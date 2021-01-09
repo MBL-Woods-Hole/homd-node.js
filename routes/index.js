@@ -12,7 +12,7 @@ const C	  = require(app_root + '/public/constants');
 
   /* GET home page. */
   router.get('/', (req, res) => {
-    res.render('home', {
+    res.render('pages/home', {
             title: 'HOMD:Home',
             user: req.user, 
             hostname: CFG.hostname 

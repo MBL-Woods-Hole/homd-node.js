@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>title: <%= title %></title>
+	<link rel="stylesheet" type="text/css" href="/css/style.css" \>
+</head>
+
+
+
+
+<body>
+  <div id='wrapper'>		
+	    
+	    
+	<div id='header'>
+       <%- include('../partials/header'); %>
+    </div>
+
+	
+	<div id='sidebar'>
+	  <%- include('../partials/sidebar'); %>
+	</div>
+	
+	<div id="navbar">
+            <%- include('../partials/navbar'); %>
+    </div>
+    
+    <div class='page-title'><b>Home Page</b></div>
+	
+	<div class='content' id="">  					
+		 <%- include('../partials/home_content'); %>
+	</div>
+    
+    <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+
+

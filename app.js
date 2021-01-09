@@ -33,8 +33,8 @@ app.set('appName', 'HOMD');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
+//app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
 //app.set(express.static(__dirname + 'tmp'));
 // MIDDLEWARE  <-- must be in correct order:
 //app.use(favicon( path.join(__dirname, 'public', 'favicon.ico')));
