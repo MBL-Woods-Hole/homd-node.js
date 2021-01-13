@@ -1,112 +1,133 @@
-<!-- this is both the top and left menu -->  
 
-<a href='/home'>Home</a><b>|</b>
-<a href='/taxon_description'>Taxon Description</a><b>|</b>
-<a href='/refseq'>16S rRNA RefSeq</a><b>|</b>
-<a href='/genomes'>Genomes</a><b>|</b>
-<a href='/proteomes'>Proteomes</a><b>|</b>
-<a href='/tools'>HOMD Tools</a><b>|</b>
-<a href='/download'>Download</a><b>|</b>
-<a href='/info'>HOMD Information</a><b>|</b>
+<ul id="nav" style='z-index:1'>
 
-
-<!-- 
+	<li><a href="/" title="HOMD Home">Home</a>
+	   <!-- 
 <ul>
+		<li><a href='/user.php?op=loginscreen&module=NS-User'>Login</a></li>
+		<li><a href='/user.php?op=check_age&module=NS-NewUser'>Register</a></li>
+		<li><a href='/user.php?op=lostpassscreen&module=NS-LostPassword'>Reset Password</a></li>	
+	   </ul>
+ -->
+	</li>		
 	
-	<li><a href="#">Taxon Description</a>
-	  <ul>
-	   <li><a href="#">Taxon Table</a></li>
-	   <li><a href="#">Taxonomic Hierarchy</a></li>
-	   <li><a href="#">Taxonomic Level</a></li>
-	   <li><a href="#">Download Taxonomy Data</a></li>
-	  </ul>
+	
+
+	<li><div>Taxon Description</div>
+		<ul>
+			<li><a href="/taxTable">Taxon Table</a></li>
+			<li><a href="/taxHierarchy">Taxonomic Hierarchy</a></li>
+			<li><a href="/taxLevel">Taxonomic Level</a></li>
+			<li><a href="/taxDownload">Download Taxonomy Data</a></li>
+		</ul>
 	</li>
 	
-	<li><a href="#">16S rRNA RefSeq</a>
-	  <ul>
-		<li><a href="#">Identify 16S rRNA using BLASTN</a></li>
-		<li><a href="#">View 16S</a></li>
-		<li><a href="#">Download</a></li>
-		<li><a href="#">History</a></li>
-	  </ul>
-	</li>
-	<li><a href="#">Genomes</a>
-	  <ul>
-	    <li><a href="#">Taxa with Annotated Genomes</a></li>
-	    <li><a href="#">All Oral Genomes</a></li>
-	    <li><a href="#">All Genomes</a></li>
-	    <li><a href="#">HOMD JBrowse Genome Viewer</a>
-	      <ul>
-	        <li><a href="#">Select a Genome to view in JBrowse</a></li>
-	        <li><a href="#">Upload your own reference sequence</a></li>
-	      </ul>
-	    </li>
-	    <li><a href="#">Genomic Trees</a>
-	      <ul>
-	        <li><a href="#">PhyloPhlAn Conserved Protein Tree</a></li>
-	        <li><a href="#">Ribosomal Protein Tree</a></li>
-	        <li><a href="#">16S rRNA gene Tree</a></li>
-	      </ul>
-	    </li>
-	    <li><a href="#">Download Genomic Data</a></li>
-	    <li><a href="#">HOMD Reference Genome Version History</a></li>
-	  </ul>
-	</li>
-	<li><a href="#">Proteomes</a>
-	  <ul>
-	    <li><a href="#">View Genomic Tree based on Conserved Proteins</a></li>
-	    <li><a href="#">Download All Protein Sequences Annotated from Genomes</a></li>
-	  </ul>
-	</li>
-	<li><a href="#">HOMD Tools</a>
-	  <ul>
-	    <li><a href="#">HOMD JBrowse Genome Viewer</a>
-	      <ul>
-	        <li><a href="#">Select a genome to view in JBrowse</a></li>
-	        <li><a href="#">Upload your own reference sequence</a></li>
-	      </ul>
-	    </li>
-	    <li><a href="#">View Genome Annotation</a></li>
-	    <li><a href="#">BLAST Against HOMD Genomes</a>
-	      <ul>
-	        <li><a href="#">BLAST against a Genome</a></li>
-	        <li><a href="#">BLAST against all Genomes</a></li>
-	      </ul>
-	    </li>
-	  </ul>
-	</li>
-	<li><a href="#">Download</a>
-	  <ul>
-	    <li><a href="#">Download HOMD Data</a></li>
-	    <li><a href="#">HOMD FTP Site</a></li>
-	    <li><a href="#">HOMD Posters</a></li>
-	    <li><a href="#">Oralgen</a>
-	      <ul>
-	        <li><a href="#">Oralgen Archive</a></li>
-	        <li><a href="#">Oralgen Genome Info</a></li>
-	      </ul>
-	    </li>
-	  </ul>
-	</li>
-	<li><a href="#">HOMD Information</a>
-	  <ul>
-	    <li><a href="#">How to cite HOMD</a></li>
-	    <li><a href="#">Project Description</a></li>
-	    <li><a href="#">Strains and DNA Availablity</a></li>
-	    <li><a href="#">Team</a></li>
-	    <li><a href="#">Contact Us</a></li>
-	    <li><a href="#">Mailing List</a></li>
-	    <li><a href="#">Help and Guides</a>
-	      <ul>
-	        <li><a href="#">User's Guide</a></li>
-	        <li><a href="#">Hands-on Guide to HOMD</a></li>
-	        <li><a href="#">Quick Tour to HOMD</a></li>
-	      </ul>
-	    </li>
-	    <li><a href="#">Usage Statistics</a></li>
-	    <li><a href="#">Site Map</a></li>
-	  </ul>
-	</li>
+	<li><div>16S rRNA RefSeq</div>
+		<ul>
+			<li><a href="/refseqBLASTN">Identify 16S rRNA using BLASTN</a></li>
+			<li><a href="/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg">View 16S rRNA RefSeq Phylogenetic Tree</a></li>
+			<li><a href="/refseqDownload">Download 16S rRNA RefSeq & Taxonomy</a></li>
+			<li><a href="/refseqVersionHistory">HOMD 16S rRNA RefSeq Version History</a></li>
+		</ul>
+	</li>	
+	
+
+	<li><div>Genomes</div>
+		<ul>
+			<li><a href="/?name=HOMD&annot=1">Taxa with Annotated Genomes</a></li>
+			<li><a href="/?name=GenomeList&link=GenomeList&type=all_oral">All Oral Genomes</a></li>
+			<li><a href="/?name=GenomeList&link=GenomeList&type=all_homd">All Genomes</a></li>
+			<li><a href="">HOMD JBrowse Genome Viewer <font color="red">&#187;</font></a>
+				<ul>
+				<li><a href="/?name=GenomeExpGM&gprog=jbrowse">Select an HOMD genome to view in JBrowse</a></li>
+				<li><a href="/?name=myjbrowse">Upload your own reference sequence <font color="green">HOMD only!</font></a></li>
+				</ul>
+			</li>			
+			<li><a href="">Genomic Trees <font color="red">&#187;</font></a>
+				<ul> 
+				<li><a href="/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">PhyloPhlAn Conserved Protein Tree</a></li>
+				<li><a href="/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg">Ribosomal Protein Tree</a></li>
+				<li><a href="/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.svg">16S rRNA Gene Tree</a></li>
+				</ul>
+			</li>			
+			<li><a href="/ftp/genomes/PROKKA/current/">Download Genomic Data</a></li>
+			<li><a href="/?name=Article&file=index&toc=1&sid=157">HOMD Reference Genome Version History</a></li>
+		</ul>
+	</li>	
+
+	<li><div>Proteomes</div>
+		<ul>
+			<li><a href="/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">View genomic tree based on conserved proteins</a></li>
+			<li><a href="/ftp/genomes/PROKKA/current/">Download All Protein Sequences Annotated from Genomes</a></li>
+		</ul>
+	</li>	
+	
+	<li><div>HOMD Tools</div>
+		<ul>
+			<li><a href="">HOMD JBrowse Genome Viewer <font color="red">&#187;</font></a>
+				<ul>
+				<li><a href="/?name=GenomeExpGM&gprog=jbrowse">Select an HOMD genome to view in JBrowse</a></li>
+				<li><a href="/?name=myjbrowse">Upload your own reference sequence <font color="green">HOMD only!</font></a></li>
+				</ul>
+			</li>
+			
+			<li><a href="/?name=GenomeExpGM&gprog=danno&annodb=prokka_annot">Genome Annotations</a></li>
+			<li><a href="">BLAST Against HOMD Genomes <font color="red">&#187;</font></a>
+				<ul>
+					<li><a href="/?name=GenomeExpGM&gprog=blast">BLAST against a genome</a></li>
+					<li><a href="/?name=GenomeExpGM&gprog=blast&org=all_genome">BLAST against all genomes</a></li>
+				</ul>		
+			</li>
+		</ul>
+	</li>	
+
+
+
+
+	<li><div>Download</div>
+		<ul>
+			<li><a href="/index.php?name=Download">Download HOMD Data</a></li>
+			<li><a href="http://www.homd.org/ftp">HOMD FTP Site</a></li>
+			<li><a href="/poster">HOMD Posters</a></li>		
+			<li><a href="http://www.oralgen.org" target="_blank">Oralgen Archive <font color="red">&#187;</font> </a>
+				<ul>
+					<li><a href="http://www.oralgen.org" target="_blank">Oralgen Archive</a></li>
+					<li><a href="http://www.homd.org/oralgen">Oralgen Genome Info</a></li>
+				</ul>			
+			</li>	
+		</ul>
+	</li>	
+
+	<li><div>HOMD Information</div>
+		<ul>
+			<li><a href="/index.php?name=Article&toc=1&sid=89">How to Cite HOMD</a></li>
+
+	<li><a href="/?name=Article&file=index&sid=59" title="Click for help on current page">How to Use This Page <font color="red">&#187;</font></a>
+		<ul>
+			<li><a href="/index.php?name=Article">User's Guide</a></li>
+			<li><a href="/download/guide/Hands_on_Guide_to_HOMD_20090330.ppt">Hands on Guide to HOMD</a></li>
+			<li><a href="/download/guide/HHOMD_HMS_TCHEN_2015.pptx">Quick Tour to HOMD 2015</a></li>
+		</ul>
+	</li>	
+
+			<li><a href="/index.php?name=Article&toc=1&sid=3">Project Description</a></li>
+			<li><a href="/index.php?name=Article&sid=101&toc=1">Strains and DNA Availability</a></li>
+			<li><a href="/index.php?name=Article&toc=1&sid=4">People</a></li>
+			<li><a href="/index.php?name=Article&toc=1&sid=27">Contact Us</a></li>
+			<li><a href="/index.php?name=Article&toc=1&sid=67">Mailing List</a></li>
+			<li><a href="/index.php?name=LinkModules&link=statistics">Usage Statistics</a></li>
+			<li><a href="/index.php?name=HOME&link=smap">Site Map</a></li>
+		</ul>
+	</li>		
+
+	
+		<li><div title="Simplified page name for referencing purpose"><font color="#66FFFF">Page: HP1</font></div></li>	
 	
 </ul>
- -->
+
+<div id='refseq-stats'>
+   16S rRNA Refseq <a class="pn-sub" href="/?name=Article&toc=1&sid=96">V15.21</a> 
+   Genomic RefSeq  <a class="pn-sub" href="?name=Article&file=index&toc=1&sid=157">V9.14</a>
+</div>
+
+

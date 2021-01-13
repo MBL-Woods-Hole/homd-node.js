@@ -25,7 +25,7 @@ const fs = require('fs-extra');
 
 
 const home      = require('./routes/index');
-
+//const tax       = require('./routes/routes_users');
 
 const app = express();
 app.set('appName', 'HOMD');
@@ -70,7 +70,11 @@ app.use(express.static('tmp'));
 
 // ROUTES:
 app.use('/', home);
+//app.use('/tax', tax);
 
 
 
 module.exports = app;
+
+
+

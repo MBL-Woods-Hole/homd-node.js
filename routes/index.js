@@ -14,13 +14,34 @@ const C	  = require(app_root + '/public/constants');
   router.get('/', (req, res) => {
     res.render('pages/home', {
             title: 'HOMD:Home',
-            user: req.user, 
             hostname: CFG.hostname 
         });
   });
 
-
-
+  router.get('/taxTable', (req, res) => {
+    res.render('pages/taxon/taxtable', {
+            title: 'HOMD:Taxon Table', 
+            hostname: CFG.hostname 
+        });
+  });
+  router.get('/taxHierarchy', (req, res) => {
+    res.render('pages/taxon/taxhierarchy', {
+            title: 'HOMD:Taxon Hierarchy', 
+            hostname: CFG.hostname 
+        });
+  });
+  router.get('/taxLevel', (req, res) => {
+    res.render('pages/taxon/taxlevel', {
+            title: 'HOMD:Taxon Level', 
+            hostname: CFG.hostname 
+        });
+  });
+  router.get('/taxDownload', (req, res) => {
+    res.render('pages/taxon/taxdownload', {
+            title: 'HOMD:Taxon Download', 
+            hostname: CFG.hostname 
+        });
+  });
 //});
 
 module.exports = router;
