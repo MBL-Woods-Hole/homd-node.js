@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../../partials/header_html'); %>
+
+
+<body>
+  <div id='wrapper'>		
+	    
+	    
+	<div id='header'>
+       <%- include('../../partials/header_img'); %>
+    </div>
+
+	
+	
+	<div id="navbar">
+            <%- include('../../partials/navbar'); %>
+    </div>
+    
+    
+	
+	<div class='wide-content' id="">
+	  	
+	  <div id='' class="flash-message" >  	
+        <% if (messages.success) { %>
+          <div class="alert_flash_message_success"><%= messages.success %></div>
+        <% }else if(messages.fail){ %>
+          <div class="alert_flash_message_fail"><%= messages.fail %></div>
+        <% } %>
+       </div>
+       
+       <div id='' class="admin-box">				
+		<form action="/admin/login" method="post">
+			<div>
+				<label>Username:</label>
+				<input type="text" name="username"/>
+			</div>
+			<div>
+				<label>Password:</label>
+				<input type="password" name="password"/>
+			</div>
+			<div>
+				<input type="submit" value="Log In"/>
+			</div>
+		</form>
+       </div>
+	</div>
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+
+

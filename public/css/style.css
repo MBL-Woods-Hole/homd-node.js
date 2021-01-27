@@ -4,26 +4,43 @@ body {
   font: small Verdana, Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
-  background: #F8F8F8;  /* very light grey */
+  background: white;  
 }
 a { text-decoration: none; }
 #header { background: white; }
-table { width: 100%; }
+table { width: 100%; border: 1px solid black;}
 th, td { padding: 0; }
 
 ####forsythlogo {position:absolute; top:0; right:0;}
+.main-text {
+  
+}
 
-
+.main-text::first-letter {
+  font-size: 300%;
+  color: #00659c;
+}
 
 ul li { list-style: none; }
 
+.flash-message {
+   float:left;
+   color:red;
+}
+.admin-box {
+  background:lightgrey;
+  margin:auto;
+  width:30%;
+  padding:10px;
+}
 #left-sidebar {
   position: absolute;
   top: 115px;
   left: 5px;
   width: 200px;
   background: tan;
-  padding: 0em;
+  padding: 0;
+  margin: 10px;
   /* border: 1px solid #600; */
   
 }
@@ -38,7 +55,8 @@ ul li { list-style: none; }
   right: 5px;
   width: 200px;
   background: tan;
-  padding: 0em;
+  padding: 0;
+  margin:10px;
   border: 1px solid #600;
   
 }
@@ -61,8 +79,8 @@ ul li { list-style: none; }
 }
 .home-content{
   margin: 30px 230px 2em 230px;
-  padding: 5px; 
-  border: 1px solid red;
+  padding: 10px 20px 0 40px; 
+  /* border: 1px solid red; */
   font:  Arial, sans-serif;
   font-size: small;
   text-align: justify;
@@ -70,12 +88,14 @@ ul li { list-style: none; }
 }
 .wide-content{
   margin: 30px 10px 2em 10px;
-  padding: 5px; 
-  border: 1px solid red;
+  padding: 5px 15px 5px 15px;
+  /* border: 1px solid red; */
   font:  Arial, sans-serif;
   font-size: small;
   text-align: justify;
   line-height: 22px;
+  /* text-align:center; */
+  
 }
 .title {
    background: #00659c; 

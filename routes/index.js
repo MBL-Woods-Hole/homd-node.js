@@ -12,36 +12,47 @@ const C	  = require(app_root + '/public/constants');
 
   /* GET home page. */
   router.get('/', (req, res) => {
+    show_session(req)
     res.render('pages/home', {
-            title: 'HOMD:Home',
+            title: 'HOMD :: Human Oral Microbiome Database',
             hostname: CFG.hostname 
         });
   });
 
   router.get('/taxTable', (req, res) => {
+    show_session(req)
+    //console.log(C.tax_table_results)
     res.render('pages/taxon/taxtable', {
-            title: 'HOMD:Taxon Table', 
-            hostname: CFG.hostname 
+            title: 'HOMD :: Taxon Table', 
+            hostname: CFG.hostname,
+            res: C.tax_table_results 
         });
   });
   router.get('/taxHierarchy', (req, res) => {
     res.render('pages/taxon/taxhierarchy', {
-            title: 'HOMD:Taxon Hierarchy', 
+            title: 'HOMD :: Taxon Hierarchy', 
             hostname: CFG.hostname 
         });
   });
   router.get('/taxLevel', (req, res) => {
     res.render('pages/taxon/taxlevel', {
-            title: 'HOMD:Taxon Level', 
+            title: 'HOMD :: Taxon Level', 
             hostname: CFG.hostname 
         });
   });
   router.get('/taxDownload', (req, res) => {
     res.render('pages/taxon/taxdownload', {
-            title: 'HOMD:Taxon Download', 
+            title: 'HOMD :: Taxon Download', 
             hostname: CFG.hostname 
         });
   });
 //});
 
 module.exports = router;
+
+function show_session(req){
+	console.log('(Availible for when sessions are needed) req.session: ')
+    console.log(req.session)
+    console.log(req.sessionID)
+    console.log(req.session.id)
+}

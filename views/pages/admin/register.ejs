@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../../partials/header_html'); %>
+
+<body>
+  <div id='wrapper'>		
+	    
+	    
+	<div id='header'>
+       <%- include('../../partials/header_img'); %>
+    </div>
+
+	
+	
+	<div id="navbar">
+            <%- include('../../partials/navbar'); %>
+    </div>
+    
+    
+	
+	<div class='wide-content' id="">  					
+	  <div id='' class="flash-message" >  	
+        <% if (messages.success) { %>
+          <div class="alert_flash_message_success"><%= messages.success %></div>
+        <% }else if(messages.fail){ %>
+          <div class="alert_flash_message_fail"><%= messages.fail %></div>
+        <% } %>
+       </div>
+       
+       <div id='' class="admin-box">				
+		<form action="/admin/register" method="post">
+			<table>
+			<tr><td>
+			<div>
+				<label>Username:</label>
+				<input type="text" name="username"/>
+			</div>
+			</td></tr><tr><td>
+			<div>
+				<label>Password:</label>
+				<input type="password" name="password"/>
+			</div>
+			</td></tr><tr><td>
+			<div>
+				<label>First Name:</label>
+				<input type="text" name="firstname"/>
+			</div>
+			</td></tr><tr><td>
+			<div>
+				<label>Last Name:</label>
+				<input type="text" name="lastname"/>
+			</div>
+			</td></tr><tr><td>
+			<div>
+				<label>Email:</label>
+				<input type="text" name="email"/>
+			</div>
+			</td></tr><tr><td>
+			<div>
+				<label>Institution:</label>
+				<input type="text" name="institution"/>
+			</div>
+			</td></tr><tr><td>
+			<div>
+				<input type="submit" value="Log In"/>
+			</div>
+			</td></tr>
+			</table>
+		</form>
+       </div>
+	</div>
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+
+

@@ -7,52 +7,65 @@ const path = require('path');
 global.DBConn = dbconn;
 global.app_root = path.resolve(__dirname);
 const C		= require('./public/constants');
-
+const fs = require('fs-extra');
 
 const express = require('express');
 
 const router = express.Router();
 const session = require('express-session');
+const passport = require('passport');
 
-//const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-//const flash = require('express-flash');
+const flash = require('express-flash');
 //const favicon = require('serve-favicon');
-const fs = require('fs-extra');
+
 //const zlib = require('zlib');
 //const sizeof = require('object-sizeof');
 
 
 const home      = require('./routes/index');
 //const tax       = require('./routes/routes_users');
+const admin       = require('./routes/routes_admin');
 
 const app = express();
 app.set('appName', 'HOMD');
-
-
+require('./config/passport')(passport, DBConn); // pass passport for configuration
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-//app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
-//app.set(express.static(__dirname + 'tmp'));
+//
 // MIDDLEWARE  <-- must be in correct order:
 //app.use(favicon( path.join(__dirname, 'public', 'favicon.ico')));
 //app.use(logger('dev'));
 //app.use(bodyParser({limit: 1024000000 })); // 1024MB
 // app.use(bodyParser({uploadDir:'./uploads'}));
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true,         // allows for richer json like experience https://www.npmjs.com/package/qs#readme
     limit: '50mb',          // size of body
     parameterLimit: 1000000 // number of parameters
 }));
-
+app.use(session({
+  secret: 'gtf34ds',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { maxage:6000 }
+  //store: new mongoStore({
+  //  mongooseConnection: mongoose.connection,
+   // collection: 'sessions' // default
+  //})
+}));
 //app.use(expressSanitizer()); // this line follows bodyParser() instantiations
 //app.use(expressSanitized()); // this line follows bodyParser()
 // app.use(expressValidator()); // this line must be immediately after any of the bodyParser middlewares!
 
-
+app.use(express.static(__dirname + 'tmp'));
 
 //upload.single('singleInputFileName')
 //app.use(upload.single('singleInputFileName'));  // for multipart uploads: files
@@ -71,8 +84,27 @@ app.use(express.static('tmp'));
 // ROUTES:
 app.use('/', home);
 //app.use('/tax', tax);
+app.use('/admin', admin);
 
+/**
+ * Create global objects once upon server startup
+ */
 
+const homdTaxonomy = require('./models/homd_taxonomy');
+let all_homd_taxonomy = new homdTaxonomy();
+
+all_homd_taxonomy.get_all_taxa(function(err, results) {
+    if (err)
+        throw err; // or return an error message, or something
+    else
+    {
+       console.log('Success with homd taxonomy')
+       //console.log(results)
+       C.tax_table_results = results
+       
+    }
+    
+});
 
 module.exports = app;
 
