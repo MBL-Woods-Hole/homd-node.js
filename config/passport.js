@@ -1,6 +1,8 @@
 var queries       = require('../routes/sql_admin');
 var LocalStrategy = require('passport-local').Strategy;
 var path          = require('path');
+var User          = require(app_root + '/models/user_model');
+const C       = require(app_root + '/public/constants');
 
 module.exports = function (passport, db) {
 
@@ -179,7 +181,7 @@ function login_auth_user(req, username, password, done, db) {
 //         console.log(e)
 //       }
     //  console.log('login_auth_user-2');
-      return done(null, rows[0]);
+      return done(null, rows[0], req.flash('success', 'Login Successful'));
     }
 
     // if the user is found but the password is wrong:
@@ -198,6 +200,7 @@ function signup_user(req, username, password, done, db) {
   // username -> no spaces or 'funny' chars
   // find a user whose email is the same as the forms email
   // we are checking to see if the user trying to login already exists
+  console.log(req.body)
   var this_user_obj    = new User();
   var new_user         = this_user_obj.newUser(req.body, username, password);
   var confirm_password = req.body.password_confirm;
@@ -249,8 +252,8 @@ function signup_user(req, username, password, done, db) {
           };
           let user_data_dir                  = path.join(req.CONFIG.USER_FILES_BASE, username);
           console.log('Validating/Creating User Data Directory: ' + user_data_dir);
-          helpers.ensure_dir_exists(user_data_dir);  // also chmod to 0777 (ug+rwx)
-          return done(null, new_user);
+          //helpers.ensure_dir_exists(user_data_dir);  // also chmod to 0777 (ug+rwx)
+          return done(null, new_user, req.flash('success', 'Registration was successful.'));
         }
       });
     }

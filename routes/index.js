@@ -3,7 +3,7 @@ const express = require('express');
 var router = express.Router();
 const fs   = require('fs-extra');
 const path  = require('path');
-//const helpers = require('./helpers/helpers');
+const helpers = require('./helpers/helpers');
 //const ds = require('./load_all_datasets');
 const CFG = require(app_root + '/config/config');
 const C	  = require(app_root + '/public/constants');
@@ -18,8 +18,8 @@ const C	  = require(app_root + '/public/constants');
             hostname: CFG.hostname 
         });
   });
-
   router.get('/taxTable', (req, res) => {
+  //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
     show_session(req)
     //console.log(C.tax_table_results)
     res.render('pages/taxon/taxtable', {

@@ -38,10 +38,10 @@ ul li { list-style: none; }
 #left-sidebar {
   position: relative;
   float: left;
-  top: -10px;
+  top: 35px;
   left: 5px;
   width: 200px;
-  /* background: tan; */
+  background: tan;
   padding: 0;
   margin: 10px;
   /* border: 1px solid #600; */
@@ -55,13 +55,13 @@ ul li { list-style: none; }
 #right-sidebar {
   position: relative;
   float: right;
-  top: -10px;
+  top: 35px;
   right: 5px;
   width: 200px;
-  background: #006699;
+  background: tan;
   padding: 0;
   margin:10px;
-  /* border: 1px solid #600; */
+  border: 1px solid #600;
   
 }
 #right-sidebar ul {
@@ -82,14 +82,13 @@ ul li { list-style: none; }
    
 }
 .home-content{
-  margin: 25px 230px 2em 230px;
-  padding: 0 20px 0 40px; 
+  margin: 30px 230px 2em 230px;
+  padding: 10px 20px 0 40px; 
   /* border: 1px solid red; */
   font:  Arial, sans-serif;
   font-size: small;
   text-align: justify;
   line-height: 22px;
-  
 }
 .wide-content{
   margin: 30px 10px 2em 10px;
@@ -107,7 +106,6 @@ ul li { list-style: none; }
    font-weight: bold;
    color: white;
    padding: 1px 0 1px 10px;
-   margin: 2px 0 2px 0;
 }
 .admin-box {  /* Login Pages Boxes */
   background:lightgrey;
@@ -143,8 +141,8 @@ ul li { list-style: none; }
 	white-space:nowrap;
 	/* width:0px;  */
 	float:right;
-	right:10px;
-	top: 0px;
+	right:-200px;
+	top: -20px;
 	
 	/* border:1px solid red; */
 	
@@ -153,7 +151,7 @@ ul li { list-style: none; }
    /* text-align: left; */
    
    position:relative;
-   left: 0px;
+   left: -210px;
 }
 #nav ul {
 	margin:0px;

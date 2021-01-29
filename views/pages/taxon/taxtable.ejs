@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../../partials/header_html'); %>
-
+<title><%= title %></title>
 
 <body>
   <div id='wrapper'>		
@@ -11,15 +11,13 @@
        <%- include('../../partials/header_img'); %>
     </div>
 
-	
-	
 	<div id="navbar">
             <%- include('../../partials/navbar'); %>
     </div>
-    
+    <div id='' class='page-content'>
     
 	
-	<div class='wide-content' id="">  					
+	  <div class='wide-content' id="">  					
 		 List of Human Microbial Taxa
 		 <table>
 		 <tr><th>Taxon ID</th><th>Genus</th><th>Species</th><th>Flag</th><th>Status</th></tr>
@@ -27,8 +25,8 @@
 		   <tr><td><%= res[n].oral_taxon_id  %></td><td><%= res[n].genus  %></td><td><%= res[n].species  %></td><td><%= res[n].warning  %></td><td><%= res[n].group  %></td></tr>
 		 <% } %>
 		 </table>
-	</div>
-    
+	  </div>
+    </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>

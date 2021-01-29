@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../../partials/header_html'); %>
-
+<title><%= title %></title>
 
 <body>
   <div id='wrapper'>		
@@ -16,35 +16,34 @@
 	<div id="navbar">
             <%- include('../../partials/navbar'); %>
     </div>
-    
+    <div id='' class='page-content'>
     
 	
-	<div class='wide-content' id="">
+	  <div class='wide-content' id="">
 	  	
-	  <div id='' class="flash-message" >  	
+	    <div id='' class="flash-message" >  	
         <% if (messages.success) { %>
-          <div class="alert_flash_message_success"><%= messages.success %></div>
+          <div class="alert_flash_message_success"><%- messages.success %></div>
         <% }else if(messages.fail){ %>
-          <div class="alert_flash_message_fail"><%= messages.fail %></div>
+          <div class="alert_flash_message_fail"><%- messages.fail %></div>
         <% } %>
-       </div>
+        </div>
        
-       <div id='' class="admin-box">				
-		<form action="/admin/login" method="post">
-			<div>
-				<label>Username:</label>
+        <div id='' class="admin-box">				
+		  <form action="/admin/login" method="post">
+			<table><tr><td>
+				<label>Username:</label></td><td>
 				<input type="text" name="username"/>
-			</div>
-			<div>
-				<label>Password:</label>
+			</td></tr><tr><td>
+				<label>Password:</label></td><td>
 				<input type="password" name="password"/>
-			</div>
-			<div>
-				<input type="submit" value="Log In"/>
-			</div>
-		</form>
-       </div>
-	</div>
+			</td></tr><tr><td>
+				<input disabled type="submit" value="Log In"/>
+			</td></tr></table>
+		  </form>
+        </div>
+	  </div>
+    </div> <!-- end: page-content -->
     
     <div id='footer'>
          <%- include('../../partials/footer'); %>

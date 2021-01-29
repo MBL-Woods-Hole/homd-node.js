@@ -35,6 +35,11 @@ router.get('/register', (req, res) => {
     });
 });
 
+router.post('/register', passport.authenticate('local-signup', {
+                successRedirect : '/', // redirect to the secure profile section
+                failureRedirect : '/admin/register', // redirect back to the signup page if there is an error
+                failureFlash : true         // allow flash messages
+}));
 
 router.get('/reset_password', (req, res) => {
     res.render('pages/admin/reset_pasword', { 

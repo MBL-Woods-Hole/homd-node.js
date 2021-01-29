@@ -30,9 +30,9 @@
 
 	<li><div>Genomes</div>
 		<ul>
-			<li><a href="/?name=HOMD&annot=1">Taxa with Annotated Genomes</a></li>
-			<li><a href="/?name=GenomeList&link=GenomeList&type=all_oral">All Oral Genomes</a></li>
-			<li><a href="/?name=GenomeList&link=GenomeList&type=all_homd">All Genomes</a></li>
+			<li><a href="/genomes">Taxa with Annotated Genomes</a></li>
+			<li><a href="/genomes/all_oral">All Oral Genomes</a></li>
+			<li><a href="/genomes/all_homd">All Genomes</a></li>
 			<li><a href="">HOMD JBrowse Genome Viewer <font color="red">&#187;</font></a>
 				<ul>
 				<li><a href="/?name=GenomeExpGM&gprog=jbrowse">Select an HOMD genome to view in JBrowse</a></li>
@@ -120,6 +120,15 @@
 		<!-- <li><div title="Simplified page name for referencing purpose"><font color="#66FFFF"></font></div></li>	 -->
 	
 </ul>
+<div id='login-status'>
+  <div id='' class="flash-message" >  	
+        <% if (messages.success) { %>
+          <div class="alert_flash_message_success"><%- messages.success %></div>
+        <% }else if(messages.fail){ %>
+          <div class="alert_flash_message_fail"><%- messages.fail %></div>
+        <% } %>
+  </div>
+</div>
 
 <div id='refseq-stats'>
    16S rRNA Refseq <a class="pn-sub" href="/?name=Article&toc=1&sid=96">V15.21</a> 

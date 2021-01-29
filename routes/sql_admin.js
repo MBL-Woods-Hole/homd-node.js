@@ -18,6 +18,24 @@ reset_user_signin: (new_count, old_date, uid) => {
     var updateQuery = "UPDATE user set sign_in_count='"+new_count+"', current_sign_in_at=CURRENT_TIMESTAMP(), last_sign_in_at='"+old_date+"' WHERE user_id='"+uid+"'"
     return updateQuery
 },
+insert_new_user: (mysql_new_user) => {
+    
+    var qInsertUser = "INSERT INTO user (username, encrypted_password, first_name, last_name, email, institution, active, sign_in_count, security_level, current_sign_in_at, last_sign_in_at)";
+    qInsertUser +=    " VALUES ('" + mysql_new_user.username +"', "+
+                                   // helpers.generateHash(mysql_new_user.password) +"', '"+
+                                    "PASSWORD('"+mysql_new_user.password+"'),   '"+
+                                    mysql_new_user.firstname +"', '"+
+                                    mysql_new_user.lastname +"', '"+
+                                    mysql_new_user.email +"', '"+
+                                    mysql_new_user.institution +"',"+                                    
+                                    " 1,"+
+                                     " 1, "+
+                                     mysql_new_user.security_level +","+
+                                    " CURRENT_TIMESTAMP(), "+
+                                     " CURRENT_TIMESTAMP() )";
+    //console.log(qInsertUser)
+    return qInsertUser
+},
 
 };
 

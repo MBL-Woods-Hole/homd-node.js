@@ -11,7 +11,7 @@ if(available_environments.indexOf(process.argv[2]) !== -1){
 	process.env.NODE_ENV = process.argv[2];
 }else{
 	console.log('Available Environments:', available_environments);
-	if(CFG.hostname === '??????') {
+	if(CFG.hostname === '??????') {  // put production host here
 	    process.env.NODE_ENV = 'production';  // homd
 	}else if(CFG.hostname === 'localhost'){
 	    process.env.NODE_ENV = 'development';  // homddev

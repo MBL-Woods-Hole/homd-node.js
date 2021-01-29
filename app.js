@@ -14,7 +14,7 @@ const express = require('express');
 const router = express.Router();
 const session = require('express-session');
 const passport = require('passport');
-
+const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
@@ -34,13 +34,13 @@ require('./config/passport')(passport, DBConn); // pass passport for configurati
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 //
 // MIDDLEWARE  <-- must be in correct order:
-//app.use(favicon( path.join(__dirname, 'public', 'favicon.ico')));
-//app.use(logger('dev'));
+app.use(logger('dev'));
 //app.use(bodyParser({limit: 1024000000 })); // 1024MB
 // app.use(bodyParser({uploadDir:'./uploads'}));
 
@@ -86,6 +86,25 @@ app.use('/', home);
 //app.use('/tax', tax);
 app.use('/admin', admin);
 
+// LAST Middleware:
+app.use(function(req, res, next){
+  res.status(404);
+
+  // respond with html page
+  if (req.accepts('html')) {
+    res.render('pages/lost', { url: req.url });
+    return;
+  }
+
+  // respond with json
+  if (req.accepts('json')) {
+    res.send({ error: 'Not found' });
+    return;
+  }
+
+  // default to plain-text. send()
+  res.type('txt').send('Not found');
+});
 /**
  * Create global objects once upon server startup
  */

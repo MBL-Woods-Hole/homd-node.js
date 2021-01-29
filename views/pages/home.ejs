@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../partials/header_html'); %>
-
+<title><%= title %></title>
 <body>
   <div id='wrapper'>		
 	    
@@ -9,27 +9,27 @@
 	<div id='header'>
        <%- include('../partials/header_img'); %>
     </div>
-
-	
-	<div id='left-sidebar'>
-	  <%- include('../partials/sidebar'); %>
-	</div>
-	<div id='right-sidebar'>
-	  <ul>
-	    <li><h4>Meta-Database Search</h4></li>
-	    <li><h4>Announcement</h4></li>
-	    <li><h4>Database Update</h4></li>
-	  </ul>
-	</div>
-	<div id="navbar">
+    <div id="navbar">
             <%- include('../partials/navbar'); %>
     </div>
     
-    
+    <div id='' class='page-content'>
 	
-	<div class='home-content' id="">  					
-		 <%- include('../partials/home_content'); %>
-	</div>
+		<div id='left-sidebar'>
+		  <%- include('../partials/sidebar'); %>
+		</div>
+		<div id='right-sidebar'>
+		  
+			<div class='title'>Meta-Database Search</div>
+			<div class='title'>Announcement</div>
+			<div class='title'>Database Update</div>
+		  
+		</div>
+	
+		<div class='home-content' id="">  					
+			 <%- include('../partials/home_content'); %>
+		</div>
+    </div> <!-- end: page-content -->
     
     <div id='footer'>
          <%- include('../partials/footer'); %>

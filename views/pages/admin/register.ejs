@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../../partials/header_html'); %>
-
+<title><%= title %></title>
 <body>
   <div id='wrapper'>		
 	    
@@ -15,61 +15,49 @@
 	<div id="navbar">
             <%- include('../../partials/navbar'); %>
     </div>
-    
+    <div id='' class='page-content'>
     
 	
-	<div class='wide-content' id="">  					
-	  <div id='' class="flash-message" >  	
+	  <div class='wide-content' id="">  					
+	    
+	    <div id='' class="flash-message" >  	
         <% if (messages.success) { %>
           <div class="alert_flash_message_success"><%= messages.success %></div>
         <% }else if(messages.fail){ %>
           <div class="alert_flash_message_fail"><%= messages.fail %></div>
         <% } %>
-       </div>
+        </div>
        
-       <div id='' class="admin-box">				
-		<form action="/admin/register" method="post">
-			<table>
+        <div id='' class="admin-box">				
+		  Registration is not open at this time, however HOMD data is all public.
+		  <form action="/admin/register" method="post">
+			<table style=''>
 			<tr><td>
-			<div>
-				<label>Username:</label>
+				<label>Username:</label></td><td>
 				<input type="text" name="username"/>
-			</div>
 			</td></tr><tr><td>
-			<div>
-				<label>Password:</label>
+				<label>Password:</label></td><td>
 				<input type="password" name="password"/>
-			</div>
 			</td></tr><tr><td>
-			<div>
-				<label>First Name:</label>
+				<label>First Name:</label></td><td>
 				<input type="text" name="firstname"/>
-			</div>
 			</td></tr><tr><td>
-			<div>
-				<label>Last Name:</label>
+				<label>Last Name:</label></td><td>
 				<input type="text" name="lastname"/>
-			</div>
 			</td></tr><tr><td>
-			<div>
-				<label>Email:</label>
+				<label>Email:</label></td><td>
 				<input type="text" name="email"/>
-			</div>
 			</td></tr><tr><td>
-			<div>
-				<label>Institution:</label>
+				<label>Institution:</label></td><td>
 				<input type="text" name="institution"/>
-			</div>
 			</td></tr><tr><td>
-			<div>
-				<input type="submit" value="Log In"/>
-			</div>
+				<input disabled id='register' type="submit" value="Register"/>
 			</td></tr>
 			</table>
-		</form>
-       </div>
-	</div>
-    
+		  </form>
+        </div>
+	  </div>
+    </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>

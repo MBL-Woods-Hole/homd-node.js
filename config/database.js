@@ -1,6 +1,6 @@
 var mysql = require('mysql2');
 var fs    = require('fs-extra');
-var path  = require('path');
+//var path  = require('path');
 
 var db_config_file = './config/db-connection.js';
 eval(fs.readFileSync(db_config_file).toString());
