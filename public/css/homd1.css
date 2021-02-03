@@ -1,3 +1,5 @@
+/*
+
 .sel option{
 height:5px;
 padding:0,0,0,0;
@@ -147,7 +149,11 @@ FONT: bold 8pt Arial;
 background:#666699;
 }
 
+*/
+
 /* some browser, e.g., EDGE doesn't like HOMDsubtitle1, changed to HOMDsubtitleA */
+
+/*
 
 .HOMDsubtitleA {
 COLOR: #000000;
@@ -163,9 +169,14 @@ line-height: 22px;
     float:left;
 }
 
+*/
+
 /* Microsoft EDGE would crash on float: left, eventhough it supports it when 
 testing with @supports (float:left), so use EDGE specific propert to make 
 float:non */
+
+
+/* 
 @supports (-ms-accelerator:true){
     .HOMDsubtitleA:first-child:first-letter {
     COLOR: #00468C;
@@ -174,6 +185,11 @@ float:non */
     float:none;
     }
 }
+ */
+
+
+
+/*
 
 .HOMDsubtitle2 {
 BACKGROUND: none; 
@@ -525,6 +541,7 @@ COLOR: #990033;
 }
 
 
+
 .HOMDtext5{
 FONT: 8pt Arial; 
 text-align:;
@@ -583,6 +600,8 @@ FONT: bold 8pt Arial;
 color:#FFFFFF;
 text-decoration: none;
 }
+
+*/
 
 
 .menulines_top{

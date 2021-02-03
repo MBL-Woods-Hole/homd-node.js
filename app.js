@@ -27,6 +27,7 @@ const flash = require('express-flash');
 const home      = require('./routes/index');
 //const tax       = require('./routes/routes_users');
 const admin       = require('./routes/routes_admin');
+const help       = require('./routes/routes_help');
 
 const app = express();
 app.set('appName', 'HOMD');
@@ -85,6 +86,7 @@ app.use(express.static('tmp'));
 app.use('/', home);
 //app.use('/tax', tax);
 app.use('/admin', admin);
+app.use('/help', help);
 
 // LAST Middleware:
 app.use(function(req, res, next){

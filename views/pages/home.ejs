@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../partials/header_html'); %>
+<link rel="stylesheet" type="text/css" href="/css/homd1.css" \>
 <title><%= title %></title>
 <body>
   <div id='wrapper'>		
@@ -42,27 +43,16 @@
 </html>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!-- <script src="https://code.jquery.com/ui/3.5.1/jquery-ui.js"></script> -->
+<script type="text/javascript" src="/js/menu.js"></script>
 <!-- <script type="text/javascript" src="/js/jquery-1.3.1.min.js"></script>	 -->
 <!-- <script type="text/javascript" language="javascript" src="/js/jquery.dropdownPlain.js"></script> -->
 <script>
-  function mainmenu(){
-	$(" #nav ul ").css({display: "none"}); // Opera Fix
-	$(" #nav li").hover(function(){
-        $(this).find('ul:first').css({visibility: "visible",display: "none"}).show(400);
-        },function(){
-        $(this).find('ul:first').css({visibility: "hidden"});
-        });
-}
-
- 
- 
- $(document).ready(function(){                    
+  $(document).ready(function(){                    
     mainmenu();
-});
-
-function expandcontent_simple(curobj, cid){
+  });
+  // this function is for the left side menu on the home page
+  function expandcontent_simple(curobj, cid){
 	document.getElementById(cid).style.display=(document.getElementById(cid).style.display!="none")? "none" : "";
-}
+  }
 </script>
 

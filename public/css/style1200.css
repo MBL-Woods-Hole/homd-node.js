@@ -1,15 +1,16 @@
+/* https://www.w3schools.com/cssref/css_colors.asp */
+
 * {margin: 0; padding: 0; }
 html {
-  background: black; 
+  background: lightgrey; 
 }
 body {
   
   font: small Verdana, Arial, Helvetica, sans-serif;
   margin: auto;
-  padding: 0;
+  padding: 0 2px 20px 2px;
   width: 1200px;
   background: white;  
-  
   
 }
 a { text-decoration: none; }
@@ -17,10 +18,12 @@ a { text-decoration: none; }
 table { width: 100%; }
 th, td { padding: 0; }
 
-####forsythlogo {position:absolute; top:0; right:0;}
+/* ####forsythlogo {position:absolute; top:0; right:0;} */
+/* 
 .main-text {
   
 }
+ */
 
 .main-text::first-letter {
   font-size: 300%;
@@ -37,10 +40,10 @@ ul li { list-style: none; }
 #left-sidebar {
   position: relative;
   float: left;
-  top: 35px;
+  top: -10px;
   left: 5px;
   width: 200px;
-  background: tan;
+  /* background: tan; */
   padding: 0;
   margin: 10px;
   /* border: 1px solid #600; */
@@ -54,13 +57,13 @@ ul li { list-style: none; }
 #right-sidebar {
   position: relative;
   float: right;
-  top: 35px;
+  top: -10px;
   right: 5px;
   width: 200px;
-  background: tan;
+  background: #006699;
   padding: 0;
   margin:10px;
-  border: 1px solid #600;
+  /* border: 1px solid #600; */
   
 }
 #right-sidebar ul {
@@ -81,13 +84,14 @@ ul li { list-style: none; }
    
 }
 .home-content{
-  margin: 30px 230px 2em 230px;
-  padding: 10px 20px 0 40px; 
+  margin: 25px 230px 2em 230px;
+  padding: 0 20px 0 40px; 
   /* border: 1px solid red; */
   font:  Arial, sans-serif;
   font-size: small;
   text-align: justify;
   line-height: 22px;
+  
 }
 .wide-content{
   margin: 30px 10px 2em 10px;
@@ -105,6 +109,7 @@ ul li { list-style: none; }
    font-weight: bold;
    color: white;
    padding: 1px 0 1px 10px;
+   margin: 2px 0 2px 0;
 }
 .admin-box {  /* Login Pages Boxes */
   background:lightgrey;
@@ -128,6 +133,7 @@ ul li { list-style: none; }
   background:#BED6EC;
   width:100%;
   height: 20px;
+  
   /* border: 1px solid red; */
   text-align: left;
 }
@@ -139,8 +145,9 @@ ul li { list-style: none; }
 	white-space:nowrap;
 	/* width:0px;  */
 	float:right;
-	right:-200px;
-	top: -20px;
+	right:10px;
+	top: 0px;
+	
 	/* border:1px solid red; */
 	
 }
@@ -148,7 +155,7 @@ ul li { list-style: none; }
    /* text-align: left; */
    
    position:relative;
-   left: -210px;
+   left: 0px;
 }
 #nav ul {
 	margin:0px;

@@ -1,0 +1,161 @@
+/* user Guide Styling */
+
+#user_help_nav {
+    float: left;
+    width: 280px;
+    border-top: 1px solid #999;
+    border-right: 1px solid #999;
+    border-left: 1px solid #999;
+}
+#user_help_nav li a {
+    display: block;
+    padding: 10px 15px;
+    background: #ccc;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #999;
+    text-decoration: none;
+    color: #000;
+}
+#user_help_nav li a:not(.menutitle):hover, #user_help_nav li a:not(.menutitle).active {
+    background: lightcyan;
+    color: black;
+}
+
+#user_help_nav li ul {
+    display: none; 
+}
+#user_help_nav li ul li a {
+    padding: 1px 0px 1px 20px;
+    background: #ececec;
+    white-space:nowrap;
+    border-bottom: 1px dotted #ccc;
+}
+
+/*  userdoc_table */
+#userdoc_div {
+   width: 100%;
+}
+.userdoc_tables {
+    border:1px solid black;
+    padding:2px;
+    
+}
+#userdoc_table {
+  
+}
+#userdoc_table td {
+    vertical-align:top;
+    padding:0 10px;
+    
+}
+.userdoc_tables .table_header {
+    font-weight: bold;
+    font-size:large;
+    text-align: center;
+    background: white;
+}
+#userdoc_table .header_row {
+    font-size: large;
+    background: #00659c;
+    color:white;
+    text-align:center;
+    
+}
+#userdoc_table .menu-item {
+    margin-left: 50px;
+    padding-left: 50px;
+    
+}
+
+/* Accordian Help Menu */
+
+#accordian_div {
+  /* border:1px solid red; */
+  width:270px;
+  float:left;
+  margin-right:20px;
+}
+.accordion {
+  width: 100%;
+  max-width: 360px;
+  margin: 30px auto 20px;
+  background: #FFF;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.accordion .link {
+  cursor: pointer;
+  display: block;
+  padding: 10px 15px 10px 42px;
+  color: #4D4D4D;
+  font-size: 12px;
+  font-weight: 700;
+  border-bottom: 1px solid #CCC;
+  position: relative;
+  -webkit-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+
+.accordion li:last-child .link { border-bottom: 0; }
+
+.accordion li i {
+  position: absolute;
+  top: 16px;
+  left: 12px;
+  font-size: 18px;
+  color: #595959;
+  -webkit-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+
+.accordion li i.fa-chevron-down {
+  right: 12px;
+  left: auto;
+  font-size: 16px;
+}
+
+.accordion li.open .link { color: #b63b4d; }
+
+.accordion li.open i { color: #b63b4d; }
+
+.accordion li.open i.fa-chevron-down {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+/**
+ * Submenu
+ -----------------------------*/
+
+
+.submenu {
+  display: none;
+  background: #444359;
+  font-size: 14px;
+}
+
+.submenu li { border-bottom: 1px solid #4b4a5e; }
+
+.submenu a {
+  display: block;
+  text-decoration: none;
+  color: #d9d9d9;
+  padding: 2px 12px 2px 42px;
+  font-size: 11px;
+  word-spacing: 1px;
+  line-height: 1.5;
+  -webkit-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+.submenu a:hover {
+  background: #b63b4d;
+  color: #FFF;
+}

@@ -52,3 +52,5 @@ router.get('/reset_password', (req, res) => {
 
 
 module.exports = router;
+
+
