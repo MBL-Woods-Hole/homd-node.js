@@ -1,8 +1,55 @@
+const links = {'help_overview':['features','guide'],
+'help_taxon':['intro','table','hierarchy','level','description','trees','align']
+}
 
-
+// 'help_ident':['blast','history'],
+// 'help_genomes':['genomes_homd','tables','ref_history','meta','ncbi'],
+// 'help_tools':['overview','genome','jbrowse','annotation','blast','dynamic','kegg','ontology','download'],
+// 'help_search':['meta'],
+// 'help_info':['homepage','pdescription','team','mailing','contact','cite','availability'],
+// 'help_anouncements':['none']
+// }
+// var id_list = []
+// var n = 0;
+// for (i in links) {
+// 	
+// 	for (j in links[i]){
+// 		n= n+1;
+// 		//alert(n)
+// 		var link = i+'--'+links[i][j]
+// 		var link_id = link+'_id'
+// 		console.log('link= '+link)
+// 		link_id = document.getElementById(link) || null;
+// 		if (link_id !== null) {
+// 		  link_id.addEventListener('click', function () {
+// 			  //clear_filters();
+// 			  test_ajax(link_id)
+// 			  
+// 			  //console.log('...........................................found click fxn')
+// 		  });
+// 		}
+// 	}
+// }
 	
-	
-function helpmenu() {
+// overview_link_id = document.getElementById('help_overview--features') || null;
+// if (overview_link_id !== null) {
+//   overview_link_id.addEventListener('click', function () {
+// 	  //clear_filters();
+// 	  test_ajax(overview_link_id)
+// 	  
+// 	  //console.log('...........................................found click fxn')
+//   });
+// }
+// guide_link_id = document.getElementById('help_overview--guide') || null;
+// if (guide_link_id !== null) {
+//   guide_link_id.addEventListener('click', function () {
+// 	  //clear_filters();
+// 	  test_ajax(guide_link_id)
+// 	  
+// 	  //console.log('...........................................found click fxn')
+//   });
+// }
+function userdocs_menu() {
 	var Accordion = function(el, multiple) {
 		this.el = el || {};
 		this.multiple = multiple || false;
@@ -27,8 +74,39 @@ function helpmenu() {
 	}	
 
 	var accordion = new Accordion($('#accordion'), false);
+	//tmp = menu +'--'+ page
+	//console.log(tmp)
+	// on load open accordion to specific page
+	//jQuery("#"+menu).slideDown()
+	//jQuery.wait(200)
+	//jQuery("#"+menu +"--"+ page+" > a").css({"color":"red"})
+	
+	
 };
+function ajax(x) {
+   //console.log(jQuery(x).parent.id)
+   	console.log(jQuery(x).parent().attr('id'))
+   	//jQuery(x).parent().css({"background-color":"green"})
+   	var args = {}
+   	args.id = jQuery(x).attr('id')
+   	//alert(args.id)
+   	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("POST", "/help/ajax", true);
+	xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var response = xmlhttp.responseText;
+            // if(response=='OK')
+            //console.log('response')
+            //console.log(response)
+            //alert(response)
+            document.getElementById('content_div').innerHTML = response;
 
+          }
+    }
+	xmlhttp.send(JSON.stringify(args));
+   
+};
  //  var _gaq = _gaq || [];
 //   _gaq.push(['_setAccount', 'UA-36251023-1']);
 //   _gaq.push(['_setDomainName', 'jqueryscript.net']);
