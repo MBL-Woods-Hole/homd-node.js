@@ -1,7 +1,5 @@
-const links = {'help_overview':['features','guide'],
-'help_taxon':['intro','table','hierarchy','level','description','trees','align']
-}
-
+// const links = {'help_overview':['features','guide'],
+// 'help_taxon':['intro','table','hierarchy','level','description','trees','align'],
 // 'help_ident':['blast','history'],
 // 'help_genomes':['genomes_homd','tables','ref_history','meta','ncbi'],
 // 'help_tools':['overview','genome','jbrowse','annotation','blast','dynamic','kegg','ontology','download'],
@@ -49,7 +47,7 @@ const links = {'help_overview':['features','guide'],
 // 	  //console.log('...........................................found click fxn')
 //   });
 // }
-function userdocs_menu() {
+function userdocs_side_menu() {
 	var Accordion = function(el, multiple) {
 		this.el = el || {};
 		this.multiple = multiple || false;
@@ -83,24 +81,56 @@ function userdocs_menu() {
 	
 	
 };
+function set_all_links_default() {
+	// get all the a links in the ul list
+	var links = [];
+	$("#accordion").find('a').each(function() {
+    	//links.push( this ); 
+    	//console.log('lnk '+$(this).attr('id')) 
+    	 this.style.color='white'
+	})
+	//var id_list = []
+	//var n = 0;
+	//for (i in links) {
+	     //links[i].style.color='white'
+		// for (j in links[i]){
+// 			n= n+1;
+// 			//alert(n)
+// 			var link = i+'--'+links[i][j]
+// 			var link_id = link+'_id'
+// 			console.log('link= '+link)
+// 			link_id = document.getElementById(link) || null;
+// 			if (link_id !== null) {
+// 			  link_id.style.color='white'
+// 			  
+// 			}
+// 		}
+	//}
+}
 function ajax(x) {
    //console.log(jQuery(x).parent.id)
-   	console.log(jQuery(x).parent().attr('id'))
+   	console.log(jQuery(x).attr('id'))
    	//jQuery(x).parent().css({"background-color":"green"})
    	var args = {}
    	args.id = jQuery(x).attr('id')
-   	//alert(args.id)
+   	var tmp = args.id.split('--')
+   	set_all_links_default()
    	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("POST", "/help/ajax", true);
 	xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = xmlhttp.responseText;
+            var static_data = JSON.parse(response)
             // if(response=='OK')
             //console.log('response')
             //console.log(response)
             //alert(response)
-            document.getElementById('content_div').innerHTML = response;
+            document.getElementById(args.id).style.color = "red";
+            document.getElementById('content_div').innerHTML = static_data.data;
+        	// changes url to allow reload page (Seems to lose the header images)
+           // window.history.pushState({}, null, "/help/template/?menu="+tmp[0]+"&page="+tmp[1]+"&new=1");
+            //window.location.href = "/help/template/?menu="+tmp[0]+"&page="+tmp[1]+"&new=1";
 
           }
     }
