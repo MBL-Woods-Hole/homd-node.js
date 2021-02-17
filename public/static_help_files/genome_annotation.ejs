@@ -1,0 +1,30 @@
+<div class='helptitle'>Dynamic Genome Annotation</div>
+<div class='help_content'>
+HOMD provides dynamic annotation for the genomes of the human oral microbiome, including many pathogenic human oral microbes. The Dynamic Annotation of HOMD has the following important features:
+
+1) Gene prediction - For the genome with o­nly contig sequences, GeneMarkS (http://opal.biology.gatech.edu/) is used to predict coding genes.
+2) Frequent update - The HOMD automatic annotation pipeline is constantly working and cycling through each of the complete or partial genomes that are being annotated. The sequence databases that are being search against, such as NCBI nr protein sequences and the Swissprot protein database, are also updated o­n the weekly basis. This ensures that the annotation results are always up-to-date.
+3) Pathway and gene function prediction: The search results are automatically parsed and significant matches (BLASTP e value < 10-5) kept for data-mining. The annotation pipeline looks into each of the significant matches against the Swissprot database and finds the E.C. number from all the matches. These E.C. numbers are collected and mapped to the KEGG metabolic pathway as the putative metabolic pathways for a particular genome. Similarly, to build the GO functional tree (Gene o­ntology tree), the pipeline looks for the INTERPRO IDs from all the significant matches. Both KEGG and GO predictions are done automatically and thus results updated immediately in the end of each annotation cycle.
+4) Dynamic display and search: The gene IDs, names and definition of the matched genes or proteins are stored in the HOMD database. This allows the search of a potential function in a genome. The annotation results for each ORF are display in a table with sorting options o­n many fields, such as ORF IDs, contig IDs, best hit definition, hit organisms, and scores.
+
+Below is a  screen shot of the HOMD Dynamic Annotation interface, with areas highlighted with reference numbers for detail information.
+
+
+
+1) Quick Search: The HOMD automatic annotation pipeline takes all the ORFs of a genome and routinely performs BLASTP searches against two major sets of sequence databases - the NCBI non-redundant nr protein sequences (All non-redundant GenBank CDS translations+PDB+SwissProt+PIR+PRF) and the SwissProt protein database alone. The search against nr is used to find the best overall matches for possible functional inference. However many of the proteins deposited in nr are putative, hypothetical proteins with no function. To better construct more reliable metabolic pathways or gene o­ntology, the pipeline also search the Swissprot proteins, of which each protein are well curated and contain informational linkages useful for pathway or o­ntology construction. Thus, the BLAST results are stored separately in the database. These result can be searched by keywords typed in the search box o­n the dynamic annotation page.
+
+2) Annotation Statistics: Summary data for the query genome.
+
+
+3) Total records found in the database: Number of ORFs of which the BLAST result contains the keyword searched (keywords are highlighted in the table).
+
+
+4) Display filter: When the sequence is not complete and in multiple contigs, you can choose to view matches of a single contig o­nly or of all contigs available for this genome.
+
+
+5) Pagination: How many pages are the search results displayed in and o­n which page you are viewing. You can jump to a specified page by typing in the page number manually.
+
+6) Number of ORFs to show per page.
+
+7) The dynamic annotation result table.
+</div>

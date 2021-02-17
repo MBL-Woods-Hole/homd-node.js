@@ -9,7 +9,7 @@ const C = require(app_root + '/public/constants');
  //homd_query3 = "select * from HOMD_taxonomy.status"
  homd_query = " SELECT  a.oral_taxon_id, a.genus, a.species, \
         IFNULL(b.warning, '0') as `warning`, \
-        IFNULL(c.group, 'unknown') as `group` \
+        IFNULL(c.group, 'unknown') as `status` \
     FROM    HOMD_taxonomy.taxon_list a \
         left JOIN HOMD_taxonomy.warning b \
             ON a.oral_taxon_id = b.oral_taxon_id \

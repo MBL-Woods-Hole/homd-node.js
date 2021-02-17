@@ -14,7 +14,7 @@ body {
   font: small Verdana, Arial, Helvetica, sans-serif;
   margin: auto;
   padding: 0 2px 20px 2px;
-  width: 1200px;
+  width: 1350px;
   background: white;  
   
 }
@@ -81,7 +81,7 @@ ul li { list-style: none; }
     font: x-small "Lucida Grande", Helvetica, arial, sans-serif;
     color: grey; 
     border: 1px solid gray;
-    margin: 0 80px 2em 80px;
+    margin: 5px 80px 2em 80px;
     padding: 5px;   
 }
 
@@ -99,15 +99,7 @@ ul li { list-style: none; }
   
 }
 .wide-content{
-  margin: 30px 10px 2em 10px;
-  padding: 5px 15px 5px 15px;
-  /* border: 1px solid red; */
-  /* font:  Arial, sans-serif; */
-  font-size: small;
-  text-align: justify;
-  line-height: 22px;
-  height: 100%;
-  /* text-align:center; */
+  
   
 }
 .title {
@@ -116,6 +108,13 @@ ul li { list-style: none; }
    color: white;
    padding: 1px 0 1px 10px;
    margin: 2px 0 2px 0;
+}
+.page-title {
+   text-align: center;
+   width:100%;
+   font-weight: bold;
+   font-size: medium;
+   margin:20px;
 }
 .center-box {  /* Login Pages Boxes */
   background:lightgrey;

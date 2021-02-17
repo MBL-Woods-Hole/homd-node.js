@@ -66,19 +66,18 @@
     padding-left: 50px;
     
 }
-.wide-content {   /* overriding from style.css */
-  padding-left:0px;
-  margin-top:0;
-}
+
 .page-content {
    min-height: 700px;
 }
 
+
 /* help content_div inside wide-content inside page-content */
 #content_div {
-	margin:12px 0 0 200px;
-	width:950px;
-	margin-top:-1px;
+	margin:0px 0 0 230px;
+	
+	width:1100px;
+	/* margin-top:-1px; */
 	/* padding:15px; */
 	border:1px solid black;
 }
@@ -87,14 +86,16 @@
 }
 /* Accordian Help Menu */
 #accordion_div {
-  /* border:1px solid black; */
-  width:250px;
+  border:1px solid black;
+  width:215px;
   float:left;
-  
-  box-sizing: content-box;
+  /* margin-left: 10px; */
+  /* padding-left:-20px; */
+  /* box-sizing: content-box; */
   /* margin-top:-30px; */
   
 }
+/* 
 #help-pages-title {
    width:80%;
    background:white;
@@ -105,6 +106,7 @@
    margin-top:5px;
    font-size:large;
 }
+ */
 .helptitle {
    background: lightblue;
    font-weight:bold;

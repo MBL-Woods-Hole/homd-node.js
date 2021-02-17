@@ -22,6 +22,7 @@ const C	  = require(app_root + '/public/constants');
   //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
     show_session(req)
     //console.log(C.tax_table_results)
+    // See models/homd_taxonomy.js for C.tax_table_results
     res.render('pages/taxon/taxtable', {
             title: 'HOMD :: Taxon Table', 
             hostname: CFG.hostname,

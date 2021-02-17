@@ -107,12 +107,17 @@ function set_all_links_default() {
 // 		}
 	//}
 }
-function ajax(x) {
+function load_text(link){
+  // and set session
+}
+function ajax(x, set_session) {
    //console.log(jQuery(x).parent.id)
    	console.log(jQuery(x).attr('id'))
+   	console.log(set_session)
    	//jQuery(x).parent().css({"background-color":"green"})
    	var args = {}
    	args.id = jQuery(x).attr('id')
+   	args.set_session = set_session
    	var tmp = args.id.split('--')
    	set_all_links_default()
    	var xmlhttp = new XMLHttpRequest();
@@ -129,7 +134,9 @@ function ajax(x) {
             document.getElementById(args.id).style.color = "red";
             document.getElementById('content_div').innerHTML = static_data.data;
         	// changes url to allow reload page (Seems to lose the header images)
-           // window.history.pushState({}, null, "/help/template/?menu="+tmp[0]+"&page="+tmp[1]+"&new=1");
+           //window.history.pushState({}, null, "/help/template/?menu="+tmp[0]+"&page="+tmp[1]+"&new=1");
+           //window.history.pushState({}, null, "/help/template");
+           window.history.replaceState( {} , 'foo', "/help/template/?menu="+tmp[0]+"&page="+tmp[1]+"&new=1" );
             //window.location.href = "/help/template/?menu="+tmp[0]+"&page="+tmp[1]+"&new=1";
 
           }
