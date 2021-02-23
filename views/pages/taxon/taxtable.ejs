@@ -2,61 +2,8 @@
 <html lang="en">
 <%- include('../../partials/header_html'); %>
 <title><%= title %></title>
-<style>
- #tax-box {
-   padding:10px 10px 20px 10px;
-   border:1px solid gray;
- }
- #tax-table {
-   border:1px solid red;
-   
- }
-  #tax-table  th{
-   background: #00659c;
-   color:white;
-   padding: 3px;
-   
- }
- #tax-table td { 
-    padding: 3px;
- } 
- #tax-table tr:nth-child(even) { 
-    background-color: Lightgreen; 
- } 
- #tax-table tr:hover { 
-    background-color: Lightyellow; 
- } 
- #outer-content {
-   padding-left:10px;
-   width: 100%;
-   display: inline-block;
- }
- #taxa-search {
-   float:right;
-   padding-right:25px;
-   /* margin-top:10px; */
+<link rel="stylesheet" href="/css/taxa_pages.css" >
 
-   font-size:small;
- }
- #navigate-alpha {
-   float:left;
- }
- #inner-content {
-   /* padding-left:10px; */
-   width: 100%;
-   display: inline-block;
- }
- #taxa-count {
-   float:left;
-   
-   /* margin-top:10px; */
-
-   font-size:small;
- }
- #taxa-filter {
-   float:right;
- }
-</style>
 <body>
   <div id='wrapper'>		
 	    
@@ -127,7 +74,7 @@
 		     <form id='' name='' method='POST' action=''>
 		     <table>
 		     <tr><td>
-		     <div id='status-div' style='background:turquoise;padding:2px;font-size:12px;'>
+		     <div id='status-div' style=''>
 		     Status: <input type='checkbox' checked name='' \> Named&nbsp;
 		     <input type='checkbox' checked name='' \> Unnamed&nbsp;
 		     <input type='checkbox' checked name='' \> Phylotypes&nbsp;
@@ -139,7 +86,7 @@
 		     <input type='radio' name='' \> All&nbsp;
 		     </td></tr>
 		     <tr><td>
-		     <div id='bodysite-div' style='background:pink;padding:2px;font-size:12px;'>
+		     <div id='bodysite-div' style=''>
 		     Body Site: <input type='checkbox' checked name='' \> Oral&nbsp;
 		     <input type='checkbox' checked name='' \> Nasal&nbsp;
 		     <input type='checkbox' checked name='' \> Skin&nbsp;

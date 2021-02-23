@@ -4,50 +4,23 @@ var router = express.Router();
 const fs   = require('fs-extra');
 const path  = require('path');
 const helpers = require('./helpers/helpers');
+const url       = require('url');
 //const ds = require('./load_all_datasets');
 const CFG = require(app_root + '/config/config');
 const C	  = require(app_root + '/public/constants');
 
 //var rs_ds = ds.get_datasets( () => {  
 
-  /* GET home page. */
-  router.get('/', (req, res) => {
-    show_session(req)
-    res.render('pages/home', {
-            title: 'HOMD :: Human Oral Microbiome Database',
-            hostname: CFG.hostname 
-        });
-  });
-  router.get('/taxTable', (req, res) => {
-  //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-    show_session(req)
-    //console.log(C.tax_table_results)
-    // See models/homd_taxonomy.js for C.tax_table_results
-    res.render('pages/taxon/taxtable', {
-            title: 'HOMD :: Taxon Table', 
-            hostname: CFG.hostname,
-            res: C.tax_table_results 
-        });
-  });
-  router.get('/taxHierarchy', (req, res) => {
-    res.render('pages/taxon/taxhierarchy', {
-            title: 'HOMD :: Taxon Hierarchy', 
-            hostname: CFG.hostname 
-        });
-  });
-  router.get('/taxLevel', (req, res) => {
-    res.render('pages/taxon/taxlevel', {
-            title: 'HOMD :: Taxon Level', 
-            hostname: CFG.hostname 
-        });
-  });
-  router.get('/taxDownload', (req, res) => {
-    res.render('pages/taxon/taxdownload', {
-            title: 'HOMD :: Taxon Download', 
-            hostname: CFG.hostname 
-        });
-  });
-//});
+/* GET home page. */
+router.get('/', (req, res) => {
+show_session(req)
+res.render('pages/home', {
+		title: 'HOMD :: Human Oral Microbiome Database',
+		hostname: CFG.hostname 
+	});
+});
+
+
 
 module.exports = router;
 
@@ -56,4 +29,17 @@ function show_session(req){
     console.log(req.session)
     console.log(req.sessionID)
     console.log(req.session.id)
+}
+function get_options_by_node(node) {
+  let options_obj = {
+    id: node.node_id,
+    text: node.taxon,
+    child: 0,
+    tooltip: node.rank,
+  };
+  if (node.children_ids.length > 0) {
+    options_obj.child = 1;
+    options_obj.item = [];
+  }
+  return options_obj;
 }

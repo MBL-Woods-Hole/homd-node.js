@@ -18,6 +18,16 @@ body {
   background: white;  
   
 }
+#forsyth_logo {
+  height:50px;
+}
+#homd_banner  {
+  height:50px;
+}
+
+#header {
+  height:50px;
+}
 a { text-decoration: none; }
 #header { background: white; }
 table { width: 100%; }
@@ -99,7 +109,7 @@ ul li { list-style: none; }
   
 }
 .wide-content{
-  
+  /* text-align:center; */
   
 }
 .title {

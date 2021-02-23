@@ -26,3 +26,25 @@ module.exports.isLoggedIn = (req, res, next) => {
   // return;
 };
 
+// todo: use in file instead of those in the class
+module.exports.check_if_rank = (field_name) => {
+
+  let ranks = C.RANKS;
+
+  // ranks = ["domain","phylum","klass","order","family","genus","species","strain"]
+  return ranks.includes(field_name);
+};
+
+module.exports.compareStrings_alpha = (a, b) => {
+  // Assuming you want case-insensitive comparison
+  a = a.toLowerCase();
+  b = b.toLowerCase();
+  return (a < b) ? -1 : (a > b) ? 1 : 0;
+};
+// Sort list of json objects numerically
+module.exports.compareStrings_int   = (a, b) => {
+  // Assuming you want case-insensitive comparison
+  a = parseInt(a);
+  b = parseInt(b);
+  return (a < b) ? -1 : (a > b) ? 1 : 0;
+};

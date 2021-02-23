@@ -25,7 +25,7 @@ const flash = require('express-flash');
 
 
 const home      = require('./routes/index');
-//const tax       = require('./routes/routes_users');
+const taxa       = require('./routes/routes_taxa');
 const admin       = require('./routes/routes_admin');
 const help       = require('./routes/routes_help');
 
@@ -78,13 +78,15 @@ app.use(cookieParser());
  * maxAge used to cache the content, # msec
  * to "uncache" some pages: http://stackoverflow.com/questions/17407770/express-setting-different-maxage-for-certain-files
  */
-app.use(express.static( 'public', {maxAge: '24h' }));
-app.use(express.static('tmp'));
-
+//app.use(express.static( 'public', {maxAge: '24h' }));
+//app.use(express.static('tmp'));
+app.use(express.static('public'));
+//app.use('data', express.static(path.join(__dirname, 'public', 'data')));
 
 // ROUTES:
 app.use('/', home);
 //app.use('/tax', tax);
+app.use('/taxa', taxa);
 app.use('/admin', admin);
 app.use('/help', help);
 
@@ -110,10 +112,19 @@ app.use(function(req, res, next){
 /**
  * Create global objects once upon server startup
  */
-
-const homdTaxonomy = require('./models/homd_taxonomy');
-let all_homd_taxonomy = new homdTaxonomy();
-
+const CustomTaxa  = require('./routes/helpers/taxa_class');
+const silvaTaxonomy_from_file = require('./models/homd_taxonomy_file');
+const homdTaxonomy = require('./models/homd_taxonomy_db');
+const all_homd_taxonomy = new homdTaxonomy();
+//console.log('silvaTaxonomy_from_file')
+//console.log(silvaTaxonomy_from_file.all_silva_taxonomy)  from vamps::localhost
+C.silva_taxonomy = new CustomTaxa(silvaTaxonomy_from_file.all_silva_taxonomy);
+//console.log('C.silva_taxonomy')
+for( var d in C.silva_taxonomy){
+  //taxa_tree_dict, taxa_tree_dict_map_by_rank, taxonomy_obj, taxa_tree_dict_map_by_id, taxa_tree_dict_map_by_db_id_n_rank, taxa_tree_dict_map_by_name_n_rank
+  //console.log(d)
+}
+//console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank)
 all_homd_taxonomy.get_all_taxa(function(err, results) {
     if (err)
         throw err; // or return an error message, or something
@@ -122,6 +133,8 @@ all_homd_taxonomy.get_all_taxa(function(err, results) {
        console.log('Success with homd taxonomy')
        //console.log(results)
        C.tax_table_results = results
+       
+       
        
     }
     

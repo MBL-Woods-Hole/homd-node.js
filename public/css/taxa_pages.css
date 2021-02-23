@@ -1,0 +1,73 @@
+#custom_tax_div {
+  
+}
+#custom_treebox {
+    border:1px solid black;
+    padding:10px;
+    margin: 0 auto;
+    /* overflow:auto; */
+    height:400px;
+    width:400px;
+    
+}
+
+#tax-box {
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
+ }
+ #tax-table {
+   border:1px solid red;
+   
+ }
+  #tax-table  th{
+   background: #00659c;
+   color:white;
+   padding: 3px;
+   
+ }
+ #tax-table td { 
+    padding: 3px;
+ } 
+ #tax-table tr:nth-child(even) { 
+    background-color: Lightgreen; 
+ } 
+ #tax-table tr:hover { 
+    background-color: Lightyellow; 
+ } 
+ #outer-content {
+   padding-left:10px;
+   width: 100%;
+   display: inline-block;
+ }
+ #taxa-search {
+   float:right;
+   padding-right:25px;
+   /* margin-top:10px; */
+
+   font-size:small;
+ }
+ #navigate-alpha {
+   float:left;
+ }
+ #inner-content {
+   /* padding-left:10px; */
+   width: 100%;
+   display: inline-block;
+ }
+ #taxa-count {
+   float:left;
+   
+   /* margin-top:10px; */
+
+   font-size:small;
+ }
+ #taxa-filter {
+   float:right;
+ }
+ 
+ #status-div {
+   background:turquoise;padding:2px;font-size:12px;
+ }
+ #bodysite-div {
+   background:pink;padding:2px;font-size:12px;
+ }

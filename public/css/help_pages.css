@@ -84,6 +84,10 @@
 .help_content {
   padding:20px;
 }
+.news{
+ margin:2px;
+ color:darkgoldenrod;
+}
 /* Accordian Help Menu */
 #accordion_div {
   border:1px solid black;

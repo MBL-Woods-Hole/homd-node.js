@@ -31,6 +31,12 @@ router.get('/template', (req, res) => {
     // via sessions???
     // a reload will use session info
     // link will use link info
+    // new==1 then resen session??
+    if(parsed_url.query.new && parsed_url.query.new == '1'){
+      console.log('got new==1')
+      delete req.session.page
+      delete req.session.menu
+    }
     if(req.session.menu && req.session.page){  // reload ONLY
 //        	console.log('RELOAD')
      	menu_item = req.session.menu
