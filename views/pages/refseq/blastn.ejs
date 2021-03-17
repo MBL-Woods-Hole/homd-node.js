@@ -2,6 +2,35 @@
 <html lang="en">
 <%- include('../../partials/header_html'); %>
 <title><%= title %></title>
+<style>
+#center70pct_div {
+   
+   width:70%;
+   padding:5px;
+   text-align:left;
+}
+#other70 {
+   border:1px solid black;
+   background:lightgrey;
+   padding:5px;
+ 
+}
+.block-title {
+ background:#00659c;
+ color:white;
+ text-align:center;
+ padding:2px;
+ margin:2px;
+}
+.textinput {
+            
+	width: 95%;
+	min-height: 75px;
+	resize: none;
+	
+	border: 1px solid grey;
+}
+</style>
 <body>
   <div id='wrapper'>		
 	    
@@ -19,9 +48,62 @@
 	
 	
 		<div class='wide-content' id="">  					
-			 <div class='page-title'>HOMD 16S rRNA Sequence Identification</div>
-			 This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences. The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] [Detail]
-			 
+		  <center>
+		  <div class='page-title'>HOMD 16S rRNA Sequence Identification</div>
+		  <div id='center70pct_div'>
+			 This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences. 
+			 The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] [Detail]
+<form id='' name='' method='POST' action='/refseq/refseqBLASTN'>	     
+		     <div id='other70'>
+		     
+		       <div class='block-title' id=''>Upload your 16S rRNA sequences:</div>
+		       Copy and paste sequence(s) below, preferably in FASTA format:
+		       <center>
+		        <textarea class="textinput" id='' name='input_seq' ></textarea>
+		       </center>
+		       Or upload a sequence file from your computer 
+		       <input type="file" id="" name="blastn_file"  >
+
+<br><br>
+(Note1: Multiple sequences can be uploaded, please check <a href='/help/template?menu=help_ident&page=blast&new=1'>examples on sequence formats and restrictions.</a>)
+<br>
+(Note2: current limit of number of sequences is 5000)
+		       <br><br>
+		       <div class='block-title' id=''>Adjust Blast parameters: (Optional)</div>
+		       Blastn Database:
+		       <select id='' name='blastn_db'>
+		          <option value='opt1'>opt1</option>
+		          <option value='opt2'>opt2</option>
+		          <option value='opt3'>opt3</option>
+		       </select>
+		       <br>Expect:
+		       <select id='' name='blastn_expect'>
+		          <option value='0.0001'>0.0001</option>
+		          <option value='0.01'>0.01</option>
+		          <option value='0.1'>0.1</option>
+		       </select>
+		       Filter <input type='checkbox' name='blastn_filter'> Low Complexity
+		       Descriptions:
+		       <select id='' name='blastn_descriptions'>
+		          <option value='5'>5</option>
+		          <option value='10'>10</option>
+		          <option value='50'>50</option>
+		       </select>
+		       Alignments:
+		       <select id='' name='blastn_alignments'>
+		          <option value='5'>5</option>
+		          <option value='10'>10</option>
+		          <option value='50'>50</option>
+		       </select>
+		       <br>Other Advanced Options:
+		       <input type='text' value='-q -3 -r 2 -G 5 -E 2' maxlength='30' name='blastn_other'>
+		     <hr>
+		     <center><input type='submit' \></center>
+		     </div> <!-- End other70 -->
+</form>
+		  </div>  <!-- End center70pct_div -->
+		  
+		  </center>
 		</div>
 	
     </div> <!-- end: page-content -->
