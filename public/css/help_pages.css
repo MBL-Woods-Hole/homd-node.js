@@ -81,12 +81,18 @@
 	/* padding:15px; */
 	border:1px solid black;
 }
+
+.helptitle {
+   background: lightblue;
+   font-weight:bold;
+   padding:3px 20px;
+}
 .help_content {
   padding:20px;
 }
 .news{
- margin:2px;
- color:darkgoldenrod;
+  margin:2px;
+  color:darkgoldenrod;
 }
 /* Accordian Help Menu */
 #accordion_div {
@@ -99,24 +105,8 @@
   /* margin-top:-30px; */
   
 }
-/* 
-#help-pages-title {
-   width:80%;
-   background:white;
-   font-weight:bold;
-   padding:5px 10px;
-   text-align:center;
-   margin-left:40px;
-   margin-top:5px;
-   font-size:large;
-}
- */
-.helptitle {
-   background: lightblue;
-   font-weight:bold;
-   
-   padding:3px;
-}
+
+
 .accordion {
   width: 100%;
   max-width: 360px;

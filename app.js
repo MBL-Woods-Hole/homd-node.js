@@ -8,7 +8,7 @@ global.DBConn = dbconn;
 global.app_root = path.resolve(__dirname);
 const C		= require('./public/constants');
 const fs = require('fs-extra');
-
+//const createIframe = require("node-iframe");
 const express = require('express');
 
 const router = express.Router();
@@ -25,11 +25,16 @@ const flash = require('express-flash');
 
 
 const home      = require('./routes/index');
-const taxa       = require('./routes/routes_taxa');
-const admin       = require('./routes/routes_admin');
-const help       = require('./routes/routes_help');
+const admin     = require('./routes/routes_admin');
+const help      = require('./routes/routes_help');
+const taxa      = require('./routes/routes_taxa');
+const refseq	= require('./routes/routes_refseq');
+const genomes	= require('./routes/routes_genomes');
+//const jbrowse2	= require('./routes/routes_jbrowse');
+
 
 const app = express();
+
 app.set('appName', 'HOMD');
 require('./config/passport')(passport, DBConn); // pass passport for configuration
 app.use(passport.initialize());
@@ -39,12 +44,13 @@ app.use(flash());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+//app.engine('html', require('ejs').renderFile);
 //
 // MIDDLEWARE  <-- must be in correct order:
 app.use(logger('dev'));
 //app.use(bodyParser({limit: 1024000000 })); // 1024MB
 // app.use(bodyParser({uploadDir:'./uploads'}));
-
+//app.use(createIframe);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -66,8 +72,9 @@ app.use(session({
 //app.use(expressSanitized()); // this line follows bodyParser()
 // app.use(expressValidator()); // this line must be immediately after any of the bodyParser middlewares!
 
-app.use(express.static(__dirname + 'tmp'));
-
+app.use(express.static('public'));
+app.use(express.static('tmp'));
+//app.use('/genomes', express.static(__dirname + 'jbrowse2/static/js'))
 //upload.single('singleInputFileName')
 //app.use(upload.single('singleInputFileName'));  // for multipart uploads: files
 
@@ -80,16 +87,20 @@ app.use(cookieParser());
  */
 //app.use(express.static( 'public', {maxAge: '24h' }));
 //app.use(express.static('tmp'));
-app.use(express.static('public'));
+
+//app.use(express.static('jbrowse2/static/js'));
+//path.join(__dirname, 'public', 'javascripts')
 //app.use('data', express.static(path.join(__dirname, 'public', 'data')));
 
 // ROUTES:
 app.use('/', home);
 //app.use('/tax', tax);
-app.use('/taxa', taxa);
 app.use('/admin', admin);
 app.use('/help', help);
-
+app.use('/taxa', taxa);
+app.use('/refseq', refseq);
+app.use('/genomes', genomes);
+//app.use('/jbrowse2', jbrowse2);
 // LAST Middleware:
 app.use(function(req, res, next){
   res.status(404);
@@ -113,17 +124,36 @@ app.use(function(req, res, next){
  * Create global objects once upon server startup
  */
 const CustomTaxa  = require('./routes/helpers/taxa_class');
-const silvaTaxonomy_from_file = require('./models/homd_taxonomy_file');
+//const silvaTaxonomy_from_file = require('./models/homd_taxonomy_file');
+
+//app.use(createIframe);
+// this file was created from vamps taxonomy table using the python script:
+//  taxonomy_csv2json.py
+fs.readFile('public/data/all_silva_taxonomy.json', {"flag": 'rs'}, (err, data) => {
+    if (err)
+      console.log(err)
+    else
+      C.silva_taxonomy = new CustomTaxa(JSON.parse(data));
+      //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_rank["order"])
+      //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_id["2"])
+      //console.log(C.silva_taxonomy.taxa_tree_dict["2"])
+      //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank["3_domain"])
+      for( var d in C.silva_taxonomy){
+	  // taxa_tree_dict, taxa_tree_dict_map_by_rank, taxonomy_obj, taxa_tree_dict_map_by_id, taxa_tree_dict_map_by_db_id_n_rank, taxa_tree_dict_map_by_name_n_rank
+	   //console.log(d)
+	 }
+})
+
 const homdTaxonomy = require('./models/homd_taxonomy_db');
 const all_homd_taxonomy = new homdTaxonomy();
 //console.log('silvaTaxonomy_from_file')
 //console.log(silvaTaxonomy_from_file.all_silva_taxonomy)  from vamps::localhost
-C.silva_taxonomy = new CustomTaxa(silvaTaxonomy_from_file.all_silva_taxonomy);
+
 //console.log('C.silva_taxonomy')
-for( var d in C.silva_taxonomy){
-  //taxa_tree_dict, taxa_tree_dict_map_by_rank, taxonomy_obj, taxa_tree_dict_map_by_id, taxa_tree_dict_map_by_db_id_n_rank, taxa_tree_dict_map_by_name_n_rank
-  //console.log(d)
-}
+
+//console.log(C.silva_taxonomy.taxa_tree_dict_map_by_rank["domain"])
+
+//taxa_tree_dict_map_by_id
 //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank)
 all_homd_taxonomy.get_all_taxa(function(err, results) {
     if (err)

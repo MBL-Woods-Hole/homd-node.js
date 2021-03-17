@@ -1,5 +1,5 @@
 #custom_tax_div {
-  
+    text-align:center;
 }
 #custom_treebox {
     border:1px solid black;
@@ -7,7 +7,7 @@
     margin: 0 auto;
     /* overflow:auto; */
     height:400px;
-    width:400px;
+    width:70%;
     
 }
 
@@ -71,3 +71,24 @@
  #bodysite-div {
    background:pink;padding:2px;font-size:12px;
  }
+ 
+/*  Tax Level page */
+#taxlevel_tdiv1 {
+   border:1px solid black;
+   width:70%;
+   padding:5px;
+   text-align:left;
+}
+#taxlevel_tdiv2 {
+   
+   padding:5px;
+   
+}
+#level_table {
+   /* border:1px solid red; */
+   width:90%;
+   padding: 10px;
+}
+#level_table td{
+   padding:0 3px;
+}

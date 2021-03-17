@@ -23,55 +23,157 @@
 /////////////////////////
 
 function load_dhtmlx(data) {
-    //customTree = new dhtmlXTreeObject("custom_treebox","100%","100%",0);
     
+    // dhtmlx version:5  has dynamic loading
+    customOldTree = new dhtmlXTreeObject("custom_treebox","100%","100%",0);
+    customOldTree.setImagesPath("/images/dhtmlx/imgs/");
+    customOldTree.enableCheckBoxes(false);
+    //customTree.enableThreeStateCheckboxes(true);
+    customOldTree.enableTreeLines(false); // true by default
+    customOldTree.enableTreeImages(false);
+    customOldTree.enableAutoTooltips(true)
+    customOldTree.attachEvent("onCheck",function(id){
+        on_check_dhtmlx(id)
+    });
+    customOldTree.attachEvent("onDblClick", function(id){
+        expand_tree_dhtmlx(id)
+    });
+    // customOldTree.attachEvent("onClick", function(id){
+//     	console.log('Item clicked',id)
+//     	if(customOldTree.getOpenState(id)){
+//     	  customOldTree.closeItem(id);
+//     	}else{
+//     	  customOldTree.openItem(id);
+//     	}
+//     	
+//     	//return false;
+// 	})
+    customOldTree.setXMLAutoLoading("tax_custom_dhtmlx");
+	customOldTree.setDataMode("json");
+	  //load first level of tree
+	customOldTree.load("tax_custom_dhtmlx?id=0","json");
+	  
+
+    
+    
+    
+    // // dhtmlx version:7(free) dynamic loading is in pro version
     // customTree = new dhx.Tree("custom_treebox", {
-//     	css:"my_first_class my_second_class"
-//     	});
-    customTree = new dhx.Tree("custom_treebox", {
-    	icon: false
-	});
-	customTree.data.parse(data);
-    // customTree.setImagesPath("/images/dhtmlx/imgs/");
-
-    customTree.events.on("itemClick", function(id, e){
-    	console.log("The item with the id "+ id +" was clicked.");
-    	customTree.toggle(id);
-	});
+	//     	icon: false
+	// 	});
+	// 	customTree.data.parse(data);
+	//     
+	// 
+	//     customTree.events.on("itemClick", function(id, e){
+	//     	console.log("The item with the id "+ id +" was clicked.");
+	//     	customTree.toggle(id);
+	// 	});
 }
-
-// function expand_tree_dhtmlx(id){
-//   //alert(customTree.hasChildren(id))
-//   //kids = customTree.getAllSubItems(id);
-//   level = customTree.getLevel(id)
-//   
-//   
-//   //alert(level)
-//   if ( customTree.hasChildren(id) ) {
-//        
-//       //clk_counter++;
-//       //if(clk_counter+level <= 7){
-//         //document.getElementById('custom_rank_info').innerHTML = 'opening;
-//         customTree.openAllItems(id,true); 
-// 
-//       //}else{
-//       //  alert('no more levels')
-//       //}
-// 
-//       
-//        
-//       
-//   }else{
-//     alert('no sub-levels found')
-//   }
-// 
-// }
-function reset_tree_dhtmlx(){
+///////////////////////////////////////////////////////////////
+function expand_tree_dhtmlx(id){
+  //alert(customTree.hasChildren(id))
+  //kids = customTree.getAllSubItems(id);
+  level = customOldTree.getLevel(id)
   
-  customTree.collapseAll();
+  
+  //alert(level)
+  if ( customOldTree.hasChildren(id) ) {
+       
+      //clk_counter++;
+      //if(clk_counter+level <= 7){
+        //document.getElementById('custom_rank_info').innerHTML = 'opening;
+        customOldTree.openAllItems(id,true); 
+
+      //}else{
+      //  alert('no more levels')
+      //}
+
+      
+       
+      
+  }else{
+    alert('no sub-levels found')
+  }
+
+}
+function reset_tree_dhtmlx(){
+  //customOldTree.closeAllItems(0);
+  customOldTree.refreshItem()
+  //customTree.collapseAll();
 }
 
 function open_tree_dhtmlx(){
-  
-  customTree.expandAll();
+  // difficult with dynamic loading
+  console.log('open whole tree')
+  customOldTree.openAllItems(0);
+  // console.log(customOldTree.getSubItems(0).split(',')[1])
+//   //customOldTree.getSubItems(0).split(',')[1]
+//   for( var n in customOldTree.getSubItems(0).split(',')){
+//      console.log(n)
+//      customOldTree.openAllItems(customOldTree.getSubItems(0).split(',')[n]);
+//   }
+  //customTree.expandAll();
 }
+
+function change_level(rank) {
+	
+	var args = {}
+	args.rank = rank
+	var ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
+	for(n in ranks){
+	  document.getElementById(ranks[n]).style ='font-weight:normal;'
+	}
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("POST", "/taxa/taxLevel", true);
+	xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var response = xmlhttp.responseText;
+            //console.log(response)
+            static_data = JSON.parse(response)
+            
+            //console.log(static_data)
+			var html = ''
+			html += "<table id='level_table' border='1'>"
+			html += '<tr>'
+			if(rank == 'domain'){
+			
+			}else{
+				html += '<th>Parent Level</th>'
+			}
+			html += '<th>'+rank+'</th>'
+			if(rank == 'species'){
+				html += '<th>HMT Taxon ID</th>'
+			}
+			html += '<th>Taxon Count</th><th>lineage (for debuging)</th><th>Genome Count</th><th>16S rRNA Refseq count</th></tr>'
+			
+			
+			for(n in static_data){
+				html += '<tr>'
+				if(rank == 'domain'){
+			
+				}else{
+					html += '<td>'+static_data[n].parent_taxon+'</td>'
+				}
+				html += '<td>'+static_data[n].item_taxon+"</td>"
+				if(rank == 'species'){
+				  	html +="<td style='text-align:center'></td>"
+				}
+				html += "<td style='text-align:center'>"+static_data[n].item_count+'</td>'
+				html +="<td>"+static_data[n].lineage+"</td>"
+				html += '</tr>'
+			}
+			html += '</table>'
+			document.getElementById('taxlevel_tdiv2').innerHTML = html
+			
+			document.getElementById(rank).style ='font-weight:bold;'
+
+		}
+	}
+	xmlhttp.send(JSON.stringify(args));
+
+
+}
+
+
+

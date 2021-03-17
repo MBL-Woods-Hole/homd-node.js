@@ -5,6 +5,7 @@ const fs       = require('fs-extra');
 const url = require('url');
 const path     = require('path');
 const C		  = require(app_root + '/public/constants');
+//const helpers = require(app_root + '/routes/helpers/helpers');
 
 router.get('/stub', (req, res) => {
     res.render('pages/help/stub', {title:'stub'});

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../../partials/header_html'); %>
+<title><%= title %></title>
+<link rel="stylesheet" href="/css/taxa_pages.css" >
+
+<body>
+  <div id='wrapper'>		
+	    
+	    
+	<div id='header'>
+       <%- include('../../partials/header_img'); %>
+    </div>
+
+	<div id="navbar">
+            <%- include('../../partials/navbar'); %>
+    </div>
+    <div id='' class='page-content'>
+    
+	
+	  <div class='wide-content' id="">  					
+		 <div class='page-title'>List of Human Microbial Taxa</div>
+		 
+		 <div id='outer-content'>
+			 <div id='taxa-search'>
+		      <br>
+			   <form id='' name='' method='POST' action=''>
+				  Search:
+				  <input type='text' maxlength='18' size='20'>
+				  <select id='' name='field'>
+					<option value="all">All Fields</option>
+					<option value="taxid">Taxon ID</option>
+					<option value="genus">Genus</option>
+					<option value="species">Species</option>
+					<option value="synonyms">Synonyms</option>
+					<option value="type">Type Strains</option>
+					<option value="rrna">16S rRNA ID</option>
+				  </select>
+				  Matching:
+				  <select id='' name='match'>
+					<option value="all">ALL words</option>
+					<option value="any">ANY words</option>
+					<option value="exact">Exact phrase</option>
+				  </select>
+				  <select id='' name='sub'>
+					<option value="partial">Partial field</option>
+					<option value="whole">Whole field</option>
+				  </select>
+				  <input type='submit' value=' Go '>
+			   </form>
+			 </div>
+			 <div id='navigate-alpha'>
+		 
+			  Navigate Tax by Alphabet:<br>
+			  <a href=''>A</a>|<a href=''>B</a>|<a href=''>C</a>|<a href=''>D</a>|
+			  <a href=''>E</a>|<a href=''>F</a>|<a href=''>G</a>|<a href=''>H</a>|
+			  <a href=''>I</a>|<a href=''>J</a>|<a href=''>K</a>|<a href=''>L</a>|
+			  <a href=''>M</a>|<a href=''>N</a>|<a href=''>O</a>|<a href=''>P</a>|
+			  <a href=''>Q</a>|<a href=''>R</a>|<a href=''>S</a>|<a href=''>T</a>|
+			  <a href=''>U</a>|<a href=''>V</a>|<a href=''>W</a>|<a href=''>X</a>|
+			  <a href=''>Y</a>|<a href=''>Z</a>|<a href=''>All Entries</a>|
+			 </div>
+		 </div>  <!-- end outer-content -->
+		 
+		 <div id='tax-box' >
+		 
+		 <div id='inner-content'>
+		   <div id='taxa-count'>
+		     <div id='total-count'>Total: XXX</div>
+		     
+		     <div id='showing-count'>Showing XXX</div>
+		   </div>
+		   <div id='taxa-filter'>
+		     <form id='' name='' method='POST' action=''>
+		     <table>
+		     <tr><td>
+		     <div id='status-div' style=''>
+		     Status: <input type='checkbox' checked name='' \> Named&nbsp;
+		     <input type='checkbox' checked name='' \> Unnamed&nbsp;
+		     <input type='checkbox' checked name='' \> Phylotypes&nbsp;
+		     <input type='checkbox' checked name='' \> Lost&nbsp;
+		     <input type='checkbox' name='' \> Dropped&nbsp;
+		     </div>
+		     </td><td>
+		     <input type='radio' checked name='' \> All Valid&nbsp;
+		     <input type='radio' name='' \> All&nbsp;
+		     </td></tr>
+		     <tr><td>
+		     <div id='bodysite-div' style=''>
+		     Body Site: <input type='checkbox' checked name='' \> Oral&nbsp;
+		     <input type='checkbox' checked name='' \> Nasal&nbsp;
+		     <input type='checkbox' checked name='' \> Skin&nbsp;
+		     <input type='checkbox' checked name='' \> Vaginal&nbsp;
+		     <input type='checkbox' checked name='' \> Unassigned&nbsp;
+		     <input type='checkbox' name='' \> NonOralRef&nbsp;
+		     </div>
+		     </td><td>
+		     <input type='submit' value=' Show '>
+		     <input type='button' value=' Clear '>
+		     </td></tr>
+		     </table>
+		     </form>
+		   </div>
+		 
+		 </div>  <!-- end inner-content -->
+		 <table id='tax-table' class='table'><thead>
+		 <tr><th>Taxon ID</th><th>Genus</th><th>Species</th>
+		     <th>Status</th><th>Body Site</th><th>Flag</th>
+		     <th>Taxon Link</th><th>Genome Link</th><th>Genome Size</th>
+		 </tr>
+		 </thead>
+		 <tbody>
+		 <% for(n in res){ %>
+		   <tr>
+		   <td><%= res[n].oral_taxon_id  %></td>
+		   <td><i><%= res[n].genus  %></i></td>
+		   <td><i><%= res[n].species  %></i></td>
+		   <td><%= res[n].status  %></td>
+		   <td></td>
+		   <td><%= res[n].warning  %></td>
+		   <td></td>
+		   <td></td>
+		   <td></td>
+		   </tr>
+		 <% } %>
+		 </tbody>
+		 </table>
+		 
+		 </div>  <!-- end: tax-box -->
+	  </div>
+    </div> <!-- end: page-content -->
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  $(document).ready(function(){                    
+    mainmenu();
+});
+
+</script>
+
+
+
