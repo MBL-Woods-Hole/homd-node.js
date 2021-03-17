@@ -7,7 +7,6 @@
 .vagrant
 .vscode
 .idea
-package.json
 public/scripts/*.pyc
 *.pyc
 !db_schema.sql
