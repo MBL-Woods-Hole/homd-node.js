@@ -10,7 +10,17 @@ const open = require('open');
 
 
 router.get('/refseqBLASTN', (req, res) => {
-    console.log('MADEIT TO blastn')
+    console.log('MADEIT TO blastn-get')
+	res.render('pages/refseq/blastn', {
+		title: 'HOMD :: Taxon Table', 
+		hostname: CFG.hostname,
+		
+	});
+});
+
+router.post('/refseqBLASTN', (req, res) => {
+    console.log('MADEIT TO blastn-post')
+	console.log(req.body)
 	res.render('pages/refseq/blastn', {
 		title: 'HOMD :: Taxon Table', 
 		hostname: CFG.hostname,
