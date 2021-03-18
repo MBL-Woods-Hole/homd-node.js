@@ -170,6 +170,7 @@ const all_homd_taxonomy = new homdTaxonomy();
 //     
 // });
 
+console.log('start here in app.js')
 
 module.exports = app;
 
