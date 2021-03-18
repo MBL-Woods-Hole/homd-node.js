@@ -7,7 +7,6 @@
     "homd-node": "a_util.js"
   },
   "dependencies": {
-    "@gmod/jbrowse": "^1.14.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "debug": "^4.3.1",
