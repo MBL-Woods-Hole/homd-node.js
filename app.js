@@ -155,20 +155,20 @@ const all_homd_taxonomy = new homdTaxonomy();
 
 //taxa_tree_dict_map_by_id
 //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank)
-all_homd_taxonomy.get_all_taxa(function(err, results) {
-    if (err)
-        throw err; // or return an error message, or something
-    else
-    {
-       console.log('Success with homd taxonomy')
+//#all_homd_taxonomy.get_all_taxa(function(err, results) {
+//#    if (err)
+//#        throw err; // or return an error message, or something
+//#    else
+//#    {
+//#       console.log('Success with homd taxonomy')
        //console.log(results)
-       C.tax_table_results = results
+//#       C.tax_table_results = results
        
        
        
-    }
+//#    }
     
-});
+//#});
 
 module.exports = app;
 
