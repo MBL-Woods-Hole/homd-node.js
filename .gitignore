@@ -3,7 +3,7 @@
 *.fna
 *.fasta
 *.svg
-*.png
+
 .vagrant
 .vscode
 .idea
