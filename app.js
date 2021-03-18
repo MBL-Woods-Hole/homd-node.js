@@ -72,7 +72,7 @@ app.use(session({
 //app.use(expressSanitized()); // this line follows bodyParser()
 // app.use(expressValidator()); // this line must be immediately after any of the bodyParser middlewares!
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('tmp'));
 //app.use('/genomes', express.static(__dirname + 'jbrowse2/static/js'))
 //upload.single('singleInputFileName')
