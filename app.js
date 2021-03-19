@@ -129,23 +129,33 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 //app.use(createIframe);
 // this file was created from vamps taxonomy table using the python script:
 //  taxonomy_csv2json.py
-fs.readFile('public/data/all_silva_taxonomy.json', {"flag": 'rs'}, (err, data) => {
-    if (err)
-      console.log(err)
-    else
-      C.silva_taxonomy = new CustomTaxa(JSON.parse(data));
-      //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_rank["order"])
-      //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_id["2"])
-      //console.log(C.silva_taxonomy.taxa_tree_dict["2"])
-      //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank["3_domain"])
-      for( var d in C.silva_taxonomy){
-	  // taxa_tree_dict, taxa_tree_dict_map_by_rank, taxonomy_obj, taxa_tree_dict_map_by_id, taxa_tree_dict_map_by_db_id_n_rank, taxa_tree_dict_map_by_name_n_rank
-	   //console.log(d)
-	 }
-})
+// fs.readFile('public/data/all_silva_taxonomy.json', {"flag": 'rs'}, (err, data) => {
+//     if (err)
+//       console.log(err)
+//     else
+//       //C.silva_taxonomy = new CustomTaxa(JSON.parse(data));
+//       
+//       //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_rank["order"])
+//       //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_id["2"])
+//       //console.log(C.silva_taxonomy.taxa_tree_dict["2"])
+//       //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank["3_domain"])
+//       //for( var d in C.silva_taxonomy){
+// 	  // taxa_tree_dict, taxa_tree_dict_map_by_rank, taxonomy_obj, taxa_tree_dict_map_by_id, taxa_tree_dict_map_by_db_id_n_rank, taxa_tree_dict_map_by_name_n_rank
+// 	   //console.log(d)
+// 	 //}
+// })
 
-const homdTaxonomy = require('./models/homd_taxonomy_db');
-const all_homd_taxonomy = new homdTaxonomy();
+
+//const homdTaxonomy_fromFile = require(path.join(config.PATH_TO_DATA)+'oral_taxonomy.json');
+//var obj = JSON.parse(fs.readFileSync(, 'utf8'));
+// used script 'init_data.py' to create this file
+fs.readFile(path.join(config.PATH_TO_DATA)+'/oral_taxonomy.json', 'utf8', function (err, data) {
+  if (err) throw err;
+   C.homd_taxonomy = JSON.parse(data);
+   
+   console.log(C.homd_taxonomy[1])
+});
+
 //console.log('silvaTaxonomy_from_file')
 //console.log(silvaTaxonomy_from_file.all_silva_taxonomy)  from vamps::localhost
 
@@ -156,19 +166,27 @@ const all_homd_taxonomy = new homdTaxonomy();
 //taxa_tree_dict_map_by_id
 //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank)
 
-// all_homd_taxonomy.get_all_taxa(function(err, results) {
-//     if (err)
-//         throw err; // or return an error message, or something
-//     else
-//     {
-//        console.log('Success with homd taxonomy')
-//        //console.log(results)
-//        C.tax_table_results = results
-//        
-//        
-//     }
-//     
-// });
+// Experimenting here
+const homdTaxonomy = require('./models/homd_taxonomy_db');
+const all_homd_taxonomy = new homdTaxonomy();
+all_homd_taxonomy.get_all_taxa(function(err, results) {
+    if (err)
+        throw err; // or return an error message, or something
+    else
+    {
+       console.log('Success with homd taxonomy')
+       C.silva_taxonomy = new CustomTaxa(results);
+       var homd_tax2 = results;
+       //console.log(C.silva_taxonomy)
+       
+       //console.log(homd_tax2)
+       //console.log(homd_tax2.length)
+       //C.tax_table_results = results
+       
+       
+    }
+    
+});
 
 console.log('start here in app.js')
 

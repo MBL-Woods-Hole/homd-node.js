@@ -15,7 +15,7 @@ router.get('/taxTable', (req, res) => {
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		hostname: CFG.hostname,
-		res: C.tax_table_results 
+		res: JSON.stringify(C.homd_taxonomy) 
 	});
 });
 router.get('/taxHierarchy', (req, res) => {

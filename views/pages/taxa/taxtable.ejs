@@ -1,3 +1,4 @@
+<% list = JSON.parse(res) %>
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../../partials/header_html'); %>
@@ -110,16 +111,16 @@
 		 </tr>
 		 </thead>
 		 <tbody>
-		 <% for(n in res){ %>
+		 <% for(n in list){ %>
 		   <tr>
-		   <td><%= res[n].oral_taxon_id  %></td>
-		   <td><i><%= res[n].genus  %></i></td>
-		   <td><i><%= res[n].species  %></i></td>
-		   <td><%= res[n].status  %></td>
-		   <td></td>
-		   <td><%= res[n].warning  %></td>
-		   <td></td>
-		   <td></td>
+		   <td><%= n  %></td>
+		   <td><i><%= list[n].genus  %></i></td>
+		   <td><i><%= list[n].species  %></i></td>
+		   <td><%= list[n].status  %></td>
+		   <td><%= list[n].site  %></td>
+		   <td><%= list[n].warning  %></td>
+		   <td><a href=''>Taxon Description</a></td>
+		   <td><a href=''>num Genomes</a></td>
 		   <td></td>
 		   </tr>
 		 <% } %>
