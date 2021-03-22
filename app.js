@@ -149,13 +149,30 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 //const homdTaxonomy_fromFile = require(path.join(config.PATH_TO_DATA)+'oral_taxonomy.json');
 //var obj = JSON.parse(fs.readFileSync(, 'utf8'));
 // used script 'init_data.py' to create this file
-fs.readFile(path.join(config.PATH_TO_DATA)+'/oral_taxonomy.json', 'utf8', function (err, data) {
+fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_taxalookup.json'), 'utf8', function (err, data) {
   if (err) throw err;
-   C.homd_taxonomy = JSON.parse(data);
-   
-   console.log(C.homd_taxonomy[1])
+   C.taxonomy_taxalookup = JSON.parse(data);
+   // look up by oral taxon id
+   //console.log(C.taxonomy_taxalookup[1])
 });
-
+fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_taxalist.json'), 'utf8', function (err, data) {
+  if (err) throw err;
+   C.taxonomy_taxalist = JSON.parse(data);
+   // list of oral taxons
+   //console.log(C.taxonomy_taxalist[2])
+});
+fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_infolookup.json'), 'utf8', function (err, data) {
+  if (err) throw err;
+   C.taxonomy_infolookup = JSON.parse(data);
+   // list of oral taxons
+   //console.log(C.taxonomy_infolookup[2])
+});
+fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_lineagelookup.json'), 'utf8', function (err, data) {
+  if (err) throw err;
+   C.taxonomy_lineagelookup = JSON.parse(data);
+   // list of oral taxons
+   console.log(C.taxonomy_lineagelookup[2])
+});
 //console.log('silvaTaxonomy_from_file')
 //console.log(silvaTaxonomy_from_file.all_silva_taxonomy)  from vamps::localhost
 

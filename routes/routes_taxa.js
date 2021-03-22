@@ -11,11 +11,29 @@ router.get('/taxTable', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	
 	console.log('in taxtable ')
-	// See models/homd_taxonomy.js for C.tax_table_results
+	//console.log(C.homd_taxonomy)
+	let myurl = url.parse(req.url, true);
+  	console.log(myurl.query)
+	tax_letter = myurl.query.k
+	tcount = C.taxonomy_taxalist.length
+	//console.log(tax_letter)
+	// filter
+	if(tax_letter){
+	   // COOL....
+	   send_tax_obj = C.taxonomy_taxalist.filter(item => item.genus.charAt(0) == tax_letter)
+	}else{
+	   send_tax_obj = C.taxonomy_taxalist
+	}
+	
+	// sort list AFTER filter
+	
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		hostname: CFG.hostname,
-		res: JSON.stringify(C.homd_taxonomy) 
+		res: JSON.stringify(send_tax_obj),
+		count: Object.keys(send_tax_obj).length,
+		tcount: tcount,
+		letter: tax_letter
 	});
 });
 router.get('/taxHierarchy', (req, res) => {
@@ -169,7 +187,27 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
 
   res.json(json);
 });
-//
+/////////////////////////////////
+router.get('/taxDescription', (req, res) => {
+	let myurl = url.parse(req.url, true);
+  	let oraltaxonid = myurl.query.oraltaxonid;
+	var data1 = C.taxonomy_taxalookup[oraltaxonid]
+	var data2 = C.taxonomy_infolookup[oraltaxonid]
+	var data3 = C.taxonomy_lineagelookup[oraltaxonid]
+	for(c in data2){
+	  console.log(c)
+	}
+	res.render('pages/taxa/taxdescription', {
+		title: 'HOMD :: Taxon Level', 
+		hostname: CFG.hostname,
+		taxonid: oraltaxonid,
+		data1: JSON.stringify(data1),
+		data2: JSON.stringify(data2),
+		data3: JSON.stringify(data3)
+		
+	});
+});
+////////////////////////////////////////////////////////////////////////////////////
 function get_options_by_node(node) {
   let options_obj = {
     id: node.node_id,
@@ -187,3 +225,7 @@ function get_options_by_node(node) {
 
 
 module.exports = router;
+
+
+
+

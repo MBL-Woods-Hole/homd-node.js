@@ -4,7 +4,19 @@
 <%- include('../../partials/header_html'); %>
 <title><%= title %></title>
 <link rel="stylesheet" href="/css/taxa_pages.css" >
-
+<style>
+.button {
+   font: bold 11px Arial;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  padding: 2px 6px 2px 6px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+}
+</style>
 <body>
   <div id='wrapper'>		
 	    
@@ -52,14 +64,10 @@
 			 </div>
 			 <div id='navigate-alpha'>
 		 
-			  Navigate Tax by Alphabet:<br>
-			  <a href=''>A</a>|<a href=''>B</a>|<a href=''>C</a>|<a href=''>D</a>|
-			  <a href=''>E</a>|<a href=''>F</a>|<a href=''>G</a>|<a href=''>H</a>|
-			  <a href=''>I</a>|<a href=''>J</a>|<a href=''>K</a>|<a href=''>L</a>|
-			  <a href=''>M</a>|<a href=''>N</a>|<a href=''>O</a>|<a href=''>P</a>|
-			  <a href=''>Q</a>|<a href=''>R</a>|<a href=''>S</a>|<a href=''>T</a>|
-			  <a href=''>U</a>|<a href=''>V</a>|<a href=''>W</a>|<a href=''>X</a>|
-			  <a href=''>Y</a>|<a href=''>Z</a>|<a href=''>All Entries</a>|
+			  Navigate Taxa by Alphabet: <%= letter %><br>
+			  <pre>
+<a href='taxTable?k=A'>A</a>|<a href='taxTable?k=B'>B</a>|<a href='taxTable?k=C'>C</a>|<a href='taxTable?k=D'>D</a>|<a href='taxTable?k=E'>E</a>|<a href='taxTable?k=F'>F</a>|<a href='taxTable?k=G'>G</a>|<a href='taxTable?k=H'>H</a>|<a href='taxTable?k=I'>I</a>|<a href='taxTable?k=J'>J</a>|<a href='taxTable?k=K'>K</a>|<a href='taxTable?k=L'>L</a>|<a href='taxTable?k=M'>M</a>|<a href='taxTable?k=N'>N</a>|<a href='taxTable?k=O'>O</a>|<a href='taxTable?k=P'>P</a>|<a href='taxTable?k=Q'>Q</a>|<a href='taxTable?k=R'>R</a>|<a href='taxTable?k=S'>S</a>|<a href='taxTable?k=T'>T</a>|<a href='taxTable?k=U'>U</a>|<a href='taxTable?k=V'>V</a>|<a href='taxTable?k=W'>W</a>|<a href='taxTable?k=X'>X</a>|<a href='taxTable?k=Y'>Y</a>|<a href='taxTable?k=Z'>Z</a>|<a href='taxTable?k='>All Entries</a>|
+</pre>
 			 </div>
 		 </div>  <!-- end outer-content -->
 		 
@@ -67,9 +75,9 @@
 		 
 		 <div id='inner-content'>
 		   <div id='taxa-count'>
-		     <div id='total-count'>Total: XXX</div>
+		     <div id='total-count'>Total: <%= tcount %></div>
 		     
-		     <div id='showing-count'>Showing XXX</div>
+		     <div id='showing-count'>Showing <%= count %></div>
 		   </div>
 		   <div id='taxa-filter'>
 		     <form id='' name='' method='POST' action=''>
@@ -113,14 +121,16 @@
 		 <tbody>
 		 <% for(n in list){ %>
 		   <tr>
-		   <td><%= n  %></td>
+		   <% taxonid= list[n].otid %>
+		   <% taxidfullname = 'HMT-'+("000" + taxonid).slice(-3); %>
+		   <td><%= taxidfullname  %></td>
 		   <td><i><%= list[n].genus  %></i></td>
 		   <td><i><%= list[n].species  %></i></td>
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].site  %></td>
 		   <td><%= list[n].warning  %></td>
-		   <td><a href=''>Taxon Description</a></td>
-		   <td><a href=''>num Genomes</a></td>
+		   <td style='text-align:center'><a href="/taxa/taxDescription?oraltaxonid=<%= taxonid %>" class="button" style='color:blue;'>Taxon Description</a></td>
+		   <td style='text-align:center'><a href="#" class="button" style='color:green;'># of Genomes</a></td>
 		   <td></td>
 		   </tr>
 		 <% } %>
