@@ -2,6 +2,7 @@
 <% data1 = JSON.parse(data1) %>
 <% data2 = JSON.parse(data2) %>
 <% data3 = JSON.parse(data3) %>
+<% data4 = JSON.parse(data4) %>
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../../partials/header_html'); %>
@@ -64,13 +65,15 @@
 <tr>
   <td class='tbl-title'>Classification:</td>
   <td>
-	Domain: <%= data3.domain %>
-	<br>Phylum: <%= data3.phylum %>
-	<br>Class: <%= data3.klass %>
-	<br>Order: <%= data3.order %>
-	<br>Family: <%= data3.family %>
-	<br>Genus: <%= data1.genus %>
-	<br>Species: <%= data1.species %>
+	<table>
+	  <tr><td>Domain:</td><td><%= data3.domain %></td></tr>
+	  <tr><td>Phylum:</td><td><%= data3.phylum %></td></tr>
+	  <tr><td>Class:</td><td><%= data3.klass %></td></tr>
+	  <tr><td>Order:</td><td><%= data3.order %></td></tr>
+	  <tr><td>Family:</td><td><%= data3.family %></td></tr>
+	  <tr><td>Genus:</td><td><%= data1.genus %></td></tr>
+	  <tr><td>Species:</td><td><%= data1.species %></td></tr>
+	</table>
   </td>
   <td class='tbl-title'>NCBI Taxonomy ID:</td>
   <td><%= data1.NCBI_taxon_id %> <a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.NCBI_taxon_id %>' target='_blank'>[NCBI Taxonomy Link]</a></td>
@@ -98,18 +101,23 @@
 
 </table>
 <div id='' class='description-header2'>General Information:</div>
-<%= data2.general %>
+&nbsp;<%= data2.general %>
 <div id='' class='description-header2'>Cultivability:</div>
-<%= data2.culta %>
+&nbsp;<%= data2.culta %>
 <div id='' class='description-header2'>Phenotypic Characteristics:</div>
-<%= data2.pheno %>
+&nbsp;<%= data2.pheno %>
 <div id='' class='description-header2'>Prevalence and Source:</div>
-<%= data2.prev %>
+&nbsp;<%= data2.prev %>
 <div id='' class='description-header2'>Disease Associations:</div>
-<%= data2.disease %>
+&nbsp;<%= data2.disease %>
 <div id='' class='description-header2'>References:</div>
-<%= data2.refs %>
+&nbsp;
+<% if(data4){ %>
+<% for (i in data4){ %>
+<br>[<b><%= parseInt(i)+1 %></b>]<%= data4[i].authors %> <%= data4[i].title %> <%= data4[i].journal %>
 
+<% } %>
+<% } %>
 
 		
 </div> <!-- end: page-block -->

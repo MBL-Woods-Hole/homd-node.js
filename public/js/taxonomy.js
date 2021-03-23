@@ -175,5 +175,33 @@ function change_level(rank) {
 
 }
 
+function clear_filter_form(){
+	var els = document.getElementsByClassName('filter_ckbx')
+	for (n in els){
+		els[n].checked = false
+	}
+}
 
-
+function check_then_post(form){
+   	console.log(form)
+   	var filter_status = ['named','unnamed','phylotype','lost','dropped']
+	var filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoral']
+   	var els = document.getElementsByClassName('filter_ckbx')
+   	got_one_status = 0
+   	got_one_sites = 0
+   	for (n in els){
+		if(els[n].checked == true){
+			if(filter_status.indexOf(els[n].name) != -1){
+				got_one_status = 1
+			}
+			if(filter_sites.indexOf(els[n].name) != -1){
+				got_one_sites = 1
+			}
+		}
+	}
+	if (got_one_sites == 0 || got_one_status == 0){
+	   alert('You must choose at least one from each group: "Status" and "Body Site".')
+	   return;
+	}
+   	form.submit()
+}

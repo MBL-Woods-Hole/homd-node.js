@@ -13,7 +13,7 @@ const C	  = require(app_root + '/public/constants');
 
 /* GET home page. */
 router.get('/', (req, res) => {
-show_session(req)
+helpers.show_session(req)
 res.render('pages/home', {
 		title: 'HOMD :: Human Oral Microbiome Database',
 		hostname: CFG.hostname 
@@ -24,12 +24,7 @@ res.render('pages/home', {
 
 module.exports = router;
 
-function show_session(req){
-	console.log('(Availible for when sessions are needed) req.session: ')
-    console.log(req.session)
-    console.log(req.sessionID)
-    console.log(req.session.id)
-}
+
 function get_options_by_node(node) {
   let options_obj = {
     id: node.node_id,

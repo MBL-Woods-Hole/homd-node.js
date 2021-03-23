@@ -48,3 +48,9 @@ module.exports.compareStrings_int   = (a, b) => {
   b = parseInt(b);
   return (a < b) ? -1 : (a > b) ? 1 : 0;
 };
+module.exports.show_session = (req) =>{
+	console.log('(Availible for when sessions are needed) req.session: ')
+    console.log(req.session)
+    console.log(req.sessionID)
+    console.log(req.session.id)
+};

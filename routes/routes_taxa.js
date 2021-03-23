@@ -10,17 +10,18 @@ const helpers = require(app_root + '/routes/helpers/helpers');
 router.get('/taxTable', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	
-	console.log('in taxtable ')
+	console.log('in taxtable -get')
 	//console.log(C.homd_taxonomy)
+	helpers.show_session(req)
 	let myurl = url.parse(req.url, true);
   	console.log(myurl.query)
-	tax_letter = myurl.query.k
+	req.session.tax_letter = myurl.query.k
 	tcount = C.taxonomy_taxalist.length
 	//console.log(tax_letter)
 	// filter
-	if(tax_letter){
+	if(req.session.tax_letter){
 	   // COOL....
-	   send_tax_obj = C.taxonomy_taxalist.filter(item => item.genus.charAt(0) == tax_letter)
+	   send_tax_obj = C.taxonomy_taxalist.filter(item => item.genus.charAt(0) == req.session.tax_letter)
 	}else{
 	   send_tax_obj = C.taxonomy_taxalist
 	}
@@ -33,7 +34,59 @@ router.get('/taxTable', (req, res) => {
 		res: JSON.stringify(send_tax_obj),
 		count: Object.keys(send_tax_obj).length,
 		tcount: tcount,
-		letter: tax_letter
+		letter: req.session.tax_letter,
+		statusfltr: JSON.stringify(C.tax_status_on) ,  // default
+		sitefltr: JSON.stringify(C.tax_sites_on),  //default
+		search: ''
+	});
+});
+router.post('/taxTable', (req, res) => {
+	console.log('in taxtable -post')
+	tcount = C.taxonomy_taxalist.length
+	//helpers.show_session(req)
+	console.log(req.body)
+	//plus valid
+	valid = req.body.valid
+	// filter_status = ['named','unnamed','phylotype','lost','dropped']
+// 	filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoral']
+	
+	statusfilter_on =[]
+	sitefilter_on  = []
+	for(i in req.body){
+		if(C.tax_status_all.indexOf(i) != -1){
+		   statusfilter_on.push(i)
+		}
+		if(C.tax_sites_all.indexOf(i) != -1){
+		   sitefilter_on.push(i)
+		}
+	}
+	//console.log('statusfilter_on',statusfilter_on)
+	//console.log('sitefilter_on',sitefilter_on)
+	// letterfilter
+	if(req.session.tax_letter){
+	   // COOL....
+	   send_tax_obj = C.taxonomy_taxalist.filter(item => item.genus.charAt(0) == req.session.tax_letter)
+	}else{
+	   send_tax_obj = C.taxonomy_taxalist
+	}
+	// status filter
+	//console.log('send_tax_obj[0]',send_tax_obj[0])
+	send_tax_obj = send_tax_obj.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) != -1 )
+	//console.log('send_tax_obj',send_tax_obj)
+	// site filter
+	send_tax_obj = send_tax_obj.filter(item => sitefilter_on.indexOf(item.site.toLowerCase()) != -1)
+	// use session for taxletter
+	res.render('pages/taxa/taxtable', {
+		title: 'HOMD :: Taxon Table', 
+		hostname: CFG.hostname,
+		res: JSON.stringify(send_tax_obj),
+		count: Object.keys(send_tax_obj).length,
+		tcount: tcount,
+		letter: req.session.tax_letter,
+		statusfltr: JSON.stringify(statusfilter_on),
+		sitefltr:JSON.stringify(sitefilter_on),
+		
+		search: ''
 	});
 });
 router.get('/taxHierarchy', (req, res) => {
@@ -194,17 +247,23 @@ router.get('/taxDescription', (req, res) => {
 	var data1 = C.taxonomy_taxalookup[oraltaxonid]
 	var data2 = C.taxonomy_infolookup[oraltaxonid]
 	var data3 = C.taxonomy_lineagelookup[oraltaxonid]
-	for(c in data2){
-	  console.log(c)
+	if(C.taxonomy_refslookup[oraltaxonid]){
+		var data4 = C.taxonomy_refslookup[oraltaxonid]
+	}else{
+		var data4 = []
 	}
+	
+	//for(c in data2){
+	  console.log(data4)
+	//}
 	res.render('pages/taxa/taxdescription', {
 		title: 'HOMD :: Taxon Level', 
 		hostname: CFG.hostname,
 		taxonid: oraltaxonid,
 		data1: JSON.stringify(data1),
 		data2: JSON.stringify(data2),
-		data3: JSON.stringify(data3)
-		
+		data3: JSON.stringify(data3),
+		data4: JSON.stringify(data4),
 	});
 });
 ////////////////////////////////////////////////////////////////////////////////////

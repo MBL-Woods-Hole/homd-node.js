@@ -1,4 +1,11 @@
 <% list = JSON.parse(res) %>
+<% statusfltrX = statusfltr %>
+
+<script>
+	var letter = '<%- letter %>'
+	var statusfltr= JSON.parse('<%- statusfltr %>')
+	var sitefltr= JSON.parse('<%- sitefltr %>')
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../../partials/header_html'); %>
@@ -10,13 +17,14 @@
   text-decoration: none;
   background-color: #EEEEEE;
   color: #333333;
-  padding: 2px 6px 2px 6px;
+  padding: 2px;
   border-top: 1px solid #CCCCCC;
   border-right: 1px solid #333333;
   border-bottom: 1px solid #333333;
   border-left: 1px solid #CCCCCC;
 }
 </style>
+
 <body>
   <div id='wrapper'>		
 	    
@@ -65,9 +73,9 @@
 			 <div id='navigate-alpha'>
 		 
 			  Navigate Taxa by Alphabet: <%= letter %><br>
-			  <pre>
-<a href='taxTable?k=A'>A</a>|<a href='taxTable?k=B'>B</a>|<a href='taxTable?k=C'>C</a>|<a href='taxTable?k=D'>D</a>|<a href='taxTable?k=E'>E</a>|<a href='taxTable?k=F'>F</a>|<a href='taxTable?k=G'>G</a>|<a href='taxTable?k=H'>H</a>|<a href='taxTable?k=I'>I</a>|<a href='taxTable?k=J'>J</a>|<a href='taxTable?k=K'>K</a>|<a href='taxTable?k=L'>L</a>|<a href='taxTable?k=M'>M</a>|<a href='taxTable?k=N'>N</a>|<a href='taxTable?k=O'>O</a>|<a href='taxTable?k=P'>P</a>|<a href='taxTable?k=Q'>Q</a>|<a href='taxTable?k=R'>R</a>|<a href='taxTable?k=S'>S</a>|<a href='taxTable?k=T'>T</a>|<a href='taxTable?k=U'>U</a>|<a href='taxTable?k=V'>V</a>|<a href='taxTable?k=W'>W</a>|<a href='taxTable?k=X'>X</a>|<a href='taxTable?k=Y'>Y</a>|<a href='taxTable?k=Z'>Z</a>|<a href='taxTable?k='>All Entries</a>|
-</pre>
+			 
+<a id='A' href='taxTable?k=A'>A</a>|<a id='B' href='taxTable?k=B'>B</a>|<a id='C' href='taxTable?k=C'>C</a>|<a id='D' href='taxTable?k=D'>D</a>|<a id='E' href='taxTable?k=E'>E</a>|<a id='F' href='taxTable?k=F'>F</a>|<a id='G' href='taxTable?k=G'>G</a>|<a id='H' href='taxTable?k=H'>H</a>|<a id='I' href='taxTable?k=I'>I</a>|<a id='J' href='taxTable?k=J'>J</a>|<a id='K' href='taxTable?k=K'>K</a>|<a id='L' href='taxTable?k=L'>L</a>|<a id='M' href='taxTable?k=M'>M</a>|<a id='N' href='taxTable?k=N'>N</a>|<a id='O' href='taxTable?k=O'>O</a>|<a id='P' href='taxTable?k=P'>P</a>|<a id='Q' href='taxTable?k=Q'>Q</a>|<a id='R' href='taxTable?k=R'>R</a>|<a id='S' href='taxTable?k=S'>S</a>|<a id='T' href='taxTable?k=T'>T</a>|<a id='U' href='taxTable?k=U'>U</a>|<a id='V' href='taxTable?k=V'>V</a>|<a id='W' href='taxTable?k=W'>W</a>|<a id='X' href='taxTable?k=X'>X</a>|<a id='Y' href='taxTable?k=Y'>Y</a>|<a id='Z' href='taxTable?k=Z'>Z</a>|<a href='taxTable?k='>All Entries</a>|
+
 			 </div>
 		 </div>  <!-- end outer-content -->
 		 
@@ -80,35 +88,38 @@
 		     <div id='showing-count'>Showing <%= count %></div>
 		   </div>
 		   <div id='taxa-filter'>
-		     <form id='' name='' method='POST' action=''>
-		     <table>
-		     <tr><td>
-		     <div id='status-div' style=''>
-		     Status: <input type='checkbox' checked name='' \> Named&nbsp;
-		     <input type='checkbox' checked name='' \> Unnamed&nbsp;
-		     <input type='checkbox' checked name='' \> Phylotypes&nbsp;
-		     <input type='checkbox' checked name='' \> Lost&nbsp;
-		     <input type='checkbox' name='' \> Dropped&nbsp;
-		     </div>
-		     </td><td>
-		     <input type='radio' checked name='' \> All Valid&nbsp;
-		     <input type='radio' name='' \> All&nbsp;
-		     </td></tr>
-		     <tr><td>
-		     <div id='bodysite-div' style=''>
-		     Body Site: <input type='checkbox' checked name='' \> Oral&nbsp;
-		     <input type='checkbox' checked name='' \> Nasal&nbsp;
-		     <input type='checkbox' checked name='' \> Skin&nbsp;
-		     <input type='checkbox' checked name='' \> Vaginal&nbsp;
-		     <input type='checkbox' checked name='' \> Unassigned&nbsp;
-		     <input type='checkbox' name='' \> NonOralRef&nbsp;
-		     </div>
-		     </td><td>
-		     <input type='submit' value=' Show '>
-		     <input type='button' value=' Clear '>
-		     </td></tr>
-		     </table>
-		     </form>
+ <form id='tax_filter_form' name='tax_filter_form' method='POST' action='taxTable'>
+	 <table>
+	 <tr><td>
+	 <div id='status-div' style=''>
+	 Status: 
+	 
+	 <input type='checkbox' class='filter_ckbx' name='named' \> Named&nbsp;
+	 <input type='checkbox' class='filter_ckbx' name='unnamed' \> Unnamed&nbsp;
+	 <input type='checkbox' class='filter_ckbx' name='phylotype' \> Phylotypes&nbsp;
+	 <input type='checkbox' class='filter_ckbx' name='lost' \> Lost&nbsp;
+	 <input type='checkbox' class='filter_ckbx' name='dropped' \> Dropped&nbsp;
+	 </div>
+	 </td><td>
+	 <input type='radio' checked name='valid' value='only_valid'\> All Valid&nbsp;
+	 <input type='radio'         name='valid' value='all' \> All&nbsp;
+	 </td></tr>
+	 <tr><td>
+	 <div id='bodysite-div' style=''>
+	 Body Site: 
+	 <input type='checkbox' class='filter_ckbx' name='oral' \> Oral&nbsp;
+	 <input type='checkbox' class='filter_ckbx' name='nasal' \> Nasal&nbsp;
+	 <input type='checkbox' class='filter_ckbx' name='skin' \> Skin&nbsp;
+	 <input type='checkbox' class='filter_ckbx' name='vaginal' \> Vaginal&nbsp;
+	 <input type='checkbox' class='filter_ckbx' name='unassigned' \> Unassigned&nbsp;
+	 <input type='checkbox' class='filter_ckbx' name='nonoral' \> NonOralRef&nbsp;
+	 </div>
+	 </td><td>
+	 <input type='button' value=' Show ' onclick="check_then_post(this.form)">
+	 <input type='button' value=' Clear ' onclick='clear_filter_form()'>
+	 </td></tr>
+	 </table>
+ </form>
 		   </div>
 		 
 		 </div>  <!-- end inner-content -->
@@ -129,8 +140,8 @@
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].site  %></td>
 		   <td><%= list[n].warning  %></td>
-		   <td style='text-align:center'><a href="/taxa/taxDescription?oraltaxonid=<%= taxonid %>" class="button" style='color:blue;'>Taxon Description</a></td>
-		   <td style='text-align:center'><a href="#" class="button" style='color:green;'># of Genomes</a></td>
+		   <td style='text-align:center' nowrap><a href="/taxa/taxDescription?oraltaxonid=<%= taxonid %>" class="button" style='color:blue;'>Taxon Description</a></td>
+		   <td style='text-align:center' nowrap><a href="#" class="button" style='color:green;'># of Genomes</a></td>
 		   <td></td>
 		   </tr>
 		 <% } %>
@@ -151,9 +162,28 @@
 </html>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/taxonomy.js"></script>
 <script>
   $(document).ready(function(){                    
     mainmenu();
+    
+    // lets set check here
+    // uncheck all
+    var els = document.getElementsByClassName('filter_ckbx')
+    var all_on = statusfltr.concat(sitefltr)
+    // console.log(statusfltr)
+//     console.log(sitefltr)
+//     console.log(all_on)
+    for (n in els){
+		if(all_on.indexOf(els[n].name) != -1){
+		  els[n].checked = true
+		}
+	} 
+	if(letter){
+		document.getElementById(letter).style.color = 'red'
+		//document.getElementById(letter).style.fontWeight = 'bold'
+		document.getElementById(letter).style.fontSize = 'medium'
+	}
 });
 
 </script>

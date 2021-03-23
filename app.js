@@ -171,7 +171,13 @@ fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_lineagelookup.json'), 'utf8
   if (err) throw err;
    C.taxonomy_lineagelookup = JSON.parse(data);
    // list of oral taxons
-   console.log(C.taxonomy_lineagelookup[2])
+   //console.log(C.taxonomy_lineagelookup[2])
+});
+fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_refslookup.json'), 'utf8', function (err, data) {
+  if (err) throw err;
+   C.taxonomy_refslookup = JSON.parse(data);
+   // list of oral taxons
+   //console.log(C.taxonomy_refslookup[155])
 });
 //console.log('silvaTaxonomy_from_file')
 //console.log(silvaTaxonomy_from_file.all_silva_taxonomy)  from vamps::localhost
