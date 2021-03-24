@@ -23,6 +23,12 @@
   border-bottom: 1px solid #333333;
   border-left: 1px solid #CCCCCC;
 }
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+    content: " \25B4\25BE" 
+}
+#navigate-alpha a {
+   color:#006699;
+}
 </style>
 
 <body>
@@ -72,9 +78,10 @@
 			 </div>
 			 <div id='navigate-alpha'>
 		 
-			  Navigate Taxa by Alphabet: <%= letter %><br>
+			  Navigate Taxa by Alphabet:<br>
 			 
-<a id='A' href='taxTable?k=A'>A</a>|<a id='B' href='taxTable?k=B'>B</a>|<a id='C' href='taxTable?k=C'>C</a>|<a id='D' href='taxTable?k=D'>D</a>|<a id='E' href='taxTable?k=E'>E</a>|<a id='F' href='taxTable?k=F'>F</a>|<a id='G' href='taxTable?k=G'>G</a>|<a id='H' href='taxTable?k=H'>H</a>|<a id='I' href='taxTable?k=I'>I</a>|<a id='J' href='taxTable?k=J'>J</a>|<a id='K' href='taxTable?k=K'>K</a>|<a id='L' href='taxTable?k=L'>L</a>|<a id='M' href='taxTable?k=M'>M</a>|<a id='N' href='taxTable?k=N'>N</a>|<a id='O' href='taxTable?k=O'>O</a>|<a id='P' href='taxTable?k=P'>P</a>|<a id='Q' href='taxTable?k=Q'>Q</a>|<a id='R' href='taxTable?k=R'>R</a>|<a id='S' href='taxTable?k=S'>S</a>|<a id='T' href='taxTable?k=T'>T</a>|<a id='U' href='taxTable?k=U'>U</a>|<a id='V' href='taxTable?k=V'>V</a>|<a id='W' href='taxTable?k=W'>W</a>|<a id='X' href='taxTable?k=X'>X</a>|<a id='Y' href='taxTable?k=Y'>Y</a>|<a id='Z' href='taxTable?k=Z'>Z</a>|<a href='taxTable?k='>All Entries</a>|
+<a id='A' href='taxTable?k=A'>A</a>|<a id='B' href='taxTable?k=B'>B</a>|<a id='C' href='taxTable?k=C'>C</a>|<a id='D' href='taxTable?k=D'>D</a>|<a id='E' href='taxTable?k=E'>E</a>|<a id='F' href='taxTable?k=F'>F</a>|<a id='G' href='taxTable?k=G'>G</a>|<a id='H' href='taxTable?k=H'>H</a>|<a id='I' href='taxTable?k=I'>I</a>|<a id='J' href='taxTable?k=J'>J</a>|<a id='K' href='taxTable?k=K'>K</a>|<a id='L' href='taxTable?k=L'>L</a>|<a id='M' href='taxTable?k=M'>M</a>|<a id='N' href='taxTable?k=N'>N</a>|<a id='O' href='taxTable?k=O'>O</a>|<a id='P' href='taxTable?k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='taxTable?k=R'>R</a>|<a id='S' href='taxTable?k=S'>S</a>|<a id='T' href='taxTable?k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='taxTable?k=V'>V</a>|<a id='W' href='taxTable?k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='taxTable?k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>|
+<a id='all' href='taxTable?k='>All Entries</a>|
 
 			 </div>
 		 </div>  <!-- end outer-content -->
@@ -82,12 +89,17 @@
 		 <div id='tax-box' >
 		 
 		 <div id='inner-content'>
+		   <span id='taxa-sort' style=''>
+		   Toggle/Sort table by clicking on header label
+		   </span>
+		   
 		   <div id='taxa-count'>
 		     <div id='total-count'>Total: <%= tcount %></div>
 		     
 		     <div id='showing-count'>Showing <%= count %></div>
 		   </div>
-		   <div id='taxa-filter'>
+  
+<div id='taxa-filter'>
  <form id='tax_filter_form' name='tax_filter_form' method='POST' action='taxTable'>
 	 <table>
 	 <tr><td>
@@ -120,13 +132,13 @@
 	 </td></tr>
 	 </table>
  </form>
-		   </div>
+</div>  <!-- End tax filter -->
 		 
 		 </div>  <!-- end inner-content -->
-		 <table id='tax-table' class='table'><thead>
-		 <tr><th>Taxon ID</th><th>Genus</th><th>Species</th>
+		 <table id='tax-table' class='table sortable'><thead>
+		 <tr><th >Taxon ID</th><th>Genus</th><th>Species</th>
 		     <th>Status</th><th>Body Site</th><th>Flag</th>
-		     <th>Taxon Link</th><th>Genome Link</th><th>Genome Size</th>
+		     <th class="sorttable_nosort">Taxon Link</th><th class="sorttable_nosort">Genome Link</th><th>Genome Size</th>
 		 </tr>
 		 </thead>
 		 <tbody>
@@ -135,8 +147,8 @@
 		   <% taxonid= list[n].otid %>
 		   <% taxidfullname = 'HMT-'+("000" + taxonid).slice(-3); %>
 		   <td><%= taxidfullname  %></td>
-		   <td><i><%= list[n].genus  %></i></td>
-		   <td><i><%= list[n].species  %></i></td>
+		   <td><i><b><%= list[n].genus  %></b></i></td>
+		   <td><i><b><%= list[n].species  %></b></i></td>
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].site  %></td>
 		   <td><%= list[n].warning  %></td>
@@ -163,6 +175,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script type="text/javascript" src="/js/taxonomy.js"></script>
+<script src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script>
   $(document).ready(function(){                    
     mainmenu();
@@ -183,6 +196,8 @@
 		document.getElementById(letter).style.color = 'red'
 		//document.getElementById(letter).style.fontWeight = 'bold'
 		document.getElementById(letter).style.fontSize = 'medium'
+	}else{
+		document.getElementById('all').style.color = 'red'
 	}
 });
 

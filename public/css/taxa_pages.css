@@ -23,10 +23,12 @@
    background: #00659c;
    color:white;
    padding: 3px;
+   font-size:13px;
    
  }
  #tax-table td { 
     padding: 3px;
+    font-size:12px;
  } 
  #tax-table tr:nth-child(even) { 
     background-color: Lightgreen; 
@@ -56,10 +58,19 @@
  }
  #taxa-count {
    float:left;
-   
-   /* margin-top:10px; */
+   width:100px;
+   border:1px solid red;
 
    font-size:small;
+ }
+ #taxa-sort {
+    position:absolute;
+    border:1px solid black;
+    padding:3px;
+    margin:25px 0 0 150px;
+    font-size:x-small;
+    font-weight:bold;
+    width:300px;
  }
  #taxa-filter {
    float:right;

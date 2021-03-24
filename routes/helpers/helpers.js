@@ -50,7 +50,7 @@ module.exports.compareStrings_int   = (a, b) => {
 };
 module.exports.show_session = (req) =>{
 	console.log('(Availible for when sessions are needed) req.session: ')
-    console.log(req.session)
-    console.log(req.sessionID)
-    console.log(req.session.id)
+    console.log('req.session',req.session)
+    console.log('req.sessionID',req.sessionID)
+    console.log('req.session.id',req.session.id)
 };

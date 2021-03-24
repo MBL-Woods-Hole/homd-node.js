@@ -11,11 +11,11 @@ router.get('/taxTable', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	
 	console.log('in taxtable -get')
-	//console.log(C.homd_taxonomy)
 	helpers.show_session(req)
 	let myurl = url.parse(req.url, true);
-  	console.log(myurl.query)
+  	//console.log(myurl.query)
 	req.session.tax_letter = myurl.query.k
+	
 	tcount = C.taxonomy_taxalist.length
 	//console.log(tax_letter)
 	// filter
@@ -26,8 +26,9 @@ router.get('/taxTable', (req, res) => {
 	   send_tax_obj = C.taxonomy_taxalist
 	}
 	
-	// sort list AFTER filter
-	
+	// table sort done via client side js library sorttable: 
+	// https://www.kryogenix.org/code/browser/sorttable
+    console.log(send_tax_obj[0])
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		hostname: CFG.hostname,
@@ -46,7 +47,7 @@ router.post('/taxTable', (req, res) => {
 	//helpers.show_session(req)
 	console.log(req.body)
 	//plus valid
-	valid = req.body.valid
+	valid = req.body.valid  // WHAT IS THIS???
 	// filter_status = ['named','unnamed','phylotype','lost','dropped']
 // 	filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoral']
 	
