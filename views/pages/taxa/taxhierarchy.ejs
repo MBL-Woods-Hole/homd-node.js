@@ -12,16 +12,20 @@ body {
 }
 .containerTableStyle {
     padding:0;
+   
 }
 .standartTreeImage {
   padding:0;
+  
   margin: auto;
   width:10px;
+  background: gold;
 }
 .standartTreeRow {
    margin: auto;
-   /* background: red; */
+   background: gold;
    padding-left:0;
+   
    margin:0;
    text-align:left;
    
@@ -62,8 +66,8 @@ body {
 		 <span class=''>Taxonomy Selection</span>
             <br>
             <input type='button'  name='' value='Reset Tree' onclick='reset_tree_dhtmlx()'> |
-             <input type='button'  name='' value='Open Tree' onclick='open_tree_dhtmlx()'> |
-            <small>(click taxon names to expand deeper levels.)</small>
+             <input type='button'  name='' value='Open Level' onclick='open_tree_dhtmlx()'> |
+            <small>(double-click taxon names to expand deeper levels.)</small>
 		 </div>
 		 <table id='custom_tax_div' >
             <tr><td>

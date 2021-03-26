@@ -29,7 +29,7 @@ const admin     = require('./routes/routes_admin');
 const help      = require('./routes/routes_help');
 const taxa      = require('./routes/routes_taxa');
 const refseq	= require('./routes/routes_refseq');
-const genomes	= require('./routes/routes_genomes');
+const genome	= require('./routes/routes_genome');
 //const jbrowse2	= require('./routes/routes_jbrowse');
 
 
@@ -99,7 +99,7 @@ app.use('/admin', admin);
 app.use('/help', help);
 app.use('/taxa', taxa);
 app.use('/refseq', refseq);
-app.use('/genomes', genomes);
+app.use('/genome', genome);
 //app.use('/jbrowse2', jbrowse2);
 // LAST Middleware:
 app.use(function(req, res, next){
@@ -128,57 +128,72 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 
 //app.use(createIframe);
 // this file was created from vamps taxonomy table using the python script:
-//  taxonomy_csv2json.py
-// fs.readFile('public/data/all_silva_taxonomy.json', {"flag": 'rs'}, (err, data) => {
-//     if (err)
-//       console.log(err)
-//     else
-//       //C.silva_taxonomy = new CustomTaxa(JSON.parse(data));
-//       
-//       //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_rank["order"])
-//       //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_id["2"])
-//       //console.log(C.silva_taxonomy.taxa_tree_dict["2"])
-//       //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank["3_domain"])
-//       //for( var d in C.silva_taxonomy){
-// 	  // taxa_tree_dict, taxa_tree_dict_map_by_rank, taxonomy_obj, taxa_tree_dict_map_by_id, taxa_tree_dict_map_by_db_id_n_rank, taxa_tree_dict_map_by_name_n_rank
-// 	   //console.log(d)
-// 	 //}
-// })
+//  db2jsontax.py
+
 
 
 //const homdTaxonomy_fromFile = require(path.join(config.PATH_TO_DATA)+'oral_taxonomy.json');
 //var obj = JSON.parse(fs.readFileSync(, 'utf8'));
 // used script 'init_data.py' to create this file
-fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_taxalookup.json'), 'utf8', function (err, data) {
+
+// How is this file created:: in homd-scripts/homd_init_data.py
+fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_taxalookup.json'), 'utf8', function (err, data) {
   if (err) throw err;
    C.taxonomy_taxalookup = JSON.parse(data);
    // look up by oral taxon id
    //console.log(C.taxonomy_taxalookup[1])
 });
-fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_taxalist.json'), 'utf8', function (err, data) {
+
+// How is this file created:: in homd-scripts/homd_init_data.py
+fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_taxalist.json'), 'utf8', function (err, data) {
   if (err) throw err;
    C.taxonomy_taxalist = JSON.parse(data);
    // list of oral taxons
    //console.log(C.taxonomy_taxalist[2])
 });
-fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_infolookup.json'), 'utf8', function (err, data) {
+
+// How is this file created:: in homd-scripts/homd_init_data.py
+fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_infolookup.json'), 'utf8', function (err, data) {
   if (err) throw err;
    C.taxonomy_infolookup = JSON.parse(data);
-   // list of oral taxons
+   // lookup by Oral_taxon_id of oral taxons
    //console.log(C.taxonomy_infolookup[2])
 });
-fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_lineagelookup.json'), 'utf8', function (err, data) {
+
+// How is this file created:: in homd-scripts/homd_init_data.py
+fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_lineagelookup.json'), 'utf8', function (err, data) {
   if (err) throw err;
    C.taxonomy_lineagelookup = JSON.parse(data);
-   // list of oral taxons
+   // lookup by Oral_taxon_id of oral taxons
    //console.log(C.taxonomy_lineagelookup[2])
 });
-fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_refslookup.json'), 'utf8', function (err, data) {
+
+// How is this file created:: in homd-scripts/homd_init_data.py
+fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_refslookup.json'), 'utf8', function (err, data) {
   if (err) throw err;
    C.taxonomy_refslookup = JSON.parse(data);
-   // list of oral taxons
+   // lookup by Oral_taxon_id of oral taxons
    //console.log(C.taxonomy_refslookup[155])
 });
+
+// How is this file created:: in homd-scripts/homd_init_data.py
+fs.readFile(path.join(config.PATH_TO_DATA,'homd_data_hierarchy.json'), 'utf8', (err, data) => {
+    if (err)
+      console.log(err)
+    else
+      C.homd_taxonomy = new CustomTaxa(JSON.parse(data));
+      //  This construct is used alot
+      // for the hierarchy dhtmlx tree
+      
+     // console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'])
+//       console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["953"])
+       //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank)
+      //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank["3_domain"])
+      //for( var d in C.homd_taxonomy){
+	  //taxa_tree_dict, taxa_tree_dict_map_by_rank, taxonomy_obj, taxa_tree_dict_map_by_id,  taxa_tree_dict_map_by_name_n_rank
+	   //console.log(d)
+	// }
+})
 //console.log('silvaTaxonomy_from_file')
 //console.log(silvaTaxonomy_from_file.all_silva_taxonomy)  from vamps::localhost
 
@@ -190,26 +205,26 @@ fs.readFile(path.join(config.PATH_TO_DATA, 'taxonomy_refslookup.json'), 'utf8', 
 //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank)
 
 // Experimenting here
-const homdTaxonomy = require('./models/homd_taxonomy_db');
-const all_homd_taxonomy = new homdTaxonomy();
-all_homd_taxonomy.get_all_taxa(function(err, results) {
-    if (err)
-        throw err; // or return an error message, or something
-    else
-    {
-       console.log('Success with homd taxonomy')
-       C.silva_taxonomy = new CustomTaxa(results);
-       var homd_tax2 = results;
-       //console.log(C.silva_taxonomy)
-       
-       //console.log(homd_tax2)
-       //console.log(homd_tax2.length)
-       //C.tax_table_results = results
-       
-       
-    }
-    
-});
+// const homdTaxonomy = require('./models/homd_taxonomy_db');
+// const all_homd_taxonomy = new homdTaxonomy();
+// all_homd_taxonomy.get_all_taxa(function(err, results) {
+//     if (err)
+//         throw err; // or return an error message, or something
+//     else
+//     {
+//        console.log('Success with homd taxonomy')
+//        C.silva_taxonomy = new CustomTaxa(results);
+//        var homd_tax2 = results;
+//        //console.log(C.silva_taxonomy)
+//        
+//        //console.log(homd_tax2)
+//        //console.log(homd_tax2.length)
+//        //C.tax_table_results = results
+//        
+//        
+//     }
+//     
+// });
 
 console.log('start here in app.js')
 

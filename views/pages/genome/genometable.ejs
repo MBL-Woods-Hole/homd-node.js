@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../../partials/header_html'); %>
+<title><%= title %></title>
+<style>
+#gnom-table {
+  padding:5px;
+}
+#gnom-table th{
+  color:white;
+  background:#006699;
+  padding:10px;
+  font-size:10px;
+}
+</style>
+<body>
+  <div id='wrapper'>		
+	    
+	    
+	<div id='header'>
+       <%- include('../../partials/header_img'); %>
+    </div>
+
+	
+	
+	<div id="navbar">
+		<%- include('../../partials/navbar'); %>
+	</div>
+	<div id='' class='page-content'>
+	
+	
+		<div class='wide-content' id="">  					
+			 <div class='page-title'>Human Microbial Genomes</div>
+<table id='gnom-table' class='table' border='1'><thead>
+<tr><th >Taxon ID</th><th>Genus</th><th>Species</th>
+<th>Strain/Culture<br>Collection</th><th>SEQ ID</th><th>No. of contigs<br>and<br>plasmids</th>
+<th class=''>Combined<br>Length (bp)</th><th class=''>GC<br>(%)</th><th colspan='4'>Genome Info and Tools</th><th colspan='3'>Available Annotations</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>	
+<td>Taxon Desc</td><td>Genome Info</td><td>Genome Viewer</td><td>BLAST</td>
+<td>PROKKA</td><td>NCBI</td><td>HOMD</td>
+</tr> 
+</tbody>
+</table>
+		</div>  <!-- end wide -->
+	
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+
+
+

@@ -56,7 +56,7 @@
 <div class='page-title'>Human Oral Microbiome Taxon Description</div>
 <div id='page-block'>
 <div id='' class='description-header'><i><%= data1.genus %><%= data1.species %></i></div>
-<table border='1'>
+<table border='0'>
 <tr><td class='tbl-title'>Human Microbial Taxon ID:</td><td><%= data1.otid %></td><td class='tbl-title'>Body Site:</td><td><%= data1.site %></td></tr>
 <tr><td class='tbl-title'>Status:</td><td><%= data1.status %></td><td class='tbl-title' rowspan='2'>Synonym:</td><td rowspan='2'><%- data1.synonyms.replace('&lt;BR&gt;','<br>') %></td></tr>
 <tr><td class='tbl-title'>Reference Strain:</td><td><%= data1.type_strain %></td></tr>
@@ -80,19 +80,24 @@
 </tr>
 
 
-<tr><td class='tbl-title' rowspan='3'>16S rRNA Reference Sequences:</td><td>HOMD RefSeq ID:</td><td class='tbl-title'>PubMed Search:</td><td></td></tr>
-<tr><td>View in phylogenetic tree</td><td class='tbl-title'>Nucleotide Search:</td><td></td></tr>
-<tr><td>Download</td><td class='tbl-title'>Protein Search:</td><td></td></tr>
+<tr>
+<td class='tbl-title' rowspan='3'>16S rRNA Reference Sequences:</td><td>HOMD RefSeq ID:</td>
+<td class='tbl-title'>PubMed Search:</td><td><a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank'>[PubMed Link]</a></td></tr>
+<tr><td><a href='#'>View in phylogenetic tree</a></td>
+<td class='tbl-title'>Nucleotide Search:</td><td><a href='https://www.ncbi.nlm.nih.gov/nucleotide?cmd=search&term=%22<%= data1.genus %>+<%= data1.species %>%22+%5Borganism%5D' target='_blank'>[Entrez Nucleotide Link]</a></td></tr>
+<tr><td><a href='#'>Download latest 16S rRNA reference gene sequences</a></td>
+<td class='tbl-title'>Protein Search:</td><td><a href='https://www.ncbi.nlm.nih.gov/protein?cmd=search&term=%22<%= data1.genus %>+<%= data1.species %>%22+%5Borganism%5D' target='_blank'>[Entrez Protein Link]</a></td>
+</tr>
 
 
 <tr>
   <td class='tbl-title'>Abundance:</td><td></td>
   <td class='tbl-title'>Genome Sequence</td>
   <td>
-    1   View Genome
-    <br>View taxon in genome tree
-    <br>View taxon in ribosome protein tree
-    <br>View taxon in genomic 16S rRNA gene tree
+        <a href='#'>View Genome</a>
+    <br><a href='#'>View taxon in genome tree</a>
+    <br><a href='#'>View taxon in ribosome protein tree</a>
+    <br><a href='#'>View taxon in genomic 16S rRNA gene tree</a>
   </td>
 </tr>
 

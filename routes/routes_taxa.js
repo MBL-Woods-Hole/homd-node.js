@@ -96,10 +96,13 @@ router.get('/taxHierarchy', (req, res) => {
 	
 	// use this only if use the version 5 dhtmlx tree	( w/dynamic loading)
 	// using file public/data/all_silva_taxonomy.json
+	//C.dhtmlxTreeData
+	console.log(C.dhtmlxTreeData)
 	res.render('pages/taxa/taxhierarchy', {
 			title: 'HOMD :: Taxon Hierarchy', 
 			hostname: CFG.hostname,
-			data: {}
+			data: {},
+			dhtmlx: JSON.stringify(C.dhtmlxTreeData)
 		});
 		
 	// use this only if use the version 7 dhtmlx tree	(non-dynamic loading)
@@ -130,23 +133,23 @@ router.post('/taxLevel', (req, res) => {
 	const rank = req.body.rank
 	
 	const tax_resp = []
-	fs.readFile('public/data/taxcounts.json', (err, data) => {
+	fs.readFile(path.join(CFG.PATH_TO_DATA,'homd_data_taxcounts.json'), 'utf8', (err, data) => {
     	if (err)
       		console.log(err)
     	else
 			var taxdata = JSON.parse(data);
 			//console.log(taxdata['Archaea;Euryarchaeota;Halobacteria'])
 			//Problem family: Bacteria;Actinobacteria;Actinobacteria;Acidimicrobiales;Acidimicrobiaceae
-			family = C.silva_taxonomy.taxa_tree_dict_map_by_name_n_rank['Acidimicrobiaceae_family']
-			fam_pid = family.parent_id
-			order1 =C.silva_taxonomy.taxa_tree_dict_map_by_id[fam_pid]
-			Acidimicrobiia_klass= C.silva_taxonomy.taxa_tree_dict_map_by_name_n_rank['Acidimicrobiia_klass']
-			//order = C.silva_taxonomy.taxa_tree_dict_map_by_name_n_rank[family.taxon +'_'+family.node_id]
+			//family = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Acidimicrobiaceae_family']
+			//fam_pid = family.parent_id
+			//order1 =C.homd_taxonomy.taxa_tree_dict_map_by_id[fam_pid]
+			//Acidimicrobiia_klass= C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Acidimicrobiia_klass']
+			//order = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[family.taxon +'_'+family.node_id]
 			
-			console.log(family)
-			console.log(order1)
-			console.log(Acidimicrobiia_klass)
-			const result = C.silva_taxonomy.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
+			//console.log(family)
+			//console.log(order1)
+			//console.log(Acidimicrobiia_klass)
+			const result = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
 				// get lineage of taxitem
 				//console.log(taxitem)
 				lineage = [taxitem.taxon]
@@ -154,7 +157,7 @@ router.post('/taxLevel', (req, res) => {
 				new_search_rank = C.RANKS[C.RANKS.indexOf(taxitem.rank)-1]
 				//console.log(new_search_id,new_search_rank)
 				while (new_search_id != 0){
-					new_search_item = C.silva_taxonomy.taxa_tree_dict_map_by_id[new_search_id]
+					new_search_item = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_search_id]
 					//name_n_rank
 					//new_search_item = new_search_parent
 					lineage.unshift(new_search_item.taxon)  // adds to front of lineage array -prepends
@@ -207,32 +210,29 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
   json.item = [];
 
   if (parseInt(id) === 0){
-    /*
-        return json for collapsed tree: 'domain' only
-            json = {"id":"0","item":[
-                {"id":"1","text":"Bacteria","tooltip":"domain","checked":true,"child":"1","item":[]},
-                {"id":"214","text":"Archaea","tooltip":"domain","checked":true,"child":"1","item":[]},
-                {"id":"338","text":"Unknown","tooltip":"domain","checked":true,"child":"1","item":[]},
-                {"id":"353","text":"Organelle","tooltip":"domain","checked":true,"child":"1","item":[]}
-                ]
-            }
-    */
-
-    C.silva_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
+    
+   
+//console.log('in parseint 0')
+//console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'])
+//console.log(C.homd_taxonomy)
+    C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
+        //console.log('node')
         let options_obj = get_options_by_node(node);
         options_obj.checked = true;
+        //console.log(options_obj)
         json.item.push(options_obj);
       }
     );
   }
   else {
-    const objects_w_this_parent_id = C.silva_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.silva_taxonomy.taxa_tree_dict_map_by_id[n_id]);
+    const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
     objects_w_this_parent_id.map(node => {
       let options_obj = get_options_by_node(node);
       options_obj.checked = false;
       json.item.push(options_obj);
     });
   }
+  //console.log(json)
   json.item.sort(function sortByAlpha(a, b) {
     return helpers.compareStrings_alpha(a.text, b.text);
   });
@@ -244,12 +244,12 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
 /////////////////////////////////
 router.get('/taxDescription', (req, res) => {
 	let myurl = url.parse(req.url, true);
-  	let oraltaxonid = myurl.query.oraltaxonid;
-	var data1 = C.taxonomy_taxalookup[oraltaxonid]
-	var data2 = C.taxonomy_infolookup[oraltaxonid]
-	var data3 = C.taxonomy_lineagelookup[oraltaxonid]
-	if(C.taxonomy_refslookup[oraltaxonid]){
-		var data4 = C.taxonomy_refslookup[oraltaxonid]
+  	let otid = myurl.query.otid;
+	var data1 = C.taxonomy_taxalookup[otid]
+	var data2 = C.taxonomy_infolookup[otid]
+	var data3 = C.taxonomy_lineagelookup[otid]
+	if(C.taxonomy_refslookup[otid]){
+		var data4 = C.taxonomy_refslookup[otid]
 	}else{
 		var data4 = []
 	}
@@ -260,7 +260,7 @@ router.get('/taxDescription', (req, res) => {
 	res.render('pages/taxa/taxdescription', {
 		title: 'HOMD :: Taxon Level', 
 		hostname: CFG.hostname,
-		taxonid: oraltaxonid,
+		taxonid: otid,
 		data1: JSON.stringify(data1),
 		data2: JSON.stringify(data2),
 		data3: JSON.stringify(data3),
@@ -269,12 +269,17 @@ router.get('/taxDescription', (req, res) => {
 });
 ////////////////////////////////////////////////////////////////////////////////////
 function get_options_by_node(node) {
+  rankname = node.rank.charAt(0).toUpperCase() + node.rank.slice(1)
+  text = rankname+' '+node.taxon
+  if(node.rank=='species'){
+    text = "<a href='taxDescription?otid="+node.otid+"'><i>"+rankname+' '+node.taxon+'</i></a>'
+  }
   let options_obj = {
     id: node.node_id,
-    text: node.rank+' '+node.taxon,
+    text: text,
     rank: node.rank,
     child: 0,
-    tooltip: node.rank,
+    tooltip: rankname,
   };
   if (node.children_ids.length > 0) {
     options_obj.child = 1;

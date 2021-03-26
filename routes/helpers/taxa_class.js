@@ -34,7 +34,7 @@ function get_by_key(dictMap, dictMap_key)
   return dictMap[dictMap_key];
 }
 
-function make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, db_id)
+function make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, otid)
 {
   const current_dict =
           {
@@ -42,15 +42,17 @@ function make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, d
             children_ids: [],
             taxon: "",
             rank: "",
-            node_id: 1,
-            db_id: 1
+            node_id: 1
+            
           };
 
   current_dict.taxon = taxa_name;
   current_dict.rank = taxa_rank;
   current_dict.parent_id = i_am_a_parent;
   current_dict.node_id = taxon_name_id;
-  current_dict.db_id = db_id;
+  if(taxa_rank == 'species'){
+    current_dict.otid = otid;
+  }
   return current_dict;
 }
 
@@ -73,7 +75,7 @@ function make_taxa_tree_dict(taxonomy_obj)
 {
   let taxa_tree_dict = [];
   let dictMap_by_name_n_rank  = {};
-  let dictMap_by_db_id_n_rank = {};
+  let dictMap_by_otid_n_rank = {};
 
   let dictMap_by_id = {};
   //console.log("HHH0");
@@ -94,10 +96,11 @@ function make_taxa_tree_dict(taxonomy_obj)
       if (is_rank)
       {
         
-        let db_id_field_name = field_name + "_id";
-        //console.log("db_id_field_name = " + JSON.stringify(db_id_field_name));
-        let db_id = in_obj[db_id_field_name];
-        //console.log("db_id = " + JSON.stringify(db_id));
+        //let otid_field_name = field_name + "_id";
+        let otid_field_name = "otid";
+        //console.log("otid_field_name = " + JSON.stringify(otid_field_name));
+        let otid = in_obj[otid_field_name];
+        //console.log("in_obj = " + JSON.stringify(in_obj));
 
         let parent_node = {};
         let current_dict = {};
@@ -117,14 +120,14 @@ function make_taxa_tree_dict(taxonomy_obj)
             	}
             else //(!node)
             {
-				current_dict = make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, db_id);
+				current_dict = make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, otid);
 				//console.log("current_dict = " + JSON.stringify(current_dict,null,4))
 
 				taxa_tree_dict.push(current_dict);
 
 				add_to_dict_by_key(dictMap_by_name_n_rank,  current_dict.taxon + "_" + current_dict.rank, current_dict);
 
-				add_to_dict_by_key(dictMap_by_db_id_n_rank, current_dict.db_id + "_" + current_dict.rank, current_dict);
+				add_to_dict_by_key(dictMap_by_otid_n_rank, current_dict.otid + "_" + current_dict.rank, current_dict);
 
 				i_am_a_parent = current_dict.node_id;
 
@@ -137,8 +140,8 @@ function make_taxa_tree_dict(taxonomy_obj)
       }
     }
   } 
-  //console.log(dictMap_by_db_id_n_rank)
-  return [taxa_tree_dict, dictMap_by_id, dictMap_by_db_id_n_rank, dictMap_by_name_n_rank];
+  //console.log(dictMap_by_otid_n_rank)
+  return [taxa_tree_dict, dictMap_by_id, dictMap_by_otid_n_rank, dictMap_by_name_n_rank];
 }
 
 // Public
@@ -152,7 +155,7 @@ function TaxonomyTree(rows) {
   let temp_arr = make_taxa_tree_dict(this.taxonomy_obj);
   this.taxa_tree_dict = temp_arr[0];
   this.taxa_tree_dict_map_by_id = temp_arr[1]; 
-  this.taxa_tree_dict_map_by_db_id_n_rank = temp_arr[2]; 
+  this.taxa_tree_dict_map_by_otid_n_rank = temp_arr[2]; 
   this.taxa_tree_dict_map_by_name_n_rank = temp_arr[3]; 
   this.taxa_tree_dict_map_by_rank = make_dictMap_by_rank(this.taxa_tree_dict);
   //console.log("HHH1");

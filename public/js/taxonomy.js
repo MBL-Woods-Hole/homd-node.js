@@ -23,7 +23,7 @@
 /////////////////////////
 
 function load_dhtmlx(data) {
-    
+    console.log('loading dhtmlx')
     // dhtmlx version:5  has dynamic loading
     customOldTree = new dhtmlXTreeObject("custom_treebox","100%","100%",0);
     customOldTree.setImagesPath("/images/dhtmlx/imgs/");
@@ -48,9 +48,13 @@ function load_dhtmlx(data) {
 //     	
 //     	//return false;
 // 	})
+
+//customOldTree.parse(dhtmlx_tree,"json");
+
+
     customOldTree.setXMLAutoLoading("tax_custom_dhtmlx");
 	customOldTree.setDataMode("json");
-	  //load first level of tree
+	  ////load first level of tree
 	customOldTree.load("tax_custom_dhtmlx?id=0","json");
 	  
 
@@ -105,16 +109,26 @@ function reset_tree_dhtmlx(){
 function open_tree_dhtmlx(){
   // difficult with dynamic loading
   console.log('open whole tree')
-  customOldTree.openAllItems(0);
-  // console.log(customOldTree.getSubItems(0).split(',')[1])
-//   //customOldTree.getSubItems(0).split(',')[1]
-//   for( var n in customOldTree.getSubItems(0).split(',')){
-//      console.log(n)
-//      customOldTree.openAllItems(customOldTree.getSubItems(0).split(',')[n]);
-//   }
-  //customTree.expandAll();
+  arrystring = customOldTree.getAllSubItems(0)
+  arry = arrystring.split(',')
+  for(i in arry){
+       console.log(arry[i])
+       
+       customOldTree.openItem(arry[i])
+       ret = get_sublevels(arry[i])
+       console.log(ret)
+       for(n in ret){
+       		console.log(ret[n])
+       		customOldTree.openItem(ret[n])
+       }
+  }
 }
-
+function get_sublevels(lvl){
+	 subs = customOldTree.getAllSubItems(lvl)
+	 subs2 = customOldTree.getAllSubItems('975')
+	 console.log(subs2)
+	 return subs.split(',')
+}
 function change_level(rank) {
 	
 	var args = {}

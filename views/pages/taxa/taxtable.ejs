@@ -152,8 +152,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].site  %></td>
 		   <td><%= list[n].warning  %></td>
-		   <td style='text-align:center' nowrap><a href="/taxa/taxDescription?oraltaxonid=<%= taxonid %>" class="button" style='color:blue;'>Taxon Description</a></td>
-		   <td style='text-align:center' nowrap><a href="#" class="button" style='color:green;'># of Genomes</a></td>
+		   <td style='text-align:center' nowrap><a href="/taxa/taxDescription?otid=<%= taxonid %>" class="button" style='color:blue;'>Taxon Description</a></td>
+		   <td style='text-align:center' nowrap><a href="/genome/genometable" class="button" style='color:green;'># of Genomes</a></td>
 		   <td></td>
 		   </tr>
 		 <% } %>
