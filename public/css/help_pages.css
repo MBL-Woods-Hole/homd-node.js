@@ -1,5 +1,9 @@
 /* user Guide Styling */
-
+a {
+   font-size: 14px;
+   word-spacing: normal;
+   color:#006699;
+}
 #user_help_nav {
     float: left;
     width: 280px;
@@ -80,6 +84,9 @@
 	/* margin-top:-1px; */
 	/* padding:15px; */
 	border:1px solid black;
+	/* letter-spacing: .07em; */
+	word-spacing: 4px;
+	line-height: 140%;
 }
 
 .helptitle {
@@ -94,6 +101,30 @@
   margin:2px;
   color:darkgoldenrod;
 }
+
+
+.version-history-entry {
+   border:1px solid black;
+   background:lightgrey;
+   margin:5px;
+   padding:5px;
+}
+.version-date {
+    display: block;
+    color:blue;
+    font-weight:bold;
+    font-size:13px;
+    padding:0 0 5px 0;
+}
+.version-note {
+	display: block;
+    color:blue;
+    padding-left:15px;
+}
+
+
+
+
 /* Accordian Help Menu */
 #accordion_div {
   border:1px solid black;

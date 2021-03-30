@@ -7,7 +7,7 @@ const path     = require('path');
 const C		  = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
 
-router.get('/taxTable', (req, res) => {
+router.get('/tax_table', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	
 	console.log('in taxtable -get')
@@ -16,16 +16,17 @@ router.get('/taxTable', (req, res) => {
   	//console.log(myurl.query)
 	req.session.tax_letter = myurl.query.k
 	
-	tcount = C.taxonomy_taxalist.length
+	
 	//console.log(tax_letter)
 	// filter
+	send_tax_obj1 = Object.values(C.taxonomy_taxonlookup);
+	tcount = send_tax_obj1.length
 	if(req.session.tax_letter){
 	   // COOL....
-	   send_tax_obj = C.taxonomy_taxalist.filter(item => item.genus.charAt(0) == req.session.tax_letter)
+	   send_tax_obj = send_tax_obj1.filter(item => item.genus.charAt(0) == req.session.tax_letter)
 	}else{
-	   send_tax_obj = C.taxonomy_taxalist
+		send_tax_obj = send_tax_obj1
 	}
-	
 	// table sort done via client side js library sorttable: 
 	// https://www.kryogenix.org/code/browser/sorttable
     console.log(send_tax_obj[0])
@@ -41,7 +42,7 @@ router.get('/taxTable', (req, res) => {
 		search: ''
 	});
 });
-router.post('/taxTable', (req, res) => {
+router.post('/tax_table', (req, res) => {
 	console.log('in taxtable -post')
 	tcount = C.taxonomy_taxalist.length
 	//helpers.show_session(req)
@@ -64,12 +65,15 @@ router.post('/taxTable', (req, res) => {
 	//console.log('statusfilter_on',statusfilter_on)
 	//console.log('sitefilter_on',sitefilter_on)
 	// letterfilter
+	send_tax_obj1 = Object.values(C.taxonomy_taxonlookup);
+	tcount = send_tax_obj1.length
 	if(req.session.tax_letter){
 	   // COOL....
-	   send_tax_obj = C.taxonomy_taxalist.filter(item => item.genus.charAt(0) == req.session.tax_letter)
+	   send_tax_obj = send_tax_obj1.filter(item => item.genus.charAt(0) == req.session.tax_letter)
 	}else{
-	   send_tax_obj = C.taxonomy_taxalist
+		send_tax_obj = send_tax_obj1
 	}
+	
 	// status filter
 	//console.log('send_tax_obj[0]',send_tax_obj[0])
 	send_tax_obj = send_tax_obj.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) != -1 )
@@ -90,7 +94,7 @@ router.post('/taxTable', (req, res) => {
 		search: ''
 	});
 });
-router.get('/taxHierarchy', (req, res) => {
+router.get('/tax_hierarchy', (req, res) => {
 	//the json file was created from a csv of vamps taxonomy
 	// using the script: taxonomy_csv2json.py in ../homd_data
 	
@@ -117,7 +121,7 @@ router.get('/taxHierarchy', (req, res) => {
 // 		});
 // 	});
 });
-router.get('/taxLevel', (req, res) => {
+router.get('/tax_level', (req, res) => {
 	
 	res.render('pages/taxa/taxlevel', {
 		title: 'HOMD :: Taxon Level', 
@@ -130,25 +134,15 @@ router.get('/taxLevel', (req, res) => {
 router.post('/taxLevel', (req, res) => {
 	
 	//console.log(req.body)
-	const rank = req.body.rank
+	var rank = req.body.rank
 	
 	const tax_resp = []
-	fs.readFile(path.join(CFG.PATH_TO_DATA,'homd_data_taxcounts.json'), 'utf8', (err, data) => {
+	fs.readFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn), 'utf8', (err, data) => {
     	if (err)
       		console.log(err)
     	else
 			var taxdata = JSON.parse(data);
-			//console.log(taxdata['Archaea;Euryarchaeota;Halobacteria'])
-			//Problem family: Bacteria;Actinobacteria;Actinobacteria;Acidimicrobiales;Acidimicrobiaceae
-			//family = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Acidimicrobiaceae_family']
-			//fam_pid = family.parent_id
-			//order1 =C.homd_taxonomy.taxa_tree_dict_map_by_id[fam_pid]
-			//Acidimicrobiia_klass= C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Acidimicrobiia_klass']
-			//order = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[family.taxon +'_'+family.node_id]
 			
-			//console.log(family)
-			//console.log(order1)
-			//console.log(Acidimicrobiia_klass)
 			const result = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
 				// get lineage of taxitem
 				//console.log(taxitem)
@@ -166,6 +160,9 @@ router.post('/taxLevel', (req, res) => {
 				}
 				return_obj = {}
 				return_obj.item_rank = rank
+				if(rank='species'){
+					return_obj.otid = taxitem.otid
+				}
 				return_obj.item_taxon = lineage[lineage.length - 1]
 				return_obj.parent_rank = C.RANKS[C.RANKS.indexOf(rank) - 1]
 				return_obj.parent_taxon = lineage[lineage.length - 2]
@@ -190,7 +187,7 @@ router.post('/taxLevel', (req, res) => {
 //
 //
 
-router.get('/taxDownload', (req, res) => {
+router.get('/tax_download', (req, res) => {
 	res.render('pages/taxon/taxdownload', {
 		title: 'HOMD :: Taxon Download', 
 		hostname: CFG.hostname 
@@ -242,12 +239,51 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
   res.json(json);
 });
 /////////////////////////////////
-router.get('/taxDescription', (req, res) => {
+router.get('/tax_description', (req, res) => {
 	let myurl = url.parse(req.url, true);
   	let otid = myurl.query.otid;
-	var data1 = C.taxonomy_taxalookup[otid]
+	console.log('where am i1')
+	/*
+	This busy page needs:
+	1  otid 		type:string
+	2  status
+	3  reference strains vs strain info  type:array
+		Why do some pages have ref and others straininfo?
+	4  Tax classification  data3 type strings
+	5  16S rRNA Reference Seqs
+	6  Abundance
+	7  Hierarchy Structure -- what is this?
+	8  body site
+	9  synonyms	type:array
+	10 NCBI taxid
+	11 PubMed, Entrez Nucleotide and Proten Searches -- links(uses genus+species)
+	12 Genome Sequence  - needs genome count and otid
+	13 Ref Data: General,Citations,Pheno,Cultivability,Pevalence...
+	
+	
+	*/
+	
+	if( C.taxonomy_taxonlookup[otid] == undefined){
+    	req.flash('TRY AGAIN')
+    	res.send('That Taxon ID: ('+otid+') was not found1 - Use the Back Arrow and select another')
+    	return
+  	}
+	var data1 = C.taxonomy_taxonlookup[otid]
+	console.log('where am i2')
+	if( C.taxonomy_infolookup[otid] == undefined){
+    	req.flash('TRY AGAIN')
+    	res.send('That Taxon ID: ('+otid+') was not found2 - Use the Back Arrow and select another')
+    	return
+  	}
 	var data2 = C.taxonomy_infolookup[otid]
+	console.log('where am i3')
+	if( C.taxonomy_lineagelookup[otid] == undefined){
+    	req.flash('TRY AGAIN')
+    	res.send('That Taxon ID: ('+otid+') was not found3 - Use the Back Arrow and select another')
+    	return
+  	}
 	var data3 = C.taxonomy_lineagelookup[otid]
+	console.log('where am i4')
 	if(C.taxonomy_refslookup[otid]){
 		var data4 = C.taxonomy_refslookup[otid]
 	}else{
@@ -272,7 +308,7 @@ function get_options_by_node(node) {
   rankname = node.rank.charAt(0).toUpperCase() + node.rank.slice(1)
   text = rankname+' '+node.taxon
   if(node.rank=='species'){
-    text = "<a href='taxDescription?otid="+node.otid+"'><i>"+rankname+' '+node.taxon+'</i></a>'
+    text = "<a href='tax_description?otid="+node.otid+"'><i>"+rankname+' '+node.taxon+'</i></a>'
   }
   let options_obj = {
     id: node.node_id,

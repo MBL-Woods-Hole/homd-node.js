@@ -80,8 +80,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		 
 			  Navigate Taxa by Alphabet:<br>
 			 
-<a id='A' href='taxTable?k=A'>A</a>|<a id='B' href='taxTable?k=B'>B</a>|<a id='C' href='taxTable?k=C'>C</a>|<a id='D' href='taxTable?k=D'>D</a>|<a id='E' href='taxTable?k=E'>E</a>|<a id='F' href='taxTable?k=F'>F</a>|<a id='G' href='taxTable?k=G'>G</a>|<a id='H' href='taxTable?k=H'>H</a>|<a id='I' href='taxTable?k=I'>I</a>|<a id='J' href='taxTable?k=J'>J</a>|<a id='K' href='taxTable?k=K'>K</a>|<a id='L' href='taxTable?k=L'>L</a>|<a id='M' href='taxTable?k=M'>M</a>|<a id='N' href='taxTable?k=N'>N</a>|<a id='O' href='taxTable?k=O'>O</a>|<a id='P' href='taxTable?k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='taxTable?k=R'>R</a>|<a id='S' href='taxTable?k=S'>S</a>|<a id='T' href='taxTable?k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='taxTable?k=V'>V</a>|<a id='W' href='taxTable?k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='taxTable?k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>|
-<a id='all' href='taxTable?k='>All Entries</a>|
+<a id='A' href='tax_table?k=A'>A</a>|<a id='B' href='tax_table?k=B'>B</a>|<a id='C' href='tax_table?k=C'>C</a>|<a id='D' href='tax_table?k=D'>D</a>|<a id='E' href='tax_table?k=E'>E</a>|<a id='F' href='tax_table?k=F'>F</a>|<a id='G' href='tax_table?k=G'>G</a>|<a id='H' href='tax_table?k=H'>H</a>|<a id='I' href='tax_table?k=I'>I</a>|<a id='J' href='tax_table?k=J'>J</a>|<a id='K' href='tax_table?k=K'>K</a>|<a id='L' href='tax_table?k=L'>L</a>|<a id='M' href='tax_table?k=M'>M</a>|<a id='N' href='tax_table?k=N'>N</a>|<a id='O' href='tax_table?k=O'>O</a>|<a id='P' href='tax_table?k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='tax_table?k=R'>R</a>|<a id='S' href='tax_table?k=S'>S</a>|<a id='T' href='tax_table?k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='tax_table?k=V'>V</a>|<a id='W' href='tax_table?k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='tax_table?k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>|
+<a id='all' href='tax_table?k='>All Entries</a>|
 
 			 </div>
 		 </div>  <!-- end outer-content -->
@@ -100,7 +100,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		   </div>
   
 <div id='taxa-filter'>
- <form id='tax_filter_form' name='tax_filter_form' method='POST' action='taxTable'>
+ <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
 	 <table>
 	 <tr><td>
 	 <div id='status-div' style=''>
@@ -152,8 +152,18 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].site  %></td>
 		   <td><%= list[n].warning  %></td>
-		   <td style='text-align:center' nowrap><a href="/taxa/taxDescription?otid=<%= taxonid %>" class="button" style='color:blue;'>Taxon Description</a></td>
-		   <td style='text-align:center' nowrap><a href="/genome/genometable" class="button" style='color:green;'># of Genomes</a></td>
+		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= taxonid %>" class="button" style='color:blue;'>Taxon Description</a></td>
+		   <td style='text-align:center' nowrap>
+		   <% num_genomes = list[n].genomes.length %>
+		   <% if(num_genomes == 0){ %>
+		     <a href="" class="button" style='color:grey;'><%= num_genomes %> Genomes</a>
+		     
+		   <% }else{ %>
+		     
+		     <a href="/genome/genome_table?otid=<%= taxonid %>" class="button" style='color:green;'><%= num_genomes %> Genomes</a>
+		     
+		   <% } %>
+		   </td>
 		   <td></td>
 		   </tr>
 		 <% } %>

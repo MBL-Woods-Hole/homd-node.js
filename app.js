@@ -19,7 +19,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
 //const favicon = require('serve-favicon');
-
+const async = require('async')
 //const zlib = require('zlib');
 //const sizeof = require('object-sizeof');
 
@@ -34,6 +34,8 @@ const genome	= require('./routes/routes_genome');
 
 
 const app = express();
+
+
 
 app.set('appName', 'HOMD');
 require('./config/passport')(passport, DBConn); // pass passport for configuration
@@ -120,111 +122,49 @@ app.use(function(req, res, next){
   // default to plain-text. send()
   res.type('txt').send('Not found');
 });
-/**
+/*
  * Create global objects once upon server startup
  */
 const CustomTaxa  = require('./routes/helpers/taxa_class');
-//const silvaTaxonomy_from_file = require('./models/homd_taxonomy_file');
 
-//app.use(createIframe);
-// this file was created from vamps taxonomy table using the python script:
-//  db2jsontax.py
+// scripts to create this data::
+// homd-scripts/homd_init_data.py
+//
+var data_init_files =[
+	//C.gindex_lookup_fn,
+	C.refs_lookup_fn,
+	C.lineage_lookup_fn, 
+	C.info_lookup_fn,
+	//C.tax_list_fn,
+	C.tax_lookup_fn,
+	C.tax_hierarchy_fn
+]
+ 
+function readAsync(file, callback) {
+    fs.readFile(path.join(config.PATH_TO_DATA, file), 'utf8', callback);
+}
 
-
-
-//const homdTaxonomy_fromFile = require(path.join(config.PATH_TO_DATA)+'oral_taxonomy.json');
-//var obj = JSON.parse(fs.readFileSync(, 'utf8'));
-// used script 'init_data.py' to create this file
-
-// How is this file created:: in homd-scripts/homd_init_data.py
-fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_taxalookup.json'), 'utf8', function (err, data) {
-  if (err) throw err;
-   C.taxonomy_taxalookup = JSON.parse(data);
-   // look up by oral taxon id
-   //console.log(C.taxonomy_taxalookup[1])
+async.map(data_init_files, readAsync, function(err, results) {
+    // results = ['file 1 content', 'file 2 content', ...]
+    // add the data to CONSTANTS so they are availible everywhere
+    // the lookups are keyed on Oral_taxon_id
+    //C.genome_idxlookup 		= JSON.parse(results[0]);
+    C.taxonomy_refslookup 	= JSON.parse(results[0]);
+    C.taxonomy_lineagelookup = JSON.parse(results[1]);
+    C.taxonomy_infolookup 	= JSON.parse(results[2]);
+   // C.taxonomy_taxonlist 	= JSON.parse(results[4]);
+    C.taxonomy_taxonlookup 	= JSON.parse(results[3]);
+    C.homd_taxonomy = new CustomTaxa(JSON.parse(results[4]));
+    //examples
+   
+    for(var n in C.homd_taxonomy){
+       console.log(n)
+    }
+    
 });
 
-// How is this file created:: in homd-scripts/homd_init_data.py
-fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_taxalist.json'), 'utf8', function (err, data) {
-  if (err) throw err;
-   C.taxonomy_taxalist = JSON.parse(data);
-   // list of oral taxons
-   //console.log(C.taxonomy_taxalist[2])
-});
 
-// How is this file created:: in homd-scripts/homd_init_data.py
-fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_infolookup.json'), 'utf8', function (err, data) {
-  if (err) throw err;
-   C.taxonomy_infolookup = JSON.parse(data);
-   // lookup by Oral_taxon_id of oral taxons
-   //console.log(C.taxonomy_infolookup[2])
-});
 
-// How is this file created:: in homd-scripts/homd_init_data.py
-fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_lineagelookup.json'), 'utf8', function (err, data) {
-  if (err) throw err;
-   C.taxonomy_lineagelookup = JSON.parse(data);
-   // lookup by Oral_taxon_id of oral taxons
-   //console.log(C.taxonomy_lineagelookup[2])
-});
-
-// How is this file created:: in homd-scripts/homd_init_data.py
-fs.readFile(path.join(config.PATH_TO_DATA, 'homd_data_refslookup.json'), 'utf8', function (err, data) {
-  if (err) throw err;
-   C.taxonomy_refslookup = JSON.parse(data);
-   // lookup by Oral_taxon_id of oral taxons
-   //console.log(C.taxonomy_refslookup[155])
-});
-
-// How is this file created:: in homd-scripts/homd_init_data.py
-fs.readFile(path.join(config.PATH_TO_DATA,'homd_data_hierarchy.json'), 'utf8', (err, data) => {
-    if (err)
-      console.log(err)
-    else
-      C.homd_taxonomy = new CustomTaxa(JSON.parse(data));
-      //  This construct is used alot
-      // for the hierarchy dhtmlx tree
-      
-     // console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'])
-//       console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["953"])
-       //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank)
-      //console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank["3_domain"])
-      //for( var d in C.homd_taxonomy){
-	  //taxa_tree_dict, taxa_tree_dict_map_by_rank, taxonomy_obj, taxa_tree_dict_map_by_id,  taxa_tree_dict_map_by_name_n_rank
-	   //console.log(d)
-	// }
-})
-//console.log('silvaTaxonomy_from_file')
-//console.log(silvaTaxonomy_from_file.all_silva_taxonomy)  from vamps::localhost
-
-//console.log('C.silva_taxonomy')
-
-//console.log(C.silva_taxonomy.taxa_tree_dict_map_by_rank["domain"])
-
-//taxa_tree_dict_map_by_id
-//console.log(C.silva_taxonomy.taxa_tree_dict_map_by_db_id_n_rank)
-
-// Experimenting here
-// const homdTaxonomy = require('./models/homd_taxonomy_db');
-// const all_homd_taxonomy = new homdTaxonomy();
-// all_homd_taxonomy.get_all_taxa(function(err, results) {
-//     if (err)
-//         throw err; // or return an error message, or something
-//     else
-//     {
-//        console.log('Success with homd taxonomy')
-//        C.silva_taxonomy = new CustomTaxa(results);
-//        var homd_tax2 = results;
-//        //console.log(C.silva_taxonomy)
-//        
-//        //console.log(homd_tax2)
-//        //console.log(homd_tax2.length)
-//        //C.tax_table_results = results
-//        
-//        
-//     }
-//     
-// });
 
 console.log('start here in app.js')
 

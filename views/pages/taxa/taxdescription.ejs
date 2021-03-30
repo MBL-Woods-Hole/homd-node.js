@@ -58,8 +58,8 @@
 <div id='' class='description-header'><i><%= data1.genus %><%= data1.species %></i></div>
 <table border='0'>
 <tr><td class='tbl-title'>Human Microbial Taxon ID:</td><td><%= data1.otid %></td><td class='tbl-title'>Body Site:</td><td><%= data1.site %></td></tr>
-<tr><td class='tbl-title'>Status:</td><td><%= data1.status %></td><td class='tbl-title' rowspan='2'>Synonym:</td><td rowspan='2'><%- data1.synonyms.replace('&lt;BR&gt;','<br>') %></td></tr>
-<tr><td class='tbl-title'>Reference Strain:</td><td><%= data1.type_strain %></td></tr>
+<tr><td class='tbl-title'>Status:</td><td><%= data1.status %></td><td class='tbl-title' rowspan='2'>Synonym(s):</td><td rowspan='2'><%- data1.synonyms.join('<br>') %></td></tr>
+<tr><td class='tbl-title'>Strain Information:</td><td><%= data1.type_strain.join('<br>') %></td></tr>
 
 
 <tr>
@@ -94,7 +94,7 @@
   <td class='tbl-title'>Abundance:</td><td></td>
   <td class='tbl-title'>Genome Sequence</td>
   <td>
-        <a href='#'>View Genome</a>
+        # <a href='#'>View Genome</a>
     <br><a href='#'>View taxon in genome tree</a>
     <br><a href='#'>View taxon in ribosome protein tree</a>
     <br><a href='#'>View taxon in genomic 16S rRNA gene tree</a>

@@ -130,10 +130,11 @@ function get_sublevels(lvl){
 	 return subs.split(',')
 }
 function change_level(rank) {
-	
+	// Use capitals here for ranks
 	var args = {}
-	args.rank = rank
-	var ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
+	args.rank = rank.toLowerCase()
+	if(args.rank=='class'){args.rank='klass';}// for use in homd_taxonomy.taxa_tree_dict_map_by_rank
+	var ranks = ["Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species"];
 	for(n in ranks){
 	  document.getElementById(ranks[n]).style ='font-weight:normal;'
 	}
@@ -148,33 +149,36 @@ function change_level(rank) {
             
             //console.log(static_data)
 			var html = ''
-			html += "<table id='level_table' border='1'>"
+			html += "<table id='tax-table' class='table' border='0'>"
 			html += '<tr>'
-			if(rank == 'domain'){
-			
-			}else{
+			if(rank != 'Domain'){
 				html += '<th>Parent Level</th>'
 			}
 			html += '<th>'+rank+'</th>'
-			if(rank == 'species'){
+			if(rank == 'Species'){
 				html += '<th>HMT Taxon ID</th>'
 			}
-			html += '<th>Taxon Count</th><th>lineage (for debuging)</th><th>Genome Count</th><th>16S rRNA Refseq count</th></tr>'
+			html += '<th>Taxon Count</th>'
+			
+			//html += '<th>lineage (for debuging)</th>'
+			
+			html += '<th>Genome Count</th><th>16S rRNA Refseq count</th></tr>'
 			
 			
 			for(n in static_data){
 				html += '<tr>'
-				if(rank == 'domain'){
-			
-				}else{
-					html += '<td>'+static_data[n].parent_taxon+'</td>'
+				if(rank != 'Domain'){
+					html += '<td nowrap>'+static_data[n].parent_taxon+'</td>'
 				}
-				html += '<td>'+static_data[n].item_taxon+"</td>"
-				if(rank == 'species'){
-				  	html +="<td style='text-align:center'></td>"
+				html += '<td nowrap>'+static_data[n].item_taxon+"</td>"
+				if(rank == 'Species'){
+				  	html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
 				}
 				html += "<td style='text-align:center'>"+static_data[n].item_count+'</td>'
-				html +="<td>"+static_data[n].lineage+"</td>"
+				
+				//html +="<td>"+static_data[n].lineage+"</td>"
+				
+				html += '<td></td><td></td>'
 				html += '</tr>'
 			}
 			html += '</table>'
@@ -184,6 +188,7 @@ function change_level(rank) {
 
 		}
 	}
+	
 	xmlhttp.send(JSON.stringify(args));
 
 
