@@ -18,7 +18,7 @@ constants.info_lookup_fn 	= 'homd_data_infolookup.json'
 constants.lineage_lookup_fn = 'homd_data_lineagelookup.json'
 constants.refs_lookup_fn 	= 'homd_data_refslookup.json'
 // genome filenames
-//constants.gindex_lookup_fn 	= 'homd_genomedata_indexlookup.json'
+constants.genomes_lookup_fn 	= 'homd_genome_lookup.json'
 
 
 module.exports = constants;

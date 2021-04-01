@@ -131,13 +131,14 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 // homd-scripts/homd_init_data.py
 //
 var data_init_files =[
-	//C.gindex_lookup_fn,
+
 	C.refs_lookup_fn,
 	C.lineage_lookup_fn, 
 	C.info_lookup_fn,
 	//C.tax_list_fn,
 	C.tax_lookup_fn,
-	C.tax_hierarchy_fn
+	C.tax_hierarchy_fn,
+    C.genomes_lookup_fn,
 ]
  
 function readAsync(file, callback) {
@@ -155,6 +156,7 @@ async.map(data_init_files, readAsync, function(err, results) {
    // C.taxonomy_taxonlist 	= JSON.parse(results[4]);
     C.taxonomy_taxonlookup 	= JSON.parse(results[3]);
     C.homd_taxonomy = new CustomTaxa(JSON.parse(results[4]));
+    C.genomes_lookup 	= JSON.parse(results[5]);
     //examples
    
     for(var n in C.homd_taxonomy){

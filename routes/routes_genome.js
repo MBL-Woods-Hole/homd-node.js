@@ -15,20 +15,27 @@ router.get('/genome_table', (req, res) => {
 
 	var seqid_list;
 	let myurl = url.parse(req.url, true);
-	console.log('otid',myurl.query.otid)
+	//console.log('otid',myurl.query.otid)
 	var otid = myurl.query.otid
 	if(['all','alloral'].indexOf(otid) == -1) {
-		seqid_list = C.taxonomy_taxonlookup[otid]
+		seqid_list = C.taxonomy_taxonlookup[otid].genomes
 	}else{
 		seqid_list = [] // TODO
 	}
-	console.log('seqid_list',seqid_list)
-	
+	//console.log('seqid_list',seqid_list)
+	list_of_objs = []
+	for(n in seqid_list)
+	{
+
+		list_of_objs.push(C.genomes_lookup[seqid_list[n]])
+	}
+	console.log(list_of_objs)
+
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
 		hostname: CFG.hostname,
 		otid: otid,  // default
-		seqid_list: JSON.stringify(seqid_list)
+		seqid_list: JSON.stringify(list_of_objs)
 		
 		
 	});

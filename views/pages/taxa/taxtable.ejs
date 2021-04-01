@@ -144,15 +144,15 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		 <tbody>
 		 <% for(n in list){ %>
 		   <tr>
-		   <% taxonid= list[n].otid %>
-		   <% taxidfullname = 'HMT-'+("000" + taxonid).slice(-3); %>
+		   <% otid= list[n].otid %>
+		   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
 		   <td><%= taxidfullname  %></td>
 		   <td><i><b><%= list[n].genus  %></b></i></td>
 		   <td><i><b><%= list[n].species  %></b></i></td>
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].site  %></td>
 		   <td><%= list[n].warning  %></td>
-		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= taxonid %>" class="button" style='color:blue;'>Taxon Description</a></td>
+		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="button" style='color:blue;'>Taxon Description</a></td>
 		   <td style='text-align:center' nowrap>
 		   <% num_genomes = list[n].genomes.length %>
 		   <% if(num_genomes == 0){ %>
@@ -160,7 +160,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		     
 		   <% }else{ %>
 		     
-		     <a href="/genome/genome_table?otid=<%= taxonid %>" class="button" style='color:green;'><%= num_genomes %> Genomes</a>
+		     <a href="/genome/genome_table?otid=<%= otid %>" class="button" style='color:green;'><%= num_genomes %> Genomes</a>
 		     
 		   <% } %>
 		   </td>
