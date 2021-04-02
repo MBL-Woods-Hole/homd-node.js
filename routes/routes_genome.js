@@ -15,27 +15,23 @@ router.get('/genome_table', (req, res) => {
 
 	var seqid_list;
 	let myurl = url.parse(req.url, true);
-	//console.log('otid',myurl.query.otid)
+	console.log('otid',myurl.query.otid)
 	var otid = myurl.query.otid
 	if(['all','alloral'].indexOf(otid) == -1) {
-		seqid_list = C.taxonomy_taxonlookup[otid].genomes
+		seqid_list = C.taxonomy_taxonlookup[otid]
 	}else{
 		seqid_list = [] // TODO
 	}
-	//console.log('seqid_list',seqid_list)
-	list_of_objs = []
-	for(n in seqid_list)
-	{
-
-		list_of_objs.push(C.genomes_lookup[seqid_list[n]])
-	}
-	console.log(list_of_objs)
-
+	// get each secid from C.genome_lookup
+	console.log('seqid_list',seqid_list)
+	
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
 		hostname: CFG.hostname,
 		otid: otid,  // default
-		seqid_list: JSON.stringify(list_of_objs)
+		seqid_list: JSON.stringify(seqid_list),
+		rna_ver : C.rRNA_refseq_version,
+		gen_ver : C.genomic_refseq_verson
 		
 		
 	});
@@ -57,7 +53,9 @@ router.get('/jbrowse', (req, res) => {
 		title: 'HOMD :: Taxon Table', 
 		hostname: CFG.hostname,
 		gnom: '',  // default
-		genomes: JSON.stringify(C.available_jbgenomes)
+		genomes: JSON.stringify(C.available_jbgenomes),
+		rna_ver : C.rRNA_refseq_version,
+		gen_ver : C.genomic_refseq_verson
 	});
 });
 router.post('/jbrowse', (req, res) => {
@@ -74,7 +72,9 @@ router.post('/jbrowse', (req, res) => {
 		title: 'HOMD :: Taxon Table', 
 		hostname: CFG.hostname,
 		gnom: gnom,  // default
-		genomes: JSON.stringify(C.available_jbgenomes)
+		genomes: JSON.stringify(C.available_jbgenomes),
+		rna_ver : C.rRNA_refseq_version,
+		gen_ver : C.genomic_refseq_verson
 	});
 });
 router.post('/jbrowse_ajax', (req, res) => {
@@ -119,6 +119,8 @@ router.get('/genome_description', (req, res) => {
 		data2: JSON.stringify(data2),
 		data3: JSON.stringify(data3),
 		data4: JSON.stringify(data4),
+		rna_ver : C.rRNA_refseq_version,
+		gen_ver : C.genomic_refseq_verson
 	});
 });
 module.exports = router;

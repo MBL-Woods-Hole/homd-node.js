@@ -13,10 +13,12 @@ const C		  = require(app_root + '/public/constants');
 
 router.get('/login', (req, res) => {
     res.render('pages/admin/login', { 
-                      title: 'HOMD :: Login',
-                      user: req.user, 
-                      hostname: CFG.hostname,
-                      return_to_url: req.session.returnTo 
+		  title: 'HOMD :: Login',
+		  user: req.user, 
+		  hostname: CFG.hostname,
+		  return_to_url: req.session.returnTo,
+		  rna_ver : C.rRNA_refseq_version,
+		  gen_ver : C.genomic_refseq_verson
     });
 });
 
@@ -28,10 +30,12 @@ router.post('/login',
 
 router.get('/register', (req, res) => {
     res.render('pages/admin/register', { 
-                      title: 'HOMD :: Signup',
-                      user: req.user, 
-                      hostname: CFG.hostname,
-                      return_to_url: req.session.returnTo 
+		  title: 'HOMD :: Signup',
+		  user: req.user, 
+		  hostname: CFG.hostname,
+		  return_to_url: req.session.returnTo,
+		  rna_ver : C.rRNA_refseq_version,
+		  gen_ver : C.genomic_refseq_verson 
     });
 });
 
@@ -43,10 +47,12 @@ router.post('/register', passport.authenticate('local-signup', {
 
 router.get('/reset_password', (req, res) => {
     res.render('pages/admin/reset_pasword', { 
-                      title: 'HOMD :: Reset Password',
-                      user: req.user, 
-                      hostname: CFG.hostname,
-                      return_to_url: req.session.returnTo 
+		  title: 'HOMD :: Reset Password',
+		  user: req.user, 
+		  hostname: CFG.hostname,
+		  return_to_url: req.session.returnTo,
+		  rna_ver : C.rRNA_refseq_version,
+		  gen_ver : C.genomic_refseq_verson 
     });
 });
 

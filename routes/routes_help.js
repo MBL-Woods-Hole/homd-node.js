@@ -13,9 +13,11 @@ router.get('/stub', (req, res) => {
 
 router.get('/user_guide', (req, res) => {
     res.render('pages/help/user_guide', { 
-                      title: "HOMD :: User's Guide",
-                      user: req.user, 
-                      hostname: CFG.hostname,
+		  title: "HOMD :: User's Guide",
+		  user: req.user, 
+		  hostname: CFG.hostname,
+		  rna_ver : C.rRNA_refseq_version,
+		  gen_ver : C.genomic_refseq_verson
                       
     });
 });
@@ -52,11 +54,13 @@ router.get('/template', (req, res) => {
     	res.render('pages/help/stub', {title:'stub'});
     }else{
     res.render('pages/help/help_pages', { 
-                      title: "HOMD :: User's Guide: "+info_content,
-                      page: info_content,  // this will open the menu
-                      menu: menu_item,
-                      user: req.user, 
-                      hostname: CFG.hostname,
+		  title: "HOMD :: User's Guide: "+info_content,
+		  page: info_content,  // this will open the menu
+		  menu: menu_item,
+		  user: req.user, 
+		  hostname: CFG.hostname,
+		  rna_ver : C.rRNA_refseq_version,
+		  gen_ver : C.genomic_refseq_verson
                       
     });
     }

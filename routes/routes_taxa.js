@@ -39,7 +39,9 @@ router.get('/tax_table', (req, res) => {
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(C.tax_status_on) ,  // default
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
-		search: ''
+		search: '',
+		rna_ver : C.rRNA_refseq_version,
+		gen_ver : C.genomic_refseq_verson
 	});
 });
 router.post('/tax_table', (req, res) => {
@@ -91,7 +93,9 @@ router.post('/tax_table', (req, res) => {
 		statusfltr: JSON.stringify(statusfilter_on),
 		sitefltr:JSON.stringify(sitefilter_on),
 		
-		search: ''
+		search: '',
+		rna_ver : C.rRNA_refseq_version,
+		gen_ver : C.genomic_refseq_verson
 	});
 });
 router.get('/tax_hierarchy', (req, res) => {
@@ -106,7 +110,9 @@ router.get('/tax_hierarchy', (req, res) => {
 			title: 'HOMD :: Taxon Hierarchy', 
 			hostname: CFG.hostname,
 			data: {},
-			dhtmlx: JSON.stringify(C.dhtmlxTreeData)
+			dhtmlx: JSON.stringify(C.dhtmlxTreeData),
+			rna_ver : C.rRNA_refseq_version,
+			gen_ver : C.genomic_refseq_verson
 		});
 		
 	// use this only if use the version 7 dhtmlx tree	(non-dynamic loading)
@@ -126,7 +132,9 @@ router.get('/tax_level', (req, res) => {
 	res.render('pages/taxa/taxlevel', {
 		title: 'HOMD :: Taxon Level', 
 		hostname: CFG.hostname,
-		level: 'domain'
+		level: 'domain',
+		rna_ver : C.rRNA_refseq_version,
+		gen_ver : C.genomic_refseq_verson
 	});
 });
 //
@@ -301,6 +309,8 @@ router.get('/tax_description', (req, res) => {
 		data2: JSON.stringify(data2),
 		data3: JSON.stringify(data3),
 		data4: JSON.stringify(data4),
+		rna_ver : C.rRNA_refseq_version,
+		gen_ver : C.genomic_refseq_verson
 	});
 });
 ////////////////////////////////////////////////////////////////////////////////////

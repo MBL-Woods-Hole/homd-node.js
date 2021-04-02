@@ -24,6 +24,8 @@ router.post('/refseqBLASTN', (req, res) => {
 	res.render('pages/refseq/blastn', {
 		title: 'HOMD :: Taxon Table', 
 		hostname: CFG.hostname,
+		rna_ver : C.rRNA_refseq_version,
+		gen_ver : C.genomic_refseq_verson
 		
 	});
 });

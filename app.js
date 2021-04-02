@@ -131,14 +131,13 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 // homd-scripts/homd_init_data.py
 //
 var data_init_files =[
-
+	
 	C.refs_lookup_fn,
 	C.lineage_lookup_fn, 
 	C.info_lookup_fn,
-	//C.tax_list_fn,
 	C.tax_lookup_fn,
-	C.tax_hierarchy_fn,
-    C.genomes_lookup_fn,
+	C.tax_hierarchy_fn,  // gives you taxonomy lineage
+	C.genome_lookup_fn
 ]
  
 function readAsync(file, callback) {
@@ -149,14 +148,13 @@ async.map(data_init_files, readAsync, function(err, results) {
     // results = ['file 1 content', 'file 2 content', ...]
     // add the data to CONSTANTS so they are availible everywhere
     // the lookups are keyed on Oral_taxon_id
-    //C.genome_idxlookup 		= JSON.parse(results[0]);
-    C.taxonomy_refslookup 	= JSON.parse(results[0]);
-    C.taxonomy_lineagelookup = JSON.parse(results[1]);
-    C.taxonomy_infolookup 	= JSON.parse(results[2]);
-   // C.taxonomy_taxonlist 	= JSON.parse(results[4]);
-    C.taxonomy_taxonlookup 	= JSON.parse(results[3]);
+    
+    C.taxonomy_refslookup 			= JSON.parse(results[0]);
+    C.taxonomy_lineagelookup 		= JSON.parse(results[1]);
+    C.taxonomy_infolookup 			= JSON.parse(results[2]);
+    C.taxonomy_taxonlookup 			= JSON.parse(results[3]);
     C.homd_taxonomy = new CustomTaxa(JSON.parse(results[4]));
-    C.genomes_lookup 	= JSON.parse(results[5]);
+    C.genome_lookup 				= JSON.parse(results[5]);
     //examples
    
     for(var n in C.homd_taxonomy){
