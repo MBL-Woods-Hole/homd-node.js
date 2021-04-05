@@ -12,6 +12,7 @@ const path     = require('path');
 const C		  = require(app_root + '/public/constants');
 
 router.get('/login', (req, res) => {
+    helpers.accesslog(req, res)
     res.render('pages/admin/login', { 
 		  title: 'HOMD :: Login',
 		  user: req.user, 
@@ -29,6 +30,7 @@ router.post('/login',
 );
 
 router.get('/register', (req, res) => {
+    helpers.accesslog(req, res)
     res.render('pages/admin/register', { 
 		  title: 'HOMD :: Signup',
 		  user: req.user, 
@@ -46,6 +48,7 @@ router.post('/register', passport.authenticate('local-signup', {
 }));
 
 router.get('/reset_password', (req, res) => {
+    helpers.accesslog(req, res)
     res.render('pages/admin/reset_pasword', { 
 		  title: 'HOMD :: Reset Password',
 		  user: req.user, 

@@ -12,7 +12,7 @@ const createIframe = require("node-iframe");
 //app.use(createIframe);
 router.get('/genome_table', (req, res) => {
 	console.log('in genometable -get')
-
+    helpers.accesslog(req, res)
 	var seqid_list;
 	let myurl = url.parse(req.url, true);
 	console.log('otid',myurl.query.otid)
@@ -38,7 +38,7 @@ router.get('/genome_table', (req, res) => {
 })
 router.get('/jbrowse', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-	
+	helpers.accesslog(req, res)
 	console.log('jbrowse-get')
 	
 	// See models/homd_taxonomy.js for C.tax_table_results
@@ -60,7 +60,7 @@ router.get('/jbrowse', (req, res) => {
 });
 router.post('/jbrowse', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-	
+	helpers.accesslog(req, res)
 	console.log('jbrowse-post')
 	
 	// See models/homd_taxonomy.js for C.tax_table_results
@@ -80,12 +80,14 @@ router.post('/jbrowse', (req, res) => {
 router.post('/jbrowse_ajax', (req, res) => {
 	console.log('AJAX JBrowse')
 	console.log(req.body);
+	helpers.accesslog(req, res)
 	//open(jburl)
 	
 	res.send(JSON.stringify({'static_data':req.body.gnom}));
 });
 router.get('/genome_description', (req, res) => {
 	console.log('in genomedescription -get')
+	helpers.accesslog(req, res)
 		/*
 	1	Oral Taxon ID	191	
 	2	HOMD Sequence ID	SEQF1851	

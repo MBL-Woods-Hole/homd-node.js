@@ -5,13 +5,15 @@ const fs       = require('fs-extra');
 const url = require('url');
 const path     = require('path');
 const C		  = require(app_root + '/public/constants');
-//const helpers = require(app_root + '/routes/helpers/helpers');
+const helpers = require(app_root + '/routes/helpers/helpers');
 
 router.get('/stub', (req, res) => {
     res.render('pages/help/stub', {title:'stub'});
+    helpers.accesslog(req, res)
 });
 
 router.get('/user_guide', (req, res) => {
+    helpers.accesslog(req, res)
     res.render('pages/help/user_guide', { 
 		  title: "HOMD :: User's Guide",
 		  user: req.user, 
@@ -25,6 +27,7 @@ router.get('/user_guide', (req, res) => {
 router.get('/template', (req, res) => {
     // the url should always be formed: /help/template?page=name
     console.log('')
+    helpers.accesslog(req, res)
     console.log('in template')
     console.log(req.session)
     const parsed_url = url.parse(req.url, true);
@@ -71,7 +74,7 @@ router.post('/ajax', function(req, res){
     console.log('in ajax-on server')
     //console.log('req.body');
     console.log(req.body);
-    
+    helpers.accesslog(req, res)
     
     var file;
     var id = req.body.id;  //.split('--')

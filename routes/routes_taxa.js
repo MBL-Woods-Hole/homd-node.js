@@ -9,7 +9,7 @@ const helpers = require(app_root + '/routes/helpers/helpers');
 
 router.get('/tax_table', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-	
+	helpers.accesslog(req, res)
 	console.log('in taxtable -get')
 	helpers.show_session(req)
 	let myurl = url.parse(req.url, true);
@@ -45,6 +45,7 @@ router.get('/tax_table', (req, res) => {
 	});
 });
 router.post('/tax_table', (req, res) => {
+	helpers.accesslog(req, res)
 	console.log('in taxtable -post')
 	tcount = C.taxonomy_taxalist.length
 	//helpers.show_session(req)
@@ -101,7 +102,7 @@ router.post('/tax_table', (req, res) => {
 router.get('/tax_hierarchy', (req, res) => {
 	//the json file was created from a csv of vamps taxonomy
 	// using the script: taxonomy_csv2json.py in ../homd_data
-	
+	helpers.accesslog(req, res)
 	// use this only if use the version 5 dhtmlx tree	( w/dynamic loading)
 	// using file public/data/all_silva_taxonomy.json
 	//C.dhtmlxTreeData
@@ -128,7 +129,7 @@ router.get('/tax_hierarchy', (req, res) => {
 // 	});
 });
 router.get('/tax_level', (req, res) => {
-	
+	helpers.accesslog(req, res)
 	res.render('pages/taxa/taxlevel', {
 		title: 'HOMD :: Taxon Level', 
 		hostname: CFG.hostname,
@@ -143,7 +144,7 @@ router.post('/taxLevel', (req, res) => {
 	
 	//console.log(req.body)
 	var rank = req.body.rank
-	
+	helpers.accesslog(req, res)
 	const tax_resp = []
 	fs.readFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn), 'utf8', (err, data) => {
     	if (err)
@@ -196,6 +197,7 @@ router.post('/taxLevel', (req, res) => {
 //
 
 router.get('/tax_download', (req, res) => {
+	helpers.accesslog(req, res)
 	res.render('pages/taxon/taxdownload', {
 		title: 'HOMD :: Taxon Download', 
 		hostname: CFG.hostname 
@@ -207,6 +209,7 @@ router.get('/tax_download', (req, res) => {
 router.get('/tax_custom_dhtmlx', (req, res) => {
   console.time("TIME: tax_custom_dhtmlx");
   console.log('IN tax_custom_dhtmlx')
+  helpers.accesslog(req, res)
   let myurl = url.parse(req.url, true);
   let id = myurl.query.id;
 
@@ -250,7 +253,7 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
 router.get('/tax_description', (req, res) => {
 	let myurl = url.parse(req.url, true);
   	let otid = myurl.query.otid;
-	console.log('where am i1')
+	helpers.accesslog(req, res)
 	/*
 	This busy page needs:
 	1  otid 		type:string
@@ -277,21 +280,21 @@ router.get('/tax_description', (req, res) => {
     	return
   	}
 	var data1 = C.taxonomy_taxonlookup[otid]
-	console.log('where am i2')
+	
 	if( C.taxonomy_infolookup[otid] == undefined){
     	req.flash('TRY AGAIN')
     	res.send('That Taxon ID: ('+otid+') was not found2 - Use the Back Arrow and select another')
     	return
   	}
 	var data2 = C.taxonomy_infolookup[otid]
-	console.log('where am i3')
+	
 	if( C.taxonomy_lineagelookup[otid] == undefined){
     	req.flash('TRY AGAIN')
     	res.send('That Taxon ID: ('+otid+') was not found3 - Use the Back Arrow and select another')
     	return
   	}
 	var data3 = C.taxonomy_lineagelookup[otid]
-	console.log('where am i4')
+	
 	if(C.taxonomy_refslookup[otid]){
 		var data4 = C.taxonomy_refslookup[otid]
 	}else{

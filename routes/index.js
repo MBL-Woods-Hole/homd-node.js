@@ -1,6 +1,8 @@
 "use strict"
 const express = require('express');
 var router = express.Router();
+
+
 const fs   = require('fs-extra');
 const path  = require('path');
 const helpers = require('./helpers/helpers');
@@ -8,12 +10,19 @@ const url       = require('url');
 //const ds = require('./load_all_datasets');
 const CFG = require(app_root + '/config/config');
 const C	  = require(app_root + '/public/constants');
-
+var timestamp = new Date(); // getting current timestamp
 //var rs_ds = ds.get_datasets( () => {  
 
 /* GET home page. */
 router.get('/', (req, res) => {
-helpers.show_session(req)
+
+ helpers.accesslog(req, res)
+ //  console.log('Timestamp:', timestamp);
+//   console.log('Request Headers:', req.headers);
+//   console.log('Request Query Params:', req.query); // for all query params
+//   console.log('Request Path:', req.path);
+//   console.log('Request Route:', req.route);
+//helpers.show_session(req)
 res.render('pages/home', {
 		title: 'HOMD :: Human Oral Microbiome Database',
 		hostname: CFG.hostname 

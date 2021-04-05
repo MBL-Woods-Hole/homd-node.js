@@ -1,5 +1,6 @@
 "use strict"
 // for newrelic: start in config.js
+const winston = require('winston');
 const config = require('./config/config');
 const dbconn = require('./config/database').pool;
 const path = require('path');

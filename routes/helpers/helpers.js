@@ -3,6 +3,7 @@ const C       = require(app_root + '/public/constants');
 //const CFG  = require(app_root + '/config/config');
 const express     = require('express');
 const fs          = require('fs-extra');
+var accesslog = require('access-log');
 //const nodemailer  = require('nodemailer');
 //let transporter = nodemailer.createTransport({});
 const util        = require('util');
@@ -54,3 +55,9 @@ module.exports.show_session = (req) =>{
     console.log('req.sessionID',req.sessionID)
     console.log('req.session.id',req.session.id)
 };
+module.exports.accesslog = (req, res) =>{
+    accesslog(req, res, C.access_log_format, function(s) {
+      console.log(s);
+      fs.writeFileSync(C.access_logfile, s+'\n', {flag:'a'})
+    });
+}

@@ -1,4 +1,4 @@
-
+const CFG   = require(app_root + '/config/config');
 let constants = {};
 
 constants.rRNA_refseq_version    = '15.22'
@@ -23,5 +23,7 @@ constants.refs_lookup_fn 	= 'homd_data_refslookup.json'
 // genome filenames
 //constants.gindex_lookup_fn 	= 'homd_genomedata_indexlookup.json'
 
+constants.access_log_format = 'url=":url" method=":method" statusCode=":statusCode" delta=":delta" ip=":ip"'
+constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // if you want a non-relative url use: config.js
 
 module.exports = constants;
