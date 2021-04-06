@@ -199,12 +199,14 @@ function clear_filter_form(){
 	for (n in els){
 		els[n].checked = false
 	}
+	document.getElementById('valid1').checked = false
+	document.getElementById('valid2').checked = false
 }
 
 function check_then_post(form){
-   	console.log(form)
-   	var filter_status = ['named','unnamed','phylotype','lost','dropped']
-	var filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoral']
+   	//console.log(form)
+   	var filter_status = ['named','unnamed','phylotype','lost','dropped','nonoralref']
+	var filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
    	var els = document.getElementsByClassName('filter_ckbx')
    	got_one_status = 0
    	got_one_sites = 0
@@ -224,3 +226,24 @@ function check_then_post(form){
 	}
    	form.submit()
 }
+
+function change_valid(val){
+    
+    //console.log(val)
+    var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
+    var extra= ['dropped','nonoralref']
+    if(val == 'all'){
+        for(n in extra){
+            document.getElementById(extra[n]).checked = true
+        }
+    }else{
+         for(n in extra){
+            document.getElementById(extra[n]).checked = false
+        }
+    }
+    for(n in lst){
+        document.getElementById(lst[n]).checked = true
+    }
+}
+
+

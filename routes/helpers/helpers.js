@@ -41,6 +41,13 @@ module.exports.compareStrings_alpha = (a, b) => {
   a = a.toLowerCase();
   b = b.toLowerCase();
   return (a < b) ? -1 : (a > b) ? 1 : 0;
+  
+  // sort a list of objects by a value?
+  // obj_list.sort(function sortByTime(a, b) {
+//       //reverse sort: recent-->oldest
+//       return helpers.compareStrings_alpha(b.time.getTime(), a.time.getTime());
+//     });
+  
 };
 // Sort list of json objects numerically
 module.exports.compareStrings_int   = (a, b) => {
@@ -57,7 +64,16 @@ module.exports.show_session = (req) =>{
 };
 module.exports.accesslog = (req, res) =>{
     accesslog(req, res, C.access_log_format, function(s) {
-      console.log(s);
-      fs.writeFileSync(C.access_logfile, s+'\n', {flag:'a'})
+      //console.log(s);
+      //fs.writeFileSync(C.access_logfile, s+'\n', {flag:'a'})
+    
+    
+        fs.writeFile(C.access_logfile, s+'\n', err => {
+             if (err) {
+                 console.error(err)
+                 return
+             }
+             //file written successfully
+         })
     });
 }

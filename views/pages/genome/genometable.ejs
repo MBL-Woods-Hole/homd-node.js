@@ -1,4 +1,4 @@
-<% info = JSON.parse(seqid_list) %>
+<% ginfo = JSON.parse(seqid_list) %>
 
 
 <!DOCTYPE html>
@@ -54,11 +54,11 @@
 </thead>
 <tbody>
 
-<% for(n in info){ %>
+<% for(n in ginfo){ %>
 	<% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
 	<tr>
-		<td><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td><td><%= info[n].genus %></td><td><%= info[n].species %></td><td>&nbsp;</td>
-		<td><a href="genome_description?gid=<%= info[n].gid %>"> <%= info[n].gid %></a></td><td></td><td>&nbsp;</td><td>&nbsp;</td>
+		<td><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td><td><%= ginfo[n].genus %></td><td><%= ginfo[n].species %></td><td><%= ginfo[n].ccolct %></td>
+		<td><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td><td><%= ginfo[n].ncontigs %></td><td><%= ginfo[n].tlength %></td><td><%= ginfo[n].gc %></td>
 	<td class='gbutton'>Taxon Desc</td><td class='gbutton'>Genome Info</td><td class='gbutton'>Genome Viewer</td><td class='gbutton'>BLAST</td>
 	<td class='gbutton'>PROKKA</td><td class='gbutton'>NCBI</td><td class='gbutton'>HOMD</td>
 	</tr>

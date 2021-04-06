@@ -7,9 +7,9 @@ constants.genomic_refseq_verson = '9.14'
 constants.RANKS = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
 constants.available_jbgenomes = ['volvox','tomato','yeast_synteny'];
 
-constants.tax_status_all =['named','unnamed','phylotype','lost','dropped'];
+constants.tax_status_all =['named','unnamed','phylotype','lost','dropped','nonoralref'];
 constants.tax_status_on =['named','unnamed','phylotype','lost'];
-constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoral'];
+constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralref'];
 constants.tax_sites_on =['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
 
 // tax filenames (fn)
@@ -23,7 +23,9 @@ constants.refs_lookup_fn 	= 'homd_data_refslookup.json'
 // genome filenames
 //constants.gindex_lookup_fn 	= 'homd_genomedata_indexlookup.json'
 
-constants.access_log_format = 'url=":url" method=":method" statusCode=":statusCode" delta=":delta" ip=":ip"'
+//constants.access_log_format = 'url=":url" method=":method" statusCode=":statusCode" delta=":delta" ip=":ip"'
+constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'
+
 constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // if you want a non-relative url use: config.js
 
 module.exports = constants;

@@ -15,12 +15,16 @@ router.get('/tax_table', (req, res) => {
 	let myurl = url.parse(req.url, true);
   	//console.log(myurl.query)
 	req.session.tax_letter = myurl.query.k
-	
+	var intiial_status_filter = ['named','unnamed','phylotype','lost']  //['dropped','nonoralref']
 	
 	//console.log(tax_letter)
 	// filter
-	send_tax_obj1 = Object.values(C.taxonomy_taxonlookup);
-	tcount = send_tax_obj1.length
+	send_tax_obj = Object.values(C.taxonomy_taxonlookup);
+	tcount = send_tax_obj.length
+	send_tax_obj1 = send_tax_obj.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) != -1 )
+	//var intiial_site_filter = ['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
+	//send_tax_obj = send_tax_obj.filter(item => intiial_site_filter.indexOf(item.site[0].toLowerCase()) != -1)
+	
 	if(req.session.tax_letter){
 	   // COOL....
 	   send_tax_obj = send_tax_obj1.filter(item => item.genus.charAt(0) == req.session.tax_letter)
@@ -29,7 +33,11 @@ router.get('/tax_table', (req, res) => {
 	}
 	// table sort done via client side js library sorttable: 
 	// https://www.kryogenix.org/code/browser/sorttable
-    console.log(send_tax_obj[0])
+    //console.log(send_tax_obj[0])
+    //sort
+    send_tax_obj.sort(function (a, b) {
+      return helpers.compareStrings_alpha(a.genus, b.genus);
+    });
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		hostname: CFG.hostname,
@@ -47,13 +55,13 @@ router.get('/tax_table', (req, res) => {
 router.post('/tax_table', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('in taxtable -post')
-	tcount = C.taxonomy_taxalist.length
+	tcount = C.taxonomy_taxonlookup.length
 	//helpers.show_session(req)
 	console.log(req.body)
 	//plus valid
 	valid = req.body.valid  // WHAT IS THIS???
 	// filter_status = ['named','unnamed','phylotype','lost','dropped']
-// 	filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoral']
+// 	filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
 	
 	statusfilter_on =[]
 	sitefilter_on  = []
@@ -65,30 +73,28 @@ router.post('/tax_table', (req, res) => {
 		   sitefilter_on.push(i)
 		}
 	}
-	//console.log('statusfilter_on',statusfilter_on)
-	//console.log('sitefilter_on',sitefilter_on)
+	console.log('statusfilter_on',statusfilter_on)
+	console.log('sitefilter_on',sitefilter_on)
 	// letterfilter
-	send_tax_obj1 = Object.values(C.taxonomy_taxonlookup);
-	tcount = send_tax_obj1.length
+	send_tax_obj0 = Object.values(C.taxonomy_taxonlookup);
+	tcount = send_tax_obj0.length
 	if(req.session.tax_letter){
 	   // COOL....
-	   send_tax_obj = send_tax_obj1.filter(item => item.genus.charAt(0) == req.session.tax_letter)
+	   send_tax_obj1 = send_tax_obj0.filter(item => item.genus.charAt(0) == req.session.tax_letter)
 	}else{
-		send_tax_obj = send_tax_obj1
+		send_tax_obj1 = send_tax_obj0
 	}
 	
-	// status filter
-	//console.log('send_tax_obj[0]',send_tax_obj[0])
-	send_tax_obj = send_tax_obj.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) != -1 )
-	//console.log('send_tax_obj',send_tax_obj)
-	// site filter
-	send_tax_obj = send_tax_obj.filter(item => sitefilter_on.indexOf(item.site.toLowerCase()) != -1)
+	send_tax_obj2 = send_tax_obj1.filter(item => sitefilter_on.indexOf(item.site[0].toLowerCase()) != -1)
+	send_tax_obj3 = send_tax_obj2.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) != -1 )    
+	
+	//console.log('send_tax_objC',send_tax_obj)
 	// use session for taxletter
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		hostname: CFG.hostname,
-		res: JSON.stringify(send_tax_obj),
-		count: Object.keys(send_tax_obj).length,
+		res: JSON.stringify(send_tax_obj3),
+		count: Object.keys(send_tax_obj3).length,
 		tcount: tcount,
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(statusfilter_on),
@@ -106,7 +112,7 @@ router.get('/tax_hierarchy', (req, res) => {
 	// use this only if use the version 5 dhtmlx tree	( w/dynamic loading)
 	// using file public/data/all_silva_taxonomy.json
 	//C.dhtmlxTreeData
-	console.log(C.dhtmlxTreeData)
+	//console.log(C.dhtmlxTreeData)
 	res.render('pages/taxa/taxhierarchy', {
 			title: 'HOMD :: Taxon Hierarchy', 
 			hostname: CFG.hostname,
@@ -281,33 +287,30 @@ router.get('/tax_description', (req, res) => {
   	}
 	var data1 = C.taxonomy_taxonlookup[otid]
 	
-	if( C.taxonomy_infolookup[otid] == undefined){
-    	req.flash('TRY AGAIN')
-    	res.send('That Taxon ID: ('+otid+') was not found2 - Use the Back Arrow and select another')
-    	return
-  	}
-	var data2 = C.taxonomy_infolookup[otid]
-	
-	if( C.taxonomy_lineagelookup[otid] == undefined){
-    	req.flash('TRY AGAIN')
-    	res.send('That Taxon ID: ('+otid+') was not found3 - Use the Back Arrow and select another')
-    	return
-  	}
-	var data3 = C.taxonomy_lineagelookup[otid]
-	
+	if(C.taxonomy_infolookup[otid] ){
+	    var data2 = C.taxonomy_infolookup[otid]
+	}else{
+	    console.warn('Could not find info for',otid)
+	    var data2 = {}
+	}
+	if(C.taxonomy_lineagelookup[otid] ){
+	    var data3 = C.taxonomy_lineagelookup[otid]
+	}else{
+	    console.warn('Could not find lineage for',otid)
+	    var data3 = {}
+	}
 	if(C.taxonomy_refslookup[otid]){
 		var data4 = C.taxonomy_refslookup[otid]
 	}else{
+		console.warn('Could not find refs for',otid)
 		var data4 = []
 	}
 	
-	//for(c in data2){
-	  console.log(data4)
-	//}
+	
 	res.render('pages/taxa/taxdescription', {
 		title: 'HOMD :: Taxon Level', 
 		hostname: CFG.hostname,
-		taxonid: otid,
+		otid: otid,
 		data1: JSON.stringify(data1),
 		data2: JSON.stringify(data2),
 		data3: JSON.stringify(data3),

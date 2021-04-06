@@ -12,23 +12,27 @@
 <title><%= title %></title>
 <link rel="stylesheet" href="/css/taxa_pages.css" >
 <style>
-.button {
-   font: bold 11px Arial;
-  text-decoration: none;
-  background-color: #EEEEEE;
-  color: #333333;
-  padding: 2px;
-  border-top: 1px solid #CCCCCC;
-  border-right: 1px solid #333333;
-  border-bottom: 1px solid #333333;
-  border-left: 1px solid #CCCCCC;
-}
-table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
-    content: " \25B4\25BE" 
-}
-#navigate-alpha a {
-   color:#006699;
-}
+    .button {
+       font: bold 11px Arial;
+      text-decoration: none;
+      background-color: #EEEEEE;
+      color: #333333;
+      padding: 2px;
+      border-top: 1px solid #CCCCCC;
+      border-right: 1px solid #333333;
+      border-bottom: 1px solid #333333;
+      border-left: 1px solid #CCCCCC;
+
+    }
+    table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+        content: " \25B4\25BE" 
+    }
+    #navigate-alpha a {
+       color:#006699;
+    }
+    #radio_btns {
+        font-size:11px;
+    }
 </style>
 
 <body>
@@ -106,29 +110,31 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 	 <div id='status-div' style=''>
 	 Status: 
 	 
-	 <input type='checkbox' class='filter_ckbx' name='named' \> Named&nbsp;
-	 <input type='checkbox' class='filter_ckbx' name='unnamed' \> Unnamed&nbsp;
-	 <input type='checkbox' class='filter_ckbx' name='phylotype' \> Phylotypes&nbsp;
-	 <input type='checkbox' class='filter_ckbx' name='lost' \> Lost&nbsp;
-	 <input type='checkbox' class='filter_ckbx' name='dropped' \> Dropped&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='named' name='named' \> Named&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='unnamed' name='unnamed' \> Unnamed&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='phylotype' name='phylotype' \> Phylotypes&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='lost' name='lost' \> Lost&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' \> Dropped&nbsp;
 	 </div>
-	 </td><td>
-	 <input type='radio' checked name='valid' value='only_valid'\> All Valid&nbsp;
-	 <input type='radio'         name='valid' value='all' \> All&nbsp;
+	 </td><td id='radio_btns'>
+	 
+	 <input type='radio' id='valid1' name='valid' value='only_valid'  onclick="change_valid('only')"\> All Valid Taxa&nbsp;
+	 <input type='radio' id='valid2' name='valid' value='all'  onclick="change_valid('all')"\> All&nbsp;
 	 </td></tr>
 	 <tr><td>
 	 <div id='bodysite-div' style=''>
 	 Body Site: 
-	 <input type='checkbox' class='filter_ckbx' name='oral' \> Oral&nbsp;
-	 <input type='checkbox' class='filter_ckbx' name='nasal' \> Nasal&nbsp;
-	 <input type='checkbox' class='filter_ckbx' name='skin' \> Skin&nbsp;
-	 <input type='checkbox' class='filter_ckbx' name='vaginal' \> Vaginal&nbsp;
-	 <input type='checkbox' class='filter_ckbx' name='unassigned' \> Unassigned&nbsp;
-	 <input type='checkbox' class='filter_ckbx' name='nonoral' \> NonOralRef&nbsp;
+	 
+	 <input type='checkbox' class='filter_ckbx' id='oral' name='oral' \> Oral&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='nasal' name='nasal' \> Nasal&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='skin' name='skin' \> Skin&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' \> Vaginal&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='unassigned' name='unassigned' \> Unassigned&nbsp;
+	 <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' \> NonOralRef&nbsp;
 	 </div>
 	 </td><td>
 	 <input type='button' value=' Show ' onclick="check_then_post(this.form)">
-	 <input type='button' value=' Clear ' onclick='clear_filter_form()'>
+	 <input type='button' value=' Clear All ' onclick='clear_filter_form()'>
 	 </td></tr>
 	 </table>
  </form>
@@ -156,7 +162,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		   <td style='text-align:center' nowrap>
 		   <% num_genomes = list[n].genomes.length %>
 		   <% if(num_genomes == 0){ %>
-		     <a href="" class="button" style='color:grey;'><%= num_genomes %> Genomes</a>
+		     <span class="button" style='color:grey;'><%= num_genomes %> Genomes</span>
 		     
 		   <% }else{ %>
 		     
@@ -194,9 +200,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     // uncheck all
     var els = document.getElementsByClassName('filter_ckbx')
     var all_on = statusfltr.concat(sitefltr)
-    // console.log(statusfltr)
-//     console.log(sitefltr)
-//     console.log(all_on)
     for (n in els){
 		if(all_on.indexOf(els[n].name) != -1){
 		  els[n].checked = true
@@ -204,7 +207,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 	} 
 	if(letter){
 		document.getElementById(letter).style.color = 'red'
-		//document.getElementById(letter).style.fontWeight = 'bold'
 		document.getElementById(letter).style.fontSize = 'medium'
 	}else{
 		document.getElementById('all').style.color = 'red'
