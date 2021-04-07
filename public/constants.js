@@ -13,13 +13,15 @@ constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralr
 constants.tax_sites_on =['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
 
 // tax filenames (fn)
-constants.taxcounts_fn 		= 'homd_data_taxcounts.json'
-constants.tax_lookup_fn 	= 'homd_data_taxalookup.json'
-constants.genome_lookup_fn 		= 'homd_genome_lookup.json'
-constants.tax_hierarchy_fn 	= 'homd_data_hierarchy.json'
+constants.genome_lookup_fn 	= 'homd_genome_lookup.json'
 constants.info_lookup_fn 	= 'homd_data_infolookup.json'
 constants.lineage_lookup_fn = 'homd_data_lineagelookup.json'
 constants.refs_lookup_fn 	= 'homd_data_refslookup.json'
+constants.taxcounts_fn 		= 'homd_data_taxcounts.json'
+constants.tax_lookup_fn 	= 'homd_data_taxalookup.json'
+constants.tax_hierarchy_fn 	= 'homd_data_hierarchy.json'
+constants.refseq_fn 		= 'homd_data_refseq.json'
+
 // genome filenames
 //constants.gindex_lookup_fn 	= 'homd_genomedata_indexlookup.json'
 

@@ -246,4 +246,30 @@ function change_valid(val){
     }
 }
 
-
+function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,flag) {
+    
+    //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+    defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
+    args={}
+    args.refid = seqid
+    var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("POST", "/taxa/get_refseq", true);
+	xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = xmlhttp.responseText;
+        //console.log(defline)
+        text = '<pre>'+defline+'<br>'
+        text += resp
+        text += '</pre>'
+		var win = window.open("about:blank", null, "width=500,height=600");
+		var doc = win.document;
+		doc.open("text/html");
+		doc.write(text);
+		doc.close();
+    		
+    		
+    		}
+    }
+    xmlhttp.send(JSON.stringify(args));
+}

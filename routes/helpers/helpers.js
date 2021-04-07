@@ -77,3 +77,15 @@ module.exports.accesslog = (req, res) =>{
          })
     });
 }
+
+module.exports.chunkSubstr = (str, size) =>{
+  //https://stackoverflow.com/questions/7033639/split-large-string-in-n-size-chunks-in-javascript
+  const numChunks = Math.ceil(str.length / size)
+  const chunks = new Array(numChunks)
+
+  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
+    chunks[i] = str.substr(o, size)
+  }
+
+  return chunks
+}

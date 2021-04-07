@@ -6,6 +6,8 @@ const url = require('url');
 const path     = require('path');
 const C		  = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
+const queries = require(app_root + '/routes/queries')
+
 
 router.get('/tax_table', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
@@ -86,17 +88,8 @@ router.post('/tax_table', (req, res) => {
 	}
 	
 	// error if site is empty list
-	throw new error
-	send_tax_obj2 = send_tax_obj1.filter(item => sitefilter_on.indexOf( (x)=>{
-	   console.log('x',x)
-	   if(item.site.length == 0){
-	   		true
-	   }else{
-	   		true
-	   }
-	//item.site[0].toLowerCase()) != -1  // true
-	
-	}))
+	//throw new error
+	send_tax_obj2 = send_tax_obj1.filter(item => sitefilter_on.indexOf(item.site[0].toLowerCase()) != -1)
 	
 	send_tax_obj3 = send_tax_obj2.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) != -1 )    
 	
@@ -314,11 +307,16 @@ router.get('/tax_description', (req, res) => {
 	if(C.taxonomy_refslookup[otid]){
 		var data4 = C.taxonomy_refslookup[otid]
 	}else{
-		console.warn('Could not find refs for',otid)
+		console.warn('Could not find references for',otid)
 		var data4 = []
 	}
-	
-	
+	if(C.refseq_lookup[otid]){
+		var data5 = C.refseq_lookup[otid]
+	}else{
+		console.warn('Could not find refseqs for',otid)
+		var data5 = []
+	}
+	console.log(data5)
 	res.render('pages/taxa/taxdescription', {
 		title: 'HOMD :: Taxon Level', 
 		hostname: CFG.hostname,
@@ -327,9 +325,26 @@ router.get('/tax_description', (req, res) => {
 		data2: JSON.stringify(data2),
 		data3: JSON.stringify(data3),
 		data4: JSON.stringify(data4),
+		data5: JSON.stringify(data5),
 		rna_ver : C.rRNA_refseq_version,
 		gen_ver : C.genomic_refseq_verson
 	});
+});
+
+
+router.post('/get_refseq', (req, res) => {
+	console.log(req.body)
+	var refseq_id = req.body.refid;
+
+	// express deprecated req.param(name): Use req.params, req.body, or req.query
+	// See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
+	//FIXME There are 4 fields which do I query???
+	TDBConn.query(queries.get_refseq_query(refseq_id), (err, rows) => {
+		seqstr = rows[0].seq_trim28
+		arr = helpers.chunkSubstr(seqstr,60)
+		html = arr.join('<br>')
+		res.send(html)
+	})
 });
 ////////////////////////////////////////////////////////////////////////////////////
 function get_options_by_node(node) {

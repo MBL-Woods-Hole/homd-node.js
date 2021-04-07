@@ -2,10 +2,12 @@
 // for newrelic: start in config.js
 const winston = require('winston');
 const config = require('./config/config');
-const dbconn = require('./config/database').pool;
+const taxdbconn = require('./config/database').taxon_pool;
+const gendbconn = require('./config/database').genome_pool;
 const path = require('path');
 // explicitly makes conn global
-global.DBConn = dbconn;
+global.TDBConn = taxdbconn;
+global.GDBConn = gendbconn;
 global.app_root = path.resolve(__dirname);
 const C		= require('./public/constants');
 const fs = require('fs-extra');
@@ -39,7 +41,7 @@ const app = express();
 
 
 app.set('appName', 'HOMD');
-require('./config/passport')(passport, DBConn); // pass passport for configuration
+require('./config/passport')(passport, TDBConn); // pass passport for configuration
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
@@ -138,7 +140,8 @@ var data_init_files =[
 	C.info_lookup_fn,
 	C.tax_lookup_fn,
 	C.tax_hierarchy_fn,  // gives you taxonomy lineage
-	C.genome_lookup_fn
+	C.genome_lookup_fn,
+	C.refseq_fn
 ]
  
 function readAsync(file, callback) {
@@ -154,8 +157,9 @@ async.map(data_init_files, readAsync, function(err, results) {
     C.taxonomy_lineagelookup 		= JSON.parse(results[1]);
     C.taxonomy_infolookup 			= JSON.parse(results[2]);
     C.taxonomy_taxonlookup 			= JSON.parse(results[3]);
-    C.homd_taxonomy = new CustomTaxa(JSON.parse(results[4]));
+    C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[4]));
     C.genome_lookup 				= JSON.parse(results[5]);
+    C.refseq_lookup 				= JSON.parse(results[6]);
     //examples
    
     for(var n in C.homd_taxonomy){
