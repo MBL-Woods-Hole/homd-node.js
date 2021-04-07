@@ -85,7 +85,19 @@ router.post('/tax_table', (req, res) => {
 		send_tax_obj1 = send_tax_obj0
 	}
 	
-	send_tax_obj2 = send_tax_obj1.filter(item => sitefilter_on.indexOf(item.site[0].toLowerCase()) != -1)
+	// error if site is empty list
+	throw new error
+	send_tax_obj2 = send_tax_obj1.filter(item => sitefilter_on.indexOf( (x)=>{
+	   console.log('x',x)
+	   if(item.site.length == 0){
+	   		true
+	   }else{
+	   		true
+	   }
+	//item.site[0].toLowerCase()) != -1  // true
+	
+	}))
+	
 	send_tax_obj3 = send_tax_obj2.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) != -1 )    
 	
 	//console.log('send_tax_objC',send_tax_obj)
