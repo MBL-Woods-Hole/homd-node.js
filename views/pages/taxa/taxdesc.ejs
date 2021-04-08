@@ -106,9 +106,9 @@
 </td>
 
 <td class='tbl-title'>PubMed Search:</td><td><a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank'>[PubMed Link]</a></td></tr>
-<tr><td><a href='#'>View in phylogenetic tree</a></td>
+<tr><td><a href='#'>View in phylogenetic tree</a>-TODO</td>
 <td class='tbl-title'>Nucleotide Search:</td><td><a href='https://www.ncbi.nlm.nih.gov/nucleotide?cmd=search&term=%22<%= data1.genus %>+<%= data1.species %>%22+%5Borganism%5D' target='_blank'>[Entrez Nucleotide Link]</a></td></tr>
-<tr><td><a href='#'>Download latest 16S rRNA reference gene sequences</a></td>
+<tr><td><a href='#'>Download latest 16S rRNA reference gene sequences</a>-TODO</td>
 <td class='tbl-title'>Protein Search:</td><td><a href='https://www.ncbi.nlm.nih.gov/protein?cmd=search&term=%22<%= data1.genus %>+<%= data1.species %>%22+%5Borganism%5D' target='_blank'>[Entrez Protein Link]</a></td>
 </tr>
 
@@ -119,13 +119,13 @@
   <td>
     <% if(data1.genomes.length > 0){ %>
         <%= data1.genomes.length %> <a href='/genome/genome_table?otid=<%= otid %>'>View Genome</a>
-        <br><a href='#'>View taxon in genome tree</a>
-    	<br><a href='#'>View taxon in ribosome protein tree</a>
-   		<br><a href='#'>View taxon in genomic 16S rRNA gene tree</a>
+        <br><a href='#'>View taxon in genome tree</a>-TODO
+    	<br><a href='#'>View taxon in ribosome protein tree</a>-TODO
+   		<br><a href='#'>View taxon in genomic 16S rRNA gene tree</a>-TODO
     <% }else{ %>
-        View taxon in genome tree
-    <br>View taxon in ribosome protein tree
-    <br>View taxon in genomic 16S rRNA gene tree
+        View taxon in genome tree-TODO
+    <br>View taxon in ribosome protein tree-TODO
+    <br>View taxon in genomic 16S rRNA gene tree-TODO
     <% } %>
   </td>
 </tr>
@@ -135,15 +135,15 @@
 
 </table>
 <div id='' class='description-header2'>General Information:</div>
-&nbsp;<%= data2.general %>
+&nbsp;<%- data2.general %>
 <div id='' class='description-header2'>Cultivability:</div>
-&nbsp;<%= data2.culta %>
+&nbsp;<%- data2.culta %>
 <div id='' class='description-header2'>Phenotypic Characteristics:</div>
-&nbsp;<%= data2.pheno %>
+&nbsp;<%- data2.pheno %>
 <div id='' class='description-header2'>Prevalence and Source:</div>
-&nbsp;<%= data2.prev %>
+&nbsp;<%- data2.prev %>
 <div id='' class='description-header2'>Disease Associations:</div>
-&nbsp;<%= data2.disease %>
+&nbsp;<%- data2.disease %>
 <div id='' class='description-header2'>References:</div>
 &nbsp;
 <% if(data4){ %>

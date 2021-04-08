@@ -42,8 +42,8 @@ function make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, o
             children_ids: [],
             taxon: "",
             rank: "",
-            node_id: 1
-            
+            node_id: 1,
+            //otid: 'x'
           };
 
   current_dict.taxon = taxa_name;
@@ -62,8 +62,14 @@ function add_children_to_parent(dictMap_by_id, current_dict)
   
 //  TODO: test if changed to let and removed from above
   let parent_node = dictMap_by_id[current_dict.parent_id];
+  
   if (parent_node)
   {
+    //if(current_dict.rank=='species' && current_dict.taxon=='vaginalis'){
+      //console.log(4,parent_node)
+      //console.log(5,current_dict)
+    //}
+    //console.log(parent_node.taxon)
     parent_node.children_ids.push(current_dict.node_id);
   }
   return parent_node;
@@ -109,31 +115,34 @@ function make_taxa_tree_dict(taxonomy_obj)
         if (in_obj.hasOwnProperty(taxa_rank))
         {
           let taxa_name = in_obj[taxa_rank];
-          if (taxa_name)
-          {
+          if (taxa_name) {
 				//console.log("name_rank1 = " + taxa_name + " - " + taxa_rank);
 				let node = get_by_key(dictMap_by_name_n_rank, taxa_name + "_" + taxa_rank);
 				//console.log("old_node = " + JSON.stringify(node));
 
 				if (node) {
+					
 					i_am_a_parent = node.node_id;
-            	}
-            else //(!node)
-            {
-				current_dict = make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, otid);
-				//console.log("current_dict = " + JSON.stringify(current_dict,null,4))
+            	} else {//(!node)
+                    
+                    current_dict = make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, otid);
+                    //console.log("current_dict = " + JSON.stringify(current_dict,null,4))
+                    if(taxa_name=='Methanobrevibacter'){
+                               //console.log('2',current_dict)         
+                        }
+                    taxa_tree_dict.push(current_dict);
 
-				taxa_tree_dict.push(current_dict);
+                    add_to_dict_by_key(dictMap_by_name_n_rank,  current_dict.taxon + "_" + current_dict.rank, current_dict);
 
-				add_to_dict_by_key(dictMap_by_name_n_rank,  current_dict.taxon + "_" + current_dict.rank, current_dict);
+                    add_to_dict_by_key(dictMap_by_otid_n_rank, current_dict.otid + "_" + current_dict.rank, current_dict);
 
-				add_to_dict_by_key(dictMap_by_otid_n_rank, current_dict.otid + "_" + current_dict.rank, current_dict);
+                    i_am_a_parent = current_dict.node_id;
 
-				i_am_a_parent = current_dict.node_id;
-
-				taxon_name_id += 1;
-
-				parent_node = add_children_to_parent(dictMap_by_id, current_dict);
+                    taxon_name_id += 1;
+                    if(taxa_name=='Methanobrevibacter'){
+                               //console.log('3',dictMap_by_id[958])         
+                        }
+                    parent_node = add_children_to_parent(dictMap_by_id, current_dict);
             }
           }
         }

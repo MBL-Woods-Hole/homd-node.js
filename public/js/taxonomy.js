@@ -246,6 +246,7 @@ function change_valid(val){
     }
 }
 
+
 function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,flag) {
     
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
@@ -262,10 +263,13 @@ function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,f
         text = '<pre>'+defline+'<br>'
         text += resp
         text += '</pre>'
-		var win = window.open("about:blank", null, "width=500,height=600");
+		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=500,height=600");
 		var doc = win.document;
+		//doc.writeln("<title>yourtitle</title>");
+		//doc.title = 'eHOMD Reference Sequence'
 		doc.open("text/html");
-		doc.write(text);
+		
+		doc.write("<title>eHOMD Reference Sequence</title>"+text);
 		doc.close();
     		
     		

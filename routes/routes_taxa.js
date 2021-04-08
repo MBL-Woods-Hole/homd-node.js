@@ -234,6 +234,15 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
 //console.log('in parseint 0')
 //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'])
 //console.log(C.homd_taxonomy)
+//     
+    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"])
+    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["954"])
+    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["955"])
+    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["956"])
+    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["957"])
+    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["958"])
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["7"])
+    
     C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
         //console.log('node')
         let options_obj = get_options_by_node(node);
@@ -316,8 +325,8 @@ router.get('/tax_description', (req, res) => {
 		console.warn('Could not find refseqs for',otid)
 		var data5 = []
 	}
-	console.log(data5)
-	res.render('pages/taxa/taxdescription', {
+	console.log(data2.general)
+	res.render('pages/taxa/taxdesc', {
 		title: 'HOMD :: Taxon Level', 
 		hostname: CFG.hostname,
 		otid: otid,

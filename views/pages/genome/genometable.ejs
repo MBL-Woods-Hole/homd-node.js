@@ -8,24 +8,87 @@
 <style>
 #gnom-table {
   padding:5px;
+  width:1350px;
+  table-layout:fixed;
 }
 #gnom-table th{
   color:white;
   background:#006699;
-  padding:10px;
+  padding:5px;
   font-size:10px;
+  
 }
 .gbutton {
-  font: bold 11px Arial;
+  font: bold 10px Arial;
   text-decoration: none;
   text-align:center;
   background-color: #EEEEEE;
-  color: #333333;
-  padding: 2px;
+  
+  width:10px;
+  
   border-top: 1px solid #CCCCCC;
   border-right: 1px solid #333333;
   border-bottom: 1px solid #333333;
   border-left: 1px solid #CCCCCC;
+
+}
+.red{
+  background-color:red;
+}
+.green{
+  background-color:green;
+  color:white;
+}
+.blue{
+    background-color:blue;
+    color:white;
+}
+.purple{
+    background-color:purple;
+    color:white
+}
+#col1 {
+    width: 40px;
+}
+#col2 {
+    width: 130px;
+}
+#col3 {
+    width: 130px;
+}
+#col4 {
+    /* floating col  */
+}
+#col5{
+   width: 50px;
+}
+#col6{
+   width: 50px;
+}
+#col7{
+   width: 50px;
+}
+#col8{
+   width: 50px;
+}
+#col9{
+   width: 250px;
+}
+#col10{
+   width: 130px;
+}
+#gnom-table td{
+  padding:0 2px;
+  font-size:x-small;
+}
+.tax_name{
+  font-size:x-small;
+  font-style:italic;
+  font-weight:bold;
+  
+}
+.center {
+    text-align:center;
 }
 </style>
 <body>
@@ -47,20 +110,39 @@
 		<div class='wide-content' id="">  					
 			 <div class='page-title'>Human Microbial Genomes</div>
 <table id='gnom-table' class='table sorttable' border='1'><thead>
-<tr><th >Taxon ID</th><th>Genus</th><th>Species</th>
-<th>Strain/Culture<br>Collection</th><th>SEQ ID</th><th>No. of contigs<br>and<br>plasmids</th>
-<th class=''>Combined<br>Length (bp)</th><th class=''>GC<br>(%)</th><th colspan='4'>Genome Info and Tools</th><th colspan='3'>Available Annotations</th>
+<tr>
+<th id='col1'>Taxon ID</th>
+<th id='col2'>Genus</th>
+<th id='col3'>Species</th>
+<th id='col4'>Strain/Culture<br>Collection</th>
+<th id='col5'>SEQ ID</th>
+<th id='col6'>No. of contigs<br>and<br>plasmids</th>
+<th id='col7'>Combined<br>Length (bp)</th>
+<th id='col8'>GC<br>(%)</th>
+<th id='col9' colspan='4'>Genome Info and Tools</th>
+<th id='col10' colspan='3'>Available Annotations</th>
 </tr>
 </thead>
 <tbody>
 
 <% for(n in ginfo){ %>
-	<% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+	<% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
 	<tr>
-		<td><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td><td><%= ginfo[n].genus %></td><td><%= ginfo[n].species %></td><td><%= ginfo[n].ccolct %></td>
-		<td><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td><td><%= ginfo[n].ncontigs %></td><td><%= ginfo[n].tlength %></td><td><%= ginfo[n].gc %></td>
-	<td class='gbutton'>Taxon Desc</td><td class='gbutton'>Genome Info</td><td class='gbutton'>Genome Viewer</td><td class='gbutton'>BLAST</td>
-	<td class='gbutton'>PROKKA</td><td class='gbutton'>NCBI</td><td class='gbutton'>HOMD</td>
+		<td nowrap ><a href='tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
+		<td class='tax_name'><%= ginfo[n].genus %></td>
+		<td class='tax_name'><%= ginfo[n].species %></td>
+		<td class=''><%= ginfo[n].ccolct %></td>
+		<td class='center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
+		<td class='center'><%= ginfo[n].ncontigs %></td>
+		<td class='center'><%= ginfo[n].tlength %></td>
+		<td class='center'><%= ginfo[n].gc %></td>
+        <td class='gbutton red' nowrap><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Desc</a></td>
+        <td class='gbutton green' nowrap><a href='/genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a></td>
+        <td class='gbutton blue' nowrap>Genome Viewer</td>
+        <td class='gbutton purple'>BLAST</td>
+        <td class='gbutton'>PROKKA</td>
+        <td class='gbutton'>NCBI</td>
+        <td class='gbutton'>HOMD</td>
 	</tr>
 <% } %>
 
