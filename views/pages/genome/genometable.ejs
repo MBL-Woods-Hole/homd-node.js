@@ -35,29 +35,31 @@
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
         content: " \25B4\25BE" 
     }
-.red{
-  
+.red {
+	color:#cc0000;
+}
+.red_btn {
   border: 1px solid #cc0000;
 }
-.red a {
+.red_btn a {
   color:#cc0000;
 }
-.green{
+.green_btn{
   border: 1px solid green;
 }
-.green a {
+.green_btn a {
   color:green;
 }
-.blue{
+.blue_btn{
     border: 1px solid blue;
 }
-.blue a {
+.blue_btn a {
     color:blue;
 }
-.purple{
+.purple_btn{
     border: 1px solid purple;
 }
-.purple a {
+.purple_btn a {
     color:purple
 }
 
@@ -105,9 +107,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 }
 #right-genome-filter{
   /* float:right; */
-  width:80%;
+  /* width:400px; */
   /* border:1px solid red; */
-  padding-left:150px;
+  padding-left:170px;
 }
 #genus-filter{
   padding-left:3px;
@@ -132,6 +134,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
    border:1px solid green;
    margin-top:0px;
 }
+#count_info{
+   font-weight:bold;
+   
+   padding:15px;
+}
 </style>
 <body>
   <div id='wrapper'>		
@@ -155,7 +162,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
  <%- include('../../partials/genome_table_filter.ejs') %> 
 
 <div id='table_div'>
-Number of Genomes:
+<br><span id='count_info'><%- count_text %></span>
 <table id='gnom-table' class='table sortable' border='1'><thead>
 <tr>
 <th class='col1'>Taxon ID</th>
@@ -183,10 +190,10 @@ Number of Genomes:
 		<td class='center'><%= ginfo[n].ncontigs %></td>
 		<td class='center'><%= ginfo[n].tlength %></td>
 		<td class='center'><%= ginfo[n].gc %></td>
-        <td class='gbutton red' nowrap><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Desc</a></td>
-        <td class='gbutton green' nowrap><a href='/genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a></td>
-        <td class='gbutton blue' nowrap><a href=''>Genome Viewer</a></td>
-        <td class='gbutton purple'><a href=''>BLAST</a></td>
+        <td class='gbutton red_btn' nowrap><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Desc</a></td>
+        <td class='gbutton green_btn' nowrap><a href='/genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a></td>
+        <td class='gbutton blue_btn' nowrap><a href=''>Genome Viewer</a></td>
+        <td class='gbutton purple_btn'><a href=''>BLAST</a></td>
         <td class='gbutton'>PROKKA</td>
         <td class='gbutton'>NCBI</td>
         <td class='gbutton'>HOMD</td>
@@ -212,7 +219,15 @@ Number of Genomes:
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
+
 <script src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script>
+	var letter = '<%- letter %>'
+	if(letter){
+		document.getElementById(letter).style.color = 'red'
+		document.getElementById(letter).style.fontSize = 'medium'
+	}else{
+		document.getElementById('all').style.color = 'red'
+	}
 </script>
 

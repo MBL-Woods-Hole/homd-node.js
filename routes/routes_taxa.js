@@ -17,25 +17,34 @@ router.get('/tax_table', (req, res) => {
 	let myurl = url.parse(req.url, true);
   	//console.log(myurl.query)
 	req.session.tax_letter = myurl.query.k
-	var intiial_status_filter = ['named','unnamed','phylotype','lost']  //['dropped','nonoralref']
-	
-	//console.log(tax_letter)
-	// filter
+	req.session.annot = myurl.query.annot
 	send_tax_obj = Object.values(C.taxonomy_taxonlookup);
-	tcount = send_tax_obj.length
-	send_tax_obj1 = send_tax_obj.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) != -1 )
-	//var intiial_site_filter = ['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
-	//send_tax_obj = send_tax_obj.filter(item => intiial_site_filter.indexOf(item.site[0].toLowerCase()) != -1)
-	
-	if(req.session.tax_letter){
-	   // COOL....
-	   send_tax_obj = send_tax_obj1.filter(item => item.genus.charAt(0) == req.session.tax_letter)
+	tcount = send_tax_obj.length  // total count of our filters
+	if(req.session.annot){
+	  send_tax_obj = send_tax_obj.filter(item => item.genomes.length >0)
 	}else{
-		send_tax_obj = send_tax_obj1
-	}
-	// table sort done via client side js library sorttable: 
-	// https://www.kryogenix.org/code/browser/sorttable
-    //console.log(send_tax_obj[0])
+	
+	
+		var intiial_status_filter = ['named','unnamed','phylotype','lost']  //['dropped','nonoralref']
+	
+		//console.log(tax_letter)
+		// filter
+		send_tax_obj1 = send_tax_obj.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) != -1 )
+		//var intiial_site_filter = ['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
+		//send_tax_obj = send_tax_obj.filter(item => intiial_site_filter.indexOf(item.site[0].toLowerCase()) != -1)
+	
+		if(req.session.tax_letter){
+		   // COOL....
+		   send_tax_obj = send_tax_obj1.filter(item => item.genus.charAt(0) == req.session.tax_letter)
+		}else{
+			send_tax_obj = send_tax_obj1
+		}
+		// table sort done via client side js library sorttable: 
+		// https://www.kryogenix.org/code/browser/sorttable
+		//console.log(send_tax_obj[0])
+    }
+    
+    
     //sort
     send_tax_obj.sort(function (a, b) {
       return helpers.compareStrings_alpha(a.genus, b.genus);

@@ -1,11 +1,6 @@
 <% list = JSON.parse(res) %>
 <% statusfltrX = statusfltr %>
 
-<script>
-	var letter = '<%- letter %>'
-	var statusfltr= JSON.parse('<%- statusfltr %>')
-	var sitefltr= JSON.parse('<%- sitefltr %>')
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../../partials/header_html'); %>
@@ -115,6 +110,9 @@
   $(document).ready(function(){                    
     mainmenu();
     
+    var letter = '<%- letter %>'
+	var statusfltr= JSON.parse('<%- statusfltr %>')
+	var sitefltr= JSON.parse('<%- sitefltr %>')
     // lets set check here
     // uncheck all
     var els = document.getElementsByClassName('filter_ckbx')

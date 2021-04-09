@@ -20,9 +20,10 @@ router.get('/genome_table', (req, res) => {
 	var otid = myurl.query.otid
 	var show_filters = 0
 	
-	
+	var count_text = ''
 	
 	if(['all','alloral'].indexOf(otid) == -1) {
+		// single gid
 		seqid_list = C.taxonomy_taxonlookup[otid].genomes
 		gid_obj_list = []
 		for(n in seqid_list){
@@ -30,15 +31,19 @@ router.get('/genome_table', (req, res) => {
 		    //console.log(C.genome_lookup[seqid_list[n]])
 		}
 		show_filters = 0
+		count_text = 'No. of genomes for TAXON-ID::HMT-'+otid+': <span class="red">'+gid_obj_list.length.toString()+'</span>'
 	}else{
+		// all gids
 		gid_obj_list1 = Object.values(C.genome_lookup);
 		show_filters = 1
 		
 		if(req.session.gen_letter){
 	   	// COOL....
 	   		gid_obj_list = gid_obj_list1.filter(item => item.genus.charAt(0) == req.session.gen_letter)
+			count_text = 'No. of genomes starting with: '+req.session.gen_letter+': <span class="red">'+gid_obj_list.length.toString()+'</span>'
 		}else{
 			gid_obj_list = gid_obj_list1
+			count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span>'
 		}
 	}
 	
@@ -53,7 +58,8 @@ router.get('/genome_table', (req, res) => {
 		gen_ver : C.genomic_refseq_verson,
 		letter: req.session.gen_letter,
 		otid: otid,
-		show_filters:show_filters
+		show_filters:show_filters,
+		count_text:count_text
 		
 	});
 })

@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 //   console.log('Request Query Params:', req.query); // for all query params
 //   console.log('Request Path:', req.path);
 //   console.log('Request Route:', req.route);
-//helpers.show_session(req)
+helpers.show_session(req)
 res.render('pages/home', {
 		title: 'HOMD :: Human Oral Microbiome Database',
 		hostname: CFG.hostname 
