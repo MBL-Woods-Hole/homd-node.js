@@ -177,7 +177,7 @@ router.post('/taxLevel', (req, res) => {
 				//console.log(taxitem)
 				lineage = [taxitem.taxon]
 				new_search_id = taxitem.parent_id
-				new_search_rank = C.RANKS[C.RANKS.indexOf(taxitem.rank)-1]
+				new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
 				//console.log(new_search_id,new_search_rank)
 				while (new_search_id != 0){
 					new_search_item = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_search_id]
@@ -193,7 +193,7 @@ router.post('/taxLevel', (req, res) => {
 					return_obj.otid = taxitem.otid
 				}
 				return_obj.item_taxon = lineage[lineage.length - 1]
-				return_obj.parent_rank = C.RANKS[C.RANKS.indexOf(rank) - 1]
+				return_obj.parent_rank = C.ranks[C.ranks.indexOf(rank) - 1]
 				return_obj.parent_taxon = lineage[lineage.length - 2]
 				return_obj.item_count = taxdata[lineage.join(';')]
 				return_obj.lineage = lineage.join(';')
