@@ -32,50 +32,55 @@
   border-left: 1px solid #CCCCCC;
 
 }
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+        content: " \25B4\25BE" 
+    }
 .red{
-  background-color:red;
+  
+  border: 1px solid #cc0000;
+}
+.red a {
+  color:#cc0000;
 }
 .green{
-  background-color:green;
-  color:white;
+  border: 1px solid green;
+}
+.green a {
+  color:green;
 }
 .blue{
-    background-color:blue;
-    color:white;
+    border: 1px solid blue;
+}
+.blue a {
+    color:blue;
 }
 .purple{
-    background-color:purple;
-    color:white
+    border: 1px solid purple;
 }
-#col1 {
+.purple a {
+    color:purple
+}
+
+
+.col1 {
     width: 40px;
 }
-#col2 {
+.col130 {
     width: 130px;
 }
-#col3 {
-    width: 130px;
-}
-#col4 {
+
+.col4 {
     /* floating col  */
 }
-#col5{
+.col50{
    width: 50px;
 }
-#col6{
-   width: 50px;
+
+.col9{
+   width: 280px;
 }
-#col7{
-   width: 50px;
-}
-#col8{
-   width: 50px;
-}
-#col9{
-   width: 250px;
-}
-#col10{
-   width: 130px;
+.col10{
+   width: 140px;
 }
 #gnom-table td{
   padding:0 2px;
@@ -90,6 +95,43 @@
 .center {
     text-align:center;
 }
+#genome-filter-div {
+   
+}
+#left-genome-filter{
+  /* float:left; */
+  width:100%;
+  /* border:1px solid red; */
+}
+#right-genome-filter{
+  /* float:right; */
+  width:80%;
+  /* border:1px solid red; */
+  padding-left:150px;
+}
+#genus-filter{
+  padding-left:3px;
+}
+#genome-search {
+   
+   padding:5px;
+   background:lightgrey;
+   padding-right:25px;
+   margin-bottom:2px;
+   border: 1px solid black;
+   /* margin-top:10px; */
+
+   font-size:small;
+ }
+#navigate-alpha {
+   
+   margin-top:0px;
+   padding-left:3px;
+ }
+#table_div{
+   border:1px solid green;
+   margin-top:0px;
+}
 </style>
 <body>
   <div id='wrapper'>		
@@ -98,29 +140,34 @@
 	<div id='header'>
        <%- include('../../partials/header_img'); %>
     </div>
-
-	
 	
 	<div id="navbar">
 		<%- include('../../partials/navbar'); %>
 	</div>
-	<div id='' class='page-content'>
+	
+	<div  class='page-content'>
 	
 	
-		<div class='wide-content' id="">  					
-			 <div class='page-title'>Human Microbial Genomes</div>
-<table id='gnom-table' class='table sorttable' border='1'><thead>
+	<div class='wide-content' id="">  					
+		<div class='page-title'>Human Microbial Genomes</div>
+
+
+ <%- include('../../partials/genome_table_filter.ejs') %> 
+
+<div id='table_div'>
+Number of Genomes:
+<table id='gnom-table' class='table sortable' border='1'><thead>
 <tr>
-<th id='col1'>Taxon ID</th>
-<th id='col2'>Genus</th>
-<th id='col3'>Species</th>
-<th id='col4'>Strain/Culture<br>Collection</th>
-<th id='col5'>SEQ ID</th>
-<th id='col6'>No. of contigs<br>and<br>plasmids</th>
-<th id='col7'>Combined<br>Length (bp)</th>
-<th id='col8'>GC<br>(%)</th>
-<th id='col9' colspan='4'>Genome Info and Tools</th>
-<th id='col10' colspan='3'>Available Annotations</th>
+<th class='col1'>Taxon ID</th>
+<th class='col130'>Genus</th>
+<th class='col130'>Species</th>
+<th class='col4'>Strain/Culture<br>Collection</th>
+<th class='col50'>SEQ ID</th>
+<th class='col50'>No. of contigs<br>and<br>plasmids</th>
+<th class='col50'>Combined<br>Length (bp)</th>
+<th class='col50'>GC<br>(%)</th>
+<th class=" col9 sorttable_nosort" colspan='4'>Genome Info and Tools</th>
+<th class=" col10 sorttable_nosort" colspan='3'>Available Annotations</th>
 </tr>
 </thead>
 <tbody>
@@ -138,8 +185,8 @@
 		<td class='center'><%= ginfo[n].gc %></td>
         <td class='gbutton red' nowrap><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Desc</a></td>
         <td class='gbutton green' nowrap><a href='/genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a></td>
-        <td class='gbutton blue' nowrap>Genome Viewer</td>
-        <td class='gbutton purple'>BLAST</td>
+        <td class='gbutton blue' nowrap><a href=''>Genome Viewer</a></td>
+        <td class='gbutton purple'><a href=''>BLAST</a></td>
         <td class='gbutton'>PROKKA</td>
         <td class='gbutton'>NCBI</td>
         <td class='gbutton'>HOMD</td>
@@ -148,6 +195,7 @@
 
 </tbody>
 </table>
+  </div>  <!-- end table_div -->
 		</div>  <!-- end wide -->
 	
     </div> <!-- end: page-content -->

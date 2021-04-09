@@ -4,7 +4,24 @@ let constants = {};
 constants.rRNA_refseq_version    = '15.22'
 constants.genomic_refseq_verson = '9.14'
 
-constants.RANKS = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
+constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
+constants.phyla = [ 'Actinobacteria',
+					'Bacteroidetes',
+					'Chlamydiae',
+					'Chlorobi',
+					'Chloroflexi',
+					'Euryarchaeota',
+					'Firmicutes',
+					'Fusobacteria',
+					'Gracilibacteria (GN02)',
+					'Proteobacteria',
+					'Saccharibacteria (TM7)',
+					'Spirochaetes',
+					'SR1',
+					'Synergistetes',
+					'WPS-2'
+]
+
 constants.available_jbgenomes = ['volvox','tomato','yeast_synteny'];
 
 constants.tax_status_all =['named','unnamed','phylotype','lost','dropped','nonoralref'];

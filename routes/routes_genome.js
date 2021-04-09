@@ -15,8 +15,12 @@ router.get('/genome_table', (req, res) => {
     helpers.accesslog(req, res)
 	var seqid_list;
 	let myurl = url.parse(req.url, true);
+	req.session.gen_letter = myurl.query.k
 	console.log('otid',myurl.query.otid)
 	var otid = myurl.query.otid
+	var show_filters = 0
+	
+	
 	
 	if(['all','alloral'].indexOf(otid) == -1) {
 		seqid_list = C.taxonomy_taxonlookup[otid].genomes
@@ -25,9 +29,17 @@ router.get('/genome_table', (req, res) => {
 		    gid_obj_list.push(C.genome_lookup[seqid_list[n]])
 		    //console.log(C.genome_lookup[seqid_list[n]])
 		}
+		show_filters = 0
 	}else{
+		gid_obj_list1 = Object.values(C.genome_lookup);
+		show_filters = 1
 		
-		gid_obj_list = Object.values(C.genome_lookup);
+		if(req.session.gen_letter){
+	   	// COOL....
+	   		gid_obj_list = gid_obj_list1.filter(item => item.genus.charAt(0) == req.session.gen_letter)
+		}else{
+			gid_obj_list = gid_obj_list1
+		}
 	}
 	
 	// get each secid from C.genome_lookup
@@ -38,8 +50,10 @@ router.get('/genome_table', (req, res) => {
 		hostname: CFG.hostname,
 		seqid_list: JSON.stringify(gid_obj_list),
 		rna_ver : C.rRNA_refseq_version,
-		gen_ver : C.genomic_refseq_verson
-		
+		gen_ver : C.genomic_refseq_verson,
+		letter: req.session.gen_letter,
+		otid: otid,
+		show_filters:show_filters
 		
 	});
 })

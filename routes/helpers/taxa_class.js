@@ -9,11 +9,11 @@ const helpers = require(app_root + '/routes/helpers/helpers');
 
 // Private
 let taxon_name_id = 1;
-const ranks = CONSTS.RANKS;
+const ranks = CONSTS.ranks;
 
 function make_dictMap_by_rank(tags) {
   const dictMap_by_rank = {};
-  // let ranks = CONSTS.RANKS;
+  // let ranks = CONSTS.ranks;
   ranks.forEach( rank => {
     dictMap_by_rank[rank] = [];
   });

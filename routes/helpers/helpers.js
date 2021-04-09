@@ -30,7 +30,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 // todo: use in file instead of those in the class
 module.exports.check_if_rank = (field_name) => {
 
-  let ranks = C.RANKS;
+  let ranks = C.ranks;
 
   // ranks = ["domain","phylum","klass","order","family","genus","species","strain"]
   return ranks.includes(field_name);

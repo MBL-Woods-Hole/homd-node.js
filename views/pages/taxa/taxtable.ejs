@@ -51,98 +51,17 @@
 	
 	  <div class='wide-content' id="">  					
 		 <div class='page-title'>List of Human Microbial Taxa</div>
-		 
-		 <div id='outer-content'>
-			 <div id='taxa-search'>
-		      <br>
-			   <form id='' name='' method='POST' action=''>
-				  Search:
-				  <input type='text' maxlength='18' size='20'>
-				  <select id='' name='field'>
-					<option value="all">All Fields</option>
-					<option value="taxid">Taxon ID</option>
-					<option value="genus">Genus</option>
-					<option value="species">Species</option>
-					<option value="synonyms">Synonyms</option>
-					<option value="type">Type Strains</option>
-					<option value="rrna">16S rRNA ID</option>
-				  </select>
-				  Matching:
-				  <select id='' name='match'>
-					<option value="all">ALL words</option>
-					<option value="any">ANY words</option>
-					<option value="exact">Exact phrase</option>
-				  </select>
-				  <select id='' name='sub'>
-					<option value="partial">Partial field</option>
-					<option value="whole">Whole field</option>
-				  </select>
-				  <input type='submit' value=' Go '>
-			   </form>
-			 </div>
-			 <div id='navigate-alpha'>
-		 
-			  Navigate Taxa by Alphabet:<br>
+		 		 
 			 
-<a id='A' href='tax_table?k=A'>A</a>|<a id='B' href='tax_table?k=B'>B</a>|<a id='C' href='tax_table?k=C'>C</a>|<a id='D' href='tax_table?k=D'>D</a>|<a id='E' href='tax_table?k=E'>E</a>|<a id='F' href='tax_table?k=F'>F</a>|<a id='G' href='tax_table?k=G'>G</a>|<a id='H' href='tax_table?k=H'>H</a>|<a id='I' href='tax_table?k=I'>I</a>|<a id='J' href='tax_table?k=J'>J</a>|<a id='K' href='tax_table?k=K'>K</a>|<a id='L' href='tax_table?k=L'>L</a>|<a id='M' href='tax_table?k=M'>M</a>|<a id='N' href='tax_table?k=N'>N</a>|<a id='O' href='tax_table?k=O'>O</a>|<a id='P' href='tax_table?k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='tax_table?k=R'>R</a>|<a id='S' href='tax_table?k=S'>S</a>|<a id='T' href='tax_table?k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='tax_table?k=V'>V</a>|<a id='W' href='tax_table?k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='tax_table?k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>|
-<a id='all' href='tax_table?k='>All Entries</a>|
+	<%- include('../../partials/tax_table_filter_pt1.ejs') %>
 
-			 </div>
-		 </div>  <!-- end outer-content -->
-		 
-		 <div id='tax-box' >
-		 
-		 <div id='inner-content'>
-		   <span id='taxa-sort' style=''>
-		   Toggle/Sort table by clicking on header label
-		   </span>
-		   
-		   <div id='taxa-count'>
-		     <div id='total-count'>Total: <%= tcount %></div>
-		     
-		     <div id='showing-count'>Showing <%= count %></div>
-		   </div>
-  
-<div id='taxa-filter'>
- <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
-	 <table>
-	 <tr><td>
-	 <div id='status-div' style=''>
-	 Status: 
+<div id='tax-box' >
+
+	<%- include('../../partials/tax_table_filter_pt2.ejs') %> 
 	 
-	 <input type='checkbox' class='filter_ckbx' id='named' name='named' \> Named&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='unnamed' name='unnamed' \> Unnamed&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='phylotype' name='phylotype' \> Phylotypes&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='lost' name='lost' \> Lost&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' \> Dropped&nbsp;
-	 </div>
-	 </td><td id='radio_btns'>
-	 
-	 <input type='radio' id='valid1' name='valid' value='only_valid'  onclick="change_valid('only')"\> All Valid Taxa&nbsp;
-	 <input type='radio' id='valid2' name='valid' value='all'  onclick="change_valid('all')"\> All&nbsp;
-	 </td></tr>
-	 <tr><td>
-	 <div id='bodysite-div' style=''>
-	 Body Site: 
-	 
-	 <input type='checkbox' class='filter_ckbx' id='oral' name='oral' \> Oral&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='nasal' name='nasal' \> Nasal&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='skin' name='skin' \> Skin&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' \> Vaginal&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='unassigned' name='unassigned' \> Unassigned&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' \> NonOralRef&nbsp;
-	 </div>
-	 </td><td>
-	 <input type='button' value=' Show ' onclick="check_then_post(this.form)">
-	 <input type='button' value=' Clear All ' onclick='clear_filter_form()'>
-	 </td></tr>
-	 </table>
- </form>
-</div>  <!-- End tax filter -->
 		 
-		 </div>  <!-- end inner-content -->
 		 <table id='tax-table' class='table sortable'><thead>
-		 <tr><th >Taxon ID</th><th>Genus</th><th>Species</th>
+		 <tr><th>Taxon ID</th><th>Genus</th><th>Species</th>
 		     <th>Status</th><th>Body Site</th><th>Flag</th>
 		     <th class="sorttable_nosort">Taxon Link</th><th class="sorttable_nosort">Genome Link</th><th>Genome Size</th>
 		 </tr>
@@ -176,7 +95,7 @@
 		 </tbody>
 		 </table>
 		 
-		 </div>  <!-- end: tax-box -->
+</div>  <!-- end: tax-box -->
 	  </div>
     </div> <!-- end: page-content -->
     <div id='footer'>
