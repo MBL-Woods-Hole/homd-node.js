@@ -59,3 +59,14 @@ function change_genome2(genome){
     }
 	xmlhttp.send(JSON.stringify(args));
 }
+
+function toggle_options(){
+	var el = document.getElementById("gen_options")
+	//console.log(el)
+	if(el.style.display == 'none'){
+		el.style.display = 'inline'
+	}else{
+		el.style.display = 'none'
+	}
+	//document.getElementById("gen_options").innerHTML = "insert here"
+}

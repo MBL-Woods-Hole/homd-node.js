@@ -1,15 +1,31 @@
-<div id='inner-content'>
-		   <span id='taxa-sort' style=''>
-		   Toggle/Sort table by clicking on header label
-		   </span>
+<% var fstyle = 'none'; %>
+<% if(show_filters){ %>
+<%     fstyle = 'inline'; %> 
+<% }else{ %>   <!-- end if -->
+<% 		fstyle = 'none'; %>
+      <div id='showing-count'>Showing <%= count %> Taxa</div>
+<% } %>
+
+
+<div id='inner-content' style="display:<%= fstyle %>">
+<table>
+<tr><td>
 		   
-		   <div id='taxa-count'>
-		     <div id='total-count'>Total: <%= tcount %></div>
-		     
-		     <div id='showing-count'>Showing <%= count %></div>
-		   </div>
+	<div id='taxa-count'>
+	 <div id='total-count'>Total: <%= tcount %> Taxa</div>
+	 
+	 <div id='showing-count'>Showing <%= count %></div>
+   </div>
+
+</td><td>
+		   
+	<span id='taxa-sort' style=''>
+		   Toggle/Sort table by clicking on header label
+	</span>
+
+</td><td>
   
-  <div id='taxa-filter'>
+   <div id='taxa-filter'>
     <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
 	 <table>
 	 <tr><td>
@@ -43,7 +59,10 @@
 	 <input type='button' value=' Clear All ' onclick='clear_filter_form()'>
 	 </td></tr>
 	 </table>
-  </form>
-</div>  <!-- End tax filter -->
+    </form>
+   </div>  <!-- End tax filter -->
+
+</td></tr>
+</table>
 
 </div>  <!-- end inner-content -->		

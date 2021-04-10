@@ -20,11 +20,15 @@ router.get('/tax_table', (req, res) => {
 	req.session.annot = myurl.query.annot
 	send_tax_obj = Object.values(C.taxonomy_taxonlookup);
 	tcount = send_tax_obj.length  // total count of our filters
+	var show_filters = 0
+	var pgtitle = 'Taxon Table';
 	if(req.session.annot){
-	  send_tax_obj = send_tax_obj.filter(item => item.genomes.length >0)
+	  	send_tax_obj = send_tax_obj.filter(item => item.genomes.length >0)
+	  	show_filters = 0
+	  	pgtitle = 'Human Microbial Taxa with Annotated Genomes'
 	}else{
-	
-	
+		show_filters = 1
+		pgtitle = 'List of Human Microbial Taxa'
 		var intiial_status_filter = ['named','unnamed','phylotype','lost']  //['dropped','nonoralref']
 	
 		//console.log(tax_letter)
@@ -51,6 +55,7 @@ router.get('/tax_table', (req, res) => {
     });
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
+		pgtitle:pgtitle,
 		hostname: CFG.hostname,
 		res: JSON.stringify(send_tax_obj),
 		count: Object.keys(send_tax_obj).length,
@@ -58,6 +63,7 @@ router.get('/tax_table', (req, res) => {
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(C.tax_status_on) ,  // default
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
+		show_filters:show_filters,
 		search: '',
 		rna_ver : C.rRNA_refseq_version,
 		gen_ver : C.genomic_refseq_verson

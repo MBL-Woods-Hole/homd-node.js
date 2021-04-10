@@ -7,27 +7,7 @@
 <title><%= title %></title>
 <link rel="stylesheet" href="/css/taxa_pages.css" >
 <style>
-    .button {
-       font: bold 11px Arial;
-      text-decoration: none;
-      background-color: #EEEEEE;
-      color: #333333;
-      padding: 2px;
-      border-top: 1px solid #CCCCCC;
-      border-right: 1px solid #333333;
-      border-bottom: 1px solid #333333;
-      border-left: 1px solid #CCCCCC;
 
-    }
-    table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
-        content: " \25B4\25BE" 
-    }
-    #navigate-alpha a {
-       color:#006699;
-    }
-    #radio_btns {
-        font-size:11px;
-    }
 </style>
 
 <body>
@@ -45,7 +25,7 @@
     
 	
 	  <div class='wide-content' id="">  					
-		 <div class='page-title'>List of Human Microbial Taxa</div>
+		 <div class='page-title'><%= pgtitle %></div>
 		 		 
 			 
 	<%- include('../../partials/tax_table_filter_pt1.ejs') %>

@@ -1,0 +1,133 @@
+#gnom-table {
+  padding:5px;
+  width:1350px;
+  table-layout:fixed;
+}
+#gnom-table th{
+  color:white;
+  background:#006699;
+  padding:5px;
+  font-size:10px;
+  
+}
+.gbutton {
+  font: bold 10px Arial;
+  text-decoration: none;
+  text-align:center;
+  background-color: #EEEEEE;
+  
+  width:10px;
+  
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+
+}
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+        content: " \25B4\25BE" 
+    }
+.red {
+	color:#cc0000;
+}
+.red_btn {
+  border: 1px solid #cc0000;
+}
+.red_btn a {
+  color:#cc0000;
+}
+.green_btn{
+  border: 1px solid green;
+}
+.green_btn a {
+  color:green;
+}
+.blue_btn{
+    border: 1px solid blue;
+}
+.blue_btn a {
+    color:blue;
+}
+.purple_btn{
+    border: 1px solid purple;
+}
+.purple_btn a {
+    color:purple
+}
+
+
+.col1 {
+    width: 40px;
+}
+.col130 {
+    width: 130px;
+}
+
+.col4 {
+    /* floating col  */
+}
+.col50{
+   width: 50px;
+}
+
+.col9{
+   width: 280px;
+}
+.col10{
+   width: 140px;
+}
+#gnom-table td{
+  padding:0 2px;
+  font-size:x-small;
+}
+.tax_name{
+  font-size:x-small;
+  font-style:italic;
+  font-weight:bold;
+  
+}
+.center {
+    text-align:center;
+}
+#genome-filter-div {
+   
+}
+#left-genome-filter{
+  /* float:left; */
+  width:100%;
+  /* border:1px solid red; */
+}
+#right-genome-filter{
+  /* float:right; */
+  /* width:400px; */
+  /* border:1px solid red; */
+  padding-left:170px;
+}
+#genus-filter{
+  padding-left:3px;
+}
+#genome-search {
+   
+   padding:5px;
+   background:lightgrey;
+   padding-right:25px;
+   margin-bottom:2px;
+   border: 1px solid black;
+   /* margin-top:10px; */
+
+   font-size:small;
+ }
+#navigate-alpha {
+   
+   margin-top:0px;
+   padding-left:3px;
+ }
+#table_div{
+   border:1px solid green;
+   margin-top:0px;
+}
+#count_info{
+   font-weight:bold;
+   
+   padding:15px;
+}

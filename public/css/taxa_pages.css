@@ -37,44 +37,14 @@
     background-color: Lightyellow; 
  } 
  #outer-content {
-   padding-left:10px;
-   width: 100%;
-   display: inline-block;
+   
  }
- #taxa-search {
-   float:right;
-   padding-right:25px;
-   /* margin-top:10px; */
-
-   font-size:small;
- }
- #navigate-alpha {
-   float:left;
- }
+ 
+ 
  #inner-content {
-   /* padding-left:10px; */
-   width: 100%;
-   display: inline-block;
+  
  }
- #taxa-count {
-   float:left;
-   width:100px;
-   border:1px solid red;
-
-   font-size:small;
- }
- #taxa-sort {
-    position:absolute;
-    border:1px solid black;
-    padding:3px;
-    margin:25px 0 0 150px;
-    font-size:x-small;
-    font-weight:bold;
-    width:300px;
- }
- #taxa-filter {
-   float:right;
- }
+ 
  
  #status-div {
    background:turquoise;padding:2px;font-size:12px;
@@ -102,4 +72,67 @@
 }
 #level_table td{
    padding:0 3px;
+}
+.button {
+   font: bold 11px Arial;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  padding: 2px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+
+}
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+	content: " \25B4\25BE" 
+}
+
+
+
+ 
+ #taxa-search {
+   width:80%;
+   margin-left:80px;
+   padding-left:50px;
+   /* border: 1px solid red; */
+   /* margin-top:10px; */
+   font-size:small;
+ }
+#navigate-alpha {
+   width:120%;
+   /* border: 1px solid red; */
+   padding-left:5px;
+ }
+#navigate-alpha a {
+   color:#006699;
+}
+
+#taxa-count {
+   
+   width:95%;
+   border:1px solid red;
+   margin-right:20px;
+   padding:2px;
+   font-size:small;
+ }
+ #taxa-sort {
+    position:relative;
+    border:1px solid black;
+    padding:10px 3px;
+    margin:20px 0 0 40px;
+    font-size:x-small;
+    font-weight:bold;
+    width:95%;
+ }
+ 
+#taxa-filter {
+   width:95%;
+   /* border:1px solid red; */
+   padding-left:30px;
+ }
+ 
+#radio_btns {
+	font-size:11px;
 }
