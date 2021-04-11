@@ -6,7 +6,8 @@ const url 		= require('url');
 const path     	= require('path');
 const C		  	= require(app_root + '/public/constants');
 const helpers 	= require(app_root + '/routes/helpers/helpers');
-const open = require('open');
+const queries = require(app_root + '/routes/queries')
+//const open = require('open');
 const createIframe = require("node-iframe");
 //const JB = require('jbrowse2');
 //app.use(createIframe);
@@ -63,6 +64,7 @@ router.get('/genome_table', (req, res) => {
 		
 	});
 })
+//
 router.get('/jbrowse', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	helpers.accesslog(req, res)
@@ -85,6 +87,7 @@ router.get('/jbrowse', (req, res) => {
 		gen_ver : C.genomic_refseq_verson
 	});
 });
+//
 router.post('/jbrowse', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	helpers.accesslog(req, res)
@@ -104,6 +107,7 @@ router.post('/jbrowse', (req, res) => {
 		gen_ver : C.genomic_refseq_verson
 	});
 });
+//
 router.post('/jbrowse_ajax', (req, res) => {
 	console.log('AJAX JBrowse')
 	console.log(req.body);
@@ -112,9 +116,13 @@ router.post('/jbrowse_ajax', (req, res) => {
 	
 	res.send(JSON.stringify({'static_data':req.body.gnom}));
 });
+//
 router.get('/genome_description', (req, res) => {
 	console.log('in genomedescription -get')
 	helpers.accesslog(req, res)
+	let myurl = url.parse(req.url, true);
+	var gid = myurl.query.gid
+	
 		/*
 	1	Oral Taxon ID	191	
 	2	HOMD Sequence ID	SEQF1851	
@@ -139,17 +147,36 @@ router.get('/genome_description', (req, res) => {
 	20  16S rRNA gene sequence
 	21  Comments
 	*/
-	
+	console.log(C.genome_lookup[gid])
 	res.render('pages/genome/genomedesc', {
-		title: 'HOMD :: Taxon Level', 
+		title: 'HOMD :: Genome Info', 
 		hostname: CFG.hostname,
-		taxonid: otid,
-		data1: JSON.stringify(data1),
-		data2: JSON.stringify(data2),
-		data3: JSON.stringify(data3),
-		data4: JSON.stringify(data4),
+		//taxonid: otid,
+		data1: JSON.stringify(C.genome_lookup[gid]),
+		//data2: JSON.stringify(data2),
+		//data3: JSON.stringify(data3),
+		//data4: JSON.stringify(data4),
 		rna_ver : C.rRNA_refseq_version,
 		gen_ver : C.genomic_refseq_verson
 	});
+});
+
+router.post('/get_16s_seq', (req, res) => {
+	console.log('in get_16s_seq -post')
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	var gid = req.body.seqid;
+
+	// express deprecated req.param(name): Use req.params, req.body, or req.query
+	// See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
+	//FIXME There are 4 fields which do I query???
+	GDBConn.query(queries.get_16s_rRNA_sequence_query(gid), (err, rows) => {
+		console.log(rows)
+		seqstr = rows[0]['16s_rRNA']
+		arr = helpers.chunkSubstr(seqstr,60)
+		html = arr.join('<br>')
+		res.send(html)
+	})
+	
 });
 module.exports = router;

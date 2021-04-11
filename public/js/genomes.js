@@ -70,3 +70,35 @@ function toggle_options(){
 	}
 	//document.getElementById("gen_options").innerHTML = "insert here"
 }
+
+function get_16s_seq(seqid) {
+    
+    //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+    //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
+    args={}
+    args.seqid = seqid
+    var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("POST", "/genome/get_16s_seq", true);
+	xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = xmlhttp.responseText;
+        //console.log(defline)
+        //text = '<pre>'+defline+'<br>'
+        text = '<pre><br>'
+        text += resp
+        text += '</pre>'
+		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=500,height=600");
+		var doc = win.document;
+		//doc.writeln("<title>yourtitle</title>");
+		//doc.title = 'eHOMD Reference Sequence'
+		doc.open("text/html");
+		
+		doc.write("<title>eHOMD 16s rRNA Sequence</title>"+text);
+		doc.close();
+    		
+    		
+    		}
+    }
+    xmlhttp.send(JSON.stringify(args));
+}
