@@ -172,9 +172,12 @@ router.post('/get_16s_seq', (req, res) => {
 	//FIXME There are 4 fields which do I query???
 	GDBConn.query(queries.get_16s_rRNA_sequence_query(gid), (err, rows) => {
 		console.log(rows)
-		seqstr = rows[0]['16s_rRNA']
-		arr = helpers.chunkSubstr(seqstr,60)
-		html = arr.join('<br>')
+		seqstr = rows[0]['16s_rRNA'].replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&amp;gt;/gi,'>').replace(/&amp;lt;/gi,'<')
+		
+		console.log(seqstr)
+		//arr = helpers.chunkSubstr(seqstr,60)
+		//html = seqstr.join('<br>')
+		html = seqstr
 		res.send(html)
 	})
 	

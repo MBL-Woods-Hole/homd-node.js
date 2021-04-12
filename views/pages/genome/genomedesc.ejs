@@ -21,12 +21,20 @@
 	
 	
 		<div class='wide-content' id=""> 
+		<div class='page-title'>Sequence Meta Information: 
+		<small><i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.ccolct %></small></div>
+		
 <center>
+	<div id='header_buttons' style='padding-bottom:5px;'>
+	 <button onclick="location.href='/taxa/tax_description?otid=<%= ginfo.otid %>';">Taxon Page</button>
+	 <button id='' value=''>JBrowse Genome Viewer</button>
+	 <button id='' value=''>BLAST Against this Genome</button>
+	 <button id='' value=''>PROKKA Annotation</button>
+	 <button id='' value=''>NCBI Annotation</button>
+	</div>
 <div id='table_div' style='width:50%;border:1px solid purple;'>		
 		 					
  <table border='1'>
- 
- 
  <tr><td>1</td><td>Oral Taxon ID</td><td><%= ginfo.otid %></td></tr>
  <tr><td>2</td><td>HOMD Sequence ID</td><td><%= ginfo.gid %></td></tr>
  <tr><td>3</td><td>HOMD Name (Genus, Species)</td><td><%= ginfo.genus %> <%= ginfo.species %></td></tr>
@@ -46,20 +54,15 @@
  <tr><td>17</td><td>Sequencing Center</td><td><%= ginfo.seq_center %></td></tr>
  <tr><td>18</td><td>ATCC Medium Number</td><td><%= ginfo.atcc_mn %></td></tr>
  <tr><td>19</td><td>Non-ATCC Medium</td><td><%= ginfo.non_atcc_mn %></td></tr>
- <tr><td>20</td><td>16S rRNA Gene Sequence</td>
- <% if(ginfo['16s_rRNA']){ %>
+ <tr>
+   <td>20</td><td>16S rRNA Gene Sequence</td>
+   <% if(ginfo['16s_rRNA']){ %>
  	<td><a href='#' onclick="get_16s_seq('<%= ginfo.gid %>')">Open/View</a></td>
- 	
-
- <% }else{ %>
+   <% }else{ %>
  	<td>N/A</td>
- <% } %>
+   <% } %>
  </tr>
- 
- 
  <tr><td>21</td><td>Comments for 16s rRNA Gene Sequence</td><td></td></tr>
- 
-
  </table>
 		 
 </div>			 

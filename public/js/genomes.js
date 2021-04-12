@@ -84,11 +84,12 @@ function get_16s_seq(seqid) {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
         //console.log(defline)
-        //text = '<pre>'+defline+'<br>'
-        text = '<pre><br>'
+        text = ''
+        //text += '<pre>'+defline+'<br>'
+        text = '<pre>'
         text += resp
         text += '</pre>'
-		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=500,height=600");
+		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=600,height=500");
 		var doc = win.document;
 		//doc.writeln("<title>yourtitle</title>");
 		//doc.title = 'eHOMD Reference Sequence'
