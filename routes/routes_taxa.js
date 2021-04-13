@@ -56,7 +56,7 @@ router.get('/tax_table', (req, res) => {
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
-		hostname: CFG.hostname,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		res: JSON.stringify(send_tax_obj),
 		count: Object.keys(send_tax_obj).length,
 		tcount: tcount,
@@ -65,8 +65,7 @@ router.get('/tax_table', (req, res) => {
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
 		show_filters:show_filters,
 		search: '',
-		rna_ver : C.rRNA_refseq_version,
-		gen_ver : C.genomic_refseq_verson
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 router.post('/tax_table', (req, res) => {
@@ -79,7 +78,8 @@ router.post('/tax_table', (req, res) => {
 	valid = req.body.valid  // WHAT IS THIS???
 	// filter_status = ['named','unnamed','phylotype','lost','dropped']
 // 	filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
-	
+	pgtitle = 'List of Human Microbial Taxa'
+	show_filters = 1
 	statusfilter_on =[]
 	sitefilter_on  = []
 	for(i in req.body){
@@ -112,17 +112,17 @@ router.post('/tax_table', (req, res) => {
 	// use session for taxletter
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
-		hostname: CFG.hostname,
+		pgtitle:pgtitle,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		res: JSON.stringify(send_tax_obj3),
 		count: Object.keys(send_tax_obj3).length,
 		tcount: tcount,
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(statusfilter_on),
 		sitefltr:JSON.stringify(sitefilter_on),
-		
+		show_filters:show_filters,
 		search: '',
-		rna_ver : C.rRNA_refseq_version,
-		gen_ver : C.genomic_refseq_verson
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 router.get('/tax_hierarchy', (req, res) => {
@@ -135,11 +135,10 @@ router.get('/tax_hierarchy', (req, res) => {
 	//console.log(C.dhtmlxTreeData)
 	res.render('pages/taxa/taxhierarchy', {
 			title: 'HOMD :: Taxon Hierarchy', 
-			hostname: CFG.hostname,
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			data: {},
 			dhtmlx: JSON.stringify(C.dhtmlxTreeData),
-			rna_ver : C.rRNA_refseq_version,
-			gen_ver : C.genomic_refseq_verson
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		});
 		
 	// use this only if use the version 7 dhtmlx tree	(non-dynamic loading)
@@ -158,10 +157,9 @@ router.get('/tax_level', (req, res) => {
 	helpers.accesslog(req, res)
 	res.render('pages/taxa/taxlevel', {
 		title: 'HOMD :: Taxon Level', 
-		hostname: CFG.hostname,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		level: 'domain',
-		rna_ver : C.rRNA_refseq_version,
-		gen_ver : C.genomic_refseq_verson
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 //
@@ -220,16 +218,6 @@ router.post('/taxLevel', (req, res) => {
 	});
 });
 //
-//
-
-router.get('/tax_download', (req, res) => {
-	helpers.accesslog(req, res)
-	res.render('pages/taxon/taxdownload', {
-		title: 'HOMD :: Taxon Download', 
-		hostname: CFG.hostname 
-	});
-});
-//});
 
 // test: choose custom taxonomy, show tree
 router.get('/tax_custom_dhtmlx', (req, res) => {
@@ -343,15 +331,14 @@ router.get('/tax_description', (req, res) => {
 	console.log(data2.general)
 	res.render('pages/taxa/taxdesc', {
 		title: 'HOMD :: Taxon Level', 
-		hostname: CFG.hostname,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		otid: otid,
 		data1: JSON.stringify(data1),
 		data2: JSON.stringify(data2),
 		data3: JSON.stringify(data3),
 		data4: JSON.stringify(data4),
 		data5: JSON.stringify(data5),
-		rna_ver : C.rRNA_refseq_version,
-		gen_ver : C.genomic_refseq_verson
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 
@@ -370,6 +357,48 @@ router.post('/get_refseq', (req, res) => {
 		res.send(html)
 	})
 });
+
+// router.get('/tax_download', (req, res) => {
+// 	helpers.accesslog(req, res)
+// 	res.render('pages/taxon/taxdownload', {
+// 		title: 'HOMD :: Taxon Download', 
+// 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
+// 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+// 	});
+// });
+router.get('/dld_ttable', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	let myurl = url.parse(req.url, true);
+  	let type = myurl.query.type;
+	// type = browser text or excel
+	var table_tsv = create_table('ttable','browser')
+	if(type == 'browser'){
+	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
+	}else if(type == 'text'){
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.csv\""});
+	}else if(type == 'excel'){
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
+	}else{
+	    // error
+	    console.log('Download table format ERROR')
+	}
+	res.send(table_tsv)
+	res.end()
+});
+
+// router.post('/dld_ttable', (req, res) => {
+// 	helpers.accesslog(req, res)
+// 	console.log(req.body)
+// 	// req.body.type = text or excel <= for download
+// 	// maybe use res.download
+// 	res.set({"Content-Disposition":"attachment; filename=\"req.params.name\""});
+// 	res.send('okay done');
+// 	
+// 	//res.send('ok')
+// 	
+// });
+
 ////////////////////////////////////////////////////////////////////////////////////
 function get_options_by_node(node) {
   rankname = node.rank.charAt(0).toUpperCase() + node.rank.slice(1)
@@ -390,6 +419,34 @@ function get_options_by_node(node) {
   }
   return options_obj;
 }
+
+function create_table(source, type) {
+
+    if(source == 'ttable' && type == 'browser'){
+        obj1 = C.taxonomy_taxonlookup
+        obj2 = C.taxonomy_lineagelookup
+        obj3 = C.taxonomy_infolookup 
+        var headers_row = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
+        
+        txt =  headers_row.join('\t')
+        
+        for(otid in obj1){
+            o1 = obj1[otid]
+            o2 = obj2[otid]
+            o3 = obj3[otid]
+            
+            var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.NCBI_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
+            row = r.join('\t')
+            txt += '\n'+row
+        }
+    }   
+    //console.log(txt)
+    return txt
+}        
+        
+        
+        
+   
 
 
 module.exports = router;

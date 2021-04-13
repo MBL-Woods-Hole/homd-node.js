@@ -161,7 +161,11 @@ async.map(data_init_files, readAsync, function(err, results) {
     C.genome_lookup 				= JSON.parse(results[5]);
     C.refseq_lookup 				= JSON.parse(results[6]);
     //examples
-   
+    console.log('length of C.taxonomy_taxonlookup: ',Object.keys(C.taxonomy_taxonlookup).length)
+    console.log('length of C.taxonomy_refslookup: ',Object.keys(C.taxonomy_refslookup).length)
+    console.log('length of C.taxonomy_lineagelookup: ',Object.keys(C.taxonomy_lineagelookup).length)
+    console.log('length of C.taxonomy_infolookup: ',Object.keys(C.taxonomy_infolookup).length)
+    console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
     for(var n in C.homd_taxonomy){
        console.log(n)
     }

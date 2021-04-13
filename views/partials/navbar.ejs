@@ -1,3 +1,5 @@
+<% var version_info = JSON.parse(ver_info) %> 
+<% var cfg = JSON.parse(config) %> 
 
 <ul id="nav" style='z-index:1'>
 
@@ -122,10 +124,12 @@
         <% } %>
   </div>
 </div>
-
+<span style=''>
+  uptime: <%= cfg.hostname %> <%= cfg.env %>
+</span>
 <div id='refseq-stats'>
-   16S rRNA Refseq <a class="pn-sub" href="/?name=Article&toc=1&sid=96">V15.21</a> 
-   Genomic RefSeq  <a class="pn-sub" href="?name=Article&file=index&toc=1&sid=157">V9.14</a>
+   16S rRNA Refseq <a class="pn-sub" href="/?name=Article&toc=1&sid=96"><%= version_info.rna_ver %></a> 
+   Genomic RefSeq  <a class="pn-sub" href="?name=Article&file=index&toc=1&sid=157"><%= version_info.gen_ver %></a>
 </div>
 
 

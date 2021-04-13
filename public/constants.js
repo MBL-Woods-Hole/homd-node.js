@@ -2,7 +2,7 @@ const CFG   = require(app_root + '/config/config');
 let constants = {};
 
 constants.rRNA_refseq_version    = '15.22'
-constants.genomic_refseq_verson = '9.14'
+constants.genomic_refseq_version = '9.14'
 
 constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
 constants.phyla = [ 'Actinobacteria',

@@ -25,7 +25,7 @@ router.post('/refseqBLASTN', (req, res) => {
 	helpers.accesslog(req, res)
 	res.render('pages/refseq/blastn', {
 		title: 'HOMD :: Taxon Table', 
-		hostname: CFG.hostname,
+		hostname: CFG.HOSTNAME,
 		rna_ver : C.rRNA_refseq_version,
 		gen_ver : C.genomic_refseq_verson
 		

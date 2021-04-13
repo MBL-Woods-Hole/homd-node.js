@@ -16,10 +16,9 @@ router.get('/login', (req, res) => {
     res.render('pages/admin/login', { 
 		  title: 'HOMD :: Login',
 		  user: req.user, 
-		  hostname: CFG.hostname,
+		  config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		  return_to_url: req.session.returnTo,
-		  rna_ver : C.rRNA_refseq_version,
-		  gen_ver : C.genomic_refseq_verson
+		  ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
     });
 });
 
@@ -34,10 +33,9 @@ router.get('/register', (req, res) => {
     res.render('pages/admin/register', { 
 		  title: 'HOMD :: Signup',
 		  user: req.user, 
-		  hostname: CFG.hostname,
+		  config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		  return_to_url: req.session.returnTo,
-		  rna_ver : C.rRNA_refseq_version,
-		  gen_ver : C.genomic_refseq_verson 
+		  ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
     });
 });
 
@@ -52,10 +50,9 @@ router.get('/reset_password', (req, res) => {
     res.render('pages/admin/reset_pasword', { 
 		  title: 'HOMD :: Reset Password',
 		  user: req.user, 
-		  hostname: CFG.hostname,
+		  config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		  return_to_url: req.session.returnTo,
-		  rna_ver : C.rRNA_refseq_version,
-		  gen_ver : C.genomic_refseq_verson 
+		  ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}), 
     });
 });
 

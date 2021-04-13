@@ -95,7 +95,7 @@ function get_16s_seq(seqid) {
 		//doc.title = 'eHOMD Reference Sequence'
 		doc.open("text/html");
 		
-		doc.write("<title>eHOMD 16s rRNA Sequence</title>"+text);
+		doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
 		doc.close();
     		
     		

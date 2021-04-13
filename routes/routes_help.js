@@ -17,9 +17,8 @@ router.get('/user_guide', (req, res) => {
     res.render('pages/help/user_guide', { 
 		  title: "HOMD :: User's Guide",
 		  user: req.user, 
-		  hostname: CFG.hostname,
-		  rna_ver : C.rRNA_refseq_version,
-		  gen_ver : C.genomic_refseq_verson
+		  config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		  ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
                       
     });
 });
@@ -61,9 +60,8 @@ router.get('/template', (req, res) => {
 		  page: info_content,  // this will open the menu
 		  menu: menu_item,
 		  user: req.user, 
-		  hostname: CFG.hostname,
-		  rna_ver : C.rRNA_refseq_version,
-		  gen_ver : C.genomic_refseq_verson
+		  config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		  ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
                       
     });
     }

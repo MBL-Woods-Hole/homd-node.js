@@ -53,10 +53,9 @@ router.get('/genome_table', (req, res) => {
 	
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
-		hostname: CFG.hostname,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		seqid_list: JSON.stringify(gid_obj_list),
-		rna_ver : C.rRNA_refseq_version,
-		gen_ver : C.genomic_refseq_verson,
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		letter: req.session.gen_letter,
 		otid: otid,
 		show_filters:show_filters,
@@ -80,11 +79,10 @@ router.get('/jbrowse', (req, res) => {
 	// https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4350995/
 	res.render('pages/genomes/jbrowse2_stub_iframe', {
 		title: 'HOMD :: Taxon Table', 
-		hostname: CFG.hostname,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		gnom: '',  // default
 		genomes: JSON.stringify(C.available_jbgenomes),
-		rna_ver : C.rRNA_refseq_version,
-		gen_ver : C.genomic_refseq_verson
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 //
@@ -100,11 +98,10 @@ router.post('/jbrowse', (req, res) => {
 	//res.send(JSON.stringify({'static_data':gnom}));
 	res.render('pages/genomes/jbrowse2_stub_iframe', {
 		title: 'HOMD :: Taxon Table', 
-		hostname: CFG.hostname,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		gnom: gnom,  // default
 		genomes: JSON.stringify(C.available_jbgenomes),
-		rna_ver : C.rRNA_refseq_version,
-		gen_ver : C.genomic_refseq_verson
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 //
@@ -150,14 +147,13 @@ router.get('/genome_description', (req, res) => {
 	console.log(C.genome_lookup[gid])
 	res.render('pages/genome/genomedesc', {
 		title: 'HOMD :: Genome Info', 
-		hostname: CFG.hostname,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		//taxonid: otid,
 		data1: JSON.stringify(C.genome_lookup[gid]),
 		//data2: JSON.stringify(data2),
 		//data3: JSON.stringify(data3),
 		//data4: JSON.stringify(data4),
-		rna_ver : C.rRNA_refseq_version,
-		gen_ver : C.genomic_refseq_verson
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 

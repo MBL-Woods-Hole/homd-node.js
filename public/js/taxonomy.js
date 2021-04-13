@@ -259,11 +259,13 @@ function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,f
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
-        //console.log(defline)
-        text = '<pre>'+defline+'<br>'
+        console.log(resp)
+        text = ''
+        //text += '<pre>'+defline+'<br>'
+        text = '<pre>'
         text += resp
         text += '</pre>'
-		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=500,height=600");
+		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=600,height=500");
 		var doc = win.document;
 		//doc.writeln("<title>yourtitle</title>");
 		//doc.title = 'eHOMD Reference Sequence'
@@ -273,7 +275,21 @@ function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,f
 		doc.close();
     		
     		
-    		}
+      }
     }
     xmlhttp.send(JSON.stringify(args));
 }
+//
+// function dld_ttable(type) {
+//     var args = {type:type}
+//     var xmlhttp = new XMLHttpRequest();
+// 	xmlhttp.open("POST", "/taxa/dld_ttable", true);
+// 	xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//         var resp = xmlhttp.responseText;
+//         console.log(resp)
+//        } 
+//     }
+//     xmlhttp.send(JSON.stringify(args));
+// }
