@@ -1,11 +1,9 @@
+<%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(seqid_list) %>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<%- include('../../partials/header_html'); %>
-<title><%= title %></title>
 <link rel="stylesheet" href="/css/genome_pages.css" >
+
 <style>
 
 </style>
@@ -32,7 +30,7 @@
 
 <div id='table_div'>
 <br><span id='count_info'><%- count_text %></span>
-<table id='gnom-table' class='table sortable' border='1'><thead>
+<table id='gnom-table' class='table sortable' border='0'><thead>
 <tr>
 <th class='col1'>Taxon ID</th>
 <th class='col130'>Genus</th>
@@ -59,12 +57,12 @@
 		<td class='center'><%= ginfo[n].ncontigs %></td>
 		<td class='center'><%= ginfo[n].tlength %></td>
 		<td class='center'><%= ginfo[n].gc %></td>
-        <td class='gbutton red_btn' nowrap><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Desc</a></td>
+        <td class='gbutton red1_btn' nowrap><a class='btn  btn-default' href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Desc</a></td>
         <td class='gbutton green_btn' nowrap><a href='genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a></td>
-        <td class='gbutton blue_btn' nowrap><a href=''>Genome Viewer</a></td>
+        <td class='gbutton blue1_btn' nowrap><a href=''>Genome Viewer</a></td>
         <td class='gbutton purple_btn'><a href=''>BLAST</a></td>
-        <td class='gbutton'>PROKKA</td>
-        <td class='gbutton'>NCBI</td>
+        <td class='gbutton red2_btn'><a  href='annotation/<%= ginfo[n].gid %>/prokka'>PROKKA</a></td>
+        <td class='gbutton blue1_btn'><a href='annotation/<%= ginfo[n].gid %>/ncbi'>NCBI</a></td>
         <td class='gbutton'>HOMD</td>
 	</tr>
 <% } %>
@@ -90,6 +88,7 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 <script type="text/javascript" src="/js/genomes.js"></script>
 
+<script src="/js/bootstrap.min.js"></script>
 <script src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script>
 	var letter = '<%- letter %>'

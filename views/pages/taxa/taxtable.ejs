@@ -1,16 +1,15 @@
+<%- include('../../partials/header_html'); %>
+
 <% list = JSON.parse(res) %>
 <% statusfltrX = statusfltr %>
 
-<!DOCTYPE html>
-<html lang="en">
-<%- include('../../partials/header_html'); %>
-<title><%= title %></title>
 <link rel="stylesheet" href="/css/taxa_pages.css" >
 <style>
 #download_fxn {
   position:absolute;
   right: 90px;
   top:75px;
+  font-size:11px;
 }
 </style>
 
@@ -30,7 +29,7 @@
 	
 	  <div class='wide-content' id="">  					
 		 <div class='page-title'><%= pgtitle %></div>
-		 <div id='download_fxn'>Download Taxon Table: 
+		 <div id='download_fxn'><b>Download Taxon Table</b>: 
 		 <a href='dld_ttable?type=browser' >[Browser]</a>
 		 <a href='dld_ttable?type=text' >[Text]</a>
 		 <a href='dld_ttable?type=excel' >[Excel]</a>

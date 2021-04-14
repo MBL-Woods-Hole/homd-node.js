@@ -1,5 +1,7 @@
 <%- include('../../partials/header_html'); %>
 
+<style>
+</style>
 <body>
   <div id='wrapper'>		
 	    
@@ -17,7 +19,7 @@
 	
 	
 		<div class='wide-content' id="">  					
-			 CONTENT
+			 ANNOTATIONS for <%= gid %>
 		</div>
 	
     </div> <!-- end: page-content -->
@@ -33,20 +35,7 @@
 </html>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
 
-<script>
-    function mainmenu(){
-		$(" #nav ul ").css({display: "none"}); // Opera Fix
-		$(" #nav li").hover(function(){
-          $(this).find('ul:first').css({visibility: "visible",display: "none"}).show(400);
-          },function(){
-          $(this).find('ul:first').css({visibility: "hidden"});
-        });
-    }
 
-	$(document).ready(function(){                    
-		mainmenu();
-	});
-
-</script>
 

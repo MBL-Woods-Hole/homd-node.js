@@ -124,9 +124,12 @@
         <% } %>
   </div>
 </div>
-<span style=''>
-  uptime: <%= cfg.hostname %> <%= cfg.env %>
+<% if(cfg.env == 'development'){ %>
+<span style='color:#cc0000'>
+  ** HOMD Development **
 </span>
+<% } %>
+
 <div id='refseq-stats'>
    16S rRNA Refseq <a class="pn-sub" href="/?name=Article&toc=1&sid=96"><%= version_info.rna_ver %></a> 
    Genomic RefSeq  <a class="pn-sub" href="?name=Article&file=index&toc=1&sid=157"><%= version_info.gen_ver %></a>

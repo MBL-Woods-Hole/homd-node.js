@@ -1,9 +1,7 @@
-<% ginfo = JSON.parse(data1) %>
-
-<!DOCTYPE html>
-<html lang="en">
 <%- include('../../partials/header_html'); %>
-<title><%= title %></title>
+
+<% ginfo = JSON.parse(data1) %>
+<link rel="stylesheet" href="/css/genome_pages.css" >
 <body>
   <div id='wrapper'>		
 	    
@@ -32,9 +30,10 @@
 	 <button id='' value=''>PROKKA Annotation</button>
 	 <button id='' value=''>NCBI Annotation</button>
 	</div>
-<div id='table_div' style='width:50%;border:1px solid purple;'>		
-		 					
- <table border='1'>
+<div id='table_div' style='width:80%;border:1px solid #3a6696;padding:10px 100px'>		
+  <a href='/help/template?menu=help_genomes&page=metas&new=1'>Help with this Information</a> 					
+ 
+ <table id='gnomdesc-table' border='0' style='width:50%;border:1px solid #3a6696;'>
  <tr><td>1</td><td>Oral Taxon ID</td><td><%= ginfo.otid %></td></tr>
  <tr><td>2</td><td>HOMD Sequence ID</td><td><%= ginfo.gid %></td></tr>
  <tr><td>3</td><td>HOMD Name (Genus, Species)</td><td><%= ginfo.genus %> <%= ginfo.species %></td></tr>

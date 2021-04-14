@@ -330,7 +330,7 @@ router.get('/tax_description', (req, res) => {
 	}
 	console.log(data2.general)
 	res.render('pages/taxa/taxdesc', {
-		title: 'HOMD :: Taxon Level', 
+		title: 'HOMD :: Taxon Info', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		otid: otid,
 		data1: JSON.stringify(data1),
@@ -376,7 +376,7 @@ router.get('/dld_ttable', (req, res) => {
 	if(type == 'browser'){
 	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
 	}else if(type == 'text'){
-	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.csv\""});
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.txt\""});
 	}else if(type == 'excel'){
 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
 	}else{

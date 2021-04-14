@@ -27,9 +27,11 @@ console.log("Setting Environment to: "+process.env.NODE_ENV);
 const options = {}
 var http;
 if(CFG.SERVER_PORT == '443'){
+   
    options.key = fs.readFileSync(CFG.KEY_FILE),
    options.cert= fs.readFileSync(CFG.CERT_FILE)
    http = require('https');
+   console.log('Reading https cert files',CFG.KEY_FILE,CFG.CERT_FILE)
 }else{
    http = require('http');
 };

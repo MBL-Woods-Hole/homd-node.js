@@ -31,10 +31,10 @@
     font-size:12px;
  } 
  #tax-table tr:nth-child(even) { 
-    background-color: Lightgreen; 
+    background-color: #ffffcd; 
  } 
  #tax-table tr:hover { 
-    background-color: Lightyellow; 
+    background-color: #feff3c; 
  } 
  #outer-content {
    
@@ -47,10 +47,10 @@
  
  
  #status-div {
-   background:turquoise;padding:2px;font-size:12px;
+   background:#e1f0f4;padding:2px;font-size:12px;
  }
  #bodysite-div {
-   background:pink;padding:2px;font-size:12px;
+   background:#f5dced;padding:2px;font-size:12px;
  }
  
 /*  Tax Level page */

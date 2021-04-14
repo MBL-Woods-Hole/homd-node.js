@@ -10,6 +10,15 @@
   font-size:10px;
   
 }
+#gnom-table tr:nth-child(even) { 
+    background-color: #ffffcd; 
+ } 
+ #gnom-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
+#gnomdesc-table tr:nth-child(even) { 
+    background-color: #ffffcd; 
+ } 
 .gbutton {
   font: bold 10px Arial;
   text-decoration: none;
@@ -28,25 +37,37 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
         content: " \25B4\25BE" 
     }
 .red {
-	color:#cc0000;
+	color: #cc0000;
 }
-.red_btn {
+.red1_btn {
+  border: 1px solid red;
+}
+.red1_btn a {
+  color: red;
+}
+.red2_btn {
   border: 1px solid #cc0000;
 }
-.red_btn a {
-  color:#cc0000;
+.red2_btn a {
+  color: #cc0000;
 }
 .green_btn{
   border: 1px solid green;
 }
 .green_btn a {
-  color:green;
+  color: green;
 }
-.blue_btn{
+.blue1_btn{
     border: 1px solid blue;
 }
-.blue_btn a {
-    color:blue;
+.blue1_btn a {
+    color: blue;
+}
+.blue2_btn{
+    border: 1px solid #3a6696;
+}
+.blue2_btn a {
+    color: #3a6696;
 }
 .purple_btn{
     border: 1px solid purple;

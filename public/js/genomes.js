@@ -29,7 +29,7 @@ function change_genome2(genome){
   
   
   var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", "/genomes/jbrowse_ajax", true);
+	xmlhttp.open("POST", "/genome/jbrowse_ajax", true);
 	xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {

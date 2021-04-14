@@ -49,7 +49,7 @@ router.get('/genome_table', (req, res) => {
 	}
 	
 	// get each secid from C.genome_lookup
-	console.log('seqid_list',gid_obj_list[0])
+	//console.log('seqid_list',gid_obj_list[0])
 	
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
@@ -77,8 +77,8 @@ router.get('/jbrowse', (req, res) => {
 	// SHOULD THIS BE IN THE HOMD DIR???
 	// GOOD: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0924-1
 	// https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4350995/
-	res.render('pages/genomes/jbrowse2_stub_iframe', {
-		title: 'HOMD :: Taxon Table', 
+	res.render('pages/genome/jbrowse2_stub_iframe', {
+		title: 'HOMD :: JBrowse', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		gnom: '',  // default
 		genomes: JSON.stringify(C.available_jbgenomes),
@@ -96,8 +96,8 @@ router.post('/jbrowse', (req, res) => {
 	var gnom = req.body.gnom_select
 	
 	//res.send(JSON.stringify({'static_data':gnom}));
-	res.render('pages/genomes/jbrowse2_stub_iframe', {
-		title: 'HOMD :: Taxon Table', 
+	res.render('pages/genome/jbrowse2_stub_iframe', {
+		title: 'HOMD :: JBrowse', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		gnom: gnom,  // default
 		genomes: JSON.stringify(C.available_jbgenomes),
@@ -144,7 +144,7 @@ router.get('/genome_description', (req, res) => {
 	20  16S rRNA gene sequence
 	21  Comments
 	*/
-	console.log(C.genome_lookup[gid])
+	//console.log(C.genome_lookup[gid])
 	res.render('pages/genome/genomedesc', {
 		title: 'HOMD :: Genome Info', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -177,5 +177,23 @@ router.post('/get_16s_seq', (req, res) => {
 		res.send(html)
 	})
 	
+});
+//
+router.get('/annotation/:gid/:type', (req, res) => {
+    helpers.accesslog(req, res)
+    console.log('in annotation')
+    let myurl = url.parse(req.url, true);
+    var gid = req.params.gid
+    var annot_type = req.params.type
+    
+    
+    res.render('pages/genome/annotation', {
+        title: 'HOMD :: Genome Annotation', 
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		gid: gid,
+    
+    })
+
 });
 module.exports = router;

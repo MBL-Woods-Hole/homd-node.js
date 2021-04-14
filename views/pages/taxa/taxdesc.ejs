@@ -1,3 +1,4 @@
+<%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
 <% data1 = JSON.parse(data1) %>
 <% data2 = JSON.parse(data2) %>
@@ -7,10 +8,7 @@
 <% taxidfullname = ("000" + otid).slice(-3); %>
 <% taxidfullnameplus = 'HMT-'+taxidfullname; %>
 
-<!DOCTYPE html>
-<html lang="en">
-<%- include('../../partials/header_html'); %>
-<title><%= title %></title>
+
 <style>
 #page-block {
   border: 1px solid black;
@@ -22,7 +20,7 @@
    text-align: center;
    padding:10px;
    margin: 1px;
-   background: gold;
+   background: #f2cb6d;
    font-weight:bold;
    font-size:13px;
 }
@@ -66,32 +64,48 @@
 <td class='tbl-title'>Human Microbial Taxon ID:</td><td><%= taxidfullname %></td>
 <td class='tbl-title'>Body Site:</td><td><%= data1.site %></td>
 </tr>
-<tr><td class='tbl-title'>Status:</td><td><%= data1.status %></td><td class='tbl-title' rowspan='2'>Synonym(s):</td><td rowspan='2'><%- data1.synonyms.join('<br>') %></td></tr>
-<tr><td class='tbl-title'>Strain Information:</td><td><%= data1.type_strain.join('<br>') %></td></tr>
-
+<tr>
+  <td class='tbl-title'>Status:</td><td><%= data1.status %></td>
+  <td class='tbl-title' rowspan='2'>Synonym(s):</td>
+  <td rowspan='2'><i><%- data1.synonyms.join('<br>') %></i></td>
+</tr>
+<tr>
+  
+  <% if(data1.type_strain[0] == 'None'){ %>
+  
+    <td class='tbl-title'>Reference Strain:</td>
+    <td>None, not yet cultivated
+  <% }else{ %>
+    <td class='tbl-title'>Strain Information:</td>
+    <td><%= data1.type_strain.join('<br>') %>
+  <% } %>
+  
+  <br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank'>Global Catalogue of Microorganisms</a>
+  </td>
+</tr>
 
 <tr>
   <td class='tbl-title'>Classification:</td>
   <td>
 	<table>
-	  <tr><td>Domain:</td><td><%= data3.domain %></td></tr>
-	  <tr><td>Phylum:</td><td><%= data3.phylum %></td></tr>
-	  <tr><td>Class:</td><td><%= data3.klass %></td></tr>
-	  <tr><td>Order:</td><td><%= data3.order %></td></tr>
-	  <tr><td>Family:</td><td><%= data3.family %></td></tr>
-	  <tr><td>Genus:</td><td><%= data1.genus %></td></tr>
-	  <tr><td>Species:</td><td><%= data1.species %></td></tr>
+	  <tr><td>Domain:</td><td><i><%= data3.domain %></i></td></tr>
+	  <tr><td>Phylum:</td><td><i><%= data3.phylum %></i></td></tr>
+	  <tr><td>Class:</td><td><i><%= data3.klass %></i></td></tr>
+	  <tr><td>Order:</td><td><i><%= data3.order %></i></td></tr>
+	  <tr><td>Family:</td><td><i><%= data3.family %></i></td></tr>
+	  <tr><td>Genus:</td><td><i><%= data1.genus %></i></td></tr>
+	  <tr><td>Species:</td><td><i><%= data1.species %></i></td></tr>
 	</table>
   </td>
   <td class='tbl-title'>NCBI Taxonomy ID:</td>
-  <td><%= data1.NCBI_taxid %> <a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.NCBI_taxid %>' target='_blank'>[NCBI Taxonomy Link]</a></td>
+  <td><%= data1.NCBI_taxid %> <a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.NCBI_taxid %>' target='_blank'>[Link to NCBI]</a></td>
 </tr>
 
 
 <tr>
 <td class='tbl-title' rowspan='3'>16S rRNA Reference Sequences:</td>
 
-<td>HOMD RefSeq ID:
+<td><b>HOMD RefSeq ID</b>:
 <% for( var n in data5){ %>
 	<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
 	<% refseqid 	= data5[n].refseqid %>
@@ -114,7 +128,7 @@
 
 
 <tr>
-  <td class='tbl-title'>Abundance:</td><td></td>
+  <td class='tbl-title'>Abundance:</td><td>TODO</td>
   <td class='tbl-title'>Genome Sequence</td>
   <td>
     <% if(data1.genomes.length > 0){ %>
@@ -131,7 +145,7 @@
 </tr>
 
 
-<tr><td class='tbl-title'>Hierarchy Structure:</td><td></td><td></td><td></td></tr>
+<tr><td class='tbl-title'>Hierarchy Structure:</td><td>TODO</td><td></td><td></td></tr>
 
 </table>
 <div id='' class='description-header2'>General Information:</div>
