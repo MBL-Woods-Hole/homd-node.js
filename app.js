@@ -136,10 +136,11 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 var data_init_files =[
 	
 	C.refs_lookup_fn,
-	C.lineage_lookup_fn, 
+	C.nonoral_lineage_lookup_fn, 
 	C.info_lookup_fn,
 	C.tax_lookup_fn,
-	C.tax_hierarchy_fn,  // gives you taxonomy lineage
+	C.nonoral_tax_hierarchy_fn,  // gives you taxonomy lineage
+	C.oral_tax_hierarchy_fn,  // gives you taxonomy lineage
 	C.genome_lookup_fn,
 	C.refseq_fn
 ]
@@ -157,9 +158,10 @@ async.map(data_init_files, readAsync, function(err, results) {
     C.taxonomy_lineagelookup 		= JSON.parse(results[1]);
     C.taxonomy_infolookup 			= JSON.parse(results[2]);
     C.taxonomy_taxonlookup 			= JSON.parse(results[3]);
-    C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[4]));
-    C.genome_lookup 				= JSON.parse(results[5]);
-    C.refseq_lookup 				= JSON.parse(results[6]);
+    C.nonoral_homd_taxonomy =  new CustomTaxa(JSON.parse(results[4]));
+    C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
+    C.genome_lookup 				= JSON.parse(results[6]);
+    C.refseq_lookup 				= JSON.parse(results[7]);
     //examples
     console.log('length of C.taxonomy_taxonlookup: ',Object.keys(C.taxonomy_taxonlookup).length)
     console.log('length of C.taxonomy_refslookup: ',Object.keys(C.taxonomy_refslookup).length)
@@ -169,6 +171,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     for(var n in C.homd_taxonomy){
        console.log(n)
     }
+    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Methanobrevibacter_genus'])
     
 });
 

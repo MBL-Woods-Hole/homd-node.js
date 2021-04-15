@@ -22,12 +22,21 @@
 	
 	  <div class='wide-content' id="">  					
 		 
-		 
+		 ORAL: <%= oral %>
 		<center>
-		 <div class='page-title'>Human Oral Microbiome Taxonomic Level List</div>
+		 <div class='page-title'>Human Oral Microbiome Taxonomic Level List
+		 
+		 </div>
+		 <% if(oral){ %>
+		   Note: this table includes non-oral/nasal reference taxa, 
+		   <a href='tax_level' >[show oral/nasal only]</a>
+		 <% }else{ %>
+		   Note: this table does not includes non-oral/nasal reference taxa, 
+		   <a href='tax_level' >[show also non-oral/nasal taxa]</a>
+		 <% }%>
 		 
 		 <div id='center70pct_div'>
-		 <span class=''>Taxonomic Level</span>
+		 <span class=''>Taxonomic Level:</span>
             <br>
                  <a href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
             &gt; <a href='#' id='Phylum' onclick="change_level('Phylum')">Phylum</a> 

@@ -63,7 +63,8 @@
 #taxlevel_tdiv2 {
    
    padding:5px;
-   
+   width:80%;
+   border:1px solid gray;
 }
 #level_table {
    /* border:1px solid red; */

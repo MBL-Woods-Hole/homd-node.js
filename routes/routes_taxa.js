@@ -141,24 +141,27 @@ router.get('/tax_hierarchy', (req, res) => {
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		});
 		
-	// use this only if use the version 7 dhtmlx tree	(non-dynamic loading)
-	// fs.readFile('public/data/vamps_taxonomy.json', (err, jsondata) => {
-// 		//console.log(JSON.parse(data));
-// 		//let taxaData = JSON.parse(data);
-// 		//console.log(student);
-// 		res.render('pages/taxon/taxhierarchy', {
-// 			title: 'HOMD :: Taxon Hierarchy', 
-// 			hostname: CFG.hostname,
-// 			data: jsondata
-// 		});
-// 	});
+	
 });
 router.get('/tax_level', (req, res) => {
 	helpers.accesslog(req, res)
+	var oral;
+	if(req.session.counts_file == C.nonoral_taxcounts_fn){
+		req.session.counts_file = C.oral_taxcounts_fn 
+		req.session.tax_obj = C.oral_homd_taxonomy
+		oral=0
+	}else{
+		req.session.counts_file = C.nonoral_taxcounts_fn  // default
+		req.session.tax_obj = C.nonoral_homd_taxonomy
+		oral=1
+	}
+  console.log(req.session.counts_file)
+	
 	res.render('pages/taxa/taxlevel', {
 		title: 'HOMD :: Taxon Level', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		level: 'domain',
+		oral: oral,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -170,13 +173,13 @@ router.post('/taxLevel', (req, res) => {
 	var rank = req.body.rank
 	helpers.accesslog(req, res)
 	const tax_resp = []
-	fs.readFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn), 'utf8', (err, data) => {
+	fs.readFile(path.join(CFG.PATH_TO_DATA, req.session.counts_file), 'utf8', (err, data) => {
     	if (err)
       		console.log(err)
     	else
 			var taxdata = JSON.parse(data);
 			
-			const result = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
+			const result = req.session.tax_obj.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
 				// get lineage of taxitem
 				//console.log(taxitem)
 				lineage = [taxitem.taxon]
@@ -184,27 +187,36 @@ router.post('/taxLevel', (req, res) => {
 				new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
 				//console.log(new_search_id,new_search_rank)
 				while (new_search_id != 0){
-					new_search_item = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_search_id]
-					//name_n_rank
-					//new_search_item = new_search_parent
+					new_search_item = req.session.tax_obj.taxa_tree_dict_map_by_id[new_search_id]
+
 					lineage.unshift(new_search_item.taxon)  // adds to front of lineage array -prepends
 					new_search_id = new_search_item.parent_id
 				
 				}
 				return_obj = {}
 				return_obj.item_rank = rank
-				if(rank='species'){
+				
+				if(rank=='species'){
 					return_obj.otid = taxitem.otid
+					console.log('species')
+					// here we 'fix' the species to exclude the genus so that
+					// the whole lineage can be used as an index for the counts
+					genus = lineage[lineage.length - 2]
+					species = lineage[lineage.length - 1]
+					new_sp = species.replace(genus,'')
+					lineage[lineage.length - 1] = new_sp.trim()
+					
 				}
 				return_obj.item_taxon = lineage[lineage.length - 1]
 				return_obj.parent_rank = C.ranks[C.ranks.indexOf(rank) - 1]
 				return_obj.parent_taxon = lineage[lineage.length - 2]
-				return_obj.item_count = taxdata[lineage.join(';')]
+				
+				return_obj.tax_count = taxdata[lineage.join(';')].tax_cnt
+				return_obj.gne_count = taxdata[lineage.join(';')].gne_cnt
+				return_obj.rrna_count = taxdata[lineage.join(';')]['16s_cnt']
+				
 				return_obj.lineage = lineage.join(';')
-				if(!return_obj.item_count){
-				   //console.log(return_obj)
-				   //console.log(lineage.join(';'))
-				}
+				
 				tax_resp.push(return_obj)
 				return return_obj
 		
@@ -218,7 +230,18 @@ router.post('/taxLevel', (req, res) => {
 	});
 });
 //
+router.post('/oral_counts_toggle', (req, res) => {
+	var oral = req.body.oral
+	helpers.accesslog(req, res)
+	console.log('oral ',oral)
+	if(oral == 'false'){
+		req.session.counts_file = C.nonoral_taxcounts_fn  // default
+	}else{
+		req.session.counts_file = C.oral_taxcounts_fn  
+	}
+	res.send({ok:'ok'});
 
+});
 // test: choose custom taxonomy, show tree
 router.get('/tax_custom_dhtmlx', (req, res) => {
   console.time("TIME: tax_custom_dhtmlx");
@@ -238,15 +261,15 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
 //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'])
 //console.log(C.homd_taxonomy)
 //     
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"])
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["954"])
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["955"])
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["956"])
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["957"])
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["958"])
+    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_rank["domain"])
+    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["954"])
+    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["955"])
+    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["956"])
+    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["957"])
+    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["958"])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["7"])
     
-    C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
+    C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
         //console.log('node')
         let options_obj = get_options_by_node(node);
         options_obj.checked = true;
@@ -256,7 +279,7 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
     );
   }
   else {
-    const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
+    const objects_w_this_parent_id = C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
     objects_w_this_parent_id.map(node => {
       let options_obj = get_options_by_node(node);
       options_obj.checked = false;

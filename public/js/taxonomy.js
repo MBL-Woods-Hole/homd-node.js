@@ -174,11 +174,13 @@ function change_level(rank) {
 				if(rank == 'Species'){
 				  	html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
 				}
-				html += "<td style='text-align:center'>"+static_data[n].item_count+'</td>'
+				html += "<td style='text-align:center'>"+static_data[n].tax_count+'</td>'
 				
 				//html +="<td>"+static_data[n].lineage+"</td>"
 				
-				html += '<td></td><td></td>'
+				html += "<td style='text-align:center'>"+static_data[n].gne_count+'</td>'
+				html += "<td style='text-align:center'>"+static_data[n].rrna_count+'</td>'
+				
 				html += '</tr>'
 			}
 			html += '</table>'
@@ -193,7 +195,26 @@ function change_level(rank) {
 
 
 }
-
+function toggle_oral(oral){
+	console.log(oral)
+	if(oral=='false'){
+		console.log('notcode')
+	}else{
+		console.log('code')
+	}
+	var args = {}
+	args.oral = oral
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("POST", "/taxa/oral_counts_toggle", true);
+	xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var response = xmlhttp.responseText;
+            console.log(response)
+          }
+    }
+    xmlhttp.send(JSON.stringify(args));
+}
 function clear_filter_form(){
 	var els = document.getElementsByClassName('filter_ckbx')
 	for (n in els){
