@@ -2,6 +2,7 @@
 <% ginfo = JSON.parse(seqid_list) %>
 
 
+
 <link rel="stylesheet" href="/css/genome_pages.css" >
 
 <style>
@@ -49,7 +50,7 @@
 <% for(n in ginfo){ %>
 	<% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
 	<tr>
-		<td nowrap ><a href='tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
+		<td nowrap ><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
 		<td class='tax_name'><%= ginfo[n].genus %></td>
 		<td class='tax_name'><%= ginfo[n].species %></td>
 		<td class=''><%= ginfo[n].ccolct %></td>

@@ -89,3 +89,16 @@ module.exports.chunkSubstr = (str, size) =>{
 
   return chunks
 }
+//
+module.exports.format_long_numbers = (x) =>{
+    // change 456734 => 456,734
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+module.exports.format_Mbps = (x) =>{
+    // change 456734 => 456,734
+    return (parseFloat(x) /1000000).toFixed(2).toString() +' Mbps'
+}
+//
+module.exports.onlyUnique = (value, index, self) =>{
+  return self.indexOf(value) === index;
+}

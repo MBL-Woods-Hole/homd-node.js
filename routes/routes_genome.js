@@ -17,19 +17,34 @@ router.get('/genome_table', (req, res) => {
 	var seqid_list;
 	let myurl = url.parse(req.url, true);
 	req.session.gen_letter = myurl.query.k
-	console.log('otid',myurl.query.otid)
+	console.log('myurl.query',myurl.query)
 	var otid = myurl.query.otid
+	var phylum = myurl.query.phylum
 	var show_filters = 0
+	var phyla_obj = C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
+	var phyla = phyla_obj.map(function(el){ return el.taxon; })
 	
 	var count_text = ''
 	
-	if(['all','alloral'].indexOf(otid) == -1) {
+	if(phylum){
+	  gid_obj_list = Object.values(C.genome_lookup);
+	  otid = 'all'
+	  show_filters = 1
+	  var lineage_list = Object.values(C.taxonomy_lineagelookup)
+	  var obj_lst = lineage_list.filter(item => item.phylum === phylum)  //filter for phylum 
+	  var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
+	  		return el.otid
+	  })
+	  gid_obj_list = gid_obj_list.filter(item => {   // filter genome obj list for inclusion in otid list
+	     	return otid_list.indexOf(item.otid) !== -1
+	  })
+	  count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span> ('+otid_list.length+' taxons)'
+	}else if(['all','alloral'].indexOf(otid) === -1) {
 		// single gid
 		seqid_list = C.taxonomy_taxonlookup[otid].genomes
 		gid_obj_list = []
 		for(n in seqid_list){
 		    gid_obj_list.push(C.genome_lookup[seqid_list[n]])
-		    //console.log(C.genome_lookup[seqid_list[n]])
 		}
 		show_filters = 0
 		count_text = 'No. of genomes for TAXON-ID::HMT-'+otid+': <span class="red">'+gid_obj_list.length.toString()+'</span>'
@@ -40,7 +55,7 @@ router.get('/genome_table', (req, res) => {
 		
 		if(req.session.gen_letter){
 	   	// COOL....
-	   		gid_obj_list = gid_obj_list1.filter(item => item.genus.charAt(0) == req.session.gen_letter)
+	   		gid_obj_list = gid_obj_list1.filter(item => item.genus.charAt(0) === req.session.gen_letter)
 			count_text = 'No. of genomes starting with: '+req.session.gen_letter+': <span class="red">'+gid_obj_list.length.toString()+'</span>'
 		}else{
 			gid_obj_list = gid_obj_list1
@@ -48,8 +63,14 @@ router.get('/genome_table', (req, res) => {
 		}
 	}
 	
+	// Phyla Philter
+	
+	
+	gid_obj_list.map(function(el){
+	      if(el.tlength){ el.tlength = helpers.format_long_numbers(el.tlength); }
+	})
 	// get each secid from C.genome_lookup
-	//console.log('seqid_list',gid_obj_list[0])
+	console.log('seqid_list',gid_obj_list[0])
 	
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
@@ -58,6 +79,8 @@ router.get('/genome_table', (req, res) => {
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		letter: req.session.gen_letter,
 		otid: otid,
+		phylum:phylum,
+		phyla: JSON.stringify(phyla),
 		show_filters:show_filters,
 		count_text:count_text
 		
@@ -193,6 +216,43 @@ router.get('/annotation/:gid/:type', (req, res) => {
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		gid: gid,
     
+    })
+
+});
+
+router.get('/phylo_phlan_tree', (req, res) => {
+    helpers.accesslog(req, res)
+    console.log('in annotation')
+    
+    res.render('pages/genome/genomic_phylo_phlan_tree', {
+        title: 'HOMD :: Genome Annotation', 
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		
+    
+    })
+
+});
+router.get('/ribosomal_protein_tree', (req, res) => {
+    helpers.accesslog(req, res)
+    console.log('in annotation')
+
+    res.render('pages/genome/ribosomal_protein_tree', {
+        title: 'HOMD :: Genome Annotation', 
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		
+    })
+
+});
+router.get('/rRNA_gene_tree', (req, res) => {
+    helpers.accesslog(req, res)
+    console.log('in annotation')
+    
+    res.render('pages/genome/rRNA_gene_tree', {
+        title: 'HOMD :: rRNA_gene_tree', 
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
     })
 
 });

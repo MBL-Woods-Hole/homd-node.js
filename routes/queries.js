@@ -8,7 +8,7 @@ const helpers = require(app_root + '/routes/helpers/helpers');
 
 
 module.exports.get_refseq_query = (refid) => {
-    var qSelectRefseq = "SELECT seq_trim28 from taxonid_refseqid_seq ";
+    var qSelectRefseq = "SELECT seq_trim9 from taxonid_refseqid_seq ";
     qSelectRefseq += " WHERE refseqid='"+refid+"'";
     console.log(qSelectRefseq);
     return qSelectRefseq;

@@ -1,3 +1,4 @@
+<% phyla = JSON.parse(phyla) %>
 <% var fstyle = 'none'; %>
 <% if(show_filters){ %>
 <%   fstyle = 'inline'; %>
@@ -11,8 +12,17 @@
 
 <div id='left-genome-filter'>	
 	<div id='genus-filter'>
-	  Navigate genomes by Phylum:<select>
+	  Navigate genomes by Phylum:
+	  <select  onchange="location = this.value;">
 	  <option>Select a Phylum</option>
+	  <% for(n in phyla) { %>
+	    <% if(phyla[n] === phylum){ %>
+	      <option selected value='genome_table?phylum=<%= phyla[n] %>'><%= phyla[n] %></option>
+	    <% }else{ %>
+	      <option value='genome_table?phylum=<%= phyla[n] %>'><%= phyla[n] %></option>
+	    <% } %>
+	  <% } %>
+	  
 	  </select>
 	</div>  <!-- end genus-filter -->
 	

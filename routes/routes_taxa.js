@@ -33,13 +33,13 @@ router.get('/tax_table', (req, res) => {
 	
 		//console.log(tax_letter)
 		// filter
-		send_tax_obj1 = send_tax_obj.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) != -1 )
+		send_tax_obj1 = send_tax_obj.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) !== -1 )
 		//var intiial_site_filter = ['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
-		//send_tax_obj = send_tax_obj.filter(item => intiial_site_filter.indexOf(item.site[0].toLowerCase()) != -1)
+		//send_tax_obj = send_tax_obj.filter(item => intiial_site_filter.indexOf(item.site[0].toLowerCase()) !== -1)
 	
 		if(req.session.tax_letter){
 		   // COOL....
-		   send_tax_obj = send_tax_obj1.filter(item => item.genus.charAt(0) == req.session.tax_letter)
+		   send_tax_obj = send_tax_obj1.filter(item => item.genus.charAt(0) === req.session.tax_letter)
 		}else{
 			send_tax_obj = send_tax_obj1
 		}
@@ -48,7 +48,30 @@ router.get('/tax_table', (req, res) => {
 		//console.log(send_tax_obj[0])
     }
     
-    
+    // Here we add the genome size formatting on the fly
+    send_tax_obj.map(function(el){
+	      el.gsize = ''
+	      if(el.genomes.length === 0){
+	      	el.gsize = ''
+	      }else if(el.genomes.length === 1 && el.genomes[0] in C.genome_lookup){
+	        el.gsize = helpers.format_Mbps(C.genome_lookup[el.genomes[0]].tlength).toString()
+	      }else{  // More than one genome
+	        var size_array = el.genomes.map( (x) =>{
+	          if(C.genome_lookup[x].tlength !== 0){
+	            return C.genome_lookup[x].tlength 
+	          }
+	        })
+	        var min = Math.min.apply(Math, size_array.filter(Boolean))  // this removes 'falsy' from array
+	        var max = Math.max.apply(Math, size_array.filter(Boolean))
+	        console.log(min,max,size_array)
+	        if(min === max){
+	        	el.gsize = helpers.format_Mbps(min)
+	        }else{
+	        	el.gsize = helpers.format_Mbps(min)+' - '+helpers.format_Mbps(max)
+	        }
+	      }
+	})
+    console.log(send_tax_obj[0])
     //sort
     send_tax_obj.sort(function (a, b) {
       return helpers.compareStrings_alpha(a.genus, b.genus);
@@ -83,10 +106,10 @@ router.post('/tax_table', (req, res) => {
 	statusfilter_on =[]
 	sitefilter_on  = []
 	for(i in req.body){
-		if(C.tax_status_all.indexOf(i) != -1){
+		if(C.tax_status_all.indexOf(i) !== -1){
 		   statusfilter_on.push(i)
 		}
-		if(C.tax_sites_all.indexOf(i) != -1){
+		if(C.tax_sites_all.indexOf(i) !== -1){
 		   sitefilter_on.push(i)
 		}
 	}
@@ -97,16 +120,16 @@ router.post('/tax_table', (req, res) => {
 	tcount = send_tax_obj0.length
 	if(req.session.tax_letter){
 	   // COOL....
-	   send_tax_obj1 = send_tax_obj0.filter(item => item.genus.charAt(0) == req.session.tax_letter)
+	   send_tax_obj1 = send_tax_obj0.filter(item => item.genus.charAt(0) === req.session.tax_letter)
 	}else{
 		send_tax_obj1 = send_tax_obj0
 	}
 	
 	// error if site is empty list
 	//throw new error
-	send_tax_obj2 = send_tax_obj1.filter(item => sitefilter_on.indexOf(item.site[0].toLowerCase()) != -1)
+	send_tax_obj2 = send_tax_obj1.filter(item => sitefilter_on.indexOf(item.site[0].toLowerCase()) !== -1)
 	
-	send_tax_obj3 = send_tax_obj2.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) != -1 )    
+	send_tax_obj3 = send_tax_obj2.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) !== -1 )    
 	
 	//console.log('send_tax_objC',send_tax_obj)
 	// use session for taxletter
@@ -146,7 +169,7 @@ router.get('/tax_hierarchy', (req, res) => {
 router.get('/tax_level', (req, res) => {
 	helpers.accesslog(req, res)
 	var oral;
-	if(req.session.counts_file == C.nonoral_taxcounts_fn){
+	if(req.session.counts_file === C.nonoral_taxcounts_fn){
 		req.session.counts_file = C.oral_taxcounts_fn 
 		req.session.tax_obj = C.oral_homd_taxonomy
 		oral=0
@@ -186,7 +209,7 @@ router.post('/taxLevel', (req, res) => {
 				new_search_id = taxitem.parent_id
 				new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
 				//console.log(new_search_id,new_search_rank)
-				while (new_search_id != 0){
+				while (new_search_id !== 0){
 					new_search_item = req.session.tax_obj.taxa_tree_dict_map_by_id[new_search_id]
 
 					lineage.unshift(new_search_item.taxon)  // adds to front of lineage array -prepends
@@ -196,7 +219,7 @@ router.post('/taxLevel', (req, res) => {
 				return_obj = {}
 				return_obj.item_rank = rank
 				
-				if(rank=='species'){
+				if(rank === 'species'){
 					return_obj.otid = taxitem.otid
 					console.log('species')
 					// here we 'fix' the species to exclude the genus so that
@@ -234,7 +257,7 @@ router.post('/oral_counts_toggle', (req, res) => {
 	var oral = req.body.oral
 	helpers.accesslog(req, res)
 	console.log('oral ',oral)
-	if(oral == 'false'){
+	if(oral === 'false'){
 		req.session.counts_file = C.nonoral_taxcounts_fn  // default
 	}else{
 		req.session.counts_file = C.oral_taxcounts_fn  
@@ -320,7 +343,7 @@ router.get('/tax_description', (req, res) => {
 	
 	*/
 	
-	if( C.taxonomy_taxonlookup[otid] == undefined){
+	if( C.taxonomy_taxonlookup[otid] === undefined){
     	req.flash('TRY AGAIN')
     	res.send('That Taxon ID: ('+otid+') was not found1 - Use the Back Arrow and select another')
     	return
@@ -381,14 +404,14 @@ router.post('/get_refseq', (req, res) => {
 	})
 });
 
-// router.get('/tax_download', (req, res) => {
-// 	helpers.accesslog(req, res)
-// 	res.render('pages/taxon/taxdownload', {
-// 		title: 'HOMD :: Taxon Download', 
-// 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
-// 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-// 	});
-// });
+router.get('/tax_download', (req, res) => {
+	helpers.accesslog(req, res)
+	res.render('pages/taxa/taxdownload', {
+		title: 'HOMD :: Tax Download', 
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+	});
+});
 router.get('/dld_ttable', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log(req.body)
@@ -396,11 +419,11 @@ router.get('/dld_ttable', (req, res) => {
   	let type = myurl.query.type;
 	// type = browser text or excel
 	var table_tsv = create_table('ttable','browser')
-	if(type == 'browser'){
+	if(type === 'browser'){
 	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
-	}else if(type == 'text'){
+	}else if(type === 'text'){
 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.txt\""});
-	}else if(type == 'excel'){
+	}else if(type === 'excel'){
 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
 	}else{
 	    // error
@@ -426,7 +449,7 @@ router.get('/dld_ttable', (req, res) => {
 function get_options_by_node(node) {
   rankname = node.rank.charAt(0).toUpperCase() + node.rank.slice(1)
   text = rankname+' '+node.taxon
-  if(node.rank=='species'){
+  if(node.rank ==='species'){
     text = "<a href='tax_description?otid="+node.otid+"'><i>"+rankname+' '+node.taxon+'</i></a>'
   }
   let options_obj = {
@@ -445,7 +468,7 @@ function get_options_by_node(node) {
 
 function create_table(source, type) {
 
-    if(source == 'ttable' && type == 'browser'){
+    if(source === 'ttable' && type === 'browser'){
         obj1 = C.taxonomy_taxonlookup
         obj2 = C.taxonomy_lineagelookup
         obj3 = C.taxonomy_infolookup 

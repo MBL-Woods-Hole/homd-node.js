@@ -168,7 +168,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     console.log('length of C.taxonomy_lineagelookup: ',Object.keys(C.taxonomy_lineagelookup).length)
     console.log('length of C.taxonomy_infolookup: ',Object.keys(C.taxonomy_infolookup).length)
     console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
-    for(var n in C.homd_taxonomy){
+    for(var n in C.nonoral_homd_taxonomy){
        console.log(n)
     }
     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Methanobrevibacter_genus'])

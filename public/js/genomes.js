@@ -103,3 +103,8 @@ function get_16s_seq(seqid) {
     }
     xmlhttp.send(JSON.stringify(args));
 }
+//
+function format_long_numbers(x){
+    // change 456734 => 456,734
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
