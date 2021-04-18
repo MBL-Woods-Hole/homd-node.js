@@ -22,7 +22,7 @@ constants.phyla = [ 'Actinobacteria',
 					'WPS-2'
 ]
 
-constants.available_jbgenomes = ['volvox','tomato','yeast_synteny'];
+//constants.available_jbgenomes = ['volvox','tomato','yeast_synteny'];
 
 constants.tax_status_all =['named','unnamed','phylotype','lost','dropped','nonoralref'];
 constants.tax_status_on =['named','unnamed','phylotype','lost'];

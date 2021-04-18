@@ -3,7 +3,9 @@
 
 <style>
             
-
+#genome_choices{
+  padding:10px 0 10px 100px;
+}
 	
 </style>
 <body>
@@ -29,11 +31,12 @@
 		  <!-- <form id='load_genome_form' name='' action='/genomes/jbrowse' method='POST'>	 -->
 		  <div id='genome_choices'>
 			<select id='gnom_select' name='gnom_select' onchange='change_genome2(this.value)'>
+			 Select a Genome:
 			 <option id='' name='none' value='none'>Choose...</option>
 			 <% for(i in gn){ %>
-			 	<option id='' name='gnom' value='<%= gn[i] %>'><%= gn[i] %></option>
+			 	<option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 			 <% } %>
-			</select>
+			</select> from a total of <%= tgenomes %>
 		  <!-- </form> -->	
 		  </div>
 		  

@@ -87,6 +87,9 @@ router.get('/genome_table', (req, res) => {
 	});
 })
 //
+router.get('/jbrowse2/:id', (req, res) => {
+	console.log('jbrowse2/:id -get')
+});
 router.get('/jbrowse', (req, res) => {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	helpers.accesslog(req, res)
@@ -100,11 +103,22 @@ router.get('/jbrowse', (req, res) => {
 	// SHOULD THIS BE IN THE HOMD DIR???
 	// GOOD: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0924-1
 	// https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4350995/
+	//console.log(Object.values(C.genome_lookup)[0])
+	var glist = Object.values(C.genome_lookup)
+	glist.sort(function (a, b) {
+    	return helpers.compareStrings_alpha(a.genus, b.genus);
+    });
+	// filter out empties then map to create list of sorted strings
+	var genome_list = glist.filter(item => item.genus !== '')
+		.map( (el)=>{
+			return {gid:el.gid, genus:el.genus, species:el.species, ccolct:el.ccolct}
+		})
 	res.render('pages/genome/jbrowse2_stub_iframe', {
 		title: 'HOMD :: JBrowse', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		gnom: '',  // default
-		genomes: JSON.stringify(C.available_jbgenomes),
+		genomes: JSON.stringify(genome_list),
+		tgenomes: genome_list.length,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -124,17 +138,18 @@ router.post('/jbrowse', (req, res) => {
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		gnom: gnom,  // default
 		genomes: JSON.stringify(C.available_jbgenomes),
+		
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 //
 router.post('/jbrowse_ajax', (req, res) => {
 	console.log('AJAX JBrowse')
-	console.log(req.body);
+	//console.log(req.body);
 	helpers.accesslog(req, res)
 	//open(jburl)
 	
-	res.send(JSON.stringify({'static_data':req.body.gnom}));
+	res.send(JSON.stringify({'response_data':req.body.gid}));
 });
 //
 router.get('/genome_description', (req, res) => {

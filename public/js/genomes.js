@@ -9,9 +9,9 @@ function change_genome1(genome){
 }
 
 
-function change_genome2(genome){
-  console.log(genome)
-  if(genome=='none'){
+function change_genome2(gid){
+  console.log(gid)
+  if(gid=='none'){
      document.getElementById("genome_iframe").src = "";	
 	 document.getElementById("genome_iframe").width = '100%'
 	 document.getElementById("genome_iframe").height = '0'
@@ -19,7 +19,7 @@ function change_genome2(genome){
   }
   // reload page form or ajax?
   args = {}
-  args.gnom = genome
+  args.gid = gid
   //import assembly from '/jbrowse/js/assembly_'+genome+'.js'
   //import tracks from '/jbrowse/js/tracks_'+genome+'.js';
   //var json = require('/jbrowse/js/assembly_'+genome+'.js'); //(with path)
@@ -36,7 +36,7 @@ function change_genome2(genome){
             var response = xmlhttp.responseText;
             var static_data = JSON.parse(response)
             // if(response=='OK')
-            console.log(response)
+            console.log('resp:',response)
             //alert(response)
                 //html = "<center><h2>Embedded JBrowse2 "+ genome +"</h2></center>"
 				//html += "<iframe"
@@ -46,8 +46,10 @@ function change_genome2(genome){
 // 					html += 'height="800px"'
 // 				html += ">"
 // 				html += "</iframe>"
-				
-			document.getElementById("genome_iframe").src = "/jbrowse2/index.html?tracklist=0&nav=0&overview=0&config=/jbrowse2/test_data/"+ genome +"/config.json";	
+			var jburl = "?data=homd_configs/"+gid
+			jburl += "&tracklist=0&nav=0&overview=0"
+			//jburl += "&config=homd_configs/"+gid +"/config.json"
+			document.getElementById("genome_iframe").src = "/jbrowse2/" + jburl;	
 			document.getElementById("genome_iframe").width = '100%'
 			document.getElementById("genome_iframe").height = '800px'
 			
