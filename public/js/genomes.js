@@ -48,7 +48,7 @@ function change_genome2(gid){
 // 				html += "</iframe>"
 			var jburl = "?data=homd_configs/"+gid
 			jburl += "&tracklist=0&nav=0&overview=0"
-			//jburl += "&config=homd_configs/"+gid +"/config.json"
+			jburl += "&config=homd_configs/"+gid +"/config.json"
 			document.getElementById("genome_iframe").src = "/jbrowse2/" + jburl;	
 			document.getElementById("genome_iframe").width = '100%'
 			document.getElementById("genome_iframe").height = '800px'
