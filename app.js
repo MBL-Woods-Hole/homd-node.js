@@ -157,7 +157,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     // the lookups are keyed on Oral_taxon_id
     
     C.taxonomy_refslookup 			= JSON.parse(results[0]);
-    C.taxonomy_lineagelookup 		= JSON.parse(results[1]);
+    C.taxonomy_lineagelookup 		= JSON.parse(results[1]);  // non-oral 'all'
     C.taxonomy_infolookup 			= JSON.parse(results[2]);
     C.taxonomy_taxonlookup 			= JSON.parse(results[3]);
     C.nonoral_homd_taxonomy =  new CustomTaxa(JSON.parse(results[4]));
