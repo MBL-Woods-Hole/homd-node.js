@@ -477,13 +477,16 @@ function create_table(source, type) {
         txt =  headers_row.join('\t')
         
         for(otid in obj1){
-            o1 = obj1[otid]
-            o2 = obj2[otid]
-            o3 = obj3[otid]
+            if(otid in obj2 && otid in obj3){
+               o1 = obj1[otid]
+               o2 = obj2[otid]
+               o3 = obj3[otid]
             
-            var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.NCBI_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
-            row = r.join('\t')
-            txt += '\n'+row
+               //console.log(o2)
+               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.NCBI_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
+               row = r.join('\t')
+               txt += '\n'+row
+            }
         }
     }   
     //console.log(txt)
