@@ -4,6 +4,9 @@
 td a {
    color:blue;
 }
+.card-body a {
+   color:black;
+}
 </style>
 <body>
   <div id='wrapper'>		
@@ -34,18 +37,26 @@ td a {
 		   <a href='tax_level' >[show also non-oral/nasal taxa]</a>
 		 <% }%>
 		 
-		 <div id='center70pct_div'>
-		 <h5 class='text-primary'>Taxonomic Level:</h5>
-            <br>
-                 <a href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
+		 
+	<div class="card text-white bg-success mb-3" style="max-width: 50rem;">
+  		<h4 class="card-header">Taxonomic Level:</h4>
+  		<div class="card-body">
+    	   <p class="card-text">
+   
+            Select Rank: &nbsp; &nbsp; &nbsp;    
+            <a href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
             &gt; <a href='#' id='Phylum' onclick="change_level('Phylum')">Phylum</a> 
             &gt; <a href='#' id='Class' onclick="change_level('Class')">Class</a> 
             &gt; <a href='#' id='Order' onclick="change_level('Order')">Order</a> 
             &gt; <a href='#' id='Family' onclick="change_level('Family')">Family</a> 
             &gt; <a href='#' id='Genus' onclick="change_level('Genus')">Genus</a> 
             &gt; <a href='#' id='Species' onclick="change_level('Species')">Species</a>
-		 </div>
+		   </p>
+        </div>
+     </div>
 		 
+		 
+		 <br>
 		 <div id='taxlevel_tdiv2' style='background: lightgrey;'></div>
 	    </center> 
 	  </div> <!-- End jumbo -->

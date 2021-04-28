@@ -1,14 +1,27 @@
 #gnom-table {
   padding:5px;
-  width:1350px;
+ /*  width:1200px; */
   table-layout:fixed;
 }
 #gnom-table th{
   color:white;
   background:#006699;
   padding:5px;
-  font-size:10px;
+  font-size:13px;
+  text-align: center;
   
+}
+#gnom-table td{
+  padding:3px 2px;
+  font-size:small;
+  color: #303030;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.linkout a
+{
+ color: #780000;
 }
 #gnom-table tr:nth-child(even) { 
     background-color: #ffffcd; 
@@ -19,20 +32,7 @@
 #gnomdesc-table tr:nth-child(even) { 
     background-color: #ffffcd; 
  } 
-.gbutton {
-  font: bold 10px Arial;
-  text-decoration: none;
-  text-align:center;
-  background-color: #EEEEEE;
-  
-  width:10px;
-  
-  border-top: 1px solid #CCCCCC;
-  border-right: 1px solid #333333;
-  border-bottom: 1px solid #333333;
-  border-left: 1px solid #CCCCCC;
 
-}
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
         content: " \25B4\25BE" 
     }
@@ -77,30 +77,26 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 }
 
 
-.col1 {
-    width: 40px;
-}
-.col130 {
-    width: 130px;
-}
-
-.col4 {
-    /* floating col  */
-}
-.col50{
+.col1{
    width: 50px;
 }
-
+.col2 {
+    width: 80px;
+}
+.col3 {
+    width: 120px;
+}
+.col4 {
+    width: 160px;
+}
 .col9{
-   width: 280px;
+   width: 250px;
 }
 .col10{
-   width: 140px;
+   width: 150px;
 }
-#gnom-table td{
-  padding:0 2px;
-  font-size:x-small;
-}
+
+
 .tax_name{
   font-size:x-small;
   font-style:italic;

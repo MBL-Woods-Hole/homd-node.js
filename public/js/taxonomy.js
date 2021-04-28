@@ -136,7 +136,7 @@ function change_level(rank) {
 	if(args.rank=='class'){args.rank='klass';}// for use in homd_taxonomy.taxa_tree_dict_map_by_rank
 	var ranks = ["Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species"];
 	for(n in ranks){
-	  document.getElementById(ranks[n]).style ='font-weight:normal;'
+	  document.getElementById(ranks[n]).style ='font-weight:normal;color:black;'
 	}
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("POST", "/taxa/taxLevel", true);
@@ -187,7 +187,7 @@ function change_level(rank) {
 			html += '</tbody></table>'
 			document.getElementById('taxlevel_tdiv2').innerHTML = html
 			
-			document.getElementById(rank).style ='font-weight:bold;'
+			document.getElementById(rank).style ='font-weight:bold;font-size:18px;color:red;'
 
 		}
 	}

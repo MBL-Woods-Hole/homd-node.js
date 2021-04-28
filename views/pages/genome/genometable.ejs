@@ -1,78 +1,79 @@
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(seqid_list) %>
 
-
-
-<link rel="stylesheet" href="/css/genome_pages.css" >
-
+<link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <style>
+
 
 </style>
 <body>
   <div id='wrapper'>		
-	    
-	    
+	     
 	<div id='header'>
        <%- include('../../partials/header_img'); %>
     </div>
 	
-	<div id="navbar">
-		<%- include('../../partials/navbar'); %>
-	</div>
-	
-	<div  class='page-content'>
+	<%- include('../../partials/navbar'); %>
 	
 	
-	<div class='wide-content' id="">  					
-		<div class='page-title'>Human Microbial Genomes</div>
+	<div  class='page-content' style='padding:20px 30px 0 30px;'>
+      <div class='jumbotron'> 
+	
+	
+						
+		<center><h3 class='title text-info'>Human Microbial Genomes</h3></center>
 
 
  <%- include('../../partials/genome_table_filter.ejs') %> 
 
 <div id='table_div'>
-<br><span id='count_info'><%- count_text %></span>
-<table id='gnom-table' class='table sortable' border='0'><thead>
+<span id='count_info'><%- count_text %></span>
+<table id='gnom-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
+<thead>
 <tr>
-<th class='col1'>Taxon ID</th>
-<th class='col130'>Genus</th>
-<th class='col130'>Species</th>
-<th class='col4'>Strain/Culture<br>Collection</th>
-<th class='col50'>SEQ ID</th>
-<th class='col50'>No. of contigs<br>and<br>plasmids</th>
-<th class='col50'>Combined<br>Length (bp)</th>
-<th class='col50'>GC<br>(%)</th>
-<th class=" col9 sorttable_nosort" colspan='4'>Genome Info and Tools</th>
-<th class=" col10 sorttable_nosort" colspan='3'>Available Annotations</th>
+<th class='col2' >Taxon ID</th>
+<th class='col3' scope="col" >Genus</th>
+<th class='col3' scope="col" >Species</th>
+<th  class='' scope="col" >Strain/Culture<br>Collection</th>
+<th class='col2' scope="col" >SEQ ID</th>
+<th class='col1' scope="col" >No. of contigs<br>and<br>plasmids</th>
+<th class='col2' scope="col" >Combined<br>Length<br>(bp)</th>
+<th class='col1' scope="col" >GC<br>(%)</th>
+<th class="col9 sorttable_nosort" >Genome Info and Tools</th>
+<th   class="col10 sorttable_nosort" >Available Annotations</th>
 </tr>
 </thead>
 <tbody>
 
 <% for(n in ginfo){ %>
 	<% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
-	<tr>
-		<td nowrap ><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-		<td class='tax_name'><%= ginfo[n].genus %></td>
-		<td class='tax_name'><%= ginfo[n].species %></td>
-		<td class=''><%= ginfo[n].ccolct %></td>
-		<td class='center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
+	<tr class="table-primaryX">
+		<td class='linkout center' nowrap ><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
+		<td class='tax_name'><em><%= ginfo[n].genus %></em></td>
+		<td class='tax_name'><em><%= ginfo[n].species %></em></td>
+		<td ><%= ginfo[n].ccolct %></td>
+		<td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
 		<td class='center'><%= ginfo[n].ncontigs %></td>
 		<td class='center'><%= ginfo[n].tlength %></td>
 		<td class='center'><%= ginfo[n].gc %></td>
-        <td class='gbutton red1_btn' nowrap><a class='btn  btn-default' href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Desc</a></td>
-        <td class='gbutton green_btn' nowrap><a href='genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a></td>
-        <td class='gbutton blue1_btn' nowrap><a href=''>Genome Viewer</a></td>
-        <td class='gbutton purple_btn'><a href=''>BLAST</a></td>
-        <td class='gbutton red2_btn'><a  href='annotation/<%= ginfo[n].gid %>/prokka'>PROKKA</a></td>
-        <td class='gbutton blue1_btn'><a href='annotation/<%= ginfo[n].gid %>/ncbi'>NCBI</a></td>
-        <td class='gbutton'>HOMD</td>
+		
+        <td class='center' nowrap><a class='badge badge-light' href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Desc</a>
+        <a class='badge badge-secondary' href='genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a>
+        <a class='badge badge-success' href=''>Genome Viewer</a>
+        <a class='badge badge-warning' href=''>BLAST</a></td>
+        
+        
+        <td class='center'><a class='badge badge-danger'  href='annotation/<%= ginfo[n].gid %>/prokka'>PROKKA</a>
+        <a class='badge badge-dark' href='annotation/<%= ginfo[n].gid %>/ncbi'>NCBI</a>
+        <span class="badge badge-primary">HOMD</span></td>
 	</tr>
 <% } %>
 
 </tbody>
 </table>
   </div>  <!-- end table_div -->
-		</div>  <!-- end wide -->
-	
+		
+	</div>  <!-- end jumbo -->
     </div> <!-- end: page-content -->
     
     <div id='footer'>
@@ -86,10 +87,9 @@
 </html>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script type="text/javascript" src="/js/menu.js"></script>
 <script type="text/javascript" src="/js/genomes.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
 
-<script src="/js/bootstrap.min.js"></script>
 <script src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script>
 	var letter = '<%- letter %>'

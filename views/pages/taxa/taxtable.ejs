@@ -13,6 +13,13 @@
 .table-condensed{
   font-size: 13px;
 }
+#tax-table
+{
+}
+#tax-table th
+{
+
+}
 #tax-table td
 {
  max-width: 200px;
@@ -66,7 +73,7 @@
 		 </thead>
 		 <tbody>
 		 <% for(n in list){ %>
-		   <tr class="table-primary">
+		   <tr class="table-primaryX">
 		   <% otid= list[n].otid %>
 		   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
 		   <td nowrap><%= taxidfullname  %></td>
@@ -108,7 +115,7 @@
 </html>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <!-- <script type="text/javascript" src="/js/menu.js"></script> -->
-<!-- <script type="text/javascript" src="/js/taxonomy.js"></script> -->
+<script type="text/javascript" src="/js/taxonomy.js"></script>
 <script type="text/javascript" src="/js/bootstrap.js"></script>
 <script src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script>
