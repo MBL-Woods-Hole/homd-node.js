@@ -1,45 +1,43 @@
 <%- include('../partials/header_html'); %>
 
-<link rel="stylesheet" type="text/css" href="/css/homd1.css" \>
-
 <style>
   /* Increase the header for this page only */
-#forsyth_logo {
-  height:120%;
+
+p {
+letter-spacing: 1.5px;
 }
-#homd_banner  {
-  height:120%;
-}
-#header {
-  height:120%;
+#masthead img {
+   height:120%;
 }
 </style>
 <body>
   <div id='wrapper'>		
 	    
 	    
-	<div id='header'>
+	<div id='header' >
        <%- include('../partials/header_img'); %>
     </div>
-    <div id="navbar">
-            <%- include('../partials/navbar'); %>
-    </div>
     
-    <div id='' class='page-content'>
+    <%- include('../partials/navbar'); %>
+    
+    
+    <div id='' class='page-content' style='padding:20px 30px 0 30px;'>
 	
-		<div id='left-sidebar'>
-		  <%- include('../partials/sidebar'); %>
-		</div>
-		<div id='right-sidebar'>
-		  
-			<div class='title'>Meta-Database Search</div>
-			<div class='title'>Announcement</div>
-			<div class='title'>Database Update</div>
-		  
-		</div>
+
 	
-		<div class='home-content' id="">  					
-			 <%- include('../partials/home_content'); %>
+		<div class='jumbotron'>  					
+			 <div class="card text-white bg-primary mb-3" style="max-width: 20rem;float:right;">
+			  <div class="card-header">Header</div>
+			  <div class="card-body">
+				<h4 class="card-title">Announcements</h4>
+				<p class="card-text">Some quick example text.</p>
+			  
+			    <h4 class="card-title">Database Updates</h4>
+			  </div>
+			</div>
+			 
+			<%- include('../partials/home_content'); %>
+			
 		</div>
     </div> <!-- end: page-content -->
     
@@ -54,12 +52,14 @@
 </html>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script type="text/javascript" src="/js/menu.js"></script>
+<!-- <script type="text/javascript" src="/js/menu.js"></script> -->
+<script type="text/javascript" src="/js/bootstrap.js"></script>
 <!-- <script type="text/javascript" src="/js/jquery-1.3.1.min.js"></script>	 -->
 <!-- <script type="text/javascript" language="javascript" src="/js/jquery.dropdownPlain.js"></script> -->
 <script>
   $(document).ready(function(){                    
-    mainmenu();
+    //mainmenu();
+    $('.dropdown-toggle').dropdown()
   });
   // this function is for the left side menu on the home page
   function expandcontent_simple(curobj, cid){

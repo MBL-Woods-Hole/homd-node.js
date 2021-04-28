@@ -1,0 +1,175 @@
+/* https://www.w3schools.com/cssref/css_colors.asp */
+
+/* 
+* {margin: 0; padding: 0; }
+h1 {font-size:xx-small;}
+h2 {font-size:x-small;}
+
+h4 {font-size: large;}
+h5 {font-size:x-large;}
+html {
+  background: lightgrey; 
+}
+
+body {
+  
+  font: small Verdana, Arial, Helvetica, sans-serif;
+  margin: auto;
+  padding: 0 2px 20px 2px;
+  width: 1350px;
+  background: white;  
+  
+}
+#forsyth_logo {
+  height:50px;
+}
+#homd_banner  {
+  height:50px;
+}
+
+#header {
+  height:50px;
+}
+a { text-decoration: none; }
+#header { background: white; }
+table { width: 100%; }
+th, td { padding: 0; }
+ */
+
+/* ####forsythlogo {position:absolute; top:0; right:0;} */
+/* 
+.main-text {
+  
+}
+ */
+.buttonX {
+  font: bold 11px Arial;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  padding: 2px 6px 2px 6px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+}
+
+.main-text::first-letter {
+  font-size: 300%;
+  color: #00659c;
+}
+
+ul li { list-style: none; }
+
+.flash-message {
+   float:left;
+   color:orange;
+}
+
+#left-sidebar {
+  position: relative;
+  float: left;
+  top: -10px;
+  left: 5px;
+  width: 200px;
+  /* background: tan; */
+  padding: 0;
+  margin: 10px;
+  /* border: 1px solid #600; */
+  
+}
+#left-sidebar ul {
+  list-style: none;
+  margin: 1em;
+  padding: 0;
+}
+#right-sidebar {
+  position: relative;
+  float: right;
+  top: -10px;
+  right: 5px;
+  width: 200px;
+  background: #006699;
+  padding: 0;
+  margin:10px;
+  /* border: 1px solid #600; */
+  
+}
+#right-sidebar ul {
+  list-style: none;
+  margin: 1em;
+  padding: 0;
+}
+#footer {
+    text-align: center;
+    font: x-small "Lucida Grande", Helvetica, arial, sans-serif;
+    color: grey; 
+    border: 1px solid gray;
+    margin: 5px 80px 2em 80px;
+    padding: 5px;   
+}
+
+.pull_right{
+   
+}
+.home-content{
+  margin: 25px 230px 2em 230px;
+  padding: 0 20px 0 40px; 
+  /* border: 1px solid red; */
+  font:  Arial, sans-serif;
+  font-size: small;
+  text-align: justify;
+  line-height: 22px;
+  
+}
+.wide-content{
+  /* text-align:center; */
+  
+}
+.title {
+   background: #00659c; 
+   font-weight: bold;
+   color: white;
+   padding: 1px 0 1px 10px;
+   margin: 2px 0 2px 0;
+}
+.page-title {
+   text-align: center;
+   width:100%;
+   font-weight: bold;
+   font-size: medium;
+   margin:20px;
+}
+.center-box {  /* Login Pages Boxes */
+  background:lightgrey;
+  margin:auto;
+  width:250px;
+  padding:10px;
+}
+
+
+/****for css menu****/
+#login-status {  /* In header/menu bar */
+  position:absolute;  
+	background: grey; 
+	right:400px; 
+	margin-top:3px;
+	/* text-align: right; */
+	z-index: 10;
+}
+
+
+#refseq-stats { 
+	position:relative;  
+	background: #BED6EC; 
+	color: grey;
+	/* right:100px;  */
+	white-space:nowrap;
+	/* width:0px;  */
+	float:right;
+	right:10px;
+	top: 0px;
+	
+	/* border:1px solid red; */
+	
+}
