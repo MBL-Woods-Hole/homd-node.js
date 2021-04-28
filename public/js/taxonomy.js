@@ -149,24 +149,25 @@ function change_level(rank) {
             
             //console.log(static_data)
 			var html = ''
-			html += "<table id='tax-table' class='table' border='0'>"
+			html += "<table id='table' class='table table-hover' border='0'>"
+			html += '<thead>'
 			html += '<tr>'
 			if(rank != 'Domain'){
-				html += '<th>Parent Level</th>'
+				html += '<th scope="col">Parent Level</th>'
 			}
-			html += '<th>'+rank+'</th>'
+			html += '<th scope="col">'+rank+'</th>'
 			if(rank == 'Species'){
-				html += '<th>HMT Taxon ID</th>'
+				html += '<th scope="col">HMT Taxon ID</th>'
 			}
-			html += '<th>Taxon Count</th>'
+			html += '<th scope="col">Taxon Count</th>'
 			
 			//html += '<th>lineage (for debuging)</th>'
 			
-			html += '<th>Genome Count</th><th>16S rRNA Refseq count</th></tr>'
+			html += '<th scope="col">Genome Count</th><th scope="col">16S rRNA Refseq count</th></tr></thead><tbody>'
 			
 			
 			for(n in static_data){
-				html += '<tr>'
+				html += '<tr class="table-warning">'
 				if(rank != 'Domain'){
 					html += '<td nowrap>'+static_data[n].parent_taxon+'</td>'
 				}
@@ -183,7 +184,7 @@ function change_level(rank) {
 				
 				html += '</tr>'
 			}
-			html += '</table>'
+			html += '</tbody></table>'
 			document.getElementById('taxlevel_tdiv2').innerHTML = html
 			
 			document.getElementById(rank).style ='font-weight:bold;'

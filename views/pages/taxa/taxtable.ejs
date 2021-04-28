@@ -10,7 +10,16 @@
   top:75px;
   font-size:11px;
 }
-
+.table-condensed{
+  font-size: 13px;
+}
+#tax-table td
+{
+ max-width: 200px;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}
 </style>
 
 <body>
@@ -24,14 +33,14 @@
 	<%- include('../../partials/navbar'); %>
    
     <div id='' class='page-content' style='padding:20px 30px 0 30px;'>
-    
+      <div class='jumbotron'> 
 	
-	  					
-		 <div class='page-title'><%= pgtitle %></div>
+		 <center><h3 class='title text-info'><%= pgtitle %></h3></center>
+		 
 		 <div id='download_fxn'><b>Download Taxon Table</b>: 
-		 <a href='dld_ttable?type=browser' >[Browser]</a>
-		 <a href='dld_ttable?type=text' >[Text]</a>
-		 <a href='dld_ttable?type=excel' >[Excel]</a>
+		   <a href='dld_ttable?type=browser' >[Browser]</a>
+		   <a href='dld_ttable?type=text' >[Text]</a>
+		   <a href='dld_ttable?type=excel' >[Excel]</a>
 		 </div>		 
 			 
 	<%- include('../../partials/tax_table_filter_pt1.ejs') %>
@@ -41,51 +50,52 @@
 	<%- include('../../partials/tax_table_filter_pt2.ejs') %> 
 	 
 		 
-		 <table id='tax-table' class='table  table-hover sortable'>
+		 <table id='tax-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
 		 <thead>
 		  <tr>
-		    <th scope="col">Taxon ID</th>
+		    <th scope="col" nowrap>Taxon ID</th>
 		    <th scope="col">Genus</th>
 		    <th scope="col">Species</th>
 		    <th scope="col">Status</th>
-		    <th scope="col">Body Site</th>
+		    <th scope="col" nowrap>Body Site</th>
 		    <th scope="col">Flag</th>
-		    <th scope="col" class="sorttable_nosort">Taxon Link</th>
-		    <th scope="col" class="sorttable_nosort">Genome Link</th>
-		    <th scope="col">Genome Size</th>
+		    <th scope="col" class="sorttable_nosort" nowrap>Taxon Link</th>
+		    <th scope="col" class="sorttable_nosort" nowrap>Genome Link</th>
+		    <th scope="col" nowrap>Genome Size</th>
 		  </tr>
 		 </thead>
 		 <tbody>
 		 <% for(n in list){ %>
-		   <tr>
+		   <tr class="table-primary">
 		   <% otid= list[n].otid %>
 		   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
-		   <td><%= taxidfullname  %></td>
-		   <td><i><b><%= list[n].genus  %></b></i></td>
-		   <td><i><b><%= list[n].species  %></b></i></td>
+		   <td nowrap><%= taxidfullname  %></td>
+		   <td nowrap><i><b><%= list[n].genus  %></b></i></td>
+		   <td nowrap><i><b><%= list[n].species  %></b></i></td>
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].site  %></td>
 		   <td><%= list[n].warning  %></td>
-		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="badge badge-primary" >Taxon Description</a></td>
+		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="btn btn-info btn-sm" >Taxon Description</a></td>
 		   <td style='text-align:center' nowrap>
 		   <% num_genomes = list[n].genomes.length %>
-		   <% if(num_genomes == 0){ %>
-		     <span class="badge badge-secondary" ><%= num_genomes %> Genomes</span>
-		     
+		   <% if(num_genomes === 0){ %>
+		     No Genomes
+		   <% }else if(num_genomes === 1){ %> 
+		    <a href="/genome/genome_table?otid=<%= otid %>" class="btn btn-success btn-sm" >1 Genome</a>
 		   <% }else{ %>
 		     
-		     <a href="/genome/genome_table?otid=<%= otid %>" class="badge badge-secondary" ><%= num_genomes %> Genomes</a>
+		     <a href="/genome/genome_table?otid=<%= otid %>" class="btn btn-success btn-sm" ><%= num_genomes %> Genomes</a>
 		     
 		   <% } %>
 		   </td>
-		   <td><%= list[n].gsize  %></td>
+		   <td nowrap><%= list[n].gsize  %></td>
 		   </tr>
 		 <% } %>
 		 </tbody>
 		 </table>
 		 
 </div>  <!-- end: tax-box -->
-	  
+	  </div> <!-- end jumbo -->
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>

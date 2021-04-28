@@ -27,7 +27,7 @@
 }
 .dhx_bg_img_fix {
     width:10px;
-    /* background: yellow; */
+    background: #fdffca;
     margin: auto;
     
 }
@@ -39,16 +39,6 @@
     border:1px solid #A4BED4;
 }
 
-  /* Increase the header for this page only */
-#forsyth_logo {
-  height:80%;
-}
-#homd_banner  {
-  height:80%;
-}
-#header {
-  height:80%;
-}
 
 </style>
 <body>
@@ -59,33 +49,31 @@
        <%- include('../../partials/header_img'); %>
     </div>
 
-	
-	
-	<div id="navbar">
-            <%- include('../../partials/navbar'); %>
-    </div>
-    <div id='' class='page-content '>
+    <%- include('../../partials/navbar'); %>
     
+    <div id='' class='page-content' style='padding:20px 30px 0 30px;'>
+      <div class='jumbotron'> 
 	
 	 					
-		 <div style='text-align:center;'>
-		 <div class='page-title'>Human Oral Microbiome Taxonomic Hierarchy
-		 <br><small>(Note: showing also non-oral/nasal reference taxa)</small>
-		 </div>
-		 <span class=''>Taxonomy Selection</span>
+	   <div style='text-align:center;'>
+		 <h3 class='title text-info'>Human Oral Microbiome Taxonomic Hierarchy</h3>
+		 <small>(Note: showing also non-oral/nasal reference taxa)</small>
+		 
+		 <h5 class='text-primary'>Taxonomy Selection</h5>
             <br>
             <input type='button'  name='' value='Reset Tree' onclick='reset_tree_dhtmlx()'> |
-             <input type='button'  name='' value='Open Level' onclick='open_tree_dhtmlx()'> |
-            <small>(double-click taxon names to expand deeper levels.)</small>
-		 </div>
+             <input type='button'  name='' value='Open Levels' onclick='open_tree_dhtmlx()'> |
+            <br><small>(double-click taxon names to expand deeper levels.)</small>
 		 
-		 <table id='custom_tax_div' >
+		 
+		  <table id='custom_tax_div' class="text-center" style='margin-left:300px;width:600px;'>
             <tr><td>
-            <div id="custom_treebox"></div>
+            <div id="custom_treebox" class="text-center" style='padding:10px;background:#fdffca;'></div>
             </td></tr>
 
           </table>
-	  
+         </div> 
+	  </div>  end jumbo
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>

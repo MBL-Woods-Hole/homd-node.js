@@ -3,9 +3,6 @@
 <style>
   /* Increase the header for this page only */
 
-p {
-letter-spacing: 1.5px;
-}
 #masthead img {
    height:120%;
 }
@@ -25,20 +22,31 @@ letter-spacing: 1.5px;
 	
 
 	
-		<div class='jumbotron'>  					
-			 <div class="card text-white bg-primary mb-3" style="max-width: 20rem;float:right;">
-			  <div class="card-header">Header</div>
+		<div class='jumbotron px-5'>  					
+			 <div id='side-gig' style='float:right;'>
+			 
+			 <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+			  <div class="card-header">Announcements</div>
 			  <div class="card-body">
-				<h4 class="card-title">Announcements</h4>
+				<h5 class="card-title">Announcement-01</h5>
 				<p class="card-text">Some quick example text.</p>
-			  
-			    <h4 class="card-title">Database Updates</h4>
 			  </div>
 			</div>
-			 
+			
+			<br>
+			
+			
+			<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+			  <div class="card-header">Database Updates</div>
+			  <div class="card-body">
+				<h5 class="card-title">Update-01</h5>
+				<p class="card-text">Some quick example text.</p>
+			  </div>
+			</div> 
+			</div> <!-- end side-gig -->
 			<%- include('../partials/home_content'); %>
 			
-		</div>
+		</div>  <!-- jumbo -->
     </div> <!-- end: page-content -->
     
     <div id='footer'>

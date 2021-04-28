@@ -7,23 +7,30 @@
 	 
 <table>
 <tr><td>	
-	
-	<div id='navigate-alpha'>
-		 
-		Navigate Taxa by Alphabet:<br>
+	<div class="card border-primary mb-3" style="max-width: 30rem;">
+  <div class="card-header">Navigate Taxa by Alphabet: (<small>back to <a id='all' href='tax_table?k='>All Entries</a></small>)</div>
+  <div class="card-body">
+    
+    <p class="card-text"<br>
 			 
 		<a id='A' href='tax_table?k=A'>A</a>|<a id='B' href='tax_table?k=B'>B</a>|<a id='C' href='tax_table?k=C'>C</a>|<a id='D' href='tax_table?k=D'>D</a>|<a id='E' href='tax_table?k=E'>E</a>|<a id='F' href='tax_table?k=F'>F</a>|<a id='G' href='tax_table?k=G'>G</a>|<a id='H' href='tax_table?k=H'>H</a>|<a id='I' href='tax_table?k=I'>I</a>|<a id='J' href='tax_table?k=J'>J</a>|<a id='K' href='tax_table?k=K'>K</a>|<a id='L' href='tax_table?k=L'>L</a>|<a id='M' href='tax_table?k=M'>M</a>|<a id='N' href='tax_table?k=N'>N</a>|<a id='O' href='tax_table?k=O'>O</a>|<a id='P' href='tax_table?k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='tax_table?k=R'>R</a>|<a id='S' href='tax_table?k=S'>S</a>|<a id='T' href='tax_table?k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='tax_table?k=V'>V</a>|<a id='W' href='tax_table?k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='tax_table?k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>|
-		<a id='all' href='tax_table?k='>All Entries</a>|
-
-	</div>
+		
+    </p>
+  </div>
+</div>
+	
+	
+	
 	
 </td><td>
 
-	<div id='taxa-search'>
-	  <br>
+	<div class="card border-primary mb-3" style="max-width: 40rem;">
+	  <div class="card-header">Search this table:</div>
+	   <div class="card-body">
 	   <form id='' name='' method='POST' action=''>
-		  Search:
-		  <input type='text' name='tax_srch' maxlength='18' size='20'>
+		 <fieldset> 
+		 <div class="form-group row">
+		  <input type='text' class='' name='tax_srch' maxlength='18' size='20'>
 		  <select id='' name='field'>
 			<option value="all">All Fields</option>
 			<option value="taxid">Taxon ID</option>
@@ -33,7 +40,7 @@
 			<option value="type">Type Strains</option>
 			<option value="rrna">16S rRNA ID</option>
 		  </select>
-		  Matching:
+		  &nbsp;Matching:
 		  <select id='' name='match'>
 			<option value="all">ALL words</option>
 			<option value="any">ANY words</option>
@@ -44,9 +51,11 @@
 			<option value="whole">Whole field</option>
 		  </select>
 		  <input type='submit' value=' Go '>
+	     </div>
+	     </fieldset>
 	   </form>
+	 </div>
 	</div>
-	 
 </td></tr>
 </table>	 
 	

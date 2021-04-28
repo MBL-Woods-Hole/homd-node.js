@@ -1,7 +1,9 @@
 <%- include('../../partials/header_html'); %>
 
 <style>
-
+td a {
+   color:blue;
+}
 </style>
 <body>
   <div id='wrapper'>		
@@ -10,22 +12,20 @@
 	<div id='header'>
        <%- include('../../partials/header_img'); %>
     </div>
-
 	
-	
-	<div id="navbar">
-            <%- include('../../partials/navbar'); %>
-    </div>
-    <div id='' class='page-content'>
+    <%- include('../../partials/navbar'); %>
     
+    <div id='' class='page-content' style='padding:20px 30px 0 30px;'>
+      <div class='jumbotron'> 
 	
-	  <div class='wide-content' id="">  					
+	  					
 		 
 		 ORAL: <%= oral %>
-		<center>
-		 <div class='page-title'>Human Oral Microbiome Taxonomic Level List
 		 
-		 </div>
+		 
+		<center>
+		 <h3 class='title text-info'>Human Oral Microbiome Taxonomic Level List</h3>
+		 
 		 <% if(oral){ %>
 		   Note: this table includes non-oral/nasal reference taxa, 
 		   <a href='tax_level' >[show oral/nasal only]</a>
@@ -35,7 +35,7 @@
 		 <% }%>
 		 
 		 <div id='center70pct_div'>
-		 <span class=''>Taxonomic Level:</span>
+		 <h5 class='text-primary'>Taxonomic Level:</h5>
             <br>
                  <a href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
             &gt; <a href='#' id='Phylum' onclick="change_level('Phylum')">Phylum</a> 
@@ -46,11 +46,9 @@
             &gt; <a href='#' id='Species' onclick="change_level('Species')">Species</a>
 		 </div>
 		 
-		 <div id='taxlevel_tdiv2'>
-		 
-		 </div>
+		 <div id='taxlevel_tdiv2' style='background: lightgrey;'></div>
 	    </center> 
-	  </div>
+	  </div> <!-- End jumbo -->
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
@@ -68,7 +66,7 @@
 <script type="text/javascript" src="/js/bootstrap.js"></script>
 <script>
   $(document).ready(function(){                    
-    mainmenu();
+    //mainmenu();
     change_level('Domain')
 });
 
