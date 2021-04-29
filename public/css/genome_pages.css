@@ -19,9 +19,14 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+#gnom-table .badge{
+  
+  font-size:0.8em;
+  
+}
 .linkout a
 {
- color: #780000;
+ color: blue;
 }
 #gnom-table tr:nth-child(even) { 
     background-color: #ffffcd; 
@@ -90,10 +95,10 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     width: 160px;
 }
 .col9{
-   width: 250px;
+   width: 270px;
 }
 .col10{
-   width: 150px;
+   width: 145px;
 }
 
 

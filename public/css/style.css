@@ -4,3 +4,7 @@ letter-spacing: 1.5px;
 #masthead img {
    height:50px;
 }
+.page-content {
+  padding:20px 30px 0 30px;
+  
+}

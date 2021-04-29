@@ -15,18 +15,37 @@
 }
 #tax-table
 {
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
 }
 #tax-table th
 {
-
+  color:white;
+  background:#006699;
+  padding:5px;
+  font-size:13px;
+  text-align: center;
 }
 #tax-table td
 {
- max-width: 200px;
- overflow: hidden;
- text-overflow: ellipsis;
- white-space: nowrap;
+ padding:3px 2px;
+  font-size:small;
+  color: #303030;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+#tax-table tr:nth-child(even) { 
+    background-color: #ffffcd; 
+ } 
+ #tax-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
+
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+        content: " \25B4\25BE" 
+    }
 </style>
 
 <body>
@@ -39,7 +58,7 @@
 
 	<%- include('../../partials/navbar'); %>
    
-    <div id='' class='page-content' style='padding:20px 30px 0 30px;'>
+    <div id='' class='page-content'>
       <div class='jumbotron'> 
 	
 		 <center><h3 class='title text-info'><%= pgtitle %></h3></center>
@@ -82,16 +101,16 @@
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].site  %></td>
 		   <td><%= list[n].warning  %></td>
-		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="btn btn-info btn-sm" >Taxon Description</a></td>
+		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="badge badge-primary" >Taxon Description</a></td>
 		   <td style='text-align:center' nowrap>
 		   <% num_genomes = list[n].genomes.length %>
 		   <% if(num_genomes === 0){ %>
 		     No Genomes
 		   <% }else if(num_genomes === 1){ %> 
-		    <a href="/genome/genome_table?otid=<%= otid %>" class="btn btn-success btn-sm" >1 Genome</a>
+		    <a href="/genome/genome_table?otid=<%= otid %>" class="badge badge-success" >1 Genome</a>
 		   <% }else{ %>
 		     
-		     <a href="/genome/genome_table?otid=<%= otid %>" class="btn btn-success btn-sm" ><%= num_genomes %> Genomes</a>
+		     <a href="/genome/genome_table?otid=<%= otid %>" class="badge badge-success" ><%= num_genomes %> Genomes</a>
 		     
 		   <% } %>
 		   </td>
