@@ -2,10 +2,14 @@
 
 <style>
   /* Increase the header for this page only */
-
+p {
+    
+    font-size: 16px;
+}
 #masthead img {
    height:120%;
 }
+
 </style>
 <body>
   <div id='wrapper'>		
@@ -60,14 +64,49 @@
 </html>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!-- <script type="text/javascript" src="/js/menu.js"></script> -->
 <script type="text/javascript" src="/js/bootstrap.js"></script>
 <!-- <script type="text/javascript" src="/js/jquery-1.3.1.min.js"></script>	 -->
 <!-- <script type="text/javascript" language="javascript" src="/js/jquery.dropdownPlain.js"></script> -->
 <script>
   $(document).ready(function(){                    
-    //mainmenu();
+   
     $('.dropdown-toggle').dropdown()
+    
+    
+    document.addEventListener("DOMContentLoaded", function(){
+// make it as accordion for smaller screens
+if (window.innerWidth < 992) {
+
+  // close all inner dropdowns when parent is closed
+  document.querySelectorAll('.navbar .dropdown').forEach(function(everydropdown){
+    everydropdown.addEventListener('hidden.bs.dropdown', function () {
+      // after dropdown is hidden, then find all submenus
+        this.querySelectorAll('.submenu').forEach(function(everysubmenu){
+          // hide every submenu as well
+          everysubmenu.style.display = 'none';
+        });
+    })
+  });
+
+  document.querySelectorAll('.dropdown-menu a').forEach(function(element){
+    element.addEventListener('click', function (e) {
+        let nextEl = this.nextElementSibling;
+        if(nextEl && nextEl.classList.contains('submenu')) {	
+          // prevent opening link if link needs to open dropdown
+          e.preventDefault();
+          if(nextEl.style.display == 'block'){
+            nextEl.style.display = 'none';
+          } else {
+            nextEl.style.display = 'block';
+          }
+
+        }
+    });
+  })
+}
+// end if innerWidth
+}); 
+// DOMContentLoaded  end
   });
   // this function is for the left side menu on the home page
   function expandcontent_simple(curobj, cid){

@@ -1,0 +1,134 @@
+<%- include('../../partials/header_html_virome'); %>
+
+<% list = JSON.parse(vdata) %>
+
+<style>
+#download_fxn {
+  position:absolute;
+  right: 90px;
+  top:150px;
+  font-size:12px;
+}
+.table-condensed{
+  font-size: 13px;
+}
+#virus-table
+{
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
+}
+#virus-table th
+{
+  color:white;
+  background:#006699;
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+}
+#virus-table td
+{
+ padding:3px 2px;
+  font-size:small;
+  color: #303030;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#virus-table tr:nth-child(even) { 
+    background-color: #ffffcd; 
+ } 
+ #virus-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
+
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+        content: " \25B4\25BE" 
+    }
+.col1{
+   width: 40px;
+}
+.center {
+    text-align:center;
+}
+</style>
+
+<body>
+  <div id='wrapper'>		
+	    
+	    
+	<div id='header'>
+       <%- include('../../partials/header_img_virome'); %>
+    </div>
+
+	<%- include('../../partials/navbar_virome'); %>
+   
+    <div id='' class='page-content'>
+      <div class='jumbotron'> 
+	
+		 <center><h4 class='title text-info'>Virus Table</h4></center>
+		 <%= Object.keys(list[0]) %>
+		 <div id='download_fxn'><b>Download Virus Table</b>: 
+		   <a href='dld_ttable?type=browser' >[Browser]</a>
+		   <a href='dld_ttable?type=text' >[Text]</a>
+		   <a href='dld_ttable?type=excel' >[Excel]</a>
+		 </div>		 
+			 
+	
+
+<div id='tax-box' >
+
+	
+	 
+		 
+		 <table id='virus-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
+		 <thead>
+		  <tr>
+		    <th scope="col" class='col1 sorttable_nosort'>No.</th>
+		    <th scope="col" class='center'>NCBI Assembly</th>
+		    <th scope="col">SRA Accession</th>
+		    <th scope="col">Genus</th>
+		    <th scope="col">Species</th>
+		    <th scope="col">Host Bacteria</th>
+		  </tr>
+		 </thead>
+		 <tbody>
+		 <% for(n in list){ %>
+		   <tr class="table-primaryX">
+		   <% vid = list[n].vid %>
+		   
+		   <td nowrap><%= n  %></td>
+		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank'><%= list[n].assembly_ncbi  %></a></td>
+		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank'><%= list[n].sra_accession_ncbi  %></a></td>
+		   <td nowrap><i><b><%= list[n].genus_ncbi  %></b></i></td>
+		   <td nowrap><i><b><%= list[n].species_ncbi  %></b></i></td>
+		   <td nowrap><i><b><%= list[n].host_ncbi  %></b></i></td>
+		   
+		   </tr>
+		 <% } %>
+		 </tbody>
+		 </table>
+		 
+</div>  <!-- end: tax-box -->
+	  </div> <!-- end jumbo -->
+    </div> <!-- end: page-content -->
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="/js/taxonomy.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script>
+ 
+
+</script>
+
+
+

@@ -3,6 +3,25 @@
 
 <link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+<style>
+
+#help-menu-header1 {
+   text-align:center;
+   
+   color:black;
+   font-size:15px;
+   font-weight:bold;
+}
+.help-menu-header2 {
+   text-align:center;
+   background:#006699;
+   color:white;
+   font-size:14px;
+}
+.jumbotron{
+ height:800px;
+}
+</style>
 
 <body>
   <div id='wrapper'>		
@@ -12,25 +31,14 @@
        <%- include('../../partials/header_img'); %>
     </div>
 
+	<%- include('../../partials/navbar'); %>
 	
-	
-	<div id="navbar">
-		<%- include('../../partials/navbar'); %>
-	</div>
 		
 	<div id='' class='page-content'>
 	   <!-- <button id='trigger' style='float:left;'> Hide Help Menu <<< </button> -->
-	   
-	  
-		<div class='wide-content' id=""> 
-		<div id='' class='page-title'>HOMD User Documentation</div> 					
-			<div id='' class="flash-message" >  	
-			<% if (messages.success) { %>
-			  <div class="alert_flash_message_success"><%- messages.success %></div>
-			<% }else if(messages.fail){ %>
-			  <div class="alert_flash_message_fail"><%- messages.fail %></div>
-			<% } %>
-			</div>
+		<div class='jumbotron' > 
+		<center><h4 class='title text-info'>HOMD User Documentation</h4></center> 					
+			
 			<div id='accordion_div' style=''>
 			 	<%- include('../../partials/user_doc_menu-ul'); %>
 			</div>
@@ -39,7 +47,7 @@
 				
 		    </div>  <!-- end: content_div -->
 			
-		</div>  <!-- end: wide-content -->
+		</div>  <!-- end: jumbo -->
 	
     </div> <!-- end: page-content -->
     
@@ -60,26 +68,15 @@
 <!-- <script type="text/javascript" src="/js/jquery.treeview.min.js"></script> -->
 <script type="text/javascript" src="/js/bootstrap.js"></script>
 
-
 <script type="text/javascript" src="/js/help_pages.js"></script>
 <script>
   var page = '<%- page; %>'
   var menu = '<%- menu; %>'
-  // function helpmenu(){
-//     console.log('in helpmenu')
-//     $('#user_help_nav > li > a').click(function(){
-// 		console.log('in helpmenu click')
-// 		if ($(this).attr('class') != 'active'){
-// 		  $('#user_help_nav li ul').slideUp();
-// 		  $(this).next().slideToggle();
-// 		  $('#user_help_nav li a').removeClass('active');
-// 		  $(this).addClass('active');
-// 		}
-// 	});
-//   }
- 
+  console.log('menu',menu)
+
 $(document).ready(function(){                    
-    mainmenu();
+    
+    ///* https://www.jqueryscript.net/demo/Super-Smooth-Accordion-Dropdown-Menu-with-jQuery-CSS3/ */
     userdocs_side_menu();
     // on page load:
     //openslider:
@@ -92,60 +89,7 @@ $(document).ready(function(){
     //load_text(help_page_link)
     
     
-    // first example
-    //console.log('in helpmenu1')
-	// $("#user_info_menu").treeview({
-// 		collapsed: true,
-// 		unique: true,
-// 		control:"#sidetreecontrol",
-// 		persist: "location"
-// 	});
-
-	//var link = "#"+menu +"--"+ page
-	//console.log('outside jquery: '+link)
-  //$("#"+menu +"--"+ page+" > a").on('click', function(e){
-        // console.log('in jquery: '+link)
-//         e.preventDefault();
-//         //var data = $('input[name=quote]').val();
-//         $.ajax({
-//             type: 'post',
-//             url: '/help/ajax',
-//             //data: data,
-//             dataType: 'text'
-//         })
-//         .done(function(data){
-//             //$('h1').html(data.quote);
-//         });
-//    });
-    
-    
 });
 
-//https://nnattawat.github.io/slideReveal/
-// var slider = $('#accordion_div').slideReveal({
-//   		trigger: $("#trigger"),
-//   		push: false,
-//   		//overlay: true,   // this will block all links
-//   		top: 145,
-//   		
-//   		overlayColor: 'rgba(0,0,0,0.0)',  // rgba(0,0,0,0.0) == clear
-//   		//zindex: 100,
-//   		shown: function(slider, trigger){
-//     		console.log("After opened!");
-//     		// change #content_div style with to auto
-//     		$('#content_div').css({"width":"950px","margin-left":"200px"})
-//     		// change icon
-//     		$('#trigger').html(' <<< ')
-//   		},
-//   		hidden: function(slider, trigger){
-//     		console.log("After closed!");
-//     		jQuery('#content_div').css({"width":"auto","margin":"0"})
-//     		// change icon
-//     		$('#trigger').html(' Show Help Menu >>> ')
-//   		},
-// 	});
-// 	//slider.slideReveal("show")
-// //var slider = $('#accordion_div').slideReveal()
-// slider.slideReveal("show", false);
 </script>
 

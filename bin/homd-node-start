@@ -40,8 +40,8 @@ app.set('env', process.env.NODE_ENV);
 process.env.PORT = CFG.SERVER_PORT || '3001'
 console.log(process.env.PORT)
 app.set('port', process.env.PORT);
-console.log('TAXON DATABASE: '+NODE_TAXON_DATABASE,'(Databases set in config/db-connection.js)');
-console.log('GENOME DATABASE: '+NODE_GENOME_DATABASE);
+console.log('TAXON DATABASE: '+NODE_BACTERIAL_DATABASE,'(Databases set in config/db-connection.js)');
+//console.log('GENOME DATABASE: '+NODE_GENOME_DATABASE);
 console.log('ENV:',app.get('env'),'(Environment set in bin/www)');
 console.log('HOSTNAME: '+CFG.HOSTNAME)
 
