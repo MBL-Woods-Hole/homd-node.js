@@ -36,10 +36,10 @@
   white-space: nowrap;
 }
 #virus-table tr:nth-child(even) { 
-    background-color: #ffffcd; 
+    background-color: #D4EFFF; 
  } 
  #virus-table tr:hover { 
-    background-color: #dce7f5; 
+    background-color: #FBF9EA; 
  } 
 
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
@@ -97,7 +97,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		   <tr class="table-primaryX">
 		   <% vid = list[n].vid %>
 		   
-		   <td nowrap><%= n  %></td>
+		   <td nowrap><%= vid  %></td>
 		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank'><%= list[n].assembly_ncbi  %></a></td>
 		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank'><%= list[n].sra_accession_ncbi  %></a></td>
 		   <td nowrap><i><b><%= list[n].genus_ncbi  %></b></i></td>
