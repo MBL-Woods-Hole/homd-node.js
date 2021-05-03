@@ -21,21 +21,27 @@
    padding:10px;
    margin: 1px;
    background: #f2cb6d;
+   color: black;
    font-weight:bold;
-   font-size:13px;
+   font-size:14px;
 }
-.description-header2 {
-  
-   padding:10px;
-   margin: 1px;
-   background: #fed8b1;
-   font-weight:bold;
-   font-size:13px;
-}
+
 .tbl-title{
 	padding: 4px 8px;
 	font-weight:bold;
 	background: #fffdd0;
+}
+#description_tbl td{
+  padding-left:5px;
+  border-bottom:1px solid red;
+}
+#tax_lineage td{
+  padding-left:5px;
+  border-bottom:0px solid blue;
+}
+.extra {
+   background:white;
+   padding: 2px 8px;
 }
 </style>
 <body>
@@ -46,19 +52,16 @@
        <%- include('../../partials/header_img'); %>
     </div>
 
-	
-	
-	
 		<%- include('../../partials/navbar'); %>
 	
-	<div id='' class='page-content'>
+	<div class='page-content'>
 	  <div class='jumbotron' >
 	  
 	    					
-<div class='page-title'>Human Oral Microbiome Taxon Description</div>
+<center><h4 class='title text-info'>Human Oral Microbiome Taxon Description</h4></center>
 <div id='page-block'>
 <div id='' class='description-header'><i><%= data1.genus %><%= data1.species %></i></div>
-<table border='0'>
+<table id='description_tbl' border='0'>
 <tr>
 
 <td class='tbl-title'>Human Microbial Taxon ID:</td><td><%= taxidfullname %></td>
@@ -71,13 +74,13 @@
 </tr>
 <tr>
   
-  <% if(data1.type_strain[0] == 'None'){ %>
+  <% if(data1.type_strains[0] == 'None'){ %>
   
     <td class='tbl-title'>Reference Strain:</td>
     <td>None, not yet cultivated
   <% }else{ %>
     <td class='tbl-title'>Strain Information:</td>
-    <td><%= data1.type_strain.join('<br>') %>
+    <td><%= data1.type_strains.join('<br>') %>
   <% } %>
   
   <br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank'>Global Catalogue of Microorganisms</a>
@@ -87,7 +90,7 @@
 <tr>
   <td class='tbl-title'>Classification:</td>
   <td>
-	<table>
+	<table id='tax_lineage'>
 	  <tr><td>Domain:</td><td><i><%= data3.domain %></i></td></tr>
 	  <tr><td>Phylum:</td><td><i><%= data3.phylum %></i></td></tr>
 	  <tr><td>Class:</td><td><i><%= data3.klass %></i></td></tr>
@@ -148,23 +151,23 @@
 <tr><td class='tbl-title'>Hierarchy Structure:</td><td>TODO</td><td></td><td></td></tr>
 
 </table>
-<div id='' class='description-header2'>General Information:</div>
-&nbsp;<%- data2.general %>
-<div id='' class='description-header2'>Cultivability:</div>
-&nbsp;<%- data2.culta %>
-<div id='' class='description-header2'>Phenotypic Characteristics:</div>
-&nbsp;<%- data2.pheno %>
-<div id='' class='description-header2'>Prevalence and Source:</div>
-&nbsp;<%- data2.prev %>
-<div id='' class='description-header2'>Disease Associations:</div>
-&nbsp;<%- data2.disease %>
-<div id='' class='description-header2'>References:</div>
-&nbsp;
+<br><div class='description-header'>General Information:</div>
+<div class='extra'><%- data2.general %></div>
+<br><div class='description-header'>Cultivability:</div>
+<div class='extra'><%- data2.culta %></div>
+<br><div class='description-header'>Phenotypic Characteristics:</div>
+<div class='extra'><%- data2.pheno %></div>
+<br><div class='description-header'>Prevalence and Source:</div>
+<div class='extra'><%- data2.prev %></div>
+<br><div class='description-header'>Disease Associations:</div>
+<div class='extra'><%- data2.disease %></div>
+<br><div class='description-header'>References:</div>
 <% if(data4){ %>
-<% for (i in data4){ %>
-<br>[<b><%= parseInt(i)+1 %></b>]<%= data4[i].authors %> <%= data4[i].title %> <%= data4[i].journal %>
-
-<% } %>
+  <div class='extra'>
+  <% for (i in data4){ %>
+    <br>[<b><%= parseInt(i)+1 %></b>] <%= data4[i].authors %> <%= data4[i].title %> <%= data4[i].journal %>
+  <% } %>
+  </div>
 <% } %>
 
 		

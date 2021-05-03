@@ -33,6 +33,7 @@ const help      = require('./routes/routes_help');
 const taxa      = require('./routes/routes_taxa');
 const refseq	= require('./routes/routes_refseq');
 const genome	= require('./routes/routes_genome');
+const virome	= require('./routes/routes_virome');
 //const jbrowse2	= require('./routes/routes_jbrowse');
 
 
@@ -107,6 +108,7 @@ app.use('/help', help);
 app.use('/taxa', taxa);
 app.use('/refseq', refseq);
 app.use('/genome', genome);
+app.use('/virome', virome);
 //app.use('/jbrowse2', jbrowse2);
 // LAST Middleware:
 app.use(function(req, res, next){
@@ -137,14 +139,19 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 //
 var data_init_files =[
 	
-	C.refs_lookup_fn,
-	C.nonoral_lineage_lookup_fn, 
-	C.info_lookup_fn,
-	C.tax_lookup_fn,
-	C.nonoral_tax_hierarchy_fn,  // gives you taxonomy lineage
-	C.oral_tax_hierarchy_fn,  // gives you taxonomy lineage
+	C.taxon_lookup_fn,
+    C.lineage_lookup_fn ,
+ 	C.tax_hierarchy_fn,  // gives you taxonomy lineage
 	C.genome_lookup_fn,
-	C.refseq_fn
+	C.refseq_lookup_fn,
+	
+	C.references_lookup_fn,
+	
+	C.info_lookup_fn,
+	
+	// tax counts is not loaded here
+	
+	
 ]
  
 function readAsync(file, callback) {
@@ -155,26 +162,28 @@ async.map(data_init_files, readAsync, function(err, results) {
     // results = ['file 1 content', 'file 2 content', ...]
     // add the data to CONSTANTS so they are availible everywhere
     // the lookups are keyed on Oral_taxon_id
+    C.taxon_lookup 			  = JSON.parse(results[0]);
+    C.taxon_lineage_lookup 		= JSON.parse(results[1]);  // non-oral 'all'
+    C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[2]));
+    C.genome_lookup 				= JSON.parse(results[3]);
+    C.refseq_lookup 				= JSON.parse(results[4]);
+    C.taxon_references_lookup 	= JSON.parse(results[5]);
+    C.taxon_info_lookup 			= JSON.parse(results[6]);
     
-    C.taxonomy_refslookup 			= JSON.parse(results[0]);
-    C.taxonomy_lineagelookup 		= JSON.parse(results[1]);  // non-oral 'all'
-    C.taxonomy_infolookup 			= JSON.parse(results[2]);
-    C.taxonomy_taxonlookup 			= JSON.parse(results[3]);
-    C.nonoral_homd_taxonomy =  new CustomTaxa(JSON.parse(results[4]));
-    C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
-    C.genome_lookup 				= JSON.parse(results[6]);
-    C.refseq_lookup 				= JSON.parse(results[7]);
+    
+   // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
+    
     //examples
-    console.log('length of C.taxonomy_taxonlookup: ',Object.keys(C.taxonomy_taxonlookup).length)
-    console.log('length of C.taxonomy_refslookup: ',Object.keys(C.taxonomy_refslookup).length)
-    console.log('length of C.taxonomy_lineagelookup: ',Object.keys(C.taxonomy_lineagelookup).length)
-    console.log('length of C.taxonomy_infolookup: ',Object.keys(C.taxonomy_infolookup).length)
+    console.log('length of C.taxonomy_taxonlookup: ',Object.keys(C.taxon_lookup).length)
+    console.log('length of C.taxonomy_refslookup: ',Object.keys(C.taxon_references_lookup).length)
+    console.log('length of C.taxonomy_lineagelookup: ',Object.keys(C.taxon_lineage_lookup).length)
+    console.log('length of C.taxonomy_infolookup: ',Object.keys(C.taxon_info_lookup).length)
     console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
     console.log('length of C.genome_lookup: ',Object.keys(C.genome_lookup).length)
     for(var n in C.nonoral_homd_taxonomy){
        console.log(n)
     }
-    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Methanobrevibacter_genus'])
+    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Methanobrevibacter_genus'])
     
 });
 

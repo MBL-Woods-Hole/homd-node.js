@@ -21,7 +21,7 @@
 	
 	
 						
-		<center><h3 class='title text-info'>Human Microbial Genomes</h3></center>
+		<center><h4 class='title text-info'>Human Microbial Genomes</h4></center>
 
 
  <%- include('../../partials/genome_table_filter.ejs') %> 
@@ -31,11 +31,12 @@
 <table id='gnom-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
 <thead>
 <tr>
-<th class='col2' >Taxon ID</th>
+<th class='col2' scope="col" >SEQ-ID</th>
+<th class='col2' >Taxon-ID</th>
 <th class='col3' scope="col" >Genus</th>
 <th class='col3' scope="col" >Species</th>
 <th  class='' scope="col" >Strain/Culture<br>Collection</th>
-<th class='col2' scope="col" >SEQ ID</th>
+
 <th class='col1' scope="col" >No. of contigs<br>and<br>plasmids</th>
 <th class='col2' scope="col" >Combined<br>Length<br>(bp)</th>
 <th class='col1' scope="col" >GC<br>(%)</th>
@@ -48,11 +49,12 @@
 <% for(n in ginfo){ %>
 	<% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
 	<tr class="table-primaryX">
+		<td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
 		<td class='linkout center' nowrap ><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
 		<td class='tax_name'><em><%= ginfo[n].genus %></em></td>
 		<td class='tax_name'><em><%= ginfo[n].species %></em></td>
 		<td ><%= ginfo[n].ccolct %></td>
-		<td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
+		
 		<td class='center'><%= ginfo[n].ncontigs %></td>
 		<td class='center'><%= ginfo[n].tlength %></td>
 		<td class='center'><%= ginfo[n].gc %></td>

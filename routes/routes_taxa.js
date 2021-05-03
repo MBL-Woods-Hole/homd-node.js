@@ -18,7 +18,7 @@ router.get('/tax_table', (req, res) => {
   	//console.log(myurl.query)
 	req.session.tax_letter = myurl.query.k
 	req.session.annot = myurl.query.annot
-	send_tax_obj = Object.values(C.taxonomy_taxonlookup);
+	send_tax_obj = Object.values(C.taxon_lookup);
 	tcount = send_tax_obj.length  // total count of our filters
 	var show_filters = 0
 	var pgtitle = 'Taxon Table';
@@ -51,13 +51,14 @@ router.get('/tax_table', (req, res) => {
     // Here we add the genome size formatting on the fly
     send_tax_obj.map(function(el){
 	      el.gsize = ''
+	      //console.log(el)
 	      if(el.genomes.length === 0){
 	      	el.gsize = ''
 	      }else if(el.genomes.length === 1 && el.genomes[0] in C.genome_lookup){
 	        el.gsize = helpers.format_Mbps(C.genome_lookup[el.genomes[0]].tlength).toString()
 	      }else{  // More than one genome
 	        var size_array = el.genomes.map( (x) =>{
-	          if(C.genome_lookup[x].tlength !== 0){
+	          if(x in C.genome_lookup && C.genome_lookup[x].tlength !== 0){
 	            return C.genome_lookup[x].tlength 
 	          }
 	        })
@@ -94,7 +95,7 @@ router.get('/tax_table', (req, res) => {
 router.post('/tax_table', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('in taxtable -post')
-	tcount = C.taxonomy_taxonlookup.length
+	tcount = C.taxon_lookup.length
 	//helpers.show_session(req)
 	console.log(req.body)
 	//plus valid
@@ -116,7 +117,7 @@ router.post('/tax_table', (req, res) => {
 	console.log('statusfilter_on',statusfilter_on)
 	console.log('sitefilter_on',sitefilter_on)
 	// letterfilter
-	send_tax_obj0 = Object.values(C.taxonomy_taxonlookup);
+	send_tax_obj0 = Object.values(C.taxon_lookup);
 	tcount = send_tax_obj0.length
 	if(req.session.tax_letter){
 	   // COOL....
@@ -169,16 +170,18 @@ router.get('/tax_hierarchy', (req, res) => {
 router.get('/tax_level', (req, res) => {
 	helpers.accesslog(req, res)
 	var oral;
-	if(req.session.counts_file === C.nonoral_taxcounts_fn){
-		req.session.counts_file = C.oral_taxcounts_fn 
-		req.session.tax_obj = C.oral_homd_taxonomy
-		oral=0
-	}else{
-		req.session.counts_file = C.nonoral_taxcounts_fn  // default
-		req.session.tax_obj = C.nonoral_homd_taxonomy
-		oral=1
-	}
-  console.log(req.session.counts_file)
+	// if(req.session.counts_file === C.nonoral_taxcounts_fn){
+// 		req.session.counts_file = C.oral_taxcounts_fn 
+// 		req.session.tax_obj = C.oral_homd_taxonomy
+// 		oral=0
+// 	}else{
+// 		req.session.counts_file = C.nonoral_taxcounts_fn  // default
+// 		req.session.tax_obj = C.nonoral_homd_taxonomy
+// 		oral=1
+// 	}
+    req.session.counts_file = C.taxcounts_fn  // default
+	req.session.tax_obj = C.homd_taxonomy
+    console.log(req.session.counts_file)
 	
 	res.render('pages/taxa/taxlevel', {
 		title: 'HOMD :: Taxon Level', 
@@ -235,8 +238,8 @@ router.post('/taxLevel', (req, res) => {
 				return_obj.parent_taxon = lineage[lineage.length - 2]
 				
 				return_obj.tax_count = taxdata[lineage.join(';')].tax_cnt
-				return_obj.gne_count = taxdata[lineage.join(';')].gne_cnt
-				return_obj.rrna_count = taxdata[lineage.join(';')]['16s_cnt']
+				return_obj.gne_count = taxdata[lineage.join(';')].gcnt
+				return_obj.rrna_count = taxdata[lineage.join(';')].refcnt
 				
 				return_obj.lineage = lineage.join(';')
 				
@@ -257,11 +260,12 @@ router.post('/oral_counts_toggle', (req, res) => {
 	var oral = req.body.oral
 	helpers.accesslog(req, res)
 	console.log('oral ',oral)
-	if(oral === 'false'){
-		req.session.counts_file = C.nonoral_taxcounts_fn  // default
-	}else{
-		req.session.counts_file = C.oral_taxcounts_fn  
-	}
+	// if(oral === 'false'){
+// 		req.session.counts_file = C.nonoral_taxcounts_fn  // default
+// 	}else{
+// 		req.session.counts_file = C.oral_taxcounts_fn  
+// 	}
+	req.session.counts_file = C.taxcounts_fn  
 	res.send({ok:'ok'});
 
 });
@@ -284,15 +288,15 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
 //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'])
 //console.log(C.homd_taxonomy)
 //     
-    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_rank["domain"])
-    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["954"])
-    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["955"])
-    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["956"])
-    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["957"])
-    console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["958"])
+   //  console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_rank["domain"])
+//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["954"])
+//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["955"])
+//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["956"])
+//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["957"])
+//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["958"])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["7"])
     
-    C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
+    C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
         //console.log('node')
         let options_obj = get_options_by_node(node);
         options_obj.checked = true;
@@ -302,7 +306,7 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
     );
   }
   else {
-    const objects_w_this_parent_id = C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
+    const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
     objects_w_this_parent_id.map(node => {
       let options_obj = get_options_by_node(node);
       options_obj.checked = false;
@@ -343,27 +347,27 @@ router.get('/tax_description', (req, res) => {
 	
 	*/
 	
-	if( C.taxonomy_taxonlookup[otid] === undefined){
+	if( C.taxon_lookup[otid] === undefined){
     	req.flash('TRY AGAIN')
     	res.send('That Taxon ID: ('+otid+') was not found1 - Use the Back Arrow and select another')
     	return
   	}
-	var data1 = C.taxonomy_taxonlookup[otid]
+	var data1 = C.taxon_lookup[otid]
 	
-	if(C.taxonomy_infolookup[otid] ){
-	    var data2 = C.taxonomy_infolookup[otid]
+	if(C.taxon_info_lookup[otid] ){
+	    var data2 = C.taxon_info_lookup[otid]
 	}else{
 	    console.warn('Could not find info for',otid)
 	    var data2 = {}
 	}
-	if(C.taxonomy_lineagelookup[otid] ){
-	    var data3 = C.taxonomy_lineagelookup[otid]
+	if(C.taxon_lineage_lookup[otid] ){
+	    var data3 = C.taxon_lineage_lookup[otid]
 	}else{
 	    console.warn('Could not find lineage for',otid)
 	    var data3 = {}
 	}
-	if(C.taxonomy_refslookup[otid]){
-		var data4 = C.taxonomy_refslookup[otid]
+	if(C.taxon_references_lookup[otid]){
+		var data4 = C.taxon_references_lookup[otid]
 	}else{
 		console.warn('Could not find references for',otid)
 		var data4 = []
@@ -374,7 +378,7 @@ router.get('/tax_description', (req, res) => {
 		console.warn('Could not find refseqs for',otid)
 		var data5 = []
 	}
-	console.log(data2.general)
+	console.log(data1)
 	res.render('pages/taxa/taxdesc', {
 		title: 'HOMD :: Taxon Info', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -396,8 +400,9 @@ router.post('/get_refseq', (req, res) => {
 	// express deprecated req.param(name): Use req.params, req.body, or req.query
 	// See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
 	//FIXME There are 4 fields which do I query???
+	//The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
 	TDBConn.query(queries.get_refseq_query(refseq_id), (err, rows) => {
-		seqstr = rows[0].seq_trim28
+		seqstr = rows[0].seq_trim9
 		arr = helpers.chunkSubstr(seqstr,60)
 		html = arr.join('<br>')
 		res.send(html)
@@ -469,9 +474,9 @@ function get_options_by_node(node) {
 function create_table(source, type) {
 
     if(source === 'ttable' && type === 'browser'){
-        obj1 = C.taxonomy_taxonlookup
-        obj2 = C.taxonomy_lineagelookup
-        obj3 = C.taxonomy_infolookup 
+        obj1 = C.taxon_lookup
+        obj2 = C.taxon_lineage_lookup
+        obj3 = C.taxon_info_lookup 
         var headers_row = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
         
         txt =  headers_row.join('\t')
@@ -483,7 +488,7 @@ function create_table(source, type) {
                o3 = obj3[otid]
             
                //console.log(o2)
-               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.NCBI_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
+               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.ncbi_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
                row = r.join('\t')
                txt += '\n'+row
             }

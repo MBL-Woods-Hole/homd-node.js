@@ -21,7 +21,7 @@ router.get('/genome_table', (req, res) => {
 	var otid = myurl.query.otid
 	var phylum = myurl.query.phylum
 	var show_filters = 0
-	var phyla_obj = C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
+	var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
 	var phyla = phyla_obj.map(function(el){ return el.taxon; })
 	
 	var count_text = ''
@@ -30,7 +30,7 @@ router.get('/genome_table', (req, res) => {
 	  gid_obj_list = Object.values(C.genome_lookup);
 	  otid = 'all'
 	  show_filters = 1
-	  var lineage_list = Object.values(C.taxonomy_lineagelookup)
+	  var lineage_list = Object.values(C.taxon_lineage_lookup)
 	  var obj_lst = lineage_list.filter(item => item.phylum === phylum)  //filter for phylum 
 	  var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
 	  		return el.otid
@@ -41,13 +41,15 @@ router.get('/genome_table', (req, res) => {
 	  count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span> ('+otid_list.length+' taxons)'
 	}else if(['all','alloral'].indexOf(otid) === -1) {
 		// single gid
-		seqid_list = C.taxonomy_taxonlookup[otid].genomes
+		seqid_list = C.taxon_lookup[otid].genomes
+		console.log('sil',seqid_list)
 		gid_obj_list = []
 		for(n in seqid_list){
 		    gid_obj_list.push(C.genome_lookup[seqid_list[n]])
 		}
 		show_filters = 0
 		count_text = 'No. of genomes for TAXON-ID::HMT-'+otid+': <span class="red">'+gid_obj_list.length.toString()+'</span>'
+	  console.log('gol',gid_obj_list)
 	}else{
 		// all gids
 		gid_obj_list1 = Object.values(C.genome_lookup);
@@ -70,7 +72,7 @@ router.get('/genome_table', (req, res) => {
 	      if(el.tlength){ el.tlength = helpers.format_long_numbers(el.tlength); }
 	})
 	// get each secid from C.genome_lookup
-	console.log('seqid_list',gid_obj_list[0])
+	//console.log('seqid_list',gid_obj_list[0])
 	
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 

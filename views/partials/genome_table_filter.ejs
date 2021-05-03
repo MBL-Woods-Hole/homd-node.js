@@ -11,19 +11,25 @@
 <td>
 
 	
+<style>
+.form-group {
+  width:400px;
+display:inline-block;
+}
+
+</style>	
 	
-	
 
 
 
-<div class="card border-primary mb-3" style="max-width: 100%;height:165px;">
-  <div class="card-header">Navigate Genomes by Alphabet: </div>
+<div class="card border-primary" style="max-width: 100%;height:145px;">
   <div class="card-body">
-    
-    <p class="card-text"> 
+    <p class="card-text">
+      <center>Select Genomes by Alphabet: <br></center> 
 		<a id='A' href='genome_table?otid=<%= otid  %>&k=A'>A</a>|<a id='B' href='genome_table?otid=<%= otid  %>&k=B'>B</a>|<a id='C' href='genome_table?otid=<%= otid  %>&k=C'>C</a>|<a id='D' href='genome_table?otid=<%= otid  %>&k=D'>D</a>|<a id='E' href='genome_table?otid=<%= otid  %>&k=E'>E</a>|<a id='F' href='genome_table?otid=<%= otid  %>&k=F'>F</a>|<a id='G' href='genome_table?otid=<%= otid  %>&k=G'>G</a>|<a id='H' href='genome_table?otid=<%= otid  %>&k=H'>H</a>|<a id='I' href='genome_table?otid=<%= otid  %>&k=I'>I</a>|<a id='J' href='genome_table?otid=<%= otid  %>&k=J'>J</a>|<a id='K' href='genome_table?otid=<%= otid  %>&k=K'>K</a>|<a id='L' href='genome_table?otid=<%= otid  %>&k=L'>L</a>|<a id='M' href='genome_table?otid=<%= otid  %>&k=M'>M</a>|<a id='N' href='genome_table?otid=<%= otid  %>&k=N'>N</a>|<a id='O' href='genome_table?otid=<%= otid  %>&k=O'>O</a>|<a id='P' href='genome_table?otid=<%= otid  %>&k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='genome_table?otid=<%= otid  %>&k=R'>R</a>|<a id='S' href='genome_table?otid=<%= otid  %>&k=S'>S</a>|<a id='T' href='genome_table?otid=<%= otid  %>&k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='genome_table?otid=<%= otid  %>&k=V'>V</a>|<a id='W' href='genome_table?otid=<%= otid  %>&k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='genome_table?otid=<%= otid  %>&k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>
+    <br><center><small>Revert back to:</small> <a id='all' href='genome_table?otid=<%= otid  %>&k='>All Entries</a></center>
     </p>
-    <center><small>Revert back to:</small> <a id='all' href='genome_table?otid=<%= otid  %>&k='>All Entries</a></center>
+    
   </div>
 </div>
 
@@ -34,15 +40,20 @@
 
 
 	
-  <div class="card border-primary mb-3" style="max-width: 100%;height:165px;">
+  <div id='genome-search' class="card border-primary" style="max-width: 100%;height:145px;">
 	<div class="card-body">  
-	<p class="card-text">
+	<p class="card-text col-sm-6">
 	<form  name='' method='POST' action=''>
-	  <input type='submit' value='Search'> 
-	  genomes: <input type='text'name='gen_srch' maxlength='18' size='20'>
-	  <input type='button' value='Clear'> <a href='#'  onclick='toggle_options()'>Options [+]</a>
-	  <span id='gen_options' style='display:none;font-size:10px;'>
-	    <br>In:
+	  
+	  <input class="btn btn-secondary btn-sm float-right" type='submit' value='Search'> 
+	  
+	  Search Genomes:&nbsp;&nbsp;
+	  <span class='' >
+	    <input class="" type='text' name='gen_srch' maxlength='18' size='20'>
+	    <input class="btn btn-secondary btn-sm" type='button' value='Clear'> <a href='#' id='goptions' onclick='toggle_options()'>Options [+]</a>
+	  </span>
+	  <div class='' id='gen_options' style='display:none;font-size:12px;border-top:1px solid orange;border-bottom:1px solid orange;padding:3px 3px 3px 0;"'>
+	    <br>&nbsp;&nbsp;&nbsp;In:
 	    <select>
 	      <optgroup>
 	      <option>All Fields</option>
@@ -66,7 +77,7 @@
 	      <option>Partial Field</option>
 	      <option>Whole Field</option>
 	    </select>
-	  </span>
+	  </div>
 	  
 	  <br>Sequencing Status: 
 	  <input type='checkbox' class='filter_ckbx' id='status_all' name='status_all' \> All&nbsp;
@@ -90,9 +101,10 @@
 
 </td></tr>
 <tr><td colspan='2'>
-<div id='genus-filter'>
-	  Navigate genomes by Phylum:
-	  <select  onchange="location = this.value;">
+<div id='phylum-filter' >
+	  Navigate Genomes by Phylum:&nbsp;&nbsp;
+	  <select   onchange="location = this.value;">
+	  <optgroup>
 	  <option>Select a Phylum</option>
 	  <% for(n in phyla) { %>
 	    <% if(phyla[n] === phylum){ %>
@@ -101,7 +113,7 @@
 	      <option value='genome_table?phylum=<%= phyla[n] %>'><%= phyla[n] %></option>
 	    <% } %>
 	  <% } %>
-	  
+	  </optgroup>
 	  </select>
     </div>  <!-- end genus-filter -->
 </td></tr>

@@ -33,16 +33,17 @@ constants.tax_sites_on =['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
 constants.genome_lookup_fn 		= 'homd_genome_lookup.json'
 constants.info_lookup_fn 		= 'homd_data_infolookup.json'
 
-constants.refs_lookup_fn 		= 'homd_data_refslookup.json'
-constants.oral_taxcounts_fn 	= 'homd_data_oral_taxcounts.json'
-constants.nonoral_taxcounts_fn 	= 'homd_data_nonoral_taxcounts.json'
-constants.tax_lookup_fn 		= 'homd_data_taxalookup.json'
-constants.oral_lineage_lookup_fn 	= 'homd_data_oral_lineagelookup.json'
-constants.nonoral_lineage_lookup_fn 	= 'homd_data_nonoral_lineagelookup.json'
-constants.oral_tax_hierarchy_fn 		= 'homd_data_oral_hierarchy.json'
-constants.nonoral_tax_hierarchy_fn 		= 'homd_data_nonoral_hierarchy.json'
-constants.refseq_fn 			= 'homd_data_refseq.json'
+constants.references_lookup_fn 		= 'homd_data_referenceslookup.json'
+//constants.oral_taxcounts_fn 	= 'homd_data_oral_taxcounts.json'
+constants.taxcounts_fn 	        = 'homd_data_taxcounts.json'
+constants.taxon_lookup_fn 		= 'homd_data_taxonlookup.json'
+//constants.oral_lineage_lookup_fn 	= 'homd_data_oral_lineagelookup.json'
+constants.lineage_lookup_fn 	= 'homd_data_taxlineagelookup.json'
+//constants.oral_tax_hierarchy_fn 		= 'homd_data_oral_hierarchy.json'
+constants.tax_hierarchy_fn 		= 'homd_data_taxhierarchy.json'
+constants.refseq_lookup_fn 		= 'homd_data_refseqlookup.json'
 
+constants.virome_file           = 'homd_virome_list.json'
 // genome filenames
 //constants.gindex_lookup_fn 	= 'homd_genomedata_indexlookup.json'
 

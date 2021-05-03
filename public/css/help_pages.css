@@ -4,6 +4,7 @@ a {
    word-spacing: normal;
    color:#006699;
 }
+
 #user_help_nav {
     float: left;
     width: 280px;
@@ -78,9 +79,9 @@ a {
 
 /* help content_div inside wide-content inside page-content */
 #content_div {
-	margin:0px 0 0 230px;
+	margin:0px 0 0 250px;
 	
-	width:1100px;
+	width:auto;
 	/* margin-top:-1px; */
 	/* padding:15px; */
 	border:1px solid black;
@@ -97,10 +98,7 @@ a {
 .help_content {
   padding:20px;
 }
-.news{
-  margin:2px;
-  color:darkgoldenrod;
-}
+
 
 
 .version-history-entry {
@@ -124,24 +122,24 @@ a {
 
 
 
-
+/* https://www.jqueryscript.net/demo/Super-Smooth-Accordion-Dropdown-Menu-with-jQuery-CSS3/ */
 /* Accordian Help Menu */
+
 #accordion_div {
-  border:1px solid black;
+  position:relative;
   width:215px;
+  top:-70px;
   float:left;
-  /* margin-left: 10px; */
-  /* padding-left:-20px; */
-  /* box-sizing: content-box; */
-  /* margin-top:-30px; */
-  
+  box-sizing: content-box;
+
 }
 
-
 .accordion {
-  width: 100%;
-  max-width: 360px;
-  /* margin: 30px auto 20px; */
+  
+  width: 215px;
+  height:auto;
+  padding: 0;
+  list-style-type: none;
   background: #FFF;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -152,19 +150,20 @@ a {
   cursor: pointer;
   display: block;
   padding: 5px 15px 5px 42px;
+ 
   color: #4D4D4D;
   background:#fafad2;
   white-space:nowrap;
-  /* word-spacing: inherit; */
+
   font:   bold 12px/30px Georgia, serif;
-  /* font: bold, 12px Arial,  sans-serif; */
-  /* font-size: 11px; */
-  /* font-weight: bold; */
+  
   border-bottom: 1px solid #CCC;
   position: relative;
   -webkit-transition: all 0.4s ease;
   -o-transition: all 0.4s ease;
   transition: all 0.4s ease;
+  
+  margin-left:auto;
 }
 
 .accordion li:last-child .link { border-bottom: 0; }
@@ -198,15 +197,14 @@ a {
   transform: rotate(180deg);
 }
 
-/**
- * Submenu
- -----------------------------*/
 
 
 .submenu {
   display: none;
   background: #444359;
   font-size: 14px;
+  padding: 0;
+  list-style-type: none;
 }
 
 .submenu li { border-bottom: 1px solid #4b4a5e; }

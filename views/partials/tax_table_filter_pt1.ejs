@@ -5,14 +5,14 @@
 
 
 	 
-<table border='1'>
+<table border='0'>
 <tr><td valign='top'>	
-	<div class="card border-primary mb-3" style="max-width: 100%;height:125px;">
-  
+
+
+<div class="card border-warning mb-3" style="max-width: 100%;height:125px;">
   <div class="card-body">
-    
     <p class="card-text">
-	    <center>Filter by Alpha: <br></center>
+	    <center>Select Taxa by Alphabet: <br></center>
 		<a id='A' href='tax_table?k=A'>A</a>|<a id='B' href='tax_table?k=B'>B</a>|<a id='C' href='tax_table?k=C'>C</a>|<a id='D' href='tax_table?k=D'>D</a>|<a id='E' href='tax_table?k=E'>E</a>|<a id='F' href='tax_table?k=F'>F</a>|<a id='G' href='tax_table?k=G'>G</a>|<a id='H' href='tax_table?k=H'>H</a>|<a id='I' href='tax_table?k=I'>I</a>|<a id='J' href='tax_table?k=J'>J</a>|<a id='K' href='tax_table?k=K'>K</a>|<a id='L' href='tax_table?k=L'>L</a>|<a id='M' href='tax_table?k=M'>M</a>|<a id='N' href='tax_table?k=N'>N</a>|<a id='O' href='tax_table?k=O'>O</a>|<a id='P' href='tax_table?k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='tax_table?k=R'>R</a>|<a id='S' href='tax_table?k=S'>S</a>|<a id='T' href='tax_table?k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='tax_table?k=V'>V</a>|<a id='W' href='tax_table?k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='tax_table?k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>
         <br><center><small>Revert back to:</small> <a id='all' href='tax_table?k='>All Entries</a></center>
     </p>
@@ -26,18 +26,18 @@
 </td><td>&nbsp;</td><td style='width: 750px;'>
 
 	
-	    <div class="card border-primary mb-3" style="height:125px;">
+	<div id='taxon-filter' class="card border-warning mb-3" style="height:125px;">
   
   <div class="card-body">
     
     <p class="card-text">
-        <center>Filter by Status and Site:</center>
+        <center><span id='filter-head'>Filter by Status and Site:</span></center>
    
     <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
 	 <table>
 	 <tr><td>
 	 <div id='status-div' style=''>
-	 <b>Status</b>: 
+	 <span class='filter-title'>Status</span>: 
 	 
 	 <input type='checkbox' class='filter_ckbx' id='named' name='named' \> Named&nbsp;
 	 <input type='checkbox' class='filter_ckbx' id='unnamed' name='unnamed' \> Unnamed&nbsp;
@@ -52,9 +52,9 @@
 	 </td></tr>
 	 <tr><td>
 	 <div id='bodysite-div' style=''>
-	 <b>Body Site</b>: 
+	 <span class='filter-title'>Body Site</span>: 
 	 
-	 <input type='checkbox' class='filter_ckbx' id='oral' name='oral' \> Oral&nbsp;
+	 <input type='checkbox' class='filter_ckbx ' id='oral' name='oral' \> Oral&nbsp;
 	 <input type='checkbox' class='filter_ckbx' id='nasal' name='nasal' \> Nasal&nbsp;
 	 <input type='checkbox' class='filter_ckbx' id='skin' name='skin' \> Skin&nbsp;
 	 <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' \> Vaginal&nbsp;
@@ -62,8 +62,8 @@
 	 <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' \> NonOralRef&nbsp;
 	 </div>
 	 </td><td>
-	 <input type='button' value=' Show ' onclick="check_then_post(this.form)">
-	 <input type='button' value=' Clear All ' onclick='clear_filter_form()'>
+	 <input class="btn btn-secondary btn-sm" type='button' value=' Show ' onclick="check_then_post(this.form)">
+	 <input class="btn btn-secondary btn-sm" type='button' value=' Clear All ' onclick='clear_filter_form()'>
 	 </td></tr>
 	 </table>
     </form>

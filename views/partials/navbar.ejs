@@ -3,62 +3,73 @@
 
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  
+<div class="container-fluid">
 
-  <div class="collapse navbar-collapse" id="navbarColor01">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home
-          <span class="sr-only">(current)</span>
-        </a>
-      </li>
-      
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Bacteria</a>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="/taxa/tax_table">Taxonomy Table</a>
-          <a class="dropdown-item" href="/taxa/tax_hierarchy">Taxonomic Hierarchy</a>
-          <a class="dropdown-item" href="/taxa/tax_level">Taxonomic Level</a>
-          <a class="dropdown-item" href="/taxa/tax_download">Download Taxonomy Data</a>
-          <a class="dropdown-item" href="/taxa/tax_table?annot=1">Taxa with Annotated Genomes</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="/genome/genome_table?otid=alloral">All Oral Genomes</a>
-          <a class="dropdown-item" href="/genome/genome_table?otid=all">All Genomes</a>
-          <a class="dropdown-item" href="/genome/jbrowse">HOMD JBrowse Genome Viewer</a>
-          <a class="dropdown-item" href="#">Genomic Trees</a>
-          <a class="dropdown-item" href="#">Download Genomic Data</a>
-          <a class="dropdown-item" href="#">HOMD Reference Genome Version History</a>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Viromes</a>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Separated link</a>
-        </div>
-      </li>
-      
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Help</a>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="/help/template?menu=help_info&page=sitemap&new=1">Site Map</a>
-          <a class="dropdown-item" href="/help/user_guide" target='_blank'>Help Page (In a New Window)</a>
-          <a class="dropdown-item" href="/help/template?menu=help_info&page=cite&new=1">How to Cite HOMD</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Separated link</a>
-        </div>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Meta-Database Search">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-    </form>
 
-  </div>
+<div class="collapse navbar-collapse" id="main_nav">
+  <ul class="navbar-nav">
+    <li class="nav-item active"> <a class="nav-link" href="/">Home </a> </li>
+    
+    
+<!--   Bacteria -->
+    <li class="nav-item dropdown" id="myDropdown">
+      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">  Bacteria  </a>
+      <ul class="dropdown-menu">
+        <li> <a class="dropdown-item" href="/taxa/tax_table">Taxonomy Table</a></li>
+        <li> <a class="dropdown-item" href="/taxa/tax_hierarchy">Taxonomic Hierarchy</a></li>
+        <li> <a class="dropdown-item" href="/taxa/tax_level">Taxonomic Level</a></li>
+        <li> <a class="dropdown-item" href="/taxa/tax_download">Download Taxonomy Data</a></li>
+        <li><div class="dropdown-divider"></div></li>
+        <li><a class="dropdown-item" href="/genome/genome_table?otid=alloral">Identify 16S rRNA using BLASTn</a></li>
+        <li>  <a class="dropdown-item" href="/genome/genome_table?otid=all">View 16S rRNA RefSeq Phylogenetic Tree</a></li>
+        <li>  <a class="dropdown-item" href="/genome/jbrowse">Download 16S rRNA RefSeq Taxonomy</a></li>
+        <li>  <a class="dropdown-item" href="#">16S rRNA RefSeq Version History</a></li>
+      </ul>
+    </li>
+    
+  <!--   Genomes -->
+    <li class="nav-item dropdown" id="myDropdown">
+      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">  Genomes  </a>
+      <ul class="dropdown-menu">
+        <li> <a class="dropdown-item" href="/genome/genome_table?otid=all">Genome Table</a></li>
+        <li> <a class="dropdown-item" href="/taxa/tax_table?annot=1">Taxa with Annotated Genomes</a></li>
+        <li> <a class="dropdown-item" href="/genome/jbrowse">HOMD JBrowse Genome Viewer</a>
+        <li> <a class="dropdown-item" href="#"> Genomic Trees &raquo; </a>
+          <ul class="submenu dropdown-menu">
+            <li><a class="dropdown-item" href="#">Conserved Protein Tree</a></li>
+            <li><a class="dropdown-item" href="#">Protein Tree</a></li>
+            <li><a class="dropdown-item" href="#">16S rRNA Gene Tree</a></li>
+          </ul>
+        </li>
+        <li> <a class="dropdown-item" href="#">Download Genomic Data</a></li>
+        <li><a class="dropdown-item" href="#"> ref genome version history </a></li>
+      </ul>
+    </li>
+    
+    <li class="nav-item"> <a class="nav-link" href="/virome">Virome </a> </li>
+    
+   <!--  Help -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >Help</a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=sitemap&new=1">Site Map</a></li>
+          <li><a class="dropdown-item" href="/help/user_guide" target='_blank'>Help Page (In a New Window)</a></li>
+          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=cite&new=1">How to Cite HOMD</a></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+          <li><div class="dropdown-divider"></div></li>
+          <li><a class="dropdown-item" href="#">Separated link</a></li>
+        </ul>
+      </li>
+    
+    
+    
+    
+  </ul>
+</div>
+<!-- navbar-collapse.// -->
+</div>
+<!-- container-fluid.// -->
 </nav>
+
 
 

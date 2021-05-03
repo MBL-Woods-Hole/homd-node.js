@@ -10,47 +10,54 @@
     width:70%;
     
 }
+#download_fxn {
+  position:absolute;
+  right: 90px;
+  top:130px;
+  font-size:12px;
+}
 
 #tax-box {
    padding:10px 10px 20px 10px;
    border:1px solid gray;
  }
- #tax-table {
-   /* border:1px solid red; */
-   
- }
-  #tax-table  th{
-   background: #00659c;
-   color:white;
-   padding: 3px;
-   font-size:13px;
-   
- }
- #tax-table td { 
-    padding: 3px;
-    font-size:12px;
- } 
- #tax-table tr:nth-child(even) { 
+ 
+ #tax-table
+{
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
+}
+#tax-table th
+{
+  color:white;
+  background:#006699;
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+}
+#tax-table td
+{
+ padding:3px 2px;
+  font-size:small;
+  color: #303030;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#tax-table tr:nth-child(even) { 
     background-color: #ffffcd; 
  } 
  #tax-table tr:hover { 
-    background-color: #feff3c; 
+    background-color: #dce7f5; 
  } 
- #outer-content {
-   
- }
- 
- 
- #inner-content {
-  
- }
  
  
  #status-div {
-   background:#e1f0f4;padding:2px;font-size:12px;
+   padding:5px;font-size:12px;
  }
  #bodysite-div {
-   background:#f5dced;padding:2px;font-size:12px;
+   padding:5px;font-size:12px;
  }
  
 /*  Tax Level page */
@@ -74,18 +81,7 @@
 #level_table td{
    padding:0 3px;
 }
-.button {
-   font: bold 11px Arial;
-  text-decoration: none;
-  background-color: #EEEEEE;
-  color: #333333;
-  padding: 2px;
-  border-top: 1px solid #CCCCCC;
-  border-right: 1px solid #333333;
-  border-bottom: 1px solid #333333;
-  border-left: 1px solid #CCCCCC;
 
-}
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
 	content: " \25B4\25BE" 
 }
@@ -93,7 +89,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 
 
  
- #taxa-search {
+#taxa-search {
    width:80%;
    margin-left:80px;
    padding-left:50px;
@@ -123,22 +119,32 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     border:1px solid black;
     padding:10px 3px;
     margin:20px 0 0 40px;
-    font-size:x-small;
+    font-size:small;
     font-weight:bold;
     width:95%;
  }
  
-#taxa-filter {
-   width:95%;
-   /* border:1px solid red; */
-   padding-left:30px;
- }
+
  
 #radio_btns {
 	font-size:11px;
 }
+.filter-title {
+	font-weight:bold;
+	font-size:13px;
+	color: darkgrey;
 
+}   
+#taxon-filter input[type="button"]{
+  line-height: 14px;
+}
+#taxon-search select{
+   font-size:12px;
+}
 
-
-
-
+#taxon-search input[type="text"]{
+   padding: 1px 1px; line-height: 8px;
+}
+#taxon-search input[type="submit"]{
+   line-height: 14px;
+}
