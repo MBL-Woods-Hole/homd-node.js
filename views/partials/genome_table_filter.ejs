@@ -16,7 +16,10 @@
   width:400px;
 display:inline-block;
 }
-
+#goptions {
+  color:blue;
+  cursor: pointer;
+}
 </style>	
 	
 
@@ -50,7 +53,7 @@ display:inline-block;
 	  Search Genomes:&nbsp;&nbsp;
 	  <span class='' >
 	    <input class="" type='text' name='gen_srch' maxlength='18' size='20'>
-	    <input class="btn btn-secondary btn-sm" type='button' value='Clear'> <a href='#' id='goptions' onclick='toggle_options()'>Options [+]</a>
+	    <input class="btn btn-secondary btn-sm" type='button' value='Clear'> <span id='goptions' onclick='toggle_options()'>Options [+]</span>
 	  </span>
 	  <div class='' id='gen_options' style='display:none;font-size:12px;border-top:1px solid orange;border-bottom:1px solid orange;padding:3px 3px 3px 0;"'>
 	    <br>&nbsp;&nbsp;&nbsp;In:

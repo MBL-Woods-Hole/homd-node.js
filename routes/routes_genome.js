@@ -301,24 +301,20 @@ router.get('/dld_table', (req, res) => {
 function create_table(source, type) {
 
     if(source === 'table' && type === 'browser'){
-        obj1 = C.taxon_lookup
-        obj2 = C.taxon_lineage_lookup
-        obj3 = C.taxon_info_lookup 
-        var headers_row = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
+       
+        var headers_row = ["Genome-ID","Oral_Taxon-ID","Genus","Species","Status","No. Contigs","Sequencing Center","Total Length","Oral Pathogen","Culture Collection","GC %","NCBI Taxon-ID","NCBI BioProject-ID","NCBI BioSample-ID","Isolate Origin","atcc_mn","non_atcc_mn","Genbank Acc no.","Genbank Assembly","16S rRNA","16S rRNA Comment","flag_id"]
         
         txt =  headers_row.join('\t')
         
-        for(otid in obj1){
-            if(otid in obj2 && otid in obj3){
-               o1 = obj1[otid]
-               o2 = obj2[otid]
-               o3 = obj3[otid]
+        for(gid in C.genome_lookup){
+            obj = C.genome_lookup[gid]
+               
             
                //console.log(o2)
-               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.ncbi_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
+               var r = [gid, obj.otid, obj.genus, obj.species, obj.status, obj.ncontigs, obj.seq_center, obj.tlength, obj.oral_path, obj.ccolct, obj.gc,obj.ncbi_taxid,obj.ncbi_bpid,obj.ncbi_bsid,obj.io,obj.atcc_mn,obj.non_atcc_mn,obj.gb_acc,obj.gb_asmbly,obj['16s_rrna'],obj['16s_rrna_comment'],obj.flag]
                row = r.join('\t')
                txt += '\n'+row
-            }
+            
         }
     }   
     //console.log(txt)
