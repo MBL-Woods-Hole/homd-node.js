@@ -10,6 +10,9 @@ p {
    height:120%;
 }
 
+
+
+
 </style>
 <body>
   <div id='wrapper'>		
@@ -29,7 +32,7 @@ p {
 		<div class='jumbotron px-5'>  					
 			 <div id='side-gig' class='float-right' >
 			 
-			 <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+			 <div class="card text-white bg-dark mb-3" style="max-width: 20rem;">
 			  <div class="card-header">Announcements</div>
 			  <div class="card-body">
 				<h5 class="card-title">Announcement-01</h5>
@@ -40,7 +43,7 @@ p {
 			<br>
 			
 			
-			<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+			<div class="card text-white bg-dark mb-3" style="max-width: 20rem;">
 			  <div class="card-header">Database Updates</div>
 			  <div class="card-body">
 				<h5 class="card-title">Update-01</h5>
@@ -68,49 +71,6 @@ p {
 <!-- <script type="text/javascript" src="/js/jquery-1.3.1.min.js"></script>	 -->
 <!-- <script type="text/javascript" language="javascript" src="/js/jquery.dropdownPlain.js"></script> -->
 <script>
-  $(document).ready(function(){                    
-   
-    $('.dropdown-toggle').dropdown()
-    
-    
-    document.addEventListener("DOMContentLoaded", function(){
-// make it as accordion for smaller screens
-if (window.innerWidth < 992) {
 
-  // close all inner dropdowns when parent is closed
-  document.querySelectorAll('.navbar .dropdown').forEach(function(everydropdown){
-    everydropdown.addEventListener('hidden.bs.dropdown', function () {
-      // after dropdown is hidden, then find all submenus
-        this.querySelectorAll('.submenu').forEach(function(everysubmenu){
-          // hide every submenu as well
-          everysubmenu.style.display = 'none';
-        });
-    })
-  });
-
-  document.querySelectorAll('.dropdown-menu a').forEach(function(element){
-    element.addEventListener('click', function (e) {
-        let nextEl = this.nextElementSibling;
-        if(nextEl && nextEl.classList.contains('submenu')) {	
-          // prevent opening link if link needs to open dropdown
-          e.preventDefault();
-          if(nextEl.style.display == 'block'){
-            nextEl.style.display = 'none';
-          } else {
-            nextEl.style.display = 'block';
-          }
-
-        }
-    });
-  })
-}
-// end if innerWidth
-}); 
-// DOMContentLoaded  end
-  });
-  // this function is for the left side menu on the home page
-  function expandcontent_simple(curobj, cid){
-	document.getElementById(cid).style.display=(document.getElementById(cid).style.display!="none")? "none" : "";
-  }
 </script>
 

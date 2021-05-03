@@ -26,8 +26,8 @@ display:inline-block;
   <div class="card-body">
     <p class="card-text">
       <center>Select Genomes by Alphabet: <br></center> 
-		<a id='A' href='genome_table?otid=<%= otid  %>&k=A'>A</a>|<a id='B' href='genome_table?otid=<%= otid  %>&k=B'>B</a>|<a id='C' href='genome_table?otid=<%= otid  %>&k=C'>C</a>|<a id='D' href='genome_table?otid=<%= otid  %>&k=D'>D</a>|<a id='E' href='genome_table?otid=<%= otid  %>&k=E'>E</a>|<a id='F' href='genome_table?otid=<%= otid  %>&k=F'>F</a>|<a id='G' href='genome_table?otid=<%= otid  %>&k=G'>G</a>|<a id='H' href='genome_table?otid=<%= otid  %>&k=H'>H</a>|<a id='I' href='genome_table?otid=<%= otid  %>&k=I'>I</a>|<a id='J' href='genome_table?otid=<%= otid  %>&k=J'>J</a>|<a id='K' href='genome_table?otid=<%= otid  %>&k=K'>K</a>|<a id='L' href='genome_table?otid=<%= otid  %>&k=L'>L</a>|<a id='M' href='genome_table?otid=<%= otid  %>&k=M'>M</a>|<a id='N' href='genome_table?otid=<%= otid  %>&k=N'>N</a>|<a id='O' href='genome_table?otid=<%= otid  %>&k=O'>O</a>|<a id='P' href='genome_table?otid=<%= otid  %>&k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='genome_table?otid=<%= otid  %>&k=R'>R</a>|<a id='S' href='genome_table?otid=<%= otid  %>&k=S'>S</a>|<a id='T' href='genome_table?otid=<%= otid  %>&k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='genome_table?otid=<%= otid  %>&k=V'>V</a>|<a id='W' href='genome_table?otid=<%= otid  %>&k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='genome_table?otid=<%= otid  %>&k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>
-    <br><center><small>Revert back to:</small> <a id='all' href='genome_table?otid=<%= otid  %>&k='>All Entries</a></center>
+		<a id='A' href='genome_table?k=A'>A</a>|<a id='B' href='genome_table?k=B'>B</a>|<a id='C' href='genome_table?k=C'>C</a>|<a id='D' href='genome_table?k=D'>D</a>|<a id='E' href='genome_table?k=E'>E</a>|<a id='F' href='genome_table?k=F'>F</a>|<a id='G' href='genome_table?k=G'>G</a>|<a id='H' href='genome_table?k=H'>H</a>|<a id='I' href='genome_table?k=I'>I</a>|<a id='J' href='genome_table?k=J'>J</a>|<a id='K' href='genome_table?k=K'>K</a>|<a id='L' href='genome_table?k=L'>L</a>|<a id='M' href='genome_table?k=M'>M</a>|<a id='N' href='genome_table?k=N'>N</a>|<a id='O' href='genome_table?k=O'>O</a>|<a id='P' href='genome_table?k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='genome_table?k=R'>R</a>|<a id='S' href='genome_table?k=S'>S</a>|<a id='T' href='genome_table?k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='genome_table?k=V'>V</a>|<a id='W' href='genome_table?k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='genome_table?k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>
+    <br><center><small>Revert back to:</small> <a id='all' href='genome_table?k='>All Entries</a></center>
     </p>
     
   </div>
@@ -105,7 +105,7 @@ display:inline-block;
 	  Navigate Genomes by Phylum:&nbsp;&nbsp;
 	  <select   onchange="location = this.value;">
 	  <optgroup>
-	  <option>Select a Phylum</option>
+	  <option value='genome_table'>Select a Phylum</option>
 	  <% for(n in phyla) { %>
 	    <% if(phyla[n] === phylum){ %>
 	      <option selected value='genome_table?phylum=<%= phyla[n] %>'><%= phyla[n] %></option>

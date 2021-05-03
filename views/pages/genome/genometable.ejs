@@ -2,7 +2,14 @@
 <% ginfo = JSON.parse(seqid_list) %>
 
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
+
 <style>
+#download_fxn {
+  position:absolute;
+  right: 90px;
+  top:130px;
+  font-size:12px;
+}
 
 
 </style>
@@ -22,7 +29,12 @@
 	
 						
 		<center><h4 class='title text-info'>Human Microbial Genomes</h4></center>
-
+        
+        <div id='download_fxn'><b>Download Genome Table</b>: 
+		   <a href='dld_table?type=browser' >[Browser]</a>
+		   <a href='dld_table?type=text' >[Text]</a>
+		   <a href='dld_table?type=excel' >[Excel]</a>
+		 </div>		 
 
  <%- include('../../partials/genome_table_filter.ejs') %> 
 
@@ -67,7 +79,7 @@
         
         <td class='center'><a class='badge badge-danger'  href='annotation/<%= ginfo[n].gid %>/prokka'>PROKKA</a>
         <a class='badge badge-dark' href='annotation/<%= ginfo[n].gid %>/ncbi'>NCBI</a>
-        <span class="badge badge-primary">HOMD</span></td>
+        <span class="badge badge-light">HOMD</span></td>
 	</tr>
 <% } %>
 

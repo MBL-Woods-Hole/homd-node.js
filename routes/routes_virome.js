@@ -47,13 +47,13 @@ router.get('/virus_table', (req, res) => {
 });
 
 
-router.get('/dld_ttable', (req, res) => {
+router.get('/dld_table', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log(req.body)
 	let myurl = url.parse(req.url, true);
   	let type = myurl.query.type;
 	// type = browser text or excel
-	var table_tsv = create_table('ttable','browser')
+	var table_tsv = create_table('table','browser')
 	if(type === 'browser'){
 	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
 	}else if(type === 'text'){
@@ -72,7 +72,7 @@ router.get('/dld_ttable', (req, res) => {
 ////////////////////////////////
 function create_table(source, type) {
 
-    if(source === 'ttable' && type === 'browser'){
+    if(source === 'table' && type === 'browser'){
        
         var headers_row = ["Virus-ID","Assembly.NCBI","Accession.NCBI","Family.NCBI","Genus.NCBI","Species.NCBI","Molecule_Type.NCBI","Sequence_Type.NCBI","Host.NCBI","Isolation_Source.NCBI","Collection_Date.NCBI","BioSample.NCBI","Genbank_Title.NCBI"]
         

@@ -33,9 +33,9 @@
 		 <center><h4 class='title text-info'><%= pgtitle %></h4></center>
 		 
 		 <div id='download_fxn'><b>Download Taxon Table</b>: 
-		   <a href='dld_ttable?type=browser' >[Browser]</a>
-		   <a href='dld_ttable?type=text' >[Text]</a>
-		   <a href='dld_ttable?type=excel' >[Excel]</a>
+		   <a href='dld_table?type=browser' >[Browser]</a>
+		   <a href='dld_table?type=text' >[Text]</a>
+		   <a href='dld_table?type=excel' >[Excel]</a>
 		 </div>		 
 			 
 	<%- include('../../partials/tax_table_filter_pt1.ejs') %>
@@ -70,7 +70,7 @@
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].site  %></td>
 		   <td><%= list[n].warning  %></td>
-		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="badge badge-primary" >Taxon Description</a></td>
+		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="badge badge-info" >Taxon Description</a></td>
 		   <td style='text-align:center' nowrap>
 		   <% num_genomes = list[n].genomes.length %>
 		   <% if(num_genomes === 0){ %>

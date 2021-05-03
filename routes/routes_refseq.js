@@ -9,7 +9,7 @@ const helpers 	= require(app_root + '/routes/helpers/helpers');
 const open = require('open');
 
 
-router.get('/refseqBLASTN', (req, res) => {
+router.get('/refseq_blastn', (req, res) => {
     console.log('MADEIT TO blastn-get')
     helpers.accesslog(req, res)
 	res.render('pages/refseq/blastn', {
@@ -21,7 +21,7 @@ router.get('/refseqBLASTN', (req, res) => {
 	});
 });
 
-router.post('/refseqBLASTN', (req, res) => {
+router.post('/refseq_blastn', (req, res) => {
     console.log('MADEIT TO blastn-post')
 	console.log(req.body)
 	helpers.accesslog(req, res)

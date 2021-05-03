@@ -17,7 +17,7 @@ router.get('/genome_table', (req, res) => {
 	var seqid_list;
 	let myurl = url.parse(req.url, true);
 	req.session.gen_letter = myurl.query.k
-	console.log('myurl.query',myurl.query)
+	//console.log('myurl.query',myurl.query)
 	var otid = myurl.query.otid
 	var phylum = myurl.query.phylum
 	var show_filters = 0
@@ -39,7 +39,7 @@ router.get('/genome_table', (req, res) => {
 	     	return otid_list.indexOf(item.otid) !== -1
 	  })
 	  count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span> ('+otid_list.length+' taxons)'
-	}else if(['all','alloral'].indexOf(otid) === -1) {
+	}else if(otid) {  // if otid 
 		// single gid
 		seqid_list = C.taxon_lookup[otid].genomes
 		console.log('sil',seqid_list)
@@ -49,7 +49,7 @@ router.get('/genome_table', (req, res) => {
 		}
 		show_filters = 0
 		count_text = 'No. of genomes for TAXON-ID::HMT-'+otid+': <span class="red">'+gid_obj_list.length.toString()+'</span>'
-	  console.log('gol',gid_obj_list)
+	  //console.log('gol',gid_obj_list)
 	}else{
 		// all gids
 		gid_obj_list1 = Object.values(C.genome_lookup);
@@ -273,4 +273,58 @@ router.get('/rRNA_gene_tree', (req, res) => {
     })
 
 });
+
+
+router.get('/dld_table', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	let myurl = url.parse(req.url, true);
+  	let type = myurl.query.type;
+	// type = browser text or excel
+	var table_tsv = create_table('table','browser')
+	if(type === 'browser'){
+	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
+	}else if(type === 'text'){
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.txt\""});
+	}else if(type === 'excel'){
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
+	}else{
+	    // error
+	    console.log('Download table format ERROR')
+	}
+	res.send(table_tsv)
+	res.end()
+});
+
+///////////////////////////////
+//////////////////////////////
+function create_table(source, type) {
+
+    if(source === 'table' && type === 'browser'){
+        obj1 = C.taxon_lookup
+        obj2 = C.taxon_lineage_lookup
+        obj3 = C.taxon_info_lookup 
+        var headers_row = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
+        
+        txt =  headers_row.join('\t')
+        
+        for(otid in obj1){
+            if(otid in obj2 && otid in obj3){
+               o1 = obj1[otid]
+               o2 = obj2[otid]
+               o3 = obj3[otid]
+            
+               //console.log(o2)
+               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.ncbi_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
+               row = r.join('\t')
+               txt += '\n'+row
+            }
+        }
+    }   
+    //console.log(txt)
+    return txt
+}        
+        
+        
+        
 module.exports = router;

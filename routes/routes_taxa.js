@@ -64,7 +64,7 @@ router.get('/tax_table', (req, res) => {
 	        })
 	        var min = Math.min.apply(Math, size_array.filter(Boolean))  // this removes 'falsy' from array
 	        var max = Math.max.apply(Math, size_array.filter(Boolean))
-	        console.log(min,max,size_array)
+	        //console.log(min,max,size_array)
 	        if(min === max){
 	        	el.gsize = helpers.format_Mbps(min)
 	        }else{
@@ -128,7 +128,17 @@ router.post('/tax_table', (req, res) => {
 	
 	// error if site is empty list
 	//throw new error
-	send_tax_obj2 = send_tax_obj1.filter(item => sitefilter_on.indexOf(item.site[0].toLowerCase()) !== -1)
+	send_tax_obj2 = send_tax_obj1.filter( item => sitefilter_on.indexOf(item.sites[0].toLowerCase()) !== -1)
+	// send_tax_obj2 = send_tax_obj1.filter( function(item) {
+// 	    console.log(item)
+// 	    if(item.sites.length > 0){
+// 	      sitefilter_on.indexOf(item.sites[0].toLowerCase()) !== -1
+// 	    }else{
+// 	      return 0
+// 	    }
+// 	    
+// 	}) 
+	
 	
 	send_tax_obj3 = send_tax_obj2.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) !== -1 )    
 	
@@ -296,22 +306,29 @@ router.get('/tax_custom_dhtmlx', (req, res) => {
 //     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["958"])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["7"])
     
-    C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
-        //console.log('node')
-        let options_obj = get_options_by_node(node);
-        options_obj.checked = true;
-        //console.log(options_obj)
-        json.item.push(options_obj);
-      }
-    );
-  }
-  else {
-    const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
-    objects_w_this_parent_id.map(node => {
-      let options_obj = get_options_by_node(node);
-      options_obj.checked = false;
-      json.item.push(options_obj);
-    });
+        C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
+            //console.log(node)
+            let lineage = get_lineage(node)
+            cts = get_counts(lineage)
+            //console.log(node)
+            
+            let options_obj = get_options_by_node(node);
+            options_obj.text = options_obj.text + ' '+cts
+            options_obj.checked = true;
+            //console.log(options_obj)
+            json.item.push(options_obj);
+          }
+        );
+  }else {
+        const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
+        objects_w_this_parent_id.map(node => {
+          let lineage = get_lineage(node)
+          cts = get_counts(lineage)
+          let options_obj = get_options_by_node(node);
+          options_obj.text = options_obj.text + ' '+cts
+          options_obj.checked = false;
+          json.item.push(options_obj);
+        });
   }
   //console.log(json)
   json.item.sort(function sortByAlpha(a, b) {
@@ -417,13 +434,13 @@ router.get('/tax_download', (req, res) => {
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
-router.get('/dld_ttable', (req, res) => {
+router.get('/dld_table', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log(req.body)
 	let myurl = url.parse(req.url, true);
   	let type = myurl.query.type;
 	// type = browser text or excel
-	var table_tsv = create_table('ttable','browser')
+	var table_tsv = create_table('table','browser')
 	if(type === 'browser'){
 	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
 	}else if(type === 'text'){
@@ -452,6 +469,7 @@ router.get('/dld_ttable', (req, res) => {
 
 ////////////////////////////////////////////////////////////////////////////////////
 function get_options_by_node(node) {
+  
   rankname = node.rank.charAt(0).toUpperCase() + node.rank.slice(1)
   text = rankname+' '+node.taxon
   if(node.rank ==='species'){
@@ -470,10 +488,62 @@ function get_options_by_node(node) {
   }
   return options_obj;
 }
-
+////////////
+function get_lineage(node){
+    console.log(node)
+    let lineage;
+    let tax_obj = C.homd_taxonomy.taxa_tree_dict_map_by_id
+    if(node.parent_id===0){
+        lineage = node.taxon
+    }else if(node.rank==='phylum'){
+        let dn = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id]
+        lineage = dn.taxon+';'+node.taxon
+    }else if(node.rank==='klass'){
+        let pn = tax_obj[node.parent_id]
+        let dn = tax_obj[pn.parent_id]
+        lineage = dn.taxon+';'+pn.taxon+';'+node.taxon
+    }else if(node.rank==='order'){
+        let kn = tax_obj[node.parent_id]
+        let pn = tax_obj[kn.parent_id]
+        let dn = tax_obj[pn.parent_id]
+        lineage = dn.taxon+';'+pn.taxon+';'+kn.taxon+';'+    node.taxon
+    }else if(node.rank==='family'){
+        let on = tax_obj[node.parent_id]
+        let kn = tax_obj[on.parent_id]
+        let pn = tax_obj[kn.parent_id]
+        let dn = tax_obj[pn.parent_id]
+        lineage = dn.taxon+';'+pn.taxon+';'+kn.taxon+';'+ on.taxon+';'+   node.taxon
+    }else if(node.rank==='genus'){
+        let fn = tax_obj[node.parent_id]
+        let on = tax_obj[fn.parent_id]
+        let kn = tax_obj[on.parent_id]
+        let pn = tax_obj[kn.parent_id]
+        let dn = tax_obj[pn.parent_id]
+        lineage = dn.taxon+';'+pn.taxon+';'+kn.taxon+';'+ on.taxon+';'+ fn.taxon+';'+  node.taxon
+    }else if(node.rank==='species'){
+        let gn = tax_obj[node.parent_id]
+        let fn = tax_obj[gn.parent_id]
+        let on = tax_obj[fn.parent_id]
+        let kn = tax_obj[on.parent_id]
+        let pn = tax_obj[kn.parent_id]
+        let dn = tax_obj[pn.parent_id]
+        lineage = dn.taxon+';'+pn.taxon+';'+kn.taxon+';'+ on.taxon+';'+ fn.taxon+';'+ gn.taxon+';'+ node.taxon
+    }
+    
+    console.log('line',lineage)
+    return lineage
+}
+function get_counts(lineage){
+    console.log(lineage)
+    
+    let txt = '['+C.taxon_counts_lookup[lineage].tax_cnt.toString() + ', '+C.taxon_counts_lookup[lineage].gcnt.toString()+', '+C.taxon_counts_lookup[lineage].refcnt.toString()+']'
+        
+    return txt
+}
+/////////////////////////////////////////
 function create_table(source, type) {
 
-    if(source === 'ttable' && type === 'browser'){
+    if(source === 'table' && type === 'browser'){
         obj1 = C.taxon_lookup
         obj2 = C.taxon_lineage_lookup
         obj3 = C.taxon_info_lookup 

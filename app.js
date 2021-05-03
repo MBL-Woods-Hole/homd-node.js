@@ -148,7 +148,7 @@ var data_init_files =[
 	C.references_lookup_fn,
 	
 	C.info_lookup_fn,
-	
+	C.taxcounts_fn 	
 	// tax counts is not loaded here
 	
 	
@@ -162,14 +162,14 @@ async.map(data_init_files, readAsync, function(err, results) {
     // results = ['file 1 content', 'file 2 content', ...]
     // add the data to CONSTANTS so they are availible everywhere
     // the lookups are keyed on Oral_taxon_id
-    C.taxon_lookup 			  = JSON.parse(results[0]);
-    C.taxon_lineage_lookup 		= JSON.parse(results[1]);  // non-oral 'all'
+    C.taxon_lookup 			        = JSON.parse(results[0]);
+    C.taxon_lineage_lookup 		    = JSON.parse(results[1]);  // non-oral 'all'
     C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[2]));
     C.genome_lookup 				= JSON.parse(results[3]);
     C.refseq_lookup 				= JSON.parse(results[4]);
-    C.taxon_references_lookup 	= JSON.parse(results[5]);
+    C.taxon_references_lookup 	    = JSON.parse(results[5]);
     C.taxon_info_lookup 			= JSON.parse(results[6]);
-    
+    C.taxon_counts_lookup 			= JSON.parse(results[7]);
     
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     
@@ -180,10 +180,11 @@ async.map(data_init_files, readAsync, function(err, results) {
     console.log('length of C.taxonomy_infolookup: ',Object.keys(C.taxon_info_lookup).length)
     console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
     console.log('length of C.genome_lookup: ',Object.keys(C.genome_lookup).length)
-    for(var n in C.nonoral_homd_taxonomy){
+    for(var n in C.homd_taxonomy){
        console.log(n)
     }
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Methanobrevibacter_genus'])
+   // console.log(C.homd_taxonomy.taxonomy_obj)
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Methanobrevibacter_genus'])
     
 });
 
