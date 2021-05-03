@@ -170,6 +170,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     console.log('length of C.taxonomy_lineagelookup: ',Object.keys(C.taxonomy_lineagelookup).length)
     console.log('length of C.taxonomy_infolookup: ',Object.keys(C.taxonomy_infolookup).length)
     console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
+    console.log('length of C.genome_lookup: ',Object.keys(C.genome_lookup).length)
     for(var n in C.nonoral_homd_taxonomy){
        console.log(n)
     }
