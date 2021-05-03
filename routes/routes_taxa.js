@@ -378,7 +378,7 @@ router.get('/tax_description', (req, res) => {
 		console.warn('Could not find refseqs for',otid)
 		var data5 = []
 	}
-	console.log(data2.general)
+	console.log(data1)
 	res.render('pages/taxa/taxdesc', {
 		title: 'HOMD :: Taxon Info', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -400,8 +400,9 @@ router.post('/get_refseq', (req, res) => {
 	// express deprecated req.param(name): Use req.params, req.body, or req.query
 	// See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
 	//FIXME There are 4 fields which do I query???
+	//The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
 	TDBConn.query(queries.get_refseq_query(refseq_id), (err, rows) => {
-		seqstr = rows[0].seq_trim28
+		seqstr = rows[0].seq_trim9
 		arr = helpers.chunkSubstr(seqstr,60)
 		html = arr.join('<br>')
 		res.send(html)

@@ -67,8 +67,10 @@ function toggle_options(){
 	//console.log(el)
 	if(el.style.display == 'none'){
 		el.style.display = 'inline'
+		document.getElementById("goptions").innerHTML = 'Options [-]'
 	}else{
 		el.style.display = 'none'
+		document.getElementById("goptions").innerHTML = 'Options [+]'
 	}
 	//document.getElementById("gen_options").innerHTML = "insert here"
 }

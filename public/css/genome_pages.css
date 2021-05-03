@@ -29,7 +29,7 @@
  color: blue;
 }
 #gnom-table tr:nth-child(even) { 
-    background-color: #ffffcd; 
+    background-color: #D79A9A; 
  } 
  #gnom-table tr:hover { 
     background-color: #dce7f5; 
@@ -111,34 +111,24 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .center {
     text-align:center;
 }
-#genome-filter-div {
-   
+#genome-search input[type="button"] {
+  line-height: 14px;
 }
-#left-genome-filter{
-  /* float:left; */
-  width:100%;
-  /* border:1px solid red; */
+#genome-search input[type="submit"] {
+  line-height: 14px;
 }
-#right-genome-filter{
-  /* float:right; */
-  /* width:400px; */
-  /* border:1px solid red; */
-  padding-left:170px;
+#genome-search input[type="text"] {
+  line-height: 14px;
 }
-#genus-filter{
+#phylum-filter{
   padding-left:3px;
+  float:right;
+  
 }
-#genome-search {
-   
-   padding:5px;
-   background:lightgrey;
-   padding-right:25px;
-   margin-bottom:2px;
-   border: 1px solid black;
-   /* margin-top:10px; */
+#phylum-filter select {
+  font-size:12px;
+}
 
-   font-size:small;
- }
 #navigate-alpha {
    
    margin-top:0px;
