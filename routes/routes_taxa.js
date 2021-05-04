@@ -396,6 +396,7 @@ router.get('/tax_description', (req, res) => {
 		var data5 = []
 	}
 	console.log(data1)
+	console.log(data5)
 	res.render('pages/taxa/taxdesc', {
 		title: 'HOMD :: Taxon Info', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),

@@ -28,7 +28,7 @@
 }
 #virus-table td
 {
- padding:3px 2px;
+  padding:3px 2px;
   font-size:small;
   color: #303030;
   overflow: hidden;
@@ -100,9 +100,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		   <td nowrap><%= vid  %></td>
 		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank'><%= list[n].assembly_ncbi  %></a></td>
 		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank'><%= list[n].sra_accession_ncbi  %></a></td>
-		   <td nowrap><i><b><%= list[n].genus_ncbi  %></b></i></td>
-		   <td nowrap><i><b><%= list[n].species_ncbi  %></b></i></td>
-		   <td nowrap><i><b><%= list[n].host_ncbi  %></b></i></td>
+		   <td nowrap class='center'><i><b><%= list[n].genus_ncbi  %></b></i></td>
+		   <td nowrap class='center'><i><b><%= list[n].species_ncbi  %></b></i></td>
+		   <td nowrap class='center'><i><b><%= list[n].host_ncbi  %></b></i></td>
 		   
 		   </tr>
 		 <% } %>
@@ -124,7 +124,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="/js/taxonomy.js"></script>
 <script type="text/javascript" src="/js/bootstrap.js"></script>
-<script src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script>
  
 

@@ -43,6 +43,11 @@
    background:white;
    padding: 2px 8px;
 }
+.span_lnk {
+   color:blue;
+   cursor:pointer;
+}
+
 </style>
 <body>
   <div id='wrapper'>		
@@ -60,12 +65,12 @@
 	    					
 <center><h4 class='title text-info'>Human Oral Microbiome Taxon Description</h4></center>
 <div id='page-block'>
-<div id='' class='description-header'><i><%= data1.genus %><%= data1.species %></i></div>
+<div id='' class='description-header'><i><%= data1.genus %> <%= data1.species %></i></div>
 <table id='description_tbl' border='0'>
 <tr>
 
 <td class='tbl-title'>Human Microbial Taxon ID:</td><td><%= taxidfullname %></td>
-<td class='tbl-title'>Body Site:</td><td><%= data1.site %></td>
+<td class='tbl-title'>Body Site:</td><td><%- data1.sites.join('<br>') %></td>
 </tr>
 <tr>
   <td class='tbl-title'>Status:</td><td><%= data1.status %></td>
@@ -74,16 +79,17 @@
 </tr>
 <tr>
   
-  <% if(data1.type_strains[0] == 'None'){ %>
-  
+  <% if(data1.type_strains.length === 0){ %>
     <td class='tbl-title'>Reference Strain:</td>
     <td>None, not yet cultivated
   <% }else{ %>
     <td class='tbl-title'>Strain Information:</td>
-    <td><%= data1.type_strains.join('<br>') %>
+    <td>[<%- data1.type_strains.join('], [') %>]
+    <br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank'>Global Catalogue of Microorganisms</a>
+ 
   <% } %>
   
-  <br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank'>Global Catalogue of Microorganisms</a>
+   
   </td>
 </tr>
 
@@ -118,7 +124,7 @@
 	<% refstatus 	= data5[n].status %>
 	<% refsite 		= data5[n].site %>
 	<% refflag 		= data5[n].flag %>
-	<a href='#' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= refsite %>','<%= refflag %>')"><%= refseqid %></a>
+	[<span class='span_lnk' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= refsite %>','<%= refflag %>')"><%= refseqid %></span>],
 <% } %>
 </td>
 
