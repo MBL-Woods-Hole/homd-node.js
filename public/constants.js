@@ -24,26 +24,26 @@ constants.phyla = [ 'Actinobacteria',
 
 //constants.available_jbgenomes = ['volvox','tomato','yeast_synteny'];
 
-constants.tax_status_all =['named','unnamed','phylotype','lost','dropped','nonoralref'];
+constants.tax_status_all =['named','unnamed','phylotype','lost','dropped'];
 constants.tax_status_on =['named','unnamed','phylotype','lost'];
 constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralref'];
 constants.tax_sites_on =['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
 
 // tax filenames (fn)
-constants.genome_lookup_fn 		= 'homd_genome_lookup.json'
-constants.info_lookup_fn 		= 'homd_data_infolookup.json'
+constants.genome_lookup_fn 		= 'homdData-GenomeLookup.json'
+constants.info_lookup_fn 		= 'homdData-TaxonInfoLookup.json'
 
-constants.references_lookup_fn 		= 'homd_data_referenceslookup.json'
+constants.references_lookup_fn 		= 'homdData-TaxonReferencesLookup.json'
 //constants.oral_taxcounts_fn 	= 'homd_data_oral_taxcounts.json'
-constants.taxcounts_fn 	        = 'homd_data_taxcounts.json'
-constants.taxon_lookup_fn 		= 'homd_data_taxonlookup.json'
+constants.taxcounts_fn 	        = 'homdData-TaxonCounts.json'
+constants.taxon_lookup_fn 		= 'homdData-TaxonLookup.json'
 //constants.oral_lineage_lookup_fn 	= 'homd_data_oral_lineagelookup.json'
-constants.lineage_lookup_fn 	= 'homd_data_taxlineagelookup.json'
+constants.lineage_lookup_fn 	= 'homdData-TaxonLineagelookup.json'
 //constants.oral_tax_hierarchy_fn 		= 'homd_data_oral_hierarchy.json'
-constants.tax_hierarchy_fn 		= 'homd_data_taxhierarchy.json'
-constants.refseq_lookup_fn 		= 'homd_data_refseqlookup.json'
+constants.tax_hierarchy_fn 		= 'homdData-TaxonHierarchy.json'
+constants.refseq_lookup_fn 		= 'homdData-TaxonRefseqLookup.json'
 
-constants.virome_file           = 'homd_virome_list.json'
+constants.virome_file           = 'homdData-ViromeList.json'
 // genome filenames
 //constants.gindex_lookup_fn 	= 'homd_genomedata_indexlookup.json'
 

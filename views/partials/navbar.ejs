@@ -2,7 +2,7 @@
 <% var cfg = JSON.parse(config) %> 
 
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-light">
 <div class="container-fluid">
 
 
@@ -27,9 +27,30 @@
       </ul>
     </li>
     
-  <!--   Genomes -->
+  <!--   Phage -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >Phage</a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/virome">Phage Home</a></li>
+        </ul>
+    </li>
+    
+    <!--  Ecology -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >Ecology</a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=sitemap&new=1">Site Map</a></li>
+          <li><a class="dropdown-item" href="/help/user_guide" target='_blank'>Help Page (In a New Window)</a></li>
+          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=cite&new=1">How to Cite HOMD</a></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+          <li><div class="dropdown-divider"></div></li>
+          <li><a class="dropdown-item" href="#">Separated link</a></li>
+        </ul>
+    </li> 
+      
+  <!--   Genomics -->
     <li class="nav-item dropdown" id="myDropdown">
-      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">  Genomes  </a>
+      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">  Genomics  </a>
       <ul class="dropdown-menu">
         <li> <a class="dropdown-item" href="/genome/genome_table">Genome Table</a></li>
         <li> <a class="dropdown-item" href="/taxa/tax_table?annot=1">Taxa with Annotated Genomes</a></li>
@@ -46,21 +67,38 @@
       </ul>
     </li>
     
-    <li class="nav-item"> <a class="nav-link" href="/virome">Virome </a> </li>
+    <!--  Animal Microbiomes -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >AnimalMicrobiomes</a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=sitemap&new=1">Site Map</a></li>
+          
+          <li><div class="dropdown-divider"></div></li>
+          <li><a class="dropdown-item" href="#">Separated link</a></li>
+        </ul>
+    </li> 
     
    <!--  Help -->
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >Help</a>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=sitemap&new=1">Site Map</a></li>
-          <li><a class="dropdown-item" href="/help/user_guide" target='_blank'>Help Page (In a New Window)</a></li>
+          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=sitemap&new=1">Users Guide</a></li>
+          <li><a class="dropdown-item" href="/help/user_guide" target='_blank'>Help Pages (In a New Window)</a></li>
           <li><a class="dropdown-item" href="/help/template?menu=help_info&page=cite&new=1">How to Cite HOMD</a></li>
-          <li><a class="dropdown-item" href="#">Something else here</a></li>
+          <li><a class="dropdown-item" href="#">History</a></li>
+          <li><a class="dropdown-item" href="#">People</a></li>
           <li><div class="dropdown-divider"></div></li>
-          <li><a class="dropdown-item" href="#">Separated link</a></li>
+          <li><a class="dropdown-item" href="#">Contact Us</a></li>
         </ul>
-      </li>
+    </li>
     
+    <!--  FTP -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >FTP</a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/ftp"></a></li>
+        </ul>
+    </li> 
     
     
     

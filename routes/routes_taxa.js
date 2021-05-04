@@ -29,19 +29,23 @@ router.get('/tax_table', (req, res) => {
 	}else{
 		show_filters = 1
 		pgtitle = 'List of Human Microbial Taxa'
-		var intiial_status_filter = ['named','unnamed','phylotype','lost']  //['dropped','nonoralref']
+		var intiial_status_filter = C.tax_status_on  //['named','unnamed','phylotype','lost']  // no['dropped','nonoralref']
 	
 		//console.log(tax_letter)
 		// filter
 		send_tax_obj1 = send_tax_obj.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) !== -1 )
-		//var intiial_site_filter = ['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
-		//send_tax_obj = send_tax_obj.filter(item => intiial_site_filter.indexOf(item.site[0].toLowerCase()) !== -1)
+		var intiial_site_filter = C.tax_sites_on  //['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
+		send_tax_obj2 = send_tax_obj1.filter( function(e) {
+	    if(e.sites.length > 0 && intiial_site_filter.indexOf(e.sites[0].toLowerCase()) !== -1){
+	       return e
+	    }
+	}) 
 	
 		if(req.session.tax_letter){
 		   // COOL....
-		   send_tax_obj = send_tax_obj1.filter(item => item.genus.charAt(0) === req.session.tax_letter)
+		   send_tax_obj = send_tax_obj2.filter(item => item.genus.charAt(0) === req.session.tax_letter)
 		}else{
-			send_tax_obj = send_tax_obj1
+			send_tax_obj = send_tax_obj2
 		}
 		// table sort done via client side js library sorttable: 
 		// https://www.kryogenix.org/code/browser/sorttable
@@ -100,8 +104,8 @@ router.post('/tax_table', (req, res) => {
 	console.log(req.body)
 	//plus valid
 	valid = req.body.valid  // WHAT IS THIS???
-	// filter_status = ['named','unnamed','phylotype','lost','dropped']
-// 	filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
+	
+
 	pgtitle = 'List of Human Microbial Taxa'
 	show_filters = 1
 	statusfilter_on =[]
@@ -128,16 +132,15 @@ router.post('/tax_table', (req, res) => {
 	
 	// error if site is empty list
 	//throw new error
-	send_tax_obj2 = send_tax_obj1.filter( item => sitefilter_on.indexOf(item.sites[0].toLowerCase()) !== -1)
-	// send_tax_obj2 = send_tax_obj1.filter( function(item) {
-// 	    console.log(item)
-// 	    if(item.sites.length > 0){
-// 	      sitefilter_on.indexOf(item.sites[0].toLowerCase()) !== -1
-// 	    }else{
-// 	      return 0
-// 	    }
-// 	    
-// 	}) 
+	//send_tax_obj2 = send_tax_obj1.filter( item => sitefilter_on.indexOf(item.sites[0].toLowerCase()) !== -1)
+	send_tax_obj2 = send_tax_obj1.filter( function(e) {
+	    if(e.sites.length > 0 && sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1){
+	    //if(e.sites.length > 0){
+	      //sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1
+	      return e
+	    }else{
+	    }
+	}) 
 	
 	
 	send_tax_obj3 = send_tax_obj2.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) !== -1 )    
