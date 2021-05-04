@@ -47,7 +47,9 @@
    color:blue;
    cursor:pointer;
 }
-
+a {
+   color:blue;
+}
 </style>
 <body>
   <div id='wrapper'>		
@@ -86,7 +88,6 @@
     <td class='tbl-title'>Strain Information:</td>
     <td>[<%- data1.type_strains.join('], [') %>]
     <br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank'>Global Catalogue of Microorganisms</a>
- 
   <% } %>
   
    
@@ -107,7 +108,7 @@
 	</table>
   </td>
   <td class='tbl-title'>NCBI Taxonomy ID:</td>
-  <td><%= data1.NCBI_taxid %> <a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.NCBI_taxid %>' target='_blank'>[Link to NCBI]</a></td>
+  <td><%= data1.ncbi_taxid %> [<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank'>Link to NCBI</a>]</td>
 </tr>
 
 
@@ -128,11 +129,11 @@
 <% } %>
 </td>
 
-<td class='tbl-title'>PubMed Search:</td><td><a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank'>[PubMed Link]</a></td></tr>
+<td class='tbl-title'>PubMed Search:</td><td>[<a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank'>PubMed Link</a>]</td></tr>
 <tr><td><a href='#'>View in phylogenetic tree</a>-TODO</td>
-<td class='tbl-title'>Nucleotide Search:</td><td><a href='https://www.ncbi.nlm.nih.gov/nucleotide?cmd=search&term=%22<%= data1.genus %>+<%= data1.species %>%22+%5Borganism%5D' target='_blank'>[Entrez Nucleotide Link]</a></td></tr>
+<td class='tbl-title'>Nucleotide Search:</td><td>[<a href='https://www.ncbi.nlm.nih.gov/nucleotide?cmd=search&term=%22<%= data1.genus %>+<%= data1.species %>%22+%5Borganism%5D' target='_blank'>Entrez Nucleotide Link</a>]</td></tr>
 <tr><td><a href='#'>Download latest 16S rRNA reference gene sequences</a>-TODO</td>
-<td class='tbl-title'>Protein Search:</td><td><a href='https://www.ncbi.nlm.nih.gov/protein?cmd=search&term=%22<%= data1.genus %>+<%= data1.species %>%22+%5Borganism%5D' target='_blank'>[Entrez Protein Link]</a></td>
+<td class='tbl-title'>Protein Search:</td><td>[<a href='https://www.ncbi.nlm.nih.gov/protein?cmd=search&term=%22<%= data1.genus %>+<%= data1.species %>%22+%5Borganism%5D' target='_blank'>Entrez Protein Link</a>]</td>
 </tr>
 
 
@@ -141,7 +142,7 @@
   <td class='tbl-title'>Genome Sequence</td>
   <td>
     <% if(data1.genomes.length > 0){ %>
-        <%= data1.genomes.length %> <a href='/genome/genome_table?otid=<%= otid %>'>View Genome</a>
+        <%= data1.genomes.length %> [<a href='/genome/genome_table?otid=<%= otid %>'>View Genome(s)</a>]
         <br><a href='#'>View taxon in genome tree</a>-TODO
     	<br><a href='#'>View taxon in ribosome protein tree</a>-TODO
    		<br><a href='#'>View taxon in genomic 16S rRNA gene tree</a>-TODO
