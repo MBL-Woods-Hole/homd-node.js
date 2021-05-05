@@ -459,18 +459,111 @@ router.get('/dld_table', (req, res) => {
 	res.end()
 });
 
-// router.post('/dld_ttable', (req, res) => {
-// 	helpers.accesslog(req, res)
-// 	console.log(req.body)
-// 	// req.body.type = text or excel <= for download
-// 	// maybe use res.download
-// 	res.set({"Content-Disposition":"attachment; filename=\"req.params.name\""});
-// 	res.send('okay done');
-// 	
-// 	//res.send('ok')
-// 	
-// });
-
+router.get('/domain/:name', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	
+  	console.log(req.params.name)
+	res.render('pages/taxa/domain', {
+			title: 'HOMD :: Domain', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			data: {},
+			tax_name: req.params.name,
+			rank:'Domain',
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+	
+});
+router.get('/phylum/:name', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	
+  	console.log(req.params.name)
+	res.render('pages/taxa/phylum', {
+			title: 'HOMD :: Phylum', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			data: {},
+			tax_name: req.params.name,
+			rank:'Phylum',
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+	
+});
+router.get('/class/:name', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	
+  	console.log(req.params.name)
+	res.render('pages/taxa/class', {
+			title: 'HOMD :: Class', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			data: {},
+			tax_name: req.params.name,
+			rank:'Class',
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+	
+});
+router.get('/order/:name', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	
+  	console.log(req.params.name)
+	res.render('pages/taxa/order', {
+			title: 'HOMD :: Order', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			data: {},
+			tax_name: req.params.name,
+			rank:'Order',
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+	
+});
+router.get('/family/:name', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	
+  	console.log(req.params.name)
+	res.render('pages/taxa/family', {
+			title: 'HOMD :: Family', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			data: {},
+			tax_name: req.params.name,
+			rank:'Family',
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+	
+});
+router.get('/genus/:name', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	
+  	console.log(req.params.name)
+	res.render('pages/taxa/genus', {
+			title: 'HOMD :: Genus', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			data: {},
+			tax_name: req.params.name,
+			rank:'Genus',
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+	
+});
+router.get('/species/:name', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	
+  	console.log(req.params.name)
+	res.render('pages/taxa/species', {
+			title: 'HOMD :: Species', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			data: {},
+			tax_name: req.params.name,
+			rank:'Species',
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+	
+});
 ////////////////////////////////////////////////////////////////////////////////////
 function get_options_by_node(node) {
   

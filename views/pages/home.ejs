@@ -1,59 +1,29 @@
-<%- include('../partials/header_html'); %>
-
 <style>
-  /* Increase the header for this page only */
-p {
-    
-    font-size: 16px;
-}
-#masthead img {
-   height:120%;
-}
-
-
-
 
 </style>
+<%- include('../partials/header_html'); %>
 <body>
-  <div id='wrapper'>		
+  	
+<style>
+  /* Increase the header for this page only */
+
+ #masthead img {
+  height:80px;
+  padding:0;
+  margin:0;
+ } 
+
+</style>	    
 	    
-	    
-	<div id='header' >
-       <%- include('../partials/header_img'); %>
-    </div>
+	
+    <%- include('../partials/header_img'); %>
+   
     
     <%- include('../partials/navbar'); %>
     
     
-    <div id='' class='page-content' >
-	
-
-	
-		<div class='jumbotron px-5'>  					
-			 <div id='side-gig' class='float-right' >
-			 
-			 <div class="card text-white bg-dark mb-3" style="max-width: 20rem;">
-			  <div class="card-header">Announcements</div>
-			  <div class="card-body">
-				<h5 class="card-title">Announcement-01</h5>
-				<p class="card-text">Some quick example text.</p>
-			  </div>
-			</div>
-			
-			<br>
-			
-			
-			<div class="card text-white bg-dark mb-3" style="max-width: 20rem;">
-			  <div class="card-header">Database Updates</div>
-			  <div class="card-body">
-				<h5 class="card-title">Update-01</h5>
-				<p class="card-text">Some quick example text.</p>
-			  </div>
-			</div> 
-			</div> <!-- end side-gig -->
-			<%- include('../partials/home_content'); %>
-			
-		</div>  <!-- jumbo -->
+    <div class='page-content' >
+		<%- include('../partials/home_content'); %>
     </div> <!-- end: page-content -->
     
     <div id='footer'>
@@ -61,16 +31,20 @@ p {
     </div>
        
    
-  </div> <!-- end wrapper -->
+ 
 </body>
 
 </html>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script type="text/javascript" src="/js/bootstrap.js"></script>
-<!-- <script type="text/javascript" src="/js/jquery-1.3.1.min.js"></script>	 -->
-<!-- <script type="text/javascript" language="javascript" src="/js/jquery.dropdownPlain.js"></script> -->
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+ <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+ 
+<script type="text/javascript" src="/js/menu.js"></script>
 <script>
+// this should run on every page for main menu open speed
+mainmenu()
+
+
 
 </script>
 

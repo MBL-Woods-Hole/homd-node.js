@@ -9,17 +9,13 @@ td a {
 }
 </style>
 <body>
-  <div id='wrapper'>		
-	    
-	    
-	<div id='header'>
-       <%- include('../../partials/header_img'); %>
-    </div>
+  	
+    <%- include('../../partials/header_img'); %>
 	
     <%- include('../../partials/navbar'); %>
     
     <div id='' class='page-content' >
-      <div class='jumbotron'> 
+      
 	
 	  					
 		 
@@ -59,22 +55,23 @@ td a {
 		 <br>
 		 <div id='taxlevel_tdiv2' style='background: lightgrey;'></div>
 	    </center> 
-	  </div> <!-- End jumbo -->
+	  
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>
        
    
-  </div> <!-- end wrapper -->
+ 
 </body>
 
 </html>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="/js/taxonomy.js"></script>
-<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
 <script>
+  mainmenu()
   $(document).ready(function(){                    
    
     change_level('Domain')

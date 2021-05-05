@@ -3,16 +3,30 @@
 <style>
 </style>
 <body>
-  		
-    <%- include('../../partials/header_img'); %>
+  <div id='wrapper'>		
+	    
+	    
+	
+       <%- include('../../partials/header_img'); %>
     
 
 	<%- include('../../partials/navbar'); %>
 	
 	<div class='page-content'>
-		 					
-			 <center><h4 class='title text-info'>CONTENT</h4></center>
-		
+		  					
+	  <center>
+	     <h4 class='title text-info'>Rank: <%= rank %> </h4>
+	     <div class='sub-title'>
+	       <%= tax_name %>
+	     </div>
+		discription of this rank
+		images?
+		List of phyla	 
+			 
+	  </center>
+			 
+			 
+	</div>
 	
     </div> <!-- end: page-content -->
     
@@ -20,6 +34,8 @@
          <%- include('../../partials/footer'); %>
     </div>
        
+   
+  
 </body>
 
 </html>

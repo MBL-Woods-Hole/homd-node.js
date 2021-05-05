@@ -2,118 +2,101 @@
 <% var cfg = JSON.parse(config) %> 
 
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-light">
-<div class="container-fluid">
 
+<ul id="nav" style='z-index:1'>
 
-<div class="collapse navbar-collapse" id="main_nav">
-  <ul class="navbar-nav">
-    <li class="nav-item active"> <a class="nav-link" href="/">Home </a> </li>
-    
-    
-<!--   Bacteria -->
-    <li class="nav-item dropdown" id="myDropdown">
-      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">  Bacteria  </a>
-      <ul class="dropdown-menu">
-        <li> <a class="dropdown-item" href="/taxa/tax_table">Taxonomy Table</a></li>
-        <li> <a class="dropdown-item" href="/taxa/tax_hierarchy">Taxonomic Hierarchy</a></li>
-        <li> <a class="dropdown-item" href="/taxa/tax_level">Taxonomic Level</a></li>
-        <li> <a class="dropdown-item" href="/taxa/tax_download">Download Taxonomy Data</a></li>
-        <li><div class="dropdown-divider"></div></li>
-        <li><a class="dropdown-item" href="/refseq/refseq_blastn">Identify 16S rRNA using BLASTn</a></li>
-        <li>  <a class="dropdown-item" href="/refseq/phylo_tree">View 16S rRNA RefSeq Phylogenetic Tree</a></li>
-        <li>  <a class="dropdown-item" href="/refseq/download">Download 16S rRNA RefSeq Taxonomy</a></li>
-        <li>  <a class="dropdown-item" href="/help/template?menu=help_ident&page=refseq_history&new=1">16S rRNA RefSeq Version History</a></li>
-      </ul>
-    </li>
-    
-  <!--   Phage -->
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >Phage</a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/virome">Phage Home</a></li>
-        </ul>
-    </li>
-    
-    <!--  Ecology -->
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >Ecology</a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=sitemap&new=1">Site Map</a></li>
-          <li><a class="dropdown-item" href="/help/user_guide" target='_blank'>Help Page (In a New Window)</a></li>
-          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=cite&new=1">How to Cite HOMD</a></li>
-          <li><a class="dropdown-item" href="#">Something else here</a></li>
-          <li><div class="dropdown-divider"></div></li>
-          <li><a class="dropdown-item" href="#">Separated link</a></li>
-        </ul>
-    </li> 
-      
-  <!--   Genomics -->
-    <li class="nav-item dropdown" id="myDropdown">
-      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">  Genomics  </a>
-      <ul class="dropdown-menu">
-        <li> <a class="dropdown-item" href="/genome/genome_table">Genome Table</a></li>
-        <li> <a class="dropdown-item" href="/taxa/tax_table?annot=1">Taxa with Annotated Genomes</a></li>
-        <li> <a class="dropdown-item" href="/genome/jbrowse">HOMD JBrowse Genome Viewer</a>
-        <li> <a class="dropdown-item" href="#"> Genomic Trees &raquo; </a>
-          <ul class="submenu dropdown-menu">
-            <li><a class="dropdown-item" href="/genome/phylo_phlan_tree">Conserved Protein Tree</a></li>
-            <li><a class="dropdown-item" href="/genome/ribosomal_protein_tree">Protein Tree</a></li>
-            <li><a class="dropdown-item" href="/genome/rRNA_gene_tree">16S rRNA Gene Tree</a></li>
-          </ul>
-        </li>
-        <li> <a class="dropdown-item" href="#">Download Genomic Data</a></li>
-        <li><a class="dropdown-item" href="/help/template?menu=help_genomes&page=refgenome_history&new=1"> ref genome version history </a></li>
-      </ul>
-    </li>
-    
-    <!--  Animal Microbiomes -->
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >AnimalMicrobiomes</a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=sitemap&new=1">Site Map</a></li>
-          
-          <li><div class="dropdown-divider"></div></li>
-          <li><a class="dropdown-item" href="#">Separated link</a></li>
-        </ul>
-    </li> 
-    
-   <!--  Help -->
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >Help</a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=sitemap&new=1">Users Guide</a></li>
-          <li><a class="dropdown-item" href="/help/user_guide" target='_blank'>Help Pages (In a New Window)</a></li>
-          <li><a class="dropdown-item" href="/help/template?menu=help_info&page=cite&new=1">How to Cite HOMD</a></li>
-          <li><a class="dropdown-item" href="#">History</a></li>
-          <li><a class="dropdown-item" href="#">People</a></li>
-          <li><div class="dropdown-divider"></div></li>
-          <li><a class="dropdown-item" href="#">Contact Us</a></li>
-        </ul>
-    </li>
-    
-    <!--  FTP -->
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" >FTP</a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/ftp"></a></li>
-        </ul>
-    </li> 
-    
-    
-    
-  </ul>
-</div>
-<!-- navbar-collapse.// -->
-</div>
-<!-- container-fluid.// -->
+	<li><a href="/" title="HOMD Home">Home</a>	    
+     
+	</li>		
+	
+	<li><div>Bacteria <font color="#3399FF">&#5121;</font></div>
+		<ul>
+			<li><a href="/taxa/tax_table">Taxon Table</a></li>
+			<li><a href="/taxa/tax_hierarchy">Taxonomic Hierarchy</a></li>
+			<li><a href="/taxa/tax_level">Taxonomic Level</a></li>
+			<li><a href="/taxa/tax_download">Download Taxonomy Data</a></li>
+		</ul>
+	</li>
+	
+	<li><div>Phage <font color="#3399FF">&#5121;</font></div>
+		<ul>
+			<li><a href="/refseq/refseqBLASTN">Identify 16S rRNA using BLASTN</a></li>
+			<li><a href="/refseq/phylo_tree">View 16S rRNA RefSeq Phylogenetic Tree</a></li>
+			<li><a href="/refseq/download">Download 16S rRNA RefSeq & Taxonomy</a></li>
+			<li><a href="/help/template?menu=help_ident&page=refseq_history&new=1">HOMD 16S rRNA RefSeq Version History</a></li>
+		</ul>
+	</li>	
+	
+
+	<li><div class='main-topic'>Genomic <font color="#3399FF">&#5121;</font></div>
+		<ul>
+			<li><a href="/taxa/tax_table?annot=1">Taxa with Annotated Genomes</a></li>
+			
+			<li><a href="/genome/genome_table?otid=">Genome Table</a></li>
+			<li><a href="">HOMD JBrowse Genome Viewer <font color="red">&#187;</font></a>
+				<ul>
+				<li><a href="/genome/jbrowse">Select an HOMD genome to view in JBrowse</a></li>
+				</ul>
+			</li>			
+			<li><a href="">Genomic Trees <font color="red">&#187;</font></a>
+				<ul> 
+				<li><a href="/genome/phylo_phlan_tree">PhyloPhlAn Conserved Protein Tree</a></li>
+				<li><a href="/genome/ribosomal_protein_tree">Ribosomal Protein Tree</a></li>
+				<li><a href="/genome/rRNA_gene_tree">16S rRNA Gene Tree</a></li>
+				</ul>
+			</li>			
+			<li><a href="/ftp/genome/PROKKA/current/">Download Genomic Data</a></li>
+			<li><a href="/help/template?menu=help_genomes&page=refgenome_history&new=1">HOMD Reference Genome Version History</a></li>
+		</ul>
+	</li>	
+
+	<li><div>Ecology <font color="#3399FF">&#5121;</font></div>
+		<ul>
+			<li><a href="/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">View genomic tree based on conserved proteins</a></li>
+			<li><a href="/ftp/genomes/PROKKA/current/">Download All Protein Sequences Annotated from Genomes</a></li>
+		</ul>
+	</li>	
+	
+	<li><div>Animal Microbiomes <font color="#3399FF">&#5121;</font></div>
+		<ul>
+			<li><a href="">HOMD JBrowse Genome Viewer <font color="red">&#187;</font></a>
+				<ul>
+				<li><a href="/genomes/jbrowse">Select an HOMD genome to view in JBrowse</a></li>
+				
+				</ul>
+			</li>
+			
+			<li><a href="/?name=GenomeExpGM&gprog=danno&annodb=prokka_annot">Genome Annotations</a></li>
+			<li><a href="">BLAST Against HOMD Genomes <font color="red">&#187;</font></a>
+				<ul>
+					<li><a href="/?name=GenomeExpGM&gprog=blast">BLAST against a genome</a></li>
+					<li><a href="/?name=GenomeExpGM&gprog=blast&org=all_genome">BLAST against all genomes</a></li>
+				</ul>		
+			</li>
+		</ul>
+	</li>	
 
 
 
+	<li><div>Help <font color="#3399FF">&#5121;</font></div>
+		<ul>
+			<li><a href="/help/user_guide" target='_blank'>User's Guide (in a new window)</a></li>
+			<li><a href="/help/template?menu=help_info&page=cite&new=1">How to Cite HOMD</a></li>
+			<li><a href="/help/template?menu=help_info&page=pdescription&new=1">Project Description</a></li>
+			<li><a href="/help/template?menu=help_info&page=dna&new=1">Strains and DNA Availability</a></li>
+			<li><a href="/help/template?menu=help_info&page=team&new=1">People</a></li>
+			<li><a href="/help/template?menu=help_info&page=contact&new=1">Contact Us</a></li>
+			<li><a href="/help/template?menu=help_info&page=maillist&new=1">Mailing List</a></li>
+			<li><a href="/help/template?menu=help_info&page=usage&new=1">Usage Statistics</a></li>
+			<li><a href="/help/template?menu=help_info&page=sitemap&new=1">Site Map</a></li>
+			<li><a href="/help/template?menu=help_info&page=announcements&new=1">Announcements</a></li>
+		</ul>
+	</li>		
 
-
-
-</nav>
+	<li id='simple_page_name'></li>
+		<!-- <li><div title="Simplified page name for referencing purpose"><font color="#66FFFF"></font></div></li>	 -->
+	
+</ul>
 
 
 
