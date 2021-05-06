@@ -154,62 +154,112 @@ var data_init_files =[
 	
 ]
 console.log('Path to Data Files:',config.PATH_TO_DATA)
-function readAsync(file, callback) {
-    console.log('Reading File:',path.join(config.PATH_TO_DATA, file))
-    try {
-	  if (fs.existsSync(path.join(config.PATH_TO_DATA, file))) {
-		//file exists
-	  }
-	} catch(err) {
-	  console.error(err)
-	}
-    
-    fs.readFile(path.join(config.PATH_TO_DATA, file), callback);
-}
-if (fs.existsSync(config.PATH_TO_DATA)) {
-    console.log('Data Directory exists!');
-} else {
-    console.log('Data Directory not found.');
-}
-
-async.map(data_init_files, readAsync, function(err, results) {
-    // results = ['file 1 content', 'file 2 content', ...]
-    // add the data to CONSTANTS so they are availible everywhere
-    // the lookups are keyed on Oral_taxon_id
-    console.log('parsing0')
-    console.log(results[0])
-    C.taxon_lookup 			        = JSON.parse(results[0]);
-    console.log('parsing1')
-    C.taxon_lineage_lookup 		    = JSON.parse(results[1]); 
-    console.log('parsing2') 
-    C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[2]));
-    console.log('parsing3')
-    C.genome_lookup 				= JSON.parse(results[3]);
-    console.log('parsing4')
-    C.refseq_lookup 				= JSON.parse(results[4]);
-    console.log('parsing5')
-    C.taxon_references_lookup 	    = JSON.parse(results[5]);
-    console.log('parsing6')
-    C.taxon_info_lookup 			= JSON.parse(results[6]);
-    console.log('parsing7')
-    C.taxon_counts_lookup 			= JSON.parse(results[7]);
-    
-   // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
-    
-    //examples
-    console.log('length of C.taxonomy_taxonlookup: ',Object.keys(C.taxon_lookup).length)
-    console.log('length of C.taxonomy_refslookup: ',Object.keys(C.taxon_references_lookup).length)
-    console.log('length of C.taxonomy_lineagelookup: ',Object.keys(C.taxon_lineage_lookup).length)
-    console.log('length of C.taxonomy_infolookup: ',Object.keys(C.taxon_info_lookup).length)
-    console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
-    console.log('length of C.genome_lookup: ',Object.keys(C.genome_lookup).length)
-    for(var n in C.homd_taxonomy){
-       console.log(n)
-    }
-   // console.log(C.homd_taxonomy.taxonomy_obj)
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Acidovorax_genus'])
-    
-});
+// function readAsync(file, callback) {
+//     console.log('Reading File:',path.join(config.PATH_TO_DATA, file))
+//     try {
+// 	  if (fs.existsSync(path.join(config.PATH_TO_DATA, file))) {
+// 		//file exists
+// 	  }
+// 	} catch(err) {
+// 	  console.error(err)
+// 	}
+//     
+//     fs.readFile(path.join(config.PATH_TO_DATA, file), callback);
+// }
+fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[0]), (err, results) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  C.taxon_lookup 			        = JSON.parse(results);
+})
+fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[1]), (err, results) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  C.taxon_lineage_lookup			        = JSON.parse(results);
+})
+fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[2]), (err, results) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  C.homd_taxonomy =  new CustomTaxa(JSON.parse(results));
+})
+fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[3]), (err, results) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  C.genome_lookup 			        = JSON.parse(results);
+})
+fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[4]), (err, results) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  C.refseq_lookup			        = JSON.parse(results);
+})
+fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[5]), (err, results) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  C.taxon_references_lookup 			        = JSON.parse(results);
+})
+fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[6]), (err, results) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  C.taxon_info_lookup			        = JSON.parse(results);
+})
+fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[7]), (err, results) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  C.taxon_counts_lookup 			        = JSON.parse(results);
+})
+// async.map(data_init_files, readAsync, function(err, results) {
+//     // results = ['file 1 content', 'file 2 content', ...]
+//     // add the data to CONSTANTS so they are availible everywhere
+//     // the lookups are keyed on Oral_taxon_id
+//     console.log('parsing0')
+//     console.log(results[0])
+//     C.taxon_lookup 			        = JSON.parse(results[0]);
+//     console.log('parsing1')
+//     C.taxon_lineage_lookup 		    = JSON.parse(results[1]); 
+//     console.log('parsing2') 
+//     C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[2]));
+//     console.log('parsing3')
+//     C.genome_lookup 				= JSON.parse(results[3]);
+//     console.log('parsing4')
+//     C.refseq_lookup 				= JSON.parse(results[4]);
+//     console.log('parsing5')
+//     C.taxon_references_lookup 	    = JSON.parse(results[5]);
+//     console.log('parsing6')
+//     C.taxon_info_lookup 			= JSON.parse(results[6]);
+//     console.log('parsing7')
+//     C.taxon_counts_lookup 			= JSON.parse(results[7]);
+//     
+//    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
+//     
+//     //examples
+//     console.log('length of C.taxonomy_taxonlookup: ',Object.keys(C.taxon_lookup).length)
+//     console.log('length of C.taxonomy_refslookup: ',Object.keys(C.taxon_references_lookup).length)
+//     console.log('length of C.taxonomy_lineagelookup: ',Object.keys(C.taxon_lineage_lookup).length)
+//     console.log('length of C.taxonomy_infolookup: ',Object.keys(C.taxon_info_lookup).length)
+//     console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
+//     console.log('length of C.genome_lookup: ',Object.keys(C.genome_lookup).length)
+//     for(var n in C.homd_taxonomy){
+//        console.log(n)
+//     }
+//    // console.log(C.homd_taxonomy.taxonomy_obj)
+//     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Acidovorax_genus'])
+//     
+// });
 
 
 
