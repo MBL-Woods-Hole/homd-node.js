@@ -153,8 +153,9 @@ var data_init_files =[
 	
 	
 ]
- 
+console.log('Path to Data Files:',config.PATH_TO_DATA)
 function readAsync(file, callback) {
+    
     fs.readFile(path.join(config.PATH_TO_DATA, file), 'utf8', callback);
 }
 
@@ -184,7 +185,7 @@ async.map(data_init_files, readAsync, function(err, results) {
        console.log(n)
     }
    // console.log(C.homd_taxonomy.taxonomy_obj)
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Acidovorax_genus'])
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Acidovorax_genus'])
     
 });
 
