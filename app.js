@@ -156,7 +156,7 @@ var data_init_files =[
 console.log('Path to Data Files:',config.PATH_TO_DATA)
 function readAsync(file, callback) {
     console.log('Reading File:',path.join(config.PATH_TO_DATA, file))
-    fs.readFile(path.join(config.PATH_TO_DATA, file), 'utf8', callback);
+    fs.readFile(path.join(config.PATH_TO_DATA, file), callback);
 }
 
 async.map(data_init_files, readAsync, function(err, results) {
