@@ -155,7 +155,7 @@ var data_init_files =[
 ]
 console.log('Path to Data Files:',config.PATH_TO_DATA)
 function readAsync(file, callback) {
-    
+    console.log('Reading File:',path.join(config.PATH_TO_DATA, file))
     fs.readFile(path.join(config.PATH_TO_DATA, file), 'utf8', callback);
 }
 
@@ -164,7 +164,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     // add the data to CONSTANTS so they are availible everywhere
     // the lookups are keyed on Oral_taxon_id
     C.taxon_lookup 			        = JSON.parse(results[0]);
-    C.taxon_lineage_lookup 		    = JSON.parse(results[1]);  // non-oral 'all'
+    C.taxon_lineage_lookup 		    = JSON.parse(results[1]);  
     C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[2]));
     C.genome_lookup 				= JSON.parse(results[3]);
     C.refseq_lookup 				= JSON.parse(results[4]);
