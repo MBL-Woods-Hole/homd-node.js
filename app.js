@@ -184,7 +184,7 @@ async.map(data_init_files, readAsync, function(err, results) {
        console.log(n)
     }
    // console.log(C.homd_taxonomy.taxonomy_obj)
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Methanobrevibacter_genus'])
+    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Acidovorax_genus'])
     
 });
 

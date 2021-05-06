@@ -57,18 +57,18 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
   <div id='wrapper'>		
 	    
 	    
-	<div id='header'>
-       <%- include('../../partials/header_img_virome'); %>
-    </div>
+	
+    <%- include('../../partials/header_img'); %>
+    
 
-	<%- include('../../partials/navbar_virome'); %>
+	<%- include('../../partials/navbar'); %>
    
     <div id='' class='page-content'>
-      <div class='jumbotron'> 
+      
 	
-		 <center><h4 class='title text-info'>Virus Table</h4></center>
+		 <center><h4 class='title text-info'>Phage Table</h4></center>
 		 <%= Object.keys(list[0]) %>
-		 <div id='download_fxn'><b>Download Virus Table</b>: 
+		 <div id='download_fxn'><b>Download Phage Table</b>: 
 		   <a href='dld_table?type=browser' >[Browser]</a>
 		   <a href='dld_table?type=text' >[Text]</a>
 		   <a href='dld_table?type=excel' >[Excel]</a>
@@ -110,7 +110,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		 </table>
 		 
 </div>  <!-- end: tax-box -->
-	  </div> <!-- end jumbo -->
+	  
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>

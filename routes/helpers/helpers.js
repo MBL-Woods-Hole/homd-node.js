@@ -102,3 +102,6 @@ module.exports.format_Mbps = (x) =>{
 module.exports.onlyUnique = (value, index, self) =>{
   return self.indexOf(value) === index;
 }
+module.exports.capitalizeFirst = (value, index, self) =>{
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}

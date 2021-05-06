@@ -1,14 +1,3 @@
-<%- include('../../partials/header_html'); %>
-<% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
-<% data1 = JSON.parse(data1) %>
-<% data2 = JSON.parse(data2) %>
-<% data3 = JSON.parse(data3) %>
-<% data4 = JSON.parse(data4) %>
-<% data5 = JSON.parse(data5) //refseq  %>
-<% taxidfullname = ("000" + otid).slice(-3); %>
-<% taxidfullnameplus = 'HMT-'+taxidfullname; %>
-
-
 <style>
 #taxon-desc{
    font-size:20px;
@@ -64,6 +53,18 @@
    border-top:2px dashed #336633;
 }
 </style>
+<%- include('../../partials/header_html'); %>
+<% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+<% data1 = JSON.parse(data1) %>
+<% data2 = JSON.parse(data2) %>
+<% data3 = JSON.parse(data3) %>
+<% data4 = JSON.parse(data4) %>
+<% data5 = JSON.parse(data5) //refseq  %>
+<% taxidfullname = ("000" + otid).slice(-3); %>
+<% taxidfullnameplus = 'HMT-'+taxidfullname; %>
+
+
+
 <body>
   		
 	
@@ -105,13 +106,13 @@
 	  <td class='tbl-title'>Classification:</td>
 	  <td>
 		<table id='tax_lineage'>
-		  <tr><td>Domain:</td><td><a href='/taxa/domain/<%= data3.domain %>'><i><%= data3.domain %></i></a></td></tr>
-		  <tr><td>Phylum:</td><td><a href='/taxa/phylum/<%= data3.phylum %>'><i><%= data3.phylum %></i></a></td></tr>
-		  <tr><td>Class:</td><td><a href='/taxa/class/<%= data3.klass %>'><i><%= data3.klass %></i></a></td></tr>
-		  <tr><td>Order:</td><td><a href='/taxa/order/<%= data3.order %>'><i><%= data3.order %></i></a></td></tr>
-		  <tr><td>Family:</td><td><a href='/taxa/family/<%= data3.family %>'><i><%= data3.family %></i></a></td></tr>
-		  <tr><td>Genus:</td><td><a href='/taxa/genus/<%= data3.genus %>'><i><%= data1.genus %></i></a></td></tr>
-		  <tr><td>Species:</td><td><a href='/taxa/species/<%= data3.species %>'><i><%= data1.species %></i></a></td></tr>
+		  <tr><td>Domain:</td><td><a href='/taxa/life?rank=domain&name=<%= data3.domain %>'><i><%= data3.domain %></i></a></td></tr>
+		  <tr><td>Phylum:</td><td><a href='/taxa/life?rank=phylum&name=<%= data3.phylum %>'><i><%= data3.phylum %></i></a></td></tr>
+		  <tr><td>Class:</td><td><a href='/taxa/life?rank=class&name=<%= data3.klass %>'><i><%= data3.klass %></i></a></td></tr>
+		  <tr><td>Order:</td><td><a href='/taxa/life?order&name=<%= data3.order %>'><i><%= data3.order %></i></a></td></tr>
+		  <tr><td>Family:</td><td><a href='/taxa/life?rank=family&name=<%= data3.family %>'><i><%= data3.family %></i></a></td></tr>
+		  <tr><td>Genus:</td><td><a href='/taxa/life?rank=genus&name=<%= data3.genus %>'><i><%= data1.genus %></i></a></td></tr>
+		  <tr><td>Species:</td><td><i><%= data1.genus %> <%= data1.species %></i></td></tr>
 		</table>
 	  </td>
 	</tr>

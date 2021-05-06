@@ -22,17 +22,50 @@ p {
   background:white;
   border:1px solid darkgrey;
 }
-
+/* header images masthead */
 #masthead {
   width:100%;
   background:black;
+  
 }
 #masthead img {
   height:50px;
   padding:0;
   margin:0;
 } 
- 
+ /* Three image containers (use 25% for four, and 50% for two, etc) */
+.column {
+  float: left;
+  width: 50%;
+  padding: 0px;
+}
+#col1 {
+float: left;
+  width: 75%;
+  padding: 0;
+  overflow:auto;
+}
+
+#col2 {
+  overflow:auto;
+  
+  margin-top:5px;
+  width: 100px;
+  height: 20px;
+  float:right;
+}
+
+#col2 a img{
+    width: auto;
+    height: 100%; 
+}
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+   
 #footer {
    border:1px solid black;
    border-top:1px solid black;

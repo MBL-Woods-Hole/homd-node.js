@@ -31,19 +31,19 @@ router.get('/virus_table', (req, res) => {
   console.log('in virus table')
   helpers.accesslog(req, res)
 
- //  fs.readFile(path.join(CFG.PATH_TO_DATA, C.virome_file), 'utf8', (err, data) => {
-//     	if (err)
-//       		console.log(err)
-//     	else{
-//           data = JSON.parse(data)
+  fs.readFile(path.join(CFG.PATH_TO_DATA, C.virome_file), 'utf8', (err, data) => {
+    	if (err)
+      		console.log(err)
+    	else{
+          data = JSON.parse(data)
 		  res.render('pages/virome/virometable', {
 				title: 'HOMD :: Human Oral Virome Database',
 				config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 				vdata:    JSON.stringify(C.virome_lookup),
 		  });
-//         }
-//   });
+         }
+   });
 });
 
 

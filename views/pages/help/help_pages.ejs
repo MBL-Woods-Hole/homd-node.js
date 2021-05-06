@@ -1,8 +1,3 @@
-<%- include('../../partials/header_html'); %>
-<link rel="stylesheet" type="text/css" href="/css/help_pages.css" \>
-
-<link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
 <style>
 
 #help-menu-header1 {
@@ -18,28 +13,27 @@
    color:white;
    font-size:14px;
 }
-.jumbotron{
-    height:800px;
-}
+
 </style>
+<%- include('../../partials/header_html'); %>
+<link rel="stylesheet" type="text/css" href="/css/help_pages.css" \>
+
+<link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
 
 <body>
-  <div id='wrapper'>		
-	    
-	    
-	<div id='header'>
-       <%- include('../../partials/header_img'); %>
-    </div>
-
+  	
+    <%- include('../../partials/header_img'); %>
 	<%- include('../../partials/navbar'); %>
 	
 		
 	<div id='' class='page-content'>
 	   <!-- <button id='trigger' style='float:left;'> Hide Help Menu <<< </button> -->
-		<div class='jumbotron' > 
+		
 		<center><h4 class='title text-info'>HOMD User Documentation</h4></center> 					
 			
-			<div id='accordion_div' style=''>
+			<div id='accordion_div' >
 			 	<%- include('../../partials/user_doc_menu-ul'); %>
 			</div>
 			
@@ -47,7 +41,7 @@
 				
 		    </div>  <!-- end: content_div -->
 			
-		</div>  <!-- end: jumbo -->
+		
 	
     </div> <!-- end: page-content -->
     
@@ -55,8 +49,6 @@
          <%- include('../../partials/footer'); %>
     </div>
        
-   
-  </div> <!-- end wrapper -->
 </body>
 
 </html>

@@ -564,7 +564,180 @@ router.get('/species/:name', (req, res) => {
 		});
 	
 });
+router.get('/life', (req, res) => {
+	helpers.accesslog(req, res)
+	console.log('in LIFE')
+	let myurl = url.parse(req.url, true);
+  	let tax_name = myurl.query.name
+  	if(tax_name){
+		tax_name = myurl.query.name.replace(/"/g,'')
+	}
+	let rank = (myurl.query.rank)
+	let taxa_list =[]
+	let next_rank,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
+	console.log(rank)
+	console.log(tax_name)
+	//next_rank = C.ranks[C.ranks.indexOf(rank) +1]
+	
+	html =''
+	if(!rank){
+	   taxa_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'].map(a => a.taxon)
+	   next_rank = 'domain'
+	   html += '<tr><td>&nbsp;Domains</td><td>'
+	   for(n in taxa_list){
+		      html += "<a href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
+	   }
+	   html += '</td></tr>'
+	}else{
+		//console.log(upto)
+		var lineage = make_lineage(rank,tax_name)
+		// what should lineage looklike??
+		// {domain:'bacteria',phylum:'firmicutes'}
+	    console.log('lineage',lineage)
+		rank_id = C.ranks.indexOf(rank) +2
+		show_ranks = C.ranks.slice(0,rank_id)
+		
+		console.log('show_ranks',show_ranks)
+		last_rank = show_ranks[show_ranks.length -1]
+		
+		
+		space = '&nbsp;' 
+		for(i in show_ranks){
+		   if(show_ranks[i] == 'klass'){
+			 rank_display = 'Class'
+		   }else{
+			 rank_display = helpers.capitalizeFirst(show_ranks[i])
+		   }
+		   if(show_ranks[i] != last_rank){
+		      // here we just need one row
+		      //console.log('geting',show_ranks[i],'for',tax_name)
+		      
+		       
+		      html += '<tr><td>'+space+rank_display+'</td><td>'
+			  html += "<a href='life?rank="+show_ranks[i]+"&name=\""+lineage[show_ranks[i]]+"\"'>"+lineage[show_ranks[i]]+'</a><br>'
+			  html += '</td></tr>'
+		   }else{
+		     
+		     	 
+			 next_rank = C.ranks[C.ranks.indexOf(rank) +1]
+			 
+			 childern_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank].children_ids
+			 console.log('ch',childern_ids)
+			 
+			 html += '<tr><td>'+space+rank_display+'</td><td>'
+			 
+			 for(n in childern_ids){
+			   taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[childern_ids[n]].taxon
+			   taxa_list.push(taxon)
+			 }
+			 for(n in taxa_list){
+				 if(rank === 'genus'){
+				    otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
+				    console.log('otid',otid)
+					html += space+taxa_list[n]+" (<a href='tax_description?otid="+otid+"'>Taxon-ID:"+otid+')</a><br>'
+				 
+			 
+				 }else{
+				 
+					   html += space+"<a href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
+				
+				 }
+			 }
+			 html += '</td></tr>'
+		
+		  }
+		  space += '&nbsp;'
+		}
+
+	}
+	
+	if(rank === 'klass'){
+		 rank_display = 'Class'
+	}else{
+		 if(rank)
+		   rank_display = helpers.capitalizeFirst(rank)
+	}
+	res.render('pages/taxa/life', {
+			title: 'HOMD :: Species', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			data: {},
+			tax_name: tax_name,
+			//headline: 'Life: Cellular Organisms',
+			rank: rank_display,
+			taxa_list: JSON.stringify(taxa_list),
+			
+			html: html,
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+	
+});
 ////////////////////////////////////////////////////////////////////////////////////
+/////////////////////// FUNCTIONS //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+function make_lineage(rank, name){
+   lineage = {}
+   lineage[rank] = name
+   
+	parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[name+'_'+rank].parent_id
+	//phylum
+	if(parent_id){
+		parent_node = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id]
+		console.log(parent_node)
+		newname = parent_node.taxon
+		newrank = parent_node.rank
+		lineage[newrank] = newname
+		parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[newname+'_'+newrank].parent_id
+		//klass
+		if(parent_id){
+			parent_node = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id]
+			console.log(parent_node)
+			newname = parent_node.taxon
+			newrank = parent_node.rank
+			lineage[newrank] = newname
+			parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[newname+'_'+newrank].parent_id
+			//order
+			if(parent_id){
+				parent_node = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id]
+				console.log(parent_node)
+				newname = parent_node.taxon
+				newrank = parent_node.rank
+				lineage[newrank] = newname
+				parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[newname+'_'+newrank].parent_id
+				//family
+				if(parent_id){
+					parent_node = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id]
+					console.log(parent_node)
+					newname = parent_node.taxon
+					newrank = parent_node.rank
+					lineage[newrank] = newname
+					parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[newname+'_'+newrank].parent_id
+					//genus
+					if(parent_id){
+						parent_node = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id]
+						console.log(parent_node)
+						newname = parent_node.taxon
+						newrank = parent_node.rank
+						lineage[newrank] = newname
+						parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[newname+'_'+newrank].parent_id
+						//species
+						if(parent_id){
+							parent_node = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id]
+							console.log(parent_node)
+							newname = parent_node.taxon
+							newrank = parent_node.rank
+							lineage[newrank] = newname
+							
+						}
+					}
+				}
+			}
+		}
+	}
+		 
+	
+	
+	return lineage
+}
 function get_options_by_node(node) {
   
   rankname = node.rank.charAt(0).toUpperCase() + node.rank.slice(1)
