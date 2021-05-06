@@ -164,6 +164,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     // add the data to CONSTANTS so they are availible everywhere
     // the lookups are keyed on Oral_taxon_id
     console.log('parsing0')
+    console.log(results[0])
     C.taxon_lookup 			        = JSON.parse(results[0]);
     console.log('parsing1')
     C.taxon_lineage_lookup 		    = JSON.parse(results[1]); 
