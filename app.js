@@ -156,6 +156,14 @@ var data_init_files =[
 console.log('Path to Data Files:',config.PATH_TO_DATA)
 function readAsync(file, callback) {
     console.log('Reading File:',path.join(config.PATH_TO_DATA, file))
+    try {
+	  if (fs.existsSync(path.join(config.PATH_TO_DATA, file))) {
+		//file exists
+	  }
+	} catch(err) {
+	  console.error(err)
+	}
+    
     fs.readFile(path.join(config.PATH_TO_DATA, file), callback);
 }
 if (fs.existsSync(config.PATH_TO_DATA)) {
@@ -163,6 +171,7 @@ if (fs.existsSync(config.PATH_TO_DATA)) {
 } else {
     console.log('Data Directory not found.');
 }
+
 async.map(data_init_files, readAsync, function(err, results) {
     // results = ['file 1 content', 'file 2 content', ...]
     // add the data to CONSTANTS so they are availible everywhere
