@@ -163,13 +163,21 @@ async.map(data_init_files, readAsync, function(err, results) {
     // results = ['file 1 content', 'file 2 content', ...]
     // add the data to CONSTANTS so they are availible everywhere
     // the lookups are keyed on Oral_taxon_id
+    console.log('parsing0')
     C.taxon_lookup 			        = JSON.parse(results[0]);
-    C.taxon_lineage_lookup 		    = JSON.parse(results[1]);  
+    console.log('parsing1')
+    C.taxon_lineage_lookup 		    = JSON.parse(results[1]); 
+    console.log('parsing2') 
     C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[2]));
+    console.log('parsing3')
     C.genome_lookup 				= JSON.parse(results[3]);
+    console.log('parsing4')
     C.refseq_lookup 				= JSON.parse(results[4]);
+    console.log('parsing5')
     C.taxon_references_lookup 	    = JSON.parse(results[5]);
+    console.log('parsing6')
     C.taxon_info_lookup 			= JSON.parse(results[6]);
+    console.log('parsing7')
     C.taxon_counts_lookup 			= JSON.parse(results[7]);
     
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
