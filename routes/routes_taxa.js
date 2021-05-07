@@ -583,7 +583,7 @@ router.get('/life', (req, res) => {
 	
 	let taxa_list =[]
 	let next_rank,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
-	var lineage_list = [0]
+	var lineage_list = ['']
 	console.log(rank)
 	console.log(tax_name)
 	//next_rank = C.ranks[C.ranks.indexOf(rank) +1]
@@ -594,7 +594,7 @@ router.get('/life', (req, res) => {
 	   next_rank = 'domain'
 	   html += '<tr><td>&nbsp;Domains</td><td>'
 	   for(n in taxa_list){
-		      html += "<a href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
+		      html += "<a title='"+taxa_list[n]+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
 	   }
 	   html += '</td></tr>'
 	}else{
@@ -628,7 +628,7 @@ router.get('/life', (req, res) => {
 		      
 		       
 		      html += '<tr><td>'+space+rank_display+'</td><td>'
-			  html += "<a href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a><br>'
+			  html += "<a title='"+lineage_list[1][show_ranks[i]]+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a><br>'
 			  html += '</td></tr>'
 		   }else{
 		     
@@ -648,12 +648,12 @@ router.get('/life', (req, res) => {
 				 if(rank === 'genus'){
 				    otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
 				    //console.log('otid',otid)
-					html += space+'<em>'+taxa_list[n]+"</em> (<a href='tax_description?otid="+otid+"'>Taxon-ID:"+otid+')</a><br>'
+					html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+taxa_list[n]+"' href='tax_description?otid="+otid+"'>Taxon-ID:"+otid+')</a><br>'
 				 
 			 
 				 }else{
 				 
-					   html += space+"<a href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
+					   html += space+"<a title='"+taxa_list[n]+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
 				
 				 }
 			 }

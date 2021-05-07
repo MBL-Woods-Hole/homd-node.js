@@ -1,16 +1,24 @@
 <style>
-table{
+#hierarchy_table_div table{
   width:50%;
 }
-table td{
+#hierarchy_table_div table td{
    padding:0 10px;
    border:1px solid brown;
 }
 #images{
    float:right;
    margin-top:10px;
-}#images div{
+}
+#images div{
    padding:5px;
+}
+#lineage{
+  padding:20px 10px 10px 10px;
+  margin-top:20px;
+  background: palegoldenrod;
+ 
+  
 }
 </style>
 <% images = JSON.parse(image_array)  %>
@@ -24,7 +32,6 @@ table td{
 <%    headline = 'Class: '+tax_name %>
 
 <% }else{ %>
-	 
 	<% headline = rank.charAt(0).toUpperCase() + rank.slice(1) + ': '+tax_name %>
 <% } %>
 
@@ -39,6 +46,12 @@ table td{
 	  			
 	  <center><h4 class='title text-info'><%= headline %></h4></center>
 	  
+	  <div id='lineage'>
+	  <% if(lineage){ %>
+	    <span>Lineage:</span> <span><small><%= lineage %></small></span>
+	  <% } %>
+	  </div>
+	 
 	  <div id='images'> <!-- Up to four images  -->
 	    <table border='0'>
 	    <tr>
@@ -65,7 +78,7 @@ table td{
 	    </table>
 	  </div>
 	  
-	  
+	  <div id='hierarchy_table_div'>
 	  <table border='0'>	
 		<thead>
 		 <tr><th>Taxonomy eHOMD:</th><th></th><tr>
@@ -75,7 +88,8 @@ table td{
 		 <%- html %>
 		
 		</tbody>
-	 </table>
+	  </table>
+	  </div>
     </div> <!-- end: page-content -->
     
     <div id='footer'>
