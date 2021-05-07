@@ -6,17 +6,30 @@ table td{
    padding:0 10px;
    border:1px solid brown;
 }
+#images{
+   float:right;
+   margin-top:10px;
+}#images div{
+   padding:5px;
+}
 </style>
+<% images = JSON.parse(image_array)  %>
 <%- include('../../partials/header_html'); %>
-
-
 
 
 <% if(!rank) {  %> 
 <%    headline = 'Life:  Cellular Organisms' %>
+<% }else if (rank === 'klass'){ %>
+
+<%    headline = 'Class: '+tax_name %>
+
 <% }else{ %>
-<%    headline = rank+': '+tax_name %>
-<% } %>		
+	 
+	<% headline = rank.charAt(0).toUpperCase() + rank.slice(1) + ': '+tax_name %>
+<% } %>
+
+
+	
 <body>
   		
     <%- include('../../partials/header_img'); %>
@@ -26,7 +39,31 @@ table td{
 	  			
 	  <center><h4 class='title text-info'><%= headline %></h4></center>
 	  
-	  
+	  <div id='images'> <!-- Up to four images  -->
+	    <table border='0'>
+	    <tr>
+	    <% for(n in images){ %>
+	      <% if(n==0 || n===2){ %>
+	        <tr><td>
+	      <% }else{ %>
+	        <td>
+	      <% } %>
+	      
+	       <div>
+	       <img id='img' src='/images/life-images/<%= rank %>/<%= images[n].name %>' width='250' alt=''  \><br>
+	       <small><%= images[n].text %></small>
+	     
+	       </div>
+	      
+	     <% if(n==0 || n===2){ %>
+	        </td>
+	      <% }else{ %>
+	        </td></tr>
+	      <% } %>
+	    <% } %>
+	    
+	    </table>
+	  </div>
 	  
 	  
 	  <table border='0'>	
@@ -34,7 +71,7 @@ table td{
 		 <tr><th>Taxonomy eHOMD:</th><th></th><tr>
 		</thead>
 		<tbody>
-		 <tr><td>Life</td><td><a href='life?rank=&name='>Cellular Organisms</a></td></tr>
+		 <tr><td>Life</td><td><a href='life'>Cellular Organisms</a></td></tr>
 		 <%- html %>
 		
 		</tbody>

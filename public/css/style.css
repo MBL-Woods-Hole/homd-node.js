@@ -21,6 +21,7 @@ p {
   margin:30px;
   background:white;
   border:1px solid darkgrey;
+  overflow:auto;
 }
 /* header images masthead */
 #masthead {
@@ -91,14 +92,15 @@ float: left;
 	margin:1px;
 	padding:0px;
 	/* width:80%; */
-	background-color:lightgrey;	
+	background-color:palegoldenrod;	
 	
 	left:0px;
 	border:1px solid black;
 	
     display:none;
     position:absolute;
-    top:95%;
+    
+   
 }
 #nav ul ul{
 	position:absolute;
@@ -109,23 +111,42 @@ float: left;
 #nav li{
 	display:block;
 	float:left;	
-	padding: 10px;
+	padding: 0px 0px 15px 0px;
 	
 	
 }
+
 #nav a,#nav div{
 	display:block;
 	text-decoration:none;
+	padding:10px 10px 12px 10px;
+	
+	font:bold 12px Verdana;
+	color: black;
+	background-color: white;
+	
+	
+}
+
+###nav a,###nav div{
+	display:block;
+	text-decoration:none;
 	padding:2px 4px 2px 4px;
+	
 	font:bold 12px Verdana;
 	color: black;
 	background-color: white;
 	
 }
+
 #nav div{
 	cursor: default;
 	
 }
+#nav .main-topic {
+     
+}
+
 #nav ul li {
 	float:none;
 	text-align:left;
@@ -138,19 +159,21 @@ float: left;
 }
 #nav li:hover{
 	position:relative;
+	
 }
 
-#nav li a:hover,#nav li div:hover{
+#nav li a:hover, #nav li div:hover{
 	position:relative;
-	
 	
 	background-color: lightblue;
 	text-decoration:none;
+	
+	
 }
 
 #nav li ul li a{
 	position:relative;
-	background-color:lightgrey;
+	background-color:palegoldenrod;
 	font:bold 13px Verdana;
 	color: black;
 	text-decoration:none;
@@ -161,7 +184,7 @@ float: left;
 
 #nav li ul li:hover>a {
 	display: block;
-	background-color:lightblue;
+	background-color:palegoldenrod;
 	color: red;
 	
 	
@@ -171,7 +194,7 @@ float: left;
 
 #nav li ul li ul a{
 	position:relative;
-	background-color:lightgrey;
+	background-color:palegoldenrod;
 	font:bold 13px Verdana;
 	color: black;
 	text-decoration:none;
@@ -180,5 +203,5 @@ float: left;
 }
 #nav li ul li ul a:hover{
 	color:red;
-	background-color:lightblue;	
+	background-color:palegoldenrod;	
 }

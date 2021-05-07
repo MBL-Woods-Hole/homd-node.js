@@ -52,6 +52,12 @@
    margin:4px;
    border-top:2px dashed #336633;
 }
+#images{
+   float:right;
+   margin-top:10px;
+}#images div{
+   padding:5px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -62,6 +68,7 @@
 <% data5 = JSON.parse(data5) //refseq  %>
 <% taxidfullname = ("000" + otid).slice(-3); %>
 <% taxidfullnameplus = 'HMT-'+taxidfullname; %>
+<% images = JSON.parse(image_array)  %>
 
 
 
@@ -92,8 +99,41 @@
 		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
 		  The item with
       </div></div>
+     
+     
       
-      <div class="float-right">Image1 <br>Image2</div>
+      <div id='images'>
+      
+      <table border='0'>
+	    <tr>
+	    <% for(n in images){ %>
+	      <% if(n==0 || n===2){ %>
+	        <tr><td>
+	      <% }else{ %>
+	        <td>
+	      <% } %>
+	      
+	       <div>
+	       <img id='img' src='/images/life-images/genus/<%= images[n].name %>' height='100' alt=''  \><br>
+	       <small><%= images[n].text %></small>
+	     
+	       </div>
+	      
+	     <% if(n==0 || n===2){ %>
+	        </td>
+	      <% }else{ %>
+	        </td></tr>
+	      <% } %>
+	    <% } %>
+	    
+	    </table>
+      
+      
+      
+      </div>
+
+
+
 </div>
 
 
@@ -108,7 +148,7 @@
 		<table id='tax_lineage'>
 		  <tr><td>Domain:</td><td><a href='/taxa/life?rank=domain&name=<%= data3.domain %>'><i><%= data3.domain %></i></a></td></tr>
 		  <tr><td>Phylum:</td><td><a href='/taxa/life?rank=phylum&name=<%= data3.phylum %>'><i><%= data3.phylum %></i></a></td></tr>
-		  <tr><td>Class:</td><td><a href='/taxa/life?rank=class&name=<%= data3.klass %>'><i><%= data3.klass %></i></a></td></tr>
+		  <tr><td>Class:</td><td><a href='/taxa/life?rank=klass&name=<%= data3.klass %>'><i><%= data3.klass %></i></a></td></tr>
 		  <tr><td>Order:</td><td><a href='/taxa/life?order&name=<%= data3.order %>'><i><%= data3.order %></i></a></td></tr>
 		  <tr><td>Family:</td><td><a href='/taxa/life?rank=family&name=<%= data3.family %>'><i><%= data3.family %></i></a></td></tr>
 		  <tr><td>Genus:</td><td><a href='/taxa/life?rank=genus&name=<%= data3.genus %>'><i><%= data1.genus %></i></a></td></tr>
