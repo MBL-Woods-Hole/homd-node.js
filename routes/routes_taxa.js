@@ -396,14 +396,18 @@ router.get('/tax_description', (req, res) => {
 		console.warn('Could not find refseqs for',otid)
 		var data5 = []
 	}
-	console.log(data1)
-	console.log(data5)
+	//console.log(data1)
+	//console.log(data5)
 	// get_genus photos
 	node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
 	var lineage_list = make_lineage(node)  // [str obj]
 	var image_array = find_images('genus',data3.genus)
-	console.log('genus',data3.genus)
-	console.log('imgs',image_array)
+	//console.log('genus',data3.genus)
+	//console.log('imgs',image_array)
+	//console.log('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
+	//console.log('regex2',lineage_list[0].split(';').pop())
+	//console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
+	lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
 	res.render('pages/taxa/taxdesc', {
 		title: 'HOMD :: Taxon Info', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -414,7 +418,7 @@ router.get('/tax_description', (req, res) => {
 		data3: JSON.stringify(data3),
 		data4: JSON.stringify(data4),
 		data5: JSON.stringify(data5),
-		lineage: lineage_list[0].replace(/;/g,'; '),
+		lineage: lineage_string,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -576,6 +580,8 @@ router.get('/life', (req, res) => {
 	let myurl = url.parse(req.url, true);
   	let tax_name = myurl.query.name;
   	let rank = (myurl.query.rank)
+  	console.log('rank',rank)
+	console.log('tax_name',tax_name)
   	if(tax_name){
 		tax_name = myurl.query.name.replace(/"/g,'')
 	}
@@ -583,13 +589,10 @@ router.get('/life', (req, res) => {
 	if(rank)
 	   image_array = find_images(rank,tax_name)
 	
-	
-	
 	let taxa_list =[]
 	let next_rank,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
 	var lineage_list = ['']
-	console.log('rank',rank)
-	console.log('tax_name',tax_name)
+	
 	//next_rank = C.ranks[C.ranks.indexOf(rank) +1]
 	
 	html =''
@@ -608,14 +611,14 @@ router.get('/life', (req, res) => {
 		//var lineage = make_lineage_obj(rank,tax_name)
 		// what should lineage looklike??
 		// {domain:'bacteria',phylum:'firmicutes'}
-		console.log('string_lineage:',lineage_list[0])
-	    console.log('lineage OBJ1',lineage_list[1])
+		//console.log('string_lineage:',lineage_list[0])
+	    //console.log('lineage OBJ1',lineage_list[1])
 	    //console.log('string_OBj2:',lineage)
 	    
 		rank_id = C.ranks.indexOf(rank) +2
 		show_ranks = C.ranks.slice(0,rank_id)
 		
-		console.log('show_ranks',show_ranks)
+		//console.log('show_ranks',show_ranks)
 		last_rank = show_ranks[show_ranks.length -1]
 		
 		
@@ -642,7 +645,7 @@ router.get('/life', (req, res) => {
 			    use_plural = true;
 			 }
 			 rank_display = get_rank_display(show_ranks[i],use_plural)
-			 console.log('rank_displayx',rank_display)
+			 //console.log('rank_displayx',rank_display)
 			 
 			 html += '<tr><td>'+space+rank_display+'</td><td>'
 			 for(n in taxa_list){
@@ -651,7 +654,7 @@ router.get('/life', (req, res) => {
 				    //console.log('otid',otid)
 					html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+taxa_list[n]+"' href='tax_description?otid="+otid+"'>Taxon-ID: "+otid+'</a>)<br>'
 				 }else{
-					   html += space+"<a title='"+taxa_list[n]+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
+					html += space+"<a title='"+taxa_list[n]+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
 				 }
 			 }
 			 html += '</td></tr>'
@@ -661,7 +664,10 @@ router.get('/life', (req, res) => {
 
 	}
 	
-	
+	//console.log('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
+	//console.log('regex2',lineage_list[0].split(';').pop())
+	//console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
+	lineage_string = lineage_list[0].split(';').join('; ')
 	res.render('pages/taxa/life', {
 			title: 'HOMD :: Species', 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -672,7 +678,7 @@ router.get('/life', (req, res) => {
 			taxa_list: JSON.stringify(taxa_list),
 			image_array:JSON.stringify(image_array),
 			html: html,
-			lineage:lineage_list[0].replace(/;/g,'; '),
+			lineage:lineage_string,
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		});
 	
@@ -846,7 +852,6 @@ function make_lineage(node){
         lineage_obj.genus = tax_obj[node.parent_id].taxon
         lineage_obj.species = node.taxon
     }
-    
     //console.log('line',lineage)
     return [lineage,lineage_obj]
 }
@@ -920,43 +925,40 @@ function find_images(rank,tax_name) {
 	var fname4_prefix = tax_name+'-4' // or '-3.jpeg'
 	try {
 	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))) {
-		console.log('adding1',fname1_prefix)
+		//console.log('adding1',fname1_prefix)
 		image_list.push({"name":fname1_prefix+'.'+ext,"text":"text of photo-1"})
 	  
 	  }else{
-	  	console.log('no find1',path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))
+	  	//console.log('no find1',path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))
 	  }
 	  
 	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,rank,fname2_prefix+'.'+ext))) {
-		console.log('adding2',fname2_prefix)
+		//console.log('adding2',fname2_prefix)
 		image_list.push({"name":fname2_prefix+'.'+ext,"text":"text of photo-2"})
 	  }else{
-		  console.log('no find2',path.join(CFG.PATH_TO_IMAGES,rank,fname2_prefix))
+		  //console.log('no find2',path.join(CFG.PATH_TO_IMAGES,rank,fname2_prefix))
 	  }
 	 
 	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,rank,fname3_prefix+'.'+ext))) {
-		console.log('adding',fname3_prefix+'.'+ext)
+		//console.log('adding',fname3_prefix+'.'+ext)
 		image_list.push({"name":fname3_prefix+'.'+ext,"text":"text of photo-3"})
 	  }else{
-		  console.log('no find3',path.join(CFG.PATH_TO_IMAGES,rank,fname3_prefix))
+		  //console.log('no find3',path.join(CFG.PATH_TO_IMAGES,rank,fname3_prefix))
 	  }
 	  
 	 if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,rank,fname4_prefix+'.'+ext))) {
-		console.log('adding',fname4_prefix+'.'+ext)
+		//console.log('adding',fname4_prefix+'.'+ext)
 		image_list.push({"name":fname4_prefix+'.'+ext,"text":"text of photo-4"})
 	  }else{
-		  console.log('no find4',path.join(CFG.PATH_TO_IMAGES,rank,fname4_prefix))
+		  //console.log('no find4',path.join(CFG.PATH_TO_IMAGES,rank,fname4_prefix))
 	  }
 	  
 	} catch(err) {
 	  console.error(err)
 	}
 	
-	
-	console.log('im-arry',image_list)
-	
+	//console.log('im-arry',image_list)
 	return image_list
-	
 }      
         
         
