@@ -237,19 +237,19 @@ router.post('/taxLevel', (req, res) => {
 				
 				if(rank === 'species'){
 					return_obj.otid = taxitem.otid
-					console.log('species')
-					// here we 'fix' the species to exclude the genus so that
-					// the whole lineage can be used as an index for the counts
-					genus = lineage[lineage.length - 2]
-					species = lineage[lineage.length - 1]
-					new_sp = species.replace(genus,'')
-					lineage[lineage.length - 1] = new_sp.trim()
+					// console.log('species')
+// 					// here we 'fix' the species to exclude the genus so that
+// 					// the whole lineage can be used as an index for the counts
+// 					genus = lineage[lineage.length - 2]
+// 					species = lineage[lineage.length - 1]
+// 					new_sp = species.replace(genus,'')
+// 					lineage[lineage.length - 1] = new_sp.trim()
 					
 				}
 				return_obj.item_taxon = lineage[lineage.length - 1]
 				return_obj.parent_rank = C.ranks[C.ranks.indexOf(rank) - 1]
 				return_obj.parent_taxon = lineage[lineage.length - 2]
-				
+				console.log(lineage)
 				return_obj.tax_count = taxdata[lineage.join(';')].tax_cnt
 				return_obj.gne_count = taxdata[lineage.join(';')].gcnt
 				return_obj.rrna_count = taxdata[lineage.join(';')].refcnt
@@ -399,7 +399,8 @@ router.get('/tax_description', (req, res) => {
 	console.log(data1)
 	console.log(data5)
 	// get_genus photos
-	
+	node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
+	var lineage_list = make_lineage(node)  // [str obj]
 	var image_array = find_images('genus',data3.genus)
 	console.log('genus',data3.genus)
 	console.log('imgs',image_array)
@@ -413,6 +414,7 @@ router.get('/tax_description', (req, res) => {
 		data3: JSON.stringify(data3),
 		data4: JSON.stringify(data4),
 		data5: JSON.stringify(data5),
+		lineage: lineage_list[0].replace(/;/g,'; '),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -577,15 +579,17 @@ router.get('/life', (req, res) => {
   	if(tax_name){
 		tax_name = myurl.query.name.replace(/"/g,'')
 	}
-	var image_array = find_images(rank,tax_name)
+	var image_array =[]
+	if(rank)
+	   image_array = find_images(rank,tax_name)
 	
 	
 	
 	let taxa_list =[]
 	let next_rank,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
 	var lineage_list = ['']
-	console.log(rank)
-	console.log(tax_name)
+	console.log('rank',rank)
+	console.log('tax_name',tax_name)
 	//next_rank = C.ranks[C.ranks.indexOf(rank) +1]
 	
 	html =''
@@ -617,48 +621,40 @@ router.get('/life', (req, res) => {
 		
 		space = '&nbsp;' 
 		for(i in show_ranks){
-		   if(show_ranks[i] == 'klass'){
-			 rank_display = 'Class'
-		   }else{
-			 rank_display = helpers.capitalizeFirst(show_ranks[i])
-		   }
-		   if(show_ranks[i] != last_rank){
-		      // here we just need one row
-		      //console.log('geting',show_ranks[i],'for',tax_name)
+		   
+		   rank_display = get_rank_display(show_ranks[i],false)
+		   if(show_ranks[i] != last_rank){  // Last row
 		      
-		       
 		      html += '<tr><td>'+space+rank_display+'</td><td>'
 			  html += "<a title='"+lineage_list[1][show_ranks[i]]+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a><br>'
 			  html += '</td></tr>'
-		   }else{
+		   }else{  // Gather rows before the last row
 		     
-		     	 
 			 next_rank = C.ranks[C.ranks.indexOf(rank) +1]
-			 
 			 childern_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank].children_ids
-			 //console.log('ch',childern_ids)
-			 
-			 html += '<tr><td>'+space+rank_display+'</td><td>'
 			 
 			 for(n in childern_ids){
 			   taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[childern_ids[n]].taxon
 			   taxa_list.push(taxon)
 			 }
+			 var use_plural = false;
+			 if(taxa_list.length > 1){
+			    use_plural = true;
+			 }
+			 rank_display = get_rank_display(show_ranks[i],use_plural)
+			 console.log('rank_displayx',rank_display)
+			 
+			 html += '<tr><td>'+space+rank_display+'</td><td>'
 			 for(n in taxa_list){
 				 if(rank === 'genus'){
 				    otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
 				    //console.log('otid',otid)
-					html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+taxa_list[n]+"' href='tax_description?otid="+otid+"'>Taxon-ID:"+otid+')</a><br>'
-				 
-			 
+					html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+taxa_list[n]+"' href='tax_description?otid="+otid+"'>Taxon-ID: "+otid+'</a>)<br>'
 				 }else{
-				 
 					   html += space+"<a title='"+taxa_list[n]+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
-				
 				 }
 			 }
 			 html += '</td></tr>'
-		
 		  }
 		  space += '&nbsp;'
 		}
@@ -676,7 +672,7 @@ router.get('/life', (req, res) => {
 			taxa_list: JSON.stringify(taxa_list),
 			image_array:JSON.stringify(image_array),
 			html: html,
-			lineage:lineage_list[0],
+			lineage:lineage_list[0].replace(/;/g,'; '),
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		});
 	
@@ -684,6 +680,36 @@ router.get('/life', (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
+function get_rank_display(rank,use_plural){
+   var display_name = 'not_working'
+   if(use_plural){
+     if(rank === 'domain'){
+     	display_name = 'Domains'
+     }else if(rank === 'phylum'){
+     	display_name = 'Phyla'
+     }else if(rank === 'klass'){
+     	display_name = 'Classes'
+     }else if(rank === 'order'){
+     	display_name = 'Orders'
+     }else if(rank === 'family'){
+     	display_name = 'Families'
+     }else if(rank === 'genus'){
+     	display_name = 'Genuses'
+     }else if(rank === 'species'){
+        display_name = 'Species'
+     }
+   }else{
+   	if(rank === 'klass'){
+       display_name = 'Class'
+     
+     }else{
+        display_name = helpers.capitalizeFirst(rank)
+     }
+   }
+   
+   return display_name
+    
+}
 // function make_lineage_obj(rank, name){
 //     let lineage = {}
 //     lineage[rank] = name
@@ -775,7 +801,7 @@ function make_lineage(node){
         let kn = tax_obj[node.parent_id]
         let pn = tax_obj[kn.parent_id]
         let dn = tax_obj[pn.parent_id]
-        lineage = dn.taxon+';'+pn.taxon+';'+kn.taxon+';'+    node.taxon
+        lineage = dn.taxon+';'+pn.taxon+';'+kn.taxon+';'+ node.taxon
         lineage_obj.domain = tax_obj[pn.parent_id].taxon
         lineage_obj.phylum = tax_obj[kn.parent_id].taxon
         lineage_obj.klass = tax_obj[node.parent_id].taxon
@@ -850,7 +876,7 @@ function get_options_by_node(node) {
 //
 
 function get_counts(lineage){
-    console.log(lineage)
+    console.log('lineage',lineage)
     
     let txt = '['+C.taxon_counts_lookup[lineage].tax_cnt.toString() + ', '+C.taxon_counts_lookup[lineage].gcnt.toString()+', '+C.taxon_counts_lookup[lineage].refcnt.toString()+']'
         

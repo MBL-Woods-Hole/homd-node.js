@@ -30,9 +30,12 @@
 .description{
   font-size:11px;
   padding:4px;
+  max-height:160px;
+  overflow:auto;
 }
 #description_tbl{
   width:100%;
+  
   font-size:small;
 }
 #description_tbl td{
@@ -57,6 +60,15 @@
    margin-top:10px;
 }#images div{
    padding:5px;
+}
+#lineage{
+  padding:10px 10px 10px 10px;
+  
+  background: palegoldenrod;
+  border:1px solid brown;
+}
+#lineage2{
+   color:red;
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -98,45 +110,64 @@
 		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
 		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
 		  The item with
+		   The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+          The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with
+		   The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+          The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with
+		   The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+          The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
+		  The item with
       </div></div>
      
      
       
-      <div id='images'>
-      
-      <table border='0'>
-	    <tr>
-	    <% for(n in images){ %>
-	      <% if(n==0 || n===2){ %>
-	        <tr><td>
-	      <% }else{ %>
-	        <td>
-	      <% } %>
-	      
-	       <div>
-	       <img id='img' src='/images/life-images/genus/<%= images[n].name %>' height='100' alt=''  \><br>
-	       <small><%= images[n].text %></small>
-	     
-	       </div>
-	      
-	     <% if(n==0 || n===2){ %>
-	        </td>
-	      <% }else{ %>
-	        </td></tr>
-	      <% } %>
-	    <% } %>
-	    
-	    </table>
-      
-      
-      
-      </div>
-
-
-
+<div id='images'>
+  <table border='0'>
+	<% for(n in images){ %>
+	  <% if(n==0 || n===2){ %>
+		<tr><td>
+	  <% }else{ %>
+		<td>
+	  <% } %>
+	   <div>
+	    <img id='img' src='/images/life-images/genus/<%= images[n].name %>' height='100' alt=''  \><br>
+	    <small><%= images[n].text %></small>
+	   </div>
+	 <% if(n==0 || n===2){ %>
+		</td>
+	  <% }else{ %>
+		</td></tr>
+	  <% } %>
+	<% } %>
+  </table>
 </div>
 
 
+
+</div> <!--    End Outer -->
+
+<div id='lineage'>
+	  <% if(lineage){ %>
+	    <span>Lineage:</span> <span id='lineage2' ><small><%- lineage %></small></span>
+	  <% } %>
+</div>
 
 
 <table id='description_tbl' border='0'>
@@ -148,10 +179,10 @@
 		<table id='tax_lineage'>
 		  <tr><td>Domain:</td><td><a href='/taxa/life?rank=domain&name=<%= data3.domain %>'><i><%= data3.domain %></i></a></td></tr>
 		  <tr><td>Phylum:</td><td><a href='/taxa/life?rank=phylum&name=<%= data3.phylum %>'><i><%= data3.phylum %></i></a></td></tr>
-		  <tr><td>Class:</td><td><a href='/taxa/life?rank=klass&name=<%= data3.klass %>'><i><%= data3.klass %></i></a></td></tr>
-		  <tr><td>Order:</td><td><a href='/taxa/life?order&name=<%= data3.order %>'><i><%= data3.order %></i></a></td></tr>
+		  <tr><td>Class:</td><td> <a href='/taxa/life?rank=klass&name=<%= data3.klass %>'><i><%= data3.klass %></i></a></td></tr>
+		  <tr><td>Order:</td><td> <a href='/taxa/life?rank=order&name=<%= data3.order %>'><i><%= data3.order %></i></a></td></tr>
 		  <tr><td>Family:</td><td><a href='/taxa/life?rank=family&name=<%= data3.family %>'><i><%= data3.family %></i></a></td></tr>
-		  <tr><td>Genus:</td><td><a href='/taxa/life?rank=genus&name=<%= data3.genus %>'><i><%= data1.genus %></i></a></td></tr>
+		  <tr><td>Genus:</td><td> <a href='/taxa/life?rank=genus&name=<%= data3.genus %>'><i><%= data1.genus %></i></a></td></tr>
 		  <tr><td>Species:</td><td><i><%= data1.genus %> <%= data1.species %></i></td></tr>
 		</table>
 	  </td>

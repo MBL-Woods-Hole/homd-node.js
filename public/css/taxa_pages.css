@@ -27,6 +27,7 @@
   padding:5px;
  /*  width:1200px; */
   table-layout:fixed;
+  width:100%;
 }
 #tax-table th
 {

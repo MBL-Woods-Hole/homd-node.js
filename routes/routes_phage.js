@@ -9,16 +9,18 @@ const helpers = require(app_root + '/routes/helpers/helpers');
 const queries = require(app_root + '/routes/queries')
 
 router.get('/', (req, res) => {
-  console.log('in virome')
+  console.log('in phage')
   helpers.accesslog(req, res)
-  fs.readFile(path.join(CFG.PATH_TO_DATA, C.virome_file), 'utf8', (err, data) => {
+  fs.readFile(path.join(CFG.PATH_TO_DATA, C.phage_file), 'utf8', (err, data) => {
     	if (err)
       		console.log(err)
     	else{
          // add virome to global constants
-          C.virome_lookup = JSON.parse(data)
-          res.render('pages/virome/index', {
-                title: 'HOMD :: Human Oral Virome Database',
+          
+          C.phage_lookup = JSON.parse(data) // will only be loaded once
+          
+          res.render('pages/phage/index', {
+                title: 'HOMD :: Human Oral Phage Database',
                 config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
                 ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
         
@@ -27,20 +29,23 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/virus_table', (req, res) => {
-  console.log('in virus table')
+router.get('/phage_table', (req, res) => {
+  console.log('in phage table')
   helpers.accesslog(req, res)
 
-  fs.readFile(path.join(CFG.PATH_TO_DATA, C.virome_file), 'utf8', (err, data) => {
+  fs.readFile(path.join(CFG.PATH_TO_DATA, C.phage_file), 'utf8', (err, data) => {
     	if (err)
       		console.log(err)
     	else{
-          data = JSON.parse(data)
-		  res.render('pages/virome/virometable', {
-				title: 'HOMD :: Human Oral Virome Database',
+           // will only be loaded once
+           // Is this the right way to do this?? (load for each page)
+          C.phage_lookup = JSON.parse(data) // will only be loaded once
+		  
+		  res.render('pages/phage/phagetable', {
+				title: 'HOMD :: Human Oral Phage Database',
 				config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-				vdata:    JSON.stringify(C.virome_lookup),
+				vdata:    JSON.stringify(C.phage_lookup),
 		  });
          }
    });
@@ -74,12 +79,12 @@ function create_table(source, type) {
 
     if(source === 'table' && type === 'browser'){
        
-        var headers_row = ["Virus-ID","Assembly.NCBI","Accession.NCBI","Family.NCBI","Genus.NCBI","Species.NCBI","Molecule_Type.NCBI","Sequence_Type.NCBI","Host.NCBI","Isolation_Source.NCBI","Collection_Date.NCBI","BioSample.NCBI","Genbank_Title.NCBI"]
+        var headers_row = ["Phage-ID","Assembly.NCBI","Accession.NCBI","Family.NCBI","Genus.NCBI","Species.NCBI","Molecule_Type.NCBI","Sequence_Type.NCBI","Host.NCBI","Isolation_Source.NCBI","Collection_Date.NCBI","BioSample.NCBI","Genbank_Title.NCBI"]
         
         txt =  headers_row.join('\t')
         
-        for(vid in C.virome_lookup){
-            obj = C.virome_lookup[vid]
+        for(vid in C.phage_lookup){
+            obj = C.phage_lookup[vid]
                
             
                //console.log(o2)

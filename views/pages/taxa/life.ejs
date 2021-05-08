@@ -14,11 +14,17 @@
    padding:5px;
 }
 #lineage{
-  padding:20px 10px 10px 10px;
+  padding:10px 10px 10px 10px;
   margin-top:20px;
   background: palegoldenrod;
- 
-  
+  border:1px solid brown;
+}
+#lineage2{
+   color:red;
+}
+#headline1{
+  font-size:20px;
+  font-weight:bold;
 }
 </style>
 <% images = JSON.parse(image_array)  %>
@@ -26,13 +32,16 @@
 
 
 <% if(!rank) {  %> 
-<%    headline = 'Life:  Cellular Organisms' %>
+<%    headline1 = 'Life: ' %>
+<%    headline2 = 'Cellular Organisms' %>
 <% }else if (rank === 'klass'){ %>
 
-<%    headline = 'Class: '+tax_name %>
+<%    headline1 = 'Class: ' %>
+<%    headline2 = tax_name %>
 
 <% }else{ %>
-	<% headline = rank.charAt(0).toUpperCase() + rank.slice(1) + ': '+tax_name %>
+	<% headline1 = rank.charAt(0).toUpperCase() + rank.slice(1) + ': ' %>
+	<% headline2 = tax_name %>
 <% } %>
 
 
@@ -44,13 +53,15 @@
 	
 	<div class='page-content'>
 	  			
-	  <center><h4 class='title text-info'><%= headline %></h4></center>
+	  <center><span id='headline1'><%= headline1 %></span> <span id='headline2'><%= headline2 %></span></center>
 	  
-	  <div id='lineage'>
+	  
 	  <% if(lineage){ %>
-	    <span>Lineage:</span> <span><small><%= lineage %></small></span>
+	  <div id='lineage'>
+	    <span>Lineage:</span> <span id='lineage2'><small><%= lineage %></small></span>
+	    </div>
 	  <% } %>
-	  </div>
+	  
 	 
 	  <div id='images'> <!-- Up to four images  -->
 	    <table border='0'>
@@ -81,7 +92,7 @@
 	  <div id='hierarchy_table_div'>
 	  <table border='0'>	
 		<thead>
-		 <tr><th>Taxonomy eHOMD:</th><th></th><tr>
+		 <tr><th >Taxonomy eHOMD:</th><tr>
 		</thead>
 		<tbody>
 		 <tr><td>Life</td><td><a href='life'>Cellular Organisms</a></td></tr>

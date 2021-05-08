@@ -33,7 +33,7 @@ const help      = require('./routes/routes_help');
 const taxa      = require('./routes/routes_taxa');
 const refseq	= require('./routes/routes_refseq');
 const genome	= require('./routes/routes_genome');
-const virome	= require('./routes/routes_virome');
+const phage	    = require('./routes/routes_phage');
 //const jbrowse2	= require('./routes/routes_jbrowse');
 
 
@@ -108,7 +108,7 @@ app.use('/help', help);
 app.use('/taxa', taxa);
 app.use('/refseq', refseq);
 app.use('/genome', genome);
-app.use('/virome', virome);
+app.use('/phage', phage);
 //app.use('/jbrowse2', jbrowse2);
 // LAST Middleware:
 app.use(function(req, res, next){
@@ -144,12 +144,9 @@ var data_init_files =[
  	C.tax_hierarchy_fn,  // gives you taxonomy lineage
 	C.genome_lookup_fn,
 	C.refseq_lookup_fn,
-	
 	C.references_lookup_fn,
-	
 	C.info_lookup_fn,
 	C.taxcounts_fn 	
-	// tax counts is not loaded here
 	
 	
 ]
@@ -173,22 +170,22 @@ async.map(data_init_files, readAsync, function(err, results) {
     // results = ['file 1 content', 'file 2 content', ...]
     // add the data to CONSTANTS so they are availible everywhere
     // the lookups are keyed on Oral_taxon_id
-    console.log('parsing0')
-    console.log(results[0])
+    //console.log('parsing0')
+    //console.log(results[0])
     C.taxon_lookup 			        = JSON.parse(results[0]);
-    console.log('parsing1')
+    //console.log('parsing1')
     C.taxon_lineage_lookup 		    = JSON.parse(results[1]); 
-    console.log('parsing2') 
+    //console.log('parsing2') 
     C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[2]));
-    console.log('parsing3')
+    //console.log('parsing3')
     C.genome_lookup 				= JSON.parse(results[3]);
-    console.log('parsing4')
+    //console.log('parsing4')
     C.refseq_lookup 				= JSON.parse(results[4]);
-    console.log('parsing5')
+    //console.log('parsing5')
     C.taxon_references_lookup 	    = JSON.parse(results[5]);
-    console.log('parsing6')
+    //console.log('parsing6')
     C.taxon_info_lookup 			= JSON.parse(results[6]);
-    console.log('parsing7')
+    //console.log('parsing7')
     C.taxon_counts_lookup 			= JSON.parse(results[7]);
     
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
@@ -206,7 +203,7 @@ async.map(data_init_files, readAsync, function(err, results) {
    // console.log(C.homd_taxonomy.taxonomy_obj)
    //class
    //Absconditabacteria (SR1) [C-1]
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Absconditabacteria (SR1) [C-1]_klass'])
+    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Burkholderiales_order'])
     
 });
 
