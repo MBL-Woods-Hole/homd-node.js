@@ -401,7 +401,7 @@ router.get('/tax_description', (req, res) => {
 	// get_genus photos
 	node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
 	var lineage_list = make_lineage(node)  // [str obj]
-	var image_array = find_images('genus',data3.genus)
+	var image_array = find_images('species',data3.species)
 	//console.log('genus',data3.genus)
 	//console.log('imgs',image_array)
 	//console.log('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
@@ -919,10 +919,15 @@ function find_images(rank,tax_name) {
 
 	var image_list = []
 	var ext = 'png'
-	var fname1_prefix = tax_name+'-1' // look for .jpg .jpeg png
-	var fname2_prefix = tax_name+'-2' // or '-2.jpeg'
-	var fname3_prefix = tax_name+'-3' // or '-3.jpeg'
-	var fname4_prefix = tax_name+'-4' // or '-3.jpeg'
+	// for photos NO Spaces = join w/ underscore
+	var tname = tax_name.replace(' ','_')
+	if(rank=='species'){
+	   console.log('look image',tname)
+	}  
+	var fname1_prefix = tname+'-1' // look for .jpg .jpeg png
+	var fname2_prefix = tname+'-2' // or '-2.jpeg'
+	var fname3_prefix = tname+'-3' // or '-3.jpeg'
+	var fname4_prefix = tname+'-4' // or '-3.jpeg'
 	try {
 	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))) {
 		//console.log('adding1',fname1_prefix)

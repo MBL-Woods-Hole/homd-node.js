@@ -37,6 +37,8 @@ p {
   padding:0;
   margin:0;
 } 
+
+
  /* Three image containers (use 25% for four, and 50% for two, etc) */
 .column {
   float: left;
@@ -207,4 +209,23 @@ float: left;
 #nav li ul li ul a:hover{
 	color:red;
 	background-color:palegoldenrod;	
+}
+/*  nav search: */
+ #menu-search {
+  display: flex;
+  flex-wrap: wrap;
+  /* width: 20%; */
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);
+  
+  /* border:1px solid grey; */
+}
+#menu-search input[type=text] {
+  width:150px;
+  font-size:15px;
+}
+#menu-search input[type=image] {
+  height:30px;
 }
