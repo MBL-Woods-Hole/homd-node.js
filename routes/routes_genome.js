@@ -232,6 +232,7 @@ router.get('/annotation/:gid/:type', (req, res) => {
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		gid: gid,
+		type: annot_type.toUpperCase()
     
     })
 
