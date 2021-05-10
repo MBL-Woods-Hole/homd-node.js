@@ -43,7 +43,8 @@ constants.lineage_lookup_fn 	= 'homdData-TaxonLineagelookup.json'
 constants.tax_hierarchy_fn 		= 'homdData-TaxonHierarchy.json'
 constants.refseq_lookup_fn 		= 'homdData-TaxonRefSeqLookup.json'
 
-constants.phage_file           = 'homdData-ViromeList.json'
+constants.phage_list_fn          = 'homdData-PhageList.json'
+//constants.phage_lookup_fn           = 'homdData-PhageLookup.json'  //dont yet have an indexID
 // genome filenames
 //constants.gindex_lookup_fn 	= 'homd_genomedata_indexlookup.json'
 

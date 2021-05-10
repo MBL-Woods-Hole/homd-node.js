@@ -6,7 +6,28 @@
   top:130px;
   font-size:12px;
 }
-
+.pill {
+  padding: 5px 4px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 0px;
+  cursor: pointer;
+  font-size:11px;
+  border-radius: 16px;
+}
+.pill-orange {
+  background-color: orange;
+  border: 1px solid darkorange;
+  color: black;
+  
+}
+.pill-green {
+  background-color: green;
+  border: 1px solid darkgreen;
+  color: white;
+  
+}
 </style>
 
 <%- include('../../partials/header_html'); %>
@@ -68,16 +89,16 @@
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].sites  %></td>
 		   <td><%= list[n].warning  %></td>
-		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="badge badge-info" >Taxon Description</a></td>
+		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Taxon Description</a></td>
 		   <td style='text-align:center' nowrap>
 		   <% num_genomes = list[n].genomes.length %>
 		   <% if(num_genomes === 0){ %>
-		     No Genomes
+		     
 		   <% }else if(num_genomes === 1){ %> 
-		    <a href="/genome/genome_table?otid=<%= otid %>" class="badge badge-success" >1 Genome</a>
+		    <a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-green" >1 Genome</a>
 		   <% }else{ %>
 		     
-		     <a href="/genome/genome_table?otid=<%= otid %>" class="badge badge-success" ><%= num_genomes %> Genomes</a>
+		     <a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-green" ><%= num_genomes %> Genomes</a>
 		     
 		   <% } %>
 		   </td>

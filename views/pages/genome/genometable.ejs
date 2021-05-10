@@ -14,7 +14,52 @@ display:inline-block;
   color:blue;
   cursor: pointer;
 }
+.pill {
+  padding: 5px 4px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 0px;
+  cursor: pointer;
+  font-size:11px;
+  border-radius: 16px;
+}
+.pill-indigo {
+  background-color: indigo;
+  border: 1px solid black;
+  color: white;
+}
 
+.pill-khaki {
+  background-color: khaki;
+  border:  1px solid black;;
+  color: black;
+  
+}
+.pill-lightseagreen {
+  background-color: lightseagreen;
+  border:  1px solid black;;
+  color: black;
+  
+}
+.pill-mediumorchid {
+  background-color: MediumOrchid;
+  border:  1px solid black;;
+  color: white;
+  
+}
+.pill-midnightblue {
+  background-color: midnightblue;
+  border:  1px solid black;;
+  color: white;
+  
+}
+.pill-slateblue {
+  background-color: SlateBlue;
+  border:  1px solid black;;
+  color: white;
+  
+}
 </style>
 
 <%- include('../../partials/header_html'); %>
@@ -81,14 +126,14 @@ display:inline-block;
 		<td class='center'><%= ginfo[n].tlength %></td>
 		<td class='center'><%= ginfo[n].gc %></td>
 		
-        <td class='center' nowrap><a class='badge badge-light' href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Desc</a>
-        <a class='badge badge-secondary' href='genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a>
-        <a class='badge badge-success' href=''>Genome Viewer</a>
-        <a class='badge badge-warning' href=''>BLAST</a></td>
+        <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Info</a>
+        <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a>
+        <a class='pill pill-lightseagreen' href=''>Genome Viewer</a>
+        <a class='pill pill-midnightblue' href=''>BLAST</a></td>
         
         
-        <td class='center'><a class='badge badge-danger'  href='annotation/<%= ginfo[n].gid %>/prokka'>PROKKA</a>
-        <a class='badge badge-dark' href='annotation/<%= ginfo[n].gid %>/ncbi'>NCBI</a>
+        <td class='center'><a class='pill pill-mediumorchid'  href='annotation/<%= ginfo[n].gid %>/prokka'>PROKKA</a>
+        <a class='pill pill-slateblue' href='annotation/<%= ginfo[n].gid %>/ncbi'>NCBI</a>
         <!-- <span class="badge badge-light">HOMD</span></td> -->
 	</tr>
 <% } %>
