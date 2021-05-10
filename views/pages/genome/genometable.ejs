@@ -15,11 +15,11 @@ display:inline-block;
   cursor: pointer;
 }
 .pill {
-  padding: 5px 4px;
+  padding: 0px 4px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  margin: 4px 0px;
+  margin: 0px 0px;
   cursor: pointer;
   font-size:11px;
   border-radius: 16px;
@@ -79,7 +79,7 @@ display:inline-block;
 	
 	
 	<div  class='page-content' >
-      <div class='jumbotron'> 
+       
 	
 	
 						
@@ -95,20 +95,21 @@ display:inline-block;
 
 <div id='table_div'>
 <span id='count_info'><%- count_text %></span>
+
 <table id='gnom-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
 <thead>
 <tr>
 <th class='col2' scope="col" >SEQ-ID</th>
-<th class='col2' >TaxonID</th>
+<th class='col2' >TaxID</th>
 <th class='col3' scope="col" >Genus</th>
 <th class='col3' scope="col" >Species</th>
-<th class='' scope="col" >Strain/Culture<br>Collection</th>
+<th class='' scope="col" >Strain/Culture Collection</th>
 
 <th class='col1' scope="col" >Contigs</th>
 <th class='col2' scope="col" >Combined<br>Length</th>
 <th class='col1' scope="col" >GC(%)</th>
 <th class="col9 sorttable_nosort"  >Genome Info and Tools</th>
-<th class="col10 sorttable_nosort" >Available Annotations</th>
+<th class="col10 sorttable_nosort" >Annotations</th>
 </tr>
 </thead>
 <tbody>
@@ -142,7 +143,7 @@ display:inline-block;
 </table>
   </div>  <!-- end table_div -->
 		
-	</div>  <!-- end jumbo -->
+	
     </div> <!-- end: page-content -->
     
     <div id='footer'>

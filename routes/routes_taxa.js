@@ -18,7 +18,11 @@ router.get('/tax_table', (req, res) => {
   	//console.log(myurl.query)
 	req.session.tax_letter = myurl.query.k
 	req.session.annot = myurl.query.annot
-	send_tax_obj = Object.values(C.taxon_lookup);
+	var page = myurl.query.page
+	if( !req.session.tax_letter && !req.session.annot && !page){
+	   page = 1
+	} 
+	var send_tax_obj = Object.values(C.taxon_lookup);
 	tcount = send_tax_obj.length  // total count of our filters
 	var show_filters = 0
 	var pgtitle = 'Taxon Table';
@@ -81,18 +85,52 @@ router.get('/tax_table', (req, res) => {
     send_tax_obj.sort(function (a, b) {
       return helpers.compareStrings_alpha(a.genus, b.genus);
     });
+   
+    if(page){
+        
+	
+	    var trows = send_tax_obj.length  //820
+        console.log('trows',trows)
+        var row_per_page = 200
+        var number_of_pages = Math.ceil(trows/row_per_page)
+    
+        console.log('number_of_pages',number_of_pages)
+    
+        var show_page = page
+        if(show_page === 1){
+            var send_list = send_tax_obj.slice(0,row_per_page)  // first 200
+        }else{
+            var send_list = send_tax_obj.slice(row_per_page*(show_page-1),row_per_page*show_page)  // second 200
+        }
+        var page_form = ' <small>OnPage: '+show_page.toString()+'  ['
+        for(var i=1;i<=number_of_pages;i++){
+            if(parseInt(page) === i){
+              page_form += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?page="+i.toString()+"'\"> "
+            }else{
+              page_form += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?page="+i.toString()+"'\"> "
+            }
+            
+        }
+        page_form += ']</small>'
+	}else{
+	    page_form = ''
+	    send_list = send_tax_obj
+	}
+	
+	
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		res: JSON.stringify(send_tax_obj),
-		count: Object.keys(send_tax_obj).length,
+		res: JSON.stringify(send_list),
+		count: Object.keys(send_list).length,
 		tcount: tcount,
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(C.tax_status_on) ,  // default
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
 		show_filters:show_filters,
 		search: '',
+		page_form:page_form,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -159,6 +197,7 @@ router.post('/tax_table', (req, res) => {
 		sitefltr:JSON.stringify(sitefilter_on),
 		show_filters:show_filters,
 		search: '',
+		page_form:'',
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -920,9 +959,9 @@ function find_images(rank,tax_name) {
 	var image_list = []
 	var ext = 'png'
 	// for photos NO Spaces = join w/ underscore
-	var tname = tax_name.replace(' ','_')
+	var tname = tax_name.replace(/ /g,'_')
 	if(rank=='species'){
-	   console.log('look image',tname)
+	   console.log('looking for species image: ',tname)
 	}  
 	var fname1_prefix = tname+'-1' // look for .jpg .jpeg png
 	var fname2_prefix = tname+'-2' // or '-2.jpeg'
