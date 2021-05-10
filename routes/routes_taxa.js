@@ -920,9 +920,9 @@ function find_images(rank,tax_name) {
 	var image_list = []
 	var ext = 'png'
 	// for photos NO Spaces = join w/ underscore
-	var tname = tax_name.replace(' ','_')
+	var tname = tax_name.replace(/ /g,'_')
 	if(rank=='species'){
-	   console.log('look image',tname)
+	   console.log('looking for species image: ',tname)
 	}  
 	var fname1_prefix = tname+'-1' // look for .jpg .jpeg png
 	var fname2_prefix = tname+'-2' // or '-2.jpeg'
