@@ -147,7 +147,7 @@
 		<td>
 	  <% } %>
 	   <div>
-	    <img id='img' src='/images/life-images/species/<%= images[n].name %>' height='100' alt=''  \><br>
+	    <img id='img' src='/images/life-images/species/<%= images[n].name %>' width='200' alt=''  \><br>
 	    <small><%= images[n].text %></small>
 	   </div>
 	 <% if(n==0 || n===2){ %>
@@ -163,11 +163,6 @@
 
 </div> <!--    End Outer -->
 
-<div id='lineage'>
-	  <% if(lineage){ %>
-	    <span>Lineage:</span> <span id='lineage2' ><small><%- lineage %></small></span>
-	  <% } %>
-</div>
 
 
 <table id='description_tbl' border='0'>

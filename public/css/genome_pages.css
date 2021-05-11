@@ -17,7 +17,7 @@
   font-size:small;
   color: #303030;
   overflow: hidden;
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis; */
   white-space: nowrap;
 }
 #gnom-table .badge{
@@ -112,15 +112,23 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .center {
     text-align:center;
 }
-#genome-search input[type="button"] {
-  line-height: 14px;
+
+#row1 {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+  padding:20px 0;
 }
-#genome-search input[type="submit"] {
-  line-height: 14px;
+#left_column1 {
+  margin:20px 0 0 0;
+  padding-top:10px;
 }
-#genome-search input[type="text"] {
-  line-height: 14px;
+/* Clear floats after the columns */
+#right_column1 {
+  /* float: right; */
 }
+
 #phylum-filter{
   padding-left:3px;
   float:right;
@@ -139,6 +147,18 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 #count_info{
    font-weight:bold;
    
-   padding:15px;
+   
 }
-#gen_options optgroup { font-size: 10px; }
+#gen_options{
+    display:none;
+    font-size:12px;
+    border-top:1px solid orange;
+    border-bottom:1px solid orange;
+    padding:3px 3px 3px 0;
+}
+#gen_options optgroup { 
+    font-size: 10px; 
+}
+
+
+

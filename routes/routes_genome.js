@@ -17,9 +17,15 @@ router.get('/genome_table', (req, res) => {
 	var seqid_list;
 	let myurl = url.parse(req.url, true);
 	req.session.gen_letter = myurl.query.k
+	var page = myurl.query.page
 	//console.log('myurl.query',myurl.query)
+	
 	var otid = myurl.query.otid
 	var phylum = myurl.query.phylum
+	console.log('otid',otid,'phylum',phylum,'req.session.gen_letter',req.session.gen_letter,'page',page)
+	if(!otid && !phylum && !req.session.gen_letter && !page){
+	   page = 1
+	} 
 	var show_filters = 0
 	var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
 	var phyla = phyla_obj.map(function(el){ return el.taxon; })
@@ -64,27 +70,57 @@ router.get('/genome_table', (req, res) => {
 			count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span>'
 		}
 	}
-	
-	// Phyla Philter
-	
-	
 	gid_obj_list.map(function(el){
 	      if(el.tlength){ el.tlength = helpers.format_long_numbers(el.tlength); }
 	})
+	// Pagination
+	console.log('page',page)
+	if(page){
+        
+	
+	    var trows = gid_obj_list.length  //2087
+        var row_per_page = 200
+        var number_of_pages = Math.ceil(trows/row_per_page)
+    
+        console.log('number_of_pages',number_of_pages)
+    
+        var show_page = page
+        if(show_page === 1){
+            var send_list = gid_obj_list.slice(0,row_per_page)  // first 200
+        }else{
+            var send_list = gid_obj_list.slice(row_per_page*(show_page-1),row_per_page*show_page)  // second 200
+        }
+        var html = ' <small>On page: '+show_page.toString()+' of '+number_of_pages.toString()+'  ['
+        for(var i=1;i<=number_of_pages;i++){
+            if(parseInt(page) === i){
+              html += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='genome_table?page="+i.toString()+"'\"> "
+            }else{
+              html += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='genome_table?page="+i.toString()+"'\"> "
+            }
+            
+        }
+        count_text += " (Showing: "+send_list.length.toString()+')'+html+']</small>'
+	}else{
+        send_list = gid_obj_list
+        count_text += " (Showing: "+send_list.length.toString()+')'	
+    }	
 	// get each secid from C.genome_lookup
 	//console.log('seqid_list',gid_obj_list[0])
 	
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		seqid_list: JSON.stringify(gid_obj_list),
+		
+		//seqid_list: JSON.stringify(gid_obj_list),
+		seqid_list: JSON.stringify(send_list),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		letter: req.session.gen_letter,
 		otid: otid,
 		phylum:phylum,
 		phyla: JSON.stringify(phyla),
 		show_filters:show_filters,
-		count_text:count_text
+		count_text:count_text,
+		page:show_page,
 		
 	});
 })
@@ -232,6 +268,7 @@ router.get('/annotation/:gid/:type', (req, res) => {
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		gid: gid,
+		type: annot_type.toUpperCase()
     
     })
 

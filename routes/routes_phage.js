@@ -11,7 +11,7 @@ const queries = require(app_root + '/routes/queries')
 router.get('/', (req, res) => {
   console.log('in phage')
   helpers.accesslog(req, res)
-  fs.readFile(path.join(CFG.PATH_TO_DATA, C.phage_file), 'utf8', (err, data) => {
+  fs.readFile(path.join(CFG.PATH_TO_DATA, C.phage_list_fn), 'utf8', (err, data) => {
     	if (err)
       		console.log(err)
     	else{

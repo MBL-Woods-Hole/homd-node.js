@@ -90,14 +90,15 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 
 
  
+/* 
 #taxa-search {
    width:80%;
    margin-left:80px;
    padding-left:50px;
-   /* border: 1px solid red; */
-   /* margin-top:10px; */
+  
    font-size:small;
  }
+ */
 #navigate-alpha {
    width:120%;
    /* border: 1px solid red; */
@@ -107,22 +108,83 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
    color:#006699;
 }
 
+#taxa-filter{
+   border:1px solid black;
+}
+
+/* Create three unequal columns that floats next to each other */
+#row1 {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+  padding:20px 0 0 0;
+}
+#left_column1 {
+  margin:10px 0 0 0;
+}
+
+
+
+/* Clear floats after the columns */
+#right_column1 {
+  /* float: right; */
+}
+
+
+#row2 {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+  
+}
+#left_column2 {
+  margin:10px 0 0 0;
+}
+
+
+
+/* Clear floats after the columns */
+#right_column2 {
+  /* float: right; */
+}
+
+
+
+
+
+
+/* 
+#taxa-header-table2{
+    table-layout:fixed;
+    width:100%
+}
+#taxa-header-table2 td #taxa-count{
+  width:50%
+}
+#taxa-header-table2 td #taxa-page{
+  width:50%
+}
+#taxa-header-table2 td #taxa-search{
+ width:150%
+}
 #taxa-count {
    
-   width:95%;
+  
    border:1px solid red;
-   margin-right:20px;
-   padding:2px;
+   margin-right:0px;
+   padding:0 2px;
    font-size:small;
  }
- #taxa-sort {
-    position:relative;
+ #taxa-page {
+    
     border:1px solid black;
-    padding:10px 3px;
-    margin:20px 0 0 40px;
-    font-size:small;
-    font-weight:bold;
-    width:95%;
+    width:50%;
+    padding:0 10px;
+    margin:0;
+    
+   
  }
  
 
@@ -136,16 +198,23 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 	color: darkgrey;
 
 }   
-#taxon-filter input[type="button"]{
+#taxa-filter input[type="button"]{
   line-height: 14px;
 }
-#taxon-search select{
-   font-size:12px;
+#taxa-search{
+  padding:0 5px;
+  margin-left:0px;
+  
+  width:100%;
+}
+#taxa-search select{
+   font-size:11px;
 }
 
-#taxon-search input[type="text"]{
+#taxa-search input[type="text"]{
    padding: 1px 1px; line-height: 8px;
 }
-#taxon-search input[type="submit"]{
-   line-height: 14px;
+#taxa-search input[type="submit"]{
+   line-height: 10px;
 }
+ */
