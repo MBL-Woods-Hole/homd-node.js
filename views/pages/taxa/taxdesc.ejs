@@ -70,6 +70,11 @@
 #lineage2{
    color:red;
 }
+.data{
+   width:300px;
+   height:200px;
+   overflow:auto;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -102,38 +107,12 @@
     <div class="float-left">
       Description:
           <div class=" description">
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-          The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with
-		   The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-          The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with
-		   The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-          The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with
-		   The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-          The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with a class of float is floated left and so the text in the div which comes after it wraps around the float.
-		  The item with
+		  <%- data2.general %>
+	  <br><%- data2.disease %>
+	  <br><%- data2.prev %>
+	  <br><%- data2.culta %>
+	  <br><%- data2.pheno %>
+	  
       </div></div>
      
      
@@ -147,7 +126,7 @@
 		<td>
 	  <% } %>
 	   <div>
-	    <img id='img' src='/images/life-images/species/<%= images[n].name %>' width='200' alt=''  \><br>
+	    <img id='img' src='/images/life-images/species/<%= images[n].name %>' width='180' alt=''  \><br>
 	    <small><%= images[n].text %></small>
 	   </div>
 	 <% if(n==0 || n===2){ %>
@@ -184,26 +163,27 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>NCBI Taxonomy ID:</td>
-	  <td><%= data1.ncbi_taxid %> [<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank'>Link to NCBI</a>]</td>
+	  <td><small><%= data1.ncbi_taxid %> [<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank'>Link to NCBI</a>]</small></td>
 	</tr>
 	<tr>
 	  <% if(data1.type_strains.length === 0){ %>
 		<td class='tbl-title'>Reference Strain:</td>
-		<td>None, not yet cultivated
+		<td><small>None, not yet cultivated
 	  <% }else{ %>
 		<td class='tbl-title'>Strain Information:</td>
-		<td>[<%- data1.type_strains.join('], [') %>]
+		<td><small>[<%- data1.type_strains.join('], [') %>]
 		<br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank'>Global Catalogue of Microorganisms</a>
 	  <% } %>
-        </td>
+        </small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Former Names or Synonyms:</td>
-	  <td><i><%- data1.synonyms.join('<br>') %></i></td>
+	  <td><small><i><%- data1.synonyms.join('<br>') %></i></small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Phenotypic Characteristics:</td>
-	  <td></td>
+	  <td class='data'><small><%- data2.pheno %>
+	  </small></td>
 	</tr>
 	</table>
 
@@ -212,35 +192,35 @@
 	<table id='right-tbl'>
 	<tr>
 	  <td class='tbl-title'>Genotypic Description:</td>
-	  <td>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></td>
+	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Pangenome:</td>
-	  <td>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></td>
+	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Phylogenetic Trees:</td>
-	  <td>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></td>
+	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Microbial Ecology:</td>
-	  <td>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></td>
+	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Phage known to infect this species:</td>
-	  <td>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></td>
+	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Proteomics:</td>
-	  <td>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></td>
+	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Tools:</td>
-	  <td>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></td>
+	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>PubMed Search:</td>
-	  <td>[<a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank'>PubMed Link</a>]</td>
+	  <td><small>[<a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank'>PubMed Link</a>]</small></td>
 	</tr>
 	</table>
 

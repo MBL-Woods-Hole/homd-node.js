@@ -708,9 +708,13 @@ router.get('/life', (req, res) => {
 	//console.log('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
 	//console.log('regex2',lineage_list[0].split(';').pop())
 	//console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
+	var title = 'Life'
+	if(rank)
+	    title = helpers.capitalizeFirst(rank)
+	
 	lineage_string = lineage_list[0].split(';').join('; ')
 	res.render('pages/taxa/life', {
-			title: 'HOMD :: Species', 
+			title: 'HOMD :: '+title, 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			data: {},
 			tax_name: tax_name,
