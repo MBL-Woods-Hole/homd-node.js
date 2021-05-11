@@ -90,14 +90,15 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 
 
  
+/* 
 #taxa-search {
    width:80%;
    margin-left:80px;
    padding-left:50px;
-   /* border: 1px solid red; */
-   /* margin-top:10px; */
+  
    font-size:small;
  }
+ */
 #navigate-alpha {
    width:120%;
    /* border: 1px solid red; */
@@ -107,28 +108,46 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
    color:#006699;
 }
 
-
+#taxa-filter{
+   border:1px solid black;
+}
 
 /* Create three unequal columns that floats next to each other */
-.column {
-  float: left;
-  padding: 10px;
-  
+#row1 {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+  padding:20px 0 0 0;
+}
+#left_column1 {
+  margin:10px 0 0 0;
 }
 
-.left, .right {
-  width: 25%;
-}
 
-.middle {
-  width: 50%;
-}
 
 /* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+#right_column1 {
+  /* float: right; */
+}
+
+
+#row2 {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+  
+}
+#left_column2 {
+  margin:10px 0 0 0;
+}
+
+
+
+/* Clear floats after the columns */
+#right_column2 {
+  /* float: right; */
 }
 
 

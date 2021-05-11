@@ -9,27 +9,34 @@
 
 
 
-<div class="row">
-  <div class="column left">
+<div id="row2">
+  
+  
+  
+  
+  <div id="column_left2">
       <div id='taxa-count'>
-         <span id='total-count'><strong>Total:</strong> <span><%= tcount %> Taxa</span></span>
+         <span id='total-count'><strong>Total:</strong> <span><%= tcount %> </span></span>
      
-         (<span id='showing-count'><strong>Showing</strong> <span><%= count %></span></span>)
+         (<span id='showing-count'><strong>Showing <span><%= count %></strong></span> Taxa</span>
+       
+       <%- page_form %>
        </div>
+  
+            
   </div>
-  <div class="column middle">
-      <div id='taxa-page' >
-              <%- page_form %>
-        </div>
-
-  </div>
-  <div class="column right">
+  
+  
+  
+  
+  
+  <div id="column_right2">
       <div id='taxa-search' >
-       <form id='' class='form-inline' name='' method='POST' action=''>
+       <form class='form-inline' name='' method='POST' action=''>
             <fieldset>
             Search This table:
             <div class="">
-              <input type='text' class="" name='tax_srch' maxlength='18' size='20'>
+              <input type='text'  name='tax_srch' maxlength='18' size='20'>
               <select id='' class="" name='field' >
                 <option value="all">All Fields</option>
                 <option value="taxid">Taxon ID</option>
@@ -41,21 +48,23 @@
               </select>
         
               &nbsp;Matching:
-              <select id='' class="" name='match'>
+              <select  name='match'>
                 <option value="all">ALL words</option>
                 <option value="any">ANY words</option>
                 <option value="exact">Exact phrase</option>
               </select>
-              <select id='' class="" name='sub'>
+              <select  name='sub'>
                 <option value="partial">Partial field</option>
                 <option value="whole">Whole field</option>
               </select>
-              <input class="" type='submit' value=' Go '>
+              <input  type='submit' value=' Go '>
             </div>
             </fieldset>
          </form>
       </div>
   </div>
+  
+ 
 </div>
 
 

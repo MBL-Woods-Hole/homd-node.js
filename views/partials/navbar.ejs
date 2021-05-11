@@ -83,10 +83,10 @@
 		</ul>
 	</li>		
 
-	<form id='menu-search' method='POST' action='/homd/site_search'>
-	  <input type="text" placeholder="Search.."  name='search_text' value='' maxlength='18' size='20'  />
-	  <input type="image" src='/images/search.png' alt="Submit" class="searchButton" height='20' />
-    </form>
+	<span id='menu-search' >
+	  <input type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
+	  <input type="image" src='/images/search.png'  class="searchButton" height='20' onclick='search()' />
+    </span>
 		<!-- <li><div title="Simplified page name for referencing purpose"><font color="#66FFFF"></font></div></li>	 -->
 	
 </ul>

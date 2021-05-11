@@ -28,3 +28,24 @@ function mainmenu(){
 //         }
 //     }
 // }
+
+function search(){
+	var form = document.getElementById('menu-search')
+	searchText = document.getElementById('search_text').value
+	if(!searchText)
+		return
+	var f = document.createElement("form");
+	f.setAttribute('method',"post");
+	f.setAttribute('action',"/homd/site_search"); 
+	
+	//create input element
+	var i = document.createElement("input");
+	i.type = "text";
+	i.name = "intext";
+	i.id = "intext";
+	i.value = searchText
+	// add all elements to the form
+	f.appendChild(i);
+	document.getElementsByTagName('body')[0].appendChild(f); //pure javascript
+	f.submit()
+}

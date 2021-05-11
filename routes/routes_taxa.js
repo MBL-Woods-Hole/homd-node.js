@@ -26,6 +26,7 @@ router.get('/tax_table', (req, res) => {
 	tcount = send_tax_obj.length  // total count of our filters
 	var show_filters = 0
 	var pgtitle = 'Taxon Table';
+	var count_text = ''
 	if(req.session.annot){
 	  	send_tax_obj = send_tax_obj.filter(item => item.genomes.length >0)
 	  	show_filters = 0
@@ -102,7 +103,7 @@ router.get('/tax_table', (req, res) => {
         }else{
             var send_list = send_tax_obj.slice(row_per_page*(show_page-1),row_per_page*show_page)  // second 200
         }
-        var page_form = ' <small>OnPage: '+show_page.toString()+'  ['
+        var page_form = ' <small>On Page: '+show_page.toString()+' of '+number_of_pages.toString()+')<br>Change Page: ['
         for(var i=1;i<=number_of_pages;i++){
             if(parseInt(page) === i){
               page_form += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?page="+i.toString()+"'\"> "
@@ -124,7 +125,8 @@ router.get('/tax_table', (req, res) => {
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		res: JSON.stringify(send_list),
 		count: Object.keys(send_list).length,
-		tcount: tcount,
+		//tcount: tcount,
+		count_text:count_text,
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(C.tax_status_on) ,  // default
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
@@ -197,7 +199,7 @@ router.post('/tax_table', (req, res) => {
 		sitefltr:JSON.stringify(sitefilter_on),
 		show_filters:show_filters,
 		search: '',
-		page_form:'',
+		page_form:')',
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });

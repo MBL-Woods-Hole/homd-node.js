@@ -90,7 +90,7 @@ router.get('/genome_table', (req, res) => {
         }else{
             var send_list = gid_obj_list.slice(row_per_page*(show_page-1),row_per_page*show_page)  // second 200
         }
-        var html = ' <small>OnPage: '+show_page.toString()+'  ['
+        var html = ' <small>On page: '+show_page.toString()+' of '+number_of_pages.toString()+'  ['
         for(var i=1;i<=number_of_pages;i++){
             if(parseInt(page) === i){
               html += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='genome_table?page="+i.toString()+"'\"> "
