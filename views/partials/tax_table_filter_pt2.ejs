@@ -1,10 +1,3 @@
-<% var fstyle = 'none'; %>
-<% if(show_filters){ %>
-<%     fstyle = 'inline'; %> 
-<% }else{ %>   <!-- end if -->
-<% 		fstyle = 'none'; %>
-      <div id='showing-count'>Showing: <%= count %> Taxa</div>
-<% } %>
 
 
 
@@ -12,18 +5,15 @@
 <div id="row2">
   
   
-  
-  
   <div id="column_left2">
       <div id='taxa-count'>
          <span id='total-count'><strong>Total:</strong> <span><%= tcount %> </span></span>
      
-         (<span id='showing-count'><strong>Showing <span><%= count %></strong></span> Taxa</span>
+         (<span id='showing-count'><strong>Showing <span><%= count %></span></strong> Taxa</span>)
        
-       <%- page_form %>
+         <%- page_form %>
        </div>
-  
-            
+ 
   </div>
   
   
