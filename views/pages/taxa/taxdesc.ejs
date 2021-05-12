@@ -29,13 +29,12 @@
 }
 .description{
   font-size:11px;
-  padding:4px;
-  max-height:160px;
+  padding:0 4px;
+  height:200px;
   overflow:auto;
 }
 #description_tbl{
   width:100%;
-  
   font-size:small;
 }
 #description_tbl td{
@@ -58,18 +57,12 @@
 #images{
    float:right;
    margin-top:10px;
+   width:45%;
+   border:1px solid green;
 }#images div{
-   padding:5px;
+   padding:0 5px;
 }
-#lineage{
-  padding:10px 10px 10px 10px;
-  
-  background: palegoldenrod;
-  border:1px solid brown;
-}
-#lineage2{
-   color:red;
-}
+
 .data{
    width:300px;
    height:200px;
@@ -118,24 +111,37 @@
      
       
 <div id='images'>
-  <table border='0'>
+  <% if(images.length === 0 ) { %>
+    <div style='margin-left:100px;'>
+		<small>no images available</small>
+	</div>
+  
+  <% }else if(images.length === 1 ) { %>
+      <div style='margin-left:100px;'>
+		<img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt=''  \><br>
+		<small><%= images[0].text %></small>
+	  </div>
+  
+  <% }else{ %>
+    <table border='0'>
 	<% for(n in images){ %>
-	  <% if(n==0 || n===2){ %>
+	  <% if(n==0 || n==2){ %>
 		<tr><td>
 	  <% }else{ %>
 		<td>
 	  <% } %>
 	   <div>
-	    <img id='img' src='/images/life-images/species/<%= images[n].name %>' width='180' alt=''  \><br>
-	    <small><%= images[n].text %></small>
+		<img id='img' src='/images/life-images/<%= images[n].name %>' width='200' alt=''  \><br>
+		<small><%= images[n].text %></small>
 	   </div>
-	 <% if(n==0 || n===2){ %>
+	 <% if(n==0 || n==2){ %>
 		</td>
 	  <% }else{ %>
 		</td></tr>
 	  <% } %>
 	<% } %>
-  </table>
+    </table>
+  <% } %>
 </div>
 
 
@@ -144,7 +150,7 @@
 
 
 
-<table id='description_tbl' border='0'>
+<table id='description_tbl' border='1'>
 <tr><td>
 	<table id='left-tbl'>
 	<tr>

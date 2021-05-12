@@ -23,9 +23,7 @@ router.get('/genome_table', (req, res) => {
 	var otid = myurl.query.otid
 	var phylum = myurl.query.phylum
 	console.log('otid',otid,'phylum',phylum,'req.session.gen_letter',req.session.gen_letter,'page',page)
-	if(!otid && !phylum && !req.session.gen_letter && !page){
-	   page = 1
-	} 
+	
 	var show_filters = 0
 	var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
 	var phyla = phyla_obj.map(function(el){ return el.taxon; })
@@ -44,7 +42,8 @@ router.get('/genome_table', (req, res) => {
 	  gid_obj_list = gid_obj_list.filter(item => {   // filter genome obj list for inclusion in otid list
 	     	return otid_list.indexOf(item.otid) !== -1
 	  })
-	  count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span> ('+otid_list.length+' taxons)'
+	  count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span> <br><small>(Representing '+otid_list.length+' HOMD taxons)</small>'
+	
 	}else if(otid) {  // if otid 
 		// single gid
 		seqid_list = C.taxon_lookup[otid].genomes
@@ -54,7 +53,7 @@ router.get('/genome_table', (req, res) => {
 		    gid_obj_list.push(C.genome_lookup[seqid_list[n]])
 		}
 		show_filters = 0
-		count_text = 'No. of genomes for TAXON-ID::HMT-'+otid+': <span class="red">'+gid_obj_list.length.toString()+'</span>'
+		count_text = 'No. of genomes for Taxon-ID::HMT-'+otid+': <span class="red">'+gid_obj_list.length.toString()+'</span><br>'
 	  //console.log('gol',gid_obj_list)
 	}else{
 		// all gids
@@ -64,12 +63,14 @@ router.get('/genome_table', (req, res) => {
 		if(req.session.gen_letter){
 	   	// COOL....
 	   		gid_obj_list = gid_obj_list1.filter(item => item.genus.charAt(0) === req.session.gen_letter)
-			count_text = 'No. of genomes starting with: '+req.session.gen_letter+': <span class="red">'+gid_obj_list.length.toString()+'</span>'
+			count_text = 'No. of genomes starting with: '+req.session.gen_letter+': <span class="red">'+gid_obj_list.length.toString()+'</span><br>'
 		}else{
 			gid_obj_list = gid_obj_list1
 			count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span>'
 		}
+		
 	}
+	
 	gid_obj_list.map(function(el){
 	      if(el.tlength){ el.tlength = helpers.format_long_numbers(el.tlength); }
 	})
@@ -90,19 +91,22 @@ router.get('/genome_table', (req, res) => {
         }else{
             var send_list = gid_obj_list.slice(row_per_page*(show_page-1),row_per_page*show_page)  // second 200
         }
-        var html = ' <small>On page: '+show_page.toString()+' of '+number_of_pages.toString()+'  ['
+        var page_text = '<small>On page: '+show_page.toString()+' of '+number_of_pages.toString()+'::  ['
         for(var i=1;i<=number_of_pages;i++){
             if(parseInt(page) === i){
-              html += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='genome_table?page="+i.toString()+"'\"> "
+              page_text += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='genome_table?page="+i.toString()+"'\"> "
             }else{
-              html += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='genome_table?page="+i.toString()+"'\"> "
+              page_text += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='genome_table?page="+i.toString()+"'\"> "
             }
             
         }
-        count_text += " (Showing: "+send_list.length.toString()+')'+html+']</small>'
+        page_text += ']'
+        count_text += " <small>(Showing: "+send_list.length.toString()+')</small><br>'
 	}else{
         send_list = gid_obj_list
-        count_text += " (Showing: "+send_list.length.toString()+')'	
+        
+        count_text += " <small>(Showing: "+send_list.length.toString()+')</small>'
+        var page_text = ''	
     }	
 	// get each secid from C.genome_lookup
 	//console.log('seqid_list',gid_obj_list[0])
@@ -120,6 +124,7 @@ router.get('/genome_table', (req, res) => {
 		phyla: JSON.stringify(phyla),
 		show_filters:show_filters,
 		count_text:count_text,
+		page_text:page_text,
 		page:show_page,
 		
 	});

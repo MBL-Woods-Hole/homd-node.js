@@ -19,11 +19,11 @@ router.get('/tax_table', (req, res) => {
 	req.session.tax_letter = myurl.query.k
 	req.session.annot = myurl.query.annot
 	var page = myurl.query.page
-	if( !req.session.tax_letter && !req.session.annot && !page){
-	   page = 1
-	} 
+	// if( !req.session.tax_letter && !req.session.annot && !page){
+// 	   page = 1
+// 	} 
 	var send_tax_obj = Object.values(C.taxon_lookup);
-	tcount = send_tax_obj.length  // total count of our filters
+	var tcount = send_tax_obj.length  // total count of our filters
 	var show_filters = 0
 	var pgtitle = 'Taxon Table';
 	var count_text = ''
@@ -88,8 +88,6 @@ router.get('/tax_table', (req, res) => {
     });
    
     if(page){
-        
-	
 	    var trows = send_tax_obj.length  //820
         console.log('trows',trows)
         var row_per_page = 200
@@ -103,7 +101,7 @@ router.get('/tax_table', (req, res) => {
         }else{
             var send_list = send_tax_obj.slice(row_per_page*(show_page-1),row_per_page*show_page)  // second 200
         }
-        var page_form = ' <small>On Page: '+show_page.toString()+' of '+number_of_pages.toString()+')<br>Change Page: ['
+        var page_form = '<br><small>On Page: '+show_page.toString()+' of '+number_of_pages.toString()+':: Change Page: ['
         for(var i=1;i<=number_of_pages;i++){
             if(parseInt(page) === i){
               page_form += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?page="+i.toString()+"'\"> "
@@ -118,15 +116,15 @@ router.get('/tax_table', (req, res) => {
 	    send_list = send_tax_obj
 	}
 	
-	
+	//var count_text = get_count_text_n_page_form(page)
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		res: JSON.stringify(send_list),
 		count: Object.keys(send_list).length,
-		//tcount: tcount,
-		count_text:count_text,
+		tcount: tcount,
+		//count_text:count_text,
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(C.tax_status_on) ,  // default
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
@@ -136,6 +134,7 @@ router.get('/tax_table', (req, res) => {
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
+
 router.post('/tax_table', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('in taxtable -post')
@@ -199,7 +198,7 @@ router.post('/tax_table', (req, res) => {
 		sitefltr:JSON.stringify(sitefilter_on),
 		show_filters:show_filters,
 		search: '',
-		page_form:')',
+		page_form:'',
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -442,7 +441,7 @@ router.get('/tax_description', (req, res) => {
 	// get_genus photos
 	node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
 	var lineage_list = make_lineage(node)  // [str obj]
-	var image_array = find_images('species',data3.species)
+	var image_array = find_images('species',otid,data3.species)
 	//console.log('genus',data3.genus)
 	//console.log('imgs',image_array)
 	//console.log('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
@@ -628,7 +627,7 @@ router.get('/life', (req, res) => {
 	}
 	var image_array =[]
 	if(rank)
-	   image_array = find_images(rank,tax_name)
+	   image_array = find_images(rank,'',tax_name)
 	
 	let taxa_list =[]
 	let next_rank,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
@@ -960,21 +959,28 @@ function create_table(source, type) {
     return txt
 }        
  //
-function find_images(rank,tax_name) {
+function find_images(rank, otid, tax_name) {
 
 	var image_list = []
 	var ext = 'png'
 	// for photos NO Spaces = join w/ underscore
-	var tname = tax_name.replace(/ /g,'_')
-	if(rank=='species'){
-	   console.log('looking for species image: ',tname+'(1-4).png')
-	}  
-	var fname1_prefix = tname+'-1' // look for .jpg .jpeg png
-	var fname2_prefix = tname+'-2' // or '-2.jpeg'
-	var fname3_prefix = tname+'-3' // or '-3.jpeg'
-	var fname4_prefix = tname+'-4' // or '-3.jpeg'
+	var tname,fname1_prefix,fname2_prefix,fname3_prefix,fname4_prefix
+	if(otid){
+	    console.log('looking for otid image: HMT'+otid+'(1-4).png')
+	    fname1_prefix = 'HMT/HMT'+otid+'-1' // look for .jpg .jpeg png
+		fname2_prefix = 'HMT/HMT'+otid+'-2' // or '-2.jpeg'
+		fname3_prefix = 'HMT/HMT'+otid+'-3' // or '-3.jpeg'
+		fname4_prefix = 'HMT/HMT'+otid+'-4' // or '-3.jpeg'
+	}else{  // rank and not otid
+	    tname = tax_name.replace(/ /g,'_')  // mostly for species 
+	    fname1_prefix = rank+'/'+tname+'-1' // look for .jpg .jpeg png
+	    fname2_prefix = rank+'/'+tname+'-2' // or '-2.jpeg'
+	    fname3_prefix = rank+'/'+tname+'-3' // or '-3.jpeg'
+	    fname4_prefix = rank+'/'+tname+'-4' // or '-3.jpeg'
+	} 
+ 
 	try {
-	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))) {
+	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname1_prefix+'.'+ext))) {
 		//console.log('adding1',fname1_prefix)
 		image_list.push({"name":fname1_prefix+'.'+ext,"text":"text of photo-1"})
 	  
@@ -982,21 +988,21 @@ function find_images(rank,tax_name) {
 	  	//console.log('no find1',path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))
 	  }
 	  
-	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,rank,fname2_prefix+'.'+ext))) {
+	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname2_prefix+'.'+ext))) {
 		//console.log('adding2',fname2_prefix)
 		image_list.push({"name":fname2_prefix+'.'+ext,"text":"text of photo-2"})
 	  }else{
 		  //console.log('no find2',path.join(CFG.PATH_TO_IMAGES,rank,fname2_prefix))
 	  }
 	 
-	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,rank,fname3_prefix+'.'+ext))) {
+	  if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname3_prefix+'.'+ext))) {
 		//console.log('adding',fname3_prefix+'.'+ext)
 		image_list.push({"name":fname3_prefix+'.'+ext,"text":"text of photo-3"})
 	  }else{
 		  //console.log('no find3',path.join(CFG.PATH_TO_IMAGES,rank,fname3_prefix))
 	  }
 	  
-	 if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,rank,fname4_prefix+'.'+ext))) {
+	 if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname4_prefix+'.'+ext))) {
 		//console.log('adding',fname4_prefix+'.'+ext)
 		image_list.push({"name":fname4_prefix+'.'+ext,"text":"text of photo-4"})
 	  }else{
