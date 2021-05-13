@@ -21,8 +21,10 @@ p {
 .title{
    width:100%;
    padding:8px;
+   color:white;
    background:steelblue;
    font-weight:bold;
+   font-size:20px;
    text-align:center;
 }
 .page-content {

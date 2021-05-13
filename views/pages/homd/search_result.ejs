@@ -16,12 +16,13 @@
 			 <h4 class='title text-info'>Search Result: [<small><%= search_text %></small>]</h4>
 <!-- 'HMT-'+("000" + otid).slice(-3);	 -->	
 		<% for(n in otids){ %>
-		   <% otid = 'HMT-'+("000" + otids[n]).slice(-3); %>
-		   <br><%= otid %>
+		   <% otid = otids[n] %>
+		   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+		   <br><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a>
 		<% } %>
 	<% for(n in gids){ %>
-		   
-		   <br><%= gids[n] %>
+		   <% gid = gids[n] %>
+		   <br><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a>
 		<% } %>
     </div> <!-- end: page-content -->
     
