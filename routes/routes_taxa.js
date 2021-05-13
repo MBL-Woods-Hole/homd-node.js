@@ -23,11 +23,17 @@ router.get('/tax_table', (req, res) => {
 // 	   page = 1
 // 	} 
 	var send_tax_obj = Object.values(C.taxon_lookup);
+	console.log('C.taxon_lookup[9]',C.taxon_lookup[9])
+	
+	// FIX THIS IF SELECT DROPPED OR NONORAL
+	send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
 	var tcount = send_tax_obj.length  // total count of our filters
+	
 	var show_filters = 0
 	var pgtitle = 'Taxon Table';
 	var count_text = ''
 	if(req.session.annot){
+	  	// grab only the taxa that have genomes
 	  	send_tax_obj = send_tax_obj.filter(item => item.genomes.length >0)
 	  	show_filters = 0
 	  	pgtitle = 'Human Microbial Taxa with Annotated Genomes'
@@ -138,7 +144,7 @@ router.get('/tax_table', (req, res) => {
 router.post('/tax_table', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('in taxtable -post')
-	tcount = C.taxon_lookup.length
+	
 	//helpers.show_session(req)
 	console.log(req.body)
 	//plus valid
@@ -161,12 +167,13 @@ router.post('/tax_table', (req, res) => {
 	console.log('sitefilter_on',sitefilter_on)
 	// letterfilter
 	send_tax_obj0 = Object.values(C.taxon_lookup);
-	tcount = send_tax_obj0.length
+	send_tax_obj = send_tax_obj0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+	var tcount = send_tax_obj.length
 	if(req.session.tax_letter){
 	   // COOL....
-	   send_tax_obj1 = send_tax_obj0.filter(item => item.genus.charAt(0) === req.session.tax_letter)
+	   send_tax_obj1 = send_tax_obj.filter(item => item.genus.charAt(0) === req.session.tax_letter)
 	}else{
-		send_tax_obj1 = send_tax_obj0
+		send_tax_obj1 = send_tax_obj
 	}
 	
 	// error if site is empty list
@@ -183,7 +190,9 @@ router.post('/tax_table', (req, res) => {
 	
 	
 	send_tax_obj3 = send_tax_obj2.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) !== -1 )    
-	
+	send_tax_obj3.sort(function (a, b) {
+      return helpers.compareStrings_alpha(a.genus, b.genus);
+    });
 	//console.log('send_tax_objC',send_tax_obj)
 	// use session for taxletter
 	res.render('pages/taxa/taxtable', {
@@ -206,32 +215,18 @@ router.get('/tax_hierarchy', (req, res) => {
 	//the json file was created from a csv of vamps taxonomy
 	// using the script: taxonomy_csv2json.py in ../homd_data
 	helpers.accesslog(req, res)
-	// use this only if use the version 5 dhtmlx tree	( w/dynamic loading)
-	// using file public/data/all_silva_taxonomy.json
-	//C.dhtmlxTreeData
-	//console.log(C.dhtmlxTreeData)
+	
 	res.render('pages/taxa/taxhierarchy', {
 			title: 'HOMD :: Taxon Hierarchy', 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			data: {},
 			dhtmlx: JSON.stringify(C.dhtmlxTreeData),
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		});
-		
-	
+	});
 });
 router.get('/tax_level', (req, res) => {
 	helpers.accesslog(req, res)
-	var oral;
-	// if(req.session.counts_file === C.nonoral_taxcounts_fn){
-// 		req.session.counts_file = C.oral_taxcounts_fn 
-// 		req.session.tax_obj = C.oral_homd_taxonomy
-// 		oral=0
-// 	}else{
-// 		req.session.counts_file = C.nonoral_taxcounts_fn  // default
-// 		req.session.tax_obj = C.nonoral_homd_taxonomy
-// 		oral=1
-// 	}
+	//var oral;
     req.session.counts_file = C.taxcounts_fn  // default
 	req.session.tax_obj = C.homd_taxonomy
     console.log(req.session.counts_file)
@@ -240,7 +235,7 @@ router.get('/tax_level', (req, res) => {
 		title: 'HOMD :: Taxon Level', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		level: 'domain',
-		oral: oral,
+		//oral: oral,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });

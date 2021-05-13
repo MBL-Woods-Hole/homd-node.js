@@ -3,11 +3,11 @@
 const winston = require('winston');
 const config = require('./config/config');
 const taxdbconn = require('./config/database').taxon_pool;
-const gendbconn = require('./config/database').genome_pool;
+//const gendbconn = require('./config/database').genome_pool;
 const path = require('path');
 // explicitly makes conn global
 global.TDBConn = taxdbconn;
-global.GDBConn = gendbconn;
+//global.GDBConn = gendbconn;
 global.app_root = path.resolve(__dirname);
 const C		= require('./public/constants');
 const fs = require('fs-extra');

@@ -110,7 +110,9 @@ router.get('/genome_table', (req, res) => {
     }	
 	// get each secid from C.genome_lookup
 	//console.log('seqid_list',gid_obj_list[0])
-	
+	send_list.sort(function (a, b) {
+      return helpers.compareStrings_alpha(a.genus, b.genus);
+    });
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -247,7 +249,7 @@ router.post('/get_16s_seq', (req, res) => {
 	// express deprecated req.param(name): Use req.params, req.body, or req.query
 	// See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
 	//FIXME There are 4 fields which do I query???
-	GDBConn.query(queries.get_16s_rRNA_sequence_query(gid), (err, rows) => {
+	TDBConn.query(queries.get_16s_rRNA_sequence_query(gid), (err, rows) => {
 		console.log(rows)
 		seqstr = rows[0]['16s_rRNA'].replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&amp;gt;/gi,'>').replace(/&amp;lt;/gi,'<')
 		
@@ -266,17 +268,36 @@ router.get('/annotation/:gid/:type', (req, res) => {
     let myurl = url.parse(req.url, true);
     var gid = req.params.gid
     var annot_type = req.params.type
-    
-    
-    res.render('pages/genome/annotation', {
-        title: 'HOMD :: Genome Annotation', 
-		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		gid: gid,
-		type: annot_type.toUpperCase()
-    
-    })
-
+    annoquery = "SELECT * FROM annotation."+annot_type+"_info WHERE seq_id ='"+gid+"'"
+    console.log(annoquery)
+    var info_data_obj = {}
+    TDBConn.query(annoquery, (err, rows) => {
+		if(err){
+		    console.log(err)
+		}else{
+		    console.log('rows',rows)
+		    if(rows.length == 0){
+		        
+		    }else{
+		    
+		      info_data_obj = rows[0]
+		      for(i in info_data_obj){
+		         // should be just one row
+		         console.log(i,info_data_obj[i])
+		      }
+		
+	        }
+			res.render('pages/genome/annotation', {
+				title: 'HOMD :: '+gid, 
+				config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+				gid: gid,
+				info_data: JSON.stringify(info_data_obj),
+				type: annot_type.toUpperCase()
+	
+			})
+	  }
+   })
 });
 
 router.get('/phylo_phlan_tree', (req, res) => {

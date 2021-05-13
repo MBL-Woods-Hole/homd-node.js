@@ -1,7 +1,8 @@
 <style>
 </style>
 <%- include('../../partials/header_html'); %>
-
+<% otids = JSON.parse(otid_list) %>
+<% gids = JSON.parse(gid_list) %>
 
 <body>
   		
@@ -12,9 +13,16 @@
 	
 	<div class='page-content'>
 		 					
-			 <center><h4 class='title text-info'>Search Result</h4></center>
-		
-	
+			 <h4 class='title text-info'>Search Result: [<small><%= search_text %></small>]</h4>
+<!-- 'HMT-'+("000" + otid).slice(-3);	 -->	
+		<% for(n in otids){ %>
+		   <% otid = 'HMT-'+("000" + otids[n]).slice(-3); %>
+		   <br><%= otid %>
+		<% } %>
+	<% for(n in gids){ %>
+		   
+		   <br><%= gids[n] %>
+		<% } %>
     </div> <!-- end: page-content -->
     
     <div id='footer'>

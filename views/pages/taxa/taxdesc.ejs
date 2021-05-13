@@ -18,10 +18,10 @@
 }
 .float-right{
    float:right;
-   border:1px solid red;
+   
    padding:5px;
    margin:5px;
-   width:30%
+   width:48%
 }
 .text {
    overflow:auto;
@@ -54,14 +54,7 @@
    margin:4px;
    border-top:2px dashed #336633;
 }
-#images{
-   float:right;
-   margin-top:10px;
-   width:45%;
-   border:1px solid green;
-}#images div{
-   padding:0 5px;
-}
+
 
 .data{
    width:300px;
@@ -93,9 +86,10 @@
 <div class='page-content'>
 	 
 	  
-<center><span id='taxon-desc'>Taxon Description: <i><%= data1.genus %> <%= data1.species %></i></span>	
+<center><div class='title'>
+<span id='taxon-desc'>Taxon Description: <i><%= data1.genus %> <%= data1.species %></i></span>	
 (HMT-TaxonID: <%= otid %>)
-</center>			
+</div></center>			
 <div class="outer">
     <div class="float-left">
       Description:
@@ -110,10 +104,10 @@
      
      
       
-<div id='images'>
+<div class='float-right'>
   <% if(images.length === 0 ) { %>
-    <div style='margin-left:100px;'>
-		<small>no images available</small>
+    <div>
+		<small>** no images available **</small>
 	</div>
   
   <% }else if(images.length === 1 ) { %>

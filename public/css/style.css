@@ -18,7 +18,13 @@ p {
   /* letter-spacing: 1.5px; */
  /*  font-family: "Times New Roman", Times, serif; */
 }
-
+.title{
+   width:100%;
+   padding:8px;
+   background:steelblue;
+   font-weight:bold;
+   text-align:center;
+}
 .page-content {
   padding:5px;
   margin:30px;
