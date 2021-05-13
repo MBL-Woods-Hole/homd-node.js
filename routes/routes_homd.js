@@ -17,7 +17,7 @@ router.post('/site_search', (req, res) => {
 	var search_txt = req.body.intext
 	// pure numeric would be: otid
 	var tax_search_lst = [] 
-	if(Number.isInteger(parseInt(search_txt))){
+	//if(Number.isInteger(parseInt(search_txt))){
 	   // search Object.keys(C.taxon_lookup)
 	   console.log('got an integer')
 	   otid_lst = Object.keys(C.taxon_lookup)
@@ -25,7 +25,7 @@ router.post('/site_search', (req, res) => {
 	   // convert to text and true if includes
 	   otid_lst = otid_lst.filter(item => ((item+'').includes(search_txt))) 
 	   gid_lst = gid_lst.filter(item => ((item+'').includes(search_txt))) 
-	}
+	//}
 	console.log(otid_lst)
 	/*
 	Taxonomy DB - genus;species
