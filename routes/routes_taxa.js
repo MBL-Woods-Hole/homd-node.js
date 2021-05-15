@@ -18,7 +18,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
   	//console.log(myurl.query)
 	req.session.tax_letter = myurl.query.k
 	req.session.annot = myurl.query.annot
-	var page = myurl.query.page
+	let page = myurl.query.page
 	// if( !req.session.tax_letter && !req.session.annot && !page){
 // 	   page = 1
 // 	} 
@@ -256,7 +256,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
 router.post('/tax_level', function tax_level_post(req, res) {
 	
 	//console.log(req.body)
-	var rank = req.body.rank
+	let rank = req.body.rank
 	helpers.accesslog(req, res)
 	const tax_resp = []
 	fs.readFile(path.join(CFG.PATH_TO_DATA, req.session.counts_file), 'utf8', (err, data) => {
@@ -268,18 +268,18 @@ router.post('/tax_level', function tax_level_post(req, res) {
 			const result = req.session.tax_obj.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
 				// get lineage of taxitem
 				//console.log(taxitem)
-				lineage = [taxitem.taxon]
-				new_search_id = taxitem.parent_id
-				new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
+				let lineage = [taxitem.taxon]
+				let new_search_id = taxitem.parent_id
+				let new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
 				//console.log(new_search_id,new_search_rank)
 				while (new_search_id !== 0){
-					new_search_item = req.session.tax_obj.taxa_tree_dict_map_by_id[new_search_id]
+					let new_search_item = req.session.tax_obj.taxa_tree_dict_map_by_id[new_search_id]
 
 					lineage.unshift(new_search_item.taxon)  // adds to front of lineage array -prepends
-					new_search_id = new_search_item.parent_id
+					let new_search_id = new_search_item.parent_id
 				
 				}
-				return_obj = {}
+				let return_obj = {}
 				return_obj.item_rank = rank
 				
 				if(rank === 'species' || rank === 'subspecies'){
@@ -416,7 +416,8 @@ router.get('/tax_description', function tax_description(req, res){
 	13 Ref Data: General,Citations,Pheno,Cultivability,Pevalence...
 	*/
 	var data1 = C.taxon_lookup[otid]
-	if(otid in C.dropped_taxids){
+	//console.log('dropped',C.dropped_taxids)
+	if(C.dropped_taxids.indexOf(otid) !== -1){
 	   console.log(data1)
 	   res.render('pages/taxa/dropped', {
 	       title: 'HOMD :: Error', 

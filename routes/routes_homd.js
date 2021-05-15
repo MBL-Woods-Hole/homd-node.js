@@ -14,21 +14,19 @@ router.post('/site_search', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('in POST -Search')
 	console.log(req.body)
-	var search_txt = req.body.intext.toLowerCase()
+	let search_txt = req.body.intext.toLowerCase()
 	// pure numeric would be: otid
-	var tax_search_lst = [] 
+	let tax_search_lst = [] 
 	//if(Number.isInteger(parseInt(search_txt))){
 	   // search Object.keys(C.taxon_lookup)
 	   
-	otid_lst = Object.keys(C.taxon_lookup)
-	gid_lst = Object.keys(C.genome_lookup)
 	// convert to text and true if includes
-	otid_lst = otid_lst.filter(item => ((item+'').includes(search_txt)))  // searches the otid only
-	gid_lst = gid_lst.filter(item => ((item.toLowerCase()+'').includes(search_txt))) 
+	let otid_lst = Object.keys(C.taxon_lookup).filter(item => ((item+'').includes(search_txt)))  // searches the otid only
+	let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(search_txt))) 
 
 	// lets search the taxonomy names
 	//test_val = 'rhiz' // only 9 grep results
-	taxon_lst = Object.values(C.taxon_lineage_lookup).filter( function(e){
+	let taxon_lst = Object.values(C.taxon_lineage_lookup).filter( function(e){
 	  if(Object.keys(e).length !== 0){
 		//console.log(e)
 		if(e.domain.toLowerCase().includes(search_txt) 
@@ -45,8 +43,8 @@ router.post('/site_search', (req, res) => {
 	  //
 	})
 	//  Now get the otids
-	taxon_otid_obj = {}
-	taxon_otid_lst = taxon_lst.map(el => el.otid)      
+	let taxon_otid_obj = {}
+	let taxon_otid_lst = taxon_lst.map(e => e.otid)      
 	for(n in taxon_otid_lst){
 	   let otid = taxon_otid_lst[n]
 	   taxon_otid_obj[otid]= {'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species}
