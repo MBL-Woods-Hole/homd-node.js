@@ -296,7 +296,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
 				return_obj.item_taxon = lineage[lineage.length - 1]
 				return_obj.parent_rank = C.ranks[C.ranks.indexOf(rank) - 1]
 				return_obj.parent_taxon = lineage[lineage.length - 2]
-				console.log(lineage)
+				//console.log(lineage)
 				return_obj.tax_count = taxdata[lineage.join(';')].tax_cnt
 				return_obj.gne_count = taxdata[lineage.join(';')].gcnt
 				return_obj.rrna_count = taxdata[lineage.join(';')].refcnt
@@ -332,7 +332,7 @@ router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
 // test: choose custom taxonomy, show tree
 router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
   //console.time("TIME: tax_custom_dhtmlx");
-  console.log('IN tax_custom_dhtmlx')
+  //console.log('IN tax_custom_dhtmlx')
   helpers.accesslog(req, res)
   let myurl = url.parse(req.url, true);
   let id = myurl.query.id;
@@ -357,7 +357,7 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["7"])
     
         C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
-            console.log('node1',node)
+            //console.log('node1',node)
             let lineage = make_lineage(node)  // [str obj]
             cts = get_counts(lineage[0])
             //console.log(node)
@@ -374,9 +374,9 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
         }
         const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
         objects_w_this_parent_id.map(node => {
-          console.log('node2',node)
+          //console.log('node2',node)
           let lineage = make_lineage(node)  // [str obj]
-          console.log('lineage:',lineage)
+          //console.log('lineage:',lineage)
           cts = get_counts(lineage[0])
           let options_obj = get_options_by_node(node);
           options_obj.text = options_obj.text + ' '+cts
@@ -702,7 +702,7 @@ function get_rank_display(rank,use_plural){
 
 ////////////
 function make_lineage(node){
-    console.log('in lineage-node',node)
+    //console.log('in lineage-node',node)
     let lineage =''
     let lineage_obj = {}
     let tax_obj = C.homd_taxonomy.taxa_tree_dict_map_by_id
@@ -793,7 +793,7 @@ function make_lineage(node){
 }
 ////
 function get_options_by_node(node) {
-  console.log(node)
+  //console.log(node)
   
   var rankname = node.rank.charAt(0).toUpperCase() + node.rank.slice(1)
   if(rankname == 'Klass')

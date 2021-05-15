@@ -23,7 +23,7 @@
 /////////////////////////
 
 function load_dhtmlx(data) {
-    console.log('loading dhtmlx')
+    //console.log('loading dhtmlx')
     // dhtmlx version:5  has dynamic loading
     customOldTree = new dhtmlXTreeObject("custom_treebox","100%","100%",0);
     customOldTree.setImagesPath("/images/dhtmlx/imgs/");
@@ -56,10 +56,6 @@ function load_dhtmlx(data) {
 	customOldTree.setDataMode("json");
 	  ////load first level of tree
 	customOldTree.load("tax_custom_dhtmlx?id=0","json");
-	  
-
-    
-    
     
     // // dhtmlx version:7(free) dynamic loading is in pro version
     // customTree = new dhx.Tree("custom_treebox", {
