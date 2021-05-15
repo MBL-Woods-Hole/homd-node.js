@@ -50,7 +50,7 @@ function make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, o
   current_dict.rank = taxa_rank;
   current_dict.parent_id = i_am_a_parent;
   current_dict.node_id = taxon_name_id;
-  if(taxa_rank == 'species' || taxa_rank == 'subspecies'){
+  if(taxa_rank == 'species'){
     current_dict.otid = otid;
   }
   return current_dict;
@@ -58,8 +58,6 @@ function make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, o
 
 function add_children_to_parent(dictMap_by_id, current_dict)
 {
-  // here current dict if species WITH children REMOVE otid
- 
   add_to_dict_by_key(dictMap_by_id, current_dict.node_id, current_dict);
   
 //  TODO: test if changed to let and removed from above
@@ -73,11 +71,6 @@ function add_children_to_parent(dictMap_by_id, current_dict)
     //}
     //console.log(parent_node.taxon)
     parent_node.children_ids.push(current_dict.node_id);
-  }
-  
-  // here current dict if subspecies:  REMOVE (ambiguous)parent.otid
-  if(current_dict.rank == 'subspecies' ){
-      delete parent_node.otid
   }
   return parent_node;
 }

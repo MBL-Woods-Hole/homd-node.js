@@ -3,12 +3,7 @@
 <% list = JSON.parse(vdata) %>
 
 <style>
-#download_fxn {
-  position:absolute;
-  right: 90px;
-  top:150px;
-  font-size:12px;
-}
+
 .table-condensed{
   font-size: 13px;
 }
@@ -66,10 +61,10 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
    
     <div id='' class='page-content'>
       
-	
-		 <center><h4 class='title text-info'>Phage Table</h4></center>
-		 <%= Object.keys(list[0]) %>
-		 <div id='download_fxn'><b>Download Phage Table</b>: 
+		 <div class='title'>Phage Table</div>
+		 <br><%= Object.keys(list[0]) %>
+		 
+		 <div id='download_browser_text_excel'><b>Download Phage Table</b>: 
 		   <a href='dld_table?type=browser' >[Browser]</a>
 		   <a href='dld_table?type=text' >[Text]</a>
 		   <a href='dld_table?type=excel' >[Excel]</a>

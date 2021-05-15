@@ -61,6 +61,12 @@
    height:200px;
    overflow:auto;
 }
+#status{
+   width:100%;
+   padding:10px;
+   margin:10px;
+   background:orange;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -84,22 +90,26 @@
 <%- include('../../partials/navbar'); %>
 	
 <div class='page-content'>
-	 
-	  
-<div class='title'>Taxon Description: <i><%= data1.genus %> <%= data1.species %></i>
+<% if(data3.subspecies){ %>	   
+  <div class='title'><i><%= data1.genus %> <%= data1.species %> <%= data3.subspecies %></i>
    (HMT-TaxonID: <%= otid %>)
-</div>		
+  </div>	
+<% }else{ %>
+  <div class='title'><i><%= data1.genus %> <%= data1.species %></i>
+   (HMT-TaxonID: <%= otid %>)
+  </div>
+<% } %>
 <div class="outer">
     <div class="float-left">
       Description:
-          <div class=" description">
+        <div class=" description">
 		  <%- data2.general %>
-	  <br><%- data2.disease %>
-	  <br><%- data2.prev %>
-	  <br><%- data2.culta %>
-	  <br><%- data2.pheno %>
-	  
-      </div></div>
+	  	  <br><%- data2.disease %>
+	  	  <br><%- data2.prev %>
+	  	  <br><%- data2.culta %>
+	  	  <br><%- data2.pheno %>
+      	</div>
+    </div>
      
      
       
@@ -138,11 +148,10 @@
 </div>
 
 
-
 </div> <!--    End Outer -->
 
-
-
+<div id='tables'>
+<br><br><div id='status'>Status and Preferred Body Site</div>
 <table id='description_tbl' border='1'>
 <tr><td>
 	<table id='left-tbl'>
@@ -156,7 +165,13 @@
 		  <tr><td>Order:</td><td> <a href='/taxa/life?rank=order&name=<%= data3.order %>'><i><%= data3.order %></i></a></td></tr>
 		  <tr><td>Family:</td><td><a href='/taxa/life?rank=family&name=<%= data3.family %>'><i><%= data3.family %></i></a></td></tr>
 		  <tr><td>Genus:</td><td> <a href='/taxa/life?rank=genus&name=<%= data3.genus %>'><i><%= data1.genus %></i></a></td></tr>
-		  <tr><td>Species:</td><td><i><%= data1.genus %> <%= data1.species %></i></td></tr>
+		  
+		  <% if(data3.subspecies){ %>
+		    <tr><td>Species:</td><td> <a href='/taxa/life?rank=species&name="<%= data3.species %>"'><i><%= data3.species %></i></a></td></tr>
+		    <tr><td>Subspecies:</td><td><i><%= data3.subspecies %></i></td></tr>
+		  <% }else{ %>
+		     <tr><td>Species:</td><td><i><%= data1.genus %> <%= data1.species %></i></td></tr>
+		  <% } %>
 		</table>
 	  </td>
 	</tr>
@@ -180,6 +195,14 @@
 	  <td><small><i><%- data1.synonyms.join('<br>') %></i></small></td>
 	</tr>
 	<tr>
+	  <td class='tbl-title'>16S rRNA Reference Sequence:</td>
+	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	</tr>
+	<tr>
+	  <td class='tbl-title'>Genome Sequence:</td>
+	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	</tr>
+	<tr>
 	  <td class='tbl-title'>Phenotypic Characteristics:</td>
 	  <td class='data'><small><%- data2.pheno %>
 	  </small></td>
@@ -197,6 +220,7 @@
 	  <td class='tbl-title'>Pangenome:</td>
 	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
+	
 	<tr>
 	  <td class='tbl-title'>Phylogenetic Trees:</td>
 	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
@@ -215,16 +239,19 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Tools:</td>
-	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	  <td><small>JBrowse::ANVIO`</small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>PubMed Search:</td>
-	  <td><small>[<a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank'>PubMed Link</a>]</small></td>
+	  <td><small>[<a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank'>PubMed Link</a>]
+	  [Entrez-Nucleotide] [Entrez-Protein]</small>
+	  </td>
 	</tr>
 	</table>
 
 </td></tr>
 </table>
+</div>
 
 <div id='references'>References:</div>
 <% if(data4){ %>
@@ -242,8 +269,6 @@
          <%- include('../../partials/footer'); %>
     </div>
        
-   
-  
 </body>
 
 </html>

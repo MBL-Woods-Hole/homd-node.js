@@ -103,43 +103,52 @@ function expand_tree_dhtmlx(id){
 function reset_tree_dhtmlx(){
   //customOldTree.closeAllItems(0);
   customOldTree.refreshItem()
+  clk_counter = 0  // reset
   //customTree.collapseAll();
 }
-
+clk_counter = 0   // global
 function open_tree_dhtmlx(){
   // difficult with dynamic loading
-  console.log('open whole tree')
+  //console.log('open whole tree')
+  clk_counter++;
+  //console.log('clk_counter',clk_counter)
+  if(clk_counter > 7){
+      return
+  }
   arrystring = customOldTree.getAllSubItems(0)
   arry = arrystring.split(',')
   for(i in arry){
-       console.log(arry[i])
-       
+       //console.log(arry[i])
+       //level = customOldTree.getLevel(arry[i])
+  //clk_counter = 0
+  //console.log('level:',level)
        customOldTree.openItem(arry[i])
        ret = get_sublevels(arry[i])
-       console.log(ret)
+       //console.log('ret',ret)
        for(n in ret){
-       		console.log(ret[n])
-       		customOldTree.openItem(ret[n])
+       		//console.log('ret[n]',ret[n])
+       		//customOldTree.openItem(ret[n])
        }
   }
 }
 function get_sublevels(lvl){
 	 subs = customOldTree.getAllSubItems(lvl)
-	 subs2 = customOldTree.getAllSubItems('975')
-	 console.log(subs2)
+	 //subs2 = customOldTree.getAllSubItems('975')
+	 //console.log(subs2)
 	 return subs.split(',')
 }
+///////
 function change_level(rank) {
 	// Use capitals here for ranks
 	var args = {}
 	args.rank = rank.toLowerCase()
 	if(args.rank=='class'){args.rank='klass';}// for use in homd_taxonomy.taxa_tree_dict_map_by_rank
-	var ranks = ["Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species"];
+	var ranks = ["Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species","Subspecies"];
 	for(n in ranks){
 	  document.getElementById(ranks[n]).style ='font-weight:normal;color:black;'
 	}
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", "/taxa/taxLevel", true);
+	xmlhttp.open("POST", "/taxa/tax_level", true);
 	xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -156,7 +165,7 @@ function change_level(rank) {
 				html += '<th scope="col">Parent Level</th>'
 			}
 			html += '<th scope="col">'+rank+'</th>'
-			if(rank == 'Species'){
+			if(rank == 'Species' || rank == 'Subspecies'){
 				html += '<th scope="col">HMT Taxon ID</th>'
 			}
 			html += '<th scope="col">Taxon Count</th>'
@@ -172,7 +181,7 @@ function change_level(rank) {
 					html += '<td nowrap>'+static_data[n].parent_taxon+'</td>'
 				}
 				html += '<td nowrap>'+static_data[n].item_taxon+"</td>"
-				if(rank == 'Species'){
+				if(rank == 'Species' || rank == 'Subspecies'){
 				  	html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
 				}
 				html += "<td style='text-align:center'>"+static_data[n].tax_count+'</td>'

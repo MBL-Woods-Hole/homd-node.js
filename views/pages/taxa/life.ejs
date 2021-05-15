@@ -54,7 +54,11 @@
 	<div class='page-content'>
 	  			
 	  <div class='title'>
-	  <span id='headline1'><%= headline1 %></span> <span id='headline2'><%= headline2 %></span>
+	  <% if(rank=='species') { %>
+	     <span id='headline1'><%= headline1 %></span> <span id='headline2'><em><%= headline2 %></em></span>
+	  <% }else{ %>
+	     <span id='headline1'><%= headline1 %></span> <span id='headline2'><%= headline2 %></span>
+	  <% } %>
 	  </div>
 	  
 	  
@@ -65,31 +69,48 @@
 	  <% } %>
 	  
 	 
-	  <div id='images'> <!-- Up to four images  -->
-	    <table border='0'>
-	    <tr>
-	    <% for(n in images){ %>
-	      <% if(n==0 || n===2){ %>
-	        <tr><td>
-	      <% }else{ %>
-	        <td>
-	      <% } %>
-	      
-	       <div>
-	       <img id='img' src='/images/life-images/<%= images[n].name %>' width='250' alt=''  \><br>
-	       <small><%= images[n].text %></small>
-	     
-	       </div>
-	      
-	     <% if(n==0 || n===2){ %>
-	        </td>
-	      <% }else{ %>
-	        </td></tr>
-	      <% } %>
-	    <% } %>
-	    
-	    </table>
-	  </div>
+
+	  
+	  
+<div id='images'> <!-- Up to four images  -->
+<% if(images.length === 0 ) { %>
+<div style='padding-right:200px;'>
+<small>** no images available **</small>
+</div>
+
+<% }else if(images.length === 1 ) { %>
+<div style='padding-right:200px;'>
+<img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt=''  \><br>
+<small><%= images[0].text %></small>
+</div>
+
+<% }else{ %>
+
+<table border='0'>
+<tr>
+<% for(n in images){ %>
+<% if(n==0 || n===2){ %>
+<tr><td>
+<% }else{ %>
+<td>
+<% } %>
+
+<div>
+<img id='img' src='/images/life-images/<%= images[n].name %>' width='250' alt=''  \><br>
+<small><%= images[n].text %></small>
+
+</div>
+
+<% if(n==0 || n===2){ %>
+</td>
+<% }else{ %>
+</td></tr>
+<% } %>
+<% } %>
+
+</table>
+<% } %>
+</div>
 	  
 	  <div id='hierarchy_table_div'>
 	  <table border='0'>	
