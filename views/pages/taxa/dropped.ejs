@@ -1,4 +1,12 @@
 <style>
+.warning{
+  margin:10px;
+  padding:10px;
+  background: #FFD580;
+}
+span{
+  color :blue;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -12,9 +20,12 @@
 	
 	<div class='page-content'>
 		 					
-			 <center><h4 class='title text-info'>Search Result</h4></center>
-		TODODOTO
-	<%- result %>
+			 <div class='title'>CONTENT</div>
+			 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+			 <h4 class='warning'>Warning: This TaxonID has been Dropped from HOMD: 
+			 <span><%= taxidfullname %></span></h4>
+		
+	
     </div> <!-- end: page-content -->
     
     <div id='footer'>

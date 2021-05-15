@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
     	else{
          // add virome to global constants
           
-          C.phage_lookup = JSON.parse(data) // will only be loaded once
+          C.phage_list = JSON.parse(data) // will only be loaded once
           
           res.render('pages/phage/index', {
                 title: 'HOMD :: Human Oral Phage Database',
@@ -39,13 +39,16 @@ router.get('/phage_table', (req, res) => {
     	else{
            // will only be loaded once
            // Is this the right way to do this?? (load for each page)
-          C.phage_lookup = JSON.parse(data) // will only be loaded once
-		  
+          C.phage_list = JSON.parse(data) // will only be loaded once
+		  console.log(C.phage_list[0])
+		  C.phage_list.sort(function (a, b) {
+      		return helpers.compareStrings_alpha(a.genus_ncbi, b.genus_ncbi);
+    	  });
 		  res.render('pages/phage/phagetable', {
 				title: 'HOMD :: Human Oral Phage Database',
 				config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-				vdata:    JSON.stringify(C.phage_lookup),
+				vdata:    JSON.stringify(C.phage_list),
 		  });
          }
    });

@@ -3,11 +3,11 @@
 const winston = require('winston');
 const config = require('./config/config');
 const taxdbconn = require('./config/database').taxon_pool;
-const gendbconn = require('./config/database').genome_pool;
+//const gendbconn = require('./config/database').genome_pool;
 const path = require('path');
 // explicitly makes conn global
 global.TDBConn = taxdbconn;
-global.GDBConn = gendbconn;
+//global.GDBConn = gendbconn;
 global.app_root = path.resolve(__dirname);
 const C		= require('./public/constants');
 const fs = require('fs-extra');
@@ -189,14 +189,20 @@ async.map(data_init_files, readAsync, function(err, results) {
     C.taxon_info_lookup 			= JSON.parse(results[6]);
     //console.log('parsing7')
     C.taxon_counts_lookup 			= JSON.parse(results[7]);
+    //Object.values(C.taxon_lookup)
+    C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
+    C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
     
+    //var  = C.dropped_obj
+    //console.log('Dropped:',C.dropped_taxids)
+    //console.log('NonOralRef:',C.nonoralref_taxids)
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     
     //examples
-    console.log('length of C.taxonomy_taxonlookup: ',Object.keys(C.taxon_lookup).length)
-    console.log('length of C.taxonomy_refslookup: ',Object.keys(C.taxon_references_lookup).length)
-    console.log('length of C.taxonomy_lineagelookup: ',Object.keys(C.taxon_lineage_lookup).length)
-    console.log('length of C.taxonomy_infolookup: ',Object.keys(C.taxon_info_lookup).length)
+    console.log('length of C.taxon_lookup: ',Object.keys(C.taxon_lookup).length)
+    console.log('length of C.taxon_references_lookup: ',Object.keys(C.taxon_references_lookup).length)
+    console.log('length of C.taxon_lineage_lookup: ',Object.keys(C.taxon_lineage_lookup).length)
+    console.log('length of C.taxon_info_lookup: ',Object.keys(C.taxon_info_lookup).length)
     console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
     console.log('length of C.genome_lookup: ',Object.keys(C.genome_lookup).length)
     for(var n in C.homd_taxonomy){
@@ -205,8 +211,11 @@ async.map(data_init_files, readAsync, function(err, results) {
    // console.log(C.homd_taxonomy.taxonomy_obj)
    //class
    //Absconditabacteria (SR1) [C-1]
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Burkholderiales_order'])
-    
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Burkholderiales_order'])
+    //console.log('58',C.taxon_lineage_lookup[58])
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['clade 431_subspecies'])
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
 });
 
 // fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[0]), (err, results) => {

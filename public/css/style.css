@@ -18,7 +18,15 @@ p {
   /* letter-spacing: 1.5px; */
  /*  font-family: "Times New Roman", Times, serif; */
 }
-
+.title{
+   width:100%;
+   padding:8px;
+   color:white;
+   background:steelblue;
+   font-weight:bold;
+   font-size:20px;
+   text-align:center;
+}
 .page-content {
   padding:5px;
   margin:30px;
@@ -38,7 +46,12 @@ p {
   margin:0;
 } 
 
-
+#download_browser_text_excel {
+  position:absolute;
+  right: 50px;
+  top:165px;
+  font-size:12px;
+}
  /* Three image containers (use 25% for four, and 50% for two, etc) */
 .column {
   float: left;

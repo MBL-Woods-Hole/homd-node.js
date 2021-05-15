@@ -1,3 +1,16 @@
+// Get the search box input field
+var input = document.getElementById("search_text");
+// Execute a function when the user releases a key on the keyboard
+input.addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    document.getElementById("search_button").click();
+  }
+});
+
 // this should run on every page for main menu open speed
 function mainmenu(){
 	$(" #nav ul ").css({display: "none"}); // Opera Fix
@@ -29,8 +42,9 @@ function mainmenu(){
 //     }
 // }
 
+
 function search(){
-	var form = document.getElementById('menu-search')
+	//var form = document.getElementById('menu-search')
 	searchText = document.getElementById('search_text').value
 	if(!searchText)
 		return

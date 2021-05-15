@@ -1,16 +1,28 @@
-<%- include('../../partials/header_html'); %>
-
 <style>
+#genome_explorer{
+  
+  height:100px;
+  border:1px solid black;
+}
 </style>
+<%- include('../../partials/header_html'); %>
+<% info_data = JSON.parse(info_data) %>
+<!-- 1595 -->
 <body>
   		
     <%- include('../../partials/header_img'); %>
     
 	<%- include('../../partials/navbar'); %>
 	
-	<div id='' class='page-content'>
-							
-			 <%= type %> ANNOTATIONS for <%= gid %>
+	<div  class='page-content'>
+		
+		<div id='genome_explorer'>					
+			 <div class='title'>Genome Explorer: <span id='headline2'><%= info_data.organism %></span></div>
+			 <li>Choose another SeqID
+			 <li>Buttons for JBrowse,PROKKA,NCBI,BLAST,GenomeDesc,TaxonDesc
+			  <li><%= type %> ANNOTATIONS for <%= gid %>
+			    
+		</div>
 		
 	
     </div> <!-- end: page-content -->
