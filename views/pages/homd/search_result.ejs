@@ -3,7 +3,7 @@
 <%- include('../../partials/header_html'); %>
 <% otids = JSON.parse(otid_list) %>
 <% gids = JSON.parse(gid_list) %>
-
+<% lineageids = JSON.parse(taxon_otid_obj) %>
 <body>
   		
     <%- include('../../partials/header_img'); %>
@@ -13,13 +13,22 @@
 	
 	<div class='page-content'>
 		 					
-			 <h4 class='title text-info'>Search Result: [<small><%= search_text %></small>]</h4>
+			 <h4 class='title text-info'>Result [<small>Search Text: <%= search_text %></small>]</h4>
 <!-- 'HMT-'+("000" + otid).slice(-3);	 -->	
-		<% for(n in otids){ %>
-		   <% otid = otids[n] %>
+	Match Taxa Names:
+	<% for(otid in lineageids){ %>
+		   
 		   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
-		   <br><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a>
-		<% } %>
+		   <br><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a> 
+		   <em><%= lineageids[otid].genus %> <%= lineageids[otid].species %></em>
+	<% } %>
+	<br><br>Match Taxon-IDs:
+	<% for(n in otids){ %>
+	   <% otid = otids[n] %>
+	   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+	   <br><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a>
+	<% } %>
+	<br><br>Match SEQ-IDs:
 	<% for(n in gids){ %>
 		   <% gid = gids[n] %>
 		   <br><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a>
