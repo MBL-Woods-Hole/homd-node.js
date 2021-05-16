@@ -276,7 +276,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
 					let new_search_item = req.session.tax_obj.taxa_tree_dict_map_by_id[new_search_id]
 
 					lineage.unshift(new_search_item.taxon)  // adds to front of lineage array -prepends
-					let new_search_id = new_search_item.parent_id
+					new_search_id = new_search_item.parent_id
 				
 				}
 				let return_obj = {}

@@ -99,7 +99,7 @@ float: left;
 
 
 /* The navigation menu */
-
+/* BGcolor:  #99cfe0 */
 #nav {
    /* text-align: left; */
    height:40px;
@@ -112,19 +112,22 @@ float: left;
 	margin:1px;
 	padding:0px;
 	/* width:80%; */
-	background-color:palegoldenrod;	
+	background-color:#99cfe0;	
 	
 	left:0px;
 	border:1px solid black;
 	
     display:none;
     position:absolute;
-    
+    border-bottom-right-radius:10px;
+    border-bottom-left-radius:10px;
    
 }
 #nav ul ul{
 	position:absolute;
 	left:100%;top:0px;
+	border-top-right-radius:10px;
+    border-top-left-radius:10px;
 }
 
 
@@ -185,7 +188,7 @@ float: left;
 #nav li a:hover, #nav li div:hover{
 	position:relative;
 	
-	background-color: lightblue;
+	background-color: #99cfe0;
 	text-decoration:none;
 	
 	
@@ -193,7 +196,7 @@ float: left;
 
 #nav li ul li a{
 	position:relative;
-	background-color:palegoldenrod;
+	background-color:#99cfe0;
 	font:bold 13px Verdana;
 	color: black;
 	text-decoration:none;
@@ -204,7 +207,7 @@ float: left;
 
 #nav li ul li:hover>a {
 	display: block;
-	background-color:palegoldenrod;
+	background-color:#99cfe0;
 	color: red;
 	
 	
@@ -214,7 +217,7 @@ float: left;
 
 #nav li ul li ul a{
 	position:relative;
-	background-color:palegoldenrod;
+	background-color:#99cfe0;
 	font:bold 13px Verdana;
 	color: black;
 	text-decoration:none;
@@ -223,7 +226,7 @@ float: left;
 }
 #nav li ul li ul a:hover{
 	color:red;
-	background-color:palegoldenrod;	
+	background-color:#99cfe0;	
 }
 /*  nav search: */
  #menu-search {
