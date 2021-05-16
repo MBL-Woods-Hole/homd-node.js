@@ -14,19 +14,44 @@ router.post('/site_search', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('in POST -Search')
 	console.log(req.body)
-	var search_txt = req.body.intext
+	let search_txt = req.body.intext.toLowerCase()
 	// pure numeric would be: otid
-	var tax_search_lst = [] 
+	let tax_search_lst = [] 
 	//if(Number.isInteger(parseInt(search_txt))){
 	   // search Object.keys(C.taxon_lookup)
-	   console.log('got an integer')
-	   otid_lst = Object.keys(C.taxon_lookup)
-	   gid_lst = Object.keys(C.genome_lookup)
-	   // convert to text and true if includes
-	   otid_lst = otid_lst.filter(item => ((item+'').includes(search_txt))) 
-	   gid_lst = gid_lst.filter(item => ((item+'').includes(search_txt))) 
-	//}
-	console.log(otid_lst)
+	   
+	// convert to text and true if includes
+	let otid_lst = Object.keys(C.taxon_lookup).filter(item => ((item+'').includes(search_txt)))  // searches the otid only
+	let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(search_txt))) 
+
+	// lets search the taxonomy names
+	//test_val = 'rhiz' // only 9 grep results
+	let taxon_lst = Object.values(C.taxon_lineage_lookup).filter( function(e){
+	  if(Object.keys(e).length !== 0){
+		//console.log(e)
+		if(e.domain.toLowerCase().includes(search_txt) 
+		|| e.phylum.toLowerCase().includes(search_txt) 
+		 || e.klass.toLowerCase().includes(search_txt)
+		  || e.order.toLowerCase().includes(search_txt)
+		   || e.family.toLowerCase().includes(search_txt)
+			|| e.genus.toLowerCase().includes(search_txt)
+			 || e.species.toLowerCase().includes(search_txt)
+			  || e.subspecies.toLowerCase().includes(search_txt)){
+		  return e
+		}
+	  }
+	  //
+	})
+	//  Now get the otids
+	let taxon_otid_obj = {}
+	let taxon_otid_lst = taxon_lst.map(e => e.otid)      
+	for(n in taxon_otid_lst){
+	   let otid = taxon_otid_lst[n]
+	   taxon_otid_obj[otid]= {'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species}
+	}
+	//console.log(taxon_lst,'taxon_lst',taxon_lst.length)
+	//console.log(taxon_lst2,'taxon_lst2',taxon_lst2.length)
+	//console.log('110',C.taxon_lineage_lookup[110])
 	/*
 	Taxonomy DB - genus;species
 	    TaxObjects:strain,refseqID,OTID
@@ -45,6 +70,7 @@ router.post('/site_search', (req, res) => {
 		search_text: search_txt,
 		otid_list: JSON.stringify(otid_lst),
 		gid_list: JSON.stringify(gid_lst),
+		taxon_otid_obj: JSON.stringify(taxon_otid_obj),
 		
 	});
 	

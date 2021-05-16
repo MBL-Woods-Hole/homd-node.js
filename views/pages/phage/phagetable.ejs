@@ -1,7 +1,3 @@
-<%- include('../../partials/header_html_virome'); %>
-
-<% list = JSON.parse(vdata) %>
-
 <style>
 
 .table-condensed{
@@ -48,15 +44,17 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     text-align:center;
 }
 </style>
+<%- include('../../partials/header_html'); %>
+
+<% list = JSON.parse(vdata) %>
+
+
 
 <body>
   <div id='wrapper'>		
 	    
-	    
-	
     <%- include('../../partials/header_img'); %>
     
-
 	<%- include('../../partials/navbar'); %>
    
     <div id='' class='page-content'>

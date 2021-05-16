@@ -177,8 +177,15 @@ function change_level(rank) {
 					html += '<td nowrap>'+static_data[n].parent_taxon+'</td>'
 				}
 				html += '<td nowrap>'+static_data[n].item_taxon+"</td>"
-				if(rank == 'Species' || rank == 'Subspecies'){
-				  	html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
+				if(rank == 'Species'){
+				  	if(static_data[n].otid){
+				  	   html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
+				  	}else{
+				  	   html +="<td><small>>open subspecies<</small></td>"
+				    }
+				}
+				if(rank == 'Subspecies'){
+				  html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
 				}
 				html += "<td style='text-align:center'>"+static_data[n].tax_count+'</td>'
 				
