@@ -194,20 +194,25 @@ async.map(data_init_files, readAsync, function(err, results) {
     //Object.values(C.taxon_lookup)
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
     C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
-    
+    //helpers.print_size()
     //var  = C.dropped_obj
     //console.log('Dropped:',C.dropped_taxids)
     //console.log('NonOralRef:',C.nonoralref_taxids)
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     
     //examples
-    console.log('length of C.taxon_lookup: ',Object.keys(C.taxon_lookup).length)
-    console.log('length of C.taxon_references_lookup: ',Object.keys(C.taxon_references_lookup).length)
-    console.log('length of C.taxon_lineage_lookup: ',Object.keys(C.taxon_lineage_lookup).length)
-    console.log('length of C.taxon_info_lookup: ',Object.keys(C.taxon_info_lookup).length)
-    console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
-    console.log('length of C.genome_lookup: ',Object.keys(C.genome_lookup).length)
-    console.log('length of C.annotation_lookup: ',Object.keys(C.annotation_lookup).length)
+    let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
+    console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
+    console.log('C.taxon_references_lookup length',Object.keys(C.taxon_references_lookup).length)
+    
+    size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup))
+    console.log('C.taxon_lineage_lookup length',Object.keys(C.taxon_lineage_lookup).length,'\tsize(KB):',size/1024)
+    console.log('C.taxon_info_lookup length',Object.keys(C.taxon_info_lookup).length)
+    console.log('C.refseq_lookup length',Object.keys(C.refseq_lookup).length)
+    size = Buffer.byteLength(JSON.stringify(C.genome_lookup))
+    console.log('C.genome_lookup length',Object.keys(C.genome_lookup).length,'\t\tsize(KB):',size/1024)
+    size = Buffer.byteLength(JSON.stringify(C.annotation_lookup))
+    console.log('C.annotation_lookup length',Object.keys(C.annotation_lookup).length,'\t\tsize(KB):',size/1024)
     for(var n in C.homd_taxonomy){
        console.log(n)
     }

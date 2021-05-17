@@ -105,3 +105,7 @@ module.exports.onlyUnique = (value, index, self) =>{
 module.exports.capitalizeFirst = (value, index, self) =>{
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
+module.exports.print_size = (obj, index, self) =>{
+  let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
+    console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
+}

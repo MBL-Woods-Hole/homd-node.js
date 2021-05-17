@@ -267,9 +267,9 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
     console.log('in annotation')
     let myurl = url.parse(req.url, true);
     var gid = req.params.gid
-    var annot_type = req.params.type
-    if(!C.annotation_lookup.hasOwnProperty(gid) || !C.annotation_lookup[gid].hasOwnProperty(annot_type)){
-    	let message = "Could not find "+annot_type+" annotation for "+gid
+    var anno_type = req.params.type
+    if(!C.annotation_lookup.hasOwnProperty(gid) || !C.annotation_lookup[gid].hasOwnProperty(anno_type)){
+    	let message = "Could not find "+anno_type+" annotation for "+gid
     	res.render('pages/lost_message', {
 	       title: 'HOMD :: Error', 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -279,38 +279,36 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 	   })
 	   return	
     }
-    let info_data_obj = C.annotation_lookup[gid][annot_type]
+    let info_data_obj = C.annotation_lookup[gid][anno_type]
     console.log(info_data_obj)
-    //annoquery = "SELECT * FROM annotation."+annot_type+"_info WHERE seq_id ='"+gid+"'"
-    //console.log(annoquery)
+    annoquery = "SELECT UNCOMPRESS(seq_comp) as seq FROM annotation.genome WHERE genome_id='256' and seq_id ='"+gid+"' and annotation='"+anno_type+"' limit 2"
+    console.log(annoquery)
     //var info_data_obj = {}
-    //TDBConn.query(annoquery, (err, rows) => {
-	// 	if(err){
-// 		    console.log(err)
-// 		}else{
-// 		    console.log('rows',rows)
-// 		    if(rows.length == 0){
-// 		        
-// 		    }else{
-// 		    
-// 		      info_data_obj = rows[0]
-// 		      for(i in info_data_obj){
-// 		         // should be just one row
-// 		         console.log(i,info_data_obj[i])
-// 		      }
-// 		
-// 	        }
+    TDBConn.query(annoquery, (err, rows) => {
+		if(err){
+		    console.log(err)
+		}else{
+		    
+		    if(rows.length == 0){
+		          console.log('no rows found')
+		    }else{
+		    
+		      for(n in rows){
+		         console.log('row',rows[n]['seq'].toString())
+		      }
+		
+	        }
 			res.render('pages/genome/annotation', {
 				title: 'HOMD :: '+gid, 
 				config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 				gid: gid,
 				info_data: JSON.stringify(info_data_obj),
-				type: annot_type.toUpperCase()
+				type: anno_type.toUpperCase()
 	
 			})
-	//   }
-//    })
+	   }
+    })
 });
 
 router.get('/phylo_phlan_tree', function phylo_phlan_tree(req, res) {
