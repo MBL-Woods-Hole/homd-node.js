@@ -1,7 +1,3 @@
-<%- include('../../partials/header_html'); %>
-
-<% ginfo = JSON.parse(data1) %>
-<link rel="stylesheet" href="/css/genome_pages.css" >
 <style>
 
 #table_div {
@@ -14,6 +10,11 @@
   border:1px solid #3a6696;
 }
 </style>
+<%- include('../../partials/header_html'); %>
+
+<% ginfo = JSON.parse(data1) %>
+<link rel="stylesheet" href="/css/genome_pages.css" >
+
 <body>
   <div id='wrapper'>		
 	    
@@ -35,8 +36,8 @@
 	 <button onclick="location.href='/taxa/tax_description?otid=<%= ginfo.otid %>';">Taxon Page: (ID=<%= ginfo.otid %>)</button>
 	 <button id='' value=''>JBrowse Genome Viewer</button>
 	 <button id='' value=''>BLAST Against this Genome</button>
-	 <button id='' value=''>PROKKA Annotation</button>
-	 <button id='' value=''>NCBI Annotation</button>
+	 <button onclick="location.href='annotation/<%= ginfo.gid %>/prokka';">PROKKA Annotation</button>
+	 <button onclick="location.href='annotation/<%= ginfo.gid %>/ncbi';">NCBI Annotation</button>
 	</div>
 <div id='table_div' >		
   <a href='/help/template?menu=help_genomes&page=metas&new=1'>Help with this Information</a> 					

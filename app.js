@@ -148,7 +148,8 @@ var data_init_files =[
 	C.refseq_lookup_fn,
 	C.references_lookup_fn,
 	C.info_lookup_fn,
-	C.taxcounts_fn 	
+	C.taxcounts_fn,
+	C.annotation_lookup_fn	
 	
 	
 ]
@@ -189,6 +190,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     C.taxon_info_lookup 			= JSON.parse(results[6]);
     //console.log('parsing7')
     C.taxon_counts_lookup 			= JSON.parse(results[7]);
+    C.annotation_lookup 			= JSON.parse(results[8]);
     //Object.values(C.taxon_lookup)
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
     C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
@@ -205,6 +207,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     console.log('length of C.taxon_info_lookup: ',Object.keys(C.taxon_info_lookup).length)
     console.log('length of C.refseq_lookup: ',Object.keys(C.refseq_lookup).length)
     console.log('length of C.genome_lookup: ',Object.keys(C.genome_lookup).length)
+    console.log('length of C.annotation_lookup: ',Object.keys(C.annotation_lookup).length)
     for(var n in C.homd_taxonomy){
        console.log(n)
     }

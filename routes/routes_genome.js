@@ -11,7 +11,7 @@ const queries = require(app_root + '/routes/queries')
 const createIframe = require("node-iframe");
 //const JB = require('jbrowse2');
 //app.use(createIframe);
-router.get('/genome_table', (req, res) => {
+router.get('/genome_table', function genome_table(req, res) {
 	console.log('in genometable -get')
     helpers.accesslog(req, res)
 	var seqid_list;
@@ -132,10 +132,10 @@ router.get('/genome_table', (req, res) => {
 	});
 })
 //
-router.get('/jbrowse2/:id', (req, res) => {
+router.get('/jbrowse2/:id', function jbrowse2(req, res) {
 	console.log('jbrowse2/:id -get')
 });
-router.get('/jbrowse', (req, res) => {
+router.get('/jbrowse', function jbrowse(req, res) {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('jbrowse-get')
@@ -168,7 +168,7 @@ router.get('/jbrowse', (req, res) => {
 	});
 });
 //
-router.post('/jbrowse', (req, res) => {
+router.post('/jbrowse', function jbrowse_post(req, res) {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('jbrowse-post')
@@ -188,7 +188,7 @@ router.post('/jbrowse', (req, res) => {
 	});
 });
 //
-router.post('/jbrowse_ajax', (req, res) => {
+router.post('/jbrowse_ajax', function jbrowse_ajax_post(req, res) {
 	console.log('AJAX JBrowse')
 	//console.log(req.body);
 	helpers.accesslog(req, res)
@@ -197,7 +197,7 @@ router.post('/jbrowse_ajax', (req, res) => {
 	res.send(JSON.stringify({'response_data':req.body.gid}));
 });
 //
-router.get('/genome_description', (req, res) => {
+router.get('/genome_description', function genome_description(req, res) {
 	console.log('in genomedescription -get')
 	helpers.accesslog(req, res)
 	let myurl = url.parse(req.url, true);
@@ -240,7 +240,7 @@ router.get('/genome_description', (req, res) => {
 	});
 });
 
-router.post('/get_16s_seq', (req, res) => {
+router.post('/get_16s_seq', function get_16s_seq_post(req, res) {
 	console.log('in get_16s_seq -post')
 	helpers.accesslog(req, res)
 	console.log(req.body)
@@ -262,31 +262,44 @@ router.post('/get_16s_seq', (req, res) => {
 	
 });
 //
-router.get('/annotation/:gid/:type', (req, res) => {
+router.get('/annotation/:gid/:type', function annotation(req, res) {
     helpers.accesslog(req, res)
     console.log('in annotation')
     let myurl = url.parse(req.url, true);
     var gid = req.params.gid
     var annot_type = req.params.type
-    annoquery = "SELECT * FROM annotation."+annot_type+"_info WHERE seq_id ='"+gid+"'"
-    console.log(annoquery)
-    var info_data_obj = {}
-    TDBConn.query(annoquery, (err, rows) => {
-		if(err){
-		    console.log(err)
-		}else{
-		    console.log('rows',rows)
-		    if(rows.length == 0){
-		        
-		    }else{
-		    
-		      info_data_obj = rows[0]
-		      for(i in info_data_obj){
-		         // should be just one row
-		         console.log(i,info_data_obj[i])
-		      }
-		
-	        }
+    if(!C.annotation_lookup.hasOwnProperty(gid) || !C.annotation_lookup[gid].hasOwnProperty(annot_type)){
+    	let message = "Could not find "+annot_type+" annotation for "+gid
+    	res.render('pages/lost_message', {
+	       title: 'HOMD :: Error', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			message:message,
+			//data1: JSON.stringify(data1),
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+	   })
+	   return	
+    }
+    let info_data_obj = C.annotation_lookup[gid][annot_type]
+    console.log(info_data_obj)
+    //annoquery = "SELECT * FROM annotation."+annot_type+"_info WHERE seq_id ='"+gid+"'"
+    //console.log(annoquery)
+    //var info_data_obj = {}
+    //TDBConn.query(annoquery, (err, rows) => {
+	// 	if(err){
+// 		    console.log(err)
+// 		}else{
+// 		    console.log('rows',rows)
+// 		    if(rows.length == 0){
+// 		        
+// 		    }else{
+// 		    
+// 		      info_data_obj = rows[0]
+// 		      for(i in info_data_obj){
+// 		         // should be just one row
+// 		         console.log(i,info_data_obj[i])
+// 		      }
+// 		
+// 	        }
 			res.render('pages/genome/annotation', {
 				title: 'HOMD :: '+gid, 
 				config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -296,11 +309,11 @@ router.get('/annotation/:gid/:type', (req, res) => {
 				type: annot_type.toUpperCase()
 	
 			})
-	  }
-   })
+	//   }
+//    })
 });
 
-router.get('/phylo_phlan_tree', (req, res) => {
+router.get('/phylo_phlan_tree', function phylo_phlan_tree(req, res) {
     helpers.accesslog(req, res)
     console.log('in annotation')
     
@@ -313,7 +326,7 @@ router.get('/phylo_phlan_tree', (req, res) => {
     })
 
 });
-router.get('/ribosomal_protein_tree', (req, res) => {
+router.get('/ribosomal_protein_tree', function ribosomal_protein_tree(req, res) {
     helpers.accesslog(req, res)
     console.log('in annotation')
 
@@ -325,7 +338,7 @@ router.get('/ribosomal_protein_tree', (req, res) => {
     })
 
 });
-router.get('/rRNA_gene_tree', (req, res) => {
+router.get('/rRNA_gene_tree', function rRNA_gene_tree(req, res) {
     helpers.accesslog(req, res)
     console.log('in annotation')
     
@@ -338,7 +351,7 @@ router.get('/rRNA_gene_tree', (req, res) => {
 });
 
 
-router.get('/dld_table', (req, res) => {
+router.get('/dld_table', function dld_table(req, res) {
 	helpers.accesslog(req, res)
 	console.log(req.body)
 	let myurl = url.parse(req.url, true);

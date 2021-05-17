@@ -174,8 +174,8 @@ float: left;
 	float:none;
 	text-align:left;
 	white-space:nowrap;
-	padding:2px;
-	margin:2px;	
+	padding:2px 0;
+	margin:2px 0;	
 }
 #nav ul li a{
 	padding:8px;
@@ -187,11 +187,8 @@ float: left;
 
 #nav li a:hover, #nav li div:hover{
 	position:relative;
-	
 	background-color: #99cfe0;
 	text-decoration:none;
-	
-	
 }
 
 #nav li ul li a{
@@ -207,13 +204,11 @@ float: left;
 
 #nav li ul li:hover>a {
 	display: block;
-	background-color:#99cfe0;
-	color: red;
+	background-color:#556b2f;
+	color: #ffba3b;
 	
 	
 }
-
-
 
 #nav li ul li ul a{
 	position:relative;
@@ -221,12 +216,11 @@ float: left;
 	font:bold 13px Verdana;
 	color: black;
 	text-decoration:none;
-	
 	top: 1px;	
 }
 #nav li ul li ul a:hover{
-	color:red;
-	background-color:#99cfe0;	
+	color:#ffba3b;
+	background-color:#556b2f;	
 }
 /*  nav search: */
  #menu-search {

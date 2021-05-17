@@ -419,11 +419,11 @@ router.get('/tax_description', function tax_description(req, res){
 	//console.log('dropped',C.dropped_taxids)
 	if(C.dropped_taxids.indexOf(otid) !== -1){
 	   console.log(data1)
-	   res.render('pages/taxa/dropped', {
+	   let message = "That is a dropped TaxonID: "+otid
+	   res.render('pages/lost_message', {
 	       title: 'HOMD :: Error', 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-			otid: otid,
-			//data1: JSON.stringify(data1),
+			message:message,
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	   })
 	   return
@@ -826,7 +826,9 @@ function get_options_by_node(node) {
 function get_counts(lineage){
     
     
-    let txt = '['+C.taxon_counts_lookup[lineage].tax_cnt.toString() + ', '+C.taxon_counts_lookup[lineage].gcnt.toString()+', '+C.taxon_counts_lookup[lineage].refcnt.toString()+']'
+    let txt = '[<small>'+C.taxon_counts_lookup[lineage].tax_cnt.toString() 
+            + ', '+C.taxon_counts_lookup[lineage].gcnt.toString()
+            +', '+C.taxon_counts_lookup[lineage].refcnt.toString()+'</small>]';
         
     return txt
 }
