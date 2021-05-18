@@ -534,7 +534,7 @@ router.get('/dld_table', (req, res) => {
 });
 
 
-router.get('/life', (req, res) => {
+router.get('/life', function life(req, res) {
 	helpers.accesslog(req, res)
 	console.log('in LIFE')
 	let myurl = url.parse(req.url, true);
@@ -556,7 +556,7 @@ router.get('/life', (req, res) => {
 	//next_rank = C.ranks[C.ranks.indexOf(rank) +1]
 	
 	html =''
-	if(!rank){
+	if(!rank){  // Cellular_Organisims
 	   taxa_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'].map(a => a.taxon)
 	   next_rank = 'domain'
 	   html += '<tr><td>&nbsp;Domains</td><td>'
@@ -564,6 +564,7 @@ router.get('/life', (req, res) => {
 		      html += "<a title='"+taxa_list[n]+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
 	   }
 	   html += '</td></tr>'
+	   image_array =[{'name':'cellular_organisms.png','text':''}]
 	}else{
 		//console.log(upto)
 		node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
