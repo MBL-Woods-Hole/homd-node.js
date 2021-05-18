@@ -34,7 +34,9 @@
     padding:2px 2px 2px 2px;
     border:1px solid #A4BED4;
 }
-
+#count_info{
+   font-size:x-small;
+}
 
 </style>
 <%- include('../../partials/header_html'); %>
@@ -62,8 +64,8 @@
 		 
 		 <h5 class='text-warning'>Taxonomy Selection</h5>
             <br>
-            <input type='button'  name='' value='Reset Tree' onclick='reset_tree_dhtmlx()'> |
-             <input type='button'  name='' value='Open Levels' onclick='open_tree_dhtmlx()'> |
+            <input type='button'  name='' value='Reset Tree' onclick='reset_tree_dhtmlx()'> ||
+             <input type='button'  name='' value='Open Levels' onclick='open_tree_dhtmlx()'>
             <br><small>(double-click taxon names to expand deeper levels.)</small>
 		 
 		 
@@ -72,7 +74,9 @@
             <div id="custom_treebox" class="text-center" style='padding:10px;background:#fdffca;'></div>
             </td></tr>
 
-          </table></center>
+          </table>
+          <span id='count_info'>Numbers indicated in brackets at each level: [ Number of Taxa, Number of Genomes, Number of 16S rRNA RefSeqs ]</span>
+          </center>
          </div> 
 	 
     </div> <!-- end: page-content -->

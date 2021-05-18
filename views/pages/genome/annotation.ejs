@@ -1,8 +1,15 @@
 <style>
-#genome_explorer{
-  
+#genome-explorer{
+  width:60%;
   height:100px;
   border:1px solid black;
+  
+}
+#annotation-table{
+  width:100%;
+  margin:30px 0;
+  border:1px solid silver;
+  
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -16,15 +23,21 @@
 	
 	<div  class='page-content'>
 		
-		<div id='genome_explorer'>					
-			 <div class='title'>Genome Explorer: <span id='headline2'><%= info_data.organism %></span></div>
+		<center>
+		<div id='genome-explorer'>					
+			 <div class='title'><%= type %> Annotation for Genome: <span id='headline2'><%= info_data.organism %></span></div>
 			 <li>Choose another SeqID
 			 <li>Buttons for JBrowse,PROKKA,NCBI,BLAST,GenomeDesc,TaxonDesc
 			  <li><%= type %> ANNOTATIONS for <%= gid %>
 			    
 		</div>
+		</center>
+	    <div id='annotation-table'>					
+			 Annotation Table
+			    
+		</div>
 		
-	
+		<!-- https://vicbioinformatics.com/software.prokka.shtml -->
     </div> <!-- end: page-content -->
     
     <div id='footer'>
