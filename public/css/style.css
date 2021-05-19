@@ -288,3 +288,24 @@ float: left;
   border: 1px solid black;
   color: white;
 }
+
+/* For genome table AND Taxon Table alphabet srch */
+#row1 {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+  padding:20px 0;
+  width:100%;
+}
+#column_left1{
+   padding:10px;
+   border:1px solid red;
+}
+#column_right1 {
+  padding:10px 50px;
+  
+  border:1px solid red;
+  
+}
+

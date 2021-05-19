@@ -117,22 +117,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 
 /* Create three unequal columns that floats next to each other */
 
-#row1 {
-  display: flex;                  /* establish flex container */
-  flex-direction: row;            /* default value; can be omitted */
-  flex-wrap: nowrap;              /* default value; can be omitted */
-  justify-content: space-between; /* switched from default (flex-start, see below) */
-  padding:20px 0 0 0;
-}
-#left_column1 {
-  margin:10px 0 0 0;
-}
-
-/* Clear floats after the columns */
-#right_column1 {
-  /* float: right; */
-}
-
 
 #row2 {
   display: flex;                  /* establish flex container */
@@ -141,14 +125,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
   justify-content: space-between; /* switched from default (flex-start, see below) */
   
 }
-#left_column2 {
+#column_left2 {
   margin:10px 0 0 0;
 }
-
-
-
 /* Clear floats after the columns */
-#right_column2 {
+#column_right2 {
   /* float: right; */
 }
 
