@@ -241,9 +241,9 @@ router.get('/tax_hierarchy', (req, res) => {
 router.get('/tax_level', function tax_level_get(req, res) {
 	helpers.accesslog(req, res)
 	//var oral;
-    req.session.counts_file = C.taxcounts_fn  // default
-	req.session.tax_obj = C.homd_taxonomy
-    console.log(req.session.counts_file)
+    
+	//req.session.tax_obj = C.homd_taxonomy
+    //console.log(req.session.counts_file)
 	
 	res.render('pages/taxa/taxlevel', {
 		title: 'HOMD :: Taxon Level', 
@@ -261,13 +261,13 @@ router.post('/tax_level', function tax_level_post(req, res) {
 	let rank = req.body.rank
 	helpers.accesslog(req, res)
 	const tax_resp = []
-	fs.readFile(path.join(CFG.PATH_TO_DATA, req.session.counts_file), 'utf8', (err, data) => {
+	fs.readFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn), 'utf8', (err, data) => {
     	if (err)
       		console.log(err)
     	else
 			var taxdata = JSON.parse(data);
 			
-			const result = req.session.tax_obj.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
+			const result = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
 				// get lineage of taxitem
 				//console.log(taxitem)
 				let lineage = [taxitem.taxon]
@@ -275,7 +275,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
 				let new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
 				//console.log(new_search_id,new_search_rank)
 				while (new_search_id !== 0){
-					let new_search_item = req.session.tax_obj.taxa_tree_dict_map_by_id[new_search_id]
+					let new_search_item = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_search_id]
 
 					lineage.unshift(new_search_item.taxon)  // adds to front of lineage array -prepends
 					new_search_id = new_search_item.parent_id
@@ -319,15 +319,11 @@ router.post('/tax_level', function tax_level_post(req, res) {
 });
 //
 router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
+	// NO USED!!!
 	var oral = req.body.oral
 	helpers.accesslog(req, res)
 	console.log('oral ',oral)
-	// if(oral === 'false'){
-// 		req.session.counts_file = C.nonoral_taxcounts_fn  // default
-// 	}else{
-// 		req.session.counts_file = C.oral_taxcounts_fn  
-// 	}
-	req.session.counts_file = C.taxcounts_fn  
+	
 	res.send({ok:'ok'});
 
 });

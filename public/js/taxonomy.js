@@ -181,7 +181,7 @@ function change_level(rank) {
 				  	if(static_data[n].otid){
 				  	   html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
 				  	}else{
-				  	   html +="<td><small>>open subspecies<</small></td>"
+				  	   html +="<td><small>><a href='life?rank=species&name=\""+static_data[n].item_taxon+"\"'>open subspecies</a><</small></td>"
 				    }
 				}
 				if(rank == 'Subspecies'){

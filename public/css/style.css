@@ -24,6 +24,7 @@ input[type=radio] {
    background:steelblue;
    font-size:20px;
    text-align:center;
+   color:white;
 }
 
 /* header images masthead */
@@ -39,9 +40,9 @@ input[type=radio] {
 } 
 
 #download_browser_text_excel {
-  position:absolute;
-  right: 55px;
-  top:150px;
+  position:relative;
+  left: 0px;
+  top:2px;
   font-size:12px;
 }
  /* Three image containers (use 25% for four, and 50% for two, etc) */
