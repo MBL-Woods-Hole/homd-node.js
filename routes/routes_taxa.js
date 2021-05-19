@@ -59,7 +59,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	      }
 	     }) 
 	    //console.log('send_tax_obj2[0]',send_tax_obj2[0])
-		if(req.session.tax_letter){
+		if(req.session.tax_letter !== 'all' && req.session.tax_letter !== 'allall'){
 		   console.log('GOT a TaxLetter: ',req.session.tax_letter)
 		   // COOL....
 		   send_tax_obj = send_tax_obj2.filter(item => item.genus.charAt(0) === req.session.tax_letter)
@@ -181,17 +181,19 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	send_tax_obj0 = Object.values(C.taxon_lookup);
 	send_tax_obj = send_tax_obj0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
 	var tcount = send_tax_obj.length
-	if(req.session.tax_letter){
-	   // COOL....
-	   send_tax_obj1 = send_tax_obj.filter(item => item.genus.charAt(0) === req.session.tax_letter)
-	}else{
-		send_tax_obj1 = send_tax_obj
-	}
+	req.session.tax_letter = ''
 	
+	// if(req.session.tax_letter){
+// 	   // COOL....
+// 	   send_tax_obj1 = send_tax_obj.filter(item => item.genus.charAt(0) === req.session.tax_letter)
+// 	}else{
+// 		send_tax_obj1 = send_tax_obj
+// 	}
+// 	
 	// error if site is empty list
 	//throw new error
 	//send_tax_obj2 = send_tax_obj1.filter( item => sitefilter_on.indexOf(item.sites[0].toLowerCase()) !== -1)
-	send_tax_obj2 = send_tax_obj1.filter( function(e) {
+	send_tax_obj2 = send_tax_obj.filter( function(e) {
 	    if(e.sites.length > 0 && sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1){
 	    //if(e.sites.length > 0){
 	      //sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1

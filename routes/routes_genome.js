@@ -183,13 +183,17 @@ router.post('/jbrowse', function jbrowse_post(req, res) {
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		gnom: gnom,  // default
 		genomes: JSON.stringify(C.available_jbgenomes),
-		
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 //
 router.post('/jbrowse_ajax', function jbrowse_ajax_post(req, res) {
 	console.log('AJAX JBrowse')
+	// URL from old HOMD site:
+// ?data=homd/SEQF2029
+// 	&tracks=DNA,prokka,ncbi
+// 	&loc=SEQF2029|GL982453.1:2729587..4094422
+// 	&highlight=
 	//console.log(req.body);
 	helpers.accesslog(req, res)
 	//open(jburl)
@@ -266,8 +270,8 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
     helpers.accesslog(req, res)
     console.log('in annotation')
     let myurl = url.parse(req.url, true);
-    var gid = req.params.gid
-    var anno_type = req.params.type
+    let gid = req.params.gid
+    let anno_type = req.params.type
     if(!C.annotation_lookup.hasOwnProperty(gid) || !C.annotation_lookup[gid].hasOwnProperty(anno_type)){
     	let message = "Could not find "+anno_type+" annotation for "+gid
     	res.render('pages/lost_message', {
@@ -280,8 +284,12 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 	   return	
     }
     let info_data_obj = C.annotation_lookup[gid][anno_type]
-    console.log(info_data_obj)
-    annoquery = "SELECT UNCOMPRESS(seq_comp) as seq FROM annotation.genome WHERE genome_id='256' and seq_id ='"+gid+"' and annotation='"+anno_type+"' limit 2"
+    let tmp_obj = Object.keys(C.annotation_lookup)  // get prokka organisms [seqid,organism]
+    let all_annos_obj = tmp_obj.map((x) =>{
+	            return [x, C.annotation_lookup[x].prokka.organism] 
+	        })
+    
+    annoquery = "SELECT UNCOMPRESS(seq_comp) as seq FROM annotation.genome WHERE seq_id ='"+gid+"' and annotation='"+anno_type+"' limit 2"
     console.log(annoquery)
     //var info_data_obj = {}
     TDBConn.query(annoquery, (err, rows) => {
@@ -304,6 +312,7 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 				gid: gid,
 				info_data: JSON.stringify(info_data_obj),
+				all_annos: JSON.stringify(all_annos_obj),
 				type: anno_type.toUpperCase()
 	
 			})

@@ -1,6 +1,3 @@
-<%- include('../../partials/header_html'); %>
-<% gn = JSON.parse(genomes) %>
-
 <style>
             
 #genome_choices{
@@ -8,6 +5,10 @@
 }
 	
 </style>
+<%- include('../../partials/header_html'); %>
+<% gn = JSON.parse(genomes) %>
+
+
 <body>
   <div id='wrapper'>		
 	    
@@ -22,9 +23,7 @@
 		<%- include('../../partials/navbar'); %>
 	</div>
 	<div id='' class='page-content'>
-	
-	    
-		<div class='wide-content' id="">  					
+			
 		  <br>
 			 
 		  <span>Select a Genome:</span>	  
@@ -47,7 +46,7 @@
 				></iframe>
            </div>
 			
-		</div> <!-- end: wide-content -->
+		
 		
     </div> <!-- end: page-content -->
      

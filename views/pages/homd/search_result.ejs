@@ -12,14 +12,12 @@
 <% otids = JSON.parse(otid_list) %>
 <% gids = JSON.parse(gid_list) %>
 <% lineageids = JSON.parse(taxon_otid_obj) %>
-<body>
-  		
-    <%- include('../../partials/header_img'); %>
-    
 
-	<%- include('../../partials/navbar'); %>
-	
-	<div class='page-content'>
+<body>
+  	<div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    <div class='page-content' >
 		 					
 			 <h4 class='title text-info'>Result [<small>Search Text: <%= search_text %></small>]</h4>
 <!-- 'HMT-'+("000" + otid).slice(-3);	 -->	
@@ -54,7 +52,7 @@
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>
-       
+  </div>     
 </body>
 
 </html>
