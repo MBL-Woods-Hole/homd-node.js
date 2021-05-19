@@ -40,8 +40,7 @@ input[type=radio] {
 } 
 
 #download_browser_text_excel {
-  position:relative;
-  left: 0px;
+  float:right;
   top:2px;
   font-size:12px;
 }
@@ -229,4 +228,63 @@ float: left;
 }
 #menu-search input[type=image] {
   height:30px;
+}
+
+
+/* Pill BUTTONS */
+
+.pill {
+  padding: 0px 4px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0px 0px;
+  cursor: pointer;
+  font-size:11px;
+  border-radius: 16px;
+}
+.pill-brown {
+  background-color: brown;
+  border: 1px solid black;
+  color: white;
+}
+.pill-indigo {
+  background-color: indigo;
+  border: 1px solid black;
+  color: white;
+}
+.pill-khaki {
+  background-color: khaki;
+  border:  1px solid black;;
+  color: black;
+}
+.pill-lightseagreen {
+  background-color: lightseagreen;
+  border:  1px solid black;;
+  color: black;
+}
+.pill-mediumorchid {
+  background-color: MediumOrchid;
+  border:  1px solid black;;
+  color: white;
+}
+.pill-midnightblue {
+  background-color: midnightblue;
+  border:  1px solid black;;
+  color: white;
+}
+.pill-slateblue {
+  background-color: SlateBlue;
+  border:  1px solid black;;
+  color: white;
+}
+.pill-orange {
+  background-color: orange;
+  border: 1px solid black;
+  color: black;
+}
+.pill-green {
+  background-color: green;
+  border: 1px solid black;
+  color: white;
 }

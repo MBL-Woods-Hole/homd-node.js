@@ -128,7 +128,7 @@ a {
 #accordion_div {
   position:relative;
   width:215px;
-  top:-10px;
+  top:0px;
   float:left;
   box-sizing: content-box;
 

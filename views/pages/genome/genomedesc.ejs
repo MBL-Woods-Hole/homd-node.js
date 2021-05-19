@@ -9,6 +9,18 @@
   width:80%;
   border:1px solid black;
 }
+.gd-button{
+  background-color: darkgrey;
+  color: white;
+  padding:3px 5px;
+  text-decoration: none;
+  font-size:small;
+  border-radius:3px;
+  border:1px solid darkgreen;
+}
+#header_buttons{
+   padding:5px 0;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data1) %>
@@ -26,12 +38,12 @@
 		<small><i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.ccolct %></small></div>
 		
 
-	<div id='header_buttons' style='padding-bottom:5px;'>
-	 <button onclick="location.href='/taxa/tax_description?otid=<%= ginfo.otid %>';">Taxon Page: (ID=<%= ginfo.otid %>)</button>
-	 <button id='' value=''>JBrowse Genome Viewer</button>
-	 <button id='' value=''>BLAST Against this Genome</button>
-	 <button onclick="location.href='annotation/<%= ginfo.gid %>/prokka';">PROKKA Annotation</button>
-	 <button onclick="location.href='annotation/<%= ginfo.gid %>/ncbi';">NCBI Annotation</button>
+	<div id='header_buttons' >
+	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (ID=<%= ginfo.otid %>)</a>
+	 <a class='gd-button' href=''>JBrowse Genome Viewer</a>
+	 <a class='gd-button' href=''>BLAST Against this Genome</a>
+	 <a class='gd-button' href='annotation/<%= ginfo.gid %>/prokka'>PROKKA Annotation</a>
+	 <a class='gd-button' href='annotation/<%= ginfo.gid %>/ncbi'>NCBI Annotation</a>
 	</div>
 <div id='table_div' >		
   <a href='/help/template?menu=help_genomes&page=metas&new=1'>Help with this Information</a> 					
@@ -59,7 +71,7 @@
  <tr class="table-active"><td>19</td><td>Non-ATCC Medium</td><td><%= ginfo.non_atcc_mn %></td></tr>
  <tr class="table-light">
    <td>20</td><td>16S rRNA Gene Sequence</td>
-   <% if(ginfo['16s_rRNA']){ %>
+   <% if(ginfo['16s_rrna_flag']){ %>
  	<td><a href='#' onclick="get_16s_seq('<%= ginfo.gid %>')">View Sequence</a></td>
    <% }else{ %>
  	<td>N/A</td>

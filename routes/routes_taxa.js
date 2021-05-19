@@ -122,9 +122,9 @@ router.get('/tax_table', function tax_table_get(req, res) {
         var page_form = '<br><small>On Page: '+show_page.toString()+' of '+number_of_pages.toString()+':: Change Page: ['
         for(var i=1;i<=number_of_pages;i++){
             if(parseInt(page) === i){
-              page_form += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?page="+i.toString()+"'\"> "
+              page_form += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?k=all&page="+i.toString()+"'\"> "
             }else{
-              page_form += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?page="+i.toString()+"'\"> "
+              page_form += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?k=all&page="+i.toString()+"'\"> "
             }
             
         }
@@ -459,7 +459,7 @@ router.get('/tax_description', function tax_description(req, res){
 		var data5 = []
 	}
 	//console.log(data1)
-	//console.log(data5)
+	console.log(data1)
 	// get_genus photos
 	node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
 	var lineage_list = make_lineage(node)  // [str obj]
@@ -470,6 +470,7 @@ router.get('/tax_description', function tax_description(req, res){
 	//console.log('regex2',lineage_list[0].split(';').pop())
 	//console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
 	lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
+	
 	res.render('pages/taxa/taxdesc', {
 		title: 'HOMD :: Taxon Info', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),

@@ -99,20 +99,24 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
    font-size:small;
  }
  */
+/* 
 #navigate-alpha {
    width:120%;
-   /* border: 1px solid red; */
    padding-left:5px;
  }
 #navigate-alpha a {
    color:#006699;
 }
+ */
 
+/* 
 #taxa-filter{
    border:1px solid black;
 }
+ */
 
 /* Create three unequal columns that floats next to each other */
+
 #row1 {
   display: flex;                  /* establish flex container */
   flex-direction: row;            /* default value; can be omitted */
@@ -123,8 +127,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 #left_column1 {
   margin:10px 0 0 0;
 }
-
-
 
 /* Clear floats after the columns */
 #right_column1 {

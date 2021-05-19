@@ -208,26 +208,26 @@ function change_level(rank) {
 
 
 }
-function toggle_oral(oral){
-	console.log(oral)
-	if(oral=='false'){
-		console.log('notcode')
-	}else{
-		console.log('code')
-	}
-	var args = {}
-	args.oral = oral
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", "/taxa/oral_counts_toggle", true);
-	xmlhttp.setRequestHeader("Content-type","application/json");
-    xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var response = xmlhttp.responseText;
-            console.log(response)
-          }
-    }
-    xmlhttp.send(JSON.stringify(args));
-}
+// function toggle_oral(oral){
+// 	console.log(oral)
+// 	if(oral=='false'){
+// 		console.log('notcode')
+// 	}else{
+// 		console.log('code')
+// 	}
+// 	var args = {}
+// 	args.oral = oral
+// 	var xmlhttp = new XMLHttpRequest();
+// 	xmlhttp.open("POST", "/taxa/oral_counts_toggle", true);
+// 	xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//             var response = xmlhttp.responseText;
+//             console.log(response)
+//           }
+//     }
+//     xmlhttp.send(JSON.stringify(args));
+// }
 function clear_filter_form(){
 	var els = document.getElementsByClassName('filter_ckbx')
 	for (n in els){
@@ -284,8 +284,9 @@ function change_valid(val){
 function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,flag) {
     
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
-    defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
-    args={}
+    var defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
+    console.log(defline)
+    var args={}
     args.refid = seqid
     var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("POST", "/taxa/get_refseq", true);
@@ -297,6 +298,7 @@ function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,f
         text = ''
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
+        text += defline+'\n'
         text += resp
         text += '</pre>'
 		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=600,height=500");

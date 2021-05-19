@@ -21,46 +21,45 @@
 	
 	<div id='column_right1'  >
     
-    <center><span id='filter-head'>Filter by Status and Site:</span></center>
+        <center><span id='filter-head'>Filter by Status and Site:</span></center>
     
-    <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
-	 <table>
-	 <tr><td>
-	 <div id='status-div' style=''>
-	 <span class='filter-title'>Status</span>: 
-	 
-	 <input type='checkbox' class='filter_ckbx' id='named' name='named' \> Named&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='unnamed' name='unnamed' \> Unnamed&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='phylotype' name='phylotype' \> Phylotypes&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='lost' name='lost' \> Lost&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' \> Dropped&nbsp;
-	 </div>
-	 </td><td id='radio_btns'>
-	 
-	 <input type='radio' id='valid1' name='valid' value='only_valid'  onclick="change_valid('only')"\> All Valid Taxa&nbsp;
-	 <input type='radio' id='valid2' name='valid' value='all'  onclick="change_valid('all')"\> All&nbsp;
-	 </td></tr>
-	 <tr><td>
-	 <div id='bodysite-div' style=''>
-	 <span class='filter-title'>Body Site</span>: 
-	 
-	 <input type='checkbox' class='filter_ckbx ' id='oral' name='oral' \> Oral&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='nasal' name='nasal' \> Nasal&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='skin' name='skin' \> Skin&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' \> Vaginal&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='unassigned' name='unassigned' \> Unassigned&nbsp;
-	 <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' \> NonOralRef&nbsp;
-	 </div>
-	 </td><td>
-	 <input class="btn btn-secondary btn-sm" type='button' value=' Show ' onclick="check_then_post(this.form)">
-	 <input class="btn btn-secondary btn-sm" type='button' value=' Clear All ' onclick='clear_filter_form()'>
-	 </td></tr>
-	 </table>
-    </form>
+        <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
+         <table>
+         <tr><td>
+         <div id='status-div' style=''>
+             <span class='filter-title'>Status</span>: 
+     
+             <input type='checkbox' class='filter_ckbx' id='named' name='named' \> Named&nbsp;
+             <input type='checkbox' class='filter_ckbx' id='unnamed' name='unnamed' \> Unnamed&nbsp;
+             <input type='checkbox' class='filter_ckbx' id='phylotype' name='phylotype' \> Phylotypes&nbsp;
+             <input type='checkbox' class='filter_ckbx' id='lost' name='lost' \> Lost&nbsp;
+             <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' \> Dropped&nbsp;
+         </div>
+         </td><td id='radio_btns'>
+         <small>
+          <input type='radio' id='valid1' name='valid' value='only_valid'  onclick="change_valid('only')"\> All Valid Taxa&nbsp;
+          <input type='radio' id='valid2' name='valid' value='all'  onclick="change_valid('all')"\> All&nbsp;
+         </small>
+         </td></tr>
+         <tr><td>
+         <div id='bodysite-div' style=''>
+             <span class='filter-title'>Body Site</span>: 
+     
+             <input type='checkbox' class='filter_ckbx ' id='oral' name='oral' \> Oral&nbsp;
+             <input type='checkbox' class='filter_ckbx' id='nasal' name='nasal' \> Nasal&nbsp;
+             <input type='checkbox' class='filter_ckbx' id='skin' name='skin' \> Skin&nbsp;
+             <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' \> Vaginal&nbsp;
+             <input type='checkbox' class='filter_ckbx' id='unassigned' name='unassigned' \> Unassigned&nbsp;
+             <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' \> NonOralRef&nbsp;
+         </div>
+         </td><td>
+         <input class="pill pill-brown" type='button' value=' Show ' onclick="check_then_post(this.form)">
+         <input class="pill pill-brown" type='button' value=' Clear All ' onclick='clear_filter_form()'>
+         </td></tr>
+         </table>
+        </form>
     
-   </div>  <!-- End tax filter -->
-	
-	
+   </div>  <!-- End column_right1 -->
 	
 </div>
 	
