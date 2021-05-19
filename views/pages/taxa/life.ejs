@@ -47,11 +47,10 @@
 
 	
 <body>
-  		
+  <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
-	<%- include('../../partials/navbar'); %>
-	
-	<div class='page-content'>
+    <%- include('../../partials/navbar'); %>
+    <div class='page-content' >
 	  			
 	  <div class='title'>
 	  <% if(rank=='species') { %>
@@ -67,7 +66,7 @@
 	    <span>Lineage:</span> <span id='lineage2'><small><%= lineage %></small></span>
 	    </div>
 	  <% }else{ %>
-	  <div id='lineage' style='height:40px;margin-top:20px;'>Select a domain below to descend the taxonomic lineage of the oral microbiome.</div>
+	  <div id='lineage' style='padding:10px;margin-top:20px;'>Select a domain below to descend the taxonomic lineage of the oral microbiome.</div>
 	  <% } %>
 	  
 	 
@@ -131,7 +130,7 @@
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>
-       
+  </div>  <!-- end wrapper    -->  
 </body>
 
 </html>

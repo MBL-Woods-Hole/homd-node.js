@@ -13,15 +13,16 @@
    float:left;
    border:1px solid pink;
    padding:5px;
-   margin:5px;
+   margin:5px 0;
    width:50%
 }
 .float-right{
    float:right;
    
    padding:5px;
-   margin:5px;
-   width:48%
+   margin:5px 0;
+   width:46%;
+   border:1px solid pink;
 }
 .text {
    overflow:auto;
@@ -29,7 +30,7 @@
 }
 .description{
   font-size:11px;
-  padding:0 4px;
+  padding:0 0px;
   height:200px;
   overflow:auto;
 }
@@ -55,7 +56,6 @@
    border-top:2px dashed #336633;
 }
 
-
 .data{
    width:300px;
    height:200px;
@@ -63,8 +63,7 @@
 }
 #status{
    width:100%;
-   padding:10px;
-   margin:10px;
+   padding:10px 0;
    background:orange;
 }
 </style>
@@ -79,17 +78,13 @@
 <% taxidfullnameplus = 'HMT-'+taxidfullname; %>
 <% images = JSON.parse(image_array)  %>
 
-
-
 <body>
-  		
-	
-<%- include('../../partials/header_img'); %>
+  	<div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    <div class='page-content' >
     
-
-<%- include('../../partials/navbar'); %>
-	
-<div class='page-content'>
+    
 <% if(data3.subspecies){ %>	   
   <div class='title'><i><%= data1.genus %> <%= data1.species %> <%= data3.subspecies %></i>
    (HMT-TaxonID: <%= otid %>)
@@ -268,7 +263,7 @@
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>
-       
+  </div> <!-- end wrapper   -->   
 </body>
 
 </html>

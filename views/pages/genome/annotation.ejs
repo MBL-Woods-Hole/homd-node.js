@@ -14,19 +14,25 @@
 </style>
 <%- include('../../partials/header_html'); %>
 <% info_data = JSON.parse(info_data) %>
+<% all_annos = JSON.parse(all_annos) %>
 <!-- 1595 -->
 <body>
-  		
+  	<div id='wrapper'>
     <%- include('../../partials/header_img'); %>
-    
-	<%- include('../../partials/navbar'); %>
-	
-	<div  class='page-content'>
+    <%- include('../../partials/navbar'); %>
+    <div class='page-content' >
 		
 		<center>
 		<div id='genome-explorer'>					
 			 <div class='title'><%= type %> Annotation for Genome: <span id='headline2'><%= info_data.organism %></span></div>
 			 <li>Choose another SeqID
+			 
+			 <select>
+			 <% for(n in all_annos){ %>
+			 <option><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
+			 <% } %>
+			 
+			 </select>
 			 <li>Buttons for JBrowse,PROKKA,NCBI,BLAST,GenomeDesc,TaxonDesc
 			  <li><%= type %> ANNOTATIONS for <%= gid %>
 			    

@@ -1,8 +1,6 @@
-<link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <style>
 
 .pill {
-
   padding: 0px 4px;
   text-align: center;
   text-decoration: none;
@@ -24,7 +22,7 @@
   
 }
 </style>
-
+<link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <%- include('../../partials/header_html'); %>
 
 <% list = JSON.parse(res) %>
@@ -32,16 +30,11 @@
 
 
 <body>
-  <div id='wrapper'>		
-	    
-	    
-	<div id='header'>
-       <%- include('../../partials/header_img'); %>
-    </div>
-
-	<%- include('../../partials/navbar'); %>
-   
-    <div id='' class='page-content'>
+  	<div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    <div class='page-content' >
+    
       
 	
 		 <div class='title'><%= pgtitle %></div>
