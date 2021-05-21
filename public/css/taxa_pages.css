@@ -69,19 +69,11 @@
    text-align:left;
 }
 #taxlevel_tdiv2 {
-   
    padding:5px;
    width:80%;
-   border:1px solid gray;
+   border:1px solid red;
 }
-#level_table {
-   /* border:1px solid red; */
-   width:90%;
-   padding: 10px;
-}
-#level_table td{
-   padding:0 3px;
-}
+
 
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
 	content: " \25B4\25BE" 

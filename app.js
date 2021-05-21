@@ -118,7 +118,12 @@ app.use(function(req, res, next){
 
   // respond with html page
   if (req.accepts('html')) {
-    res.render('pages/lost', { url: req.url,title:'HOMD Lost' });
+    res.render('pages/lost', { 
+    	url: req.url,
+    	title:'HOMD Lost',
+    	config : JSON.stringify({hostname:config.HOSTNAME,env:config.ENV}),
+    	ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+    });
     return;
   }
 

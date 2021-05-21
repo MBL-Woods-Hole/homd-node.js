@@ -33,21 +33,15 @@ constants.tax_sites_on =['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
 // tax filenames (fn)
 constants.genome_lookup_fn 		= 'homdData-GenomeLookup.json'
 constants.info_lookup_fn 		= 'homdData-TaxonInfoLookup.json'
-
-constants.references_lookup_fn 		= 'homdData-TaxonReferencesLookup.json'
-//constants.oral_taxcounts_fn 	= 'homd_data_oral_taxcounts.json'
+constants.references_lookup_fn 	= 'homdData-TaxonReferencesLookup.json'
 constants.taxcounts_fn 	        = 'homdData-TaxonCounts.json'
 constants.taxon_lookup_fn 		= 'homdData-TaxonLookup.json'
-//constants.oral_lineage_lookup_fn 	= 'homd_data_oral_lineagelookup.json'
 constants.lineage_lookup_fn 	= 'homdData-TaxonLineagelookup.json'
-//constants.oral_tax_hierarchy_fn 		= 'homd_data_oral_hierarchy.json'
 constants.tax_hierarchy_fn 		= 'homdData-TaxonHierarchy.json'
 constants.refseq_lookup_fn 		= 'homdData-TaxonRefSeqLookup.json'
 constants.phage_list_fn         = 'homdData-PhageList.json'
 constants.annotation_lookup_fn  = 'homdData-AnnotationLookup.json'
-//constants.phage_lookup_fn           = 'homdData-PhageLookup.json'  //dont yet have an indexID
-// genome filenames
-//constants.gindex_lookup_fn 	= 'homd_genomedata_indexlookup.json'
+
 
 //constants.access_log_format = 'url=":url" method=":method" statusCode=":statusCode" delta=":delta" ip=":ip"'
 constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'

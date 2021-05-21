@@ -2,8 +2,13 @@
 td a {
    color:blue;
 }
-.card-body a {
-   color:black;
+#level-table {
+   border-collapse: collapse;
+}
+#level-table th,td {
+   padding: 2px 10px;
+   border:1px solid black;
+   border-collapse: collapse;
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -16,33 +21,33 @@ td a {
     <div class='page-content' >
 		 
 		 
-		<center>
-		 <h4 class='title text-info'>Human Oral Microbiome Taxonomic Level List</h4>
+	<center>
+		 <div class='title'>Human Oral Microbiome Taxonomic Level List</div>
 		 
 		
 		 
-	<div class="card text-white bg-secondary mb-3" style="max-width: 50rem;">
-  		<h4 class="card-header">Taxonomic Level:</h4>
-  		<div class="card-body">
-    	   <p class="card-text">
+		<div class="" style="max-width: 50rem;">
+			<h4 class="card-header">Taxonomic Level:</h4>
+			<div class="card-body">
+			   <p class="card-text">
    
-            Select Rank: &nbsp; &nbsp; &nbsp;    
-            <a href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
-            &gt; <a href='#' id='Phylum' onclick="change_level('Phylum')">Phylum</a> 
-            &gt; <a href='#' id='Class' onclick="change_level('Class')">Class</a> 
-            &gt; <a href='#' id='Order' onclick="change_level('Order')">Order</a> 
-            &gt; <a href='#' id='Family' onclick="change_level('Family')">Family</a> 
-            &gt; <a href='#' id='Genus' onclick="change_level('Genus')">Genus</a> 
-            &gt; <a href='#' id='Species' onclick="change_level('Species')">Species</a>
-            &gt; <a href='#' id='Subspecies' onclick="change_level('Subspecies')">Subspecies</a>
-		   </p>
-        </div>
-     </div>
+				Select a Rank: &nbsp; &nbsp; &nbsp;    
+				<a href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
+				&gt; <a href='#' id='Phylum' onclick="change_level('Phylum')">Phylum</a> 
+				&gt; <a href='#' id='Class' onclick="change_level('Class')">Class</a> 
+				&gt; <a href='#' id='Order' onclick="change_level('Order')">Order</a> 
+				&gt; <a href='#' id='Family' onclick="change_level('Family')">Family</a> 
+				&gt; <a href='#' id='Genus' onclick="change_level('Genus')">Genus</a> 
+				&gt; <a href='#' id='Species' onclick="change_level('Species')">Species</a>
+				&gt; <a href='#' id='Subspecies' onclick="change_level('Subspecies')">Subspecies</a>
+			   </p>
+			</div>
+		 </div>
 		 
 		 
 		 <br>
-		 <div id='taxlevel_tdiv2' style='background: lightgrey;'></div>
-	    </center> 
+		 <div id='taxlevel_div'></div>
+	</center> 
 	  
     </div> <!-- end: page-content -->
     <div id='footer'>

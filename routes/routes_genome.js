@@ -253,7 +253,12 @@ router.post('/get_16s_seq', function get_16s_seq_post(req, res) {
 	// express deprecated req.param(name): Use req.params, req.body, or req.query
 	// See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
 	//FIXME There are 4 fields which do I query???
+	
 	TDBConn.query(queries.get_16s_rRNA_sequence_query(gid), (err, rows) => {
+		if(err){
+		    console.log(err)
+		    return
+		}
 		console.log(rows)
 		seqstr = rows[0]['16s_rRNA'].replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&amp;gt;/gi,'>').replace(/&amp;lt;/gi,'<')
 		
@@ -284,37 +289,38 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 	   return	
     }
     let info_data_obj = C.annotation_lookup[gid][anno_type]
+    let otid = C.genome_lookup[gid].otid
     let tmp_obj = Object.keys(C.annotation_lookup)  // get prokka organisms [seqid,organism]
     let all_annos_obj = tmp_obj.map((x) =>{
-	            return [x, C.annotation_lookup[x].prokka.organism] 
-	        })
+	        return [x, C.annotation_lookup[x].prokka.organism] 
+	    })
     
-    annoquery = "SELECT UNCOMPRESS(seq_comp) as seq FROM annotation.genome WHERE seq_id ='"+gid+"' and annotation='"+anno_type+"' limit 2"
-    console.log(annoquery)
+    //annoquery = "SELECT UNCOMPRESS(seq_comp) as seq FROM annotation.genome WHERE seq_id ='"+gid+"' and annotation='"+anno_type+"' limit 2"
+    //annoquery = "SELECT PID,product FROM annotation.orf_sequence WHERE gid ='"+gid+"' and annotation='"+anno_type+"' limit 2"
+   
+    console.log(info_data_obj)
     //var info_data_obj = {}
-    TDBConn.query(annoquery, (err, rows) => {
+    TDBConn.query(queries.get_annotation_query(gid,anno_type), (err, rows) => {
 		if(err){
 		    console.log(err)
 		}else{
-		    
 		    if(rows.length == 0){
 		          console.log('no rows found')
 		    }else{
-		    
 		      for(n in rows){
-		         console.log('row',rows[n]['seq'].toString())
+		         console.log('row',rows[n])
 		      }
-		
 	        }
 			res.render('pages/genome/annotation', {
 				title: 'HOMD :: '+gid, 
 				config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 				gid: gid,
+				otid: otid,
 				info_data: JSON.stringify(info_data_obj),
 				all_annos: JSON.stringify(all_annos_obj),
-				type: anno_type.toUpperCase()
-	
+				anno_type: anno_type.toUpperCase(),
+				mole: JSON.stringify(rows),
 			})
 	   }
     })

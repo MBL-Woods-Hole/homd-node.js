@@ -139,7 +139,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     font-size:12px;
     border-top:1px solid orange;
     border-bottom:1px solid orange;
-    padding:3px 3px 3px 0;
+    padding:5px 3px;
+    margin:5px 0;
 }
 #gen_options optgroup { 
     font-size: 10px; 

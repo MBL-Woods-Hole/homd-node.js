@@ -4,6 +4,10 @@
 	border:0;
 	list-style: none;
 }
+a { text-decoration: none; }
+p {
+   text-indent: 45px;
+}
 #wrapper {
 	border: 1px solid #000;
 	width: 1200px;
@@ -15,6 +19,9 @@
   background:white;
   min-height:500px;
   
+}
+.intro-content{
+   padding:20px;
 }
 input[type=radio] {
     height: .8em;
@@ -230,7 +237,9 @@ float: left;
   height:30px;
 }
 
-
+.text-danger{
+   color:orange;
+}
 /* Pill BUTTONS */
 
 .pill {
@@ -304,8 +313,22 @@ float: left;
 }
 #column_right1 {
   padding:10px 50px;
-  
   border:1px solid red;
-  
 }
 
+
+.red-text{
+  color:red;
+}
+.blue-text{
+  color:blue;
+}
+.green-text{
+  color:green;
+}
+
+.dropdown{
+  border:1px solid brown;
+  padding:1px;
+  border-radius: 3px;
+}

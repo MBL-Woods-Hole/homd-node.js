@@ -21,18 +21,19 @@
   <div id='column_right1'  >
 	
 	<p class="card-text col-sm-6">
-	<form  name='' method='POST' action=''>
+	<form name='genome_srch' method='POST' action='genome_table_search'>
 	  
 	  <input class="pill pill-brown float-right" type='submit' value='Search'> 
 	  
 	  Search Genomes:&nbsp;&nbsp;
 	  <span class='' >
-	    <input class="" type='text' name='gen_srch' maxlength='18' size='20'>
-	    <input class="pill pill-brown" type='button' value='Clear'> <span id='goptions' class='span_lnk' onclick='toggle_options()'>Options [+]</span>
+	    <input id='gene_srch_text' class='dropdown' placeholder="Search.."  type='text' name='gen_srch' maxlength='18' size='20'>
+	    <input class="pill pill-brown" type='button' value='Clear' onclick='clear_gene_srch()'> 
+	    <span id='goptions' class='span_lnk' onclick='toggle_options()'>Options [+]</span>
 	  </span>
-	  <div class='' id='gen_options'>
+	  <div id='gen_options' style='display:none;'>
 	    <br>&nbsp;&nbsp;&nbsp;In:
-	    <select>
+	    <select class='dropdown'>
 	      <optgroup>
 	      <option>All Fields</option>
 	      <option>Taxon ID</option>
@@ -46,12 +47,12 @@
 	      </optgroup>
 	    </select>
 	    Matching:
-	    <select>
+	    <select class='dropdown'>
 	      <option>All Words</option>
 	      <option>ANY Words</option>
 	      <option>Exact Phrase</option>
 	    </select>
-	    <select>
+	    <select class='dropdown'>
 	      <option>Partial Field</option>
 	      <option>Whole Field</option>
 	    </select>
@@ -63,13 +64,7 @@
 	  <input type='checkbox' class='filter_ckbx' id='status_coverage' name='status_coverage' \> High Coverages&nbsp;
 	  <input type='checkbox' class='filter_ckbx' id='status_survey' name='status_survey' \> Survey&nbsp;
 	 
-	  <br>Annotation: 
-	  <input type='checkbox' class='filter_ckbx' id='anno_all' name='anno_all' \> All&nbsp;
-	  <input type='checkbox' class='filter_ckbx' id='anno_both' name='anno_both' \> HOMD with Static&nbsp;
-	  <input type='checkbox' class='filter_ckbx' id='anno_homd' name='anno_homd' \> HOMD only&nbsp;
-	  <input type='checkbox' class='filter_ckbx' id='anno_static' name='anno_static' \> Static only&nbsp;
-	  <input type='checkbox' class='filter_ckbx' id='anno_non' name='anno_non' \> non-oral/nasal&nbsp;
-		  
+	 	  
 	</form>
 	</p>
 	
@@ -78,8 +73,8 @@
 </div>
 
 <div id='phylum-filter' >
-	  Navigate Genomes by Phylum:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	  <select   onchange="location = this.value;">
+	  <small>Navigate Genomes by Phylum:
+	  <select class='dropdown' onchange="location = this.value;">
 	  <optgroup>
 	  <option value='genome_table?page=1'>Select a Phylum</option>
 	  <% for(n in phyla) { %>
@@ -91,4 +86,5 @@
 	  <% } %>
 	  </optgroup>
 	  </select>
+	  </small>
 </div>  <!-- end phylum-filter -->		

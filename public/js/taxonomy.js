@@ -154,7 +154,7 @@ function change_level(rank) {
             
             //console.log(static_data)
 			var html = ''
-			html += "<table id='table' class='table table-hover' border='0'>"
+			html += "<table id='level-table' class='table table-hover' border='0'>"
 			html += '<thead>'
 			html += '<tr>'
 			if(rank != 'Domain'){
@@ -197,7 +197,7 @@ function change_level(rank) {
 				html += '</tr>'
 			}
 			html += '</tbody></table>'
-			document.getElementById('taxlevel_tdiv2').innerHTML = html
+			document.getElementById('taxlevel_div').innerHTML = html
 			
 			document.getElementById(rank).style ='font-weight:bold;font-size:18px;color:red;'
 
@@ -237,13 +237,13 @@ function clear_filter_form(){
 	document.getElementById('valid2').checked = false
 }
 
-function check_then_post(form){
+function check_then_post_filter(form){
    	//console.log(form)
-   	var filter_status = ['named','unnamed','phylotype','lost','dropped','nonoralref']
+   	var filter_status = ['named','unnamed','phylotype','lost','dropped']
 	var filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
    	var els = document.getElementsByClassName('filter_ckbx')
-   	got_one_status = 0
-   	got_one_sites = 0
+   	var got_one_status = 0
+   	var got_one_sites = 0
    	for (n in els){
 		if(els[n].checked == true){
 			if(filter_status.indexOf(els[n].name) != -1){
@@ -254,31 +254,31 @@ function check_then_post(form){
 			}
 		}
 	}
-	if (got_one_sites == 0 || got_one_status == 0){
-	   alert('You must choose at least one from each group: "Status" and "Body Site".')
+	if (got_one_sites == 0 && got_one_status == 0){
+	   alert('You must choose at least one from "Status" and "Body Site".')
 	   return;
 	}
    	form.submit()
 }
 
-function change_valid(val){
-    
-    //console.log(val)
-    var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
-    var extra= ['dropped','nonoralref']
-    if(val == 'all'){
-        for(n in extra){
-            document.getElementById(extra[n]).checked = true
-        }
-    }else{
-         for(n in extra){
-            document.getElementById(extra[n]).checked = false
-        }
-    }
-    for(n in lst){
-        document.getElementById(lst[n]).checked = true
-    }
-}
+// function change_valid(val){
+//     
+//     //console.log(val)
+//     var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
+//     var extra= ['dropped','nonoralref']
+//     if(val == 'all'){
+//         for(n in extra){
+//             document.getElementById(extra[n]).checked = true
+//         }
+//     }else{
+//          for(n in extra){
+//             document.getElementById(extra[n]).checked = false
+//         }
+//     }
+//     for(n in lst){
+//         document.getElementById(lst[n]).checked = true
+//     }
+// }
 
 
 function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,flag) {
