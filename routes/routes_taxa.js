@@ -122,9 +122,9 @@ router.get('/tax_table', function tax_table_get(req, res) {
         var page_form = '<br><small>On Page: '+show_page.toString()+' of '+number_of_pages.toString()+':: Change Page: ['
         for(var i=1;i<=number_of_pages;i++){
             if(parseInt(page) === i){
-              page_form += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?page="+i.toString()+"'\"> "
+              page_form += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?k=all&page="+i.toString()+"'\"> "
             }else{
-              page_form += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?page="+i.toString()+"'\"> "
+              page_form += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?k=all&page="+i.toString()+"'\"> "
             }
             
         }
@@ -156,11 +156,11 @@ router.get('/tax_table', function tax_table_get(req, res) {
 router.post('/tax_table', function tax_table_post(req, res) {
 	helpers.accesslog(req, res)
 	console.log('in taxtable -post')
-	
+	let send_tax_obj = {}
 	//helpers.show_session(req)
 	console.log(req.body)
 	//plus valid
-	valid = req.body.valid  // WHAT IS THIS???
+	//valid = req.body.valid  // WHAT IS THIS???
 	
 
 	pgtitle = 'List of Human Microbial Taxa'
@@ -168,44 +168,45 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	statusfilter_on =[]
 	sitefilter_on  = []
 	for(i in req.body){
-		if(C.tax_status_all.indexOf(i) !== -1){
-		   statusfilter_on.push(i)
-		}
 		if(C.tax_sites_all.indexOf(i) !== -1){
 		   sitefilter_on.push(i)
 		}
+		if(C.tax_status_all.indexOf(i) !== -1){
+		   statusfilter_on.push(i)
+		}
+		
 	}
 	console.log('statusfilter_on',statusfilter_on)
 	console.log('sitefilter_on',sitefilter_on)
 	// letterfilter
-	send_tax_obj0 = Object.values(C.taxon_lookup);
-	send_tax_obj = send_tax_obj0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-	var tcount = send_tax_obj.length
+	// if dropped is on need to add dropped to 
+	let temp_obj = Object.values(C.taxon_lookup);
+	var tcount = temp_obj.length
 	req.session.tax_letter = ''
 	
-	// if(req.session.tax_letter){
-// 	   // COOL....
-// 	   send_tax_obj1 = send_tax_obj.filter(item => item.genus.charAt(0) === req.session.tax_letter)
-// 	}else{
-// 		send_tax_obj1 = send_tax_obj
-// 	}
-// 	
-	// error if site is empty list
-	//throw new error
-	//send_tax_obj2 = send_tax_obj1.filter( item => sitefilter_on.indexOf(item.sites[0].toLowerCase()) !== -1)
-	send_tax_obj2 = send_tax_obj.filter( function(e) {
-	    if(e.sites.length > 0 && sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1){
-	    //if(e.sites.length > 0){
-	      //sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1
-	      return e
-	    }else{
-	    }
-	}) 
+	if(statusfilter_on.length == C.tax_status_all.length && sitefilter_on.length == C.tax_sites_all.length){
+	  // no filter -- allow all
+	  send_tax_obj = temp_obj
+	}else{
+	  //console.log(C.taxon_lookup[987])
+	  //send_tax_obj2 = send_tax_obj.filter( item => statusfilter_on.indexOf(item.status.toLowerCase()) !== -1 )    
+      // 999 has nonoralref
+      console.log(C.taxon_lookup[999])
+      send_tax_obj = temp_obj.filter( function(e){
+          //console.log('e',e)
+          if( (e.sites.length > 0 
+              && sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1)
+              || statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 )
+              {
+             return e
+          }
+          
+      }) 
+    }   
+      
 	
-	
-	send_tax_obj3 = send_tax_obj2.filter(item => statusfilter_on.indexOf(item.status.toLowerCase()) !== -1 )    
-	send_tax_obj3.sort(function (a, b) {
-      return helpers.compareStrings_alpha(a.genus, b.genus);
+	send_tax_obj.sort(function (a, b) {
+        return helpers.compareStrings_alpha(a.genus, b.genus);
     });
 	//console.log('send_tax_objC',send_tax_obj)
 	// use session for taxletter
@@ -213,8 +214,8 @@ router.post('/tax_table', function tax_table_post(req, res) {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		res: JSON.stringify(send_tax_obj3),
-		count: Object.keys(send_tax_obj3).length,
+		res: JSON.stringify(send_tax_obj),
+		count: Object.keys(send_tax_obj).length,
 		tcount: tcount,
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(statusfilter_on),
@@ -459,7 +460,7 @@ router.get('/tax_description', function tax_description(req, res){
 		var data5 = []
 	}
 	//console.log(data1)
-	//console.log(data5)
+	console.log(data1)
 	// get_genus photos
 	node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
 	var lineage_list = make_lineage(node)  // [str obj]
@@ -470,6 +471,7 @@ router.get('/tax_description', function tax_description(req, res){
 	//console.log('regex2',lineage_list[0].split(';').pop())
 	//console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
 	lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
+	
 	res.render('pages/taxa/taxdesc', {
 		title: 'HOMD :: Taxon Info', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -557,9 +559,11 @@ router.get('/life', function life(req, res) {
 	if(!rank){  // Cellular_Organisims
 	   taxa_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'].map(a => a.taxon)
 	   next_rank = 'domain'
-	   html += '<tr><td>&nbsp;Domains</td><td>'
+	   
+	   html += "<tr><td class='life-taxa-name'>&nbsp;Domains</td><td class='life-taxa'>"
 	   for(n in taxa_list){
-		      html += "<a title='"+taxa_list[n]+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
+		      var title = 'Domain: '+taxa_list[n]
+		      html += "<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
 	   }
 	   html += '</td></tr>'
 	   image_array =[{'name':'cellular_organisms.png','text':''}]
@@ -586,9 +590,9 @@ router.get('/life', function life(req, res) {
 		   
 		   rank_display = get_rank_display(show_ranks[i],false)
 		   if(show_ranks[i] != last_rank){  // Last row
-		      
-		      html += '<tr><td>'+space+rank_display+'</td><td>'
-			  html += "<a title='"+lineage_list[1][show_ranks[i]]+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a><br>'
+		      var title = rank_display+': '+lineage_list[1][show_ranks[i]]
+		      html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
+			  html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a><br>'
 			  html += '</td></tr>'
 		   }else{  // Gather rows before the last row
 		     
@@ -606,20 +610,20 @@ router.get('/life', function life(req, res) {
 			 rank_display = get_rank_display(show_ranks[i],use_plural)
 			 //console.log('rank_displayx',rank_display)
 			 
-			 html += '<tr><td>'+space+rank_display+'</td><td>'
+			 html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
 			 for(n in taxa_list){
 				 //console.log('SHOW RANKS',show_ranks.length)
-				 
+				 var title = rank_display+': '+taxa_list[n]
 				 if(rank === 'genus'){
 
 				       childern_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].children_ids
 				       if(childern_ids.length > 0){
 				         console.log('childern_ids-2')
-				         html += space+"<a title='"+taxa_list[n]+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
+				         html += space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
 				       }else{
 				         otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
 				       //console.log('otid',otid)
-					     html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+taxa_list[n]+"' href='tax_description?otid="+otid+"'>Taxon-ID: "+otid+'</a>)<br>'
+					     html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>Taxon-ID: "+otid+'</a>)<br>'
 				       }
 				 
 				 }else{
@@ -627,9 +631,9 @@ router.get('/life', function life(req, res) {
 				       console.log('RANK==species')
 				       //console.log(taxa_list[n])
 				       otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'].otid
-				       html += space+"<a title='"+taxa_list[n]+"' href='tax_description?otid="+otid+"'>"+taxa_list[n]+'</a><br>'    
+				       html += space+"<a title='"+title+"' href='tax_description?otid="+otid+"'>"+taxa_list[n]+'</a><br>'    
 				    }else{
-					   html += space+"<a title='"+taxa_list[n]+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
+					   html += space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
 				    }
 				 } 
 			 }
@@ -825,9 +829,9 @@ function get_options_by_node(node) {
 function get_counts(lineage){
     
     
-    let txt = '[<small>'+C.taxon_counts_lookup[lineage].tax_cnt.toString() 
-            + ', '+C.taxon_counts_lookup[lineage].gcnt.toString()
-            +', '+C.taxon_counts_lookup[lineage].refcnt.toString()+'</small>]';
+    let txt = "[<small><span class='red-text'>"+C.taxon_counts_lookup[lineage].tax_cnt.toString()+'</span>' 
+            + ", <span class='green-text'>"+C.taxon_counts_lookup[lineage].gcnt.toString()+'</span>'
+            +", <span class='blue-text'>"+C.taxon_counts_lookup[lineage].refcnt.toString()+'</span></small>]';
         
     return txt
 }

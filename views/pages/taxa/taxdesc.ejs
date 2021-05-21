@@ -18,7 +18,6 @@
 }
 .float-right{
    float:right;
-   
    padding:5px;
    margin:5px 0;
    width:46%;
@@ -65,6 +64,15 @@
    width:100%;
    padding:10px 0;
    background:orange;
+}
+.td-button{
+  background-color: darkgrey;
+  color: white;
+  padding:2px 2px;
+  text-decoration: none;
+  font-size:small;
+  border-radius:3px;
+  border:1px solid darkgreen;
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -154,12 +162,12 @@
 	  <td class='tbl-title'>Classification:</td>
 	  <td>
 		<table id='tax_lineage'>
-		  <tr><td>Domain:</td><td><a href='/taxa/life?rank=domain&name=<%= data3.domain %>'><i><%= data3.domain %></i></a></td></tr>
-		  <tr><td>Phylum:</td><td><a href='/taxa/life?rank=phylum&name=<%= data3.phylum %>'><i><%= data3.phylum %></i></a></td></tr>
-		  <tr><td>Class:</td><td> <a href='/taxa/life?rank=klass&name=<%= data3.klass %>'><i><%= data3.klass %></i></a></td></tr>
-		  <tr><td>Order:</td><td> <a href='/taxa/life?rank=order&name=<%= data3.order %>'><i><%= data3.order %></i></a></td></tr>
-		  <tr><td>Family:</td><td><a href='/taxa/life?rank=family&name=<%= data3.family %>'><i><%= data3.family %></i></a></td></tr>
-		  <tr><td>Genus:</td><td> <a href='/taxa/life?rank=genus&name=<%= data3.genus %>'><i><%= data1.genus %></i></a></td></tr>
+		  <tr><td>Domain:</td><td><a href='/taxa/life?rank=domain&name=<%= data3.domain %>'><%= data3.domain %></a></td></tr>
+		  <tr><td>Phylum:</td><td><a href='/taxa/life?rank=phylum&name=<%= data3.phylum %>'><%= data3.phylum %></a></td></tr>
+		  <tr><td>Class:</td><td> <a href='/taxa/life?rank=klass&name=<%= data3.klass %>'><%= data3.klass %></a></td></tr>
+		  <tr><td>Order:</td><td> <a href='/taxa/life?rank=order&name=<%= data3.order %>'><%= data3.order %></a></td></tr>
+		  <tr><td>Family:</td><td><a href='/taxa/life?rank=family&name=<%= data3.family %>'><%= data3.family %></a></td></tr>
+		  <tr><td>Genus:</td><td> <a href='/taxa/life?rank=genus&name=<%= data3.genus %>'><%= data1.genus %></a></td></tr>
 		  
 		  <% if(data3.subspecies){ %>
 		    <tr><td>Species:</td><td> <a href='/taxa/life?rank=species&name="<%= data3.species %>"'><i><%= data3.species %></i></a></td></tr>
@@ -190,12 +198,37 @@
 	  <td><small><i><%- data1.synonyms.join('<br>') %></i></small></td>
 	</tr>
 	<tr>
-	  <td class='tbl-title'>16S rRNA Reference Sequence:</td>
-	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	  <td class='tbl-title'>16S rRNA Reference Sequences:</td>
+	  <td><small>
+	  <% for( var n in data5){ %>
+	<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+	<% refseqid 	= data5[n].refseqid %>
+	<% refseqname 	= data5[n].seqname %>
+	<% refstrain 	= data5[n].strain %>
+	<% refgenbank 	= data5[n].genbank %>
+	<% refstatus 	= data1.status %>
+	<% refsite 		= data1.site %>
+	<% refflag 		= data1.genomes === [] ? 'Genome:No' : 'Genome:Yes' %>
+	RefSeq ID: <a href='#' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= refsite %>','<%= refflag %>')">
+	<%= refseqid %></a>
+<% } %>
+	  </small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Genome Sequence:</td>
-	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	  <td><small>
+	  <% g_length = data1.genomes.length %>
+	  <% if(g_length === 0){ %>
+	     No Genomes
+	  <% }else if(g_length === 1){ %>
+	        <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'>1 Genome</a>
+	  <% }else{ %>
+	     <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'><%= g_length %> Genomes</a>
+	  <% } %>
+	  
+	  
+	  </small>
+	  </td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Phenotypic Characteristics:</td>

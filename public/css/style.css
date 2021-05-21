@@ -4,6 +4,10 @@
 	border:0;
 	list-style: none;
 }
+a { text-decoration: none; }
+p {
+   text-indent: 45px;
+}
 #wrapper {
 	border: 1px solid #000;
 	width: 1200px;
@@ -15,6 +19,9 @@
   background:white;
   min-height:500px;
   
+}
+.intro-content{
+   padding:20px;
 }
 input[type=radio] {
     height: .8em;
@@ -40,8 +47,7 @@ input[type=radio] {
 } 
 
 #download_browser_text_excel {
-  position:relative;
-  left: 0px;
+  float:right;
   top:2px;
   font-size:12px;
 }
@@ -229,4 +235,100 @@ float: left;
 }
 #menu-search input[type=image] {
   height:30px;
+}
+
+.text-danger{
+   color:orange;
+}
+/* Pill BUTTONS */
+
+.pill {
+  padding: 0px 4px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0px 0px;
+  cursor: pointer;
+  font-size:11px;
+  border-radius: 16px;
+}
+.pill-brown {
+  background-color: brown;
+  border: 1px solid black;
+  color: white;
+}
+.pill-indigo {
+  background-color: indigo;
+  border: 1px solid black;
+  color: white;
+}
+.pill-khaki {
+  background-color: khaki;
+  border:  1px solid black;;
+  color: black;
+}
+.pill-lightseagreen {
+  background-color: lightseagreen;
+  border:  1px solid black;;
+  color: black;
+}
+.pill-mediumorchid {
+  background-color: MediumOrchid;
+  border:  1px solid black;;
+  color: white;
+}
+.pill-midnightblue {
+  background-color: midnightblue;
+  border:  1px solid black;;
+  color: white;
+}
+.pill-slateblue {
+  background-color: SlateBlue;
+  border:  1px solid black;;
+  color: white;
+}
+.pill-orange {
+  background-color: orange;
+  border: 1px solid black;
+  color: black;
+}
+.pill-green {
+  background-color: green;
+  border: 1px solid black;
+  color: white;
+}
+
+/* For genome table AND Taxon Table alphabet srch */
+#row1 {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+  padding:20px 0;
+  width:100%;
+}
+#column_left1{
+   padding:10px;
+   border:1px solid red;
+}
+#column_right1 {
+  padding:10px 50px;
+  border:1px solid red;
+}
+
+
+.red-text{
+  color:red;
+}
+.blue-text{
+  color:blue;
+}
+.green-text{
+  color:green;
+}
+
+.dropdown{
+  border:1px solid brown;
+  padding:1px;
+  border-radius: 3px;
 }

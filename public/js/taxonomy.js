@@ -154,7 +154,7 @@ function change_level(rank) {
             
             //console.log(static_data)
 			var html = ''
-			html += "<table id='table' class='table table-hover' border='0'>"
+			html += "<table id='level-table' class='table table-hover' border='0'>"
 			html += '<thead>'
 			html += '<tr>'
 			if(rank != 'Domain'){
@@ -197,7 +197,7 @@ function change_level(rank) {
 				html += '</tr>'
 			}
 			html += '</tbody></table>'
-			document.getElementById('taxlevel_tdiv2').innerHTML = html
+			document.getElementById('taxlevel_div').innerHTML = html
 			
 			document.getElementById(rank).style ='font-weight:bold;font-size:18px;color:red;'
 
@@ -208,26 +208,26 @@ function change_level(rank) {
 
 
 }
-function toggle_oral(oral){
-	console.log(oral)
-	if(oral=='false'){
-		console.log('notcode')
-	}else{
-		console.log('code')
-	}
-	var args = {}
-	args.oral = oral
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", "/taxa/oral_counts_toggle", true);
-	xmlhttp.setRequestHeader("Content-type","application/json");
-    xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var response = xmlhttp.responseText;
-            console.log(response)
-          }
-    }
-    xmlhttp.send(JSON.stringify(args));
-}
+// function toggle_oral(oral){
+// 	console.log(oral)
+// 	if(oral=='false'){
+// 		console.log('notcode')
+// 	}else{
+// 		console.log('code')
+// 	}
+// 	var args = {}
+// 	args.oral = oral
+// 	var xmlhttp = new XMLHttpRequest();
+// 	xmlhttp.open("POST", "/taxa/oral_counts_toggle", true);
+// 	xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//             var response = xmlhttp.responseText;
+//             console.log(response)
+//           }
+//     }
+//     xmlhttp.send(JSON.stringify(args));
+// }
 function clear_filter_form(){
 	var els = document.getElementsByClassName('filter_ckbx')
 	for (n in els){
@@ -237,13 +237,13 @@ function clear_filter_form(){
 	document.getElementById('valid2').checked = false
 }
 
-function check_then_post(form){
+function check_then_post_filter(form){
    	//console.log(form)
-   	var filter_status = ['named','unnamed','phylotype','lost','dropped','nonoralref']
+   	var filter_status = ['named','unnamed','phylotype','lost','dropped']
 	var filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
    	var els = document.getElementsByClassName('filter_ckbx')
-   	got_one_status = 0
-   	got_one_sites = 0
+   	var got_one_status = 0
+   	var got_one_sites = 0
    	for (n in els){
 		if(els[n].checked == true){
 			if(filter_status.indexOf(els[n].name) != -1){
@@ -254,38 +254,39 @@ function check_then_post(form){
 			}
 		}
 	}
-	if (got_one_sites == 0 || got_one_status == 0){
-	   alert('You must choose at least one from each group: "Status" and "Body Site".')
+	if (got_one_sites == 0 && got_one_status == 0){
+	   alert('You must choose at least one from "Status" and "Body Site".')
 	   return;
 	}
    	form.submit()
 }
 
-function change_valid(val){
-    
-    //console.log(val)
-    var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
-    var extra= ['dropped','nonoralref']
-    if(val == 'all'){
-        for(n in extra){
-            document.getElementById(extra[n]).checked = true
-        }
-    }else{
-         for(n in extra){
-            document.getElementById(extra[n]).checked = false
-        }
-    }
-    for(n in lst){
-        document.getElementById(lst[n]).checked = true
-    }
-}
+// function change_valid(val){
+//     
+//     //console.log(val)
+//     var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
+//     var extra= ['dropped','nonoralref']
+//     if(val == 'all'){
+//         for(n in extra){
+//             document.getElementById(extra[n]).checked = true
+//         }
+//     }else{
+//          for(n in extra){
+//             document.getElementById(extra[n]).checked = false
+//         }
+//     }
+//     for(n in lst){
+//         document.getElementById(lst[n]).checked = true
+//     }
+// }
 
 
 function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,flag) {
     
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
-    defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
-    args={}
+    var defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
+    console.log(defline)
+    var args={}
     args.refid = seqid
     var xmlhttp = new XMLHttpRequest();
 	xmlhttp.open("POST", "/taxa/get_refseq", true);
@@ -297,6 +298,7 @@ function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,f
         text = ''
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
+        text += defline+'\n'
         text += resp
         text += '</pre>'
 		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=600,height=500");

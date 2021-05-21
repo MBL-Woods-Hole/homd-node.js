@@ -1,20 +1,58 @@
 <style>
 #genome-explorer{
   width:60%;
-  height:100px;
+  height:auto;
   border:1px solid black;
+  
+}
+#annotation-table-div{
+ 
+  margin:30px 0;
+  border:1px solid silver;
   
 }
 #annotation-table{
   width:100%;
   margin:30px 0;
-  border:1px solid silver;
+  border-collapse: collapse;
   
+}
+#annotation-table th{
+  padding:5px;
+  background:yellow;
+  
+}
+#header_buttons{
+   padding:5px 0;
+}
+.an-button{
+  background-color: lightgreen;
+  color: black;
+  padding:3px 3px;
+  text-decoration: none;
+  font-size:small;
+  border-radius:3px;
+  border:1px solid darkgreen;
+}
+.active{
+  background:#6b2f55;
+  color:white;
+}
+#annotation-info{
+  border:1px solid red;
+  height: auto;
+  padding:10px;
+  font-size:small;
+}
+#info-table, #info-table td {
+  border: 1px solid green;   
+  border-collapse: collapse;
 }
 </style>
 <%- include('../../partials/header_html'); %>
 <% info_data = JSON.parse(info_data) %>
 <% all_annos = JSON.parse(all_annos) %>
+<% mole = JSON.parse(mole) %>
 <!-- 1595 -->
 <body>
   	<div id='wrapper'>
@@ -24,22 +62,82 @@
 		
 		<center>
 		<div id='genome-explorer'>					
-			 <div class='title'><%= type %> Annotation for Genome: <span id='headline2'><%= info_data.organism %></span></div>
-			 <li>Choose another SeqID
+			 <div class='title'><%= anno_type %> Annotation for Genome: <span id='headline'><%= info_data.organism %></span></div>
 			 
-			 <select>
+			 <div style='padding:5px 0;'>
+			 Choose Another SeqID:
+			 <select class='dropdown'>
 			 <% for(n in all_annos){ %>
 			 <option><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
 			 <% } %>
-			 
 			 </select>
-			 <li>Buttons for JBrowse,PROKKA,NCBI,BLAST,GenomeDesc,TaxonDesc
-			  <li><%= type %> ANNOTATIONS for <%= gid %>
+			 </div>
+			 
+			 <div id='header_buttons' >
+			  <a class='an-button' href='/genome/jbrowse'>JBrowse Genome Viewer</a>
+			  <% if(anno_type == 'PROKKA'){ %>
+			    <span class='an-button active' href=''>PROKKA</span>
+			    <a class='an-button' href='/genome/annotation/<%= gid %>/ncbi'>NCBI</a>
+			  <% }else{ %>
+			    <a class='an-button' href='/genome/annotation/<%= gid %>/prokka'>PROKKA</a>
+			    <span class='an-button active' href=''>NCBI</span>
+			  <% } %>
+			  
+			  <a class='an-button' href='/genome/blast/<%= gid %>'>BLAST</a>
+			  <a class='an-button' href='/genome/genome_description?gid=<%= gid %>'>Genome Desc.</a>
+			  <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Desc.</a>
+			 </div>
+			  
 			    
 		</div>
 		</center>
-	    <div id='annotation-table'>					
+		
+		<div id='annotation-info'>
+		  <%= anno_type %> ANNOTATIONS for <%= gid %>
+		
+		  <br>
+			<table id='info-table' >
+			 <tr><td>Genome selected: </td><td><%= info_data.organism %></td>
+				 <td>Contigs:</td><td><%= info_data.contigs %>	</td>
+				 <td>Bases:</td><td><%= info_data.bases %> bps</td>	
+			  </tr>
+		
+			<tr><td>CDS:</td><td><%= info_data.CDS %>	</td>
+				 <td>rRNA:</td><td><%= info_data.rRNA %></td>
+				 <td>Repeat Region:</td><td><%= info_data.repeat_region %></td>	
+			</tr>
+		
+			<tr><td>tmRNA:</td><td><%= info_data.tmRNA %>	</td>
+				<td>tRNA:</td><td><%= info_data.tRNA %>	</td>
+				<td>Misc RNA:</td><td> <%= info_data.misc_RNA %></td>	
+			</tr>
+		
+		
+			<tr><td colspan='2'>Total features:</td><td> ?? </td><td> ?? </td><td> ?? </td><td> ?? </td></tr>
+			</table>
+		
+		</div>
+		
+		
+	    <div id='annotation-table-div'>					
 			 Annotation Table
+			 <table id='annotation-table' class='sortable'>
+			 <thead>
+			  <tr>
+			   <th>Molecule</th><th>PID</th><th>Sequences</th><th>Size</th><th>Range</th><th>Gene Product Name</th>
+			  </tr>
+			 </thead>
+			 <tbody>
+			 <% for(n in mole){ %>
+			 <tr>
+			   <td><%= mole[n].accession %></td>
+			   <td><%= mole[n].PID %></td>
+			   <td><a href=''>NA</a> <a href=''>AA</a></td><td></td><td></td>			   
+			   <td><%= mole[n].product %></td>
+			 </tr>
+			 <% } %>
+			 </tbody>
+			 </table>
 			    
 		</div>
 		
@@ -57,6 +155,7 @@
 </html>
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()

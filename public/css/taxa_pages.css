@@ -69,19 +69,11 @@
    text-align:left;
 }
 #taxlevel_tdiv2 {
-   
    padding:5px;
    width:80%;
-   border:1px solid gray;
+   border:1px solid red;
 }
-#level_table {
-   /* border:1px solid red; */
-   width:90%;
-   padding: 10px;
-}
-#level_table td{
-   padding:0 3px;
-}
+
 
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
 	content: " \25B4\25BE" 
@@ -99,37 +91,23 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
    font-size:small;
  }
  */
+/* 
 #navigate-alpha {
    width:120%;
-   /* border: 1px solid red; */
    padding-left:5px;
  }
 #navigate-alpha a {
    color:#006699;
 }
+ */
 
+/* 
 #taxa-filter{
    border:1px solid black;
 }
+ */
 
 /* Create three unequal columns that floats next to each other */
-#row1 {
-  display: flex;                  /* establish flex container */
-  flex-direction: row;            /* default value; can be omitted */
-  flex-wrap: nowrap;              /* default value; can be omitted */
-  justify-content: space-between; /* switched from default (flex-start, see below) */
-  padding:20px 0 0 0;
-}
-#left_column1 {
-  margin:10px 0 0 0;
-}
-
-
-
-/* Clear floats after the columns */
-#right_column1 {
-  /* float: right; */
-}
 
 
 #row2 {
@@ -139,14 +117,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
   justify-content: space-between; /* switched from default (flex-start, see below) */
   
 }
-#left_column2 {
+#column_left2 {
   margin:10px 0 0 0;
 }
-
-
-
 /* Clear floats after the columns */
-#right_column2 {
+#column_right2 {
   /* float: right; */
 }
 

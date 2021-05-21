@@ -113,21 +113,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     text-align:center;
 }
 
-#row1 {
-  display: flex;                  /* establish flex container */
-  flex-direction: row;            /* default value; can be omitted */
-  flex-wrap: nowrap;              /* default value; can be omitted */
-  justify-content: space-between; /* switched from default (flex-start, see below) */
-  padding:20px 0;
-}
-#left_column1 {
-  margin:20px 0 0 0;
-  padding-top:10px;
-}
-/* Clear floats after the columns */
-#right_column1 {
-  /* float: right; */
-}
 
 #phylum-filter{
   padding-left:3px;
@@ -154,7 +139,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     font-size:12px;
     border-top:1px solid orange;
     border-bottom:1px solid orange;
-    padding:3px 3px 3px 0;
+    padding:5px 3px;
+    margin:5px 0;
 }
 #gen_options optgroup { 
     font-size: 10px; 

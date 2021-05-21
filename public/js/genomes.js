@@ -64,15 +64,13 @@ function change_genome2(gid){
 
 function toggle_options(){
 	var el = document.getElementById("gen_options")
-	//console.log(el)
-	if(el.style.display == 'none'){
+	if(el.style.display === 'none'){
 		el.style.display = 'inline'
 		document.getElementById("goptions").innerHTML = 'Options [-]'
 	}else{
 		el.style.display = 'none'
 		document.getElementById("goptions").innerHTML = 'Options [+]'
 	}
-	//document.getElementById("gen_options").innerHTML = "insert here"
 }
 
 function get_16s_seq(seqid) {
@@ -112,4 +110,8 @@ function format_long_numbers(x){
     // change 456734 => 456,734
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
-
+//
+function clear_gene_srch(){
+   gene_srch_text = document.getElementById("gene_srch_text")
+   gene_srch_text.value=''
+}

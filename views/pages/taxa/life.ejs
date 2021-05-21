@@ -26,6 +26,28 @@
   font-size:20px;
   font-weight:bold;
 }
+#life-table{
+   border-collapse:collapse;
+   margin:10px;
+   
+}
+#life-table tr td{
+   padding:5px;
+   
+}
+.life-taxa-name{
+   background:lightgray;
+   vertical-align:top;
+}
+.life-taxa{
+   background:white;
+   font-size:20px;
+   color:black;
+}
+.life-taxa a{
+   font-size:20px;
+   color:blue;
+}
 </style>
 <% images = JSON.parse(image_array)  %>
 <%- include('../../partials/header_html'); %>
@@ -86,40 +108,36 @@
 </div>
 
 <% }else{ %>
+	<table id='image-table'>
+		<tr>
+		<% for(n in images){ %>
+		  <% if(n==0 || n===2){ %>
+			<tr><td>
+		  <% }else{ %>
+			<td>
+		  <% } %>
 
-<table border='0'>
-<tr>
-<% for(n in images){ %>
-<% if(n==0 || n===2){ %>
-<tr><td>
-<% }else{ %>
-<td>
-<% } %>
-
-<div>
-<img id='img' src='/images/life-images/<%= images[n].name %>' width='250' alt=''  \><br>
-<small><%= images[n].text %></small>
-
-</div>
-
-<% if(n==0 || n===2){ %>
-</td>
-<% }else{ %>
-</td></tr>
-<% } %>
-<% } %>
-
-</table>
+		  <div>
+			<img id='img' src='/images/life-images/<%= images[n].name %>' width='250' alt=''  \><br>
+			<small><%= images[n].text %></small>
+		  </div>
+		  <% if(n==0 || n===2){ %>
+			</td>
+		  <% }else{ %>
+			</td></tr>
+		  <% } %>
+		<% } %>
+	</table>
 <% } %>
 </div>
 	  
 	  <div id='hierarchy_table_div'>
-	  <table border='0'>	
+	  <table id='life-table'>	
 		<thead>
-		 <tr><th >Taxonomy eHOMD:</th><tr>
+		 <tr><th></th><th><i>e</i>HOMD Taxonomy</th><tr>
 		</thead>
 		<tbody>
-		 <tr><td>Life</td><td><a href='life'>Cellular Organisms</a></td></tr>
+		 <tr><td class='life-taxa-name'>Life</td><td class='life-taxa'><a href='life'>Cellular Organisms</a></td></tr>
 		 <%- html %>
 		
 		</tbody>
