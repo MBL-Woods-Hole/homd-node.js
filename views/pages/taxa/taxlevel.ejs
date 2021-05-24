@@ -10,6 +10,18 @@ td a {
    border:1px solid black;
    border-collapse: collapse;
 }
+.level-button{
+     border:2px solid green;
+     color: white;
+     background:#e9ffdb;
+     border-radius:2px;
+     padding:2px 5px;
+}
+.level-button a{
+     
+     color: white;
+     
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -32,14 +44,14 @@ td a {
 			   <p class="card-text">
    
 				Select a Rank: &nbsp; &nbsp; &nbsp;    
-				<a href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
-				&gt; <a href='#' id='Phylum' onclick="change_level('Phylum')">Phylum</a> 
-				&gt; <a href='#' id='Class' onclick="change_level('Class')">Class</a> 
-				&gt; <a href='#' id='Order' onclick="change_level('Order')">Order</a> 
-				&gt; <a href='#' id='Family' onclick="change_level('Family')">Family</a> 
-				&gt; <a href='#' id='Genus' onclick="change_level('Genus')">Genus</a> 
-				&gt; <a href='#' id='Species' onclick="change_level('Species')">Species</a>
-				&gt; <a href='#' id='Subspecies' onclick="change_level('Subspecies')">Subspecies</a>
+				<a class='level-button' type='button' href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
+				&gt; <a class='level-button' type='button'  href='#' id='Phylum' onclick="change_level('Phylum')">Phylum</a> 
+				&gt; <a class='level-button' type='button'  href='#' id='Class' onclick="change_level('Class')">Class</a> 
+				&gt; <a class='level-button' type='button'  href='#' id='Order' onclick="change_level('Order')">Order</a> 
+				&gt; <a class='level-button' type='button'  href='#' id='Family' onclick="change_level('Family')">Family</a> 
+				&gt; <a class='level-button' type='button'  href='#' id='Genus' onclick="change_level('Genus')">Genus</a> 
+				&gt; <a class='level-button' type='button'  href='#' id='Species' onclick="change_level('Species')">Species</a>
+				&gt; <a class='level-button' type='button'  href='#' id='Subspecies' onclick="change_level('Subspecies')">Subspecies</a>
 			   </p>
 			</div>
 		 </div>

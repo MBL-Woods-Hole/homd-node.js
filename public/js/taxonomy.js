@@ -199,7 +199,7 @@ function change_level(rank) {
 			html += '</tbody></table>'
 			document.getElementById('taxlevel_div').innerHTML = html
 			
-			document.getElementById(rank).style ='font-weight:bold;font-size:18px;color:red;'
+			document.getElementById(rank).style ='font-weight:bold;font-size:18px;color:#cf1020;'
 
 		}
 	}
