@@ -1,27 +1,11 @@
 <style>
 #genome-explorer{
-  width:60%;
+  width:70%;
   height:auto;
   border:1px solid black;
   
 }
-#annotation-table-div{
- 
-  margin:30px 0;
-  border:1px solid silver;
-  
-}
-#annotation-table{
-  width:100%;
-  margin:30px 0;
-  border-collapse: collapse;
-  
-}
-#annotation-table th{
-  padding:5px;
-  background:yellow;
-  
-}
+
 #header_buttons{
    padding:5px 0;
 }
@@ -39,14 +23,55 @@
   color:white;
 }
 #annotation-info{
-  border:1px solid red;
+  
   height: auto;
   padding:10px;
+  margin-top:10px;
   font-size:small;
 }
-#info-table, #info-table td {
+#anno-title2 {
+   font-size:18px;
+   
+}
+#info-table, #info-table td,th {
   border: 1px solid green;   
   border-collapse: collapse;
+  padding:2px 10px;
+}
+#annotation-table-div{
+ 
+  margin:30px 0;
+  border:1px solid silver;
+  
+}
+#annotation-table{
+  width:100%;
+  margin:30px 0;
+  
+  background:lightgray;
+  
+}
+#annotation-table th{
+  padding:5px;
+  background:#6bb6ff;
+}
+#annotation-table td{
+  padding:2px 8px;
+  
+}
+#annotation-table tr:nth-child(even) { 
+    background-color: #ffb46b; 
+ } 
+ #annotation-table tr:hover { 
+    background-color: #FBF9EA; 
+ } 
+
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+        content: " \25B4\25BE" 
+    }
+#no-data{
+    padding:10px;
+    background:orange
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -62,27 +87,27 @@
 		
 		<center>
 		<div id='genome-explorer'>					
-			 <div class='title'><%= anno_type %> Annotation for Genome: <span id='headline'><%= info_data.organism %></span></div>
+			 <div class='title'><%= anno_type.toUpperCase() %> Annotation for Genome: <span id='headline'><%= info_data.organism %></span></div>
 			 
 			 <div style='padding:5px 0;'>
 			 Choose Another SeqID:
-			 <select class='dropdown'>
+			 <select class='dropdown' onchange="if (this.value) window.location.href='/genome/annotation/'+this.value+'/<%= anno_type %>'  ">
+			 <option>Choose...</option>
 			 <% for(n in all_annos){ %>
-			 <option><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
+			 <option name='' value='<%= all_annos[n][0] %>'><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
 			 <% } %>
 			 </select>
 			 </div>
 			 
 			 <div id='header_buttons' >
-			  <a class='an-button' href='/genome/jbrowse'>JBrowse Genome Viewer</a>
-			  <% if(anno_type == 'PROKKA'){ %>
+			  <% if(anno_type == 'prokka'){ %>
 			    <span class='an-button active' href=''>PROKKA</span>
 			    <a class='an-button' href='/genome/annotation/<%= gid %>/ncbi'>NCBI</a>
 			  <% }else{ %>
 			    <a class='an-button' href='/genome/annotation/<%= gid %>/prokka'>PROKKA</a>
 			    <span class='an-button active' href=''>NCBI</span>
 			  <% } %>
-			  
+			  <a class='an-button' href='http://www.homd.org/jbrowse/index.html?data=homd/<%= gid %>' target='_blank'>JBrowse Genome Viewer</a>
 			  <a class='an-button' href='/genome/blast/<%= gid %>'>BLAST</a>
 			  <a class='an-button' href='/genome/genome_description?gid=<%= gid %>'>Genome Desc.</a>
 			  <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Desc.</a>
@@ -93,52 +118,80 @@
 		</center>
 		
 		<div id='annotation-info'>
-		  <%= anno_type %> ANNOTATIONS for <%= gid %>
+		  <span id='anno-title2'><%= anno_type.toUpperCase() %> Annotation for <%= gid %></span>
 		
 		  <br>
 			<table id='info-table' >
-			 <tr><td>Genome selected: </td><td><%= info_data.organism %></td>
-				 <td>Contigs:</td><td><%= info_data.contigs %>	</td>
-				 <td>Bases:</td><td><%= info_data.bases %> bps</td>	
-			  </tr>
+			 <tr><th colspan='4'>Genome selected: <%= info_data.organism %> </th></tr>
+			 <tr>
+			   <td>Contigs:</td><td><%= info_data.contigs %>	</td>
+			   <td>Bases:</td><td><%= info_data.bases %> bps</td>	
+			 </tr>
 		
 			<tr><td>CDS:</td><td><%= info_data.CDS %>	</td>
 				 <td>rRNA:</td><td><%= info_data.rRNA %></td>
-				 <td>Repeat Region:</td><td><%= info_data.repeat_region %></td>	
 			</tr>
 		
 			<tr><td>tmRNA:</td><td><%= info_data.tmRNA %>	</td>
 				<td>tRNA:</td><td><%= info_data.tRNA %>	</td>
-				<td>Misc RNA:</td><td> <%= info_data.misc_RNA %></td>	
+				
 			</tr>
 		
 		
-			<tr><td colspan='2'>Total features:</td><td> ?? </td><td> ?? </td><td> ?? </td><td> ?? </td></tr>
+			
 			</table>
 		
 		</div>
 		
 		
 	    <div id='annotation-table-div'>					
-			 Annotation Table
+			 <% if(mole.length === 0){ %>
+			     <div id='no-data'>There is no annotation data available for <%= anno_type.toUpperCase() %> <%= gid %></div>
+			 <% }else{ %>
+			 
+			 Annotation Table [page:<%= show_page %>]
+			 <% next_page = parseInt(show_page)+1 %>
+			 <% prev_page = parseInt(show_page)-1 %>
+			 <br>Number of Records: <%= trecords %> <small>[<%= number_of_pages %> Pages]
+			 <a href='/genome/annotation/<%= gid %>/<%= anno_type %>?page=<%= next_page %>'>Next Page</a>
+			 <==>
+			 <a href='/genome/annotation/<%= gid %>/<%= anno_type %>?page=<%= prev_page %>'>Previous Page</a>
+			 </small>
+			 
+			 
+			 
 			 <table id='annotation-table' class='sortable'>
 			 <thead>
 			  <tr>
-			   <th>Molecule</th><th>PID</th><th>Sequences</th><th>Size</th><th>Range</th><th>Gene Product Name</th>
+			   <th class='sorttable_nosort'></th>
+			   <th>Molecule</th>
+			   <th>PID</th>
+			   <th class='sorttable_nosort'>Sequences</th>
+			   <th>Size</th>
+			   <th>Range</th>
+			   <th>Gene Product Name</th>
 			  </tr>
 			 </thead>
 			 <tbody>
+			 <% cnt = start_count %>
 			 <% for(n in mole){ %>
 			 <tr>
+			   <td><%= cnt %></td>
 			   <td><%= mole[n].accession %></td>
 			   <td><%= mole[n].PID %></td>
-			   <td><a href=''>NA</a> <a href=''>AA</a></td><td></td><td></td>			   
+			   <td nowrap>
+			       [<a title='Nucleic Acid' href='#' onclick="get_NN_NA_seq('na','<%= mole[n].PID %>')">NA</a>] 
+			       [<a title='Amino Acid' href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].PID %>')">AA</a>]
+			   </td>
+			   <td></td>
+			   <td></td>			   
 			   <td><%= mole[n].product %></td>
 			 </tr>
+			 <% cnt += 1 %>
 			 <% } %>
 			 </tbody>
 			 </table>
-			    
+			 <% } %>  
 		</div>
 		
 		<!-- https://vicbioinformatics.com/software.prokka.shtml -->
@@ -155,8 +208,10 @@
 </html>
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
+
 <script>
   mainmenu()
 </script>

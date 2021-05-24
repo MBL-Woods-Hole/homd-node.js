@@ -252,7 +252,6 @@ router.post('/get_16s_seq', function get_16s_seq_post(req, res) {
 
 	// express deprecated req.param(name): Use req.params, req.body, or req.query
 	// See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
-	//FIXME There are 4 fields which do I query???
 	
 	TDBConn.query(queries.get_16s_rRNA_sequence_query(gid), (err, rows) => {
 		if(err){
@@ -270,6 +269,36 @@ router.post('/get_16s_seq', function get_16s_seq_post(req, res) {
 	})
 	
 });
+router.post('/get_NN_NA_seq', function get_NN_NA_seq_post(req, res) {
+	console.log('in get_NN_NA_seq -post')
+	helpers.accesslog(req, res)
+	console.log(req.body)
+	var type = req.body.type
+	var pid = req.body.pid
+	//var gid = req.body.seqid;
+    //q = 'SELECT UNCOMPRESS(seq_na_comp) FROM annotation.orf_sequence '
+    //q += "WHERE PID='"+req.body.pid+"'"
+	q = "SELECT UNCOMPRESS(seq_comp) as seq FROM annotation.orf_sequence "
+    q += "join annotation.sequence on (orf_sequence.sequence_"+type+"_id = sequence.sequence_id)"
+    q += "WHERE PID='"+pid+"'"
+    console.log(q)
+	
+	TDBConn.query(q, (err, rows) => {
+		if(err){
+		    console.log(err)
+		    return
+		}
+		console.log(rows)
+		seqstr = rows[0]['seq']
+		
+		console.log(seqstr)
+		//arr = helpers.chunkSubstr(seqstr,60)
+		//html = seqstr.join('<br>')
+		html = seqstr
+		res.send(html)
+	})
+	
+});
 //
 router.get('/annotation/:gid/:type', function annotation(req, res) {
     helpers.accesslog(req, res)
@@ -277,6 +306,10 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
     let myurl = url.parse(req.url, true);
     let gid = req.params.gid
     let anno_type = req.params.type
+    let page = myurl.query.page
+    if(!page){
+      page=1
+    }
     if(!C.annotation_lookup.hasOwnProperty(gid) || !C.annotation_lookup[gid].hasOwnProperty(anno_type)){
     	let message = "Could not find "+anno_type+" annotation for "+gid
     	res.render('pages/lost_message', {
@@ -300,27 +333,65 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
    
     console.log(info_data_obj)
     //var info_data_obj = {}
-    TDBConn.query(queries.get_annotation_query(gid,anno_type), (err, rows) => {
+    
+    var q = queries.get_annotation_query(gid,anno_type)
+    console.log(q)
+    
+    TDBConn.query(q, (err, rows) => {
 		if(err){
 		    console.log(err)
 		}else{
 		    if(rows.length == 0){
 		          console.log('no rows found')
-		    }else{
-		      for(n in rows){
-		         console.log('row',rows[n])
-		      }
-	        }
+		    }
+		    let trecords = rows.length
+		    
+			if(page){
+				var trows = rows.length 
+				//console.log('trows',trows)
+				var row_per_page = 200
+				var number_of_pages = Math.ceil(trows/row_per_page)
+	            if(page > number_of_pages){page = 1}
+	            if(page < 1){page = number_of_pages}
+				console.log('number_of_pages',number_of_pages)
+	
+				var show_page = page
+				if(show_page === 1){
+					var send_list = rows.slice(0,row_per_page)  // first 200
+					start_count = 1
+				}else{
+					var send_list = rows.slice(row_per_page*(show_page-1),row_per_page*show_page)  // second 200
+					start_count = row_per_page*(show_page-1) + 1
+				}
+				console.log('start count',start_count)
+				//var page_form = '<br><small>On Page: '+show_page.toString()+' of '+number_of_pages.toString()+':: Change Page: ['
+				// for(var i=1;i<=number_of_pages;i++){
+// 					if(parseInt(page) === i){
+// 					  page_form += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?k=all&page="+i.toString()+"'\"> "
+// 					}else{
+// 					  page_form += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?k=all&page="+i.toString()+"'\"> "
+// 					}
+// 			
+// 				}
+// 				page_form += ']</small>'
+			}
+	
+	
 			res.render('pages/genome/annotation', {
 				title: 'HOMD :: '+gid, 
 				config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 				gid: gid,
 				otid: otid,
+				trecords:trecords,
+				start_count:start_count,
+				show_page: show_page,
+				number_of_pages: number_of_pages,
 				info_data: JSON.stringify(info_data_obj),
 				all_annos: JSON.stringify(all_annos_obj),
-				anno_type: anno_type.toUpperCase(),
-				mole: JSON.stringify(rows),
+				anno_type: anno_type,
+				//mole: JSON.stringify(rows),
+				mole: JSON.stringify(send_list),
 			})
 	   }
     })
