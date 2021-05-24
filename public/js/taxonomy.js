@@ -261,24 +261,24 @@ function check_then_post_filter(form){
    	form.submit()
 }
 
-// function change_valid(val){
-//     
-//     //console.log(val)
-//     var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
-//     var extra= ['dropped','nonoralref']
-//     if(val == 'all'){
-//         for(n in extra){
-//             document.getElementById(extra[n]).checked = true
-//         }
-//     }else{
-//          for(n in extra){
-//             document.getElementById(extra[n]).checked = false
-//         }
-//     }
-//     for(n in lst){
-//         document.getElementById(lst[n]).checked = true
-//     }
-// }
+function change_valid(val){
+    // used from taxtable filter valid
+    //console.log(val)
+    var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
+    var extra= ['dropped','nonoralref']
+    if(val == 'all'){
+        for(n in extra){
+            document.getElementById(extra[n]).checked = true
+        }
+    }else{
+         for(n in extra){
+            document.getElementById(extra[n]).checked = false
+        }
+    }
+    for(n in lst){
+        document.getElementById(lst[n]).checked = true
+    }
+}
 
 
 function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,flag) {

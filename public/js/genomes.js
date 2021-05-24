@@ -99,9 +99,40 @@ function get_16s_seq(seqid) {
 		
 		doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
 		doc.close();
-    		
-    		
-    		}
+      }
+    }
+    xmlhttp.send(JSON.stringify(args));
+}
+//
+function get_NN_NA_seq(type,pid) {  // type=nn or na
+    console.log('in NNNA',type,pid)
+    //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+    //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
+    console.log(type,pid)
+    args={}
+    args.type = type
+    args.pid = pid
+    var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("POST", "/genome/get_NN_NA_seq", true);
+	xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = xmlhttp.responseText;
+        //console.log(defline)
+        text = ''
+        //text += '<pre>'+defline+'<br>'
+        text = '<pre>'
+        text += resp
+        text += '</pre>'
+		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=600,height=500");
+		var doc = win.document;
+		//doc.writeln("<title>yourtitle</title>");
+		//doc.title = 'eHOMD Reference Sequence'
+		doc.open("text/html");
+		
+		doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
+		doc.close();
+      }
     }
     xmlhttp.send(JSON.stringify(args));
 }
@@ -114,4 +145,7 @@ function format_long_numbers(x){
 function clear_gene_srch(){
    gene_srch_text = document.getElementById("gene_srch_text")
    gene_srch_text.value=''
+}
+function select_annotation(gid,anno){
+    console.log(gid,anno)
 }
