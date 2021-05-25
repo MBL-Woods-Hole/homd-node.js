@@ -259,12 +259,12 @@ router.post('/get_16s_seq', function get_16s_seq_post(req, res) {
 		    return
 		}
 		console.log(rows)
-		seqstr = rows[0]['16s_rRNA'].replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&amp;gt;/gi,'>').replace(/&amp;lt;/gi,'<')
+		let seqstr = rows[0]['16s_rRNA'].replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&amp;gt;/gi,'>').replace(/&amp;lt;/gi,'<')
 		
 		console.log(seqstr)
-		//arr = helpers.chunkSubstr(seqstr,60)
-		//html = seqstr.join('<br>')
-		html = seqstr
+		let arr = helpers.chunkSubstr(seqstr,80)
+		let html = seqstr.join('<br>')
+		//html = seqstr
 		res.send(html)
 	})
 	
@@ -273,14 +273,16 @@ router.post('/get_NN_NA_seq', function get_NN_NA_seq_post(req, res) {
 	console.log('in get_NN_NA_seq -post')
 	helpers.accesslog(req, res)
 	console.log(req.body)
-	var type = req.body.type
-	var pid = req.body.pid
+	let field_name = 'seq_'+req.body.type  // na or aa => seq_na or seq_aa
+	let pid = req.body.pid
+	let db = req.body.db.toUpperCase()
 	//var gid = req.body.seqid;
     //q = 'SELECT UNCOMPRESS(seq_na_comp) FROM annotation.orf_sequence '
     //q += "WHERE PID='"+req.body.pid+"'"
-	q = "SELECT UNCOMPRESS(seq_comp) as seq FROM annotation.orf_sequence "
-    q += "join annotation.sequence on (orf_sequence.sequence_"+type+"_id = sequence.sequence_id)"
-    q += "WHERE PID='"+pid+"'"
+	q = "SELECT "+field_name+" as seq FROM "+db+".ORF_seq"
+    //q += " JOIN annotation.sequence on (orf_sequence.sequence_"+type+"_id = sequence.sequence_id)"
+    q += " WHERE PID='"+pid+"'"
+    
     console.log(q)
 	
 	TDBConn.query(q, (err, rows) => {
@@ -289,13 +291,20 @@ router.post('/get_NN_NA_seq', function get_NN_NA_seq_post(req, res) {
 		    return
 		}
 		console.log(rows)
-		seqstr = rows[0]['seq']
+		let seqstr = rows[0]['seq']
 		
-		console.log(seqstr)
-		//arr = helpers.chunkSubstr(seqstr,60)
-		//html = seqstr.join('<br>')
-		html = seqstr
+		console.log(seqstr.length)
+		let arr = helpers.chunkSubstr(seqstr,80)
+		let html = arr.join('<br>')
+		//html = seqstr
 		res.send(html)
+		
+		
+		
+		// seqstr = rows[0].seq_trim9
+// 		arr = helpers.chunkSubstr(seqstr,60)
+// 		html = arr.join('<br>')
+// 		res.send(html)
 	})
 	
 });
