@@ -498,8 +498,8 @@ router.post('/get_refseq', function get_refseq(req, res) {
 	//The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
 	TDBConn.query(queries.get_refseq_query(refseq_id), (err, rows) => {
 		seqstr = rows[0].seq_trim9
-		arr = helpers.chunkSubstr(seqstr,60)
-		html = arr.join('<br>')
+		let arr = helpers.chunkSubstr(seqstr,80)
+		let html = arr.join('<br>')
 		res.send(html)
 	})
 });

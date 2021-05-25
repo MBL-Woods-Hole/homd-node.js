@@ -78,6 +78,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 <% info_data = JSON.parse(info_data) %>
 <% all_annos = JSON.parse(all_annos) %>
 <% mole = JSON.parse(mole) %>
+<% db = anno_type+'_'+gid %>
 <!-- 1595 -->
 <body>
   	<div id='wrapper'>
@@ -180,8 +181,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			   <td><%= mole[n].accession %></td>
 			   <td><%= mole[n].PID %></td>
 			   <td nowrap>
-			       [<a title='Nucleic Acid' href='#' onclick="get_NN_NA_seq('na','<%= mole[n].PID %>')">NA</a>] 
-			       [<a title='Amino Acid' href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].PID %>')">AA</a>]
+			       [<a title='Nucleic Acid' href='#' onclick="get_NN_NA_seq('na','<%= mole[n].PID %>','<%= db %>')">NA</a>] 
+			       [<a title='Amino Acid' href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].PID %>','<%= db %>')">AA</a>]
 			   </td>
 			   <td></td>
 			   <td></td>			   
