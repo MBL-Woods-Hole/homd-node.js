@@ -337,7 +337,7 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
     var q = queries.get_annotation_query2(gid,anno_type)
     console.log(q)
     
-    TDBConn.query(q, (err, rows) => {
+    ADBConn.query(q, (err, rows) => {
 		if(err){
 		    console.log(err)
 		}else{
