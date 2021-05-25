@@ -497,7 +497,7 @@ router.post('/get_refseq', function get_refseq(req, res) {
 	//FIXME There are 4 fields which do I query???
 	//The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
 	TDBConn.query(queries.get_refseq_query(refseq_id), (err, rows) => {
-		seqstr = rows[0].seq_trim9
+		let seqstr = rows[0].seq_trim9
 		let arr = helpers.chunkSubstr(seqstr,80)
 		let html = arr.join('<br>')
 		res.send(html)
