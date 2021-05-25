@@ -3,6 +3,7 @@
 const winston = require('winston');
 const config = require('./config/config');
 const taxdbconn = require('./config/database').taxon_pool;
+const annodbconn = require('./config/database').taxon_pool2;
 //const gendbconn = require('./config/database').genome_pool;
 const path = require('path');
 // explicitly makes conn global

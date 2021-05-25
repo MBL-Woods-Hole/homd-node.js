@@ -22,10 +22,7 @@ module.exports.get_16s_rRNA_sequence_query = (gid) => {
 }
 
 module.exports.get_annotation_query = (gid, anno) => {
-   //  var qSelectAnno = "select mol_id, accession, PID, product from annotation.orf_sequence"
-//     qSelectAnno += " join annotation.molecule using(mol_id)"
-//     qSelectAnno += " where orf_sequence.gid='"+gid+"'"
-//     qSelectAnno += " and orf_sequence.annotation='"+anno+"'";
+   
     var qSelectAnno = "SELECT accession, PID, product FROM annotation.orf_sequence" 
     qSelectAnno += " JOIN annotation.molecule ON orf_sequence.gid=molecule.gid"
     qSelectAnno += " AND orf_sequence.annotation=molecule.annotation"
@@ -33,5 +30,12 @@ module.exports.get_annotation_query = (gid, anno) => {
     qSelectAnno += " WHERE orf_sequence.gid='"+gid+"'" 
     qSelectAnno += " AND orf_sequence.annotation='"+anno+"'";      
 
+    return qSelectAnno;
+}
+
+module.exports.get_annotation_query2 = (gid, anno) => {
+    var db = anno.toUpperCase() +'_'+gid
+    var qSelectAnno = "SELECT accession, PID, product FROM "+db+".ORF_seq"
+    qSelectAnno += " JOIN "+db+".molecules ON "+db+".ORF_seq.mol_id="+db+".molecules.id"
     return qSelectAnno;
 }

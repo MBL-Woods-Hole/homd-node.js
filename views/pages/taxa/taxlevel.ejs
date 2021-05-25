@@ -16,11 +16,16 @@ td a {
      background:#e9ffdb;
      border-radius:2px;
      padding:2px 5px;
+     
 }
 .level-button a{
-     
      color: white;
-     
+}
+#level-container{
+  padding:20px 0 0 0;
+}
+.card-body{
+   padding:10px 0 0 0;
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -38,12 +43,10 @@ td a {
 		 
 		
 		 
-		<div class="" style="max-width: 50rem;">
-			<h4 class="card-header">Taxonomic Level:</h4>
+		<div id='level-container' >
+			<h4 >Taxonomic Level:</h4>
 			<div class="card-body">
-			   <p class="card-text">
-   
-				Select a Rank: &nbsp; &nbsp; &nbsp;    
+				<small>[Select a Rank:]</small> <br>   
 				<a class='level-button' type='button' href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
 				&gt; <a class='level-button' type='button'  href='#' id='Phylum' onclick="change_level('Phylum')">Phylum</a> 
 				&gt; <a class='level-button' type='button'  href='#' id='Class' onclick="change_level('Class')">Class</a> 
@@ -52,7 +55,7 @@ td a {
 				&gt; <a class='level-button' type='button'  href='#' id='Genus' onclick="change_level('Genus')">Genus</a> 
 				&gt; <a class='level-button' type='button'  href='#' id='Species' onclick="change_level('Species')">Species</a>
 				&gt; <a class='level-button' type='button'  href='#' id='Subspecies' onclick="change_level('Subspecies')">Subspecies</a>
-			   </p>
+			  
 			</div>
 		 </div>
 		 

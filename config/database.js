@@ -15,3 +15,12 @@ exports.taxon_pool      =    mysql.createPool({
     debug    :  false
 });
 
+exports.taxon_pool2      =    mysql.createPool({
+    connectionLimit : 100, //important
+    host     : db_config2.host,
+    user     : db_config2.user,
+    password : db_config2.password,
+    socketPath : db_config2.socketPath,
+   // database : db_config.database,
+    debug    :  false
+});
