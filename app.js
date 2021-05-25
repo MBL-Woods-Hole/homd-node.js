@@ -8,7 +8,7 @@ const annodbconn = require('./config/database').taxon_pool2;
 const path = require('path');
 // explicitly makes conn global
 global.TDBConn = taxdbconn;
-//global.GDBConn = gendbconn;
+global.ADBConn = annodbconn;
 global.app_root = path.resolve(__dirname);
 const C		= require('./public/constants');
 const fs = require('fs-extra');
