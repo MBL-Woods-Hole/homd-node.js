@@ -118,7 +118,7 @@ router.get('/genome_table', function genome_table(req, res) {
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		
 		//seqid_list: JSON.stringify(gid_obj_list),
-		seqid_list: JSON.stringify(send_list),
+		data: JSON.stringify(send_list),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		letter: req.session.gen_letter,
 		otid: otid,
@@ -132,24 +132,18 @@ router.get('/genome_table', function genome_table(req, res) {
 	});
 })
 //
-router.get('/jbrowse2/:id', function jbrowse2(req, res) {
-	console.log('jbrowse2/:id -get')
-});
+// router.get('/jbrowse2/:id', function jbrowse2(req, res) {
+// 	console.log('jbrowse2/:id -get')
+// });
 router.get('/jbrowse', function jbrowse(req, res) {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('jbrowse-get')
+	let myurl = url.parse(req.url, true);
+    
+    let gid = myurl.query.gid
 	
-	// See models/homd_taxonomy.js for C.tax_table_results
-	
-	//jbrowse install on my localhost mac osx:
-	//https://jbrowse.org/jb2/
-	// installed locally at $HOME/programming/jbrowse2
-	// SHOULD THIS BE IN THE HOMD DIR???
-	// GOOD: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0924-1
-	// https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4350995/
-	//console.log(Object.values(C.genome_lookup)[0])
-	var glist = Object.values(C.genome_lookup)
+	let glist = Object.values(C.genome_lookup)
 	glist.sort(function (a, b) {
     	return helpers.compareStrings_alpha(a.genus, b.genus);
     });
@@ -161,34 +155,35 @@ router.get('/jbrowse', function jbrowse(req, res) {
 	res.render('pages/genome/jbrowse2_stub_iframe', {
 		title: 'HOMD :: JBrowse', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		gnom: '',  // default
+		gid: gid,  // default
 		genomes: JSON.stringify(genome_list),
 		tgenomes: genome_list.length,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
 //
-router.post('/jbrowse', function jbrowse_post(req, res) {
-//router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-	helpers.accesslog(req, res)
-	console.log('jbrowse-post')
-	
-	// See models/homd_taxonomy.js for C.tax_table_results
-	console.log(req.body);
-	var gnom = req.body.gnom_select
-	
-	//res.send(JSON.stringify({'static_data':gnom}));
-	res.render('pages/genome/jbrowse2_stub_iframe', {
-		title: 'HOMD :: JBrowse', 
-		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		gnom: gnom,  // default
-		genomes: JSON.stringify(C.available_jbgenomes),
-		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-	});
-});
+// router.post('/jbrowse', function jbrowse_post(req, res) {
+// //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
+// 	helpers.accesslog(req, res)
+// 	console.log('jbrowse-post')
+// 	
+// 	// See models/homd_taxonomy.js for C.tax_table_results
+// 	console.log(req.body);
+// 	var gnom = req.body.gnom_select
+// 	
+// 	//res.send(JSON.stringify({'static_data':gnom}));
+// 	res.render('pages/genome/jbrowse2_stub_iframe', {
+// 		title: 'HOMD :: JBrowse', 
+// 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+// 		gnom: gnom,  // default
+// 		genomes: JSON.stringify(C.available_jbgenomes),
+// 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+// 	});
+// });
 //
 router.post('/jbrowse_ajax', function jbrowse_ajax_post(req, res) {
 	console.log('AJAX JBrowse')
+	console.log(req.body);
 	// URL from old HOMD site:
 // ?data=homd/SEQF2029
 // 	&tracks=DNA,prokka,ncbi
@@ -258,10 +253,10 @@ router.post('/get_16s_seq', function get_16s_seq_post(req, res) {
 		    console.log(err)
 		    return
 		}
-		console.log(rows)
+		//console.log(rows)
 		let seqstr = rows[0]['16s_rRNA'].replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&amp;gt;/gi,'>').replace(/&amp;lt;/gi,'<')
 		
-		console.log(seqstr)
+		//console.log(seqstr)
 		let arr = helpers.chunkSubstr(seqstr,80)
 		let html = seqstr.join('<br>')
 		//html = seqstr
@@ -290,10 +285,10 @@ router.post('/get_NN_NA_seq', function get_NN_NA_seq_post(req, res) {
 		    console.log(err)
 		    return
 		}
-		console.log(rows)
+		//console.log(rows)
 		let seqstr = rows[0]['seq']
 		
-		console.log(seqstr.length)
+		//console.log(seqstr.length)
 		let arr = helpers.chunkSubstr(seqstr,80)
 		let html = arr.join('<br>')
 		//html = seqstr
@@ -465,6 +460,39 @@ router.get('/dld_table', function dld_table(req, res) {
 	res.end()
 });
 
+
+router.post('/search_genometable', function search_genometable(req, res) {
+	console.log(req.body)
+	let search_txt = req.body.tax_srch
+	let search_field = req.body.field
+	let seqrch_match = req.body.match
+	let search_sub = req.body.sub
+	// FIXME
+	gid_obj_list1 = Object.values(C.genome_lookup);
+	//send_list = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+	//let tcount = send_tax_obj.length  // total count of our filters
+	pgtitle = 'Search TaxTable'
+	var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
+	var phyla = phyla_obj.map(function(el){ return el.taxon; })
+	res.render('pages/genome/genometable', {
+		title: 'HOMD :: Genome Table', 
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		
+		//seqid_list: JSON.stringify(gid_obj_list),
+		data: JSON.stringify(gid_obj_list1),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		letter: '',
+		otid: '',
+		phylum: '',
+		phyla: JSON.stringify(phyla),
+		show_filters: 1,
+		count_text:'',
+		page_text:'',
+		page:1,
+		
+	});
+	
+})
 ///////////////////////////////
 //////////////////////////////
 function create_table(source, type) {

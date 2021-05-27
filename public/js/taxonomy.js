@@ -329,3 +329,11 @@ function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,f
 //     }
 //     xmlhttp.send(JSON.stringify(args));
 // }
+function tax_table_search(){
+   form = document.getElementById('ttable_search')
+   if(form.tax_srch.value == ''){
+       return
+   }
+   
+   form.submit()
+}

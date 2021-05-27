@@ -40,9 +40,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .col1{
    width: 40px;
 }
-.center {
-    text-align:center;
-}
+
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -66,7 +64,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		 </div>		 
 			 
 	 
-
+<small>(HPT = <u>H</u>uman <u>P</u>hage <u>T</u>axon)</small>
 <div id='tax-box' >
 
 	
@@ -91,9 +89,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		   <td nowrap><%= vid  %></td>
 		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank'><%= list[n].assembly_ncbi  %></a></td>
 		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank'><%= list[n].sra_accession_ncbi  %></a></td>
-		   <td nowrap class='center'><i><b><%= list[n].genus_ncbi  %></b></i></td>
-		   <td nowrap class='center'><i><b><%= list[n].species_ncbi  %></b></i></td>
-		   <td nowrap class='center'><i><b><%= list[n].host_ncbi  %></b></i></td>
+		   <td nowrap class=''><i><b><%= list[n].genus_ncbi  %></b></i></td>
+		   <td nowrap class=''><a href='phagedesc'><i><b><%= list[n].species_ncbi  %></b></i></a></td>
+		   <td nowrap class=''><i><b><%= list[n].host_ncbi  %></b></i></td>
 		   
 		   </tr>
 		 <% } %>

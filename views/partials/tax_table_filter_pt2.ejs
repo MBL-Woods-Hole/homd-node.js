@@ -22,11 +22,11 @@
   
   <div id="column_right2">
       <div id='taxa-search' >
-       <form class='form-inline' name='' method='POST' action=''>
+       <form class='form-inline' id='ttable_search' name='ttable_search' method='POST' action='search_taxtable' >
             <fieldset>
-            Search This table:
+            Search This Table:
             <div class="">
-              <input type='text'  name='tax_srch' maxlength='18' size='20'>
+              <input type='text'  class='dropdown' name='tax_srch' maxlength='18' size='20'>
               <select class='dropdown' id='' class="" name='field' >
                 <option value="all">All Fields</option>
                 <option value="taxid">Taxon ID</option>
@@ -47,7 +47,7 @@
                 <option value="partial">Partial field</option>
                 <option value="whole">Whole field</option>
               </select>
-              <input class="pill pill-brown" type='submit' value=' Go '>
+              <input class="pill pill-brown" type='button' value=' Go ' onclick='tax_table_search()'>
             </div>
             </fieldset>
          </form>

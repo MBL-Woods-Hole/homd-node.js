@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <%- include('../../partials/header_html'); %>
 
-<% list = JSON.parse(res) %>
+<% list = JSON.parse(data) %>
 <% statusfltrX = statusfltr %>
 
 
@@ -30,7 +30,7 @@
 		 </div>		 
 			 
 	<%- include('../../partials/tax_table_filter_pt1.ejs') %>
-
+<small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
 <div id='tax-box' >
 
 	<%- include('../../partials/tax_table_filter_pt2.ejs') %> 
@@ -52,7 +52,7 @@
 		 </thead>
 		 <tbody>
 		 <% for(n in list){ %>
-		   <tr class="table-primaryX">
+		   <tr>
 		   <% otid= list[n].otid %>
 		   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
 		   <td nowrap><%= taxidfullname  %></td>

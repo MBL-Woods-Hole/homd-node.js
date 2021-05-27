@@ -1,48 +1,44 @@
 <style>
             
 #genome_choices{
-  padding:10px 0 10px 100px;
+  padding:10px 0 10px 50px;
+  border:1px solid grey;
 }
-	
+#iframe_div{
+
+}	
 </style>
 <%- include('../../partials/header_html'); %>
 <% gn = JSON.parse(genomes) %>
 
+<% %>
 
 <body>
-  <div id='wrapper'>		
-	    
-	    
-	<div id='header'>
-       <%- include('../../partials/header_img'); %>
-    </div>
-
-	
-	
-	<div id="navbar">
-		<%- include('../../partials/navbar'); %>
-	</div>
-	<div id='' class='page-content'>
-			
-		  <br>
+  	<div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    <div class='page-content' >
+		
 			 
-		  <span>Select a Genome:</span>	  
-		  <!-- <form id='load_genome_form' name='' action='/genomes/jbrowse' method='POST'>	 -->
+		   
 		  <div id='genome_choices'>
-			<select id='gnom_select' name='gnom_select' onchange='change_genome2(this.value)'>
+		    <span nowrap>Select a Genome: 
+			<select id='gnom_select' class='dropdown' name='gnom_select' onchange='change_genome_4_jbrowse(this.value)'>
 			 Select a Genome:
 			 <option id='' name='none' value='none'>Choose...</option>
 			 <% for(i in gn){ %>
 			 	<option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 			 <% } %>
 			</select> from a total of <%= tgenomes %>
-		  <!-- </form> -->	
+		   </span>
 		  </div>
+		 	
 		  
-		  
-           <div id='iframe_div' style="width: 100%; margin: 0 auto;">
-			   <center><h2>Embedded JBrowse2</h2></center>
-				<iframe id='genome_iframe' width='100%' height=0
+           <div id='iframe_div' >
+			   <center><h3>JBrowse <span id='gid-label'></span>
+			   
+			   </h3></center><span id='open_new_window'></span>
+				<iframe id='genome_iframe' width='100%' height=20
 				></iframe>
            </div>
 			
@@ -62,6 +58,13 @@
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/genomes.js"></script>
-
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+  var gid = '<%- gid; %>'
+  if(gid){
+     change_genome_4_jbrowse(gid)
+  }
+</script>
 
 

@@ -40,7 +40,7 @@
 
 	<div id='header_buttons' >
 	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (ID=<%= ginfo.otid %>)</a>
-	 <a class='gd-button' href='http://www.homd.org/jbrowse/index.html?data=homd/<%= ginfo.gid %>' target='_blank'>JBrowse Genome Viewer</a>
+	 <a class='gd-button' href='/genome/jbrowse?gid=<%= ginfo.gid %>'>Genome Viewer</a>
 	 <a class='gd-button' href=''>BLAST Against this Genome</a>
 	 <a class='gd-button' href='annotation/<%= ginfo.gid %>/prokka'>PROKKA Annotation</a>
 	 <a class='gd-button' href='annotation/<%= ginfo.gid %>/ncbi'>NCBI Annotation</a>

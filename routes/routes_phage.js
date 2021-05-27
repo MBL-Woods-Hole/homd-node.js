@@ -53,7 +53,16 @@ router.get('/phage_table', (req, res) => {
          }
    });
 });
-
+router.get('/phagedesc', (req, res) => {
+  console.log('in phage table')
+  helpers.accesslog(req, res)
+  res.render('pages/phage/phagedesc', {
+				title: 'HOMD :: Human Oral Phage Database',
+				config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
+				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+				vdata:    JSON.stringify(C.phage_list),
+		  });
+});
 
 router.get('/dld_table', (req, res) => {
 	helpers.accesslog(req, res)
