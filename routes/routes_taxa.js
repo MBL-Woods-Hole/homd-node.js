@@ -299,13 +299,20 @@ router.post('/tax_level', function tax_level_post(req, res) {
 				return_obj.item_taxon = lineage[lineage.length - 1]
 				return_obj.parent_rank = C.ranks[C.ranks.indexOf(rank) - 1]
 				return_obj.parent_taxon = lineage[lineage.length - 2]
-				//console.log(lineage)
-				return_obj.tax_count = taxdata[lineage.join(';')].tax_cnt
-				return_obj.gne_count = taxdata[lineage.join(';')].gcnt
-				return_obj.rrna_count = taxdata[lineage.join(';')].refcnt
-				
-				return_obj.lineage = lineage.join(';')
-				
+				console.log(rank,lineage)
+				if(lineage.length == C.ranks.indexOf(rank)+1){
+                    let lineage_str = lineage.join(';')
+                    return_obj.tax_count = taxdata[lineage_str ].tax_cnt
+                    return_obj.gne_count = taxdata[lineage_str ].gcnt
+                    return_obj.rrna_count = taxdata[lineage_str ].refcnt
+                    return_obj.lineage = lineage_str 
+                    
+				}else{
+				    return_obj.tax_count = 0
+                    return_obj.gne_count = 0
+                    return_obj.rrna_count = 0
+                    return_obj.lineage = '' 
+				}
 				tax_resp.push(return_obj)
 				return return_obj
 		
