@@ -1,5 +1,7 @@
 <style>
 </style>
+<% data = JSON.parse(phage_data) %>
+
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -10,9 +12,33 @@
     
     <div class='page-content' >
 		 					
-			 <div class='title'>CONTENT</div>
-		
+			 <div class='title'>PHAGE DATA: <small>PhageID <%= pid %></small></div>
 	
+	<table>
+	<tr>	
+	  <td nowrap>Family: <%= data.family_ncbi  %></td>
+	</tr><tr>	
+	  <td nowrap>Genus Species: <i><%= data.genus_ncbi  %> <%= data.species_ncbi  %></i></td>
+	</tr>
+	
+	<tr>	
+	  <td nowrap>NCBI Assembly: <a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank'><%= data.assembly_ncbi  %></a></td>
+	</tr><tr>
+	<% if(data.sra_accession_ncbi != ''){ %>  
+	  <td nowrap>NCBI Accession: <a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank'><%= data.sra_accession_ncbi  %></a></td>
+    <% }else{ %>
+      <td nowrap>NCBI Accession: none</td>
+    <% } %>
+    </tr><tr>
+	  <td nowrap>Host Species: <a href='' target='_blank'><%= data.host_ncbi  %></a></td>
+    </tr><tr>
+    <% if(data.otid != ''){ %>
+	  <td nowrap><a href='/taxa/tax_description?otid=<%= data.host_otid %>'>Host Oral Taxon-ID: <%= data.host_otid %></a></td>
+	<% }else{ %>
+      <td nowrap>Host Oral Taxon-ID: none found</td>
+    <% } %>
+    </tr>
+    </table>
     </div> <!-- end: page-content -->
     
     <div id='footer'>

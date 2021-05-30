@@ -18,9 +18,12 @@
   margin-top:20px;
   background: palegoldenrod;
   border:1px solid brown;
+  color:red;
 }
 #lineage2{
-   color:red;
+   color:black;
+   font-weight:normal;
+   font-family:Trebuchet MS, sans-serif;
 }
 #headline1{
   font-size:20px;
@@ -85,7 +88,7 @@
 	  
 	  <% if(lineage){ %>
 	  <div id='lineage'>
-	    <span>Lineage:</span> <span id='lineage2'><small><%= lineage %></small></span>
+	    <span>Lineage:</span> <span id='lineage2'><%= lineage %></span>
 	    </div>
 	  <% }else{ %>
 	  <div id='lineage' style='padding:10px;margin-top:20px;'>Select a domain below to descend the taxonomic lineage of the oral microbiome.</div>
