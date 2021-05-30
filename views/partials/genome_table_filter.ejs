@@ -20,10 +20,10 @@
 	
   <div id='column_right1'  >
 	
-	<p class="card-text col-sm-6">
-	<form name='genome_srch' method='POST' action='genome_table_search'>
+	
+	<form id='gtable_search' name='gtable_search' method='POST' action='search_genometable' >
 	  
-	  <input class="pill pill-brown float-right" type='submit' value='Search'> 
+	  <input class="pill pill-brown float-right" type='button' value='Search' onclick='genome_table_search()'> 
 	  
 	  Search Genomes:&nbsp;&nbsp;
 	  <span class='' >
@@ -33,40 +33,39 @@
 	  </span>
 	  <div id='gen_options' style='display:none;'>
 	    <br>&nbsp;&nbsp;&nbsp;In:
-	    <select class='dropdown'>
+	    <select name='field' class='dropdown'>
 	      <optgroup>
-	      <option>All Fields</option>
-	      <option>Taxon ID</option>
-	      <option>Genus</option>
-	      <option>Species</option>
-	      <option>Culture Collection</option>
-	      <option>Isolation Origin</option>
-	      <option>Sequence Status</option>
-	      <option>Sequence Center</option>
-	      <option>Seq ID</option>
+	      <option value=''>All Fields</option>
+	      <option value=''>Taxon ID</option>
+	      <option value=''>Genus</option>
+	      <option value=''>Species</option>
+	      <option value=''>Culture Collection</option>
+	      <option value=''>Isolation Origin</option>
+	      <option value=''>Sequence Status</option>
+	      <option value=''>Sequence Center</option>
+	      <option value=''>Seq ID</option>
 	      </optgroup>
 	    </select>
 	    Matching:
-	    <select class='dropdown'>
-	      <option>All Words</option>
-	      <option>ANY Words</option>
-	      <option>Exact Phrase</option>
+	    <select  name='match' class='dropdown'>
+	      <option value='all'>All Words</option>
+	      <option value='any' >ANY Words</option>
+	      <option value='exact'>Exact Phrase</option>
 	    </select>
-	    <select class='dropdown'>
-	      <option>Partial Field</option>
-	      <option>Whole Field</option>
+	    <select name='sub' class='dropdown'>
+	      <option value='partial'>Partial Field</option>
+	      <option value='whole'>Whole Field</option>
 	    </select>
 	  </div>
 	  
 	  <br>Sequencing Status: 
-	  <input type='checkbox' class='filter_ckbx' id='status_all' name='status_all' \> All&nbsp;
-	  <input type='checkbox' class='filter_ckbx' id='status_complete' name='status_complete' \> Complete&nbsp;
-	  <input type='checkbox' class='filter_ckbx' id='status_coverage' name='status_coverage' \> High Coverages&nbsp;
-	  <input type='checkbox' class='filter_ckbx' id='status_survey' name='status_survey' \> Survey&nbsp;
-	 
-	 	  
+	  <input type='checkbox' class='filter_ckbx' id='status_all' name='status_all' value='all'\> All&nbsp;
+	  <input type='checkbox' class='filter_ckbx' id='status_complete' name='status_complete' value='complete' \> Complete&nbsp;
+	  <input type='checkbox' class='filter_ckbx' id='status_coverage' name='status_coverage' value='high' \> High Coverages&nbsp;
+	  <input type='checkbox' class='filter_ckbx' id='status_survey' name='status_survey' value='survey' \> Survey&nbsp;
+	   
 	</form>
-	</p>
+	
 	
   </div>	 <!--  end card-->
 	 	 

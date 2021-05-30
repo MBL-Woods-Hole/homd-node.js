@@ -74,9 +74,9 @@ router.post('/ajax', function(req, res){
     console.log(req.body);
     helpers.accesslog(req, res)
     
-    var file;
-    var id = req.body.id;  //.split('--')
-    var tmp = id.split('--')
+    let file;
+    let id = req.body.id;  //.split('--')
+    let tmp = id.split('--')
     if(req.body.set_session == true){
       req.session.menu = tmp[0]
 	  req.session.page = tmp[1]
@@ -87,12 +87,11 @@ router.post('/ajax', function(req, res){
     file = path.join(process.cwd(), 'public', 'static_help_files', tmp[1] +'.ejs' )
     
     
-    console.log(file)
-    var static_data = {}
+    //console.log(file)
+    let static_data = {}
     static_data.menu = tmp[0]
     static_data.page = tmp[1]
     fs.readFile(file, "utf8", (err,data) => {
-    
     	if(err){
     		console.log('No file found -- does not validate -1!!')
             req.flash('NO TEXT/FILE FOUND')
@@ -101,7 +100,6 @@ router.post('/ajax', function(req, res){
     	//console.log(data)
     	static_data.data = data
     	res.send(JSON.stringify(static_data));
-    	
     });
     
 });

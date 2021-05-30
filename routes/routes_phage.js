@@ -33,27 +33,33 @@ router.get('/phage_table', (req, res) => {
   console.log('in phage table')
   helpers.accesslog(req, res)
 
-  fs.readFile(path.join(CFG.PATH_TO_DATA, C.phage_list_fn), 'utf8', (err, data) => {
-    	if (err)
-      		console.log(err)
-    	else{
-           // will only be loaded once
-           // Is this the right way to do this?? (load for each page)
-          C.phage_list = JSON.parse(data) // will only be loaded once
-		  console.log(C.phage_list[0])
-		  C.phage_list.sort(function (a, b) {
-      		return helpers.compareStrings_alpha(a.genus_ncbi, b.genus_ncbi);
-    	  });
-		  res.render('pages/phage/phagetable', {
+  let phage_list = Object.values(C.phage_lookup)
+  phage_list.sort(function (a, b) {
+	return helpers.compareStrings_alpha(a.family_ncbi, b.family_ncbi);
+  });
+  res.render('pages/phage/phagetable', {
+		title: 'HOMD :: Human Oral Phage Database',
+		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		vdata:    JSON.stringify(phage_list),
+  });
+      
+});
+router.get('/phagedesc', (req, res) => {
+  console.log('in phage table')
+  helpers.accesslog(req, res)
+  let myurl = url.parse(req.url, true);
+  let pid = myurl.query.pid;
+  let phage = C.phage_lookup[parseInt(pid)]
+  console.log(phage)
+  res.render('pages/phage/phagedesc', {
 				title: 'HOMD :: Human Oral Phage Database',
 				config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-				vdata:    JSON.stringify(C.phage_list),
+				phage_data:JSON.stringify(phage),
+				pid:pid
 		  });
-         }
-   });
 });
-
 
 router.get('/dld_table', (req, res) => {
 	helpers.accesslog(req, res)
@@ -82,7 +88,7 @@ function create_table(source, type) {
 
     if(source === 'table' && type === 'browser'){
        
-        var headers_row = ["Phage-ID","Assembly.NCBI","Accession.NCBI","Family.NCBI","Genus.NCBI","Species.NCBI","Molecule_Type.NCBI","Sequence_Type.NCBI","Host.NCBI","Isolation_Source.NCBI","Collection_Date.NCBI","BioSample.NCBI","Genbank_Title.NCBI"]
+        var headers_row = ["Phage-ID","Assembly.NCBI","Accession.NCBI","Family.NCBI","Genus.NCBI","Species.NCBI","Molecule_Type.NCBI","Sequence_Type.NCBI","Host.NCBI","Host.HOMD-TaxonID","Isolation_Source.NCBI","Collection_Date.NCBI","BioSample.NCBI","Genbank_Title.NCBI"]
         
         txt =  headers_row.join('\t')
         
@@ -91,7 +97,7 @@ function create_table(source, type) {
                
             
                //console.log(o2)
-               var r = [vid, obj.assembly_ncbi, obj.sra_accession_ncbi, obj.family_ncbi, obj.genus_ncbi, obj.species_ncbi, obj.molecule_type_ncbi, obj.sequence_type_ncbi, obj.host_ncbi, obj.isolation_source_ncbi, obj.collection_date_ncbi, obj.biosample_ncbi, obj.genbank_title_ncbi]
+               var r = [vid, obj.assembly_ncbi, obj.sra_accession_ncbi, obj.family_ncbi, obj.genus_ncbi, obj.species_ncbi, obj.molecule_type_ncbi, obj.sequence_type_ncbi, obj.host_ncbi, obj.host_otid, obj.isolation_source_ncbi, obj.collection_date_ncbi, obj.biosample_ncbi, obj.genbank_title_ncbi]
                row = r.join('\t')
                txt += '\n'+row
             

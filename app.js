@@ -155,8 +155,8 @@ var data_init_files =[
 	C.references_lookup_fn,
 	C.info_lookup_fn,
 	C.taxcounts_fn,
-	C.annotation_lookup_fn	
-	
+	C.annotation_lookup_fn,
+	C.phage_lookup_fn	
 	
 ]
 console.log('Path to Data Files:',config.PATH_TO_DATA)
@@ -197,12 +197,13 @@ async.map(data_init_files, readAsync, function(err, results) {
     //console.log('parsing7')
     C.taxon_counts_lookup 			= JSON.parse(results[7]);
     C.annotation_lookup 			= JSON.parse(results[8]);
+    C.phage_lookup 			        = JSON.parse(results[9]);
     //Object.values(C.taxon_lookup)
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
     C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
     //helpers.print_size()
     //var  = C.dropped_obj
-    //console.log('Dropped:',C.dropped_taxids)
+    console.log('Dropped:',C.dropped_taxids)
     //console.log('NonOralRef:',C.nonoralref_taxids)
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     

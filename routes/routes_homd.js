@@ -7,13 +7,24 @@ const path     = require('path');
 const C		  = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
 const queries = require(app_root + '/routes/queries')
-
+const findInFiles = require('find-in-files');
 
 
 router.post('/site_search', (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('in POST -Search')
 	console.log(req.body)
+		/*
+	Taxonomy DB - genus;species
+	    TaxObjects:strain,refseqID,OTID
+	Genome DB   - genus;species
+		GeneObjects: SeqID
+	Phage DB - host Genus;Species
+		PhageObjects:
+	Help Pages
+	NCBI Genome Annot
+	Prokka Genome Annot
+	*/
 	let search_txt = req.body.intext.toLowerCase()
 	// pure numeric would be: otid
 	let tax_search_lst = [] 
@@ -49,31 +60,59 @@ router.post('/site_search', (req, res) => {
 	   let otid = taxon_otid_lst[n]
 	   taxon_otid_obj[otid]= {'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species}
 	}
+	
+	// search help pages
+	let dir = path.join(process.cwd(), 'public', 'static_help_files' )
+	// https://www.npmjs.com/package/find-in-files
+	// var result2 = findInFiles.find(search_txt, dir, '.ejs$')
+// 		.then(function(help_page_results) {
+//         console.log(help_page_results)
+//         
+//         res.render('pages/homd/search_result', {
+// 			title: 'HOMD :: Site Search', 
+// 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
+// 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+// 			search_text: search_txt,
+// 			otid_list: JSON.stringify(otid_lst),
+// 			gid_list: JSON.stringify(gid_lst),
+// 			taxon_otid_obj: JSON.stringify(taxon_otid_obj),
+// 			help_pages: JSON.stringify(help_page_results)
+// 	    });
+//         
+//      
+//     });
+    var result2 = findInFiles.find({'term': search_txt, 'flags': 'ig'}, dir, '.ejs$')
+                .then(function(help_page_results) {
+		
+        console.log('help_page_results',help_page_results)
+        let lst = []
+        for(fpath in help_page_results){
+           console.log(fpath, help_page_results[fpath])
+           lst.push(path.basename(fpath, path.extname(fpath)))
+        }
+        res.render('pages/homd/search_result', {
+			title: 'HOMD :: Site Search', 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+			search_text: search_txt,
+			otid_list: JSON.stringify(otid_lst),
+			gid_list: JSON.stringify(gid_lst),
+			taxon_otid_obj: JSON.stringify(taxon_otid_obj),
+			help_pages: JSON.stringify(lst),
+	    });
+        
+     });
+   
+    
+      // console.log('res2',result2); // Code depending on result
+    
+   
 	//console.log(taxon_lst,'taxon_lst',taxon_lst.length)
 	//console.log(taxon_lst2,'taxon_lst2',taxon_lst2.length)
 	//console.log('110',C.taxon_lineage_lookup[110])
-	/*
-	Taxonomy DB - genus;species
-	    TaxObjects:strain,refseqID,OTID
-	Genome DB   - genus;species
-		GeneObjects: SeqID
-	Phage DB - host Genus;Species
-		PhageObjects:
-	Help Pages
-	NCBI Genome Annot
-	Prokka Genome Annot
-	*/
-	res.render('pages/homd/search_result', {
-		title: 'HOMD :: Site Search', 
-		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
-		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		search_text: search_txt,
-		otid_list: JSON.stringify(otid_lst),
-		gid_list: JSON.stringify(gid_lst),
-		taxon_otid_obj: JSON.stringify(taxon_otid_obj),
-		
-	});
+
 	
+
 	
 	
 });

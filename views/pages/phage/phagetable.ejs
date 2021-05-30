@@ -40,8 +40,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .col1{
    width: 40px;
 }
-.center {
-    text-align:center;
+.col2{
+   width: 130px;
+}
+.col3{
+   width: 240px;
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -66,7 +69,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		 </div>		 
 			 
 	 
-
+<small>(HPT = <u>H</u>uman <u>P</u>hage <u>T</u>axon)</small>
 <div id='tax-box' >
 
 	
@@ -76,24 +79,27 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		 <thead>
 		  <tr>
 		    <th scope="col" class='col1 sorttable_nosort'>No.</th>
-		    <th scope="col" class='center'>NCBI Assembly</th>
-		    <th scope="col">SRA Accession</th>
-		    <th scope="col">Genus</th>
-		    <th scope="col">Species</th>
-		    <th scope="col">Host Bacteria</th>
+		    <th scope="col" class='col3'>Family</th>
+		    <th scope="col" class='col3'>Genus</th>
+		    <th scope="col" class='col3'>Species</th>
+		    <th scope="col" class=''>Host Bacteria</th>
 		  </tr>
 		 </thead>
 		 <tbody>
 		 <% for(n in list){ %>
 		   <tr class="table-primaryX">
-		   <% vid = list[n].vid %>
+		   <% pid = list[n].pid %>
+		   <td nowrap><%= pid %></td>
 		   
-		   <td nowrap><%= vid  %></td>
-		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank'><%= list[n].assembly_ncbi  %></a></td>
-		   <td nowrap class='center'><a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank'><%= list[n].sra_accession_ncbi  %></a></td>
-		   <td nowrap class='center'><i><b><%= list[n].genus_ncbi  %></b></i></td>
-		   <td nowrap class='center'><i><b><%= list[n].species_ncbi  %></b></i></td>
-		   <td nowrap class='center'><i><b><%= list[n].host_ncbi  %></b></i></td>
+		   <td nowrap class='center'><b><%= list[n].family_ncbi  %></b></td>
+		   <td nowrap class=''><i><b><%= list[n].genus_ncbi  %></b></i></td>
+		   <td nowrap class=''><a href='phagedesc?pid=<%= pid %>'><i><b><%= list[n].species_ncbi  %></b></i></a></td>
+		   <% html="" %>
+		   <% if(list[n].host_otid != ''){ %>
+		       <% taxidfullname = 'HMT-'+("000" + list[n].host_otid).slice(-3); %>
+		       <% html="(<a href='/taxa/tax_description?otid="+list[n].host_otid+"'>"+taxidfullname+"</a>)" %>
+		   <% } %>
+		   <td nowrap class=''><%- html %> <i><b><%= list[n].host_ncbi  %> </b></i></td>
 		   
 		   </tr>
 		 <% } %>

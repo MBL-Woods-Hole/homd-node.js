@@ -139,7 +139,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		res: JSON.stringify(send_list),
+		data: JSON.stringify(send_list),
 		count: Object.keys(send_list).length,
 		tcount: tcount,
 		//count_text:count_text,
@@ -214,15 +214,15 @@ router.post('/tax_table', function tax_table_post(req, res) {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		res: JSON.stringify(send_tax_obj),
+		data: JSON.stringify(send_tax_obj),
 		count: Object.keys(send_tax_obj).length,
 		tcount: tcount,
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(statusfilter_on),
-		sitefltr:JSON.stringify(sitefilter_on),
-		show_filters:show_filters,
+		sitefltr: JSON.stringify(sitefilter_on),
+		show_filters: show_filters,
 		search: '',
-		page_form:'',
+		page_form: '',
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -299,13 +299,27 @@ router.post('/tax_level', function tax_level_post(req, res) {
 				return_obj.item_taxon = lineage[lineage.length - 1]
 				return_obj.parent_rank = C.ranks[C.ranks.indexOf(rank) - 1]
 				return_obj.parent_taxon = lineage[lineage.length - 2]
-				//console.log(lineage)
-				return_obj.tax_count = taxdata[lineage.join(';')].tax_cnt
-				return_obj.gne_count = taxdata[lineage.join(';')].gcnt
-				return_obj.rrna_count = taxdata[lineage.join(';')].refcnt
-				
-				return_obj.lineage = lineage.join(';')
-				
+				console.log(rank,lineage)
+				if(lineage.length == C.ranks.indexOf(rank)+1){
+                    let lineage_str = lineage.join(';')
+                    //console.log(lineage_str)
+                    if(taxdata.hasOwnProperty(lineage_str)){
+						return_obj.tax_count = taxdata[lineage_str].tax_cnt
+						return_obj.gne_count = taxdata[lineage_str].gcnt
+						return_obj.rrna_count = taxdata[lineage_str].refcnt
+						return_obj.lineage = lineage_str 
+                    }else{
+                        return_obj.tax_count = 0
+						return_obj.gne_count = 0
+						return_obj.rrna_count = 0
+						return_obj.lineage = '' 
+                    }
+				}else{
+				    return_obj.tax_count = 0
+                    return_obj.gne_count = 0
+                    return_obj.rrna_count = 0
+                    return_obj.lineage = '' 
+				}
 				tax_resp.push(return_obj)
 				return return_obj
 		
@@ -496,7 +510,9 @@ router.post('/get_refseq', function get_refseq(req, res) {
 	// See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
 	//FIXME There are 4 fields which do I query???
 	//The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
-	TDBConn.query(queries.get_refseq_query(refseq_id), (err, rows) => {
+	let q = queries.get_refseq_query(refseq_id)
+	//console.log(q)
+	TDBConn.query(q, (err, rows) => {
 		let seqstr = rows[0].seq_trim9
 		let arr = helpers.chunkSubstr(seqstr,80)
 		let html = arr.join('<br>')
@@ -550,33 +566,29 @@ router.get('/life', function life(req, res) {
 	   image_array = find_images(rank,'',tax_name)
 	
 	let taxa_list =[]
-	let next_rank,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
+	let next_rank,title,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
 	var lineage_list = ['']
 	
 	//next_rank = C.ranks[C.ranks.indexOf(rank) +1]
 	
 	html =''
 	if(!rank){  // Cellular_Organisims
-	   taxa_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'].map(a => a.taxon)
+	   //taxa_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'].map(a => a.taxon)
 	   next_rank = 'domain'
 	   
 	   html += "<tr><td class='life-taxa-name'>&nbsp;Domains</td><td class='life-taxa'>"
-	   for(n in taxa_list){
-		      var title = 'Domain: '+taxa_list[n]
-		      html += "<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
-	   }
+	   
+	   title = 'Domain: Archaea'
+ 	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a><br>"
+       title = 'Domain: Bacteria'
+ 	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a><br>"
+
 	   html += '</td></tr>'
 	   image_array =[{'name':'cellular_organisms.png','text':''}]
 	}else{
 		//console.log(upto)
 		node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
 		var lineage_list = make_lineage(node)  // [str obj]
-		//var lineage = make_lineage_obj(rank,tax_name)
-		// what should lineage looklike??
-		// {domain:'bacteria',phylum:'firmicutes'}
-		//console.log('string_lineage:',lineage_list[0])
-	    //console.log('lineage OBJ1',lineage_list[1])
-	    //console.log('lineage:',lineage_list)
 	    
 		rank_id = C.ranks.indexOf(rank) +2
 		show_ranks = C.ranks.slice(0,rank_id)
@@ -584,13 +596,12 @@ router.get('/life', function life(req, res) {
 		//console.log('show_ranks',show_ranks)
 		last_rank = show_ranks[show_ranks.length -1]
 		
-		
 		space = '&nbsp;' 
 		for(i in show_ranks){
 		   
 		   rank_display = get_rank_display(show_ranks[i],false)
 		   if(show_ranks[i] != last_rank){  // Last row
-		      var title = rank_display+': '+lineage_list[1][show_ranks[i]]
+		      title = rank_display+': '+lineage_list[1][show_ranks[i]]
 		      html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
 			  html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a><br>'
 			  html += '</td></tr>'
@@ -611,9 +622,12 @@ router.get('/life', function life(req, res) {
 			 //console.log('rank_displayx',rank_display)
 			 
 			 html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
+			 taxa_list.sort(function (a, b) {
+      			return helpers.compareStrings_alpha(a, b);
+    		 });
 			 for(n in taxa_list){
 				 //console.log('SHOW RANKS',show_ranks.length)
-				 var title = rank_display+': '+taxa_list[n]
+				 title = rank_display+': '+taxa_list[n]
 				 if(rank === 'genus'){
 
 				       childern_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].children_ids
@@ -647,13 +661,13 @@ router.get('/life', function life(req, res) {
 	//console.log('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
 	//console.log('regex2',lineage_list[0].split(';').pop())
 	//console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
-	var title = 'Life'
+	var page_title = 'Life'
 	if(rank)
-	    title = helpers.capitalizeFirst(rank)
+	    page_title = helpers.capitalizeFirst(rank)
 	
 	lineage_string = lineage_list[0].split(';').join('; ')
 	res.render('pages/taxa/life', {
-			title: 'HOMD :: '+title, 
+			title: 'HOMD :: '+page_title, 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			data: {},
 			tax_name: tax_name,
@@ -667,6 +681,36 @@ router.get('/life', function life(req, res) {
 		});
 	
 });
+
+router.post('/search_taxtable', function search_taxtable(req, res) {
+	console.log(req.body)
+	let search_txt = req.body.tax_srch
+	let search_field = req.body.field
+	let seqrch_match = req.body.match
+	let search_sub = req.body.sub
+	// FIXME
+	let send_tax_obj = Object.values(C.taxon_lookup);
+	send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+	let tcount = send_tax_obj.length  // total count of our filters
+	pgtitle = 'Search TaxTable'
+	res.render('pages/taxa/taxtable', {
+		title: 'HOMD :: Taxon Table', 
+		pgtitle:pgtitle,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		data: JSON.stringify(send_tax_obj),
+		count: Object.keys(send_tax_obj).length,
+		tcount: tcount,
+		letter: '',
+		statusfltr: JSON.stringify(C.tax_status_on),
+		sitefltr:JSON.stringify(C.tax_site_on),
+		show_filters: 1,
+		search: '',
+		page_form: '',
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+	});
+	
+	
+})
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////

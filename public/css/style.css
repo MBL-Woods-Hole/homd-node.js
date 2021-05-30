@@ -9,6 +9,9 @@ a { text-decoration: none; }
 p {
    text-indent: 45px;
 }
+.center {
+    text-align:center;
+}
 #wrapper {
 	border: 1px solid #000;
 	width: 1200px;
@@ -22,7 +25,11 @@ p {
   
 }
 .intro-content{
-   padding:20px;
+   padding:30px 80px;
+   word-spacing: 4px;
+	line-height: 140%;
+   font-family:Georgia, serif;
+   font-size:18px;
 }
 input[type=radio] {
     height: .8em;
@@ -130,7 +137,7 @@ input[type=radio] {
 #nav li{
 	display:block;
 	float:left;	
-	padding: 0px 0px 15px 0px;
+	padding: 0px 0px 0px 0px;
 }
 
 #nav a,#nav div{
@@ -172,15 +179,18 @@ input[type=radio] {
 }
 #nav li:hover{
 	position:relative;
-	
 }
 
 #nav li a:hover, #nav li div:hover{
 	position:relative;
 	background-color: #99cfe0;
 	text-decoration:none;
+	
 }
-
+#first a:hover{
+  /* kludge */
+  padding-bottom:14px;
+}
 #nav li ul li a{
 	position:relative;
 	background-color:#99cfe0;
@@ -195,9 +205,7 @@ input[type=radio] {
 #nav li ul li:hover>a {
 	display: block;
 	background-color:#556b2f;
-	color: #ffba3b;
-	
-	
+	color: #ffba3b;	
 }
 
 #nav li ul li ul a{
