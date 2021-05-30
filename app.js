@@ -203,7 +203,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
     //helpers.print_size()
     //var  = C.dropped_obj
-    //console.log('Dropped:',C.dropped_taxids)
+    console.log('Dropped:',C.dropped_taxids)
     //console.log('NonOralRef:',C.nonoralref_taxids)
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     

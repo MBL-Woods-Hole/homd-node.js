@@ -302,11 +302,18 @@ router.post('/tax_level', function tax_level_post(req, res) {
 				console.log(rank,lineage)
 				if(lineage.length == C.ranks.indexOf(rank)+1){
                     let lineage_str = lineage.join(';')
-                    return_obj.tax_count = taxdata[lineage_str ].tax_cnt
-                    return_obj.gne_count = taxdata[lineage_str ].gcnt
-                    return_obj.rrna_count = taxdata[lineage_str ].refcnt
-                    return_obj.lineage = lineage_str 
-                    
+                    //console.log(lineage_str)
+                    if(taxdata.hasOwnProperty(lineage_str)){
+						return_obj.tax_count = taxdata[lineage_str].tax_cnt
+						return_obj.gne_count = taxdata[lineage_str].gcnt
+						return_obj.rrna_count = taxdata[lineage_str].refcnt
+						return_obj.lineage = lineage_str 
+                    }else{
+                        return_obj.tax_count = 0
+						return_obj.gne_count = 0
+						return_obj.rrna_count = 0
+						return_obj.lineage = '' 
+                    }
 				}else{
 				    return_obj.tax_count = 0
                     return_obj.gne_count = 0
