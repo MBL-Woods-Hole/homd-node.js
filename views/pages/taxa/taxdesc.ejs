@@ -211,8 +211,10 @@
 	<% refflag 		= data1.genomes === [] ? 'Genome:No' : 'Genome:Yes' %>
 	RefSeq ID: <a href='#' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= refsite %>','<%= refflag %>')">
 	<%= refseqid %></a>
-<% } %>
-	  </small></td>
+    <% } %>
+	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/refseq/phylo_tree?otid=<%= otid %>'>View in RefSeq Tree</a>
+	  </small>
+	  </td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Genome Sequence:</td>

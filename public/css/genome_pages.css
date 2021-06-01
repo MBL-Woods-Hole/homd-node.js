@@ -35,9 +35,7 @@
  #gnom-table tr:hover { 
     background-color: #dce7f5; 
  } 
-#gnomdesc-table tr:nth-child(even) { 
-    background-color: #ffffcd; 
- } 
+
 
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
         content: " \25B4\25BE" 

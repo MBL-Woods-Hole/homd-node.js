@@ -36,14 +36,16 @@ router.post('/refseq_blastn', (req, res) => {
 //
 router.get('/phylo_tree', (req, res) => {
     console.log('phylo_tree')
-	console.log(req.body)
 	helpers.accesslog(req, res)
+	let myurl = url.parse(req.url, true);
+	let otid = myurl.query.otid
+	console.log('otid',otid)
 	res.render('pages/refseq/phylo_tree', {
 		title: 'HOMD :: Phylo Tree', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		hostname: CFG.HOSTNAME,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		
+		otid:otid
 	});
 });
 router.get('/download', (req, res) => {
