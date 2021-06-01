@@ -7174,31 +7174,16 @@
   otid = "<%= otid %>"
   $(document).ready(function () {
     // Handler for .ready() called.
-    
-    $('html, body').animate({
-        scrollTop: $("a:contains('"+otid+"')").offset().top,
-        cssText: $("a:contains('"+otid+"')").css({'cssText':"font-weight:bold; font-size:120%;font-style:italic;"})
-       //color: $("a:contains('"+otid+"')").attr('style', 'background: red !important')
-    }, 'slow');
-    
-  //   $("a").each(function () {
-//      if ($(this).text().includes(otid))
-//      {
-//          //$(this).css("background-color", "red !important");
-//          
-//          $(this).css({
-//         'cssText': 'width: 220px !important'
-//     });
-//          
-//      }
-//});
-   // $("a:contains('"+otid+"')").css({ 'background-color': 'green', 'font-size': '120%' ,'font-style':'oblique'});
-   //  $("a:contains('"+otid+"').innerHTML").animate({
-//     	
-//           color: "#fff",
-//     })
-//     $("a:contains('"+otid+"').innerHTML").css("color","red")
-    	
+    if(otid){
+      var taxidfullname = 'HMT-'+("000" + otid).slice(-3);
+      var el = $("a:contains('"+taxidfullname+"')")
+      console.log(el.parent().parent())
+      el.parent().parent().css({'cssText':"font-weight:bold; font-size:120%;font-style:italic;"})
+      $('html, body').animate({
+        scrollTop: el.offset().top -80,
+      }, 'slow');
+    }
+ 
    });
 </script>
 

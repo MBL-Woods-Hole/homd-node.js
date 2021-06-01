@@ -447,7 +447,10 @@ router.get('/tax_description', function tax_description(req, res){
     	return
   	}
 	
-	
+	// find list pids that are known use this taxon
+	plist = Object.values(C.phage_lookup).filter(item => (item.host_otid == otid)) 
+	pid_list = Object.keys(plist)
+	console.log('pid_list',pid_list)
 	if(C.taxon_info_lookup[otid] ){
 	    var data2 = C.taxon_info_lookup[otid]
 	}else{
@@ -477,6 +480,7 @@ router.get('/tax_description', function tax_description(req, res){
 	console.log(data1)
 	// get_genus photos
 	node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
+	console.log('node',node)
 	var lineage_list = make_lineage(node)  // [str obj]
 	var image_array = find_images('species',otid,data3.species)
 	//console.log('genus',data3.genus)
@@ -513,7 +517,8 @@ router.post('/get_refseq', function get_refseq(req, res) {
 	let q = queries.get_refseq_query(refseq_id)
 	//console.log(q)
 	TDBConn.query(q, (err, rows) => {
-		let seqstr = rows[0].seq_trim9
+		//console.log(rows)
+		let seqstr = rows[0].seq.toString()
 		let arr = helpers.chunkSubstr(seqstr,80)
 		let html = arr.join('<br>')
 		res.send(html)
@@ -556,7 +561,7 @@ router.get('/life', function life(req, res) {
 	let myurl = url.parse(req.url, true);
   	let tax_name = myurl.query.name;
   	let rank = (myurl.query.rank)
-  	console.log('rank:',rank)
+  	//console.log('rank:',rank)
 	//console.log('tax_name',tax_name)
   	if(tax_name){
 		tax_name = myurl.query.name.replace(/"/g,'')

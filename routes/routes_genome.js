@@ -404,12 +404,13 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 router.get('/phylo_phlan_tree', function phylo_phlan_tree(req, res) {
     helpers.accesslog(req, res)
     console.log('in annotation')
-    
+    let myurl = url.parse(req.url, true);
+	let otid = myurl.query.otid
     res.render('pages/genome/genomic_phylo_phlan_tree', {
         title: 'HOMD :: Genome Annotation', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		
+		otid:otid,
     
     })
 
@@ -417,23 +418,26 @@ router.get('/phylo_phlan_tree', function phylo_phlan_tree(req, res) {
 router.get('/ribosomal_protein_tree', function ribosomal_protein_tree(req, res) {
     helpers.accesslog(req, res)
     console.log('in annotation')
-
+    let myurl = url.parse(req.url, true);
+	let otid = myurl.query.otid
     res.render('pages/genome/ribosomal_protein_tree', {
         title: 'HOMD :: Genome Annotation', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		
+		otid:otid,
     })
 
 });
 router.get('/rRNA_gene_tree', function rRNA_gene_tree(req, res) {
     helpers.accesslog(req, res)
     console.log('in annotation')
-    
+    let myurl = url.parse(req.url, true);
+	let otid = myurl.query.otid
     res.render('pages/genome/rRNA_gene_tree', {
         title: 'HOMD :: rRNA_gene_tree', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		otid:otid,
     })
 
 });

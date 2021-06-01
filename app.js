@@ -7,7 +7,7 @@ const annodbconn = require('./config/database').taxon_pool2;
 //const gendbconn = require('./config/database').genome_pool;
 const path = require('path');
 // explicitly makes conn global
-global.TDBConn = taxdbconn;
+global.TDBConn = taxdbconn;   // database:  homd
 global.ADBConn = annodbconn;
 global.app_root = path.resolve(__dirname);
 const C		= require('./public/constants');
@@ -227,7 +227,8 @@ async.map(data_init_files, readAsync, function(err, results) {
    //class
    //Absconditabacteria (SR1) [C-1]
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Burkholderiales_order'])
-    //console.log('58',C.taxon_lineage_lookup[58])
+    console.log('849',C.taxon_lineage_lookup[849])
+    console.log('755',C.taxon_lineage_lookup[755])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['clade 431_subspecies'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])

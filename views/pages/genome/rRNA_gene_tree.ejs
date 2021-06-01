@@ -27311,6 +27311,19 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-  
+  otid = "<%= otid %>"
+  $(document).ready(function () {
+    // Handler for .ready() called.
+    if(otid){
+      var taxidfullname = 'HMT-'+("000" + otid).slice(-3);
+      var el = $("tspan:contains('"+taxidfullname+"')")
+      console.log(el.parent())
+      el.parent().css({'cssText':"font-weight:bold; font-size:120%;font-style:italic;"})
+      $('html, body').animate({
+        scrollTop: el.offset().top -80,
+      }, 'slow');
+    }
+ 
+   });
 </script>
 
