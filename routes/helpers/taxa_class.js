@@ -98,6 +98,15 @@ function make_taxa_tree_dict(taxonomy_obj)
   for (let i=0, len = taxonomy_obj.length; i < len; i++)
   {
     
+  //problem node   {
+//   parent_id: 0,
+//   children_ids: [ 48 ],
+//   taxon: 'Terrahaemophilus',
+//   rank: 'genus',
+//   node_id: 47
+// }
+
+    
 	  let in_obj = taxonomy_obj[i];
     //console.log("\ntaxon_objs[i] = " + JSON.stringify(in_obj));
     let i_am_a_parent = 0;
@@ -123,10 +132,14 @@ function make_taxa_tree_dict(taxonomy_obj)
         {
           let taxa_name = in_obj[taxa_rank];
           if (taxa_name) {
-				//console.log("name_rank1 = " + taxa_name + " - " + taxa_rank);
+				
 				let node = get_by_key(dictMap_by_name_n_rank, taxa_name + "_" + taxa_rank);
 				//console.log("old_node = " + JSON.stringify(node));
-
+// if(taxa_name =='Terrahaemophilus'){
+// 				console.log("name_rank1 = " + taxa_name + " - " + taxa_rank);
+// 				console.log("old_node = " + JSON.stringify(node));
+// 				console.log("taxon_name_id = ", taxon_name_id);
+// }
 				if (node) {
 					
 					i_am_a_parent = node.node_id;
@@ -134,9 +147,7 @@ function make_taxa_tree_dict(taxonomy_obj)
                     
                     current_dict = make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, otid);
                     //console.log("current_dict = " + JSON.stringify(current_dict,null,4))
-                    if(taxa_name=='Methanobrevibacter'){
-                               //console.log('2',current_dict)         
-                        }
+                   
                     taxa_tree_dict.push(current_dict);
 
                     add_to_dict_by_key(dictMap_by_name_n_rank,  current_dict.taxon + "_" + current_dict.rank, current_dict);
@@ -146,9 +157,7 @@ function make_taxa_tree_dict(taxonomy_obj)
                     i_am_a_parent = current_dict.node_id;
 
                     taxon_name_id += 1;
-                    if(taxa_name=='Methanobrevibacter'){
-                               //console.log('3',dictMap_by_id[958])         
-                        }
+                    
                     parent_node = add_children_to_parent(dictMap_by_id, current_dict);
             }
           }

@@ -19,14 +19,14 @@
     
     <div class='page-content' >
     
-      
+  
 	
 		 <div class='title'><%= pgtitle %></div>
 		 
-		 <div id='download_browser_text_excel'><b>Download Taxon Table</b>: 
-		   <a href='dld_table?type=browser' >[Browser]</a>
-		   <a href='dld_table?type=text' >[Text]</a>
-		   <a href='dld_table?type=excel' >[Excel]</a>
+		 <div id='download_browser_text_excel'><b>Download this Taxon Data</b>: 
+		   <a href='dld_table/browser/<%= letter %>/<%= page %>/<%= sitefltr %>/<%= statusfltr %>' >[Browser]</a>
+		   <a href='dld_table/text/<%= letter %>/<%= page %>/<%= sitefltr %>/<%= statusfltr %>' >[Text]</a>
+		   <a href='dld_table/excel/<%= letter %>/<%= page %>/<%= sitefltr %>/<%= statusfltr %>' >[Excel]</a>
 		 </div>		 
 			 
 	<%- include('../../partials/tax_table_filter_pt1.ejs') %>

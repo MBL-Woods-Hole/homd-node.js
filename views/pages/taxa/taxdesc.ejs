@@ -211,22 +211,31 @@
 	<% refflag 		= data1.genomes === [] ? 'Genome:No' : 'Genome:Yes' %>
 	RefSeq ID: <a href='#' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= refsite %>','<%= refflag %>')">
 	<%= refseqid %></a>
-<% } %>
-	  </small></td>
+    <% } %>
+	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/refseq/phylo_tree?otid=<%= otid %>'>View in RefSeq Tree</a>
+	  </small>
+	  </td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Genome Sequence:</td>
 	  <td><small>
 	  <% g_length = data1.genomes.length %>
+	  <table><tr>
 	  <% if(g_length === 0){ %>
-	     No Genomes
-	  <% }else if(g_length === 1){ %>
-	        <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'>1 Genome</a>
+	     <td>No Genomes</td>
 	  <% }else{ %>
-	     <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'><%= g_length %> Genomes</a>
+	  <%    if(g_length === 1){ %>
+	         <td><a class='td-button' href='/genome/genome_table?otid=<%= otid %>'>1 Genome</a>
+	  <%    }else{ %>
+	         <td><a class='td-button' href='/genome/genome_table?otid=<%= otid %>'><%= g_length %> Genomes</a>
+	  <%    } %>
+	        </td><td><a href='/genome/phylo_phlan_tree?otid=<%= otid %>'>view in genome tree</a>
+	            <br><a href='/genome/ribosomal_protein_tree?otid=<%= otid %>'>view in ribosome protein tree</a>
+	            <br><a href='/genome/rRNA_gene_tree?otid=<%= otid %>'>view in 16S rRNA gene tree</a>
+	        </td>
 	  <% } %>
-	  
-	  
+	  </tr>    
+	  </table>
 	  </small>
 	  </td>
 	</tr>

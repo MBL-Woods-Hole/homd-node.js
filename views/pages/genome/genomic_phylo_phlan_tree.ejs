@@ -1,3 +1,22 @@
+<style>
+.page-content {
+ width:99%; 
+ overflow:auto;
+ font-size:small;
+ }
+</style>
+<%- include('../../partials/header_html'); %>
+
+<body>
+  	<div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+    
+  <!-- SVG HERE -->
+
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2400" height="42290" version="1.1">
 <defs>
 
@@ -14444,3 +14463,35 @@
 </g>
 </g>
 </svg>
+
+
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+  otid = "<%= otid %>"
+  $(document).ready(function () {
+    // Handler for .ready() called.
+    if(otid){
+      var taxidfullname = 'HMT-'+("000" + otid).slice(-3);
+      var el = $("tspan:contains('"+taxidfullname+"')")
+      console.log(el.parent())
+      el.parent().css({'cssText':"font-weight:bold; font-size:120%;font-style:italic;"})
+      $('html, body').animate({
+        scrollTop: el.offset().top -80,
+      }, 'slow');
+    }
+ 
+   });
+</script>
+

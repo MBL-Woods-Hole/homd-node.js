@@ -1,13 +1,9 @@
-
 <style>
-
-.dnld-block {
-   
-   background: tan;
-   padding:10px;
-   margin:10px;
-}
-
+.page-content {
+ width:99%; 
+ overflow:auto;
+ font-size:small;
+ }
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -15,34 +11,26 @@
   	<div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
+    
+    
     <div class='page-content' >
-	   
-		 <div class='title'>Taxon Data for Download</div>
-		 
-		 <div class='dnld-block'>Batch Taxonomic Data Download:
-		 Complete Taxon Table
-		 
-		 
-		 </div>
-		 <div class='dnld-block'>Phylogenetics</div>
-		 
-		 <div class='dnld-block'>Batch Genomic Meta Informaton Download</div>
-		 <div class='dnld-block'>	HOMD Database Schema</div>
-		 <div class='dnld-block'>HOMD Database Structures</div>
-	  </div>
+    
+  <!-- INLINE SVG HERE -->
+		
     </div> <!-- end: page-content -->
+    
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>
        
-   
-   </div>
 </body>
 
 </html>
+
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-  
 </script>
+
+

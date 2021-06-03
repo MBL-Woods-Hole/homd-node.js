@@ -337,3 +337,31 @@ function tax_table_search(){
    
    form.submit()
 }
+//
+//function tax_download(type,letter,page,sites,stati){
+// function tax_download(type,letter,page,sites,stati){
+// 	console.log('type:',type)
+// 	console.log('letter:',letter)
+// 	console.log('page:',page)
+// 	console.log('sites:',sites)
+// 	console.log('stati:',stati)
+// 	var xmlhttp = new XMLHttpRequest();
+// 	xmlhttp.open("POST", "/taxa/dld_table", true);
+// 	args = {}
+// 	args.type = type
+// 	args.letter = letter
+// 	args.page = page
+// 	args.sites = sites
+// 	args.stati = stati
+// 	xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//         var resp = xmlhttp.responseText;
+//         console.log(resp)
+//         document.write(resp)
+//        } 
+//     }
+//     xmlhttp.send(JSON.stringify(args));
+//   
+//    
+// }
