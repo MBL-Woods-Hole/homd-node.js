@@ -90,7 +90,10 @@
   mainmenu()
   var scroll = '<%= scroll_to %>'
   el = document.getElementById(scroll)
-  el.scrollIntoView()
+  //el.scrollIntoView()
+  document.querySelector(el).scrollIntoView({ 
+  behavior: 'smooth' 
+});
 </script>
 
 
