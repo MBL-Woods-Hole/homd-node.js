@@ -28,13 +28,12 @@ display:inline-block;
 	
 	
 	<div  class='page-content' >
-						
-		<center><h4 class='title text-info'>Human Microbial Genomes</h4></center>
-        
-        <div id='download_browser_text_excel'><b>Download Genome Table</b>: 
-		   <a href='dld_table?type=browser' >[Browser]</a>
-		   <a href='dld_table?type=text' >[Text]</a>
-		   <a href='dld_table?type=excel' >[Excel]</a>
+   						
+		<div class='title text-info'>Human Microbial Genomes</div>
+        <div id='download_browser_text_excel'><b>Download this Genome Data</b>: 
+		   <a href='dld_table/browser/<%= letter %>/<%= page %>/<%= phylum %>/<%= otid %>' >[Browser]</a>
+		   <a href='dld_table/text/<%= letter %>/<%= page %>/<%= phylum %>/<%= otid %>' >[Text]</a>
+		   <a href='dld_table/excel/<%= letter %>/<%= page %>/<%= phylum %>/<%= otid %>' >[Excel]</a>
 		 </div>		 
 
  <%- include('../../partials/genome_table_filter.ejs') %> 

@@ -31,6 +31,22 @@ res.render('pages/home', {
 	});
 });
 
+router.get('/download', (req, res) => {
+    helpers.accesslog(req, res)
+    let myurl = url.parse(req.url, true);
+   	let scroll = myurl.query.scroll;
+ //  console.log('Timestamp:', timestamp);
+//   console.log('Request Headers:', req.headers);
+//   console.log('Request Query Params:', req.query); // for all query params
+//   console.log('Request Path:', req.path);
+//   console.log('Request Route:', req.route);
+    res.render('pages/download', {
+		title: 'HOMD :: Human Oral Microbiome Database',
+		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		scroll_to: scroll
+	});
+});
 
 
 module.exports = router;

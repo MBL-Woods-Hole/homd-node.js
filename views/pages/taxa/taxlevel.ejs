@@ -24,7 +24,7 @@ td a {
 #level-container{
   padding:20px 0 0 0;
 }
-.card-body{
+#button-group{
    padding:10px 0 0 0;
 }
 </style>
@@ -45,8 +45,9 @@ td a {
 		 
 		<div id='level-container' >
 			<h4 >Taxonomic Level:</h4>
-			<div class="card-body">
-				<small>[Select a Rank:]</small> <br>   
+			   <br>
+				<small>[Select a Rank:]</small> 
+				<div id='button-group'> 
 				<a class='level-button' type='button' href='#' id='Domain' onclick="change_level('Domain')">Domain</a> 
 				&gt; <a class='level-button' type='button'  href='#' id='Phylum' onclick="change_level('Phylum')">Phylum</a> 
 				&gt; <a class='level-button' type='button'  href='#' id='Class' onclick="change_level('Class')">Class</a> 
@@ -55,8 +56,8 @@ td a {
 				&gt; <a class='level-button' type='button'  href='#' id='Genus' onclick="change_level('Genus')">Genus</a> 
 				&gt; <a class='level-button' type='button'  href='#' id='Species' onclick="change_level('Species')">Species</a>
 				&gt; <a class='level-button' type='button'  href='#' id='Subspecies' onclick="change_level('Subspecies')">Subspecies</a>
-			  
-			</div>
+			   </div>
+			
 		 </div>
 		 
 		 

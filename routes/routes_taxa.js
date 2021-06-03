@@ -7,7 +7,11 @@ const path     = require('path');
 const C		  = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
 const queries = require(app_root + '/routes/queries')
-
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+today = yyyy + '-' + mm + '-' + dd;
 
 router.get('/tax_table', function tax_table_get(req, res) {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
@@ -17,31 +21,27 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	let myurl = url.parse(req.url, true);
   	//console.log(myurl.query)
 	req.session.tax_letter = myurl.query.k
-	req.session.annot = myurl.query.annot
+	let annot = myurl.query.annot
 	let page = myurl.query.page
-	// if( !req.session.tax_letter && !req.session.annot && !page){
-// 	   page = 1
-// 	} 
-	var send_tax_obj = Object.values(C.taxon_lookup);
 	
-	//console.log('C.taxon_lookup[9]',C.taxon_lookup[90])
+	var send_tax_obj = Object.values(C.taxon_lookup);
 	
 	// FIX THIS IF SELECT DROPPED OR NONORAL
 	send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
 	var tcount = send_tax_obj.length  // total count of our filters
 	
-	var show_filters = 0
+	//var show_filters = 0
 	var pgtitle = 'Taxon Table';
 	var count_text = ''
-	if(req.session.annot){
+	if(annot){
 	  	// grab only the taxa that have genomes
 	  	console.log('GOT annotations')
 	  	send_tax_obj = send_tax_obj.filter(item => item.genomes.length >0)
-	  	show_filters = 0
+	  	//show_filters = 0
 	  	pgtitle = 'Human Microbial Taxa with Annotated Genomes'
 	}else{
 		console.log('NO annotations')
-		show_filters = 1
+		//show_filters = 1
 		pgtitle = 'List of Human Microbial Taxa'
 		var intiial_status_filter = C.tax_status_on  //['named','unnamed','phylotype','lost']  // no['dropped','nonoralref']
 	
@@ -51,21 +51,22 @@ router.get('/tax_table', function tax_table_get(req, res) {
 		var intiial_site_filter = C.tax_sites_on  //['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
 		//console.log('send_tax_obj1[0]',send_tax_obj1[0])
 		
-		
 		send_tax_obj2 = send_tax_obj1.filter( function(e) {
 	      //console.log(e)
 	      if(e.sites.length > 0 && intiial_site_filter.indexOf(e.sites[0].toLowerCase()) !== -1){
 	         return e
 	      }
-	     }) 
+	    }) 
 	    //console.log('send_tax_obj2[0]',send_tax_obj2[0])
 		if(req.session.tax_letter !== 'all' && req.session.tax_letter !== 'allall'){
 		   console.log('GOT a TaxLetter: ',req.session.tax_letter)
 		   // COOL....
 		   send_tax_obj = send_tax_obj2.filter(item => item.genus.charAt(0) === req.session.tax_letter)
+		   page=0
 		}else{
 			console.log('NO TaxLetter')
 			send_tax_obj = send_tax_obj2
+			
 		}
 		// table sort done via client side js library sorttable: 
 		// https://www.kryogenix.org/code/browser/sorttable
@@ -105,7 +106,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
       return helpers.compareStrings_alpha(a.genus, b.genus);
     });
    
-    if(page){
+    if(page > 0){
 	    var trows = send_tax_obj.length  //820
         //console.log('trows',trows)
         var row_per_page = 200
@@ -146,9 +147,10 @@ router.get('/tax_table', function tax_table_get(req, res) {
 		letter: req.session.tax_letter,
 		statusfltr: JSON.stringify(C.tax_status_on) ,  // default
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
-		show_filters:show_filters,
+		//show_filters:show_filters,
 		search: '',
 		page_form:page_form,
+		page:page,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -164,7 +166,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	
 
 	pgtitle = 'List of Human Microbial Taxa'
-	show_filters = 1
+	//show_filters = 1
 	statusfilter_on =[]
 	sitefilter_on  = []
 	for(i in req.body){
@@ -217,12 +219,13 @@ router.post('/tax_table', function tax_table_post(req, res) {
 		data: JSON.stringify(send_tax_obj),
 		count: Object.keys(send_tax_obj).length,
 		tcount: tcount,
-		letter: req.session.tax_letter,
+		letter: 'all',
 		statusfltr: JSON.stringify(statusfilter_on),
 		sitefltr: JSON.stringify(sitefilter_on),
-		show_filters: show_filters,
+		//show_filters: show_filters,
 		search: '',
 		page_form: '',
+		page:0,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -525,27 +528,106 @@ router.post('/get_refseq', function get_refseq(req, res) {
 	})
 });
 
-router.get('/tax_download', function tax_download(req, res) {
+// router.post('/dld_table', function dld_table_post(req, res) {
+// 	helpers.accesslog(req, res)
+// 	console.log('in dld tax-post')
+// 	console.log(req.body)
+// 	let letter = req.body.letter
+// 	let page = req.body.page;
+// 	let sites = JSON.parse(req.body.sites)
+// 	let stati = JSON.parse(req.body.stati)
+// 	let type = req.body.type;
+// 	type='browser'
+// 	// Apply filters
+// 	var send_tax_obj = Object.values(C.taxon_lookup);
+// 	if(page){
+// 	    var trows = send_tax_obj.length  //820
+//         var row_per_page = 200
+//         var number_of_pages = Math.ceil(trows/row_per_page)
+//         if(page === 1){
+//             var send_list = send_tax_obj.slice(0,row_per_page)  // first 200
+//         }else{
+//             var send_list = send_tax_obj.slice(row_per_page*(page-1),row_per_page*page)  // second 200
+//         }
+// 	}else if(letter){
+// 	    send_list = send_tax_obj.filter(item => item.genus.charAt(0) === letter)
+// 	}else{
+// 	    // apply site/status filter
+// 	}
+//   	let list_of_otids = send_list.map(item => item.otid)
+//   	console.log('list_of_otids',list_of_otids)
+// 	// type = browser, text or excel
+// 	var table_tsv = create_table(list_of_otids,'table','browser')
+// 	if(type === 'browser'){
+// 	    //res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
+// 	    res.set('text/csv')
+// 	}else if(type === 'text'){
+// 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.txt\""});
+// 	}else if(type === 'excel'){
+// 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
+// 	}else{
+// 	    // error
+// 	    console.log('Download table format ERROR')
+// 	}
+// 	res.send(table_tsv)
+// 	res.end('Yes')
+// });
+router.get('/dld_table/:type/:letter/:page/:sites/:stati', function dld_table_get(req, res) {
 	helpers.accesslog(req, res)
-	res.render('pages/taxa/taxdownload', {
-		title: 'HOMD :: Tax Download', 
-		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
-		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-	});
-});
-router.get('/dld_table', (req, res) => {
-	helpers.accesslog(req, res)
-	console.log(req.body)
-	let myurl = url.parse(req.url, true);
-  	let type = myurl.query.type;
-	// type = browser text or excel
-	var table_tsv = create_table('table','browser')
+	console.log('in dld tax-get')
+	//console.log(req.body)
+	let type = req.params.type
+	let letter = req.params.letter
+	let page = req.params.page;
+	let sitefilter = JSON.parse(req.params.sites)
+	let statusfilter = JSON.parse(req.params.stati)
+//      console.log('type',type)
+//   	console.log('letter',letter)
+//   	console.log('page',page)
+//   	console.log('sites',sitefilter)
+//   	console.log('stati',statusfilter)
+	
+	// Apply filters
+	let temp_list = Object.values(C.taxon_lookup);
+	let file_filter_txt = ""
+	if(page > 0){
+	    var trows = temp_list.length  //820
+        var row_per_page = 200
+        var number_of_pages = Math.ceil(trows/row_per_page)
+        if(page === 1){
+            var send_list = temp_list.slice(0,row_per_page)  // first 200
+        }else{
+            var send_list = temp_list.slice(row_per_page*(page-1),row_per_page*page)  // second 200
+        }
+        file_filter_txt = "HOMD.org Taxon Data::Page Filter Applied (this is page #"+page+" of "+number_of_pages+")"
+	}else if(letter && letter.match(/[A-Z]{1}/)){
+	    console.log('MATCH Letter: ',letter)
+	    send_list = temp_list.filter(item => item.genus.charAt(0) === letter)
+	    file_filter_txt = "HOMD.org Taxon Data::Letter Filter Applied (genus with first letter of '"+letter+"')"
+	}else{
+		// apply site/status filter as last resort
+		send_list = temp_list.filter( function(e){
+		  //console.log('e',e)
+		  if( (e.sites.length > 0 
+			  && sitefilter.indexOf(e.sites[0].toLowerCase()) !== -1)
+			  || statusfilter.indexOf(e.status.toLowerCase()) !== -1 )
+			  {
+			 return e
+		  }
+		})
+		file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied" 
+	}
+  	let list_of_otids = send_list.map(item => item.otid)
+  	console.log('list_of_otids',list_of_otids)
+	// type = browser, text or excel
+	file_filter_txt = file_filter_txt+ " Date: "+today
+	var table_tsv = create_table(list_of_otids,'table',type,file_filter_txt )
 	if(type === 'browser'){
 	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
 	}else if(type === 'text'){
-	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.txt\""});
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+".txt\""});
 	}else if(type === 'excel'){
-	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+".xls\""});
 	}else{
 	    // error
 	    console.log('Download table format ERROR')
@@ -553,7 +635,28 @@ router.get('/dld_table', (req, res) => {
 	res.send(table_tsv)
 	res.end()
 });
-
+// router.get('/dld_tableXX', function dld_table_get(req, res) {
+// 	helpers.accesslog(req, res)
+// 	console.log(req.body)
+// 	
+// 	let myurl = url.parse(req.url, true);
+//   	let type = myurl.query.type;
+// 	// type = browser text or excel
+// 	var table_tsv = create_table('table','browser')
+// 	if(type === 'browser'){
+// 	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
+// 	}else if(type === 'text'){
+// 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.txt\""});
+// 	}else if(type === 'excel'){
+// 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
+// 	}else{
+// 	    // error
+// 	    console.log('Download table format ERROR')
+// 	}
+// 	res.send(table_tsv)
+// 	res.end()
+// });
+// 
 
 router.get('/life', function life(req, res) {
 	helpers.accesslog(req, res)
@@ -708,7 +811,7 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
 		letter: '',
 		statusfltr: JSON.stringify(C.tax_status_on),
 		sitefltr:JSON.stringify(C.tax_site_on),
-		show_filters: 1,
+		//show_filters: 1,
 		search: '',
 		page_form: '',
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
@@ -808,8 +911,11 @@ function make_lineage(node){
         lineage_obj.family = tax_obj[node.parent_id].taxon
         lineage_obj.genus = node.taxon
     }else if(node.rank==='species'){
+        //console.log('species1',node)
         let gn = tax_obj[node.parent_id]
+        //console.log('genus1',gn)
         let fn = tax_obj[gn.parent_id]
+        //console.log('family1',fn)
         let on = tax_obj[fn.parent_id]
         let kn = tax_obj[on.parent_id]
         let pn = tax_obj[kn.parent_id]
@@ -885,27 +991,40 @@ function get_counts(lineage){
     return txt
 }
 /////////////////////////////////////////
-function create_table(source, type) {
-
-    if(source === 'table' && type === 'browser'){
+function create_table(otids, source, type, head_txt) {
+    let txt = head_txt+'\n'
+    if(source === 'table'){
         var obj1 = C.taxon_lookup
         var obj2 = C.taxon_lineage_lookup
         var obj3 = C.taxon_info_lookup 
         var headers_row = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
         
-        var txt =  headers_row.join('\t')
+        txt +=  headers_row.join('\t')
+        var o1,o2,o3
+        for(n in otids){
+           
+            let otid = otids[n].toString()
+            o1 = obj1[otid]
+             console.log('otid',otid)
+             console.log('otidX2',obj2[otid])
+             console.log('otidX3',obj3[otid])
+            if(otid in obj2){
+               o2 = obj2[otid]
+            }else{
+               o2 = {'domain':'','phylum':'','klass':'','order':'','family':'','genus':'','species':''}
+            }
+            if(otid in obj3){
+               o3 = obj3[otid]
+            }else{
+               o3 = {'general':'','culta':'','pheno':'','prev':'','disease':''}
+            }
         
-        for(otid in obj1){
-            if(otid in obj2 && otid in obj3){
-               var o1 = obj1[otid]
-               var o2 = obj2[otid]
-               var o3 = obj3[otid]
-            
+        
                //console.log(o2)
                var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.ncbi_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
                var row = r.join('\t')
                txt += '\n'+row
-            }
+            
         }
     }   
     //console.log(txt)

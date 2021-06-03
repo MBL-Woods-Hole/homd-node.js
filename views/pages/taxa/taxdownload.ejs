@@ -1,11 +1,13 @@
 
 <style>
-td a {
-   color:blue;
+
+.dnld-block {
+   
+   background: tan;
+   padding:10px;
+   margin:10px;
 }
-.card-body a {
-   color:black;
-}
+
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -15,14 +17,18 @@ td a {
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
 	   
-	   					
-		 <center><h4 class='title text-info'>Downloadable Data in HOMD</h4></center>
+		 <div class='title'>Taxon Data for Download</div>
 		 
-		 <div class=''>Phylogenetics</div>
-		 <div class=''>Batch Taxonomic Data Download:</div>
-		 <div class=''>Batch Genomic Meta Informaton Download</div>
-		 <div class=''>	HOMD Database Schema</div>
-		 <div class=''>HOMD Database Structures</div>
+		 <div class='dnld-block'>Batch Taxonomic Data Download:
+		 Complete Taxon Table
+		 
+		 
+		 </div>
+		 <div class='dnld-block'>Phylogenetics</div>
+		 
+		 <div class='dnld-block'>Batch Genomic Meta Informaton Download</div>
+		 <div class='dnld-block'>	HOMD Database Schema</div>
+		 <div class='dnld-block'>HOMD Database Structures</div>
 	  </div>
     </div> <!-- end: page-content -->
     <div id='footer'>

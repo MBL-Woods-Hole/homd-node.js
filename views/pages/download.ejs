@@ -1,0 +1,96 @@
+<style>
+.dnld-block{
+  
+  margin:10px 0;
+  border:1px solid green;
+}
+.dnld-block ul {
+  
+  padding:5px;
+}
+.subtitle{
+  background:lightgrey;
+  padding:5px 10px;
+}
+</style>
+<%- include('../partials/header_html'); %>
+
+<body>
+  	<div id='wrapper'>
+    <%- include('../partials/header_img'); %>
+    <%- include('../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+		 					
+	<div class='title'>Download HOMD Data</div>
+		
+
+<div id='taxon' class='dnld-block'>
+	
+	<div class='subtitle'>Batch Taxonomic Data Download:</div>
+	<ul>
+	<li>Taxon Table</li>
+	</ul>
+</div>
+<div id='genome' class='dnld-block'>
+	
+	<div class='subtitle'>Batch Genomic Meta Informaton Download</div>
+	<ul>
+	<li>Sequence Meta Information</li>
+	</ul>
+</div>
+<div id='phylo' class='dnld-block'>
+	
+	<div class='subtitle'>Phylogenetics</div>
+	<ul>
+	<li>Phylogenetic tree of HOMD 16S rRNA Reference Sequences</li>
+	<li>Phylogenetic tree of 16S rRNA gene sequences identified in HOMD genomes</li>
+	<li>Phylogenomic tree based on conserved proteins identified from HOMD genomes</li>
+	<li>Phylogenetic tree of ribosomal proteins identified from HOMD genomes</li>
+	</ul>
+</div>		 
+
+<div id='phage' class='dnld-block'>
+	
+	<div class='subtitle'>Batch Phage Data Download:</div>
+	<ul>
+	<li>Phage Table</li>
+	</ul>
+</div>
+
+<div id='refseq' class='dnld-block'>
+    
+	<div class='subtitle'>Download HOMD 16S rRNA Gene Sequences</div>
+			 
+	HOMD provides two different sets of 16S rRNA Gene Reference Sequence (RefSeq) for download and BLAST search:
+	<br><br> 
+	1.	<b>HOMD 16S rRNA RefSeq:</b> This set contains sequences representing all currently named and unnamed oral taxa.
+	<br>2.	<b>HOMD 16S rRNA Extended RefSeq:</b> This set contains additional16S rRNA reference gene sequences that are distinctively different from existing taxa but have not yet been assigned with a taxon ID.
+	<br><br> 
+	A phylogeny-based, high-resolution, habitat-specific training reference sequence set was constructed to achieve species/supraspecies-level taxonomic assignment to short- and long-read 16S rRNA gene-derived amplicon sequence variants (ASVs). The training set sequences, together with the pipeline scripts, are available for download. For detail description of the training set and the pipelines, 
+	please refer to our publication <a href='https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-020-00841-w' target='_blank' >Escapa et al, 2020</a>.
+ 
+	In addition, the entire collection of all cloned sequences (clonal collection) upon which the Refseq was derived from, is also provided for download on this page and on the HOMD FTP site.
+</div>
+
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+  var scroll = '<%= scroll_to %>'
+  el = document.getElementById(scroll)
+  el.scrollIntoView()
+</script>
+
+
