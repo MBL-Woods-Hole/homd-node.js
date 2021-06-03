@@ -1,8 +1,10 @@
 <style>
             
 #genome_choices{
-  padding:10px 0 10px 50px;
+  padding:20px 0 20px 50px;
+  margin-top:100px;
   border:1px solid grey;
+  background:pink;
 }
 #iframe_div{
 
@@ -23,26 +25,25 @@
 		   
 		  <div id='genome_choices'>
 		    <span nowrap>Select a Genome: 
-			<select id='gnom_select' class='dropdown' name='gnom_select' onchange='change_genome_4_jbrowse(this.value)'>
+			<select id='gnom_select' class='dropdown' name='gnom_select' onchange='open_jbrowse_in_new_window(this.value)'>
 			 Select a Genome:
 			 <option id='' name='none' value='none'>Choose...</option>
 			 <% for(i in gn){ %>
 			 	<option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 			 <% } %>
-			</select> from a total of <%= tgenomes %>
+			</select> from a total of <%= tgenomes %> (opens in a new window)
 		   </span>
 		  </div>
 		 	
-		  
+<!--		  
            <div id='iframe_div' >
 			   <center><h3>JBrowse <span id='gid-label'></span>
-			   
 			   </h3></center><span id='open_new_window'></span>
 				<iframe id='genome_iframe' width='100%' height=20
 				></iframe>
            </div>
 			
-		
+-->		
 		
     </div> <!-- end: page-content -->
      
@@ -63,7 +64,8 @@
   mainmenu()
   var gid = '<%- gid; %>'
   if(gid){
-     change_genome_4_jbrowse(gid)
+     //change_genome_4_jbrowse(gid)
+     open_jbrowse_in_new_window(gid)
   }
 </script>
 
