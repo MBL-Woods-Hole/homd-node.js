@@ -16,7 +16,7 @@ module.exports.get_refseq_query = (refid) => {
 
 module.exports.get_16s_rRNA_sequence_query = (gid) => {
     var qSelect16Sseq = "SELECT 16s_rRNA from genomes_extra ";
-    qSelect16Sseq += " WHERE seq_id='"+gid+"'";
+    qSelect16Sseq += "WHERE seq_id='"+gid+"'";
     
     return qSelect16Sseq;
 }
@@ -35,7 +35,7 @@ module.exports.get_annotation_query = (gid, anno) => {
 
 module.exports.get_annotation_query2 = (gid, anno) => {
     var db = anno.toUpperCase() +'_'+gid
-    var qSelectAnno = "SELECT accession, PID, product FROM "+db+".ORF_seq"
+    var qSelectAnno = "SELECT accession, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM "+db+".ORF_seq"
     qSelectAnno += " JOIN "+db+".molecules ON "+db+".ORF_seq.mol_id="+db+".molecules.id"
     return qSelectAnno;
 }

@@ -69,7 +69,7 @@ function get_16s_seq(seqid) {
         text = '<pre>'
         text += resp
         text += '</pre>'
-		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
 		var doc = win.document;
 		//doc.writeln("<title>yourtitle</title>");
 		//doc.title = 'eHOMD Reference Sequence'

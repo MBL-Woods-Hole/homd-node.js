@@ -57,6 +57,7 @@
 }
 #annotation-table td{
   padding:2px 8px;
+  font-size:small;
   
 }
 #annotation-table tr:nth-child(even) { 
@@ -73,13 +74,16 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     padding:10px;
     background:orange
 }
+.col5{
+   width:150px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% info_data = JSON.parse(info_data) %>
 <% all_annos = JSON.parse(all_annos) %>
-<% mole = JSON.parse(mole) %>
+<% mole = JSON.parse(pid_list) %>
 <% db = anno_type+'_'+gid %>
-<!-- 1595 -->
+
 <body>
   	<div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -103,7 +107,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			 <% } %>
 			 </select>
 			 </div>
-			 
+			 <!-- http://www.homd.org/jbrowse/index.html
+			 ?data=homd%2FSEQF1595
+			 &loc=SEQF1595%7CKI535342.1%3A6149..8582
+			 &highlight=SEQF1595%7CKI535342.1%3A6757..7974
+			 &tracks=DNA%2Cprokka%2Cncbi -->
 			 <div id='header_buttons' >
 			  <% if(anno_type == 'prokka'){ %>
 			    <span class='an-button active' href=''>PROKKA</span>
@@ -112,7 +120,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			    <a class='an-button' href='/genome/annotation/<%= gid %>/prokka'>PROKKA</a>
 			    <span class='an-button active' href=''>NCBI</span>
 			  <% } %>
-			  <a class='an-button' href='/genome/jbrowse?gid=<%= gid %>'>Genome Viewer</a>
+			  <a class='an-button' href='http://www.homd.org/jbrowse/index.html?data=homd/<%= gid %>' target='_blank'>Genome Viewer</a>
 			  <a class='an-button' href='/genome/blast/<%= gid %>'>BLAST</a>
 			  <a class='an-button' href='/genome/genome_description?gid=<%= gid %>'>Genome Desc.</a>
 			  <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Desc.</a>
@@ -157,7 +165,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			 Annotation Table [page:<%= show_page %>]
 			 <% next_page = parseInt(show_page)+1 %>
 			 <% prev_page = parseInt(show_page)-1 %>
-			 <br>Number of Records: <%= trecords %> <small>[<%= number_of_pages %> Pages]
+			 <br>Number of Records Found: <%= trecords %> <small>[<%= number_of_pages %> Pages]
 			 <a href='/genome/annotation/<%= gid %>/<%= anno_type %>?page=<%= next_page %>'>Next Page</a>
 			 <==>
 			 <a href='/genome/annotation/<%= gid %>/<%= anno_type %>?page=<%= prev_page %>'>Previous Page</a>
@@ -168,13 +176,13 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			 <table id='annotation-table' class='sortable'>
 			 <thead>
 			  <tr>
-			   <th class='sorttable_nosort'></th>
-			   <th>Molecule</th>
-			   <th>PID</th>
-			   <th class='sorttable_nosort'>Sequences</th>
-			   <th>Size</th>
-			   <th>Range</th>
-			   <th>Gene Product Name</th>
+			   <th class='sorttable_nosortX'></th>
+			   <th class='col1'>Molecule</th>
+			   <th class='col2'>PID</th>
+			   <th class='col3 sorttable_nosort'>Sequences</th>
+			   <th class='col4' nowrap>Size (<small>NA/AA</small>)</th>
+			   <th class='col5'>Range</th>
+			   <th class='col6'>Gene Product Name</th>
 			  </tr>
 			 </thead>
 			 <tbody>
@@ -183,13 +191,13 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			 <tr>
 			   <td><%= cnt %></td>
 			   <td><%= mole[n].accession %></td>
-			   <td><%= mole[n].PID %></td>
+			   <td nowrap><%= mole[n].PID %> <a href='http://www.homd.org/jbrowse/index.html?data=homd/<%= gid %>&highlight=<%= mole[n].accession %>:<%= mole[n].start %>..<%= mole[n].stop %>' target='_blank'>jb</a></td>
 			   <td nowrap>
-			       [<a title='Nucleic Acid' href='#' onclick="get_NN_NA_seq('na','<%= mole[n].PID %>','<%= db %>')">NA</a>] 
-			       [<a title='Amino Acid' href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].PID %>','<%= db %>')">AA</a>]
+			       [<a title='Nucleic Acid' href='#' onclick="get_NN_NA_seq('na','<%= mole[n].PID %>','<%= db %>')"><b>NA</b></a>] 
+			       [<a title='Amino Acid' href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].PID %>','<%= db %>')"><b>AA</b></a>]
 			   </td>
-			   <td></td>
-			   <td></td>			   
+			   <td><%= mole[n].len_na %>/<%= mole[n].len_aa %></td>
+			   <td><%= mole[n].start %>-<%= mole[n].stop %></td>			   
 			   <td><%= mole[n].product %></td>
 			 </tr>
 			 <% cnt += 1 %>
