@@ -270,11 +270,14 @@ router.post('/get_16s_seq', function get_16s_seq_post(req, res) {
 		    return
 		}
 		//console.log(rows)
-		let seqstr = rows[0]['16s_rRNA'].replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&amp;gt;/gi,'>').replace(/&amp;lt;/gi,'<')
+		let html = rows[0]['16s_rRNA'].replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&amp;gt;/gi,'>').replace(/&amp;lt;/gi,'<')
+		if(html == ''){
+		   html = 'No sequence found'
+		}
+		console.log(html)
 		
-		//console.log(seqstr)
-		let arr = helpers.chunkSubstr(seqstr,80)
-		let html = seqstr.join('<br>')
+		//seqstr = helpers.chunkSubstr(seqstr,80)
+		//let html = seqstr.join('<br>')
 		//html = seqstr
 		res.send(html)
 	})
@@ -411,7 +414,7 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 				all_annos: JSON.stringify(all_annos_obj),
 				anno_type: anno_type,
 				//mole: JSON.stringify(rows),
-				mole: JSON.stringify(send_list),
+				pid_list: JSON.stringify(send_list),
 			})
 	   }
     })

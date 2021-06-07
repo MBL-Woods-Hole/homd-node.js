@@ -44,7 +44,7 @@
 
 	<div id='header_buttons' >
 	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (ID=<%= ginfo.otid %>)</a>
-	 <a class='gd-button' href='/genome/jbrowse?gid=<%= ginfo.gid %>'>Genome Viewer</a>
+	 <a class='gd-button' href="http://www.homd.org/jbrowse/index.html?data=homd/<%= ginfo.gid %>" target='_blank'>Genome Viewer</a>
 	 <a class='gd-button' href=''>BLAST Against this Genome</a>
 	 <a class='gd-button' href='annotation/<%= ginfo.gid %>/prokka'>PROKKA Annotation</a>
 	 <a class='gd-button' href='annotation/<%= ginfo.gid %>/ncbi'>NCBI Annotation</a>
@@ -75,7 +75,7 @@
  <tr class="table-active"><td>19</td><td>Non-ATCC Medium</td><td><%= ginfo.non_atcc_mn %></td></tr>
  <tr class="table-light">
    <td>20</td><td>16S rRNA Gene Sequence</td>
-   <% if(ginfo['16s_rrna_flag']){ %>
+   <% if(ginfo['16s_rrna_flag'] === '1'){ %>
  	<td><a href='#' onclick="get_16s_seq('<%= ginfo.gid %>')">View Sequence</a></td>
    <% }else{ %>
  	<td>N/A</td>
