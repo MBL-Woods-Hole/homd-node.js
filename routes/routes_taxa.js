@@ -451,8 +451,8 @@ router.get('/tax_description', function tax_description(req, res){
   	}
 	
 	// find list pids that are known use this taxon
-	plist = Object.values(C.phage_lookup).filter(item => (item.host_otid == otid)) 
-	pid_list = Object.keys(plist)
+	let plist = Object.values(C.phage_lookup).filter(item => (item.host_otid === otid)) 
+	let pid_list = plist.map(item => item.pid)
 	console.log('pid_list',pid_list)
 	if(C.taxon_info_lookup[otid] ){
 	    var data2 = C.taxon_info_lookup[otid]
@@ -479,6 +479,9 @@ router.get('/tax_description', function tax_description(req, res){
 		console.warn('Could not find refseqs for',otid)
 		var data5 = []
 	}
+	// phage known to infect
+	//let tmp_list = Object.values(C.phage_lookup).filter(item => item.host_otid === otid)
+	//let pids = tmp_list.map()
 	//console.log(data1)
 	console.log(data1)
 	// get_genus photos
@@ -497,6 +500,7 @@ router.get('/tax_description', function tax_description(req, res){
 		title: 'HOMD :: Taxon Info', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		otid: otid,
+		pids: pid_list,
 		image_array:JSON.stringify(image_array),
 		data1: JSON.stringify(data1),
 		data2: JSON.stringify(data2),

@@ -267,8 +267,14 @@
 	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
 	<tr>
-	  <td class='tbl-title'>Phage known to infect this species:</td>
-	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	  <td class='tbl-title'>Number of Phage<br>Known to Infect this Species:</td>
+	  <td><small><%= pids.length %>
+	  <% if(pids.length > 0){ %>
+	     <a href='/phage/phage_table?host_otid=<%= otid %>'>See List</a>
+	  <% } %>
+	  </small>
+	  
+	  </td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Proteomics:</td>

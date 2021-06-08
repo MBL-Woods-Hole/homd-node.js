@@ -211,7 +211,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
     console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
     console.log('C.taxon_references_lookup length',Object.keys(C.taxon_references_lookup).length)
-    
+    //console.log(C.phage_lookup)
     size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup))
     console.log('C.taxon_lineage_lookup length',Object.keys(C.taxon_lineage_lookup).length,'\tsize(KB):',size/1024)
     console.log('C.taxon_info_lookup length',Object.keys(C.taxon_info_lookup).length)
