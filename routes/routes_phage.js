@@ -9,7 +9,7 @@ const helpers = require(app_root + '/routes/helpers/helpers');
 const queries = require(app_root + '/routes/queries')
 
 router.get('/', (req, res) => {
-  console.log('in phage')
+  console.log('in phage hello')
   helpers.accesslog(req, res)
   fs.readFile(path.join(CFG.PATH_TO_DATA, C.phage_list_fn), 'utf8', (err, data) => {
     	if (err)
@@ -32,8 +32,18 @@ router.get('/', (req, res) => {
 router.get('/phage_table', (req, res) => {
   console.log('in phage table')
   helpers.accesslog(req, res)
-
-  let phage_list = Object.values(C.phage_lookup)
+  let myurl = url.parse(req.url, true);
+  let host_otid = myurl.query.host_otid;
+  let phage_list = []
+  let tmp_phage_list = Object.values(C.phage_lookup)
+  
+  if(host_otid){
+      phage_list = tmp_phage_list.filter(item => item.host_otid == host_otid)
+  }else{
+     phage_list = tmp_phage_list
+  }
+  
+  
   phage_list.sort(function (a, b) {
 	return helpers.compareStrings_alpha(a.family_ncbi, b.family_ncbi);
   });
@@ -45,12 +55,12 @@ router.get('/phage_table', (req, res) => {
   });
       
 });
-router.get('/phagedesc', (req, res) => {
-  console.log('in phage table')
+router.get('/phagedesc', function phagedesc(req, res) {
+  console.log('in phage desc')
   helpers.accesslog(req, res)
   let myurl = url.parse(req.url, true);
   let pid = myurl.query.pid;
-  let phage = C.phage_lookup[parseInt(pid)]
+  let phage = C.phage_lookup[pid]
   console.log(phage)
   res.render('pages/phage/phagedesc', {
 				title: 'HOMD :: Human Oral Phage Database',
@@ -61,7 +71,7 @@ router.get('/phagedesc', (req, res) => {
 		  });
 });
 
-router.get('/dld_table', (req, res) => {
+router.get('/dld_table', function dld_table(req, res) {
 	helpers.accesslog(req, res)
 	console.log(req.body)
 	let myurl = url.parse(req.url, true);
@@ -81,7 +91,17 @@ router.get('/dld_table', (req, res) => {
 	res.send(table_tsv)
 	res.end()
 });
-
+//
+//
+router.get('/search_questions', function search_questions(req, res) {
+  console.log('in search_questions')
+  
+  res.render('pages/phage/search_questions', {
+				title: 'HOMD :: Human Oral Phage Questions',
+				config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
+				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		  });
+});
 ////////////////////////////////
 ////////////////////////////////
 function create_table(source, type) {
