@@ -66,9 +66,9 @@
    background:orange;
 }
 .td-button{
-  background-color: darkgrey;
-  color: white;
-  padding:2px 2px;
+  background-color: #97B8F7;
+  color: black;
+  padding:2px 4px;
   text-decoration: none;
   font-size:small;
   border-radius:3px;
@@ -217,19 +217,16 @@
 	  </td>
 	</tr>
 	<tr>
-	  <td class='tbl-title'>Genome Sequence:</td>
+	  <td class='tbl-title'>Number of<br>Genome Sequences:</td>
 	  <td><small>
 	  <% g_length = data1.genomes.length %>
 	  <table><tr>
 	  <% if(g_length === 0){ %>
 	     <td>No Genomes</td>
 	  <% }else{ %>
-	  <%    if(g_length === 1){ %>
-	         <td><a class='td-button' href='/genome/genome_table?otid=<%= otid %>'>1 Genome</a>
-	  <%    }else{ %>
-	         <td><a class='td-button' href='/genome/genome_table?otid=<%= otid %>'><%= g_length %> Genomes</a>
-	  <%    } %>
-	        </td><td><a href='/genome/phylo_phlan_tree?otid=<%= otid %>'>view in genome tree</a>
+	 
+	        <td><%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> See List </a></td>
+	        <td><a href='/genome/phylo_phlan_tree?otid=<%= otid %>'>view in genome tree</a>
 	            <br><a href='/genome/ribosomal_protein_tree?otid=<%= otid %>'>view in ribosome protein tree</a>
 	            <br><a href='/genome/rRNA_gene_tree?otid=<%= otid %>'>view in 16S rRNA gene tree</a>
 	        </td>
@@ -268,11 +265,11 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Number of Phage<br>Known to Infect this Species:</td>
-	  <td><small><%= pids.length %>
+	  <td><%= pids.length %>
 	  <% if(pids.length > 0){ %>
-	     <a href='/phage/phage_table?host_otid=<%= otid %>'>See List</a>
+	     <a class='td-button' href='/phage/phage_table?host_otid=<%= otid %>'> See List </a>
 	  <% } %>
-	  </small>
+	 
 	  
 	  </td>
 	</tr>
