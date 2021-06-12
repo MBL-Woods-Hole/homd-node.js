@@ -1,5 +1,3 @@
-<%- include('../../partials/header_html'); %>
-
 <style>
 #center70pct_div {
    
@@ -29,6 +27,7 @@
 	border: 1px solid grey;
 }
 </style>
+<%- include('../../partials/header_html'); %>
 <body>
   <div id='wrapper'>		
 	    
@@ -48,10 +47,11 @@
 		 
 		  <div class='title'>HOMD 16S rRNA Sequence Identification</div>
 		  
-		  
+		  <center>
 		  <div id='center70pct_div'>
 			 This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences. 
-			 The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] [Detail]
+			 The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] 
+			 [<a href='/help/template/?menu=help_ident&page=blast&new=1' target='_blank'>Detail</a>]
 <form id='' name='' method='POST' action='/refseq/refseqBLASTN'>	     
 		     <div id='other70'>
 		     
@@ -64,7 +64,7 @@
 		       <input type="file" id="" name="blastn_file"  >
 
 <br><br>
-(Note1: Multiple sequences can be uploaded, please check <a href='/help/template?menu=help_ident&page=blast&new=1'>examples on sequence formats and restrictions.</a>)
+(Note1: Multiple sequences can be uploaded, please check <a href='/help/template?menu=help_ident&page=blast&new=1' target='_blank'>examples on sequence formats and restrictions.</a>)
 <br>
 (Note2: current limit of number of sequences is 5000)
 		       <br><br>
@@ -97,11 +97,12 @@
 		       <br>Other Advanced Options:
 		       <input type='text' value='-q -3 -r 2 -G 5 -E 2' maxlength='30' name='blastn_other'>
 		     <hr>
-		     <center><input type='submit' \></center>
+		     <center><input class='pill pill-brown' type='submit' \></center>
 		     </div> <!-- End other70 -->
 </form>
-		  </div>  <!-- End center70pct_div -->
 		  
+	</div>  <!-- End center70pct_div -->
+	</center>	  
 		 
 		
 	
@@ -119,4 +120,7 @@
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/bootstrap.js"></script>
-
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>

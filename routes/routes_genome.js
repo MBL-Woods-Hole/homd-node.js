@@ -579,6 +579,26 @@ router.post('/search_genometable', function search_genometable(req, res) {
 	});
 	
 })
+//
+//
+router.get('/blast', function blast(req, res) {
+	console.log('in BLAST')
+	let myurl = url.parse(req.url, true);
+	let gid = myurl.query.gid
+	console.log('gid',gid)
+	let tmp_obj = Object.keys(C.annotation_lookup)  // get prokka organisms [seqid,organism]
+    let all_annos_obj = tmp_obj.map((x) =>{
+	        return [x, C.annotation_lookup[x].prokka.organism] 
+	})
+	res.render('pages/genome/blast', {
+		title: 'HOMD :: Genome BLAST', 
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		all_annos: JSON.stringify(all_annos_obj),
+		gid: gid,
+		
+	});
+})
 ///////////////////////////////
 //////////////////////////////
 function create_table(gids, source, type, start_txt) {

@@ -1,0 +1,57 @@
+<style>
+</style>
+<%- include('../../partials/header_html'); %>
+<% all_annos = JSON.parse(all_annos) %>
+<body>
+  	<div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+		 					
+		<div class='title'>Genome BLAST</div>
+		<center>
+		<div style='padding:5px 0;'>
+			 <% if(gid){ %>
+			    Selected Genome: <%= gid %>
+			    
+			 <% } %>
+			 <br>Choose Another Genome:
+			 <select class='dropdown' onchange="if (this.value) window.location.href='/genome/blast?gid='+this.value  ">
+			 <option>Choose...</option>
+			 <% for(n in all_annos){ %>
+			   <% if(all_annos[n][0] == gid){ %>
+			     <option selected value='<%= all_annos[n][0] %>'><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
+			   <% }else{ %>
+			     <option value='<%= all_annos[n][0] %>'><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
+			   <% } %>
+			 <% } %>
+			 </select>
+			 Or <a href='/genome/blast?gid=all'>Select All</a>
+		</div>
+		
+		<div id='blast_entry'>
+		 <textarea rows='3' cols='100'>
+		cc
+		 </textarea>
+		</div>
+		</center>
+	
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+
