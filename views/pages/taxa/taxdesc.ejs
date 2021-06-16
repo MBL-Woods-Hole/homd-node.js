@@ -180,7 +180,7 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>NCBI Taxonomy ID:</td>
-	  <td><small><%= data1.ncbi_taxid %> [<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank'>Link to NCBI</a>]</small></td>
+	  <td><small><%= data1.ncbi_taxid %> [<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]</small></td>
 	</tr>
 	<tr>
 	  <% if(data1.type_strains.length === 0){ %>
@@ -189,7 +189,7 @@
 	  <% }else{ %>
 		<td class='tbl-title'>Strain Information:</td>
 		<td><small>[<%- data1.type_strains.join('], [') %>]
-		<br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank'>Global Catalogue of Microorganisms</a>
+		<br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank' rel="noopener noreferrer">Global Catalogue of Microorganisms</a>
 	  <% } %>
         </small></td>
 	</tr>
@@ -283,7 +283,7 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>PubMed Search:</td>
-	  <td><small>[<a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank'>PubMed Link</a>]
+	  <td><small>[<a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank' rel="noopener noreferrer">PubMed Link</a>]
 	  [Entrez-Nucleotide] [Entrez-Protein]</small>
 	  </td>
 	</tr>

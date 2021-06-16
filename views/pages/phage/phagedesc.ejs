@@ -22,10 +22,10 @@
 	</tr>
 	
 	<tr>	
-	  <td nowrap>NCBI Assembly: <a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank'><%= data.assembly_ncbi  %></a></td>
+	  <td nowrap>NCBI Assembly: <a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.assembly_ncbi  %></a></td>
 	</tr><tr>
 	<% if(data.sra_accession_ncbi != ''){ %>  
-	  <td nowrap>NCBI Accession: <a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank'><%= data.sra_accession_ncbi  %></a></td>
+	  <td nowrap>NCBI Accession: <a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.sra_accession_ncbi  %></a></td>
     <% }else{ %>
       <td nowrap>NCBI Accession: none</td>
     <% } %>

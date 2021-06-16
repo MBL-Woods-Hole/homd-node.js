@@ -419,7 +419,18 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 	   }
     })
 });
+// 2021-06-15  opening trees in new tab because thet take too long to open in an iframe
+// which makes the main menu non functional
+router.post('/refseq_tree', function phylo_phlan_tree(req, res) {
+    helpers.accesslog(req, res)
+    console.log('in refseq_tree')
+    console.log(req.body)
+    let tree = req.body.tree_name
+    
+    //import svgfile from "./path/fileName.svg";
+    res.send('okay')
 
+});
 router.get('/phylo_phlan_tree', function phylo_phlan_tree(req, res) {
     helpers.accesslog(req, res)
     console.log('in annotation')

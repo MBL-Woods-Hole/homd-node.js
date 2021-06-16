@@ -9,7 +9,7 @@ const helpers 	= require(app_root + '/routes/helpers/helpers');
 const open = require('open');
 
 
-router.get('/refseq_blastn', (req, res) => {
+router.get('/refseq_blastn', function refseq_blastn_get(req, res) {
     console.log('MADEIT TO blastn-get')
     helpers.accesslog(req, res)
 	res.render('pages/refseq/blastn', {
@@ -21,7 +21,7 @@ router.get('/refseq_blastn', (req, res) => {
 	});
 });
 
-router.post('/refseq_blastn', (req, res) => {
+router.post('/refseq_blastn', function refseq_blastn_post(req, res) {
     console.log('MADEIT TO blastn-post')
 	console.log(req.body)
 	helpers.accesslog(req, res)
@@ -34,13 +34,21 @@ router.post('/refseq_blastn', (req, res) => {
 	});
 });
 //
-router.get('/phylo_tree', (req, res) => {
+router.get('/refseq_tree', function refseq_tree(req, res) {
     console.log('phylo_tree')
 	helpers.accesslog(req, res)
 	let myurl = url.parse(req.url, true);
 	let otid = myurl.query.otid
 	console.log('otid',otid)
-	res.render('pages/refseq/phylo_tree', {
+	
+});
+router.get('/refseq_treeXX', function refseq_tree(req, res) {
+    console.log('phylo_tree')
+	helpers.accesslog(req, res)
+	let myurl = url.parse(req.url, true);
+	let otid = myurl.query.otid
+	console.log('otid',otid)
+	res.render('pages/refseq/refseq_tree', {
 		title: 'HOMD :: Phylo Tree', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		hostname: CFG.HOSTNAME,
@@ -48,7 +56,7 @@ router.get('/phylo_tree', (req, res) => {
 		otid:otid
 	});
 });
-router.get('/download', (req, res) => {
+router.get('/download', function download(req, res) {
     console.log('download')
 	console.log(req.body)
 	helpers.accesslog(req, res)
