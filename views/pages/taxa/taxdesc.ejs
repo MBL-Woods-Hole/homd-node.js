@@ -95,17 +95,17 @@
     
 <% if(data3.subspecies){ %>	   
   <div class='title'><i><%= data1.genus %> <%= data1.species %> <%= data3.subspecies %></i>
-   (HMT-TaxonID: <%= otid %>)
+   (<%= taxidfullnameplus %>)
   </div>	
 <% }else{ %>
   <div class='title'><i><%= data1.genus %> <%= data1.species %></i>
-   (HMT-TaxonID: <%= otid %>)
+   (<%= taxidfullnameplus %>)
   </div>
 <% } %>
 <div class="outer">
     <div class="float-left">
       Description:
-        <div class=" description">
+        <div class="description">
 		  <%- data2.general %>
 	  	  <br><%- data2.disease %>
 	  	  <br><%- data2.prev %>
@@ -218,29 +218,30 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Number of<br>Genome Sequences:</td>
-	  <td><small>
-	  <% g_length = data1.genomes.length %>
-	  <table><tr>
-	  <% if(g_length === 0){ %>
-	     <td>No Genomes</td>
-	  <% }else{ %>
-	 
-	        <td><%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> See List </a></td>
-	        <td><a href='/genome/phylo_phlan_tree?otid=<%= otid %>'>view in genome tree</a>
-	            <br><a href='/genome/ribosomal_protein_tree?otid=<%= otid %>'>view in ribosome protein tree</a>
-	            <br><a href='/genome/rRNA_gene_tree?otid=<%= otid %>'>view in 16S rRNA gene tree</a>
-	        </td>
-	  <% } %>
-	  </tr>    
-	  </table>
-	  </small>
+	  <td>
+		  <small>
+		  <% g_length = data1.genomes.length %>
+		  <% if(g_length === 0){ %>
+			 No Genomes
+		  <% }else{ %>
+			 <%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> See List </a>
+		  <% } %>
+		  </small>
 	  </td>
 	</tr>
 	<tr>
-	  <td class='tbl-title'>Phenotypic Characteristics:</td>
-	  <td class='data'><small><%- data2.pheno %>
-	  </small></td>
+	  <td class='tbl-title'>Phylogenetic Trees:</td>
+	  <td>
+	  <% if(g_length > 0){ %>
+	    <small>
+	      <a href='/genome/phylo_phlan_tree?otid=<%= otid %>'>view in genome tree</a>
+	        <br><a href='/genome/ribosomal_protein_tree?otid=<%= otid %>'>view in ribosome protein tree</a>
+	        <br><a href='/genome/rRNA_gene_tree?otid=<%= otid %>'>view in 16S rRNA gene tree</a>
+	    </small>
+	  <% } %>
+	  </td>
 	</tr>
+	
 	</table>
 
 </td><td>
@@ -250,13 +251,17 @@
 	  <td class='tbl-title'>Genotypic Description:</td>
 	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
-	<tr>
-	  <td class='tbl-title'>Pangenome:</td>
-	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
-	</tr>
 	
 	<tr>
-	  <td class='tbl-title'>Phylogenetic Trees:</td>
+	  <td class='tbl-title'>Phenotypic Characteristics:</td>
+	  <td>
+	  <% if(data2.pheno !==''){ %>
+	    <small><%- data2.pheno %></small>
+	  <% } %>
+	  </td>
+	</tr>
+	<tr>
+	  <td class='tbl-title'>Pangenome:</td>
 	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
 	</tr>
 	<tr>
