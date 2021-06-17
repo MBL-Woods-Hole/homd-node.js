@@ -483,7 +483,7 @@ router.get('/tax_description', function tax_description(req, res){
 	//let tmp_list = Object.values(C.phage_lookup).filter(item => item.host_otid === otid)
 	//let pids = tmp_list.map()
 	//console.log(data1)
-	console.log(data1)
+	console.log('d2',data2)
 	// get_genus photos
 	node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
 	console.log('node',node)
@@ -749,7 +749,7 @@ router.get('/life', function life(req, res) {
 				       }else{
 				         otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
 				       //console.log('otid',otid)
-					     html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>Taxon-ID: "+otid+'</a>)<br>'
+					     html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)<br>'
 				       }
 				 
 				 }else{
@@ -1093,7 +1093,7 @@ function find_images(rank, otid, tax_name) {
 	return image_list
 }      
         
-        
+    
    
 
 

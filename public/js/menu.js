@@ -63,3 +63,34 @@ function search(){
 	document.getElementsByTagName('body')[0].appendChild(f); //pure javascript
 	f.submit()
 }
+
+function open_tree(tree_name) {  // needs to be global
+    // tree names: refseq, conserved, ribosomal, 16S_rRNA
+   
+    args={}
+    args.tree_name = tree_name
+    var xmlhttp = new XMLHttpRequest();
+	xmlhttp.open("POST", "/genome/refseq_tree", true);
+	xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = xmlhttp.responseText;
+        //console.log(defline)
+        text = ''
+        //text += '<pre>'+defline+'<br>'
+        text = '<pre>'
+        text += resp
+        text += '</pre>'
+		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
+		var doc = win.document;
+		//doc.writeln("<title>yourtitle</title>");
+		//doc.title = 'eHOMD Reference Sequence'
+		doc.open("text/html");
+		
+		//doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
+		doc.write(text);
+		doc.close();
+      }
+    }
+    xmlhttp.send(JSON.stringify(args));
+}

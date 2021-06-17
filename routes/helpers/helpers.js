@@ -109,3 +109,6 @@ module.exports.print_size = (obj, index, self) =>{
   let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
     console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
 }
+module.exports.make_otid_display_name = (otid) =>{
+    return 'HMT-'+("000" + otid.toString()).slice(-3);
+} 

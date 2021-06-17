@@ -14,7 +14,7 @@ p {
 }
 #wrapper {
 	border: 1px solid #000;
-	width: 1200px;
+	width: 1350px;
 	margin: auto;
 }
 .page-content {
@@ -44,14 +44,15 @@ input[type=radio] {
 
 /* header images masthead */
 #masthead {
-  width:1200px;
-  background:black;
+  width:1350px;
+  background: black;
   
 }
 #masthead img {
   height:50px;
   padding:0;
   margin:0;
+  
 } 
 /* Clear floats after image containers */
 #masthead::after {
@@ -104,7 +105,7 @@ input[type=radio] {
 /* BGcolor:  #99cfe0 */
 #nav {
    /* text-align: left; */
-   height:39px;
+   height:42px;
    position:relative;
    left: 0px;
    border-top:1px solid black;
@@ -145,7 +146,7 @@ input[type=radio] {
 	text-decoration:none;
 	padding:10px 10px 12px 10px;
 	
-	font:bold 11px Verdana;
+	font:bold 13px Verdana;
 	color: black;
 	background-color: white;
 	
@@ -157,7 +158,7 @@ input[type=radio] {
 	text-decoration:none;
 	padding:2px 4px 2px 4px;
 	
-	font:bold 11px Verdana;
+	font:bold 12px Verdana;
 	color: black;
 	background-color: white;
 	
