@@ -421,58 +421,65 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 });
 // 2021-06-15  opening trees in new tab because thet take too long to open in an iframe
 // which makes the main menu non functional
-router.post('/refseq_tree', function phylo_phlan_tree(req, res) {
+router.get('/conserved_protein_tree', function conserved_protein_tree(req, res) {
     helpers.accesslog(req, res)
-    console.log('in refseq_tree')
-    console.log(req.body)
-    let tree = req.body.tree_name
-    
-    //import svgfile from "./path/fileName.svg";
-    res.send('okay')
-
-});
-router.get('/phylo_phlan_tree', function phylo_phlan_tree(req, res) {
-    helpers.accesslog(req, res)
-    console.log('in annotation')
+    console.log('in conserved_protein_tree')
     let myurl = url.parse(req.url, true);
 	let otid = myurl.query.otid
-    res.render('pages/genome/genomic_phylo_phlan_tree', {
-        title: 'HOMD :: Genome Annotation', 
+	let fullname = helpers.make_otid_display_name(otid)
+	console.log(fullname)
+	fs.readFile('public/trees/conserved_tree.svg','utf8', (err, data) => {
+      if(err){
+         console.log(err)
+      }
+      res.render('pages/genome/conserved_protein_tree', {
+        title: 'HOMD :: Conserved Protein Tree', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		otid:otid,
+		svg_data: JSON.stringify(data),
+		otid:fullname,
+      })
     
     })
-
 });
 router.get('/ribosomal_protein_tree', function ribosomal_protein_tree(req, res) {
     helpers.accesslog(req, res)
-    console.log('in annotation')
+    console.log('in ribosomal_protein_tree')
     let myurl = url.parse(req.url, true);
 	let otid = myurl.query.otid
-    res.render('pages/genome/ribosomal_protein_tree', {
-        title: 'HOMD :: Genome Annotation', 
+    fs.readFile('public/trees/ribosomal_tree.svg','utf8', (err, data) => {
+      if(err){
+         console.log(err)
+      }
+      res.render('pages/genome/ribosomal_protein_tree', {
+        title: 'HOMD :: Ribosomal Protein Tree', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		svg_data: JSON.stringify(data),
 		otid:otid,
+      })
     })
-
 });
 router.get('/rRNA_gene_tree', function rRNA_gene_tree(req, res) {
     helpers.accesslog(req, res)
-    console.log('in annotation')
+    console.log('in rRNA_gene_tree')
     let myurl = url.parse(req.url, true);
 	let otid = myurl.query.otid
-    res.render('pages/genome/rRNA_gene_tree', {
-        title: 'HOMD :: rRNA_gene_tree', 
+    fs.readFile('public/trees/16S_rRNA_tree.svg','utf8', (err, data) => {
+      if(err){
+         console.log(err)
+      }
+      res.render('pages/genome/rRNA_gene_tree', {
+        title: 'HOMD :: rRNA Gene Tree', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		svg_data: JSON.stringify(data),
 		otid:otid,
+      })
     })
-
 });
-
-
+//
+//
 router.get('/dld_table/:type/:letter/:page/:phylum/:otid', function dld_table(req, res) {
 	helpers.accesslog(req, res)
 	console.log('in download table')
