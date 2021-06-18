@@ -100,15 +100,17 @@
 	  
 <div id='images'> <!-- Up to four images  -->
 <% if(images.length === 0 ) { %>
-<div style='padding-right:200px;'>
-<small>** no images available **</small>
-</div>
-
+  <style>
+    #hierarchy_table_div table{
+      width:90%;
+    }
+  </style>
+  <% table_width = '90%' %>
 <% }else if(images.length === 1 ) { %>
-<div style='padding-right:200px;'>
-<img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt='<%= tax_name %> Image'  \><br>
-<small><%= images[0].text %></small>
-</div>
+  <div style='padding-right:200px;'>
+    <img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt='<%= tax_name %> Image'  \><br>
+    <small><%= images[0].text %></small>
+  </div>
 
 <% }else{ %>
 	<table id='image-table'>
@@ -132,9 +134,10 @@
 		<% } %>
 	</table>
 <% } %>
+
 </div>
 	  
-	  <div id='hierarchy_table_div'>
+	  <div id='hierarchy_table_div' width='90%'>
 	  <table id='life-table'>	
 		<thead>
 		 <tr><th></th><th><i>e</i>HOMD Taxonomy</th><tr>

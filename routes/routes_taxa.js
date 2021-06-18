@@ -38,11 +38,11 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	  	console.log('GOT annotations')
 	  	send_tax_obj = send_tax_obj.filter(item => item.genomes.length >0)
 	  	//show_filters = 0
-	  	pgtitle = 'Human Microbial Taxa with Annotated Genomes'
+	  	pgtitle = 'Human Oral Microbial Taxa with Annotated Genomes'
 	}else{
 		console.log('NO annotations')
 		//show_filters = 1
-		pgtitle = 'List of Human Microbial Taxa'
+		pgtitle = 'List of Human Oral Microbial Taxa'
 		var intiial_status_filter = C.tax_status_on  //['named','unnamed','phylotype','lost']  // no['dropped','nonoralref']
 	
 		//console.log(tax_letter)
@@ -453,7 +453,7 @@ router.get('/tax_description', function tax_description(req, res){
 	// find list pids that are known use this taxon
 	let plist = Object.values(C.phage_lookup).filter(item => (item.host_otid === otid)) 
 	let pid_list = plist.map(item => item.pid)
-	console.log('pid_list',pid_list)
+	//console.log('pid_list',pid_list)
 	if(C.taxon_info_lookup[otid] ){
 	    var data2 = C.taxon_info_lookup[otid]
 	}else{
@@ -483,10 +483,10 @@ router.get('/tax_description', function tax_description(req, res){
 	//let tmp_list = Object.values(C.phage_lookup).filter(item => item.host_otid === otid)
 	//let pids = tmp_list.map()
 	//console.log(data1)
-	console.log('d2',data2)
+	//console.log('d2',data2)
 	// get_genus photos
 	node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
-	console.log('node',node)
+	//console.log('node',node)
 	var lineage_list = make_lineage(node)  // [str obj]
 	var image_array = find_images('species',otid,data3.species)
 	//console.log('genus',data3.genus)
@@ -639,6 +639,17 @@ router.get('/dld_table/:type/:letter/:page/:sites/:stati', function dld_table_ge
 	res.send(table_tsv)
 	res.end()
 });
+// router.get('/tree',function tree(req, res) {
+//     console.log('in tree')
+//     fs.readFile('public/trees/refseq_tree.svg', (err, data) => {
+//         if(err){
+//            console.log(err)
+//         }
+//         res.set('Content-Type', 'application/svg+xml');
+//         res.send(data)
+//         res.end()
+//     })
+// })
 // router.get('/dld_tableXX', function dld_table_get(req, res) {
 // 	helpers.accesslog(req, res)
 // 	console.log(req.body)

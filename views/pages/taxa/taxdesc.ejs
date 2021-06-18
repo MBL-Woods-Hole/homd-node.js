@@ -28,7 +28,7 @@
   border:1px solid green;
 }
 .description{
-  font-size:11px;
+  font-size:12px;
   padding:0 0px;
   height:200px;
   overflow:auto;
@@ -74,6 +74,9 @@
   border-radius:3px;
   border:1px solid darkgreen;
 }
+.img {
+  height: 200px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -118,13 +121,14 @@
       
 <div class='float-right'>
   <% if(images.length === 0 ) { %>
-    <div>
-		<small>** no images available **</small>
-	</div>
+    <style>
+      .float-left{width:100%;}
+      .float-right{border:0px}
+    </style>
   
   <% }else if(images.length === 1 ) { %>
-      <div style='margin-left:100px;'>
-		<img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt=''  \><br>
+      <div >
+		<img class='img' src='/images/life-images/<%= images[0].name %>'  alt='<%= images[0].name %>'  \><br>
 		<small><%= images[0].text %></small>
 	  </div>
   
@@ -137,7 +141,7 @@
 		<td>
 	  <% } %>
 	   <div>
-		<img id='img' src='/images/life-images/<%= images[n].name %>' width='200' alt=''  \><br>
+		<img class='img' src='/images/life-images/<%= images[n].name %>'  alt='<%= images[n].name %>'  \><br>
 		<small><%= images[n].text %></small>
 	   </div>
 	 <% if(n==0 || n==2){ %>
@@ -154,7 +158,7 @@
 </div> <!--    End Outer -->
 
 <div id='tables'>
-<br><br><div id='status'>Status: [<%= data1.status %>] -- and Preferred Body Site: [<%= data1.site %>]</div>
+<br><br><div id='status'>Status: [<%= data1.status %>] -- Preferred Body Site: [<%= data1.site %>]</div>
 <table id='description_tbl' border='1'>
 <tr><td>
 	<table id='left-tbl'>
@@ -234,7 +238,7 @@
 	  <td>
 	  <% if(g_length > 0){ %>
 	    <small>
-	      <a href='/genome/phylo_phlan_tree?otid=<%= otid %>'>view in genome tree</a>
+	            <a href='/genome/conserved_protein_tree?otid=<%= otid %>'>view in genome tree</a>
 	        <br><a href='/genome/ribosomal_protein_tree?otid=<%= otid %>'>view in ribosome protein tree</a>
 	        <br><a href='/genome/rRNA_gene_tree?otid=<%= otid %>'>view in 16S rRNA gene tree</a>
 	    </small>
