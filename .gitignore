@@ -2,7 +2,7 @@
 *.fa
 *.fna
 *.fasta
-*.svg
+
 
 .vagrant
 .vscode
