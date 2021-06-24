@@ -81,15 +81,29 @@ router.post('/site_search', (req, res) => {
 //         
 //      
 //     });
-    var result2 = findInFiles.find({'term': search_txt, 'flags': 'ig'}, dir, '.ejs$')
-                .then(function(help_page_results) {
-		
-        console.log('help_page_results',help_page_results)
-        let lst = []
-        for(fpath in help_page_results){
-           console.log(fpath, help_page_results[fpath])
-           lst.push(path.basename(fpath, path.extname(fpath)))
+    //  Now the phage db
+    // phageID, phage:family,genus,species, host:genus,species, ncbi ids
+    //console.log(C.phage_lookup['HPT-000001'])
+    let phage_id_lst = Object.keys(C.phage_lookup).filter(item => ((item+'').includes(search_txt))) 
+    let phage_db = Object.values(C.phage_lookup).filter( function(e){
+        if(e.family_ncbi.toLowerCase().includes(search_txt) 
+          || e.genus_ncbi.toLowerCase().includes(search_txt)
+          || e.species_ncbi.toLowerCase().includes(search_txt)
+          || e.host_ncbi.toLowerCase().includes(search_txt)){
+          return e
         }
+    })
+    let phage_name_lst = phage_db.map(e => e.pid)   
+    console.log(phage_name_lst)
+//    var result2 = findInFiles.find({'term': search_txt, 'flags': 'ig'}, dir, '.ejs$')
+//                .then(function(help_page_results) {
+		
+        //console.log('help_page_results',help_page_results)
+//         let lst = []
+//         for(fpath in help_page_results){
+//            //console.log(fpath, help_page_results[fpath])
+//            lst.push(path.basename(fpath, path.extname(fpath)))
+//         }
         res.render('pages/homd/search_result', {
 			title: 'HOMD :: Site Search', 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
@@ -98,15 +112,16 @@ router.post('/site_search', (req, res) => {
 			otid_list: JSON.stringify(otid_lst),
 			gid_list: JSON.stringify(gid_lst),
 			taxon_otid_obj: JSON.stringify(taxon_otid_obj),
-			help_pages: JSON.stringify(lst),
+			//help_pages: JSON.stringify(lst),
+			phage_id_list: JSON.stringify(phage_id_lst),  // phageIDs
+			phage_name_list: JSON.stringify(phage_name_lst)          // family,genus,species,host
+			
 	    });
         
-     });
+     //});
    
     
-      // console.log('res2',result2); // Code depending on result
-    
-   
+    // console.log('res2',result2); // Code depending on result
 	//console.log(taxon_lst,'taxon_lst',taxon_lst.length)
 	//console.log(taxon_lst2,'taxon_lst2',taxon_lst2.length)
 	//console.log('110',C.taxon_lineage_lookup[110])

@@ -136,6 +136,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	}
 	
 	//var count_text = get_count_text_n_page_form(page)
+	console.log(C.tax_status_on)
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
@@ -210,7 +211,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	send_tax_obj.sort(function (a, b) {
         return helpers.compareStrings_alpha(a.genus, b.genus);
     });
-	//console.log('send_tax_objC',send_tax_obj)
+	console.log('statusfilter_on',statusfilter_on)
 	// use session for taxletter
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 

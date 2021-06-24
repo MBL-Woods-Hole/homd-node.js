@@ -8,8 +8,8 @@
 <%- include('../../partials/header_html'); %>
 
 <% list = JSON.parse(data) %>
-<% statusfltrX = statusfltr %>
-
+<% statusfltrejs = JSON.parse(statusfltr) %>
+<% sitefltrejs = JSON.parse(sitefltr) %>
 
 <body>
   	<div id='wrapper'>
@@ -102,17 +102,17 @@
   $(document).ready(function(){                    
     
     var letter = '<%- letter %>'
-	var statusfltr= JSON.parse('<%- statusfltr %>')
-	var sitefltr= JSON.parse('<%- sitefltr %>')
-    // lets set check here
-    // uncheck all
-    var els = document.getElementsByClassName('filter_ckbx')
-    var all_on = statusfltr.concat(sitefltr)
-    for (n in els){
-		if(all_on.indexOf(els[n].name) != -1){
-		  els[n].checked = true
-		}
-	} 
+// 	var statusfltr= JSON.parse('<%- statusfltr %>')
+// 	var sitefltr= JSON.parse('<%- sitefltr %>')
+//     // lets set check here
+//     // uncheck all
+//     var els = document.getElementsByClassName('filter_ckbx')
+//     var all_on = statusfltr.concat(sitefltr)
+//     for (n in els){
+// 		if(all_on.indexOf(els[n].name) != -1){
+// 		  els[n].checked = true
+// 		}
+// 	} 
 	if(letter){
 		document.getElementById(letter).style.color = 'red'
 		document.getElementById(letter).style.fontSize = 'medium'
