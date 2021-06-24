@@ -81,11 +81,10 @@ display:inline-block;
         
  -->
        
-        <a class='pill pill-midnightblue' href=''>BLAST</a></td>
-        
-        
-        <td class='center'><a class='pill pill-mediumorchid'  href='annotation/<%= ginfo[n].gid %>/prokka'>PROKKA</a>
-        <a class='pill pill-slateblue' href='annotation/<%= ginfo[n].gid %>/ncbi'>NCBI</a>
+        <a class='pill pill-midnightblue' href='explorer?gid=<%= ginfo[n].gid %>&blast=1'>BLAST</a></td>
+        <td class='center'>
+        <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
+        <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
         <!-- <span class="badge badge-light">HOMD</span></td> -->
 	</tr>
 <% } %>

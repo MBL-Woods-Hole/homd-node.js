@@ -81,6 +81,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 <%- include('../../partials/header_html'); %>
 <% info_data = JSON.parse(info_data) %>
 <% all_annos = JSON.parse(all_annos) %>
+<% page_data = JSON.parse(page_data) %>
 <% mole = JSON.parse(pid_list) %>
 <% db = anno_type+'_'+gid %>
 
@@ -90,15 +91,24 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
 		
+		
+		
 		<center>
 		<div id='genome-explorer'>					
-			 <div class='title'><%= anno_type.toUpperCase() %> Annotation for Genome: <span id='headline'><%= info_data.organism %></span></div>
-			 
-			 <div style='padding:5px 0;'>
-			 Choose Another Genome:
-			 <select class='dropdown' onchange="if (this.value) window.location.href='/genome/annotation/'+this.value+'/<%= anno_type %>'  ">
-			 <option>Choose...</option>
-			 <% for(n in all_annos){ %>
+			<% if(blast == '1'){ %>
+			    <div class='title'>BLAST Against Genome: <span id='headline'><%= organism %></span> [<%= gid %>]</div>
+			<% }else{ %>
+			    <div class='title'><%= anno_type.toUpperCase() %> Annotation for Genome: <span id='headline'><%= organism %></span> [<%= gid %>]</div>
+			<% } %> 
+			<div style='padding:5px 0;'>
+			Choose Another Genome:
+			<% if(blast == '1'){ %>
+			     <select class='dropdown' onchange="if (this.value) window.location.href='explorer?gid='+this.value+'&blast=1'  ">
+			<% }else{ %>
+			     <select class='dropdown' onchange="if (this.value) window.location.href='explorer?gid='+this.value+'&anno=<%= anno_type %>'  ">
+			<% } %> 
+			<option>Choose...</option>
+			<% for(n in all_annos){ %>
 			   <% if(all_annos[n][0] == gid){ %>
 			     <option selected value='<%= all_annos[n][0] %>'><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
 			   <% }else{ %>
@@ -115,13 +125,19 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			 <div id='header_buttons' >
 			  <% if(anno_type == 'prokka'){ %>
 			    <span class='an-button active' href=''>PROKKA</span>
-			    <a class='an-button' href='/genome/annotation/<%= gid %>/ncbi'>NCBI</a>
-			  <% }else{ %>
-			    <a class='an-button' href='/genome/annotation/<%= gid %>/prokka'>PROKKA</a>
+			    <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+			    <a class='an-button' href='explorer?gid=<%= gid %>&blast=1'>BLAST</a>
+			  <% }else if(anno_type == 'ncbi'){ %>
+			    <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
 			    <span class='an-button active' href=''>NCBI</span>
+			    <a class='an-button' href='explorer?gid=<%= gid %>&blast=1'>BLAST</a>
+			  <% }else if(blast == '1'){ %>
+			    <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
+			    <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+			    <span class='an-button active' href=''>BLAST</span>
+			    
 			  <% } %>
 			  <a class='an-button' href='http://www.homd.org/jbrowse/index.html?data=homd/<%= gid %>' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
-			  <a class='an-button' href='/genome/blast?gid=<%= gid %>'>BLAST</a>
 			  <a class='an-button' href='/genome/genome_description?gid=<%= gid %>'>Genome Desc.</a>
 			  <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Desc.</a>
 			 </div>
@@ -130,82 +146,13 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		</div>
 		</center>
 		
-		<div id='annotation-info'>
-		  <span id='anno-title2'><%= anno_type.toUpperCase() %> Annotation for <%= gid %></span>
-		
-		  <br>
-			<table id='info-table' >
-			 <tr><th colspan='4'>Genome selected: <%= info_data.organism %> </th></tr>
-			 <tr>
-			   <td>Contigs:</td><td><%= info_data.contigs %>	</td>
-			   <td>Bases:</td><td><%= info_data.bases %> bps</td>	
-			 </tr>
-		
-			<tr><td>CDS:</td><td><%= info_data.CDS %>	</td>
-				 <td>rRNA:</td><td><%= info_data.rRNA %></td>
-			</tr>
-		
-			<tr><td>tmRNA:</td><td><%= info_data.tmRNA %>	</td>
-				<td>tRNA:</td><td><%= info_data.tRNA %>	</td>
-				
-			</tr>
+		<% if(anno_type == 'prokka' || anno_type == 'ncbi'){ %>
+		    <%- include('../../partials/annotation'); %>
+		<% }else if(blast == 1){  %>
+		    <%- include('../../partials/blast'); %>
+		<% } %>
 		
 		
-			
-			</table>
-		
-		</div>
-		
-		
-	    <div id='annotation-table-div'>					
-			 <% if(mole.length === 0){ %>
-			     <div id='no-data'>There is no annotation data available for <%= anno_type.toUpperCase() %> <%= gid %></div>
-			 <% }else{ %>
-			 
-			 Annotation Table [page:<%= show_page %>]
-			 <% next_page = parseInt(show_page)+1 %>
-			 <% prev_page = parseInt(show_page)-1 %>
-			 <br>Number of Records Found: <%= trecords %> <small>[<%= number_of_pages %> Pages]
-			 <a href='/genome/annotation/<%= gid %>/<%= anno_type %>?page=<%= next_page %>'>Next Page</a>
-			 <==>
-			 <a href='/genome/annotation/<%= gid %>/<%= anno_type %>?page=<%= prev_page %>'>Previous Page</a>
-			 </small>
-			 
-			 
-			 
-			 <table id='annotation-table' class='sortable'>
-			 <thead>
-			  <tr>
-			   <th class='sorttable_nosortX'></th>
-			   <th class='col1'>Molecule</th>
-			   <th class='col2'>PID</th>
-			   <th class='col3 sorttable_nosort'>Sequences</th>
-			   <th class='col4' nowrap>Size (<small>NA/AA</small>)</th>
-			   <th class='col5'>Range</th>
-			   <th class='col6'>Gene Product Name</th>
-			  </tr>
-			 </thead>
-			 <tbody>
-			 <% cnt = start_count %>
-			 <% for(n in mole){ %>
-			 <tr>
-			   <td><%= cnt %></td>
-			   <td><%= mole[n].accession %></td>
-			   <td nowrap><%= mole[n].PID %> <a href='http://www.homd.org/jbrowse/index.html?data=homd/<%= gid %>&highlight=<%= mole[n].accession %>:<%= mole[n].start %>..<%= mole[n].stop %>' target='_blank' rel="noopener noreferrer">jb</a></td>
-			   <td nowrap>
-			       [<a title='Nucleic Acid' href='#' onclick="get_NN_NA_seq('na','<%= mole[n].PID %>','<%= db %>')"><b>NA</b></a>] 
-			       [<a title='Amino Acid' href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].PID %>','<%= db %>')"><b>AA</b></a>]
-			   </td>
-			   <td><%= mole[n].len_na %>/<%= mole[n].len_aa %></td>
-			   <td><%= mole[n].start %>-<%= mole[n].stop %></td>			   
-			   <td><%= mole[n].product %></td>
-			 </tr>
-			 <% cnt += 1 %>
-			 <% } %>
-			 </tbody>
-			 </table>
-			 <% } %>  
-		</div>
 		
 		<!-- https://vicbioinformatics.com/software.prokka.shtml -->
     </div> <!-- end: page-content -->

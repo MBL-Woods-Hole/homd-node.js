@@ -323,33 +323,100 @@ router.post('/get_NN_NA_seq', function get_NN_NA_seq_post(req, res) {
 	
 });
 //
-router.get('/annotation/:gid/:type', function annotation(req, res) {
+// router.get('/blast', function blast(req, res) {
+// 	console.log('in BLAST')
+// 	let myurl = url.parse(req.url, true);
+// 	let gid = myurl.query.gid
+// 	console.log('gid',gid)
+// 	let tmp_obj = Object.keys(C.annotation_lookup)  // get prokka organisms [seqid,organism]
+//     let all_annos_obj = tmp_obj.map((x) =>{
+// 	        return [x, C.annotation_lookup[x].prokka.organism] 
+// 	})
+// 	res.render('pages/genome/explorer', {
+// 		title: 'HOMD :: Genome BLAST', 
+// 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+// 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+// 		all_annos: JSON.stringify(all_annos_obj),
+// 		gid: gid,
+// 		
+// 	});
+// })
+//router.get('/annotation/:gid/:type', function annotation(req, res) {
+router.get('/explorer', function annotation(req, res) {
     helpers.accesslog(req, res)
-    console.log('in annotation')
+    console.log('in explorer')
     let myurl = url.parse(req.url, true);
-    let gid = req.params.gid
-    let anno_type = req.params.type
-    let page = myurl.query.page
-    if(!page){
-      page=1
+    let gid = myurl.query.gid
+    let anno_type = ''
+    let blast = 0
+    var info_data_obj = {}
+    let page_data = {}
+    let organism,pid_list
+    let render_fxn = (req,res,gid,otid,blast,organism,all_annos_obj,anno_type,page_data,info_data_obj,pid_list) => {
+        res.render('pages/genome/explorer', {
+				title: 'HOMD :: '+gid, 
+				config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+				gid: gid,
+				otid: otid,
+				all_annos: JSON.stringify(all_annos_obj),
+				anno_type: anno_type,
+				page_data: JSON.stringify(page_data),
+				blast: blast,
+				organism: organism,
+				//trecords:trecords,
+				//start_count:start_count,
+				//show_page: show_page,
+				//number_of_pages: number_of_pages,
+				info_data: JSON.stringify(info_data_obj),
+				pid_list: JSON.stringify(pid_list),
+			})
     }
-    if(!C.annotation_lookup.hasOwnProperty(gid) || !C.annotation_lookup[gid].hasOwnProperty(anno_type)){
-    	let message = "Could not find "+anno_type+" annotation for "+gid
-    	res.render('pages/lost_message', {
-	       title: 'HOMD :: Error', 
-			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-			message:message,
-			//data1: JSON.stringify(data1),
-			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-	   })
-	   return	
+    
+    if(myurl.query.blast == 1){
+        blast = 1
     }
-    let info_data_obj = C.annotation_lookup[gid][anno_type]
+    if(myurl.query.anno){
+       anno_type=myurl.query.anno
+    }
+    page_data.page = myurl.query.page
+    if(!page_data.page){
+      page_data.page=1
+    }
     let otid = C.genome_lookup[gid].otid
     let tmp_obj = Object.keys(C.annotation_lookup)  // get prokka organisms [seqid,organism]
     let all_annos_obj = tmp_obj.map((x) =>{
 	        return [x, C.annotation_lookup[x].prokka.organism] 
 	    })
+    
+    if(C.annotation_lookup.hasOwnProperty(gid)){
+       organism = C.annotation_lookup[gid].prokka.organism
+    }
+    console.log('organism',organism)
+    console.log('blast',blast)
+    console.log('page_data.page',page_data.page)
+    console.log('anno_type',anno_type)
+    if(blast == 1){
+        info_data_obj ={}
+        pid_list=[]
+        page_data={}
+        render_fxn(req,res,gid,otid,blast,organism,all_annos_obj,anno_type,page_data,info_data_obj,pid_list)
+        return
+    }
+    if(C.annotation_lookup.hasOwnProperty(gid) && C.annotation_lookup[gid].hasOwnProperty(anno_type)){
+      //console.log('XXX')
+      info_data_obj = C.annotation_lookup[gid][anno_type]
+    }else{
+    //if(!C.annotation_lookup.hasOwnProperty(gid) || !C.annotation_lookup[gid].hasOwnProperty(anno_type)){
+    	let message = "Could not find "+anno_type+" annotation for "+gid
+    	info_data_obj ={}
+    	//console.log('XXY')
+        pid_list=[]
+        page_data={}
+    	render_fxn(req,res,gid,otid,blast,organism,all_annos_obj,anno_type,page_data,info_data_obj,pid_list)
+        return
+    	
+    }
     
     //annoquery = "SELECT UNCOMPRESS(seq_comp) as seq FROM annotation.genome WHERE seq_id ='"+gid+"' and annotation='"+anno_type+"' limit 2"
     //annoquery = "SELECT PID,product FROM annotation.orf_sequence WHERE gid ='"+gid+"' and annotation='"+anno_type+"' limit 2"
@@ -367,26 +434,26 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 		    if(rows.length == 0){
 		          console.log('no rows found')
 		    }
-		    let trecords = rows.length
+		    page_data.trecords = rows.length
 		    
-			if(page){
+			if(page_data.page){
 				var trows = rows.length 
 				//console.log('trows',trows)
-				var row_per_page = 200
-				var number_of_pages = Math.ceil(trows/row_per_page)
-	            if(page > number_of_pages){page = 1}
-	            if(page < 1){page = number_of_pages}
-				console.log('number_of_pages',number_of_pages)
+				page_data.row_per_page = 200
+				page_data.number_of_pages = Math.ceil(trows/page_data.row_per_page)
+	            if(page_data.page > page_data.number_of_pages){page_data.page = 1}
+	            if(page_data.page < 1){page_data.page = page_data.number_of_pages}
+				console.log('page_data.number_of_pages',page_data.number_of_pages)
 	
-				var show_page = page
-				if(show_page === 1){
-					var send_list = rows.slice(0,row_per_page)  // first 200
-					start_count = 1
+				page_data.show_page = page_data.page
+				if(page_data.show_page === 1){
+					pid_list = rows.slice(0,page_data.row_per_page)  // first 200
+					page_data.start_count = 1
 				}else{
-					var send_list = rows.slice(row_per_page*(show_page-1),row_per_page*show_page)  // second 200
-					start_count = row_per_page*(show_page-1) + 1
+					pid_list = rows.slice(page_data.row_per_page*(page_data.show_page-1),page_data.row_per_page*page_data.show_page)  // second 200
+					page_data.start_count = page_data.row_per_page*(page_data.show_page-1) + 1
 				}
-				console.log('start count',start_count)
+				console.log('start count',page_data.start_count)
 				//var page_form = '<br><small>On Page: '+show_page.toString()+' of '+number_of_pages.toString()+':: Change Page: ['
 				// for(var i=1;i<=number_of_pages;i++){
 // 					if(parseInt(page) === i){
@@ -399,25 +466,26 @@ router.get('/annotation/:gid/:type', function annotation(req, res) {
 // 				page_form += ']</small>'
 			}
 	
-	
-			res.render('pages/genome/annotation', {
-				title: 'HOMD :: '+gid, 
-				config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-				gid: gid,
-				otid: otid,
-				trecords:trecords,
-				start_count:start_count,
-				show_page: show_page,
-				number_of_pages: number_of_pages,
-				info_data: JSON.stringify(info_data_obj),
-				all_annos: JSON.stringify(all_annos_obj),
-				anno_type: anno_type,
-				//mole: JSON.stringify(rows),
-				pid_list: JSON.stringify(send_list),
-			})
+	        render_fxn(req,res,gid,otid,blast,organism,all_annos_obj,anno_type,page_data,info_data_obj,pid_list)
+// 			res.render('pages/genome/explorer', {
+// 				title: 'HOMD :: '+gid, 
+// 				config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+// 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+// 				gid: gid,
+// 				otid: otid,
+// 				trecords:trecords,
+// 				start_count:start_count,
+// 				show_page: show_page,
+// 				number_of_pages: number_of_pages,
+// 				info_data: JSON.stringify(info_data_obj),
+// 				all_annos: JSON.stringify(all_annos_obj),
+// 				anno_type: anno_type,
+// 				//mole: JSON.stringify(rows),
+// 				pid_list: JSON.stringify(send_list),
+// 			})
 	   }
     })
+
 });
 // 2021-06-15  opening trees in new tab because thet take too long to open in an iframe
 // which makes the main menu non functional
@@ -599,24 +667,7 @@ router.post('/search_genometable', function search_genometable(req, res) {
 })
 //
 //
-router.get('/blast', function blast(req, res) {
-	console.log('in BLAST')
-	let myurl = url.parse(req.url, true);
-	let gid = myurl.query.gid
-	console.log('gid',gid)
-	let tmp_obj = Object.keys(C.annotation_lookup)  // get prokka organisms [seqid,organism]
-    let all_annos_obj = tmp_obj.map((x) =>{
-	        return [x, C.annotation_lookup[x].prokka.organism] 
-	})
-	res.render('pages/genome/blast', {
-		title: 'HOMD :: Genome BLAST', 
-		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		all_annos: JSON.stringify(all_annos_obj),
-		gid: gid,
-		
-	});
-})
+
 ///////////////////////////////
 //////////////////////////////
 function create_table(gids, source, type, start_txt) {
