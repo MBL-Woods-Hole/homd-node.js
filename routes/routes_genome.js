@@ -351,7 +351,7 @@ router.get('/explorer', function annotation(req, res) {
     let blast = 0
     var info_data_obj = {}
     let page_data = {}
-    let organism,pid_list
+    let organism,pid_list,otid
     let render_fxn = (req,res,gid,otid,blast,organism,all_annos_obj,anno_type,page_data,info_data_obj,pid_list) => {
         res.render('pages/genome/explorer', {
 				title: 'HOMD :: '+gid, 
@@ -383,13 +383,20 @@ router.get('/explorer', function annotation(req, res) {
     if(!page_data.page){
       page_data.page=1
     }
-    let otid = C.genome_lookup[gid].otid
+    otid = ''
+    if(gid && !gid.startsWith('Choose')){
+        otid = C.genome_lookup[gid].otid
+        
+    }else{
+        
+    }
+    
     let tmp_obj = Object.keys(C.annotation_lookup)  // get prokka organisms [seqid,organism]
     let all_annos_obj = tmp_obj.map((x) =>{
 	        return [x, C.annotation_lookup[x].prokka.organism] 
 	    })
     
-    if(C.annotation_lookup.hasOwnProperty(gid)){
+    if(C.annotation_lookup.hasOwnProperty(gid) ){
        organism = C.annotation_lookup[gid].prokka.organism
     }
     console.log('organism',organism)
