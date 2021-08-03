@@ -14,7 +14,13 @@
   padding:0;
   margin:0;
 } 
-
+#info {
+  padding:15px 15px;
+  margin:20px;
+  background: orange;
+  font-size: large;
+  border:1px solid black;
+}
 </style>
 
 <%- include('../partials/header_html'); %>
@@ -28,6 +34,14 @@
     <div class='page-content' >
     
         <div class='title'>Welcome to The Expanded Human Oral Microbiome Database</div>
+		
+<div id='info'>
+		This site (https://node.homd.info/) will be the new home of the Human Oral Microbiome Database but it is still 
+		under construction so please be patient while we get it ready for use.
+		<br> The original site (<a href'http://www.homd.org/index.php">http://www.homd.org</a>) is still up and 
+		will continue to be updated until this new site is completed. Thanks for using HOMD.
+</div>
+		
 		<%- include('../partials/home_content'); %>
     </div> <!-- end: page-content -->
     
