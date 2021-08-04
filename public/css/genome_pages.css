@@ -20,6 +20,11 @@
   /* text-overflow: ellipsis; */
   white-space: nowrap;
 }
+#genome-box{
+   height:700px;
+   overflow:auto;
+   width:100%;
+}
 #gnom-table .badge{
   
   font-size:0.8em;

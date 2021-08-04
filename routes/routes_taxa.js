@@ -190,16 +190,36 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	if(statusfilter_on.length == C.tax_status_all.length && sitefilter_on.length == C.tax_sites_all.length){
 	  // no filter -- allow all
 	  send_tax_obj = temp_obj
+	}else if(statusfilter_on.length == 0){  // only items from site filter checked
+	    send_tax_obj = temp_obj.filter( function(e){
+          console.log('e',e)
+          var s = e.sites[0].toLowerCase()  // nasal,oral
+          if( sitefilter_on.indexOf(s) !== -1 )
+                     //nasal or oral if site item in s return only one instance
+          {
+             return e
+          }
+        }) 
+	
+	}else if(sitefilter_on.length == 0){   // only items from status filter checked
+	    send_tax_obj = temp_obj.filter( function(e){
+          //console.log('e',e)
+          if( statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 ){
+             return e
+          }
+        }) 
+	
 	}else{
 	  //console.log(C.taxon_lookup[987])
 	  //send_tax_obj2 = send_tax_obj.filter( item => statusfilter_on.indexOf(item.status.toLowerCase()) !== -1 )    
       // 999 has nonoralref
       console.log(C.taxon_lookup[999])
+      
       send_tax_obj = temp_obj.filter( function(e){
           //console.log('e',e)
           if( (e.sites.length > 0 
-              && sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1)
-              || statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 )
+              && (sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1)
+                  && statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 ))
               {
              return e
           }
