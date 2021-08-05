@@ -1,8 +1,5 @@
 <style>
-
-
-
-
+thead th { position: sticky; top: 0; }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <%- include('../../partials/header_html'); %>
@@ -12,6 +9,7 @@
 <% sitefltrejs = JSON.parse(sitefltr) %>
 
 <body>
+  	<div id="loader" class="center-loader"></div>
   	<div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
@@ -22,18 +20,18 @@
   
 	
 		 <div class='title'><%= pgtitle %></div>
-		 
+		 <small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
 		 <div id='download_browser_text_excel'><b>Download this Taxon Data</b>: 
-		   <a href='dld_table/browser/<%= letter %>/<%= page %>/<%= sitefltr %>/<%= statusfltr %>' >[Browser]</a>
-		   <a href='dld_table/text/<%= letter %>/<%= page %>/<%= sitefltr %>/<%= statusfltr %>' >[Text]</a>
-		   <a href='dld_table/excel/<%= letter %>/<%= page %>/<%= sitefltr %>/<%= statusfltr %>' >[Excel]</a>
+		   <a href='dld_table/browser/<%= letter %>/<%= sitefltr %>/<%= statusfltr %>' >[Browser]</a>
+		   <a href='dld_table/text/<%= letter %>/<%= sitefltr %>/<%= statusfltr %>' >[Text]</a>
+		   <a href='dld_table/excel/<%= letter %>/<%= sitefltr %>/<%= statusfltr %>' >[Excel]</a>
 		 </div>		 
 			 
 	<%- include('../../partials/tax_table_filter_pt1.ejs') %>
-<small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
+    <%- include('../../partials/tax_table_filter_pt2.ejs') %> 
 <div id='tax-box' >
 
-	<%- include('../../partials/tax_table_filter_pt2.ejs') %> 
+	
 	 
 		 
 		 <table id='tax-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
@@ -102,25 +100,27 @@
   $(document).ready(function(){                    
     
     var letter = '<%- letter %>'
-// 	var statusfltr= JSON.parse('<%- statusfltr %>')
-// 	var sitefltr= JSON.parse('<%- sitefltr %>')
-//     // lets set check here
-//     // uncheck all
-//     var els = document.getElementsByClassName('filter_ckbx')
-//     var all_on = statusfltr.concat(sitefltr)
-//     for (n in els){
-// 		if(all_on.indexOf(els[n].name) != -1){
-// 		  els[n].checked = true
-// 		}
-// 	} 
-	if(letter){
+
+	if(letter && letter !== 'all'){
 		document.getElementById(letter).style.color = 'red'
 		document.getElementById(letter).style.fontSize = 'medium'
-	}else{
-		document.getElementById('all').style.color = 'red'
 	}
-});
+  });
 
+
+document.onreadystatechange = function() {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                  '#tax-box').style.visibility = "hidden";
+                document.querySelector(
+                  "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                  "#loader").style.display = "none";
+                document.querySelector(
+                  '#tax-box').style.visibility = "visible";
+            }
+        };
 </script>
 
 

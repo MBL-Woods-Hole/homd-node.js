@@ -20,6 +20,12 @@
   /* text-overflow: ellipsis; */
   white-space: nowrap;
 }
+#genome-box{
+   height:700px;
+   overflow:auto;
+   width:100%;
+   margin-top:5px;
+}
 #gnom-table .badge{
   
   font-size:0.8em;
@@ -82,19 +88,19 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 
 
 .col1{
-   width: 50px;
+   width: 70px;
 }
 .col2 {
     width: 75px;
 }
 .col3 {
-    width: 120px;
+    width: 130px;
 }
 .col4 {
     width: 160px;
 }
 .col9{
-   width: 270px;
+   width: 320px;
 }
 .col10{
    width: 100px;
@@ -128,7 +134,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
  }
 
 #count_info{
-   font-weight:bold;
+   /* font-weight:bold; */
    
    
 }

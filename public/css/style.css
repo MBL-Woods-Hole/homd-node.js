@@ -4,6 +4,9 @@
 	border:0;
 	list-style: none;
 	box-sizing: border-box;
+	 font-family:Verdana;
+	 /* font-family: Baskerville, Baskerville Old Face, Garamond, Times New Roman, serif; */
+  
 }
 a { text-decoration: none; }
 p {
@@ -28,7 +31,7 @@ p {
    padding:30px 80px;
    word-spacing: 4px;
 	line-height: 140%;
-   font-family:Georgia, serif;
+   
    font-size:18px;
 }
 input[type=radio] {
@@ -146,7 +149,8 @@ input[type=radio] {
 	text-decoration:none;
 	padding:10px 10px 12px 10px;
 	
-	font:bold 13px Verdana;
+	font-weight: bold;
+	font-size:   13px;
 	color: black;
 	background-color: white;
 	
@@ -158,7 +162,8 @@ input[type=radio] {
 	text-decoration:none;
 	padding:2px 4px 2px 4px;
 	
-	font:bold 12px Verdana;
+	font-weight: bold;
+	font-size:   12px;
 	color: black;
 	background-color: white;
 	
@@ -195,7 +200,8 @@ input[type=radio] {
 #nav li ul li a{
 	position:relative;
 	background-color:#99cfe0;
-	font:bold 12px Verdana;
+	font-weight: bold;
+	font-size:   12px;
 	color: black;
 	text-decoration:none;
 	
@@ -212,7 +218,8 @@ input[type=radio] {
 #nav li ul li ul a{
 	position:relative;
 	background-color:#99cfe0;
-	font:bold 12px Verdana;
+	font-weight: bold;
+	font-size:   12px;
 	color: black;
 	text-decoration:none;
 	top: 1px;	
@@ -319,7 +326,7 @@ input[type=radio] {
    border:1px solid brown;
 }
 #column_right1 {
-  padding:10px 50px;
+  padding:10px 30px;
   border:1px solid brown;
 }
 /*row2 and col2 is just  For Taxon Table inner srch */
@@ -353,4 +360,37 @@ input[type=radio] {
   border:1px solid brown;
   padding:1px;
   border-radius: 3px;
+}
+
+/* Loader for tables:taxon, genome, phage */
+#loader {
+	border: 12px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 12px solid #444444;
+	width: 70px;
+	height: 70px;
+	animation: spin 1s linear infinite;
+}
+  
+@keyframes spin {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+  
+.center-loader {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+/* End Loader */
+
+.filter-title{
+  font-weight:bold;
+}
+.alpha-list {
+  letter-spacing: 2px;
 }

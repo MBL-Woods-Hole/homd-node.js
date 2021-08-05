@@ -22,32 +22,38 @@ router.get('/tax_table', function tax_table_get(req, res) {
   	//console.log(myurl.query)
 	req.session.tax_letter = myurl.query.k
 	let annot = myurl.query.annot
-	let page = myurl.query.page
 	
-	var send_tax_obj = Object.values(C.taxon_lookup);
+	
+	var send_tax_obj0 = Object.values(C.taxon_lookup);
 	
 	// FIX THIS IF SELECT DROPPED OR NONORAL
-	send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-	var tcount = send_tax_obj.length  // total count of our filters
+	send_tax_obj1 = send_tax_obj0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+	var tcount = send_tax_obj1.length  // total count of our filters
 	
 	//var show_filters = 0
-	var pgtitle = 'Taxon Table';
+	
 	var count_text = ''
+	pgtitle = 'List of Human Oral Microbial Taxa'
 	if(annot){
 	  	// grab only the taxa that have genomes
 	  	console.log('GOT annotations')
-	  	send_tax_obj = send_tax_obj.filter(item => item.genomes.length >0)
+	  	send_tax_obj2 = send_tax_obj1.filter(item => item.genomes.length >0)
 	  	//show_filters = 0
 	  	pgtitle = 'Human Oral Microbial Taxa with Annotated Genomes'
+	}else if(req.session.tax_letter !== 'all'){
+	    console.log('GOT a TaxLetter: ',req.session.tax_letter)
+		   // COOL.... filter the whole list
+		send_tax_obj2 = send_tax_obj0.filter(item => item.genus.charAt(0) === req.session.tax_letter)
+		  
 	}else{
-		console.log('NO annotations')
-		//show_filters = 1
-		pgtitle = 'List of Human Oral Microbial Taxa'
+		console.log('NO to only annotations or tax letters')
+		//whole list or 
+		
 		var intiial_status_filter = C.tax_status_on  //['named','unnamed','phylotype','lost']  // no['dropped','nonoralref']
 	
 		//console.log(tax_letter)
 		// filter
-		send_tax_obj1 = send_tax_obj.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) !== -1 )
+		send_tax_obj1 = send_tax_obj0.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) !== -1 )
 		var intiial_site_filter = C.tax_sites_on  //['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
 		//console.log('send_tax_obj1[0]',send_tax_obj1[0])
 		
@@ -58,23 +64,23 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	      }
 	    }) 
 	    //console.log('send_tax_obj2[0]',send_tax_obj2[0])
-		if(req.session.tax_letter !== 'all' && req.session.tax_letter !== 'allall'){
-		   console.log('GOT a TaxLetter: ',req.session.tax_letter)
-		   // COOL....
-		   send_tax_obj = send_tax_obj2.filter(item => item.genus.charAt(0) === req.session.tax_letter)
-		   page=0
-		}else{
-			console.log('NO TaxLetter')
-			send_tax_obj = send_tax_obj2
-			
-		}
+		// if(req.session.tax_letter !== 'all' ){
+// 		   console.log('GOT a TaxLetter: ',req.session.tax_letter)
+// 		   // COOL....
+// 		   send_tax_obj = send_tax_obj2.filter(item => item.genus.charAt(0) === req.session.tax_letter)
+// 		   
+// 		}else{
+// 			console.log('NO TaxLetter')
+// 			send_tax_obj = send_tax_obj2
+// 			
+// 		}
 		// table sort done via client side js library sorttable: 
 		// https://www.kryogenix.org/code/browser/sorttable
 		//console.log(send_tax_obj[0])
     }
     //console.log('send_tax_obj[0]',send_tax_obj[0])
     // Here we add the genome size formatting on the fly
-    send_tax_obj.map(function(el){
+    send_tax_obj2.map(function(el){
 	      el.gsize = ''
 	      //console.log(el)
 	      if(el.genomes.length === 0){
@@ -102,38 +108,11 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	})
     //console.log('send_tax_obj[0]',send_tax_obj[0])
     //sort
-    send_tax_obj.sort(function (a, b) {
+    send_tax_obj2.sort(function (a, b) {
       return helpers.compareStrings_alpha(a.genus, b.genus);
     });
    
-    if(page > 0){
-	    var trows = send_tax_obj.length  //820
-        //console.log('trows',trows)
-        var row_per_page = 200
-        var number_of_pages = Math.ceil(trows/row_per_page)
-    
-        //console.log('number_of_pages',number_of_pages)
-    
-        var show_page = page
-        if(show_page === 1){
-            var send_list = send_tax_obj.slice(0,row_per_page)  // first 200
-        }else{
-            var send_list = send_tax_obj.slice(row_per_page*(show_page-1),row_per_page*show_page)  // second 200
-        }
-        var page_form = '<br><small>On Page: '+show_page.toString()+' of '+number_of_pages.toString()+':: Change Page: ['
-        for(var i=1;i<=number_of_pages;i++){
-            if(parseInt(page) === i){
-              page_form += i.toString()+"<input checked type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?k=all&page="+i.toString()+"'\"> "
-            }else{
-              page_form += i.toString()+"<input type='radio' name='page' value='"+i.toString()+"' onclick=\"location.href='tax_table?k=all&page="+i.toString()+"'\"> "
-            }
-            
-        }
-        page_form += ']</small>'
-	}else{
-	    page_form = ''
-	    send_list = send_tax_obj
-	}
+	send_list = send_tax_obj2
 	
 	//var count_text = get_count_text_n_page_form(page)
 	console.log(C.tax_status_on)
@@ -150,8 +129,6 @@ router.get('/tax_table', function tax_table_get(req, res) {
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
 		//show_filters:show_filters,
 		search: '',
-		page_form:page_form,
-		page:page,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -168,8 +145,8 @@ router.post('/tax_table', function tax_table_post(req, res) {
 
 	pgtitle = 'List of Human Microbial Taxa'
 	//show_filters = 1
-	statusfilter_on =[]
-	sitefilter_on  = []
+	let statusfilter_on =[]
+	let sitefilter_on  = []
 	for(i in req.body){
 		if(C.tax_sites_all.indexOf(i) !== -1){
 		   sitefilter_on.push(i)
@@ -190,19 +167,46 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	if(statusfilter_on.length == C.tax_status_all.length && sitefilter_on.length == C.tax_sites_all.length){
 	  // no filter -- allow all
 	  send_tax_obj = temp_obj
-	}else{
-	  //console.log(C.taxon_lookup[987])
-	  //send_tax_obj2 = send_tax_obj.filter( item => statusfilter_on.indexOf(item.status.toLowerCase()) !== -1 )    
-      // 999 has nonoralref
-      console.log(C.taxon_lookup[999])
-      send_tax_obj = temp_obj.filter( function(e){
-          //console.log('e',e)
-          if( (e.sites.length > 0 
-              && sitefilter_on.indexOf(e.sites[0].toLowerCase()) !== -1)
-              || statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 )
-              {
+	}else if(statusfilter_on.length == 0){  // only items from site filter checked
+	    send_tax_obj = temp_obj.filter( function(e){
+          if(e.sites.length > 0){
+            for(n in e.sites){
+              var site = e.sites[n].toLowerCase()  // nasal,oral
+              if( sitefilter_on.indexOf(site) !== -1 )
+                //nasal or oral if site item in s return only one instance
+			   {
+				 //console.log('e',e)
+				 return e
+			   }
+            }
+          }
+          
+        }) 
+	
+	}else if(sitefilter_on.length == 0){   // only items from status filter checked
+	    send_tax_obj = temp_obj.filter( function(e){
+          if( statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 ){
+             //console.log('e',e)
              return e
           }
+        }) 
+	
+	}else{
+      
+      send_tax_obj = temp_obj.filter( function(e){
+          
+          if(e.sites.length > 0){
+            for(n in e.sites){
+              var site = e.sites[n].toLowerCase()  // nasal,oral
+              var status = e.status.toLowerCase()
+              if(sitefilter_on.indexOf(site) !== -1 && statusfilter_on.indexOf(status) !== -1 )
+              {
+                 //console.log('e',e)
+                 return e
+              }
+          
+            }
+          }  
           
       }) 
     }   
@@ -225,8 +229,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
 		sitefltr: JSON.stringify(sitefilter_on),
 		//show_filters: show_filters,
 		search: '',
-		page_form: '',
-		page:0,
+		
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -533,79 +536,21 @@ router.post('/get_refseq', function get_refseq(req, res) {
 	})
 });
 
-// router.post('/dld_table', function dld_table_post(req, res) {
-// 	helpers.accesslog(req, res)
-// 	console.log('in dld tax-post')
-// 	console.log(req.body)
-// 	let letter = req.body.letter
-// 	let page = req.body.page;
-// 	let sites = JSON.parse(req.body.sites)
-// 	let stati = JSON.parse(req.body.stati)
-// 	let type = req.body.type;
-// 	type='browser'
-// 	// Apply filters
-// 	var send_tax_obj = Object.values(C.taxon_lookup);
-// 	if(page){
-// 	    var trows = send_tax_obj.length  //820
-//         var row_per_page = 200
-//         var number_of_pages = Math.ceil(trows/row_per_page)
-//         if(page === 1){
-//             var send_list = send_tax_obj.slice(0,row_per_page)  // first 200
-//         }else{
-//             var send_list = send_tax_obj.slice(row_per_page*(page-1),row_per_page*page)  // second 200
-//         }
-// 	}else if(letter){
-// 	    send_list = send_tax_obj.filter(item => item.genus.charAt(0) === letter)
-// 	}else{
-// 	    // apply site/status filter
-// 	}
-//   	let list_of_otids = send_list.map(item => item.otid)
-//   	console.log('list_of_otids',list_of_otids)
-// 	// type = browser, text or excel
-// 	var table_tsv = create_table(list_of_otids,'table','browser')
-// 	if(type === 'browser'){
-// 	    //res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
-// 	    res.set('text/csv')
-// 	}else if(type === 'text'){
-// 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.txt\""});
-// 	}else if(type === 'excel'){
-// 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
-// 	}else{
-// 	    // error
-// 	    console.log('Download table format ERROR')
-// 	}
-// 	res.send(table_tsv)
-// 	res.end('Yes')
-// });
-router.get('/dld_table/:type/:letter/:page/:sites/:stati', function dld_table_get(req, res) {
+
+router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
 	helpers.accesslog(req, res)
 	console.log('in dld tax-get')
 	//console.log(req.body)
 	let type = req.params.type
 	let letter = req.params.letter
-	let page = req.params.page;
 	let sitefilter = JSON.parse(req.params.sites)
 	let statusfilter = JSON.parse(req.params.stati)
-//      console.log('type',type)
-//   	console.log('letter',letter)
-//   	console.log('page',page)
-//   	console.log('sites',sitefilter)
-//   	console.log('stati',statusfilter)
+
 	
 	// Apply filters
 	let temp_list = Object.values(C.taxon_lookup);
 	let file_filter_txt = ""
-	if(page > 0){
-	    var trows = temp_list.length  //820
-        var row_per_page = 200
-        var number_of_pages = Math.ceil(trows/row_per_page)
-        if(page === 1){
-            var send_list = temp_list.slice(0,row_per_page)  // first 200
-        }else{
-            var send_list = temp_list.slice(row_per_page*(page-1),row_per_page*page)  // second 200
-        }
-        file_filter_txt = "HOMD.org Taxon Data::Page Filter Applied (this is page #"+page+" of "+number_of_pages+")"
-	}else if(letter && letter.match(/[A-Z]{1}/)){
+	if(letter && letter.match(/[A-Z]{1}/)){
 	    console.log('MATCH Letter: ',letter)
 	    send_list = temp_list.filter(item => item.genus.charAt(0) === letter)
 	    file_filter_txt = "HOMD.org Taxon Data::Letter Filter Applied (genus with first letter of '"+letter+"')"
@@ -613,12 +558,18 @@ router.get('/dld_table/:type/:letter/:page/:sites/:stati', function dld_table_ge
 		// apply site/status filter as last resort
 		send_list = temp_list.filter( function(e){
 		  //console.log('e',e)
-		  if( (e.sites.length > 0 
-			  && sitefilter.indexOf(e.sites[0].toLowerCase()) !== -1)
-			  || statusfilter.indexOf(e.status.toLowerCase()) !== -1 )
-			  {
-			 return e
-		  }
+		  if(e.sites.length > 0){
+            for(n in e.sites){
+              var site = e.sites[n].toLowerCase()  // nasal,oral
+              var status = e.status.toLowerCase()
+              if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
+              {
+                 //console.log('e',e)
+                 return e
+              }
+          
+            }
+          }  
 		})
 		file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied" 
 	}
@@ -640,39 +591,7 @@ router.get('/dld_table/:type/:letter/:page/:sites/:stati', function dld_table_ge
 	res.send(table_tsv)
 	res.end()
 });
-// router.get('/tree',function tree(req, res) {
-//     console.log('in tree')
-//     fs.readFile('public/trees/refseq_tree.svg', (err, data) => {
-//         if(err){
-//            console.log(err)
-//         }
-//         res.set('Content-Type', 'application/svg+xml');
-//         res.send(data)
-//         res.end()
-//     })
-// })
-// router.get('/dld_tableXX', function dld_table_get(req, res) {
-// 	helpers.accesslog(req, res)
-// 	console.log(req.body)
-// 	
-// 	let myurl = url.parse(req.url, true);
-//   	let type = myurl.query.type;
-// 	// type = browser text or excel
-// 	var table_tsv = create_table('table','browser')
-// 	if(type === 'browser'){
-// 	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
-// 	}else if(type === 'text'){
-// 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.txt\""});
-// 	}else if(type === 'excel'){
-// 	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
-// 	}else{
-// 	    // error
-// 	    console.log('Download table format ERROR')
-// 	}
-// 	res.send(table_tsv)
-// 	res.end()
-// });
-// 
+
 
 router.get('/life', function life(req, res) {
 	helpers.accesslog(req, res)
@@ -829,7 +748,6 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
 		sitefltr:JSON.stringify(C.tax_site_on),
 		//show_filters: 1,
 		search: '',
-		page_form: '',
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 	
