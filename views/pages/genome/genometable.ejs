@@ -1,14 +1,11 @@
 <style>
-.form-group {
-  width:400px;
-display:inline-block;
-}
+
 .span_lnk {
   color:blue;
   cursor: pointer;
 }
-
-
+/* Fix the tax table header */
+thead th { position: sticky; top: 0; }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <%- include('../../partials/header_html'); %>
@@ -18,6 +15,8 @@ display:inline-block;
 
 
 <body>
+ <div id="loader" class="center-loader"></div>
+
   <div id='wrapper'>		
 	     
 	<div id='header'>
@@ -31,16 +30,16 @@ display:inline-block;
    						
 		<div class='title text-info'>Human Oral Microbial Genomes</div>
         <div id='download_browser_text_excel'><b>Download this Genome Data</b>: 
-		   <a href='dld_table/browser/<%= letter %>/<%= page %>/<%= phylum %>/<%= otid %>' >[Browser]</a>
-		   <a href='dld_table/text/<%= letter %>/<%= page %>/<%= phylum %>/<%= otid %>' >[Text]</a>
-		   <a href='dld_table/excel/<%= letter %>/<%= page %>/<%= phylum %>/<%= otid %>' >[Excel]</a>
+		   <a href='dld_table/browser/<%= letter %>/<%= phylum %>/<%= otid %>' >[Browser]</a>
+		   <a href='dld_table/text/<%= letter %>/<%= phylum %>/<%= otid %>' >[Text]</a>
+		   <a href='dld_table/excel/<%= letter %>/<%= phylum %>/<%= otid %>' >[Excel]</a>
 		 </div>		 
 
  <%- include('../../partials/genome_table_filter.ejs') %> 
 
+
+
 <div id='genome-box'>
-<span id='count_info'><%- count_text %></span>
-<%- page_text %>
 
 <table id='gnom-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
 <thead>
@@ -112,13 +111,25 @@ display:inline-block;
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
-  mainmenu()
+    mainmenu()  // function in public/js/menu.js
 	var letter = '<%- letter %>'
-	if(letter){
+	if(letter && letter !== 'all'){
 		document.getElementById(letter).style.color = 'red'
 		document.getElementById(letter).style.fontSize = 'medium'
-	}else{
-		document.getElementById('all').style.color = 'red'
 	}
+	
+	 document.onreadystatechange = function() {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                  '#genome-box').style.visibility = "hidden";
+                document.querySelector(
+                  "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                  "#loader").style.display = "none";
+                document.querySelector(
+                  '#genome-box').style.visibility = "visible";
+            }
+        };
 </script>
 

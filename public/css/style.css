@@ -326,7 +326,7 @@ input[type=radio] {
    border:1px solid brown;
 }
 #column_right1 {
-  padding:10px 50px;
+  padding:10px 30px;
   border:1px solid brown;
 }
 /*row2 and col2 is just  For Taxon Table inner srch */
@@ -360,4 +360,37 @@ input[type=radio] {
   border:1px solid brown;
   padding:1px;
   border-radius: 3px;
+}
+
+/* Loader for tables:taxon, genome, phage */
+#loader {
+	border: 12px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 12px solid #444444;
+	width: 70px;
+	height: 70px;
+	animation: spin 1s linear infinite;
+}
+  
+@keyframes spin {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+  
+.center-loader {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+/* End Loader */
+
+.filter-title{
+  font-weight:bold;
+}
+.alpha-list {
+  letter-spacing: 2px;
 }
