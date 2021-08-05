@@ -32,7 +32,7 @@ const home      = require('./routes/index');
 const homd		= require('./routes/routes_homd')
 
 const admin     = require('./routes/routes_admin');
-const help      = require('./routes/routes_help');
+//const help      = require('./routes/routes_help');
 const taxa      = require('./routes/routes_taxa');
 const refseq	= require('./routes/routes_refseq');
 const genome	= require('./routes/routes_genome');
@@ -107,7 +107,7 @@ app.use(cookieParser());
 app.use('/', home);
 app.use('/homd', homd);
 app.use('/admin', admin);
-app.use('/help', help);
+//app.use('/help', help);
 app.use('/taxa', taxa);
 app.use('/refseq', refseq);
 app.use('/genome', genome);

@@ -1,7 +1,8 @@
 <style>
 </style>
 <%- include('../../partials/header_html'); %>
-
+<% if(rank=='klass'){ rank = 'Class'}%>
+<% clean_rank = rank[0].toUpperCase() + rank.substring(1) %>
 <body>
   	<div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -10,7 +11,7 @@
     
     <div class='page-content' >
 		 					
-			 <div class='title'><%= rank %> <%= tax_name %></div>
+			 <div class='title'><%= clean_rank %> <%= tax_name %></div>
 	
     </div> <!-- end: page-content -->
     
