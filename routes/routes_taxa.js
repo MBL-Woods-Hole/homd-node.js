@@ -615,6 +615,7 @@ router.get('/life', function life(req, res) {
 	//next_rank = C.ranks[C.ranks.indexOf(rank) +1]
 	
 	html =''
+	var cts = ''
 	if(!rank){  // Cellular_Organisims
 	   //taxa_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'].map(a => a.taxon)
 	   next_rank = 'domain'
@@ -622,9 +623,11 @@ router.get('/life', function life(req, res) {
 	   html += "<tr><td class='life-taxa-name'>&nbsp;Domains</td><td class='life-taxa'>"
 	   
 	   title = 'Domain: Archaea'
- 	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a><br>"
+	   cts = C.taxon_counts_lookup['Archaea'].tax_cnt.toString()
+ 	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>("+cts+")</small><br>"
        title = 'Domain: Bacteria'
- 	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a><br>"
+       cts = C.taxon_counts_lookup['Bacteria'].tax_cnt.toString()
+ 	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>("+cts+")</small>"
 
 	   html += '</td></tr>'
 	   image_array =[{'name':'cellular_organisms.png','text':''}]
@@ -643,10 +646,25 @@ router.get('/life', function life(req, res) {
 		for(i in show_ranks){
 		   
 		   rank_display = get_rank_display(show_ranks[i],false)
-		   if(show_ranks[i] != last_rank){  // Last row
+		   // let name_n_rank = tax_name+'_'+level
+//    console.log(name_n_rank)
+//    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[name_n_rank]
+//    let lin = make_lineage(node)
+//    console.log(lin)
+		   console.log('lineage: ',lineage_list[0])
+		      //var cts = get_counts(lineage_list[0])
+		    //var cts = C.taxon_counts_lookup[lineage_list[0]].tax_cnt.toString()
+		    //console.log('counts: ',cts)
+		   if(show_ranks[i] != last_rank){  // Last row of many items
+		      
+		      node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[lineage_list[1][show_ranks[i]]+'_'+show_ranks[i]]
+			  lin = make_lineage(node)
+			  cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
+		    
 		      title = rank_display+': '+lineage_list[1][show_ranks[i]]
 		      html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
-			  html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a><br>'
+			  html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a> ('+cts+')'
+			  html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>Visit Taxon Page</a></span>"
 			  html += '</td></tr>'
 		   }else{  // Gather rows before the last row
 		     
@@ -690,7 +708,10 @@ router.get('/life', function life(req, res) {
 				       otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'].otid
 				       html += space+"<a title='"+title+"' href='tax_description?otid="+otid+"'>"+taxa_list[n]+'</a><br>'    
 				    }else{
-					   html += space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a><br>'
+					   node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+next_rank]
+					   lin = make_lineage(node)
+					   cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
+					   html += space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small><br>'
 				    }
 				 } 
 			 }
@@ -724,6 +745,24 @@ router.get('/life', function life(req, res) {
 		});
 	
 });
+//
+router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
+   console.log('in taxon page')
+   let level = req.params.level
+   let tax_name = req.params.name
+   console.log('level '+level)
+   console.log('name '+tax_name)
+   
+   res.render('pages/taxa/taxon_page', {
+			title: 'HOMD ::'+level+'::'+tax_name, 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			tax_name: tax_name,
+			//headline: 'Life: Cellular Organisms',
+			rank: level,
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+});
+//
 
 router.post('/search_taxtable', function search_taxtable(req, res) {
 	console.log(req.body)
@@ -917,10 +956,9 @@ function get_options_by_node(node) {
 
 function get_counts(lineage){
     
-    
-    let txt = "[<small><span class='red-text'>"+C.taxon_counts_lookup[lineage].tax_cnt.toString()+'</span>' 
+    let txt = "[<span class='red-text'>"+C.taxon_counts_lookup[lineage].tax_cnt.toString()+'</span>' 
             + ", <span class='green-text'>"+C.taxon_counts_lookup[lineage].gcnt.toString()+'</span>'
-            +", <span class='blue-text'>"+C.taxon_counts_lookup[lineage].refcnt.toString()+'</span></small>]';
+            +", <span class='blue-text'>"+C.taxon_counts_lookup[lineage].refcnt.toString()+'</span>]';
         
     return txt
 }
