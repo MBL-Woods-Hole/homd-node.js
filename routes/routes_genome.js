@@ -91,14 +91,17 @@ router.get('/genome_table', function genome_table(req, res) {
 	
 	send_list = gid_obj_list
 	
-	
-       	
     
 	// get each secid from C.genome_lookup
 	//console.log('seqid_list',gid_obj_list[0])
-	send_list.sort(function (a, b) {
-      return helpers.compareStrings_alpha(a.genus, b.genus);
-    });
+	// send_list.sort(function (a, b) {
+//       return helpers.compareStrings_alpha(a.genus, b.genus);
+//     });
+    // sort by two fields
+    send_list.sort( (a, b) =>
+		
+		b.species - a.species || a.genus.localeCompare(b.genus),
+	)
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -439,6 +442,8 @@ router.get('/explorer', function annotation(req, res) {
 });
 // 2021-06-15  opening trees in new tab because thet take too long to open in an iframe
 // which makes the main menu non functional
+// These functions are used to open trees with a search for odid or genomeID
+// The main menu goues through routes_homd::open_tree
 router.get('/conserved_protein_tree', function conserved_protein_tree(req, res) {
     helpers.accesslog(req, res)
     console.log('in conserved_protein_tree')

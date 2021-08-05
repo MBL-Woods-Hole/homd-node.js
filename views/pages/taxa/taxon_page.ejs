@@ -1,15 +1,17 @@
+<style>
+</style>
 <%- include('../../partials/header_html'); %>
-
+<% if(rank=='klass'){ rank = 'Class'}%>
+<% clean_rank = rank[0].toUpperCase() + rank.substring(1) %>
 <body>
   	<div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
+    
+    
     <div class='page-content' >
-	
-	
-		<div class='wide-content' id="">  					
-			 CONTENT
-		</div>
+		 					
+			 <div class='title'><%= clean_rank %> <%= tax_name %></div>
 	
     </div> <!-- end: page-content -->
     
@@ -17,15 +19,14 @@
          <%- include('../../partials/footer'); %>
     </div>
        
-   
-  </div> <!-- end wrapper -->
 </body>
 
 </html>
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
-
+<script type="text/javascript" src="/js/menu.js"></script>
 <script>
-    
+  mainmenu()
 </script>
+
 

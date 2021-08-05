@@ -7,9 +7,10 @@
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
 <script>
 var otid = "<%= otid %>"
-console.log(otid)
-$("text:contains('"+otid+"')").css({"fill": "red"}, {"background-color": "#FFFF00" })
-window.scrollTo(0, $("text:contains('"+otid+"')").offset().top-50)
+taxidfullname = 'HMT-'+("000" + otid).slice(-3);
+console.log(taxidfullname)
+$("text:contains('"+taxidfullname+"')").css({"fill": "red"}, {"background-color": "#FFFF00" })
+window.scrollTo(0, $("text:contains('"+taxidfullname+"')").offset().top-50)
 </script>
 
 </body>

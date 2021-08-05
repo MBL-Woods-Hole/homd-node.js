@@ -369,6 +369,7 @@ input[type=radio] {
 	border-top: 12px solid #444444;
 	width: 70px;
 	height: 70px;
+	margin-top:180px;
 	animation: spin 1s linear infinite;
 }
   
