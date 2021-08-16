@@ -130,7 +130,7 @@ function select_annotation(gid,anno){
 }
 function genome_table_search(){
    form = document.getElementById('gtable_search')
-   if(form.gen_srch.value === ''){
+   if(form.gene_srch.value === ''){
        return
    }
    form.submit()

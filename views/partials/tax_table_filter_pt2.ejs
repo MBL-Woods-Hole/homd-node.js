@@ -30,17 +30,17 @@
             <fieldset>
             Search This Table:
             <div class="">
-              <input type='text'  class='dropdown' name='tax_srch' maxlength='18' size='20'>
+              <input type='text' placeholder="Search.." class='dropdown' name='tax_srch' maxlength='18' size='20'>
               <select class='dropdown' id='' class="" name='field' >
                 <option value="all">All Fields</option>
                 <option value="taxid">Taxon ID</option>
                 <option value="genus">Genus</option>
                 <option value="species">Species</option>
-                <option value="synonyms">Synonyms</option>
-                <option value="type">Type Strains</option>
-                <option value="rrna">16S rRNA ID</option>
+                <option value="synonym">Synonyms</option>
+                <option value="type_strain">Type Strains</option>
+                <!-- <option value="rrna">16S rRNA ID</option> -->
               </select>
-        
+ <!--       
               &nbsp;Matching:
               <select class='dropdown'  name='match'>
                 <option value="all">ALL words</option>
@@ -51,6 +51,7 @@
                 <option value="partial">Partial field</option>
                 <option value="whole">Whole field</option>
               </select>
+-->
               <input class="pill pill-brown" type='button' value=' Go ' onclick='tax_table_search()'>
             </div>
             </fieldset>
