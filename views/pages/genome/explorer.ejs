@@ -137,7 +137,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			    <span class='an-button active' href=''>BLAST</span>
 			    
 			  <% } %>
-			  <a class='an-button' href='http://www.homd.org/jbrowse/index.html?data=homd/<%= gid %>' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
+			  <a class='an-button' href='http://www.homd.org/jbrowse/index.html?data=homd/<%= gid %>&tracks=DNA,ncbi,prokka' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
 			  <a class='an-button' href='/genome/genome_description?gid=<%= gid %>'>Genome Desc.</a>
 			  <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Desc.</a>
 			 </div>

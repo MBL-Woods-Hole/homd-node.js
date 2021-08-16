@@ -74,7 +74,7 @@ router.get('/genome_table', function genome_table(req, res) {
 		if(letter && letter.match(/[A-Z]{1}/)){
 	   	// COOL....
 	   		gid_obj_list = temp_list.filter(item => item.genus.charAt(0) === letter)
-			count_text = 'No. of genomes starting with<br>the letter: '+letter+': <span class="red">'+gid_obj_list.length.toString()+'</span><br>'
+			count_text = "No. of genomes starting with<br>the letter '"+letter+"': <span class='red'>"+gid_obj_list.length.toString()+'</span><br>'
 		    
 		    
 		}else{

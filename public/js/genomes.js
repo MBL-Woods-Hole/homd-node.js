@@ -15,7 +15,7 @@ function open_jbrowse_in_new_window(gid){
 	 document.getElementById("genome_iframe").height = '0'
      return
   }
-  var url = "http://www.homd.org/jbrowse/index.html?data=homd/"+gid
+  let url = "http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,ncbi"
   window.open(url)
 }
 
@@ -29,12 +29,12 @@ function change_genome_4_jbrowse(gid){
   }
   // reload page form or ajax?
   
-  let url ="http://www.homd.org/jbrowse/index.html?data=homd/"+gid
+  let url ="http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,ncbi"
   console.log(url)
   document.getElementById("genome_iframe").width = '100%'
   document.getElementById("genome_iframe").height = '800px'
   document.getElementById("genome_iframe").src = url;
-  new_window_txt ="[<a href='http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"' target='_blank'>Open in a new window</a>]"
+  new_window_txt ="[<a href='"+url+"' target='_blank'>Open in a new window</a>]"
   document.getElementById("open_new_window").innerHTML = new_window_txt;
   document.getElementById("gid-label").innerHTML = ': '+gid
   
