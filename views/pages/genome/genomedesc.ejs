@@ -44,7 +44,7 @@
 
 	<div id='header_buttons' >
 	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (ID=<%= ginfo.otid %>)</a>
-	 <a class='gd-button' href="http://www.homd.org/jbrowse/index.html?data=homd/<%= ginfo.gid %>" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
+	 <a class='gd-button' href="http://www.homd.org/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,ncbi" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&blast=1'>BLAST Against this Genome</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA Annotation</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI Annotation</a>

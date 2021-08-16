@@ -119,8 +119,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 
 
 #phylum-filter{
-  padding-left:3px;
-  float:right;
+  padding:15px 0 0 0;
   
 }
 #phylum-filter select {
