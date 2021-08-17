@@ -36,7 +36,7 @@ router.get('/phage_table', (req, res) => {
   let host_otid = myurl.query.host_otid;
   let phage_list = []
   let tmp_phage_list = Object.values(C.phage_lookup)
-  
+  console.log(tmp_phage_list[0])
   if(host_otid){
       phage_list = tmp_phage_list.filter(item => item.host_otid == host_otid)
   }else{
@@ -52,6 +52,8 @@ router.get('/phage_table', (req, res) => {
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		vdata:    JSON.stringify(phage_list),
+		phyla: JSON.stringify({}),
+		count_text:'',
   });
       
 });
