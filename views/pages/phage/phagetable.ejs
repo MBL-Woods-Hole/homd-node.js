@@ -42,7 +42,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
         content: " \25B4\25BE" 
     }
 .col1{
-   width: 80px;
+   width: 90px;
 }
 .col2{
    width: 130px;
@@ -58,6 +58,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 
 
 <body>
+  <div id="loader" class="center-loader"></div>
   <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
@@ -74,15 +75,14 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 			 
 	 
 <small>(HPT = <u>H</u>uman <u>P</u>hage <u>T</u>axon)</small>
+<%- include('../../partials/phage_table_filter.ejs') %>
 <div id='phage-box' >
 
 	
-	 
-		 
 		 <table id='phage-table' class='table table-hover table-condensed sortable' style=''>
 		 <thead>
 		  <tr>
-		    <th scope="col" class='col1'>No.</th>
+		    <th scope="col" class='col1'>Phage-ID</th>
 		    <th scope="col" class='col3'>Family</th>
 		    <th scope="col" class='col3'>Genus</th>
 		    <th scope="col" class='col3'>Species</th>
@@ -95,7 +95,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		   <% pid = list[n].pid %>
 		   <td nowrap><%= pid %></td>
 		   
-		   <td nowrap class='center'><b><%= list[n].family_ncbi  %></b></td>
+		   <td nowrap class=''><b><%= list[n].family_ncbi  %></b></td>
 		   <td nowrap class=''><i><b><%= list[n].genus_ncbi  %></b></i></td>
 		   <td nowrap class=''><a href='phagedesc?pid=<%= pid %>'><i><b><%= list[n].species_ncbi  %></b></i></a></td>
 		   <% html="" %>
@@ -126,9 +126,24 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/phage.js"></script>
 <script>
   mainmenu()
- 
+
+
+  document.onreadystatechange = function() {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                  '#phage-box').style.visibility = "hidden";
+                document.querySelector(
+                  "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                  "#loader").style.display = "none";
+                document.querySelector(
+                  '#phage-box').style.visibility = "visible";
+            }
+        };
 
 </script>
 
