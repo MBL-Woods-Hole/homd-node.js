@@ -131,6 +131,14 @@ function phage_alpha(letter){
 	
     return false;
     
-    
-    
+}
+//
+function deselect_letter(){
+    console.log('deselect')
+    var els = document.getElementById('alpha-list').getElementsByTagName('a');
+    for (var i = 0; i < els.length; i++) {
+       console.log(els[i])
+       els[i].style.color = 'black'
+	   els[i].style.fontSize = 'small'
+    }
 }

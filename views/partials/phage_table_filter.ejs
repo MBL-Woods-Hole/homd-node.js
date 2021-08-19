@@ -21,15 +21,15 @@
 		  <center>
 		   <small>Select Phage by Alphabet: 
 			<% if(rank == 'genus'){ %>
-			  <input type='radio' name='phage-by-alpha' value='family' />Family
-			  <input type='radio' name='phage-by-alpha' checked value='genus' />Genus
+			  <input type='radio' name='phage-by-alpha' value='family' onclick='deselect_letter()' />Family
+			  <input type='radio' name='phage-by-alpha' checked value='genus' onclick='deselect_letter()' />Genus
 			<% }else{ %>
-			  <input type='radio' name='phage-by-alpha' checked value='family' />Family
-			  <input type='radio' name='phage-by-alpha' value='genus' />Genus
+			  <input type='radio' name='phage-by-alpha' checked value='family' onclick='deselect_letter()' />Family
+			  <input type='radio' name='phage-by-alpha' value='genus' onclick='deselect_letter()' />Genus
 			<% } %>
 			
 			<br>
-			<span class='alpha-list'> 
+			<span id='alpha-list'> 
 			<a id='A' href='#' onclick="phage_alpha('a')">A</a>|<a id='B' href='#' onclick="phage_alpha('b')">B</a>|<a id='C' href='#' onclick="phage_alpha('c')">C</a>|<a id='D' href='#' onclick="phage_alpha('d')">D</a>|<a id='E' href='#' onclick="phage_alpha('e')">E</a>|<a id='F' href='#' onclick="phage_alpha('f')">F</a>|<a id='G' href='#' onclick="phage_alpha('g')">G</a>|<a id='H' href='#' onclick="phage_alpha('h')">H</a>|<a id='I' href='#' onclick="phage_alpha('i')">I</a>|<a id='J' href='#' onclick="phage_alpha('j')">J</a>|<a id='K' href='#' onclick="phage_alpha('k')">K</a>|<a id='L' href='#' onclick="phage_alpha('l')">L</a>|<a id='M' href='#' onclick="phage_alpha('m')">M</a>|<a id='N' href='#' onclick="phage_alpha('n')">N</a>|<a id='O' href='#' onclick="phage_alpha('o')">O</a>|<a id='P' href='#' onclick="phage_alpha('p')">P</a>|<a id='Q' href='#' onclick="phage_alpha('q')">Q</a>|<a id='R' href='#' onclick="phage_alpha('r')">R</a>|<a id='S' href='#' onclick="phage_alpha('s')">S</a>|<a id='T' href='#' onclick="phage_alpha('t')">T</a>|<a id='U' href='#' onclick="phage_alpha('u')">U</a>|<a id='V' href='#' onclick="phage_alpha('v')">V</a>|<a id='W' href='#' onclick="phage_alpha('w')">W</a>|<a id='X' href='#' onclick="phage_alpha('x')">X</a>|<a id='Y' href='#' onclick="phage_alpha('y')">Y</a>|<a id='Z' href='#' onclick="phage_alpha('z')">Z</a>
 		    </span>
 		   </small>
