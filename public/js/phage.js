@@ -1,41 +1,136 @@
-function select_phage_headers(){
-   
-   list=[
+function open_phage_header_select(){
+    $('#phage-column-choices').show();
+    //event.stopPropagation();
+}
+function close_phage_header_select(){
+    //document.getElementById('phage-column-choices').style.visibility = 'hidden'
+    $('#phage-column-choices').hide()
+}
+function clear_phage_header_select(){
+    var els = document.getElementsByClassName('potential_column_header')
+    for(n in els){
+       els[n].checked = false
+       els[n].disabled = false
+    }
+}
+function create_column_choices_dialog(cols_showing){
+   // on page load only
+   var col_list = 
+   [
+      {name:'Host Taxon-ID',value:'host_otid'},
+      {name:'NCBI-Host_Bacteria',value:'host_ncbi'},
+      {name:'NCBI-Assembly',value:'assembly_ncbi'},
       
-      'Host Taxon-ID',
-      'NCBI-Assembly',
-      'NCBI-SRA_Accession',
-      'NCBI-Submitters',
-      'NCBI-Release_Date',
-      'NCBI-Family',
-      'NCBI-Genus',
-      'NCBI-Species',
-      'NCBI-Publications',
-      'NCBI-Molecule_Type',
-      'NCBI-Sequence_Type',
-      'NCBI-Geo_Location',
-      'NCBI-USA',
-      'NCBI-Host_Bacteria',
-      'NCBI-Isolation_Source',
-      'NCBI-Collection_Date',
-      'NCBI-Biosample',
-      'NCBI-genbank_title'
+      {name:'NCBI-SRA_Accession',value:'sra_accession_ncbi'},
+      {name:'NCBI-Collection_Date',value:'collection_date_ncbi'},
+      {name:'NCBI-Release_Date',value:'release_date_ncbi'},
+      {name:'NCBI-Geo_Location',value:'geo_location_ncbi'},
+      {name:'NCBI-USA',value:'usa_ncbi'},
+      
+      {name:'NCBI-Family',value:'family_ncbi'},
+      {name:'NCBI-Genus',value:'genus_ncbi'},
+      {name:'NCBI-Species',value:'species_ncbi'},
+      
+      {name:'NCBI-Biosample',value:'biosample_ncbi'},
+      {name:'NCBI-Genbank_Title',value:'genbank_title_ncbi'},
+      {name:'NCBI-Isolation_Source',value:'isolation_source_ncbi'},
+      {name:'NCBI-Molecule_Type',value:'molecule_type_ncbi'},
+      {name:'NCBI-Publications',value:'publications_ncbi'},
+      
+      {name:'NCBI-Sequence_Type',value:'sequence_type_ncbi'},
+      {name:'NCBI-Submitters',value:'submitters_ncbi'}
    ]
-   html = ''
-   html += "<input type='checkbox' checked disabled name='pid' value='Phage-ID' /> Phage-ID<br>"
-   for (n in list){
-     html += "<input type='checkbox' name='' value='"+list[n]+"' /> "+list[n]+"<br>"
+   
+   html = "<form name='phage_table_column_select' method='POST' action='phage_table' >"
+   html += '<table><tr>'
+   html += "<td><input type='checkbox' checked disabled  value='Phage-ID' /> Phage-ID"
+   html += "<input type='hidden'  name='pid' value='Phage-ID' /></td>"
+   
+   var rows=3
+   //console.log(cols_showing[0])
+   //make name list from cols_showing
+   cols_showing_names=[]
+   for(n in cols_showing){
+      cols_showing_names.push(cols_showing[n].name)
    }
-   html += "<input type='button' name='cancel' value='Cancel' onclick='close_phage_header_select()' />&nbsp;"
-   html += "<input type='button' name='done' value='Go' />"
+   //console.log(cols_showing_names)
+   cnt = cols_showing_names.length
+   for (n in col_list){
+     //console.log('modulus ',n % rows)
+     if(n % rows == 0){  // modulus
+         html += "</tr><tr>"
+     }
+     if(cols_showing_names.indexOf(col_list[n].value) > 0){
+        isdisabled = ''
+        ischecked = 'checked'
+     }else{
+         if(cnt >= 6){
+            isdisabled = 'disabled'
+         }else{
+            isdisabled = ''
+         }
+         ischecked=''
+     }
+     html += "<td><input type='checkbox' "+isdisabled+" "+ischecked+" class='potential_column_header' name='"+col_list[n].value+"' value='"+col_list[n].value+"' onclick='column_count()' /> "+col_list[n].name+"</td>"
+   }
+   html += "</tr><tr>"
+   html += "<td><input type='button' class='pill pill-khaki' name='clear' value='Clear' onclick='clear_phage_header_select()' />&nbsp;&nbsp;&nbsp;&nbsp;"
+   html += "<input type='button' class='pill pill-orange' name='cancel' value='Cancel' onclick='close_phage_header_select()' />&nbsp;&nbsp;&nbsp;&nbsp;"
+   html += "<input type='submit' class='pill pill-lightseagreen' value='   Go   ' /></td>"
+   
+   html += "</tr></table>"
+   html += "</form>"
    document.getElementById('phage-column-choices').innerHTML = html
    document.getElementById('phage-column-choices').style.cssText= `
       position : absolute;
-      background:grey;
-      padding: 5px;
+      background:lightgrey;
+      padding: 15px;
+      border:1px solid black;
+      display: none;
     `;
 }
 
-function close_phage_header_select(){
-    document.getElementById('phage-column-choices').style.visibility='hidden'
+
+function column_count(){
+    // limit column count to five
+    var cnt = 0
+    var els = document.getElementsByClassName('potential_column_header')
+    Array.from(els).forEach((el) => {
+      if(el.checked === true){
+          cnt += 1
+       }
+    });
+    if(cnt >= 5){
+      Array.from(els).forEach((el) => {
+       if(el.checked === false){
+          el.disabled = true
+       }
+      });
+    }else{
+      Array.from(els).forEach((el) => {
+        el.disabled = false
+      });
+    }
+    //console.log(cnt)
+}
+//
+function phage_alpha(letter){
+    console.log('js got letter',letter)
+    var xmlhttp = new XMLHttpRequest();
+    
+    let rank_radio_list = document.getElementsByName('phage-by-alpha')
+    let rank = 'family' // default
+    for(n in rank_radio_list){
+        if(rank_radio_list[n].checked == true){
+            rank = rank_radio_list[n].value
+        }
+    }
+   
+    let url = "phage_table?k="+letter+'&rank='+rank
+	window.open(url,"_self")
+	
+    return false;
+    
+    
+    
 }

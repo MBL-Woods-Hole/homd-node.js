@@ -1,0 +1,56 @@
+.table-condensed{
+  font-size: 13px;
+}
+#phage-box{
+  height:700px;
+  overflow:auto;
+}
+#phage-table
+{
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
+  width:100%;
+}
+#phage-table th
+{
+  color:white;
+  background:#006699;
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+}
+#phage-table td
+{
+  padding:3px 2px;
+  font-size:small;
+  color: #303030;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#phage-table tr:nth-child(even) { 
+    background-color: #D4EFFF; 
+ } 
+ #phage-table tr:hover { 
+    background-color: #FBF9EA; 
+ } 
+
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+        content: " \25B4\25BE" 
+    }
+.col1{
+   width: 90px;
+}
+.col2{
+   width: 130px;
+}
+.col3{
+   width: 240px;
+}
+.col4{
+   width: 340px;
+}
+.col5{
+   width: 500px
+}

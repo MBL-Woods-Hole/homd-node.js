@@ -1,60 +1,11 @@
 <style>
 
-.table-condensed{
-  font-size: 13px;
-}
-#phage-box{
-  height:700px;
-  overflow:auto;
-}
-#phage-table
-{
-  padding:5px;
- /*  width:1200px; */
-  table-layout:fixed;
-  width:100%;
-}
-#phage-table th
-{
-  color:white;
-  background:#006699;
-  padding:5px;
-  font-size:13px;
-  text-align: center;
-}
-#phage-table td
-{
-  padding:3px 2px;
-  font-size:small;
-  color: #303030;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-#phage-table tr:nth-child(even) { 
-    background-color: #D4EFFF; 
- } 
- #phage-table tr:hover { 
-    background-color: #FBF9EA; 
- } 
-
-table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
-        content: " \25B4\25BE" 
-    }
-.col1{
-   width: 90px;
-}
-.col2{
-   width: 130px;
-}
-.col3{
-   width: 240px;
-}
 </style>
+<link rel="stylesheet" type="text/css" href="/css/phage_pages.css" >
 <%- include('../../partials/header_html'); %>
 
-<% list = JSON.parse(vdata) %>
-
+<% list = JSON.parse(pdata) %>
+<% cols_to_show = JSON.parse(cols) %>
 
 
 <body>
@@ -67,7 +18,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		 <div class='title'>Human Oral Phage of Microbial Taxa</div>
 		 
 		 
-		 <div id='download_browser_text_excel'><b>Download Phage Table</b>: 
+		 <div id='download_browser_text_excel'><b>Download This Phage Table</b>: 
 		   <a href='dld_table?type=browser' >[Browser]</a>
 		   <a href='dld_table?type=text' >[Text]</a>
 		   <a href='dld_table?type=excel' >[Excel]</a>
@@ -82,30 +33,63 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 		 <table id='phage-table' class='table table-hover table-condensed sortable' style=''>
 		 <thead>
 		  <tr>
-		    <th scope="col" class='col1'>Phage-ID</th>
+		    <% for(n in cols_to_show) { %>
+		    <th scope="col" class='<%= cols_to_show[n].width %>'><%= cols_to_show[n].view %></th>
+		    <!-- 
+<th scope="col" class='col1'>Phage-ID</th>
 		    <th scope="col" class='col3'>Family</th>
 		    <th scope="col" class='col3'>Genus</th>
 		    <th scope="col" class='col3'>Species</th>
-		    <th scope="col" class=''>Host Bacteria</th>
+		    <th scope="col" class='col1'>Host Taxon-ID</th>
+		    <th scope="col" class=''>Host Species</th>
+ -->
+		    <% } %>
 		  </tr>
 		 </thead>
 		 <tbody>
-		 <% for(n in list){ %>
-		   <tr class="table-primaryX">
-		   <% pid = list[n].pid %>
-		   <td nowrap><%= pid %></td>
+		 <% if(list.length == 0) { %>
+		    
+		    <tr>
+		    <% if(rank == 'family') { %>
+		      <td></td><td>Nothing to show for this search.</td>
+		    <% }else{ %>
+		      <td></td><td></td><td>Nothing to show for this search.</td>
+		    <% } %>
+		    </tr>
+		 
+		 <% }else{ %>
+		   <% for(n in list){ %>
+			   <tr>
+			   <% for(x in cols_to_show){ %>
+			     
+			     <!-- need links and flesh out otid -->
+			     <% if(cols_to_show[x].name == 'pid'){ %>
+			        <td nowrap><a href='phagedesc?pid=<%= list[n][cols_to_show[x].name] %>'><%= list[n][cols_to_show[x].name] %></a></td>
+			     <% }else if(cols_to_show[x].name == 'host_otid'){ %>
+			        <% taxidfullname = 'HMT-'+("000" + list[n][cols_to_show[x].name]).slice(-3); %>
+			        <td nowrap><a href='/taxa/tax_description?otid=<%= list[n][cols_to_show[x].name] %>'><%= taxidfullname %></a></td>
+			     <% }else{ %>
+			        <td nowrap><%= list[n][cols_to_show[x].name] %></td>
+			     <% } %>
+			   <% } %>
+			   
+<!--			   
+			   <% pid = list[n].pid %>
+			   <td nowrap><%= pid %></td>
 		   
-		   <td nowrap class=''><b><%= list[n].family_ncbi  %></b></td>
-		   <td nowrap class=''><i><b><%= list[n].genus_ncbi  %></b></i></td>
-		   <td nowrap class=''><a href='phagedesc?pid=<%= pid %>'><i><b><%= list[n].species_ncbi  %></b></i></a></td>
-		   <% html="" %>
-		   <% if(list[n].host_otid != ''){ %>
-		       <% taxidfullname = 'HMT-'+("000" + list[n].host_otid).slice(-3); %>
-		       <% html="(<a href='/taxa/tax_description?otid="+list[n].host_otid+"'>"+taxidfullname+"</a>)" %>
+			   <td nowrap class=''><b><%= list[n].family_ncbi  %></b></td>
+			   <td nowrap class=''><i><b><%= list[n].genus_ncbi  %></b></i></td>
+			   <td nowrap class=''><a href='phagedesc?pid=<%= pid %>'><i><b><%= list[n].species_ncbi  %></b></i></a></td>
+			   <% html="" %>
+			   <% if(list[n].host_otid != ''){ %>
+				   <% taxidfullname = 'HMT-'+("000" + list[n].host_otid).slice(-3); %>
+				   <% html="<a href='/taxa/tax_description?otid="+list[n].host_otid+"'>"+taxidfullname+"</a>" %>
+			   <% } %>
+			   <td nowrap class=''><%- html %></td>
+			   <td nowrap class=''><i><b><%= list[n].host_ncbi  %> </b></i></td>
+-->		   
+			   
 		   <% } %>
-		   <td nowrap class=''><%- html %> <i><b><%= list[n].host_ncbi  %> </b></i></td>
-		   
-		   </tr>
 		 <% } %>
 		 </tbody>
 		 </table>
@@ -129,8 +113,24 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 <script type="text/javascript" src="/js/phage.js"></script>
 <script>
   mainmenu()
-
-
+  $(document).ready(function(){ 
+     var cols_showing = <%- cols %>
+     
+     create_column_choices_dialog(cols_showing) 
+     
+     var letter = '<%- letter %>'
+	if(letter && letter !== 'all'){
+		document.getElementById(letter.toUpperCase()).style.color = 'red'
+		document.getElementById(letter.toUpperCase()).style.fontSize = 'medium'
+	}                  
+ 
+  });    
+  $(document).mouseup(function (e) {
+		if ($(e.target).closest("#phage-column-choices").length === 0) {
+			$("#phage-column-choices").hide();
+		}
+  });
+   
   document.onreadystatechange = function() {
             if (document.readyState !== "complete") {
                 document.querySelector(

@@ -6,33 +6,35 @@
   <div id='column_left1'  >
 	
 	<div id='header-select' >
-		  <a href='#' onclick='select_phage_headers()'>Select up to 5 columns to view:</a>
+		  <a href='#' onclick='open_phage_header_select()'>Select up to 5 columns to view</a>
 		  <div id='phage-column-choices'></div>
 		  
 		  
 		  
 	</div>  <!-- end header-select -->	
 	
-	
-	
-	
-	
-	
-	
     </div>	 <!--  end col-left1-->
   
     <div id="column_right1" >
 		<div class='alpha-select'>
+		<!-- <form method='GET' action='phage_table' > -->
 		  <center>
-			<small>Select Phage by Alphabet: 
-			<input type='radio' name='phage-by-alpha' checked value='family' />Family
-			<input type='radio' name='phage-by-alpha' value='genus' />Genus
+		   <small>Select Phage by Alphabet: 
+			<% if(rank == 'genus'){ %>
+			  <input type='radio' name='phage-by-alpha' value='family' />Family
+			  <input type='radio' name='phage-by-alpha' checked value='genus' />Genus
+			<% }else{ %>
+			  <input type='radio' name='phage-by-alpha' checked value='family' />Family
+			  <input type='radio' name='phage-by-alpha' value='genus' />Genus
+			<% } %>
+			
 			<br>
 			<span class='alpha-list'> 
-			<a id='A' href='genome_table?k=A'>A</a>|<a id='B' href='genome_table?k=B'>B</a>|<a id='C' href='genome_table?k=C'>C</a>|<a id='D' href='genome_table?k=D'>D</a>|<a id='E' href='genome_table?k=E'>E</a>|<a id='F' href='genome_table?k=F'>F</a>|<a id='G' href='genome_table?k=G'>G</a>|<a id='H' href='genome_table?k=H'>H</a>|<a id='I' href='genome_table?k=I'>I</a>|<a id='J' href='genome_table?k=J'>J</a>|<a id='K' href='genome_table?k=K'>K</a>|<a id='L' href='genome_table?k=L'>L</a>|<a id='M' href='genome_table?k=M'>M</a>|<a id='N' href='genome_table?k=N'>N</a>|<a id='O' href='genome_table?k=O'>O</a>|<a id='P' href='genome_table?k=P'>P</a>|<a id='Q' style='color:grey;'>Q</a>|<a id='R' href='genome_table?k=R'>R</a>|<a id='S' href='genome_table?k=S'>S</a>|<a id='T' href='genome_table?k=T'>T</a>|<a id='U' style='color:grey;'>U</a>|<a id='V' href='genome_table?k=V'>V</a>|<a id='W' href='genome_table?k=W'>W</a>|<a id='X' style='color:grey;'>X</a>|<a id='Y' href='genome_table?k=Y'>Y</a>|<a id='Z' style='color:grey;'>Z</a>
+			<a id='A' href='#' onclick="phage_alpha('a')">A</a>|<a id='B' href='#' onclick="phage_alpha('b')">B</a>|<a id='C' href='#' onclick="phage_alpha('c')">C</a>|<a id='D' href='#' onclick="phage_alpha('d')">D</a>|<a id='E' href='#' onclick="phage_alpha('e')">E</a>|<a id='F' href='#' onclick="phage_alpha('f')">F</a>|<a id='G' href='#' onclick="phage_alpha('g')">G</a>|<a id='H' href='#' onclick="phage_alpha('h')">H</a>|<a id='I' href='#' onclick="phage_alpha('i')">I</a>|<a id='J' href='#' onclick="phage_alpha('j')">J</a>|<a id='K' href='#' onclick="phage_alpha('k')">K</a>|<a id='L' href='#' onclick="phage_alpha('l')">L</a>|<a id='M' href='#' onclick="phage_alpha('m')">M</a>|<a id='N' href='#' onclick="phage_alpha('n')">N</a>|<a id='O' href='#' onclick="phage_alpha('o')">O</a>|<a id='P' href='#' onclick="phage_alpha('p')">P</a>|<a id='Q' href='#' onclick="phage_alpha('q')">Q</a>|<a id='R' href='#' onclick="phage_alpha('r')">R</a>|<a id='S' href='#' onclick="phage_alpha('s')">S</a>|<a id='T' href='#' onclick="phage_alpha('t')">T</a>|<a id='U' href='#' onclick="phage_alpha('u')">U</a>|<a id='V' href='#' onclick="phage_alpha('v')">V</a>|<a id='W' href='#' onclick="phage_alpha('w')">W</a>|<a id='X' href='#' onclick="phage_alpha('x')">X</a>|<a id='Y' href='#' onclick="phage_alpha('y')">Y</a>|<a id='Z' href='#' onclick="phage_alpha('z')">Z</a>
 		    </span>
-			</small>
-			</center>
+		   </small>
+		  </center>
+		<!-- </form> -->
 		</div>
 	</div>
 	 	 
@@ -42,8 +44,8 @@
 	<span id='count_info'><%- count_text %></span>
 	
 	<div><center>Reload Table</center>
-	   <small>with original sorting:
-	   <a class="pill pill-brown" href='genome_table?k=0'>Reload</a>
+	   <small>with original sorting and columns:
+	   <a class="pill pill-brown" href='phage_table?reset=1'>Reload</a>
 	   <small>
 	</div> 
 
@@ -73,7 +75,7 @@
               </optgroup>
               </select>
  
-              <input class="pill pill-brown float-right" type='button' value=' Go ' onclick='genome_table_search()'> 
+              <input class="pill pill-brown float-right" type='button' value=' Go ' onclick='phage_table_search()'> 
             </div>
        
 	  

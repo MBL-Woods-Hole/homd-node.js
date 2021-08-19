@@ -15,10 +15,12 @@
 			 <div class='title'>PHAGE DATA: <small>PhageID <%= pid %></small></div>
 	
 	<table>
+	
 	<tr>	
 	  <td nowrap>Family: <%= data.family_ncbi  %></td>
-	</tr><tr>	
-	  <td nowrap>Genus Species: <i><%= data.genus_ncbi  %> <%= data.species_ncbi  %></i></td>
+	</tr>
+	<tr>	
+	  <td nowrap>Family; Genus; Species: <%= data.family_ncbi  %> <i><%= data.genus_ncbi  %> <%= data.species_ncbi  %></i></td>
 	</tr>
 	
 	<tr>	
@@ -38,6 +40,38 @@
       <td nowrap>Host Oral Taxon-ID: none found</td>
     <% } %>
     </tr>
+    <tr>	
+	  <td>Submitters: <%= data.submitters_ncbi  %></td>
+	</tr>
+	<tr>	
+	  <td>release_date_ncbi: <%= data.release_date_ncbi  %></td>
+	</tr>
+	<tr>	
+	  <td>publications_ncbi: <%= data.publications_ncbi  %></td>
+	</tr>
+	<tr>	
+	  <td>molecule_type_ncbi: <%= data.molecule_type_ncbi  %></td>
+	</tr>
+	<tr>	
+	  <td>sequence_type_ncbi: <%= data.sequence_type_ncbi  %></td>
+	</tr>
+	<tr>	
+	  <td>geo_location (USA) ncbi: <%= data.geo_location_ncbi  %> (<%= data.usa_ncbi  %>)</td>
+	</tr>
+	<tr>	
+	  <td>isolation_source_ncbi: <%= data.isolation_source_ncbi  %></td>
+	</tr>
+	<tr>	
+	  <td>collection_date_ncbi: <%= data.collection_date_ncbi  %></td>
+	</tr>
+	<tr>	
+	  <td>biosample_ncbi: <%= data.biosample_ncbi  %></td>
+	</tr>
+	<tr>	
+	  <td>genbank_title_ncbi: <%= data.genbank_title_ncbi  %></td>
+	</tr>
+	
+
     </table>
     </div> <!-- end: page-content -->
     

@@ -40,7 +40,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	  	big_tax_list2 = big_tax_list1.filter(item => item.genomes.length >0)
 	  	//show_filters = 0
 	  	pgtitle = 'Human Oral Microbial Taxa with Annotated Genomes'
-	}else if(req.session.tax_letter !== 'all'){
+	}else if(req.session.tax_letter && req.session.tax_letter !== 'all'){
 	    console.log('GOT a TaxLetter: ',req.session.tax_letter)
 		   // COOL.... filter the whole list
 		big_tax_list2 = big_tax_list0.filter(item => item.genus.charAt(0) === req.session.tax_letter)
