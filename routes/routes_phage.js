@@ -36,6 +36,7 @@ router.get('/phage_table', function phage_table_get(req, res) {
   let host_otid = myurl.query.host_otid;
   let letter    = myurl.query.k
   let rank = 'family'  // default
+  let count_text = ''
   if(myurl.query.rank){
       rank = myurl.query.rank
   }
@@ -54,6 +55,7 @@ router.get('/phage_table', function phage_table_get(req, res) {
   console.log(tmp_phage_list[0])
   if(host_otid){
       send_list0 = tmp_phage_list.filter(item => item.host_otid == host_otid)
+      count_text = 'Showing: '+send_list0.length.toString() +' rows for host TaxonID: HMT_'+host_otid
   }else if(letter && letter.match(/[a-z]{1}/)){
      console.log('got a letter ',letter,' rank: ',rank)
      //console.log(tmp_phage_list[0].family_ncbi.toLowerCase().charAt(0))
@@ -62,15 +64,17 @@ router.get('/phage_table', function phage_table_get(req, res) {
      }else{
          send_list0 = tmp_phage_list.filter(item => item.family_ncbi.toLowerCase().charAt(0) === letter)
      }
-     
+     count_text = 'Found '+send_list0.length.toString()+' for letter: '+letter.toUpperCase()+' ('+rank+')'
   }else{
      send_list0 = tmp_phage_list
+     count_text = 'Showing: '+send_list0.length.toString() +' rows.'
   }
   
   
   send_list0.sort(function (a, b) {
 	return helpers.compareStrings_alpha(a.family_ncbi, b.family_ncbi);
   });
+  
   //console.log(res)
   // here we pare down the send_list to contain only data from the pertinent cols
    for(n in send_list0){
@@ -95,8 +99,8 @@ router.get('/phage_table', function phage_table_get(req, res) {
   //console.log('session cols')
   //console.log(req.session.cols)
   
-    
-  res.render('pages/phage/phagetable', {
+   //count_text =  count_text0 //, send_list.length)
+   res.render('pages/phage/phagetable', {
 		title: 'HOMD :: Human Oral Phage Database',
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
@@ -104,7 +108,7 @@ router.get('/phage_table', function phage_table_get(req, res) {
 		
 		rank: rank,
 		cols: JSON.stringify(cols_to_show),
-		count_text:'',
+		count_text: count_text,
 		letter: letter,
   });
       
@@ -115,7 +119,6 @@ router.post('/phage_table', function phage_table_post(req, res) {
    console.log('in phage table POST')
    console.log(req.body)
     // only change columns here in post
-
    let send_list = []
    let tmp_phage_list = Object.values(C.phage_lookup)
    let cols_to_show =[]
@@ -146,7 +149,7 @@ router.post('/phage_table', function phage_table_post(req, res) {
 //    console.log(send_list.length)
 //    console.log('send_list')
 //    console.log(send_list)
-  
+  let count_text = 'Showing: '+send_list.length.toString() +' rows.'
   res.render('pages/phage/phagetable', {
 		title: 'HOMD :: Human Oral Phage Database',
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
@@ -155,7 +158,7 @@ router.post('/phage_table', function phage_table_post(req, res) {
 		
 		rank: 'family',
 		cols: JSON.stringify(cols_to_show),
-		count_text:'',
+		count_text: count_text,
 		letter:'',
   });
   
@@ -318,13 +321,14 @@ router.post('/search_phagetable', function search_phagetable(req, res) {
          tmp_obj[req.session.cols[x].name] = send_list0[n][req.session.cols[x].name]
       }
       send_list.push(tmp_obj)
-   }
+    }
 	console.log('tmp_phage_list[0]')
-   console.log(tmp_phage_list[0])
+    console.log(tmp_phage_list[0])
 	// console.log('SEARCH::send_list.length')
 //     console.log(send_list.length)
 //     console.log('send_list')
 //     console.log(send_list)
+    let count_text = 'Showing: '+send_list.length.toString() +' rows.'
 	res.render('pages/phage/phagetable', {
 		title: 'HOMD :: Human Oral Phage Database',
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
@@ -333,7 +337,7 @@ router.post('/search_phagetable', function search_phagetable(req, res) {
 		
 		rank:    'family',
 		cols:    JSON.stringify(req.session.cols),
-		count_text:'',
+		count_text: count_text,
 		letter:'',
   });
 	

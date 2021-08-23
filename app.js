@@ -1,6 +1,6 @@
 "use strict"
 // for newrelic: start in config.js
-const winston = require('winston');
+//const winston = require('winston');
 const config = require('./config/config');
 const taxdbconn = require('./config/database').taxon_pool;
 const annodbconn = require('./config/database').taxon_pool2;
