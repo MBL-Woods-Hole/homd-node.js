@@ -128,8 +128,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
 		statusfltr: JSON.stringify(C.tax_status_on),  // default
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
 		//show_filters:show_filters,
-		search_txt: '',
-		search_field:'',
+		search_txt: '0',
+		search_field:'0',
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -229,8 +229,8 @@ router.post('/tax_table', function tax_table_post(req, res) {
 		statusfltr: JSON.stringify(statusfilter_on),
 		sitefltr: JSON.stringify(sitefilter_on),
 		//show_filters: show_filters,
-		search_txt: '',
-		search_field:'',
+		search_txt: '0',
+		search_field:'0',
 		
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
@@ -238,88 +238,18 @@ router.post('/tax_table', function tax_table_post(req, res) {
 //
 router.post('/search_taxtable', function search_taxtable(req, res) {
 	console.log(req.body)
-	let send_list = [];
+	
 	let search_txt = req.body.tax_srch.toLowerCase()  // already filtered for empty string and extreme length
 	let search_field = req.body.field
 	//let seqrch_match = req.body.match
 	//let search_sub = req.body.sub
-	let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
+	
 	console.log('C.taxon_lookup[389]')
 	console.log(C.taxon_lookup[389])
 	// filter: all;otid;genus;species;synonyms;type_strains;(16S rRNA ID)
 	//send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-	if(search_field == 'taxid'){
-	    send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
-	}else if(search_field == 'genus'){
-	    send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-	}else if(search_field == 'species'){
-	    send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
-	}else if(search_field == 'synonym'){
-	    send_list = big_tax_list.filter( function(e) {
-	       for(n in e.synonyms){
-	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
-	             return e
-	          }
-	       }
-	    })    
-	    
-	}else if(search_field == 'type_strain'){
-	    send_list = big_tax_list.filter( function(e) {
-	       for(n in e.type_strains){
-	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
-	             return e
-	          }
-	       }
-	    })
-	}else{
-	    // search all
-	    //send_list = send_tax_obj
-	    let temp_obj = {}
-	    var tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    tmp_send_list = big_tax_list.filter( function(e) {
-	       for(n in e.synonyms){
-	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
-	             return e
-	          }
-	       }
-	    })    
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    tmp_send_list = big_tax_list.filter( function(e) {
-	       for(n in e.type_strains){
-	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
-	             return e
-	          }
-	       }
-	    })
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    // now back to a list
-	    send_list = Object.values(temp_obj);
-	    
-	    
-	}
 	
-	
+	let send_list = get_filtered_taxon_list(search_txt, search_field)
 	
 	let tcount = send_list.length  // total count of our filters
 	pgtitle = 'Search TaxTable'
@@ -341,6 +271,9 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
 	
 	
 });
+//
+
+
 //
 //
 router.get('/tax_hierarchy', (req, res) => {
@@ -647,15 +580,19 @@ router.post('/get_refseq', function get_refseq(req, res) {
 });
 
 
-router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
+router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', function dld_table_get(req, res) {
+//router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
+
 	helpers.accesslog(req, res)
 	console.log('in dld tax-get')
 	//console.log(req.body)
+	let send_list = []
 	let type = req.params.type
 	let letter = req.params.letter
 	let sitefilter = JSON.parse(req.params.sites)
 	let statusfilter = JSON.parse(req.params.stati)
-
+    let search_txt = req.params.search_txt
+	let search_field = req.params.search_field
 	
 	// Apply filters
 	let temp_list = Object.values(C.taxon_lookup);
@@ -664,6 +601,9 @@ router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req,
 	    console.log('MATCH Letter: ',letter)
 	    send_list = temp_list.filter(item => item.genus.charAt(0) === letter)
 	    file_filter_txt = "HOMD.org Taxon Data::Letter Filter Applied (genus with first letter of '"+letter+"')"
+	}else if(search_txt !== '0'){
+	    send_list = get_filtered_taxon_list(search_txt, search_field)
+	    file_filter_txt = "HOMD.org Taxon Data::Search Filter Applied (Search text '"+search_txt+"')"
 	}else{
 		// apply site/status filter as last resort
 		send_list = temp_list.filter( function(e){
@@ -1144,7 +1084,82 @@ function find_images(rank, otid, tax_name) {
 	return image_list
 }      
         
-    
+ function get_filtered_taxon_list(search_txt, search_field){
+
+	let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
+	if(search_field == 'taxid'){
+	    send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+	}else if(search_field == 'genus'){
+	    send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
+	}else if(search_field == 'species'){
+	    send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
+	}else if(search_field == 'synonym'){
+	    send_list = big_tax_list.filter( function(e) {
+	       for(n in e.synonyms){
+	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
+	             return e
+	          }
+	       }
+	    })    
+	    
+	}else if(search_field == 'type_strain'){
+	    send_list = big_tax_list.filter( function(e) {
+	       for(n in e.type_strains){
+	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
+	             return e
+	          }
+	       }
+	    })
+	}else{
+	    // search all
+	    //send_list = send_tax_obj
+	    let temp_obj = {}
+	    var tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    tmp_send_list = big_tax_list.filter( function(e) {
+	       for(n in e.synonyms){
+	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
+	             return e
+	          }
+	       }
+	    })    
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    tmp_send_list = big_tax_list.filter( function(e) {
+	       for(n in e.type_strains){
+	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
+	             return e
+	          }
+	       }
+	    })
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    // now back to a list
+	    send_list = Object.values(temp_obj);
+	    
+	    
+	}
+	return send_list
+}	
+	   
    
 
 

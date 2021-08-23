@@ -23,9 +23,10 @@ thead th { position: sticky; top: 0; }
 		 <div class='title'><%= pgtitle %></div>
 		 <small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
 		 <div id='download_browser_text_excel'><b>Download this Taxon Data</b>: 
-		   <a href='dld_table/browser/<%= letter %>/<%= sitefltr %>/<%= statusfltr %>' >[Browser]</a>
-		   <a href='dld_table/text/<%= letter %>/<%= sitefltr %>/<%= statusfltr %>' >[Text]</a>
-		   <a href='dld_table/excel/<%= letter %>/<%= sitefltr %>/<%= statusfltr %>' >[Excel]</a>
+		 
+		   <a href='dld_table/browser/<%= letter %>/<%= sitefltr %>/<%= statusfltr %>/<%= search_txt %>/<%= search_field %>' >[Browser]</a>
+		   <a href='dld_table/text/<%= letter %>/<%= sitefltr %>/<%= statusfltr %>/<%= search_txt %>/<%= search_field %>' >[Text]</a>
+		   <a href='dld_table/excel/<%= letter %>/<%= sitefltr %>/<%= statusfltr %>/<%= search_txt %>/<%= search_field %>' >[Excel]</a>
 		 </div>		 
 			 
 	<%- include('../../partials/tax_table_filter_pt1.ejs') %>

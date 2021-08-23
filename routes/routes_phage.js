@@ -101,8 +101,8 @@ router.get('/phage_table', function phage_table_get(req, res) {
 		cols: JSON.stringify(cols_to_show),
 		count_text: count_text,
 		letter: letter,
-		search_txt: '',
-		search_field: '',
+		search_txt: '0',  // dont us empty string
+		search_field: '0',  // dont us empty string
   });
       
 });
@@ -152,9 +152,9 @@ router.post('/phage_table', function phage_table_post(req, res) {
 		rank: 'family',
 		cols: JSON.stringify(cols_to_show),
 		count_text: count_text,
-		letter:'',
-		search_txt:'',
-		search_field:'',
+		letter:'all',  // dont us empty string
+		search_txt:'0',  // dont us empty string
+		search_field:'0',  // dont us empty string
   });
   
 });
@@ -194,7 +194,7 @@ router.post('/search_phagetable', function search_phagetable(req, res) {
 		rank:    'family',
 		cols:    JSON.stringify(req.session.cols),
 		count_text: count_text,
-		letter:'',
+		letter:'all',  // dont us empty string
 		search_txt: search_txt,
 		search_field: search_field,
   });
@@ -224,22 +224,26 @@ router.get('/dld_table/:type/:letter/:rank/:search_txt/:search_field', function 
 	helpers.accesslog(req, res)
 	console.log('in dld phage-get')
 	
-	let myurl = url.parse(req.url, true);
-  	let type = myurl.query.type;
-  	let letter = myurl.query.letter;
-  	let rank = myurl.query.rank;
-  	let search_txt = myurl.query.search_txt;
-  	let search_field = myurl.query.search_field;
-  	
+	let type = req.params.type
+	let letter = req.params.letter
+	let rank = req.params.rank
+	let search_txt = req.params.search_txt
+	let search_field = req.params.search_field
+	
+
   	let tmp_phage_list = Object.values(C.phage_lookup)
-  	
+  	console.log('type '+type)
+  	console.log('letter '+letter)
+  	console.log('rank '+rank)
   	if(letter && letter.match(/[A-Z]{1}/)){
+        console.log('got letter '+letter)
         if(rank == 'genus'){
              send_list0 = tmp_phage_list.filter(item => item.genus_ncbi.toLowerCase().charAt(0) === letter)
         }else{
              send_list0 = tmp_phage_list.filter(item => item.family_ncbi.toLowerCase().charAt(0) === letter)
         }
-  	}else if(search_txt){  // filter
+  	}else if(search_txt !== '0'){  // filter
+  	    console.log('got search '+search_txt+'  fld: '+search_field)
   	    send_list0 = get_filtered_phage_list(search_txt, search_field)
   	}else{  // full list
   	    send_list0 = tmp_phage_list

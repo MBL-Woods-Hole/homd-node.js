@@ -30,9 +30,9 @@ thead th { position: sticky; top: 0; }
    						
 		<div class='title text-info'>Human Oral Microbial Genomes</div>
         <div id='download_browser_text_excel'><b>Download this Genome Data</b>: 
-		   <a href='dld_table/browser/<%= letter %>/<%= phylum %>/<%= otid %>' >[Browser]</a>
-		   <a href='dld_table/text/<%= letter %>/<%= phylum %>/<%= otid %>' >[Text]</a>
-		   <a href='dld_table/excel/<%= letter %>/<%= phylum %>/<%= otid %>' >[Excel]</a>
+		   <a href='dld_table/browser/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Browser]</a>
+		   <a href='dld_table/text/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Text]</a>
+		   <a href='dld_table/excel/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Excel]</a>
 		 </div>		 
 
  <%- include('../../partials/genome_table_filter.ejs') %> 

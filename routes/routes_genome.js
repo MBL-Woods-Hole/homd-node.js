@@ -114,6 +114,8 @@ router.get('/genome_table', function genome_table(req, res) {
 		phylum:phylum,
 		phyla: JSON.stringify(phyla),
 		count_text:count_text,
+		search_txt: '0',
+		search_field:'0',
 		
 	});
 });
@@ -127,84 +129,12 @@ router.post('/search_genometable', function search_genometable(req, res) {
 	//let search_sub = req.body.sub
 	console.log(C.genome_lookup['SEQF1003'])
 	// FIXME
-	gid_obj_list = Object.values(C.genome_lookup);
-	if(search_field == 'taxid'){
-	    send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))
-	}else if(search_field == 'seqid'){
-	    send_list = gid_obj_list.filter(item => item.gid.toLowerCase().includes(search_txt))
-	}else if(search_field == 'genus'){
-	    send_list = gid_obj_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-	}else if(search_field == 'species'){
-	    send_list = gid_obj_list.filter(item => item.species.toLowerCase().includes(search_txt))
-	}else if(search_field == 'ccolct'){
-	    send_list = gid_obj_list.filter(item => item.ccolct.toLowerCase().includes(search_txt))
-	}else if(search_field == 'io'){
-	    send_list = gid_obj_list.filter(item => item.io.toLowerCase().includes(search_txt))
-	}else if(search_field == 'status'){
-	    send_list = gid_obj_list.filter(item => item.status.toLowerCase().includes(search_txt))
-	}else if(search_field == 'seq_center'){
-	    send_list = gid_obj_list.filter(item => item.seq_center.toLowerCase().includes(search_txt))
-	}else{
-	    let temp_obj = {}
-	    var tmp_send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //gid
-	    tmp_send_list = gid_obj_list.filter(item => item.gid.toLowerCase().includes(search_txt))
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //genus
-	    var tmp_send_list = gid_obj_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    // species
-	    var tmp_send_list = gid_obj_list.filter(item => item.species.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //culture collection
-	    var tmp_send_list = gid_obj_list.filter(item => item.ccolct.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    // isolation origin
-	    var tmp_send_list = gid_obj_list.filter(item => item.io.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //seq status
-	    var tmp_send_list = gid_obj_list.filter(item => item.status.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //seq_center
-	    var tmp_send_list = gid_obj_list.filter(item => item.seq_center.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    // now back to a list
-	    send_list = Object.values(temp_obj);
-	    
-	}
 	
-	
+	send_list = get_filtered_genome_list(search_txt, search_field)
 	
 	pgtitle = 'Search TaxTable'
 	var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
 	var phyla = phyla_obj.map(function(el){ return el.taxon; })
-	
-	
 	
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
@@ -213,18 +143,20 @@ router.post('/search_genometable', function search_genometable(req, res) {
 		//seqid_list: JSON.stringify(gid_obj_list),
 		data: JSON.stringify(send_list),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		letter: '',
-		otid: '',
-		phylum: '',
+		letter: 'all',  // dont us empty string: -for download fxn
+		otid: '0',   // dont us empty string: -for download fxn
+		phylum: '0',  // dont us empty string: -for download fxn
 		phyla: JSON.stringify(phyla),
 		
 		count_text:"<br>No. of genomes found using search string '"+search_txt+"': "+send_list.length.toString(),
-		page_text:'',
-		page:1,
+		search_txt: search_txt,
+		search_field: search_field,
 		
 	});
 	
-});
+});	
+
+
 //
 // router.get('/jbrowse2/:id', function jbrowse2(req, res) {
 // 	console.log('jbrowse2/:id -get')
@@ -611,13 +543,16 @@ router.get('/rRNA_gene_tree', function rRNA_gene_tree(req, res) {
 });
 //
 //
-router.get('/dld_table/:type/:letter/:phylum/:otid', function dld_table(req, res) {
+router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', function dld_table(req, res) {
 	helpers.accesslog(req, res)
 	console.log('in download table')
 	let type = req.params.type
 	let letter = req.params.letter
 	let phylum = req.params.phylum
 	let otid = req.params.otid
+	let search_txt = req.params.search_txt
+	let search_field = req.params.search_field
+	
     console.log('type',type)
   	console.log('letter',letter)
   	console.log('phylum',phylum)
@@ -654,6 +589,9 @@ router.get('/dld_table/:type/:letter/:phylum/:otid', function dld_table(req, res
 	    })
 	    console.log('cksend_list',send_list)
 	    file_filter_txt = "HOMD.org Genome Data::Phylum: "+phylum
+	}else if(search_txt !== '0'){
+	    send_list = get_filtered_genome_list(search_txt, search_field)
+	    file_filter_txt = "HOMD.org Genome Data::Search Text: "+search_txt
 	}else{
 		// whole list as last resort
 		console.log('in all dnld')
@@ -713,6 +651,81 @@ function create_table(gids, source, type, start_txt) {
     return txt
 }        
         
-        
+//
+function get_filtered_genome_list(search_txt, search_field){	
+	let gid_obj_list = Object.values(C.genome_lookup);
+	
+	if(search_field == 'taxid'){
+	    send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+	}else if(search_field == 'seqid'){
+	    send_list = gid_obj_list.filter(item => item.gid.toLowerCase().includes(search_txt))
+	}else if(search_field == 'genus'){
+	    send_list = gid_obj_list.filter(item => item.genus.toLowerCase().includes(search_txt))
+	}else if(search_field == 'species'){
+	    send_list = gid_obj_list.filter(item => item.species.toLowerCase().includes(search_txt))
+	}else if(search_field == 'ccolct'){
+	    send_list = gid_obj_list.filter(item => item.ccolct.toLowerCase().includes(search_txt))
+	}else if(search_field == 'io'){
+	    send_list = gid_obj_list.filter(item => item.io.toLowerCase().includes(search_txt))
+	}else if(search_field == 'status'){
+	    send_list = gid_obj_list.filter(item => item.status.toLowerCase().includes(search_txt))
+	}else if(search_field == 'seq_center'){
+	    send_list = gid_obj_list.filter(item => item.seq_center.toLowerCase().includes(search_txt))
+	}else{
+	    let temp_obj = {}
+	    var tmp_send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //gid
+	    tmp_send_list = gid_obj_list.filter(item => item.gid.toLowerCase().includes(search_txt))
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //genus
+	    var tmp_send_list = gid_obj_list.filter(item => item.genus.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    // species
+	    var tmp_send_list = gid_obj_list.filter(item => item.species.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //culture collection
+	    var tmp_send_list = gid_obj_list.filter(item => item.ccolct.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    // isolation origin
+	    var tmp_send_list = gid_obj_list.filter(item => item.io.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //seq status
+	    var tmp_send_list = gid_obj_list.filter(item => item.status.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //seq_center
+	    var tmp_send_list = gid_obj_list.filter(item => item.seq_center.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    // now back to a list
+	    send_list = Object.values(temp_obj);
+	    
+	}
+    return send_list	
+}	
+	       
         
 module.exports = router;
