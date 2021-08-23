@@ -233,6 +233,113 @@ router.post('/tax_table', function tax_table_post(req, res) {
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
+//
+router.post('/search_taxtable', function search_taxtable(req, res) {
+	console.log(req.body)
+	let send_list = [];
+	let search_txt = req.body.tax_srch.toLowerCase()  // already filtered for empty string and extreme length
+	let search_field = req.body.field
+	//let seqrch_match = req.body.match
+	//let search_sub = req.body.sub
+	let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
+	console.log('C.taxon_lookup[389]')
+	console.log(C.taxon_lookup[389])
+	// filter: all;otid;genus;species;synonyms;type_strains;(16S rRNA ID)
+	//send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+	if(search_field == 'taxid'){
+	    send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+	}else if(search_field == 'genus'){
+	    send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
+	}else if(search_field == 'species'){
+	    send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
+	}else if(search_field == 'synonym'){
+	    send_list = big_tax_list.filter( function(e) {
+	       for(n in e.synonyms){
+	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
+	             return e
+	          }
+	       }
+	    })    
+	    
+	}else if(search_field == 'type_strain'){
+	    send_list = big_tax_list.filter( function(e) {
+	       for(n in e.type_strains){
+	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
+	             return e
+	          }
+	       }
+	    })
+	}else{
+	    // search all
+	    //send_list = send_tax_obj
+	    let temp_obj = {}
+	    var tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    tmp_send_list = big_tax_list.filter( function(e) {
+	       for(n in e.synonyms){
+	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
+	             return e
+	          }
+	       }
+	    })    
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    tmp_send_list = big_tax_list.filter( function(e) {
+	       for(n in e.type_strains){
+	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
+	             return e
+	          }
+	       }
+	    })
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    // now back to a list
+	    send_list = Object.values(temp_obj);
+	    
+	    
+	}
+	
+	
+	
+	let tcount = send_list.length  // total count of our filters
+	pgtitle = 'Search TaxTable'
+	res.render('pages/taxa/taxtable', {
+		title: 'HOMD :: Taxon Table', 
+		pgtitle: pgtitle,
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		data: JSON.stringify(send_list),
+		count: Object.keys(send_list).length,
+		tcount: tcount,
+		letter: '',
+		statusfltr: JSON.stringify(C.tax_status_on),
+		sitefltr: JSON.stringify(C.tax_sites_on),
+		//show_filters: 1,
+		search: '',
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+	});
+	
+	
+});
+//
+//
 router.get('/tax_hierarchy', (req, res) => {
 	//the json file was created from a csv of vamps taxonomy
 	// using the script: taxonomy_csv2json.py in ../homd_data
@@ -764,110 +871,7 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
 });
 //
 
-router.post('/search_taxtable', function search_taxtable(req, res) {
-	console.log(req.body)
-	let send_list = [];
-	let search_txt = req.body.tax_srch.toLowerCase()  // already filtered for empty string and extreme length
-	let search_field = req.body.field
-	//let seqrch_match = req.body.match
-	//let search_sub = req.body.sub
-	let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
-	console.log('C.taxon_lookup[389]')
-	console.log(C.taxon_lookup[389])
-	// filter: all;otid;genus;species;synonyms;type_strains;(16S rRNA ID)
-	//send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-	if(search_field == 'taxid'){
-	    send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
-	}else if(search_field == 'genus'){
-	    send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-	}else if(search_field == 'species'){
-	    send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
-	}else if(search_field == 'synonym'){
-	    send_list = big_tax_list.filter( function(e) {
-	       for(n in e.synonyms){
-	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
-	             return e
-	          }
-	       }
-	    })    
-	    
-	}else if(search_field == 'type_strain'){
-	    send_list = big_tax_list.filter( function(e) {
-	       for(n in e.type_strains){
-	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
-	             return e
-	          }
-	       }
-	    })
-	}else{
-	    // search all
-	    //send_list = send_tax_obj
-	    let temp_obj = {}
-	    var tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    tmp_send_list = big_tax_list.filter( function(e) {
-	       for(n in e.synonyms){
-	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
-	             return e
-	          }
-	       }
-	    })    
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    tmp_send_list = big_tax_list.filter( function(e) {
-	       for(n in e.type_strains){
-	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
-	             return e
-	          }
-	       }
-	    })
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    // now back to a list
-	    send_list = Object.values(temp_obj);
-	    
-	    
-	}
-	
-	
-	
-	let tcount = send_list.length  // total count of our filters
-	pgtitle = 'Search TaxTable'
-	res.render('pages/taxa/taxtable', {
-		title: 'HOMD :: Taxon Table', 
-		pgtitle: pgtitle,
-		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		data: JSON.stringify(send_list),
-		count: Object.keys(send_list).length,
-		tcount: tcount,
-		letter: '',
-		statusfltr: JSON.stringify(C.tax_status_on),
-		sitefltr: JSON.stringify(C.tax_sites_on),
-		//show_filters: 1,
-		search: '',
-		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-	});
-	
-	
-})
+
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////

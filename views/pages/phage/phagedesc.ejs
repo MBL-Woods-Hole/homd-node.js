@@ -17,58 +17,58 @@
 	<table>
 	
 	<tr>	
-	  <td nowrap>Family: <%= data.family_ncbi  %></td>
+	  <td nowrap><strong>Family</strong>:</td><td><%= data.family_ncbi  %></td>
 	</tr>
 	<tr>	
-	  <td nowrap>Family; Genus; Species: <%= data.family_ncbi  %> <i><%= data.genus_ncbi  %> <%= data.species_ncbi  %></i></td>
+	  <td nowrap><strong>Genus; Species</strong>:</td><td><i><%= data.genus_ncbi  %> <%= data.species_ncbi  %></i></td>
 	</tr>
 	
 	<tr>	
-	  <td nowrap>NCBI Assembly: <a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.assembly_ncbi  %></a></td>
+	  <td nowrap><strong>NCBI Assembly</strong>:</td><td><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.assembly_ncbi  %></a></td>
 	</tr><tr>
 	<% if(data.sra_accession_ncbi != ''){ %>  
-	  <td nowrap>NCBI Accession: <a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.sra_accession_ncbi  %></a></td>
+	  <td nowrap><strong>NCBI Accession</strong>:</td><td><a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.sra_accession_ncbi  %></a></td>
     <% }else{ %>
-      <td nowrap>NCBI Accession: none</td>
+      <td nowrap><strong>NCBI Accession</strong>:</td><td>none</td>
     <% } %>
     </tr><tr>
-	  <td nowrap>Host Species: <a href='' target='_blank'><%= data.host_ncbi  %></a></td>
+	  <td nowrap><strong>Host Species</strong>:</td><td><a href='' target='_blank'><%= data.host_ncbi  %></a></td>
     </tr><tr>
     <% if(data.otid != ''){ %>
-	  <td nowrap><a href='/taxa/tax_description?otid=<%= data.host_otid %>'>Host Oral Taxon-ID: <%= data.host_otid %></a></td>
+	  <td nowrap><a href='/taxa/tax_description?otid=<%= data.host_otid %>'><strong>Host Oral Taxon-ID</strong>:</td><td><%= data.host_otid %></a></td>
 	<% }else{ %>
-      <td nowrap>Host Oral Taxon-ID: none found</td>
+      <td nowrap><strong>Host Oral Taxon-ID</strong>:</td><td>none found</td>
     <% } %>
     </tr>
     <tr>	
-	  <td>Submitters: <%= data.submitters_ncbi  %></td>
+	  <td><strong>Submitters</strong>:</td><td><%= data.submitters_ncbi  %></td>
 	</tr>
 	<tr>	
-	  <td>release_date_ncbi: <%= data.release_date_ncbi  %></td>
+	  <td><strong>release_date_ncbi</strong>:</td><td><%= data.release_date_ncbi  %></td>
 	</tr>
 	<tr>	
-	  <td>publications_ncbi: <%= data.publications_ncbi  %></td>
+	  <td><strong>publications_ncbi</strong>:</td><td><%= data.publications_ncbi  %></td>
 	</tr>
 	<tr>	
-	  <td>molecule_type_ncbi: <%= data.molecule_type_ncbi  %></td>
+	  <td><strong>molecule_type_ncbi</strong>:</td><td><%= data.molecule_type_ncbi  %></td>
 	</tr>
 	<tr>	
-	  <td>sequence_type_ncbi: <%= data.sequence_type_ncbi  %></td>
+	  <td><strong>sequence_type_ncbi</strong>:</td><td><%= data.sequence_type_ncbi  %></td>
 	</tr>
 	<tr>	
-	  <td>geo_location (USA) ncbi: <%= data.geo_location_ncbi  %> (<%= data.usa_ncbi  %>)</td>
+	  <td><strong>geo_location (USA) ncbi</strong>:</td><td><%= data.geo_location_ncbi  %> (<%= data.usa_ncbi  %>)</td>
 	</tr>
 	<tr>	
-	  <td>isolation_source_ncbi: <%= data.isolation_source_ncbi  %></td>
+	  <td><strong>isolation_source_ncbi</strong>:</td><td><%= data.isolation_source_ncbi  %></td>
 	</tr>
 	<tr>	
-	  <td>collection_date_ncbi: <%= data.collection_date_ncbi  %></td>
+	  <td><strong>collection_date_ncbi</strong>:</td><td><%= data.collection_date_ncbi  %></td>
 	</tr>
 	<tr>	
-	  <td>biosample_ncbi: <%= data.biosample_ncbi  %></td>
+	  <td><strong>biosample_ncbi</strong>:</td><td><%= data.biosample_ncbi  %></td>
 	</tr>
 	<tr>	
-	  <td>genbank_title_ncbi: <%= data.genbank_title_ncbi  %></td>
+	  <td><strong>genbank_title_ncbi</strong>:</td><td><%= data.genbank_title_ncbi  %></td>
 	</tr>
 	
 

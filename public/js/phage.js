@@ -87,6 +87,7 @@ function create_column_choices_dialog(cols_showing){
       padding: 15px;
       border:1px solid black;
       display: none;
+      z-index: 100;
     `;
 }
 
@@ -141,4 +142,13 @@ function deselect_letter(){
        els[i].style.color = 'black'
 	   els[i].style.fontSize = 'small'
     }
+}
+//
+function phage_table_search(){
+   form = document.getElementById('ptable_search')
+   if(form.phage_srch.value == ''){
+       return
+   }
+   
+   form.submit()
 }

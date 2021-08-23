@@ -41,75 +41,67 @@ router.get('/phage_table', function phage_table_get(req, res) {
   }
   let reset    = myurl.query.reset
   if(reset == '1'){
-     req.session.cols = ''
-  }
-  let phage_list = []
+     req.session.cols = C.default_phage_cols
+     cols_to_show = req.session.cols
+  }else if(req.session.cols){
+     cols_to_show = req.session.cols
+  }else{
+      cols_to_show = C.default_phage_cols
+  }   
+  let send_list = []
+  let send_list0 = []
   let tmp_phage_list = Object.values(C.phage_lookup)
   console.log(tmp_phage_list[0])
   if(host_otid){
-      phage_list = tmp_phage_list.filter(item => item.host_otid == host_otid)
+      send_list0 = tmp_phage_list.filter(item => item.host_otid == host_otid)
   }else if(letter && letter.match(/[a-z]{1}/)){
      console.log('got a letter ',letter,' rank: ',rank)
      //console.log(tmp_phage_list[0].family_ncbi.toLowerCase().charAt(0))
      if(rank == 'genus'){
-         phage_list = tmp_phage_list.filter(item => item.genus_ncbi.toLowerCase().charAt(0) === letter)
+         send_list0 = tmp_phage_list.filter(item => item.genus_ncbi.toLowerCase().charAt(0) === letter)
      }else{
-         phage_list = tmp_phage_list.filter(item => item.family_ncbi.toLowerCase().charAt(0) === letter)
+         send_list0 = tmp_phage_list.filter(item => item.family_ncbi.toLowerCase().charAt(0) === letter)
      }
      
   }else{
-     phage_list = tmp_phage_list
+     send_list0 = tmp_phage_list
   }
   
   
-  phage_list.sort(function (a, b) {
+  send_list0.sort(function (a, b) {
 	return helpers.compareStrings_alpha(a.family_ncbi, b.family_ncbi);
   });
   //console.log(res)
-  console.log(phage_list.length)
-  let all_cols = [
-      {name:'pid', view:'Phage-ID', width:'col1', order:'1'},
-      {name:'host_otid', view:'Taxon-ID', width:'col1', order:'5'},
-      {name:'assembly_ncbi', view:'', width:'col3', order:''},
-      {name:'sra_accession_ncbi', view:'', width:'col3', order:''},
-      {name:'submitters_ncbi', view:'', width:'col3', order:''},
-      {name:'release_date_ncbi', view:'', width:'col3', order:''},
-      {name:'family_ncbi', view:'Family', width:'col3', order:'2'},
-      {name:'genus_ncbi', view:'Genus', width:'col3', order:'3'},
-      {name:'species_ncbi', view:'Species', width:'col3', order:'4'},
-      {name:'publications_ncbi', view:'', width:'col3', order:''},
-      {name:'molecule_type_ncbi', view:'', width:'col3', order:''},
-      {name:'sequence_type_ncbi', view:'', width:'col3', order:''},
-      {name:'geo_location_ncbi', view:'', width:'col3', order:''},
-      {name:'usa_ncbi', view:'', width:'col3', order:''},
-      {name:'host_ncbi', view:'Host Name', width:'', order:'6'}, // one col should have no width
-      {name:'isolation_source_ncbi', view:'', width:'col3', order:''},
-      {name:'collection_date_ncbi', view:'', width:'col3', order:''},
-      {name:'biosample_ncbi', view:'', width:'col3', order:''},
-      {name:'genbank_title_ncbi', view:'', width:'col3', order:''}
-  ]
+  // here we pare down the send_list to contain only data from the pertinent cols
+   for(n in send_list0){
+      tmp_obj = {}
+      for(x in cols_to_show){
+         tmp_obj[cols_to_show[x].name] = send_list0[n][cols_to_show[x].name]
+      }
+      send_list.push(tmp_obj)
+   }
+   console.log('tmp_phage_list[0]')
+   console.log(tmp_phage_list[0])
+   // console.log('POST::send_list0.length')
+//    console.log(send_list0.length)
+//    
+//    console.log('GET::send_list.length')
+//    console.log(send_list.length)
+//    console.log('send_list')
+//    console.log(send_list)
+
   
-  let default_cols = [  // six at most
-       {name:'pid', view:'Phage-ID', width:'col1', order:'1'},
-       {name:'family_ncbi', view:'Family', width:'col3', order:'2'},
-       {name:'genus_ncbi', view:'Genus', width:'col3', order:'3'},
-       {name:'species_ncbi', view:'Species', width:'col3', order:'4'},
-       {name:'host_otid', view:'Taxon-ID', width:'col1', order:'5'},
-       {name:'host_ncbi', view:'Host Name', width:'', order:'6'} // one col should have no width
-  ] 
-  console.log('session cols')
-  console.log(req.session.cols)
-  if(req.session.cols){
-     cols_to_show = req.session.cols
-  }else{
-      cols_to_show = default_cols
-  }     
+ 
+  //console.log('session cols')
+  //console.log(req.session.cols)
+  
+    
   res.render('pages/phage/phagetable', {
 		title: 'HOMD :: Human Oral Phage Database',
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		pdata:    JSON.stringify(phage_list),
-		phyla: JSON.stringify({}),
+		pdata:    JSON.stringify(send_list),
+		
 		rank: rank,
 		cols: JSON.stringify(cols_to_show),
 		count_text:'',
@@ -117,102 +109,50 @@ router.get('/phage_table', function phage_table_get(req, res) {
   });
       
 });
+//
+//
 router.post('/phage_table', function phage_table_post(req, res) {
-  console.log('in phage table POST')
-  console.log(req.body)
-  // let letter = req.body.letter
-//   let rank = req.body.rank
-   // default_cols = ['pid','family_ncbi','genus_ncbi','species_ncbi','host_otid','host_ncbi'] 
-   // make a new obj with ONLY the requested cols
-//    let all_cols1 = [
-//       {pid:{ view:'Phage-ID', width:'col1', order:'1'}},
-//       {host_otid:{ view:'Taxon-ID', width:'col1', order:'5'}},
-//       {assembly_ncbi:{ view:'', width:'col3', order:''}},
-//       {sra_accession_ncbi:{ view:'', width:'col3', order:''}},
-//       {submitters_ncbi:{ view:'', width:'col3', order:''}},
-//       {release_date_ncbi:{ view:'', width:'col3', order:''}},
-//       {family_ncbi:{ view:'Family', width:'col3', order:'2'}},
-//       {genus_ncbi:{ view:'Genus', width:'col3', order:'3'}},
-//       {species_ncbi:{ view:'Species', width:'col3', order:'4'}},
-//       {publications_ncbi:{ view:'', width:'col3', order:''}},
-//       {molecule_type_ncbi:{ view:'', width:'col3', order:''}},
-//       {sequence_type_ncbi:{ view:'', width:'col3', order:''}},
-//       {geo_location_ncbi:{ view:'', width:'col3', order:''}},
-//       {usa_ncbi:{ view:'', width:'col3', order:''}},
-//       {host_ncbi:{ view:'Host Name', width:'', order:'6'}}, // one col should have no width
-//       {isolation_source_ncbi:{ view:'', width:'col3', order:''}},
-//       {collection_date_ncbi:{ view:'', width:'col3', order:''}},
-//       {biosample_ncbi:{ view:'', width:'col3', order:''}},
-//       {genbank_title_ncbi:{ view:'', width:'col3', order:''}}
-//    ]
-   let all_cols = [
-      {name:'pid', view:'Phage-ID', width:'col1', order:'1'},
-      {name:'host_otid', view:'Taxon-ID', width:'col1', order:'5'},
-      {name:'assembly_ncbi', view:'Assembly', width:'col3', order:''},
-      {name:'sra_accession_ncbi', view:'SRA Accession', width:'col3', order:''},
-      {name:'submitters_ncbi', view:'Submitters', width:'col5', order:''},
-      {name:'release_date_ncbi', view:'Release Date', width:'col3', order:''},
-      {name:'family_ncbi', view:'Family', width:'col3', order:'2'},
-      {name:'genus_ncbi', view:'Genus', width:'col3', order:'3'},
-      {name:'species_ncbi', view:'Species', width:'col3', order:'4'},
-      {name:'publications_ncbi', view:'Publications', width:'col3', order:''},
-      {name:'molecule_type_ncbi', view:'Molecule Type', width:'col1', order:''},
-      {name:'sequence_type_ncbi', view:'Sequence Type', width:'col1', order:''},
-      {name:'geo_location_ncbi', view:'Geo Location', width:'col1', order:''},
-      {name:'usa_ncbi', view:'USA', width:'col1', order:''},
-      {name:'host_ncbi', view:'Host Name', width:'', order:'6'}, // one col should have no width
-      {name:'isolation_source_ncbi', view:'Isolation Source', width:'col3', order:''},
-      {name:'collection_date_ncbi', view:'Collection Date', width:'col3', order:''},
-      {name:'biosample_ncbi', view:'BioSample', width:'col3', order:''},
-      {name:'genbank_title_ncbi', view:'Genbank Title', width:'col3', order:''}
-  ]
-   let phage_list = []
+   console.log('in phage table POST')
+   console.log(req.body)
+    // only change columns here in post
+
+   let send_list = []
    let tmp_phage_list = Object.values(C.phage_lookup)
-   let filtered_content =[]
    let cols_to_show =[]
-   for(n in all_cols){
-   for(item in req.body){
-         if(item == all_cols[n].name && cols_to_show.indexOf(all_cols[n]) == -1){
-           cols_to_show.push(all_cols[n])
+   for(n in C.all_phage_cols){
+     for(item in req.body){
+         if(item == C.all_phage_cols[n].name && cols_to_show.indexOf(C.all_phage_cols[n]) == -1){
+           cols_to_show.push(C.all_phage_cols[n])
          }
+     }
    }
-   }
+   // reset session
    req.session.cols = cols_to_show
-   console.log('cols')
-   console.log(cols_to_show)
+   //console.log('cols')
+   //console.log(cols_to_show)
+   // here we pare down the send_list to contain only data from the pertinent cols
    for(n in tmp_phage_list){
       tmp_obj = {}
       for(x in cols_to_show){
          tmp_obj[cols_to_show[x].name] = tmp_phage_list[n][cols_to_show[x].name]
       }
-      filtered_content.push(tmp_obj)
+      send_list.push(tmp_obj)
    }
    
-   //console.log(filtered_content)
-//   if(letter && letter.match(/[a-z]{1}/)){
-//      console.log('got a letter ',letter,' rank: ',rank)
-//      //console.log(tmp_phage_list[0].family_ncbi.toLowerCase().charAt(0))
-//      if(rank == 'genus'){
-//          phage_list = tmp_phage_list.filter(item => item.genus_ncbi.toLowerCase().charAt(0) === letter)
-//      }else{
-//          phage_list = tmp_phage_list.filter(item => item.family_ncbi.toLowerCase().charAt(0) === letter)
-//      }
-//      
-//   }else{
-      phage_list = filtered_content
-//   }
-//   phage_list.sort(function (a, b) {
-// 	return helpers.compareStrings_alpha(a.family_ncbi, b.family_ncbi);
-//   })
-   console.log(phage_list.length)
-   console.log(phage_list[0])
+   console.log('tmp_phage_list[0]')
+   console.log(tmp_phage_list[0])
+   
+   // console.log('POST::send_list.length')
+//    console.log(send_list.length)
+//    console.log('send_list')
+//    console.log(send_list)
   
   res.render('pages/phage/phagetable', {
 		title: 'HOMD :: Human Oral Phage Database',
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		pdata:    JSON.stringify(phage_list),
-		phyla: JSON.stringify({}),
+		pdata:    JSON.stringify(send_list),
+		
 		rank: 'family',
 		cols: JSON.stringify(cols_to_show),
 		count_text:'',
@@ -220,7 +160,184 @@ router.post('/phage_table', function phage_table_post(req, res) {
   });
   
 });
-
+//
+router.post('/search_phagetable', function search_phagetable(req, res) {
+	console.log(req.body)
+	let send_list = [];
+	let send_list0 = []
+	let search_txt = req.body.phage_srch.toLowerCase()  // already filtered for empty string and extreme length
+	let search_field = req.body.field
+	
+    let tmp_phage_list = Object.values(C.phage_lookup)
+    console.log(tmp_phage_list[0])
+	if(search_field == 'hostid'){
+	    send_list0 = tmp_phage_list.filter(item => item.host_otid.toLowerCase().includes(search_txt))
+	}else if(search_field == 'hostname'){
+	    send_list0 = tmp_phage_list.filter(item => item.host_ncbi.toLowerCase().includes(search_txt))
+	}else if(search_field == 'phageid'){
+	    send_list0 = tmp_phage_list.filter(item => item.pid.toLowerCase().includes(search_txt))
+	}else if(search_field == 'pfamily'){
+	    send_list0 = tmp_phage_list.filter(item => item.family_ncbi.toLowerCase().includes(search_txt))
+	}else if(search_field == 'pgenus'){
+	    send_list0 = tmp_phage_list.filter(item => item.genus_ncbi.toLowerCase().includes(search_txt))
+	}else if(search_field == 'pspecies'){
+	    send_list0 = tmp_phage_list.filter(item => item.species_ncbi.toLowerCase().includes(search_txt))
+	}else if(search_field == 'assembly'){
+	    send_list0 = tmp_phage_list.filter(item => item.assembly_ncbi.toLowerCase().includes(search_txt))
+	}else if(search_field == 'sra_accession'){
+	    send_list0 = tmp_phage_list.filter(item => item.sra_accession_ncbi.toLowerCase().includes(search_txt))
+	}else if(search_field == 'submitters'){
+	    send_list0 = tmp_phage_list.filter(item => item.submitters_ncbi.toLowerCase().includes(search_txt))
+	
+	}else if(search_field == 'publications'){
+	    send_list0 = tmp_phage_list.filter(item => item.publications_ncbi.toLowerCase().includes(search_txt))
+	
+	}else if(search_field == 'molecule_type'){
+	    send_list0 = tmp_phage_list.filter(item => item.molecule_type_ncbi.toLowerCase().includes(search_txt))
+	
+	}else if(search_field == 'sequence_type'){
+	    send_list0 = tmp_phage_list.filter(item => item.sequence_type_ncbi.toLowerCase().includes(search_txt))
+	
+	
+	}else if(search_field == 'geo_location'){
+	    send_list0 = tmp_phage_list.filter(item => item.geo_location_ncbi.toLowerCase().includes(search_txt))
+	}else if(search_field == 'isolation_source'){
+	    send_list0 = tmp_phage_list.filter(item => item.isolation_source_ncbi.toLowerCase().includes(search_txt))
+	}else if(search_field == 'biosample'){
+	    send_list0 = tmp_phage_list.filter(item => item.biosample_ncbi.toLowerCase().includes(search_txt))
+	}else if(search_field == 'genbank_title'){
+	    send_list0 = tmp_phage_list.filter(item => item.genbank_title_ncbi.toLowerCase().includes(search_txt))
+	}else{   // all
+	    // search all
+	    //send_list = send_tax_obj
+	    let temp_obj = {}
+	    //host_otid
+	    send_list0 = tmp_phage_list.filter(item => item.host_otid.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    //hostname
+	    send_list0 = tmp_phage_list.filter(item => item.host_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //phageID
+	    send_list0 = tmp_phage_list.filter(item => item.pid.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //family_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.family_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //genus
+	    send_list0 = tmp_phage_list.filter(item => item.genus_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //species
+	    send_list0 = tmp_phage_list.filter(item => item.species_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //assembly_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.assembly_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //sra_accession_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.sra_accession_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //submitters_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.submitters_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //publications_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.publications_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //molecule_type_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.molecule_type_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //sequence_type_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.sequence_type_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //geo_location_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.geo_location_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //isolation_source_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.isolation_source_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //biosample_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.biosample_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    //genbank_title_ncbi
+	    send_list0 = tmp_phage_list.filter(item => item.genbank_title_ncbi.toLowerCase().includes(search_txt))
+	    for(n in send_list0){
+	       temp_obj[send_list0[n].pid] = send_list0[n]
+	    }
+	    
+	    // now back to a list
+	    send_list0 = Object.values(temp_obj);
+	}
+	
+	// here we pare down the send_list to contain only data from the pertinent cols
+   for(n in send_list0){
+      tmp_obj = {}
+      for(x in cols_to_show){
+         tmp_obj[req.session.cols[x].name] = send_list0[n][req.session.cols[x].name]
+      }
+      send_list.push(tmp_obj)
+   }
+	console.log('tmp_phage_list[0]')
+   console.log(tmp_phage_list[0])
+	// console.log('SEARCH::send_list.length')
+//     console.log(send_list.length)
+//     console.log('send_list')
+//     console.log(send_list)
+	res.render('pages/phage/phagetable', {
+		title: 'HOMD :: Human Oral Phage Database',
+		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		pdata:    JSON.stringify(send_list),
+		
+		rank:    'family',
+		cols:    JSON.stringify(req.session.cols),
+		count_text:'',
+		letter:'',
+  });
+	
+});
 router.get('/phagedesc', function phagedesc(req, res) {
   console.log('in phage desc')
   helpers.accesslog(req, res)

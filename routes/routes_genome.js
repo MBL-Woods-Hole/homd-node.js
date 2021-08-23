@@ -116,7 +116,115 @@ router.get('/genome_table', function genome_table(req, res) {
 		count_text:count_text,
 		
 	});
-})
+});
+//
+//
+router.post('/search_genometable', function search_genometable(req, res) {
+	console.log(req.body)
+	let search_txt = req.body.gene_srch.toLowerCase()
+	let search_field = req.body.field
+	//let seqrch_match = req.body.match
+	//let search_sub = req.body.sub
+	console.log(C.genome_lookup['SEQF1003'])
+	// FIXME
+	gid_obj_list = Object.values(C.genome_lookup);
+	if(search_field == 'taxid'){
+	    send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+	}else if(search_field == 'seqid'){
+	    send_list = gid_obj_list.filter(item => item.gid.toLowerCase().includes(search_txt))
+	}else if(search_field == 'genus'){
+	    send_list = gid_obj_list.filter(item => item.genus.toLowerCase().includes(search_txt))
+	}else if(search_field == 'species'){
+	    send_list = gid_obj_list.filter(item => item.species.toLowerCase().includes(search_txt))
+	}else if(search_field == 'ccolct'){
+	    send_list = gid_obj_list.filter(item => item.ccolct.toLowerCase().includes(search_txt))
+	}else if(search_field == 'io'){
+	    send_list = gid_obj_list.filter(item => item.io.toLowerCase().includes(search_txt))
+	}else if(search_field == 'status'){
+	    send_list = gid_obj_list.filter(item => item.status.toLowerCase().includes(search_txt))
+	}else if(search_field == 'seq_center'){
+	    send_list = gid_obj_list.filter(item => item.seq_center.toLowerCase().includes(search_txt))
+	}else{
+	    let temp_obj = {}
+	    var tmp_send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //gid
+	    tmp_send_list = gid_obj_list.filter(item => item.gid.toLowerCase().includes(search_txt))
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //genus
+	    var tmp_send_list = gid_obj_list.filter(item => item.genus.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    // species
+	    var tmp_send_list = gid_obj_list.filter(item => item.species.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //culture collection
+	    var tmp_send_list = gid_obj_list.filter(item => item.ccolct.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    // isolation origin
+	    var tmp_send_list = gid_obj_list.filter(item => item.io.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //seq status
+	    var tmp_send_list = gid_obj_list.filter(item => item.status.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    //seq_center
+	    var tmp_send_list = gid_obj_list.filter(item => item.seq_center.toLowerCase().includes(search_txt))
+	    // for uniqueness convert to object::otid
+	    for(n in tmp_send_list){
+	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+	    }
+	    
+	    // now back to a list
+	    send_list = Object.values(temp_obj);
+	    
+	}
+	
+	
+	
+	pgtitle = 'Search TaxTable'
+	var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
+	var phyla = phyla_obj.map(function(el){ return el.taxon; })
+	
+	
+	
+	res.render('pages/genome/genometable', {
+		title: 'HOMD :: Genome Table', 
+		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+		
+		//seqid_list: JSON.stringify(gid_obj_list),
+		data: JSON.stringify(send_list),
+		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		letter: '',
+		otid: '',
+		phylum: '',
+		phyla: JSON.stringify(phyla),
+		
+		count_text:"<br>No. of genomes found using search string '"+search_txt+"': "+send_list.length.toString(),
+		page_text:'',
+		page:1,
+		
+	});
+	
+});
 //
 // router.get('/jbrowse2/:id', function jbrowse2(req, res) {
 // 	console.log('jbrowse2/:id -get')
@@ -575,112 +683,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid', function dld_table(req, res
 });
 
 
-router.post('/search_genometable', function search_genometable(req, res) {
-	console.log(req.body)
-	let search_txt = req.body.gene_srch.toLowerCase()
-	let search_field = req.body.field
-	//let seqrch_match = req.body.match
-	//let search_sub = req.body.sub
-	console.log(C.genome_lookup['SEQF1003'])
-	// FIXME
-	gid_obj_list = Object.values(C.genome_lookup);
-	if(search_field == 'taxid'){
-	    send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))
-	}else if(search_field == 'seqid'){
-	    send_list = gid_obj_list.filter(item => item.gid.toLowerCase().includes(search_txt))
-	}else if(search_field == 'genus'){
-	    send_list = gid_obj_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-	}else if(search_field == 'species'){
-	    send_list = gid_obj_list.filter(item => item.species.toLowerCase().includes(search_txt))
-	}else if(search_field == 'ccolct'){
-	    send_list = gid_obj_list.filter(item => item.ccolct.toLowerCase().includes(search_txt))
-	}else if(search_field == 'io'){
-	    send_list = gid_obj_list.filter(item => item.io.toLowerCase().includes(search_txt))
-	}else if(search_field == 'status'){
-	    send_list = gid_obj_list.filter(item => item.status.toLowerCase().includes(search_txt))
-	}else if(search_field == 'seq_center'){
-	    send_list = gid_obj_list.filter(item => item.seq_center.toLowerCase().includes(search_txt))
-	}else{
-	    let temp_obj = {}
-	    var tmp_send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //gid
-	    tmp_send_list = gid_obj_list.filter(item => item.gid.toLowerCase().includes(search_txt))
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //genus
-	    var tmp_send_list = gid_obj_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    // species
-	    var tmp_send_list = gid_obj_list.filter(item => item.species.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //culture collection
-	    var tmp_send_list = gid_obj_list.filter(item => item.ccolct.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    // isolation origin
-	    var tmp_send_list = gid_obj_list.filter(item => item.io.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //seq status
-	    var tmp_send_list = gid_obj_list.filter(item => item.status.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    //seq_center
-	    var tmp_send_list = gid_obj_list.filter(item => item.seq_center.toLowerCase().includes(search_txt))
-	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
-	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-	    }
-	    
-	    // now back to a list
-	    send_list = Object.values(temp_obj);
-	    
-	}
-	
-	
-	
-	pgtitle = 'Search TaxTable'
-	var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
-	var phyla = phyla_obj.map(function(el){ return el.taxon; })
-	
-	
-	
-	res.render('pages/genome/genometable', {
-		title: 'HOMD :: Genome Table', 
-		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
-		
-		//seqid_list: JSON.stringify(gid_obj_list),
-		data: JSON.stringify(send_list),
-		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		letter: '',
-		otid: '',
-		phylum: '',
-		phyla: JSON.stringify(phyla),
-		
-		count_text:"<br>No. of genomes found using search string '"+search_txt+"': "+send_list.length.toString(),
-		page_text:'',
-		page:1,
-		
-	});
-	
-})
+
 //
 //
 

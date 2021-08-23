@@ -1,5 +1,3 @@
-<% phyla = JSON.parse(phyla) %>
-
 
 <div id="row1">	
 
@@ -50,19 +48,19 @@
 	</div> 
 
 
-<form id='gtable_search' name='gtable_search' method='POST' action='search_genometable' >
+<form id='ptable_search' name='ptable_search' method='POST' action='search_phagetable' >
 	  
 	  
             Search This Table:
             <div class="">
-              <input  id='gene_srch_text' type='text' placeholder="Search.." class='dropdown' name='gene_srch' maxlength='18' size='20'>
+              <input  id='phage_srch_text' type='text' placeholder="Search.." class='dropdown' name='phage_srch' maxlength='18' size='20'>
               <select class='dropdown' id='' class="" name='field' >
-                <optgroup>
+              <optgroup>
               <option value='all'>All Fields</option>
               <option value='phageid'>Phage-ID</option>
-              <option value='family'>Family</option>
-              <option value='genus'>Genus</option>
-              <option value='species'>Species</option>
+              <option value='pfamily'>Phage Family</option>
+              <option value='pgenus'>Phage Genus</option>
+              <option value='pspecies'>Phage Species</option>
               <option value='hostname'>Host Name</option>
               <option value='hostid'>Host Taxon-ID</option>
               <!-- 

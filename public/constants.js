@@ -49,4 +49,34 @@ constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVer
 
 constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // if you want a non-relative url use: config.js
 
+constants.default_phage_cols = [  // six at most
+       {name:'pid', view:'Phage-ID', width:'col1', order:'1'},
+       {name:'family_ncbi', view:'Phage Family', width:'col3', order:'2'},
+       {name:'genus_ncbi', view:'Phage Genus', width:'col3', order:'3'},
+       {name:'species_ncbi', view:'Phage Species', width:'col3', order:'4'},
+       {name:'host_otid', view:'Host Taxon-ID', width:'col1', order:'5'},
+       {name:'host_ncbi', view:'Host Name', width:'', order:'6'} // one col should have no width
+  ] 
+constants.all_phage_cols = [
+      {name:'pid', view:'Phage-ID', width:'col1', order:'1'},
+      {name:'host_otid', view:'Host Taxon-ID', width:'col1', order:'5'},
+      {name:'assembly_ncbi', view:'NCBI Assembly', width:'col3', order:''},
+      {name:'sra_accession_ncbi', view:'SRA Accession', width:'col3', order:''},
+      {name:'submitters_ncbi', view:'NCBI Submitters', width:'col5', order:''},
+      {name:'release_date_ncbi', view:'NCBI Release Date', width:'col3', order:''},
+      {name:'family_ncbi', view:'Phage Family', width:'col3', order:'2'},
+      {name:'genus_ncbi', view:'Phage Genus', width:'col3', order:'3'},
+      {name:'species_ncbi', view:'Phage Species', width:'col3', order:'4'},
+      {name:'publications_ncbi', view:'Publications', width:'col3', order:''},
+      {name:'molecule_type_ncbi', view:'Molecule Type', width:'col1', order:''},
+      {name:'sequence_type_ncbi', view:'Sequence Type', width:'col1', order:''},
+      {name:'geo_location_ncbi', view:'Geo Location', width:'col1', order:''},
+      {name:'usa_ncbi', view:'USA', width:'col1', order:''},
+      {name:'host_ncbi', view:'Host Name', width:'', order:'6'}, // one col should have no width
+      {name:'isolation_source_ncbi', view:'Isolation Source', width:'col3', order:''},
+      {name:'collection_date_ncbi', view:'Collection Date', width:'col3', order:''},
+      {name:'biosample_ncbi', view:'BioSample', width:'col3', order:''},
+      {name:'genbank_title_ncbi', view:'Genbank Title', width:'col3', order:''}
+  ]
+  
 module.exports = constants;

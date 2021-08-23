@@ -23,7 +23,8 @@
 #genome-box{
    height:700px;
    overflow:auto;
-   width:100%;
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
    margin-top:5px;
 }
 #gnom-table .badge{
