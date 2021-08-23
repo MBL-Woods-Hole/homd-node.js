@@ -39,7 +39,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	  	console.log('GOT annotations')
 	  	big_tax_list2 = big_tax_list1.filter(item => item.genomes.length >0)
 	  	//show_filters = 0
-	  	pgtitle = 'Human Oral Microbial Taxa with Annotated Genomes'
+	  	pgtitle = 'List of Human Oral Microbial Taxa (with Annotated Genomes)'
 	}else if(req.session.tax_letter && req.session.tax_letter !== 'all'){
 	    console.log('GOT a TaxLetter: ',req.session.tax_letter)
 		   // COOL.... filter the whole list
@@ -128,7 +128,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
 		statusfltr: JSON.stringify(C.tax_status_on),  // default
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
 		//show_filters:show_filters,
-		search: '',
+		search_txt: '',
+		search_field:'',
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 });
@@ -228,7 +229,8 @@ router.post('/tax_table', function tax_table_post(req, res) {
 		statusfltr: JSON.stringify(statusfilter_on),
 		sitefltr: JSON.stringify(sitefilter_on),
 		//show_filters: show_filters,
-		search: '',
+		search_txt: '',
+		search_field:'',
 		
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
@@ -332,7 +334,8 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
 		statusfltr: JSON.stringify(C.tax_status_on),
 		sitefltr: JSON.stringify(C.tax_sites_on),
 		//show_filters: 1,
-		search: '',
+		search_txt: search_txt,
+		search_field:search_field,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 	
