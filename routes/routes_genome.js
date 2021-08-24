@@ -36,7 +36,7 @@ router.get('/genome_table', function genome_table(req, res) {
 	
 	var count_text = ''
 	let temp_list = Object.values(C.genome_lookup);
-	if(phylum){
+	if(phylum && phylum !== '0'){
 	  //gid_obj_list = Object.values(C.genome_lookup);
 	  otid = 0
 	  letter='all'
@@ -50,7 +50,7 @@ router.get('/genome_table', function genome_table(req, res) {
 	  })
 	  count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span> From Phylum:"'+phylum+'"<br><small>(Representing '+otid_list.length+' HOMD taxons)</small>'
 	  count_text += " <small>(Showing: "+gid_obj_list.length.toString()+')</small>'
-	}else if(otid) {  // if otid 
+	}else if(otid && otid !== '0') {  // if otid 
 		// single gid
 		
 		seqid_list = C.taxon_lookup[otid].genomes
@@ -71,10 +71,10 @@ router.get('/genome_table', function genome_table(req, res) {
 		otid = '0'
 		//gid_obj_list1 = Object.values(C.genome_lookup);
 		
-		if(letter && letter.match(/[A-Z]{1}/)){
+		if(letter && letter.match(/[A-Z]{1}/)){   // always caps
 	   	// COOL....
-	   		gid_obj_list = temp_list.filter(item => item.genus.charAt(0) === letter)
-			count_text = "No. of genomes starting with<br>the letter '"+letter+"': <span class='red'>"+gid_obj_list.length.toString()+'</span><br>'
+	   		gid_obj_list = temp_list.filter(item => item.genus.toUpperCase().charAt(0) === letter)
+			count_text = "No. of genomes with genus starting with<br>the letter '"+letter+"': <span class='red'>"+gid_obj_list.length.toString()+'</span><br>'
 		    
 		    
 		}else{
@@ -561,7 +561,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
 	let temp_list = Object.values(C.genome_lookup);
 	let send_list =[];
 	let file_filter_txt = '';
-	if(letter && letter.match(/[A-Z]{1}/)){  //ck
+	if(letter && letter.match(/[A-Z]{1}/)){  // always caps
 	    console.log('in letter dnld')
 	    console.log('MATCH Letter: ',letter)
 	    send_list = temp_list.filter(item => item.genus.charAt(0) === letter)

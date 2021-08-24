@@ -14,15 +14,15 @@ var yyyy = today.getFullYear();
 today = yyyy + '-' + mm + '-' + dd;
 
 router.get('/tax_table', function tax_table_get(req, res) {
-//router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
 	helpers.accesslog(req, res)
 	console.log('in taxtable -get')
 	helpers.show_session(req)
 	let myurl = url.parse(req.url, true);
   	//console.log(myurl.query)
-	req.session.tax_letter = myurl.query.k
-	let annot = myurl.query.annot
 	
+	let letter = myurl.query.k
+	let annot = myurl.query.annot
+	let reset    = myurl.query.reset
 	
 	var big_tax_list0 = Object.values(C.taxon_lookup);
 	
@@ -34,18 +34,25 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	
 	var count_text = ''
 	pgtitle = 'List of Human Oral Microbial Taxa'
+	
+	if(reset == '1'){
+	    letter = 'all'
+	    annot = 0
+	}
 	if(annot){
 	  	// grab only the taxa that have genomes
 	  	console.log('GOT annotations')
 	  	big_tax_list2 = big_tax_list1.filter(item => item.genomes.length >0)
 	  	//show_filters = 0
 	  	pgtitle = 'List of Human Oral Microbial Taxa (with Annotated Genomes)'
-	}else if(req.session.tax_letter && req.session.tax_letter !== 'all'){
-	    console.log('GOT a TaxLetter: ',req.session.tax_letter)
+	  	letter = 'all'
+	}else if(letter && letter.match(/[A-Z]{1}/)){   // always caps
+	    console.log('GOT a TaxLetter: ',letter)
 		   // COOL.... filter the whole list
-		big_tax_list2 = big_tax_list0.filter(item => item.genus.charAt(0) === req.session.tax_letter)
+		big_tax_list2 = big_tax_list0.filter(item => item.genus.toUpperCase().charAt(0) === letter)
 		  
 	}else{
+		
 		console.log('NO to only annotations or tax letters')
 		//whole list or 
 		
@@ -63,20 +70,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	         return e
 	      }
 	    }) 
-	    //console.log('send_tax_obj2[0]',send_tax_obj2[0])
-		// if(req.session.tax_letter !== 'all' ){
-// 		   console.log('GOT a TaxLetter: ',req.session.tax_letter)
-// 		   // COOL....
-// 		   send_tax_obj = send_tax_obj2.filter(item => item.genus.charAt(0) === req.session.tax_letter)
-// 		   
-// 		}else{
-// 			console.log('NO TaxLetter')
-// 			send_tax_obj = send_tax_obj2
-// 			
-// 		}
-		// table sort done via client side js library sorttable: 
-		// https://www.kryogenix.org/code/browser/sorttable
-		//console.log(send_tax_obj[0])
+	    letter = 'all'
+	    
     }
     //console.log('send_tax_obj[0]',send_tax_obj[0])
     // Here we add the genome size formatting on the fly
@@ -116,17 +111,19 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	
 	//var count_text = get_count_text_n_page_form(page)
 	console.log(C.tax_status_on)
+	let count_txt = 'Total:'+(big_tax_list0.length).toString()+' Showing: '+(Object.keys(send_list).length).toString()
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle: pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		data: JSON.stringify(send_list),
-		count: Object.keys(send_list).length,
-		tcount: tcount,
-		//count_text:count_text,
-		letter: req.session.tax_letter,
+		
+		
+		count_txt: count_txt,
+		letter: letter,
 		statusfltr: JSON.stringify(C.tax_status_on),  // default
 		sitefltr: JSON.stringify(C.tax_sites_on),  //default
+		default_filters:'1',
 		//show_filters:show_filters,
 		search_txt: '0',
 		search_field:'0',
@@ -162,14 +159,12 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	// letterfilter
 	// if dropped is on need to add dropped to 
 	let big_tax_list = Object.values(C.taxon_lookup);
-	var tcount = temp_obj.length
-	req.session.tax_letter = ''
 	
 	if(statusfilter_on.length == C.tax_status_all.length && sitefilter_on.length == C.tax_sites_all.length){
 	  // no filter -- allow all
 	  send_list = big_tax_list
 	}else if(statusfilter_on.length == 0){  // only items from site filter checked
-	    send_list = temp_obj.filter( function(e){
+	    send_list = big_tax_list.filter( function(e){
           if(e.sites.length > 0){
             for(n in e.sites){
               var site = e.sites[n].toLowerCase()  // nasal,oral
@@ -218,16 +213,19 @@ router.post('/tax_table', function tax_table_post(req, res) {
     });
 	console.log('statusfilter_on',statusfilter_on)
 	// use session for taxletter
+	
+	let count_txt = 'Total:'+(big_tax_list.length).toString()+' Showing: '+(Object.keys(send_list).length).toString()
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		data: JSON.stringify(send_list),
-		count: Object.keys(send_tax_obj).length,
-		tcount: tcount,
+		
+		count_txt: count_txt,
 		letter: 'all',
 		statusfltr: JSON.stringify(statusfilter_on),
 		sitefltr: JSON.stringify(sitefilter_on),
+		default_filters:'0',
 		//show_filters: show_filters,
 		search_txt: '0',
 		search_field:'0',
@@ -250,22 +248,26 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
 	//send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
 	
 	let send_list = get_filtered_taxon_list(search_txt, search_field)
-	
 	let tcount = send_list.length  // total count of our filters
+	var big_tax_list = Object.values(C.taxon_lookup);
+	let count_txt = 'Total:'+(big_tax_list.length).toString()+' Showing: '+(Object.keys(send_list).length).toString()
 	pgtitle = 'Search TaxTable'
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle: pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		data: JSON.stringify(send_list),
+		
 		count: Object.keys(send_list).length,
 		tcount: tcount,
-		letter: '',
+		count_txt: count_txt,
+		letter: 'all',
 		statusfltr: JSON.stringify(C.tax_status_on),
-		sitefltr: JSON.stringify(C.tax_sites_on),
+		sitefltr:   JSON.stringify(C.tax_sites_on),
+		default_filters:'1',
 		//show_filters: 1,
 		search_txt: search_txt,
-		search_field:search_field,
+		search_field: search_field,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 	});
 	

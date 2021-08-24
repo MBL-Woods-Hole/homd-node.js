@@ -58,18 +58,20 @@ router.get('/phage_table', function phage_table_get(req, res) {
   if(host_otid){
       send_list0 = tmp_phage_list.filter(item => item.host_otid == host_otid)
       count_text = 'Showing: '+send_list0.length.toString() +' rows for host TaxonID: HMT_'+host_otid
-  }else if(letter && letter.match(/[a-z]{1}/)){
+      letter='all'
+  }else if(letter && letter.match(/[A-Z]{1}/)){  // always caps
      console.log('got a letter ',letter,' rank: ',rank)
      //console.log(tmp_phage_list[0].family_ncbi.toLowerCase().charAt(0))
      if(rank == 'genus'){
-         send_list0 = tmp_phage_list.filter(item => item.genus_ncbi.toLowerCase().charAt(0) === letter)
+         send_list0 = tmp_phage_list.filter(item => item.genus_ncbi.toUpperCase().charAt(0) === letter)
      }else{
-         send_list0 = tmp_phage_list.filter(item => item.family_ncbi.toLowerCase().charAt(0) === letter)
+         send_list0 = tmp_phage_list.filter(item => item.family_ncbi.toUpperCase().charAt(0) === letter)
      }
-     count_text = 'Found '+send_list0.length.toString()+' for letter: '+letter.toUpperCase()+' ('+rank+')'
+     count_text = 'Found '+send_list0.length.toString()+' for letter: '+letter+' ('+rank+')'
   }else{
      send_list0 = tmp_phage_list
      count_text = 'Showing: '+send_list0.length.toString() +' rows.'
+     letter='all'
   }
   
   
