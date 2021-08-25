@@ -23,19 +23,17 @@ router.get('/genome_table', function genome_table(req, res) {
 	var seqid_list;
 	let myurl = url.parse(req.url, true);
 	let letter = myurl.query.k
-	
-	//console.log('myurl.query',myurl.query)
-	
-	var otid = myurl.query.otid
-	var phylum = myurl.query.phylum
+	let otid = myurl.query.otid
+	let phylum = myurl.query.phylum
+	var count_txt, count_txt0;
 	console.log('otid',otid,'phylum',phylum,'letter',letter)
 	
 	
 	var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
 	var phyla = phyla_obj.map(function(el){ return el.taxon; })
 	
-	var count_text = ''
-	let temp_list = Object.values(C.genome_lookup);
+	
+	let big_temp_list = Object.values(C.genome_lookup);
 	if(phylum && phylum !== '0'){
 	  //gid_obj_list = Object.values(C.genome_lookup);
 	  otid = 0
@@ -45,11 +43,11 @@ router.get('/genome_table', function genome_table(req, res) {
 	  var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
 	  		return el.otid
 	  })
-	  gid_obj_list = temp_list.filter(item => {   // filter genome obj list for inclusion in otid list
+	  gid_obj_list = big_temp_list.filter(item => {   // filter genome obj list for inclusion in otid list
 	     	return otid_list.indexOf(item.otid) !== -1
 	  })
-	  count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span> From Phylum:"'+phylum+'"<br><small>(Representing '+otid_list.length+' HOMD taxons)</small>'
-	  count_text += " <small>(Showing: "+gid_obj_list.length.toString()+')</small>'
+	  count_txt0 = 'Showing '+gid_obj_list.length.toString()+' rows from phylum: "'+phylum+'"'
+	  
 	}else if(otid && otid !== '0') {  // if otid 
 		// single gid
 		
@@ -60,11 +58,9 @@ router.get('/genome_table', function genome_table(req, res) {
 		    gid_obj_list.push(C.genome_lookup[seqid_list[n]])
 		}
 		
-		count_text = 'No. of genomes for TaxonID "HMT-'+otid+'": <span class="red">'+gid_obj_list.length.toString()+'</span><br>'
-	  //console.log('gol',gid_obj_list)
 	    phylum=0
 	    letter='all'
-	    count_text += " <small>(Showing: "+gid_obj_list.length.toString()+')</small>'
+	    count_txt0 = 'Showing '+gid_obj_list.length.toString()+' rows for TaxonID "HMT-'+otid+'"'
 	}else{  // not phylum, otid
 		// all gids
 		phylum=0
@@ -73,13 +69,13 @@ router.get('/genome_table', function genome_table(req, res) {
 		
 		if(letter && letter.match(/[A-Z]{1}/)){   // always caps
 	   	// COOL....
-	   		gid_obj_list = temp_list.filter(item => item.genus.toUpperCase().charAt(0) === letter)
-			count_text = "No. of genomes with genus starting with<br>the letter '"+letter+"': <span class='red'>"+gid_obj_list.length.toString()+'</span><br>'
+	   		gid_obj_list = big_temp_list.filter(item => item.genus.toUpperCase().charAt(0) === letter)
+			count_txt0 = 'Showing '+gid_obj_list.length.toString()+' rows for genus starting with "'+letter+'"'
 		    
 		    
 		}else{
-			gid_obj_list = temp_list
-			count_text = 'No. of genomes found: <span class="red">'+gid_obj_list.length.toString()+'</span>'
+			gid_obj_list = big_temp_list
+			count_txt0 = 'Showing '+gid_obj_list.length.toString()+' rows.'
 		    letter='all'
 		}
 		
@@ -99,9 +95,9 @@ router.get('/genome_table', function genome_table(req, res) {
 //     });
     // sort by two fields
     send_list.sort( (a, b) =>
-		
 		b.species - a.species || a.genus.localeCompare(b.genus),
 	)
+	count_txt = count_txt0 + ' <small>(Total:'+(big_temp_list.length).toString()+')</small> '
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -113,7 +109,7 @@ router.get('/genome_table', function genome_table(req, res) {
 		otid: otid,
 		phylum:phylum,
 		phyla: JSON.stringify(phyla),
-		count_text:count_text,
+		count_text:count_txt,
 		search_txt: '0',
 		search_field:'0',
 		
@@ -125,17 +121,19 @@ router.post('/search_genometable', function search_genometable(req, res) {
 	console.log(req.body)
 	let search_txt = req.body.gene_srch.toLowerCase()
 	let search_field = req.body.field
+	var count_txt, count_txt0;
 	//let seqrch_match = req.body.match
 	//let search_sub = req.body.sub
 	console.log(C.genome_lookup['SEQF1003'])
 	// FIXME
-	
-	send_list = get_filtered_genome_list(search_txt, search_field)
+	let big_gene_list = Object.values(C.genome_lookup);
+	send_list = get_filtered_genome_list(big_gene_list, search_txt, search_field)
 	
 	pgtitle = 'Search TaxTable'
 	var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
 	var phyla = phyla_obj.map(function(el){ return el.taxon; })
-	
+	count_txt0 =  'Showing '+(send_list.length).toString()+' rows using search string: "'+req.body.gene_srch+'".'
+	count_txt = count_txt0+' <small>(Total:'+(big_gene_list.length).toString()+')</small>'
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
@@ -148,7 +146,7 @@ router.post('/search_genometable', function search_genometable(req, res) {
 		phylum: '0',  // dont us empty string: -for download fxn
 		phyla: JSON.stringify(phyla),
 		
-		count_text:"<br>No. of genomes found using search string '"+search_txt+"': "+send_list.length.toString(),
+		count_text: count_txt,
 		search_txt: search_txt,
 		search_field: search_field,
 		
@@ -590,7 +588,8 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
 	    console.log('cksend_list',send_list)
 	    file_filter_txt = "HOMD.org Genome Data::Phylum: "+phylum
 	}else if(search_txt !== '0'){
-	    send_list = get_filtered_genome_list(search_txt, search_field)
+	    let big_gene_list = Object.values(C.genome_lookup);
+	    send_list = get_filtered_genome_list(big_gene_list, search_txt, search_field)
 	    file_filter_txt = "HOMD.org Genome Data::Search Text: "+search_txt
 	}else{
 		// whole list as last resort
@@ -652,8 +651,8 @@ function create_table(gids, source, type, start_txt) {
 }        
         
 //
-function get_filtered_genome_list(search_txt, search_field){	
-	let gid_obj_list = Object.values(C.genome_lookup);
+function get_filtered_genome_list(gid_obj_list, search_txt, search_field){	
+	
 	
 	if(search_field == 'taxid'){
 	    send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))

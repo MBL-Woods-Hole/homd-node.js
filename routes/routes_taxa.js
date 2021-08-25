@@ -23,7 +23,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	let letter = myurl.query.k
 	let annot = myurl.query.annot
 	let reset    = myurl.query.reset
-	
+	var count_txt, count_txt0;
 	var big_tax_list0 = Object.values(C.taxon_lookup);
 	
 	// FIX THIS IF SELECT DROPPED OR NONORAL
@@ -46,11 +46,12 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	  	//show_filters = 0
 	  	pgtitle = 'List of Human Oral Microbial Taxa (with Annotated Genomes)'
 	  	letter = 'all'
+	  	count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows with annotated genomes.'
 	}else if(letter && letter.match(/[A-Z]{1}/)){   // always caps
 	    console.log('GOT a TaxLetter: ',letter)
 		   // COOL.... filter the whole list
 		big_tax_list2 = big_tax_list0.filter(item => item.genus.toUpperCase().charAt(0) === letter)
-		  
+		count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows for genus starting with: "'+letter+'"'
 	}else{
 		
 		console.log('NO to only annotations or tax letters')
@@ -71,6 +72,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	      }
 	    }) 
 	    letter = 'all'
+	    count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows.'
 	    
     }
     //console.log('send_tax_obj[0]',send_tax_obj[0])
@@ -111,7 +113,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	
 	//var count_text = get_count_text_n_page_form(page)
 	console.log(C.tax_status_on)
-	let count_txt = 'Total:'+(big_tax_list0.length).toString()+' Showing: '+(Object.keys(send_list).length).toString()
+	count_txt = count_txt0 + ' <small>(Total:'+(big_tax_list0.length).toString()+')</small> '
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle: pgtitle,
@@ -139,7 +141,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	console.log(req.body)
 	//plus valid
 	//valid = req.body.valid  // WHAT IS THIS???
-	
+	var count_txt, count_txt0;
 
 	pgtitle = 'List of Human Microbial Taxa'
 	//show_filters = 1
@@ -213,14 +215,13 @@ router.post('/tax_table', function tax_table_post(req, res) {
     });
 	console.log('statusfilter_on',statusfilter_on)
 	// use session for taxletter
-	
-	let count_txt = 'Total:'+(big_tax_list.length).toString()+' Showing: '+(Object.keys(send_list).length).toString()
+	count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows using status and body site filter.'
+	count_txt = count_txt0+' <small>(Total:'+(big_tax_list.length).toString()+')</small>'
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		data: JSON.stringify(send_list),
-		
 		count_txt: count_txt,
 		letter: 'all',
 		statusfltr: JSON.stringify(statusfilter_on),
@@ -239,27 +240,26 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
 	
 	let search_txt = req.body.tax_srch.toLowerCase()  // already filtered for empty string and extreme length
 	let search_field = req.body.field
-	//let seqrch_match = req.body.match
-	//let search_sub = req.body.sub
+	var count_txt, count_txt0;
 	
 	console.log('C.taxon_lookup[389]')
 	console.log(C.taxon_lookup[389])
 	// filter: all;otid;genus;species;synonyms;type_strains;(16S rRNA ID)
 	//send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+	let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
+	let send_list = get_filtered_taxon_list(big_tax_list, search_txt, search_field)
 	
-	let send_list = get_filtered_taxon_list(search_txt, search_field)
-	let tcount = send_list.length  // total count of our filters
-	var big_tax_list = Object.values(C.taxon_lookup);
-	let count_txt = 'Total:'+(big_tax_list.length).toString()+' Showing: '+(Object.keys(send_list).length).toString()
+	
+	//let count_txt = 'Total:'+(big_tax_list.length).toString()+' Showing: '+(Object.keys(send_list).length).toString()
 	pgtitle = 'Search TaxTable'
+	count_txt0 =  'Showing '+(send_list.length).toString()+' rows using search string: "'+req.body.tax_srch+'".'
+	count_txt = count_txt0+' <small>(Total:'+(big_tax_list.length).toString()+')</small>'
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle: pgtitle,
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		data: JSON.stringify(send_list),
-		
 		count: Object.keys(send_list).length,
-		tcount: tcount,
 		count_txt: count_txt,
 		letter: 'all',
 		statusfltr: JSON.stringify(C.tax_status_on),
@@ -1086,9 +1086,9 @@ function find_images(rank, otid, tax_name) {
 	return image_list
 }      
         
- function get_filtered_taxon_list(search_txt, search_field){
+ function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
 
-	let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
+	
 	if(search_field == 'taxid'){
 	    send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
 	}else if(search_field == 'genus'){
