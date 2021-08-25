@@ -7,11 +7,26 @@ function close_phage_header_select(){
     $('#phage-column-choices').hide()
 }
 function clear_phage_header_select(){
-    var els = document.getElementsByClassName('potential_column_header')
+    var els = document.getElementsByClassName('potential_column_header');
     for(n in els){
-       els[n].checked = false
+       els[n].checked  = false
        els[n].disabled = false
     }
+}
+function defaults_phage_header_select(){
+   var els = document.getElementsByClassName('potential_column_header');
+   var default_col_list_values = 
+   [ 'host_otid','host_ncbi','family_ncbi', 'genus_ncbi', 'species_ncbi' ];
+   for(n in els){
+       if(default_col_list_values.indexOf(els[n].value) == -1 ){
+          els[n].checked  = false
+          els[n].disabled = true
+       }else{
+          els[n].checked  = true
+          els[n].disabled = false
+       }
+    }
+   
 }
 function create_column_choices_dialog(cols_showing){
    // on page load only
@@ -76,7 +91,9 @@ function create_column_choices_dialog(cols_showing){
    html += "</tr><tr>"
    html += "<td><input type='button' class='pill pill-khaki' name='clear' value='Clear' onclick='clear_phage_header_select()' />&nbsp;&nbsp;&nbsp;&nbsp;"
    html += "<input type='button' class='pill pill-orange' name='cancel' value='Cancel' onclick='close_phage_header_select()' />&nbsp;&nbsp;&nbsp;&nbsp;"
-   html += "<input type='submit' class='pill pill-lightseagreen' value='   Go   ' /></td>"
+   html += "<input type='button' class='pill pill-orange' name='defaults' value='Defaults' onclick='defaults_phage_header_select()' />&nbsp;&nbsp;&nbsp;&nbsp;"
+   
+   html += "</td><td><input type='submit' class='pill pill-lightseagreen' value='   Go   ' /></td>"
    
    html += "</tr></table>"
    html += "</form>"
