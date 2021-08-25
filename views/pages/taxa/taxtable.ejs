@@ -54,7 +54,7 @@ thead th { position: sticky; top: 0; }
 		   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
 		   <td nowrap><%= taxidfullname  %></td>
 		   <td nowrap><i><b><a href='taxon_page/genus/<%= list[n].genus %>'><%= list[n].genus  %></a></b></i></td>
-		   <td nowrap><i><b><a href='taxon_page/species/<%= list[n].species %>'><%= list[n].species  %></a></b></i></td>
+		   <td nowrap><i><b><a href='taxon_page/species/<%= list[n].genus %> <%= list[n].species %>'><%= list[n].species  %></a></b></i></td>
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].sites  %></td>
 		   <td><%= list[n].warning  %></td>

@@ -230,7 +230,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     console.log('389',C.taxon_lineage_lookup[389])
     //console.log('755',C.taxon_lineage_lookup[755])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['clade 431_subspecies'])
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Abiotrophia defectiva_species'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
     
     let num_zeros = 0

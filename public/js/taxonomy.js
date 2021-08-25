@@ -139,7 +139,7 @@ function change_level(rank) {
 	var args = {}
 	args.rank = rank.toLowerCase()
 	if(args.rank=='class'){args.rank='klass';}// for use in homd_taxonomy.taxa_tree_dict_map_by_rank
-	var ranks = ["Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species","Subspecies"];
+	var ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
 	for(n in ranks){
 	  document.getElementById(ranks[n]).style ='font-weight:normal;color:black;'
 	}
@@ -157,11 +157,11 @@ function change_level(rank) {
 			html += "<table id='level-table' class='table table-hover' border='0'>"
 			html += '<thead>'
 			html += '<tr>'
-			if(rank != 'Domain'){
+			if(rank != 'domain'){
 				html += '<th scope="col">Parent Level</th>'
 			}
 			html += '<th scope="col">'+rank+'</th>'
-			if(rank == 'Species' || rank == 'Subspecies'){
+			if(rank == 'species' || rank == 'subspecies'){
 				html += '<th scope="col">HMT Taxon ID</th>'
 			}
 			html += '<th scope="col">Taxon Count</th>'
@@ -173,18 +173,18 @@ function change_level(rank) {
 			
 			for(n in static_data){
 				html += '<tr class="table-warning">'
-				if(rank != 'Domain'){
+				if(rank != 'domain'){
 					html += "<td nowrap><a href='taxon_page/"+ranks[ranks.indexOf(rank)-1]+"/"+static_data[n].parent_taxon+"'>"+static_data[n].parent_taxon+"</a></td>"
 				}
 				html += "<td nowrap><a href='taxon_page/"+rank+"/"+static_data[n].item_taxon+"'>"+static_data[n].item_taxon+"</a></td>"
-				if(rank == 'Species'){
+				if(rank == 'species'){
 				  	if(static_data[n].otid){
 				  	   html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
 				  	}else{
 				  	   html +="<td><small>><a href='life?rank=species&name=\""+static_data[n].item_taxon+"\"'>open subspecies</a><</small></td>"
 				    }
 				}
-				if(rank == 'Subspecies'){
+				if(rank == 'subspecies'){
 				  html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
 				}
 				html += "<td style='text-align:center'>"+static_data[n].tax_count+'</td>'

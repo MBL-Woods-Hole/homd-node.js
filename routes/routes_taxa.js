@@ -802,14 +802,26 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    console.log('in taxon page')
    let level = req.params.level
    let tax_name = req.params.name
-   console.log('level '+level)
-   console.log('name '+tax_name)
-   
+   console.log('level: '+level+' name: '+tax_name)
+   //console.log(tax_name+'_'+level)
+   // Class must be klass lowecase
+   // species must be genus-species uupercase first
+   //node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Anaerolineae_klass']
+   node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+level]
+   if(!node){
+      console.log('ERROR Node')
+   }
+   let lineage = make_lineage(node)
+   if(!lineage[0]){
+      lineage[0] = ''
+      console.log('ERROR Lineage')
+   }
    res.render('pages/taxa/taxon_page', {
 			title: 'HOMD ::'+level+'::'+tax_name, 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			tax_name: tax_name,
 			//headline: 'Life: Cellular Organisms',
+			lineage:lineage[0],
 			rank: level,
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		});

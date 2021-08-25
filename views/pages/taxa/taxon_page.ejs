@@ -1,4 +1,10 @@
 <style>
+#taxon-page-div {
+   margin:20px 0;
+   padding:10px;
+   border:1px solid green;
+   
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% if(rank=='klass'){ rank = 'Class'}%>
@@ -11,7 +17,13 @@
     
     <div class='page-content' >
 		 					
-			 <div class='title'><%= clean_rank %> <%= tax_name %></div>
+		<div class='title'><%= clean_rank %> <%= tax_name %></div>
+		
+		<div id='taxon-page-div'>
+		TODO .... <%= tax_name %> (<%= clean_rank %>)
+		<br><%= lineage %>
+		</div>	 
+			 
 	
     </div> <!-- end: page-content -->
     
