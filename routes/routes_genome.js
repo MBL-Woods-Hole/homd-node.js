@@ -14,7 +14,7 @@ var dd = String(today.getDate()).padStart(2, '0');
 var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
 today = yyyy + '-' + mm + '-' + dd;
-
+var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 //const JB = require('jbrowse2');
 //app.use(createIframe);
 router.get('/genome_table', function genome_table(req, res) {
@@ -616,9 +616,9 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
 	if(type === 'browser'){
 	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
 	}else if(type === 'text'){
-	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_genome_table"+today+".txt\""});
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_genome_table"+today+'_'+currentTimeInSeconds+".txt\""});
 	}else if(type === 'excel'){
-	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_genome_table"+today+".xls\""});
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_genome_table"+today+'_'+currentTimeInSeconds+".xls\""});
 	}else{
 	    // error
 	    console.log('Download table format ERROR')
