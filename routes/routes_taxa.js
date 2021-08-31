@@ -117,6 +117,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle: pgtitle,
+		pgname: 'taxon_table',  //for AbountThisPage
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		data: JSON.stringify(send_list),
 		
@@ -220,6 +221,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle:pgtitle,
+		pgname: 'taxon_table',  //for AbountThisPage
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		data: JSON.stringify(send_list),
 		count_txt: count_txt,
@@ -257,6 +259,7 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
 	res.render('pages/taxa/taxtable', {
 		title: 'HOMD :: Taxon Table', 
 		pgtitle: pgtitle,
+		pgname: 'taxon_table',  //for AbountThisPage
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		data: JSON.stringify(send_list),
 		count: Object.keys(send_list).length,
@@ -284,7 +287,8 @@ router.get('/tax_hierarchy', (req, res) => {
 	helpers.accesslog(req, res)
 	
 	res.render('pages/taxa/taxhierarchy', {
-			title: 'HOMD :: Taxon Hierarchy', 
+			title: 'HOMD :: Taxon Hierarchy',
+			pgname: 'tax_hierarchy',  //for AbountThisPage 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			data: {},
 			dhtmlx: JSON.stringify(C.dhtmlxTreeData),
@@ -300,6 +304,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
 	
 	res.render('pages/taxa/taxlevel', {
 		title: 'HOMD :: Taxon Level', 
+		pgname: 'tax_level',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		level: 'domain',
 		//oral: oral,
@@ -486,7 +491,8 @@ router.get('/tax_description', function tax_description(req, res){
 	   console.log(data1)
 	   let message = "That is a dropped TaxonID: "+otid
 	   res.render('pages/lost_message', {
-	       title: 'HOMD :: Error', 
+	       title: 'HOMD :: Error',
+	       pgname: 'lost',  //for AbountThisPage  
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			message:message,
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
@@ -547,6 +553,7 @@ router.get('/tax_description', function tax_description(req, res){
 	
 	res.render('pages/taxa/taxdesc', {
 		title: 'HOMD :: Taxon Info', 
+		pgname: 'tax_description',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		otid: otid,
 		pids: pid_list,
@@ -784,6 +791,7 @@ router.get('/life', function life(req, res) {
 	lineage_string = lineage_list[0].split(';').join('; ')
 	res.render('pages/taxa/life', {
 			title: 'HOMD :: '+page_title, 
+			pgname: 'tax_life',  //for AbountThisPage 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			data: {},
 			tax_name: tax_name,
@@ -817,7 +825,8 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
       console.log('ERROR Lineage')
    }
    res.render('pages/taxa/taxon_page', {
-			title: 'HOMD ::'+level+'::'+tax_name, 
+			title: 'HOMD ::'+level+'::'+tax_name,
+			pgname: 'taxon_page',  //for AbountThisPage  
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			tax_name: tax_name,
 			//headline: 'Life: Cellular Organisms',

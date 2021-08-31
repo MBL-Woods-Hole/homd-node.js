@@ -98,6 +98,7 @@ router.post('/site_search', (req, res) => {
 
 	res.render('pages/homd/search_result', {
 		title: 'HOMD :: Site Search', 
+		pgname: 'site_search_result',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		search_text: search_txt,

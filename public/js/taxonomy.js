@@ -160,7 +160,8 @@ function change_level(rank) {
 			if(rank != 'domain'){
 				html += '<th scope="col">Parent Level</th>'
 			}
-			html += '<th scope="col">'+rank+'</th>'
+			
+			html += '<th scope="col">'+fix_rank(rank)+'</th>'
 			if(rank == 'species' || rank == 'subspecies'){
 				html += '<th scope="col">HMT Taxon ID</th>'
 			}
@@ -336,6 +337,12 @@ function tax_table_search(){
    }
    
    form.submit()
+}
+function fix_rank(rank){
+    if(rank == 'klass' || rank == 'Klass'){
+        rank = 'class'
+    }
+    return rank.charAt(0).toUpperCase() + rank.slice(1);
 }
 //
 //function tax_download(type,letter,page,sites,stati){

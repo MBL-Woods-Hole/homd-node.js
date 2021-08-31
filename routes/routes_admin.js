@@ -15,6 +15,7 @@ router.get('/login', (req, res) => {
     helpers.accesslog(req, res)
     res.render('pages/admin/login', { 
 		  title: 'HOMD :: Login',
+		  pgname: 'login',  //for AbountThisPage 
 		  user: req.user, 
 		  config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		  return_to_url: req.session.returnTo,
@@ -32,6 +33,7 @@ router.get('/register', (req, res) => {
     helpers.accesslog(req, res)
     res.render('pages/admin/register', { 
 		  title: 'HOMD :: Signup',
+		  pgname: 'signup',  //for AbountThisPage 
 		  user: req.user, 
 		  config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		  return_to_url: req.session.returnTo,
@@ -49,6 +51,7 @@ router.get('/reset_password', (req, res) => {
     helpers.accesslog(req, res)
     res.render('pages/admin/reset_pasword', { 
 		  title: 'HOMD :: Reset Password',
+		  pgname: 'reset_password',  //for AbountThisPage 
 		  user: req.user, 
 		  config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		  return_to_url: req.session.returnTo,

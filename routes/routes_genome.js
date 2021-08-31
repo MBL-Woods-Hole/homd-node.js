@@ -100,6 +100,7 @@ router.get('/genome_table', function genome_table(req, res) {
 	count_txt = count_txt0 + ' <small>(Total:'+(big_temp_list.length).toString()+')</small> '
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
+		pgname: 'genome_table',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		
 		//seqid_list: JSON.stringify(gid_obj_list),
@@ -136,6 +137,7 @@ router.post('/search_genometable', function search_genometable(req, res) {
 	count_txt = count_txt0+' <small>(Total:'+(big_gene_list.length).toString()+')</small>'
 	res.render('pages/genome/genometable', {
 		title: 'HOMD :: Genome Table', 
+		pgname: 'genome_table',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		
 		//seqid_list: JSON.stringify(gid_obj_list),
@@ -178,6 +180,7 @@ router.get('/jbrowse', function jbrowse(req, res) {
 		})
 	res.render('pages/genome/jbrowse2_stub_iframe', {
 		title: 'HOMD :: JBrowse', 
+		pgname: 'jbrowse',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		gid: gid,  // default
 		genomes: JSON.stringify(genome_list),
@@ -252,7 +255,8 @@ router.get('/genome_description', function genome_description(req, res) {
 	*/
 	//console.log(C.genome_lookup[gid])
 	res.render('pages/genome/genomedesc', {
-		title: 'HOMD :: Genome Info', 
+		title: 'HOMD :: Genome Info',
+		pgname: 'genome_description',  //for AbountThisPage  
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		//taxonid: otid,
 		data1: JSON.stringify(C.genome_lookup[gid]),
@@ -362,7 +366,8 @@ router.get('/explorer', function annotation(req, res) {
     let organism,pid_list,otid
     let render_fxn = (req,res,gid,otid,blast,organism,all_annos_obj,anno_type,page_data,info_data_obj,pid_list) => {
         res.render('pages/genome/explorer', {
-				title: 'HOMD :: '+gid, 
+				title: 'HOMD :: '+gid,
+				pgname: 'genome_explorer',  //for AbountThisPage  
 				config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 				ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 				gid: gid,
@@ -495,6 +500,7 @@ router.get('/conserved_protein_tree', function conserved_protein_tree(req, res) 
       }
       res.render('pages/genome/conserved_protein_tree', {
         title: 'HOMD :: Conserved Protein Tree', 
+        pgname: '',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		svg_data: JSON.stringify(data),
@@ -514,6 +520,7 @@ router.get('/ribosomal_protein_tree', function ribosomal_protein_tree(req, res) 
       }
       res.render('pages/genome/ribosomal_protein_tree', {
         title: 'HOMD :: Ribosomal Protein Tree', 
+        pgname: '',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		svg_data: JSON.stringify(data),
@@ -532,6 +539,7 @@ router.get('/rRNA_gene_tree', function rRNA_gene_tree(req, res) {
       }
       res.render('pages/genome/rRNA_gene_tree', {
         title: 'HOMD :: rRNA Gene Tree', 
+        pgname: '',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		svg_data: JSON.stringify(data),

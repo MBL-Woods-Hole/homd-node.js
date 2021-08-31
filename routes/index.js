@@ -25,6 +25,7 @@ router.get('/', (req, res) => {
 helpers.show_session(req)
 res.render('pages/home', {
 		title: 'HOMD :: Human Oral Microbiome Database',
+		pgname: 'home',  //for AbountThisPage 
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		
@@ -42,6 +43,7 @@ router.get('/download', (req, res) => {
 //   console.log('Request Route:', req.route);
     res.render('pages/download', {
 		title: 'HOMD :: Human Oral Microbiome Database',
+		pgname: 'download',  //for AbountThisPage 
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		scroll_to: scroll
