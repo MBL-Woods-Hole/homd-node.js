@@ -22,9 +22,15 @@
     border:1px solid black;
     padding:2px;
 }
+#major_genera{
+   border:1px solid black;
+   padding: 5px;
+   margin:10px 2px;
+}
 </style>
 <% segata_data = JSON.parse(segata) %>
 <% segata_order = JSON.parse(segata_order) %>
+
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -38,7 +44,8 @@
 		<div class='title'><%= rank %>: <%= tax_name %></div>
 		
 		<div id='taxon-page-div'>
-		    Full Lineage: <%= lineage %>
+		    Full Lineage: <%- lineage %>
+		    <br><small><%- children %></small>
 		</div>	
 <% if(segata_data.length ==0){ %>
 		    No Segata data
@@ -97,6 +104,13 @@
 			</small>	 
 	    
 	    </div>
+	    
+	    <% if(genera == 1){ %>
+	      <div id='major_genera'>
+	        Major Genera: &gt;not yet implemented&lt;
+	    
+	      </div>
+	    <% } %>
 	</div> <!-- end col right -->
 </div>  <!-- end row1 -->
 <% } %>

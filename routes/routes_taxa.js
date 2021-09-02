@@ -694,6 +694,7 @@ router.get('/life', function life(req, res) {
 	}else{
 		//console.log(upto)
 		node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+		
 		var lineage_list = make_lineage(node)  // [str obj]
 	    
 		rank_id = C.ranks.indexOf(rank) +2
@@ -711,7 +712,7 @@ router.get('/life', function life(req, res) {
 //    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[name_n_rank]
 //    let lin = make_lineage(node)
 //    console.log(lin)
-		   console.log('lineage: ',lineage_list[0])
+		   //console.log('lineage: ',lineage_list[0])
 		      //var cts = get_counts(lineage_list[0])
 		    //var cts = C.taxon_counts_lookup[lineage_list[0]].tax_cnt.toString()
 		    //console.log('counts: ',cts)
@@ -789,7 +790,7 @@ router.get('/life', function life(req, res) {
 	if(rank)
 	    page_title = helpers.capitalizeFirst(rank)
 	
-	lineage_string = lineage_list[0].split(';').join('; ')
+	lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'life')
 	res.render('pages/taxa/life', {
 			title: 'HOMD :: '+page_title, 
 			pgname: 'tax_life',  //for AbountThisPage 
@@ -809,12 +810,20 @@ router.get('/life', function life(req, res) {
 //
 router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    console.log('in taxon page')
-   let level = req.params.level
+   let rank = req.params.level
    let tax_name = req.params.name
    let segata_text = ''
+   var segata = []
    let max = 0
    let max_obj = {}
-   console.log('level: '+level+' name: '+tax_name)
+   let major_genera=0
+   if(['phylum','klass','order'].indexOf(rank) != -1){
+      // find major genera per Jessica (hand curated)
+      // or abundance >1% at some site
+      major_genera=1
+   }
+   console.log('rank: '+rank+' name: '+tax_name)
+   // TODO::should be in constants???
    let segata_names = {'BM':"buccal mucosa (BM)",
    		"KG":"keratinized gingiva (KG)",
    		'Hp':'hard Palate (Hp)',
@@ -826,24 +835,32 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    		"SubP":"sub-gingival Plaque (SubP)",
    		"Stool":"stool"}
    let segata_order = ['BM',"KG",'Hp','G1-avg','Th',"PT","TD","Sal",'G2-avg',"SupP","SubP",'G3-avg',"Stool",'G4-avg']
-   node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+level]
+   let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+   //console.log(node)
+   var children_string = 'Lower rank member(s):: '
+   for(i in node.children_ids){
+   		n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
+   		//children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
+   		children_string += "<a href='/taxa/taxon_page/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>; "
+   }
+   
    if(!node){
       console.log('ERROR Node')
    }
-   let lineage = make_lineage(node)
-   var segata = []
-   if(!lineage[0]){
-      lineage[0] = ''
+   let lineage_list = make_lineage(node)
+   
+   if(!lineage_list[0]){
+      lineage_list[0] = ''
       console.log('ERROR Lineage')
    }else{
       
-      if(lineage[0] in C.segata_lookup){
-         segata = Object.values(C.segata_lookup[lineage[0]])
+      if(lineage_list[0] in C.segata_lookup){
+         segata = Object.values(C.segata_lookup[lineage_list[0]])
          segata = reorder_for_graphing(segata, segata_order)
          max = Math.max.apply(Math, segata.map(function(o) { return o.avg; }))
          max_obj = segata.find(function(o){ return o.avg == max})
          
-         segata_text += helpers.clean_rank_name_for_show(level) +' '+tax_name+ ' is'
+         segata_text += helpers.clean_rank_name_for_show(rank) +' '+tax_name+ ' is'
          if(max > 1){
 			   segata_text += ' an abundant'
 			}else if(max > 0.1 && max <=1){
@@ -881,19 +898,23 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    
   
    
-   console.log('max',max)
-   console.log('max_obj',max_obj)
-   console.log('segata data:')
-   console.log(segata)
+   //console.log('max',max)
+   //console.log('max_obj',max_obj)
+   //console.log('segata data:')
+   //console.log(segata)
+   //lineage_string = lineage_list[0].split(';').join('; ')
+   lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'taxon_page')
    res.render('pages/taxa/taxon_page', {
-			title: 'HOMD ::'+level+'::'+tax_name,
+			title: 'HOMD ::'+rank+'::'+tax_name,
 			pgname: 'taxon_page',  //for AbountThisPage  
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			tax_name: tax_name,
 			//headline: 'Life: Cellular Organisms',
-			lineage: lineage[0],
-			rank: helpers.clean_rank_name_for_show(level),
+			lineage: lineage_string,
+			rank: helpers.clean_rank_name_for_show(rank),
 			max: max,
+			genera: major_genera,
+			children: children_string,
 			segata_text: segata_text,
 			segata_order: JSON.stringify(segata_order),
 			segata: JSON.stringify(segata),

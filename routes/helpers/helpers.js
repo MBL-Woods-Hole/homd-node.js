@@ -119,4 +119,17 @@ module.exports.clean_rank_name_for_show = (rank) =>{
 	}
 	return rank.charAt(0).toUpperCase() + rank.slice(1)
 }
-
+module.exports.make_lineage_string_with_links = (lineage_list, link) =>{
+     var tmp = ''
+     i =0 
+     for(n in lineage_list[1]){
+         if(link == 'life'){
+           tmp += "<a href='/taxa/"+link+"?rank="+C.ranks[i]+"&name=\""+lineage_list[1][n]+"\"'>"+lineage_list[1][n]+'</a>; '
+         }else{
+           tmp += "<a href='/taxa/"+link+"/"+C.ranks[i]+"/"+lineage_list[1][n]+"'>"+lineage_list[1][n]+'</a>; '
+         }
+         i += 1
+     }
+     //console.log(tmp)
+     return tmp
+}
