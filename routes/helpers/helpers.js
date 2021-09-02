@@ -112,3 +112,11 @@ module.exports.print_size = (obj, index, self) =>{
 module.exports.make_otid_display_name = (otid) =>{
     return 'HMT-'+("000" + otid.toString()).slice(-3);
 } 
+module.exports.clean_rank_name_for_show = (rank) =>{
+	// capitalise and fix klass => Class
+	if(rank == 'klass' || rank == 'Klass'){
+	   rank = 'Class'
+	}
+	return rank.charAt(0).toUpperCase() + rank.slice(1)
+}
+

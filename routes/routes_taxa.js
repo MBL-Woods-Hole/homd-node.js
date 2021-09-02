@@ -810,28 +810,92 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    console.log('in taxon page')
    let level = req.params.level
    let tax_name = req.params.name
+   let segata_text = ''
+   let max = 0
+   let max_obj = {}
    console.log('level: '+level+' name: '+tax_name)
-   //console.log(tax_name+'_'+level)
-   // Class must be klass lowecase
-   // species must be genus-species uupercase first
-   //node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Anaerolineae_klass']
+   let segata_names = {'BM':"buccal mucosa (BM)",
+   		"KG":"keratinized gingiva (KG)",
+   		'Hp':'hard Palate (Hp)',
+   		'Th':"throat (Th)",
+   		"PT":"palatine tonsils (PT)",
+   		"TD":'tongue dorsum (TD)',
+   		"Sal":"saliva (Sal)",
+   		"SupP":"supra-gingival Plaque (SupP)",
+   		"SubP":"sub-gingival Plaque (SubP)",
+   		"Stool":"stool"}
+   let segata_order = ['BM',"KG",'Hp','G1-avg','Th',"PT","TD","Sal",'G2-avg',"SupP","SubP",'G3-avg',"Stool",'G4-avg']
    node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+level]
    if(!node){
       console.log('ERROR Node')
    }
    let lineage = make_lineage(node)
+   var segata = []
    if(!lineage[0]){
       lineage[0] = ''
       console.log('ERROR Lineage')
+   }else{
+      
+      if(lineage[0] in C.segata_lookup){
+         segata = Object.values(C.segata_lookup[lineage[0]])
+         segata = reorder_for_graphing(segata, segata_order)
+         max = Math.max.apply(Math, segata.map(function(o) { return o.avg; }))
+         max_obj = segata.find(function(o){ return o.avg == max})
+         
+         segata_text += helpers.clean_rank_name_for_show(level) +' '+tax_name+ ' is'
+         if(max > 1){
+			   segata_text += ' an abundant'
+			}else if(max > 0.1 && max <=1){
+			   segata_text += ' a moderately abundant'
+			}else{  // smaller than 0.1
+			   segata_text += ' a low-abundance'
+			}
+         segata_text += ' member of the healthy oral microbiome. It reaches its highest relative abundance '
+         if(max_obj.loci == 'G1-avg'){
+         	segata_text += ' across all oral locations.' // This will hit for 'bacteria'
+         }else if(max_obj.loci == 'G2-avg'){
+         	segata_text += ' across all Group2 locations.'
+         }else if(max_obj.loci == 'G3-avg'){
+         	segata_text += ' across all Group3 locations.'
+         }else if(max_obj.loci == 'G4-avg'){
+            segata_text += ' in stool.'
+         }else if(max_obj.loci in segata_names){
+            segata_text += ' in the '+segata_names[max_obj.loci]
+            if(max_obj.loci == 'Sal'){
+               segata_text += ' suggesting that its site of greatest abundance has not yet been identified.'
+            }else if(max_obj.loci == 'Hp'){
+            
+            }else if(max_obj.loci == 'SubP'){
+            
+            }
+            
+         }else{
+            segata_text += ' across all oral locations.'
+         }
+         
+         
+      }
    }
+   
+   
+  
+   
+   console.log('max',max)
+   console.log('max_obj',max_obj)
+   console.log('segata data:')
+   console.log(segata)
    res.render('pages/taxa/taxon_page', {
 			title: 'HOMD ::'+level+'::'+tax_name,
 			pgname: 'taxon_page',  //for AbountThisPage  
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			tax_name: tax_name,
 			//headline: 'Life: Cellular Organisms',
-			lineage:lineage[0],
-			rank: level,
+			lineage: lineage[0],
+			rank: helpers.clean_rank_name_for_show(level),
+			max: max,
+			segata_text: segata_text,
+			segata_order: JSON.stringify(segata_order),
+			segata: JSON.stringify(segata),
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		});
 });
@@ -1182,7 +1246,24 @@ function find_images(rank, otid, tax_name) {
 	}
 	return send_list
 }	
-	   
+//
+function reorder_for_graphing(segata, segata_order){
+   //segata_order is a list ['BM,'td'...]
+   // segata is a list of objects {loci: 'G1-avg', avg: '0', stdev: '0'}
+   var ret_list = []
+   for(n in segata_order){
+      var item = segata_order[n]
+      for(i in segata){
+          if(segata[i].loci == item){
+             ret_list.push(segata[i])
+          }
+      }
+   
+   }
+   return ret_list
+
+
+}	   
    
 
 
