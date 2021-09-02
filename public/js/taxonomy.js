@@ -231,8 +231,8 @@ function change_level(rank) {
 // }
 function clear_filter_form(){
 	var els = document.getElementsByClassName('filter_ckbx')
-	for (n in els){
-		els[n].checked = false
+	for(i = 0; i < els.length; i++){
+		els[i].checked = false
 	}
 	document.getElementById('valid1').checked = false
 	document.getElementById('valid2').checked = false
@@ -245,12 +245,12 @@ function check_then_post_filter(form){
    	var els = document.getElementsByClassName('filter_ckbx')
    	var got_one_status = 0
    	var got_one_sites = 0
-   	for (n in els){
-		if(els[n].checked == true){
-			if(filter_status.indexOf(els[n].name) != -1){
+   	for(i = 0; i < els.length; i++){
+		if(els[i].checked == true){
+			if(filter_status.indexOf(els[i].name) != -1){
 				got_one_status = 1
 			}
-			if(filter_sites.indexOf(els[n].name) != -1){
+			if(filter_sites.indexOf(els[i].name) != -1){
 				got_one_sites = 1
 			}
 		}
@@ -343,6 +343,20 @@ function fix_rank(rank){
         rank = 'class'
     }
     return rank.charAt(0).toUpperCase() + rank.slice(1);
+}
+//
+function toggle_lower_ranks(){
+    els = document.getElementsByClassName('lower-rank-items')
+    toggle_btn = document.getElementById('toggle_ranks')
+    for(i = 0; i < els.length; i++){
+      if(els[i].style.display == 'none'){
+       els[i].style.display = 'inline'
+       toggle_btn.innerHTML="<a href='#' onclick='toggle_lower_ranks()'>hide[-]</a>"
+      }else{
+       els[i].style.display = 'none'
+       toggle_btn.innerHTML="<a href='#' onclick='toggle_lower_ranks()'>show[+]</a>"
+      }
+    }
 }
 //
 //function tax_download(type,letter,page,sites,stati){

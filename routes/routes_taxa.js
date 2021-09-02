@@ -837,11 +837,11 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    let segata_order = ['BM',"KG",'Hp','G1-avg','Th',"PT","TD","Sal",'G2-avg',"SupP","SubP",'G3-avg',"Stool",'G4-avg']
    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
    //console.log(node)
-   var children_string = 'Lower rank member(s):: '
+   var children_list = []
    for(i in node.children_ids){
    		n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
    		//children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
-   		children_string += "<a href='/taxa/taxon_page/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>; "
+   		children_list.push("<a href='/taxa/taxon_page/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>; ")
    }
    
    if(!node){
@@ -914,7 +914,7 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
 			rank: helpers.clean_rank_name_for_show(rank),
 			max: max,
 			genera: major_genera,
-			children: children_string,
+			children: JSON.stringify(children_list),
 			segata_text: segata_text,
 			segata_order: JSON.stringify(segata_order),
 			segata: JSON.stringify(segata),
