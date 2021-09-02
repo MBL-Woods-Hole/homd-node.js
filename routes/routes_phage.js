@@ -7,6 +7,12 @@ const path     = require('path');
 const C		  = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
 const queries = require(app_root + '/routes/queries')
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+today = yyyy + '-' + mm + '-' + dd;
+var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
 router.get('/', function index(req, res) {
   console.log('in phage hello')
@@ -262,9 +268,9 @@ router.get('/dld_table/:type/:letter/:rank/:search_txt/:search_field', function 
 	if(type === 'browser'){
 	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
 	}else if(type === 'text'){
-	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.txt\""});
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""});
 	}else if(type === 'excel'){
-	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table.xls\""});
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""});
 	}else{
 	    // error
 	    console.log('Download table format ERROR')
