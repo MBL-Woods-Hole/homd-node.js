@@ -46,12 +46,12 @@
 		<div id='taxon-page-div'>
 		    Full Lineage: <%- lineage %>
 		    <br><small>Lower rank member(s): 
-		    <% if(children_lst.length < 5){ %>
-		       <% for(n in children_lst){ %>
+		    <% if(children_lst.length <= 5){ %>
+		        <% for(n in children_lst){ %>
 		          <span ><%- children_lst[n] %></span>
-		       <% } %>
+		        <% } %>
 		    <% }else{ %>
-		      <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
+		        <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
 		      <% for(n in children_lst){ %>
 		        <span class='lower-rank-items' style='display:none'><%- children_lst[n] %></span>
 		      <% } %>
@@ -59,7 +59,7 @@
 		    </small>
 		</div>	
 <% if(segata_data.length ==0){ %>
-		    No Segata data
+		No Segata Data
 <% }else{ %>		
 <div id="row1">	
   <div id='column_left1'  >

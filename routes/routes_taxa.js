@@ -817,11 +817,7 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    let max = 0
    let max_obj = {}
    let major_genera=0
-   if(['phylum','klass','order'].indexOf(rank) != -1){
-      // find major genera per Jessica (hand curated)
-      // or abundance >1% at some site
-      major_genera=1
-   }
+   
    console.log('rank: '+rank+' name: '+tax_name)
    // TODO::should be in constants???
    let segata_names = {'BM':"buccal mucosa (BM)",
@@ -836,6 +832,11 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    		"Stool":"stool"}
    let segata_order = ['BM',"KG",'Hp','G1-avg','Th',"PT","TD","Sal",'G2-avg',"SupP","SubP",'G3-avg',"Stool",'G4-avg']
    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+   genera = get_major_genera(rank, node)
+   
+
+   //console.log('genera')
+   //console.log(genera)
    //console.log(node)
    var children_list = []
    for(i in node.children_ids){
@@ -1286,7 +1287,54 @@ function reorder_for_graphing(segata, segata_order){
 
 
 }	   
+//
+function get_major_genera(rank, node) {
+	var genera = []
+	if(['phylum','klass','order'].indexOf(rank) != -1){
+      // find major genera per Jessica (hand curated)
+      // or abundance >1% at some site
+      // find all genera under tax_name the get the counts
+      // how to find all genera from node?
+
+      for(n in node.children_ids){
+        new_node1 = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]  // klass ,order or family
+        for(m in new_node1.children_ids){
+          new_node2 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node1.children_ids[m]]  // order, family or genus
+          if(new_node2.rank == 'genus'){
+            //stop you're done
+            counts = C.taxon_counts_lookup[make_lineage(new_node2)[0]]
+            genera.push(new_node2)
+          }else{
+            for(p in new_node2.children_ids){
+              new_node3 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node2.children_ids[p]] // family or genus
+              if(new_node3.rank == 'genus'){
+                //stop you're done
+                counts = C.taxon_counts_lookup[make_lineage(new_node3)[0]]
+                genera.push(new_node3)
+              }else{
+                for(q in new_node3.children_ids){
+                  new_node4 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node3.children_ids[q]] // must be genus
+                  console.log('make_lineage(new_node4)')
+                  console.log(make_lineage(new_node4)[0])
+                  counts = C.taxon_counts_lookup[make_lineage(new_node4)[0]].tax_cnt
+                  console.log('counts', counts)
+                  genera.push(new_node4)
+                }
+              }
+            } 
+          }
+        }
+      }
+      major_genera=1
+   }
+   // the counts here are not abundance
+   // here get majors
+   // phylum/Actinobacteria from jessica
+   // Actinomyces, Corynebacterium, Cutibacterium, Propionibacterium, Rothia, Schaalia.
    
+
+   return genera
+}
 
 
 module.exports = router;
