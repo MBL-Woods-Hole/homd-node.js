@@ -61,7 +61,7 @@ function create_column_choices_dialog(cols_showing){
    html += "<td><input type='checkbox' checked disabled  value='Phage-ID' /> Phage-ID"
    html += "<input type='hidden'  name='pid' value='Phage-ID' /></td>"
    
-   var rows=3
+   var cols=3
    //console.log(cols_showing[0])
    //make name list from cols_showing
    cols_showing_names=[]
@@ -71,8 +71,8 @@ function create_column_choices_dialog(cols_showing){
    //console.log(cols_showing_names)
    cnt = cols_showing_names.length
    for (n in col_list){
-     //console.log('modulus ',n % rows)
-     if(n % rows == 0){  // modulus
+     //console.log('modulus ',n % cols)
+     if(n % cols == 0){  // modulus
          html += "</tr><tr>"
      }
      if(cols_showing_names.indexOf(col_list[n].value) > 0){

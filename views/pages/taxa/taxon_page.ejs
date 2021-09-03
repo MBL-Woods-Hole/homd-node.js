@@ -13,6 +13,7 @@
 #segata_table_div{
    position: relative;
    right:10px;
+   width:auto;
 }
 #segata_table{
     font-size:small;
@@ -31,6 +32,7 @@
 <% segata_data = JSON.parse(segata) %>
 <% segata_order = JSON.parse(segata_order) %>
 <% children_lst = JSON.parse(children) %>
+<% genera = JSON.parse(genera) %>
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -38,93 +40,110 @@
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     
-    
+    <% if(rank == 'klass' || rank == 'Klass'){  %>
+        <% rank_show = 'Class' %>
+    <% }else{ %> 
+       <% rank_show = rank.charAt(0).toUpperCase() + rank.slice(1) %>
+    <% } %>
     <div class='page-content' >
 		 					
-		<div class='title'><%= rank %>: <%= tax_name %></div>
+		<div class='title'><%= rank_show %>: <%= tax_name %></div>
 		
 		<div id='taxon-page-div'>
 		    Full Lineage: <%- lineage %>
 		    <br><small>Lower rank member(s): 
 		    <% if(children_lst.length <= 5){ %>
 		        <% for(n in children_lst){ %>
-		          <span ><%- children_lst[n] %></span>
+		          <span >[<%- children_lst[n] %>]</span>
 		        <% } %>
 		    <% }else{ %>
 		        <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
+		      
+		      <div id='lower-rank-items-div' style='display:none'>
+		      <% cols = 5 %>
+		      <table><tr>
 		      <% for(n in children_lst){ %>
-		        <span class='lower-rank-items' style='display:none'><%- children_lst[n] %></span>
+		         <% if(n % cols == 0){  %><!-- // modulus -->
+                  </tr><tr>
+                 <% } %>
+		        <td><small>[<%- children_lst[n] %>]</small></td>
 		      <% } %>
+		      </tr></table>
+		      </div>
+		    
+		    
 		    <% } %>
+		    <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
+		    <br>Genera:
+		    <select class='dropdown'>
+		    <% for(n in genera){ %>
+	          <option><%= genera[n].taxon %></option>
+	        <% } %>
+		    <% } %>
+		    </select>
 		    </small>
+		    
 		</div>	
-<% if(segata_data.length ==0){ %>
-		No Segata Data
-<% }else{ %>		
+	
+
 <div id="row1">	
   <div id='column_left1'  >
-		<div id='plot_div'>
 		
-			
-			<small><%= segata_text %>
-			
-			
-			</small>
+		
+		  <div id='plot_div'>
+			<small><%= segata_text %></small>
 			<div id="plot_here"></div> 
-			
-			
-	   
-	    </div>
+	      </div>
+	    
 	</div>    <!--  end col-left1-->
   
     <div id="column_right1" >
 	    
-	    <div id='segata_table_div'>
-	    <table id='segata_table' border='1'><thead><tr><th></th>
-	    <% for(n in segata_order){ %>
-	      <th><%= segata_order[n] %></th>
-	    <% } %>
-	    </tr>
+            <div id='segata_table_div'>
+            <table id='segata_table' border='1'><thead><tr><th></th>
+            <% for(n in segata_order){ %>
+              <th><%= segata_order[n] %></th>
+            <% } %>
+            </tr>
+        
+            </thead>
+            <tbody>
+            <tr><th>Avg</th>
+            <% for(n in segata_data){ %>   <!-- Already corrected order -->
+                <td><%= segata_data[n].avg %></td>
+            <% } %>
+            </tr>
+            <tr><th>Stdev</th>
+            <% for(n in segata_data){ %>   <!-- Already corrected order -->
+                <td><%= segata_data[n].stdev %></td>
+            <% } %>
+            </tr>
+            </tbody>
+            </table>
+            <br>
+            <small>
+                Average abundance, expressed in percentage of all microbial 
+                clades in the four digestive tract groups and among the ten body habitats. 
+                <ul>
+                <li>Group 1 (G1): buccal mucosa (BM), keratinized gingiva (KG) and hard palate (HP); 
+                <li>Group 2 (G2): throat (Th), palatine tonsils (PT), tongue dorsum (TD) and saliva (Sal); 
+                <li>Group 3 (G3): supraginval (SupP) and subgingival plaques (SubP); 
+                <li>Group 4 (G4): stool (Stool). 
+                </ul>
+                <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
+                From Segata et al.(2012)</a>
+                </small>	 
+        
+            </div>
 	    
-	    </thead>
-	    <tbody>
-	    <tr><th>Avg</th>
-	    <% for(n in segata_data){ %>   <!-- Already corrected order -->
-	        <td><%= segata_data[n].avg %></td>
-	    <% } %>
-	    </tr>
-	    <tr><th>Stdev</th>
-	    <% for(n in segata_data){ %>   <!-- Already corrected order -->
-	        <td><%= segata_data[n].stdev %></td>
-	    <% } %>
-	    </tr>
-	    </tbody>
-	    </table>
-	    <br>
-	    <small>
-			Average abundance, expressed in percentage of all microbial 
-			clades in the four digestive tract groups and among the ten body habitats. 
-			<ul>
-			<li>Group 1 (G1): buccal mucosa (BM), keratinized gingiva (KG) and hard palate (HP); 
-			<li>Group 2 (G2): throat (Th), palatine tonsils (PT), tongue dorsum (TD) and saliva (Sal); 
-			<li>Group 3 (G3): supraginval (SupP) and subgingival plaques (SubP); 
-			<li>Group 4 (G4): stool (Stool). 
-			</ul>
-			<a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
-			From Segata et al.(2012)</a>
-			</small>	 
 	    
-	    </div>
-	    
-	    <% if(genera == 1){ %>
-	      <div id='major_genera'>
-	        Major Genera: &gt;not yet implemented&lt;
-	    
-	      </div>
-	    <% } %>
 	</div> <!-- end col right -->
+	
+	
 </div>  <!-- end row1 -->
-<% } %>
+
+
+
     </div> <!-- end: page-content -->
     
     <div id='footer'>
@@ -144,7 +163,9 @@
   data = JSON.parse('<%- segata %>')
   max = '<%- max %>'
   if(data.length == 0){
-     document.getElementById("plot_here").innerHTML = 'No Segata2012 Data'
+     document.getElementById("plot_here").innerHTML = 'No Segata2012 Data2'
+     document.getElementById("segata_table_div").innerHTML = 'No Segata2012 Data2'
+  
   }else{
 	  console.log(data)
 	  //max = max([item.avg for item in data])

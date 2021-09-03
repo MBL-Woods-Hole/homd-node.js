@@ -816,7 +816,7 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    var segata = []
    let max = 0
    let max_obj = {}
-   let major_genera=0
+   //let major_genera=0
    
    console.log('rank: '+rank+' name: '+tax_name)
    // TODO::should be in constants???
@@ -835,14 +835,14 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    genera = get_major_genera(rank, node)
    
 
-   //console.log('genera')
-   //console.log(genera)
+   console.log('genera')
+   console.log(genera)
    //console.log(node)
    var children_list = []
    for(i in node.children_ids){
    		n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
    		//children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
-   		children_list.push("<a href='/taxa/taxon_page/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>; ")
+   		children_list.push("<a href='/taxa/taxon_page/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
    }
    
    if(!node){
@@ -905,6 +905,10 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    //console.log(segata)
    //lineage_string = lineage_list[0].split(';').join('; ')
    lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'taxon_page')
+   // sort genera list 
+   genera.sort(function sortByTaxa(a, b) {
+                return helpers.compareStrings_alpha(a.taxon, b.taxon);
+    });
    res.render('pages/taxa/taxon_page', {
 			title: 'HOMD ::'+rank+'::'+tax_name,
 			pgname: 'taxon_page',  //for AbountThisPage  
@@ -912,9 +916,9 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
 			tax_name: tax_name,
 			//headline: 'Life: Cellular Organisms',
 			lineage: lineage_string,
-			rank: helpers.clean_rank_name_for_show(rank),
+			rank: rank,
 			max: max,
-			genera: major_genera,
+			genera: JSON.stringify(genera),
 			children: JSON.stringify(children_list),
 			segata_text: segata_text,
 			segata_order: JSON.stringify(segata_order),
@@ -1297,27 +1301,27 @@ function get_major_genera(rank, node) {
       // how to find all genera from node?
 
       for(n in node.children_ids){
-        new_node1 = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]  // klass ,order or family
+        let new_node1 = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]  // klass ,order or family
         for(m in new_node1.children_ids){
-          new_node2 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node1.children_ids[m]]  // order, family or genus
+          let new_node2 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node1.children_ids[m]]  // order, family or genus
           if(new_node2.rank == 'genus'){
             //stop you're done
-            counts = C.taxon_counts_lookup[make_lineage(new_node2)[0]]
+            //counts = C.taxon_counts_lookup[make_lineage(new_node2)[0]]
             genera.push(new_node2)
           }else{
             for(p in new_node2.children_ids){
-              new_node3 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node2.children_ids[p]] // family or genus
+              let new_node3 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node2.children_ids[p]] // family or genus
               if(new_node3.rank == 'genus'){
                 //stop you're done
-                counts = C.taxon_counts_lookup[make_lineage(new_node3)[0]]
+                //counts = C.taxon_counts_lookup[make_lineage(new_node3)[0]]
                 genera.push(new_node3)
               }else{
                 for(q in new_node3.children_ids){
-                  new_node4 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node3.children_ids[q]] // must be genus
-                  console.log('make_lineage(new_node4)')
-                  console.log(make_lineage(new_node4)[0])
-                  counts = C.taxon_counts_lookup[make_lineage(new_node4)[0]].tax_cnt
-                  console.log('counts', counts)
+                  let new_node4 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node3.children_ids[q]] // must be genus
+                  //console.log('make_lineage(new_node4)')
+                  //console.log(make_lineage(new_node4)[0])
+                  //counts = C.taxon_counts_lookup[make_lineage(new_node4)[0]].tax_cnt
+                  //console.log('counts', counts)
                   genera.push(new_node4)
                 }
               }
@@ -1325,7 +1329,7 @@ function get_major_genera(rank, node) {
           }
         }
       }
-      major_genera=1
+      //major_genera=1
    }
    // the counts here are not abundance
    // here get majors
