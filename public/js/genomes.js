@@ -52,7 +52,7 @@ function toggle_options(){
 }
 
 function get_16s_seq(seqid) {
-    
+    // on taxon description page
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
     args={}
@@ -84,6 +84,7 @@ function get_16s_seq(seqid) {
 //
 function get_NN_NA_seq(type,pid,db) {  // type=nn or na
     console.log('in NNNA',type,pid)
+    // on genome explore page
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
     console.log(type,pid)

@@ -121,6 +121,7 @@ app.use(function(req, res, next){
   if (req.accepts('html')) {
     res.render('pages/lost', { 
     	url: req.url,
+    	pgname: 'lost',
     	title:'HOMD Lost',
     	config : JSON.stringify({hostname:config.HOSTNAME,env:config.ENV}),
     	ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),

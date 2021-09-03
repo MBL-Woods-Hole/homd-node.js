@@ -81,8 +81,10 @@ function open_tree(tree_name) {  // needs to be global ie in menu.js
         text = '<pre>'
         text += resp
         text += '</pre>'
-		var win = window.open( "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
-		var doc = win.document;
+		//var win = window.open( "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
+		//var win = window.open();
+		
+		var doc = window.open().document;
 		//doc.writeln("<title>yourtitle</title>");
 		//doc.title = 'eHOMD Reference Sequence'
 		//doc.open("text/html");

@@ -56,7 +56,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
       }
       res.render('pages/refseq/refseq_tree', {
         title: 'HOMD :: Conserved Protein Tree',
-        pgname: '',  //for AbountThisPage , 
+        pgname: 'tree',  //for AbountThisPage , 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		svg_data: JSON.stringify(data),
