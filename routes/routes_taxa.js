@@ -839,7 +839,7 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    console.log(genera)
    //console.log(node)
    var children_list = []
-   for(i in node.children_ids){
+   for(i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
    		n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
    		//children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
    		children_list.push("<a href='/taxa/taxon_page/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")

@@ -346,21 +346,12 @@ function fix_rank(rank){
 }
 //
 function toggle_lower_ranks(){
-    //els = document.getElementsByClassName('lower-rank-items')
-    toggle_btn = document.getElementById('toggle_ranks')
-    // for(i = 0; i < els.length; i++){
-//       if(els[i].style.display == 'none'){
-//        els[i].style.display = 'inline'
-//        toggle_btn.innerHTML="<a href='#' onclick='toggle_lower_ranks()'>hide[-]</a>"
-//       }else{
-//        els[i].style.display = 'none'
-//        toggle_btn.innerHTML="<a href='#' onclick='toggle_lower_ranks()'>show[+]</a>"
-//       }
-//     }
     
+    toggle_btn = document.getElementById('toggle_ranks')
     el = document.getElementById('lower-rank-items-div')
     if(el.style.display == 'none'){
        el.style.display = 'inline'
+       document.getElementById('tbl').style.marginLeft = "30px";
        toggle_btn.innerHTML="<a href='#' onclick='toggle_lower_ranks()'>hide[-]</a>"
     }else{
        el.style.display = 'none'

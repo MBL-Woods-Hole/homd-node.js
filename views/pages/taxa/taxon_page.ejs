@@ -23,11 +23,7 @@
     border:1px solid black;
     padding:2px;
 }
-#major_genera{
-   border:1px solid black;
-   padding: 5px;
-   margin:10px 2px;
-}
+
 </style>
 <% segata_data = JSON.parse(segata) %>
 <% segata_order = JSON.parse(segata_order) %>
@@ -61,7 +57,7 @@
 		      
 		      <div id='lower-rank-items-div' style='display:none'>
 		      <% cols = 5 %>
-		      <table><tr>
+		      <table id='tbl'><tr>
 		      <% for(n in children_lst){ %>
 		         <% if(n % cols == 0){  %><!-- // modulus -->
                   </tr><tr>
@@ -74,11 +70,11 @@
 		    
 		    <% } %>
 		    <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
-		    <br>Genera:
-		    <select class='dropdown'>
-		    <% for(n in genera){ %>
-	          <option><%= genera[n].taxon %></option>
-	        <% } %>
+		      <br>Genera:
+		      <select class='dropdown' onchange="location = this.value;">
+		      <% for(n in genera){ %>
+	            <option value='/taxa/taxon_page/genus/<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
+	          <% } %>
 		    <% } %>
 		    </select>
 		    </small>
