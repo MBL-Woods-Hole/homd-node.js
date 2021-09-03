@@ -23,7 +23,14 @@
     border:1px solid black;
     padding:2px;
 }
-
+#visit-life-page{
+   float:right;
+   font-size:x-small;
+   color:green;
+}
+#visit-life-page a{
+  color:steelblue;
+}
 </style>
 <% segata_data = JSON.parse(segata) %>
 <% segata_order = JSON.parse(segata_order) %>
@@ -46,7 +53,9 @@
 		<div class='title'><%= rank_show %>: <%= tax_name %></div>
 		
 		<div id='taxon-page-div'>
+		
 		    Full Lineage: <%- lineage %>
+		    <span id='visit-life-page'><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Visit LifePage</a></span>
 		    <br><small>Lower rank member(s): 
 		    <% if(children_lst.length <= 5){ %>
 		        <% for(n in children_lst){ %>
@@ -72,6 +81,7 @@
 		    <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
 		      <br>Genera:
 		      <select class='dropdown' onchange="location = this.value;">
+		      <option value="" disabled selected>Select your genera</option>
 		      <% for(n in genera){ %>
 	            <option value='/taxa/taxon_page/genus/<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
 	          <% } %>
@@ -89,6 +99,9 @@
 		  <div id='plot_div'>
 			<small><%= segata_text %></small>
 			<div id="plot_here"></div> 
+			<small><a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
+                Segata et al.(2012)</a>
+            </small>
 	      </div>
 	    
 	</div>    <!--  end col-left1-->
@@ -127,7 +140,7 @@
                 <li>Group 4 (G4): stool (Stool). 
                 </ul>
                 <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
-                From Segata et al.(2012)</a>
+                Segata et al.(2012)</a>
                 </small>	 
         
             </div>

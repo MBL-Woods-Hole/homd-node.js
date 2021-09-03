@@ -36,6 +36,7 @@
 }
 #life-table tr td{
    padding:5px;
+   font-size:15px;
    
 }
 .life-taxa-name{
@@ -52,9 +53,11 @@
 }
 .vist-taxon-page{
   float:right;
-  font-size:small;
+  font-size:x-small;
 }
-
+.vist-taxon-page a{
+  color:steelblue;
+}
 </style>
 <% images = JSON.parse(image_array)  %>
 <%- include('../../partials/header_html'); %>
