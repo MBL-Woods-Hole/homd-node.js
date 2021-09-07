@@ -81,7 +81,7 @@
 		    <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
 		      <br>Genera:
 		      <select class='dropdown' onchange="location = this.value;">
-		      <option value="" disabled selected>Select your genera</option>
+		      <option value="" disabled selected>Select a genera</option>
 		      <% for(n in genera){ %>
 	            <option value='/taxa/taxon_page/genus/<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
 	          <% } %>
@@ -172,8 +172,8 @@
   data = JSON.parse('<%- segata %>')
   max = '<%- max %>'
   if(data.length == 0){
-     document.getElementById("plot_here").innerHTML = 'No Segata2012 Data2'
-     document.getElementById("segata_table_div").innerHTML = 'No Segata2012 Data2'
+     document.getElementById("plot_here").innerHTML = 'No Segata2012 Data'
+     document.getElementById("segata_table_div").innerHTML = 'No Segata2012 Data'
   
   }else{
 	  console.log(data)
