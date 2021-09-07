@@ -89,7 +89,12 @@ input[type=radio] {
     width: auto;
     height: 100%; 
 }
-
+.float-right{
+   float: right;
+}
+.float-left{
+   float: left;
+}
 
 /*    End of header images CSS */
    

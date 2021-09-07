@@ -244,12 +244,12 @@ router.get('/dld_table/:type/:letter/:rank/:search_txt/:search_field', function 
 	let search_txt = req.params.search_txt
 	let search_field = req.params.search_field
 	
-
+    console.log(type,letter,rank,search_txt,search_field)
   	let tmp_phage_list = Object.values(C.phage_lookup)
   	console.log('type '+type)
   	console.log('letter '+letter)
   	console.log('rank '+rank)
-  	if(letter && letter.match(/[A-Z]{1}/)){
+  	if(letter && letter.match(/[A-Z]{1}/)){   // match single letter
         console.log('got letter '+letter)
         if(rank == 'genus'){
              send_list0 = tmp_phage_list.filter(item => item.genus_ncbi.toLowerCase().charAt(0) === letter)
@@ -261,6 +261,7 @@ router.get('/dld_table/:type/:letter/:rank/:search_txt/:search_field', function 
   	    let tmp_phage_list = Object.values(C.phage_lookup)
   	    send_list0 = get_filtered_phage_list(tmp_phage_list, search_txt, search_field)
   	}else{  // full list
+  	    console.log('default')
   	    send_list0 = tmp_phage_list
   	}
 	// type = browser text or excel

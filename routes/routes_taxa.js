@@ -175,39 +175,30 @@ router.post('/tax_table', function tax_table_post(req, res) {
               if( sitefilter_on.indexOf(site) !== -1 )
                 //nasal or oral if site item in s return only one instance
 			   {
-				 //console.log('e',e)
 				 return e
 			   }
             }
           }
           
         }) 
-	
 	}else if(sitefilter_on.length == 0){   // only items from status filter checked
 	    send_list = big_tax_list.filter( function(e){
           if( statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 ){
-             //console.log('e',e)
              return e
           }
         }) 
-	
 	}else{
-      
       send_list = big_tax_list.filter( function(e){
-          
           if(e.sites.length > 0){
             for(n in e.sites){
               var site = e.sites[n].toLowerCase()  // nasal,oral
               var status = e.status.toLowerCase()
               if(sitefilter_on.indexOf(site) !== -1 && statusfilter_on.indexOf(status) !== -1 )
               {
-                 //console.log('e',e)
                  return e
               }
-          
             }
           }  
-          
       }) 
     }   
       
@@ -603,7 +594,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
 	let statusfilter = JSON.parse(req.params.stati)
     let search_txt = req.params.search_txt
 	let search_field = req.params.search_field
-	
+	//console.log(type,letter,sitefilter,statusfilter,search_txt,search_field)
 	// Apply filters
 	let temp_list = Object.values(C.taxon_lookup);
 	let file_filter_txt = ""
@@ -614,25 +605,70 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
 	}else if(search_txt !== '0'){
 	    send_list = get_filtered_taxon_list(search_txt, search_field)
 	    file_filter_txt = "HOMD.org Taxon Data::Search Filter Applied (Search text '"+search_txt+"')"
+	//}else if(sitefilter.length > 0 ||  statusfilter.length > 0){
+	}else if(statusfilter.length === 0 && sitefilter.length === 0){
+	  // this is for download default table. on the downloads page
+	  // you cant get here from the table itself (javascript prevents)
+	  console.log('in dwnld filters==[][]')
+	  send_list = temp_list
 	}else{
 		// apply site/status filter as last resort
-		send_list = temp_list.filter( function(e){
-		  //console.log('e',e)
-		  if(e.sites.length > 0){
+		console.log('in dwnld filters')
+		
+		if(statusfilter.length == 0){  // only items from site filter checked
+	    send_list = temp_list.filter( function(e){
+          if(e.sites.length > 0){
+            for(n in e.sites){
+              var site = e.sites[n].toLowerCase()  // nasal,oral
+              if( sitefilter.indexOf(site) !== -1 )
+                //nasal or oral if site item in s return only one instance
+			   {
+				 return e
+			   }
+            }
+          }
+          
+        }) 
+	}else if(sitefilter.length == 0){   // only items from status filter checked
+	    send_list = temp_list.filter( function(e){
+          if( statusfilter.indexOf(e.status.toLowerCase()) !== -1 ){
+             return e
+          }
+        }) 
+	}else{
+      send_list = temp_list.filter( function(e){
+          if(e.sites.length > 0){
             for(n in e.sites){
               var site = e.sites[n].toLowerCase()  // nasal,oral
               var status = e.status.toLowerCase()
               if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
               {
-                 //console.log('e',e)
                  return e
               }
-          
             }
-          }  
-		})
-		file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied" 
-	}
+          }
+        })
+    } 
+  } 
+		
+		
+		// send_list = temp_list.filter( function(e){
+// 		  //console.log('e',e)
+// 		  if(e.sites.length > 0){
+//             for(n in e.sites){
+//               var site = e.sites[n].toLowerCase()  // nasal,oral
+//               var status = e.status.toLowerCase()
+//               if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
+//               {
+//                  //console.log('e',e)
+//                  return e
+//               }
+//           
+//             }
+//           }  
+// 		})
+	file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied" 
+
   	let list_of_otids = send_list.map(item => item.otid)
   	console.log('list_of_otids',list_of_otids)
 	// type = browser, text or excel
@@ -1119,9 +1155,8 @@ function create_table(otids, source, type, head_txt) {
            
             let otid = otids[n].toString()
             o1 = obj1[otid]
-             console.log('otid',otid)
-             console.log('otidX2',obj2[otid])
-             console.log('otidX3',obj3[otid])
+             //console.log('otid',otid)
+             
             if(otid in obj2){
                o2 = obj2[otid]
             }else{

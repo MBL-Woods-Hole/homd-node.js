@@ -77,6 +77,13 @@
 .img {
   height: 200px;
 }
+.rs-span-2{
+  float:right;
+}
+.rs-span-1{
+  
+  
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -184,7 +191,7 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>NCBI Taxonomy ID:</td>
-	  <td><small><%= data1.ncbi_taxid %> [<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]</small></td>
+	  <td><small><%= data1.ncbi_taxid %> <span class='rs-span-2'>[<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]</span></small></td>
 	</tr>
 	<tr>
 	  <% if(data1.type_strains.length === 0){ %>
@@ -204,19 +211,28 @@
 	<tr>
 	  <td class='tbl-title'>16S rRNA Reference Sequences:</td>
 	  <td><small>
-	  <% for( var n in data5){ %>
-	<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
-	<% refseqid 	= data5[n].refseqid %>
-	<% refseqname 	= data5[n].seqname %>
-	<% refstrain 	= data5[n].strain %>
-	<% refgenbank 	= data5[n].genbank %>
-	<% refstatus 	= data1.status %>
-	<% refsite 		= data1.site %>
-	<% refflag 		= data1.genomes === [] ? 'Genome:No' : 'Genome:Yes' %>
-	RefSeq ID: <a href='#' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= refsite %>','<%= refflag %>')">
-	<%= refseqid %></a>
-    <% } %>
-	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>View in RefSeq Tree</a>
+	  
+		  <span class='rs-span-2'>
+		  &nbsp;&nbsp;&nbsp;<a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>view in<br>RefSeq tree</a>
+		  </span>
+	  
+		  <% for( var n in data5){ %>
+		<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+		<% refseqid 	= data5[n].refseqid %>
+		<% refseqname 	= data5[n].seqname %>
+		<% refstrain 	= data5[n].strain %>
+		<% refgenbank 	= data5[n].genbank %>
+		<% refstatus 	= data1.status %>
+		<% refsite 		= data1.site %>
+		<% refflag 		= data1.genomes === [] ? 'Genome:No' : 'Genome:Yes' %>
+		<span class='rs-span-1'>
+		  RefSeq ID:<a href='#' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= refsite %>','<%= refflag %>')">
+		  <%= refseqid %></a>
+		</span>
+		<br>
+		<% } %>
+	  
+	  
 	  </small>
 	  </td>
 	</tr>
@@ -253,7 +269,7 @@
 	<table id='right-tbl'>
 	<tr>
 	  <td class='tbl-title'>Genotypic Description:</td>
-	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	  <td><small>TODO</small></td>
 	</tr>
 	
 	<tr>
@@ -266,11 +282,11 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Pangenome:</td>
-	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	  <td><small><a href='https://anviserver.homd.info/'>https://anviserver.homd.info/</a>-TODO</small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Microbial Ecology:</td>
-	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	  <td><small>TODO</small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Number of Phage<br>Known to Infect this Species:</td>
@@ -284,11 +300,11 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Proteomics:</td>
-	  <td><small>>>>>>>>>>><<<<<<<<<<>>>>>>>>>></small></td>
+	  <td><small>TODO</small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Tools:</td>
-	  <td><small>JBrowse::ANVIO`</small></td>
+	  <td><small>JBrowse; Anvi`o</small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>PubMed Search:</td>
