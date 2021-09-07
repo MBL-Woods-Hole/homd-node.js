@@ -64,33 +64,35 @@ function search(){
 	f.submit()
 }
 
-function open_tree(tree_name) {  // needs to be global ie in menu.js
-    // tree names: refseq, conserved, ribosomal, 16S_rRNA
-    // OPEN TREES In another window not in an iframe
-    args={}
-    args.tree_name = tree_name
-    var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", "/homd/open_tree", true);
-	xmlhttp.setRequestHeader("Content-type","application/json");
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        var resp = xmlhttp.responseText;
-        //console.log(defline)
-        text = ''
-        //text += '<pre>'+defline+'<br>'
-        text = '<pre>'
-        text += resp
-        text += '</pre>'
-		var win = window.open( "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
-		var doc = win.document;
-		//doc.writeln("<title>yourtitle</title>");
-		//doc.title = 'eHOMD Reference Sequence'
-		//doc.open("text/html");
-		doc.open("image/svg+xml");
-		//doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
-		doc.write(text);
-		doc.close();
-      }
-    }
-    xmlhttp.send(JSON.stringify(args));
-}
+// function open_tree(tree_name) {  // needs to be global ie in menu.js
+//     // tree names: refseq, conserved, ribosomal, 16S_rRNA
+//     // OPEN TREES In another window not in an iframe
+//     args={}
+//     args.tree_name = tree_name
+//     var xmlhttp = new XMLHttpRequest();
+// 	xmlhttp.open("POST", "/homd/open_tree", true);
+// 	xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//         var resp = xmlhttp.responseText;
+//         //console.log(defline)
+//         text = ''
+//         //text += '<pre>'+defline+'<br>'
+//         text = '<pre>'
+//         text += resp
+//         text += '</pre>'
+// 		//var win = window.open( "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
+// 		//var win = window.open();
+// 		
+// 		var doc = window.open().document;
+// 		//doc.writeln("<title>yourtitle</title>");
+// 		//doc.title = 'eHOMD Reference Sequence'
+// 		//doc.open("text/html");
+// 		doc.open("image/svg+xml");
+// 		//doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
+// 		doc.write(text);
+// 		doc.close();
+//       }
+//     }
+//     xmlhttp.send(JSON.stringify(args));
+// }

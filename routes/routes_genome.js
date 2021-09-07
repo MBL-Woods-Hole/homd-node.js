@@ -500,7 +500,7 @@ router.get('/conserved_protein_tree', function conserved_protein_tree(req, res) 
       }
       res.render('pages/genome/conserved_protein_tree', {
         title: 'HOMD :: Conserved Protein Tree', 
-        pgname: '',  //for AbountThisPage 
+        pgname: 'tree',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		svg_data: JSON.stringify(data),
@@ -520,7 +520,7 @@ router.get('/ribosomal_protein_tree', function ribosomal_protein_tree(req, res) 
       }
       res.render('pages/genome/ribosomal_protein_tree', {
         title: 'HOMD :: Ribosomal Protein Tree', 
-        pgname: '',  //for AbountThisPage 
+        pgname: 'tree',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		svg_data: JSON.stringify(data),
@@ -539,7 +539,7 @@ router.get('/rRNA_gene_tree', function rRNA_gene_tree(req, res) {
       }
       res.render('pages/genome/rRNA_gene_tree', {
         title: 'HOMD :: rRNA Gene Tree', 
-        pgname: '',  //for AbountThisPage 
+        pgname: 'tree',  //for AbountThisPage 
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		svg_data: JSON.stringify(data),

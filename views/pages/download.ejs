@@ -1,16 +1,27 @@
 <style>
 .dnld-block{
   
-  margin:10px 0;
-  border:1px solid green;
-}
-.dnld-block ul {
+  margin:30px 0;
+  border:1px solid black;
+  width:70%;
   
-  padding:5px;
 }
+
 .subtitle{
   background:lightgrey;
   padding:5px 10px;
+}
+.download-table{
+  width:auto;
+  text-align:center;
+}
+.download-table th{
+  background:palegreen;
+}
+.download-table td{
+  background:lightgrey;
+  padding: 2px 20px;
+  font-size:small;
 }
 </style>
 <%- include('../partials/header_html'); %>
@@ -25,42 +36,81 @@
 		 					
 	<div class='title'>Download HOMD Data</div>
 		
-
+<center>
 <div id='taxon' class='dnld-block'>
-	
+	<center>
 	<div class='subtitle'>Batch Taxonomic Data Download:</div>
-	<ul>
-	<li>Taxon Table</li>
-	</ul>
+	<table class='download-table'>
+	  <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+	  <tr><td>Taxon Table</td>
+	    <td><a href='/taxa/dld_table/browser/all/[]/[]/0/0'>Tab Delimited Text<br>(View in browser)</a></td>
+	    <td><a href='/taxa/dld_table/text/all/[]/[]/0/0'>Tab Delimited Text<br>(Save to file)</a></td>
+	    <td><a href='/taxa/dld_table/excel/all/[]/[]/0/0'>MS Excel Format<br>(Save to file)</a></td>
+	  </tr>
+	  <tr>
+	    <td>Taxonomic Hierarchy</td><td><a href=''>Tab Delimited Text<br>(View in browser)</a></td><td><a href=''>Tab Delimited Text<br>(Save to file)</a></td><td><a href=''>MS Excel Format<br>(Save to file)</a></td></tr>
+	  <tr>
+	    <td>Taxonomic Level</td><td><a href=''>Tab Delimited Text<br>(View in browser)</a></td><td><a href=''>Tab Delimited Text<br>(Save to file)</a></td><td><a href=''>MS Excel Format<br>(Save to file)</a></td></tr>
+	</table>
+	</center>
 </div>
 <div id='genome' class='dnld-block'>
-	
+	<center>
 	<div class='subtitle'>Batch Genomic Meta Informaton Download</div>
-	<ul>
-	<li>Sequence Meta Information</li>
-	</ul>
+	<table class='download-table'>
+	  <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+	  <tr><td>Sequence Meta Information</td><td><a href=''>Tab Delimited Text-todo<br>(View in browser)</a></td><td><a href=''>Tab Delimited Text-todo<br>(Save to file)</a></td><td><a href=''>MS Excel Format-todo<br>(Save to file)</a></td></tr>
+	  
+	</table>
+	</center>
 </div>
 <div id='phylo' class='dnld-block'>
-	
+	<center>
 	<div class='subtitle'>Phylogenetics</div>
-	<ul>
-	<li>Phylogenetic tree of HOMD 16S rRNA Reference Sequences</li>
-	<li>Phylogenetic tree of 16S rRNA gene sequences identified in HOMD genomes</li>
-	<li>Phylogenomic tree based on conserved proteins identified from HOMD genomes</li>
-	<li>Phylogenetic tree of ribosomal proteins identified from HOMD genomes</li>
-	</ul>
+	<table class='download-table'>
+	  <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+	  <tr><td>Phylogenetic tree of HOMD 16S rRNA Reference Sequences</td>
+	      <td><a href="http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg">svg</a></td>
+	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.tre'>newick</a></td>
+	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/refseq/current/seqid_info.txt'>Sequence ID table</a></td>
+	  </tr>
+	  <tr><td>Phylogenetic tree of 16S rRNA gene sequences identified in HOMD genomes</td>
+	      <td><a href="http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.svg">svg</a></td>
+	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.tre'>newick-todo</a></td>
+	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/seqid_info_16S.txt'>Sequence ID table-todo</a></td>
+	  </tr>
+	  <tr><td>Phylogenomic tree based on conserved proteins identified from HOMD genomes</td>
+	      <td><a href="http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">svg</a></td>
+	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.tre'>newick-todo</a></td>
+	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table-todo</a></td>
+	  </tr>
+	  <tr><td>Phylogenetic tree of ribosomal proteins identified from HOMD genomes</td>
+	      <td><a href="http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg">svg</a></td>
+	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.tre'>newick-todo</a></td>
+	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table-todo</a></td>
+	  </tr>
+	
+	</table>
+	</center>
 </div>		 
 
 <div id='phage' class='dnld-block'>
-	
+	<center>
 	<div class='subtitle'>Batch Phage Data Download:</div>
-	<ul>
-	<li>Phage Table</li>
-	</ul>
+	<table class='download-table'>
+	  <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+	  <tr>
+	    <td>Phage Table</td>
+	    <td><a href='/phage/dld_table/browser/all/family/0/0'>Tab Delimited Text<br>(View in browser)</a></td>
+	    <td><a href='/phage/dld_table/text/all/family/0/0'>Tab Delimited Text<br>(Save to file)</a></td>
+	    <td><a href='/phage/dld_table/excel/all/family/0/0'>MS Excel Format<br>(Save to file)</a></td></tr>
+	  
+	</table>
+	</center>
 </div>
 
 <div id='refseq' class='dnld-block'>
-    
+    <center>
 	<div class='subtitle'>Download HOMD 16S rRNA Gene Sequences</div>
 			 
 	HOMD provides two different sets of 16S rRNA Gene Reference Sequence (RefSeq) for download and BLAST search:
@@ -72,8 +122,9 @@
 	please refer to our publication <a href='https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-020-00841-w' target='_blank' >Escapa et al, 2020</a>.
  
 	In addition, the entire collection of all cloned sequences (clonal collection) upon which the Refseq was derived from, is also provided for download on this page and on the HOMD FTP site.
+	</center>
 </div>
-
+</center>
     </div> <!-- end: page-content -->
     
     <div id='footer'>

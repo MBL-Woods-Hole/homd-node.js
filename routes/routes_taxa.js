@@ -175,39 +175,30 @@ router.post('/tax_table', function tax_table_post(req, res) {
               if( sitefilter_on.indexOf(site) !== -1 )
                 //nasal or oral if site item in s return only one instance
 			   {
-				 //console.log('e',e)
 				 return e
 			   }
             }
           }
           
         }) 
-	
 	}else if(sitefilter_on.length == 0){   // only items from status filter checked
 	    send_list = big_tax_list.filter( function(e){
           if( statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 ){
-             //console.log('e',e)
              return e
           }
         }) 
-	
 	}else{
-      
       send_list = big_tax_list.filter( function(e){
-          
           if(e.sites.length > 0){
             for(n in e.sites){
               var site = e.sites[n].toLowerCase()  // nasal,oral
               var status = e.status.toLowerCase()
               if(sitefilter_on.indexOf(site) !== -1 && statusfilter_on.indexOf(status) !== -1 )
               {
-                 //console.log('e',e)
                  return e
               }
-          
             }
           }  
-          
       }) 
     }   
       
@@ -603,7 +594,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
 	let statusfilter = JSON.parse(req.params.stati)
     let search_txt = req.params.search_txt
 	let search_field = req.params.search_field
-	
+	//console.log(type,letter,sitefilter,statusfilter,search_txt,search_field)
 	// Apply filters
 	let temp_list = Object.values(C.taxon_lookup);
 	let file_filter_txt = ""
@@ -614,25 +605,70 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
 	}else if(search_txt !== '0'){
 	    send_list = get_filtered_taxon_list(search_txt, search_field)
 	    file_filter_txt = "HOMD.org Taxon Data::Search Filter Applied (Search text '"+search_txt+"')"
+	//}else if(sitefilter.length > 0 ||  statusfilter.length > 0){
+	}else if(statusfilter.length === 0 && sitefilter.length === 0){
+	  // this is for download default table. on the downloads page
+	  // you cant get here from the table itself (javascript prevents)
+	  console.log('in dwnld filters==[][]')
+	  send_list = temp_list
 	}else{
 		// apply site/status filter as last resort
-		send_list = temp_list.filter( function(e){
-		  //console.log('e',e)
-		  if(e.sites.length > 0){
+		console.log('in dwnld filters')
+		
+		if(statusfilter.length == 0){  // only items from site filter checked
+	    send_list = temp_list.filter( function(e){
+          if(e.sites.length > 0){
+            for(n in e.sites){
+              var site = e.sites[n].toLowerCase()  // nasal,oral
+              if( sitefilter.indexOf(site) !== -1 )
+                //nasal or oral if site item in s return only one instance
+			   {
+				 return e
+			   }
+            }
+          }
+          
+        }) 
+	}else if(sitefilter.length == 0){   // only items from status filter checked
+	    send_list = temp_list.filter( function(e){
+          if( statusfilter.indexOf(e.status.toLowerCase()) !== -1 ){
+             return e
+          }
+        }) 
+	}else{
+      send_list = temp_list.filter( function(e){
+          if(e.sites.length > 0){
             for(n in e.sites){
               var site = e.sites[n].toLowerCase()  // nasal,oral
               var status = e.status.toLowerCase()
               if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
               {
-                 //console.log('e',e)
                  return e
               }
-          
             }
-          }  
-		})
-		file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied" 
-	}
+          }
+        })
+    } 
+  } 
+		
+		
+		// send_list = temp_list.filter( function(e){
+// 		  //console.log('e',e)
+// 		  if(e.sites.length > 0){
+//             for(n in e.sites){
+//               var site = e.sites[n].toLowerCase()  // nasal,oral
+//               var status = e.status.toLowerCase()
+//               if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
+//               {
+//                  //console.log('e',e)
+//                  return e
+//               }
+//           
+//             }
+//           }  
+// 		})
+	file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied" 
+
   	let list_of_otids = send_list.map(item => item.otid)
   	console.log('list_of_otids',list_of_otids)
 	// type = browser, text or excel
@@ -685,11 +721,11 @@ router.get('/life', function life(req, res) {
 	   title = 'Domain: Archaea'
 	   cts = C.taxon_counts_lookup['Archaea'].tax_cnt.toString()
  	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>("+cts+")</small>"
- 	   html += " <span class='vist-taxon-page'><a href='taxon_page/domain/Archaea'>Visit TaxonPage</a></span><br>"
+ 	   html += " <span class='vist-taxon-page'><a href='taxon_page/domain/Archaea'>TaxonPage</a></span><br>"
        title = 'Domain: Bacteria'
        cts = C.taxon_counts_lookup['Bacteria'].tax_cnt.toString()
  	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>("+cts+")</small>"
- 	   html += " <span class='vist-taxon-page'><a href='taxon_page/domain/Bacteria'>Visit TaxonPage</a></span><br>"
+ 	   html += " <span class='vist-taxon-page'><a href='taxon_page/domain/Bacteria'>TaxonPage</a></span><br>"
 
 	   html += '</td></tr>'
 	   image_array =[{'name':'cellular_organisms.png','text':''}]
@@ -727,7 +763,7 @@ router.get('/life', function life(req, res) {
 		      title = rank_display+': '+lineage_list[1][show_ranks[i]]
 		      html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
 			  html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a> ('+cts+')'
-			  html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>Visit TaxonPage</a></span>"
+			  html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>TaxonPage</a></span>"
 			  html += '</td></tr>'
 		   }else{  // Gather rows before the last row
 		     
@@ -762,7 +798,7 @@ router.get('/life', function life(req, res) {
 				         otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
 				       //console.log('otid',otid)
 					     html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
-					     html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+taxa_list[n]+"'>Visit TaxonPage</a></span><br>"
+					     html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+taxa_list[n]+"'>TaxonPage</a></span><br>"
 				       }
 				 
 				 }else{
@@ -777,7 +813,7 @@ router.get('/life', function life(req, res) {
 					   lin = make_lineage(node)
 					   cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
 					   html += space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
-					   html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+taxa_list[n]+"'>Visit TaxonPage</a></span><br>"
+					   html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+taxa_list[n]+"'>TaxonPage</a></span><br>"
 				    }
 				 } 
 			 }
@@ -1119,9 +1155,8 @@ function create_table(otids, source, type, head_txt) {
            
             let otid = otids[n].toString()
             o1 = obj1[otid]
-             console.log('otid',otid)
-             console.log('otidX2',obj2[otid])
-             console.log('otidX3',obj3[otid])
+             //console.log('otid',otid)
+             
             if(otid in obj2){
                o2 = obj2[otid]
             }else{

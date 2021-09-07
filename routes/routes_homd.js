@@ -116,23 +116,23 @@ router.post('/site_search', (req, res) => {
 
 // The main menu goes through here: routes_homd::open_tree w/ no search
 // The functions in routes_genome and refseq are used to open trees with a search for odid or genomeID
-router.post('/open_tree', function phylo_phlan_tree(req, res) {
-    // load trees from menu.js
-    // tree names: refseq, conserved, ribosomal, 16S_rRNA
-    helpers.accesslog(req, res)
-    console.log('in routes_homd::open_tree')
-    console.log(req.body)
-    let tree = req.body.tree_name
-    fs.readFile('public/trees/'+tree+'_tree.svg', (err, data) => {
-        if(err){
-           console.log(err)
-        }
-        res.set('Content-Type', 'application/svg+xml');
-        res.send(data)
-        res.end()
-    })
-
-});
+// router.post('/open_tree', function phylo_phlan_tree(req, res) {
+//     // load trees from menu.js
+//     // tree names: refseq, conserved, ribosomal, 16S_rRNA
+//     helpers.accesslog(req, res)
+//     console.log('in routes_homd::open_tree')
+//     console.log(req.body)
+//     let tree = req.body.tree_name
+//     fs.readFile('public/trees/'+tree+'_tree.svg', (err, data) => {
+//         if(err){
+//            console.log(err)
+//         }
+//         res.set('Content-Type', 'application/svg+xml');
+//         res.send(data)
+//         res.end()
+//     })
+// 
+// });
 
 
 module.exports = router;
