@@ -896,8 +896,8 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
       console.log('ERROR Lineage')
    }else{
       
-      if(lineage_list[0] in C.segata_lookup){
-         segata = Object.values(C.segata_lookup[lineage_list[0]])
+      if(lineage_list[0] in C.abundance_lookup){
+         segata = Object.values(C.abundance_lookup[lineage_list[0]])
          segata = reorder_for_graphing(segata, segata_order)
          max = Math.max.apply(Math, segata.map(function(o) { return o.avg; }))
          max_obj = segata.find(function(o){ return o.avg == max})
