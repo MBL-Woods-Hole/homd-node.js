@@ -133,14 +133,14 @@
 		    
 		</div>	
 <div id='legend'>		
-Buccal Mucosa (BM), Keratinized Gingiva (KG), Hard Palate (HP)  Palatine Tonsils (PT), Tongue Dorsum (TD)
-Supra-Gingival (SupP) and Sub-Gingival (SubP) Plaques; 
+Legend: Buccal Mucosa (BM), Keratinized Gingiva (KG), Hard Palate (HP), Palatine Tonsils (PT), Tongue Dorsum (TD),
+Supra-Gingival (SupP), and Sub-Gingival (SubP) Plaques; 
 </div>				 
 <div id="row">	
 <% if(Object.keys(segata_data).length == 0){ %>
    <% width='15%' %>
 <% }else{ %>
-   <% width='35%' %>
+   <% width='auto' %>
 <% } %>
 <div id='column_left' style='width:<%= width %>' >
 		
@@ -163,7 +163,7 @@ Supra-Gingival (SupP) and Sub-Gingival (SubP) Plaques;
 <% if(Object.keys(dewhirst_data).length === 0){ %>
    <% width='15%' %>
 <% }else{ %>
-   <% width='35%' %>
+   <% width='auto' %>
 <% } %>
 <div id="column_middle"  style='width:<%= width %>'>
 	  <div class='plot_div'>
@@ -180,7 +180,7 @@ Supra-Gingival (SupP) and Sub-Gingival (SubP) Plaques;
 <% if(Object.keys(eren_data).length === 0){ %>
    <% width='15%' %>
 <% }else{ %>
-   <% width='35%' %>
+   <% width='auto' %>
 <% } %>
 <div id="column_right"  style='width:<%= width %>'>
       <div class='plot_div'>

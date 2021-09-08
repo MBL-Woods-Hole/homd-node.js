@@ -360,8 +360,19 @@ input[type=radio] {
 .red-text{
   color:red;
 }
+.red{
+  background:red;
+}
 .blue-text{
   color:blue;
+}
+.blue{
+  background:lightblue;
+  width:100%;
+}
+.blue a{
+  
+  width:100%;
 }
 .green-text{
   color:green;

@@ -791,29 +791,30 @@ router.get('/life', function life(req, res) {
 				 if(rank === 'genus'){
 
 				       childern_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].children_ids
-				       if(childern_ids.length > 0){
-				         console.log('childern_ids-2')
-				         html += space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a>g1<br>'
+				       if(childern_ids.length > 0){  // only if subspecies
+				       //Bacteria;Firmicutes;Bacilli;Lactobacillales;Streptococcaceae;Streptococcus;Streptococcus oralis;
+				         //console.log('childern_ids-2')
+				         html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a></span><br>'
 				       }else{
 				         otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
 				       //console.log('otid',otid)
-					     html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
-					     html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Ecology</a></span><br>"
+					     html += "<span class='blue'>"+space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
+					     html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Ecology</a></span></span><br>"
 				       }
 				 
 				 }else{
 					if(rank === 'species'){
-				       console.log('RANK==species')
+				       //console.log('RANK==species')
 				       //console.log(taxa_list[n])
 				       otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'].otid
-				       html += space+"<a title='"+title+"' href='tax_description?otid="+otid+"'>"+taxa_list[n]+'</a><br>'    
+				       html += "<span class=''>"+space+"<a title='"+title+"' href='tax_description?otid="+otid+"'>"+taxa_list[n]+'</a></span><br>'    
 				    }else{
 					   // list of not genus or species 
 					   node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+next_rank]
 					   lin = make_lineage(node)
 					   cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
-					   html += space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
-					   html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Ecology</a></span><br>"
+					   html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
+					   html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Ecology</a></span></span><br>"
 				    }
 				 } 
 			 }
@@ -850,7 +851,7 @@ router.get('/life', function life(req, res) {
 });
 //
 router.get('/ecology/:level/:name', function ecology(req, res) {
-   console.log('in taxon page')
+   console.log('in ecology')
    let rank = req.params.level
    let tax_name = req.params.name
    let segata_text = '',dewhirst_text='',eren_text=''
