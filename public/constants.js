@@ -42,7 +42,7 @@ constants.refseq_lookup_fn 		= 'homdData-TaxonRefSeqLookup.json'
 constants.phage_list_fn         = 'homdData-PhageList.json'
 constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
 constants.annotation_lookup_fn  = 'homdData-AnnotationLookup.json'
-constants.abundance_lookup_fn      = 'homdData-Abundance.json'
+//constants.abundance_lookup_fn      = 'homdData-Abundance.json'
 
 //constants.access_log_format = 'url=":url" method=":method" statusCode=":statusCode" delta=":delta" ip=":ip"'
 constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'

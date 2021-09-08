@@ -158,7 +158,7 @@ var data_init_files =[
 	C.taxcounts_fn,
 	C.annotation_lookup_fn,
 	C.phage_lookup_fn,
-	C.abundance_lookup_fn	
+	
 	
 ]
 console.log('Path to Data Files:',config.PATH_TO_DATA)
@@ -200,7 +200,7 @@ async.map(data_init_files, readAsync, function(err, results) {
     C.taxon_counts_lookup 			= JSON.parse(results[7]);
     C.annotation_lookup 			= JSON.parse(results[8]);
     C.phage_lookup 			        = JSON.parse(results[9]);
-    C.abundance_lookup 			    = JSON.parse(results[10]);
+    
     //Object.values(C.taxon_lookup)
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
     C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
@@ -217,12 +217,21 @@ async.map(data_init_files, readAsync, function(err, results) {
     //console.log(C.phage_lookup)
     size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup))
     console.log('C.taxon_lineage_lookup length',Object.keys(C.taxon_lineage_lookup).length,'\tsize(KB):',size/1024)
+    
+    size = Buffer.byteLength(JSON.stringify(C.taxon_info_lookup))
     console.log('C.taxon_info_lookup length',Object.keys(C.taxon_info_lookup).length)
+    
+    size = Buffer.byteLength(JSON.stringify(C.refseq_lookup))
     console.log('C.refseq_lookup length',Object.keys(C.refseq_lookup).length)
+    
     size = Buffer.byteLength(JSON.stringify(C.genome_lookup))
     console.log('C.genome_lookup length',Object.keys(C.genome_lookup).length,'\t\tsize(KB):',size/1024)
+    
     size = Buffer.byteLength(JSON.stringify(C.annotation_lookup))
     console.log('C.annotation_lookup length',Object.keys(C.annotation_lookup).length,'\t\tsize(KB):',size/1024)
+    
+    size = Buffer.byteLength(JSON.stringify(C.taxon_counts_lookup))
+    console.log('C.taxon_counts_lookup length',Object.keys(C.taxon_counts_lookup).length,'\tsize(KB):',size/1024)
     for(var n in C.homd_taxonomy){
        console.log(n)
     }

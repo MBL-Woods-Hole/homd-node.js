@@ -41,7 +41,7 @@ thead th { position: sticky; top: 0; }
 		    <th scope="col">Species</th>
 		    <th scope="col">Status</th>
 		    <th scope="col" nowrap>Body Site</th>
-		    <th scope="col">Flag</th>
+		    <th scope="col">Ecology Link</th>
 		    <th scope="col" class="sorttable_nosort" nowrap>Taxon Link</th>
 		    <th scope="col" class="sorttable_nosort" nowrap>Genome Link</th>
 		    <th scope="col" nowrap>Genome Size</th>
@@ -53,21 +53,21 @@ thead th { position: sticky; top: 0; }
 		   <% otid= list[n].otid %>
 		   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
 		   <td nowrap><%= taxidfullname  %></td>
-		   <td nowrap><i><b><a href='taxon_page/genus/<%= list[n].genus %>'><%= list[n].genus  %></a></b></i></td>
-		   <td nowrap><i><b><a href='taxon_page/species/<%= list[n].genus %> <%= list[n].species %>'><%= list[n].species  %></a></b></i></td>
+		   <td nowrap><i><b><a href='life?rank=genus&name=<%= list[n].genus %>'><%= list[n].genus  %></a></b></i></td>
+		   <td nowrap><i><b><a href='life?rank=species&name=<%= list[n].genus %> <%= list[n].species %>'><%= list[n].species  %></a></b></i></td>
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].sites  %></td>
-		   <td><%= list[n].warning  %></td>
+		   <td style='text-align:center' nowrap><a href="ecology/species/<%= list[n].genus %>%20<%= list[n].species %>" class="pill pill-green" >Ecology</a></td>
 		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Taxon Description</a></td>
 		   <td style='text-align:center' nowrap>
 		   <% num_genomes = list[n].genomes.length %>
 		   <% if(num_genomes === 0){ %>
 		     
 		   <% }else if(num_genomes === 1){ %> 
-		    <a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-green" >1 Genome</a>
+		    <a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-lightseagreen" >1 Genome</a>
 		   <% }else{ %>
 		     
-		     <a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-green" ><%= num_genomes %> Genomes</a>
+		     <a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-lightseagreen" ><%= num_genomes %> Genomes</a>
 		     
 		   <% } %>
 		   </td>

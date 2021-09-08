@@ -329,6 +329,12 @@ input[type=radio] {
 #column_left1{
    padding:10px;
    border:1px solid brown;
+   width:auto;
+}
+#column_middle1{
+   padding:10px;
+   border:1px solid brown;
+   width:33%;
 }
 #column_right1 {
   padding:10px 30px;

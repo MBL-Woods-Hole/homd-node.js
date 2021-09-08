@@ -64,8 +64,8 @@ thead th { position: sticky; top: 0; }
 	<tr class="">
 		<td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
 		<td class='linkout center' nowrap ><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-		<td class='tax_name'><em><a href='/taxa/taxon_page/genus/<%= ginfo[n].genus %>'><%= ginfo[n].genus %></a></em></td>
-		<td class='tax_name'><em><a href='/taxa/taxon_page/species/<%= ginfo[n].species %>'><%= ginfo[n].species %></a></em></td>
+		<td class='tax_name'><em><a href='/taxa/ecology/genus/<%= ginfo[n].genus %>'><%= ginfo[n].genus %></a></em></td>
+		<td class='tax_name'><em><a href='/taxa/ecology/species/<%= ginfo[n].species %>'><%= ginfo[n].species %></a></em></td>
 		<td ><%= ginfo[n].ccolct %></td>
 		
 		<td class='center'><%= ginfo[n].ncontigs %></td>

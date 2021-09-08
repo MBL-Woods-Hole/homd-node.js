@@ -721,11 +721,11 @@ router.get('/life', function life(req, res) {
 	   title = 'Domain: Archaea'
 	   cts = C.taxon_counts_lookup['Archaea'].tax_cnt.toString()
  	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>("+cts+")</small>"
- 	   html += " <span class='vist-taxon-page'><a href='taxon_page/domain/Archaea'>TaxonPage</a></span><br>"
+ 	   html += " <span class='vist-taxon-page'><a href='ecology/domain/Archaea'>Ecology</a></span><br>"
        title = 'Domain: Bacteria'
        cts = C.taxon_counts_lookup['Bacteria'].tax_cnt.toString()
  	   html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>("+cts+")</small>"
- 	   html += " <span class='vist-taxon-page'><a href='taxon_page/domain/Bacteria'>TaxonPage</a></span><br>"
+ 	   html += " <span class='vist-taxon-page'><a href='ecology/domain/Bacteria'>Ecology</a></span><br>"
 
 	   html += '</td></tr>'
 	   image_array =[{'name':'cellular_organisms.png','text':''}]
@@ -763,7 +763,7 @@ router.get('/life', function life(req, res) {
 		      title = rank_display+': '+lineage_list[1][show_ranks[i]]
 		      html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
 			  html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a> ('+cts+')'
-			  html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>TaxonPage</a></span>"
+			  html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>Ecology</a></span>"
 			  html += '</td></tr>'
 		   }else{  // Gather rows before the last row
 		     
@@ -798,7 +798,7 @@ router.get('/life', function life(req, res) {
 				         otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
 				       //console.log('otid',otid)
 					     html += space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
-					     html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+taxa_list[n]+"'>TaxonPage</a></span><br>"
+					     html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Ecology</a></span><br>"
 				       }
 				 
 				 }else{
@@ -813,7 +813,7 @@ router.get('/life', function life(req, res) {
 					   lin = make_lineage(node)
 					   cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
 					   html += space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
-					   html += " <span class='vist-taxon-page'><a href='taxon_page/"+show_ranks[i]+"/"+taxa_list[n]+"'>TaxonPage</a></span><br>"
+					   html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Ecology</a></span><br>"
 				    }
 				 } 
 			 }
@@ -849,41 +849,49 @@ router.get('/life', function life(req, res) {
 	
 });
 //
-router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
+router.get('/ecology/:level/:name', function ecology(req, res) {
    console.log('in taxon page')
    let rank = req.params.level
    let tax_name = req.params.name
-   let segata_text = ''
-   var segata = []
+   let segata_text = '',dewhirst_text='',eren_text=''
    let max = 0
    let max_obj = {}
    //let major_genera=0
-   
+   let segata_data={},dewhirst_data={},eren_data={}
+   let segata_max=0,dewhirst_max=0,eren_max=0
+   let eren_table='',dewhirst_table='',segata_table=''
    console.log('rank: '+rank+' name: '+tax_name)
    // TODO::should be in constants???
-   let segata_names = {'BM':"buccal mucosa (BM)",
-   		"KG":"keratinized gingiva (KG)",
-   		'Hp':'hard Palate (Hp)',
-   		'Th':"throat (Th)",
-   		"PT":"palatine tonsils (PT)",
-   		"TD":'tongue dorsum (TD)',
-   		"Sal":"saliva (Sal)",
-   		"SupP":"supra-gingival Plaque (SupP)",
-   		"SubP":"sub-gingival Plaque (SubP)",
-   		"Stool":"stool"}
-   let segata_order = ['BM',"KG",'Hp','G1-avg','Th',"PT","TD","Sal",'G2-avg',"SupP","SubP",'G3-avg',"Stool",'G4-avg']
+   let abundance_names = {
+        'BM':"Buccal Mucosa (BM)",
+   		"KG":"Keratinized Gingiva (KG)",
+   		'HP':'Hard Palate (HP)',
+   		'Throat':"Throat",
+   		"PT":"Palatine Tonsils (PT)",
+   		"TD":'Tongue Dorsum (TD)',
+   		"Saliva":"Saliva",
+   		"SupP":"Supra-gingival Plaque (SupP)",
+   		"SubP":"Sub-gingival Plaque (SubP)",
+   		"Stool":"Stool"
+   	}
+   //let segata_order = ['BM',"KG",'Hp','G1-avg','Th',"PT","TD","Sal",'G2-avg',"SupP","SubP",'G3-avg',"Stool",'G4-avg']
+   let segata_order = ['BM',"KG",'HP','Throat',"PT","TD","Saliva","SupP","SubP",'Stool']
+   let dewhirst_order = ['BM',"KG",'HP','TD','PT','Throat','Saliva','SupP','SubP']
+   let eren_order = ['BM',"KG",'HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+   if(!node){
+      //error
+   }
    genera = get_major_genera(rank, node)
    
-
    //console.log('genera')
    //console.log(genera)
-   //console.log(node)
+   console.log(node)
    var children_list = []
    for(i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
    		n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
    		//children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
-   		children_list.push("<a href='/taxa/taxon_page/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
+   		children_list.push("<a href='/taxa/ecology/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
    }
    
    if(!node){
@@ -895,44 +903,35 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
       lineage_list[0] = ''
       console.log('ERROR Lineage')
    }else{
+      // console.log('lineage')
+//       console.log(lineage_list[0])
       
-      if(lineage_list[0] in C.abundance_lookup){
-         segata = Object.values(C.abundance_lookup[lineage_list[0]])
-         segata = reorder_for_graphing(segata, segata_order)
-         max = Math.max.apply(Math, segata.map(function(o) { return o.avg; }))
-         max_obj = segata.find(function(o){ return o.avg == max})
+      //console.log(C.taxon_counts_lookup[lineage_list[0]])
+      if(lineage_list[0] in C.taxon_counts_lookup){
          
-         segata_text += helpers.clean_rank_name_for_show(rank) +' '+tax_name+ ' is'
-         if(max > 1){
-			   segata_text += ' an abundant'
-			}else if(max > 0.1 && max <=1){
-			   segata_text += ' a moderately abundant'
-			}else{  // smaller than 0.1
-			   segata_text += ' a low-abundance'
-			}
-         segata_text += ' member of the healthy oral microbiome. It reaches its highest relative abundance '
-         if(max_obj.loci == 'G1-avg'){
-         	segata_text += ' across all oral locations.' // This will hit for 'bacteria'
-         }else if(max_obj.loci == 'G2-avg'){
-         	segata_text += ' across all Group2 locations.'
-         }else if(max_obj.loci == 'G3-avg'){
-         	segata_text += ' across all Group3 locations.'
-         }else if(max_obj.loci == 'G4-avg'){
-            segata_text += ' in stool.'
-         }else if(max_obj.loci in segata_names){
-            segata_text += ' in the '+segata_names[max_obj.loci]
-            if(max_obj.loci == 'Sal'){
-               segata_text += ' suggesting that its site of greatest abundance has not yet been identified.'
-            }else if(max_obj.loci == 'Hp'){
-            
-            }else if(max_obj.loci == 'SubP'){
-            
-            }
-            
-         }else{
-            segata_text += ' across all oral locations.'
+         if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+             segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
+             segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
+             segata_text += helpers.clean_rank_name_for_show(rank) +' '+tax_name+ ' is'
+			 max_obj = segata_data.find(function(o){ return o.avg == segata_max})
+			 segata_text = get_abundance_text(segata_max, max_obj, abundance_names, rank, tax_name)
+			 segata_table = build_abundance_table('segata',segata_data,segata_order)
+			 
          }
-         
+         if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
+             dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
+             dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
+             max_obj = dewhirst_data.find(function(o){ return o.avg == dewhirst_max})
+			 dewhirst_text = get_abundance_text(dewhirst_max, max_obj, abundance_names, rank, tax_name)
+             dewhirst_table = build_abundance_table('dewhirst',dewhirst_data,dewhirst_order)
+         }
+         if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
+             eren_max = C.taxon_counts_lookup[lineage_list[0]]['max_eren']
+             eren_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren'])
+             max_obj = eren_data.find(function(o){ return o.avg == eren_max})
+			 eren_text = get_abundance_text(eren_max, max_obj, abundance_names, rank, tax_name)
+			 eren_table = build_abundance_table('eren',eren_data,eren_order)
+         }
          
       }
    }
@@ -942,28 +941,41 @@ router.get('/taxon_page/:level/:name', function taxon_page(req, res) {
    
    //console.log('max',max)
    //console.log('max_obj',max_obj)
-   //console.log('segata data:')
-   //console.log(segata)
+//    console.log('segata data:')
+//    console.log(segata_data)
+//    
+//    console.log('eren_data')
+//     console.log(eren_data)
+// 	console.log('dewhirst_data')
+// 	console.log(dewhirst_data)
    //lineage_string = lineage_list[0].split(';').join('; ')
-   lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'taxon_page')
+   lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
    // sort genera list 
    genera.sort(function sortByTaxa(a, b) {
                 return helpers.compareStrings_alpha(a.taxon, b.taxon);
     });
-   res.render('pages/taxa/taxon_page', {
+   res.render('pages/taxa/ecology', {
 			title: 'HOMD ::'+rank+'::'+tax_name,
-			pgname: 'taxon_page',  //for AbountThisPage  
+			pgname: 'ecology',  //for AbountThisPage  
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			tax_name: tax_name,
 			//headline: 'Life: Cellular Organisms',
 			lineage: lineage_string,
 			rank: rank,
-			max: max,
+			max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'eren':eren_max}),
+			
 			genera: JSON.stringify(genera),
 			children: JSON.stringify(children_list),
 			segata_text: segata_text,
+			dewhirst_text: dewhirst_text,
+			eren_text: eren_text,
+			segata_table: segata_table,
+			dewhirst_table: dewhirst_table,
+			eren_table: eren_table,
 			segata_order: JSON.stringify(segata_order),
-			segata: JSON.stringify(segata),
+			segata: JSON.stringify(segata_data),
+			dewhirst: JSON.stringify(dewhirst_data),
+			eren: JSON.stringify(eren_data),
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		});
 });
@@ -1314,23 +1326,87 @@ function find_images(rank, otid, tax_name) {
 	return send_list
 }	
 //
-function reorder_for_graphing(segata, segata_order){
-   //segata_order is a list ['BM,'td'...]
-   // segata is a list of objects {loci: 'G1-avg', avg: '0', stdev: '0'}
-   var ret_list = []
-   for(n in segata_order){
-      var item = segata_order[n]
-      for(i in segata){
-          if(segata[i].loci == item){
-             ret_list.push(segata[i])
-          }
+// function reorder_for_graphing(segata, segata_order){
+//    //segata_order is a list ['BM,'td'...]
+//    // segata is a list of objects {loci: 'G1-avg', avg: '0', stdev: '0'}
+//    var ret_list = []
+//    for(n in segata_order){
+//       var item = segata_order[n]
+//       for(i in segata){
+//           if(segata[i].loci == item){
+//              ret_list.push(segata[i])
+//           }
+//       }
+//    
+//    }
+//    return ret_list
+// 
+// 
+// }
+function get_abundance_text(max, max_obj, names, rank, tax_name){
+    //console.log('max_obj2')
+    //console.log(max_obj)
+    var text = helpers.clean_rank_name_for_show(rank)
+    if(rank=='species'){
+       text += ': <b><i>'+tax_name+ '</i></b> is '
+    }else{
+       text += ': <b>'+tax_name+ '</b> is '
+    }
+    
+    if(max > 1){
+		   text += ' an abundant'
+		}else if(max > 0.1 && max <=1){
+		   text += ' a moderately abundant'
+		}else{  // smaller than 0.1
+		   text += ' a low-abundance'
+		}
+	 text += ' member of the healthy oral microbiome. It reaches its highest relative abundance '
+	 if(max_obj.site in names){
+		text += ' in the '+names[max_obj.site]
+		if(max_obj.site == 'Saliva'){
+		   text += ' suggesting that its site of greatest abundance has not yet been identified.'
+		}else if(max_obj.site == 'HP'){
+	
+		}else if(max_obj.site == 'SubP'){
+	
+		}
+	
+	 }else{
+		text += ' across all oral locations.'
+	 }
+	 return text
+}	
+function build_abundance_table(cite, data, order){
+    //console.log('data')
+    //console.log(data)
+    var html = '<table><thead><tr><td></td>'
+    for(n in order){
+        html += '<th>'+order[n]+'</th>'
+    }
+    html += '</tr></thead><tbody>'
+    // segata, dewhirst, eren
+    html += '<tr><th>Avg</th>'
+    for(n in data){
+        html += '<td>'+data[n].avg+'</td>'
+    }
+    // segata, dewhirst
+    if(['segata','dewhirst'].indexOf(cite) != -1){
+      html += '<tr><th>Stdev</th>'
+      for(n in data){
+        html += '<td>'+data[n].stdev+'</td>'
       }
-   
-   }
-   return ret_list
-
-
-}	   
+    }
+    // dewhirst, eren
+    if(['dewhirst','eren'].indexOf(cite) != -1){
+      html += '<tr><th>Prev</th>'
+      for(n in data){
+        html += '<td>'+data[n].prev+'</td>'
+      }
+    }
+    html += '</tbody></table>'
+    
+    return html
+}   
 //
 function get_major_genera(rank, node) {
 	var genera = []
