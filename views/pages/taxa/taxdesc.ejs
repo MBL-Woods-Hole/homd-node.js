@@ -173,15 +173,15 @@
 	  <td class='tbl-title'>Classification:</td>
 	  <td>
 		<table id='tax_lineage'>
-		  <tr><td>Domain:</td><td><a href='ecology/domain/<%= data3.domain %>'><%= data3.domain %></a></td></tr>
-		  <tr><td>Phylum:</td><td><a href='ecology/phylum/<%= data3.phylum %>'><%= data3.phylum %></a></td></tr>
-		  <tr><td>Class:</td><td> <a href='ecology/klass/<%= data3.klass %>'><%= data3.klass %></a></td></tr>
-		  <tr><td>Order:</td><td> <a href='ecology/order/<%= data3.order %>'><%= data3.order %></a></td></tr>
-		  <tr><td>Family:</td><td><a href='ecology/family/<%= data3.family %>'><%= data3.family %></a></td></tr>
-		  <tr><td>Genus:</td><td> <a href='ecology/genus/<%= data3.genus %>'><%= data1.genus %></a></td></tr>
+		  <tr><td>Domain:</td><td><a href='life?rank=domain&name=<%= data3.domain %>'><%= data3.domain %></a></td></tr>
+		  <tr><td>Phylum:</td><td><a href='life?rank=phylum&name=<%= data3.phylum %>'><%= data3.phylum %></a></td></tr>
+		  <tr><td>Class:</td><td> <a href='life?rank=klass&name=<%= data3.klass %>'><%= data3.klass %></a></td></tr>
+		  <tr><td>Order:</td><td> <a href='life?rank=order&name=<%= data3.order %>'><%= data3.order %></a></td></tr>
+		  <tr><td>Family:</td><td><a href='life?rank=family&name=<%= data3.family %>'><%= data3.family %></a></td></tr>
+		  <tr><td>Genus:</td><td> <a href='life?rank=genus&name=<%= data3.genus %>'><%= data1.genus %></a></td></tr>
 		  
 		  <% if(data3.subspecies){ %>
-		    <tr><td>Species:</td><td> <a href='ecology/species/<%= data3.species %>'><i><%= data3.species %></i></a></td></tr>
+		    <tr><td>Species:</td><td> <a href='life?rank=species&name=<%= data3.species %>'><i><%= data3.species %></i></a></td></tr>
 		    <tr><td>Subspecies:</td><td><i><%= data3.subspecies %></i></td></tr>
 		  <% }else{ %>
 		     <tr><td>Species:</td><td><i><%= data1.genus %> <%= data1.species %></i></td></tr>
@@ -286,7 +286,7 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Microbial Ecology:</td>
-	  <td><small>[<a href='ecology/species/<%= data3.species %>'>Open Abundance Page for <i><%= data3.species %></i></a>]</small></td>
+	  <td><small>[<a href='ecology/species/<%= data3.species %>'>Open Abundance/Ecology Page for <i><%= data3.species %></i></a>]</small></td>
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Number of Phage<br>Known to Infect this Species:</td>
