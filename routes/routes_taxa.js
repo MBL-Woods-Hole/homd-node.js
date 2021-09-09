@@ -1347,6 +1347,30 @@ function find_images(rank, otid, tax_name) {
 function get_abundance_text(max, max_obj, names, rank, tax_name){
     //console.log('max_obj2')
     //console.log(max_obj)
+    /*
+    From Jessica Email 8/31/2021
+    The scheme for generating the text for HOMD would look something like this:  
+		intended text in blue:
+		[Genus/Family/Order/Class/Phylum] xxx is  
+		{if maximum abundance in Segata et al. 2012 data is} 
+		  >= 1% at some site:  [an abundant] 
+		  0.1-1% [a moderately abundant] 
+		  0.001-0.1% [a low-abundance] 
+		member of the healthy oral microbiome. 
+
+		It reaches its highest relative abundance in the  
+		 [buccal mucosa, keratinized gingiva, and hard palate] 
+		 [tongue dorsum, tonsils, and throat] 
+		 [supra- and sub-gingival dental plaque] 
+		 [sub-gingival dental plaque]  {if SubP and SupP are higher than the other sites, and  SUBP > 2x SUPP}
+		 [hard palate]  {if BM, KG, and HP are higher than the other sites, and HP > 2x BM}
+		 [saliva] suggesting that its site of greatest abundance has not yet been identified] 
+
+		Then show a table of abundance (mean and standard deviation) for this taxon at 9 oral sites, from Segata et al. 2012  
+
+		if max abundance is zero: 
+		 not found in the healthy oral microbiome, but is included in HOMD as a non-oral reference taxon. 
+    */
     var text = helpers.clean_rank_name_for_show(rank)
     if(rank=='species'){
        text += ': <b><i>'+tax_name+ '</i></b> is '
