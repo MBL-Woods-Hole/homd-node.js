@@ -832,7 +832,8 @@ router.get('/life', function life(req, res) {
 	if(rank)
 	    page_title = helpers.capitalizeFirst(rank)
 	
-	lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'life')
+	//lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'life')
+	lineage_string = lineage_list[0]
 	res.render('pages/taxa/life', {
 			title: 'HOMD :: '+page_title, 
 			pgname: 'tax_life',  //for AbountThisPage 
