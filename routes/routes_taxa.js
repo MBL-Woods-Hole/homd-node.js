@@ -927,26 +927,30 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
          
          if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
+             
              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
-             segata_text += helpers.clean_rank_name_for_show(rank) +' '+tax_name+ ' is'
-			 // max_obj = segata_data.find(function(o){ return o.avg == segata_max})
-			 segata_text = get_abundance_text(segata_max, segata_data, abundance_names, rank, tax_name)
-			 segata_table = build_abundance_table('segata',segata_data,segata_order)
+
+			 let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
+			 segata_text = get_abundance_text(segata_max, clone_segata_data, abundance_names, rank, tax_name)
+			 segata_table = build_abundance_table('segata',clone_segata_data, segata_order)
+			 
 			 
          }
          if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
+             let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
              //max_obj = dewhirst_data.find(function(o){ return o.avg == dewhirst_max})
-			 dewhirst_text = get_abundance_text(dewhirst_max, dewhirst_data, abundance_names, rank, tax_name)
-             dewhirst_table = build_abundance_table('dewhirst',dewhirst_data,dewhirst_order)
+			 dewhirst_text = get_abundance_text(dewhirst_max, clone_dewhirst_data, abundance_names, rank, tax_name)
+             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data,dewhirst_order)
          }
          if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
              eren_max = C.taxon_counts_lookup[lineage_list[0]]['max_eren']
              eren_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren'])
+             let clone_eren_data = JSON.parse(JSON.stringify(eren_data)) // clone to avoid difficult errors
              //max_obj = eren_data.find(function(o){ return o.avg == eren_max})
-			 eren_text = get_abundance_text(eren_max, eren_data, abundance_names, rank, tax_name)
-			 eren_table = build_abundance_table('eren',eren_data,eren_order)
+			 eren_text = get_abundance_text(eren_max, clone_eren_data, abundance_names, rank, tax_name)
+			 eren_table = build_abundance_table('eren',clone_eren_data,eren_order)
          }
          
       }
@@ -957,8 +961,8 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    
    //console.log('max',max)
    //console.log('max_obj',max_obj)
-//    console.log('segata data:')
-//    console.log(segata_data)
+   // console.log('segata data:')
+    //console.log(segata_data)
 //    
 //    console.log('eren_data')
 //     console.log(eren_data)
@@ -1360,9 +1364,8 @@ function find_images(rank, otid, tax_name) {
 // 
 // }
 function get_abundance_text(max, data, names, rank, tax_name){
-    max_obj = data.find(function(o){ return o.avg == max})
-    //console.log('max_obj2')
-    //console.log(max_obj)
+    let max_obj = data.find(function(o){ return o.avg == max})
+    
     /*
     From Jessica Email 8/31/2021
     The scheme for generating the text for HOMD would look something like this:  
@@ -1391,7 +1394,7 @@ function get_abundance_text(max, data, names, rank, tax_name){
 		if max abundance is zero: 
 		 not found in the healthy oral microbiome, but is included in HOMD as a non-oral reference taxon. 
     */
-    console.log(data)
+    
     var text = helpers.clean_rank_name_for_show(rank)
     if(rank=='species'){
        text += ': <b><i>'+tax_name+ '</i></b> is '
@@ -1412,8 +1415,8 @@ function get_abundance_text(max, data, names, rank, tax_name){
 		var all_min = Math.min.apply(Math,data.map(i => i.avg))
 		var all_max = Math.max.apply(Math,data.map(i => i.avg))
 		
-		if(all_min > 95 || all_max < 5){
-		   text += ' across all oral locations.'  // for bacteria
+		if(tax_name == 'Bacteria' || tax_name == 'Archaea'){
+		   text += ' across all oral locations.'  // for bacteria,Archaea
 		}else if(['TD','PT','Throat'].indexOf(max_obj.site) >= 0) {
 		   text += ' in the Tongue Dorsum, Palatine Tonsils, and Throat'
 		}else if(max_obj.site == 'HP' && (data.filter(i => i.site = 'HP')).avg  > 2*(data.filter(i => i.site = 'BM')).avg){
@@ -1426,8 +1429,6 @@ function get_abundance_text(max, data, names, rank, tax_name){
 		   text += ' in the Supra-Gingival and Sub-Gingival Dental Plaques'
 		}else if(max_obj.site == 'Saliva'){
 		   text += ' suggesting that its site of greatest abundance has not yet been identified.'
-		}else if(max_obj.site == 'Stool'){
-	       text += ' in the Stool.'
 		}else{
 	       text += ' in the '+max_obj.site
 		}
@@ -1435,6 +1436,7 @@ function get_abundance_text(max, data, names, rank, tax_name){
 	 }else{
 		text += ' across all oral locations.'
 	 }
+	 
 	 return text
 }	
 function build_abundance_table(cite, data, order){
