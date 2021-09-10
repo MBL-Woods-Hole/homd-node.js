@@ -91,35 +91,46 @@
        <% rank_show = rank.charAt(0).toUpperCase() + rank.slice(1) %>
     <% } %>
     <div class='page-content' >
-		 					
-		<div class='title'><%= rank_show %>: <%= tax_name %></div>
-		
+		<% if(rank=='species') { %> 					
+		   <div class='title'><%= rank_show %>: <em><%= tax_name %></em></div>
+		<% }else{ %>
+	       <div class='title'><%= rank_show %>: <%= tax_name %></div>
+	    <% } %>
 		<div id='taxon-page-div'>
 		
 		    Full Lineage: <%- lineage %>
-		    <span id='visit-life-page'><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>LifePage</a></span>
-		    <br><small>Lower rank member(s): 
-		    <% if(children_lst.length <= 5){ %>
-		        <% for(n in children_lst){ %>
-		          <span >[<%- children_lst[n] %>]</span>
-		        <% } %>
+		    <% if(children_lst.length == 0){ %>
+		       <span id='visit-life-page'><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description</a></span>
 		    <% }else{ %>
-		        <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
-		      
-		      <div id='lower-rank-items-div' style='display:none'>
-		      <% cols = 5 %>
-		      <table id='tbl'><tr>
-		      <% for(n in children_lst){ %>
-		         <% if(n % cols == 0){  %><!-- // modulus -->
-                  </tr><tr>
-                 <% } %>
-		        <td><small>[<%- children_lst[n] %>]</small></td>
-		      <% } %>
-		      </tr></table>
-		      </div>
-		    
-		    
+		       <br><small>Lower rank member(s): 
+		       <% if(children_lst.length <= 5){ %>
+		           <% for(n in children_lst){ %>
+		             <span >[<%- children_lst[n] %>]</span>
+		           <% } %>
+		         
+		       <% }else{ %>
+				   <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
+			  
+				   <div id='lower-rank-items-div' style='display:none'>
+				   <% cols = 5 %>
+				   <table id='tbl'><tr>
+				   <% for(n in children_lst){ %>
+					 <% if(n % cols == 0){  %><!-- // modulus -->
+					  </tr><tr>
+					 <% } %>
+					 <td><small>[<%- children_lst[n] %>]</small></td>
+				   <% } %>
+				   </tr></table>
+				   </div>
+		      <% } %>  <!-- End of if(children_lst.length -->
+		      <span id='visit-life-page'><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>LifePage</a></span>
+	
 		    <% } %>
+		    
+		    
+		    
+		    
+		    
 		    <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
 		      <br>Genera:
 		      <select class='dropdown' onchange="location = this.value;">

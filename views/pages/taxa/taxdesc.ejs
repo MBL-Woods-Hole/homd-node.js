@@ -286,7 +286,12 @@
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Microbial Ecology:</td>
-	  <td><small>[<a href='ecology/species/<%= data3.species %>'>Open Abundance/Ecology Page for <i><%= data3.species %></i></a>]</small></td>
+	  <% if(data3.subspecies){ %>
+	    <td><small>[<a href='ecology/subspecies/<%= data3.subspecies %>'>Open Abundance/Ecology Page for <i><%= data3.subspecies %></i></a>]</small></td>
+	  <% }else{ %>
+	    <td><small>[<a href='ecology/species/<%= data3.species %>'>Open Abundance/Ecology Page for <i><%= data3.species %></i></a>]</small></td>
+	  <% } %>
+	
 	</tr>
 	<tr>
 	  <td class='tbl-title'>Number of Phage<br>Known to Infect this Species:</td>
