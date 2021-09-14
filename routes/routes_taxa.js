@@ -77,7 +77,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	    
     }
     //console.log('send_tax_obj[0]',send_tax_obj[0])
-    // Here we add the genome size formatting on the fly
+    // Here we add the genome size formatting on the fly AND Ecology button
     big_tax_list2.map(function(el){
 	      el.gsize = ''
 	      //console.log(el)
@@ -103,13 +103,33 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	        	el.gsize = helpers.format_Mbps(min)+' - '+helpers.format_Mbps(max)
 	        }
 	      }
+	      
+	      // do we have ecology/abundance data?  
+	      // Is abundance the only thing on the ecology page?
+	      el.ecology = 0  // change to 1 if we do
+	      var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
+	    
+	      var lineage_list = make_lineage(node)
+	      if(lineage_list[0] in C.taxon_counts_lookup){
+              if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+                 el.ecology = 1
+             }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
+                 el.ecology = 1
+             }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
+                 el.ecology = 1
+             }else{
+                 el.ecology = 0
+             }
+	      }
 	})
+	//console.log(big_tax_list2[0])
     //console.log('send_tax_obj[0]',send_tax_obj[0])
     //sort
     big_tax_list2.sort(function (a, b) {
       return helpers.compareStrings_alpha(a.genus, b.genus);
     });
-   
+    
+    
 	send_list = big_tax_list2
 	
 	//var count_text = get_count_text_n_page_form(page)
@@ -348,7 +368,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
 				return_obj.item_taxon = lineage[lineage.length - 1]
 				return_obj.parent_rank = C.ranks[C.ranks.indexOf(rank) - 1]
 				return_obj.parent_taxon = lineage[lineage.length - 2]
-				console.log(rank,lineage)
+				//console.log(rank,lineage)
 				if(lineage.length == C.ranks.indexOf(rank)+1){
                     let lineage_str = lineage.join(';')
                     //console.log(lineage_str)
@@ -902,7 +922,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    //console.log('node')
    //console.log(node)
    // /subspecies/subsp.%20dentisani%20clade%20058
-   console.log(node)
+   //console.log(node)
    var children_list = []
    for(i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
    		n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]

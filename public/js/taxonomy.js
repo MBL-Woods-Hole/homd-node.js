@@ -175,9 +175,9 @@ function change_level(rank) {
 			for(n in static_data){
 				html += '<tr class="table-warning">'
 				if(rank != 'domain'){
-					html += "<td nowrap><a href='taxon_page/"+ranks[ranks.indexOf(rank)-1]+"/"+static_data[n].parent_taxon+"'>"+static_data[n].parent_taxon+"</a></td>"
+					html += "<td nowrap><a href='life?rank="+ranks[ranks.indexOf(rank)-1]+"&name="+static_data[n].parent_taxon+"'>"+static_data[n].parent_taxon+"</a></td>"
 				}
-				html += "<td nowrap><a href='taxon_page/"+rank+"/"+static_data[n].item_taxon+"'>"+static_data[n].item_taxon+"</a></td>"
+				html += "<td nowrap><a href='life?rank="+rank+"&name="+static_data[n].item_taxon+"'>"+static_data[n].item_taxon+"</a></td>"
 				if(rank == 'species'){
 				  	if(static_data[n].otid){
 				  	   html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"

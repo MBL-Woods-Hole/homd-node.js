@@ -57,7 +57,11 @@ thead th { position: sticky; top: 0; }
 		   <td nowrap><i><b><a href='life?rank=species&name=<%= list[n].genus %> <%= list[n].species %>'><%= list[n].species  %></a></b></i></td>
 		   <td><%= list[n].status  %></td>
 		   <td><%= list[n].sites  %></td>
-		   <td style='text-align:center' nowrap><a href="ecology/species/<%= list[n].genus %>%20<%= list[n].species %>" class="pill pill-green" >Ecology</a></td>
+		   <% if(list[n].ecology === 1){ %>
+		     <td style='text-align:center' nowrap><a href="ecology/species/<%= list[n].genus %>%20<%= list[n].species %>" class="pill pill-green" >Ecology</a></td>
+		   <% }else{ %>
+		     <td style='text-align:center' nowrap</td>
+		   <% } %>
 		   <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Taxon Description</a></td>
 		   <td style='text-align:center' nowrap>
 		   <% num_genomes = list[n].genomes.length %>
