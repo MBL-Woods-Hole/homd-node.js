@@ -15,7 +15,7 @@ today = yyyy + '-' + mm + '-' + dd;
 var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
 router.get('/tax_table', function tax_table_get(req, res) {
-	helpers.accesslog(req, res)
+	
 	console.log('in taxtable -get')
 	helpers.show_session(req)
 	let myurl = url.parse(req.url, true);
@@ -156,7 +156,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 });
 
 router.post('/tax_table', function tax_table_post(req, res) {
-	helpers.accesslog(req, res)
+	
 	console.log('in taxtable -post')
 	let send_tax_obj = {}
 	//helpers.show_session(req)
@@ -296,7 +296,7 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
 router.get('/tax_hierarchy', (req, res) => {
 	//the json file was created from a csv of vamps taxonomy
 	// using the script: taxonomy_csv2json.py in ../homd_data
-	helpers.accesslog(req, res)
+	
 	
 	res.render('pages/taxa/taxhierarchy', {
 			title: 'HOMD :: Taxon Hierarchy',
@@ -308,7 +308,7 @@ router.get('/tax_hierarchy', (req, res) => {
 	});
 });
 router.get('/tax_level', function tax_level_get(req, res) {
-	helpers.accesslog(req, res)
+	
 	//var oral;
     
 	//req.session.tax_obj = C.homd_taxonomy
@@ -329,7 +329,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
 	
 	//console.log(req.body)
 	let rank = req.body.rank
-	helpers.accesslog(req, res)
+	
 	const tax_resp = []
 	fs.readFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn), 'utf8', (err, data) => {
     	if (err)
@@ -405,7 +405,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
 router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
 	// NO USED!!!
 	var oral = req.body.oral
-	helpers.accesslog(req, res)
+	
 	console.log('oral ',oral)
 	
 	res.send({ok:'ok'});
@@ -415,7 +415,7 @@ router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
 router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
   //console.time("TIME: tax_custom_dhtmlx");
   //console.log('IN tax_custom_dhtmlx')
-  helpers.accesslog(req, res)
+  
   let myurl = url.parse(req.url, true);
   let id = myurl.query.id;
 
@@ -479,7 +479,7 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
 router.get('/tax_description', function tax_description(req, res){
 	let myurl = url.parse(req.url, true);
   	let otid = myurl.query.otid;
-	helpers.accesslog(req, res)
+	
 	/*
 	This busy page needs:
 	1  otid 		type:string
@@ -601,116 +601,10 @@ router.post('/get_refseq', function get_refseq(req, res) {
 });
 
 
-router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', function dld_table_get(req, res) {
-//router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
-
-	helpers.accesslog(req, res)
-	console.log('in dld tax-get')
-	//console.log(req.body)
-	let send_list = []
-	let type = req.params.type
-	let letter = req.params.letter
-	let sitefilter = JSON.parse(req.params.sites)
-	let statusfilter = JSON.parse(req.params.stati)
-    let search_txt = req.params.search_txt
-	let search_field = req.params.search_field
-	//console.log(type,letter,sitefilter,statusfilter,search_txt,search_field)
-	// Apply filters
-	let temp_list = Object.values(C.taxon_lookup);
-	let file_filter_txt = ""
-	if(letter && letter.match(/[A-Z]{1}/)){
-	    console.log('MATCH Letter: ',letter)
-	    send_list = temp_list.filter(item => item.genus.charAt(0) === letter)
-	    file_filter_txt = "HOMD.org Taxon Data::Letter Filter Applied (genus with first letter of '"+letter+"')"
-	}else if(search_txt !== '0'){
-	    send_list = get_filtered_taxon_list(search_txt, search_field)
-	    file_filter_txt = "HOMD.org Taxon Data::Search Filter Applied (Search text '"+search_txt+"')"
-	//}else if(sitefilter.length > 0 ||  statusfilter.length > 0){
-	}else if(statusfilter.length === 0 && sitefilter.length === 0){
-	  // this is for download default table. on the downloads page
-	  // you cant get here from the table itself (javascript prevents)
-	  console.log('in dwnld filters==[][]')
-	  send_list = temp_list
-	}else{
-		// apply site/status filter as last resort
-		console.log('in dwnld filters')
-		
-		if(statusfilter.length == 0){  // only items from site filter checked
-	    send_list = temp_list.filter( function(e){
-          if(e.sites.length > 0){
-            for(n in e.sites){
-              var site = e.sites[n].toLowerCase()  // nasal,oral
-              if( sitefilter.indexOf(site) !== -1 )
-                //nasal or oral if site item in s return only one instance
-			   {
-				 return e
-			   }
-            }
-          }
-          
-        }) 
-	}else if(sitefilter.length == 0){   // only items from status filter checked
-	    send_list = temp_list.filter( function(e){
-          if( statusfilter.indexOf(e.status.toLowerCase()) !== -1 ){
-             return e
-          }
-        }) 
-	}else{
-      send_list = temp_list.filter( function(e){
-          if(e.sites.length > 0){
-            for(n in e.sites){
-              var site = e.sites[n].toLowerCase()  // nasal,oral
-              var status = e.status.toLowerCase()
-              if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
-              {
-                 return e
-              }
-            }
-          }
-        })
-    } 
-  } 
-		
-		
-		// send_list = temp_list.filter( function(e){
-// 		  //console.log('e',e)
-// 		  if(e.sites.length > 0){
-//             for(n in e.sites){
-//               var site = e.sites[n].toLowerCase()  // nasal,oral
-//               var status = e.status.toLowerCase()
-//               if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
-//               {
-//                  //console.log('e',e)
-//                  return e
-//               }
-//           
-//             }
-//           }  
-// 		})
-	file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied" 
-
-  	let list_of_otids = send_list.map(item => item.otid)
-  	console.log('list_of_otids',list_of_otids)
-	// type = browser, text or excel
-	file_filter_txt = file_filter_txt+ " Date: "+today
-	var table_tsv = create_table(list_of_otids,'table',type,file_filter_txt )
-	if(type === 'browser'){
-	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
-	}else if(type === 'text'){
-	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""});
-	}else if(type === 'excel'){
-	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""});
-	}else{
-	    // error
-	    console.log('Download table format ERROR')
-	}
-	res.send(table_tsv)
-	res.end()
-});
 
 
 router.get('/life', function life(req, res) {
-	helpers.accesslog(req, res)
+	
 	console.log('in LIFE')
 	let myurl = url.parse(req.url, true);
   	let tax_name = myurl.query.name;
@@ -1020,7 +914,128 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
 		});
 });
 //
+router.get('/download/:type/:fxn', function download(req, res) {
+    let type = req.params.type   // browser, text or excel
+    let fxn = req.params.fxn     // hierarchy or level
+    console.log('in download: '+type+'::'+fxn)
+    let file_filter_txt, table_tsv;
+   
+    let temp_list = Object.values(C.taxon_lookup);
+    let list_of_otids = temp_list.map(item => item.otid)  // use all the otids
+    if(fxn == 'level'){
+        file_filter_txt = "HOMD.org Taxon Data::Taxonomic Level" 
+        table_tsv = create_table(list_of_otids, 'level', type, file_filter_txt )
+    }else if(fxn == 'hierarchy'){
+        file_filter_txt = "HOMD.org Taxon Data::Taxonomic Hierarchy" 
+        table_tsv = create_table(list_of_otids, 'hierarchy', type, file_filter_txt )
+    }else{
+       // type error
+    }
+    if(type === 'browser'){
+	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
+	}else if(type === 'text'){
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""});
+	}else if(type === 'excel'){
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""});
+	}else{
+	    // error
+	    console.log('Download table format ERROR')
+	}
+	res.send(table_tsv)
+	res.end()
+    
+});
+router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', function dld_table_get(req, res) {
+//router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
 
+	
+	console.log('in dld tax-get')
+	//console.log(req.body)
+	let send_list = []
+	let type = req.params.type
+	let letter = req.params.letter
+	let sitefilter = JSON.parse(req.params.sites)
+	let statusfilter = JSON.parse(req.params.stati)
+    let search_txt = req.params.search_txt
+	let search_field = req.params.search_field
+	//console.log(type,letter,sitefilter,statusfilter,search_txt,search_field)
+	// Apply filters
+	let temp_list = Object.values(C.taxon_lookup);
+	let file_filter_txt = ""
+	if(letter && letter.match(/[A-Z]{1}/)){
+	    console.log('MATCH Letter: ',letter)
+	    send_list = temp_list.filter(item => item.genus.charAt(0) === letter)
+	    file_filter_txt = "HOMD.org Taxon Data::Letter Filter Applied (genus with first letter of '"+letter+"')"
+	}else if(search_txt !== '0'){
+	    send_list = get_filtered_taxon_list(search_txt, search_field)
+	    file_filter_txt = "HOMD.org Taxon Data::Search Filter Applied (Search text '"+search_txt+"')"
+	//}else if(sitefilter.length > 0 ||  statusfilter.length > 0){
+	}else if(statusfilter.length === 0 && sitefilter.length === 0){
+	  // this is for download default table. on the downloads page
+	  // you cant get here from the table itself (javascript prevents)
+	  console.log('in dwnld filters==[][]')
+	  send_list = temp_list
+	}else{
+		// apply site/status filter as last resort
+		console.log('in dwnld filters')
+		
+		if(statusfilter.length == 0){  // only items from site filter checked
+	    send_list = temp_list.filter( function(e){
+          if(e.sites.length > 0){
+            for(n in e.sites){
+              var site = e.sites[n].toLowerCase()  // nasal,oral
+              if( sitefilter.indexOf(site) !== -1 )
+                //nasal or oral if site item in s return only one instance
+			   {
+				 return e
+			   }
+            }
+          }
+          
+        }) 
+	}else if(sitefilter.length == 0){   // only items from status filter checked
+	    send_list = temp_list.filter( function(e){
+          if( statusfilter.indexOf(e.status.toLowerCase()) !== -1 ){
+             return e
+          }
+        }) 
+	}else{
+      send_list = temp_list.filter( function(e){
+          if(e.sites.length > 0){
+            for(n in e.sites){
+              var site = e.sites[n].toLowerCase()  // nasal,oral
+              var status = e.status.toLowerCase()
+              if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
+              {
+                 return e
+              }
+            }
+          }
+        })
+    } 
+  } 
+		
+		
+
+	file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied"+ " Date: "+today 
+
+  	let list_of_otids = send_list.map(item => item.otid)
+  	console.log('list_of_otids',list_of_otids)
+	// type = browser, text or excel
+	var table_tsv = create_table(list_of_otids, 'table', type, file_filter_txt )
+	if(type === 'browser'){
+	    res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
+	}else if(type === 'text'){
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""});
+	}else if(type === 'excel'){
+	    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""});
+	}else{
+	    // error
+	    console.log('Download table format ERROR')
+	}
+	res.send(table_tsv)
+	res.end()
+});
 
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
@@ -1194,17 +1209,19 @@ function get_counts(lineage){
 }
 /////////////////////////////////////////
 function create_table(otids, source, type, head_txt) {
+    // source == table, hirearchy or level
     let txt = head_txt+'\n'
+    let headers,lineage,old_lineage,otid_pretty
     if(source === 'table'){
         var obj1 = C.taxon_lookup
         var obj2 = C.taxon_lineage_lookup
         var obj3 = C.taxon_info_lookup 
-        var headers_row = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
+        headers = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
         
-        txt +=  headers_row.join('\t')
+        txt +=  headers.join('\t')
         var o1,o2,o3
         for(n in otids){
-           
+            
             let otid = otids[n].toString()
             o1 = obj1[otid]
              //console.log('otid',otid)
@@ -1227,8 +1244,88 @@ function create_table(otids, source, type, head_txt) {
                txt += '\n'+row
             
         }
-    }   
-    //console.log(txt)
+    }else if(source === 'level'){
+        headers = ['Domain','Domain_count','Phylum','Phylum_count','Class','Class_count','Order','Order_count','Family','Family_count','Genus','Genus_count','Species','Species_count','Subspecies','Oral_Taxon_ID']
+        txt +=  headers.join('\t')+'\n'
+        
+        for(n in otids){
+            otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
+            //console.log(C.taxon_lineage_lookup[otids[n]])
+            old_lineage = ''
+            if(otids[n] in C.taxon_lineage_lookup){
+                for( m in C.ranks){
+                    rank = C.ranks[m]
+                
+                    lineage = old_lineage + C.taxon_lineage_lookup[otids[n]][rank]
+                    //console.log(rank,lineage)
+                    cnts = C.taxon_counts_lookup[lineage].tax_cnt
+                    if(rank == 'subspecies' ){
+                          txt += C.taxon_lineage_lookup[otids[n]]['subspecies']+'\t'+otid_pretty // no counts
+                    }else if(rank == 'species' ){
+                      if(C.taxon_lineage_lookup[otids[n]]['subspecies'] == ''){
+                         old_lineage = lineage
+                      }else{
+                         old_lineage = lineage+';'
+                      }
+                      txt += C.taxon_lineage_lookup[otids[n]]['species']+'\t'+cnts+'\t'
+                    }else{
+                       old_lineage = lineage+';'
+                       txt += C.taxon_lineage_lookup[otids[n]][rank]+'\t'+cnts+'\t'
+                    }
+                }
+                txt += '\n'
+            }
+        }
+    }else if(source === 'hierarchy'){
+        headers = ['Domain','Phylum','Class','Order','Family','Genus','Species','Subspecies','Oral_Taxon_ID',
+                   'Domain_Taxon_Count','Domain_Seq_Count','Domain_Clone_Count',
+                   'Phylum_Taxon_Count','Phylum_Seq_Count','Phylum_Clone_Count',
+                   'Class_Taxon_Count','Class_Seq_Count','Class_Clone_Count',
+                   'Order_Taxon_Count','Order_Seq_Count','Order_Clone_Count',
+                   'Family_Taxon_Count','Family_Seq_Count','Family_Clone_Count',
+                   'Genus_Taxon_Count','Genus_Seq_Count','Genus_Clone_Count',
+                   'Species_Taxon_Count','Species_Seq_Count','Species_Clone_Count',
+                   'Subspecies_Taxon_Count','Subspecies_Seq_Count','Subspecies_Clone_Count'
+                   ]
+        txt +=  headers.join('\t')+'\n'
+        for(n in otids){
+            otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
+            old_lineage = ''
+            if(otids[n] in C.taxon_lineage_lookup){
+                for( m in C.ranks){
+                    rank = C.ranks[m]
+                    txt += C.taxon_lineage_lookup[otids[n]][rank] +'\t'
+                }
+                txt += otid_pretty+'\t'
+                // tax_counts
+                for( m in C.ranks){
+                    rank = C.ranks[m]
+                    lineage = old_lineage + C.taxon_lineage_lookup[otids[n]][rank]
+                    cnts = C.taxon_counts_lookup[lineage]
+                    //console.log(lineage)
+                    //console.log(cnts)
+                    txt += cnts.tax_cnt +'\t'+cnts.gcnt +'\t'+cnts.refcnt +'\t'
+                    if(rank == 'species' ){
+                      if(C.taxon_lineage_lookup[otids[n]]['subspecies'] == ''){
+                         old_lineage = lineage
+                      }else{
+                         old_lineage = lineage+';'
+                      }
+                    }else{
+                      old_lineage = lineage+';'
+                    }
+                }
+                // are clone counts the same as refseq counts????
+                txt += '\n'
+            }
+        }
+        
+    }else{
+       // source ERROR
+       return 'ERROR'
+    }
+    //console.log(C.homd_taxonomy)
+    //console.log(C.taxon_counts_lookup )
     return txt
 }        
  //

@@ -260,7 +260,13 @@ input[type=radio] {
    color:orange;
 }
 /* Pill BUTTONS */
-
+.button{
+  padding:2px 5px;
+  border:1px solid black;
+  background:grey;
+  font-size:10px;
+  color:white;
+}
 .pill {
   padding: 0px 4px;
   text-align: center;
