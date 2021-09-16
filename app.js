@@ -255,7 +255,7 @@ async.map(data_init_files, readAsync, function(err, results) {
           num_zeros += 1
        }
     }
-    console.log("number of genuses with parent_id='0': ",num_zeros)
+    console.log("number of genera with parent_id='0': ",num_zeros," :Bad if not zero!")
 });
 
 // fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[0]), (err, results) => {
