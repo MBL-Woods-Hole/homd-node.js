@@ -13,7 +13,7 @@ td a {
 .level-button{
      border:2px solid green;
      color: white;
-     background:#e9ffdb;
+     background: #e9ffdb;
      border-radius:2px;
      padding:2px 5px;
      
@@ -36,15 +36,12 @@ td a {
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
-		 
-		 
-	<center>
 		 <div class='title'>Human Oral Microbiome Taxonomic Level List</div>
+		 <a id='download_browser_text_excel'  href='/download#taxon' >Download Options</a>	 
 		 
-		
-		 
-		<div id='level-container' >
-			<h4 >Taxonomic Level:</h4>
+	    <center>
+		  <div id='level-container' >
+			<h4 >Taxonomic Level</h4>
 			   <br>
 				<small>[Select a Rank:]</small> 
 				<div id='button-group'> 
@@ -58,12 +55,12 @@ td a {
 				&gt; <a class='level-button' type='button'  href='#' id='subspecies' onclick="change_level('subspecies')">Subspecies</a>
 			   </div>
 			
-		 </div>
+		  </div>
 		 
 		 
-		 <br>
-		 <div id='taxlevel_div'></div>
-	</center> 
+		  <br>
+		  <div id='taxlevel_div'></div>
+	    </center> 
 	  
     </div> <!-- end: page-content -->
     <div id='footer'>

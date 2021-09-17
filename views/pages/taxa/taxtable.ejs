@@ -1,6 +1,7 @@
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
+
 </style>
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <%- include('../../partials/header_html'); %>
@@ -33,7 +34,7 @@ thead th { position: sticky; top: 0; }
     <%- include('../../partials/tax_table_filter_pt2.ejs') %> 
 <div id='tax-box' >
 
-		 <table id='tax-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
+		 <table id='tax-table' class='table table-hover table-condensed sortable' >
 		 <thead>
 		  <tr>
 		    <th scope="col" nowrap>Taxon-ID</th>

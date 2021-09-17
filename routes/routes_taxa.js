@@ -107,19 +107,22 @@ router.get('/tax_table', function tax_table_get(req, res) {
 	      // do we have ecology/abundance data?  
 	      // Is abundance the only thing on the ecology page?
 	      el.ecology = 0  // change to 1 if we do
-	      var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
-	    
-	      var lineage_list = make_lineage(node)
-	      if(lineage_list[0] in C.taxon_counts_lookup){
-              if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
-                 el.ecology = 1
-             }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
-                 el.ecology = 1
-             }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
-                 el.ecology = 1
-             }else{
-                 el.ecology = 0
-             }
+	      
+	      if(el.status != 'Dropped'){
+              var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
+          
+              var lineage_list = make_lineage(node)
+              if(lineage_list[0] in C.taxon_counts_lookup){
+                  if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+                     el.ecology = 1
+                 }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
+                     el.ecology = 1
+                 }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
+                     el.ecology = 1
+                 }else{
+                     el.ecology = 0
+                 }
+              }
 	      }
 	})
 	//console.log(big_tax_list2[0])
@@ -221,7 +224,28 @@ router.post('/tax_table', function tax_table_post(req, res) {
           }  
       }) 
     }   
+    
+      send_list.map(function(el){
+        el.ecology = 0  // change to 1 if we do
+	      
+        if(el.status != 'Dropped'){
+          var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
       
+          var lineage_list = make_lineage(node)
+          if(lineage_list[0] in C.taxon_counts_lookup){
+              if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+                 el.ecology = 1
+             }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
+                 el.ecology = 1
+             }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
+                 el.ecology = 1
+             }else{
+                 el.ecology = 0
+             }
+          }
+        }
+      });
+    
 	
 	send_list.sort(function (a, b) {
         return helpers.compareStrings_alpha(a.genus, b.genus);
@@ -1080,7 +1104,7 @@ function make_lineage(node){
     let lineage =''
     let lineage_obj = {}
     let tax_obj = C.homd_taxonomy.taxa_tree_dict_map_by_id
-    if(node.parent_id===0){
+    if(node.parent_id == 0){
         lineage = node.taxon
         lineage_obj.domain = node.taxon
     }else if(node.rank==='phylum'){

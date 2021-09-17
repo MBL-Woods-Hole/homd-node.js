@@ -31,11 +31,12 @@
  /*  width:1200px; */
   table-layout:fixed;
   width:100%;
+  background:lightgrey;
 }
 #tax-table th
 {
   color:white;
-  background:#006699;
+  background:  var(--table-header-bg);
   padding:5px;
   font-size:13px;
   text-align: center;
@@ -50,8 +51,9 @@
   white-space: nowrap;
 }
 #tax-table tr:nth-child(even) { 
-    background-color: #ffffcd; 
+    background-color: var(--table-row-even1);
  } 
+ 
  #tax-table tr:hover { 
     background-color: #dce7f5; 
  } 
@@ -81,35 +83,6 @@
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
 	content: " \25B4\25BE" 
 }
-
-
- 
-/* 
-#taxa-search {
-   width:80%;
-   margin-left:80px;
-   padding-left:50px;
-  
-   font-size:small;
- }
- */
-/* 
-#navigate-alpha {
-   width:120%;
-   padding-left:5px;
- }
-#navigate-alpha a {
-   color:#006699;
-}
- */
-
-/* 
-#taxa-filter{
-   border:1px solid black;
-}
- */
-
-/* Create three unequal columns that floats next to each other */
 
 
 

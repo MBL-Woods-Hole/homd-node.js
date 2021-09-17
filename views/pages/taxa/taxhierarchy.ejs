@@ -54,31 +54,30 @@
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
-      
+       <h4 class='title text-info'>Human Oral Microbiome Taxonomic Hierarchy</h4>
+        
+		   <a id='download_browser_text_excel'  href='/download#taxon' >Download Options</a>
+	   
 	
 	 					
-	   <div style='text-align:center;'>
-		 <h4 class='title text-info'>Human Oral Microbiome Taxonomic Hierarchy</h4>
-	      
+	   <center> 
             <br><br><br>
             <input type='button' class='pill pill-brown' name='' value='Reset Tree' onclick='reset_tree_dhtmlx()'> ||
              <input type='button' class='pill pill-brown' name='' value='Open Next Level' onclick='open_tree_dhtmlx()'>
             <br><small>(double-click taxon names to expand deeper levels.)</small>
 		 
+		   <br><br>
+		   <span id='count_info'>Numbers indicated in brackets at each level: 
+            <br>[ <span class='red-text'>Number of Taxa</span>, <span class='green-text'>Number of Genomes</span>, <span class='blue-text'>Number of 16S rRNA RefSeqs</span> ]</span>
+           </span> 
 		 
-		 <br><br><span id='count_info'>Numbers indicated in brackets at each level: 
-          <br>[ <span class='red-text'>Number of Taxa</span>, <span class='green-text'>Number of Genomes</span>, <span class='blue-text'>Number of 16S rRNA RefSeqs</span> ]</span>
-         </span> 
-		 
-		  <center>
+		  
 		    <table id='custom_tax_div' class="text-center" >
              <tr><td>
               <div id="custom_treebox" class="text-center" style='padding:10px;background:#fdffca;'></div>
              </td></tr>
             </table>
-          </center>
-          
-         </div> 
+    </center> 
 	 
     </div> <!-- end: page-content -->
     <div id='footer'>

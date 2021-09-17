@@ -11,6 +11,7 @@
 #phage-table
 {
   padding:5px;
+  background:lightgrey;
  /*  width:1200px; */
   table-layout:fixed;
   width:100%;
@@ -18,7 +19,7 @@
 #phage-table th
 {
   color:white;
-  background:#006699;
+  background: var(--table-header-bg);  /* #006699; */
   padding:5px;
   font-size:13px;
   text-align: center;
@@ -33,7 +34,7 @@
   white-space: nowrap;
 }
 #phage-table tr:nth-child(even) { 
-    background-color: #D4EFFF; 
+    background-color: var(--table-row-even3);
  } 
  #phage-table tr:hover { 
     background-color: #FBF9EA; 

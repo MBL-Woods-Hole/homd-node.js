@@ -1,3 +1,22 @@
+
+/* 
+Pastels: fbb4ae b3cde3 ccebc5 decbe4 fed9a6 ffffcc e5d8bd fddaec f2f2f2
+ */
+
+:root {
+  --title-bg:steelblue;
+  --table-header-bg: #083370;    /* #006699; */
+  
+  --table-row-even1: #fbb4ae;
+  --table-row-even2: #e5d8bd;
+  --table-row-even3: #ccebc5;
+  --table-row-odd1: #decbe4;
+  --table-row-odd2: #fed9a6;
+  --table-row-odd3: #ffffcc;
+  
+ 
+}
+
 * {
 	margin:0;
 	padding:0;
@@ -39,7 +58,7 @@ input[type=radio] {
 }
 .title{
    padding:10px;
-   background:steelblue;
+   background: var(--title-bg);
    font-size:20px;
    text-align:center;
    color:white;
@@ -121,7 +140,7 @@ input[type=radio] {
 }
 #nav ul {
 	margin-top:0px;
-	padding:0px;
+	padding:5px 10px;
 	/* width:80%; */
 	background-color:#99cfe0;	
 	

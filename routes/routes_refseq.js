@@ -18,7 +18,7 @@ router.get('/refseq_blastn', function refseq_blastn_get(req, res) {
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		hostname: CFG.hostname,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		
+		db_choices: JSON.stringify(C.refseq_blastn_db_choices),
 	});
 });
 
@@ -32,6 +32,7 @@ router.post('/refseq_blastn', function refseq_blastn_post(req, res) {
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 		hostname: CFG.HOSTNAME,
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		db_choices: JSON.stringify(C.refseq_blastn_db_choices),
 		
 	});
 });

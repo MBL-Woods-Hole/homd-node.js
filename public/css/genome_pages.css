@@ -6,7 +6,7 @@
 }
 #gnom-table th{
   color:white;
-  background:#006699;
+  background: var(--table-header-bg);
   padding:5px;
   font-size:13px;
   text-align: center;
@@ -37,7 +37,7 @@
  color: blue;
 }
 #gnom-table tr:nth-child(even) { 
-    background-color: #D79A9A; 
+    background-color: var(--table-row-even2); 
  } 
  #gnom-table tr:hover { 
     background-color: #dce7f5; 

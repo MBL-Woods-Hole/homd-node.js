@@ -16,14 +16,8 @@ var timestamp = new Date(); // getting current timestamp
 /* GET home page. */
 router.get('/', (req, res) => {
 
- helpers.accesslog(req, res)
- //  console.log('Timestamp:', timestamp);
-//   console.log('Request Headers:', req.headers);
-//   console.log('Request Query Params:', req.query); // for all query params
-//   console.log('Request Path:', req.path);
-//   console.log('Request Route:', req.route);
-helpers.show_session(req)
-res.render('pages/home', {
+    
+    res.render('pages/home', {
 		title: 'HOMD :: Human Oral Microbiome Database',
 		pgname: 'home',  //for AbountThisPage 
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
@@ -33,20 +27,13 @@ res.render('pages/home', {
 });
 
 router.get('/download', (req, res) => {
-    helpers.accesslog(req, res)
-    let myurl = url.parse(req.url, true);
-   	let scroll = myurl.query.scroll;
- //  console.log('Timestamp:', timestamp);
-//   console.log('Request Headers:', req.headers);
-//   console.log('Request Query Params:', req.query); // for all query params
-//   console.log('Request Path:', req.path);
-//   console.log('Request Route:', req.route);
+    
     res.render('pages/download', {
 		title: 'HOMD :: Human Oral Microbiome Database',
 		pgname: 'download',  //for AbountThisPage 
 		config :  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-		scroll_to: scroll
+		
 	});
 });
 

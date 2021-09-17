@@ -26,8 +26,13 @@
 	
 	border: 1px solid grey;
 }
+.adjust_block{
+    padding: 10px 0;
+    
+}
 </style>
 <%- include('../../partials/header_html'); %>
+<% db_choices = JSON.parse(db_choices) %>
 <body>
   <div id='wrapper'>		
 	    
@@ -52,8 +57,8 @@
 			 This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences. 
 			 The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] 
 			 
-<form id='' name='' method='POST' action='/refseq/refseqBLASTN'>	     
-		     <div id='other70'>
+<form id='' name='' method='POST' action='/refseq/refseq_blastn'>	     
+	<div id='other70'>
 		     
 		       <div class='block-title' id=''>Upload your 16S rRNA sequences:</div>
 		       Copy and paste sequence(s) below, preferably in FASTA format:
@@ -68,37 +73,71 @@
 <br>
 (Note2: current limit of number of sequences is 5000)
 		       <br><br>
-		       <div class='block-title' id=''>Adjust Blast parameters: (Optional)</div>
+		       
+		       
+		       <div class='block-title' >Adjust Blast parameters: (Optional)</div>
+		<div class='adjust_block'>
 		       Blastn Database:
-		       <select id='' name='blastn_db'>
-		          <option value='opt1'>opt1</option>
-		          <option value='opt2'>opt2</option>
-		          <option value='opt3'>opt3</option>
+		       <select class='dropdown' id='blastn_db' name='blastn_db'>
+		          <% for(n in db_choices){ %>
+		            <option value='<%= db_choices[n].value %>'><%= db_choices[n].name %></option>
+		          <% } %>
 		       </select>
-		       <br>Expect:
-		       <select id='' name='blastn_expect'>
+		</div> 
+		<div class='adjust_block'>
+		       Expect:
+		       <select class='dropdown' id='blastn_expect' name='blastn_expect'>
 		          <option value='0.0001'>0.0001</option>
 		          <option value='0.01'>0.01</option>
 		          <option value='0.1'>0.1</option>
+		          <option value='1'>1</option>
+		          <option value='10'>10</option>
+		          <option value='100'>100</option>
+		          <option value='1000'>1000</option>
 		       </select>
-		       Filter <input type='checkbox' name='blastn_filter'> Low Complexity
+		        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		        Filter Low Complexity: <input type='checkbox' id='blastn_filter' name='blastn_filter'>
+		</div> 
+		<div class='adjust_block'>     
 		       Descriptions:
-		       <select id='' name='blastn_descriptions'>
+		       <select class='dropdown' id='blastn_descriptions' name='blastn_descriptions'>
 		          <option value='5'>5</option>
 		          <option value='10'>10</option>
+		          <option value='20'>20</option>
 		          <option value='50'>50</option>
+		          <option value='100'>100</option>
+		          <option value='250'>250</option>
+		          <option value='500'>500</option>
 		       </select>
 		       Alignments:
-		       <select id='' name='blastn_alignments'>
+		       <select class='dropdown'  id='blastn_alignments' name='blastn_alignments'>
 		          <option value='5'>5</option>
 		          <option value='10'>10</option>
+		          <option value='20'>20</option>
 		          <option value='50'>50</option>
+		          <option value='100'>100</option>
+		          <option value='250'>250</option>
+		          <option value='500'>500</option>
 		       </select>
-		       <br>Other Advanced Options:
-		       <input type='text' value='-q -3 -r 2 -G 5 -E 2' maxlength='30' name='blastn_other'>
+		</div>
+		
+		   
+		<div class='adjust_block'>
+		       Other Advanced Options:
+		       <input class='dropdown' id='advanced_opts' name='advanced_opts' type='text' value='-q -3 -r 2 -G 5 -E 2' maxlength='30' name='blastn_other'>
 		     <hr>
+		</div> 
+		<div class='adjust_block'> 
+		Sort results by <input type='radio' id='sort_blastn_result_score' checked name='sort_blastn_result' value='score'>Score (bits)  <input type='radio' name='sort_blastn_result' value='percent'>Percent Identity (New option!)
+		</div>
+		<div class='adjust_block'>
+		       <span onclick='reset2default()' class='pill pill-brown'>Reset to Defaults</span>
+		</div> 
+		<div class='adjust_block'>
 		     <center><input class='pill pill-brown' type='submit' \></center>
-		     </div> <!-- End other70 -->
+		</div>
+		
+	</div> <!-- End other70 -->
 </form>
 		  
 	</div>  <!-- End center70pct_div -->
@@ -123,4 +162,24 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
+  function reset2default(){
+     document.getElementById('blastn_db').value = '15.22_9';
+     document.getElementById('blastn_expect').value = '0.0001';
+     document.getElementById('blastn_descriptions').value = '20';
+     document.getElementById('blastn_alignments').value = '20';
+     document.getElementById('advanced_opts').value = '-q -3 -r 2 -G 5 -E 2';
+     
+     
+     document.getElementById('blastn_filter').checked = false;
+     document.getElementById('sort_blastn_result_score').checked = true;
+     
+  }
 </script>
+
+
+
+
+
+
+
+
