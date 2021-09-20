@@ -50,7 +50,7 @@ function search(){
 		return
 	var f = document.createElement("form");
 	f.setAttribute('method',"post");
-	f.setAttribute('action',"/homd/site_search"); 
+	f.setAttribute('action',"/site_search"); 
 	
 	//create input element
 	var i = document.createElement("input");

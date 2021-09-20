@@ -29,7 +29,6 @@ const async = require('async')
 
 
 const home      = require('./routes/index');
-const homd		= require('./routes/routes_homd')
 
 const admin     = require('./routes/routes_admin');
 //const help      = require('./routes/routes_help');
@@ -105,7 +104,7 @@ app.use(cookieParser());
 
 // ROUTES:
 app.use('/', home);
-app.use('/homd', homd);
+
 app.use('/admin', admin);
 //app.use('/help', help);
 app.use('/taxa', taxa);
