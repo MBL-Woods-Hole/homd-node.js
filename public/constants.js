@@ -94,5 +94,14 @@ constants.refseq_blastn_db_choices = [
     {name:'eHOMD 16s rRNA RefSeq Extended V1.1',value:'V1.1'}
 
 ]
-  
+constants.posters_pdfs =
+[
+{shortname:"McCafferty2014", filename:'2014-AADR-McCafferty.pdf'},
+{shortname:"Chen2014", filename:'2014-AADR-TCHEN.pdf'},
+{shortname:"Dewhirst2014", filename:'2014-AADR-DEWHIRST.pdf'},
+{shortname:"2012a", filename:'2012a.pdf'},
+{shortname:"2012b", filename:'2012b.pdf'},
+{shortname:"2012c", filename:'2012c.pdf'},
+]
+
 module.exports = constants;

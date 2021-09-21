@@ -10,7 +10,283 @@
     
     <div class='page-content' >
 		 					
-			 <div class='title'>CONTENT</div>
+			 <div class='titlex'>Comparison between HOMD and LANL ORALGEN Annotated Genomes</div>
+
+<table id="oralgen" cellspacing="2px" cellpadding="4px">
+<tr><th rowspan="2">Genome Name</th>
+<th colspan="2">HOMD/NCBI<br>Genome Information</th>
+<th colspan="2">ORALGEN<br>Genome Information</th>
+<th rowspan="2" colspan="2">Has Oralgen Annotation Panel<br>in HOMD JBrowse?</th>
+<th rowspan="2">Other Info</td></tr>
+<tr><th>Contigs/<br>Molecules</th><th>Combined<br>Size (bps)</th>
+<th>Contigs/<br>Molecules</th><th>Combined<br>Size (bps)</th></tr>
+<tr>
+<td><b>Actinomyces naeslundii MG1</b>
+
+</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">3,042,856</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">3,042,856</td>
+
+<td align="">&nbsp;<b>YES</b>&nbsp;</td><td>
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/anae&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=anae'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('anae')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Actinomyces_naeslundii_MG1">FTP</a> <b><font color="green" size="+0.5">*</font></b></td>
+</tr>
+<tr>
+<td><b>Fusobacterium nucleatum ATCC 25586</b>
+ <b><font color="red" size="+0.5">**</font><b>
+</td>
+<td align="center" style="color:red">1</td>
+<td align="right"  style="color:red">2,174,500</td>
+<td align="center" style="color:red">4</td>
+<td align="right"  style="color:red">2,192,643</td>
+
+<td align="">&nbsp;<b>YES</b>&nbsp;</td><td>
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/Fusobacterium_nucleatum_uid295&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Fusobacterium_nucleatum_uid295'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('fnuc')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Fusobacterium_nucleatum_ATCC_25586">FTP</a> <b><font color="green" size="+0.5">*</font></b></td>
+</tr>
+<tr>
+<td><b>Porphyromonas gingivalis ATCC 33277</b>
+
+</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">2,354,886</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">2,354,886</td>
+
+<td align="">&nbsp;<b>YES</b>&nbsp;</td><td>
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/Porphyromonas_gingivalis_ATCC_33277_uid19051&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Porphyromonas_gingivalis_ATCC_33277_uid19051'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('pgin2')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Porphyromonas_gingivalis_ATCC_33277">FTP</a> <b><font color="green" size="+0.5">*</font></b></td>
+</tr>
+<tr>
+<td><b>Porphyromonas gingivalis W83</b>
+ <b><font color="red" size="+0.5">*</font><b>
+</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:red">2,343,476</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:red">2,343,479</td>
+
+<td align="">&nbsp;<b>YES</b>&nbsp;</td><td>
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/Porphyromonas_gingivalis_W83_uid48&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Porphyromonas_gingivalis_W83_uid48'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('pgin')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Porphyromonas_gingivalis">FTP</a> <b><font color="green" size="+0.5">*</font></b></td>
+</tr>
+<tr>
+<td><b>Prevotella intermedia 17</b>
+ <b><font color="red" size="+0.5">#</font><b>
+</td>
+<td align="center" style="color:red">2</td>
+<td align="right"  style="color:red">2,699,437</td>
+<td align="center" style="color:red">3</td>
+<td align="right"  style="color:red">2,135,969</td>
+
+<td align="">&nbsp;<b>YES</b>&nbsp;</td><td>
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/Prevotella_intermedia_17_uid175&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Prevotella_intermedia_17_uid175'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('pintnew')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Prevotella_intermedia_17">FTP</a> <b><font color="green" size="+0.5">*</font></b></td>
+</tr>
+<tr>
+<td><b>Streptococcus gordonii Challis substr. CH1</b>
+
+</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">2,196,662</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">2,196,662</td>
+
+<td align="">&nbsp;<b>YES</b>&nbsp;</td><td>
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/Streptococcus_gordonii_Challis_substr_CH1_uid66&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Streptococcus_gordonii_Challis_substr_CH1_uid66'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('sgor')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Streptococcus_gordonii_Challis_substr._CH1">FTP</a> <b><font color="green" size="+0.5">*</font></b></td>
+</tr>
+<tr>
+<td><b>Streptococcus mitis NCTC 12261</b>
+
+</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">2,045,857</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">2,045,857</td>
+
+<td align="">&nbsp;<b>YES</b>&nbsp;</td><td>
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/smit&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=smit'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('smit')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Streptococcus_mitis_NCTC_12261">FTP</a> <b><font color="green" size="+0.5">*</font></b></td>
+</tr>
+<tr>
+<td><b>Streptococcus sanguinis SK36</b>
+
+</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">2,388,435</td>
+<td align="center" style="color:black">1</td>
+<td align="right"  style="color:black">2,388,435</td>
+
+<td align="">&nbsp;<b>YES</b>&nbsp;</td><td>
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/Streptococcus_sanguinis_SK36_uid13942&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Streptococcus_sanguinis_SK36_uid13942'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('ssan')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Streptococcus_sanguinis_SK36">FTP</a> <b><font color="green" size="+0.5">*</font></b></td>
+</tr>
+<tr>
+<td><b>Treponema denticola ATCC 35405</b>
+ <b><font color="red" size="+0.5">##</font><b>
+</td>
+<td align="center" style="color:red">1</td>
+<td align="right"  style="color:red">2,843,201</td>
+<td align="center" style="color:red">2</td>
+<td align="right"  style="color:red">2,846,850</td>
+
+<td align="">&nbsp;<b>YES</b>&nbsp;</td><td>
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/Treponema_denticola_ATCC_35405_uid4&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Treponema_denticola_ATCC_35405_uid4'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('tden_new')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Treponema_denticola_ATCC_35405">FTP</a> <b><font color="green" size="+0.5">*</font></b></td>
+</tr>
+<tr>
+<td><b>Aggregatibacter actinomycetemcomitans HK1651</b>
+<br>(Actinobacillus actinomycetemcomitans HK1651)</td>
+<td align="center" style="color:red">1</td>
+<td align="right"  style="color:red">2,105,332</td>
+<td align="center" style="color:red">2</td>
+<td align="right"  style="color:red">2,130,910</td>
+<td>&nbsp;<b><font color="red">NO</font></b>&nbsp;</td><td> 
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/aact&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=aact'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('aact')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Actinobacillus_actinomycetemcomitans_HK1651">FTP</a> <b><font color="green" size="+0.5">*</font></b> <font color="blue" size="+0.5">*</font></b>
+</td>
+</tr>
+<tr>
+<td><b>Fusobacterium	nucleatum subsp. polymorphum ATCC 10953</b>
+<br>(Fusobacterium nucleatum polymorphum)</td>
+<td align="center" style="color:red">14</td>
+<td align="right"  style="color:red">2,428,298</td>
+<td align="center" style="color:red">2</td>
+<td align="right"  style="color:red">2,441,532</td>
+<td>&nbsp;<b><font color="red">NO</font></b>&nbsp;</td><td> 
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=pgin'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('fnucp')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Fusobacterium_nucleatum_polymorphum">FTP</a> <b><font color="green" size="+0.5">*</font></b> <font color="blue" size="+0.5">*</font></b>
+</td>
+</tr>
+<tr>
+<td><b>Streptococcus mutans UA159</b>
+</td>
+<td align="center" style="color:red">1</td>
+<td align="right"  style="color:red">2,032,925</td>
+<td align="center" style="color:red">8</td>
+<td align="right"  style="color:red">2,088,156</td>
+<td>&nbsp;<b><font color="red">NO</font></b>&nbsp;</td><td> 
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/smut&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=smut'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('smut')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Streptococcus_mutans_UA159">FTP</a> <b><font color="green" size="+0.5">*</font></b> <font color="blue" size="+0.5">*</font></b>
+</td>
+</tr>
+<tr>
+<td><b>Tannerella forsythia ATCC 43037</b>
+</td>
+<td align="center" style="color:red">1</td>
+<td align="right"  style="color:red">3,405,521</td>
+<td align="center" style="color:red">5</td>
+<td align="right"  style="color:red">3,505,077</td>
+<td>&nbsp;<b><font color="red">NO</font></b>&nbsp;</td><td> 
+<input class="bt1" type="button" value="HOMD JBrowse" onclick="location.href='http://www.homd.org/jbrowse/index.html?data=homd/json/bfor&tracks=DNA,homd_gene,oralgen_gene'"> 
+<input class="bt2" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=bfor'"> 
+<input class="bt3" type="button" value="ORALGEN" onclick="gotooralgen('tfor')">
+</td>
+<td><a href="ftp://www.homd.org/lanl_oralgen/Tannerella_forsythensis_ATCC_43037">FTP</a> <b><font color="green" size="+0.5">*</font></b> <font color="blue" size="+0.5">*</font></b>
+</td>
+</tr>
+</table>
+</form>
+</td></tr>
+
+<tr><td>
+	<table  width="800px"><tr>
+	<td valign="top" width="40%" align="left">
+		<table><tr>
+		<td valign="top"><b><font color="red" size="+0.5">*</font></b></td>
+		<td>The Porphyromonas gingivalis W83 genomic sequence
+annotated by ORALGEN has the following 3 additional 
+nucleotides. Although for convenience, we still provide 
+an ORALGEN panel in the HOMD JBrowse (above) for this genome, 
+please note that the coordination for the ORALGEN annotated genes
+will be 1,2 or 3 bases off when aligned to the HOMD genome:
+<br>
+<pre>
+<b>479,441 bp</b>
+NCBI:    G-CCT
+Oralgen: G<font color="red">N</font>CCT
+
+<b>880,452 bp</b>
+NCBI:    C-TTT
+Oralgen: K<font color="red">Y</font>YTT
+
+<b>1,138,113 bp</b>
+NCBI:    A-AATT
+Oralgen: A<font color="red">NAATT
+</pre>
+		</td></tr>
+		</table>
+	</td><td valign="top"  width="30%"  align="left">
+		<table>
+		<tr>
+		<td valign="top"><b><font color="red" size="+0.5">**</font></b></td>
+		<td>ORALGEN recorded 3 plasmids (pFN1,pKH9,pPA52) which NCBI does not have.		</td></tr>	
+		<tr>
+		<td valign="top"><b><font color="red" size="+0.5">#</font></b></td>
+		<td>In addition to the two chromosomes, ORALGEN has an additional sequence for plasmid pYHBi1.		</td></tr>	
+		<tr>
+		<td valign="top"><b><font color="red" size="+0.5">##</font></b></td>
+		<td>ORALGEN recorded a plasmid pTS1 which NCBI does not have.		</td></tr>			
+		<tr>
+		<td valign="top"><b><font color="green" size="+0.5">*</font></b></td>
+		<td>This FTP folder contains all the original ORALGEN data exported to Excel spread sheets		</td></tr>	
+		</table>
+	</td><td  valign="top"  width="30%"  align="left">
+		<table ><tr>
+		<td valign="top"><b><font color="blue" size="+0.5">*</font></b></td>
+		<td>Since the genomic sequences annotated by ORALGEN is different from the 
+current updated genomic sequences annotated by HOMD, 
+we provide a Oralgen gene ID => HOMD/NCBI gene ID mapping table
+based on the BLAST Search Result. In the provided FTP folder, please look for 
+a file named either: <br><br><b>lanl_gene_id_2_ncbi_blastp.csv</b> <br>or<br> <b>lanl_gene_id_2_homd_blastp.csv</b>		</td></tr>	
+		</table>
+	</td>
+	</tr></table>
+</td></tr>
+
+<tr><td>&nbsp;&nbsp; <i>~ Contact George Chen (electronic mail: tchen at forsyth.org) if there's any question ~</i></td></tr>
+
+</table>
+
 		
 	
     </div> <!-- end: page-content -->

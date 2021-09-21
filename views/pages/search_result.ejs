@@ -8,7 +8,7 @@
    border:1px solid black;
 }
 </style>
-<%- include('../../partials/header_html'); %>
+<%- include('../partials/header_html'); %>
 <% var otids = JSON.parse(otid_list) %>
 <% var gids = JSON.parse(gid_list) %>
 <% var lineageids = JSON.parse(taxon_otid_obj) %>
@@ -18,8 +18,8 @@
 <body>
   
   	<div id='wrapper'>
-    <%- include('../../partials/header_img'); %>
-    <%- include('../../partials/navbar'); %>
+    <%- include('../partials/header_img'); %>
+    <%- include('../partials/navbar'); %>
     <div class='page-content' >	
 			 <h4 class='title text-info'>Result [<small>Search Text: <%= search_text %></small>]</h4>
 <!-- 'HMT-'+("000" + otid).slice(-3);	 -->
@@ -72,7 +72,7 @@
     </div> <!-- end: page-content -->
     
     <div id='footer'>
-         <%- include('../../partials/footer'); %>
+         <%- include('../partials/footer'); %>
     </div>
   </div>     
 </body>
