@@ -795,6 +795,15 @@ router.get('/life', function life(req, res) {
 	
 });
 //
+router.get('/ecology_index', function ecology_index(req, res) {
+    
+    res.render('pages/taxa/ecology_index', {
+			title: 'HOMD :: Ecology', 
+			pgname: 'ecology',  //for AbountThisPage 
+			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
+			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		});
+});
 router.get('/ecology/:level/:name', function ecology(req, res) {
    console.log('in ecology')
    let rank = req.params.level;

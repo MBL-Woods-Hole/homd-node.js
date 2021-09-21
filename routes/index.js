@@ -36,66 +36,66 @@ router.get('/download', (req, res) => {
 		
 	});
 });
-router.get('/downloadPDF/:shortname', (req, res) => {
-    // downloads the requested pdf file stored in ../homd-data/
-    let shortname = req.params.shortname;
-    console.log(shortname)
-    let filename = C.posters_pdfs.filter(item => item.shortname === shortname)[0].filename
-    console.log(filename)
-    let file = path.join(CFG.PATH_TO_DATA,filename)
-    res.download(file);
-    
-});
-router.get('/downloadPDF2', (req, res) => {
-    // downloads the requested pdf file stored in ../homd-data/
-    //var EasyFtp = require('easy-ftp');
-    var http = require('http');
-	var filepath = 'http://www.homd.org/ftp/poster/2012a.pdf'
-	const request = http.get({uri: filepath, encoding: null}, function(resp) {
-       let data = '';
-
-	  // A chunk of data has been received.
-	  resp.on('data', (chunk) => {
-		data += chunk;
-		
-	  });
-
-	  // The whole response has been received. Print out the result.
-	  resp.on('end', () => {
-		//console.log(JSON.parse(data).explanation);
-		//console.log(JSON.parse(data).explanation)
-		var pdffile = new Buffer.concat(data)  //.toString('utf8');
-		console.log('converted to base64');
-        response.header("Access-Control-Allow-Origin", "*");
-        response.header("Access-Control-Allow-Headers", "X-Requested-With");
-        response.header('content-type', 'application/pdf');
-        response.send(pdffile);
-	  });
-
-	}).on("error", (err) => {
-	  //console.log("Error: " + err.message);
-	});
-	
-	
-// 	var request = http.get(filepath, function(response) {
-//       response.pipe(file);
-//       file.on('finish', function() {
-//          file.close(cb);  // close() is async, call cb after close completes.
-//       });
-//     }).on('error', function(err) { // Handle errors
-//         fs.unlink(dest); // Delete the file async. (But we don't check the result)
-//         if (cb) cb(err.message);
-//     });
-// 	res.download(filepath, '2012a.pdf', (err) => {
-// 			if (err) {
-// 			  res.status(500).send({
-// 				message: "Could not download the file. " + err,
-// 			  });
-// 			}
+// router.get('/downloadPDF/:shortname', (req, res) => {
+//     // downloads the requested pdf file stored in ../homd-data/
+//     let shortname = req.params.shortname;
+//     console.log(shortname)
+//     let filename = C.posters_pdfs.filter(item => item.shortname === shortname)[0].filename
+//     console.log(filename)
+//     let file = path.join(CFG.PATH_TO_DATA,filename)
+//     res.download(file);
+//     
+// });
+// router.get('/downloadPDF2', (req, res) => {
+//     // downloads the requested pdf file stored in ../homd-data/
+//     //var EasyFtp = require('easy-ftp');
+//     var http = require('http');
+// 	var filepath = 'http://www.homd.org/ftp/poster/2012a.pdf'
+// 	const request = http.get({uri: filepath, encoding: null}, function(resp) {
+//        let data = '';
+// 
+// 	  // A chunk of data has been received.
+// 	  resp.on('data', (chunk) => {
+// 		data += chunk;
+// 		
+// 	  });
+// 
+// 	  // The whole response has been received. Print out the result.
+// 	  resp.on('end', () => {
+// 		//console.log(JSON.parse(data).explanation);
+// 		//console.log(JSON.parse(data).explanation)
+// 		var pdffile = new Buffer.concat(data)  //.toString('utf8');
+// 		console.log('converted to base64');
+//         response.header("Access-Control-Allow-Origin", "*");
+//         response.header("Access-Control-Allow-Headers", "X-Requested-With");
+//         response.header('content-type', 'application/pdf');
+//         response.send(pdffile);
+// 	  });
+// 
+// 	}).on("error", (err) => {
+// 	  //console.log("Error: " + err.message);
 // 	});
-	
-    	
-});
+// 	
+// 	
+// // 	var request = http.get(filepath, function(response) {
+// //       response.pipe(file);
+// //       file.on('finish', function() {
+// //          file.close(cb);  // close() is async, call cb after close completes.
+// //       });
+// //     }).on('error', function(err) { // Handle errors
+// //         fs.unlink(dest); // Delete the file async. (But we don't check the result)
+// //         if (cb) cb(err.message);
+// //     });
+// // 	res.download(filepath, '2012a.pdf', (err) => {
+// // 			if (err) {
+// // 			  res.status(500).send({
+// // 				message: "Could not download the file. " + err,
+// // 			  });
+// // 			}
+// // 	});
+// 	
+//     	
+// });
 router.get('/poster', (req, res) => {
     
     res.render('pages/poster', {

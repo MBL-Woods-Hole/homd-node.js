@@ -1,0 +1,75 @@
+<style>
+#info{
+   width:35%;
+   padding:20px 5px;
+}
+#eco_table{
+   
+}
+#eco_table tr,td{
+   border:1px solid black;
+   border-collapse: collapse;
+   padding:3px;
+}
+</style>
+<%- include('../../partials/header_html'); %>
+
+<body>
+  	<div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+		 					
+			 <div class='title'>Ecology/Abundance Pages</div>
+		<div id='info'>
+		These pages show abundance data for each taxon name (from domain to species) in the HOMD database.
+		<br><br>Listed here are the two domains (Bacteria and Archaea) and their phyla to get you started. Just follow the links
+		to reach the abundance pages (if any). 
+		<br><br>The Abundance data comes from three sources: Dewhirst (not published), 
+		<a href='https://www.pnas.org/content/111/28/E2875.short'>Eren (2014)</a> and 
+		<a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42'>Segata (2012)</a>
+	    </div>
+		<center>
+            <table id='eco_table' border='1'>
+            <tr><th>Domain</th><th>Phyla</th></tr>
+            <tr><td><a href='ecology/domain/Archaea'>Archaea</a></td><td><a href='ecology/phylum/Euryarchaeota'>Euryarchaeota</a></td></tr>
+            <tr><td valign="top"><a href='ecology/domain/Bacteria'>Bacteria</a></td>
+            
+            
+            <td>
+            <a href='ecology/phylum/Firmicutes'>Firmicutes</a>
+            <br><a href='ecology/phylum/Absconditabacteria (SR1)'>Absconditabacteria (SR1)</a>
+            <br><a href='ecology/phylum/Proteobacteria'>Proteobacteria</a>
+            <br><a href='ecology/phylum/Actinobacteria'>Actinobacteria</a>
+            <br><a href='ecology/phylum/Bacteroidetes'>Bacteroidetes</a>
+            <br><a href='ecology/phylum/Chloroflexi'>Chloroflexi</a>
+            <br><a href='ecology/phylum/Cyanobacteria'>Cyanobacteria</a>
+            <br><a href='ecology/phylum/Saccharibacteria (TM7)'>Saccharibacteria (TM7)</a>
+            <br><a href='ecology/phylum/Chlamydiae'>Chlamydiae</a>
+            <br><a href='ecology/phylum/Chlorobi'>Chlorobi</a>
+            <br><a href='ecology/phylum/Synergistetes'>Synergistetes</a>
+            <br><a href='ecology/phylum/Fusobacteria'>Fusobacteria</a>
+            <br><a href='ecology/phylum/Gracilibacteria (GN02)'>Gracilibacteria (GN02)</a>
+            <br><a href='ecology/phylum/Spirochaetes'>Spirochaetes</a>
+            <br><a href='ecology/phylum/WPS-2'>WPS-2</a></td></tr>
+            </table>
+	    <center>
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+
