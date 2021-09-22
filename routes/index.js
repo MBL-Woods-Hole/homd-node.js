@@ -36,66 +36,7 @@ router.get('/download', (req, res) => {
 		
 	});
 });
-// router.get('/downloadPDF/:shortname', (req, res) => {
-//     // downloads the requested pdf file stored in ../homd-data/
-//     let shortname = req.params.shortname;
-//     console.log(shortname)
-//     let filename = C.posters_pdfs.filter(item => item.shortname === shortname)[0].filename
-//     console.log(filename)
-//     let file = path.join(CFG.PATH_TO_DATA,filename)
-//     res.download(file);
-//     
-// });
-// router.get('/downloadPDF2', (req, res) => {
-//     // downloads the requested pdf file stored in ../homd-data/
-//     //var EasyFtp = require('easy-ftp');
-//     var http = require('http');
-// 	var filepath = 'http://www.homd.org/ftp/poster/2012a.pdf'
-// 	const request = http.get({uri: filepath, encoding: null}, function(resp) {
-//        let data = '';
-// 
-// 	  // A chunk of data has been received.
-// 	  resp.on('data', (chunk) => {
-// 		data += chunk;
-// 		
-// 	  });
-// 
-// 	  // The whole response has been received. Print out the result.
-// 	  resp.on('end', () => {
-// 		//console.log(JSON.parse(data).explanation);
-// 		//console.log(JSON.parse(data).explanation)
-// 		var pdffile = new Buffer.concat(data)  //.toString('utf8');
-// 		console.log('converted to base64');
-//         response.header("Access-Control-Allow-Origin", "*");
-//         response.header("Access-Control-Allow-Headers", "X-Requested-With");
-//         response.header('content-type', 'application/pdf');
-//         response.send(pdffile);
-// 	  });
-// 
-// 	}).on("error", (err) => {
-// 	  //console.log("Error: " + err.message);
-// 	});
-// 	
-// 	
-// // 	var request = http.get(filepath, function(response) {
-// //       response.pipe(file);
-// //       file.on('finish', function() {
-// //          file.close(cb);  // close() is async, call cb after close completes.
-// //       });
-// //     }).on('error', function(err) { // Handle errors
-// //         fs.unlink(dest); // Delete the file async. (But we don't check the result)
-// //         if (cb) cb(err.message);
-// //     });
-// // 	res.download(filepath, '2012a.pdf', (err) => {
-// // 			if (err) {
-// // 			  res.status(500).send({
-// // 				message: "Could not download the file. " + err,
-// // 			  });
-// // 			}
-// // 	});
-// 	
-//     	
-// });
+//
 router.get('/poster', (req, res) => {
     
     res.render('pages/poster', {
@@ -133,15 +74,41 @@ router.post('/site_search', (req, res) => {
 	Prokka Genome Annot
 	*/
 	let search_txt = req.body.intext.toLowerCase()
-	// pure numeric would be: otid
-	let tax_search_lst = [] 
-	//if(Number.isInteger(parseInt(search_txt))){
-	   // search Object.keys(C.taxon_lookup)
-	   
-	// convert to text and true if includes
-	let otid_lst = Object.keys(C.taxon_lookup).filter(item => ((item+'').includes(search_txt)))  // searches the otid only
-	let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(search_txt))) 
 
+	// Genomes
+	let all_gid_obj_list = Object.values(C.genome_lookup)
+	//let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(search_txt))) 
+    var gidkeylist = Object.keys(all_gid_obj_list[0])
+    let gid_obj_lst = all_gid_obj_list.filter(function (el) {
+          for(var n in gidkeylist){
+             if(Array.isArray(el[gidkeylist[n]])){
+                 //we're missing any arrays
+             }else{
+             if( (el[gidkeylist[n]]).toLowerCase().includes(search_txt)){
+               return el.gid
+             }
+             }
+          }
+    });
+    var gid_lst = gid_obj_lst.map(e => e.gid)
+    
+    // OTID
+    let all_otid_obj_list = Object.values(C.taxon_lookup)
+	var otidkeylist = Object.keys(all_otid_obj_list[0])
+    let otid_obj_lst = all_otid_obj_list.filter(function (el) {
+          for(var n in otidkeylist){
+             //console.log( el[otidkeylist[n]] )
+             if(Array.isArray(el[otidkeylist[n]])){
+                 //we're missing any arrays
+             }else{
+               if((el[otidkeylist[n]]).toLowerCase().includes(search_txt)){
+                 return el.otid
+               }
+             }
+          }
+    });
+	let otid_lst = otid_obj_lst.map(e => e.otid)
+	
 	// lets search the taxonomy names
 	//test_val = 'rhiz' // only 9 grep results
 	let taxon_lst = Object.values(C.taxon_lineage_lookup).filter( function(e){
@@ -163,7 +130,7 @@ router.post('/site_search', (req, res) => {
 	//  Now get the otids
 	let taxon_otid_obj = {}
 	let taxon_otid_lst = taxon_lst.map(e => e.otid)      
-	for(n in taxon_otid_lst){
+	for(var n in taxon_otid_lst){
 	   let otid = taxon_otid_lst[n]
 	   taxon_otid_obj[otid]= {'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species}
 	}
@@ -191,17 +158,26 @@ router.post('/site_search', (req, res) => {
     //  Now the phage db
     // phageID, phage:family,genus,species, host:genus,species, ncbi ids
     //console.log(C.phage_lookup['HPT-000001'])
-    let phage_id_lst = Object.keys(C.phage_lookup).filter(item => ((item+'').includes(search_txt))) 
-    let phage_db = Object.values(C.phage_lookup).filter( function(e){
-        if(e.family_ncbi.toLowerCase().includes(search_txt) 
-          || e.genus_ncbi.toLowerCase().includes(search_txt)
-          || e.species_ncbi.toLowerCase().includes(search_txt)
-          || e.host_ncbi.toLowerCase().includes(search_txt)){
-          return e
-        }
-    })
-    let phage_name_lst = phage_db.map(e => e.pid)   
-    console.log(phage_name_lst)
+    // PHAGE
+	let all_phage_obj_list = Object.values(C.phage_lookup)
+	//let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(search_txt))) 
+    //console.log(all_phage_obj_list[0])
+    var pidkeylist = Object.keys(all_phage_obj_list[0])
+    let pid_obj_lst = all_phage_obj_list.filter(function (el) {
+          for(var n in pidkeylist){
+             //console.log(pidkeylist[n]+'-'+search_txt)
+             if(Array.isArray(el[pidkeylist[n]])){
+                 //we're missing any arrays
+             }else{
+             if((el[pidkeylist[n]]).toLowerCase().includes(search_txt)){
+               return el.pid
+             }
+             }
+          }
+    });
+    //console.log(pid_obj_lst)
+    var phage_id_lst = pid_obj_lst.map(e => e.pid)
+    
 
 	res.render('pages/search_result', {
 		title: 'HOMD :: Site Search', 
@@ -214,7 +190,7 @@ router.post('/site_search', (req, res) => {
 		taxon_otid_obj: JSON.stringify(taxon_otid_obj),
 		//help_pages: JSON.stringify(lst),
 		phage_id_list: JSON.stringify(phage_id_lst),  // phageIDs
-		phage_name_list: JSON.stringify(phage_name_lst)          // family,genus,species,host
+		        
 		
 	});
         

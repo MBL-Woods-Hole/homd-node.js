@@ -13,7 +13,7 @@
 <% var gids = JSON.parse(gid_list) %>
 <% var lineageids = JSON.parse(taxon_otid_obj) %>
 <% var phage_id_list = JSON.parse(phage_id_list) %>
-<% var phage_name_list = JSON.parse(phage_name_list) %>
+
 
 <body>
   
@@ -62,13 +62,7 @@
 		   <br><%= parseInt(n)+1 %>) <a href='/phage/phagedesc?pid=<%= pid %>'><%= pid %></a>
 		<% } %>
     </div>
-    <div class='search-box'>
-	  Matching Phage Names: (<%= phage_name_list.length %>)
-	  <% for(n in phage_name_list){ %>
-		   <% pid = phage_name_list[n] %>
-		   <br><%= parseInt(n)+1 %>) <a href='/phage/phagedesc?pid=<%= pid %>'><%= pid %></a> 
-	<% } %>
-    </div>
+
     </div> <!-- end: page-content -->
     
     <div id='footer'>

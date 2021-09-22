@@ -24,10 +24,10 @@
 	</tr>
 	
 	<tr>	
-	  <td nowrap><strong>NCBI Assembly</strong>:</td><td><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= list[n].assembly_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.assembly_ncbi  %></a></td>
+	  <td nowrap><strong>NCBI Assembly</strong>:</td><td><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= data.assembly_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.assembly_ncbi  %></a></td>
 	</tr><tr>
 	<% if(data.sra_accession_ncbi != ''){ %>  
-	  <td nowrap><strong>NCBI Accession</strong>:</td><td><a href='https://www.ncbi.nlm.nih.gov/sra/<%= list[n].sra_accession_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.sra_accession_ncbi  %></a></td>
+	  <td nowrap><strong>NCBI Accession</strong>:</td><td><a href='https://www.ncbi.nlm.nih.gov/sra/<%= data.sra_accession_ncbi  %>' target='_blank' rel="noopener noreferrer"><%= data.sra_accession_ncbi  %></a></td>
     <% }else{ %>
       <td nowrap><strong>NCBI Accession</strong>:</td><td>none</td>
     <% } %>

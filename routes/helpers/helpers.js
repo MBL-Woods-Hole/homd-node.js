@@ -122,7 +122,7 @@ module.exports.clean_rank_name_for_show = (rank) =>{
 module.exports.make_lineage_string_with_links = (lineage_list, link) =>{
      var tmp = ''
      i =0 
-     for(n in lineage_list[1]){
+     for(var n in lineage_list[1]){
          if(link == 'life'){
            tmp += "<a href='/taxa/"+link+"?rank="+C.ranks[i]+"&name=\""+lineage_list[1][n]+"\"'>"+lineage_list[1][n]+'</a>; '
          }else{

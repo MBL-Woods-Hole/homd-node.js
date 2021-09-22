@@ -54,7 +54,7 @@ router.get('/genome_table', function genome_table(req, res) {
 		seqid_list = C.taxon_lookup[otid].genomes
 		//console.log('sil',seqid_list)
 		gid_obj_list = []
-		for(n in seqid_list){
+		for(var n in seqid_list){
 		    gid_obj_list.push(C.genome_lookup[seqid_list[n]])
 		}
 		
@@ -577,7 +577,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
 	    console.log('in otid dnld')
 	    gid_list = C.taxon_lookup[otid].genomes
 		//console.log('sil',seqid_list)
-		for(n in gid_list){
+		for(var n in gid_list){
 		    send_list.push(C.genome_lookup[gid_list[n]])
 		}
 		file_filter_txt = "HOMD.org Genome Data::Oral TaxonID: HMT-"+("000" + otid).slice(-3);
@@ -642,7 +642,7 @@ function create_table(gids, source, type, start_txt) {
         
         txt +=  headers_row.join('\t')
         
-        for(n in gids){
+        for(var n in gids){
             gid = gids[n]
             obj = C.genome_lookup[gid]
                
@@ -682,48 +682,48 @@ function get_filtered_genome_list(gid_obj_list, search_txt, search_field){
 	    let temp_obj = {}
 	    var tmp_send_list = gid_obj_list.filter(item => item.otid.toLowerCase().includes(search_txt))
 	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    //gid
 	    tmp_send_list = gid_obj_list.filter(item => item.gid.toLowerCase().includes(search_txt))
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    //genus
 	    var tmp_send_list = gid_obj_list.filter(item => item.genus.toLowerCase().includes(search_txt))
 	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    // species
 	    var tmp_send_list = gid_obj_list.filter(item => item.species.toLowerCase().includes(search_txt))
 	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    //culture collection
 	    var tmp_send_list = gid_obj_list.filter(item => item.ccolct.toLowerCase().includes(search_txt))
 	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    // isolation origin
 	    var tmp_send_list = gid_obj_list.filter(item => item.io.toLowerCase().includes(search_txt))
 	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    //seq status
 	    var tmp_send_list = gid_obj_list.filter(item => item.status.toLowerCase().includes(search_txt))
 	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    //seq_center
 	    var tmp_send_list = gid_obj_list.filter(item => item.seq_center.toLowerCase().includes(search_txt))
 	    // for uniqueness convert to object::otid
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    

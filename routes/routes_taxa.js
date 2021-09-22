@@ -172,7 +172,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	//show_filters = 1
 	let statusfilter_on =[]
 	let sitefilter_on  = []
-	for(i in req.body){
+	for(var i in req.body){
 		if(C.tax_sites_all.indexOf(i) !== -1){
 		   sitefilter_on.push(i)
 		}
@@ -193,7 +193,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	}else if(statusfilter_on.length == 0){  // only items from site filter checked
 	    send_list = big_tax_list.filter( function(e){
           if(e.sites.length > 0){
-            for(n in e.sites){
+            for(var n in e.sites){
               var site = e.sites[n].toLowerCase()  // nasal,oral
               if( sitefilter_on.indexOf(site) !== -1 )
                 //nasal or oral if site item in s return only one instance
@@ -213,7 +213,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	}else{
       send_list = big_tax_list.filter( function(e){
           if(e.sites.length > 0){
-            for(n in e.sites){
+            for(var n in e.sites){
               var site = e.sites[n].toLowerCase()  // nasal,oral
               var status = e.status.toLowerCase()
               if(sitefilter_on.indexOf(site) !== -1 && statusfilter_on.indexOf(status) !== -1 )
@@ -680,7 +680,7 @@ router.get('/life', function life(req, res) {
 		last_rank = show_ranks[show_ranks.length -1]
 		
 		space = '&nbsp;' 
-		for(i in show_ranks){
+		for(var i in show_ranks){
 		   
 		   rank_display = get_rank_display(show_ranks[i],false)
 		   // let name_n_rank = tax_name+'_'+level
@@ -714,7 +714,7 @@ router.get('/life', function life(req, res) {
 			 next_rank = C.ranks[C.ranks.indexOf(rank) +1]
 			 childern_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank].children_ids
 			 
-			 for(n in childern_ids){
+			 for(var n in childern_ids){
 			   taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[childern_ids[n]].taxon
 			   taxa_list.push(taxon)
 			 }
@@ -729,7 +729,7 @@ router.get('/life', function life(req, res) {
 			 taxa_list.sort(function (a, b) {
       			return helpers.compareStrings_alpha(a, b);
     		 });
-			 for(n in taxa_list){
+			 for(var n in taxa_list){
 				 //console.log('SHOW RANKS',show_ranks.length)
 				 title = rank_display+': '+taxa_list[n]
 				 if(rank === 'genus'){
@@ -851,7 +851,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    // /subspecies/subsp.%20dentisani%20clade%20058
    //console.log(node)
    var children_list = []
-   for(i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
+   for(var i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
    		n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
    		//children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
    		children_list.push("<a href='/taxa/ecology/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
@@ -1015,7 +1015,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
 		if(statusfilter.length == 0){  // only items from site filter checked
 	    send_list = temp_list.filter( function(e){
           if(e.sites.length > 0){
-            for(n in e.sites){
+            for(var n in e.sites){
               var site = e.sites[n].toLowerCase()  // nasal,oral
               if( sitefilter.indexOf(site) !== -1 )
                 //nasal or oral if site item in s return only one instance
@@ -1035,7 +1035,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
 	}else{
       send_list = temp_list.filter( function(e){
           if(e.sites.length > 0){
-            for(n in e.sites){
+            for(var n in e.sites){
               var site = e.sites[n].toLowerCase()  // nasal,oral
               var status = e.status.toLowerCase()
               if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
@@ -1253,7 +1253,7 @@ function create_table(otids, source, type, head_txt) {
         
         txt +=  headers.join('\t')
         var o1,o2,o3
-        for(n in otids){
+        for(var n in otids){
             
             let otid = otids[n].toString()
             o1 = obj1[otid]
@@ -1281,12 +1281,12 @@ function create_table(otids, source, type, head_txt) {
         headers = ['Domain','Domain_count','Phylum','Phylum_count','Class','Class_count','Order','Order_count','Family','Family_count','Genus','Genus_count','Species','Species_count','Subspecies','Oral_Taxon_ID']
         txt +=  headers.join('\t')+'\n'
         
-        for(n in otids){
+        for(var n in otids){
             otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
             //console.log(C.taxon_lineage_lookup[otids[n]])
             old_lineage = ''
             if(otids[n] in C.taxon_lineage_lookup){
-                for( m in C.ranks){
+                for( var m in C.ranks){
                     rank = C.ranks[m]
                 
                     lineage = old_lineage + C.taxon_lineage_lookup[otids[n]][rank]
@@ -1321,17 +1321,17 @@ function create_table(otids, source, type, head_txt) {
                    'Subspecies_Taxon_Count','Subspecies_Seq_Count','Subspecies_Clone_Count'
                    ]
         txt +=  headers.join('\t')+'\n'
-        for(n in otids){
+        for(var n in otids){
             otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
             old_lineage = ''
             if(otids[n] in C.taxon_lineage_lookup){
-                for( m in C.ranks){
+                for( var m in C.ranks){
                     rank = C.ranks[m]
                     txt += C.taxon_lineage_lookup[otids[n]][rank] +'\t'
                 }
                 txt += otid_pretty+'\t'
                 // tax_counts
-                for( m in C.ranks){
+                for( var m in C.ranks){
                     rank = C.ranks[m]
                     lineage = old_lineage + C.taxon_lineage_lookup[otids[n]][rank]
                     cnts = C.taxon_counts_lookup[lineage]
@@ -1431,7 +1431,7 @@ function find_images(rank, otid, tax_name) {
 	    send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
 	}else if(search_field == 'synonym'){
 	    send_list = big_tax_list.filter( function(e) {
-	       for(n in e.synonyms){
+	       for(var n in e.synonyms){
 	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
 	             return e
 	          }
@@ -1440,7 +1440,7 @@ function find_images(rank, otid, tax_name) {
 	    
 	}else if(search_field == 'type_strain'){
 	    send_list = big_tax_list.filter( function(e) {
-	       for(n in e.type_strains){
+	       for(var n in e.type_strains){
 	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
 	             return e
 	          }
@@ -1452,39 +1452,39 @@ function find_images(rank, otid, tax_name) {
 	    let temp_obj = {}
 	    var tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
 	    // for uniqueness convert to object
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    
 	    tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    
 	    tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    
 	    tmp_send_list = big_tax_list.filter( function(e) {
-	       for(n in e.synonyms){
+	       for(var n in e.synonyms){
 	          if(e.synonyms[n].toLowerCase().includes(search_txt)){
 	             return e
 	          }
 	       }
 	    })    
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    
 	    tmp_send_list = big_tax_list.filter( function(e) {
-	       for(n in e.type_strains){
+	       for(var n in e.type_strains){
 	          if(e.type_strains[n].toLowerCase().includes(search_txt)){
 	             return e
 	          }
 	       }
 	    })
-	    for(n in tmp_send_list){
+	    for(var n in tmp_send_list){
 	       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
 	    }
 	    
@@ -1500,9 +1500,9 @@ function find_images(rank, otid, tax_name) {
 //    //segata_order is a list ['BM,'td'...]
 //    // segata is a list of objects {loci: 'G1-avg', avg: '0', stdev: '0'}
 //    var ret_list = []
-//    for(n in segata_order){
+//    for(var n in segata_order){
 //       var item = segata_order[n]
-//       for(i in segata){
+//       for(var i in segata){
 //           if(segata[i].loci == item){
 //              ret_list.push(segata[i])
 //           }
@@ -1594,26 +1594,26 @@ function build_abundance_table(cite, data, order){
     //console.log(data)
     
     var html = '<table><thead><tr><td></td>'
-    for(n in order){
+    for(var n in order){
         html += '<th>'+order[n]+'</th>'
     }
     html += '</tr></thead><tbody>'
     // segata, dewhirst, eren
     html += '<tr><th>Avg</th>'
-    for(n in data){
+    for(var n in data){
         html += '<td>'+data[n].avg+'</td>'
     }
     // segata, dewhirst
     if(['segata','dewhirst'].indexOf(cite) != -1){
       html += '<tr><th>Stdev</th>'
-      for(n in data){
+      for(var n in data){
         html += '<td>'+data[n].stdev+'</td>'
       }
     }
     // dewhirst, eren
     if(['dewhirst','eren'].indexOf(cite) != -1){
       html += '<tr><th>Prev</th>'
-      for(n in data){
+      for(var n in data){
         html += '<td>'+data[n].prev+'</td>'
       }
     }
@@ -1630,23 +1630,23 @@ function get_major_genera(rank, node) {
       // find all genera under tax_name the get the counts
       // how to find all genera from node?
 
-      for(n in node.children_ids){
+      for(var n in node.children_ids){
         let new_node1 = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]  // klass ,order or family
-        for(m in new_node1.children_ids){
+        for(var m in new_node1.children_ids){
           let new_node2 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node1.children_ids[m]]  // order, family or genus
           if(new_node2.rank == 'genus'){
             //stop you're done
             //counts = C.taxon_counts_lookup[make_lineage(new_node2)[0]]
             genera.push(new_node2)
           }else{
-            for(p in new_node2.children_ids){
+            for(var p in new_node2.children_ids){
               let new_node3 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node2.children_ids[p]] // family or genus
               if(new_node3.rank == 'genus'){
                 //stop you're done
                 //counts = C.taxon_counts_lookup[make_lineage(new_node3)[0]]
                 genera.push(new_node3)
               }else{
-                for(q in new_node3.children_ids){
+                for(var q in new_node3.children_ids){
                   let new_node4 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node3.children_ids[q]] // must be genus
                   //console.log('make_lineage(new_node4)')
                   //console.log(make_lineage(new_node4)[0])

@@ -88,9 +88,9 @@ router.get('/phage_table', function phage_table_get(req, res) {
   
   //console.log(res)
   // here we pare down the send_list to contain only data from the pertinent cols
-   for(n in send_list0){
+   for(var n in send_list0){
       tmp_obj = {}
-      for(x in cols_to_show){
+      for(var x in cols_to_show){
          tmp_obj[cols_to_show[x].name] = send_list0[n][cols_to_show[x].name]
       }
       send_list.push(tmp_obj)
@@ -125,8 +125,8 @@ router.post('/phage_table', function phage_table_post(req, res) {
    let send_list = []
    let tmp_phage_list = Object.values(C.phage_lookup)
    let cols_to_show =[]
-   for(n in C.all_phage_cols){
-     for(item in req.body){
+   for(var n in C.all_phage_cols){
+     for(var item in req.body){
          if(item == C.all_phage_cols[n].name && cols_to_show.indexOf(C.all_phage_cols[n]) == -1){
            cols_to_show.push(C.all_phage_cols[n])
          }
@@ -137,9 +137,9 @@ router.post('/phage_table', function phage_table_post(req, res) {
    //console.log('cols')
    //console.log(cols_to_show)
    // here we pare down the send_list to contain only data from the pertinent cols
-   for(n in tmp_phage_list){
+   for(var n in tmp_phage_list){
       tmp_obj = {}
-      for(x in cols_to_show){
+      for(var x in cols_to_show){
          tmp_obj[cols_to_show[x].name] = tmp_phage_list[n][cols_to_show[x].name]
       }
       send_list.push(tmp_obj)
@@ -179,11 +179,11 @@ router.post('/search_phagetable', function search_phagetable(req, res) {
 	let tmp_phage_list = Object.values(C.phage_lookup)
 	send_list0 = get_filtered_phage_list(tmp_phage_list, search_txt, search_field)
 	
-   for(n in send_list0){
+   for(var n in send_list0){
       console.log('n',n)
       
       tmp_obj = {}
-      for(x in req.session.cols){
+      for(var x in req.session.cols){
          console.log(req.session.cols)
          tmp_obj[req.session.cols[x].name] = send_list0[n][req.session.cols[x].name]
       }
@@ -301,7 +301,7 @@ function create_table(list, source, type) {
         
         txt =  headers_row.join('\t')
         
-        for(pid in list){
+        for(var pid in list){
             obj = list[pid]
                
                //console.log(o2)
@@ -361,96 +361,96 @@ function get_filtered_phage_list(big_phage_list, search_txt, search_field){
 	    //host_otid
 	    send_list0 = big_phage_list.filter(item => item.host_otid.toLowerCase().includes(search_txt))
 	    // for uniqueness convert to object
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    //hostname
 	    send_list0 = big_phage_list.filter(item => item.host_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //phageID
 	    send_list0 = big_phage_list.filter(item => item.pid.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //family_ncbi
 	    send_list0 = big_phage_list.filter(item => item.family_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //genus
 	    send_list0 = big_phage_list.filter(item => item.genus_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //species
 	    send_list0 = big_phage_list.filter(item => item.species_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //assembly_ncbi
 	    send_list0 = big_phage_list.filter(item => item.assembly_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //sra_accession_ncbi
 	    send_list0 = big_phage_list.filter(item => item.sra_accession_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //submitters_ncbi
 	    send_list0 = big_phage_list.filter(item => item.submitters_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //publications_ncbi
 	    send_list0 = big_phage_list.filter(item => item.publications_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //molecule_type_ncbi
 	    send_list0 = big_phage_list.filter(item => item.molecule_type_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //sequence_type_ncbi
 	    send_list0 = big_phage_list.filter(item => item.sequence_type_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //geo_location_ncbi
 	    send_list0 = big_phage_list.filter(item => item.geo_location_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //isolation_source_ncbi
 	    send_list0 = big_phage_list.filter(item => item.isolation_source_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //biosample_ncbi
 	    send_list0 = big_phage_list.filter(item => item.biosample_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
 	    //genbank_title_ncbi
 	    send_list0 = big_phage_list.filter(item => item.genbank_title_ncbi.toLowerCase().includes(search_txt))
-	    for(n in send_list0){
+	    for(var n in send_list0){
 	       temp_obj[send_list0[n].pid] = send_list0[n]
 	    }
 	    
