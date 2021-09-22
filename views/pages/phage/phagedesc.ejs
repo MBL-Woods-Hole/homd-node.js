@@ -1,4 +1,12 @@
 <style>
+#phage-table{
+   border-collapse:collapse;
+   margin:15px 0;
+}
+#phage-table th,td{
+    border: 1px solid grey;
+    padding:5px;
+}
 </style>
 <% data = JSON.parse(phage_data) %>
 
@@ -14,7 +22,8 @@
 		 					
 			 <div class='title'>PHAGE DATA: <small>PhageID <%= pid %></small></div>
 <div id='under-construction'>Page Under Construction</div>		
-	<table>
+<center>
+<table id='phage-table'>
 	
 	<tr>	
 	  <td nowrap><strong>Phage Family</strong>:</td><td><%= data.family_ncbi  %></td>
@@ -32,13 +41,12 @@
       <td nowrap><strong>NCBI Accession</strong>:</td><td>none</td>
     <% } %>
     </tr><tr>
-	  <td nowrap><strong>Host Species</strong>:</td><td><a href='/taxa/tax_description?otid=<%= data.host_otid %>'><i><%= data.host_ncbi %></i></a></td>
-    </tr><tr>
-    <% if(data.otid != ''){ %>
-	  <td nowrap><strong>Host Oral Taxon-ID</strong>:</td><td><a href='/taxa/tax_description?otid=<%= data.host_otid %>'><%= data.host_otid %></a></td>
-	<% }else{ %>
-      <td nowrap><strong>Host Oral Taxon-ID</strong>:</td><td>none found</td>
-    <% } %>
+	  <% if(data.host_otid != ''){ %>
+	    <% taxidfullname = 'HMT-'+("000" + data.host_otid).slice(-3); %>
+	    <td nowrap><strong>Host Species (Taxon-ID)</strong>:</td><td><a href='/taxa/tax_description?otid=<%= data.host_otid %>'><i><%= data.host_ncbi %></i> <small>(<%= taxidfullname %>)</small></a></td>
+      <% }else{ %>
+        <td nowrap><strong>Host Species (Taxon-ID)</strong>:</td><td><i><%= data.host_ncbi %></i> <small>(none found)</small></td>
+      <% } %>
     </tr>
     <tr>	
 	  <td><strong>Submitters</strong>:</td><td><%= data.submitters_ncbi  %></td>
@@ -64,8 +72,13 @@
 	<tr>	
 	  <td><strong>collection_date_ncbi</strong>:</td><td><%= data.collection_date_ncbi  %></td>
 	</tr>
-	<tr>	
-	  <td><strong>biosample_ncbi</strong>:</td><td><%= data.biosample_ncbi  %></td>
+	<tr>
+	  <% if(data.biosample_ncbi != ''){ %>
+	     <td><strong>biosample_ncbi</strong>:</td><td><a href='https://www.ncbi.nlm.nih.gov/biosample/?term=<%= data.biosample_ncbi %>' target='_blank' ><%= data.biosample_ncbi  %></a></td>
+	  <% }else{ %>
+	     <td><strong>biosample_ncbi</strong>:</td><td></td>
+	  <% } %>	
+	  
 	</tr>
 	<tr>	
 	  <td><strong>genbank_title_ncbi</strong>:</td><td><%= data.genbank_title_ncbi  %></td>
@@ -73,6 +86,7 @@
 	
 
     </table>
+</center>
     </div> <!-- end: page-content -->
     
     <div id='footer'>
