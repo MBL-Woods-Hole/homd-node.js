@@ -73,26 +73,28 @@ router.post('/site_search', (req, res) => {
 	NCBI Genome Annot
 	Prokka Genome Annot
 	*/
-	let search_txt = req.body.intext.toLowerCase()
+	
+	let search_txt = req.body.intext
+	let search_txt_lower = req.body.intext.toLowerCase()
 
-	// Genomes
+	// Genome  Metadata
 	let all_gid_obj_list = Object.values(C.genome_lookup)
-	//let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(search_txt))) 
+	//let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(search_txt_lower))) 
     var gidkeylist = Object.keys(all_gid_obj_list[0])
     let gid_obj_lst = all_gid_obj_list.filter(function (el) {
           for(var n in gidkeylist){
              if(Array.isArray(el[gidkeylist[n]])){
                  //we're missing any arrays
              }else{
-             if( (el[gidkeylist[n]]).toLowerCase().includes(search_txt)){
-               return el.gid
-             }
+               if( (el[gidkeylist[n]]).toLowerCase().includes(search_txt_lower)){
+                 return el.gid
+               }
              }
           }
     });
     var gid_lst = gid_obj_lst.map(e => e.gid)
     
-    // OTID
+    // OTID Metadata
     let all_otid_obj_list = Object.values(C.taxon_lookup)
 	var otidkeylist = Object.keys(all_otid_obj_list[0])
     let otid_obj_lst = all_otid_obj_list.filter(function (el) {
@@ -101,7 +103,7 @@ router.post('/site_search', (req, res) => {
              if(Array.isArray(el[otidkeylist[n]])){
                  //we're missing any arrays
              }else{
-               if((el[otidkeylist[n]]).toLowerCase().includes(search_txt)){
+               if((el[otidkeylist[n]]).toLowerCase().includes(search_txt_lower)){
                  return el.otid
                }
              }
@@ -110,18 +112,19 @@ router.post('/site_search', (req, res) => {
 	let otid_lst = otid_obj_lst.map(e => e.otid)
 	
 	// lets search the taxonomy names
-	//test_val = 'rhiz' // only 9 grep results
+	//Bacterial Taxonomy Names
+	console.log(Object.keys(C.taxon_counts_lookup)[0])
 	let taxon_lst = Object.values(C.taxon_lineage_lookup).filter( function(e){
 	  if(Object.keys(e).length !== 0){
 		//console.log(e)
-		if(e.domain.toLowerCase().includes(search_txt) 
-		|| e.phylum.toLowerCase().includes(search_txt) 
-		 || e.klass.toLowerCase().includes(search_txt)
-		  || e.order.toLowerCase().includes(search_txt)
-		   || e.family.toLowerCase().includes(search_txt)
-			|| e.genus.toLowerCase().includes(search_txt)
-			 || e.species.toLowerCase().includes(search_txt)
-			  || e.subspecies.toLowerCase().includes(search_txt)){
+		if(e.domain.toLowerCase().includes(search_txt_lower) 
+		|| e.phylum.toLowerCase().includes(search_txt_lower) 
+		 || e.klass.toLowerCase().includes(search_txt_lower)
+		  || e.order.toLowerCase().includes(search_txt_lower)
+		   || e.family.toLowerCase().includes(search_txt_lower)
+			|| e.genus.toLowerCase().includes(search_txt_lower)
+			 || e.species.toLowerCase().includes(search_txt_lower)
+			  || e.subspecies.toLowerCase().includes(search_txt_lower)){
 		  return e
 		}
 	  }
@@ -132,44 +135,44 @@ router.post('/site_search', (req, res) => {
 	let taxon_otid_lst = taxon_lst.map(e => e.otid)      
 	for(var n in taxon_otid_lst){
 	   let otid = taxon_otid_lst[n]
-	   taxon_otid_obj[otid]= {'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species}
+	   taxon_otid_obj[otid]      = C.taxon_lineage_lookup[otid].domain
+	   taxon_otid_obj[otid] += ';'+C.taxon_lineage_lookup[otid].phylum
+	   taxon_otid_obj[otid] += ';'+C.taxon_lineage_lookup[otid].klass
+	   taxon_otid_obj[otid] += ';'+C.taxon_lineage_lookup[otid].order
+	   taxon_otid_obj[otid] += ';'+C.taxon_lineage_lookup[otid].family
+	   taxon_otid_obj[otid] += ';'+C.taxon_lineage_lookup[otid].genus
+	   taxon_otid_obj[otid] += ';'+C.taxon_lineage_lookup[otid].species
+	   if(C.taxon_lineage_lookup[otid].subspecies != ''){
+	     taxon_otid_obj[otid] += ';'+C.taxon_lineage_lookup[otid].subspecies
+	    }
+	   
+	      //{
+	      //'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species
+	      //}
 	}
+	
+	
+	
+	
 	
 	// search help pages
 	let dir = path.join(process.cwd(), 'public', 'static_help_files' )
-	// https://www.npmjs.com/package/find-in-files
-	// var result2 = findInFiles.find(search_txt, dir, '.ejs$')
-// 		.then(function(help_page_results) {
-//         console.log(help_page_results)
-//         
-//         res.render('pages/homd/search_result', {
-// 			title: 'HOMD :: Site Search', 
-// 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
-// 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-// 			search_text: search_txt,
-// 			otid_list: JSON.stringify(otid_lst),
-// 			gid_list: JSON.stringify(gid_lst),
-// 			taxon_otid_obj: JSON.stringify(taxon_otid_obj),
-// 			help_pages: JSON.stringify(help_page_results)
-// 	    });
-//         
-//      
-//     });
+	
     //  Now the phage db
     // phageID, phage:family,genus,species, host:genus,species, ncbi ids
     //console.log(C.phage_lookup['HPT-000001'])
-    // PHAGE
+    // PHAGE Metadata
 	let all_phage_obj_list = Object.values(C.phage_lookup)
-	//let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(search_txt))) 
+	//let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(search_txt_lower))) 
     //console.log(all_phage_obj_list[0])
     var pidkeylist = Object.keys(all_phage_obj_list[0])
     let pid_obj_lst = all_phage_obj_list.filter(function (el) {
           for(var n in pidkeylist){
-             //console.log(pidkeylist[n]+'-'+search_txt)
+             //console.log(pidkeylist[n]+'-'+search_txt_lower)
              if(Array.isArray(el[pidkeylist[n]])){
                  //we're missing any arrays
              }else{
-             if((el[pidkeylist[n]]).toLowerCase().includes(search_txt)){
+             if((el[pidkeylist[n]]).toLowerCase().includes(search_txt_lower)){
                return el.pid
              }
              }
@@ -185,6 +188,7 @@ router.post('/site_search', (req, res) => {
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}), 
 		ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
 		search_text: search_txt,
+		
 		otid_list: JSON.stringify(otid_lst),
 		gid_list: JSON.stringify(gid_lst),
 		taxon_otid_obj: JSON.stringify(taxon_otid_obj),

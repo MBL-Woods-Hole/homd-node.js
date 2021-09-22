@@ -17,7 +17,7 @@
 	<table>
 	
 	<tr>	
-	  <td nowrap><strong>Family</strong>:</td><td><%= data.family_ncbi  %></td>
+	  <td nowrap><strong>Phage Family</strong>:</td><td><%= data.family_ncbi  %></td>
 	</tr>
 	<tr>	
 	  <td nowrap><strong>Genus; Species</strong>:</td><td><i><%= data.genus_ncbi  %> <%= data.species_ncbi  %></i></td>
@@ -32,10 +32,10 @@
       <td nowrap><strong>NCBI Accession</strong>:</td><td>none</td>
     <% } %>
     </tr><tr>
-	  <td nowrap><strong>Host Species</strong>:</td><td><a href='' target='_blank'><%= data.host_ncbi  %></a></td>
+	  <td nowrap><strong>Host Species</strong>:</td><td><a href='/taxa/tax_description?otid=<%= data.host_otid %>'><i><%= data.host_ncbi %></i></a></td>
     </tr><tr>
     <% if(data.otid != ''){ %>
-	  <td nowrap><a href='/taxa/tax_description?otid=<%= data.host_otid %>'><strong>Host Oral Taxon-ID</strong>:</td><td><%= data.host_otid %></a></td>
+	  <td nowrap><strong>Host Oral Taxon-ID</strong>:</td><td><a href='/taxa/tax_description?otid=<%= data.host_otid %>'><%= data.host_otid %></a></td>
 	<% }else{ %>
       <td nowrap><strong>Host Oral Taxon-ID</strong>:</td><td>none found</td>
     <% } %>
