@@ -152,11 +152,8 @@ router.post('/site_search', (req, res) => {
 	}
 	
 	
-	
-	
-	
 	// search help pages
-	let dir = path.join(process.cwd(), 'public', 'static_help_files' )
+	//let dir = path.join(process.cwd(), 'public', 'static_help_files' )
 	
     //  Now the phage db
     // phageID, phage:family,genus,species, host:genus,species, ncbi ids

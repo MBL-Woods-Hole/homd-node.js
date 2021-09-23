@@ -796,14 +796,27 @@ router.get('/life', function life(req, res) {
 });
 //
 router.get('/ecology_index', function ecology_index(req, res) {
-    
+    let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
+    //console.log(phyla_obj)
+    let bac_phyla_only = phyla_obj.filter( (x) =>{
+		  
+		  
+		  if(C.homd_taxonomy.taxa_tree_dict_map_by_id[x.parent_id].taxon == 'Bacteria'){
+			return x.taxon 
+		  }
+	})
+    let phyla = bac_phyla_only.map( x => x.taxon)
+    phyla.sort()
+    console.log(phyla)
     res.render('pages/taxa/ecology_index', {
 			title: 'HOMD :: Ecology', 
 			pgname: 'ecology',  //for AbountThisPage 
 			config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),
 			ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+		    phyla: JSON.stringify(phyla),
 		});
 });
+//
 router.get('/ecology/:level/:name', function ecology(req, res) {
    console.log('in ecology')
    let rank = req.params.level;
