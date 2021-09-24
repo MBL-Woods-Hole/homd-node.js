@@ -26,6 +26,8 @@
 #visit-life-page{
    float:right;
    font-size:x-small;
+   border:1px solid lightgrey;
+   padding:2px;
    
 }
 #visit-life-page a{
@@ -44,30 +46,43 @@
    border:1px solid black;
    padding: 1px;
 }
+
 #legend{
-   font-size:x-small;
+   font-size:small;
+   text-align:center;
+   background:lightgreen;
+   width:100%;
+}
+#legend-content{
+  padding:5px;
 }
 #row{
   display: flex;                  /* establish flex container */
   flex-direction: row;            /* default value; can be omitted */
   flex-wrap: nowrap;              /* default value; can be omitted */
   justify-content: space-between; /* switched from default (flex-start, see below) */
-  padding:5px 0;
+  
   width:100%;
 
 }
-#column_left{
- padding:10px;
+#column_one{
+   border:1px solid brown;
+   width:auto;
+   font-size:x-small;
+   
+}
+#column_two{
+   padding:10px;
    border:1px solid brown;
    
 }
-#column_middle{
- padding:10px;
+#column_three{
+   padding:10px;
    border:1px solid brown;
    
 }
-#column_right{
- padding:10px;
+#column_four{
+   padding:10px;
    border:1px solid brown;
    
 
@@ -102,16 +117,17 @@
 	    
 	    
 		<div id='taxon-page-div'>
-		    <span id='visit-life-page'>
-		        <a href='/taxa/ecology_index'>Ecology Home</a>
-		    <br><br>
-		        <a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page</a>
-		    </span>
+		    
 		    
 		    Full Lineage: <%- lineage %>
 		    <% if(children_lst.length == 0){ %>
 		       <span id='visit-life-page'><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description</a></span>
 		    <% }else{ %>
+		       <span id='visit-life-page'>
+		         <a href='/taxa/ecology_index'>Ecology Home</a>
+		          <br><br>
+		         <a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page</a>
+		       </span>
 		       <br><small>Lower rank member(s): 
 		       <% if(children_lst.length <= 5){ %>
 		           <% for(n in children_lst){ %>
@@ -133,18 +149,8 @@
 				   </tr></table>
 				   </div>
 		      <% } %>  <!-- End of if(children_lst.length -->
-		      
-		      
-		      
-		      
-		      
-		      
-		      
 	
 		    <% } %>
-		    
-		    
-		    
 		    
 		    
 		    <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
@@ -159,17 +165,40 @@
 		    </small>
 		    
 		</div>	<!-- end taxon-page-div -->
-<div id='legend'>		
-Legend: Buccal Mucosa (BM), Keratinized Gingiva (KG), Hard Palate (HP), Palatine Tonsils (PT), Tongue Dorsum (TD),
-Supra-Gingival (SupP), and Sub-Gingival (SubP) Plaques; 
-</div>				 
+	 
 <div id="row">	
 <% if(Object.keys(segata_data).length == 0){ %>
    <% width='15%' %>
 <% }else{ %>
    <% width='auto' %>
 <% } %>
-<div id='column_left' style='width:<%= width %>' >
+<div id='column_one'>
+<div id='legend'>Legend:</div>
+<div id='legend-content'>
+
+<pre>
+Group1:
+  BM - Buccal Mucosa
+  KG - Keratinized Gingiva
+  HP - Hard Palate
+
+Group2:
+  Throat
+  PT - Palatine Tonsils
+  TD - Tongue Dorsum
+  Saliva
+
+Group3:
+  SupP - Supra-gingival Plaque
+  SubP - Sub-gingival Plaque
+
+Group4:
+  Stool
+</pre>  
+  
+</div>
+</div>
+<div id='column_two' style='width:<%= width %>' >
 		
 		
 	  <div class='plot_div'>
@@ -192,7 +221,7 @@ Supra-Gingival (SupP), and Sub-Gingival (SubP) Plaques;
 <% }else{ %>
    <% width='auto' %>
 <% } %>
-<div id="column_middle"  style='width:<%= width %>'>
+<div id="column_three"  style='width:<%= width %>'>
 	  <div class='plot_div'>
 		<small>
       From: Dewhirst 35x9 data<br><small>(not published yet)</small>
@@ -208,7 +237,7 @@ Supra-Gingival (SupP), and Sub-Gingival (SubP) Plaques;
 <% }else{ %>
    <% width='auto' %>
 <% } %>
-<div id="column_right"  style='width:<%= width %>'>
+<div id="column_four"  style='width:<%= width %>'>
       <div class='plot_div'>
       <small>
       From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
