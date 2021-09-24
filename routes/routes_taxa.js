@@ -748,10 +748,10 @@ router.get('/life', function life(req, res) {
 				 
 				 }else{
 					if(rank === 'species'){
-				       //console.log('RANK==species')
+				       //display will be subspecies
 				       //console.log(taxa_list[n])
 				       otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'].otid
-				       html += "<span class=''>"+space+"<a title='"+title+"' href='tax_description?otid="+otid+"'>"+taxa_list[n]+'</a></span><br>'    
+				       html += "<span class=''>"+space+taxa_list[n]+"  </span>(<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)<br>'    
 				    }else{
 					   // list of not genus or species 
 					   node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+next_rank]
@@ -799,11 +799,9 @@ router.get('/ecology_index', function ecology_index(req, res) {
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
     //console.log(phyla_obj)
     let bac_phyla_only = phyla_obj.filter( (x) =>{
-		  
-		  
-		  if(C.homd_taxonomy.taxa_tree_dict_map_by_id[x.parent_id].taxon == 'Bacteria'){
-			return x.taxon 
-		  }
+	  if(C.homd_taxonomy.taxa_tree_dict_map_by_id[x.parent_id].taxon == 'Bacteria'){
+		return x.taxon 
+	  }
 	})
     let phyla = bac_phyla_only.map( x => x.taxon)
     phyla.sort()

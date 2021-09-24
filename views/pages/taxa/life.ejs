@@ -62,33 +62,23 @@
 <% images = JSON.parse(image_array)  %>
 <%- include('../../partials/header_html'); %>
 
-
-<% if(!rank) {  %> 
-<%    headline1 = 'Life: ' %>
-<%    headline2 = 'Cellular Organisms' %>
-<% }else if (rank === 'klass'){ %>
-
-<%    headline1 = 'Class: ' %>
-<%    headline2 = tax_name %>
-
-<% }else{ %>
-	<% headline1 = rank.charAt(0).toUpperCase() + rank.slice(1) + ': ' %>
-	<% headline2 = tax_name %>
-<% } %>
-
-
-	
 <body>
   <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
-    <div class='page-content' >
-	  			
+    <div class='page-content' >		
 	  <div class='title'>
-	  <% if(rank=='species') { %>
-	     <span id='headline1'><%= headline1 %></span> <span class='yellow' id='headline2'><em><%= headline2 %></em></span>
+	  <% if(!rank) { %>
+	     <span id='headline1'>Life:</span> <span class='yellow' id='headline2'>Cellular Organisms</span>
+	  <% }else if (rank === 'klass'){ %>
+	     <span id='headline1'>Class:</span> <span class='yellow' id='headline2'><%= tax_name %></span>
+	  <% }else if(rank=='species') { %>
+	     
+	     <span id='headline1'>Species:</span> <span class='yellow' id='headline2'><em><%= tax_name %></em></span>
+	  
 	  <% }else{ %>
-	     <span id='headline1'><%= headline1 %></span> <span class='yellow' id='headline2'><%= headline2 %></span>
+	     <% headline1 = rank.charAt(0).toUpperCase() + rank.slice(1) + ': '%>
+	     <span id='headline1'><%= headline1 %></span> <span class='yellow' id='headline2'><%= tax_name %></span>
 	  <% } %>
 	  
 	  </div>
