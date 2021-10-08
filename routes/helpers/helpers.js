@@ -225,7 +225,7 @@ module.exports.get_qsub_script_text = (req, scriptlog, dir_path, cmd_name, cmd_l
 //
 //
 
-module.exports.make_blast_script_txt = (req, data_dir, cmd_list, opts) => {
+module.exports.make_blast1_script_txt = (req, data_dir, cmd_list, opts) => {
   //console.log('OPTS: ')
   //console.log(opts)
   make_blast_script_txt = "";
@@ -237,7 +237,8 @@ module.exports.make_blast_script_txt = (req, data_dir, cmd_list, opts) => {
 
   make_blast_script_txt += "\n";
   make_blast_script_txt += "\n";
-  make_blast_script_txt += `FILE_NUMBER=\`/usr/bin/wc -l < ${data_dir}/filenames.list\``;
+  //make_blast_script_txt += `FILE_NUMBER=\`/usr/bin/wc -l < ${data_dir}/filenames.list\``;
+  make_blast_script_txt += `FILE_NUMBER=\`/usr/bin/sed -n '$=' < ${data_dir}/filenames.list\``;
   make_blast_script_txt += "\n";
   //make_blast_script_txt += "FILE_NUMBER=\"$({FILE_NUMBER##*( )}+1-1)\""
   
@@ -263,10 +264,10 @@ module.exports.make_blast_script_txt = (req, data_dir, cmd_list, opts) => {
     //make_blast_script_txt += "  module load bioware\n"
     //make_blast_script_txt += "  PATH=$PATH:"+app_root+"/public/scripts/gast:"+req.CONFIG.GAST_SCRIPT_PATH+"\n"
     //make_blast_script_txt += "  source /groups//vampsweb/" + req.CONFIG.site + "/seqinfobin/vamps_environment.sh\n"
-    make_blast_script_txt += "  echo \"===== $PATH ====\" >> " + data_dir + "/clust_blast.log\n"
+    //make_blast_script_txt += "  echo \"===== $PATH ====\" >> " + data_dir + "/clust_blast.log\n"
 
     make_blast_script_txt += "  LISTFILE=" + data_dir + "/filenames.list\n"
-    make_blast_script_txt += "  echo \"LISTFILE is \\$LISTFILE\" >> " + data_dir + "/clust_blast.log\n";
+    //make_blast_script_txt += "  echo \"LISTFILE is \\$LISTFILE\" >> " + data_dir + "/clust_blast.log\n";
 
     make_blast_script_txt += "\n";
     make_blast_script_txt += '  INFILE=\\`sed -n "\\${SGE_TASK_ID}p" \\$LISTFILE\\`';
@@ -281,23 +282,37 @@ module.exports.make_blast_script_txt = (req, data_dir, cmd_list, opts) => {
 
 
 // ORIGINAL::make_blast_script_txt += "  echo \"" + opts.gast_script_path + "/gast/gast_ill -saveuc -nodup " + opts.full_option + " -in \\$INFILE -db " + opts.gast_db_path + "/" + opts.ref_db_name + ".fa -rtax " + opts.gast_db_path + "/" + opts.ref_db_name + ".tax -out \\$INFILE.gast -uc \\$INFILE.uc -threads 0\" >> " + data_dir + "/clust_gast_ill_" + project + ".sh.sge_script.sh.log\n"
-  make_blast_script_txt += "  echo \"" + "/usr/local/blast/bin/blastall  -p blastn "
-  make_blast_script_txt += "-d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta "
-  make_blast_script_txt += "-e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 "
-  make_blast_script_txt += "-i \\$INFILE" 
-  make_blast_script_txt += "-o "+data_dir+"/out_file.out "
-  make_blast_script_txt += "1>/dev/null 2>>"+data_dir+"/error2;\""
+//   make_blast_script_txt += "  echo \"" + "/usr/local/blast/bin/blastall  -p blastn "
+//   make_blast_script_txt += "-d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta "
+//   make_blast_script_txt += "-e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 "
+//   make_blast_script_txt += "-i \\$INFILE " 
+//   make_blast_script_txt += "-o "+data_dir+"/out_file.out "
+//   make_blast_script_txt += "1>/dev/null 2>>"+data_dir+"/error2;\""
   //make_blast_script_txt += ""
 //  make_blast_script_txt += "   " + opts.gast_script_path + "/gast/gast_ill -saveuc -nodup " + opts.full_option + " -in \\$INFILE -db " + opts.gast_db_path + "/" + opts.ref_db_name + ".fa -rtax " + opts.gast_db_path + "/" + opts.ref_db_name + ".tax -out \\$INFILE.gast -uc \\$INFILE.uc -threads 0\n";
-  make_blast_script_txt += "\n";
+  make_blast_script_txt += "\n\n";
   
   // The qsub command
-  make_blast_script_txt += "/usr/local/blast/bin/blastall  -p blastn "
-  make_blast_script_txt += "-d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta "
-  make_blast_script_txt += "-e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 "
-  make_blast_script_txt += "-i \\$INFILE" 
-  make_blast_script_txt += "-o "+data_dir+"/out_file.out "
-  make_blast_script_txt += "1>/dev/null 2>>"+data_dir+"/error2;"
+  blast_command = "/usr/local/blast/bin/blastall  -p blastn "
+  blast_command += "-d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta "
+  blast_command += "-e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 "
+  blast_command += "-i \\$INFILE " 
+  blast_command += "-o "+data_dir+"/out_file.out "
+  blast_command += "1>/dev/null 2>>"+data_dir+"/error2;"
+
+  make_blast_script_txt += "  echo \"" + blast_command + " \""
+  
+  make_blast_script_txt += "\n\n";
+  
+  //make_blast_script_txt += blast_command;
+
+// testing
+make_blast_script_txt += "  echo \" # print date and time \"" + "\n"
+make_blast_script_txt += "date" + "\n"
+make_blast_script_txt += "  echo \"# Sleep for 20 seconds \"" + "\n"
+make_blast_script_txt += "sleep 20" + "\n"
+make_blast_script_txt += "  echo \"# print date and time again \"" + "\n"
+make_blast_script_txt += "date" + "\n"
 
 
 // command from email:
@@ -314,12 +329,14 @@ module.exports.make_blast_script_txt = (req, data_dir, cmd_list, opts) => {
 // #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
 
   
-  make_blast_script_txt += "\n";
+  make_blast_script_txt += "\n\n";
   make_blast_script_txt += "  chmod 666 " + data_dir + "/clust_blast.log\n"
   make_blast_script_txt += "\n";
-  make_blast_script_txt += "InputComesFromHERE\n"
+  make_blast_script_txt += "InputComesFromHERE\n\n"
 
   //make_blast_script_txt += "echo \"Running clust_blast.sh >> " + data_dir + "/clust_blast.log\n"
+
+
 
   //make_blast_script_txt += "\n";
   //make_blast_script_txt += "\n";
@@ -332,7 +349,7 @@ module.exports.make_blast_script_txt = (req, data_dir, cmd_list, opts) => {
     //var parallel_env_tag = '-pe smp 8'  // req to work on vamps cluster 2019-01
     //var parallel_env_tag = '-pe allslots 12'
     //make_blast_script_txt += "qsub "+parallel_env_tag+" "+sync_tag+" " + data_dir + "/clust_blast.sh\n";
-  
+  make_blast_script_txt += "qsub " + data_dir + "/clust_blast.sh\n";
   //make_blast_script_txt += "echo \"Done with cluster_blast\" >> " + data_dir + "/cluster.log\n"
   //make_blast_script_txt += "echo \"Running install scripts (see log)\" >> " + data_dir + "/cluster.log\n"
   

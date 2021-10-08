@@ -191,7 +191,7 @@ router.post('/refseq_blastn', function refseq_blastn_post(req, res) {
 	  });
     }
     
-	blast_script_txt = helpers.make_blast_script_txt(req, blast_directory, [], {})
+	blast_script_txt = helpers.make_blast1_script_txt(req, blast_directory, [], {})
 	qsub_blastfile = path.join(blast_directory, 'blast.sh')
 	fs.writeFile(qsub_blastfile, blast_script_txt, (err2)=> {
 	  if (err2)
