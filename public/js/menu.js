@@ -20,7 +20,19 @@ function mainmenu(){
         $(this).find('ul:first').css({visibility: "hidden"});
         });
 }
-
+function close_flash(m){
+  if(m == 'success'){
+    $('#alert_flash_message_success').delay(500).slideUp(300);
+  }else{
+    $('#alert_flash_message_fail').delay(500).slideUp(300);
+  }
+}
+// $(document).ready(function(){
+//     $("#alert_flash_message_fail").delay(5000).slideUp(300);
+// });
+// $(document).ready(function(){
+// 	$("#alert_flash_message_success").delay(5000).slideUp(300);
+// });
 // function mainmenu() {
 //    document.getElementById("nav").style.display='none'
 //    document.getElementById("ul").style.display='none'

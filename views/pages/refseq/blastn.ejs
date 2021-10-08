@@ -35,7 +35,7 @@
 <% db_choices = JSON.parse(db_choices) %>
 <body>
   <div id='wrapper'>		
-	    
+     
 	    
 	<div id='header'>
        <%- include('../../partials/header_img'); %>
@@ -48,10 +48,10 @@
 	
 	<div id='' class='page-content'>
 		
-		 					
+					
 		 
 		  <div class='title'>HOMD 16S rRNA Sequence Identification</div>
-		  
+		  <%- include('../../partials/flash'); %>
 		  <center>
 		  <div id='center70pct_div'>
 			 This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences. 
@@ -158,7 +158,6 @@
 </html>
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
-<script type="text/javascript" src="/js/bootstrap.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
@@ -169,11 +168,12 @@
      document.getElementById('blastn_alignments').value = '20';
      document.getElementById('advanced_opts').value = '-q -3 -r 2 -G 5 -E 2';
      
-     
      document.getElementById('blastn_filter').checked = false;
      document.getElementById('sort_blastn_result_score').checked = true;
      
   }
+  
+  
 </script>
 
 

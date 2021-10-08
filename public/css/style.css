@@ -464,3 +464,15 @@ hr{
    border:1px solid black;
    
 }
+#alert_flash_message_success{
+    background:green;
+    border:1px solid black;
+    padding:5px;
+    position:relative;
+}
+#alert_flash_message_fail{
+    background:orange;
+    border:1px solid black;
+    padding:5px;
+    position:relative;
+}

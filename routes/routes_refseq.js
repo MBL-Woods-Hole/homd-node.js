@@ -24,9 +24,190 @@ router.get('/refseq_blastn', function refseq_blastn_get(req, res) {
 
 router.post('/refseq_blastn', function refseq_blastn_post(req, res) {
     console.log('MADEIT TO blastn-post')
-	console.log(req.body)
-	helpers.accesslog(req, res)
-	res.render('pages/refseq/blastn', {
+	console.log(req.body.input_seq)
+	console.log(req.body.input_seq.length)
+	console.log(req.session.id)  // create filename?
+	let input_seq_input = req.body.input_seq
+	let patt = /[^ATCGUKSYMWRBDHVN]/i   //contains anything other than 'A','T','C' or 'G'
+	// current timestamp in milliseconds
+	let blast_session_ts = Date.now().toString();
+	console.log(blast_session_ts)
+	
+	// is input_seq in proper format 
+	// if '>' as first char okay MAY be multiple seqs
+	// if '>' not first char ONLY one sequence
+/*
+	workflow:
+	save file where?
+	run script python? shell?
+	that validates format,size,...
+	script: split sequences into separate files if appropriate
+	script create sep qsub script for each file
+	
+	vamps blast DOES NOT use cluster  => must look to gast for example
+	see helpers.get_qsub_script_text()
+	
+	Samples:
+	agtcgtactgggatctgaa
+	
+	>ds1|imput 1200
+	agtcgtactggtaccggatctgaa
+	>ds1|kefdgste5%$
+	agtcgtactgggatctgaagtagaatccgt
+	>ds2| let kefdgste5%$
+	agtcgtactgggat
+	ctgaagtagaatccatccgt
+	
+*/
+// 	let input_seq_input = `	 >ds1|imput 1200 
+// 	agtcgtactggtaccggatctgaa
+// 	>ds1|kefdgste5%$
+// 	agtcgtactgggatctgaagtagaatccgt
+// 	>ds2| let kefdgste5%$
+// 	agtcgtactgggat
+// 	ctgaagtagaatccatccgt`;
+	var min_length = 10;
+	input_seq_input = input_seq_input.trim();
+	if(input_seq_input === ''){
+        req.flash('fail', 'No Query Sequence(s) were Entered');  // implement flash?
+        res.redirect('/refseq/refseq_blastn');
+        return;
+    }
+    if(input_seq_input.length <= min_length){  
+        req.flash('fail', 'Query length needs to be greater than 10bp');
+        res.redirect('/refseq/refseq_blastn');
+        return;
+    }
+    let filename,filepath,data,fasta_as_list,trimlines,twolist;
+    
+    var blast_directory = path.join(CFG.PATH_TO_BLAST_FILES,blast_session_ts)
+    if (!fs.existsSync(blast_directory)){
+         fs.mkdirSync(blast_directory);
+    }
+    let filelist = []
+    if(input_seq_input[0] === '>'){
+       console.log('got fasta format')
+       var xtrim = input_seq_input.split('>')  // split on > first then \r
+       // what if other > in defline? fail
+       console.log('xtrim')
+       console.log(xtrim)
+       if(xtrim.length >5000){
+		 req.flash('fail', 'Too many sequences entered. 5000 max');
+		 res.redirect('/refseq/refseq_blastn');
+         return;
+       }
+       
+       for (i = 0; i <= xtrim.length; i++) {
+         if(xtrim[i]){
+              fasta_as_list =xtrim[i].split(/\r?\n/)
+              fasta_as_list[0] = '>' + fasta_as_list[0]
+              //console.log('\nsingle_as_list')
+              //console.log(single_as_list)
+              trimlines = fasta_as_list.map(el => el.trim()) 
+              //console.log(cleanlines2)
+              twolist = [trimlines[0],trimlines.slice(1,trimlines.length).join('')]
+              // validate newlist[1]
+              if(twolist[1].length <= min_length){  
+                 // what to do here? delete?
+                 console.log('found short sequence: #',i.toString(),' length: ', twolist[1].length)
+              }
+              twolist[1] = twolist[1].toUpperCase()
+              if( patt.test(twolist[1]) ){
+                 req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
+                 res.redirect('/refseq/refseq_blastn');
+                 return;
+              }
+              console.log(twolist)
+              data = twolist.join('\n')+'\n'
+              filename = 'blast'+i.toString()+'.fa'
+              filepath = path.join(blast_directory, filename)
+              filelist.push(filepath)
+              fs.writeFile(filepath, data, (err)=> {
+			    if (err)
+					console.log(err);
+				else {
+					console.log("File written successfully: "+filepath);
+				}
+			  });
+              
+         }
+       }
+       
+       
+       //
+       //
+       //
+  //      var lines = input_seq_input.split(/\r?\n/)  // split on end line
+//        var cleanlines = lines.map(el => el.trim())    // trim white space from ends
+//        console.log('cleanlines',cleanlines)
+//        
+//        // split array into multiple arrays
+//        data = ''
+//        new_start = false
+//        for (i = 0; i <= cleanlines.length; i++) {
+//           console.log(cleanlines[i])
+//           
+//           if(cleanlines[i][0] == '>'){
+//              // start new file  blast+n
+//              new_start = true
+//              if(data && new_start){
+//                 console.log('\ndata i=',i)   // should be 0, 1 ,2
+//                 console.log(data)
+//              }
+//              filename = 'blast'+i.toString()+'.fa'
+//              filepath = path.join(blast_directory, filename)
+//              data = cleanlines[i]+'\n'
+//           }else{
+//              data += cleanlines[i]+'\n'
+//           }
+//           
+//           
+//           
+//           
+//        }
+       // may be multiple seqs or single
+       // defline may contain any char?
+    }else{
+      // single sequence
+      // validate
+      console.log('got valid single sequence')
+      input_seq_input = input_seq_input.toUpperCase()
+      if( patt.test(input_seq_input) ){
+        req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
+        res.redirect('/refseq/refseq_blastn');
+        return;
+      }
+      
+      filename = 'blast1.fa'
+      filepath = path.join(blast_directory, filename)
+      filelist = [filepath]
+      data = '>1\n'+input_seq_input+'\n'
+      fs.writeFile(filepath, data, (err)=> {
+		  if (err)
+			console.log(err);
+		  else {
+			console.log("File written successfully\n");
+		  }
+	  });
+    }
+    
+	blast_script_txt = helpers.make_blast_script_txt(req, blast_directory, [], {})
+	qsub_blastfile = path.join(blast_directory, 'blast.sh')
+	fs.writeFile(qsub_blastfile, blast_script_txt, (err2)=> {
+	  if (err2)
+		 console.log(err2);
+	  else {
+		  console.log('success writing blast script - now run it!')
+		  fs.chmodSync(qsub_blastfile, 0o775); // make executable
+			
+	  }
+	})
+
+	  
+	//we'll create one blast.sh script
+	// that will write one blast2.sh script
+	
+	res.render('pages/refseq/blastn_results', {
 		title: 'HOMD :: BLAST', 
 		pgname: 'refseq_blast',
 		config : JSON.stringify({hostname:CFG.HOSTNAME,env:CFG.ENV}),

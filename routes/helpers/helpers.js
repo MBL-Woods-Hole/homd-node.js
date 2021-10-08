@@ -133,3 +133,212 @@ module.exports.make_lineage_string_with_links = (lineage_list, link) =>{
      //console.log(tmp)
      return tmp
 }
+//
+module.exports.get_qsub_script_text = (req, scriptlog, dir_path, cmd_name, cmd_list) => {
+  /*
+   #!/bin/sh
+   # CODE:
+   # source environment:\n";
+   source /groups/vampsweb/"+site+"/seqinfobin/vamps_environment.sh
+   TSTAMP=`date "+%Y%m%d%H%M%S"`'
+   # . /usr/share/Modules/init/sh
+   # export MODULEPATH=/usr/local/www/vamps/software/modulefiles
+   # module load clusters/vamps
+   cd "+pwd+"
+   function status() {
+   qstat -f
+   }
+   function submit_job() {
+   cat<<END | qsub
+   #!/bin/bash
+   #$ -j y
+   #$ -o "+scriptlog+"
+   #$ -N "+name+"
+   #$ -cwd
+   #$ -V
+   echo -n "Hostname: "
+   hostname
+   echo -n "Current working directory: "
+   pwd
+   source /groups/vampsweb/"+site+"/seqinfobin/vamps_environment.sh
+   for (i in cmd_list) {
+   cmd_list[i]
+   }
+   END
+   }
+   status
+   submit_job
+   */
+  //### Create Cluster Script
+  // TODO: DRY with l 1380
+  script_text = "#!/bin/bash\n\n";
+  script_text += "# CODE:\t" + cmd_name + "\n\n";
+  //script_text += "# source environment:\n";
+  //script_text += "source /groups/vampsweb/" + req.CONFIG.site + "/seqinfobin/vamps_environment.sh\n\n";
+  script_text += 'TSTAMP=`date "+%Y%m%d%H%M%S"`' + "\n\n";
+  //script_text += "# Loading Module didn't work when testing:\n";
+  //$script_text .= "LOGNAME=test-output-$TSTAMP.log\n";
+  script_text += ". /usr/share/Modules/init/sh\n";
+  //script_text += "export MODULEPATH=/usr/local/www/vamps/software/modulefiles\n";
+  //script_text += "module load clusters/vamps\n\n";
+  script_text += "cd /groups/vampsweb/tmp\n\n";
+  //script_text += "cd "+pwd+"\n\n";
+  //script_text += "mkdir "+pwd+"/gast\n\n";
+  //script_text += "mkdir gast\n\n";
+  //    script_text += "function status() {\n";
+//     script_text += "   qstat -f\n";
+//     script_text += "}\n\n";
+  script_text += "function submit_job() {\n";
+  script_text += "cat<<END | qsub\n";
+  script_text += "#!/bin/bash\n";
+  script_text += "#$ -j y\n";
+  script_text += "#$ -o " + scriptlog + "\n";
+  script_text += "#$ -N " + cmd_name + "\n";
+  script_text += "#$ -pe allslots 12\n";
+  //script_text += "#$ -p 100\n";   // priority default is 0
+  script_text += "#$ -cwd\n";
+  script_text += "#$ -V\n";
+  
+  script_text += 'echo -n "Hostname: "' + "\n";
+  script_text += "hostname\n";
+  script_text += 'echo -n "qsub: Current working directory: "' + "\n";
+  script_text += "pwd\n\n";
+  //script_text += "source /groups/vampsweb/" + req.CONFIG.site + "/seqinfobin/vamps_environment.sh;\n\n"
+//     script_text += "source /groups/vampsweb/"+site+"/seqinfobin/vamps_environment.sh\n\n";
+
+  for (var i in cmd_list) {
+    script_text += cmd_list[i] + "\n";
+    script_text += "echo \"DONE-"+i.toString()+"\" >> " + scriptlog + "\n\n"
+  }
+//
+//     //script_text += "chmod 666 "+log+"\n";
+//     //$script_text .= "sleep 120\n";   # for testing
+  script_text += "\nEND\n";
+  script_text += "}\n";
+//     script_text += "status\n";  //#  status will show up in export.out
+  script_text += "submit_job\n";
+  //##### END  create command
+
+  return script_text;
+
+};
+//
+//
+
+module.exports.make_blast_script_txt = (req, data_dir, cmd_list, opts) => {
+  //console.log('OPTS: ')
+  //console.log(opts)
+  make_blast_script_txt = "";
+  
+
+  make_blast_script_txt += "ls " + data_dir + "/*.fa > " + data_dir + "/filenames.list\n"
+  make_blast_script_txt += "# chmod 666 " + data_dir + "/filenames.list\n"
+  make_blast_script_txt += "cd " + data_dir + "\n";
+
+  make_blast_script_txt += "\n";
+  make_blast_script_txt += "\n";
+  make_blast_script_txt += `FILE_NUMBER=\`/usr/bin/wc -l < ${data_dir}/filenames.list\``;
+  make_blast_script_txt += "\n";
+  //make_blast_script_txt += "FILE_NUMBER=\"$({FILE_NUMBER##*( )}+1-1)\""
+  
+  make_blast_script_txt += "\n";
+  make_blast_script_txt += "echo \"total files = $FILE_NUMBER\" >> " + data_dir + "/clust_blast.log\n"
+
+  make_blast_script_txt += "cat >" + data_dir + "/clust_blast.sh <<InputComesFromHERE\n"
+  make_blast_script_txt += "#!/bin/bash\n";
+
+    make_blast_script_txt += "#$ -S /bin/bash\n"
+    make_blast_script_txt += "#$ -N clust_blast.sh\n"
+    make_blast_script_txt += "# Giving the name of the output log file\n"
+    make_blast_script_txt += "#$ -o " + data_dir + "/cluster.log\n"
+    make_blast_script_txt += "#$ -j y\n"
+    make_blast_script_txt += "# Send mail to these users\n"
+    //make_blast_script_txt += "#$ -M " + req.user.email + "\n"
+    //make_blast_script_txt += "# Send mail; -m as sends on abort, suspend.\n"
+    make_blast_script_txt += "#$ -m as\n"
+    make_blast_script_txt += "#$ -t 1-\${FILE_NUMBER##*( )}\n"   // ##*( )supposed to remove white space
+    make_blast_script_txt += "# Now the script will iterate $FILE_NUMBER times.\n"
+
+    //make_blast_script_txt += "  . /xraid/bioware/Modules/etc/profile.modules\n"
+    //make_blast_script_txt += "  module load bioware\n"
+    //make_blast_script_txt += "  PATH=$PATH:"+app_root+"/public/scripts/gast:"+req.CONFIG.GAST_SCRIPT_PATH+"\n"
+    //make_blast_script_txt += "  source /groups//vampsweb/" + req.CONFIG.site + "/seqinfobin/vamps_environment.sh\n"
+    make_blast_script_txt += "  echo \"===== $PATH ====\" >> " + data_dir + "/clust_blast.log\n"
+
+    make_blast_script_txt += "  LISTFILE=" + data_dir + "/filenames.list\n"
+    make_blast_script_txt += "  echo \"LISTFILE is \\$LISTFILE\" >> " + data_dir + "/clust_blast.log\n";
+
+    make_blast_script_txt += "\n";
+    make_blast_script_txt += '  INFILE=\\`sed -n "\\${SGE_TASK_ID}p" \\$LISTFILE\\`';
+  
+
+  make_blast_script_txt += "\n";
+  make_blast_script_txt += "  echo \"=====\" >> " + data_dir + "/clust_blast.log\n"
+  make_blast_script_txt += "  echo \"file name is \\$INFILE\" >> " + data_dir + "/clust_blast.log\n"
+  make_blast_script_txt += "  echo '' >> " + data_dir + "/clust_blast.log\n"
+  make_blast_script_txt += "  echo \"SGE_TASK_ID = \\$SGE_TASK_ID\" >> " + data_dir + "/clust_blast.log\n"
+  make_blast_script_txt += "  echo '' >> " + data_dir + "/clust_blast.log\n"
+
+
+// ORIGINAL::make_blast_script_txt += "  echo \"" + opts.gast_script_path + "/gast/gast_ill -saveuc -nodup " + opts.full_option + " -in \\$INFILE -db " + opts.gast_db_path + "/" + opts.ref_db_name + ".fa -rtax " + opts.gast_db_path + "/" + opts.ref_db_name + ".tax -out \\$INFILE.gast -uc \\$INFILE.uc -threads 0\" >> " + data_dir + "/clust_gast_ill_" + project + ".sh.sge_script.sh.log\n"
+  make_blast_script_txt += "  echo \"" + "/usr/local/blast/bin/blastall  -p blastn "
+  make_blast_script_txt += "-d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta "
+  make_blast_script_txt += "-e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 "
+  make_blast_script_txt += "-i \\$INFILE" 
+  make_blast_script_txt += "-o "+data_dir+"/out_file.out "
+  make_blast_script_txt += "1>/dev/null 2>>"+data_dir+"/error2;\""
+  //make_blast_script_txt += ""
+//  make_blast_script_txt += "   " + opts.gast_script_path + "/gast/gast_ill -saveuc -nodup " + opts.full_option + " -in \\$INFILE -db " + opts.gast_db_path + "/" + opts.ref_db_name + ".fa -rtax " + opts.gast_db_path + "/" + opts.ref_db_name + ".tax -out \\$INFILE.gast -uc \\$INFILE.uc -threads 0\n";
+  make_blast_script_txt += "\n";
+  
+  // The qsub command
+  make_blast_script_txt += "/usr/local/blast/bin/blastall  -p blastn "
+  make_blast_script_txt += "-d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta "
+  make_blast_script_txt += "-e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 "
+  make_blast_script_txt += "-i \\$INFILE" 
+  make_blast_script_txt += "-o "+data_dir+"/out_file.out "
+  make_blast_script_txt += "1>/dev/null 2>>"+data_dir+"/error2;"
+
+
+// command from email:
+// /usr/local/blast/bin/blastall  -p blastn \
+// -d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta  \
+// -e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2  \
+// -i /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/389_0541_Abiotrophia_defectiva_HMT \
+// -o /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
+// 1>/dev/null 2>>/mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/error2; \
+// mv /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
+// /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/389_0541_Abiotrophia_defectiva_HMT;\
+// /mnt/myBROP/var/www/html/homd_modules/RNAblast/parse_blast_single.pl \
+// feu9hoakrcsg3r9cukjp5r36k7  389_0541_Abiotrophia_defectiva_HMT S ;\
+// #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
+
+  
+  make_blast_script_txt += "\n";
+  make_blast_script_txt += "  chmod 666 " + data_dir + "/clust_blast.log\n"
+  make_blast_script_txt += "\n";
+  make_blast_script_txt += "InputComesFromHERE\n"
+
+  //make_blast_script_txt += "echo \"Running clust_blast.sh >> " + data_dir + "/clust_blast.log\n"
+
+  //make_blast_script_txt += "\n";
+  //make_blast_script_txt += "\n";
+  //make_blast_script_txt += "export SGE_ROOT=/opt/sge\n";
+  //make_blast_script_txt += "source /groups/vampsweb/" + req.CONFIG.site + "/seqinfobin/vamps_environment.sh\n\n"
+  
+    // the -sync y tag means that the following install scripts will run AFTER the cluster gast scripts finish
+    // this is important to have -sync y
+    //var sync_tag = '-sync y' // forces qsub to wait until all jobs finish before exiting and then running install
+    //var parallel_env_tag = '-pe smp 8'  // req to work on vamps cluster 2019-01
+    //var parallel_env_tag = '-pe allslots 12'
+    //make_blast_script_txt += "qsub "+parallel_env_tag+" "+sync_tag+" " + data_dir + "/clust_blast.sh\n";
+  
+  //make_blast_script_txt += "echo \"Done with cluster_blast\" >> " + data_dir + "/cluster.log\n"
+  //make_blast_script_txt += "echo \"Running install scripts (see log)\" >> " + data_dir + "/cluster.log\n"
+  
+
+  make_blast_script_txt += "\n";
+  // make_blast_script_txt += "touch " + path.join(data_dir, "TEMP.tmp");
+  // make_blast_script_txt += "\n";
+  return make_blast_script_txt
+}
