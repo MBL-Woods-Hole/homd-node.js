@@ -476,3 +476,7 @@ hr{
     padding:5px;
     position:relative;
 }
+.greyed{
+   background:lightgrey;
+   color:darkgrey;
+}

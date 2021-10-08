@@ -134,50 +134,20 @@ router.post('/refseq_blastn', function refseq_blastn_post(req, res) {
        }
        
        
-       //
-       //
-       //
-  //      var lines = input_seq_input.split(/\r?\n/)  // split on end line
-//        var cleanlines = lines.map(el => el.trim())    // trim white space from ends
-//        console.log('cleanlines',cleanlines)
-//        
-//        // split array into multiple arrays
-//        data = ''
-//        new_start = false
-//        for (i = 0; i <= cleanlines.length; i++) {
-//           console.log(cleanlines[i])
-//           
-//           if(cleanlines[i][0] == '>'){
-//              // start new file  blast+n
-//              new_start = true
-//              if(data && new_start){
-//                 console.log('\ndata i=',i)   // should be 0, 1 ,2
-//                 console.log(data)
-//              }
-//              filename = 'blast'+i.toString()+'.fa'
-//              filepath = path.join(blast_directory, filename)
-//              data = cleanlines[i]+'\n'
-//           }else{
-//              data += cleanlines[i]+'\n'
-//           }
-//           
-//           
-//           
-//           
-//        }
+ 
        // may be multiple seqs or single
        // defline may contain any char?
     }else{
       // single sequence
       // validate
-      console.log('got valid single sequence')
+      
       input_seq_input = input_seq_input.toUpperCase()
       if( patt.test(input_seq_input) ){
         req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
         res.redirect('/refseq/refseq_blastn');
         return;
       }
-      
+      console.log('got valid single sequence')
       filename = 'blast1.fa'
       filepath = path.join(blast_directory, filename)
       filelist = [filepath]
@@ -193,6 +163,15 @@ router.post('/refseq_blastn', function refseq_blastn_post(req, res) {
     
 	blast_script_txt = helpers.make_blast1_script_txt(req, blast_directory, [], {})
 	qsub_blastfile = path.join(blast_directory, 'blast.sh')
+	
+	// I'm working here: need to write one fasta file per sequence
+	// also need one command file per sequence (will reference fasta)
+	// Then one qsubcommands file that lists the files: qsub fileN
+	// to be run by torque
+	// ?? Question how best to write many files in node -- Consider python
+	qsub_commands_txt = helpers.make_qsub_commands_txt(req, blast_directory, filelist)
+	
+	console.log(qsub_commands_txt)
 	fs.writeFile(qsub_blastfile, blast_script_txt, (err2)=> {
 	  if (err2)
 		 console.log(err2);

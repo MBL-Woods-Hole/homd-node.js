@@ -354,11 +354,13 @@ router.post('/get_NN_NA_seq', function get_NN_NA_seq_post(req, res) {
 // 	});
 // })
 //router.get('/annotation/:gid/:type', function annotation(req, res) {
-router.get('/explorer', function annotation(req, res) {
+router.get('/explorer', function explorer(req, res) {
     helpers.accesslog(req, res)
     console.log('in explorer')
     let myurl = url.parse(req.url, true);
     let gid = myurl.query.gid
+    console.log('gid',gid)
+    
     let anno_type = ''
     let blast = 0
     var info_data_obj = {}
@@ -397,18 +399,15 @@ router.get('/explorer', function annotation(req, res) {
       page_data.page=1
     }
     otid = ''
-    if(gid && !gid.startsWith('Choose')){
-        otid = C.genome_lookup[gid].otid
-        
-    }else{
-        
-    }
     
     let tmp_obj = Object.keys(C.annotation_lookup)  // get prokka organisms [seqid,organism]
     let all_annos_obj = tmp_obj.map((x) =>{
 	        return [x, C.annotation_lookup[x].prokka.organism] 
 	    })
-    
+    if(!gid || gid=='0'){
+       render_fxn(req,res,0,0,blast,'',all_annos_obj,'',{},{},[])
+        return
+    }
     if(C.annotation_lookup.hasOwnProperty(gid) ){
        organism = C.annotation_lookup[gid].prokka.organism
     }

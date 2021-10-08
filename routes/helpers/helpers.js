@@ -306,27 +306,15 @@ module.exports.make_blast1_script_txt = (req, data_dir, cmd_list, opts) => {
   
   //make_blast_script_txt += blast_command;
 
-// testing
-make_blast_script_txt += "  echo \" # print date and time \"" + "\n"
-make_blast_script_txt += "date" + "\n"
-make_blast_script_txt += "  echo \"# Sleep for 20 seconds \"" + "\n"
-make_blast_script_txt += "sleep 20" + "\n"
-make_blast_script_txt += "  echo \"# print date and time again \"" + "\n"
-make_blast_script_txt += "date" + "\n"
-
-
-// command from email:
-// /usr/local/blast/bin/blastall  -p blastn \
-// -d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta  \
-// -e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2  \
-// -i /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/389_0541_Abiotrophia_defectiva_HMT \
-// -o /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
-// 1>/dev/null 2>>/mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/error2; \
-// mv /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
-// /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/389_0541_Abiotrophia_defectiva_HMT;\
-// /mnt/myBROP/var/www/html/homd_modules/RNAblast/parse_blast_single.pl \
-// feu9hoakrcsg3r9cukjp5r36k7  389_0541_Abiotrophia_defectiva_HMT S ;\
-// #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
+/////////////////////////////////////////////////////////////////
+// testing:: must port >> to log
+make_blast_script_txt += "  echo \"# print date and time \" >> " + data_dir + "/clust_blast.log\n"
+make_blast_script_txt += "date >>" + data_dir + "/clust_blast.log\n"
+make_blast_script_txt += "  echo \"# Sleep for 20 seconds \" >> " + data_dir + "/clust_blast.log\n"
+make_blast_script_txt += "sleep 20 >>" + data_dir + "/clust_blast.log\n"
+make_blast_script_txt += "  echo \"# print date and time again \" >> " + data_dir + "/clust_blast.log\n"
+make_blast_script_txt += "date >> " + data_dir + "/clust_blast.log\n"
+//////////////////////////////////////////
 
   
   make_blast_script_txt += "\n\n";
@@ -336,7 +324,7 @@ make_blast_script_txt += "date" + "\n"
 
   //make_blast_script_txt += "echo \"Running clust_blast.sh >> " + data_dir + "/clust_blast.log\n"
 
-
+  make_blast_script_txt += "chmod 775 "+data_dir+"/clust_blast.sh\n";
 
   //make_blast_script_txt += "\n";
   //make_blast_script_txt += "\n";
@@ -349,7 +337,19 @@ make_blast_script_txt += "date" + "\n"
     //var parallel_env_tag = '-pe smp 8'  // req to work on vamps cluster 2019-01
     //var parallel_env_tag = '-pe allslots 12'
     //make_blast_script_txt += "qsub "+parallel_env_tag+" "+sync_tag+" " + data_dir + "/clust_blast.sh\n";
-  make_blast_script_txt += "qsub " + data_dir + "/clust_blast.sh\n";
+  
+  
+  //make_blast_script_txt += "qsub " + data_dir + "/clust_blast.sh\n";
+
+/////////////////////////////////////////////////////////////////
+// testing:: run the script locally
+make_blast_script_txt += "bash "+data_dir + "/clust_blast.sh\n";
+///////////////////////////////////////////////////////////////////
+
+
+
+  
+  
   //make_blast_script_txt += "echo \"Done with cluster_blast\" >> " + data_dir + "/cluster.log\n"
   //make_blast_script_txt += "echo \"Running install scripts (see log)\" >> " + data_dir + "/cluster.log\n"
   
