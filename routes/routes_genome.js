@@ -392,20 +392,22 @@ router.get('/explorer', function explorer(req, res) {
   if (!pageData.page) {
     pageData.page = 1
   }
- 
   // const tmpObj = Object.keys(C.annotation_lookup) // get prokka organisms [seqid,organism]
   const allAnnosObj = Object.keys(C.annotation_lookup).map((x) => {
     return [x, C.annotation_lookup[x].prokka.organism]
   })
+  
   if (!gid || gid === '0') {
-    render_fxn(req, res, 0, 0, blast, '', allAnnosObj, '', {}, {}, [])
+    render_fxn(req, res, 0, 0, blast, '',[],[], allAnnosObj, '', {}, {}, [])
     return
   }
+  console.log('one0')
   otid = C.genome_lookup[gid].otid
   if (C.annotation_lookup.hasOwnProperty(gid)) {
   // if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
     organism = C.annotation_lookup[gid].prokka.organism
   }
+  console.log('one')
   dbChoices = C.genome_blastn_db_choices
   dbChoices.unshift({name:organism+': Genomic DNA',value:'org_genomes'},{name:organism+': DNA of Annotated Proteins',value:'org_proteins'})
   //console.log(dbChoices)
