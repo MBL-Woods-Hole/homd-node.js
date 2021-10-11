@@ -76,6 +76,21 @@ function search(){
 	f.submit()
 }
 
+function blastFormCheck(){
+   form = document.getElementById('blastForm')
+   blastText = document.getElementById('textinput').value.toUpperCase()
+   fileInput = document.getElementById('fileInput').value
+   
+   if(blastText == '' && fileInput == ''){
+       alert('No sequences or file found')
+       return
+   }else if(fileInput == '' && blastText.length < 10){
+       alert('Sequence is too short: min_length = 10bp')
+       return
+   }
+   
+   form.submit()
+}
 // function open_tree(tree_name) {  // needs to be global ie in menu.js
 //     // tree names: refseq, conserved, ribosomal, 16S_rRNA
 //     // OPEN TREES In another window not in an iframe

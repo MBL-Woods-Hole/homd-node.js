@@ -1,0 +1,117 @@
+<link rel="stylesheet" type="text/css" href="/css/blast.css" >
+<center>
+<div id='center70pct_div'>
+    <% if(blast_fxn == 'genome'){ %> 
+       
+    <% }else{ %>
+         This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences. 
+        The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010]    
+    <% } %>     
+<form id='blastForm' name='' method='POST' action='/blast/refseq_blastn2' enctype='multipart/form-data' >      
+  <div id='other70'>
+       <% if(blast_fxn == 'genome'){ %> 
+           <div class='block-title' id=''>BLAST against <%= organism %> genome sequence</div>
+           Copy and paste sequence(s) below, preferably in FASTA format:
+           <div style='float:right'><small>
+              <input type='radio' checked name='blastAnno' value='prokka'>PROKKA&nbsp;&nbsp;&nbsp;
+              <input type='radio' name='blastAnno' value='ncbi'>NCBI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </small></div>
+       <% }else{ %>
+           <div class='block-title' id=''>Upload your 16S rRNA sequences:</div>
+           Copy and paste sequence(s) below, preferably in FASTA format:
+       <% } %>  
+           
+           
+           
+           <center>
+            <textarea class="textinput" id='textinput' placeholder="Enter sequence(s) in FASTA format..." name='inputSeq' ></textarea>
+           </center>
+           Or upload a sequence file from your computer 
+           <input type="file" id='fileInput' name="blastFile"  >
+
+<br><br>
+(Note1: Multiple sequences can be uploaded, please check <a href='https://wiki.homd.info/help/sequence_formats' target='_blank' rel="noopener noreferrer">examples on sequence formats and restrictions.</a>)
+<br>
+(Note2: current limit of number of sequences is 5000)
+           <br><br>
+           
+           
+           <div class='block-title' >Adjust Blast parameters: (Optional)</div>
+    <div class='adjust_block'>
+    
+    
+    
+    <% if(blast_fxn == 'genome'){ %>
+        <select class='dropdown' id='blastPrg' name='blastPrg'>
+              <% for(n in blast_prg){ %>
+                <option value='<%= blast_prg[n] %>'><%= blast_prg[n] %></option>
+              <% } %>
+        </select>
+    <% }else{ %>
+        Blastn 
+    <% } %>
+    
+           Database:
+           <select class='dropdown' id='blastDb' name='blastDb'>
+              <% for(n in db_choices){ %>
+                <option value='<%= db_choices[n].value %>'><%= db_choices[n].name %></option>
+              <% } %>
+           </select>
+    </div> 
+    <div class='adjust_block'>
+           Expect:
+           <select class='dropdown' id='blastExpect' name='blastExpect'>
+              <option selected='selected' value='0.0001'>0.0001</option>
+              <option value='0.01'>0.01</option>
+              <option value='0.1'>0.1</option>
+              <option value='1'>1</option>
+              <option value='10'>10</option>
+              <option value='100'>100</option>
+              <option value='1000'>1000</option>
+           </select>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Filter Low Complexity: <input type='checkbox' id='blastFilter' name='blastFilter'>
+    </div> 
+    <div class='adjust_block'>     
+           Descriptions:
+           <select class='dropdown' id='blastDescriptions' name='blastDescriptions'>
+              <option value='5'>5</option>
+              <option value='10'>10</option>
+              <option selected='selected' value='20'>20</option>
+              <option value='50'>50</option>
+              <option value='100'>100</option>
+              <option value='250'>250</option>
+              <option value='500'>500</option>
+           </select>
+           Alignments:
+           <select class='dropdown'  id='blastAlignments' name='blastAlignments'>
+              <option value='5'>5</option>
+              <option value='10'>10</option>
+              <option selected='selected' value='20'>20</option>
+              <option value='50'>50</option>
+              <option value='100'>100</option>
+              <option value='250'>250</option>
+              <option value='500'>500</option>
+           </select>
+    </div>
+    
+       
+    <div class='adjust_block'>
+           Other Advanced Options:
+           <input class='dropdown' id='advancedOpts' name='advancedOpts' type='text' value='-q -3 -r 2 -G 5 -E 2' maxlength='30' >
+         
+    
+    <br><br>Sort results by: <input type='radio' id='sortBlastResultScore' checked name='sortBlastResultScore' value='score'>Score (bits)  <input type='radio' name='sort_blastn_result' value='percent'>Percent Identity (New option!)
+    </div>
+    <div class='adjust_block'>
+           <span onclick='reset2default()' class='pill pill-brown pill-lg'>Reset to Defaults</span>
+    </div> 
+    <div class='adjust_block'>
+         <center><input class='pill pill-brown pill-lg' type='button' value='Blast' onclick='blastFormCheck()' \></center>
+    </div>
+    
+  </div> <!-- End other70 -->
+  <input type='hidden' name='returnTo' value='<%= returnTo %>' >
+</form>
+</div>
+</center>

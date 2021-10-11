@@ -92,7 +92,10 @@ constants.refseq_blastn_db_choices = [
     {name:'NCBI Reference RNA Sequences (refseq_rna, 1969-12-31)',value:'NCBI'},
     {name:'RDP 16S rRNA Sequences',value:'RDP'},
     {name:'eHOMD 16s rRNA RefSeq Extended V1.1',value:'V1.1'}
-
+]
+constants.genome_blastn_db_choices = [
+  {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes'},
+  {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins'},
 ]
 // constants.posters_pdfs =
 // [

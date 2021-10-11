@@ -6,7 +6,18 @@ Pastels: fbb4ae b3cde3 ccebc5 decbe4 fed9a6 ffffcc e5d8bd fddaec f2f2f2
 :root {
   --title-bg:steelblue;
   --table-header-bg: #083370;    /* #006699; */
-  
+  --div-bg01:#8dd3c7;
+  --div-bg02:#ffffb3;
+  --div-bg03:#bebada;
+  --div-bg04:#fb8072;
+  --div-bg05:#80b1d3;
+  --div-bg06:#fdb462;
+  --div-bg07:#b3de69;
+  --div-bg08:#fccde5;
+  --div-bg09:#d9d9d9;
+  --div-bg10:#bc80bd;
+  --div-bg11:#ccebc5;
+  --div-bg12:#ffed6f;
   --table-row-even1: #fbb4ae;
   --table-row-even2: #e5d8bd;
   --table-row-even3: #ccebc5;
@@ -302,6 +313,14 @@ hr{
   cursor: pointer;
   font-size:11px;
   border-radius: 16px;
+}
+.pill-md{
+   font-size:13px;
+   padding: 1px 5px;
+}
+.pill-lg{
+   font-size:14px;
+   padding: 2px 6px;
 }
 .pill-brown {
   background-color: brown;

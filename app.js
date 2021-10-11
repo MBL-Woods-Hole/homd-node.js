@@ -10,10 +10,11 @@ const path = require('path');
 global.TDBConn = taxdbconn;   // database:  homd
 global.ADBConn = annodbconn;
 global.app_root = path.resolve(__dirname);
-const C		= require('./public/constants');
+const C = require('./public/constants');
 const fs = require('fs-extra');
 //const createIframe = require("node-iframe");
 const express = require('express');
+
 
 const router = express.Router();
 const session = require('express-session');
@@ -33,11 +34,10 @@ const home      = require('./routes/index');
 const admin     = require('./routes/routes_admin');
 //const help      = require('./routes/routes_help');
 const taxa      = require('./routes/routes_taxa');
-const refseq	= require('./routes/routes_refseq');
-const genome	= require('./routes/routes_genome');
-const phage	    = require('./routes/routes_phage');
-//const jbrowse2	= require('./routes/routes_jbrowse');
-
+const refseq = require('./routes/routes_refseq');
+const genome = require('./routes/routes_genome');
+const phage    = require('./routes/routes_phage');
+const blast    = require('./routes/routes_blast');
 
 const app = express();
 
@@ -111,19 +111,20 @@ app.use('/taxa', taxa);
 app.use('/refseq', refseq);
 app.use('/genome', genome);
 app.use('/phage', phage);
+app.use('/blast', blast);
 //app.use('/jbrowse2', jbrowse2);
 // LAST Middleware:
 app.use(function(req, res, next){
-  res.status(404);
+  res.status(404)
 
   // respond with html page
   if (req.accepts('html')) {
     res.render('pages/lost', { 
-    	url: req.url,
-    	pgname: 'lost',
-    	title:'HOMD Lost',
-    	config : JSON.stringify({hostname:config.HOSTNAME,env:config.ENV}),
-    	ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+      url: req.url,
+      pgname: 'lost',
+      title:'HOMD Lost',
+      config : JSON.stringify({hostname:config.HOSTNAME,env:config.ENV}),
+      ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
     });
     return;
   }
@@ -146,30 +147,30 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 // homd-scripts/homd_init_data.py
 //
 var data_init_files =[
-	
-	C.taxon_lookup_fn,
+  
+  C.taxon_lookup_fn,
     C.lineage_lookup_fn ,
- 	C.tax_hierarchy_fn,  // gives you taxonomy lineage
-	C.genome_lookup_fn,
-	C.refseq_lookup_fn,
-	C.references_lookup_fn,
-	C.info_lookup_fn,
-	C.taxcounts_fn,
-	C.annotation_lookup_fn,
-	C.phage_lookup_fn,
-	
-	
+  C.tax_hierarchy_fn,  // gives you taxonomy lineage
+  C.genome_lookup_fn,
+  C.refseq_lookup_fn,
+  C.references_lookup_fn,
+  C.info_lookup_fn,
+  C.taxcounts_fn,
+  C.annotation_lookup_fn,
+  C.phage_lookup_fn,
+  
+  
 ]
 console.log('Path to Data Files:',config.PATH_TO_DATA)
 function readAsync(file, callback) {
     console.log('Reading File:',path.join(config.PATH_TO_DATA, file))
     try {
-	  if (fs.existsSync(path.join(config.PATH_TO_DATA, file))) {
-		//file exists
-	  }
-	} catch(err) {
-	  console.error(err)
-	}
+    if (fs.existsSync(path.join(config.PATH_TO_DATA, file))) {
+    //file exists
+    }
+  } catch(err) {
+    console.error(err)
+  }
     
     fs.readFile(path.join(config.PATH_TO_DATA, file), callback);
 }
@@ -182,23 +183,23 @@ async.map(data_init_files, readAsync, function(err, results) {
     // the lookups are keyed on Oral_taxon_id
     //console.log('parsing0')
     //console.log(results[0])
-    C.taxon_lookup 			        = JSON.parse(results[0]);// lookup by otid
+    C.taxon_lookup              = JSON.parse(results[0]);// lookup by otid
     //console.log('parsing1')
-    C.taxon_lineage_lookup 		    = JSON.parse(results[1]); // lookup by otid
+    C.taxon_lineage_lookup        = JSON.parse(results[1]); // lookup by otid
     //console.log('parsing2') 
     C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[2]));
     //console.log('parsing3')
-    C.genome_lookup 				= JSON.parse(results[3]);  // lookup by gid
+    C.genome_lookup         = JSON.parse(results[3]);  // lookup by gid
     //console.log('parsing4')
-    C.refseq_lookup 				= JSON.parse(results[4]);
+    C.refseq_lookup         = JSON.parse(results[4]);
     //console.log('parsing5')
-    C.taxon_references_lookup 	    = JSON.parse(results[5]);   // lookup by otid
+    C.taxon_references_lookup       = JSON.parse(results[5]);   // lookup by otid
     //console.log('parsing6')
-    C.taxon_info_lookup 			= JSON.parse(results[6]);  // lookup by otid
+    C.taxon_info_lookup       = JSON.parse(results[6]);  // lookup by otid
     //console.log('parsing7')
-    C.taxon_counts_lookup 			= JSON.parse(results[7]);   // lookup by lineage
-    C.annotation_lookup 			= JSON.parse(results[8]);
-    C.phage_lookup 			        = JSON.parse(results[9]);
+    C.taxon_counts_lookup       = JSON.parse(results[7]);   // lookup by lineage
+    C.annotation_lookup       = JSON.parse(results[8]);
+    C.phage_lookup              = JSON.parse(results[9]);
     
     
     //Object.values(C.taxon_lookup)
@@ -262,14 +263,14 @@ async.map(data_init_files, readAsync, function(err, results) {
 //     console.error(err)
 //     return
 //   }
-//   C.taxon_lookup 			        = JSON.parse(results);
+//   C.taxon_lookup               = JSON.parse(results);
 // })
 // fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[1]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
-//   C.taxon_lineage_lookup			        = JSON.parse(results);
+//   C.taxon_lineage_lookup             = JSON.parse(results);
 // })
 // fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[2]), (err, results) => {
 //   if (err) {
@@ -283,35 +284,35 @@ async.map(data_init_files, readAsync, function(err, results) {
 //     console.error(err)
 //     return
 //   }
-//   C.genome_lookup 			        = JSON.parse(results);
+//   C.genome_lookup              = JSON.parse(results);
 // })
 // fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[4]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
-//   C.refseq_lookup			        = JSON.parse(results);
+//   C.refseq_lookup              = JSON.parse(results);
 // })
 // fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[5]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
-//   C.taxon_references_lookup 			        = JSON.parse(results);
+//   C.taxon_references_lookup              = JSON.parse(results);
 // })
 // fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[6]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
-//   C.taxon_info_lookup			        = JSON.parse(results);
+//   C.taxon_info_lookup              = JSON.parse(results);
 // })
 // fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[7]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
-//   C.taxon_counts_lookup 			        = JSON.parse(results);
+//   C.taxon_counts_lookup              = JSON.parse(results);
 // })
 // 
 
