@@ -408,9 +408,8 @@ router.get('/explorer', function explorer(req, res) {
     organism = C.annotation_lookup[gid].prokka.organism
   }
   console.log('one')
-  dbChoices = C.genome_blastn_db_choices
+  dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '='
   dbChoices.unshift({name:organism+': Genomic DNA',value:'org_genomes'},{name:organism+': DNA of Annotated Proteins',value:'org_proteins'})
-  //console.log(dbChoices)
   
   console.log('organism', organism)
   console.log('blast', blast)
