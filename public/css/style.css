@@ -6,6 +6,15 @@ Pastels: fbb4ae b3cde3 ccebc5 decbe4 fed9a6 ffffcc e5d8bd fddaec f2f2f2
 :root {
   --title-bg:steelblue;
   --table-header-bg: #083370;    /* #006699; */
+  --div-bg011:#fbb4ae;
+  --div-bg012:#b3cde3;
+  --div-bg013:#ccebc5;
+  --div-bg014:#decbe4;
+  --div-bg015:#fed9a6;
+  --div-bg016:#ffffcc;
+  --div-bg017:#e5d8bd;
+  --div-bg018:#fddaec;
+  --div-bg019:#f2f2f2;
   --div-bg01:#8dd3c7;
   --div-bg02:#ffffb3;
   --div-bg03:#bebada;
@@ -29,13 +38,13 @@ Pastels: fbb4ae b3cde3 ccebc5 decbe4 fed9a6 ffffcc e5d8bd fddaec f2f2f2
 }
 
 * {
-	margin:0;
-	padding:0;
-	border:0;
-	list-style: none;
-	box-sizing: border-box;
-	 font-family:Verdana;
-	 /* font-family: Baskerville, Baskerville Old Face, Garamond, Times New Roman, serif; */
+  margin:0;
+  padding:0;
+  border:0;
+  list-style: none;
+  box-sizing: border-box;
+   font-family:Verdana;
+   /* font-family: Baskerville, Baskerville Old Face, Garamond, Times New Roman, serif; */
   
 }
 a { text-decoration: none; }
@@ -46,9 +55,9 @@ p {
     text-align:center;
 }
 #wrapper {
-	border: 1px solid #000;
-	width: 1350px;
-	margin: auto;
+  border: 1px solid #000;
+  width: 1350px;
+  margin: auto;
 }
 .page-content {
   padding:5px;
@@ -60,7 +69,7 @@ p {
 .intro-content{
    padding:30px 80px;
    word-spacing: 4px;
-	line-height: 140%;
+  line-height: 140%;
    
    font-size:18px;
 }
@@ -157,14 +166,14 @@ hr{
    border-bottom:1px solid black;
 }
 #nav ul {
-	margin-top:0px;
-	padding:5px 10px;
-	/* width:80%; */
-	background-color:#99cfe0;	
-	
-	left:0px;
-	border:1px solid black;
-	
+  margin-top:0px;
+  padding:5px 10px;
+  /* width:80%; */
+  background-color:#99cfe0; 
+  
+  left:0px;
+  border:1px solid black;
+  
     display:none;
     position:absolute;
     border-bottom-right-radius:10px;
@@ -172,103 +181,103 @@ hr{
    
 }
 #nav ul ul{
-	position:absolute;
-	left:100%;
-	top:0px;
-	border-top-right-radius:10px;
+  position:absolute;
+  left:100%;
+  top:0px;
+  border-top-right-radius:10px;
     border-top-left-radius:10px;
 }
 
 
 #nav li{
-	display:block;
-	float:left;	
-	padding: 0px 0px 0px 0px;
+  display:block;
+  float:left; 
+  padding: 0px 0px 0px 0px;
 }
 
 #nav a,#nav div{
-	display:block;
-	text-decoration:none;
-	padding:10px 10px 12px 10px;
-	
-	font-weight: bold;
-	font-size:   13px;
-	color: black;
-	background-color: white;
-	
-	
+  display:block;
+  text-decoration:none;
+  padding:10px 10px 12px 10px;
+  
+  font-weight: bold;
+  font-size:   13px;
+  color: black;
+  background-color: white;
+  
+  
 }
 
 ###nav a,###nav div{
-	display:block;
-	text-decoration:none;
-	padding:2px 4px 2px 4px;
-	
-	font-weight: bold;
-	font-size:   12px;
-	color: black;
-	background-color: white;
-	
+  display:block;
+  text-decoration:none;
+  padding:2px 4px 2px 4px;
+  
+  font-weight: bold;
+  font-size:   12px;
+  color: black;
+  background-color: white;
+  
 }
 
 #nav div{
-	cursor: default;
+  cursor: default;
 }
 
 #nav ul li {
-	float:none;
-	text-align:left;
-	white-space:nowrap;
-	padding:2px 0;
-	margin:2px 0;	
+  float:none;
+  text-align:left;
+  white-space:nowrap;
+  padding:2px 0;
+  margin:2px 0; 
 }
 #nav ul li a{
-	padding:4px;
+  padding:4px;
 }
 #nav li:hover{
-	position:relative;
+  position:relative;
 }
 
 #nav li a:hover, #nav li div:hover{
-	position:relative;
-	background-color: #99cfe0;
-	text-decoration:none;
-	
+  position:relative;
+  background-color: #99cfe0;
+  text-decoration:none;
+  
 }
 #first a:hover{
   /* kludge */
   padding-bottom:14px;
 }
 #nav li ul li a{
-	position:relative;
-	background-color:#99cfe0;
-	font-weight: bold;
-	font-size:   12px;
-	color: black;
-	text-decoration:none;
-	
-	top: 1px;	
+  position:relative;
+  background-color:#99cfe0;
+  font-weight: bold;
+  font-size:   12px;
+  color: black;
+  text-decoration:none;
+  
+  top: 1px; 
 }
 
 
 #nav li ul li:hover>a {
-	display: block;
-	background-color:#556b2f;
-	color: #ffba3b;	
+  display: block;
+  background-color:#556b2f;
+  color: #ffba3b; 
 }
 
 #nav li ul li ul a{
-	position:relative;
-	background-color:#99cfe0;
-	font-weight: bold;
-	font-size:   12px;
-	color: black;
-	text-decoration:none;
-	top: 1px;	
+  position:relative;
+  background-color:#99cfe0;
+  font-weight: bold;
+  font-size:   12px;
+  color: black;
+  text-decoration:none;
+  top: 1px; 
 }
 #nav li ul li ul a:hover{
-	color:#ffba3b;
-	background-color:#556b2f;	
+  color:#ffba3b;
+  background-color:#556b2f; 
 }
 /*  nav search: */
 #homd-search {
@@ -440,28 +449,28 @@ hr{
 
 /* Loader for tables:taxon, genome, phage */
 #loader {
-	border: 12px solid #f3f3f3;
-	border-radius: 50%;
-	border-top: 12px solid #444444;
-	width: 70px;
-	height: 70px;
-	margin-top:180px;
-	animation: spin 1s linear infinite;
+  border: 12px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 12px solid #444444;
+  width: 70px;
+  height: 70px;
+  margin-top:180px;
+  animation: spin 1s linear infinite;
 }
   
 @keyframes spin {
-	100% {
-		transform: rotate(360deg);
-	}
+  100% {
+    transform: rotate(360deg);
+  }
 }
   
 .center-loader {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 /* End Loader */
 

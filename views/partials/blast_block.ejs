@@ -1,11 +1,25 @@
+
 <link rel="stylesheet" type="text/css" href="/css/blast.css" >
+<% if(blast_fxn == 'genome'){ %> 
+<style>
+  #other70 {
+   background:var(--div-bg017);
+  }
+</style>
+<% }else{ %>
+<style>
+  #other70 {
+   background:var(--div-bg01);
+  }
+</style>
+<% } %>  
 <center>
 <div id='center70pct_div'>
     <% if(blast_fxn == 'genome'){ %> 
        
     <% }else{ %>
          This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences. 
-        The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010]    
+        The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] <a href='https://wiki.homd.info/help/blast/sequence_formats' target='_blank'>[DETAIL]</a>  
     <% } %>     
 <form id='blastForm' name='' method='POST' action='/blast/refseq_blastn2' enctype='multipart/form-data' >      
   <div id='other70'>
@@ -30,7 +44,7 @@
            <input type="file" id='fileInput' name="blastFile"  >
 
 <br><br>
-(Note1: Multiple sequences can be uploaded, please check <a href='https://wiki.homd.info/help/sequence_formats' target='_blank' rel="noopener noreferrer">examples on sequence formats and restrictions.</a>)
+(Note1: Multiple sequences can be uploaded, please check <a href='https://wiki.homd.info/help/blast/sequence_formats' target='_blank' rel="noopener noreferrer">examples on sequence formats and restrictions.</a>)
 <br>
 (Note2: current limit of number of sequences is 5000)
            <br><br>
@@ -59,7 +73,7 @@
            </select>
     </div> 
     <div class='adjust_block'>
-           Expect:
+           <a href='https://wiki.homd.info/help/blast/parameters' target='_blank''>Expect</a>:
            <select class='dropdown' id='blastExpect' name='blastExpect'>
               <option selected='selected' value='0.0001'>0.0001</option>
               <option value='0.01'>0.01</option>
@@ -70,10 +84,10 @@
               <option value='1000'>1000</option>
            </select>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            Filter Low Complexity: <input type='checkbox' id='blastFilter' name='blastFilter'>
+            <a href='https://wiki.homd.info/help/blast/parameters' target='_blank''>Filter</a> Low Complexity: <input type='checkbox' id='blastFilter' name='blastFilter'>
     </div> 
     <div class='adjust_block'>     
-           Descriptions:
+           <a href='https://wiki.homd.info/help/blast/parameters' target='_blank''>Descriptions</a>:
            <select class='dropdown' id='blastDescriptions' name='blastDescriptions'>
               <option value='5'>5</option>
               <option value='10'>10</option>
@@ -83,7 +97,7 @@
               <option value='250'>250</option>
               <option value='500'>500</option>
            </select>
-           Alignments:
+           <a href='https://wiki.homd.info/help/blast/parameters' target='_blank''>Alignments</a>:
            <select class='dropdown'  id='blastAlignments' name='blastAlignments'>
               <option value='5'>5</option>
               <option value='10'>10</option>

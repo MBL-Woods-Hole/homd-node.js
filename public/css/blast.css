@@ -29,3 +29,6 @@
   resize: none;
   border: 1px solid grey;
 }
+input[type=radio] {
+    height: 1.1em;
+}
