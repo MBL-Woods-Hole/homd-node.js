@@ -21,17 +21,17 @@
          This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences. 
         The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] <a href='https://wiki.homd.info/help/blast/sequence_formats' target='_blank'>[DETAIL]</a>  
     <% } %>     
-<form id='blastForm' name='' method='POST' action='/blast/refseq_blastn2' enctype='multipart/form-data' >      
+<form id='blastForm' name='blastForm' method='POST' action='/blast/refseq_blastn2' enctype='multipart/form-data' >      
   <div id='other70'>
        <% if(blast_fxn == 'genome'){ %> 
-           <div class='block-title' id=''>BLAST against <%= organism %> genome sequence</div>
+           <div class='block-title' >BLAST against <%= organism %> genome sequence</div>
            Copy and paste sequence(s) below, preferably in FASTA format:
            <div style='float:right'><small>
               <input type='radio' checked name='blastAnno' value='prokka'>PROKKA&nbsp;&nbsp;&nbsp;
               <input type='radio' name='blastAnno' value='ncbi'>NCBI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </small></div>
        <% }else{ %>
-           <div class='block-title' id=''>Upload your 16S rRNA sequences:</div>
+           <div class='block-title' >Upload your 16S rRNA sequences:</div>
            Copy and paste sequence(s) below, preferably in FASTA format:
        <% } %>  
            
@@ -55,17 +55,17 @@
     
     
     
-    <% if(blast_fxn == 'genome'){ %>
+    <% if(blast_fxn == 'genome'){ %><a href='https://wiki.homd.info/help/blast/programs' target='_blank'>Program</a>: 
         <select class='dropdown' id='blastPrg' name='blastPrg'>
               <% for(n in blast_prg){ %>
                 <option value='<%= blast_prg[n] %>'><%= blast_prg[n] %></option>
               <% } %>
         </select>
     <% }else{ %>
-        Blastn 
+        <a href='https://wiki.homd.info/help/blast/programs' target='_blank'>BLASTN</a>:
     <% } %>
     
-           Database:
+           <a href='https://wiki.homd.info/help/blast/databases' target='_blank'>database</a>:
            <select class='dropdown' id='blastDb' name='blastDb'>
               <% for(n in db_choices){ %>
                 <option value='<%= db_choices[n].value %>'><%= db_choices[n].name %></option>
@@ -73,7 +73,7 @@
            </select>
     </div> 
     <div class='adjust_block'>
-           <a href='https://wiki.homd.info/help/blast/parameters' target='_blank''>Expect</a>:
+           <a href='https://wiki.homd.info/help/blast/parameters' target='_blank'>Expect</a>:
            <select class='dropdown' id='blastExpect' name='blastExpect'>
               <option selected='selected' value='0.0001'>0.0001</option>
               <option value='0.01'>0.01</option>
@@ -84,10 +84,10 @@
               <option value='1000'>1000</option>
            </select>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href='https://wiki.homd.info/help/blast/parameters' target='_blank''>Filter</a> Low Complexity: <input type='checkbox' id='blastFilter' name='blastFilter'>
+            <a href='https://wiki.homd.info/help/blast/parameters' target='_blank'>Filter</a> Low Complexity: <input type='checkbox' id='blastFilter' name='blastFilter'>
     </div> 
     <div class='adjust_block'>     
-           <a href='https://wiki.homd.info/help/blast/parameters' target='_blank''>Descriptions</a>:
+           <a href='https://wiki.homd.info/help/blast/parameters' target='_blank'>Descriptions</a>:
            <select class='dropdown' id='blastDescriptions' name='blastDescriptions'>
               <option value='5'>5</option>
               <option value='10'>10</option>
@@ -97,7 +97,7 @@
               <option value='250'>250</option>
               <option value='500'>500</option>
            </select>
-           <a href='https://wiki.homd.info/help/blast/parameters' target='_blank''>Alignments</a>:
+           <a href='https://wiki.homd.info/help/blast/parameters' target='_blank'>Alignments</a>:
            <select class='dropdown'  id='blastAlignments' name='blastAlignments'>
               <option value='5'>5</option>
               <option value='10'>10</option>

@@ -114,14 +114,20 @@
 		  <li><a href="https://wiki.homd.info/pages/<%= pgname %>" target='_blank' rel="noopener noreferrer">About this Page</a></li>
 		</ul>
 	</li>		
-    
+	
 	<span id='homd-search' >
 	  <input type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
 	  <input type="image" src='/images/search.png'  id="search_button" height='20' onclick='search()' />
+	  
     </span>
+    
 		<!-- <li><div title="Simplified page name for referencing purpose"><font color="#66FFFF"></font></div></li>	 -->
 	
 </ul>
 
 
+<div id='version-info' >
+	    16S rRNA RefSeq: <a href="https://wiki.homd.info/versioning/refseq-version-history" target='_blank'>V<%= version_info.rna_ver %></a>
+	    &nbsp;&nbsp;&nbsp;Genomic RefSeq: <a href="https://wiki.homd.info/versioning/gene-version-history" target='_blank'>V<%= version_info.gen_ver %></a>
+</div>
 

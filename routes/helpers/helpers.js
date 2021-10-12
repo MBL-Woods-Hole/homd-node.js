@@ -293,12 +293,13 @@ module.exports.make_blast1_script_txt = (req, dataDir, cmd_list, opts) => {
   make_blast_script_txt += "\n\n";
   
   // The qsub blast command
-  blast_command = "/usr/local/blast/bin/blastall  -p blastn "
-  blast_command += "-d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta "
-  blast_command += "-e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 "
-  blast_command += "-i \\$INFILE " 
-  blast_command += "-o "+dataDir+"/out_file.out "
-  blast_command += "1>/dev/null 2>>"+dataDir+"/error2;"
+  //blast_command = "/usr/local/blast/bin/blastall  -p blastn "
+  blast_command = C.PATH_TO_BLAST_PROGS + '/' + blastProg
+  blast_command += " -d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta"
+  blast_command += " -e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2"
+  blast_command += " -i \\$INFILE" 
+  blast_command += " -o "+dataDir+"/out_file.out"
+  blast_command += " 1>/dev/null 2>>"+dataDir+"/error2;"
 
   //make_blast_script_txt += "  echo \"BLASTn Commamd:\n " + blast_command + "\n<--END Command\"\n\n"
   make_blast_script_txt += "  echo \"" + blast_command + "\" >> " + dataDir + "/clust_blast.log\n"

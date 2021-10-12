@@ -3,6 +3,7 @@ let constants = {};
 
 constants.rRNA_refseq_version    = '15.22'
 constants.genomic_refseq_version = '9.14'
+constants.use_cluster = false
 
 //constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
 constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];

@@ -1,14 +1,19 @@
 <style>
- /* Increase the header for this page only */
+</style>
+<%- include('../partials/header_html'); %>
+<style>   /* Must be after header */
 #masthead {
+   /* Increase the header for this page only */
   width:100%;
   background:black;
   background-image: url("/images/grid.png");
   background-repeat:repeat-x;
   background-size: 6%;
   height:80px;
-  
 }
+
+
+
 #masthead span a img {
   height:80px;
   padding:0;
@@ -16,6 +21,9 @@
 } 
 .text-info {
   font-weight:bold;
+}
+#version-info{
+  top:60px;
 }
 #info {
   padding:15px 15px;
@@ -25,9 +33,6 @@
   border:1px solid black;
 }
 </style>
-
-<%- include('../partials/header_html'); %>
-
 
 
 <body>
