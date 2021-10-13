@@ -511,6 +511,7 @@ hr{
 }
 #alert_flash_message_success{
     background:green;
+    color:white;
     border:1px solid black;
     padding:5px;
     position:relative;

@@ -3,8 +3,9 @@ var router    = express.Router()
 const CFG     = require(app_root + '/config/config')
 const fs        = require('fs-extra')
 const fsp = require('fs').promises
+const {spawn} = require('child_process');
 const multer  = require('multer')
-const upload = multer({ dest: CFG.UPLOAD_DIR })
+const upload = multer({ storage: CFG.UPLOAD_DIR })
 const path      = require('path')
 const helpers   = require(app_root + '/routes/helpers/helpers')
 const C       = require(app_root + '/public/constants')
@@ -60,13 +61,15 @@ function checkSeqLength(seq, minLength) {
 }
 function followFilePath(req, res, opts, blastOpts, blastDir, fileContents) {
   console.log('in File Path')
+  
+  // need 5000 seq limit in place
   if(opts.move_file){
     source = req.file.path;
     dest = path.join(blastDir,'fastaFromFile.fna');  // MUST BE *.fna NOT *.fa so that it wont be read by script
     // for fileinput
     //fs.renameSync(source, dest)
     //let fastaFilePaths = readFileWriteFiles(blastDir, dest)
-  
+    
     return (async function () {
       if (req.file){
         if(opts.move_file){
@@ -81,12 +84,14 @@ function followFilePath(req, res, opts, blastOpts, blastDir, fileContents) {
   
   
 }
-//  TEXT Input
-function followTextInputPath(req, res, opts, blastOpts, blastDir) {
+function followTextInputPathPyScript(req, res, opts, blastOpts, blastDir) {
   console.log('in TextEntry Path')
   let inputSeqInput = req.body.inputSeq.trim();
   let filePath,fileName,data,fastaAsList,trimLines,twoList
-    
+  
+  let pyscript = path.join(CFG.PATH_TO_SCRIPTS, 'run_blast_no_cluster.py') 
+  
+  
   let fileList = []
   let fastaFilePaths = []
   if (inputSeqInput[0] === '>'){
@@ -96,7 +101,7 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
      console.log('xtrim')
      console.log(xtrim)
      if (xtrim.length > 5000){
-       req.flash('fail', 'Too many sequences entered. 5000 max');
+       req.flash('fail', 'Too many sequences entered: 5000 max');
        res.redirect('/refseq/refseq_blastn');
        return;
      }
@@ -104,10 +109,7 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
          if(xtrim[i]){
               fastaAsList =xtrim[i].split(/\r?\n/)
               fastaAsList[0] = '>' + fastaAsList[0]
-              //console.log('\nsingle_as_list')
-              //console.log(single_as_list)
               trimLines = fastaAsList.map(el => el.trim()) 
-              //console.log(cleanlines2)
               twoList = [trimLines[0],trimLines.slice(1, trimLines.length).join('')]
               // validate newlist[1]
               if(twoList[1].length <= opts.minLength){  
@@ -120,18 +122,115 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
                  res.redirect('/refseq/refseq_blastn');
                  return;
               }
-              console.log('Cleaned:',twoList)
+              //console.log('Cleaned:',twoList)
               data = twoList.join('\n') + '\n'
               fileName = 'blast' + i.toString() + '.fa'
               filePath = path.join(blastDir, fileName)
               fastaFilePaths.push(filePath)
               
              fs.writeFile(filePath, data, (err) => {
-                if (err){
-                   console.log(err)
-                } else {
-                   console.log("File written successfully", filePath);
-                }
+                if (err) console.log(err)
+              })
+
+         }
+       }  // end for i in xtrim
+       
+  
+   } else {
+      // not fasta format -- MUST be single sequence
+      // single sequence
+      // validate
+      https://medium.com/swlh/run-python-script-from-node-js-and-send-data-to-browser-15677fcf199f
+      inputSeqInput = inputSeqInput.toUpperCase()
+      let pyscriptOpts =  ['text_single', inputSeqInput]
+      console.log('running py script ')
+      const python = spawn(pyscript, pyscriptOpts)
+      python.stdout.on('data', function (data) {
+        console.log('Pipe data from python script ...');
+        dataToSend = data.toString();
+      });
+      python.on('close', (code) => {
+        console.log(`child process close all stdio with code ${code}`);
+        // send data to browser
+        res.send(dataToSend)
+      });
+      if( opts.patt.test(inputSeqInput) ){
+        req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
+        res.redirect('/refseq/refseq_blastn');
+        return;
+      }
+      console.log('got valid single sequence')
+      fileName = 'blast1.fa'
+      filePath = path.join(blastDir, fileName)
+      fastaFilePaths = [filePath]
+      data = '>1\n'+inputSeqInput + '\n'
+      
+      
+      fs.writeFile(filePath, data, (err)=> {
+        if(err){
+          console.log(err)
+        } else {
+          //console.log("File written successfully -single\n", filePath);
+        }
+      })
+  }
+  
+  let command = helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir )
+  let batchFile = path.join(blastDir,'batch.sh')
+  fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {
+      if(err){
+          console.log(err)
+      }else{
+          //console.log('wrote batch blast file')
+          RunAndCheck(batchFile, render_page, [req, res])
+          //RunAndCheck(batchFile, callback_function, callback_function_options)
+      }
+    })
+}
+//  TEXT Input
+function followTextInputPath(req, res, opts, blastOpts, blastDir) {
+  console.log('in TextEntry Path')
+  let inputSeqInput = req.body.inputSeq.trim();
+  let filePath,fileName,data,fastaAsList,trimLines,twoList
+  
+  let fileList = []
+  let fastaFilePaths = []
+  if (inputSeqInput[0] === '>'){
+     console.log('got fasta format')
+     var xtrim = inputSeqInput.split('>')  // split on > first then \r
+     // what if other > in defline? fail
+     console.log('xtrim')
+     console.log(xtrim)
+     if (xtrim.length > 5000){
+       req.flash('fail', 'Too many sequences entered: 5000 max');
+       res.redirect('/refseq/refseq_blastn');
+       return;
+     }
+     for (i = 0; i <= xtrim.length; i++) {
+         if(xtrim[i]){
+              fastaAsList =xtrim[i].split(/\r?\n/)
+              fastaAsList[0] = '>' + fastaAsList[0]
+              trimLines = fastaAsList.map(el => el.trim()) 
+              twoList = [trimLines[0],trimLines.slice(1, trimLines.length).join('')]
+              // validate newlist[1]
+              if(twoList[1].length <= opts.minLength){  
+                 // what to do here? delete?
+                 console.log('found short sequence: #', i.toString(), ' length: ', twoList[1].length)
+              }
+              twoList[1] = twoList[1].toUpperCase()
+              if ( opts.patt.test(twoList[1]) ){
+                 req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
+                 res.redirect('/refseq/refseq_blastn');
+                 return;
+              }
+              //console.log('Cleaned:',twoList)
+              data = twoList.join('\n') + '\n'
+              fileName = 'blast' + i.toString() + '.fa'
+              filePath = path.join(blastDir, fileName)
+              fastaFilePaths.push(filePath)
+              
+             fs.writeFile(filePath, data, (err) => {
+                if (err) console.log(err)
               })
 
          }
@@ -141,7 +240,7 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
       // not fasta format -- MUST be single sequence
       // single sequence
       // validate
-      
+     
       inputSeqInput = inputSeqInput.toUpperCase()
       if( opts.patt.test(inputSeqInput) ){
         req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
@@ -159,7 +258,7 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
         if(err){
           console.log(err)
         } else {
-          console.log("File written successfully -single\n", filePath);
+          //console.log("File written successfully -single\n", filePath);
         }
       })
   }
@@ -170,7 +269,7 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
       if(err){
           console.log(err)
       }else{
-          console.log('wrote batch blast file')
+          //console.log('wrote batch blast file')
           RunAndCheck(batchFile, render_page, [req, res])
           //RunAndCheck(batchFile, callback_function, callback_function_options)
       }
@@ -214,7 +313,7 @@ function writeFilesFromContents(fileContents, req, res, blastOpts , blastDir) {
        if( lastLine || (n > 0  && lines[parseInt(n)+1][0] === '>')){
          fs.writeFile(fastaFilePath, fileText, function(err) {
              if(err) console.log(err)
-             else console.log('wrote file',fastaFilePath)
+             //else console.log('wrote file',fastaFilePath)
           })
        }
     }
@@ -224,7 +323,7 @@ function writeFilesFromContents(fileContents, req, res, blastOpts , blastDir) {
       if(err){
           console.log(err)
       }else{
-          console.log('wrote batch blast file')
+          //console.log('wrote batch blast file')
           RunAndCheck(batchFile, render_page, [req, res])
           //RunAndCheck(batchFile, callback_function, callback_function_options)
       }
@@ -274,7 +373,7 @@ async function readFileWriteFilesPromise(bigFilePath, req, res, blastOpts, blast
        if( lastLine || (n > 0  && lines[parseInt(n)+1][0] === '>')){
          fs.writeFile(fastaFilePath, fileText, function(err) {
              if(err) console.log(err)
-             else console.log('wrote file',fastaFilePath)
+             //else console.log('wrote file',fastaFilePath)
           })
        }
     }
@@ -285,7 +384,7 @@ async function readFileWriteFilesPromise(bigFilePath, req, res, blastOpts, blast
       if(err){
           console.log(err)
       }else{
-          console.log('wrote batch blast file')
+          //console.log('wrote batch blast file')
           RunAndCheck(batchFile, render_page, [req, res])
           //RunAndCheck(batchFile, callback_function, callback_function_options)
           
@@ -317,10 +416,10 @@ async function moveFile(source, destination) {
   }
 }
 
-let render_page = (req, res) => {
+let render_page = (opts) => {
    console.log('in render page fxn')
-   //req.flash('success', 'Successful Blast');
-   res.render('pages/refseq/blastn_results', {
+   
+   opts[1].render('pages/refseq/blastn_results', {
     title: 'HOMD :: BLAST', 
     pgname: 'refseq_blast',
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
@@ -330,7 +429,62 @@ let render_page = (req, res) => {
     
    })
 }
-router.post('/refseq_blastn2', upload.single('blastFile'),  function refseq_blastn_post2(req, res) {
+router.post('/blast_post', upload.single('blastFile'),  function blast_post(req, res) {
+    console.log('MADEIT TO blastPost')
+  console.log(req.body)
+  console.log('req.file?', req.file)   // may be undefined
+  let filename, filepath, data, fasta_as_list, trimlines, twolist;
+  const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i, returnTo: req.body.returnTo }
+  let blastOpts = { expect:    req.body.blastExpect, 
+              descriptions: req.body.blastDescriptions,
+              alignments: req.body.blastAlignments,
+              advanced: req.body.advancedOpts,
+              program: req.body.blastProg
+              // add dbPath later
+  }
+  
+  if(req.body.blastFxn === 'genome') {
+    blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,req.body.blastDb) 
+  } else {
+    blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_REFSEQ,req.body.blastDb) 
+  }
+  if(req.body.blastFilter){
+    blastOpts.fitler = '-F F'
+  }
+  let blast_session_ts = Date.now().toString();
+  const blast_directory = path.join(CFG.PATH_TO_BLAST_FILES, blast_session_ts)
+  if (!fs.existsSync(blast_directory)){
+       fs.mkdirSync(blast_directory);
+  }
+  if(req.file){
+      if (req.file.size > 1500000){   // 1 911 016
+       req.flash('fail', 'File too large');
+       res.redirect('/refseq/refseq_blastn');
+       return;
+      }
+      var fileContents = ''  // if buffer in req,file not need to move/read file
+      if(req.file.buffer){
+         fileContents = req.file.buffer.toString()
+         opts.move_file = false
+      } else {
+         opts.move_file = true
+      }
+      // move file
+      // read file
+      // write files(s) to dir
+      //followFilePath(req, res, opts, blastOpts, blast_directory, fileContents)
+      followFilePathPyScript(req, res, opts, blastOpts, blast_directory, fileContents)
+    }else{
+      // differentiate single from multiple
+      // write data into file(s)
+      //followTextInputPath(req, res, opts, blastOpts, blast_directory)
+      followTextInputPathPyScript(req, res, opts, blastOpts, blast_directory)
+    }
+})
+//
+//
+
+router.post('/refseq_blastn_takesTooLong', upload.single('blastFile'),  function refseq_blastn_post2(req, res) {
     console.log('MADEIT TO blastn-post')
   console.log(req.body)
   console.log('req.file?', req.file)   // may be undefined
@@ -359,7 +513,12 @@ router.post('/refseq_blastn2', upload.single('blastFile'),  function refseq_blas
   }
   let result 
   if(req.file){
-      var fileContents = ''
+      if (req.file.size > 1500000){   // 1 911 016
+       req.flash('fail', 'File too large');
+       res.redirect('/refseq/refseq_blastn');
+       return;
+      }
+      var fileContents = ''  // if buffer in req,file not need to move/read file
       if(req.file.buffer){
          fileContents = req.file.buffer.toString()
          opts.move_file = false
@@ -376,9 +535,10 @@ router.post('/refseq_blastn2', upload.single('blastFile'),  function refseq_blas
       followTextInputPath(req, res, opts, blastOpts, blast_directory)
     }
     
-    
-// agtcgtactgggatctgaa
-/*   
+/*  test seqs    
+
+ agtcgtactgggatctgaa
+  
   >ds1|imput 1200
   agtcgtactggtaccggatctgaa
   >ds1|kefdgste5%$
@@ -405,10 +565,9 @@ router.post('/refseq_blastn2', upload.single('blastFile'),  function refseq_blas
         console.log('NO Cluster; Use shell script')
         //let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'run_blast_no_cluster.py')
         //RunAndCheck(pyscript,{},{})
-        
     }
-  
-  
+    req.flash('success', 'Successful Blast');
+    render_page([req,res])
  
 
   
@@ -513,7 +672,7 @@ function RunAndCheck(script_path, callback_function, callback_function_options)
      
      if (code === 0)
      {
-       callback_function(callback_function_options);
+       //callback_function(callback_function_options);
      }
      else // code != 0
      {

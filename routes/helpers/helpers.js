@@ -368,7 +368,7 @@ module.exports.make_qsub_commands_txt = function make_qsub_commands_txt(req, dat
 }
 module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFilePaths, opts, dataDir) {
     console.log('in createBlastCommandFile')
-    console.log(fastaFilePaths)
+    //console.log(fastaFilePaths)
     let make_blast_script_txt = ''
     make_blast_script_txt += "#!/bin/bash\n\n"
     
@@ -383,10 +383,11 @@ module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFil
 // /mnt/myBROP/var/www/html/homd_modules/RNAblast/parse_blast_single.pl \
 // feu9hoakrcsg3r9cukjp5r36k7 389_0541_Abiotrophia_defectiva_HMT S ;\
 // #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
-    console.log(opts)
+    //console.log(opts)
     for (let i = 0; i < fastaFilePaths.length; i++) {
        make_blast_script_txt += path.join(CFG.PATH_TO_BLAST_PROG, opts.program)
-       make_blast_script_txt += ' -db ' + opts.dbPath
+       make_blast_script_txt += ' -db /Users/avoorhis/programming/blast/Bv6/Bv6'
+       //make_blast_script_txt += ' -db ' + opts.dbPath
        make_blast_script_txt += ' -evalue ' + opts.expect
        make_blast_script_txt += ' -max_target_seqs ' + opts.descriptions
        //make_blast_script_txt += ' -num_alignments ' + opts.alignments
@@ -400,7 +401,7 @@ module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFil
        make_blast_script_txt += '\n\n'
        
     }
-    console.log('batch blast content:')
-    console.log(make_blast_script_txt)
+    //console.log('batch blast content:')
+    //console.log(make_blast_script_txt)
     return make_blast_script_txt
 }
