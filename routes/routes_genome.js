@@ -376,7 +376,7 @@ router.get('/explorer', function explorer(req, res) {
       organism: organism,
       db_choices: JSON.stringify(dbChoices),
       blast_prg: JSON.stringify(blast_programs),
-      blast_fxn: 'genome',
+      blastFxn: 'genome',
       info_data: JSON.stringify(infoDataObj),
       pid_list: JSON.stringify(pidList),
       returnTo: '/genome/explorer'
@@ -409,7 +409,10 @@ router.get('/explorer', function explorer(req, res) {
   }
   console.log('one')
   dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '='
-  dbChoices.unshift({name:organism+': Genomic DNA',value:'org_genomes'},{name:organism+': DNA of Annotated Proteins',value:'org_proteins'})
+  dbChoices.unshift(
+       {name:organism+': Genomic DNA',value:'org_genomes',filename:'fna/'+gid},
+       {name:organism+': DNA of Annotated Proteins',value:'org_proteins',filename:'faa/'+gid}
+    )
   
   console.log('organism', organism)
   console.log('blast', blast)

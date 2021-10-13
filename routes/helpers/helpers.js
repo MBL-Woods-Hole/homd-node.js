@@ -1,6 +1,6 @@
 const C       = require(app_root + '/public/constants');
 //const queries = require(app_root + '/routes/queries');
-//const CFG  = require(app_root + '/config/config');
+const CFG  = require(app_root + '/config/config');
 const express     = require('express');
 const fs          = require('fs-extra');
 var accesslog = require('access-log');
@@ -119,7 +119,7 @@ module.exports.clean_rank_name_for_show = (rank) =>{
 	}
 	return rank.charAt(0).toUpperCase() + rank.slice(1)
 }
-module.exports.make_lineage_string_with_links = (lineage_list, link) =>{
+module.exports.make_lineage_string_with_links = function make_lineage_string_with_links(lineage_list, link) {
      var tmp = ''
      i =0 
      for(var n in lineage_list[1]){
@@ -134,7 +134,7 @@ module.exports.make_lineage_string_with_links = (lineage_list, link) =>{
      return tmp
 }
 //
-module.exports.get_qsub_script_text = (req, scriptlog, dir_path, cmd_name, cmd_list) => {
+module.exports.get_qsub_script_text = function get_qsub_script_text(req, scriptlog, dir_path, cmd_name, cmd_list) {
   /*
    #!/bin/sh
    # CODE:
@@ -225,7 +225,7 @@ module.exports.get_qsub_script_text = (req, scriptlog, dir_path, cmd_name, cmd_l
 //
 //
 
-module.exports.make_blast1_script_txt = (req, dataDir, cmd_list, opts) => {
+module.exports.make_blast1_script_txt = function make_blast_script_txt(req, dataDir, cmd_list, opts) {
   //console.log('OPTS: ')
   //console.log(opts)
   make_blast_script_txt = "";
@@ -363,6 +363,42 @@ make_blast_script_txt += "bash "+dataDir + "/clust_blast.sh\n";
   return make_blast_script_txt
 }
 //
-module.exports.make_qsub_commands_txt = (req, dataDir, fileList) => {
+module.exports.make_qsub_commands_txt = function make_qsub_commands_txt(req, dataDir, fileList) {
 
+}
+module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFilePaths, opts, dataDir) {
+    console.log('in createBlastCommandFile')
+    console.log(fastaFilePaths)
+    let make_blast_script_txt = ''
+    make_blast_script_txt += "#!/bin/bash\n\n"
+    
+//     /usr/local/blast/bin/blastall -p blastn \
+// -d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta \
+// -e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 \
+// -i /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/389_0541_Abiotrophia_defectiva_HMT \
+// -o /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
+// 1>/dev/null 2>>/mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/error2; \
+// mv /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
+// /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/389_0541_Abiotrophia_defectiva_HMT;\
+// /mnt/myBROP/var/www/html/homd_modules/RNAblast/parse_blast_single.pl \
+// feu9hoakrcsg3r9cukjp5r36k7 389_0541_Abiotrophia_defectiva_HMT S ;\
+// #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
+console.log(opts)
+    for (let i = 0; i <= fastaFilePaths.length; i++) {
+       make_blast_script_txt += path.join(CFG.PATH_TO_BLAST_PROG, opts.program)
+       make_blast_script_txt += ' -db ' + opts.dbPath
+       make_blast_script_txt += ' -evalue ' + opts.expect
+       make_blast_script_txt += ' -num_descriptions ' + opts.descriptions
+       make_blast_script_txt += ' -num_alignments ' + opts.alignments
+       
+       make_blast_script_txt += ' -query ' + fastaFilePaths[i]
+       make_blast_script_txt += ' -outfmt 15'   //JSON
+       make_blast_script_txt += ' -out ' + dataDir + '/result_' + i.toString() + '.blast' 
+       
+       make_blast_script_txt += " 1>/dev/null 2>>" + dataDir + "/error2;"
+       make_blast_script_txt += '\n\n'
+       
+    
+    }
+    console.log(make_blast_script_txt)
 }

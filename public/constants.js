@@ -8,20 +8,20 @@ constants.use_cluster = false
 //constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
 constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
 constants.phyla = [ 'Actinobacteria',
-					'Bacteroidetes',
-					'Chlamydiae',
-					'Chlorobi',
-					'Chloroflexi',
-					'Euryarchaeota',
-					'Firmicutes',
-					'Fusobacteria',
-					'Gracilibacteria (GN02)',
-					'Proteobacteria',
-					'Saccharibacteria (TM7)',
-					'Spirochaetes',
-					'SR1',
-					'Synergistetes',
-					'WPS-2'
+          'Bacteroidetes',
+          'Chlamydiae',
+          'Chlorobi',
+          'Chloroflexi',
+          'Euryarchaeota',
+          'Firmicutes',
+          'Fusobacteria',
+          'Gracilibacteria (GN02)',
+          'Proteobacteria',
+          'Saccharibacteria (TM7)',
+          'Spirochaetes',
+          'SR1',
+          'Synergistetes',
+          'WPS-2'
 ]
 
 //constants.available_jbgenomes = ['volvox','tomato','yeast_synteny'];
@@ -32,14 +32,14 @@ constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralr
 constants.tax_sites_on =['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
 
 // tax filenames (fn)
-constants.genome_lookup_fn 		= 'homdData-GenomeLookup.json'
-constants.info_lookup_fn 		= 'homdData-TaxonInfoLookup.json'
-constants.references_lookup_fn 	= 'homdData-TaxonReferencesLookup.json'
-constants.taxcounts_fn 	        = 'homdData-TaxonCounts.json'
-constants.taxon_lookup_fn 		= 'homdData-TaxonLookup.json'
-constants.lineage_lookup_fn 	= 'homdData-TaxonLineagelookup.json'
-constants.tax_hierarchy_fn 		= 'homdData-TaxonHierarchy.json'
-constants.refseq_lookup_fn 		= 'homdData-TaxonRefSeqLookup.json'
+constants.genome_lookup_fn    = 'homdData-GenomeLookup.json'
+constants.info_lookup_fn    = 'homdData-TaxonInfoLookup.json'
+constants.references_lookup_fn  = 'homdData-TaxonReferencesLookup.json'
+constants.taxcounts_fn          = 'homdData-TaxonCounts.json'
+constants.taxon_lookup_fn     = 'homdData-TaxonLookup.json'
+constants.lineage_lookup_fn   = 'homdData-TaxonLineagelookup.json'
+constants.tax_hierarchy_fn    = 'homdData-TaxonHierarchy.json'
+constants.refseq_lookup_fn    = 'homdData-TaxonRefSeqLookup.json'
 constants.phage_list_fn         = 'homdData-PhageList.json'
 constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
 constants.annotation_lookup_fn  = 'homdData-AnnotationLookup.json'
@@ -81,22 +81,35 @@ constants.all_phage_cols = [
   ]
   
 constants.refseq_blastn_db_choices = [
-    {name:'eHOMD 16s rRNA RefSeq Version 15.22 (starts at pos 9)',value:'15.22_9'},
-    {name:'eHOMD 16s rRNA RefSeq Version 15.22 (starts at pos 28)',value:'15.22'},
-    {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at pos 9)',value:'14.51-9'},
-    {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at pos 28)',value:'14.51'},
-    {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at 28 trimmed at 1407 of aligned seq)',value:'14.51-trimmed'},
-    {name:'eHOMD 16s rRNA RefSeq Version 13.2 (starts at pos 9)',value:'13.2-9'},
-    {name:'eHOMD 16s rRNA RefSeq Version 13.2 (starts at pos 28)',value:'13.2'},
+    {name:'eHOMD 16s rRNA RefSeq Version 15.22 (starts at pos 9)',value:'15.22_9',
+         filename:'HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta'},
+    {name:'eHOMD 16s rRNA RefSeq Version 15.22 (starts at pos 28)',value:'15.22',
+         filename:'HOMD_16S_rRNA_RefSeq_V15.22.fasta'},
+    {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at pos 9)',value:'14.51-9',
+         filename:'HOMD_16S_rRNA_RefSeq_V14.51.p9.fasta'},
+    {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at pos 28)',value:'14.51',
+         filename:'HOMD_16S_rRNA_RefSeq_V14.51.fasta'},
+    {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at 28 trimmed at 1407 of aligned seq)',value:'14.51-trimmed',
+         filename:'HOMD_16S_rRNA_RefSeq_V14.5.trimmed.fasta'},
+    {name:'eHOMD 16s rRNA RefSeq Version 13.2 (starts at pos 9)',value:'13.2-9',
+         filename:'HOMD_16S_rRNA_RefSeq_V13.2.p9.fasta'},
+    {name:'eHOMD 16s rRNA RefSeq Version 13.2 (starts at pos 28)',value:'13.2',
+         filename:'HOMD_16S_rRNA_RefSeq_V13.2.fasta'},
 
-    {name:'Greengenes 16S rRNA Sequences (gg16S_unaligned)',value:'GG'},
-    {name:'NCBI Reference RNA Sequences (refseq_rna, 1969-12-31)',value:'NCBI'},
-    {name:'RDP 16S rRNA Sequences',value:'RDP'},
-    {name:'eHOMD 16s rRNA RefSeq Extended V1.1',value:'V1.1'}
+    {name:'Greengenes 16S rRNA Sequences (gg16S_unaligned)',value:'GG',
+         filename:''},
+    {name:'NCBI Reference RNA Sequences (refseq_rna, 1969-12-31)',value:'NCBI',
+         filename:''},
+    {name:'RDP 16S rRNA Sequences',value:'RDP',
+         filename:''},
+    {name:'eHOMD 16s rRNA RefSeq Extended V1.1',value:'V1.1',
+         filename:'Extended_reference_version1'}
 ]
 constants.genome_blastn_db_choices = [
-  {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes'},
-  {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins'},
+  {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
+       filename:'fna/ALL_genomes'},
+  {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
+       filename:'faa/ALL_genomes'},
 ]
 // constants.posters_pdfs =
 // [

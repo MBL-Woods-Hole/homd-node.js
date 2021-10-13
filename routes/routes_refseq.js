@@ -21,7 +21,7 @@ router.get('/refseq_blastn', function refseq_blastn_get(req, res) {
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     db_choices: JSON.stringify(C.refseq_blastn_db_choices),
     blast_prg: JSON.stringify(['blastn']),
-    blast_fxn: 'refseq',
+    blastFxn: 'refseq',
     returnTo: '/refseq/refseq_blastn'
   })
 })
