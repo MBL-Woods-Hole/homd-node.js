@@ -383,22 +383,19 @@ module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFil
 // /mnt/myBROP/var/www/html/homd_modules/RNAblast/parse_blast_single.pl \
 // feu9hoakrcsg3r9cukjp5r36k7 389_0541_Abiotrophia_defectiva_HMT S ;\
 // #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
-console.log(opts)
-    for (let i = 0; i <= fastaFilePaths.length; i++) {
+    console.log(opts)
+    for (let i = 0; i < fastaFilePaths.length; i++) {
        make_blast_script_txt += path.join(CFG.PATH_TO_BLAST_PROG, opts.program)
        make_blast_script_txt += ' -db ' + opts.dbPath
        make_blast_script_txt += ' -evalue ' + opts.expect
-       make_blast_script_txt += ' -num_descriptions ' + opts.descriptions
+       make_blast_script_txt += ' -max_target_seqs ' + opts.descriptions
        make_blast_script_txt += ' -num_alignments ' + opts.alignments
-       
        make_blast_script_txt += ' -query ' + fastaFilePaths[i]
        make_blast_script_txt += ' -outfmt 15'   //JSON
        make_blast_script_txt += ' -out ' + dataDir + '/result_' + i.toString() + '.blast' 
-       
        make_blast_script_txt += " 1>/dev/null 2>>" + dataDir + "/error2;"
        make_blast_script_txt += '\n\n'
-       
-    
     }
     console.log(make_blast_script_txt)
+    return make_blast_script_txt
 }

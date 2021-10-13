@@ -67,14 +67,14 @@ function followFilePath(req, res, opts, blastOpts, blastDir, fileContents) {
     //fs.renameSync(source, dest)
     //let fastaFilePaths = readFileWriteFiles(blastDir, dest)
   
-    return (async function (req) {
+    return (async function () {
       if (req.file){
         if(opts.move_file){
           await moveFile(source, dest)
         }
         readFileWriteFilesPromise(dest, blastOpts, blastDir);
       }
-    })(req)
+    })()
   } else{
     writeFilesFromContents(fileContents, blastOpts, blastDir)
   }
@@ -164,7 +164,15 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
       })
   }
   
-  helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir )
+  let command = helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir )
+  let batchFile = path.join(blastDir,'batch.sh')
+  fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {
+      if(err){
+          console.log(err)
+      }else{
+          console.log('wrote batch blast file')
+      }
+    })
 }
 // https://www.digitalocean.com/community/tutorials/how-to-work-with-files-using-the-fs-module-in-node-js
 function writeFilesFromContents(fileContents, blastOpts , blastDir) {
@@ -173,7 +181,10 @@ function writeFilesFromContents(fileContents, blastOpts , blastDir) {
     let count = 0
     let lastLine = false
     let fastaFilePaths = []
-    for(n = 0; n <= lines.length; n++){
+    for(let n = 0; n < lines.length; n++){
+       if(!lines[n]){
+          continue
+       }
        if( lines[parseInt(n)+1] === undefined ){
           lastLine = true
        }
@@ -181,9 +192,7 @@ function writeFilesFromContents(fileContents, blastOpts , blastDir) {
        //console.log('')
        //console.log(lines[n])
        write_file=false
-       if(!lines[n]){
-          continue
-       }
+       
        if(lines[n][0] === '>'){
           // here write the file from previous
           
@@ -207,24 +216,17 @@ function writeFilesFromContents(fileContents, blastOpts , blastDir) {
           })
        }
     }
-    helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir)
-}
-function readFileWriteFiles(dir, bigFilePath) {
-    console.log('in readFileWriteFiles - no Promises')
-    readFileContent(bigFilePath, function (err, content) {
-        console.log('content')
-        console.log(content.toString())
-        
-        return 'myreturn'
-    })
-    
-}
-function readFileContent(file, callback) {
-    fs.readFile(file, function (err, content) {
-        if (err) return callback(err)
-        callback(null, content)
+    let command = helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir)
+    let batchFile = path.join(blastDir,'batch.sh')
+    fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {
+      if(err){
+          console.log(err)
+      }else{
+          console.log('wrote batch blast file')
+      }
     })
 }
+
 
 async function readFileWriteFilesPromise(bigFilePath, blastOpts, blastDir ) {
   
@@ -236,7 +238,11 @@ async function readFileWriteFilesPromise(bigFilePath, blastOpts, blastDir ) {
     let count = 0
     let lastLine = false
     let fastaFilePaths = []
-    for(n = 0; n <= lines.length; n++){
+    for(let n = 0; n < lines.length; n++){
+       console.log('line::',lines[n])
+       if(!lines[n]){
+          continue
+       }
        if( lines[parseInt(n)+1] === undefined ){
           lastLine = true
        }
@@ -244,9 +250,7 @@ async function readFileWriteFilesPromise(bigFilePath, blastOpts, blastDir ) {
        //console.log('')
        //console.log(lines[n])
        write_file=false
-       if(!lines[n]){
-          continue
-       }
+       
        if(lines[n][0] === '>'){
           // here write the file from previous
           
@@ -270,10 +274,23 @@ async function readFileWriteFilesPromise(bigFilePath, blastOpts, blastDir ) {
           })
        }
     }
-    helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir)
+    
+    let command = helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir)
+    let batchFile = path.join(blastDir, 'batch.sh')
+    fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {
+      if(err){
+          console.log(err)
+      }else{
+          console.log('wrote batch blast file')
+      }
+    })
+    
+    
   } catch (error) {
     console.error('Got an error trying to read the file: ',error);
+    
   }
+  
 }
 async function writeFile(filePath, data) {
   try {
@@ -498,6 +515,21 @@ function RunAndCheck(script_path, req, res, callback_function, callback_function
 
  
 }
-
+function readFileWriteFiles(dir, bigFilePath) {
+    console.log('in readFileWriteFiles - no Promises')
+    readFileContent(bigFilePath, function (err, content) {
+        console.log('content')
+        console.log(content.toString())
+        
+        return 'myreturn'
+    })
+    
+}
+function readFileContent(file, callback) {
+    fs.readFile(file, function (err, content) {
+        if (err) return callback(err)
+        callback(null, content)
+    })
+}
 
 module.exports = router
