@@ -389,13 +389,18 @@ module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFil
        make_blast_script_txt += ' -db ' + opts.dbPath
        make_blast_script_txt += ' -evalue ' + opts.expect
        make_blast_script_txt += ' -max_target_seqs ' + opts.descriptions
-       make_blast_script_txt += ' -num_alignments ' + opts.alignments
+       //make_blast_script_txt += ' -num_alignments ' + opts.alignments
+       // Error: Argument "num_alignments".num_descriptions Incompatible with argument:  `max_target_seqs'
+       // 
        make_blast_script_txt += ' -query ' + fastaFilePaths[i]
        make_blast_script_txt += ' -outfmt 15'   //JSON
        make_blast_script_txt += ' -out ' + dataDir + '/result_' + i.toString() + '.blast' 
-       make_blast_script_txt += " 1>/dev/null 2>>" + dataDir + "/error2;"
+       make_blast_script_txt += " 1>/dev/null 2>>" + dataDir + "/error.log;"
+       
        make_blast_script_txt += '\n\n'
+       
     }
+    console.log('batch blast content:')
     console.log(make_blast_script_txt)
     return make_blast_script_txt
 }

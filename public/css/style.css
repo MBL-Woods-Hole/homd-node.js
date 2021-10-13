@@ -303,12 +303,13 @@ hr{
   height:30px;
 }
 #version-info{
-  position: absolute;
-  right:12px;
-  top:30px;
+  position:relative;
+  float:right;
+  top:-65px;
   font-size:11px;
   padding:3px;
   color:white;
+  width:310px;;
   border:1px solid orange;
   
 }

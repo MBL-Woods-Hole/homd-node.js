@@ -72,11 +72,11 @@ function followFilePath(req, res, opts, blastOpts, blastDir, fileContents) {
         if(opts.move_file){
           await moveFile(source, dest)
         }
-        readFileWriteFilesPromise(dest, blastOpts, blastDir);
+        readFileWriteFilesPromise(dest, req, res, blastOpts, blastDir);
       }
     })()
   } else{
-    writeFilesFromContents(fileContents, blastOpts, blastDir)
+    writeFilesFromContents(fileContents, req, res, blastOpts, blastDir)
   }
   
   
@@ -171,11 +171,13 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
           console.log(err)
       }else{
           console.log('wrote batch blast file')
+          RunAndCheck(batchFile, render_page(req, res), {})
+          //RunAndCheck(batchFile, callback_function, callback_function_options)
       }
     })
 }
 // https://www.digitalocean.com/community/tutorials/how-to-work-with-files-using-the-fs-module-in-node-js
-function writeFilesFromContents(fileContents, blastOpts , blastDir) {
+function writeFilesFromContents(fileContents, req, res, blastOpts , blastDir) {
     console.log('In writeFilesFromContents - no promises')
     const lines = (fileContents.trim()).split('\n')
     let count = 0
@@ -223,12 +225,14 @@ function writeFilesFromContents(fileContents, blastOpts , blastDir) {
           console.log(err)
       }else{
           console.log('wrote batch blast file')
+          RunAndCheck(batchFile, render_page(req, res), {})
+          //RunAndCheck(batchFile, callback_function, callback_function_options)
       }
     })
 }
 
 
-async function readFileWriteFilesPromise(bigFilePath, blastOpts, blastDir ) {
+async function readFileWriteFilesPromise(bigFilePath, req, res, blastOpts, blastDir ) {
   
   console.log('in readFileWriteFilesPromise')
   try {
@@ -277,11 +281,14 @@ async function readFileWriteFilesPromise(bigFilePath, blastOpts, blastDir ) {
     
     let command = helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir)
     let batchFile = path.join(blastDir, 'batch.sh')
-    fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {
+    fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {  // executable
       if(err){
           console.log(err)
       }else{
           console.log('wrote batch blast file')
+          RunAndCheck(batchFile, render_page(req, res), {})
+          //RunAndCheck(batchFile, callback_function, callback_function_options)
+          
       }
     })
     
@@ -310,7 +317,9 @@ async function moveFile(source, destination) {
   }
 }
 
-let render_page = (res) => {
+let render_page = (req, res) => {
+   console.log('in render page fxn')
+   req.flash('success', 'Successful Blast');
    res.render('pages/refseq/blastn_results', {
     title: 'HOMD :: BLAST', 
     pgname: 'refseq_blast',
@@ -395,7 +404,7 @@ router.post('/refseq_blastn2', upload.single('blastFile'),  function refseq_blas
     }else{
         console.log('NO Cluster; Use shell script')
         //let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'run_blast_no_cluster.py')
-        //RunAndCheck(pyscript,req,res,{},{})
+        //RunAndCheck(pyscript,{},{})
         
     }
   
@@ -452,19 +461,19 @@ router.post('/refseq_blastn2', upload.single('blastFile'),  function refseq_blas
     
   //we'll create one blast.sh script
   // that will write one blast2.sh script
-  
-  res.render('pages/refseq/blastn_results', {
-    title: 'HOMD :: BLAST', 
-    pgname: 'refseq_blast',
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    hostname: CFG.HOSTNAME,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-    
-  })
+//   console.log('rendering page fxn2')
+//   res.render('pages/refseq/blastn_results', {
+//     title: 'HOMD :: BLAST', 
+//     pgname: 'refseq_blast',
+//     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//     hostname: CFG.HOSTNAME,
+//     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//     db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+//     
+//   })
 })
 //
-function RunAndCheck(script_path, req, res, callback_function, callback_function_options)
+function RunAndCheck(script_path, callback_function, callback_function_options)
 {
   // http://krasimirtsonev.com/blog/article/Nodejs-managing-child-processes-starting-stopping-exec-spawn
   console.log("in RunAndCheck");
@@ -472,8 +481,9 @@ function RunAndCheck(script_path, req, res, callback_function, callback_function
 
   const exec = require('child_process').exec;
   // TODO:  use file_path_obj;
-  const opts = {env:{'PATH': CFG.PATH,'LD_LIBRARY_PATH': CFG.LD_LIBRARY_PATH} }
-  const child = exec(script_path, opts);
+  //const opts = {env:{'PATH': CFG.PATH,'LD_LIBRARY_PATH': CFG.LD_LIBRARY_PATH} }
+  //const child = exec(script_path, opts);
+  const child = exec(script_path);
   //var scriptlog1 = path.join(CFG.USER_FILES_BASE, req.user.username,'project-'+project, 'matrix_log1.txt');
   
   // var child = spawn(script_path, [], {
@@ -486,7 +496,7 @@ function RunAndCheck(script_path, req, res, callback_function, callback_function
         data = data.toString().trim();
         output += data;
         console.log('stdout: ' + data);
-        CheckIfPID(data);
+        //CheckIfPID(data);
   });
   
  
