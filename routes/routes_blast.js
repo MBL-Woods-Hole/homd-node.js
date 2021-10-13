@@ -298,7 +298,7 @@ router.post('/refseq_blastn2', upload.single('blastFile'),  function refseq_blas
       followTextInputPath(req, res, opts, blastOpts, blast_directory)
     }
     
-    return
+    
 // agtcgtactgggatctgaa
 /*   
   >ds1|imput 1200
@@ -324,7 +324,7 @@ router.post('/refseq_blastn2', upload.single('blastFile'),  function refseq_blas
           }
         })
     }else{
-        console.log('NO Cluster; Use Python script')
+        console.log('NO Cluster; Use shell script')
         //let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'run_blast_no_cluster.py')
         //RunAndCheck(pyscript,req,res,{},{})
         
