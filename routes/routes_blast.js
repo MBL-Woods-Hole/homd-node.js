@@ -58,20 +58,26 @@ function checkSeqLength(seq, minLength) {
   return true
   
 }
-function followFilePath(req, res, opts, blastOpts, blastDir) {
+function followFilePath(req, res, opts, blastOpts, blastDir, fileContents) {
   console.log('in File Path')
-  source = req.file.path;
-  dest = path.join(blastDir,'fastaFromFile.fna');  // MUST BE *.fna NOT *.fa so that it wont be read by script
-  // for fileinput
-  //fs.renameSync(source, dest)
-  //let fastaFilePaths = readFileWriteFiles(blastDir, dest)
+  if(opts.move_file){
+    source = req.file.path;
+    dest = path.join(blastDir,'fastaFromFile.fna');  // MUST BE *.fna NOT *.fa so that it wont be read by script
+    // for fileinput
+    //fs.renameSync(source, dest)
+    //let fastaFilePaths = readFileWriteFiles(blastDir, dest)
   
-  return (async function (req) {
-    if (req.file){
-      await moveFile(source, dest);
-      readFileWriteFilesPromise(dest, blastOpts, blastDir);
-    }
-  })(req)
+    return (async function (req) {
+      if (req.file){
+        if(opts.move_file){
+          await moveFile(source, dest)
+        }
+        readFileWriteFilesPromise(dest, blastOpts, blastDir);
+      }
+    })(req)
+  } else{
+    writeFilesFromContents(fileContents, blastOpts, blastDir)
+  }
   
   
 }
@@ -158,15 +164,53 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
       })
   }
   
-  
-  
-  
-  
   helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir )
 }
 // https://www.digitalocean.com/community/tutorials/how-to-work-with-files-using-the-fs-module-in-node-js
+function writeFilesFromContents(fileContents, blastOpts , blastDir) {
+    console.log('In writeFilesFromContents - no promises')
+    const lines = (fileContents.trim()).split('\n')
+    let count = 0
+    let lastLine = false
+    let fastaFilePaths = []
+    for(n = 0; n <= lines.length; n++){
+       if( lines[parseInt(n)+1] === undefined ){
+          lastLine = true
+       }
+       
+       //console.log('')
+       //console.log(lines[n])
+       write_file=false
+       if(!lines[n]){
+          continue
+       }
+       if(lines[n][0] === '>'){
+          // here write the file from previous
+          
+          newFile = true
+          fileName = 'blast'+ count.toString()+'.fa'
+          fastaFilePath = path.join(blastDir, fileName)
+          fastaFilePaths.push(fastaFilePath)
+          fileText = lines[n].trim() + '\n'
+          count += 1
+       }else{
+          fileText += lines[n].trim() + '\n'
+          write_file=true
+          
+       }
+       //console.log('lines[n+1]')
+       //console.log(lines[parseInt(n)+1])
+       if( lastLine || (n > 0  && lines[parseInt(n)+1][0] === '>')){
+         fs.writeFile(fastaFilePath, fileText, function(err) {
+             if(err) console.log(err)
+             else console.log('wrote file',fastaFilePath)
+          })
+       }
+    }
+    helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir)
+}
 function readFileWriteFiles(dir, bigFilePath) {
-    console.log('in readFileWriteFiles')
+    console.log('in readFileWriteFiles - no Promises')
     readFileContent(bigFilePath, function (err, content) {
         console.log('content')
         console.log(content.toString())
@@ -181,6 +225,7 @@ function readFileContent(file, callback) {
         callback(null, content)
     })
 }
+
 async function readFileWriteFilesPromise(bigFilePath, blastOpts, blastDir ) {
   
   console.log('in readFileWriteFilesPromise')
@@ -288,10 +333,17 @@ router.post('/refseq_blastn2', upload.single('blastFile'),  function refseq_blas
   }
   let result 
   if(req.file){
+      var fileContents = ''
+      if(req.file.buffer){
+         fileContents = req.file.buffer.toString()
+         opts.move_file = false
+      } else {
+         opts.move_file = true
+      }
       // move file
       // read file
       // write files(s) to dir
-      followFilePath(req, res, opts, blastOpts, blast_directory)
+      followFilePath(req, res, opts, blastOpts, blast_directory, fileContents)
     }else{
       // differentiate single from multiple
       // write data into file(s)
