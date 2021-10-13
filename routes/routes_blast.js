@@ -319,7 +319,7 @@ async function moveFile(source, destination) {
 
 let render_page = (req, res) => {
    console.log('in render page fxn')
-   req.flash('success', 'Successful Blast');
+   //req.flash('success', 'Successful Blast');
    res.render('pages/refseq/blastn_results', {
     title: 'HOMD :: BLAST', 
     pgname: 'refseq_blast',
