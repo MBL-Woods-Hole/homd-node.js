@@ -171,7 +171,7 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
           console.log(err)
       }else{
           console.log('wrote batch blast file')
-          RunAndCheck(batchFile, render_page(req, res), {})
+          RunAndCheck(batchFile, render_page, [req, res])
           //RunAndCheck(batchFile, callback_function, callback_function_options)
       }
     })
@@ -225,7 +225,7 @@ function writeFilesFromContents(fileContents, req, res, blastOpts , blastDir) {
           console.log(err)
       }else{
           console.log('wrote batch blast file')
-          RunAndCheck(batchFile, render_page(req, res), {})
+          RunAndCheck(batchFile, render_page, [req, res])
           //RunAndCheck(batchFile, callback_function, callback_function_options)
       }
     })
@@ -286,7 +286,7 @@ async function readFileWriteFilesPromise(bigFilePath, req, res, blastOpts, blast
           console.log(err)
       }else{
           console.log('wrote batch blast file')
-          RunAndCheck(batchFile, render_page(req, res), {})
+          RunAndCheck(batchFile, render_page, [req, res])
           //RunAndCheck(batchFile, callback_function, callback_function_options)
           
       }
@@ -510,11 +510,10 @@ function RunAndCheck(script_path, callback_function, callback_function_options)
      let ary = output.split("\n");
      console.log("TTT output.split (ary) ");
      //console.log(util.inspect(ary, false, null));
-     let last_line = ary[ary.length - 1];
-     console.log('last_line:', last_line);
+     
      if (code === 0)
      {
-       callback_function(callback_function_options, last_line);
+       callback_function(callback_function_options);
      }
      else // code != 0
      {
