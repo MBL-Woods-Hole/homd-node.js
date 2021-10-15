@@ -384,10 +384,17 @@ module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFil
 // feu9hoakrcsg3r9cukjp5r36k7 389_0541_Abiotrophia_defectiva_HMT S ;\
 // #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
     //console.log(opts)
+    console.log('Hostname: ',CFG.HOSTNAME)
     for (let i = 0; i < fastaFilePaths.length; i++) {
        make_blast_script_txt += path.join(CFG.PATH_TO_BLAST_PROG, opts.program)
-       make_blast_script_txt += ' -db /Users/avoorhis/programming/blast/Bv6/Bv6'
-       //make_blast_script_txt += ' -db ' + opts.dbPath
+       if(CFG.HOSTNAME === 'MacBook-Air.local'){
+          make_blast_script_txt += ' -db /Users/avoorhis/programming/blast_db/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
+       }else if(CFG.HOSTNAME === 'MBL'){
+          make_blast_script_txt += ' -db /Users/avoorhis/programming/blast/Bv6/Bv6'
+       }else{   // HOMD
+          make_blast_script_txt += ' -db ' + opts.dbPath
+       }
+       
        make_blast_script_txt += ' -evalue ' + opts.expect
        make_blast_script_txt += ' -max_target_seqs ' + opts.descriptions
        //make_blast_script_txt += ' -num_alignments ' + opts.alignments
@@ -395,7 +402,7 @@ module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFil
        // 
        make_blast_script_txt += ' -query ' + fastaFilePaths[i]
        make_blast_script_txt += ' -outfmt 15'   //JSON
-       make_blast_script_txt += ' -out ' + dataDir + '/result_' + i.toString() + '.blast' 
+       make_blast_script_txt += ' -out ' + dataDir + '/result' + i.toString() + '.blast' 
        make_blast_script_txt += " 1>/dev/null 2>>" + dataDir + "/error.log;"
        
        make_blast_script_txt += '\n\n'
