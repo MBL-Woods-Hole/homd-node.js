@@ -4,6 +4,7 @@ const CFG  = require(app_root + '/config/config');
 const express     = require('express');
 const fs          = require('fs-extra');
 var accesslog = require('access-log');
+const async = require('async')
 //const nodemailer  = require('nodemailer');
 //let transporter = nodemailer.createTransport({});
 const util        = require('util');
@@ -113,11 +114,11 @@ module.exports.make_otid_display_name = (otid) =>{
     return 'HMT-'+("000" + otid.toString()).slice(-3);
 } 
 module.exports.clean_rank_name_for_show = (rank) =>{
-	// capitalise and fix klass => Class
-	if(rank == 'klass' || rank == 'Klass'){
-	   rank = 'Class'
-	}
-	return rank.charAt(0).toUpperCase() + rank.slice(1)
+    // capitalise and fix klass => Class
+    if(rank == 'klass' || rank == 'Klass'){
+       rank = 'Class'
+    }
+    return rank.charAt(0).toUpperCase() + rank.slice(1)
 }
 module.exports.make_lineage_string_with_links = function make_lineage_string_with_links(lineage_list, link) {
      var tmp = ''
@@ -401,7 +402,9 @@ module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFil
        // Error: Argument "num_alignments".num_descriptions Incompatible with argument:  `max_target_seqs'
        // 
        make_blast_script_txt += ' -query ' + fastaFilePaths[i]
-       make_blast_script_txt += ' -outfmt 15'   //JSON
+       make_blast_script_txt += ' -outfmt 15'   // single file: JSON
+       //make_blast_script_txt += ' -outfmt 16'   //single file:XML
+      // make_blast_script_txt += ' -html'   //JSON
        make_blast_script_txt += ' -out ' + dataDir + '/result' + i.toString() + '.blast' 
        make_blast_script_txt += " 1>/dev/null 2>>" + dataDir + "/error.log;"
        
@@ -412,3 +415,48 @@ module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFil
     //console.log(make_blast_script_txt)
     return make_blast_script_txt
 }
+module.exports.readFilesInDirectory = function readFilesInDirectory(directory, destination) {
+
+  return new Promise((resolve, reject) => {
+
+    fs.readdir(directory, (err, files) => {
+        if (err)
+            return reject(err);
+
+        files = files.map(file => path.join(directory,file));
+
+        //Read all files in parallel
+        async.map(files, fs.readFile, (err, results) => {
+            if (err)
+                return reject(err);
+
+           //results[0] contents of file #1
+           //results[1] contents of file #2
+           //results[n] ...
+
+            //Write the joined results to destination
+            // fs.writeFile(destination, results.join("\n"), (err) => {
+//                 if (err)
+//                     return reject(err);
+// 
+//                 resolve();
+//             });
+        });
+
+    });
+  });
+}
+//
+module.exports.readAsync = function readAsync(file, callback) {
+    console.log('Reading File:',file)
+    try {
+    if (fs.existsSync(file)) {
+    //file exists
+    }
+  } catch(err) {
+    console.error(err)
+  }
+    
+    fs.readFile(file, callback);
+}
+

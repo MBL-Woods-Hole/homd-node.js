@@ -9,56 +9,157 @@ const upload = multer({ dest: CFG.UPLOAD_DIR })
 const path      = require('path')
 const helpers   = require(app_root + '/routes/helpers/helpers')
 const C       = require(app_root + '/public/constants')
+const async = require('async')
 
-router.post('/refseq_blastn_1', upload.single('blastFile'),  function refseq_blastn_post1(req, res) {
-    console.log('MADEIT TO blastn-postTESTING')
-    console.log(req.body)
-    console.log(req.file)
-    // const patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
+// router.post('/refseq_blastn_1', upload.single('blastFile'),  function refseq_blastn_post1(req, res) {
+//     console.log('MADEIT TO blastn-postTESTING')
+//     console.log(req.body)
+//     console.log(req.file)
+//     // const patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
+//     
+//     const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i }
+//     //let blast_session_ts = Date.now().toString();
+//     let blast_session_ts = req.session.id
+//     const blast_directory = path.join(CFG.PATH_TO_BLAST_FILES, blast_session_ts)
+//     if (!fs.existsSync(blast_directory)){
+//          fs.mkdirSync(blast_directory);
+//     }
+//     if(req.file){
+//        followFilePath(req, res, opts, blast_directory)
+//     }else{
+//        followTextInputPath(req, res, opts,blast_directory)
+//     }
+//     
+//     
+//     // steps
+//     // move file
+//     // read file
+//     // console.log results
+//       
+//   // for text input
+//   //(async function () {
+//     // write single file
+//     
+//     // splint into separate files
+//     // write individulal blast file
+//     // write single qsubcommands file
+//   //await addGroceryItem('nutella', 1, 4);
+//   //})();
+//    //render_page(res)
+// })
+
+router.get('/blast_wait', function blastWait(req, res) {
+    console.log('in blast wait')
+    // need access to blast dir????
+    // session id??
     
-    const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i }
-    let blast_session_ts = Date.now().toString();
-    const blast_directory = path.join(CFG.PATH_TO_BLAST_FILES, blast_session_ts)
-    if (!fs.existsSync(blast_directory)){
-         fs.mkdirSync(blast_directory);
+    console.log('session blast_wait:')
+    console.log(req.session)
+    let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blastID)
+    req.session.blastCounter += 1
+    let blastResultsDir = path.join(blastDir,'results')
+    const result = getAllDirFiles(blastDir) // will give ALL files in ALL dirs
+    let finished = false,blastFiles=[],faFiles = []
+    for(i=0;i<result.length;i++){
+       if(result[i].endsWith('.fa')){
+          faFiles.push(result[i])
+       } 
+       if(result[i].endsWith('.out')){
+          blastFiles.push(path.join(blastResultsDir, result[i]))
+       } 
     }
-    if(req.file){
-       followFilePath(req, res, opts, blast_directory)
-    }else{
-       followTextInputPath(req, res, opts,blast_directory)
+    console.log(blastFiles)
+    if(blastFiles.length === faFiles.length && req.session.blastCounter > 1){
+       finished = true
     }
-    
-    
-    // steps
-    // move file
-    // read file
-    // console.log results
+    console.log('finished:t/f?',finished)
+    if(finished){
+      data = {}
+      async.map(blastFiles, helpers.readAsync, function(err, results) {
+           for(i=0;i<blastFiles.length;i++){
+              data['query'+i.toString()] = (JSON.parse(results[i])).BlastOutput2[0].report.results.search
+           
+           }
+           //console.log('data')
+          // console.log(data)
+           const html = getBlastHtml(data)
       
-  // for text input
-  //(async function () {
-    // write single file
+          res.render('pages/blast/blast_results', {
+            title: 'HOMD :: BLAST WAIT', 
+            pgname: 'blast_results',
+            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+            hostname: CFG.HOSTNAME,
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+            html: html
     
-    // splint into separate files
-    // write individulal blast file
-    // write single qsubcommands file
-  //await addGroceryItem('nutella', 1, 4);
-  //})();
-   render_page(res)
+          })
+      })
+      
+      
+      
+    }else{
+      res.render('pages/blast/blast_wait', {
+        title: 'HOMD :: BLAST WAIT', 
+        pgname: 'blast_wait',
+        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        hostname: CFG.HOSTNAME,
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+    
+      })
+      }
+    
+
 })
-function checkSeqLength(seq, minLength) {
-  if(inputSeqInput === ''){
-        req.flash('fail', 'No Query Sequence(s) were Entered');  // implement flash?
-        res.redirect('/refseq/refseq_blastn');  // this may be refseq or genome
-        return false;
-  }
-  if(inputSeqInput.length <= opts.minLength){  
-        req.flash('fail', 'Query length needs to be greater than 10bp');
-        res.redirect('/refseq/refseq_blastn');
-        return false
-  }
-  return true
-  
+function getBlastHtml(json){
+    let html = '<table>'
+    html += '<tr><th>Query</th><th>Length</th><th>Hit</th><th>HOMD Clone Name</th></tr>'
+    for(n in json){
+       
+       for(m=0; m<4; m++){   // take 4 hits only -- are they top hits??
+           html += '<tr><td>'+json[n].query_title+'</td><td>'+json[n].query_len+'</td>'
+           console.log(json[n].hits[m])
+           let desc = json[n].hits[m].description[0].title  // always take first desc ??
+           let id = desc.split('|')[0].trim()
+           html += '<td>'+id+'</td>'+'<td>'+desc+'</td></tr>'
+       }
+       
+    }
+    html += '</table>'
+    
+    
+     return html
 }
+function getAllDirFiles(dirPath, arrayOfFiles) {
+  files = fs.readdirSync(dirPath)
+
+  arrayOfFiles = arrayOfFiles || []
+
+  files.forEach(function(file) {
+    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+      arrayOfFiles = getAllDirFiles(dirPath + "/" + file, arrayOfFiles)
+    } else {
+      arrayOfFiles.push(file)
+    }
+  })
+
+  return arrayOfFiles
+}
+// function checkSeqLength(seq, minLength) {
+//   if(inputSeqInput === ''){
+//         req.flash('fail', 'No Query Sequence(s) were Entered');  // implement flash?
+//         res.redirect('/refseq/refseq_blastn');  // this may be refseq or genome
+//         return false;
+//   }
+//   if(inputSeqInput.length <= opts.minLength){  
+//         req.flash('fail', 'Query length needs to be greater than 10bp');
+//         res.redirect('/refseq/refseq_blastn');
+//         return false
+//   }
+//   return true
+//   
+// }
 function followFilePath(req, res, opts, blastOpts, blastDir, fileContents) {
   console.log('in File Path')
   
@@ -98,93 +199,93 @@ function followTextInputPathPyScript(req, res, opts, blastOpts, blastDir) {
   
 }
 //  TEXT Input
-function followTextInputPath(req, res, opts, blastOpts, blastDir) {
-  console.log('in TextEntry Path')
-  let inputSeqInput = req.body.inputSeq.trim();
-  let filePath,fileName,data,fastaAsList,trimLines,twoList
-  
-  let fileList = []
-  let fastaFilePaths = []
-  if (inputSeqInput[0] === '>'){
-     console.log('got fasta format')
-     var xtrim = inputSeqInput.split('>')  // split on > first then \r
-     // what if other > in defline? fail
-     console.log('xtrim')
-     console.log(xtrim)
-     if (xtrim.length > 5000){
-       req.flash('fail', 'Too many sequences entered: 5000 max');
-       res.redirect('/refseq/refseq_blastn');
-       return;
-     }
-     for (i = 0; i <= xtrim.length; i++) {
-         if(xtrim[i]){
-              fastaAsList =xtrim[i].split(/\r?\n/)
-              fastaAsList[0] = '>' + fastaAsList[0]
-              trimLines = fastaAsList.map(el => el.trim()) 
-              twoList = [trimLines[0],trimLines.slice(1, trimLines.length).join('')]
-              // validate newlist[1]
-              if(twoList[1].length <= opts.minLength){  
-                 // what to do here? delete?
-                 console.log('found short sequence: #', i.toString(), ' length: ', twoList[1].length)
-              }
-              twoList[1] = twoList[1].toUpperCase()
-              if ( opts.patt.test(twoList[1]) ){
-                 req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
-                 res.redirect('/refseq/refseq_blastn');
-                 return;
-              }
-              //console.log('Cleaned:',twoList)
-              data = twoList.join('\n') + '\n'
-              fileName = 'blast' + i.toString() + '.fa'
-              filePath = path.join(blastDir, fileName)
-              fastaFilePaths.push(filePath)
-              
-             fs.writeFile(filePath, data, (err) => {
-                if (err) console.log(err)
-              })
-
-         }
-       }  // end for i in xtrim
-       
-  } else {
-      // not fasta format -- MUST be single sequence
-      // single sequence
-      // validate
-     
-      inputSeqInput = inputSeqInput.toUpperCase()
-      if( opts.patt.test(inputSeqInput) ){
-        req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
-        res.redirect('/refseq/refseq_blastn');
-        return;
-      }
-      console.log('got valid single sequence')
-      fileName = 'blast1.fa'
-      filePath = path.join(blastDir, fileName)
-      fastaFilePaths = [filePath]
-      data = '>1\n'+inputSeqInput + '\n'
-      
-      
-      fs.writeFile(filePath, data, (err)=> {
-        if(err){
-          console.log(err)
-        } else {
-          //console.log("File written successfully -single\n", filePath);
-        }
-      })
-  }
-  
-  let command = helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir )
-  let batchFile = path.join(blastDir,'batch.sh')
-  fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {
-      if(err){
-          console.log(err)
-      }else{
-          //console.log('wrote batch blast file')
-          RunAndCheck(batchFile, render_page, [req, res])
-          //RunAndCheck(batchFile, callback_function, callback_function_options)
-      }
-    })
-}
+// function followTextInputPath(req, res, opts, blastOpts, blastDir) {
+//   console.log('in TextEntry Path')
+//   let inputSeqInput = req.body.inputSeq.trim();
+//   let filePath,fileName,data,fastaAsList,trimLines,twoList
+//   
+//   let fileList = []
+//   let fastaFilePaths = []
+//   if (inputSeqInput[0] === '>'){
+//      console.log('got fasta format')
+//      var xtrim = inputSeqInput.split('>')  // split on > first then \r
+//      // what if other > in defline? fail
+//      console.log('xtrim')
+//      console.log(xtrim)
+//      if (xtrim.length > 5000){
+//        req.flash('fail', 'Too many sequences entered: 5000 max');
+//        res.redirect('/refseq/refseq_blastn');
+//        return;
+//      }
+//      for (i = 0; i <= xtrim.length; i++) {
+//          if(xtrim[i]){
+//               fastaAsList =xtrim[i].split(/\r?\n/)
+//               fastaAsList[0] = '>' + fastaAsList[0]
+//               trimLines = fastaAsList.map(el => el.trim()) 
+//               twoList = [trimLines[0],trimLines.slice(1, trimLines.length).join('')]
+//               // validate newlist[1]
+//               if(twoList[1].length <= opts.minLength){  
+//                  // what to do here? delete?
+//                  console.log('found short sequence: #', i.toString(), ' length: ', twoList[1].length)
+//               }
+//               twoList[1] = twoList[1].toUpperCase()
+//               if ( opts.patt.test(twoList[1]) ){
+//                  req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
+//                  res.redirect('/refseq/refseq_blastn');
+//                  return;
+//               }
+//               //console.log('Cleaned:',twoList)
+//               data = twoList.join('\n') + '\n'
+//               fileName = 'blast' + i.toString() + '.fa'
+//               filePath = path.join(blastDir, fileName)
+//               fastaFilePaths.push(filePath)
+//               
+//              fs.writeFile(filePath, data, (err) => {
+//                 if (err) console.log(err)
+//               })
+// 
+//          }
+//        }  // end for i in xtrim
+//        
+//   } else {
+//       // not fasta format -- MUST be single sequence
+//       // single sequence
+//       // validate
+//      
+//       inputSeqInput = inputSeqInput.toUpperCase()
+//       if( opts.patt.test(inputSeqInput) ){
+//         req.flash('fail', 'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.');
+//         res.redirect('/refseq/refseq_blastn');
+//         return;
+//       }
+//       console.log('got valid single sequence')
+//       fileName = 'blast1.fa'
+//       filePath = path.join(blastDir, fileName)
+//       fastaFilePaths = [filePath]
+//       data = '>1\n'+inputSeqInput + '\n'
+//       
+//       
+//       fs.writeFile(filePath, data, (err)=> {
+//         if(err){
+//           console.log(err)
+//         } else {
+//           //console.log("File written successfully -single\n", filePath);
+//         }
+//       })
+//   }
+//   
+//   let command = helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir )
+//   let batchFile = path.join(blastDir,'batch.sh')
+//   fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {
+//       if(err){
+//           console.log(err)
+//       }else{
+//           //console.log('wrote batch blast file')
+//           RunAndCheck(batchFile, render_page, [req, res])
+//           //RunAndCheck(batchFile, callback_function, callback_function_options)
+//       }
+//     })
+// }
 // // https://www.digitalocean.com/community/tutorials/how-to-work-with-files-using-the-fs-module-in-node-js
 // function writeFilesFromContents(fileContents, req, res, blastOpts , blastDir) {
 //     console.log('In writeFilesFromContents - no promises')
@@ -241,73 +342,73 @@ function followTextInputPath(req, res, opts, blastOpts, blastDir) {
 // }
 
 
-async function readFileWriteFilesPromise(bigFilePath, req, res, blastOpts, blastDir ) {
-  
-  console.log('in readFileWriteFilesPromise')
-  try {
-    const data = await fsp.readFile(bigFilePath);
-    //console.log(data.toString())
-    const lines = (data.toString().trim()).split('\n')
-    let count = 0
-    let lastLine = false
-    let fastaFilePaths = []
-    for(let n = 0; n < lines.length; n++){
-       console.log('line::',lines[n])
-       if(!lines[n]){
-          continue
-       }
-       if( lines[parseInt(n)+1] === undefined ){
-          lastLine = true
-       }
-       
-       //console.log('')
-       //console.log(lines[n])
-       //write_file=false
-       
-       if(lines[n][0] === '>'){
-          // here write the file from previous
-          
-          //newFile = true
-          fileName = 'blast'+ count.toString()+'.fa'
-          fastaFilePath = path.join(blastDir, fileName)
-          fastaFilePaths.push(fastaFilePath)
-          fileText = lines[n].trim() + '\n'
-          count += 1
-       }else{
-          fileText += lines[n].trim() + '\n'
-          //write_file=true
-          
-       }
-       //console.log('lines[n+1]')
-       //console.log(lines[parseInt(n)+1])
-       if( lastLine || (n > 0  && lines[parseInt(n)+1][0] === '>')){
-         fs.writeFile(fastaFilePath, fileText, function(err) {
-             if(err) console.log(err)
-             //else console.log('wrote file',fastaFilePath)
-          })
-       }
-    }
-    
-    let command = helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir)
-    let batchFile = path.join(blastDir, 'batch.sh')
-    fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {  // executable
-      if(err){
-          console.log(err)
-      }else{
-          //console.log('wrote batch blast file')
-          RunAndCheck(batchFile, render_page, [req, res])
-          //RunAndCheck(batchFile, callback_function, callback_function_options)
-          
-      }
-    })
-    
-    
-  } catch (error) {
-    console.error('Got an error trying to read the file: ',error);
-    
-  }
-  
-}
+// async function readFileWriteFilesPromise(bigFilePath, req, res, blastOpts, blastDir ) {
+//   
+//   console.log('in readFileWriteFilesPromise')
+//   try {
+//     const data = await fsp.readFile(bigFilePath);
+//     //console.log(data.toString())
+//     const lines = (data.toString().trim()).split('\n')
+//     let count = 0
+//     let lastLine = false
+//     let fastaFilePaths = []
+//     for(let n = 0; n < lines.length; n++){
+//        console.log('line::',lines[n])
+//        if(!lines[n]){
+//           continue
+//        }
+//        if( lines[parseInt(n)+1] === undefined ){
+//           lastLine = true
+//        }
+//        
+//        //console.log('')
+//        //console.log(lines[n])
+//        //write_file=false
+//        
+//        if(lines[n][0] === '>'){
+//           // here write the file from previous
+//           
+//           //newFile = true
+//           fileName = 'blast'+ count.toString()+'.fa'
+//           fastaFilePath = path.join(blastDir, fileName)
+//           fastaFilePaths.push(fastaFilePath)
+//           fileText = lines[n].trim() + '\n'
+//           count += 1
+//        }else{
+//           fileText += lines[n].trim() + '\n'
+//           //write_file=true
+//           
+//        }
+//        //console.log('lines[n+1]')
+//        //console.log(lines[parseInt(n)+1])
+//        if( lastLine || (n > 0  && lines[parseInt(n)+1][0] === '>')){
+//          fs.writeFile(fastaFilePath, fileText, function(err) {
+//              if(err) console.log(err)
+//              //else console.log('wrote file',fastaFilePath)
+//           })
+//        }
+//     }
+//     
+//     let command = helpers.createBlastCommandFile(fastaFilePaths, blastOpts , blastDir)
+//     let batchFile = path.join(blastDir, 'batch.sh')
+//     fs.writeFile(batchFile, command, { mode: 0o755 }, function(err) {  // executable
+//       if(err){
+//           console.log(err)
+//       }else{
+//           //console.log('wrote batch blast file')
+//           RunAndCheck(batchFile, render_page, [req, res])
+//           //RunAndCheck(batchFile, callback_function, callback_function_options)
+//           
+//       }
+//     })
+//     
+//     
+//   } catch (error) {
+//     console.error('Got an error trying to read the file: ',error);
+//     
+//   }
+//   
+// }
 async function writeFile(filePath, data) {
   try {
     await fsp.writeFile(filePath, data);
@@ -335,32 +436,32 @@ async function moveFile(source, destination) {
   }
 }
 
-let render_page = function render_page(opts) {
-   console.log('in render page fxn')
-   
-   opts[1].render('pages/refseq/blastn_results', {
-    title: 'HOMD :: BLAST', 
-    pgname: 'refseq_blast',
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    hostname: CFG.HOSTNAME,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-    
-   })
-}
-let render_wait_page = function render_wait_page(opts) {
-   console.log('in render wait blast page fxn')
-   
-   opts[1].render('pages/blast/blast_wait', {
-    title: 'HOMD :: BLAST', 
-    pgname: 'blast_wait',
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    hostname: CFG.HOSTNAME,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-    
-   })
-}
+// let render_page = function render_page(opts) {
+//    console.log('in render page fxn')
+//    
+//    opts[1].render('pages/refseq/blastn_results', {
+//     title: 'HOMD :: BLAST', 
+//     pgname: 'refseq_blast',
+//     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//     hostname: CFG.HOSTNAME,
+//     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//     db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+//     
+//    })
+// }
+// let render_wait_page = function render_wait_page(opts) {
+//    console.log('in render wait blast page fxn')
+//    
+//    opts[1].render('pages/blast/blast_wait', {
+//     title: 'HOMD :: BLAST', 
+//     pgname: 'blast_wait',
+//     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//     hostname: CFG.HOSTNAME,
+//     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//     db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+//     
+//    })
+// }
 router.post('/blast_post', upload.single('blastFile'),  function blast_post(req, res) {
     console.log('MADEIT TO blastPost')
   console.log(req.body)
@@ -383,8 +484,11 @@ router.post('/blast_post', upload.single('blastFile'),  function blast_post(req,
   if(req.body.blastFilter){
     blastOpts.fitler = '-F F'
   }
-  let blast_session_ts = Date.now().toString();
-  const blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blast_session_ts)
+  //let blast_session_ts = Date.now().toString();
+  const randomnum = Math.floor(Math.random() * 90000) + 10000;
+  opts.blastSessionID = req.session.id + '-' + randomnum.toString()
+  
+  const blastDir = path.join(CFG.PATH_TO_BLAST_FILES, opts.blastSessionID)
   if (!fs.existsSync(blastDir)){
        fs.mkdirSync(blastDir);
   }
@@ -428,6 +532,7 @@ router.post('/blast_post', upload.single('blastFile'),  function blast_post(req,
 //
 //
 function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy){
+    console.log('In runPyScript')
     // here run pyscript
     // then render and return to restart q 5sec
     let pyscriptOpts 
@@ -456,33 +561,43 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy){
     
     
     //let pyscriptOpts =  ['-t',opts.type]
-    console.log('running py script ')
-    
+    console.log('running py script: ')
+    console.log(pyscript, pyscriptOpts.join(' '))
     const pythonRun = spawn(pyscript, pyscriptOpts, {
-                    env:{'PATH':CFG.PATH},
-                    detached: true, stdio: 'pipe'
-            });
+                env:{'PATH': CFG.PATH},
+                detached: true, stdio: 'pipe'
+    });
     
     pythonRun.stdout.on('data', function (data) {
       console.log('Pipe data from python script ...');
-      dataToSend = data.toString();
+      dataPyToSend = data.toString();
     });
-    // pythonRun.on('close', (code) => {
-//       console.log(`child process close all stdio with code ${code}`);
-//       // send data to browser for testing
-//       res.send(dataToSend)
-//     });
-   
-   //render_wait_page([req,res])
-   res.render('pages/blast/blast_wait', {
-    title: 'HOMD :: BLAST', 
-    pgname: 'blast_wait',
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    hostname: CFG.HOSTNAME,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+    pythonRun.stderr.on('data', function (data) {
+      console.log('ERR',data.toString());
+    });
     
-   })
+    testing = false
+    
+    if(testing){
+        pythonRun.on('close', (code) => {
+          console.log(`child process close all stdio with code ${code}`);
+          // send data to browser for testing
+          res.send(dataPyToSend)
+        });
+    }else{
+        // respond immediately
+        console.log('session BLASTING')
+        //res.cookie('blastDir',blastDir);
+        //req.session.cookie.blastid = blastDir
+        const oneDayToSeconds = 24 * 60 * 60;  // hr/d min/hr sec/min
+        req.session.blastID = opts.blastSessionID
+        req.session.blastCounter = 0
+        console.log(req.session)
+        res.redirect('blast_wait')   // MUST run at least once
+    }
+   
+   
+     
      
 }
 
@@ -643,57 +758,57 @@ function writeBlastConfig(dir, data) {
 // //   })
 // })
 //
-function RunAndCheck(script_path, callback_function, callback_function_options)
-{
-  // http://krasimirtsonev.com/blog/article/Nodejs-managing-child-processes-starting-stopping-exec-spawn
-  console.log("in RunAndCheck");
-  console.log("script_path: " + script_path);
-
-  const exec = require('child_process').exec;
-  // TODO:  use file_path_obj;
-  //const opts = {env:{'PATH': CFG.PATH,'LD_LIBRARY_PATH': CFG.LD_LIBRARY_PATH} }
-  //const child = exec(script_path, opts);
-  const child = exec(script_path);
-  //var scriptlog1 = path.join(CFG.USER_FILES_BASE, req.user.username,'project-'+project, 'matrix_log1.txt');
-  
-  // var child = spawn(script_path, [], {
-//                             env:{'PATH':CFG.PATH,'LD_LIBRARY_PATH':CFG.LD_LIBRARY_PATH},
-//                             detached: true, stdio: 'pipe'
-//                         });
-  let output = '';
-  
-  child.stdout.on('data', function AddDataToOutput(data) {
-        data = data.toString().trim();
-        output += data;
-        console.log('stdout: ' + data);
-        //CheckIfPID(data);
-  });
-  
- 
-  
-  child.stderr.on('data', data => {
-      console.log('stderr: ' + data);
-  });
-  
-  child.on('close', function checkExitCode(code) {
-     console.log('From RunAndCheck process exited with code ' + code);
-     let ary = output.split("\n");
-     console.log("TTT output.split (ary) ");
-     //console.log(util.inspect(ary, false, null));
-     
-     if (code === 0)
-     {
-       //callback_function(callback_function_options);
-     }
-     else // code != 0
-     {
-       console.log('FAILED',script_path)
-       //failedCode(req, res, path.join(CFG.USER_FILES_BASE, req.user.username, 'project-' + project), project, last_line);
-     }
-  });
-
- 
-}
+// function RunAndCheck(script_path, callback_function, callback_function_options)
+// {
+//   // http://krasimirtsonev.com/blog/article/Nodejs-managing-child-processes-starting-stopping-exec-spawn
+//   console.log("in RunAndCheck");
+//   console.log("script_path: " + script_path);
+// 
+//   const exec = require('child_process').exec;
+//   // TODO:  use file_path_obj;
+//   //const opts = {env:{'PATH': CFG.PATH,'LD_LIBRARY_PATH': CFG.LD_LIBRARY_PATH} }
+//   //const child = exec(script_path, opts);
+//   const child = exec(script_path);
+//   //var scriptlog1 = path.join(CFG.USER_FILES_BASE, req.user.username,'project-'+project, 'matrix_log1.txt');
+//   
+//   // var child = spawn(script_path, [], {
+// //                             env:{'PATH':CFG.PATH,'LD_LIBRARY_PATH':CFG.LD_LIBRARY_PATH},
+// //                             detached: true, stdio: 'pipe'
+// //                         });
+//   let output = '';
+//   
+//   child.stdout.on('data', function AddDataToOutput(data) {
+//         data = data.toString().trim();
+//         output += data;
+//         console.log('stdout: ' + data);
+//         //CheckIfPID(data);
+//   });
+//   
+//  
+//   
+//   child.stderr.on('data', data => {
+//       console.log('stderr: ' + data);
+//   });
+//   
+//   child.on('close', function checkExitCode(code) {
+//      console.log('From RunAndCheck process exited with code ' + code);
+//      let ary = output.split("\n");
+//      console.log("TTT output.split (ary) ");
+//      //console.log(util.inspect(ary, false, null));
+//      
+//      if (code === 0)
+//      {
+//        //callback_function(callback_function_options);
+//      }
+//      else // code != 0
+//      {
+//        console.log('FAILED',script_path)
+//        //failedCode(req, res, path.join(CFG.USER_FILES_BASE, req.user.username, 'project-' + project), project, last_line);
+//      }
+//   });
+// 
+//  
+// }
 function readFileWriteFiles(dir, bigFilePath) {
     console.log('in readFileWriteFiles - no Promises')
     readFileContent(bigFilePath, function (err, content) {

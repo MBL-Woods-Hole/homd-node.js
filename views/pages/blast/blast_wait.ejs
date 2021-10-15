@@ -13,6 +13,8 @@
        <div class='title'>BLAST WAIT</div>
        
        <br>will refresh every 5 seconds and present the blast results page when complete.
+       <br><br>
+       <div id='show'>This page will reload in <span id="cnt" style="color:red;">5</span> Seconds</div>
     
   
     </div> <!-- end: page-content -->
@@ -30,9 +32,56 @@
 <script>
   mainmenu()
   
-  // setTimeout(function(){
+ //  setTimeout(function(){
 //    window.location.reload(1);
 // }, 5000);
+
+var counter = 5;   // start decrement
+var endAt =   60000;  // one min =  5000 * 12
+var timeout = setTimeout("location.reload(true);",5000);  // 5 seconds
+// call this function when want to stop refreshes
+  function resetTimeout() {
+    clearTimeout(timeout);
+    //timeout = setTimeout("location.reload(true);",5000);
+  }
+  
+  
+    // The countdown method.
+//     var intervalId1 = window.setInterval(function () {
+//         counter--;
+//         if (counter >= 0) {
+//             var span;
+//             span = document.getElementById("cnt");
+//             span.innerHTML = counter;
+//         }
+//         if (counter === 0) {
+//             clearInterval(counter);
+//         }
+// 
+//     }, 1000);  // one second
+// 
+//     var intervalId2 = window.setInterval('refresh()', 5000);  // 5000 == 5 seconds
+// 
+//     // Refresh or reload page.
+//     function refresh() {
+//         window.location.reload();
+//     }
+    
+    
+    
+//   function refresh() {
+//        var randomnumber = Math.floor(Math.random() * 100);
+//        $('#show').text('I am getting refreshed every 5 seconds..! Random Number ==> ' + randomnumber);
+//        //window.location.reload();
+//      }
+// 
+// var intervalId = setInterval(refresh, 10 * 500);
+// 
+// setTimeout(function () {
+//     clearInterval2(intervalId1);
+//     clearInterval2(intervalId2);
+//     alert('refresh stop!');
+// }, 30000);   // end refreshing in 1min=60000ms
 </script>
 
 

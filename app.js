@@ -1,7 +1,7 @@
 "use strict"
 // for newrelic: start in config.js
 //const winston = require('winston');
-const config = require('./config/config');
+const CFG = require('./config/config');
 const taxdbconn = require('./config/database').taxon_pool;
 const annodbconn = require('./config/database').taxon_pool2;
 //const gendbconn = require('./config/database').genome_pool;
@@ -11,6 +11,7 @@ global.TDBConn = taxdbconn;   // database:  homd
 global.ADBConn = annodbconn;
 global.app_root = path.resolve(__dirname);
 const C = require('./public/constants');
+const helpers   = require(app_root + '/routes/helpers/helpers')
 const fs = require('fs-extra');
 //const createIframe = require("node-iframe");
 const express = require('express');
@@ -19,8 +20,8 @@ const express = require('express');
 const router = express.Router();
 const session = require('express-session');
 const passport = require('passport');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
+//const logger = require('morgan');
+//const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
 //const favicon = require('serve-favicon');
@@ -55,7 +56,7 @@ app.set('view engine', 'ejs');
 //app.engine('html', require('ejs').renderFile);
 //
 // MIDDLEWARE  <-- must be in correct order:
-app.use(logger('dev'));
+//app.use(logger('dev'));
 //app.use(bodyParser({limit: 1024000000 })); // 1024MB
 // app.use(bodyParser({uploadDir:'./uploads'}));
 //app.use(createIframe);
@@ -82,13 +83,13 @@ app.use(session({
 
 app.use(express.static('public'));
 //app.use(express.static(config.jbrowse_data));
-app.set('jbdata', config.jbrowse_data);
+app.set('jbdata', CFG.jbrowse_data);
 app.use(express.static('tmp'));
 //app.use('/genomes', express.static(__dirname + 'jbrowse2/static/js'))
 //upload.single('singleInputFileName')
 //app.use(upload.single('singleInputFileName'));  // for multipart uploads: files
 
-app.use(cookieParser());
+//app.use(cookieParser());
 
 //app.use(compression());
 /**
@@ -123,7 +124,7 @@ app.use(function(req, res, next){
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
-      config : JSON.stringify({hostname:config.HOSTNAME,env:config.ENV}),
+      config : JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
     });
     return;
@@ -148,36 +149,22 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 //
 var data_init_files =[
   
-  C.taxon_lookup_fn,
-    C.lineage_lookup_fn ,
-  C.tax_hierarchy_fn,  // gives you taxonomy lineage
-  C.genome_lookup_fn,
-  C.refseq_lookup_fn,
-  C.references_lookup_fn,
-  C.info_lookup_fn,
-  C.taxcounts_fn,
-  C.annotation_lookup_fn,
-  C.phage_lookup_fn,
-  
+  path.join(CFG.PATH_TO_DATA, C.taxon_lookup_fn),
+  path.join(CFG.PATH_TO_DATA, C.lineage_lookup_fn) ,
+  path.join(CFG.PATH_TO_DATA, C.tax_hierarchy_fn),  // gives you taxonomy lineage
+  path.join(CFG.PATH_TO_DATA, C.genome_lookup_fn),
+  path.join(CFG.PATH_TO_DATA, C.refseq_lookup_fn),
+  path.join(CFG.PATH_TO_DATA, C.references_lookup_fn),
+  path.join(CFG.PATH_TO_DATA, C.info_lookup_fn),
+  path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),
+  path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),
+  path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn)
   
 ]
-console.log('Path to Data Files:',config.PATH_TO_DATA)
-function readAsync(file, callback) {
-    console.log('Reading File:',path.join(config.PATH_TO_DATA, file))
-    try {
-    if (fs.existsSync(path.join(config.PATH_TO_DATA, file))) {
-    //file exists
-    }
-  } catch(err) {
-    console.error(err)
-  }
-    
-    fs.readFile(path.join(config.PATH_TO_DATA, file), callback);
-}
+console.log('Path to Data Files:',CFG.PATH_TO_DATA)
 
 
-
-async.map(data_init_files, readAsync, function(err, results) {
+async.map(data_init_files, helpers.readAsync, function(err, results) {
     // results = ['file 1 content', 'file 2 content', ...]
     // add the data to CONSTANTS so they are availible everywhere
     // the lookups are keyed on Oral_taxon_id
@@ -258,56 +245,56 @@ async.map(data_init_files, readAsync, function(err, results) {
     console.log("number of genera with parent_id='0': ",num_zeros," :Bad if not zero!")
 });
 
-// fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[0]), (err, results) => {
+// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[0]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
 //   C.taxon_lookup               = JSON.parse(results);
 // })
-// fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[1]), (err, results) => {
+// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[1]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
 //   C.taxon_lineage_lookup             = JSON.parse(results);
 // })
-// fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[2]), (err, results) => {
+// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[2]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
 //   C.homd_taxonomy =  new CustomTaxa(JSON.parse(results));
 // })
-// fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[3]), (err, results) => {
+// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[3]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
 //   C.genome_lookup              = JSON.parse(results);
 // })
-// fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[4]), (err, results) => {
+// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[4]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
 //   C.refseq_lookup              = JSON.parse(results);
 // })
-// fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[5]), (err, results) => {
+// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[5]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
 //   C.taxon_references_lookup              = JSON.parse(results);
 // })
-// fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[6]), (err, results) => {
+// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[6]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
 //   }
 //   C.taxon_info_lookup              = JSON.parse(results);
 // })
-// fs.readFile(path.join(config.PATH_TO_DATA, data_init_files[7]), (err, results) => {
+// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[7]), (err, results) => {
 //   if (err) {
 //     console.error(err)
 //     return
