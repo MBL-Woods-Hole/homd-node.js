@@ -1,5 +1,12 @@
 <style>
+#blast-wait-box{
+   background: lightblue;
+   padding:20px;
+   border: 1px solid grey;
+   width: 70%;
+}
 </style>
+<% error_obj = JSON.parse(error) %>
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -11,11 +18,30 @@
     <div class='page-content' >
               
        <div class='title'>BLAST WAIT</div>
+    <% if(error_obj.code) { %>
+       <div class='error'>
+       <%- error_obj.msg %>
+       </div>
+         <!-- turn off timer -->
+        <% timer = 'off' %>
+    <% }else{ %>
+       <% timer = 'on' %>
+      <center>
+      <div id='blast-wait-box'>
+         <br>Will refresh every 5 seconds and present the blast results page when complete.
        
-       <br>will refresh every 5 seconds and present the blast results page when complete.
-       <br><br>
-       <div id='show'>This page will reload in <span id="cnt" style="color:red;">5</span> Seconds</div>
-    
+         <br>
+         
+         <% if(filesFinished >0){ %>
+              Sequences Finished:  <%= filesFinished %> out of <%= filesStarted %>
+         <% }else{ %>
+              <span id='proc'>Processing</span>
+         <% } %>
+         <br><br>
+         <span id='show'>This page will reload in <span id="cnt" style="color:red;">5</span> Seconds</span>
+      </div>
+      </center>
+    <% } %>
   
     </div> <!-- end: page-content -->
     
@@ -38,27 +64,29 @@
 
 var counter = 5;   // start decrement
 var endAt =   60000;  // one min =  5000 * 12
-var timeout = setTimeout("location.reload(true);",5000);  // 5 seconds
-// call this function when want to stop refreshes
+////////////////////////////////////
+// this works
+  var timeout = setTimeout("location.reload(true);",5000);  // 5 seconds
+  // call this function when want to stop refreshes
   function resetTimeout() {
     clearTimeout(timeout);
     //timeout = setTimeout("location.reload(true);",5000);
   }
+///////////////////////////////////  
   
-  
-    // The countdown method.
-//     var intervalId1 = window.setInterval(function () {
-//         counter--;
-//         if (counter >= 0) {
-//             var span;
-//             span = document.getElementById("cnt");
-//             span.innerHTML = counter;
-//         }
-//         if (counter === 0) {
-//             clearInterval(counter);
-//         }
-// 
-//     }, 1000);  // one second
+// The countdown method.
+var intervalId1 = window.setInterval(function () {
+    counter--;
+    if (counter >= 0) {
+        var span;
+        span = document.getElementById("cnt");
+        document.getElementById("proc").innerHTML = '##'.repeat(counter * 2)
+        span.innerHTML = counter;
+    }
+    if (counter === 0) {
+        clearInterval(counter);
+    }
+}, 1000);  // one second}}
 // 
 //     var intervalId2 = window.setInterval('refresh()', 5000);  // 5000 == 5 seconds
 // 

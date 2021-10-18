@@ -3,46 +3,43 @@
 import os,sys
 import argparse
 import datetime
-import configparser
+import json
 import subprocess
+import re
 
 myusage = """
    to be run from homd-node.js  
 
 """
 parser = argparse.ArgumentParser(description="", usage=myusage)
-# parser.add_argument("-t", '--datatype', required=False, action="store",   dest = "datatype", default=None) 
-# parser.add_argument("-d", '--directory',required=False, action="store",   dest = "datadir", default=None) 
-# parser.add_argument("-text", '--text',   required=False, action="store",   dest = "textstring", default=None)
-# parser.add_argument("-f", '--filepath', required=False, action="store",   dest = "filepath", default=None)
-# parser.add_argument("-db", '--blastdbpath', required=False, action="store",   dest = "blastdb", default=None)
-# parser.add_argument("-a", '--advancedopts', required=False, action="store",   dest = "advancedopts", default=None)
-# parser.add_argument("-n", '--resultsreturned', required=False, action="store",   dest = "resret", default=None)
-# parser.add_argument("-p", '--blastprogram', required=False, action="store",   dest = "blastprogram", default=None)
-# parser.add_argument("-e", '--expect', required=False, action="store",   dest = "expect", default=None)
 
 parser.add_argument("-c", '--config', required=False, action="store",   dest = "config", default=None)
+parser.add_argument("-v", '--verbose', required=False, action="store_true",   dest = "verbose", default=False)
 
 
 
 args = parser.parse_args()  
 
-print('Hello from python script: '+args.config+'<br>')
-
-print(sys.argv)
+print('[PYSCRIPT]::Hello from pyscript: '+args.config+'<br>')
+print('[PYSCRIPT]::Command:')
 for n in sys.argv:
-  print(n)
+    print(n,end=' ')
+
+f = open(args.config)
+details_dict = json.load(f)
+#print(details_dict)
+#config = configparser.RawConfigParser()   
+#config.read(args.config)
+#details_dict = dict(config.items('MAIN'))
 
 
-config = configparser.RawConfigParser()   
-
-config.read(args.config)
-details_dict = dict(config.items('MAIN'))
-print(details_dict)
+    
 
 def processFile(args, details_dict):
     files = []
-    with open(details_dict['filepath']) as infile:
+    if args.verbose:
+      print('processing',details_dict['filePath'])
+    with open(details_dict['filePath']) as infile:
     
       seqcount = 0
       count = 0
@@ -57,7 +54,7 @@ def processFile(args, details_dict):
             if count > 0:
                 write_file(fastaFilePath, entry)
             fileName = 'blast'+ str(seqcount)+'.fa'
-            fastaFilePath = os.path.join(details_dict['blastdir'], fileName)
+            fastaFilePath = os.path.join(details_dict['blastDir'], fileName)
             files.append(fileName)
             
             entry = line.strip()+'\n'
@@ -77,9 +74,10 @@ def write_file(path, data):
     f.close() 
 
 def processTextIntoFiles(args, details_dict):
-    print('<br>in process')
+    if args.verbose:
+        print('<br>in processTextIntoFiles')
     
-    textInput = (details_dict['textinput']).strip().strip('"')
+    textInput = (details_dict['textInput']).strip().strip('"')
     
     files = []
     if textInput[0] == '>':
@@ -89,42 +87,62 @@ def processTextIntoFiles(args, details_dict):
         seqcount = 0
         count = 0
         lastLine = False
-        print()
+        if args.verbose:
+            print()
         for line in lines_split:
             line = line.strip()
-            print('line',line)
+            if args.verbose:
+                print('line',line)
             if not line:
                 continue
             
             if count == len(lines_split)-1 :
                 lastLine = True
+                if args.verbose:
+                    print('found lastline',line)
            
             if line[0] == '>':
                 fileName = 'blast'+ str(seqcount)+'.fa'
-                fastaFilePath = os.path.join(details_dict['blastdir'], fileName)
+                fastaFilePath = os.path.join(details_dict['blastDir'], fileName)
                 files.append(fileName)
                 
                 entry = line.strip() + '\n'
                 
                 seqcount += 1
             else:
-                entry += line.strip()
+                entry += line.strip().upper()
             
-            if lastLine or (count > 0  and lines_split[count+1][0] == '>'):
+            if lastLine or (count > 0  and lines_split[count+1].strip()[0] == '>'):
+                if args.verbose:
+                  print('\nwriting',fastaFilePath)
                 write_file(fastaFilePath, entry) 
         
             count += 1
         
     else:
-        print('<br>in process single')
-        # single naked sequence
-        fileName = 'blast0.fa'
-        fileNamePath = os.path.join(details_dict['blastdir'], fileName)
-        files.append(fileName)
-        write_file(fileNamePath, '>1\n'+textInput+'\n')
+        if args.verbose:
+            print('<br>in process single')
+        textInput = textInput.upper()
+        if validate(textInput):
         
-    
+            # single naked sequence
+            fileName = 'blast0.fa'
+            fileNamePath = os.path.join(details_dict['blastDir'], fileName)
+            files.append(fileName)
+            write_file(fileNamePath, '>1\n'+textInput+'\n')
+        else:
+           sys.exit('ERROR--Invalid Characters')
+        
     return files
+    
+def validate(string):
+    re2 =  re.compile(r"^[ATCGUKSYMWRBDHVN]*$")
+    #patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
+    if re2.search(string):
+        return True
+    else:
+        return False
+
 
 def batchBlastFile(args, filesArray, details_dict):
     fileText ='#!/bin/bash\n\n'
@@ -136,30 +154,29 @@ def batchBlastFile(args, filesArray, details_dict):
             fileText += ' -db /Users/avoorhis/programming/blast_db/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
         elif details_dict['site'] == 'MBL':
             fileText += ' -db /Users/avoorhis/programming/blast/Bv6/Bv6'
-        else:   # HOMD
-            fileText += ' -db ' + details_dict['blastdbpath']
+        else:   # HOMD Default
+            fileText += ' -db ' + details_dict['blastdbPath']
         fileText += ' -evalue ' + details_dict['expect']
-        fileText += ' -max_target_seqs ' + details_dict['numresults']
+        fileText += ' -max_target_seqs ' + details_dict['numResults']
    
-        fileText += ' -query ' + os.path.join(details_dict['blastdir'],file)
+        fileText += ' -query ' + os.path.join(details_dict['blastDir'],file)
         fileText += ' -outfmt 15'   ##JSON
-        fileText += ' -out ' +  os.path.join(details_dict['blastdir'],'results', file+'.out') 
-        fileText += " 1>/dev/null 2>>" + details_dict['blastdir'] + "/error.log;"
+        fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'results', file+'.out') 
+        fileText += " 1>/dev/null 2>>" + details_dict['blastDir'] + "/error.log;"
         fileText += '\n'
     
     return fileText
     
 # def run(args):
 #   print('running')
-  
+#sys.exit('ERROR--Test error handling from pyscript') 
   
 # filepath takes presidence over text
-if details_dict['filepath']:
+if details_dict['filePath']:
    # read line by line and write into separate files
    filesArray = processFile(args,details_dict)
-elif details_dict['textinput']:
+elif details_dict['textInput']:
    #text may be LARGE
-   print('<br>Got Text')
    # separate into separate sequences (may be just one)
    filesArray = processTextIntoFiles(args,details_dict)
    # write into separate files
@@ -167,11 +184,8 @@ else:
    print('Could not find file or text - must exit')
    sys.exit('Could not find file or text - must exit')  
 
-# write batch blast shell script then run it
-print()
-# for file in filesArray:
-#     print('<br>',file)
-outDir = os.path.join(details_dict['blastdir'],'results')
+
+outDir = os.path.join(details_dict['blastDir'],'results')
 try:
     os.makedirs(outDir)
 except FileExistsError:
@@ -179,7 +193,7 @@ except FileExistsError:
 
 batchText = batchBlastFile(args, filesArray, details_dict)
 batchFileName = 'blast.sh'
-batchFileNamePath = os.path.join(details_dict['blastdir'],'blast.sh')
+batchFileNamePath = os.path.join(details_dict['blastDir'],'blast.sh')
 write_file(batchFileNamePath, batchText)
 os.chmod(batchFileNamePath, 0o775)   # make executable
 return_code = subprocess.run(batchFileNamePath)
@@ -198,69 +212,28 @@ if __name__ == '__main__':
 
 parser.add_argument("-c", '--config', required=False, action="store",   dest = "config", default=None)
 
+run_blast_no_cluster.py -c ./config.json
 
     """
-    parser = argparse.ArgumentParser(description="" ,usage=myusage)
+   
 
 
-#     parser.add_argument("-t","--datatype",
-#                 required=False,  action="store",   dest = "datatype", default=None,
-#                 help="")
-# 
-#     parser.add_argument("-d", "--directory",
-#                 required=False,  action='store', dest = "datadir", default=None,
-#                 help=" ")
-#     parser.add_argument("-text", "--text",
-#                 required=False,  action='store', dest = "textstring", default=None,
-#                 help=" ")
-#     parser.add_argument("-f", "--filepath",
-#                  required=False,  action='store', dest = "host",  default=None,
-#                  help=" ")
-#     parser.add_argument("-db", "--blastdbpath",
-#                 required=False,  action='store', dest = "blastdb", default=None,
-#                 help=" ")
-#     parser.add_argument("-a", "--advancedopts",
-#                 required=False,  action='store', dest = "advancedopts", default=None,
-#                 help=" ")
-#     parser.add_argument("-n", "--numresults",
-#                 required=False,  action='store', dest = "numresults", default=None,
-#                 help=" ")
-#     parser.add_argument("-p", "--blastprogram",
-#                required=False,  action="store",   dest = "blastprogram", default=None,
-#                help="")
-#     parser.add_argument("-e", "--expect",
-#                 required=True,  action='store', dest = "expect", default=None,
-#                 help=" ")
-    parser.add_argument("-c", "--config",
-                required=True,  action='store', dest = "config", default=None,
-                help=" ")
-    args = parser.parse_args()
-
-
-   #  if args.host == 'vamps':
-#         #db_host = 'vampsdb'
-#         db_host = 'bpcweb8'
-#         args.NODE_DATABASE = 'vamps2'
-#         db_home = '/groups/vampsweb/vamps/'
-#     elif args.host == 'vampsdev':
-#         #db_host = 'vampsdev'
-#         db_host = 'bpcweb7'
-#         args.NODE_DATABASE = 'vamps2'
-#         db_home = '/groups/vampsweb/vampsdev/'
-#     else:
-#         db_host = 'localhost'
-#         db_home = '~/'
-#         args.NODE_DATABASE = 'vamps_development'
-#
-#     args.obj = MySQLdb.connect( host=db_host, db=args.NODE_DATABASE, read_default_file=os.path.expanduser("~/.my.cnf_node")    )
-#
-#     #db = MySQLdb.connect(host="localhost", # your host, usually localhost
-#     #                         read_default_file="~/.my.cnf"  )
-#     args.cur = args.obj.cursor()
-
-
-    
-    #(args.proj, args.pid, args.dids, args.dsets) = get_data(args)  
+    args.runByHand = True
+    f = open(args.config)
+    details_dict = json.load(f)
+    #print(details_dict)
+    # filepath takes presidence over text
+    if details_dict['filePath']:
+       # read line by line and write into separate files
+       filesArray = processFile(args,details_dict)
+    elif details_dict['textInput']:
+       #text may be LARGE
+       # separate into separate sequences (may be just one)
+       filesArray = processTextIntoFiles(args, details_dict)
+       # write into separate files
+    else:
+       print('Could not find file or text - must exit')
+       sys.exit('Could not find file or text - must exit')  
     
     #run(args) 
-    print('Finished')
+    print('Finished - from pyscript')

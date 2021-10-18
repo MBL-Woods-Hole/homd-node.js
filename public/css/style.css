@@ -60,28 +60,28 @@ p {
   margin: auto;
 }
 .page-content {
-  padding:5px;
-  margin:5px;
-  background:white;
-  min-height:500px;
+  padding: 5px;
+  margin: 5px;
+  background: white;
+  min-height: 500px;
   
 }
 .intro-content{
-   padding:30px 80px;
+   padding: 30px 80px;
    word-spacing: 4px;
-  line-height: 140%;
-   
-   font-size:18px;
+   line-height: 140%;
+   font-size: 18px;
 }
 input[type=radio] {
     height: .8em;
 }
 .title{
-   padding:10px;
+   padding: 10px;
    background: var(--title-bg);
-   font-size:20px;
-   text-align:center;
-   color:white;
+   font-size: 20px;
+   text-align: center;
+   color: white;
+   border:1px solid black;
 }
 
 /* header images masthead */
@@ -525,4 +525,21 @@ hr{
 .greyed{
    background:lightgrey;
    color:darkgrey;
+}
+.error{
+   font-size: 15px;
+   width:50%;
+   height: 100px;
+   border:3px solid orange;
+   background:lightgrey;
+   color: black;
+   padding: 30px;
+   position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    margin: auto;
+   
 }

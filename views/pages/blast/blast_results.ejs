@@ -1,5 +1,60 @@
 <style>
+/* Fix the tax table header */
+thead th { position: sticky; top: 0; }
+#blast-search-info{
+  border:1px solid grey;
+  padding:2px 10px;
+  background: var(--div-bg03);
+  height: 60px;
+  
+}
+#blast-search-info  table{
+  border-collapse:collapse;
+  font-size: small;
+  width:100%;
+}
+#blast-search-info  table td{
+  padding:0 2px;
+  border:1px solid black;
+}
+#blastResultsDiv{
+  border: 1px solid black;
+  padding: 10px;
+  font-size: small;
+  height: 500px;
+  overflow: auto;
+}
+#blastResultsDiv table{
+  border: 1px solid black;
+  font-size: small;
+  border-collapse:collapse;
+}
+#blastResultsDiv table th{
+  color: black;
+  background:  lightgreen;
+  padding:5px;
+  font-size:12px;
+  text-align: center;
+  
+}
+#blastResultsDiv table td{
+  border: 1px solid green;
+  padding: 1px 3px;
+  
+}
+.blastcol1{
+    max-width: 250px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+.blastcol2{
+    max-width: 30px;
+   
+}
+
 </style>
+<% error_obj = JSON.parse(error) %>
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -13,9 +68,30 @@
   <div class='title'>BLASTn Results</div>
     <%- include('../../partials/flash'); %>
     <div id='under-construction'>Page Under Construction</div>	
-
-
-   <%- html %>
+<% if(error_obj.code) { %>
+     <div class='error'>
+     <%- error_obj.msg %>
+     </div>
+     <!-- turn off timer -->
+     <% timer = 'off' %>
+<% }else{ %>
+    <div id='blast-search-info'>
+      <table>
+        <tr>
+        <td><a href='#blastStats'>View BLAST Stats and Legend</a></td>
+        <td>Download</td>
+        </tr>
+        <tr>
+        <td>Search Results: <%= numseqs %> sequence(s) searched against target database:<br><%= targetdb %></td>
+        <td><span class=''>Elapsed Time: <%= blastTimer %> sec</span></td>
+        </tr>
+      </table>
+    </div>    
+    <div id='blastResultsDiv'><%- html %></div>
+    <div id='blastStats'>
+       SearchID: <%= blastId %>
+    </div>
+<% } %>   
     </div> <!-- end: page-content -->
     
     <div id='footer'>

@@ -47,7 +47,18 @@ const async = require('async')
 //   //})();
 //    //render_page(res)
 // })
+/*  test seqs    
 
+ agtcgtactgggatctgaa
+  
+  >ds0|imput 1200
+  agtcgtactggtaccggatctgaa
+  >ds1|kefdgste5%$
+  agtcgtactgggatctgaagtagaatccgt
+  >ds2| let kefdgste5%$
+  agtcgtactgggat
+  ctgaagtagaatccatccgt
+*/  
 router.get('/blast_wait', function blastWait(req, res) {
     console.log('in blast wait')
     // need access to blast dir????
@@ -55,35 +66,63 @@ router.get('/blast_wait', function blastWait(req, res) {
     
     console.log('session blast_wait:')
     console.log(req.session)
-    let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blastID)
-    req.session.blastCounter += 1
-    let blastResultsDir = path.join(blastDir,'results')
-    const result = getAllDirFiles(blastDir) // will give ALL files in ALL dirs
-    let finished = false,blastFiles=[],faFiles = []
-    for(i=0;i<result.length;i++){
-       if(result[i].endsWith('.fa')){
-          faFiles.push(result[i])
-       } 
-       if(result[i].endsWith('.out')){
-          blastFiles.push(path.join(blastResultsDir, result[i]))
-       } 
+    let finished = false, blastFiles = [], faFiles = [], html, jsondata,database
+    
+    
+    
+    if(req.session.blastID){
+        let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blastID)
+        req.session.blastCounter += 1
+        req.session.blastTimer += 5  // 5sec at a pop
+        let blastResultsDir = path.join(blastDir,'results')
+        const result = getAllDirFiles(blastDir) // will give ALL files in ALL dirs
+        
+        for(i=0; i < result.length; i++){
+           if(result[i].endsWith('.fa')){
+              faFiles.push(result[i])
+           } 
+           if(result[i].endsWith('.out')){
+              blastFiles.push(path.join(blastResultsDir, result[i]))
+           } 
+        }
+        
+        if(blastFiles.length === faFiles.length && req.session.blastCounter > 1){
+           finished = true;
+           
+        }
+    }else{
+        finished = false;
     }
-    console.log(blastFiles)
-    if(blastFiles.length === faFiles.length && req.session.blastCounter > 1){
-       finished = true
+    if(!req.session.blastCounter){
+       // need to get off this train
+       finished = true;
     }
+    console.log('counter:',req.session.blastCounter,'blastFiles',blastFiles.length,'faFiles',faFiles.length)
     console.log('finished:t/f?',finished)
+    console.log('session.error',req.session.pyerror)
     if(finished){
       data = {}
       async.map(blastFiles, helpers.readAsync, function(err, results) {
-           for(i=0;i<blastFiles.length;i++){
-              data['query'+i.toString()] = (JSON.parse(results[i])).BlastOutput2[0].report.results.search
-           
-           }
-           //console.log('data')
-          // console.log(data)
-           const html = getBlastHtml(data)
-      
+          
+          for(i=0;i<blastFiles.length;i++){
+              jsondata = JSON.parse(results[i])
+              console.log(blastFiles[i])
+              data['query'+i.toString()] = jsondata.BlastOutput2[0].report.results.search
+
+              console.log('jsondata', jsondata)
+              if(jsondata === undefined){
+                  console.log('jsondata error for file:',blastFiles[i])
+              }
+              database = path.basename(jsondata.BlastOutput2[0].report.search_target.db)
+              console.log('database', database)
+          }
+
+          html = getBlastHtml(data)
+          console.log('session.error2',req.session.pyerror)
+          if(blastFiles.length === 0){
+             req.session.pyerror = {code:1, msg:'something bad happened'}
+             
+          }
           res.render('pages/blast/blast_results', {
             title: 'HOMD :: BLAST WAIT', 
             pgname: 'blast_results',
@@ -91,14 +130,19 @@ router.get('/blast_wait', function blastWait(req, res) {
             hostname: CFG.HOSTNAME,
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
             db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-            html: html
-    
+            html: html,
+            targetdb: database,
+            numseqs: blastFiles.length,
+            blastId: req.session.blastID,
+            blastTimer: req.session.blastTimer,   // rough count
+            error: JSON.stringify(req.session.pyerror)
           })
       })
       
       
       
     }else{
+      console.log('rendering blast_wait')
       res.render('pages/blast/blast_wait', {
         title: 'HOMD :: BLAST WAIT', 
         pgname: 'blast_wait',
@@ -106,27 +150,48 @@ router.get('/blast_wait', function blastWait(req, res) {
         hostname: CFG.HOSTNAME,
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-    
+        filesFinished: blastFiles.length,
+        filesStarted: faFiles.length,
+        error: JSON.stringify(req.session.pyerror)
+        
       })
-      }
+    }
     
 
 })
 function getBlastHtml(json){
-    let html = '<table>'
-    html += '<tr><th>Query</th><th>Length</th><th>Hit</th><th>HOMD Clone Name</th></tr>'
-    for(n in json){
+    let desc,id,html,init,numhits,split_items,hmt
+    
+    html = '<table><thead>'
+    html += "<tr><th>Query</th><th>Length</th><th>Hit</th><th>HOMD Clone Name</th></tr>"
+    html += "</thead><tbody>"
+    
+    for(let n in json){
+        numhits = json[n].hits.length
        
-       for(m=0; m<4; m++){   // take 4 hits only -- are they top hits??
-           html += '<tr><td>'+json[n].query_title+'</td><td>'+json[n].query_len+'</td>'
-           console.log(json[n].hits[m])
-           let desc = json[n].hits[m].description[0].title  // always take first desc ??
-           let id = desc.split('|')[0].trim()
-           html += '<td>'+id+'</td>'+'<td>'+desc+'</td></tr>'
+       if(numhits == 0){
+           html += "<tr><td class='blastcol1'>"+json[n].query_title+"</td><td class='blastcol2'>"+json[n].query_len+"</td>"
+           html += "<td class='blastcol3'>no hits found</td><td class='blastcol4'>no hits found</td></tr>"
+       } else if(numhits >= 4) {
+          html += "<tr><td class='blastcol1' rowspan='4'>"+json[n].query_title+"</td><td class='blastcol2 center' rowspan='4'>"+json[n].query_len+"</td>"
+          for(let m=0; m<4; m++) {   // take 4 hits only -- are they top hits??
+               desc = json[n].hits[m].description[0].title.split('|')  // always take first desc ??
+               id = desc.shift()   // remove and return first item
+               hmt = desc[1].split('-')[1].trim()
+               html += "<td class='blastcol3 center'><a href='/taxa/tax_description?otid="+hmt+"'>"+id.trim()+"</a></td>"+"<td class='blastcol4'>"+desc.join('|')+"</td></tr>"
+               //html += "<td></td><td></td></tr>"
+           }
+       } else {
+          html += "<tr><td class='blastcol1' rowspan='"+numhits+"'>"+json[n].query_title+"</td><td class='blastcol2' rowspan='"+numhits+"'>"+json[n].query_len+"</td>"
+          for(let m=0; m<numhits.length; m++) {   // take 4 hits only -- are they top hits??
+               desc = json[n].hits[m].description[0].title.split('|')  // always take first desc ??
+               id = desc.shift()   // remove and return first item
+               hmt = desc[1].split('-')[1].trim()
+               html += "<td class='blastcol3'><a href='/taxa/tax_description?otid="+hmt+"'>"+id.trim+"</a></td>"+"<td class='blastcol4'>"+desc.join('|')+"</td></tr>"
+           }
        }
-       
     }
-    html += '</table>'
+    html += '</tbody></table>'
     
     
      return html
@@ -176,10 +241,10 @@ function followFilePath(req, res, opts, blastOpts, blastDir, fileContents) {
         
         await moveFile(source, dest)
         let data = await readFile(dest)
-        console.log('dataxx')
-        console.log(data)
+        //console.log('dataxx')
+        //console.log(data)
         
-        runPyScript(req, res, opts, blastOpts, blastDir, dest)
+        return runPyScript(req, res, opts, blastOpts, blastDir, dest)
         //return data
           //readFileWriteFilesPromise(dest, req, res, blastOpts, blastDir);
           //readFileContent(dest, {})
@@ -194,7 +259,8 @@ function followFilePath(req, res, opts, blastOpts, blastDir, fileContents) {
 function followTextInputPathPyScript(req, res, opts, blastOpts, blastDir) {
   console.log('in TextEntry Path')
   let inputSeqInput = req.body.inputSeq.trim();
-  // let python doo the work of splitting and file writing
+  // let python do the work of splitting and file writing
+  
   return inputSeqInput
   
 }
@@ -508,7 +574,7 @@ router.post('/blast_post', upload.single('blastFile'),  function blast_post(req,
       opts.type = 'textInput'
       //followTextInputPath(req, res, opts, blastOpts, blast_directory)
       data = followTextInputPathPyScript(req, res, opts, blastOpts, blastDir)
-      runPyScript(req, res, opts, blastOpts, blastDir, data)
+      return runPyScript(req, res, opts, blastOpts, blastDir, data)
   }
     
     // pyScript takes data as string/buffer does all the rest
@@ -535,22 +601,24 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy){
     console.log('In runPyScript')
     // here run pyscript
     // then render and return to restart q 5sec
-    let pyscriptOpts 
+    let pyscriptOpts = []
+    
     let pyscript = path.join(CFG.PATH_TO_SCRIPTS, 'run_blast_no_cluster.py') 
     let config = {}
+    config.site = CFG.SITE  //  local, mbl or homd;; this determines blast db
     config.blastdbPath = blastOpts.dbPath
     config.blastDir = blastDir
-    config.datatype = opts.type
+    config.dataType = opts.type
     config.expect = blastOpts.expect
-    config.numresults = blastOpts.descriptions
+    config.numResults = blastOpts.descriptions
     config.advanced = blastOpts.advanced
     config.program = path.join(CFG.PATH_TO_BLAST_PROG, blastOpts.program)
-    config.site = CFG.SITE
-    config.filepath = ''
+    
+    config.filePath = ''
     config.textInput = ''
     
     if(opts.type == 'fileInput'){
-        config.filepath = dataForPy
+        config.filePath = dataForPy
     }else{
         config.textInput = '"'+dataForPy+'"'
     }
@@ -564,24 +632,35 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy){
     console.log('running py script: ')
     console.log(pyscript, pyscriptOpts.join(' '))
     const pythonRun = spawn(pyscript, pyscriptOpts, {
-                env:{'PATH': CFG.PATH},
+                env:{'PATH': CFG.PATH},   // CFG.PATH must include python executable path
                 detached: true, stdio: 'pipe'
-    });
+    })
     
     pythonRun.stdout.on('data', function (data) {
-      console.log('Pipe data from python script ...');
-      dataPyToSend = data.toString();
-    });
-    pythonRun.stderr.on('data', function (data) {
-      console.log('ERR',data.toString());
-    });
+      console.log('Pipeing data from python script::')
+      console.log(data.toString())
+      let dataPyToSend = data.toString()
+      req.session.pyerror = {code:0, msg:''}
+    })
     
+    pythonRun.stderr.on('data', function (data) {
+      data = data.toString()
+      req.session.pyerror = {code:1, msg:'bland error'}
+      console.log('Caught ERROR', data)
+      
+    })
+    pythonRun.on('close', function(){
+        console.log('Finished - from nodejs')
+        
+    })
     testing = false
+    console.log('Testing',testing)
     
     if(testing){
+        //send data to browser window
         pythonRun.on('close', (code) => {
           console.log(`child process close all stdio with code ${code}`);
-          // send data to browser for testing
+          // send pyscript output to browser for testing
           res.send(dataPyToSend)
         });
     }else{
@@ -591,24 +670,30 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy){
         //req.session.cookie.blastid = blastDir
         const oneDayToSeconds = 24 * 60 * 60;  // hr/d min/hr sec/min
         req.session.blastID = opts.blastSessionID
+        req.session.blastTimer = 0
         req.session.blastCounter = 0
         console.log(req.session)
+        req.session.pyerror = {code:0, msg:''}
         res.redirect('blast_wait')   // MUST run at least once
     }
-   
+    
+    
+     
    
      
      
 }
 
 function writeBlastConfig(dir, data) {
-    const configFilePath = path.join(dir,'DATA.config')
-    let config_string = '[MAIN]\n'
-    for(n in data){
-       config_string += n+" = "+data[n] +'\n'
-    }
-    fs.writeFileSync(configFilePath , config_string)
-    return configFilePath
+    //const configFilePath = path.join(dir,'DATA.config')
+    const jsonConfigFilePath = path.join(dir,'DATA.json')
+    // let config_string = '[MAIN]\n'
+//     for(n in data){
+//        config_string += n+" = "+data[n] +'\n'
+//     }
+    //fs.writeFileSync(configFilePath , config_string)
+    fs.writeFileSync(jsonConfigFilePath , JSON.stringify(data, null, 2))
+    return jsonConfigFilePath
 }
 // router.post('/refseq_blastn_takesTooLong', upload.single('blastFile'),  function refseq_blastn_post2(req, res) {
 //     console.log('MADEIT TO blastn-post')

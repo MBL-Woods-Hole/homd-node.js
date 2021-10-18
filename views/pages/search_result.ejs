@@ -20,51 +20,51 @@
 
 <body>
   
-  	<div id='wrapper'>
+    <div id='wrapper'>
     <%- include('../partials/header_img'); %>
     <%- include('../partials/navbar'); %>
-    <div class='page-content' >	
-			 <h4 class='title text-info'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span></small>]</h4>
-<!-- 'HMT-'+("000" + otid).slice(-3);	 -->
-	<div class=''>
-	  To Search the Help Pages See <a href='https://wiki.homd.info'>https://wiki.homd.info</a>
+    <div class='page-content' > 
+       <h4 class='title text-info'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span></small>]</h4>
+<!-- 'HMT-'+("000" + otid).slice(-3);  -->
+  <div class=''>
+    To Search the Help Pages See <a href='https://wiki.homd.info'>https://wiki.homd.info</a>
     </div>
     
     <br>Matches from Bacterial Taxon Names: (<%= Object.keys(lineageids).length %>)
-	<div class='search-box'>
-	  <% n = 0 %>
-	  <% for(otid in lineageids){ %>
-		   <% n += 1 %>
-		   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
-		   <br><%= parseInt(n) %>) <a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a> 
-		   <em><%= lineageids[otid] %></em>
-	<% } %>
-	</div>
+  <div class='search-box'>
+    <% n = 0 %>
+    <% for(otid in lineageids){ %>
+       <% n += 1 %>
+       <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+       <br><%= parseInt(n) %>) <a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a> 
+       <em><%= lineageids[otid] %></em>
+  <% } %>
+  </div>
     <hr> 
-    Matches from Oral Taxon-ID Metadata: (<%= otids.length %>)	
-	<div class='search-box'>
-	  <% for(n in otids){ %>
-	   <% otid = otids[n] %>
-	   <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
-	   <br><%= parseInt(n)+1 %>) <a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a>
-	<% } %>
-	</div>
-    <hr> 	
+    Matches from Oral Taxon-ID Metadata: (<%= otids.length %>)  
+  <div class='search-box'>
+    <% for(n in otids){ %>
+     <% otid = otids[n] %>
+     <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+     <br><%= parseInt(n)+1 %>) <a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a>
+  <% } %>
+  </div>
+    <hr>  
     Matches from Genome Metadata: (<%= gids.length %>)
-	<div class='search-box'>
-	  <% for(n in gids){ %>
-		   <% gid = gids[n] %>
-		   <br><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a>
-		<% } %>
+  <div class='search-box'>
+    <% for(n in gids){ %>
+       <% gid = gids[n] %>
+       <br><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a>
+    <% } %>
     </div>
     
     <hr>   
     Matches from Phage Metadata: (<%= phage_id_list.length %>)
     <div class='search-box'>
-	  <% for(n in phage_id_list){ %>
-		   <% pid = phage_id_list[n] %>
-		   <br><%= parseInt(n)+1 %>) <a href='/phage/phagedesc?pid=<%= pid %>'><%= pid %></a>
-		<% } %>
+    <% for(n in phage_id_list){ %>
+       <% pid = phage_id_list[n] %>
+       <br><%= parseInt(n)+1 %>) <a href='/phage/phagedesc?pid=<%= pid %>'><%= pid %></a>
+    <% } %>
     </div>
 
     </div> <!-- end: page-content -->

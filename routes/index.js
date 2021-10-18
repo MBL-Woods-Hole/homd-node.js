@@ -16,8 +16,6 @@ const C = require(app_root + '/public/constants')
 router.get('/', (req, res) => {
   console.log('req.session')
   console.log(req.session)
-  
-  
   res.render('pages/home', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'home', // for AbountThisPage

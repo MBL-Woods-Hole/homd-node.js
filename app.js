@@ -105,19 +105,30 @@ app.use(express.static('tmp'));
 
 // ROUTES:
 app.use('/', home);
-
 app.use('/admin', admin);
-//app.use('/help', help);
 app.use('/taxa', taxa);
 app.use('/refseq', refseq);
 app.use('/genome', genome);
 app.use('/phage', phage);
 app.use('/blast', blast);
-//app.use('/jbrowse2', jbrowse2);
+
+
+// error handler middleware:
+app.use((error, req, res, next) => {
+ console.error(error.stack);
+ //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
+ res.render('pages/lost', { 
+      url: req.url,
+      pgname: 'lost',
+      title:'HOMD Lost',
+      config : JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
+      ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+      msg: 'We\'re Sorry -- Something Broke!<br><br>If it happens again please let us know.' 
+    });
+})
 // LAST Middleware:
 app.use(function(req, res, next){
   res.status(404)
-
   // respond with html page
   if (req.accepts('html')) {
     res.render('pages/lost', { 
@@ -126,6 +137,7 @@ app.use(function(req, res, next){
       title:'HOMD Lost',
       config : JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+      msg: 'Sorry -- We can\'t find the page you requested.'
     });
     return;
   }

@@ -58,7 +58,7 @@ module.exports.compareStrings_int   = (a, b) => {
   return (a < b) ? -1 : (a > b) ? 1 : 0;
 };
 module.exports.show_session = (req) =>{
-	console.log('(Availible for when sessions are needed) req.session: ')
+  console.log('(Availible for when sessions are needed) req.session: ')
     //console.log('req.session',req.session)
     //console.log('req.sessionID',req.sessionID)
     console.log('req.session.id',req.session.id)
@@ -67,8 +67,6 @@ module.exports.accesslog = (req, res) =>{
     accesslog(req, res, C.access_log_format, function(s) {
       //console.log(s);
       //fs.writeFileSync(C.access_logfile, s+'\n', {flag:'a'})
-    
-    
         fs.writeFile(C.access_logfile, s+'\n', err => {
              if (err) {
                  console.error(err)
@@ -95,7 +93,7 @@ module.exports.format_long_numbers = (x) =>{
     // change 456734 => 456,734
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
-module.exports.format_Mbps = (x) =>{
+module.exports.format_Mbps = (x) =>{ // mega base pairs
     // change 456734 => 456,734
     return (parseFloat(x) /1000000).toFixed(2).toString() +' Mbps'
 }
