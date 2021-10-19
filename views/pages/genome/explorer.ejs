@@ -129,7 +129,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
       <% } %> 
       <option value='0' >Choose...</option>
       <% for(n in all_annos){ %>
-         <% if(all_annos[n][0] == gid){ %>
+         <% if(all_annos[n][0] === gid){ %>
            <option selected value='<%= all_annos[n][0] %>'><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
          <% }else{ %>
            <option value='<%= all_annos[n][0] %>'><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>

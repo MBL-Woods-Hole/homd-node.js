@@ -153,15 +153,20 @@ def batchBlastFile(args, filesArray, details_dict):
         if details_dict['site'] == 'localhome':
             fileText += ' -db /Users/avoorhis/programming/blast_db/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
         elif details_dict['site'] == 'localmbl':
-            fileText += ' -db /Users/avoorhis/programming/blast/Bv6/Bv6'
+            fileText += ' -db /Users/avoorhis/programming/blast-db-testing/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
+            ##fileText += ' -db /Users/avoorhis/programming/blast-db-testing/B6/B6'
         else:   # HOMD Default
             fileText += ' -db ' + details_dict['blastdbPath']
         fileText += ' -evalue ' + details_dict['expect']
-        fileText += ' -max_target_seqs ' + details_dict['numResults']
-   
         fileText += ' -query ' + os.path.join(details_dict['blastDir'],file)
-        fileText += ' -outfmt 15'   ##JSON
-        fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'results', file+'.out') 
+        # either:
+        fileText += ' -num_alignments ' + details_dict['alignments']   # not compaable w/ max_target_seqs
+        fileText += ' -num_descriptions ' + details_dict['descriptions']   # not compaable w/ max_target_seqs
+        # or:
+        #fileText += ' -max_target_seqs ' + details_dict['maxTargetSeqs']  # use if outfmt >4
+        #fileText += ' -outfmt 15'   ## 15 JSON
+        
+        fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
         fileText += " 1>/dev/null 2>>" + details_dict['blastDir'] + "/error.log;"
         fileText += '\n'
     
@@ -184,7 +189,7 @@ else:
    sys.exit('Could not find file or text - must exit')  
 
 
-outDir = os.path.join(details_dict['blastDir'],'results')
+outDir = os.path.join(details_dict['blastDir'],'blast_results')
 try:
     os.makedirs(outDir)
 except FileExistsError:

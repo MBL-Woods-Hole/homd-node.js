@@ -116,10 +116,9 @@ app.use('/blast', blast);
 app.use((error, req, res, next) => {
   console.error(error);
   //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
-  if(process.env.NODE_ENV === 'development'){
-  //if(process.env.NODE_ENV === 'production'){
-   
-   log.debug(error.toString())
+  //if(CFG.ENV === 'development'){
+  if(CFG.ENV === 'production'){
+     log.debug(error.toString())
   }
   res.render('pages/lost', { 
       url: req.url,

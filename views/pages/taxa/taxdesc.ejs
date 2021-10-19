@@ -6,7 +6,7 @@
 .outer{
    width:100%;
    min-height:200px;
-   
+   max-height:200px;
    
 }
 .float-left{
@@ -30,7 +30,7 @@
 .description{
   font-size:12px;
   padding:0 0px;
-  height:200px;
+  max-height:200px;
   overflow:auto;
 }
 #description_tbl{
@@ -64,6 +64,7 @@
    width:100%;
    padding:10px 0;
    background:orange;
+   border:1px solid darkgreen;
 }
 .td-button{
   background-color: #97B8F7;
@@ -113,15 +114,22 @@
   </div>
 <% } %>
 <div class="outer">
+    
     <div class="float-left">
       Description:
-        <div class="description">
-		  <%- data2.general %>
-	  	  <br><%- data2.disease %>
-	  	  <br><%- data2.prev %>
-	  	  <br><%- data2.culta %>
-	  	  <br><%- data2.pheno %>
-      	</div>
+        <% if(Object.keys(data2).length === 0) { %>
+          <span class="description" >
+          Not Written Yet
+          </span>
+        <% }else{ %>
+            <div class="description">
+              <%- data2.general %>
+              <br><%- data2.disease %>
+              <br><%- data2.prev %>
+              <br><%- data2.culta %>
+              <br><%- data2.pheno %>
+            </div>
+      	<% } %>
     </div>
      
      
