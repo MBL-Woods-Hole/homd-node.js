@@ -167,8 +167,7 @@ def batchBlastFile(args, filesArray, details_dict):
     
     return fileText
     
-# def run(args):
-#   print('running')
+#   For error testing:
 #sys.exit('ERROR--Test error handling from pyscript') 
   
 # filepath takes presidence over text

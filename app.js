@@ -15,12 +15,12 @@ const helpers   = require(app_root + '/routes/helpers/helpers')
 const fs = require('fs-extra');
 //const createIframe = require("node-iframe");
 const express = require('express');
-
+const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
+const log = require('simple-node-logger').createSimpleFileLogger(logFilePath);
 
 const router = express.Router();
 const session = require('express-session');
 const passport = require('passport');
-//const logger = require('morgan');
 //const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
@@ -56,7 +56,6 @@ app.set('view engine', 'ejs');
 //app.engine('html', require('ejs').renderFile);
 //
 // MIDDLEWARE  <-- must be in correct order:
-//app.use(logger('dev'));
 //app.use(bodyParser({limit: 1024000000 })); // 1024MB
 // app.use(bodyParser({uploadDir:'./uploads'}));
 //app.use(createIframe);
@@ -115,19 +114,27 @@ app.use('/blast', blast);
 
 // error handler middleware:
 app.use((error, req, res, next) => {
- console.error(error.stack);
- //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
- res.render('pages/lost', { 
+  console.error(error);
+  //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
+  if(process.env.NODE_ENV === 'development'){
+  //if(process.env.NODE_ENV === 'production'){
+   const logPath = '/Users/avoorhis/programming/homd-node.log'
+   log.debug(error.toString())
+  }
+  res.render('pages/lost', { 
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
       config : JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-      msg: 'We\'re Sorry -- Something Broke!<br><br>If it happens again please let us know.' 
-    });
+      msg: 'We\'re Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:',
+      trace: error.toString()
+  });
+  
 })
 // LAST Middleware:
 app.use(function(req, res, next){
+  console.log('in 404')
   res.status(404)
   // respond with html page
   if (req.accepts('html')) {
@@ -137,7 +144,8 @@ app.use(function(req, res, next){
       title:'HOMD Lost',
       config : JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-      msg: 'Sorry -- We can\'t find the page you requested.'
+      msg: 'Sorry -- We can\'t find the page you requested.',
+      trace: JSON.stringify(req.url)
     });
     return;
   }

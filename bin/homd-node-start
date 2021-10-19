@@ -2,7 +2,7 @@
 
 const app = require('../app');
 
-const debug = require('debug')('homd-node.js');
+//const debug = require('debug')('homd-node.js');
 const CFG = require(app_root + '/config/config');
 const fs = require('fs-extra');
 
@@ -11,21 +11,21 @@ const fs = require('fs-extra');
 available_environments = ['testing','development','production'];
 
 if(available_environments.indexOf(process.argv[2]) !== -1){
-	process.env.NODE_ENV = process.argv[2];
+  process.env.NODE_ENV = process.argv[2];
 }else{
-	console.log('Available Environments:', available_environments);
-	if(CFG.HOSTNAME === '??????') {  // put production host here
-	    process.env.NODE_ENV = 'production';  // homd
-	}else if(CFG.HOSTNAME === 'localhost'){
-	    process.env.NODE_ENV = 'development';  // homddev
-	}else{
-	    process.env.NODE_ENV = 'development';
-	}
+  console.log('Available Environments:', available_environments);
+  if(CFG.HOSTNAME === '??????') {  // put production host here
+      process.env.NODE_ENV = 'production';  // homd
+  }else if(CFG.HOSTNAME === 'localhost'){
+      process.env.NODE_ENV = 'development';  // homddev
+  }else{
+      process.env.NODE_ENV = 'development';
+  }
 }
 console.log("Setting Environment to: "+process.env.NODE_ENV);
 
 const options = {}
-var http;
+let http;
 if(CFG.SERVER_PORT == '443'){
    
    options.key = fs.readFileSync(CFG.KEY_FILE),
@@ -47,9 +47,9 @@ console.log('DATABASE: =>'+NODE_BACTERIAL_DATABASE+'<= (Databases set in config/
 console.log('ENV:',app.get('env'),'(Environment set in bin/www)');
 console.log('HOSTNAME: '+CFG.HOSTNAME)
 
-var server = http.createServer(options, app).listen(app.get('port'), function(){
-    debug('Express server listening on port ' + server.address().port);
-    console.log('HOMD-Node.js started on: '+CFG.HOSTNAME+':'+process.env.PORT);
+const server = http.createServer(options, app).listen(app.get('port'), function(){
+    //debug('Express server listening on port ' + server.address().port);
+    console.log(`HOMD-Node.js server is listening on ${CFG.HOSTNAME}:${process.env.PORT}`)
 });
 
 

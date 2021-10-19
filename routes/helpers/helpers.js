@@ -1,3 +1,4 @@
+'use strict'
 const C       = require(app_root + '/public/constants');
 //const queries = require(app_root + '/routes/queries');
 const CFG  = require(app_root + '/config/config');
@@ -119,9 +120,9 @@ module.exports.clean_rank_name_for_show = (rank) =>{
     return rank.charAt(0).toUpperCase() + rank.slice(1)
 }
 module.exports.make_lineage_string_with_links = function make_lineage_string_with_links(lineage_list, link) {
-     var tmp = ''
-     i =0 
-     for(var n in lineage_list[1]){
+     let tmp = ''
+     let i = 0 
+     for(let n in lineage_list[1]){
          if(link == 'life'){
            tmp += "<a href='/taxa/"+link+"?rank="+C.ranks[i]+"&name=\""+lineage_list[1][n]+"\"'>"+lineage_list[1][n]+'</a>; '
          }else{
@@ -446,14 +447,16 @@ module.exports.readFilesInDirectory = function readFilesInDirectory(directory, d
 }
 //
 module.exports.readAsync = function readAsync(file, callback) {
-    console.log('Reading File:',file)
-    try {
-    if (fs.existsSync(file)) {
-    //file exists
+    if(process.env.NODE_ENV === 'development'){
+      console.log('Reading File:',file)
     }
-  } catch(err) {
-    console.error(err)
-  }
+    try {
+      if (fs.existsSync(file)) {
+    //file exists
+      }
+    } catch(err) {
+      console.error(err)
+    }
     
     fs.readFile(file, callback);
 }

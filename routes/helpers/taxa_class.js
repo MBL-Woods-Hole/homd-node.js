@@ -1,3 +1,4 @@
+'use strict'
 /*
  * TaxonomyTree = custom_taxa_class.js
  */

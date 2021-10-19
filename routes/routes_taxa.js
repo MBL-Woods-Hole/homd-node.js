@@ -1,3 +1,4 @@
+'use strict'
 const express  = require('express');
 var router   = express.Router();
 const CFG   = require(app_root + '/config/config');
@@ -24,16 +25,16 @@ router.get('/tax_table', function tax_table_get(req, res) {
   let letter = req.query.k
   let annot = req.query.annot
   let reset    = req.query.reset
-  var count_txt, count_txt0;
-  var big_tax_list0 = Object.values(C.taxon_lookup);
-  
+  let count_txt, count_txt0;
+  let big_tax_list0 = Object.values(C.taxon_lookup);
+  let big_tax_list1,big_tax_list2,send_list,pgtitle
   // FIX THIS IF SELECT DROPPED OR NONORAL
   big_tax_list1 = big_tax_list0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-  var tcount = big_tax_list1.length  // total count of our filters
+  let tcount = big_tax_list1.length  // total count of our filters
   
   //var show_filters = 0
   
-  var count_text = ''
+  let count_text = ''
   pgtitle = 'List of Human Oral Microbial Taxa'
   
   if(reset == '1'){
@@ -166,7 +167,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
   console.log(req.body)
   //plus valid
   //valid = req.body.valid  // WHAT IS THIS???
-  var count_txt, count_txt0;
+  let big_tax_list,count_txt, count_txt0, pgtitle,send_list;
 
   pgtitle = 'List of Human Microbial Taxa'
   //show_filters = 1
@@ -185,7 +186,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
   console.log('sitefilter_on',sitefilter_on)
   // letterfilter
   // if dropped is on need to add dropped to 
-  let big_tax_list = Object.values(C.taxon_lookup);
+  big_tax_list = Object.values(C.taxon_lookup);
   
   if(statusfilter_on.length == C.tax_status_all.length && sitefilter_on.length == C.tax_sites_all.length){
     // no filter -- allow all
@@ -278,7 +279,7 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
   
   let search_txt = req.body.tax_srch.toLowerCase()  // already filtered for empty string and extreme length
   let search_field = req.body.field
-  var count_txt, count_txt0;
+  var count_txt, count_txt0, pgtitle;
   
   console.log('C.taxon_lookup[389]')
   console.log(C.taxon_lookup[389])
@@ -439,7 +440,7 @@ router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
 router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
   //console.time("TIME: tax_custom_dhtmlx");
   //console.log('IN tax_custom_dhtmlx')
-  
+  let cts,lineage,options_obj
   //let myurl = url.parse(req.url, true);
   let id = req.query.id;
 
@@ -464,10 +465,10 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
     
         C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
             //console.log('node1',node)
-            let lineage = make_lineage(node)  // [str obj]
+            lineage = make_lineage(node)  // [str obj]
             cts = get_counts(lineage[0])
             //console.log(node)
-            let options_obj = get_options_by_node(node);
+            options_obj = get_options_by_node(node);
             options_obj.text = options_obj.text + ' '+cts
             options_obj.checked = true;
             //console.log(options_obj)
@@ -481,10 +482,10 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
         const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
         objects_w_this_parent_id.map(node => {
           //console.log('node2',node)
-          let lineage = make_lineage(node)  // [str obj]
+          lineage = make_lineage(node)  // [str obj]
           //console.log('lineage:',lineage)
           cts = get_counts(lineage[0])
-          let options_obj = get_options_by_node(node);
+          options_obj = get_options_by_node(node);
           options_obj.text = options_obj.text + ' '+cts
           options_obj.checked = false;
           json.item.push(options_obj);
@@ -503,7 +504,7 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
 router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
   let otid = req.query.otid;
-  
+  let data1,data2,data3,data4,data5
   /*
   This busy page needs:
   1  otid     type:string
@@ -521,7 +522,7 @@ router.get('/tax_description', function tax_description(req, res){
   12 Genome Sequence  - needs genome count and otid
   13 Ref Data: General,Citations,Pheno,Cultivability,Pevalence...
   */
-  var data1 = C.taxon_lookup[otid]
+  data1 = C.taxon_lookup[otid]
   //console.log('dropped',C.dropped_taxids)
   if(C.dropped_taxids.indexOf(otid) !== -1){
      console.log(data1)
@@ -546,29 +547,29 @@ router.get('/tax_description', function tax_description(req, res){
   let pid_list = plist.map(item => item.pid)
   //console.log('pid_list',pid_list)
   if(C.taxon_info_lookup[otid] ){
-      var data2 = C.taxon_info_lookup[otid]
+      data2 = C.taxon_info_lookup[otid]
   }else {
       console.warn('Could not find info for',otid)
-      var data2 = {}
+      data2 = {}
   }
   if(C.taxon_lineage_lookup[otid] ){
-      var data3 = C.taxon_lineage_lookup[otid]
+      data3 = C.taxon_lineage_lookup[otid]
       console.log(data3)
   }else {
       console.warn('Could not find lineage for',otid)
-      var data3 = {}
+      data3 = {}
   }
   if(C.taxon_references_lookup[otid]){
-    var data4 = C.taxon_references_lookup[otid]
+    data4 = C.taxon_references_lookup[otid]
   }else {
     console.warn('Could not find references for',otid)
-    var data4 = []
+    data4 = []
   }
   if(C.refseq_lookup[otid]){
-    var data5 = C.refseq_lookup[otid]
+    data5 = C.refseq_lookup[otid]
   }else {
     console.warn('Could not find refseqs for',otid)
-    var data5 = []
+    data5 = []
   }
   // phage known to infect
   //let tmp_list = Object.values(C.phage_lookup).filter(item => item.host_otid === otid)
@@ -576,16 +577,16 @@ router.get('/tax_description', function tax_description(req, res){
   //console.log(data1)
   //console.log('d2',data2)
   // get_genus photos
-  node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
+  let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
   //console.log('node',node)
-  var lineage_list = make_lineage(node)  // [str obj]
-  var image_array = find_images('species',otid,data3.species)
+  let lineage_list = make_lineage(node)  // [str obj]
+  let image_array = find_images('species',otid,data3.species)
   //console.log('genus',data3.genus)
   //console.log('imgs',image_array)
   //console.log('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
   //console.log('regex2',lineage_list[0].split(';').pop())
   //console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
-  lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
+  let lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
   
   res.render('pages/taxa/taxdesc', {
     title: 'HOMD :: Taxon Info', 
@@ -633,6 +634,7 @@ router.get('/life', function life(req, res) {
   // let myurl = url.parse(req.url, true);
   let tax_name = req.query.name;
   let rank = (req.query.rank)
+  let lin,lineage_string
     //console.log('rank:',rank)
   //console.log('tax_name',tax_name)
     if(tax_name){
@@ -669,7 +671,7 @@ router.get('/life', function life(req, res) {
      image_array =[{'name':'cellular_organisms.png','text':''}]
   }else {
     //console.log(upto)
-    node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
     
     var lineage_list = make_lineage(node)  // [str obj]
       
@@ -849,7 +851,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    if(!node){
       //error
    }
-   genera = get_major_genera(rank, node)
+   let genera = get_major_genera(rank, node)
    if(rank == 'species'){
       if(node.hasOwnProperty('otid')){
           otid = node.otid
@@ -863,7 +865,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    //console.log(node)
    var children_list = []
    for(var i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
-      n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
+      let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
       //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
       children_list.push("<a href='/taxa/ecology/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
    }
@@ -927,7 +929,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
 //  console.log('dewhirst_data')
 //  console.log(dewhirst_data)
    //lineage_string = lineage_list[0].split(';').join('; ')
-   lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
+   let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
    // sort genera list 
    genera.sort(function sortByTaxa(a, b) {
                 return helpers.compareStrings_alpha(a.taxon, b.taxon);
@@ -1433,7 +1435,7 @@ function find_images(rank, otid, tax_name) {
         
  function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
 
-  
+  let send_list = []
   if(search_field == 'taxid'){
       send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
   }else if(search_field == 'genus'){

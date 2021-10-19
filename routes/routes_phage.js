@@ -1,3 +1,4 @@
+'use strict'
 const express  = require('express');
 var router   = express.Router();
 const CFG   = require(app_root + '/config/config');
@@ -43,7 +44,7 @@ router.get('/phage_table', function phage_table_get(req, res) {
   let host_otid = req.query.host_otid;
   let letter    = req.query.k
   let rank = 'family'  // default
-  var count_txt, count_txt0;
+  let count_txt, count_txt0, tmp_obj;
   let cols_to_show=[]
   if(req.query.rank){
       rank = req.query.rank
@@ -58,8 +59,8 @@ router.get('/phage_table', function phage_table_get(req, res) {
       cols_to_show = C.default_phage_cols
       req.session.cols = C.default_phage_cols
   }   
-  let send_list = []
-  let send_list0 = []
+  let send_list = [],send_list0 = []
+  
   let tmp_phage_list = Object.values(C.phage_lookup)
   console.log(tmp_phage_list[0])
   if(host_otid){
@@ -83,12 +84,12 @@ router.get('/phage_table', function phage_table_get(req, res) {
   
   
   send_list0.sort(function (a, b) {
-  return helpers.compareStrings_alpha(a.family_ncbi, b.family_ncbi);
+     return helpers.compareStrings_alpha(a.family_ncbi, b.family_ncbi);
   })
   
   //console.log(res)
   // here we pare down the send_list to contain only data from the pertinent cols
-   for(var n in send_list0){
+   for(let n in send_list0){
       tmp_obj = {}
       for(var x in cols_to_show){
          tmp_obj[cols_to_show[x].name] = send_list0[n][cols_to_show[x].name]
@@ -125,6 +126,7 @@ router.post('/phage_table', function phage_table_post(req, res) {
    let send_list = []
    let tmp_phage_list = Object.values(C.phage_lookup)
    let cols_to_show =[]
+   let tmp_obj
    for(var n in C.all_phage_cols){
      for(var item in req.body){
          if(item == C.all_phage_cols[n].name && cols_to_show.indexOf(C.all_phage_cols[n]) == -1){
