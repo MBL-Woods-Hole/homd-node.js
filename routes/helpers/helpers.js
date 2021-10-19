@@ -6,8 +6,6 @@ const express     = require('express');
 const fs          = require('fs-extra');
 var accesslog = require('access-log');
 const async = require('async')
-//const nodemailer  = require('nodemailer');
-//let transporter = nodemailer.createTransport({});
 const util        = require('util');
 const path        = require('path');
 
@@ -43,12 +41,6 @@ module.exports.compareStrings_alpha = (a, b) => {
   a = a.toLowerCase();
   b = b.toLowerCase();
   return (a < b) ? -1 : (a > b) ? 1 : 0;
-  
-  // sort a list of objects by a value?
-  // obj_list.sort(function sortByTime(a, b) {
-//       //reverse sort: recent-->oldest
-//       return helpers.compareStrings_alpha(b.time.getTime(), a.time.getTime());
-//     });
   
 };
 // Sort list of json objects numerically
@@ -366,54 +358,55 @@ make_blast_script_txt += "bash "+dataDir + "/clust_blast.sh\n";
 module.exports.make_qsub_commands_txt = function make_qsub_commands_txt(req, dataDir, fileList) {
 
 }
-module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFilePaths, opts, dataDir) {
-    console.log('in createBlastCommandFile')
-    //console.log(fastaFilePaths)
-    let make_blast_script_txt = ''
-    make_blast_script_txt += "#!/bin/bash\n\n"
-    
-//     /usr/local/blast/bin/blastall -p blastn \
-// -d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta \
-// -e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 \
-// -i /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/389_0541_Abiotrophia_defectiva_HMT \
-// -o /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
-// 1>/dev/null 2>>/mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/error2; \
-// mv /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
-// /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/389_0541_Abiotrophia_defectiva_HMT;\
-// /mnt/myBROP/var/www/html/homd_modules/RNAblast/parse_blast_single.pl \
-// feu9hoakrcsg3r9cukjp5r36k7 389_0541_Abiotrophia_defectiva_HMT S ;\
-// #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
-    //console.log(opts)
-    console.log('Hostname: ',CFG.HOSTNAME)
-    for (let i = 0; i < fastaFilePaths.length; i++) {
-       make_blast_script_txt += path.join(CFG.PATH_TO_BLAST_PROG, opts.program)
-       if(CFG.HOSTNAME === 'MacBook-Air.local'){
-          make_blast_script_txt += ' -db /Users/avoorhis/programming/blast_db/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
-       }else if(CFG.HOSTNAME === 'MBL'){
-          make_blast_script_txt += ' -db /Users/avoorhis/programming/blast/Bv6/Bv6'
-       }else{   // HOMD
-          make_blast_script_txt += ' -db ' + opts.dbPath
-       }
-       
-       make_blast_script_txt += ' -evalue ' + opts.expect
-       make_blast_script_txt += ' -max_target_seqs ' + opts.descriptions
-       //make_blast_script_txt += ' -num_alignments ' + opts.alignments
-       // Error: Argument "num_alignments".num_descriptions Incompatible with argument:  `max_target_seqs'
-       // 
-       make_blast_script_txt += ' -query ' + fastaFilePaths[i]
-       make_blast_script_txt += ' -outfmt 15'   // single file: JSON
-       //make_blast_script_txt += ' -outfmt 16'   //single file:XML
-      // make_blast_script_txt += ' -html'   //JSON
-       make_blast_script_txt += ' -out ' + dataDir + '/result' + i.toString() + '.blast' 
-       make_blast_script_txt += " 1>/dev/null 2>>" + dataDir + "/error.log;"
-       
-       make_blast_script_txt += '\n\n'
-       
-    }
-    //console.log('batch blast content:')
-    //console.log(make_blast_script_txt)
-    return make_blast_script_txt
-}
+// module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFilePaths, opts, dataDir) {
+//     console.log('in createBlastCommandFile')
+//     //console.log(fastaFilePaths)
+//     let make_blast_script_txt = ''
+//     make_blast_script_txt += "#!/bin/bash\n\n"
+//     
+// //     /usr/local/blast/bin/blastall -p blastn \
+// // -d /mnt/LV1/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta \
+// // -e 0.0001 -F F -v 20 -b 20 -q -3 -r 2 -G 5 -E 2 \
+// // -i /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/389_0541_Abiotrophia_defectiva_HMT \
+// // -o /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
+// // 1>/dev/null 2>>/mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/error2; \
+// // mv /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
+// // /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/389_0541_Abiotrophia_defectiva_HMT;\
+// // /mnt/myBROP/var/www/html/homd_modules/RNAblast/parse_blast_single.pl \
+// // feu9hoakrcsg3r9cukjp5r36k7 389_0541_Abiotrophia_defectiva_HMT S ;\
+// // #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
+//     //console.log(opts)
+//     console.log('XXXXXXXXHostname: ',CFG.HOSTNAME)
+//     console.log('XXXXXXXXSITE: ',CFG.SITE)
+//     for (let i = 0; i < fastaFilePaths.length; i++) {
+//        make_blast_script_txt += path.join(CFG.PATH_TO_BLAST_PROG, opts.program)
+//        if(CFG.SITE === 'localhome'){
+//           make_blast_script_txt += ' -db /Users/avoorhis/programming/blast_db/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
+//        }else if(CFG.SITE === 'localmbl'){
+//           make_blast_script_txt += ' -db /Users/avoorhis/programming/blast/Bv6/Bv6'
+//        }else{   // HOMD
+//           make_blast_script_txt += ' -db ' + opts.dbPath
+//        }
+//        
+//        make_blast_script_txt += ' -evalue ' + opts.expect
+//        make_blast_script_txt += ' -max_target_seqs ' + opts.descriptions
+//        //make_blast_script_txt += ' -num_alignments ' + opts.alignments
+//        // Error: Argument "num_alignments".num_descriptions Incompatible with argument:  `max_target_seqs'
+//        // 
+//        make_blast_script_txt += ' -query ' + fastaFilePaths[i]
+//        make_blast_script_txt += ' -outfmt 15'   // single file: JSON
+//        //make_blast_script_txt += ' -outfmt 16'   //single file:XML
+//       // make_blast_script_txt += ' -html'   //JSON
+//        make_blast_script_txt += ' -out ' + dataDir + '/result' + i.toString() + '.blast' 
+//        make_blast_script_txt += " 1>/dev/null 2>>" + dataDir + "/error.log;"
+//        
+//        make_blast_script_txt += '\n\n'
+//        
+//     }
+//     //console.log('batch blast content:')
+//     //console.log(make_blast_script_txt)
+//     return make_blast_script_txt
+// }
 module.exports.readFilesInDirectory = function readFilesInDirectory(directory, destination) {
 
   return new Promise((resolve, reject) => {

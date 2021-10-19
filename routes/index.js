@@ -80,7 +80,7 @@ router.post('/site_search', (req, res) => {
   // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
   const gidKeyList = Object.keys(allGidObjList[0])
   const gidObjList = allGidObjList.filter(function (el) {
-    for (const n in gidKeyList) {
+    for (let n in gidKeyList) {
       if (Array.isArray(el[gidKeyList[n]])) {
         // we're missing any arrays
       } else {
@@ -97,7 +97,7 @@ router.post('/site_search', (req, res) => {
   const allOtidObjList = Object.values(C.taxon_lookup)
   const otidkeylist = Object.keys(allOtidObjList[0])
   const otidObjList = allOtidObjList.filter(function (el) {
-    for (const n in otidkeylist) {
+    for (let n in otidkeylist) {
       // console.log( el[otidkeylist[n]] )
       if (Array.isArray(el[otidkeylist[n]])) {
         // we're missing any arrays
@@ -133,7 +133,7 @@ router.post('/site_search', (req, res) => {
   //  Now get the otids
   const taxonOtidObj = {}
   const taxonOtidList = taxonList.map(e => e.otid)
-  for (const n in taxonOtidList) {
+  for (let n in taxonOtidList) {
     const otid = taxonOtidList[n]
     taxonOtidObj[otid] = C.taxon_lineage_lookup[otid].domain
     taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].phylum
@@ -163,7 +163,7 @@ router.post('/site_search', (req, res) => {
   // console.log(allPhageObjList[0])
   const pidKeyList = Object.keys(allPhageObjList[0])
   const pidObjList = allPhageObjList.filter(function (el) {
-    for (const n in pidKeyList) {
+    for (let n in pidKeyList) {
       // console.log(pidkeylist[n]+'-'+searchTextLower)
       if (Array.isArray(el[pidKeyList[n]])) {
         // we're missing any arrays

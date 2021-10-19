@@ -118,7 +118,7 @@ app.use((error, req, res, next) => {
   //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
   if(process.env.NODE_ENV === 'development'){
   //if(process.env.NODE_ENV === 'production'){
-   const logPath = '/Users/avoorhis/programming/homd-node.log'
+   
    log.debug(error.toString())
   }
   res.render('pages/lost', { 

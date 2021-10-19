@@ -152,7 +152,7 @@ def batchBlastFile(args, filesArray, details_dict):
         
         if details_dict['site'] == 'localhome':
             fileText += ' -db /Users/avoorhis/programming/blast_db/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
-        elif details_dict['site'] == 'MBL':
+        elif details_dict['site'] == 'localmbl':
             fileText += ' -db /Users/avoorhis/programming/blast/Bv6/Bv6'
         else:   # HOMD Default
             fileText += ' -db ' + details_dict['blastdbPath']
