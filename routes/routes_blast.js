@@ -60,6 +60,24 @@ const async = require('async')
   agtcgtactgggat
   ctgaagtagaatccatccgt
 */  
+router.get('/showBlast/:type/:id/:num', function blastWait(req, res) {
+    console.log('in showBlast')
+    let type = req.params.type
+    let num = req.params.num
+    let blastID = req.params.id
+    console.log('type',type)
+    console.log('id',blastID)
+    console.log('num',num)
+    let file
+    if(type === 'res'){
+        file = path.join(CFG.PATH_TO_BLAST_FILES,blastID,'blast_results','blast'+num+'.fa.out')
+    }else{  // type = seq
+        file = path.join(CFG.PATH_TO_BLAST_FILES,blastID,'blast'+num+'.fa')
+    }
+    console.log('file',file)
+    const data = fs.readFileSync(file)
+    res.send(data)
+})
 router.get('/blast_wait', function blastWait(req, res) {
     console.log('in blast wait')
     // need access to blast dir????
@@ -119,7 +137,7 @@ router.get('/blast_wait', function blastWait(req, res) {
               console.log('database', database)
           }
 
-          html = getBlastHtml(data)
+          html = getBlastHtmlTable(data, req.session.blastID)
           console.log('session.error2',req.session.pyerror)
           // if(blastFiles.length === 0){
 //              req.session.pyerror = {code:1, msg:'something bad happened'}
@@ -168,23 +186,34 @@ router.get('/blast_wait', function blastWait(req, res) {
     
 
 })
-function getBlastHtml(json){
-    let desc,id,html,init,numhits,split_items,hmt
+function getBlastHtmlTable(json, blastID){
+    let desc,id,html,init,numhits,split_items,hmt,seqid
     
     html = '<table><thead>'
-    html += "<tr><th>Query</th><th>Length</th><th>Hit</th><th>HOMD Clone Name</th></tr>"
+    html += "<tr><td>cb</td><th>Query</th><th>Length</th><th>Link</th><th>Hit</th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identities(%)</th></tr>"
     html += "</thead><tbody>"
-    
+    html += '<tr>'
     for(let n in json){
         numhits = json[n].hits.length
        
        if(numhits == 0){
-           html += "<tr><td class='blastcol1'>"+json[n].query_title+"</td><td class='blastcol2'>"+json[n].query_len+"</td>"
-           html += "<td class='blastcol3'>no hits found</td><td class='blastcol4'>no hits found</td></tr>"
+           html += '<td></td>'
+           html += "<td class='blastcol1'>"+json[n].query_title+'</td>'
+           html += "<td class='blastcol2'>"+json[n].query_len+'</td>'
+           html += '<td></td>'
+           html += "<td class='blastcol3'>no hits found</td>"
+           html += "<td class='blastcol4'>no hits found</td>"  
+           html += '<td></td><td></td><td></td></tr>'
+       
        } else if(numhits >= 4) {
-          html += "<tr><td class='blastcol1' rowspan='4'>"+json[n].query_title+"</td><td class='blastcol2 center' rowspan='4'>"+json[n].query_len+"</td>"
+          html += "<td rowspan='4'><input type='checkbox' name='' value=''></td>"
+          html += "<td class='blastcol1' rowspan='4'>"+json[n].query_title+'</td>'
+          html += "<td class='blastcol2 center' rowspan='4'>"+json[n].query_len+"</td>"
+         // html += "<td rowspan='4'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>blast_resultfile</a></td>"
+          html += "<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n[n.length - 1]+"')\">seq</a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n[n.length - 1]+"')\">blast_resultfile</a></td>"
+          
           for(let m=0; m<4; m++) {   // take 4 hits only -- are they top hits??
-               html += getHTML(json[n].hits[m].description, json[n].hits[m].hsps)
+               html += getRowHTML(json[n].hits[m].description[0], json[n].hits[m].hsps[0])
                
               //  
 //                desc = json[n].hits[m].description[0].title.split('|')  // always take first desc ??  !!!! this only works for HOMD DBs !!!!
@@ -195,9 +224,15 @@ function getBlastHtml(json){
 //                //html += "<td></td><td></td></tr>"
            }
        } else {
-          html += "<tr><td class='blastcol1' rowspan='"+numhits+"'>"+json[n].query_title+"</td><td class='blastcol2' rowspan='"+numhits+"'>"+json[n].query_len+"</td>"
+          seqid = 
+          html += "<td rowspan='"+numhits+"'><input type='checkbox' name='' value=''></td>"
+          html += "<td class='blastcol1' rowspan='"+numhits+"'>"+json[n].query_title+'</td>'
+          html += "<td class='blastcol2' rowspan='"+numhits+"'>"+json[n].query_len+'</td>'
+          //html += "<td rowspan='"+numhits+"'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>res</a></td>"
+          html += "<td rowspan='"+numhits+"'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n[n.length - 1]+"')\">seq</a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n[n.length - 1]+"')\">blast_resultfile</a></td>"
+          
           for(let m=0; m<numhits.length; m++) {   // take 4 hits only -- are they top hits??
-               html += getHTML(json[n].hits[m].description, json[n].hits[m].hsps)
+               html += getRowHTML(json[n].hits[m].description[0], json[n].hits[m].hsps[0])
               //  desc = json[n].hits[m].description[0].title.split('|')  // always take first desc ?? !!!! this only works for HOMD DBs !!!!
 //                id = desc.shift()   // remove and return first item
 //                hmt = desc[1].split('-')[1].trim()
@@ -207,31 +242,39 @@ function getBlastHtml(json){
     }
     html += '</tbody></table>'
     
-    
-     return html
+    return html
 }
-function getHTML(description, hsps) {
-    let hit_items,titleid,HMT,score,identity,html = ''
-    if(description.length === 1){
-       if(description[0].title === ''){
-          //b6
-          
-          html += "<td class='blastcol3 center'>"+description[0].id+'</td>'
-          html += "<td class='blastcol4'>"+description[0].accession+"</td></tr>"
-       }else{
-          // for all? homd blast databases??
-          hit_items = description[0].title.split('|')
-          titleid = hit_items.shift()  // remove and return first item
-          HMT = hit_items[1].split('-')[1].trim()
-          html += "<td class='blastcol3 center'><a href='/taxa/tax_description?otid="+HMT+"'>"+titleid.trim()+'</a></td>'
-          html += "<td class='blastcol4'>"+hit_items.join('|')+"</td></tr>"
-       }
-       
-               
-    }else{
-       // error
-       throw new Error('BLAST database formating problem')
-    }
+function getRowHTML(description, hsps) {
+    let hit_items,titleid,HMT,bitScore,identityPct,evalue,html = ''
+    bitScore = hsps.bit_score.toFixed(1).toString()
+    identityPct = (hsps.identity * 100 / hsps.align_len).toFixed(1).toString()
+    evalue = hsps.evalue.toString()
+    // console.log('evalue', evalue)
+//     console.log('hsps.identity', hsps.identity)
+//     console.log('bitScore', bitScore)
+//     console.log('identityPct', identityPct)
+    
+     if(description.title === ''){
+        //eg Bv6
+        html += "<td class='blastcol3 center'>" + description.id + '</td>'
+        html += "<td class='blastcol4 xsmall'>" + description.accession + '</td>'
+        html += "<td class='center xsmall'>" + evalue + '</td>'
+        html += "<td class='center xsmall'>" + bitScore + '</td>'
+        html += "<td class='center xsmall'>" + identityPct + '</td>'
+        html += '</tr>'
+     }else{
+        // for all? homd blast databases??
+        hit_items = description.title.split('|')
+        titleid = hit_items.shift()  // remove and return first item
+        HMT = hit_items[1].split('-')[1].trim()
+        html += "<td class='blastcol3 center'><a href='/taxa/tax_description?otid=" + HMT + "'>" + titleid.trim() + '</a></td>'
+        html += "<td class='blastcol4 xsmall'>" + hit_items.join('|') + '</td>'
+        html += "<td class='center xsmall'>" + evalue + '</td>'
+        html += "<td class='center xsmall'>" + bitScore + '</td>'
+        html += "<td class='center xsmall'>" + identityPct + '</td>'
+        html += '</tr>'
+     }
+    
     
     return html
 }
@@ -340,9 +383,9 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   let filename, filepath, data, fasta_as_list, trimlines, twolist,fastaFilePaths;
   const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i, returnTo: req.body.returnTo }
   let blastOpts = { expect:    req.body.blastExpect, 
-              descriptions: req.body.blastDescriptions,
-              alignments: req.body.blastAlignments,
-              //maxTargetSeqs: req.body.blastMaxTargetSeqs,
+              //descriptions: req.body.blastDescriptions,
+              //alignments: req.body.blastAlignments,
+              maxTargetSeqs: req.body.blastMaxTargetSeqs,
               advanced: req.body.advancedOpts,
               program: req.body.blastProg
               // add dbPath later
@@ -473,10 +516,10 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
     config.blastDir = blastDir
     config.dataType = opts.type
     config.expect = blastOpts.expect
-    config.descriptions = blastOpts.descriptions
-    config.alignments = blastOpts.alignments
+    //config.descriptions = blastOpts.descriptions
+    //config.alignments = blastOpts.alignments
     config.advanced = blastOpts.advanced
-    //config.maxTargetSeqs = blastOpts.maxTargetSeqs
+    config.maxTargetSeqs = blastOpts.maxTargetSeqs
     
     config.program = path.join(CFG.PATH_TO_BLAST_PROG, blastOpts.program)
     

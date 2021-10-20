@@ -22,12 +22,15 @@ thead th { position: sticky; top: 0; }
   padding: 10px;
   font-size: small;
   height: 500px;
+  width: auto;
   overflow: auto;
 }
 #blastResultsDiv table{
   border: 1px solid black;
   font-size: small;
   border-collapse:collapse;
+  width: auto;
+  overflow: auto;
 }
 #blastResultsDiv table th{
   color: black;
@@ -79,7 +82,16 @@ thead th { position: sticky; top: 0; }
       <table>
         <tr>
         <td><a href='#blastStats'>View BLAST Stats and Legend</a></td>
-        <td>Download</td>
+        <td>Download
+          <select class='dropdown'>
+            <option>As Text -top 4 matches</option>
+            <option>As Text -all</option>
+            <option>As Excel -top 4 matches</option>
+            <option>As Excel -all</option>
+          </select>
+        
+        
+        </td>
         </tr>
         <tr>
         <td>Search Results: <%= numseqs %> sequence(s) searched against target database:<br><%= targetdb %></td>
@@ -87,7 +99,11 @@ thead th { position: sticky; top: 0; }
         </tr>
       </table>
     </div>    
-    <div id='blastResultsDiv'><%- html %></div>
+    
+    <div id='blastResultsDiv'>
+       <%- html %>
+    </div>
+    
     <div id='blastStats'>
        SearchID: <%= blastId %>
     </div>
@@ -104,6 +120,7 @@ thead th { position: sticky; top: 0; }
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/blast.js"></script>
 <script>
   mainmenu()
 </script>

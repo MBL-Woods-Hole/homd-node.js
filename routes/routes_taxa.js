@@ -610,9 +610,7 @@ router.post('/get_refseq', function get_refseq(req, res) {
   console.log(req.body)
   var refseq_id = req.body.refid;
 
-  // express deprecated req.param(name): Use req.params, req.body, or req.query
-  // See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
-  //FIXME There are 4 fields which do I query???
+  
   //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
   let q = queries.get_refseq_query(refseq_id)
   //console.log(q)

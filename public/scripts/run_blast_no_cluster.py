@@ -160,12 +160,12 @@ def batchBlastFile(args, filesArray, details_dict):
         fileText += ' -evalue ' + details_dict['expect']
         fileText += ' -query ' + os.path.join(details_dict['blastDir'],file)
         # either:
-        fileText += ' -num_alignments ' + details_dict['alignments']   # not compaable w/ max_target_seqs
-        fileText += ' -num_descriptions ' + details_dict['descriptions']   # not compaable w/ max_target_seqs
+        #fileText += ' -num_alignments ' + details_dict['alignments']   # not compaable w/ max_target_seqs
+        #fileText += ' -num_descriptions ' + details_dict['descriptions']   # not compaable w/ max_target_seqs
         # or:
-        #fileText += ' -max_target_seqs ' + details_dict['maxTargetSeqs']  # use if outfmt >4
-        #fileText += ' -outfmt 15'   ## 15 JSON
-        
+        fileText += ' -max_target_seqs ' + details_dict['maxTargetSeqs']  # use if outfmt >4
+        fileText += ' -outfmt 15'   ## 15 JSON
+        #fileText += ' -html'   ## dont use this
         fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
         fileText += " 1>/dev/null 2>>" + details_dict['blastDir'] + "/error.log;"
         fileText += '\n'

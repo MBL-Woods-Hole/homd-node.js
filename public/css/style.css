@@ -54,6 +54,12 @@ p {
 .center {
     text-align:center;
 }
+.small {
+    font-size: small;
+}
+.xsmall {
+    font-size: x-small;
+}
 #wrapper {
   border: 1px solid #000;
   width: 1350px;
