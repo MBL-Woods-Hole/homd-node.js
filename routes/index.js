@@ -84,7 +84,7 @@ router.post('/site_search', (req, res) => {
       if (Array.isArray(el[gidKeyList[n]])) {
         // we're missing any arrays
       } else {
-        if ((el[gidKeyList[n]]).toLowerCase().includes(searchTextLower)) {
+        if ( Object.prototype.hasOwnProperty.call(el, gidKeyList[n]) && (el[gidKeyList[n]]).toLowerCase().includes(searchTextLower)) {
           return el.gid
         }
       }
@@ -102,7 +102,7 @@ router.post('/site_search', (req, res) => {
       if (Array.isArray(el[otidkeylist[n]])) {
         // we're missing any arrays
       } else {
-        if ((el[otidkeylist[n]]).toLowerCase().includes(searchTextLower)) {
+        if ( Object.prototype.hasOwnProperty.call(el, otidkeylist[n]) && (el[otidkeylist[n]]).toLowerCase().includes(searchTextLower)) {
           return el.otid
         }
       }

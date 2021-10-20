@@ -6,8 +6,8 @@ Pastels: fbb4ae b3cde3 ccebc5 decbe4 fed9a6 ffffcc e5d8bd fddaec f2f2f2
 :root {
   --title-bg:steelblue;
   --table-header-bg: #083370;    /* #006699; */
-  --div-bg011:#fbb4ae;
-  --div-bg012:#b3cde3;
+  --div-bg011:#fbb4ae;    /* lite green */
+  --div-bg012:#b3cde3;   /* golden yellow */
   --div-bg013:#ccebc5;
   --div-bg014:#decbe4;
   --div-bg015:#fed9a6;
@@ -23,7 +23,7 @@ Pastels: fbb4ae b3cde3 ccebc5 decbe4 fed9a6 ffffcc e5d8bd fddaec f2f2f2
   --div-bg06:#fdb462;
   --div-bg07:#b3de69;
   --div-bg08:#fccde5;
-  --div-bg09:#d9d9d9;
+  --div-bg09:#d9d9d9;    /* grey */
   --div-bg10:#bc80bd;
   --div-bg11:#ccebc5;
   --div-bg12:#ffed6f;

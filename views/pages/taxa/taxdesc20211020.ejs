@@ -1,13 +1,37 @@
 <style>
-
-
-
+#taxon-desc{
+   font-size:20px;
+   
+}
+.outer{
+   width:100%;
+   min-height:200px;
+   max-height:200px;
+   
+}
+.float-left{
+   float:left;
+   border:1px solid pink;
+   padding:5px;
+   margin:5px 0;
+   width:50%
+}
+.float-right{
+   float:right;
+   padding:5px;
+   margin:5px 0;
+   width:46%;
+   border:1px solid pink;
+}
+.text {
+   overflow:auto;
+  border:1px solid green;
+}
 .description{
   font-size:12px;
-  padding:5px;
+  padding:0 0px;
   max-height:200px;
   overflow:auto;
-  border:1px solid darkgreen;
 }
 #description_tbl{
   width:100%;
@@ -15,7 +39,6 @@
 }
 #description_tbl td{
   padding-left:5px;
-  
   
 }
 #left-tbl td{
@@ -90,15 +113,16 @@
    (<%= taxidfullnameplus %>)
   </div>
 <% } %>
-
+<div class="outer">
     
-    
-    <div class='description'>
-      <b>Description</b>:
+    <div class="float-left">
+      Description:
         <% if(Object.keys(data2).length === 0) { %>
+          <span class="description" >
           Not Written Yet
+          </span>
         <% }else{ %>
-            <div class=''>
+            <div class="description">
               <%- data2.general %>
               <br><%- data2.disease %>
               <br><%- data2.prev %>
@@ -110,37 +134,43 @@
      
      
       
-<div class=''>
-  <% if(images.length === 1 ) { %>
-      <div class=''>
-        <img class='img' src='/images/life-images/<%= images[0].name %>'  alt='<%= images[0].name %>'  \><br>
-        <small><%= images[0].text %></small>
-      </div>
+<div class='float-right'>
+  <% if(images.length === 0 ) { %>
+    <style>
+      .float-left{width:100%;}
+      .float-right{border:0px}
+    </style>
+  
+  <% }else if(images.length === 1 ) { %>
+      <div >
+    <img class='img' src='/images/life-images/<%= images[0].name %>'  alt='<%= images[0].name %>'  \><br>
+    <small><%= images[0].text %></small>
+    </div>
   
   <% }else{ %>
-      <table border='0'>
-              <% for(n in images){ %>
-                <% if(n==0 || n==2){ %>
-                <tr><td>
-                <% }else{ %>
-                <td>
-                <% } %>
-                 <div>
-                <img class='img' src='/images/life-images/<%= images[n].name %>'  alt='<%= images[n].name %>'  \><br>
-                <small><%= images[n].text %></small>
-                 </div>
-               <% if(n==0 || n==2){ %>
-                </td>
-                <% }else{ %>
-                </td></tr>
-                <% } %>
-              <% } %>
-      </table>
+    <table border='0'>
+  <% for(n in images){ %>
+    <% if(n==0 || n==2){ %>
+    <tr><td>
+    <% }else{ %>
+    <td>
+    <% } %>
+     <div>
+    <img class='img' src='/images/life-images/<%= images[n].name %>'  alt='<%= images[n].name %>'  \><br>
+    <small><%= images[n].text %></small>
+     </div>
+   <% if(n==0 || n==2){ %>
+    </td>
+    <% }else{ %>
+    </td></tr>
+    <% } %>
+  <% } %>
+    </table>
   <% } %>
 </div>
 
 
-
+</div> <!--    End Outer -->
 
 <div id='tables'>
 <br><br><div id='status'>Status: [<%= data1.status %>] -- Preferred Body Site: [<%= data1.site %>]</div>

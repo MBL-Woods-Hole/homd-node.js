@@ -4,7 +4,7 @@ thead th { position: sticky; top: 0; }
 #blast-search-info{
   border:1px solid grey;
   padding:2px 10px;
-  background: var(--div-bg03);
+  background: lightgrey;
   height: 60px;
   
 }
@@ -32,9 +32,13 @@ thead th { position: sticky; top: 0; }
   width: auto;
   overflow: auto;
 }
+#blastResultsDiv table sup{
+  color:red;
+}
 #blastResultsDiv table th{
-  color: black;
-  background:  lightgreen;
+  
+  background:  var(--table-header-bg);
+  color: white;
   padding:5px;
   font-size:12px;
   text-align: center;
@@ -46,7 +50,7 @@ thead th { position: sticky; top: 0; }
   
 }
 .blastcol1{
-    max-width: 250px;
+    max-width: 300px;
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;
@@ -55,7 +59,12 @@ thead th { position: sticky; top: 0; }
     max-width: 30px;
    
 }
-
+.blastBGodd{
+   background: var(--div-bg09)  /* grey */
+}
+.blastBGeven{
+   background: var(--div-bg12)  
+}
 </style>
 <% error_obj = JSON.parse(error) %>
 <%- include('../../partials/header_html'); %>
@@ -78,18 +87,22 @@ thead th { position: sticky; top: 0; }
      <!-- turn off timer -->
      <% timer = 'off' %>
 <% }else{ %>
+    
+    <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
     <div id='blast-search-info'>
       <table>
         <tr>
         <td><a href='#blastStats'>View BLAST Stats and Legend</a></td>
-        <td>Download
+        <td>
           <select class='dropdown'>
+            <option>Download</option>
             <option>As Text -top 4 matches</option>
             <option>As Text -all</option>
             <option>As Excel -top 4 matches</option>
             <option>As Excel -all</option>
+            <option>As JSON Format</option>
           </select>
-        
+          <= Use checkboxes in column 1 to limit sequences.
         
         </td>
         </tr>
@@ -100,13 +113,23 @@ thead th { position: sticky; top: 0; }
       </table>
     </div>    
     
+    
     <div id='blastResultsDiv'>
        <%- html %>
     </div>
     
-    <div id='blastStats'>
+    <small>
+      <div id='blastStats'>
        SearchID: <%= blastId %>
-    </div>
+       <table class='table'>
+       
+       <tr><td>1</td><td></td><td>4</td><td></td></tr>
+       <tr><td>2</td><td></td><td>5</td><td></td></tr>
+       <tr><td>3</td><td><img  src='/images/tinyseq.gif' height='15'> Link opens the sequence<br><img  src='/images/blastRes.gif' height='15'> Link opens the JSON blast result.</td><td>6</td><td></td></tr>
+       </table>
+      </div>
+    </small>
+    </form>
 <% } %>   
     </div> <!-- end: page-content -->
     

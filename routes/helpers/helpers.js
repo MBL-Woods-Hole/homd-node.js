@@ -358,6 +358,9 @@ make_blast_script_txt += "bash "+dataDir + "/clust_blast.sh\n";
 module.exports.make_qsub_commands_txt = function make_qsub_commands_txt(req, dataDir, fileList) {
 
 }
+module.exports.sleep = function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
 // module.exports.createBlastCommandFile = function createBlastCommandFile(fastaFilePaths, opts, dataDir) {
 //     console.log('in createBlastCommandFile')
 //     //console.log(fastaFilePaths)
