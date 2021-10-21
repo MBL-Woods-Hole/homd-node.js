@@ -94,13 +94,13 @@ thead th { position: sticky; top: 0; }
         <tr>
         <td><a href='#blastStats'>View BLAST Stats and Legend</a></td>
         <td>
-          <select class='dropdown'>
-            <option>Download</option>
-            <option>As Text -top 4 matches</option>
-            <option>As Text -all</option>
-            <option>As Excel -top 4 matches</option>
-            <option>As Excel -all</option>
-            <option>As JSON Format</option>
+          <select class='dropdown' onchange="blastDownload(this.value,'<%= blastId %>')">
+            <option value='0'>Download</option>
+            <option value='text4'>As Text -top 4 matches</option>
+            <option value='textAll'>As Text -all</option>
+            <option value='excel4'>As Excel -top 4 matches</option>
+            <option value='excelAll'>As Excel -all</option>
+            <option value='json'>As JSON Format</option>
           </select>
           <= Use checkboxes in column 1 to limit sequences.
         

@@ -1,12 +1,13 @@
 <style>
 #blast-wait-box{
-   background: lightblue;
+   background: black;
+   color:white;
    padding:20px;
    border: 1px solid grey;
    width: 70%;
 }
 </style>
-<% error_obj = JSON.parse(error) %>
+
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -18,30 +19,27 @@
     <div class='page-content' >
               
        <div class='title'>BLAST WAIT</div>
-    <% if(error_obj.code) { %>
-       <div class='error'>
-       <%- error_obj.msg %>
-       </div>
-         <!-- turn off timer -->
-        <% timer = 'off' %>
-    <% }else{ %>
+    
        <% timer = 'on' %>
       <center>
       <div id='blast-wait-box'>
-         <br>Will refresh every 5 seconds and present the blast results page when complete.
+         <br>Refreshes every 5 seconds and present the blast results page when complete.
        
          <br>
          
          <% if(filesFinished >0){ %>
-              Sequences Finished:  <%= filesFinished %> out of <%= filesStarted %>
+              <br><br>Sequences Finished:  <%= filesFinished %> out of <%= filesStarted %>
          <% }else{ %>
-              <span id='proc'>Processing</span>
+              <br><br>
          <% } %>
+              
+         <br><br><span id='proc'>Processing</span>
+         <br><br><img src='/images/0_WzVRQs214b7TgyJXtrans.gif' height='80'>
          <br><br>
          <span id='show'>This page will reload in <span id="cnt" style="color:red;">5</span> Seconds</span>
       </div>
       </center>
-    <% } %>
+    
   
     </div> <!-- end: page-content -->
     

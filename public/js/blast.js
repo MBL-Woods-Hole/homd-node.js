@@ -33,7 +33,7 @@ function getFileContent(type, id, num) {
 } 
 
 
-function blastCBMaster(){
+function blastCkboxMaster(id){
    //alert('in bcbm')
    var ckbs = document.querySelectorAll("input[type='checkbox']");
    // just need to check or un-check all
@@ -50,4 +50,23 @@ function blastCBMaster(){
     } 
 }
 
+function blastDownload(value, id){
+   alert(id)
+   form = document.getElementById('blastDownloadForm')
+   var i = document.createElement("input");
+   i.type = "text";
+   i.name = "dnldType";
+   i.id = "intext";
+   i.value = value
+   // add all elements to the form
+   form.appendChild(i);
+   var i = document.createElement("input");
+   i.type = "text";
+   i.name = "blastID";
+   i.id = "intext";
+   i.value = id
+   // add all elements to the form
+   form.appendChild(i);
+   form.submit()
+}
      

@@ -12,42 +12,7 @@ const helpers   = require(app_root + '/routes/helpers/helpers')
 const C       = require(app_root + '/public/constants')
 const async = require('async')
 
-// router.post('/refseq_blastn_1', upload.single('blastFile'),  function refseq_blastn_post1(req, res) {
-//     console.log('MADEIT TO blastn-postTESTING')
-//     console.log(req.body)
-//     console.log(req.file)
-//     // const patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
-//     
-//     const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i }
-//     //let blast_session_ts = Date.now().toString();
-//     let blast_session_ts = req.session.id
-//     const blast_directory = path.join(CFG.PATH_TO_BLAST_FILES, blast_session_ts)
-//     if (!fs.existsSync(blast_directory)){
-//          fs.mkdirSync(blast_directory);
-//     }
-//     if(req.file){
-//        followFilePath(req, res, opts, blast_directory)
-//     }else{
-//        followTextInputPath(req, res, opts,blast_directory)
-//     }
-//     
-//     
-//     // steps
-//     // move file
-//     // read file
-//     // console.log results
-//       
-//   // for text input
-//   //(async function () {
-//     // write single file
-//     
-//     // splint into separate files
-//     // write individulal blast file
-//     // write single qsubcommands file
-//   //await addGroceryItem('nutella', 1, 4);
-//   //})();
-//    //render_page(res)
-// })
+
 /*  test seqs    
 
  agtcgtactgggatctgaa
@@ -59,10 +24,21 @@ const async = require('async')
   >ds2| let kefdgste5%$
   agtcgtactgggat
   ctgaagtagaatccatccgt
+  
+  >PC_634_1_FLP3FBN01ELBSX_orig_bc_ACAGAGT
+CTGGGCCGTCTCAGTCCCAATGTGGCCGTACCCTCTGGCCGGCTACGTCATCGCCTTGGTGGGCCGTT
+>PC_634_2_FLP3FBN01EG8AX_orig_bc_ACAGAGT
+TTGGACCGTGTCTCAGTTCCAATGTGGGGGCCTTCCTCTCAGAACCCCTATCCATCGAAGGCTTGGTGGGCCGTTA
+>PC_354_3_FLP3FBN01EEWKD_orig_bc_AGCACGA
+TTGGGCCGTGTCTATGTGGCCGATCAGTCTCTTGGCTATGCATCATTGCCTTGGTAAGCCGTT
+>PC_481_4_FLP3FBN01DEHK3_orig_bc_ACCAGCG
+CTGGGCCGTGTCTCTCCCAATGTGGCCGTTCAACCTCTCAGTCCGGCTACTGATCGACTTGGTGAGCCGTT
 */  
 router.post('/blastDownload', function blastWait(req, res) {
     console.log('in blastDownload')
     console.log(req.body)
+    
+    
 })
 router.post('/showBlast', function blastWait(req, res) {
     console.log('in showBlast')
@@ -96,7 +72,7 @@ router.get('/blast_wait', function blastWait(req, res) {
     
     console.log('session blast_wait:')
     console.log(req.session)
-    let finished = false, blastFiles = [], faFiles = [], html, jsondata, database
+    let finished = false, blastFiles = [], faFiles = [], html, jsondata, database, pyerror
     
     
     
@@ -129,7 +105,7 @@ router.get('/blast_wait', function blastWait(req, res) {
     }
     console.log('counter:',req.session.blastCounter,'blastFiles',blastFiles.length,'faFiles',faFiles.length)
     console.log('finished:t/f?',finished)
-    console.log('session.error',req.session.pyerror)
+    //console.log('session.error',req.session.pyerror)
     if(finished){
       let data = {}
       async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
@@ -149,32 +125,64 @@ router.get('/blast_wait', function blastWait(req, res) {
           }
 
           html = getBlastHtmlTable(data, req.session.blastID)
-          console.log('session.error2',req.session.pyerror)
+          //console.log('session.error2',req.session.pyerror)
           // if(blastFiles.length === 0){
 //              req.session.pyerror = {code:1, msg:'something bad happened'}
 //              
 //           }
-          if(!database){
-              // throw error
-              throw new Error('BLAST Database Error - no db found.')
-              
-          }
+          if(!req.session.blastID){
+             req.flash('fail', 'blastID no longer Valid')
+             res.redirect('/refseq/refseq_blastn') // this needs to redirect to either refseq or genome
+             return
+           }
+          console.log('req.session.blastID',req.session.blastID)
+          let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blastID, 'SCRIPTERROR')
           
-          // don't delete req.session.blast* yet
-          res.render('pages/blast/blast_results', {
-            title: 'HOMD :: BLAST WAIT', 
-            pgname: 'blast_results',
-            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-            hostname: CFG.HOSTNAME,
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-            db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-            html: html,
-            targetdb: database,
-            numseqs: blastFiles.length,
-            blastId: req.session.blastID,
-            blastTimer: req.session.blastTimer,   // rough count
-            error: JSON.stringify(req.session.pyerror)
-          })
+          fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
+              if(err){
+                  // continue on NO ERROR FILE PRESENT
+                  if(!database){
+                     // throw error
+                     //throw new Error('BLAST Database Error - no db found.')
+                     pyerror = { code: 1, msg: 'BLAST Database Error - no db found.' }
+                  }
+                  // no error to report
+                  pyerror = { code: 0, msg: ''}
+                  
+                  
+                  
+              }else{
+                 // file exists throw error
+                 //throw new Error('BLAST Script Error: '+content)
+                 pyerror = { code: 1, msg:'BLAST Script Error: ' + content }
+                 
+              }
+              
+              //////////////
+               // don't delete req.session.blast* yet
+              res.render('pages/blast/blast_results', {
+                title: 'HOMD :: BLAST WAIT', 
+                pgname: 'blast_results',
+                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                hostname: CFG.HOSTNAME,
+                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+                html: html,
+                targetdb: database,
+                numseqs: blastFiles.length,
+                blastId: req.session.blastID,
+                blastTimer: req.session.blastTimer,   // rough count
+                error: JSON.stringify(pyerror)
+              })
+              //////////////////////
+              
+              
+          }) 
+             
+          
+          
+          
+         
       })
       
       
@@ -190,7 +198,7 @@ router.get('/blast_wait', function blastWait(req, res) {
         db_choices: JSON.stringify(C.refseq_blastn_db_choices),
         filesFinished: blastFiles.length,
         filesStarted: faFiles.length,
-        error: JSON.stringify(req.session.pyerror)
+        //error: JSON.stringify(req.session.pyerror)
         
       })
     }
@@ -202,7 +210,7 @@ function getBlastHtmlTable(json, blastID){
     
     html = '<table><thead>'
     html += '<tr>'
-    html += "<th><input type='checkbox' onclick='blastCBMaster()'><br><sup>1</sup></th>"
+    html += "<th><input type='checkbox' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
     html += '<th>Query</th><th>Length</th>'
     html += '<th>View<sup>3</sup><br>Link</th><th>Hit</th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identities<br>(%)</th></tr>'
     html += '</thead><tbody>'
@@ -227,13 +235,14 @@ function getBlastHtmlTable(json, blastID){
            html += "<tr class='"+bgcolor+"'>"
            html += '<td></td>'
            html += "<td class='blastcol1 small'>"+json[n].query_title+'</td>'
-           html += "<td class='blastcol2'>"+json[n].query_len+'</td>'
+           html += "<td class='blastcol2 center'>"+json[n].query_len+'</td>'
            html += '<td></td>'
-           html += "<td class='blastcol3'>no hits found</td>"
+           html += "<td class='blastcol3 center'>no hits found</td>"
            html += "<td class='blastcol4'>no hits found</td>"  
            html += '<td></td><td></td><td></td></tr>'
        
        } else if(numhits >= 4) {
+          console.log('numhits>=4',numhits)
           html += "<tr class='"+bgcolor+"'>"
           html += "<td rowspan='4'><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"
           html += "<td class='blastcol1 small' rowspan='4'>"+json[n].query_title+'</td>'
@@ -241,20 +250,21 @@ function getBlastHtmlTable(json, blastID){
          // html += "<td rowspan='4'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>blast_resultfile</a></td>"
           html += "<td class='center' rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
           
-          for(let m=0; m<4; m++) {   // take 4 hits only -- are they top hits??
+          for(let m = 0; m < 4; m++) {   // take 4 hits only -- are they top hits??
                html += getRowHTML(json[n].hits[m].description[0], json[n].hits[m].hsps[0], bgcolor)
                html += '</tr>'
             
           }
        } else {
+          console.log('numhits<4',numhits)
           html += "<tr class='"+bgcolor+"'>"
           html += "<td rowspan='"+numhits+"'><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"
           html += "<td class='blastcol1 small' rowspan='"+numhits+"'>"+json[n].query_title+'</td>'
-          html += "<td class='blastcol2' rowspan='"+numhits+"'>"+json[n].query_len+'</td>'
+          html += "<td class='blastcol2 center' rowspan='"+numhits+"'>"+json[n].query_len+'</td>'
           //html += "<td rowspan='"+numhits+"'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>res</a></td>"
           html += "<td class='center' rowspan='"+numhits+"'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
           
-          for(let m=0; m<numhits.length; m++) {   // take 4 hits only -- are they top hits??
+          for(let m = 0; m < numhits; m++) {   // take 4 hits only -- are they top hits??
                html += getRowHTML(json[n].hits[m].description[0], json[n].hits[m].hsps[0], bgcolor)
                html += '</tr>'
           }
@@ -543,6 +553,7 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
     
     config.program = path.join(CFG.PATH_TO_BLAST_PROG, blastOpts.program)
     
+    config.command = pyscript +' -c '+ path.join(blastDir, 'DATA.json')
     config.filePath = ''
     config.textInput = ''
     
@@ -573,21 +584,18 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
       console.log('Pipeing data from python script::')
       console.log(data.toString())
       let dataPyToSend = data.toString()
-      req.session.pyerror = {code:0, msg:''}
+      //req.session.pyerror = {code:0, msg:''}
     })
     
     pythonRun.stderr.on('data', function pyStdErr(data) {
-      let errordata = data.toString()
+      let errorData = data.toString()
       
-      req.session.pyerror = {code: 1, msg: errordata}
-      console.log('Caught ERROR', errordata)
+      //req.session.pyerror = {code: 1, msg: errorData}
+      console.log('Caught ERROR', errorData)
       //
-      try {
-        throw new Error('BLAST Script Error - '+ errordata)  // production write to log
-      }
-      catch (error) {
-        next(error)
-      }
+      let errorFilePath = path.join(blastDir, 'SCRIPTERROR')
+      console.log(errorFilePath)
+      fs.writeFileSync(errorFilePath, errorData)
       //throw new Error(errordata);
       
     })
@@ -616,7 +624,7 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
         req.session.blastTimer = 0
         req.session.blastCounter = 0
         console.log(req.session)
-        req.session.pyerror = {code:0, msg:''}
+        //req.session.pyerror = {code:0, msg:''}
         res.redirect('blast_wait')   // MUST run at least once
     }
     

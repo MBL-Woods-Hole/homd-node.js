@@ -31,7 +31,28 @@ details_dict = json.load(f)
 #config = configparser.RawConfigParser()   
 #config.read(args.config)
 #details_dict = dict(config.items('MAIN'))
+"""
+ agtcgtactgggatctgaa
+  
+  >ds0|imput 1200
+  agtcgtactggtaccggatctgaa
+  >ds1|kefdgste5%$
+  agtcgtactgggatctgaagtagaatccgt
+  >ds2| let kefdgste5%$
+  agtcgtactgggat
+  ctgaagtagaatccatccgt
+  
+  >PC_634_1_FLP3FBN01ELBSX_orig_bc_ACAGAGT
+CTGGGCCGTCTCAGTCCCAATGTGGCCGTACCCTCTGGCCGGCTACGTCATCGCCTTGGTGGGCCGTT
+>PC_634_2_FLP3FBN01EG8AX_orig_bc_ACAGAGT
+TTGGACCGTGTCTCAGTTCCAATGTGGGGGCCTTCCTCTCAGAACCCCTATCCATCGAAGGCTTGGTGGGCCGTTA
+>PC_354_3_FLP3FBN01EEWKD_orig_bc_AGCACGA
+TTGGGCCGTGTCTATGTGGCCGATCAGTCTCTTGGCTATGCATCATTGCCTTGGTAAGCCGTT
+>PC_481_4_FLP3FBN01DEHK3_orig_bc_ACCAGCG
+CTGGGCCGTGTCTCTCCCAATGTGGCCGTTCAACCTCTCAGTCCGGCTACTGATCGACTTGGTGAGCCGTT
 
+
+"""
 
     
 
@@ -83,6 +104,7 @@ def processTextIntoFiles(args, details_dict):
     if textInput[0] == '>':
         # one or more seqs
         lines_split = textInput.split('\n')
+        lines_split = [n for n in lines_split if n.strip()] ## get rid of empty lines 
         
         seqcount = 0
         count = 0
@@ -110,8 +132,11 @@ def processTextIntoFiles(args, details_dict):
                 
                 seqcount += 1
             else:
-                entry += line.strip().upper()
-            
+                t = line.strip().upper()
+                if validate(t):
+                    entry += t
+                else:
+                    sys.exit('ERROR--Found invalid characters in string. Only IUPAC letters allowed.')
             if lastLine or (count > 0  and lines_split[count+1].strip()[0] == '>'):
                 if args.verbose:
                   print('\nwriting',fastaFilePath)
@@ -124,14 +149,13 @@ def processTextIntoFiles(args, details_dict):
             print('<br>in process single')
         textInput = textInput.upper()
         if validate(textInput):
-        
             # single naked sequence
             fileName = 'blast0.fa'
             fileNamePath = os.path.join(details_dict['blastDir'], fileName)
             files.append(fileName)
             write_file(fileNamePath, '>1\n'+textInput+'\n')
         else:
-           sys.exit('ERROR--Invalid Characters')
+           sys.exit('ERROR--Found invalid characters in string. Only IUPAC letters allowed.')
         
     return files
     
