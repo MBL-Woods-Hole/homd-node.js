@@ -43,140 +43,76 @@ router.get('/blast_results', function blastResults(req, res) {
      
      
      console.log(req.query)
-     let jsondata, data={}, html
-     // read directory DATA.config first
+     let jsonData, data={}, html
+     // read directory CONFIG.json first
      let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
-     
-     
      let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results')
      //const result = getAllDirFiles(blastDir) // will give ALL files in ALL dirs
      const result = getAllFilesWithExt(blastResultsDir, 'out')
-     // for(let i=0; i < result.length; i++){
-//            if(result[i].endsWith('.fa')){
-//               faFiles.push(result[i])
-//            } 
-//            if(result[i].endsWith('.out')){
-//               blastFiles.push(path.join(blastResultsDir, result[i]))
-//            } 
-//         }
-     
-     
      let blastFiles = []
      for(let i=0; i < result.length; i++){
               blastFiles.push(path.join(blastResultsDir, result[i]))
-      }
+     }
      console.log('blastfiles')
      console.log(blastFiles)
-     
-     async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
+     let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
+     fs.readFile(configFilePath, function readConfig(err,  configData) {
+         if(err){
+            return console.log(err)
+         }else{
+             let config = JSON.parse(configData)
+             async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
           
-          for(let i=0; i<blastFiles.length; i++){
-              jsondata = JSON.parse(results[i])
-              console.log(blastFiles[i])
-              data['query'+i.toString()] = jsondata.BlastOutput2[0].report.results.search
-              if(CFG.ENV === 'development'){
-                  console.log('jsondata', jsondata)
-              }
-              if(jsondata === undefined){
-                  console.log('jsondata error for file:',blastFiles[i])
-              }
+                  for(let i=0; i<blastFiles.length; i++){
+                      jsonData = JSON.parse(results[i])
+                      console.log(blastFiles[i])
+                      data['query'+i.toString()] = jsonData.BlastOutput2[0].report.results.search
+                      if(CFG.ENV === 'development'){
+                          console.log('jsondata', jsonData)
+                      }
+                      if(jsonData === undefined){
+                          console.log('jsondata error for file:',blastFiles[i])
+                      }
               
-          }
+                  }
 
-          html = getBlastHtmlTable(data, blastID)
+                  html = getBlastHtmlTable(data, blastID)
          
-          if(!blastID){
-             req.flash('fail', 'blastID no longer Valid')
-             res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
-             return
-           }
+                  if(!blastID){
+                     req.flash('fail', 'blastID no longer Valid')
+                     res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
+                     return
+                   }
           
 
      
-        res.render('pages/blast/blast_results', {
-                title: 'HOMD :: BLAST WAIT', 
-                pgname: 'blast_results',
-                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-                hostname: CFG.HOSTNAME,
-                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-                //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-                html: html,
-                numseqs: blastFiles.length,
-                //blastSessionParams: JSON.stringify(req.session.blast),
-                //blastTimer: req.session.blast.timer,   // rough count
-                //blastProgram: req.session.blast.program,
-                //error: JSON.stringify(pyerror)
-                error: JSON.stringify({})
-          })
-    }) 
-})
-//
-router.get('/blast_wait', function blastWait(req, res) {
-    console.log('in blast wait')
+                res.render('pages/blast/blast_results', {
+                        title: 'HOMD :: BLAST WAIT', 
+                        pgname: 'blast_results',
+                        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                        hostname: CFG.HOSTNAME,
+                        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                        //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+                        html: html,
+                        numseqs: blastFiles.length,
+                        blastParams: JSON.stringify(config),
+                        //blastTimer: req.session.blast.timer,   // rough count
+                        //blastProgram: req.session.blast.program,
+                        //error: JSON.stringify(pyerror)
+                        blastID: blastID,
+                        error: JSON.stringify({})
+                  })
+            })   // end async
     
-    // need access to blast dir????
-    // session id??
-    if(!req.session.blast){
-       res.redirect('/')
-       return
-    }
-    
-    console.log('session blast_wait:')
-    console.log(req.session)
-    console.log(req.session.id)
-    let finished = false, blastFiles = [], faFiles = [], html, jsondata, pyerror
-    
-    if(req.session.blast.id){
-        let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id)
-        req.session.blast.counter += 1
-        req.session.blast.timer += 5  // 5sec at a pop
-        let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'blast_results')
-        //const result = getAllDirFiles(blastDir) // will give ALL files in ALL dirs
-        const faFiles    = getAllFilesWithExt(blastDir,'fa')
-        const blastFiles = getAllFilesWithExt(blastResultsDir,'out')
-        // for(let i=0; i < result.length; i++){
-//            if(result[i].endsWith('.fa')){
-//               faFiles.push(result[i])
-//            } 
-//            if(result[i].endsWith('.out')){
-//               blastFiles.push(path.join(blastResultsDir, result[i]))
-//            } 
-//         }
-        
-        if(blastFiles.length === faFiles.length && req.session.blast.counter > 1){
-             finished = true;
         }
-    }else{
-        finished = false;
-    }
-    if(!req.session.blast.counter){
-       // need to get off this train
-       finished = true;
-    }
-    console.log('counter:',req.session.blast.counter,'blastFiles',blastFiles.length,'faFiles',faFiles.length)
-    console.log('finished:t/f?',finished)
-    //console.log('session.error',req.session.pyerror)
-    if(finished){
-        let data = {}
-        //console.log('req.session.blast.id',req.session.blast.id)
-        let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'SCRIPTERROR')
-
-        fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
-              if(err){
-                  // continue on NO ERROR FILE PRESENT
-                  // no error to report
-                  pyerror = { code: 0, msg: ''}
-              }else{
-                 // file exists throw error
-                 //throw new Error('BLAST Script Error: '+content)
-                 pyerror = { code: 1, msg:'BLAST Script Error: ' + content }
-              }
-              res.redirect('/blast/blast_results?id=' + req.session.blast.id)
-        }) 
-
-    }else{
-      console.log('rendering blast_wait')
-      res.render('pages/blast/blast_wait', {
+     })
+     
+})
+const run_blast_wait = function runBlastWait(res, blastDir) {
+    console.log('rendering blast wait')
+    let faFiles    = getAllFilesWithExt(blastDir,'fa')     // synchronous !!
+    let blastFiles = getAllFilesWithExt(blastDir,'blast_results','out')   // synchronous !!
+    res.render('pages/blast/blast_wait', {
         title: 'HOMD :: BLAST WAIT', 
         pgname: 'blast_wait',
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
@@ -185,14 +121,144 @@ router.get('/blast_wait', function blastWait(req, res) {
         //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
         filesFinished: blastFiles.length,
         filesStarted: faFiles.length,
-        //error: JSON.stringify(req.session.pyerror)
-        
       })
+}
+//
+router.get('/blast_wait', function blastWait(req, res) {
+    console.log('in blast wait')
+    console.log(req.query)
+    let blastID = req.query.id 
+    let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
+    let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results')
+    // need access to blast dir????
+    // session id??
+    let finished = false, html, jsonData, pyerror
+    let faFiles    = getAllFilesWithExt(blastDir,'fa')     // synchronous !!
+    let blastFiles = getAllFilesWithExt(blastResultsDir,'out')   // synchronous !!
+    
+    
+     
+    if(blastID){
+        //const result = getAllDirFiles(blastDir) // will give ALL files in ALL dirs
+        
+
+        //if(blastFiles.length === faFiles.length && req.session.blast.counter > 1){
+        if(blastFiles.length > 0 && blastFiles.length === faFiles.length ){
+             console.log('setting finished to true')
+             finished = true;
+        }
+    }else{
+        finished = false;
+    }
+   //  if(!req.session.blast.counter){
+//        // need to get off this train
+//        finished = true;
+//     }
+    console.log('blastFiles',blastFiles.length,'faFiles',faFiles.length)
+    console.log('finished:t/f?',finished)
+    //console.log('session.error',req.session.pyerror)
+    if(finished){
+        let data = {}
+        //console.log('req.session.blast.id',req.session.blast.id)
+        let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'SCRIPTERROR')
+
+        fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
+              if(err){
+                  // continue on NO ERROR FILE PRESENT
+                  // no error to report
+                  console.log('no SCRIPTERROR file present :)')
+                  pyerror = { code: 0, msg: ''}
+              }else{
+                 // file exists throw error
+                 //throw new Error('BLAST Script Error: '+content)
+                 pyerror = { code: 1, msg:'BLAST Script Error: ' + content }
+                
+              }
+               console.log('pyerror from SCRIPTERROR file:',pyerror)
+              res.redirect('/blast/blast_results?id=' + blastID)
+        }) 
+
+    }else{
+      console.log('running:  run_blast_wait')
+      //res.redirect('/blast/blast_results?id=' + blastID)
+      run_blast_wait(res, blastDir)
+      
+      // res.render('pages/blast/blast_wait', {
+//         title: 'HOMD :: BLAST WAIT', 
+//         pgname: 'blast_wait',
+//         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//         hostname: CFG.HOSTNAME,
+//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//         //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+//         filesFinished: blastFiles.length,
+//         filesStarted: faFiles.length,
+//          
+//         //error: JSON.stringify(req.session.pyerror)
+//         
+//       })
     }
     
 
 })
-
+//
+//
+router.post('/blast_post', upload.single('blastFile'),  async function blast_post(req, res, next) {
+  console.log('MADEIT TO blastPost')
+  console.log('req.body')
+  console.log(req.body)
+  
+  console.log('req.file?', req.file)   // may be undefined
+  // blastFxn == 'refseq' and returnTo == '/refseq/refseq_blastn'
+  
+  let filename, filepath, data, fasta_as_list, trimlines, twolist,fastaFilePaths;
+  const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i, returnTo: req.body.returnTo }
+  let blastOpts = createBlastOpts(req.body)
+  
+  //let blast_session_ts = Date.now().toString();
+  const randomnum = Math.floor(Math.random() * 90000) + 10000;
+  opts.blastID = req.session.id + '-' + randomnum.toString()
+  
+  const blastDir = path.join(CFG.PATH_TO_BLAST_FILES, opts.blastID)
+  //const blastDir = path.join(CFG.PATH_TO_BLAST_FILES, opts.blastID, 'blast_results')
+  if (!fs.existsSync(blastDir+'/'+'blast_results')){
+       fs.mkdirSync(blastDir+'/'+'blast_results', { recursive: true });
+  }
+  
+  if(req.file){
+      opts.type = 'fileInput'
+      if (req.file.size > 1500000){   // 1 911 016
+       req.flash('fail', 'File too large');
+       res.redirect(req.body.returnTo);
+       return;
+      }
+      var fileContents = ''  // if buffer in req,file not need to move/read file
+      
+      followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
+      
+      //data = followFilePathPyScript(req, res, opts, blastOpts, blastDir, fileContents)
+  }else{
+      opts.type = 'textInput'
+      //followTextInputPath(req, res, opts, blastOpts, blast_directory)
+      data = followTextInputPathPyScript(req, res, opts, blastOpts, blastDir, next)
+      
+      let config = createConfig(req, opts, blastOpts, blastDir, data)
+      const configFilePath = path.join(blastDir,'CONFIG.json')
+      
+      fs.writeFile(configFilePath, JSON.stringify(config, null, 2), function writeConfig(err){
+          if(err){
+              return console.log(err)
+          }else{
+              runPyScript(req, res, opts, blastOpts, blastDir)
+          }
+      
+      
+      })
+      
+  }
+    
+})
+//
+//
 function getBlastHtmlTable(json, blastID){
     let desc,id,html,init,numhits,split_items,hmt,seqid
     
@@ -352,11 +418,17 @@ function followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
       if (req.file){
         
         await moveFile(source, dest)
-        let data = await readFile(dest)
+        //let data = await readFile(dest)
+        await readFile(dest)
         //console.log('dataxx')
         //console.log(data)
+        let config = createConfig(req, opts, blastOpts, blastDir, dest)
+        console.log('config')
+        console.log(config)
+        const configFilePath = path.join(blastDir,'CONFIG.json')
+        await writeFile(configFilePath, JSON.stringify(config, null, 2))
         
-        runPyScript(req, res, opts, blastOpts, blastDir, dest, next)
+        runPyScript(req, res, opts, blastOpts, blastDir)
         
         //return data
           //readFileWriteFilesPromise(dest, req, res, blastOpts, blastDir);
@@ -378,99 +450,66 @@ function followTextInputPathPyScript(req, res, opts, blastOpts, blastDir, next) 
   
 }
 
-async function writeFile(filePath, data) {
-  try {
-    await fsp.writeFile(filePath, data);
-    console.log('data written to '+filePath);
-  } catch (error) {
-    console.error('Got an error trying to write the file: ',error);
-  }
-}
-async function readFile(filePath) {
-  try {
-    const data = await fsp.readFile(filePath);
-    console.log('data read from to '+filePath);
-    return data
-  } catch (error) {
-    console.error('Got an error trying to read the file: ',error);
-  }
-}
-async function moveFile(source, destination) {
-  console.log('in move')
-  try {
-    await fsp.rename(source, destination);
-    console.log(`Moved file from ${source} to ${destination}`);
-  } catch (error) {
-    console.error('Got an error trying to move the file:',error);
-  }
-}
 
 
-router.post('/blast_post', upload.single('blastFile'),  async function blast_post(req, res, next) {
-  console.log('MADEIT TO blastPost')
-  console.log(req.body)
-  
-  console.log('req.file?', req.file)   // may be undefined
-  // blastFxn == 'refseq' and returnTo == '/refseq/refseq_blastn'
-  
-  let filename, filepath, data, fasta_as_list, trimlines, twolist,fastaFilePaths;
-  const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i, returnTo: req.body.returnTo }
-  let blastOpts = { expect:    req.body.blastExpect, 
-              //descriptions: req.body.blastDescriptions,
-              //alignments: req.body.blastAlignments,
-              maxTargetSeqs: req.body.blastMaxTargetSeqs,
-              advanced: req.body.advancedOpts,
-              program: req.body.blastProg
-              // add dbPath later
-  }
-  
-  if(req.body.blastFxn === 'genome') {
-    blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,req.body.blastDb) 
-  } else {
-    blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_REFSEQ,req.body.blastDb) 
-  }
-  if(req.body.blastFilter){
-    blastOpts.fitler = '-F F'
-  }
-  //let blast_session_ts = Date.now().toString();
-  const randomnum = Math.floor(Math.random() * 90000) + 10000;
-  opts.blastSessionID = req.session.id + '-' + randomnum.toString()
-  
-  const blastDir = path.join(CFG.PATH_TO_BLAST_FILES, opts.blastSessionID)
-  //const blastDir = path.join(CFG.PATH_TO_BLAST_FILES, opts.blastSessionID, 'blast_results')
-  if (!fs.existsSync(blastDir+'/'+'blast_results')){
-       fs.mkdirSync(blastDir+'/'+'blast_results', { recursive: true });
-  }
-  if(req.file){
-      opts.type = 'fileInput'
-      if (req.file.size > 1500000){   // 1 911 016
-       req.flash('fail', 'File too large');
-       res.redirect(req.body.returnTo);
-       return;
-      }
-      var fileContents = ''  // if buffer in req,file not need to move/read file
-      
-      followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
-      
-      //data = followFilePathPyScript(req, res, opts, blastOpts, blastDir, fileContents)
-  }else{
-      opts.type = 'textInput'
-      //followTextInputPath(req, res, opts, blastOpts, blast_directory)
-      data = followTextInputPathPyScript(req, res, opts, blastOpts, blastDir, next)
-      runPyScript(req, res, opts, blastOpts, blastDir, data, next)
-     
-//      dataFromPython = await pythonPromise(req, res, opts, blastOpts, blastDir, data);
-      //console.log('XX',dataFromPython)
-      
-          
-      //res.send(dataFromPython);
-  }
+
+
+function createBlastOpts(reqBody) {
+    let bOpts = {}
+    bOpts.expect =    reqBody.blastExpect
+    //descriptions: req.body.blastDescriptions,
+    //alignments: req.body.blastAlignments,
+    bOpts.maxTargetSeqs = reqBody.blastMaxTargetSeqs,
+    bOpts.advanced = reqBody.advancedOpts,
+    bOpts.program = reqBody.blastProg
+    // add dbPath later
+    bOpts.blastDb = reqBody.blastDb
+    if(reqBody.blastFxn === 'genome') {
+      bOpts.dbPath = CFG.BLAST_DB_PATH_GENOME 
+    } else {
+      bOpts.dbPath = CFG.BLAST_DB_PATH_REFSEQ
+    }
+    if(reqBody.blastFilter){
+      bOpts.fitler = '-F F'
+    }
+    return bOpts
+}
+//
+//
+function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     
-})
+    console.log('blastOpts')
+    console.log(blastOpts)
+    let config = {}
+    config.site = CFG.SITE  //  local, mbl or homd;; this determines blast db
+    config.blastdbPath = blastOpts.dbPath
+    config.blastdb = blastOpts.blastDb
+    config.blastDir = blastDir
+    config.dataType = opts.type
+    config.expect = blastOpts.expect
+    config.blastFxn = req.body.blastFxn
+    config.advanced = blastOpts.advanced
+    config.maxTargetSeqs = blastOpts.maxTargetSeqs
+    config.program = blastOpts.program
+    config.programPath = CFG.PATH_TO_BLAST_PROG
+    let pyScriptPath = path.join(CFG.PATH_TO_SCRIPTS, 'run_blast_no_cluster.py') 
+    config.command = pyScriptPath +' -c '+ path.join(blastDir, 'CONFIG.json')
+    config.filePath = ''
+    config.textInput = ''
+    // config.seqcount
+    
+    if(opts.type == 'fileInput'){
+        config.filePath = dataOrPath
+    }else{
+        config.textInput = '"'+dataOrPath+'"'
+    }
+    
+    return config
+}
 
 //
 //
-function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
+function runPyScript(req, res, opts, blastOpts, blastDir){
     console.log('In runPyScript')
     let success, lineItems, seqcount
     //const dataFromPython = await pythonPromise(req, res, opts, blastOpts, blastDir, dataForPy);
@@ -478,42 +517,19 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
     // then render and return to restart q 5sec
     // let pyscriptOpts = []
 //     
-    let pyscript = path.join(CFG.PATH_TO_SCRIPTS, 'run_blast_no_cluster.py') 
-    let config = {}
-    config.site = CFG.SITE  //  local, mbl or homd;; this determines blast db
-    config.blastdbPath = blastOpts.dbPath
-    config.blastDir = blastDir
-    config.dataType = opts.type
-    config.expect = blastOpts.expect
-    config.blastFxn = req.body.blastFxn
-    //config.descriptions = blastOpts.descriptions
-    //config.alignments = blastOpts.alignments
-    config.advanced = blastOpts.advanced
-    config.maxTargetSeqs = blastOpts.maxTargetSeqs
     
-    config.program = path.join(CFG.PATH_TO_BLAST_PROG, blastOpts.program)
+    let pyScriptPath = path.join(CFG.PATH_TO_SCRIPTS, 'run_blast_no_cluster.py')
     
-    config.command = pyscript +' -c '+ path.join(blastDir, 'DATA.json')
-    config.filePath = ''
-    config.textInput = ''
+    //const configFile = writeBlastConfig(blastDir, config)   // sync or no sync??
     
-    if(opts.type == 'fileInput'){
-        config.filePath = dataForPy
-    }else{
-        config.textInput = '"'+dataForPy+'"'
-    }
-    
-    const configFile = writeBlastConfig(blastDir, config)   // sync or no sync??
-    
-    const pyscriptOpts = ['-c', configFile]
+    const pyscriptOpts = ['-c', path.join(blastDir, 'CONFIG.json')]
     
     
     //let pyscriptOpts =  ['-t',opts.type]
     console.log('running py script: ')
-    console.log(pyscript, pyscriptOpts.join(' '))
+    console.log(pyScriptPath, pyscriptOpts.join(' '))
     
-    
-    const pythonRun = spawn(pyscript, pyscriptOpts, {
+    const pythonRun = spawn(pyScriptPath, pyscriptOpts, {
                 env:{'PATH': CFG.PATH},   // CFG.PATH must include python executable path
                 detached: true, stdio: 'pipe'
     })
@@ -574,16 +590,16 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
             });
         } else if(success) {
             // respond immediately
-            console.log('session BLASTING')
+            console.log('success py BLASTING')
             //res.cookie('blastDir',blastDir);
             //req.session.cookie.blastid = blastDir
-            const oneDayToMilliSeconds = 1000 * 60 * 60 * 60 * 24;
+            //const oneDayToMilliSeconds = 1000 * 60 * 60 * 60 * 24;
             // IDEA:: put EVERYthing in config file NOT session var
         
-            console.log('Setting session.blast')
+            //console.log('Setting session.blast')
         
         
-            // req.session.blast = {}
+// req.session.blast = {}
 //         
 //             //  1000 * 60 * 60 * 60 * 24)   // // 24hrs === 86,400,000 msec
 //             req.session.blast.id = opts.blastSessionID
@@ -602,7 +618,8 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
 //             }, 100000)   // // 100sec === 100000 msec
 //             console.log(req.session)
             //req.session.pyerror = {code:0, msg:''}
-            res.redirect('blast_wait')   // MUST run at least once
+            //res.redirect('blast_wait?id='+opts.blastID)   // MUST run at least once
+            run_blast_wait(res, blastDir)
         }else {
             // pyerror
             console.log('not success or testing')
@@ -649,223 +666,25 @@ router.post('/openBlastWindow', function openBlastWindow(req, res) {
     console.log('file',file)
     const data = fs.readFile(file, 'utf8', function readBlastFile(err, data) {
       if (err)
-          console.log(err)
+          return console.log(err)
       else
           console.log(data)
           res.send(data)
     
     })
 })
-function writeBlastConfig(dir, data) {
-    //const configFilePath = path.join(dir,'DATA.config')
-    const jsonConfigFilePath = path.join(dir,'DATA.json')
-    // let config_string = '[MAIN]\n'
-//     for(n in data){
-//        config_string += n+" = "+data[n] +'\n'
-//     }
-    //fs.writeFileSync(configFilePath , config_string)
-    fs.writeFileSync(jsonConfigFilePath , JSON.stringify(data, null, 2))
-    return jsonConfigFilePath
-}
-// router.post('/refseq_blastn_takesTooLong', upload.single('blastFile'),  function refseq_blastn_post2(req, res) {
-//     console.log('MADEIT TO blastn-post')
-//   console.log(req.body)
-//   console.log('req.file?', req.file)   // may be undefined
-//   let filename, filepath, data, fasta_as_list, trimlines, twolist;
-//   const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i, returnTo: req.body.returnTo }
-//   let blastOpts = { expect:    req.body.blastExpect, 
-//               descriptions: req.body.blastDescriptions,
-//               alignments: req.body.blastAlignments,
-//               advanced: req.body.advancedOpts,
-//               program: req.body.blastProg
-//               // add dbPath later
-//   }
-//   
-//   if(req.body.blastFxn === 'genome') {
-//     blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,req.body.blastDb) 
-//   } else {
-//     blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_REFSEQ,req.body.blastDb) 
-//   }
-//   if(req.body.blastFilter){
-//     blastOpts.fitler = '-F F'
-//   }
-//   let blast_session_ts = Date.now().toString();
-//   const blast_directory = path.join(CFG.PATH_TO_BLAST_FILES, blast_session_ts)
-//   if (!fs.existsSync(blast_directory)){
-//        fs.mkdirSync(blast_directory);
-//   }
-//   let result 
-//   if(req.file){
-//       if (req.file.size > 1500000){   // 1 911 016
-//        req.flash('fail', 'File too large');
-//        res.redirect('/refseq/refseq_blastn');
-//        return;
-//       }
-//       var fileContents = ''  // if buffer in req,file not need to move/read file
-//       if(req.file.buffer){
-//          fileContents = req.file.buffer.toString()
-//          opts.move_file = false
-//       } else {
-//          opts.move_file = true
-//       }
-//       // move file
-//       // read file
-//       // write files(s) to dir
-//       followFilePath(req, res, opts, blastOpts, blast_directory, fileContents)
-//     }else{
-//       // differentiate single from multiple
-//       // write data into file(s)
-//       followTextInputPath(req, res, opts, blastOpts, blast_directory)
-//     }
-//     
-/*  test seqs    
-
- agtcgtactgggatctgaa
-  
-  >ds0|imput 1200
-  agtcgtactggtaccggatctgaa
-  >ds1|kefdgste5%$
-  agtcgtactgggatctgaagtagaatccgt
-  >ds2| let kefdgste5%$
-  agtcgtactgggat
-  ctgaagtagaatccatccgt
-*/  
-//     
-//     if(C.use_cluster){
-//         console.log('Use Cluster')
-//         blast_script_txt = helpers.make_blast1_script_txt(req, blast_directory, [], {})
-//         qsub_blastfile = path.join(blast_directory, 'blast.sh')
-//         //console.log(qsub_commands_txt)
-//         fs.writeFile(qsub_blastfile, blast_script_txt, (err2)=> {
-//           if (err2)
-//            console.log(err2);
-//           else {
-//             console.log('success writing blast script - now run it!')
-//             fs.chmodSync(qsub_blastfile, 0o775); // make executable
-//           }
-//         })
-//     }else{
-//         console.log('NO Cluster; Use shell script')
-//         //let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'run_blast_no_cluster.py')
-//         //RunAndCheck(pyscript,{},{})
-//     }
-//     req.flash('success', 'Successful Blast');
-//     render_page([req,res])
-//  
-// 
-//   
-//   
-// 
-// /*
-//   workflow:
-//   save file where?
-//   run script python? shell?
-//   that validates format,size,...
-//   script: split sequences into separate files if appropriate
-//   script create sep qsub script for each file
-//   
-//   vamps blast DOES NOT use cluster  => must look to gast for example
-//   see helpers.get_qsub_script_text()
-//   
-//   Samples:
-//   
-//   
-// */
-//   
-//     
-//     
-//      //var blast_directory = path.join(CFG.PATH_TO_BLAST_FILES,blast_session_ts)
-// //     if (!fs.existsSync(blast_directory)){
-// //          fs.mkdirSync(blast_directory);
+// function writeBlastConfig(dir, data) {
+//     //const configFilePath = path.join(dir,'CONFIG.json')
+//     const jsonConfigFilePath = path.join(dir,'CONFIG.json')
+//     // let config_string = '[MAIN]\n'
+// //     for(n in data){
+// //        config_string += n+" = "+data[n] +'\n'
 // //     }
-// //     if (from_file){
-// //        fs.rename(req.file.path, path.join(blast_directory,'fasta_from_file.fa'), function (err) {
-// //       if (err) {
-// //         console.log(err)
-// //       } else {
-// //         console.log("Successfully moved the file!");
-// //         // now open/read, check_size, and split into individual files
-// //       }
-// //     })
-// //     }else {
-// //        // from entry
-// //     }
-//     
-//        
-//        
-//        
-//        // may be multiple seqs or single
-//        // defline may contain any char?
-//   
-//     
-//   
-// 
-//     
-//   //we'll create one blast.sh script
-//   // that will write one blast2.sh script
-// //   console.log('rendering page fxn2')
-// //   res.render('pages/refseq/blastn_results', {
-// //     title: 'HOMD :: BLAST', 
-// //     pgname: 'refseq_blast',
-// //     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-// //     hostname: CFG.HOSTNAME,
-// //     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-// //     db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-// //     
-// //   })
-// })
-//
-// function RunAndCheck(script_path, callback_function, callback_function_options)
-// {
-//   // http://krasimirtsonev.com/blog/article/Nodejs-managing-child-processes-starting-stopping-exec-spawn
-//   console.log("in RunAndCheck");
-//   console.log("script_path: " + script_path);
-// 
-//   const exec = require('child_process').exec;
-//   // TODO:  use file_path_obj;
-//   //const opts = {env:{'PATH': CFG.PATH,'LD_LIBRARY_PATH': CFG.LD_LIBRARY_PATH} }
-//   //const child = exec(script_path, opts);
-//   const child = exec(script_path);
-//   //var scriptlog1 = path.join(CFG.USER_FILES_BASE, req.user.username,'project-'+project, 'matrix_log1.txt');
-//   
-//   // var child = spawn(script_path, [], {
-// //                             env:{'PATH':CFG.PATH,'LD_LIBRARY_PATH':CFG.LD_LIBRARY_PATH},
-// //                             detached: true, stdio: 'pipe'
-// //                         });
-//   let output = '';
-//   
-//   child.stdout.on('data', function AddDataToOutput(data) {
-//         data = data.toString().trim();
-//         output += data;
-//         console.log('stdout: ' + data);
-//         //CheckIfPID(data);
-//   });
-//   
-//  
-//   
-//   child.stderr.on('data', data => {
-//       console.log('stderr: ' + data);
-//   });
-//   
-//   child.on('close', function checkExitCode(code) {
-//      console.log('From RunAndCheck process exited with code ' + code);
-//      let ary = output.split("\n");
-//      console.log("TTT output.split (ary) ");
-//      //console.log(util.inspect(ary, false, null));
-//      
-//      if (code === 0)
-//      {
-//        //callback_function(callback_function_options);
-//      }
-//      else // code != 0
-//      {
-//        console.log('FAILED',script_path)
-//        //failedCode(req, res, path.join(CFG.USER_FILES_BASE, req.user.username, 'project-' + project), project, last_line);
-//      }
-//   });
-// 
-//  
+//     //fs.writeFileSync(configFilePath , config_string)
+//     fs.writeFileSync(jsonConfigFilePath , JSON.stringify(data, null, 2))
+//     return jsonConfigFilePath
 // }
+
 function readFileWriteFiles(dir, bigFilePath) {
     console.log('in readFileWriteFiles - no Promises')
     readFileContent(bigFilePath, function readFileContentcb(err, content) {
@@ -883,5 +702,30 @@ function readFileContent(file, callback) {
         callback(null, content)
     })
 }
-
+async function writeFile(filePath, data) {
+  try {
+    await fsp.writeFile(filePath, data);
+    console.log('data written to '+filePath);
+  } catch (error) {
+    console.error('Got an error trying to write the file: ',error);
+  }
+}
+async function readFile(filePath) {
+  try {
+    const data = await fsp.readFile(filePath);
+    console.log('data read from to '+filePath);
+    return data
+  } catch (error) {
+    console.error('Got an error trying to read the file: ',error);
+  }
+}
+async function moveFile(source, destination) {
+  console.log('in move')
+  try {
+    await fsp.rename(source, destination);
+    console.log(`Moved file from ${source} to ${destination}`);
+  } catch (error) {
+    console.error('Got an error trying to move the file:',error);
+  }
+}
 module.exports = router

@@ -6,7 +6,7 @@ function getFileContent(type, id, num) {
     args.id = id
     args.num = num
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "/blast/showBlast", true);
+    xmlhttp.open("POST", "/blast/openBlastWindow", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -51,7 +51,10 @@ function blastCkboxMaster(id){
 }
 
 function blastDownload(value, id){
-   alert(id)
+   //alert(id)
+   if(value === 0){
+       return
+   }
    form = document.getElementById('blastDownloadForm')
    var i = document.createElement("input");
    i.type = "text";

@@ -160,6 +160,7 @@ def processTextIntoFiles(args, details_dict):
     return files
     
 def validate(string):
+    ## this should cover proteins AND genomes
     re2 =  re.compile(r"^[ATCGUKSYMWRBDHVN]*$")
     #patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
     if re2.search(string):
@@ -180,7 +181,8 @@ def batchBlastFile(args, filesArray, details_dict):
             fileText += ' -db /Users/avoorhis/programming/blast-db-testing/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
             ##fileText += ' -db /Users/avoorhis/programming/blast-db-testing/B6/B6'
         else:   # HOMD Default
-            fileText += ' -db ' + details_dict['blastdbPath']
+            fileText += ' -db ' + os.path.join(details_dict['blastdbPath'], details_dict['blastdb'])
+        
         fileText += ' -evalue ' + details_dict['expect']
         fileText += ' -query ' + os.path.join(details_dict['blastDir'],file)
         # either:
@@ -214,10 +216,6 @@ else:
 
 
 outDir = os.path.join(details_dict['blastDir'],'blast_results')
-try:
-    os.makedirs(outDir)
-except FileExistsError:
-    pass
 
 batchText = batchBlastFile(args, filesArray, details_dict)
 batchFileName = 'blast.sh'
@@ -228,7 +226,10 @@ return_code = subprocess.run(batchFileNamePath)
 print("<br<br>Output of run() : ", return_code)
 #os.system(batchFileNamePath)
 
+## Important Last Line
+print('SEQCOUNT=',len(filesArray), sep = '')
 
+#################
 
 if __name__ == '__main__':
     import argparse
@@ -264,4 +265,3 @@ run_blast_no_cluster.py -c ./config.json
        sys.exit('Could not find file or text - must exit')  
     
     #run(args) 
-    print('Finished - from pyscript')

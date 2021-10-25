@@ -21,7 +21,6 @@ const log = require('simple-node-logger').createSimpleFileLogger(logFilePath);
 const router = express.Router();
 const session = require('express-session');
 const passport = require('passport');
-//const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
 //const favicon = require('serve-favicon');
@@ -64,25 +63,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true,         // allows for richer json like experience https://www.npmjs.com/package/qs#readme
     limit: '50mb',          // size of body
-    parameterLimit: 1000000 // number of parameters
+    parameterLimit: 100000 // number of parameters
 }));
+
+// https://blog.jscrambler.com/best-practices-for-secure-session-management-in-node
 app.use(session({
   secret: 'gtf34ds',
   resave: true,
   saveUninitialized: true,
-  cookie: { maxage:6000 }
-  //store: new mongoStore({
-  //  mongooseConnection: mongoose.connection,
-   // collection: 'sessions' // default
-  //})
+  cookie: { maxage: 6000 }
+  
 }));
-//app.use(expressSanitizer()); // this line follows bodyParser() instantiations
-//app.use(expressSanitized()); // this line follows bodyParser()
-// app.use(expressValidator()); // this line must be immediately after any of the bodyParser middlewares!
 
 app.use(express.static('public'));
 //app.use(express.static(config.jbrowse_data));
-app.set('jbdata', CFG.jbrowse_data);
+
 app.use(express.static('tmp'));
 //app.use('/genomes', express.static(__dirname + 'jbrowse2/static/js'))
 //upload.single('singleInputFileName')

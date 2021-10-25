@@ -25,16 +25,16 @@
       <div id='blast-wait-box'>
          <br>Refreshes every 5 seconds and present the blast results page when complete.
        
-         <br>
+         <br><br><img src='/images/0_WzVRQs214b7TgyJXtrans.gif' height='80'>
          
          <% if(filesFinished >0){ %>
-              <br><br>Sequences Finished:  <%= filesFinished %> out of <%= filesStarted %>
+              <br>Sequences Finished:  <%= filesFinished %> out of <%= filesStarted %>
          <% }else{ %>
-              <br><br>
+              <br>
          <% } %>
               
-         <br><br><span id='proc'>Processing</span>
-         <br><br><img src='/images/0_WzVRQs214b7TgyJXtrans.gif' height='80'>
+         <br><span id='proc'>Processing</span>
+         
          <br><br>
          <span id='show'>This page will reload in <span id="cnt" style="color:red;">5</span> Seconds</span>
       </div>

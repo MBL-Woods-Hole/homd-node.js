@@ -503,7 +503,7 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
 /////////////////////////////////
 router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
-  let otid = req.query.otid;
+  let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
   let data1,data2,data3,data4,data5
   /*
   This busy page needs:

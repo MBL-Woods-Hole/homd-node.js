@@ -39,7 +39,7 @@
 }
 #status{
    width:100%;
-   padding:10px 0 10px 5px;
+   padding:10px 0;
    background:orange;
    border:1px solid darkgreen;
 }
@@ -92,14 +92,11 @@
 <% } %>
 
     
-<% if(images.length > 0 ) { %>    
-   <div class='description' style='float:left; width:45%; height:220px;max-height:230px;'>
-<% }else{ %>
-   <div class='description' style=''>
-<% } %>
+    
+<div class='description'>
   <b>Description</b>:
     <% if(Object.keys(data2).length === 0) { %>
-      Not Available
+      Not Written Yet
     <% }else{ %>
         <div class=''>
           <%- data2.general %>
@@ -116,7 +113,7 @@
 <div class=''>
   <% if(images.length === 1 ) { %>
       <div class=''>
-        &nbsp;<img class='img' src='/images/life-images/<%= images[0].name %>'  alt='<%= images[0].name %>'  \><br>
+        <img class='img' src='/images/life-images/<%= images[0].name %>'  alt='<%= images[0].name %>'  \><br>
         <small><%= images[0].text %></small>
       </div>
   
@@ -146,7 +143,7 @@
 
 
 <div id='tables'>
-<br><div id='status'>Status: [<%= data1.status %>] -- Preferred Body Site: [<%= data1.site %>]</div>
+<br><br><div id='status'>Status: [<%= data1.status %>] -- Preferred Body Site: [<%= data1.site %>]</div>
 <table id='description_tbl' border='1'>
 <tr><td>
   <table id='left-tbl'>

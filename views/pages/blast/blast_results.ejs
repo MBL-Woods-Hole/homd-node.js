@@ -66,7 +66,9 @@ thead th { position: sticky; top: 0; }
    background: var(--div-bg12)  
 }
 </style>
+<% blastParams = JSON.parse(blastParams) %>
 <% error_obj = JSON.parse(error) %>
+
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -77,7 +79,7 @@ thead th { position: sticky; top: 0; }
     
     <div class='page-content' >
 
-  <div class='title'>BLASTn Results</div>
+  <div class='title'><%= blastParams.program %> Results (<%= blastParams.blastFxn %>)</div>
     <%- include('../../partials/flash'); %>
     <div id='under-construction'>Page Under Construction</div>	
 <% if(error_obj.code) { %>
@@ -94,7 +96,7 @@ thead th { position: sticky; top: 0; }
         <tr>
         <td><a href='#blastStats'>View BLAST Stats and Legend</a></td>
         <td>
-          <select class='dropdown' onchange="blastDownload(this.value,'<%= blastId %>')">
+          <select class='dropdown' onchange="blastDownload(this.value,'<%= blastParams.id %>')">
             <option value='0'>Download</option>
             <option value='text4'>As Text -top 4 matches</option>
             <option value='textAll'>As Text -all</option>
@@ -107,8 +109,8 @@ thead th { position: sticky; top: 0; }
         </td>
         </tr>
         <tr>
-        <td>Search Results: <%= numseqs %> sequence(s) searched against target database:<br><%= targetdb %></td>
-        <td><span class=''>Elapsed Time: <%= blastTimer %> sec</span></td>
+        <td>Search Results: <%= numseqs %> sequence(s) searched against target database:<br><%= blastParams.blastdb %></td>
+        <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
       </table>
     </div>    
@@ -120,7 +122,7 @@ thead th { position: sticky; top: 0; }
     
     <small>
       <div id='blastStats'>
-       SearchID: <%= blastId %>
+       blast ID: <%= blastID %>
        <table class='table'>
        
        <tr><td>1</td><td></td><td>4</td><td></td></tr>

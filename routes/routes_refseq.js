@@ -11,7 +11,7 @@ const helpers   = require(app_root + '/routes/helpers/helpers');
 const open = require('open');
 
 
-router.get('/refseq_blastn', function refseq_blastn_get(req, res) {
+router.get('/refseq_blastn', function refseq_blastn(req, res) {
     console.log('MADEIT TO blastn-get')
     helpers.accesslog(req, res)
   res.render('pages/refseq/blastn', {

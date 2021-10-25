@@ -316,6 +316,7 @@ router.get('/explorer', function explorer (req, res) {
   let dbChoices = []
   let otid = 0
   const blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN', 'TBLASTX']
+  
   const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, infoDataObj, pidList) => {
     res.render('pages/genome/explorer', {
       title: 'HOMD :: ' + gid,
@@ -365,7 +366,7 @@ router.get('/explorer', function explorer (req, res) {
   }
   //console.log('one')
   dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '='
-  dbChoices.unshift(
+  dbChoices.unshift(   ///  add these two
        { name: organism + ': Genomic DNA', value: 'org_genomes', filename: 'fna/' + gid },
        { name: organism + ': DNA of Annotated Proteins', value: 'org_proteins', filename: 'faa/' + gid }
     )
