@@ -101,7 +101,7 @@ router.get('/blast_results', function blastResults(req, res) {
                         pgname: 'blast_results',
                         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
                         hostname: CFG.HOSTNAME,
-                        url: CFG.url,
+                        url: CFG.URL,
                         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                         //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
                         html: html,
