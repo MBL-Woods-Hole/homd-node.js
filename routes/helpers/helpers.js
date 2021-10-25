@@ -443,8 +443,8 @@ module.exports.readFilesInDirectory = function readFilesInDirectory(directory, d
 }
 //
 module.exports.readAsync = function readAsync(file, callback) {
-    if(process.env.NODE_ENV === 'development'){
-      console.log('Reading File:',file)
+    if(CFG.ENV === 'development'){
+        console.log('Reading File:',file)
     }
     try {
       if (fs.existsSync(file)) {
