@@ -26,11 +26,9 @@ for n in sys.argv:
     print(n,end=' ')
 
 f = open(args.config)
+
 details_dict = json.load(f)
-#print(details_dict)
-#config = configparser.RawConfigParser()   
-#config.read(args.config)
-#details_dict = dict(config.items('MAIN'))
+
 """
  agtcgtactgggatctgaa
   
@@ -204,11 +202,11 @@ def batchBlastFile(args, filesArray, details_dict):
 # filepath takes presidence over text
 if details_dict['filePath']:
    # read line by line and write into separate files
-   filesArray = processFile(args,details_dict)
+   filesArray = processFile(args, details_dict)
 elif details_dict['textInput']:
    #text may be LARGE
    # separate into separate sequences (may be just one)
-   filesArray = processTextIntoFiles(args,details_dict)
+   filesArray = processTextIntoFiles(args, details_dict)
    # write into separate files
 else:
    print('Could not find file or text - must exit')

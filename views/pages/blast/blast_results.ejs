@@ -65,6 +65,16 @@ thead th { position: sticky; top: 0; }
 .blastBGeven{
    background: var(--div-bg12)  
 }
+#blastStats table{
+    font-size:small;
+    border:1px solid black;
+    border-collapse: collapse;
+    
+}
+#blastStats table td{
+    border:1px solid black;
+    padding: 3px;
+}
 </style>
 <% blastParams = JSON.parse(blastParams) %>
 <% error_obj = JSON.parse(error) %>
@@ -122,12 +132,21 @@ thead th { position: sticky; top: 0; }
     
     <small>
       <div id='blastStats'>
-       blast ID: <%= blastID %>
-       <table class='table'>
+       blast results link: <%= url %>/blast/blast_results?id=<%= blastID %>
+       <table class='table' border='1'>
        
-       <tr><td>1</td><td></td><td>4</td><td></td></tr>
-       <tr><td>2</td><td></td><td>5</td><td></td></tr>
-       <tr><td>3</td><td><img  src='/images/tinyseq.gif' height='15'> Link opens the sequence<br><img  src='/images/blastRes.gif' height='15'> Link opens the JSON blast result.</td><td>6</td><td></td></tr>
+        <tr>
+            <td><strong>1</strong> Check individual or all results to be downloaded.</td>
+            <td><strong>4</strong> The table will show the top four hit results for each query sequence.</td>
+        </tr>
+        <tr>
+            <td><strong>2</strong> Click to toggle the sort order of the results by query ID</td>
+            <td><strong>5</strong> Total mis-match nt / total match nt</td>
+        </tr>
+        <tr>
+            <td><strong>3</strong> <img  src='/images/tinyseq.gif' height='15'> Link to the Sequence<br>&nbsp;&nbsp;&nbsp;<img  src='/images/blastRes.gif' height='15'> Link to the JSON Blast Results.</td>
+            <td><strong>6</strong></td>
+        </tr>
        </table>
       </div>
     </small>
@@ -145,6 +164,7 @@ thead th { position: sticky; top: 0; }
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
+<!-- <script type="text/javascript" src="/js/sorttable.js"></script> --> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/blast.js"></script>
 <script>
   mainmenu()
