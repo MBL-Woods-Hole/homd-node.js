@@ -109,7 +109,7 @@ thead th { position: sticky; top: 0; }
         <tr>
         <td><a href='#blastStats'>View BLAST Stats and Legend</a></td>
         <td>
-          <select class='dropdown' onchange="blastDownload(this.value,'<%= blastParams.id %>')">
+          <select class='dropdown' onchange="blastDownload(this.value,'<%= blastID %>')">
             <option value='0'>Download</option>
             <option value='text4'>As Text -top 4 matches</option>
             <option value='textAll'>As Text -all</option>
@@ -126,9 +126,14 @@ thead th { position: sticky; top: 0; }
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
       </table>
-    </div>    
-    
-    
+    </div>
+    <div id=''>    
+      <center><small>
+      Sort by Query <input type='checkbox' id='querySortcb' onclick="sortBlastTable(this, '<%= blastID %>','query')">&nbsp;&nbsp;&nbsp;&nbsp;
+       bit_score <input type='checkbox' id='scoreSortcb' onclick="sortBlastTable(this, '<%= blastID %>','score')">&nbsp;&nbsp;&nbsp;&nbsp;
+       or Identity <input type='checkbox' id='identitySortcb' onclick="sortBlastTable(this, '<%= blastID %>','identity')">
+      </small></center>
+    </div>
     <div id='blastResultsDiv'>
        <%- html %>
     </div>

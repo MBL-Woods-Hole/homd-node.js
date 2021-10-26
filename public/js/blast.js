@@ -72,4 +72,22 @@ function blastDownload(value, id){
    form.appendChild(i);
    form.submit()
 }
-     
+
+function sortBlastTable(cb, blastID, col) {
+    url = "/blast/blast_results?id="+blastID+'&col='+col
+    console.log(cb)
+    if(cb.checked){
+       console.log('checked')
+       direction = 'rev'
+    }else{
+       console.log('not checked')
+       direction = 'fwd'
+    }
+    url = "/blast/blast_results?id="+blastID+'&col='+col+'&dir='+direction
+    console.log(url)
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", url, true);
+
+    xmlhttp.send();
+    
+}

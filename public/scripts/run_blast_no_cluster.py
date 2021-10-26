@@ -153,7 +153,9 @@ def processText(args, details_dict):
             print('<br>in process single')
         if len(textInput) < minLength:
             sys.exit('Sequence is too short. Must be greater than: '+str(minLength))
-        textInput = textInput.upper()
+        ## split/join  to remove any linefeeds
+        textInput = ''.join(textInput.upper().splitlines())
+        
         if validate(textInput):
             # single naked sequence
             fileName = 'blast0.fa'
@@ -166,13 +168,24 @@ def processText(args, details_dict):
     return files
     
 def validate(string):
-    ## this should cover proteins AND genomes
-    re2 =  re.compile(r"^[ATCGUKSYMWRBDHVN]*$")
+    ## Nucleotides
+    #string = """MKKTLRIFLSSLSLTALLAGPTIALAESSSSESSASSQESTASSESSTDFKAVAEAIKAATSAKEASVTYTNSTPITFGKAPVTETIHAYSLISLKDFTKDLAFPFGGDTQTGAVLVLDVSLKNDSDKDTYITGGFSGSIVGYNKAVSHNNNLLDEAKDLTKAVVDAKQVLKAKSELRGFVAIAIGGDALKQLNKNGELSFDPLIVLANQGDKITDAIVPTASTILPTSKEGAAKRSAASEFYPDKLTAENWGTKTLISSSTDKQNVKFEGYDVTLNGYQLVDFKPNEDQASRFEKLKGGVVVLTAEITVKNNGKVALNARQTAGNLVFNDQLKLMHEGMVEVEPAKDKEIVEPGQEYTYHLAFVYSKDDYDLYKDRSLTLNVNLYDKDFKSLTKSGDITFQLKK""".upper()
+    
+    ## https://www.bioinformatics.org/sms/iupac.html
+    reNA =  re.compile(r"^[ATCGUKSYMWRBDHVN\.\-]*$")   # NA
+    ## Amino Acids
+    reAA =  re.compile(r"^[ACDEFGHIKLMNPQRSTVWY]*$")   # AA
+    reBOTH = re.compile(r"^[ATCGUKSYMWRBDHVN\.\-DEFILPQY]*$")
+    #is_valid = not any(k in strg for k in 'ATCGUKSYMWRBDHVN.-DEFILPQY')
+    #print('\nis_valid')
+    #print(is_valid)
     #patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
-    if re2.search(string):
+    
+    if reBOTH.search(string):
         return True
     else:
         return False
+    
 
 
 def createBatchBlastFileText(args, filesArray, details_dict):
@@ -188,14 +201,10 @@ def createBatchBlastFileText(args, filesArray, details_dict):
             ##fileText += ' -db /Users/avoorhis/programming/blast-db-testing/B6/B6'
         else:   # HOMD Default
             fileText += ' -db ' + os.path.join(details_dict['blastdbPath'], details_dict['blastdb'])
-        
         fileText += ' -evalue ' + details_dict['expect']
         fileText += ' -query ' + os.path.join(details_dict['blastDir'],file)
-        # either:
-        #fileText += ' -num_alignments ' + details_dict['alignments']   # not compaable w/ max_target_seqs
-        #fileText += ' -num_descriptions ' + details_dict['descriptions']   # not compaable w/ max_target_seqs
-        # or:
         fileText += ' -max_target_seqs ' + details_dict['maxTargetSeqs']  # use if outfmt >4
+        fileText += ' ' + details_dict['advanced']
         fileText += ' -outfmt 15'   ## 15 JSON
         #fileText += ' -html'   ## dont use this
         fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 

@@ -307,8 +307,9 @@ router.get('/explorer', function explorer (req, res) {
   // let myurl = url.parse(req.url, true)
   const gid = req.query.gid
   console.log('gid', gid)
-  const annoType = req.query.anno
-  let blast = req.query.blast
+  let annoType = req.query.anno || ''
+  
+  let blast = req.query.blast || 0
   let infoDataObj = {}
   let pageData = {}
   let organism

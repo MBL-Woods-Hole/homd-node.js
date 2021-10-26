@@ -37,17 +37,15 @@ CTGGGCCGTGTCTCTCCCAATGTGGCCGTTCAACCTCTCAGTCCGGCTACTGATCGACTTGGTGAGCCGTT
 
 router.get('/blast_results', function blastResults(req, res) {
         console.log('in blast_results')
-        console.log(req.query)
-        const blastID = req.query.id   
-        const sortCol = req.query.col || '' 
-         const sortDir = req.query.dir || '' 
+        let blastID = req.query.id   
+
         if(Object.prototype.hasOwnProperty.call(req.session, 'blast')){
             console.log('deleteing session blast')
             delete req.session.blast
         }
 
         //console.log(req.query)
-        let jsondata, data=[], html
+        let jsondata, data={}, html
         // read directory CONFIG.json first
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
 
@@ -78,8 +76,7 @@ router.get('/blast_results', function blastResults(req, res) {
                 for(let i=0; i<blastFiles.length; i++){
                   jsondata = JSON.parse(results[i])
                   //console.log(blastFiles[i])
-                  data.push(jsondata.BlastOutput2[0].report.results.search)
-                  
+                  data['query'+i.toString()] = jsondata.BlastOutput2[0].report.results.search
                   if(CFG.ENV === 'development'){
                       console.log('jsondata', jsondata)
                   }
@@ -89,7 +86,7 @@ router.get('/blast_results', function blastResults(req, res) {
 
                 }
 
-                html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
+                html = getBlastHtmlTable(data, blastID)
 
                 if(!blastID){
                      req.flash('fail', 'blastID no longer Valid')
@@ -97,7 +94,7 @@ router.get('/blast_results', function blastResults(req, res) {
                      return
                 }
 
-console.log('rendering page')
+
                 res.render('pages/blast/blast_results', {
                         title: 'HOMD :: BLAST WAIT', 
                         pgname: 'blast_results',
@@ -167,13 +164,13 @@ router.get('/blast_wait', function blastWait(req, res) {
     console.log('finished:t/f?',finished)
     //console.log('session.error',req.session.pyerror)
     if(finished){
-      let data = []
+      let data = {}
       async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
           
           for(let i=0;i<blastFiles.length;i++){
               jsondata = JSON.parse(results[i])
               //console.log(blastFiles[i])
-              data.push(jsondata.BlastOutput2[0].report.results.search)
+              data['query'+i.toString()] = jsondata.BlastOutput2[0].report.results.search
               if(CFG.ENV === 'development'){
                   console.log('jsondata', jsondata)
               }
@@ -324,7 +321,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
     // for json :: download
     
     // return to results
-    //res.end()
+    res.end()
     
 })
 router.post('/openBlastWindow', function openBlastWindow(req, res) {
@@ -408,7 +405,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
 }
 //
 //
-function getBlastHtmlTable(jsonList, blastID, sortCol, sortDir){
+function getBlastHtmlTable(json, blastID){
     let desc,id,html,init,numhits,split_items,hmt,seqid
     
     html = "<table class='sortable'><thead>"
@@ -417,28 +414,10 @@ function getBlastHtmlTable(jsonList, blastID, sortCol, sortDir){
     html += '<th>Query<sup>2</sup></th><th>Length</th>'
     html += '<th>View<sup>3</sup><br>Link</th><th>Hit<sup>4</sup></th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<sup>5</sup><br>(%)</th></tr>'
     html += '</thead><tbody>'
-    //console.log('jsonList')
-    //console.log(jsonList)
-    if(sortCol === 'query'){
-      console.log('sorting: ',sortCol, sortDir)
-      if(sortDir === 'fwd'){
-          jsonList.sort(function (a, b) {
-            return helpers.compareStrings_alpha(a.query_title, b.query_title);
-          })
-      }else{
-          jsonList.sort(function (a, b) {
-            return helpers.compareStrings_alpha(b.query_title, a.query_title);
-          })
-      }
-    }
-    console.log(jsonList[0].query_title)
-    console.log('XXXX')
+    
     let count = 0,bgcolor,odd
-    //for(let n in jsonList){
-    for(let n = 0; n < jsonList.length; n++){
-       //console.log('jsonList[n]',n)
-       //console.log(jsonList[n])
-       numhits = jsonList[n].hits.length
+    for(let n in json){
+       numhits = json[n].hits.length
        // n == query0, query1, query2 .....
        //bg color
        odd = count % 2  // will be either 0 or 1
@@ -455,8 +434,8 @@ function getBlastHtmlTable(jsonList, blastID, sortCol, sortDir){
        if(numhits == 0){
            html += "<tr class='"+bgcolor+"'>"
            html += '<td></td>'
-           html += "<td class='blastcol1 small'>"+jsonList[n].query_title+'</td>'
-           html += "<td class='blastcol2 center'>"+jsonList[n].query_len+'</td>'
+           html += "<td class='blastcol1 small'>"+json[n].query_title+'</td>'
+           html += "<td class='blastcol2 center'>"+json[n].query_len+'</td>'
            html += "<td class='center' rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
            html += "<td class='blastcol3 center'>no hits found</td>"
            html += "<td class='blastcol4'>no hits found</td>"  
@@ -466,13 +445,13 @@ function getBlastHtmlTable(jsonList, blastID, sortCol, sortDir){
           //console.log('numhits>=4',numhits)
           html += "<tr class='"+bgcolor+"'>"
           html += "<td rowspan='4'><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"
-          html += "<td class='blastcol1 small' rowspan='4'>"+jsonList[n].query_title+'</td>'
-          html += "<td class='blastcol2 center' rowspan='4'>"+jsonList[n].query_len+"</td>"
+          html += "<td class='blastcol1 small' rowspan='4'>"+json[n].query_title+'</td>'
+          html += "<td class='blastcol2 center' rowspan='4'>"+json[n].query_len+"</td>"
          // html += "<td rowspan='4'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>blast_resultfile</a></td>"
           html += "<td class='center' rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
           
           for(let m = 0; m < 4; m++) {   // take 4 hits only -- are they top hits??
-               html += getRowHTML(jsonList[n].hits[m].description[0], jsonList[n].hits[m].hsps[0], bgcolor)
+               html += getRowHTML(json[n].hits[m].description[0], json[n].hits[m].hsps[0], bgcolor)
                html += '</tr>'
             
           }
@@ -480,13 +459,13 @@ function getBlastHtmlTable(jsonList, blastID, sortCol, sortDir){
           //console.log('numhits<4',numhits)
           html += "<tr class='"+bgcolor+"'>"
           html += "<td rowspan='"+numhits+"'><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"
-          html += "<td class='blastcol1 small' rowspan='"+numhits+"'>"+jsonList[n].query_title+'</td>'
-          html += "<td class='blastcol2 center' rowspan='"+numhits+"'>"+jsonList[n].query_len+'</td>'
+          html += "<td class='blastcol1 small' rowspan='"+numhits+"'>"+json[n].query_title+'</td>'
+          html += "<td class='blastcol2 center' rowspan='"+numhits+"'>"+json[n].query_len+'</td>'
           //html += "<td rowspan='"+numhits+"'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>res</a></td>"
           html += "<td class='center' rowspan='"+numhits+"'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
           
           for(let m = 0; m < numhits; m++) {   // take 4 hits only -- are they top hits??
-               html += getRowHTML(jsonList[n].hits[m].description[0], jsonList[n].hits[m].hsps[0], bgcolor)
+               html += getRowHTML(json[n].hits[m].description[0], json[n].hits[m].hsps[0], bgcolor)
                html += '</tr>'
           }
        }
