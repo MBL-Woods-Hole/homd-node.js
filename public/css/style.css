@@ -523,7 +523,8 @@ hr{
     position:relative;
 }
 #alert_flash_message_fail{
-    background:orange;
+    background: #E10000;   /* orange; */
+    color: lightgrey;
     border:1px solid black;
     padding:5px;
     position:relative;

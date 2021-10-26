@@ -1,7 +1,7 @@
  <% if (messages.success) { %>
-  	  <div  id="alert_flash_message_success"><%= messages.success %>
-  	  <a href='#' style='float:right' onclick="close_flash('success')">X</a>
-  	  </div>
+      <div  id="alert_flash_message_success"><%= messages.success %>
+      <a href='#' style='float:right' onclick="close_flash('success')">X</a>
+      </div>
 <% }else if(messages.fail){ %>
       <div  id="alert_flash_message_fail" style='display:block;'><%= messages.fail %>
       <a href='#' style='float:right' onclick="close_flash('fail')">X</a></div>

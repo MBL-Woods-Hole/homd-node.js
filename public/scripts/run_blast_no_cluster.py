@@ -16,6 +16,7 @@ parser = argparse.ArgumentParser(description="", usage=myusage)
 parser.add_argument("-c", '--config', required=False, action="store",   dest = "config", default=None)
 parser.add_argument("-v", '--verbose', required=False, action="store_true",   dest = "verbose", default=False)
 
+minLength = 10
 
 
 args = parser.parse_args()  
@@ -60,24 +61,26 @@ def processFile(args, details_dict):
       print('processing',details_dict['filePath'])
     with open(details_dict['filePath']) as infile:
     
-      seqcount = 0
+      seqcounter = 0
       count = 0
       entry = ''
       writePreviousFile = False
       for line in infile:
         line = line.strip()
+        if count == 0 and not line.startswith('>'):
+            sys.exit('File is not FASTA format') 
         if not line:
             continue
         if line.startswith('>'):
             writePreviousFile = True
             if count > 0:
                 write_file(fastaFilePath, entry)
-            fileName = 'blast'+ str(seqcount)+'.fa'
+            fileName = 'blast'+ str(seqcounter)+'.fa'
             fastaFilePath = os.path.join(details_dict['blastDir'], fileName)
             files.append(fileName)
             
             entry = line.strip()+'\n'
-            seqcount +=1
+            seqcounter +=1
         else:
             entry += line.strip()
             writePreviousFile = False
@@ -92,19 +95,22 @@ def write_file(path, data):
     f.write(data+'\n')
     f.close() 
 
-def processTextIntoFiles(args, details_dict):
+def processText(args, details_dict):
     if args.verbose:
-        print('<br>in processTextIntoFiles')
+        print('<br>in processText')
     
     textInput = (details_dict['textInput']).strip().strip('"')
     
     files = []
     if textInput[0] == '>':
-        # one or more seqs
+        # one or more seqs entered
+        # if seq is too short or non-IUPAC => toss it
+        # how do i tell if they are ALL too short or non-IUPAC??
         lines_split = textInput.split('\n')
         lines_split = [n for n in lines_split if n.strip()] ## get rid of empty lines 
         
-        seqcount = 0
+        seqcount = len(lines_split)
+        seqcounter = 0
         count = 0
         lastLine = False
         if args.verbose:
@@ -122,19 +128,19 @@ def processTextIntoFiles(args, details_dict):
                     print('found lastline',line)
            
             if line[0] == '>':
-                fileName = 'blast'+ str(seqcount)+'.fa'
+                fileName = 'blast'+ str(seqcounter)+'.fa'
                 fastaFilePath = os.path.join(details_dict['blastDir'], fileName)
                 files.append(fileName)
                 
                 entry = line.strip() + '\n'
                 
-                seqcount += 1
+                seqcounter += 1
             else:
                 t = line.strip().upper()
                 if validate(t):
                     entry += t
                 else:
-                    sys.exit('ERROR--Found invalid characters in string. Only IUPAC letters allowed.')
+                    sys.exit('Found invalid characters in string. Only IUPAC letters allowed.')
             if lastLine or (count > 0  and lines_split[count+1].strip()[0] == '>'):
                 if args.verbose:
                   print('\nwriting',fastaFilePath)
@@ -145,6 +151,8 @@ def processTextIntoFiles(args, details_dict):
     else:
         if args.verbose:
             print('<br>in process single')
+        if len(textInput) < minLength:
+            sys.exit('Sequence is too short. Must be greater than: '+str(minLength))
         textInput = textInput.upper()
         if validate(textInput):
             # single naked sequence
@@ -153,7 +161,7 @@ def processTextIntoFiles(args, details_dict):
             files.append(fileName)
             write_file(fileNamePath, '>1\n'+textInput+'\n')
         else:
-           sys.exit('ERROR--Found invalid characters in string. Only IUPAC letters allowed.')
+           sys.exit('Found invalid characters in string. Only IUPAC letters allowed.')
         
     return files
     
@@ -167,7 +175,7 @@ def validate(string):
         return False
 
 
-def batchBlastFile(args, filesArray, details_dict):
+def createBatchBlastFileText(args, filesArray, details_dict):
     fileText ='#!/bin/bash\n\n'
     
     for file in filesArray:
@@ -206,7 +214,7 @@ if details_dict['filePath']:
 elif details_dict['textInput']:
    #text may be LARGE
    # separate into separate sequences (may be just one)
-   filesArray = processTextIntoFiles(args, details_dict)
+   filesArray = processText(args, details_dict)
    # write into separate files
 else:
    print('Could not find file or text - must exit')
@@ -215,7 +223,7 @@ else:
 
 outDir = os.path.join(details_dict['blastDir'],'blast_results')
 
-batchText = batchBlastFile(args, filesArray, details_dict)
+batchText = createBatchBlastFileText(args, filesArray, details_dict)
 batchFileName = 'blast.sh'
 batchFileNamePath = os.path.join(details_dict['blastDir'],'blast.sh')
 write_file(batchFileNamePath, batchText)
@@ -256,7 +264,7 @@ run_blast_no_cluster.py -c ./config.json
     elif details_dict['textInput']:
        #text may be LARGE
        # separate into separate sequences (may be just one)
-       filesArray = processTextIntoFiles(args, details_dict)
+       filesArray = processText(args, details_dict)
        # write into separate files
     else:
        print('Could not find file or text - must exit')

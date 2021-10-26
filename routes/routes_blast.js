@@ -59,7 +59,6 @@ router.get('/blast_results', function blastResults(req, res) {
         }
 
 
-
         let blastFiles = []
         for(let i=0; i < result.length; i++){
             blastFiles.push(path.join(blastResultsDir, result[i]))
@@ -413,7 +412,7 @@ function getBlastHtmlTable(json, blastID){
     html += '<tr>'
     html += "<th><input type='checkbox' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
     html += '<th>Query<sup>2</sup></th><th>Length</th>'
-    html += '<th>View<sup>3</sup><br>Link</th><th>Hit<sup>4</sup></th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<sup>5<sup><br>(%)</th></tr>'
+    html += '<th>View<sup>3</sup><br>Link</th><th>Hit<sup>4</sup></th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<sup>5</sup><br>(%)</th></tr>'
     html += '</thead><tbody>'
     
     let count = 0,bgcolor,odd
@@ -437,7 +436,7 @@ function getBlastHtmlTable(json, blastID){
            html += '<td></td>'
            html += "<td class='blastcol1 small'>"+json[n].query_title+'</td>'
            html += "<td class='blastcol2 center'>"+json[n].query_len+'</td>'
-           html += '<td></td>'
+           html += "<td class='center' rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n[n.length - 1]+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
            html += "<td class='blastcol3 center'>no hits found</td>"
            html += "<td class='blastcol4'>no hits found</td>"  
            html += '<td></td><td></td><td></td></tr>'

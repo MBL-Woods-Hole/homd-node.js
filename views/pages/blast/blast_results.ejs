@@ -75,6 +75,9 @@ thead th { position: sticky; top: 0; }
     border:1px solid black;
     padding: 3px;
 }
+#blasturl{
+   color: blue;
+}
 </style>
 <% blastParams = JSON.parse(blastParams) %>
 <% error_obj = JSON.parse(error) %>
@@ -132,7 +135,7 @@ thead th { position: sticky; top: 0; }
     
     <small>
       <div id='blastStats'>
-       blast results link: <%= url %>/blast/blast_results?id=<%= blastID %>
+       blast results link: [ <span id='blasturl'><%= url %>/blast/blast_results?id=<%= blastID %></span> ] <= Copy this link to come back to these results.
        <table class='table' border='1'>
        
         <tr>
@@ -144,7 +147,7 @@ thead th { position: sticky; top: 0; }
             <td><strong>5</strong> Total mis-match nt / total match nt</td>
         </tr>
         <tr>
-            <td><strong>3</strong> <img  src='/images/tinyseq.gif' height='15'> Link to the Sequence<br>&nbsp;&nbsp;&nbsp;<img  src='/images/blastRes.gif' height='15'> Link to the JSON Blast Results.</td>
+            <td><strong>3</strong> &nbsp;&nbsp;<img  src='/images/tinyseq.gif' height='15'>&nbsp;&nbsp;Links to Sequences<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img  src='/images/blastRes.gif' height='15'>&nbsp;&nbsp;Links to JSON Blast Results.</td>
             <td><strong>6</strong></td>
         </tr>
        </table>
