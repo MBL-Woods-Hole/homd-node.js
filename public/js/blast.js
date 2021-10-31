@@ -1,6 +1,6 @@
 
 function getFileContent(type, id, num) {
-   
+   console.log(type, id, num)
     var args={}
     args.type = type  // seq or res
     args.id = id
@@ -56,38 +56,67 @@ function blastDownload(value, id){
        return
    }
    form = document.getElementById('blastDownloadForm')
-   var i = document.createElement("input");
-   i.type = "text";
-   i.name = "dnldType";
-   i.id = "intext";
-   i.value = value
-   // add all elements to the form
-   form.appendChild(i);
-   var i = document.createElement("input");
-   i.type = "text";
-   i.name = "blastID";
-   i.id = "intext";
-   i.value = id
-   // add all elements to the form
-   form.appendChild(i);
+   // form.reset();
+//    const i = document.createElement("input");
+//    i.type = "text";
+//    i.name = "dnldType";
+//    i.id = "intext";
+//    i.value = value
+//    // add all elements to the form
+//    form.appendChild(i);
+//    const j = document.createElement("input");
+//    j.type = "text";
+//    j.name = "blastID";
+//    j.id = "intext";
+//    j.value = id
+//    // add all elements to the form
+//    form.appendChild(j);
+   document.getElementById('dnldType').value = 0
    form.submit()
 }
-
-function sortBlastTable(cb, blastID, col) {
-    url = "/blast/blast_results?id="+blastID+'&col='+col
-    console.log(cb)
+function sortBlastTableForm(cb, blastID, col){
+   //console.log(cb, blastID, col)
+   if(col === 'query'){
+      document.getElementById('isort').checked = false
+      document.getElementById('ssort').checked = false
+   }else if(col == 'score'){
+      document.getElementById('qsort').checked = false
+      document.getElementById('isort').checked = false
+   }else{  // identity
+      document.getElementById('qsort').checked = false
+      document.getElementById('ssort').checked = false
+   }
+   
     if(cb.checked){
-       console.log('checked')
+       //console.log('checked')
        direction = 'rev'
     }else{
-       console.log('not checked')
+       //console.log('not checked')
        direction = 'fwd'
     }
-    url = "/blast/blast_results?id="+blastID+'&col='+col+'&dir='+direction
-    console.log(url)
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("GET", url, true);
-
-    xmlhttp.send();
+    var url = '?id='+blastID+'&col='+col+'&dir='+direction+'&ajax=1'
+    xmlhttp.open("GET", "blast_results"+url, true);
     
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      var resp = xmlhttp.responseText;
+      document.getElementById('blastResultsDiv').innerHTML = resp
+     } 
+    }
+    xmlhttp.send();
+  
+}
+
+function reset2default() {
+   // set advanced,expect,max_target_seqs,
+   // defaults
+   adv = '-penalty -3 -reward 2 -gapopen 5 -gapextend 2'
+   max_target_seqs = '20'
+   expect = '0.0001'
+   document.getElementById('advancedOpts').value = adv
+   document.getElementById('blastMaxTargetSeqs').value = max_target_seqs
+   document.getElementById('blastExpect').value = expect
+   
 }

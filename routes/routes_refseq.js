@@ -15,7 +15,7 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
     console.log('MADEIT TO blastn-get')
     helpers.accesslog(req, res)
   res.render('pages/refseq/blastn', {
-    title: 'HOMD :: BLAST', 
+    title: 'HOMD :: RefSeq Blast', 
     pgname: 'refseq_blast',
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     hostname: CFG.hostname,

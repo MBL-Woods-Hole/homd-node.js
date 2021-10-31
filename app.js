@@ -59,12 +59,13 @@ app.set('view engine', 'ejs');
 // app.use(bodyParser({uploadDir:'./uploads'}));
 //app.use(createIframe);
 
-app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({
-    extended: true,         // allows for richer json like experience https://www.npmjs.com/package/qs#readme
+    extended: false,         // allows for richer json like experience https://www.npmjs.com/package/qs#readme
     limit: '50mb',          // size of body
     parameterLimit: 100000 // number of parameters
 }));
+app.use(bodyParser.json());
 
 // https://blog.jscrambler.com/best-practices-for-secure-session-management-in-node
 app.use(session({

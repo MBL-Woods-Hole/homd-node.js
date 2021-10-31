@@ -103,18 +103,25 @@ thead th { position: sticky; top: 0; }
      <% timer = 'off' %>
 <% }else{ %>
     
-    <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
+    
     <div id='blast-search-info'>
+      <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
       <table>
         <tr>
         <td><a href='#blastStats'>View BLAST Stats and Legend</a></td>
         <td>
-          <select class='dropdown' onchange="blastDownload(this.value,'<%= blastID %>')">
+          <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.value,'<%= blastID %>')">
             <option value='0'>Download</option>
-            <option value='text4'>As Text -top 4 matches</option>
-            <option value='textAll'>As Text -all</option>
-            <option value='excel4'>As Excel -top 4 matches</option>
-            <option value='excelAll'>As Excel -all</option>
+            <option value='text1'>As Text -top hit only</option>
+            <option value='text4'>As Text -top 4 hits</option>
+            <option value='text20'>As Text -top 20 hits</option>
+            <option value='textAll'>As Text -all hits</option>
+            <option disabled>--------</option>
+            <option value='excel1'>As Excel -top hit only</option>
+            <option value='excel4'>As Excel -top 4 hits</option>
+            <option value='excel20'>As Excel -top 20 hits</option>
+            <option value='excelAll'>As Excel -all hits</option>
+            <option disabled>--------</option>
             <option value='json'>As JSON Format</option>
           </select>
           <= Use checkboxes in column 1 to limit sequences.
@@ -126,23 +133,29 @@ thead th { position: sticky; top: 0; }
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
       </table>
+      <input type='hidden' name='blastID' value='<%= blastID %>'>
+      </form>
     </div>
-    <div id=''>    
+    <div>    
       <center><small>
-      Sort by Query <input type='checkbox' id='querySortcb' onclick="sortBlastTable(this, '<%= blastID %>','query')">&nbsp;&nbsp;&nbsp;&nbsp;
-       bit_score <input type='checkbox' id='scoreSortcb' onclick="sortBlastTable(this, '<%= blastID %>','score')">&nbsp;&nbsp;&nbsp;&nbsp;
-       or Identity <input type='checkbox' id='identitySortcb' onclick="sortBlastTable(this, '<%= blastID %>','identity')">
+      Sort Table: &nbsp;&nbsp;&nbsp;&nbsp;
+      By Query: 
+         <input type='checkbox' id='qsort' name='qsort' value='query' onclick="sortBlastTableForm(this,'<%= blastID %>','query')">&nbsp;&nbsp;&nbsp;&nbsp;
+       By bit_score: 
+         <input type='checkbox' id='ssort' name='ssort' value='score' onclick="sortBlastTableForm(this,'<%= blastID %>','score')">&nbsp;&nbsp;&nbsp;&nbsp;
+       By Identity:
+         <input type='checkbox' id='isort' name='isort' value='identity' onclick="sortBlastTableForm(this,'<%= blastID %>','identity')">
+      
       </small></center>
     </div>
     <div id='blastResultsDiv'>
+       
        <%- html %>
     </div>
     
     <small>
       <div id='blastStats'>
-       blast results link: [ <span id='blasturl'><%= url %>/blast/blast_results?id=<%= blastID %></span> ] <= Copy this link to come back to these results.
        <table class='table' border='1'>
-       
         <tr>
             <td><strong>1</strong> Check individual or all results to be downloaded.</td>
             <td><strong>4</strong> The table will show the top four hit results for each query sequence.</td>
@@ -158,7 +171,7 @@ thead th { position: sticky; top: 0; }
        </table>
       </div>
     </small>
-    </form>
+    
 <% } %>   
     </div> <!-- end: page-content -->
     
