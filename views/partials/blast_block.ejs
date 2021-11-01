@@ -56,7 +56,7 @@
     
     
     <% if(blastFxn == 'genome'){ %><a href='https://wiki.homd.info/help/blast/programs' target='_blank'>Program</a>: 
-        <select class='dropdown' id='blastProg' name='blastProg'>
+        <select class='dropdown' id='blastProg' name='blastProg' onchange="changeBlastGenomeDbs('<%= gid %>',this.value)">
               <% for(n in blast_prg){ %>
                 <option value='<%= blast_prg[n].toLowerCase() %>'><%= blast_prg[n] %></option>
               <% } %>
@@ -67,12 +67,17 @@
     <% } %>
     
            <a href='https://wiki.homd.info/help/blast/databases' target='_blank'>database</a>:
-           <select class='dropdown' id='blastDb' name='blastDb'>
-              <% for(n in db_choices){ %>
-                <option value='<%= db_choices[n].filename %>'><%= db_choices[n].name %></option>
-              <% } %>
-           </select>
+           <span id='genomeBlastDbChoices'>
+             <select class='dropdown' id='blastDb' name='blastDb'>
+               <% for(n in db_choices){ %>
+                 <option value='<%= db_choices[n].filename %>'><%= db_choices[n].name %></option>
+               <% } %>
+             </select>
+           </span>
     </div> 
+    
+    
+    
     <div class='adjust_block'>
            <a href='https://wiki.homd.info/help/blast/parameters' target='_blank'>Expect</a>:
            <select class='dropdown' id='blastExpect' name='blastExpect'>

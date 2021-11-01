@@ -316,7 +316,12 @@ router.get('/explorer', function explorer (req, res) {
   let pidList
   let dbChoices = []
   let otid = 0
-  const blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN', 'TBLASTX']
+  const blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN']
+  // BLASTP  Compares an amino acid query sequence against a protein sequence database
+//   BLASTN  Compares a nucleotide query sequence against a nucleotide sequence database
+//   BLASTX  Compares a nucleotide query sequence translated in all reading frames against a protein sequence database
+//   TBLASTN Compares a protein query sequence against a nucleotide sequence database dynamically translated in all reading frames
+
   
   const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, infoDataObj, pidList) => {
     res.render('pages/genome/explorer', {
@@ -336,7 +341,7 @@ router.get('/explorer', function explorer (req, res) {
       blastFxn: 'genome',
       info_data: JSON.stringify(infoDataObj),
       pid_list: JSON.stringify(pidList),
-      returnTo: '/genome/explorer'
+      returnTo: '/genome/explorer?gid='+gid+'&blast=1'
       
     })
   }
@@ -366,12 +371,25 @@ router.get('/explorer', function explorer (req, res) {
     organism = C.annotation_lookup[gid].prokka.organism
   }
   //console.log('one')
-  dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '='
-  dbChoices.unshift(   ///  add these two
-       { name: organism + ': Genomic DNA', value: 'org_genomes', filename: 'fna/' + gid },
-       { name: organism + ': DNA of Annotated Proteins', value: 'org_proteins', filename: 'faa/' + gid }
-    )
-  
+  //dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '='
+  let dbChoicesALL = [
+      // NA
+      {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
+           filename:'fna/ALL_genomes'},
+      { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', filename: 'fna/' + gid },
+      // AA
+      {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
+           filename:'faa/ALL_genomes'},
+       
+       { name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', filename: 'faa/' + gid }
+    ]
+  dbChoices = [   // start with blastn and na only (not aa)
+      { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', filename: 'fna/' + gid },
+      
+      {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
+           filename:'fna/ALL_genomes'},
+       
+    ]
 // console.log('organism', organism)
 // console.log('blast', blast)
 // console.log('page_data.page', pageData.page)
@@ -433,12 +451,48 @@ router.get('/explorer', function explorer (req, res) {
     }
   })
 })
+//
+//
+router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
+    console.log('in changeBlastGenomeDbs AJAX')
+    console.log(req.body)
+    let db = req.body.db
+    let gid = req.body.gid
+    let organism = ''
+    if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
+       organism = C.annotation_lookup[gid].prokka.organism
+     }
+    let dbChoicesALL = [
+      // NA
+      {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
+           filename:'fna/ALL_genomes'},
+      { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', 
+           filename: 'fna/' + gid },
+      // AA
+      {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
+           filename:'faa/ALL_genomes'},
+       
+       { name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', 
+           filename: 'faa/' + gid }
+    ]
+    let html = "<select class='dropdown' id='blastDb' name='blastDb'>"
+    if(db == 'blastn' || db == 'tblastn'){
+       html += "<option value='fna/"+gid+"'>This Organism's ("+organism + ") Genomic DNA</option>"
+       html += "<option value='fna/ALL_genomes'>Genomic DNA from all HOMD Genomes</option>"
+    }else{  // blastp and blastx
+       html += "<option value='faa/"+gid+"'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+       html += "<option value='faa/ALL_genomes'>DNA Sequences of Proteins from all HOMD Genomes</option>"
+    }
+    html += "</select>"
+    res.send(html)
+    
+})
 // 2021-06-15  opening trees in new tab because thet take too long to open in an iframe
 // which makes the main menu non functional
 // These functions are used to open trees with a search for odid or genomeID
 // The main menu goues through routes_homd::open_tree
 router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
-  helpers.accesslog(req, res)
+  
   console.log('in conserved_protein_tree')
   // let myurl = url.URL(req.url, true);
   const otid = req.query.otid

@@ -185,6 +185,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
           
     </div>
     </center>
+    <%- include('../../partials/flash'); %>
     <% if(gid){ %>
             <% if(anno_type == 'prokka' || anno_type == 'ncbi'){ %>
                 <%- include('../../partials/annotation'); %>

@@ -267,7 +267,14 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   let filename, filepath, data, fasta_as_list, trimlines, twolist,fastaFilePaths;
   const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i, returnTo: req.body.returnTo }
   let blastOpts = createBlastOpts(req.body)
+  let dbPath
+  if(req.body.blastFxn === 'genome'){
+      dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,req.body.blastDb)
+  }else{
+      dbPath = path.join(CFG.BLAST_DB_PATH_REFSEQ,req.body.blastDb)
+  }
   
+  console.log('DB Path (for production):: ',dbPath)
   //let blast_session_ts = Date.now().toString();
   const randomnum = Math.floor(Math.random() * 90000) + 10000;
   opts.blastSessionID = req.session.id + '-' + randomnum.toString()
@@ -289,10 +296,8 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
       
   }else{
       opts.type = 'textInput'
-      
       let inputSeqInput = req.body.inputSeq.trim();
       runPyScript(req, res, opts, blastOpts, blastDir, inputSeqInput, next)
-     
   }
     
 

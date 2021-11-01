@@ -69,14 +69,14 @@ function get_16s_seq(seqid) {
         text = '<pre>'
         text += resp
         text += '</pre>'
-		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
-		var doc = win.document;
-		//doc.writeln("<title>yourtitle</title>");
-		//doc.title = 'eHOMD Reference Sequence'
-		doc.open("text/html");
-		
-		doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
-		doc.close();
+    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
+    var doc = win.document;
+    //doc.writeln("<title>yourtitle</title>");
+    //doc.title = 'eHOMD Reference Sequence'
+    doc.open("text/html");
+  
+    doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
+    doc.close();
       }
     }
     xmlhttp.send(JSON.stringify(args));
@@ -93,8 +93,8 @@ function get_NN_NA_seq(type,pid,db) {  // type=nn or na
     args.pid  = pid
     args.db   = db
     var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", "/genome/get_NN_NA_seq", true);
-	xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.open("POST", "/genome/get_NN_NA_seq", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
@@ -104,14 +104,14 @@ function get_NN_NA_seq(type,pid,db) {  // type=nn or na
         text = '<pre>'
         text += resp
         text += '</pre>'
-		var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
-		var doc = win.document;
-		//doc.writeln("<title>yourtitle</title>");
-		//doc.title = 'eHOMD Reference Sequence'
-		doc.open("text/html");
-		
-		doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
-		doc.close();
+    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+    var doc = win.document;
+    //doc.writeln("<title>yourtitle</title>");
+    //doc.title = 'eHOMD Reference Sequence'
+    doc.open("text/html");
+  
+    doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
+    doc.close();
       }
     }
     xmlhttp.send(JSON.stringify(args));
@@ -135,4 +135,23 @@ function genome_table_search(){
        return
    }
    form.submit()
+}
+function changeBlastGenomeDbs(gid, db) {
+    //alert(gid)
+    args = {}
+    args.db = db
+    args.gid = gid
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "/genome/changeBlastGenomeDbs", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = xmlhttp.responseText;
+        //console.log(resp)
+        
+        document.getElementById('genomeBlastDbChoices').innerHTML=resp
+       }
+    }
+    xmlhttp.send(JSON.stringify(args));
+
 }

@@ -95,22 +95,23 @@ constants.refseq_blastn_db_choices = [
          filename:'HOMD_16S_rRNA_RefSeq_V13.2.p9.fasta'},
     {name:'eHOMD 16s rRNA RefSeq Version 13.2 (starts at pos 28)',value:'13.2',
          filename:'HOMD_16S_rRNA_RefSeq_V13.2.fasta'},
-
-    {name:'Greengenes 16S rRNA Sequences (gg16S_unaligned)',value:'GG',
-         filename:''},
-    {name:'NCBI Reference RNA Sequences (refseq_rna, 1969-12-31)',value:'NCBI',
-         filename:''},
-    {name:'RDP 16S rRNA Sequences',value:'RDP',
-         filename:''},
+// where are these DBs? are they important?
+   //  {name:'Greengenes 16S rRNA Sequences (gg16S_unaligned)',value:'GG',
+//          filename:''},
+//     {name:'NCBI Reference RNA Sequences (refseq_rna, 1969-12-31)',value:'NCBI',
+//          filename:''},
+//     {name:'RDP 16S rRNA Sequences',value:'RDP',
+//          filename:''},
+    
     {name:'eHOMD 16s rRNA RefSeq Extended V1.1',value:'V1.1',
          filename:'Extended_reference_version1'}
 ]
-constants.genome_blastn_db_choices = [
-  {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
-       filename:'fna/ALL_genomes'},
-  {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
-       filename:'faa/ALL_genomes'},
-]
+// constants.genome_blastn_db_choices = [
+//   {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
+//        filename:'fna/ALL_genomes'},
+//   {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
+//        filename:'faa/ALL_genomes'},
+// ]
 // constants.posters_pdfs =
 // [
 // {shortname:"McCafferty2014", filename:'2014-AADR-McCafferty.pdf'},

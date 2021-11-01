@@ -137,7 +137,7 @@ def processText(args, details_dict):
                 seqcounter += 1
             else:
                 t = line.strip().upper()
-                if validate(t):
+                if validate(details_dict['blastdb'], t):
                     entry += t
                 else:
                     sys.exit('Found invalid characters in string. Only IUPAC letters allowed.')
@@ -156,7 +156,7 @@ def processText(args, details_dict):
         ## split/join  to remove any linefeeds
         textInput = ''.join(textInput.upper().splitlines())
         
-        if validate(textInput):
+        if validate(details_dict['blastdb'], textInput):
             # single naked sequence
             fileName = 'blast0.fa'
             fileNamePath = os.path.join(details_dict['blastDir'], fileName)
@@ -167,7 +167,7 @@ def processText(args, details_dict):
         
     return files
     
-def validate(string):
+def validate(db, string):
     ## Nucleotides
     #string = """MKKTLRIFLSSLSLTALLAGPTIALAESSSSESSASSQESTASSESSTDFKAVAEAIKAATSAKEASVTYTNSTPITFGKAPVTETIHAYSLISLKDFTKDLAFPFGGDTQTGAVLVLDVSLKNDSDKDTYITGGFSGSIVGYNKAVSHNNNLLDEAKDLTKAVVDAKQVLKAKSELRGFVAIAIGGDALKQLNKNGELSFDPLIVLANQGDKITDAIVPTASTILPTSKEGAAKRSAASEFYPDKLTAENWGTKTLISSSTDKQNVKFEGYDVTLNGYQLVDFKPNEDQASRFEKLKGGVVVLTAEITVKNNGKVALNARQTAGNLVFNDQLKLMHEGMVEVEPAKDKEIVEPGQEYTYHLAFVYSKDDYDLYKDRSLTLNVNLYDKDFKSLTKSGDITFQLKK""".upper()
     
@@ -179,12 +179,20 @@ def validate(string):
     #is_valid = not any(k in strg for k in 'ATCGUKSYMWRBDHVN.-DEFILPQY')
     #print('\nis_valid')
     #print(is_valid)
+    print('[PYSCRIPT] db:',db)
     #patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
-    
-    if reBOTH.search(string):
-        return True
+    if db[0:3] == 'faa':  ## for protein db
+      print('[PYSCRIPT] in db-faa')
+      if reAA.search(string):
+          return True
+      else:
+          return False
     else:
-        return False
+      print('[PYSCRIPT] in db-fna')
+      if reNA.search(string):
+          return True
+      else:
+          return False
     
 
 
