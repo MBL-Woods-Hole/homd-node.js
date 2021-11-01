@@ -378,7 +378,7 @@ router.get('/explorer', function explorer (req, res) {
            filename: 'fna/' + gid +'.fna'},
       
       {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
-           filename:'fna/ALL_genomes'},
+           filename:'fna/ALL_genomes.fna'},
        
     ]
 // console.log('organism', organism)
