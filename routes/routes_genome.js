@@ -372,19 +372,10 @@ router.get('/explorer', function explorer (req, res) {
   }
   //console.log('one')
   //dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '='
-  let dbChoicesALL = [
-      // NA
-      {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
-           filename:'fna/ALL_genomes'},
-      { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', filename: 'fna/' + gid },
-      // AA
-      {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
-           filename:'faa/ALL_genomes'},
-       
-       { name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', filename: 'faa/' + gid }
-    ]
+  
   dbChoices = [   // start with blastn and na only (not aa)
-      { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', filename: 'fna/' + gid },
+      { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', 
+           filename: 'fna/' + gid +'.fna'},
       
       {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
            filename:'fna/ALL_genomes'},
@@ -465,23 +456,23 @@ router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
     let dbChoicesALL = [
       // NA
       {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
-           filename:'fna/ALL_genomes'},
+           filename:'fna/ALL_genomes.fna'},
       { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', 
-           filename: 'fna/' + gid },
+           filename: 'fna/' + gid +'.fna' },
       // AA
       {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
-           filename:'faa/ALL_genomes'},
+           filename:'faa/ALL_genomes.faa'},
        
        { name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', 
-           filename: 'faa/' + gid }
+           filename: 'faa/' + gid +'.faa' }
     ]
     let html = "<select class='dropdown' id='blastDb' name='blastDb'>"
     if(db == 'blastn' || db == 'tblastn'){
-       html += "<option value='fna/"+gid+"'>This Organism's ("+organism + ") Genomic DNA</option>"
-       html += "<option value='fna/ALL_genomes'>Genomic DNA from all HOMD Genomes</option>"
+       html += "<option value='fna/"+gid+".fna'>This Organism's ("+organism + ") Genomic DNA</option>"
+       html += "<option value='fna/ALL_genomes.fna'>Genomic DNA from all HOMD Genomes</option>"
     }else{  // blastp and blastx
-       html += "<option value='faa/"+gid+"'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
-       html += "<option value='faa/ALL_genomes'>DNA Sequences of Proteins from all HOMD Genomes</option>"
+       html += "<option value='faa/"+gid+".faa'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+       html += "<option value='faa/ALL_genomes.faa'>DNA Sequences of Proteins from all HOMD Genomes</option>"
     }
     html += "</select>"
     res.send(html)

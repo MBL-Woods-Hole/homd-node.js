@@ -200,7 +200,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
     fileText ='#!/bin/bash\n\n'
     
     for file in filesArray:
-        fileText += details_dict['program']
+        fileText += os.path.join(details_dict['programPath'], details_dict['program'])
         
         if details_dict['site'] == 'localhome':
             fileText += ' -db /Users/avoorhis/programming/blast_db/HOMD_16S_rRNA_RefSeq_V15.22.fasta'

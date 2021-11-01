@@ -107,6 +107,19 @@ constants.refseq_blastn_db_choices = [
          filename:'Extended_reference_version1'}
 ]
 // constants.genome_blastn_db_choices = [
+constants.genome_blastn_db_choices = [
+      // NA
+      {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
+           filename:'fna/ALL_genomes.fna'},
+      //{ name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', 
+      //     filename: 'fna/' + gid +'.fna' },
+      // AA
+      {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
+           filename:'faa/ALL_genomes.faa'},
+       
+       //{ name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', 
+       //    filename: 'faa/' + gid +'.faa' }
+    ]
 //   {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
 //        filename:'fna/ALL_genomes'},
 //   {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
