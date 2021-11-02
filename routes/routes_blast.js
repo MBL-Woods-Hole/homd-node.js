@@ -719,11 +719,12 @@ function getBlastHTML1(jsonList, blastID) {
        }
        count += 1
        if(numhits === 0){
+           //console.log('numhits',numhits)
            addhtml += "<tr class='"+bgcolor+"'>"
            addhtml += '<td></td>'
            addhtml += "<td class='blastcol1 small'>"+jsonList[n].query_title+'</td>'
            addhtml += "<td class='blastcol2 center'>"+jsonList[n].query_len+'</td>'
-           addhtml += "<td class='center' rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
+           addhtml += "<td class='center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a> <a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
            addhtml += "<td class='blastcol3 center'>no hits found</td>"
            addhtml += "<td class='blastcol4'>no hits found</td>"  
            addhtml += '<td></td><td></td><td></td></tr>'
@@ -770,6 +771,7 @@ function getRowHTML(description, hsps, bgcolor) {
      }else{
         // for all? homd blast databases??
         hit_items = description.title.split('|')
+        console.log('hit_items:',hit_items)
         titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
         HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
         addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid=" + HMT + "'>" + titleid.trim() + '</a></td>'

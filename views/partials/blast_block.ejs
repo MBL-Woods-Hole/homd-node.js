@@ -55,7 +55,8 @@
     
     
     
-    <% if(blastFxn == 'genome'){ %><a href='https://wiki.homd.info/help/blast/programs' target='_blank'>Program</a>: 
+    <% if(blastFxn == 'genome'){ %>
+        <a href='https://wiki.homd.info/help/blast/programs' target='_blank'>Program</a>: 
         <select class='dropdown' id='blastProg' name='blastProg' onchange="changeBlastGenomeDbs('<%= gid %>',this.value)">
               <% for(n in blast_prg){ %>
                 <option value='<%= blast_prg[n].toLowerCase() %>'><%= blast_prg[n] %></option>
@@ -138,18 +139,15 @@
            
     </div>
     
-       
     <div class='adjust_block'>
-           Other Advanced Options:
-           <input class='dropdown' id='advancedOpts' name='advancedOpts' type='text' value='-penalty -3 -reward 2 -gapopen 5 -gapextend 2' maxlength='100' size='50'>
-         
-    <!-- 
-
-    <br><br>Sort results by: <input type='radio' id='sortBlastResultScore' checked name='sortBlastResultScore' value='score'>Score (bits)  <input type='radio' name='sort_blastn_result' value='percent'>Percent Identity (New option!)
-    
- -->
-    
+           <a href='https://wiki.homd.info/help/blast/advanced_options' target='_blank'>Other Advanced Options:</a>
+       <% if(blastFxn == 'genome'){ %>      
+        <input class='dropdown' id='advancedOpts' name='advancedOpts' type='text' value='' maxlength='100' size='50'>
+      <% }else{ %>
+        <input class='dropdown' id='advancedOpts' name='advancedOpts' type='text' value='-penalty -3 -reward 2 -gapopen 5 -gapextend 2' maxlength='100' size='50'>
+      <% } %>
     </div>
+    
     <div class='adjust_block'>
            <span onclick='reset2default()' class='pill pill-brown pill-lg'>Reset to Defaults</span>
     </div> 
