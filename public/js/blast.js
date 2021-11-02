@@ -35,18 +35,19 @@ function getFileContent(type, id, num) {
 
 function blastCkboxMaster(id){
    //alert('in bcbm')
-   var ckbs = document.querySelectorAll("input[type='checkbox']");
+   table = document.getElementById('blastResultsDiv')
+   cbxs = table.querySelectorAll("input[type='checkbox']");
    // just need to check or un-check all
-   if(ckbs[1].checked){
+   if(cbxs[1].checked){
       ckall = false
    }else{
       ckall = true
    }
-   for(var i = 0; i < ckbs.length; i++) {
+   for(var i = 0; i < cbxs.length; i++) {
       if(ckall)
-        ckbs[i].checked = true; 
+        cbxs[i].checked = true; 
       else
-        ckbs[i].checked = false; 
+        cbxs[i].checked = false; 
     } 
 }
 
@@ -56,6 +57,26 @@ function blastDownload(value, id){
        return
    }
    form = document.getElementById('blastDownloadForm')
+   table = document.getElementById('blastResultsDiv')
+   cbxs = table.querySelectorAll("input[type='checkbox']");
+   //console.log(cbxs)
+   
+   checked = []
+   for(var i=0; i<cbxs.length;i++){
+       //console.log(cbxs[i].value)
+       //console.log(cbxs[i].checked)
+       if(cbxs[i].checked && cbxs[i].value != 'master'){
+         checked.push(cbxs[i])
+       }
+   }
+   for(var n=0; n<checked.length; n++){
+      let i = document.createElement("input");
+       i.type = "hidden";
+       i.name = "blastFilesToDnld";
+       i.value = 'blast'+checked[n].value.toString()+'.fa.out'
+       // add all elements to the form
+       form.appendChild(i);
+   }
    // form.reset();
 //    const i = document.createElement("input");
 //    i.type = "text";

@@ -95,7 +95,7 @@ router.get('/blast_results', function blastResults(req, res) {
                   data.push(jsondata.BlastOutput2[0].report.results.search)
                   
                   if(CFG.ENV === 'development'){
-                      console.log('jsondata', jsondata)
+                      //console.log('jsondata[0]', jsondata[0])
                   }
                   if(jsondata === undefined){
                       console.log('jsondata error for file:',blastFiles[i])
@@ -138,23 +138,34 @@ router.get('/blast_results', function blastResults(req, res) {
 
 //
 //
-router.get('/blast_wait', function blastWait(req, res) {
+router.get('/blast_wait', async function blastWait(req, res, next) {
     console.log('in blast wait')
     //????
     console.log('session blast_wait:')
     console.log(req.session)
     let finished = false, blastFiles = [], faFiles = [], html, jsondata, database, pyerror
     
-    
-    
     if(req.session.blast.id){
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id)
+        let errorFile = path.join(blastDir,'error.log')
+        if (fs.existsSync(errorFile)) {
+            let error = fs.readFileSync(errorFile) 
+            if (error.length == 0) {
+                // ok
+            }else{
+              req.flash('fail', 'BLAST Program Error '+ error.toString())
+              res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
+              return
+            }
+            
+		}
         //req.session.blastCounter += 1
         req.session.blast.timer += 5  // 5sec at a pop
         let blastResultsDir = path.join(blastDir,'blast_results')
         const result = getAllDirFiles(blastDir) // will give ALL files in ALL dirs
         if(!result){
-           throw new Error('There was a fatal error reading the BLAST directory')
+           req.flash('fail', 'There was a fatal error reading the BLAST directory')
+           res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
            return
         }
         for(let i=0; i < result.length; i++){
@@ -189,7 +200,7 @@ router.get('/blast_wait', function blastWait(req, res) {
               //console.log(blastFiles[i])
               data.push(jsondata.BlastOutput2[0].report.results.search)
               if(CFG.ENV === 'development'){
-                  console.log('jsondata', jsondata)
+                  //console.log('jsondata[0]', jsondata[0])
               }
               if(jsondata === undefined){
                   console.log('jsondata error for file:',blastFiles[i])
@@ -198,12 +209,7 @@ router.get('/blast_wait', function blastWait(req, res) {
               //console.log('database', database)
           }
 
-          //html = getBlastHtmlTable(data, req.session.blast.id)
-          //console.log('session.error2',req.session.pyerror)
-          // if(blastFiles.length === 0){
-//              req.session.pyerror = {code:1, msg:'something bad happened'}
-//              
-//           }
+        
           if(!req.session.blast.id){
              req.flash('fail', 'blastID no longer Valid')
              res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
@@ -277,7 +283,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   console.log('DB Path (for production):: ',dbPath)
   //let blast_session_ts = Date.now().toString();
   const randomnum = Math.floor(Math.random() * 90000) + 10000;
-  opts.blastSessionID = req.session.id + '-' + randomnum.toString()
+  opts.blastSessionID = Date.now() + '-' + randomnum.toString()
   
   const blastDir = path.join(CFG.PATH_TO_BLAST_FILES, opts.blastSessionID)
   if (!fs.existsSync(blastDir+'/'+'blast_results')){
@@ -357,7 +363,11 @@ router.post('/blastDownload', function blastDownload(req, res) {
 
     let blastFiles = []
     for(let i=0; i < result.length; i++){
-        blastFiles.push(path.join(blastResultsDir, result[i]))
+        if(req.body.blastFilesToDnld.indexOf(result[i]) >= 0) {
+           blastFiles.push(path.join(blastResultsDir, result[i]))
+        }else{
+          console.log('NOT Downloading:',result[i])
+        }
     }
     //console.log('blastfiles')
     //console.log(blastFiles)
@@ -377,14 +387,14 @@ router.post('/blastDownload', function blastDownload(req, res) {
                   
                   jsondata = JSON.parse(results[i])
                   
-                  console.log(jsondata.BlastOutput2[0])
+                  //console.log(jsondata.BlastOutput2[0])
                   program = jsondata.BlastOutput2[0].report.program
                   version = jsondata.BlastOutput2[0].report.version
                   fileData[jsondata.BlastOutput2[0].report.results.search.query_title] = jsondata.BlastOutput2[0].report.results.search
                   //data.push(jsondata.BlastOutput2[0].report.results.search)
                   
                   if(CFG.ENV === 'development'){
-                      console.log('jsondata', jsondata)
+                      //console.log('jsondata', jsondata)
                   }
                   if(jsondata === undefined){
                       console.log('jsondata error for file:',blastFiles[i])
@@ -571,7 +581,7 @@ function getBlastHtmlTable(jsonList, blastID, sortCol, sortDir){
     //html += "</small>"
     html += "<table><thead>"
     html += '<tr>'
-    html += "<th><input type='checkbox' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
+    html += "<th><input type='checkbox'  value='master' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
     html += '<th>Query<sup>2</sup></th><th>Length</th>'
     html += '<th>View<sup>3</sup><br>Link</th><th>Hit<sup>4</sup></th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<sup>5</sup><br>(%)</th></tr>'
     html += '</thead><tbody>'
@@ -677,7 +687,7 @@ function getBlastHTML2(jsonList, blastID, sortCol, sortDir) {
        }
         count += 1
         addhtml += "<tr class='"+bgcolor+"'>"
-        addhtml += "<td><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"
+        addhtml += "<td></td>"  // no checkboxes
         addhtml += "<td class='blastcol1 small' >"+newList[n].query+'</td>'
         addhtml += "<td class='blastcol2 center' >"+newList[n].length+"</td>"
        // addhtml += "<td rowspan='4'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>blast_resultfile</a></td>"
@@ -732,7 +742,7 @@ function getBlastHTML1(jsonList, blastID) {
        } else {
           //console.log('numhits<4',numhits)
           addhtml += "<tr class='"+bgcolor+"'>"
-          addhtml += "<td rowspan='"+allow+"'><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"
+          addhtml += "<td rowspan='"+allow+"'><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"  // value will be the file number: blast0, 1, 2...
           addhtml += "<td class='blastcol1 small' rowspan='"+allow+"'>"+jsonList[n].query_title+'</td>'
           addhtml += "<td class='blastcol2 center' rowspan='"+allow+"'>"+jsonList[n].query_len+'</td>'
           //addhtml += "<td rowspan='"+allow+"'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>res</a></td>"
@@ -771,7 +781,7 @@ function getRowHTML(description, hsps, bgcolor) {
      }else{
         // for all? homd blast databases??
         hit_items = description.title.split('|')
-        console.log('hit_items:',hit_items)
+        //console.log('hit_items:',hit_items)
         titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
         HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
         addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid=" + HMT + "'>" + titleid.trim() + '</a></td>'
