@@ -8,6 +8,7 @@
 .vscode
 .idea
 public/scripts/*.pyc
+install_scripts/homdData-*
 *.pyc
 !db_schema.sql
 !db_config.sql.gz
