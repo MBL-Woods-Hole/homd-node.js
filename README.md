@@ -9,7 +9,7 @@ to make it fully functional.
 All files located in /install_scripts
 
 ### Legacy transfer files:
-Used for extracting data from the old mysql database and putting in the new database
+Used for extracting data from the old mysql database and putting in the new database (not maintained (may/will) need editing.
 - 1_txfr_taxonomy.py	
 - 2_txfr_sites.py		
 - 3_txfr_genomes.py		
@@ -38,4 +38,7 @@ This provides the app with JSON objects which is much faster that making MySQL q
 - Initialize_Abundance.py -- Has to be run after Initialize_Taxonomy.py! \
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage: ./Initialize_Abundance.py -i HOMDtaxa-abundance-2021-09-06-cleaned.csv 
   - Re-writes file: homdData-TaxonCounts.json
+
+Once these homdData* files are created they need to be moved into homd-data directory which is outside the app root.
+The exact directory is defined in the /config/config.js file as config.DATA
 
