@@ -214,7 +214,8 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         fileText += ' -max_target_seqs ' + details_dict['maxTargetSeqs']  # use if outfmt >4
         fileText += ' ' + details_dict['advanced']
         fileText += ' -outfmt 15'   ## 15 JSON
-        #fileText += ' -html'   ## dont use this
+        ##fileText += ' -outfmt 16'   ## 16 XML
+        fileText += ' -html'   ## dont use this
         fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
         fileText += " 1>/dev/null 2>>" + details_dict['blastDir'] + "/error.log;"
         fileText += '\n'

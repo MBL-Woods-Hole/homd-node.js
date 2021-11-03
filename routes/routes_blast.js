@@ -90,6 +90,7 @@ router.get('/blast_results', function blastResults(req, res) {
              async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
 
                 for(let i=0; i<blastFiles.length; i++){
+                  console.log(blastFiles[i])
                   jsondata = JSON.parse(results[i])
                   //console.log(blastFiles[i])
                   data.push(jsondata.BlastOutput2[0].report.results.search)
