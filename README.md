@@ -22,7 +22,8 @@ This provides the app with JSON objects which is much faster that making MySQL q
 These scripts support a pretty_print (-pp) option to be able to read the JSON file better if you are so inclined.
 
 - Initialize_Taxonomy.py -- Takes data from new MySQL DB: homd \
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage: ./Initialize_Taxonomy.py -- creates files:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage: ./Initialize_Taxonomy.py \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- creates files:
   - ./homdData-TaxonRefSeqLookup.json
   - ./homdData-TaxonInfoLookup.json
   - ./homdData-TaxonReferencesLookup.json
@@ -31,11 +32,14 @@ These scripts support a pretty_print (-pp) option to be able to read the JSON fi
   - ./homdData-TaxonCounts.json
   - ./homdData-TaxonLookup.json
 - Initialize_Annotation.py -- Takes data from ORIGINAL HOMD Annotation DBs (ie: PROKKA_SEQF1234 and NCBI_SEQF1234) \
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage ./Initialize_Annotation.py  (creates file: homdData-AnnotationLookup.json)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage ./Initialize_Annotation.py  \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(creates file: homdData-AnnotationLookup.json)
 - Initialize_Genomes.py -- Takes data from new MySQL DB: genome \
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage ./Initialize_Genomes.py (creates file: homdData-GenomeLookup.json)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage ./Initialize_Genomes.py \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(creates file: homdData-GenomeLookup.json)
 - Initialize_Phage.py -- Takes data from new MySQL DB: homd \
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage: ./Initialize_Phage.py (creates file: homdData-PhageList.json and homdData-PhageLookup.json)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage: ./Initialize_Phage.py \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(creates file: homdData-PhageList.json and homdData-PhageLookup.json)
 
 - Initialize_Abundance.py -- *Must be run after Initialize_Taxonomy.py!* \
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage: ./Initialize_Abundance.py -i HOMDtaxa-abundance-2021-09-06-cleaned.csv 
