@@ -17,7 +17,7 @@ Used for extracting data from the old mysql database and putting in the new data
 - 5_load_phage.py
 
 ### Initialization scripts (Initialize_*)
-Used to create the JSON files that the HOMD Node.js app reads on startup.
+Used to create the required JSON files that the HOMD Node.js app reads on startup.
 This provides the app with JSON objects which is much faster that making MySQL queries during data requests.
 
 - Initialize_Annotation.py -- Takes data from ORIGINAL HOMD Annotation DBs (ie: PROKKA_SEQF1234 and NCBI_SEQF1234) \

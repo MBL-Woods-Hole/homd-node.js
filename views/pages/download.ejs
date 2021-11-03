@@ -72,117 +72,126 @@
 <%- include('../partials/header_html'); %>
 
 <body>
-  	<div id='wrapper'>
+    <div id='wrapper'>
     <%- include('../partials/header_img'); %>
     <%- include('../partials/navbar'); %>
     
     
     <div class='page-content' >
-		 					
-	<div class='title'>Download HOMD Data</div>
-		
+              
+  <div class='title'>Download HOMD Data</div>
+    
 <center>
 
 
 <a name='taxon'>
 <div id='taxon' class='dnld-block'>
-	<center>
-	<div class='subtitle'>Taxonomic Data::Batch Downloads</div>
-	<table class='download-table'>
-	  <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
-	  <tr><td>Taxon Table <a href='/taxa/tax_table'>[page]</a></td>
-	    <td><a href='/taxa/dld_table/browser/all/[]/[]/0/0'>Tab Delimited Text<br>(View in browser)</a></td>
-	    <td><a href='/taxa/dld_table/text/all/[]/[]/0/0'>Tab Delimited Text<br>(Save to file)</a></td>
-	    <td><a href='/taxa/dld_table/excel/all/[]/[]/0/0'>MS Excel Format<br>(Save to file)</a></td>
-	  </tr>
-	  <tr>
-	    <td>Taxonomic Hierarchy <a href='/taxa/tax_hierarchy'>[page]</a></td><td><a href='/taxa/download/browser/hierarchy'>Tab Delimited Text<br>(View in browser)</a></td><td><a href='/taxa/download/text/hierarchy'>Tab Delimited Text<br>(Save to file)</a></td><td><a href='/taxa/download/excel/hierarchy'>MS Excel Format<br>(Save to file)</a></td></tr>
-	  <tr>
-	    <td>Taxonomic Level <a href='/taxa/tax_level'>[page]</a></td><td><a href='/taxa/download/browser/level'>Tab Delimited Text<br>(View in browser)</a></td><td><a href='/taxa/download/text/level'>Tab Delimited Text<br>(Save to file)</a></td><td><a href='/taxa/download/excel/level'>MS Excel Format<br>(Save to file)</a></td></tr>
-	</table>
-	</center>
+  <center>
+  <div class='subtitle'>Taxonomic Data::Batch Downloads</div>
+  <table class='download-table'>
+    <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+    <tr><td>Taxon Table <a href='/taxa/tax_table'>[page]</a></td>
+      <td><a href='/taxa/dld_table/browser/all/[]/[]/0/0'>Tab Delimited Text<br>(View in browser)</a></td>
+      <td><a href='/taxa/dld_table/text/all/[]/[]/0/0'>Tab Delimited Text<br>(Save to file)</a></td>
+      <td><a href='/taxa/dld_table/excel/all/[]/[]/0/0'>MS Excel Format<br>(Save to file)</a></td>
+    </tr>
+ <!-- 
+   
+    <tr><td>Taxon Table for Legacy Comparison</td>
+      <td><a href='/taxa/dld_table_for_legacy_comparison'>Tab Delimited Text<br>(View in browser)</a></td>
+      <td><a href='/taxa/dld_table_for_legacy_comparison'>Tab Delimited Text<br>(Save to file)</a></td>
+      <td><a href='/taxa/dld_table_for_legacy_comparison'>MS Excel Format<br>(Save to file)</a></td>
+    </tr>
+  
+ -->  
+    <tr>
+      <td>Taxonomic Hierarchy <a href='/taxa/tax_hierarchy'>[page]</a></td><td><a href='/taxa/download/browser/hierarchy'>Tab Delimited Text<br>(View in browser)</a></td><td><a href='/taxa/download/text/hierarchy'>Tab Delimited Text<br>(Save to file)</a></td><td><a href='/taxa/download/excel/hierarchy'>MS Excel Format<br>(Save to file)</a></td></tr>
+    <tr>
+      <td>Taxonomic Level <a href='/taxa/tax_level'>[page]</a></td><td><a href='/taxa/download/browser/level'>Tab Delimited Text<br>(View in browser)</a></td><td><a href='/taxa/download/text/level'>Tab Delimited Text<br>(Save to file)</a></td><td><a href='/taxa/download/excel/level'>MS Excel Format<br>(Save to file)</a></td></tr>
+  </table>
+  </center>
 </div>
 
 <hr>
 <a name='genome'>
 <div id='genome' class='dnld-block'>
-	<center>
-	<div class='subtitle'>Genomic Meta Informaton::Batch Downloads</div>
-	<table class='download-table'>
-	  <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
-	  <tr><td>Sequence Meta Information <a href='/genome/genome_table'>[page]</a></td><td><a href='/genome/dld_table/browser/all/0/0/0/0'>Tab Delimited Text<br>(View in browser)</a></td><td><a href='/genome/dld_table/text/all/0/0/0/0'>Tab Delimited Text<br>(Save to file)</a></td><td><a href='/genome/dld_table/excel/all/0/0/0/0'>MS Excel Format<br>(Save to file)</a></td></tr>
-	  
-	</table>
-	</center>
+  <center>
+  <div class='subtitle'>Genomic Meta Informaton::Batch Downloads</div>
+  <table class='download-table'>
+    <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+    <tr><td>Sequence Meta Information <a href='/genome/genome_table'>[page]</a></td><td><a href='/genome/dld_table/browser/all/0/0/0/0'>Tab Delimited Text<br>(View in browser)</a></td><td><a href='/genome/dld_table/text/all/0/0/0/0'>Tab Delimited Text<br>(Save to file)</a></td><td><a href='/genome/dld_table/excel/all/0/0/0/0'>MS Excel Format<br>(Save to file)</a></td></tr>
+    
+  </table>
+  </center>
 </div>
 
 <hr>
 <a name='phylo'>
 <div id='phylo' class='dnld-block'>
-	<center>
-	<div class='subtitle'>Phylogenetics</div>
-	<table class='download-table' >
-	  <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
-	  <tr><td>Phylogenetic tree of HOMD 16S rRNA Reference Sequences</td>
-	      <td><a href="http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg">svg</a></td>
-	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.tre'>newick</a></td>
-	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/refseq/current/seqid_info.txt'>Sequence ID table</a></td>
-	  </tr>
-	  <tr><td>Phylogenetic tree of 16S rRNA gene sequences identified in HOMD genomes</td>
-	      <td><a href="http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.svg">svg</a></td>
-	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.tre'>newick</a></td>
-	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/seqid_info_16S.txt'>Sequence ID table</a></td>
-	  </tr>
-	  <tr><td>Phylogenomic tree based on conserved proteins identified from HOMD genomes</td>
-	      <td><a href="http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">svg</a></td>
-	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.tre'>newick</a></td>
-	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table</a></td>
-	  </tr>
-	  <tr><td>Phylogenetic tree of ribosomal proteins identified from HOMD genomes</td>
-	      <td><a href="http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg">svg</a></td>
-	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.tre'>newick</a></td>
-	      <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table</a></td>
-	  </tr>
-	
-	</table>
-	</center>
-</div>		 
+  <center>
+  <div class='subtitle'>Phylogenetics</div>
+  <table class='download-table' >
+    <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+    <tr><td>Phylogenetic tree of HOMD 16S rRNA Reference Sequences</td>
+        <td><a href="http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg">svg</a></td>
+        <td><a href='http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.tre'>newick</a></td>
+        <td><a href='http://www.homd.org/ftp/phylogenetic_trees/refseq/current/seqid_info.txt'>Sequence ID table</a></td>
+    </tr>
+    <tr><td>Phylogenetic tree of 16S rRNA gene sequences identified in HOMD genomes</td>
+        <td><a href="http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.svg">svg</a></td>
+        <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.tre'>newick</a></td>
+        <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/seqid_info_16S.txt'>Sequence ID table</a></td>
+    </tr>
+    <tr><td>Phylogenomic tree based on conserved proteins identified from HOMD genomes</td>
+        <td><a href="http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">svg</a></td>
+        <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.tre'>newick</a></td>
+        <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table</a></td>
+    </tr>
+    <tr><td>Phylogenetic tree of ribosomal proteins identified from HOMD genomes</td>
+        <td><a href="http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg">svg</a></td>
+        <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.tre'>newick</a></td>
+        <td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table</a></td>
+    </tr>
+  
+  </table>
+  </center>
+</div>     
 
 <hr>
 <a name='phage'>
 <div id='phage' class='dnld-block'>
-	<center>
-	<div class='subtitle'>Phage Data::Batch Downloads</div>
-	<table class='download-table'>
-	  <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
-	  <tr>
-	    <td>Phage Table <a href='/phage/phage_table'>[page]</a></td>
-	    <td><a href='/phage/dld_table/browser/all/family/0/0'>Tab Delimited Text<br>(View in browser)</a></td>
-	    <td><a href='/phage/dld_table/text/all/family/0/0'>Tab Delimited Text<br>(Save to file)</a></td>
-	    <td><a href='/phage/dld_table/excel/all/family/0/0'>MS Excel Format<br>(Save to file)</a></td></tr>
-	  
-	</table>
-	</center>
+  <center>
+  <div class='subtitle'>Phage Data::Batch Downloads</div>
+  <table class='download-table'>
+    <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+    <tr>
+      <td>Phage Table <a href='/phage/phage_table'>[page]</a></td>
+      <td><a href='/phage/dld_table/browser/all/family/0/0'>Tab Delimited Text<br>(View in browser)</a></td>
+      <td><a href='/phage/dld_table/text/all/family/0/0'>Tab Delimited Text<br>(Save to file)</a></td>
+      <td><a href='/phage/dld_table/excel/all/family/0/0'>MS Excel Format<br>(Save to file)</a></td></tr>
+    
+  </table>
+  </center>
 </div>
 <hr>
 <a name='refseq'>
 <div id='refseq' class='dnld-block'>
 
-	<div class='subtitle'>Download HOMD 16S rRNA Gene Sequences</div>
-<div class='refseq-text'>		 
-	HOMD provides two different sets of 16S rRNA Gene Reference Sequence (RefSeq) for download and BLAST search:
-	<br><br>
-	<pre>
-	1. <b>HOMD 16S rRNA RefSeq</b>:</b> This set contains sequences representing all currently named and unnamed oral taxa.
-	2. <b>HOMD 16S rRNA Extended RefSeq</b>:</b> This set contains additional16S rRNA reference gene sequences that are 
-	    distinctively different from existing taxa but have not yet been assigned with a taxon ID.</li>
-	</pre>
-	
-	A phylogeny-based, high-resolution, habitat-specific training reference sequence set was constructed to achieve species/supraspecies-level taxonomic assignment to short- and long-read 16S rRNA gene-derived amplicon sequence variants (ASVs). 
-	<a href='http://www.homd.org/ftp/publication_data/20190709/'>The training set sequences, together with the pipeline scripts, are available for download</a>. For detail description of the training set and the pipelines, 
-	please refer to our publication <a href='https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-020-00841-w' target='_blank' >Escapa et al, 2020</a>.
+  <div class='subtitle'>Download HOMD 16S rRNA Gene Sequences</div>
+<div class='refseq-text'>    
+  HOMD provides two different sets of 16S rRNA Gene Reference Sequence (RefSeq) for download and BLAST search:
+  <br><br>
+  <pre>
+  1. <b>HOMD 16S rRNA RefSeq</b>:</b> This set contains sequences representing all currently named and unnamed oral taxa.
+  2. <b>HOMD 16S rRNA Extended RefSeq</b>:</b> This set contains additional16S rRNA reference gene sequences that are 
+      distinctively different from existing taxa but have not yet been assigned with a taxon ID.</li>
+  </pre>
+  
+  A phylogeny-based, high-resolution, habitat-specific training reference sequence set was constructed to achieve species/supraspecies-level taxonomic assignment to short- and long-read 16S rRNA gene-derived amplicon sequence variants (ASVs). 
+  <a href='http://www.homd.org/ftp/publication_data/20190709/'>The training set sequences, together with the pipeline scripts, are available for download</a>. For detail description of the training set and the pipelines, 
+  please refer to our publication <a href='https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-020-00841-w' target='_blank' >Escapa et al, 2020</a>.
     <br><br>
-	In addition, the entire collection of all cloned sequences (clonal collection) upon which the Refseq was derived from, is also provided for download on this page and on the <a href='http://www.homd.org/ftp/'>HOMD FTP site</a>.
+  In addition, the entire collection of all cloned sequences (clonal collection) upon which the Refseq was derived from, is also provided for download on this page and on the <a href='http://www.homd.org/ftp/'>HOMD FTP site</a>.
 </div>
 
 <div id='download-refseq-table-div'>
@@ -190,7 +199,7 @@
 
 
 <table id='download-refseq-table' border='1'>
-<tr><th>Date</th>	 <th>Version Name</th>	<th></th> </tr>
+<tr><th>Date</th>  <th>Version Name</th>  <th></th> </tr>
 
 <tr class='download-refseq-title' ><td class='download-refseq-title' colspan='2'></a>HOMD 16S rRNA RefSeq *</td><td><span class='rtclk'>Right-click to download<br>or click to open</span></td> </tr>
 <tr><td>2021-02-09</td><td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.fasta' >eHOMD 16S rRNA RefSeq Version 15.22 (Starts from position 28)</a></td>
@@ -246,7 +255,7 @@
 <tr><td>2021-02-09</td><td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.22 Aligned FASTA File</a></td>
     <td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.aligned.fasta'>[Download]</a></td></tr>
 <tr><td>2021-02-09</td><td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.22 Taxonomy File for MOTHUR</a></td>
-    <td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.mothur.taxonomy'>[Download]</a></td></tr>	
+    <td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.mothur.taxonomy'>[Download]</a></td></tr>  
 <tr><td>2021-02-09</td><td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.22 Taxonomy File for QIIME</a></td>
     <td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.qiime.taxonomy'>[Download]</a></td></tr>
 <tr><td>2017-11-16</td><td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.1 Aligned FASTA File</a></td>
@@ -276,15 +285,15 @@
 <tr><td>2014-09-11</td><td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'>HOMD 16S rRNA RefSeq Version 13.2 Taxonomy File for mothur</a></td>
     <td><a href='http://www.homd.org/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'>[Download]</a></td></tr>
 
-																		</table>
-</div>	
-	
-<div id='table-note'>	
+                                    </table>
+</div>  
+  
+<div id='table-note'> 
 * These sequences are corrected consensus sequences. Many have been corrected and extended based on alignment with other sequences for that taxon and Ns and indels removed. Therefore, for many sequences, there will be differences between the Reference Sequence and the GenBank sequence listed in the header information. 
-We have not yet updated our own GenBank sequences, and can not update those from other depositors. We believe these are currently the best reference sequences available, and for the purposes of BLAST analysis, have the advantage of being of a uniform length.	
+We have not yet updated our own GenBank sequences, and can not update those from other depositors. We believe these are currently the best reference sequences available, and for the purposes of BLAST analysis, have the advantage of being of a uniform length.  
 </div>
-	
-	
+  
+  
 
 </div>
 </center>

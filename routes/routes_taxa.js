@@ -989,6 +989,25 @@ router.get('/download/:type/:fxn', function download(req, res) {
   res.end()
     
 })
+// router.get('/dld_table_for_legacy_comparison', function dld_table_for_legacy_comparison(req, res) {
+//     console.log('in dld_table_for_legacy_comparison')
+//     let temp_list = Object.values(C.taxon_lookup)
+//     console.log(C.taxon_lookup[1]) 
+//     console.log(C.taxon_lineage_lookup[1]) 
+//     console.log(Object.values(C.taxon_references_lookup)[0]) 
+//     console.log(C.taxon_references_lookup[161]) 
+//     console.log(Object.values(C.taxon_info_lookup)[0]) 
+//     console.log(C.taxon_info_lookup[9]) 
+//     // HMT_ID	Domain	Phylum	Class	Order	Family	Genus	Species	
+//     // Status	Body_site	Warning	Type_strain	16S_rRNA	Clone_count	
+//     // Clone_%	Clone_rank	Synonyms	NCBI_taxon_id	NCBI_pubmed_count	
+//     // NCBI_nucleotide_count	NCBI_protein_count	Genome_ID	General_info
+//     // Cultivability	Phenotypic_characteristics	Prevalence	Disease	References
+//     
+//     
+//     res.end()
+// 
+// })
 router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', function dld_table_get(req, res) {
 //router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
 
@@ -1281,12 +1300,12 @@ function create_table(otids, source, type, head_txt) {
                o3 = {'general':'','culta':'','pheno':'','prev':'','disease':''}
             }
         
-        
+            if(o2.domain){  // weeds out 
                //console.log(o2)
                var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.ncbi_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
                var row = r.join('\t')
                txt += '\n'+row
-            
+            }
         }
     }else if(source === 'level'){
         headers = ['Domain','Domain_count','Phylum','Phylum_count','Class','Class_count','Order','Order_count','Family','Family_count','Genus','Genus_count','Species','Species_count','Subspecies','Oral_Taxon_ID']
