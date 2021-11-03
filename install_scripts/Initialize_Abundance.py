@@ -235,16 +235,17 @@ if __name__ == "__main__":
     usage = """
     USAGE:
         Opens and adds to the homdData-TaxonCounts.json file 
+        MUST be run AFTER Initialize_Taxonomy.py
+        ./Initialize_Abundance.py -i HOMDtaxa-abundance-2021-09-06-cleaned.csv
         
-        Initialize_Abundance.py -i HOMDtaxa-abundance-2021-09-06-cleaned.csv
+        TODO add abundance data to database
+        
         
         OLD:
         Run 3 times (once for each abundance.csv file
           ./Initialize_Abundance.py -i Segata2021-09-07.csv -s segata
           ./Initialize_Abundance.py -i Eren2021-09-07.csv -s eren
           ./Initialize_Abundance.py -i Dewhirst2021-09-07.csv -s dewhirst -pp
-        
-        TODO add abundance data to database
         
     """
 

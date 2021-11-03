@@ -17,9 +17,9 @@ from connect import MyConnection
 # TABLES
 
 first_query ="""
-    SELECT phage_id as pid, Assembly_NCBI,SRA_Accession_NCBI,Submitters_NCBI,Release_Date_NCBI,	
-	Family_NCBI,Genus_NCBI,Species_NCBI, Genotype_NCBI, Publications_NCBI,  Molecule_type_NCBI,Sequence_Type_NCBI,Geo_Location_NCBI,
-	USA_NCBI,Host_NCBI,Isolation_Source_NCBI,Collection_Date_NCBI,BioSample_NCBI,GenBank_Title_NCBI	
+    SELECT phage_id as pid, Assembly_NCBI,SRA_Accession_NCBI,Submitters_NCBI,Release_Date_NCBI, 
+  Family_NCBI,Genus_NCBI,Species_NCBI, Genotype_NCBI, Publications_NCBI,  Molecule_type_NCBI,Sequence_Type_NCBI,Geo_Location_NCBI,
+  USA_NCBI,Host_NCBI,Isolation_Source_NCBI,Collection_Date_NCBI,BioSample_NCBI,GenBank_Title_NCBI 
     from phage_data
     ORDER BY pid
 """
@@ -29,54 +29,54 @@ q_tax = "SELECT \
    `genus`.`genus` AS `genus`,genus.genus_id, \
    `species`.`species` AS `species`,species.species_id \
 FROM ((((((((`taxonomy` join `otid_prime` on((`taxonomy`.`taxonomy_id` = `otid_prime`.`taxonomy_id`))) join `domain` on((`taxonomy`.`domain_id` = `domain`.`domain_id`))) join `phylum` on((`taxonomy`.`phylum_id` = `phylum`.`phylum_id`))) join `klass` on((`taxonomy`.`klass_id` = `klass`.`klass_id`))) join `order` on((`taxonomy`.`order_id` = `order`.`order_id`))) join `family` on((`taxonomy`.`family_id` = `family`.`family_id`))) join `genus` on((`taxonomy`.`genus_id` = `genus`.`genus_id`))) join `species` on((`taxonomy`.`species_id` = `species`.`species_id`))) order by `otid_prime`.`otid`;"
-# otid=336	gid=SEQF1970   Atopobium	rimae	
+# otid=336  gid=SEQF1970   Atopobium  rimae 
 
 
 
 
 def create_phage(pid):  # basics - page1 Table: genomes  phage_data_id IS UNIQUE
     """  
-    phage_data_id	int(11) unsigned	NO	PRI	NULL	auto_increment
-	Assembly_NCBI	varchar(50)	NO			
-	SRA_Accession_NCBI	varchar(100)	NO			
-	Submitters_NCBI	text	YES		NULL	
-	Release_Date_NCBI	varchar(50)	YES		NULL	
-	Family_NCBI	varchar(50)	YES		NULL	
-	Genus_NCBI	varchar(50)	YES		NULL	
-	Species_NCBI	varchar(100)	YES		NULL	
-	Molecule_type_NCBI	varchar(50)	YES		NULL	
-	Sequence_Type_NCBI	varchar(50)	YES		NULL	
-	Geo_Location_NCBI	varchar(100)	YES		NULL	
-	USA_NCBI	varchar(10)	YES		NULL	
-	Host_NCBI	varchar(100)	YES		NULL	
-	Isolation_Source_NCBI	varchar(100)	YES		NULL	
-	Collection_Date_NCBI	varchar(100)	YES		NULL	
-	BioSample_NCBI	varchar(20)	YES		NULL	
-	GenBank_Title_NCBI	varchar(100)	YES		NULL	
-	
+    phage_data_id int(11) unsigned  NO  PRI NULL  auto_increment
+  Assembly_NCBI varchar(50) NO      
+  SRA_Accession_NCBI  varchar(100)  NO      
+  Submitters_NCBI text  YES   NULL  
+  Release_Date_NCBI varchar(50) YES   NULL  
+  Family_NCBI varchar(50) YES   NULL  
+  Genus_NCBI  varchar(50) YES   NULL  
+  Species_NCBI  varchar(100)  YES   NULL  
+  Molecule_type_NCBI  varchar(50) YES   NULL  
+  Sequence_Type_NCBI  varchar(50) YES   NULL  
+  Geo_Location_NCBI varchar(100)  YES   NULL  
+  USA_NCBI  varchar(10) YES   NULL  
+  Host_NCBI varchar(100)  YES   NULL  
+  Isolation_Source_NCBI varchar(100)  YES   NULL  
+  Collection_Date_NCBI  varchar(100)  YES   NULL  
+  BioSample_NCBI  varchar(20) YES   NULL  
+  GenBank_Title_NCBI  varchar(100)  YES   NULL  
+  
     """
     phage = {}
-    phage['pid'] 		= pid    		# phage_id initially this is just sequential: O
+    phage['pid']    = pid       # phage_id initially this is just sequential: O
     
     phage['family_ncbi'] = ''  
-    phage['genus_ncbi'] 	= ''   		# 
-    phage['species_ncbi'] 	= ''   		#
-    phage['assembly_ncbi']	= ''   		# 
-    phage['sra_accession_ncbi'] 	= ''   #
-    phage['submitters_ncbi'] = '' 	# 
-    phage['release_date_ncbi'] 	= '' # 
-    phage['molecule_type_ncbi'] 	= ''  # 
-    phage['sequence_type_ncbi'] 		= ''   # 
+    phage['genus_ncbi']   = ''      # 
+    phage['species_ncbi']   = ''      #
+    phage['assembly_ncbi']  = ''      # 
+    phage['sra_accession_ncbi']   = ''   #
+    phage['submitters_ncbi'] = ''   # 
+    phage['release_date_ncbi']  = '' # 
+    phage['molecule_type_ncbi']   = ''  # 
+    phage['sequence_type_ncbi']     = ''   # 
     phage['geo_location_ncbi'] = ''   # 
-    phage['usa_ncbi'] 	= ''   		# 
+    phage['usa_ncbi']   = ''      # 
     phage['publications_ncbi'] = '' 
     phage['genotypes_ncbi'] = '' 
     phage['host_ncbi'] = ''
-    phage['host_otid'] = ''      		# searched/calulated of host bacteria
-    phage['isolation_source_ncbi'] 		= ''   # table 2
-    phage['collection_date_ncbi'] 	= ''  # table 2
-    phage['biosample_ncbi'] = ''   	# table 2
-    phage['genbank_title_ncbi'] 	= ''
+    phage['host_otid'] = ''         # searched/calulated of host bacteria
+    phage['isolation_source_ncbi']    = ''   # table 2
+    phage['collection_date_ncbi']   = ''  # table 2
+    phage['biosample_ncbi'] = ''    # table 2
+    phage['genbank_title_ncbi']   = ''
     
     return phage
 
@@ -148,16 +148,17 @@ if __name__ == "__main__":
 
     usage = """
     USAGE:
-        Initialize_Phage.py
+        Initialize_Phage.py  (gets data from db:homd; table:phage_data)
         
-       
+          Phage data is now in database table:
+           but see: phage_starter_dataKK.csv
         
     """
 
     parser = argparse.ArgumentParser(description="." ,usage=usage)
 
-    parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
-                                                    help=" ")
+    #parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
+    #                                                help=" ")
     parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-Phage',
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
@@ -183,7 +184,7 @@ if __name__ == "__main__":
         args.DATABASE = 'homd'
         dbhost = 'localhost'
     else:
-    	sys.exit('dbhost - error')
+      sys.exit('dbhost - error')
     args.indent = None
     if args.prettyprint:
         args.indent = 4

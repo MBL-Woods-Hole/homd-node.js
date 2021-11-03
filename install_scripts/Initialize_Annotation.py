@@ -164,9 +164,11 @@ if __name__ == "__main__":
 
     usage = """
     USAGE:
-        homd_init_genome_data.py
+        Initialize_Annotation.py 
+         --reads data from the ORIGINAL PROKKA and NCBI annotation DBs
+         ie:  PROKKA_SEQF3654 and NCBI_SEQF3654
         
-        will print out the need initialization files for homd
+        will print out the needed initialization files for homd
         Needs MySQL: tries to read your ~/.my.cnf_node
         
            -outdir Output directory [default]
@@ -181,8 +183,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="." ,usage=usage)
 
-    parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
-                                                    help=" ")
+    #parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
+    #                                                help=" ")
     parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-Annotation',
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
