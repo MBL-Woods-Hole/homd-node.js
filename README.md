@@ -21,7 +21,6 @@ Used for extracting data from the old mysql database and putting in the new data
 Used to create the JSON files that the HOMD Node.js app reads on startup.
 This provides the app with JSON objects which is much faster that making MySQL queries during data requests.
 - Initialize_Annotation.py
-- Initialize_BlastDB.py
 - Initialize_Genomes.py
 - Initialize_Phage.py
 - Initialize_Taxonomy.py
