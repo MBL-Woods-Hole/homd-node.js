@@ -15,12 +15,13 @@ Used for extracting data from the old mysql database and putting in the new data
 - 3_txfr_genomes.py		
 - 4_notes.txt	
 - 5_load_phage.py
-- 6_Abundance2JSON_2021-09-07.py
 
 ### Initialization scripts (Initialize_*)
 Used to create the JSON files that the HOMD Node.js app reads on startup.
 This provides the app with JSON objects which is much faster that making MySQL queries during data requests.
-- Initialize_Annotation.py
+
+- Initialize_Annotation.py  
 - Initialize_Genomes.py
 - Initialize_Phage.py
 - Initialize_Taxonomy.py
+- Initialize_Abundance.py -- To be run after Initialize_Taxonomy.py
