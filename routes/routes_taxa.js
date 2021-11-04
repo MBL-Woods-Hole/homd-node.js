@@ -1279,6 +1279,8 @@ function create_table(otids, source, type, head_txt) {
         var obj1 = C.taxon_lookup
         var obj2 = C.taxon_lineage_lookup
         var obj3 = C.taxon_info_lookup 
+        //console.log('o1-3')
+        //console.log(obj1[3])
         headers = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
         
         txt +=  headers.join('\t')
@@ -1299,10 +1301,17 @@ function create_table(otids, source, type, head_txt) {
             }else {
                o3 = {'general':'','culta':'','pheno':'','prev':'','disease':''}
             }
-        
-            if(o2.domain){  // weeds out 
+            // list! o1.type_strain, o1,genomes, o1,synonyms, o1.sites, o1.ref_strains, o1,rrna_sequences
+            // clone counts
+            if(o2.domain){  // weeds out dropped
                //console.log(o2)
-               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,o1.site,o1.warning,o1.type_strain,,,,,o1.synonyms,o1.ncbi_taxid,,,,o1.genomes,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
+               let tstrains = o1.type_strains.join(' | ')
+               let gn = o1.genomes.join(' | ')
+               let syn = o1.synonyms.join(' | ')
+               let sites = o1.sites.join(' | ')
+               let rstrains = o1.ref_strains.join(' | ')
+               let rnaseq = o1.rrna_sequences.join(' | ')
+               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,,,,gn,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
                var row = r.join('\t')
                txt += '\n'+row
             }
@@ -1469,7 +1478,7 @@ function find_images(rank, otid, tax_name) {
       })    
       
   }else if(search_field == 'type_strain'){
-      send_list = big_tax_list.filter( function(e) {
+      send_list = big_tax_list.filter( function filterBigList1(e) {
          for(var n in e.type_strains){
             if(e.type_strains[n].toLowerCase().includes(search_txt)){
                return e
@@ -1496,7 +1505,7 @@ function find_images(rank, otid, tax_name) {
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
-      tmp_send_list = big_tax_list.filter( function(e) {
+      tmp_send_list = big_tax_list.filter( function filterBigList2(e) {
          for(var n in e.synonyms){
             if(e.synonyms[n].toLowerCase().includes(search_txt)){
                return e
@@ -1507,7 +1516,7 @@ function find_images(rank, otid, tax_name) {
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
-      tmp_send_list = big_tax_list.filter( function(e) {
+      tmp_send_list = big_tax_list.filter( function filterBigList3(e) {
          for(var n in e.type_strains){
             if(e.type_strains[n].toLowerCase().includes(search_txt)){
                return e
@@ -1544,7 +1553,7 @@ function find_images(rank, otid, tax_name) {
 // 
 // }
 function get_abundance_text(max, data, names, rank, tax_name){
-    let max_obj = data.find(function(o){ return o.avg == max})
+    let max_obj = data.find(function findData(o) { return o.avg == max})
     
     /*
     From Jessica Email 8/31/2021

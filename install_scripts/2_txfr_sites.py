@@ -75,13 +75,13 @@ def run_prime(args):
 def run_site(args):
     """
    CREATE TABLE `site` (
-	  `site_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	  `otid` int(11) unsigned NOT NULL,
-	  `site` varchar(20) DEFAULT '',
-	  PRIMARY KEY (`site_id`),
-	  UNIQUE KEY `otid` (`otid`,`site`),
-	  CONSTRAINT `otid_fk3` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`)
-	) ENGINE=InnoDB AUTO_INCREMENT=825 DEFAULT CHARSET=latin1;
+    `site_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `otid` int(11) unsigned NOT NULL,
+    `site` varchar(20) DEFAULT '',
+    PRIMARY KEY (`site_id`),
+    UNIQUE KEY `otid` (`otid`,`site`),
+    CONSTRAINT `otid_fk3` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=825 DEFAULT CHARSET=latin1;
         
     """
     global otid_result
@@ -109,13 +109,13 @@ def run_site(args):
 def run_type_strain(args):
     """
    CREATE TABLE `type_strain` (
-	  `type_strain_id` int(8) unsigned NOT NULL AUTO_INCREMENT,
-	  `otid` int(11) unsigned NOT NULL,
-	  `type_strain` varchar(30) NOT NULL DEFAULT '',
-	  PRIMARY KEY (`type_strain_id`),
-	  UNIQUE KEY `otid` (`otid`,`type_strain`),
-	  CONSTRAINT `type_strain_ibfk_1` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`) ON UPDATE CASCADE
-	) ENGINE=InnoDB AUTO_INCREMENT=167 DEFAULT CHARSET=latin1;
+    `type_strain_id` int(8) unsigned NOT NULL AUTO_INCREMENT,
+    `otid` int(11) unsigned NOT NULL,
+    `type_strain` varchar(30) NOT NULL DEFAULT '',
+    PRIMARY KEY (`type_strain_id`),
+    UNIQUE KEY `otid` (`otid`,`type_strain`),
+    CONSTRAINT `type_strain_ibfk_1` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`) ON UPDATE CASCADE
+  ) ENGINE=InnoDB AUTO_INCREMENT=167 DEFAULT CHARSET=latin1;
     """
     q1 = "select Oral_taxon_id as otid, type_strain from  1_type_strain"
     
@@ -136,25 +136,29 @@ def run_type_strain(args):
 def run_ref_strain(args):
     """
     CREATE TABLE `ref_strain` (
-	  `reference_strain_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	  `otid` int(11) unsigned NOT NULL,
-	  `reference_strain` varchar(100) NOT NULL,
-	  PRIMARY KEY (`reference_strain_id`),
-	  UNIQUE KEY `otid` (`otid`,`reference_strain`),
-	  CONSTRAINT `otid_ref_strain_fk3` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`)
-	) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+    `reference_strain_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `otid` int(11) unsigned NOT NULL,
+    `reference_strain` varchar(100) NOT NULL,
+    PRIMARY KEY (`reference_strain_id`),
+    UNIQUE KEY `otid` (`otid`,`reference_strain`),
+    CONSTRAINT `otid_ref_strain_fk3` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
     """
     
-    
+    #print(otid_result)
+    #sys.exit()
     q1 = "select Oral_taxon_id as otid, reference_strain from  1_reference_strain"
     
     rstrain_result = myconn_tax.execute_fetch_select_dict(q1)
     
     for obj in rstrain_result:
        otid = str(obj['otid'])
+       print('otid',otid)
        if otid and otid in otid_result:
+       
         #lst = [str(obj['otid']),str(site_lookup[obj['site']])]
+            
             q2 = "INSERT IGNORE into ref_strain (otid,reference_strain) VALUES ('"+otid+"','"+obj['reference_strain']+"')"
             if args.verbose:
                 print(q2)
@@ -195,13 +199,13 @@ def run_status(args):
 def run_16s_rRNA_seqs(args):
     """
     CREATE TABLE `rRNA_sequence` (
-	  `rRNA_sequence_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	  `otid` int(11) unsigned NOT NULL,
-	  `rRNA_sequence` varchar(100) NOT NULL,
-	  PRIMARY KEY (`rRNA_sequence_id`),
-	  UNIQUE KEY `otid` (`otid`,`rRNA_sequence`),
-	  CONSTRAINT `otid_rRNA_sequence_fk3` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`)
-	) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+    `rRNA_sequence_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `otid` int(11) unsigned NOT NULL,
+    `rRNA_sequence` varchar(100) NOT NULL,
+    PRIMARY KEY (`rRNA_sequence_id`),
+    UNIQUE KEY `otid` (`otid`,`rRNA_sequence`),
+    CONSTRAINT `otid_rRNA_sequence_fk3` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
     """
     q1 = "select Oral_taxon_id as otid, 16S_rRNA_sequence as seqref from  1_16S_rRNA_sequence"
     
@@ -246,14 +250,14 @@ def run_16s_rRNA_seqs(args):
 
 def run_synonyms(args):
     """
-	   CREATE TABLE `synonym` (
-		  `synonym_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-		  `otid` int(11) unsigned DEFAULT NULL,
-		  `synonym` varchar(100) NOT NULL DEFAULT '',
-		  PRIMARY KEY (`synonym_id`),
-		  UNIQUE KEY `otid` (`otid`,`synonym`),
-		  CONSTRAINT `synonyms_ibfk_1` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`) ON UPDATE CASCADE
-		) ENGINE=InnoDB AUTO_INCREMENT=1006 DEFAULT CHARSET=latin1;
+     CREATE TABLE `synonym` (
+      `synonym_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+      `otid` int(11) unsigned DEFAULT NULL,
+      `synonym` varchar(100) NOT NULL DEFAULT '',
+      PRIMARY KEY (`synonym_id`),
+      UNIQUE KEY `otid` (`otid`,`synonym`),
+      CONSTRAINT `synonyms_ibfk_1` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`) ON UPDATE CASCADE
+    ) ENGINE=InnoDB AUTO_INCREMENT=1006 DEFAULT CHARSET=latin1;
         
     """
     global full_tax_lookup
@@ -280,7 +284,7 @@ def run_synonyms(args):
 
 def run_references(args):
     """
-	   CREATE TABLE `reference` (
+     CREATE TABLE `reference` (
   `reference_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `otid` int(11) unsigned NOT NULL,
   `pubmed_id` int(15) DEFAULT NULL,
@@ -315,25 +319,25 @@ def run_references(args):
             
 def run_refseq(args):
     """
-	CREATE TABLE `otid_refseqid` (
-	  `otid_refseq_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	  `otid` int(11) unsigned NOT NULL,
-	  `refseqid` varchar(20) NOT NULL,
-	  `seqname` varchar(50) NOT NULL,
-	  `strain` varchar(128) NOT NULL,
-	  `genbank` varchar(30) NOT NULL,
-	  `seq_trim9` text NOT NULL,
-	  `seq_trim28` text NOT NULL,
-	  `seq_aligned` text NOT NULL,
-	  `seq_trim28_end` text NOT NULL,
-	  `status` varchar(20) NOT NULL,
-	  `site` varchar(100) NOT NULL,
-	  `order` int(11) NOT NULL,
-	  `flag` varchar(100) NOT NULL,
-	  PRIMARY KEY (`otid_refseq_id`),
-	  UNIQUE KEY `otid` (`otid`,`refseqid`),
-	  CONSTRAINT `otid_refseq_fk3` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`)
-	) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  CREATE TABLE `otid_refseqid` (
+    `otid_refseq_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `otid` int(11) unsigned NOT NULL,
+    `refseqid` varchar(20) NOT NULL,
+    `seqname` varchar(50) NOT NULL,
+    `strain` varchar(128) NOT NULL,
+    `genbank` varchar(30) NOT NULL,
+    `seq_trim9` text NOT NULL,
+    `seq_trim28` text NOT NULL,
+    `seq_aligned` text NOT NULL,
+    `seq_trim28_end` text NOT NULL,
+    `status` varchar(20) NOT NULL,
+    `site` varchar(100) NOT NULL,
+    `order` int(11) NOT NULL,
+    `flag` varchar(100) NOT NULL,
+    PRIMARY KEY (`otid_refseq_id`),
+    UNIQUE KEY `otid` (`otid`,`refseqid`),
+    CONSTRAINT `otid_refseq_fk3` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
     """
     q1 = "select taxonid as otid, refseqid,seqname,strain,genbank,seq_trim9,seq_trim28,seq_aligned,seq_trim28_end,status,site,`order`,flag from  taxonid_refseqid_seq"
     
@@ -351,37 +355,37 @@ def run_refseq(args):
 def run_info(args):
     """
     CREATE TABLE `otid_info` (
-	  `otid_info_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	  `otid` int(11) unsigned NOT NULL,
-	  `general` text NOT NULL,
-	  `prevalence` text NOT NULL,
-	  `cultivability` text NOT NULL,
-	  `disease_associations` text NOT NULL,
-	  `phenotypic_characteristics` text NOT NULL,
-	  PRIMARY KEY (`otid_info_id`),
-	  KEY `otid_info_ibfk_1` (`otid`),
-	  CONSTRAINT `otid_info_ibfk_1` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`) ON UPDATE CASCADE
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+    `otid_info_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `otid` int(11) unsigned NOT NULL,
+    `general` text NOT NULL,
+    `prevalence` text NOT NULL,
+    `cultivability` text NOT NULL,
+    `disease_associations` text NOT NULL,
+    `phenotypic_characteristics` text NOT NULL,
+    PRIMARY KEY (`otid_info_id`),
+    KEY `otid_info_ibfk_1` (`otid`),
+    CONSTRAINT `otid_info_ibfk_1` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`) ON UPDATE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
     """
     query_info ="""  
-		SELECT a.oral_taxon_id as otid, 
-		IFNULL(b.description, '') as `culta`, 
-		IFNULL(c.description, '') as `disease`,  
-		IFNULL(d.description, '') as `general`,  
-		IFNULL(e.description, '') as `pheno`,
-		IFNULL(f.description, '') as `prev`
-		FROM    taxon_list a
-		LEFT JOIN    1_cultivability b
-			ON a.oral_taxon_id = b.oral_taxon_id 
-		LEFT JOIN 1_disease_associations c
-			ON a.oral_taxon_id = c.oral_taxon_id
-		LEFT JOIN 1_general d
-			ON a.oral_taxon_id = d.oral_taxon_id
-		LEFT JOIN 1_phenotypic_characteristics e
-			ON a.oral_taxon_id = e.oral_taxon_id
-		LEFT JOIN 1_prevalence f
-			ON a.oral_taxon_id = f.oral_taxon_id    
-		ORDER BY otid
+    SELECT a.oral_taxon_id as otid, 
+    IFNULL(b.description, '') as `culta`, 
+    IFNULL(c.description, '') as `disease`,  
+    IFNULL(d.description, '') as `general`,  
+    IFNULL(e.description, '') as `pheno`,
+    IFNULL(f.description, '') as `prev`
+    FROM    taxon_list a
+    LEFT JOIN    1_cultivability b
+      ON a.oral_taxon_id = b.oral_taxon_id 
+    LEFT JOIN 1_disease_associations c
+      ON a.oral_taxon_id = c.oral_taxon_id
+    LEFT JOIN 1_general d
+      ON a.oral_taxon_id = d.oral_taxon_id
+    LEFT JOIN 1_phenotypic_characteristics e
+      ON a.oral_taxon_id = e.oral_taxon_id
+    LEFT JOIN 1_prevalence f
+      ON a.oral_taxon_id = f.oral_taxon_id    
+    ORDER BY otid
     """
     info_result = myconn_tax.execute_fetch_select_dict(query_info)
     master = []
@@ -453,7 +457,7 @@ def run_info(args):
     q = "INSERT into taxon_info (otid,general,prevalence,cultivability,disease_associations,phenotypic_characteristics)"
     q += " VALUES"
     for n in master:
-    	q += '( "'+ '","'.join(n) +'"),'
+      q += '( "'+ '","'.join(n) +'"),'
     q = q[:-1]
     myconn_new.execute_no_fetch(q) 
     

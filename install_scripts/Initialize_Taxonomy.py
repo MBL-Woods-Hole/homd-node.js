@@ -69,6 +69,7 @@ def create_taxon(otid):
     taxon['genomes'] = []
     taxon['type_strains'] = []
     taxon['ref_strains'] = []
+    taxon['rrna_sequences'] = []
     taxon['synonyms'] = []
     taxon['sites'] = []
     
@@ -207,11 +208,24 @@ def run_ref_strain(args):
         else:
             sys.exit('problem with reference_strain exiting') 
 
+def run_rrna_sequences(ars):
+    global master_lookup
+    q = """
+    select otid, rrna_sequence from rrna_sequence
+    """
+    result = myconn.execute_fetch_select_dict(q)
+    for obj in result:
+        otid = str(obj['otid'])
+        if otid in master_lookup:
+            #if master_lookup[otid]['status'] != 'Dropped':
+            master_lookup[otid]['rrna_sequences'].append(obj['rrna_sequence'])
+        else:
+            sys.exit('problem with rrna_sequence exiting') 
 
 def run_refseq(args):
     global refseq_lookup
     global master_lookup
-    query_refseqid = "SELECT otid,refseqid, seqname, strain, genbank FROM taxon_refseqid"
+    query_refseqid = "SELECT otid, refseqid, seqname, strain, genbank FROM taxon_refseqid"
     result = myconn.execute_fetch_select_dict(query_refseqid)
     refseq_lookup = {}
     for obj in result:
@@ -511,6 +525,7 @@ if __name__ == "__main__":
     run_type_strain(args)  # in master_lookup
     run_sites(args)        # in master_lookup
     run_ref_strain(args)   # in master_lookup
+    run_rrna_sequences(args)
     run_refseq(args)       # in master_lookup
     run_info(args)
     run_references(args)
