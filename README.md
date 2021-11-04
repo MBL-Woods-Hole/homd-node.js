@@ -41,7 +41,7 @@ These scripts support a pretty_print (-pp) option to be able to read the JSON fi
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage: ./Initialize_Phage.py \
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(creates file: homdData-PhageList.json and homdData-PhageLookup.json)
 
-- Initialize_Abundance.py -- *Must be run after Initialize_Taxonomy.py!* \
+- Initialize_Abundance.py -- *MUST be run after Initialize_Taxonomy.py!* \
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usage: ./Initialize_Abundance.py -i HOMDtaxa-abundance-2021-09-06-cleaned.tsv 
   - Re-writes file: homdData-TaxonCounts.json
 

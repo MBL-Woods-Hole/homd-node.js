@@ -266,11 +266,11 @@ def run_info(args):  ## prev general,  On its own lookup
         # remove any double quotes but single quotes are ok (to preserve links)
         lookup[otid] = {}
         lookup[otid]['otid']    = otid
-        lookup[otid]['culta']   = obj['cultivability']
-        lookup[otid]['disease'] = obj['disease_associations']
-        lookup[otid]['general'] = obj['general']
-        lookup[otid]['pheno']   = obj['phenotypic_characteristics']
-        lookup[otid]['prev']    = obj['prevalence']
+        lookup[otid]['culta']   = obj['cultivability'].strip()
+        lookup[otid]['disease'] = obj['disease_associations'].strip()
+        lookup[otid]['general'] = obj['general'].strip()
+        lookup[otid]['pheno']   = obj['phenotypic_characteristics'].strip()
+        lookup[otid]['prev']    = obj['prevalence'].strip()
             
     file = os.path.join(args.outdir,args.outfileprefix+'InfoLookup.json')
     print_dict(file, lookup) 
@@ -281,7 +281,7 @@ def run_info(args):  ## prev general,  On its own lookup
 def run_references(args):   ## REFERENCE Citations
     
     lookup = {}
-    q =  "SELECT otid,pubmed_id,journal,authors,`title` from reference"
+    q =  "SELECT otid, pubmed_id,journal,authors,`title` from reference"
     result = myconn.execute_fetch_select_dict(q)
     
     for obj in result:
@@ -289,15 +289,41 @@ def run_references(args):   ## REFERENCE Citations
         otid = str(obj['otid'])
         
         #if otid not in lookup:
-        lookup[otid] = []
-            
-        lookup[otid].append(
+        if otid not in lookup:
+            lookup[otid] = {}
+        if 'pubs' not in lookup[otid]:
+            lookup[otid]['pubs'] = []
+        lookup[otid]['pubs'].append(
             {'pubmed_id':obj['pubmed_id'],
               'journal': obj['journal'].replace('"',"'").replace('&quot;',"'").replace('&#039;',"'").replace('\r',"").replace('\n',""),
               'authors': obj['authors'],
               'title':   obj['title'].replace('"',"'").replace('&quot;',"'").replace('&#039;',"'").replace('\r',"").replace('\n',"")
             })
         
+    q2 =  """SELECT otid,
+          NCBI_pubmed_search_count as a,
+          NCBI_nucleotide_search_count as b,
+          NCBI_protein_search_count as c,
+          NCBI_genome_search_count as d,
+          NCBI_taxonomy_search_count as e,
+          NCBI_gene_search_count as f,
+          NCBI_genomeP_search_count as g 
+          from extra_flat_info"""
+    result = myconn.execute_fetch_select_dict(q2)
+    for obj in result:
+        otid = str(obj['otid'])
+        if otid not in lookup:
+            lookup[otid] = {}
+        lookup[otid]['NCBI_pubmed_search_count'] = str(obj['a'])
+        lookup[otid]['NCBI_nucleotide_search_count'] = str(obj['b'])
+        lookup[otid]['NCBI_protein_search_count'] = str(obj['c'])
+        lookup[otid]['NCBI_genome_search_count'] = str(obj['d'])
+        lookup[otid]['NCBI_taxonomy_search_count'] = str(obj['e'])
+        lookup[otid]['NCBI_gene_search_count'] = str(obj['f'])
+        lookup[otid]['NCBI_genomeP_search_count'] = str(obj['g'])
+        
+        
+    
     file = os.path.join(args.outdir,args.outfileprefix+'ReferencesLookup.json')
     print_dict(file, lookup)        
     
@@ -533,6 +559,8 @@ if __name__ == "__main__":
     
      # run lineage AFTER to get counts
     run_lineage(args)
+    
+    print('\nFinished -- Now run: ./Initialize_Abundance.py -i HOMDtaxa-abundance-XXXX-XX-XX-cleaned.tsv\n')
     # run abundance after lineach because uses counts data
     # run abundance is now in its own script: Initialize_Abundance.py
     # but still adds to TaxonCounts.json file

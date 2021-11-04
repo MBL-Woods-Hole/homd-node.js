@@ -104,13 +104,13 @@
     <% if(Object.keys(data2).length === 0) { %>
       Not Available
     <% }else{ %>
-        <div class=''>
-          <%- data2.general %>
-          <br><%- data2.disease %>
-          <br><%- data2.prev %>
-          <br><%- data2.culta %>
-          <br><%- data2.pheno %>
-        </div>
+        
+          <br><%- data2.general %>
+          <br><b>Disease Associations</b>:<br>&nbsp;&nbsp;<%- data2.disease %>
+          <br><b>Prevalence and Source</b>:<br>&nbsp;&nbsp;<%- data2.prev %>
+          <br><b>Cultivability</b>:<br>&nbsp;&nbsp;<%- data2.culta %>
+          <br><b>Phenotypic Characteristics</b>:<br>&nbsp;&nbsp;<%- data2.pheno %>
+        
     <% } %>
 </div>
      

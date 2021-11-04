@@ -225,7 +225,7 @@ def run_abundance_csv():
     print_dict(filename, collector)
     
 def print_dict(filename, dict):
-    print('writing',filename)
+    print('Re-Writing',filename)
     with open(filename, 'w') as outfile:
         json.dump(dict, outfile, indent=args.indent)    
 

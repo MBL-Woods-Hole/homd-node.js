@@ -559,8 +559,8 @@ router.get('/tax_description', function tax_description(req, res){
       console.warn('Could not find lineage for',otid)
       data3 = {}
   }
-  if(C.taxon_references_lookup[otid]){
-    data4 = C.taxon_references_lookup[otid]
+  if(C.taxon_references_lookup[otid] && C.taxon_references_lookup[otid].pubs){
+    data4 = C.taxon_references_lookup[otid].pubs
   }else {
     console.warn('Could not find references for',otid)
     data4 = []
