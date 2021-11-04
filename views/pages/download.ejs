@@ -67,8 +67,20 @@
    
    text-align: center;
 }
-
+#downloadMenu{
+width:180px;
+    height:auto;
+    background:tan;
+    color:#FFF;
+    padding:5px 2px;
+    text-align:center;
+    border:1px solid grey;
+    top:180px;
+    position:fixed;
+    float:right;
+}
 </style>
+<a name='top'>
 <%- include('../partials/header_html'); %>
 
 <body>
@@ -78,7 +90,20 @@
     
     
     <div class='page-content' >
-              
+    
+    <div  class="" >
+     <div  id="downloadMenu" >
+      <div class="list-group">
+        <a href="#top" >[top]</a>
+        <br><a href="#taxon">Taxonomy data</a>
+        <br><a href="#genome">Genomic data</a>
+        <br><a href="#phylo">Phylo data</a>
+        <br><a href="#phage">Phage data</a>
+        <br><a href="#refseq">16S rRNA seqs</a>
+      
+      </div>
+     </div>
+</div>           
   <div class='title'>Download HOMD Data</div>
     
 <center>

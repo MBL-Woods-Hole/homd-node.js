@@ -18,6 +18,9 @@
   
   
 }
+.tbl-title{
+  background:lightblue;
+}
 #left-tbl td{
   padding:4px;
   border-bottom:1px solid darkgrey;
@@ -148,7 +151,7 @@
 <div id='tables'>
 <br><div id='status'>Status: [<%= data1.status %>] -- Preferred Body Site: [<%= data1.site %>]</div>
 <table id='description_tbl' border='1'>
-<tr><td>
+<tr><td style="width: 500px; vertical-align:top">
   <table id='left-tbl'>
   <tr>
     <td class='tbl-title'>Classification:</td>
@@ -193,7 +196,7 @@
     <td class='tbl-title'>16S rRNA Reference Sequences:</td>
     <td><small>
     
-      <span class='rs-span-2'>
+      <span class='rs-span-2' style='border:1px solid black;padding:1px;'>
       &nbsp;&nbsp;&nbsp;<a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>view in<br>RefSeq tree</a>
       </span>
     
@@ -212,7 +215,7 @@
     </span>
     <br>
     <% } %>
-    
+    <br><br><a href='/download/#refseq'>Download latest 16S rRNA reference gene sequences.</a>
     
     </small>
     </td>
@@ -245,7 +248,7 @@
   
   </table>
 
-</td><td>
+</td><td style="width: 500px; vertical-align:top">
 
   <table id='right-tbl'>
   <tr>
