@@ -108,8 +108,8 @@
           <br><%- data2.general %>
           <br><b>Disease Associations</b>:<br>&nbsp;&nbsp;<%- data2.disease %>
           <br><b>Prevalence and Source</b>:<br>&nbsp;&nbsp;<%- data2.prev %>
-          <br><b>Cultivability</b>:<br>&nbsp;&nbsp;<%- data2.culta %>
-          <br><b>Phenotypic Characteristics</b>:<br>&nbsp;&nbsp;<%- data2.pheno %>
+          <!-- <br><b>Cultivability</b>:<br>&nbsp;&nbsp;<%- data2.culta %> -->
+          <!-- <br><b>Phenotypic Characteristics</b>:<br>&nbsp;&nbsp;<%- data2.pheno %> -->
         
     <% } %>
 </div>
@@ -265,11 +265,20 @@
     </td>
   </tr>
   <tr>
+    <td class='tbl-title'>Cultivability:</td>
+    <td>
+    <% if(data2.culta !==''){ %>
+      <small><%- data2.culta %></small>
+    <% } %>
+    </td>
+  </tr>
+  
+  <tr>
     <td class='tbl-title'>Pangenome:</td>
     <td><small><a href='https://anviserver.homd.info/'>https://anviserver.homd.info/</a>-TODO</small></td>
   </tr>
   <tr>
-    <td class='tbl-title'>Microbial Ecology:</td>
+    <td class='tbl-title'>Microbial Ecology<br>/Abundance:</td>
     <% if(data3.subspecies){ %>
       <td><small>[<a href='ecology/subspecies/<%= data3.subspecies %>'>Open Abundance/Ecology Page for <i><%= data3.subspecies %></i></a>]</small></td>
     <% }else{ %>
@@ -297,8 +306,11 @@
   </tr>
   <tr>
     <td class='tbl-title'>PubMed Search:</td>
-    <td><small>[<a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank' rel="noopener noreferrer">PubMed Link</a>]
-    [Entrez-Nucleotide] [Entrez-Protein]</small>
+    <td><small>
+      <%= data4.NCBI_pubmed_search_count %> [<a href='https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22' target='_blank' rel="noopener noreferrer">PubMed Link</a>]
+      <br><%= data4.NCBI_nucleotide_search_count %> [<a href='https://www.ncbi.nlm.nih.gov/nucleotide?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22+%5Borganism%5D' target='_blank' rel="noopener noreferrer">Entrez Nucleotide Link]</a>]
+      <br><%= data4.NCBI_protein_search_count %> [<a href='https://www.ncbi.nlm.nih.gov/protein?cmd=search&term=%22<%= data1.genus %>%20<%= data1.species %>%22%20%5Borganism%5D' target='_blank' rel="noopener noreferrer">Entrez Protein Link]</a>]
+       </small>
     </td>
   </tr>
   </table>
@@ -308,10 +320,10 @@
 </div>
 
 <div id='references'>References:</div>
-<% if(data4){ %>
+<% if(data4.pubs){ %>
   <div class='extra'>
-  <% for (i in data4){ %>
-    <br>[<b><%= parseInt(i)+1 %></b>] <%= data4[i].authors %> <%= data4[i].title %> <%= data4[i].journal %>
+  <% for (i in data4.pubs){ %>
+    <br>[<b><%= parseInt(i)+1 %></b>] <%= data4.pubs[i].authors %> <%= data4.pubs[i].title %> <%= data4.pubs[i].journal %>
   <% } %>
   </div>
 <% } %>

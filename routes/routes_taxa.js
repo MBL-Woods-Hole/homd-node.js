@@ -559,11 +559,14 @@ router.get('/tax_description', function tax_description(req, res){
       console.warn('Could not find lineage for',otid)
       data3 = {}
   }
-  if(C.taxon_references_lookup[otid] && C.taxon_references_lookup[otid].pubs){
-    data4 = C.taxon_references_lookup[otid].pubs
+  console.log('389')
+  console.log(C.taxon_references_lookup['389'])
+  if(C.taxon_references_lookup[otid]){
+    data4 = C.taxon_references_lookup[otid]
+    
   }else {
     console.warn('Could not find references for',otid)
-    data4 = []
+    data4 = {}
   }
   if(C.refseq_lookup[otid]){
     data5 = C.refseq_lookup[otid]
@@ -1276,15 +1279,16 @@ function create_table(otids, source, type, head_txt) {
     let txt = head_txt+'\n'
     let headers,lineage,old_lineage,otid_pretty
     if(source === 'table'){
-        var obj1 = C.taxon_lookup
-        var obj2 = C.taxon_lineage_lookup
-        var obj3 = C.taxon_info_lookup 
+        let obj1 = C.taxon_lookup
+        let obj2 = C.taxon_lineage_lookup
+        let obj3 = C.taxon_info_lookup 
+        let obj4 = C.taxon_references_lookup 
         //console.log('o1-3')
         //console.log(obj1[3])
         headers = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
         
         txt +=  headers.join('\t')
-        var o1,o2,o3
+        var o1,o2,o3,o4
         for(var n in otids){
             
             let otid = otids[n].toString()
@@ -1301,6 +1305,11 @@ function create_table(otids, source, type, head_txt) {
             }else {
                o3 = {'general':'','culta':'','pheno':'','prev':'','disease':''}
             }
+            if(otid in obj4){
+               o4 = obj4[otid]
+            }else {
+               o4 = {NCBI_pubmed_search_count: '0',NCBI_nucleotide_search_count: '0',NCBI_protein_search_count: '0'}
+            }
             // list! o1.type_strain, o1,genomes, o1,synonyms, o1.sites, o1.ref_strains, o1,rrna_sequences
             // clone counts
             if(o2.domain){  // weeds out dropped
@@ -1311,7 +1320,7 @@ function create_table(otids, source, type, head_txt) {
                let sites = o1.sites.join(' | ')
                let rstrains = o1.ref_strains.join(' | ')
                let rnaseq = o1.rrna_sequences.join(' | ')
-               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,,,,gn,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
+               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
                var row = r.join('\t')
                txt += '\n'+row
             }

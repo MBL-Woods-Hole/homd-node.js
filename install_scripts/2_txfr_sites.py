@@ -455,6 +455,12 @@ def run_info(args):
                  continue
             culta = obj['culta'] \
                     .strip() \
+                    .replace('&lt;p&gt;',"") \
+                    .replace('&lt;P&gt;',"") \
+                    .replace('&lt;/p&gt;',"") \
+                    .replace('&lt;/P&gt;',"") \
+                    .replace('&lt;br&gt;',"") \
+                    .replace('&lt;BR&gt;',"") \
                     .replace('"',"'") \
                     .replace('&amp;#39;',"'") \
                     .replace(',','') \
@@ -464,9 +470,14 @@ def run_info(args):
                     .replace('&nbsp;',' ') \
                     .replace('&quot;',"'") \
                     .replace('\r',"").replace('\n',"")
-                
             disease = obj['disease'] \
                     .strip() \
+                    .replace('&lt;p&gt;',"") \
+                    .replace('&lt;P&gt;',"") \
+                    .replace('&lt;/p&gt;',"") \
+                    .replace('&lt;/P&gt;',"") \
+                    .replace('&lt;br&gt;',"") \
+                    .replace('&lt;BR&gt;',"") \
                     .replace('"',"'") \
                     .replace('&amp;#39;',"'") \
                     .replace(',','') \
@@ -478,6 +489,12 @@ def run_info(args):
                     .replace('\r',"").replace('\n',"")         
             general = obj['general'] \
                     .strip() \
+                    .replace('&lt;p&gt;',"") \
+                    .replace('&lt;P&gt;',"") \
+                    .replace('&lt;/p&gt;',"") \
+                    .replace('&lt;/P&gt;',"") \
+                    .replace('&lt;br&gt;',"") \
+                    .replace('&lt;BR&gt;',"") \
                     .replace('"',"'") \
                     .replace('&amp;#39;',"'") \
                     .replace(',','') \
@@ -489,6 +506,12 @@ def run_info(args):
                     .replace('\r',"").replace('\n',"")  
             pheno = obj['pheno'] \
                     .strip() \
+                    .replace('&lt;p&gt;',"") \
+                    .replace('&lt;P&gt;',"") \
+                    .replace('&lt;/p&gt;',"") \
+                    .replace('&lt;/P&gt;',"") \
+                    .replace('&lt;br&gt;',"") \
+                    .replace('&lt;BR&gt;',"") \
                     .replace('"',"'") \
                     .replace('&amp;#39;',"'") \
                     .replace(',','') \
@@ -500,6 +523,12 @@ def run_info(args):
                     .replace('\r',"").replace('\n',"") 
             prev = obj['prev'] \
                     .strip() \
+                    .replace('&lt;p&gt;',"") \
+                    .replace('&lt;P&gt;',"") \
+                    .replace('&lt;/p&gt;',"") \
+                    .replace('&lt;/P&gt;',"") \
+                    .replace('&lt;br&gt;',"") \
+                    .replace('&lt;BR&gt;',"") \
                     .replace('"',"'") \
                     .replace('&amp;#39;',"'") \
                     .replace(',','') \
