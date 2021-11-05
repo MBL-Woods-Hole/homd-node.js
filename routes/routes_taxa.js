@@ -1320,7 +1320,11 @@ function create_table(otids, source, type, head_txt) {
                let sites = o1.sites.join(' | ')
                let rstrains = o1.ref_strains.join(' | ')
                let rnaseq = o1.rrna_sequences.join(' | ')
-               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,o2.species,o1.status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
+               // per FDewhirst: species needs to be unencumbered of genus for this table
+               let species_pts = o2.species.split(' ')
+               species_pts.shift()
+               let species = species_pts.join(' ')
+               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o1.status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
                var row = r.join('\t')
                txt += '\n'+row
             }

@@ -50,6 +50,7 @@ otid_result = []
     
 
 def run_prime(args):
+    print('otid_prime')
     q1 = "SELECT otid FROM  otid_prime"
     result = myconn_new.execute_fetch_select(q1)
     
@@ -118,7 +119,7 @@ def run_type_strain(args):
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
     """
     q1 = "select Oral_taxon_id as otid, type_strain from  1_type_strain"
-    
+    print('type_strain')
         
     tstrain_result = myconn_tax.execute_fetch_select_dict(q1)
     full_tax_list = []
@@ -145,7 +146,7 @@ def run_ref_strain(args):
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
     """
-    
+    print('ref_strain')
     #print(otid_result)
     #sys.exit()
     q1 = "select Oral_taxon_id as otid, reference_strain from  1_reference_strain"
@@ -166,7 +167,7 @@ def run_ref_strain(args):
                 
 def ncbi_taxid(args):
     q1 = "select Oral_taxon_id as otid, NCBI_taxon_id from  1_ncbi_taxonomy"
-     
+    print('ncbi_taxid')
     ncbi_result = myconn_tax.execute_fetch_select_dict(q1)
     full_tax_list = []
     full_tax_lookup = {}
@@ -182,7 +183,7 @@ def ncbi_taxid(args):
 
 def run_status(args):
     q1 = "select Oral_taxon_id as otid, `group` from  1_status"
-    
+    print('status')
     status_result = myconn_tax.execute_fetch_select_dict(q1)
     full_tax_list = []
     full_tax_lookup = {}
@@ -208,7 +209,7 @@ def run_16s_rRNA_seqs(args):
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
     """
     q1 = "select Oral_taxon_id as otid, 16S_rRNA_sequence as seqref from  1_16S_rRNA_sequence"
-    
+    print('16S rRNA Seqs')
         
     rrna_result = myconn_tax.execute_fetch_select_dict(q1)
     full_tax_list = []
@@ -264,6 +265,7 @@ def run_synonyms(args):
     
         
     q1 = "select Oral_taxon_id as otid, synonyms as synonym from  1_synonyms_correct"
+    print('synomyms')
     #q2 = "SELECT site,site_id from site"
     
     #site_result = myconn_new.execute_fetch_select_dict(q2)
@@ -303,6 +305,7 @@ def run_references(args):
     
         
     q1 = "select Oral_taxon_id as otid, pubmed_id,journal,authors,title,auto_id from 1_references"
+    print('references')
     references_result = myconn_tax.execute_fetch_select_dict(q1)
     
     for obj in references_result:
@@ -342,7 +345,7 @@ def run_flat_file(args):
         
     """
     global full_tax_lookup
-    
+    print('flat file: pubmed')
         
     q1 = """select Oral_taxon_id as otid,
           NCBI_pubmed_search_count as a,
@@ -396,7 +399,7 @@ def run_refseq(args):
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
     """
     q1 = "select taxonid as otid, refseqid,seqname,strain,genbank,seq_trim9,seq_trim28,seq_aligned,seq_trim28_end,status,site,`order`,flag from  taxonid_refseqid_seq"
-    
+    print('refseq')
     result = myconn_tax.execute_fetch_select_dict(q1)
     for obj in result:
         otid = str(obj['otid'])
@@ -424,6 +427,7 @@ def run_info(args):
   CONSTRAINT `taxon_info_ibfk_1` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`) ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
     """
+    print('taxon info')
     query_info ="""  
     SELECT a.oral_taxon_id as otid, 
     IFNULL(b.description, '') as `culta`, 

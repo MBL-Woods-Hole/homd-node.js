@@ -376,9 +376,12 @@ router.get('/explorer', function explorer (req, res) {
   dbChoices = [   // start with blastn and na only (not aa)
       { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', 
            filename: 'fna/' + gid +'.fna'},
-      
+      { name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', 
+           filename: '?/' + gid +'.fna'},
       {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
            filename:'fna/ALL_genomes.fna'},
+      {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
+           filename:'?/ALL_genomes.fna'},
        
     ]
 // console.log('organism', organism)
@@ -469,7 +472,11 @@ router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
     let html = "<select class='dropdown' id='blastDb' name='blastDb'>"
     if(db == 'blastn' || db == 'tblastn'){
        html += "<option value='fna/"+gid+".fna'>This Organism's ("+organism + ") Genomic DNA</option>"
-       html += "<option value='fna/ALL_genomes.fna'>Genomic DNA from all HOMD Genomes</option>"
+       html += "<option value='?/"+gid+".fna'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+       html += "<option value='faa/ALL_genomes.fna'>Genomic DNA of all Annotated Proteins</option>"
+       html += "<option value='faa/ALL_genomes.fna'>DNA Sequences of Proteins from all HOMD Genomes</option>"
+       
+       
     }else{  // blastp and blastx
        html += "<option value='faa/"+gid+".faa'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
        html += "<option value='faa/ALL_genomes.faa'>DNA Sequences of Proteins from all HOMD Genomes</option>"
@@ -634,8 +641,11 @@ function createTable (gids, source, type, startText) {
     for (let n in gids) {
       const gid = gids[n]
       const obj = C.genome_lookup[gid]
-
-      const r = [gid, obj.otid, obj.genus, obj.species, obj.status, obj.ncontigs, obj.seq_center, obj.tlength, obj.oral_path, obj.ccolct, obj.gc, obj.ncbi_taxid, obj.ncbi_bpid, obj.ncbi_bsid, obj.io, obj.atcc_mn, obj.non_atcc_mn, obj.gb_acc, obj.gb_asmbly, obj['16s_rrna'], obj['16s_rrna_comment'], obj.flag]
+      // per FDewhirst: species needs to be unencumbered of genus for this table
+       let species_pts = obj.species.split(' ')
+       species_pts.shift()
+       let species = species_pts.join(' ')
+      const r = [gid, obj.otid, obj.genus, species, obj.status, obj.ncontigs, obj.seq_center, obj.tlength, obj.oral_path, obj.ccolct, obj.gc, obj.ncbi_taxid, obj.ncbi_bpid, obj.ncbi_bsid, obj.io, obj.atcc_mn, obj.non_atcc_mn, obj.gb_acc, obj.gb_asmbly, obj['16s_rrna'], obj['16s_rrna_comment'], obj.flag]
       txt += '\n' + r.join('\t')
     }
   }
