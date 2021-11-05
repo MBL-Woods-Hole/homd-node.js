@@ -279,7 +279,7 @@ def run_synonyms(args):
         otid = str(obj['otid'])
         if otid and otid in otid_result:
             #lst = [str(obj['otid']),str(site_lookup[obj['site']])]
-            q2 = "INSERT IGNORE into `synonym` (otid,synonym) VALUES ('"+otid+"','"+obj['synonym']+"')"
+            q2 = "INSERT IGNORE into `synonym` (otid, synonym) VALUES ('"+otid+"','"+obj['synonym'].strip()+"')"
             myconn_new.execute_no_fetch(q2) 
 
 def run_references(args):
