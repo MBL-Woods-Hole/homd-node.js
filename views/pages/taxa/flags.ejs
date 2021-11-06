@@ -1,4 +1,16 @@
 <style>
+.flag-table-div{
+   padding: 5px;
+   margin:5px;
+   border:1px solid red;
+}
+table {
+  border-collapse:collapse;
+}
+table td{
+  border:1px solid black;
+  padding:5px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -11,13 +23,38 @@
     <div class='page-content' >
               
        <div class='title'>Taxon Flags</div>
+<div class='flag-table-div'> 
+       Site Table
        <table>
        <thead>
-       <tr><th>Site</th><th>Status</th><th>Warnings</th></tr>
+       <tr><th>Site</th><th>Description</th><th>Link</th></tr>
        </thead>
        <tbody>
+         <tr><td>Nasal</td><td></td><td>[taxa table]</td></tr>
+         <tr><td>Oral</td><td></td><td></td></tr>
+         <tr><td>Skin</td><td></td><td></td></tr>
+         <tr><td>Vaginal</td><td></td><td></td></tr>
+         <tr><td>Unassigned</td><td></td><td></td></tr>
+         <tr><td>NonOralRef</td><td></td><td></td></tr>
        </tbody>
        </table>
+</div>
+<div class='flag-table-div'>       
+       Status Table
+       <table>
+       <thead>
+       <tr><th>Status</th><th>Description</th><th>Link</th></tr>
+       </thead>
+       <tbody>
+         <tr><td>Named</td><td>Cultured</td><td>[taxa table]</td></tr>
+         <tr><td>Unnamed</td><td>Cultured</td><td>[taxa table]</td></tr>
+         <tr><td>PhyloType</td><td>Non-Cultured</td><td>[taxa table]</td></tr>
+         <tr><td>Lost</td><td>Non-Cultured</td><td>[taxa table]</td></tr>
+         <tr><td>Dropped</td><td>No longer in HOMD database</td><td>[taxa table]</td></tr>
+       </tbody>
+       </table>
+</div>       
+       
     
   
     </div> <!-- end: page-content -->
