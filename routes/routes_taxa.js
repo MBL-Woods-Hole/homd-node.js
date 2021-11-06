@@ -1086,7 +1086,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
   file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied"+ " Date: "+today 
 
     let list_of_otids = send_list.map(item => item.otid)
-    console.log('list_of_otids',list_of_otids)
+    //console.log('list_of_otids',list_of_otids)
   // type = browser, text or excel
   var table_tsv = create_table(list_of_otids, 'table', type, file_filter_txt )
   if(type === 'browser'){
@@ -1321,9 +1321,11 @@ function create_table(otids, source, type, head_txt) {
                let rstrains = o1.ref_strains.join(' | ')
                let rnaseq = o1.rrna_sequences.join(' | ')
                // per FDewhirst: species needs to be unencumbered of genus for this table
-               let species_pts = o2.species.split(' ')
-               species_pts.shift()
-               let species = species_pts.join(' ')
+               // let species_pts = o2.species.split(' ')
+//                species_pts.shift()
+//                let species = species_pts.join(' ')
+               
+               let species = o2.species.replace(o2.genus,'').trim()
                var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o1.status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
                var row = r.join('\t')
                txt += '\n'+row

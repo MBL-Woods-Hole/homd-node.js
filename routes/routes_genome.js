@@ -642,9 +642,7 @@ function createTable (gids, source, type, startText) {
       const gid = gids[n]
       const obj = C.genome_lookup[gid]
       // per FDewhirst: species needs to be unencumbered of genus for this table
-       let species_pts = obj.species.split(' ')
-       species_pts.shift()
-       let species = species_pts.join(' ')
+      let species = obj.species.replace(obj.genus,'').trim()
       const r = [gid, obj.otid, obj.genus, species, obj.status, obj.ncontigs, obj.seq_center, obj.tlength, obj.oral_path, obj.ccolct, obj.gc, obj.ncbi_taxid, obj.ncbi_bpid, obj.ncbi_bsid, obj.io, obj.atcc_mn, obj.non_atcc_mn, obj.gb_acc, obj.gb_asmbly, obj['16s_rrna'], obj['16s_rrna_comment'], obj.flag]
       txt += '\n' + r.join('\t')
     }
