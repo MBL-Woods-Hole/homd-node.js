@@ -39,9 +39,9 @@ router.get('/tax_table', function tax_table_get(req, res) {
   
   if(reset == '1'){
       letter = 'all'
-      annot = 0
+      annot = undefined // not '0' or '1'
   }
-  if(annot){
+  if(annot === '1'){
       // grab only the taxa that have genomes
       console.log('GOT annotations')
       big_tax_list2 = big_tax_list1.filter(item => item.genomes.length >0)
@@ -49,6 +49,14 @@ router.get('/tax_table', function tax_table_get(req, res) {
       pgtitle = 'List of Human Oral Microbial Taxa (with Annotated Genomes)'
       letter = 'all'
       count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows with annotated genomes.'
+  }else if(annot === '0') {
+      // grab only the taxa that have NO genomes
+      console.log('GOT no annotations')
+      big_tax_list2 = big_tax_list1.filter(item => item.genomes.length == 0)
+      //show_filters = 0
+      pgtitle = 'List of Human Oral Microbial Taxa (with Annotated Genomes)'
+      letter = 'all'
+      count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows with no genomes.'
   }else if(letter && letter.match(/[A-Z]{1}/)){   // always caps
       console.log('GOT a TaxLetter: ',letter)
        // COOL.... filter the whole list
@@ -107,7 +115,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
         
         // do we have ecology/abundance data?  
         // Is abundance the only thing on the ecology page?
-        el.ecology = '0'  // change to 1 if we do
+        el.ecology = 0  // change to 1 if we do
         
         if(el.status != 'Dropped'){
               var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
@@ -115,13 +123,13 @@ router.get('/tax_table', function tax_table_get(req, res) {
               var lineage_list = make_lineage(node)
               if(lineage_list[0] in C.taxon_counts_lookup){
                   if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
-                     el.ecology = '1'
+                     el.ecology = 1
                  }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
-                     el.ecology = '1'
+                     el.ecology = 1
                  }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
-                     el.ecology = '1'
+                     el.ecology = 1
                  }else {
-                     el.ecology = '0'
+                     el.ecology = 0
                  }
               }
         }
@@ -138,7 +146,9 @@ router.get('/tax_table', function tax_table_get(req, res) {
   
   //var count_text = get_count_text_n_page_form(page)
   console.log(C.tax_status_on)
-  count_txt = count_txt0 + ' <small>(Total:'+(big_tax_list0.length).toString()+')</small> '
+  count_txt = count_txt0 + '<br><small>(Total:'+(big_tax_list0.length).toString()+')</small> '
+  console.log('send_list[0]')
+  console.log(send_list[0])
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 
     pgtitle: pgtitle,
@@ -167,9 +177,9 @@ router.post('/tax_table', function tax_table_post(req, res) {
   console.log(req.body)
   //plus valid
   //valid = req.body.valid  // WHAT IS THIS???
-  let big_tax_list,count_txt, count_txt0, pgtitle,send_list;
+  let big_tax_list,count_txt, count_txt0, send_list;
 
-  pgtitle = 'List of Human Microbial Taxa'
+  
   //show_filters = 1
   let statusfilter_on =[]
   let sitefilter_on  = []
@@ -253,11 +263,11 @@ router.post('/tax_table', function tax_table_post(req, res) {
     })
   console.log('statusfilter_on',statusfilter_on)
   // use session for taxletter
-  count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows using status and body site filter.'
-  count_txt = count_txt0+' <small>(Total:'+(big_tax_list.length).toString()+')</small>'
+  count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows (status and body site filter).'
+  count_txt = count_txt0+'<br><small>(Total:'+(big_tax_list.length).toString()+')</small>'
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 
-    pgtitle:pgtitle,
+    pgtitle: 'List of Human Microbial Taxa',
     pgname: 'taxon_table',  //for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     data: JSON.stringify(send_list),
@@ -274,12 +284,23 @@ router.post('/tax_table', function tax_table_post(req, res) {
   })
 })
 //
+router.get('/flags', function flags(req, res) {
+    res.render('pages/taxa/flags', {
+      title: 'HOMD :: Taxon Flags', 
+      pgtitle:'Taxa Flag',
+      pgname: 'taxon_table',  //for AbountThisPage
+      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    })
+
+
+})
 router.post('/search_taxtable', function search_taxtable(req, res) {
   console.log(req.body)
   
   let search_txt = req.body.tax_srch.toLowerCase()  // already filtered for empty string and extreme length
   let search_field = req.body.field
-  var count_txt, count_txt0, pgtitle;
+  var count_txt, count_txt0
   
   console.log('C.taxon_lookup[389]')
   console.log(C.taxon_lookup[389])
@@ -288,14 +309,11 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
   let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
   let send_list = get_filtered_taxon_list(big_tax_list, search_txt, search_field)
   
-  
-  //let count_txt = 'Total:'+(big_tax_list.length).toString()+' Showing: '+(Object.keys(send_list).length).toString()
-  pgtitle = 'Search TaxTable'
   count_txt0 =  'Showing '+(send_list.length).toString()+' rows using search string: "'+req.body.tax_srch+'".'
-  count_txt = count_txt0+' <small>(Total:'+(big_tax_list.length).toString()+')</small>'
+  count_txt = count_txt0+'<br><small>(Total:'+(big_tax_list.length).toString()+')</small>'
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 
-    pgtitle: pgtitle,
+    pgtitle: 'Search TaxTable',
     pgname: 'taxon_table',  //for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     data: JSON.stringify(send_list),
@@ -549,29 +567,29 @@ router.get('/tax_description', function tax_description(req, res){
   if(C.taxon_info_lookup[otid] ){
       data2 = C.taxon_info_lookup[otid]
   }else {
-      console.warn('Could not find info for',otid)
+      console.warn('No taxon_info for HMT:',otid,' in C.taxon_info_lookup')
       data2 = {}
   }
   if(C.taxon_lineage_lookup[otid] ){
       data3 = C.taxon_lineage_lookup[otid]
       console.log(data3)
   }else {
-      console.warn('Could not find lineage for',otid)
+      console.warn('NO taxon_lineage for HMT:',otid,' in C.taxon_lineage_lookup')
       data3 = {}
   }
-  console.log('389')
-  console.log(C.taxon_references_lookup['389'])
+  //console.log('389')
+  //console.log(C.taxon_references_lookup['389'])
   if(C.taxon_references_lookup[otid]){
     data4 = C.taxon_references_lookup[otid]
     
   }else {
-    console.warn('Could not find references for',otid)
+    console.warn('No taxon_references for HMT:',otid,'in C.taxon_references_lookup')
     data4 = {}
   }
   if(C.refseq_lookup[otid]){
     data5 = C.refseq_lookup[otid]
   }else {
-    console.warn('Could not find refseqs for',otid)
+    console.warn('No refseq for HMT:',otid,'in C.refseq_lookup')
     data5 = []
   }
   // phage known to infect
@@ -616,7 +634,7 @@ router.post('/get_refseq', function get_refseq(req, res) {
   
   //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
   let q = queries.get_refseq_query(refseq_id)
-  //console.log(q)
+  console.log(q)
   TDBConn.query(q, (err, rows) => {
     //console.log(rows)
     let seqstr = rows[0].seq.toString()

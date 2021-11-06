@@ -1,28 +1,66 @@
 
+<style>
+table{
+   width:100%;
+}
+table td{
+  padding:0 5px;
+}
+.filter-item{
+   font-size:14px;
+}
 
+#taxa-filter-links{
+   border:1px solid black;
+   padding:2px 5px;
+   height:50px;
+   
+}
+#spot-1{
+  
+}
+#spot-2{
+  width:18%;
+}
+#spot-3{
+  width:16%;
+}
+#spot-4{
+  width:28%;
+}
+</style>
 
 
 <div id="row2">
   
+  <table>
+  <tr><td id='spot-1'>
   
-  <div id="column_left2">
-      <div id='taxa-count'>
-         
-         <span id='total-count'><strong><%- count_txt %></strong></span>
+      
+          <div id='taxa-count'>
+             <span id='total-count'><strong><%- count_txt %></strong></span>
+           </div>
+     
+      
+  </td><td id='spot-2'>
+  
+     <div class='filter-item' id='taxa-filter-links'><center>Reload Table</center>
+       with Original Sorting:
+       <a class="pill pill-brown pill-md" href='tax_table?reset=1'>Reload</a>
        
-       </div>
- 
-  </div>
+     </div> 
+
+</td><td id='spot-3'>
   
- <div><center>Reload Table</center>
-   <small>with Original Sorting:
-   <a class="pill pill-brown pill-md" href='tax_table?reset=1'>Reload</a>
-   <small>
- </div> 
+      <div class='filter-item' id='taxa-filter-links'>
+       [<a href="/taxa/tax_table?annot=1">Taxa With Genomes</a>]
+       <br>[<a href="/taxa/tax_table?annot=0">Taxa Without Genomes</a>]
+       
+     </div> 
+
+</td><td id='spot-4'>
   
-  
-  
-  <div id="column_right2">
+  <div class='filter-item' id="taxa-filter-links">
       <div id='taxa-search' >
        <form class='form-inline' id='ttable_search' name='ttable_search' method='POST' action='search_taxtable' >
             <fieldset>
@@ -56,7 +94,8 @@
          </form>
       </div>
   </div>
-  
+</td></tr>
+</table>
  
 </div>
 
