@@ -595,7 +595,7 @@ router.get('/tax_description', function tax_description(req, res){
   // phage known to infect
   //let tmp_list = Object.values(C.phage_lookup).filter(item => item.host_otid === otid)
   //let pids = tmp_list.map()
-  //console.log(data1)
+  //console.log('d1',data1)
   //console.log('d2',data2)
   // get_genus photos
   let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']

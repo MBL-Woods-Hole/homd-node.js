@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-## SEE https://docs.dhtmlx.com/suite/tree__api__refs__tree.html // new version 7 must load from json file
-# this script creates a list of json objects that allows the dhtmlx javascript library
-# to parse and show a taxonomy tree (Written for HOMD)
-##
+
 import os, sys
 import json
 #from json import JSONEncoder
