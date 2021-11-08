@@ -99,10 +99,11 @@ router.post('/site_search', (req, res) => {
   const otidkeylist = Object.keys(allOtidObjList[0])
   const otidObjList = allOtidObjList.filter(function (el) {
     for (let n in otidkeylist) {
-      // console.log( el[otidkeylist[n]] )
+      //console.log( 'el[otidkeylist[n]]',el[otidkeylist[n]] )
       if (Array.isArray(el[otidkeylist[n]])) {
         // we're missing any arrays
       } else {
+        
         if ( Object.prototype.hasOwnProperty.call(el, otidkeylist[n]) && (el[otidkeylist[n]]).toLowerCase().includes(searchTextLower)) {
           return el.otid
         }
