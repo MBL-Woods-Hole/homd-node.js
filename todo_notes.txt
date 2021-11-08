@@ -1,0 +1,149 @@
+HOMD Notes
+2021-11-08
+Meet w/ George tomorrow
+-paths blast
+-captcha Google (do we have a google account? yes)
+-cron job  or removing blast jobs
+-database update list to show on site
+-mysqlworkbench schema: db reverse engineer
+-redo mysql dump schema and fix MBL db:
+    ALTER TABLE taxonomy ADD CONSTRAINT taxonomy_fk_klass_id FOREIGN KEY (klass_id) REFERENCES klass(klass_id) ON UPDATE CASCADE;
+-Clean up genomes and genomes_extra tables: make primary key
+
+
+I noticed that the genomes extra table was still myisam
+-----
+SELECT concat(column_name,',')
+FROM information_schema.columns
+WHERE  table_name = 'genomes_extra'
+   AND table_schema = 'homd'
+
+-----
+CREATE TABLE `genomes_homd_extra` (
+  `genomes_homd_extra_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `seq_id` varchar(11) NOT NULL,
+  `isolate_origin` text NOT NULL,
+  `ncbi_id` varchar(30) NOT NULL DEFAULT '',
+  `ncbi_taxon_id` varchar(10) NOT NULL DEFAULT '',
+  `goldstamp_id` varchar(20) NOT NULL DEFAULT '',
+  `genbank_acc` varchar(100) NOT NULL DEFAULT '',
+  `cmr_id` varchar(10) NOT NULL DEFAULT '',
+  `gc` varchar(5) NOT NULL DEFAULT '',
+  `gc_comment` text NOT NULL,
+  `atcc_medium_number` varchar(25) NOT NULL DEFAULT '',
+  `non_atcc_medium` varchar(25) NOT NULL DEFAULT '',
+  `16s_rrna` text NOT NULL,
+  `16s_rrna_comment` text NOT NULL,
+  `type_strain` varchar(10) NOT NULL DEFAULT '',
+  `oral` varchar(80) NOT NULL DEFAULT '',
+  `number_of_clones_6_06` varchar(10) NOT NULL DEFAULT '',
+  `air_or_anerobe` varchar(10) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `gram_stain` varchar(10) NOT NULL DEFAULT '',
+  `atcc_list_1` varchar(14) NOT NULL DEFAULT '',
+  `other_internal_names` text NOT NULL,
+  `flag_explanation` varchar(50) NOT NULL DEFAULT '',
+  `ncbi_nucleotide_Entries_7_06` varchar(7) NOT NULL DEFAULT '',
+  `biochemistry` text NOT NULL,
+  `dna_molecular_Summary` text NOT NULL,
+  `orf_annotation_Summary` text NOT NULL,
+  `Unnamed_Field4` text NOT NULL,
+  `Unnamed_Field5` text NOT NULL,
+  PRIMARY KEY (`genomes_homd_extra_id`),
+  KEY `genome_fk` (`seq_id`),
+  CONSTRAINT `genome_fk` FOREIGN KEY (`seq_id`) REFERENCES `genomes` (`seq_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4110 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `genomes_all_extra` (
+  `genomes_all_extra_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `seq_id` varchar(11) NOT NULL,
+  `isolate_origin` text NOT NULL,
+  `ncbi_id` varchar(30) NOT NULL DEFAULT '',
+  `ncbi_taxon_id` varchar(10) NOT NULL DEFAULT '',
+  `goldstamp_id` varchar(20) NOT NULL DEFAULT '',
+  `genbank_acc` varchar(100) NOT NULL DEFAULT '',
+  `cmr_id` varchar(10) NOT NULL DEFAULT '',
+  `gc` varchar(5) NOT NULL DEFAULT '',
+  `gc_comment` text NOT NULL,
+  `atcc_medium_number` varchar(25) NOT NULL DEFAULT '',
+  `non_atcc_medium` varchar(25) NOT NULL DEFAULT '',
+  `16s_rrna` text NOT NULL,
+  `16s_rrna_comment` text NOT NULL,
+  `type_strain` varchar(10) NOT NULL DEFAULT '',
+  `oral` varchar(80) NOT NULL DEFAULT '',
+  `number_of_clones_6_06` varchar(10) NOT NULL DEFAULT '',
+  `air_or_anerobe` varchar(10) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `gram_stain` varchar(10) NOT NULL DEFAULT '',
+  `atcc_list_1` varchar(14) NOT NULL DEFAULT '',
+  `other_internal_names` text NOT NULL,
+  `flag_explanation` varchar(50) NOT NULL DEFAULT '',
+  `ncbi_nucleotide_Entries_7_06` varchar(7) NOT NULL DEFAULT '',
+  `biochemistry` text NOT NULL,
+  `dna_molecular_Summary` text NOT NULL,
+  `orf_annotation_Summary` text NOT NULL,
+  `Unnamed_Field4` text NOT NULL,
+  `Unnamed_Field5` text NOT NULL,
+  PRIMARY KEY (`genomes_all_extra_id`),
+  KEY `genome_fk` (`seq_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+
+
+insert ignore into genomes_all_extra2 (
+seq_id,
+isolate_origin,
+ncbi_id,
+ncbi_taxon_id,
+goldstamp_id,
+genbank_acc,
+cmr_id,
+gc,
+gc_comment,
+atcc_medium_number,
+non_atcc_medium,
+16s_rrna,
+16s_rrna_comment,
+type_strain,
+oral,
+number_of_clones_6_06,
+air_or_anerobe,
+shape,
+gram_stain,
+atcc_list_1,
+other_internal_names,
+flag_explanation,
+ncbi_nucleotide_Entries_7_06,
+biochemistry,
+dna_molecular_Summary,
+orf_annotation_Summary,
+Unnamed_Field4,
+Unnamed_Field5)
+select 
+seq_id,
+isolate_origin,
+ncbi_id,
+ncbi_taxon_id,
+goldstamp_id,
+genbank_acc,
+cmr_id,
+gc,
+gc_comment,
+atcc_medium_number,
+non_atcc_medium,
+16s_rrna,
+16s_rrna_comment,
+type_strain,
+oral,
+number_of_clones_6_06,
+air_or_anerobe,
+shape,
+gram_stain,
+atcc_list_1,
+other_internal_names,
+flag_explanation,
+ncbi_nucleotide_Entries_7_06,
+biochemistry,
+dna_molecular_Summary,
+orf_annotation_Summary,
+Unnamed_Field4,
+Unnamed_Field5 from genomes_extra

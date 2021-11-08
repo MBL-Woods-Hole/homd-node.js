@@ -18,7 +18,7 @@ from connect import MyConnection
 #update_date_tbl = 'static_genomes_update_date'  # this seems to be the LONG list of gids -- use it first then fill in
 #index_tbl       = 'seqid_otid_index'   # match w/ otid OTID Not Unique 
 genomes_tbl = 'genomes' #  has genus,species,status,#ofcontigs,combinedlength,flag,oralpathogen-+
-seq_extra_tbl   = 'genomes_extra' # has ncbi_id,ncbi_taxid,GC --and alot more
+seq_extra_tbl   = 'genomes_homd_extra' # has ncbi_id,ncbi_taxid,GC --and alot more
 # 1 --annotated at HOMD with NCBI ANNOTATION
 # 12 --annotated at HOMD without NCBI Annotation
 # 21 --Genomes with NCBI annotation
