@@ -61,10 +61,7 @@
 .rs-span-2{
   float:right;
 }
-.rs-span-1{
-  
-  
-}
+
 .small-tbl{
     border-collapse:collapse;
 }
@@ -198,10 +195,7 @@
     <td><small><%= statusWords %> </small></td>
   </tr>
   
-  <tr>
-    <td class='tbl-title'>NCBI Taxonomy ID:</td>
-    <td><small><%= data1.ncbi_taxid %> <span class='rs-span-2'>[<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]</span></small></td>
-  </tr>
+  
   <tr>
     <% if(data1.type_strains.length === 0){ %>
     <td class='tbl-title'>Reference Strain:</td>
@@ -255,13 +249,6 @@
     </small>
     </td>
   </tr>
-  
-  
-  </table>
-
-</td><td style="width: 500px; vertical-align:top">
-
-  <table id='right-tbl'>
   <tr>
     <td class='tbl-title'>Genotypic Description:</td>
     <td><small></small></td>
@@ -275,6 +262,13 @@
     <% } %>
     </td>
   </tr>
+  
+  </table>
+
+</td><td style="width: 500px; vertical-align:top">
+
+  <table id='right-tbl'>
+  
   <tr>
     <td class='tbl-title'>Cultivability:</td>
     <td>
@@ -314,6 +308,10 @@
   <tr>
     <td class='tbl-title'>Tools:</td>
     <td><small>JBrowse; Anvi`o</small></td>
+  </tr>
+  <tr>
+    <td class='tbl-title'>NCBI Taxonomy ID:</td>
+    <td><small><%= data1.ncbi_taxid %> <span>[<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]</span></small></td>
   </tr>
   <tr>
     <td class='tbl-title'>PubMed Searches:</td>
