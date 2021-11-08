@@ -254,16 +254,25 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 
   // express deprecated req.param(name): Use req.params, req.body, or req.query
   // See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
-  
-  TDBConn.query(queries.get_16s_rRNA_sequence_query(gid), (err, rows) => {
+  let q = queries.get_16s_rRNA_sequence_query(gid)
+  console.log(q)
+  let html
+  TDBConn.query(q, (err, rows) => {
     if (err) {
       console.log(err)
       return
     }
     // console.log(rows)
-    let html = rows[0]['16s_rRNA'].replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&quot;/gi, '"').replace(/&amp;gt;/gi, '>').replace(/&amp;lt;/gi, '<')
+    let seq = (rows[0]['16s_rRNA']).toUpperCase()
+    console.log('seq',seq)
+    if(seq === "&LT;DIV ID=VIETDEVDIVID STYLE=&QUOT;POSITION:RELATIVE;FONT-FAMILY:ARIAL;FONT-SIZE:11PX&QUOT;&GT;&LT;/DIV&GT;"){
+        html = 'No Sequence Found'
+    }else{
+        html = seq.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&quot;/gi, '"').replace(/&amp;gt;/gi, '>').replace(/&amp;lt;/gi, '<')
+    }
+    console.log('html',html)
     if (html === '') {
-       html = 'No sequence found'
+       html = 'No Sequence Found'
     }
     //console.log(html)
     res.send(html)
