@@ -40,8 +40,10 @@
 		
 		<div class='title'>Sequence Meta Information: 
 		<small><i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.ccolct %></small></div>
-		
 
+<% if(Object.keys(ginfo).length ==0 ) { %>
+    <br><br>No Data Found for Genome: <%= gid %>		
+<% }else{ %>
 	<div id='header_buttons' >
 	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (ID=<%= ginfo.otid %>)</a>
 	 <a class='gd-button' href="http://www.homd.org/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,ncbi" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
@@ -49,40 +51,41 @@
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA Annotation</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI Annotation</a>
 	</div>
-<div id='table_div' >						
+    <div id='table_div' >						
+
+
+     <table id='gnomdesc-table' class="table table-hover" border='0' >
+     <tr class="table-active"><td>1</td><td>HOMD Sequence ID</td><td><%= ginfo.gid %></td></tr>
+     <tr class="table-light"><td>2</td><td>Oral Taxon ID</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= ginfo.otid %></a></td></tr>
  
- <table id='gnomdesc-table' class="table table-hover" border='0' >
- <tr class="table-active"><td>1</td><td>HOMD Sequence ID</td><td><%= ginfo.gid %></td></tr>
- <tr class="table-light"><td>2</td><td>Oral Taxon ID</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= ginfo.otid %></a></td></tr>
- 
- <tr class="table-active"><td>3</td><td>HOMD Name (Genus, Species)</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><i><%= ginfo.genus %> <%= ginfo.species %></i></a></td></tr>
- <tr class="table-light"><td>4</td><td>Genome Sequence Name</td><td></td></tr>
- <tr class="table-active"><td>5</td><td>Comments on Name</td><td></td></tr>
- <tr class="table-light"><td>6</td><td>Culture Collection Entry Number</td><td><%= ginfo.ccolct %></td></tr>
- <tr class="table-active"><td>7</td><td>Isolate Origin</td><td><%= ginfo.io %></td></tr>
- <tr class="table-light"><td>8</td><td>Sequencing Status</td><td><%= ginfo.status %></td></tr>
- <tr class="table-active"><td>9</td><td>NCBI Taxonomy ID</td><td><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.ncbi_taxid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_taxid %></a></td></tr>
- <tr class="table-light"><td>10</td><td>NCBI Genome BioProject ID</td><td><a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bpid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bpid %></a></td></tr>
- <tr class="table-active"><td>11</td><td>NCBI Genome BioSample ID</td><td><a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_bsid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bsid %></a></td></tr>
- <tr class="table-light"><td>12</td><td>GenBank Accession ID</td><td><a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= ginfo.gb_acc %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_acc %></a></td></tr>
- <tr class="table-active"><td>13</td><td>Genbank Assembly ID</td><td><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= ginfo.gb_asmbly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_asmbly %></a></td></tr>
- <tr class="table-light"><td>14</td><td>Number of Contigs and Singlets</td><td><%= ginfo.ncontigs %></td></tr>
- <tr class="table-active"><td>15</td><td>Combined Length (bps)</td><td><%= ginfo.tlength %></td></tr>
- <tr class="table-light"><td>16</td><td>GC Percentage</td><td><%= ginfo.gc %></td></tr>
- <tr class="table-active"><td>17</td><td>Sequencing Center</td><td><%= ginfo.seq_center %></td></tr>
- <tr class="table-light"><td>18</td><td>ATCC Medium Number</td><td><%= ginfo.atcc_mn %></td></tr>
- <tr class="table-active"><td>19</td><td>Non-ATCC Medium</td><td><%= ginfo.non_atcc_mn %></td></tr>
- <tr class="table-light">
-   <td>20</td><td>16S rRNA Gene Sequence</td>
-   <% if(ginfo['16s_rrna_flag'] === '1'){ %>
- 	<td><a href='#' onclick="get_16s_seq('<%= ginfo.gid %>')">View Sequence</a></td>
-   <% }else{ %>
- 	<td>N/A</td>
-   <% } %>
- </tr>
- <tr class="table-active"><td>21</td><td>Comments for 16s rRNA Gene Sequence</td><td></td></tr>
- </table>
-		 
+     <tr class="table-active"><td>3</td><td>HOMD Name (Genus, Species)</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><i><%= ginfo.genus %> <%= ginfo.species %></i></a></td></tr>
+     <tr class="table-light"><td>4</td><td>Genome Sequence Name</td><td></td></tr>
+     <tr class="table-active"><td>5</td><td>Comments on Name</td><td></td></tr>
+     <tr class="table-light"><td>6</td><td>Culture Collection Entry Number</td><td><%= ginfo.ccolct %></td></tr>
+     <tr class="table-active"><td>7</td><td>Isolate Origin</td><td><%= ginfo.io %></td></tr>
+     <tr class="table-light"><td>8</td><td>Sequencing Status</td><td><%= ginfo.status %></td></tr>
+     <tr class="table-active"><td>9</td><td>NCBI Taxonomy ID</td><td><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.ncbi_taxid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_taxid %></a></td></tr>
+     <tr class="table-light"><td>10</td><td>NCBI Genome BioProject ID</td><td><a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bpid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bpid %></a></td></tr>
+     <tr class="table-active"><td>11</td><td>NCBI Genome BioSample ID</td><td><a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_bsid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bsid %></a></td></tr>
+     <tr class="table-light"><td>12</td><td>GenBank Accession ID</td><td><a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= ginfo.gb_acc %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_acc %></a></td></tr>
+     <tr class="table-active"><td>13</td><td>Genbank Assembly ID</td><td><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= ginfo.gb_asmbly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_asmbly %></a></td></tr>
+     <tr class="table-light"><td>14</td><td>Number of Contigs and Singlets</td><td><%= ginfo.ncontigs %></td></tr>
+     <tr class="table-active"><td>15</td><td>Combined Length (bps)</td><td><%= ginfo.tlength %></td></tr>
+     <tr class="table-light"><td>16</td><td>GC Percentage</td><td><%= ginfo.gc %></td></tr>
+     <tr class="table-active"><td>17</td><td>Sequencing Center</td><td><%= ginfo.seq_center %></td></tr>
+     <tr class="table-light"><td>18</td><td>ATCC Medium Number</td><td><%= ginfo.atcc_mn %></td></tr>
+     <tr class="table-active"><td>19</td><td>Non-ATCC Medium</td><td><%= ginfo.non_atcc_mn %></td></tr>
+     <tr class="table-light">
+       <td>20</td><td>16S rRNA Gene Sequence</td>
+       <% if(ginfo['16s_rrna_flag'] === '1'){ %>
+        <td><a href='#' onclick="get_16s_seq('<%= ginfo.gid %>')">View Sequence</a></td>
+       <% }else{ %>
+        <td>N/A</td>
+       <% } %>
+     </tr>
+     <tr class="table-active"><td>21</td><td>Comments for 16s rRNA Gene Sequence</td><td></td></tr>
+     </table>
+<% } %>		 
 </div>			 
 </center>			 
 			 	 

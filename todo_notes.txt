@@ -11,5 +11,4 @@ DONE -redo mysql dump schema and fix MBL db:
 DONE -Clean up genomes and genomes_extra tables: make primary key
 
 
-I noticed that the genomes extra table was still myisam
------
+genome description when you place an unknown into url: We're Sorry -- Something Broke!

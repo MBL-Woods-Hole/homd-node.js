@@ -207,7 +207,12 @@ router.get('/genome_description', function genomeDescription (req, res) {
   helpers.accesslog(req, res)
   //let myurl = url.parse(req.url, true);
   const gid = req.query.gid
-  
+  let data
+  if(Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)){
+    data = C.genome_lookup[gid]
+  }else{
+    data = {}
+  }
     /*
   1 Oral Taxon ID 191 
   2 HOMD Sequence ID  SEQF1851  
@@ -238,7 +243,8 @@ router.get('/genome_description', function genomeDescription (req, res) {
     pgname: 'genome_description', // for AbountThisPage 
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     // taxonid: otid,
-    data1: JSON.stringify(C.genome_lookup[gid]),
+    data1: JSON.stringify(data),
+    gid: gid,
     // data2: JSON.stringify(data2),
     // data3: JSON.stringify(data3),
     // data4: JSON.stringify(data4),
