@@ -109,9 +109,15 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     
     <center>
     <div id='genome-explorer'>
+      
       <% if(blast == '1'){ %>
           <div id='under-construction'>Page Under Construction</div> 
-          <div class='title'>BLAST Against Genome: <span id='headline'><%= organism %></span> [<%= gid %>]</div>
+          <% if(gid === 'all'){ %>
+             <div class='title'>BLAST Against All Genomes</div>
+          <% }else{ %>
+             <div class='title'>BLAST Against Genome: <span id='headline'><%= organism %></span> [<%= gid %>]</div>
+          <% } %>
+          
       <% }else{ %>
           <div class='title'><%= anno_type.toUpperCase() %> Annotation for Genome: <span id='headline'><%= organism %></span> [<%= gid %>]</div>
       <% } %> 

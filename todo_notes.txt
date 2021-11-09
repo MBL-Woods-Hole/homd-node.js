@@ -2,13 +2,27 @@ HOMD Notes
 2021-11-08
 Meet w/ George tomorrow
 -paths blast
--captcha Google (do we have a google account? yes)
-DONE -cron job  or removing blast jobs  => sudo nano /etc/cron.monthly/standard
+/mnt/efs/lv1_dev/blastdb/current/blastdb/genomes/
+    faa   SEQF3676.faa*
+    ffn   SEQF3676.ffn
+    fna   SEQF3676.fna
+  
+All genomes:
+    
+    blastn & tblastn & tblastx 2dbs: "genomic seqs from all homd genomes"         path:?  fna
+                                     "DNA seqs of proteins from all homd genomes" path:?  ffn 
+    
+    blastp and blastx 1db: "proteins annotated from all homd genomes"             path:?  faa 
+    
+Refseq:  /mnt/efs/lv1_dev/blastdb/blast_db/oral16S
+
+-captcha Google (do we (homd) have a google account? yes)
 -database update list to show on site
+
+
 DONE -mysqlworkbench schema: db reverse engineer
 DONE -redo mysql dump schema and fix MBL db:
-    DONE: ALTER TABLE taxonomy ADD CONSTRAINT taxonomy_fk_klass_id FOREIGN KEY (klass_id) REFERENCES klass(klass_id) ON UPDATE CASCADE;
+DONE:    ALTER TABLE taxonomy ADD CONSTRAINT taxonomy_fk_klass_id FOREIGN KEY (klass_id) REFERENCES klass(klass_id) ON UPDATE CASCADE;
 DONE -Clean up genomes and genomes_extra tables: make primary key
-
-
-genome description when you place an unknown into url: We're Sorry -- Something Broke!
+DONE -cron job  or removing blast jobs  => sudo nano /etc/cron.monthly/standard
+DONE: genome description when you place an unknown into url: We're Sorry -- Something Broke!

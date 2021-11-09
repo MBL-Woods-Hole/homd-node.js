@@ -363,6 +363,7 @@ router.get('/explorer', function explorer (req, res) {
   
   if (req.query.blast === 1) {
     blast = 1
+     
   }
   
   pageData.page = req.query.page
@@ -379,11 +380,12 @@ router.get('/explorer', function explorer (req, res) {
     return
   }
   //console.log('one0')
-  otid = C.genome_lookup[gid].otid
-  //if (C.annotation_lookup.hasOwnProperty(gid)) {
+  
+  if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
+        otid = C.genome_lookup[gid].otid
+  }
   if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
-  // if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
-    organism = C.annotation_lookup[gid].prokka.organism
+        organism = C.annotation_lookup[gid].prokka.organism
   }
   //console.log('one')
   //dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '='
@@ -393,6 +395,8 @@ router.get('/explorer', function explorer (req, res) {
            filename: 'fna/' + gid +'.fna'},
       { name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', 
            filename: '?/' + gid +'.fna'},
+      
+      // all for blastn tblastn or tblastx
       {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
            filename:'fna/ALL_genomes.fna'},
       {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
