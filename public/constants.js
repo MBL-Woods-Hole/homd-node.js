@@ -107,24 +107,20 @@ constants.refseq_blastn_db_choices = [
          filename:'Extended_reference_version1'}
 ]
 // constants.genome_blastn_db_choices = [
-constants.genome_blastn_db_choices = [
-      // NA
-      {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
+constants.all_genome_blastn_db_choices = { nucleotide:
+    [
+      // blastn & tblastn & tblastx 2dbs: 
+      {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes1', programs:['blastn','tblastn','tblastx'],
            filename:'fna/ALL_genomes.fna'},
-      //{ name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', 
-      //     filename: 'fna/' + gid +'.fna' },
-      // AA
-      {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
-           filename:'faa/ALL_genomes.faa'},
-       
-       //{ name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', 
-       //    filename: 'faa/' + gid +'.faa' }
+      {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_genomes2', programs:['blastn','tblastn','tblastx'],
+           filename:'ffn/ALL_genomes.ffn'}
+    ],
+    protein: [
+        // blastp and blastx 1db:
+      { name: 'Proteins Annotated from all HOMD Genomes', value: 'all_genomes3', programs:['blastp','blastx'],
+           filename: 'faa/ALL_genomes.faa' }
     ]
-//   {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
-//        filename:'fna/ALL_genomes'},
-//   {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
-//        filename:'faa/ALL_genomes'},
-// ]
+}
 // constants.posters_pdfs =
 // [
 // {shortname:"McCafferty2014", filename:'2014-AADR-McCafferty.pdf'},

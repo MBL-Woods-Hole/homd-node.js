@@ -329,7 +329,7 @@ router.get('/explorer', function explorer (req, res) {
   let pageData = {}
   let organism
   let pidList
-  let dbChoices = []
+  //let dbChoices = []
   let otid = 0
   const blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN']
   // BLASTP  Compares an amino acid query sequence against a protein sequence database
@@ -389,20 +389,17 @@ router.get('/explorer', function explorer (req, res) {
   }
   //console.log('one')
   //dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '='
-  
-  dbChoices = [   // start with blastn and na only (not aa)
-      { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', 
-           filename: 'fna/' + gid +'.fna'},
-      { name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', 
-           filename: '?/' + gid +'.fna'},
-      
-      // all for blastn tblastn or tblastx
-      {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
-           filename:'fna/ALL_genomes.fna'},
-      {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
-           filename:'?/ALL_genomes.fna'},
-       
-    ]
+  let el1,el2
+ 
+  let dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x); // copy array
+  if(gid != 'all'){
+      el1 = {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
+               filename:'fna/'+gid+'.fna'}
+      el2 = {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
+               filename:'ffn/'+gid+'.ffn'}
+      dbChoices.unshift(el2)
+      dbChoices.unshift(el1)
+  }     
 // console.log('organism', organism)
 // console.log('blast', blast)
 // console.log('page_data.page', pageData.page)
@@ -471,34 +468,28 @@ router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
     console.log(req.body)
     let db = req.body.db
     let gid = req.body.gid
-    let organism = ''
+    let organism = '',dbChoices
     if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
        organism = C.annotation_lookup[gid].prokka.organism
      }
-    let dbChoicesALL = [
-      // NA
-      {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes',
-           filename:'fna/ALL_genomes.fna'},
-      { name: "This Organism's ("+organism + ') Genomic DNA', value: 'org_genomes', 
-           filename: 'fna/' + gid +'.fna' },
-      // AA
-      {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_proteins',
-           filename:'faa/ALL_genomes.faa'},
-       
-       { name: "This Organism's ("+organism + ') DNA of Annotated Proteins', value: 'org_proteins', 
-           filename: 'faa/' + gid +'.faa' }
-    ]
+    
     let html = "<select class='dropdown' id='blastDb' name='blastDb'>"
-    if(db == 'blastn' || db == 'tblastn'){
-       html += "<option value='fna/"+gid+".fna'>This Organism's ("+organism + ") Genomic DNA</option>"
-       html += "<option value='?/"+gid+".fna'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
-       html += "<option value='faa/ALL_genomes.fna'>Genomic DNA of all Annotated Proteins</option>"
-       html += "<option value='faa/ALL_genomes.fna'>DNA Sequences of Proteins from all HOMD Genomes</option>"
+    if(db === 'blastn' || db === 'tblastn' || db ==='tblastx'){
+       dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x)
+       if(gid != 'all'){
+           html += "<option value='fna/"+gid+".fna'>This Organism's ("+organism + ") Genomic DNA</option>"
+           html += "<option value='ffn/"+gid+".ffn'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+       }
+       html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
+       html += "<option value='"+dbChoices[1].filename+"'>"+dbChoices[1].name+"</option>"
        
        
     }else{  // blastp and blastx
-       html += "<option value='faa/"+gid+".faa'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
-       html += "<option value='faa/ALL_genomes.faa'>DNA Sequences of Proteins from all HOMD Genomes</option>"
+       dbChoices = C.all_genome_blastn_db_choices.protein.map((x) => x)
+       if(gid != 'all'){
+           html += "<option value='faa/"+gid+".faa'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+       }
+       html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
     }
     html += "</select>"
     res.send(html)

@@ -9,10 +9,10 @@ Meet w/ George tomorrow
   
 All genomes:
     
-    blastn & tblastn & tblastx 2dbs: "genomic seqs from all homd genomes"         path:?  fna
-                                     "DNA seqs of proteins from all homd genomes" path:?  ffn 
+    blastn & tblastn & tblastx 2dbs: "Genomic DNA from all HOMD Genomes"         path:?  fna
+                                     "DNA Sequences of Proteins from all HOMD Genomes" path:?  ffn 
     
-    blastp and blastx 1db: "proteins annotated from all homd genomes"             path:?  faa 
+    blastp and blastx 1db: "Proteins Annotated from all HOMD Genomes"             path:?  faa 
     
 Refseq:  /mnt/efs/lv1_dev/blastdb/blast_db/oral16S
 

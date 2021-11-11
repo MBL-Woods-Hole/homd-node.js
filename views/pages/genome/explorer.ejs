@@ -109,18 +109,24 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     
     <center>
     <div id='genome-explorer'>
-      
-      <% if(blast == '1'){ %>
-          <div id='under-construction'>Page Under Construction</div> 
-          <% if(gid === 'all'){ %>
+      <% if(gid === 'all'){ %>
              <div class='title'>BLAST Against All Genomes</div>
-          <% }else{ %>
+      <% }else{ %>
              <div class='title'>BLAST Against Genome: <span id='headline'><%= organism %></span> [<%= gid %>]</div>
-          <% } %>
+      <% } %>
+      <% if(blast === '1'){ %>
+          <div id='under-construction'>Page Under Construction</div> 
+          
+          
           
       <% }else{ %>
           <div class='title'><%= anno_type.toUpperCase() %> Annotation for Genome: <span id='headline'><%= organism %></span> [<%= gid %>]</div>
       <% } %> 
+  <% if(gid === 'all'){ %>    
+      
+  
+      
+  <% }else{ %>
       <div style='padding:5px 0;'>
       <% if(!gid){ %>
          Choose a Genome:
@@ -190,6 +196,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
         
           
     </div>
+<% } %> 
     </center>
     <%- include('../../partials/flash'); %>
     <% if(gid){ %>
