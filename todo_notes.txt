@@ -1,4 +1,14 @@
 HOMD Notes
+2021-11-12
+genomes blast db link not working:
+
+blastn -db /mnt/efs/lv1_dev/blastdb/current/blastdb/genomes/ffn/ALL_genomes.ffn
+BLAST Database error: Could not find volume or alias file (ftp/ffn/ALL_genomes.ffn.00) 
+referenced in alias file (/mnt/efs/lv1_dev/blastdb/V9.14/blastdb/genomes/ffn/ALL_genomes.ffn).
+
+blastn -db /mnt/efs/lv1_dev/blastdb/current/blast_db/oral16S/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta -query blast0.fa
+
+
 2021-11-08
 Meet w/ George tomorrow
 -paths blast

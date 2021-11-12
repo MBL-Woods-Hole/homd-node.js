@@ -198,17 +198,18 @@ def validate(db, string):
 
 def createBatchBlastFileText(args, filesArray, details_dict):
     fileText ='#!/bin/bash\n\n'
-    
+    fileText += 'cd '+ details_dict['blastdbPath'] + '\n\n'
     for file in filesArray:
         fileText += os.path.join(details_dict['programPath'], details_dict['program'])
         
-        if details_dict['site'] == 'localhome':
-            fileText += ' -db /Users/avoorhis/programming/blast_db/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
-        elif details_dict['site'] == 'localmbl':
-            fileText += ' -db /Users/avoorhis/programming/blast-db-testing/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
-            ##fileText += ' -db /Users/avoorhis/programming/blast-db-testing/B6/B6'
-        else:   # HOMD Default
-            fileText += ' -db ' + os.path.join(details_dict['blastdbPath'], details_dict['blastdb'])
+        # if details_dict['site'] == 'localhome':
+#             fileText += ' -db /Users/avoorhis/programming/blast_db/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
+#         elif details_dict['site'] == 'localmbl':
+#             fileText += ' -db /Users/avoorhis/programming/blast-db-testing/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
+#             ##fileText += ' -db /Users/avoorhis/programming/blast-db-testing/B6/B6'
+#         else:   # HOMD Default
+        #fileText += ' -db ' + os.path.join(details_dict['blastdbPath'], details_dict['blastdb'])
+        fileText += ' -db ' + details_dict['blastdb']
         fileText += ' -evalue ' + details_dict['expect']
         fileText += ' -query ' + os.path.join(details_dict['blastDir'],file)
         fileText += ' -max_target_seqs ' + details_dict['maxTargetSeqs']  # use if outfmt >4
