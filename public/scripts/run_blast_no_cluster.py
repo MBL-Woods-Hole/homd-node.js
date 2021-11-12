@@ -198,7 +198,7 @@ def validate(db, string):
 
 def createBatchBlastFileText(args, filesArray, details_dict):
     fileText ='#!/bin/bash\n\n'
-    fileText += 'cd '+ details_dict['blastdbPath'] + '\n\n'
+    #fileText += 'cd '+ details_dict['blastdbPath'] + '\n\n'
     for file in filesArray:
         fileText += os.path.join(details_dict['programPath'], details_dict['program'])
         
@@ -208,8 +208,8 @@ def createBatchBlastFileText(args, filesArray, details_dict):
 #             fileText += ' -db /Users/avoorhis/programming/blast-db-testing/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
 #             ##fileText += ' -db /Users/avoorhis/programming/blast-db-testing/B6/B6'
 #         else:   # HOMD Default
-        #fileText += ' -db ' + os.path.join(details_dict['blastdbPath'], details_dict['blastdb'])
-        fileText += ' -db ' + details_dict['blastdb']
+        fileText += ' -db ' + os.path.join(details_dict['blastdbPath'], details_dict['blastdb'])
+        #fileText += ' -db ' + details_dict['blastdb']
         fileText += ' -evalue ' + details_dict['expect']
         fileText += ' -query ' + os.path.join(details_dict['blastDir'],file)
         fileText += ' -max_target_seqs ' + details_dict['maxTargetSeqs']  # use if outfmt >4
@@ -218,7 +218,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         ##fileText += ' -outfmt 16'   ## 16 XML
         fileText += ' -html'   ## dont use this
         fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
-        fileText += " 1>/dev/null 2>>" + details_dict['blastDir'] + "/error.log;"
+        fileText += " 1>/dev/null 2>>" + details_dict['blastDir'] + "/scripterror.log;"
         fileText += '\n'
     
     return fileText
@@ -242,7 +242,18 @@ else:
 
 outDir = os.path.join(details_dict['blastDir'],'blast_results')
 
-batchText = createBatchBlastFileText(args, filesArray, details_dict)
+
+if 'ALL_genomes' in details_dict['blastdb']:
+    dbfile = os.path.join(details_dict['blastdbPath'], details_dict['blastdb']+'.00.nhr')
+else:
+    # for genome individual AND 16S
+    dbfile = os.path.join(details_dict['blastdbPath'], details_dict['blastdb']+'.nhr')
+
+if os.path.isfile(dbfile):
+    batchText = createBatchBlastFileText(args, filesArray, details_dict)
+else:
+    print('Could not find database - must exit')
+    sys.exit('Could not find blast database: '+dbfile)  
 batchFileName = 'blast.sh'
 batchFileNamePath = os.path.join(details_dict['blastDir'],'blast.sh')
 write_file(batchFileNamePath, batchText)
