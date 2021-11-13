@@ -322,23 +322,28 @@ router.get('/explorer', function explorer (req, res) {
   // let myurl = url.parse(req.url, true)
   const gid = req.query.gid
   console.log('gid', gid)
-  let annoType = req.query.anno || ''
-  
+  let anno = req.query.anno || 'prokka'
   let blast = req.query.blast || 0
-  let infoDataObj = {}
+  console.log('gid:', gid,'anno:',anno,'Blast:',blast)
+  // blast == 0 or 1 or all
+  // anno == 
+  let annoInfoObj = {}
   let pageData = {}
-  let organism
-  let pidList
+  pageData.page = req.query.page
+  if (!req.query.page) {
+    pageData.page = 1
+  }
+  let organism = 'Unknown', pidList
   //let dbChoices = []
   let otid = 0
   const blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN']
   // BLASTP  Compares an amino acid query sequence against a protein sequence database
-//   BLASTN  Compares a nucleotide query sequence against a nucleotide sequence database
-//   BLASTX  Compares a nucleotide query sequence translated in all reading frames against a protein sequence database
-//   TBLASTN Compares a protein query sequence against a nucleotide sequence database dynamically translated in all reading frames
+  // BLASTN  Compares a nucleotide query sequence against a nucleotide sequence database
+  // BLASTX  Compares a nucleotide query sequence translated in all reading frames against a protein sequence database
+  // TBLASTN Compares a protein query sequence against a nucleotide sequence database dynamically translated in all reading frames
 
   
-  const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, infoDataObj, pidList) => {
+  const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
     res.render('pages/genome/explorer', {
       title: 'HOMD :: ' + gid,
       pgname: 'genome_explorer', // for AbountThisPage 
@@ -354,91 +359,101 @@ router.get('/explorer', function explorer (req, res) {
       db_choices: JSON.stringify(dbChoices),
       blast_prg: JSON.stringify(blastPrograms),
       blastFxn: 'genome',
-      info_data: JSON.stringify(infoDataObj),
+      info_data: JSON.stringify(annoInfoObj),
       pid_list: JSON.stringify(pidList),
       returnTo: '/genome/explorer?gid='+gid+'&blast=1'
       
     })
   }
   
-  if (req.query.blast === 1) {
-    blast = 1
-     
-  }
-  
-  pageData.page = req.query.page
-  if (!pageData.page) {
-    pageData.page = 1
-  }
+  // req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno
   // const tmpObj = Object.keys(C.annotation_lookup) // get prokka organisms [seqid,organism]
   const allAnnosObj = Object.keys(C.annotation_lookup).map((x) => {
     return [x, C.annotation_lookup[x].prokka.organism]
   })
   
-  if (!gid || gid === '0') {
-    renderFxn(req, res, 0, 0, blast, '', [], [], allAnnosObj, '', {}, {}, [])
+  if (!gid || gid.toString() === '0') {
+    //console.log('1')
+    renderFxn(req, res, 0, 0, blast, '', [], [], allAnnosObj, anno, {}, {}, [])
     return
+  }else {
+      //console.log('2')
+      if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
+        organism = C.annotation_lookup[gid].prokka.organism
+      }else{
+      //console.log('3')
+        req.flash('fail', 'Genome not found: "'+gid+'"')
+        renderFxn(req, res, 0, 0, 0, '', [], [], allAnnosObj, '', {}, {}, [])
+        return
+      }
   }
-  //console.log('one0')
+  let dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x); // copy array
+  if(gid != 'all'){
+      let el1 = {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
+               filename:'fna/'+gid+'.fna'}
+      let el2 = {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
+               filename:'ffn/'+gid+'.ffn'}
+      dbChoices.unshift(el2)
+      dbChoices.unshift(el1)
+  }  
+  if(gid === 'all' && blast.toString() === '1') {
+     //console.log('4')
+     renderFxn(req, res, 'all', 0, 1, '', dbChoices, blastPrograms, allAnnosObj, '', {}, {}, [])
+     return
+  }
   
   if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
         otid = C.genome_lookup[gid].otid
   }
-  if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
-        organism = C.annotation_lookup[gid].prokka.organism
+  if(gid && !blast && !anno) {
+     //console.log('5')
+     renderFxn(req, res, gid, 0, 0, organism, [], [], allAnnosObj, '', {}, {}, [])
+     return
   }
   //console.log('one')
-  //dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '='
-  let el1,el2
+  //dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '=
  
-  let dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x); // copy array
-  if(gid != 'all'){
-      el1 = {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
-               filename:'fna/'+gid+'.fna'}
-      el2 = {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
-               filename:'ffn/'+gid+'.ffn'}
-      dbChoices.unshift(el2)
-      dbChoices.unshift(el1)
-  }     
+     
 // console.log('organism', organism)
 // console.log('blast', blast)
 // console.log('page_data.page', pageData.page)
 //   console.log('anno_type', annoType)
-  if (blast === 1) {
-    infoDataObj = {}
-    pidList = []
-    pageData = {}
-    renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, infoDataObj, pidList)
+  if (blast && blast.toString() === '1') {
+    //console.log('6')
+    renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno, {}, {}, [])
     return
   }
-  // Object.hasOwnProperty(entries,key)
-  if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], annoType)) {
-  //if (C.annotation_lookup.hasOwnProperty(gid) && C.annotation_lookup[gid].hasOwnProperty(annoType)) {
-    infoDataObj = C.annotation_lookup[gid][annoType]
+  
+  // now annotations
+  if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
+    annoInfoObj = C.annotation_lookup[gid][anno]
   } else {
   // if (!C.annotation_lookup.hasOwnProperty(gid) || !C.annotation_lookup[gid].hasOwnProperty(anno_type)) {
-    // let message = 'Could not find ' + annoType + ' annotation for ' + gid
-    infoDataObj = {}
-    // console.log('XXY')
-    pidList = []
-    pageData = {}
-    renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, infoDataObj, pidList)
+    // let message = 'Could not find ' + anno + ' annotation for ' + gid
+    //console.log('7')
+    req.flash('fail', 'Could not find: "'+anno+'" annotation for '+gid)
+    renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno, {}, {}, [])
     return
   }
 
 
-  const q = queries.get_annotation_query2(gid, annoType)
+  const q = queries.get_annotation_query2(gid, anno)
   console.log(q)
 
   ADBConn.query(q, (err, rows) => {
     if (err) {
-      console.log(err)
+      req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
+      pidList = []
+      pageData = {}
+      //console.log('8')
+      renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno, pageData, annoInfoObj, pidList)
+      return
     } else {
       if (rows.length === 0) {
         console.log('no rows found')
       }
       pageData.trecords = rows.length
-
+      //console.log('9')
       if (pageData.page) {
         const trows = rows.length
         // console.log('trows',trows)
@@ -457,7 +472,7 @@ router.get('/explorer', function explorer (req, res) {
         }
         //console.log('start count', pageData.start_count)
       }
-      renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, infoDataObj, pidList)
+      renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno, pageData, annoInfoObj, pidList)
     }
   })
 })
