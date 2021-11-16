@@ -148,13 +148,15 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     
     if(req.session.blast.id){
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id)
-        let errorFile = path.join(blastDir,'scripterror.log')
+        //# blasterror.log will always be created
+        //# whereas pythonerror.log will only be present if script error
+        let errorFile = path.join(blastDir,'pythonerror.log')  // 
         if (fs.existsSync(errorFile)) {
             let error = fs.readFileSync(errorFile) 
             if (error.length == 0) {
                 // ok
             }else{
-              console.log('XXXX')
+              //console.log('XXXX')
               req.flash('fail', 'BLAST Program Error '+ error.toString())
               res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
               return
@@ -218,7 +220,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
              return
            }
           console.log('req.session.blast.id',req.session.blast.id)
-          let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'scripterror.log')
+          let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'blasterror.log')
           
           fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
               if(err){
@@ -234,7 +236,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
                   
               }else{
                  // file exists throw error
-                 console.log('YYYY')
+                 //console.log('YYYY')
                  //throw new Error('BLAST Script Error: '+content)
                  pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
                  req.flash('fail', 'BLAST Script Error:: '+ content)
@@ -954,7 +956,7 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
       //req.session.pyerror = {code: 1, msg: errorData}
       console.log('Caught ERROR', errorData)
       //
-      let errorFilePath = path.join(blastDir, 'scripterror.log')
+      let errorFilePath = path.join(blastDir, 'pythonerror.log')
       console.log(errorFilePath)
       fs.appendFileSync(errorFilePath, errorData)
       //throw new Error(errordata);
