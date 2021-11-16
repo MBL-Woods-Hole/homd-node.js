@@ -113,7 +113,7 @@ router.get('/blast_results', function blastResults(req, res) {
 
                 for(let i=0; i<blastFiles.length; i++){
                   console.log(blastFiles[i])
-                  
+                  console.log('thisSessionBlast',thisSessionBlast)
                   if(thisSessionBlast.blastFxn === 'genome'){
                      data.push(results[i])
                   }else{
@@ -128,12 +128,12 @@ router.get('/blast_results', function blastResults(req, res) {
                       //console.log('jsondata[0]', jsondata[0])
                   }
                   
-
                 }
+                let html = ''
                  if(thisSessionBlast.blastFxn === 'genome'){
-                     const html = data.join('XXXXXX')
+                     html = data.join('XXXXXX')
                  }else{
-                     const html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
+                     html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
                  }
                 
                 if(!blastID){
