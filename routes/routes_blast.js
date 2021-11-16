@@ -719,7 +719,12 @@ function getBlastHTML1(jsonList, blastID) {
     for(let n = 0; n < jsonList.length; n++){
        //console.log('jsonList[n]',n)
        //console.log(jsonList[n])
-       numhits = jsonList[n].hits.length
+       if(Object.prototype.hasOwnProperty.call(jsonList[n],'hits')){
+           numhits = jsonList[n].hits.length
+       }else{  
+           addhtml += "<tr><td>Blast Error: "+jsonList[n].message+"</td></tr>"
+           return
+       }
        let allow = 4
         if(numhits < allow){
            allow = numhits
