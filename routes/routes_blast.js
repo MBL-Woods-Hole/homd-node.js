@@ -626,7 +626,11 @@ function getBlastHTML2(jsonList, blastID, sortCol, sortDir) {
     console.log(jsonList[0])
     let newList = [],addhtml = ''
     for(let n = 0; n < jsonList.length; n++){
-        numhits = jsonList[n].hits.length
+        if(Object.prototype.hasOwnProperty.call(jsonList[n],'hits')){
+           numhits = jsonList[n].hits.length
+        }else{  
+           return "<tr><td>Blast Error: "+jsonList[n].message+"</td></tr>"
+        }
         let q = jsonList[n].query_title
         let l = jsonList[n].query_len
         let allow = 4

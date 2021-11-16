@@ -181,18 +181,24 @@ def validate(db, string):
     #print(is_valid)
     print('[PYSCRIPT] db:',db)
     #patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
-    if db[0:3] == 'faa':  ## for protein db
-      print('[PYSCRIPT] in db-faa')
-      if reAA.search(string):
-          return True
-      else:
-          return False
+    print('[PYSCRIPT] in db-faa')
+    if reBOTH.search(string):
+        return True
     else:
-      print('[PYSCRIPT] in db-fna')
-      if reNA.search(string):
-          return True
-      else:
-          return False
+        return False
+
+    # if db[0:3] == 'faa':  ## for protein db
+#       print('[PYSCRIPT] in db-faa')
+#       if reAA.search(string):
+#           return True
+#       else:
+#           return False
+#     else:
+#       print('[PYSCRIPT] in db-fna')
+#       if reNA.search(string):
+#           return True
+#       else:
+#           return False
     
 
 
