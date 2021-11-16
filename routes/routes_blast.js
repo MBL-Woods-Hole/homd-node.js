@@ -71,7 +71,9 @@ router.get('/blast_results', function blastResults(req, res) {
             })
         }
         //////////////////
+        let thisSessionBlast = {}
         if(Object.prototype.hasOwnProperty.call(req.session, 'blast')){
+            thisSessionBlast = JSON.parse(JSON.stringify(req.session.blast))
             console.log('deleteing session blast')
             delete req.session.blast
         }
@@ -112,7 +114,7 @@ router.get('/blast_results', function blastResults(req, res) {
                 for(let i=0; i<blastFiles.length; i++){
                   console.log(blastFiles[i])
                   
-                  if(req.session.blast.blastFxn === 'genome'){
+                  if(thisSessionBlast.blastFxn === 'genome'){
                      data.push(results[i])
                   }else{
                     jsondata = JSON.parse(results[i])
@@ -128,7 +130,7 @@ router.get('/blast_results', function blastResults(req, res) {
                   
 
                 }
-                 if(req.session.blast.blastFxn === 'genome'){
+                 if(thisSessionBlast.blastFxn === 'genome'){
                      const html = data.join('XXXXXX')
                  }else{
                      const html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
