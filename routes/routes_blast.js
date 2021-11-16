@@ -148,7 +148,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     
     if(req.session.blast.id){
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id)
-        let errorFile = path.join(blastDir,'error.log')
+        let errorFile = path.join(blastDir,'scripterror.log')
         if (fs.existsSync(errorFile)) {
             let error = fs.readFileSync(errorFile) 
             if (error.length == 0) {
@@ -217,7 +217,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
              return
            }
           console.log('req.session.blast.id',req.session.blast.id)
-          let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'error.log')
+          let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'scripterror.log')
           
           fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
               if(err){
@@ -952,7 +952,7 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
       //req.session.pyerror = {code: 1, msg: errorData}
       console.log('Caught ERROR', errorData)
       //
-      let errorFilePath = path.join(blastDir, 'error.log')
+      let errorFilePath = path.join(blastDir, 'scripterror.log')
       console.log(errorFilePath)
       fs.appendFileSync(errorFilePath, errorData)
       //throw new Error(errordata);
