@@ -199,7 +199,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
       let data = []
       async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
           if(err){  // files not present?
-             req.flash('fail', 'Error reading results')
+             req.flash('fail', 'Error reading results (files not present)')
              res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
              return
           }
@@ -217,7 +217,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
                 database = path.basename(jsondata.BlastOutput2[0].report.search_target.db)
               }catch(e){
                  // files zero length?
-                 req.flash('fail', 'Error reading results')
+                 req.flash('fail', 'Error reading results (zero length)')
                  res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
                  return
               }
@@ -248,10 +248,12 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
                  // file exists throw error
                  //console.log('YYYY')
                  //throw new Error('BLAST Script Error: '+content)
-                 pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
-                 req.flash('fail', 'BLAST Script Error:: '+ content)
-                 res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
-                 return
+                if(content){  // means there was true error NOT zero length
+                  pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
+                  req.flash('fail', 'BLAST Script Error:: '+ content)
+                  res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
+                  return
+                }
                  
               }
               
