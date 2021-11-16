@@ -53,6 +53,24 @@ router.get('/blast_results', function blastResults(req, res) {
         
         const sortCol = req.query.col || '' 
         const sortDir = req.query.dir || '' 
+        //////////////////
+        const renderFxn = (req, res, html, blastFiles, config, blastID) => {
+          res.render('pages/blast/blast_results', {
+                  title: 'HOMD :: Blast Results', 
+                  pgname: 'blast_results',
+                  config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                  hostname: CFG.HOSTNAME,
+                  //url: CFG.URL,
+                  ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                  //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+                  html: html,
+                  numseqs: blastFiles.length,
+                  blastParams: JSON.stringify(config),
+                  blastID: blastID,
+                  error: JSON.stringify({})
+            })
+        }
+        //////////////////
         if(Object.prototype.hasOwnProperty.call(req.session, 'blast')){
             console.log('deleteing session blast')
             delete req.session.blast
@@ -77,6 +95,8 @@ router.get('/blast_results', function blastResults(req, res) {
         for(let i=0; i < result.length; i++){
             blastFiles.push(path.join(blastResultsDir, result[i]))
         }
+        
+        
         //console.log('blastfiles')
         //console.log(blastFiles)
         let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
@@ -91,20 +111,28 @@ router.get('/blast_results', function blastResults(req, res) {
 
                 for(let i=0; i<blastFiles.length; i++){
                   console.log(blastFiles[i])
-                  jsondata = JSON.parse(results[i])
-                  //console.log(blastFiles[i])
-                  data.push(jsondata.BlastOutput2[0].report.results.search)
                   
+                  if(req.session.blastFxn === 'genome'){
+                     data.push(results[i])
+                  }else{
+                    jsondata = JSON.parse(results[i])
+                    //console.log(blastFiles[i])
+                    data.push(jsondata.BlastOutput2[0].report.results.search)
+                    if(jsondata === undefined){
+                        console.log('jsondata error for file:',blastFiles[i])
+                    }
+                  }
                   if(CFG.ENV === 'development'){
                       //console.log('jsondata[0]', jsondata[0])
                   }
-                  if(jsondata === undefined){
-                      console.log('jsondata error for file:',blastFiles[i])
-                  }
+                  
 
                 }
-
-                const html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
+                 if(req.session.blastFxn === 'genome'){
+                     const html = data.join('XXXXXX')
+                 }else{
+                     const html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
+                 }
                 
                 if(!blastID){
                      req.flash('fail', 'blastID no longer Valid')
@@ -116,27 +144,33 @@ router.get('/blast_results', function blastResults(req, res) {
                 if(req.query.ajax){
                    return res.send(html)
                 }else{
-                
-                  res.render('pages/blast/blast_results', {
-                        title: 'HOMD :: Blast Results', 
-                        pgname: 'blast_results',
-                        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-                        hostname: CFG.HOSTNAME,
-                        //url: CFG.URL,
-                        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-                        //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-                        html: html,
-                        numseqs: blastFiles.length,
-                        blastParams: JSON.stringify(config),
-                        blastID: blastID,
-                        error: JSON.stringify({})
-                  })
+                  renderFxn(req, res, html, blastFiles, config, blastID)
+                  // res.render('pages/blast/blast_results', {
+//                         title: 'HOMD :: Blast Results', 
+//                         pgname: 'blast_results',
+//                         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//                         hostname: CFG.HOSTNAME,
+//                         //url: CFG.URL,
+//                         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//                         //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+//                         html: html,
+//                         numseqs: blastFiles.length,
+//                         blastParams: JSON.stringify(config),
+//                         blastID: blastID,
+//                         error: JSON.stringify({})
+//                   })
                 }
             }) 
         }
     })
 })
-
+function getBlastHtmlFromHtml(blastFiles, blastID){
+   let html = '<table>'
+   for(let i in blastFiles){
+     html += "<tr><td><a href='#' onclick=\"window.open('"+blastFiles[i]+"', '_blank', 'fullscreen=yes'); return false;\">"+blastFiles[i]+"</a></td></tr>"
+   }
+   return html
+}
 //
 //
 router.get('/blast_wait', async function blastWait(req, res, next) {
@@ -145,7 +179,29 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     console.log('session blast_wait:')
     console.log(req.session)
     let finished = false, blastFiles = [], faFiles = [], html, jsondata, database, pyerror
-    
+    //////
+    const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
+      res.render('pages/genome/explorer', {
+        title: 'HOMD :: ' + gid,
+        pgname: 'genome_explorer', // for AbountThisPage 
+        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        gid: gid,
+        otid: otid,
+        all_annos: JSON.stringify(allAnnosObj),
+        anno_type: annoType,
+        page_data: JSON.stringify(pageData),
+        blast: blast,
+        organism: organism,
+        db_choices: JSON.stringify(dbChoices),
+        blast_prg: JSON.stringify(blastPrograms),
+        blastFxn: 'genome',
+        info_data: JSON.stringify(annoInfoObj),
+        pid_list: JSON.stringify(pidList),
+        returnTo: '/genome/explorer?gid='+gid+'&blast=1'
+      
+      })
+    }
     if(req.session.blast.id){
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id)
         //# blasterror.log will always be created
@@ -1005,7 +1061,7 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
 //       //  1000 * 60 * 60 * 60 * 24)   // // 24hrs === 86,400,000 msec
         req.session.blast.id = opts.blastSessionID
         req.session.blast.timer = 0
-        req.session.blast.homdFxn = req.body.blastFxn
+        req.session.blast.blastFxn = req.body.blastFxn
         req.session.blast.returnTo = req.body.returnTo
         res.redirect('blast_wait')   // MUST run at least once
     }
