@@ -245,17 +245,19 @@ else:
 outDir = os.path.join(details_dict['blastDir'],'blast_results')
 
 
-if 'ALL_genomes' in details_dict['blastdb']:
-    dbfile = os.path.join(details_dict['blastdbPath'], details_dict['blastdb']+'.00.nhr')
-else:
-    # for genome individual AND 16S
-    dbfile = os.path.join(details_dict['blastdbPath'], details_dict['blastdb']+'.nhr')
+# if 'ALL_genomes' in details_dict['blastdb']:
+#     dbfile = os.path.join(details_dict['blastdbPath'], details_dict['blastdb']+'.00.nhr')
+# else:
+#     # for genome individual AND 16S
+#     dbfile = os.path.join(details_dict['blastdbPath'], details_dict['blastdb']+'.nhr')
+# 
+# if os.path.isfile(dbfile):
+#     batchText = createBatchBlastFileText(args, filesArray, details_dict)
+# else:
+#     print('Could not find database - must exit')
+#     sys.exit('Could not find blast database: '+dbfile)  
 
-if os.path.isfile(dbfile):
-    batchText = createBatchBlastFileText(args, filesArray, details_dict)
-else:
-    print('Could not find database - must exit')
-    sys.exit('Could not find blast database: '+dbfile)  
+batchText = createBatchBlastFileText(args, filesArray, details_dict)
 batchFileName = 'blast.sh'
 batchFileNamePath = os.path.join(details_dict['blastDir'],'blast.sh')
 write_file(batchFileNamePath, batchText)
