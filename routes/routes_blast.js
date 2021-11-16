@@ -154,6 +154,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
             if (error.length == 0) {
                 // ok
             }else{
+              console.log('XXXX')
               req.flash('fail', 'BLAST Program Error '+ error.toString())
               res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
               return
@@ -233,6 +234,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
                   
               }else{
                  // file exists throw error
+                 console.log('YYYY')
                  //throw new Error('BLAST Script Error: '+content)
                  pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
                  req.flash('fail', 'BLAST Script Error:: '+ content)
