@@ -198,19 +198,29 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     if(finished){
       let data = []
       async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
-          
+          if(err){  // files not present?
+             req.flash('fail', 'Error reading results')
+             res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
+             return
+          }
           for(let i=0;i<blastFiles.length;i++){
-              jsondata = JSON.parse(results[i])
-              //console.log(blastFiles[i])
-              data.push(jsondata.BlastOutput2[0].report.results.search)
-              if(CFG.ENV === 'development'){
-                  //console.log('jsondata[0]', jsondata[0])
+              try{
+                jsondata = JSON.parse(results[i])
+                //console.log(blastFiles[i])
+                data.push(jsondata.BlastOutput2[0].report.results.search)
+                if(CFG.ENV === 'development'){
+                    //console.log('jsondata[0]', jsondata[0])
+                }
+                if(jsondata === undefined){
+                    console.log('jsondata error for file:',blastFiles[i])
+                }
+                database = path.basename(jsondata.BlastOutput2[0].report.search_target.db)
+              }catch(e){
+                 // files zero length?
+                 req.flash('fail', 'Error reading results')
+                 res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
+                 return
               }
-              if(jsondata === undefined){
-                  console.log('jsondata error for file:',blastFiles[i])
-              }
-              database = path.basename(jsondata.BlastOutput2[0].report.search_target.db)
-              //console.log('database', database)
           }
 
         
