@@ -796,11 +796,17 @@ function getRowHTML(description, hsps, bgcolor) {
         
      }else{
         // for all? homd blast databases??
-        hit_items = description.title.split('|')
+        // this only works for 16Srefseq
+        let title = description.title
+        hit_items = title.split('|')
         //console.log('hit_items:',hit_items)
-        titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
-        HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
-        addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid=" + HMT + "'>" + titleid.trim() + '</a></td>'
+        try {
+          titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
+          HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
+          addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid=" + HMT + "'>" + titleid.trim() + '</a></td>'
+        }catch(e){
+          addhtml += "<td class='blastcol3 center "+bgcolor+"'>"+title+"</td>"
+        }
         addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + hit_items.join('|') + '</td>'
         addhtml += "<td class='center xsmall "+bgcolor+"'>" + evalue + '</td>'
         addhtml += "<td class='center xsmall "+bgcolor+"'>" + bitScore + '</td>'

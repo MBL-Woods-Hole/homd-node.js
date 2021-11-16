@@ -368,8 +368,11 @@ router.get('/explorer', function explorer (req, res) {
   
   // req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno
   // const tmpObj = Object.keys(C.annotation_lookup) // get prokka organisms [seqid,organism]
-  const allAnnosObj = Object.keys(C.annotation_lookup).map((x) => {
-    return [x, C.annotation_lookup[x].prokka.organism]
+  const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
+    return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
+  })
+  allAnnosObj.sort(function sortAnnos (a, b) {
+      return helpers.compareStrings_alpha(a.org, b.org)
   })
   
   if (!gid || gid.toString() === '0') {

@@ -26,10 +26,14 @@
        <% if(blastFxn == 'genome'){ %> 
            <div class='block-title' >BLAST against <%= organism %> genome sequence</div>
            Copy and paste sequence(s) below, preferably in FASTA format:
+           <!-- 
+
            <div style='float:right'><small>
               <input type='radio' checked name='blastAnno' value='prokka'>PROKKA&nbsp;&nbsp;&nbsp;
               <input type='radio' name='blastAnno' value='ncbi'>NCBI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </small></div>
+          
+ -->
        <% }else{ %>
            <div class='block-title' >Upload your 16S rRNA sequences:</div>
            Copy and paste sequence(s) below, preferably in FASTA format:

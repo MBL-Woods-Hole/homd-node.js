@@ -13,10 +13,10 @@
  -->      
         <option value='0' >Choose...</option>
         <% for(n in all_annos){ %>
-           <% if(all_annos[n][0] === gid){ %>
-             <option selected value='<%= all_annos[n][0] %>'><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
+           <% if(all_annos[n].gid === gid){ %>
+             <option selected value='<%= all_annos[n].gid %>'><%= all_annos[n].org %> <small>(<%= all_annos[n].gid %>)</small></option>
            <% }else{ %>
-             <option value='<%= all_annos[n][0] %>'><%= all_annos[n][0] %>: <%= all_annos[n][1] %></option>
+             <option value='<%= all_annos[n].gid %>'><%= all_annos[n].org %> <small>(<%= all_annos[n].gid %>)</small></option>
            <% } %>
          <% } %>
          </select>

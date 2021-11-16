@@ -118,7 +118,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
       <% } %>
       <%- include('../../partials/explorer_head'); %>
     </div>
-<%- include('../../partials/flash'); %>
+    <%- include('../../partials/flash'); %>
     <% if(!gid || gid.toString() === '0'){ %>
          <!-- do nothing here  -->
     <% }else if((!blast || blast === '0') && (!anno_type || anno_type==='0')) { %> 
