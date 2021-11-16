@@ -248,8 +248,8 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
                  // file exists throw error
                  //console.log('YYYY')
                  //throw new Error('BLAST Script Error: '+content)
-                 console.log('CONTENT',content)
-                if(content){  // means there was true error NOT zero length
+                 console.log('CONTENT',content.toString().trim())
+                if(content.toString().trim()){  // means there was true error NOT zero length
                 
                   pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
                   req.flash('fail', 'BLAST Script Error:: '+ content)
