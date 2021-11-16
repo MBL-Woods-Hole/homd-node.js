@@ -132,7 +132,7 @@ router.get('/blast_results', function blastResults(req, res) {
                 let html = ''
                  if(thisSessionBlast.blastFxn === 'genome'){
                      let rowBreak = "<br>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ="
-                     html = data.join('XXXXXX')
+                     html = data.join(rowBreak)
                  }else{
                      html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
                  }
