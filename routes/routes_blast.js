@@ -217,9 +217,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
                 database = path.basename(jsondata.BlastOutput2[0].report.search_target.db)
               }catch(e){
                  // files zero length?
-                 req.flash('fail', 'Error reading results (zero length)')
-                 res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
-                 return
+                 //error will appear in blasterror.log
               }
           }
 
@@ -234,16 +232,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
           
           fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
               if(err){
-                  // continue on NO ERROR FILE PRESENT
-                  if(!database){
-                     // throw error
-                     //throw new Error('BLAST Database Error - no db found.')
-                     pyerror = { code: 1, msg: 'BLAST Database Error - no db found.' }
-                  }
-                  // no error to report
-                  pyerror = { code: 0, msg: ''}
-                  
-                  
+                  // continue on NO ERROR FILE PRESENT              
               }else{
                  // file exists throw error
                  //console.log('YYYY')
