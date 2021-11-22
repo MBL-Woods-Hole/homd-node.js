@@ -1,4 +1,9 @@
 HOMD Notes
+2021-11-22
+put a notes section on the taxon desc page and in the db
+Also a db update page
+
+
 2021-11-12
 genomes blast db link not working:
 
