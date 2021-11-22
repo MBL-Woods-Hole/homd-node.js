@@ -109,7 +109,8 @@ def run_taxa(args):
                     taxonObj['warning'] = toadd 
         
                 elif n=='ncbi_taxid':  #list
-                    taxonObj['ncbi_taxid'] = toadd    
+                    taxonObj['ncbi_taxid'] = toadd  
+                   
                 else:
                     #taxonObj[n] = toadd.replace('"','').replace("'","").replace(',','')
                     pass

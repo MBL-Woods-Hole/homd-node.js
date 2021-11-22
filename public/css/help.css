@@ -1,0 +1,28 @@
+#help-left-table{
+  border: 1px solid black;
+  padding:5px;
+}
+#help-middle-table{
+  border: 1px solid black;
+  padding:5px;
+}
+#help-right-table{
+  border: 1px solid black;
+  padding:5px;
+}
+.help-menu-return{
+   float:right;
+   font-size:small;
+}
+.help-div{
+   line-height: 1.6;
+   padding:20px;
+   margin:20px;
+   border:2px solid lightseagreen;
+}
+.inset{
+   margin-left:20px;
+   padding:8px;
+   border:1px solid grey;
+   background:#dcdcdc;
+}

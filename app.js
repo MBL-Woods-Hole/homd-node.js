@@ -38,7 +38,7 @@ const refseq = require('./routes/routes_refseq');
 const genome = require('./routes/routes_genome');
 const phage    = require('./routes/routes_phage');
 const blast    = require('./routes/routes_blast');
-
+const help    = require('./routes/routes_help');
 const app = express();
 
 
@@ -106,6 +106,7 @@ app.use('/refseq', refseq);
 app.use('/genome', genome);
 app.use('/phage', phage);
 app.use('/blast', blast);
+app.use('/help', help);
 
 
 // error handler middleware:
