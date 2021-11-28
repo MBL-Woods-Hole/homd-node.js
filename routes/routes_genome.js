@@ -99,17 +99,16 @@ router.get('/genome_table', function genomeTable(req, res) {
   count_txt = count_txt0 + ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 
-    pgname: 'genome_table', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-
+    pgname: 'genome/genome_table', // for AbountThisPage
+    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, rootPath: CFG.PROCESS_DIR }),
     // seqid_list: JSON.stringify(gid_obj_list),
     data: JSON.stringify(send_list),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     letter: letter,
     otid: otid,
-    phylum:phylum,
+    phylum: phylum,
     phyla: JSON.stringify(phyla),
-    count_text:count_txt,
+    count_text: count_txt,
     search_txt: '0',
     search_field:'0'
     
@@ -135,7 +134,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
   countTxt = countTxt0 + ' <small>(Total:' + (bigGeneList.length).toString() + ')</small>'
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 
-    pgname: 'genome_table', // for AbountThisPage
+    pgname: 'genome/genome_table', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     
     //seqid_list: JSON.stringify(gid_obj_list),
@@ -178,7 +177,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
     })
   res.render('pages/genome/jbrowse2_stub_iframe', {
     title: 'HOMD :: JBrowse', 
-    pgname: 'jbrowse', // for AbountThisPage
+    pgname: 'genome/jbrowse', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     gid: gid,  // default
     genomes: JSON.stringify(genomeList),
@@ -240,7 +239,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
   // console.log(C.genome_lookup[gid])
   res.render('pages/genome/genomedesc', {
     title: 'HOMD :: Genome Info',
-    pgname: 'genome_description', // for AbountThisPage 
+    pgname: 'genome/genome_description', // for AbountThisPage 
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     // taxonid: otid,
     data1: JSON.stringify(data),
@@ -346,7 +345,7 @@ router.get('/explorer', function explorer (req, res) {
   const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
     res.render('pages/genome/explorer', {
       title: 'HOMD :: ' + gid,
-      pgname: 'genome_explorer', // for AbountThisPage 
+      pgname: 'genome/explorer', // for AbountThisPage 
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       gid: gid,
@@ -390,15 +389,14 @@ router.get('/explorer', function explorer (req, res) {
         return
       }
   }
-  let dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x); // copy array
-  if(gid != 'all'){
-      let el1 = {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
-               filename:'fna/'+gid+'.fna'}
-      let el2 = {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
+  //let dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x); // copy array
+  let dbChoices = [
+      {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
+               filename:'fna/'+gid+'.fna'},
+      {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
                filename:'ffn/'+gid+'.ffn'}
-      dbChoices.unshift(el2)
-      dbChoices.unshift(el1)
-  }  
+      ]
+   
   if(gid === 'all' && blast.toString() === '1') {
      //console.log('4')
      renderFxn(req, res, 'all', 0, 1, '', dbChoices, blastPrograms, allAnnosObj, '', {}, {}, [])
@@ -481,6 +479,25 @@ router.get('/explorer', function explorer (req, res) {
 })
 //
 //
+router.get('/blast_all', function blast_all(req, res) {
+   console.log('in blast all')
+   const blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN']
+   let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
+
+   res.render('pages/genome/blast_all', {
+        title: 'HOMD :: Ribosomal Protein Tree',
+        pgname: 'blast', // for AbountThisPage
+        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        blastFxn: 'genome',
+        organism: '',
+        gid: 'all',
+        blast_prg: JSON.stringify(blastPrograms),
+        db_choices: JSON.stringify(dbChoices),
+        returnTo: '/genome/blast_all'
+      })
+   
+})
 router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
     console.log('in changeBlastGenomeDbs AJAX')
     console.log(req.body)
@@ -497,17 +514,18 @@ router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
        if(gid != 'all'){
            html += "<option value='fna/"+gid+".fna'>This Organism's ("+organism + ") Genomic DNA</option>"
            html += "<option value='ffn/"+gid+".ffn'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+       }else{
+           html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
+           html += "<option value='"+dbChoices[1].filename+"'>"+dbChoices[1].name+"</option>"
        }
-       html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
-       html += "<option value='"+dbChoices[1].filename+"'>"+dbChoices[1].name+"</option>"
-       
        
     }else{  // blastp and blastx
        dbChoices = C.all_genome_blastn_db_choices.protein.map((x) => x)
        if(gid != 'all'){
            html += "<option value='faa/"+gid+".faa'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+       }else{
+           html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
        }
-       html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
     }
     html += "</select>"
     res.send(html)
@@ -530,7 +548,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
     } else {
       res.render('pages/genome/conserved_protein_tree', {
         title: 'HOMD :: Conserved Protein Tree',
-        pgname: 'tree', // for AbountThisPage
+        pgname: 'genome/tree', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         svg_data: JSON.stringify(data),
@@ -550,7 +568,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
     } else {
       res.render('pages/genome/ribosomal_protein_tree', {
         title: 'HOMD :: Ribosomal Protein Tree',
-        pgname: 'tree', // for AbountThisPage
+        pgname: 'genome/tree', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         svg_data: JSON.stringify(data),
@@ -572,7 +590,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
     }
     res.render('pages/genome/rRNA_gene_tree', {
       title: 'HOMD :: rRNA Gene Tree',
-      pgname: 'tree', // for AbountThisPage
+      pgname: 'genome/tree', // for AbountThisPage
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       svg_data: JSON.stringify(data),

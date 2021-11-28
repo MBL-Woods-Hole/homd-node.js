@@ -28,7 +28,7 @@ router.get('/', function index(req, res) {
           
           res.render('pages/phage/index', {
                 title: 'HOMD :: Human Oral Phage Database',
-                pgname: 'phage_home', // for AbountThisPage
+                pgname: '', // for AbountThisPage
                 config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         
@@ -103,7 +103,7 @@ router.get('/phage_table', function phage_table_get(req, res) {
    count_txt = count_txt0 + ' <small>(Total:'+(tmpPhageList.length).toString()+')</small> '
    res.render('pages/phage/phagetable', {
     title: 'HOMD :: Human Oral Phage Database',
-    pgname: 'phage_table', // for AbountThisPage
+    pgname: 'phage/phage_table', // for AbountThisPage
     config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     pdata:    JSON.stringify(sendList),
@@ -157,7 +157,7 @@ router.post('/phage_table', function phage_table_post(req, res) {
   let count_txt = 'Showing: '+sendList.length.toString() +' rows. <small>(Total:'+(tmpPhageList.length).toString()+')</small> '
   res.render('pages/phage/phagetable', {
     title: 'HOMD :: Human Oral Phage Database',
-    pgname: 'phage_table', // for AbountThisPage
+    pgname: 'phage/phage_table', // for AbountThisPage
     config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     pdata:    JSON.stringify(sendList),
@@ -201,7 +201,7 @@ router.post('/search_phagetable', function search_phagetable(req, res) {
     countText = countText0+' <small>(Total:'+(tmpPhageList.length).toString()+')</small> '
   res.render('pages/phage/phagetable', {
     title: 'HOMD :: Human Oral Phage Database',
-    pgname: 'phage_table', // for AbountThisPage
+    pgname: 'phage/phage_table', // for AbountThisPage
     config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     pdata:    JSON.stringify(sendList),
@@ -228,7 +228,7 @@ router.get('/phagedesc', function phagedesc(req, res) {
   console.log(phage)
   res.render('pages/phage/phagedesc', {
         title: 'HOMD :: Human Oral Phage Database',
-        pgname: 'phage_description', // for AbountThisPage
+        pgname: 'phage/phage_description', // for AbountThisPage
         config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         phage_data: JSON.stringify(phage),
@@ -288,7 +288,7 @@ router.get('/search_questions', function search_questions(req, res) {
   
   res.render('pages/phage/search_questions', {
         title: 'HOMD :: Human Oral Phage Questions',
-        pgname: 'phage_search', // for AbountThisPage
+        pgname: '', // for AbountThisPage
         config:  JSON.stringify({ hostname:CFG.HOSTNAME, env:CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       })

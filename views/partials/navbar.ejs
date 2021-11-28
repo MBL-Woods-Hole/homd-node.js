@@ -28,7 +28,7 @@
     <ul>
       <!-- <li><a href="/phage">Phage Home</a></li> -->
       <li><a href="/phage/phage_table">Phage Table</a></li>
-      <li><a href="https://wiki.homd.info/help/phage">Phage Help Pages</a></li>
+      <li><a href="/help/help-page?pagecode=phage">Phage Help Pages</a></li>
       <li><a href="/download#phage">Download Phage Data</a></li>
       <li><a href='/phage/search_questions'>Phage Search Questions</a></li>
     </ul>
@@ -49,20 +49,14 @@
         </ul>
       </li> 
       <li><a href="/genome/explorer?gid=&anno=prokka">Genome Annotations</a></li>
-      <li><a href="">BLAST <font color="blue">&#187;</font></a>
-        <ul> 
-        <li><a href="/genome/explorer?gid=&blast=1">BLAST Against a single HOMD Genome</a></li>
-        <li><a href="/genome/explorer?gid=all&blast=1">BLAST Against All HOMD Genomes</a></li>
-        
-        </ul>
-      </li>  
+      <li><a href="/genome/explorer?gid=&blast=1">BLAST</a></li>  
       
       <!-- <li><a href="/genome/explorer?blast=1">BLAST Against a single HOMD Genome</a></li> -->
       <!-- <li><a href="/genome/explorer?blast=1">BLAST Against All HOMD Genomes</a></li> -->
       <li><a href="https://anviserver.homd.info" target='_blank'>HOMD Anvi'o Server</a></li>  
       <li><a href="/download#genome">Download Genomic Data</a></li>
       
-      <li><a href="https://wiki.homd.info/versioning/gene-version-history" target='_blank'>HOMD Reference Genome Version History (opens in a new window)</a></li>
+      <li><a href="/help/help-page?pagecode=genome/genome_version">HOMD Reference Genome Version History</a></li>
     </ul>
   </li> 
 <!--
@@ -81,7 +75,7 @@
           
           <li><a href="/download#refseq">Download RefSeq Data</a></li>
           
-          <li><a href="https://wiki.homd.info/versioning/refseq-version-history" target='_blank'>Version History (opens in a new window)</a></li>
+          <li><a href="/help/help-page?pagecode=refseq/refseq_version">Version History</a></li>
     </ul>
   </li> 
   <li><div class='main-topic'>Animal Microbiomes <font color="#3399FF">&#5121;</font></div>
@@ -112,21 +106,24 @@
   <li><div class='main-topic'>Help <font color="#3399FF">&#5121;</font></div>
     <ul>
       <li><a href="/help/index" >HOMD Help Index</a></li>
-      <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home</a></li>
+      <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home-obsolete</a></li>
       <!-- <li><a href="https://wiki.homd.info/help/user_guide" target='_blank'>User's Guide (in a new window)</a></li> -->
-      <li><a href="https://wiki.homd.info/help/general/cite" target='_blank' rel="noopener noreferrer">How to Cite HOMD</a></li>
-      <li><a href="https://wiki.homd.info/help/general/description" target='_blank' rel="noopener noreferrer">Project Description</a></li>
-      <li><a href="https://wiki.homd.info/help/general/strains" target='_blank'>Strains and DNA Availability</a></li>
-      <li><a href="https://wiki.homd.info/help/general/team" target='_blank' rel="noopener noreferrer">People</a></li>
-      <li><a href="https://wiki.homd.info/help/general/contact" target='_blank' rel="noopener noreferrer">Contact Us</a></li>
-      <li><a href="https://wiki.homd.info/help/general/mailing-list" target='_blank' rel="noopener noreferrer">Mailing List</a></li>
+      <li><a href='/help/help-page?pagecode=cite' >How to Cite HOMD</a></li>
+      <li><a href='/help/help-page?pagecode=description' >Project Description</a></li>
+      <li><a href='/help/help-page?pagecode=strains'>Strains and DNA Availability</a></li>
+      <li><a href='/help/help-page?pagecode=team'>People</a></li>
+      <li><a href='/help/help-page?pagecode=contact'>Contact Us</a></li>
+      <!-- <li><a href='/help/mailing'>Mailing List</a></li> -->
       
       <!-- <li><a href="/forum" target='_blank' rel="noopener noreferrer">Forum</a></li> -->
-      <li><a href="https://wiki.homd.info/announcements/list" target='_blank' rel="noopener noreferrer">Announcements</a></li>
-      <li><a href="https://wiki.homd.info/pages/<%= pgname %>" target='_blank' rel="noopener noreferrer">About this Page</a></li>
+      <li><a href='/help/help-page?pagecode=announcement'>Announcements</a></li>
+      
     </ul>
+    
   </li>   
-  
+  <% if(pgname && pgname != 'lost'){ %>
+      <li><a href='/help/help-page?pagecode=<%= pgname %>'><span class='blue-text'>[Page-Help]</span></a></li>
+  <% } %>
   <span id='homd-search' >
     <input type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
     <input type="image" src='/images/search.png'  id="search_button" height='20' onclick='search()' />
@@ -134,12 +131,13 @@
     </span>
     
     <!-- <li><div title="Simplified page name for referencing purpose"><font color="#66FFFF"></font></div></li>  -->
+
   
 </ul>
 
 
 <div id='version-info' >
-      16S rRNA RefSeq: <a href="https://wiki.homd.info/versioning/refseq-version-history" target='_blank'>V<%= version_info.rna_ver %></a>
-      &nbsp;&nbsp;&nbsp;Genomic RefSeq: <a href="https://wiki.homd.info/versioning/gene-version-history" target='_blank'>V<%= version_info.gen_ver %></a>
+      16S rRNA RefSeq: <a href="/help/help-page?pagecode=refseq/refseq_version">V<%= version_info.rna_ver %></a>
+      &nbsp;&nbsp;&nbsp;Genomic RefSeq: <a href="/help/help-page?pagecode=genome/genome_version">V<%= version_info.gen_ver %></a>
 </div>
 

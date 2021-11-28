@@ -1,0 +1,40 @@
+<style>
+</style>
+<%- include('../../partials/header_html'); %>
+<% db_choices = JSON.parse(db_choices) %>
+<% blast_prg = JSON.parse(blast_prg) %>
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <div class='title'>BLAST Against All Genomes</div>
+       <div style='padding:5px 0;'>
+        
+        <center>Or <a href='explorer?blast=1'>choose a single genome to blast against</a></center>
+        
+      </div>
+      <%- include('../../partials/flash'); %>
+    <%- include('../../partials/blast_block'); %>
+  
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/genomes.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

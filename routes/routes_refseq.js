@@ -16,7 +16,7 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
     helpers.accesslog(req, res)
   res.render('pages/refseq/blastn', {
     title: 'HOMD :: RefSeq Blast', 
-    pgname: 'refseq_blast',
+    pgname: 'blast',
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     hostname: CFG.hostname,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -49,7 +49,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
       }
       res.render('pages/refseq/refseq_tree', {
         title: 'HOMD :: Conserved Protein Tree',
-        pgname: 'tree', // for AbountThisPage, 
+        pgname: 'refseq/tree', // for AbountThisPage, 
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         svg_data: JSON.stringify(data),
@@ -72,7 +72,7 @@ router.get('/download', function download(req, res) {
   helpers.accesslog(req, res)
   res.render('pages/refseq/download', {
     title: 'HOMD :: Phylo Tree', 
-    pgname: 'refseq_download', // for AbountThisPage
+    pgname: 'download', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     hostname: CFG.HOSTNAME,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),

@@ -57,7 +57,7 @@ router.get('/blast_results', function blastResults(req, res) {
         const renderFxn = (req, res, html, blastFiles, config, blastID) => {
           res.render('pages/blast/blast_results', {
                   title: 'HOMD :: Blast Results', 
-                  pgname: 'blast_results',
+                  pgname: 'blast',
                   config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
                   hostname: CFG.HOSTNAME,
                   //url: CFG.URL,
@@ -186,7 +186,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
       res.render('pages/genome/explorer', {
         title: 'HOMD :: ' + gid,
-        pgname: 'genome_explorer', // for AbountThisPage 
+        pgname: 'blast', // for AbountThisPage 
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         gid: gid,
@@ -318,7 +318,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
       console.log('rendering blast_wait')
       res.render('pages/blast/blast_wait', {
         title: 'HOMD :: BLAST WAIT', 
-        pgname: 'blast_wait',
+        pgname: 'blast',
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         hostname: CFG.HOSTNAME,
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),

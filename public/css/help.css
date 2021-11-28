@@ -1,3 +1,19 @@
+#over-table,td{
+   padding:20px 40px;;
+}
+.help-table{
+    border-collapse:collapse;
+}
+.help-table th{
+    border-bottom:1px solid black;
+    background: lightblue;
+    padding:5px;
+}
+.help-table td{
+    border-right:1px solid black;
+    padding:3px 7px;
+    
+}
 #help-left-table{
   border: 1px solid black;
   padding:5px;
@@ -6,10 +22,15 @@
   border: 1px solid black;
   padding:5px;
 }
+#help-middle-table td{
+  border: 1px solid black;
+  
+}
 #help-right-table{
   border: 1px solid black;
   padding:5px;
 }
+
 .help-menu-return{
    float:right;
    font-size:small;
@@ -20,9 +41,25 @@
    margin:20px;
    border:2px solid lightseagreen;
 }
+.help-item{
+   padding:10px; 20px;
+}
 .inset{
    margin-left:20px;
    padding:8px;
    border:1px solid grey;
    background:#dcdcdc;
+   font-size:12px;
+}
+.date{
+   padding:10px 0 10px 5px;
+   margin-top:20px;
+   font-weight:bold;
+   background:lightblue;
+   border-left: 4px solid blue;
+}
+.heading{
+   padding:10px 0 10px 40px;
+   font-weight:bold;
+   font-size:large;
 }

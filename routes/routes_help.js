@@ -2,121 +2,84 @@
 const express  = require('express');
 var router   = express.Router();
 const CFG   = require(app_root + '/config/config');
-const fs       = require('fs-extra');
-// const url = require('url');
-const path     = require('path');
 const C     = require(app_root + '/public/constants');
-const helpers = require(app_root + '/routes/helpers/helpers');
-const queries = require(app_root + '/routes/queries')
-var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = today.getFullYear();
-today = yyyy + '-' + mm + '-' + dd;
-var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+
 
 router.get('/index', function index(req, res) {
-  console.log('in help')
-    
+  
     res.render('pages/help/index', {
         title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
+        pgname: '', // for AboutThisPage
+        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV, rootPath: CFG.PROCESS_DIR}),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 
     })
   
 })
-router.get('/strains', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/strains', {
+router.get('/help-page', function help_page(req, res) {
+  //let page = req.params.pagecode
+  let page = req.query.pagecode
+  console.log('page',page)
+  res.render('pages/help/helppage', {
         title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
+        pgname: '', // for AboutThisPage
+        pagecode: page,
+        pagetitle: getPageTitle(page),
+        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV, rootPath: CFG.PROCESS_DIR}),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     })
 })
-router.get('/description', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/description', {
-        title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
-})
-router.get('/cite', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/cite', {
-        title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
-})  
-router.get('/team', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/team', {
-        title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
-})  
-router.get('/contact', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/contact', {
-        title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
-})
-router.get('/mailing', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/mailing', {
-        title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
-})
-router.get('/announcement', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/announcement', {
-        title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
-})
-router.get('/refseq_version', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/refseq_version', {
-        title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
-})
-router.get('/genome_version', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/genome_version', {
-        title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
-})
-router.get('/database_update', function index(req, res) {
-  console.log('in help')
-  res.render('pages/help/database_update', {
-        title: 'HOMD :: Help Pages',
-        pgname: 'Help Index', // for AboutThisPage
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
-})
+
+function getPageTitle(page){
+    
+    if(page === 'cite'){
+       return 'How to Cite the Human Oral Microbiome Database'
+    }
+    if(page === 'description'){
+       return 'The HOMD Project Description'
+    }
+    if(page === 'strains'){
+       return 'Strains and DNA Availability'
+    }
+    if(page === 'team'){
+       return 'Team'
+    }
+    if(page === 'contact'){
+       return 'Contact Us'
+    }
+    if(page === 'mailing'){
+       return 'Mailing Lists'
+    }
+    if(page === 'download'){
+       return 'Downloading HOMD Data'
+    }
+    if(page === 'announcement'){
+       return 'Announcements'
+    }
+    if(page === 'genome/genome_version'){
+       return 'HOMD Reference Genomes Version History'
+    }
+    if(page === 'refseq/refseq_version'){
+       return 'HOMD 16S rRNA Gene Reference Sequence Version History'
+    }
+    if(page === 'database_update'){
+       return 'HOMD Database Updates'
+    }
+    if(page === 'taxon/tax_table'){
+       return 'Page::Taxon Table'
+    }
+    if(page === 'genome/genome_table'){
+       return 'Page::Genome Table'
+    }
+    if(page === 'phage/phage_table'){
+       return 'Page::Phage Table'
+    }
+    return page+'-FixmyTitle'
+}
+
+
+
+
 
 
 module.exports = router;

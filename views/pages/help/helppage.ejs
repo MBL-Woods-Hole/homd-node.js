@@ -1,0 +1,35 @@
+<style>
+</style>
+<% var cfg = JSON.parse(config) %> 
+
+<link rel="stylesheet" href="/css/help.css">
+<%- include(cfg.rootPath+'views/partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include(cfg.rootPath+'views/partials/header_img'); %>
+    <%- include(cfg.rootPath+'views/partials/navbar'); %>
+    
+<div class='page-content' >
+    <div class='title'><%= pagetitle %></div>
+    <span class='help-menu-return'>Back To: <a href='/help/index'>Main-Help-Menu</a></span>
+    <div class='help-div'> 
+        <%- include(cfg.rootPath+'views/partials/help/'+pagecode); %>
+    </div>  
+</div> <!-- end: page-content -->
+    
+<div id='footer'>
+         <%- include(cfg.rootPath+'views/partials/footer'); %>
+</div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

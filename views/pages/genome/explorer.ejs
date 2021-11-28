@@ -109,14 +109,14 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
  <!-- GID:<%= gid %>   Blast:<%= blast %>   Anno:<%= anno_type %>   --> 
 <center>
     <div id='genome-explorer'>
+      
       <% if(!gid || gid.toString() === '0'){ %>
          <% title ='Choose a Genome' %>
-      <% }else if(gid === 'all' && blast.toString() === '1'){ %>
-         <% title ='Blast Against all HOMD Genomes' %>
       <% }else{ %>
          <% title ='Genome Explorer: '+organism+' ('+gid+')' %>
       <% } %>
       <%- include('../../partials/explorer_head'); %>
+    
     </div>
     <%- include('../../partials/flash'); %>
     <% if(!gid || gid.toString() === '0'){ %>
