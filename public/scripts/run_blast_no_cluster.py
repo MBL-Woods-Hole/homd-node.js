@@ -204,7 +204,7 @@ def validate(db, string):
 
 def createBatchBlastFileText(args, filesArray, details_dict):
     fileText ='#!/bin/bash\n\n'
-    #fileText += 'cd '+ details_dict['blastdbPath'] + '\n\n'
+    fileText += 'cd '+ os.path.join(details_dict['blastdbPath'],details_dict['ext']) + '\n\n'
     for file in filesArray:
         fileText += os.path.join(details_dict['programPath'], details_dict['program'])
         
@@ -214,7 +214,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
 #             fileText += ' -db /Users/avoorhis/programming/blast-db-testing/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
 #             ##fileText += ' -db /Users/avoorhis/programming/blast-db-testing/B6/B6'
 #         else:   # HOMD Default
-        fileText += ' -db ' + os.path.join(details_dict['blastdbPath'], details_dict['blastdb'])
+        fileText += ' -db ' + details_dict['blastdb']
         #fileText += ' -db ' + details_dict['blastdb']
         fileText += ' -evalue ' + details_dict['expect']
         fileText += ' -query ' + os.path.join(details_dict['blastDir'],file)

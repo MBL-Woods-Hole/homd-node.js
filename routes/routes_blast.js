@@ -589,7 +589,7 @@ router.post('/openBlastWindow', function openBlastWindow(req, res) {
 ///// FUNCTIONS /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 function createBlastOpts(reqBody) {
-    let bOpts = {}
+    let bOpts = {},dbItems
     bOpts.expect =    reqBody.blastExpect
     //descriptions: req.body.blastDescriptions,
     //alignments: req.body.blastAlignments,
@@ -597,11 +597,16 @@ function createBlastOpts(reqBody) {
     bOpts.advanced = reqBody.advancedOpts,
     bOpts.program = reqBody.blastProg
     // add dbPath later
-    bOpts.blastDb = reqBody.blastDb
+    
     if(reqBody.blastFxn === 'genome') {
-      bOpts.dbPath = CFG.BLAST_DB_PATH_GENOME 
+      bOpts.dbPath = CFG.BLAST_DB_PATH_GENOME
+      dbItems = reqBody.blastDb.split('/')
+      bOpts.blastDb = dbItems[1]
+      bOpts.ext = dbItems[0]
     } else {
       bOpts.dbPath = CFG.BLAST_DB_PATH_REFSEQ
+      bOpts.blastDb = reqBody.blastDb
+      bOpts.ext = ''
     }
     if(reqBody.blastFilter){
       bOpts.fitler = '-F F'
@@ -616,6 +621,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     config.site = CFG.SITE  //  local, mbl or homd;; this determines blast db
     config.blastdbPath = blastOpts.dbPath
     config.blastdb = blastOpts.blastDb
+    config.ext = blastOpts.ext  // used only for genome
     config.blastDir = blastDir
     config.dataType = opts.type
     config.expect = blastOpts.expect

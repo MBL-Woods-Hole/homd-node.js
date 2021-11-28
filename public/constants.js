@@ -111,14 +111,14 @@ constants.all_genome_blastn_db_choices = { nucleotide:
     [
       // blastn & tblastn & tblastx 2dbs: 
       {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes1', programs:['blastn','tblastn','tblastx'],
-           filename:'fna/ALL_genomes.fna'},
+           ext:'fna',filename:'fna/ALL_genomes.fna'},
       {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_genomes2', programs:['blastn','tblastn','tblastx'],
-           filename:'ffn/ALL_genomes.ffn'}
+           ext:'ffn',filename:'ffn/ALL_genomes.ffn'}
     ],
     protein: [
         // blastp and blastx 1db:
       { name: 'Proteins Annotated from all HOMD Genomes', value: 'all_genomes3', programs:['blastp','blastx'],
-           filename: 'faa/ALL_genomes.faa' }
+           ext:'faa',filename: 'faa/ALL_genomes.faa' }
     ]
 }
 // constants.posters_pdfs =
