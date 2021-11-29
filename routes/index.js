@@ -182,51 +182,36 @@ router.post('/site_search', (req, res) => {
   // console.log(pidObjList)
   const phageIdLst = pidObjList.map(e => e.pid)
   
-  // help pages
+  // help pages uses grep
   let helpLst = []
-  const grep_cmd = "/usr/bin/grep -liRw "+path.join(CFG.PROCESS_DIR,'views','partials','help') + " -e '" + searchText + "'" 
-  console.log('grep_cmd',grep_cmd)
+  let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
+  const grep_cmd = "/usr/bin/grep -liRw "+help_trunk + " -e '" + searchText + "'" 
+  //console.log('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
         console.error('stderr',stderr);
         return;
       }
-      console.log('stdout',stdout);
+      //console.log('stdout',stdout);
       let fileLst = []
       if(stdout){
         fileLst = stdout.trim().split('\n')
       }
       if(fileLst.length > 0){
-      for(let n in fileLst){
-        let items = fileLst[n].split('/')
-        helpLst.push(items[items.length - 1])
+        for(let n in fileLst){
+          //console.log('file',fileLst[n])
+          let cleanfinal = fileLst[n].replace(help_trunk,'').replace(/^\//,'').replace(/\.ejs$/,'')
+          helpLst.push(cleanfinal)
+        }
       }
-      }
-      console.log('fileLst',fileLst);
- console.log('helpLst',helpLst);
-  
- //  const grepRun = exec(grep_cmd, {
-//                 env:{'PATH': CFG.PATH},   // CFG.PATH must include python executable path
-//                 detached: true, stdio: 'pipe'
-//   })
-//   grepRun.stdout.on('data', function gpStdOut(data) {
-//       console.log('Pipeing data from grep::')
-//       console.log(data.toString())
-//       
-//     })
-//     
-//   grepRun.stderr.on('data', function gpStdErr(data) {
-//       let errorData = data.toString()
-//       console.log('error',errorData)
-//       
-//     })
+      
+
       res.render('pages/search_result', {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         search_text: searchText,
-
         otid_list: JSON.stringify(otidLst),
         gid_list: JSON.stringify(gidLst),
         taxon_otid_obj: JSON.stringify(taxonOtidObj),

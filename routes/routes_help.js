@@ -3,7 +3,8 @@ const express  = require('express');
 var router   = express.Router();
 const CFG   = require(app_root + '/config/config');
 const C     = require(app_root + '/public/constants');
-
+const path  = require('path')
+const { exec, spawn } = require('child_process');
 
 router.get('/index', function index(req, res) {
   
@@ -29,7 +30,53 @@ router.get('/help-page', function help_page(req, res) {
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     })
 })
+router.get('/search', function search(req, res) {
+  //let page = req.params.pagecode
+  res.render('pages/help/search', {
+        title: 'HOMD :: Help Search',
+        pgname: '', // for AboutThisPage
+        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV, rootPath: CFG.PROCESS_DIR}),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    })
+})
+router.post('/help_search_result', function help_search_result(req, res) {
+  console.log('in POST -Search Help')
+  console.log(req.body)
+  let searchText = req.body.input_string
+  // help pages uses grep
+  let helpLst = []
+  let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
+  const grep_cmd = "/usr/bin/grep -liRw "+help_trunk + " -e '" + searchText + "'" 
+  //console.log('grep_cmd',grep_cmd)
+  exec(grep_cmd, (err, stdout, stderr) => {
+      if (stderr) {
+        console.error('stderr',stderr);
+        return;
+      }
+      //console.log('stdout',stdout);
+      let fileLst = []
+      if(stdout){
+        fileLst = stdout.trim().split('\n')
+      }
+      if(fileLst.length > 0){
+        for(let n in fileLst){
+          //console.log('file',fileLst[n])
+          let cleanfinal = fileLst[n].replace(help_trunk,'').replace(/^\//,'').replace(/\.ejs$/,'')
+          helpLst.push(cleanfinal)
+        }
+      }
 
+      res.render('pages/help/search_result', {
+        title: 'HOMD :: Help Search',
+        pgname: '', // for AbountThisPage
+        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        search_text: searchText,
+        help_pages: JSON.stringify(helpLst),
+      })
+   });
+  
+})
 function getPageTitle(page){
     
     if(page === 'cite'){

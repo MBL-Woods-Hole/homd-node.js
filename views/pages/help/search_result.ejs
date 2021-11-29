@@ -1,0 +1,52 @@
+<style>
+.search-box{
+   height:100px;
+   width:70%;
+   overflow:auto;
+   margin:0px 0px;
+   padding:0px 10px;
+   background:lightyellow;
+   border:1px solid black;
+}
+#srch_txt{
+   color:orange;
+}
+</style>
+<link rel="stylesheet" href="/css/help.css">
+<%- include('../../partials/header_html'); %>
+<% var help_list = JSON.parse(help_pages) %>
+
+<body>
+  
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    <div class='page-content' > 
+       <div class='title'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span></small>]</div>
+       <span class='help-menu-return'><a href='/help/index'>Main-Help-Menu</a></span>
+ 
+
+    Matches from Help Pages: (<%= help_list.length %>)
+    <div class='search-box'>
+    <% for(n in help_list){ %>
+       <br><%= parseInt(n)+1 %>) <a href='/help/help-page?pagecode=<%= help_list[n] %>'><%= help_list[n] %></a>
+    <% } %>
+    </div>
+    
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+  </div>     
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

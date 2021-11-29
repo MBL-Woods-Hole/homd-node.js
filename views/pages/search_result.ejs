@@ -1,6 +1,7 @@
 <style>
 .search-box{
    height:100px;
+   width:70%;
    overflow:auto;
    margin:0px 0px;
    padding:0px 10px;
@@ -24,7 +25,7 @@
     <%- include('../partials/header_img'); %>
     <%- include('../partials/navbar'); %>
     <div class='page-content' > 
-       <h4 class='title text-info'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span></small>]</h4>
+       <div class='title'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span></small>]</div>
 <!-- 'HMT-'+("000" + otid).slice(-3);  -->
  
     
@@ -64,8 +65,8 @@
        <br><%= parseInt(n)+1 %>) <a href='/phage/phagedesc?pid=<%= pid %>'><%= pid %></a>
     <% } %>
     </div>
-    
-    Matches from Help Pages: (<%= phage_id_list.length %>)
+    <hr>
+    Matches from Help Pages: (<%= help_list.length %>)
     <div class='search-box'>
     <% for(n in help_list){ %>
        <br><%= parseInt(n)+1 %>) <a href='/help/help-page?pagecode=<%= help_list[n] %>'><%= help_list[n] %></a>
