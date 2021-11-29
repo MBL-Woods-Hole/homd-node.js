@@ -1,12 +1,10 @@
-<%- include('../../../partials/help/blast/blast_menu'); %>
-<strong>Identify 16S rRNA Sequence by BLAST Search</strong>
-<br><br>One of the major features of HOMD is the comprehensive collection of the 16S rRNA sequences for all the human oral microbial taxa (the HOMD 16S rRNA RefSeq).  The tool "Identify 16S rRNA sequence" lets users identify unknown 16S rRNA sequences for the closest match(s) from two sets of reference sequences - the HOMD 16S rRNA and the RDP-II 16S rRNA sequences.
+Identify 16S rRNA Sequence by BLAST Search
+One of the major features of HOMD is the comprehensive collection of the 16S rRNA sequences for all the human oral microbial taxa (the HOMD 16S rRNA RefSeq).  The tool "Identify 16S rRNA sequence" lets users identify unknown 16S rRNA sequences for the closest match(s) from two sets of reference sequences - the HOMD 16S rRNA and the RDP-II 16S rRNA sequences.
 
-<br><br>Input sequence upload: Either copy and paste sequences in to the text field or directly upload from user's computer. Multiple sequences are allowed but must conform to the FASTA format described below.
+Input sequence upload: Either copy and paste sequences in to the text field or directly upload from user's computer. Multiple sequences are allowed but must conform to the FASTA format described below.
 
-<br><br>Input sequence format: The input sequences must be in FASTA format; when multiple sequences are pastes or uploaded each sequence must start with a single and separate line that begins with the greater-than symbol ">"; for example:
-<div class='inset'>
-<pre>
+Input sequence format: The input sequences must be in FASTA format; when multiple sequences are pastes or uploaded each sequence must start with a single and separate line that begins with the greater-than symbol ">"; for example:
+
 >seq A
 AAGTCGATCGATCATCGTGTAC
 >seq B
@@ -15,29 +13,26 @@ ACGATCGTAGGTAGTCGTAGTA
 ACGATCGTACGTACGTACGATACGATCG
 GTAGGTAGCGTACGATACGATCGTACGTAC
 GTACGATACGATCGGTAG
-</pre>
-</div>
 
+In FASTA format the first line of each sequence usually contains the sequence ID, names or any descriptive words, right after the ">" symbol. This first line can be in any length but take care not to split a long first line into multiple lines, as any character in second line and o­nward are consider the sequences (Many text processing software may do this without warning you). In the HOMD "Identify 16S rRNA Sequence" tool, o­nly the first 30 characters (minus no alphanumeric characters) will be shown in the final result. If more than o­ne sequences share the same 30 characters in the begining, sequencial numbers will be attached to these sequences aumatically.
 
-<br><br>In FASTA format the first line of each sequence usually contains the sequence ID, names or any descriptive words, right after the ">" symbol. This first line can be in any length but take care not to split a long first line into multiple lines, as any character in second line and o­nward are consider the sequences (Many text processing software may do this without warning you). In the HOMD "Identify 16S rRNA Sequence" tool, o­nly the first 30 characters (minus no alphanumeric characters) will be shown in the final result. If more than o­ne sequences share the same 30 characters in the begining, sequencial numbers will be attached to these sequences aumatically.
-
-<br><br>HOMD provides two different sets of 16S rRNA Gene Reference Sequence (RefSeq) for download and homologous search:
+HOMD provides two different sets of 16S rRNA Gene Reference Sequence (RefSeq) for download and homologous search:
 
 1. HOMD 16S rRNA RefSeq: This set contains sequences of all oral taxa with formal or provisional names.
 2. HOMD 16S rRNA Extended RefSeq : This set contains additional16S rRNA reference gene sequences that have not been assigned to a final taxon.
 
-<br><br>The reference sequence sets are being updated regularly to include additional sequences. [View Revision History of Reference Sequences]
+The reference sequence sets are being updated regularly to include additional sequences. [View Revision History of Reference Sequences]
 
-<br><br>The RDP 16S rRNA Sequences data set used in HOMD was downloaded from the Ribosomal Database Project-II project:
-<a href='http://rdp.cme.msu.edu/download/release10_27_unaligned.fa.gz'>http://rdp.cme.msu.edu/download/release10_27_unaligned.fa.gz</a> and contains 1,921,179 16S rRNA sequences.
+The RDP 16S rRNA Sequences data set used in HOMD was downloaded from the Ribosomal Database Project-II project:
+http://rdp.cme.msu.edu/download/release10_27_unaligned.fa.gz and contains 1,921,179 16S rRNA sequences.
 
-<br><br>The NCBI Reference RNA Sequences data set used in HOMD was downloaded from NCBI's FTP site:
-<a href='https://ftp.ncbi.nlm.nih.gov/blast/db//refseq_rna.tar.gz'>https://ftp.ncbi.nlm.nih.gov/blast/db/refseq_rna.tar.gz</a>
-NCBI updates this set of data regularly and HOMD is also updating this database on the weekly basis. The exact number of sequences and date of the data set will be shown in the BLAST Search result page.
+The NCBI Reference RNA Sequences data set used in HOMD was downloaded from NCBI's FTP site:
+ftp://ftp.ncbi.nlm.nih.gov/blast/db/refseq_rna.tar.gz
+NCBI updates this set of data regularly and HOMD is also updating this database o­n the weekly basis. The exact number of sequences and date of the data set will be shown in the BLAST Search result page.
 
-<br><br>The Greengenes 16S rRNA Sequences data set used in HOMD was downloaded from Greengenes's FTP site:
-<a href='http://greengenes.lbl.gov/Download/Sequence_Data/Fasta_data_files/current_GREENGENES_gg16S_unaligned.fasta.gz'>http://greengenes.lbl.gov/Download/Sequence_Data/Fasta_data_files/current_GREENGENES_gg16S_unaligned.fasta.gz</a>
+The Greengenes 16S rRNA Sequences data set used in HOMD was downloaded from Greengenes's FTP site:
+http://greengenes.lbl.gov/Download/Sequence_Data/Fasta_data_files/current_GREENGENES_gg16S_unaligned.fasta.gz
 The exact number of sequences and date of the data set will be shown in the BLAST Search result page.
 
 
-<br><br>BLAST Parameters: Standard BLAST parameters that can be adjusted in this program are listed in the lower portion of this tool page, and the detail information regarding these parameters can be accessed by following the clickable hyper-links o­n the names of these parameters.
+BLAST Parameters: Standard BLAST parameters that can be adjusted in this program are listed in the lower portion of this tool page, and the detail information regarding these parameters can be accessed by following the clickable hyper-links o­n the names of these parameters.
