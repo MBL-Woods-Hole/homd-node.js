@@ -1,0 +1,64 @@
+<%- include('../../../partials/help/blast/blast_menu'); %>
+Full list of the BLAST Advanced options (from NCBI)
+<a href='https://www.ncbi.nlm.nih.gov/books/NBK279684/' target='_blank'>See https://www.ncbi.nlm.nih.gov/books/NBK279684/</a>
+
+<br><br><strong>BLASTN Program Advanced Options</strong>
+<ul>
+<li><strong>-gapopen</strong> Cost to open a gap [Integer] NCBI default = 5; HOMD 16S rRNA search default = 5
+
+<li><strong>-gapextend</strong> Cost to extend a gap [Integer] NCBI default = 2; HOMD 16S rRNA search default = 5
+
+<li><strong>-penalty</strong> Penalty for a mismatch in the blast portion of run [Integer] NCBI default = -3; HOMD 16S rRNA search default= -5
+
+<li><strong>-reward</strong> Reward for a match in the blast portion of run [Integer] NCBI default = 1; HOMD 16S rRNA search default = 4
+
+<li><strong>-evalue</strong> Expectation value (E) [Real] default = 10.0
+
+<li><strong>-word_size</strong> Word size, default is 11 for blastn, 3 for other programs.
+
+<li><strong>-max_target_seqs</strong> Number of alignments to keep [Integer] default = 500
+
+<li><strong>-threshold</strong> Threshold for extending hits, default if zero blastp 11, blastn 0, blastx 12, tblastn 13 tblastx 13, megablast 0 [Integer] default = 0
+
+<li><strong>-xdrop_gap_final</strong> X dropoff value for final gapped alignment in bits (0.0 invokes default behavior) blastn/megablast 50, tblastx 0, all others 25 [Integer] default = 0
+
+<li><strong>-xdrop_ungap</strong> X dropoff value for ungapped extensions in bits (0.0 invokes default behavior) blastn 20, megablast 10, all others 7 [Real] default = 0.0
+
+<li><strong>-strand</strong> Query strands to search against database (for blast[nx], and tblastx) Choice of both, minus, or plus.
+
+<li><strong>-dbsize</strong> Effective length of the database (use zero for the real size) [Real] default = 0
+
+<li><strong>-max_hsps</strong> Number of best hits from a region to keep (off by default, if used a value of 100 is recommended) [Integer] default = 0
+
+<li><strong>-searchsp</strong> Effective length of the search space (use zero for the real size) [Real] default = 0
+</ul>
+<br><br><strong>BLASTP, BLASTX, TBLASTN Program Advanced Options</strong>
+<ul>
+<li><strong>-gapopen</strong> Cost to open a gap [Integer] default = 11
+
+<li><strong>-gapextend</strong> Cost to extend a gap [Integer] default = 1
+
+<li><strong>-evalue</strong> Expectation value (E) [Real] default = 10.0
+
+<li><strong>-word_size</strong> Word size, default is 11 for blastn, 3 for other programs.
+
+<li><strong>-max_target_seqs</strong> Number of alignments to keep [Integer] default = 500
+
+<li><strong>-threshold</strong> Threshold for extending hits, default if zero blastp 11, blastn 0, blastx 12, tblastn 13 tblastx 13, megablast 0 [Integer] default = 0
+
+<li><strong>-comp_based_stats</strong> Use composition-based statistics for tblastn: D or d: default (equivalent to F) 0 or F or f: no composition-based statistics 1 or T or t: Composition-based statistics as in NAR 29:2994-3005, 2001 2: Composition-based score adjustment as in Bioinformatics 21:902-911, 2005, conditioned o­n sequence properties 3: Composition-based score adjustment as in Bioinformatics 21:902-911, 2005, unconditionally For programs other than tblastn, must either be absent or be D, F or 0. [String] default = D
+
+<li><strong>-use_sw_tback</strong> Compute locally optimal Smith-Waterman alignments (blastp.) [flag]
+
+<li><strong>-xdrop_gap_final</strong> X dropoff value for final gapped alignment in bits (0.0 invokes default behavior) blastn/megablast 50, tblastx 0, all others 25 [Integer] default = 0
+
+<li><strong>-xdrop_ungap</strong> X dropoff value for ungapped extensions in bits (0.0 invokes default behavior) blastn 20, megablast 10, all others 7 [Real] default = 0.0
+
+<li><strong>-strand</strong> Query strands to search against database (for blast[nx], and tblastx) Choice of both, minus, or plus.
+
+<li><strong>-dbsize</strong> Effective length of the database (use zero for the real size) [Real] default = 0
+
+<li><strong>-max_hsps</strong> Number of best hits from a region to keep (off by default, if used a value of 100 is recommended) [Integer] default = 0
+
+<li><strong>-searchsp</strong> Effective length of the search space (use zero for the real size) [Real] default = 0 Limited values for gap existence and extension are supported for these three programs. Some supported and suggested values are: Existence Extension 10 1 10 2 11 1 8 2 9 2
+</ul>

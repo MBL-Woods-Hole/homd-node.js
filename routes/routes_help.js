@@ -74,6 +74,27 @@ function getPageTitle(page){
     if(page === 'phage/phage_table'){
        return 'Page::Phage Table'
     }
+    if(page === 'blast/blast'){
+       return 'Page::Blast Menu'
+    }
+    if(page === 'blast/formats'){
+       return 'Page::Blast Formats'
+    }
+    if(page === 'blast/formats'){
+       return 'Page::Blast Formats'
+    }
+    if(page === 'blast/databases'){
+       return 'Page::Blast Databases'
+    }
+    if(page === 'blast/parameters'){
+       return 'Page::Blast Parameters'
+    }
+    if(page === 'blast/programs'){
+       return 'Page::Blast Programs'
+    }
+    if(page === 'blast/advanced'){
+       return 'Page::Blast Advanced Parameters'
+    }
     return page+'-FixmyTitle'
 }
 
