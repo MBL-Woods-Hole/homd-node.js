@@ -121,14 +121,15 @@
     </ul>
     
   </li>   
+  
   <% if(pgname && pgname != 'lost'){ %>
       <li><a href='/help/help-page?pagecode=<%= pgname %>'><span class='blue-text'>[Page-Help]</span></a></li>
   <% } %>
+  
   <span id='homd-search' >
     <input type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
     <input type="image" src='/images/search.png'  id="search_button" height='20' onclick='search()' />
-    
-    </span>
+  </span>
     
     <!-- <li><div title="Simplified page name for referencing purpose"><font color="#66FFFF"></font></div></li>  -->
 

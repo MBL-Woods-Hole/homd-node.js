@@ -16,7 +16,7 @@
 <% var gids = JSON.parse(gid_list) %>
 <% var lineageids = JSON.parse(taxon_otid_obj) %>
 <% var phage_id_list = JSON.parse(phage_id_list) %>
-
+<% var help_list = JSON.parse(help_pages) %>
 
 <body>
   
@@ -26,9 +26,7 @@
     <div class='page-content' > 
        <h4 class='title text-info'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span></small>]</h4>
 <!-- 'HMT-'+("000" + otid).slice(-3);  -->
-  <div class=''>
-    To Search the Help Pages See <a href='https://wiki.homd.info'>https://wiki.homd.info</a>
-    </div>
+ 
     
     <br>Matches from Bacterial Taxon Names: (<%= Object.keys(lineageids).length %>)
   <div class='search-box'>
@@ -66,7 +64,14 @@
        <br><%= parseInt(n)+1 %>) <a href='/phage/phagedesc?pid=<%= pid %>'><%= pid %></a>
     <% } %>
     </div>
-
+    
+    Matches from Help Pages: (<%= phage_id_list.length %>)
+    <div class='search-box'>
+    <% for(n in help_list){ %>
+       <br><%= parseInt(n)+1 %>) <a href='/help/help-page?pagecode=<%= help_list[n] %>'><%= help_list[n] %></a>
+    <% } %>
+    </div>
+    
     </div> <!-- end: page-content -->
     
     <div id='footer'>
