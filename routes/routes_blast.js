@@ -116,9 +116,9 @@ router.get('/blast_results', function blastResults(req, res) {
                   console.log(blastFiles[i])
                   console.log('config',config)
                   if(config.blastFxn === 'genome'){
-                     data.push(results[i])
+                     data.push(results[i])   // genome is -html flag
                   }else{
-                    jsondata = JSON.parse(results[i])
+                    jsondata = JSON.parse(results[i])  // refseq is json -outfmt 
                     //console.log(blastFiles[i])
                     data.push(jsondata.BlastOutput2[0].report.results.search)
                     if(jsondata === undefined){
@@ -168,13 +168,13 @@ router.get('/blast_results', function blastResults(req, res) {
         }
     })
 })
-function getBlastHtmlFromHtml(blastFiles, blastID){
-   let html = '<table>'
-   for(let i in blastFiles){
-     html += "<tr><td><a href='#' onclick=\"window.open('"+blastFiles[i]+"', '_blank', 'fullscreen=yes'); return false;\">"+blastFiles[i]+"</a></td></tr>"
-   }
-   return html
-}
+// function getBlastHtmlFromHtml(blastFiles, blastID){
+//    let html = '<table>'
+//    for(let i in blastFiles){
+//      html += "<tr><td><a href='#' onclick=\"window.open('"+blastFiles[i]+"', '_blank', 'fullscreen=yes'); return false;\">"+blastFiles[i]+"</a></td></tr>"
+//    }
+//    return html
+// }
 //
 //
 router.get('/blast_wait', async function blastWait(req, res, next) {
@@ -290,31 +290,34 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
           console.log('req.session.blast.id',req.session.blast.id)
           
           // ONLY READ blasterror IF blastFiles are empty files //
-          console.log('**jsondata**',jsondata)
-          console.log('**data**',data)
-          let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'blasterror.log')
-          fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
-              if(err){
-                  // continue on NO ERROR FILE PRESENT              
-              }else{
-                 // file exists throw error
-                 //console.log('YYYY')
-                 //throw new Error('BLAST Script Error: '+content)
-                 console.log('CONTENT',content.toString().trim())
-                if(content.toString().trim()){  // means there was true error NOT zero length
+          //console.log('**jsondata**',jsondata)
+          //console.log('**data**',data)
+          if(data.length === 0){
+              let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'blasterror.log')
+              fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
+                  if(err){
+                      // continue on NO ERROR FILE PRESENT              
+                  }else{
+                     // file exists throw error
+                     //console.log('YYYY')
+                     //throw new Error('BLAST Script Error: '+content)
+                     console.log('CONTENT',content.toString().trim())
+                    if(content.toString().trim()){  // means there was true error NOT zero length
                 
-                  pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
-                  req.flash('fail', 'BLAST Script Error:: '+ content)
-                  res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
-                  return
-                }
-                 
-              }
-              
-              //////////////
-               // don't delete req.session.blast* yet
-               res.redirect('/blast/blast_results?id=' + req.session.blast.id)
-          }) 
+                      pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
+                      req.flash('fail', 'BLAST Script Error:: '+ content)
+                      res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
+                      return
+                    }
+                  }
+                  //////////////
+                   // don't delete req.session.blast* yet
+                   res.redirect('/blast/blast_results?id=' + req.session.blast.id)
+              })
+          }else{
+            // means data var is not zero length
+            // continue on ::Should be NO ERROR FILE PRESENT -- Or error is only a Warning
+          }
              
       })
       
@@ -353,9 +356,9 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   
   console.log('DB Path (for production):: ',dbPath)
   //let blast_session_ts = Date.now().toString();
-  const randomnum = Math.floor(Math.random() * 90000) + 10000;
-  opts.blastSessionID = Date.now() + '-' + randomnum.toString()
-  
+  //const randomnum = Math.floor(Math.random() * 90000) + 10000;
+  //opts.blastSessionID = Date.now() + '-' + randomnum.toString()
+  opts.blastSessionID = helpers.makeid(20)
   const blastDir = path.join(CFG.PATH_TO_BLAST_FILES, opts.blastSessionID)
   if (!fs.existsSync(blastDir+'/'+'blast_results')){
        fs.mkdirSync(blastDir+'/'+'blast_results', { recursive: true });
