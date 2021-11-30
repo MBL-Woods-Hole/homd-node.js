@@ -71,9 +71,9 @@ router.get('/blast_results', function blastResults(req, res) {
             })
         }
         //////////////////
-        let thisSessionBlast = {}
+        //let thisSessionBlast = {}
         if(Object.prototype.hasOwnProperty.call(req.session, 'blast')){
-            thisSessionBlast = JSON.parse(JSON.stringify(req.session.blast))
+            //thisSessionBlast = JSON.parse(JSON.stringify(req.session.blast))
             console.log('deleteing session blast')
             delete req.session.blast
         }
@@ -101,6 +101,7 @@ router.get('/blast_results', function blastResults(req, res) {
         
         //console.log('blastfiles')
         //console.log(blastFiles)
+        //try:  https://node.homd.info/blast/blast_results?id=1638297207475-44741
         let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
         fs.readFile(configFilePath, function readConfig(err,  configData) {
          if(err){
@@ -113,8 +114,8 @@ router.get('/blast_results', function blastResults(req, res) {
 
                 for(let i=0; i<blastFiles.length; i++){
                   console.log(blastFiles[i])
-                  console.log('thisSessionBlast',thisSessionBlast)
-                  if(thisSessionBlast.blastFxn === 'genome'){
+                  console.log('config',config)
+                  if(config.blastFxn === 'genome'){
                      data.push(results[i])
                   }else{
                     jsondata = JSON.parse(results[i])
@@ -130,7 +131,7 @@ router.get('/blast_results', function blastResults(req, res) {
                   
                 }
                 let html = ''
-                 if(thisSessionBlast.blastFxn === 'genome'){
+                 if(config.blastFxn === 'genome'){
                      let rowBreak = "<br>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ="
                      html = data.join(rowBreak)
                  }else{
