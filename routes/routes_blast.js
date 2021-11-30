@@ -287,8 +287,10 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
              return
            }
           console.log('req.session.blast.id',req.session.blast.id)
-          let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'blasterror.log')
           
+          // ONLY READ blasterror IF blastFiles are empty files //
+          console.log('**jsondata**',jsondata)
+          let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'blasterror.log')
           fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
               if(err){
                   // continue on NO ERROR FILE PRESENT              
