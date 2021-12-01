@@ -108,77 +108,77 @@ function getPageTitle(page){
     }
     // GENOME
     if(page === 'genome/genome_table'){
-       return 'Page::Genome Table'
+       return 'Page Help::Genome Table'
     }
     if(page === 'genome/genome_version'){
        return 'HOMD Reference Genomes Version History'
     }
     if(page === 'genome/description'){
-       return 'Page::Genome Description'
+       return 'Page Help::Genome Description'
     }
     if(page === 'genome/explorer'){
-       return 'Page::Genome Explorer and Annotations'
+       return 'Page Help::Genome Explorer and Annotations'
     }
     if(page === 'genome/jbrowse'){
-       return 'Page::JBrowse'
+       return 'Page Help::JBrowse'
     }
     // REFSEQ
     if(page === 'refseq/refseq_version'){
        return 'HOMD 16S rRNA Gene Reference Sequence Version History'
     }
     if(page === 'refseq/blastn'){
-       return 'Page:: Refseq BLASTN'
+       return 'Page Help:: Refseq BLASTN'
     }
     if(page === 'refseq/trees'){
-       return 'Page:: Refseq Phylogenetic Trees'
+       return 'Page Help:: Refseq Phylogenetic Trees'
     }
     // TAXON
     if(page === 'taxon/tax_table'){
-       return 'Page::Taxon Table'
+       return 'Page Help::Taxon Table'
     }
-    if(page === 'taxon/Description'){
-       return 'Page::Taxon Description'
+    if(page === 'taxon/description'){
+       return 'Page Help::Taxon Description'
     }
     if(page === 'taxon/ecology'){
-       return 'Page::Ecology and Abundance'
+       return 'Page Help::Ecology and Abundance'
     }
     if(page === 'taxon/hierarchy'){
-       return 'Page::Taxon Dynamic Tree Hierarchy'
+       return 'Page Help::Taxon Dynamic Tree Hierarchy'
     }
     if(page === 'taxon/level'){
-       return 'Page::Taxon by Rank Level Selection'
+       return 'Page Help::Taxon by Rank Level Selection'
     }
     if(page === 'taxon/life'){
-       return "Page::Taxon 'life' Pages"
+       return "Page Help::Taxon 'life' Pages"
     }
     // PHAGE
     if(page === 'phage/phage_table'){
-       return 'Page::Phage Table'
+       return 'Page Help::Phage Table'
     }
     if(page === 'phage/description'){
-       return 'Page::Phage Description'
+       return 'Page Help::Phage Description'
     }
     // BLAST
     if(page === 'blast/blast'){
-       return 'Page::Blast Menu'
+       return 'Page Help::Blast Menu'
     }
     if(page === 'blast/formats'){
-       return 'Page::Blast Formats'
+       return 'Page Help::Blast Formats'
     }
     if(page === 'blast/formats'){
-       return 'Page::Blast Formats'
+       return 'Page Help::Blast Formats'
     }
     if(page === 'blast/databases'){
-       return 'Page::Blast Databases'
+       return 'Page Help::Blast Databases'
     }
     if(page === 'blast/parameters'){
-       return 'Page::Blast Parameters'
+       return 'Page Help::Blast Parameters'
     }
     if(page === 'blast/programs'){
-       return 'Page::Blast Programs'
+       return 'Page Help::Blast Programs'
     }
     if(page === 'blast/advanced'){
-       return 'Page::Blast Advanced Parameters'
+       return 'Page Help::Blast Advanced Parameters'
     }
     
     

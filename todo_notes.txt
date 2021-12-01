@@ -3,8 +3,11 @@ HOMD Notes
 blast tblastn got a warning in blasterror.txt
  with no hits found -- should read blast results BEFORE blasterror.txt
 ADD Note:  to blast wait: **please do not leave page**
+Pull test genome db to home macbook for testing
 Ask George: html (genomic) vs json (refseq) and table
--How to download a html output
+-How to download an html output?
+Where to add schema - download? put a date on it
+Add flag table to db: status,site what others?
 
 2021-11-22
 put a notes section on the taxon desc page and in the db

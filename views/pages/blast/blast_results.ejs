@@ -92,7 +92,7 @@ thead th { position: sticky; top: 0; }
     
     <div class='page-content' >
 
-  <div class='title'><%= blastParams.program %> Results (<%= blastParams.blastFxn %>)</div>
+  <div class='title'><%= blastParams.program.toUpperCase() %> Results (<%= blastParams.blastFxn %>)</div>
     <%- include('../../partials/flash'); %>
     <div id='under-construction'>Page Under Construction</div>	
 <% if(error_obj.code) { %>
@@ -148,13 +148,15 @@ thead th { position: sticky; top: 0; }
       
       </small></center>
     </div>
-    <% }else{ %>
-       genome
     <% } %>
+    
+    
     <div id='blastResultsDiv'>
        <%- html %>
     </div>
     
+    
+    <% if(blastParams.blastFxn === 'refseq') { %>
     <small>
       <div id='blastStats'>
        <table class='table' border='1'>
@@ -173,8 +175,9 @@ thead th { position: sticky; top: 0; }
        </table>
       </div>
     </small>
+    <% } %>  <!-- End: if blastParams.blastFxn === 'refseq' -->
     
-<% } %>  <!--  End: if blastFxn ==refseq -->
+<% } %>  <!--  End: if(error_obj.code) -->
     </div> <!-- end: page-content -->
     
     <div id='footer'>

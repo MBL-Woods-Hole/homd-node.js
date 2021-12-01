@@ -130,6 +130,32 @@ router.get('/blast_results', function blastResults(req, res) {
                   }
                   
                 }
+                
+                console.log('**data**',data)
+                if(data.length === 0){
+                    // error no data
+                    let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, config.id, 'blasterror.log')
+                    fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
+                        if(err){
+                          // continue on NO ERROR FILE PRESENT and no data  WTF?
+                          // throw error 
+                          req.flash('fail', 'BLAST Failed with no data and no error information')
+                            res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
+                            return            
+                        }else{
+                          // file exists throw error
+                          //console.log('YYYY')
+                          //throw new Error('BLAST Script Error: '+content)
+                          console.log('CONTENT',content.toString().trim())
+                          if(content.toString().trim()){  // means there was true error NOT zero length
+                            //pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
+                            req.flash('fail', 'BLAST Script Error:: '+ content)
+                            res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
+                            return
+                          }
+                        }
+                    })
+                }
                 let html = ''
                  if(config.blastFxn === 'genome'){
                      let rowBreak = "<br>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ="
@@ -149,20 +175,7 @@ router.get('/blast_results', function blastResults(req, res) {
                    return res.send(html)
                 }else{
                   renderFxn(req, res, html, blastFiles, config, blastID)
-                  // res.render('pages/blast/blast_results', {
-//                         title: 'HOMD :: Blast Results', 
-//                         pgname: 'blast_results',
-//                         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-//                         hostname: CFG.HOSTNAME,
-//                         //url: CFG.URL,
-//                         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-//                         //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-//                         html: html,
-//                         numseqs: blastFiles.length,
-//                         blastParams: JSON.stringify(config),
-//                         blastID: blastID,
-//                         error: JSON.stringify({})
-//                   })
+                  
                 }
             }) 
         }
@@ -209,7 +222,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     if(req.session.blast.id){
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id)
         //# blasterror.log will always be created
-        //# whereas pythonerror.log will only be present if script error
+        //# whereas pythonerror.log will only be present if pyscript error
         let errorFile = path.join(blastDir,'pythonerror.log')  // 
         if (fs.existsSync(errorFile)) {
             let error = fs.readFileSync(errorFile) 
@@ -256,70 +269,12 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     console.log('finished:t/f?',finished)
     //console.log('session.error',req.session.pyerror)
     if(finished){
-      let data = []
-      async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
-          if(err){  // files not present?
-             req.flash('fail', 'Error reading results (files not present)')
-             res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
-             return
-          }
-          for(let i=0;i<blastFiles.length;i++){
-              try{
-                jsondata = JSON.parse(results[i])
-                //console.log(blastFiles[i])
-                data.push(jsondata.BlastOutput2[0].report.results.search)
-                if(CFG.ENV === 'development'){
-                    //console.log('jsondata[0]', jsondata[0])
-                }
-                if(jsondata === undefined){
-                    console.log('jsondata error for file:',blastFiles[i])
-                }
-                database = path.basename(jsondata.BlastOutput2[0].report.search_target.db)
-              }catch(e){
-                 // files zero length?
-                 //error will appear in blasterror.log
-              }
-          }
-
-        
-          if(!req.session.blast.id){
-             req.flash('fail', 'blastID no longer Valid')
-             res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
-             return
-           }
-          console.log('req.session.blast.id',req.session.blast.id)
-          
-          // ONLY READ blasterror IF blastFiles are empty files //
-          //console.log('**jsondata**',jsondata)
-          //console.log('**data**',data)
-          if(data.length === 0){
-              let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id, 'blasterror.log')
-              fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
-                  if(err){
-                      // continue on NO ERROR FILE PRESENT              
-                  }else{
-                     // file exists throw error
-                     //console.log('YYYY')
-                     //throw new Error('BLAST Script Error: '+content)
-                     console.log('CONTENT',content.toString().trim())
-                    if(content.toString().trim()){  // means there was true error NOT zero length
-                
-                      pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
-                      req.flash('fail', 'BLAST Script Error:: '+ content)
-                      res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
-                      return
-                    }
-                  }
-                  //////////////
-                   // don't delete req.session.blast* yet
-                   res.redirect('/blast/blast_results?id=' + req.session.blast.id)
-              })
-          }else{
-            // means data var is not zero length
-            // continue on ::Should be NO ERROR FILE PRESENT -- Or error is only a Warning
-          }
-             
-      })
+      if(!req.session.blast.id){
+         req.flash('fail', 'blastID no longer Valid')
+         res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
+         return
+       }
+      res.redirect('/blast/blast_results?id=' + req.session.blast.id)
       
     }else{
       console.log('rendering blast_wait')
@@ -626,9 +581,10 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     //console.log(blastOpts)
     let config = {}
     config.site = CFG.SITE  //  local, mbl or homd;; this determines blast db
+    config.id = opts.blastSessionID
     config.blastdbPath = blastOpts.dbPath
-    config.blastdb = blastOpts.blastDb
     config.ext = blastOpts.ext  // used only for genome
+    config.blastdb = blastOpts.blastDb
     config.blastDir = blastDir
     config.dataType = opts.type
     config.expect = blastOpts.expect
@@ -637,6 +593,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     config.maxTargetSeqs = blastOpts.maxTargetSeqs
     config.program = blastOpts.program
     config.programPath = CFG.PATH_TO_BLAST_PROG
+    config.returnTo = opts.returnTo
     let pyScriptPath = path.join(CFG.PATH_TO_SCRIPTS, 'run_blast_no_cluster.py') 
     config.command = pyScriptPath +' -c '+ path.join(blastDir, 'CONFIG.json')
     config.filePath = ''

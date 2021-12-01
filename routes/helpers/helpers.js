@@ -456,6 +456,7 @@ module.exports.readAsync = function readAsync(file, callback) {
 }
 
 module.exports.makeid = function makeid(length) {
+    // Used for blast.id
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
