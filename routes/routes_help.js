@@ -103,24 +103,62 @@ function getPageTitle(page){
     if(page === 'announcement'){
        return 'Announcements'
     }
-    if(page === 'genome/genome_version'){
-       return 'HOMD Reference Genomes Version History'
-    }
-    if(page === 'refseq/refseq_version'){
-       return 'HOMD 16S rRNA Gene Reference Sequence Version History'
-    }
-    if(page === 'database_update'){
+     if(page === 'database_update'){
        return 'HOMD Database Updates'
     }
-    if(page === 'taxon/tax_table'){
-       return 'Page::Taxon Table'
-    }
+    // GENOME
     if(page === 'genome/genome_table'){
        return 'Page::Genome Table'
     }
+    if(page === 'genome/genome_version'){
+       return 'HOMD Reference Genomes Version History'
+    }
+    if(page === 'genome/description'){
+       return 'Page::Genome Description'
+    }
+    if(page === 'genome/explorer'){
+       return 'Page::Genome Explorer and Annotations'
+    }
+    if(page === 'genome/jbrowse'){
+       return 'Page::JBrowse'
+    }
+    // REFSEQ
+    if(page === 'refseq/refseq_version'){
+       return 'HOMD 16S rRNA Gene Reference Sequence Version History'
+    }
+    if(page === 'refseq/blastn'){
+       return 'Page:: Refseq BLASTN'
+    }
+    if(page === 'refseq/trees'){
+       return 'Page:: Refseq Phylogenetic Trees'
+    }
+    // TAXON
+    if(page === 'taxon/tax_table'){
+       return 'Page::Taxon Table'
+    }
+    if(page === 'taxon/Description'){
+       return 'Page::Taxon Description'
+    }
+    if(page === 'taxon/ecology'){
+       return 'Page::Ecology and Abundance'
+    }
+    if(page === 'taxon/hierarchy'){
+       return 'Page::Taxon Dynamic Tree Hierarchy'
+    }
+    if(page === 'taxon/level'){
+       return 'Page::Taxon by Rank Level Selection'
+    }
+    if(page === 'taxon/life'){
+       return "Page::Taxon 'life' Pages"
+    }
+    // PHAGE
     if(page === 'phage/phage_table'){
        return 'Page::Phage Table'
     }
+    if(page === 'phage/description'){
+       return 'Page::Phage Description'
+    }
+    // BLAST
     if(page === 'blast/blast'){
        return 'Page::Blast Menu'
     }
@@ -142,6 +180,8 @@ function getPageTitle(page){
     if(page === 'blast/advanced'){
        return 'Page::Blast Advanced Parameters'
     }
+    
+    
     return page+'-FixmyTitle'
 }
 

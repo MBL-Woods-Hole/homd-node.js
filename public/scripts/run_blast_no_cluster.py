@@ -5,7 +5,7 @@ import argparse
 import datetime
 import json
 import subprocess
-import re
+import re, glob
 
 myusage = """
    to be run from homd-node.js  
@@ -234,6 +234,15 @@ def createBatchBlastFileText(args, filesArray, details_dict):
     
     return fileText
     
+def check_for_db(args, details_dict):
+    dbpath = os.path.join(details_dict['blastdbPath'],details_dict['ext'],details_dict['blastdb'] )
+    print('checking',dbpath)
+    if len(glob.glob(dbpath+'*')) == 0:
+        print('Could not find BLAST database - must exit')
+        sys.exit('Could not find BLAST database: '+dbpath+'*')  
+    
+    
+    
 #   For error testing:
 #sys.exit('ERROR--Test error handling from pyscript') 
   
@@ -250,6 +259,7 @@ else:
    print('Could not find file or text - must exit')
    sys.exit('Could not find file or text - must exit')  
 
+check_for_db(args, details_dict)
 
 outDir = os.path.join(details_dict['blastDir'],'blast_results')
 
