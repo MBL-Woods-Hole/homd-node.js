@@ -185,7 +185,7 @@ router.post('/site_search', (req, res) => {
   // help pages uses grep
   let helpLst = []
   let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
-  const grep_cmd = "/usr/bin/grep -liRw "+help_trunk + " -e '" + searchText + "'" 
+  const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + searchText + "'" 
   //console.log('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
