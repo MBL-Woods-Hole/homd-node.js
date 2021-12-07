@@ -41,7 +41,7 @@ thead th { position: sticky; top: 0; }
         <th scope="col">Genus</th>
         <th scope="col">Species</th>
         <th scope="col">Status</th>
-        <th scope="col" nowrap>Body Site</th>
+       <!--  <th scope="col" nowrap>Body Site</th> -->
         <th scope="col">Ecology Link</th>
         <th scope="col" class="sorttable_nosort" nowrap>Taxon Link</th>
         <th scope="col" class="sorttable_nosort" nowrap>Genome Link</th>
@@ -57,7 +57,7 @@ thead th { position: sticky; top: 0; }
        <td nowrap><i><b><a href='life?rank=genus&name=<%= list[n].genus %>'><%= list[n].genus  %></a></b></i></td>
        <td nowrap><i><b><a href='life?rank=species&name=<%= list[n].genus %> <%= list[n].species %>'><%= list[n].species  %></a></b></i></td>
        <td><%= list[n].status  %></td>
-       <td><%= list[n].sites  %></td>
+     <!--   <td><%= list[n].sites  %></td> -->
        <% if(list[n].ecology === 1){ %>
          <td style='text-align:center' nowrap><a href="ecology/species/<%= list[n].genus %>%20<%= list[n].species %>" class="pill pill-green" >Ecology</a></td>
        <% }else{ %>

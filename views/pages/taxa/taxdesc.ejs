@@ -181,29 +181,36 @@
   </tr>
   <tr>
     <td class='tbl-title'><strong>Status:</strong></td>
-    <% if(data1.status == 'Lost'){ %>
-       <% statusWords = data1.status + ' - Uncultured' %>
-    <% }else if(data1.status == 'Named'){ %>
-       <% statusWords = data1.status + ' - Cultured' %>
-    <% }else if(data1.status == 'Unnamed'){ %>
-       <% statusWords = data1.status + ' - Cultured' %>
-    <% }else if(data1.status == 'Phylotype'){ %>
-       <% statusWords = data1.status + ' - Uncultured' %>
+    <% if(data1.status === 'Lost'){ %>
+       <% statusWords = 'Unnamed - Culture Lost' %>
+    <% }else if(data1.status === 'Named'){ %>
+       <% statusWords = 'Named - Cultured' %>
+    <% }else if(data1.status === 'Unnamed'){ %>
+       <% statusWords = 'Unnamed - Cultured' %>
+    <% }else if(data1.status === 'Phylotype'){ %>
+       <% statusWords = 'Phylotype - Uncultured' %>
     <% }else{ %> <!-- // error -->
        <% statusWords = data1.status %>
     <% } %>
     <td><small><%= statusWords %> </small></td>
   </tr>
   
-  
   <tr>
-    <% if(data1.type_strains.length === 0){ %>
-    <td class='tbl-title'>Reference Strain:</td>
-    <td><small>None, not yet cultivated
-    <% }else{ %>
-    <td class='tbl-title'>Strain Information:</td>
-    <td><small>[<%- data1.type_strains.join('], [') %>]
-    <br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank' rel="noopener noreferrer">Global Catalogue of Microorganisms</a>
+   
+    <% if(data1.status != 'Named') { %>
+        <td class='tbl-title'>Reference Strain:</td>  <!-- Only if status is unnamed? what about lost or phylotype? -->
+        <% if(data1.type_strains.length > 0){ %>
+           [<%- data1.type_strains.join('], [') %>]
+        <% }else{ %>
+           <td><small>None, not yet cultivated
+        <% } %>
+    <% }else{ %>                                     <!--  if status is Named - Cultured also -->
+        <td class='tbl-title'>Type Strain Information:</td>
+        <td><small>
+        <% if(data1.type_strains.length > 0){ %>
+           [<%- data1.type_strains.join('], [') %>]
+        <% } %>
+        <br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank' rel="noopener noreferrer">Global Catalogue of Microorganisms</a>
     <% } %>
         </small></td>
   </tr>
