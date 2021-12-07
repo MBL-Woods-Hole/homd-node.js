@@ -197,28 +197,28 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     console.log(req.session)
     let finished = false, blastFiles = [], faFiles = [], html, jsondata, database, pyerror
     //////
-    const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
-      res.render('pages/genome/explorer', {
-        title: 'HOMD :: ' + gid,
-        pgname: 'blast', // for AbountThisPage 
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        gid: gid,
-        otid: otid,
-        all_annos: JSON.stringify(allAnnosObj),
-        anno_type: annoType,
-        page_data: JSON.stringify(pageData),
-        blast: blast,
-        organism: organism,
-        db_choices: JSON.stringify(dbChoices),
-        blast_prg: JSON.stringify(blastPrograms),
-        blastFxn: 'genome',
-        info_data: JSON.stringify(annoInfoObj),
-        pid_list: JSON.stringify(pidList),
-        returnTo: '/genome/explorer?gid='+gid+'&blast=1'
-      
-      })
-    }
+//     const renderFxn = (req, res, gid, otid, blast, organism, dbChoices,  allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
+//       res.render('pages/genome/explorer', {
+//         title: 'HOMD :: ' + gid,
+//         pgname: 'blast', // for AbountThisPage 
+//         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//         gid: gid,
+//         otid: otid,
+//         all_annos: JSON.stringify(allAnnosObj),
+//         anno_type: annoType,
+//         page_data: JSON.stringify(pageData),
+//         blast: blast,
+//         organism: organism,
+//         db_choices: JSON.stringify(dbChoices),
+//         blast_prg: JSON.stringify(C.blastPrograms),
+//         blastFxn: 'genome',
+//         info_data: JSON.stringify(annoInfoObj),
+//         pid_list: JSON.stringify(pidList),
+//         returnTo: '/genome/explorer?gid='+gid+'&blast=1'
+//       
+//       })
+//    }
     if(req.session.blast.id){
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id)
         //# blasterror.log will always be created
@@ -320,7 +320,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   }
   if(req.file){
       opts.type = 'fileInput'
-      if (req.file.size > 1500000){   // 1 911 016
+      if (req.file.size > C.blast_max_file_size){   // 1 911 016
        req.flash('fail', 'File too large');
        res.redirect(req.body.returnTo);
        return;

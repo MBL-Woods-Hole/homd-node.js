@@ -37,3 +37,7 @@ module.exports.get_annotation_query2 = (gid, anno) => {
   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
   return qSelectAnno
 }
+
+module.exports.get_db_updates_query = () => {
+  return 'SELECT otid, description, reason, date FROM updates order by date'
+}

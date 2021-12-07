@@ -4,6 +4,7 @@ var router   = express.Router();
 const CFG   = require(app_root + '/config/config');
 const C     = require(app_root + '/public/constants');
 const path  = require('path')
+const queries = require(app_root + '/routes/queries')
 const { exec, spawn } = require('child_process');
 
 router.get('/index', function index(req, res) {
@@ -20,15 +21,35 @@ router.get('/index', function index(req, res) {
 router.get('/help-page', function help_page(req, res) {
   //let page = req.params.pagecode
   let page = req.query.pagecode
-  console.log('page',page)
-  res.render('pages/help/helppage', {
+  //console.log('page',page)
+  const renderFxn = (req, res, page, updates) => {
+      //console.log('updates',updates)
+      res.render('pages/help/helppage', {
         title: 'HOMD :: Help Pages',
-        pgname: '', // for AboutThisPage
-        pagecode: page,
-        pagetitle: getPageTitle(page),
-        config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV, rootPath: CFG.PROCESS_DIR}),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    })
+          pgname: '', // for AboutThisPage
+          pagecode: page,
+          pagetitle: getPageTitle(page),
+          db_updates: updates,
+          config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV, rootPath: CFG.PROCESS_DIR}),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      
+      })
+    }
+  
+  if(page === 'database_update'){
+      let q = queries.get_db_updates_query()
+      let rowarray = []
+      TDBConn.query(q, (err, rows) => {
+        //console.log(rows)
+        for(let n in rows){
+           rowarray.push({otid:rows[n].otid,description:rows[n].description,reason:rows[n].reason,date:rows[n].date})
+        }
+        renderFxn(req, res, page, rowarray)
+      })
+  }else{
+  
+    renderFxn(req, res, page, [])
+  }
 })
 router.get('/search', function search(req, res) {
   //let page = req.params.pagecode

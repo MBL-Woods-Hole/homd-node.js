@@ -24,8 +24,23 @@ constants.phyla = [ 'Actinobacteria',
           'WPS-2'
 ]
 
-//constants.available_jbgenomes = ['volvox','tomato','yeast_synteny'];
 
+constants.segata_order = ['BM',"KG",'HP','Throat',"PT","TD","Saliva","SupP","SubP",'Stool']
+constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','Throat','Saliva','SupP','SubP']
+constants.eren_order = ['BM',"KG",'HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
+constants.abundance_names = {
+        'BM':"Buccal Mucosa (BM)",
+      "KG":"Keratinized Gingiva (KG)",
+      'HP':'Hard Palate (HP)',
+      'Throat':"Throat",
+      "PT":"Palatine Tonsils (PT)",
+      "TD":'Tongue Dorsum (TD)',
+      "Saliva":"Saliva",
+      "SupP":"Supra-gingival Plaque (SupP)",
+      "SubP":"Sub-gingival Plaque (SubP)",
+      "Stool":"Stool"
+}   
+   
 constants.tax_status_all =['named','unnamed','phylotype','lost','dropped'];
 constants.tax_status_on =['named','unnamed','phylotype','lost'];
 constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralref'];
@@ -79,7 +94,12 @@ constants.all_phage_cols = [
       {name:'biosample_ncbi', view:'BioSample', width:'col3', order:''},
       {name:'genbank_title_ncbi', view:'Genbank Title', width:'col3', order:''}
   ]
-  
+constants.blast_max_file_size =  1500000
+ // BLASTP  Compares an amino acid query sequence against a protein sequence database
+  // BLASTN  Compares a nucleotide query sequence against a nucleotide sequence database
+  // BLASTX  Compares a nucleotide query sequence translated in all reading frames against a protein sequence database
+  // TBLASTN Compares a protein query sequence against a nucleotide sequence database dynamically translated in all reading frames
+constants.blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN']
 constants.refseq_blastn_db_choices = [
     {name:'eHOMD 16s rRNA RefSeq Version 15.22 (starts at pos 9)',value:'15.22_9',
          filename:'HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta'},

@@ -17,10 +17,8 @@ var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in second
 
 router.get('/tax_table', function tax_table_get(req, res) {
   
-  console.log('in taxtable -get')
+  helpers.print('in taxtable -get')
   helpers.show_session(req)
-  //let myurl = url.parse(req.url, true);
-    //console.log(myurl.query)
   
   let letter = req.query.k
   let annot = req.query.annot
@@ -43,7 +41,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
   }
   if(annot === '1'){
       // grab only the taxa that have genomes
-      console.log('GOT annotations')
+      helpers.print('GOT annotations')
       big_tax_list2 = big_tax_list1.filter(item => item.genomes.length >0)
       //show_filters = 0
       pgtitle = 'List of Human Oral Microbial Taxa (with Annotated Genomes)'
@@ -51,25 +49,23 @@ router.get('/tax_table', function tax_table_get(req, res) {
       count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows with annotated genomes.'
   }else if(annot === '0') {
       // grab only the taxa that have NO genomes
-      console.log('GOT no annotations')
+      helpers.print('GOT no annotations')
       big_tax_list2 = big_tax_list1.filter(item => item.genomes.length == 0)
       //show_filters = 0
       pgtitle = 'List of Human Oral Microbial Taxa (with Annotated Genomes)'
       letter = 'all'
       count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows with no genomes.'
   }else if(letter && letter.match(/[A-Z]{1}/)){   // always caps
-      console.log('GOT a TaxLetter: ',letter)
+      helpers.print(['GOT a TaxLetter: ',letter])
        // COOL.... filter the whole list
     big_tax_list2 = big_tax_list0.filter(item => item.genus.toUpperCase().charAt(0) === letter)
     count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows for genus starting with: "'+letter+'"'
   }else {
     
-    console.log('NO to only annotations or tax letters')
+    helpers.print('NO to only annotations or tax letters')
     //whole list or 
     
     var intiial_status_filter = C.tax_status_on  //['named','unnamed','phylotype','lost']  // no['dropped','nonoralref']
-  
-    //console.log(tax_letter)
     // filter
     big_tax_list1 = big_tax_list0.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) !== -1 )
     var intiial_site_filter = C.tax_sites_on  //['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
@@ -145,10 +141,9 @@ router.get('/tax_table', function tax_table_get(req, res) {
   send_list = big_tax_list2
   
   //var count_text = get_count_text_n_page_form(page)
-  console.log(C.tax_status_on)
+  helpers.print(C.tax_status_on)
   count_txt = count_txt0 + '<br><small>(Total:'+(big_tax_list0.length).toString()+')</small> '
-  console.log('send_list[0]')
-  console.log(send_list[0])
+  helpers.print(['send_list[0]',send_list[0]])
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 
     pgtitle: pgtitle,
@@ -171,10 +166,10 @@ router.get('/tax_table', function tax_table_get(req, res) {
 
 router.post('/tax_table', function tax_table_post(req, res) {
   
-  console.log('in taxtable -post')
+  helpers.print('in taxtable -post')
   let send_tax_obj = {}
   //helpers.show_session(req)
-  console.log(req.body)
+  helpers.print(req.body)
   //plus valid
   //valid = req.body.valid  // WHAT IS THIS???
   let big_tax_list,count_txt, count_txt0, send_list;
@@ -192,8 +187,8 @@ router.post('/tax_table', function tax_table_post(req, res) {
     }
     
   }
-  console.log('statusfilter_on',statusfilter_on)
-  console.log('sitefilter_on',sitefilter_on)
+  helpers.print(['statusfilter_on',statusfilter_on])
+  helpers.print(['sitefilter_on',sitefilter_on])
   // letterfilter
   // if dropped is on need to add dropped to 
   big_tax_list = Object.values(C.taxon_lookup);
@@ -261,7 +256,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
   send_list.sort(function (a, b) {
         return helpers.compareStrings_alpha(a.genus, b.genus);
     })
-  console.log('statusfilter_on',statusfilter_on)
+  helpers.print(['statusfilter_on',statusfilter_on])
   // use session for taxletter
   count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows (status and body site filter).'
   count_txt = count_txt0+'<br><small>(Total:'+(big_tax_list.length).toString()+')</small>'
@@ -302,8 +297,7 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
   let search_field = req.body.field
   var count_txt, count_txt0
   
-  console.log('C.taxon_lookup[389]')
-  console.log(C.taxon_lookup[389])
+  helpers.print(['C.taxon_lookup[389]',C.taxon_lookup[389]])
   // filter: all;otid;genus;species;synonyms;type_strains;(16S rRNA ID)
   //send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
   let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
@@ -449,7 +443,7 @@ router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
   // NO USED!!!
   var oral = req.body.oral
   
-  console.log('oral ',oral)
+  helpers.print(['oral ',oral])
   
   res.send({ok:'ok'})
 
@@ -543,7 +537,7 @@ router.get('/tax_description', function tax_description(req, res){
   data1 = C.taxon_lookup[otid]
   //console.log('dropped',C.dropped_taxids)
   if(C.dropped_taxids.indexOf(otid) !== -1){
-     console.log(data1)
+     helpers.print(data1)
      let message = "That is a dropped TaxonID: "+otid
      res.render('pages/lost_message', {
          title: 'HOMD :: Error',
@@ -572,7 +566,7 @@ router.get('/tax_description', function tax_description(req, res){
   }
   if(C.taxon_lineage_lookup[otid] ){
       data3 = C.taxon_lineage_lookup[otid]
-      console.log(data3)
+      helpers.print(data3)
   }else {
       console.warn('NO taxon_lineage for HMT:',otid,' in C.taxon_lineage_lookup')
       data3 = {}
@@ -628,13 +622,13 @@ router.get('/tax_description', function tax_description(req, res){
 
 
 router.post('/get_refseq', function get_refseq(req, res) {
-  console.log(req.body)
+  helpers.print(req.body)
   var refseq_id = req.body.refid;
 
   
   //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
   let q = queries.get_refseq_query(refseq_id)
-  console.log(q)
+  helpers.print(q)
   TDBConn.query(q, (err, rows) => {
     //console.log(rows)
     let seqstr = rows[0].seq.toString()
@@ -761,7 +755,7 @@ router.get('/life', function life(req, res) {
                  //console.log('childern_ids-2')
                  html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a></span><br>'
                }else {
-                 otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
+                 let otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
                //console.log('otid',otid)
                html += "<span class='blue'>"+space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
                html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Ecology</a></span></span><br>"
@@ -826,7 +820,7 @@ router.get('/ecology_index', function ecology_index(req, res) {
   })
     let phyla = bac_phyla_only.map( x => x.taxon)
     phyla.sort()
-    console.log(phyla)
+    helpers.print(phyla)
     res.render('pages/taxa/ecology_index', {
       title: 'HOMD :: Ecology', 
       pgname: 'taxon/ecology', // for AbountThisPage
@@ -837,7 +831,7 @@ router.get('/ecology_index', function ecology_index(req, res) {
 })
 //
 router.get('/ecology/:level/:name', function ecology(req, res) {
-   console.log('in ecology')
+   helpers.print('in ecology')
    let rank = req.params.level;
    let tax_name = req.params.name;
    let segata_text = '',dewhirst_text='',eren_text='';
@@ -848,24 +842,10 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    let segata_data={},dewhirst_data={},eren_data={};
    let segata_max=0,dewhirst_max=0,eren_max=0;
    let eren_table='',dewhirst_table='',segata_table='';
-   console.log('rank: '+rank+' name: '+tax_name);
+   //console.log('rank: '+rank+' name: '+tax_name);
    // TODO::should be in constants???
-   let abundance_names = {
-        'BM':"Buccal Mucosa (BM)",
-      "KG":"Keratinized Gingiva (KG)",
-      'HP':'Hard Palate (HP)',
-      'Throat':"Throat",
-      "PT":"Palatine Tonsils (PT)",
-      "TD":'Tongue Dorsum (TD)',
-      "Saliva":"Saliva",
-      "SupP":"Supra-gingival Plaque (SupP)",
-      "SubP":"Sub-gingival Plaque (SubP)",
-      "Stool":"Stool"
-    }
-   //let segata_order = ['BM',"KG",'Hp','G1-avg','Th',"PT","TD","Sal",'G2-avg',"SupP","SubP",'G3-avg',"Stool",'G4-avg']
-   let segata_order = ['BM',"KG",'HP','Throat',"PT","TD","Saliva","SupP","SubP",'Stool']
-   let dewhirst_order = ['BM',"KG",'HP','TD','PT','Throat','Saliva','SupP','SubP']
-   let eren_order = ['BM',"KG",'HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
+   
+  
    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
    if(!node){
       //error
@@ -910,8 +890,8 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
 
        let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
-       segata_text = get_abundance_text(segata_max, clone_segata_data, abundance_names, rank, tax_name)
-       segata_table = build_abundance_table('segata',clone_segata_data, segata_order)
+       segata_text = get_abundance_text(segata_max, clone_segata_data, C.abundance_names, rank, tax_name)
+       segata_table = build_abundance_table('segata',clone_segata_data, C.segata_order)
        
        
          }
@@ -920,16 +900,16 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
              //max_obj = dewhirst_data.find(function(o){ return o.avg == dewhirst_max})
-       dewhirst_text = get_abundance_text(dewhirst_max, clone_dewhirst_data, abundance_names, rank, tax_name)
-             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data,dewhirst_order)
+       dewhirst_text = get_abundance_text(dewhirst_max, clone_dewhirst_data, C.abundance_names, rank, tax_name)
+             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.dewhirst_order)
          }
          if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
              eren_max = C.taxon_counts_lookup[lineage_list[0]]['max_eren']
              eren_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren'])
              let clone_eren_data = JSON.parse(JSON.stringify(eren_data)) // clone to avoid difficult errors
              //max_obj = eren_data.find(function(o){ return o.avg == eren_max})
-       eren_text = get_abundance_text(eren_max, clone_eren_data, abundance_names, rank, tax_name)
-       eren_table = build_abundance_table('eren',clone_eren_data,eren_order)
+       eren_text = get_abundance_text(eren_max, clone_eren_data, C.abundance_names, rank, tax_name)
+       eren_table = build_abundance_table('eren', clone_eren_data, C.eren_order)
          }
          
       }
@@ -971,7 +951,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       segata_table: segata_table,
       dewhirst_table: dewhirst_table,
       eren_table: eren_table,
-      segata_order: JSON.stringify(segata_order),
+      segata_order: JSON.stringify(C.segata_order),
       segata: JSON.stringify(segata_data),
       dewhirst: JSON.stringify(dewhirst_data),
       eren: JSON.stringify(eren_data),
@@ -982,7 +962,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
 router.get('/download/:type/:fxn', function download(req, res) {
     let type = req.params.type   // browser, text or excel
     let fxn = req.params.fxn     // hierarchy or level
-    console.log('in download: '+type+'::'+fxn)
+    helpers.print(['in download: '+type+'::'+fxn])
     let file_filter_txt, table_tsv;
    
     let temp_list = Object.values(C.taxon_lookup);
@@ -1033,7 +1013,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
 //router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
 
   
-  console.log('in dld tax-get')
+  console.log('in dld table - taxon')
   //console.log(req.body)
   let send_list = []
   let type = req.params.type
@@ -1047,7 +1027,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
   let temp_list = Object.values(C.taxon_lookup);
   let file_filter_txt = ""
   if(letter && letter.match(/[A-Z]{1}/)){
-      console.log('MATCH Letter: ',letter)
+      helpers.print(['MATCH Letter: ',letter])
       send_list = temp_list.filter(item => item.genus.charAt(0) === letter)
       file_filter_txt = "HOMD.org Taxon Data::Letter Filter Applied (genus with first letter of '"+letter+"')"
   }else if(search_txt !== '0'){
@@ -1057,7 +1037,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
   }else if(statusfilter.length === 0 && sitefilter.length === 0){
     // this is for download default table. on the downloads page
     // you cant get here from the table itself (javascript prevents)
-    console.log('in dwnld filters==[][]')
+    helpers.print('in dwnld filters==[][]')
     send_list = temp_list
   }else {
     // apply site/status filter as last resort
@@ -1441,11 +1421,11 @@ function find_images(rank, otid, tax_name) {
   // for photos NO Spaces = join w/ underscore
   var tname,fname1_prefix,fname2_prefix,fname3_prefix,fname4_prefix
   if(otid){
-      console.log('looking for otid image: HMT'+otid+'(1-4).png')
+      helpers.print('looking for otid image: HMT'+otid+'(1-4).png')
       fname1_prefix = 'HMT/HMT'+otid+'-1' // look for .jpg .jpeg png
-    fname2_prefix = 'HMT/HMT'+otid+'-2' // or '-2.jpeg'
-    fname3_prefix = 'HMT/HMT'+otid+'-3' // or '-3.jpeg'
-    fname4_prefix = 'HMT/HMT'+otid+'-4' // or '-3.jpeg'
+      fname2_prefix = 'HMT/HMT'+otid+'-2' // or '-2.jpeg'
+      fname3_prefix = 'HMT/HMT'+otid+'-3' // or '-3.jpeg'
+      fname4_prefix = 'HMT/HMT'+otid+'-4' // or '-3.jpeg'
   }else {  // rank and not otid
       tname = tax_name.replace(/ /g,'_')  // mostly for species 
       fname1_prefix = rank+'/'+tname+'-1' // look for .jpg .jpeg png
@@ -1568,23 +1548,7 @@ function find_images(rank, otid, tax_name) {
   return send_list
 } 
 //
-// function reorder_for_graphing(segata, segata_order){
-//    //segata_order is a list ['BM,'td'...]
-//    // segata is a list of objects {loci: 'G1-avg', avg: '0', stdev: '0'}
-//    var ret_list = []
-//    for(var n in segata_order){
-//       var item = segata_order[n]
-//       for(var i in segata){
-//           if(segata[i].loci == item){
-//              ret_list.push(segata[i])
-//           }
-//       }
-//    
-//    }
-//    return ret_list
-// 
-// 
-// }
+//
 function get_abundance_text(max, data, names, rank, tax_name){
     let max_obj = data.find(function findData(o) { return o.avg == max})
     

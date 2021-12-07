@@ -27,7 +27,7 @@ router.get('/genome_table', function genomeTable(req, res) {
   let otid = req.query.otid
   let phylum = req.query.phylum
   let count_txt, count_txt0, send_list, gid_obj_list;
-  console.log('otid',otid,'phylum',phylum,'letter',letter)
+  helpers.print(['otid',otid,'phylum',phylum,'letter',letter])
   
   
   var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
@@ -122,7 +122,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
   var countTxt, countTxt0;
   //let seqrch_match = req.body.match
   //let search_sub = req.body.sub
-  console.log(C.genome_lookup['SEQF1003'])
+  helpers.print(C.genome_lookup['SEQF1003'])
   // FIXME
   let bigGeneList = Object.values(C.genome_lookup);
   const sendList = getFilteredGenomeList(bigGeneList, searchTxt, searchField)
@@ -188,7 +188,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
 //
 router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
   console.log('AJAX JBrowse')
-  console.log(req.body)
+  helpers.print(req.body)
   // URL from old HOMD site:
   // ?data=homd/SEQF2029
   //  &tracks=DNA,prokka,ncbi
@@ -203,7 +203,7 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
 //
 router.get('/genome_description', function genomeDescription (req, res) {
   console.log('in genomedescription -get')
-  helpers.accesslog(req, res)
+  
   //let myurl = url.parse(req.url, true);
   const gid = req.query.gid
   let data
@@ -253,14 +253,14 @@ router.get('/genome_description', function genomeDescription (req, res) {
 
 router.post('/get_16s_seq', function get16sSeqPost (req, res) {
   console.log('in get_16s_seq -post')
-  helpers.accesslog(req, res)
-  console.log(req.body)
+  
+  helpers.print(req.body)
   const gid = req.body.seqid
 
   // express deprecated req.param(name): Use req.params, req.body, or req.query
   // See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
   let q = queries.get_16s_rRNA_sequence_query(gid)
-  console.log(q)
+  helpers.print(q)
   let html
   TDBConn.query(q, (err, rows) => {
     if (err) {
@@ -269,13 +269,13 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
     }
     // console.log(rows)
     let seq = (rows[0]['16s_rRNA']).toUpperCase()
-    console.log('seq',seq)
+    helpers.print(['seq',seq])
     if(seq === "&LT;DIV ID=VIETDEVDIVID STYLE=&QUOT;POSITION:RELATIVE;FONT-FAMILY:ARIAL;FONT-SIZE:11PX&QUOT;&GT;&LT;/DIV&GT;"){
         html = 'No Sequence Found'
     }else{
         html = seq.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&quot;/gi, '"').replace(/&amp;gt;/gi, '>').replace(/&amp;lt;/gi, '<')
     }
-    console.log('html',html)
+    helpers.print(['html',html])
     if (html === '') {
        html = 'No Sequence Found'
     }
@@ -286,15 +286,14 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 
 router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   console.log('in get_NN_NA_seq -post')
-  helpers.accesslog(req, res)
-  console.log(req.body)
+  helpers.print(req.body)
   const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   const db = req.body.db.toUpperCase()
   
   let q = 'SELECT ' + fieldName + ' as seq FROM ' + db + '.ORF_seq'
   q += " WHERE PID='" + pid + "'"
-  console.log(q)
+  helpers.print(q)
   
   ADBConn.query(q, (err, rows) => {
     if (err) {
@@ -316,14 +315,13 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
 //
 
 router.get('/explorer', function explorer (req, res) {
-  helpers.accesslog(req, res)
   console.log('in explorer')
   // let myurl = url.parse(req.url, true)
   const gid = req.query.gid
-  console.log('gid', gid)
+  
   let anno = req.query.anno || 'prokka'
   let blast = req.query.blast || 0
-  console.log('gid:', gid,'anno:',anno,'Blast:',blast)
+  helpers.print(['gid:', gid,'anno:',anno,'Blast:',blast])
   // blast == 0 or 1 or all
   // anno == 
   let annoInfoObj = {}
@@ -335,37 +333,42 @@ router.get('/explorer', function explorer (req, res) {
   let organism = 'Unknown', pidList
   //let dbChoices = []
   let otid = 0
-  const blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN']
+  
   // BLASTP  Compares an amino acid query sequence against a protein sequence database
   // BLASTN  Compares a nucleotide query sequence against a nucleotide sequence database
   // BLASTX  Compares a nucleotide query sequence translated in all reading frames against a protein sequence database
   // TBLASTN Compares a protein query sequence against a nucleotide sequence database dynamically translated in all reading frames
 
+  let args = {}
+  //const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
+  const renderFxn = (req, res, args) => {
   
-  const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
+    // args={
+    //   gid, otid, blast, organism, dbChoices, allAnnosObj, annoType, pageData, annoInfoObj, pidList
+    //}
     res.render('pages/genome/explorer', {
-      title: 'HOMD :: ' + gid,
+      title: 'HOMD :: ' + args.gid,
       pgname: 'genome/explorer', // for AbountThisPage 
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-      gid: gid,
-      otid: otid,
-      all_annos: JSON.stringify(allAnnosObj),
-      anno_type: annoType,
-      page_data: JSON.stringify(pageData),
-      blast: blast,
-      organism: organism,
-      db_choices: JSON.stringify(dbChoices),
-      blast_prg: JSON.stringify(blastPrograms),
+      gid: args.gid,
+      otid: args.otid,
+      all_annos: JSON.stringify(args.allAnnosObj),
+      anno_type: args.annoType,
+      page_data: JSON.stringify(args.pageData),
+      blast: args.blast,
+      organism: args.organism,
+      db_choices: JSON.stringify(args.dbChoices),
+      blast_prg: JSON.stringify(C.blastPrograms),
       blastFxn: 'genome',
-      info_data: JSON.stringify(annoInfoObj),
-      pid_list: JSON.stringify(pidList),
-      returnTo: '/genome/explorer?gid='+gid+'&blast=1'
+      info_data: JSON.stringify(args.annoInfoObj),
+      pid_list: JSON.stringify(args.pidList),
+      returnTo: '/genome/explorer?gid='+args.gid+'&blast=1'
       
     })
   }
   
-  // req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno
+  // req, res, gid, otid, blast, organism, dbChoices,  allAnnosObj, anno
   // const tmpObj = Object.keys(C.annotation_lookup) // get prokka organisms [seqid,organism]
   const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
@@ -375,17 +378,18 @@ router.get('/explorer', function explorer (req, res) {
   })
   
   if (!gid || gid.toString() === '0') {
-    //console.log('1')
-    renderFxn(req, res, 0, 0, blast, '', [], [], allAnnosObj, anno, {}, {}, [])
+   
+    args = {gid:0,otid:0,blast:blast,organism:'',dbChoices:[],allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    renderFxn(req, res, args)
     return
   }else {
-      //console.log('2')
       if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
         organism = C.annotation_lookup[gid].prokka.organism
       }else{
-      //console.log('3')
         req.flash('fail', 'Genome not found: "'+gid+'"')
-        renderFxn(req, res, 0, 0, 0, '', [], [], allAnnosObj, '', {}, {}, [])
+        
+        args = {gid:0,otid:0,blast:0,organism:'',dbChoices:[],allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+        renderFxn(req, res, args)
         return
       }
   }
@@ -398,30 +402,27 @@ router.get('/explorer', function explorer (req, res) {
       ]
    
   if(gid === 'all' && blast.toString() === '1') {
-     //console.log('4')
-     renderFxn(req, res, 'all', 0, 1, '', dbChoices, blastPrograms, allAnnosObj, '', {}, {}, [])
-     return
+      
+      args = {gid:gid,otid:0,blast:1,organism:'',dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+      renderFxn(req, res, args)
+      return
   }
   
   if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
         otid = C.genome_lookup[gid].otid
   }
   if(gid && !blast && !anno) {
-     //console.log('5')
-     renderFxn(req, res, gid, 0, 0, organism, [], [], allAnnosObj, '', {}, {}, [])
-     return
+      
+      args = {gid:gid,otid:0,blast:0,organism:organism,dbChoices:[],allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+      renderFxn(req, res, args)
+      return
   }
-  //console.log('one')
-  //dbChoices = [...C.genome_blastn_db_choices]  // clone array DONT use '=
  
-     
-// console.log('organism', organism)
-// console.log('blast', blast)
-// console.log('page_data.page', pageData.page)
-//   console.log('anno_type', annoType)
+
   if (blast && blast.toString() === '1') {
-    //console.log('6')
-    renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno, {}, {}, [])
+    
+    args = {gid:gid,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    renderFxn(req, res, args)
     return
   }
   
@@ -429,32 +430,29 @@ router.get('/explorer', function explorer (req, res) {
   if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
     annoInfoObj = C.annotation_lookup[gid][anno]
   } else {
-  // if (!C.annotation_lookup.hasOwnProperty(gid) || !C.annotation_lookup[gid].hasOwnProperty(anno_type)) {
-    // let message = 'Could not find ' + anno + ' annotation for ' + gid
-    //console.log('7')
     req.flash('fail', 'Could not find: "'+anno+'" annotation for '+gid)
-    renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno, {}, {}, [])
+
+    args = {gid:gid,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    renderFxn(req, res, args)
     return
   }
 
 
   const q = queries.get_annotation_query2(gid, anno)
-  console.log(q)
+  helpers.print(q)
 
   ADBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
-      pidList = []
-      pageData = {}
-      //console.log('8')
-      renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno, pageData, annoInfoObj, pidList)
+
+      args = {gid:gid,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
+      renderFxn(req, res, args)
       return
     } else {
       if (rows.length === 0) {
         console.log('no rows found')
       }
       pageData.trecords = rows.length
-      //console.log('9')
       if (pageData.page) {
         const trows = rows.length
         // console.log('trows',trows)
@@ -462,7 +460,7 @@ router.get('/explorer', function explorer (req, res) {
         pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
         if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
         if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-        //console.log('page_data.number_of_pages', pageData.number_of_pages)
+        helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
         pageData.show_page = pageData.page
         if (pageData.show_page === 1) {
           pidList = rows.slice(0, pageData.row_per_page) // first 200
@@ -473,7 +471,9 @@ router.get('/explorer', function explorer (req, res) {
         }
         //console.log('start count', pageData.start_count)
       }
-      renderFxn(req, res, gid, otid, blast, organism, dbChoices, blastPrograms, allAnnosObj, anno, pageData, annoInfoObj, pidList)
+      
+      args = {gid:gid,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:pageData,annoInfoObj:annoInfoObj,pidList:pidList}
+      renderFxn(req, res, args)
     }
   })
 })
@@ -481,7 +481,7 @@ router.get('/explorer', function explorer (req, res) {
 //
 router.get('/blast_all', function blast_all(req, res) {
    console.log('in blast all')
-   const blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN']
+   
    let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
 
    res.render('pages/genome/blast_all', {
@@ -492,7 +492,7 @@ router.get('/blast_all', function blast_all(req, res) {
         blastFxn: 'genome',
         organism: '',
         gid: 'all',
-        blast_prg: JSON.stringify(blastPrograms),
+        blast_prg: JSON.stringify(C.blastPrograms),
         db_choices: JSON.stringify(dbChoices),
         returnTo: '/genome/blast_all'
       })
@@ -500,7 +500,7 @@ router.get('/blast_all', function blast_all(req, res) {
 })
 router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
     console.log('in changeBlastGenomeDbs AJAX')
-    console.log(req.body)
+    helpers.print(req.body)
     let db = req.body.db
     let gid = req.body.gid
     let organism = '',dbChoices
@@ -541,7 +541,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   // let myurl = url.URL(req.url, true);
   const otid = req.query.otid
   const fullname = helpers.make_otid_display_name(otid)
-  console.log(fullname)
+  helpers.print(fullname)
   fs.readFile('public/trees/conserved_tree.svg', 'utf8', function readSVGFile1 (err, data) {
     if (err) {
       console.log(err)
@@ -583,7 +583,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   // const myurl = url.URL(req.url, true)
   // const myurl = new url.URL(req.url)
   const otid = req.query.otid
-  console.log('otid', otid)
+  helpers.print(['otid', otid])
   fs.readFile('public/trees/16S_rRNA_tree.svg', 'utf8', function readSVGFile3 (err, data) {
     if (err) {
       console.log(err)
@@ -602,7 +602,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //
 router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', function dldTable (req, res) {
   helpers.accesslog(req, res)
-  console.log('in download table')
+  console.log('in download table -genome')
   const type = req.params.type
   const letter = req.params.letter
   const phylum = req.params.phylum
@@ -610,19 +610,16 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
   const searchText = req.params.search_txt
   const searchField = req.params.search_field
 
-  console.log('type', type)
-  console.log('letter', letter)
-  console.log('phylum', phylum)
-  console.log('otid', otid)
+  helpers.print(['type', type,'letter', letter,'phylum', phylum,'otid', otid])
   // Apply filters
   const tempList = Object.values(C.genome_lookup)
   let sendList = []
   let fileFilterText = ''
   if (letter && letter.match(/[A-Z]{1}/)) { // always caps
     console.log('in letter dnld')
-    console.log('MATCH Letter: ', letter)
+    helpers.print(['MATCH Letter: ', letter])
     sendList = tempList.filter(item => item.genus.charAt(0) === letter)
-    console.log(sendList)
+    helpers.print(sendList)
     fileFilterText = "HOMD.org Genome Data::Letter Filter Applied (genus with first letter of '" + letter + "')"
   } else if (otid > 0) {
     console.log('in otid dnld')
@@ -632,19 +629,19 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
       sendList.push(C.genome_lookup[gidList[n]])
     }
     fileFilterText = 'HOMD.org Genome Data::Oral TaxonID: HMT-' + ('000' + otid).slice(-3)
-  } else if (phylum !== 0) {
+  } else if (phylum !== 0 && phylum !== '0') {
     console.log('in phylum dnld')
     const lineageList = Object.values(C.taxon_lineage_lookup)
     const objList = lineageList.filter(item => item.phylum === phylum) // filter for phylum
-    console.log(objList)
+    
     const otidList = objList.map((el) => { // get list of otids with this phylum
       return el.otid
     })
-    console.log('otid_list', otidList)
+    helpers.print(['otid_list', otidList])
     sendList = tempList.filter(item => { // filter genome obj list for inclusion in otid list
       return otidList.indexOf(item.otid) !== -1
     })
-    console.log('cksend_list', sendList)
+    helpers.print(['cksend_list', sendList])
     fileFilterText = 'HOMD.org Genome Data::Phylum: ' + phylum
   } else if (searchText !== '0') {
     const bigGeneList = Object.values(C.genome_lookup)
@@ -659,7 +656,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
   const listOfGids = sendList.map(item => item.gid)
   fileFilterText = fileFilterText + ' Date: ' + today
 
-  console.log('listOfGids', listOfGids)
+  helpers.print(['listOfGids', listOfGids])
   // type = browser, text or excel
   const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
   if (type === 'browser') {

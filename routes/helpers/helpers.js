@@ -454,7 +454,7 @@ module.exports.readAsync = function readAsync(file, callback) {
     
     fs.readFile(file, callback);
 }
-
+//
 module.exports.makeid = function makeid(length) {
     // Used for blast.id
     var result           = '';
@@ -464,4 +464,14 @@ module.exports.makeid = function makeid(length) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+//
+module.exports.print = function print(thing) {
+    // console.log only if development
+    // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
+    let date = new Date().toISOString()
+    if(CFG.ENV != 'production') {
+        console.log('\x1b[31m%s\x1b[0m',date, thing)  
+    }
+    
 }
