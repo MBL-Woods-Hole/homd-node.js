@@ -198,18 +198,21 @@
   </tr>
   
   <tr>
-   
+     <td class='tbl-title'> Type/Strain Information:</td>
     <% if(data1.status === 'Named') { %>
         <!-- USE type strains -->
-        <td class='tbl-title'> Strain Information:</td>
+       
         <td><small>
         <% if(data1.type_strains.length > 0){ %>
            <%- data1.type_strains.join(', ') %>
         <% } %>
+        
+        <br>[Check <a href='https://lpsn.dsmz.de/species/<%= data1.genus %>-<%= data1.species %>' target='_blank' rel="noopener noreferrer">LPSN.dsmz.de</a>]
+    
         <br>[Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank' rel="noopener noreferrer">Global Catalogue of Microorganisms</a>]
+    
     <% }else{ %>                                     <!--  if status is Named - Cultured also -->
         <!-- Use Reference Strains -->
-        <td class='tbl-title'>Reference Strain:</td>  <!-- Only if status is unnamed? what about lost or phylotype? -->
         <td><small>
         <% if(data1.ref_strains.length > 0){ %>
            <%- data1.ref_strains.join(', ') %>
