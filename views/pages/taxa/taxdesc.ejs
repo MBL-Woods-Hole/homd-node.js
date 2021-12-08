@@ -189,6 +189,8 @@
        <% statusWords = 'Unnamed - Cultured' %>
     <% }else if(data1.status === 'Phylotype'){ %>
        <% statusWords = 'Phylotype - Uncultured' %>
+    <% }else if(data1.status === 'NonOralRef'){ %>
+       <% statusWords = 'NonOral Reference Taxon' %>
     <% }else{ %> <!-- // error -->
        <% statusWords = data1.status %>
     <% } %>
@@ -197,20 +199,23 @@
   
   <tr>
    
-    <% if(data1.status != 'Named') { %>
-        <td class='tbl-title'>Reference Strain:</td>  <!-- Only if status is unnamed? what about lost or phylotype? -->
-        <% if(data1.type_strains.length > 0){ %>
-           [<%- data1.type_strains.join('], [') %>]
-        <% }else{ %>
-           <td><small>None, not yet cultivated
-        <% } %>
-    <% }else{ %>                                     <!--  if status is Named - Cultured also -->
-        <td class='tbl-title'>Type Strain Information:</td>
+    <% if(data1.status === 'Named') { %>
+        <!-- USE type strains -->
+        <td class='tbl-title'> Strain Information:</td>
         <td><small>
         <% if(data1.type_strains.length > 0){ %>
-           [<%- data1.type_strains.join('], [') %>]
+           <%- data1.type_strains.join(', ') %>
         <% } %>
-        <br>Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank' rel="noopener noreferrer">Global Catalogue of Microorganisms</a>
+        <br>[Check <a href='http://gcm.wdcm.org/speciesPage.jsp?strain_name=<%= data1.genus %>+<%= data1.species %>' target='_blank' rel="noopener noreferrer">Global Catalogue of Microorganisms</a>]
+    <% }else{ %>                                     <!--  if status is Named - Cultured also -->
+        <!-- Use Reference Strains -->
+        <td class='tbl-title'>Reference Strain:</td>  <!-- Only if status is unnamed? what about lost or phylotype? -->
+        <td><small>
+        <% if(data1.ref_strains.length > 0){ %>
+           <%- data1.ref_strains.join(', ') %>
+        <% }else{ %>
+           None, not yet cultivated
+        <% } %>
     <% } %>
         </small></td>
   </tr>

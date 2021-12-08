@@ -60,7 +60,7 @@ router.get('/oralgen', (req, res) => {
 
 router.post('/site_search', (req, res) => {
   helpers.accesslog(req, res)
-  console.log('in POST -Search')
+  console.log('in index.js POST -Search')
   console.log(req.body)
   /*
     Taxonomy DB - genus;species
@@ -92,8 +92,10 @@ router.post('/site_search', (req, res) => {
       }
     }
   })
+  console.log(gidObjList[0])
+  const gidLst = gidObjList.map(e => ({gid:e.gid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
 
-  const gidLst = gidObjList.map(e => e.gid)
+
 
   // OTID Metadata
   const allOtidObjList = Object.values(C.taxon_lookup)
@@ -111,8 +113,9 @@ router.post('/site_search', (req, res) => {
       }
     }
   })
+  const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
 
-  const otidLst = otidObjList.map(e => e.otid)
+
 
   // lets search the taxonomy names
   // Bacterial Taxonomy Names

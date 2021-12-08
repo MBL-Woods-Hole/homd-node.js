@@ -23,17 +23,17 @@
       
     </ul>
   </li>
-  
-  <li><div class='main-topic'>Phage <font color="#3399FF">&#5121;</font></div>
-    <ul>
-      <!-- <li><a href="/phage">Phage Home</a></li> -->
-      <li><a href="/phage/phage_table">Phage Table</a></li>
-      <li><a href="/help/help-page?pagecode=phage">Phage Help Pages</a></li>
-      <li><a href="/download#phage">Download Phage Data</a></li>
-      <li><a href='/phage/search_questions'>Phage Search Questions</a></li>
-    </ul>
-  </li> 
-  
+  <% if(cfg.ENV === 'development'){ %>
+    <li><div class='main-topic'>Phage <font color="#3399FF">&#5121;</font></div>
+      <ul>
+        <!-- <li><a href="/phage">Phage Home</a></li> -->
+        <li><a href="/phage/phage_table">Phage Table</a></li>
+        <li><a href="/help/help-page?pagecode=phage">Phage Help Pages</a></li>
+        <li><a href="/download#phage">Download Phage Data</a></li>
+        <li><a href='/phage/search_questions'>Phage Search Questions</a></li>
+      </ul>
+    </li> 
+  <% } %>
 
   <li><div class='main-topic'>Genomic <font color="#3399FF">&#5121;</font></div>
     <ul>

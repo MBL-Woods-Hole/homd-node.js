@@ -1,17 +1,20 @@
 HOMD Notes
 12-07-21
---- #666 - Corynebacteria Matruchochi -- what is Reference Strain (None, not yet cultivated) for Jessica
+DONE #666 - Corynebacteria Matruchochi -- what is Reference Strain (None, not yet cultivated) for Jessica
      ans - It is type strain
      if status ==named then has 
---- in Search Result:: put genus species where HMT and SEQF are showing (maybe phage too)
---- Download Abundance data- how & where?
-otid::2  phylotype
-      1 Named
+     otid::2  phylotype
+      1,389 Named  use type strain (see 14)
      20 unnamed
      11 lost
-!!     269 Lost [] yet old site has ref strain:  Smibert D15A-4   IMPORTANT not in my db!
+     !!     269 Lost [] yet old site has ref strain:  Smibert D15A-4   IMPORTANT not in my db!
+---------------------------------     
+DONE in Search Result:: put genus species where HMT and SEQF are showing (maybe phage too)
+--- Download Abundance data - how & where?
+
 Meeting:
-Hide "site" for time being
+DONE Hide "site" for time being
+DONE: Hide all phage pages
 Plan for abundance table in DB
 Create abundance Table with dewhirst and eren sum up ranks for all abund data => python script
 Abundance graph: remove Groups; text to be domain only?? ask jess

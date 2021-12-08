@@ -258,7 +258,9 @@ router.post('/tax_table', function tax_table_post(req, res) {
     })
   helpers.print(['statusfilter_on',statusfilter_on])
   // use session for taxletter
-  count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows (status and body site filter).'
+  //count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows (status and body site filter).'
+  count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows (status filter).'
+  
   count_txt = count_txt0+'<br><small>(Total:'+(big_tax_list.length).toString()+')</small>'
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 
@@ -535,7 +537,7 @@ router.get('/tax_description', function tax_description(req, res){
   13 Ref Data: General,Citations,Pheno,Cultivability,Pevalence...
   */
   data1 = C.taxon_lookup[otid]
-  //console.log('dropped',C.dropped_taxids)
+  helpers.print(['data1',data1])
   if(C.dropped_taxids.indexOf(otid) !== -1){
      helpers.print(data1)
      let message = "That is a dropped TaxonID: "+otid
