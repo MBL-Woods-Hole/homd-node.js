@@ -9,7 +9,7 @@ import json
 #from json import JSONEncoder
 import argparse
 import csv
-#from connect import MyConnection
+from connect import MyConnection
 import datetime
 ranks = ['domain','phylum','klass','order','family','genus','species']
 today = str(datetime.date.today())
@@ -170,12 +170,12 @@ def run_abundance_csv():
                         
                         if header_row[i] in segata_headers and row[i]:
                             #print(header_row[i],row[i],row[i+1])
-                            collector[taxon_string]['segata'][header_row[i]]={'site':header_row[i], 'avg':row[i],'stdev':row[i+1]} # for segata
+                            collector[taxon_string]['segata'][header_row[i]]={'site':header_row[i], 'avg':row[i],'sd':row[i+1]} # for segata
                     
                     elif i>=start_dewhirst_index and i < start_dewhirst_index + dewhirst_col_count:
                         if header_row[i] in dewhirst_headers and row[i]:
                             #print(header_row[i],row[i],row[i+1])
-                            collector[taxon_string]['dewhirst'][header_row[i]]={'site':header_row[i], 'avg':row[i],'stdev':row[i+1],'prev':row[i+2]} # for segata
+                            collector[taxon_string]['dewhirst'][header_row[i]]={'site':header_row[i], 'avg':row[i],'sd':row[i+1],'prev':row[i+2]} # for segata
                     
                     elif i>=start_eren_index and i < start_eren_index + eren_col_count:
                         if header_row[i] in eren_headers and row[i]:
@@ -224,6 +224,86 @@ def run_abundance_csv():
     filename = args.outfile
     print_dict(filename, collector)
     
+def run_abundance_db(): 
+    collector = {}
+    json_file = args.outfile
+    if os.path.isfile(json_file):
+        f = open(json_file)
+        collector = json.load(f)
+    q = "SELECT * from abundance"
+    result = myconn_new.execute_fetch_select_dict(q)
+    """
+    {'abundance_id': 1148, 'reference': 'Dewhirst35x9', 'otid': '362', 'taxonomy': 'Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;Fretibacterium;sp. HMT 362', 'level': 'Species', 'max_any_site': '0.02095498', 'BM_mean': '0.002', 'BM_prev': '12.5', 'BM_sd': '0.007', 'KG_mean': '0', 'KG_prev': '5.9', 'KG_sd': '0.001', 'HP_mean': '0', 'HP_prev': '7.7', 'HP_sd': '0.001', 'TD_mean': '0', 'TD_prev': '3.1', 'TD_sd': '0.001', 'PT_mean': '0.006', 'PT_prev': '6.9', 'PT_sd': '0.03', 'Throat_mean': '0', 'Throat_prev': '3.2', 'Throat_sd': '0', 'Saliva_mean': '0', 'Saliva_prev': '6.1', 'Saliva_sd': '0.001', 'SupP_mean': '0', 'SupP_prev': '5.7', 'SupP_sd': '0.001', 'SubP_mean': '0.021', 'SubP_prev': '9.7', 'SubP_sd': '0.1', 'Stool_mean': '', 'Stool_prev': '', 'Stool_sd': ''}
+    """
+    header_suffixes = ['sd','prev','mean']
+    header_prefixes = ['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
+    
+    for row in result:
+        #print(row)
+        max_segata, max_eren, max_dewhirst = 0,0,0
+        taxon_string = row['taxonomy']
+        tax_parts = taxon_string.split(';')
+        if len(tax_parts) == 7:
+            taxon_string = ';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+tax_parts[6]
+            if 'clade' in tax_parts[6] or 'subsp' in tax_parts[6]:
+                if tax_parts[6] in subspecies:
+                    taxon_string =';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+subspecies[tax_parts[6]][0]+';'+subspecies[tax_parts[6]][1]
+        if taxon_string not in collector:
+            print('!!!missing from HOMD collector:!!! ',taxon_string)
+            collector[taxon_string] = {}
+        collector[taxon_string]['otid'] = row['otid']
+        collector[taxon_string]['max_all'] = row['max_any_site']
+        
+        if 'segata' not in collector[taxon_string]:
+            collector[taxon_string]['segata'] = {}
+        if 'eren' not in collector[taxon_string]:
+            collector[taxon_string]['eren'] = {}
+        if 'dewhirst' not in collector[taxon_string]:
+            collector[taxon_string]['dewhirst'] = {}
+        
+        if row['reference'].startswith('Segata'):
+            for p in header_prefixes:
+                max_segata = get_max(row, p, max_segata)
+                collector[taxon_string]['segata'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+            collector[taxon_string]['max_segata'] = max_segata
+        elif row['reference'].startswith('Eren'):
+            for p in header_prefixes:
+                max_eren = get_max(row, p, max_eren)
+                collector[taxon_string]['eren'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+            collector[taxon_string]['max_eren'] = max_eren
+        elif row['reference'].startswith('Dewhirst'):
+            for p in header_prefixes:
+                max_dewhirst = get_max(row, p, max_dewhirst)
+                collector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+            collector[taxon_string]['max_dewhirst'] = max_dewhirst
+        
+    #print(collector)
+    #for s in collector:
+    #    print('max_eren-s',s,collector[s])
+    filename = args.outfile
+    print_dict(filename, collector)
+    
+"""
+if species: species == genus+species
+Bacteria;Firmicutes;Bacilli;Lactobacillales;Aerococcaceae;Abiotrophia;Abiotrophia defectiva": {"tax_cnt": 1, "gcnt": 1, "refcnt": 1, 
+"segata": {}, 
+"eren": {"BM": {"site": "BM", "avg": "0.274", "prev": "61.039"}, "KG": {"site": "KG", "avg": "0.163", "prev": "32.468"}, "HP": {"site": "HP", "avg": "0.13", "prev": "53.247"}, "TD": {"site": "TD", "avg": "0.013", "prev": "20.779"}, "PT": {"site": "PT", "avg": "0.026", "prev": "31.169"}, "Throat": {"site": "Throat", "avg": "0.038", "prev": "24.675"}, "Saliva": {"site": "Saliva", "avg": "0.174", "prev": "42.857"}, "SupP": {"site": "SupP", "avg": "0.484", "prev": "75.325"}, "SubP": {"site": "SubP", "avg": "0.489", "prev": "63.636"}, "Stool": {"site": "Stool", "avg": "0", "prev": "1.299"}}, 
+"dewhirst": {"BM": {"site": "BM", "avg": "0.192", "stdev": "0.343", "prev": "75"}, "KG": {"site": "KG", "avg": "0.081", "stdev": "0.14", "prev": "61.8"}, "HP": {"site": "HP", "avg": "0.138", "stdev": "0.289", "prev": "76.9"}, "TD": {"site": "TD", "avg": "0.006", "stdev": "0.008", "prev": "56.3"}, "PT": {"site": "PT", "avg": "0.017", "stdev": "0.037", "prev": "62.1"}, "Throat": {"site": "Throat", "avg": "0.019", "stdev": "0.039", "prev": "61.3"}, "Saliva": {"site": "Saliva", "avg": "0.083", "stdev": "0.168", "prev": "79.6"}, "SupP": {"site": "SupP", "avg": "0.244", "stdev": "0.415", "prev": "71.4"}, "SubP": {"site": "SubP", "avg": "0.099", "stdev": "0.224", "prev": "56.9"}}, 
+"max_segata": "", "max_eren": "0.489", "max_dewhirst": "0.244", "max_all": "0.489017644", "otid": "389"}
+"""
+def get_max(row, p, max_ref):
+    test = row[p+'_mean']
+    #print(max_ref)
+    if not test:
+        test = 0.0
+    if not max_ref:
+        max_ref = 0.0
+    if float(test) > float(max_ref):
+        max_ref = float(test)
+    if max_ref == 0:
+        return ''
+    return max_ref
+    
 def print_dict(filename, dict):
     print('Re-Writing',filename)
     with open(filename, 'w') as outfile:
@@ -239,7 +319,9 @@ if __name__ == "__main__":
         ./Initialize_Abundance.py -i HOMDtaxa-abundance-2021-09-06-cleaned.csv
         
         TODO add abundance data to database
-        
+        2021-12-09 Note: Abundance data has been put in database table: 'abundance'
+           using ./6_load_abundance2db.py and 3 abund files
+        this will be re-written to pull data from db rather than file
         
         OLD:
         Run 3 times (once for each abundance.csv file
@@ -251,7 +333,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="." ,usage=usage)
 
-    parser.add_argument("-i", "--infile",   required=True,  action="store",   dest = "infile", default='none',
+    parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
                                                     help=" ")
 #    parser.add_argument("-s", "--source",   required=True,  action="store",   dest = "source", 
 #                                                    help="ONLY segata dewhirst eren")
@@ -270,6 +352,15 @@ if __name__ == "__main__":
     parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", default=False,
                                                     help="verbose print()") 
     args = parser.parse_args()
+    args.source = 'file'
+    if args.infile == 'none':
+        ans = input('take data from db? (N/y) ').lower()
+        if ans == 'y':
+            args.source = 'db'
+        else:
+            args.source = 'file'
+            if args.infile == 'none':
+                sys.exit('Please enter file name on command line:\n\n'+usage)
     
     #parser.print_help(usage)
     if not os.path.exists(args.outdir):
@@ -300,7 +391,10 @@ if __name__ == "__main__":
 #         sys.exit('no valid source')
 #     if args.source.lower() not in args.infile.lower():
 #         sys.exit('file/source mismatch')
-    
-    run_abundance_csv()
+    if args.source == 'file':
+        run_abundance_csv()
+    else:
+        myconn_new = MyConnection(host=dbhost_new, db=args.NEW_DATABASE,  read_default_file = "~/.my.cnf_node")
+        run_abundance_db()
    
     

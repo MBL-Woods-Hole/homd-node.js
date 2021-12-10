@@ -16,7 +16,7 @@ const { exec, spawn } = require('child_process');
 /* GET home page. */
 router.get('/', (req, res) => {
   console.log('req.session')
-  console.log(req.session)
+  helpers.print(req.session)
   console.log('Session ID:',req.session.id)
   res.render('pages/home', {
     title: 'HOMD :: Human Oral Microbiome Database',
@@ -92,7 +92,7 @@ router.post('/site_search', (req, res) => {
       }
     }
   })
-  console.log(gidObjList[0])
+  helpers.print(gidObjList[0])
   const gidLst = gidObjList.map(e => ({gid:e.gid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
 
 
@@ -106,7 +106,7 @@ router.post('/site_search', (req, res) => {
       if (Array.isArray(el[otidkeylist[n]])) {
         // we're missing any arrays
       } else {
-        
+        helpers.print(otidkeylist[n])
         if ( Object.prototype.hasOwnProperty.call(el, otidkeylist[n]) && (el[otidkeylist[n]]).toLowerCase().includes(searchTextLower)) {
           return el.otid
         }
@@ -119,7 +119,7 @@ router.post('/site_search', (req, res) => {
 
   // lets search the taxonomy names
   // Bacterial Taxonomy Names
-  console.log(Object.keys(C.taxon_counts_lookup)[0])
+  helpers.print(Object.keys(C.taxon_counts_lookup)[0])
   const taxonList = Object.values(C.taxon_lineage_lookup).filter(function (e) {
     if (Object.keys(e).length !== 0) {
       // console.log(e)

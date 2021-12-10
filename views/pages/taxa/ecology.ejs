@@ -97,7 +97,7 @@
 <%- include('../../partials/header_html'); %>
 
 <body>
-  	<div id='wrapper'>
+    <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     
@@ -107,66 +107,66 @@
        <% rank_show = rank.charAt(0).toUpperCase() + rank.slice(1) %>
     <% } %>
     <div class='page-content' >
-		
-		
-		<% if(rank=='species') { %> 					
-		   <div class='title'><b><%= rank_show %>:</b> <span class='yellow'><em><%= tax_name %></em></span></div>
-		<% }else{ %>
-	       <div class='title'><b><%= rank_show %>:</b> <span class='yellow'><%= tax_name %></span></div>
-	    <% } %>
-	    
-	    
-		<div id='taxon-page-div'>
-		    
-		    
-		    Full Lineage: <%- lineage %>
-		    <% if(children_lst.length == 0){ %>
-		       <span id='visit-life-page'><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description</a></span>
-		    <% }else{ %>
-		       <span id='visit-life-page'>
-		         <a href='/taxa/ecology_index'>Ecology Home</a>
-		          <br><br>
-		         <a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page</a>
-		       </span>
-		       <br><small>Lower rank member(s): 
-		       <% if(children_lst.length <= 5){ %>
-		           <% for(n in children_lst){ %>
-		             <span >[<%- children_lst[n] %>]</span>
-		           <% } %>
-		         
-		       <% }else{ %>
-				   <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
-			  
-				   <div id='lower-rank-items-div' style='display:none'>
-				   <% cols = 5 %>
-				   <table id='tbl'><tr>
-				   <% for(n in children_lst){ %>
-					 <% if(n % cols == 0){  %><!-- // modulus -->
-					  </tr><tr>
-					 <% } %>
-					 <td><small>[<%- children_lst[n] %>]</small></td>
-				   <% } %>
-				   </tr></table>
-				   </div>
-		      <% } %>  <!-- End of if(children_lst.length -->
-	
-		    <% } %>
-		    
-		    
-		    <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
-		      <br>Genera:
-		      <select class='dropdown' onchange="location = this.value;">
-		      <option value="" disabled selected>Select a genera</option>
-		      <% for(n in genera){ %>
-	            <option value='/taxa/ecology/genus/<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
-	          <% } %>
-		    <% } %>
-		    </select>
-		    </small>
-		    
-		</div>	<!-- end taxon-page-div -->
-	 
-<div id="row">	
+    
+    
+    <% if(rank=='species') { %>           
+       <div class='title'><b><%= rank_show %>:</b> <span class='yellow'><em><%= tax_name %></em></span></div>
+    <% }else{ %>
+         <div class='title'><b><%= rank_show %>:</b> <span class='yellow'><%= tax_name %></span></div>
+      <% } %>
+      
+      
+    <div id='taxon-page-div'>
+        
+        
+        Full Lineage: <%- lineage %>
+        <% if(children_lst.length == 0){ %>
+           <span id='visit-life-page'><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description</a></span>
+        <% }else{ %>
+           <span id='visit-life-page'>
+             <a href='/taxa/ecology_index'>Ecology Home</a>
+              <br><br>
+             <a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page</a>
+           </span>
+           <br><small>Lower rank member(s): 
+           <% if(children_lst.length <= 5){ %>
+               <% for(n in children_lst){ %>
+                 <span >[<%- children_lst[n] %>]</span>
+               <% } %>
+             
+           <% }else{ %>
+           <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
+        
+           <div id='lower-rank-items-div' style='display:none'>
+           <% cols = 5 %>
+           <table id='tbl'><tr>
+           <% for(n in children_lst){ %>
+           <% if(n % cols == 0){  %><!-- // modulus -->
+            </tr><tr>
+           <% } %>
+           <td><small>[<%- children_lst[n] %>]</small></td>
+           <% } %>
+           </tr></table>
+           </div>
+          <% } %>  <!-- End of if(children_lst.length -->
+  
+        <% } %>
+        
+        
+        <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
+          <br>Genera:
+          <select class='dropdown' onchange="location = this.value;">
+          <option value="" disabled selected>Select a genera</option>
+          <% for(n in genera){ %>
+              <option value='/taxa/ecology/genus/<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
+            <% } %>
+        <% } %>
+        </select>
+        </small>
+        
+    </div>  <!-- end taxon-page-div -->
+   
+<div id="row">  
 <% if(Object.keys(segata_data).length == 0){ %>
    <% width='15%' %>
 <% }else{ %>
@@ -192,22 +192,22 @@
 </div>
 </div>
 <div id='column_two' style='width:<%= width %>' >
-		
-		
-	  <div class='plot_div'>
-		<small>
-		From: <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
-				Segata et al.(2012)</a>
-		<br><%- segata_text %>
-		
-		</small>
-		<div id="plot_segata_here"></div> 
-	  </div>
-	  <% if(Object.keys(segata_data).length !== 0){ %>
-		  <div class='abund-table-div'><%- segata_table %></div>	
-	  <% } %>
-	      
-	    
+    
+    
+    <div class='plot_div'>
+    <small>
+    From: <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
+        Segata et al.(2012)</a>
+    <!-- <br><%- segata_text %> -->
+    
+    </small>
+    <div id="plot_segata_here"></div> 
+    </div>
+    <% if(Object.keys(segata_data).length !== 0){ %>
+      <div class='abund-table-div'><%- segata_table %></div>  
+    <% } %>
+        
+      
 </div>    <!--  end col-left1-->
 <% if(Object.keys(dewhirst_data).length === 0){ %>
    <% width='15%' %>
@@ -215,15 +215,16 @@
    <% width='auto' %>
 <% } %>
 <div id="column_three"  style='width:<%= width %>'>
-	  <div class='plot_div'>
-		<small>
+    <div class='plot_div'>
+    <small>
       From: Dewhirst 35x9 data<br><small>(not published yet)</small>
-		<br><%- dewhirst_text %></small>
-		<div id="plot_dewhirst_here"></div> 
-	  </div>
-	  <% if(Object.keys(dewhirst_data).length !== 0){ %>
-	      <div class='abund-table-div'><%- dewhirst_table %></div>
-	  <% } %>
+    <!-- <br><%- dewhirst_text %> -->
+    </small>
+    <div id="plot_dewhirst_here"></div> 
+    </div>
+    <% if(Object.keys(dewhirst_data).length !== 0){ %>
+        <div class='abund-table-div'><%- dewhirst_table %></div>
+    <% } %>
 </div>
 <% if(Object.keys(eren_data).length === 0){ %>
    <% width='15%' %>
@@ -234,17 +235,17 @@
       <div class='plot_div'>
       <small>
       From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
-				Eren et al.(2014)</a>
-		<br>
-		<%- eren_text %></small>
-		<div id="plot_eren_here"></div> 
-	  </div>
-	  <% if(Object.keys(eren_data).length !== 0){ %>
-	      <div class='abund-table-div'><%- eren_table %></div>
-	  <% } %>	    
+        Eren et al.(2014)</a>
+    <!-- <br><%- eren_text %> -->
+    </small>
+    <div id="plot_eren_here"></div> 
+    </div>
+    <% if(Object.keys(eren_data).length !== 0){ %>
+        <div class='abund-table-div'><%- eren_table %></div>
+    <% } %>     
 </div> <!-- end col right -->
-	
-	
+  
+  
 </div>  <!-- end row1 -->
 
 
@@ -271,63 +272,67 @@
   edata = JSON.parse('<%- eren %>')
   // set the dimensions and margins of the graph
   var margin = {top: 30, right: 30, bottom: 70, left: 30},
-			width = 350 - margin.left - margin.right,
-			height = 300 - margin.top - margin.bottom;
+      width = 350 - margin.left - margin.right,
+      height = 300 - margin.top - margin.bottom;
   //
   // Dewhirst
   //
   //
   //
+  console.log('s',max.segata)
+  console.log('d',max.dewhirst)
+  console.log('e',max.eren)
+  
   if(Object.keys(ddata).length == 0){
      document.getElementById("plot_dewhirst_here").innerHTML = '<small>No Data</small>'
   }else{
       console.log(ddata)
-	  //max = max([item.avg for item in data])
-	  //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
-	  max_ceil = Math.ceil(max.dewhirst)
-	  console.log(max.dewhirst)
-	  
+    //max = max([item.avg for item in data])
+    //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
+    max_ceil = Math.ceil(max.dewhirst)
+    console.log(max.dewhirst)
+    
 
-		// append the svg object to the body of the page
-		var svg = d3.select("#plot_dewhirst_here")
-		  .append("svg")
-			.attr("width", width + margin.left + margin.right)
-			.attr("height", height + margin.top + margin.bottom)
-		  .append("g")
-			.attr("transform",
-				  "translate(" + margin.left + "," + margin.top + ")");
-	
-	// X axis
-	var x = d3.scaleBand()
-	  .range([ 0, width ])
-	  .domain(ddata.map(function(d) { return d.site; }))
-	  .padding(0.2);
-	svg.append("g")
-	  .attr("transform", "translate(0," + height + ")")
-	  .call(d3.axisBottom(x))
-	  .selectAll("text")
-		.attr("transform", "translate(-10,0)rotate(-45)")
-		.style("text-anchor", "end");
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_dewhirst_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+  // X axis
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(ddata.map(function(d) { return d.site; }))
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
 
-	// Add Y axis
-	var y = d3.scaleLinear()
-	  .domain([0, max_ceil])
-	  .range([ height, 0]);
-	svg.append("g")
-	  .call(d3.axisLeft(y));
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, max_ceil])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
     
     // Bars
     var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-	//var colors = d3.scaleOrdinal().domain(ddata).range(d3.schemeSet2);
-	svg.selectAll("mybar")
-	  .data(ddata)
-	  .enter()
-	  .append("rect")
-		.attr("x", function(d) { return x(d.site); })
-		.attr("y", function(d) { return y(d.avg); })
-		.attr("width", x.bandwidth())
-		.attr("height", function(d) { return height - y(d.avg); })
-		.attr("fill", function(ddata, i) {
+  //var colors = d3.scaleOrdinal().domain(ddata).range(d3.schemeSet2);
+  svg.selectAll("mybar")
+    .data(ddata)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(ddata, i) {
               return colors(i);
              });
   }
@@ -338,55 +343,55 @@
   if(Object.keys(edata).length == 0){
      document.getElementById("plot_eren_here").innerHTML = '<small>No Data</small>'
   }else{
-     console.log(edata)
-	  //max = max([item.avg for item in data])
-	  //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
-	  max_ceil = Math.ceil(max.eren)
-	  console.log(max.eren)
-	  
-	  
-	  
+    //console.log(edata)
+    //max = max([item.avg for item in data])
+    //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
+    max_ceil = Math.ceil(max.eren)
+    //console.log(max.eren)
+    
+    
+    
 
-		// append the svg object to the body of the page
-		var svg = d3.select("#plot_eren_here")
-		  .append("svg")
-			.attr("width", width + margin.left + margin.right)
-			.attr("height", height + margin.top + margin.bottom)
-		  .append("g")
-			.attr("transform",
-				  "translate(" + margin.left + "," + margin.top + ")");
-	
-	// X axis
-	var x = d3.scaleBand()
-	  .range([ 0, width ])
-	  .domain(edata.map(function(d) { return d.site; }))
-	  .padding(0.2);
-	svg.append("g")
-	  .attr("transform", "translate(0," + height + ")")
-	  .call(d3.axisBottom(x))
-	  .selectAll("text")
-		.attr("transform", "translate(-10,0)rotate(-45)")
-		.style("text-anchor", "end");
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_eren_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+  // X axis
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(edata.map(function(d) { return d.site; }))
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
 
-	// Add Y axis
-	var y = d3.scaleLinear()
-	  .domain([0, max_ceil])
-	  .range([ height, 0]);
-	svg.append("g")
-	  .call(d3.axisLeft(y));
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, max_ceil])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
     
     // Bars
     var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-	//var colors = d3.scaleOrdinal().domain(edata).range(d3.schemeSet2);
-	svg.selectAll("mybar")
-	  .data(edata)
-	  .enter()
-	  .append("rect")
-		.attr("x", function(d) { return x(d.site); })
-		.attr("y", function(d) { return y(d.avg); })
-		.attr("width", x.bandwidth())
-		.attr("height", function(d) { return height - y(d.avg); })
-		.attr("fill", function(edata, i) {
+  //var colors = d3.scaleOrdinal().domain(edata).range(d3.schemeSet2);
+  svg.selectAll("mybar")
+    .data(edata)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(edata, i) {
               return colors(i);
              });
   }
@@ -395,53 +400,53 @@
   if(Object.keys(sdata).length == 0){
      document.getElementById("plot_segata_here").innerHTML = '<small>No Data</small>'
   }else{
-	  console.log(sdata)
-	  //max = max([item.avg for item in data])
-	  //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
-	  max_ceil = Math.ceil(max.segata)
-	  //max_ceil = 0.01
-	  //console.log(max.segata)
+    //console.log(sdata)
+    //max = max([item.avg for item in data])
+    //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
+    max_ceil = Math.ceil(max.segata)
+    //max_ceil = 0.01
+    //console.log(max.segata)
 
-		// append the svg object to the body of the page
-		var svg = d3.select("#plot_segata_here")
-		  .append("svg")
-			.attr("width", width + margin.left + margin.right)
-			.attr("height", height + margin.top + margin.bottom)
-		  .append("g")
-			.attr("transform",
-				  "translate(" + margin.left + "," + margin.top + ")");
-	
-	// X axis
-	var x = d3.scaleBand()
-	  .range([ 0, width ])
-	  .domain(sdata.map(function(d) { return d.site; }))
-	  .padding(0.2);
-	svg.append("g")
-	  .attr("transform", "translate(0," + height + ")")
-	  .call(d3.axisBottom(x))
-	  .selectAll("text")
-		.attr("transform", "translate(-10,0)rotate(-45)")
-		.style("text-anchor", "end");
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_segata_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+  // X axis
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(sdata.map(function(d) { return d.site; }))
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
 
-	// Add Y axis
-	var y = d3.scaleLinear()
-	  .domain([0, max_ceil])
-	  .range([ height, 0]);
-	svg.append("g")
-	  .call(d3.axisLeft(y));
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, max_ceil])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
     
     // Bars
     var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
-	//var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
-	svg.selectAll("mybar")
-	  .data(sdata)
-	  .enter()
-	  .append("rect")
-		.attr("x", function(d) { return x(d.site); })
-		.attr("y", function(d) { return y(d.avg); })
-		.attr("width", x.bandwidth())
-		.attr("height", function(d) { return height - y(d.avg); })
-		.attr("fill", function(sdata, i) {
+  //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
+  svg.selectAll("mybar")
+    .data(sdata)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(sdata, i) {
               return colors(i);
              });
 } // end else

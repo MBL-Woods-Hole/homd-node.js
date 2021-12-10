@@ -909,6 +909,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              eren_max = C.taxon_counts_lookup[lineage_list[0]]['max_eren']
              eren_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren'])
              let clone_eren_data = JSON.parse(JSON.stringify(eren_data)) // clone to avoid difficult errors
+             helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              //max_obj = eren_data.find(function(o){ return o.avg == eren_max})
        eren_text = get_abundance_text(eren_max, clone_eren_data, C.abundance_names, rank, tax_name)
        eren_table = build_abundance_table('eren', clone_eren_data, C.eren_order)
@@ -1552,8 +1553,9 @@ function find_images(rank, otid, tax_name) {
 //
 //
 function get_abundance_text(max, data, names, rank, tax_name){
-    let max_obj = data.find(function findData(o) { return o.avg == max})
-    
+    helpers.print(['max',max])
+    let max_obj = data.find(function findData(o) { helpers.print(o);return o.avg == max})
+    helpers.print(['max_obj',max_obj])
     /*
     From Jessica Email 8/31/2021
     The scheme for generating the text for HOMD would look something like this:  
@@ -1645,7 +1647,7 @@ function build_abundance_table(cite, data, order){
     if(['segata','dewhirst'].indexOf(cite) != -1){
       html += '<tr><th>Stdev</th>'
       for(var n in data){
-        html += '<td>'+data[n].stdev+'</td>'
+        html += '<td>'+data[n].sd+'</td>'
       }
     }
     // dewhirst, eren

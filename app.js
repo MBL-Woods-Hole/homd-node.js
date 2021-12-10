@@ -243,7 +243,7 @@ async.map(data_init_files, helpers.readAsync, function(err, results) {
    //class
    //Absconditabacteria (SR1) [C-1]
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Burkholderiales_order'])
-    console.log('lineage 701',C.taxon_lineage_lookup[701])
+    helpers.print(['lineage 701',C.taxon_lineage_lookup[701]])
     //console.log('refseq 12',C.refseq_lookup[12])
     //console.log('SEQF1388',C.genome_lookup['SEQF1388'])
     //console.log(C.taxon_counts_lookup['Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Variovorax'])
@@ -260,7 +260,7 @@ async.map(data_init_files, helpers.readAsync, function(err, results) {
           num_zeros += 1
        }
     }
-    console.log("number of genera with parent_id='0': ",num_zeros," :Bad if not zero!")
+    console.log("number of genera with parent_id='0': ",num_zeros," :Should be zero!")
 });
 
 // fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[0]), (err, results) => {
