@@ -86,7 +86,7 @@ router.post('/site_search', (req, res) => {
       if (Array.isArray(el[gidKeyList[n]])) {
         // we're missing any arrays
       } else {
-        if ( Object.prototype.hasOwnProperty.call(el, gidKeyList[n]) && (el[gidKeyList[n]]).toLowerCase().includes(searchTextLower)) {
+        if ( Object.prototype.hasOwnProperty.call(el, gidKeyList[n]) && (el[gidKeyList[n]]).toString().toLowerCase().includes(searchTextLower)) {
           return el.gid
         }
       }
@@ -106,11 +106,13 @@ router.post('/site_search', (req, res) => {
       if (Array.isArray(el[otidkeylist[n]])) {
         // we're missing any arrays
       } else {
-        console.log('otidkeylist[n]',otidkeylist[n])
         
-        if ( Object.prototype.hasOwnProperty.call(el, otidkeylist[n]) && el[otidkeylist[n]].toLowerCase().includes(searchTextLower)) {
+        helpers.print(['el',el])
+        
+        if ( Object.prototype.hasOwnProperty.call(el, otidkeylist[n]) && el[otidkeylist[n]].toString().toLowerCase().includes(searchTextLower)) {
           return el.otid
         }
+       
       }
     }
   })
@@ -176,7 +178,7 @@ router.post('/site_search', (req, res) => {
         // we're missing any arrays
         // return 0
       } else {
-        if ((el[pidKeyList[n]]).toLowerCase().includes(searchTextLower)) {
+        if ((el[pidKeyList[n]]).toString().toLowerCase().includes(searchTextLower)) {
           return el.pid
         }
         // return 0
