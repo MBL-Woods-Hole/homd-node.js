@@ -106,8 +106,9 @@ router.post('/site_search', (req, res) => {
       if (Array.isArray(el[otidkeylist[n]])) {
         // we're missing any arrays
       } else {
-        helpers.print(otidkeylist[n])
-        if ( Object.prototype.hasOwnProperty.call(el, otidkeylist[n]) && (el[otidkeylist[n]]).toLowerCase().includes(searchTextLower)) {
+        console.log('otidkeylist[n]',otidkeylist[n])
+        
+        if ( Object.prototype.hasOwnProperty.call(el, otidkeylist[n]) && el[otidkeylist[n]].toLowerCase().includes(searchTextLower)) {
           return el.otid
         }
       }

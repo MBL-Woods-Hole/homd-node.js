@@ -2,7 +2,7 @@ HOMD Notes
 2021-12-10
 Abundance files changes to match db:
    2021-11-05 :: HMT-191:Changed genus from Propionibacterium to Acidipropionibacterium
-   2021-11-05 :: HMT-701:Changed genus from Actinomyces to Schaalia
+   2021-11-05 :: HMT-701:Changed genus from Actinomyces to Schaalia  *partial which species
 
 12-07-21
 DONE #666 - Corynebacteria Matruchochi -- what is Reference Strain (None, not yet cultivated) for Jessica
