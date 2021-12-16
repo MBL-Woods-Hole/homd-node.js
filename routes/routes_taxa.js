@@ -1278,7 +1278,7 @@ function get_counts(lineage){
 function create_table(otids, source, type, head_txt) {
     // source == table, hirearchy or level
     let txt = head_txt+'\n'
-    let headers,lineage,old_lineage,otid_pretty
+    let headers,lineage,old_lineage,otid_pretty,rank,cnts
     if(source === 'table'){
         let obj1 = C.taxon_lookup
         let obj2 = C.taxon_lineage_lookup
