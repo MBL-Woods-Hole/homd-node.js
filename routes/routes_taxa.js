@@ -836,14 +836,14 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    helpers.print('in ecology')
    let rank = req.params.level;
    let tax_name = req.params.name;
-   let segata_text = '',dewhirst_text='',eren_text='';
+   let segata_text = '',dewhirst_text='',erenv1v3_text='';
    let max = 0;
    let otid ='0';
    let max_obj = {};
    //let major_genera=0;
-   let segata_data={},dewhirst_data={},eren_data={};
-   let segata_max=0,dewhirst_max=0,eren_max=0;
-   let eren_table='',dewhirst_table='',segata_table='';
+   let segata_data={},dewhirst_data={},erenv1v3_data={};
+   let segata_max=0,dewhirst_max=0,erenv1v3_max=0;
+   let erenv1v3_table='',dewhirst_table='',segata_table='';
    //console.log('rank: '+rank+' name: '+tax_name);
    // TODO::should be in constants???
    
@@ -890,10 +890,9 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
              
              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
-
-       let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
-       segata_text = get_abundance_text(segata_max, clone_segata_data, C.abundance_names, rank, tax_name)
-       segata_table = build_abundance_table('segata',clone_segata_data, C.segata_order)
+             let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
+             segata_text = get_abundance_text(segata_max, clone_segata_data, C.abundance_names, rank, tax_name)
+             segata_table = build_abundance_table('segata',clone_segata_data, C.segata_order)
        
        
          }
@@ -902,18 +901,27 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
              //max_obj = dewhirst_data.find(function(o){ return o.avg == dewhirst_max})
-       dewhirst_text = get_abundance_text(dewhirst_max, clone_dewhirst_data, C.abundance_names, rank, tax_name)
+             dewhirst_text = get_abundance_text(dewhirst_max, clone_dewhirst_data, C.abundance_names, rank, tax_name)
              dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.dewhirst_order)
          }
-         if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
-             eren_max = C.taxon_counts_lookup[lineage_list[0]]['max_eren']
-             eren_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren'])
-             let clone_eren_data = JSON.parse(JSON.stringify(eren_data)) // clone to avoid difficult errors
+         if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3']).length != 0){
+             erenv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv1v3']
+             erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
+             let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
              helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              //max_obj = eren_data.find(function(o){ return o.avg == eren_max})
-       eren_text = get_abundance_text(eren_max, clone_eren_data, C.abundance_names, rank, tax_name)
-       eren_table = build_abundance_table('eren', clone_eren_data, C.eren_order)
+             erenv1v3_text = get_abundance_text(erenv1v3_max, clone_eren_data, C.abundance_names, rank, tax_name)
+             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.eren_order)
          }
+         // if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v5']).length != 0){
+//              eren_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
+//              eren_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
+//              let clone_eren_data = JSON.parse(JSON.stringify(eren_data)) // clone to avoid difficult errors
+//              helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+//              //max_obj = eren_data.find(function(o){ return o.avg == eren_max})
+//              eren_text = get_abundance_text(eren_max, clone_eren_data, C.abundance_names, rank, tax_name)
+//              eren_table = build_abundance_table('eren_v3v5', clone_eren_data, C.eren_order)
+//          }
          
       }
    }
@@ -944,20 +952,20 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       //headline: 'Life: Cellular Organisms',
       lineage: lineage_string,
       rank: rank,
-      max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'eren':eren_max}),
+      max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max}),
       otid: otid,  // zero unless species
       genera: JSON.stringify(genera),
       children: JSON.stringify(children_list),
       segata_text: segata_text,
       dewhirst_text: dewhirst_text,
-      eren_text: eren_text,
+      erenv1v3_text: erenv1v3_text,
       segata_table: segata_table,
       dewhirst_table: dewhirst_table,
-      eren_table: eren_table,
+      erenv1v3_table: erenv1v3_table,
       segata_order: JSON.stringify(C.segata_order),
       segata: JSON.stringify(segata_data),
       dewhirst: JSON.stringify(dewhirst_data),
-      eren: JSON.stringify(eren_data),
+      erenv1v3: JSON.stringify(erenv1v3_data),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     })
 })
@@ -1644,14 +1652,14 @@ function build_abundance_table(cite, data, order){
         html += '<td>'+data[n].avg+'</td>'
     }
     // segata, dewhirst
-    if(['segata','dewhirst'].indexOf(cite) != -1){
+    if(['segata','dewhirst','eren_v1v3'].indexOf(cite) != -1){
       html += '<tr><th>Stdev</th>'
       for(var n in data){
         html += '<td>'+data[n].sd+'</td>'
       }
     }
     // dewhirst, eren
-    if(['dewhirst','eren'].indexOf(cite) != -1){
+    if(['dewhirst','eren_v1v3'].indexOf(cite) != -1){
       html += '<tr><th>Prev</th>'
       for(var n in data){
         html += '<td>'+data[n].prev+'</td>'

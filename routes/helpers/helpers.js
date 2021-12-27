@@ -118,7 +118,11 @@ module.exports.make_lineage_string_with_links = function make_lineage_string_wit
          if(link == 'life'){
            tmp += "<a href='/taxa/"+link+"?rank="+C.ranks[i]+"&name=\""+lineage_list[1][n]+"\"'>"+lineage_list[1][n]+'</a>; '
          }else{
-           tmp += "<a href='/taxa/"+link+"/"+C.ranks[i]+"/"+lineage_list[1][n]+"'>"+lineage_list[1][n]+'</a>; '
+           if(i === (Object.keys(lineage_list[1])).length - 1){
+               tmp += lineage_list[1][n]
+           }else{
+               tmp += "<a href='/taxa/"+link+"/"+C.ranks[i]+"/"+lineage_list[1][n]+"'>"+lineage_list[1][n]+'</a>; '
+            }
          }
          i += 1
      }

@@ -25,20 +25,20 @@ constants.phyla = [ 'Actinobacteria',
 ]
 
 
-constants.segata_order = ['BM',"KG",'HP','Throat',"PT","TD","Saliva","SupP","SubP",'Stool']
-constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','Throat','Saliva','SupP','SubP']
-constants.eren_order = ['BM',"KG",'HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
+constants.segata_order = ['BM',"KG",'HP','TH',"PT","TD","SV","SupP","SubP",'ST']
+constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP']
+constants.eren_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','ST']
 constants.abundance_names = {
-        'BM':"Buccal Mucosa (BM)",
+      'BM':"Buccal Mucosa (BM)",
       "KG":"Keratinized Gingiva (KG)",
       'HP':'Hard Palate (HP)',
-      'Throat':"Throat",
+      'TH':"Throat",
       "PT":"Palatine Tonsils (PT)",
       "TD":'Tongue Dorsum (TD)',
-      "Saliva":"Saliva",
+      "SV":"Saliva",
       "SupP":"Supra-gingival Plaque (SupP)",
       "SubP":"Sub-gingival Plaque (SubP)",
-      "Stool":"Stool"
+      "ST":"Stool"
 }   
    
 constants.tax_status_all =['named','unnamed','phylotype','lost','dropped'];

@@ -322,7 +322,7 @@ if __name__ == "__main__":
         2021-12-09 Note: Abundance data has been put in database table: 'abundance'
            using ./6_load_abundance2db.py and 3 abund files
         this will be re-written to pull data from db rather than file
-        
+
         OLD:
         Run 3 times (once for each abundance.csv file
           ./Initialize_Abundance.py -i Segata2021-09-07.csv -s segata
