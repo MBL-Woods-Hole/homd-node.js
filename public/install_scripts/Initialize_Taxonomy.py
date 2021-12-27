@@ -558,7 +558,7 @@ if __name__ == "__main__":
      # run lineage AFTER to get counts
     run_lineage(args)
     
-    print('\nFinished -- Now run: ./Initialize_Abundance.py -i HOMDtaxa-abundance-XXXX-XX-XX-cleaned.tsv\n')
+    print('\nFinished -- Now run: ./Initialize_Abundance.py (data from abundance table)\n')
     # run abundance after lineach because uses counts data
     # run abundance is now in its own script: Initialize_Abundance.py
     # but still adds to TaxonCounts.json file

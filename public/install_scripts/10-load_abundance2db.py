@@ -14,43 +14,36 @@ import datetime
 ranks = ['domain','phylum','klass','order','family','genus','species']
 today = str(datetime.date.today())
 
-# these MUST match phage_data MySQL table fields
-# NOT USED
-ncbi_headers=['phage_id','Assembly_NCBI','SRA_Accession_NCBI','Submitters_NCBI','Release_Date_NCBI','Species_NCBI','Genus_NCBI','Family_NCBI','Molecule_type_NCBI',
-'Sequence_Type_NCBI','Genotype_NCBI','Publications_NCBI','Geo_Location_NCBI','USA_NCBI','Host_NCBI','Isolation_Source_NCBI','Collection_Date_NCBI',
-'BioSample_NCBI','GenBank_Title_NCBI']
-            
-
-
-
 
 
 def run_abundance_csv(args): 
-    if args.name == 'eren':
-        check = 'max Eren oral site'
-        reference = 'Eren2014'
-        tmp = 'BM-mean,BM-prev,KG-mean,KG-prev,HP-mean,HP-prev,TD-mean,TD-prev,PT-mean,PT-prev,Throat-mean,Throat-prev,Saliva-mean,Saliva-prev,SupP-mean,SupP-prev,SubP-mean,SubP-prev,Stool-mean,Stool-prev'
-    elif args.name == 'segata':
-        check = 'max Segata oral site'
+    print(args.source)
+    if args.source == 'eren2014_v1v3':
+        check = 'Max'
+        reference = 'Eren2014_v1v3'
+        tmp = 'BM-mean,BM-sd,BM-prev,KG-mean,KG-sd,KG-prev,HP-mean,HP-sd,HP-prev,TD-mean,TD-sd,TD-prev,PT-mean,PT-sd,PT-prev,TH-mean,TH-sd,TH-prev,SV-mean,SV-sd,SV-prev,SupP-mean,SupP-sd,SupP-prev,SubP-mean,SubP-sd,SubP-prev,ST-mean,ST-sd,ST-prev'
+    elif args.source == 'eren2014_v3v5':
+        check = 'Max'
+        reference = 'Eren2014_v3v5'
+        tmp = 'BM-mean,BM-sd,BM-prev,KG-mean,KG-sd,KG-prev,HP-mean,HP-sd,HP-prev,TD-mean,TD-sd,TD-prev,PT-mean,PT-sd,PT-prev,TH-mean,TH-sd,TH-prev,SV-mean,SV-sd,SV-prev,SupP-mean,SupP-sd,SupP-prev,SubP-mean,SubP-sd,SubP-prev,ST-mean,ST-sd,ST-prev'
+    elif args.source == 'segata':
+        check = 'Max'
         reference = 'Segata2012'
-        tmp = 'BM-mean,BM-sd,KG-mean,KG-sd,HP-mean,HP-sd,Throat-mean,Throat-sd,PT-mean,PT-sd,TD-mean,TD-sd,Saliva-mean,Saliva-sd,SupP-mean,SupP-sd,SubP-mean,SubP-sd,Stool-mean,Stool-sd'
-    else:
-        check = 'max Dewhirst oral site'
+        tmp = 'BM-mean,BM-sd,KG-mean,KG-sd,HP-mean,HP-sd,TH-mean,TH-sd,PT-mean,PT-sd,TD-mean,TD-sd,SV-mean,SV-sd,SupP-mean,SupP-sd,SubP-mean,SubP-sd,ST-mean,ST-sd'
+    elif args.source == 'dewhirst_35x9':
+        #check = 'max Dewhirst oral site'
+        check = 'Max'
         reference = 'Dewhirst35x9'
-        tmp = 'BM-mean,BM-sd,BM-prev,KG-mean,KG-sd,KG-prev,HP-mean,HP-sd,HP-prev,TD-mean,TD-sd,TD-prev,PT-mean,PT-sd,PT-prev,Throat-mean,Throat-sd,Throat-prev,Saliva-mean,Saliva-sd,Saliva-prev,SupP-mean,SupP-sd,SupP-prev,SubP-mean,SubP-sd,SubP-prev'
-    
+        tmp = 'BM-mean,BM-sd,BM-prev,KG-mean,KG-sd,KG-prev,HP-mean,HP-sd,HP-prev,TD-mean,TD-sd,TD-prev,PT-mean,PT-sd,PT-prev,TH-mean,TH-sd,TH-prev,SV-mean,SV-sd,SV-prev,SupP-mean,SupP-sd,SupP-prev,SubP-mean,SubP-sd,SubP-prev'
+    else:
+        sys.exit('no source found')
     active = tmp.split(',')
     active = [n.replace('-','_') for n in active]
     print(active)
     
-    with open(args.infile) as csv_file:
-        #csv_reader = csv.reader(csv_file, delimiter=',')  # AV comma
+    with open(args.infile) as csv_file: 
         
-        if args.delimiter == 'tab':
-            csv_reader = csv.DictReader(csv_file, delimiter='\t') # KK tab
-        else:
-            csv_reader = csv.DictReader(csv_file, delimiter=',') # KK tab
-        
+        csv_reader = csv.DictReader(csv_file, delimiter='\t') # KK tab
         
         for row in csv_reader:
             values = []
@@ -60,7 +53,7 @@ def run_abundance_csv(args):
             
             for item in active:
                 values.append(row[item.replace('_','-')])
-            q = q + "('"+reference+"','"+row['HMT']+"','"+row['Taxonomy']+"','"+row['level']+"','"+row['max any oral site']+"','"+"','".join(values)+"')"
+            q = q + "('"+reference+"','"+row['HMT']+"','"+row['Taxonomy']+"','"+row['Rank']+"','"+row['Max']+"','"+"','".join(values)+"')"
 
             print(q)
             
@@ -72,21 +65,22 @@ if __name__ == "__main__":
     usage = """
     USAGE:
         takes the abundance data from 3 csv files to the database.
-        HOMD-abundance-Segata.csv
-        HOMD-abundance-Dewhirst.csv
-        HOMD-abundance-Segata.csv
+        HOMD-abundance-Segata.csv   => segata_edit2021-12-24.csv
+        HOMD-abundance-Dewhirst.csv => dewhirst_edit2021-12-27.csv
+        HOMD-abundance-Segata.csv   =>  eren2014_v1v3_MeanStdevPrev_byRankFINAL_2021-12-26_homd.csv
         
-        ./6_load_abundance2db.py -i HOMD-abundance-XXX.csv -n name [segata, dewhirst or eren]
+        --source must be in ['eren2014_v1v3','eren2014_v3v5','dewhirst_35x9', 'segata']
+        
+        ./6_load_abundance2db.py -i HOMD-abundance-XXX.csv -n name [segata, dewhirst_35x9 or eren2014_v1v3 (v3v5)]
     """
 
     parser = argparse.ArgumentParser(description="." ,usage=usage)
 
     parser.add_argument("-i", "--infile",   required=True,  action="store",   dest = "infile", default='none',
                                                     help=" ")
-    parser.add_argument("-n", "--name",   required=True,  action="store",   dest = "name", 
-                                                    help="segata, dewhirst or eren ")
-    parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
-                         help = "Not usually needed if -host is accurate")
+    parser.add_argument("-s", "--source",   required=True,  action="store",   dest = "source", 
+                                    help="eren2014_v1v3 eren2014_v3v5 dewhirst_35x9 segata ")
+    
     parser.add_argument("-host", "--host",
                         required = False, action = 'store', dest = "dbhost", default = 'localhost',
                         help = "choices=['homd',  'localhost']")
@@ -98,12 +92,11 @@ if __name__ == "__main__":
     parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", default=False,
                                                     help="verbose print()") 
     args = parser.parse_args()
-    if args.name not in ['segata','dewhirst','eren']:
-        sys.exit('\nargs.name not in (segata,dewhirst,eren)\n')
+    if args.source not in ['eren2014_v1v3','eren2014_v3v5','dewhirst_35x9','segata']:
+        print(usage)
+        sys.exit()
     #parser.print_help(usage)
-    if not os.path.exists(args.outdir):
-        print("\nThe out put directory doesn't exist:: using the current dir instead\n")
-        args.outdir = './'                         
+                         
     if args.dbhost == 'homd':
         #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
         #args.TAX_DATABASE = 'HOMD_taxonomy'
@@ -122,9 +115,7 @@ if __name__ == "__main__":
         
     else:
         sys.exit('dbhost - error')
-    args.indent = None
-    if args.prettyprint:
-        args.indent = 4
+    
     #myconn_tax = MyConnection(host=dbhost_old, db=args.TAX_DATABASE,   read_default_file = "~/.my.cnf_node")
     myconn_new = MyConnection(host=dbhost_new, db=args.NEW_DATABASE,  read_default_file = "~/.my.cnf_node")
     

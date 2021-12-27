@@ -226,7 +226,9 @@ def run_abundance_csv():
     
 def run_abundance_db(): 
     collector = {}
-    json_file = args.outfile
+    filestarter = 'homdData-TaxonCounts.json'
+    #json_file = args.outfile
+    json_file = filestarter
     if os.path.isfile(json_file):
         f = open(json_file)
         collector = json.load(f)
@@ -236,7 +238,7 @@ def run_abundance_db():
     {'abundance_id': 1148, 'reference': 'Dewhirst35x9', 'otid': '362', 'taxonomy': 'Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;Fretibacterium;sp. HMT 362', 'level': 'Species', 'max_any_site': '0.02095498', 'BM_mean': '0.002', 'BM_prev': '12.5', 'BM_sd': '0.007', 'KG_mean': '0', 'KG_prev': '5.9', 'KG_sd': '0.001', 'HP_mean': '0', 'HP_prev': '7.7', 'HP_sd': '0.001', 'TD_mean': '0', 'TD_prev': '3.1', 'TD_sd': '0.001', 'PT_mean': '0.006', 'PT_prev': '6.9', 'PT_sd': '0.03', 'Throat_mean': '0', 'Throat_prev': '3.2', 'Throat_sd': '0', 'Saliva_mean': '0', 'Saliva_prev': '6.1', 'Saliva_sd': '0.001', 'SupP_mean': '0', 'SupP_prev': '5.7', 'SupP_sd': '0.001', 'SubP_mean': '0.021', 'SubP_prev': '9.7', 'SubP_sd': '0.1', 'Stool_mean': '', 'Stool_prev': '', 'Stool_sd': ''}
     """
     header_suffixes = ['sd','prev','mean']
-    header_prefixes = ['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
+    header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
     
     for row in result:
         #print(row)
@@ -249,15 +251,17 @@ def run_abundance_db():
                 if tax_parts[6] in subspecies:
                     taxon_string =';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+subspecies[tax_parts[6]][0]+';'+subspecies[tax_parts[6]][1]
         if taxon_string not in collector:
-            print('!!!missing from HOMD collector:!!! ',taxon_string)
+            print('!!!missing from HOMD collector(TaxonCounts.json):!!! ',taxon_string)
             collector[taxon_string] = {}
         collector[taxon_string]['otid'] = row['otid']
         collector[taxon_string]['max_all'] = row['max_any_site']
         
         if 'segata' not in collector[taxon_string]:
             collector[taxon_string]['segata'] = {}
-        if 'eren' not in collector[taxon_string]:
-            collector[taxon_string]['eren'] = {}
+        if 'eren_v1v3' not in collector[taxon_string]:
+            collector[taxon_string]['eren_v1v3'] = {}
+        if 'eren_v3v5' not in collector[taxon_string]:
+            collector[taxon_string]['eren_v3v5'] = {}
         if 'dewhirst' not in collector[taxon_string]:
             collector[taxon_string]['dewhirst'] = {}
         
@@ -266,17 +270,23 @@ def run_abundance_db():
                 max_segata = get_max(row, p, max_segata)
                 collector[taxon_string]['segata'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_segata'] = max_segata
-        elif row['reference'].startswith('Eren'):
+        elif row['reference'].startswith('Eren2014_v1v3'):
             for p in header_prefixes:
                 max_eren = get_max(row, p, max_eren)
-                collector[taxon_string]['eren'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
-            collector[taxon_string]['max_eren'] = max_eren
+                collector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+            collector[taxon_string]['max_erenv1v3'] = max_eren
+        elif row['reference'].startswith('Eren2014_v3v5'):
+            for p in header_prefixes:
+                max_eren = get_max(row, p, max_eren)
+                collector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+            collector[taxon_string]['max_erenv3v5'] = max_eren
         elif row['reference'].startswith('Dewhirst'):
             for p in header_prefixes:
                 max_dewhirst = get_max(row, p, max_dewhirst)
                 collector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_dewhirst'] = max_dewhirst
-        
+        else:
+            pass
     #print(collector)
     #for s in collector:
     #    print('max_eren-s',s,collector[s])
@@ -337,8 +347,8 @@ if __name__ == "__main__":
                                                     help=" ")
 #    parser.add_argument("-s", "--source",   required=True,  action="store",   dest = "source", 
 #                                                    help="ONLY segata dewhirst eren")
-    parser.add_argument("-o", "--outfile",   required=False,  action="store",   dest = "outfile", default='homdData-TaxonCounts.json',
-                                                    help=" ")
+    parser.add_argument("-o", "--outfile",   required=False,  action="store",   dest = "outfile", 
+            default='homdData-TaxonCounts.json',  help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")
     parser.add_argument("-host", "--host",
@@ -349,18 +359,19 @@ if __name__ == "__main__":
                         help = "output file is human friendly")
     parser.add_argument("-d", "--delimiter", required = False, action = 'store', dest = "delimiter", default = 'tab',
                          help = "Delimiter: commaAV[Default]: 'comma' or tabKK: 'tab'")
+    
     parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", default=False,
                                                     help="verbose print()") 
     args = parser.parse_args()
-    args.source = 'file'
-    if args.infile == 'none':
-        ans = input('take data from db? (N/y) ').lower()
-        if ans == 'y':
-            args.source = 'db'
-        else:
-            args.source = 'file'
-            if args.infile == 'none':
-                sys.exit('Please enter file name on command line:\n\n'+usage)
+    #args.source = 'file'
+    # if args.infile == 'none':
+#         ans = input('take data from db? (N/y) ').lower()
+#         if ans == 'y':
+#             args.source = 'db'
+#         else:
+#             args.source = 'file'
+#             if args.infile == 'none':
+#                 sys.exit('Please enter file name on command line:\n\n'+usage)
     
     #parser.print_help(usage)
     if not os.path.exists(args.outdir):
@@ -391,10 +402,10 @@ if __name__ == "__main__":
 #         sys.exit('no valid source')
 #     if args.source.lower() not in args.infile.lower():
 #         sys.exit('file/source mismatch')
-    if args.source == 'file':
-        run_abundance_csv()
-    else:
-        myconn_new = MyConnection(host=dbhost_new, db=args.NEW_DATABASE,  read_default_file = "~/.my.cnf_node")
-        run_abundance_db()
+    # if args.source == 'file':
+#         run_abundance_csv()
+#     else:
+    myconn_new = MyConnection(host=dbhost_new, db=args.NEW_DATABASE,  read_default_file = "~/.my.cnf_node")
+    run_abundance_db()
    
     

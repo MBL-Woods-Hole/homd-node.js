@@ -56,41 +56,34 @@
 #legend-content{
   padding:5px;
 }
+.plot{
+   padding:10px;
+}
 #row{
-  display: flex;                  /* establish flex container */
-  flex-direction: row;            /* default value; can be omitted */
-  flex-wrap: nowrap;              /* default value; can be omitted */
-  justify-content: space-between; /* switched from default (flex-start, see below) */
-  
-  width:100%;
-
+   width:50%;
+   border:1px solid black;
 }
-#column_one{
+#legend_div{
    border:1px solid brown;
-   width:auto;
+   width:200px;;
    font-size:x-small;
+   float:left;
    
 }
-#column_two{
-   padding:10px;
-   border:1px solid brown;
-   
-}
-#column_three{
-   padding:10px;
-   border:1px solid brown;
-   
-}
-#column_four{
-   padding:10px;
-   border:1px solid brown;
-   
 
+#plot_table{
+  border-collapse:collapse;
+  width:100%
+}
+.wide{
+   padding:10px 0;
+   background:grey;
 }
 </style>
 <% segata_data = JSON.parse(segata) %>
 <% dewhirst_data = JSON.parse(dewhirst) %>
 <% erenv1v3_data = JSON.parse(erenv1v3) %>
+<% erenv3v5_data = {} %>
 <% segata_order = JSON.parse(segata_order) %>
 <% children_lst = JSON.parse(children) %>
 <% genera = JSON.parse(genera) %>
@@ -165,36 +158,36 @@
         </small>
         
     </div>  <!-- end taxon-page-div -->
-   
+
+<div id='legend_div'>
+    <div id='legend'>Legend:</div>
+    <div id='legend-content'>
+    <pre>
+
+      BM - Buccal Mucosa
+      KG - Keratinized Gingiva
+      HP - Hard Palate
+
+      PT - Palatine Tonsils
+      TD - Tongue Dorsum
+      TH - Throat
+  
+      SupP - Supra-gingival Plaque
+      SubP - Sub-gingival Plaque
+  
+      ST - Stool
+    </pre>  
+    </div>
+</div>
+
+<center>   
 <div id="row">  
-<% if(Object.keys(segata_data).length == 0){ %>
-   <% width='15%' %>
-<% }else{ %>
-   <% width='auto' %>
-<% } %>
-<div id='column_one'>
-<div id='legend'>Legend:</div>
-<div id='legend-content'>
 
-<pre>
 
-  BM - Buccal Mucosa
-  KG - Keratinized Gingiva
-  HP - Hard Palate
 
-  PT - Palatine Tonsils
-  TD - Tongue Dorsum
-  TH - Throat
-  
-  SupP - Supra-gingival Plaque
-  SubP - Sub-gingival Plaque
-  
-  ST - Stool
-</pre>  
-  
-</div>
-</div>
-<div id='column_two' style='width:<%= width %>' >
+<table id='plot_table' class='look'>
+<tr><td>
+<div class='plot' id='column_twoX' style='' >
     
     
     <div class='plot_div'>
@@ -207,34 +200,35 @@
     <div id="plot_segata_here"></div> 
     </div>
     <% if(Object.keys(segata_data).length !== 0){ %>
+      <small>percent abundance</small>
       <div class='abund-table-div'><%- segata_table %></div>  
-    <% } %>
-        
-      
+    <% } %>  
 </div>    <!--  end col-left1-->
-<% if(Object.keys(dewhirst_data).length === 0){ %>
-   <% width='15%' %>
-<% }else{ %>
-   <% width='auto' %>
-<% } %>
-<div id="column_three"  style='width:<%= width %>'>
+
+</td><td>Notes:</td></tr>
+<tr><td class='wide' colspan='2'></td></tr>
+<tr><td>
+
+<div class='plot' id="column_threeX"  style=''>
     <div class='plot_div'>
     <small>
-      From: Dewhirst 35x9 data<br><small>(not published yet)</small>
+      From: Dewhirst 35x9 data <small>(not published yet)</small>
     <!-- <br><%- dewhirst_text %> -->
     </small>
     <div id="plot_dewhirst_here"></div> 
     </div>
+    
     <% if(Object.keys(dewhirst_data).length !== 0){ %>
+        <small>percent abundance</small>
         <div class='abund-table-div'><%- dewhirst_table %></div>
     <% } %>
 </div>
-<% if(Object.keys(erenv1v3_data).length === 0){ %>
-   <% width='15%' %>
-<% }else{ %>
-   <% width='auto' %>
-<% } %>
-<div id="column_four"  style='width:<%= width %>'>
+
+</td><td>Notes:</td></tr>
+<tr><td class='wide' colspan='2'></td></tr>
+<tr><td>
+
+<div class='plot' id="column_fourX"  style='width:100%;'>
       <div class='plot_div'>
       <small>
       From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
@@ -244,13 +238,37 @@
     <div id="plot_erenv1v3_here"></div> 
     </div>
     <% if(Object.keys(erenv1v3_data).length !== 0){ %>
+        <small>percent abundance</small>
         <div class='abund-table-div'><%- erenv1v3_table %></div>
     <% } %>     
 </div> <!-- end col right -->
-  
-  
-</div>  <!-- end row1 -->
 
+</td><td>Notes:</td></tr>
+<tr><td class='wide' colspan='2'></td></tr>
+<tr><td>
+
+<div class='plot' id="column_fourX"  style='width:100%;'>
+      <div class='plot_div'>
+      <small>
+      From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
+        Eren et al.(2014) (V3-V5)</a>
+    <!-- <br><%- erenv1v3_text %> -->
+    </small>
+    <div id="plot_erenv3v5_here"></div> 
+    </div>
+    <% if(Object.keys(erenv3v5_data).length !== 0){ %>
+        <small>percent abundance</small>
+        <div class='abund-table-div'><%- erenv3v5_table %></div>
+    <% } %>     
+</div> <!-- end col right -->
+
+</td><td>Notes:</td></tr>
+
+
+</table>
+  
+</div>  <!-- end row -->
+</center>
 
 
     </div> <!-- end: page-content -->
@@ -273,10 +291,13 @@
   sdata = JSON.parse('<%- segata %>')
   ddata = JSON.parse('<%- dewhirst %>')
   edatav1v3 = JSON.parse('<%- erenv1v3 %>')
+  edatav3v5 = {}
   // set the dimensions and margins of the graph
+  w = 450
+  h = 300
   var margin = {top: 30, right: 30, bottom: 70, left: 30},
-      width = 350 - margin.left - margin.right,
-      height = 300 - margin.top - margin.bottom;
+      width = w - margin.left - margin.right,
+      height = h - margin.top - margin.bottom;
   //
   // Dewhirst
   //
@@ -340,7 +361,16 @@
              });
   }
   //
-  // Eren
+  // Erenv3v5
+  //
+  //
+  if(Object.keys(edatav3v5).length == 0){
+     document.getElementById("plot_erenv3v5_here").innerHTML = '<small>No Data</small>'
+  }else{
+  
+  }
+  //
+  // Erenv1v3
   //
   //
   if(Object.keys(edatav1v3).length == 0){
