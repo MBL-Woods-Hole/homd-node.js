@@ -184,37 +184,7 @@ def run_abundance_csv():
                     else:
                         pass 
                     
-        #             for k in ['segata','dewhirst','eren']:
-#                         
-#                         if k == 'segata':
-#                             if row[max_segata_index]:
-#                             
-#                                 #cols = header_row[start_segata_index:start_segata_index+segata_col_count]
-#                                 # cols=segata ['BM', '', 'KG', '', 'HP', '', 'Throat', '', 'PT', '', 'TD', '', 'Saliva', '', 'SupP', '', 'SubP', '', 'Stool', '']
-#                                 for p in range(start_segata_index, start_segata_index+segata_col_count):
-#                                 
-#                                     if header_row[p] in segata_headers:
-#                                         print('row',p,header_row[p],row[p])
-#                                         collector[taxon_string]['segata'][header_row[p]]={'site':header_row[p], 'avg':row[p],'stdev':row[p+1]} # for segata
-#                     
-#                         if k == 'dewhirst':
-#                             start=start_dewhirst_index
-#                             headers = dewhirst_headers
-#                             cols = header_row[start_dewhirst_index:start_dewhirst_index+dewhirst_col_count]
-#                         if k == 'eren': 
-#                             start=start_eren_index
-#                             headers = eren_headers
-#                             cols = header_row[start_eren_index:start_eren_index+eren_col_count]
-#                     
-                    
-                        
-                                
-                     #    if args.source == 'eren':
-#                             collector[taxon_string][args.source][header_row[i]]={'site':header_row[i], 'avg':row[i],'prev':row[i+1]} # for eren
-#                         elif args.source == 'segata':
-#                             
-#                         else: # dewhirst
-#                             collector[taxon_string][args.source][header_row[i]]={'site':header_row[i], 'avg':row[i],'stdev':row[i+1],'prev':row[i+2]} # for dewhirst
+
             else:
                 continue
                 
@@ -235,15 +205,16 @@ def run_abundance_db():
     q = "SELECT * from abundance"
     result = myconn_new.execute_fetch_select_dict(q)
     """
-    {'abundance_id': 1148, 'reference': 'Dewhirst35x9', 'otid': '362', 'taxonomy': 'Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;Fretibacterium;sp. HMT 362', 'level': 'Species', 'max_any_site': '0.02095498', 'BM_mean': '0.002', 'BM_prev': '12.5', 'BM_sd': '0.007', 'KG_mean': '0', 'KG_prev': '5.9', 'KG_sd': '0.001', 'HP_mean': '0', 'HP_prev': '7.7', 'HP_sd': '0.001', 'TD_mean': '0', 'TD_prev': '3.1', 'TD_sd': '0.001', 'PT_mean': '0.006', 'PT_prev': '6.9', 'PT_sd': '0.03', 'Throat_mean': '0', 'Throat_prev': '3.2', 'Throat_sd': '0', 'Saliva_mean': '0', 'Saliva_prev': '6.1', 'Saliva_sd': '0.001', 'SupP_mean': '0', 'SupP_prev': '5.7', 'SupP_sd': '0.001', 'SubP_mean': '0.021', 'SubP_prev': '9.7', 'SubP_sd': '0.1', 'Stool_mean': '', 'Stool_prev': '', 'Stool_sd': ''}
+    {'abundance_id': 1148, 'reference': 'Dewhirst35x9', 'otid': '362', 'taxonomy': 'Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;Fretibacterium;sp. HMT 362', 'level': 'Species', 'max': '0.02095498', 'BM_mean': '0.002', 'BM_prev': '12.5', 'BM_sd': '0.007', 'KG_mean': '0', 'KG_prev': '5.9', 'KG_sd': '0.001', 'HP_mean': '0', 'HP_prev': '7.7', 'HP_sd': '0.001', 'TD_mean': '0', 'TD_prev': '3.1', 'TD_sd': '0.001', 'PT_mean': '0.006', 'PT_prev': '6.9', 'PT_sd': '0.03', 'Throat_mean': '0', 'Throat_prev': '3.2', 'Throat_sd': '0', 'Saliva_mean': '0', 'Saliva_prev': '6.1', 'Saliva_sd': '0.001', 'SupP_mean': '0', 'SupP_prev': '5.7', 'SupP_sd': '0.001', 'SubP_mean': '0.021', 'SubP_prev': '9.7', 'SubP_sd': '0.1', 'Stool_mean': '', 'Stool_prev': '', 'Stool_sd': ''}
     """
-    header_suffixes = ['sd','prev','mean']
+    
     header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
     
     for row in result:
         #print(row)
         max_segata, max_eren, max_dewhirst = 0,0,0
         taxon_string = row['taxonomy']
+        
         tax_parts = taxon_string.split(';')
         if len(tax_parts) == 7:
             taxon_string = ';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+tax_parts[6]
@@ -254,8 +225,8 @@ def run_abundance_db():
             print('!!!missing from HOMD collector(TaxonCounts.json):!!! ',taxon_string)
             collector[taxon_string] = {}
         collector[taxon_string]['otid'] = row['otid']
-        collector[taxon_string]['max_all'] = row['max_any_site']
-        
+        collector[taxon_string]['max_all'] = row['max']
+        collector[taxon_string]['notes'] = {}
         if 'segata' not in collector[taxon_string]:
             collector[taxon_string]['segata'] = {}
         if 'eren_v1v3' not in collector[taxon_string]:
@@ -270,21 +241,25 @@ def run_abundance_db():
                 max_segata = get_max(row, p, max_segata)
                 collector[taxon_string]['segata'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_segata'] = max_segata
+            collector[taxon_string]['notes']['segata'] = row['notes']
         elif row['reference'].startswith('Eren2014_v1v3'):
             for p in header_prefixes:
                 max_eren = get_max(row, p, max_eren)
                 collector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_erenv1v3'] = max_eren
+            collector[taxon_string]['notes']['eren_v1v3'] = row['notes']
         elif row['reference'].startswith('Eren2014_v3v5'):
             for p in header_prefixes:
                 max_eren = get_max(row, p, max_eren)
                 collector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_erenv3v5'] = max_eren
+            collector[taxon_string]['notes']['eren_v3v5'] = row['notes']
         elif row['reference'].startswith('Dewhirst'):
             for p in header_prefixes:
                 max_dewhirst = get_max(row, p, max_dewhirst)
                 collector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_dewhirst'] = max_dewhirst
+            collector[taxon_string]['notes']['dewhirst'] = row['notes']
         else:
             pass
     #print(collector)

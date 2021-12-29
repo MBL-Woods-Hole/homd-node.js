@@ -4,7 +4,7 @@
    padding:20px 5px;
 }
 #eco_table{
-   
+   font-size:13px;
 }
 #eco_table tr,td{
    border:1px solid black;
@@ -12,75 +12,103 @@
    padding:3px;
 }
 
-#row{
-  display: flex;                  /* establish flex container */
-  flex-direction: row;            /* default value; can be omitted */
-  flex-wrap: nowrap;              /* default value; can be omitted */
-  justify-content: space-between; /* switched from default (flex-start, see below) */
-  padding:20px 0;
-  border:1px solid black;
-  width:100%;
-}
-#column_left{
-  padding:10px;
+.rank_div{
+   height:300px;
+   overflow:auto;
    
-   width:auto;
-}
-#column_right{
-  padding:10px;
-  width:70%;
 }
 </style>
+<% sole_arch = JSON.parse(sole_arch) %>
 <% phla = JSON.parse(phyla) %>
+<% klasses = JSON.parse(klasses) %>
+<% orders = JSON.parse(orders) %>
+<% families = JSON.parse(families) %>
+<% genera = JSON.parse(genera) %>
+
 <%- include('../../partials/header_html'); %>
 
 <body>
-  	<div id='wrapper'>
+    <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     
     
     <div class='page-content' >
-		 					
-			 <div class='title'>Ecology/Abundance Pages</div>
-			 
-	<div id="row">
+              
+       <div class='title'>Ecology/Abundance Pages</div>
+       
+  <div>
 
-	<div id='column_left'  >
-		<div id='info'>
-		These pages show abundance data for each taxon name (from domain to species) in the HOMD database.
-		<br><br>Listed here are the two domains, Bacteria and Archaea, and their phyla to get you started. Follow the links
-		to reach the abundance pages. 
-		<br><br>The Abundance data comes from three sources: Dewhirst (not published), 
-		<a href='https://www.pnas.org/content/111/28/E2875.short'>Eren (2014)</a> and 
-		<a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42'>Segata (2012)</a>
-	    </div>
-	    
-	</div>
-	<div id='column_right'  >
-		<center>
+  <div>
+    <div id='info'>
+    The abundance pages show available data for the ranks in each taxon name (from domain to species) in the HOMD database.
+    
+    <br><br>Listed here are taxonomy names from domain through genus for the taxa in HOMD. Each is a link
+      to a page showing abundance data from the three source: 
+      <br>Dewhirst (not published), 
+    <a href='https://www.pnas.org/content/111/28/E2875.short'>Eren (2014)</a> and 
+    <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42'>Segata (2012)</a>
+      </div>
+      
+  </div>
+  <br>
+  <div>
+    <center>
             <table id='eco_table' border='1'>
-            <tr><th>Domain</th><th>Phyla</th></tr>
-            <tr><td><a href='ecology/domain/Archaea'>Archaea</a></td><td><a href='ecology/phylum/Euryarchaeota'>Euryarchaeota</a></td></tr>
-            <tr><td valign="top"><a href='ecology/domain/Bacteria'>Bacteria</a></td>
-            
-            
-             <td>
-				<% no_data_list = ['Chlamydiae','Chlorobi','Gracilibacteria (GN02)','WPS-2'] %>
-				<% for(n in phla){ %>
-				    <% if(no_data_list.indexOf(phla[n]) == -1){ %>
-				       <a href='ecology/phylum/<%= phla[n] %>'><%= phla[n] %></a><br>
-				    <% }else{ %>
-				       <%= phla[n] %><span style='float:right;'><small>(no abundance data)</small></span><br>
-				   
-				    <% } %>
-				    
-				<% } %>
-				
-             </td></tr>
+            <tr><th>Domain</th><th>Phylum</th><th>Class</th><th>Order</th><th>Family</th><th>Genus</th></tr>
+            <tr>
+              <td><a href='ecology/domain/<%= sole_arch.domain %>'><%= sole_arch.domain %></a></td>
+              <td><a href='ecology/phylum/<%= sole_arch.phylum %>'><%= sole_arch.phylum %></a></td>
+              <td><a href='ecology/klass/<%= sole_arch.klass %>'><%= sole_arch.klass %></a></td>
+              <td><a href='ecology/order/<%= sole_arch.order %>'><%= sole_arch.order %></a></td>
+              <td><a href='ecology/family/<%= sole_arch.family %>'><%= sole_arch.family %></a></td>
+              <td><a href='ecology/genus/<%= sole_arch.genus %>'><%= sole_arch.genus %></a></td>
+              
+            </tr>
+            <tr>
+              <td valign="top"><a href='ecology/domain/Bacteria'>Bacteria</a></td>
+              <td>
+                <% no_data_list = ['Chlamydiae','Chlorobi','Gracilibacteria (GN02)','WPS-2'] %>
+                <div class='rank_div'>
+                <% for(n in phla){ %>
+                    
+                       <a href='ecology/phylum/<%= phla[n] %>'><%= phla[n] %></a><br>
+                    
+                <% } %>
+                </div>
+              </td>
+              <td>
+                <div class='rank_div'>
+                <% for(n in klasses){ %>
+                    <a href='ecology/klass/<%= klasses[n] %>'><%= klasses[n] %></a><br>
+                <% } %>
+                </div>
+              </td>
+              <td>
+                <div class='rank_div'>
+                <% for(n in orders){ %>
+                    <a href='ecology/order/<%= orders[n] %>'><%= orders[n] %></a><br>
+                <% } %>
+                </div>
+              </td>
+              <td>
+                <div class='rank_div'>
+                <% for(n in families){ %>
+                    <a href='ecology/family/<%= families[n] %>'><%= families[n] %></a><br>
+                <% } %>
+                </div>
+              </td>
+              <td>
+                <div class='rank_div'>
+                <% for(n in genera){ %>
+                    <a href='ecology/genus/<%= genera[n] %>'><%= genera[n] %></a><br>
+                <% } %>
+                </div>
+              </td>
+            </tr>
             </table>
-	    <center>
-	    </div>
+      <center>
+      </div>
     </div> <!-- end: page-content -->
     
     <div id='footer'>
