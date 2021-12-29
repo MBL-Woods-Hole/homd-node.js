@@ -982,7 +982,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    
    
   
-   
+   console.log('erenv1v3_notes:',erenv1v3_notes)
    //console.log('max',max)
    //console.log('max_obj',max_obj)
    // console.log('segata data:')
