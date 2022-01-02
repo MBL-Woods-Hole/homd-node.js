@@ -59,140 +59,7 @@ subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp. polymorphum']
 subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp. vincentii'] 
 
 
-def run_abundance_csv(): 
-    collector = {}
-#     if args.source == 'eren':
-#         max_index = 8
-#         headers = eren_headers
-#     elif args.source == 'segata':
-#         max_index = 6
-#         headers = segata_headers
-#     else:
-#         max_index = 7
-#         headers = dewhirst_headers
-    # Opening JSON file
-    json_file = args.outfile
-    if os.path.isfile(json_file):
-        f = open(json_file)
-        collector = json.load(f)
-        #print(collector)
-        
-    with open(args.infile) as csv_file:
-        #csv_reader = csv.reader(csv_file, delimiter=',')  # AV comma
-        
-        if args.delimiter == 'tab':
-            csv_reader = csv.reader(csv_file, delimiter='\t') # 
-        else:
-            csv_reader = csv.reader(csv_file, delimiter=',') # 
-        #indices = {}
-        start = 'no'
-        
-        for row in csv_reader:
-            
-            if row[0] == 'Headers':   # I added this keyword in the proper row[0]
-                header_row = row
-                #print(header_row)
-                
-                #rkeys = list(row.keys())
-                #print('\n',indices)
-                # eg: {'BM': 11, 'KG': 13, 'HP': 15, 'Throat': 17, 'PT': 19, 'TD': 21, 'Saliva': 23, 'SupP': 25, 'SubP': 27, 'Stool': 29}
-            if  row[0] == 'HOMD taxonomy':
-                start = 'yes'
-                continue  # go to the next row
-                
-            if start == 'yes':
-                #print(row) 
-                taxon_string = row[0]
-                
-                
-                """
-                The TaxonCount file has species= genus species
-                but the segata,dewhirst and eren files just use species=species
-                so to match:
-                Eren: Bacteria;Spirochaetes;Spirochaetia;Spirochaetales;Spirochaetaceae;Treponema;vincentii
-                coll  Bacteria;Spirochaetes;Spirochaetia;Spirochaetales;Spirochaetaceae;Treponema;Treponema vincentii
-                """
-                tax_parts = taxon_string.split(';')
-                
-                if len(tax_parts) == 7:
-                    
-                    taxon_string = ';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+tax_parts[6]
-                    if 'clade' in tax_parts[6] or 'subsp' in tax_parts[6]:
-                        if tax_parts[6] in subspecies:
-                            # if '[Eubacterium]' in taxon_string:
-#                                 print('found '+tax_parts[6])
-#                                 print('old tax string: ')
-#                                 print(taxon_string)
-                            taxon_string =';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+subspecies[tax_parts[6]][0]+';'+subspecies[tax_parts[6]][1]
-                            # if '[Eubacterium]' in taxon_string:
-#                                 print('new tax string: ')
-#                                 print(taxon_string)
-                if row[max_any_index] == '0':
-                    pass
-                    #collector[taxon_string]['max_all'] = '0'
-               
-                
-                if not row[max_any_index]:  # will pass zero but not empty string
-                   continue
-                
-                
-                #print()
-                #print(taxon_string)
-                if taxon_string not in collector:
-                    print('missing from HOMD collector: ',taxon_string)
-                    continue
-                    #sys.exit('not in collector')
-                    collector[taxon_string] = {}
-                if 'segata' not in collector[taxon_string]:
-                    collector[taxon_string]['segata'] = {}
-                if 'eren' not in collector[taxon_string]:
-                    collector[taxon_string]['eren'] = {}
-                if 'dewhirst' not in collector[taxon_string]:
-                    collector[taxon_string]['dewhirst'] = {}
-                
-                
-                collector[taxon_string]['max_segata'] = row[max_segata_index]
-                collector[taxon_string]['max_eren'] = row[max_eren_index]
-                collector[taxon_string]['max_dewhirst'] = row[max_dewhirst_index]
-                collector[taxon_string]['max_all'] = row[max_any_index]
-                if row[hmt_index]:
-                    collector[taxon_string]['otid'] = row[hmt_index]
-                if header_row[start_segata_index] != 'BM':
-                    sys.exit('bad header row:segata') 
-                if header_row[start_dewhirst_index] != 'BM':
-                    sys.exit('bad header row:dewhirst') 
-                if header_row[start_eren_index] != 'BM':
-                    sys.exit('bad header row:eren') 
-                          
-                for i,val in enumerate(row):
-                    
-                    if i >= start_segata_index and i < start_segata_index + segata_col_count:
-                        
-                        if header_row[i] in segata_headers and row[i]:
-                            #print(header_row[i],row[i],row[i+1])
-                            collector[taxon_string]['segata'][header_row[i]]={'site':header_row[i], 'avg':row[i],'sd':row[i+1]} # for segata
-                    
-                    elif i>=start_dewhirst_index and i < start_dewhirst_index + dewhirst_col_count:
-                        if header_row[i] in dewhirst_headers and row[i]:
-                            #print(header_row[i],row[i],row[i+1])
-                            collector[taxon_string]['dewhirst'][header_row[i]]={'site':header_row[i], 'avg':row[i],'sd':row[i+1],'prev':row[i+2]} # for segata
-                    
-                    elif i>=start_eren_index and i < start_eren_index + eren_col_count:
-                        if header_row[i] in eren_headers and row[i]:
-                            #print(header_row[i],row[i],row[i+1])
-                            collector[taxon_string]['eren'][header_row[i]]={'site':header_row[i], 'avg':row[i],'prev':row[i+1]} # for segata
-                    else:
-                        pass 
-                    
 
-            else:
-                continue
-                
-    
-    #print(collector)
-    #filename = args.source+'_taxon_abundance_data.json'
-    filename = args.outfile
-    print_dict(filename, collector)
     
 def run_abundance_db(): 
     collector = {}
@@ -226,7 +93,8 @@ def run_abundance_db():
             collector[taxon_string] = {}
         collector[taxon_string]['otid'] = row['otid']
         collector[taxon_string]['max_all'] = row['max']
-        collector[taxon_string]['notes'] = {}
+        if 'notes' not in collector[taxon_string]:
+            collector[taxon_string]['notes'] = {}
         if 'segata' not in collector[taxon_string]:
             collector[taxon_string]['segata'] = {}
         if 'eren_v1v3' not in collector[taxon_string]:
@@ -242,26 +110,25 @@ def run_abundance_db():
                 collector[taxon_string]['segata'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_segata'] = max_segata
             collector[taxon_string]['notes']['segata'] = row['notes']
-        elif row['reference'].startswith('Eren2014_v1v3'):
+        if row['reference'].startswith('Eren2014_v1v3'):
             for p in header_prefixes:
                 max_eren = get_max(row, p, max_eren)
                 collector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_erenv1v3'] = max_eren
             collector[taxon_string]['notes']['eren_v1v3'] = row['notes']
-        elif row['reference'].startswith('Eren2014_v3v5'):
+        if row['reference'].startswith('Eren2014_v3v5'):
             for p in header_prefixes:
                 max_eren = get_max(row, p, max_eren)
                 collector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_erenv3v5'] = max_eren
             collector[taxon_string]['notes']['eren_v3v5'] = row['notes']
-        elif row['reference'].startswith('Dewhirst'):
+        if row['reference'].startswith('Dewhirst'):
             for p in header_prefixes:
                 max_dewhirst = get_max(row, p, max_dewhirst)
                 collector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_dewhirst'] = max_dewhirst
             collector[taxon_string]['notes']['dewhirst'] = row['notes']
-        else:
-            pass
+        
     #print(collector)
     #for s in collector:
     #    print('max_eren-s',s,collector[s])
@@ -301,13 +168,8 @@ if __name__ == "__main__":
     USAGE:
         Opens and adds to the homdData-TaxonCounts.json file 
         MUST be run AFTER Initialize_Taxonomy.py
-        ./Initialize_Abundance.py -i HOMDtaxa-abundance-2021-09-06-cleaned.csv
+        ./Initialize_Abundance.py (now gets data from DB table: 'abundance')
         
-        TODO add abundance data to database
-        2021-12-09 Note: Abundance data has been put in database table: 'abundance'
-           using ./6_load_abundance2db.py and 3 abund files
-        this will be re-written to pull data from db rather than file
-
         OLD:
         Run 3 times (once for each abundance.csv file
           ./Initialize_Abundance.py -i Segata2021-09-07.csv -s segata
@@ -338,15 +200,7 @@ if __name__ == "__main__":
     parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", default=False,
                                                     help="verbose print()") 
     args = parser.parse_args()
-    #args.source = 'file'
-    # if args.infile == 'none':
-#         ans = input('take data from db? (N/y) ').lower()
-#         if ans == 'y':
-#             args.source = 'db'
-#         else:
-#             args.source = 'file'
-#             if args.infile == 'none':
-#                 sys.exit('Please enter file name on command line:\n\n'+usage)
+   
     
     #parser.print_help(usage)
     if not os.path.exists(args.outdir):
@@ -371,15 +225,7 @@ if __name__ == "__main__":
     args.indent = None
     if args.prettyprint:
         args.indent = 4
-    #myconn_tax = MyConnection(host=dbhost_old, db=args.TAX_DATABASE,   read_default_file = "~/.my.cnf_node")
-    #myconn_new = MyConnection(host=dbhost_new, db=args.NEW_DATABASE,  read_default_file = "~/.my.cnf_node")
-#     if args.source not in ['segata','dewhirst','eren']:
-#         sys.exit('no valid source')
-#     if args.source.lower() not in args.infile.lower():
-#         sys.exit('file/source mismatch')
-    # if args.source == 'file':
-#         run_abundance_csv()
-#     else:
+   
     myconn_new = MyConnection(host=dbhost_new, db=args.NEW_DATABASE,  read_default_file = "~/.my.cnf_node")
     run_abundance_db()
    

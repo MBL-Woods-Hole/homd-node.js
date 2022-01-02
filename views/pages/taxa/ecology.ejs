@@ -97,8 +97,8 @@ ul li{
 .note{
   font-size:12px;
   padding:10px 4px;
-  width:286px;
-  height:300px;
+  width:auto;
+  height:auto;
   border:1px solid brown;
   overflow: auto;
 }
@@ -241,7 +241,7 @@ ul li{
 <% }else{ %>
     <% parts = notes.segata.split(';') %>
     <div class='note'>
-    Notes:
+    <b>Notes:</b>
     <% for(n in parts){ %>
      <br><br><%- parts[n] %>
     <% } %>
@@ -274,7 +274,7 @@ ul li{
 <% }else{ %>
     <% parts = notes.dewhirst.split(';') %>
     <div class='note'>
-    Notes:
+    <b>Notes:</b>
     <% for(n in parts){ %>
      <br><br><%- parts[n] %>
     <% } %>
@@ -308,7 +308,7 @@ ul li{
     <% }else{ %>
         <% parts = notes.erenv1v3.split(';') %>
         <div class='note'>
-        Notes:
+        <b>Notes:</b>
         <% for(n in parts){ %>
          <br><br><%- parts[n] %>
         <% } %>
@@ -342,7 +342,7 @@ ul li{
     <% }else{ %>
         <% parts = notes.erenv3v5.split(';') %>
         <div class='note'>
-        Notes:
+        <b>Notes:</b>
         <% for(n in parts){ %>
          <br><br><%- parts[n] %>
         <% } %>
