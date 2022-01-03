@@ -16,7 +16,7 @@ const fs = require('fs-extra');
 //const createIframe = require("node-iframe");
 const express = require('express');
 const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
-const log = require('simple-node-logger').createSimpleFileLogger(logFilePath);
+const node_log = require('simple-node-logger').createSimpleFileLogger(logFilePath);
 
 const router = express.Router();
 const session = require('express-session');
@@ -41,7 +41,12 @@ const blast    = require('./routes/routes_blast');
 const help    = require('./routes/routes_help');
 const app = express();
 
-
+// PRODUCTION: log every restart
+if(CFG.ENV === 'production'){
+    const output = fs.createWriteStream('../homd_restart.log', {flags : 'a'})
+    const restart_logger = new console.Console(output)
+    restart_logger.log('Restart on '+helpers.timestamp())
+}
 
 app.set('appName', 'HOMD');
 require('./config/passport')(passport, TDBConn); // pass passport for configuration
@@ -115,7 +120,7 @@ app.use((error, req, res, next) => {
   //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
   //if(CFG.ENV === 'development'){
   if(CFG.ENV === 'production'){
-     log.debug(error.toString())
+     node_log.debug(error.toString())
   }
   res.render('pages/lost', { 
       url: req.url,

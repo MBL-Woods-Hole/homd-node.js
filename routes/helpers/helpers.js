@@ -8,12 +8,23 @@ var accesslog = require('access-log');
 const async = require('async')
 const util        = require('util');
 const path        = require('path');
-var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = today.getFullYear();
-today = yyyy + '-' + mm + '-' + dd;
+
+
 // route middleware to make sure a user is logged in
+module.exports.timestamp = () => {
+    //var today = new Date().toUTCString();
+    var today = new Date().toLocaleString() 
+    return today
+//     var dd = String(today.getDate()).padStart(2, '0');
+//     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+//     var yyyy = today.getFullYear();
+//     var hours = today.getHours()
+//     var mins = today.getMinutes()
+//     var secs = today.getSeconds()
+//     var date_string = yyyy + '-' + mm + '-' + dd;
+//     var time_string = '('+String(hours)+'-'+String(mins)+'-'+String(secs)+')'
+//     return date_string + ' '+time_string
+}
 module.exports.isLoggedIn = (req, res, next) => {
   // if user is authenticated in the session, carry on
 

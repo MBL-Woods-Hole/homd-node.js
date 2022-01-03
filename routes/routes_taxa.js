@@ -1084,10 +1084,7 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     helpers.print('type: '+type+' source: '+source)
     let table_tsv='',row,site
     let temp_list = Object.values(C.taxon_counts_lookup)
-    //console.log('Proteobacteria',C.taxon_counts_lookup['Bacteria;Proteobacteria'])
-    //console.log('Brevundimonas diminuta',C.taxon_counts_lookup['Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Brevundimonas;Brevundimonas diminuta'])
-    // dewhirst, eren BM: { site: 'BM', avg: '100', prev: '', sd: '0.003' },
-    // segata BM: { site: 'BM', avg: '100', prev: 'NO', sd: '0.003' },
+    
     let header = 'HOMD (https://node.homd.info/)::'
     if(source === 'segata'){
         header += 'Data from Segata(2012); '
