@@ -934,7 +934,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
              let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
              //segata_text = get_abundance_text(segata_max, clone_segata_data, C.abundance_names, rank, tax_name)
-             segata_table = build_abundance_table('segata',clone_segata_data, C.segata_order)
+             segata_table = build_abundance_table('segata',clone_segata_data, C.abundance_order)
              if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
              }
@@ -946,7 +946,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
              //max_obj = dewhirst_data.find(function(o){ return o.avg == dewhirst_max})
              //dewhirst_text = get_abundance_text(dewhirst_max, clone_dewhirst_data, C.abundance_names, rank, tax_name)
-             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.dewhirst_order)
+             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.abundance_order)
              if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
              }
@@ -959,7 +959,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              //max_obj = eren_data.find(function(o){ return o.avg == eren_max})
              //erenv1v3_text = get_abundance_text(erenv1v3_max, clone_eren_data, C.abundance_names, rank, tax_name)
-             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.eren_order)
+             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.abundance_order)
              if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
              }
@@ -1018,7 +1018,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       segata_table: segata_table,
       dewhirst_table: dewhirst_table,
       erenv1v3_table: erenv1v3_table,
-      segata_order: JSON.stringify(C.segata_order),
+      //segata_order: JSON.stringify(C.segata_order),
       segata: JSON.stringify(segata_data),
       dewhirst: JSON.stringify(dewhirst_data),
       erenv1v3: JSON.stringify(erenv1v3_data),
@@ -1076,7 +1076,101 @@ router.get('/download/:type/:fxn', function download(req, res) {
 //     res.end()
 // 
 // })
-router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', function dld_table_get(req, res) {
+router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
+//router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
+    console.log('in dld abund - taxon')
+    let type = req.params.type
+    let source = req.params.source
+    helpers.print('type: '+type+' source: '+source)
+    let table_tsv='',row,site
+    let temp_list = Object.values(C.taxon_counts_lookup)
+    //console.log('Proteobacteria',C.taxon_counts_lookup['Bacteria;Proteobacteria'])
+    //console.log('Brevundimonas diminuta',C.taxon_counts_lookup['Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Brevundimonas;Brevundimonas diminuta'])
+    // dewhirst, eren BM: { site: 'BM', avg: '100', prev: '', sd: '0.003' },
+    // segata BM: { site: 'BM', avg: '100', prev: 'NO', sd: '0.003' },
+    let header = 'HOMD (https://node.homd.info/)::'
+    if(source === 'segata'){
+        header += 'Data from Segata(2012); '
+        
+    }else if(source === 'dewhirst'){
+        header += 'Data from Dewhirst(unpublished); '
+    }else if(source === 'erenv1v3'){
+        header += 'Data from Eren(2014) V1-V3; '
+    }else if(source === 'erenv3v5'){
+        header += 'Data from Eren(2014) V3-V5; '
+    }
+    header += 'HMT == Human Microbial Taxon'
+    table_tsv += header+'\nTAX\tHMT' 
+    for(let n in C.abundance_order){
+         site = C.abundance_order[n]
+         table_tsv += '\t' +site+'_mean'+'\t'+site+'_stdev'+'\t'+site+'_prev'
+    }
+    table_tsv += '\n'
+    for(let tax_string in C.taxon_counts_lookup){
+      
+      if(source === 'segata' 
+                && C.taxon_counts_lookup[tax_string].hasOwnProperty('segata') 
+                && Object.keys(C.taxon_counts_lookup[tax_string]['segata']).length > 0)
+            {
+            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
+            row = C.taxon_counts_lookup[tax_string]['segata']
+            for(let n in C.abundance_order){
+                site = C.abundance_order[n]
+                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+            }
+            table_tsv += '\n'
+      }else if(source === 'dewhirst' 
+                && C.taxon_counts_lookup[tax_string].hasOwnProperty('dewhirst') 
+                && Object.keys(C.taxon_counts_lookup[tax_string]['dewhirst']).length > 0)
+            {
+            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
+            row = C.taxon_counts_lookup[tax_string]['dewhirst']
+            for(let n in C.abundance_order){
+                site = C.abundance_order[n]
+                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+            }
+            table_tsv += '\n'
+      }else if(source === 'erenv1v3' 
+                && C.taxon_counts_lookup[tax_string].hasOwnProperty('eren_v1v3')
+                && Object.keys(C.taxon_counts_lookup[tax_string]['eren_v1v3']).length > 0)
+            {
+            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
+            row = C.taxon_counts_lookup[tax_string]['eren_v1v3']
+            for(let n in C.abundance_order){
+                site = C.abundance_order[n]
+                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+            }
+            table_tsv += '\n'
+      }else if(source === 'erenv3v5' 
+                && C.taxon_counts_lookup[tax_string].hasOwnProperty('eren_v3v5')
+                &&  Object.keys(C.taxon_counts_lookup[tax_string]['eren_v3v5']).length > 0)
+            {
+            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
+            row = C.taxon_counts_lookup[tax_string]['eren_v3v5']
+            for(let n in C.abundance_order){
+                site = C.abundance_order[n]
+                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+            }
+            table_tsv += '\n'
+      }else{
+         // error
+      }
+    }
+    let filename = 'HOMD_abundance_table_'+source
+    if(type === 'browser'){
+      res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
+    }else if(type === 'text'){
+      res.set({"Content-Disposition":"attachment; filename=\""+filename+today+'_'+currentTimeInSeconds+".txt\""})
+    }else if(type === 'excel'){
+      res.set({"Content-Disposition":"attachment; filename=\""+filename+today+'_'+currentTimeInSeconds+".xls\""})
+    }else {
+      // error
+      console.log('Download table format ERROR')
+    }
+    res.send(table_tsv)
+    res.end()
+})    
+router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
 //router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
 
   
@@ -1087,7 +1181,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
   let letter = req.params.letter
   let sitefilter = JSON.parse(req.params.sites)
   let statusfilter = JSON.parse(req.params.stati)
-    let search_txt = req.params.search_txt
+  let search_txt = req.params.search_txt
   let search_field = req.params.search_field
   //console.log(type,letter,sitefilter,statusfilter,search_txt,search_field)
   // Apply filters
@@ -1153,7 +1247,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
     let list_of_otids = send_list.map(item => item.otid)
     //console.log('list_of_otids',list_of_otids)
   // type = browser, text or excel
-  var table_tsv = create_table(list_of_otids, 'table', type, file_filter_txt )
+  var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
   if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
   }else if(type === 'text'){
@@ -1339,7 +1433,7 @@ function get_counts(lineage){
     return txt
 }
 /////////////////////////////////////////
-function create_table(otids, source, type, head_txt) {
+function create_taxon_table(otids, source, type, head_txt) {
     // source == table, hirearchy or level
     let txt = head_txt+'\n'
     let headers,lineage,old_lineage,otid_pretty,rank,cnts
