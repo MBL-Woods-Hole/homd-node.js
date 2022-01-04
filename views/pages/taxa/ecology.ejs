@@ -13,19 +13,6 @@ ul li{
    width:400px;
    
 }
-#segata_table_div{
-   position: relative;
-   right:10px;
-   width:auto;
-}
-#segata_table{
-    font-size:small;
-    border-collapse: collapse;
-}
-#segata_table td{
-    border:1px solid black;
-    padding:2px;
-}
 
 .abund-table-div{
    
@@ -40,18 +27,40 @@ ul li{
    padding:1px 3px;
    
 }
-#links{
+#links_inflow {
+  width: 200px; 
+  height: 1000px; 
+  float: right; 
+  
+  position: relative; 
+  margin-right: 0px;
+  border:1px solid red;
+}
+#links_fixed{
+  width: 150px; 
+  border:1px solid lightgrey;
+  font-size: small;
+  
+  position: fixed; 
+  top: 250px; 
+  margin-left: 15px;
+  padding:0 5px;
+   
+   
+/* 
    position: fixed;
-   right: 20px;
+   left:1350px;
    font-size: small;
    border:1px solid lightgrey;
    padding:5px;
+ */
    
 }
-#links a{
+#links_fixed a{
   color:steelblue;
   
 }
+
 #legend_div{
    position:fixed;
    border:1px solid brown;
@@ -178,15 +187,17 @@ ul li{
         </small>
         
     </div>  <!-- end taxon-page-div -->
-<div id='links'>
- Links:<br>
-    <ul>
-    <% if(children_lst.length == 0){ %>
-        <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description:<br>&nbsp;&nbsp;<small><%= taxidfullname %></small></a></li>
-    <% } %>
-    <li><a href='/taxa/ecology_index'>Ecology Home</a>
-    <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%= tax_name %></small></a>
-    </ul>
+<div id='links_inflow'>
+    <div id='links_fixed'>
+     Links:<br>
+        <ul>
+        <% if(children_lst.length == 0){ %>
+            <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description:<br>&nbsp;&nbsp;<small><%= taxidfullname %></small></a></li>
+        <% } %>
+        <li><a href='/taxa/ecology_index'>Ecology Home</a>
+        <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%= tax_name %></small></a>
+        </ul>
+    </div>
 </div>
 <div id='legend_div'>
     <div id='legend'>Legend:</div>

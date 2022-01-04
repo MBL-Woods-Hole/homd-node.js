@@ -298,7 +298,7 @@
     <td><small><a href='https://anviserver.homd.info/'>https://anviserver.homd.info/</a></small></td>
   </tr>
   <tr>
-    <td class='tbl-title'>Microbial Ecology<br>/Abundance:</td>
+    <td class='tbl-title'>Microbial Ecology<br>(Abundance):</td>
     <% if(data3.subspecies){ %>
       <td><small>[<a href='ecology/subspecies/<%= data3.subspecies %>'>Open Abundance/Ecology Page for <i><%= data3.subspecies %></i></a>]</small></td>
     <% }else{ %>
@@ -306,16 +306,18 @@
     <% } %>
   
   </tr>
+  
+<!-- 
   <tr>
     <td class='tbl-title'>Number of Phage<br>Known to Infect this Species:</td>
     <td><%= pids.length %>
     <% if(pids.length > 0){ %>
        <a class='td-button' href='/phage/phage_table?host_otid=<%= otid %>'> See List </a>
     <% } %>
-   
-    
     </td>
   </tr>
+ -->
+  
   <tr>
     <td class='tbl-title'>Proteomics:</td>
     <td><small></small></td>
