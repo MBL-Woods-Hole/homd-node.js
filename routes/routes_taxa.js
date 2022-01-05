@@ -883,9 +883,9 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    let otid ='0';
    let max_obj = {};
    //let major_genera=0;
-   let segata_data={},dewhirst_data={},erenv1v3_data={};
-   let segata_max=0,dewhirst_max=0,erenv1v3_max=0;
-   let erenv1v3_table='',dewhirst_table='',segata_table='';
+   let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
+   let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
+   let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
    //console.log('rank: '+rank+' name: '+tax_name);
    // TODO::should be in constants???
    
@@ -930,22 +930,17 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
          
          if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
-             
              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
              let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
-             //segata_text = get_abundance_text(segata_max, clone_segata_data, C.abundance_names, rank, tax_name)
              segata_table = build_abundance_table('segata',clone_segata_data, C.abundance_order)
              if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
              }
-       
          }
          if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
-             //max_obj = dewhirst_data.find(function(o){ return o.avg == dewhirst_max})
-             //dewhirst_text = get_abundance_text(dewhirst_max, clone_dewhirst_data, C.abundance_names, rank, tax_name)
              dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.abundance_order)
              if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
@@ -955,50 +950,32 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              erenv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv1v3']
              erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
              let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
-             console.log('C.taxon_counts_lookup')
              helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             //max_obj = eren_data.find(function(o){ return o.avg == eren_max})
-             //erenv1v3_text = get_abundance_text(erenv1v3_max, clone_eren_data, C.abundance_names, rank, tax_name)
              erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.abundance_order)
              if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
              }
          }
-         // if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v5']).length != 0){
-//              eren_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
-//              eren_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
-//              let clone_eren_data = JSON.parse(JSON.stringify(eren_data)) // clone to avoid difficult errors
-//              helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-//              //max_obj = eren_data.find(function(o){ return o.avg == eren_max})
-//              eren_text = get_abundance_text(eren_max, clone_eren_data, C.abundance_names, rank, tax_name)
-//              eren_table = build_abundance_table('eren_v3v5', clone_eren_data, C.eren_order)
-//                if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-//                 erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
-//                }
-//          }
+         if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5']).length != 0){
+             erenv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
+             erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
+             let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
+             helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+             erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.abundance_order)
+             if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+                 erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
+             }
+         }
          
       }
-   }
+    }
    
-   
-  
-   console.log('erenv1v3_notes:',erenv1v3_notes)
-   //console.log('max',max)
-   //console.log('max_obj',max_obj)
-   // console.log('segata data:')
-    //console.log(segata_data)
-//    
-   //console.log('erenv1v3_data')
-    //console.log(erenv1v3_data)
-//  console.log('dewhirst_data')
-//  console.log(dewhirst_data)
-   //lineage_string = lineage_list[0].split(';').join('; ')
-   let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
+    let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
    // sort genera list 
-   genera.sort(function sortByTaxa(a, b) {
-                return helpers.compareStrings_alpha(a.taxon, b.taxon);
+    genera.sort(function sortByTaxa(a, b) {
+        return helpers.compareStrings_alpha(a.taxon, b.taxon);
     })
-   res.render('pages/taxa/ecology', {
+    res.render('pages/taxa/ecology', {
       title: 'HOMD ::'+rank+'::'+tax_name,
       pgname: 'taxon/ecology', // for AbountThisPage 
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
@@ -1006,22 +983,19 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       //headline: 'Life: Cellular Organisms',
       lineage: lineage_string,
       rank: rank,
-      max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max}),
+      max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
       otid: otid,  // zero unless species
       genera: JSON.stringify(genera),
       children: JSON.stringify(children_list),
-      // segata_notes: segata_notes,
-//       dewhirst_notes: dewhirst_notes,
-//       erenv1v3_notes: erenv1v3_notes,
-//       erenv3v5_notes: erenv3v5_notes,
       notes: JSON.stringify({'segata':segata_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
       segata_table: segata_table,
       dewhirst_table: dewhirst_table,
       erenv1v3_table: erenv1v3_table,
-      //segata_order: JSON.stringify(C.segata_order),
+      erenv3v5_table: erenv3v5_table,
       segata: JSON.stringify(segata_data),
       dewhirst: JSON.stringify(dewhirst_data),
       erenv1v3: JSON.stringify(erenv1v3_data),
+      erenv3v5: JSON.stringify(erenv3v5_data),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     })
 })
@@ -1793,27 +1767,25 @@ function build_abundance_table(cite, data, order){
         html += '<th>'+order[n]+'</th>'
     }
     html += '</tr></thead><tbody>'
-    // segata, dewhirst, eren
+   
     html += '<tr><th>Avg</th>'
     for(var n in data){
         html += '<td>'+data[n].avg+'</td>'
     }
-    // segata, dewhirst
-    if(['segata','dewhirst','eren_v1v3'].indexOf(cite) != -1){
-      html += '<tr><th>Stdev</th>'
-      for(var n in data){
+    
+    html += '<tr><th>Stdev</th>'
+    for(var n in data){
         html += '<td>'+data[n].sd+'</td>'
-      }
     }
-    // dewhirst, eren
-    if(['dewhirst','eren_v1v3'].indexOf(cite) != -1){
+
+    // dewhirst, eren  (Not for Segata)
+    if(['dewhirst','eren_v1v3','eren_v3v5'].indexOf(cite) != -1){
       html += '<tr><th>Prev</th>'
       for(var n in data){
         html += '<td>'+data[n].prev+'</td>'
       }
     }
     html += '</tbody></table>'
-    
     return html
 }   
 //
