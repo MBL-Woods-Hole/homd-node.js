@@ -76,6 +76,9 @@ def run_abundance_db():
     """
     
     header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
+    segata_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
+    eren_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
+    dewhirst_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','NS']
     
     for row in result:
         #print(row)
@@ -105,25 +108,25 @@ def run_abundance_db():
             collector[taxon_string]['dewhirst'] = {}
         
         if row['reference'].startswith('Segata'):
-            for p in header_prefixes:
+            for p in segata_header_prefixes:
                 max_segata = get_max(row, p, max_segata)
                 collector[taxon_string]['segata'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_segata'] = max_segata
             collector[taxon_string]['notes']['segata'] = row['notes']
         if row['reference'].startswith('Eren2014_v1v3'):
-            for p in header_prefixes:
+            for p in eren_header_prefixes:
                 max_eren = get_max(row, p, max_eren)
                 collector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_erenv1v3'] = max_eren
             collector[taxon_string]['notes']['eren_v1v3'] = row['notes']
         if row['reference'].startswith('Eren2014_v3v5'):
-            for p in header_prefixes:
+            for p in eren_header_prefixes:
                 max_eren = get_max(row, p, max_eren)
                 collector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_erenv3v5'] = max_eren
             collector[taxon_string]['notes']['eren_v3v5'] = row['notes']
         if row['reference'].startswith('Dewhirst'):
-            for p in header_prefixes:
+            for p in dewhirst_header_prefixes:
                 max_dewhirst = get_max(row, p, max_dewhirst)
                 collector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             collector[taxon_string]['max_dewhirst'] = max_dewhirst

@@ -206,10 +206,25 @@
         <% if(data1.type_strains.length > 0){ %>
            <%- data1.type_strains.join(', ') %>
         <% } %>
+        
         <% if(data3.subspecies){ %>
+           <% sp_parts = data1.species.split(" ") %>
+           <% ssp_parts = data3.subspecies.split(" ") %>
+           <% if(sp_parts[0] == "[Eubacterium]"){ %>
+             <% gs = "Eubacterium-" + sp_parts[1]+"-"+data1.species %>
+           <% }else{ %>
+             <% gs = data1.genus +"-"+ data1.species %>
+           <% } %>
+           
+           
           <br>[Check <a href='https://lpsn.dsmz.de/subspecies/<%= data1.genus %>-<%= data1.species %>-<%= data3.subspecies.split(" ")[1] %>' target='_blank' rel="noopener noreferrer">LPSN.dsmz.de</a>]
           <br>[Check <a href='http://gcm.wdcm.org/search?search=<%= data1.genus %>%20<%= data1.species %>%20<%= data3.subspecies %>' target='_blank' rel="noopener noreferrer">Global Catalogue of Microorganisms</a>]
         <% }else{ %>
+            <% if(data1.species.split(" ")[0] == "[Eubacterium]"){ %>
+            <% gs = data1.species %>
+         <% }else{ %>
+            <% gs = data1.genus +"-"+ data1.species %>
+         <% } %>
           <br>[Check <a href='https://lpsn.dsmz.de/species/<%= data1.genus %>-<%= data1.species %>' target='_blank' rel="noopener noreferrer">LPSN.dsmz.de</a>]
           <br>[Check <a href='http://gcm.wdcm.org/search?search=<%= data1.genus %>%20<%= data1.species %>' target='_blank' rel="noopener noreferrer">Global Catalogue of Microorganisms</a>]
         <% } %>
@@ -337,12 +352,19 @@
     <td class='tbl-title'>PubMed Searches:</td>
     <td><small>
       <% if(data1.status === 'Named') { %>
+         <% if(data1.species.split(" ")[0] == "[Eubacterium]"){ %>
+            <% gs = data1.species %>
+         <% }else{ %>
+            <% gs = data1.genus +"-"+ data1.species %>
+         <% } %>
        <table class='small-tbl' border='0'>
-        <tr><td style='text-align:right;border:none;padding:0 1px;'><%= data4.NCBI_pubmed_search_count %></td><td style='padding:0 1px;border:none;'>[<a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= data1.genus %>-<%= data1.species %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link</a>]</td></tr>
-        <!-- nuccore/?term="genus+species"   -->
-        <!-- nucleotide?cmd=search&term="data1.genus data1.species" -->
-        <tr><td style='text-align:right;border:none;padding:0 1px;'><%= data4.NCBI_nucleotide_search_count %></td><td style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= data1.genus %>-<%= data1.species %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link</a>]</td></tr>
-        <tr><td style='text-align:right;border:none;padding:0 1px;'><%= data4.NCBI_protein_search_count %></td><td style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= data1.genus %>-<%= data1.species %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link</a>]</td></tr>
+         
+            <tr><td style='text-align:right;border:none;padding:0 1px;'><%= data4.NCBI_pubmed_search_count %></td><td style='padding:0 1px;border:none;'>[<a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= gs %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link</a>]</td></tr>
+            <!-- nuccore/?term="genus+species"   -->
+            <!-- nucleotide?cmd=search&term="data1.genus data1.species" -->
+            <tr><td style='text-align:right;border:none;padding:0 1px;'><%= data4.NCBI_nucleotide_search_count %></td><td style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= gs %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link</a>]</td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'><%= data4.NCBI_protein_search_count %></td><td style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= gs %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link</a>]</td></tr>
+         
        </table>
       <% }else{ %>
          Status:<%= data1.status %>

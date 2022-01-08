@@ -199,15 +199,17 @@ ul li{
           <br>BM - Buccal Mucosa
           <br>KG - Keratinized Gingiva
           <br>HP - Hard Palate
-<br>
+          <br>
           <br>TD - Tongue Dorsum
           <br>PT - Palatine Tonsils
           <br>TH - Throat
           <br>SV - Saliva
-<br>  
+          <br>  
           <br>SupP - Supra-gingival Plaque
           <br>SubP - Sub-gingival Plaque
-  <br>
+          <br>
+          <br>NS - Nasal
+          <br>
           <br>ST - Stool
         </ul>  
         </div>
@@ -254,40 +256,6 @@ ul li{
      <br><br><%- parts[n] %>
     <% } %>
     </div>
-<% } %>
-</td>
-</tr>
-<tr><td class='wide' colspan='2'></td></tr>
-<tr><td>
-
-<div class='plot'  style=''>
-    <div class='plot_div'>
-    <small>
-      From: Dewhirst 35x9 data <small>(not published yet)</small>
-    
-    </small>
-    <div id="plot_dewhirst_here"></div> 
-    </div>
-    
-    <% if(Object.keys(dewhirst_data).length !== 0){ %>
-        <small>percent abundance</small>
-        <div class='abund-table-div'><%- dewhirst_table %></div>
-    <% } %>
-</div>
-
-</td>
-<td>
-<% if(notes.dewhirst == ''){ %>
-    <div class='nonote'>No Notes</div>
-<% }else{ %>
-    <% parts = notes.dewhirst.split(';') %>
-    <div class='note'>
-    <b>Notes:</b>
-    <% for(n in parts){ %>
-     <br><br><%- parts[n] %>
-    <% } %>
-    </div>
-    
 <% } %>
 </td>
 </tr>
@@ -357,6 +325,40 @@ ul li{
         </div>
     
     <% } %>
+</td>
+</tr>
+<tr><td class='wide' colspan='2'></td></tr>
+<tr><td>
+
+<div class='plot'  style=''>
+    <div class='plot_div'>
+    <small>
+      From: Dewhirst 35x9 data <small>(not published yet)</small>
+    
+    </small>
+    <div id="plot_dewhirst_here"></div> 
+    </div>
+    
+    <% if(Object.keys(dewhirst_data).length !== 0){ %>
+        <small>percent abundance</small>
+        <div class='abund-table-div'><%- dewhirst_table %></div>
+    <% } %>
+</div>
+
+</td>
+<td>
+<% if(notes.dewhirst == ''){ %>
+    <div class='nonote'>No Notes</div>
+<% }else{ %>
+    <% parts = notes.dewhirst.split(';') %>
+    <div class='note'>
+    <b>Notes:</b>
+    <% for(n in parts){ %>
+     <br><br><%- parts[n] %>
+    <% } %>
+    </div>
+    
+<% } %>
 </td>
 </tr>
 

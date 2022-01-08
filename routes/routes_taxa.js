@@ -941,7 +941,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
-             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.abundance_order)
+             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.dewhirst_order)
              if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
              }
@@ -1058,22 +1058,26 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     helpers.print('type: '+type+' source: '+source)
     let table_tsv='',row,site
     let temp_list = Object.values(C.taxon_counts_lookup)
-    
+    let abundance_order
     let header = 'HOMD (https://node.homd.info/)::'
     if(source === 'segata'){
         header += 'Data from Segata(2012); '
-        
+        abundance_order = C.abundance_order
     }else if(source === 'dewhirst'){
         header += 'Data from Dewhirst(unpublished); '
+        abundance_order = C.dewhirst_order
     }else if(source === 'erenv1v3'){
         header += 'Data from Eren(2014) V1-V3; '
+        abundance_order = C.abundance_order
     }else if(source === 'erenv3v5'){
         header += 'Data from Eren(2014) V3-V5; '
+        abundance_order = C.abundance_order
     }
     header += 'HMT == Human Microbial Taxon'
     table_tsv += header+'\nTAX\tHMT' 
-    for(let n in C.abundance_order){
-         site = C.abundance_order[n]
+    
+    for(let n in abundance_order){
+         site = abundance_order[n]
          table_tsv += '\t' +site+'_mean'+'\t'+site+'_stdev'+'\t'+site+'_prev'
     }
     table_tsv += '\n'
@@ -1085,8 +1089,8 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
             {
             table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
             row = C.taxon_counts_lookup[tax_string]['segata']
-            for(let n in C.abundance_order){
-                site = C.abundance_order[n]
+            for(let n in abundance_order){
+                site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
@@ -1096,8 +1100,8 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
             {
             table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
             row = C.taxon_counts_lookup[tax_string]['dewhirst']
-            for(let n in C.abundance_order){
-                site = C.abundance_order[n]
+            for(let n in abundance_order){
+                site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
@@ -1107,8 +1111,8 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
             {
             table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
             row = C.taxon_counts_lookup[tax_string]['eren_v1v3']
-            for(let n in C.abundance_order){
-                site = C.abundance_order[n]
+            for(let n in abundance_order){
+                site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
@@ -1118,8 +1122,8 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
             {
             table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
             row = C.taxon_counts_lookup[tax_string]['eren_v3v5']
-            for(let n in C.abundance_order){
-                site = C.abundance_order[n]
+            for(let n in abundance_order){
+                site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'

@@ -30,7 +30,7 @@ constants.phyla = [ 'Actinobacteria',
 // constants.eren_order =     ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','ST']
 constants.abundance_order =   ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
 //constants.segata_order =   ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
-//constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP']
+constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','NS']
 //constants.eren_order =     ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','ST']
 
 // constants.abundance_names = {
