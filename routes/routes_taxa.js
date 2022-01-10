@@ -518,7 +518,7 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
 router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
-  let data1,data2,data3,data4,data5
+  let data1,data2,data3,data4,data5,links
   /*
   This busy page needs:
   1  otid     type:string
@@ -536,6 +536,32 @@ router.get('/tax_description', function tax_description(req, res){
   12 Genome Sequence  - needs genome count and otid
   13 Ref Data: General,Citations,Pheno,Cultivability,Pevalence...
   */
+  /*
+  Link Exceptions
+  105	Peptostreptococcaceae [XI][G-1]	[Eubacterium] infirmum	
+  467	Peptostreptococcaceae [XI][G-1]	[Eubacterium] sulci	
+759	Peptostreptococcaceae [XI][G-5]	[Eubacterium] saphenum	
+673	Peptostreptococcaceae [XI][G-6]	[Eubacterium] minutum	
+694	Peptostreptococcaceae [XI][G-6]	[Eubacterium] nodatum	
+557	Peptostreptococcaceae [XI][G-9]	[Eubacterium] brachy	
+
+106	Peptostreptococcaceae [XI][G-7]	[Eubacterium] yurii	subsp. schtitka
+377	Peptostreptococcaceae [XI][G-7]	[Eubacterium] yurii	subsps. yurii & margaretiae
+
+  
+  */
+  let link_exceptions = {}
+  link_exceptions['105'] = {'ncbilink':'Eubacterium-infirmum','gcmlink':'Eubacterium%20infirmum','lpsnlink':'species/eubacterium-infirmum'}
+  link_exceptions['467'] = {'ncbilink':'Eubacterium-sulci','gcmlink':'Eubacterium%20sulci','lpsnlink':'species/eubacterium-sulci'}
+  link_exceptions['759'] = {'ncbilink':'Eubacterium-saphenum','gcmlink':'Eubacterium%20saphenum','lpsnlink':'species/eubacterium-saphenum'}
+  link_exceptions['673'] = {'ncbilink':'Eubacterium-minutum','gcmlink':'Eubacterium%20minutum','lpsnlink':'species/eubacterium-minutum'}
+  link_exceptions['694'] = {'ncbilink':'Eubacterium-nodatum','gcmlink':'Eubacterium%20nodatum','lpsnlink':'species/eubacterium-nodatum'}
+  link_exceptions['557'] = {'ncbilink':'Eubacterium-brachy','gcmlink':'Eubacterium%20brachy','lpsnlink':'species/eubacterium-brachy'}
+  // susp 106	Peptostreptococcaceae [XI][G-7]	[Eubacterium] yurii	subsp. schtitka
+  link_exceptions['106'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/eubacterium-yurii-schtitka'}
+  // subsp 377	Peptostreptococcaceae [XI][G-7]	[Eubacterium] yurii	subsps. yurii & margaretiae
+  link_exceptions['377'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/Eubacterium-yurii-margaretiae'}
+  
   data1 = C.taxon_lookup[otid]
   helpers.print(['data1',data1])
   if(C.dropped_taxids.indexOf(otid) !== -1){
@@ -604,7 +630,15 @@ router.get('/tax_description', function tax_description(req, res){
   //console.log('regex2',lineage_list[0].split(';').pop())
   //console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
   let lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
-  
+  if(otid in link_exceptions){
+     links = link_exceptions[otid]
+  }else{
+     if(data3.subspecies){
+        links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species+'%20'+data3.subspecies,'lpsnlink':'subspecies/'+data1.genus+'-'+data1.species+'-'+data3.subspecies.split(' ')[1]}
+     }else{
+        links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species,'lpsnlink':'species/'+data1.genus+'-'+data1.species}
+     }
+  }
   res.render('pages/taxa/taxdesc', {
     title: 'HOMD :: Taxon Info', 
     pgname: 'taxon/tax_description', // for AbountThisPage
@@ -617,6 +651,7 @@ router.get('/tax_description', function tax_description(req, res){
     data3: JSON.stringify(data3),
     data4: JSON.stringify(data4),
     data5: JSON.stringify(data5),
+    links: JSON.stringify(links),
     lineage: lineage_string,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
   })

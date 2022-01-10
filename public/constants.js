@@ -24,7 +24,7 @@ constants.phyla = [ 'Actinobacteria',
           'WPS-2'
 ]
 
-
+// constants.link_exceptions  SEE routes_taxa.js:taxdesc()
 // constants.segata_order =   ['BM',"KG",'HP',       'TH',"PT","TD","SV","SupP","SubP",'ST']
 // constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP']
 // constants.eren_order =     ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','ST']
