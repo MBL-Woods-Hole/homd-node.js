@@ -14,10 +14,9 @@ import datetime
 ranks = ['domain','phylum','klass','order','family','genus','species']
 today = str(datetime.date.today())
 
-# segata_headers=['BM','KG','HP','Throat','PT','TD','Saliva','SupP','SubP','Stool']
-# dewhirst_headers=['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP']
-# eren_headers=['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
-headers = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+segata_headers=['BM','KG','HP','Throat','PT','TD','Saliva','SupP','SubP','Stool']
+dewhirst_headers=['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP']
+eren_headers=['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
 
    
 hmt_index = 2  # only for dewhirst and eren
@@ -58,76 +57,7 @@ subspecies['nucleatum subsp. animalis'] = ['nucleatum','subsp. animalis']
 subspecies['nucleatum subsp. nucleatum'] = ['nucleatum','subsp. nucleatum'] 
 subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp. polymorphum'] 
 subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp. vincentii'] 
-"""
-CREATE TABLE `abundance_copy4` (
-  `abundance_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `reference` varchar(300) NOT NULL DEFAULT '',
-  `otid` varchar(11) NOT NULL DEFAULT '',
-  `domain_id` int(11) unsigned NOT NULL,
-  `phylum_id` int(11) unsigned NOT NULL,
-  `klass_id` int(11) unsigned NOT NULL,
-  `order_id` int(11) unsigned NOT NULL,
-  `family_id` int(11) unsigned NOT NULL,
-  `genus_id` int(11) unsigned NOT NULL,
-  `species_id` int(11) unsigned NOT NULL,
-  `subspecies_id` int(11) unsigned NOT NULL,
-  `notes` text,
-  `level` varchar(12) NOT NULL DEFAULT '',
-  `max` varchar(10) NOT NULL DEFAULT '',
-  `BM_mean` varchar(11) NOT NULL DEFAULT '',
-  `BM_prev` varchar(11) DEFAULT '',
-  `BM_sd` varchar(11) NOT NULL DEFAULT '',
-  `KG_mean` varchar(11) NOT NULL DEFAULT '',
-  `KG_prev` varchar(11) NOT NULL DEFAULT '',
-  `KG_sd` varchar(11) NOT NULL DEFAULT '',
-  `HP_mean` varchar(11) NOT NULL DEFAULT '',
-  `HP_prev` varchar(11) NOT NULL DEFAULT '',
-  `HP_sd` varchar(11) NOT NULL DEFAULT '',
-  `TD_mean` varchar(11) NOT NULL DEFAULT '',
-  `TD_prev` varchar(11) NOT NULL DEFAULT '',
-  `TD_sd` varchar(11) NOT NULL DEFAULT '',
-  `PT_mean` varchar(11) NOT NULL DEFAULT '',
-  `PT_prev` varchar(11) NOT NULL DEFAULT '',
-  `PT_sd` varchar(11) NOT NULL DEFAULT '',
-  `TH_mean` varchar(11) NOT NULL DEFAULT '',
-  `TH_prev` varchar(11) NOT NULL DEFAULT '',
-  `TH_sd` varchar(11) NOT NULL DEFAULT '',
-  `SV_mean` varchar(11) NOT NULL DEFAULT '',
-  `SV_prev` varchar(11) NOT NULL DEFAULT '',
-  `SV_sd` varchar(11) NOT NULL DEFAULT '',
-  `SupP_mean` varchar(11) NOT NULL DEFAULT '',
-  `SupP_prev` varchar(11) NOT NULL DEFAULT '',
-  `SupP_sd` varchar(11) NOT NULL DEFAULT '',
-  `SubP_mean` varchar(11) NOT NULL DEFAULT '',
-  `SubP_prev` varchar(11) NOT NULL DEFAULT '',
-  `SubP_sd` varchar(11) NOT NULL DEFAULT '',
-  `NS_mean` varchar(11) DEFAULT ' ',
-  `NS_prev` varchar(11) DEFAULT '',
-  `NS_sd` varchar(11) NOT NULL DEFAULT '',
-  `ST_mean` varchar(11) NOT NULL DEFAULT '',
-  `ST_prev` varchar(11) NOT NULL DEFAULT '',
-  `ST_sd` varchar(11) NOT NULL DEFAULT '',
-  PRIMARY KEY (`abundance_id`),
-  UNIQUE KEY `reference` (`reference`,`BM_mean`,`domain_id`,`phylum_id`,`klass_id`,`order_id`,`family_id`,`genus_id`,`species_id`,`subspecies_id`),
-  KEY `abundance_id_ibfk_3` (`otid`),
-  KEY `phylum_id` (`phylum_id`),
-  KEY `klass_id` (`klass_id`),
-  KEY `order_id` (`order_id`),
-  KEY `family_id` (`family_id`),
-  KEY `genus_id` (`genus_id`),
-  KEY `species_id` (`species_id`),
-  KEY `subspecies_id` (`subspecies_id`),
-  CONSTRAINT `abundance_copy4_ibfk_1` FOREIGN KEY (`domain_id`) REFERENCES `domain` (`domain_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_2` FOREIGN KEY (`phylum_id`) REFERENCES `phylum` (`phylum_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_3` FOREIGN KEY (`klass_id`) REFERENCES `klass` (`klass_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_4` FOREIGN KEY (`order_id`) REFERENCES `order` (`order_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_5` FOREIGN KEY (`family_id`) REFERENCES `family` (`family_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_6` FOREIGN KEY (`genus_id`) REFERENCES `genus` (`genus_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_7` FOREIGN KEY (`species_id`) REFERENCES `species` (`species_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_8` FOREIGN KEY (`subspecies_id`) REFERENCES `subspecies` (`subspecies_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-"""
 
 
     
@@ -139,24 +69,7 @@ def run_abundance_db():
     if os.path.isfile(json_file):
         f = open(json_file)
         collector = json.load(f)
-    sites = []
-    for n in headers:
-        sites.append(n+'_mean')
-        sites.append(n+'_sd')
-        sites.append(n+'_prev')
-    q = "SELECT otid,notes,`level`,reference,concat_ws(',',`domain`,`phylum`,`klass`,`order`,`family`,`genus`,`species`,`subspecies`) as taxonomy, "+','.join(sites)
-    q += " FROM abundance"
-    q += " JOIN `domain` using(domain_id)"
-    q += " JOIN `phylum` using(phylum_id)"
-    q += " JOIN `klass` using(klass_id)"
-    q += " JOIN `order` using(order_id)"
-    q += " JOIN `family` using(family_id)"
-    q += " JOIN `genus` using(genus_id)"
-    q += " JOIN `species` using(species_id)"
-    q += " JOIN `subspecies` using(subspecies_id)"
-    print(q)
-    
-    
+    q = "SELECT * from abundance"
     result = myconn_new.execute_fetch_select_dict(q)
     """
     {'abundance_id': 1148, 'reference': 'Dewhirst35x9', 'otid': '362', 'taxonomy': 'Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;Fretibacterium;sp. HMT 362', 'level': 'Species', 'max': '0.02095498', 'BM_mean': '0.002', 'BM_prev': '12.5', 'BM_sd': '0.007', 'KG_mean': '0', 'KG_prev': '5.9', 'KG_sd': '0.001', 'HP_mean': '0', 'HP_prev': '7.7', 'HP_sd': '0.001', 'TD_mean': '0', 'TD_prev': '3.1', 'TD_sd': '0.001', 'PT_mean': '0.006', 'PT_prev': '6.9', 'PT_sd': '0.03', 'Throat_mean': '0', 'Throat_prev': '3.2', 'Throat_sd': '0', 'Saliva_mean': '0', 'Saliva_prev': '6.1', 'Saliva_sd': '0.001', 'SupP_mean': '0', 'SupP_prev': '5.7', 'SupP_sd': '0.001', 'SubP_mean': '0.021', 'SubP_prev': '9.7', 'SubP_sd': '0.1', 'Stool_mean': '', 'Stool_prev': '', 'Stool_sd': ''}
@@ -170,7 +83,7 @@ def run_abundance_db():
     for row in result:
         #print(row)
         max_segata, max_eren, max_dewhirst = 0,0,0
-        taxon_string = fix_taxonomy(row['taxonomy'])
+        taxon_string = row['taxonomy']
         
         tax_parts = taxon_string.split(';')
         if len(tax_parts) == 7:
@@ -182,7 +95,7 @@ def run_abundance_db():
             print('!!!missing from HOMD collector(TaxonCounts.json):!!! ',taxon_string)
             collector[taxon_string] = {}
         collector[taxon_string]['otid'] = row['otid']
-        #collector[taxon_string]['max_all'] = row['max']
+        collector[taxon_string]['max_all'] = row['max']
         if 'notes' not in collector[taxon_string]:
             collector[taxon_string]['notes'] = {}
         if 'segata' not in collector[taxon_string]:
@@ -233,21 +146,6 @@ Bacteria;Firmicutes;Bacilli;Lactobacillales;Aerococcaceae;Abiotrophia;Abiotrophi
 "dewhirst": {"BM": {"site": "BM", "avg": "0.192", "stdev": "0.343", "prev": "75"}, "KG": {"site": "KG", "avg": "0.081", "stdev": "0.14", "prev": "61.8"}, "HP": {"site": "HP", "avg": "0.138", "stdev": "0.289", "prev": "76.9"}, "TD": {"site": "TD", "avg": "0.006", "stdev": "0.008", "prev": "56.3"}, "PT": {"site": "PT", "avg": "0.017", "stdev": "0.037", "prev": "62.1"}, "Throat": {"site": "Throat", "avg": "0.019", "stdev": "0.039", "prev": "61.3"}, "Saliva": {"site": "Saliva", "avg": "0.083", "stdev": "0.168", "prev": "79.6"}, "SupP": {"site": "SupP", "avg": "0.244", "stdev": "0.415", "prev": "71.4"}, "SubP": {"site": "SubP", "avg": "0.099", "stdev": "0.224", "prev": "56.9"}}, 
 "max_segata": "", "max_eren": "0.489", "max_dewhirst": "0.244", "max_all": "0.489017644", "otid": "389"}
 """
-def fix_taxonomy(taxonomy):
-    """
-    subspecies were put in separate col in script: abundance_scripts/10-load_abundance2dbNEW.py and stored in db
-    Here we append subspecies back to species
-    """
-    tax_lst = taxonomy.split(',')
-    new_tax = []
-    subsp = tax_lst[-1]
-    if subsp:
-        tax_lst.pop(-1)
-        tax_lst[-1] = tax_lst[-1]+' '+subsp
-    for name in tax_lst:
-        if name:
-            new_tax.append(name)
-    return ';'.join(new_tax)
 def get_max(row, p, max_ref):
     test = row[p+'_mean']
     #print(max_ref)

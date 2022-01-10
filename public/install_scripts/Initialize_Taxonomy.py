@@ -379,13 +379,7 @@ JOIN subspecies  using(subspecies_id)
         JOIN genus using(genus_id)
         JOIN species  using(species_id)
         JOIN subspecies  using(subspecies_id)
-        WHERE otid not in ('9',   '15',  '16',  '55',  '65',
-  '67',  '68',  '69',  '140', '143',
-  '177', '210', '220', '255', '296',
-  '310', '372', '395', '437', '446',
-  '449', '452', '453', '462', '474',
-  '486', '487', '502', '648', '729',
-  '826')
+        WHERE status != 'Dropped'
       """
     
     result = myconn.execute_fetch_select_dict(qtax)
