@@ -16,6 +16,22 @@ Used for extracting data from the old mysql database and putting in the new data
 - 4_notes.txt
 - 5_load_phage.py
 
+### Abundance scripts 
+Located on github:homd-scripts
+These scripts are used sequentially for taking data from oligotypes (Eren2014) or counts matrix (Segata2012 and Dewhirst) 
+to place the data into the 'abundance' database table. Each script takes the output from the previous script.
+The output is tab-separated data. Run the script with no parameters to get input requirements.
+More information: file:notes_abundance.txt (RUNNING THE SCRIPTS) in github:homd-scripts
+ - 12-blast_parse_abundance.py  -- first and second steps: to blast a seq, then parse the results (Eren)
+ - 3-abundance_add_counts_per_site.py  Adds counts data (Eren) to create a counts matrix
+ - 4-abundance_calculate_pcts.py   percents per person-site
+ - 5-abundance_coalesce.py        split the rows up to one row per HMT
+ - 6 NO SCRIPT
+ - 7-abundance_hmt2taxonomy.py    convert HMT to taxonomy
+ - 8-gather_abundance_by_rank.py  Split the taxon_strings and addup the percentages per rank.
+ - 9-abunance_ranks_calc_means.py   Calculate the MEAN, SD and PREV for each site for each row(taxonomy)
+ - 10-load_abundance2db.py     Load the abundance MEAN, Stdev, and Prev for each oral site into the database.
+ 
 ### Initialization scripts (Initialize_*)
 Used to create the required JSON files that the HOMD Node.js app reads on startup.
 This provides the app with JSON objects which is much faster that making MySQL queries during data requests.
