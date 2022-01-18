@@ -368,8 +368,8 @@ JOIN species  using(species_id)
 JOIN subspecies  using(subspecies_id)    
     """
 ## IMPORTANT -- DO NOT LET Dropped into hiearchy/Lineage/Counts    
-    qtax = """select otid,domain,phylum,klass,`order`,family,genus,species,subspecies
-        from otid_prime
+    qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies
+        FROM otid_prime
         JOIN taxonomy using(taxonomy_id)
         JOIN domain using(domain_id)
         JOIN phylum using(phylum_id)

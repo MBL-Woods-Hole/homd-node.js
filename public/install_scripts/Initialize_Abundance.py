@@ -39,27 +39,27 @@ dewhirst_cols = ['mean','stdev','prevalence']
 
 # to correct for the few subspecies in HOMD::
 subspecies = {}
-subspecies['reuteri clade 818'] = ['reuteri','clade 818']  # tax_parts 6 and 7
-subspecies['reuteri clade 938'] = ['reuteri','clade 938'] 
-subspecies['cristatus clade 578'] = ['cristatus','clade 578'] 
-subspecies['cristatus clade 886'] = ['cristatus','clade 886'] 
-subspecies['infantis clade 431'] = ['infantis','clade 431'] 
-subspecies['infantis clade 638'] = ['infantis','clade 638'] 
-subspecies['oralis subsp. dentisani clade 058'] = ['oralis','subsp. dentisani clade 058'] 
-subspecies['oralis subsp. dentisani clade 398'] = ['oralis','subsp. dentisani clade 398'] 
-subspecies['oralis subsp. oralis'] = ['oralis','subsp. oralis'] 
-subspecies['oralis subsp. tigurinus clade 070'] = ['oralis','subsp. tigurinus clade 070'] 
-subspecies['oralis subsp. tigurinus clade 071'] = ['oralis','subsp. tigurinus clade 071'] 
-subspecies['parasanguinis clade 411'] = ['parasanguinis','clade 411']
-subspecies['parasanguinis clade 721'] = ['parasanguinis','clade 721']
-subspecies['[Eubacterium] yurii subsp. schtitka'] = ['[Eubacterium] yurii','subsp. schtitka'] 
-subspecies['[Eubacterium] yurii subsps. yurii & margaretiae'] = ['[Eubacterium] yurii','subsps. yurii & margaretiae']
-subspecies['nucleatum subsp. animalis'] = ['nucleatum','subsp. animalis'] 
-subspecies['nucleatum subsp. nucleatum'] = ['nucleatum','subsp. nucleatum'] 
-subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp. polymorphum'] 
-subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp. vincentii'] 
+subspecies['reuteri clade 818'] = ['reuteri','clade_818']  # tax_parts 6 and 7
+subspecies['reuteri clade 938'] = ['reuteri','clade_938'] 
+subspecies['cristatus clade 578'] = ['cristatus','clade_578'] 
+subspecies['cristatus clade 886'] = ['cristatus','clade_886'] 
+subspecies['infantis clade 431'] = ['infantis','clade_431'] 
+subspecies['infantis clade 638'] = ['infantis','clade_638'] 
+subspecies['oralis subsp. dentisani clade 058'] = ['oralis','subsp._dentisani_clade_058'] 
+subspecies['oralis subsp. dentisani clade 398'] = ['oralis','subsp._dentisani_clade_398'] 
+subspecies['oralis subsp. oralis'] = ['oralis','subsp._oralis'] 
+subspecies['oralis subsp. tigurinus clade 070'] = ['oralis','subsp._tigurinus_clade_070'] 
+subspecies['oralis subsp. tigurinus clade 071'] = ['oralis','subsp._tigurinus_clade_071'] 
+subspecies['parasanguinis clade 411'] = ['parasanguinis','clade_411']
+subspecies['parasanguinis clade 721'] = ['parasanguinis','clade_721']
+subspecies['[Eubacterium] yurii subsp. schtitka'] = ['[Eubacterium] yurii','subsp._schtitka'] 
+subspecies['[Eubacterium] yurii subsps. yurii & margaretiae'] = ['[Eubacterium] yurii','subsps._yurii_&_margaretiae']
+subspecies['nucleatum subsp. animalis'] = ['nucleatum','subsp._animalis'] 
+subspecies['nucleatum subsp. nucleatum'] = ['nucleatum','subsp._nucleatum'] 
+subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp._polymorphum'] 
+subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp._vincentii'] 
 """
-CREATE TABLE `abundance_copy4` (
+CREATE TABLE `abundance` (
   `abundance_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `reference` varchar(300) NOT NULL DEFAULT '',
   `otid` varchar(11) NOT NULL DEFAULT '',
@@ -132,19 +132,19 @@ CREATE TABLE `abundance_copy4` (
 
     
 def run_abundance_db(): 
-    collector = {}
+    TCcollector = {}
     filestarter = 'homdData-TaxonCounts.json'
     #json_file = args.outfile
     json_file = filestarter
     if os.path.isfile(json_file):
         f = open(json_file)
-        collector = json.load(f)
+        TCcollector = json.load(f)
     sites = []
     for n in headers:
         sites.append(n+'_mean')
         sites.append(n+'_sd')
         sites.append(n+'_prev')
-    q = "SELECT otid,notes,`level`,reference,concat_ws(',',`domain`,`phylum`,`klass`,`order`,`family`,`genus`,`species`,`subspecies`) as taxonomy, "+','.join(sites)
+    q = "SELECT otid,notes,`level`,reference,concat_ws(';',`domain`,`phylum`,`klass`,`order`,`family`,`genus`,`species`,`subspecies`) as taxonomy, "+','.join(sites)
     q += " FROM abundance"
     q += " JOIN `domain` using(domain_id)"
     q += " JOIN `phylum` using(phylum_id)"
@@ -171,59 +171,62 @@ def run_abundance_db():
         #print(row)
         max_segata, max_eren, max_dewhirst = 0,0,0
         taxon_string = fix_taxonomy(row['taxonomy'])
-        
-        tax_parts = taxon_string.split(';')
-        if len(tax_parts) == 7:
-            taxon_string = ';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+tax_parts[6]
-            if 'clade' in tax_parts[6] or 'subsp' in tax_parts[6]:
-                if tax_parts[6] in subspecies:
-                    taxon_string =';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+subspecies[tax_parts[6]][0]+';'+subspecies[tax_parts[6]][1]
-        if taxon_string not in collector:
-            print('!!!missing from HOMD collector(TaxonCounts.json):!!! ',taxon_string)
-            collector[taxon_string] = {}
-        collector[taxon_string]['otid'] = row['otid']
-        #collector[taxon_string]['max_all'] = row['max']
-        if 'notes' not in collector[taxon_string]:
-            collector[taxon_string]['notes'] = {}
-        if 'segata' not in collector[taxon_string]:
-            collector[taxon_string]['segata'] = {}
-        if 'eren_v1v3' not in collector[taxon_string]:
-            collector[taxon_string]['eren_v1v3'] = {}
-        if 'eren_v3v5' not in collector[taxon_string]:
-            collector[taxon_string]['eren_v3v5'] = {}
-        if 'dewhirst' not in collector[taxon_string]:
-            collector[taxon_string]['dewhirst'] = {}
+        #taxon_string = row['taxonomy']
+        # tax_parts = taxon_string.split(';')
+#         if len(tax_parts) == 7:
+#             #print('found clade')
+#             taxon_string = ';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+tax_parts[6]
+#             
+#             if 'clade' in tax_parts[6] or 'subsp' in tax_parts[6]:
+#                 #print('found clade')
+#                 if tax_parts[6] in subspecies:
+#                     taxon_string =';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+subspecies[tax_parts[6]][0]+';'+subspecies[tax_parts[6]][1]
+        if taxon_string not in TCcollector:
+            print('!!!missing from HOMD TCcollector(TaxonCounts.json):!!! ',taxon_string)
+            TCcollector[taxon_string] = {}
+        TCcollector[taxon_string]['otid'] = row['otid']
+        #TCcollector[taxon_string]['max_all'] = row['max']
+        if 'notes' not in TCcollector[taxon_string]:
+            TCcollector[taxon_string]['notes'] = {}
+        if 'segata' not in TCcollector[taxon_string]:
+            TCcollector[taxon_string]['segata'] = {}
+        if 'eren_v1v3' not in TCcollector[taxon_string]:
+            TCcollector[taxon_string]['eren_v1v3'] = {}
+        if 'eren_v3v5' not in TCcollector[taxon_string]:
+            TCcollector[taxon_string]['eren_v3v5'] = {}
+        if 'dewhirst' not in TCcollector[taxon_string]:
+            TCcollector[taxon_string]['dewhirst'] = {}
         
         if row['reference'].startswith('Segata'):
             for p in segata_header_prefixes:
                 max_segata = get_max(row, p, max_segata)
-                collector[taxon_string]['segata'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
-            collector[taxon_string]['max_segata'] = max_segata
-            collector[taxon_string]['notes']['segata'] = row['notes']
+                TCcollector[taxon_string]['segata'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+            TCcollector[taxon_string]['max_segata'] = max_segata
+            TCcollector[taxon_string]['notes']['segata'] = row['notes']
         if row['reference'].startswith('Eren2014_v1v3'):
             for p in eren_header_prefixes:
                 max_eren = get_max(row, p, max_eren)
-                collector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
-            collector[taxon_string]['max_erenv1v3'] = max_eren
-            collector[taxon_string]['notes']['eren_v1v3'] = row['notes']
+                TCcollector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+            TCcollector[taxon_string]['max_erenv1v3'] = max_eren
+            TCcollector[taxon_string]['notes']['eren_v1v3'] = row['notes']
         if row['reference'].startswith('Eren2014_v3v5'):
             for p in eren_header_prefixes:
                 max_eren = get_max(row, p, max_eren)
-                collector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
-            collector[taxon_string]['max_erenv3v5'] = max_eren
-            collector[taxon_string]['notes']['eren_v3v5'] = row['notes']
+                TCcollector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+            TCcollector[taxon_string]['max_erenv3v5'] = max_eren
+            TCcollector[taxon_string]['notes']['eren_v3v5'] = row['notes']
         if row['reference'].startswith('Dewhirst'):
             for p in dewhirst_header_prefixes:
                 max_dewhirst = get_max(row, p, max_dewhirst)
-                collector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
-            collector[taxon_string]['max_dewhirst'] = max_dewhirst
-            collector[taxon_string]['notes']['dewhirst'] = row['notes']
+                TCcollector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+            TCcollector[taxon_string]['max_dewhirst'] = max_dewhirst
+            TCcollector[taxon_string]['notes']['dewhirst'] = row['notes']
         
-    #print(collector)
-    #for s in collector:
-    #    print('max_eren-s',s,collector[s])
+    #print(TCcollector)
+    #for s in TCcollector:
+    #    print('max_eren-s',s,TCcollector[s])
     filename = args.outfile
-    print_dict(filename, collector)
+    print_dict(filename, TCcollector)
     
 """
 if species: species == genus+species
@@ -233,21 +236,63 @@ Bacteria;Firmicutes;Bacilli;Lactobacillales;Aerococcaceae;Abiotrophia;Abiotrophi
 "dewhirst": {"BM": {"site": "BM", "avg": "0.192", "stdev": "0.343", "prev": "75"}, "KG": {"site": "KG", "avg": "0.081", "stdev": "0.14", "prev": "61.8"}, "HP": {"site": "HP", "avg": "0.138", "stdev": "0.289", "prev": "76.9"}, "TD": {"site": "TD", "avg": "0.006", "stdev": "0.008", "prev": "56.3"}, "PT": {"site": "PT", "avg": "0.017", "stdev": "0.037", "prev": "62.1"}, "Throat": {"site": "Throat", "avg": "0.019", "stdev": "0.039", "prev": "61.3"}, "Saliva": {"site": "Saliva", "avg": "0.083", "stdev": "0.168", "prev": "79.6"}, "SupP": {"site": "SupP", "avg": "0.244", "stdev": "0.415", "prev": "71.4"}, "SubP": {"site": "SubP", "avg": "0.099", "stdev": "0.224", "prev": "56.9"}}, 
 "max_segata": "", "max_eren": "0.489", "max_dewhirst": "0.244", "max_all": "0.489017644", "otid": "389"}
 """
+
 def fix_taxonomy(taxonomy):
+    tax_lst = taxonomy.strip(';').split(';')
+    #print('\n',taxonomy)
+    if len(tax_lst) < 7: # d,p,c,o,f,g
+        return ';'.join(tax_lst)
+    #print(tax_lst)
+    if len(tax_lst) == 8:
+        subsp = tax_lst[-1]
+    else:
+        subsp = ''
+    genus = tax_lst[5]
+    species = tax_lst[6]
+    if subsp and 'Eubacterium' in species:
+#         print('1')
+        tax_lst = tax_lst[:6] +[genus+' '+species,subsp ]
+        
+    elif 'Eubacterium' in species:
+        # print('\n',taxonomy)
+#         print('2')
+        
+        tax_lst = tax_lst[:6] +[genus+' '+species]
+#         print(';'.join(tax_lst))
+    elif subsp:
+#         print('3')
+        #tax_lst.pop(-1)
+        #tax_lst[-1] = tax_lst[-1]+' '+subsp
+        tax_lst = tax_lst[:6] +[genus+' '+species,subsp]
+        #print('subsp',tax_lst)
+    else:
+        tax_lst = tax_lst[:6] +[genus+' '+species]
+    #return taxonomy.strip(';')
+    #Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;Jonquetella
+    #Bacteria;Synergistetes;Synergistia;Synergistales;Dethiosulfovibrionaceae;Jonquetella
+    #Bacteria;Firmicutes;Clostridia;Eubacteriales;Peptostreptococcaceae;Peptostreptococcaceae_[G-1];Peptostreptococcaceae_[G-1] Peptostreptococcaceae_[G-1] [Eubacterium]_sulci
+    #Bacteria;Firmicutes;Clostridia;Eubacteriales;Peptostreptococcaceae;Peptostreptococcaceae_[G-1];Peptostreptococcaceae_[G-1] [Eubacterium]_sulci
+    #Bacteria;Firmicutes;Clostridia;Eubacteriales;Peptostreptococcaceae;Peptostreptococcaceae_[G-1];Peptostreptococcaceae_[G-1] [Eubacterium]_sulci
+    #Bacteria;Firmicutes;Clostridia;Eubacteriales;Peptostreptococcaceae;Peptostreptococcaceae_[G-1];Peptostreptococcaceae_[G-1] [Eubacterium]_sulci
+    return ';'.join(tax_lst)
+    
+def fix_taxonomyX(taxonomy):
     """
     subspecies were put in separate col in script: abundance_scripts/10-load_abundance2dbNEW.py and stored in db
     Here we append subspecies back to species
     """
-    tax_lst = taxonomy.split(',')
+    tax_lst = taxonomy.split(';')
     new_tax = []
     subsp = tax_lst[-1]
-    if subsp:
-        tax_lst.pop(-1)
-        tax_lst[-1] = tax_lst[-1]+' '+subsp
+    
+    # if subsp:
+#         tax_lst.pop(-1)
+#         tax_lst[-1] = tax_lst[-1]+' '+subsp
     for name in tax_lst:
         if name:
             new_tax.append(name)
     return ';'.join(new_tax)
+    
 def get_max(row, p, max_ref):
     test = row[p+'_mean']
     #print(max_ref)
