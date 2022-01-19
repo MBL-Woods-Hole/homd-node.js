@@ -1,0 +1,3 @@
+Overview:  Bacteria of the genus Neisseria are abundant in the mouth, making up 2-10% of the bacteria at most oral sites.  
+Ecological role/importance in health and disease: Several of the 20 species of Neisseria in HOMD are common members of the normal oral microflora. For example, N. flavescens, N. perflava, and N. subflava are abundant on the tongue dorsum and N. elongata, N. mucosa, and N. oralis in dental plaque.  Other species, such as N. meningitidis and N. gonorrhoeae, are human pathogens included in HOMD as reference sequences even though they are not generally detected in the mouth.
+

@@ -1,4 +1,15 @@
 HOMD Notes
+2022-01
+Fix taxonomy steps
+1- replace taxonomy table
+   SET FOREIGN_KEY_CHECKS=0
+   update subspecies set subspecies = REPLACE(subspecies, ' ', '_') 
+   WHERE `subspecies` like '%[%' or `subspecies` like '%(%'
+2- remove all the [] and () taxanames from domain..species that have '_'
+3 - load taxonomy and check
+4 - change all the [] and () taxnames to underscores
+5 re-run update taxonomy script:
+    floyd avoorhis$ ../update_homd_taxonomy_byFile.py -i homd_ncbi_blast_all_tophits-KISS.csv -g
 2021-12-10
 Abundance files changes to match db:
    2021-11-05 :: HMT-191:Changed genus from Propionibacterium to Acidipropionibacterium

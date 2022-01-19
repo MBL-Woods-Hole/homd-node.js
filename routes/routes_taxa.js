@@ -684,16 +684,25 @@ router.get('/life', function life(req, res) {
   // let myurl = url.parse(req.url, true);
   let tax_name = req.query.name;
   let rank = (req.query.rank)
-  let lin,lineage_string
+  let lin,lineage_string,text = false
     //console.log('rank:',rank)
   //console.log('tax_name',tax_name)
-    if(tax_name){
+  if(tax_name){
     tax_name = req.query.name.replace(/"/g,'')
   }
   var image_array =[]
-  if(rank)
+  if(rank){
      image_array = find_images(rank,'',tax_name)
+     //console.log(image_array)
+  }
+  let genera_w_text = ['Actinomyces','Campylobacter','Corynebacterium','Gemella','Leptotrichia',
+    'Porphyromonas','Pseudoleptotrichia','Schaalia','Tannerella','Aggregatibacter','Capnocytophaga',
+    'Fusobacterium','Haemophilus','Neisseria','Prevotella','Rothia','Streptococcus','Veillonella']
+  //Capnocytophaga Schaalia, Leptotrichia,Corynebacterium have images
   
+  if(rank == "genus" && genera_w_text.indexOf(tax_name) != -1){
+     text = 'genus/'+tax_name+'.ejs'
+  }
   let taxa_list =[]
   let next_rank,title,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
   var lineage_list = ['']
@@ -711,11 +720,11 @@ router.get('/life', function life(req, res) {
      title = 'Domain: Archaea'
      cts = C.taxon_counts_lookup['Archaea'].tax_cnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>("+cts+")</small>"
-     html += " <span class='vist-taxon-page'><a href='ecology/domain/Archaea'>Ecology</a></span><br>"
+     html += " <span class='vist-taxon-page'><a href='ecology/domain/Archaea'>Abundance</a></span><br>"
        title = 'Domain: Bacteria'
        cts = C.taxon_counts_lookup['Bacteria'].tax_cnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>("+cts+")</small>"
-     html += " <span class='vist-taxon-page'><a href='ecology/domain/Bacteria'>Ecology</a></span><br>"
+     html += " <span class='vist-taxon-page'><a href='ecology/domain/Bacteria'>Abundance</a></span><br>"
 
      html += '</td></tr>'
      image_array =[{'name':'cellular_organisms.png','text':''}]
@@ -759,7 +768,7 @@ router.get('/life', function life(req, res) {
     
         }
          
-        html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>Ecology</a></span>"
+        html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>Abundance</a></span>"
         html += '</td></tr>'
        }else {  // Gather rows before the last row
          
@@ -777,7 +786,7 @@ router.get('/life', function life(req, res) {
        rank_display = get_rank_display(show_ranks[i],use_plural)
        //console.log('rank_displayx',rank_display)
        
-       html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
+       html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa blue'>"
        taxa_list.sort(function (a, b) {
             return helpers.compareStrings_alpha(a, b);
          })
@@ -794,8 +803,8 @@ router.get('/life', function life(req, res) {
                }else {
                  let otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
                //console.log('otid',otid)
-               html += "<span class='blue'>"+space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
-               html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Ecology</a></span></span><br>"
+               html += "<span class=''>"+space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
+               html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Abundance</a></span></span><br>"
                }
          
          }else {
@@ -810,7 +819,7 @@ router.get('/life', function life(req, res) {
              lin = make_lineage(node)
              cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
              html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
-             html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Ecology</a></span></span><br>"
+             html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Abundance</a></span></span><br>"
             }
          } 
        }
@@ -840,6 +849,7 @@ router.get('/life', function life(req, res) {
       rank: rank,
       taxa_list: JSON.stringify(taxa_list),
       image_array:JSON.stringify(image_array),
+      text: text,
       html: html,
       lineage:lineage_string,
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -1289,7 +1299,7 @@ function get_rank_display(rank,use_plural){
      }else if(rank === 'family'){
       display_name = 'Families'
      }else if(rank === 'genus'){
-      display_name = 'Genuses'
+      display_name = 'Genera'
      }else if(rank === 'species'){
         display_name = 'Species'
      }else if(rank === 'subspecies'){

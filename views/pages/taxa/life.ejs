@@ -1,10 +1,26 @@
 <style>
-#hierarchy_table_div table{
-  width:50%;
-}
+
 #hierarchy_table_div table td{
    padding:0 10px;
    border:1px solid brown;
+}
+#imagesNtext{
+    float:right;
+   border:1px solid brown;
+   width:48%;
+   font-size:13px;
+   line-height:150%;
+   margin-top:25px;
+   padding:10px;
+}
+#text{
+   float:right;
+   border:1px solid brown;
+   width:48%;
+   font-size:13px;
+   line-height:150%;
+   margin-top:25px;
+   padding:10px;
 }
 #images{
    float:right;
@@ -66,95 +82,103 @@
   <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
-    <div class='page-content' >		
-	  <div class='title'>
-	  <% if(!rank) { %>
-	     <span id='headline1'>Life:</span> <span class='yellow' id='headline2'>Cellular Organisms</span>
-	  <% }else if (rank === 'klass'){ %>
-	     <span id='headline1'>Class:</span> <span class='yellow' id='headline2'><%= tax_name %></span>
-	  <% }else if(rank=='species') { %>
-	     
-	     <span id='headline1'>Species:</span> <span class='yellow' id='headline2'><em><%= tax_name %></em></span>
-	  
-	  <% }else{ %>
-	     <% headline1 = rank.charAt(0).toUpperCase() + rank.slice(1) + ': '%>
-	     <span id='headline1'><%= headline1 %></span> <span class='yellow' id='headline2'><%= tax_name %></span>
-	  <% } %>
-	  
-	  </div>
-	  
-	  
-	  <% if(lineage){ %>
-	  <div id='lineage'>
-	    <span>Lineage:</span> <span id='lineage2'><%- lineage %></span>
-	    </div>
-	  <% }else{ %>
-	  <div id='lineage' style='padding:10px;margin-top:20px;'>Select a domain below to descend the taxonomic lineage of the oral microbiome.</div>
-	  <% } %>
-	  
-	 
-
-	  
-	  
-<div id='images'> <!-- Up to four images  -->
-<% if(images.length === 0 ) { %>
-  <style>
-    #hierarchy_table_div table{
-      width:90%;
-    }
-  </style>
-  <% table_width = '90%' %>
-<% }else if(images.length === 1 ) { %>
-  <div style='padding-right:200px;'>
-    <img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt='<%= tax_name %> Image'  \><br>
-    <small><%= images[0].text %></small>
-  </div>
-
-<% }else{ %>
-	<table id='image-table'>
-		<tr>
-		<% for(n in images){ %>
-		  <% if(n==0 || n===2){ %>
-			<tr><td>
-		  <% }else{ %>
-			<td>
-		  <% } %>
-
-		  <div>
-			<img id='img' src='/images/life-images/<%= images[n].name %>' width='250' alt=''  \><br>
-			<small><%= images[n].text %></small>
-		  </div>
-		  <% if(n==0 || n===2){ %>
-			</td>
-		  <% }else{ %>
-			</td></tr>
-		  <% } %>
-		<% } %>
-	</table>
-<% } %>
-
-</div>
-	  
-	  <div id='hierarchy_table_div' width='90%'>
-	  <table id='life-table'>	
-		<thead>
-		 <tr><th></th><th><i>e</i>HOMD Taxonomy</th><tr>
-		</thead>
-		<tbody>
-		 <tr><td class='life-taxa-name'>Life</td><td class='life-taxa'><a href='life'>Cellular Organisms</a></td></tr>
-		 <%- html %>
-		
-		</tbody>
-	  </table>
-	  </div>
-    </div> <!-- end: page-content -->
+    <div class='page-content' >   
+    <div class='title'>
+    <% if(!rank) { %>
+       <span id='headline1'>Life:</span> <span class='yellow' id='headline2'>Cellular Organisms</span>
+    <% }else if (rank === 'klass'){ %>
+       <span id='headline1'>Class:</span> <span class='yellow' id='headline2'><%= tax_name %></span>
+    <% }else if(rank=='species') { %>
+       
+       <span id='headline1'>Species:</span> <span class='yellow' id='headline2'><em><%= tax_name %></em></span>
     
-    <div id='footer'>
-         <%- include('../../partials/footer'); %>
+    <% }else{ %>
+       <% headline1 = rank.charAt(0).toUpperCase() + rank.slice(1) + ': '%>
+       <span id='headline1'><%= headline1 %></span> <span class='yellow' id='headline2'><%= tax_name %></span>
+    <% } %>
+    
     </div>
-  </div>  <!-- end wrapper    -->  
-</body>
+    
+    
+    <% if(lineage){ %>
+    <div id='lineage'>
+      <span>Lineage:</span> <span id='lineage2'><%- lineage %></span>
+      </div>
+    <% }else{ %>
+    <div id='lineage' style='padding:10px;margin-top:20px;'>Select a domain below to descend the taxonomic lineage of the oral microbiome.</div>
+    <% } %>
+    
+   
+<% if(text && images.length > 0){ %>
+   <div id='imagesNtext'>
+   <div id='textx'><%- include('../../partials/static/'+text); %></div>
+   <br>
+   <div id='imagesx'><img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt=''  \></div>
+   
+   </div>
+   
+   <style>#life-table{ width:50%;}</style>
+   
+<% }else if(text){ %>
+    <div id='text'><%- include('../../partials/static/'+text); %></div>
+    <style>#life-table{ width:50%;}</style>
+<% }else if(images.length > 0){ %> 
+    <div id='images'>
+    <% if(images.length === 1 ) { %>
+      <div style='padding-right:200px;'>
+        <img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt='<%= tax_name %> Image'  \><br>
+        <small><%= images[0].text %></small>
+      </div>
+    <% }else{ %>
+      <table id='image-table'>
+        <tr>
+        <% for(n in images){ %>
+          <% if(n==0 || n===2){ %>
+          <tr><td>
+          <% }else{ %>
+          <td>
+          <% } %>
+          <div>
+          <img id='img' src='/images/life-images/<%= images[n].name %>' width='250' alt=''  \><br>
+          <small><%= images[n].text %></small>
+          </div>
+          <% if(n==0 || n===2){ %>
+          </td>
+          <% }else{ %>
+          </td></tr>
+          <% } %>
+        <% } %>
+      </table>
+    <% } %>
+    </div>
+    <style>#life-table{ width:50%;}</style>
+<% }else{ %> 
+    <style>#life-table{ width:80%;}</style>
+<% } %> 
 
+
+ 
+
+    
+    <div id='hierarchy_table_div'>
+    <table id='life-table'> 
+    <thead>
+     <tr><th></th><th><i>e</i>HOMD Taxonomy</th><tr>
+    </thead>
+    <tbody>
+     <tr><td class='life-taxa-name'>Life</td><td class='life-taxa'><a href='life'>Cellular Organisms</a></td></tr>
+     <%- html %>
+    
+    </tbody>
+    </table>
+    </div>
+</div> <!-- end: page-content -->
+
+<div id='footer'>
+     <%- include('../../partials/footer'); %>
+</div>
+</div>  <!-- end wrapper    -->  
+</body>
 </html>
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
