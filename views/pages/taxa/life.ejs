@@ -20,7 +20,7 @@
 #text{
    float:right;
    border:1px solid brown;
-   width:48%;
+   width:40%;
    font-size:13px;
    line-height:150%;
    margin-top:25px;
@@ -112,7 +112,7 @@
     <div id='lineage' style='padding:10px;margin-top:20px;'>Select a domain below to descend the taxonomic lineage of the oral microbiome.</div>
     <% } %>
     
-<% if(text && images.length > 0){ %>
+<% if(text_file && images.length > 0){ %>
    <div id='imagesNtext'>
    <div><%- include('../../partials/static/'+text); %></div>
    <br>
@@ -120,11 +120,14 @@
    
    </div>
    
-   <style>#life-table{width:50%;}</style>
+   <style>#life-table{width:58%;}</style>
    
-<% }else if(text){ %>
-    <div id='text'><%- include('../../partials/static/'+text); %></div>
-    <style>#life-table{width:50%;}</style>
+<% }else if(text_file){ %>
+    <div id='text'><%- include('../../partials/static/'+text_file); %></div>
+    <style>#life-table{width:58%;}</style>
+<% }else if(text_format){ %>
+   <div id='text'><%- text_format %></div>
+   <style>#life-table{width:58%;}</style>
 <% }else if(images.length > 0){ %> 
     <div id='images'>
     <% if(images.length === 1 ) { %>
@@ -154,7 +157,7 @@
       </table>
     <% } %>
     </div>
-    <style>#life-table{width:50%;}</style>
+    <style>#life-table{width:58%;}</style>
 <% }else{ %> 
     <style>#life-table{width:80%;}</style>
 <% } %> 

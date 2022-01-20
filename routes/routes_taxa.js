@@ -684,7 +684,7 @@ router.get('/life', function life(req, res) {
   // let myurl = url.parse(req.url, true);
   let tax_name = req.query.name;
   let rank = (req.query.rank)
-  let lin,lineage_string,text = false
+  let lin,lineage_string
     //console.log('rank:',rank)
   //console.log('tax_name',tax_name)
   if(tax_name){
@@ -697,10 +697,7 @@ router.get('/life', function life(req, res) {
   }
   
   //Capnocytophaga Schaalia, Leptotrichia,Corynebacterium have images
-  
-  if(rank == "genus" && C.names_w_text.genera.indexOf(tax_name) != -1){
-     text = 'genus/'+tax_name+'.ejs'
-  }
+  let text = get_rank_text(rank,tax_name)
   let taxa_list =[]
   let next_rank,title,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
   var lineage_list = ['']
@@ -847,7 +844,8 @@ router.get('/life', function life(req, res) {
       rank: rank,
       taxa_list: JSON.stringify(taxa_list),
       image_array:JSON.stringify(image_array),
-      text: text,
+      text_file: text[0],
+      text_format: text[1],
       html: html,
       lineage:lineage_string,
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -916,37 +914,74 @@ router.get('/ecology_index', function ecology_index(req, res) {
     })
 })
 //
-router.get('/ecology/:level/:name', function ecology(req, res) {
-   helpers.print('in ecology')
-   let rank = req.params.level;
-   let tax_name = req.params.name;
-   //let segata_text = '',dewhirst_text='',erenv1v3_text='';
-   let segata_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
-   let max = 0;
-   let otid ='0';
-   let max_obj = {};
-   //let major_genera=0;
-   let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
-   let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
-   let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
-   //console.log('rank: '+rank+' name: '+tax_name);
-   // TODO::should be in constants???
-   let text=false
-    if(rank == "genus" && C.names_w_text.genera.indexOf(tax_name) != -1){
-     text = 'genus/'+tax_name+'.ejs'
+function get_rank_text(rank,tax_name){
+    let text = [false,false]
+    if(rank == "genus"){
+      if(C.names_w_text.genera.indexOf(tax_name) != -1){
+        text[0] = 'genus/'+tax_name+'.ejs'
+      }else if(C.names_w_text.provisional_genera.indexOf(tax_name) != -1){
+        console.log('GOT Provisional')
+        console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
+        let children_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'].children_ids
+        let num_species = children_ids.length
+        let children = []
+        text[1] = tax_name +" is a provisionally named genus constructed to provide a" 
+        text[1] += " stably named reference for a currently unnamed taxon represented"
+        text[1] += " by a set of 16S rRNA clones.  It contains "+num_species.toString()+" species:<br>"
+        for(let n in children_ids){
+            text[1] += ' - '+C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]].taxon +'<br>'
+        }
+
+      }
     }
-   let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
-   if(!node){
+    return text
+}
+router.get('/ecology/:level/:name', function ecology(req, res) {
+    helpers.print('in ecology')
+    let rank = req.params.level;
+    let tax_name = req.params.name;
+    //let segata_text = '',dewhirst_text='',erenv1v3_text='';
+    let segata_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
+    let max = 0;
+    let otid ='0';
+    let max_obj = {};
+    //let major_genera=0;
+    let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
+    let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
+    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
+    //console.log('rank: '+rank+' name: '+tax_name);
+    // TODO::should be in constants???
+    let text = get_rank_text(rank,tax_name)
+    // if(rank == "genus"){
+//       if(C.names_w_text.genera.indexOf(tax_name) != -1){
+//         text_file = 'genus/'+tax_name+'.ejs'
+//       }else if(C.names_w_text.provisional_genera.indexOf(tax_name) != -1){
+//         console.log('GOT Provisional')
+//         console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
+//         let children_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'].children_ids
+//         let num_species = children_ids.length
+//         let children = []
+//         text_format = tax_name +" is a provisionally named genus constructed to provide a" 
+//         text_format += " stably named reference for a currently unnamed taxon represented"
+//         text_format += " by a set of 16S rRNA clones.  It contains "+num_species.toString()+" species:<br>"
+//         for(let n in children_ids){
+//             text_format += ' - '+C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]].taxon +'<br>'
+//         }
+// 
+//       }
+//     }
+    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+    if(!node){
       //error
-   }
-   let genera = get_major_genera(rank, node)
-   if(rank == 'species'){
+    }
+    let genera = get_major_genera(rank, node)
+    if(rank == 'species'){
       if(node.hasOwnProperty('otid')){
           otid = node.otid
       }
-   }else if(rank == 'subspecies'){
+    }else if(rank == 'subspecies'){
       otid = node.otid
-   }
+    }
    //console.log('node')
    //console.log(node)
    // /subspecies/subsp.%20dentisani%20clade%20058
@@ -1031,7 +1066,8 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
       otid: otid,  // zero unless species
       genera: JSON.stringify(genera),
-      text: text,
+      text_file: text[0],
+      text_format: text[1],
       children: JSON.stringify(children_list),
       notes: JSON.stringify({'segata':segata_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
       segata_table: segata_table,

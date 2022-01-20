@@ -14,7 +14,7 @@ const { exec, spawn } = require('child_process');
 // var rs_ds = ds.get_datasets( () => {
 
 /* GET home page. */
-router.get('/', (req, res) => {
+router.get('/', function index(req, res) {
   console.log('req.session')
   helpers.print(req.session)
   console.log('Session ID:',req.session.id)
@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
   })
 })
 
-router.get('/download', (req, res) => {
+router.get('/download', function download(req, res) {
   // renders the overall downlads page
   res.render('pages/download', {
     title: 'HOMD :: Human Oral Microbiome Database',
@@ -38,7 +38,7 @@ router.get('/download', (req, res) => {
   })
 })
 //
-router.get('/poster', (req, res) => {
+router.get('/poster', function poster(req, res) {
   res.render('pages/poster', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
@@ -48,7 +48,7 @@ router.get('/poster', (req, res) => {
   })
 })
 
-router.get('/oralgen', (req, res) => {
+router.get('/oralgen', function oralgen(req, res) {
   res.render('pages/oralgen', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
@@ -58,7 +58,7 @@ router.get('/oralgen', (req, res) => {
   })
 })
 
-router.post('/site_search', (req, res) => {
+router.post('/site_search', function site_search(req, res) {
   helpers.accesslog(req, res)
   console.log('in index.js POST -Search')
   console.log(req.body)
@@ -186,13 +186,16 @@ router.post('/site_search', (req, res) => {
     }
   })
   // console.log(pidObjList)
+  function addslashes( str ) {
+    return (str + '').replace(/[\]\[\\"']/g, '\\$&')
+}
   const phageIdLst = pidObjList.map(e => e.pid)
   
   // help pages uses grep
   let helpLst = []
   let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
-  const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + searchText + "'" 
-  //console.log('grep_cmd',grep_cmd)
+  const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + addslashes(searchText) + "'" 
+  console.log('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
         console.error('stderr',stderr);

@@ -78,7 +78,7 @@ ul li{
    width:100%;
 }
 .plot{
-   padding:0px;
+   padding:0 10px;
 }
 
 .plot_table{
@@ -256,13 +256,14 @@ ul li{
   <td>
   
   <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot' >
-        <div class='plot-title'>
+    
+    <div class='plot-title'>
         <small>
         From: <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
             Segata et al.(2012)</a>
         </small>
-        </div>
+    </div>
+    <div class='plot' >
         <div id="plot_segata_here"></div> 
     </div>
         
@@ -299,13 +300,14 @@ ul li{
 
 <tr><td>
     <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot' >
+    
     <div class='plot-title'>
         <small>
           From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
             Eren et al.(2014) (V1-V3)</a>
-    
-        </small></div>
+        </small>
+    </div>
+    <div class='plot' >
         <div id="plot_erenv1v3_here"></div> 
     </div>
         
@@ -342,13 +344,13 @@ ul li{
 
 <tr><td>
     <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot' >
     <div class='plot-title'>
         <small>
           From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
             Eren et al.(2014) (V3-V5)</a>
-    
-        </small></div>
+        </small>
+    </div>
+    <div class='plot' >
         <div id="plot_erenv3v5_here"></div> 
     </div>
         
@@ -384,13 +386,13 @@ ul li{
 <tr><td class='wide'></td></tr>
 <tr><td>
     <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot' >
     <div class='plot-title'>
         <small>
-      From: Dewhirst 35x9 data <small>(not published yet)</small>
-    
-    </small></div>
-    <div id="plot_dewhirst_here"></div> 
+        From: Dewhirst 35x9 data <small>(not published yet)</small>
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_dewhirst_here"></div> 
     </div>
         
   </td><td class='notes-td'>
@@ -427,9 +429,11 @@ ul li{
 </div>  <!-- column middle -->
   
 <div class='column right'>
-   <% if(text){ %>
-    <div id='text'><%- include('../../partials/static/'+text); %></div>
-    <% } %>
+   <% if(text_file){ %>
+     <div id='text'><%- include('../../partials/static/'+text_file); %></div>
+   <% }else if(text_format){ %>
+    <div id='text'><%- text_format %></div>
+   <%} %>
 </div>
 
     
