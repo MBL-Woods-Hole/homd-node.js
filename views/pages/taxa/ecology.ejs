@@ -8,10 +8,7 @@ ul li{
    border:1px solid green;
    
 }
-.plot_div{
-   
-   
-}
+
 
 .abund-table-div{
    
@@ -33,15 +30,15 @@ ul li{
 .left {
   width: 15%;
   font-size:12px;
-  height: 800px; /* Should be removed. Only for demonstration */
+  height: 200px; /* only to hold column open */
 }
+
 .right {
+  width: 35%;
   
-  font-size:12px;
-  height: 800px; /* Should be removed. Only for demonstration */
 }
 .middle {
-  width: 70%;
+  width: 50%;
   border:1px solid black;
   
 }
@@ -50,29 +47,16 @@ ul li{
   display: table;
   clear: both;
 }
-#legend{
+#legend-links{
   position:fixed;
 }
-#legend-title{
-   
-   font-size:13px;
-   text-align:center;
-   background:lightgreen;
-   border:1px solid brown;
-   
-   
-   
-   
-}
+
 #legend-content{
   padding:3px 5px;;
   border:1px solid brown;
 }
-#links{
-  position:fixed;
-  margin:0 20px;
-}
-#links-title{
+
+.menu-title{
    
    font-size:13px;
    text-align:center;
@@ -85,33 +69,61 @@ ul li{
   border:1px solid brown;
 }
 
+.plot-title{
+   background:lightblue;
+   padding:0 3px;
+   border:1px solid grey;
+}
+#plot_table_master{
+   width:100%;
+}
 .plot{
-   padding:10px;
+   padding:0px;
 }
 
-#plot_table{
+.plot_table{
   border-collapse:collapse;
-  width:100%
+  
 }
-#plot_table td{
+.plot_table td{
   vertical-align:top;
   
+  
+}
+.plot-td{
+   min-width:350px;
 }
 .wide{
    padding:10px 0;
    background:grey;
 }
+.notes-td{
+   vertical-align:top;
+   
+}
 .nonote{
    font-size:10px;
    padding:10px 4px;
+   margin-left:250px;
+   
 }
 .note{
   font-size:12px;
   padding:10px 4px;
   width:auto;
   height:auto;
+  
   border:1px solid brown;
   overflow: auto;
+}
+#text{
+   
+   border:1px solid brown;
+   background-color:lightgrey;
+   font-size:13px;
+   line-height:150%;
+   margin:0 5px;
+   padding:10px;
 }
 </style>
 <% segata_data = JSON.parse(segata) %>
@@ -192,29 +204,44 @@ ul li{
 
 <div class='row'> 
      <div class='column left'>
-        <div id='legend'>
-        <div id='legend-title'>Legend:</div>
-        <div id='legend-content'>
-        
-          <br>BM - Buccal Mucosa
-          <br>KG - Keratinized Gingiva
-          <br>HP - Hard Palate
-          <br>
-          <br>TD - Tongue Dorsum
-          <br>PT - Palatine Tonsils
-          <br>TH - Throat
-          <br>SV - Saliva
-          <br>  
-          <br>SupP - Supra-gingival Plaque
-          <br>SubP - Sub-gingival Plaque
-          <br>
-          <br>NS - Nasal
-          <br>
-          <br>ST - Stool
-        </ul>  
+      <div id='legend-links'>
+      <div class='menu-title'>Links:</div>
+          <div id='links-content'>
+            <ul>
+            <% if(children_lst.length == 0){ %>
+                <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description:<br>&nbsp;&nbsp;<small><%= taxidfullname %></small></a></li>
+            <% } %>
+            <li><a href='/taxa/ecology_index'>Ecology Home</a>
+            <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%= tax_name %></small></a>
+            </ul>
+          </div>
+      
+      <br>
+    
+        <div id='legendx'>
+        <div class='menu-title'>Legend:</div>
+            <div id='legend-content'>
+            <ul>
+              <br>BM - Buccal Mucosa
+              <br>KG - Keratinized Gingiva
+              <br>HP - Hard Palate
+              <br>
+              <br>TD - Tongue Dorsum
+              <br>PT - Palatine Tonsils
+              <br>TH - Throat
+              <br>SV - Saliva
+              <br>  
+              <br>SupP - Supra-gingival Plaque
+              <br>SubP - Sub-gingival Plaque
+              <br>
+              <br>NS - Nasal
+              <br>
+              <br>ST - Stool
+            </ul>  
+            </div>
         </div>
-        </div>
-    </div>
+      </div>  
+    </div>   <!-- end column left -->
    
     
 
@@ -224,61 +251,66 @@ ul li{
 
 
 <div class='column middle'>
-<table id='plot_table' >
-<tr><td>
-<div class='plot' >
-    
-    
-    <div class='plot_div'>
-    <small>
-    From: <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
-        Segata et al.(2012)</a>
-    
-    
-    </small>
-    <div id="plot_segata_here"></div> 
+<table id='plot_table_master'>
+<tr>
+  <td>
+  
+  <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot' >
+        <div class='plot-title'>
+        <small>
+        From: <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
+            Segata et al.(2012)</a>
+        </small>
+        </div>
+        <div id="plot_segata_here"></div> 
     </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.segata == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.segata.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
     <% if(Object.keys(segata_data).length !== 0){ %>
       <small>percent abundance</small>
       <div class='abund-table-div'><%- segata_table %></div>  
     <% } %>  
-</div>    
-
-</td>
-<td>
-<% if(notes.segata == ''){ %>
-    <div class='nonote'>No Notes</div>
-<% }else{ %>
-    <% parts = notes.segata.split(';') %>
-    <div class='note'>
-    <b>Notes:</b>
-    <% for(n in parts){ %>
-     <br><br><%- parts[n] %>
-    <% } %>
-    </div>
-<% } %>
-</td>
+    
+    
+    </td></tr></table>
+    
+    
+  </td>
 </tr>
 
 <tr><td class='wide' colspan='2'></td></tr>
 
 <tr><td>
-    <div class='plot'  style='width:100%;'>
-          <div class='plot_div'>
-          <small>
+    <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot' >
+    <div class='plot-title'>
+        <small>
           From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
             Eren et al.(2014) (V1-V3)</a>
     
-        </small>
+        </small></div>
         <div id="plot_erenv1v3_here"></div> 
-        </div>
-        <% if(Object.keys(erenv1v3_data).length !== 0){ %>
-            <small>percent abundance</small>
-            <div class='abund-table-div'><%- erenv1v3_table %></div>
-        <% } %>     
     </div>
-</td>
-<td>
+        
+  </td><td class='notes-td'>
+    
     <% if(notes.erenv1v3 == ''){ %>
         <div class='nonote'>No Notes</div>
     <% }else{ %>
@@ -289,30 +321,39 @@ ul li{
          <br><br><%- parts[n] %>
         <% } %>
         </div>
-    
     <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(erenv1v3_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- erenv1v3_table %></div>  
+    <% } %>  
+    
+    
+    </td></tr></table>
+
+
 </td>
 </tr>
 
 <tr><td class='wide' colspan='2'></td></tr>
 
 <tr><td>
-    <div class='plot'  style='width:100%;'>
-          <div class='plot_div'>
-          <small>
+    <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot' >
+    <div class='plot-title'>
+        <small>
           From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
             Eren et al.(2014) (V3-V5)</a>
     
-        </small>
+        </small></div>
         <div id="plot_erenv3v5_here"></div> 
-        </div>
-        <% if(Object.keys(erenv3v5_data).length !== 0){ %>
-            <small>percent abundance</small>
-            <div class='abund-table-div'><%- erenv3v5_table %></div>
-        <% } %>     
-    </div> 
-
-</td><td>
+    </div>
+        
+  </td><td class='notes-td'>
+    
     <% if(notes.erenv3v5 == ''){ %>
         <div class='nonote'>No Notes</div>
     <% }else{ %>
@@ -323,63 +364,73 @@ ul li{
          <br><br><%- parts[n] %>
         <% } %>
         </div>
-    
     <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(erenv3v5_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- erenv3v5_table %></div>  
+    <% } %>  
+    
+    
+    </td></tr></table>
+    
+    
+
 </td>
 </tr>
-<tr><td class='wide' colspan='2'></td></tr>
+<tr><td class='wide'></td></tr>
 <tr><td>
-
-<div class='plot'  style=''>
-    <div class='plot_div'>
-    <small>
+    <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot' >
+    <div class='plot-title'>
+        <small>
       From: Dewhirst 35x9 data <small>(not published yet)</small>
     
-    </small>
+    </small></div>
     <div id="plot_dewhirst_here"></div> 
     </div>
+        
+  </td><td class='notes-td'>
     
+    <% if(notes.dewhirst == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.dewhirst.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
     <% if(Object.keys(dewhirst_data).length !== 0){ %>
-        <small>percent abundance</small>
-        <div class='abund-table-div'><%- dewhirst_table %></div>
-    <% } %>
-</div>
-
-</td>
-<td>
-<% if(notes.dewhirst == ''){ %>
-    <div class='nonote'>No Notes</div>
-<% }else{ %>
-    <% parts = notes.dewhirst.split(';') %>
-    <div class='note'>
-    <b>Notes:</b>
-    <% for(n in parts){ %>
-     <br><br><%- parts[n] %>
-    <% } %>
-    </div>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- dewhirst_table %></div>  
+    <% } %>  
     
-<% } %>
+    
+    </td></tr></table>
+
+
 </td>
 </tr>
 
 
 </table>
-</div>
+</div>  <!-- column middle -->
   
-  <div class='column right'>
-      <div id='links'>
-      <div id='links-title'>Links:</div>
-      <div id='links-content'>
-        <ul>
-        <% if(children_lst.length == 0){ %>
-            <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description:<br>&nbsp;&nbsp;<small><%= taxidfullname %></small></a></li>
-        <% } %>
-        <li><a href='/taxa/ecology_index'>Ecology Home</a>
-        <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%= tax_name %></small></a>
-        </ul>
-      </div>
-      </div>
-  </div>
+<div class='column right'>
+   <% if(text){ %>
+    <div id='text'><%- include('../../partials/static/'+text); %></div>
+    <% } %>
+</div>
 
     
 </div>  <!-- end row -->
@@ -387,7 +438,7 @@ ul li{
 
 
     </div> <!-- end: page-content -->
-    
+    </div> <!-- end: wrapper -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>
@@ -408,7 +459,7 @@ ul li{
   edatav1v3 = JSON.parse('<%- erenv1v3 %>')
   edatav3v5 = JSON.parse('<%- erenv3v5 %>')
   // set the dimensions and margins of the graph
-  w = 550
+  w = 350
   h = 300
   var margin = {top: 30, right: 30, bottom: 70, left: 30},
       width = w - margin.left - margin.right,

@@ -23,7 +23,10 @@ constants.phyla = [ 'Actinobacteria',
           'Synergistetes',
           'WPS-2'
 ]
-
+constants.names_w_text = {genera:['Actinomyces','Campylobacter','Corynebacterium','Gemella','Leptotrichia',
+    'Porphyromonas','Pseudoleptotrichia','Schaalia','Tannerella','Aggregatibacter','Capnocytophaga',
+    'Fusobacterium','Haemophilus','Neisseria','Prevotella','Rothia','Streptococcus','Veillonella']
+    }
 // constants.link_exceptions  SEE routes_taxa.js:taxdesc()
 // constants.segata_order =   ['BM',"KG",'HP',       'TH',"PT","TD","SV","SupP","SubP",'ST']
 // constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP']

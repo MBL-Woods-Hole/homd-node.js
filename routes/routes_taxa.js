@@ -695,12 +695,10 @@ router.get('/life', function life(req, res) {
      image_array = find_images(rank,'',tax_name)
      //console.log(image_array)
   }
-  let genera_w_text = ['Actinomyces','Campylobacter','Corynebacterium','Gemella','Leptotrichia',
-    'Porphyromonas','Pseudoleptotrichia','Schaalia','Tannerella','Aggregatibacter','Capnocytophaga',
-    'Fusobacterium','Haemophilus','Neisseria','Prevotella','Rothia','Streptococcus','Veillonella']
+  
   //Capnocytophaga Schaalia, Leptotrichia,Corynebacterium have images
   
-  if(rank == "genus" && genera_w_text.indexOf(tax_name) != -1){
+  if(rank == "genus" && C.names_w_text.genera.indexOf(tax_name) != -1){
      text = 'genus/'+tax_name+'.ejs'
   }
   let taxa_list =[]
@@ -933,8 +931,10 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
    //console.log('rank: '+rank+' name: '+tax_name);
    // TODO::should be in constants???
-   
-  
+   let text=false
+    if(rank == "genus" && C.names_w_text.genera.indexOf(tax_name) != -1){
+     text = 'genus/'+tax_name+'.ejs'
+    }
    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
    if(!node){
       //error
@@ -1031,6 +1031,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
       otid: otid,  // zero unless species
       genera: JSON.stringify(genera),
+      text: text,
       children: JSON.stringify(children_list),
       notes: JSON.stringify({'segata':segata_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
       segata_table: segata_table,
