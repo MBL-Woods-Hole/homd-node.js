@@ -137,6 +137,7 @@ function get_sublevels(lvl){
 function change_level(rank) {
   // Use capitals here for ranks
   var args = {}
+  //console.log(rank)
   args.rank = rank.toLowerCase()
   if(args.rank=='class'){args.rank='klass';}// for use in homd_taxonomy.taxa_tree_dict_map_by_rank
   var ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
@@ -177,16 +178,21 @@ function change_level(rank) {
         if(rank != 'domain'){
           html += "<td nowrap><a href='life?rank="+ranks[ranks.indexOf(rank)-1]+"&name="+static_data[n].parent_taxon+"'>"+static_data[n].parent_taxon+"</a></td>"
         }
-        html += "<td nowrap><a href='life?rank="+rank+"&name="+static_data[n].item_taxon+"'>"+static_data[n].item_taxon+"</a></td>"
+        
         if(rank == 'species'){
+            
             if(static_data[n].otid){
+               html += "<td nowrap>"+static_data[n].item_taxon+"</td>"
                html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
             }else{
-               html +="<td><small>><a href='life?rank=species&name=\""+static_data[n].item_taxon+"\"'>open subspecies</a><</small></td>"
+               html += "<td nowrap><a href='life?rank="+rank+"&name="+static_data[n].item_taxon+"'>"+static_data[n].item_taxon+"</a></td>"
+               html +="<td nowrap><small>[<a href='life?rank=species&name=\""+static_data[n].item_taxon+"\"'>open-subsp.</a>]</small></td>"
             }
-        }
-        if(rank == 'subspecies'){
+        }else if(rank == 'subspecies'){
+          html += "<td nowrap>"+static_data[n].item_taxon+"</td>"
           html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
+        }else{
+          html += "<td nowrap><a href='life?rank="+rank+"&name="+static_data[n].item_taxon+"'>"+static_data[n].item_taxon+"</a></td>"
         }
         html += "<td style='text-align:center'>"+static_data[n].tax_count+'</td>'
         

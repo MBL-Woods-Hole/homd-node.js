@@ -366,7 +366,8 @@ router.get('/tax_level', function tax_level_get(req, res) {
 //
 router.post('/tax_level', function tax_level_post(req, res) {
   
-  //console.log(req.body)
+  helpers.print(req.body)
+  
   let rank = req.body.rank
   
   const tax_resp = []
@@ -409,19 +410,19 @@ router.post('/tax_level', function tax_level_post(req, res) {
         return_obj.parent_taxon = lineage[lineage.length - 2]
         //console.log(rank,lineage)
         if(lineage.length == C.ranks.indexOf(rank)+1){
-                    let lineage_str = lineage.join(';')
+            let lineage_str = lineage.join(';')
                     //console.log(lineage_str)
-                    if(taxdata.hasOwnProperty(lineage_str)){
-            return_obj.tax_count = taxdata[lineage_str].tax_cnt
-            return_obj.gne_count = taxdata[lineage_str].gcnt
-            return_obj.rrna_count = taxdata[lineage_str].refcnt
-            return_obj.lineage = lineage_str 
-                    }else {
-                        return_obj.tax_count = 0
-            return_obj.gne_count = 0
-            return_obj.rrna_count = 0
-            return_obj.lineage = '' 
-                    }
+            if(taxdata.hasOwnProperty(lineage_str)){
+                return_obj.tax_count = taxdata[lineage_str].tax_cnt
+                return_obj.gne_count = taxdata[lineage_str].gcnt
+                return_obj.rrna_count = taxdata[lineage_str].refcnt
+                return_obj.lineage = lineage_str 
+            }else {
+                return_obj.tax_count = 0
+                return_obj.gne_count = 0
+                return_obj.rrna_count = 0
+                return_obj.lineage = '' 
+            }
         }else {
             return_obj.tax_count = 0
                     return_obj.gne_count = 0
@@ -680,11 +681,11 @@ router.post('/get_refseq', function get_refseq(req, res) {
 
 router.get('/life', function life(req, res) {
   
-  console.log('in LIFE')
+  //console.log('in LIFE')
   // let myurl = url.parse(req.url, true);
   let tax_name = req.query.name;
   let rank = (req.query.rank)
-  let lin,lineage_string
+  let lin,lineage_string,otid
     //console.log('rank:',rank)
   //console.log('tax_name',tax_name)
   if(tax_name){
@@ -698,7 +699,7 @@ router.get('/life', function life(req, res) {
   
   //Capnocytophaga Schaalia, Leptotrichia,Corynebacterium have images
   let text = get_rank_text(rank,tax_name)
-  console.log('TEXT',text)
+  //console.log('TEXT',text)
   let taxa_list =[]
   let next_rank,title,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
   var lineage_list = ['']
@@ -797,7 +798,7 @@ router.get('/life', function life(req, res) {
                  //console.log('childern_ids-2')
                  html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a></span><br>'
                }else {
-                 let otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
+                 otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
                //console.log('otid',otid)
                html += "<span class=''>"+space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
                html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Abundance</a></span></span><br>"
@@ -806,7 +807,8 @@ router.get('/life', function life(req, res) {
          }else {
           if(rank === 'species'){
                //display will be subspecies
-               //console.log(taxa_list[n])
+               //console.log('taxa_list[n]',taxa_list[n])
+               //console.log('taxa_list[n]2',C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'])
                otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'].otid
                html += "<span class=''>"+space+taxa_list[n]+"  </span>(<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)<br>'    
             }else {
