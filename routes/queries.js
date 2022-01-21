@@ -39,5 +39,5 @@ module.exports.get_annotation_query2 = (gid, anno) => {
 }
 
 module.exports.get_db_updates_query = () => {
-  return 'SELECT otid, description, reason, date FROM updates order by date'
+  return "SELECT otid, description, reason, date FROM updates WHERE `show`='1'"
 }

@@ -144,6 +144,10 @@ module.exports.make_lineage_string_with_links = function make_lineage_string_wit
      //console.log(tmp)
      return tmp
 }
+
+module.exports.addslashes = function addslashes( str ) {
+    return (str + '').replace(/[\]\[\\"']/g, '\\$&')
+}
 //
 // module.exports.get_qsub_script_text = function get_qsub_script_text(req, scriptlog, dir_path, cmd_name, cmd_list) {
 //   /*

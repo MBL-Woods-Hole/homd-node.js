@@ -186,15 +186,13 @@ router.post('/site_search', function site_search(req, res) {
     }
   })
   // console.log(pidObjList)
-  function addslashes( str ) {
-    return (str + '').replace(/[\]\[\\"']/g, '\\$&')
-}
+  
   const phageIdLst = pidObjList.map(e => e.pid)
   
   // help pages uses grep
   let helpLst = []
   let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
-  const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + addslashes(searchText) + "'" 
+  const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
   console.log('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {

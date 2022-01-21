@@ -4,8 +4,10 @@ var router   = express.Router();
 const CFG   = require(app_root + '/config/config');
 const C     = require(app_root + '/public/constants');
 const path  = require('path')
+const helpers = require('./helpers/helpers')
 const queries = require(app_root + '/routes/queries')
 const { exec, spawn } = require('child_process');
+
 
 router.get('/index', function index(req, res) {
   
@@ -22,14 +24,15 @@ router.get('/help-page', function help_page(req, res) {
   //let page = req.params.pagecode
   let page = req.query.pagecode
   //console.log('page',page)
-  const renderFxn = (req, res, page, updates) => {
+  const renderFxn = (req, res, page, updates, date_sort) => {
       //console.log('updates',updates)
       res.render('pages/help/helppage', {
         title: 'HOMD :: Help Pages',
           pgname: '', // for AboutThisPage
           pagecode: page,
           pagetitle: getPageTitle(page),
-          db_updates: updates,
+          db_updates: JSON.stringify(updates),
+          date_sort: date_sort,
           config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV, rootPath: CFG.PROCESS_DIR}),
           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       
@@ -39,18 +42,37 @@ router.get('/help-page', function help_page(req, res) {
   if(page === 'database_update'){
       let q = queries.get_db_updates_query()
       let rowarray = []
+      let byDate = {}
+      
       TDBConn.query(q, (err, rows) => {
-        //console.log(rows)
+        if(err) console.log(err)
+        console.log('row',rows)
         for(let n in rows){
-           rowarray.push({otid:rows[n].otid,description:rows[n].description,reason:rows[n].reason,date:rows[n].date})
+           if(rows[n].date in byDate){
+             byDate[rows[n].date].push({otid:rows[n].otid, description:rows[n].description, reason:rows[n].reason})
+           }else{
+             byDate[rows[n].date] = [{otid:rows[n].otid, description:rows[n].description, reason:rows[n].reason}]
+              
+           }
+           
+           //rowarray.push({otid:rows[n].otid,description:rows[n].description,reason:rows[n].reason,date:rows[n].date})
         }
-        renderFxn(req, res, page, rowarray)
+        console.log(byDate)
+        let date_array = Object.keys(byDate)
+        //console.log('date_array1',date_array)
+        date_array.sort(function(a, b){
+            const date1 = new Date(a)
+            const date2 = new Date(b)
+            return date2 - date1;
+        })
+        //console.log('date_array2',date_array)
+        renderFxn(req, res, page, byDate, date_array)
       })
   }else{
-  
-    renderFxn(req, res, page, [])
+    renderFxn(req, res, page, [], [])
   }
 })
+
 router.get('/search', function search(req, res) {
   //let page = req.params.pagecode
   res.render('pages/help/search', {
@@ -67,7 +89,7 @@ router.post('/help_search_result', function help_search_result(req, res) {
   // help pages uses grep
   let helpLst = []
   let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
-  const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + searchText + "'" 
+  const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
   //console.log('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
@@ -98,6 +120,15 @@ router.post('/help_search_result', function help_search_result(req, res) {
    });
   
 })
+
+router.get('/download_file', function search(req, res) {
+  //let page = req.params.pagecode
+  let fullpath = path.join(CFG.PATH_TO_DATA,req.query.filename)
+  helpers.print('file path: '+fullpath)
+  res.download(fullpath)
+  //res.end()
+})
+//=====================================================================================
 function getPageTitle(page){
     
     if(page === 'cite'){
