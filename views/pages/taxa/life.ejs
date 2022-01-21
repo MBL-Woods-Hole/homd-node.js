@@ -10,7 +10,7 @@
 #imagesNtext{
     float:right;
    border:1px solid brown;
-   width:48%;
+   width:40%;
    font-size:13px;
    line-height:150%;
    margin-top:25px;
@@ -20,6 +20,7 @@
 #text{
    float:right;
    border:1px solid brown;
+   background-color:lightgrey;
    width:40%;
    font-size:13px;
    line-height:150%;
@@ -114,9 +115,9 @@
     
 <% if(text_file && images.length > 0){ %>
    <div id='imagesNtext'>
-   <div><%- include('../../partials/static/'+text); %></div>
+   <div><%- include("../../partials/static/"+text_file); %></div>
    <br>
-   <div><img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt=''  \></div>
+   <div><img id='img' src='/images/life-images/<%= images[0].name %>' width='250' alt='<%= tax_name %> Image'  \></div>
    
    </div>
    

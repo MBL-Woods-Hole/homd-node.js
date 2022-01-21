@@ -32,36 +32,36 @@ td a {
 
 
 <body>
-  	<div id='wrapper'>
+    <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
-		 <div class='title'>Human Oral Microbiome Taxonomic Level List</div>
-		 <a id='download_browser_text_excel'  href='/download#taxon' >Download Options</a>	 
-		 
-	    <center>
-		  <div id='level-container' >
-			<h4 >Taxonomic Level</h4>
-			   <br>
-				<small>[Select a Rank:]</small> 
-				<div id='button-group'> 
-				<a class='level-button' type='button' href='#' id='domain' onclick="change_level('domain')">Domain</a> 
-				&gt; <a class='level-button' type='button'  href='#' id='phylum' onclick="change_level('phylum')">Phylum</a> 
-				&gt; <a class='level-button' type='button'  href='#' id='klass' onclick="change_level('klass')">Class</a> 
-				&gt; <a class='level-button' type='button'  href='#' id='order' onclick="change_level('order')">Order</a> 
-				&gt; <a class='level-button' type='button'  href='#' id='family' onclick="change_level('family')">Family</a> 
-				&gt; <a class='level-button' type='button'  href='#' id='genus' onclick="change_level('genus')">Genus</a> 
-				&gt; <a class='level-button' type='button'  href='#' id='species' onclick="change_level('species')">Species</a>
-				&gt; <a class='level-button' type='button'  href='#' id='subspecies' onclick="change_level('subspecies')">Subspecies</a>
-			   </div>
-			
-		  </div>
-		 
-		 
-		  <br>
-		  <div id='taxlevel_div'></div>
-	    </center> 
-	  
+     <div class='title'>Human Oral Microbiome Taxonomic Level List</div>
+     <a id='download_browser_text_excel'  href='/download#taxon' >Download Options</a>   
+     
+      <center>
+      <div id='level-container' >
+      <h4 >Taxonomic Level</h4>
+         <br>
+        <small>[Select a Rank:]</small> 
+        <div id='button-group'> 
+        <a class='level-button' type='button' href='#' id='domain' onclick="change_level('domain')">Domain</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='phylum' onclick="change_level('phylum')">Phylum</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='klass' onclick="change_level('klass')">Class</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='order' onclick="change_level('order')">Order</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='family' onclick="change_level('family')">Family</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='genus' onclick="change_level('genus')">Genus</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='species' onclick="change_level('species')">Species</a>
+        &gt; <a class='level-button' type='button'  href='#' id='subspecies' onclick="change_level('subspecies')">Subspecies</a>
+         </div>
+      
+      </div>
+     
+     
+      <br>
+      <div id='taxlevel_div'></div>
+      </center> 
+    
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>

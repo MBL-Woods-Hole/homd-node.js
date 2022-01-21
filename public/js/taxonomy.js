@@ -169,7 +169,7 @@ function change_level(rank) {
       
       //html += '<th>lineage (for debuging)</th>'
       
-      html += '<th scope="col">Genome Count</th><th scope="col">16S rRNA Refseq count</th></tr></thead><tbody>'
+      html += '<th scope="col">Genome Count</th><th scope="col">16S rRNA Refseq Count</th></tr></thead><tbody>'
       
       
       for(n in static_data){

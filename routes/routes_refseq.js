@@ -16,7 +16,7 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
     helpers.accesslog(req, res)
   res.render('pages/refseq/blastn', {
     title: 'HOMD :: RefSeq Blast', 
-    pgname: 'blast',
+    pgname: 'blast/parameters',
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     hostname: CFG.hostname,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),

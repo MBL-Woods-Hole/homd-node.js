@@ -192,7 +192,7 @@ ul li{
         <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
           <br>Genera:
           <select class='dropdown' onchange="location = this.value;">
-          <option value="" disabled selected>Select a genera</option>
+          <option value="" disabled selected>Select a genus</option>
           <% for(n in genera){ %>
               <option value='/taxa/ecology/genus/<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
             <% } %>

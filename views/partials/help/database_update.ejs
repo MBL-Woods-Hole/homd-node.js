@@ -4,7 +4,7 @@
 <% for(n in date_sort) { %>
   <% date = date_sort[n] %>
   <% otid_pretty = 'HMT-'+("000" + db_updates[n].otid).slice(-3) %>
-  <br><br><b><%= date %></b> 
+  <b><%= date %></b> 
   <% for(d in updates[date]) { %>
     <br>&nbsp;&nbsp;&nbsp;HMT: <b><%= updates[date][d].otid %></b> -- <%- updates[date][d].description %>
     <% if(updates[date][d].reason){ %>
@@ -13,6 +13,7 @@
      
   
   <% } %>
+  <hr>
 <% } %>
 <br><br><strong>2021-June -- Pre-SQL Database Re-write:</strong>
 <br>2017-11-22

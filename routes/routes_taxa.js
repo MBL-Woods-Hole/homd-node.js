@@ -339,7 +339,7 @@ router.get('/tax_hierarchy', (req, res) => {
   
   res.render('pages/taxa/taxhierarchy', {
       title: 'HOMD :: Taxon Hierarchy',
-      pgname: 'taxon/tax_hierarchy', // for AbountThisPage
+      pgname: 'taxon/hierarchy', // for AbountThisPage
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       data: {},
       dhtmlx: JSON.stringify(C.dhtmlxTreeData),
@@ -355,7 +355,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
   
   res.render('pages/taxa/taxlevel', {
     title: 'HOMD :: Taxon Level', 
-    pgname: 'taxon/tax_level', // for AbountThisPage
+    pgname: 'taxon/level', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     level: 'domain',
     //oral: oral,
@@ -641,7 +641,7 @@ router.get('/tax_description', function tax_description(req, res){
   }
   res.render('pages/taxa/taxdesc', {
     title: 'HOMD :: Taxon Info', 
-    pgname: 'taxon/tax_description', // for AbountThisPage
+    pgname: 'taxon/description', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     otid: otid,
     pids: pid_list,
@@ -698,6 +698,7 @@ router.get('/life', function life(req, res) {
   
   //Capnocytophaga Schaalia, Leptotrichia,Corynebacterium have images
   let text = get_rank_text(rank,tax_name)
+  console.log('TEXT',text)
   let taxa_list =[]
   let next_rank,title,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,genus,species,rank_display
   var lineage_list = ['']
@@ -836,7 +837,7 @@ router.get('/life', function life(req, res) {
   lineage_string = lineage_list[0]
   res.render('pages/taxa/life', {
       title: 'HOMD :: '+page_title, 
-      pgname: 'taxon/tax_life', // for AbountThisPage
+      pgname: 'taxon/life', // for AbountThisPage
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       data: {},
       tax_name: tax_name,

@@ -1,3 +1,8 @@
+li{
+ 
+
+ 
+}
 #over-table,td{
    padding:20px 40px;;
 }
@@ -49,7 +54,7 @@
    padding:8px;
    border:1px solid grey;
    background:#dcdcdc;
-   font-size:12px;
+   font-size:13px;
 }
 .date{
    padding:10px 0 10px 5px;
