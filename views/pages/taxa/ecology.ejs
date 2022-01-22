@@ -25,10 +25,12 @@ ul li{
 }
 .column {
   float: left;
+  min-height: 380px;
 }
 
 .left {
   width: 15%;
+  
   font-size:12px;
   height: 200px; /* only to hold column open */
 }
@@ -49,6 +51,7 @@ ul li{
 }
 #legend-links{
   position:fixed;
+  
 }
 
 #legend-content{
@@ -158,7 +161,6 @@ ul li{
       
     <div id='taxon-page-div'>
         
-        
         Full Lineage: <%- lineage %>
         <% if(children_lst.length == 0){ %>
            
@@ -171,20 +173,20 @@ ul li{
                <% } %>
              
            <% }else{ %>
-           <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
+            <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
         
-           <div id='lower-rank-items-div' style='display:none'>
-           <% cols = 5 %>
-           <table id='tbl'><tr>
-           <% for(n in children_lst){ %>
-           <% if(n % cols == 0){  %><!-- // modulus -->
-            </tr><tr>
-           <% } %>
-           <td><small>[<%- children_lst[n] %>]</small></td>
-           <% } %>
-           </tr></table>
-           </div>
-          <% } %>  <!-- End of if(children_lst.length -->
+            <div id='lower-rank-items-div' style='display:none'>
+               <% cols = 5 %>
+               <table id='tbl'><tr>
+               <% for(n in children_lst){ %>
+               <% if(n % cols == 0){  %><!-- // modulus -->
+                </tr><tr>
+               <% } %>
+               <td>[<%- children_lst[n] %>]</td>
+               <% } %>
+               </tr></table>
+            </div>
+          <% } %>  <!-- End of if(children_lst.length <5 -->
   
         <% } %>
         
@@ -195,9 +197,10 @@ ul li{
           <option value="" disabled selected>Select a genus</option>
           <% for(n in genera){ %>
               <option value='/taxa/ecology/genus/<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
-            <% } %>
+          <% } %>
+          </select>
         <% } %>
-        </select>
+        
         </small>
         
     </div>  <!-- end taxon-page-div -->
@@ -212,7 +215,7 @@ ul li{
                 <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description:<br>&nbsp;&nbsp;<small><%= taxidfullname %></small></a></li>
             <% } %>
             <li><a href='/taxa/ecology_index'>Ecology Home</a>
-            <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%= tax_name %></small></a>
+            <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%- tax_name.split(' ').join('<br>') %></small></a>
             </ul>
           </div>
       
