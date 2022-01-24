@@ -208,7 +208,7 @@ async.map(data_init_files, helpers.readAsync, function(err, results) {
     C.taxon_counts_lookup       = JSON.parse(results[7]);   // lookup by lineage
     C.annotation_lookup       = JSON.parse(results[8]);
     C.phage_lookup              = JSON.parse(results[9]);
-    
+    // add genus, species to C.genome_lookup
     
     //Object.values(C.taxon_lookup)
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
@@ -255,7 +255,7 @@ async.map(data_init_files, helpers.readAsync, function(err, results) {
     //console.log('755',C.taxon_lineage_lookup[755])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Abiotrophia defectiva_species'])
-    console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['species'])
     
     let num_zeros = 0
     for(n in C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']){

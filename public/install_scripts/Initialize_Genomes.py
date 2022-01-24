@@ -36,7 +36,7 @@ first_genomes_query_no_flagid ="""
     SELECT seq_id as gid,
     genus,
     species,
-    status,
+    genomes.status,
     IFNULL(number_contig, '') as ncontigs, 
     IFNULL(combined_length, '') as tlength,
     IFNULL(oral_pathogen, '') as oral_path,
@@ -44,6 +44,8 @@ first_genomes_query_no_flagid ="""
     IFNULL(sequence_center, '') as seq_center,
     flag
     from {tbl1}
+    JOIN otid_prime using(otid)
+    JOIN taxonomy using(taxonomy_id)
     JOIN genus using(genus_id)
     JOIN species using(species_id)
     ORDER BY gid
@@ -52,7 +54,7 @@ first_genomes_query ="""
     SELECT seq_id as gid,
     genus,
     species,
-    status,
+    genomes.status,
     IFNULL(number_contig, '') as ncontigs, 
     IFNULL(combined_length, '') as tlength,
     IFNULL(oral_pathogen, '') as oral_path,
@@ -60,6 +62,8 @@ first_genomes_query ="""
     IFNULL(sequence_center, '') as seq_center,
     flag_id as flag
     from {tbl1}
+    JOIN otid_prime using(otid)
+    JOIN taxonomy using(taxonomy_id)
     JOIN genus using(genus_id)
     JOIN species using(species_id)
     JOIN seqid_flag using(flag_id)

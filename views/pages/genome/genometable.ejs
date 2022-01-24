@@ -17,23 +17,23 @@ thead th { position: sticky; top: 0; }
 <body>
  <div id="loader" class="center-loader"></div>
 
-  <div id='wrapper'>		
-	     
-	<div id='header'>
+  <div id='wrapper'>    
+       
+  <div id='header'>
        <%- include('../../partials/header_img'); %>
     </div>
-	
-	<%- include('../../partials/navbar'); %>
-	
-	
-	<div  class='page-content' >
-   						
-		<div class='title text-info'>Human Oral Microbial Genomes</div>
+  
+  <%- include('../../partials/navbar'); %>
+  
+  
+  <div  class='page-content' >
+              
+    <div class='title text-info'>Human Oral Microbial Genomes</div>
         <div id='download_browser_text_excel'><b>Download this Genome Data</b>: 
-		   <a href='dld_table/browser/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Browser]</a>
-		   <a href='dld_table/text/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Text]</a>
-		   <a href='dld_table/excel/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Excel]</a>
-		 </div>		 
+       <a href='dld_table/browser/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Browser]</a>
+       <a href='dld_table/text/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Text]</a>
+       <a href='dld_table/excel/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Excel]</a>
+     </div>    
 
  <%- include('../../partials/genome_table_filter.ejs') %> 
 
@@ -60,18 +60,18 @@ thead th { position: sticky; top: 0; }
 <tbody>
 
 <% for(n in ginfo){ %>
-	<% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
-	<tr class="">
-		<td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
-		<td class='linkout center' nowrap ><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-		<td class='tax_name'><em><a href='/taxa/ecology/genus/<%= ginfo[n].genus %>'><%= ginfo[n].genus %></a></em></td>
-		<td class='tax_name'><em><a href='/taxa/ecology/species/<%= ginfo[n].species %>'><%= ginfo[n].species %></a></em></td>
-		<td ><%= ginfo[n].ccolct %></td>
-		
-		<td class='center'><%= ginfo[n].ncontigs %></td>
-		<td class='center'><%= ginfo[n].tlength %></td>
-		<td class='center'><%= ginfo[n].gc %></td>
-		
+  <% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
+  <tr class="">
+    <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
+    <td class='linkout center' nowrap ><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
+    <td class='tax_name'><em><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>'><%= ginfo[n].genus %></a></em></td>
+    <td class='tax_name'><em><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= ginfo[n].species %></a></em></td>
+    <td ><%= ginfo[n].ccolct %></td>
+    
+    <td class='center'><%= ginfo[n].ncontigs %></td>
+    <td class='center'><%= ginfo[n].tlength %></td>
+    <td class='center'><%= ginfo[n].gc %></td>
+    
         <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Info</a>
         <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a>
         <a class='pill pill-lightseagreen' href='http://www.homd.org/jbrowse/index.html?data=homd/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
@@ -85,14 +85,14 @@ thead th { position: sticky; top: 0; }
         <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
         <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
         <!-- <span class="badge badge-light">HOMD</span></td> -->
-	</tr>
+  </tr>
 <% } %>
 
 </tbody>
 </table>
   </div>  <!-- end genome-box -->
-		
-	
+    
+  
     </div> <!-- end: page-content -->
     
     <div id='footer'>
@@ -112,13 +112,13 @@ thead th { position: sticky; top: 0; }
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
     mainmenu()  // function in public/js/menu.js
-	var letter = '<%- letter %>'
-	if(letter && letter !== 'all'){
-		document.getElementById(letter).style.color = 'red'
-		document.getElementById(letter).style.fontSize = 'medium'
-	}
-	
-	 document.onreadystatechange = function() {
+  var letter = '<%- letter %>'
+  if(letter && letter !== 'all'){
+    document.getElementById(letter).style.color = 'red'
+    document.getElementById(letter).style.fontSize = 'medium'
+  }
+  
+   document.onreadystatechange = function() {
             if (document.readyState !== "complete") {
                 document.querySelector(
                   '#genome-box').style.visibility = "hidden";

@@ -81,19 +81,22 @@ router.get('/genome_table', function genomeTable(req, res) {
   }
   
   gid_obj_list.map(function mapGidObjList (el) {
-        if (el.tlength) { el.tlength = helpers.format_long_numbers(el.tlength); }
+        if (el.tlength) { 
+            el.tlength = helpers.format_long_numbers(el.tlength); 
+        }
+        
   })
   
   send_list = gid_obj_list
   
-    
+  //console.log('send_list',send_list[0])  
   // get each secid from C.genome_lookup
   //console.log('seqid_list',gid_obj_list[0])
   // send_list.sort(function (a, b) {
   // return helpers.compareStrings_alpha(a.genus, b.genus);
   //     })
     // sort by two fields
-    send_list.sort( (a, b) =>
+  send_list.sort( (a, b) =>
     b.species - a.species || a.genus.localeCompare(b.genus),
   )
   count_txt = count_txt0 + ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
@@ -167,6 +170,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
   const gid = req.query.gid
   
   const glist = Object.values(C.genome_lookup)
+  
   glist.sort(function sortGList (a, b) {
       return helpers.compareStrings_alpha(a.genus, b.genus)
     })

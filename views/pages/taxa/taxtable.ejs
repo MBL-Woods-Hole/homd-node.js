@@ -51,11 +51,11 @@ thead th { position: sticky; top: 0; }
      <tbody>
      <% for(n in list){ %>
        <tr>
-       <% otid= list[n].otid %>
+       <% otid = list[n].otid %>
        <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
        <td nowrap><%= taxidfullname  %></td>
        <td nowrap><i><b><a href='life?rank=genus&name=<%= list[n].genus %>'><%= list[n].genus  %></a></b></i></td>
-       <td nowrap><i><b><a href='life?rank=species&name=<%= list[n].genus %> <%= list[n].species %>'><%= list[n].species  %></a></b></i></td>
+       <td nowrap><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
        <td><%= list[n].status  %></td>
      <!--   <td><%= list[n].sites  %></td> -->
        <% if(list[n].ecology === 1){ %>

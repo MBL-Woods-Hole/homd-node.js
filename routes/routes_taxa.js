@@ -978,6 +978,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       //error
     }
     let genera = get_major_genera(rank, node)
+    console.log(tax_name,rank,node)
     if(rank == 'species'){
       if(node.hasOwnProperty('otid')){
           otid = node.otid
