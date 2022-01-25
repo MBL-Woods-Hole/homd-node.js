@@ -856,7 +856,7 @@ router.get('/life', function life(req, res) {
   
 })
 //
-router.get('/ecology_index', function ecology_index(req, res) {
+router.get('/ecology', function ecology_index(req, res) {
     let sole_arch = {'domain':'Archaea','phylum':'Euryarchaeota','klass':'Methanobacteria','order':'Methanobacteriales','family':'Methanobacteriaceae','genus':'Methanobrevibacter'}
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
     let class_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['klass']
@@ -939,6 +939,7 @@ function get_rank_text(rank,tax_name){
     }
     return text
 }
+
 router.get('/ecology/:level/:name', function ecology(req, res) {
     helpers.print('in ecology')
     let rank = req.params.level;
