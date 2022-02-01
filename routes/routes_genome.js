@@ -125,11 +125,11 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
   var countTxt, countTxt0;
   //let seqrch_match = req.body.match
   //let search_sub = req.body.sub
-  helpers.print(C.genome_lookup['SEQF1003'])
+  
   // FIXME
   let bigGeneList = Object.values(C.genome_lookup);
   const sendList = getFilteredGenomeList(bigGeneList, searchTxt, searchField)
-
+console.log(sendList)
   let pgtitle = 'Search TaxTable'
   var phylaObj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
   var phyla = phylaObj.map(function mapPhylaObj2 (el) { return el.taxon; })
@@ -719,51 +719,54 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
   } else if (searchField === 'seq_center') {
     sendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
   } else {
-    tmpSendList = gidObjList.filter(item => item.otid.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::otid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].otid] = tmpSendList[n]
-    }
-    // gid
+    console.log('searchField',searchField)
+    
+     // gid
     tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
     for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].otid] = tmpSendList[n]
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    }
+    //otid
+    tmpSendList = gidObjList.filter(item => item.otid.toLowerCase().includes(searchText))
+    // for uniqueness convert to object::otid THIS is WRONG: Must be gid
+    for (let n in tmpSendList) {
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // genus
     tmpSendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::otid
+    // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].otid] = tmpSendList[n]
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // species
     tmpSendList = gidObjList.filter(item => item.species.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::otid
+    // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].otid] = tmpSendList[n]
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // culture collection
     tmpSendList = gidObjList.filter(item => item.ccolct.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::otid
+    // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].otid] = tmpSendList[n]
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // isolation origin
     tmpSendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::otid
+    // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].otid] = tmpSendList[n]
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // seq status
     tmpSendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::otid
+    // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].otid] = tmpSendList[n]
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // seq_center
     tmpSendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::otid
+    // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].otid] = tmpSendList[n]
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // now back to a list
     sendList = Object.values(tempObj)

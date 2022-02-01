@@ -1,4 +1,11 @@
 HOMD Notes
+2022-02-01
+  idea: archeopterix?
+  vamps krona js target plot - useful for homd?
+  ppangolin?
+  
+  Fixed search for 'accolens' in genome table should get 9 rows
+  top hits for abundance per subhabitat
 2022-01
 Fix taxonomy steps
 1- replace taxonomy table
