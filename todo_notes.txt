@@ -4,8 +4,11 @@ HOMD Notes
   vamps krona js target plot - useful for homd?
   ppangolin?
   
-  Fixed search for 'accolens' in genome table should get 9 rows
+  Fixed: search for 'accolens' in genome table should get 9 rows
+  Abundance
   top hits for abundance per subhabitat
+  krona graph for each oral habitat?
+  
 2022-01
 Fix taxonomy steps
 1- replace taxonomy table
