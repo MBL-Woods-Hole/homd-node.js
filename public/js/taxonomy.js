@@ -134,6 +134,7 @@ function get_sublevels(lvl){
    return subs.split(',')
 }
 ///////
+
 function change_level(rank) {
   // Use capitals here for ranks
   var args = {}

@@ -1323,10 +1323,109 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
   res.send(table_tsv)
   res.end()
 })
-
+router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
+    console.log('in abundance_by_site')
+    
+    let rank = req.params.rank
+    let group = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank]
+    let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
+    let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+    let group_collector = {},top_ten = {},node,lineage_list,count_obj
+    for(let p in group){
+        //console.log(phyla[p])
+        node = group[p]
+        lineage_list = make_lineage(node)
+        //console.log('lineage_list',lineage_list)
+        count_obj = C.taxon_counts_lookup[lineage_list[0]]
+        group_collector[lineage_list[0]] = get_site_avgs(count_obj)
+        
+    }
+    for(let n in abund_sites){
+        let site = abund_sites[n]
+        top_ten[site] = get_top_ten(group_collector, site,rank)  // new col[site] = [{name:count},...] // list desc /w counts
+    //console.log('phyla_collector',phyla_collector)
+    }
+    //console.log(top_ten)
+    res.render('pages/taxa/abundance_by_site', {
+      title: 'HOMD ::Abundance by oral site',
+      pgname: '', // for AbountThisPage 
+      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      data: JSON.stringify(top_ten),
+      rank:rank
+    })
+})
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
+function get_top_ten(collector, site,rank){
+    
+    let tmp1={},tmp2=[]
+    
+    for(let taxname in collector){
+        tmp1={}
+        //console.log('taxname',taxname)
+        tmp1[taxname] = collector[taxname]
+        tmp2.push(tmp1)
+    }
+    //console.log('tmp2-1',tmp2)
+    
+    let x = tmp2.map(el => {
+    
+        //console.log(Object.keys(el)[0])
+        //let key = Object.keys(el)[0]
+        let obj = {}
+        let name_ary = Object.keys(el)[0].split(';')
+        obj['name'] = name_ary[name_ary.length - 1]
+        obj['value'] = el[Object.keys(el)[0]][site] 
+        if(rank == 'species'){
+            obj['otid']  = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[name_ary[name_ary.length - 1] +'_species'].otid
+        }
+        return obj
+    })
+   
+    //sort by BM value
+    return sortByKeyDEC(x,'value').slice(0, 10)
+}
+
+function sortByKeyDEC(array, key) {
+  return array.sort(function(a,b) { return b[key] - a[key];});
+}
+function get_site_avgs(obj){
+    let return_obj = {}
+    let ref,site,count
+    let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
+    let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+    //console.log('obj',obj)
+    for(let i in abund_sites){
+        return_obj[abund_sites[i]] = 0
+    }
+    count = 0
+    for(let n in abund_refs){
+       ref = abund_refs[n]
+       //console.log('ref',ref)
+       if(obj[ref] && Object.values(obj[ref]).length > 0){
+            count +=1
+            for(let i in abund_sites){
+              site = abund_sites[i]
+              //console.log('site',site)
+              if(obj[ref].hasOwnProperty(site)){
+                 //console.log('found',site,ref,obj[ref][site].avg)
+                 return_obj[site] += parseFloat(obj[ref][site].avg)
+              }
+            }
+       }
+    }
+    //console.log('count',count)
+    for(let s in return_obj){
+        //console.log('s',s,return_obj[s])
+        if(count){
+          return_obj[s] = (return_obj[s] / count).toPrecision(4)  // create avg
+        }
+    }
+    
+    return return_obj
+}
 function get_rank_display(rank,use_plural){
    var display_name = 'not_working'
    if(use_plural){

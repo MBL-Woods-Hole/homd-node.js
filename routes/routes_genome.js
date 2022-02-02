@@ -129,7 +129,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
   // FIXME
   let bigGeneList = Object.values(C.genome_lookup);
   const sendList = getFilteredGenomeList(bigGeneList, searchTxt, searchField)
-console.log(sendList)
+
   let pgtitle = 'Search TaxTable'
   var phylaObj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
   var phyla = phylaObj.map(function mapPhylaObj2 (el) { return el.taxon; })
@@ -719,8 +719,6 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
   } else if (searchField === 'seq_center') {
     sendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
   } else {
-    console.log('searchField',searchField)
-    
      // gid
     tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
     for (let n in tmpSendList) {
