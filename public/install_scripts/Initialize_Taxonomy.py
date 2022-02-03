@@ -11,7 +11,7 @@ import datetime
 ranks = ['domain','phylum','klass','order','family','genus','species','subspecies']
 #ranks = ['domain','phylum','klass','order','family','genus','species']
 today = str(datetime.date.today())
-
+sys.path.append('../../../homd-data/')
 from connect import MyConnection
 
 # TABLES

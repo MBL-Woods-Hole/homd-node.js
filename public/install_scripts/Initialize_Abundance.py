@@ -9,6 +9,7 @@ import json
 #from json import JSONEncoder
 import argparse
 import csv
+sys.path.append('../../../homd-data/')
 from connect import MyConnection
 import datetime
 ranks = ['domain','phylum','klass','order','family','genus','species']
@@ -142,6 +143,8 @@ def run_abundance_db():
     sites = []
     for n in headers:
         sites.append(n+'_mean')
+        sites.append(n+'_10p')
+        sites.append(n+'_90p')
         sites.append(n+'_sd')
         sites.append(n+'_prev')
     q = "SELECT otid,notes,`level`,reference,concat_ws(';',`domain`,`phylum`,`klass`,`order`,`family`,`genus`,`species`,`subspecies`) as taxonomy, "+','.join(sites)
@@ -206,19 +209,19 @@ def run_abundance_db():
         if row['reference'].startswith('Eren2014_v1v3'):
             for p in eren_header_prefixes:
                 max_eren = get_max(row, p, max_eren)
-                TCcollector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+                TCcollector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
             TCcollector[taxon_string]['max_erenv1v3'] = max_eren
             TCcollector[taxon_string]['notes']['eren_v1v3'] = row['notes']
         if row['reference'].startswith('Eren2014_v3v5'):
             for p in eren_header_prefixes:
                 max_eren = get_max(row, p, max_eren)
-                TCcollector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+                TCcollector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
             TCcollector[taxon_string]['max_erenv3v5'] = max_eren
             TCcollector[taxon_string]['notes']['eren_v3v5'] = row['notes']
         if row['reference'].startswith('Dewhirst'):
             for p in dewhirst_header_prefixes:
                 max_dewhirst = get_max(row, p, max_dewhirst)
-                TCcollector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
+                TCcollector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
             TCcollector[taxon_string]['max_dewhirst'] = max_dewhirst
             TCcollector[taxon_string]['notes']['dewhirst'] = row['notes']
         

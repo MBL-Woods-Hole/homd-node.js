@@ -1,6 +1,20 @@
 HOMD Notes
+2022-02-02
+From JMW
+1: For Eren V1-V3, Eren V3-V5, and Dewhirst, where you currently have Avg (50th percentile abundance), 
+Stdev, and Prev, can you add rows for 10th percentile abundance and 90th percentile abundance?
+
+3. I suggest a bar chart on the page https://node.homd.info/taxa/ecology
+ showing 10 bars, one for each of 9 oral sites plus nasal, as a visual that will 
+ show the similarities and differences among sites.
+Something like figure 1A in Segata et al. 2012 but showing species where they show genera.
+https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42/figures/1
+Let me know if you'd like some help designing such a bar chart.  
+The species should be grouped by taxonomy rather than abundance, and with a color scheme 
+where related species have a similar color, as in the Segata et al. figure.
+
 2022-02-01
-  idea: archeopterix?
+  idea: archyeopterix?
   vamps krona js target plot - useful for homd?
   ppangolin?
   

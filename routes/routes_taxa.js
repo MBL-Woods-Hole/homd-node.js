@@ -1949,8 +1949,7 @@ function get_abundance_text(max, data, names, rank, tax_name){
    return text
 } 
 function build_abundance_table(cite, data, order){
-    //console.log('data')
-    //console.log(data)
+    console.log('data',data)
     
     var html = '<table><thead><tr><td></td>'
     for(var n in order){
@@ -1962,18 +1961,32 @@ function build_abundance_table(cite, data, order){
     for(var n in data){
         html += '<td>'+data[n].avg+'</td>'
     }
+    html += '</tr>'
+    if(['dewhirst','eren_v1v3','eren_v3v5'].indexOf(cite) != -1){
+        html += '<tr><th>10<sup>th</sup>p</th>'
+        for(var n in data){
+            html += '<td>'+data[n]['10p']+'</td>'
+        }
+        html += '</tr>'
+        html += '<tr><th>90<sup>th</sup>p</th>'
+        for(var n in data){
+            html += '<td>'+data[n]['90p']+'</td>'
+        }
+        html += '</tr>'
+    }
     
     html += '<tr><th>Stdev</th>'
     for(var n in data){
         html += '<td>'+data[n].sd+'</td>'
     }
-
+    html += '</tr>'
     // dewhirst, eren  (Not for Segata)
     if(['dewhirst','eren_v1v3','eren_v3v5'].indexOf(cite) != -1){
       html += '<tr><th>Prev</th>'
       for(var n in data){
         html += '<td>'+data[n].prev+'</td>'
       }
+      html += '</tr>'
     }
     html += '</tbody></table>'
     return html
