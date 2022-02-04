@@ -1,23 +1,7 @@
 HOMD Notes
 2022-02-02
-TOP-Ten Page
-1-(JMW)Hi Andy,
-Here are some other suggestions (from Floyd and me) about the top-10 page
-https://node.homd.info/taxa/abundance_by_site/phylum
-
--all the abundances should have 3 decimal places; right now most have 3 but some 
-have 2, 4, 5, or 6
-
--at the bottom of the list of 10 for each site, can we put a line for "sum of top 10" abundance?  
-(to make it obvious whether the top 10 represent 98% of the data, or 28%).
-
--can we make a way to click on something in the header for each site 
-(buccal mucosa, keratinized gingiva, hard palate, etc.) 
-to open up the full list of species in descending order of abundance, 
-so that people can see more than the first 10?
-
-Jessica
-==========================
+1-Let's put on the list to figure out why the sums for phylum go as high as 100.9 
+-- seems too high for roundoff error.
 2-(JMW)Hi Andy,
 
 Floyd and I just talked and the answer to my question below is no, we don't want to consider 

@@ -979,6 +979,10 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       //error
     }
     let genera = get_major_genera(rank, node)
+    // sort genera list 
+    genera.sort(function sortByTaxa(a, b) {
+        return helpers.compareStrings_alpha(a.taxon, b.taxon);
+    })
     console.log(tax_name,rank,node)
     if(rank == 'species'){
       if(node.hasOwnProperty('otid')){
@@ -1007,11 +1011,32 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       lineage_list[0] = ''
       console.log('ERROR Lineage')
    }else {
-      // console.log('lineage')
-//       console.log(lineage_list[0])
-      
-      //console.log(C.taxon_counts_lookup[lineage_list[0]])
-      if(lineage_list[0] in C.taxon_counts_lookup){
+        // if(rank === 'species' && C.species_w_subspecies.hasOwnProperty(tax_name)){ //and C.species_w_subspecies
+//          //try parasanguinis (411,721)   818,938 has none
+//          console.log('lineage_list[0]',tax_name,lineage_list[0],'subsp ',C.species_w_subspecies[tax_name])
+//          let dewhirst_susp_data = [],erenv1v3_susp_data=[],erenv3v5_susp_data=[]
+//          for(let i in C.species_w_subspecies[tax_name]){
+//             let subsp_lineage = lineage_list[0]+';'+C.species_w_subspecies[tax_name][i]
+//             console.log('subsp_lineage',subsp_lineage)
+//             if('dewhirst' in C.taxon_counts_lookup[subsp_lineage] && Object.keys(C.taxon_counts_lookup[subsp_lineage]['dewhirst']).length != 0){
+//               dewhirst_susp_data.push(Object.values(C.taxon_counts_lookup[subsp_lineage]['dewhirst']))
+//             }
+//             if('eren_v1v3' in C.taxon_counts_lookup[subsp_lineage] && Object.keys(C.taxon_counts_lookup[subsp_lineage]['eren_v1v3']).length != 0){
+//               erenv1v3_susp_data.push(Object.values(C.taxon_counts_lookup[subsp_lineage]['eren_v1v3']))
+//             }
+//             if('eren_v3v5' in C.taxon_counts_lookup[subsp_lineage] && Object.keys(C.taxon_counts_lookup[subsp_lineage]['eren_v3v5']).length != 0){
+//               erenv3v5_susp_data.push(Object.values(C.taxon_counts_lookup[subsp_lineage]['eren_v3v5']))
+//             }
+//              
+//              console.log('dewhirst',dewhirst_data)
+//          }
+//          
+//          dewhirst_data = combine_abund_data(dewhirst_susp_data)
+//          erenv1v3_data = combine_abund_data(erenv1v3_susp_data)
+//          erenv3v5_data = combine_abund_data(erenv3v5_susp_data)
+//          
+         
+       if(lineage_list[0] in C.taxon_counts_lookup){
          
          if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
@@ -1022,8 +1047,10 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
                  segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
              }
          }
+         
          if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
+             console.log('in Dewhirst')
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
              dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.dewhirst_order)
@@ -1056,10 +1083,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
     }
    
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
-   // sort genera list 
-    genera.sort(function sortByTaxa(a, b) {
-        return helpers.compareStrings_alpha(a.taxon, b.taxon);
-    })
+   
     res.render('pages/taxa/ecology', {
       title: 'HOMD ::'+rank+'::'+tax_name,
       pgname: 'taxon/ecology', // for AbountThisPage 
@@ -1988,7 +2012,7 @@ function get_abundance_text(max, data, names, rank, tax_name){
    return text
 } 
 function build_abundance_table(cite, data, order){
-    console.log('data',data)
+    //console.log('data',data)
     
     var html = '<table><thead><tr><td></td>'
     for(var n in order){

@@ -165,6 +165,15 @@ constants.all_genome_blastn_db_choices = { nucleotide:
            ext:'faa',filename: 'faa/ALL_genomes.faa' }
     ]
 }
+constants.species_w_subspecies = {
+    'Streptococcus parasanguinis': ['clade_411','clade_721'],
+    'Streptococcus infantis': ['clade_431','clade_638'],
+    'Streptococcus cristatus': ['clade_578','clade_886'],
+    'Streptococcus oralis': ['subsp._oralis', 'subsp._dentisani_clade_058', 'subsp._dentisani_clade_398', 'subsp._tigurinus_clade_070', 'subsp._tigurinus_clade_071'],
+    'Fusobacterium nucleatum': ['subsp._animalis', 'subsp._nucleatum', 'subsp._polymorphum', 'subsp._vincentii'],
+    'Limosilactobacillus reuteri': ['clade_818','clade_938'],  // no abundance data
+    'Peptostreptococcaceae_[G-7] [Eubacterium]_yurii': ['subsps._yurii_&_margaretiae','subsp._schtitka']
+}
 // constants.posters_pdfs =
 // [
 // {shortname:"McCafferty2014", filename:'2014-AADR-McCafferty.pdf'},
