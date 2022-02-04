@@ -33,7 +33,9 @@ table{
 .site-table{
    border-collapse:collapse;
    font-size:14px;
-   
+}
+.site-table th{
+   padding:0 3px;
 }
 #master td{
   padding:3px;
@@ -42,6 +44,14 @@ table{
    background:lightblue;
    border:1px solid orange;
    width:100%;
+   
+}
+
+.all-link{
+   font-size: 12px;
+   float:right;
+   color:brown;
+   
 }
 </style>
 <% sitedata = JSON.parse(data) %>
@@ -68,10 +78,10 @@ table{
         <!-- <a class='level-button' type='button' href='#' id='domain' onclick="change_level('domain')">Domain</a>  -->
         <a  class='level-button' href='/taxa/abundance_by_site/phylum' id='phylum' >Phylum</a> 
         &gt; <a class='level-button' type='button'  href='/taxa/abundance_by_site/klass' id='klass' >Class</a> 
-        &gt; <a class='level-button' type='button'  href='/taxa/abundance_by_site/order' id='order' onclick="change_level('order')">Order</a> 
-        &gt; <a class='level-button' type='button'  href='/taxa/abundance_by_site/family' id='family' onclick="change_level('family')">Family</a> 
-        &gt; <a class='level-button' type='button'  href='/taxa/abundance_by_site/genus' id='genus' onclick="change_level('genus')">Genus</a> 
-        &gt; <a class='level-button' type='button'  href='/taxa/abundance_by_site/species' id='species' onclick="change_level('species')">Species</a>
+        &gt; <a class='level-button' type='button'  href='/taxa/abundance_by_site/order' id='order' ">Order</a> 
+        &gt; <a class='level-button' type='button'  href='/taxa/abundance_by_site/family' id='family' ">Family</a> 
+        &gt; <a class='level-button' type='button'  href='/taxa/abundance_by_site/genus' id='genus' ">Genus</a> 
+        &gt; <a class='level-button' type='button'  href='/taxa/abundance_by_site/species' id='species' ">Species</a>
          </div>
       
       </div>
@@ -91,44 +101,59 @@ table{
 <tr>
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Buccal Mucosa (BM)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Buccal Mucosa (BM) <span class='all-link'><a href='#' onclick="get_abund_sorted('BM','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['BM']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['BM'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['BM'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['BM'][n]['name'] %>
+            <% taxname = sitedata['BM'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['BM'][n]['name'] %></a></td><td><%= sitedata['BM'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['BM'][n]['value'] %></td></tr>
+        <% sum += parseFloat(sitedata['BM'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Keratinized Gingiva (KG)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Keratinized Gingiva (KG)<span class='all-link'><a href='#' onclick="get_abund_sorted('KG','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['KG']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['KG'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['KG'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['KG'][n]['name'] %>
+            <% taxname = sitedata['KG'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['KG'][n]['name'] %></a></td><td><%= sitedata['KG'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['KG'][n]['value'] %></td></tr>
+        <% sum += parseFloat(sitedata['KG'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Hard Palate (HP)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Hard Palate (HP)<span class='all-link'><a href='#' onclick="get_abund_sorted('HP','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['HP']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['HP'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['HP'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['HP'][n]['name'] %>
+            <% taxname = sitedata['HP'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['HP'][n]['name'] %></a></td><td><%= sitedata['HP'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['HP'][n]['value'] %></td></tr>
+        <% sum += parseFloat(sitedata['HP'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
   
@@ -136,44 +161,59 @@ table{
   
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Tongue Dorsum (TD)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Tongue Dorsum (TD)<span class='all-link'><a href='#' onclick="get_abund_sorted('TD','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['TD']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['TD'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['TD'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['TD'][n]['name'] %>
+            <% taxname = sitedata['TD'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['TD'][n]['name'] %></a></td><td><%= sitedata['TD'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['TD'][n]['value'] %></td></tr>
+        <% sum += parseFloat(sitedata['TD'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Palatine Tonsils (PT)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Palatine Tonsils (PT)<span class='all-link'><a href='#' onclick="get_abund_sorted('PT','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['PT']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['PT'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['PT'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['PT'][n]['name'] %>
+            <% taxname = sitedata['PT'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['PT'][n]['name'] %></a></td><td><%= sitedata['PT'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['PT'][n]['value'] %></td></tr>
+        <% sum += parseFloat(sitedata['PT'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Throat (TH)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Throat (TH)<span class='all-link'><a href='#' onclick="get_abund_sorted('TH','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['TH']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['TH'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['TH'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['TH'][n]['name'] %>
+            <% taxname = sitedata['TH'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['TH'][n]['name'] %></a></td><td><%= sitedata['TH'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['TH'][n]['value'] %></td></tr>
+      <% sum += parseFloat(sitedata['TH'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
 
@@ -181,44 +221,59 @@ table{
   
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Saliva (SV)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Saliva (SV)<span class='all-link'><a href='#' onclick="get_abund_sorted('SV','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['SV']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['SV'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['SV'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['SV'][n]['name'] %>
+            <% taxname = sitedata['SV'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['SV'][n]['name'] %></a></td><td><%= sitedata['SV'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['SV'][n]['value'] %></td></tr>
+        <% sum += parseFloat(sitedata['SV'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Supra-gingival Plaque (SupP)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Supra-gingival Plaque (SupP)<span class='all-link'><a href='#' onclick="get_abund_sorted('SupP','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['SupP']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['SupP'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['SupP'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['SupP'][n]['name'] %>
+            <% taxname = sitedata['SupP'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['SupP'][n]['name'] %></a></td><td><%= sitedata['SupP'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['SupP'][n]['value'] %></td></tr>
+      <% sum += parseFloat(sitedata['SupP'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Sub-gingival Plaque (SubP)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Sub-gingival Plaque (SubP)<span class='all-link'><a href='#' onclick="SubP">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['SubP']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['SubP'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['SubP'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['SubP'][n]['name'] %>
+            <% taxname = sitedata['SubP'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['SubP'][n]['name'] %></a></td><td><%= sitedata['SubP'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['SubP'][n]['value'] %></td></tr>
+        <% sum += parseFloat(sitedata['SubP'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>  
   
@@ -226,30 +281,40 @@ table{
   
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Nasal (NS)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Nasal (NS)<span class='all-link'><a href='#' onclick="get_abund_sorted('NS','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['NS']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['NS'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['NS'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['NS'][n]['name'] %>
+            <% taxname = sitedata['NS'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['NS'][n]['name'] %></a></td><td><%= sitedata['NS'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['NS'][n]['value'] %></td></tr>
+        <% sum += parseFloat(sitedata['NS'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
   <td align='center'>
     <table class='site-table'>
-      <tr class='header'><th colspan='2'>Stool (ST)</th></tr>
-      <tr><th><%= showrank %></th><th>Abundance</th></tr>
+      <tr class='header'><th colspan='2'>Stool (ST)<span class='all-link'><a href='#' onclick="get_abund_sorted('ST','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
+      <% sum = 0 %>
       <% for(n in sitedata['ST']) { %>
         <% if(rank === 'species'){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['ST'][n]['otid'] %>
+           <% taxname = '<i>'+sitedata['ST'][n]['name'] +'</i>' %>
         <% }else{ %>
             <% link = '/taxa/life?rank=' + rank + '&name=' + sitedata['ST'][n]['name'] %>
+            <% taxname = sitedata['ST'][n]['name'] %>
         <% } %>
-        <tr><td><a href='<%= link %>'><%= sitedata['ST'][n]['name'] %></a></td><td><%= sitedata['ST'][n]['value'] %></td></tr>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td><%= sitedata['ST'][n]['value'] %></td></tr>
+        <% sum += parseFloat(sitedata['ST'][n]['value']) %>
       <% } %>
+      <tr><td align='right'>Sum:</td><td><%= sum.toFixed(3) %></td></tr>
     </table>
   </td>
   

@@ -1,10 +1,63 @@
 HOMD Notes
 2022-02-02
-From JMW
+TOP-Ten Page
+1-(JMW)Hi Andy,
+Here are some other suggestions (from Floyd and me) about the top-10 page
+https://node.homd.info/taxa/abundance_by_site/phylum
+
+-all the abundances should have 3 decimal places; right now most have 3 but some 
+have 2, 4, 5, or 6
+
+-at the bottom of the list of 10 for each site, can we put a line for "sum of top 10" abundance?  
+(to make it obvious whether the top 10 represent 98% of the data, or 28%).
+
+-can we make a way to click on something in the header for each site 
+(buccal mucosa, keratinized gingiva, hard palate, etc.) 
+to open up the full list of species in descending order of abundance, 
+so that people can see more than the first 10?
+
+Jessica
+==========================
+2-(JMW)Hi Andy,
+
+Floyd and I just talked and the answer to my question below is no, we don't want to consider 
+anything with an HMT number to be a species.
+
+We would​ like to be able to add the multiple clades or multiple subspecies together to 
+generate abundance numbers for the species listed below.
+
+In the case of Strep oralis, there are actually two levels to add, because some of the 
+subspecies have subclades.
+
+The way the database is structured, can we populate the species level with the sum of the 
+sub-species or sub-clades?
+
+A question for the team -- 
+I was surprised that Streptococcus parasanguinis didn't appear on the top 10 for tongue, 
+and it's because it is divided into two subspecies, so for the species rank the abundance 
+tables show "no data".
+One of the subspecies averages about 3% in tongue and would make the list; the other is 
+about 1%.
+The same issue will affect Streptococcus oralis; either subspecies dentisani or subspecies 
+tigurinus could make the list by itself in dental plaque, and together they certainly would.
+Do we want to add the subspecies abundances together to generate species numbers, or should 
+we consider anything with an HMT number to be its own species?
+
+This affects 
+Streptococcus parasanguinis (clades 411 and 721)
+Streptococcus infantis (clades 431 and 638)
+Streptococcus cristatus (clades 578 and 886)
+Streptococcus oralis (subspecies oralis, dentisani clade 058, dentisani clade 398, tigurinus 
+clade 070, tigurinus clade 071)
+Fusobacterium nucleatum (subspecies animalis, nucleatum, polymorphum, vincentii)
+Limosilactobacillus reuteri (clades 818 and 938)
+Peptostreptococcaceae_G-7 [Eubacterium] yurii (subspecies yurii and margaretiae)
+===================================
+3-From JMW
 1: For Eren V1-V3, Eren V3-V5, and Dewhirst, where you currently have Avg (50th percentile abundance), 
 Stdev, and Prev, can you add rows for 10th percentile abundance and 90th percentile abundance?
 
-3. I suggest a bar chart on the page https://node.homd.info/taxa/ecology
+***3. I suggest a bar chart on the page https://node.homd.info/taxa/ecology
  showing 10 bars, one for each of 9 oral sites plus nasal, as a visual that will 
  show the similarities and differences among sites.
 Something like figure 1A in Segata et al. 2012 but showing species where they show genera.

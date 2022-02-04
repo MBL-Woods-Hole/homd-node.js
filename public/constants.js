@@ -52,18 +52,18 @@ constants.abundance_order =   ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",
 constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','NS']
 //constants.eren_order =     ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','ST']
 
-// constants.abundance_names = {
-//       'BM':"Buccal Mucosa (BM)",
-//       "KG":"Keratinized Gingiva (KG)",
-//       'HP':'Hard Palate (HP)',
-//       'TH':"Throat",
-//       "PT":"Palatine Tonsils (PT)",
-//       "TD":'Tongue Dorsum (TD)',
-//       "SV":"Saliva",
-//       "SupP":"Supra-gingival Plaque (SupP)",
-//       "SubP":"Sub-gingival Plaque (SubP)",
-//       "ST":"Stool"
-// }   
+constants.abundance_names = {
+      'BM':"Buccal Mucosa (BM)",
+      "KG":"Keratinized Gingiva (KG)",
+      'HP':'Hard Palate (HP)',
+      'TH':"Throat",
+      "PT":"Palatine Tonsils (PT)",
+      "TD":'Tongue Dorsum (TD)',
+      "SV":"Saliva",
+      "SupP":"Supra-gingival Plaque (SupP)",
+      "SubP":"Sub-gingival Plaque (SubP)",
+      "ST":"Stool"
+}   
    
 constants.tax_status_all =['named','unnamed','phylotype','lost','dropped'];
 constants.tax_status_on =['named','unnamed','phylotype','lost'];

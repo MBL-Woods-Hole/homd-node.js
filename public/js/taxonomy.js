@@ -297,8 +297,8 @@ function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,f
     var args={}
     args.refid = seqid
     var xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("POST", "/taxa/get_refseq", true);
-  xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.open("POST", "/taxa/get_refseq", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
@@ -322,6 +322,34 @@ function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,f
       }
     }
     xmlhttp.send(JSON.stringify(args));
+}
+function get_abund_sorted(site,rank) {
+    
+    //console.log('site',site,'rank',rank)
+    
+    var xmlhttp = new XMLHttpRequest();
+    //xmlhttp.open("POST", "/taxa/get_refseq", true);
+    xmlhttp.open("GET","/taxa/show_all_abundance/"+site+"/"+rank)
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var response = xmlhttp.responseText;
+        //console.log(response)
+        
+        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+        var doc = win.document;
+        //doc.writeln("<title>yourtitle</title>");
+        //doc.title = 'eHOMD Reference Sequence'
+        doc.open("text/html");
+    
+        doc.write("<title>Sorted Abundances</title>"+response);
+        doc.close();
+        
+        
+      }
+    }
+    //xmlhttp.send(JSON.stringify(args));
+    xmlhttp.send();
 }
 //
 // function dld_ttable(type) {

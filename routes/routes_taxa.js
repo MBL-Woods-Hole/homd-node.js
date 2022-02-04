@@ -1328,22 +1328,21 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     
     let rank = req.params.rank
     let group = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank]
-    let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
+    //let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
     let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
-    let group_collector = {},top_ten = {},node,lineage_list,count_obj
-    for(let p in group){
+    let group_collector = {},top_ten = {},node,lineage_list
+    for(let i in group){
         //console.log(phyla[p])
-        node = group[p]
+        node = group[i]
         lineage_list = make_lineage(node)
         //console.log('lineage_list',lineage_list)
-        count_obj = C.taxon_counts_lookup[lineage_list[0]]
-        group_collector[lineage_list[0]] = get_site_avgs(count_obj)
+        group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
         
     }
-    for(let n in abund_sites){
-        let site = abund_sites[n]
-        top_ten[site] = get_top_ten(group_collector, site,rank)  // new col[site] = [{name:count},...] // list desc /w counts
-    //console.log('phyla_collector',phyla_collector)
+    for(let i in abund_sites){
+        let site = abund_sites[i]
+        top_ten[site] = get_sorted_abund_names(group_collector, site, rank, 10)  // new col[site] = [{name:count},...] // list desc /w counts
+        //console.log('phyla_collector',phyla_collector)
     }
     //console.log(top_ten)
     res.render('pages/taxa/abundance_by_site', {
@@ -1355,10 +1354,49 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
       rank:rank
     })
 })
+//
+router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, res) {
+    console.log('in show_all_abundance')
+    let site = req.params.site
+    let rank = req.params.rank
+    //console.log('site2',site,'rank2',rank)
+    let group = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank]
+    let group_collector = {},top_names = {},node,lineage_list,showrank
+    if(rank == 'klass') {
+        showrank = 'Class'
+    }else{
+        showrank = rank.charAt(0).toUpperCase() + rank.slice(1)
+    }
+    for(let i in group){
+        //console.log(phyla[p])
+        node = group[i]
+        lineage_list = make_lineage(node)
+        //console.log('lineage_list',lineage_list)
+        group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+    }
+    top_names = get_sorted_abund_names(group_collector, site, rank, 'all')
+    //console.log(top_names)
+    let count = 1
+    let txt = 'Oral Site: '+C.abundance_names[site]+"<br><table border='1'>"
+    txt += '<tr><td></td><td><b>'+showrank+'</b></td><td><b>% Abund</b></td></tr>'
+    for(let i in top_names){
+        txt += '<tr><td>'+count.toString()+'</td>'
+        if(rank === 'species'){
+          txt += '<td><i>'+top_names[i].name+'</i></td>'
+        }else{
+          txt += '<td>'+top_names[i].name+'</td>'
+        }
+        txt += '<td>'+top_names[i].value+'</td></tr>'
+        count+=1
+    }
+    txt += '</table>'
+    res.send(txt)
+    
+})
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
-function get_top_ten(collector, site,rank){
+function get_sorted_abund_names(collector, site, rank, num_to_return){
     
     let tmp1={},tmp2=[]
     
@@ -1369,11 +1407,8 @@ function get_top_ten(collector, site,rank){
         tmp2.push(tmp1)
     }
     //console.log('tmp2-1',tmp2)
-    
     let x = tmp2.map(el => {
-    
         //console.log(Object.keys(el)[0])
-        //let key = Object.keys(el)[0]
         let obj = {}
         let name_ary = Object.keys(el)[0].split(';')
         obj['name'] = name_ary[name_ary.length - 1]
@@ -1384,8 +1419,12 @@ function get_top_ten(collector, site,rank){
         return obj
     })
    
-    //sort by BM value
-    return sortByKeyDEC(x,'value').slice(0, 10)
+    //sort by value
+    if(num_to_return === 'all'){
+        return sortByKeyDEC(x,'value')
+    }else{
+        return sortByKeyDEC(x,'value').slice(0, 10)
+    }
 }
 
 function sortByKeyDEC(array, key) {
@@ -1420,7 +1459,7 @@ function get_site_avgs(obj){
     for(let s in return_obj){
         //console.log('s',s,return_obj[s])
         if(count){
-          return_obj[s] = (return_obj[s] / count).toPrecision(4)  // create avg
+          return_obj[s] = (return_obj[s] / count).toFixed(3)  // create avg
         }
     }
     
