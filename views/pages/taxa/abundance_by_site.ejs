@@ -124,7 +124,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['KG']) { %>
-        <% if(rank === 'species' && sitedata['BM'][n]['otid']){ %>
+        <% if(rank === 'species' && sitedata['KG'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['KG'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['KG'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -143,7 +143,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['HP']) { %>
-        <% if(rank === 'species' && sitedata['BM'][n]['otid']){ %>
+        <% if(rank === 'species' && sitedata['HP'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['HP'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['HP'][n]['name'] +'</i>' %>
         <% }else{ %>
