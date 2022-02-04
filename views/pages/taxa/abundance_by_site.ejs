@@ -105,7 +105,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['BM']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['BM'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['BM'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['BM'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -124,7 +124,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['KG']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['BM'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['KG'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['KG'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -143,7 +143,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['HP']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['BM'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['HP'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['HP'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -165,7 +165,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['TD']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['TD'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['TD'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['TD'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -184,7 +184,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['PT']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['PT'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['PT'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['PT'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -203,7 +203,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['TH']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['TH'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['TH'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['TH'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -225,7 +225,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['SV']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['SV'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['SV'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['SV'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -244,7 +244,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['SupP']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['SupP'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['SupP'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['SupP'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -263,7 +263,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['SubP']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['SubP'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['SubP'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['SubP'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -285,7 +285,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['NS']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['NS'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['NS'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['NS'][n]['name'] +'</i>' %>
         <% }else{ %>
@@ -304,7 +304,7 @@ table{
       <tr><td><center><%= showrank %></center></td><td>% Abund</td></tr>
       <% sum = 0 %>
       <% for(n in sitedata['ST']) { %>
-        <% if(rank === 'species'){ %>
+        <% if(rank === 'species' && sitedata['ST'][n]['otid']){ %>
            <% link = '/taxa/tax_description?otid=' + sitedata['ST'][n]['otid'] %>
            <% taxname = '<i>'+sitedata['ST'][n]['name'] +'</i>' %>
         <% }else{ %>
