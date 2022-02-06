@@ -1,6 +1,6 @@
 <style>
 #info{
-   
+   font-size:14px;
    padding:20px 5px;
 }
 #eco_table{
@@ -19,6 +19,12 @@
    overflow:auto;
    
 }
+#top-10-link{
+   padding:3px;
+   border:1px solid brown;
+   float:right;
+   
+}
 </style>
 <% sole_arch = JSON.parse(sole_arch) %>
 <% phla = JSON.parse(phyla) %>
@@ -26,6 +32,7 @@
 <% orders = JSON.parse(orders) %>
 <% families = JSON.parse(families) %>
 <% genera = JSON.parse(genera) %>
+
 
 <%- include('../../partials/header_html'); %>
 
@@ -41,19 +48,23 @@
         <a id='download_browser_text_excel'  href='/download#abundance' >Download Options</a> 
 
         <div id='info'>
-            The following abundance pages show available data for the ranks in each taxon name (from domain to species) in the HOMD database.
+            The following abundance pages show available data with bar charts for the ranks in each taxon name (from domain to species) in the HOMD database.
 
-            <br><br>Listed here are taxonomic names from domain through genus for the taxa in HOMD. Each name below is a link
+            <br>Listed on this page are taxonomic names from domain through genus for the taxa in HOMD. Each name below is a link
               to a page showing abundance data from the three sources: 
-              <br>Dewhirst (not published), 
-            <a href='https://www.pnas.org/content/111/28/E2875.short'>Eren (2014)</a> and 
-            <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42'>Segata (2012)</a>
+              <br>
+            <a href='https://www.pnas.org/content/111/28/E2875.short'>Eren (2014)</a> ,
+            <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42'>Segata (2012)</a>,
+            and Dewhirst (not published)
+       <span id='top-10-link'><a href='abundance_by_site/phylum'>Most abundant taxa for each oral sub-habitat</a>.
+       </span> 
+        
         </div>
       
   
+  <div id='bar-chart'>BarChart</div>
   
-  To see a table of the <a href='abundance_by_site/phylum'>most abundant taxa for each oral sub-habitat</a>.
-  <br><br>
+  <br>
   <div>
     <center>
             <table id='eco_table' border='1'>
@@ -123,8 +134,44 @@
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script type="text/javascript" src="/js/d3_barplot.js"></script>
 <script>
   mainmenu()
+  var sites = JSON.parse('<%- bar_data %>')
+  var site_names = sites.map(el => el.site)
+  //console.log('site_names ',site_names)
+  var species = Object.keys(sites[0])
+  species.shift()  // remove 'site'
+  species.sort()
+  //console.log('species length ',species.length)
+  
+  var colors2 = get_colors(species)
+  //console.log('species colors ',colors2)
+  var site_species = JSON.parse('<%- site_species %>')
+  //console.log(site_species)
+  width=1300
+  
+  chart = StackedBarChart(site_species, {
+      x: d => d.abundance,
+      y: d => d.site,
+      z: d => d.species,
+      yDomain: d3.groupSort(
+        site_species,
+        (D) => D[0].abundance / d3.sum(D, d => d.abundance), // proportion of first age group
+        d => d.site // sort y by x
+      ),
+      zDomain: species,
+      //colors: d3.schemeSpectral[species.length],
+      //colors: colors2,
+      width
+  })
+  var s = new XMLSerializer()
+  document.getElementById('bar-chart').innerHTML = s.serializeToString(chart); 
+  // states = sites, BM,KG,HP...== bars
+  //ages = species many
+  //stateages = site_species[] {site:'',species:'',abundance:''}
 </script>
 
 

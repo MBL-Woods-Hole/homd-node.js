@@ -857,6 +857,13 @@ router.get('/life', function life(req, res) {
 })
 //
 router.get('/ecology', function ecology_index(req, res) {
+    let bar_graph_data = []
+    let site_species = [],tmp = {}// {site,sp,abund} ordered by sp
+    
+    for(let n in Object.keys(C.abundance_names)){
+        //data.push({'site':Object.keys(C.abundance_names)[n]})
+    }
+    //group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
     let sole_arch = {'domain':'Archaea','phylum':'Euryarchaeota','klass':'Methanobacteria','order':'Methanobacteriales','family':'Methanobacteriaceae','genus':'Methanobrevibacter'}
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
     let class_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['klass']
@@ -864,6 +871,54 @@ router.get('/ecology', function ecology_index(req, res) {
     let family_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['family']
     let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']
     let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
+    let group_collector={}
+    for(let i in species_obj){
+        //let s = species[i]
+        let lineage_list = make_lineage(species_obj[i])
+        //console.log('s',lineage_list[0])
+        let abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+        
+        // only add sp with significant abunds - how?
+        delete abund_obj['ST']
+        //console.log('abund_obj',abund_obj)//{BM,KG,HP....}
+        //let vals = Object.values(abund_obj)
+        let avg = Object.values(abund_obj).reduce((a, b) => parseFloat(a) + parseFloat(b)) / Object.values(abund_obj).length;
+        //console.log('avg',avg)//{BM,KG,HP....}
+        if(avg > 1.0){
+            group_collector[lineage_list[0]] = abund_obj
+        }else{
+           //console.log('Removing',lineage_list[0],abund_obj)//{BM,KG,HP....}
+        }
+    }
+    //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
+    for(let n in Object.keys(C.abundance_names)){
+        
+        let site = Object.keys(C.abundance_names)[n]
+        //console.log('SITE',site)
+        if(site !== 'ST'){
+            tmp = {}
+            tmp.site = site
+        
+            for(let species in group_collector){
+                let sp = species.split(';')[species.split(';').length -1]
+                let val = parseFloat(group_collector[species][tmp.site])
+                
+                //if(val > 0.1){
+                tmp[sp] = val  // {site,sp,sp,sp,sp,sp....}
+                site_species.push({'site':site,'species':sp, 'abundance':val})
+                //}
+            }
+            bar_graph_data.push(tmp)
+        }
+        
+    }
+    
+    // let grab_species = Object.keys(tmp)
+//     grab_species.shift()  // remove 'site'
+//     grab_species.sort()
+    //console.log('site_species',site_species)
+    //console.log('bar_graph_data keys',bar_graph_data[0])
+    //console.log(bar_graph_data.filter(el => el.site))
     
     let bac_phyla_only = phyla_obj.filter( (x) =>{
       if(C.homd_taxonomy.taxa_tree_dict_map_by_id[x.parent_id].taxon == 'Bacteria'){
@@ -896,6 +951,8 @@ router.get('/ecology', function ecology_index(req, res) {
     let families = bac_families_only.map( x => x.taxon)
     let genera = bac_genera_only.map( x => x.taxon)
     let species = species_obj.map( x => x.taxon)
+    
+    
     phyla.sort()
     klasses.sort()
     orders.sort()
@@ -913,6 +970,8 @@ router.get('/ecology', function ecology_index(req, res) {
       orders: JSON.stringify(orders),
       families: JSON.stringify(families),
       genera: JSON.stringify(genera),
+      bar_data: JSON.stringify(bar_graph_data),
+      site_species: JSON.stringify(site_species)
       
     })
 })
@@ -956,24 +1015,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
     //console.log('rank: '+rank+' name: '+tax_name);
     // TODO::should be in constants???
     let text = get_rank_text(rank,tax_name)
-    // if(rank == "genus"){
-//       if(C.names_w_text.genera.indexOf(tax_name) != -1){
-//         text_file = 'genus/'+tax_name+'.ejs'
-//       }else if(C.names_w_text.provisional_genera.indexOf(tax_name) != -1){
-//         console.log('GOT Provisional')
-//         console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
-//         let children_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'].children_ids
-//         let num_species = children_ids.length
-//         let children = []
-//         text_format = tax_name +" is a provisionally named genus constructed to provide a" 
-//         text_format += " stably named reference for a currently unnamed taxon represented"
-//         text_format += " by a set of 16S rRNA clones.  It contains "+num_species.toString()+" species:<br>"
-//         for(let n in children_ids){
-//             text_format += ' - '+C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]].taxon +'<br>'
-//         }
-// 
-//       }
-//     }
+   
     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
     if(!node){
       //error
@@ -1011,31 +1053,6 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
       lineage_list[0] = ''
       console.log('ERROR Lineage')
    }else {
-        // if(rank === 'species' && C.species_w_subspecies.hasOwnProperty(tax_name)){ //and C.species_w_subspecies
-//          //try parasanguinis (411,721)   818,938 has none
-//          console.log('lineage_list[0]',tax_name,lineage_list[0],'subsp ',C.species_w_subspecies[tax_name])
-//          let dewhirst_susp_data = [],erenv1v3_susp_data=[],erenv3v5_susp_data=[]
-//          for(let i in C.species_w_subspecies[tax_name]){
-//             let subsp_lineage = lineage_list[0]+';'+C.species_w_subspecies[tax_name][i]
-//             console.log('subsp_lineage',subsp_lineage)
-//             if('dewhirst' in C.taxon_counts_lookup[subsp_lineage] && Object.keys(C.taxon_counts_lookup[subsp_lineage]['dewhirst']).length != 0){
-//               dewhirst_susp_data.push(Object.values(C.taxon_counts_lookup[subsp_lineage]['dewhirst']))
-//             }
-//             if('eren_v1v3' in C.taxon_counts_lookup[subsp_lineage] && Object.keys(C.taxon_counts_lookup[subsp_lineage]['eren_v1v3']).length != 0){
-//               erenv1v3_susp_data.push(Object.values(C.taxon_counts_lookup[subsp_lineage]['eren_v1v3']))
-//             }
-//             if('eren_v3v5' in C.taxon_counts_lookup[subsp_lineage] && Object.keys(C.taxon_counts_lookup[subsp_lineage]['eren_v3v5']).length != 0){
-//               erenv3v5_susp_data.push(Object.values(C.taxon_counts_lookup[subsp_lineage]['eren_v3v5']))
-//             }
-//              
-//              console.log('dewhirst',dewhirst_data)
-//          }
-//          
-//          dewhirst_data = combine_abund_data(dewhirst_susp_data)
-//          erenv1v3_data = combine_abund_data(erenv1v3_susp_data)
-//          erenv3v5_data = combine_abund_data(erenv3v5_susp_data)
-//          
-         
        if(lineage_list[0] in C.taxon_counts_lookup){
          
          if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
@@ -1142,25 +1159,7 @@ router.get('/download/:type/:fxn', function download(req, res) {
   res.end()
     
 })
-// router.get('/dld_table_for_legacy_comparison', function dld_table_for_legacy_comparison(req, res) {
-//     console.log('in dld_table_for_legacy_comparison')
-//     let temp_list = Object.values(C.taxon_lookup)
-//     console.log(C.taxon_lookup[1]) 
-//     console.log(C.taxon_lineage_lookup[1]) 
-//     console.log(Object.values(C.taxon_references_lookup)[0]) 
-//     console.log(C.taxon_references_lookup[161]) 
-//     console.log(Object.values(C.taxon_info_lookup)[0]) 
-//     console.log(C.taxon_info_lookup[9]) 
-//     // HMT_ID	Domain	Phylum	Class	Order	Family	Genus	Species	
-//     // Status	Body_site	Warning	Type_strain	16S_rRNA	Clone_count	
-//     // Clone_%	Clone_rank	Synonyms	NCBI_taxon_id	NCBI_pubmed_count	
-//     // NCBI_nucleotide_count	NCBI_protein_count	Genome_ID	General_info
-//     // Cultivability	Phenotypic_characteristics	Prevalence	Disease	References
-//     
-//     
-//     res.end()
-// 
-// })
+
 router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
 //router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
     console.log('in dld abund - taxon')
@@ -1353,7 +1352,8 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     let rank = req.params.rank
     let group = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank]
     //let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
-    let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+    let abund_sites = Object.keys(C.abundance_names) //['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+    
     let group_collector = {},top_ten = {},node,lineage_list
     for(let i in group){
         //console.log(phyla[p])
@@ -1363,6 +1363,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
         group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
         
     }
+    //console.log()
     for(let i in abund_sites){
         let site = abund_sites[i]
         top_ten[site] = get_sorted_abund_names(group_collector, site, rank, 10)  // new col[site] = [{name:count},...] // list desc /w counts
@@ -1457,34 +1458,43 @@ function sortByKeyDEC(array, key) {
 function get_site_avgs(obj){
     let return_obj = {}
     let ref,site,count
-    let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
-    let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+    let abund_refs = C.abundance_refs
+    //let abund_refs = ['dewhirst']
+    //let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+    let abund_sites = Object.keys(C.abundance_names)
     //console.log('obj',obj)
     for(let i in abund_sites){
         return_obj[abund_sites[i]] = 0
     }
-    count = 0
+    
     for(let n in abund_refs){
        ref = abund_refs[n]
-       //console.log('ref',ref)
+       //console.log('\n')
        if(obj[ref] && Object.values(obj[ref]).length > 0){
-            count +=1
+            //console.log('ref',obj[ref],ref)
             for(let i in abund_sites){
               site = abund_sites[i]
               //console.log('site',site)
               if(obj[ref].hasOwnProperty(site)){
                  //console.log('found',site,ref,obj[ref][site].avg)
                  return_obj[site] += parseFloat(obj[ref][site].avg)
+              }else{
+                return_obj[site] += 0
               }
             }
+       }else{
+        for(let i in abund_sites){
+            return_obj[abund_sites[i]] += 0
+        }
        }
     }
-    //console.log('count',count)
+    
+    //console.log('text_sv_sum',text_sv_sum)
+    //console.log('countSV',count,return_obj['SV'])
     for(let s in return_obj){
         //console.log('s',s,return_obj[s])
-        if(count){
-          return_obj[s] = (return_obj[s] / count).toFixed(3)  // create avg
-        }
+        return_obj[s] = (return_obj[s] / abund_refs.length).toFixed(3) 
+        
     }
     
     return return_obj

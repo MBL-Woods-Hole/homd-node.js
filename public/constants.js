@@ -43,10 +43,7 @@ constants.names_w_text = {genera:['Actinomyces','Campylobacter','Corynebacterium
     'Syntrophomonadaceae_[VIII][G-1]','Veillonellaceae_[G-1]'
 ]
     }
-// constants.link_exceptions  SEE routes_taxa.js:taxdesc()
-// constants.segata_order =   ['BM',"KG",'HP',       'TH',"PT","TD","SV","SupP","SubP",'ST']
-// constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP']
-// constants.eren_order =     ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','ST']
+constants.abundance_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
 constants.abundance_order =   ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
 //constants.segata_order =   ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
 constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','NS']
@@ -62,6 +59,7 @@ constants.abundance_names = {
       "SV":"Saliva",
       "SupP":"Supra-gingival Plaque (SupP)",
       "SubP":"Sub-gingival Plaque (SubP)",
+      "NS": "Nasal",
       "ST":"Stool"
 }   
    
