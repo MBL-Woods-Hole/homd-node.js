@@ -872,45 +872,60 @@ router.get('/ecology', function ecology_index(req, res) {
     let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']
     let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
     let group_collector={}
-    for(let i in species_obj){
+    // for(let i in species_obj){
+//         //let s = species[i]
+//         let lineage_list = make_lineage(species_obj[i])
+//         //console.log('s',lineage_list[0])
+//         let abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+//         
+//         // only add sp with significant abunds - how?
+//         delete abund_obj['ST']
+//         //console.log('abund_obj',abund_obj)//{BM,KG,HP....}
+//         //let vals = Object.values(abund_obj)
+//         let avg = Object.values(abund_obj).reduce((a, b) => parseFloat(a) + parseFloat(b)) / Object.values(abund_obj).length;
+//         //console.log('avg',avg)//{BM,KG,HP....}
+//         if(avg > 1.0){
+//             group_collector[lineage_list[0]] = abund_obj
+//         }else{
+//            //console.log('Removing',lineage_list[0],abund_obj)//{BM,KG,HP....}
+//         }
+//     }
+   let species = C.plot_species.map(el => el.name)
+   let colors = C.plot_species.map(el => el.color)
+   console.log('species colors ',colors)
+    for(let i in species){
         //let s = species[i]
-        let lineage_list = make_lineage(species_obj[i])
-        //console.log('s',lineage_list[0])
+        let sp = species[i]
+        console.log(sp)
+        let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[sp+'_species']
+        let lineage_list = make_lineage(node)
+        console.log('s',node,lineage_list[0])
         let abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
         
-        // only add sp with significant abunds - how?
         delete abund_obj['ST']
-        //console.log('abund_obj',abund_obj)//{BM,KG,HP....}
+        console.log('C.plot_species[sp]',colors[i])//{BM,KG,HP....}
         //let vals = Object.values(abund_obj)
-        let avg = Object.values(abund_obj).reduce((a, b) => parseFloat(a) + parseFloat(b)) / Object.values(abund_obj).length;
-        //console.log('avg',avg)//{BM,KG,HP....}
-        if(avg > 1.0){
-            group_collector[lineage_list[0]] = abund_obj
-        }else{
-           //console.log('Removing',lineage_list[0],abund_obj)//{BM,KG,HP....}
-        }
+        group_collector[lineage_list[0]]={}
+        group_collector[lineage_list[0]].counts = abund_obj
+        group_collector[lineage_list[0]].color = colors[i]
+       
     }
     //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
     for(let n in Object.keys(C.abundance_names)){
-        
         let site = Object.keys(C.abundance_names)[n]
         //console.log('SITE',site)
         if(site !== 'ST'){
             tmp = {}
             tmp.site = site
-        
             for(let species in group_collector){
                 let sp = species.split(';')[species.split(';').length -1]
-                let val = parseFloat(group_collector[species][tmp.site])
-                
-                //if(val > 0.1){
+                let val = parseFloat(group_collector[species].counts[tmp.site])
+                let c = group_collector[species].color
                 tmp[sp] = val  // {site,sp,sp,sp,sp,sp....}
-                site_species.push({'site':site,'species':sp, 'abundance':val})
-                //}
+                site_species.push({'site': site,'species': sp, 'abundance': val, color: c})
             }
             bar_graph_data.push(tmp)
         }
-        
     }
     
     // let grab_species = Object.keys(tmp)
@@ -950,9 +965,24 @@ router.get('/ecology', function ecology_index(req, res) {
     let orders = bac_orders_only.map( x => x.taxon)
     let families = bac_families_only.map( x => x.taxon)
     let genera = bac_genera_only.map( x => x.taxon)
-    let species = species_obj.map( x => x.taxon)
-    
-    
+    //let species = species_obj.map( x => x.taxon)
+//     'Fusobacterium nucleatum',
+//   'Fusobacterium periodonticum',
+//   'Haemophilus parainfluenzae',
+//   'Neisseria perflava',
+//   'Porphyromonas pasteri',
+//   'Prevotella melaninogenica',
+//   'Streptococcus oralis',
+//   'Streptococcus australis',
+//   'Streptococcus sp._HMT_074',
+//   'Streptococcus parasanguinis',
+//   'Streptococcus sp._HMT_423',
+//   'Streptococcus infantis',
+//   'Streptococcus cristatus',
+//   'Streptococcus mitis',
+//   'Streptococcus salivarius',
+//   'Veillonella dispar'
+    console.log('bar_graph_data',Object.keys(bar_graph_data[0]))
     phyla.sort()
     klasses.sort()
     orders.sort()
@@ -970,34 +1000,13 @@ router.get('/ecology', function ecology_index(req, res) {
       orders: JSON.stringify(orders),
       families: JSON.stringify(families),
       genera: JSON.stringify(genera),
+      constant_colors: JSON.stringify(colors),
       bar_data: JSON.stringify(bar_graph_data),
       site_species: JSON.stringify(site_species)
       
     })
 })
 //
-function get_rank_text(rank,tax_name){
-    let text = [false,false]
-    if(rank == "genus"){
-      if(C.names_w_text.genera.indexOf(tax_name) != -1){
-        text[0] = 'genus/'+tax_name+'.ejs'
-      }else if(C.names_w_text.provisional_genera.indexOf(tax_name) != -1){
-        console.log('GOT Provisional')
-        console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
-        let children_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'].children_ids
-        let num_species = children_ids.length
-        let children = []
-        text[1] = tax_name +" is a provisionally named genus constructed to provide a" 
-        text[1] += " stably named reference for a currently unnamed taxon represented"
-        text[1] += " by a set of 16S rRNA clones.  It contains "+num_species.toString()+" species:<br>"
-        for(let n in children_ids){
-            text[1] += ' - '+C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]].taxon +'<br>'
-        }
-
-      }
-    }
-    return text
-}
 
 router.get('/ecology/:level/:name', function ecology(req, res) {
     helpers.print('in ecology')
@@ -1059,7 +1068,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
              let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
-             segata_table = build_abundance_table('segata',clone_segata_data, C.abundance_order)
+             segata_table = build_abundance_table('segata',clone_segata_data, C.segata_order)
              if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
              }
@@ -1080,7 +1089,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
              let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
              helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.abundance_order)
+             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.eren_order)
              if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
              }
@@ -1090,7 +1099,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
              let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
              helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.abundance_order)
+             erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.eren_order)
              if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
              }
@@ -1098,7 +1107,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
          
       }
     }
-   
+   console.log('segata_data',segata_data)
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
    
     res.render('pages/taxa/ecology', {
@@ -1352,7 +1361,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     let rank = req.params.rank
     let group = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank]
     //let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
-    let abund_sites = Object.keys(C.abundance_names) //['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+    let abund_sites = Object.keys(C.abundance_names) 
     
     let group_collector = {},top_ten = {},node,lineage_list
     for(let i in group){
@@ -1366,7 +1375,8 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     //console.log()
     for(let i in abund_sites){
         let site = abund_sites[i]
-        top_ten[site] = get_sorted_abund_names(group_collector, site, rank, 10)  // new col[site] = [{name:count},...] // list desc /w counts
+        top_ten[site] = get_sorted_abund_names(group_collector, site, rank, 10)
+          // new col[site] = [{name:count},...] // list desc /w counts
         //console.log('phyla_collector',phyla_collector)
     }
     //console.log(top_ten)
@@ -1376,6 +1386,8 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       data: JSON.stringify(top_ten),
+      plot_order: C.base_abundance_order.concat(['NS']),
+      site_names: JSON.stringify(C.abundance_names),
       rank:rank
     })
 })
@@ -1421,6 +1433,30 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
+function get_rank_text(rank, tax_name){
+    let text = [false,false]
+    if(rank == "genus"){
+      if(C.names_w_text.genera.indexOf(tax_name) != -1){
+        text[0] = 'genus/'+tax_name+'.ejs'
+      }else if(C.names_w_text.provisional_genera.indexOf(tax_name) != -1){
+        console.log('GOT Provisional')
+        console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
+        let children_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'].children_ids
+        let num_species = children_ids.length
+        let children = []
+        text[1] = tax_name +" is a provisionally named genus constructed to provide a" 
+        text[1] += " stably named reference for a currently unnamed taxon represented"
+        text[1] += " by a set of 16S rRNA clones.  It contains "+num_species.toString()+" species:<br>"
+        for(let n in children_ids){
+            text[1] += ' - '+C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]].taxon +'<br>'
+        }
+
+      }
+    }
+    return text
+}
+//
+//
 function get_sorted_abund_names(collector, site, rank, num_to_return){
     
     let tmp1={},tmp2=[]
@@ -1491,10 +1527,15 @@ function get_site_avgs(obj){
     
     //console.log('text_sv_sum',text_sv_sum)
     //console.log('countSV',count,return_obj['SV'])
-    for(let s in return_obj){
-        //console.log('s',s,return_obj[s])
-        return_obj[s] = (return_obj[s] / abund_refs.length).toFixed(3) 
-        
+    for(let site in return_obj){
+        console.log('s',site,return_obj[site])
+        if(site === 'NS'){
+          return_obj[site] = (return_obj[site]).toFixed(3) // only dewhirst
+        }else if(site === 'ST'){
+          return_obj[site] = (return_obj[site] / 3).toFixed(3) //only eren and segata
+        }else{
+          return_obj[site] = (return_obj[site] / abund_refs.length).toFixed(3) 
+        }
     }
     
     return return_obj
@@ -2026,6 +2067,7 @@ function build_abundance_table(cite, data, order){
     
     var html = '<table><thead><tr><td></td>'
     for(var n in order){
+        
         html += '<th>'+order[n]+'</th>'
     }
     html += '</tr></thead><tbody>'

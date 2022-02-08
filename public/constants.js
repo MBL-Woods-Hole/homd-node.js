@@ -43,26 +43,67 @@ constants.names_w_text = {genera:['Actinomyces','Campylobacter','Corynebacterium
     'Syntrophomonadaceae_[VIII][G-1]','Veillonellaceae_[G-1]'
 ]
     }
-constants.abundance_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
-constants.abundance_order =   ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
-//constants.segata_order =   ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
-constants.dewhirst_order = ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','NS']
+constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
+//constants.abundance_order = ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
+constants.base_abundance_order      = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD'] //,'NS','ST']
+constants.segata_order =   constants.base_abundance_order.concat(['ST'])
+constants.eren_order = constants.base_abundance_order.concat(['ST'])
+constants.dewhirst_order  = constants.base_abundance_order.concat(['NS'])
 //constants.eren_order =     ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','ST']
-
+//constants.site_order      = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS','ST']
 constants.abundance_names = {
-      'BM':"Buccal Mucosa (BM)",
-      "KG":"Keratinized Gingiva (KG)",
-      'HP':'Hard Palate (HP)',
-      'TH':"Throat",
-      "PT":"Palatine Tonsils (PT)",
-      "TD":'Tongue Dorsum (TD)',
-      "SV":"Saliva",
-      "SupP":"Supra-gingival Plaque (SupP)",
-      "SubP":"Sub-gingival Plaque (SubP)",
+      'BM': "Buccal Mucosa (BM)",
+      "KG": "Keratinized Gingiva (KG)",
+      'HP': 'Hard Palate (HP)',
+      'TH': "Throat",
+      "PT": "Palatine Tonsils (PT)",
+      "TD": 'Tongue Dorsum (TD)',
+      "SV": "Saliva",
+      "SupP": "Supra-gingival Plaque (SupP)",
+      "SubP": "Sub-gingival Plaque (SubP)",
       "NS": "Nasal",
-      "ST":"Stool"
+      "ST": "Stool"
 }   
-   
+constants.plot_species = [  // to be put in db with species_id
+    {name:'Actinomyces naeslundii',color:'#dc143c'},
+    {name:'Actinomyces oris',color:'#ff4040'},
+    {name:'Alloprevotella sp._HMT_473',color:'#e6082d'},
+    {name:'Campylobacter concisus',color:'#1f8ad5'},
+    {name:'Capnocytophaga gingivalis',color:'#a1ee0a'},
+    {name:'Capnocytophaga granulosa',color:'#a0155f'},
+    {name:'Capnocytophaga sputigena',color:'#a440c7'},
+    {name:'Corynebacterium matruchotii',color:'#da70d6'},
+    {name:'Fusobacterium nucleatum',color:'#fcffa4'},
+    {name:'Fusobacterium periodonticum',color:'#fff44f'},
+    {name:'Gemella haemolysans',color:'#3bea0f'},
+    {name:'Haemophilus parainfluenzae',color:'#ffa500'},
+    {name:'Lautropia mirabilis',color:'#804e71'},
+    {name:'Leptotrichia buccalis',color:'#00ffff'},
+    {name:'Pseudoleptotrichia sp._HMT_221',color:'#96152e'},
+    {name:'Neisseria flavescens',color:'#a04115'},
+    {name:'Neisseria perflava',color:'#9a8bf0'},
+    {name:'Porphyromonas pasteri',color:'#87cefa'},
+    {name:'Prevotella melaninogenica',color:'#7b68ee'},
+    {name:'Prevotella oris',color:'#9400d3'},
+    {name:'Rothia aeria',color:'#4ddc9b'},
+    {name:'Rothia dentocariosa',color:'#e13ffa'},
+    {name:'Rothia mucilaginosa',color:'#f4f74a'},
+    {name:'Schaalia odontolytica',color:'#ff0000'},
+    {name:'Streptococcus oralis',color:'#008000'},
+    {name:'Streptococcus mitis',color:'#005800'},
+    {name:'Streptococcus infantis',color:'#006200'},
+    {name:'Streptococcus australis',color:'#008080'},
+    {name:'Streptococcus cristatus',color:'#008080'},
+    {name:'Streptococcus parasanguinis',color:'#3CBC3C'},
+    {name:'Streptococcus salivarius',color:'#50D050'},
+    {name:'Streptococcus sanguinis',color:'#008080'},
+    {name:'Streptococcus sp._HMT_074',color:'#008080'},
+    {name:'Streptococcus sp._HMT_423',color:'#008080'},
+    {name:'Veillonella atypica',color:'#4eb52d'},
+    {name:'Veillonella dispar',color:'#3de5c8'},
+    {name:'Veillonella parvula',color:'#4ecb04'},
+    {name:'Veillonella sp._HMT_780',color:'#3bd2e4'}
+]   
 constants.tax_status_all =['named','unnamed','phylotype','lost','dropped'];
 constants.tax_status_on =['named','unnamed','phylotype','lost'];
 constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralref'];

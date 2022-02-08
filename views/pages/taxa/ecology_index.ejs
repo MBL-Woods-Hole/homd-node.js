@@ -62,7 +62,7 @@
         </div>
       
   
-  <div id='bar-chart'>BarChart</div>
+  <div id='bar-chart' >BarChart</div>
   
   <br>
   <div>
@@ -136,23 +136,30 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
+
 <script type="text/javascript" src="/js/d3_barplot.js"></script>
 <script>
   mainmenu()
   var sites = JSON.parse('<%- bar_data %>')
   var site_names = sites.map(el => el.site)
+  var site_order = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS'] // per JMW
+  xlabel = 'Major Species Abundances for each oral site'
   //console.log('site_names ',site_names)
   var species = Object.keys(sites[0])
   species.shift()  // remove 'site'
   species.sort()
   //console.log('species length ',species.length)
-  
-  var colors2 = get_colors(species)
-  //console.log('species colors ',colors2)
+  //console.log('species',species)
+  //var ccolors = get_colors(species)
+  var ccolors = JSON.parse('<%- constant_colors %>')
+  console.log('species colors ',ccolors)
   var site_species = JSON.parse('<%- site_species %>')
-  //console.log(site_species)
+  //console.log(site_species[10])
   width=1300
-  
+  // Prep the tooltip bits, initial display is hidden
+
+
+
   chart = StackedBarChart(site_species, {
       x: d => d.abundance,
       y: d => d.site,
@@ -169,9 +176,102 @@
   })
   var s = new XMLSerializer()
   document.getElementById('bar-chart').innerHTML = s.serializeToString(chart); 
+  
+  
+  
+//    var div = d3.select("body").append("div")
+//     .attr("class", "tooltip")
+//     .style("opacity", 0); 
+//   var $liveTip = $('<div id="livetip"></div>').hide().appendTo('body'),
+//         $win = $(window),
+//         showTip;
+//   var tip = {
+//       title: '',
+//       offset: 12,
+//       //delay: 300,
+//       position: function(event) {
+//         var positions = {x: event.pageX, y: event.pageY};
+//         var dimensions = {
+//           x: [
+//             $win.width(),
+//             $liveTip.outerWidth()
+//           ],
+//           y: [
+//             $win.scrollTop() + $win.height(),
+//             $liveTip.outerHeight()
+//           ]
+//         };
+// 
+//         for ( var axis in dimensions ) {
+//           if (dimensions[axis][0] <dimensions[axis][1] + positions[axis] + this.offset) {
+//             positions[axis] -= dimensions[axis][1] + this.offset;
+//           } else {
+//             positions[axis] += this.offset;
+//           }
+//         }
+//         $liveTip.css({
+//           top: positions.y,
+//           left: positions.x
+//         });
+// 
+//       }
+//     };
+
+  
   // states = sites, BM,KG,HP...== bars
   //ages = species many
   //stateages = site_species[] {site:'',species:'',abundance:''}
+//     $(document).ready(function() { 
+//         $("body").delegate(".tooltip", "mouseover mouseout mousemove", function (event) {
+//           var link = this,
+//           html = '';
+//           $link = $(this);
+//      
+//           if (event.type == 'mouseover') {
+//             tip.id = link.id;
+//             //alert(tip.id)
+//             link.id = '';
+//             id_items = tip.id.split('-|-');
+//             html = "<table><tr>";
+//                  
+//               html += "<td>Site: "+id_items[0]+"</td>";
+//               html += "</tr><tr>";
+//               html += "<td>Name: "+id_items[1]+"</td>";
+//             
+//             html += "</tr><table>";
+// 
+//             showTip = setTimeout(function() {
+//      
+//               $link.data('tipActive', true);
+//           
+//               tip.position(event);
+//          //alert(event.pageX)
+//               $liveTip
+//               //.html('<div>' + html  + '</div>')
+//               .html('<div>' + html  + '</div>')
+//               .fadeOut(0)
+//               .fadeIn(200);
+//      
+//             }, tip.delay);
+//           }
+//      
+//           if (event.type == 'mouseout') {
+//             link.id = tip.id || link.id;
+//             if ($link.data('tipActive')) {
+//               $link.removeData('tipActive');
+//               $liveTip.hide();
+//             } else {
+//               clearTimeout(showTip);
+//             }
+//           }
+//      
+//           if (event.type == 'mousemove' && $link.data('tipActive')) {
+//             tip.position(event);
+//           }
+//               
+//         });
+//     })
+    
 </script>
 
 

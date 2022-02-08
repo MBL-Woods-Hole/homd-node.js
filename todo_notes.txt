@@ -1,4 +1,19 @@
 HOMD Notes
+2022-02-07
+For the bar graph colors for the taxa:
+
+Could all the different Streps be different shades of green?  With S. mitis, S. oralis, and S. infantis 
+similar shades (because we can't really tell them apart very well with this data anyway) 
+and S. salivarius a distinctive shade, and S. parasanguinis a distinctive shade?
+
+Here are the colors we use for microscopy images; it would be great to match these as much as possible:
+Corynebacterium: magenta
+Fusobacterium: yellow
+Leptotrichia: cyan
+Haemophilus: orange
+Prevotella:  purple (like you have for P. melaninogenica)
+Actinomyces and Schaalia:  red
+Porphyromonas:  light/medium blue
 2022-02-02
 1-Let's put on the list to figure out why the sums for phylum go as high as 100.9 
 -- seems too high for roundoff error.

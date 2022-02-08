@@ -18,7 +18,7 @@ today = str(datetime.date.today())
 # segata_headers=['BM','KG','HP','Throat','PT','TD','Saliva','SupP','SubP','Stool']
 # dewhirst_headers=['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP']
 # eren_headers=['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
-headers = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+headers = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS','ST']
 
    
 hmt_index = 2  # only for dewhirst and eren
@@ -165,11 +165,16 @@ def run_abundance_db():
     {'abundance_id': 1148, 'reference': 'Dewhirst35x9', 'otid': '362', 'taxonomy': 'Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;Fretibacterium;sp. HMT 362', 'level': 'Species', 'max': '0.02095498', 'BM_mean': '0.002', 'BM_prev': '12.5', 'BM_sd': '0.007', 'KG_mean': '0', 'KG_prev': '5.9', 'KG_sd': '0.001', 'HP_mean': '0', 'HP_prev': '7.7', 'HP_sd': '0.001', 'TD_mean': '0', 'TD_prev': '3.1', 'TD_sd': '0.001', 'PT_mean': '0.006', 'PT_prev': '6.9', 'PT_sd': '0.03', 'Throat_mean': '0', 'Throat_prev': '3.2', 'Throat_sd': '0', 'Saliva_mean': '0', 'Saliva_prev': '6.1', 'Saliva_sd': '0.001', 'SupP_mean': '0', 'SupP_prev': '5.7', 'SupP_sd': '0.001', 'SubP_mean': '0.021', 'SubP_prev': '9.7', 'SubP_sd': '0.1', 'Stool_mean': '', 'Stool_prev': '', 'Stool_sd': ''}
     """
     
-    header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
-    segata_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
-    eren_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
-    dewhirst_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','NS']
-    
+    #header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
+    #header_prefixes = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS','ST']
+    #segata_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
+    #eren_header_prefixes =   ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
+    site_prefixes    = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD']
+    eren_site_prefixes     = site_prefixes + ['ST']
+    segata_site_prefixes   = site_prefixes + ['ST']
+    dewhirst_site_prefixes = site_prefixes + ['NS'] 
+    #['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','NS']
+    print(segata_site_prefixes)
     for row in result:
         #print(row)
         max_segata, max_eren, max_dewhirst = 0,0,0
@@ -201,25 +206,26 @@ def run_abundance_db():
             TCcollector[taxon_string]['dewhirst'] = {}
         
         if row['reference'].startswith('Segata'):
-            for p in segata_header_prefixes:
+            for p in segata_site_prefixes:
+                
                 max_segata = get_max(row, p, max_segata)
                 TCcollector[taxon_string]['segata'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
             TCcollector[taxon_string]['max_segata'] = max_segata
             TCcollector[taxon_string]['notes']['segata'] = row['notes']
         if row['reference'].startswith('Eren2014_v1v3'):
-            for p in eren_header_prefixes:
+            for p in eren_site_prefixes:
                 max_eren = get_max(row, p, max_eren)
                 TCcollector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
             TCcollector[taxon_string]['max_erenv1v3'] = max_eren
             TCcollector[taxon_string]['notes']['eren_v1v3'] = row['notes']
         if row['reference'].startswith('Eren2014_v3v5'):
-            for p in eren_header_prefixes:
+            for p in eren_site_prefixes:
                 max_eren = get_max(row, p, max_eren)
                 TCcollector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
             TCcollector[taxon_string]['max_erenv3v5'] = max_eren
             TCcollector[taxon_string]['notes']['eren_v3v5'] = row['notes']
         if row['reference'].startswith('Dewhirst'):
-            for p in dewhirst_header_prefixes:
+            for p in dewhirst_site_prefixes:
                 max_dewhirst = get_max(row, p, max_dewhirst)
                 TCcollector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
             TCcollector[taxon_string]['max_dewhirst'] = max_dewhirst
@@ -298,9 +304,9 @@ def fix_taxonomyX(taxonomy):
     
 def get_max(row, p, max_ref):
     test = row[p+'_mean']
-    #print(max_ref)
-    if not test:
-        test = 0.0
+    
+    if not test.strip():
+        return 0
     if not max_ref:
         max_ref = 0.0
     if float(test) > float(max_ref):
