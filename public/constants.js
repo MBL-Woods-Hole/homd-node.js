@@ -76,7 +76,7 @@ let staph_color = 'tomato'
 // Anaerococcus octavius and Anaerococcus sp. HMT 290 can be the same colorc;
 let anaero_color = 'PaleGoldenrod'
 // Haemophilus haemolyticus and H. sp. HMT 036 can be the same color;
-let haemo_color = 'silver'
+let haemo_color = 'OrangeRed'
 // Leptotrichia buccalis and Leptotrichia wadei can be the same color;
 let lepto1_color = '#00ffff'
 // Leptotrichia sp. HMT 417 and Pseudoleptotrichia HMT 221 can be the same color;
@@ -88,7 +88,7 @@ constants.plot_species = [  // to be put in db with species_id
     {name:'Actinomyces graevenitzii',color:'lightsalmon'},
     {name:'Actinomyces naeslundii',color:'#dc143c'},
     {name:'Actinomyces oris',color:'#ff4040'},
-    {name:'Alloprevotella sp._HMT_473',color:'#e6082d'},
+    {name:'Alloprevotella sp._HMT_473',color:'DarkViolet'},
     {name:'Anaerococcus octavius',color: anaero_color},
     {name:'Anaerococcus sp._HMT_290',color: anaero_color},
     {name:'Campylobacter concisus',color:'#1f8ad5'},
@@ -104,8 +104,8 @@ constants.plot_species = [  // to be put in db with species_id
     {name:'Corynebacterium pseudodiphtheriticum',color: nasal_coryne_color},
     {name:'Corynebacterium tuberculostearicum',color: nasal_coryne_color},
     {name:'Cutibacterium acnes',color:'MediumSeaGreen'},
-    {name:'Fusobacterium nucleatum',color:'#fcffa4'},
-    {name:'Fusobacterium periodonticum',color:'#fff44f'},
+    {name:'Fusobacterium nucleatum',color:'yellow'},
+    {name:'Fusobacterium periodonticum',color:'chartreuse'},
     {name:'Gemella haemolysans',color:'#3bea0f'},
     {name:'Granulicatella adiacens',color:'plum'},
     {name:'Granulicatella elegans',color:'aliceblue'},
@@ -139,11 +139,11 @@ constants.plot_species = [  // to be put in db with species_id
     {name:'Streptococcus sanguinis',color:'#008080'},
     {name:'Streptococcus sp._HMT_074',color: strep_color},
     {name:'Streptococcus sp._HMT_423',color: strep_color},
-    {name:'Veillonella atypica',color:'#4eb52d'},
-    {name:'Veillonella dispar',color:'#3de5c8'},
-    {name:'Veillonella parvula',color:'#4ecb04'},
-    {name:'Veillonella rogosae',color:'deeppink'},
-    {name:'Veillonella sp._HMT_780',color:'#3bd2e4'}
+    {name:'Veillonella atypica',color:'#ffcff1'},
+    {name:'Veillonella dispar',color:'#fddde6'},
+    {name:'Veillonella parvula',color:'#ffb6c1'},
+    {name:'Veillonella rogosae',color:'#fba0e3'},
+    {name:'Veillonella sp._HMT_780',color:'deeppink'}
 ]   
 constants.tax_status_all =['named','unnamed','phylotype','lost','dropped'];
 constants.tax_status_on =['named','unnamed','phylotype','lost'];
