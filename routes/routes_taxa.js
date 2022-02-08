@@ -859,10 +859,9 @@ router.get('/life', function life(req, res) {
 router.get('/ecology', function ecology_index(req, res) {
     let bar_graph_data = []
     let site_species = [],tmp = {}// {site,sp,abund} ordered by sp
+    let graph_site_order = C.base_abundance_order
+    graph_site_order.push('NS')
     
-    for(let n in Object.keys(C.abundance_names)){
-        //data.push({'site':Object.keys(C.abundance_names)[n]})
-    }
     //group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
     let sole_arch = {'domain':'Archaea','phylum':'Euryarchaeota','klass':'Methanobacteria','order':'Methanobacteriales','family':'Methanobacteriaceae','genus':'Methanobrevibacter'}
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
@@ -872,60 +871,88 @@ router.get('/ecology', function ecology_index(req, res) {
     let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']
     let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
     let group_collector={}
-    // for(let i in species_obj){
-//         //let s = species[i]
-//         let lineage_list = make_lineage(species_obj[i])
-//         //console.log('s',lineage_list[0])
-//         let abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
-//         
-//         // only add sp with significant abunds - how?
-//         delete abund_obj['ST']
-//         //console.log('abund_obj',abund_obj)//{BM,KG,HP....}
-//         //let vals = Object.values(abund_obj)
-//         let avg = Object.values(abund_obj).reduce((a, b) => parseFloat(a) + parseFloat(b)) / Object.values(abund_obj).length;
-//         //console.log('avg',avg)//{BM,KG,HP....}
-//         if(avg > 1.0){
-//             group_collector[lineage_list[0]] = abund_obj
-//         }else{
-//            //console.log('Removing',lineage_list[0],abund_obj)//{BM,KG,HP....}
-//         }
-//     }
-   let species = C.plot_species.map(el => el.name)
-   let colors = C.plot_species.map(el => el.color)
-   console.log('species colors ',colors)
-    for(let i in species){
-        //let s = species[i]
-        let sp = species[i]
-        console.log(sp)
-        let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[sp+'_species']
-        let lineage_list = make_lineage(node)
-        console.log('s',node,lineage_list[0])
-        let abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
-        
-        delete abund_obj['ST']
-        console.log('C.plot_species[sp]',colors[i])//{BM,KG,HP....}
-        //let vals = Object.values(abund_obj)
-        group_collector[lineage_list[0]]={}
-        group_collector[lineage_list[0]].counts = abund_obj
-        group_collector[lineage_list[0]].color = colors[i]
-       
+    let species_for_plot = C.plot_species.map(el => el.name)
+    species_for_plot.push('other')
+    let colors_for_plot = C.plot_species.map(el => el.color)
+    colors_for_plot.push('black')
+    let spcount = 0
+    let other_collector = {},abund_obj
+    for(let n in graph_site_order){
+        other_collector[graph_site_order[n]] = 0.0
     }
+    for(let i in species_obj){  // all species
+        //let s = species[i]
+        //console.log('sp0',species_obj[i])
+        let lineage_list = make_lineage(species_obj[i])
+        //console.log('sp1',lineage_list)
+        let sp = lineage_list[0].split(';')[lineage_list[0].split(';').length - 1]
+        //console.log('sp',sp)
+        if(species_for_plot.indexOf(sp) === -1){
+           // must get site avg
+           abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+           for(let site in abund_obj){
+              //console.log('n',site)
+              other_collector[site] += parseFloat(abund_obj[site])
+           }
+           delete other_collector['ST']
+        }else{
+            console.log('in list',sp)
+            spcount += 1
+            abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+            delete abund_obj['ST']
+            group_collector[lineage_list[0]]={}
+            group_collector[lineage_list[0]].counts = abund_obj
+            //group_collector[lineage_list[0]].colors = 
+        }
+        
+
+    }
+    console.log('list count ',spcount)
+    group_collector['other'] = {}
+    group_collector['other'].counts = {}
+    for(let n in graph_site_order){
+        group_collector['other'].counts[graph_site_order[n]] = other_collector[graph_site_order[n]]
+    }
+   //console.log('species count ',group_collector['other'])
+   //console.log('species colors ',colors_for_plot)
+ //    for(let i in species_for_plot){
+//         //let s = species[i]
+//         let sp = species_for_plot[i]
+//         //console.log('sp',sp)
+//         if(sp !== 'other'){
+//             let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[sp+'_species']
+//             let lineage_list = make_lineage(node)
+//             //console.log('s',node,lineage_list[0])
+//             let abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+//         
+//             delete abund_obj['ST']
+//         //console.log('C.plot_species[sp]',colors[i])//{BM,KG,HP....}
+//         //let vals = Object.values(abund_obj)
+//         group_collector[lineage_list[0]]={}
+//         group_collector[lineage_list[0]].counts = abund_obj
+//         group_collector[lineage_list[0]].color = colors_for_plot[i]
+//        
+//     }
     //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
-    for(let n in Object.keys(C.abundance_names)){
-        let site = Object.keys(C.abundance_names)[n]
-        //console.log('SITE',site)
-        if(site !== 'ST'){
+    
+    //console.log('site_order',site_order)
+    for(let n in graph_site_order){//Object.keys(C.abundance_names)){
+        let site = graph_site_order[n]
+        
+        
             tmp = {}
             tmp.site = site
             for(let species in group_collector){
+                //console.log('sp',species)
                 let sp = species.split(';')[species.split(';').length -1]
+                
                 let val = parseFloat(group_collector[species].counts[tmp.site])
-                let c = group_collector[species].color
+                //let c = group_collector[species].color
                 tmp[sp] = val  // {site,sp,sp,sp,sp,sp....}
-                site_species.push({'site': site,'species': sp, 'abundance': val, color: c})
+                site_species.push({'site': site,'species': sp, 'abundance': val})
             }
             bar_graph_data.push(tmp)
-        }
+        
     }
     
     // let grab_species = Object.keys(tmp)
@@ -965,24 +992,14 @@ router.get('/ecology', function ecology_index(req, res) {
     let orders = bac_orders_only.map( x => x.taxon)
     let families = bac_families_only.map( x => x.taxon)
     let genera = bac_genera_only.map( x => x.taxon)
-    //let species = species_obj.map( x => x.taxon)
-//     'Fusobacterium nucleatum',
-//   'Fusobacterium periodonticum',
-//   'Haemophilus parainfluenzae',
-//   'Neisseria perflava',
-//   'Porphyromonas pasteri',
-//   'Prevotella melaninogenica',
-//   'Streptococcus oralis',
-//   'Streptococcus australis',
-//   'Streptococcus sp._HMT_074',
-//   'Streptococcus parasanguinis',
-//   'Streptococcus sp._HMT_423',
-//   'Streptococcus infantis',
-//   'Streptococcus cristatus',
-//   'Streptococcus mitis',
-//   'Streptococcus salivarius',
-//   'Veillonella dispar'
-    console.log('bar_graph_data',Object.keys(bar_graph_data[0]))
+    
+    let numbersCopy = [...Object.values(bar_graph_data[7])];
+    let s = numbersCopy.shift()
+    let sum = 0.0
+    for(let x in numbersCopy){
+       sum += parseFloat(numbersCopy[x])
+    }
+    //console.log('numbersCopy',s,numbersCopy,sum )
     phyla.sort()
     klasses.sort()
     orders.sort()
@@ -1000,9 +1017,10 @@ router.get('/ecology', function ecology_index(req, res) {
       orders: JSON.stringify(orders),
       families: JSON.stringify(families),
       genera: JSON.stringify(genera),
-      constant_colors: JSON.stringify(colors),
+      constant_colors: JSON.stringify(colors_for_plot),
       bar_data: JSON.stringify(bar_graph_data),
-      site_species: JSON.stringify(site_species)
+      site_species: JSON.stringify(site_species),
+      chart_order: JSON.stringify(graph_site_order)
       
     })
 })
@@ -1528,11 +1546,11 @@ function get_site_avgs(obj){
     //console.log('text_sv_sum',text_sv_sum)
     //console.log('countSV',count,return_obj['SV'])
     for(let site in return_obj){
-        console.log('s',site,return_obj[site])
+        //console.log('s',site,return_obj[site])
         if(site === 'NS'){
           return_obj[site] = (return_obj[site]).toFixed(3) // only dewhirst
         }else if(site === 'ST'){
-          return_obj[site] = (return_obj[site] / 3).toFixed(3) //only eren and segata
+          return_obj[site] = (return_obj[site] / 3).toFixed(3) //only erenx2 and segata
         }else{
           return_obj[site] = (return_obj[site] / abund_refs.length).toFixed(3) 
         }

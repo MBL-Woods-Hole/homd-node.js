@@ -141,8 +141,9 @@
 <script>
   mainmenu()
   var sites = JSON.parse('<%- bar_data %>')
+  var chart_order = JSON.parse('<%- chart_order %>')
   var site_names = sites.map(el => el.site)
-  var site_order = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS'] // per JMW
+  //var site_order = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS'] // per JMW
   xlabel = 'Major Species Abundances for each oral site'
   //console.log('site_names ',site_names)
   var species = Object.keys(sites[0])
@@ -164,11 +165,12 @@
       x: d => d.abundance,
       y: d => d.site,
       z: d => d.species,
-      yDomain: d3.groupSort(
-        site_species,
-        (D) => D[0].abundance / d3.sum(D, d => d.abundance), // proportion of first age group
-        d => d.site // sort y by x
-      ),
+      // yDomain: d3.groupSort(
+//         site_species,
+//         (D) => D[0].abundance / d3.sum(D, d => d.abundance), // proportion of first age group
+//         d => d.site // sort y by x
+//       ),
+      yDomain: chart_order.reverse(),
       zDomain: species,
       //colors: d3.schemeSpectral[species.length],
       //colors: colors2,
