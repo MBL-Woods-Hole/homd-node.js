@@ -66,40 +66,40 @@ constants.abundance_names = {
 }  
 
 //All the Capnocytophaga can be the same color;
-let capno_color ='#a1ee0a'
+let capno_color = ['#a1ee0a','#98fb98','#00ff7f','#adff2f']  // 4 greens
 //both Corynebacterium matruchotii and Corynebacterium durum can be the same color;
-let coryne_color = '#da70d6'
+let coryne_color = ['#da70d6', 'magenta']// 2 magenta
 // The 5 nasal Corynebacterium (accolens, pseudodiphtheriticum, tuberculostearucium, propinquum, macginleyi) can be the same color;
 let nasal_coryne_color = 'lightblue'
 // Staph epidermidis and Staph aureus can be the same color;
-let staph_color = 'tomato'
+let staph_color = ['tomato','lightsalmon']
 // Anaerococcus octavius and Anaerococcus sp. HMT 290 can be the same colorc;
-let anaero_color = 'PaleGoldenrod'
+let anaero_color = ['#fff8dc','#fcffa4']
 // Haemophilus haemolyticus and H. sp. HMT 036 can be the same color;
-let haemo_color = 'OrangeRed'
+let haemo_color = 'orangered'
 // Leptotrichia buccalis and Leptotrichia wadei can be the same color;
 let lepto1_color = '#00ffff'
 // Leptotrichia sp. HMT 417 and Pseudoleptotrichia HMT 221 can be the same color;
 let lepto2_color = '#96152e'
 // and it would be good if S. mitis, S. oralis, and S. infantis, and S. spp. HMT 074 and 423 
 //were very similar color or the same color to emphasize that we can't really tell them apart with this data. 
-let strep_color = '#008000'
+let strep_color = ['#acbf60','#b0c24a','#a4c639','#8c9e5e','#9ab973'] // 5 green
 constants.plot_species = [  // to be put in db with species_id
     {name:'Actinomyces graevenitzii',color:'lightsalmon'},
     {name:'Actinomyces naeslundii',color:'#dc143c'},
     {name:'Actinomyces oris',color:'#ff4040'},
     {name:'Alloprevotella sp._HMT_473',color:'DarkViolet'},
-    {name:'Anaerococcus octavius',color: anaero_color},
-    {name:'Anaerococcus sp._HMT_290',color: anaero_color},
+    {name:'Anaerococcus octavius',color: anaero_color[0]},
+    {name:'Anaerococcus sp._HMT_290',color: anaero_color[1]},
     {name:'Campylobacter concisus',color:'#1f8ad5'},
-    {name:'Capnocytophaga gingivalis',color: capno_color},
-    {name:'Capnocytophaga granulosa',color: capno_color},
-    {name:'Capnocytophaga leadbetteri',color: capno_color},
-    {name:'Capnocytophaga sputigena',color: capno_color},
+    {name:'Capnocytophaga gingivalis',color: capno_color[0]},
+    {name:'Capnocytophaga granulosa',color: capno_color[1]},
+    {name:'Capnocytophaga leadbetteri',color: capno_color[2]},
+    {name:'Capnocytophaga sputigena',color: capno_color[3]},
     {name:'Corynebacterium accolens',color: nasal_coryne_color},
-    {name:'Corynebacterium durum',color: coryne_color},
+    {name:'Corynebacterium durum',color: coryne_color[0]},
     {name:'Corynebacterium macginleyi',color: nasal_coryne_color},
-    {name:'Corynebacterium matruchotii',color: coryne_color},
+    {name:'Corynebacterium matruchotii',color: coryne_color[1]},
     {name:'Corynebacterium propinquum',color: nasal_coryne_color},
     {name:'Corynebacterium pseudodiphtheriticum',color: nasal_coryne_color},
     {name:'Corynebacterium tuberculostearicum',color: nasal_coryne_color},
@@ -127,18 +127,20 @@ constants.plot_species = [  // to be put in db with species_id
     {name:'Rothia dentocariosa',color:'#e13ffa'},
     {name:'Rothia mucilaginosa',color:'#f4f74a'},
     {name:'Schaalia odontolytica',color:'#ff0000'},
-    {name:'Staphylococcus aureus',color: staph_color},
-    {name:'Staphylococcus epidermidis',color: staph_color},
+    {name:'Schaalia sp._HMT_172',color:'#ff0000'},
+    {name:'Schaalia sp._HMT_180',color:'#ff0000'},
+    {name:'Staphylococcus aureus',color: staph_color[0]},
+    {name:'Staphylococcus epidermidis',color: staph_color[1]},
     {name:'Streptococcus australis',color:'#008080'},
     {name:'Streptococcus cristatus',color:'#008080'},
-    {name:'Streptococcus infantis',color: strep_color},
-    {name:'Streptococcus mitis',color: strep_color},
-    {name:'Streptococcus oralis',color: strep_color},
+    {name:'Streptococcus infantis',color: strep_color[0]},
+    {name:'Streptococcus mitis',color: strep_color[1]},
+    {name:'Streptococcus oralis',color: strep_color[2]},
     {name:'Streptococcus parasanguinis',color:'#3CBC3C'},
     {name:'Streptococcus salivarius',color:'#50D050'},
     {name:'Streptococcus sanguinis',color:'#008080'},
-    {name:'Streptococcus sp._HMT_074',color: strep_color},
-    {name:'Streptococcus sp._HMT_423',color: strep_color},
+    {name:'Streptococcus sp._HMT_074',color: strep_color[3]},
+    {name:'Streptococcus sp._HMT_423',color: strep_color[4]},
     {name:'Veillonella atypica',color:'#ffcff1'},
     {name:'Veillonella dispar',color:'#fddde6'},
     {name:'Veillonella parvula',color:'#ffb6c1'},
