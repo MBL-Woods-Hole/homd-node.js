@@ -2,7 +2,7 @@ const CFG   = require(app_root + '/config/config');
 let constants = {};
 
 constants.rRNA_refseq_version    = '15.22'
-constants.genomic_refseq_version = '9.14'
+constants.genomic_refseq_version = '9.15'
 constants.use_cluster = false
 
 //constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
@@ -70,7 +70,7 @@ let capno_color = ['#a1ee0a','#98fb98','#00ff7f','#adff2f']  // 4 greens
 //both Corynebacterium matruchotii and Corynebacterium durum can be the same color;
 let coryne_color = ['#da70d6', 'magenta']// 2 magenta
 // The 5 nasal Corynebacterium (accolens, pseudodiphtheriticum, tuberculostearucium, propinquum, macginleyi) can be the same color;
-let nasal_coryne_color = 'lightblue'
+let nasal_coryne_color = ['lightblue','#ace5ee','#abcdef','#a4dded','#b0e0e6']
 // Staph epidermidis and Staph aureus can be the same color;
 let staph_color = ['tomato','lightsalmon']
 // Anaerococcus octavius and Anaerococcus sp. HMT 290 can be the same colorc;
@@ -96,13 +96,13 @@ constants.plot_species = [  // to be put in db with species_id
     {name:'Capnocytophaga granulosa',color: capno_color[1]},
     {name:'Capnocytophaga leadbetteri',color: capno_color[2]},
     {name:'Capnocytophaga sputigena',color: capno_color[3]},
-    {name:'Corynebacterium accolens',color: nasal_coryne_color},
+    {name:'Corynebacterium accolens',color: nasal_coryne_color[0]},
     {name:'Corynebacterium durum',color: coryne_color[0]},
-    {name:'Corynebacterium macginleyi',color: nasal_coryne_color},
+    {name:'Corynebacterium macginleyi',color: nasal_coryne_color[1]},
     {name:'Corynebacterium matruchotii',color: coryne_color[1]},
-    {name:'Corynebacterium propinquum',color: nasal_coryne_color},
-    {name:'Corynebacterium pseudodiphtheriticum',color: nasal_coryne_color},
-    {name:'Corynebacterium tuberculostearicum',color: nasal_coryne_color},
+    {name:'Corynebacterium propinquum',color: nasal_coryne_color[2]},
+    {name:'Corynebacterium pseudodiphtheriticum',color: nasal_coryne_color[3]},
+    {name:'Corynebacterium tuberculostearicum',color: nasal_coryne_color[4]},
     {name:'Cutibacterium acnes',color:'MediumSeaGreen'},
     {name:'Fusobacterium nucleatum',color:'yellow'},
     {name:'Fusobacterium periodonticum',color:'chartreuse'},

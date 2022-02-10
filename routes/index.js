@@ -76,7 +76,7 @@ router.post('/site_search', function site_search(req, res) {
 
   const searchText = req.body.intext
   const searchTextLower = req.body.intext.toLowerCase()
-
+  let add_genome_to_otid = {}
   // Genome  Metadata
   const allGidObjList = Object.values(C.genome_lookup)
   // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
@@ -87,14 +87,16 @@ router.post('/site_search', function site_search(req, res) {
         // we're missing any arrays
       } else {
         if ( Object.prototype.hasOwnProperty.call(el, gidKeyList[n]) && (el[gidKeyList[n]]).toString().toLowerCase().includes(searchTextLower)) {
+          add_genome_to_otid[el.otid] = el.genus+' '+el.species
           return el.gid
         }
       }
     }
   })
-  helpers.print(gidObjList[0])
+  
+  //helpers.print(gidObjList[0])
   const gidLst = gidObjList.map(e => ({gid:e.gid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-
+  //console.log('gidObjList[0]',gidLst[0])
 
 
   // OTID Metadata
@@ -107,7 +109,7 @@ router.post('/site_search', function site_search(req, res) {
         // we're missing any arrays
       } else {
         
-        helpers.print(['el',el])
+        //helpers.print(['el',el])
         
         if ( Object.prototype.hasOwnProperty.call(el, otidkeylist[n]) && el[otidkeylist[n]].toString().toLowerCase().includes(searchTextLower)) {
           return el.otid
@@ -117,12 +119,17 @@ router.post('/site_search', function site_search(req, res) {
     }
   })
   const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-
+  if(Object.keys(add_genome_to_otid).length > 0){
+  	for(let otid in add_genome_to_otid){
+  		otidLst.push({otid: otid, species: '<i>'+add_genome_to_otid[otid]+'</i>'})
+  	}
+  }
+  //console.log('otidLst[0]',otidLst)
 
 
   // lets search the taxonomy names
   // Bacterial Taxonomy Names
-  helpers.print(Object.keys(C.taxon_counts_lookup)[0])
+  //helpers.print(Object.keys(C.taxon_counts_lookup)[0])
   const taxonList = Object.values(C.taxon_lineage_lookup).filter(function (e) {
     if (Object.keys(e).length !== 0) {
       // console.log(e)

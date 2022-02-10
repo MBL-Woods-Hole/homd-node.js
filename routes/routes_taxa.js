@@ -1359,14 +1359,14 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     console.log('in abundance_by_site')
     
     let rank = req.params.rank
-    let group = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank]
+    let node_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank]
     //let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
     let abund_sites = Object.keys(C.abundance_names) 
     
     let group_collector = {},top_ten = {},node,lineage_list
-    for(let i in group){
+    for(let i in node_list){
         //console.log(phyla[p])
-        node = group[i]
+        node = node_list[i]
         lineage_list = make_lineage(node)
         //console.log('lineage_list',lineage_list)
         group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
@@ -1491,7 +1491,9 @@ function get_sorted_abund_names(collector, site, rank, num_to_return){
 function sortByKeyDEC(array, key) {
   return array.sort(function(a,b) { return b[key] - a[key];});
 }
+//
 function get_site_avgs(obj){
+    //console.log('\nin obj',obj)
     let return_obj = {}
     let ref,site,count
     let abund_refs = C.abundance_refs
@@ -1499,45 +1501,41 @@ function get_site_avgs(obj){
     //let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
     let abund_sites = Object.keys(C.abundance_names)
     //console.log('obj',obj)
+    let counter_per_site = {}
     for(let i in abund_sites){
+    	site = abund_sites[i]
+       	counter_per_site[site] = 0
         return_obj[abund_sites[i]] = 0
     }
     
+
+    
+    
+   
     for(let n in abund_refs){
        ref = abund_refs[n]
-       //console.log('\n')
-       if(obj[ref] && Object.values(obj[ref]).length > 0){
-            //console.log('ref',obj[ref],ref)
-            for(let i in abund_sites){
-              site = abund_sites[i]
-              //console.log('site',site)
-              if(obj[ref].hasOwnProperty(site)){
-                 //console.log('found',site,ref,obj[ref][site].avg)
-                 return_obj[site] += parseFloat(obj[ref][site].avg)
-              }else{
-                return_obj[site] += 0
-              }
-            }
-       }else{
-        for(let i in abund_sites){
-            return_obj[abund_sites[i]] += 0
-        }
+       
+       for(let i in abund_sites){
+           site = abund_sites[i]
+           //counter_per_site[site]=0
+           //console.log('site',site,'ref',ref)
+           if(obj.hasOwnProperty(ref) && (Object.keys(obj[ref]).indexOf(site) != -1)){
+				//console.log('found site',site, 'adding',parseFloat(obj[ref][site].avg))
+				 return_obj[site] += parseFloat(obj[ref][site].avg)
+				 counter_per_site[site] += 1
+			   
+           }
        }
+       
     }
-    
-    //console.log('text_sv_sum',text_sv_sum)
+    //console.log('counter SubP',counter_per_site['SubP'])
     //console.log('countSV',count,return_obj['SV'])
     for(let site in return_obj){
-        //console.log('s',site,return_obj[site])
-        if(site === 'NS'){
-          return_obj[site] = (return_obj[site]).toFixed(3) // only dewhirst
-        }else if(site === 'ST'){
-          return_obj[site] = (return_obj[site] / 3).toFixed(3) //only erenx2 and segata
-        }else{
-          return_obj[site] = (return_obj[site] / abund_refs.length).toFixed(3) 
-        }
+          return_obj[site] = (return_obj[site] / counter_per_site[site]).toFixed(3) 
     }
-    
+    //console.log('avg return SubP',return_obj['SubP'])
+    //console.log('avg return BM',return_obj['BM'])
+    //console.log('')
     return return_obj
 }
 function get_rank_display(rank,use_plural){
