@@ -32,7 +32,11 @@ acceptable_genome_flags = ('11','12','21','91')
 # """.format(tbl=update_date_tbl)
 # 2
 
-# 1
+# in db change gc_comment to genbank_assembly (MBL) VARCHAR(20)
+# change genbank_acc to genbank_accession: 
+# change goldstamp_id to ncbi_biosample
+# change ncbi_id to ncbi_bioproject
+# isolate origin varchar(200)
 first_genomes_query_no_flagid ="""
     SELECT seq_id as gid,
     genus,
@@ -74,15 +78,15 @@ first_genomes_query ="""
 # IFNULL too CPU Intensive
 extra_query ="""  
     SELECT seq_id as gid,
-    IFNULL(ncbi_id, '') as ncbi_bpid,
+    IFNULL(ncbi_bioproject, '') as ncbi_bpid,
     IFNULL(ncbi_taxon_id, '') as ncbi_taxid,
     IFNULL(isolate_origin, '') as io,
     IFNULL(gc, '') as gc,
     IFNULL(atcc_medium_number, '') as atcc_mn,
     IFNULL(non_atcc_medium, '') as non_atcc_mn,
-    IFNULL(genbank_acc, '') as gb_acc,
-    IFNULL(gc_comment, '') as gb_asmbly,
-    IFNULL(goldstamp_id, '') as  ncbi_bsid,
+    IFNULL(genbank_accession, '') as gb_acc,
+    IFNULL(genbank_assembly, '') as gb_asmbly,
+    IFNULL(ncbi_biosample, '') as  ncbi_bsid,
     IF(16s_rrna ='', '0','1') as 16s_rrna_flag  
     from {tbl}
     ORDER BY gid
@@ -90,15 +94,15 @@ extra_query ="""
 
 extra_query2 ="""
     SELECT seq_id as gid,
-    ncbi_id as ncbi_bpid,
+    ncbi_bioproject as ncbi_bpid,
     ncbi_taxon_id as ncbi_taxid,
     isolate_origin as io,
     gc, 
     atcc_medium_number as atcc_mn,
     non_atcc_medium as non_atcc_mn,
-    genbank_acc as gb_acc,
-    gc_comment as gb_asmbly,
-    goldstamp_id as  ncbi_bsid,
+    genbank_accession as gb_acc,
+    genbank_assembly as gb_asmbly,
+    ncbi_biosample as  ncbi_bsid,
     IF(16s_rrna ='', '0','1') as 16s_rrna_flag  
     from {tbl}
 """.format(tbl=seq_extra_tbl)
