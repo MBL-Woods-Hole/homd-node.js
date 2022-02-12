@@ -460,7 +460,7 @@ ul li{
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
-<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script type="text/javascript" src="/js/taxonomy.js"></script>
 <script>
   mainmenu()
@@ -487,11 +487,11 @@ ul li{
   if(Object.keys(ddata).length == 0){
      document.getElementById("plot_dewhirst_here").innerHTML = '<small>No Data</small>'
   }else{
-      console.log(ddata)
+      //console.log(ddata)
     //max = max([item.avg for item in data])
     //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
     max_ceil = Math.ceil(max.dewhirst)
-    console.log(max.dewhirst)
+    //console.log(max.dewhirst)
     
 
     // append the svg object to the body of the page
