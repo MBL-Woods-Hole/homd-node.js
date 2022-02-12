@@ -539,15 +539,15 @@ router.get('/tax_description', function tax_description(req, res){
   */
   /*
   Link Exceptions
-  105	Peptostreptococcaceae [XI][G-1]	[Eubacterium] infirmum	
-  467	Peptostreptococcaceae [XI][G-1]	[Eubacterium] sulci	
-759	Peptostreptococcaceae [XI][G-5]	[Eubacterium] saphenum	
-673	Peptostreptococcaceae [XI][G-6]	[Eubacterium] minutum	
-694	Peptostreptococcaceae [XI][G-6]	[Eubacterium] nodatum	
-557	Peptostreptococcaceae [XI][G-9]	[Eubacterium] brachy	
+  105   Peptostreptococcaceae [XI][G-1] [Eubacterium] infirmum  
+  467   Peptostreptococcaceae [XI][G-1] [Eubacterium] sulci 
+759 Peptostreptococcaceae [XI][G-5] [Eubacterium] saphenum  
+673 Peptostreptococcaceae [XI][G-6] [Eubacterium] minutum   
+694 Peptostreptococcaceae [XI][G-6] [Eubacterium] nodatum   
+557 Peptostreptococcaceae [XI][G-9] [Eubacterium] brachy    
 
-106	Peptostreptococcaceae [XI][G-7]	[Eubacterium] yurii	subsp. schtitka
-377	Peptostreptococcaceae [XI][G-7]	[Eubacterium] yurii	subsps. yurii & margaretiae
+106 Peptostreptococcaceae [XI][G-7] [Eubacterium] yurii subsp. schtitka
+377 Peptostreptococcaceae [XI][G-7] [Eubacterium] yurii subsps. yurii & margaretiae
 
   
   */
@@ -558,9 +558,9 @@ router.get('/tax_description', function tax_description(req, res){
   link_exceptions['673'] = {'ncbilink':'Eubacterium-minutum','gcmlink':'Eubacterium%20minutum','lpsnlink':'species/eubacterium-minutum'}
   link_exceptions['694'] = {'ncbilink':'Eubacterium-nodatum','gcmlink':'Eubacterium%20nodatum','lpsnlink':'species/eubacterium-nodatum'}
   link_exceptions['557'] = {'ncbilink':'Eubacterium-brachy','gcmlink':'Eubacterium%20brachy','lpsnlink':'species/eubacterium-brachy'}
-  // susp 106	Peptostreptococcaceae [XI][G-7]	[Eubacterium] yurii	subsp. schtitka
+  // susp 106   Peptostreptococcaceae [XI][G-7] [Eubacterium] yurii subsp. schtitka
   link_exceptions['106'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/eubacterium-yurii-schtitka'}
-  // subsp 377	Peptostreptococcaceae [XI][G-7]	[Eubacterium] yurii	subsps. yurii & margaretiae
+  // subsp 377  Peptostreptococcaceae [XI][G-7] [Eubacterium] yurii subsps. yurii & margaretiae
   link_exceptions['377'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/Eubacterium-yurii-margaretiae'}
   
   data1 = C.taxon_lookup[otid]
@@ -858,7 +858,7 @@ router.get('/life', function life(req, res) {
 //
 router.get('/ecology', function ecology_index(req, res) {
     let bar_graph_data = []
-    let site_species = [],tmp = {}// {site,sp,abund} ordered by sp
+    let site_species = {},sp_per_site = {}// {site,sp,abund} ordered by sp
     let graph_site_order = C.base_abundance_order
     graph_site_order.push('NS')
     
@@ -920,36 +920,37 @@ router.get('/ecology', function ecology_index(req, res) {
     }
     group_collector['other'] = {}
     for(let y in graph_site_order){
-        group_collector['other'][graph_site_order[y]] = 100 - site_sums[graph_site_order[y]]
+        group_collector['other'][graph_site_order[y]] = (100 - site_sums[graph_site_order[y]]).toFixed(3)
+        site_species[graph_site_order[y]]=[]
     }
    
     //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
     
     //console.log('site_order',site_order)
+    let tmp
     for(let n in graph_site_order){//Object.keys(C.abundance_names)){
         let site = graph_site_order[n]
+        //console.log('site',site)
+        tmp={}
+        tmp['site'] = site
+        sp_per_site[site] = {}
+        for(let species in group_collector){
+            //console.log('sp',species)
+            let sp = species.split(';')[species.split(';').length -1]
+            let val = parseFloat(group_collector[species][site])
+            //let c = group_collector[species].color
+            tmp[sp] = val
+            sp_per_site[site][sp] = val  // {site,sp,sp,sp,sp,sp....}
+            site_species[site].push({'site':site,'species': sp, 'abundance': val})
+            //site_species[site][sp] = 
+        }
         
-            tmp = {}
-            tmp.site = site
-            for(let species in group_collector){
-                //console.log('sp',species)
-                let sp = species.split(';')[species.split(';').length -1]
-                
-                let val = parseFloat(group_collector[species][tmp.site])
-                //let c = group_collector[species].color
-                tmp[sp] = val  // {site,sp,sp,sp,sp,sp....}
-                site_species.push({'site': site,'species': sp, 'abundance': val})
-            }
-            bar_graph_data.push(tmp)
+        bar_graph_data.push(tmp)
         
     }
     
-    // let grab_species = Object.keys(tmp)
-//     grab_species.shift()  // remove 'site'
-//     grab_species.sort()
-    //console.log('site_species',site_species)
-    //console.log('bar_graph_data keys',bar_graph_data[0])
-    //console.log(bar_graph_data.filter(el => el.site))
+    //console.log('bar_graph_data',bar_graph_data.length)
+    
     
     let bac_phyla_only = phyla_obj.filter( (x) =>{
       if(C.homd_taxonomy.taxa_tree_dict_map_by_id[x.parent_id].taxon == 'Bacteria'){
@@ -1000,9 +1001,12 @@ router.get('/ecology', function ecology_index(req, res) {
       families: JSON.stringify(families),
       genera: JSON.stringify(genera),
       constant_colors: JSON.stringify(colors_for_plot),
-      bar_data: JSON.stringify(bar_graph_data),
+      
+      bar_data1: JSON.stringify(sp_per_site),
+      bar_data2: JSON.stringify(bar_graph_data),
       site_species: JSON.stringify(site_species),
-      chart_order: JSON.stringify(graph_site_order)
+      site_order: JSON.stringify(graph_site_order),
+      ab_names: JSON.stringify(C.abundance_names)
       
     })
 })
@@ -1503,14 +1507,10 @@ function get_site_avgs(obj){
     //console.log('obj',obj)
     let counter_per_site = {}
     for(let i in abund_sites){
-    	site = abund_sites[i]
-       	counter_per_site[site] = 0
+        site = abund_sites[i]
+        counter_per_site[site] = 0
         return_obj[abund_sites[i]] = 0
     }
-    
-
-    
-    
    
     for(let n in abund_refs){
        ref = abund_refs[n]
@@ -1520,10 +1520,10 @@ function get_site_avgs(obj){
            //counter_per_site[site]=0
            //console.log('site',site,'ref',ref)
            if(obj.hasOwnProperty(ref) && (Object.keys(obj[ref]).indexOf(site) != -1)){
-				//console.log('found site',site, 'adding',parseFloat(obj[ref][site].avg))
-				 return_obj[site] += parseFloat(obj[ref][site].avg)
-				 counter_per_site[site] += 1
-			   
+                //console.log('found site',site, 'adding',parseFloat(obj[ref][site].avg))
+                 return_obj[site] += parseFloat(obj[ref][site].avg)
+                 counter_per_site[site] += 1
+               
            }
        }
        
