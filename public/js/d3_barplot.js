@@ -26,14 +26,15 @@ var initStackedBarChart = {
         domEle = config.element,
         stackKey = config.key,
         data = config.data,
-        margin = {top: 20, right: 20, bottom: 40, left: 150},
+        margin = {top: 20, right: 20, bottom: 25, left: 150},
         width = 1200 - margin.left - margin.right,
-        height = 200 - margin.top - margin.bottom,
+        height = 220 - margin.top - margin.bottom,
         xScale = d3.scaleLinear().rangeRound([0, width]),
         yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
         color = d3.scaleOrdinal(config.colors) //d3.scaleOrdinal(d3.schemeCategory20),
         xAxis = d3.axisBottom(xScale),
         yAxis =  d3.axisLeft(yScale),
+        xlabel = 'Major Species-Level Abundances for Each Oral Site'
         svg = d3.select("#"+domEle).append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -74,16 +75,16 @@ var initStackedBarChart = {
                   var xPosition = d3.mouse(this)[0] - 5;
                   var yPosition = d3.mouse(this)[1] - 5;
                   var id_node = this.parentNode.id.split('-|-')
-                  var html = '<table><tr><td><span style="background:'+id_node[1]+';border:1px solid grey;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Species:</td><td><i>'+id_node[0]+'</i></td></tr>'
+                  var html = '<div id="outer_div"><table><tr><td><span style="background:'+id_node[1]+';border:1px solid grey;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Species:</td><td><i>'+id_node[0]+'</i></td></tr>'
                   html += '<tr><td>Oral Site:</td><td>'+ab_names[site_order[i]]+'</td></tr>'
-                  html += '<tr><td>Abundance:</td><td>'+sp_per_site[site_order[i]][id_node[0]]+'%</td></tr></table>'
+                  html += '<tr><td>Abundance:</td><td>'+sp_per_site[site_order[i]][id_node[0]]+'%</td></tr></table></div>'
+                  
                   tooltip
                               .style("left", d3.mouse(this)[0] + 155 + "px")
-                              .style("top",  d3.mouse(this)[1] + 255 + "px")
+                              .style("top",  d3.mouse(this)[1] + 268 + "px")
                               .style("display", "inline-block")
                               .style("margin",  "10px")
                               .style("padding",  "10px")
-                              .style("background","lightgrey")
                               .style("width","auto")
                               .style("text-align","left")
                               //.style("width",species[i].length +"px")
@@ -110,7 +111,7 @@ var initStackedBarChart = {
                                ( margin.top - 25) + ")")
           .style("text-anchor", "left")
           .style("font-size", "small")
-          .text('Major Species Abundances for Each Oral Site');                          
+          .text(xlabel);                          
     }  // end of draw
 }
 

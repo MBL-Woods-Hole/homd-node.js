@@ -1,7 +1,9 @@
 <style>
 #info{
    font-size:14px;
-   padding:20px 5px;
+   padding:0px 5px 20px 5px;
+   width:70%;
+   
 }
 #eco_table{
    font-size:13px;
@@ -21,11 +23,16 @@
 }
 #top-10-link{
    padding:3px;
+   top: 150px;
    border:1px solid brown;
    float:right;
    
 }
-
+#outer_div{
+   padding:3px;
+   border: 1px solid brown;
+   background: lightgrey;
+}
 .toolTip table td{
   border: 0px;
   font-size: small;
@@ -33,10 +40,11 @@
 .toolTip {
   position: absolute;
   display: block;
+  background:#B0B0B0;
   /* top:100px; */
 /*   min-width: 280px; */
   min-height: 60px;
-  background: none repeat scroll 0 0 #ffffff;
+  /* background: none repeat scroll 0 0 #ffffff; */
   border: 1px solid #6F257F;
   padding: 14px;
   text-align: left;
@@ -62,18 +70,18 @@
 
         <div class='title'>Ecology (Abundance) Pages</div>
         <a id='download_browser_text_excel'  href='/download#abundance' >Download Options</a> 
-
+<br><span id='top-10-link'><a href='abundance_by_site/phylum'>Most abundant taxa for each oral sub-habitat</a>.
+       </span> 
         <div id='info'>
             The following abundance pages show available data with bar charts for the ranks in each taxon name (from domain to species) in the HOMD database.
 
-            <br>Listed on this page are taxonomic names from domain through genus for the taxa in HOMD. Each name below is a link
+            Listed on this page are taxonomic names from domain through genus for the taxa in HOMD. Each name in the table below is a link
               to a page showing abundance data from the three sources: 
               <br>
             <a href='https://www.pnas.org/content/111/28/E2875.short'>Eren (2014)</a> ,
             <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42'>Segata (2012)</a>,
             and Dewhirst (not published)
-       <span id='top-10-link'><a href='abundance_by_site/phylum'>Most abundant taxa for each oral sub-habitat</a>.
-       </span> 
+       
         
         </div>
       
@@ -161,7 +169,7 @@
   var site_order = JSON.parse('<%- site_order %>')
   plot_order = site_order.slice().reverse();
   //var site_order = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS'] // per JMW
-  xlabel = 'Major Species Abundances for each oral site'
+  xlabel = 'Major Species-Level Abundances for each oral site'
   
   var ccolors = JSON.parse('<%- constant_colors %>')
   //console.log('species colors ',ccolors)
