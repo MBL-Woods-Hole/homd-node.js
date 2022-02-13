@@ -55,14 +55,14 @@ constants.abundance_names = {
       'BM': "Buccal Mucosa (BM)",
       "KG": "Keratinized Gingiva (KG)",
       'HP': 'Hard Palate (HP)',
-      'TH': "Throat",
+      'TH': "Throat (TH)",
       "PT": "Palatine Tonsils (PT)",
       "TD": 'Tongue Dorsum (TD)',
-      "SV": "Saliva",
+      "SV": "Saliva (SV)",
       "SupP": "Supra-gingival Plaque (SupP)",
       "SubP": "Sub-gingival Plaque (SubP)",
-      "NS": "Nasal",
-      "ST": "Stool"
+      "NS": "Nasal (NS)",
+      "ST": "Stool (ST)"
 }  
 
 //All the Capnocytophaga can be the same color;
