@@ -903,14 +903,14 @@ router.get('/ecology', function ecology_index(req, res) {
 //            }
            
         }else{
-            //console.log('in list',sp)
+            //console.log('in list',sp,C.taxon_counts_lookup[lineage_list[0]])
             spcount += 1
             abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
             delete abund_obj['ST']
             group_collector[lineage_list[0]]={}
             group_collector[lineage_list[0]] = abund_obj
             for(let site in abund_obj){
-               //console.log('n',site,abund_obj[site])
+               //console.log('n',sp,site,abund_obj[site])
                site_sums[site] += parseFloat(abund_obj[site])
             }
             //group_collector[lineage_list[0]].colors = 
@@ -920,6 +920,7 @@ router.get('/ecology', function ecology_index(req, res) {
     }
     group_collector['other'] = {}
     for(let y in graph_site_order){
+        //console.log(graph_site_order[y],site_sums)
         group_collector['other'][graph_site_order[y]] = (100 - site_sums[graph_site_order[y]]).toFixed(3)
         site_species[graph_site_order[y]]=[]
     }
@@ -988,7 +989,7 @@ router.get('/ecology', function ecology_index(req, res) {
     orders.sort()
     families.sort()
     genera.sort()
-    //helpers.print(bac_phyla_only)
+    //console.log('bar_graph_data',bar_graph_data)
     res.render('pages/taxa/ecology_index', {
       title: 'HOMD :: Ecology', 
       pgname: 'taxon/ecology', // for AbountThisPage

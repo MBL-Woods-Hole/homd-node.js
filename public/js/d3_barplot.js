@@ -78,10 +78,15 @@ var initStackedBarChart = {
                   var html = '<div id="outer_div"><table><tr><td><span style="background:'+id_node[1]+';border:1px solid grey;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Species:</td><td><i>'+id_node[0]+'</i></td></tr>'
                   html += '<tr><td>Oral Site:</td><td>'+ab_names[site_order[i]]+'</td></tr>'
                   html += '<tr><td>Abundance:</td><td>'+sp_per_site[site_order[i]][id_node[0]]+'%</td></tr></table></div>'
-                  
+                  var x = d3.event.pageX - document.getElementById('bar-chart').getBoundingClientRect().x + 10
+                  var y = d3.event.pageY - document.getElementById('bar-chart').getBoundingClientRect().y + 10
                   tooltip
-                              .style("left", d3.mouse(this)[0] + 155 + "px")
-                              .style("top",  d3.mouse(this)[1] + 268 + "px")
+                              
+                              //console.log(d3.mouse(svg.node())[0],d3.mouse(this)[0])
+                              .style("left", d3.mouse(this)[0] + 155 + "px")  // X side-2-side home mbook
+                              //.style("left", (x) + "px")
+                              .style("top",  d3.mouse(this)[1] + 268 + "px")  // Y up-down home macbook
+                               //.style("top",  (y)+ "px")
                               .style("display", "inline-block")
                               .style("margin",  "10px")
                               .style("padding",  "10px")
