@@ -1378,20 +1378,13 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
         node = node_list[i]
         lineage_list = make_lineage(node)
         //console.log('lineage_list',lineage_list)
-        let avg = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+        //let avg = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
         group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
-        if(lineage_list[1].genus == 'Achromobacter'){
-          console.log('avges-AChromo',avg,C.taxon_counts_lookup[lineage_list[0]])
-          
-        }
         
     }
-    //console.log()
     for(let i in abund_sites){
         let site = abund_sites[i]
         top_ten[site] = get_sorted_abund_names(group_collector, site, rank, 10)
-          // new col[site] = [{name:count},...] // list desc /w counts
-        //console.log('phyla_collector',phyla_collector)
     }
     //console.log(top_ten)
     //const porder = [...C.base_abundance_order] //;.concat(['NS'])
@@ -1530,14 +1523,9 @@ function get_site_avgs(obj){
        
        for(let i in abund_sites){
            site = abund_sites[i]
-           //counter_per_site[site]=0
-           //console.log('site',site,'ref',ref)
            
            if(obj.hasOwnProperty(ref) && (Object.keys(obj[ref]).indexOf(site) != -1)){
                 //console.log('found site',site, 'adding',parseFloat(obj[ref][site].avg))
-                 if(site=='NS'){
-                    //console.log('ref',ref)
-                 }
                  return_obj[site] += parseFloat(obj[ref][site].avg)
                  counter_per_site[site] += 1
                
@@ -1547,20 +1535,26 @@ function get_site_avgs(obj){
        }
        
     }
-    //console.log('counter SubP',counter_per_site['SubP'])
+    //console.log('counter SV',counter_per_site['SV'])
     //console.log('countSV',count,return_obj['SV'])
     for(let site in return_obj){
-          let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
-          if(parseFloat(result)){
-              return_obj[site] = result 
+          //let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
+          if(site == 'NS'){   // only Dewhirst
+            let result = (return_obj[site]).toFixed(3)  // divide by 1 ONLY Dewhirst
+            return_obj[site] = result 
           }else{
-              return_obj[site] = '0.000'
+            let result = (return_obj[site] / 4).toFixed(3)  // divide by 4 a
+            return_obj[site] = result 
           }
+          
+          // }else{
+//               return_obj[site] = '0.000'
+//           }
           
     }
     
     //console.log('avg return SubP',return_obj['SubP'])
-    //console.log('avg return BM',return_obj['BM'])
+    //console.log('avg return SV',return_obj['SV'])
     //console.log('')
     return return_obj
 }
