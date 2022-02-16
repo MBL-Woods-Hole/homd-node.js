@@ -1378,7 +1378,12 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
         node = node_list[i]
         lineage_list = make_lineage(node)
         //console.log('lineage_list',lineage_list)
+        let avg = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
         group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+        if(lineage_list[1].genus == 'Achromobacter'){
+          console.log('avges-AChromo',avg,C.taxon_counts_lookup[lineage_list[0]])
+          
+        }
         
     }
     //console.log()
@@ -1505,7 +1510,7 @@ function sortByKeyDEC(array, key) {
 }
 //
 function get_site_avgs(obj){
-    console.log('\nin obj',obj)
+    //console.log('\nin obj',obj)
     let return_obj = {}
     let ref,site,count
     let abund_refs = C.abundance_refs
@@ -1527,11 +1532,17 @@ function get_site_avgs(obj){
            site = abund_sites[i]
            //counter_per_site[site]=0
            //console.log('site',site,'ref',ref)
+           
            if(obj.hasOwnProperty(ref) && (Object.keys(obj[ref]).indexOf(site) != -1)){
                 //console.log('found site',site, 'adding',parseFloat(obj[ref][site].avg))
+                 if(site=='NS'){
+                    //console.log('ref',ref)
+                 }
                  return_obj[site] += parseFloat(obj[ref][site].avg)
                  counter_per_site[site] += 1
                
+           }else{
+              //console.log('excluding',ref,site)
            }
        }
        
@@ -1539,8 +1550,15 @@ function get_site_avgs(obj){
     //console.log('counter SubP',counter_per_site['SubP'])
     //console.log('countSV',count,return_obj['SV'])
     for(let site in return_obj){
-          return_obj[site] = (return_obj[site] / counter_per_site[site]).toFixed(3) 
+          let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
+          if(parseFloat(result)){
+              return_obj[site] = result 
+          }else{
+              return_obj[site] = '0.000'
+          }
+          
     }
+    
     //console.log('avg return SubP',return_obj['SubP'])
     //console.log('avg return BM',return_obj['BM'])
     //console.log('')
