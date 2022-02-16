@@ -859,10 +859,10 @@ router.get('/life', function life(req, res) {
 router.get('/ecology', function ecology_index(req, res) {
     let bar_graph_data = []
     let site_species = {},sp_per_site = {}// {site,sp,abund} ordered by sp
-    let graph_site_order = C.base_abundance_order
-    graph_site_order.push('NS')
-    
-    //group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+    // let graph_site_order = C.base_abundance_order
+//     graph_site_order.push('NS')
+//     console.log('PUSH',C.base_abundance_order,graph_site_order)
+
     let sole_arch = {'domain':'Archaea','phylum':'Euryarchaeota','klass':'Methanobacteria','order':'Methanobacteriales','family':'Methanobacteriaceae','genus':'Methanobrevibacter'}
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
     let class_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['klass']
@@ -877,13 +877,13 @@ router.get('/ecology', function ecology_index(req, res) {
     colors_for_plot.push('grey')
     let spcount = 0
     let other_collector = {}, test_all_collector={},abund_obj
-    for(let n in graph_site_order){
+    for(let n in C.base_abundance_graphs){
         //console.log('graph_site_order',graph_site_order[n])
         //other_collector[graph_site_order[n]] = 0.0
     }
     let site_sums = {}
-    for(let y in graph_site_order){
-        site_sums[graph_site_order[y]]=0.0
+    for(let y in C.base_abundance_graphs){
+        site_sums[C.base_abundance_graphs[y]]=0.0
     }
     for(let i in species_obj){  // all species
         //let s = species[i]
@@ -919,18 +919,18 @@ router.get('/ecology', function ecology_index(req, res) {
 
     }
     group_collector['other'] = {}
-    for(let y in graph_site_order){
+    for(let y in C.base_abundance_graphs){
         //console.log(graph_site_order[y],site_sums)
-        group_collector['other'][graph_site_order[y]] = (100 - site_sums[graph_site_order[y]]).toFixed(3)
-        site_species[graph_site_order[y]]=[]
+        group_collector['other'][C.base_abundance_graphs[y]] = (100 - site_sums[C.base_abundance_graphs[y]]).toFixed(3)
+        site_species[C.base_abundance_graphs[y]]=[]
     }
    
     //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
     
     //console.log('site_order',site_order)
     let tmp
-    for(let n in graph_site_order){//Object.keys(C.abundance_names)){
-        let site = graph_site_order[n]
+    for(let n in C.base_abundance_graphs){//Object.keys(C.abundance_names)){
+        let site = C.base_abundance_graphs[n]
         //console.log('site',site)
         tmp={}
         tmp['site'] = site
@@ -1006,7 +1006,7 @@ router.get('/ecology', function ecology_index(req, res) {
       bar_data1: JSON.stringify(sp_per_site),
       bar_data2: JSON.stringify(bar_graph_data),
       site_species: JSON.stringify(site_species),
-      site_order: JSON.stringify(graph_site_order),
+      site_order: JSON.stringify(C.base_abundance_graphs),
       ab_names: JSON.stringify(C.abundance_names)
       
     })
@@ -1268,7 +1268,9 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     }
     res.send(table_tsv)
     res.end()
-})    
+}) 
+//
+//   
 router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
 //router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
 
@@ -1360,6 +1362,8 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
   res.send(table_tsv)
   res.end()
 })
+//
+//
 router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     console.log('in abundance_by_site')
     
@@ -1385,13 +1389,16 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
         //console.log('phyla_collector',phyla_collector)
     }
     //console.log(top_ten)
+    //const porder = [...C.base_abundance_order] //;.concat(['NS'])
+    //porder.push('NS')
+    //console.log(C.base_abundance_order,porder)
     res.render('pages/taxa/abundance_by_site', {
       title: 'HOMD ::Abundance by oral site',
       pgname: '', // for AbountThisPage 
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       data: JSON.stringify(top_ten),
-      plot_order: C.base_abundance_order.concat(['NS']),
+      plot_order: C.base_abundance_graphs,
       site_names: JSON.stringify(C.abundance_names),
       rank:rank
     })
@@ -1498,7 +1505,7 @@ function sortByKeyDEC(array, key) {
 }
 //
 function get_site_avgs(obj){
-    //console.log('\nin obj',obj)
+    console.log('\nin obj',obj)
     let return_obj = {}
     let ref,site,count
     let abund_refs = C.abundance_refs
