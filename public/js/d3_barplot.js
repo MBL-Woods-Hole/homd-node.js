@@ -80,23 +80,33 @@ var initStackedBarChart = {
                   html += '<tr><td>Abundance:</td><td>'+sp_per_site[site_order[i]][id_node[0]]+'%</td></tr></table></div>'
                   //var x = d3.event.pageX - document.getElementById('bar-chart').getBoundingClientRect().x + 10
                   //var y = d3.event.pageY - document.getElementById('bar-chart').getBoundingClientRect().y + 10
-                  //var matrix = this.getScreenCTM().translate(+ this.getAttribute("cx"), + this.getAttribute("cy"));
+                  var matrix = this.getScreenCTM().translate(+ this.getAttribute("cx"), + this.getAttribute("cy"));
                   var pos = d3.select(this).node().getBoundingClientRect();
+                  console.log(matrix.e, matrix.f)
                   tooltip
-                              
+                         //d3.mouse(container)::
+                         //Returns the x and y coordinates of the current event relative to the specified container.     
+                          //What you want is d3.event.pageX which gives you:
+                          //An integer value, in pixels, indicating the X coordinate at which the mouse pointer was 
+                          //located when the event occurred. This value is relative to the left edge of the entire document, 
+                          //regardless of the current horizontal scrolling offset of the document.    
                               //console.log(d3.mouse(svg.node())[0],d3.mouse(this)[0])
                              // .style("left", d3.mouse(this)[0] + 155 + "px")  // X side-2-side home mbook
                              //  .style("top",  d3.mouse(this)[1] + 268 + "px")  // Y up-down home macbook
-                              .style("left", pos['x'] + 10 + "px")
-        
-                              .style("top",  ( pos['y'] + 50) + "px")
-                              .style("display", "inline-block")
-                              .style("margin",  "10px")
-                              .style("padding",  "10px")
-                              .style("width","auto")
-                              .style("text-align","left")
-                              //.style("width",species[i].length +"px")
-                              .html(html);
+						.style('top', d3.event.pageY + 5 + 'px')
+						.style('left', d3.event.pageX + 'px')
+
+						//.style("left", pos['x'] + 10 + "px")
+						//.style("top",  ( window.pageYOffset+pos['y'] + 10) + "px")
+
+
+						.style("display", "inline-block")
+						.style("margin",  "10px")
+						.style("padding",  "10px")
+						.style("width","auto")
+						.style("text-align","left")
+						//.style("width",species[i].length +"px")
+						.html(html);
                 });
               
         var tooltip = d3.select("body").append("div").attr("class", "toolTip");             
