@@ -905,7 +905,7 @@ router.get('/ecology', function ecology_index(req, res) {
         }else{
             //console.log('in list',sp,C.taxon_counts_lookup[lineage_list[0]])
             spcount += 1
-            abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+            abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],'species')
             delete abund_obj['ST']
             group_collector[lineage_list[0]]={}
             group_collector[lineage_list[0]] = abund_obj
@@ -1379,7 +1379,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
         lineage_list = make_lineage(node)
         //console.log('lineage_list',lineage_list)
         //let avg = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
-        group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+        group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],rank)
         
     }
     for(let i in abund_sites){
@@ -1419,13 +1419,13 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
         node = group[i]
         lineage_list = make_lineage(node)
         //console.log('lineage_list',lineage_list)
-        group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+        group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],rank)
     }
     top_names = get_sorted_abund_names(group_collector, site, rank, 'all')
     //console.log(top_names)
     let count = 1
     let txt = 'Oral Site: '+C.abundance_names[site]+"<br><table border='1'>"
-    txt += '<tr><td></td><td><b>'+showrank+'</b></td><td><b>% Abund</b></td></tr>'
+    txt += '<tr><td></td><td>Level: <b>'+showrank+'</b></td><td><b>% Abund</b></td></tr>'
     for(let i in top_names){
         txt += '<tr><td>'+count.toString()+'</td>'
         if(rank === 'species'){
@@ -1502,7 +1502,7 @@ function sortByKeyDEC(array, key) {
   return array.sort(function(a,b) { return b[key] - a[key];});
 }
 //
-function get_site_avgs(obj){
+function get_site_avgs(obj,rank){
     //console.log('\nin obj',obj)
     let return_obj = {}
     let ref,site,count
@@ -1541,6 +1541,9 @@ function get_site_avgs(obj){
           //let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
           if(site == 'NS'){   // only Dewhirst
             let result = (return_obj[site]).toFixed(3)  // divide by 1 ONLY Dewhirst
+            return_obj[site] = result 
+          }else if(rank === 'species'){  //only dewhirst and erinx2
+            let result = (return_obj[site] / 3).toFixed(3)  // divide by 4 a
             return_obj[site] = result 
           }else{
             let result = (return_obj[site] / 4).toFixed(3)  // divide by 4 a
