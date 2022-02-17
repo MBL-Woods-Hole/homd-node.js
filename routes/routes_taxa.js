@@ -862,7 +862,8 @@ router.get('/ecology', function ecology_index(req, res) {
     // let graph_site_order = C.base_abundance_order
 //     graph_site_order.push('NS')
 //     console.log('PUSH',C.base_abundance_order,graph_site_order)
-
+    let abundance_graph_order = C.base_abundance_order.concat(['NS'])
+    //console.log('g ORDER',abundance_graph_order,C.base_abundance_order)
     let sole_arch = {'domain':'Archaea','phylum':'Euryarchaeota','klass':'Methanobacteria','order':'Methanobacteriales','family':'Methanobacteriaceae','genus':'Methanobrevibacter'}
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
     let class_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['klass']
@@ -877,13 +878,13 @@ router.get('/ecology', function ecology_index(req, res) {
     colors_for_plot.push('grey')
     let spcount = 0
     let other_collector = {}, test_all_collector={},abund_obj
-    for(let n in C.base_abundance_graphs){
+    for(let n in abundance_graph_order){
         //console.log('graph_site_order',graph_site_order[n])
         //other_collector[graph_site_order[n]] = 0.0
     }
     let site_sums = {}
-    for(let y in C.base_abundance_graphs){
-        site_sums[C.base_abundance_graphs[y]]=0.0
+    for(let y in abundance_graph_order){
+        site_sums[abundance_graph_order[y]]=0.0
     }
     for(let i in species_obj){  // all species
         //let s = species[i]
@@ -919,18 +920,18 @@ router.get('/ecology', function ecology_index(req, res) {
 
     }
     group_collector['other'] = {}
-    for(let y in C.base_abundance_graphs){
+    for(let y in abundance_graph_order){
         //console.log(graph_site_order[y],site_sums)
-        group_collector['other'][C.base_abundance_graphs[y]] = (100 - site_sums[C.base_abundance_graphs[y]]).toFixed(3)
-        site_species[C.base_abundance_graphs[y]]=[]
+        group_collector['other'][abundance_graph_order[y]] = (100 - site_sums[abundance_graph_order[y]]).toFixed(3)
+        site_species[abundance_graph_order[y]]=[]
     }
    
     //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
     
     //console.log('site_order',site_order)
     let tmp
-    for(let n in C.base_abundance_graphs){//Object.keys(C.abundance_names)){
-        let site = C.base_abundance_graphs[n]
+    for(let n in abundance_graph_order){//Object.keys(C.abundance_names)){
+        let site = abundance_graph_order[n]
         //console.log('site',site)
         tmp={}
         tmp['site'] = site
@@ -1006,7 +1007,7 @@ router.get('/ecology', function ecology_index(req, res) {
       bar_data1: JSON.stringify(sp_per_site),
       bar_data2: JSON.stringify(bar_graph_data),
       site_species: JSON.stringify(site_species),
-      site_order: JSON.stringify(C.base_abundance_graphs),
+      site_order: JSON.stringify(abundance_graph_order),
       ab_names: JSON.stringify(C.abundance_names)
       
     })
@@ -1073,7 +1074,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
              let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
-             segata_table = build_abundance_table('segata',clone_segata_data, C.segata_order)
+             segata_table = build_abundance_table('segata',clone_segata_data, C.base_abundance_order.concat(['ST']))
              if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
              }
@@ -1081,7 +1082,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
          
          if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
-             console.log('in Dewhirst')
+             //console.log('in Dewhirst')
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
              dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.dewhirst_order)
@@ -1094,7 +1095,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
              let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
              helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.eren_order)
+             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.base_abundance_order.concat(['ST']))
              if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
              }
@@ -1104,7 +1105,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
              let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
              helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.eren_order)
+             erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.base_abundance_order.concat(['ST']))
              if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
              }
@@ -1112,7 +1113,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
          
       }
     }
-   console.log('segata_data',segata_data)
+   //console.log('segata_data',segata_data)
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
    
     res.render('pages/taxa/ecology', {
@@ -1186,16 +1187,16 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     let header = 'HOMD (https://node.homd.info/)::'
     if(source === 'segata'){
         header += 'Data from Segata(2012); '
-        abundance_order = C.abundance_order
+        abundance_order = C.base_abundance_order.concat(['ST'])
     }else if(source === 'dewhirst'){
         header += 'Data from Dewhirst(unpublished); '
-        abundance_order = C.dewhirst_order
+        abundance_order = C.base_abundance_order.concat(['NS'])
     }else if(source === 'erenv1v3'){
         header += 'Data from Eren(2014) V1-V3; '
-        abundance_order = C.abundance_order
+        abundance_order = C.base_abundance_order.concat(['ST'])
     }else if(source === 'erenv3v5'){
         header += 'Data from Eren(2014) V3-V5; '
-        abundance_order = C.abundance_order
+        abundance_order = C.base_abundance_order.concat(['ST'])
     }
     header += 'HMT == Human Microbial Taxon'
     table_tsv += header+'\nTAX\tHMT' 
@@ -1396,7 +1397,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       data: JSON.stringify(top_ten),
-      plot_order: C.base_abundance_graphs,
+      plot_order: C.base_abundance_order.concat(['NS']),
       site_names: JSON.stringify(C.abundance_names),
       rank:rank
     })
