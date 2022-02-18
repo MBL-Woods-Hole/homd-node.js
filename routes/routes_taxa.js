@@ -1097,7 +1097,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              //console.log('in Dewhirst')
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
-             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.dewhirst_order)
+             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.base_abundance_order.concat(['NS']))
              if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
              }
@@ -2101,7 +2101,6 @@ function build_abundance_table(cite, data, order){
     
     var html = '<table><thead><tr><td></td>'
     for(var n in order){
-        
         html += '<th>'+order[n]+'</th>'
     }
     html += '</tr></thead><tbody>'
