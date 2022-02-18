@@ -147,7 +147,9 @@ hr{
 .float-left{
    float: left;
 }
-
+.right-justify{
+   text-align: right;
+}
 /*    End of header images CSS */
    
  #download_browser_text_excel {

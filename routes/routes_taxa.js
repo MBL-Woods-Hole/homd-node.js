@@ -177,59 +177,71 @@ router.post('/tax_table', function tax_table_post(req, res) {
   
   //show_filters = 1
   let statusfilter_on =[]
-  let sitefilter_on  = []
+  //let sitefilter_on  = []
   for(var i in req.body){
-    if(C.tax_sites_all.indexOf(i) !== -1){
-       sitefilter_on.push(i)
-    }
+    // if(C.tax_sites_all.indexOf(i) !== -1){
+//        sitefilter_on.push(i)
+//     }
     if(C.tax_status_all.indexOf(i) !== -1){
        statusfilter_on.push(i)
     }
     
   }
   helpers.print(['statusfilter_on',statusfilter_on])
-  helpers.print(['sitefilter_on',sitefilter_on])
+  //helpers.print(['sitefilter_on',sitefilter_on])
   // letterfilter
   // if dropped is on need to add dropped to 
   big_tax_list = Object.values(C.taxon_lookup);
   
-  if(statusfilter_on.length == C.tax_status_all.length && sitefilter_on.length == C.tax_sites_all.length){
+  if(statusfilter_on.length == C.tax_status_all.length){
     // no filter -- allow all
     send_list = big_tax_list
-  }else if(statusfilter_on.length == 0){  // only items from site filter checked
-      send_list = big_tax_list.filter( function(e){
-          if(e.sites.length > 0){
-            for(var n in e.sites){
-              var site = e.sites[n].toLowerCase()  // nasal,oral
-              if( sitefilter_on.indexOf(site) !== -1 )
-                //nasal or oral if site item in s return only one instance
-         {
-         return e
-         }
-            }
-          }
-          
-        }) 
-  }else if(sitefilter_on.length == 0){   // only items from status filter checked
-      send_list = big_tax_list.filter( function(e){
-          if( statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 ){
-             return e
-          }
-        }) 
-  }else {
-      send_list = big_tax_list.filter( function(e){
-          if(e.sites.length > 0){
-            for(var n in e.sites){
-              var site = e.sites[n].toLowerCase()  // nasal,oral
-              var status = e.status.toLowerCase()
-              if(sitefilter_on.indexOf(site) !== -1 && statusfilter_on.indexOf(status) !== -1 )
-              {
-                 return e
-              }
-            }
-          }  
-      }) 
-    }   
+  }else{
+  	send_list = big_tax_list.filter( function(e){
+	  if( statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 ){
+		 return e
+	  }
+	}) 
+  }
+  
+  
+//   if(statusfilter_on.length == C.tax_status_all.length && sitefilter_on.length == C.tax_sites_all.length){
+//     // no filter -- allow all
+//     send_list = big_tax_list
+//   }else if(statusfilter_on.length == 0){  // only items from site filter checked
+//       send_list = big_tax_list.filter( function(e){
+//           if(e.sites.length > 0){
+//             for(var n in e.sites){
+//               var site = e.sites[n].toLowerCase()  // nasal,oral
+//               if( sitefilter_on.indexOf(site) !== -1 )
+//                 //nasal or oral if site item in s return only one instance
+//          {
+//          return e
+//          }
+//             }
+//           }
+//           
+//         }) 
+//   }else if(sitefilter_on.length == 0){   // only items from status filter checked
+//       send_list = big_tax_list.filter( function(e){
+//           if( statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 ){
+//              return e
+//           }
+//         }) 
+//   }else {
+//       send_list = big_tax_list.filter( function(e){
+//           if(e.sites.length > 0){
+//             for(var n in e.sites){
+//               var site = e.sites[n].toLowerCase()  // nasal,oral
+//               var status = e.status.toLowerCase()
+//               if(sitefilter_on.indexOf(site) !== -1 && statusfilter_on.indexOf(status) !== -1 )
+//               {
+//                  return e
+//               }
+//             }
+//           }  
+//       }) 
+//     }   
     
       send_list.map(function(el){
         el.ecology = '0'  // change to 1 if we do
@@ -271,7 +283,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
     count_txt: count_txt,
     letter: 'all',
     statusfltr: JSON.stringify(statusfilter_on),
-    sitefltr: JSON.stringify(sitefilter_on),
+    //sitefltr: JSON.stringify(sitefilter_on),
     default_filters:'0',
     //show_filters: show_filters,
     search_txt: '0',
@@ -2095,32 +2107,32 @@ function build_abundance_table(cite, data, order){
    
     html += '<tr><th>Avg</th>'
     for(var n in data){
-        html += '<td>'+data[n].avg+'</td>'
+        html += '<td class="right-justify">'+(parseFloat(data[n].avg)).toFixed(3)+'</td>'
     }
     html += '</tr>'
     if(['dewhirst','eren_v1v3','eren_v3v5'].indexOf(cite) != -1){
         html += '<tr><th>10<sup>th</sup>p</th>'
         for(var n in data){
-            html += '<td>'+data[n]['10p']+'</td>'
+            html += '<td class="right-justify">'+(parseFloat(data[n]['10p'])).toFixed(3)+'</td>'
         }
         html += '</tr>'
         html += '<tr><th>90<sup>th</sup>p</th>'
         for(var n in data){
-            html += '<td>'+data[n]['90p']+'</td>'
+            html += '<td class="right-justify">'+(parseFloat(data[n]['90p'])).toFixed(3)+'</td>'
         }
         html += '</tr>'
     }
     
     html += '<tr><th>Stdev</th>'
     for(var n in data){
-        html += '<td>'+data[n].sd+'</td>'
+        html += '<td class="right-justify">'+(parseFloat(data[n].sd)).toFixed(3)+'</td>'
     }
     html += '</tr>'
     // dewhirst, eren  (Not for Segata)
     if(['dewhirst','eren_v1v3','eren_v3v5'].indexOf(cite) != -1){
       html += '<tr><th>Prev</th>'
       for(var n in data){
-        html += '<td>'+data[n].prev+'</td>'
+        html += '<td class="right-justify">'+(parseFloat(data[n].prev)).toFixed(3)+'</td>'
       }
       html += '</tr>'
     }

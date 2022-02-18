@@ -32,7 +32,8 @@ router.get('/genome_table', function genomeTable(req, res) {
   
   var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
   var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
-  
+  let big_tax_list = Object.values(C.taxon_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+  let taxa_wgenomes = big_tax_list.filter(item => item.genomes.length >0)
   
   let big_temp_list = Object.values(C.genome_lookup);
   if (phylum && phylum !== '0') {
@@ -113,7 +114,8 @@ router.get('/genome_table', function genomeTable(req, res) {
     phyla: JSON.stringify(phyla),
     count_text: count_txt,
     search_txt: '0',
-    search_field:'0'
+    search_field:'0',
+    taxa_wgenomes: taxa_wgenomes.length
     
   })
 })
@@ -125,6 +127,8 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
   var countTxt, countTxt0;
   //let seqrch_match = req.body.match
   //let search_sub = req.body.sub
+  let big_tax_list = Object.values(C.taxon_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+  let taxa_wgenomes = big_tax_list.filter(item => item.genomes.length >0)
   
   // FIXME
   let bigGeneList = Object.values(C.genome_lookup);
@@ -151,6 +155,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
     count_text: countTxt,
     search_txt: searchTxt,
     search_field: searchField,
+    taxa_wgenomes: taxa_wgenomes.length
     
   })
   

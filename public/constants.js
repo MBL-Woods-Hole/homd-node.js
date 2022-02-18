@@ -148,7 +148,7 @@ constants.plot_species = [  // to be put in db with species_id
     {name:'Veillonella rogosae',color:'#fba0e3'},
     {name:'Veillonella sp._HMT_780',color:'deeppink'}
 ]   
-constants.tax_status_all =['named','unnamed','phylotype','lost','dropped'];
+constants.tax_status_all =['named','unnamed','phylotype','lost','dropped','nonoralref'];
 constants.tax_status_on =['named','unnamed','phylotype','lost'];
 constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralref'];
 constants.tax_sites_on =['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];

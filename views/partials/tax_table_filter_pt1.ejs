@@ -35,65 +35,19 @@
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' \> Dropped&nbsp;
             <% } %>
-             
-             
-         </div>
-         </td>
-<!-- 
-         
-         <td id='radio_btns'>
-         <small>
-            <% if(default_filters == '1'){ %>
-               <input type='radio' id='valid1' checked name='valid' value='only_valid'  onclick="change_valid('only')"\> All Valid Taxa&nbsp;
-            <% }else{ %>
-               <input type='radio' id='valid1' name='valid' value='only_valid'  onclick="change_valid('only')"\> All Valid Taxa&nbsp;
-            <% } %>
-            <input type='radio' id='valid2' name='valid' value='all'  onclick="change_valid('all')"\> All&nbsp;
-         </small>
-         </td>
-         
- -->
-         </tr>
-         <tr><td>
-<!-- 
-         
-         <div id='bodysite-div' style=''>
-            <span class='filter-title'>Body Site</span>: 
-            <% if(sitefltrejs.indexOf('oral') > -1){ %>
-                <input type='checkbox' checked class='filter_ckbx ' id='oral' name='oral' \> Oral&nbsp;
-            <% }else{ %>
-                <input type='checkbox' class='filter_ckbx ' id='oral' name='oral' \> Oral&nbsp;
-            <% } %>
-            <% if(sitefltrejs.indexOf('nasal') > -1){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='nasal' name='nasal' \> Nasal&nbsp;
-            <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='nasal' name='nasal' \> Nasal&nbsp;
-            <% } %>
-            <% if(sitefltrejs.indexOf('skin') > -1){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='skin' name='skin' \> Skin&nbsp;
-            <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='skin' name='skin' \> Skin&nbsp;
-            <% } %>
-            <% if(sitefltrejs.indexOf('vaginal') > -1){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='vaginal' name='vaginal' \> Vaginal&nbsp;
-            <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' \> Vaginal&nbsp;
-            <% } %>
-            <% if(sitefltrejs.indexOf('unassigned') > -1){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='unassigned' name='unassigned' \> Unassigned&nbsp;
-            <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='unassigned' name='unassigned' \> Unassigned&nbsp;
-            <% } %>
-            <% if(sitefltrejs.indexOf('nonoralref') > -1){ %>
+            
+            <% if(statusfltrejs.indexOf('nonoralref') > -1){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='nonoralref' name='nonoralref' \> NonOralRef&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' \> NonOralRef&nbsp;
-            <% } %>
-                    
+            <% } %> 
              
          </div>
-         
- -->
+         </td>
+
+         </tr>
+         <tr><td>
+
          
          </td><td>
          <input class="pill pill-brown" type='button' value=' Show ' onclick="check_then_post_filter(this.form)">
