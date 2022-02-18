@@ -45,11 +45,11 @@ constants.names_w_text = {genera:['Actinomyces','Campylobacter','Corynebacterium
     }
 constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
 //constants.abundance_order = ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
-constants.base_abundance_order      = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD'] //,'NS','ST']
-constants.base_abundance_graphs      = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS']
-constants.segata_order =   constants.base_abundance_order.concat(['ST'])
-constants.eren_order = constants.base_abundance_order.concat(['ST'])
-constants.dewhirst_order  = constants.base_abundance_order.concat(['NS'])
+constants.base_abundance_order       = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD'] //,'NS','ST']
+//constants.base_abundance_graphs      = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS']
+//constants.segata_order =   constants.base_abundance_order.concat(['ST'])
+//constants.eren_order = constants.base_abundance_order.concat(['ST'])
+//constants.dewhirst_order  = constants.base_abundance_order.concat(['NS'])
 //constants.eren_order =     ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','ST']
 //constants.site_order      = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS','ST']
 constants.abundance_names = {
