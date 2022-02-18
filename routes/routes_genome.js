@@ -26,7 +26,7 @@ router.get('/genome_table', function genomeTable(req, res) {
   let letter = req.query.k
   let otid = req.query.otid
   let phylum = req.query.phylum
-  let count_txt, count_txt0, send_list, gid_obj_list;
+  let count_txt, count_txt0, send_list, gid_obj_list,otid_grabber = {};
   helpers.print(['otid',otid,'phylum',phylum,'letter',letter])
   
   
@@ -36,20 +36,34 @@ router.get('/genome_table', function genomeTable(req, res) {
   let taxa_wgenomes = big_tax_list.filter(item => item.genomes.length >0)
   
   let big_temp_list = Object.values(C.genome_lookup);
+  
+  
   if (phylum && phylum !== '0') {
     //gid_obj_list = Object.values(C.genome_lookup);
     otid = 0
     letter='all'
     var lineage_list = Object.values(C.taxon_lineage_lookup)
     var obj_lst = lineage_list.filter(item => item.phylum === phylum)  //filter for phylum 
+    //console.log('obj_lst',obj_lst)
     var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
         return el.otid
     })
+    otid_grabber = {}
     gid_obj_list = big_temp_list.filter(item => {   // filter genome obj list for inclusion in otid list
-        return otid_list.indexOf(item.otid) !== -1
+        if(otid_list.indexOf(item.otid) !== -1){
+            otid_grabber[item.otid] = 1
+            return true
+        }
+        //return otid_list.indexOf(item.otid) !== -1
     })
-    count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows from phylum: "' + phylum + '"'
-    
+    //console.log('otid_grabber',otid_grabber)
+    //console.log('gid_obj_list',gid_obj_list)
+    // now get just the otids from the selected gids
+    gid_obj_list.map( (el) =>{ return el.otid })
+    //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows from phylum: "' + phylum + '"'
+    count_txt0 = 'For Phylum ' + phylum + ' there are ' +gid_obj_list.length.toString() +' genomes representing '+Object.keys(otid_grabber).length.toString()+' taxa.'
+  
+  
   } else if (otid && otid !== '0') {  // if otid 
     // single gid
     
@@ -62,7 +76,8 @@ router.get('/genome_table', function genomeTable(req, res) {
     
       phylum=0
       letter='all'
-      count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for TaxonID "HMT-' + otid + '"'
+      //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for TaxonID "HMT-' + otid + '"'
+      count_txt0 = 'For Taxon HMT-' + otid + ' there are '+gid_obj_list.length.toString() +' genomes.'
   } else {  // not phylum, otid
     // all gids
     phylum=0
@@ -72,8 +87,8 @@ router.get('/genome_table', function genomeTable(req, res) {
     if (letter && letter.match(/[A-Z]{1}/)) {   // always caps
       // COOL....
         gid_obj_list = big_temp_list.filter(item => item.genus.toUpperCase().charAt(0) === letter)
-      count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for genus starting with "' + letter + '"'
-
+      //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for genus starting with "' + letter + '"'
+      count_txt0 = 'Showing ' + gid_obj_list.length.toString() +' genomes that start with "'+letter+'".'
     } else {
       gid_obj_list = big_temp_list
       count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows.'
@@ -100,7 +115,7 @@ router.get('/genome_table', function genomeTable(req, res) {
   send_list.sort( (a, b) =>
     b.species - a.species || a.genus.localeCompare(b.genus),
   )
-  count_txt = count_txt0 + ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
+  count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 
     pgname: 'genome/genome_table', // for AbountThisPage
@@ -115,6 +130,7 @@ router.get('/genome_table', function genomeTable(req, res) {
     count_text: count_txt,
     search_txt: '0',
     search_field:'0',
+    all_genome_count: big_temp_list.length,
     taxa_wgenomes: taxa_wgenomes.length
     
   })
@@ -138,7 +154,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
   var phylaObj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
   var phyla = phylaObj.map(function mapPhylaObj2 (el) { return el.taxon; })
   countTxt0 =  'Showing ' + (sendList.length).toString() + ' rows using search string: "' + req.body.gene_srch + '".'
-  countTxt = countTxt0 + ' <small>(Total:' + (bigGeneList.length).toString() + ')</small>'
+  countTxt = countTxt0 //+ ' <small>(Total:' + (bigGeneList.length).toString() + ')</small>'
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 
     pgname: 'genome/genome_table', // for AbountThisPage
@@ -155,6 +171,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
     count_text: countTxt,
     search_txt: searchTxt,
     search_field: searchField,
+    all_genome_count: bigGeneList.length,
     taxa_wgenomes: taxa_wgenomes.length
     
   })

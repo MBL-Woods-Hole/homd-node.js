@@ -48,8 +48,11 @@
 </div>
 
 <div id="row2">
-	<span id='count_info'><%- count_text %>
-	
+	<span id='count_info'>
+	<small>
+	There are <%= all_genome_count %> genomes representing <%= taxa_wgenomes %> taxa (excluding 'NonOralRef' and 'Dropped').
+	<br><%- count_text %>
+	</small>
 	</span>
 	
 	<div><center>Reload Table</center>
