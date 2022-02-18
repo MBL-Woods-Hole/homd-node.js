@@ -60,8 +60,16 @@ router.get('/genome_table', function genomeTable(req, res) {
     //console.log('gid_obj_list',gid_obj_list)
     // now get just the otids from the selected gids
     gid_obj_list.map( (el) =>{ return el.otid })
+    let genom = 'are '+gid_obj_list.length.toString()+' genomes'
+    if(gid_obj_list.length === 1){
+        genom = 'is 1 genome'
+    }
+    let taxa = 'taxa'
+    if(Object.keys(otid_grabber).length === 1){
+        taxa = 'taxon'
+    }
     //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows from phylum: "' + phylum + '"'
-    count_txt0 = 'For Phylum ' + phylum + ' there are ' +gid_obj_list.length.toString() +' genomes representing '+Object.keys(otid_grabber).length.toString()+' taxa.'
+    count_txt0 = 'For Phylum ' + phylum + ' there '+genom+' representing '+Object.keys(otid_grabber).length.toString()+' '+taxa+'.'
   
   
   } else if (otid && otid !== '0') {  // if otid 
@@ -74,10 +82,14 @@ router.get('/genome_table', function genomeTable(req, res) {
         gid_obj_list.push(C.genome_lookup[seqid_list[n]])
     }
     
-      phylum=0
-      letter='all'
-      //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for TaxonID "HMT-' + otid + '"'
-      count_txt0 = 'For Taxon HMT-' + otid + ' there are '+gid_obj_list.length.toString() +' genomes.'
+    phylum=0
+    letter='all'
+    let genom = 'are '+gid_obj_list.length.toString()+' genomes.'
+    if(gid_obj_list.length === 1){
+        genom = 'is 1 genome.'
+    }
+    //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for TaxonID "HMT-' + otid + '"'
+    count_txt0 = 'For Taxon ' + helpers.make_otid_display_name(otid) + ' there  '+genom
   } else {  // not phylum, otid
     // all gids
     phylum=0
@@ -88,7 +100,8 @@ router.get('/genome_table', function genomeTable(req, res) {
       // COOL....
         gid_obj_list = big_temp_list.filter(item => item.genus.toUpperCase().charAt(0) === letter)
       //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for genus starting with "' + letter + '"'
-      count_txt0 = 'Showing ' + gid_obj_list.length.toString() +' genomes that start with "'+letter+'".'
+      
+      count_txt0 = 'Showing ' + gid_obj_list.length.toString() +' genome(s) that start with "'+letter+'".'
     } else {
       gid_obj_list = big_temp_list
       count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows.'
