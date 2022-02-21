@@ -19,14 +19,11 @@
 }
 .adjust_block{
     padding: 10px 0;
-    
 }
 
 .textinput {
-            
-  width: 95%;
-  min-height: 100px;
-  resize: none;
+  width: 65%;
+  min-height: 120px;
   border: 1px solid grey;
 }
 input[type=radio] {
