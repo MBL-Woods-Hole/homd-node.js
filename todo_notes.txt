@@ -1,4 +1,6 @@
 HOMD Notes
+2022-02-15
+Protein Blast against all genome not working. 
 2022-02-07
 For the bar graph colors for the taxa:
 

@@ -8,12 +8,25 @@ use Data::Dumper;
 
 # AAV blast output: /mnt/efs/lv1/oral16S6_tmp/
 # AAV location: /mnt/efs/lv1_dev/myBROP/var/www/html_ehomd/ehomd_modules/RNAblast
-
-#Proovide the path first (the session id)
+# -outfmt <String>
+#    alignment view options:
+#      0 = pairwise,
+#      1 = query-anchored showing identities,
+#      2 = query-anchored no identities,
+#      3 = flat query-anchored, show identities,
+#      4 = flat query-anchored, no identities,
+#      5 = XML Blast output,
+#      6 = tabular,
+#      7 = tabular with comment lines,
+#      8 = Text ASN.1,
+#      9 = Binary ASN.1,
+#     10 = Comma-separated values,
+#     11 = BLAST archive format (ASN.1) 
+#Provide the path first (the session id)
 #for HOMD
 #my $root="/mnt/LV1/oral16S6_tmp";
 #for mbl
-my $root="/Users/avoorhis/programming/blast-upload";
+my $root="/Users/avoorhis/programming/blast_upload";
 my $sessionID=$ARGV[0];
 $sessionID=~s/[\s|\n|\t]//g;
 my $fld=$root."/".$sessionID;

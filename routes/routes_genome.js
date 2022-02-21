@@ -32,6 +32,7 @@ router.get('/genome_table', function genomeTable(req, res) {
   
   var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
   var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
+  //console.log('phyla',phyla)
   let big_tax_list = Object.values(C.taxon_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
   let taxa_wgenomes = big_tax_list.filter(item => item.genomes.length >0)
   
@@ -139,7 +140,7 @@ router.get('/genome_table', function genomeTable(req, res) {
     letter: letter,
     otid: otid,
     phylum: phylum,
-    phyla: JSON.stringify(phyla),
+    phyla: JSON.stringify(phyla.sort()),
     count_text: count_txt,
     search_txt: '0',
     search_field:'0',
@@ -179,7 +180,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
     letter: 'all',  // dont us empty string: -for download fxn
     otid: '0',   // dont us empty string: -for download fxn
     phylum: '0',  // dont us empty string: -for download fxn
-    phyla: JSON.stringify(phyla),
+    phyla: JSON.stringify(phyla.sort()),
     
     count_text: countTxt,
     search_txt: searchTxt,

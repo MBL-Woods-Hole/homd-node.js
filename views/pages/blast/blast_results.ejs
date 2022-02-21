@@ -78,6 +78,19 @@ thead th { position: sticky; top: 0; }
 #blasturl{
    color: blue;
 }
+pre{
+    overflow: auto;
+    background: #ddd;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: -ms-pre-wrap;
+    font-family: Consolas, monospace;
+    border:1px solid grey;
+}
 </style>
 <% blastParams = JSON.parse(blastParams) %>
 <% error_obj = JSON.parse(error) %>

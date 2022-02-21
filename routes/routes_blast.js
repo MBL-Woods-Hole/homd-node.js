@@ -113,10 +113,13 @@ router.get('/blast_results', function blastResults(req, res) {
              async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
 
                 for(let i=0; i<blastFiles.length; i++){
-                  console.log(blastFiles[i])
-                  console.log('config',config)
+                  // console.log(blastFiles[i])
+//                   console.log('config',config)
+//                   console.log('results-i',results[i].toString())
                   if(config.blastFxn === 'genome'){
-                     data.push(results[i])   // genome is -html flag
+                     //data = results[i].toString()
+                     //data.push("<div style='font-family: monospace;'><pre>"+results[i].toString()+'</pre></div>')   // genome is -html flag
+                     data.push(results[i].toString()) 
                   }else{
                     jsondata = JSON.parse(results[i])  // refseq is json -outfmt 
                     //console.log(blastFiles[i])
@@ -131,7 +134,7 @@ router.get('/blast_results', function blastResults(req, res) {
                   
                 }
                 
-                console.log('**data**',data)
+                //console.log('**data**',data)
                 if(data.length === 0){
                     // error no data
                     let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, config.id, 'blasterror.log')
@@ -158,8 +161,9 @@ router.get('/blast_results', function blastResults(req, res) {
                 }
                 let html = ''
                  if(config.blastFxn === 'genome'){
-                     let rowBreak = "<br>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ="
+                     let rowBreak = "<br>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =<br>"
                      html = data.join(rowBreak)
+                     //html = data
                  }else{
                      html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
                  }
@@ -313,7 +317,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   //let blast_session_ts = Date.now().toString();
   //const randomnum = Math.floor(Math.random() * 90000) + 10000;
   //opts.blastSessionID = Date.now() + '-' + randomnum.toString()
-  opts.blastSessionID = helpers.makeid(20)
+  opts.blastSessionID = helpers.makeid(20) + '_'+req.body.blastFxn
   const blastDir = path.join(CFG.PATH_TO_BLAST_FILES, opts.blastSessionID)
   if (!fs.existsSync(blastDir+'/'+'blast_results')){
        fs.mkdirSync(blastDir+'/'+'blast_results', { recursive: true });

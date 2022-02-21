@@ -67,10 +67,11 @@ def processFile(args, details_dict):
       writePreviousFile = False
       for line in infile:
         line = line.strip()
-        if count == 0 and not line.startswith('>'):
-            sys.exit('File is not FASTA format') 
         if not line:
             continue
+        if count == 0 and not line.startswith('>'):
+            sys.exit('File is not FASTA format') 
+        
         if line.startswith('>'):
             writePreviousFile = True
             if count > 0:
@@ -222,6 +223,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         fileText += ' ' + details_dict['advanced']
         if details_dict['blastFxn'] == 'genome':
             fileText += ' -html'   ## dont use this with other -outfmt
+            pass
         else:
             fileText += ' -outfmt 15'   ## 15 JSON
         ##fileText += ' -outfmt 16'   ## 16 XML
