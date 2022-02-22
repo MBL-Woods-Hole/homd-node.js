@@ -403,7 +403,8 @@ router.get('/explorer', function explorer (req, res) {
       blastFxn: 'genome',
       info_data: JSON.stringify(args.annoInfoObj),
       pid_list: JSON.stringify(args.pidList),
-      returnTo: '/genome/explorer?gid='+args.gid+'&blast=1'
+      returnTo: '/genome/explorer?gid='+args.gid+'&blast=1',
+      blastmax: JSON.stringify(C.blast_max_file),
       
     })
   }
@@ -534,7 +535,8 @@ router.get('/blast_all', function blast_all(req, res) {
         gid: 'all',
         blast_prg: JSON.stringify(C.blastPrograms),
         db_choices: JSON.stringify(dbChoices),
-        returnTo: '/genome/blast_all'
+        returnTo: '/genome/blast_all',
+        blastmax: JSON.stringify(C.blast_max_file),
       })
    
 })

@@ -105,6 +105,10 @@ module.exports.format_Mbps = (x) =>{ // mega base pairs
     // change 456734 => 456,734
     return (parseFloat(x) /1000000).toFixed(2).toString() +' Mbps'
 }
+module.exports.format_MB = (x) =>{ // mega bytes
+    // change 456734 => 456,734
+    return (parseFloat(x) /1000000).toFixed(3).toString() +' MB'
+}
 //
 module.exports.onlyUnique = (value, index, self) =>{
   return self.indexOf(value) === index;

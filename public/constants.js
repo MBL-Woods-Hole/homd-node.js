@@ -201,7 +201,7 @@ constants.all_phage_cols = [
       {name:'biosample_ncbi', view:'BioSample', width:'col3', order:''},
       {name:'genbank_title_ncbi', view:'Genbank Title', width:'col3', order:''}
   ]
-constants.blast_max_file_size =  1500000
+constants.blast_max_file =  { size:1.50, seqs:1000 }// MB === 1,500,000
  // BLASTP  Compares an amino acid query sequence against a protein sequence database
   // BLASTN  Compares a nucleotide query sequence against a nucleotide sequence database
   // BLASTX  Compares a nucleotide query sequence translated in all reading frames against a protein sequence database

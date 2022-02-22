@@ -4,7 +4,7 @@ var router    = express.Router()
 const CFG     = require(app_root + '/config/config')
 const fs        = require('fs-extra')
 const fsp = require('fs').promises
-const {spawn} = require('child_process');
+const {exec, spawn} = require('child_process');
 const multer  = require('multer')
 const upload = multer({ dest: CFG.UPLOAD_DIR })
 const path      = require('path')
@@ -357,19 +357,40 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   }
   if(req.file){
       opts.type = 'fileInput'
-      if (req.file.size > C.blast_max_file_size){   // 1 911 016
-       req.flash('fail', 'File too large');
-       res.redirect(req.body.returnTo);
-       return;
-      }
-      var fileContents = ''  // if buffer in req,file not need to move/read file
-      
-      followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
-      
+      console.log('req.file',req.file)
+      let grep_cmd = "/usr/bin/grep '>' "+req.file.path+' | wc -l'
+      exec(grep_cmd, (err, stdout, stderr) => {
+		  if (stderr) {
+			console.error('stderr',stderr);
+			return;
+		  }
+		  let fa_seqs = parseInt(stdout.trim())
+          if(fa_seqs > C.blast_max_file.seqs){
+             req.flash('fail', 'File too large:SeqCount='+fa_seqs.toString());
+		     res.redirect(req.body.returnTo);
+		     return;
+          } 
+	  
+		  if (req.file.size > C.blast_max_file.size * 1000000){   // 1 911 016
+		   req.flash('fail', 'File too large: '+helpers.format_MB(req.file.size));
+		   res.redirect(req.body.returnTo);
+		   return;
+		  }
+		  var fileContents = ''  // if buffer in req,file not need to move/read file
+		  followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
+      })
   }else{
       opts.type = 'textInput'
       let inputSeqInput = req.body.inputSeq.trim();
-      runPyScript(req, res, opts, blastOpts, blastDir, inputSeqInput, next)
+      // count '>'
+      var count = (inputSeqInput.match(/>/g) || []).length;
+      if(count < C.blast_max_file.seqs){
+         runPyScript(req, res, opts, blastOpts, blastDir, inputSeqInput, next)
+      }else{
+         req.flash('fail', 'Input too large:SeqCount='+count.toString());
+		     res.redirect(req.body.returnTo);
+		     return;
+      }
   }
     
 
