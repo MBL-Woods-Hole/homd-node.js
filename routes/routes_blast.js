@@ -103,7 +103,7 @@ router.get('/blast_results', function blastResults(req, res) {
         //console.log(blastFiles)
         //try:  https://node.homd.info/blast/blast_results?id=1638297207475-44741
         let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
-        fs.readFile(configFilePath, function readConfig(err,  configData) {
+        fs.readFile(configFilePath, function readConfig(err, configData) {
          if(err){
             req.flash('fail', 'blastID no longer Valid')
             res.redirect('/') // this needs to redirect to either refseq or genome

@@ -463,7 +463,7 @@ module.exports.readFilesInDirectory = function readFilesInDirectory(directory, d
   });
 }
 //
-module.exports.readAsync = function readAsync(file, callback) {
+module.exports.readAsync = async function readAsync(file, callback) {
     if(CFG.ENV === 'development'){
         console.log('Reading File:',file)
     }
@@ -474,9 +474,10 @@ module.exports.readAsync = function readAsync(file, callback) {
     } catch(err) {
       console.error(err)
     }
-    
+    await module.exports.sleep(1000);
     fs.readFile(file, callback);
 }
+
 //
 module.exports.makeid = function makeid(length) {
     // Used for blast.id
