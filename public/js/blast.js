@@ -135,6 +135,7 @@ function reset2default(fxn) {
    // defaults
    if(fxn == 'genome'){
       adv = ''
+      document.getElementById('blast_prokka_rb').checked = true
    }else{
       adv = '-penalty -3 -reward 2 -gapopen 5 -gapextend 2'
    }

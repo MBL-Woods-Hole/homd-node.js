@@ -270,7 +270,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
            } 
         }
         
-        if(blastFiles.length === faFiles.length && req.session.blast.timer > 21){ // time chosen arbitrarily
+        if(blastFiles.length === faFiles.length && req.session.blast.timer > 31){ // time chosen arbitrarily
            finished = true;
            
         }
@@ -316,16 +316,23 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   console.log('MADEIT TO blastPost')
   console.log(req.body)
   console.log('req.file?', req.file)   // may be undefined
+  let anno = req.body.blastAnno  // either prokka or ncbi
   let filename, filepath, data, fasta_as_list, trimlines, twolist,fastaFilePaths;
   const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i, returnTo: req.body.returnTo }
   let blastOpts = createBlastOpts(req.body)
   let dbPath
   if(req.body.blastFxn === 'genome'){
-      dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,req.body.blastDb)
+      if(anno === 'ncbi'){
+          dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_ncbi')
+      }else{
+          dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes')
+      }
+      
   }else{
-      dbPath = path.join(CFG.BLAST_DB_PATH_REFSEQ,req.body.blastDb)
+      dbPath = path.join(CFG.BLAST_DB_PATH_REFSEQ)
+      
   }
-  
+  blastOpts.dbPath = dbPath
   console.log('DB Path (for production):: ',dbPath)
   //let blast_session_ts = Date.now().toString();
   //const randomnum = Math.floor(Math.random() * 90000) + 10000;
@@ -578,12 +585,13 @@ function createBlastOpts(reqBody) {
     // add dbPath later
     
     if(reqBody.blastFxn === 'genome') {
-      bOpts.dbPath = CFG.BLAST_DB_PATH_GENOME
+      //bOpts.dbPath = CFG.BLAST_DB_PATH_GENOME
+      bOpts.anno = reqBody.blastAnno
       dbItems = reqBody.blastDb.split('/')
       bOpts.blastDb = dbItems[1]
       bOpts.ext = dbItems[0]
     } else {
-      bOpts.dbPath = CFG.BLAST_DB_PATH_REFSEQ
+      //bOpts.dbPath = CFG.BLAST_DB_PATH_REFSEQ
       bOpts.blastDb = reqBody.blastDb
       bOpts.ext = ''
     }
