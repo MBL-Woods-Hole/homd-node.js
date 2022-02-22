@@ -172,8 +172,8 @@ router.get('/blast_results', function blastResults(req, res) {
                 }
                 let html = ''
                  if(config.blastFxn === 'genome'){
-                     let rowBreak = "<br>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =<br>"
-                     html = data.join(rowBreak)
+                     let rowBreak = "</pre><br><pre>"
+                     html = '<pre>'+data.join(rowBreak)+'</pre>'
                      //html = data
                  }else{
                      html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
@@ -270,7 +270,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
            if(result[i].endsWith('.out')){
               blastFiles.push(path.join(blastResultsDir, result[i]))
               if(req.session.blast.timer <= 5){
-                req.session.blast.fsize0 = helpers.checkFileSize(blastFiles[0])
+                req.session.blast.fsize0 = helpers.checkFileSize(blastFiles[blastFiles.length-1])
                 console.log('fsize0',req.session.blast.fsize)
               }
            } 
@@ -279,7 +279,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
         if(blastFiles.length >0 && blastFiles.length === faFiles.length){// && req.session.blast.timer > 41){ // time chosen arbitrarily
            //finished = true;
            req.session.blast.fsize0 = req.session.blast.fsize
-           req.session.blast.fsize = helpers.checkFileSize(blastFiles[0])  // when stable then finished == true
+           req.session.blast.fsize = helpers.checkFileSize(blastFiles[blastFiles.length-1])  // when stable then finished == true
             console.log('fsizes',req.session.blast.fsize0,req.session.blast.fsize)
             if(req.session.blast.fsize > 100 && req.session.blast.fsize0 === req.session.blast.fsize){
               finished = true;
