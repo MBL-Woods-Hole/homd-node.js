@@ -222,7 +222,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         fileText += ' -max_target_seqs ' + details_dict['maxTargetSeqs']  # use if outfmt >4
         fileText += ' ' + details_dict['advanced']
         if details_dict['blastFxn'] == 'genome':
-            fileText += ' -html'   ## dont use this with other -outfmt
+            #fileText += ' -html'   ## dont use this with other -outfmt
             pass
         else:
             fileText += ' -outfmt 15'   ## 15 JSON
