@@ -82,13 +82,12 @@ router.get('/blast_results', function blastResults(req, res) {
         let jsondata, data=[]
         // read directory CONFIG.json first
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
-
-        let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results')
+        let blastResultsDir = path.join(blastDir, 'blast_results')
 
         const result = getAllFilesWithExt(blastResultsDir, 'out')
 
         if(!result){
-           throw new Error('The Blast ID "'+blastID+'" was not found.<BR>Probably expired if you are using and old link.')
+           throw new Error('The Blast ID "'+blastID+'" was not found.<br>Probably expired if you are using and old link.')
            return
         }
 
@@ -102,14 +101,24 @@ router.get('/blast_results', function blastResults(req, res) {
         //console.log('blastfiles')
         //console.log(blastFiles)
         //try:  https://node.homd.info/blast/blast_results?id=1638297207475-44741
-        let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
+        let configFilePath = path.join(blastDir,'CONFIG.json')
         fs.readFile(configFilePath, function readConfig(err, configData) {
          if(err){
             req.flash('fail', 'blastID no longer Valid')
             res.redirect('/') // this needs to redirect to either refseq or genome
             return
          }else{
+             // blast.out files are present (but are they complete?)
              let config = JSON.parse(configData)
+             
+            //  if(config.blastFxn === 'genome'){
+//                for(let i in blastFiles){
+//                     fs.readFile(blastFiles[i], function(err, content){
+//                         console.log('XXX',content.toString())
+//                         renderFxn(req, res, content, blastFiles, config, blastID)
+//                     })
+//                }
+//              }else{
              
              async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
 
@@ -184,7 +193,8 @@ router.get('/blast_results', function blastResults(req, res) {
                   
                 }
             }) 
-        }
+           // }// end test else
+         } // end else
     })
 })
 // function getBlastHtmlFromHtml(blastFiles, blastID){
@@ -260,7 +270,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
            } 
         }
         
-        if(blastFiles.length === faFiles.length && req.session.blast.timer > 5){
+        if(blastFiles.length === faFiles.length && req.session.blast.timer > 21){ // time chosen arbitrarily
            finished = true;
            
         }
@@ -269,7 +279,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     }
     if(!req.session.blast.timer){
        // need to get off this train
-       await module.exports.sleep(1000);
+       //await module.exports.sleep(1000);
        finished = true;
     }
     //console.log('timer:',req.session.blast.timer,'blastFiles',blastFiles.length,'faFiles',faFiles.length)

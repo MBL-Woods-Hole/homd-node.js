@@ -474,7 +474,8 @@ module.exports.readAsync = async function readAsync(file, callback) {
     } catch(err) {
       console.error(err)
     }
-    
+    console.log('sleeping')
+    //await module.exports.sleep(10000)
     fs.readFile(file, callback);
 }
 
