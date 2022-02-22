@@ -270,7 +270,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
            } 
         }
         
-        if(blastFiles.length === faFiles.length && req.session.blast.timer > 31){ // time chosen arbitrarily
+        if(blastFiles.length === faFiles.length && req.session.blast.timer > 41){ // time chosen arbitrarily
            finished = true;
            
         }
@@ -330,7 +330,6 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
       
   }else{
       dbPath = path.join(CFG.BLAST_DB_PATH_REFSEQ)
-      
   }
   blastOpts.dbPath = dbPath
   console.log('DB Path (for production):: ',dbPath)
