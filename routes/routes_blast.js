@@ -110,6 +110,7 @@ router.get('/blast_results', function blastResults(req, res) {
             return
          }else{
              let config = JSON.parse(configData)
+             
              async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
 
                 for(let i=0; i<blastFiles.length; i++){
@@ -268,6 +269,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     }
     if(!req.session.blast.timer){
        // need to get off this train
+       await module.exports.sleep(1000);
        finished = true;
     }
     //console.log('timer:',req.session.blast.timer,'blastFiles',blastFiles.length,'faFiles',faFiles.length)
