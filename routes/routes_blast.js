@@ -270,7 +270,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
            } 
         }
         
-        if(blastFiles.length === faFiles.length && req.session.blast.timer > 21){ // time chosen arbitrarily
+        if(blastFiles.length === faFiles.length && req.session.blast.timer > 41){ // time chosen arbitrarily
            finished = true;
            
         }
