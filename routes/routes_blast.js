@@ -119,9 +119,9 @@ router.get('/blast_results', function blastResults(req, res) {
 //                   console.log('results-i',results[i].toString())
                   if(config.blastFxn === 'genome'){
                      //data = results[i].toString()
-                     console.log('pushing',results[i].toString())
+                     console.log('pushing',results[i])
                      //data.push("<div style='font-family: monospace;'><pre>"+results[i].toString()+'</pre></div>')   // genome is -html flag
-                     data.push(results[i].toString()) 
+                     data.push(results[i]) 
                   }else{
                     jsondata = JSON.parse(results[i])  // refseq is json -outfmt 
                     //console.log(blastFiles[i])
