@@ -284,7 +284,7 @@ batchFileNamePath = os.path.join(details_dict['blastDir'],'blast.sh')
 write_file(batchFileNamePath, batchText)
 os.chmod(batchFileNamePath, 0o775)   # make executable
 return_code = subprocess.run(batchFileNamePath)
-print("<br<br>Output of run() : ", return_code)
+print("\n\nOutput of run() : ", return_code)
 #os.system(batchFileNamePath)
 
 ## Important Last Line

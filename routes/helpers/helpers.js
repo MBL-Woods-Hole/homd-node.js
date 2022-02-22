@@ -491,6 +491,19 @@ module.exports.makeid = function makeid(length) {
     return result;
 }
 //
+module.exports.checkFileSize = function checkFileSize(file_path){
+   let statsObj = fs.statSync(file_path);
+   console.log('size',statsObj.size);  // bytes
+   return statsObj.size
+   // fs.statSync(file_path, (err, stats) => {
+//     if (err) {
+//         console.log(`File doesn't exist.`);
+//     } else {
+//         console.log('size',stats.size);  // bytes
+//         return stats.size
+//     }
+//});
+}
 module.exports.print = function print(thing) {
     // console.log only if development
     // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
