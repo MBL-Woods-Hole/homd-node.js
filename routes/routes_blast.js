@@ -113,11 +113,12 @@ router.get('/blast_results', function blastResults(req, res) {
              async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
 
                 for(let i=0; i<blastFiles.length; i++){
-                  // console.log(blastFiles[i])
+                     console.log('file',blastFiles[i])
 //                   console.log('config',config)
 //                   console.log('results-i',results[i].toString())
                   if(config.blastFxn === 'genome'){
                      //data = results[i].toString()
+                     console.log('pushing',results[i].toString())
                      //data.push("<div style='font-family: monospace;'><pre>"+results[i].toString()+'</pre></div>')   // genome is -html flag
                      data.push(results[i].toString()) 
                   }else{

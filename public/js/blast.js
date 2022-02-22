@@ -130,14 +130,19 @@ function sortBlastTableForm(cb, blastID, col){
   
 }
 
-function reset2default() {
+function reset2default(fxn) {
    // set advanced,expect,max_target_seqs,
    // defaults
-   adv = '-penalty -3 -reward 2 -gapopen 5 -gapextend 2'
-   max_target_seqs = '20'
+   if(fxn == 'genome'){
+      adv = ''
+   }else{
+      adv = '-penalty -3 -reward 2 -gapopen 5 -gapextend 2'
+   }
+   max_target_seqs = '100'
    expect = '0.0001'
    document.getElementById('advancedOpts').value = adv
    document.getElementById('blastMaxTargetSeqs').value = max_target_seqs
    document.getElementById('blastExpect').value = expect
+   document.getElementById('textinput').value = ''
    
 }

@@ -26,7 +26,7 @@
 <form id='blastForm' name='blastForm' method='POST' action='/blast/blast_post' enctype='multipart/form-data' >      
   
   <div id='other70'>
-       <div class='block-title' >Blast Program and Database</div>
+       <div class='block-title' >BLAST Program and Database</div>
        <div class='adjust_block'>
        
        <% if(blastFxn == 'genome'){ %>
@@ -113,9 +113,9 @@
            <select class='dropdown' id='blastMaxTargetSeqs' name='blastMaxTargetSeqs'>
               <option value='5'>5</option>
               <option value='10'>10</option>
-              <option selected='selected' value='20'>20</option>
+              <option value='20'>20</option>
               <option value='50'>50</option>
-              <option value='100'>100</option>
+              <option selected='selected' value='100'>100</option>
               <option value='250'>250</option>
               <option value='500'>500</option>
            </select>
@@ -134,7 +134,7 @@
     </div>
     
     <div class='adjust_block'>
-           <span onclick='reset2default()' class='pill pill-brown pill-lg'>Reset to Defaults</span>
+           <span onclick="reset2default('<%= blastFxn %>')" class='pill pill-brown pill-lg'>Reset to Defaults</span>
     </div> 
     <div class='adjust_block'>
          <center><input class='pill pill-brown pill-lg' type='button' value='Blast' onclick='blastFormCheck()' \></center>
@@ -146,3 +146,4 @@
 </form>
 </div>
 </center>
+<script type="text/javascript" src="/js/blast.js"></script>
