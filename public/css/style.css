@@ -82,7 +82,7 @@ input[type=radio] {
     height: .8em;
 }
 .title{
-   padding: 10px 0 10px 300px;  /* push to right */
+   padding: 10px 0 10px 0px;  /* push to right */
    background: var(--title-bg);
    font-size: 20px;
    text-align: center;

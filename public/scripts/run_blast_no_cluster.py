@@ -201,8 +201,8 @@ def validate(db, string):
 #       else:
 #           return False
     
-
-
+#https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205286
+#http://sing-group.org/blasterjs/
 def createBatchBlastFileText(args, filesArray, details_dict):
     fileText ='#!/bin/bash\n\n'
     fileText += 'cd '+ os.path.join(details_dict['blastdbPath'],details_dict['ext']) + '\n\n'
@@ -223,9 +223,12 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         fileText += ' ' + details_dict['advanced']
         if details_dict['blastFxn'] == 'genome':
             #fileText += ' -html'   ## dont use this with other -outfmt
+            # George will supply perl script to parse result
             pass
         else:
-            fileText += ' -outfmt 15'   ## 15 JSON
+            #fileText += ' -outfmt 15'   ## 15 JSON
+            
+            pass
         ##fileText += ' -outfmt 16'   ## 16 XML
         
         fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 

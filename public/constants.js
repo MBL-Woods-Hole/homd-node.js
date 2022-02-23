@@ -208,20 +208,22 @@ constants.blast_max_file =  { size:1.50, seqs:1000 }// MB === 1,500,000
   // TBLASTN Compares a protein query sequence against a nucleotide sequence database dynamically translated in all reading frames
 constants.blastPrograms = ['BLASTN', 'BLASTP', 'BLASTX', 'TBLASTN']
 constants.refseq_blastn_db_choices = [
+     {name:'eHOMD 16s rRNA RefSeq Version 15.22 (starts at pos 28)',value:'15.22',
+         filename:'HOMD_16S_rRNA_RefSeq_V15.22.fasta'},
     {name:'eHOMD 16s rRNA RefSeq Version 15.22 (starts at pos 9)',value:'15.22_9',
          filename:'HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta'},
-    {name:'eHOMD 16s rRNA RefSeq Version 15.22 (starts at pos 28)',value:'15.22',
-         filename:'HOMD_16S_rRNA_RefSeq_V15.22.fasta'},
-    {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at pos 9)',value:'14.51-9',
-         filename:'HOMD_16S_rRNA_RefSeq_V14.51.p9.fasta'},
     {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at pos 28)',value:'14.51',
          filename:'HOMD_16S_rRNA_RefSeq_V14.51.fasta'},
+    {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at pos 9)',value:'14.51-9',
+         filename:'HOMD_16S_rRNA_RefSeq_V14.51.p9.fasta'},
+    
     {name:'eHOMD 16s rRNA RefSeq Version 14.51 (starts at 28 trimmed at 1407 of aligned seq)',value:'14.51-trimmed',
          filename:'HOMD_16S_rRNA_RefSeq_V14.5.trimmed.fasta'},
+    {name:'eHOMD 16s rRNA RefSeq Version 13.2 (starts at pos 28)',value:'13.2',
+         filename:'HOMD_16S_rRNA_RefSeq_V13.2.fasta'},    
     {name:'eHOMD 16s rRNA RefSeq Version 13.2 (starts at pos 9)',value:'13.2-9',
          filename:'HOMD_16S_rRNA_RefSeq_V13.2.p9.fasta'},
-    {name:'eHOMD 16s rRNA RefSeq Version 13.2 (starts at pos 28)',value:'13.2',
-         filename:'HOMD_16S_rRNA_RefSeq_V13.2.fasta'},
+    
 // where are these DBs? are they important?
    //  {name:'Greengenes 16S rRNA Sequences (gg16S_unaligned)',value:'GG',
 //          filename:''},

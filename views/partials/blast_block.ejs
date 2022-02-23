@@ -15,12 +15,7 @@
 <% } %>
 <center>
 <div id='center70pct_div'>
-    <% if(blastFxn == 'genome'){ %>
-
-    <% }else{ %>
-         This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences.
-        The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] <a href='/help/help-page?pagecode=blast/formats'>[DETAIL]</a>
-    <% } %>
+    
 
 
 <form id='blastForm' name='blastForm' method='POST' action='/blast/blast_post' enctype='multipart/form-data' >
@@ -116,11 +111,15 @@ or <%= blast_max.size %> MB filesize.)
 
           <a href='/help/help-page?pagecode=blast/parameters'>Maximum Target Sequences</a>:
            <select class='dropdown' id='blastMaxTargetSeqs' name='blastMaxTargetSeqs'>
-              <option value='5'>5</option>
-              <option value='10'>10</option>
-              <option value='20'>20</option>
-              <option value='50'>50</option>
-              <option selected='selected' value='100'>100</option>
+              <% if(blastFxn == 'genome'){ %>
+                <option value='20'>20</option>
+                <option value='50'>50</option>
+                <option selected='selected' value='100'>100</option>
+              <% }else{ %>
+                <option selected='selected' value='20'>20</option>
+                <option value='50'>50</option>
+                <option value='100'>100</option>
+              <% } %>
               <option value='250'>250</option>
               <option value='500'>500</option>
            </select>
@@ -142,8 +141,14 @@ or <%= blast_max.size %> MB filesize.)
     <div class='adjust_block'>
          <center><input class='pill pill-brown pill-lg' type='button' value='Blast' onclick='blastFormCheck()' \></center>
     </div>
+    </div> <!-- End other70 -->
+<% if(blastFxn == 'genome'){ %>
 
-  </div> <!-- End other70 -->
+    <% }else{ %>
+         This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences.
+        The sequence search is based on the NCBI BLASTN version 2.9.0+ <a href='/help/help-page?pagecode=blast/formats'>[DETAIL]</a>
+    <% } %>
+  
   <input type='hidden' name='returnTo' value='<%= returnTo %>' >
     <input type='hidden' name='blastFxn' value='<%= blastFxn %>' >
 </form>

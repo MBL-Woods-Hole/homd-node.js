@@ -22,9 +22,10 @@
 }
 
 .textinput {
-  width: 65%;
+  width: 95%;
   min-height: 120px;
   border: 1px solid grey;
+  font-size: 11px;
 }
 input[type=radio] {
     height: 1.1em;

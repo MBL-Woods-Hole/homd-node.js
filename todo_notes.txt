@@ -1,4 +1,32 @@
 HOMD Notes
+2022-0223
+Meet w/ Floyd
+16SRefSeqBlast
+--change from xml to default blast output -and figure out how to parse
+  consider: #https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205286
+            #http://sing-group.org/blasterjs/
+            https://plos.figshare.com/articles/dataset/BlasterJS_A_novel_interactive_JavaScript_visualisation_component_for_BLAST_alignment_results/7184210
+Result table:
+-- Query header should show all header -wrap
+--HOMD Clone Name can be narrower (just not three lines)
+-- View Link - split to: "Query Sequence" and "Alignment" -get rid of icons
+-- sort: initial is by entered seq order
+     add another choice "back to original order"
+     by bit score and identity should be within each seq
+     Radios not cbs
+-- what to do with grey box?
+--WAIT: show elapsed time rather than seqs processed
+
+GenomeBlast
+--buttons at top (inside to section of box):"nucleic acid","protein" and "other" (three) for blast program
+    then ncbi(default)  and prokka
+    then "all genomes" and "Select a genome"
+-- get rid of link at top to select all vs single genome
+
+Results:
+--WAIT:show elapsed time rather than seqs processed
+
+
 2022-02-15
 Protein Blast against all genome not working. 
 2022-02-07
