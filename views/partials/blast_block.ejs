@@ -1,6 +1,6 @@
 
 <link rel="stylesheet" type="text/css" href="/css/blast.css" >
-<% if(blastFxn == 'genome'){ %> 
+<% if(blastFxn == 'genome'){ %>
 <style>
   #other70 {
    background:var(--div-bg017);
@@ -12,35 +12,35 @@
    background:var(--div-bg01);
   }
 </style>
-<% } %>  
+<% } %>
 <center>
 <div id='center70pct_div'>
-    <% if(blastFxn == 'genome'){ %> 
-       
+    <% if(blastFxn == 'genome'){ %>
+
     <% }else{ %>
-         This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences. 
-        The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] <a href='/help/help-page?pagecode=blast/formats'>[DETAIL]</a>  
-    <% } %>     
+         This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences.
+        The sequence search is based on the NCBI BLASTN version 2.2.23 [Feb-03-2010] <a href='/help/help-page?pagecode=blast/formats'>[DETAIL]</a>
+    <% } %>
 
 
-<form id='blastForm' name='blastForm' method='POST' action='/blast/blast_post' enctype='multipart/form-data' >      
-  
+<form id='blastForm' name='blastForm' method='POST' action='/blast/blast_post' enctype='multipart/form-data' >
+
   <div id='other70'>
        <div class='block-title' >BLAST Program and Database</div>
        <div class='adjust_block'>
-       
+
        <% if(blastFxn == 'genome'){ %>
-        <a href='/help/help-page?pagecode=blast/programs'>Program</a>: 
+        <a href='/help/help-page?pagecode=blast/programs'>Program</a>:
         <select class='dropdown' id='blastProg' name='blastProg' onchange="changeBlastGenomeDbs('<%= gid %>',this.value)">
               <% for(n in blast_prg){ %>
                 <option value='<%= blast_prg[n].toLowerCase() %>'><%= blast_prg[n] %></option>
               <% } %>
         </select>
-        
+
     <% }else{ %>
-        <a href='/help/help-page?pagecode=blast/programs'>BLASTN</a>:
+        <a href='/help/help-page?pagecode=blast/programs'>Program: BLASTN</a>
         <input type='hidden' name='blastProg' value='blastn' >
-        
+
     <% } %>
         <% if(blastFxn == 'genome'){ %>
 	    <div style='float:right'><small>
@@ -49,7 +49,7 @@
           </small>
         </div>
         <% } %>  <br><center>
-	   <a href='/help/help-page?pagecode=blast/databases'>database</a>:
+	   <a href='/help/help-page?pagecode=blast/databases'>Database</a>:
 	   <span id='genomeBlastDbChoices'>
 		 <select class='dropdown' id='blastDb' name='blastDb'>
 		   <% for(n in db_choices){ %>
@@ -59,31 +59,31 @@
 	   </span>
 	   </center>
        </div>
-    
-     
-       <% if(blastFxn == 'genome'){ %> 
+
+
+       <% if(blastFxn == 'genome'){ %>
            <% if(gid == 'all'){ %>
              <div class='block-title' >BLAST Against All HOMD Genome Sequences</div>
            <% }else{ %>
              <div class='block-title' >BLAST Against "<%= organism %>" Genome Sequence</div>
            <% } %>
            Copy and paste sequence(s) below, preferably in FASTA format:
-          
 
-          
-          
+
+
+
 
        <% }else{ %>
            <div class='block-title' >Upload your 16S rRNA sequences:</div>
            Copy and paste sequence(s) below, preferably in FASTA format:
-       <% } %>  
-           
-           
-           
+       <% } %>
+
+
+
            <center>
             <textarea class="textinput" id='textinput' placeholder="Enter sequence(s) in FASTA format..." name='inputSeq' ></textarea>
            </center>
-           Or upload a sequence file from your computer: 
+           Or upload a sequence file from your computer:
            <input type="file" id='fileInput' name="blastFile"  >
 
 <br><br>
@@ -91,12 +91,12 @@
 <br>
 (Note2: current limit of number of sequences is <%= blast_max.seqs %> or <%= blast_max.size %> MBytes for files.)
 	   <br><br>
-	   
-	   
-	   <div class='block-title' >Adjust Blast parameters: (Optional)</div>
-    
 
-    
+
+	   <div class='block-title' >Adjust Blast Parameters: (Optional)</div>
+
+
+
     <div class='adjust_block'>
            <a href='/help/help-page?pagecode=blast/parameters'>Expect</a>:
            <select class='dropdown' id='blastExpect' name='blastExpect'>
@@ -109,10 +109,10 @@
               <option value='1000'>1000</option>
            </select>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-           
-    </div> 
-    <div class='adjust_block'>     
-          
+
+    </div>
+    <div class='adjust_block'>
+
           <a href='/help/help-page?pagecode=blast/parameters'>Maximum Target Sequences</a>:
            <select class='dropdown' id='blastMaxTargetSeqs' name='blastMaxTargetSeqs'>
               <option value='5'>5</option>
@@ -123,27 +123,27 @@
               <option value='250'>250</option>
               <option value='500'>500</option>
            </select>
-           
 
-           
+
+
     </div>
-    
+
     <div class='adjust_block'>
            <a href='/help/help-page?pagecode=blast/advanced'>Other Advanced Options:</a>
-       <% if(blastFxn == 'genome'){ %>      
+       <% if(blastFxn == 'genome'){ %>
         <input class='dropdown' id='advancedOpts' name='advancedOpts' type='text' value='' maxlength='100' size='50'>
       <% }else{ %>
         <input class='dropdown' id='advancedOpts' name='advancedOpts' type='text' value='-penalty -3 -reward 2 -gapopen 5 -gapextend 2' maxlength='100' size='50'>
       <% } %>
     </div>
-    
+
     <div class='adjust_block'>
            <span onclick="reset2default('<%= blastFxn %>')" class='pill pill-brown pill-lg'>Reset to Defaults</span>
-    </div> 
+    </div>
     <div class='adjust_block'>
          <center><input class='pill pill-brown pill-lg' type='button' value='Blast' onclick='blastFormCheck()' \></center>
     </div>
-    
+
   </div> <!-- End other70 -->
   <input type='hidden' name='returnTo' value='<%= returnTo %>' >
     <input type='hidden' name='blastFxn' value='<%= blastFxn %>' >
