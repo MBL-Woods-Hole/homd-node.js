@@ -46,8 +46,8 @@ CTGGGCCGTGTCTCTCCCAATGTGGCCGTTCAACCTCTCAGTCCGGCTACTGATCGACTTGGTGAGCCGTT
 // })
 router.get('/blast_results', function blastResults(req, res) {
         console.log('in blast_results')
-        console.log('req.query:',req.query)
-        console.log('req.body:',req.body)
+        //console.log('req.query:',req.query)
+        //console.log('req.body:',req.body)
         //console.log('req:',req)
         const blastID = req.query.id
         
@@ -123,25 +123,28 @@ router.get('/blast_results', function blastResults(req, res) {
              async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
 
                 for(let i=0; i<blastFiles.length; i++){
-                     console.log('file',blastFiles[i])
+                     //console.log('file',blastFiles[i])
 //                   console.log('config',config)
 //                   console.log('results-i',results[i].toString())
                   if(config.blastFxn === 'genome'){
                      //data = results[i].toString()
-                     console.log('pushing',results[i])
+                     //console.log('pushing',results[i])
                      //data.push("<div style='font-family: monospace;'><pre>"+results[i].toString()+'</pre></div>')   // genome is -html flag
                      data.push(results[i]) 
-                  }else{
-                    jsondata = JSON.parse(results[i])  // refseq is json -outfmt 
+                  }else{  // 16S rRNA refseq
+                    let parsed_data = helpers.parse_blast_refseq(results[i])
+                    data.push(parsed_data) // in order of sequences
+                    //console.log('parsed_data',parsed_data)
+                    //jsondata = JSON.parse(results[i])  // refseq is json -outfmt 
                     //console.log(blastFiles[i])
-                    data.push(jsondata.BlastOutput2[0].report.results.search)
-                    if(jsondata === undefined){
-                        console.log('jsondata error for file:',blastFiles[i])
-                    }
+                    //data.push(jsondata.BlastOutput2[0].report.results.search)
+                    //if(jsondata === undefined){
+                    //    console.log('jsondata error for file:',blastFiles[i])
+                    //}
                   }
-                  if(CFG.ENV === 'development'){
-                      //console.log('jsondata[0]', jsondata[0])
-                  }
+                  // if(CFG.ENV === 'development'){
+//                       //console.log('jsondata[0]', jsondata[0])
+//                   }
                   
                 }
                 
@@ -160,7 +163,7 @@ router.get('/blast_results', function blastResults(req, res) {
                           // file exists throw error
                           //console.log('YYYY')
                           //throw new Error('BLAST Script Error: '+content)
-                          console.log('CONTENT',content.toString().trim())
+                          //console.log('CONTENT',content.toString().trim())
                           if(content.toString().trim()){  // means there was true error NOT zero length
                             //pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
                             req.flash('fail', 'BLAST Script Error:: '+ content)
@@ -175,8 +178,9 @@ router.get('/blast_results', function blastResults(req, res) {
                      let rowBreak = "</pre><br><pre>"
                      html = '<pre>'+data.join(rowBreak)+'</pre>'
                      //html = data
-                 }else{
-                     html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
+                 }else{   // refseq
+                     //html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
+                     html = getBlastHtmlTable0(data, blastID, sortCol, sortDir)
                  }
                 
                 if(!blastID){
@@ -185,7 +189,6 @@ router.get('/blast_results', function blastResults(req, res) {
                      return
                 }
 
-                console.log('rendering page')
                 if(req.query.ajax){
                    return res.send(html)
                 }else{
@@ -209,8 +212,8 @@ router.get('/blast_results', function blastResults(req, res) {
 router.get('/blast_wait', async function blastWait(req, res, next) {
     console.log('in blast wait')
     //????
-    console.log('session blast_wait:')
-    console.log(req.session)
+    //console.log('session blast_wait:')
+    //console.log(req.session)
     let finished = false, blastFiles = [], faFiles = [], html, jsondata, database, pyerror
     
     //////
@@ -257,7 +260,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
         req.session.blast.timer += 5  // 5sec at a pop
         let blastResultsDir = path.join(blastDir,'blast_results')
         const result = getAllDirFiles(blastDir) // will give ALL files in ALL dirs
-        console.log('result',result)
+        //console.log('result',result)
         if(!result){
            req.flash('fail', 'There was a fatal error reading the BLAST directory')
            res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
@@ -271,7 +274,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
               blastFiles.push(path.join(blastResultsDir, result[i]))
               if(req.session.blast.timer <= 5){
                 req.session.blast.fsize0 = helpers.checkFileSize(blastFiles[blastFiles.length-1])
-                console.log('fsize0',req.session.blast.fsize)
+                //console.log('fsize0',req.session.blast.fsize)
               }
            } 
         }
@@ -280,7 +283,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
            //finished = true;
            req.session.blast.fsize0 = req.session.blast.fsize
            req.session.blast.fsize = helpers.checkFileSize(blastFiles[blastFiles.length-1])  // when stable then finished == true
-            console.log('fsizes',req.session.blast.fsize0,req.session.blast.fsize)
+            //console.log('fsizes',req.session.blast.fsize0,req.session.blast.fsize)
             if(req.session.blast.fsize > 100 && req.session.blast.fsize0 === req.session.blast.fsize){
               finished = true;
             }
@@ -328,8 +331,8 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
 
 router.post('/blast_post', upload.single('blastFile'),  async function blast_post(req, res, next) {
   console.log('MADEIT TO blastPost')
-  console.log(req.body)
-  console.log('req.file?', req.file)   // may be undefined
+  //console.log(req.body)
+  //console.log('req.file?', req.file)   // may be undefined
   let anno = req.body.blastAnno  // either prokka or ncbi
   let filename, filepath, data, fasta_as_list, trimlines, twolist,fastaFilePaths;
   const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i, returnTo: req.body.returnTo }
@@ -357,27 +360,27 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   }
   if(req.file){
       opts.type = 'fileInput'
-      console.log('req.file',req.file)
+      //console.log('req.file',req.file)
       let grep_cmd = "/usr/bin/grep '>' "+req.file.path+' | wc -l'
       exec(grep_cmd, (err, stdout, stderr) => {
-		  if (stderr) {
-			console.error('stderr',stderr);
-			return;
-		  }
-		  let fa_seqs = parseInt(stdout.trim())
+          if (stderr) {
+            console.error('stderr',stderr);
+            return;
+          }
+          let fa_seqs = parseInt(stdout.trim())
           if(fa_seqs > C.blast_max_file.seqs){
              req.flash('fail', 'File too large:SeqCount='+fa_seqs.toString());
-		     res.redirect(req.body.returnTo);
-		     return;
+             res.redirect(req.body.returnTo);
+             return;
           } 
-	  
-		  if (req.file.size > C.blast_max_file.size * 1000000){   // 1 911 016
-		   req.flash('fail', 'File too large: '+helpers.format_MB(req.file.size));
-		   res.redirect(req.body.returnTo);
-		   return;
-		  }
-		  var fileContents = ''  // if buffer in req,file not need to move/read file
-		  followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
+      
+          if (req.file.size > C.blast_max_file.size * 1000000){   // 1 911 016
+           req.flash('fail', 'File too large: '+helpers.format_MB(req.file.size));
+           res.redirect(req.body.returnTo);
+           return;
+          }
+          var fileContents = ''  // if buffer in req,file not need to move/read file
+          followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
       })
   }else{
       opts.type = 'textInput'
@@ -388,8 +391,8 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
          runPyScript(req, res, opts, blastOpts, blastDir, inputSeqInput, next)
       }else{
          req.flash('fail', 'Input too large:SeqCount='+count.toString());
-		     res.redirect(req.body.returnTo);
-		     return;
+             res.redirect(req.body.returnTo);
+             return;
       }
   }
     
@@ -426,15 +429,15 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
 router.post('/blastDownload', function blastDownload(req, res) {
     //
     console.log('in blastDownload')
-    console.log(req.body)
+    //console.log(req.body)
     let blastID = req.body.blastID
     let type = req.body.dnldType
     
-    console.log('type',type)
+    //console.log('type',type)
     if(!type || !blastID){
        return
     }
-    let jsondata, data=[], program, version
+    let  data=[]
     // read directory CONFIG.json first
     let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
 
@@ -446,15 +449,9 @@ router.post('/blastDownload', function blastDownload(req, res) {
        throw new Error('The Blast ID "'+blastID+'" was not found.<BR>Probably expired if you are using and old link.')
        return
     }
-
-
     let blastFiles = []
     for(let i=0; i < result.length; i++){
-        if(req.body.blastFilesToDnld.indexOf(result[i]) >= 0) {
-           blastFiles.push(path.join(blastResultsDir, result[i]))
-        }else{
-          console.log('NOT Downloading:',result[i])
-        }
+        blastFiles.push(path.join(blastResultsDir, result[i]))
     }
     //console.log('blastfiles')
     //console.log(blastFiles)
@@ -471,26 +468,14 @@ router.post('/blastDownload', function blastDownload(req, res) {
 
                 for(let i=0; i<blastFiles.length; i++){
                   
+                  let parsed_data = helpers.parse_blast_refseq(results[i])
+                  data.push(parsed_data) // in order of sequences
                   
-                  jsondata = JSON.parse(results[i])
-                  
-                  //console.log(jsondata.BlastOutput2[0])
-                  program = jsondata.BlastOutput2[0].report.program
-                  version = jsondata.BlastOutput2[0].report.version
-                  fileData[jsondata.BlastOutput2[0].report.results.search.query_title] = jsondata.BlastOutput2[0].report.results.search
-                  //data.push(jsondata.BlastOutput2[0].report.results.search)
-                  
-                  if(CFG.ENV === 'development'){
-                      //console.log('jsondata', jsondata)
-                  }
-                  if(jsondata === undefined){
-                      console.log('jsondata error for file:',blastFiles[i])
-                  }
 
                 }
                 
                 //const html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
-                var table_tsv = create_download_table(fileData, type, program, version)
+                var table_tsv = create_blast_download_table(data, type)
                 if(type.substring(0,4) === 'text'){
                     res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""})
                  }else{  //excel
@@ -505,10 +490,65 @@ router.post('/blastDownload', function blastDownload(req, res) {
 
     
 })
-function create_download_table(data, type, program, version) {
+function create_blast_download_table(data, type) {
   let txt = ''
   
-  let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentity\tIdentities(%)\tScore (bits)\tQuery Start\tSbjct Start\tQuery End\tSbjct End\tEvalue\tGaps\n'
+  //let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentity\tIdentities(%)\tScore (bits)\tQuery Start\tSbjct Start\tQuery End\tSbjct End\tEvalue\tGaps\n'
+  let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentities(%)\tScore (bits)\tEvalue\tGaps\n'
+  
+  //console.log('data',data)
+  //console.log(data[0].hits[0].hsps[0])
+  let hit,h,hitCountOutput,dnldInfo
+  
+  for(let n in data){
+     //console.log('data[n]',data[n])
+     data[n].data.sort(function sortIR2(a, b) {
+            return helpers.compareStrings_int(b.bitscore, a.bitscore);
+     })
+     if(type === 'text1' || type === 'excel1'){
+         dnldInfo = 'Top BLAST Hit Only: '+data[n].version+'\n'
+         txt += data[n].query+'\t'+data[n].query_length+'\t'
+         
+          //console.log('data[0]',data[n].data[0])
+          txt += helpers.make_otid_display_name(data[n].data[0].otid)+'\t'+data[n].data[0].clone_id+'\t'+data[n].data[0].clone+'\t'+data[n].data[0].identity+'\t'+data[n].data[0].bitscore+'\t'+data[n].data[0].expect+'\t'+data[n].data[0].gaps+'\n'
+      
+      }else if(type === 'textAll' || type === 'excelAll'){
+         dnldInfo = 'All BLAST Hits: '+data[n].version+'\n'
+         
+          //console.log('data[0]',data[n].data[0])
+          for(let i in data[n].data){
+            txt += data[n].query+'\t'+data[n].query_length+'\t'
+            txt += helpers.make_otid_display_name(data[n].data[i].otid)+'\t'+data[n].data[i].clone_id+'\t'+data[n].data[i].clone+'\t'+data[n].data[i].identity+'\t'+data[n].data[i].bitscore+'\t'+data[n].data[i].expect+'\t'+data[n].data[i].gaps+'\n'
+          }
+      }else if(type === 'text4' || type === 'excel4'){
+         dnldInfo = 'Top 4 BLAST Hits: '+data[n].version+'\n'
+         
+          //console.log('data[0]',data[n].data[0])
+          for(let i=0;i<4;i++){
+            txt += data[n].query+'\t'+data[n].query_length+'\t'
+            txt += helpers.make_otid_display_name(data[n].data[i].otid)+'\t'+data[n].data[i].clone_id+'\t'+data[n].data[i].clone+'\t'+data[n].data[i].identity+'\t'+data[n].data[i].bitscore+'\t'+data[n].data[i].expect+'\t'+data[n].data[i].gaps+'\n'
+          }
+       }else if(type === 'text20' || type === 'excel20'){
+         dnldInfo = 'Top 20 BLAST Hits: '+data[n].version+'\n'
+         
+          //console.log('data[0]',data[n].data[0])
+          for(let i=0;i<20;i++){
+            txt += data[n].query+'\t'+data[n].query_length+'\t'
+            txt += helpers.make_otid_display_name(data[n].data[i].otid)+'\t'+data[n].data[i].clone_id+'\t'+data[n].data[i].clone+'\t'+data[n].data[i].identity+'\t'+data[n].data[i].bitscore+'\t'+data[n].data[i].expect+'\t'+data[n].data[i].gaps+'\n'
+          }
+       }
+         
+     
+  }
+  let retTxt = dnldInfo + header + txt
+  return retTxt
+}
+function create_blast_download_tableX(data, type, program, version) {
+  let txt = ''
+  
+  //let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentity\tIdentities(%)\tScore (bits)\tQuery Start\tSbjct Start\tQuery End\tSbjct End\tEvalue\tGaps\n'
+  let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentity\tIdentities(%)\tScore (bits)\tEvalue\tGaps\n'
+  
   //console.log(data[0].hits[0].description)
   //console.log(data[0].hits[0].hsps[0])
   let hit,h,hitCountOutput,dnldInfo
@@ -669,49 +709,139 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
 }
 //
 //
-function getBlastHtmlTable(jsonList, blastID, sortCol, sortDir){
-    let desc,id,html,init,split_items,hmt,seqid
+function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
+    let desc,id,html,init,split_items,hmt,seqid,odd,bgcolor
+    
+    // sort data_arr
     html =''
     //html += "<small>"
     html += "blast results link: [ <span id='blasturl'>"+CFG.URL+"/blast/blast_results?id="+blastID+"</span> ] <= Copy this link to come back to these results for 30 days."
     //html += "</small>"
     html += "<table><thead>"
     html += '<tr>'
-    html += "<th><input type='checkbox'  value='master' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
-    html += '<th>Query<sup>2</sup></th><th>Length</th>'
-    html += '<th>View<sup>3</sup><br>Link</th><th>Hit<sup>4</sup></th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<sup>5</sup><br>(%)</th></tr>'
+    //html += "<th><input type='checkbox'  value='master' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
+    
+    html += '<th>Query</th><th>Length<br>(nt)</th>'
+    html += '<th>Query<br>Sequence</th><th>Alignment</th><th>Hit</th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<br>(%)</th></tr>'
     html += '</thead><tbody>'
-    //console.log('jsonList')
-    //console.log(jsonList)
-    if(sortCol === 'query'){
-      console.log('sorting: ', sortCol, sortDir)
-      if(sortDir === 'fwd'){
-          jsonList.sort(function sortQF(a, b) {
-            return helpers.compareStrings_alpha(a.query_title, b.query_title);
-          })
-      } else {
-          jsonList.sort(function sortQR(a, b) {
-            return helpers.compareStrings_alpha(b.query_title, a.query_title);
-          })
-      }
-      html += getBlastHTML1(jsonList, blastID)
-    } else if(sortCol === 'identity' || sortCol === 'score'){
-       // make a new list from jsonList-- then sort it
-       html += getBlastHTML2(jsonList, blastID, sortCol, sortDir)
-   
-    } else {
-       // unsorted
-        html += getBlastHTML1(jsonList, blastID)
+    if(sortCol ==='query'){
+         //console.log(sortDir)
+         if(sortDir === 'fwd'){
+           data_arr.sort(function sortDA(a, b) {
+            return helpers.compareStrings_alpha(b.query, a.query);
+            })
+         }else{
+           data_arr.sort(function sortDA(b, a) {
+            return helpers.compareStrings_alpha(b.query, a.query);
+            })
+         }
+    }else{ 
+        //if(sortCol ==='sequence'){  // original: by sequence
+         
     }
+    //console.log('data_arr',data_arr)
+    for(let i in data_arr){
+        odd = i % 2  // will be either 0 or 1
+       //console.log('odd',odd)
+       
+       if(odd){
+         bgcolor = 'blastBGodd'
+       }else{
+         bgcolor = 'blastBGeven'
+       }
+       html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td><td rowspan='4' class='center'>"+data_arr[i].query_length+'</td>'
+       
+       if(data_arr[i].data == 'no hits'){
+           html += "<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td><td rowspan='4'></td>"
+           html += '<td></td>'+"<td>No Hits Found"+'</td><td></td><td></td><td></td>'
+           html += '</tr>'
+       }else{
+         //sort data_arr[i].data by bitscore
+         if(sortCol ==='bitscore'){
+           if(sortDir === 'fwd'){
+               data_arr[i].data.sort(function sortDA(a, b) {
+                return helpers.compareStrings_int(b.bitscore, a.bitscore);
+                })
+             }else{
+               data_arr[i].data.sort(function sortDA(b, a) {
+                return helpers.compareStrings_int(b.bitscore, a.bitscore);
+                })
+             }
+         }else if(sortCol ==='identity'){
+            if(sortDir === 'fwd'){
+               data_arr[i].data.sort(function sortDA(a, b) {
+                return helpers.compareStrings_alpha(b.identity, a.identity);
+                })
+             }else{
+               data_arr[i].data.sort(function sortDA(b, a) {
+                return helpers.compareStrings_alpha(b.identity, a.identity);
+                })
+             }
+         }else{
+           // original
+           data_arr[i].data.sort(function sortDA(a, b) {
+            return helpers.compareStrings_int(b.bitscore, a.bitscore);
+           })
+         }
+         html += "<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
+         html += "<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
+         for(let n=0;n<4;n++){
+           html += "<td nowrap class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid="+data_arr[i].data[n].otid+"'>"+data_arr[i].data[n].clone_id+'</a></td>'
+           html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].clone+"</td><td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].expect+"</td>"
+           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].bitscore+"</td>"
+           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].identity+'</td>'
+           html += '</tr>'
+         }
+       }
+       
+    }
+    
     html += '</tbody></table>'
     return html
 }
-function getBlastHTML2(jsonList, blastID, sortCol, sortDir) {
+//
+// function getBlastHtmlTableXX(jsonList, blastID, sortCol, sortDir){
+//     let desc,id,html,init,split_items,hmt,seqid
+//     html =''
+//     //html += "<small>"
+//     html += "blast results link: [ <span id='blasturl'>"+CFG.URL+"/blast/blast_results?id="+blastID+"</span> ] <= Copy this link to come back to these results for 30 days."
+//     //html += "</small>"
+//     html += "<table><thead>"
+//     html += '<tr>'
+//     html += "<th><input type='checkbox'  value='master' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
+//     html += '<th>Query<sup>2</sup></th><th>Length</th>'
+//     html += '<th>View<sup>3</sup><br>Link</th><th>Hit<sup>4</sup></th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<sup>5</sup><br>(%)</th></tr>'
+//     html += '</thead><tbody>'
+//     //console.log('jsonList')
+//     //console.log(jsonList)
+//     if(sortCol === 'query'){
+//       console.log('sorting: ', sortCol, sortDir)
+//       if(sortDir === 'fwd'){
+//           jsonList.sort(function sortQF(a, b) {
+//             return helpers.compareStrings_alpha(a.query_title, b.query_title);
+//           })
+//       } else {
+//           jsonList.sort(function sortQR(a, b) {
+//             return helpers.compareStrings_alpha(b.query_title, a.query_title);
+//           })
+//       }
+//       html += getBlastHTML1(jsonList, blastID)
+//     } else if(sortCol === 'identity' || sortCol === 'score'){
+//        // make a new list from jsonList-- then sort it
+//        html += getBlastHTML2(jsonList, blastID, sortCol, sortDir)
+//    
+//     } else {
+//        // unsorted
+//         html += getBlastHTML1(jsonList, blastID)
+//     }
+//     html += '</tbody></table>'
+//     return html
+// }
+function getBlastHTML2XX(jsonList, blastID, sortCol, sortDir) {
     // for sorting by identity and bit score
     
     let numhits,count=0,odd,bgcolor
-    console.log('jsonList[0]')
-    console.log(jsonList[0])
+    //console.log('jsonList[0]',jsonList[0])
     let newList = [],addhtml = ''
     for(let n = 0; n < jsonList.length; n++){
         if(Object.prototype.hasOwnProperty.call(jsonList[n],'hits')){
@@ -998,14 +1128,14 @@ function followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
 async function readFile(filePath) {
   try {
     const data = await fsp.readFile(filePath);
-    console.log('data read from to '+filePath);
+    //console.log('data read from to '+filePath);
     return data
   } catch (error) {
     console.error('Got an error trying to read the file: ',error);
   }
 }
 async function moveFile(source, destination) {
-  console.log('in move')
+  //console.log('in move')
   try {
     await fsp.rename(source, destination);
     console.log(`Moved file from ${source} to ${destination}`);
@@ -1050,7 +1180,7 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
     
     pythonRun.stdout.on('data', function pyStdOut(data) {
       console.log('Pipeing data from python script::')
-      console.log(data.toString())
+      //console.log(data.toString())
       let dataPyToSend = data.toString()
       //req.session.pyerror = {code:0, msg:''}
     })
@@ -1062,7 +1192,7 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
       console.log('Caught ERROR', errorData)
       //
       let errorFilePath = path.join(blastDir, 'pythonerror.log')
-      console.log(errorFilePath)
+      //console.log(errorFilePath)
       fs.appendFileSync(errorFilePath, errorData)
       //throw new Error(errordata);
       

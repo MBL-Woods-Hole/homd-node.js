@@ -227,9 +227,9 @@ def createBatchBlastFileText(args, filesArray, details_dict):
             pass
         else:
             #fileText += ' -outfmt 15'   ## 15 JSON
-            
+            #fileText += ' -outfmt 16'   ## 16 XML
             pass
-        ##fileText += ' -outfmt 16'   ## 16 XML
+            
         
         fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
         # blasterror.log will always be created but may be zero length

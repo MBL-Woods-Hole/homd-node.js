@@ -517,3 +517,106 @@ module.exports.print = function print(thing) {
     }
     
 }
+//
+module.exports.parse_blast_refseq = function parse_blast0(file_data){
+    //console.log('BLAST data',file_data.toString())
+    let string = file_data.toString()
+    let file_collector = {}
+    let id_collector = {}
+    let tmp =[]
+    let no_hits = false,clone='',clone_id,otid,version='unknown'
+    //let result = string.match(/Java(Script)/);
+    if(string.match(/No hits found/)){
+       no_hits = true
+    }
+    let lines = string.split('\n')
+    let line,query_length='0',query='',start_looking_for_gt=false,split_name
+    for(let i in lines){
+       
+       line = lines[i].trim()
+       
+       if(!line) continue;
+       if(line.indexOf('BLAST')===0){
+          version = line
+       }
+       //console.log('line',line)
+       if(line.indexOf('Query=') === 0 && !start_looking_for_gt){
+          //console.log('Query=',line)
+          query += line.substring(6).trim()
+          if(lines[parseInt(i)+1] != 'Length='){
+              query += ' '+lines[parseInt(i)+1]
+          }
+       }
+       if(line.indexOf('Length=') === 0 && !start_looking_for_gt ){
+          query_length = line.split('=')[1]
+       }
+       if(line.indexOf('Sequences producing significant alignments') === 0){
+          start_looking_for_gt = true
+       }
+       if(line.indexOf('>') === 0 && start_looking_for_gt){
+           clone = line.substring(1);  //s1.substring(1);
+           if(lines[parseInt(i)+1] != 'Length='){
+               //console.log(i,parseInt(i)+1)
+               clone += lines[parseInt(i)+1]
+           }
+           if(lines[parseInt(i)+2] != 'Length='){
+               //console.log(i,parseInt(i)+2)
+               clone += lines[parseInt(i)+2]
+           }
+           
+           split_name = clone.split('|')
+           clone_id = split_name[0].trim()
+           otid = split_name[2].trim().split('-')[1]
+           id_collector[clone_id] = {'clone': clone, 'clone_id': clone_id, otid: otid}
+           // if(lines[parseInt(i)+1] != 'Length='){
+//               clone += ' '+lines[parseInt(i)+1]
+//            }
+       }
+       if(line.indexOf('Length=') === 0 && start_looking_for_gt){
+             id_collector[clone_id]['length'] = line.split('=')[1]
+       }
+       if(line.indexOf('Score') === 0 && start_looking_for_gt){  // starts on row 2:score,expect
+             let parts = line.split(',')
+             id_collector[clone_id]['bitscore'] = parts[0].split('=')[1].trim().split(/\s+/)[0]
+             id_collector[clone_id]['expect'] = parts[1].split('=')[1].trim()
+       }
+       if(line.indexOf('Identities') === 0 && start_looking_for_gt){  // starts on row 2:score,expect
+             let parts = line.split(',')
+             let regCapture = /\(([^)]+)\)/   // grab inside parens
+             id_collector[clone_id]['identity'] = parts[0].split('=')[1].trim().match(regCapture)[1]
+             id_collector[clone_id]['gaps'] = parts[1].split('=')[1].trim()
+             
+       }
+       if(line.indexOf('Strand') === 0 && start_looking_for_gt){  // starts on row 2:score,expect
+             id_collector[clone_id]['strand'] = line.split('=')[1]
+       }
+       
+       
+    }
+    //console.log('id_collector',id_collector)
+    file_collector.version = version
+    file_collector.query = query
+    file_collector.query_length = query_length
+    if(no_hits){
+        file_collector.data = ['no hits']
+    }else{
+        file_collector.data = Object.values(id_collector)
+    }
+    //console.log('file_collector',file_collector)
+    return file_collector
+    /*   For each file
+    Want to grab  all this data:
+    1) query: >524_3631 | Veillonella atypica | HMT-524 | Clone: MB5_P17 | GB:
+DQ003631 | Status: Named | Preferred Habitat: Oral | Genome:
+Genome: yes
+    2)Length=1368
+    3) Score = 115 bits (127),  Expect = 2e-27
+ Identities = 71/76 (93%), Gaps = 0/76 (0%)
+ Strand=Plus/Minus
+    
+    */
+}
+
+
+
+

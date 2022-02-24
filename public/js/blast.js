@@ -15,10 +15,9 @@ function getFileContent(type, id, num) {
         text = ''
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
-        
         text += resp
         text += '</pre>'
-    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=680,height=500");
     var doc = win.document;
     //doc.writeln("<title>yourtitle</title>");
     //doc.title = 'eHOMD Reference Sequence'
@@ -51,52 +50,15 @@ function blastCkboxMaster(id){
     } 
 }
 
-function blastDownload(value, id){
+function blastDownload(form){
    //alert(id)
-   if(value === 0){
-       return
-   }
-   form = document.getElementById('blastDownloadForm')
-   table = document.getElementById('blastResultsDiv')
-   cbxs = table.querySelectorAll("input[type='checkbox']");
-   //console.log(cbxs)
    
-   checked = []
-   for(var i=0; i<cbxs.length;i++){
-       //console.log(cbxs[i].value)
-       //console.log(cbxs[i].checked)
-       if(cbxs[i].checked && cbxs[i].value != 'master'){
-         checked.push(cbxs[i])
-       }
-   }
-   for(var n=0; n<checked.length; n++){
-      let i = document.createElement("input");
-       i.type = "hidden";
-       i.name = "blastFilesToDnld";
-       i.value = 'blast'+checked[n].value.toString()+'.fa.out'
-       // add all elements to the form
-       form.appendChild(i);
-   }
-   // form.reset();
-//    const i = document.createElement("input");
-//    i.type = "text";
-//    i.name = "dnldType";
-//    i.id = "intext";
-//    i.value = value
-//    // add all elements to the form
-//    form.appendChild(i);
-//    const j = document.createElement("input");
-//    j.type = "text";
-//    j.name = "blastID";
-//    j.id = "intext";
-//    j.value = id
-//    // add all elements to the form
-//    form.appendChild(j);
-   document.getElementById('dnldType').value = 0
+   //form = document.getElementById('blastDownloadForm')
+  
    form.submit()
 }
 function sortBlastTableForm(cb, blastID, col){
-   //console.log(cb, blastID, col)
+   console.log(cb, blastID, col)
    if(col === 'query'){
       document.getElementById('isort').checked = false
       document.getElementById('ssort').checked = false
@@ -127,6 +89,78 @@ function sortBlastTableForm(cb, blastID, col){
      } 
     }
     xmlhttp.send();
+  
+}
+qdir = 'fwd'
+bdir = 'fwd'
+idir = 'fwd'
+direction = 'fwd'
+function sortBlastTableForm_toggle(blastID, col){
+   console.log(blastID, col)
+   if(col === 'query'){
+      document.getElementById('bsort').style.background = 'grey'
+      document.getElementById('isort').style.background = 'grey'
+      document.getElementById('ssort').checked = false
+      if(direction=='fwd'){
+         document.getElementById('qsort').style.background = 'lightgreen'
+         direction='rev'
+      }else{
+         document.getElementById('qsort').style.background = 'darkgreen'
+         direction='fwd'
+      }
+      
+   }else if(col == 'bitscore'){
+       document.getElementById('qsort').style.background = 'grey'
+      
+      document.getElementById('isort').style.background = 'grey'
+      document.getElementById('ssort').checked = false
+      if(direction=='fwd'){
+         document.getElementById('bsort').style.background = 'lightgreen'
+         direction='rev'
+      }else{
+         document.getElementById('bsort').style.background = 'darkgreen'
+         direction='fwd'
+      }
+   }else if(col == 'identity'){
+       document.getElementById('qsort').style.background = 'grey'
+      document.getElementById('bsort').style.background = 'grey'
+     
+      document.getElementById('ssort').checked = false
+      if(direction=='fwd'){
+         document.getElementById('isort').style.background = 'lightgreen'
+         direction='rev'
+      }else{
+         document.getElementById('isort').style.background = 'darkgreen'
+         direction='fwd'
+      }
+   }else{  // sequence original
+       document.getElementById('qsort').style.background = 'grey'
+      document.getElementById('bsort').style.background = 'grey'
+      document.getElementById('isort').style.background = 'grey'
+      direction='fwd'
+
+   }
+   console.log(direction)
+  //   if(cb.checked){
+//        //console.log('checked')
+//        direction = 'rev'
+//     }else{
+//        //console.log('not checked')
+//        direction = 'fwd'
+//     }
+    var xmlhttp = new XMLHttpRequest();
+    var url = '?id='+blastID+'&col='+col+'&dir='+direction+'&ajax=1&t='+ Math.random()
+    console.log(url)
+    xmlhttp.open("GET", "blast_results"+url, true);
+    
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      var resp = xmlhttp.responseText;
+      document.getElementById('blastResultsDiv').innerHTML = resp
+     } 
+    }
+    xmlhttp.send(null);
   
 }
 

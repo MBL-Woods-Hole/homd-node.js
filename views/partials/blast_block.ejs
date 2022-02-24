@@ -145,8 +145,9 @@ or <%= blast_max.size %> MB filesize.)
 <% if(blastFxn == 'genome'){ %>
 
     <% }else{ %>
-         This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences.
+         <small>This tool identifies the closest matches of 16S rRNA sequences submitted by users among the HOMD or other 16S rRNA gene sequences.
         The sequence search is based on the NCBI BLASTN version 2.9.0+ <a href='/help/help-page?pagecode=blast/formats'>[DETAIL]</a>
+        </small>
     <% } %>
   
   <input type='hidden' name='returnTo' value='<%= returnTo %>' >

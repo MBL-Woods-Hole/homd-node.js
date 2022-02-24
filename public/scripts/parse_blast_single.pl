@@ -9,7 +9,8 @@ use Data::Dumper;
 
 #Provide the path first (the session id)
 #my $root="/mnt/LV1/oral16S6_tmp";
-my $root="/home/ubuntu/homd/blast-upload";
+#my $root="/home/ubuntu/homd/blast-upload";
+my $root="/Users/avoorhis/programming/blast_upload";
 my $sessionID=$ARGV[0];
 my $seqfile=$ARGV[1];
 

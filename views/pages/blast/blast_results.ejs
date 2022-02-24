@@ -59,6 +59,10 @@ thead th { position: sticky; top: 0; }
     max-width: 30px;
    
 }
+.blastcol4{
+    width: 500px;
+   
+}
 .blastBGodd{
    background: var(--div-bg09)  /* grey */
 }
@@ -121,9 +125,9 @@ pre{
       <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
       <table>
         <tr>
-        <td><a href='#blastStats'>View BLAST Stats and Legend</a></td>
+        
         <td>
-          <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.value,'<%= blastID %>')">
+          <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.form)">
             <option value='0'>Download</option>
             <option value='text1'>As Text -top hit only</option>
             <option value='text4'>As Text -top 4 hits</option>
@@ -137,11 +141,10 @@ pre{
             <option disabled>--------</option>
             <option value='json'>As JSON Format</option>
           </select>
-          <= Use checkboxes in column 1 to limit sequences.
+          
         
         </td>
-        </tr>
-        <tr>
+        
         <td>Search Results: <%= numseqs %> sequence(s) searched against target database:<br><%= blastParams.blastdb %></td>
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
@@ -149,16 +152,15 @@ pre{
       <input type='hidden' name='blastID' value='<%= blastID %>'>
       </form>
     </div>
-    <div>    
+    <div id='sort_radios'>    
       <center><small>
-      Sort Table: &nbsp;&nbsp;&nbsp;&nbsp;
-      By Query: 
-         <input type='checkbox' id='qsort' name='qsort' value='query' onclick="sortBlastTableForm(this,'<%= blastID %>','query')">&nbsp;&nbsp;&nbsp;&nbsp;
-       By bit_score: 
-         <input type='checkbox' id='ssort' name='ssort' value='score' onclick="sortBlastTableForm(this,'<%= blastID %>','score')">&nbsp;&nbsp;&nbsp;&nbsp;
-       By Identity:
-         <input type='checkbox' id='isort' name='isort' value='identity' onclick="sortBlastTableForm(this,'<%= blastID %>','identity')">
-      
+      Sort Table (toggle): &nbsp;&nbsp;&nbsp;&nbsp;
+      <!-- file sort is original -->
+       
+     <button class='button' id='qsort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','query')">By Query</button>
+     <button class='button' id='bsort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','bitscore')">By Bit_Score</button>
+     <button class='button' id='isort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','identity')">By Identity</button>&nbsp;&nbsp;&nbsp;&nbsp;
+     <input  checked id='ssort' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','sequence')">Original Sorting (By Sequence Input)</button>
       </small></center>
     </div>
     <% } %>
@@ -169,26 +171,7 @@ pre{
     </div>
     
     
-    <% if(blastParams.blastFxn === 'refseq') { %>
-    <small>
-      <div id='blastStats'>
-       <table class='table' border='1'>
-        <tr>
-            <td><strong>1</strong> Check individual or all results to be downloaded.</td>
-            <td><strong>4</strong> The table will show the top four hit results for each query sequence.</td>
-        </tr>
-        <tr>
-            <td><strong>2</strong> Click to toggle the sort order of the results by query ID</td>
-            <td><strong>5</strong> Total mis-match nt / total match nt</td>
-        </tr>
-        <tr>
-            <td><strong>3</strong> &nbsp;&nbsp;<img  src='/images/tinyseq.gif' height='15'>&nbsp;&nbsp;Links to Sequences<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img  src='/images/blastRes.gif' height='15'>&nbsp;&nbsp;Links to JSON Blast Results.</td>
-            <td><strong>6</strong></td>
-        </tr>
-       </table>
-      </div>
-    </small>
-    <% } %>  <!-- End: if blastParams.blastFxn === 'refseq' -->
+ 
     
 <% } %>  <!--  End: if(error_obj.code) -->
     </div> <!-- end: page-content -->

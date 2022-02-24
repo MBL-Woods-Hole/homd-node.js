@@ -70,15 +70,18 @@ sub parse_blast{ #For each blast result
 		return;
 	}else{#Containing the match results
 		#$store=~/Query=\s(.*)\n.*\((\d*?) letters\).+?(>.*)\n\n\s*Database\:.*$/s;
-		
-		$store=~/Query=\s(.*).*\(Length=(\d*?)\).+?(>.*)\n\n\s*Database\:.*$/s;
-		#$store=~/Query=\s(.*)/s;
-		print $1."\n";
-		
+		print "\nLooking for q\n";
+		print $store."\n";
+		#$store=~/Query=\s(.*).*\(Length=(\d*?)\).+?(>.*)\n\n\s*Database\:.*$/s;
+		#$store=~/Query=\s(.*).*\(Length=(\d*?)\)/s;
+		$store=~/Query=\s(.*)\n\nLength=(\d*?)\n.+?(>.*)\s*Database\:.*$/s;
+		#print $3."\n";
+		#print $store."\n";
 		($qid, $qsize)=($1, $2);
 		#@aligns=split("\n\n\n", $3);#$3: the alignment sequence
 		@aligns=split(">", $3);#$3: the alignment sequence
 		#print @aligns[0]."\n"
+		#print $qid.$qsize."\n";
 	}
 	#print Dumper @aligns;exit;
 	
@@ -87,7 +90,7 @@ sub parse_blast{ #For each blast result
 		next if(!$eachm);
 		$count++;
 		last if ($count>20);
-		my @fragment=split("\n\n\n", $eachm);	
+		my @fragment=split("\n\n\n", $eachm);
 		#print Dumper @fragment;exit;
 		###############################################################################################
 		my ($qseq, $sseq, $sid, $ssize, $score, $expect, $ident1, $ident2, $per, $st1, $st2, $qsta,$qstp,$ssta,$sstp);
