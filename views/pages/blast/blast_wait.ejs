@@ -37,6 +37,7 @@
          
          <br><br>
          <span id='show'>This page will reload in <span id="cnt" style="color:red;">5</span> Seconds</span>
+         <br>Elapsed Time: <span id='elapsed'></span>
       </div>
       </center>
     
@@ -59,7 +60,7 @@
  //  setTimeout(function(){
 //    window.location.reload(1);
 // }, 5000);
-
+var elapsed = '<%= elapsed %>'
 var counter = 5;   // start decrement
 var endAt =   60000;  // one min =  5000 * 12
 ////////////////////////////////////
@@ -80,6 +81,7 @@ var intervalId1 = window.setInterval(function () {
         span = document.getElementById("cnt");
         document.getElementById("proc").innerHTML = '##'.repeat(counter * 2)
         span.innerHTML = counter;
+        document.getElementById("elapsed").innerHTML = elapsed.toString()+' Secs'
     }
     if (counter === 0) {
         clearInterval(counter);
