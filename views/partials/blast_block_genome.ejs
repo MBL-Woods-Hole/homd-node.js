@@ -1,7 +1,8 @@
 
 <style>
   #other70 {
-   background:var(--div-bg017);
+   /* background:var(--div-bg017); */
+   background:#CFCFC4;
   }
   table {
     border-collapse:collapse;
@@ -18,14 +19,16 @@
   .no_border{
   border:0px solid black;
   }
+  #reset{
+    float:right;
+    padding : 60px 10px 0 0;
+  }
 </style>
 
 <center>
 
 <div id='center70pct_div'>
-    <div id='reset' style='float:right;top:60px;'>
-      <span onclick="reset2default_genome()" class='pill pill-brown pill-lg'>Reset to Defaults</span>
-    </div>
+    
 
 
 <form id='blastForm' name='blastForm' method='POST' action='/blast/blast_post' enctype='multipart/form-data' >
@@ -34,12 +37,14 @@
   
        <div class='block-title' >BLAST Program and Database:</div>
        <div class='adjust_block'>
-       
+       <div id='reset' >
+          <span onclick="reset2default('<%= blastFxn %>')" class='pill pill-brown pill-lg'>Reset to Defaults</span>
+        </div>
         <table border='1'>
         <tr>
           <td><a href='/help/help-page?pagecode=blast/programs' >BLAST Program:</a></td>
-          <td ><input id='blastn_rb' type='radio' checked name='blastProg' value='blastn' onclick="changeBlastGenomeDbs('<%= gid %>','blastn')"> Nucleic Acid (BLASTN)</td>
-          <td ><input id='blastp_rb' type='radio' name='blastProg' value='blastp' onclick="changeBlastGenomeDbs('<%= gid %>','blastp')"> Protein (BLASTP)</td>
+          <td ><input id='blastn_rb' type='radio' checked name='blastProg' value='blastn' onclick="changeBlastGenomeDbs('<%= gid %>','blastn')"> Nucleic Acid (<small>BLASTN</small>)</td>
+          <td ><input id='blastp_rb' type='radio' name='blastProg' value='blastp' onclick="changeBlastGenomeDbs('<%= gid %>','blastp')"> Protein (<small>BLASTP</small>)</td>
           <td colspan='2'><button class='button pill' id='qsort' type='button' onclick="show_other_blast('<%= gid %>')">Other</button><span id='other_blast'></span></td>
         </tr>
        <tr><td> 

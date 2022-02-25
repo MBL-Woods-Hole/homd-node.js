@@ -165,60 +165,21 @@ function sortBlastTableForm_toggle(blastID, col){
 }
 
 function reset2default(fxn) {
-   // set advanced,expect,max_target_seqs,
    // defaults
    if(fxn == 'genome'){
-      adv = ''
-      document.getElementById('blast_prokka_rb').checked = true
+     window.open('/genome/blast?gid=all','_self');
    }else{
-      adv = '-penalty -3 -reward 2 -gapopen 5 -gapextend 2'
+     window.open('/refseq/refseq_blastn','_self');
    }
-   max_target_seqs = '100'
-   expect = '0.0001'
-   document.getElementById('advancedOpts').value = adv
-   document.getElementById('blastMaxTargetSeqs').value = max_target_seqs
-   document.getElementById('blastExpect').value = expect
-   document.getElementById('textinput').value = ''
    
 }
-function reset2default_genome() {
-   // set advanced,expect,max_target_seqs,
-   // defaults
-   //location.reload();
-   window.open('/genome/blast?gid=all','_self');
-   return
-  //  adv = ''
-//    document.getElementById('blastn_rb').checked = true
-//    document.getElementById('blast_ncbi_rb').checked = true
-//    document.getElementById('all_genomes').checked = true
-//    // set dbs
-//    // set to '0'
-//    document.getElementById('genome_choices').value = '0'
-//    // and hide single seq choices
-//    document.getElementById('genome_choices').style.display = 'none'
-//    max_target_seqs = '100'
-//    expect = '0.0001'
-//    document.getElementById('advancedOpts').value = adv
-//    document.getElementById('blastMaxTargetSeqs').value = max_target_seqs
-//    document.getElementById('blastExpect').value = expect
-//    document.getElementById('textinput').value = ''
-//    document.getElementById('other_blast').innerHTML = ''
-//    
-//    //document.getElementById('blastDb').text = 'fna/ALL_genomes.fna'
-//    selectEl = document.getElementById('blastDb')
-//    selectEl.options[selectEl.selectedIndex].text = 'Genomic DNA from all HOMD Genomes'
-//    selectEl.options[selectEl.selectedIndex].value = 'fna/ALL_genomes.fna'
-   //console.log(document.getElementById('blastDb'))
-   
-}
-//
 //
 //
 function show_other_blast(gid){
    console.log('gid',gid)
-   txt = "&nbsp;&nbsp;&nbsp;<input type='radio' name='blastProg' value='blastx' onclick=\"changeBlastGenomeDbs('"+gid+"','blastx')\"> BLASTX&nbsp;&nbsp;&nbsp;"
-   txt += "<input type='radio' name='blastProg' value='tblastn' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastn')\"> TBLASTN&nbsp;&nbsp;&nbsp;"
-   txt += "<input type='radio' name='blastProg' value='tblastx' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastx')\"> TBLASTX"
+   txt = "&nbsp;&nbsp;&nbsp;<input type='radio' name='blastProg' value='blastx' onclick=\"changeBlastGenomeDbs('"+gid+"','blastx')\"> <small>BLASTX</small>&nbsp;&nbsp;&nbsp;"
+   txt += "<input type='radio' name='blastProg' value='tblastn' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastn')\"> <small>TBLASTN</small>&nbsp;&nbsp;&nbsp;"
+   txt += "<input type='radio' name='blastProg' value='tblastx' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastx')\"> <small>TBLASTX</small>"
    document.getElementById('other_blast').innerHTML = txt
 }
 function toggle_blast_genome_list(sh,gid){

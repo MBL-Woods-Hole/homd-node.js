@@ -82,7 +82,8 @@ input[type=radio] {
     height: .8em;
 }
 .title{
-   padding: 10px 0 10px 0px;  /* push to right */
+   padding: 14px 0 10px 0px;  
+   
    background: var(--title-bg);
    font-size: 20px;
    text-align: center;
@@ -90,6 +91,13 @@ input[type=radio] {
    border:1px solid black;
 }
 
+/* 
+.title{
+   background:tan;
+   width:100%;
+   text-align: center;
+}
+ */
 /* header images masthead */
 #masthead {
   width:1350px;
@@ -172,6 +180,7 @@ hr{
    left: 0px;
    border-top:1px solid black;
    border-bottom:1px solid black;
+   
 }
 #nav ul {
   margin-top:0px;
@@ -296,9 +305,6 @@ hr{
   top: 6px;
   right: 10px;
   
-  /* transform: translate(-50%, -50%); */
-  
-  /* border:1px solid grey; */
 }
 #homd-search input[type=text] {
   width:150px;

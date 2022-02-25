@@ -1,7 +1,12 @@
 
 <style>
   #other70 {
-   background:var(--div-bg01);
+   /* background:var(--div-bg01); */
+   background:#C1E1C1;
+  }
+  #reset{
+    float:right;
+    padding : 0px 0px 0 0;
   }
 </style>
 
@@ -14,6 +19,9 @@
 
   <div id='other70'>
        <div class='block-title' >BLAST Program and Database:</div>
+       <div id='reset'>
+           <span onclick="reset2default('<%= blastFxn %>')" class='pill pill-brown pill-lg'>Reset to Defaults</span>
+       </div>
        <div class='adjust_block'>
 
         <a href='/help/help-page?pagecode=blast/programs'>Program: BLASTN</a>
@@ -93,9 +101,7 @@ or <%= blast_max.size %> MB filesize.)
      
     </div>
 
-    <div class='adjust_block'>
-           <span onclick="reset2default('<%= blastFxn %>')" class='pill pill-brown pill-lg'>Reset to Defaults</span>
-    </div>
+    
     <div class='adjust_block'>
          <center><input class='pill pill-brown pill-lg' type='button' value='Blast' onclick='blastFormCheck_refseq()' \></center>
     </div>
