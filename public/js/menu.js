@@ -76,34 +76,3 @@ function search(){
   f.submit()
 }
 
-function blastFormCheck(){
-   form = document.getElementById('blastForm')
-   blastText = document.getElementById('textinput').value.trim()
-   //alert(blastText)
-   fileInput = document.getElementById('fileInput').value
-   const patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
-   if(blastText == '' && fileInput == ''){
-       alert('No sequences or file found')
-       return
-   }else if(blastText && !fileInput == ''){
-      // check text
-      if(blastText.length < 10) {
-          alert('Sequence is too short: min_length = 10bp')
-          return
-      
-      }else if(blastText[0] === '>') {
-         var seqcount = (blastText.match(/>/g) || []).length;
-         
-      }else{
-          //test out one naked sequence
-          if( patt.test(blastText) ){
-             alert(blastText[0],'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.')
-             return
-          }
-      }
-      
-      
-   }
-   
-   form.submit()
-}

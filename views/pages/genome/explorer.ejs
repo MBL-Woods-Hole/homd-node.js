@@ -125,7 +125,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     <% }else if((!blast || blast === '0') && (!anno_type || anno_type==='0')) { %> 
          <!-- do nothing here  -->
     <% }else if(blast && blast.toString() === '1' || blast==='all') { %>
-            <%- include('../../partials/blast_block'); %>
+            <%- include('../../partials/blast_block_genome'); %>
     <% }else if(anno_type === 'prokka' || anno_type === 'ncbi' ) { %>
              <%- include('../../partials/annotation'); %>
     <% }else{ %>

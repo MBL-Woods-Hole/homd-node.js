@@ -136,22 +136,22 @@ function genome_table_search(){
    }
    form.submit()
 }
-function changeBlastGenomeDbs(gid, db) {
-    //alert(gid)
-    args = {}
-    args.db = db
-    args.gid = gid
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "/genome/changeBlastGenomeDbs", true);
-    xmlhttp.setRequestHeader("Content-type","application/json");
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        var resp = xmlhttp.responseText;
-        //console.log(resp)
-        
-        document.getElementById('genomeBlastDbChoices').innerHTML=resp
-       }
-    }
-    xmlhttp.send(JSON.stringify(args));
-
-}
+// function changeBlastGenomeDbs(gid, db) {
+//     //alert(gid)
+//     args = {}
+//     args.db = db
+//     args.gid = gid
+//     var xmlhttp = new XMLHttpRequest();
+//     xmlhttp.open("POST", "/genome/changeBlastGenomeDbs", true);
+//     xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//         var resp = xmlhttp.responseText;
+//         //console.log(resp)
+//         
+//         document.getElementById('genomeBlastDbChoices').innerHTML=resp
+//        }
+//     }
+//     xmlhttp.send(JSON.stringify(args));
+// 
+// }

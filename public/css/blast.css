@@ -33,3 +33,104 @@ input[type=radio] {
 #blastDb{
    width:500px;
 }
+#blast-search-info{
+  border:1px solid grey;
+  padding:2px 10px;
+  background: lightgrey;
+  height: 60px;
+  
+}
+#blast-search-info  table{
+  
+  
+  font-size: small;
+  width:100%;
+}
+#blast-search-info  table td{
+  padding:0 2px;
+  
+}
+#blastResultsDiv{
+  border: 1px solid black;
+  padding: 10px;
+  font-size: small;
+  height: 500px;
+  width: auto;
+  overflow: auto;
+}
+#blastResultsDiv table{
+  border: 1px solid black;
+  font-size: small;
+  border-collapse:collapse;
+  width: auto;
+  overflow: auto;
+}
+#blastResultsDiv table sup{
+  color:red;
+}
+#blastResultsDiv table th{
+  
+  background:  var(--table-header-bg);
+  color: white;
+  padding:5px;
+  font-size:12px;
+  text-align: center;
+  
+}
+#blastResultsDiv table td{
+  border: 1px solid green;
+  padding: 1px 3px;
+  
+}
+.blastcol1{
+    max-width: 300px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+.blastcol2{
+    max-width: 30px;
+   
+}
+.blastcol4{
+    width: 500px;
+   
+}
+.blastBGodd{
+   background: var(--div-bg09)  /* grey */
+}
+.blastBGeven{
+   background: var(--div-bg12)  
+}
+#blastStats table{
+    font-size:small;
+    border:1px solid black;
+    border-collapse: collapse;
+    
+}
+#blastStats table td{
+    border:1px solid black;
+    padding: 3px;
+}
+#blasturl{
+   color: blue;
+}
+#sort_radios{
+  padding:5px;
+}
+pre{
+    overflow: auto;
+    background: #ddd;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: -ms-pre-wrap;
+    font-family: Consolas, monospace;
+    border:1px solid grey;
+}
+input[type=radio] {
+    height: 1.0em;
+}

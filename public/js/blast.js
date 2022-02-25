@@ -181,3 +181,183 @@ function reset2default(fxn) {
    document.getElementById('textinput').value = ''
    
 }
+function reset2default_genome() {
+   // set advanced,expect,max_target_seqs,
+   // defaults
+   //location.reload();
+   window.open('/genome/blast?gid=all','_self');
+   return
+  //  adv = ''
+//    document.getElementById('blastn_rb').checked = true
+//    document.getElementById('blast_ncbi_rb').checked = true
+//    document.getElementById('all_genomes').checked = true
+//    // set dbs
+//    // set to '0'
+//    document.getElementById('genome_choices').value = '0'
+//    // and hide single seq choices
+//    document.getElementById('genome_choices').style.display = 'none'
+//    max_target_seqs = '100'
+//    expect = '0.0001'
+//    document.getElementById('advancedOpts').value = adv
+//    document.getElementById('blastMaxTargetSeqs').value = max_target_seqs
+//    document.getElementById('blastExpect').value = expect
+//    document.getElementById('textinput').value = ''
+//    document.getElementById('other_blast').innerHTML = ''
+//    
+//    //document.getElementById('blastDb').text = 'fna/ALL_genomes.fna'
+//    selectEl = document.getElementById('blastDb')
+//    selectEl.options[selectEl.selectedIndex].text = 'Genomic DNA from all HOMD Genomes'
+//    selectEl.options[selectEl.selectedIndex].value = 'fna/ALL_genomes.fna'
+   //console.log(document.getElementById('blastDb'))
+   
+}
+//
+//
+//
+function show_other_blast(gid){
+   console.log('gid',gid)
+   txt = "&nbsp;&nbsp;&nbsp;<input type='radio' name='blastProg' value='blastx' onclick=\"changeBlastGenomeDbs('"+gid+"','blastx')\"> BLASTX&nbsp;&nbsp;&nbsp;"
+   txt += "<input type='radio' name='blastProg' value='tblastn' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastn')\"> TBLASTN&nbsp;&nbsp;&nbsp;"
+   txt += "<input type='radio' name='blastProg' value='tblastx' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastx')\"> TBLASTX"
+   document.getElementById('other_blast').innerHTML = txt
+}
+function toggle_blast_genome_list(sh,gid){
+   args={}
+   args.gid = gid
+   // reload
+   if(document.getElementById('all_genomes').checked === true){
+       //alert('all')
+       args.gid = 'all'
+       document.getElementById('blast_sub_title').innerHTML='BLAST Against All HOMD Genome Sequences'
+    }else{
+      document.getElementById('blast_sub_title').innerHTML='BLAST Against "'+gid+'" Genome Sequences'
+    }
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.open("GET", "/genome/blast?gid="+args.gid, true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var response = xmlhttp.responseText;
+        //console.log(resp)
+        //document.getElementById('genomeBlastDbChoices').innerHTML=response
+        progs = document.getElementsByName('blastProg')
+        for(i in progs){
+           if(progs[i].checked === true){
+              prog = progs[i].value
+           }
+        }
+        //alert(db)
+        changeBlastGenomeDbs(args.gid, prog)
+			if(sh === 'show'){
+			  document.getElementById('genome_choices').style.display = 'block'
+			}else{
+			  document.getElementById('genome_choices').style.display = 'none'
+			}
+		}
+    }
+    xmlhttp.send();
+   
+}
+function change_blast_genome(gid){
+   window.open('/genome/blast?gid='+gid,'_self');
+
+}
+function changeBlastGenomeDbs(gid, prog) {
+    //alert(gid)
+    args = {}
+    args.prog = prog
+    args.gid = gid
+    // if all_genomes is selected: ignore 'gid'
+    if(document.getElementById('all_genomes').checked === true){
+       args.gid = 'all'
+    }
+    
+    
+    
+    if(prog==='blastn' || prog ==='blastp'){
+      document.getElementById('other_blast').innerHTML = ''
+    }
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "/blast/changeBlastGenomeDbs", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var response = xmlhttp.responseText;
+        //console.log(resp)
+        document.getElementById('genomeBlastDbChoices').innerHTML=response
+        //document.getElementById(selected_db+'_rb').checked = true
+       }
+    }
+    xmlhttp.send(JSON.stringify(args));
+
+}
+//
+function blastFormCheck_refseq(){
+   form = document.getElementById('blastForm')
+   blastText = document.getElementById('textinput').value.trim()
+   //alert(blastText)
+   fileInput = document.getElementById('fileInput').value
+   const patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
+   if(blastText == '' && fileInput == ''){
+       alert('No sequences or file found')
+       return
+   }else if(blastText && !fileInput == ''){
+      // check text
+      if(blastText.length < 10) {
+          alert('Sequence is too short: min_length = 10bp')
+          return
+      
+      }else if(blastText[0] === '>') {
+         var seqcount = (blastText.match(/>/g) || []).length;
+         
+      }else{
+          //test out one naked sequence
+          if( patt.test(blastText) ){
+             alert(blastText[0],'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.')
+             return
+          }
+      }
+      
+      
+   }
+   
+   form.submit()
+}
+function blastFormCheck_genome(){
+   form = document.getElementById('blastForm')
+   // test for single wo chosen
+   if(document.getElementById('single_genome').checked === true
+     && document.getElementById('choose_genome_select').value === '0'){
+     alert('You must choose a genome OR select "ALL Genomes"')
+     return
+   }
+   
+   blastText = document.getElementById('textinput').value.trim()
+   //alert(blastText)
+   fileInput = document.getElementById('fileInput').value
+   const patt = /[^ATCGUKSYMWRBDHVN]/i   // These are the IUPAC letters
+   if(blastText == '' && fileInput == ''){
+       alert('No sequences or file found')
+       return
+   }else if(blastText && !fileInput == ''){
+      // check text
+      if(blastText.length < 10) {
+          alert('Sequence is too short: min_length = 10bp')
+          return
+      
+      }else if(blastText[0] === '>') {
+         var seqcount = (blastText.match(/>/g) || []).length;
+         
+      }else{
+          //test out one naked sequence
+          if( patt.test(blastText) ){
+             alert(blastText[0],'Wrong character(s) detected: only letters represented by the standard IUB/IUPAC codes are allowed.')
+             return
+          }
+      }
+      
+      
+   }
+   
+   form.submit()
+}

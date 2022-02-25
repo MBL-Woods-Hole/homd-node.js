@@ -1,106 +1,15 @@
+
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
-#blast-search-info{
-  border:1px solid grey;
-  padding:2px 10px;
-  background: lightgrey;
-  height: 60px;
-  
-}
-#blast-search-info  table{
-  border-collapse:collapse;
-  font-size: small;
-  width:100%;
-}
-#blast-search-info  table td{
-  padding:0 2px;
-  border:1px solid black;
-}
-#blastResultsDiv{
-  border: 1px solid black;
-  padding: 10px;
-  font-size: small;
-  height: 500px;
-  width: auto;
-  overflow: auto;
-}
-#blastResultsDiv table{
-  border: 1px solid black;
-  font-size: small;
-  border-collapse:collapse;
-  width: auto;
-  overflow: auto;
-}
-#blastResultsDiv table sup{
-  color:red;
-}
-#blastResultsDiv table th{
-  
-  background:  var(--table-header-bg);
-  color: white;
-  padding:5px;
-  font-size:12px;
-  text-align: center;
-  
-}
-#blastResultsDiv table td{
-  border: 1px solid green;
-  padding: 1px 3px;
-  
-}
-.blastcol1{
-    max-width: 300px;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-}
-.blastcol2{
-    max-width: 30px;
-   
-}
-.blastcol4{
-    width: 500px;
-   
-}
-.blastBGodd{
-   background: var(--div-bg09)  /* grey */
-}
-.blastBGeven{
-   background: var(--div-bg12)  
-}
-#blastStats table{
-    font-size:small;
-    border:1px solid black;
-    border-collapse: collapse;
-    
-}
-#blastStats table td{
-    border:1px solid black;
-    padding: 3px;
-}
-#blasturl{
-   color: blue;
-}
-pre{
-    overflow: auto;
-    background: #ddd;
-    padding-left: 10px;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -o-pre-wrap;
-    white-space: -ms-pre-wrap;
-    font-family: Consolas, monospace;
-    border:1px solid grey;
-}
+
 </style>
+
 <% blastParams = JSON.parse(blastParams) %>
 <% error_obj = JSON.parse(error) %>
 
 <%- include('../../partials/header_html'); %>
-
+<link rel="stylesheet" type="text/css" href="/css/blast.css" >
 <body>
    <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -128,7 +37,7 @@ pre{
         
         <td>
           <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.form)">
-            <option value='0'>Download</option>
+            <option value='0'>Download Options</option>
             <option value='text1'>As Text -top hit only</option>
             <option value='text4'>As Text -top 4 hits</option>
             <option value='text20'>As Text -top 20 hits</option>
@@ -139,7 +48,7 @@ pre{
             <option value='excel20'>As Excel -top 20 hits</option>
             <option value='excelAll'>As Excel -all hits</option>
             <option disabled>--------</option>
-            <option value='json'>As JSON Format</option>
+            <option value='zip'>BLAST Output Files</option>
           </select>
           
         

@@ -1,6 +1,7 @@
 <style>
 </style>
 <%- include('../../partials/header_html'); %>
+<link rel="stylesheet" type="text/css" href="/css/blast.css" >
 <% db_choices = JSON.parse(db_choices) %>
 <% blast_max = JSON.parse(blastmax) %>
 <body>
@@ -21,7 +22,7 @@
 
       <%- include('../../partials/flash'); %>
       <div id='under-construction'>Page Under Construction</div>
-         <%- include('../../partials/blast_block'); %>
+         <%- include('../../partials/blast_block_refseq'); %>
        </div>  <!-- End center70pct_div -->
   </center>   
      

@@ -1,9 +1,11 @@
 <style>
 </style>
 <%- include('../../partials/header_html'); %>
+<link rel="stylesheet" type="text/css" href="/css/blast.css" >
 <% db_choices = JSON.parse(db_choices) %>
 <% blast_prg = JSON.parse(blast_prg) %>
 <% blast_max = JSON.parse(blastmax) %>
+<% all_annos = JSON.parse(all_annos) %>
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -12,14 +14,13 @@
     
     <div class='page-content' >
               
-       <div class='title'>BLAST Against All Genomes</div>
+       <div class='title'>BLAST Against HOMD Genomes</div>
        <div style='padding:5px 0;'>
         
-        <center>Or <a href='explorer?blast=1'>choose a single genome to blast against</a></center>
         
       </div>
       <%- include('../../partials/flash'); %>
-    <%- include('../../partials/blast_block'); %>
+    <%- include('../../partials/blast_block_genome'); %>
   
     </div> <!-- end: page-content -->
     

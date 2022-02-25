@@ -329,10 +329,43 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     
 
 })
-
+router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs(req, res) {
+    console.log('in changeBlastGenomeDbs AJAX')
+    helpers.print(req.body)
+    let prog = req.body.prog
+    let gid = req.body.gid
+    let organism = '',dbChoices
+    if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
+       organism = C.annotation_lookup[gid].prokka.organism
+     }
+    
+    let html = "<select class='dropdown' id='blastDb' name='blastDb'>"
+    if(prog === 'blastn' || prog === 'tblastn' || prog ==='tblastx'){
+       dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x)
+       if(gid != 'all'){
+           html += "<option value='fna/"+gid+".fna'>This Organism's ("+organism + ") Genomic DNA</option>"
+           html += "<option value='ffn/"+gid+".ffn'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+       }else{
+           html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
+           html += "<option value='"+dbChoices[1].filename+"'>"+dbChoices[1].name+"</option>"
+       }
+       
+    }else{  // blastp and blastx
+       dbChoices = C.all_genome_blastn_db_choices.protein.map((x) => x)
+       if(gid != 'all'){
+           html += "<option value='faa/"+gid+".faa'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+       }else{
+           html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
+       }
+    }
+    html += "</select>"
+    res.send(html)
+    
+})
 router.post('/blast_post', upload.single('blastFile'),  async function blast_post(req, res, next) {
   console.log('MADEIT TO blastPost')
-  //console.log(req.body)
+  console.log(req.body)
+  
   //console.log('req.file?', req.file)   // may be undefined
   let anno = req.body.blastAnno  // either prokka or ncbi
   let filename, filepath, data, fasta_as_list, trimlines, twolist,fastaFilePaths;
@@ -430,6 +463,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
 router.post('/blastDownload', function blastDownload(req, res) {
     //
     console.log('in blastDownload')
+    const AdmZip = require('adm-zip');
     //console.log(req.body)
     let blastID = req.body.blastID
     let type = req.body.dnldType
@@ -438,7 +472,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
     if(!type || !blastID){
        return
     }
-    let  data=[]
+    let  data=[],zip
     // read directory CONFIG.json first
     let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
 
@@ -451,9 +485,22 @@ router.post('/blastDownload', function blastDownload(req, res) {
        return
     }
     let blastFiles = []
+    if(type === 'zip'){
+       zip = new AdmZip();
+    }
     for(let i=0; i < result.length; i++){
         blastFiles.push(path.join(blastResultsDir, result[i]))
+        if(type === 'zip'){
+           zip.addLocalFile(path.join(blastResultsDir, result[i]))
+        }
     }
+    if(type === 'zip'){
+        const data = zip.toBuffer();
+        res.set('Content-Type','application/octet-stream');
+        res.set('Content-Disposition',"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".zip\"");
+        res.set('Content-Length',data.length);
+        res.send(data);
+    }else{
     //console.log('blastfiles')
     //console.log(blastFiles)
     let fileData = {}
@@ -478,9 +525,9 @@ router.post('/blastDownload', function blastDownload(req, res) {
                 //const html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
                 var table_tsv = create_blast_download_table(data, type)
                 if(type.substring(0,4) === 'text'){
-                    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""})
+                    res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
                  }else{  //excel
-                    res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""})
+                    res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
                  }
                 res.send(table_tsv)
                 delete req.body
@@ -488,7 +535,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
              })   
       }
     })
-
+    }  // end else
     
 })
 function create_blast_download_table(data, type) {

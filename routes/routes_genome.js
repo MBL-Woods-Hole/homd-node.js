@@ -520,59 +520,108 @@ router.get('/explorer', function explorer (req, res) {
 })
 //
 //
-router.get('/blast_all', function blast_all(req, res) {
-   console.log('in blast all')
-   
-   let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
-
-   res.render('pages/genome/blast_all', {
+router.get('/blast', function blast_get(req, res) {
+   console.log('in genome blast-GET')
+   const chosen_gid = req.query.gid
+   console.log('chosen gid=',chosen_gid)
+   let organism,dbChoices
+   const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
+    return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
+   })
+   allAnnosObj.sort(function sortAnnos (a, b) {
+      return helpers.compareStrings_alpha(a.org, b.org)
+   })
+   //let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
+    if(! chosen_gid || chosen_gid == 0|| chosen_gid ==='all'){
+      dbChoices = C.all_genome_blastn_db_choices.nucleotide
+      organism = ''
+    }else{
+      organism = C.annotation_lookup[chosen_gid].prokka.organism
+      dbChoices = [
+      {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
+               filename:'fna/'+chosen_gid+'.fna'},
+      {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
+               filename:'ffn/'+chosen_gid+'.ffn'}
+      ]
+    }
+   res.render('pages/genome/blast', {
         title: 'HOMD :: Ribosomal Protein Tree',
         pgname: 'blast', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         blastFxn: 'genome',
-        organism: '',
-        gid: 'all',
+        organism: organism,
+        gid: chosen_gid,
+        all_annos: JSON.stringify(allAnnosObj),
         blast_prg: JSON.stringify(C.blastPrograms),
         db_choices: JSON.stringify(dbChoices),
-        returnTo: '/genome/blast_all',
+        returnTo: '/genome/blast',
         blastmax: JSON.stringify(C.blast_max_file),
       })
    
 })
-router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
-    console.log('in changeBlastGenomeDbs AJAX')
-    helpers.print(req.body)
-    let db = req.body.db
-    let gid = req.body.gid
-    let organism = '',dbChoices
-    if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
-       organism = C.annotation_lookup[gid].prokka.organism
-     }
-    
-    let html = "<select class='dropdown' id='blastDb' name='blastDb'>"
-    if(db === 'blastn' || db === 'tblastn' || db ==='tblastx'){
-       dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x)
-       if(gid != 'all'){
-           html += "<option value='fna/"+gid+".fna'>This Organism's ("+organism + ") Genomic DNA</option>"
-           html += "<option value='ffn/"+gid+".ffn'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
-       }else{
-           html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
-           html += "<option value='"+dbChoices[1].filename+"'>"+dbChoices[1].name+"</option>"
-       }
-       
-    }else{  // blastp and blastx
-       dbChoices = C.all_genome_blastn_db_choices.protein.map((x) => x)
-       if(gid != 'all'){
-           html += "<option value='faa/"+gid+".faa'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
-       }else{
-           html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
-       }
-    }
-    html += "</select>"
-    res.send(html)
-    
-})
+// router.post('/blast', function blast_post(req, res) {
+//    console.log('in genome blast POST')
+//    console.log('body',req.body)
+//    const chosen_gid = req.body.gid
+//    
+//    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
+//     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
+//    })
+//    allAnnosObj.sort(function sortAnnos (a, b) {
+//       return helpers.compareStrings_alpha(a.org, b.org)
+//    })
+//    let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
+// 
+//    res.render('pages/genome/blast', {
+//         title: 'HOMD :: Ribosomal Protein Tree',
+//         pgname: 'blast', // for AbountThisPage
+//         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//         blastFxn: 'genome',
+//         organism: '',
+//         gid: chosen_gid,
+//         all_annos: JSON.stringify(allAnnosObj),
+//         blast_prg: JSON.stringify(C.blastPrograms),
+//         db_choices: JSON.stringify(dbChoices),
+//         returnTo: '/genome/blast',
+//         blastmax: JSON.stringify(C.blast_max_file),
+//       })
+//    
+// })
+// router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
+//     console.log('in changeBlastGenomeDbs AJAX')
+//     helpers.print(req.body)
+//     let db = req.body.db
+//     let gid = req.body.gid
+//     let organism = '',dbChoices
+//     if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
+//        organism = C.annotation_lookup[gid].prokka.organism
+//      }
+//     
+//     let html = "<select class='dropdown' id='blastDb' name='blastDb'>"
+//     if(db === 'blastn' || db === 'tblastn' || db ==='tblastx'){
+//        dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x)
+//        if(gid != 'all'){
+//            html += "<option value='fna/"+gid+".fna'>This Organism's ("+organism + ") Genomic DNA</option>"
+//            html += "<option value='ffn/"+gid+".ffn'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+//        }else{
+//            html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
+//            html += "<option value='"+dbChoices[1].filename+"'>"+dbChoices[1].name+"</option>"
+//        }
+//        
+//     }else{  // blastp and blastx
+//        dbChoices = C.all_genome_blastn_db_choices.protein.map((x) => x)
+//        if(gid != 'all'){
+//            html += "<option value='faa/"+gid+".faa'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
+//        }else{
+//            html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
+//        }
+//     }
+//     html += "</select>"
+//     res.send(html)
+//     
+// })
 // 2021-06-15  opening trees in new tab because thet take too long to open in an iframe
 // which makes the main menu non functional
 // These functions are used to open trees with a search for odid or genomeID
