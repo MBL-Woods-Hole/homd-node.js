@@ -54,7 +54,7 @@ router.get('/blast_results', function blastResults(req, res) {
         const sortCol = req.query.col || '' 
         const sortDir = req.query.dir || '' 
         //////////////////
-        const renderFxn = (req, res, html, blastFiles, config, blastID) => {
+        const renderFxn = (req, res, html, queries, config, blastID) => {
           res.render('pages/blast/blast_results', {
                   title: 'HOMD :: Blast Results', 
                   pgname: 'blast',
@@ -64,7 +64,8 @@ router.get('/blast_results', function blastResults(req, res) {
                   ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                   //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
                   html: html,
-                  numseqs: blastFiles.length,
+                  //numseqs: queries.length,
+                  queries: JSON.stringify(queries),
                   blastParams: JSON.stringify(config),
                   blastID: blastID,
                   error: JSON.stringify({})
@@ -79,7 +80,7 @@ router.get('/blast_results', function blastResults(req, res) {
         }
 
         //console.log(req.query)
-        let jsondata, data=[]
+        let data=[],blastFiles = [],query_strings=[]
         // read directory CONFIG.json first
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
         let blastResultsDir = path.join(blastDir, 'blast_results')
@@ -91,8 +92,6 @@ router.get('/blast_results', function blastResults(req, res) {
            return
         }
 
-
-        let blastFiles = []
         for(let i=0; i < result.length; i++){
             blastFiles.push(path.join(blastResultsDir, result[i]))
         }
@@ -126,13 +125,17 @@ router.get('/blast_results', function blastResults(req, res) {
                      //console.log('file',blastFiles[i])
 //                   console.log('config',config)
 //                   console.log('results-i',results[i].toString())
+                     let query = helpers.parse_blast_query(results[i], config.blastFxn)
+                     query_strings.push({query:query, file:blastFiles[i]})
                   if(config.blastFxn === 'genome'){
                      //data = results[i].toString()
                      //console.log('pushing',results[i])
                      //data.push("<div style='font-family: monospace;'><pre>"+results[i].toString()+'</pre></div>')   // genome is -html flag
+                     // grep 'query=' from file
+                     
                      data.push(results[i]) 
                   }else{  // 16S rRNA refseq
-                    let parsed_data = helpers.parse_blast_refseq(results[i])
+                    let parsed_data = helpers.parse_blast(results[i], config.blastFxn)
                     data.push(parsed_data) // in order of sequences
                     //console.log('parsed_data',parsed_data)
                     //jsondata = JSON.parse(results[i])  // refseq is json -outfmt 
@@ -190,9 +193,10 @@ router.get('/blast_results', function blastResults(req, res) {
                 }
 
                 if(req.query.ajax){
-                   return res.send(html)
-                }else{
-                  renderFxn(req, res, html, blastFiles, config, blastID)
+                   return res.send(html)   // this is for refseq blast
+                }else{  // genome
+                  
+                  renderFxn(req, res, html, query_strings, config, blastID)
                   
                 }
             }) 
@@ -467,8 +471,9 @@ router.post('/blastDownload', function blastDownload(req, res) {
     //console.log(req.body)
     let blastID = req.body.blastID
     let type = req.body.dnldType
-    
+    let blastFxn = req.body.blastFxn
     //console.log('type',type)
+    
     if(!type || !blastID){
        return
     }
@@ -516,7 +521,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
 
                 for(let i=0; i<blastFiles.length; i++){
                   
-                  let parsed_data = helpers.parse_blast_refseq(results[i])
+                  let parsed_data = helpers.parse_blast(results[i], blastFxn)
                   data.push(parsed_data) // in order of sequences
                   
 
@@ -538,7 +543,10 @@ router.post('/blastDownload', function blastDownload(req, res) {
     }  // end else
     
 })
-function create_blast_download_table(data, type) {
+
+
+
+function create_blast_download_table(data_obj, type, fxn) {
   let txt = ''
   
   //let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentity\tIdentities(%)\tScore (bits)\tQuery Start\tSbjct Start\tQuery End\tSbjct End\tEvalue\tGaps\n'
@@ -546,46 +554,91 @@ function create_blast_download_table(data, type) {
   
   //console.log('data',data)
   //console.log(data[0].hits[0].hsps[0])
-  let hit,h,hitCountOutput,dnldInfo
+  let hit,h,hitCountOutput,dnldInfo,otid,clone_id
   
-  for(let n in data){
-     //console.log('data[n]',data[n])
-     data[n].data.sort(function sortIR2(a, b) {
+  for(let n in data_obj){
+     let obj = data_obj[n]
+     console.log('obj',obj)
+     obj.data.sort(function sortIR2(a, b) {
             return helpers.compareStrings_int(b.bitscore, a.bitscore);
      })
-     if(type === 'text1' || type === 'excel1'){
-         dnldInfo = 'Top BLAST Hit Only: '+data[n].version+'\n'
-         txt += data[n].query+'\t'+data[n].query_length+'\t'
+     if(obj.data == 'no hits'){
+        txt += obj.query+'\t'+obj.query_length+'\t\t\tNo Hits Found\t\t\t\t\n'
+     }else{
          
-          //console.log('data[0]',data[n].data[0])
-          txt += helpers.make_otid_display_name(data[n].data[0].otid)+'\t'+data[n].data[0].clone_id+'\t'+data[n].data[0].clone+'\t'+data[n].data[0].identity+'\t'+data[n].data[0].bitscore+'\t'+data[n].data[0].expect+'\t'+data[n].data[0].gaps+'\n'
-      
-      }else if(type === 'textAll' || type === 'excelAll'){
-         dnldInfo = 'All BLAST Hits: '+data[n].version+'\n'
+         if(type === 'text1' || type === 'excel1'){
+             dnldInfo = 'Top BLAST Hit Only: '+obj.version+'\n'
+             txt += obj.query+'\t'+obj.query_length+'\t'
          
-          //console.log('data[0]',data[n].data[0])
-          for(let i in data[n].data){
-            txt += data[n].query+'\t'+data[n].query_length+'\t'
-            txt += helpers.make_otid_display_name(data[n].data[i].otid)+'\t'+data[n].data[i].clone_id+'\t'+data[n].data[i].clone+'\t'+data[n].data[i].identity+'\t'+data[n].data[i].bitscore+'\t'+data[n].data[i].expect+'\t'+data[n].data[i].gaps+'\n'
-          }
-      }else if(type === 'text4' || type === 'excel4'){
-         dnldInfo = 'Top 4 BLAST Hits: '+data[n].version+'\n'
+              //console.log('data[0]',data[n].data[0])
+            if(fxn === 'refseq'){
+                otid = helpers.make_otid_display_name(obj.data[0].otid)
+                clone_id = obj.data[i].clone_id
+            }else{
+                otid = ''
+                clone_id = ''
+            }
+            txt += otid+'\t'+clone_id+'\t'+obj.data[0].clone+'\t'+obj.data[0].identity+'\t'+obj.data[0].bitscore+'\t'+obj.data[0].expect+'\t'+obj.data[0].gaps+'\n'
+        
+          }else if(type === 'textAll' || type === 'excelAll'){
+             dnldInfo = 'All BLAST Hits: '+obj.version+'\n'
          
-          //console.log('data[0]',data[n].data[0])
-          for(let i=0;i<4;i++){
-            txt += data[n].query+'\t'+data[n].query_length+'\t'
-            txt += helpers.make_otid_display_name(data[n].data[i].otid)+'\t'+data[n].data[i].clone_id+'\t'+data[n].data[i].clone+'\t'+data[n].data[i].identity+'\t'+data[n].data[i].bitscore+'\t'+data[n].data[i].expect+'\t'+data[n].data[i].gaps+'\n'
-          }
-       }else if(type === 'text20' || type === 'excel20'){
-         dnldInfo = 'Top 20 BLAST Hits: '+data[n].version+'\n'
+              //console.log('data[0]',data[n].data[0])
+              for(let i in obj.data){
+                if(fxn === 'refseq'){
+                    otid = helpers.make_otid_display_name(obj.data[0].otid)
+                    clone_id = obj.data[i].clone_id
+                }else{
+                    otid = ''
+                    clone_id = ''
+                }
+                if(obj.data[i]){
+                  txt += obj.query+'\t'+obj.query_length+'\t'
+                  txt += otid+'\t'+clone_id+'\t'+obj.data[i].clone+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
+                }else{
+                  txt += '\t\t\t\t\t\t\t\t\n'
+                }
+              }
+          }else if(type === 'text4' || type === 'excel4'){
+             dnldInfo = 'Top 4 BLAST Hits: '+obj.version+'\n'
          
-          //console.log('data[0]',data[n].data[0])
-          for(let i=0;i<20;i++){
-            txt += data[n].query+'\t'+data[n].query_length+'\t'
-            txt += helpers.make_otid_display_name(data[n].data[i].otid)+'\t'+data[n].data[i].clone_id+'\t'+data[n].data[i].clone+'\t'+data[n].data[i].identity+'\t'+data[n].data[i].bitscore+'\t'+data[n].data[i].expect+'\t'+data[n].data[i].gaps+'\n'
-          }
-       }
+              //console.log('data[0]',data[n].data[0])
+              for(let i=0;i<4;i++){
+                if(fxn === 'refseq'){
+                    otid = helpers.make_otid_display_name(obj.data[0].otid)
+                    clone_id = obj.data[i].clone_id
+                }else{
+                    otid = ''
+                    clone_id = ''
+                }
+                if(obj.data[i]){
+                  txt += obj.query+'\t'+obj.query_length+'\t'
+                  txt += otid+'\t'+clone_id+'\t'+obj.data[i].clone+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
+                }else{
+                  txt += '\t\t\t\t\t\t\t\t\n'
+                }
+              }
+           }else if(type === 'text20' || type === 'excel20'){
+             dnldInfo = 'Top 20 BLAST Hits: '+obj.version+'\n'
          
+              //console.log('data[0]',data[n].data[0])
+              for(let i=0;i<20;i++){
+                if(fxn === 'refseq'){
+                    otid = helpers.make_otid_display_name(obj.data[0].otid)
+                    clone_id = obj.data[i].clone_id
+                }else{
+                    otid = ''
+                    clone_id = ''
+                }
+                if(obj.data[i]){
+                txt += obj.query+'\t'+obj.query_length+'\t'
+                txt += otid+'\t'+clone_id+'\t'+obj.data[i].clone+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
+                }else{
+                  txt += '\t\t\t\t\t\t\t\t\n'
+                }
+              }
+           }
+       }  
      
   }
   let retTxt = dnldInfo + header + txt
@@ -684,7 +737,7 @@ router.post('/openBlastWindow', function openBlastWindow(req, res) {
         file = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast' + num + '.fa')
     }
     //console.log('file',file)
-    const data = fs.readFile(file, 'utf8', function readBlastFile(err, data) {
+    fs.readFile(file, 'utf8', function readBlastFile(err, data) {
       if (err)
           console.log(err)
       else
@@ -693,6 +746,37 @@ router.post('/openBlastWindow', function openBlastWindow(req, res) {
     
     })
 })
+router.get( '/show_blasterjs', function blaster_testing(req,res){
+    console.log('in show blaster')
+    let file = req.query.file
+    let query = req.query.query
+    console.log('query',query)
+    console.log('file',file)
+    fs.readFile(file, 'utf8', function readBlasterFile(err, data) {
+        //console.log('data',data)
+        res.render('pages/blast/show_blaster', {
+            title: 'HOMD :: BLAST WAIT', 
+            pgname: 'blaster',
+            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+            hostname: CFG.HOSTNAME,
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            blastData: encodeURI(data.toString()),
+            query: query
+          })
+    })
+})
+// router.get( '/blaster_test', function blaster_testing(req,res){
+//     console.log('in baster testing')
+//     
+//     res.render('pages/blast/blasterjs_test', {
+//         title: 'HOMD :: BLAST WAIT', 
+//         pgname: 'blaster',
+//         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//         hostname: CFG.HOSTNAME,
+//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//         
+//       })
+// })
 //////////////////////////////////////////////////////////////////
 ///// FUNCTIONS /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////

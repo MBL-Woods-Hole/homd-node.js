@@ -174,6 +174,11 @@ function reset2default(fxn) {
    
 }
 //
+function handleBlasterJSSelect(elm)
+  {
+     console.log(elm)
+     window.location = elm.value
+  }
 //
 function show_other_blast(gid){
    console.log('gid',gid)
@@ -209,12 +214,12 @@ function toggle_blast_genome_list(sh,gid){
         }
         //alert(db)
         changeBlastGenomeDbs(args.gid, prog)
-			if(sh === 'show'){
-			  document.getElementById('genome_choices').style.display = 'block'
-			}else{
-			  document.getElementById('genome_choices').style.display = 'none'
-			}
-		}
+            if(sh === 'show'){
+              document.getElementById('genome_choices').style.display = 'block'
+            }else{
+              document.getElementById('genome_choices').style.display = 'none'
+            }
+        }
     }
     xmlhttp.send();
    

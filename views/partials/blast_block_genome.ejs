@@ -24,7 +24,7 @@
     padding : 60px 10px 0 0;
   }
 </style>
-
+<!-- <a href='/blast/blaster_test'>blaster-js testing</a> -->
 <center>
 
 <div id='center70pct_div'>
@@ -50,13 +50,13 @@
        <tr><td> 
        <a href='/help/help-page?pagecode=blast/databases'>Database Choices</a>:
        </td><td colspan='2'>
-	   <span id='genomeBlastDbChoices'>
-		 <select class='dropdown' id='blastDb' name='blastDb'>
-		   <% for(n in db_choices){ %>
-			 <option value='<%= db_choices[n].filename %>'><%= db_choices[n].name %></option>
-		   <% } %>
-		 </select>
-	   </span>
+       <span id='genomeBlastDbChoices'>
+         <select class='dropdown' id='blastDb' name='blastDb'>
+           <% for(n in db_choices){ %>
+             <option value='<%= db_choices[n].filename %>'><%= db_choices[n].name %></option>
+           <% } %>
+         </select>
+       </span>
        </td></tr> 
         
         <tr>
@@ -127,7 +127,7 @@ or <%= blast_max.size %> MB filesize.)
 <br><br>
 
 
-	   <div class='block-title' >Adjust Blast Parameters (Optional):</div>
+       <div class='block-title' >Adjust Blast Parameters (Optional):</div>
 
 
 
@@ -148,11 +148,11 @@ or <%= blast_max.size %> MB filesize.)
 
           <a href='/help/help-page?pagecode=blast/parameters'>Maximum Target Sequences</a>:
            <select class='dropdown' id='blastMaxTargetSeqs' name='blastMaxTargetSeqs'>
-				<option value='20'>20</option>
-				<option value='50'>50</option>
-				<option selected='selected' value='100'>100</option>
-				<option value='250'>250</option>
-				<option value='500'>500</option>
+                <option value='20'>20</option>
+                <option value='50'>50</option>
+                <option selected='selected' value='100'>100</option>
+                <option value='250'>250</option>
+                <option value='500'>500</option>
            </select>
            
     </div>

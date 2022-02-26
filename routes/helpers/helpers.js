@@ -518,7 +518,28 @@ module.exports.print = function print(thing) {
     
 }
 //
-module.exports.parse_blast_refseq = function parse_blast0(file_data){
+module.exports.parse_blast_query = function parse_blast_query(file_data, fxn){
+    let string = file_data.toString()
+    let lines = string.split('\n')
+    
+    let query='',line
+    for(let i in lines){
+        line = lines[i].trim()
+        if(!line) continue;
+        if(line.indexOf('Query=') === 0){
+          query += line.substring(6).trim()
+          if(lines[parseInt(i)+1] != 'Length='){
+              query += ' '+lines[parseInt(i)+1]
+          }
+        }
+    }
+    if(query){
+       return query
+    }else{
+      return 'NotFound'
+    }
+}
+module.exports.parse_blast = function parse_blast0(file_data, fxn){
     //console.log('BLAST data',file_data.toString())
     let string = file_data.toString()
     let file_collector = {}
@@ -566,7 +587,10 @@ module.exports.parse_blast_refseq = function parse_blast0(file_data){
            
            split_name = clone.split('|')
            clone_id = split_name[0].trim()
-           otid = split_name[2].trim().split('-')[1]
+           otid = 'none'
+           if(fxn == 'refseq'){
+             otid = split_name[2].trim().split('-')[1]
+           }
            id_collector[clone_id] = {'clone': clone, 'clone_id': clone_id, otid: otid}
            // if(lines[parseInt(i)+1] != 'Length='){
 //               clone += ' '+lines[parseInt(i)+1]
