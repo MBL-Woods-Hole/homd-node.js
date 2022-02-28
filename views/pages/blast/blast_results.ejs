@@ -67,7 +67,7 @@ thead th { position: sticky; top: 0; }
       <select onchange="javascript:handleBlasterJSSelect(this)">
       <option value="0">Select BLAST Query</option>
       <% for(i in query_strings){ %>
-        <option value='/blast/show_blasterjs?id=<%= blastID %>&file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'>query: <%= query_strings[i].query %></option>
+        <option value='/blast/show_blasterjs?id=<%= blastID %>&file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'><%= query_strings[i].query %></option>
       <% } %>
       </select>
     </div>
