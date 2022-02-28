@@ -1,5 +1,43 @@
 HOMD Notes
 2022-0223
+Done:
+changed the refseq main menu item to "16S rRNA Microbiome"
+Refseq Blast:
+  Entry Page:
+    Put Note at bottom of page.
+    Fixed reset button.
+    Made default database: 15.22 (position 28)
+    Maximum Target Seqs default: 20 (removed 5 and 10 as choices)
+  Wait Page:
+    Show elapsed time
+  Result Page:
+    Sorting: original sort is by sequences in file (or textbox)
+    Link to sort by query(alpha),bit_score,identity -- they toggle!
+    added radio to show original sort.
+    Grey box at top: rearranged and removed mystery link to nowhere.
+    Added BlasterJS Alignment links (NEW)
+    Fixed 'return to data' link for copy.
+    In the data table: made the query text wrap so it can be read.
+    proper right justify for numerical data.
+    Replaced the "View Link" column with two new columns:"Query Sequence" and "Alignment".
+      The Alignment link now open the blast output file.
+Genome Blast:
+  Entry Page:
+    Main menu link opens to default: All_genomes
+    Created table at top with five rows:
+       blast program selection
+       blast database selection (adjusts depending on program select)
+       annotation (with ncbi as default)
+       blast-against: all or single genome.
+       genome selection (if single is selected)
+    Fixed reset button.
+    Maximum Target Seqs default: 100 (removed 5 and 10 as choices)
+  Wait Page:
+    Show elapsed time
+  Results Page:
+    Added BlasterJS Alignment links (NEW)
+    Fixed the 'bug' that fouled up the alignments formatting
+  
 Meet w/ Floyd
 16SRefSeqBlast
 --change from xml to default blast output -and figure out how to parse correctly

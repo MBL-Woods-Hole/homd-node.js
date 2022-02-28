@@ -63,11 +63,11 @@ thead th { position: sticky; top: 0; }
       <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
       </form>
     
-    View Alignment (<small>BlastJS</small>)
+    View Alignment (<small><a href='https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205286' target='_blank'>BlasterJS</a></small>)
       <select onchange="javascript:handleBlasterJSSelect(this)">
-      <option value="0">Select BLAST file</option>
+      <option value="0">Select BLAST Query</option>
       <% for(i in query_strings){ %>
-        <option value='/blast/show_blasterjs?file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'>query: <%= query_strings[i].query %></option>
+        <option value='/blast/show_blasterjs?id=<%= blastID %>&file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'>query: <%= query_strings[i].query %></option>
       <% } %>
       </select>
     </div>

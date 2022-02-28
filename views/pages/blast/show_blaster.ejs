@@ -1,10 +1,14 @@
 <style>
+#blast-multiple-alignments{
+  
+}
 #blast-alignments-table{
   background:white;
 }
 #blast-single-alignment{
   width:100%;
   background:#ffffe0;
+  border:1px solid grey;
   padding:20px;
   overflow:auto;
 }
@@ -24,7 +28,12 @@
     
     <div class='page-content' >
               
-       <div class='title'>BLAST Output <small>(<a href='https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205286' target='_blank'>Using Blasterjs</a>)</small></div>
+       <div class='title'>BLAST Output <small>(<a href='https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205286' target='_blank'>Using BlasterJS</a>)</small></div>
+    <div style='float:right;padding:3px;'>
+    
+      <a href='/blast/blast_results?id=<%= blastID %>' class="button" value="Go back!" >Back</a>
+    
+    </div>
     Query: <%= query %>
     
     <div id="blast-multiple-alignments"></div>

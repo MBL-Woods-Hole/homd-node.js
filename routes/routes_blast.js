@@ -746,10 +746,11 @@ router.post('/openBlastWindow', function openBlastWindow(req, res) {
     
     })
 })
-router.get( '/show_blasterjs', function blaster_testing(req,res){
+router.get( '/show_blasterjs', function show_blasterjs(req,res){
     console.log('in show blaster')
     let file = req.query.file
     let query = req.query.query
+    let id = req.query.id
     console.log('query',query)
     console.log('file',file)
     fs.readFile(file, 'utf8', function readBlasterFile(err, data) {
@@ -761,7 +762,8 @@ router.get( '/show_blasterjs', function blaster_testing(req,res){
             hostname: CFG.HOSTNAME,
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
             blastData: encodeURI(data.toString()),
-            query: query
+            query: query,
+            blastID: id
           })
     })
 })
