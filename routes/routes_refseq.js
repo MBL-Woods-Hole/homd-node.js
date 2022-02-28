@@ -26,6 +26,7 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
     blastFxn: 'refseq',
     returnTo: '/refseq/refseq_blastn',
     blastmax: JSON.stringify(C.blast_max_file),
+    blast_version: CFG.BLAST_VERSION,
   })
 })
 

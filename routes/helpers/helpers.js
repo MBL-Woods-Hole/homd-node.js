@@ -468,9 +468,10 @@ module.exports.readFilesInDirectory = function readFilesInDirectory(directory, d
 }
 //
 module.exports.readAsync = async function readAsync(file, callback) {
-    if(CFG.ENV === 'development'){
-        console.log('Reading File:',file)
-    }
+    // if(CFG.ENV === 'development'){
+//         console.log('Reading File:',file)
+//     }
+    module.exports.print(['Reading File:',file])
     try {
       if (fs.existsSync(file)) {
     //file exists
@@ -478,7 +479,7 @@ module.exports.readAsync = async function readAsync(file, callback) {
     } catch(err) {
       console.error(err)
     }
-    console.log('sleeping')
+    
     //await module.exports.sleep(10000)
     fs.readFile(file, callback);
 }

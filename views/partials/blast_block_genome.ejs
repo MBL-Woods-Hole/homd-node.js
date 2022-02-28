@@ -168,7 +168,9 @@ or <%= blast_max.size %> MB filesize.)
          <center><input class='pill pill-brown pill-lg' type='button' value='Blast' onclick='blastFormCheck_genome()' \></center>
     </div>
     </div> <!-- End other70 -->
-  
+    <small>
+        The sequence search is based on the NCBI BLAST version <%= blast_version %> <a href='/help/help-page?pagecode=blast/formats'>[DETAIL]</a>
+    </small>
   <input type='hidden' name='returnTo' value='<%= returnTo %>' >
     <input type='hidden' name='blastFxn' value='<%= blastFxn %>' >
 </form>

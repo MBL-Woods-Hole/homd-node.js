@@ -1,7 +1,7 @@
 HOMD Notes
 2022-0223
 Done:
-changed the refseq main menu item to "16S rRNA Microbiome"
+Changed the "16S Refseq" main menu item to "16S rRNA Microbiome"
 Refseq Blast:
   Entry Page:
     Put Note at bottom of page.

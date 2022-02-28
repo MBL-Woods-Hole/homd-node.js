@@ -557,6 +557,7 @@ router.get('/blast', function blast_get(req, res) {
         db_choices: JSON.stringify(dbChoices),
         returnTo: '/genome/blast',
         blastmax: JSON.stringify(C.blast_max_file),
+        blast_version: CFG.BLAST_VERSION,
       })
    
 })

@@ -75,7 +75,7 @@ router.get('/blast_results', function blastResults(req, res) {
         //let thisSessionBlast = {}
         if(Object.prototype.hasOwnProperty.call(req.session, 'blast')){
             //thisSessionBlast = JSON.parse(JSON.stringify(req.session.blast))
-            console.log('deleteing session blast')
+            //console.log('deleteing session blast')
             delete req.session.blast
         }
 
@@ -214,7 +214,7 @@ router.get('/blast_results', function blastResults(req, res) {
 //
 //
 router.get('/blast_wait', async function blastWait(req, res, next) {
-    console.log('in blast wait')
+    helpers.print('in blast wait')
     //????
     //console.log('session blast_wait:')
     //console.log(req.session)
@@ -300,11 +300,11 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     if(!req.session.blast.timer){
        // need to get off this train
        //await module.exports.sleep(1000);
-       console.log('in !req.session.blast.timer -setting finish true')
+       helpers.print('in !req.session.blast.timer -setting finish true')
        finished = true;
     }
     //console.log('timer:',req.session.blast.timer,'blastFiles',blastFiles.length,'faFiles',faFiles.length)
-    console.log('finished:t/f?',finished)
+    helpers.print(['finished:t/f?',finished])
     //console.log('session.error',req.session.pyerror)
     if(finished){
       if(!req.session.blast.id){
@@ -315,7 +315,6 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
       res.redirect('/blast/blast_results?id=' + req.session.blast.id)
       
     }else{
-      console.log('rendering blast_wait')
       res.render('pages/blast/blast_wait', {
         title: 'HOMD :: BLAST WAIT', 
         pgname: 'blast',
@@ -368,7 +367,7 @@ router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs(req, res) {
 })
 router.post('/blast_post', upload.single('blastFile'),  async function blast_post(req, res, next) {
   console.log('MADEIT TO blastPost')
-  console.log(req.body)
+  helpers.print(req.body)
   
   //console.log('req.file?', req.file)   // may be undefined
   let anno = req.body.blastAnno  // either prokka or ncbi
@@ -558,7 +557,7 @@ function create_blast_download_table(data_obj, type, fxn) {
   
   for(let n in data_obj){
      let obj = data_obj[n]
-     console.log('obj',obj)
+     
      obj.data.sort(function sortIR2(a, b) {
             return helpers.compareStrings_int(b.bitscore, a.bitscore);
      })
@@ -751,8 +750,8 @@ router.get( '/show_blasterjs', function show_blasterjs(req,res){
     let file = req.query.file
     let query = req.query.query
     let id = req.query.id
-    console.log('query',query)
-    console.log('file',file)
+    //console.log('query',query)
+    //console.log('file',file)
     fs.readFile(file, 'utf8', function readBlasterFile(err, data) {
         //console.log('data',data)
         res.render('pages/blast/show_blaster', {
