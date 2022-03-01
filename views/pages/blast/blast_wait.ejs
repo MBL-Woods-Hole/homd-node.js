@@ -28,12 +28,10 @@
          <!-- <br><br><img src='/images/0_WzVRQs214b7TgyJXtrans.gif' height='80'> -->
          <br><br><img src='/images/swirl_pastel_green.gif' height='80'>
          
-         <% if(filesFinished >0){ %>
-              <br>Sequences Finished:  <%= filesFinished %> out of <%= filesStarted %>
-         <% }else{ %>
-              <br>
-         <% } %>
-              
+        
+         <% if(filesFinished === filesStarted){ %> 
+           <br>Processing Files
+         <% } %>    
          <br><span id='proc'>Processing</span>
          
          <br><br>

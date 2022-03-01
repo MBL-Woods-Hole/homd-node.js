@@ -25,6 +25,7 @@
   width: 95%;
   min-height: 120px;
   border: 1px solid grey;
+  padding:5px 10px;
   font-size: 11px;
 }
 input[type=radio] {

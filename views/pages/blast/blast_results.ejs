@@ -80,7 +80,7 @@ thead th { position: sticky; top: 0; }
          <button class='button' id='qsort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','query')">By Query</button>
          <button class='button' id='bsort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','bitscore')">By Bit_Score</button>
          <button class='button' id='isort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','identity')">By Identity</button>&nbsp;&nbsp;&nbsp;&nbsp;
-         <input  checked id='ssort' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','sequence')">Original Sorting (By Sequence Input)</button>
+         <input  checked id='ssort' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','sequence')"> Original Sorting (By Sequence Input)</button>
           </small></center>
     </div>
     <% }else{ %>    <!-- Genomic Blast Result -->

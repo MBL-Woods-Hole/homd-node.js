@@ -370,7 +370,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   helpers.print(req.body)
   
   //console.log('req.file?', req.file)   // may be undefined
-  let anno = req.body.blastAnno  // either prokka or ncbi
+  let anno = req.body.anno  // either prokka or ncbi
   let filename, filepath, data, fasta_as_list, trimlines, twolist,fastaFilePaths;
   const opts = { minLength: 10, patt: /[^ATCGUKSYMWRBDHVN]/i, returnTo: req.body.returnTo }
   let blastOpts = createBlastOpts(req.body)
