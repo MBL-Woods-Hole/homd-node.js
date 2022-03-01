@@ -324,7 +324,8 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
         db_choices: JSON.stringify(C.refseq_blastn_db_choices),
         filesFinished: blastFiles.length,
         filesStarted: faFiles.length,
-        elapsed: req.session.blast.timer
+        elapsed: req.session.blast.timer,
+        fxn: req.session.blast.blastFxn
         //error: JSON.stringify(req.session.pyerror)
         
       })

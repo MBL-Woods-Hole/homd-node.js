@@ -29,9 +29,19 @@
          <br><br><img src='/images/swirl_pastel_green.gif' height='80'>
          
         
-         <% if(filesFinished === filesStarted){ %> 
-           <br>Processing Files
-         <% } %>    
+         <% if(fxn === 'refseq'){ %>
+           <% if(filesFinished >0){ %>
+              <br>Sequences Finished:  <%= filesFinished %> out of <%= filesStarted %>
+           <% }else{ %>
+              <br>
+           <% } %>
+         
+         <% } %>  
+         <% if(filesFinished > 1 && filesFinished === filesStarted){ %> 
+             <br>Processing Files
+         <% }else{ %>
+              <br>
+         <% } %>   
          <br><span id='proc'>Processing</span>
          
          <br><br>
