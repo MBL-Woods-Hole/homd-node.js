@@ -347,9 +347,23 @@
       color: #222222;
       font-size: 11px;
       font-family: Consolas, monospace;
-      
+      white-space: nowrap;
       }
-
+      
+pre{
+    overflow: auto;
+    background: #ddd;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: -ms-pre-wrap;
+    font-family: Consolas, monospace;
+    border:1px solid grey;
+      }
+ 
       footer {
       text-align: center;
       color: #cccccc;
@@ -611,7 +625,13 @@
                     </tr>
                   </table>
 
-                  <pre class=alignmentgraphic>{{hsp|alignment_pre}}</pre>
+                  <!-- <pre class=alignmentgraphic>{{hsp|alignment_pre}}</pre> -->
+                  <pre class=alignmentgraphic>
+Query {{ hsp['Hsp_query-from'].text|format_alignment1|safe }} {{ hsp.Hsp_qseq }} {{ hsp['Hsp_query-to'] }}<br>
+{{ ''|format_alignment2|safe }} {{ hsp.Hsp_midline }}<br>
+Subject {{ hsp['Hsp_hit-from'].text|format_alignment3|safe }} {{ hsp.Hsp_hseq }} {{ hsp['Hsp_hit-to'] }}                
+                  </pre>
+                  
                 </div>
                 {% endfor %}
 

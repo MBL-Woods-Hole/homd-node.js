@@ -27,8 +27,11 @@
      text-align:right;
   }
   #reset{
-    float:right;
-    padding : 15px 10px 0 0;
+    /* float:right; */
+    /* padding : 15px 10px 0 0; */
+    width:350px;
+    text-align:right;
+    border:0px solid black;
   }
 </style>
 <!-- <a href='/blast/blaster_test'>blaster-js testing</a> -->
@@ -49,12 +52,12 @@
        <table id='outer-table' border='1'><tr><td>
         <table id='parameters-table' border='1'>
         <tr>
-          <td><a href='/help/help-page?pagecode=blast/programs' >BLAST Program:</a></td>
+          <td nowrap><a href='/help/help-page?pagecode=blast/programs' >BLAST Program:</a></td>
           <td ><input id='blastn_rb' type='radio' checked name='blastProg' value='blastn' onclick="changeBlastGenomeDbs('<%= gid %>','blastn')"> Nucleic Acid (<small>BLASTN</small>)</td>
           <td ><input id='blastp_rb' type='radio' name='blastProg' value='blastp' onclick="changeBlastGenomeDbs('<%= gid %>','blastp')"> Protein (<small>BLASTP</small>)</td>
-          <td colspan='2' nowrap><button class='button pill' id='qsort' type='button' onclick="show_other_blast('<%= gid %>')">Other</button><span id='other_blast'></span></td>
+          <td nowrap><button class='button pill' id='qsort' type='button' onclick="show_other_blast('<%= gid %>')">Other</button><span id='other_blast'></span></td><td nowrap></td>
         </tr>
-       <tr><td> 
+       <tr><td nowrap> 
        <a href='/help/help-page?pagecode=blast/databases'>Database Choices</a>:
        </td><td colspan='2'>
        <span id='genomeBlastDbChoices'>
@@ -64,7 +67,13 @@
            <% } %>
          </select>
        </span>
-       </td></tr> 
+       </td>
+       <td nowrap>
+       <div id='reset' class='no_border'>
+          <span onclick="reset2default('<%= blastFxn %>')" class='pill pill-brown pill-lg'>Reset to Defaults</span>
+        </div>
+       </td>
+       </tr> 
         
         <tr>
           <td>Annotation:</td>
@@ -72,7 +81,7 @@
           <td colspan='1'><input id='blast_prokka_rb' type='radio' name='anno' value='prokka'> PROKKA</td>
         </tr>
         <tr>
-          <td>BLAST Against:</td>
+          <td nowrap>BLAST Against:</td>
           <% if(!gid || gid === 'all'){ %>
           <td colspan='1'><input checked type='radio' id='all_genomes' name='against' value='all' onclick="toggle_blast_genome_list('hide','<%= gid %>')"> All Genomes</td>
           <td colspan='1'><input type='radio' id='single_genome' name='against' value='single' onclick="toggle_blast_genome_list('show','<%= gid %>')"> Single Genome</td>
@@ -84,9 +93,7 @@
         </table>
         </td>
         <td class='res'>
-         <div id='resetx' >
-          <span onclick="reset2default('<%= blastFxn %>')" class='pill pill-brown pill-lg'>Reset to<br>Defaults</span>
-        </div>
+         
         </td>
         </tr>
         </table>

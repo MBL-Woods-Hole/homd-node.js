@@ -103,18 +103,48 @@ def seqid(hit):
         return s[2]
     return hitid
 
-
+@filter
+def format_alignment1(string):
+    #return "{:>7s}".format(string)
+    l = len(string)
+    pad = 10-l  # 'Query          '
+    ret = string
+    for n in range(pad):
+       ret = "&nbsp;" + ret
+    # if 1 ret~14   1-sl = 14
+    # 213457 ret 14  6-sl = 14
+    return ret
+    
+@filter
+def format_alignment2(string):
+    
+    pad = 16  # '              '
+    ret = ''
+    for n in range(pad):
+       ret = "&nbsp;" + ret
+    return ret
+@filter
+def format_alignment3(string):
+    #return "{:>7s}".format(string)
+    l = len(string)
+    pad = 8-l
+    ret = string
+    for n in range(pad):
+       ret = "&nbsp;" + ret
+    return ret
+    #return "'{0:&nbsp;>15}'".format(string)
 @filter
 def alignment_pre(hsp):
-    # return (
-#         "Query  {:>7s}  {}  {}\n".format(hsp['Hsp_query-from'].text, hsp.Hsp_qseq, hsp['Hsp_query-to']) +
-#         "       {:7s}  {}\n".format('', hsp.Hsp_midline) +
-#         "Subject{:>7s}  {}  {}".format(hsp['Hsp_hit-from'].text, hsp.Hsp_hseq, hsp['Hsp_hit-to'])
-#     )
-    string = hsp['Hsp_query-from'].text + '  '+ hsp.Hsp_qseq+ '  '+ str(hsp['Hsp_query-to'])+ '\n'
-    string += '  ' + hsp.Hsp_midline +' ' +hsp['Hsp_hit-from'].text + '\n'
-    string += '  ' + hsp.Hsp_hseq +' '+ str(hsp['Hsp_hit-to'])
-    return string
+    
+    return (
+        "\nQuery {:>7s}  {}  {}".format(hsp['Hsp_query-from'].text, hsp.Hsp_qseq, hsp['Hsp_query-to']) +
+        "\n       {:>7s}  {}".format('', hsp.Hsp_midline) +
+        "\nSubject{:>7s}  {}  {}\n".format(hsp['Hsp_hit-from'].text, hsp.Hsp_hseq, hsp['Hsp_hit-to'])
+    )
+    # string = '\n'+hsp['Hsp_query-from'].text + '  '+ hsp.Hsp_qseq+ '  '+ str(hsp['Hsp_query-to'])+ '\n'
+#     string += '  ' + hsp.Hsp_midline +' ' +hsp['Hsp_hit-from'].text + '\n'
+#     string += '  ' + hsp.Hsp_hseq +' '+ str(hsp['Hsp_hit-to'])
+    #return string
 
 @filter('len')
 def blastxml_len(node):
