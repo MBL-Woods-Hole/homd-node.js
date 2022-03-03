@@ -8,6 +8,7 @@ const {exec, spawn} = require('child_process');
 const multer  = require('multer')
 const upload = multer({ dest: CFG.UPLOAD_DIR })
 const path      = require('path')
+const parser = require('xml2json');
 const helpers   = require(app_root + '/routes/helpers/helpers')
 const C       = require(app_root + '/public/constants')
 const async = require('async')
@@ -44,111 +45,199 @@ CTGGGCCGTGTCTCTCCCAATGTGGCCGTTCAACCTCTCAGTCCGGCTACTGATCGACTTGGTGAGCCGTT
 //         console.log('req.body:',req.body)
 //         res.redirect('/blast/blast_results?id='+req.body.id+'&col='+req.body.col+'&dir='+req.body.dir)
 // })
-router.get('/blast_results', function blastResults(req, res) {
-        console.log('in blast_results')
-        //console.log('req.query:',req.query)
-        //console.log('req.body:',req.body)
-        //console.log('req:',req)
-        const blastID = req.query.id
-        
-        const sortCol = req.query.col || '' 
-        const sortDir = req.query.dir || '' 
-        //////////////////
-        const renderFxn = (req, res, html, queries, config, blastID) => {
-          res.render('pages/blast/blast_results', {
+router.get('/blast_results_genome', function blastResults_genome(req, res) {
+    console.log('in blast_results Genomic')
+    console.log('req.query:',req.query)
+    //console.log('req.body:',req.body)
+    //console.log('req:',req)
+    const blastID = req.query.id
+    const filename = req.query.file || ''
+    const blastquery = req.query.query || ''
+    let ext,html_files=[],data=[],xml_files = [],query_strings=[]
+    const renderFxn = (req, res, queries, genome_data, files, config, blastID) => {
+          //console.log('htmlfiles',files)
+          res.render('pages/blast/blast_results_genome', {
                   title: 'HOMD :: Blast Results', 
                   pgname: 'blast',
                   config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
                   hostname: CFG.HOSTNAME,
-                  //url: CFG.URL,
                   ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-                  //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
-                  html: html,
-                  //numseqs: queries.length,
                   queries: JSON.stringify(queries),
+                  files: JSON.stringify(files),
                   blastParams: JSON.stringify(config),
                   blastID: blastID,
+                  blastData: encodeURI(genome_data.toString()),
                   error: JSON.stringify({})
             })
-        }
-        //////////////////
-        //let thisSessionBlast = {}
-        if(Object.prototype.hasOwnProperty.call(req.session, 'blast')){
+    }
+    
+    if(Object.prototype.hasOwnProperty.call(req.session, 'blast')){
             //thisSessionBlast = JSON.parse(JSON.stringify(req.session.blast))
             //console.log('deleteing session blast')
             delete req.session.blast
-        }
+    }
 
-        //console.log(req.query)
-        let data=[],blastFiles = [],query_strings=[]
-        // read directory CONFIG.json first
-        let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
-        let blastResultsDir = path.join(blastDir, 'blast_results')
-
-        const result = getAllFilesWithExt(blastResultsDir, 'out')
-
-        if(!result){
-           throw new Error('The Blast ID "'+blastID+'" was not found.<br>Probably expired if you are using and old link.')
-           return
-        }
-
-        for(let i=0; i < result.length; i++){
-            blastFiles.push(path.join(blastResultsDir, result[i]))
-        }
-        
-        
-        //console.log('blastfiles')
-        //console.log(blastFiles)
-        //try:  https://node.homd.info/blast/blast_results?id=1638297207475-44741
-        let configFilePath = path.join(blastDir,'CONFIG.json')
-        fs.readFile(configFilePath, function readConfig(err, configData) {
-         if(err){
+    // read directory CONFIG.json first
+    let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
+    let blastResultsDir = path.join(blastDir, 'blast_results')
+    
+    
+    
+    //console.log('blastfiles')
+    //console.log(blastFiles)
+    //try:  https://node.homd.info/blast/blast_results?id=1638297207475-44741
+    let configFilePath = path.join(blastDir,'CONFIG.json')
+    fs.readFile(configFilePath, function readConfig(err, configData) {
+        if(err){
             req.flash('fail', 'blastID no longer Valid')
             res.redirect('/') // this needs to redirect to either refseq or genome
             return
-         }else{
+        }else{
              // blast.out files are present (but are they complete?)
-             let config = JSON.parse(configData)
+            let config = JSON.parse(configData)
              
-            //  if(config.blastFxn === 'genome'){
-//                for(let i in blastFiles){
-//                     fs.readFile(blastFiles[i], function(err, content){
-//                         console.log('XXX',content.toString())
-//                         renderFxn(req, res, content, blastFiles, config, blastID)
-//                     })
-//                }
-//              }else{
+            const result_html = getAllFilesWithExt(blastResultsDir, 'html')
+            const result_xml = getAllFilesWithExt(blastResultsDir, 'xml')
+            if(!result_html){
+                throw new Error('The Blast ID "'+blastID+'" was not found.<br>Probably expired if you are using and old link.')
+                return
+            }
              
-             async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
-
-                for(let i=0; i<blastFiles.length; i++){
-                     //console.log('file',blastFiles[i])
-//                   console.log('config',config)
-//                   console.log('results-i',results[i].toString())
-                     let query = helpers.parse_blast_query(results[i], config.blastFxn)
-                     query_strings.push({query:query, file:blastFiles[i]})
-                  if(config.blastFxn === 'genome'){
-                     //data = results[i].toString()
-                     //console.log('pushing',results[i])
-                     //data.push("<div style='font-family: monospace;'><pre>"+results[i].toString()+'</pre></div>')   // genome is -html flag
-                     // grep 'query=' from file
+            for(let i=0; i < result_html.length; i++){
+                html_files.push(path.join(blastResultsDir, result_html[i]))
+            }
+            for(let i=0; i < result_xml.length; i++){
+                xml_files.push(path.join(blastResultsDir, result_xml[i]))
+            }
+            async.map(xml_files, helpers.readAsync, function asyncMapBlast(err, results) {
+                for(let i=0; i<xml_files.length; i++){
                      
-                     data.push(results[i]) 
-                  }else{  // 16S rRNA refseq
+                    let query = helpers.parse_blast_query_xml(parser.toJson(results[i]), config.blastFxn)
+                    query_strings.push({query:query, file: html_files[i]})
+                 
+                }
+                if(filename && blastquery){
+                   fs.readFile(filename, 'utf8', function readBlasterFile(err, genome_data) {
+                      renderFxn(req, res, query_strings, genome_data, html_files, config, blastID)
+                   })
+                 }
+                //console.log('**data**',data)
+                if(xml_files.length === 0){
+                    // error no data
+                    let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, config.id, 'blasterror.log')
+                    fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
+                        if(err){
+                            req.flash('fail', 'BLAST Failed with no data and no error information')
+                            res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
+                            return            
+                        }else{
+                          // file exists throw error
+                          //console.log('YYYY')
+                          //throw new Error('BLAST Script Error: '+content)
+                          //console.log('CONTENT',content.toString().trim())
+                            if(content.toString().trim()){  // means there was true error NOT zero length
+                            //pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
+                                req.flash('fail', 'BLAST Script Error:: '+ content)
+                                res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
+                                return
+                            }
+                        }
+                    })
+                }
+                
+                
+                if(!blastID){
+                    req.flash('fail', 'blastID no longer Valid')
+                    res.redirect(config.blastFxn) // this needs to redirect to either refseq or genome
+                    return
+                }
+
+                fs.readFile(html_files[0], 'utf8', function readBlasterFile(err, genome_data) {
+                    renderFxn(req, res, query_strings, genome_data, html_files, config, blastID)
+                })
+                
+            }) // end async map
+           
+           
+        } // end else
+    })
+    
+})
+router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
+    console.log('in blast_results RefSeq')
+    //console.log('req.query:',req.query)
+    //console.log('req.body:',req.body)
+    //console.log('req:',req)
+    const blastID = req.query.id
+    let ext,html_files=[]
+    const sortCol = req.query.col || '' 
+    const sortDir = req.query.dir || '' 
+    //////////////////
+    const renderFxn = (req, res, html, queries, genome_data, files, config, blastID) => {
+        //console.log('htmlfiles',files)
+        res.render('pages/blast/blast_results_refseq', {
+            title: 'HOMD :: Blast Results', 
+            pgname: 'blast',
+            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+            hostname: CFG.HOSTNAME,
+            //url: CFG.URL,
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
+            html: html,
+            //numseqs: queries.length,
+            queries: JSON.stringify(queries),
+            files: JSON.stringify(files),
+            blastParams: JSON.stringify(config),
+            blastID: blastID,
+            blastData: encodeURI(genome_data.toString()),
+            error: JSON.stringify({})
+        })
+    }
+        
+    if(Object.prototype.hasOwnProperty.call(req.session, 'blast')){
+        //thisSessionBlast = JSON.parse(JSON.stringify(req.session.blast))
+        //console.log('deleteing session blast')
+        delete req.session.blast
+    }
+
+    //console.log(req.query)
+    let data=[],blastFiles = [],query_strings=[]
+    // read directory CONFIG.json first
+    let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
+    let blastResultsDir = path.join(blastDir, 'blast_results')
+        
+        //console.log(blastFiles)
+        //try:  https://node.homd.info/blast/blast_results?id=1638297207475-44741
+    let configFilePath = path.join(blastDir,'CONFIG.json')
+    fs.readFile(configFilePath, function readConfig(err, configData) {
+        if(err){
+            req.flash('fail', 'blastID no longer Valid')
+            res.redirect('/') // this needs to redirect to either refseq or genome
+            return
+        }else{
+            // blast.out files are present (but are they complete?)
+            let config = JSON.parse(configData)
+             
+            const result = getAllFilesWithExt(blastResultsDir, 'out')
+            if(!result){
+                   throw new Error('The Blast ID "'+blastID+'" was not found.<br>Probably expired if you are using and old link.')
+                   return
+            }
+
+             
+            for(let i=0; i < result.length; i++){
+                blastFiles.push(path.join(blastResultsDir, result[i]))
+            }
+            async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
+                for(let i=0; i<blastFiles.length; i++){
+                    //console.log('file',blastFiles[i])
+//                  console.log('config',config)
+//                  console.log('results-i',results[i].toString())
+                    let query = helpers.parse_blast_query(results[i], config.blastFxn)
+                    query_strings.push({query:query, file:blastFiles[i]})
+                  
                     let parsed_data = helpers.parse_blast(results[i], config.blastFxn)
                     data.push(parsed_data) // in order of sequences
-                    //console.log('parsed_data',parsed_data)
-                    //jsondata = JSON.parse(results[i])  // refseq is json -outfmt 
-                    //console.log(blastFiles[i])
-                    //data.push(jsondata.BlastOutput2[0].report.results.search)
-                    //if(jsondata === undefined){
-                    //    console.log('jsondata error for file:',blastFiles[i])
-                    //}
-                  }
-                  // if(CFG.ENV === 'development'){
-//                       //console.log('jsondata[0]', jsondata[0])
-//                   }
-                  
                 }
                 
                 //console.log('**data**',data)
@@ -157,51 +246,41 @@ router.get('/blast_results', function blastResults(req, res) {
                     let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, config.id, 'blasterror.log')
                     fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
                         if(err){
-                          // continue on NO ERROR FILE PRESENT and no data  WTF?
-                          // throw error 
-                          req.flash('fail', 'BLAST Failed with no data and no error information')
+                            // continue on NO ERROR FILE PRESENT and no data  WTF?
+                            // throw error 
+                            req.flash('fail', 'BLAST Failed with no data and no error information')
                             res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
                             return            
                         }else{
                           // file exists throw error
-                          //console.log('YYYY')
-                          //throw new Error('BLAST Script Error: '+content)
-                          //console.log('CONTENT',content.toString().trim())
-                          if(content.toString().trim()){  // means there was true error NOT zero length
-                            //pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
-                            req.flash('fail', 'BLAST Script Error:: '+ content)
-                            res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
-                            return
-                          }
+                            if(content.toString().trim()){  // means there was true error NOT zero length
+                                //pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
+                                req.flash('fail', 'BLAST Script Error:: '+ content)
+                                res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
+                                return
+                            }
                         }
                     })
                 }
-                let html = ''
-                 if(config.blastFxn === 'genome'){
-                     let rowBreak = "</pre><br><pre>"
-                     html = '<pre>'+data.join(rowBreak)+'</pre>'
-                     //html = data
-                 }else{   // refseq
-                     //html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
-                     html = getBlastHtmlTable0(data, blastID, sortCol, sortDir)
-                 }
+                let refseq_html = ''
+                refseq_html = getBlastHtmlTable0(data, blastID, sortCol, sortDir)
+                 
                 
                 if(!blastID){
-                     req.flash('fail', 'blastID no longer Valid')
-                     res.redirect(config.blastFxn) // this needs to redirect to either refseq or genome
-                     return
+                    req.flash('fail', 'blastID no longer Valid')
+                    res.redirect(config.blastFxn) // this needs to redirect to either refseq or genome
+                    return
                 }
 
                 if(req.query.ajax){
-                   return res.send(html)   // this is for refseq blast
-                }else{  // genome
-                  
-                  renderFxn(req, res, html, query_strings, config, blastID)
-                  
+                    return res.send(refseq_html)   // this is for refseq blast
+                }else{ 
+                  renderFxn(req, res, refseq_html, query_strings, '', html_files, config, blastID)
                 }
-            }) 
-           // }// end test else
-         } // end else
+            }) // end async map
+           
+           
+        } // end else
     })
 })
 // function getBlastHtmlFromHtml(blastFiles, blastID){
@@ -219,7 +298,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     //console.log('session blast_wait:')
     //console.log(req.session)
     let finished = false, blastFiles = [], faFiles = [], html, jsondata, database, pyerror
-    
+    let ext
     //////
 //     const renderFxn = (req, res, gid, otid, blast, organism, dbChoices,  allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
 //       res.render('pages/genome/explorer', {
@@ -264,7 +343,8 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
         req.session.blast.timer += 5  // 5sec at a pop
         let blastResultsDir = path.join(blastDir,'blast_results')
         const result = getAllDirFiles(blastDir) // will give ALL files in ALL dirs
-        //console.log('result',result)
+        console.log('blastResultsDir',blastResultsDir)
+        console.log('result',result)
         if(!result){
            req.flash('fail', 'There was a fatal error reading the BLAST directory')
            res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
@@ -274,7 +354,12 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
            if(result[i].endsWith('.fa')){
               faFiles.push(result[i])
            } 
-           if(result[i].endsWith('.out')){
+           if(req.session.blast.blastFxn === 'refseq'){
+             ext = '.out'  // these are the files we are looking for to finish
+           }else{
+             ext = '.html'
+           }
+           if(result[i].endsWith(ext)){
               blastFiles.push(path.join(blastResultsDir, result[i]))
               if(req.session.blast.timer <= 5){
                 req.session.blast.fsize0 = helpers.checkFileSize(blastFiles[blastFiles.length-1])
@@ -282,7 +367,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
               }
            } 
         }
-        
+        console.log('blastFiles',blastFiles)
         if(blastFiles.length >0 && blastFiles.length === faFiles.length){// && req.session.blast.timer > 41){ // time chosen arbitrarily
            //finished = true;
            req.session.blast.fsize0 = req.session.blast.fsize
@@ -312,7 +397,11 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
          res.redirect(req.session.blast.returnTo) // this needs to redirect to either refseq or genome
          return
        }
-      res.redirect('/blast/blast_results?id=' + req.session.blast.id)
+      if(req.session.blast.blastFxn === 'refseq'){
+         res.redirect('/blast/blast_results_refseq?id=' + req.session.blast.id)
+      }else{
+         res.redirect('/blast/blast_results_genome?id=' + req.session.blast.id)
+      }
       
     }else{
       res.render('pages/blast/blast_wait', {
@@ -763,6 +852,27 @@ router.get( '/show_blasterjs', function show_blasterjs(req,res){
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
             blastData: encodeURI(data.toString()),
             query: query,
+            blastID: id
+          })
+    })
+})
+router.get( '/show_new_blast', function show_new_blast(req,res){
+    console.log('in show blaster')
+    let file = req.query.file
+    //let query = req.query.query
+    let id = req.query.id
+    console.log('file',file)
+    //console.log('file',file)
+    fs.readFile(file, 'utf8', function readFile(err, data) {
+        console.log('data',data)
+        res.render('pages/blast/show_blaster2', {
+            title: 'HOMD :: BLAST WAIT', 
+            pgname: 'blaster',
+            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+            hostname: CFG.HOSTNAME,
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            blastData: encodeURI(data.toString()),
+            
             blastID: id
           })
     })
@@ -1302,7 +1412,7 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
     const pyscriptOpts = ['-c', jsonConfigFilePath]
     
     //console.log('running py script: ')
-    //console.log(pyscript, pyscriptOpts.join(' '))
+    console.log(pyscript, pyscriptOpts.join(' '))
     
     
     const pythonRun = spawn(pyscript, pyscriptOpts, {

@@ -30,7 +30,8 @@
     "selenium-webdriver": "^4.0.0-alpha.8",
     "simple-node-logger": "^21.8.12",
     "validator": "^13.5.2",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "xml2json": "^0.12.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -1,4 +1,7 @@
 HOMD Notes
+2022-03-03
+Fix alignment in genome output
+
 2022-0223
 Done:
 Changed the "16S Refseq" main menu item to "16S rRNA Microbiome"

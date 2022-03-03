@@ -1,0 +1,132 @@
+
+<style>
+/* Fix the tax table header */
+thead th { position: sticky; top: 0; }
+#output{
+  padding:20px;
+}
+</style>
+
+<% blastParams = JSON.parse(blastParams) %>
+<% error_obj = JSON.parse(error) %>
+<% query_strings = JSON.parse(queries) %>
+<% html_files = JSON.parse(files) %>
+
+<%- include('../../partials/header_html'); %>
+<link rel="stylesheet" type="text/css" href="/css/blast.css" >
+<body>
+   <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+
+  <div class='title'><%= blastParams.program.toUpperCase() %> Results (<%= blastParams.blastFxn %>)</div>
+    <%- include('../../partials/flash'); %>
+    <div id='under-construction'>Page Under Construction</div>
+<% if(error_obj.code) { %>
+     <div class='error'>
+     <%- error_obj.msg %>
+     </div>
+     <!-- turn off timer -->
+     <% timer = 'off' %>
+<% }else{ %>
+    
+    
+    <div id='blast-search-info'>
+      <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
+      <table>
+        <tr>
+        
+        <td>
+          <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.form)">
+            <option value='0'>Download Options</option>
+            <option value='text1'>As Text -top hit only</option>
+            <option value='text4'>As Text -top 4 hits</option>
+            <option value='text20'>As Text -top 20 hits</option>
+            <option value='textAll'>As Text -all hits</option>
+            <option disabled>--------</option>
+            <option value='excel1'>As Excel -top hit only</option>
+            <option value='excel4'>As Excel -top 4 hits</option>
+            <option value='excel20'>As Excel -top 20 hits</option>
+            <option value='excelAll'>As Excel -all hits</option>
+            <option disabled>--------</option>
+            <option value='zip'>BLAST Output Files</option>
+          </select>
+          
+        
+        </td>
+        
+        <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:<br><%= blastParams.blastdb %></td>
+        <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
+        </tr>
+      </table>
+      <input type='hidden' name='blastID' value='<%= blastID %>'>
+      <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
+      </form>
+    
+    View Results:
+      <select onchange="javascript:handleNewSelect(this)">
+      <option value="0">Select BLAST Query</option>
+      <% for(i in query_strings){ %>
+        <option value='/blast/blast_results_genome?id=<%= blastID %>&file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'><%= query_strings[i].query %></option>
+      <% } %>
+      </select>
+      
+      
+    </div>
+    
+    
+    
+   
+     <div id='output'>
+      <%- decodeURI(blastData) %>
+    </div>
+  
+
+   
+    
+    
+ 
+    
+<% } %>  <!--  End: if(error_obj.code) -->
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<!-- <script type="text/javascript" src="/js/sorttable.js"></script> --> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/blast.js"></script>
+<script>
+  mainmenu()
+  //var html_files = JSON.parse('<%- files %>')
+  //console.log(html_files[0])
+  //window.open(html_files[0])
+  // function readSingleFile(e) {
+//   var file = e.target.files[0];
+//   if (!file) {
+//     return;
+//   }
+//   var reader = new FileReader();
+//   reader.onload = function(e) {
+//     var contents = e.target.result;
+//     displayContents(contents);
+//   };
+//   reader.readAsText(file);
+// }
+// 
+// function displayContents(contents) {
+//   var element = document.getElementById('file-content');
+//   element.textContent = contents;
+// }
+</script>
+
+

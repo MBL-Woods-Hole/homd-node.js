@@ -206,6 +206,9 @@ def validate(db, string):
 def createBatchBlastFileText(args, filesArray, details_dict):
     fileText ='#!/bin/bash\n\n'
     fileText += 'cd '+ os.path.join(details_dict['blastdbPath'],details_dict['ext']) + '\n\n'
+    #https://gankrin.org/fix-unicodeencodeerror-ascii-codec-cant-encode-character/
+    fileText += 'export PYTHONIOENCODING=utf8' + '\n\n'
+    
     for file in filesArray:
         fileText += os.path.join(details_dict['programPath'], details_dict['program'])
         
@@ -223,20 +226,28 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         fileText += ' ' + details_dict['advanced']
         if details_dict['blastFxn'] == 'genome':
             #fileText += ' -html'   ## dont use this with other -outfmt
+            fileText += ' -outfmt 5'   ## xml
             # George will supply perl script to parse result
+            fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.xml') 
             pass
         else:
             #fileText += ' -outfmt 15'   ## 15 JSON
             #fileText += ' -outfmt 16'   ## 16 XML
+            fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
             pass
             
-        
-        fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
         # blasterror.log will always be created but may be zero length
         # whereas pythonerror.log will only be present if script error
         fileText += " 1>/dev/null 2>>" + details_dict['blastDir'] + "/blasterror.log;"
-        fileText += '\n'
-    
+        fileText += '\n\n'
+        
+    if details_dict['blastFxn'] == 'genome':
+        # run blast2xml on each to create nice output
+        for file in filesArray:
+            fileText += '/Users/avoorhis/programming/homd-node.js/public/scripts/blast2html.py -i ' + os.path.join(details_dict['blastDir'],'blast_results', file+'.xml')
+            fileText += ' > ' + os.path.join(details_dict['blastDir'],'blast_results', file+'.html')
+            #fileText += " 1>/dev/null 2>>" + details_dict['blastDir'] + "/blasterror.log;"
+            fileText += '\n\n'
     return fileText
     
 def check_for_db(args, details_dict):

@@ -8,6 +8,7 @@ thead th { position: sticky; top: 0; }
 <% blastParams = JSON.parse(blastParams) %>
 <% error_obj = JSON.parse(error) %>
 <% query_strings = JSON.parse(queries) %>
+<% html_files = JSON.parse(files) %>
 
 <%- include('../../partials/header_html'); %>
 <link rel="stylesheet" type="text/css" href="/css/blast.css" >
@@ -70,6 +71,12 @@ thead th { position: sticky; top: 0; }
         <option value='/blast/show_blasterjs?id=<%= blastID %>&file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'><%= query_strings[i].query %></option>
       <% } %>
       </select>
+      <select onchange="javascript:handleNewSelect(this)">
+      <option value="0">Select html file</option>
+      <% for(i in html_files){ %>
+        <option value='/blast/show_new_blast?id=<%= blastID %>&file=<%= html_files[i] %>'><%= html_files[i] %></option>
+      <% } %>
+      </select>
     </div>
     <% if(blastParams.blastFxn === 'refseq') { %>
     <div id='sort_radios'>    
@@ -88,9 +95,16 @@ thead th { position: sticky; top: 0; }
     <% } %>
     
     
-    <div id='blastResultsDiv'>
+    <% if(blastParams.blastFxn === 'refseq') { %>
+      <div id='blastResultsDiv'>
        <%- html %>
-    </div>
+      </div>
+    <% }else{ %>
+      <%= html_files[0] %>
+      <%- decodeURI(blastData) %>
+  
+
+    <% } %>
     
     
  
@@ -112,6 +126,26 @@ thead th { position: sticky; top: 0; }
 <script type="text/javascript" src="/js/blast.js"></script>
 <script>
   mainmenu()
+  //var html_files = JSON.parse('<%- files %>')
+  //console.log(html_files[0])
+  //window.open(html_files[0])
+  // function readSingleFile(e) {
+//   var file = e.target.files[0];
+//   if (!file) {
+//     return;
+//   }
+//   var reader = new FileReader();
+//   reader.onload = function(e) {
+//     var contents = e.target.result;
+//     displayContents(contents);
+//   };
+//   reader.readAsText(file);
+// }
+// 
+// function displayContents(contents) {
+//   var element = document.getElementById('file-content');
+//   element.textContent = contents;
+// }
 </script>
 
 

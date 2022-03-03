@@ -57,40 +57,40 @@ function blastDownload(form){
   
    form.submit()
 }
-function sortBlastTableForm(cb, blastID, col){
-   console.log(cb, blastID, col)
-   if(col === 'query'){
-      document.getElementById('isort').checked = false
-      document.getElementById('ssort').checked = false
-   }else if(col == 'score'){
-      document.getElementById('qsort').checked = false
-      document.getElementById('isort').checked = false
-   }else{  // identity
-      document.getElementById('qsort').checked = false
-      document.getElementById('ssort').checked = false
-   }
-   
-    if(cb.checked){
-       //console.log('checked')
-       direction = 'rev'
-    }else{
-       //console.log('not checked')
-       direction = 'fwd'
-    }
-    var xmlhttp = new XMLHttpRequest();
-    var url = '?id='+blastID+'&col='+col+'&dir='+direction+'&ajax=1'
-    xmlhttp.open("GET", "blast_results"+url, true);
-    
-    xmlhttp.setRequestHeader("Content-type","application/json");
-    xmlhttp.onreadystatechange = function() {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      var resp = xmlhttp.responseText;
-      document.getElementById('blastResultsDiv').innerHTML = resp
-     } 
-    }
-    xmlhttp.send();
-  
-}
+// function sortBlastTableForm(cb, blastID, col){
+//    console.log(cb, blastID, col)
+//    if(col === 'query'){
+//       document.getElementById('isort').checked = false
+//       document.getElementById('ssort').checked = false
+//    }else if(col == 'score'){
+//       document.getElementById('qsort').checked = false
+//       document.getElementById('isort').checked = false
+//    }else{  // identity
+//       document.getElementById('qsort').checked = false
+//       document.getElementById('ssort').checked = false
+//    }
+//    
+//     if(cb.checked){
+//        //console.log('checked')
+//        direction = 'rev'
+//     }else{
+//        //console.log('not checked')
+//        direction = 'fwd'
+//     }
+//     var xmlhttp = new XMLHttpRequest();
+//     var url = '?id='+blastID+'&col='+col+'&dir='+direction+'&ajax=1'
+//     xmlhttp.open("GET", "blast_results"+url, true);
+//     
+//     xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//       var resp = xmlhttp.responseText;
+//       document.getElementById('blastResultsDiv').innerHTML = resp
+//      } 
+//     }
+//     xmlhttp.send();
+//   
+// }
 qdir = 'fwd'
 bdir = 'fwd'
 idir = 'fwd'
@@ -140,7 +140,7 @@ function sortBlastTableForm_toggle(blastID, col){
       direction='fwd'
 
    }
-   console.log(direction)
+   //console.log(direction)
   //   if(cb.checked){
 //        //console.log('checked')
 //        direction = 'rev'
@@ -150,8 +150,8 @@ function sortBlastTableForm_toggle(blastID, col){
 //     }
     var xmlhttp = new XMLHttpRequest();
     var url = '?id='+blastID+'&col='+col+'&dir='+direction+'&ajax=1&t='+ Math.random()
-    console.log(url)
-    xmlhttp.open("GET", "blast_results"+url, true);
+    //console.log(url)
+    xmlhttp.open("GET", "blast_results_refseq"+url, true);
     
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.onreadystatechange = function() {
@@ -175,11 +175,16 @@ function reset2default(fxn) {
 }
 //
 function handleBlasterJSSelect(elm)
-  {
+{
      console.log(elm)
      window.location = elm.value
   }
 //
+function handleNewSelect(elm)
+{
+     console.log('elm',elm.value)
+     window.location = elm.value
+}
 function show_other_blast(gid){
    console.log('gid',gid)
    txt = "&nbsp;&nbsp;&nbsp;<input type='radio' name='blastProg' value='blastx' onclick=\"changeBlastGenomeDbs('"+gid+"','blastx')\"> <small>BLASTX</small>&nbsp;&nbsp;&nbsp;"
@@ -291,6 +296,16 @@ function blastFormCheck_refseq(){
 }
 function blastFormCheck_genome(){
    form = document.getElementById('blastForm')
+   if(form.blastDb.value === ''){
+      if(document.getElementById('blastp_rb').checked){
+         form.blastDb.value == 'faa/ALL_genomes.faa'
+      }else if(document.getElementById('blastn_rb').checked){
+         form.blastDb.value == 'fna/ALL_genomes.fna'
+      }else{
+        alert('You must choose a database')
+        return
+     }
+   }
    // test for single wo chosen
    if(document.getElementById('single_genome').checked === true
      && document.getElementById('choose_genome_select').value === '0'){

@@ -520,6 +520,7 @@ module.exports.print = function print(thing) {
 }
 //
 module.exports.parse_blast_query = function parse_blast_query(file_data, fxn){
+    
     let string = file_data.toString()
     let lines = string.split('\n')
     
@@ -534,6 +535,18 @@ module.exports.parse_blast_query = function parse_blast_query(file_data, fxn){
           }
         }
     }
+    if(query){
+       return query
+    }else{
+      return 'NotFound'
+    }
+}
+module.exports.parse_blast_query_xml = function parse_blast_query_xml(file_data, fxn){
+    //console.log('file_data',file_data)
+    let json = JSON.parse(file_data)  // xml
+    //console.log(json.BlastOutput)
+    let query = json['BlastOutput']['BlastOutput_query-def']
+    
     if(query){
        return query
     }else{
