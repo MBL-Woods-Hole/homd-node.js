@@ -212,12 +212,16 @@ def jblink(hit, type='jbrowse', hsp=None):
         acc = hit.replace('_','|')
         hitfrom = hsp['Hsp_hit-from']
         hitto = hsp['Hsp_hit-to']
-    
+        
         if int(hsp['Hsp_hit-from']) > int(hsp['Hsp_hit-to']):
             hitfrom = hsp['Hsp_hit-to']
             hitto = hsp['Hsp_hit-from']
-        link += "&loc={}:{}..{}".format(acc, str(int(hitfrom)-500), str(int(hitto)-500))
-        link += "&highlight={}:{}..{}".format(acc, hitfrom, hitto)
+        if int(hitfrom) < 500:
+           lochitfrom = hitfrom
+        else:
+           lochitfrom = int(hitfrom)-500    
+        link += "&loc={}:{}..{}".format(acc, str(lochitfrom), str(int(hitto)+500))
+        link += "&highlight={}:{}..{}".format(acc, str(lochitfrom), hitto)
         #link += "&st={}&sp={}".format(hsp['Hsp_hit-from'], hsp['Hsp_hit-to'])
     return link
 

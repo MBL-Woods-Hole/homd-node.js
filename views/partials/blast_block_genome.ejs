@@ -68,6 +68,7 @@
        </td><td colspan='2'>
        <span id='genomeBlastDbChoices'>
          <select class='dropdown' id='blastDb' name='blastDb'>
+           <!-- <option value='0'>Choose...</option> -->
            <% for(n in db_choices){ %>
              <option value='<%= db_choices[n].filename %>'><%= db_choices[n].name %></option>
            <% } %>
