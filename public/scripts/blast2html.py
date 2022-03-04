@@ -205,16 +205,19 @@ def jblink(hit, type='jbrowse', hsp=None):
 # <Hsp_positive>69</Hsp_positive>
 # <Hsp_gaps>0</Hsp_gaps>
     #link = "http://www.homd.org/?name=redirect&type=jbrowse&db=db&id={}".format(hit)
+    
     link = "http://www.homd.org/jbrowse/index.html"
     link += "?data=homd/{}&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew".format(hit_parts[0])
     if hsp != None:
-        hitfrom = int(hsp['Hsp_hit-from'])-500 
-        hitto = int(hsp['Hsp_hit-to'])+500
+        acc = hit.replace('_','|')
+        hitfrom = hsp['Hsp_hit-from']
+        hitto = hsp['Hsp_hit-to']
+    
         if int(hsp['Hsp_hit-from']) > int(hsp['Hsp_hit-to']):
-            hitfrom = int(hsp['Hsp_hit-to'])-500
-            hitto = int(hsp['Hsp_hit-from'])+500
-        link += "&loc={}:{}..{}".format(hit, str(hitfrom), str(hitto))
-        #link += "&highlight={}:{}..{}".format(hit, str(hitfrom), str(hitto))
+            hitfrom = hsp['Hsp_hit-to']
+            hitto = hsp['Hsp_hit-from']
+        link += "&loc={}:{}..{}".format(acc, str(int(hitfrom)-500), str(int(hitto)-500))
+        link += "&highlight={}:{}..{}".format(acc, hitfrom, hitto)
         #link += "&st={}&sp={}".format(hsp['Hsp_hit-from'], hsp['Hsp_hit-to'])
     return link
 
