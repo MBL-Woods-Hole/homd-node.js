@@ -187,9 +187,13 @@ function handleNewSelect(elm)
 }
 function show_other_blast(gid){
    console.log('gid',gid)
-   txt = "&nbsp;&nbsp;&nbsp;<input type='radio' name='blastProg' value='blastx' onclick=\"changeBlastGenomeDbs('"+gid+"','blastx')\"> <small>BLASTX</small>&nbsp;&nbsp;&nbsp;"
-   txt += "<input type='radio' name='blastProg' value='tblastn' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastn')\"> <small>TBLASTN</small>&nbsp;&nbsp;&nbsp;"
-   txt += "<input type='radio' name='blastProg' value='tblastx' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastx')\"> <small>TBLASTX</small>"
+   title_blastx = 'BLASTX: Compares a nucleotide query sequence translated in all reading frames against a protein sequence database.'
+   title_tblastn = 'TBLASTN: Compares a protein query sequence against a nucleotide sequence database dynamically translated in all reading frames.'
+   title_tblastx = 'TBLASTX: Compares the six-frame translations of a nucleotide query sequence against the six-frame translations of a nucleotide sequence database.'
+       
+   txt = "&nbsp;&nbsp;&nbsp;<input title='"+title_blastx+"' type='radio' name='blastProg' value='blastx' onclick=\"changeBlastGenomeDbs('"+gid+"','blastx')\"> <span title='"+title_blastx+"'><small>BLASTX</small></span>&nbsp;&nbsp;&nbsp;"
+   txt += "<input title='"+title_tblastn+"' type='radio' name='blastProg' value='tblastn' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastn')\"> <span title='"+title_tblastn+"'><small>TBLASTN</small></span>&nbsp;&nbsp;&nbsp;"
+   txt += "<input title='"+title_tblastx+"' type='radio' name='blastProg' value='tblastx' onclick=\"changeBlastGenomeDbs('"+gid+"','tblastx')\"> <span title='"+title_tblastx+"'><small>TBLASTX</small></span>"
    document.getElementById('other_blast').innerHTML = txt
 }
 function toggle_blast_genome_list(sh,gid){

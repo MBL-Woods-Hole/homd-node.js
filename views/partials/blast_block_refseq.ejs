@@ -23,8 +23,8 @@
            <span onclick="reset2default('<%= blastFxn %>')" class='pill pill-brown pill-lg'>Reset to Defaults</span>
        </div>
        <div class='adjust_block'>
-
-        <a href='/help/help-page?pagecode=blast/programs'>Program: BLASTN</a>
+        <% title_blastn = 'BLASTN: Compares a nucleotide query sequence against a nucleotide sequence database.' %>
+        <a title='<%= title_blastn %>' href='/help/help-page?pagecode=blast/programs'>Program: BLASTN</a>
         <input type='hidden' name='blastProg' value='blastn' >
     
        <br>

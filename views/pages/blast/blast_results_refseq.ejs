@@ -63,7 +63,7 @@ thead th { position: sticky; top: 0; }
       <input type='hidden' name='blastID' value='<%= blastID %>'>
       <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
       </form>
-    
+<!--   
     View Alignment (<small><a href='https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205286' target='_blank'>BlasterJS</a></small>)
       <select onchange="javascript:handleBlasterJSSelect(this)">
       <option value="0">Select BLAST Query</option>
@@ -71,12 +71,8 @@ thead th { position: sticky; top: 0; }
         <option value='/blast/show_blasterjs?id=<%= blastID %>&file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'><%= query_strings[i].query %></option>
       <% } %>
       </select>
-      <select onchange="javascript:handleNewSelect(this)">
-      <option value="0">Select html file</option>
-      <% for(i in html_files){ %>
-        <option value='/blast/show_new_blast?id=<%= blastID %>&file=<%= html_files[i] %>'><%= html_files[i] %></option>
-      <% } %>
-      </select>
+-->      
+    <span style='float:right'><a class='button' href='/refseq/refseq_blastn'>Back</a></span>
     </div>
     <% if(blastParams.blastFxn === 'refseq') { %>
     <div id='sort_radios'>    
@@ -126,26 +122,7 @@ thead th { position: sticky; top: 0; }
 <script type="text/javascript" src="/js/blast.js"></script>
 <script>
   mainmenu()
-  //var html_files = JSON.parse('<%- files %>')
-  //console.log(html_files[0])
-  //window.open(html_files[0])
-  // function readSingleFile(e) {
-//   var file = e.target.files[0];
-//   if (!file) {
-//     return;
-//   }
-//   var reader = new FileReader();
-//   reader.onload = function(e) {
-//     var contents = e.target.result;
-//     displayContents(contents);
-//   };
-//   reader.readAsText(file);
-// }
-// 
-// function displayContents(contents) {
-//   var element = document.getElementById('file-content');
-//   element.textContent = contents;
-// }
+ 
 </script>
 
 

@@ -522,7 +522,8 @@ router.get('/explorer', function explorer (req, res) {
 //
 router.get('/blast', function blast_get(req, res) {
    console.log('in genome blast-GET')
-   const chosen_gid = req.query.gid
+   let chosen_gid = req.query.gid
+   if(!chosen_gid){chosen_gid='all'}
    console.log('chosen gid=',chosen_gid)
    let organism,dbChoices
    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {

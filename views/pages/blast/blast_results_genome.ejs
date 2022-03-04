@@ -58,7 +58,8 @@ thead th { position: sticky; top: 0; }
         
         </td>
         
-        <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:<br><%= blastParams.blastdb %></td>
+        <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;<%= blastParams.blastdb %></td>
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
       </table>
@@ -74,7 +75,7 @@ thead th { position: sticky; top: 0; }
       <% } %>
       </select>
       
-      
+    <span style='float:right'><a class='button' href='/genome/blast'>Back</a></span>  
     </div>
     
     

@@ -425,15 +425,19 @@ pre{
             ({{result|len}} letters, {{hits|length}} hits)
         </a></div>
         {% endfor %}
-
+ 
       </section>
       {% endif %}
-
+      {% if blast.BlastOutput_program in ['blastp', 'blastx'] %}
+        {% set head_name = 'Protein' %}
+      {% else %}
+        {% set head_name = 'Nucleotide' %}
+      {% endif %}
       {% for result in blast.BlastOutput_iterations.Iteration %}
       
       <section class=match id=match{{result['Iteration_iter-num']}}>
       
-        <h1>Nucleotide Sequence ({{result|len}} letters)</h1>
+        <h1>{{head_name}} Sequence ({{result|len}} letters)</h1>
 
         <section class=header>
 
