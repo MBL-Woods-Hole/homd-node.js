@@ -569,8 +569,8 @@ pre{
 
                 <div class=linkheader>
                   <div class=right><a href="#description{{hit.Hit_num}}">Descriptions</a></div>
-                  <a class=linkheader href="{{genelink(hit|hitdef)}}">GenBank</a>
-                  <a class=linkheader href="{{genelink(hit|hitdef, 'graph')}}">Graphics</a>
+                  <a class=linkheader href="{{genelink(hit|hitdef)}}" target='_blank'>GenBank</a>
+                  <a class=linkheader href="{{genelink(hit|hitdef, 'graph')}}" target='_blank'>Graphics</a>
                   <a class=linkheader href="{{taxonlink(hit|hittaxon, 'taxon')}}">[HOMD Taxon Definition]</a>
                   <a class=linkheader href="{{genomelink(hit|hitgenome, 'genome')}}">[HOMD Genome Definition]</a>
                 </div>
@@ -605,9 +605,9 @@ pre{
                 <div class=hotspot>
                   <p class=range>
                     <span class=range>Range {{hsp.Hsp_num}}: {{hsp['Hsp_hit-from']}} to {{hsp['Hsp_hit-to']}}</span>
-                    <a class=range href="{{genelink(hit|hitdef, 'genbank', hsp)}}">GenBank</a>
-                    <a class=range href="{{genelink(hit|hitdef, 'graph', hsp)}}">Graphics</a>
-                    <a class=range href="{{jblink(hit|hitdef, 'jbrowse',hsp)}}">[HOMD JBrowse]</a>
+                    <a class=range href="{{genelink(hit|hitdef, 'genbank', hsp)}}" target='_blank'>GenBank</a>
+                    <a class=range href="{{genelink(hit|hitdef, 'graph', hsp)}} " target='_blank'>Graphics</a>
+                    <a class=range href="{{jblink(hit|hitdef, 'jbrowse',hsp)}}" target='_blank'>[HOMD JBrowse]</a>
                   </p>
 
                   <table class=hotspotstable>

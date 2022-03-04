@@ -1,6 +1,7 @@
 HOMD Notes
 2022-03-03
 Fix alignment in genome output
+refseq blast: change sort only top id and 
 
 2022-0223
 Done:

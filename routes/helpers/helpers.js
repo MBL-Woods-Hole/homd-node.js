@@ -553,6 +553,55 @@ module.exports.parse_blast_query_xml = function parse_blast_query_xml(file_data,
       return 'NotFound'
     }
 }
+module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata, fxn){
+   //""" for genome blast xml file"""
+    //console.log(jsondata['BlastOutput'])
+    let file_collector = {}
+    let id_collector = {}
+    let otid,clone,split_name,clone_id,hit,hits
+    file_collector.query = jsondata['BlastOutput']['BlastOutput_query-def']
+    file_collector.query_length = jsondata['BlastOutput']['BlastOutput_query-len']
+    file_collector.version = jsondata['BlastOutput']['BlastOutput_version']
+    let iteration = jsondata['BlastOutput']['BlastOutput_iterations']['Iteration']
+    //['Iteration_message']
+    let no_hits = false
+    if(iteration.hasOwnProperty('Iteration_message') && iteration['Iteration_message'] === 'No hits found'){
+       no_hits = true
+    }else{
+      for(let n in jsondata['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits']){
+        
+        hits = jsondata['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits'][n]
+        for(let i in hits){
+            hit = hits[i]
+        
+			console.log('hit Hsps',hit['Hit_hsps']['Hsp'])
+			clone = hit['Hit_def']
+			split_name = clone.split(' ')
+			clone_id = split_name[0].trim()
+			// SEQF1595_KI535341.1 [HMT-389 Abiotrophia defectiva ATCC 49176]
+			
+			let regCapture = /HMT-(\d+)\s/   // grab inside parens
+			otid = clone.match(regCapture)[1]
+			console.log('otid',otid)
+			id_collector[clone_id] = {'clone': clone, 'clone_id': clone_id, otid: otid}
+			id_collector[clone_id]['bitscore'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
+			id_collector[clone_id]['expect'] = hit['Hit_hsps']['Hsp']['Hsp_evalue']
+			id_collector[clone_id]['identity'] = hit['Hit_hsps']['Hsp']['Hsp_identity']
+			id_collector[clone_id]['gaps'] = hit['Hit_hsps']['Hsp']['Hsp_gaps']
+			//id_collector[clone_id]['strand'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
+			id_collector[clone_id]['length'] = hit['Hit_len']
+        }
+      }
+    }
+    if(no_hits){
+        file_collector.data = ['no hits']
+    }else{
+        file_collector.data = Object.values(id_collector)
+    }
+    //console.log('file_collector',file_collector)
+    return file_collector
+
+}
 module.exports.parse_blast = function parse_blast0(file_data, fxn){
     //console.log('BLAST data',file_data.toString())
     let string = file_data.toString()

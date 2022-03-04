@@ -116,7 +116,7 @@ router.get('/blast_results_genome', function blastResults_genome(req, res) {
                     query_strings.push({query:query, file: html_files[i]})
                  
                 }
-                if(filename && blastquery){
+                if(filename && blastquery){   // from drop menu (filename is html not xml)
                    fs.readFile(filename, 'utf8', function readBlasterFile(err, genome_data) {
                       renderFxn(req, res, query_strings, genome_data, html_files, config, blastID)
                    })
@@ -527,31 +527,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
     
 })
 //
-// router.post('/showBlast', function blastWait(req, res) {
-//     console.log('in showBlast')
-//     //console.log(req.body)
-//     let type = req.body.type
-//     let num = req.body.num
-//     let blastID = req.body.id
-//     //console.log('type',type)
-//     //console.log('id',blastID)
-//     //console.log('num',num)
-//     let file
-//     if(type === 'res'){
-//         file = path.join(CFG.PATH_TO_BLAST_FILES,blastID,'blast_results','blast'+num+'.fa.out')
-//     }else{  // type = seq
-//         file = path.join(CFG.PATH_TO_BLAST_FILES,blastID,'blast'+num+'.fa')
-//     }
-//     console.log('file',file)
-//     const data = fs.readFile(file, 'utf8', function readBlastFile(err, data) {
-//       if (err)
-//           console.log(err)
-//       else
-//           console.log(data)
-//           res.send(data)
-//     
-//     })
-// })
+
 //
 router.post('/blastDownload', function blastDownload(req, res) {
     //
@@ -559,35 +535,43 @@ router.post('/blastDownload', function blastDownload(req, res) {
     const AdmZip = require('adm-zip');
     //console.log(req.body)
     let blastID = req.body.blastID
+    let zip
     let type = req.body.dnldType
+    if(type === 'zip'){
+       zip = new AdmZip();
+    }
     let blastFxn = req.body.blastFxn
     //console.log('type',type)
     
     if(!type || !blastID){
        return
     }
-    let  data=[],zip
+    let  data=[],blastFiles = [],xml_files=[],files_array,result
     // read directory CONFIG.json first
     let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
-
     let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results')
-
-    const result = getAllFilesWithExt(blastResultsDir, 'out')
-
+    if(blastFxn ==='refseq'){
+        result = getAllFilesWithExt(blastResultsDir, 'out')
+        for(let i=0; i < result.length; i++){
+            blastFiles.push(path.join(blastResultsDir, result[i]))
+            if(type === 'zip'){
+               zip.addLocalFile(path.join(blastResultsDir, result[i]))
+            }
+        }
+    }else{
+        result = getAllFilesWithExt(blastResultsDir, 'xml')
+        for(let i=0; i < result.length; i++){
+            xml_files.push(path.join(blastResultsDir, result[i]))
+            if(type === 'zip'){
+               zip.addLocalFile(path.join(blastResultsDir, result[i]))
+            }
+        }
+    }
     if(!result){
        throw new Error('The Blast ID "'+blastID+'" was not found.<BR>Probably expired if you are using and old link.')
        return
     }
-    let blastFiles = []
-    if(type === 'zip'){
-       zip = new AdmZip();
-    }
-    for(let i=0; i < result.length; i++){
-        blastFiles.push(path.join(blastResultsDir, result[i]))
-        if(type === 'zip'){
-           zip.addLocalFile(path.join(blastResultsDir, result[i]))
-        }
-    }
+    
     if(type === 'zip'){
         const data = zip.toBuffer();
         res.set('Content-Type','application/octet-stream');
@@ -606,27 +590,45 @@ router.post('/blastDownload', function blastDownload(req, res) {
         return
       }else{
             let config = JSON.parse(configData)
-             async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
+            if(blastFxn ==='refseq'){
+                files_array = blastFiles
+            }else{
+                files_array = xml_files
+            }
+            async.map(files_array, helpers.readAsync, function asyncMapBlast(err, results) {
 
-                for(let i=0; i<blastFiles.length; i++){
-                  
-                  let parsed_data = helpers.parse_blast(results[i], blastFxn)
-                  data.push(parsed_data) // in order of sequences
-                  
-
+                if(blastFxn ==='refseq'){
+                    for(let i=0; i<blastFiles.length; i++){
+                        let parsed_data = helpers.parse_blast(results[i], type)
+                        data.push(parsed_data) // in order of sequences
+                    }
+                    //const html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
+                    var table_tsv = create_blast_download_table(data, type, blastFxn)
+                    if(type.substring(0,4) === 'text'){
+                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
+                    }else{  //excel
+                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
+                    }
+                    res.send(table_tsv)
+                    delete req.body
+                }else{   // genme xml files
+                    for(let i=0; i<xml_files.length; i++){
+                        //let query = helpers.parse_blast_query_xml(parser.toJson(results[i]), config.blastFxn)
+                        let parsed_data = helpers.parse_blast_xml2json(JSON.parse(parser.toJson(results[i])), type)
+                        data.push(parsed_data) // in order of sequences
+                        
+                    }
+                    var table_tsv = create_blast_download_table(data, type, blastFxn)
+                    if(type.substring(0,4) === 'text'){
+                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
+                    }else{  //excel
+                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
+                    }
+                    res.send(table_tsv)
+                    delete req.body
                 }
-                
-                //const html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
-                var table_tsv = create_blast_download_table(data, type)
-                if(type.substring(0,4) === 'text'){
-                    res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
-                 }else{  //excel
-                    res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
-                 }
-                res.send(table_tsv)
-                delete req.body
                 //res.end()
-             })   
+             })   // end async files
       }
     })
     }  // end else
@@ -641,13 +643,13 @@ function create_blast_download_table(data_obj, type, fxn) {
   //let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentity\tIdentities(%)\tScore (bits)\tQuery Start\tSbjct Start\tQuery End\tSbjct End\tEvalue\tGaps\n'
   let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentities(%)\tScore (bits)\tEvalue\tGaps\n'
   
-  //console.log('data',data)
+  //console.log('data',data_obj)
   //console.log(data[0].hits[0].hsps[0])
   let hit,h,hitCountOutput,dnldInfo,otid,clone_id
   
   for(let n in data_obj){
      let obj = data_obj[n]
-     
+     //console.log('obj',obj)
      obj.data.sort(function sortIR2(a, b) {
             return helpers.compareStrings_int(b.bitscore, a.bitscore);
      })
@@ -660,13 +662,10 @@ function create_blast_download_table(data_obj, type, fxn) {
              txt += obj.query+'\t'+obj.query_length+'\t'
          
               //console.log('data[0]',data[n].data[0])
-            if(fxn === 'refseq'){
-                otid = helpers.make_otid_display_name(obj.data[0].otid)
-                clone_id = obj.data[i].clone_id
-            }else{
-                otid = ''
-                clone_id = ''
-            }
+            
+            otid = helpers.make_otid_display_name(obj.data[0].otid)
+            clone_id = obj.data[0].clone_id
+            
             txt += otid+'\t'+clone_id+'\t'+obj.data[0].clone+'\t'+obj.data[0].identity+'\t'+obj.data[0].bitscore+'\t'+obj.data[0].expect+'\t'+obj.data[0].gaps+'\n'
         
           }else if(type === 'textAll' || type === 'excelAll'){
@@ -674,18 +673,14 @@ function create_blast_download_table(data_obj, type, fxn) {
          
               //console.log('data[0]',data[n].data[0])
               for(let i in obj.data){
-                if(fxn === 'refseq'){
-                    otid = helpers.make_otid_display_name(obj.data[0].otid)
-                    clone_id = obj.data[i].clone_id
-                }else{
-                    otid = ''
-                    clone_id = ''
-                }
+                
                 if(obj.data[i]){
+                  otid = helpers.make_otid_display_name(obj.data[i].otid)
+                  clone_id = obj.data[i].clone_id
                   txt += obj.query+'\t'+obj.query_length+'\t'
                   txt += otid+'\t'+clone_id+'\t'+obj.data[i].clone+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
                 }else{
-                  txt += '\t\t\t\t\t\t\t\t\n'
+                  //txt += '\t\t\t\t\t\t\t\t\n'
                 }
               }
           }else if(type === 'text4' || type === 'excel4'){
@@ -693,18 +688,14 @@ function create_blast_download_table(data_obj, type, fxn) {
          
               //console.log('data[0]',data[n].data[0])
               for(let i=0;i<4;i++){
-                if(fxn === 'refseq'){
-                    otid = helpers.make_otid_display_name(obj.data[0].otid)
-                    clone_id = obj.data[i].clone_id
-                }else{
-                    otid = ''
-                    clone_id = ''
-                }
+
                 if(obj.data[i]){
+                  otid = helpers.make_otid_display_name(obj.data[i].otid)
+                  clone_id = obj.data[i].clone_id
                   txt += obj.query+'\t'+obj.query_length+'\t'
                   txt += otid+'\t'+clone_id+'\t'+obj.data[i].clone+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
                 }else{
-                  txt += '\t\t\t\t\t\t\t\t\n'
+                  //txt += '\t\t\t\t\t\t\t\t\n'
                 }
               }
            }else if(type === 'text20' || type === 'excel20'){
@@ -712,18 +703,15 @@ function create_blast_download_table(data_obj, type, fxn) {
          
               //console.log('data[0]',data[n].data[0])
               for(let i=0;i<20;i++){
-                if(fxn === 'refseq'){
-                    otid = helpers.make_otid_display_name(obj.data[0].otid)
-                    clone_id = obj.data[i].clone_id
-                }else{
-                    otid = ''
-                    clone_id = ''
-                }
+                
+                otid = helpers.make_otid_display_name(obj.data[i].otid)
+                clone_id = obj.data[i].clone_id
+                
                 if(obj.data[i]){
                 txt += obj.query+'\t'+obj.query_length+'\t'
                 txt += otid+'\t'+clone_id+'\t'+obj.data[i].clone+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
                 }else{
-                  txt += '\t\t\t\t\t\t\t\t\n'
+                  //txt += '\t\t\t\t\t\t\t\t\n'
                 }
               }
            }
@@ -733,11 +721,11 @@ function create_blast_download_table(data_obj, type, fxn) {
   let retTxt = dnldInfo + header + txt
   return retTxt
 }
-function create_blast_download_tableX(data, type, program, version) {
+function create_blast_download_table_genomeXXX(jsondata, type) {
   let txt = ''
   
   //let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentity\tIdentities(%)\tScore (bits)\tQuery Start\tSbjct Start\tQuery End\tSbjct End\tEvalue\tGaps\n'
-  let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentity\tIdentities(%)\tScore (bits)\tEvalue\tGaps\n'
+  let header = 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentities(%)\tScore (bits)\tEvalue\tGaps\n'
   
   //console.log(data[0].hits[0].description)
   //console.log(data[0].hits[0].hsps[0])
