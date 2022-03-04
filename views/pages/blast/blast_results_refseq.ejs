@@ -56,34 +56,28 @@ thead th { position: sticky; top: 0; }
         
         </td>
         
-        <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:<br><%= blastParams.blastdb %></td>
+        <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;<%= blastParams.blastdb %></td>
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
       </table>
       <input type='hidden' name='blastID' value='<%= blastID %>'>
       <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
       </form>
-<!--   
-    View Alignment (<small><a href='https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0205286' target='_blank'>BlasterJS</a></small>)
-      <select onchange="javascript:handleBlasterJSSelect(this)">
-      <option value="0">Select BLAST Query</option>
-      <% for(i in query_strings){ %>
-        <option value='/blast/show_blasterjs?id=<%= blastID %>&file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'><%= query_strings[i].query %></option>
-      <% } %>
-      </select>
--->      
+
     <span style='float:right'><a class='button' href='/refseq/refseq_blastn'>Back</a></span>
+    <!-- <span style='float:right'><button onclick="history.back()">Go Back</button></span> -->
     </div>
     <% if(blastParams.blastFxn === 'refseq') { %>
     <div id='sort_radios'>    
           <center><small>
-          Sort Table (toggle): &nbsp;&nbsp;&nbsp;&nbsp;
+          Sort Table: &nbsp;&nbsp;&nbsp;&nbsp;
           <!-- file sort is original -->
-       
          <button class='button' id='qsort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','query')">By Query</button>
-         <button class='button' id='bsort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','bitscore')">By Bit_Score</button>
-         <button class='button' id='isort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','identity')">By Identity</button>&nbsp;&nbsp;&nbsp;&nbsp;
-         <input  checked id='ssort' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','sequence')"> Original Sorting (By Sequence Input)</button>
+         <small>(toggle)</small>&nbsp;&nbsp;&nbsp;&nbsp;
+         <input  checked id='bsort' name='sort_refseq' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','bitscore')"> By Bit_Score</button>&nbsp;&nbsp;
+         <input  checked id='isort' name='sort_refseq' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','identity')"> By Identity</button>&nbsp;&nbsp;
+         <input  checked id='ssort' name='sort_refseq' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','sequence')"> Original Sorting (By Sequence Input)</button>
           </small></center>
     </div>
     <% }else{ %>    <!-- Genomic Blast Result -->

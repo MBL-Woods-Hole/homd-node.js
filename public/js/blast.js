@@ -98,9 +98,6 @@ direction = 'fwd'
 function sortBlastTableForm_toggle(blastID, col){
    console.log(blastID, col)
    if(col === 'query'){
-      document.getElementById('bsort').style.background = 'grey'
-      document.getElementById('isort').style.background = 'grey'
-      document.getElementById('ssort').checked = false
       if(direction=='fwd'){
          document.getElementById('qsort').style.background = 'lightgreen'
          direction='rev'
@@ -108,46 +105,19 @@ function sortBlastTableForm_toggle(blastID, col){
          document.getElementById('qsort').style.background = 'darkgreen'
          direction='fwd'
       }
-      
    }else if(col == 'bitscore'){
        document.getElementById('qsort').style.background = 'grey'
-      
-      document.getElementById('isort').style.background = 'grey'
-      document.getElementById('ssort').checked = false
-      if(direction=='fwd'){
-         document.getElementById('bsort').style.background = 'lightgreen'
-         direction='rev'
-      }else{
-         document.getElementById('bsort').style.background = 'darkgreen'
-         direction='fwd'
-      }
+       direction='fwd'
    }else if(col == 'identity'){
-       document.getElementById('qsort').style.background = 'grey'
-      document.getElementById('bsort').style.background = 'grey'
-     
-      document.getElementById('ssort').checked = false
-      if(direction=='fwd'){
-         document.getElementById('isort').style.background = 'lightgreen'
-         direction='rev'
-      }else{
-         document.getElementById('isort').style.background = 'darkgreen'
-         direction='fwd'
-      }
+      document.getElementById('qsort').style.background = 'grey'
+      direction='fwd'
+      
    }else{  // sequence original
-       document.getElementById('qsort').style.background = 'grey'
-      document.getElementById('bsort').style.background = 'grey'
-      document.getElementById('isort').style.background = 'grey'
+      document.getElementById('qsort').style.background = 'grey'
       direction='fwd'
 
    }
-   //console.log(direction)
-  //   if(cb.checked){
-//        //console.log('checked')
-//        direction = 'rev'
-//     }else{
-//        //console.log('not checked')
-//        direction = 'fwd'
-//     }
+  
     var xmlhttp = new XMLHttpRequest();
     var url = '?id='+blastID+'&col='+col+'&dir='+direction+'&ajax=1&t='+ Math.random()
     //console.log(url)
