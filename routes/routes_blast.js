@@ -59,7 +59,7 @@ router.get('/blast_results_genome', function blastResults_genome(req, res) {
           res.render('pages/blast/blast_results_genome', {
                   title: 'HOMD :: Blast Results', 
                   pgname: 'blast',
-                  config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                  config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, url: CFG.URL }),
                   hostname: CFG.HOSTNAME,
                   ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                   queries: JSON.stringify(queries),
@@ -110,12 +110,22 @@ router.get('/blast_results_genome', function blastResults_genome(req, res) {
                 xml_files.push(path.join(blastResultsDir, result_xml[i]))
             }
             async.map(xml_files, helpers.readAsync, function asyncMapBlast(err, results) {
+                let hitid_obj,hitids=[],hitid_collector={}
                 for(let i=0; i<xml_files.length; i++){
                      
-                    let query = helpers.parse_blast_query_xml(parser.toJson(results[i]), config.blastFxn)
+                    let query = helpers.parse_blast_query_xml(parser.toJson(results[i]), 'query')
                     query_strings.push({query:query, file: html_files[i]})
+                    
+                    hitid_obj = helpers.parse_blast_query_xml(parser.toJson(results[i]), 'homdhitids')
+                    hitids.push(hitid_obj)
+                    for(let n in hitid_obj.hitid_ary){
+                        hitid_collector[hitid_obj.hitid_ary[n]] = 1
+                    }
                  
                 }
+                console.log('hitid_collector',hitid_collector)
+                // if protein::need to query DB for start stop
+                
                 if(filename && blastquery){   // from drop menu (filename is html not xml)
                    fs.readFile(filename, 'utf8', function readBlasterFile(err, genome_data) {
                       renderFxn(req, res, query_strings, genome_data, html_files, config, blastID)
@@ -178,7 +188,7 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
         res.render('pages/blast/blast_results_refseq', {
             title: 'HOMD :: Blast Results', 
             pgname: 'blast',
-            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, url: CFG.URL }),
             hostname: CFG.HOSTNAME,
             //url: CFG.URL,
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -283,14 +293,7 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
         } // end else
     })
 })
-// function getBlastHtmlFromHtml(blastFiles, blastID){
-//    let html = '<table>'
-//    for(let i in blastFiles){
-//      html += "<tr><td><a href='#' onclick=\"window.open('"+blastFiles[i]+"', '_blank', 'fullscreen=yes'); return false;\">"+blastFiles[i]+"</a></td></tr>"
-//    }
-//    return html
-// }
-//
+
 //
 router.get('/blast_wait', async function blastWait(req, res, next) {
     helpers.print('in blast wait')
@@ -422,6 +425,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
     
 
 })
+//
 router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs(req, res) {
     console.log('in changeBlastGenomeDbs AJAX')
     helpers.print(req.body)
@@ -455,6 +459,7 @@ router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs(req, res) {
     res.send(html)
     
 })
+//
 router.post('/blast_post', upload.single('blastFile'),  async function blast_post(req, res, next) {
   console.log('MADEIT TO blastPost')
   helpers.print(req.body)
@@ -476,6 +481,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
       dbPath = path.join(CFG.BLAST_DB_PATH_REFSEQ)
   }
   blastOpts.dbPath = dbPath
+  
   console.log('DB Path (for production):: ',dbPath)
   //let blast_session_ts = Date.now().toString();
   //const randomnum = Math.floor(Math.random() * 90000) + 10000;
@@ -515,7 +521,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
       // count '>'
       var count = (inputSeqInput.match(/>/g) || []).length;
       if(count < C.blast_max_file.seqs){
-         runPyScript(req, res, opts, blastOpts, blastDir, inputSeqInput, next)
+         runPyBlastScript(req, res, opts, blastOpts, blastDir, inputSeqInput, next)
       }else{
          req.flash('fail', 'Input too large:SeqCount='+count.toString());
              res.redirect(req.body.returnTo);
@@ -540,6 +546,11 @@ router.post('/blastDownload', function blastDownload(req, res) {
     if(type === 'zip'){
        zip = new AdmZip();
     }
+    if(type==='fasta'){
+     // blastdbcmd -db myBlastDBName -dbtype prot -entry_batch myContigList.txt -outfmt %f -out myHitContigs.fasta
+     // gather <Hit_id>gnl|BL_ORD_ID|4937322</Hit_id>
+      //return
+    }
     let blastFxn = req.body.blastFxn
     //console.log('type',type)
     
@@ -558,10 +569,11 @@ router.post('/blastDownload', function blastDownload(req, res) {
                zip.addLocalFile(path.join(blastResultsDir, result[i]))
             }
         }
-    }else{
+    }else{   // genome blast
         result = getAllFilesWithExt(blastResultsDir, 'xml')
         for(let i=0; i < result.length; i++){
             xml_files.push(path.join(blastResultsDir, result[i]))
+            
             if(type === 'zip'){
                zip.addLocalFile(path.join(blastResultsDir, result[i]))
             }
@@ -612,8 +624,30 @@ router.post('/blastDownload', function blastDownload(req, res) {
                     res.send(table_tsv)
                     delete req.body
                 }else{   // genme xml files
+                    if(type === 'fasta'){
+                        
+						let hitid_obj,hitids=[],hitid_collector={},comma_string
+						for(let i=0; i<xml_files.length; i++){
+						    hitid_obj = helpers.parse_blast_query_xml(parser.toJson(results[i]), 'hitids')
+						    hitids.push(hitid_obj)
+						    for(let i in hitid_obj.hitid_ary){
+								hitid_collector[hitid_obj.hitid_ary[i]] = 1
+						    }
+						}
+						comma_string = Object.keys(hitid_collector)   //let blastdbcmd = 'blastdbcmd -entry '+comma_string+' -outfmt %f -out '+outfilename
+						//console.log('comma_string',comma_string.join(','))
+						let blastdbcmd = "cd "+path.join(config.blastdbPath,config.ext)+";blastdbcmd -db "+config.blastdb+" -entry '"+comma_string.join(',')+"' -outfmt %f"
+						console.log('blastdbcmd',blastdbcmd)
+						helpers.execute(blastdbcmd, function(fasta_result){
+                            //console.log('fasta_result',fasta_result)
+                            
+                            res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".fa\""})
+                            res.send(fasta_result)
+                            return
+                        });
+						
+					}else{
                     for(let i=0; i<xml_files.length; i++){
-                        //let query = helpers.parse_blast_query_xml(parser.toJson(results[i]), config.blastFxn)
                         let parsed_data = helpers.parse_blast_xml2json(JSON.parse(parser.toJson(results[i])), type)
                         data.push(parsed_data) // in order of sequences
                         
@@ -626,6 +660,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
                     }
                     res.send(table_tsv)
                     delete req.body
+                    }
                 }
                 //res.end()
              })   // end async files
@@ -634,9 +669,90 @@ router.post('/blastDownload', function blastDownload(req, res) {
     }  // end else
     
 })
-
-
-
+//
+router.post('/openBlastWindow', function openBlastWindow(req, res) {
+    //
+    console.log('in openBlastWindow')
+    //console.log(req.body)
+    let type = req.body.type
+    let num = req.body.num
+    let blastID = req.body.id
+    //console.log('type',type)
+    //console.log('id',blastID)
+    //console.log('num',num)
+    let file
+    if(type === 'res'){
+        file = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results', 'blast' + num + '.fa.out')
+    }else{  // type = seq
+        file = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast' + num + '.fa')
+    }
+    //console.log('file',file)
+    fs.readFile(file, 'utf8', function readBlastFile(err, data) {
+      if (err)
+          console.log(err)
+      else
+          //console.log(data)
+          res.send(data)
+    
+    })
+})
+router.get( '/show_blasterjs', function show_blasterjs(req,res){
+    console.log('in show blaster')
+    let file = req.query.file
+    let query = req.query.query
+    let id = req.query.id
+    //console.log('query',query)
+    //console.log('file',file)
+    fs.readFile(file, 'utf8', function readBlasterFile(err, data) {
+        //console.log('data',data)
+        res.render('pages/blast/show_blaster', {
+            title: 'HOMD :: BLAST WAIT', 
+            pgname: 'blaster',
+            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+            hostname: CFG.HOSTNAME,
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            blastData: encodeURI(data.toString()),
+            query: query,
+            blastID: id
+          })
+    })
+})
+router.get( '/show_new_blast', function show_new_blast(req,res){
+    console.log('in show blaster')
+    let file = req.query.file
+    //let query = req.query.query
+    let id = req.query.id
+    console.log('file',file)
+    //console.log('file',file)
+    fs.readFile(file, 'utf8', function readFile(err, data) {
+        console.log('data',data)
+        res.render('pages/blast/show_blaster2', {
+            title: 'HOMD :: BLAST WAIT', 
+            pgname: 'blaster',
+            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+            hostname: CFG.HOSTNAME,
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            blastData: encodeURI(data.toString()),
+            
+            blastID: id
+          })
+    })
+})
+// router.get( '/blaster_test', function blaster_testing(req,res){
+//     console.log('in baster testing')
+//     
+//     res.render('pages/blast/blasterjs_test', {
+//         title: 'HOMD :: BLAST WAIT', 
+//         pgname: 'blaster',
+//         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//         hostname: CFG.HOSTNAME,
+//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//         
+//       })
+// })
+//////////////////////////////////////////////////////////////////
+///// FUNCTIONS /////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 function create_blast_download_table(data_obj, type, fxn) {
   let txt = ''
   
@@ -797,89 +913,6 @@ function getHitValues(hit){
     hitVals.clone = hitItems.join(' | ')
     return hitVals
 }
-router.post('/openBlastWindow', function openBlastWindow(req, res) {
-    //
-    console.log('in openBlastWindow')
-    //console.log(req.body)
-    let type = req.body.type
-    let num = req.body.num
-    let blastID = req.body.id
-    //console.log('type',type)
-    //console.log('id',blastID)
-    //console.log('num',num)
-    let file
-    if(type === 'res'){
-        file = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results', 'blast' + num + '.fa.out')
-    }else{  // type = seq
-        file = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast' + num + '.fa')
-    }
-    //console.log('file',file)
-    fs.readFile(file, 'utf8', function readBlastFile(err, data) {
-      if (err)
-          console.log(err)
-      else
-          //console.log(data)
-          res.send(data)
-    
-    })
-})
-router.get( '/show_blasterjs', function show_blasterjs(req,res){
-    console.log('in show blaster')
-    let file = req.query.file
-    let query = req.query.query
-    let id = req.query.id
-    //console.log('query',query)
-    //console.log('file',file)
-    fs.readFile(file, 'utf8', function readBlasterFile(err, data) {
-        //console.log('data',data)
-        res.render('pages/blast/show_blaster', {
-            title: 'HOMD :: BLAST WAIT', 
-            pgname: 'blaster',
-            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-            hostname: CFG.HOSTNAME,
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-            blastData: encodeURI(data.toString()),
-            query: query,
-            blastID: id
-          })
-    })
-})
-router.get( '/show_new_blast', function show_new_blast(req,res){
-    console.log('in show blaster')
-    let file = req.query.file
-    //let query = req.query.query
-    let id = req.query.id
-    console.log('file',file)
-    //console.log('file',file)
-    fs.readFile(file, 'utf8', function readFile(err, data) {
-        console.log('data',data)
-        res.render('pages/blast/show_blaster2', {
-            title: 'HOMD :: BLAST WAIT', 
-            pgname: 'blaster',
-            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-            hostname: CFG.HOSTNAME,
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-            blastData: encodeURI(data.toString()),
-            
-            blastID: id
-          })
-    })
-})
-// router.get( '/blaster_test', function blaster_testing(req,res){
-//     console.log('in baster testing')
-//     
-//     res.render('pages/blast/blasterjs_test', {
-//         title: 'HOMD :: BLAST WAIT', 
-//         pgname: 'blaster',
-//         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-//         hostname: CFG.HOSTNAME,
-//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-//         
-//       })
-// })
-//////////////////////////////////////////////////////////////////
-///// FUNCTIONS /////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////
 function createBlastOpts(reqBody) {
     let bOpts = {},dbItems
     bOpts.expect =    reqBody.blastExpect
@@ -892,7 +925,7 @@ function createBlastOpts(reqBody) {
     
     if(reqBody.blastFxn === 'genome') {
       //bOpts.dbPath = CFG.BLAST_DB_PATH_GENOME
-      bOpts.anno = reqBody.blastAnno
+      bOpts.anno = reqBody.anno
       dbItems = reqBody.blastDb.split('/')
       bOpts.blastDb = dbItems[1]
       bOpts.ext = dbItems[0]
@@ -906,10 +939,11 @@ function createBlastOpts(reqBody) {
     }
     return bOpts
 }
+//
 function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     
-    //console.log('blastOpts')
-    //console.log(blastOpts)
+    console.log('blastOpts',blastOpts)
+    console.log('opts',opts)
     let config = {}
     config.site = CFG.SITE  //  local, mbl or homd;; this determines blast db
     config.id = opts.blastSessionID
@@ -920,6 +954,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     config.dataType = opts.type
     config.expect = blastOpts.expect
     config.blastFxn = req.body.blastFxn
+    config.anno = blastOpts.anno
     config.advanced = blastOpts.advanced
     config.maxTargetSeqs = blastOpts.maxTargetSeqs
     config.program = blastOpts.program
@@ -946,9 +981,7 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
     
     // sort data_arr
     html =''
-    //html += "<small>"
-    html += "blast results link: [ <span id='blasturl'>"+CFG.URL+"/blast/blast_results?id="+blastID+"</span> ] <= Copy this link to come back to these results for 30 days."
-    //html += "</small>"
+   
     html += "<table><thead>"
     html += '<tr>'
     //html += "<th><input type='checkbox'  value='master' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
@@ -1032,241 +1065,201 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
     return html
 }
 //
-// function getBlastHtmlTableXX(jsonList, blastID, sortCol, sortDir){
-//     let desc,id,html,init,split_items,hmt,seqid
-//     html =''
-//     //html += "<small>"
-//     html += "blast results link: [ <span id='blasturl'>"+CFG.URL+"/blast/blast_results?id="+blastID+"</span> ] <= Copy this link to come back to these results for 30 days."
-//     //html += "</small>"
-//     html += "<table><thead>"
-//     html += '<tr>'
-//     html += "<th><input type='checkbox'  value='master' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
-//     html += '<th>Query<sup>2</sup></th><th>Length</th>'
-//     html += '<th>View<sup>3</sup><br>Link</th><th>Hit<sup>4</sup></th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<sup>5</sup><br>(%)</th></tr>'
-//     html += '</thead><tbody>'
-//     //console.log('jsonList')
-//     //console.log(jsonList)
-//     if(sortCol === 'query'){
-//       console.log('sorting: ', sortCol, sortDir)
+
+// function getBlastHTML2XX(jsonList, blastID, sortCol, sortDir) {
+//     // for sorting by identity and bit score
+//     
+//     let numhits,count=0,odd,bgcolor
+//     //console.log('jsonList[0]',jsonList[0])
+//     let newList = [],addhtml = ''
+//     for(let n = 0; n < jsonList.length; n++){
+//         if(Object.prototype.hasOwnProperty.call(jsonList[n],'hits')){
+//            numhits = jsonList[n].hits.length
+//         }else{  
+//            return "<tr><td>Blast Error: "+jsonList[n].message+"</td></tr>"
+//         }
+//         let q = jsonList[n].query_title
+//         let l = jsonList[n].query_len
+//         let allow = 4
+//         if(numhits < allow){
+//            allow = numhits
+//         }
+//         for(let m = 0; m < allow; m++) { 
+//            //console.log('jsonList[n].hits[m]')
+//            //console.log(jsonList[n].hits[m])
+//            let hit_items = jsonList[n].hits[m].description[0].title.split('|')
+//            let titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
+//            let HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
+//            let bitScore =     jsonList[n].hits[m].hsps[0].bit_score.toFixed(1).toString()
+//            let identityPct = (jsonList[n].hits[m].hsps[0].identity * 100 / jsonList[n].hits[m].hsps[0].align_len).toFixed(1).toString()
+//            let evalue = jsonList[n].hits[m].hsps[0].evalue.toString()
+//            newList.push({
+//              query: q,
+//              length: l,
+//              hit: titleid.trim(),
+//              clone: hit_items.join(' | '),
+//              evalue: evalue,
+//              score: bitScore,
+//              identity: identityPct
+//             
+//             })
+//         
+//         
+//         }
+//     
+//     
+//     }
+//     if(sortCol === 'identity'){
 //       if(sortDir === 'fwd'){
-//           jsonList.sort(function sortQF(a, b) {
-//             return helpers.compareStrings_alpha(a.query_title, b.query_title);
+//           newList.sort(function sortIF(a, b) {
+//             return helpers.compareStrings_int(a.identity, b.identity);
 //           })
 //       } else {
-//           jsonList.sort(function sortQR(a, b) {
-//             return helpers.compareStrings_alpha(b.query_title, a.query_title);
+//           newList.sort(function sortIR(a, b) {
+//             return helpers.compareStrings_int(b.identity, a.identity);
 //           })
 //       }
-//       html += getBlastHTML1(jsonList, blastID)
-//     } else if(sortCol === 'identity' || sortCol === 'score'){
-//        // make a new list from jsonList-- then sort it
-//        html += getBlastHTML2(jsonList, blastID, sortCol, sortDir)
-//    
-//     } else {
-//        // unsorted
-//         html += getBlastHTML1(jsonList, blastID)
+//     }else if(sortCol === 'score'){
+//       if(sortDir === 'fwd'){
+//           newList.sort(function sortSF(a, b) {
+//             return helpers.compareStrings_int(a.identity, b.identity);
+//           })
+//       } else {
+//           newList.sort(function sortSR(a, b) {
+//             return helpers.compareStrings_int(b.identity, a.identity);
+//           })
+//       }
 //     }
-//     html += '</tbody></table>'
-//     return html
+//     
+//     for(let n = 0; n < newList.length; n++){
+//        // quey_name,length,hit,clone_name,evalue,score,identity
+//        
+//        
+//        //console.log(jsonList[n])
+//        odd = count % 2  // will be either 0 or 1
+//        //console.log('odd',odd)
+//        
+//        if(odd){
+//          bgcolor = 'blastBGodd'
+//        }else{
+//          bgcolor = 'blastBGeven'
+//        }
+//         count += 1
+//         addhtml += "<tr class='"+bgcolor+"'>"
+//         addhtml += "<td></td>"  // no checkboxes
+//         addhtml += "<td class='blastcol1 small' >"+newList[n].query+'</td>'
+//         addhtml += "<td class='blastcol2 center' >"+newList[n].length+"</td>"
+//        // addhtml += "<td rowspan='4'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>blast_resultfile</a></td>"
+//         addhtml += "<td class='center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
+//         addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href=''>" + newList[n].hit + '</a></td>'
+//         addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + newList[n].clone + '</td>'
+//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + newList[n].evalue + '</td>'
+//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + newList[n].score + '</td>'
+//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + newList[n].identity + '</td>'
+//         addhtml += "</tr>"
+//        
+//     }
+//     
+//     return addhtml
 // }
-function getBlastHTML2XX(jsonList, blastID, sortCol, sortDir) {
-    // for sorting by identity and bit score
-    
-    let numhits,count=0,odd,bgcolor
-    //console.log('jsonList[0]',jsonList[0])
-    let newList = [],addhtml = ''
-    for(let n = 0; n < jsonList.length; n++){
-        if(Object.prototype.hasOwnProperty.call(jsonList[n],'hits')){
-           numhits = jsonList[n].hits.length
-        }else{  
-           return "<tr><td>Blast Error: "+jsonList[n].message+"</td></tr>"
-        }
-        let q = jsonList[n].query_title
-        let l = jsonList[n].query_len
-        let allow = 4
-        if(numhits < allow){
-           allow = numhits
-        }
-        for(let m = 0; m < allow; m++) { 
-           //console.log('jsonList[n].hits[m]')
-           //console.log(jsonList[n].hits[m])
-           let hit_items = jsonList[n].hits[m].description[0].title.split('|')
-           let titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
-           let HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
-           let bitScore =     jsonList[n].hits[m].hsps[0].bit_score.toFixed(1).toString()
-           let identityPct = (jsonList[n].hits[m].hsps[0].identity * 100 / jsonList[n].hits[m].hsps[0].align_len).toFixed(1).toString()
-           let evalue = jsonList[n].hits[m].hsps[0].evalue.toString()
-           newList.push({
-             query: q,
-             length: l,
-             hit: titleid.trim(),
-             clone: hit_items.join(' | '),
-             evalue: evalue,
-             score: bitScore,
-             identity: identityPct
-            
-            })
-        
-        
-        }
-    
-    
-    }
-    if(sortCol === 'identity'){
-      if(sortDir === 'fwd'){
-          newList.sort(function sortIF(a, b) {
-            return helpers.compareStrings_int(a.identity, b.identity);
-          })
-      } else {
-          newList.sort(function sortIR(a, b) {
-            return helpers.compareStrings_int(b.identity, a.identity);
-          })
-      }
-    }else if(sortCol === 'score'){
-      if(sortDir === 'fwd'){
-          newList.sort(function sortSF(a, b) {
-            return helpers.compareStrings_int(a.identity, b.identity);
-          })
-      } else {
-          newList.sort(function sortSR(a, b) {
-            return helpers.compareStrings_int(b.identity, a.identity);
-          })
-      }
-    }
-    
-    for(let n = 0; n < newList.length; n++){
-       // quey_name,length,hit,clone_name,evalue,score,identity
-       
-       
-       //console.log(jsonList[n])
-       odd = count % 2  // will be either 0 or 1
-       //console.log('odd',odd)
-       
-       if(odd){
-         bgcolor = 'blastBGodd'
-       }else{
-         bgcolor = 'blastBGeven'
-       }
-        count += 1
-        addhtml += "<tr class='"+bgcolor+"'>"
-        addhtml += "<td></td>"  // no checkboxes
-        addhtml += "<td class='blastcol1 small' >"+newList[n].query+'</td>'
-        addhtml += "<td class='blastcol2 center' >"+newList[n].length+"</td>"
-       // addhtml += "<td rowspan='4'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>blast_resultfile</a></td>"
-        addhtml += "<td class='center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
-        addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href=''>" + newList[n].hit + '</a></td>'
-        addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + newList[n].clone + '</td>'
-        addhtml += "<td class='center xsmall "+bgcolor+"'>" + newList[n].evalue + '</td>'
-        addhtml += "<td class='center xsmall "+bgcolor+"'>" + newList[n].score + '</td>'
-        addhtml += "<td class='center xsmall "+bgcolor+"'>" + newList[n].identity + '</td>'
-        addhtml += "</tr>"
-       
-    }
-    
-    return addhtml
-}
-function getBlastHTML1(jsonList, blastID) {
-    //console.log(jsonList[0].query_title)
-    //
-    let count = 0, bgcolor, odd, numhits, addhtml = ''
-    //for(let n in jsonList){
-    for(let n = 0; n < jsonList.length; n++){
-       //console.log('jsonList[n]',n)
-       //console.log(jsonList[n])
-       if(Object.prototype.hasOwnProperty.call(jsonList[n],'hits')){
-           numhits = jsonList[n].hits.length
-       }else{  
-           return "<tr><td>Blast Error: "+jsonList[n].message+"</td></tr>"
-       }
-       let allow = 4
-        if(numhits < allow){
-           allow = numhits
-        }
-       // n == query0, query1, query2
-       odd = count % 2  // will be either 0 or 1
-       //console.log('odd',odd)
-       
-       if(odd){
-         //bgcolor = 'background: var(--div-bg016)'
-         bgcolor = 'blastBGodd'
-       }else{
-         //bgcolor = 'background: var(--div-bg017)'
-         bgcolor = 'blastBGeven'
-       }
-       count += 1
-       if(numhits === 0){
-           //console.log('numhits',numhits)
-           addhtml += "<tr class='"+bgcolor+"'>"
-           addhtml += '<td></td>'
-           addhtml += "<td class='blastcol1 small'>"+jsonList[n].query_title+'</td>'
-           addhtml += "<td class='blastcol2 center'>"+jsonList[n].query_len+'</td>'
-           addhtml += "<td class='center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a> <a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
-           addhtml += "<td class='blastcol3 center'>no hits found</td>"
-           addhtml += "<td class='blastcol4'>no hits found</td>"  
-           addhtml += '<td></td><td></td><td></td></tr>'
-       
-       } else {
-          //console.log('numhits<4',numhits)
-          addhtml += "<tr class='"+bgcolor+"'>"
-          addhtml += "<td rowspan='"+allow+"'><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"  // value will be the file number: blast0, 1, 2...
-          addhtml += "<td class='blastcol1 small' rowspan='"+allow+"'>"+jsonList[n].query_title+'</td>'
-          addhtml += "<td class='blastcol2 center' rowspan='"+allow+"'>"+jsonList[n].query_len+'</td>'
-          //addhtml += "<td rowspan='"+allow+"'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>res</a></td>"
-          addhtml += "<td class='center' rowspan='"+allow+"'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
-          
-          for(let m = 0; m < allow; m++) {   // take 4 hits only -- are they top hits??
-               addhtml += getRowHTML(jsonList[n].hits[m].description[0], jsonList[n].hits[m].hsps[0], bgcolor)
-               addhtml += '</tr>'
-          }
-       }
-    }
-    
-    return addhtml
-}
+// function getBlastHTML1(jsonList, blastID) {
+//     //console.log(jsonList[0].query_title)
+//     //
+//     let count = 0, bgcolor, odd, numhits, addhtml = ''
+//     //for(let n in jsonList){
+//     for(let n = 0; n < jsonList.length; n++){
+//        //console.log('jsonList[n]',n)
+//        //console.log(jsonList[n])
+//        if(Object.prototype.hasOwnProperty.call(jsonList[n],'hits')){
+//            numhits = jsonList[n].hits.length
+//        }else{  
+//            return "<tr><td>Blast Error: "+jsonList[n].message+"</td></tr>"
+//        }
+//        let allow = 4
+//         if(numhits < allow){
+//            allow = numhits
+//         }
+//        // n == query0, query1, query2
+//        odd = count % 2  // will be either 0 or 1
+//        //console.log('odd',odd)
+//        
+//        if(odd){
+//          //bgcolor = 'background: var(--div-bg016)'
+//          bgcolor = 'blastBGodd'
+//        }else{
+//          //bgcolor = 'background: var(--div-bg017)'
+//          bgcolor = 'blastBGeven'
+//        }
+//        count += 1
+//        if(numhits === 0){
+//            //console.log('numhits',numhits)
+//            addhtml += "<tr class='"+bgcolor+"'>"
+//            addhtml += '<td></td>'
+//            addhtml += "<td class='blastcol1 small'>"+jsonList[n].query_title+'</td>'
+//            addhtml += "<td class='blastcol2 center'>"+jsonList[n].query_len+'</td>'
+//            addhtml += "<td class='center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a> <a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
+//            addhtml += "<td class='blastcol3 center'>no hits found</td>"
+//            addhtml += "<td class='blastcol4'>no hits found</td>"  
+//            addhtml += '<td></td><td></td><td></td></tr>'
+//        
+//        } else {
+//           //console.log('numhits<4',numhits)
+//           addhtml += "<tr class='"+bgcolor+"'>"
+//           addhtml += "<td rowspan='"+allow+"'><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"  // value will be the file number: blast0, 1, 2...
+//           addhtml += "<td class='blastcol1 small' rowspan='"+allow+"'>"+jsonList[n].query_title+'</td>'
+//           addhtml += "<td class='blastcol2 center' rowspan='"+allow+"'>"+jsonList[n].query_len+'</td>'
+//           //addhtml += "<td rowspan='"+allow+"'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>res</a></td>"
+//           addhtml += "<td class='center' rowspan='"+allow+"'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
+//           
+//           for(let m = 0; m < allow; m++) {   // take 4 hits only -- are they top hits??
+//                addhtml += getRowHTML(jsonList[n].hits[m].description[0], jsonList[n].hits[m].hsps[0], bgcolor)
+//                addhtml += '</tr>'
+//           }
+//        }
+//     }
+//     
+//     return addhtml
+// }
 //
 //
 
-function getRowHTML(description, hsps, bgcolor) {
-    let hit_items,titleid,HMT,bitScore,identityPct,evalue,addhtml = ''
-    bitScore = hsps.bit_score.toFixed(1).toString()
-    identityPct = (hsps.identity * 100 / hsps.align_len).toFixed(1).toString()
-    evalue = hsps.evalue.toString()
-    // console.log('evalue', evalue)
-//     console.log('hsps.identity', hsps.identity)
-//     console.log('bitScore', bitScore)
-//     console.log('identityPct', identityPct)
-    
-     if(description.title === ''){
-        //eg Bv6
-        addhtml += "<td class='blastcol3 center "+bgcolor+"'>" + description.id + '</td>'
-        addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + description.accession + '</td>'
-        addhtml += "<td class='center xsmall "+bgcolor+"'>" + evalue + '</td>'
-        addhtml += "<td class='center xsmall "+bgcolor+"'>" + bitScore + '</td>'
-        addhtml += "<td class='center xsmall "+bgcolor+"'>" + identityPct + '</td>'
-        
-     }else{
-        // for all? homd blast databases??
-        // this only works for 16Srefseq
-        let title = description.title
-        hit_items = title.split('|')
-        //console.log('hit_items:',hit_items)
-        try {
-          titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
-          HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
-          addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid=" + HMT + "'>" + titleid.trim() + '</a></td>'
-        }catch(e){
-          addhtml += "<td class='blastcol3 center "+bgcolor+"'>"+title+"</td>"
-        }
-        addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + hit_items.join('|') + '</td>'
-        addhtml += "<td class='center xsmall "+bgcolor+"'>" + evalue + '</td>'
-        addhtml += "<td class='center xsmall "+bgcolor+"'>" + bitScore + '</td>'
-        addhtml += "<td class='center xsmall "+bgcolor+"'>" + identityPct + '</td>'
-        
-     }
-    
-    
-    return addhtml
-}
+// function getRowHTML(description, hsps, bgcolor) {
+//     let hit_items,titleid,HMT,bitScore,identityPct,evalue,addhtml = ''
+//     bitScore = hsps.bit_score.toFixed(1).toString()
+//     identityPct = (hsps.identity * 100 / hsps.align_len).toFixed(1).toString()
+//     evalue = hsps.evalue.toString()
+//    
+//      if(description.title === ''){
+//         //eg Bv6
+//         addhtml += "<td class='blastcol3 center "+bgcolor+"'>" + description.id + '</td>'
+//         addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + description.accession + '</td>'
+//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + evalue + '</td>'
+//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + bitScore + '</td>'
+//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + identityPct + '</td>'
+//         
+//      }else{
+//         // for all? homd blast databases??
+//         // this only works for 16Srefseq
+//         let title = description.title
+//         hit_items = title.split('|')
+//         //console.log('hit_items:',hit_items)
+//         try {
+//           titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
+//           HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
+//           addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid=" + HMT + "'>" + titleid.trim() + '</a></td>'
+//         }catch(e){
+//           addhtml += "<td class='blastcol3 center "+bgcolor+"'>"+title+"</td>"
+//         }
+//         addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + hit_items.join('|') + '</td>'
+//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + evalue + '</td>'
+//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + bitScore + '</td>'
+//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + identityPct + '</td>'
+//         
+//      }
+//     
+//     
+//     return addhtml
+// }
 //
 //
 function getAllFilesWithExt(dirPath, ext) {
@@ -1323,21 +1316,16 @@ function followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
   console.log('in File Path')
   
   // need 5000 seq limit in place
-  
     const source = req.file.path;
     const dest = path.join(blastDir,'fastaFromFile.fna');  // MUST BE *.fna NOT *.fa so that it wont be read by script
    
-    
     return (async function mvAndRunPyFxn() {
       if (req.file){
         
         await moveFile(source, dest)
         let data = await readFile(dest)
-        //console.log('dataxx')
-        //console.log(data)
         
-        runPyScript(req, res, opts, blastOpts, blastDir, dest, next)
-        
+        runPyBlastScript(req, res, opts, blastOpts, blastDir, dest, next)
         
       }else{
          console.log('File Promise broken')
@@ -1381,13 +1369,9 @@ async function moveFile(source, destination) {
 
 //
 //
-function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
-    console.log('In runPyScript')
+function runPyBlastScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
+    console.log('In runPyBlastScript')
     
-    //const dataFromPython = await pythonPromise(req, res, opts, blastOpts, blastDir, dataForPy);
-    // here run pyscript
-    // then render and return to restart q 5sec
-    // let pyscriptOpts = []
 //     
     const pyscript = path.join(CFG.PATH_TO_SCRIPTS, 'run_blast_no_cluster.py') 
     
@@ -1407,8 +1391,6 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
                 env:{'PATH': CFG.PATH},   // CFG.PATH must include python executable path
                 detached: true, stdio: 'pipe'
     })
-    
-    
     
     pythonRun.stdout.on('data', function pyStdOut(data) {
       console.log('Pipeing data from python script::')
@@ -1461,7 +1443,6 @@ function runPyScript(req, res, opts, blastOpts, blastDir, dataForPy, next){
     }
      
 }
-
 
 
 module.exports = router

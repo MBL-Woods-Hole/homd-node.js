@@ -9,6 +9,7 @@ thead th { position: sticky; top: 0; }
 <% error_obj = JSON.parse(error) %>
 <% query_strings = JSON.parse(queries) %>
 <% html_files = JSON.parse(files) %>
+<% var cfg = JSON.parse(config) %> 
 
 <%- include('../../partials/header_html'); %>
 <link rel="stylesheet" type="text/css" href="/css/blast.css" >
@@ -84,7 +85,11 @@ thead th { position: sticky; top: 0; }
       
     <% } %>
     
-    
+    <center>
+    <small>
+    <% this_url = cfg.url +"/blast/blast_results_refseq?id=" +blastID %>
+    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] <= to come back to these results for 30 days.
+    </small></center>
     <% if(blastParams.blastFxn === 'refseq') { %>
       <div id='blastResultsDiv'>
        <%- html %>

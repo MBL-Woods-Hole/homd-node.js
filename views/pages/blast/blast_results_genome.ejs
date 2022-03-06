@@ -5,13 +5,16 @@ thead th { position: sticky; top: 0; }
 #output{
   padding:20px;
 }
+#genome_back{
+  float:right;
+}
 </style>
 
 <% blastParams = JSON.parse(blastParams) %>
 <% error_obj = JSON.parse(error) %>
 <% query_strings = JSON.parse(queries) %>
 <% html_files = JSON.parse(files) %>
-
+<% var cfg = JSON.parse(config) %> 
 <%- include('../../partials/header_html'); %>
 <link rel="stylesheet" type="text/css" href="/css/blast.css" >
 <body>
@@ -53,13 +56,15 @@ thead th { position: sticky; top: 0; }
             <option value='excelAll'>As Excel -all hits</option>
             <option disabled>--------</option>
             <option value='zip'>BLAST Output Files (xml files)</option>
+            <option value='fasta'>Fasta File of Hits</option>
           </select>
           
         
         </td>
         
         <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;<%= blastParams.blastdb %></td>
+           <br>&nbsp;&nbsp;&nbsp;&nbsp;[<%= blastParams.anno.toUpperCase() %>] <%= blastParams.blastdb %>
+        </td>
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
       </table>
@@ -75,13 +80,16 @@ thead th { position: sticky; top: 0; }
       <% } %>
       </select>
       
-    <span style='float:right'><a class='button' href='/genome/blast'>Back</a></span> 
+    <span id='genome_back' style=''><a class='button' href='/genome/blast'>Back</a></span> 
     <!-- <span style='float:right'><button onclick="history.back()">Go Back</button></span> -->
     </div>
     
     
-    
-   
+    <center>
+    <small>
+    <% this_url = cfg.url +"/blast/blast_results_genome?id=" +blastID %>
+    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] <= to come back to these results for 30 days.
+    </small></center>
      <div id='output'>
       <%- decodeURI(blastData) %>
     </div>

@@ -224,6 +224,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         fileText += ' -query ' + os.path.join(details_dict['blastDir'],file)
         fileText += ' -max_target_seqs ' + details_dict['maxTargetSeqs']  # use if outfmt >4
         fileText += ' ' + details_dict['advanced']
+        
         if details_dict['blastFxn'] == 'genome':
             #fileText += ' -html'   ## dont use this with other -outfmt
             fileText += ' -outfmt 5'   ## xml
@@ -233,6 +234,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         else:
             #fileText += ' -outfmt 15'   ## 15 JSON
             #fileText += ' -outfmt 16'   ## 16 XML
+            fileText += ' -parse_deflines'  # works with refseq db deflines
             fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
             pass
             

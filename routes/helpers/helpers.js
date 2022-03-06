@@ -8,7 +8,7 @@ var accesslog = require('access-log');
 const async = require('async')
 const util        = require('util');
 const path        = require('path');
-
+const {exec, spawn} = require('child_process');
 
 // route middleware to make sure a user is logged in
 module.exports.timestamp = () => {
@@ -541,20 +541,63 @@ module.exports.parse_blast_query = function parse_blast_query(file_data, fxn){
       return 'NotFound'
     }
 }
-module.exports.parse_blast_query_xml = function parse_blast_query_xml(file_data, fxn){
+module.exports.parse_blast_query_xml = function parse_blast_query_xml(jsondata, grab){
     //console.log('file_data',file_data)
-    let json = JSON.parse(file_data)  // xml
-    //console.log(json.BlastOutput)
-    let query = json['BlastOutput']['BlastOutput_query-def']
-    
-    if(query){
-       return query
-    }else{
-      return 'NotFound'
-    }
+    let json = JSON.parse(jsondata)  // xml
+    if(grab === 'query'){
+		//console.log(json.BlastOutput)
+		let query = json['BlastOutput']['BlastOutput_query-def']
+		if(query){
+		   return query
+		}else{
+		  return 'NotFound'
+		}
+	}else if(grab === 'homdhitids'){
+	   //for protein:: SEQF3712_01295 hypothetical protein [HMT-096 Lachnospiraceae_G-2 bacterium_HMT_096 F0428]
+	   // want SEQF3712_01295
+	   let ret = {},hits,homdhitid
+	   ret.hitid_ary = []
+	   ret.no_hits = false
+	    ret.queryid = json['BlastOutput']['BlastOutput_query-ID']
+	    let iteration = json['BlastOutput']['BlastOutput_iterations']['Iteration']
+	    if(iteration.hasOwnProperty('Iteration_message') && iteration['Iteration_message'] === 'No hits found'){
+           ret.no_hits = true
+        }else{
+			for(let n in json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits']){
+				hits = json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits'][n]
+				for(let i in hits){
+			        homdhitid = hits[i].Hit_def.split(' ')[0]
+			        ret.hitid_ary.push(homdhitid)
+				}
+			}
+        }
+        //console.log('ret',ret)
+        return ret
+	}else if(grab === 'hitids'){
+	    let ret = {},hits,hitid
+	    ret.hitid_ary = []
+	    ret.no_hits = false
+	    ret.queryid = json['BlastOutput']['BlastOutput_query-ID']
+	    let iteration = json['BlastOutput']['BlastOutput_iterations']['Iteration']
+	    if(iteration.hasOwnProperty('Iteration_message') && iteration['Iteration_message'] === 'No hits found'){
+           ret.no_hits = true
+        }else{
+			for(let n in json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits']){
+				hits = json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits'][n]
+				for(let i in hits){
+			        hitid = hits[i].Hit_id
+			        ret.hitid_ary.push(hitid)
+				}
+			}
+        }
+        //console.log('ret',ret)
+        return ret
+	}else{
+	   return "ERROR in blast XML parse"
+	}
 }
 module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata, fxn){
-   //""" for genome blast xml file"""
+   //""" for genome blast xml file download"""
     //console.log(jsondata['BlastOutput'])
     let file_collector = {}
     let id_collector = {}
@@ -574,22 +617,22 @@ module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata, fx
         for(let i in hits){
             hit = hits[i]
         
-			console.log('hit Hsps',hit['Hit_hsps']['Hsp'])
-			clone = hit['Hit_def']
-			split_name = clone.split(' ')
-			clone_id = split_name[0].trim()
-			// SEQF1595_KI535341.1 [HMT-389 Abiotrophia defectiva ATCC 49176]
-			
-			let regCapture = /HMT-(\d+)\s/   // grab inside parens
-			otid = clone.match(regCapture)[1]
-			console.log('otid',otid)
-			id_collector[clone_id] = {'clone': clone, 'clone_id': clone_id, otid: otid}
-			id_collector[clone_id]['bitscore'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
-			id_collector[clone_id]['expect'] = hit['Hit_hsps']['Hsp']['Hsp_evalue']
-			id_collector[clone_id]['identity'] = hit['Hit_hsps']['Hsp']['Hsp_identity']
-			id_collector[clone_id]['gaps'] = hit['Hit_hsps']['Hsp']['Hsp_gaps']
-			//id_collector[clone_id]['strand'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
-			id_collector[clone_id]['length'] = hit['Hit_len']
+            //console.log('hit Hsps',hit['Hit_hsps']['Hsp'])
+            clone = hit['Hit_def']
+            split_name = clone.split(' ')
+            clone_id = split_name[0].trim()
+            // SEQF1595_KI535341.1 [HMT-389 Abiotrophia defectiva ATCC 49176]
+            
+            let regCapture = /HMT-(\d+)\s/   // grab inside parens
+            otid = clone.match(regCapture)[1]
+            //console.log('otid',otid)
+            id_collector[clone_id] = {'clone': clone, 'clone_id': clone_id, otid: otid}
+            id_collector[clone_id]['bitscore'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
+            id_collector[clone_id]['expect'] = hit['Hit_hsps']['Hsp']['Hsp_evalue']
+            id_collector[clone_id]['identity'] = hit['Hit_hsps']['Hsp']['Hsp_identity']
+            id_collector[clone_id]['gaps'] = hit['Hit_hsps']['Hsp']['Hsp_gaps']
+            //id_collector[clone_id]['strand'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
+            id_collector[clone_id]['length'] = hit['Hit_len']
         }
       }
     }
@@ -704,6 +747,8 @@ Genome: yes
     */
 }
 
-
+module.exports.execute = function execute(command, callback){
+    exec(command, function(error, stdout, stderr){ callback(stdout); });
+};
 
 

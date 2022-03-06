@@ -279,7 +279,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
   // console.log(C.genome_lookup[gid])
   res.render('pages/genome/genomedesc', {
     title: 'HOMD :: Genome Info',
-    pgname: 'genome/genome_description', // for AbountThisPage 
+    pgname: 'genome/description', // for AbountThisPage 
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     // taxonid: otid,
     data1: JSON.stringify(data),
