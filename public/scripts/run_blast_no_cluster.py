@@ -247,9 +247,17 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         # run blast2xml on each to create nice output
         for file in filesArray:
             #fileText += '/Users/avoorhis/programming/homd-node.js/public/scripts/blast2html.py -i ' + os.path.join(details_dict['blastDir'],'blast_results', file+'.xml')
-            fileText += os.path.join(os.path.dirname(os.path.realpath(__file__)),'blast2html.py') +' -i ' + os.path.join(details_dict['blastDir'],'blast_results', file+'.xml')
+            fileText += os.path.join(os.path.dirname(os.path.realpath(__file__)),'blast2html.py')
+            fileText += ' -dbhost '+details_dict['dbhost']
+            fileText += ' -anno '+details_dict['anno']
+            if details_dict['ext'] == 'faa':
+                fileText += ' -db_type protein'
+            else:
+                fileText += ' -db_type nucleotide'
+            fileText += ' -i ' + os.path.join(details_dict['blastDir'],'blast_results', file+'.xml')
             fileText += ' > ' + os.path.join(details_dict['blastDir'],'blast_results', file+'.html')
             #fileText += " 1>/dev/null 2>>" + details_dict['blastDir'] + "/blasterror.log;"
+            fileText += " 2>>" + details_dict['blastDir'] + "/blasterror.log;"
             fileText += '\n\n'
     return fileText
     

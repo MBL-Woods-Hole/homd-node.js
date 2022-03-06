@@ -16,6 +16,7 @@ import re
 
 
 
+
 _filters = {}
 def filter(func_or_name):
     "Decorator to register a function as filter in the current jinja environment"
@@ -175,54 +176,108 @@ def genelink(hit, type='genbank', hsp=None):
     return link
 
 def jblink(hit, type='jbrowse', hsp=None):
+    
+    """
+    from George:
+        http://homd.org/jbrowse/index.html
+        ?data=homd/[SEQID]&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew
+        &loc=[ACCESSION]:[START]..[STOP]&highlight=[ACCESSION]:[START1]..[STOP1]
+        http://www.homd.org/
+        ?name=redirect
+        &type=jbrowse
+        &db=db
+        &id=SEQF1683_GL637672.1
+        &st=4520
+        &sp=4595
+        <Hsp_num>1</Hsp_num>
+        <Hsp_bit-score>106.379</Hsp_bit-score>
+        <Hsp_score>57</Hsp_score>
+        <Hsp_evalue>1.12307e-24</Hsp_evalue>
+        <Hsp_query-from>2</Hsp_query-from>   
+        <Hsp_query-to>76</Hsp_query-to>   
+        <Hsp_hit-from>169802</Hsp_hit-from>  st  highlight: st + Hsp_query-from
+        <Hsp_hit-to>169728</Hsp_hit-to>     stp  highlight: st + Hsp_query-to
+        <Hsp_query-frame>1</Hsp_query-frame>
+        <Hsp_hit-frame>-1</Hsp_hit-frame>
+        <Hsp_identity>69</Hsp_identity>
+        <Hsp_positive>69</Hsp_positive>
+        <Hsp_gaps>0</Hsp_gaps>
+    link = "http://www.homd.org/?name=redirect&type=jbrowse&db=db&id={}".format(hit)
+    """
+    
     if not isinstance(hit, str):
         hit = hitid(hit)
     # hit = SEQF1595_KI535341.1
     hit_parts = hit.split('_')
-    #link = "http://www.homd.org/jbrowse/index.html?id={}&type=jbrowse&db=db".format(hit)
-#from George:
-# http://homd.org/jbrowse/index.html
-# ?data=homd/[SEQID]&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew
-# &loc=[ACCESSION]:[START]..[STOP]&highlight=[ACCESSION]:[START1]..[STOP1]
-# http://www.homd.org/
-# ?name=redirect
-# &type=jbrowse
-# &db=db
-# &id=SEQF1683_GL637672.1
-# &st=4520
-# &sp=4595
-# <Hsp_num>1</Hsp_num>
-# <Hsp_bit-score>106.379</Hsp_bit-score>
-# <Hsp_score>57</Hsp_score>
-# <Hsp_evalue>1.12307e-24</Hsp_evalue>
-# <Hsp_query-from>2</Hsp_query-from>   
-# <Hsp_query-to>76</Hsp_query-to>   
-# <Hsp_hit-from>169802</Hsp_hit-from>  st  highlight: st + Hsp_query-from
-# <Hsp_hit-to>169728</Hsp_hit-to>     stp  highlight: st + Hsp_query-to
-# <Hsp_query-frame>1</Hsp_query-frame>
-# <Hsp_hit-frame>-1</Hsp_hit-frame>
-# <Hsp_identity>69</Hsp_identity>
-# <Hsp_positive>69</Hsp_positive>
-# <Hsp_gaps>0</Hsp_gaps>
-    #link = "http://www.homd.org/?name=redirect&type=jbrowse&db=db&id={}".format(hit)
-    
     link = "http://www.homd.org/jbrowse/index.html"
     link += "?data=homd/{}&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew".format(hit_parts[0])
-    if hsp != None:
-        acc = hit.replace('_','|')
-        hitfrom = hsp['Hsp_hit-from']
-        hitto = hsp['Hsp_hit-to']
-        
-        if int(hsp['Hsp_hit-from']) > int(hsp['Hsp_hit-to']):
-            hitfrom = hsp['Hsp_hit-to']
-            hitto = hsp['Hsp_hit-from']
-        if int(hitfrom) < 500:
-           lochitfrom = hitfrom
+    
+    if args.db_type == 'protein':
+        """
+        prokka-type:
+        SEQF1595_01796
+        Use PROKKA_SEQF1595;
+        select m.accession, o.start, o.stop from molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID=' SEQF1595_01796'
+        ncbi-type
+        SEQF1595_ESK65362.1
+        Use NCBI_SEQF1595;
+        select m.accession, o.start, o.stop from molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID=' ESK65362.1'
+        """
+        if args.anno == 'prokka':
+           pid = hit
         else:
-           lochitfrom = int(hitfrom)-500    
-        link += "&loc={}:{}..{}".format(acc, str(lochitfrom), str(int(hitto)+500))
-        link += "&highlight={}:{}..{}".format(acc, str(lochitfrom), hitto)
-        #link += "&st={}&sp={}".format(hsp['Hsp_hit-from'], hsp['Hsp_hit-to'])
+           pid = hit_parts[1]
+        db = args.anno.upper()+'_'+hit_parts[0]
+        query1 = "USE "+db+";"
+        query2 = "SELECT m.accession, o.start, o.stop FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='"+pid+"'"
+        
+        if args.dbhost == 'localhost':
+            query1 = "USE NCBI_SEQF1003;"
+            query2 = "SELECT m.accession, o.start, o.stop FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='EEE16625.1'"
+        #print(query2)
+        try:
+            args.myconn.execute_no_fetch(query1)
+            result = args.myconn.execute_fetch_select_dict(query2)
+            accession = result[0]['accession']
+            start = result[0]['start']
+            stop = result[0]['stop']
+            hitfrom = start
+            hitto = stop
+            #print(accession)
+            if int(start) > int(stop):
+                hitfrom = stop
+                hitto = start
+            if int(hitfrom) < 500:
+               lochitfrom = hitfrom
+            else:
+               lochitfrom = int(hitfrom)-500  
+            link += "&loc={}:{}..{}".format(accession, str(lochitfrom), str(int(hitto)+500))
+            link += "&highlight={}:{}..{}".format(accession, str(lochitfrom), hitto)
+        except:
+            pass
+        
+            
+    else:
+    #link = "http://www.homd.org/jbrowse/index.html?id={}&type=jbrowse&db=db".format(hit)
+        acc = hit.replace('_','|')
+    
+        
+        if hsp != None:
+            
+            hitfrom = hsp['Hsp_hit-from']
+            hitto = hsp['Hsp_hit-to']
+        
+            if int(hsp['Hsp_hit-from']) > int(hsp['Hsp_hit-to']):
+                hitfrom = hsp['Hsp_hit-to']
+                hitto = hsp['Hsp_hit-from']
+            if int(hitfrom) < 500:
+               lochitfrom = hitfrom
+            else:
+               lochitfrom = int(hitfrom)-500    
+            link += "&loc={}:{}..{}".format(acc, str(lochitfrom), str(int(hitto)+500))
+            link += "&highlight={}:{}..{}".format(acc, str(lochitfrom), hitto)
+            #link += "&st={}&sp={}".format(hsp['Hsp_hit-from'], hsp['Hsp_hit-to'])
+    #print(link)
     return link
 
 def taxonlink(hit, type='taxon', hsp=None):
@@ -408,12 +463,19 @@ def main():
     parser = argparse.ArgumentParser(description="Convert a BLAST XML result into a nicely readable html page",
                                      usage="{} [-i] INPUT [-o OUTPUT]".format(sys.argv[0]))
     input_group = parser.add_mutually_exclusive_group(required=True)
+    
     input_group.add_argument('positional_arg', metavar='INPUT', nargs='?', type=argparse.FileType(mode='r'),
                              help='The input Blast XML file, same as -i/--input')
     input_group.add_argument('-i', '--input', type=argparse.FileType(mode='r'), 
                              help='The input Blast XML file')
     parser.add_argument('-o', '--output', type=argparse.FileType(mode='w'), default=sys.stdout,
                         help='The output html file')
+    parser.add_argument('-dbhost', '--dbhost', dest = "dbhost", default='localhost',
+                        help='Mysql DB Host')
+    parser.add_argument('-anno', '--anno', dest = "anno", default='ncbi',
+                        help='Annotation Type')
+    parser.add_argument('-db_type', '--db_type', dest = "db_type", default='nucleotide',
+                        help='nucleotide or protein')
     # We just want the file name here, so jinja can open the file
     # itself. But it is easier to just use a FileType so argparse can
     # handle the errors. This introduces a small race condition when
@@ -421,8 +483,14 @@ def main():
     # care too much.
     parser.add_argument('--template', type=argparse.FileType(mode='r'), default=default_template,
                         help='The template file to use. Defaults to blast_html.html.jinja')
-
+    global args
+    global myconn
     args = parser.parse_args()
+    sys.path.append(path.dirname(__file__)+'/../../../homd-data/')
+    
+    from connect import MyConnection
+    
+    args.myconn = MyConnection(host=args.dbhost,  read_default_file = "~/.my.cnf_node")
     if args.input == None:
         args.input = args.positional_arg
     if args.input == None:
@@ -432,11 +500,15 @@ def main():
     args.template.close()
     if not templatedir:
         templatedir = '.'
-
+   
     b = BlastVisualize(args.input, templatedir, templatename)
     b.render(args.output)
+    
+    
+   
 
 
 if __name__ == '__main__':
+    global myconn
     main()
 

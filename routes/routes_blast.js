@@ -123,7 +123,7 @@ router.get('/blast_results_genome', function blastResults_genome(req, res) {
                     }
                  
                 }
-                console.log('hitid_collector',hitid_collector)
+                //console.log('hitid_collector',hitid_collector)
                 // if protein::need to query DB for start stop
                 
                 if(filename && blastquery){   // from drop menu (filename is html not xml)
@@ -926,9 +926,14 @@ function createBlastOpts(reqBody) {
     if(reqBody.blastFxn === 'genome') {
       //bOpts.dbPath = CFG.BLAST_DB_PATH_GENOME
       bOpts.anno = reqBody.anno
+      if(reqBody.blastDb){
       dbItems = reqBody.blastDb.split('/')
+      }else{
+        dbItems = ''
+      }
       bOpts.blastDb = dbItems[1]
       bOpts.ext = dbItems[0]
+      bOpts.dbhost = CFG.DBHOST
     } else {
       //bOpts.dbPath = CFG.BLAST_DB_PATH_REFSEQ
       bOpts.blastDb = reqBody.blastDb
@@ -955,6 +960,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     config.expect = blastOpts.expect
     config.blastFxn = req.body.blastFxn
     config.anno = blastOpts.anno
+    config.dbhost = blastOpts.dbhost
     config.advanced = blastOpts.advanced
     config.maxTargetSeqs = blastOpts.maxTargetSeqs
     config.program = blastOpts.program
