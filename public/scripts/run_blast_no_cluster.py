@@ -248,7 +248,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         for file in filesArray:
             #fileText += '/Users/avoorhis/programming/homd-node.js/public/scripts/blast2html.py -i ' + os.path.join(details_dict['blastDir'],'blast_results', file+'.xml')
             fileText += os.path.join(os.path.dirname(os.path.realpath(__file__)),'blast2html.py')
-            fileText += ' -dbhost '+details_dict['dbhost']
+            fileText += ' -dbhost '+details_dict['genome_dbhost']
             fileText += ' -anno '+details_dict['anno']
             if details_dict['ext'] == 'faa':
                 fileText += ' -db_type protein'

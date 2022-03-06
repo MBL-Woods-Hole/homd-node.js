@@ -933,7 +933,7 @@ function createBlastOpts(reqBody) {
       }
       bOpts.blastDb = dbItems[1]
       bOpts.ext = dbItems[0]
-      bOpts.dbhost = CFG.DBHOST
+      bOpts.genome_dbhost = CFG.GENOME_DBHOST
     } else {
       //bOpts.dbPath = CFG.BLAST_DB_PATH_REFSEQ
       bOpts.blastDb = reqBody.blastDb
@@ -960,7 +960,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     config.expect = blastOpts.expect
     config.blastFxn = req.body.blastFxn
     config.anno = blastOpts.anno
-    config.dbhost = blastOpts.dbhost
+    config.genome_dbhost = blastOpts.genome_dbhost
     config.advanced = blastOpts.advanced
     config.maxTargetSeqs = blastOpts.maxTargetSeqs
     config.program = blastOpts.program
