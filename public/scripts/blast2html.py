@@ -170,9 +170,44 @@ def genelink(hit, type='genbank', hsp=None):
     if not isinstance(hit, str):
         hit = hitid(hit)
     hit_parts = hit.split('_')
-    link = "http://www.ncbi.nlm.nih.gov/nucleotide/{}?report={}&log$=nuclalign".format(hit_parts[1], type)
-    if hsp != None:
-        link += "&from={}&to={}".format(hsp['Hsp_hit-from'], hsp['Hsp_hit-to'])
+    if args.dbhost == 'localhost':   # testing:will show in html
+        print('hit',hit)
+        #hit = SEQF1595_KI535341.1
+    if args.db_type == 'protein':
+        # needs to change for protein 
+        # what about nucleotide?
+        if args.anno == 'prokka':
+           pid = hit
+        else:
+           pid = hit_parts[1]
+        db = args.anno.upper()+'_'+hit_parts[0]
+        query1 = "USE "+db+";"
+        query2 = "SELECT m.accession, o.start, o.stop FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='"+pid+"'"
+        if args.dbhost == 'localhost':   # testing
+            query1 = "USE NCBI_SEQF1003;"
+            query2 = "SELECT m.accession, o.start, o.stop FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='EEE16625.1'"
+  
+        try:
+            args.myconn.execute_no_fetch(query1)
+            result = args.myconn.execute_fetch_select_dict(query2)
+            accession = result[0]['accession']
+            start = result[0]['start']
+            stop = result[0]['stop']
+            #print('acc',accession)
+            gbacc = accession.split('|')[1]
+        
+            link = "http://www.ncbi.nlm.nih.gov/nucleotide/{}?report={}&log$=nuclalign".format(gbacc, type)
+            link += "&from={}&to={}".format(start, stop)
+    
+            
+        except:
+            return 'http://www.ncbi.nlm.nih.gov/nucleotide/{}'.format(hit)
+    
+    else:
+        link = "http://www.ncbi.nlm.nih.gov/nucleotide/{}?report={}&log$=nuclalign".format(hit_parts[1], type)
+        if hsp != None:
+            link += "&from={}&to={}".format(hsp['Hsp_hit-from'], hsp['Hsp_hit-to'])
+    
     return link
 
 def jblink(hit, type='jbrowse', hsp=None):
@@ -182,27 +217,9 @@ def jblink(hit, type='jbrowse', hsp=None):
         http://homd.org/jbrowse/index.html
         ?data=homd/[SEQID]&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew
         &loc=[ACCESSION]:[START]..[STOP]&highlight=[ACCESSION]:[START1]..[STOP1]
-        http://www.homd.org/
-        ?name=redirect
-        &type=jbrowse
-        &db=db
-        &id=SEQF1683_GL637672.1
-        &st=4520
-        &sp=4595
-        <Hsp_num>1</Hsp_num>
-        <Hsp_bit-score>106.379</Hsp_bit-score>
-        <Hsp_score>57</Hsp_score>
-        <Hsp_evalue>1.12307e-24</Hsp_evalue>
-        <Hsp_query-from>2</Hsp_query-from>   
-        <Hsp_query-to>76</Hsp_query-to>   
+        
         <Hsp_hit-from>169802</Hsp_hit-from>  st  highlight: st + Hsp_query-from
         <Hsp_hit-to>169728</Hsp_hit-to>     stp  highlight: st + Hsp_query-to
-        <Hsp_query-frame>1</Hsp_query-frame>
-        <Hsp_hit-frame>-1</Hsp_hit-frame>
-        <Hsp_identity>69</Hsp_identity>
-        <Hsp_positive>69</Hsp_positive>
-        <Hsp_gaps>0</Hsp_gaps>
-    link = "http://www.homd.org/?name=redirect&type=jbrowse&db=db&id={}".format(hit)
     """
     
     if not isinstance(hit, str):
@@ -364,12 +381,12 @@ class BlastVisualize:
 
     def render(self, output):
         template = self.environment.get_template(self.templatename)
-
+        dbase = '['+args.anno.upper()+'] '+self.blast.BlastOutput_db
         params = (('Query ID', self.blast["BlastOutput_query-ID"]),
                   ('Query definition', self.blast["BlastOutput_query-def"]),
                   ('Query length', self.blast["BlastOutput_query-len"]),
                   ('Program', self.blast.BlastOutput_version),
-                  ('Database', self.blast.BlastOutput_db),
+                  ('Database', dbase),
         )
         #print('params',params)
         output.write(template.render(blast=self.blast,
