@@ -1,16 +1,41 @@
-<%- include('../partials/header_html'); %>
+
 <style>
-body{
-  background:royalblue;
-  
+#masthead {
+   /* Increase the header for this page only */
+  width:100%;
+  background:black;
+  background-image: url("/images/grid.png");
+  background-repeat:repeat-x;
+  background-size: 6%;
+  height:80px;
 }
-h1{
+
+
+
+#masthead span a img {
+  height:80px;
+  padding:0;
+  margin:0;
+} 
+.text-info {
+  font-weight:bold;
+}
+#version-info{
+  top:-64px;
+}
+#info {
+  padding:15px 15px;
+  margin:20px;
+  background: orange;
+  font-size: large;
+  border:1px solid black;
+}
+
+#welcome{
    text-align:center;
    padding:30px 0;
 }
-.text-info{
-   font-weight:bold;
-}
+
 #contributors,#supportedby{
    font-size:small;
 }
@@ -18,27 +43,29 @@ i {
    font-weight:normal;
    color:orange;
 }
+
+
 #homd_banner{
 text-align:center;
 }
 #homd_logo_img{
   border:1px solid black;
 }
-ul{
+.content ul{
  line-height:1.6em;
 }
-li{
+.content li{
 padding:.2em;
 }
-ul ul li{
+.content ul ul li{
    margin-left:25px;
 }
 .content{
-   padding:20px 40px;
+   /* padding:20px 40px; */
 }
 #homd-main-image{
    padding:20px 0;
-   background:grey;
+   
 }
 #homd-main-image img{
   border:1px solid blue;
@@ -46,13 +73,16 @@ ul ul li{
 </style>
 
 
+<%- include('../partials/header_html'); %>
 <body>
+    <div id='wrapper'>
+    <%- include('../partials/header_img'); %>
+    <%- include('../partials/navbar'); %>
     
     <div class='page-content' >
-    <h1>Welcome to the <i>expanded</i> Human Oral Microbiome Database!
-    </h1>
+    <br><span id='welcome'><h1>Welcome to the <i>expanded</i> Human Oral Microbiome Database!
+    </h1></span>
     
-    <a href='/'>ENTER <i>e</i>HOMD &#8680;</a>
 
 
 
@@ -78,7 +108,7 @@ ul ul li{
 <br>
 <div id='homd-main-image'>
 <center>
-<img id='homd_main' width='1100' src='/images/homd-main2.png' alt='HOMD Banner'  \>
+<img id='homd_main' width='1100' src='/images/homd-main3.png' alt='HOMD Banner'  \>
 </center>
 </div>
 
@@ -97,4 +127,12 @@ ul ul li{
 </body>
 
 </html>
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+ 
+ 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+// this should run on every page for main menu open speed
+mainmenu()
 
+</script>
