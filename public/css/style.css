@@ -68,7 +68,7 @@ p {
 .page-content {
   padding: 5px;
   margin: 5px;
-  background: white;
+  /* background: white; */
   min-height: 500px;
   
 }
