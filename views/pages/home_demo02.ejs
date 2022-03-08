@@ -1,0 +1,100 @@
+<%- include('../partials/header_html'); %>
+<style>
+body{
+  background:royalblue;
+  
+}
+h1{
+   text-align:center;
+   padding:30px 0;
+}
+.text-info{
+   font-weight:bold;
+}
+#contributors,#supportedby{
+   font-size:small;
+}
+i {
+   font-weight:normal;
+   color:orange;
+}
+#homd_banner{
+text-align:center;
+}
+#homd_logo_img{
+  border:1px solid black;
+}
+ul{
+ line-height:1.6em;
+}
+li{
+padding:.2em;
+}
+ul ul li{
+   margin-left:25px;
+}
+.content{
+   padding:20px 40px;
+}
+#homd-main-image{
+   padding:20px 0;
+   background:grey;
+}
+#homd-main-image img{
+  border:1px solid blue;
+}
+</style>
+
+
+<body>
+    
+    <div class='page-content' >
+    <h1>Welcome to the <i>expanded</i> Human Oral Microbiome Database!
+    </h1>
+    
+    <a href='/'>ENTER <i>e</i>HOMD &#8680;</a>
+
+
+
+<div class='content'>
+<ul>
+<li>We provide:</li>  
+<li>- comprehensive curated information o­n bacteria in the human mouth and aerodigestive tract, including the pharynx, nasal passages, sinuses and esophagus.</li>   
+<li>- information on 775 bacterial species. 57% are officially named, 13% unnamed but cultivated and 30% are known o­nly as uncultivated phylotypes. </li> 
+<li>- a provisional naming scheme for the currently unnamed taxa, based o­n the 16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can be directly linked to a stably named reference scheme.</li>  
+<li>- ecology/abundance information on bacteria at 10 sites in the mouth, nose, and throat </li> 
+<li>- a mouse oral microbiome database (MOMD) patterned on the eHOMD. </li> 
+<li>- Bacterial genome sequences are being added to the eHOMD as they become available.  
+  <ul>
+  <li>- A total of 2074 oral/nasal genomes, representing 529 taxa are currently available o­n eHOMD with annotations and can be viewed in a genome browser software. </li> 
+  <li>- Genomes for 14 non-oral/non-nasal taxa are also included in phyla with no or few sequenced oral representatives (Chlorobi, Chloroflexi, GN02, TM7, SR1, WPPS-2), to capture reads from related oral taxa. </li> 
+  </ul>
+</li> 
+<li>Coming soon:  database of bacteriophage sequences from the oral microbiome! </li>
+</ul>
+ 
+
+
+<br>
+<div id='homd-main-image'>
+<center>
+<img id='homd_main' width='1100' src='/images/homd01.png' alt='HOMD Banner'  \>
+</center>
+</div>
+
+<br>
+<hr>
+<%- include('../partials/contributors'); %>
+<br>
+<%- include('../partials/supportedby'); %>
+</div>
+ <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
+   
+</div>
+</div>
+</body>
+
+</html>
+

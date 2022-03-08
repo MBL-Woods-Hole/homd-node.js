@@ -27,9 +27,26 @@ router.get('/', function index(req, res) {
   })
 })
 router.get('/demo01', function index(req, res) {
-  console.log('demo01')
   
   res.render('pages/home_demo01', {
+    title: 'HOMD :: Human Oral Microbiome Database',
+    pgname: '', // for AbountThisPage
+    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
+  })
+})
+router.get('/demo02', function index(req, res) {
+  
+  res.render('pages/home_demo02', {
+    title: 'HOMD :: Human Oral Microbiome Database',
+    pgname: '', // for AbountThisPage
+    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
+  })
+})
+router.get('/demo03', function index(req, res) {
+  
+  res.render('pages/home_demo03', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
