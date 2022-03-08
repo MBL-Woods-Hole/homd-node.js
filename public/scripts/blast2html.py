@@ -170,8 +170,8 @@ def genelink(hit, type='genbank', hsp=None):
     if not isinstance(hit, str):
         hit = hitid(hit)
     hit_parts = hit.split('_')
-    if args.dbhost == 'localhost':   # testing:will show in html
-        print('hit',hit)
+    #if args.dbhost == 'localhost':   # testing:will show in html
+    #    print('hit',hit)
         #hit = SEQF1595_KI535341.1
     if args.db_type == 'protein':
         # needs to change for protein 
@@ -193,15 +193,21 @@ def genelink(hit, type='genbank', hsp=None):
             accession = result[0]['accession']
             start = result[0]['start']
             stop = result[0]['stop']
+            hitfrom = start
+            hitto = stop
+            #print(accession)
+            if int(start) > int(stop):
+                hitfrom = stop
+                hitto = start
             #print('acc',accession)
             gbacc = accession.split('|')[1]
         
             link = "http://www.ncbi.nlm.nih.gov/nucleotide/{}?report={}&log$=nuclalign".format(gbacc, type)
-            link += "&from={}&to={}".format(start, stop)
+            link += "&from={}&to={}".format(hitfrom, hitto)
     
             
         except:
-            return 'http://www.ncbi.nlm.nih.gov/nucleotide/{}'.format(hit)
+            link = "http://www.ncbi.nlm.nih.gov/nucleotide/{}?report={}&log$=nuclalign".format(hit_parts[1], type)
     
     else:
         link = "http://www.ncbi.nlm.nih.gov/nucleotide/{}?report={}&log$=nuclalign".format(hit_parts[1], type)

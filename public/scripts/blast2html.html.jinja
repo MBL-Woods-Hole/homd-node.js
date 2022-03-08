@@ -373,7 +373,16 @@ pre{
       footer :link {
       color: #5588cc;
       }
-      
+      #top_btn{
+      background-color:#d0f0c0;
+      border:1px solid black;
+      color:#2e8b57;
+      position: fixed;
+      padding: 5px;
+      margin-right:30px;
+      top: 250px;
+      transform: translateX(-60px);
+      }
     </style>
 
     <script type="text/javascript">
@@ -403,7 +412,9 @@ pre{
     </div>
     
     <div id=content>
-
+       <section class=top_btn>
+           <a id='top_btn' href="#top">&#708; Top</a>
+      </section>
       {% if not blast.BlastOutput_iterations.findall('Iteration') %}
       <section class=nodata>
         <h1>No data</h1>
@@ -428,6 +439,7 @@ pre{
  
       </section>
       {% endif %}
+      
       {% if blast.BlastOutput_program in ['blastp', 'blastx'] %}
         {% set head_name = 'Protein' %}
       {% else %}
@@ -460,7 +472,7 @@ pre{
           </div>
         </section>
         {% else %}
-
+        
         <section class=graphics>
           <h2>Graphic Summary</h2>
 

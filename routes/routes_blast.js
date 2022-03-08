@@ -58,7 +58,7 @@ router.get('/blast_results_genome', function blastResults_genome(req, res) {
           //console.log('htmlfiles',files)
           res.render('pages/blast/blast_results_genome', {
                   title: 'HOMD :: Blast Results', 
-                  pgname: 'blast',
+                  pgname: 'blast/blast',
                   config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, url: CFG.URL }),
                   hostname: CFG.HOSTNAME,
                   ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -187,7 +187,7 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
         //console.log('htmlfiles',files)
         res.render('pages/blast/blast_results_refseq', {
             title: 'HOMD :: Blast Results', 
-            pgname: 'blast',
+            pgname: 'blast/blast',
             config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, url: CFG.URL }),
             hostname: CFG.HOSTNAME,
             //url: CFG.URL,

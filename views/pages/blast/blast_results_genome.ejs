@@ -18,6 +18,7 @@ thead th { position: sticky; top: 0; }
 <%- include('../../partials/header_html'); %>
 <link rel="stylesheet" type="text/css" href="/css/blast.css" >
 <body>
+   <a id="top"></a>
    <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
@@ -71,15 +72,15 @@ thead th { position: sticky; top: 0; }
       <input type='hidden' name='blastID' value='<%= blastID %>'>
       <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
       </form>
-    
-    View Results:
-      <select onchange="javascript:handleNewSelect(this)">
-      <option value="0">Select BLAST Query</option>
-      <% for(i in query_strings){ %>
-        <option value='/blast/blast_results_genome?id=<%= blastID %>&file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'><%= query_strings[i].query %></option>
-      <% } %>
-      </select>
-      
+      <% if(query_strings.length > 1){ %>
+		  View Other Query Results:
+		  <select onchange="javascript:handleNewSelect(this)">
+		  <option value="0">Select BLAST Query</option>
+		  <% for(i in query_strings){ %>
+			 <option value='/blast/blast_results_genome?id=<%= blastID %>&file=<%= query_strings[i].file %>&query=<%= query_strings[i].query %>'><%= query_strings[i].query %></option>
+		  <% } %>
+		  </select>
+      <% } %> 
     <span id='genome_back' style=''><a class='button' href='/genome/blast'>Back</a></span> 
     <!-- <span style='float:right'><button onclick="history.back()">Go Back</button></span> -->
     </div>
