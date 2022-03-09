@@ -64,6 +64,7 @@ padding:.2em;
    padding:20px 40px;
    margin-top:30px;
    background:lightgrey;
+   border:1px solid grey;
 }
 #homd-main-image{
    padding:20px 0;
@@ -93,21 +94,23 @@ padding:.2em;
 }
 .table-title  {
    background:#cdf0ea;
-   padding:2px 40px;
+   padding:2px 30px;
+   
    
 }
 #main-images-table td {
    padding:10px;
    vertical-align:top;
+   text-align:center;
    
 }
 #main-images-table td img{
    border:1px solid brown;
+   width:360px;
+   height:200px;
    
 }
-td span{
-  width:auto;
-}
+
 </style>
 
 
@@ -128,13 +131,13 @@ td span{
 
 <div class='content'>
 <div id='txt'>
-	We provide comprehensive curated information on bacteria in the human mouth and aerodigestive tract, 
-	including the pharynx, nasal passages, sinuses and esophagus.
-	There are 775 oral bacterial species. 
-	57% are officially named, 13% unnamed but cultivated and 30% are known only as uncultivated phylotypes. 
-	<i>e</i>HOMD provides a provisional naming scheme for the currently unnamed taxa, based on the 
-	16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can 
-	be directly linked to a stably named reference scheme. 
+    We provide comprehensive curated information on bacteria in the human mouth and aerodigestive tract, 
+    including the pharynx, nasal passages, sinuses and esophagus.
+    There are 775 oral bacterial species. 
+    57% are officially named, 13% unnamed but cultivated and 30% are known only as uncultivated phylotypes. 
+    <i>e</i>HOMD provides a provisional naming scheme for the currently unnamed taxa, based on the 
+    16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can 
+    be directly linked to a stably named reference scheme. 
 </div>
 
 
@@ -149,86 +152,87 @@ td span{
    <thead>
    <th><span class='col-head'>Taxonomy</span></th>
    <th><span class='col-head'>Genomic</span></th>
-   <th><span class='col-head'>16S rRNA gene</span></th>
+   <th><span class='col-head'>16S rRNA Gene</span></th>
    </thead>
    <tbody>
     <tr>
-		<td>
-		<a href='taxa/tax_table'>
-		<span class='table-title'>Taxon Table</span>
-	   <img class='main-page-image' src='/images/image-TaxonTable.png' alt=''  \>
-	   
-		</a>
-		</td>
-		<td>
-		<a href='genome/genome_table'>
-		<span class='table-title'>Genome Table</span><br>
-		<img class='main-page-image' src='/images/image-GenomeTable.png' alt='genomic'  \>
-		</a>
-		</td>
-		<td>
-		<a href='refseq/refseq_blastn'>
-		<span class='table-title'>BLAST</span><br>
-		<img class='main-page-image'  src='/images/image-BLAST-refseq.png' alt='blast'  \>
-		</td>
-		
+        <td>
+        <a href='taxa/tax_table'>
+          <span class='table-title'>Taxon Table</span><br>
+          <img class='main-page-image' src='/images/image-TaxonTable.png' alt='TaxTable'  \>
+        </a>
+        </td>
+        <td>
+        <a href='genome/genome_table'>
+          <span class='table-title'>Genome Table</span><br>
+          <img class='main-page-image' src='/images/image-GenomeTable.png' alt='genomic'  \>
+        </a>
+        </td>
+        <td>
+        <a href='refseq/refseq_blastn'>
+        <span class='table-title'>BLAST</span><br>
+        <img class='main-page-image' src='/images/image-BLAST-refseq.png' alt='blast'  \>
+        </td>
+        
     </tr>
     <tr>
-		<td>
-		<a href='taxa/tax_description?otid=1'>
-		<span class='table-title'>Taxon Description</span><br>
-	   <img class='main-page-image' src='/images/image-TaxonDesc.png' alt='ecology'  \>
-		</a>
-		</td>
-		<td>
-		<a href='http://www.homd.org/jbrowse/index.html?data=homd/SEQF1595&tracks=DNA,ncbi,prokka&loc=SEQF1595|KI535342.1:169176..169852' target='_blank'>
-		<span class='table-title'>JBrowse Genome Viewer</span><br>
-		<img class='main-page-image' src='/images/image-JBrowse.png' alt='jbrowse'  \>
-		</a>
-		</td>
-		<td>
-		<span class='table-title'>16S RefSeq Tree</span><br>
-		<img class='main-page-image' src='/images/image-Trees-refseq.png' alt='trees'  \>
-		</td>
-    </tr>
-    
-    <tr>
-		<td>
-		<a href='taxa/ecology'>
-		<span class='table-title'>Ecology</span><br>
-	   <img class='main-page-image' src='/images/image-Ecology.png' alt='dynamic'  \>
-		</a>
-		</td>
-		<td>
-		<a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg'>
-		<span class='table-title'>Genomic Trees</span><br>
-		<img class='main-page-image' src='/images/image-Trees.png' alt='trees'  \>
-		</a>
-		</td>
-		<td>
-		<a href='download#refseq'>
-		<span class='table-title'>Download 16S rRNA RefSeq Data</span><br>
-		<img class='main-page-image' src='/images/image-Download-refseq.png' alt='blast'  \>
-		</a>
-		</td>
+        <td>
+        <a href='taxa/tax_description?otid=1'>
+        <span class='table-title'>Taxon Description</span><br>
+       <img class='main-page-image'  src='/images/image-TaxonDesc.png' alt='ecology'  \>
+        </a>
+        </td>
+        <td>
+        <a href='http://www.homd.org/jbrowse/index.html?data=homd/SEQF1595&tracks=DNA,ncbi,prokka&loc=SEQF1595|KI535342.1:169176..169852' target='_blank'>
+        <span class='table-title'>JBrowse Genome Viewer</span><br>
+        <img class='main-page-image'  src='/images/image-JBrowse.png' alt='jbrowse'  \>
+        </a>
+        </td>
+        <td>
+        <a href='http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg' target='_blank'>
+        <span class='table-title'>16S RefSeq Tree</span><br>
+        <img class='main-page-image'  src='/images/image-Trees-refseq.png' alt='trees'  \>
+        </a>
+        </td>
     </tr>
     
     <tr>
-		<td>
-		<a href='taxa/tax_hierarchy'>
-		<span class='table-title'>Dynamic Taxon Hierarchy</span><br>
-	   <img class='main-page-image' src='/images/image-Dynamic.png' alt='dynamic'  \>
-		</a>
-		</td>
-		<td>
-		<a href='genome/blast'>
-		<span class='table-title'>Genomic BLAST</span><br>
-		<img class='main-page-image' src='/images/image-BLAST-genome.png' alt='trees'  \>
-		</a>
-		</td>
-		<td>
-	
-		</td>
+        <td>
+        <a href='taxa/ecology'>
+        <span class='table-title'>Ecology</span><br>
+       <img class='main-page-image' src='/images/image-Ecology.png' alt='dynamic'  \>
+        </a>
+        </td>
+        <td>
+        <a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg' target='_blank'>
+        <span class='table-title'>Genomic Trees</span><br>
+        <img class='main-page-image' src='/images/image-Trees.png' alt='trees'  \>
+        </a>
+        </td>
+        <td>
+        <a href='download#refseq'>
+        <span class='table-title'>Download 16S rRNA RefSeq Data</span><br>
+        <img class='main-page-image' src='/images/image-Download-refseq.png' alt='blast'  \>
+        </a>
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+        <a href='taxa/tax_hierarchy'>
+        <span class='table-title'>Dynamic Taxon Hierarchy</span><br>
+       <img class='main-page-image' src='/images/image-Dynamic.png' alt='dynamic'  \>
+        </a>
+        </td>
+        <td>
+        <a href='genome/blast'>
+        <span class='table-title'>Genomic BLAST</span><br>
+        <img class='main-page-image' src='/images/image-BLAST-genome.png' alt='trees'  \>
+        </a>
+        </td>
+        <td>
+    
+        </td>
     </tr>
     
    </tbody>
