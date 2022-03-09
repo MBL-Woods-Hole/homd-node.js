@@ -1,4 +1,19 @@
 HOMD Notes
+2022-03-08
+Taxonomy:  
+	a taxon table listing all eHOMD taxa [graphic]
+	taxon description pages with links to reference sequences and phylogeny [graphic]
+	ecology pages showing community structure [graphic]
+	a dynamic taxonomic hierarchy [graphic]
+Genomics:
+	a list of available annotated genomes [graphic]
+	jbrowse genome viewer tool [graphic]
+	phylogenetic trees built from whole-genome information [graphic]
+	Tools to BLAST against genomes or proteins, and view the results in their genomic context [graphic]
+16S rRNA gene:
+	identify 16S rRNA gene sequences using BLAST vs. HOMD taxa [graphic]
+	phylogenetic trees built from 16S rRNA gene sequences [graphic]
+	Download HOMD data
 2022-03-03
 Fix alignment in genome output
 refseq blast: change sort only top id and 
