@@ -405,7 +405,11 @@ class BlastVisualize:
                                      taxonlink=taxonlink,
                                      genomelink=genomelink,
                                      params=params))
-
+    @filter
+    def sort_result(self, result):
+        pass
+        print('result[0]',result[0])
+        print('nnn')
     @filter
     def match_colors(self, result):
         """

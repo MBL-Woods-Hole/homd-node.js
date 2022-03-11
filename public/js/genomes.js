@@ -9,13 +9,13 @@
 // }
 function open_jbrowse_in_new_window(gid){
   console.log(gid)
-  if(gid=='none'){
+  if(gid=='0'){
      document.getElementById("genome_iframe").src = "";	
 	 document.getElementById("genome_iframe").width = '100%'
 	 document.getElementById("genome_iframe").height = '0'
      return
   }
-  let url = "http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,ncbi"
+  let url = "http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
   window.open(url)
 }
 
@@ -29,7 +29,7 @@ function change_genome_4_jbrowse(gid){
   }
   // reload page form or ajax?
   
-  let url ="http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,ncbi"
+  let url ="http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
   console.log(url)
   document.getElementById("genome_iframe").width = '100%'
   document.getElementById("genome_iframe").height = '800px'

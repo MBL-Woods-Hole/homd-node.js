@@ -159,7 +159,15 @@ hr{
    text-align: right;
 }
 /*    End of header images CSS */
+ .back_btn{
+   position:absolute;
+   font-size:13px;
+   padding-left:3px;
+ }
+ .back_btn a{
    
+   color:orange;
+ }  
  #download_browser_text_excel {
   float:right;
   top:2px;

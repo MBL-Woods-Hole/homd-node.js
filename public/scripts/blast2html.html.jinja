@@ -554,6 +554,7 @@ pre{
                   <th>Ident</th>
                   <th>Accession</th>
                 </tr>
+                {% set result2 = result|sort_result %}
                 {% for hit in result|hit_info %}
                 <tr>
                   <td><div><a href="#hit{{hit.link_id}}"
@@ -566,7 +567,7 @@ pre{
                   <td>{{hit.cover}}</td>
                   <td>{{hit.e_value}}</td>
                   <td>{{hit.ident}}</td>
-                  <td><a href="{{genelink(hit.hit|hitid)}}">{{hit.accession}}</a></td>
+                  <td><a href="{{genelink(hit.hit|hitdef)}}">{{hit.accession}}</a></td>
                 </tr>
                 {% endfor %}
               </table>
@@ -594,7 +595,7 @@ pre{
                 <div class=title>
                   <p class=hittitle>{{hit|firsttitle}}</p>
                   <p class=titleinfo>
-                    <span class=b>Sequence ID:</span> <a href="{{genelink(hit|hitid)}}">{{hit|seqid}}</a>
+                    <span class=b>Sequence ID:</span> <a href="{{genelink(hit|hitdef)}}">{{hit|seqid}}</a>
                     <span class=b>Length:</span> {{hit.Hit_len}}
                     <span class=b>Number of Matches:</span> {{hit.Hit_hsps.Hsp|length}}
                   </p>
