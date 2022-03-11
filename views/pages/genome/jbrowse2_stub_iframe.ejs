@@ -4,7 +4,7 @@
   padding:20px 0 20px 50px;
   margin-top:100px;
   border:1px solid grey;
-  background:pink;
+  background:#C1E1C1;  /* #ffc0cb; */
 }
 #iframe_div{
 
@@ -14,7 +14,7 @@
 <% gn = JSON.parse(genomes) %>
 
 <% %>
-
+<link href="/css/select2.min.css" rel="stylesheet" /> 
 <body>
   	<div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -23,7 +23,8 @@
 		
 			 
 		   
-		  <div id='genome_choices'>
+		  <!-- 
+<div id='genome_choices'>
 		    <span nowrap>Select a Genome: 
 			<select id='gnom_select' class='dropdown' name='gnom_select' onchange='open_jbrowse_in_new_window(this.value)'>
 			 Select a Genome:
@@ -31,19 +32,25 @@
 			 <% for(i in gn){ %>
 			 	<option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 			 <% } %>
-			</select> From a Total of <%= tgenomes %> (Opens in a New Window)
+			</select> 
 		   </span>
 		  </div>
+ -->
 		 	
-<!--		  
-           <div id='iframe_div' >
-			   <center><h3>JBrowse <span id='gid-label'></span>
-			   </h3></center><span id='open_new_window'></span>
-				<iframe id='genome_iframe' width='100%' height=20
-				></iframe>
-           </div>
-			
--->		
+<div id='genome_choices'>
+<span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> (JBrowse opens in a New Window)</span>
+<select id='selGenome' style='width: 800px;' onchange='open_jbrowse_in_new_window(this.value)'>
+     <option id='' name='none' value='0'>Choose...</option>
+     <% for(i in gn){ %>
+		<option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
+	<% } %>
+</select>
+
+<!-- <input type='button' value='Selected option' id='but_read'> -->
+
+<br/>
+<div id='result'></div>
+</div>
 		
     </div> <!-- end: page-content -->
      
@@ -60,6 +67,7 @@
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/select2.min.js"></script>
 <script>
   mainmenu()
   var gid = '<%- gid; %>'
@@ -67,6 +75,20 @@
      //change_genome_4_jbrowse(gid)
      open_jbrowse_in_new_window(gid)
   }
+  $(document).ready(function(){
+ 
+  // Initialize select2
+  $("#selGenome").select2();
+
+  // Read selected option
+  $('#but_read').click(function(){
+    var username = $('#selGenome option:selected').text();
+    var userid = $('#selGenome').val();
+
+    $('#result').html("id : " + userid + ", name : " + username);
+
+  });
+});
 </script>
 
 

@@ -26,68 +26,7 @@ router.get('/', function index(req, res) {
 
   })
 })
-router.get('/demo01', function index(req, res) {
-  
-  res.render('pages/home_demo01', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
-router.get('/demo02', function index(req, res) {
-  
-  res.render('pages/home_demo02', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
-router.get('/demo03', function index(req, res) {
-  
-  res.render('pages/home_demo03', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
-router.get('/demo04', function index(req, res) {
-  
-  res.render('pages/home_demo04', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
-router.get('/demo05', function index(req, res) {
-  
-  res.render('pages/home_demo05', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
-router.get('/demo06', function index(req, res) {
-  
-  res.render('pages/home_demo06', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
-router.get('/demo07', function index(req, res) {
-  res.render('pages/home_demo07', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
+
 router.get('/demo08', function index(req, res) {
   res.render('pages/home_demo08', {
     title: 'HOMD :: Human Oral Microbiome Database',
@@ -96,14 +35,7 @@ router.get('/demo08', function index(req, res) {
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
   })
 })
-router.get('/demo09', function index(req, res) {
-  res.render('pages/home_demo09', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
+
 router.get('/demo10', function index(req, res) {
   res.render('pages/home_demo_tc_01', {
     title: 'HOMD :: Human Oral Microbiome Database',

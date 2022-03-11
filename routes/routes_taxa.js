@@ -1907,7 +1907,7 @@ function find_images(rank, otid, tax_name) {
   try {
     if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname1_prefix+'.'+ext))) {
     //console.log('adding1',fname1_prefix)
-    image_list.push({"name":fname1_prefix+'.'+ext,"text":"text of photo-1"})
+    image_list.push({"name":fname1_prefix+'.'+ext,"text":""})
     
     }else {
       //console.log('no find1',path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))
@@ -1915,21 +1915,21 @@ function find_images(rank, otid, tax_name) {
     
     if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname2_prefix+'.'+ext))) {
     //console.log('adding2',fname2_prefix)
-    image_list.push({"name":fname2_prefix+'.'+ext,"text":"text of photo-2"})
+    image_list.push({"name":fname2_prefix+'.'+ext,"text":""})
     }else {
       //console.log('no find2',path.join(CFG.PATH_TO_IMAGES,rank,fname2_prefix))
     }
    
     if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname3_prefix+'.'+ext))) {
     //console.log('adding',fname3_prefix+'.'+ext)
-    image_list.push({"name":fname3_prefix+'.'+ext,"text":"text of photo-3"})
+    image_list.push({"name":fname3_prefix+'.'+ext,"text":""})
     }else {
       //console.log('no find3',path.join(CFG.PATH_TO_IMAGES,rank,fname3_prefix))
     }
     
    if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname4_prefix+'.'+ext))) {
     //console.log('adding',fname4_prefix+'.'+ext)
-    image_list.push({"name":fname4_prefix+'.'+ext,"text":"text of photo-4"})
+    image_list.push({"name":fname4_prefix+'.'+ext,"text":""})
     }else {
       //console.log('no find4',path.join(CFG.PATH_TO_IMAGES,rank,fname4_prefix))
     }
