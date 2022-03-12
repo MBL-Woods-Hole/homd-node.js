@@ -1,140 +1,10 @@
+<style>
+</style>
+<link rel="stylesheet" type="text/css" href="/css/homd1.css" >
 <% var version_info = JSON.parse(ver_info) %> 
 <%- include('../partials/header_html'); %>
 	<title>HOMD Home Page</title>
-	<style>
-		:root {
-		--navy: #1e90ff;
-		--pink: #ff8a8a;
-		--green: #327a32;		
-		--orange: rgb(214, 86, 26);
-		--gray: rgb(238, 238, 238);
-		}	
-		.size08{
-			font-size: 0.8em;
-		}	
-		.size07{
-			font-size: 0.7em;
-		}
-		#homd-search{
-		   
-		}
-		.search{
-			color:#4d7aa7;
-		}
-		.search:hover{
-			color:#195897;
-			content: "Type here";
-		}
-		.white{
-			color:white;
-		}
-		body {
-			background-color:#d8e1fc;
-		}
-		.topmenu {
-			font-size:0.8em";
-		}
-		.topmenu td {
-			color:#ecf3fa;		
-			padding-left:10px;
-			padding-right:10px;
-		}
-		.topmenu td:hover {
-			background-color: rgb(54, 104, 196);
-		}
-		.introduction {
-			font-size:1.2em;
-			border-spacing: 20px 20px;
-			color:rgb(68, 68, 68);
-			font-family: Candara;
-			line-height: 30px;
-		}
-		.maintab {
-			padding: 10px;
-			font-size:1.2em;
-			text-align: center;
-		}
-		.maintab td{
-			border-spacing: 10px 10px;
-			padding: 5px;
-			font-weight: bold;
-			vertical-align: top;
-		}
-		.round{
-		border-radius: 5px;		
-		}
-		.taxonomy{
-			font-size:1.05em;
-			background-color: #eaf5ff;
-			color: rgb(64, 64, 138);
-			border: 2px solid rgb(108, 108, 197);
-			text-align: center;
-		}
-		.taxonomy:hover{
-			border: 2px solid rgb(4, 4, 190);	
-			color: rgb(9, 9, 187);		
-		}
-		.genomic{
-			color: rgb(173, 110, 27);
-			border: 2px solid rgb(255, 187, 132);
-			font-size:1.05em;
-			background-color: rgb(250, 222, 200);
-			text-align: center;			
-		}	
-		.genomic:hover{
-			border: 2px solid rgb(212, 68, 1);		
-			color: rgb(200, 82, 4);	
-		}
-		.refseq{
-			color: rgb(58, 104, 64);
-			border: 2px solid rgb(133, 167, 138);
-			font-size:1.05em;
-			background-color: rgb(229, 252, 235);
-			text-align: center;				
-		}
-		.refseq:hover{
-			border: 2px solid rgb(38, 131, 52);
-			color: rgb(32, 80, 38);
-		}	
-		
-		.center{
-			text-align: center;
-		}
-		.tabeffect{
-			opacity:1;
-		}
-		.tabeffect:hover{
-			opacity: 1;
-			color:white;
-			transform:scale(1.2);
-			transition:0.25s;
-  transform-origin:center;			
-		}
-		.bgnavy{
-			background-color: var(--navy);
-		}
-		.bgpink{
-			background-color: var(--orange);
-		}
-		.bggreen{
-			background-color: var(--green);
-		}		
-		.bggray{
-			background-color: var(--gray);
-		}
-		#contributors{
-		  width:70%;
-		  text-align:left;
-		  line-height:1.7em;
-		  font-size:14px;
-		}
-		#supportedby{
-		  width:70%;
-		  text-align:left;
-		  line-height:1.7em;
-		  font-size:14px;
-		}
-	</style>
+	
 	
 
 
@@ -143,37 +13,29 @@
 		<table width="1250px" cellspacing="5" style="font-family:sans-serif;background-color:white">
 			<tr><td width="100%" style="background-color:#003366">
 			<img src="/images/newbanner_demo/homd_new_banner_7.png"></td></tr>
-			<tr><td align="left" style="background-color:#8d9eaa">
+			<tr><td align="left">
 				<%- include('../partials/navbar'); %>
 				
-				<!-- 
-<table class="topmenu"><tr>
-					<td>HOME</td>
-					<td>Taxonomy</td>
-					<td>Genomics</td>
-					<td>16S rRNA Microbiome</td>
-					<td>Animal Microbiomes</td>
-					<td>Downloads</td>
-					<td>Help</td>
-				</tr></table>
- -->
+				
+
 				
 				
 				
 			</td></tr>
 			<tr><td align="right">
-				<table class="size08"><tr>
+				<table class="size08" >
+				  <tr>
 					<td>16S rRNA Refseq V<%= version_info.rna_ver %></td><td>&nbsp;</td>
 					<td>Genomic Refseq V<%= version_info.gen_ver %></td><td>&nbsp;</td>
-				</tr>
-				<tr>
-					<td>
-				    <span id='homd-searchx' >
-                      <input type="text" placeholder="Search.."  id='search_textx' value='' maxlength='18' size='20'  />
-                      <input type="image" src='/images/search.png'  id="search_buttonx" height='25' onclick='search()' />
-                    </span>
-                    </td>
-				</tr>
+				  </tr>
+				  <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
+				  <tr>
+				    <td></td><td></td>
+				    <td>
+				      <input class='search dropdown' type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
+                      <input type="image" src='/images/search2.png'  id="search_button" height='15' onclick='search()' />
+                    </td><td></td>
+				  </tr>
 				</table>
 			</td></tr>			
 			<tr><td align="center">
@@ -181,8 +43,8 @@
 					<tr><td class="round bggray">
 					<tspan style="font-size:1.5em;font-weight:normal;color:rgb(150, 35, 44);font-style:italic">
 					e</tspan><tspan style="font-size:2em;font-weight:bold;color:steelblue">H</tspan>OMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract, 
-					including the pharynx, nasal passages, sinuses and esophagus. There are 775 oral bacterial species. 57% are officially 
-					named, 13% unnamed but cultivated and 30% are known only as uncultivated phylotypes. <i>e</i>HOMD taxonomy provides a provisional naming 
+					including the pharynx, nasal passages, sinuses and esophagus. There are 774 oral bacterial species. 58% are officially 
+					named, 16% unnamed but cultivated and 26% are known only as uncultivated phylotypes. <i>e</i>HOMD taxonomy provides a provisional naming 
 					scheme for the currently unnamed taxa, based on the 16S rRNA sequence phylogeny, so that strain, clone and probe data 
 					from any laboratory can be directly linked to a stably named reference scheme.<br>
 

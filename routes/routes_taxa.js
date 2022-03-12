@@ -25,11 +25,12 @@ router.get('/tax_table', function tax_table_get(req, res) {
   let reset    = req.query.reset
   let count_txt, count_txt0;
   let big_tax_list0 = Object.values(C.taxon_lookup);
+  console.log('count',big_tax_list0.length)
   let big_tax_list1,big_tax_list2,send_list,pgtitle
   // FIX THIS IF SELECT DROPPED OR NONORAL
   big_tax_list1 = big_tax_list0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
   let tcount = big_tax_list1.length  // total count of our filters
-  
+  console.log('count2',big_tax_list1.length)
   //var show_filters = 0
   
   let count_text = ''
@@ -58,8 +59,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
   }else if(letter && letter.match(/[A-Z]{1}/)){   // always caps
       helpers.print(['GOT a TaxLetter: ',letter])
        // COOL.... filter the whole list
-    big_tax_list2 = big_tax_list0.filter(item => item.genus.toUpperCase().charAt(0) === letter)
-    count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows for genus starting with: "'+letter+'"'
+      big_tax_list2 = big_tax_list0.filter(item => item.genus.toUpperCase().charAt(0) === letter)
+      count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows for genus starting with: "'+letter+'"'
   }else {
     
     helpers.print('NO to only annotations or tax letters')
@@ -68,15 +69,15 @@ router.get('/tax_table', function tax_table_get(req, res) {
     var intiial_status_filter = C.tax_status_on  //['named','unnamed','phylotype','lost']  // no['dropped','nonoralref']
     // filter
     big_tax_list1 = big_tax_list0.filter(item => intiial_status_filter.indexOf(item.status.toLowerCase()) !== -1 )
-    var intiial_site_filter = C.tax_sites_on  //['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
+    //var intiial_site_filter = C.tax_sites_on  //['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
     //console.log('send_tax_obj1[0]',send_tax_obj1[0])
-    
-    big_tax_list2 = big_tax_list1.filter( function(e) {
-        //console.log(e)
-        if(e.sites.length > 0 && intiial_site_filter.indexOf(e.sites[0].toLowerCase()) !== -1){
-           return e
-        }
-      }) 
+    big_tax_list2 = big_tax_list1
+    // big_tax_list2 = big_tax_list1.filter( function(e) {
+//         //console.log(e)
+//         if(e.sites.length > 0 && intiial_site_filter.indexOf(e.sites[0].toLowerCase()) !== -1){
+//            return e
+//         }
+//       }) 
       letter = 'all'
       count_txt0 = 'Showing '+big_tax_list2.length.toString()+' rows.'
       
@@ -139,7 +140,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
     
     
   send_list = big_tax_list2
-  
+  //count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()
+ 
   //var count_text = get_count_text_n_page_form(page)
   helpers.print(C.tax_status_on)
   count_txt = count_txt0 + '<br><small>(Total:'+(big_tax_list0.length).toString()+')</small> '
@@ -150,7 +152,6 @@ router.get('/tax_table', function tax_table_get(req, res) {
     pgname: 'taxon/tax_table',  //for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     data: JSON.stringify(send_list),
-    
     
     count_txt: count_txt,
     letter: letter,
@@ -205,43 +206,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
   }
   
   
-//   if(statusfilter_on.length == C.tax_status_all.length && sitefilter_on.length == C.tax_sites_all.length){
-//     // no filter -- allow all
-//     send_list = big_tax_list
-//   }else if(statusfilter_on.length == 0){  // only items from site filter checked
-//       send_list = big_tax_list.filter( function(e){
-//           if(e.sites.length > 0){
-//             for(var n in e.sites){
-//               var site = e.sites[n].toLowerCase()  // nasal,oral
-//               if( sitefilter_on.indexOf(site) !== -1 )
-//                 //nasal or oral if site item in s return only one instance
-//          {
-//          return e
-//          }
-//             }
-//           }
-//           
-//         }) 
-//   }else if(sitefilter_on.length == 0){   // only items from status filter checked
-//       send_list = big_tax_list.filter( function(e){
-//           if( statusfilter_on.indexOf(e.status.toLowerCase()) !== -1 ){
-//              return e
-//           }
-//         }) 
-//   }else {
-//       send_list = big_tax_list.filter( function(e){
-//           if(e.sites.length > 0){
-//             for(var n in e.sites){
-//               var site = e.sites[n].toLowerCase()  // nasal,oral
-//               var status = e.status.toLowerCase()
-//               if(sitefilter_on.indexOf(site) !== -1 && statusfilter_on.indexOf(status) !== -1 )
-//               {
-//                  return e
-//               }
-//             }
-//           }  
-//       }) 
-//     }   
+
     
       send_list.map(function(el){
         el.ecology = '0'  // change to 1 if we do

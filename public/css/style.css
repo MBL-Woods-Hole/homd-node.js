@@ -43,8 +43,7 @@ Pastels: fbb4ae b3cde3 ccebc5 decbe4 fed9a6 ffffcc e5d8bd fddaec f2f2f2
   border:0;
   list-style: none;
   box-sizing: border-box;
-   font-family: Verdana;
-   /* font-family: Baskerville, Baskerville Old Face, Garamond, Times New Roman, serif; */
+   font-family: Sans-Serif;
   
 }
 a { text-decoration: none; }
@@ -162,10 +161,9 @@ hr{
  .back_btn{
    position:absolute;
    font-size:13px;
-   padding-left:3px;
+   padding:3px 5px;
  }
  .back_btn a{
-   
    color:orange;
  }  
  #download_browser_text_excel {
@@ -183,7 +181,7 @@ hr{
 /* BGcolor:  #99cfe0 */
 #nav-div{
   width:100%;
-  font-family: sans-sarif;
+  font-family: Candara sans-sarif;
   background-color:#8D9EAA; 
   height:33px;
 }
@@ -192,7 +190,7 @@ hr{
    height:20px;  /* 42px; */
    position:relative;
    left: 0px;
-   font-family: Helvetica sans-sarif;
+   font-family: Candara sans-sarif;
    height:33px;
    
 }
@@ -201,7 +199,7 @@ hr{
   padding:0px 10px;
   /* width:80%; */
   background-color:#8D9EAA; 
-  font-family: Helvetica sans-sarif;
+  font-family: Candara sans-sarif;
   left:0px;
   border:1px solid black;
   
@@ -230,7 +228,7 @@ hr{
   display:block;
   text-decoration:none;
   padding:10px 10px 12px 10px;
-  font-family: Helvetica sans-sarif;
+  font-family: Candara sans-sarif;
   line-height: 10px;
   /* font-weight: bold; */
   font-size:1.2em;
@@ -319,23 +317,7 @@ hr{
   right: 10px;
   
 }
-/* 
-#homd-searchx {
-  display: flex;
-  flex-wrap: wrap;
-  /* width: 220px; */
-  position: absolute;
-  top: 6px;
-  right: 10px;
-  
-}
- */
-#homd-searchX input[type=text] {
-  width:150px;
-  font-size:15px;
-  border:1px solid grey;
-  border-radius:3px;
-}
+
 
 #homd-search input[type=text] {
   width:150px;
@@ -346,7 +328,9 @@ hr{
 
 #homd-search input[type=image] {
   height:20px;
+  background:#8D9EAA;
 }
+
 #version-info{
   position:relative;
   float:right;

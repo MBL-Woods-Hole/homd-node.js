@@ -1,7 +1,7 @@
 <% var version_info = JSON.parse(ver_info) %> 
 <% var cfg = JSON.parse(config) %> 
-<div id='nav-div' style="font-family:sans-serif;">
-<ul id="nav" style='font-family:sans-serif;z-index:1'>
+<div id='nav-div' >
+<ul id="nav" style='z-index:1'>
 
   <li id='first'><a class='main-topic' href="/" title="HOMD Home">Home</a></li>   
  <!-- 
@@ -136,7 +136,7 @@
   <% if(pgname !== 'home'){ %>
   <span id='homd-search' >
     <input type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
-    <input type="image" src='/images/search.png'  id="search_button" height='25' onclick='search()' />
+    <input type="image" src='/images/search2.png'  id="search_button" height='15' onclick='search()' />
   </span>
   <% } %>
 </ul>
