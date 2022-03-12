@@ -124,6 +124,7 @@ def format_alignment2(string):
     for n in range(pad):
        ret = "&nbsp;" + ret
     return ret
+    
 @filter
 def format_alignment3(string):
     #return "{:>7s}".format(string)
@@ -134,6 +135,7 @@ def format_alignment3(string):
        ret = "&nbsp;" + ret
     return ret
     #return "'{0:&nbsp;>15}'".format(string)
+    
 @filter
 def alignment_pre(hsp):
     
@@ -155,7 +157,6 @@ def blastxml_len(node):
         return int(node['Iteration_query-len'])
     raise Exception("Unknown XML node type: "+node.tag)
         
-
 @filter
 def asframe(frame):
     if frame == 1:
@@ -165,6 +166,12 @@ def asframe(frame):
     elif frame == 0:
         return '0'
     raise Exception("frame should be either +1 or -1")
+
+@filter
+def sort_result(result):
+    pass
+    #print('result[0]',result[0])
+    #print('nnn')
 
 def genelink(hit, type='genbank', hsp=None):
     if not isinstance(hit, str):
@@ -405,11 +412,7 @@ class BlastVisualize:
                                      taxonlink=taxonlink,
                                      genomelink=genomelink,
                                      params=params))
-    @filter
-    def sort_result(self, result):
-        pass
-        print('result[0]',result[0])
-        print('nnn')
+    
     @filter
     def match_colors(self, result):
         """
@@ -458,7 +461,8 @@ class BlastVisualize:
 
     @filter
     def hit_info(self, result):
-
+        print('result[0]',result)
+        print('nn')
         query_length = blastxml_len(result)
 
         for hit in hits(result):
