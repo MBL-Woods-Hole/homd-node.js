@@ -461,8 +461,8 @@ class BlastVisualize:
 
     @filter
     def hit_info(self, result):
-        print('result[0]',result)
-        print('nn')
+        #print('result[0]',result)
+        #print('nn')
         query_length = blastxml_len(result)
 
         for hit in hits(result):
