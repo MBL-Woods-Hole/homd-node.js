@@ -1,0 +1,186 @@
+<style>
+</style>
+<link rel="stylesheet" type="text/css" href="/css/homd1.css" >
+<% var version_info = JSON.parse(ver_info) %> 
+<%- include('../partials/header_html'); %>
+	<title>HOMD Home Page</title>
+	
+	
+
+
+	<body>
+		<div align="center">
+		<table width="1250px" cellspacing="5" style="font-family:sans-serif;background-color:white">
+			<tr><td width="100%" style="background-color:#003366">
+			<img src="/images/newbanner_demo/homd_new_banner_7.png"></td></tr>
+			<tr><td align="left">
+				<%- include('../partials/navbar'); %>
+				
+				
+
+				
+				
+				
+			</td></tr>
+			<tr><td align="right">
+				<table class="size08" >
+				  <tr>
+					<td>16S rRNA Refseq V<%= version_info.rna_ver %></td><td>&nbsp;</td>
+					<td>Genomic Refseq V<%= version_info.gen_ver %></td><td>&nbsp;</td>
+				  </tr>
+				  <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
+				  <tr>
+				    <td></td><td></td>
+				    <td>
+				      <input class='search dropdown' type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
+                      <input type="image" src='/images/search2.png'  id="search_button" height='15' onclick='search()' />
+                    </td><td></td>
+				  </tr>
+				</table>
+			</td></tr>			
+			<tr><td align="center">
+				<table class="introduction" width="1100px" cellpadding="20px">
+					<tr><td class="round bggray">
+					<tspan style="font-size:1.5em;font-weight:normal;color:rgb(150, 35, 44);font-style:italic">
+					e</tspan><tspan style="font-size:2em;font-weight:bold;color:steelblue">H</tspan>OMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract, 
+					including the pharynx, nasal passages, sinuses and esophagus. There are 774 oral bacterial species. 58% are officially 
+					named, 16% unnamed but cultivated and 26% are known only as uncultivated phylotypes. <i>e</i>HOMD taxonomy provides a provisional naming 
+					scheme for the currently unnamed taxa, based on the 16S rRNA sequence phylogeny, so that strain, clone and probe data 
+					from any laboratory can be directly linked to a stably named reference scheme.<br>
+
+					</td></tr>
+
+				</table>
+			</td></tr>
+			<tr><td align="center">
+			
+			
+				<table class="maintab" width="1080px" cellspacing="10px">
+					<tr><td colspan="3" style="font-weight: normal;color:rgb(58, 58, 58)">Click on the menu items above or the tabs below for more resources:</td></tr>					
+					<tr>
+						<td width="360px" align="center">
+							<table class="taxonomy round">
+								<tr><td>Taxonomy</td></tr>
+								<tr><td>
+									<table class="tabeffect bgnavy">
+										<tr><td><a href='taxa/tax_table'>Taxon Table</a></td></tr>
+										<tr><td><a href='taxa/tax_table'><img src="/images/image-TaxonTable.png" width="320"></a></td></tr>
+									</table>
+								</td></tr>
+								<tr><td>
+									<table class="tabeffect bgnavy">
+										<tr><td><a href='taxa/tax_description?otid=666'>Taxon Description</a></td></tr>
+										<tr><td><a href='taxa/tax_description?otid=666'><img src="/images/image-TaxonDesc.png" width="320"></a></td></tr>
+									</table>									
+								</td></tr>							
+								<tr><td>
+									<table class="tabeffect bgnavy">
+										<tr><td><a href='taxa/ecology'>Ecology</a></td></tr>
+										<tr><td><a href='taxa/ecology'><img src="/images/image-Ecology.png" width="320"></a></td></tr>
+									</table>									
+								</td></tr>			
+								<tr><td>
+									<table class="tabeffect bgnavy">
+										<tr><td><a href='taxa/tax_hierarchy'>Dynamic Taxon Hierarchy</a></td></tr>
+										<tr><td><a href='taxa/tax_hierarchy'><img src="/images/image-Dynamic.png" width="320"></a></td></tr>
+									</table>									
+								</td></tr>													
+							</table>
+						</td>
+
+
+						<td width="360px" align="center">
+							<table class="genomic round">
+								<tr><td>Genomic</td></tr>
+								<tr><td>
+									<table class="tabeffect bgpink">
+										<tr><td><a href='genome/genome_table'>Genome Table</a></td></tr>
+										<tr><td><a href='genome/genome_table'><img src="/images/image-GenomeTable.png" width="320"></a></td></tr>
+									</table>
+								</td></tr>
+								<tr><td>
+									<table class="tabeffect bgpink">
+										<tr><td><a href='http://www.homd.org/jbrowse/index.html?data=homd/SEQF1595&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew&loc=SEQF1595|KI535342.1:169176..169852' target='_blank'>JBrowse GEnome Viewer</a></td></tr>
+										<tr><td><a href='http://www.homd.org/jbrowse/index.html?data=homd/SEQF1595&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew&loc=SEQF1595|KI535342.1:169176..169852' target='_blank'><img src="/images/image-JBrowse.png" width="320"></a></td></tr>
+									</table>									
+								</td></tr>							
+								<tr><td>
+									<table class="tabeffect bgpink">
+										<tr><td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg' target='_blank'>Genomic Trees</a></td></tr>
+										<tr><td><a href='http://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg' target='_blank'><img src="/images/image-Trees.png" width="320"></a></td></tr>
+									</table>									
+								</td></tr>			
+								<tr><td>
+									<table class="tabeffect bgpink">
+										<tr><td><a href='genome/blast'>Genomic BLAST</a></td></tr>
+										<tr><td><a href='genome/blast'><img src="/images/image-BLAST-genome.png" width="320"></a></td></tr>
+									</table>									
+								</td></tr>													
+							</table>
+						</td>
+
+
+						<td width="360px" align="center">
+							<table class="refseq round">
+								<tr><td>16S rRNA RefSeq</td></tr>
+								<tr><td>
+									<table class="tabeffect bggreen">
+										<tr><td><a href='refseq/refseq_blastn'>BLAST</a></td></tr>
+										<tr><td><a href='refseq/refseq_blastn'><img src="/images/image-BLAST-refseq.png" width="320"></a></td></tr>
+									</table>
+								</td></tr>
+								<tr><td>
+									<table class="tabeffect bggreen">
+										<tr><td><a href='http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg' target='_blank'>16S rRNA RefSeq Tree</a></td></tr>
+										<tr><td><a href='http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg' target='_blank'><img src="/images/image-Trees-refseq.png" width="320"></a></td></tr>
+									</table>									
+								</td></tr>							
+								<tr><td>
+									<table class="tabeffect bggreen">
+										<tr><td><a href='download#refseq'>Download 16S rRNA RefSeq</a></td></tr>
+										<tr><td><a href='download#refseq'><img src="/images/image-Download-refseq.png" width="320"></a></td></tr>
+									</table>									
+								</td></tr>			
+											
+							</table>
+						</td>
+
+	
+					</tr>
+				</table>
+			</td></tr>
+
+
+			<tr><td align="center">
+				<br>
+				<hr>
+				<%- include('../partials/contributors'); %>
+				<br>
+				<%- include('../partials/supportedby'); %>
+			</td></tr>	
+
+
+			<tr><td align="right" style="background-color:#E3EBFF">
+				&nbsp;
+			</td></tr>			
+			
+
+			<tr><td align="center">
+				<table style="font-size:0.8em; font-style:italic; color:gray;text-align:center"><tr><td colspan="2">Copyright 2007-2022 The Forsyth Institute</td></tr>
+					<tr><td align="right">Hosted on Amazon AWS EC2 </td><td align="left"> <img src="/images/newbanner_demo/aws.png"></td></tr>
+				</table>
+			</td></tr>			
+
+
+			
+		</table>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+// this should run on every page for main menu open speed
+mainmenu()
+
+</script>

@@ -1,6 +1,8 @@
 HOMD Notes
 2022-03-08
-1348x650
+
+EXPLORER: sequence pop-up should have identifier
+blast genome output ordering (and check accession on live site)
 Taxonomy:  
 	a taxon table listing all eHOMD taxa [graphic]
 	taxon description pages with links to reference sequences and phylogeny [graphic]
