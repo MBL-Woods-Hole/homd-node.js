@@ -38,9 +38,9 @@
 			 <% next_page = parseInt(page_data.show_page)+1 %>
 			 <% prev_page = parseInt(page_data.show_page)-1 %>
 			 <br>Number of Records Found: <%= page_data.trecords %> <small>[<%= page_data.number_of_pages %> Pages]
-			 <a href='explorer?gid=<%= gid %>&anno=<%= anno_type %>&page=<%= next_page %>'>Next Page</a>
-			 <==>
 			 <a href='explorer?gid=<%= gid %>&anno=<%= anno_type %>&page=<%= prev_page %>'>Previous Page</a>
+			 <==>
+			 <a href='explorer?gid=<%= gid %>&anno=<%= anno_type %>&page=<%= next_page %>'>Next Page</a>
 			 </small>
 			 
 			 

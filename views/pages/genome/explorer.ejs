@@ -152,8 +152,23 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 <script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/select2.min.js"></script>
 
 <script>
   mainmenu()
+  $(document).ready(function(){
+ 
+  // Initialize select2
+  $("#selGenome").select2();
+
+  // Read selected option
+  $('#but_read').click(function(){
+    var username = $('#selGenome option:selected').text();
+    var userid = $('#selGenome').val();
+
+    $('#result').html("id : " + userid + ", name : " + username);
+
+  });
+  });
 </script>
 
