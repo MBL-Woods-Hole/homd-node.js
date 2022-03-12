@@ -15,7 +15,7 @@ function open_jbrowse_in_new_window(gid){
 	 document.getElementById("genome_iframe").height = '0'
      return
   }
-  let url = "http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
+  let url = "http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
   window.open(url)
 }
 
@@ -29,7 +29,7 @@ function change_genome_4_jbrowse(gid){
   }
   // reload page form or ajax?
   
-  let url ="http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
+  let url ="http://www.homd.org/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
   console.log(url)
   document.getElementById("genome_iframe").width = '100%'
   document.getElementById("genome_iframe").height = '800px'
@@ -82,7 +82,7 @@ function get_16s_seq(seqid) {
     xmlhttp.send(JSON.stringify(args));
 }
 //
-function get_NN_NA_seq(type,pid,db) {  // type=nn or na
+function get_NN_NA_seq(type,pid,db,mol,org) {  // type=nn or na
     console.log('in NNNA',type,pid)
     // on genome explore page
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
@@ -92,6 +92,8 @@ function get_NN_NA_seq(type,pid,db) {  // type=nn or na
     args.type = type
     args.pid  = pid
     args.db   = db
+    args.mol  = mol
+    args.org   = org
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/get_NN_NA_seq", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
@@ -102,6 +104,7 @@ function get_NN_NA_seq(type,pid,db) {  // type=nn or na
         text = ''
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
+        text += '>'+mol+' | '+ org +'\n'
         text += resp
         text += '</pre>'
     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
