@@ -18,9 +18,9 @@ router.get('/', function index(req, res) {
   console.log('req.session')
   helpers.print(req.session)
   console.log('Session ID:',req.session.id)
-  res.render('pages/home', {
+  res.render('pages/home_tc', {
     title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
+    pgname: 'home', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
 
