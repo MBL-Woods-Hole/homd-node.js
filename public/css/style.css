@@ -181,25 +181,27 @@ hr{
 /* BGcolor:  #99cfe0 */
 #nav-div{
   width:100%;
-  font-family: Candara sans-sarif;
   background-color:#8D9EAA; 
   height:33px;
 }
+
 #nav {
    /* text-align: left; */
    height:20px;  /* 42px; */
    position:relative;
    left: 0px;
-   font-family: Candara sans-sarif;
    height:33px;
    
 }
+#nav a {
+     font-family: Candara,  Sans-Serif; 
+     font-size: 16px;
+  }
 #nav ul {
   margin-top:0px;
   padding:0px 10px;
   /* width:80%; */
   background-color:#8D9EAA; 
-  font-family: Candara sans-sarif;
   left:0px;
   border:1px solid black;
   
@@ -228,27 +230,16 @@ hr{
   display:block;
   text-decoration:none;
   padding:10px 10px 12px 10px;
-  font-family: Candara sans-sarif;
   line-height: 10px;
   /* font-weight: bold; */
-  font-size:1.2em;
+  
   color: white;
   background-color: #8D9EAA;
   
   
 }
 
-###nav a,###nav div{
-  display:block;
-  text-decoration:none;
-  padding:2px 4px 2px 4px;
-  font-size:1.2em;
-  /* font-weight: bold; */
-  
-  color: black;
-  background-color: #8D9EAA;
-  
-}
+
 
 #nav div{
   cursor: default;
@@ -276,12 +267,12 @@ hr{
 }
 #first a:hover{
   /* kludge */
-  padding-bottom:14px;
+  padding-bottom:12px;
 }
 #nav li ul li a{
   position:relative;
   background-color:#8D9EAA;
-  font-size:1.2em;
+  
   color: white;
   text-decoration:none;
   
@@ -298,7 +289,6 @@ hr{
 #nav li ul li ul a{
   position:relative;
   background-color:#8D9EAA;
-  font-size:1.2em;
   color: white;
   text-decoration:none;
   top: 1px; 
@@ -327,14 +317,13 @@ hr{
 }
 
 #homd-search input[type=image] {
-  height:20px;
   background:#8D9EAA;
 }
 
 #version-info{
   position:relative;
   float:right;
-  top:-65px;
+  top:-55px;
   font-size:11px;
   padding:3px;
   color:white;

@@ -1,22 +1,14 @@
 <% var version_info = JSON.parse(ver_info) %> 
 <% var cfg = JSON.parse(config) %> 
+<style>
+  
+</style>
 <div id='nav-div' >
 <ul id="nav" style='z-index:1'>
 
-  <li id='first'><a class='main-topic' href="/" title="HOMD Home">Home</a></li>   
- <!-- 
- 
-  <li><div class='main-topic'>Home</div>
-    <ul>
-      <li><a class='main-topic' href="/" title="HOMD Home">Home-Original</a></li>  
-      <li><a href="/demo08">MainPageDemo-08</a></li>
-      <li><a href="/banner_demo">New Banners</a></li>
-      <li><a href="/demo10">New Home Design10</a></li>
-    </ul>
-  </li>
- -->
+  <li id='first'><a class='main-topic' href="/" title="HOMD Home">HOME</a></li>   
   
-  <li><div class='main-topic'>Taxonomy</div>
+  <li><a class='main-topic' href="">Taxonomy</a>
     <ul>
       <li><a href="/taxa/tax_table">Taxon Table</a></li>
       <li><a href="/taxa/life">Life Pages</a></li>
@@ -31,7 +23,7 @@
     </ul>
   </li>
   <% if(cfg.ENV === 'development'){ %>
-    <li><div class='main-topic'>Phage</div>
+    <li><a class='main-topic' href="" >Phage</a>
       <ul>
         <!-- <li><a href="/phage">Phage Home</a></li> -->
         <li><a href="/phage/phage_table">Phage Table</a></li>
@@ -42,7 +34,7 @@
     </li> 
   <% } %>
 
-  <li><div class='main-topic'>Genomics</div>
+  <li><a class='main-topic' href="" >Genomics</a>
     <ul>
       <li><a href="/genome/genome_table">Genome Table</a></li>
       <!-- <li><a href="/taxa/tax_table?annot=1">Taxon Table<br>&nbsp;&nbsp;&nbsp;(only taxa w/ genomes)</a></li> -->
@@ -67,16 +59,8 @@
     
     </ul>
   </li> 
-<!--
-  <li><div class='main-topic'>Ecology <font color="#3399FF">&#5121;</font></div>
-    <ul>
-      <li><a href="">Link-1</a></li>
-      <li><a href="">Link-2</a></li>
-      <li><a href="">Link-3</a></li>
-    </ul>
-  </li> 
---> 
-    <li><div class='main-topic'>16S rRNA Microbiome</div>
+
+    <li><a class='main-topic' href="" >16S rRNA Microbiome</a>
     <ul>
           <li><a href="/refseq/refseq_blastn">BLASTN<small>+</small> (Identify 16S rRNA Sequences)</a></li>
           <li><a href="http://www.homd.org/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg">View 16S rRNA RefSeq Phylogenetic Tree</a></li>
@@ -86,7 +70,7 @@
           <li><a href="/help/help-page?pagecode=refseq/refseq_version">Version History</a></li>
     </ul>
   </li> 
-  <li><div class='main-topic'>Animal Microbiomes</div>
+  <li><a class='main-topic' href="">Animal Microbiomes</a>
     <ul>
       <li><a href="https://momd.org/">Mouse (MOMD)</a></li>
       <!-- <li><a href="">Cat (FOMD)</a></li> -->
@@ -94,7 +78,7 @@
     </ul>
   </li> 
       
-   <li><div class='main-topic'>Downloads</div>
+   <li><a class='main-topic' href="">Downloads</a>
        <ul>
       <li><a href="/download">Download Batch HOMD Data</a></li>
       <li><a href="http://www.homd.org/ftp/" target='_blank' rel="noopener noreferrer">HOMD FTP Site</a></li>
@@ -111,7 +95,7 @@
    
    </li>
 
-  <li><div class='main-topic'>Help</div>
+  <li><a class='main-topic' href="">Help</a>
     <ul>
       <li><a href="/help/index" >HOMD Help Content</a></li>
      <!--  <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home-obsolete</a></li> -->

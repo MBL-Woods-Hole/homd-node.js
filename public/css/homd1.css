@@ -1,7 +1,7 @@
 :root {
 		--navy: #1e90ff;
 		--pink: #ff8a8a;
-		--green: #327a32;		
+		--green: #327a32;
 		--orange: rgb(214, 86, 26);
 		--gray: rgb(238, 238, 238);
 		}	
@@ -47,13 +47,16 @@
 			font-size:1.2em;
 			border-spacing: 20px 20px;
 			color:rgb(68, 68, 68);
-			font-family: Candara;
+			font-family: sarif;
 			line-height: 35px;
 			
 		}
 		.introduction td{
 			padding:20px;
-			
+			font-family: sarif;
+		}
+		.introduction td tspan{
+			font-family: sarif;
 		}
 		.maintab {
 			padding: 10px;
