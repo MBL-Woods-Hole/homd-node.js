@@ -541,12 +541,13 @@ pre{
           <h2>Descriptions</h2>
 
           <div class=grey><div class=white>
+              <span style='float:right;'><small>(click headers to sort table)</small></span>
               <h4 class=darkHeader>Sequences producing significant alignments:</h4>
-
-              <table class=descriptiontable>
+              
+              <table class='descriptiontable sortable'>
                 <col/><col/><col/><col/><col/><col/><col/>
                 <tr>
-                  <th>Description</th>
+                  <th>Description <small>(sortable)</small></th>
                   <th>Max score</th>
                   <th>Total score</th>
                   <th>Query cover</th>
@@ -568,7 +569,7 @@ pre{
                   <td>{{hit.cover}}</td>
                   <td>{{hit.e_value}}</td>
                   <td>{{hit.ident}}</td>
-                  <td><a href="{{genelink(hit.hit|hitdef)}}">{{hit.accession}}</a></td>
+                  <td><a href="{{genelink(hit.hit|hitdef)}}" target='_blank'>{{hit.accession}}</a></td>
                 </tr>
                 {% endfor %}
               </table>
@@ -670,7 +671,8 @@ Subject {{ hsp['Hsp_hit-from'].text|format_alignment3|safe }} {{ hsp.Hsp_hseq }}
     </footer>
   </body>
 </html>
-
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 {#
 Local Variables:
 tab-width: 2
