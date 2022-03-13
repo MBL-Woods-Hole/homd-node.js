@@ -82,7 +82,7 @@ function get_16s_seq(seqid) {
     xmlhttp.send(JSON.stringify(args));
 }
 //
-function get_NN_NA_seq(type,pid,db,mol,org) {  // type=nn or na
+function get_NN_NA_seq(type,pid,db,mol,org,product) {  // type=nn or na
     console.log('in NNNA',type,pid)
     // on genome explore page
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
@@ -94,6 +94,7 @@ function get_NN_NA_seq(type,pid,db,mol,org) {  // type=nn or na
     args.db   = db
     args.mol  = mol
     args.org   = org
+    args.org   = product
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/get_NN_NA_seq", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
@@ -104,7 +105,7 @@ function get_NN_NA_seq(type,pid,db,mol,org) {  // type=nn or na
         text = ''
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
-        text += '>'+mol+' | '+ org +'\n'
+        text += '>'+product+' | '+mol+' | '+ org +'\n'
         text += resp
         text += '</pre>'
     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");

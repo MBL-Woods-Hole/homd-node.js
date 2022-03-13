@@ -8,7 +8,7 @@
    width: 70%;
 }
 </style>
-
+<% var cfg = JSON.parse(config) %> 
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -18,9 +18,10 @@
     
     
     <div class='page-content' >
-              
+        
+          
        <div class='title'>BLAST Processing</div>
-    
+       
        <% timer = 'on' %>
       <center>
       <div id='blast-wait-box'>

@@ -410,14 +410,15 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
       res.render('pages/blast/blast_wait', {
         title: 'HOMD :: BLAST WAIT', 
         pgname: 'blast',
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, url: CFG.URL }),
         hostname: CFG.HOSTNAME,
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         db_choices: JSON.stringify(C.refseq_blastn_db_choices),
         filesFinished: blastFiles.length,
         filesStarted: faFiles.length,
         elapsed: req.session.blast.timer,
-        fxn: req.session.blast.blastFxn
+        fxn: req.session.blast.blastFxn,
+        blastID: req.session.blast.id,
         //error: JSON.stringify(req.session.pyerror)
         
       })
@@ -696,60 +697,9 @@ router.post('/openBlastWindow', function openBlastWindow(req, res) {
     
     })
 })
-router.get( '/show_blasterjs', function show_blasterjs(req,res){
-    console.log('in show blaster')
-    let file = req.query.file
-    let query = req.query.query
-    let id = req.query.id
-    //console.log('query',query)
-    //console.log('file',file)
-    fs.readFile(file, 'utf8', function readBlasterFile(err, data) {
-        //console.log('data',data)
-        res.render('pages/blast/show_blaster', {
-            title: 'HOMD :: BLAST WAIT', 
-            pgname: 'blaster',
-            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-            hostname: CFG.HOSTNAME,
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-            blastData: encodeURI(data.toString()),
-            query: query,
-            blastID: id
-          })
-    })
-})
-router.get( '/show_new_blast', function show_new_blast(req,res){
-    console.log('in show blaster')
-    let file = req.query.file
-    //let query = req.query.query
-    let id = req.query.id
-    console.log('file',file)
-    //console.log('file',file)
-    fs.readFile(file, 'utf8', function readFile(err, data) {
-        console.log('data',data)
-        res.render('pages/blast/show_blaster2', {
-            title: 'HOMD :: BLAST WAIT', 
-            pgname: 'blaster',
-            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-            hostname: CFG.HOSTNAME,
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-            blastData: encodeURI(data.toString()),
-            
-            blastID: id
-          })
-    })
-})
-// router.get( '/blaster_test', function blaster_testing(req,res){
-//     console.log('in baster testing')
-//     
-//     res.render('pages/blast/blasterjs_test', {
-//         title: 'HOMD :: BLAST WAIT', 
-//         pgname: 'blaster',
-//         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-//         hostname: CFG.HOSTNAME,
-//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-//         
-//       })
-// })
+
+
+
 //////////////////////////////////////////////////////////////////
 ///// FUNCTIONS /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////

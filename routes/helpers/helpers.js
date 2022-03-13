@@ -545,7 +545,7 @@ module.exports.parse_blast_query_xml = function parse_blast_query_xml(jsondata, 
     //console.log('file_data',file_data)
     let json = JSON.parse(jsondata)  // xml
     if(grab === 'query'){
-		//console.log(json.BlastOutput)
+		console.log(json.BlastOutput)
 		let query = json['BlastOutput']['BlastOutput_query-def']
 		if(query){
 		   return query
