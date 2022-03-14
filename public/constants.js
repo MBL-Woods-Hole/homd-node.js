@@ -165,6 +165,7 @@ constants.refseq_lookup_fn    = 'homdData-TaxonRefSeqLookup.json'
 constants.phage_list_fn         = 'homdData-PhageList.json'
 constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
 constants.annotation_lookup_fn  = 'homdData-AnnotationLookup.json'
+constants.image_location_fn     = 'ImageLocation.js'
 //constants.abundance_lookup_fn      = 'homdData-Abundance.json'
 
 //constants.access_log_format = 'url=":url" method=":method" statusCode=":statusCode" delta=":delta" ip=":ip"'
@@ -259,14 +260,9 @@ constants.species_w_subspecies = {
     'Limosilactobacillus reuteri': ['clade_818','clade_938'],  // no abundance data
     'Peptostreptococcaceae_[G-7] [Eubacterium]_yurii': ['subsps._yurii_&_margaretiae','subsp._schtitka']
 }
-// constants.posters_pdfs =
-// [
-// {shortname:"McCafferty2014", filename:'2014-AADR-McCafferty.pdf'},
-// {shortname:"Chen2014", filename:'2014-AADR-TCHEN.pdf'},
-// {shortname:"Dewhirst2014", filename:'2014-AADR-DEWHIRST.pdf'},
-// {shortname:"2012a", filename:'2012a.pdf'},
-// {shortname:"2012b", filename:'2012b.pdf'},
-// {shortname:"2012c", filename:'2012c.pdf'},
-// ]
+//
+
+
+
 
 module.exports = constants;

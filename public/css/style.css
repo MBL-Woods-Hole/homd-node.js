@@ -318,6 +318,7 @@ hr{
 
 #homd-search input[type=image] {
   background:#8D9EAA;
+  padding:3px 0 0 3px;
 }
 
 #version-info{
@@ -325,10 +326,10 @@ hr{
   float:right;
   top:-55px;
   font-size:11px;
-  padding:3px;
+  padding:3px 5px;
   color:white;
-  width:310px;;
-  border:1px solid orange;
+  
+  
   
 }
 #version-info a{

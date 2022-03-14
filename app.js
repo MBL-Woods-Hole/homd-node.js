@@ -179,7 +179,8 @@ var data_init_files =[
   path.join(CFG.PATH_TO_DATA, C.info_lookup_fn),
   path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),
   path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),
-  path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn)
+  path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),
+  path.join(CFG.PATH_TO_DATA, C.image_location_fn)
   
 ]
 console.log('Path to Data Files:',CFG.PATH_TO_DATA)
