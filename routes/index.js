@@ -28,8 +28,8 @@ router.get('/', function index(req, res) {
   })
 })
 
-router.get('/ftp', function index(req, res) {
-  console.log('ftp')
+router.get('/homd_ftp', function index(req, res) {
+  console.log('homd_ftp')
   let dir = req.query.dir;
   let back,pts
   if(!dir){
@@ -55,7 +55,7 @@ router.get('/ftp', function index(req, res) {
   // https://www.npmjs.com/package/browse-directory
   
   //browseDir.showTree(tree);
-  res.render('pages/ftp', {
+  res.render('pages/homd_ftp', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
@@ -67,7 +67,13 @@ router.get('/ftp', function index(req, res) {
     current:dir
   })
 })
-
+router.get('/download_file', function search(req, res) {
+  //let page = req.params.pagecode
+  let fullpath = req.query.filename
+  helpers.print('file path: '+fullpath)
+  res.download(fullpath)
+  //res.end()
+})
 router.get('/demo10', function index(req, res) {
   res.render('pages/home_demo_tc_01', {
     title: 'HOMD :: Human Oral Microbiome Database',
