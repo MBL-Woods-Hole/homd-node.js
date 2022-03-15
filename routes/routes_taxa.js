@@ -145,7 +145,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
   //var count_text = get_count_text_n_page_form(page)
   helpers.print(C.tax_status_on)
   count_txt = count_txt0 + '<br><small>(Total:'+(big_tax_list0.length).toString()+')</small> '
-  helpers.print(['send_list[0]',send_list[0]])
+  //helpers.print(['send_list[0]',send_list[0]])
+  console.log('send_list[0]',send_list[0])
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 
     pgtitle: pgtitle,
