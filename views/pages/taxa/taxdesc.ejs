@@ -141,12 +141,12 @@
   
   <% }else{ %>
       <div class='images'>
-      <table border='0'>
+      <table class='image-table' border='0'>
               <% for(n in images){ %>
                 <% if(n==0 || n==2){ %>
-                <tr><td>
+                <tr><td valign='top'>
                 <% }else{ %>
-                <td>
+                <td valign='top'>
                 <% } %>
                  <div>
                 <img class='img' src='/images/life-images/<%= images[n].name %>' title='<%= images[n].text %>' alt='<%= images[n].name %>'  \><br>

@@ -300,7 +300,7 @@
         {
         "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
-        "Leptotrichia goodfellowii":
+        "Pseudoleptotrichia goodfellowii":
         {
         "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
@@ -373,7 +373,7 @@
         {
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
-        "Schaalia lingnae [Not Validly Published]":
+        "Schaalia lingnae":
         {
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
