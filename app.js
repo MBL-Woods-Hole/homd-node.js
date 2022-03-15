@@ -180,10 +180,10 @@ var data_init_files =[
   path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),
   path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),
   path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),
-  path.join(CFG.PATH_TO_DATA, C.image_location_fn)
+  path.join('public','data', C.image_location_fn)
   
 ]
-console.log('Path to Data Files:',CFG.PATH_TO_DATA)
+//console.log('Path to Data Files:',CFG.PATH_TO_DATA)
 
 
 async.map(data_init_files, helpers.readAsync, function(err, results) {
@@ -209,6 +209,7 @@ async.map(data_init_files, helpers.readAsync, function(err, results) {
     C.taxon_counts_lookup       = JSON.parse(results[7]);   // lookup by lineage
     C.annotation_lookup       = JSON.parse(results[8]);
     C.phage_lookup              = JSON.parse(results[9]);
+    C.images              = JSON.parse(results[10]);
     // add genus, species to C.genome_lookup
     
     //Object.values(C.taxon_lookup)

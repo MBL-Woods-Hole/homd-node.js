@@ -1852,59 +1852,77 @@ function create_taxon_table(otids, source, type, head_txt) {
 function find_images(rank, otid, tax_name) {
 
   var image_list = []
-  var ext = 'png'
-  // for photos NO Spaces = join w/ underscore
-  var tname,fname1_prefix,fname2_prefix,fname3_prefix,fname4_prefix
-  if(otid){
-      helpers.print('looking for otid image: HMT'+otid+'(1-4).png')
-      fname1_prefix = 'HMT/HMT'+otid+'-1' // look for .jpg .jpeg png
-      fname2_prefix = 'HMT/HMT'+otid+'-2' // or '-2.jpeg'
-      fname3_prefix = 'HMT/HMT'+otid+'-3' // or '-3.jpeg'
-      fname4_prefix = 'HMT/HMT'+otid+'-4' // or '-3.jpeg'
-  }else {  // rank and not otid
-      tname = tax_name.replace(/ /g,'_')  // mostly for species 
-      fname1_prefix = rank+'/'+tname+'-1' // look for .jpg .jpeg png
-      fname2_prefix = rank+'/'+tname+'-2' // or '-2.jpeg'
-      fname3_prefix = rank+'/'+tname+'-3' // or '-3.jpeg'
-      fname4_prefix = rank+'/'+tname+'-4' // or '-3.jpeg'
-  } 
- 
-  try {
-    if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname1_prefix+'.'+ext))) {
-    //console.log('adding1',fname1_prefix)
-    image_list.push({"name":fname1_prefix+'.'+ext,"text":""})
-    
-    }else {
-      //console.log('no find1',path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))
-    }
-    
-    if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname2_prefix+'.'+ext))) {
-    //console.log('adding2',fname2_prefix)
-    image_list.push({"name":fname2_prefix+'.'+ext,"text":""})
-    }else {
-      //console.log('no find2',path.join(CFG.PATH_TO_IMAGES,rank,fname2_prefix))
-    }
-   
-    if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname3_prefix+'.'+ext))) {
-    //console.log('adding',fname3_prefix+'.'+ext)
-    image_list.push({"name":fname3_prefix+'.'+ext,"text":""})
-    }else {
-      //console.log('no find3',path.join(CFG.PATH_TO_IMAGES,rank,fname3_prefix))
-    }
-    
-   if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname4_prefix+'.'+ext))) {
-    //console.log('adding',fname4_prefix+'.'+ext)
-    image_list.push({"name":fname4_prefix+'.'+ext,"text":""})
-    }else {
-      //console.log('no find4',path.join(CFG.PATH_TO_IMAGES,rank,fname4_prefix))
-    }
-    
-  } catch(err) {
-    console.error(err)
+  if(C.images[rank].hasOwnProperty(tax_name)){
+     if(C.images[rank][tax_name].hasOwnProperty('filename1')){
+         image_list.push({name:path.join(rank,C.images[rank][tax_name]['filename1']),text:C.images[rank][tax_name]['text1']})
+     }
+     if(C.images[rank][tax_name].hasOwnProperty('filename2')){
+         image_list.push({name:path.join(rank,C.images[rank][tax_name]['filename2']),text:C.images[rank][tax_name]['text2']})
+     }
+     if(C.images[rank][tax_name].hasOwnProperty('filename3')){
+         image_list.push({name:path.join(rank,C.images[rank][tax_name]['filename3']),text:C.images[rank][tax_name]['text3']})
+     }
+     if(C.images[rank][tax_name].hasOwnProperty('filename4')){
+         image_list.push({name:path.join(rank,C.images[rank][tax_name]['filename4']),text:C.images[rank][tax_name]['text4']})
+     }
+  
   }
   
-  //console.log('im-arry',image_list)
   return image_list
+  
+//   var ext = 'png'
+//   // for photos NO Spaces = join w/ underscore
+//   var tname,fname1_prefix,fname2_prefix,fname3_prefix,fname4_prefix
+//   if(otid){
+//       helpers.print('looking for otid image: HMT'+otid+'(1-4).png')
+//       fname1_prefix = 'HMT/HMT'+otid+'-1' // look for .jpg .jpeg png
+//       fname2_prefix = 'HMT/HMT'+otid+'-2' // or '-2.jpeg'
+//       fname3_prefix = 'HMT/HMT'+otid+'-3' // or '-3.jpeg'
+//       fname4_prefix = 'HMT/HMT'+otid+'-4' // or '-3.jpeg'
+//   }else {  // rank and not otid
+//       tname = tax_name.replace(/ /g,'_')  // mostly for species 
+//       fname1_prefix = rank+'/'+tname+'-1' // look for .jpg .jpeg png
+//       fname2_prefix = rank+'/'+tname+'-2' // or '-2.jpeg'
+//       fname3_prefix = rank+'/'+tname+'-3' // or '-3.jpeg'
+//       fname4_prefix = rank+'/'+tname+'-4' // or '-3.jpeg'
+//   } 
+//  
+//   try {
+//     if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname1_prefix+'.'+ext))) {
+//     //console.log('adding1',fname1_prefix)
+//     image_list.push({"name":fname1_prefix+'.'+ext,"text":""})
+//     
+//     }else {
+//       //console.log('no find1',path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))
+//     }
+//     
+//     if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname2_prefix+'.'+ext))) {
+//     //console.log('adding2',fname2_prefix)
+//     image_list.push({"name":fname2_prefix+'.'+ext,"text":""})
+//     }else {
+//       //console.log('no find2',path.join(CFG.PATH_TO_IMAGES,rank,fname2_prefix))
+//     }
+//    
+//     if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname3_prefix+'.'+ext))) {
+//     //console.log('adding',fname3_prefix+'.'+ext)
+//     image_list.push({"name":fname3_prefix+'.'+ext,"text":""})
+//     }else {
+//       //console.log('no find3',path.join(CFG.PATH_TO_IMAGES,rank,fname3_prefix))
+//     }
+//     
+//    if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname4_prefix+'.'+ext))) {
+//     //console.log('adding',fname4_prefix+'.'+ext)
+//     image_list.push({"name":fname4_prefix+'.'+ext,"text":""})
+//     }else {
+//       //console.log('no find4',path.join(CFG.PATH_TO_IMAGES,rank,fname4_prefix))
+//     }
+//     
+//   } catch(err) {
+//     console.error(err)
+//   }
+//   
+//   //console.log('im-arry',image_list)
+//   return image_list
 }      
         
  function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
