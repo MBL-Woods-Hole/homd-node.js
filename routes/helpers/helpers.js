@@ -467,6 +467,34 @@ module.exports.readFilesInDirectory = function readFilesInDirectory(directory, d
   });
 }
 //
+module.exports.getAllDirFiles = function getAllDirFiles(dirPath, arrayOfFiles) {
+  arrayOfFiles = {}
+  arrayOfFiles.files =[]
+  arrayOfFiles.dirs =[]
+  try{
+      const files = fs.readdirSync(dirPath)
+
+      
+ 
+      files.forEach(function getFilesArray(file) {
+        let stats = fs.statSync(dirPath + "/" + file)
+        var unixFilePermissions = '0' + (stats.mode & parseInt('777', 8)).toString(8);
+        console.log(file,unixFilePermissions,stats)
+        if (stats.mode & (fs.constants.S_IRUSR | fs.constants.S_IRGRP | fs.constants.S_IROTH)) {
+			if (stats.isDirectory()) {
+			  //arrayOfFiles = getAllDirFiles(dirPath + "/" + file, arrayOfFiles)
+			  arrayOfFiles.dirs.push({name:file,src:dirPath + "/" + file,type:'dir'})
+			} else {
+			  arrayOfFiles.files.push({name:file,src:dirPath + "/" + file,type:'file'})
+			}
+        }
+      })
+      return arrayOfFiles
+  }catch(e){
+        return 0
+  }
+  
+}
 module.exports.readAsync = async function readAsync(file, callback) {
     // if(CFG.ENV === 'development'){
 //         console.log('Reading File:',file)

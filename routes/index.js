@@ -43,13 +43,15 @@ router.get('/ftp', function index(req, res) {
      back = pts.join('/')
   }
   console.log('dir',dir)
+  let hdirs = helpers.getAllDirFiles(dir)
+  console.log('hdirs',hdirs)
   //var tree = browseDir.browse("public/ftp");
-  var dirFiles = browseDir.browseFiles(dir);
-  console.log('files',dirFiles);
- 
-    // Get all directories of folder "directory"
-  var dirDirs = browseDir.browseDirs(dir);
-  console.log('dirs',dirDirs);
+  // var dirFiles = browseDir.browseFiles(dir);
+//   //console.log('files',dirFiles);
+//  
+//     // Get all directories of folder "directory"
+//   var dirDirs = browseDir.browseDirs(dir);
+  //console.log('dirs',dirDirs);
   // https://www.npmjs.com/package/browse-directory
   
   //browseDir.showTree(tree);
@@ -59,8 +61,8 @@ router.get('/ftp', function index(req, res) {
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     // tree: JSON.stringify(tree),
-    files: JSON.stringify(dirFiles),
-    dirs: JSON.stringify(dirDirs),
+    files: JSON.stringify(hdirs.files),
+    dirs: JSON.stringify(hdirs.dirs),
     back: back,
     current:dir
   })
