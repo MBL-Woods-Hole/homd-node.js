@@ -30,7 +30,7 @@
 		Current Directory: <%= current %>
 		<br> <br> 
 		<table id='files' border='1'>
-		<tr><th>Files</th><th>Download</th></tr>
+		<tr><th style='text-align:left'>Files</th><th>Download</th></tr>
 	
 		<% for(i in files){ %>
 		   <tr><td><%= files[i].name %></td><td><a href='/download_file?filename=<%= files[i].src %>'>download</a></td></tr>
@@ -38,7 +38,7 @@
 		</table>
 		<br>
 		<table id='dirs'>
-		<tr><th>Directories</th></tr>
+		<tr><th style='text-align:left'>Directories</th></tr>
 	
 		<% for(i in dirs){ %>
 		   <tr><td><a href='/homd_ftp?dir=<%= dirs[i].src %>'><%= dirs[i].src %></a></td></tr>
