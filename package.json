@@ -11,6 +11,7 @@
     "adm-zip": "^0.5.9",
     "async": "^0.9.2",
     "body-parser": "^1.19.0",
+    "browse-directory": "^0.0.3",
     "cookie-parser": "^1.4.5",
     "debug": "^4.3.1",
     "ejs": "^3.1.5",
