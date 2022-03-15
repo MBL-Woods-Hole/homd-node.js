@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express')
 const router = express.Router()
-
+const fs        = require('fs-extra')
 // const fs   = require('fs-extra')
 const path  = require('path')
 const helpers = require('./helpers/helpers')
@@ -27,8 +27,36 @@ router.get('/', function index(req, res) {
   })
 })
 
-router.get('/demo08', function index(req, res) {
-  res.render('pages/home_demo08', {
+router.get('/ftp', function index(req, res) {
+  console.log('ftp')
+  fs.readlink("public/ftp", function (err, linkString) { 
+         // .. do some error handling here .. 
+         if(err) console.log('err',err) 
+         console.log('linkString',linkString) 
+  });
+  let openedDir = fs.opendirSync(app_root+'/public/ftp');
+  
+// Print the pathname of the directory
+console.log("\nPath of the directory:", openedDir.path);
+  
+// Get the files present in the directory
+console.log("Files Present in directory:");
+  
+let filesLeft = true;
+while (filesLeft) {
+  // Read a file as fs.Dirent object
+  let fileDirent = openedDir.readSync();
+  
+  // If readSync() does not return null
+  // print its filename
+  if (fileDirent != null)
+    console.log("Name:", fileDirent.name);
+  
+  // If the readSync() returns null
+  // stop the loop
+  else filesLeft = false;
+}
+  res.render('pages/ftp', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),

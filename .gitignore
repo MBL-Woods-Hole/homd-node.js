@@ -8,7 +8,7 @@
 .vscode
 .idea
 public/scripts/*.pyc
-public/ftp
+public/ftp/
 install_scripts/homdData*
 public/install_scripts/homdData*
 public/ftp
