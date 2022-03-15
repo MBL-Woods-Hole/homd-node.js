@@ -10,6 +10,7 @@
 public/scripts/*.pyc
 install_scripts/homdData*
 public/install_scripts/homdData*
+public/ftp
 *.pyc
 !db_schema.sql
 !db_config.sql.gz
