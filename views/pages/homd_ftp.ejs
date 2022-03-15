@@ -1,4 +1,14 @@
 <style>
+#ftp-stuff{
+   padding:30px 30px;
+}
+#files{
+   border-collapse:collapse;
+}
+#files td{
+    border:1px solid green;
+    padding:2px 8px;
+}
 </style>
 <% var files = JSON.parse(files) %>
 <%  var dirs = JSON.parse(dirs) %>
@@ -13,26 +23,28 @@
     <div class='page-content' >
               
        <div class='title'>HOMD FTP CONTENT</div>
-       <br><a href='/homd_ftp?dir=<%= back %>'><- back </a>
-    <br> <br> 
-    Current Directory: <%= current %>
-    <br> <br> 
-    <table>
-    <tr><th>Files</th><th>Download</th></tr>
     
-    <% for(i in files){ %>
-       <tr><td><%= files[i].name %></td><td><a href='/download_file?filename=<%= files[i].src %>'>Download</a></td></tr>
-    <% } %>
-    </table>
-    <br>
-    <table>
-    <tr><th>Directories</th></tr>
-    
-    <% for(i in dirs){ %>
-       <tr><td><a href='/homd_ftp?dir=<%= dirs[i].src %>'><%= dirs[i].src %></a></td></tr>
-    <% } %>
-    </table>
-    
+    <div id='ftp-stuff'
+		<br><a href='/homd_ftp?dir=<%= back %>'><- back </a>
+		<br> <br> 
+		Current Directory: <%= current %>
+		<br> <br> 
+		<table id='files' border='1'>
+		<tr><th>Files</th><th>Download</th></tr>
+	
+		<% for(i in files){ %>
+		   <tr><td><%= files[i].name %></td><td><a href='/download_file?filename=<%= files[i].src %>'>download</a></td></tr>
+		<% } %>
+		</table>
+		<br>
+		<table id='dirs'>
+		<tr><th>Directories</th></tr>
+	
+		<% for(i in dirs){ %>
+		   <tr><td><a href='/homd_ftp?dir=<%= dirs[i].src %>'><%= dirs[i].src %></a></td></tr>
+		<% } %>
+		</table>
+    </div>   <!-- end ftp stuff -->
 
     
     </div> <!-- end: page-content -->
