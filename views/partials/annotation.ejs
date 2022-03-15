@@ -63,7 +63,7 @@
 			 <tr>
 			   <td><%= cnt %></td>
 			   <td><%= mole[n].accession %></td>
-			   <td nowrap><%= mole[n].PID %> <a href='http://www.homd.org/jbrowse/index.html?data=homd/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew&highlight=<%= mole[n].accession %>:<%= mole[n].start %>..<%= mole[n].stop %>' target='_blank' rel="noopener noreferrer">jb</a></td>
+			   <td nowrap><%= mole[n].PID %> <a href='/jbrowse/index.html?data=homd/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew&highlight=<%= mole[n].accession %>:<%= mole[n].start %>..<%= mole[n].stop %>' target='_blank' rel="noopener noreferrer">jb</a></td>
 			   <td nowrap>
 			       [<a title='Nucleic Acid' href='#' onclick="get_NN_NA_seq('na','<%= mole[n].PID %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>')"><b>NA</b></a>] 
 			       [<a title='Amino Acid' href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].PID %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>')"><b>AA</b></a>]
