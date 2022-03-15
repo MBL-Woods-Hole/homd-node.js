@@ -1,0 +1,54 @@
+<style>
+</style>
+<% var files = JSON.parse(files) %>
+<%  var dirs = JSON.parse(dirs) %>
+<%- include('../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../partials/header_img'); %>
+    <%- include('../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <div class='title'>HOMD FTP CONTENT</div>
+       <br><a href='/ftp?dir=<%= back %>'><- back </a>
+    <br> <br> 
+    Current Directory: <%= current %>
+    <br> <br> 
+    <table>
+    <tr><th>Files:</th><th>Download</th></tr>
+    
+    <% for(i in files){ %>
+       <tr><td><%= files[i].name %></td><td>dld</td></tr>
+    <% } %>
+    </table>
+    <br>
+    <table>
+    <tr><th>Directories</th></tr>
+    
+    <% for(i in dirs){ %>
+       <tr><td><a href='/ftp?dir=<%= dirs[i].src %>'><%= dirs[i].src %></a></td></tr>
+    <% } %>
+    </table>
+    
+
+    
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

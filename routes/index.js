@@ -12,6 +12,7 @@ const C = require(app_root + '/public/constants')
 const { exec, spawn } = require('child_process');
 // let timestamp = new Date() // getting current timestamp
 // var rs_ds = ds.get_datasets( () => {
+var browseDir = require("browse-directory");
 
 /* GET home page. */
 router.get('/', function index(req, res) {
@@ -29,38 +30,39 @@ router.get('/', function index(req, res) {
 
 router.get('/ftp', function index(req, res) {
   console.log('ftp')
-  fs.readlink("public/ftp", function (err, linkString) { 
-         // .. do some error handling here .. 
-         if(err) console.log('err',err) 
-         console.log('linkString',linkString) 
-  });
-  let openedDir = fs.opendirSync(app_root+'/public/ftp');
+  let dir = req.query.dir;
+  let back,pts
+  if(!dir){
+     dir = "public/ftp"
+     back = "public/ftp"
+  }else if(dir === "public/ftp" ){  // very imprtant
+     back = "public/ftp"
+  }else{
+     pts = dir.split('/')
+     pts.pop()
+     back = pts.join('/')
+  }
+  console.log('dir',dir)
+  //var tree = browseDir.browse("public/ftp");
+  var dirFiles = browseDir.browseFiles(dir);
+  console.log('files',dirFiles);
+ 
+    // Get all directories of folder "directory"
+  var dirDirs = browseDir.browseDirs(dir);
+  console.log('dirs',dirDirs);
+  // https://www.npmjs.com/package/browse-directory
   
-// Print the pathname of the directory
-console.log("\nPath of the directory:", openedDir.path);
-  
-// Get the files present in the directory
-console.log("Files Present in directory:");
-  
-let filesLeft = true;
-while (filesLeft) {
-  // Read a file as fs.Dirent object
-  let fileDirent = openedDir.readSync();
-  
-  // If readSync() does not return null
-  // print its filename
-  if (fileDirent != null)
-    console.log("Name:", fileDirent.name);
-  
-  // If the readSync() returns null
-  // stop the loop
-  else filesLeft = false;
-}
+  //browseDir.showTree(tree);
   res.render('pages/ftp', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    // tree: JSON.stringify(tree),
+    files: JSON.stringify(dirFiles),
+    dirs: JSON.stringify(dirDirs),
+    back: back,
+    current:dir
   })
 })
 
