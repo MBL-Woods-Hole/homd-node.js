@@ -231,6 +231,7 @@
         {
         "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
+        
         "Leptotrichia sp._HMT_212":
         {
         "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
@@ -255,17 +256,17 @@
         {
         "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
-        "Leptotrichia sp._HMT_219":
+        "Pseudoleptotrichia sp._HMT_219":
         {
         "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
-        "Leptotrichia sp._HMT_221":
+        "Pseudoleptotrichia sp._HMT_221":
         {
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
         "Leptotrichia wadei":
         {
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
         "Leptotrichia sp._HMT_223":
         {
@@ -285,15 +286,15 @@
         },
         "Leptotrichia sp._HMT_417":
         {
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
         "Leptotrichia sp._HMT_463":
         {
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
         "Leptotrichia sp._HMT_498":
         {
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
         "Leptotrichia buccalis":
         {
@@ -337,29 +338,29 @@
         },
         "Porphyromonas catoniae":
         {
-        "filename1":"Hedgehog-ManyFuso-FromFigureS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
         "Porphyromonas pasteri":
         {
-        "filename1":"Hedgehog-ManyFuso-FromFigureS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
         "Porphyromonas sp._HMT_275":
         {
-        "filename1":"Hedgehog-ManyFuso-FromFigureS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
         "Porphyromonas sp._HMT_277":
         {
-        "filename1":"Hedgehog-ManyFuso-FromFigureS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
         "Porphyromonas sp._HMT_278":
         {
-        "filename1":"Hedgehog-ManyFuso-FromFigureS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
         "Porphyromonas sp._HMT_284":
         {
-        "filename1":"Hedgehog-ManyFuso-FromFigureS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
-        "Rothia ":
+        "Rothia mucilaginosa":
         {
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
        
@@ -380,7 +381,7 @@
         {
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
-        "Schaalia odontolyticus":
+        "Schaalia odontolytica":
         {
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
