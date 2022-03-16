@@ -239,7 +239,7 @@ def jblink(hit, type='jbrowse', hsp=None):
         hit = hitid(hit)
     # hit = SEQF1595_KI535341.1
     hit_parts = hit.split('_')
-    link = "http://www.homd.org/jbrowse/index.html"
+    link = "/jbrowse/index.html"
     link += "?data=homd/{}&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew".format(hit_parts[0])
     
     if args.db_type == 'protein':
@@ -288,7 +288,7 @@ def jblink(hit, type='jbrowse', hsp=None):
         
             
     else:
-    #link = "http://www.homd.org/jbrowse/index.html?id={}&type=jbrowse&db=db".format(hit)
+    #link = "/jbrowse/index.html?id={}&type=jbrowse&db=db".format(hit)
         acc = hit.replace('_','|')
     
         
