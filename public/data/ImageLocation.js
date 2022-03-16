@@ -41,7 +41,7 @@
         "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
        
         },
-        "Aggregatibacter sp. HMT_512":
+        "Aggregatibacter sp._HMT_512":
         {
         "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
        
@@ -136,7 +136,7 @@
         "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         
         },
-        "Capnocytophaga863":
+        "Capnocytophaga sp._HMT_863":
         {
         "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         
@@ -199,7 +199,7 @@
         {
         "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of Fusobacterium (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113"
         },
-        "Fusobacterium sp._HMT_203":
+        "Fusobacterium sp._HMT_204":
         {
         "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of Fusobacterium (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113"
         },

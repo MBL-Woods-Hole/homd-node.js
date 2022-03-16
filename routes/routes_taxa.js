@@ -571,6 +571,7 @@ router.get('/tax_description', function tax_description(req, res){
       console.warn('No taxon_info for HMT:',otid,' in C.taxon_info_lookup')
       data2 = {}
   }
+  helpers.print(['data2',data2])
   if(C.taxon_lineage_lookup[otid] ){
       data3 = C.taxon_lineage_lookup[otid]
       helpers.print(data3)

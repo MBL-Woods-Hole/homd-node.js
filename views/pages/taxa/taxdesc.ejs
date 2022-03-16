@@ -135,8 +135,12 @@
     <% }else{ %>
         
           <br><%- data2.general %>
-          <br><b>Disease Associations</b>:<br><%- data2.disease %>
-          <br><b>Prevalence and Source</b>:<br><%- data2.prev %>
+          <% if(data2.disease){ %>
+            <br><br><b>Disease Associations</b>:<br><%- data2.disease %>
+          <% } %>
+          <% if(data2.prev){ %>
+            <br><br><b>Prevalence and Source</b>:<br><%- data2.prev %>
+          <% } %>
           <!-- <br><b>Cultivability</b>:<br>&nbsp;&nbsp;<%- data2.culta %> -->
           <!-- <br><b>Phenotypic Characteristics</b>:<br>&nbsp;&nbsp;<%- data2.pheno %> -->
         
@@ -152,7 +156,7 @@
   <% }else if(images.length === 1 ) { %>
       <div class='images'>
       <table border='0'>
-        <tr><td valign='top'><img class='img' src='/images/life-images/<%= images[0].name %>' title='<%= images[0].text %>' alt='<%= images[0].name %>'  \>
+        <tr><td valign='top'><img class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
         </td><td valign='top' class='txt'>
         <small><%= images[0].text %></small>
         </td></tr>
@@ -169,7 +173,7 @@
                 <td valign='top'>
                 <% } %>
                  <div>
-                <img class='img' src='/images/life-images/<%= images[n].name %>' title='<%= images[n].text %>' alt='<%= images[n].name %>'  \><br>
+                <img class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
                 <small class='txt'><%= images[n].text %></small>
                  </div>
                <% if(n==0 || n==2){ %>

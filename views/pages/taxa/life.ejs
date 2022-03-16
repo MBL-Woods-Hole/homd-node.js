@@ -33,6 +33,9 @@
    margin-top:25px;
    border:1px solid brown;
 }
+#image-table td{
+   padding:2px;
+}
 #images div{
    padding:5px;
 }
@@ -120,8 +123,12 @@
    <div id='imagesNtext'>
    <div><%- include("../../partials/static/"+text_file); %></div>
    <br>
-   <div><img id='img' src='/images/life-images/<%= images[0].name %>' width='250' title='<%= images[0].text %>' alt='<%= tax_name %> Image'  \></div>
    
+    <table id='image-table'>
+        <tr><td valign='top'><img id='img' src='/images/life-images/<%= images[0].name %>' width='250'  alt='<%= tax_name %> Image'  \><br>
+        </td><td valign='top'><small><%= images[0].text %></small>
+        </td></tr>
+    </table>
    </div>
    
    <style>#life-table{width:58%;}</style>
@@ -138,8 +145,11 @@
     
     <% if(images.length === 1 ) { %>
       <div style='padding-right:200px;'>
-        <img id='img' src='/images/life-images/<%= images[0].name %>' width='250' title='<%= images[0].text %>' alt='<%= tax_name %> Image'  \><br>
-        <small><%= images[0].text %></small>
+        <table id='image-table'>
+        <tr><td valign='top'><img id='img' src='/images/life-images/<%= images[0].name %>' width='250'  alt='<%= tax_name %> Image'  \><br>
+        </td><td valign='top'><small><%= images[0].text %></small>
+        </td></tr>
+        </table>
       </div>
     <% }else{ %>
       <table id='image-table'>
@@ -151,7 +161,7 @@
           <td>
           <% } %>
           <div>
-          <img id='img' src='/images/life-images/<%= images[n].name %>' width='250' title='<%= images[n].text %>' alt=''  \><br>
+          <img id='img' src='/images/life-images/<%= images[n].name %>' width='250'  alt=''  \><br>
           <small><%= images[n].text %></small>
           </div>
           <% if(n==0 || n===2){ %>
