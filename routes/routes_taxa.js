@@ -93,6 +93,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
         }else if(el.genomes.length === 1 && el.genomes[0] in C.genome_lookup){
           //console.log('g length:1')
           el.gsize = helpers.format_Mbps(C.genome_lookup[el.genomes[0]].tlength).toString()
+          console.log('el.gsize[0]',el.gsize)
         }else {  // More than one genome
           //console.log('g length:>1')
           var size_array = el.genomes.map( (x) =>{
@@ -102,12 +103,13 @@ router.get('/tax_table', function tax_table_get(req, res) {
           })
           var min = Math.min.apply(Math, size_array.filter(Boolean))  // this removes 'falsy' from array
           var max = Math.max.apply(Math, size_array.filter(Boolean))
-          //console.log(min,max,size_array)
+          console.log('min',min,'max',max,'sarray',size_array)
           if(min === max){
             el.gsize = helpers.format_Mbps(min)
           }else {
             el.gsize = helpers.format_Mbps(min)+' - '+helpers.format_Mbps(max)
           }
+          console.log('el.gsize-default',el.gsize)
         }
         
         // do we have ecology/abundance data?  
@@ -571,7 +573,7 @@ router.get('/tax_description', function tax_description(req, res){
       console.warn('No taxon_info for HMT:',otid,' in C.taxon_info_lookup')
       data2 = {}
   }
-  helpers.print(['data2',data2])
+  //helpers.print(['data2',data2])
   if(C.taxon_lineage_lookup[otid] ){
       data3 = C.taxon_lineage_lookup[otid]
       helpers.print(data3)
