@@ -3,7 +3,7 @@ HOMD Notes
 blast output jbrowse highlight
 check blast output for erros
 ImageLocation: make HMT keys for species
-
+  -- add back in the subspecies from xls file
 2022-03-08
 
 EXPLORER: sequence pop-up should have identifier

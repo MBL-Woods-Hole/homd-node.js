@@ -109,6 +109,24 @@ module.exports.format_MB = (x) =>{ // mega bytes
     // change 456734 => 456,734
     return (parseFloat(x) /1000000).toFixed(3).toString() +' MB'
 }
+module.exports.get_min = function get_min(ary){
+   let ret = ary[0]
+   for(let i=0;i<ary.length;i++){
+      if(ary[i] < ret){
+         ret = ary[i]
+      }
+   }
+   return ret
+}
+module.exports.get_max = function get_max(ary){
+   let ret = 0
+   for(let i=0;i<ary.length;i++){
+      if(ary[i] > ret){
+         ret = ary[i]
+      }
+   }
+   return ret
+}
 //
 module.exports.onlyUnique = (value, index, self) =>{
   return self.indexOf(value) === index;

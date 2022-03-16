@@ -3,7 +3,7 @@
 
 
 .description{
-  font-size:12px;
+  font-size:13px;
   padding:5px;
   max-height:200px;
   overflow:auto;
@@ -129,7 +129,10 @@
 <% }else{ %>
    <div class='description' style=''>
 <% } %>
-  <b>Description</b>:
+  <% if(text_file){ %>
+    <%- include("../../partials/static/"+text_file); %>
+  <% }else{ %>
+    <b>Description</b>:
     <% if(Object.keys(data2).length === 0) { %>
       Not Available
     <% }else{ %>
@@ -145,6 +148,7 @@
           <!-- <br><b>Phenotypic Characteristics</b>:<br>&nbsp;&nbsp;<%- data2.pheno %> -->
         
     <% } %>
+  <% } %>
 </div>
      
      
@@ -158,7 +162,7 @@
       <table border='0'>
         <tr><td valign='top'><img class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
         </td><td valign='top' class='txt'>
-        <small><%= images[0].text %></small>
+        <small><%- images[0].text %></small>
         </td></tr>
       </table>
       </div>
@@ -174,7 +178,7 @@
                 <% } %>
                  <div>
                 <img class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
-                <small class='txt'><%= images[n].text %></small>
+                <small class='txt'><%- images[n].text %></small>
                  </div>
                <% if(n==0 || n==2){ %>
                 </td>

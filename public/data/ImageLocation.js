@@ -5,15 +5,22 @@
     "order":{},
     "family":{},
     "genus":{
-        "Capnocytophaga":
+        "Actinomyces":
         {
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"ActinoYellow_CoryneMagenta_FromMW2016FigS3.jpg","text1":"<i>Actinomyces</i> (yellow) intermingled with Corynebacterium (magenta) in human dental plaque. <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>From Mark Welch et al. 2016</a>"
         },
         "Aggregatibacter":
         {
         "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
-        
+        "Capnocytophaga":
+        {
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        },
+        "Lautropia":
+        {
+        "filename1":"LmirCyan_PastYellow_RothiaRed_StrepGreen_VeillMagenta.jpg","text1":"<i>Lautropia mirabilis</i> (cyan) surrounded by <i>Haemophilus</i> or <i>Aggregatibacter</i> (yellow) and <i>Streptococcus</i> (green), with some <i>Veillonella</i> (magenta) and <i>Rothia</i> (red) visible. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
+        },
         "Schaalia":
         {
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."

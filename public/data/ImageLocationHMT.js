@@ -5,523 +5,534 @@
     "order":{},
     "family":{},
     "genus":{
-        "Capnocytophaga":
+        "Actinomyces":
         {
-        "species":"",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "all_species":true,
+        "filename1":"ActinoYellow_CoryneMagenta_FromMW2016FigS3.jpg",
+        "text1":"<i>Actinomyces</i> (yellow) intermingled with <i>Corynebacterium</i> (magenta) in human dental plaque. <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>From Mark Welch et al. 2016</a>"
         },
         "Aggregatibacter":
         {
-        "species":"",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Corncobs_unpublished-forHOMD.jpg",
+        "text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        
+        "Capnocytophaga":
+        {
+        "filename1":"Capno_256x256.png",
+        "text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
+        },
+        "Lautropia":
+        {
+        "all_species":true,
+        "filename1":"LmirCyan_PastYellow_RothiaRed_StrepGreen_VeillMagenta.jpg",
+        "text1":"<i>Lautropia mirabilis</i> (cyan) surrounded by <i>Haemophilus</i> or <i>Aggregatibacter</i> (yellow) and <i>Streptococcus</i> (green), with some <i>Veillonella</i> (magenta) and <i>Rothia</i> (red) visible. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
+        },
         "Schaalia":
         {
-        "species":"",
-        "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
+        "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png",
+        "text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: <i>Schaalia</i> in red, <i>Rothia mucilaginosa</i> in blue, <i>Veillonella</i> in magenta, <i>Streptococcus</i> in green, <i>Neisseriaceae</i> in yellow.  Image credit: Steven Wilbert."
         }
     },
     "subspecies":{},
     "species": {
-       "Aggregatibacter aphrophilus":
+       "545":
         {
         "species":"Aggregatibacter aphrophilus",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
-        "Aggregatibacter paraphrophilus":
+        "720":
         {
         "species":"Aggregatibacter paraphrophilus",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
-        "Aggregatibacter segnis":
+        "762":
         {
         "species":"Aggregatibacter segnis",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
         "458":
         {
         "species":"Aggregatibacter sp._HMT_458",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "512":
         {
         "species":"Aggregatibacter sp._HMT_512",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "513":
         {
         "species":"Aggregatibacter sp._HMT_513",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "898":
         {
         "species":"Aggregatibacter sp._HMT_898",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "949":
         {
         "species":"Aggregatibacter sp._HMT_949",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by Corynebacterium matruchotii (magenta) and \"kernels\" formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
-         "Capnocytophaga endodontalis":
+         "326":
         {
         "species":"Capnocytophaga endodontalis",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
-        "Capnocytophaga gingivalis":
+        "337":
         {
         "species":"Capnocytophaga gingivalis",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
-        "Capnocytophaga granulosa":
+        "325":
         {
         "species":"Capnocytophaga granulosa",
-        "filename1":"Capno_256x256.png ","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png ","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
-        "Capnocytophaga haemolytica":
+        "627":
         {
         "species":"Capnocytophaga haemolytica",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
-        "Capnocytophaga leadbetteri":
+        "329":
         {
         "species":"Capnocytophaga leadbetteri",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
-        "Capnocytophaga ochracea":
+        "700":
         {
         "species":"Capnocytophaga ochracea",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "323":
         {
         "species":"Capnocytophaga sp._HMT_323",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
         "324":
         {
         "species":"Capnocytophaga sp._HMT_324",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "332":
         {
         "species":"Capnocytophaga sp._HMT_332",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "334":
         {
         "species":"Capnocytophaga sp._HMT_334",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
         "335":
         {
         "species":"Capnocytophaga sp._HMT_335",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "336":
         {
         "species":"Capnocytophaga sp._HMT_336",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "338":
         {
         "species":"Capnocytophaga sp._HMT_338",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
         "380":
         {
         "species":"Capnocytophaga sp._HMT_380",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "412":
         {
         "species":"Capnocytophaga sp._HMT_412",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
         "863":
         {
         "species":"Capnocytophaga sp._HMT_863",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
         "864":
         {
         "species":"Capnocytophaga sp._HMT_864",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
         "878":
         {
         "species":"Capnocytophaga sp._HMT_878",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
         "901":
         {
         "species":"Capnocytophaga sp._HMT_901",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
         "902":
         {
         "species":"Capnocytophaga sp._HMT_902",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
         "903":
         {
         "species":"Capnocytophaga sp._HMT_903",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         
         },
-        "Capnocytophaga sputigena":
+        "775":
         {
         "species":"Capnocytophaga sputigena",
-        "filename1":"Capno_256x256.png","text1":"Capnocytophaga (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the Corynebacterium (magenta) at the center and the Streptococcus (green) in the outer ring.  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Capno_256x256.png","text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
        
         },
-        "Corynebacterium matruchotii":
+        "666":
         {
-        "species":"",
+        "species":"<i>Corynebacterium matruchotii</i>",
         "filename1":"MarkWelch2016_Fig4B_256_ForCoryne_Porph_Strep_Aggr.png",
-        "text1":"A cluster of Corynebacterium (magenta) topped by corncob structures composed of Streptococcus (green), Porphyromonas (blue), and Pasteurellaceae (orange). From Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113",
+        "text1":"A cluster of <i>Corynebacterium</i> (magenta) topped by corncob structures composed of <i>Streptococcus</i> (green), Porphyromonas (blue), and Pasteurellaceae (orange). From Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113",
         "filename2":"Coryne_matruch_256x256.png",
-        "text2":"A hedgehog structure from dental plaque, with Corynebacterium (magenta) surrounded by Streptococcus (green) and other bacteria including Fusobacterium (yellow), Leptotrichia (blue), and Pasteurellaceae (orange).  See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "text2":"A hedgehog structure from dental plaque, with <i>Corynebacterium</i> (magenta) surrounded by <i>Streptococcus</i> (green) and other bacteria including <i>Fusobacterium</i> (yellow), Leptotrichia (blue), and Pasteurellaceae (orange).  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Fusobacterium hwasookii":
+        "953":
         {
-        "species":"",
+        "species":"Fusobacterium hwasookii",
         "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg",
-        "text1":"Cells of Fusobacterium (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113"
+        "text1":"Cells of <i>Fusobacterium</i> (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Fusobacterium naviforme":
+        "689":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of Fusobacterium (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113"
+        "species":"Fusobacterium naviforme",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of <i>Fusobacterium</i> (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         "Fusobacterium nucleatum":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of Fusobacterium (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113"
+        "species":"Fusobacterium nucleatum",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of <i>Fusobacterium</i> (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         "Fusobacterium sp._HMT_203":
         {
         "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of Fusobacterium (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113"
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of <i>Fusobacterium</i> (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Fusobacterium sp._HMT_203":
+        "203":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of Fusobacterium (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113"
+        "species":"Fusobacterium sp._HMT_203",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of <i>Fusobacterium</i> (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Fusobacterium sp._HMT_204":
+        "204":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of Fusobacterium (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from Mark Welch et al. 2016  https://doi.org/10.1073/pnas.1522149113"
+        "species":"Fusobacterium sp._HMT_204",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Cells of <i>Fusobacterium</i> (yellow) frequently occur in dental plaque hedgehog structures just inside the outer layer of corncob structures. Image from <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         "Haemophilus haemolyticus":
         {
-        "species":"",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Haemophilus haemolyticus",
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
          "Haemophilus parainfluenzae":
         {
-        "species":"",
+        "species":"Haemophilus parainfluenzae",
         "filename1":"SmitisMagenta-HparaCyan.jpg","text1":"Cells of Streptococcus mitis/oralis (magenta) and Haemophilus parainfluenzae (cyan) together in dental plaque. See Perera et al. 2021 https://doi.org/10.1038/s41396-021-01141-3"
         },
          "Haemophilus paraphrohaemolyticus":
         {
-        "species":"",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Haemophilus paraphrohaemolyticus",
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-         "Haemophilus sp._HMT_036":
+         "36":
         {
-        "species":"",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Haemophilus sp._HMT_036",
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-         "Haemophilus sp._HMT_259":
+         "259":
         {
-        "species":"",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Haemophilus sp._HMT_259",
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-         "Haemophilus sp._HMT_908":
+         "908":
         {
-        "species":"",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Haemophilus sp._HMT_908",
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
          "Haemophilus sputorum":
         {
-        "species":"",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Haemophilus sputorum",
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         
-        "Leptotrichia sp._HMT_212":
+        "212":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia sp._HMT_212",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         "Leptotrichia hongkongensis":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia hongkongensis",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         "Leptotrichia shahii":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia shahii",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Leptotrichia sp._HMT_215":
+        "215":
         {
-        "species":"",
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "species":"Leptotrichia sp._HMT_215",
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"<i>Leptotrichia</i> (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
-        "Leptotrichia sp._HMT_217":
+        "217":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia sp._HMT_217",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Leptotrichia sp._HMT_218":
+        "218":
         {
-        "species":"",
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "species":"Leptotrichia sp._HMT_218",
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"<i>Leptotrichia</i> (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
-        "Pseudoleptotrichia sp._HMT_219":
+        "219":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Pseudoleptotrichia sp._HMT_219",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Pseudoleptotrichia sp._HMT_221":
+        "221":
         {
-        "species":"",
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "species":"Pseudoleptotrichia sp._HMT_221",
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"<i>Leptotrichia</i> (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
         "Leptotrichia wadei":
         {
-        "species":"",
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "species":"Leptotrichia wadei",
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"<i>Leptotrichia</i> (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
-        "Leptotrichia sp._HMT_223":
+        "223":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia sp._HMT_223",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         "Leptotrichia hofstadii":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia hofstadii",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Leptotrichia sp._HMT_225":
+        "225":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia sp._HMT_225",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Leptotrichia sp._HMT_392":
+        "392":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia sp._HMT_392",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Leptotrichia sp._HMT_417":
+        "417":
         {
-        "species":"",
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "species":"Leptotrichia sp._HMT_417",
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"<i>Leptotrichia</i> (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
-        "Leptotrichia sp._HMT_463":
+        "463":
         {
-        "species":"",
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "species":"Leptotrichia sp._HMT_463",
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"<i>Leptotrichia</i> (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
-        "Leptotrichia sp._HMT_498":
+        "498":
         {
-        "species":"",
-        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"Leptotrichia (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
+        "species":"Leptotrichia sp._HMT_498",
+        "filename1":"Leptotrichia_wadei_and_HMT_215_221_417_498_size256px.png","text1":"<i>Leptotrichia</i> (yellow) in a consortium scraped from the tongue dorsum. The white objects in the center are human epithelial cells. Photo credit: Tabita Ramirez-Puebla."
         },
         "Leptotrichia buccalis":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia buccalis",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         "Pseudoleptotrichia goodfellowii":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Pseudoleptotrichia goodfellowii",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Leptotrichia sp._HMT_847":
+        "847":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia sp._HMT_847",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Leptotrichia sp._HMT_879":
+        "879":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia sp._HMT_879",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
-        "Leptotrichia sp._HMT_909":
+        "909":
         {
-        "species":"",
-        "filename1":"Leptotrichia_256x256.png","text1":"Leptotrichia (cyan) in a hedgehog structure in human dental plaque, together with Corynebacterium (magenta) and Streptococcus (green). See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Leptotrichia sp._HMT_909",
+        "filename1":"Leptotrichia_256x256.png","text1":"<i>Leptotrichia</i> (cyan) in a hedgehog structure in human dental plaque, together with <i>Corynebacterium</i> (magenta) and <i>Streptococcus</i> (green). See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         "Neisseria cinerea":
         {
-        "species":"",
+        "species":"Neisseria cinerea",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
        
         },
         "Neisseria flavescens":
         {
-        "species":"",
+        "species":"Neisseria flavescens",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
        
         },
         "Neisseria perflava":
         {
-        "species":"",
+        "species":"Neisseria perflava",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
        
         },
         "Neisseria subflava":
         {
-        "species":"",
+        "species":"Neisseria subflava",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
        
         },
         "Porphyromonas catoniae":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Porphyromonas catoniae",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
         "Porphyromonas pasteri":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Porphyromonas pasteri",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
-        "Porphyromonas sp._HMT_275":
+        "275":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Porphyromonas sp._HMT_275",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
-        "Porphyromonas sp._HMT_277":
+        "277":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Porphyromonas sp._HMT_277",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
-        "Porphyromonas sp._HMT_278":
+        "278":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Porphyromonas sp._HMT_278",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
-        "Porphyromonas sp._HMT_284":
+        "284":
         {
-        "species":"",
-        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Porphyromonas sp._HMT_284",
+        "filename1":"Hedgehog-ManyFuso-FromFigS2.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The yellow rods are Fusobacterium spp. Image from Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
         },
         "Rothia mucilaginosa":
         {
-        "species":"",
+        "species":"Rothia mucilaginosa",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
        
         },
         "Schaalia cardiffensis":
         {
-        "species":"",
+        "species":"Schaalia cardiffensis",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
         "Schaalia georgiae":
         {
-        "species":"",
+        "species":"Schaalia georgiae",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
         "Schaalia lingnae":
         {
-        "species":"",
+        "species":"Schaalia lingnae",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
         "Schaalia meyeri":
         {
-        "species":"",
+        "species":"Schaalia meyeri",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
         "Schaalia odontolytica":
         {
-        "species":"",
+        "species":"Schaalia odontolytica",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
-        "Schaalia sp._HMT_172":
+        "172":
         {
-        "species":"",
+        "species":"Schaalia sp._HMT_172",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
-        "Schaalia sp._HMT_178":
+        "178":
         {
-        "species":"",
+        "species":"Schaalia sp._HMT_178",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
-        "Schaalia sp._HMT_180":
+        "180":
         {
-        "species":"",
+        "species":"Schaalia sp._HMT_180",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
-        "Schaalia sp._HMT_877":
+        "877":
         {
-        "species":"",
+        "species":"Schaalia sp._HMT_877",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
         
-        "Streptococcus cristatus":
+        "<i>Streptococcus cristatus</i>":
         {
-        "species":"",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"<i>Streptococcus cristatus</i>",
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         
         "Streptococcus infantis":
         {
-        "species":"",
+        "species":"Streptococcus infantis",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
         
         "Streptococcus mitis":
         {
-        "species":"",
+        "species":"Streptococcus mitis",
         "filename1":"SmitisMagenta-HparaCyan.jpg","text1":"Cells of Streptococcus mitis/oralis (magenta) and Haemophilus parainfluenzae (cyan) together in dental plaque. See Perera et al. 2021 https://doi.org/10.1038/s41396-021-01141-3"
         },
         "Streptococcus oralis":
         {
-        "species":"",
-        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by Corynebacterium matruchotii (magenta) and “kernels” formed by Streptococcus cristatus or the S. mitis/oralis group (green) and Porphyromonas species (blue).  The orange cells surrounding the streptococci are Aggregatibacter or Haemophilus spp. See Mark Welch et al. 2016 https://doi.org/10.1073/pnas.1522149113"
+        "species":"Streptococcus oralis",
+        "filename1":"Corncobs_unpublished-forHOMD.jpg","text1":"Corncob structures in dental plaque with a “cob” formed by <i>Corynebacterium matruchotii</i> (magenta) and “kernels” formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
        
         
         "Veillonella dispar":
         {
-        "species":"",
+        "species":"Veillonella dispar",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         },
         "Veillonella rogosae":
         {
-        "species":"",
+        "species":"Veillonella rogosae",
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png","text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: Schaalia in red, Rothia mucilaginosa in blue, Veillonella in magenta, Streptococcus in green, Neisseriaceae in yellow.  Image credit: Steven Wilbert."
         
         }

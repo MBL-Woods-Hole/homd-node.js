@@ -23,10 +23,11 @@ constants.phyla = [ 'Actinobacteria',
           'Synergistetes',
           'WPS-2'
 ]
-constants.names_w_text = {genera:['Actinomyces','Campylobacter','Corynebacterium','Gemella','Leptotrichia',
+constants.names_w_text = {
+  genera:['Actinomyces','Campylobacter','Corynebacterium','Gemella','Leptotrichia',
     'Porphyromonas','Pseudoleptotrichia','Schaalia','Tannerella','Aggregatibacter','Capnocytophaga',
     'Fusobacterium','Haemophilus','Neisseria','Prevotella','Rothia','Streptococcus','Veillonella'],
-    provisional_genera:['Absconditabacteria_(SR1)_[G-1]','Anaerolineae_[G-1]','Bacteroidaceae_[G-1]',
+  provisional_genera:['Absconditabacteria_(SR1)_[G-1]','Anaerolineae_[G-1]','Bacteroidaceae_[G-1]',
     'Bacteroidales_[G-2]','Bacteroidetes_[G-3]','Bacteroidetes_[G-4]','Bacteroidetes_[G-5]','Bacteroidetes_[G-7]',
     'Clostridiales_[F-1][G-1]','Clostridiales_[F-1][G-2]','Clostridiales_[F-3][G-1]','Erysipelotrichaceae_[G-1]',
     'Gracilibacteria_(GN02)_[G-1]','Gracilibacteria_(GN02)_[G-2]','Gracilibacteria_(GN02)_[G-3]',
@@ -41,8 +42,9 @@ constants.names_w_text = {genera:['Actinomyces','Campylobacter','Corynebacterium
     'Saccharibacteria_(TM7)_[G-3]','Saccharibacteria_(TM7)_[G-4]','Saccharibacteria_(TM7)_[G-5]',
     'Saccharibacteria_(TM7)_[G-6]','Saccharibacteria_(TM7)_[G-7]','Saccharibacteria_(TM7)_[G-8]',
     'Syntrophomonadaceae_[VIII][G-1]','Veillonellaceae_[G-1]'
-]
-    }
+  ],
+  species:['666']
+}
 constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
 //constants.abundance_order = ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
 constants.base_abundance_order       = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD'] //,'NS','ST']

@@ -92,7 +92,9 @@ router.get('/tax_table', function tax_table_get(req, res) {
           el.gsize = ''
         }else if(el.genomes.length === 1 && el.genomes[0] in C.genome_lookup){
           //console.log('g length:1')
-          el.gsize = helpers.format_Mbps(C.genome_lookup[el.genomes[0]].tlength).toString()
+          console.log('xxx',C.genome_lookup[el.genomes[0]])
+          //el.gsize = helpers.format_Mbps(C.genome_lookup[el.genomes[0]].tlength).toString()
+          el.gsize = (C.genome_lookup[el.genomes[0]].tlength/1000000).toFixed(2).toString() +' Mbps'
           console.log('el.gsize[0]',el.gsize)
         }else {  // More than one genome
           //console.log('g length:>1')
@@ -101,13 +103,16 @@ router.get('/tax_table', function tax_table_get(req, res) {
               return C.genome_lookup[x].tlength 
             }
           })
-          var min = Math.min.apply(Math, size_array.filter(Boolean))  // this removes 'falsy' from array
-          var max = Math.max.apply(Math, size_array.filter(Boolean))
+          //var min = Math.min.apply(Math, size_array.filter(Boolean))  // this removes 'falsy' from array
+          //var max = Math.max.apply(Math, size_array.filter(Boolean))
+          var min = helpers.get_min(size_array)
+          var max = helpers.get_max(size_array)
           console.log('min',min,'max',max,'sarray',size_array)
           if(min === max){
-            el.gsize = helpers.format_Mbps(min)
+            el.gsize =   (min/1000000).toFixed(2).toString() +' Mbps'  //helpers.format_Mbps(min)
           }else {
-            el.gsize = helpers.format_Mbps(min)+' - '+helpers.format_Mbps(max)
+            el.gsize = (min/1000000).toFixed(2).toString() +' Mbps'+' - '+(max/1000000).toFixed(2).toString() +' Mbps'
+            //helpers.format_Mbps(min)+' - '+helpers.format_Mbps(max)
           }
           console.log('el.gsize-default',el.gsize)
         }
@@ -499,7 +504,7 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
 router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
-  let data1,data2,data3,data4,data5,links
+  let data1,data2={},data3,data4,data5,links
   /*
   This busy page needs:
   1  otid     type:string
@@ -567,11 +572,15 @@ router.get('/tax_description', function tax_description(req, res){
   let plist = Object.values(C.phage_lookup).filter(item => (item.host_otid === otid)) 
   let pid_list = plist.map(item => item.pid)
   //console.log('pid_list',pid_list)
-  if(C.taxon_info_lookup[otid] ){
-      data2 = C.taxon_info_lookup[otid]
-  }else {
-      console.warn('No taxon_info for HMT:',otid,' in C.taxon_info_lookup')
-      data2 = {}
+  let text_file = get_rank_text('species','',otid)
+  console.log('text_file',text_file)
+  if(! text_file[0]){
+	  if(C.taxon_info_lookup[otid]){
+		  data2 = C.taxon_info_lookup[otid]
+	  }else {
+		  console.warn('No taxon_info for HMT:',otid,' in C.taxon_info_lookup')
+		  data2 = {}
+	  }
   }
   //helpers.print(['data2',data2])
   if(C.taxon_lineage_lookup[otid] ){
@@ -629,6 +638,7 @@ router.get('/tax_description', function tax_description(req, res){
     pids: pid_list,
     image_array:JSON.stringify(image_array),
     data1: JSON.stringify(data1),
+    text_file: text_file[0],   // only 666 so far
     data2: JSON.stringify(data2),
     data3: JSON.stringify(data3),
     data4: JSON.stringify(data4),
@@ -1425,9 +1435,9 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
-function get_rank_text(rank, tax_name){
+function get_rank_text(rank, tax_name, otid){
     let text = [false,false]
-    if(rank == "genus"){
+    if(rank === "genus"){
       if(C.names_w_text.genera.indexOf(tax_name) != -1){
         text[0] = 'genus/'+tax_name+'.ejs'
       }else if(C.names_w_text.provisional_genera.indexOf(tax_name) != -1){
@@ -1444,6 +1454,11 @@ function get_rank_text(rank, tax_name){
         }
 
       }
+    }
+    if(rank === 'species'){
+       if(C.names_w_text.species.indexOf(otid) != -1){
+          return ['species/'+otid+'.ejs']
+       }
     }
     return text
 }

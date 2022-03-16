@@ -33,6 +33,9 @@
    margin-top:25px;
    border:1px solid brown;
 }
+#image-table{
+   padding:2px;
+  }
 #image-table td{
    padding:2px;
 }
@@ -126,7 +129,7 @@
    
     <table id='image-table'>
         <tr><td valign='top'><img id='img' src='/images/life-images/<%= images[0].name %>' width='250'  alt='<%= tax_name %> Image'  \><br>
-        </td><td valign='top'><small><%= images[0].text %></small>
+        </td><td valign='top'><small><%- images[0].text %></small>
         </td></tr>
     </table>
    </div>
@@ -144,10 +147,10 @@
     <div id='images'>
     
     <% if(images.length === 1 ) { %>
-      <div style='padding-right:200px;'>
+      <div style=''>
         <table id='image-table'>
         <tr><td valign='top'><img id='img' src='/images/life-images/<%= images[0].name %>' width='250'  alt='<%= tax_name %> Image'  \><br>
-        </td><td valign='top'><small><%= images[0].text %></small>
+        </td><td valign='top'><small><%- images[0].text %></small>
         </td></tr>
         </table>
       </div>
@@ -162,7 +165,7 @@
           <% } %>
           <div>
           <img id='img' src='/images/life-images/<%= images[n].name %>' width='250'  alt=''  \><br>
-          <small><%= images[n].text %></small>
+          <small><%- images[n].text %></small>
           </div>
           <% if(n==0 || n===2){ %>
           </td>
