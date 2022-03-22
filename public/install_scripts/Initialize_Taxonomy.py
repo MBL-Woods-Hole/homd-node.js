@@ -38,7 +38,7 @@ join genus using(genus_id)
 join species using(species_id)
 """
 query_gene_count_no_flagid ="""
-SELECT otid, seq_id
+SELECT otid, seq_id, combined_length
 from {tbl}
 ORDER BY otid
 """.format(tbl=genome_tbl)
@@ -64,6 +64,7 @@ def create_taxon(otid):
     
     taxon['ncbi_taxid'] = ''
     taxon['genomes'] = []
+    taxon['tlength_str'] = ''
     taxon['type_strains'] = []
     taxon['ref_strains'] = []
     taxon['rrna_sequences'] = []
@@ -128,21 +129,27 @@ def run_taxa(args):
            
 def run_get_genomes(args):  ## add this data to master_lookup
     global master_lookup
+    global tlength_lookup
     ## SCREEN OUT BAD Genomes here in QUERY
+    #print(query_gene_count_no_flagid)
     result = myconn.execute_fetch_select_dict(query_gene_count_no_flagid)
     
+    tlength_lookup ={}
     
     for obj in result:
         #print(obj)
         otid = str(obj['otid'])
+        if otid not in tlength_lookup:
+            tlength_lookup[otid] = []
         if otid in master_lookup:
             #if master_lookup[otid]['status'] != 'Dropped':
             master_lookup[otid]['genomes'].append(obj['seq_id'])
+            
+            tlength_lookup[otid].append(obj['combined_length'])
+            
         else:
             sys.exit('problem with genome exiting') 
     
-
-
 def run_synonyms(args):
     global master_lookup
     q = """
@@ -436,8 +443,6 @@ JOIN subspecies  using(subspecies_id)
     file = os.path.join(args.outdir,args.outfileprefix+'Counts.json')
     print_dict(file, counts)
     
-    file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')  
-    print_dict(file, master_lookup) 
     
 def run_counts(taxlist, gcnt, rfcnt):
     global counts
@@ -468,8 +473,32 @@ def run_counts(taxlist, gcnt, rfcnt):
             
     return counts        
             
-
-   
+def get_mbps(x):
+    #return str(float(x)/1000000) + 'Mbps'
+    return "{:#.3g}".format(float(x)/1000000)
+    
+def print_master_lookup(args):
+    global master_lookup
+    ## get genome length 
+    
+    for otid in master_lookup:
+        min_glength = 0
+        max_glength = 0
+        if len(master_lookup[otid]['genomes']) == 0:
+            master_lookup[otid]['tlength_str'] = ''
+        elif len(master_lookup[otid]['genomes']) == 1:
+            master_lookup[otid]['tlength_str'] = get_mbps(tlength_lookup[otid][0]) + ' Mbps'
+        else:
+            #print('tlength_lookup[otid]',tlength_lookup[otid])
+            min_glength = min(tlength_lookup[otid])
+            max_glength = max(tlength_lookup[otid])
+            master_lookup[otid]['tlength_str'] = get_mbps(min_glength) +' - '+ get_mbps(max_glength)+ ' Mbps'
+            
+        #master_lookup[otid]['genomes'].append(obj['seq_id'])
+        #master_lookup[otid]['tlengths'].append(obj['combined_length'])
+    file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
+    print_dict(file, master_lookup) 
+      
 def print_dict(filename, dict):
     print('writing',filename)
     with open(filename, 'w') as outfile:
@@ -540,10 +569,14 @@ if __name__ == "__main__":
    
     run_get_genomes(args)  # in master_lookup => homd_data_taxalookup.json
     run_synonyms(args)     # in master_lookup
+    
     run_type_strain(args)  # in master_lookup
+    
     run_sites(args)        # in master_lookup
     run_ref_strain(args)   # in master_lookup
+    
     run_rrna_sequences(args)
+    print_master_lookup(args)
     run_refseq(args)       # in master_lookup
     run_info(args)
     run_references(args)

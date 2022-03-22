@@ -13,11 +13,13 @@
         },
         "Aggregatibacter":
         {
+        "all_species":false,
         "filename1":"Corncobs_unpublished-forHOMD.jpg",
         "text1":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or </i>Haemophilus</i> spp. See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
         "Capnocytophaga":
         {
+        "all_species":false,
         "filename1":"Capno_256x256.png",
         "text1":"<i>Capnocytophaga</i> (cyan) shown in a hedgehog structure from human dental plaque. They occupy the area between the <i>Corynebacterium</i> (magenta) at the center and the <i>Streptococcus</i> (green) in the outer ring.  See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>"
         },
@@ -29,6 +31,7 @@
         },
         "Schaalia":
         {
+        "all_species":false,
         "filename1":"Schaalia_Rothmuc_Neiss_Veill_256.png",
         "text1":"A bacterial consortium scraped from the top surface of a human tongue. The colors represent different kinds of bacteria: <i>Schaalia</i> in red, <i>Rothia mucilaginosa</i> in blue, <i>Veillonella</i> in magenta, <i>Streptococcus</i> in green, <i>Neisseriaceae</i> in yellow.  Image credit: Steven Wilbert."
         }

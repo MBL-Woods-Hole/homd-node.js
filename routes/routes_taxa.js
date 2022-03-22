@@ -85,37 +85,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
     //console.log('send_tax_obj[0]',send_tax_obj[0])
     // Here we add the genome size formatting on the fly AND Ecology button
     big_tax_list2.map(function(el){
-        el.gsize = ''
-        //console.log(el)
-        if(el.genomes.length === 0){
-          //console.log('g length:0')
-          el.gsize = ''
-        }else if(el.genomes.length === 1 && el.genomes[0] in C.genome_lookup){
-          //console.log('g length:1')
-          console.log('xxx',C.genome_lookup[el.genomes[0]])
-          //el.gsize = helpers.format_Mbps(C.genome_lookup[el.genomes[0]].tlength).toString()
-          el.gsize = (C.genome_lookup[el.genomes[0]].tlength/1000000).toFixed(2).toString() +' Mbps'
-          console.log('el.gsize[0]',el.gsize)
-        }else {  // More than one genome
-          //console.log('g length:>1')
-          var size_array = el.genomes.map( (x) =>{
-            if(x in C.genome_lookup && C.genome_lookup[x].tlength !== 0){
-              return C.genome_lookup[x].tlength 
-            }
-          })
-          //var min = Math.min.apply(Math, size_array.filter(Boolean))  // this removes 'falsy' from array
-          //var max = Math.max.apply(Math, size_array.filter(Boolean))
-          var min = helpers.get_min(size_array)
-          var max = helpers.get_max(size_array)
-          console.log('min',min,'max',max,'sarray',size_array)
-          if(min === max){
-            el.gsize =   (min/1000000).toFixed(2).toString() +' Mbps'  //helpers.format_Mbps(min)
-          }else {
-            el.gsize = (min/1000000).toFixed(2).toString() +' Mbps'+' - '+(max/1000000).toFixed(2).toString() +' Mbps'
-            //helpers.format_Mbps(min)+' - '+helpers.format_Mbps(max)
-          }
-          console.log('el.gsize-default',el.gsize)
-        }
+        
         
         // do we have ecology/abundance data?  
         // Is abundance the only thing on the ecology page?
@@ -138,13 +108,23 @@ router.get('/tax_table', function tax_table_get(req, res) {
               }
         }
   })
-  //console.log(big_tax_list2[0])
+  console.log(big_tax_list2[0])
     //console.log('send_tax_obj[0]',send_tax_obj[0])
     //sort
+    //big_tax_list2.sort(function (a, b) {
+    //  return helpers.compareStrings_alpha(a.genus, b.genus);
+    //})
     big_tax_list2.sort(function (a, b) {
-      return helpers.compareStrings_alpha(a.genus, b.genus);
+      return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
     })
-    
+   //  big_tax_list2.sort((a, b)=> {
+//   
+// 	  if (a.genus === b.genus){
+// 		return a.species < b.species ? -1 : 1
+// 	  } else {
+// 		return a.genus < b.genus ? -1 : 1
+// 	  }
+// 	})
     
   send_list = big_tax_list2
   //count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()
@@ -213,9 +193,6 @@ router.post('/tax_table', function tax_table_post(req, res) {
 	}) 
   }
   
-  
-
-    
       send_list.map(function(el){
         el.ecology = '0'  // change to 1 if we do
         
@@ -237,10 +214,12 @@ router.post('/tax_table', function tax_table_post(req, res) {
         }
       })
     
-  
   send_list.sort(function (a, b) {
-        return helpers.compareStrings_alpha(a.genus, b.genus);
+      return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
     })
+  // send_list.sort(function (a, b) {
+//         return helpers.compareStrings_alpha(a.genus, b.genus);
+//     })
   helpers.print(['statusfilter_on',statusfilter_on])
   // use session for taxletter
   //count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows (status and body site filter).'
