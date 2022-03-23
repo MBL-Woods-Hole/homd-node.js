@@ -593,12 +593,9 @@ router.get('/tax_description', function tax_description(req, res){
   let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
   //console.log('node',node)
   let lineage_list = make_lineage(node)  // [str obj]
-  let image_array = find_images('species',otid,data3.species)
-  //console.log('genus',data3.genus)
-  //console.log('imgs',image_array)
-  //console.log('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
-  //console.log('regex2',lineage_list[0].split(';').pop())
-  //console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
+  
+  let image_array = find_otid_images('species', otid)
+  
   let lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
   if(otid in link_exceptions){
      links = link_exceptions[otid]
@@ -663,11 +660,9 @@ router.get('/life', function life(req, res) {
   }
   var image_array =[]
   if(rank){
-     image_array = find_images(rank,'',tax_name)
-     //console.log(image_array)
+     image_array = find_life_images(rank, tax_name)
   }
   
-  //Capnocytophaga Schaalia, Leptotrichia,Corynebacterium have images
   let text = get_rank_text(rank,tax_name)
   //console.log('TEXT',text)
   let taxa_list =[]
@@ -723,20 +718,19 @@ router.get('/life', function life(req, res) {
        if(show_ranks[i] != last_rank){  // Last row of many items
           
           node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[lineage_list[1][show_ranks[i]]+'_'+show_ranks[i]]
-        lin = make_lineage(node)
-        cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
+          lin = make_lineage(node)
+          cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
         
           title = rank_display+': '+lineage_list[1][show_ranks[i]]
           html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
-        if(show_ranks[i] == 'species'){
-          html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'><em>"+lineage_list[1][show_ranks[i]]+'</em></a> ('+cts+')'
-        }else {
-          html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a> ('+cts+')'
-    
-        }
+          if(show_ranks[i] == 'species'){
+            html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'><em>"+lineage_list[1][show_ranks[i]]+'</em></a> ('+cts+')'
+          }else {
+            html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a> ('+cts+')'
+          }
          
-        html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>Abundance</a></span>"
-        html += '</td></tr>'
+          html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>Abundance</a></span>"
+          html += '</td></tr>'
        }else {  // Gather rows before the last row
          
        next_rank = C.ranks[C.ranks.indexOf(rank) +1]
@@ -1847,83 +1841,64 @@ function create_taxon_table(otids, source, type, head_txt) {
     return txt
 }        
  //
-function find_images(rank, otid, tax_name) {
-
-  var image_list = []
-  if(C.images[rank].hasOwnProperty(tax_name)){
-     if(C.images[rank][tax_name].hasOwnProperty('filename1')){
-         image_list.push({name:path.join(rank,C.images[rank][tax_name]['filename1']),text:C.images[rank][tax_name]['text1']})
-     }
-     if(C.images[rank][tax_name].hasOwnProperty('filename2')){
-         image_list.push({name:path.join(rank,C.images[rank][tax_name]['filename2']),text:C.images[rank][tax_name]['text2']})
-     }
-     if(C.images[rank][tax_name].hasOwnProperty('filename3')){
-         image_list.push({name:path.join(rank,C.images[rank][tax_name]['filename3']),text:C.images[rank][tax_name]['text3']})
-     }
-     if(C.images[rank][tax_name].hasOwnProperty('filename4')){
-         image_list.push({name:path.join(rank,C.images[rank][tax_name]['filename4']),text:C.images[rank][tax_name]['text4']})
-     }
-  
-  }
+function find_otid_images(rank, otid) {
+   var image_list = []
+   if(C.images_tax.species.hasOwnProperty(otid)){
+      //console.log('image:',eval(C.images_tax.species[otid].filename1), C.images_loc['I-1'].fname)
+      if(C.images_tax.species[otid].hasOwnProperty('filename1')){
+          image_list.push({
+              name:path.join(rank, eval(C.images_tax.species[otid].filename1)),
+              text: eval(C.images_tax.species[otid].text1)
+              })
+      }
+      if(C.images_tax.species[otid].hasOwnProperty('filename2')){
+          image_list.push({
+              name:path.join(rank, eval(C.images_tax.species[otid].filename2)),
+              text: eval(C.images_tax.species[otid].text2)
+              })
+      }
+      if(C.images_tax.species[otid].hasOwnProperty('filename3')){
+          image_list.push({
+              name:path.join(rank, eval(C.images_tax.species[otid].filename3)),
+              text: eval(C.images_tax.species[otid].text3)
+              })
+      }
+      if(C.images_tax.species[otid].hasOwnProperty('filename4')){
+          image_list.push({
+              name:path.join(rank, eval(C.images_tax.species[otid].filename4)),
+              text: eval(C.images_tax.species[otid].text4)
+              })
+      }
+      
+   }else{
+      console.log('NO images found:',otid)
+   }
   
   return image_list
   
-//   var ext = 'png'
-//   // for photos NO Spaces = join w/ underscore
-//   var tname,fname1_prefix,fname2_prefix,fname3_prefix,fname4_prefix
-//   if(otid){
-//       helpers.print('looking for otid image: HMT'+otid+'(1-4).png')
-//       fname1_prefix = 'HMT/HMT'+otid+'-1' // look for .jpg .jpeg png
-//       fname2_prefix = 'HMT/HMT'+otid+'-2' // or '-2.jpeg'
-//       fname3_prefix = 'HMT/HMT'+otid+'-3' // or '-3.jpeg'
-//       fname4_prefix = 'HMT/HMT'+otid+'-4' // or '-3.jpeg'
-//   }else {  // rank and not otid
-//       tname = tax_name.replace(/ /g,'_')  // mostly for species 
-//       fname1_prefix = rank+'/'+tname+'-1' // look for .jpg .jpeg png
-//       fname2_prefix = rank+'/'+tname+'-2' // or '-2.jpeg'
-//       fname3_prefix = rank+'/'+tname+'-3' // or '-3.jpeg'
-//       fname4_prefix = rank+'/'+tname+'-4' // or '-3.jpeg'
-//   } 
-//  
-//   try {
-//     if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname1_prefix+'.'+ext))) {
-//     //console.log('adding1',fname1_prefix)
-//     image_list.push({"name":fname1_prefix+'.'+ext,"text":""})
-//     
-//     }else {
-//       //console.log('no find1',path.join(CFG.PATH_TO_IMAGES,rank,fname1_prefix+'.'+ext))
-//     }
-//     
-//     if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname2_prefix+'.'+ext))) {
-//     //console.log('adding2',fname2_prefix)
-//     image_list.push({"name":fname2_prefix+'.'+ext,"text":""})
-//     }else {
-//       //console.log('no find2',path.join(CFG.PATH_TO_IMAGES,rank,fname2_prefix))
-//     }
-//    
-//     if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname3_prefix+'.'+ext))) {
-//     //console.log('adding',fname3_prefix+'.'+ext)
-//     image_list.push({"name":fname3_prefix+'.'+ext,"text":""})
-//     }else {
-//       //console.log('no find3',path.join(CFG.PATH_TO_IMAGES,rank,fname3_prefix))
-//     }
-//     
-//    if (fs.existsSync(path.join(CFG.PATH_TO_IMAGES,fname4_prefix+'.'+ext))) {
-//     //console.log('adding',fname4_prefix+'.'+ext)
-//     image_list.push({"name":fname4_prefix+'.'+ext,"text":""})
-//     }else {
-//       //console.log('no find4',path.join(CFG.PATH_TO_IMAGES,rank,fname4_prefix))
-//     }
-//     
-//   } catch(err) {
-//     console.error(err)
-//   }
-//   
-//   //console.log('im-arry',image_list)
-//   return image_list
+
 }      
-        
- function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
+function find_life_images(rank, tax_name) {
+  var image_list = []
+  //console.log(rank, tax_name)
+  if(C.images_tax[rank].hasOwnProperty(tax_name)){
+      if(C.images_tax[rank][tax_name].hasOwnProperty('filename1')){
+         image_list.push( {name: path.join(rank, eval(C.images_tax[rank][tax_name].filename1)), text: eval( C.images_tax[rank][tax_name].text1 )})
+     }
+     if(C.images_tax[rank][tax_name].hasOwnProperty('filename2')){
+         image_list.push({name: path.join(rank,eval(C.images_tax[rank][tax_name].filename2)),text:eval(C.images_tax[rank][tax_name].text2)})
+     }
+     if(C.images_tax[rank][tax_name].hasOwnProperty('filename3')){
+          image_list.push({name: path.join(rank,eval(C.images_tax[rank][tax_name].filename3)),text:eval(C.images_tax[rank][tax_name].text3)})
+      }
+      if(C.images_tax[rank][tax_name].hasOwnProperty('filename4')){
+          image_list.push({name: path.join(rank,eval(C.images_tax[rank][tax_name].filename4)),text:eval(C.images_tax[rank][tax_name].text4)})
+      }
+  }
+  
+  return image_list
+}       
+function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
 
   let send_list = []
   if(search_field == 'taxid'){

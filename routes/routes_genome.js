@@ -126,9 +126,12 @@ router.get('/genome_table', function genomeTable(req, res) {
   // return helpers.compareStrings_alpha(a.genus, b.genus);
   //     })
     // sort by two fields
-  send_list.sort( (a, b) =>
-    b.species - a.species || a.genus.localeCompare(b.genus),
-  )
+  // send_list.sort( (a, b) =>
+//     b.species - a.species || a.genus.localeCompare(b.genus),
+//   )
+  send_list.sort(function (a, b) {
+      return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+  })
   count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 

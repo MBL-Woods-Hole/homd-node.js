@@ -167,7 +167,10 @@ constants.refseq_lookup_fn    = 'homdData-TaxonRefSeqLookup.json'
 constants.phage_list_fn         = 'homdData-PhageList.json'
 constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
 constants.annotation_lookup_fn  = 'homdData-AnnotationLookup.json'
-constants.image_location_fn     = 'ImageLocation.js'
+//constants.image_location_fn     = 'ImageLocation.js'
+
+constants.image_location_locfn     = 'ImageLocation_loc.js'
+constants.image_location_taxfn     = 'ImageLocation_tax.js'
 //constants.abundance_lookup_fn      = 'homdData-Abundance.json'
 
 //constants.access_log_format = 'url=":url" method=":method" statusCode=":statusCode" delta=":delta" ip=":ip"'
@@ -239,7 +242,8 @@ constants.refseq_blastn_db_choices = [
          filename:'Extended_reference_version1'}
 ]
 // constants.genome_blastn_db_choices = [
-constants.all_genome_blastn_db_choices = { nucleotide:
+constants.all_genome_blastn_db_choices = { 
+    nucleotide:
     [
       // blastn & tblastn & tblastx 2dbs: 
       {name: 'Genomic DNA from all HOMD Genomes', value:'all_genomes1', programs:['blastn','tblastn','tblastx'],
@@ -247,6 +251,8 @@ constants.all_genome_blastn_db_choices = { nucleotide:
       {name: 'DNA Sequences of Proteins from all HOMD Genomes', value:'all_genomes2', programs:['blastn','tblastn','tblastx'],
            ext:'ffn',filename:'ffn/ALL_genomes.ffn'}
     ],
+//>1
+//LLGDFFRKSKEKIGKEFKRIVQRIKDFLRNLVPRTES
     protein: [
         // blastp and blastx 1db:
       { name: 'Proteins Annotated from all HOMD Genomes', value: 'all_genomes3', programs:['blastp','blastx'],

@@ -1,10 +1,10 @@
 HOMD Notes
 2022-03-16 When I get back TODO
 blast output jbrowse highlight
-check blast output for erros
+check blast output log for errors
 ImageLocation: make HMT keys for species
   -- add back in the subspecies from xls file
-ImageLocationHMT add sp frm actino and Lautropia
+ImageLocationHMT add sp from actino and Lautropia
 2022-03-08
 
 EXPLORER: sequence pop-up should have identifier
