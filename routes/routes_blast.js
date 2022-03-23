@@ -899,6 +899,21 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     
     console.log('blastOpts',blastOpts)
     console.log('opts',opts)
+    if(blastOpts.program === 'blastp'){
+       // this serves to fix possible bug 
+       // where blastp is matched with 'ffn'
+       blastOpts.ext = 'faa'
+       if(blastOpts.blastDb.substring(0,3) === 'ALL'){
+             blastOpts.blastDb = 'ALL_genomes.faa'
+       }else{
+       
+       }
+       if(blastOpts.anno === 'prokka'){
+          blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_prokka')
+       }else{
+          blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_ncbi')
+       }
+    }
     let config = {}
     config.site = CFG.SITE  //  local, mbl or homd;; this determines blast db
     config.id = opts.blastSessionID
@@ -1022,201 +1037,7 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
 }
 //
 
-// function getBlastHTML2XX(jsonList, blastID, sortCol, sortDir) {
-//     // for sorting by identity and bit score
-//     
-//     let numhits,count=0,odd,bgcolor
-//     //console.log('jsonList[0]',jsonList[0])
-//     let newList = [],addhtml = ''
-//     for(let n = 0; n < jsonList.length; n++){
-//         if(Object.prototype.hasOwnProperty.call(jsonList[n],'hits')){
-//            numhits = jsonList[n].hits.length
-//         }else{  
-//            return "<tr><td>Blast Error: "+jsonList[n].message+"</td></tr>"
-//         }
-//         let q = jsonList[n].query_title
-//         let l = jsonList[n].query_len
-//         let allow = 4
-//         if(numhits < allow){
-//            allow = numhits
-//         }
-//         for(let m = 0; m < allow; m++) { 
-//            //console.log('jsonList[n].hits[m]')
-//            //console.log(jsonList[n].hits[m])
-//            let hit_items = jsonList[n].hits[m].description[0].title.split('|')
-//            let titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
-//            let HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
-//            let bitScore =     jsonList[n].hits[m].hsps[0].bit_score.toFixed(1).toString()
-//            let identityPct = (jsonList[n].hits[m].hsps[0].identity * 100 / jsonList[n].hits[m].hsps[0].align_len).toFixed(1).toString()
-//            let evalue = jsonList[n].hits[m].hsps[0].evalue.toString()
-//            newList.push({
-//              query: q,
-//              length: l,
-//              hit: titleid.trim(),
-//              clone: hit_items.join(' | '),
-//              evalue: evalue,
-//              score: bitScore,
-//              identity: identityPct
-//             
-//             })
-//         
-//         
-//         }
-//     
-//     
-//     }
-//     if(sortCol === 'identity'){
-//       if(sortDir === 'fwd'){
-//           newList.sort(function sortIF(a, b) {
-//             return helpers.compareStrings_int(a.identity, b.identity);
-//           })
-//       } else {
-//           newList.sort(function sortIR(a, b) {
-//             return helpers.compareStrings_int(b.identity, a.identity);
-//           })
-//       }
-//     }else if(sortCol === 'score'){
-//       if(sortDir === 'fwd'){
-//           newList.sort(function sortSF(a, b) {
-//             return helpers.compareStrings_int(a.identity, b.identity);
-//           })
-//       } else {
-//           newList.sort(function sortSR(a, b) {
-//             return helpers.compareStrings_int(b.identity, a.identity);
-//           })
-//       }
-//     }
-//     
-//     for(let n = 0; n < newList.length; n++){
-//        // quey_name,length,hit,clone_name,evalue,score,identity
-//        
-//        
-//        //console.log(jsonList[n])
-//        odd = count % 2  // will be either 0 or 1
-//        //console.log('odd',odd)
-//        
-//        if(odd){
-//          bgcolor = 'blastBGodd'
-//        }else{
-//          bgcolor = 'blastBGeven'
-//        }
-//         count += 1
-//         addhtml += "<tr class='"+bgcolor+"'>"
-//         addhtml += "<td></td>"  // no checkboxes
-//         addhtml += "<td class='blastcol1 small' >"+newList[n].query+'</td>'
-//         addhtml += "<td class='blastcol2 center' >"+newList[n].length+"</td>"
-//        // addhtml += "<td rowspan='4'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>blast_resultfile</a></td>"
-//         addhtml += "<td class='center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
-//         addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href=''>" + newList[n].hit + '</a></td>'
-//         addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + newList[n].clone + '</td>'
-//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + newList[n].evalue + '</td>'
-//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + newList[n].score + '</td>'
-//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + newList[n].identity + '</td>'
-//         addhtml += "</tr>"
-//        
-//     }
-//     
-//     return addhtml
-// }
-// function getBlastHTML1(jsonList, blastID) {
-//     //console.log(jsonList[0].query_title)
-//     //
-//     let count = 0, bgcolor, odd, numhits, addhtml = ''
-//     //for(let n in jsonList){
-//     for(let n = 0; n < jsonList.length; n++){
-//        //console.log('jsonList[n]',n)
-//        //console.log(jsonList[n])
-//        if(Object.prototype.hasOwnProperty.call(jsonList[n],'hits')){
-//            numhits = jsonList[n].hits.length
-//        }else{  
-//            return "<tr><td>Blast Error: "+jsonList[n].message+"</td></tr>"
-//        }
-//        let allow = 4
-//         if(numhits < allow){
-//            allow = numhits
-//         }
-//        // n == query0, query1, query2
-//        odd = count % 2  // will be either 0 or 1
-//        //console.log('odd',odd)
-//        
-//        if(odd){
-//          //bgcolor = 'background: var(--div-bg016)'
-//          bgcolor = 'blastBGodd'
-//        }else{
-//          //bgcolor = 'background: var(--div-bg017)'
-//          bgcolor = 'blastBGeven'
-//        }
-//        count += 1
-//        if(numhits === 0){
-//            //console.log('numhits',numhits)
-//            addhtml += "<tr class='"+bgcolor+"'>"
-//            addhtml += '<td></td>'
-//            addhtml += "<td class='blastcol1 small'>"+jsonList[n].query_title+'</td>'
-//            addhtml += "<td class='blastcol2 center'>"+jsonList[n].query_len+'</td>'
-//            addhtml += "<td class='center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a> <a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
-//            addhtml += "<td class='blastcol3 center'>no hits found</td>"
-//            addhtml += "<td class='blastcol4'>no hits found</td>"  
-//            addhtml += '<td></td><td></td><td></td></tr>'
-//        
-//        } else {
-//           //console.log('numhits<4',numhits)
-//           addhtml += "<tr class='"+bgcolor+"'>"
-//           addhtml += "<td rowspan='"+allow+"'><input checked type='checkbox' name='blastcbx' value='"+n+"'></td>"  // value will be the file number: blast0, 1, 2...
-//           addhtml += "<td class='blastcol1 small' rowspan='"+allow+"'>"+jsonList[n].query_title+'</td>'
-//           addhtml += "<td class='blastcol2 center' rowspan='"+allow+"'>"+jsonList[n].query_len+'</td>'
-//           //addhtml += "<td rowspan='"+allow+"'><a href='showBlast/seq/"+blastID+"/"+n[n.length - 1]+"'>seq</a><br><br><a href='showBlast/res/"+blastID+"/"+n[n.length - 1]+"'>res</a></td>"
-//           addhtml += "<td class='center' rowspan='"+allow+"'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+n.toString()+"')\"><img  src='/images/tinyseq.gif' height='15'></a><br><br><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+n.toString()+"')\"><img  src='/images/blastRes.gif' height='15'></a></td>"
-//           
-//           for(let m = 0; m < allow; m++) {   // take 4 hits only -- are they top hits??
-//                addhtml += getRowHTML(jsonList[n].hits[m].description[0], jsonList[n].hits[m].hsps[0], bgcolor)
-//                addhtml += '</tr>'
-//           }
-//        }
-//     }
-//     
-//     return addhtml
-// }
-//
-//
 
-// function getRowHTML(description, hsps, bgcolor) {
-//     let hit_items,titleid,HMT,bitScore,identityPct,evalue,addhtml = ''
-//     bitScore = hsps.bit_score.toFixed(1).toString()
-//     identityPct = (hsps.identity * 100 / hsps.align_len).toFixed(1).toString()
-//     evalue = hsps.evalue.toString()
-//    
-//      if(description.title === ''){
-//         //eg Bv6
-//         addhtml += "<td class='blastcol3 center "+bgcolor+"'>" + description.id + '</td>'
-//         addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + description.accession + '</td>'
-//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + evalue + '</td>'
-//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + bitScore + '</td>'
-//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + identityPct + '</td>'
-//         
-//      }else{
-//         // for all? homd blast databases??
-//         // this only works for 16Srefseq
-//         let title = description.title
-//         hit_items = title.split('|')
-//         //console.log('hit_items:',hit_items)
-//         try {
-//           titleid = hit_items.shift()  // remove and return first item after cleaning off zeros
-//           HMT = (parseInt(hit_items[1].split('-')[1].trim())).toString()
-//           addhtml += "<td class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid=" + HMT + "'>" + titleid.trim() + '</a></td>'
-//         }catch(e){
-//           addhtml += "<td class='blastcol3 center "+bgcolor+"'>"+title+"</td>"
-//         }
-//         addhtml += "<td class='blastcol4 xsmall "+bgcolor+"'>" + hit_items.join('|') + '</td>'
-//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + evalue + '</td>'
-//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + bitScore + '</td>'
-//         addhtml += "<td class='center xsmall "+bgcolor+"'>" + identityPct + '</td>'
-//         
-//      }
-//     
-//     
-//     return addhtml
-// }
-//
 //
 function getAllFilesWithExt(dirPath, ext) {
     let arrayOfFiles = []

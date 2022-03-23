@@ -214,8 +214,8 @@ async.map(data_init_files, helpers.readAsync, function(err, results) {
     C.phage_lookup              = JSON.parse(results[9]);
     //C.images              = JSON.parse(results[10]);
     
-    C.images_loc              = JSON.parse(results[10]);
-    C.images_tax              = JSON.parse(results[11]);
+    C.images_loc              = JSON.parse(results[10]);   // image name and text
+    C.images_tax              = JSON.parse(results[11]);   // match image w/ otid or tax rank
     // add genus, species to C.genome_lookup
     
     //Object.values(C.taxon_lookup)
