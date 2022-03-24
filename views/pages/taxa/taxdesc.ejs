@@ -92,10 +92,10 @@
    font-size:small;
   
 }
-#myImg0:hover {opacity: 0.7;}
-#myImg1:hover {opacity: 0.7;}
-#myImg2:hover {opacity: 0.7;}
-#myImg3:hover {opacity: 0.7;}
+#myImg0:hover {opacity: 0.7;cursor:pointer;}
+#myImg1:hover {opacity: 0.7;cursor:pointer;}
+#myImg2:hover {opacity: 0.7;cursor:pointer;}
+#myImg3:hover {opacity: 0.7;cursor:pointer;}
 
 
 /* The Modal (background) */
@@ -231,7 +231,11 @@
       <div class='images'>
       <table border='0'>
         <tr><td valign='top'>
-        <img id="myImg0" class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
+        <% im_id = "none" %>
+        <% if(images[0].hires){ %>
+        <%   im_id = "myImg0" %>
+        <% } %>
+        <img id="<%= im_id %>" class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
         </td><td valign='top' class='txt'>
         <small><%- images[0].text %></small>
         </td></tr>
@@ -248,7 +252,11 @@
                 <td valign='top'>
                 <% } %>
                  <div>
-                  <img  id="myImg<%= n %>" class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
+                   <% im_id = "none" %>
+					<% if(images[n].hires){ %>
+					<%   im_id = "myImg"+n.toString() %>
+					<% } %>
+                    <img  id="<%= im_id %>" class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
                 <small class='txt'><%- images[n].text %></small>
                  </div>
                <% if(n==0 || n==2){ %>
@@ -514,12 +522,12 @@
 
 
  
-<!-- The Modal -->
+<!-- The Modal Image Enlargement-->
 <div id="myModal" class="modal">
   <!-- The Close Button -->
   <span class="close">&times;</span>
   <!-- Modal Content (The Image) -->
-  <img class="modal-content" id="img0" src=''>
+  <img class="modal-content" id="img0" >
   <!-- Modal Caption (Image Text) -->
   <div id="caption"></div>
 </div>
@@ -541,63 +549,59 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-//   var images = JSON.parse('<%= image_array %>')
-//   alert(images)
-//   // Get the modal
-// // url= /images/life-images/hires/images[n].hires
-// var modal = document.getElementById("myModal");
-// // https://www.w3schools.com/howto/howto_css_modal_images.asp
-// // Get the image and insert it inside the modal - use its "alt" text as a caption
-// var img0 = document.getElementById("myImg0");
-// var img1 = document.getElementById("myImg1");
-// //var img2 = document.getElementById("myImg2");
-// //var img3 = document.getElementById("myImg3");
-// var modalImg0 = document.getElementById("img00");
-// var modalImg1 = document.getElementById("img01");
-// //var modalImg2 = document.getElementById("img02");
-// //var modalImg3 = document.getElementById("img03");
-// var captionText = document.getElementById("caption");
-// if(img0){
-// 	img0.onclick = function(){
+  images = JSON.parse(`<%- image_array %>`)
+  //for(x in images){
+     //alert(images[x].hires)
+  //}
+  // Get the modal
+// url= /images/life-images/hires/images[n].hires
+var modal = document.getElementById("myModal");
+// https://www.w3schools.com/howto/howto_css_modal_images.asp
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var img0 = document.getElementById("myImg0");
+var img1 = document.getElementById("myImg1");
+//var img2 = document.getElementById("myImg2");
+//var img3 = document.getElementById("myImg3");
+var modalImg = document.getElementById("img0");
+
+var captionText = document.getElementById("caption");
+if(img0){
+	img0.onclick = function(){
+	  modal.style.display = "block";
+	  modalImg.src = '/images/life-images/hires/'+images[0].hires;   // this will open the same image- we want another
+	  captionText.innerHTML = images[0].hires;
+	}
+}
+if(img1){
+	img1.onclick = function(){
+	  modal.style.display = "block";
+	  modalImg.src = '/images/life-images/hires/'+images[1].hires;   // this will open the same image- we want another
+	  captionText.innerHTML = images[1].hires;
+	}
+}
+// if(img2){
+// 	img2.onclick = function(){
 // 	  modal.style.display = "block";
-// 	  alert(modalImg0.src)
-// 	  modalImg.src = modalImg0.src;   // this will open the same image- we want another
-// 	  /images/life-images/hires/ images[n].hires 
-// 	  captionText.innerHTML = this.alt;
+// 	  modalImg.src = '/images/life-images/hires/'+images[2].hires;   // this will open the same image- we want another
+// 	  captionText.innerHTML = images[2].hires;
 // 	}
 // }
-// if(img1){
-// 	img1.onclick = function(){
-// 	  
+// if(img3){
+// 	img3.onclick = function(){
 // 	  modal.style.display = "block";
-// 	  alert(modalImg1.src)
-// 	  modalImg.src = modalImg1.src;   // this will open the same image- we want another
-// 	  captionText.innerHTML = this.alt;
+// 	  modalImg3.src = '/images/life-images/hires/'+images[3].hires;   // this will open the same image- we want another
+// 	  captionText.innerHTML = images[3].hires;
 // 	}
 // }
-// // if(img2){
-// // 	img2.onclick = function(){
-// // 	  modal.style.display = "block";
-// // 	  //modalImg2.src = this.src;   // this will open the same image- we want another
-// // 	  captionText.innerHTML = this.alt;
-// // 	}
-// // }
-// // if(img3){
-// // 	img3.onclick = function(){
-// // 	  modal.style.display = "block";
-// // 	  //modalImg3.src = this.src;   // this will open the same image- we want another
-// // 	  captionText.innerHTML = this.alt;
-// // 	}
-// // }
-// 
-// // Get the <span> element that closes the modal
-// var closers = document.getElementsByClassName("close");
-// 
-// // When the user clicks on <span> (x), close the modal
-// //alert(closers)
-// for(n in closers){
-// 	closers[n].onclick = function() {
-// 	  modal.style.display = "none";
-// 	}
-// }
+
+// Get the <span> element that closes the modal
+var closers = document.getElementsByClassName("close");
+
+// When the user clicks on <span> (x), close the modal
+//alert(closers)
+for(n in closers){
+	closers[n].onclick = function() {
+	  modal.style.display = "none";
+	}
+}
 </script>

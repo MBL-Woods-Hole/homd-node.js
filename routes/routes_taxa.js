@@ -25,12 +25,12 @@ router.get('/tax_table', function tax_table_get(req, res) {
   let reset    = req.query.reset
   let count_txt, count_txt0;
   let big_tax_list0 = Object.values(C.taxon_lookup);
-  console.log('count',big_tax_list0.length)
+  //console.log('count',big_tax_list0.length)
   let big_tax_list1,big_tax_list2,send_list,pgtitle
   // FIX THIS IF SELECT DROPPED OR NONORAL
   big_tax_list1 = big_tax_list0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
   let tcount = big_tax_list1.length  // total count of our filters
-  console.log('count2',big_tax_list1.length)
+  //console.log('count2',big_tax_list1.length)
   //var show_filters = 0
   
   let count_text = ''
@@ -108,7 +108,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
               }
         }
   })
-  console.log(big_tax_list2[0])
+  //console.log(big_tax_list2[0])
     //console.log('send_tax_obj[0]',send_tax_obj[0])
     //sort
     //big_tax_list2.sort(function (a, b) {
@@ -130,10 +130,10 @@ router.get('/tax_table', function tax_table_get(req, res) {
   //count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()
  
   //var count_text = get_count_text_n_page_form(page)
-  helpers.print(C.tax_status_on)
+  //helpers.print(C.tax_status_on)
   count_txt = count_txt0 + '<br><small>(Total:'+(big_tax_list0.length).toString()+')</small> '
   //helpers.print(['send_list[0]',send_list[0]])
-  console.log('send_list[0]',send_list[0])
+  //console.log('send_list[0]',send_list[0])
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 
     pgtitle: pgtitle,
@@ -220,7 +220,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
   // send_list.sort(function (a, b) {
 //         return helpers.compareStrings_alpha(a.genus, b.genus);
 //     })
-  helpers.print(['statusfilter_on',statusfilter_on])
+  //helpers.print(['statusfilter_on',statusfilter_on])
   // use session for taxletter
   //count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows (status and body site filter).'
   count_txt0 =  'Showing '+(Object.keys(send_list).length).toString()+' rows (status filter).'
@@ -263,7 +263,7 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
   let search_field = req.body.field
   var count_txt, count_txt0
   
-  helpers.print(['C.taxon_lookup[389]',C.taxon_lookup[389]])
+  //helpers.print(['C.taxon_lookup[389]',C.taxon_lookup[389]])
   // filter: all;otid;genus;species;synonyms;type_strains;(16S rRNA ID)
   //send_tax_obj = send_tax_obj.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
   let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
@@ -528,9 +528,9 @@ router.get('/tax_description', function tax_description(req, res){
   link_exceptions['377'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/Eubacterium-yurii-margaretiae'}
   
   data1 = C.taxon_lookup[otid]
-  helpers.print(['data1',data1])
+  //helpers.print(['data1',data1])
   if(C.dropped_taxids.indexOf(otid) !== -1){
-     helpers.print(data1)
+     //helpers.print(data1)
      let message = "That is a dropped TaxonID: "+otid
      res.render('pages/lost_message', {
          title: 'HOMD :: Error',
@@ -564,7 +564,7 @@ router.get('/tax_description', function tax_description(req, res){
   //helpers.print(['data2',data2])
   if(C.taxon_lineage_lookup[otid] ){
       data3 = C.taxon_lineage_lookup[otid]
-      helpers.print(data3)
+      //helpers.print(data3)
   }else {
       console.warn('NO taxon_lineage for HMT:',otid,' in C.taxon_lineage_lookup')
       data3 = {}
@@ -821,6 +821,7 @@ router.get('/life', function life(req, res) {
 })
 //
 router.get('/ecology', function ecology_index(req, res) {
+    console.log('in ecology index')
     let bar_graph_data = []
     let site_species = {},sp_per_site = {}// {site,sp,abund} ordered by sp
     // let graph_site_order = C.base_abundance_order
@@ -848,8 +849,9 @@ router.get('/ecology', function ecology_index(req, res) {
     }
     let site_sums = {}
     for(let y in abundance_graph_order){
-        site_sums[abundance_graph_order[y]]=0.0
+        site_sums[abundance_graph_order[y]] = 0.0
     }
+    //console.log(site_sums)
     for(let i in species_obj){  // all species
         //let s = species[i]
         //console.log('sp0',species_obj[i])
@@ -871,6 +873,7 @@ router.get('/ecology', function ecology_index(req, res) {
             //console.log('in list',sp,C.taxon_counts_lookup[lineage_list[0]])
             spcount += 1
             abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],'species')
+            //console.log('abund_obj',abund_obj)
             delete abund_obj['ST']
             group_collector[lineage_list[0]]={}
             group_collector[lineage_list[0]] = abund_obj
@@ -901,7 +904,7 @@ router.get('/ecology', function ecology_index(req, res) {
         tmp['site'] = site
         sp_per_site[site] = {}
         for(let species in group_collector){
-            //console.log('sp',species)
+            //console.log('sp',species,group_collector[species])
             let sp = species.split(';')[species.split(';').length -1]
             let val = parseFloat(group_collector[species][site])
             //let c = group_collector[species].color
@@ -910,7 +913,7 @@ router.get('/ecology', function ecology_index(req, res) {
             site_species[site].push({'site':site,'species': sp, 'abundance': val})
             //site_species[site][sp] = 
         }
-        
+        //console.log('tmp',tmp)
         bar_graph_data.push(tmp)
         
     }
@@ -978,10 +981,12 @@ router.get('/ecology', function ecology_index(req, res) {
 })
 //
 
-router.get('/ecology/:level/:name', function ecology(req, res) {
+router.get('/ecology/:level/:taxname', function ecology(req, res) {
     helpers.print('in ecology')
     let rank = req.params.level;
-    let tax_name = req.params.name;
+    //let tax_name = req.params.name
+    //console.log('req.params',req)
+    let tax_name = req.params.taxname[0].toUpperCase() + req.params.taxname.substring(1); // string[0].toUpperCase() + string.substring(1)
     //let segata_text = '',dewhirst_text='',erenv1v3_text='';
     let segata_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
     let max = 0;
@@ -996,15 +1001,16 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
     let text = get_rank_text(rank,tax_name)
    
     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+    //console.log(tax_name+'_'+rank,node)
     if(!node){
-      //error
+      console.log('ERROR - could not find node for',tax_name+'_'+rank)
     }
     let genera = get_major_genera(rank, node)
     // sort genera list 
     genera.sort(function sortByTaxa(a, b) {
         return helpers.compareStrings_alpha(a.taxon, b.taxon);
     })
-    console.log(tax_name,rank,node)
+    //console.log(tax_name,rank,node)
     if(rank == 'species'){
       if(node.hasOwnProperty('otid')){
           otid = node.otid
@@ -1012,7 +1018,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
     }else if(rank == 'subspecies'){
       otid = node.otid
     }
-   console.log('node',node)
+   //console.log('node',node)
    //console.log(node)
    // /subspecies/subsp.%20dentisani%20clade%20058
    //console.log(node)
@@ -1058,7 +1064,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              erenv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv1v3']
              erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
              let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
-             helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.base_abundance_order.concat(['ST']))
              if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
@@ -1068,7 +1074,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
              erenv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
              erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
              let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
-             helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.base_abundance_order.concat(['ST']))
              if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
@@ -1144,7 +1150,7 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     console.log('in dld abund - taxon')
     let type = req.params.type
     let source = req.params.source
-    helpers.print('type: '+type+' source: '+source)
+    //helpers.print('type: '+type+' source: '+source)
     let table_tsv='',row,site
     let temp_list = Object.values(C.taxon_counts_lookup)
     let abundance_order
@@ -1415,7 +1421,7 @@ function get_rank_text(rank, tax_name, otid){
         text[0] = 'genus/'+tax_name+'.ejs'
       }else if(C.names_w_text.provisional_genera.indexOf(tax_name) != -1){
         console.log('GOT Provisional')
-        console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
+        //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
         let children_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'].children_ids
         let num_species = children_ids.length
         let children = []
@@ -1847,12 +1853,12 @@ function find_otid_images(rank, otid) {
    if(C.images_tax.species.hasOwnProperty(otid)){
       
       img_obj = C.images_tax.species[otid]
-      console.log('image:',eval(img_obj.filename1))
-      console.log('img_obj',img_obj)
+      //console.log('image:',eval(img_obj.filename1))
+      //console.log('img_obj',img_obj)
       if(C.images_tax.species[otid].hasOwnProperty('filename1')){
           hr = false
           if(C.hires_images.hasOwnProperty(eval(img_obj.filename1))){
-             console.log('got hires image1')
+             //console.log('got hires image1')
              hr = C.hires_images[eval(img_obj.filename1)]
           }
           image_list.push({
@@ -1864,7 +1870,7 @@ function find_otid_images(rank, otid) {
       if(C.images_tax.species[otid].hasOwnProperty('filename2')){
           hr = false
           if(C.hires_images.hasOwnProperty(eval(img_obj.filename2))){
-             console.log('got hires image2')
+             //console.log('got hires image2')
              hr = C.hires_images[eval(img_obj.filename2)]
           }
           image_list.push({
@@ -1876,7 +1882,7 @@ function find_otid_images(rank, otid) {
       if(C.images_tax.species[otid].hasOwnProperty('filename3')){
           hr = false
           if(C.hires_images.hasOwnProperty(eval(img_obj.filename3))){
-             console.log('got hires image3')
+             //console.log('got hires image3')
              hr = C.hires_images[eval(img_obj.filename3)]
           }
           image_list.push({
@@ -1888,7 +1894,7 @@ function find_otid_images(rank, otid) {
       if(C.images_tax.species[otid].hasOwnProperty('filename4')){
           hr = false
           if(C.hires_images.hasOwnProperty(eval(img_obj.filename4))){
-             console.log('got hires image4')
+             //console.log('got hires image4')
              hr = C.hires_images[eval(img_obj.filename4)]
           }
           image_list.push({
