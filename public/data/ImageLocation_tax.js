@@ -34,7 +34,8 @@
         {
         "all_species":false,
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
          },
         "Lautropia":
         {
@@ -232,133 +233,155 @@
         {
         "species":"Capnocytophaga endodontalis",
         "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "337":
         {
         "species":"Capnocytophaga gingivalis",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "325":
         {
         "species":"Capnocytophaga granulosa",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "627":
         {
         "species":"Capnocytophaga haemolytica",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "329":
         {
         "species":"Capnocytophaga leadbetteri",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "700":
         {
         "species":"Capnocytophaga ochracea",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "323":
         {
         "species":"Capnocytophaga sp._HMT_323",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "324":
         {
         "species":"Capnocytophaga sp._HMT_324",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "332":
         {
         "species":"Capnocytophaga sp._HMT_332",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "334":
         {
         "species":"Capnocytophaga sp._HMT_334",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "335":
         {
         "species":"Capnocytophaga sp._HMT_335",
         "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "336":
         {
         "species":"Capnocytophaga sp._HMT_336",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "338":
         {
         "species":"Capnocytophaga sp._HMT_338",
         "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "380":
         {
         "species":"Capnocytophaga sp._HMT_380",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "412":
         {
         "species":"Capnocytophaga sp._HMT_412",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "863":
         {
         "species":"Capnocytophaga sp._HMT_863",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "864":
         {
         "species":"Capnocytophaga sp._HMT_864",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "878":
         {
         "species":"Capnocytophaga sp._HMT_878",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "901":
         {
         "species":"Capnocytophaga sp._HMT_901",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "902":
         {
         "species":"Capnocytophaga sp._HMT_902",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "903":
         {
         "species":"Capnocytophaga sp._HMT_903",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "775":
         {
         "species":"Capnocytophaga sputigena",
          "filename1":"C.images_loc['I-2'].fname",
-        "text1":"C.images_loc['I-2'].caption"
+        "text1":"C.images_loc['I-2'].caption",
+        "hires":true
         },
         "666":
         {
@@ -498,7 +521,9 @@
         {
         "species":"Leptotrichia sp._HMT_215",
         "filename1":"C.images_loc['I-5'].fname",
-        "text1":"C.images_loc['I-5'].caption"
+        "text1":"C.images_loc['I-5'].caption",
+        "filename2":"C.images_loc['I-6'].fname",
+        "text2":"C.images_loc['I-6'].caption"
          },
         "217":
         {
@@ -522,7 +547,9 @@
         {
         "species":"Pseudoleptotrichia sp._HMT_221",
         "filename1":"C.images_loc['I-6'].fname",
-        "text1":"C.images_loc['I-6'].caption"
+        "text1":"C.images_loc['I-6'].caption",
+        "filename2":"C.images_loc['I-6'].fname",
+        "text2":"C.images_loc['I-6'].caption"
          },
         "222":
         {
@@ -558,7 +585,9 @@
         {
         "species":"Leptotrichia sp._HMT_417",
         "filename1":"C.images_loc['I-6'].fname",
-        "text1":"C.images_loc['I-6'].caption"
+        "text1":"C.images_loc['I-6'].caption",
+        "filename2":"C.images_loc['I-6'].fname",
+        "text2":"C.images_loc['I-6'].caption"
          },
         "463":
         {
@@ -570,7 +599,9 @@
         {
         "species":"Leptotrichia sp._HMT_498",
         "filename1":"C.images_loc['I-6'].fname",
-        "text1":"C.images_loc['I-6'].caption"
+        "text1":"C.images_loc['I-6'].caption",
+        "filename2":"C.images_loc['I-6'].fname",
+        "text2":"C.images_loc['I-6'].caption"
          },
         "563":
         {

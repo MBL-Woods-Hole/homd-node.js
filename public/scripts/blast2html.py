@@ -282,7 +282,7 @@ def jblink(hit, type='jbrowse', hsp=None):
             else:
                lochitfrom = int(hitfrom)-500  
             link += "&loc={}:{}..{}".format(accession, str(lochitfrom), str(int(hitto)+500))
-            link += "&highlight={}:{}..{}".format(accession, str(lochitfrom), hitto)
+            link += "&highlight={}:{}..{}".format(accession, str(hitfrom), hitto)
         except:
             pass
         

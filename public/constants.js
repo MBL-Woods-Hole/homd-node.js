@@ -172,7 +172,14 @@ constants.annotation_lookup_fn  = 'homdData-AnnotationLookup.json'
 constants.image_location_locfn     = 'ImageLocation_loc.js'
 constants.image_location_taxfn     = 'ImageLocation_tax.js'
 //constants.abundance_lookup_fn      = 'homdData-Abundance.json'
-
+constants.hires_images = {
+   "Capno_256x256.png": "Capnocytophaga_HighRes.png",
+   "Coryne_matruch_256x256.png": "Coryne_matruch_HighRes.png",
+   "Leptotrichia_256x256.png": "Leptotrichia_HighRes.png",
+   "MarkWelch2016_Fig4B_256_ForCoryne_Porph_Strep_Aggr.png": "MarkWelch2016_Fig4B_HighRes.png",
+   "Schaalia_Rothmuc_Neiss_Veill_256.png": "Schaalia_Rothmuc_Neiss_Veill_HighRes.png"
+   }
+//['Capnocytophaga','Coryne_matruch','Leptotrichia','MarkWelch2016_Fig4B','Schaalia_Rothmuc_Neiss_Veill']
 //constants.access_log_format = 'url=":url" method=":method" statusCode=":statusCode" delta=":delta" ip=":ip"'
 constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'
 

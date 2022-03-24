@@ -613,11 +613,11 @@ module.exports.parse_blast_query_xml = function parse_blast_query_xml(jsondata, 
 		  return 'NotFound'
 		}
 	}else if(grab === 'homdhitids'){
-	   //for protein:: SEQF3712_01295 hypothetical protein [HMT-096 Lachnospiraceae_G-2 bacterium_HMT_096 F0428]
-	   // want SEQF3712_01295
-	   let ret = {},hits,homdhitid
-	   ret.hitid_ary = []
-	   ret.no_hits = false
+	    //for protein:: SEQF3712_01295 hypothetical protein [HMT-096 Lachnospiraceae_G-2 bacterium_HMT_096 F0428]
+	    // want SEQF3712_01295
+	    let ret = {},hits,homdhitid
+	    ret.hitid_ary = []
+	    ret.no_hits = false
 	    ret.queryid = json['BlastOutput']['BlastOutput_query-ID']
 	    let iteration = json['BlastOutput']['BlastOutput_iterations']['Iteration']
 	    if(iteration.hasOwnProperty('Iteration_message') && iteration['Iteration_message'] === 'No hits found'){
@@ -626,6 +626,7 @@ module.exports.parse_blast_query_xml = function parse_blast_query_xml(jsondata, 
 			for(let n in json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits']){
 				hits = json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits'][n]
 				for(let i in hits){
+			        console.log('**hit**',hits[i])
 			        homdhitid = hits[i].Hit_def.split(' ')[0]
 			        ret.hitid_ary.push(homdhitid)
 				}

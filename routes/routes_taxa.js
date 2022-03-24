@@ -1117,10 +1117,10 @@ router.get('/download/:type/:fxn', function download(req, res) {
     let list_of_otids = temp_list.map(item => item.otid)  // use all the otids
     if(fxn == 'level'){
         file_filter_txt = "HOMD.org Taxon Data::Taxonomic Level" 
-        table_tsv = create_table(list_of_otids, 'level', type, file_filter_txt )
+        table_tsv = create_taxon_table(list_of_otids, 'level', type, file_filter_txt )
     }else if(fxn == 'hierarchy'){
         file_filter_txt = "HOMD.org Taxon Data::Taxonomic Hierarchy" 
-        table_tsv = create_table(list_of_otids, 'hierarchy', type, file_filter_txt )
+        table_tsv = create_taxon_table(list_of_otids, 'hierarchy', type, file_filter_txt )
     }else {
        // type error
     }
@@ -1843,30 +1843,58 @@ function create_taxon_table(otids, source, type, head_txt) {
  //
 function find_otid_images(rank, otid) {
    var image_list = []
+   let img_obj,hr = false
    if(C.images_tax.species.hasOwnProperty(otid)){
-      //console.log('image:',eval(C.images_tax.species[otid].filename1), C.images_loc['I-1'].fname)
+      
+      img_obj = C.images_tax.species[otid]
+      console.log('image:',eval(img_obj.filename1))
+      console.log('img_obj',img_obj)
       if(C.images_tax.species[otid].hasOwnProperty('filename1')){
+          hr = false
+          if(C.hires_images.hasOwnProperty(eval(img_obj.filename1))){
+             console.log('got hires image1')
+             hr = C.hires_images[eval(img_obj.filename1)]
+          }
           image_list.push({
-              name:path.join(rank, eval(C.images_tax.species[otid].filename1)),
-              text: eval(C.images_tax.species[otid].text1)
+              name: path.join(rank, eval(img_obj.filename1)),
+              text: eval(img_obj.text1),
+              hires: hr
               })
       }
       if(C.images_tax.species[otid].hasOwnProperty('filename2')){
+          hr = false
+          if(C.hires_images.hasOwnProperty(eval(img_obj.filename2))){
+             console.log('got hires image2')
+             hr = C.hires_images[eval(img_obj.filename2)]
+          }
           image_list.push({
-              name:path.join(rank, eval(C.images_tax.species[otid].filename2)),
-              text: eval(C.images_tax.species[otid].text2)
+              name: path.join(rank, eval(C.images_tax.species[otid].filename2)),
+              text: eval(C.images_tax.species[otid].text2),
+              hires: hr
               })
       }
       if(C.images_tax.species[otid].hasOwnProperty('filename3')){
+          hr = false
+          if(C.hires_images.hasOwnProperty(eval(img_obj.filename3))){
+             console.log('got hires image3')
+             hr = C.hires_images[eval(img_obj.filename3)]
+          }
           image_list.push({
-              name:path.join(rank, eval(C.images_tax.species[otid].filename3)),
-              text: eval(C.images_tax.species[otid].text3)
+              name: path.join(rank, eval(C.images_tax.species[otid].filename3)),
+              text: eval(C.images_tax.species[otid].text3),
+              hires: hr
               })
       }
       if(C.images_tax.species[otid].hasOwnProperty('filename4')){
+          hr = false
+          if(C.hires_images.hasOwnProperty(eval(img_obj.filename4))){
+             console.log('got hires image4')
+             hr = C.hires_images[eval(img_obj.filename4)]
+          }
           image_list.push({
-              name:path.join(rank, eval(C.images_tax.species[otid].filename4)),
-              text: eval(C.images_tax.species[otid].text4)
+              name: path.join(rank, eval(C.images_tax.species[otid].filename4)),
+              text: eval(C.images_tax.species[otid].text4),
+              hires: hr
               })
       }
       

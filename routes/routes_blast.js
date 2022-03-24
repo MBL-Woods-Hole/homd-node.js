@@ -903,11 +903,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
        // this serves to fix possible bug 
        // where blastp is matched with 'ffn'
        blastOpts.ext = 'faa'
-       if(blastOpts.blastDb.substring(0,3) === 'ALL'){
-             blastOpts.blastDb = 'ALL_genomes.faa'
-       }else{
-       
-       }
+       blastOpts.blastDb = blastOpts.blastDb.split('.')[0] + '.' + blastOpts.ext
        if(blastOpts.anno === 'prokka'){
           blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_prokka')
        }else{

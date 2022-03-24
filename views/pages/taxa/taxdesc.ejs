@@ -92,6 +92,76 @@
    font-size:small;
   
 }
+#myImg0:hover {opacity: 0.7;}
+#myImg1:hover {opacity: 0.7;}
+#myImg2:hover {opacity: 0.7;}
+#myImg3:hover {opacity: 0.7;}
+
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -160,7 +230,8 @@
   <% }else if(images.length === 1 ) { %>
       <div class='images'>
       <table border='0'>
-        <tr><td valign='top'><img class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
+        <tr><td valign='top'>
+        <img id="myImg0" class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
         </td><td valign='top' class='txt'>
         <small><%- images[0].text %></small>
         </td></tr>
@@ -177,7 +248,7 @@
                 <td valign='top'>
                 <% } %>
                  <div>
-                <img class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
+                  <img  id="myImg<%= n %>" class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
                 <small class='txt'><%- images[n].text %></small>
                  </div>
                <% if(n==0 || n==2){ %>
@@ -441,6 +512,19 @@
   </div>
 <% } %>
 
+
+ 
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- The Close Button -->
+  <span class="close">&times;</span>
+  <!-- Modal Content (The Image) -->
+  <img class="modal-content" id="img0" src=''>
+  <!-- Modal Caption (Image Text) -->
+  <div id="caption"></div>
+</div>
+
+
   
 </div> <!-- end: page-content -->
     
@@ -457,4 +541,63 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
+//   var images = JSON.parse('<%= image_array %>')
+//   alert(images)
+//   // Get the modal
+// // url= /images/life-images/hires/images[n].hires
+// var modal = document.getElementById("myModal");
+// // https://www.w3schools.com/howto/howto_css_modal_images.asp
+// // Get the image and insert it inside the modal - use its "alt" text as a caption
+// var img0 = document.getElementById("myImg0");
+// var img1 = document.getElementById("myImg1");
+// //var img2 = document.getElementById("myImg2");
+// //var img3 = document.getElementById("myImg3");
+// var modalImg0 = document.getElementById("img00");
+// var modalImg1 = document.getElementById("img01");
+// //var modalImg2 = document.getElementById("img02");
+// //var modalImg3 = document.getElementById("img03");
+// var captionText = document.getElementById("caption");
+// if(img0){
+// 	img0.onclick = function(){
+// 	  modal.style.display = "block";
+// 	  alert(modalImg0.src)
+// 	  modalImg.src = modalImg0.src;   // this will open the same image- we want another
+// 	  /images/life-images/hires/ images[n].hires 
+// 	  captionText.innerHTML = this.alt;
+// 	}
+// }
+// if(img1){
+// 	img1.onclick = function(){
+// 	  
+// 	  modal.style.display = "block";
+// 	  alert(modalImg1.src)
+// 	  modalImg.src = modalImg1.src;   // this will open the same image- we want another
+// 	  captionText.innerHTML = this.alt;
+// 	}
+// }
+// // if(img2){
+// // 	img2.onclick = function(){
+// // 	  modal.style.display = "block";
+// // 	  //modalImg2.src = this.src;   // this will open the same image- we want another
+// // 	  captionText.innerHTML = this.alt;
+// // 	}
+// // }
+// // if(img3){
+// // 	img3.onclick = function(){
+// // 	  modal.style.display = "block";
+// // 	  //modalImg3.src = this.src;   // this will open the same image- we want another
+// // 	  captionText.innerHTML = this.alt;
+// // 	}
+// // }
+// 
+// // Get the <span> element that closes the modal
+// var closers = document.getElementsByClassName("close");
+// 
+// // When the user clicks on <span> (x), close the modal
+// //alert(closers)
+// for(n in closers){
+// 	closers[n].onclick = function() {
+// 	  modal.style.display = "none";
+// 	}
+// }
 </script>

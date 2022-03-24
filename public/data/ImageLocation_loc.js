@@ -1,20 +1,20 @@
-{
-"arc1":{
-"fname":"Archaea-1.png",
-"caption":""
-},
-"bac1":{
-"fname":"Bacteria-1.png",
-"caption":""
-},
-"bac2":{
-"fname":"Bacteria-2.png",
-"caption":""
-},
-"bac3":{
-"fname":"Bacteria-3.png",
-"caption":""
-},
+	{
+	"arc1":{
+		"fname":"Archaea-1.png",
+		"caption":""
+	},
+	"bac1":{
+		"fname":"Bacteria-1.png",
+		"caption":""
+	},
+	"bac2":{
+		"fname":"Bacteria-2.png",
+		"caption":""
+	},
+	"bac3":{
+		"fname":"Bacteria-3.png",
+		"caption":""
+	},
     "I-1":{
        "hires":false,
        "fname":"Corncobs_unpublished-forHOMD.jpg",
