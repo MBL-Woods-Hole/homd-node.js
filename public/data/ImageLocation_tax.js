@@ -18,7 +18,7 @@
     "order":{},
     "family":{},
     "genus":{
-        "Actinomyces":
+       "Actinomyces":
         {
         "all_species":true,
         "filename1":"C.images_loc['I-8'].fname",
@@ -52,7 +52,133 @@
     },
     "subspecies":{},
     "species": {
-    
+       "888":
+        {
+        "species":"Actinomyces dentalis",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "618":
+        {
+        "species":"Actinomyces gerencseriae",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "866":
+        {
+        "species":"Actinomyces graevenitzii",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "645":
+        {
+        "species":"Actinomyces israelii",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "849":
+        {
+        "species":"Actinomyces johnsonii",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "852":
+        {
+        "species":"Actinomyces massiliensis",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "176":
+        {
+        "species":"Actinomyces naeslundii",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "708":
+        {
+        "species":"Actinomyces oricola",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "893":
+        {
+        "species":"Actinomyces oris",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "746":
+        {
+        "species":"Actinomyces radicidentis",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "169":
+        {
+        "species":"Actinomyces sp._HMT_169",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "170":
+        {
+        "species":"Actinomyces sp._HMT_170",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "171":
+        {
+        "species":"Actinomyces sp._HMT_171",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "175":
+        {
+        "species":"Actinomyces sp._HMT_175",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "414":
+        {
+        "species":"Actinomyces sp._HMT_414",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "448":
+        {
+        "species":"Actinomyces sp._HMT_448",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "525":
+        {
+        "species":"Actinomyces sp._HMT_525",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "896":
+        {
+        "species":"Actinomyces sp._HMT_896",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "897":
+        {
+        "species":"Actinomyces sp._HMT_897",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "179":
+        {
+        "species":"Actinomyces timonensis",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       "688":
+        {
+        "species":"Actinomyces viscosus",
+        "filename1":"C.images_loc['I-8'].fname",
+        "text1":"C.images_loc['I-8'].caption"
+        },
+       
        "545":
         {
         "species":"Aggregatibacter aphrophilus",
@@ -298,7 +424,12 @@
         "filename1":"C.images_loc['I-3'].fname",
         "text1":"C.images_loc['I-3'].caption"
           },
-          
+        "22":
+        {
+        "species":"Lautropia mirabilis",
+        "filename1":"C.images_loc['I-9'].fname",
+        "text1":"C.images_loc['I-9'].caption"
+         }, 
           
         "851":
         {
@@ -342,6 +473,8 @@
         "filename1":"C.images_loc['I-1'].fname",
         "text1":"C.images_loc['I-1'].caption"
           },
+        
+        
         
         "212":
         {
