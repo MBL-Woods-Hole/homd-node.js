@@ -277,11 +277,11 @@ def jblink(hit, type='jbrowse', hsp=None):
             if int(start) > int(stop):
                 hitfrom = stop
                 hitto = start
-            if int(hitfrom) < 500:
-               lochitfrom = hitfrom
-            else:
-               lochitfrom = int(hitfrom)-500  
-            link += "&loc={}:{}..{}".format(accession, str(lochitfrom), str(int(hitto)+500))
+            # if int(hitfrom) < 500:
+#                lochitfrom = hitfrom
+#             else:
+#                lochitfrom = int(hitfrom)-500  
+            link += "&loc={}:{}..{}".format(accession, str(int(hitfrom)-500), str(int(hitto)+500))
             link += "&highlight={}:{}..{}".format(accession, str(hitfrom), hitto)
         except:
             pass
@@ -298,14 +298,14 @@ def jblink(hit, type='jbrowse', hsp=None):
             hitto = hsp['Hsp_hit-to']
         
             if int(hsp['Hsp_hit-from']) > int(hsp['Hsp_hit-to']):
-                hitfrom = hsp['Hsp_hit-to']
-                hitto = hsp['Hsp_hit-from']
-            if int(hitfrom) < 500:
-               lochitfrom = hitfrom
-            else:
-               lochitfrom = int(hitfrom)-500    
-            link += "&loc={}:{}..{}".format(acc, str(lochitfrom), str(int(hitto)+500))
-            link += "&highlight={}:{}..{}".format(acc, str(lochitfrom), hitto)
+                hitfrom = hsp['Hsp_hit-to']  # these are the highlights
+                hitto = hsp['Hsp_hit-from']  # and the range is +/- 500
+            # if int(hitfrom) < 500:
+#                lochitfrom = hitfrom
+#             else:
+#                lochitfrom = int(hitfrom)-500    
+            link += "&loc={}:{}..{}".format(acc, str(int(hitfrom)-500), str(int(hitto)+500))
+            link += "&highlight={}:{}..{}".format(acc, str(hitfrom), hitto)
             #link += "&st={}&sp={}".format(hsp['Hsp_hit-from'], hsp['Hsp_hit-to'])
     #print(link)
     return link
