@@ -623,11 +623,11 @@ module.exports.parse_blast_query_xml = function parse_blast_query_xml(jsondata, 
 	    if(iteration.hasOwnProperty('Iteration_message') && iteration['Iteration_message'] === 'No hits found'){
            ret.no_hits = true
         }else{
-			for(let n in json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits']){
-				hits = json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits'][n]
-				console.log('**hit**',n,hits)
+			for(let hit in json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits']){
+				hits = json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits'][hit]
+				console.log('**hits**',hits)
 				for(let i in hits){
-			        
+			        console.log('**i in hits**',i,hits[i])
 			        homdhitid = hits[i].Hit_def.split(' ')[0]
 			        ret.hitid_ary.push(homdhitid)
 				}
