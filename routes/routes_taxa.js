@@ -1012,7 +1012,7 @@ router.get('/ecology/:level/:name', function ecology(req, res) {
     }else if(rank == 'subspecies'){
       otid = node.otid
     }
-   //console.log('node')
+   console.log('node',node)
    //console.log(node)
    // /subspecies/subsp.%20dentisani%20clade%20058
    //console.log(node)
