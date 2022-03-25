@@ -195,7 +195,7 @@ ul li{
           <select class='dropdown' onchange="location = this.value;">
           <option value="" disabled selected>Select a genus</option>
           <% for(n in genera){ %>
-              <option value='/taxa/ecology/genus/<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
+              <option value='/taxa/ecology?rank=genus&name=<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
           <% } %>
           </select>
         <% } %>
@@ -212,15 +212,19 @@ ul li{
             <ul>
             <% if(children_lst.length == 0){ %>
                 <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description:<br>&nbsp;&nbsp;<small><%= taxidfullname %></small></a></li>
+            <% }else{ %>
+                <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%- tax_name.split(' ').join('<br>') %></small></a>
             <% } %>
-            <li><a href='/taxa/ecology'>Ecology Home</a>
-            <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%- tax_name.split(' ').join('<br>') %></small></a>
+            
+            <li><a href='/taxa/ecology_home'>Ecology Home</a>
+            
+            
             </ul>
           </div>
       
       <br>
     
-        <div id='legendx'>
+        <div id='legend'>
         <div class='menu-title'>Legend:</div>
             <div id='legend-content'>
             <ul>

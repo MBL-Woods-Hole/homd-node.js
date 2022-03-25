@@ -59,7 +59,7 @@ thead th { position: sticky; top: 0; }
        <td><%= list[n].status  %></td>
      <!--   <td><%= list[n].sites  %></td> -->
        <% if(list[n].ecology === 1){ %>
-         <td style='text-align:center' nowrap><a href="ecology/species/<%= list[n].genus %>%20<%= list[n].species %>" class="pill pill-green" >Ecology</a></td>
+         <td style='text-align:center' nowrap><a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>" class="pill pill-green" >Ecology</a></td>
        <% }else{ %>
          <td style='text-align:center' nowrap</td>
        <% } %>

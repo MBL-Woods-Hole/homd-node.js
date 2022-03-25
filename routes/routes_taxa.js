@@ -682,11 +682,11 @@ router.get('/life', function life(req, res) {
      title = 'Domain: Archaea'
      cts = C.taxon_counts_lookup['Archaea'].tax_cnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>("+cts+")</small>"
-     html += " <span class='vist-taxon-page'><a href='ecology/domain/Archaea'>Abundance</a></span><br>"
+     html += " <span class='vist-taxon-page'><a href='ecology?rank=domain&name=Archaea'>Abundance</a></span><br>"
        title = 'Domain: Bacteria'
        cts = C.taxon_counts_lookup['Bacteria'].tax_cnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>("+cts+")</small>"
-     html += " <span class='vist-taxon-page'><a href='ecology/domain/Bacteria'>Abundance</a></span><br>"
+     html += " <span class='vist-taxon-page'><a href='ecology?rank=domain&name=Bacteria'>Abundance</a></span><br>"
 
      html += '</td></tr>'
      image_array =[{'name':'cellular_organisms.png','text':''}]
@@ -729,7 +729,7 @@ router.get('/life', function life(req, res) {
             html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a> ('+cts+')'
           }
          
-          html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+lineage_list[1][show_ranks[i]]+"'>Abundance</a></span>"
+          html += " <span class='vist-taxon-page'><a href='ecology?rank="+show_ranks[i]+"&name="+lineage_list[1][show_ranks[i]]+"'>Abundance</a></span>"
           html += '</td></tr>'
        }else {  // Gather rows before the last row
          
@@ -765,7 +765,7 @@ router.get('/life', function life(req, res) {
                  otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
                //console.log('otid',otid)
                html += "<span class=''>"+space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
-               html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Abundance</a></span></span><br>"
+               html += " <span class='vist-taxon-page'><a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>Abundance</a></span></span><br>"
                }
          
          }else {
@@ -781,7 +781,7 @@ router.get('/life', function life(req, res) {
              lin = make_lineage(node)
              cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
              html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
-             html += " <span class='vist-taxon-page'><a href='ecology/"+show_ranks[i]+"/"+taxa_list[n]+"'>Abundance</a></span></span><br>"
+             html += " <span class='vist-taxon-page'><a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>Abundance</a></span></span><br>"
             }
          } 
        }
@@ -799,7 +799,6 @@ router.get('/life', function life(req, res) {
   if(rank)
       page_title = helpers.capitalizeFirst(rank)
   
-  //lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'life')
   lineage_string = lineage_list[0]
   res.render('pages/taxa/life', {
       title: 'HOMD :: '+page_title, 
@@ -820,7 +819,7 @@ router.get('/life', function life(req, res) {
   
 })
 //
-router.get('/ecology', function ecology_index(req, res) {
+router.get('/ecology_home', function ecology_index(req, res) {
     console.log('in ecology index')
     let bar_graph_data = []
     let site_species = {},sp_per_site = {}// {site,sp,abund} ordered by sp
@@ -981,7 +980,143 @@ router.get('/ecology', function ecology_index(req, res) {
 })
 //
 
-router.get('/ecology/:level/:taxname', function ecology(req, res) {
+//router.get('/ecology/:level/:taxname', function ecology(req, res) {
+router.get('/ecology', function ecology(req, res) {
+    helpers.print('in ecology new')
+    let rank = req.query.rank;
+    let tax_name = req.query.name
+    //let tax_name = req.params.name
+    //console.log('req.params',req)
+    if(rank !== 'subspecies'){
+        tax_name = req.query.name[0].toUpperCase() + req.query.name.substring(1); // string[0].toUpperCase() + string.substring(1)
+    }
+    //let segata_text = '',dewhirst_text='',erenv1v3_text='';
+    console.log('rank',rank,'tax',tax_name)
+    let segata_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
+    let max = 0;
+    let otid ='0';
+    let max_obj = {};
+    //let major_genera=0;
+    let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
+    let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
+    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
+    //console.log('rank: '+rank+' name: '+tax_name);
+    // TODO::should be in constants???
+    let text = get_rank_text(rank,tax_name)
+   
+    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+    //console.log(tax_name+'_'+rank,node)
+    if(!node){
+      console.log('ERROR - could not find node for',tax_name+'_'+rank)
+    }
+    let genera = get_major_genera(rank, node)
+    // sort genera list 
+    genera.sort(function sortByTaxa(a, b) {
+        return helpers.compareStrings_alpha(a.taxon, b.taxon);
+    })
+    //console.log(tax_name,rank,node)
+    if(rank == 'species'){
+      if(node.hasOwnProperty('otid')){
+          otid = node.otid
+      }
+    }else if(rank == 'subspecies'){
+      otid = node.otid
+    }
+   //console.log('node',node)
+   //console.log(node)
+   // /subspecies/subsp.%20dentisani%20clade%20058
+   //console.log(node)
+   var children_list = []
+   for(var i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
+      let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
+      //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
+      children_list.push("<a href='/taxa/ecology?rank="+n.rank+"&name="+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
+   }
+   
+   if(!node){
+      console.log('ERROR Node')
+   }
+   let lineage_list = make_lineage(node)
+   
+   if(!lineage_list[0]){
+      lineage_list[0] = ''
+      console.log('ERROR Lineage')
+   }else {
+       if(lineage_list[0] in C.taxon_counts_lookup){
+         
+         if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+             segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
+             segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
+             let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
+             segata_table = build_abundance_table('segata',clone_segata_data, C.base_abundance_order.concat(['ST']))
+             if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+                 segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
+             }
+         }
+         
+         if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
+             dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
+             //console.log('in Dewhirst')
+             dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
+             let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
+             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.base_abundance_order.concat(['NS']))
+             if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+                 dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
+             }
+         }
+         if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3']).length != 0){
+             erenv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv1v3']
+             erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
+             let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
+             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.base_abundance_order.concat(['ST']))
+             if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+                 erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
+             }
+         }
+         if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5']).length != 0){
+             erenv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
+             erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
+             let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
+             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+             erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.base_abundance_order.concat(['ST']))
+             if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+                 erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
+             }
+         }
+         
+      }
+    }
+   //console.log('segata_data',segata_data)
+    let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
+   
+    res.render('pages/taxa/ecology', {
+      title: 'HOMD ::'+rank+'::'+tax_name,
+      pgname: 'taxon/ecology', // for AbountThisPage 
+      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      tax_name: tax_name,
+      //headline: 'Life: Cellular Organisms',
+      lineage: lineage_string,
+      rank: rank,
+      max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
+      otid: otid,  // zero unless species
+      genera: JSON.stringify(genera),
+      text_file: text[0],
+      text_format: text[1],
+      children: JSON.stringify(children_list),
+      notes: JSON.stringify({'segata':segata_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
+      segata_table: segata_table,
+      dewhirst_table: dewhirst_table,
+      erenv1v3_table: erenv1v3_table,
+      erenv3v5_table: erenv3v5_table,
+      segata: JSON.stringify(segata_data),
+      dewhirst: JSON.stringify(dewhirst_data),
+      erenv1v3: JSON.stringify(erenv1v3_data),
+      erenv3v5: JSON.stringify(erenv3v5_data),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    })
+})
+router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
     helpers.print('in ecology')
     let rank = req.params.level;
     //let tax_name = req.params.name
