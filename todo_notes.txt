@@ -1,4 +1,89 @@
 HOMD Notes
+2022-03-28
+CREATE TABLE `genomes2` (
+  `seq_id` varchar(12) NOT NULL,
+  `otid` int unsigned DEFAULT NULL,
+  `culture_collection` varchar(50) DEFAULT NULL,
+  `status` varchar(25) NOT NULL,
+  `sequence_center` varchar(256) DEFAULT NULL,
+  `number_contig` int DEFAULT NULL COMMENT 'the latest version',
+  `combined_length` int DEFAULT NULL COMMENT 'the latest version',
+  `flag` int unsigned NOT NULL COMMENT 'indexed',
+  `oral_pathogen` tinyint(1) NOT NULL DEFAULT '0' COMMENT '"0" means oral bacteria. "1" means oral pathogen.',
+  `isolate_origin` varchar(200) NOT NULL DEFAULT '',
+  `ncbi_bioproject` varchar(30) NOT NULL DEFAULT '',
+  `ncbi_taxon_id` varchar(10) NOT NULL DEFAULT '',
+  `ncbi_biosample` varchar(20) NOT NULL DEFAULT '',
+  `genbank_accession` varchar(100) NOT NULL DEFAULT '',
+  `cmr_id` varchar(10) NOT NULL DEFAULT '',
+  `gc` varchar(5) NOT NULL DEFAULT '',
+  `genbank_assembly` varchar(200) NOT NULL DEFAULT '',
+  `atcc_medium_number` varchar(25) NOT NULL DEFAULT '',
+  `non_atcc_medium` varchar(25) NOT NULL DEFAULT '',
+  `16s_rrna` text NOT NULL,
+  `16s_rrna_comment` text NOT NULL,
+  `type_strain` varchar(10) NOT NULL DEFAULT '',
+  `oral` varchar(80) NOT NULL DEFAULT '',
+  `number_of_clones_6_06` varchar(10) NOT NULL DEFAULT '',
+  `air_or_anerobe` varchar(10) NOT NULL DEFAULT '',
+  `shape` varchar(20) NOT NULL DEFAULT '',
+  `gram_stain` varchar(10) NOT NULL DEFAULT '',
+  `atcc_list_1` varchar(14) NOT NULL DEFAULT '',
+  `other_internal_names` varchar(200) NOT NULL DEFAULT '',
+  `flag_explanation` varchar(50) NOT NULL DEFAULT '',
+  `ncbi_nucleotide_Entries_7_06` varchar(7) NOT NULL DEFAULT '',
+  `biochemistry` text NOT NULL,
+  `dna_molecular_Summary` text NOT NULL,
+  `orf_annotation_Summary` text NOT NULL,
+  PRIMARY KEY (`seq_id`),
+  UNIQUE KEY `seq_id` (`seq_id`,`otid`),
+  KEY `culture_collection2` (`culture_collection`),
+  KEY `genome_ibfk_4` (`flag`),
+  KEY `seq_genome_otid_1` (`otid`),
+  CONSTRAINT `seq_genome_ibfk_2` FOREIGN KEY (`otid`) REFERENCES `otid_prime` (`otid`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+then
+insert into genomes2 select t1.`seq_id`,
+  t1.`otid`,
+  t1.`culture_collection`,
+  t1.`status`,
+  t1.`sequence_center`,
+  t1.`number_contig`,
+  t1.`combined_length`,
+  t1.`flag`,
+  t1.`oral_pathogen`,
+
+  t2.`isolate_origin`,
+  t2.`ncbi_bioproject`, 
+  t2.`ncbi_taxon_id`,
+  t2.`ncbi_biosample`,
+  t2.`genbank_accession`,
+  t2.`cmr_id`,
+  t2.`gc`,
+  t2.`genbank_assembly`,
+  t2.`atcc_medium_number`,
+  t2.`non_atcc_medium`,
+  t2.`16s_rrna`,
+  t2.`16s_rrna_comment`,
+  t2.`type_strain`,
+  t2.`oral`,
+  t2.`number_of_clones_6_06`,
+  t2.`air_or_anerobe`,
+  t2.`shape`,
+  t2.`gram_stain`,
+  t2.`atcc_list_1`,
+  t2.`other_internal_names`,
+  t2.`flag_explanation`,
+  t2.`ncbi_nucleotide_Entries_7_06`,
+  t2.`biochemistry`,
+  t2.`dna_molecular_Summary` ,
+  t2.`orf_annotation_Summary`
+from genomes as t1
+join genomes_homd_extra as t2 
+on t1.seq_id = t2.seq_id 
+
+
 2022-03-16 When I get back TODO
 blast output jbrowse highlight
 check blast output log for errors

@@ -279,7 +279,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
   20  16S rRNA gene sequence
   21  Comments
   */
-  // console.log(C.genome_lookup[gid])
+  //console.log(C.genome_lookup[gid])
   res.render('pages/genome/genomedesc', {
     title: 'HOMD :: Genome Info',
     pgname: 'genome/description', // for AbountThisPage 
@@ -774,7 +774,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
 function createTable (gids, source, type, startText) {
   let txt = startText + '\n'
   if (source === 'table') {
-    const headersRow = ['Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species', 'Status', 'No. Contigs', 'Sequencing Center', 'Total Length', 'Oral Pathogen', 'Culture Collection', 'GC %', 'NCBI Taxon-ID', 'NCBI BioProject-ID', 'NCBI BioSample-ID', 'Isolate Origin', 'atcc_mn', 'non_atcc_mn', 'Genbank Acc no.', 'Genbank Assembly', '16S rRNA', '16S rRNA Comment', 'flag_id']
+    const headersRow = ['Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species', 'Status', 'No. Contigs', 'Sequencing Center', 'Total Length', 'Oral Pathogen', 'Culture Collection', 'GC %', 'NCBI Genome-ID', 'NCBI BioProject-ID', 'NCBI BioSample-ID', 'Isolate Origin', 'atcc_mn', 'non_atcc_mn', 'Genbank Acc no.', 'Genbank Assembly', '16S rRNA', '16S rRNA Comment', 'flag_id']
     txt += headersRow.join('\t')
 
     for (let n in gids) {
@@ -782,7 +782,7 @@ function createTable (gids, source, type, startText) {
       const obj = C.genome_lookup[gid]
       // per FDewhirst: species needs to be unencumbered of genus for this table
       let species = obj.species.replace(obj.genus,'').trim()
-      const r = [gid, obj.otid, obj.genus, species, obj.status, obj.ncontigs, obj.seq_center, obj.tlength, obj.oral_path, obj.ccolct, obj.gc, obj.ncbi_taxid, obj.ncbi_bpid, obj.ncbi_bsid, obj.io, obj.atcc_mn, obj.non_atcc_mn, obj.gb_acc, obj.gb_asmbly, obj['16s_rrna'], obj['16s_rrna_comment'], obj.flag]
+      const r = [gid, obj.otid, obj.genus, species, obj.status, obj.ncontigs, obj.seq_center, obj.tlength, obj.oral_path, obj.ccolct, obj.gc, obj.ncbi_genomeid, obj.ncbi_bpid, obj.ncbi_bsid, obj.io, obj.atcc_mn, obj.non_atcc_mn, obj.gb_acc, obj.gb_asmbly, obj['16s_rrna'], obj['16s_rrna_comment'], obj.flag]
       txt += '\n' + r.join('\t')
     }
   }

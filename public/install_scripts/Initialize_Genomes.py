@@ -19,7 +19,7 @@ from connect import MyConnection
 #update_date_tbl = 'static_genomes_update_date'  # this seems to be the LONG list of gids -- use it first then fill in
 #index_tbl       = 'seqid_otid_index'   # match w/ otid OTID Not Unique 
 genomes_tbl = 'genomes' #  has genus,species,status,#ofcontigs,combinedlength,flag,oralpathogen-+
-seq_extra_tbl   = 'genomes_homd_extra' # has ncbi_id,ncbi_taxid,GC --and alot more
+#seq_extra_tbl   = 'genomes_homd_extra' # has ncbi_id,ncbi_taxid,GC --and alot more
 # 1 --annotated at HOMD with NCBI ANNOTATION
 # 12 --annotated at HOMD without NCBI Annotation
 # 21 --Genomes with NCBI annotation
@@ -47,55 +47,10 @@ first_genomes_query_no_flagid ="""
     IFNULL(oral_pathogen, '') as oral_path,
     IFNULL(culture_collection, '') as ccolct,
     IFNULL(sequence_center, '') as seq_center,
-    flag
-    from {tbl1}
-    JOIN otid_prime using(otid)
-    JOIN taxonomy using(taxonomy_id)
-    JOIN genus using(genus_id)
-    JOIN species using(species_id)
-    ORDER BY gid
-""".format(tbl1=genomes_tbl)
-first_genomes_query ="""
-    SELECT seq_id as gid,
-    genus,
-    species,
-    genomes.status,
-    IFNULL(number_contig, '') as ncontigs, 
-    IFNULL(combined_length, '') as tlength,
-    IFNULL(oral_pathogen, '') as oral_path,
-    IFNULL(culture_collection, '') as ccolct,
-    IFNULL(sequence_center, '') as seq_center,
-    flag_id as flag
-    from {tbl1}
-    JOIN otid_prime using(otid)
-    JOIN taxonomy using(taxonomy_id)
-    JOIN genus using(genus_id)
-    JOIN species using(species_id)
-    JOIN seqid_flag using(flag_id)
-    WHERE flag_id in {flags}
-    ORDER BY gid
-""".format(tbl1=genomes_tbl,flags=acceptable_genome_flags)
-# IFNULL too CPU Intensive
-extra_query ="""  
-    SELECT seq_id as gid,
-    IFNULL(ncbi_bioproject, '') as ncbi_bpid,
-    IFNULL(ncbi_taxon_id, '') as ncbi_taxid,
-    IFNULL(isolate_origin, '') as io,
-    IFNULL(gc, '') as gc,
-    IFNULL(atcc_medium_number, '') as atcc_mn,
-    IFNULL(non_atcc_medium, '') as non_atcc_mn,
-    IFNULL(genbank_accession, '') as gb_acc,
-    IFNULL(genbank_assembly, '') as gb_asmbly,
-    IFNULL(ncbi_biosample, '') as  ncbi_bsid,
-    IF(16s_rrna ='', '0','1') as 16s_rrna_flag  
-    from {tbl}
-    ORDER BY gid
-""".format(tbl=seq_extra_tbl)
-
-extra_query2 ="""
-    SELECT seq_id as gid,
+    flag,
+    
     ncbi_bioproject as ncbi_bpid,
-    ncbi_taxon_id as ncbi_taxid,
+    ncbi_genome_id,
     isolate_origin as io,
     gc, 
     atcc_medium_number as atcc_mn,
@@ -104,8 +59,62 @@ extra_query2 ="""
     genbank_assembly as gb_asmbly,
     ncbi_biosample as  ncbi_bsid,
     IF(16s_rrna ='', '0','1') as 16s_rrna_flag  
-    from {tbl}
-""".format(tbl=seq_extra_tbl)
+    
+    from {tbl1}
+    JOIN otid_prime using(otid)
+    JOIN taxonomy using(taxonomy_id)
+    JOIN genus using(genus_id)
+    JOIN species using(species_id)
+    ORDER BY gid
+""".format(tbl1=genomes_tbl)
+# first_genomes_query ="""
+#     SELECT seq_id as gid,
+#     genus,
+#     species,
+#     genomes.status,
+#     IFNULL(number_contig, '') as ncontigs, 
+#     IFNULL(combined_length, '') as tlength,
+#     IFNULL(oral_pathogen, '') as oral_path,
+#     IFNULL(culture_collection, '') as ccolct,
+#     IFNULL(sequence_center, '') as seq_center,
+#     flag_id as flag
+#     
+#     ncbi_bioproject as ncbi_bpid,
+#     ncbi_taxon_id as ncbi_taxid,
+#     isolate_origin as io,
+#     gc, 
+#     atcc_medium_number as atcc_mn,
+#     non_atcc_medium as non_atcc_mn,
+#     genbank_accession as gb_acc,
+#     genbank_assembly as gb_asmbly,
+#     ncbi_biosample as  ncbi_bsid,
+#     IF(16s_rrna ='', '0','1') as 16s_rrna_flag  
+#     
+#     from {tbl1}
+#     JOIN otid_prime using(otid)
+#     JOIN taxonomy using(taxonomy_id)
+#     JOIN genus using(genus_id)
+#     JOIN species using(species_id)
+#     JOIN seqid_flag using(flag_id)
+#     WHERE flag_id in {flags}
+#     ORDER BY gid
+# """.format(tbl1=genomes_tbl,flags=acceptable_genome_flags)
+
+
+# extra_query2 ="""
+#     SELECT seq_id as gid,
+#     ncbi_bioproject as ncbi_bpid,
+#     ncbi_taxon_id as ncbi_taxid,
+#     isolate_origin as io,
+#     gc, 
+#     atcc_medium_number as atcc_mn,
+#     non_atcc_medium as non_atcc_mn,
+#     genbank_accession as gb_acc,
+#     genbank_assembly as gb_asmbly,
+#     ncbi_biosample as  ncbi_bsid,
+#     IF(16s_rrna ='', '0','1') as 16s_rrna_flag  
+#     from {tbl}
+# """.format(tbl=seq_extra_tbl)
 
 
 
@@ -120,7 +129,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     6  culture collection entry number  # table
     7  isolate origin   				# table2
     8  sequencing status   				# table
-    9  ncbi taxid   					# table1
+    9  ncbi tax(genome)id   					# table1
     10 ncbi genome bioproject id   		# table
     11 ncbi genome biosample id   		# table
     12 genbank acc id   				# table2
@@ -136,6 +145,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     """
     genome = {}
     genome['gid'] 		= gid
+    genome['otid'] 		= ''   # index table
     genome['genus'] 	= ''   # table 1
     genome['species'] 	= ''   # table 1
     genome['status']	= ''   # table 1
@@ -146,7 +156,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     genome['ccolct'] 	= ''  # table 1 --is a list but presented in a single (comma separated) field in the db
     
     genome['gc'] 		= ''   # table 2
-    genome['ncbi_taxid'] = ''   # table 2
+    genome['ncbi_genomeid'] = ''   # table 2
     genome['ncbi_bpid'] 	= ''   # table 2
     genome['ncbi_bsid'] = ''
     genome['io'] 		= ''   # table 2
@@ -154,7 +164,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     genome['non_atcc_mn'] = ''   # table 2
     genome['gb_acc'] 	= ''
     genome['gb_asmbly'] = ''
-    genome['otid'] 		= ''   # index table
+    
     genome['16s_rrna_flag']   = '0'
     genome['flag']   = ''
     return genome
@@ -175,15 +185,36 @@ def run_first(args):
         
         if obj['gid'] not in master_lookup:
             taxonObj = create_genome(obj['gid']) 
-            taxonObj['genus'] = obj['genus']
-            taxonObj['species'] = obj['species']
-            taxonObj['status'] = obj['status']
-            taxonObj['ncontigs'] = obj['ncontigs']
-            taxonObj['seq_center'] = obj['seq_center']
-            taxonObj['tlength'] = obj['tlength']
-            taxonObj['oral_path'] = obj['oral_path']
-            taxonObj['ccolct'] = obj['ccolct']
-            taxonObj['flag'] = str(obj['flag'])
+            taxonObj['genus'] 		= obj['genus']
+            taxonObj['species'] 	= obj['species']
+            taxonObj['status'] 		= obj['status']
+            taxonObj['ncontigs'] 	= obj['ncontigs']
+            taxonObj['seq_center'] 	= obj['seq_center']
+            taxonObj['tlength'] 	= obj['tlength']
+            taxonObj['oral_path'] 	= obj['oral_path']
+            taxonObj['ccolct'] 		= obj['ccolct']
+            taxonObj['flag'] 		= str(obj['flag'])
+            taxonObj['gc'] 			= obj['gc']
+            taxonObj['ncbi_genomeid'] 	= obj['ncbi_genome_id']
+            taxonObj['ncbi_bpid'] 	= obj['ncbi_bpid']
+            taxonObj['ncbi_bsid'] 	= obj['ncbi_bsid']
+            taxonObj['io'] 			= obj['io']
+            taxonObj['atcc_mn'] 	= obj['atcc_mn']
+            taxonObj['non_atcc_mn'] = obj['non_atcc_mn']
+            taxonObj['gb_asmbly'] 	= obj['gb_asmbly']
+            taxonObj['gb_acc'] 		= obj['gb_acc']
+            taxonObj['16s_rrna_flag'] = obj['16s_rrna_flag']
+#             ncbi_bioproject as ncbi_bpid,
+#     ncbi_taxon_id as ncbi_taxid,
+#     isolate_origin as io,
+#     gc, 
+#     atcc_medium_number as atcc_mn,
+#     non_atcc_medium as non_atcc_mn,
+#     genbank_accession as gb_acc,
+#     genbank_assembly as gb_asmbly,
+#     ncbi_biosample as  ncbi_bsid,
+#     IF(16s_rrna ='', '0','1') as 16s_rrna_flag  
+            
         else:
             sys.exit('duplicate gid',obj['gid'])
         master_lookup[obj['gid']] = taxonObj    
@@ -193,7 +224,7 @@ def run_second(args):
     """  add otid to Object """
     global master_lookup
     g_query ="""   
-    SELECT seq_id as gid,otid
+    SELECT seq_id as gid, otid
     from genomes
     ORDER BY gid
     """
@@ -237,10 +268,7 @@ def run_third(args):
                     master_lookup[obj['gid']]['16s_rrna_flag'] = obj['16s_rrna_flag']
             	
     #print(len(master_lookup))
-    filename = os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
-    print('writing',filename)
-    with open(filename, 'w') as outfile:
-        json.dump(master_lookup, outfile, indent=args.indent)
+    
         
             
 if __name__ == "__main__":
@@ -301,5 +329,9 @@ if __name__ == "__main__":
     print(args)
     run_first(args)
     run_second(args)
-    run_third(args)
+    #run_third(args)
+    filename = os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
+    print('writing',filename)
+    with open(filename, 'w') as outfile:
+        json.dump(master_lookup, outfile, indent=args.indent)
     
