@@ -85,11 +85,11 @@ on t1.seq_id = t2.seq_id
 
 
 2022-03-16 When I get back TODO
-blast output jbrowse highlight
+DONE blast output jbrowse highlight
 check blast output log for errors
-ImageLocation: make HMT keys for species
-  -- add back in the subspecies from xls file
-ImageLocationHMT add sp from actino and Lautropia
+Done ImageLocation: make HMT keys for species
+Done   -- add back in the subspecies from xls file
+Done ImageLocationHMT add sp from actino and Lautropia
 2022-03-08
 
 EXPLORER: sequence pop-up should have identifier

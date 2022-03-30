@@ -44,7 +44,7 @@ router.get('/homd_ftp', function index(req, res) {
   }
   console.log('dir',dir)
   let hdirs = helpers.getAllDirFiles(dir)
-  console.log('hdirs',hdirs)
+  //console.log('hdirs',hdirs)
   //var tree = browseDir.browse("public/ftp");
   // var dirFiles = browseDir.browseFiles(dir);
 //   //console.log('files',dirFiles);

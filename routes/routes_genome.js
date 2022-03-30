@@ -403,6 +403,7 @@ router.get('/explorer', function explorer (req, res) {
       organism: args.organism,
       db_choices: JSON.stringify(args.dbChoices),
       blast_prg: JSON.stringify(C.blastPrograms),
+      blast_version: CFG.BLAST_VERSION,
       blastFxn: 'genome',
       info_data: JSON.stringify(args.annoInfoObj),
       pid_list: JSON.stringify(args.pidList),
