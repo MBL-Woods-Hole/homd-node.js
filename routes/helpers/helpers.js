@@ -508,7 +508,7 @@ module.exports.getAllDirFiles = function getAllDirFiles(dirPath, arrayOfFiles) {
       files.forEach(function getFilesArray(file) {
         let stats = fs.statSync(dirPath + "/" + file)
         var unixFilePermissions = '0' + (stats.mode & parseInt('777', 8)).toString(8);
-        console.log(file,unixFilePermissions,stats)
+        //console.log(file,unixFilePermissions,stats)
         if (stats.mode & (fs.constants.S_IRUSR | fs.constants.S_IRGRP | fs.constants.S_IROTH)) {
 			
 			if (stats.isDirectory()) {
