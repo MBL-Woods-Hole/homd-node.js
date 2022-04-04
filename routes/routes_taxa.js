@@ -988,7 +988,7 @@ router.get('/ecology', function ecology(req, res) {
     //let tax_name = req.params.name
     //console.log('req.params',req)
     if(rank !== 'subspecies'){
-        tax_name = req.query.name[0].toUpperCase() + req.query.name.substring(1); // string[0].toUpperCase() + string.substring(1)
+        tax_name = tax_name[0].toUpperCase() + tax_name.substring(1); // string[0].toUpperCase() + string.substring(1)
     }
     //let segata_text = '',dewhirst_text='',erenv1v3_text='';
     console.log('rank',rank,'tax',tax_name)
@@ -1161,7 +1161,7 @@ router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
    for(var i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
       let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
       //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
-      children_list.push("<a href='/taxa/ecology/"+n.rank+"/"+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
+      children_list.push("<a href='/taxa/ecology?rank="+n.rank+"&name="+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
    }
    
    if(!node){

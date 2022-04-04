@@ -1,4 +1,7 @@
 HOMD Notes
+2022-03-31
+Blast string input:
+  strip out '\r' and '\n'
 2022-03-28
 CREATE TABLE `genomes2` (
   `seq_id` varchar(12) NOT NULL,

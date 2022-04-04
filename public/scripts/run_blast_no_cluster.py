@@ -117,7 +117,7 @@ def processText(args, details_dict):
         if args.verbose:
             print()
         for line in lines_split:
-            line = line.strip()
+            line = line.strip().replace(" ", "")
             if args.verbose:
                 print('line',line)
             if not line:

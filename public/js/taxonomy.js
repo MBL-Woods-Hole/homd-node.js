@@ -263,7 +263,7 @@ function check_then_post_filter(form){
     }
   }
   if (got_one_sites == 0 && got_one_status == 0){
-     alert('You must choose at least one from "Status" and "Body Site".')
+     alert('You must choose at least one from "Status".')
      return;
   }
     form.submit()
