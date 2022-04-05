@@ -1,4 +1,16 @@
 HOMD Notes
+2022-04-04
+https://linuxize.com/post/how-to-add-swap-space-on-ubuntu-20-04/
+https://djangodeployment.readthedocs.io/en/latest/06-gunicorn.html
+macbook(localhost) 16G RAM, Apple M1 chip
+  Mitis_Group load time: 18s 12s
+  Prochlorococcus load time:  3s
+AWS 
+  Mitis_Group load time:     3min 27s
+  Prochlorococcus load time: 1min 6s
+MBL
+  Mitis_Group load time:
+  Prochlorococcus load time:
 2022-03-31
 Blast string input:
   strip out '\r' and '\n'
