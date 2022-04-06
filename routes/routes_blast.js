@@ -911,7 +911,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
        blastOpts.ext = 'faa'
        blastOpts.blastDb = blastOpts.blastDb.split('.')[0] + '.' + blastOpts.ext
        if(blastOpts.anno === 'prokka'){
-          blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_prokka')
+          blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes')
        }else{
           blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_ncbi')
        }
