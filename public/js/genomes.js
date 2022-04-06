@@ -26,7 +26,7 @@ function offer_jbrowse(gid,contig){
    let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent"
    url += "&loc="+gid+'|'+contig
  
-   document.getElementById("jbrowse_offer").innerHTML = "<a href='"+url+"'>Open in Genome Viewer</a>"
+   document.getElementById("jbrowse_offer").innerHTML = "<a href='"+url+"' target='_blank'>Open in Genome Viewer</a>"
 }
 function change_genome_4_jbrowse(gid){
   //console.log(gid)
