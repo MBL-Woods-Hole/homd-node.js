@@ -16,8 +16,7 @@ var browseDir = require("browse-directory");
 
 /* GET home page. */
 router.get('/', function index(req, res) {
-  console.log('req.session')
-  helpers.print(req.session)
+  
   console.log('Session ID:',req.session.id)
   res.render('pages/home_tc', {
     title: 'HOMD :: Human Oral Microbiome Database',

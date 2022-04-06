@@ -43,12 +43,13 @@ const app = express();
 
 // PRODUCTION: log every restart
 if(CFG.ENV === 'production'){
-    const output = fs.createWriteStream('../homd_restart.log', {flags : 'a'})
+    const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
     const restart_logger = new console.Console(output)
     restart_logger.log('Restart on '+helpers.timestamp())
 }
 
 app.set('appName', 'HOMD');
+app.set('trust proxy', true);
 require('./config/passport')(passport, TDBConn); // pass passport for configuration
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
