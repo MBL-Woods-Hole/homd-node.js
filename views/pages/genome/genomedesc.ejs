@@ -10,6 +10,9 @@
   border:1px solid black;
   background:lightgrey;
 }
+#gnomdesc-table td{
+  padding:3px;
+}
 #gnomdesc-table tr:nth-child(even) { 
     background-color: #D79A9A; 
  } 
@@ -28,7 +31,9 @@
 </style>
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data1) %>
+<% contigs = JSON.parse(contigs) %>
 <link rel="stylesheet" href="/css/genome_pages.css" >
+<link href="/css/select2.min.css" rel="stylesheet" /> 
 <% taxidfullname = ("000" + ginfo.otid).slice(-3); %>
 <% taxidfullnameplus = 'HMT-'+taxidfullname; %>
 <body>
@@ -47,7 +52,7 @@
 <% }else{ %>
 	<div id='header_buttons' >
 	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (<%= taxidfullnameplus %>)</a>
-	 <a class='gd-button' href="/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
+	 <a class='gd-button' href="/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&blast=1'>BLAST Against this Genome</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA Annotation</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI Annotation</a>
@@ -70,7 +75,17 @@
      <tr class="table-active"><td>11</td><td>NCBI Genome BioSample ID</td><td><a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_bsid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bsid %></a></td></tr>
      <tr class="table-light"><td>12</td><td>GenBank Accession ID</td><td><a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= ginfo.gb_acc %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_acc %></a></td></tr>
      <tr class="table-active"><td>13</td><td>Genbank Assembly ID</td><td><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= ginfo.gb_asmbly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_asmbly %></a></td></tr>
-     <tr class="table-light"><td>14</td><td>Number of Contigs and Singlets</td><td><%= ginfo.ncontigs %></td></tr>
+     <tr class="table-light"><td>14</td><td>Contigs and Singlets</td>
+     <td><%= ginfo.ncontigs %>
+       <select id='selContig' style='width: 200px;' onchange="offer_jbrowse('<%= ginfo.gid %>',this.value)">
+       <% for(n in contigs){ %>
+          <option><%= contigs[n] %></option>
+       <% } %>
+       </select>
+       <span id='jbrowse_offer'>
+       <a href='/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent&loc=<%= ginfo.gid %>|<%= contigs[0] %>'>Open in Genome Viewer</a>
+       </span>
+     </td></tr>
      <tr class="table-active"><td>15</td><td>Combined Length (bps)</td><td><%= ginfo.tlength %></td></tr>
      <tr class="table-light"><td>16</td><td>GC Percentage</td><td><%= ginfo.gc %></td></tr>
      <tr class="table-active"><td>17</td><td>Sequencing Center</td><td><%= ginfo.seq_center %></td></tr>
@@ -107,7 +122,14 @@
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/select2.min.js"></script>
 <script>
   mainmenu()
+  $(document).ready(function(){
+ 
+    // Initialize select2
+    $("#selContig").select2();
+
+  });
 </script>
 

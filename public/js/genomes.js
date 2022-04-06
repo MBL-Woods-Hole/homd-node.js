@@ -8,28 +8,37 @@
 // 	form.submit()
 // }
 function open_jbrowse_in_new_window(gid){
-  console.log(gid)
+  //console.log(gid)
   if(gid=='0'){
      document.getElementById("genome_iframe").src = "";	
-	 document.getElementById("genome_iframe").width = '100%'
-	 document.getElementById("genome_iframe").height = '0'
+     document.getElementById("genome_iframe").width = '100%'
+     document.getElementById("genome_iframe").height = '0'
      return
   }
-  let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
+  let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent"
   window.open(url)
 }
-
+function offer_jbrowse(gid,contig){
+   //console.log(contig)
+   if(!contig){
+      return
+   }
+   let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent"
+   url += "&loc="+gid+'|'+contig
+ 
+   document.getElementById("jbrowse_offer").innerHTML = "<a href='"+url+"'>Open in Genome Viewer</a>"
+}
 function change_genome_4_jbrowse(gid){
-  console.log(gid)
+  //console.log(gid)
   if(gid=='none'){
-     document.getElementById("genome_iframe").src = "";	
+     document.getElementById("genome_iframe").src = "";
 	 document.getElementById("genome_iframe").width = '100%'
 	 document.getElementById("genome_iframe").height = '0'
      return
   }
   // reload page form or ajax?
   
-  let url ="/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
+  let url ="/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent"
   console.log(url)
   document.getElementById("genome_iframe").width = '100%'
   document.getElementById("genome_iframe").height = '800px'

@@ -46,7 +46,6 @@
 	<% } %>
 </select>
 
-<!-- <input type='button' value='Selected option' id='but_read'> -->
 
 <br/>
 <div id='result'></div>
@@ -80,14 +79,7 @@
   // Initialize select2
   $("#selGenome").select2();
 
-  // Read selected option
-  $('#but_read').click(function(){
-    var username = $('#selGenome option:selected').text();
-    var userid = $('#selGenome').val();
-
-    $('#result').html("id : " + userid + ", name : " + username);
-
-  });
+  
 });
 </script>
 

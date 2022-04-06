@@ -20,24 +20,28 @@ module.exports.get_16s_rRNA_sequence_query = (gid) => {
   return qSelect16Sseq
 }
 
+// module.exports.get_annotation_query = (gid, anno) => {
+//   let qSelectAnno = 'SELECT accession, PID, product FROM annotation.orf_sequence'
+//   qSelectAnno += ' JOIN annotation.molecule ON orf_sequence.gid=molecule.gid'
+//   qSelectAnno += ' AND orf_sequence.annotation=molecule.annotation'
+//   qSelectAnno += ' AND orf_sequence.mol_id=molecule.mol_id'
+//   qSelectAnno += " WHERE orf_sequence.gid='" + gid + "'"
+//   qSelectAnno += " AND orf_sequence.annotation='" + anno + "'"
+// 
+//   return qSelectAnno
+// }
+
 module.exports.get_annotation_query = (gid, anno) => {
-  let qSelectAnno = 'SELECT accession, PID, product FROM annotation.orf_sequence'
-  qSelectAnno += ' JOIN annotation.molecule ON orf_sequence.gid=molecule.gid'
-  qSelectAnno += ' AND orf_sequence.annotation=molecule.annotation'
-  qSelectAnno += ' AND orf_sequence.mol_id=molecule.mol_id'
-  qSelectAnno += " WHERE orf_sequence.gid='" + gid + "'"
-  qSelectAnno += " AND orf_sequence.annotation='" + anno + "'"
-
-  return qSelectAnno
-}
-
-module.exports.get_annotation_query2 = (gid, anno) => {
   const db = anno.toUpperCase() + '_' + gid
   let qSelectAnno = 'SELECT accession, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
   return qSelectAnno
 }
-
+module.exports.get_contigs = (gid) => {   // always NCBI
+  const db = 'NCBI_' + gid
+  qSelectContigs = "SELECT accession from "+db+".molecules"
+  return qSelectContigs
+}
 module.exports.get_db_updates_query = () => {
   return "SELECT otid, description, reason, date FROM updates WHERE `show`='1'"
 }
