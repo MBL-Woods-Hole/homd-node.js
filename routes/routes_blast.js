@@ -465,6 +465,12 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   console.log('MADEIT TO blastPost')
   helpers.print(req.body)
   
+  if(CFG.ENV === 'production'){
+    let ip = helpers.getCallerIP(req)
+    const output = fs.createWriteStream('../homd-stats/blastUseIP.log', {flags : 'a'})
+    const blastip_logger = new console.Console(output)
+    blastip_logger.log(helpers.timestamp()+'\t'+ip+'\t'+req.body.blastFxn)
+  }
   //console.log('req.file?', req.file)   // may be undefined
   let anno = req.body.anno  // either prokka or ncbi
   let filename, filepath, data, fasta_as_list, trimlines, twolist,fastaFilePaths;

@@ -8,6 +8,7 @@ create new anouncement for new version
 try anviserver on MBL
 Keep IP log on blast use
 Code for blast to fool bots
+Increase blast save to 2-3 mos
 
 2022-04-04
 https://linuxize.com/post/how-to-add-swap-space-on-ubuntu-20-04/
