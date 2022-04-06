@@ -1,7 +1,7 @@
 HOMD Notes
 2022-04-05 Monthly Meeting
 DONE Remove gcskew from JB urls
-on genomedesc page add search for contigs then link to jbrowse
+DONE on genomedesc page add search for contigs then link to jbrowse
 show contigs in main HOMD search - glob
 Update help-people picture and bio
 DONE create new anouncement for new version

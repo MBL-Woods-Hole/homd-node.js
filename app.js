@@ -42,11 +42,11 @@ const help    = require('./routes/routes_help');
 const app = express();
 
 // PRODUCTION: log every restart
-if(CFG.ENV === 'production'){
+//if(CFG.ENV === 'production'){
     const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
     const restart_logger = new console.Console(output)
-    restart_logger.log('Restart on '+helpers.timestamp())
-}
+    restart_logger.log('Restart on '+helpers.timestamp(false))
+//}
 
 app.set('appName', 'HOMD');
 app.set('trust proxy', true);

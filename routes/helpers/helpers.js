@@ -11,9 +11,13 @@ const path        = require('path');
 const {exec, spawn} = require('child_process');
 
 // route middleware to make sure a user is logged in
-module.exports.timestamp = () => {
+module.exports.timestamp = (dateonly) => {
     //var today = new Date().toUTCString();
-    var today = new Date().toLocaleString() 
+    if(dateonly){
+      var today = new Date().toISOString().substring(0,10)
+    }else{
+      var today = new Date().toISOString()
+    }
     return today
 //     var dd = String(today.getDate()).padStart(2, '0');
 //     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
