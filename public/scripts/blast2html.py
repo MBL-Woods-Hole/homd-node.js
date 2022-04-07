@@ -153,10 +153,26 @@ def alignment_pre(hsp):
 def blastxml_len(node):
     if node.tag == 'Hsp':
         return int(node['Hsp_align-len'])
+        #return int(node['Hsp_bit-score'])
     elif node.tag == 'Iteration':
         return int(node['Iteration_query-len'])
     raise Exception("Unknown XML node type: "+node.tag)
-        
+
+def myTitleSort(node, sort_field):
+    t = str(node['Hit_def'])
+    #print(t+'<br>')
+    result = t[t.rfind('[')+1:t.rfind(']')]
+    tax = result.split()
+    hmt = tax[0]
+    genus = tax[1]
+    species = tax[2]
+    strain =   (' ').join(tax[3:])# everything else
+    genus_sp_st = genus.lower()+' '+species.lower()+' '+strain.lower()
+    if sort_field == 'genus_species_strain':
+        return genus_sp_st
+    if sort_field == 'strain':
+        return strain
+
 @filter
 def asframe(frame):
     if frame == 1:
@@ -167,11 +183,7 @@ def asframe(frame):
         return '0'
     raise Exception("frame should be either +1 or -1")
 
-@filter
-def sort_result(result):
-    pass
-    #print('result[0]',result[0])
-    #print('nnn')
+
 
 def genelink(hit, type='genbank', hsp=None):
     if not isinstance(hit, str):
@@ -360,12 +372,18 @@ def js_string_escape(value):
 
 @filter
 def hits(result):
-    # sort hits by longest hotspot first
+    # sort hits by longest hotspot(hsp) first
     return sorted(result.Iteration_hits.findall('Hit'),
-                  key=lambda h: max(blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp),
+                  #key=lambda h: max(blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp),
+                  key=lambda h: min(hsp.Hsp_identity / blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp),
+                  #ident = "{:.0%}".format(float(min(hsp.Hsp_identity / blastxml_len(hsp) for hsp in hsps)))
                   reverse=True)
-
-
+                  
+    # return sorted(result.Iteration_hits.findall('Hit'),
+#             
+#                   key=lambda h: str(max(blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp))+myTitleSort(h, 'genus_species_strain'), # sort by genus?
+#                   reverse=True
+#                   )
 
 class BlastVisualize:
 
@@ -458,7 +476,13 @@ class BlastVisualize:
         if query_length % skip != 0:
             yield dict(label = query_length,
                        width = (query_length % skip) * percent_multiplier)
-
+    @filter
+    def sort_result(self, result):
+        #pass
+        print('result[0]',result[0])
+        for hit in hits(result):
+           print(firsttitle(hit)+'<br>')
+        #print('nnn')
     @filter
     def hit_info(self, result):
         #print('result[0]',result)
@@ -466,6 +490,7 @@ class BlastVisualize:
         query_length = blastxml_len(result)
 
         for hit in hits(result):
+            #print('title',hit.Hit_def.text+'<br>')
             hsps = hit.Hit_hsps.Hsp
 
             cover = [False] * query_length
@@ -475,9 +500,21 @@ class BlastVisualize:
 
             def hsp_val(path):
                 return (float(hsp[path]) for hsp in hsps)
-
+            #print('firsttitle(hit)',firsttitle(hit)+'<br>')
+            t = firsttitle(hit)
+            result = t[t.rfind('[')+1:t.rfind(']')]
+            #print('[result]',result+'<br>')
+            tax = result.split()
+            hmt = tax[0]
+            genus = tax[1]
+            species = tax[2]
+            strain =   (' ').join(tax[3:])# everything else
+            #print('hmt',hmt,'genus',genus,'species',species,'strain',strain,'<br>')
             yield dict(hit = hit,
-                       title = firsttitle(hit),
+                       title = t,
+                       genus = genus,
+                       species = species,
+                       strain = strain,
                        link_id = hit.Hit_num,
                        maxscore = "{:.1f}".format(max(hsp_val('Hsp_bit-score'))),
                        totalscore = "{:.1f}".format(sum(hsp_val('Hsp_bit-score'))),

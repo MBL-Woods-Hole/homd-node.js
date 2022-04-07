@@ -1,15 +1,16 @@
 HOMD Notes
 2022-04-05 Monthly Meeting
-DONE Remove gcskew from JB urls
-DONE on genomedesc page add search for contigs then link to jbrowse
+  DONE Remove gcskew from JB urls
+  DONE on genomedesc page add search for contigs then link to jbrowse
 show contigs in main HOMD search - glob
 Update help-people picture and bio
-DONE create new anouncement for new version
+  DONE create new anouncement for new version
 try anviserver on MBL
-DONE Keep IP log on blast use
-  Write py script for countries
+  DONE Keep IP log on blast use
+  DONE Write py script for countries (in homd-scripts)
 Code for blast to fool bots
-DONE Increase blast save to 2-3 mos
+  DONE Increase blast save to 2-3 mos
+Fix initial sort of genome blast data
 
 2022-04-04
 https://linuxize.com/post/how-to-add-swap-space-on-ubuntu-20-04/

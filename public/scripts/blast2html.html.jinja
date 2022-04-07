@@ -216,7 +216,8 @@
       line-height: 1.3em;
       background-color: white;
       }
-      table.descriptiontable col:first-child {
+      /* table.descriptiontable col:first-child { */
+      table.descriptiontable  {
       width: 100%;
       }
       table.descriptiontable tr:hover {
@@ -233,9 +234,18 @@
       border-top: 0px solid black;
       }
       table.descriptiontable td {
-      overflow: hidden;
+      
       text-align: center;
       padding: .4em .8em;
+      }
+      .left{
+         text-align: left;
+      }
+      .col1{
+        overflow: hidden;
+      }
+      .col2{
+        width:500px;
       }
       table.descriptiontable td div {
       width: 1em;
@@ -383,7 +393,7 @@ pre{
       top: 250px;
       transform: translateX(-60px);
       }
-    </style>
+</style>
 
     <script type="text/javascript">
       function toggle_visibility(id) {
@@ -445,6 +455,7 @@ pre{
       {% else %}
         {% set head_name = 'Nucleotide' %}
       {% endif %}
+      
       {% for result in blast.BlastOutput_iterations.Iteration %}
       
       <section class=match id=match{{result['Iteration_iter-num']}}>
@@ -548,22 +559,31 @@ pre{
                 <col/><col/><col/><col/><col/><col/><col/>
                 <tr>
                   <th>Description <small>(sortable)</small></th>
-                  <th>Max score</th>
-                  <th>Total score</th>
-                  <th>Query cover</th>
+                  <th>Species and Strain</th>
+                  <th>Max<br>score</th>
+                  <th>Total<br>score</th>
+                  <th>Query<br>cover</th>
                   <th>E value</th>
-                  <th>Ident</th>
+                  <th>% Ident</th>
                   <th>Accession</th>
                 </tr>
-                {% set result2 = result|sort_result %}
+                
                 {% for hit in result|hit_info %}
                 
                 <tr>
-                  <td><div><a href="#hit{{hit.link_id}}"
+                  <td class='col1' style='text-align:left;width:300px;'><div>
+                     <a href="#hit{{hit.link_id}}"
                               title="{{hit.title}}"
                               id="description{{hit.link_id}}">
                         {{hit.title}}
-                  </a></div></td>
+                      </a></div>
+                  </td>
+                  <td class='col2' style='text-align:left;width:400px;' nowrap>
+                      <a href="#hit{{hit.link_id}}"
+                              title="{{hit.title}}"
+                              id="description{{hit.link_id}}">
+                          <i>{{hit.genus}} {{hit.species}} <span style='float:right;'>{{hit.strain}}</span></i>
+                      </a></td>
                   <td>{{hit.maxscore}}</td>
                   <td>{{hit.totalscore}}</td>
                   <td>{{hit.cover}}</td>
