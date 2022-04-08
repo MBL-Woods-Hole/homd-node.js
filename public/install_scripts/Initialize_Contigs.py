@@ -76,6 +76,7 @@ def run(args, dbs):
             if contig not in master_lookup:
                 master_lookup[contig] = [seqid]
             else:
+                print('appending: ',seqid,' to: ',contig)
                 master_lookup[contig].append(seqid)
     #print('master_lookup',master_lookup)           
     
