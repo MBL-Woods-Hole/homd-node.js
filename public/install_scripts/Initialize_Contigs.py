@@ -55,7 +55,31 @@ def find_databases(args):
 # 	    print(db)  
 # 	    
 # 	    q = "ALTER TABLE "+db+".`assembly_report' CHANGE `filed_value` `field_value` TEXT"  
-	    
+	
+"""
+appending:  SEQF3075  to:  JH378873.1
+appending:  SEQF3075  to:  JH378874.1
+appending:  SEQF3075  to:  JH378882.1
+appending:  SEQF3075  to:  JH378872.1
+appending:  SEQF3075  to:  JH378878.1
+appending:  SEQF3075  to:  JH378891.1
+appending:  SEQF3075  to:  JH378875.1
+appending:  SEQF3075  to:  JH378883.1
+appending:  SEQF3075  to:  JH378877.1
+appending:  SEQF3075  to:  JH378876.1
+appending:  SEQF3075  to:  JH378884.1
+appending:  SEQF3075  to:  JH378889.1
+appending:  SEQF3075  to:  JH378886.1
+appending:  SEQF3075  to:  JH378887.1
+appending:  SEQF3075  to:  JH378885.1
+appending:  SEQF3075  to:  JH378890.1
+appending:  SEQF3075  to:  JH378880.1
+appending:  SEQF3075  to:  JH378888.1
+appending:  SEQF3075  to:  JH378881.1
+appending:  SEQF3075  to:  JH378892.1
+appending:  SEQF3075  to:  JH378879.1
+appending:  SEQF3075  to:  JH378893.1
+"""    
 def run(args, dbs):
     #global master_lookup
     master_lookup = {}
