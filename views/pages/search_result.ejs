@@ -63,10 +63,10 @@
     Matches from Contigs: (<%= contig_list.length %>)
     <div class='search-box'>
     <% for(n in contig_list){ %>
-       <% gid_pts = contig_list[n].gid[0].split(',') %>
+       
        <br>
-       <% for(n in gid_pts){ %>
-       <%   gid =  gid_pts[n] %>
+       <% for(i in contig_list[n].gids){ %>
+       <%   gid =  contig_list[n].gids[i] %>
             <%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= gid %>'><%= contig_list[n].contig %>
             <%- gid %></a>
        <% } %>
