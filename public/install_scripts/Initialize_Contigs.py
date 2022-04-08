@@ -72,15 +72,15 @@ def run(args, dbs):
             parts = row['accession'].split('|')
             contig = parts[1]
             seqid = parts[0]
-            print('contig',contig)
+            #print('contig',contig)
             if contig not in master_lookup:
                 master_lookup[contig] = [seqid]
             else:
                 master_lookup[contig].append(seqid)
-    print('master_lookup',master_lookup)           
+    #print('master_lookup',master_lookup)           
     
-    for db in dbs['prokka']:
-        print('Running2',db)
+    #for db in dbs['prokka']:
+    #    print('Running2',db)
         
             
 
