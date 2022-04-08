@@ -73,7 +73,16 @@
      <tr class="table-active"><td>9</td><td>NCBI Taxon ID (Strain Level)</td><td><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.ncbi_genomeid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_genomeid %></a></td></tr>
      <tr class="table-light"><td>10</td><td>NCBI Genome BioProject ID</td><td><a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bpid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bpid %></a></td></tr>
      <tr class="table-active"><td>11</td><td>NCBI Genome BioSample ID</td><td><a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_bsid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bsid %></a></td></tr>
-     <tr class="table-light"><td>12</td><td>GenBank Accession ID</td><td><a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= ginfo.gb_acc %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_acc %></a></td></tr>
+     <tr class="table-light"><td>12</td><td>GenBank Accession ID</td>
+       <td>
+       <% acc_pts = ginfo.gb_acc.split(',') %>
+       <% for(n in acc_pts){ %>
+       <%   acc =  acc_pts[n] %>
+         <a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= acc %>' target='_blank' rel="noopener noreferrer"><%= acc %></a>
+       <% } %>
+       </td>
+      </tr>
+     
      <tr class="table-active"><td>13</td><td>Genbank Assembly ID</td><td><a href='https://www.ncbi.nlm.nih.gov/assembly/<%= ginfo.gb_asmbly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_asmbly %></a></td></tr>
      <tr class="table-light"><td>14</td><td>Contigs and Singlets</td>
      <td><%= ginfo.ncontigs %>

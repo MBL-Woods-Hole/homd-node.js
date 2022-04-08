@@ -73,22 +73,8 @@ router.get('/download_file', function search(req, res) {
   res.download(fullpath)
   //res.end()
 })
-router.get('/demo10', function index(req, res) {
-  res.render('pages/home_demo_tc_01', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
-router.get('/banner_demo', function index(req, res) {
-  res.render('pages/banner_demo', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
-  })
-})
+
+
 router.get('/download', function download(req, res) {
   // renders the overall downlads page
   res.render('pages/download', {
@@ -135,7 +121,9 @@ router.post('/site_search', function site_search(req, res) {
     NCBI Genome Annot
     Prokka Genome Annot
   */
-
+  
+  
+  
   const searchText = req.body.intext
   const searchTextLower = req.body.intext.toLowerCase()
   let add_genome_to_otid = {}
@@ -228,7 +216,20 @@ router.post('/site_search', function site_search(req, res) {
     // 'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species
     // }
   }
-
+  
+  // search contigs
+  let contigObj_list = []
+  //console.log('C.contig_lookup',C.contig_lookup )
+  let all_contigs = Object.keys(C.contig_lookup)
+  const contig_list = all_contigs.filter(el => {
+    if (el.toLowerCase().indexOf(searchTextLower) !== -1) {
+        return true;
+    }
+  });
+  for(let n in contig_list){
+      contigObj_list.push({contig:contig_list[n], gid:C.contig_lookup[contig_list[n]]})
+  }
+  
   // search help pages
   // let dir = path.join(process.cwd(), 'public', 'static_help_files' )
 
@@ -292,6 +293,7 @@ router.post('/site_search', function site_search(req, res) {
         gid_list: JSON.stringify(gidLst),
         taxon_otid_obj: JSON.stringify(taxonOtidObj),
         help_pages: JSON.stringify(helpLst),
+        contig_list:JSON.stringify(contigObj_list),
         phage_id_list: JSON.stringify(phageIdLst) // phageIDs
       })
    });

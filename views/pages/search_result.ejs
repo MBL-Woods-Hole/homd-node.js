@@ -17,6 +17,7 @@
 <% var gids = JSON.parse(gid_list) %>
 <% var lineageids = JSON.parse(taxon_otid_obj) %>
 <% var phage_id_list = JSON.parse(phage_id_list) %>
+<% var contig_list = JSON.parse(contig_list) %>
 <% var help_list = JSON.parse(help_pages) %>
 
 <body>
@@ -56,6 +57,15 @@
        <% gid = gids[n].gid %>
        <br><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= gid %>'><%= gid %>
        <%- gids[n].species %></a>
+    <% } %>
+    </div>
+    <hr>  
+    Matches from Contigs: (<%= contig_list.length %>)
+    <div class='search-box'>
+    <% for(n in contig_list){ %>
+       <% gid = contig_list[n].gid %>
+       <br><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= gid %>'><%= contig_list[n].contig %>
+      <%- gid %></a>
     <% } %>
     </div>
 <!-- 

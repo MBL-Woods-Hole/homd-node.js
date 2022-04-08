@@ -167,6 +167,7 @@ constants.refseq_lookup_fn    = 'homdData-TaxonRefSeqLookup.json'
 constants.phage_list_fn         = 'homdData-PhageList.json'
 constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
 constants.annotation_lookup_fn  = 'homdData-AnnotationLookup.json'
+constants.contig_lookup_fn      = 'homdData-ContigsLookup.json'
 //constants.image_location_fn     = 'ImageLocation.js'
 
 constants.image_location_locfn     = 'ImageLocation_loc.js'

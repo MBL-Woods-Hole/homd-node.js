@@ -181,10 +181,11 @@ var data_init_files =[
   path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),
   path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),
   path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),
-  //path.join('public','data', C.image_location_fn),
+  
   
   path.join('public','data', C.image_location_locfn),  // image name and text
-  path.join('public','data', C.image_location_taxfn)  // match image w/ otid or tax rank
+  path.join('public','data', C.image_location_taxfn),  // match image w/ otid or tax rank
+  path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn)
   
 ]
 //console.log('Path to Data Files:',CFG.PATH_TO_DATA)
@@ -204,19 +205,20 @@ async.map(data_init_files, helpers.readAsync, function(err, results) {
     //console.log('parsing3')
     C.genome_lookup         = JSON.parse(results[3]);  // lookup by gid
     //console.log('parsing4')
-    C.refseq_lookup         = JSON.parse(results[4]);
+    C.refseq_lookup             = JSON.parse(results[4]);
     //console.log('parsing5')
-    C.taxon_references_lookup       = JSON.parse(results[5]);   // lookup by otid
+    C.taxon_references_lookup   = JSON.parse(results[5]);   // lookup by otid
     //console.log('parsing6')
-    C.taxon_info_lookup       = JSON.parse(results[6]);  // lookup by otid
+    C.taxon_info_lookup         = JSON.parse(results[6]);  // lookup by otid
     //console.log('parsing7')
     C.taxon_counts_lookup       = JSON.parse(results[7]);   // lookup by lineage
-    C.annotation_lookup       = JSON.parse(results[8]);
+    C.annotation_lookup         = JSON.parse(results[8]);
     C.phage_lookup              = JSON.parse(results[9]);
     //C.images              = JSON.parse(results[10]);
     
     C.images_loc              = JSON.parse(results[10]);   // image name and text
     C.images_tax              = JSON.parse(results[11]);   // match image w/ otid or tax rank
+    C.contig_lookup           = JSON.parse(results[12]);
     // add genus, species to C.genome_lookup
     
     //Object.values(C.taxon_lookup)
