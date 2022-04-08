@@ -10,7 +10,7 @@ try anviserver on MBL
   DONE Write py script for countries (in homd-scripts)
 Code for blast to fool bots
   DONE Increase blast save to 2-3 mos
-Fix initial sort of genome blast data
+Done Fix initial sort of genome blast data
 
 2022-04-04
 https://linuxize.com/post/how-to-add-swap-space-on-ubuntu-20-04/

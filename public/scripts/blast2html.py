@@ -161,6 +161,8 @@ def blastxml_len(node):
 def myTitleSort(node, sort_field):
     t = str(node['Hit_def'])
     #print(t+'<br>')
+    #hsps = node.Hit_hsps.Hsp
+    #print(round(100*(min(hsp.Hsp_identity / blastxml_len(hsp) for hsp in hsps)),0),'<br>')
     result = t[t.rfind('[')+1:t.rfind(']')]
     tax = result.split()
     hmt = tax[0]
@@ -289,10 +291,7 @@ def jblink(hit, type='jbrowse', hsp=None):
             if int(start) > int(stop):
                 hitfrom = stop
                 hitto = start
-            # if int(hitfrom) < 500:
-#                lochitfrom = hitfrom
-#             else:
-#                lochitfrom = int(hitfrom)-500  
+
             link += "&loc={}:{}..{}".format(accession, str(int(hitfrom)-500), str(int(hitto)+500))
             link += "&highlight={}:{}..{}".format(accession, str(hitfrom), hitto)
         except:
@@ -373,17 +372,26 @@ def js_string_escape(value):
 @filter
 def hits(result):
     # sort hits by longest hotspot(hsp) first
-    return sorted(result.Iteration_hits.findall('Hit'),
-                  #key=lambda h: max(blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp),
-                  key=lambda h: min(hsp.Hsp_identity / blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp),
-                  #ident = "{:.0%}".format(float(min(hsp.Hsp_identity / blastxml_len(hsp) for hsp in hsps)))
-                  reverse=True)
+#     return sorted(result.Iteration_hits.findall('Hit'),
+#                   #key=lambda h: max(blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp),
+#                   key=lambda h: min(hsp.Hsp_identity / blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp),
+#                   #ident = "{:.0%}".format(float(min(hsp.Hsp_identity / blastxml_len(hsp) for hsp in hsps)))
+#                   reverse=True)
                   
-    # return sorted(result.Iteration_hits.findall('Hit'),
-#             
-#                   key=lambda h: str(max(blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp))+myTitleSort(h, 'genus_species_strain'), # sort by genus?
-#                   reverse=True
-#                   )
+    return sorted(result.Iteration_hits.findall('Hit'),
+                   #sort be two keys
+                   key=lambda h: (round(100*(-min(hsp.Hsp_identity / blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp)),0), # sort by genus?
+                                  myTitleSort(h,'genus_species_strain')),
+                                  reverse=False
+                   
+                   )
+#     return sorted(result.Iteration_hits.findall('Hit'),
+#             key=lambda h: myTitleSort(h,'genus_species_strain'),
+#             reverse=False),
+#                    key=lambda h: str(max(blastxml_len(hsp) for hsp in h.Hit_hsps.Hsp))+myTitleSort(h, 'genus_species_strain'), # sort by genus?
+#                    reverse=True
+#                    
+#                    )
 
 class BlastVisualize:
 
