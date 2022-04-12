@@ -8,6 +8,15 @@
     float:right;
     padding : 0px 0px 0 0;
   }
+  #spamguard_div{
+    border:1px solid black;
+    padding:5px 12px;
+    margin-top:5px;
+    background: lavender;
+  }
+  #spamguard_input{
+    padding:1px 5px;
+  }
 </style>
 
 <center>
@@ -52,7 +61,17 @@
            Or upload a sequence file from your computer:
            <input type="file" id='fileInput' name="blastFile"  >
 
-<br><br>
+<div id='spamguard_div'>
+<% sg_parts = spamguard.split('') %>
+<b>**<small>Spamguard Code: 
+  <span style="background:yellow">&nbsp;<font color="blue"><%= sg_parts[0] %></font><font color="purple"><%= sg_parts[1] %></font><font color="green"><%= sg_parts[2] %></font>&nbsp;
+  </span>
+</b>
+
+<br>Please type in the Spamguard Code: <input id='spamguard_input' type="text" value='' maxlength ='3' size='10'> (case insensitive)
+<input type="hidden" id="spamcode1" name="spamcode1" value="<%= spamguard %>">
+</small>
+</div>
 <small>
 (<b>Note1</b>: Multiple sequences can be uploaded, please check <a href='/help/help-page?pagecode=blast/formats'>examples on sequence formats and restrictions.</a>)
 <br>

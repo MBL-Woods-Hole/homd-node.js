@@ -239,6 +239,13 @@ function changeBlastGenomeDbs(gid, prog) {
 //
 function blastFormCheck_refseq(){
    form = document.getElementById('blastForm')
+   spamguard_input = document.getElementById('spamguard_input').value.toUpperCase()
+   spamguard_actual = form.spamcode1.value.toUpperCase()
+   //alert('in ' +spamguard_input)
+   //alert('actual ' +spamguard_actual)
+   if(spamguard_input !== spamguard_actual){
+      alert('Spam Guard Codes must match')
+   }
    blastText = document.getElementById('textinput').value.trim()
    //alert(blastText)
    fileInput = document.getElementById('fileInput').value
@@ -270,6 +277,13 @@ function blastFormCheck_refseq(){
 }
 function blastFormCheck_genome(){
    form = document.getElementById('blastForm')
+   spamguard_input = document.getElementById('spamguard_input').value.toUpperCase()
+   spamguard_actual = form.spamcode1.value.toUpperCase()
+   //alert('in ' +spamguard_input)
+   //alert('actual ' +spamguard_actual)
+   if(spamguard_input !== spamguard_actual){
+      alert('Spam Guard Codes must match')
+   }
    if(form.blastDb.value === ''){
       if(document.getElementById('blastp_rb').checked){
          form.blastDb.value == 'faa/ALL_genomes.faa'

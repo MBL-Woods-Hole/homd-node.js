@@ -550,7 +550,7 @@ module.exports.readAsync = async function readAsync(file, callback) {
 
 //
 module.exports.makeid = function makeid(length) {
-    // Used for blast.id
+    // Used for blast.id and spamguard
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
@@ -559,6 +559,8 @@ module.exports.makeid = function makeid(length) {
     }
     return result;
 }
+//
+
 //
 module.exports.checkFileSize = function checkFileSize(file_path){
    let statsObj = fs.statSync(file_path);

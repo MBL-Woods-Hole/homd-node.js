@@ -262,12 +262,12 @@ router.get('/genome_description', function genomeDescription (req, res) {
     if (err) {
         //console.log(err)
     }else{
-        console.log('contigs',rows)
+        //console.log('contigs',rows)
         for(let r in rows){
            contigs.push(rows[r].accession.split('|')[1])
         }
     }
-    console.log('contigs',contigs)
+    //console.log('contigs',contigs)
     
 
 		/*
@@ -566,7 +566,8 @@ router.get('/blast', function blast_get(req, res) {
                filename:'ffn/'+chosen_gid+'.ffn'}
       ]
     }
-   res.render('pages/genome/blast', {
+    
+    res.render('pages/genome/blast', {
         title: 'HOMD :: Ribosomal Protein Tree',
         pgname: 'blast', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
@@ -574,6 +575,7 @@ router.get('/blast', function blast_get(req, res) {
         blastFxn: 'genome',
         organism: organism,
         gid: chosen_gid,
+        spamguard: helpers.makeid(3).toUpperCase(),
         all_annos: JSON.stringify(allAnnosObj),
         blast_prg: JSON.stringify(C.blastPrograms),
         db_choices: JSON.stringify(dbChoices),
