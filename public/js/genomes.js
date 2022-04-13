@@ -8,15 +8,18 @@
 // 	form.submit()
 // }
 function open_jbrowse_in_new_window(gidplusgc){
-  //console.log(gid)
+  console.log(gidplusgc)
   pts = gidplusgc.split('|')
-  if(pts[0]=='0'){
+  gid = pts[0]
+  gc = pts[1]
+  if(gid=='0'){
      document.getElementById("genome_iframe").src = "";	
      document.getElementById("genome_iframe").width = '100%'
      document.getElementById("genome_iframe").height = '0'
      return
   }
-  let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+pts[1]+"),GC Skew"
+  let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
+  
   window.open(url)
 }
 function offer_jbrowse(gid, contig, gc){
