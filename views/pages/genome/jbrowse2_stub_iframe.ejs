@@ -30,7 +30,8 @@
 <select id='selGenome' style='width: 800px;' onchange='open_jbrowse_in_new_window(this.value)'>
      <option id='' name='none' value='0'>Choose...</option>
      <% for(i in gn){ %>
-		<option id='' name='gnom' value='<%= gn[i].gid %>|<%= gn[i].gc %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
+        <% gc2 = (parseFloat(gn[i].gc)/100).toFixed(2) %>
+		<option id='' name='gnom' value='<%= gn[i].gid %>|<%= gc2 %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 	<% } %>
 </select>
 
