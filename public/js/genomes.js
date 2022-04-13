@@ -115,7 +115,12 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
         //text += '>'+product+' | '+mol+' | '+ org +'\n'
-        text += '>'+gid+'|'+pid+' | '+ product+' | '+org +'\n'
+        if(type === 'prokka'){
+            text += '>' + gid +'|' + pid +' | ' + product + ' | ' + org + '\n'
+        }else{
+             text += '>' + mol + ' | ' + product + ' | '+ org + '\n'
+        }
+        
         text += resp
         text += '</pre>'
     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
