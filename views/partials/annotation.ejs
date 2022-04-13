@@ -71,7 +71,7 @@
 			   <td><%= cnt %></td>
 			   <td><%= mole[n].accession %></td>
 			   
-			   <td nowrap><%= mole[n].PID %> <a title='Genome Viewer' href='/jbrowse/index.html?data=homd/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew&loc=<%= mole[n].accession %>:<%= start-500 %>..<%= stop+500 %>&highlight=<%= mole[n].accession %>:<%= start %>..<%= stop %>' target='_blank' rel="noopener noreferrer">jb</a></td>
+			   <td nowrap><%= mole[n].PID %> <a title='Genome Viewer' href='/jbrowse/index.html?data=homd/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc %>),GC Skew&loc=<%= mole[n].accession %>:<%= start-500 %>..<%= stop+500 %>&highlight=<%= mole[n].accession %>:<%= start %>..<%= stop %>' target='_blank' rel="noopener noreferrer">jb</a></td>
 			   <td nowrap>
 			       [<a title='Nucleic Acid' href='#' onclick="get_NN_NA_seq('na','<%= mole[n].PID %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')"><b>NA</b></a>] 
 			       [<a title='Amino Acid' href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].PID %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')"><b>AA</b></a>]

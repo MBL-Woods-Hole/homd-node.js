@@ -839,3 +839,6 @@ module.exports.getCallerIP = function getCallerIP(request) {
     ip = ip.split(':').slice(-1); //in case the ip returned in a format: "::ffff:146.xxx.xxx.xxx"
     return ip;
 };
+module.exports.get_gc_for_gccontent = function get_gc_for_gccontent(gc){
+    return (parseFloat(gc)/100).toFixed(2)
+}

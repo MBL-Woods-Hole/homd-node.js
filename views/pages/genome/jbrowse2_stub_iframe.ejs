@@ -23,26 +23,14 @@
 		
 			 
 		   
-		  <!-- 
-<div id='genome_choices'>
-		    <span nowrap>Select a Genome: 
-			<select id='gnom_select' class='dropdown' name='gnom_select' onchange='open_jbrowse_in_new_window(this.value)'>
-			 Select a Genome:
-			 <option id='' name='none' value='none'>Choose...</option>
-			 <% for(i in gn){ %>
-			 	<option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
-			 <% } %>
-			</select> 
-		   </span>
-		  </div>
- -->
+
 		 	
 <div id='genome_choices'>
 <span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> (JBrowse opens in a New Window)</span>
 <select id='selGenome' style='width: 800px;' onchange='open_jbrowse_in_new_window(this.value)'>
      <option id='' name='none' value='0'>Choose...</option>
      <% for(i in gn){ %>
-		<option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
+		<option id='' name='gnom' value='<%= gn[i].gid %>|<%= gn[i].gc %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 	<% } %>
 </select>
 
@@ -70,9 +58,10 @@
 <script>
   mainmenu()
   var gid = '<%- gid; %>'
+  var gc = '<%- gc; %>'
   if(gid){
-     //change_genome_4_jbrowse(gid)
-     open_jbrowse_in_new_window(gid)
+     
+     open_jbrowse_in_new_window(gid+'|'+gc)
   }
   $(document).ready(function(){
  

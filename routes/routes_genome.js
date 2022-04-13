@@ -207,7 +207,10 @@ router.get('/jbrowse', function jbrowse (req, res) {
   //let myurl = url.parse(req.url, true);
     
   const gid = req.query.gid
-  
+  let gc = 0
+  if(gid){
+      gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
+  }
   const glist = Object.values(C.genome_lookup)
   
   glist.sort(function sortGList (a, b) {
@@ -216,13 +219,14 @@ router.get('/jbrowse', function jbrowse (req, res) {
   // filter out empties then map to create list of sorted strings
   const genomeList = glist.filter(item => item.genus !== '')
     .map((el) => {
-      return { gid: el.gid, genus: el.genus, species: el.species, ccolct: el.ccolct }
+      return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, ccolct: el.ccolct }
     })
   res.render('pages/genome/jbrowse2_stub_iframe', {
     title: 'HOMD :: JBrowse', 
     pgname: 'genome/jbrowse', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     gid: gid,  // default
+    gc:gc,
     genomes: JSON.stringify(genomeList),
     tgenomes: genomeList.length,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
@@ -392,8 +396,8 @@ router.get('/explorer', function explorer (req, res) {
   }
   let organism = 'Unknown', pidList
   //let dbChoices = []
-  let otid = 0
-  
+  let otid = 0,gc = 0
+  //console.log('C.genome_lookup[gid]',C.genome_lookup[gid])
   // BLASTP  Compares an amino acid query sequence against a protein sequence database
   // BLASTN  Compares a nucleotide query sequence against a nucleotide sequence database
   // BLASTX  Compares a nucleotide query sequence translated in all reading frames against a protein sequence database
@@ -422,6 +426,7 @@ router.get('/explorer', function explorer (req, res) {
       blast_prg: JSON.stringify(C.blastPrograms),
       blast_version: CFG.BLAST_VERSION,
       blastFxn: 'genome',
+      gc: args.gc,
       info_data: JSON.stringify(args.annoInfoObj),
       pid_list: JSON.stringify(args.pidList),
       returnTo: '/genome/explorer?gid='+args.gid+'&blast=1',
@@ -441,7 +446,7 @@ router.get('/explorer', function explorer (req, res) {
   
   if (!gid || gid.toString() === '0') {
    
-    args = {gid:0,otid:0,blast:blast,organism:'',dbChoices:[],allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    args = {gid:0,gc:gc,otid:0,blast:blast,organism:'',dbChoices:[],allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
     renderFxn(req, res, args)
     return
   }else {
@@ -450,7 +455,7 @@ router.get('/explorer', function explorer (req, res) {
       }else{
         req.flash('fail', 'Genome not found: "'+gid+'"')
         
-        args = {gid:0,otid:0,blast:0,organism:'',dbChoices:[],allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+        args = {gid:0,gc:gc,otid:0,blast:0,organism:'',dbChoices:[],allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
         renderFxn(req, res, args)
         return
       }
@@ -465,17 +470,18 @@ router.get('/explorer', function explorer (req, res) {
    
   if(gid === 'all' && blast.toString() === '1') {
       
-      args = {gid:gid,otid:0,blast:1,organism:'',dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+      args = {gid:gid,gc:gc,otid:0,blast:1,organism:'',dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
       renderFxn(req, res, args)
       return
   }
   
   if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
         otid = C.genome_lookup[gid].otid
+        gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
   }
   if(gid && !blast && !anno) {
       
-      args = {gid:gid,otid:0,blast:0,organism:organism,dbChoices:[],allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+      args = {gid:gid,gc:gc,otid:0,blast:0,organism:organism,dbChoices:[],allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
       renderFxn(req, res, args)
       return
   }
@@ -483,7 +489,7 @@ router.get('/explorer', function explorer (req, res) {
 
   if (blast && blast.toString() === '1') {
     
-    args = {gid:gid,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    args = {gid:gid,gc:gc,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
     renderFxn(req, res, args)
     return
   }
@@ -494,7 +500,7 @@ router.get('/explorer', function explorer (req, res) {
   } else {
     req.flash('fail', 'Could not find: "'+anno+'" annotation for '+gid)
 
-    args = {gid:gid,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    args = {gid:gid,gc:gc,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
     renderFxn(req, res, args)
     return
   }
@@ -507,7 +513,7 @@ router.get('/explorer', function explorer (req, res) {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 
-      args = {gid:gid,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
+      args = {gid:gid,gc:gc,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
       renderFxn(req, res, args)
       return
     } else {
@@ -534,7 +540,7 @@ router.get('/explorer', function explorer (req, res) {
         //console.log('start count', pageData.start_count)
       }
       
-      args = {gid:gid,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:pageData,annoInfoObj:annoInfoObj,pidList:pidList}
+      args = {gid:gid,gc:gc,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:pageData,annoInfoObj:annoInfoObj,pidList:pidList}
       renderFxn(req, res, args)
     }
   })

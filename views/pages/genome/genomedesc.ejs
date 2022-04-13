@@ -36,6 +36,7 @@
 <link href="/css/select2.min.css" rel="stylesheet" /> 
 <% taxidfullname = ("000" + ginfo.otid).slice(-3); %>
 <% taxidfullnameplus = 'HMT-'+taxidfullname; %>
+<% gc2 = (parseFloat(ginfo.gc)/100).toFixed(2) %>
 <body>
   	<div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -50,9 +51,10 @@
 <% if(Object.keys(ginfo).length ==0 ) { %>
     <br><br>No Data Found for Genome: <%= gid %>		
 <% }else{ %>
+    
 	<div id='header_buttons' >
 	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (<%= taxidfullnameplus %>)</a>
-	 <a class='gd-button' href="/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
+	 <a class='gd-button' href="/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&blast=1'>BLAST Against this Genome</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA Annotation</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI Annotation</a>
@@ -92,7 +94,7 @@
        <% } %>
        </select>
        <span id='jbrowse_offer'>
-       <a href='/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew&loc=<%= ginfo.gid %>|<%= contigs[0] %>' target='_blank'>Open in Genome Viewer</a>
+       <a href="/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew&loc=<%= ginfo.gid %>|<%= contigs[0] %>" target='_blank'>Open in Genome Viewer</a>
        </span>
      </td></tr>
      <tr class="table-active"><td>15</td><td>Combined Length (bps)</td><td><%= ginfo.tlength %></td></tr>
