@@ -353,7 +353,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   
   let q = 'SELECT ' + fieldName + ' as seq FROM ' + db + '.ORF_seq'
   q += " WHERE PID='" + pid + "'"
-  helpers.print(q)
+  helpers.print('anno2 query'+q)
   
   ADBConn.query(q, (err, rows) => {
     if (err) {
@@ -499,9 +499,9 @@ router.get('/explorer', function explorer (req, res) {
     return
   }
 
-
+  
   const q = queries.get_annotation_query(gid, anno)
-  helpers.print(q)
+  helpers.print('anno query '+q)
 
   ADBConn.query(q, (err, rows) => {
     if (err) {

@@ -15,7 +15,7 @@ function open_jbrowse_in_new_window(gid){
      document.getElementById("genome_iframe").height = '0'
      return
   }
-  let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
+  let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew"
   window.open(url)
 }
 function offer_jbrowse(gid,contig){
@@ -23,7 +23,7 @@ function offer_jbrowse(gid,contig){
    if(!contig){
       return
    }
-   let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
+   let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew"
    url += "&loc="+gid+'|'+contig
  
    document.getElementById("jbrowse_offer").innerHTML = "<a href='"+url+"' target='_blank'>Open in Genome Viewer</a>"
@@ -38,7 +38,7 @@ function change_genome_4_jbrowse(gid){
   }
   // reload page form or ajax?
   
-  let url ="/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew"
+  let url ="/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew"
   console.log(url)
   document.getElementById("genome_iframe").width = '100%'
   document.getElementById("genome_iframe").height = '800px'
@@ -91,7 +91,7 @@ function get_16s_seq(seqid) {
     xmlhttp.send(JSON.stringify(args));
 }
 //
-function get_NN_NA_seq(type,pid,db,mol,org,product) {  // type=nn or na
+function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     console.log('in NNNA',type,pid)
     // on genome explore page
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
@@ -114,7 +114,8 @@ function get_NN_NA_seq(type,pid,db,mol,org,product) {  // type=nn or na
         text = ''
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
-        text += '>'+product+' | '+mol+' | '+ org +'\n'
+        //text += '>'+product+' | '+mol+' | '+ org +'\n'
+        text += '>'+gid+'|'+pid+' | '+ product+' | '+org +'\n'
         text += resp
         text += '</pre>'
     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");

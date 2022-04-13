@@ -242,7 +242,7 @@ def jblink(hit, type='jbrowse', hsp=None):
     """
     from George:
         http://homd.org/jbrowse/index.html
-        ?data=homd/[SEQID]&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew
+        ?data=homd/[SEQID]&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew
         &loc=[ACCESSION]:[START]..[STOP]&highlight=[ACCESSION]:[START1]..[STOP1]
         
         <Hsp_hit-from>169802</Hsp_hit-from>  st  highlight: st + Hsp_query-from
@@ -254,7 +254,7 @@ def jblink(hit, type='jbrowse', hsp=None):
     # hit = SEQF1595_KI535341.1
     hit_parts = hit.split('_')
     link = "/jbrowse/index.html"
-    link += "?data=homd/{}&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GCContent,GCSkew".format(hit_parts[0])
+    link += "?data=homd/{}&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew".format(hit_parts[0])
     
     if args.db_type == 'protein':
         """
