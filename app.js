@@ -29,16 +29,16 @@ const async = require('async')
 //const sizeof = require('object-sizeof');
 
 
-const home      = require('./routes/index');
-
-const admin     = require('./routes/routes_admin');
+const home     = require('./routes/index');
+const admin    = require('./routes/routes_admin');
 //const help      = require('./routes/routes_help');
-const taxa      = require('./routes/routes_taxa');
-const refseq = require('./routes/routes_refseq');
-const genome = require('./routes/routes_genome');
+const taxa     = require('./routes/routes_taxa');
+const refseq   = require('./routes/routes_refseq');
+const genome   = require('./routes/routes_genome');
 const phage    = require('./routes/routes_phage');
 const blast    = require('./routes/routes_blast');
-const help    = require('./routes/routes_help');
+const help     = require('./routes/routes_help');
+const user    = require('./routes/routes_user')
 const app = express();
 
 // PRODUCTION: log every restart
@@ -113,6 +113,7 @@ app.use('/genome', genome);
 app.use('/phage', phage);
 app.use('/blast', blast);
 app.use('/help', help);
+app.use('/user', user);
 
 
 // error handler middleware:
@@ -166,62 +167,69 @@ app.use(function(req, res, next){
  */
 const CustomTaxa  = require('./routes/helpers/taxa_class');
 
-// scripts to create this data::
-// homd-scripts/homd_init_data.py
-//
-var data_init_files =[
-  
-  path.join(CFG.PATH_TO_DATA, C.taxon_lookup_fn),
-  path.join(CFG.PATH_TO_DATA, C.lineage_lookup_fn) ,
-  path.join(CFG.PATH_TO_DATA, C.tax_hierarchy_fn),  // gives you taxonomy lineage
-  path.join(CFG.PATH_TO_DATA, C.genome_lookup_fn),
-  path.join(CFG.PATH_TO_DATA, C.refseq_lookup_fn),
-  path.join(CFG.PATH_TO_DATA, C.references_lookup_fn),
-  path.join(CFG.PATH_TO_DATA, C.info_lookup_fn),
-  path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),
-  path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),
-  path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),
-  
-  
-  path.join('public','data', C.image_location_locfn),  // image name and text
-  path.join('public','data', C.image_location_taxfn),  // match image w/ otid or tax rank
-  path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn)
-  
-]
-//console.log('Path to Data Files:',CFG.PATH_TO_DATA)
 
-
-async.map(data_init_files, helpers.readAsync, function(err, results) {
-    // results = ['file 1 content', 'file 2 content', ...]
-    // add the data to CONSTANTS so they are availible everywhere
-    // the lookups are keyed on Oral_taxon_id
-    //console.log('parsing0')
-    //console.log(results[0])
-    C.taxon_lookup              = JSON.parse(results[0]);// lookup by otid
+function readFromFile(file) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(file, (err, data) => {
+            if (err) {
+                console.log(err);
+                reject(err);
+            }
+            else {
+                resolve(JSON.parse(data));
+            }
+        });
+    });
+}
+// First, an array of promises are built.
+// Each Promise reads the file, then calls resolve with the result.
+// This array is passed to Promise.all(), which then calls the callback, 
+// passing the array of results in the same order.
+const promises = [
+    
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.taxon_lookup_fn)),
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.lineage_lookup_fn)) ,
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.tax_hierarchy_fn)),  // gives you taxonomy lineage
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.genome_lookup_fn)),
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.refseq_lookup_fn)),
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.references_lookup_fn)),
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.info_lookup_fn)),
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn)),
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn)),
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn)),
+  readFromFile(path.join('public','data', C.image_location_locfn)),  // image name and text
+  readFromFile(path.join('public','data', C.image_location_taxfn)),  // match image w/ otid or tax rank
+  readFromFile(path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn))
+    // ETC ...
+];
+Promise.all(promises)
+ .then(results => {
+    //baseList = result[0];
+    //currentList = result[1];
+    //console.log(results[0]['998'])
+    C.taxon_lookup              = results[0];// lookup by otid
     //console.log('parsing1')
-    C.taxon_lineage_lookup        = JSON.parse(results[1]); // lookup by otid
+    C.taxon_lineage_lookup        = results[1]; // lookup by otid
     //console.log('parsing2') 
-    C.homd_taxonomy =  new CustomTaxa(JSON.parse(results[2]));
+    C.homd_taxonomy =  new CustomTaxa(results[2]);
     //console.log('parsing3')
-    C.genome_lookup         = JSON.parse(results[3]);  // lookup by gid
+    C.genome_lookup         = results[3];  // lookup by gid
     //console.log('parsing4')
-    C.refseq_lookup             = JSON.parse(results[4]);
+    C.refseq_lookup             = results[4];
     //console.log('parsing5')
-    C.taxon_references_lookup   = JSON.parse(results[5]);   // lookup by otid
+    C.taxon_references_lookup   = results[5];   // lookup by otid
     //console.log('parsing6')
-    C.taxon_info_lookup         = JSON.parse(results[6]);  // lookup by otid
+    C.taxon_info_lookup         = results[6];  // lookup by otid
     //console.log('parsing7')
-    C.taxon_counts_lookup       = JSON.parse(results[7]);   // lookup by lineage
-    C.annotation_lookup         = JSON.parse(results[8]);
-    C.phage_lookup              = JSON.parse(results[9]);
-    //C.images              = JSON.parse(results[10]);
+    C.taxon_counts_lookup       = results[7];   // lookup by lineage
+    C.annotation_lookup         = results[8];
+    C.phage_lookup              = results[9];
+    //C.images              = results[10]);
     
-    C.images_loc              = JSON.parse(results[10]);   // image name and text
-    C.images_tax              = JSON.parse(results[11]);   // match image w/ otid or tax rank
-    C.contig_lookup           = JSON.parse(results[12]);
-    // add genus, species to C.genome_lookup
+    C.images_loc              = results[10];   // image name and text
+    C.images_tax              = results[11];   // match image w/ otid or tax rank
+    C.contig_lookup           = results[12];
     
-    //Object.values(C.taxon_lookup)
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
     C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
     //helpers.print_size()
@@ -277,67 +285,9 @@ async.map(data_init_files, helpers.readAsync, function(err, results) {
           num_zeros += 1
        }
     }
-    console.log("number of genera with parent_id='0': ",num_zeros," :Should be zero!")
+   // console.log("number
+    // do more stuff
 });
-
-// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[0]), (err, results) => {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   C.taxon_lookup               = JSON.parse(results);
-// })
-// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[1]), (err, results) => {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   C.taxon_lineage_lookup             = JSON.parse(results);
-// })
-// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[2]), (err, results) => {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   C.homd_taxonomy =  new CustomTaxa(JSON.parse(results));
-// })
-// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[3]), (err, results) => {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   C.genome_lookup              = JSON.parse(results);
-// })
-// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[4]), (err, results) => {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   C.refseq_lookup              = JSON.parse(results);
-// })
-// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[5]), (err, results) => {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   C.taxon_references_lookup              = JSON.parse(results);
-// })
-// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[6]), (err, results) => {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   C.taxon_info_lookup              = JSON.parse(results);
-// })
-// fs.readFile(path.join(CFG.PATH_TO_DATA, data_init_files[7]), (err, results) => {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   C.taxon_counts_lookup              = JSON.parse(results);
-// })
-// 
-
 
 console.log('start here in app.js')
 

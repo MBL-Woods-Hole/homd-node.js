@@ -22,7 +22,7 @@
       
     </ul>
   </li>
-  <% if(cfg.ENV === 'development'){ %>
+  <% if(cfg.XXX === 'development'){ %>
     <li><a class='main-topic' href="" >Phage</a>
       <ul>
         <!-- <li><a href="/phage">Phage Home</a></li> -->
@@ -119,7 +119,14 @@
     </ul>
     
   </li>   
-  
+  <% if(cfg.env === 'development'){ %>
+     <li><a class='main-topic' href="">Account</a>
+     <ul>
+       <li><a href='/user/login' >Login</a></li>
+       <li><a href='/user/signup' >Signup</a></li>
+     </ul>
+    </li>
+  <% } %>
   <% if(pgname && ['home','lost'].indexOf(pgname) == -1){ %>
       <li><a href='/help/help-page?pagecode=<%= pgname %>'><span class='small-link blue-text'>[Page-Help]</span></a></li>
   <% } %>

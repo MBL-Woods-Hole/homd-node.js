@@ -18,6 +18,7 @@ var browseDir = require("browse-directory");
 router.get('/', function index(req, res) {
   
   console.log('Session ID:',req.session.id)
+  console.log('CFG.ENV :',CFG.ENV )
   res.render('pages/home_tc', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'home', // for AbountThisPage

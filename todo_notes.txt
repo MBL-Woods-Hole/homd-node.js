@@ -1,4 +1,13 @@
 HOMD Notes
+2022-04-13
+Reguarding loc and highlight::
+To prevent loc go beyond beginning and end of a contig,
+For beginning it’s easier, just write a conditional if else, if after -500, it’s <1 then it’s 1
+For end of a contig, you have to get the contig size, and if after+500 it’s > contig size, then stop is at contig size.
+<--
+**must fix jbrowse link in blast py script (need to get gc and maybe contig len)
+** adding covert user:signup:login
+DONE email on gc content 4-13
 2022-04-05 Monthly Meeting
   DONE Remove gcskew from JB urls
   DONE on genomedesc page add search for contigs then link to jbrowse

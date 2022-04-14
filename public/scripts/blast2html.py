@@ -242,7 +242,7 @@ def jblink(hit, type='jbrowse', hsp=None):
     """
     from George:
         http://homd.org/jbrowse/index.html
-        ?data=homd/[SEQID]&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew
+        ?data=homd/[SEQID]&tracks=DNA,homd,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at 0.37),GC Skew
         &loc=[ACCESSION]:[START]..[STOP]&highlight=[ACCESSION]:[START1]..[STOP1]
         
         <Hsp_hit-from>169802</Hsp_hit-from>  st  highlight: st + Hsp_query-from
@@ -254,18 +254,18 @@ def jblink(hit, type='jbrowse', hsp=None):
     # hit = SEQF1595_KI535341.1
     hit_parts = hit.split('_')
     link = "/jbrowse/index.html"
-    link += "?data=homd/{}&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew".format(hit_parts[0])
+    loclink = ''
     
     if args.db_type == 'protein':
         """
-        prokka-type:
-        SEQF1595_01796
-        Use PROKKA_SEQF1595;
-        select m.accession, o.start, o.stop from molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID=' SEQF1595_01796'
-        ncbi-type
-        SEQF1595_ESK65362.1
-        Use NCBI_SEQF1595;
-        select m.accession, o.start, o.stop from molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID=' ESK65362.1'
+        PROKKA-type:
+          SEQF1595_01796
+          Use PROKKA_SEQF1595;
+          select m.accession, o.start, o.stop from molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID=' SEQF1595_01796'
+        NCBI-type
+          SEQF1595_ESK65362.1
+          Use NCBI_SEQF1595;
+          select m.accession, o.start, o.stop from molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID=' ESK65362.1'
         """
         if args.anno == 'prokka':
            pid = hit
@@ -273,11 +273,11 @@ def jblink(hit, type='jbrowse', hsp=None):
            pid = hit_parts[1]
         db = args.anno.upper()+'_'+hit_parts[0]
         query1 = "USE "+db+";"
-        query2 = "SELECT m.accession, o.start, o.stop FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='"+pid+"'"
+        query2 = "SELECT m.accession, m.GC, o.start, o.stop FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='"+pid+"'"
         
         if args.dbhost == 'localhost':
             query1 = "USE NCBI_SEQF1003;"
-            query2 = "SELECT m.accession, o.start, o.stop FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='EEE16625.1'"
+            query2 = "SELECT m.accession, m.GC, o.start, o.stop FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='EEE16625.1'"
         #print(query2)
         try:
             args.myconn.execute_no_fetch(query1)
@@ -285,23 +285,26 @@ def jblink(hit, type='jbrowse', hsp=None):
             accession = result[0]['accession']
             start = result[0]['start']
             stop = result[0]['stop']
+            gc = result[0]['GC']
             hitfrom = start
             hitto = stop
             #print(accession)
             if int(start) > int(stop):
                 hitfrom = stop
                 hitto = start
-
-            link += "&loc={}:{}..{}".format(accession, str(int(hitfrom)-500), str(int(hitto)+500))
-            link += "&highlight={}:{}..{}".format(accession, str(hitfrom), hitto)
+            locfrom = int(hitfrom)-500
+            if locfrom < 1:
+                locfrom = 1
+            loclink += "&loc={}:{}..{}".format(accession, str(locfrom), str(int(hitto)+500))
+            loclink += "&highlight={}:{}..{}".format(accession, str(hitfrom), hitto)
         except:
             pass
         
             
-    else:
+    else:   # not protein
     #link = "/jbrowse/index.html?id={}&type=jbrowse&db=db".format(hit)
         acc = hit.replace('_','|')
-    
+        gc = '0.37'  # default -- This is wrong!
         
         if hsp != None:
             
@@ -311,14 +314,19 @@ def jblink(hit, type='jbrowse', hsp=None):
             if int(hsp['Hsp_hit-from']) > int(hsp['Hsp_hit-to']):
                 hitfrom = hsp['Hsp_hit-to']  # these are the highlights
                 hitto = hsp['Hsp_hit-from']  # and the range is +/- 500
+            locfrom = int(hitfrom)-500
+            if locfrom < 1:
+                locfrom = 1
             # if int(hitfrom) < 500:
 #                lochitfrom = hitfrom
 #             else:
 #                lochitfrom = int(hitfrom)-500    
-            link += "&loc={}:{}..{}".format(acc, str(int(hitfrom)-500), str(int(hitto)+500))
-            link += "&highlight={}:{}..{}".format(acc, str(hitfrom), hitto)
+            loclink += "&loc={}:{}..{}".format(acc, str(locfrom), str(int(hitto)+500))
+            loclink += "&highlight={}:{}..{}".format(acc, str(hitfrom), hitto)
             #link += "&st={}&sp={}".format(hsp['Hsp_hit-from'], hsp['Hsp_hit-to'])
     #print(link)
+    link += "?data=homd/{}&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at {}),GC Skew".format(hit_parts[0], gc)
+    link += loclink
     return link
 
 def taxonlink(hit, type='taxon', hsp=None):

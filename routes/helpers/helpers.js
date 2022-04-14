@@ -532,9 +532,9 @@ module.exports.getAllDirFiles = function getAllDirFiles(dirPath, arrayOfFiles) {
   
 }
 module.exports.readAsync = async function readAsync(file, callback) {
-    // if(CFG.ENV === 'development'){
-//         console.log('Reading File:',file)
-//     }
+    if(CFG.ENV === 'development'){
+        console.log('Reading File:',file)
+    }
     module.exports.print(['Reading File:',file])
     try {
       if (fs.existsSync(file)) {

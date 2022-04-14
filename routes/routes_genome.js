@@ -259,6 +259,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
   }else{
     data = {}
   }
+  //console.log(data)
   const q = queries.get_contigs(gid)
   helpers.print(q)
   let contigs = []
