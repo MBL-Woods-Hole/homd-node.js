@@ -20,7 +20,7 @@ const node_log = require('simple-node-logger').createSimpleFileLogger(logFilePat
 
 const router = express.Router();
 const session = require('express-session');
-const passport = require('passport');
+//const passport = require('passport');
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
 //const favicon = require('serve-favicon');
@@ -30,7 +30,7 @@ const async = require('async')
 
 
 const home     = require('./routes/index');
-const admin    = require('./routes/routes_admin');
+//const admin    = require('./routes/routes_admin');
 //const help      = require('./routes/routes_help');
 const taxa     = require('./routes/routes_taxa');
 const refseq   = require('./routes/routes_refseq');
@@ -50,9 +50,9 @@ const app = express();
 
 app.set('appName', 'HOMD');
 app.set('trust proxy', true);
-require('./config/passport')(passport, TDBConn); // pass passport for configuration
-app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
+// require('./config/passport')(passport, TDBConn); // pass passport for configuration
+// app.use(passport.initialize());
+// app.use(passport.session()); // persistent login sessions
 app.use(flash());
 
 // view engine setup
@@ -106,7 +106,7 @@ app.use(express.static('tmp'));
 
 // ROUTES:
 app.use('/', home);
-app.use('/admin', admin);
+//app.use('/admin', admin);
 app.use('/taxa', taxa);
 app.use('/refseq', refseq);
 app.use('/genome', genome);
