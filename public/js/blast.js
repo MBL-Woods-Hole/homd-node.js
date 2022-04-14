@@ -245,6 +245,7 @@ function blastFormCheck_refseq(){
    //alert('actual ' +spamguard_actual)
    if(spamguard_input !== spamguard_actual){
       alert('Spam Guard Codes must match')
+      return
    }
    blastText = document.getElementById('textinput').value.trim()
    //alert(blastText)
@@ -283,6 +284,7 @@ function blastFormCheck_genome(){
    //alert('actual ' +spamguard_actual)
    if(spamguard_input !== spamguard_actual){
       alert('Spam Guard Codes must match')
+      return
    }
    if(form.blastDb.value === ''){
       if(document.getElementById('blastp_rb').checked){
