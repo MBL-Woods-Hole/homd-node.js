@@ -226,7 +226,7 @@ hr{
   padding: 0px 0px 0px 0px;
 }
 
-#nav a, #nav div{
+#nav a, #nav div, #nav span{
   display:block;
   text-decoration:none;
   padding:10px 10px 12px 10px;
@@ -238,7 +238,6 @@ hr{
   
   
 }
-
 
 
 #nav div{
@@ -259,11 +258,14 @@ hr{
   position:relative;
 }
 
-#nav li a:hover, #nav li div:hover{
+#nav li a:hover, #nav li div:hover, #nav li span:hover{
   position:relative;
   background-color: #033366;
   text-decoration:none;
   
+}
+#nav span:hover{
+  cursor: s-resize;
 }
 #first a:hover{
   /* kludge */

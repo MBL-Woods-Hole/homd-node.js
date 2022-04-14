@@ -1,4 +1,11 @@
 <style>
+input{
+   border:1px solid brown;
+}
+#new_user_div{
+   margin-left:300px;
+   padding:50px 100px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -9,28 +16,26 @@
     
     
     <div class='page-content' >
-              
+          
        <div class='title'>Register for an Account</div>
-    
+    <%- include('../../partials/flash'); %>    
     <div id='new_user_div' class='table' >All fields are required -- <a class='button' href='new_user'>Clear Form</a>
-    <form id='' name='newuser_form' method='POST' action='/users/signup' >
+    <form id='newuser_form' name='newuser_form' method='POST' action='/user/signup' >
       <ul>
       <li> <input id='username'       name='username'       type="text"   value=''  \> Username <span class='tiny_font'>(alphanumeric only. no spaces.)</span>
 
       </li>
       <li> <input id='password'         name='password'         type="password" value='' \> Password <span class='tiny_font'>(between 6 and 12 characters.)</span></li>
       <li> <input id='password_confirm' name='password_confirm' type="password" value='' \> Confirm Password</li>
-      <li> <input id='userfirstname'    name='userfirstname'  type="text"  value=''   \> First Name</li>
-      <li> <input id='userlastname'     name='userlastname'   type="text"  value=''   \> Last Name</li>
-      <li> <input id='useremail'        name='useremail'      type="text"  value=''   \> Email <span class='tiny_font'>(must be correct email format)</span></li>
-      <li> <input id='userinstitution'  name='userinstitution'type="text"  value=''   \> Institution</li>
+      <li> <input id='userfirstname'    name='firstname'  type="text"  value=''   \> First Name</li>
+      <li> <input id='userlastname'     name='lastname'   type="text"  value=''   \> Last Name</li>
+      <li> <input id='useremail'        name='email'      type="text"  value=''   \> Email <span class='tiny_font'>(must be correct email format)</span></li>
+      <li> <input id='userinstitution'  name='institution'type="text"  value=''   \> Institution</li>
       <br>
       </ul>
-      <input id=''   type="submit" value='Enter' \>
+      <input    type="submit" value='Enter' \>
     </form>
-    <br>
-    <p>Already have an account? <a href="/users/login">Login</a></p>
-    <p>Or go to the <a href="/">home page</a>.</p>
+    
 
   </div>
   

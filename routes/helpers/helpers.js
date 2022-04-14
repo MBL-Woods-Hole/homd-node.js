@@ -152,7 +152,7 @@ module.exports.capitalizeFirst = (value, index, self) =>{
 }
 module.exports.print_size = (obj, index, self) =>{
   let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
-    console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
+    //console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
 }
 module.exports.make_otid_display_name = (otid) =>{
     return 'HMT-'+("000" + otid.toString()).slice(-3);
@@ -611,7 +611,7 @@ module.exports.parse_blast_query_xml = function parse_blast_query_xml(jsondata, 
     //console.log('file_data',file_data)
     let json = JSON.parse(jsondata)  // xml
     if(grab === 'query'){
-		console.log(json.BlastOutput)
+		////console.log(json.BlastOutput)
 		let query = json['BlastOutput']['BlastOutput_query-def']
 		if(query){
 		   return query
@@ -632,16 +632,16 @@ module.exports.parse_blast_query_xml = function parse_blast_query_xml(jsondata, 
 			for(let hit in json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits']){
 				hits = json['BlastOutput']['BlastOutput_iterations']['Iteration']['Iteration_hits'][hit]
 				if(hits instanceof Array){
-				   console.log('**hits**arry',hits)
+				   //console.log('**hits**arry',hits)
 				   // possibly many
 				   for(let i in hits){
-			          console.log('**i in hits**',i,hits[i])
+			          //console.log('**i in hits**',i,hits[i])
 			          homdhitid = hits[i].Hit_def.split(' ')[0]
 			          
 				    }
 				   
 				}else{
-				   console.log('**hits**obj',hits)
+				   //console.log('**hits**obj',hits)
 				   // single
 				   homdhitid = hits['Hit_def'].split(' ')[0]
 				}
@@ -841,4 +841,21 @@ module.exports.getCallerIP = function getCallerIP(request) {
 };
 module.exports.get_gc_for_gccontent = function get_gc_for_gccontent(gc){
     return (parseFloat(gc)/100).toFixed(2)
+}
+module.exports.readFromFile = function readFromFile(file, ext) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(file, (err, data) => {
+            if (err) {
+                console.log(err);
+                reject(err);
+            }
+            else {
+                if(ext == 'json'){
+                   resolve(JSON.parse(data));
+                }else{
+                   resolve(data);
+                }
+            }
+        });
+    });
 }

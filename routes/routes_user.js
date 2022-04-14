@@ -26,7 +26,6 @@ router.get('/login', (req, res) => {
 		pgname: '',
 		config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
 		ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-
 		//user    : req.user,
 		hostname: CFG.hostname,
    });                     
@@ -131,8 +130,8 @@ router.get('/signup', (req, res) => {
 
 // process the signup form
 router.post('/signup', passport.authenticate('local-signup', {
-                successRedirect : 'pages/user/profile', // redirect to the secure profile section
-                failureRedirect : 'pages/user/signup', // redirect back to the signup page if there is an error
+                successRedirect : '/user/profile', // redirect to the secure profile section
+                failureRedirect : '/user/signup', // redirect back to the signup page if there is an error
                 failureFlash : true         // allow flash messages
 }));
 // from https://stackoverflow.com/questions/27056195/nodejs-express-validator-with-passport

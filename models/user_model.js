@@ -1,5 +1,5 @@
 const validator = require('validator');
-const C		  = require(app_root + '/public/constants');
+const C      = require(app_root + '/public/constants');
 
 class User {
 
@@ -101,6 +101,7 @@ class User {
   }
 
   validate_new_user(req, new_user, confirm_password0) {
+    console.log('in USER:validate_new_user')
     var err = 0;
     var confirm_password = confirm_password0 || new_user.password;
 

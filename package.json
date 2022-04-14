@@ -30,7 +30,7 @@
     "save": "^1.0.1",
     "selenium-webdriver": "^4.0.0-alpha.8",
     "simple-node-logger": "^21.8.12",
-    "validator": "^13.5.2",
+    "validator": "^13.7.0",
     "winston": "^3.3.3",
     "xml2json": "^0.12.0"
   },

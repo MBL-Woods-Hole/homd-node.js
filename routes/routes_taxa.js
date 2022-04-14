@@ -1289,7 +1289,7 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     let table_tsv='',row,site
     let temp_list = Object.values(C.taxon_counts_lookup)
     let abundance_order
-    let header = 'HOMD (https://node.homd.info/)::'
+    let header = 'HOMD (https://homd.org/)::'
     if(source === 'segata'){
         header += 'Data from Segata(2012); '
         abundance_order = C.base_abundance_order.concat(['ST'])

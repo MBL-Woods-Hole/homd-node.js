@@ -168,38 +168,26 @@ app.use(function(req, res, next){
 const CustomTaxa  = require('./routes/helpers/taxa_class');
 
 
-function readFromFile(file) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(file, (err, data) => {
-            if (err) {
-                console.log(err);
-                reject(err);
-            }
-            else {
-                resolve(JSON.parse(data));
-            }
-        });
-    });
-}
+
 // First, an array of promises are built.
 // Each Promise reads the file, then calls resolve with the result.
 // This array is passed to Promise.all(), which then calls the callback, 
 // passing the array of results in the same order.
 const promises = [
     
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.taxon_lookup_fn)),
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.lineage_lookup_fn)) ,
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.tax_hierarchy_fn)),  // gives you taxonomy lineage
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.genome_lookup_fn)),
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.refseq_lookup_fn)),
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.references_lookup_fn)),
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.info_lookup_fn)),
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn)),
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn)),
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn)),
-  readFromFile(path.join('public','data', C.image_location_locfn)),  // image name and text
-  readFromFile(path.join('public','data', C.image_location_taxfn)),  // match image w/ otid or tax rank
-  readFromFile(path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn))
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.taxon_lookup_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.lineage_lookup_fn),'json') ,
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.genome_lookup_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.refseq_lookup_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.references_lookup_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.info_lookup_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
+  helpers.readFromFile(path.join('public','data', C.image_location_locfn),'json'),  // image name and text
+  helpers.readFromFile(path.join('public','data', C.image_location_taxfn),'json'),  // match image w/ otid or tax rank
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn),'json')
     // ETC ...
 ];
 Promise.all(promises)

@@ -1,10 +1,11 @@
-var queries       = require('../routes/sql_admin');
+var queries       = require('../routes/queries');
 var LocalStrategy = require('passport-local').Strategy;
 var path          = require('path');
 var User          = require(app_root + '/models/user_model');
-const C       = require(app_root + '/public/constants');
+const C           = require(app_root + '/public/constants');
+const CFG         = require(app_root + '/config/config')
 
-module.exports = function (passport, db) {
+module.exports = function passport_setup(passport, db) {
 
   // =========================================================================
   // passport session setup ==================================================
@@ -13,14 +14,14 @@ module.exports = function (passport, db) {
   // passport needs ability to serialize and unserialize users out of session
 
   // used to serialize the user for the session
-  passport.serializeUser(function (user, done) {
+  passport.serializeUser(function serializeUser(user, done) {
     console.log('in serialize: user_id=' + user.user_id);
     done(null, user.user_id);
   });
 
   // used to deserialize the user
-  passport.deserializeUser(function (id, done) {
-    db.query(queries.get_user_by_uid(id), function (err, rows) {
+  passport.deserializeUser(function deserializeUser(id, done) {
+    db.query(queries.get_user_by_uid(id), function q_get_user_by_uid(err, rows) {
       done(err, rows[0]);
     });
   });
@@ -37,8 +38,8 @@ module.exports = function (passport, db) {
       passwordField: 'password',
       passReqToCallback: true // allows us to pass back the entire request to the callback
     },
-    function (req, username, password, done) {
-      console.log(req.body.userfirstname);
+    function local_signup(req, username, password, done) {
+      console.log('passpt req.body',req.body);
       console.log(done);
       return signup_user(req, username, password, done, db);
     }));
@@ -55,7 +56,7 @@ module.exports = function (passport, db) {
       passwordField: 'password',
       passReqToCallback: true // allows us to pass back the entire request to the callback
     },
-    function (req, username, password, done) { // callback with username and password from our form
+    function local_login(req, username, password, done) { // callback with username and password from our form
       return login_auth_user(req, username, password, done, db);
     }));
 
@@ -135,7 +136,7 @@ function login_auth_user(req, username, password, done, db) {
 
   var qSelectUser = queries.get_user_by_name(username, password);
 
-  db.query(qSelectUser, function (err, rows) {
+  db.query(qSelectUser, function q_get_user_by_name1(err, rows) {
     if (err)
     //return done(err);
     {
@@ -162,7 +163,7 @@ function login_auth_user(req, username, password, done, db) {
       var qResetUserSignin = queries.reset_user_signin(new_count, rows[0].current_sign_in_at, rows[0].user_id);
       //var q = "update user set sign_in_count='"+new_count+"', current_sign_in_at=CURRENT_TIMESTAMP(), last_sign_in_at='"+rows[0].current_sign_in_at+"' where user_id='"+rows[0].user_id+"'"
       //console.log(q);
-      db.query(qResetUserSignin, function (err, rows) {
+      db.query(qResetUserSignin, function q_reset_user_signin(err, rows) {
         if (err) {
           console.log(err);
         }
@@ -209,8 +210,9 @@ function signup_user(req, username, password, done, db) {
   if (vaildate_res[0] === 1) {
     return done(null, false, vaildate_res[1]);
   }
-
-  db.query(queries.get_user_by_name(new_user.username, new_user.password), function (err, select_rows) {
+  console.log('Validated!')
+  db.query(queries.get_user_by_name(new_user.username, new_user.password), 
+    function q_get_user_by_name2(err, select_rows) {
     if (err) {
       console.log(err);
       return done(null, false, req.flash('fail', err));
@@ -236,21 +238,21 @@ function signup_user(req, username, password, done, db) {
       //var insertQuery = queries.insert_new_user(username, password, first, last, email, inst)
       let insertQuery = queries.insert_new_user(newUserMysql);
 
-      db.query(insertQuery, function (err, insert_rows) {
+      db.query(insertQuery, function q_insert_new_user(err, insert_rows) {
         if (err) {  // error usually if contact-email-inst index is not unique
           console.log(insertQuery);
           console.log(err);
           return done(null, false, req.flash('fail', 'There was an error.'));
         } else {
           new_user.user_id                   = insert_rows.insertId;
-          C.ALL_USERS_BY_UID[new_user.user_id] = {
-            email: new_user.email,
-            username: new_user.username,
-            last_name: new_user.lastname,
-            first_name: new_user.firstname,
-            institution: new_user.institution,
-          };
-          let user_data_dir                  = path.join(req.CONFIG.USER_FILES_BASE, username);
+          // C.ALL_USERS_BY_UID[new_user.user_id] = {
+//             email: new_user.email,
+//             username: new_user.username,
+//             last_name: new_user.lastname,
+//             first_name: new_user.firstname,
+//             institution: new_user.institution,
+//           };
+          let user_data_dir                  = path.join(CFG.USER_FILES_BASE, username);
           console.log('Validating/Creating User Data Directory: ' + user_data_dir);
           //helpers.ensure_dir_exists(user_data_dir);  // also chmod to 0777 (ug+rwx)
           return done(null, new_user, req.flash('success', 'Registration was successful.'));
