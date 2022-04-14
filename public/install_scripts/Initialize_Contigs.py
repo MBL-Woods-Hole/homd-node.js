@@ -86,10 +86,12 @@ def run(args, dbs):
             gc = row['GC']
             #print('contig',contig)
             if contig not in master_lookup:
-                master_lookup[contig] = [{'sid':seqid,'gc':gc}]
+                #master_lookup[contig] = [{'sid':seqid,'gc':gc}]
+                master_lookup[contig] = [seqid]
             else:
                 print('appending: ',seqid,' to: ',contig)
-                master_lookup[contig].append({'sid':seqid,'gc':gc})
+                #master_lookup[contig].append({'sid':seqid,'gc':gc})
+                master_lookup[contig].append(seqid)
     #print('master_lookup',master_lookup)           
     
     #for db in dbs['prokka']:

@@ -228,7 +228,8 @@ router.post('/site_search', function site_search(req, res) {
     }
   });
   for(let n in contig_list){
-      contigObj_list.push({contig:contig_list[n], gids:C.contig_lookup[contig_list[n]]})
+      
+      contigObj_list.push({contig:contig_list[n], gids: C.contig_lookup[contig_list[n]]})
   }
   
   // search help pages

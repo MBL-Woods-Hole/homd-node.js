@@ -33,7 +33,7 @@ module.exports.get_16s_rRNA_sequence_query = (gid) => {
 
 module.exports.get_annotation_query = (gid, anno) => {
   const db = anno.toUpperCase() + '_' + gid
-  let qSelectAnno = 'SELECT accession, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
+  let qSelectAnno = 'SELECT accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
   return qSelectAnno
 }
