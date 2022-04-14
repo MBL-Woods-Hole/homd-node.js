@@ -14,21 +14,8 @@ ranks = ['domain','phylum','klass','order','family','genus','species']
 today = str(date.today())
 sys.path.append('../../../homd-data/')
 from connect import MyConnection
-usable_annotations = ['ncbi','prokka']
-# obj = {seqid:[]}             
-def make_anno_object():
 
-    new_obj={}
-    new_obj['gid'] = ''
-    new_obj['organism'] = ''
-    new_obj['contigs'] = ''
-    new_obj['bases'] = ''
-    new_obj['CDS'] = ''
-    new_obj['rRNA'] = ''
-    new_obj['tRNA'] = ''
-    new_obj['tmRNA'] = ''
-    ## ignore for now repeat_region, misc_RNA
-    return new_obj
+
 
 def find_databases(args):
     
@@ -88,7 +75,7 @@ def run(args, dbs):
         print('Running1',db)
         
         
-        q = "SELECT accession from "+db+".molecules"
+        q = "SELECT accession, GC from "+db+".molecules"
         
         result = myconn.execute_fetch_select_dict(q)
         for row in result:
@@ -96,12 +83,13 @@ def run(args, dbs):
             parts = row['accession'].split('|')
             contig = parts[1]
             seqid = parts[0]
+            gc = row['GC']
             #print('contig',contig)
             if contig not in master_lookup:
-                master_lookup[contig] = [seqid]
+                master_lookup[contig] = [{'sid':seqid,'gc':gc}]
             else:
                 print('appending: ',seqid,' to: ',contig)
-                master_lookup[contig].append(seqid)
+                master_lookup[contig].append({'sid':seqid,'gc':gc})
     #print('master_lookup',master_lookup)           
     
     #for db in dbs['prokka']:

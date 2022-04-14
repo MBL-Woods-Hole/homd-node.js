@@ -22,15 +22,18 @@ function open_jbrowse_in_new_window(gidplusgc){
   
   window.open(url)
 }
-function offer_jbrowse(gid, contig, gc){
-   //console.log(contig)
+function offer_jbrowse(gid, contigplusgc){
+   console.log(contigplusgc)
+   pts = contigplusgc.split('|')
+   contig = pts[0]
+   gc = (parseFloat(pts[1])/100).toFixed(2)
    if(!contig){
       return
    }
    let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
    url += "&loc="+gid+'|'+contig
  
-   document.getElementById("jbrowse_offer").innerHTML = "<a href='"+url+"' target='_blank'>Open in Genome Viewer</a>"
+   document.getElementById("jbrowse_offer_span").innerHTML = "<a href='"+url+"' target='_blank'>Open in Genome Viewer</a>"
 }
 // function change_genome_4_jbrowse(gid){
 //   //console.log(gid)

@@ -269,7 +269,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
     }else{
         //console.log('contigs',rows)
         for(let r in rows){
-           contigs.push(rows[r].accession.split('|')[1])
+           contigs.push({contig: rows[r].accession.split('|')[1], gc: rows[r].GC})
         }
     }
     //console.log('contigs',contigs)

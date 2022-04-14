@@ -39,7 +39,7 @@ module.exports.get_annotation_query = (gid, anno) => {
 }
 module.exports.get_contigs = (gid) => {   // always NCBI
   const db = 'NCBI_' + gid
-  qSelectContigs = "SELECT accession from "+db+".molecules"
+  qSelectContigs = "SELECT accession,GC from "+db+".molecules"
   return qSelectContigs
 }
 module.exports.get_db_updates_query = () => {
