@@ -285,7 +285,7 @@ def jblink(hit, type='jbrowse', hsp=None):
             accession = result[0]['accession']
             start = result[0]['start']
             stop = result[0]['stop']
-            gc = result[0]['GC']
+            gc = str(round(float(result[0]['GC'])/100,2))
             hitfrom = start
             hitto = stop
             #print(accession)
