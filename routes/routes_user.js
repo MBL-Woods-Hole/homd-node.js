@@ -132,7 +132,8 @@ router.get('/signup', (req, res) => {
 router.post('/signup', passport.authenticate('local-signup', {
                 successRedirect : '/user/profile', // redirect to the secure profile section
                 failureRedirect : '/user/signup', // redirect back to the signup page if there is an error
-                failureFlash : true         // allow flash messages
+                failureFlash : true ,        // allow flash messages
+                session: false
 }));
 // from https://stackoverflow.com/questions/27056195/nodejs-express-validator-with-passport
 // router.post('/signup',
