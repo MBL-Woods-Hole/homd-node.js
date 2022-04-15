@@ -727,6 +727,7 @@ module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata, fx
 module.exports.parse_blast = function parse_blast0(file_data, fxn){
     //console.log('BLAST data',file_data.toString())
     let string = file_data.toString()
+    //console.log('string',string)
     let file_collector = {}
     let id_collector = {}
     let tmp =[]

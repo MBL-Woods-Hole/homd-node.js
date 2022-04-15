@@ -254,8 +254,9 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
                    //console.log('results-i',results[i].toString())
                     let query = helpers.parse_blast_query(results[i], config.blastFxn)
                     query_strings.push({query:query, file:blastFiles[i]})
-                  
+                   console.log('results[i]',i,results[i])
                     let parsed_data = helpers.parse_blast(results[i], config.blastFxn)
+                    console.log('parsed_data',i,parsed_data)
                     data.push(parsed_data) // in order of sequences
                }
                 if(data.length === 0){
@@ -975,7 +976,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
 //
 function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
     let desc,id,html,init,split_items,hmt,seqid,odd,bgcolor
-    
+    console.log('data_arr',  data_arr)
     // sort data_arr
     html =''
    
@@ -1003,6 +1004,7 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
     }
     //console.log('data_arr',data_arr)
     for(let i in data_arr){
+        //console.log('YYY', i, data_arr[i].data)
         odd = i % 2  // will be either 0 or 1
        //console.log('odd',odd)
        
@@ -1048,7 +1050,7 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
          html += "<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
          html += "<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
          for(let n=0;n<4;n++){
-           
+           //console.log('XXX', n, data_arr[i].data[n])
            html += "<td nowrap class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid="+data_arr[i].data[n].otid+"'>"+data_arr[i].data[n].clone_id+'</a></td>'
            
            html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].clone+"</td><td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].expect+"</td>"
