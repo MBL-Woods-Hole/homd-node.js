@@ -118,24 +118,33 @@
       <li><a href='/help/index'>Search Help</a></li>
     </ul>
     
+    
+    
   </li>   
+  
   <% if(cfg.env === 'development'){ %>
+  <!-- 
+
      <li><a class='main-topic' href=""><font color='red'>Account</font></a>
      <ul>
        <li><a href='/user/login' >Login</a></li>
        <li><a href='/user/signup' >Signup</a></li>
      </ul>
     </li>
+ -->
+    
   <% } %>
-  <% if(pgname && ['home','lost'].indexOf(pgname) == -1){ %>
-      <li><a href='/help/help-page?pagecode=<%= pgname %>'><span class='small-link blue-text'>[Page-Help]</span></a></li>
+    
+  <% if(pgname && ["home","lost"].indexOf(pgname) == -1){ %>
+      <li ><a href='/help/help-page?pagecode=<%= pgname %>'><small  id='page-help'>[Page-Help]</small></a></li>
   <% } %>
   
-  <span id='homd-search' >
+   
+   <span id='homd-search' >
     <input type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
     <input type="image" src='/images/search2.png'  id="search_button" height='15' onclick='search()' />
-  </span>
-  
+   </span>
+    
 </ul>
 </div>
 

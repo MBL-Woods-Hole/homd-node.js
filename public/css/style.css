@@ -226,7 +226,7 @@ hr{
   padding: 0px 0px 0px 0px;
 }
 
-#nav a, #nav div, #nav span{
+#nav a, #nav div,#nav span{
   display:block;
   text-decoration:none;
   padding:10px 10px 12px 10px;
@@ -299,17 +299,22 @@ hr{
   color:#ffba3b;
   background-color:#033366; 
 }
+#page-help{
+   font-size:small;
+   color:blue;
+}
+#page-help:hover{
+   color:white;
+}
 /*  nav search: */
 #homd-search {
   display: flex;
   flex-wrap: wrap;
   /* width: 220px; */
   position: absolute;
-  top: 6px;
   right: 10px;
-  
+  height:32px;
 }
-
 
 #homd-search input[type=text] {
   width:150px;
@@ -323,6 +328,7 @@ hr{
   padding:3px 0 0 3px;
 }
 
+
 #version-info{
   position:relative;
   float:right;
@@ -330,10 +336,8 @@ hr{
   font-size:11px;
   padding:3px 5px;
   color:white;
-  
-  
-  
 }
+
 #version-info a{
   padding:0px;
   margin:0px;
