@@ -2,6 +2,7 @@
 </style>
 <%- include('../../partials/header_html'); %>
 <link rel="stylesheet" type="text/css" href="/css/blast.css" >
+<link rel="stylesheet" href="/css/select2.min.css" /> 
 <% db_choices = JSON.parse(db_choices) %>
 <% blast_prg = JSON.parse(blast_prg) %>
 <% blast_max = JSON.parse(blastmax) %>
@@ -34,9 +35,15 @@
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
+
 <script type="text/javascript" src="/js/genomes.js"></script>
+<script type="text/javascript" src="/js/select2.min.js"></script>
 <script>
   mainmenu()
+  $(document).ready(function(){
+    // Initialize select2
+    $("#choose_genome_select").select2(); 
+  });
 </script>
 
 
