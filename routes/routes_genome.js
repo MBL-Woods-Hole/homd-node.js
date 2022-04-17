@@ -154,7 +154,7 @@ router.get('/genome_table', function genomeTable(req, res) {
 })
 //
 router.post('/search_genometable', function searchGenomeTable(req, res) {
-  console.log(req.body)
+  helpers.print(req.body)
   const searchTxt = req.body.gene_srch.toLowerCase()
   const searchField = req.body.field
   var countTxt, countTxt0;

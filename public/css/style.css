@@ -526,14 +526,7 @@ hr{
    
 }
 
-#under-construction{
-   position: absolute;
-   top:100px;
-   padding:10px;
-   background:orange;
-   border:1px solid black;
-   
-}
+
 #alert_flash_message_success{
     background:green;
     color:white;
