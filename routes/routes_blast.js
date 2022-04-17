@@ -184,6 +184,8 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
     const sortCol = req.query.col || '' 
     const sortDir = req.query.dir || '' 
     //////////////////
+    const table_opt = req.query.opt || ''
+    
     const renderFxn = (req, res, html, queries, genome_data, files, config, blastID) => {
         //console.log('htmlfiles',files)
         res.render('pages/blast/blast_results_refseq', {
@@ -212,7 +214,7 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
     }
 
     //console.log(req.query)
-    let data=[],blastFiles = [],query_strings=[]
+    let data=[],blastFiles = [],query_strings=[],refseq_html
     // read directory CONFIG.json first
     let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
     let blastResultsDir = path.join(blastDir, 'blast_results')
@@ -228,7 +230,7 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
         }else{
             // blast.out files are present (but are they complete?)
             let config = JSON.parse(configData)
-             
+            
             const result = getAllFilesWithExt(blastResultsDir, 'out')
             if(!result){
                    throw new Error('The Blast ID "'+blastID+'" was not found.<br>Probably expired if you are using and old link.')
@@ -244,47 +246,22 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
 //                 console.log('blast file',blastFiles[i])
 //                 
 //             }
+           
             Promise.all(blastFilePromises)
               .then(results => {
               //console.log('in promis')
               //console.log('result0',results[0])
-              for(let i=0; i<blastFiles.length; i++){
-                    //console.log('file',blastFiles[i])
-                   //console.log('config',config)
-                   //console.log('results-i',results[i].toString())
-                    let query = helpers.parse_blast_query(results[i], config.blastFxn)
-                    query_strings.push({query:query, file:blastFiles[i]})
-                   console.log('results[i]',i,results[i])
-                    let parsed_data = helpers.parse_blast(results[i], config.blastFxn)
-                    console.log('parsed_data',i,parsed_data)
-                    data.push(parsed_data) // in order of sequences
-               }
-                if(data.length === 0){
-                    // error no data
-                    let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, config.id, 'blasterror.log')
-                    fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
-                        if(err){
-                            // continue on NO ERROR FILE PRESENT and no data  WTF?
-                            // throw error 
-                            req.flash('fail', 'BLAST Failed with no data and no error information')
-                            res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
-                            return            
-                        }else{
-                          // file exists throw error
-                            if(content.toString().trim()){  // means there was true error NOT zero length
-                                //pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
-                                req.flash('fail', 'BLAST Script Error:: '+ content)
-                                res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
-                                return
-                            }
-                        }
-                    })
-                }
-                let refseq_html = ''
-                refseq_html = getBlastHtmlTable0(data, blastID, sortCol, sortDir)
-                 
-                
-                if(!blastID){
+              let function_args = {cfg:config,files:blastFiles,bid:blastID,scol:sortCol,sdir:sortDir,opt:table_opt}
+              
+              if(config.outfmt === 'tsv'){
+                   refseq_html = run_tsv_refseq_blast(results, function_args)
+              }else{
+                  
+                  refseq_html = run_std_refseq_blast(results, function_args)
+              
+              }
+              
+               if(!blastID){
                     req.flash('fail', 'blastID no longer Valid')
                     res.redirect(config.blastFxn) // this needs to redirect to either refseq or genome
                     return
@@ -295,31 +272,66 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
                 }else{ 
                   renderFxn(req, res, refseq_html, query_strings, '', html_files, config, blastID)
                 }
-                
+              
     
               
             })
-            // async.map(blastFiles, helpers.readAsync, function asyncMapBlast(err, results) {
-//                 for(let i=0; i<blastFiles.length; i++){
-//                     //console.log('file',blastFiles[i])
-//                    console.log('config',config)
-// //                  console.log('results-i',results[i].toString())
-//                     let query = helpers.parse_blast_query(results[i], config.blastFxn)
-//                     query_strings.push({query:query, file:blastFiles[i]})
-//                   
-//                     let parsed_data = helpers.parse_blast(results[i], config.blastFxn)
-//                     data.push(parsed_data) // in order of sequences
-//                 }
-//                 
-//                 //console.log('**data**',data)
-//                 
-//             }) // end async map
            
            
         } // end else
     })
 })
-
+function run_tsv_refseq_blast(results, args){
+    // tsv file 
+    let data=[]
+    for(let i=0; i<results.length; i++){
+        let parsed_data = helpers.parse_blast_tsv(results[i], args.opt,args.bid,i)
+        data.push(parsed_data) 
+    }
+    //console.log('data0',data[0])
+   return data.join('<br><br>')
+}
+function run_std_refseq_blast(results, args){
+    let query_strings =[],data=[]
+    for(let i=0; i<results.length; i++){
+		//console.log('file',blastFiles[i])
+	   //console.log('config',config)
+	   //console.log('results-i',results[i].toString())
+		let query = helpers.parse_to_get_blast_query(results[i], args.cfg.blastFxn)
+		query_strings.push({query:query, file:args.files[i]})
+		//console.log('results[i]',i,results[i])
+		let parsed_data = helpers.parse_blast(results[i], args.cfg.blastFxn)
+		//console.log('parsed_data',i,parsed_data)
+		data.push(parsed_data) // in order of sequences
+    }
+    
+	if(data.length === 0){
+		// error no data
+		let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, args.cfg.id, 'blasterror.log')
+		fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
+			if(err){
+				// continue on NO ERROR FILE PRESENT and no data  WTF?
+				// throw error 
+				req.flash('fail', 'BLAST Failed with no data and no error information')
+				res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
+				return            
+			}else{
+			  // file exists throw error
+				if(content.toString().trim()){  // means there was true error NOT zero length
+					//pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
+					req.flash('fail', 'BLAST Script Error:: '+ content)
+					res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
+					return
+				}
+			}
+		})
+	}
+	let refseq_html = ''
+	refseq_html = getBlastHtmlTable0(data, args.bid, args.scol, args.sdir)
+	 
+   return refseq_html
+                
+}
 //
 router.get('/blast_wait', async function blastWait(req, res, next) {
     helpers.print('in blast wait')
@@ -902,6 +914,7 @@ function createBlastOpts(reqBody) {
     bOpts.maxTargetSeqs = reqBody.blastMaxTargetSeqs,
     bOpts.advanced = reqBody.advancedOpts,
     bOpts.program = reqBody.blastProg
+    bOpts.outfmt = reqBody.outformat
     // add dbPath later
     
     if(reqBody.blastFxn === 'genome') {
@@ -947,6 +960,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     config.blastdbPath = blastOpts.dbPath
     config.ext = blastOpts.ext  // used only for genome
     config.blastdb = blastOpts.blastDb
+    config.outfmt = blastOpts.outfmt
     config.blastDir = blastDir
     config.dataType = opts.type
     config.expect = blastOpts.expect
@@ -976,7 +990,7 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
 //
 function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
     let desc,id,html,init,split_items,hmt,seqid,odd,bgcolor
-    console.log('data_arr',  data_arr)
+    //console.log('data_arr',  data_arr)
     // sort data_arr
     html =''
    
@@ -1051,12 +1065,16 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
          html += "<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
          for(let n=0;n<4;n++){
            //console.log('XXX', n, data_arr[i].data[n])
+           if(data_arr[i] && data_arr[i].data[n]){
            html += "<td nowrap class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid="+data_arr[i].data[n].otid+"'>"+data_arr[i].data[n].clone_id+'</a></td>'
            
            html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].clone+"</td><td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].expect+"</td>"
            html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].bitscore+"</td>"
            html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].identity+'</td>'
            html += '</tr>'
+           }else{
+             html += "<td colspan='4'>error</td></tr>"
+           }
          }
        }
        

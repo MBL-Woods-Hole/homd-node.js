@@ -95,7 +95,9 @@
        <% } %>
        </select>
        <span id='jbrowse_offer_span'>
-       <a href="/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew&loc=<%= ginfo.gid %>|<%= contigs[0].contig %>" target='_blank'>Open in Genome Viewer</a>
+       <% if(contigs[0]){%>
+         <a href="/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew&loc=<%= ginfo.gid %>|<%= contigs[0].contig %>" target='_blank'>Open in Genome Viewer</a>
+       <% } %>
        </span>
      </td></tr>
      <tr class="table-active"><td>15</td><td>Combined Length (bps)</td><td><%= ginfo.tlength %></td></tr>

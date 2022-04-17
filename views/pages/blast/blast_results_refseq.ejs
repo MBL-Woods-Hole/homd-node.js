@@ -1,9 +1,5 @@
 
-<style>
-/* Fix the tax table header */
-thead th { position: sticky; top: 0; }
 
-</style>
 
 <% blastParams = JSON.parse(blastParams) %>
 <% error_obj = JSON.parse(error) %>
@@ -13,6 +9,17 @@ thead th { position: sticky; top: 0; }
 
 <%- include('../../partials/header_html'); %>
 <link rel="stylesheet" type="text/css" href="/css/blast.css" >
+<style>
+/* Fix the tax table header */
+thead th { position: sticky; top: 0; }
+pre
+{
+font-family: 'Courier New', monospace;
+font-size:1.3em;
+background-color:lightgrey;
+padding:5px;
+}
+</style>
 <body>
    <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -38,7 +45,11 @@ thead th { position: sticky; top: 0; }
       <table>
         <tr>
         
+        
         <td>
+          <% if(blastParams.outfmt === "tsv"){ %>
+            Download as TSV File<br>(coming soon)
+          <% }else{ %>
           <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.form)">
             <option value='0'>Download Options</option>
             <option value='text1'>As Text -top hit only</option>
@@ -53,10 +64,8 @@ thead th { position: sticky; top: 0; }
             <option disabled>--------</option>
             <option value='zip'>BLAST Output Files</option>
           </select>
-          
-        
         </td>
-        
+        <% } %>
         <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:
         <br>&nbsp;&nbsp;&nbsp;&nbsp;<%= blastParams.blastdb %></td>
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
@@ -69,8 +78,20 @@ thead th { position: sticky; top: 0; }
     <span style='float:right'><a class='button' href='/refseq/refseq_blastn'>Back</a></span>
     <!-- <span style='float:right'><button onclick="history.back()">Go Back</button></span> -->
     </div>
-    <% if(blastParams.blastFxn === 'refseq') { %>
-    <div id='sort_radios'>    
+    <% if(blastParams.outfmt === "tsv"){ %>
+        <div id='sort_radios'>    
+          <center><small>
+          Output Options: 
+         <small>(toggle)</small>&nbsp;&nbsp;&nbsp;&nbsp;
+         <input  checked id='ofull' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','full')"> Full Table</button>&nbsp;&nbsp;
+         <input  id='oone' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','one')"> Option-1 (Full Percent ID)</button>&nbsp;&nbsp;
+         <input  id='otwo' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','two')"> Option-2 (alignments)</button>&nbsp;&nbsp;
+          <input  id='ostd' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','std')"> Standard</button>
+        
+          </small></center>
+      </div>
+    <% }else{ %>
+       <div id='sort_radios'>    
           <center><small>
           Sort Table: &nbsp;&nbsp;&nbsp;&nbsp;
           <!-- file sort is original -->
@@ -80,8 +101,8 @@ thead th { position: sticky; top: 0; }
          <input  checked id='isort' name='sort_refseq' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','identity')"> By Identity</button>&nbsp;&nbsp;
          <input  checked id='ssort' name='sort_refseq' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','sequence')"> Original Sorting (By Sequence Input)</button>
           </small></center>
-    </div>
-    <% }else{ %>    <!-- Genomic Blast Result -->
+      </div>
+    
       
     <% } %>
     

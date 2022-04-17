@@ -30,7 +30,50 @@ function getFileContent(type, id, num) {
     }
     xmlhttp.send(JSON.stringify(args));
 } 
-
+function create_alignment(qseq, sseq){
+    //alert(qseq)
+    let qseq_letters = qseq.trim().split('')
+    let sseq_letters = sseq.trim().split('')
+    let acolor = 'blue'
+    let gcolor = 'blue'
+    let ccolor = 'blue'
+    let tcolor = 'blue'
+    let qcaps = 'q: ',scaps = 's: '
+    let align_value = '   '
+    let onereturn = ''
+    console.log(qseq_letters.length,sseq_letters.length)
+    for(let q in qseq_letters){
+       
+       let letter = qseq_letters[q].toUpperCase()
+       qcaps += letter
+       
+    }
+    onereturn += '\n'
+    for(let q in qseq_letters){
+       let qletter = qseq_letters[q].toUpperCase()
+       let sletter = sseq_letters[q].toUpperCase()
+        if(qletter == sletter){
+             align_value += "|"
+        }else{
+             align_value += ' '
+        }
+    }
+    
+    for(let s in sseq_letters){
+       let letter = sseq_letters[s].toUpperCase()
+       scaps += letter
+      
+    }
+    //window.open(qcaps+'<br>'+align_value+'<br>'+scaps)
+    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=680,height=500");
+    var doc = win.document;
+    //doc.writeln("<title>yourtitle</title>");
+    //doc.title = 'eHOMD Reference Sequence'
+    doc.open("text/html")
+    doc.write('<pre>'+qcaps+'<br>'+align_value+'<br>'+scaps+'</pre>');
+    doc.close();
+    //return qcaps+'<br>'+align_value+'<br>'+scaps
+}    
 
 function blastCkboxMaster(id){
    //alert('in bcbm')
@@ -133,7 +176,24 @@ function sortBlastTableForm_toggle(blastID, col){
     xmlhttp.send(null);
   
 }
-
+function opt_toggle(blastID, opt){
+   console.log(blastID, opt)
+   
+    var xmlhttp = new XMLHttpRequest();
+    var url = '?id='+blastID+'&opt='+opt+'&ajax=1&t='+ Math.random()
+    //console.log(url)
+    xmlhttp.open("GET", "blast_results_refseq"+url, true);
+    
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      var resp = xmlhttp.responseText;
+      document.getElementById('blastResultsDiv').innerHTML = resp
+     } 
+    }
+    xmlhttp.send(null);
+  
+}
 function reset2default(fxn) {
    // defaults
    if(fxn == 'genome'){

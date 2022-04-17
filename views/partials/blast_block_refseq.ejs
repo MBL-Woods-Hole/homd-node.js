@@ -1,4 +1,4 @@
-
+<% var cfg = JSON.parse(config) %>
 <style>
   #other70 {
    /* background:var(--div-bg01); */
@@ -47,8 +47,12 @@
 	   </span>
 	   
        </div>
-
-       
+<% if(cfg.env === 'development'){ %>
+       <center><small>Output Selection: 
+       <input type='radio' checked name='outformat' value='std'> Standard&nbsp; &nbsp;
+       <input type='radio' name='outformat' value='tsv'> Custom (new!)
+       </small></center>
+<% } %>
            <div class='block-title' >Upload your 16S rRNA Sequences:</div>
            Copy and paste sequence(s) below, preferably in FASTA format:
       

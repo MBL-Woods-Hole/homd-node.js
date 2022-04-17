@@ -1,4 +1,14 @@
 HOMD Notes
+2022-04-15
+JMW would like a custom blast output similar to
+blast-script/abundance-sripts/#12
+Hi Andy,
+
+What Bernd is trying to do is probably very similar to that BLAST parse script you wrote for me.
+  The script is very useful in that it will report not only how many equally good top hits 
+  there are, and which taxa, but also the % identity over the entire length of the query, not just the matched portion. 
+
+When you have time, do you think you could make it possible for users to do a BLAST to HOMD 16S rRNA genes and receive the output from your BLAST parse script?
 2022-04-13
 Reguarding loc and highlight::
 To prevent loc go beyond beginning and end of a contig,
@@ -17,7 +27,7 @@ DONE email on gc content 4-13
   DONE Write py script for countries (in homd-scripts)
   DONE Increase blast save to 2-3 mos
   DONE Fix initial sort of genome blast data
-show contigs in main HOMD search - glob 
+   show contigs in main HOMD search - glob 
    write py script for all contigs from all genomes
    that loads at start up
 Code for blast to fool bots

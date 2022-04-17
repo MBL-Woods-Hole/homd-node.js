@@ -564,7 +564,7 @@ module.exports.makeid = function makeid(length) {
 //
 module.exports.checkFileSize = function checkFileSize(file_path){
    let statsObj = fs.statSync(file_path);
-   console.log('size',statsObj.size);  // bytes
+   //console.log('size',statsObj.size);  // bytes
    return statsObj.size
    // fs.statSync(file_path, (err, stats) => {
 //     if (err) {
@@ -585,7 +585,7 @@ module.exports.print = function print(thing) {
     
 }
 //
-module.exports.parse_blast_query = function parse_blast_query(file_data, fxn){
+module.exports.parse_to_get_blast_query = function parse_to_get_blast_query(file_data, fxn){
     
     let string = file_data.toString()
     let lines = string.split('\n')
@@ -724,6 +724,219 @@ module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata, fx
     return file_collector
 
 }
+module.exports.parse_blast_tsv = function parse_blast_tsv(file_data, opt, blastID, count){
+    //opt = 'full'  // one,two,full
+    // https://www.metagenomics.wiki/tools/blast/blastn-output-format-6
+    let lines = file_data.toString().split('\n')
+    // plan : get the top hits only (by bit_score)
+    // split the id line
+    // calculate FULL_PCT_ID 
+    // qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
+    let indexes ={query_id:0, hit_id:1,bit_score:11, pct_identity:2, 
+                  qstart:6, qend:7, stitle:13, length:3, mismatches:4, 
+                  gaps:5, qlen:12,evalue:10,qseq:14,sseq:15}  // qseq;11, sseq:12
+    let query =''
+    let header = ''
+    let max_bitscore = 0
+    let line_count = 0
+    let row_collector = []
+    for(let i in lines){
+        if(!lines[i] || lines[i] === ''){
+            continue
+        }
+        
+        //console.log('line:',lines[i])
+        if(lines[i][0] === '#'){
+          header += lines[i]+'<br>'
+          if(lines[i].startsWith('# Query:')){
+            query = lines[i].split(':')[1]
+          }
+          
+        }else{
+            line_count += 1
+            
+            let line_items = lines[i].split('\t')
+            // if(opt === 'one'){
+//                 if(line_count === 1){
+//                     // collect this line and all with this same max_bitscore 
+//                     max_bitscore = line_items[indexes.bit_score]
+//                     row_collector.push(line_items)
+//                 }else if(max_bitscore === line_items[indexes.bit_score]){
+//                     row_collector.push(line_items)
+//                 }
+//             }else 
+            if(opt === 'std'){
+              //collect only four
+              // http://0.0.0.0:3001/blast/blast_results_refseq?id=ZYF1UUBqLje5JSuO2CfI_refseq
+              // http://0.0.0.0:3001/blast/blast_results_refseq?id=Jfcp0GipN5QYxEcrTZKd_refseq
+              if(line_count < 5){
+                  row_collector.push(line_items)
+              }
+            }else{
+                // full collect all rows
+                row_collector.push(line_items)
+            }
+        }
+    }
+    //console.log('row_collector',row_collector)
+    if(row_collector.length === 0){
+        return header+"No Data"
+    }
+    let html = '<table><tr>'
+    if(opt === 'one'){
+        html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>HMT</th><th>Species</th><th>Strain/Clone</th><th>Genbank</th><th>Status</th>'
+        html += '<th>% Ident</th><th>FULL_PCT_ID</th><th>Hit Title</th>'
+    }else if(opt === 'two'){
+        html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>Mis-Matches</th><th>Gaps</th><th>Alignments</th>'
+    }else if(opt === 'std'){
+        html += '<th>Query</th><th>Q Length</th><th>Q seq</th><th>Alignment</th><th>Hit-id</th><th>HOMD Clone Name</th><th>e-value</th>'
+        html += '<th>Bit Score</th><th>% Ident</th>'
+    }else{
+       //qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
+        html += '<th>query-id</th><th>hit-id</th><th>% Ident</th><th>Alignment Length</th><th>Mis-matches</th><th>Gaps</th>'
+        html += '<th>q-start</th><th>q-end</th><th>s-start</th><th>s-end</th><th>E-value</th><th>Bit Score</th><th>Query Length</th><th>Hit Title</th>'
+    }
+    html += '</tr>'
+    if(opt === 'std'){
+        html+='<tr>'
+            html+="<td rowspan='4'>"+query.trim()+'</td>' // query
+            
+            html+="<td rowspan='4'>"+row_collector[count][indexes.qlen]+'</td>'
+            html+="<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+count+"')\">view</a></td>"   // q seq (link)
+            //html+="<td rowspan='4'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+count+"')\">open</a></td>"   // 
+            html+="<td rowspan='4'><a href='#' onclick=\"create_alignment('"+row_collector[count][indexes.qseq]+"','"+row_collector[count][indexes.sseq]+"')\">open</a></td>"
+    }
+    for(let n in row_collector){
+        let BEST_PCT_ID = 0.0
+        let BEST_FULL_PCT_ID = 0.0
+        let row_items = row_collector[n]
+        let title_items = row_items[indexes.stitle].split('|')
+        let hmt = title_items[2].trim()
+        let otid = hmt.split('-')[1]
+        if(opt === 'one'){
+            //for(let i in row_items){
+           //console.log('row_items',row_items)
+           let PCT_ID = parseFloat(row_items[indexes.pct_identity])
+        
+           let ALIGNMENT_FRAC = parseFloat(parseInt(row_items[indexes.qend]) - parseInt(row_items[indexes.qstart]) + 1.0) / parseFloat(row_items[indexes.qlen])
+           let FULL_PCT_ID = PCT_ID * ALIGNMENT_FRAC
+        // row: qid, bitscore, species, strain, HMT, PCT_ID, FULL_PCT_ID
+           
+        
+           html+='<tr>'
+           html+='<td>'+row_items[indexes.query_id]+'</td>'
+           html+='<td>'+row_items[indexes.hit_id]+'</td>'
+           html+='<td>'+row_items[indexes.bit_score]+'</td>'
+           html+="<td nowrap><a href='/taxa/tax_description?otid="+otid+"'>"+hmt+'</a></td>'  // hmt
+           html+='<td nowrap><i>'+title_items[1].trim()+'</i></td>'   // genus species
+           html+='<td nowrap>'+title_items[3].trim()+'</td>'  // strain
+           let gb = title_items[4].trim().split(':')[1].trim()
+           html+="<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+gb+"' target='_blank'>"+gb+'</a></td>'
+           html+='<td>'+title_items[5].trim().split(':')[1]+'</td>'
+           html+='<td>'+(PCT_ID).toFixed(2).toString()+'</td>'
+           html+='<td>'+(FULL_PCT_ID).toFixed(2).toString()+'</td>'
+           html+='<td>'+row_items[indexes.stitle]+'</td>'
+        
+           html+='</tr>'
+        }else if(opt === 'two'){
+           html+='<tr>'
+           html+='<td>'+row_items[indexes.query_id]+'</td>'
+           html+='<td>'+row_items[indexes.hit_id]+'</td>'
+           html+='<td>'+row_items[indexes.bit_score]+'</td>'
+           html+='<td>'+row_items[indexes.mismatches]+'</td>'
+           html+='<td>'+row_items[indexes.gaps]+'</td>'
+           html+='<td><pre>'+create_alignment(row_items[14],row_items[15])+'</pre></td>'
+        
+           html+='</tr>'
+        }else if(opt === 'std'){
+            
+            html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+title_items[0].trim()+'</a></td>'  // hit id
+            html+='<td>'+row_items[indexes.stitle]+'</td>'  // whole title
+            html+='<td>'+row_items[indexes.evalue]+'</td>'   // ?
+            html+='<td>'+row_items[indexes.bit_score]+'</td>'   // 
+            html+='<td>'+row_items[indexes.pct_identity]+'</td>'   // 
+            html+='</tr>'
+        }else{
+            html+='<tr>'
+            for(let i=0; i<14; i++){ //let i in row_items){
+               
+               html+='<td>'+row_items[i]+'</td>'
+            }
+            html+='</tr>'
+        }
+    }
+    html+='</table>'
+    
+    return header+'<br><br>'+html
+    
+}
+function create_alignment(qseq,sseq){
+    let qseq_letters = qseq.trim().split('')
+    let sseq_letters = sseq.trim().split('')
+    let acolor = 'blue'
+    let gcolor = 'blue'
+    let ccolor = 'blue'
+    let tcolor = 'blue'
+    let qcaps = '',scaps = ''
+    let qreturn_value = '',sreturn_value = '',align_value = ''
+    let onereturn = ''
+    //console.log(qseq_letters.length,sseq_letters.length)
+    for(let q in qseq_letters){
+       
+       let letter = qseq_letters[q].toUpperCase()
+       qcaps += letter
+       // if(letter === 'A'){
+//           onereturn += "<span class='A'>A</span>"
+//           //qreturn_value += "<font color='"+acolor+"'>A</font>"
+//        }else if(letter === 'G'){
+//           onereturn += "<span class='G'>G</span>"
+//           //qreturn_value += "<font color='"+gcolor+"'>G</font>"
+//        }else if(letter === 'C'){
+//           onereturn += "<span class='C'>C</span>"
+//           //qreturn_value += "<font color='"+ccolor+"'>C</font>"
+//        }else if(letter === 'T'){
+//           onereturn += "<span class='T'>T</span>"
+//           //qreturn_value += "<font color='"+tcolor+"'>T</font>"
+//        }else{
+//           onereturn += "<b>-</b>"
+//        }
+    }
+    onereturn += '\n'
+    for(let q in qseq_letters){
+       let qletter = qseq_letters[q].toUpperCase()
+       let sletter = sseq_letters[q].toUpperCase()
+        if(qletter == sletter){
+             align_value += "|"
+        }else{
+             align_value += ' '
+        }
+    }
+    
+    for(let s in sseq_letters){
+       let letter = sseq_letters[s].toUpperCase()
+       scaps += letter
+       // if(letter === 'A'){
+//           onereturn += "<span class='A'>A</span>"
+//           //sreturn_value += "<font color='"+acolor+"'>A</font>"
+//        }else if(letter === 'G'){
+//           onereturn += "<span class='G'>G</span>"
+//           //sreturn_value += "<font color='"+gcolor+"'>G</font>"
+//        }else if(letter === 'C'){
+//           onereturn += "<span class='C'>C</span>"
+//           //sreturn_value += "<font color='"+ccolor+"'>C</font>"
+//        }else if(letter === 'T'){
+//           onereturn += "<span class='T'>T</span>"
+//           //sreturn_value += "<font color='"+tcolor+"'>T</font>"
+//        }else{
+//           onereturn += "<b>-</b>"
+//        }
+    }
+    return qcaps+'<br>'+align_value+'<br>'+scaps
+    
+    
+    //return qreturn_value+'<br>'+align_value+'<br>'+sreturn_value
+    //return onereturn
+}
 module.exports.parse_blast = function parse_blast0(file_data, fxn){
     //console.log('BLAST data',file_data.toString())
     let string = file_data.toString()
@@ -731,7 +944,7 @@ module.exports.parse_blast = function parse_blast0(file_data, fxn){
     let file_collector = {}
     let id_collector = {}
     let tmp =[]
-    let no_hits = false,clone='',clone_id,otid,version='unknown'
+    let no_hits = false, clone='', clone_id, otid, version='unknown'
     //let result = string.match(/Java(Script)/);
     if(string.match(/No hits found/)){
        no_hits = true
@@ -840,9 +1053,11 @@ module.exports.getCallerIP = function getCallerIP(request) {
     ip = ip.split(':').slice(-1); //in case the ip returned in a format: "::ffff:146.xxx.xxx.xxx"
     return ip;
 };
+
 module.exports.get_gc_for_gccontent = function get_gc_for_gccontent(gc){
     return (parseFloat(gc)/100).toFixed(2)
-}
+};
+
 module.exports.readFromFile = function readFromFile(file, ext) {
     return new Promise((resolve, reject) => {
         fs.readFile(file, (err, data) => {

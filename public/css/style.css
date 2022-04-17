@@ -195,7 +195,7 @@ hr{
 }
 #nav a {
      font-family: Candara,  Sans-Serif; 
-     font-size: 16px;
+     font-size: 15px;
   }
 #nav ul {
   margin-top:0px;
@@ -216,7 +216,7 @@ hr{
   left:100%;
   top:0px;
   border-top-right-radius:10px;
-    border-top-left-radius:10px;
+  border-top-left-radius:10px;
 }
 
 
