@@ -1068,14 +1068,14 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
            })
          }
          html += "<td rowspan='4' class='blastcol2 center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
-         html += "<td rowspan='4' class='blastcol2 center'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
+         html += "<td rowspan='4' class='blastcol2 center' nowrap><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
          for(let n=0;n<4;n++){
            //console.log('XXX', n, data_arr[i].data[n])
            if(data_arr[i] && data_arr[i].data[n]){
            html += "<td nowrap class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid="+data_arr[i].data[n].otid+"'>"+data_arr[i].data[n].clone_id+'</a></td>'
            
            html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].clone+"</td>"
-           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].expect+"</td>"
+           html += "<td class='right-justify "+bgcolor+"' nowrap>"+data_arr[i].data[n].expect+"</td>"
            html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].bitscore+"</td>"
            html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].identity+"</td>"
            html += '</tr>'
