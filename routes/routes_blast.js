@@ -285,7 +285,7 @@ function run_tsv_refseq_blast(results, args){
     // tsv file 
     let data=[]
     for(let i=0; i<results.length; i++){
-        let parsed_data = helpers.parse_blast_tsv(results[i], args.opt,args.bid,i)
+        let parsed_data = helpers.parse_blast_tsv(results[i], args.opt, args.bid, i)
         data.push(parsed_data) 
     }
     //console.log('data0',data[0])

@@ -724,7 +724,7 @@ module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata, fx
     return file_collector
 
 }
-module.exports.parse_blast_tsv = function parse_blast_tsv(file_data, opt, blastID, count){
+module.exports.parse_blast_tsv = function parse_blast_tsv(file_data, opt, blastID, filenumber){
     //opt = 'full'  // one,two,full
     // https://www.metagenomics.wiki/tools/blast/blastn-output-format-6
     let lines = file_data.toString().split('\n')
@@ -733,8 +733,8 @@ module.exports.parse_blast_tsv = function parse_blast_tsv(file_data, opt, blastI
     // calculate FULL_PCT_ID 
     // qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
     let indexes ={query_id:0, hit_id:1,bit_score:11, pct_identity:2, 
-                  qstart:6, qend:7, stitle:13, length:3, mismatches:4, 
-                  gaps:5, qlen:12,evalue:10,qseq:14,sseq:15}  // qseq;11, sseq:12
+                  qstart:6, qend:7, sstart:8, send:9, stitle:13, length:3, mismatches:4, 
+                  gaps:5, qlen:12, evalue:10, qseq:14, sseq:15}  // qseq;11, sseq:12
     let query =''
     let header = ''
     let max_bitscore = 0
@@ -797,19 +797,18 @@ module.exports.parse_blast_tsv = function parse_blast_tsv(file_data, opt, blastI
         html += '<th>q-start</th><th>q-end</th><th>s-start</th><th>s-end</th><th>E-value</th><th>Bit Score</th><th>Query Length</th><th>Hit Title</th>'
     }
     html += '</tr>'
+    
     if(opt === 'std'){
         html+='<tr>'
             html+="<td rowspan='4'>"+query.trim()+'</td>' // query
-            
-            html+="<td rowspan='4'>"+row_collector[count][indexes.qlen]+'</td>'
-            html+="<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+count+"')\">view</a></td>"   // q seq (link)
-            //html+="<td rowspan='4'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+count+"')\">open</a></td>"   // 
-            html+="<td rowspan='4'><a href='#' onclick=\"create_alignment('"+row_collector[count][indexes.qseq]+"','"+row_collector[count][indexes.sseq]+"')\">open</a></td>"
-    }
+            html+="<td rowspan='4'>"+row_collector[0][indexes.qlen]+'</td>'
+            html+="<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+filenumber+"')\">view</a></td>"   // q seq (link)
+            //html+="<td rowspan='4'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+filenumber+"')\">open</a></td>"   // 
+               }
     for(let n in row_collector){
         let BEST_PCT_ID = 0.0
         let BEST_FULL_PCT_ID = 0.0
-        let row_items = row_collector[n]
+        let row_items = row_collector[n]  // an array
         let title_items = row_items[indexes.stitle].split('|')
         let hmt = title_items[2].trim()
         let otid = hmt.split('-')[1]
@@ -845,11 +844,12 @@ module.exports.parse_blast_tsv = function parse_blast_tsv(file_data, opt, blastI
            html+='<td>'+row_items[indexes.bit_score]+'</td>'
            html+='<td>'+row_items[indexes.mismatches]+'</td>'
            html+='<td>'+row_items[indexes.gaps]+'</td>'
-           html+='<td><pre>'+create_alignment(row_items[14],row_items[15])+'</pre></td>'
+           html+="<td class='align'><pre>"+create_alignment(row_items,indexes)+'</pre></td>'
         
            html+='</tr>'
         }else if(opt === 'std'){
-            
+             html+="<td><a href='#' onclick=\"create_alignment('"+row_collector[n][indexes.qseq]+"','"+row_collector[n][indexes.sseq]+"')\">open</a></td>"
+
             html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+title_items[0].trim()+'</a></td>'  // hit id
             html+='<td>'+row_items[indexes.stitle]+'</td>'  // whole title
             html+='<td nowrap>'+row_items[indexes.evalue]+'</td>'   // ?
@@ -873,15 +873,20 @@ module.exports.parse_blast_tsv = function parse_blast_tsv(file_data, opt, blastI
     return header+'<br><br>'+html
     
 }
-function create_alignment(qseq,sseq){
-    let qseq_letters = qseq.trim().split('')
-    let sseq_letters = sseq.trim().split('')
+function create_alignment(row_items, indexes){
+    
+    let qseq_letters = row_items[indexes.qseq] //qseq.trim().split('')
+    let sseq_letters = row_items[indexes.sseq] //sseq.trim().split('')
+    let qstart = row_items[indexes.qstart].padStart(6,' ')
+    let qend = row_items[indexes.qend]
+    let sstart = row_items[indexes.sstart].padStart(6,' ')
+    let send = row_items[indexes.send]
     let acolor = 'blue'
     let gcolor = 'blue'
     let ccolor = 'blue'
     let tcolor = 'blue'
-    let qcaps = '',scaps = ''
-    let qreturn_value = '',sreturn_value = '',align_value = ''
+    let qcaps = 'query:  '+qstart+' ', scaps = 'subject:'+sstart+' '
+    let qreturn_value = '',sreturn_value = '',align_value = "               "
     let onereturn = ''
     //console.log(qseq_letters.length,sseq_letters.length)
     for(let q in qseq_letters){
@@ -934,7 +939,7 @@ function create_alignment(qseq,sseq){
 //           onereturn += "<b>-</b>"
 //        }
     }
-    return qcaps+'<br>'+align_value+'<br>'+scaps
+    return qcaps+' '+qend+'<br>'+align_value+'<br>'+scaps+' '+send
     
     
     //return qreturn_value+'<br>'+align_value+'<br>'+sreturn_value
