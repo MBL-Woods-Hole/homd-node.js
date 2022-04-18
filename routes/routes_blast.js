@@ -1063,8 +1063,8 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
             return helpers.compareStrings_int(b.bitscore, a.bitscore);
            })
          }
-         html += "<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
-         html += "<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
+         html += "<td rowspan='4' class='blastcol2 center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
+         html += "<td rowspan='4' class='blastcol2 center'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
          for(let n=0;n<4;n++){
            //console.log('XXX', n, data_arr[i].data[n])
            if(data_arr[i] && data_arr[i].data[n]){
