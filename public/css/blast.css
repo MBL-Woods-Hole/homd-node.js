@@ -94,7 +94,7 @@ input[type=radio] {
    
 }
 .blastcol4{
-    width: 500px;
+    min-width: 500px;
    
 }
 .blastBGodd{

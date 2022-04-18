@@ -291,6 +291,7 @@ function run_tsv_refseq_blast(results, args){
     //console.log('data0',data[0])
    return data.join('<br><br>')
 }
+//
 function run_std_refseq_blast(results, args){
     let query_strings =[],data=[]
     for(let i=0; i<results.length; i++){
@@ -1027,7 +1028,8 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
        }else{
          bgcolor = 'blastBGeven'
        }
-       html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td><td rowspan='4' class='center'>"+data_arr[i].query_length+'</td>'
+       html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td>"
+       html += "<td rowspan='4' class='center'>"+data_arr[i].query_length+'</td>'
        
        if(data_arr[i].data == 'no hits'){
            html += "<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td><td rowspan='4'></td>"
@@ -1068,9 +1070,10 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
            if(data_arr[i] && data_arr[i].data[n]){
            html += "<td nowrap class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid="+data_arr[i].data[n].otid+"'>"+data_arr[i].data[n].clone_id+'</a></td>'
            
-           html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].clone+"</td><td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].expect+"</td>"
+           html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].clone+"</td>"
+           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].expect+"</td>"
            html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].bitscore+"</td>"
-           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].identity+'</td>'
+           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].identity+"</td>"
            html += '</tr>'
            }else{
              html += "<td colspan='4'>error</td></tr>"
