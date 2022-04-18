@@ -285,12 +285,13 @@ function run_tsv_refseq_blast(results, args){
     // tsv file 
     let data=[]
     for(let i=0; i<results.length; i++){
-        let parsed_data = helpers.parse_blast_tsv(results[i], args.opt,args.bid,i)
+        let parsed_data = helpers.parse_blast_tsv(results[i], args.opt, args.bid, i)
         data.push(parsed_data) 
     }
     //console.log('data0',data[0])
    return data.join('<br><br>')
 }
+//
 function run_std_refseq_blast(results, args){
     let query_strings =[],data=[]
     for(let i=0; i<results.length; i++){
@@ -1027,13 +1028,18 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
        }else{
          bgcolor = 'blastBGeven'
        }
-       html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td><td rowspan='4' class='center'>"+data_arr[i].query_length+'</td>'
+       
        
        if(data_arr[i].data == 'no hits'){
-           html += "<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td><td rowspan='4'></td>"
+           html += "<tr class='"+bgcolor+"'><td>"+data_arr[i].query+"</td>"
+           html += "<td class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
+           html += "<td class='blastcol2 center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
+           html += "<td></td>"
            html += '<td></td>'+"<td>No Hits Found"+'</td><td></td><td></td><td></td>'
            html += '</tr>'
        }else{
+         html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td>"
+        html += "<td rowspan='4' class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
          //sort data_arr[i].data by bitscore
          if(sortCol ==='bitscore'){
            if(sortDir === 'fwd'){
@@ -1061,16 +1067,17 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
             return helpers.compareStrings_int(b.bitscore, a.bitscore);
            })
          }
-         html += "<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
-         html += "<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
+         html += "<td rowspan='4' class='blastcol2 center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
+         html += "<td rowspan='4' class='blastcol2 center' nowrap><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
          for(let n=0;n<4;n++){
            //console.log('XXX', n, data_arr[i].data[n])
            if(data_arr[i] && data_arr[i].data[n]){
            html += "<td nowrap class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid="+data_arr[i].data[n].otid+"'>"+data_arr[i].data[n].clone_id+'</a></td>'
            
-           html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].clone+"</td><td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].expect+"</td>"
+           html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].clone+"</td>"
+           html += "<td class='right-justify "+bgcolor+"' nowrap>"+data_arr[i].data[n].expect+"</td>"
            html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].bitscore+"</td>"
-           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].identity+'</td>'
+           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].identity+"</td>"
            html += '</tr>'
            }else{
              html += "<td colspan='4'>error</td></tr>"
