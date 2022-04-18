@@ -1028,14 +1028,18 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
        }else{
          bgcolor = 'blastBGeven'
        }
-       html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td>"
-       html += "<td rowspan='4' class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
+       
        
        if(data_arr[i].data == 'no hits'){
-           html += "<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td><td rowspan='4'></td>"
+           html += "<tr class='"+bgcolor+"'><td>"+data_arr[i].query+"</td>"
+           html += "<td class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
+           html += "<td class='blastcol2 center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
+           html += "<td></td>"
            html += '<td></td>'+"<td>No Hits Found"+'</td><td></td><td></td><td></td>'
            html += '</tr>'
        }else{
+         html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td>"
+        html += "<td rowspan='4' class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
          //sort data_arr[i].data by bitscore
          if(sortCol ==='bitscore'){
            if(sortDir === 'fwd'){
