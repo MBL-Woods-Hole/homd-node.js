@@ -852,15 +852,18 @@ module.exports.parse_blast_tsv = function parse_blast_tsv(file_data, opt, blastI
             
             html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+title_items[0].trim()+'</a></td>'  // hit id
             html+='<td>'+row_items[indexes.stitle]+'</td>'  // whole title
-            html+='<td>'+row_items[indexes.evalue]+'</td>'   // ?
+            html+='<td nowrap>'+row_items[indexes.evalue]+'</td>'   // ?
             html+='<td>'+row_items[indexes.bit_score]+'</td>'   // 
             html+='<td>'+row_items[indexes.pct_identity]+'</td>'   // 
             html+='</tr>'
         }else{
             html+='<tr>'
             for(let i=0; i<14; i++){ //let i in row_items){
-               
-               html+='<td>'+row_items[i]+'</td>'
+               if(i==13){
+                  html+='<td>'+row_items[i]+'</td>'
+               }else{
+                  html+='<td nowrap>'+row_items[i]+'</td>'
+               }
             }
             html+='</tr>'
         }
