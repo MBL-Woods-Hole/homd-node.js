@@ -1029,7 +1029,7 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
          bgcolor = 'blastBGeven'
        }
        html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td>"
-       html += "<td rowspan='4' class='center'>"+data_arr[i].query_length+'</td>'
+       html += "<td rowspan='4' class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
        
        if(data_arr[i].data == 'no hits'){
            html += "<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td><td rowspan='4'></td>"
