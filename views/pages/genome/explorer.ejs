@@ -78,18 +78,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .col5{
    width:150px;
 }
-#blast-box{
-   width:90%;
-   background:lightgrey;
-   padding:20px;
-   text-align:center;
-}
-#blast-entry{
-   height:150px;
-   width:60%;
-   margin:10px;
-   border:1px solid maroon;
-}
+
 </style>
 <%- include('../../partials/header_html'); %>
 <% info_data = JSON.parse(info_data) %>
@@ -97,9 +86,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 <% page_data = JSON.parse(page_data) %>
 <% mole = JSON.parse(pid_list) %>
 <% db = anno_type+'_'+gid %>
-<% db_choices = JSON.parse(db_choices) %>
-<% blast_prg = JSON.parse(blast_prg) %>
-<% blast_max = JSON.parse(blastmax) %>
+
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -107,7 +94,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     <div class='page-content' >
     
     
- <!-- GID:<%= gid %>   Blast:<%= blast %>   Anno:<%= anno_type %>   --> 
+ <!-- GID:<%= gid %>     Anno:<%= anno_type %>   --> 
 <center>
     <div id='genome-explorer'>
       
@@ -122,10 +109,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     <%- include('../../partials/flash'); %>
     <% if(!gid || gid.toString() === '0'){ %>
          <!-- do nothing here  -->
-    <% }else if((!blast || blast === '0') && (!anno_type || anno_type==='0')) { %> 
-         <!-- do nothing here  -->
-    <% }else if(blast && blast.toString() === '1' || blast==='all') { %>
-            <%- include('../../partials/blast_block_genome'); %>
+    
     <% }else if(anno_type === 'prokka' || anno_type === 'ncbi' ) { %>
              <%- include('../../partials/annotation'); %>
     <% }else{ %>

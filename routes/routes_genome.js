@@ -385,9 +385,10 @@ router.get('/explorer', function explorer (req, res) {
   const gid = req.query.gid
   
   let anno = req.query.anno || 'prokka'
-  let blast = req.query.blast || 0
-  helpers.print(['gid:', gid,'anno:',anno,'Blast:',blast])
-  // blast == 0 or 1 or all
+  
+  
+  helpers.print(['gid:', gid,'anno:',anno])
+  
   // anno == 
   let annoInfoObj = {}
   let pageData = {}
@@ -399,18 +400,12 @@ router.get('/explorer', function explorer (req, res) {
   //let dbChoices = []
   let otid = 0,gc = 0
   //console.log('C.genome_lookup[gid]',C.genome_lookup[gid])
-  // BLASTP  Compares an amino acid query sequence against a protein sequence database
-  // BLASTN  Compares a nucleotide query sequence against a nucleotide sequence database
-  // BLASTX  Compares a nucleotide query sequence translated in all reading frames against a protein sequence database
-  // TBLASTN Compares a protein query sequence against a nucleotide sequence database dynamically translated in all reading frames
-
+ 
   let args = {}
-  //const renderFxn = (req, res, gid, otid, blast, organism, dbChoices, allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
+  //const renderFxn = (req, res, gid, otid, organism,  allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
   const renderFxn = (req, res, args) => {
   
-    // args={
-    //   gid, otid, blast, organism, dbChoices, allAnnosObj, annoType, pageData, annoInfoObj, pidList
-    //}
+    
     res.render('pages/genome/explorer', {
       title: 'HOMD :: ' + args.gid,
       pgname: 'genome/explorer', // for AbountThisPage 
@@ -421,22 +416,17 @@ router.get('/explorer', function explorer (req, res) {
       all_annos: JSON.stringify(args.allAnnosObj),
       anno_type: args.annoType,
       page_data: JSON.stringify(args.pageData),
-      blast: args.blast,
+      
       organism: args.organism,
-      db_choices: JSON.stringify(args.dbChoices),
-      blast_prg: JSON.stringify(C.blastPrograms),
-      blast_version: CFG.BLAST_VERSION,
-      blastFxn: 'genome',
       gc: args.gc,
       info_data: JSON.stringify(args.annoInfoObj),
       pid_list: JSON.stringify(args.pidList),
-      returnTo: '/genome/explorer?gid='+args.gid+'&blast=1',
-      blastmax: JSON.stringify(C.blast_max_file),
+      returnTo: '/genome/explorer?gid='+args.gid,
       
     })
   }
   
-  // req, res, gid, otid, blast, organism, dbChoices,  allAnnosObj, anno
+  // req, res, gid, otid,  organism, dbChoices,  allAnnosObj, anno
   // const tmpObj = Object.keys(C.annotation_lookup) // get prokka organisms [seqid,organism]
   const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
@@ -447,7 +437,7 @@ router.get('/explorer', function explorer (req, res) {
   
   if (!gid || gid.toString() === '0') {
    
-    args = {gid:0,gc:gc,otid:0,blast:blast,organism:'',dbChoices:[],allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    args = {gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
     renderFxn(req, res, args)
     return
   }else {
@@ -456,44 +446,24 @@ router.get('/explorer', function explorer (req, res) {
       }else{
         req.flash('fail', 'Genome not found: "'+gid+'"')
         
-        args = {gid:0,gc:gc,otid:0,blast:0,organism:'',dbChoices:[],allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+        args = {gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
         renderFxn(req, res, args)
         return
       }
   }
-  //let dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x); // copy array
-  let dbChoices = [
-      {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
-               filename:'fna/'+gid+'.fna'},
-      {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
-               filename:'ffn/'+gid+'.ffn'}
-      ]
-   
-  if(gid === 'all' && blast.toString() === '1') {
-      
-      args = {gid:gid,gc:gc,otid:0,blast:1,organism:'',dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
-      renderFxn(req, res, args)
-      return
-  }
+  
   
   if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
         otid = C.genome_lookup[gid].otid
         gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
   }
-  if(gid && !blast && !anno) {
+  if(gid && !anno) {
       
-      args = {gid:gid,gc:gc,otid:0,blast:0,organism:organism,dbChoices:[],allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+      args = {gid:gid,gc:gc,otid:0,organism:organism,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
       renderFxn(req, res, args)
       return
   }
  
-
-  if (blast && blast.toString() === '1') {
-    
-    args = {gid:gid,gc:gc,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
-    renderFxn(req, res, args)
-    return
-  }
   
   // now annotations
   if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
@@ -501,7 +471,7 @@ router.get('/explorer', function explorer (req, res) {
   } else {
     req.flash('fail', 'Could not find: "'+anno+'" annotation for '+gid)
 
-    args = {gid:gid,gc:gc,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
     renderFxn(req, res, args)
     return
   }
@@ -514,7 +484,7 @@ router.get('/explorer', function explorer (req, res) {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 
-      args = {gid:gid,gc:gc,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
+      args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
       renderFxn(req, res, args)
       return
     } else {
@@ -541,7 +511,7 @@ router.get('/explorer', function explorer (req, res) {
         //console.log('start count', pageData.start_count)
       }
       
-      args = {gid:gid,gc:gc,otid:otid,blast:blast,organism:organism,dbChoices:dbChoices,allAnnosObj:allAnnosObj,annoType:anno,pageData:pageData,annoInfoObj:annoInfoObj,pidList:pidList}
+      args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:pageData,annoInfoObj:annoInfoObj,pidList:pidList}
       renderFxn(req, res, args)
     }
   })
@@ -553,6 +523,7 @@ router.get('/blast', function blast_get(req, res) {
    let chosen_gid = req.query.gid
    if(!chosen_gid){chosen_gid='all'}
    console.log('chosen gid=',chosen_gid)
+   let sg = helpers.makeid(3).toUpperCase()
    let organism,dbChoices
    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
@@ -582,7 +553,7 @@ router.get('/blast', function blast_get(req, res) {
         blastFxn: 'genome',
         organism: organism,
         gid: chosen_gid,
-        spamguard: helpers.makeid(3).toUpperCase(),
+        spamguard: sg,
         all_annos: JSON.stringify(allAnnosObj),
         blast_prg: JSON.stringify(C.blastPrograms),
         db_choices: JSON.stringify(dbChoices),

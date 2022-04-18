@@ -4,20 +4,8 @@
     <div style='padding:5px 0;'>
         
         Choose a Genome: 
-       <!-- 
- <select class='dropdown' onchange="if (this.value) window.location.href='explorer?gid='+this.value+'&anno=<%= anno_type %>&blast=<%= blast %>'  ">
-          <option value='0' >Choose...</option>
-          <% for(n in all_annos){ %>
-             <% if(all_annos[n].gid === gid){ %>
-               <option selected value='<%= all_annos[n].gid %>'><%= all_annos[n].org %> <small>(<%= all_annos[n].gid %>)</small></option>
-             <% }else{ %>
-               <option value='<%= all_annos[n].gid %>'><%= all_annos[n].org %> <small>(<%= all_annos[n].gid %>)</small></option>
-             <% } %>
-           <% } %>
-         </select>
- -->
-         
-        <select class='dropdown' id='selGenome' style='width: 800px;' onchange="if (this.value) window.location.href='explorer?gid='+this.value+'&anno=<%= anno_type %>&blast=<%= blast %>'  ">
+       
+        <select class='dropdown' id='selGenome' style='width: 800px;' onchange="if (this.value) window.location.href='explorer?gid='+this.value+'&anno=<%= anno_type %>'  ">
            <option name='none' value='0'>Choose...</option>
            <% for(n in all_annos){ %>
               <% if(all_annos[n].gid === gid){ %>
@@ -28,18 +16,10 @@
          <% } %>
         </select>
          
-         
-         <% if(blast === '1'){ %>
-         Or <a href='blast_all'>Blast against all Genomes</a>
-         <% } %>
          <% if(gid){ %>
                  <div id='header_buttons' >
-                  <% if(blast === '1'){ %>
-                    <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
-                    <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
-                    <span class='an-button active' href=''>BLAST</span>
-                    <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
-                  <% } else if(anno_type == 'prokka'){ %>
+                  
+                  <% if(anno_type == 'prokka'){ %>
                     <span class='an-button active' href=''>PROKKA</span>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
                     <a class='an-button' href='blast?gid=<%= gid %>'>BLAST</a>

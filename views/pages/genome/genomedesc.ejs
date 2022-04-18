@@ -55,7 +55,7 @@
 	<div id='header_buttons' >
 	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (<%= taxidfullnameplus %>)</a>
 	 <a class='gd-button' href="/jbrowse/index.html?data=homd/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
-	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&blast=1'>BLAST Against this Genome</a>
+	 <a class='gd-button' href='blast?gid=<%= ginfo.gid %>'>BLAST Against this Genome</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA Annotation</a>
 	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI Annotation</a>
 	</div>

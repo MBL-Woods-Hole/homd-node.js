@@ -359,7 +359,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
 //         blastFxn: 'genome',
 //         info_data: JSON.stringify(annoInfoObj),
 //         pid_list: JSON.stringify(pidList),
-//         returnTo: '/genome/explorer?gid='+gid+'&blast=1'
+//         returnTo: '/genome/explorer?gid='+gid'
 //       
 //       })
 //    }
