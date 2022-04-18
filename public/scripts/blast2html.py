@@ -252,6 +252,7 @@ def jblink(hit, type='jbrowse', hsp=None):
     if not isinstance(hit, str):
         hit = hitid(hit)
     # hit = SEQF1595_KI535341.1
+    
     hit_parts = hit.split('_')
     link = "/jbrowse/index.html"
     loclink = ''

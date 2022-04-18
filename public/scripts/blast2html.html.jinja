@@ -262,6 +262,7 @@
       
       .alignment {
       border-top: 1px solid black;
+      
       padding-left: 1em;
       padding-right: 1em;
       width:1100px;
@@ -272,6 +273,7 @@
       padding-top: .2em;
       font-size: 85%;
       color: #14376C;
+      
       }
       div.linkheader a.linkheader {
       margin-right: 1em;
@@ -283,45 +285,52 @@
       .title .hittitle {
       color: #222222;
       margin-bottom: .3em;
+      background:lightblue;
+      
       }
-      .title .titleinfo {
+.title .titleinfo {
       font-size: 80%;
       margin-top: 0;
       margin-bottom: .3em;
-      }
-      .title .titleinfo .b {
-      color: #606060;
+      background:lightblue;
+}
+.title .titleinfo .b {
+      
       font-weight: bold;
       font-size: 90%;
-      }
+}
+      
 
-      .moretitles {
+.linktable td{
+         padding:0 20px;
+}
+.moretitles {
       margin: 1.2em;
-      }
-      .moretitles .titleinfo {
+}
+.moretitles .titleinfo {
       margin: 0;
       padding: 0;
-      }
-      .moretitles .hittitle {
+}
+.moretitles .hittitle {
       margin: .4em 0 .2em 0;
       padding: 0;
-      }
+ }
       
-      a.showmoretitles {
+a.showmoretitles {
       font-size: 75%;
       color: #336699;
       font-weight: bold;
       margin-top: 0;
-      }
-      a.showmoretitles:hover {
-      }
+}
+a.showmoretitles:hover {
+}
 
       .hotspot {
       color: #606060;
       font-family: verdana, arial, sans-serif;
       margin-bottom: 2.5em;
       }
-
+    
       .hotspot p.range {
       font-size: 70%;
       margin-top: 0;
@@ -604,22 +613,27 @@ pre{
 
           <div class=grey><div class=white>
               {% for hit in hits %}
+              {% set hsp = hit.Hit_hsps.Hsp[0] %}
               <div class=alignment id=hit{{hit.Hit_num}}>
 
                 <div class=linkheader>
                   <div class=right><a href="#description{{hit.Hit_num}}">Descriptions</a></div>
-                  <a class=linkheader href="{{genelink(hit|hitdef)}}" target='_blank'>GenBank</a>
-                  <a class=linkheader href="{{genelink(hit|hitdef, 'graph')}}" target='_blank'>Graphics</a>
-                  <a class=linkheader href="{{taxonlink(hit|hittaxon, 'taxon')}}">[HOMD Taxon Definition]</a>
-                  <a class=linkheader href="{{genomelink(hit|hitgenome, 'genome')}}">[HOMD Genome Definition]</a>
+                  <table class='linktable'><tr>
+                    <td><a class=linkheader href="{{genelink(hit|hitdef, 'genbank', hsp)}}" target='_blank'>GenBank<br>Entry</a></td>
+                    <td><a class=linkheader href="{{genelink(hit|hitdef, 'graph', hsp)}}" target='_blank'>GenBank<br>Viewer</a></td>
+                    <td><a class=range href="{{jblink(hit|hitdef, 'jbrowse', hsp)}}" target='_blank'>HOMD<br>JBrowse</a></td>
+                   
+                    <td><a class=linkheader href="{{taxonlink(hit|hittaxon, 'taxon')}}">HOMD<br>Taxon</a></td>
+                    <td><a class=linkheader href="{{genomelink(hit|hitgenome, 'genome')}}">HOMD<br>Metainfo</a></td>
+                    <td><a class=linkheader href="{{genomelink(hit|hitgenome, 'genome')}}">Protein<br>ID</a></td>
+                  </tr></table>
                 </div>
 
-                <div class=title>
-                  <p class=hittitle>{{hit|firsttitle}}</p>
-                  <p class=titleinfo>
+                <div class='title' style='background:lightblue;'>
+                  <p class='hittitle'>{{hit|firsttitle}}</p>
+                  <p class='titleinfo'>
                     <span class=b>Sequence ID:</span> <a href="{{genelink(hit|hitdef)}}">{{hit|seqid}}</a>
                     <span class=b>Length:</span> {{hit.Hit_len}}
-                    <span class=b>Number of Matches:</span> {{hit.Hit_hsps.Hsp|length}}
                   </p>
                 </div>
 
@@ -644,9 +658,11 @@ pre{
                 <div class=hotspot>
                   <p class=range>
                     <span class=range>Range {{hsp.Hsp_num}}: {{hsp['Hsp_hit-from']}} to {{hsp['Hsp_hit-to']}}</span>
+                    <!--
                     <a class=range href="{{genelink(hit|hitdef, 'genbank', hsp)}}" target='_blank'>GenBank</a>
                     <a class=range href="{{genelink(hit|hitdef, 'graph', hsp)}} " target='_blank'>Graphics</a>
-                    <a class=range href="{{jblink(hit|hitdef, 'jbrowse',hsp)}}" target='_blank'>[HOMD JBrowse]</a>
+                    <a class=range href="{{jblink(hit|hitdef, 'jbrowse', hsp)}}" target='_blank'>[HOMD JBrowse]</a>
+                    -->
                   </p>
 
                   <table class=hotspotstable>
