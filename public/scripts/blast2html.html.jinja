@@ -293,8 +293,9 @@
       margin-top: 0;
       margin-bottom: .3em;
       background:lightblue;
+      color:black
 }
-.title .titleinfo .b {
+.title .titleinfo a {
       
       font-weight: bold;
       font-size: 90%;
@@ -362,37 +363,41 @@ a.showmoretitles:hover {
       font-size: 80%;
       }
 
-      pre.alignmentgraphic {
+/* 
+pre.alignmentgraphic {
       color: #222222;
-      font-size: 11px;
-      font-family: Consolas, monospace;
+      padding:8px;
+      font-size:1.0em;
+      font-family: 'Courier New', monospace;
       white-space: nowrap;
-      }
+}
+ */
       
 pre{
     overflow: auto;
     background: #ddd;
-    padding-left: 10px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    color: #222222;
+    padding: 10px 0 15px 10px;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
     white-space: -o-pre-wrap;
     white-space: -ms-pre-wrap;
-    font-family: Consolas, monospace;
+    font-family: 'Courier New', monospace;
+    font-size:1.0em;
+    white-space: nowrap;
     border:1px solid grey;
-      }
+}
  
-      footer {
+footer {
       text-align: center;
       color: #cccccc;
       font-size: 70%;
       margin-top: 1em;
-      }
-      footer :link {
+}
+footer :link {
       color: #5588cc;
-      }
-      #top_btn{
+}
+#top_btn{
       background-color:#d0f0c0;
       border:1px solid black;
       color:#2e8b57;
@@ -401,7 +406,7 @@ pre{
       margin-right:30px;
       top: 250px;
       transform: translateX(-60px);
-      }
+}
 </style>
 
     <script type="text/javascript">
@@ -625,15 +630,17 @@ pre{
                    
                     <td><a class=linkheader href="{{taxonlink(hit|hittaxon, 'taxon')}}">HOMD<br>Taxon</a></td>
                     <td><a class=linkheader href="{{genomelink(hit|hitgenome, 'genome')}}">HOMD<br>Metainfo</a></td>
-                    <td><a class=linkheader href="{{genomelink(hit|hitgenome, 'genome')}}">Protein<br>ID</a></td>
+                    {% if head_name == 'Protein' %}
+                      <td><a class=linkheader href="{{proteinlink(hit|hitdef)}}" target='_blank'>Protein<br>ID</a></td>
+                    {% endif %}
                   </tr></table>
                 </div>
 
                 <div class='title' style='background:lightblue;'>
                   <p class='hittitle'>{{hit|firsttitle}}</p>
                   <p class='titleinfo'>
-                    <span class=b>Sequence ID:</span> <a href="{{genelink(hit|hitdef)}}">{{hit|seqid}}</a>
-                    <span class=b>Length:</span> {{hit.Hit_len}}
+                    <span>Sequence ID:</span> <a href="{{genelink(hit|hitdef)}}" target='_blank'>{{hit|seqid}}</a>
+                    <span>Length:</span> {{hit.Hit_len}}
                   </p>
                 </div>
 
@@ -647,7 +654,7 @@ pre{
                   <div class=title>
                     <p class=hittitle>{{title.title}}</p>
                     <p class=titleinfo>
-                      <span class=b>Sequence ID:</span> <a href="{{genelink(title.hitid)}}">{{title.id}}</a>
+                      <span>Sequence ID:</span> <a href="{{genelink(title.hitid)}}" target='_blank'>{{title.id}}</a>
                     </p>
                   </div>
                   {% endfor %}
@@ -680,12 +687,15 @@ pre{
                     </tr>
                   </table>
 
-                  <!-- <pre class=alignmentgraphic>{{hsp|alignment_pre}}</pre> -->
-                  <pre class=alignmentgraphic>
+                  {{hsp|alignment_pre|safe}}
+                 <!-- 
+ <pre class=alignmentgraphic>
 Query {{ hsp['Hsp_query-from'].text|format_alignment1|safe }} {{ hsp.Hsp_qseq }} {{ hsp['Hsp_query-to'] }}<br>
 {{ ''|format_alignment2|safe }} {{ hsp.Hsp_midline }}<br>
 Subject {{ hsp['Hsp_hit-from'].text|format_alignment3|safe }} {{ hsp.Hsp_hseq }} {{ hsp['Hsp_hit-to'] }}                
                   </pre>
+ -->
+
                   
                 </div>
                 {% endfor %}

@@ -139,15 +139,27 @@ def format_alignment3(string):
 @filter
 def alignment_pre(hsp):
     
-    return (
-        "\nQuery {:>7s}  {}  {}".format(hsp['Hsp_query-from'].text, hsp.Hsp_qseq, hsp['Hsp_query-to']) +
-        "\n       {:>7s}  {}".format('', hsp.Hsp_midline) +
-        "\nSubject{:>7s}  {}  {}\n".format(hsp['Hsp_hit-from'].text, hsp.Hsp_hseq, hsp['Hsp_hit-to'])
-    )
-    # string = '\n'+hsp['Hsp_query-from'].text + '  '+ hsp.Hsp_qseq+ '  '+ str(hsp['Hsp_query-to'])+ '\n'
-#     string += '  ' + hsp.Hsp_midline +' ' +hsp['Hsp_hit-from'].text + '\n'
-#     string += '  ' + hsp.Hsp_hseq +' '+ str(hsp['Hsp_hit-to'])
-    #return string
+    # return (
+#         "\nQuery {:>7s}  {}  {}".format(hsp['Hsp_query-from'].text, hsp.Hsp_qseq, hsp['Hsp_query-to']) +
+#         "\n       {:>7s}  {}".format('', hsp.Hsp_midline) +
+#         "\nSubject{:>7s}  {}  {}\n".format(hsp['Hsp_hit-from'].text, hsp.Hsp_hseq, hsp['Hsp_hit-to'])
+#     )
+
+#     string = """
+# hsp['Hsp_query-from'].text + '  '+ hsp.Hsp_qseq+ '  '+ str(hsp['Hsp_query-to'])+ '\n'
+# '  ' + hsp.Hsp_midline +' ' +hsp['Hsp_hit-from'].text + '\n'
+# hsp.Hsp_hseq +' '+ str(hsp['Hsp_hit-to'])
+# """
+    desired_len = 7   # space of padding of initial starts
+    len1 = len(hsp['Hsp_query-from'].text)  # ie 1
+    lenadd1 = desired_len - len1
+    len2 = len(hsp['Hsp_hit-from'].text)   # ie 5
+    lenadd2 = desired_len - len2
+    string = "<pre class='alignmentgraphic' nowrap>Query:&nbsp;&nbsp;" +'&nbsp;'*lenadd1 + hsp['Hsp_query-from'].text + '&nbsp;'+ hsp.Hsp_qseq+ '&nbsp;'+ str(hsp['Hsp_query-to'])+ '<br>'
+    string += '&nbsp;'*(desired_len+9) + str(hsp.Hsp_midline).replace(' ','&nbsp;') +'&nbsp;<br>'
+    string += "Subject:"+ '&nbsp;'*lenadd2 +hsp['Hsp_hit-from'].text + '&nbsp;'+ hsp.Hsp_hseq +'&nbsp;'+ str(hsp['Hsp_hit-to'])
+    string += '</pre>'
+    return string
 
 @filter('len')
 def blastxml_len(node):
@@ -185,7 +197,36 @@ def asframe(frame):
         return '0'
     raise Exception("frame should be either +1 or -1")
 
-
+def proteinlink(hit):
+    if not isinstance(hit, str):
+        hit = hitid(hit)
+    hit_parts = hit.split('_')
+    
+    #if args.db_type == 'protein':
+        # needs to change for protein 
+        # what about nucleotide?
+    if args.anno == 'prokka':
+        pid = hit
+        db = 'PROKKA_'+hit_parts[0]
+        query1 = "USE "+db+";"
+        query2 = "SELECT m.accession FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='"+pid+"'"
+        try:
+            args.myconn.execute_no_fetch(query1)
+            result = args.myconn.execute_fetch_select_dict(query2)
+            accession = result[0]['accession']
+            # prokka-accession == SEQF1730|ADFR01000016.1
+            
+            print('acc',accession)
+            gbpid = accession.split('|')[1]
+        
+        except:
+            gbpid = ''
+    else:
+        gbpid = hit_parts[1]  # NCBI
+    link = "http://www.ncbi.nlm.nih.gov/protein/{}".format(gbpid)
+    
+    
+    return link
 
 def genelink(hit, type='genbank', hsp=None):
     if not isinstance(hit, str):
@@ -201,6 +242,7 @@ def genelink(hit, type='genbank', hsp=None):
            pid = hit
         else:
            pid = hit_parts[1]
+        #print('pid',pid,'<br>')
         db = args.anno.upper()+'_'+hit_parts[0]
         query1 = "USE "+db+";"
         query2 = "SELECT m.accession, o.start, o.stop FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='"+pid+"'"
@@ -443,6 +485,7 @@ class BlastVisualize:
                                      # match_colors=self.match_colors(),
                                      # hit_info=self.hit_info(),
                                      genelink=genelink,
+                                     proteinlink=proteinlink,
                                      jblink=jblink,
                                      taxonlink=taxonlink,
                                      genomelink=genomelink,

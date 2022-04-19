@@ -1,4 +1,32 @@
 HOMD Notes
+2022-04-18
+I have a number of issues with the Genome BLAST
+   Use this protein as the example:
+
+>hypothetical protein HMPREF0629_01218 [Peptoniphilus sp. oral taxon 386 str. F0131]GenBank: EFI42564.1
+MMESRPEFDKITSFDEFTKYYWYREELSQICKSLGLEYRGTKQELNYIIEQYFKGNLIKKSSIKNEKKQVENITLDTPLLECGFSFNAKFREYFTVLTGISPFKFTADMATVWRKVKRENDLSFTIQDMLKVYYGKSDYAKYDNSVCQWNQFLKDFCADENSCNYSNKLKVASILWKEVRNSRNEKIYSKNLLTEYADKIKEYCK
+
+Note: there are 5 100% Ident hits—the first being Bulleidia extructa.
+In the Alignments:
+·         I find the dark blue highlight makes the information hard to read
+·         In the blue box the Number of Matches 1 can be dropped as always 1
+·         In the actual alignment, the font must be proportional font Currier New or other.  You don’t see the problem until you have sequences with poor matches, then you see things don’t line up.
+·         I would like to change the links above the blue bar to
+
+GenBank  GenBank  HOMD     HOMD   HOMD        Protein
+ Entry    Viewer  JBrowse  Taxon  MetaInfo      ID
+ 
+The links for these 6 buttons are
+·         http://www.ncbi.nlm.nih.gov/nucleotide/ADFR01000009.1?report=genbank&log$=nuclalign&from=59503&to=60117
+·         http://www.ncbi.nlm.nih.gov/nucleotide/ADFR01000009.1?report=graph&log$=nuclalign&from=59503&to=60117
+·         https://www.homd.org/jbrowse/index.html?data=homd/SEQF1730&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC%20Content%20(pivot%20at%200.35),GC%20Skew&loc=SEQF1730|ADFR01000009.1:59003..60617&highlight=SEQF1730|ADFR01000009.1:59503..60117
+·         https://www.homd.org/taxa/tax_description?otid=603
+·         https://www.homd.org/genome/genome_description?gid=SEQF1730
+
+·      The protein ID is EFC05543.1 which points to https://www.ncbi.nlm.nih.gov/protein/283104164 which is equivalent to https://www.ncbi.nlm.nih.gov/protein/EFC05543 (God knows where they got an absolute protein ref number—it never shows up on any of the pages).  Now the trick for Andy or George is to figure out how get the EFC05543.1 number or link.  It is in the GenBank entry under protein ID.  It is in the JBrowse view that comes up.  Is this number EFC05543.1 stored in any form in any place in the HOMD tables?  Back under Descriptions the Accession is 1282804 which is a link to the GenBank Entry.    I can explain in Zoom why getting this Protein ID in one click is very important during Zoom
+As it stands, the links are not descriptive of where you go.  I want them bigger and two lines.
+Best,Floyd
+
 2022-04-15
 JMW would like a custom blast output similar to
 blast-script/abundance-sripts/#12
