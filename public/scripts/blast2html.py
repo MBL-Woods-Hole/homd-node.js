@@ -216,7 +216,7 @@ def proteinlink(hit):
             accession = result[0]['accession']
             # prokka-accession == SEQF1730|ADFR01000016.1
             
-            print('acc',accession)
+            #print('acc',accession)
             gbpid = accession.split('|')[1]
         
         except:
