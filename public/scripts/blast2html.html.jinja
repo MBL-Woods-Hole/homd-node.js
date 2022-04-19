@@ -470,6 +470,8 @@ footer :link {
         {% set head_name = 'Nucleotide' %}
       {% endif %}
       
+      
+      
       {% for result in blast.BlastOutput_iterations.Iteration %}
       
       <section class=match id=match{{result['Iteration_iter-num']}}>
@@ -630,8 +632,8 @@ footer :link {
                    
                     <td><a class=linkheader href="{{taxonlink(hit|hittaxon, 'taxon')}}">HOMD<br>Taxon</a></td>
                     <td><a class=linkheader href="{{genomelink(hit|hitgenome, 'genome')}}">HOMD<br>Metainfo</a></td>
-                    {% if head_name == 'Protein' %}
-                      <td><a class=linkheader href="{{proteinlink(hit|hitdef)}}" target='_blank'>Protein<br>ID</a></td>
+                    {% if head_name == 'Protein' and anno == 'ncbi' %}
+                      <td><a class=linkheader href="{{proteinlink(hit|hitdef, 'link')}}" target='_blank'>Protein ID:<br>{{proteinlink(hit|hitdef, 'id')}}</a></td>
                     {% endif %}
                   </tr></table>
                 </div>

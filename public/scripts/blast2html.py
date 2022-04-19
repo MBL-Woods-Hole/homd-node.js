@@ -197,36 +197,25 @@ def asframe(frame):
         return '0'
     raise Exception("frame should be either +1 or -1")
 
-def proteinlink(hit):
+def proteinlink(hit, type):
     if not isinstance(hit, str):
         hit = hitid(hit)
     hit_parts = hit.split('_')
-    
+    #print('hit',hit,'<br>')
     #if args.db_type == 'protein':
         # needs to change for protein 
         # what about nucleotide?
-    if args.anno == 'prokka':
-        pid = hit
-        db = 'PROKKA_'+hit_parts[0]
-        query1 = "USE "+db+";"
-        query2 = "SELECT m.accession FROM molecules as m, ORF_seq as o where o.mol_id=m.id AND o.PID='"+pid+"'"
-        try:
-            args.myconn.execute_no_fetch(query1)
-            result = args.myconn.execute_fetch_select_dict(query2)
-            accession = result[0]['accession']
-            # prokka-accession == SEQF1730|ADFR01000016.1
-            
-            #print('acc',accession)
-            gbpid = accession.split('|')[1]
-        
-        except:
-            gbpid = ''
+    if args.anno == 'prokka': # grab the NCBI
+        # this only works for NCBI/protein
+        # and I cant just use the ncbi db because the PID is wrong
+        gbpid = ''
     else:
         gbpid = hit_parts[1]  # NCBI
     link = "http://www.ncbi.nlm.nih.gov/protein/{}".format(gbpid)
-    
-    
-    return link
+    if type=='link':
+        return link
+    else:
+        return gbpid
 
 def genelink(hit, type='genbank', hsp=None):
     if not isinstance(hit, str):
@@ -482,6 +471,7 @@ class BlastVisualize:
         output.write(template.render(blast=self.blast,
                                      iterations=self.blast.BlastOutput_iterations.Iteration,
                                      colors=self.colors,
+                                     anno=args.anno,
                                      # match_colors=self.match_colors(),
                                      # hit_info=self.hit_info(),
                                      genelink=genelink,
