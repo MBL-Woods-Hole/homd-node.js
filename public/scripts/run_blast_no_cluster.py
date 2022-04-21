@@ -221,7 +221,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
 #             ##fileText += ' -db /Users/avoorhis/programming/blast-db-testing/B6/B6'
 #         else:   # HOMD Default
         #fileText += ' -num_threads 4'
-        fileText += ' -num_threads 4 -mt_mode 1'
+        #fileText += ' -num_threads 4 -mt_mode 1'
         fileText += ' -db ' + details_dict['blastdb']
         #fileText += ' -db ' + details_dict['blastdb']
         fileText += ' -evalue ' + details_dict['expect']
