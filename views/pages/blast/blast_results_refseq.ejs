@@ -19,10 +19,13 @@ font-size:1.0em;
 background-color:lightgrey;
 padding:5px;
 }
+#blast-search-info{
+   height:65px;
+}
 .align pre{
    width:900px;
    overflow:auto;
-   border:1px solid red;
+   border:1px solid brown;
 }
 </style>
 <body>
@@ -37,7 +40,7 @@ padding:5px;
 
   <div class='title'><%= blastParams.program.toUpperCase() %> Results (<%= blastParams.blastFxn %>)</div>
     <%- include('../../partials/flash'); %>
-     <% if(blastParams.outfmt === "tsv"){ %>
+     <% if(blastParams.outfmt === "custom"){ %>
      <%-     include('../../partials/under_construction'); %>
      <% } %>
     
@@ -51,16 +54,20 @@ padding:5px;
     
     
     <div id='blast-search-info'>
-      <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
-      <table>
+      
+      
+        <table>
         <tr>
-        
-        
         <td>
-          <% if(blastParams.outfmt === "tsv"){ %>
-            Download as TSV File<br>(coming soon)
+          <% if(blastParams.outfmt === "custom"){ %>
+            <form id='blastDownloadForm2' name='blastDownloadForm2' method='POST' action='blastDownload2' >
+              <input style='padding:1px;border:1px solid brown;' type='submit' value='Download'>
+              <input type='hidden' name='blastID' value='<%= blastID %>'>
+              <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
+            </form>
           <% }else{ %>
-          <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.form)">
+            <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
+            <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.form)">
             <option value='0'>Download Options</option>
             <option value='text1'>As Text -top hit only</option>
             <option value='text4'>As Text -top 4 hits</option>
@@ -73,30 +80,33 @@ padding:5px;
             <option value='excelAll'>As Excel -all hits</option>
             <option disabled>--------</option>
             <option value='zip'>BLAST Output Files</option>
-          </select>
+            </select>
+          <% } %>
+          <input type='hidden' name='blastID' value='<%= blastID %>'>
+          <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
+          </form>
         </td>
-        <% } %>
+        
         <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:
         <br>&nbsp;&nbsp;&nbsp;&nbsp;<%= blastParams.blastdb %></td>
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
-      </table>
-      <input type='hidden' name='blastID' value='<%= blastID %>'>
-      <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
-      </form>
-
+        </table>
+        
+      
+    
     <span style='float:right'><a class='button' href='/refseq/refseq_blastn'>Back</a></span>
     <!-- <span style='float:right'><button onclick="history.back()">Go Back</button></span> -->
     </div>
-    <% if(blastParams.outfmt === "tsv"){ %>
+    <% if(blastParams.outfmt === "custom"){ %>
         <div id='sort_radios'>    
           <center><small>
           Output Options: 
          <small>(toggle)</small>&nbsp;&nbsp;&nbsp;&nbsp;
          <input  checked id='ofull' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','full')"> Full Table</button>&nbsp;&nbsp;
-         <input  id='oone' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','one')"> Option-1 (Full Percent ID)</button>&nbsp;&nbsp;
-         <input  id='otwo' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','two')"> Option-2 (alignments)</button>&nbsp;&nbsp;
-          <input  id='ostd' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','std')"> Standard</button>
+         <input  id='oone' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','one')"> Full Percent ID</button>&nbsp;&nbsp;
+         <input  id='otwo' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','two')"> Alignments</button>&nbsp;&nbsp;
+          <input  id='ostd' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','standard')"> Standard</button>
         
           </small></center>
       </div>
@@ -119,7 +129,7 @@ padding:5px;
     <center>
     <small>
     <% this_url = cfg.url +"/blast/blast_results_refseq?id=" +blastID %>
-    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] <= to come back to these results for 30 days.
+    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] <button onclick="copy_link()" style='padding:1px;border:1px solid brown;'>Copy Link</button> <= to come back to these results for 30 days.
     </small></center>
     <% if(blastParams.blastFxn === 'refseq') { %>
       <div id='blastResultsDiv'>
@@ -148,7 +158,7 @@ padding:5px;
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
-<!-- <script type="text/javascript" src="/js/sorttable.js"></script> --> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/blast.js"></script>
 <script>
   mainmenu()

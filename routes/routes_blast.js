@@ -184,7 +184,7 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
     const sortCol = req.query.col || '' 
     const sortDir = req.query.dir || '' 
     //////////////////
-    const table_opt = req.query.opt || ''
+    const table_opt = req.query.opt || ''  // should be empty initially
     
     const renderFxn = (req, res, html, queries, genome_data, files, config, blastID) => {
         //console.log('htmlfiles',files)
@@ -253,11 +253,11 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
               //console.log('result0',results[0])
               let function_args = {cfg:config,files:blastFiles,bid:blastID,scol:sortCol,sdir:sortDir,opt:table_opt}
               
-              if(config.outfmt === 'tsv'){
-                   refseq_html = run_tsv_refseq_blast(results, function_args)
+              if(config.outfmt === 'custom'){
+                   refseq_html = run_custom_refseq_blast(results, function_args)
               }else{
                   
-                  refseq_html = run_std_refseq_blast(results, function_args)
+                  refseq_html = run_standard_refseq_blast(results, function_args)
               
               }
               
@@ -281,18 +281,20 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
         } // end else
     })
 })
-function run_tsv_refseq_blast(results, args){
-    // tsv file 
+function run_custom_refseq_blast(results, args){
+    // tsv/custom file 
+    //console.log('args',args)
     let data=[]
     for(let i=0; i<results.length; i++){
-        let parsed_data = helpers.parse_blast_tsv(results[i], args.opt, args.bid, i)
+        //console.log('results[i]',results[i])
+        let parsed_data = helpers.parse_blast_custom(results[i], args.opt, args.bid, i)
         data.push(parsed_data) 
     }
     //console.log('data0',data[0])
    return data.join('<br><br>')
 }
 //
-function run_std_refseq_blast(results, args){
+function run_standard_refseq_blast(results, args){
     let query_strings =[],data=[]
     for(let i=0; i<results.length; i++){
 		//console.log('file',blastFiles[i])
@@ -579,7 +581,62 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
     
 })
 //
-
+router.post('/blastDownload2', function blastDownload2(req, res) {
+    console.log('in blastDownload2')
+    console.log('req.body',req.body)
+    let blastID = req.body.blastID
+    let type = req.body.dnldType || 'xls'
+    let  data=[],blastFiles = [],files_array
+    let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results')
+    let result = getAllFilesWithExt(blastResultsDir, 'out')
+    for(let i=0; i < result.length; i++){
+            blastFiles.push(path.join(blastResultsDir, result[i]))
+            if(type === 'zip'){
+               zip.addLocalFile(path.join(blastResultsDir, result[i]))
+            }
+    }
+    if(type === 'zip'){
+       //
+    }else{
+       let fileData = {}
+       let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
+       fs.readFile(configFilePath, function readConfig(err,  configData) {
+         if(err){
+           req.flash('fail', 'blastID no longer Valid')
+           res.redirect('/') // this needs to redirect to either refseq or genome
+           return
+         }else{
+           let config = JSON.parse(configData)
+            
+            files_array = blastFiles
+            
+            let blastFilePromises = []
+            for(let i=0; i < files_array.length; i++){
+                blastFilePromises.push(helpers.readFromFile(files_array[i],'txt'))
+            }
+            Promise.all(blastFilePromises)
+              .then(results => {
+                
+                    for(let i=0; i<files_array.length; i++){
+                        let parsed_data = helpers.parse_blast_table(results[i], type)
+                        data.push(parsed_data) // in order of sequences
+                    }
+                    let data_files = data.join('\n\n\n')
+                    //const html = getBlastHtmlTable(data, blastID, sortCol, sortDir)
+                    //var table_tsv = create_blast_download_table2(data, type)
+                    if(type.substring(0,4) === 'text'){
+                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
+                    }else{  //excel
+                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
+                    }
+                    res.send(data_files)
+                    delete req.body
+            })  // end promise.all    
+         }
+      })  // end readfile
+    }
+    
+})
 //
 router.post('/blastDownload', function blastDownload(req, res) {
     //
@@ -650,7 +707,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
             let config = JSON.parse(configData)
             if(blastFxn ==='refseq'){
                 files_array = blastFiles
-            }else{
+            }else{  // genomic blast
                 files_array = xml_files
             }
             let blastFilePromises = []
@@ -674,7 +731,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
                     }
                     res.send(table_tsv)
                     delete req.body
-                }else{   // genme xml files
+                }else{   // genme xml files or fast
                     if(type === 'fasta'){
                         
 						let hitid_obj,hitids=[],hitid_collector={},comma_string
@@ -691,7 +748,6 @@ router.post('/blastDownload', function blastDownload(req, res) {
 						console.log('blastdbcmd',blastdbcmd)
 						helpers.execute(blastdbcmd, function(fasta_result){
                             //console.log('fasta_result',fasta_result)
-                            
                             res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".fa\""})
                             res.send(fasta_result)
                             return
@@ -753,6 +809,12 @@ router.post('/openBlastWindow', function openBlastWindow(req, res) {
 //////////////////////////////////////////////////////////////////
 ///// FUNCTIONS /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
+function create_blast_download_table2(data_obj, type){
+   // type is zip or whatever
+   for(let n in data_obj){
+       console.log('data_obj',n, data_obj[n])
+   }
+}
 function create_blast_download_table(data_obj, type, fxn) {
   let txt = ''
   

@@ -59,14 +59,12 @@ thead th { position: sticky; top: 0; }
             <option value='zip'>BLAST Output Files (xml files)</option>
             <option value='fasta'>Fasta File of Hits</option>
           </select>
-          
-        
         </td>
         
         <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:
            <br>&nbsp;&nbsp;&nbsp;&nbsp;[<%= blastParams.anno.toUpperCase() %>] <%= blastParams.blastdb %>
         </td>
-        <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
+        
         </tr>
       </table>
       <input type='hidden' name='blastID' value='<%= blastID %>'>
@@ -82,14 +80,14 @@ thead th { position: sticky; top: 0; }
 		  </select>
       <% } %> 
     <span id='genome_back' style=''><a class='button' href='/genome/blast'>Back</a></span> 
-    <!-- <span style='float:right'><button onclick="history.back()">Go Back</button></span> -->
+    
     </div>
     
     
     <center>
     <small>
     <% this_url = cfg.url +"/blast/blast_results_genome?id=" +blastID %>
-    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] <= to come back to these results for 30 days.
+    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] <button onclick="copy_link()" style='padding:1px;border:1px solid brown;'>Copy Link</button> <= to come back to these results for 30 days.
     </small></center>
      <div id='output'>
       <%- decodeURI(blastData) %>

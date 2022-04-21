@@ -236,7 +236,7 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         else:
             #fileText += ' -outfmt 15'   ## 15 JSON
             #fileText += ' -outfmt 16'   ## 16 XML
-            if details_dict['outfmt'] == 'tsv':
+            if details_dict['outfmt'] == 'custom':
                 #fileText += " -outfmt '7 qseqid bitscore nident pident qstart qend stitle length mismatch gaps qlen evalue'"  # works with refseq db deflines
                 # qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
                 fileText += " -outfmt '7 std qlen stitle qseq sseq'"

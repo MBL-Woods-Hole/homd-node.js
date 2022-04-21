@@ -26,7 +26,9 @@
       <center>
       <div id='blast-wait-box'>
          <br>Refreshes every 5 seconds and will present the blast results page when complete.
-       
+         <br>Copy this link to access to results later (data retained for 1 month)
+         <% this_url = cfg.url +"/blast/blast_results_refseq?id=" +blastID %>
+         <br><span id='blasturl'><%= this_url %></span> <button onclick="copy_link()" style='padding:1px;border:1px solid brown;'>Copy Link</button>
          <!-- <br><br><img src='/images/0_WzVRQs214b7TgyJXtrans.gif' height='80'> -->
          <br><br><img src='/images/swirl_pastel_green.gif' height='80'>
          
@@ -65,6 +67,7 @@
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/blast.js"></script>
 <script>
   mainmenu()
   

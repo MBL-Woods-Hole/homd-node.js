@@ -392,3 +392,13 @@ function blastFormCheck_genome(){
    
    form.submit()
 }
+
+function copy_link(){
+    var resultsurl = document.getElementById("blasturl");
+    console.log(resultsurl)
+    window.getSelection().selectAllChildren(resultsurl);
+    document.execCommand("Copy")
+    /* Alert the copied text */
+    alert("Link copied to clipboard.");
+    
+}
