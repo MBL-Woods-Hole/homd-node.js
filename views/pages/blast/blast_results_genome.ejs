@@ -87,7 +87,7 @@ thead th { position: sticky; top: 0; }
     <center>
     <small>
     <% this_url = cfg.url +"/blast/blast_results_genome?id=" +blastID %>
-    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] <button onclick="copy_link()" style='padding:1px;border:1px solid brown;'>Copy Link</button> <= to come back to these results for 30 days.
+    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] <button onclick="copy_link()" style='padding:1px;border:1px solid brown;'>Copy Link</button> <= to come back to these results later (30 days).
     </small></center>
      <div id='output'>
       <%- decodeURI(blastData) %>

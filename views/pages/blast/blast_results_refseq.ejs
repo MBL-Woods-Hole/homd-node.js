@@ -3,12 +3,12 @@
 
 <% blastParams = JSON.parse(blastParams) %>
 <% error_obj = JSON.parse(error) %>
-<% query_strings = JSON.parse(queries) %>
-<% html_files = JSON.parse(files) %>
+
 <% var cfg = JSON.parse(config) %> 
 
 <%- include('../../partials/header_html'); %>
 <link rel="stylesheet" type="text/css" href="/css/blast.css" >
+
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
@@ -87,7 +87,7 @@ padding:5px;
           </form>
         </td>
         
-        <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:
+        <td>Search Results: <%= numseqs %> sequence(s) searched against target database:
         <br>&nbsp;&nbsp;&nbsp;&nbsp;<%= blastParams.blastdb %></td>
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
@@ -129,7 +129,9 @@ padding:5px;
     <center>
     <small>
     <% this_url = cfg.url +"/blast/blast_results_refseq?id=" +blastID %>
-    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] <button onclick="copy_link()" style='padding:1px;border:1px solid brown;'>Copy Link</button> <= to come back to these results for 30 days.
+    Copy this link: [ <span id='blasturl'><a href='<%= this_url %>'><%= this_url %></a></span> ] 
+    <button onclick="copy_link()" style='padding:1px;border:1px solid brown;'>Copy Link</button>
+     <= to come back to these results later (30 days).
     </small></center>
     <% if(blastParams.blastFxn === 'refseq') { %>
       <div id='blastResultsDiv'>
@@ -162,7 +164,7 @@ padding:5px;
 <script type="text/javascript" src="/js/blast.js"></script>
 <script>
   mainmenu()
- 
+  
 </script>
 
 

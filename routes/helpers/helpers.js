@@ -783,7 +783,7 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
     if(row_collector.length === 0){
         return header+"No Data"
     }
-    let html = "<table class='sortable'><tr>"
+    let html = "<table id='newSortTable' class='sortable'><tr>"
     
     if(opt === 'one'){
         html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>HMT</th><th>Species</th><th>Strain/Clone</th><th>Genbank</th><th>Status</th>'
@@ -791,8 +791,15 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
     }else if(opt === 'two'){
         html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>Mis-Matches</th><th>Gaps</th><th>Alignments</th>'
     }else if(opt === 'standard'){
-        html += '<th>Query</th><th>Q Length</th><th>Q seq</th><th>Alignment</th><th>Hit-id</th><th>HOMD Clone Name</th><th>e-value</th>'
-        html += '<th>Bit Score</th><th>% Ident</th>'
+        html += "<th class='sorttable_nosort'>Query</th>"
+        html += "<th class='sorttable_nosort'>Q Length</th>"
+        html += "<th class='sorttable_nosort'>Q seq</th>"
+        html += "<th class='sorttable_nosort'>Alignment</th>"
+        html += "<th class='sorttable_nosort'>Hit-id</th>"
+        html += "<th class='sorttable_nosort'>HOMD Clone Name</th>"
+        html += "<th class='sorttable_nosort'>e-value</th>"
+        html += "<th class='sorttable_nosort'>Bit Score</th>"
+        html += "<th class='sorttable_nosort'>% Ident</th>"
     }else{
         //qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
         html += '<th>query-id</th><th>hit-id</th><th>% Ident</th><th>Alignment Length</th><th>Mis-matches</th><th>Gaps</th>'

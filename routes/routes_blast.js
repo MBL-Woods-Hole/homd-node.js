@@ -186,8 +186,9 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
     //////////////////
     const table_opt = req.query.opt || ''  // should be empty initially
     
-    const renderFxn = (req, res, html, queries, genome_data, files, config, blastID) => {
+    const renderFxn = (req, res, html, files_length, config, blastID) => {
         //console.log('htmlfiles',files)
+        // req, res, refseq_html, blastFiles.length, config, blastID
         res.render('pages/blast/blast_results_refseq', {
             title: 'HOMD :: Blast Results', 
             pgname: 'blast/blast',
@@ -197,12 +198,12 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
             //db_choices: JSON.stringify(C.refseq_blastn_db_choices),
             html: html,
-            //numseqs: queries.length,
-            queries: JSON.stringify(queries),
-            files: JSON.stringify(files),
+            numseqs: files_length,
+            //queries: JSON.stringify(queries),
+            //files: JSON.stringify(files),
             blastParams: JSON.stringify(config),
             blastID: blastID,
-            blastData: encodeURI(genome_data.toString()),
+            //blastData: encodeURI(genome_data.toString()),
             error: JSON.stringify({})
         })
     }
@@ -270,7 +271,8 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
                 if(req.query.ajax){
                     return res.send(refseq_html)   // this is for refseq blast
                 }else{ 
-                  renderFxn(req, res, refseq_html, query_strings, '', html_files, config, blastID)
+                  //renderFxn(req, res, refseq_html, query_strings, '', html_files, config, blastID)
+                  renderFxn(req, res, refseq_html, blastFiles.length, config, blastID)
                 }
               
     

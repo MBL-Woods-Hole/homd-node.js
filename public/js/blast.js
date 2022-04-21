@@ -189,6 +189,8 @@ function opt_toggle(blastID, opt){
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       var resp = xmlhttp.responseText;
       document.getElementById('blastResultsDiv').innerHTML = resp
+      var newTableObject = document.getElementById('newSortTable')
+      sorttable.makeSortable(newTableObject);
      } 
     }
     xmlhttp.send(null);
@@ -395,7 +397,7 @@ function blastFormCheck_genome(){
 
 function copy_link(){
     var resultsurl = document.getElementById("blasturl");
-    console.log(resultsurl)
+    //console.log(resultsurl)
     window.getSelection().selectAllChildren(resultsurl);
     document.execCommand("Copy")
     /* Alert the copied text */
