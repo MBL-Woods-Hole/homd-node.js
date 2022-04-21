@@ -1,11 +1,20 @@
 HOMD Notes
+2022-04-21 mtg
+refseq blast out
+-- get coverage.
+-- is coverage * pct identity the same as FULL_PCT_ID
+-- full table should have coverage, and full_pct_id (or cov * ident)
+-- for JMW combine best hits (use full_pct_id page)
+-- on std page: the alignment should be folded for longer seqs
+      and add qstart-qend and sstart-send
+-- ***use thread=4 for blast program   '-mt_mode 1'
+-- add coverage and full_pct_id to download
+
 2022-04-18
 I have a number of issues with the Genome BLAST
    Use this protein as the example:
-
 >hypothetical protein HMPREF0629_01218 [Peptoniphilus sp. oral taxon 386 str. F0131]GenBank: EFI42564.1
 MMESRPEFDKITSFDEFTKYYWYREELSQICKSLGLEYRGTKQELNYIIEQYFKGNLIKKSSIKNEKKQVENITLDTPLLECGFSFNAKFREYFTVLTGISPFKFTADMATVWRKVKRENDLSFTIQDMLKVYYGKSDYAKYDNSVCQWNQFLKDFCADENSCNYSNKLKVASILWKEVRNSRNEKIYSKNLLTEYADKIKEYCK
-
 Note: there are 5 100% Ident hits—the first being Bulleidia extructa.
 In the Alignments:
 ·         I find the dark blue highlight makes the information hard to read

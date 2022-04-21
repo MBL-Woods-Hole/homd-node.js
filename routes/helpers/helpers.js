@@ -732,10 +732,11 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
     // plan : get the top hits only (by bit_score)
     // split the id line
     // calculate FULL_PCT_ID 
-    // qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
-    let indexes ={query_id:0, hit_id:1,bit_score:11, pct_identity:2, 
-                  qstart:6, qend:7, sstart:8, send:9, stitle:13, length:3, mismatches:4, 
-                  gaps:5, qlen:12, evalue:10, qseq:14, sseq:15}  // qseq;11, sseq:12
+    // qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle qcov qseq sseq
+    let indexes ={ query_id:0, hit_id:1, pct_identity:2, length:3, mismatches:4, gaps:5, 
+                   qstart:6, qend:7, sstart:8, send:9, evalue:10, 
+                   bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16  // qseq;11, sseq:12
+                 }
     let query =''
     let header = ''
     let max_bitscore = 0
@@ -785,12 +786,12 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
     }
     let html = "<table id='newSortTable' class='sortable'><tr>"
     
-    if(opt === 'one'){
+    if(opt === 'one'){  // best hits only(JMW)
         html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>HMT</th><th>Species</th><th>Strain/Clone</th><th>Genbank</th><th>Status</th>'
-        html += '<th>% Ident</th><th>FULL_PCT_ID</th><th>Hit Title</th>'
-    }else if(opt === 'two'){
+        html += '<th>% Ident</th><th>FULL_PCT_ID<br>Calc</th><th>Hit Title</th>'
+    }else if(opt === 'two'){  // alignments
         html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>Mis-Matches</th><th>Gaps</th><th>Alignments</th>'
-    }else if(opt === 'standard'){
+    }else if(opt === 'standard'){  // top 4 hits
         html += "<th class='sorttable_nosort'>Query</th>"
         html += "<th class='sorttable_nosort'>Q Length</th>"
         html += "<th class='sorttable_nosort'>Q seq</th>"
@@ -800,14 +801,14 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
         html += "<th class='sorttable_nosort'>e-value</th>"
         html += "<th class='sorttable_nosort'>Bit Score</th>"
         html += "<th class='sorttable_nosort'>% Ident</th>"
-    }else{
+    }else{   // full table
         //qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
-        html += '<th>query-id</th><th>hit-id</th><th>% Ident</th><th>Alignment Length</th><th>Mis-matches</th><th>Gaps</th>'
+        html += '<th>query-id</th><th>hit-id</th><th>% Ident</th><th>% Cov</th><th>FPI<br>calc</th><th>FPI<br>mult</th><th>Alignment Length</th><th>Mis-matches</th><th>Gaps</th>'
         html += '<th>q-start</th><th>q-end</th><th>s-start</th><th>s-end</th><th>E-value</th><th>Bit Score</th><th>Query Length</th><th>Hit Title</th>'
     }
     html += '</tr>'
     
-    if(opt === 'standard'){
+    if(opt === 'standard'){   // top 4 hits
         html+='<tr>'
             html+="<td rowspan='4'>"+query.trim()+'</td>' // query
             html+="<td rowspan='4'>"+row_collector[0][indexes.qlen]+'</td>'
@@ -821,13 +822,15 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
         let title_items = row_items[indexes.stitle].split('|')
         let hmt = title_items[2].trim()
         let otid = hmt.split('-')[1]
-        if(opt === 'one'){
+        
+        if(opt === 'one'){  // best hits only(JMW)
             //for(let i in row_items){
            //console.log('row_items',row_items)
-           let PCT_ID = parseFloat(row_items[indexes.pct_identity])
-        
+           
+           // (qend-qstart+1/qlen)%id
            let ALIGNMENT_FRAC = parseFloat(parseInt(row_items[indexes.qend]) - parseInt(row_items[indexes.qstart]) + 1.0) / parseFloat(row_items[indexes.qlen])
-           let FULL_PCT_ID = PCT_ID * ALIGNMENT_FRAC
+           let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
+           let full_pct_id_mult = parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100
         // row: qid, bitscore, species, strain, HMT, PCT_ID, FULL_PCT_ID
            
         
@@ -841,12 +844,13 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
            let gb = title_items[4].trim().split(':')[1].trim()
            html+="<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+gb+"' target='_blank'>"+gb+'</a></td>'
            html+='<td>'+title_items[5].trim().split(':')[1]+'</td>'
-           html+='<td>'+(PCT_ID).toFixed(2).toString()+'</td>'
-           html+='<td>'+(FULL_PCT_ID).toFixed(2).toString()+'</td>'
-           html+='<td>'+row_items[indexes.stitle]+'</td>'
+           html+='<td>'+row_items[indexes.pct_identity]+'</td>'
+           html+="<td title='calc'>"+(full_pct_id_calc).toFixed(2).toString()+'</td>'
+           
+           html+="<td title='mult'>"+row_items[indexes.stitle]+'</td>'
         
            html+='</tr>'
-        }else if(opt === 'two'){
+        }else if(opt === 'two'){   // alignments
            html+='<tr>'
            html+='<td>'+row_items[indexes.query_id]+'</td>'
            html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+row_items[indexes.hit_id]+'</a></td>'
@@ -856,7 +860,7 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
            html+="<td class='align'><pre>"+create_alignment(row_items,indexes)+'</pre></td>'
         
            html+='</tr>'
-        }else if(opt === 'standard'){
+        }else if(opt === 'standard'){   // top 4 hits
              html+="<td><a href='#' onclick=\"create_alignment('"+row_collector[n][indexes.qseq]+"','"+row_collector[n][indexes.sseq]+"')\">open</a></td>"
 
             html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+title_items[0].trim()+'</a></td>'  // hit id
@@ -865,17 +869,31 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
             html+='<td>'+row_items[indexes.bit_score]+'</td>'   // 
             html+='<td>'+row_items[indexes.pct_identity]+'</td>'   // 
             html+='</tr>'
-        }else{
+        }else{            // full table
+            //let full_pct_id2 = (parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100).toFixed(2)
+            let ALIGNMENT_FRAC = parseFloat(parseInt(row_items[indexes.qend]) - parseInt(row_items[indexes.qstart]) + 1.0) / parseFloat(row_items[indexes.qlen])
+           let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
+           let full_pct_id_mult = parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100
+        
             html+='<tr>'
-            for(let i=0; i<14; i++){ //let i in row_items){
-               if(i === indexes.stitle){
-                  html+='<td>'+row_items[i]+'</td>'
-               }else if(i === indexes.hit_id){
-                  html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+row_items[i]+'</a></td>'
-               }else{
-                  html+='<td nowrap>'+row_items[i]+'</td>'
-               }
-            }
+            html+='<td>'+row_items[indexes.query_id]+'</td>'
+            html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+row_items[indexes.hit_id]+'</a></td>'
+            html+='<td>'+row_items[indexes.pct_identity]+'</td>'
+            html+='<td>'+row_items[indexes.qcov]+'</td>'
+            html+='<td>'+full_pct_id_calc.toFixed(5).toString()+'</td>'
+            html+='<td>'+full_pct_id_mult.toFixed(5).toString()+'</td>'
+            html+='<td>'+row_items[indexes.length]+'</td>'
+            html+='<td>'+row_items[indexes.mismatches]+'</td>'
+            html+='<td>'+row_items[indexes.gaps]+'</td>'
+            html+='<td>'+row_items[indexes.qstart]+'</td>'
+            html+='<td>'+row_items[indexes.qend]+'</td>'
+            html+='<td>'+row_items[indexes.sstart]+'</td>'
+            html+='<td>'+row_items[indexes.send]+'</td>'
+            html+='<td>'+row_items[indexes.evalue]+'</td>'
+            html+='<td>'+row_items[indexes.bit_score]+'</td>'
+            html+='<td>'+row_items[indexes.qlen]+'</td>'
+            html+='<td>'+row_items[indexes.stitle]+'</td>'
+            
             html+='</tr>'
         }
     }

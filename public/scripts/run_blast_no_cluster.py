@@ -220,6 +220,8 @@ def createBatchBlastFileText(args, filesArray, details_dict):
 #             fileText += ' -db /Users/avoorhis/programming/blast-db-testing/HOMD_16S_rRNA_RefSeq_V15.22.fasta'
 #             ##fileText += ' -db /Users/avoorhis/programming/blast-db-testing/B6/B6'
 #         else:   # HOMD Default
+        #fileText += ' -num_threads 4'
+        fileText += ' -num_threads 4 -mt_mode 1'
         fileText += ' -db ' + details_dict['blastdb']
         #fileText += ' -db ' + details_dict['blastdb']
         fileText += ' -evalue ' + details_dict['expect']
@@ -239,7 +241,8 @@ def createBatchBlastFileText(args, filesArray, details_dict):
             if details_dict['outfmt'] == 'custom':
                 #fileText += " -outfmt '7 qseqid bitscore nident pident qstart qend stitle length mismatch gaps qlen evalue'"  # works with refseq db deflines
                 # qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
-                fileText += " -outfmt '7 std qlen stitle qseq sseq'"
+                # https://www.metagenomics.wiki/tools/blast/blastn-output-format-6
+                fileText += " -outfmt '7 std qlen stitle qcovs qseq sseq'"
             fileText += ' -parse_deflines'  # works with refseq db deflines
             fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
             pass

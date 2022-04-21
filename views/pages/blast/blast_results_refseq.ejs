@@ -88,7 +88,7 @@ padding:5px;
         </td>
         
         <td>Search Results: <%= numseqs %> sequence(s) searched against target database:
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;<%= blastParams.blastdb %></td>
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;<b><%= blastParams.blastdb %></b></td>
         <!-- <td><span class=''>Elapsed Time:  sec</span></td> -->
         </tr>
         </table>
@@ -104,9 +104,9 @@ padding:5px;
           Output Options: 
          <small>(toggle)</small>&nbsp;&nbsp;&nbsp;&nbsp;
          <input  checked id='ofull' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','full')"> Full Table</button>&nbsp;&nbsp;
-         <input  id='oone' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','one')"> Full Percent ID</button>&nbsp;&nbsp;
+         <input  id='oone' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','one')"> Best Hits Only</button>&nbsp;&nbsp;
          <input  id='otwo' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','two')"> Alignments</button>&nbsp;&nbsp;
-          <input  id='ostd' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','standard')"> Standard</button>
+          <input  id='ostd' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','standard')"> Top 4 Hits</button>
         
           </small></center>
       </div>
