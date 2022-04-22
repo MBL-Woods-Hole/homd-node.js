@@ -1,9 +1,9 @@
 HOMD Notes
 2022-04-21 mtg
 refseq blast out
--- get coverage.
--- is coverage * pct identity the same as FULL_PCT_ID
--- full table should have coverage, and full_pct_id (or cov * ident)
+-- get coverage. qcov vs qcovhsp??
+-- is qcoverage * pct identity the same as FULL_PCT_ID
+-- full table should have coverage, and full_pct_id (or qcov * ident)
 -- for JMW combine best hits (use full_pct_id page)
 -- on std page: the alignment should be folded for longer seqs
       and add qstart-qend and sstart-send
