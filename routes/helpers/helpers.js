@@ -790,7 +790,7 @@ module.exports.parse_blast_best = function parse_blast_best(file_data, opt, blas
     if(opt === 'best'){  // get table headers
         html += "<center><h3>Best Hits Only (per query)</h3></center>"
         html += "<table>"
-        html += '<tr><th>Query-id</th><th>Bit Score</th><th>Full_Pct_ID (%)</th>'
+        html += '<tr><th>Query-id</th><th>Bit Score</th><th># of best hits</th><th>Full_Pct_ID (%)</th>'
         html += '<th>HMT-ID</th><th>Species</th><th>Strain/Clone</th><th>GenBank</th><th>HOMD Clone Name/Hit Title</th>'
         html += '</tr>'
     }else if(opt === 'standard'){
@@ -826,10 +826,12 @@ module.exports.parse_blast_best = function parse_blast_best(file_data, opt, blas
         
         if(opt === 'best'){
 		   if(line_collector[qid] === 'no data'){
-               html += "<td>"+qid+"</td><td></td><td></td><td></td><td>No Hits</td><td>No Hits</td><td>No Hits</td><td>No Hits</td>"
+               html += "<td>"+qid+"</td><td></td><td></td><td></td><td></td><td>No Hits</td><td>No Hits</td><td>No Hits</td><td>No Hits</td>"
            }else{
 			   html += "<td rowspan='"+line_collector[qid].length.toString()+"'>"+qid+"</td>"
 			   html += "<td class='center' rowspan='"+line_collector[qid].length.toString()+"'>"+line_collector[qid][0][indexes.bit_score]+'</td>'
+			   html += "<td class='center' rowspan='"+line_collector[qid].length.toString()+"'>"+line_collector[qid].length.toString()+"</td>"
+			   
 			   for(let n in line_collector[qid]){
 				   title = line_collector[qid][n][indexes.stitle]
 				   tparts = title.split('|')
