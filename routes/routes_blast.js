@@ -184,7 +184,7 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
     const sortCol = req.query.col || '' 
     const sortDir = req.query.dir || '' 
     //////////////////
-    const table_opt = req.query.opt || ''  // should be empty initially
+    const table_opt = req.query.opt || 'full'  // should default to full table
     
     const renderFxn = (req, res, html, files_length, config, blastID) => {
         //console.log('htmlfiles',files)
@@ -284,16 +284,25 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
     })
 })
 function run_custom_refseq_blast(results, args){
-    // tsv/custom file 
+    
     //console.log('args',args)
     let data=[]
-    for(let i=0; i<results.length; i++){
+    // this will report files as separate entites
+    if(args.opt === 'best' || args.opt === 'standard'){
+       let formatted_data = helpers.parse_blast_best(results, args.opt, args.bid)
+       return formatted_data
+    }else{
+      for(let i=0; i<results.length; i++){
         //console.log('results[i]',results[i])
         let parsed_data = helpers.parse_blast_custom(results[i], args.opt, args.bid, i)
         data.push(parsed_data) 
+      }
+      return data.join('<br><br>')
     }
+    // to combine files (best hits only and maybe top4hits)
+    
     //console.log('data0',data[0])
-   return data.join('<br><br>')
+   
 }
 //
 function run_standard_refseq_blast(results, args){
@@ -1085,8 +1094,6 @@ function getBlastHtmlTable0(data_arr, blastID, sortCol, sortDir){
     for(let i in data_arr){
         //console.log('YYY', i, data_arr[i].data)
         odd = i % 2  // will be either 0 or 1
-       //console.log('odd',odd)
-       
        if(odd){
          bgcolor = 'blastBGodd'
        }else{
@@ -1218,7 +1225,8 @@ function followFilePath(req, res, opts, blastOpts, blastDir, fileContents, next)
     return (async function mvAndRunPyFxn() {
       if (req.file){
         
-        await moveFile(source, dest)
+        //await moveFile(source, dest)
+        await moveFileUpper(source, dest)
         let data = await readFile(dest)
         
         runPyBlastScript(req, res, opts, blastOpts, blastDir, dest, next)
@@ -1252,8 +1260,27 @@ async function readFile(filePath) {
 }
 async function moveFile(source, destination) {
   //console.log('in move')
+  
   try {
     await fsp.rename(source, destination);
+    
+    console.log(`Moved file from ${source} to ${destination}`);
+  } catch (error) {
+    console.error('Got an error trying to move the file:',error);
+  }
+}
+async function moveFileUpper(source, destination) {
+  //console.log('in move')
+  
+  try {
+    // uppercase
+    //let awkcmd = "awk '{ print toupper($0) }' "+ source + " > " + destination
+    //let awkcmd = "awk 'BEGIN{FS=\" \"}{if(!/>/){print toupper($0)}else{print $1}}' "+ source + " > " + destination
+    let awkcmd = "awk '{if(!/>/){print toupper($0)}else{print}}' "+ source + " > " + destination
+    
+    console.log(awkcmd)
+    await helpers.execShellCommand(awkcmd)
+   
     console.log(`Moved file from ${source} to ${destination}`);
   } catch (error) {
     console.error('Got an error trying to move the file:',error);

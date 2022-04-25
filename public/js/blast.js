@@ -30,50 +30,120 @@ function getFileContent(type, id, num) {
     }
     xmlhttp.send(JSON.stringify(args));
 } 
-function create_alignment(qseq, sseq){
+if (!String.prototype.cordwood) {
+  // https://itnext.io/javascript-split-a-string-into-equal-lengths-848eb811f383
+  String.prototype.cordwood = function(cordlen) {
+  if (cordlen === undefined || cordlen > this.length) {
+    cordlen = this.length;
+  }
+  var yardstick = new RegExp(`.{${cordlen}}`, 'g');
+  var pieces = this.match(yardstick);
+  var accumulated = (pieces.length * cordlen);
+  var modulo = this.length % accumulated;
+  if (modulo) pieces.push(this.slice(accumulated));	
+  return pieces;
+ };
+}
+function create_alignment_client(qid, hit, qseq, sseq, qstart, qend, sstart, send, fxn){
     //alert(qseq)
     let qseq_letters = qseq.trim().split('')
     let sseq_letters = sseq.trim().split('')
-    let acolor = 'blue'
-    let gcolor = 'blue'
-    let ccolor = 'blue'
-    let tcolor = 'blue'
-    let qcaps = 'q: ',scaps = 's: '
+    let fold_length = 60
+    let header_txt = 'HOMD Alignment<br>QueryID: '+qid+'<br>'+'Hit: '+hit+'<br><br>'
+    
     let align_value = '   '
-    let onereturn = ''
+    let onereturn = '',qcaps,scaps
     console.log(qseq_letters.length,sseq_letters.length)
-    for(let q in qseq_letters){
-       
-       let letter = qseq_letters[q].toUpperCase()
-       qcaps += letter
-       
-    }
-    onereturn += '\n'
-    for(let q in qseq_letters){
-       let qletter = qseq_letters[q].toUpperCase()
-       let sletter = sseq_letters[q].toUpperCase()
-        if(qletter == sletter){
-             align_value += "|"
-        }else{
-             align_value += ' '
-        }
+    if(qseq_letters.length < fold_length){
+		qcaps = 'Query:  '+qstart.padStart(6,' ')+' ', scaps = 'Subject:'+sstart.padStart(6,' ')+' '
+		for(let q in qseq_letters){
+		   let letter = qseq_letters[q].toUpperCase()
+		   qcaps += letter
+		}
+		onereturn += '\n'
+		for(let q in qseq_letters){
+		   let qletter = qseq_letters[q].toUpperCase()
+		   let sletter = sseq_letters[q].toUpperCase()
+			if(qletter == sletter){
+				 align_value += "|"
+			}else{
+				 align_value += ' '
+			}
+		}
+	
+		for(let s in sseq_letters){
+		   let letter = sseq_letters[s].toUpperCase()
+		   scaps += letter
+	  
+		}
+	}else{
+	    qcaps = 'Query:  ', scaps = 'Subject:'
+	    qseq_pieces = qseq.cordwood(fold_length)
+	    sseq_pieces = sseq.cordwood(fold_length)
+	    numrows = qseq_pieces.length
+	    text = ''
+	    let qtally = parseInt(qstart)
+	    let stally = parseInt(sstart)
+	    for(let n=0;n<numrows;n++){
+	        qtally_start = ((parseInt(n))*fold_length) + parseInt(qstart)  // 60+qstart, 120 = qstart
+	        qtally_end = qtally_start + fold_length -1
+	        stally_start = ((parseInt(n))*fold_length) + parseInt(sstart)  // 60+qstart, 120 = qstart
+	        stally_end = stally_start + fold_length -1
+	        if(n === numrows-1){
+	            stally_end = send
+	            qtally_end = qend
+	        }
+	        text += qcaps + qtally_start.toString().padStart(6,' ') + ' ' + qseq_pieces[n]+' ' +qtally_end.toString()+'\n'
+	        thisq_list = qseq_pieces[n].split('')
+	        thiss_list = sseq_pieces[n].split('')
+	        let align_value = '               '
+	        for(let q in thisq_list){
+	            let qletter = thisq_list[q]
+		        let sletter = thiss_list[q]
+		        if(qletter == sletter){
+		            align_value += '|'
+		        }else{
+		            align_value += ' '
+		        }
+		        
+	        }
+	        text += align_value +'\n'
+	        text += scaps + stally_start.toString().padStart(6,' ') + ' ' + sseq_pieces[n]+ ' ' + stally_end.toString()+'\n\n'
+	    }
+	    
+	}
+    //window.open(qcaps+'<br>'+align_value+'<br>'+scaps)
+   
+    //doc.write('<pre>'+qcaps+'<br>'+align_value+'<br>'+scaps+'</pre>');
+    
+    if(fxn === 'download'){
+        filetext = header_txt+text
+        client_download('homd_alignment.txt',filetext.replace(/<br>/g,'\n'))
+    }else{
+         filetext = header_txt+'<pre>'+text+'</pre>'
+         var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=680,height=500");
+        var doc = win.document;
+        //doc.writeln("<title>yourtitle</title>");
+        doc.title = 'eHOMD Alignment'
+        doc.open("text/html")
+        doc.write(filetext);
+        doc.close();
     }
     
-    for(let s in sseq_letters){
-       let letter = sseq_letters[s].toUpperCase()
-       scaps += letter
-      
-    }
-    //window.open(qcaps+'<br>'+align_value+'<br>'+scaps)
-    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=680,height=500");
-    var doc = win.document;
-    //doc.writeln("<title>yourtitle</title>");
-    //doc.title = 'eHOMD Reference Sequence'
-    doc.open("text/html")
-    doc.write('<pre>'+qcaps+'<br>'+align_value+'<br>'+scaps+'</pre>');
-    doc.close();
     //return qcaps+'<br>'+align_value+'<br>'+scaps
 }    
+function client_download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
 
 function blastCkboxMaster(id){
    //alert('in bcbm')

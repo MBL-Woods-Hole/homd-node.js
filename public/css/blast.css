@@ -103,6 +103,12 @@ input[type=radio] {
 .blastBGeven{
    background: var(--div-bg12)  
 }
+.blastBGodd2{
+   background: #C2D9E1;
+}
+.blastBGeven2{
+   background: #81B1CC;
+}
 #blastStats table{
     font-size:small;
     border:1px solid black;

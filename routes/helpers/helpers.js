@@ -724,6 +724,179 @@ module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata, fx
     return file_collector
 
 }
+//
+//
+module.exports.parse_blast_best = function parse_blast_best(file_data, opt, blastID){
+    // for top-4-hits and best-hits-only
+    let indexes ={ query_id:0, hit_id:1, pct_identity:2, length:3, mismatches:4, gaps:5, 
+                   qstart:6, qend:7, sstart:8, send:9, evalue:10, 
+                   bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16  // qseq;11, sseq:12
+                 }
+    
+    let bbit_score,line_collector={},allheader='',header='',q_lookup = {}
+    let row_counter =0,queryid
+    for(let n=0; n<file_data.length; n++){
+        
+        let lines = file_data[n].toString().split('\n')
+        //console.log('lines',n,lines)
+        bbit_score=0,row_counter =0
+        for(let i=0;i<lines.length; i++){
+           
+           if(!lines[i] || lines[i] === ''){
+               continue
+           }
+           if(lines[i][0] === '#'){
+              allheader += lines[i]+'<br>'
+              if(n==0 && lines[i].startsWith('# BLASTN')){
+                 header += lines[i]+'<br>'
+              }
+              if(n==0 && lines[i].startsWith('# Database:')){
+                 header += lines[i]+'<br>'
+              }
+              if(lines[i].startsWith('# Query:')){
+                 queryid = lines[i].split(' ')[2]
+              }
+              if(lines[i] === '# 0 hits found'){
+                 //console.log('linesXXX',n,lines)
+                 line_collector[queryid] = 'no data'
+              }
+              
+           }else{
+			   row_counter +=1
+			   //console.log('line',lines[i])
+			   
+			   let line_items = lines[i].trim().split('\t')
+			   q_lookup[line_items[indexes.query_id]] = n
+			   if(row_counter===1){  // must assume that lines in descending order by bit score
+				  bbit_score = parseInt(line_items[indexes.bit_score])
+				  line_collector[line_items[indexes.query_id]] = [line_items]
+				  //console.log('line_items[indexes.bit_score]',n,line_items[indexes.bit_score])
+			   }else{
+				   if(opt === 'best'){
+					   if(parseInt(line_items[indexes.bit_score]) === bbit_score){
+						   line_collector[line_items[indexes.query_id]].push(line_items)
+					   }
+				   }else{
+					   line_collector[line_items[indexes.query_id]].push(line_items)
+				   }
+			   }
+				
+           }
+         }  
+         //console.log('line_collector',n,bbit_score,line_collector)
+    }
+    let html='',title,tparts,hmt,otid,species,strain,fpi,gb
+    
+    if(opt === 'best'){  // get table headers
+        html += "<center><h3>Best Hits Only (per query)</h3></center>"
+        html += "<table>"
+        html += '<tr><th>Query-id</th><th>Bit Score</th><th>Full_Pct_ID (%)</th>'
+        html += '<th>HMT-ID</th><th>Species</th><th>Strain/Clone</th><th>GenBank</th><th>HOMD Clone Name/Hit Title</th>'
+        html += '</tr>'
+    }else if(opt === 'standard'){
+        html += "<center><h3>Top 4 Hits for each Query</h3></center>"
+        html += "<table><tr>"
+        html += "<th class=''>Query-id</th>"
+        html += "<th class=''>Query Length</th>"
+        html += "<th class=''>Query Sequence</th>"
+        html += "<th class=''>Alignment</th>"
+        html += "<th class=''>Hit-id</th>"
+        html += "<th class=''>HOMD Clone Name/Hit Title</th>"
+        html += "<th class=''>E-value</th>"
+        html += "<th class=''>Bit Score</th>"
+        html += "<th class=''>% Identity</th>"
+        html += "</tr>"
+    }
+    row_counter = 0
+    let odd,bgcolor
+    //console.log('line coll',line_collector)
+    
+    for(let qid in line_collector){
+        row_counter +=1
+        odd = row_counter % 2  // will be either 0 or 1
+        if(odd){
+          bgcolor = 'blastBGodd2'
+        }else{
+          bgcolor = 'blastBGeven2'
+        }
+        html += "<tr class='"+bgcolor+"'>"
+		//console.log(qid,line_collector[qid])
+        
+        
+        
+        if(opt === 'best'){
+		   if(line_collector[qid] === 'no data'){
+               html += "<td>"+qid+"</td><td></td><td></td><td></td><td>No Hits</td><td>No Hits</td><td>No Hits</td><td>No Hits</td>"
+           }else{
+			   html += "<td rowspan='"+line_collector[qid].length.toString()+"'>"+qid+"</td>"
+			   html += "<td class='center' rowspan='"+line_collector[qid].length.toString()+"'>"+line_collector[qid][0][indexes.bit_score]+'</td>'
+			   for(let n in line_collector[qid]){
+				   title = line_collector[qid][n][indexes.stitle]
+				   tparts = title.split('|')
+				   hmt = tparts[2].trim()
+				   otid = hmt.split('-')[1]
+				   species = tparts[1].trim()
+				   strain = tparts[3].trim()
+				   gb = tparts[4].trim().split(':')[1].trim()
+				   fpi = parseFloat(line_collector[qid][n][indexes.pct_identity]) * parseFloat(line_collector[qid][n][indexes.qcov])/100 
+				   html += "<td class='"+bgcolor+" center' nowrap title='(% ident) x (coverage)'>"+fpi.toFixed(2).toString()+"</td>"
+				   html += "<td class='"+bgcolor+"' nowrap><a href='/taxa/tax_description?otid="+otid+"'>"+hmt+"</a></td>"
+				   html += "<td class='"+bgcolor+"' nowrap><i>"+species+"</i></td>"
+				   html += "<td class='"+bgcolor+"' nowrap>"+strain+"</td>"
+				   html += "<td class='"+bgcolor+"' nowrap><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+gb+"' target='_blank'>"+gb+"</a></td>"
+				   html += "<td class='"+bgcolor+"'>"+line_collector[qid][n][indexes.stitle]+'</td>'
+				   html += '</tr>'
+			   }
+		   //html += "</tr>"
+		   }
+		
+        }else if(opt === 'standard'){  // top 4
+            //let filenumber = 0
+            if(line_collector[qid] === 'no data'){
+                html += "<td>"+qid+"</td><td></td><td></td><td>No Hits</td><td>No Hits</td><td>No Hits</td><td></td><td></td><td></td>"
+            }else{
+				html+="<td rowspan='4'>"+qid+"</td>" // query
+				html+="<td rowspan='4' class='center'>"+line_collector[qid][0][indexes.qlen]+'</td>'
+				html+="<td rowspan='4' class='center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+q_lookup[qid].toString()+"')\">view</a></td>"   // q seq (link)
+		
+				//for(let n in line_collector[qid]){
+				//console.log(qid,line_collector[qid])
+				for(let n=0;n<4;n++){// in line_collector[qid]){
+					//let qid    = line_collector[qid][n][indexes.query_id]
+					let stitle = line_collector[qid][n][indexes.stitle]
+					let qseq   = line_collector[qid][n][indexes.qseq]
+					let sseq   = line_collector[qid][n][indexes.sseq]
+					let qstart = line_collector[qid][n][indexes.qstart]
+					let qend   = line_collector[qid][n][indexes.qend]
+					let sstart = line_collector[qid][n][indexes.sstart]
+					let send = line_collector[qid][n][indexes.send]
+					let title_items = line_collector[qid][n][indexes.stitle].split('|')
+					let hmt = title_items[2].trim()
+					let otid = hmt.split('-')[1]
+					html+="<td class='"+bgcolor+" center'>"
+					html+="<a href='#'  onclick=\"create_alignment_client('"+qid+"','"+stitle+"','"+qseq+"','"+sseq+"','"+qstart+"','"+qend+"','"+sstart+"','"+send+"','open')\">open</a>"
+					html+="<br><a href='#'  onclick=\"create_alignment_client('"+qid+"','"+stitle+"','"+qseq+"','"+sseq+"','"+qstart+"','"+qend+"','"+sstart+"','"+send+"','download')\">download</a>"
+					html+="</td>"
+
+					html+="<td class='"+bgcolor+"'><a href='/taxa/tax_description?otid="+otid+"'>"+title_items[0].trim()+'</a></td>'  // hit id
+					html+="<td class='"+bgcolor+"'>"+line_collector[qid][n][indexes.stitle]+'</td>'  // whole title
+					html+="<td class='"+bgcolor+"' nowrap>"+line_collector[qid][n][indexes.evalue]+'</td>'   // ?
+					html+="<td class='"+bgcolor+" center'>"+line_collector[qid][n][indexes.bit_score]+'</td>'   // 
+					html+="<td class='"+bgcolor+" center'>"+line_collector[qid][n][indexes.pct_identity]+'</td>'   // 
+					html+='</tr>'
+				}
+                //html += "</tr>"
+            }
+            
+        }  // end best/std
+        //html += "</tr>"
+    
+        
+    }  // for(let qid in line_collector){
+    
+    return header+html
+      
+}
 module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, blastID, filenumber){
     //opt = 'full'  // one,two,full
     //console.log('opt',opt)
@@ -738,10 +911,13 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
                    bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16  // qseq;11, sseq:12
                  }
     let query =''
-    let header = ''
+    let allheader = '',header=''
+    
+    let html =''
     let max_bitscore = 0
     let line_count = 0
     let row_collector = []
+    let queryid = ''
     for(let i in lines){
         if(!lines[i] || lines[i] === ''){
             continue
@@ -749,24 +925,22 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
         
         //console.log('line:',lines[i])
         if(lines[i][0] === '#'){
-          header += lines[i]+'<br>'
-          if(lines[i].startsWith('# Query:')){
-            query = lines[i].split(':')[1]
-          }
+             allheader += lines[i]+'<br>'
+             if(lines[i].startsWith('# Database:')){
+                 header += lines[i]+'<br>'
+              }
+              if(lines[i].startsWith('# BLASTN')){
+                 header += lines[i]+'<br>'
+              }
+              if(lines[i].startsWith('# Query:')){
+                 queryid = lines[i] //.split(' ')[2,]
+              }
           
         }else{
             line_count += 1
             
             let line_items = lines[i].split('\t')
-            // if(opt === 'one'){
-//                 if(line_count === 1){
-//                     // collect this line and all with this same max_bitscore 
-//                     max_bitscore = line_items[indexes.bit_score]
-//                     row_collector.push(line_items)
-//                 }else if(max_bitscore === line_items[indexes.bit_score]){
-//                     row_collector.push(line_items)
-//                 }
-//             }else 
+            
             if(opt === 'standard'){
               //collect only four
               // http://0.0.0.0:3001/blast/blast_results_refseq?id=ZYF1UUBqLje5JSuO2CfI_refseq
@@ -782,124 +956,124 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
     }
     //console.log('row_collector[0]',row_collector)
     if(row_collector.length === 0){
-        return header+"No Data"
+        return allheader+"No Data"
     }
-    let html = "<table id='newSortTable' class='sortable'><tr>"
     
-    if(opt === 'one'){  // best hits only(JMW)
-        html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>HMT</th><th>Species</th><th>Strain/Clone</th><th>Genbank</th><th>Status</th>'
-        html += '<th>% Ident</th><th>FULL_PCT_ID<br>Calc</th><th>Hit Title</th>'
-    }else if(opt === 'two'){  // alignments
-        html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>Mis-Matches</th><th>Gaps</th><th>Alignments</th>'
+    
+    // if(opt === 'best'){  // best hits only(JMW)
+//         html += '<th>Query-id</th><th>Hit-id</th><th>Bit Score</th><th>HMT</th><th>Species</th><th>Strain/Clone</th><th>Genbank</th><th>Status</th>'
+//         html += '<th>% Identity</th><th>FULL_PCT_ID<br>Calc</th><th>HOMD Clone Name/Hit Title</th>'
+//     }else 
+    html += "<center><h3>"+queryid+"</h3></center>"
+    if(opt === 'alignments'){  // alignments
+        html += "<table id='newSortTable' class='sortable'><tr>"
+        html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>Mis-<br>Matches</th><th>Gaps</th><th>Alignments</th><th>Download</th>'
     }else if(opt === 'standard'){  // top 4 hits
-        html += "<th class='sorttable_nosort'>Query</th>"
-        html += "<th class='sorttable_nosort'>Q Length</th>"
-        html += "<th class='sorttable_nosort'>Q seq</th>"
-        html += "<th class='sorttable_nosort'>Alignment</th>"
-        html += "<th class='sorttable_nosort'>Hit-id</th>"
-        html += "<th class='sorttable_nosort'>HOMD Clone Name</th>"
-        html += "<th class='sorttable_nosort'>e-value</th>"
-        html += "<th class='sorttable_nosort'>Bit Score</th>"
-        html += "<th class='sorttable_nosort'>% Ident</th>"
+        
     }else{   // full table
         //qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
-        html += '<th>query-id</th><th>hit-id</th><th>% Ident</th><th>% Cov</th><th>FPI<br>calc</th><th>FPI<br>mult</th><th>Alignment Length</th><th>Mis-matches</th><th>Gaps</th>'
-        html += '<th>q-start</th><th>q-end</th><th>s-start</th><th>s-end</th><th>E-value</th><th>Bit Score</th><th>Query Length</th><th>Hit Title</th>'
+        
+        html += "<table id='newSortTable' class='sortable'><tr>"
+        html += '<th>Query-id</th><th>Hit-id</th><th>% Identity</th><th>% Cov</th><th>FPI<br>calc</th><th>FPI<br>mult</th><th>Alignment Length</th><th>Mis-<br>matches</th><th>Gaps</th>'
+        html += '<th>q-start</th><th>q-end</th><th>s-start</th><th>s-end</th><th>E-value</th><th>Bit Score</th><th>Query Length</th><th>HOMD Clone Name/Hit Title</th>'
     }
     html += '</tr>'
     
     if(opt === 'standard'){   // top 4 hits
-        html+='<tr>'
-            html+="<td rowspan='4'>"+query.trim()+'</td>' // query
-            html+="<td rowspan='4'>"+row_collector[0][indexes.qlen]+'</td>'
-            html+="<td rowspan='4'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+filenumber+"')\">view</a></td>"   // q seq (link)
-            //html+="<td rowspan='4'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+filenumber+"')\">open</a></td>"   // 
+           //html+="<td rowspan='4'><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+filenumber+"')\">open</a></td>"   // 
     }
+    let odd,bgcolor
     for(let n in row_collector){
+        odd = n % 2  // will be either 0 or 1
+        if(odd){
+          bgcolor = 'blastBGodd'
+        }else{
+          bgcolor = 'blastBGeven'
+        }
         let BEST_PCT_ID = 0.0
         let BEST_FULL_PCT_ID = 0.0
         let row_items = row_collector[n]  // an array
+        let qid    = row_items[indexes.query_id]
+        let stitle = row_items[indexes.stitle]
+        let qseq   = row_items[indexes.qseq]
+        let sseq   = row_items[indexes.sseq]
+        let qstart = row_items[indexes.qstart]
+        let qend   = row_items[indexes.qend]
+        let sstart = row_items[indexes.sstart]
+        let send = row_items[indexes.send]
         let title_items = row_items[indexes.stitle].split('|')
         let hmt = title_items[2].trim()
         let otid = hmt.split('-')[1]
         
-        if(opt === 'one'){  // best hits only(JMW)
-            //for(let i in row_items){
-           //console.log('row_items',row_items)
+        // if(opt === 'best'){  // best hits only(JMW)
+//             //for(let i in row_items){
+//            //console.log('row_items',row_items)
+//            
+//            // (qend-qstart+1/qlen)%id
+//            let ALIGNMENT_FRAC = parseFloat(parseInt(qend) - parseInt(qstart) + 1.0) / parseFloat(row_items[indexes.qlen])
+//            let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
+//            let full_pct_id_mult = parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100
+//         // row: qid, bitscore, species, strain, HMT, PCT_ID, FULL_PCT_ID
+//            html+='<tr>'
+//            html+='<td>'+qid+'</td>'
+//            html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+row_items[indexes.hit_id]+'</a></td>'
+//            html+='<td>'+row_items[indexes.bit_score]+'</td>'
+//            html+="<td nowrap><a href='/taxa/tax_description?otid="+otid+"'>"+hmt+'</a></td>'  // hmt
+//            html+='<td nowrap><i>'+title_items[1].trim()+'</i></td>'   // genus species
+//            html+='<td nowrap>'+title_items[3].trim()+'</td>'  // strain
+//            let gb = title_items[4].trim().split(':')[1].trim()
+//            html+="<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+gb+"' target='_blank'>"+gb+'</a></td>'
+//            html+='<td>'+title_items[5].trim().split(':')[1]+'</td>'
+//            html+='<td>'+row_items[indexes.pct_identity]+'</td>'
+//            html+="<td title='calc'>"+(full_pct_id_calc).toFixed(2).toString()+'</td>'
+//            
+//            html+="<td title='mult'>"+stitle+'</td>'
+//         
+//            html+='</tr>'
+//         }else 
+        html+="<tr class='"+bgcolor+"'>"
+        html+='<td>'+qid+'</td>'
+        if(opt === 'alignments'){   // alignments
            
-           // (qend-qstart+1/qlen)%id
-           let ALIGNMENT_FRAC = parseFloat(parseInt(row_items[indexes.qend]) - parseInt(row_items[indexes.qstart]) + 1.0) / parseFloat(row_items[indexes.qlen])
-           let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
-           let full_pct_id_mult = parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100
-        // row: qid, bitscore, species, strain, HMT, PCT_ID, FULL_PCT_ID
-           
-        
-           html+='<tr>'
-           html+='<td>'+row_items[indexes.query_id]+'</td>'
            html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+row_items[indexes.hit_id]+'</a></td>'
-           html+='<td>'+row_items[indexes.bit_score]+'</td>'
-           html+="<td nowrap><a href='/taxa/tax_description?otid="+otid+"'>"+hmt+'</a></td>'  // hmt
-           html+='<td nowrap><i>'+title_items[1].trim()+'</i></td>'   // genus species
-           html+='<td nowrap>'+title_items[3].trim()+'</td>'  // strain
-           let gb = title_items[4].trim().split(':')[1].trim()
-           html+="<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+gb+"' target='_blank'>"+gb+'</a></td>'
-           html+='<td>'+title_items[5].trim().split(':')[1]+'</td>'
-           html+='<td>'+row_items[indexes.pct_identity]+'</td>'
-           html+="<td title='calc'>"+(full_pct_id_calc).toFixed(2).toString()+'</td>'
-           
-           html+="<td title='mult'>"+row_items[indexes.stitle]+'</td>'
-        
-           html+='</tr>'
-        }else if(opt === 'two'){   // alignments
-           html+='<tr>'
-           html+='<td>'+row_items[indexes.query_id]+'</td>'
-           html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+row_items[indexes.hit_id]+'</a></td>'
-           html+='<td>'+row_items[indexes.bit_score]+'</td>'
-           html+='<td>'+row_items[indexes.mismatches]+'</td>'
-           html+='<td>'+row_items[indexes.gaps]+'</td>'
+           html+="<td class='center'>"+row_items[indexes.bit_score]+'</td>'
+           html+="<td class='center'>"+row_items[indexes.mismatches]+'</td>'
+           html+="<td class='center'>"+row_items[indexes.gaps]+'</td>'
            html+="<td class='align'><pre>"+create_alignment(row_items,indexes)+'</pre></td>'
-        
-           html+='</tr>'
-        }else if(opt === 'standard'){   // top 4 hits
-             html+="<td><a href='#' onclick=\"create_alignment('"+row_collector[n][indexes.qseq]+"','"+row_collector[n][indexes.sseq]+"')\">open</a></td>"
-
-            html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+title_items[0].trim()+'</a></td>'  // hit id
-            html+='<td>'+row_items[indexes.stitle]+'</td>'  // whole title
-            html+='<td nowrap>'+row_items[indexes.evalue]+'</td>'   // ?
-            html+='<td>'+row_items[indexes.bit_score]+'</td>'   // 
-            html+='<td>'+row_items[indexes.pct_identity]+'</td>'   // 
-            html+='</tr>'
-        }else{            // full table
-            //let full_pct_id2 = (parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100).toFixed(2)
-            let ALIGNMENT_FRAC = parseFloat(parseInt(row_items[indexes.qend]) - parseInt(row_items[indexes.qstart]) + 1.0) / parseFloat(row_items[indexes.qlen])
-           let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
-           let full_pct_id_mult = parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100
-        
-            html+='<tr>'
-            html+='<td>'+row_items[indexes.query_id]+'</td>'
-            html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+row_items[indexes.hit_id]+'</a></td>'
-            html+='<td>'+row_items[indexes.pct_identity]+'</td>'
-            html+='<td>'+row_items[indexes.qcov]+'</td>'
-            html+='<td>'+full_pct_id_calc.toFixed(5).toString()+'</td>'
-            html+='<td>'+full_pct_id_mult.toFixed(5).toString()+'</td>'
-            html+='<td>'+row_items[indexes.length]+'</td>'
-            html+='<td>'+row_items[indexes.mismatches]+'</td>'
-            html+='<td>'+row_items[indexes.gaps]+'</td>'
-            html+='<td>'+row_items[indexes.qstart]+'</td>'
-            html+='<td>'+row_items[indexes.qend]+'</td>'
-            html+='<td>'+row_items[indexes.sstart]+'</td>'
-            html+='<td>'+row_items[indexes.send]+'</td>'
-            html+='<td>'+row_items[indexes.evalue]+'</td>'
-            html+='<td>'+row_items[indexes.bit_score]+'</td>'
-            html+='<td>'+row_items[indexes.qlen]+'</td>'
-            html+='<td>'+row_items[indexes.stitle]+'</td>'
+           html+="<td><a class='button' href='#' onclick=\"create_alignment_client('"+qid+"','"+stitle+"','"+qseq+"','"+sseq+"','"+qstart+"','"+qend+"','"+sstart+"','"+send+"','download')\">download</a></td>"
             
-            html+='</tr>'
+        }else if(opt === 'standard'){   // top 4 hits
+             
+        }else{            // full table default
+            //let full_pct_id2 = (parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100).toFixed(2)
+            let ALIGNMENT_FRAC = parseFloat(parseInt(qend) - parseInt(qstart) + 1.0) / parseFloat(row_items[indexes.qlen])
+            let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
+            let full_pct_id_mult = parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100
+        
+            html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+row_items[indexes.hit_id]+'</a></td>'
+            html+="<td class='center'>"+row_items[indexes.pct_identity]+'</td>'
+            html+="<td class='center'>"+row_items[indexes.qcov]+'</td>'
+            html+='<td>'+full_pct_id_calc.toFixed(5).toString()+'</td>'
+            html+="<td title='(% ident) x (coverage)'>"+full_pct_id_mult.toFixed(5).toString()+'</td>'
+            html+="<td class='center'>"+row_items[indexes.length]+'</td>'
+            html+="<td class='center'>"+row_items[indexes.mismatches]+'</td>'
+            html+="<td class='center'>"+row_items[indexes.gaps]+'</td>'
+            html+="<td class='center'>"+qstart+'</td>'
+            html+="<td class='center'>"+qend+'</td>'
+            html+="<td class='center'>"+sstart+'</td>'
+            html+="<td class='center'>"+send+'</td>'
+            html+='<td nowrap>'+row_items[indexes.evalue]+'</td>'
+            html+="<td class='center'>"+row_items[indexes.bit_score]+'</td>'
+            html+="<td class='center'>"+row_items[indexes.qlen]+'</td>'
+            html+='<td>'+stitle+'</td>'
+            
+            
         }
+        html+='</tr>'
     }
     html+='</table>'
     
-    return header+'<br><br>'+html
+    return allheader+'<br><br>'+html
     
 }
 function create_alignment(row_items, indexes){
@@ -910,11 +1084,8 @@ function create_alignment(row_items, indexes){
     let qend = row_items[indexes.qend]
     let sstart = row_items[indexes.sstart].padStart(6,' ')
     let send = row_items[indexes.send]
-    let acolor = 'blue'
-    let gcolor = 'blue'
-    let ccolor = 'blue'
-    let tcolor = 'blue'
-    let qcaps = 'query:  '+qstart+' ', scaps = 'subject:'+sstart+' '
+    
+    let qcaps = 'Query:  '+qstart+' ', scaps = 'Subject:'+sstart+' '
     let qreturn_value = '',sreturn_value = '',align_value = "               "
     let onereturn = ''
     //console.log(qseq_letters.length,sseq_letters.length)
@@ -1161,4 +1332,21 @@ module.exports.readFromFile = function readFromFile(file, ext) {
             }
         });
     });
+}
+//
+/**
+ * Executes a shell command and return it as a Promise.
+ * @param cmd {string}
+ * @return {Promise<string>}
+ */
+module.exports.execShellCommand = function execShellCommand(cmd) {
+ const exec = require('child_process').exec;
+ return new Promise((resolve, reject) => {
+  exec(cmd, (error, stdout, stderr) => {
+   if (error) {
+    console.warn('error',error);
+   }
+   resolve(stdout? stdout : stderr);
+  });
+ });
 }

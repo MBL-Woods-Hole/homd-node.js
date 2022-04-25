@@ -9,7 +9,10 @@ refseq blast out
       and add qstart-qend and sstart-send
 -- ***use thread=4 for blast program   '-mt_mode 1'
 -- add coverage and full_pct_id to download
-
+remaining todo:
+colorize alternate rows
+check 'no hits' and < 4rows
+clean up code
 2022-04-18
 I have a number of issues with the Genome BLAST
    Use this protein as the example:

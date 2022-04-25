@@ -102,12 +102,11 @@ padding:5px;
         <div id='sort_radios'>    
           <center><small>
           Output Options: 
-         <small>(toggle)</small>&nbsp;&nbsp;&nbsp;&nbsp;
-         <input  checked id='ofull' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','full')"> Full Table</button>&nbsp;&nbsp;
-         <input  id='oone' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','one')"> Best Hits Only</button>&nbsp;&nbsp;
-         <input  id='otwo' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','two')"> Alignments</button>&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <input  checked id='ofull' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','full')"> Full Table</button>&nbsp;&nbsp;
+          <input  id='otwo' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','alignments')"> Alignments</button>&nbsp;&nbsp;
+          <input  id='oone' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','best')"> Best Hits Only</button>&nbsp;&nbsp;
           <input  id='ostd' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','standard')"> Top 4 Hits</button>
-        
           </small></center>
       </div>
     <% }else{ %>
