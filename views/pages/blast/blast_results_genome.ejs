@@ -39,11 +39,11 @@ thead th { position: sticky; top: 0; }
     
     
     <div id='blast-search-info'>
-      <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
+      
       <table>
         <tr>
-        
         <td>
+          <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
           <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.form)">
             <option value='0'>Download Options</option>
             <option value='text1'>As Text -top hit only</option>
@@ -59,17 +59,17 @@ thead th { position: sticky; top: 0; }
             <option value='zip'>BLAST Output Files (xml files)</option>
             <option value='fasta'>Fasta File of Hits</option>
           </select>
+          <input type='hidden' name='blastID' value='<%= blastID %>'>
+          <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
+          </form>
         </td>
-        
         <td>Search Results: <%= query_strings.length %> sequence(s) searched against target database:
            <br>&nbsp;&nbsp;&nbsp;&nbsp;[<%= blastParams.anno.toUpperCase() %>] <%= blastParams.blastdb %>
         </td>
-        
         </tr>
       </table>
-      <input type='hidden' name='blastID' value='<%= blastID %>'>
-      <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
-      </form>
+      
+      
       <% if(query_strings.length > 1){ %>
 		  View Other Query Results:
 		  <select onchange="javascript:handleNewSelect(this)">

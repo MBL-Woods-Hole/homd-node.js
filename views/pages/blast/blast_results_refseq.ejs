@@ -59,13 +59,7 @@ padding:5px;
         <table>
         <tr>
         <td>
-          <% if(blastParams.outfmt === "custom"){ %>
-            <form id='blastDownloadForm2' name='blastDownloadForm2' method='POST' action='blastDownload2' >
-              <input style='padding:1px;border:1px solid brown;' type='submit' value='Download'>
-              <input type='hidden' name='blastID' value='<%= blastID %>'>
-              <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
-            </form>
-          <% }else{ %>
+          
             <form id='blastDownloadForm' name='blastDownloadForm' method='POST' action='blastDownload' >
             <select name='dnldType' id='dnldType' class='dropdown' onchange="blastDownload(this.form)">
             <option value='0'>Download Options</option>
@@ -80,8 +74,9 @@ padding:5px;
             <option value='excelAll'>As Excel -all hits</option>
             <option disabled>--------</option>
             <option value='zip'>BLAST Output Files</option>
+            
             </select>
-          <% } %>
+          
           <input type='hidden' name='blastID' value='<%= blastID %>'>
           <input type='hidden' name='blastFxn' value='<%= blastParams.blastFxn %>'>
           </form>
@@ -98,7 +93,7 @@ padding:5px;
     <span style='float:right'><a class='button' href='/refseq/refseq_blastn'>Back</a></span>
     <!-- <span style='float:right'><button onclick="history.back()">Go Back</button></span> -->
     </div>
-    <% if(blastParams.outfmt === "custom"){ %>
+    
         <div id='sort_radios'>    
           <center><small>
           Output Options: 
@@ -109,21 +104,7 @@ padding:5px;
           <input  id='ostd' name='table_opts' type='radio' onclick="opt_toggle('<%= blastID %>','standard')"> Top 4 Hits</button>
           </small></center>
       </div>
-    <% }else{ %>
-       <div id='sort_radios'>    
-          <center><small>
-          Sort Table: &nbsp;&nbsp;&nbsp;&nbsp;
-          <!-- file sort is original -->
-         <button class='button' id='qsort' type='button' onclick="sortBlastTableForm_toggle('<%= blastID %>','query')">By Query</button>
-         <small>(toggle)</small>&nbsp;&nbsp;&nbsp;&nbsp;
-         <input  checked id='bsort' name='sort_refseq' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','bitscore')"> By Bit_Score</button>&nbsp;&nbsp;
-         <input  checked id='isort' name='sort_refseq' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','identity')"> By Identity</button>&nbsp;&nbsp;
-         <input  checked id='ssort' name='sort_refseq' type='radio' onclick="sortBlastTableForm_toggle('<%= blastID %>','sequence')"> Original Sorting (By Sequence Input)</button>
-          </small></center>
-      </div>
     
-      
-    <% } %>
     
     <center>
     <small>

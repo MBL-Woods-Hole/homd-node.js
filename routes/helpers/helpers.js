@@ -680,7 +680,7 @@ module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata, fx
     //console.log(jsondata['BlastOutput'])
     let file_collector = {}
     let id_collector = {}
-    let otid,clone,split_name,clone_id,hit,hits
+    let otid,hit_title,split_name,hit_id,hit,hits
     file_collector.query = jsondata['BlastOutput']['BlastOutput_query-def']
     file_collector.query_length = jsondata['BlastOutput']['BlastOutput_query-len']
     file_collector.version = jsondata['BlastOutput']['BlastOutput_version']
@@ -697,21 +697,21 @@ module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata, fx
             hit = hits[i]
         
             //console.log('hit Hsps',hit['Hit_hsps']['Hsp'])
-            clone = hit['Hit_def']
-            split_name = clone.split(' ')
-            clone_id = split_name[0].trim()
+            hit_title = hit['Hit_def']
+            split_name = hit_title.split(' ')
+            hit_id = split_name[0].trim()
             // SEQF1595_KI535341.1 [HMT-389 Abiotrophia defectiva ATCC 49176]
             
             let regCapture = /HMT-(\d+)\s/   // grab inside parens
-            otid = clone.match(regCapture)[1]
+            otid = hit_title.match(regCapture)[1]
             //console.log('otid',otid)
-            id_collector[clone_id] = {'clone': clone, 'clone_id': clone_id, otid: otid}
-            id_collector[clone_id]['bitscore'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
-            id_collector[clone_id]['expect'] = hit['Hit_hsps']['Hsp']['Hsp_evalue']
-            id_collector[clone_id]['identity'] = hit['Hit_hsps']['Hsp']['Hsp_identity']
-            id_collector[clone_id]['gaps'] = hit['Hit_hsps']['Hsp']['Hsp_gaps']
-            //id_collector[clone_id]['strand'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
-            id_collector[clone_id]['length'] = hit['Hit_len']
+            id_collector[hit_id] = {'hit_title': hit_title, 'hit_id': hit_id, otid: otid}
+            id_collector[hit_id]['bitscore'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
+            id_collector[hit_id]['expect'] = hit['Hit_hsps']['Hsp']['Hsp_evalue']
+            id_collector[hit_id]['identity'] = hit['Hit_hsps']['Hsp']['Hsp_identity']
+            id_collector[hit_id]['gaps'] = hit['Hit_hsps']['Hsp']['Hsp_gaps']
+            //id_collector[hit_id]['strand'] = hit['Hit_hsps']['Hsp']['Hsp_bit-score']
+            id_collector[hit_id]['length'] = hit['Hit_len']
         }
       }
     }
@@ -790,7 +790,7 @@ module.exports.parse_blast_best = function parse_blast_best(file_data, opt, blas
     if(opt === 'best'){  // get table headers
         html += "<center><h3>Best Hits Only (per query)</h3></center>"
         html += "<table>"
-        html += '<tr><th>Query-id</th><th>Bit Score</th><th># of best hits</th><th>Full_Pct_ID (%)</th>'
+        html += "<tr><th>Query-id</th><th>Bit Score</th><th># of best hits</th><th title='(% ident) x (coverage)'>Full_Pct_ID (%)</th>"
         html += '<th>HMT-ID</th><th>Species</th><th>Strain/Clone</th><th>GenBank</th><th>HOMD Clone Name/Hit Title</th>'
         html += '</tr>'
     }else if(opt === 'standard'){
@@ -899,6 +899,129 @@ module.exports.parse_blast_best = function parse_blast_best(file_data, opt, blas
     return header+html
       
 }
+//
+module.exports.parse_blast_custom_download = function parse_blast_custom_download(file_data, opt, blastID, filenumber){
+    let lines = file_data.toString().split('\n')
+    // plan : get the top hits only (by bit_score)
+    // split the id line
+    // calculate FULL_PCT_ID 
+    // qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle qcov qseq sseq
+    let indexes ={ query_id:0, hit_id:1, pct_identity:2, length:3, mismatches:4, gaps:5, 
+                   qstart:6, qend:7, sstart:8, send:9, evalue:10, 
+                   bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16  // qseq;11, sseq:12
+                 }
+    let allheader = '',header=''
+    
+    let text =''
+    let max_bitscore = 0
+    let line_count = 0
+    let row_collector = []
+    let query = '',version=''
+    for(let i in lines){
+        if(!lines[i] || lines[i] === ''){
+            continue
+        }
+        
+        //console.log('line:',lines[i])
+        if(lines[i][0] === '#'){
+             allheader += lines[i]+'<br>'
+             if(lines[i].startsWith('# Database:')){
+                 header += lines[i]+'<br>'
+                 version = lines[i]
+              }
+              if(lines[i].startsWith('# BLASTN')){
+                 header += lines[i]+'<br>'
+              }
+              if(lines[i].startsWith('# Query:')){
+                 query = lines[i] //.split(' ')[2,]
+              }
+          
+        }else{
+            line_count += 1
+            
+            let line_items = lines[i].split('\t')
+            
+            if(opt === 'standard'){
+              //collect only four
+              // http://0.0.0.0:3001/blast/blast_results_refseq?id=ZYF1UUBqLje5JSuO2CfI_refseq
+              // http://0.0.0.0:3001/blast/blast_results_refseq?id=Jfcp0GipN5QYxEcrTZKd_refseq
+              if(line_count < 5){
+                  row_collector.push(line_items)
+              }
+            }else{
+                // full collect all rows
+                row_collector.push(line_items)
+            }
+        }
+    }
+    //console.log('row_collector[0]',row_collector)
+    
+   
+    let odd,bgcolor
+    let return_obj = {}
+    return_obj.data = []
+    return_obj.query = query
+    return_obj.version = version
+    if(row_collector.length === 0){
+        return_obj.data = "No Data"
+    }else{
+
+      for(let n in row_collector){
+        //console.log('row',row_collector[n])
+        // let BEST_PCT_ID = 0.0
+//         let BEST_FULL_PCT_ID = 0.0
+        let row_items = row_collector[n]  // an array
+        return_obj.query_length = row_items[indexes.qlen]
+        let qid    = row_items[indexes.query_id]
+        let stitle = row_items[indexes.stitle]
+        let qseq   = row_items[indexes.qseq]
+        let sseq   = row_items[indexes.sseq]
+        let qstart = row_items[indexes.qstart]
+        let qend   = row_items[indexes.qend]
+        let sstart = row_items[indexes.sstart]
+        let send = row_items[indexes.send]
+        let title_items = row_items[indexes.stitle].split('|')
+        let hmt = title_items[2].trim()
+        let otid = hmt.split('-')[1]
+        let hitid = title_items[0]
+        //let ALIGNMENT_FRAC = parseFloat(parseInt(qend) - parseInt(qstart) + 1.0) / parseFloat(row_items[indexes.qlen])
+        //let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
+        let full_pct_id_mult = parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100
+        text += 'Query-id\tHit-id\t% Identity\tcoverage\tFPI\tHMT\tAlignment Length\tMis-matches\tGaps'
+        text += '\tq-start\tq-end\ts-start\ts-end\tE-value\tBit Score\tQuery Length\tHOMD Clone Name/Hit Title\n'
+    // query_id, subject_id, % identity, alignment length, mismatches, gap opens, q. start, q. end, s. start, s. end, 
+    // evalue, bit score, query length, subject title, % query coverage per subject, 
+    //query seq, subject seq
+        return_obj.data.push({
+            query_id: row_items[indexes.query_id],
+            hit_id: hitid,
+            evalue: row_items[indexes.evalue],
+            bitscore: row_items[indexes.bit_score],
+            //qlength:row_items[indexes.qlen],   
+            stitle: row_items[indexes.stitle],
+            //qseq: row_items[indexes.qseq],
+            //sseq: row_items[indexes.sseq],
+            qstart: row_items[indexes.qstart],
+            qend: row_items[indexes.qend],
+            sstart: row_items[indexes.sstart],
+            send: row_items[indexes.send],
+            hmt: title_items[2].trim(),
+            otid: hmt.split('-')[1],
+            mismatches: row_items[indexes.mismatches],
+            gaps: row_items[indexes.gaps],
+            alength: row_items[indexes.length],
+            identity: row_items[indexes.pct_identity],
+            coverage: row_items[indexes.qcov],
+            fpi: full_pct_id_mult.toFixed(5).toString()
+            
+            })
+        }
+    }
+        
+
+    
+    return return_obj
+}
 module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, blastID, filenumber){
     //opt = 'full'  // one,two,full
     //console.log('opt',opt)
@@ -969,7 +1092,7 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
     html += "<center><h3>"+queryid+"</h3></center>"
     if(opt === 'alignments'){  // alignments
         html += "<table id='newSortTable' class='sortable'><tr>"
-        html += '<th>query-id</th><th>hit-id</th><th>bitscore</th><th>Mis-<br>Matches</th><th>Gaps</th><th>Alignments</th><th>Download</th>'
+        html += '<th>Query-id</th><th>Hit-id</th><th>Bit Score</th><th>Mis-<br>Matches</th><th>Gaps</th><th>Alignments</th><th>Download</th>'
     }else if(opt === 'standard'){  // top 4 hits
         
     }else{   // full table
@@ -1147,54 +1270,26 @@ function create_alignment(row_items, indexes){
     //return qreturn_value+'<br>'+align_value+'<br>'+sreturn_value
     //return onereturn
 }
-module.exports.parse_blast_table = function parse_blast_table(file_data, fxn){
+module.exports.parse_blast_gather_hits = function parse_blast_gather_hits(file_data, fxn){
     let string = file_data.toString()
     let lines  = string.split('\n')
     let line_collector = {}
-    let query ='',header = '',table_rows = ''
+    let hit_ids = []
     // 16 # Fields: queryid-0, subjectid-1, pct_identity-2, alignment_length-3, mismatches-4, gap_opens-5, qstart-6, qend-7, sstart-8, send-9, evalue-10, bit_score-11, qlength-12, stitle-13, query_seq, subject_seq
-    let table_heads = ['queryid', 'subjectid', 'pct_identity', 'alignment_length', 'mismatches', 'gap_opens', 'qstart', 'qend', 'sstart', 'send', 'evalue', 'bit_score', 'qlength', 'stitle']
     
     for(let i in lines){
-       //console.log(lines[i])
+       
        if(!lines[i] || lines[i] === ''){
             continue
        }
        if(lines[i][0] === '#'){
-          
-          //header += lines[i]+'\n'
-          if(lines[i].startsWith('# BLASTN')){
-            header += lines[i]+'\n'
-          }
-          if(lines[i].startsWith('# Query:')){
-            header += lines[i]+'\n'
-          }
-          if(lines[i].startsWith('# Database:')){
-            header += lines[i]+'\n'
-          }
-          
-        }else{
-            //line_count += 1
-            let line_items = lines[i].split('\t')
-            table_rows += line_items[0] + '\t'
-            table_rows += line_items[1] + '\t'
-            table_rows += line_items[2] + '\t'
-            table_rows += line_items[3] + '\t'
-            table_rows += line_items[4] + '\t'
-            table_rows += line_items[5] + '\t'
-            table_rows += line_items[6] + '\t'
-            table_rows += line_items[7] + '\t'
-            table_rows += line_items[8] + '\t'
-            table_rows += line_items[9] + '\t'
-            table_rows += line_items[10] + '\t'
-            table_rows += line_items[11] + '\t'
-            table_rows += line_items[12] + '\t'
-            table_rows += line_items[13] + '\n'
-            
+          continue
         }
-       
+        let line_items = lines[i].split('\t') 
+        hit_ids.push(line_items[1])
+        //console.log('line1-2',line_items[0],line_items[1])  
     }
-    return header+'\n'+table_heads.join('\t')+'\n'+table_rows
+    return hit_ids
     
 }
 module.exports.parse_blast = function parse_blast(file_data, fxn){
@@ -1204,7 +1299,7 @@ module.exports.parse_blast = function parse_blast(file_data, fxn){
     let file_collector = {}
     let id_collector = {}
     let tmp =[]
-    let no_hits = false, clone='', clone_id, otid, version='unknown'
+    let no_hits = false, hit_title='', hit_id, otid, version='unknown'
     //let result = string.match(/Java(Script)/);
     if(string.match(/No hits found/)){
        no_hits = true
@@ -1234,44 +1329,44 @@ module.exports.parse_blast = function parse_blast(file_data, fxn){
           start_looking_for_gt = true
        }
        if(line.indexOf('>') === 0 && start_looking_for_gt){
-           clone = line.substring(1);  //s1.substring(1);
+           hit_title = line.substring(1);  //s1.substring(1);
            if(lines[parseInt(i)+1] != 'Length='){
                //console.log(i,parseInt(i)+1)
-               clone += lines[parseInt(i)+1]
+               hit_title += lines[parseInt(i)+1]
            }
            if(lines[parseInt(i)+2] != 'Length='){
                //console.log(i,parseInt(i)+2)
-               clone += lines[parseInt(i)+2]
+               hit_title += lines[parseInt(i)+2]
            }
            
-           split_name = clone.split('|')
-           clone_id = split_name[0].trim()
+           split_name = hit_title.split('|')
+           hit_id = split_name[0].trim()
            otid = 'none'
            if(fxn == 'refseq'){
              otid = split_name[2].trim().split('-')[1]
            }
-           id_collector[clone_id] = {'clone': clone, 'clone_id': clone_id, otid: otid}
+           id_collector[hit_id] = {'hit_title': hit_title, 'hit_id': hit_id, otid: otid}
            // if(lines[parseInt(i)+1] != 'Length='){
-//               clone += ' '+lines[parseInt(i)+1]
+//               hit_title += ' '+lines[parseInt(i)+1]
 //            }
        }
        if(line.indexOf('Length=') === 0 && start_looking_for_gt){
-             id_collector[clone_id]['length'] = line.split('=')[1]
+             id_collector[hit_id]['length'] = line.split('=')[1]
        }
        if(line.indexOf('Score') === 0 && start_looking_for_gt){  // starts on row 2:score,expect
              let parts = line.split(',')
-             id_collector[clone_id]['bitscore'] = parts[0].split('=')[1].trim().split(/\s+/)[0]
-             id_collector[clone_id]['expect'] = parts[1].split('=')[1].trim()
+             id_collector[hit_id]['bitscore'] = parts[0].split('=')[1].trim().split(/\s+/)[0]
+             id_collector[hit_id]['expect'] = parts[1].split('=')[1].trim()
        }
        if(line.indexOf('Identities') === 0 && start_looking_for_gt){  // starts on row 2:score,expect
              let parts = line.split(',')
              let regCapture = /\(([^)]+)\)/   // grab inside parens
-             id_collector[clone_id]['identity'] = parts[0].split('=')[1].trim().match(regCapture)[1]
-             id_collector[clone_id]['gaps'] = parts[1].split('=')[1].trim()
+             id_collector[hit_id]['identity'] = parts[0].split('=')[1].trim().match(regCapture)[1]
+             id_collector[hit_id]['gaps'] = parts[1].split('=')[1].trim()
              
        }
        if(line.indexOf('Strand') === 0 && start_looking_for_gt){  // starts on row 2:score,expect
-             id_collector[clone_id]['strand'] = line.split('=')[1]
+             id_collector[hit_id]['strand'] = line.split('=')[1]
        }
        
        

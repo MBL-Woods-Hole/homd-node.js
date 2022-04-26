@@ -238,11 +238,11 @@ def createBatchBlastFileText(args, filesArray, details_dict):
         else:
             #fileText += ' -outfmt 15'   ## 15 JSON
             #fileText += ' -outfmt 16'   ## 16 XML
-            if details_dict['outfmt'] == 'custom':
+            #if details_dict['outfmt'] == 'custom':
                 #fileText += " -outfmt '7 qseqid bitscore nident pident qstart qend stitle length mismatch gaps qlen evalue'"  # works with refseq db deflines
                 # qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
                 # https://www.metagenomics.wiki/tools/blast/blastn-output-format-6
-                fileText += " -outfmt '7 std qlen stitle qcovs qseq sseq'"
+            fileText += " -outfmt '7 std qlen stitle qcovs qseq sseq sacc'"
             fileText += ' -parse_deflines'  # works with refseq db deflines
             fileText += ' -out ' +  os.path.join(details_dict['blastDir'],'blast_results', file+'.out') 
             pass
