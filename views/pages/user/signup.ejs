@@ -2,7 +2,7 @@
 input{
    border:1px solid brown;
 }
-#new_user_div{
+#form_div{
    margin-left:300px;
    padding:50px 100px;
 }
@@ -19,7 +19,7 @@ input{
           
        <div class='title'>Register for an Account</div>
     <%- include('../../partials/flash'); %>    
-    <div id='new_user_div' class='table' >All fields are required -- <a class='button' href='new_user'>Clear Form</a>
+    <div id='form_div' class='table' >All fields are required -- <a class='button' href='new_user'>Clear Form</a>
     <form id='newuser_form' name='newuser_form' method='POST' action='/user/signup' >
       <ul>
       <li> <input id='username'       name='username'       type="text"   value=''  \> Username <span class='tiny_font'>(alphanumeric only. no spaces.)</span>

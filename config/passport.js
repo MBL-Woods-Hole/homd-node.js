@@ -4,7 +4,7 @@ var path          = require('path');
 var User          = require(app_root + '/models/user_model');
 const C           = require(app_root + '/public/constants');
 const CFG         = require(app_root + '/config/config')
-
+// see https://gist.github.com/manjeshpv/84446e6aa5b3689e8b84
 module.exports = function passport_setup(passport, db) {
 
   // =========================================================================

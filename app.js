@@ -20,8 +20,28 @@ const node_log = require('simple-node-logger').createSimpleFileLogger(logFilePat
 
 const router = express.Router();
 const session = require('express-session');
-//const passport = require('passport');
+const passport = require('passport');
+//const passportConfig = require('./config/passportConfig');
+const passportConfig = require('./config/passport'); // pass passport for configuration
+
 const bodyParser = require('body-parser');
+const app = express();
+app.use(bodyParser.urlencoded({
+    extended: false,         // allows for richer json like experience https://www.npmjs.com/package/qs#readme
+    limit: '50mb',          // size of body
+    parameterLimit: 100000 // number of parameters
+}));
+app.use(bodyParser.json());
+
+// https://blog.jscrambler.com/best-practices-for-secure-session-management-in-node
+app.use(session({
+  secret: 'gtf34ds',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { maxage: 6000 }
+  
+}));
+
 const flash = require('express-flash');
 //const favicon = require('serve-favicon');
 const async = require('async')
@@ -39,7 +59,7 @@ const phage    = require('./routes/routes_phage');
 const blast    = require('./routes/routes_blast');
 const help     = require('./routes/routes_help');
 const user    = require('./routes/routes_user')
-const app = express();
+
 
 // PRODUCTION: log every restart
 //if(CFG.ENV === 'production'){
@@ -50,9 +70,11 @@ const app = express();
 
 app.set('appName', 'HOMD');
 app.set('trust proxy', true);
-// require('./config/passport')(passport, TDBConn); // pass passport for configuration
-// app.use(passport.initialize());
-// app.use(passport.session()); // persistent login sessions
+
+passportConfig(passport, TDBConn);
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+
 app.use(flash());
 
 // view engine setup
@@ -66,21 +88,6 @@ app.set('view engine', 'ejs');
 //app.use(createIframe);
 
 
-app.use(bodyParser.urlencoded({
-    extended: false,         // allows for richer json like experience https://www.npmjs.com/package/qs#readme
-    limit: '50mb',          // size of body
-    parameterLimit: 100000 // number of parameters
-}));
-app.use(bodyParser.json());
-
-// https://blog.jscrambler.com/best-practices-for-secure-session-management-in-node
-app.use(session({
-  secret: 'gtf34ds',
-  resave: true,
-  saveUninitialized: true,
-  cookie: { maxage: 6000 }
-  
-}));
 
 app.use(express.static('public'));
 //app.use(express.static(config.jbrowse_data));

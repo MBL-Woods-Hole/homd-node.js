@@ -1,4 +1,11 @@
 <style>
+input{
+   border:1px solid brown;
+}
+#form_div{
+   margin-left:300px;
+   padding:50px 100px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -11,8 +18,9 @@
     <div class='page-content' >
               
        <div class='title'>Login</div>
-    <div id='login_div' class='table' >
-      <form action="/users/login" method="POST">
+       <%- include('../../partials/flash'); %>    
+      <div id='form_div' class='table' >All fields are required -- <a class='button' href='new_user'>Clear Form</a>
+      <form action="/user/login" method="POST">
           <div>
               <label>Username:</label>
               <input type="text" id='username' name="username"/>
@@ -27,16 +35,16 @@
           <input type='hidden' name='return_to_url' value=''/>
 
       </form>
-
+      </div>
       <br>
-      <p>Need an account? <a href="/users/signup">Signup</a></p>
+      <p>Need an account? <a href="/user/signup">Signup</a></p>
       
 
-      <p><a href="/users/forgotten_password">Forgot your password?</a></p>      
+      <p><a href="/user/forgotten_password">Forgot your password?</a></p>      
   
 
 
-      <p>Account help? email: <a href="mailto:vamps@mbl.edu">vamps@mbl.edu</a> (Including forgotten passwords.)</p>
+      <p>Account help? email: <a href="mailto:admin@homd.org">admin@homd.org</a> (Including forgotten passwords.)</p>
       
 
     </div>

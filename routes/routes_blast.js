@@ -80,9 +80,6 @@ router.get('/blast_results_genome', function blastResults_genome(req, res) {
     // read directory CONFIG.json first
     let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
     let blastResultsDir = path.join(blastDir, 'blast_results')
-    
-    
-    
     //console.log('blastfiles')
     //console.log(blastFiles)
     //try:  https://node.homd.info/blast/blast_results?id=1638297207475-44741
@@ -243,10 +240,6 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
                 blastFiles.push(path.join(blastResultsDir, result[i]))
                 blastFilePromises.push(helpers.readFromFile(blastFiles[i],'txt'))
             }
-            // for(let i=0; i < blastFiles.length; i++){
-//                 console.log('blast file',blastFiles[i])
-//                 
-//             }
            
             Promise.all(blastFilePromises)
               .then(results => {
@@ -254,13 +247,9 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
               //console.log('result0',results[0])
               let function_args = {cfg:config,files:blastFiles,bid:blastID,scol:sortCol,sdir:sortDir,opt:table_opt}
               
-              //if(config.outfmt === 'custom'){
-                refseq_html = run_custom_refseq_blast(results, function_args)
-              // }else{
-//                   
-//                   refseq_html = run_standard_refseq_blast(results, function_args)
-//               
-//               }
+              
+               refseq_html = run_custom_refseq_blast(results, function_args)
+              
               
                if(!blastID){
                     req.flash('fail', 'blastID no longer Valid')
@@ -288,6 +277,10 @@ function run_custom_refseq_blast(results, args){
     //console.log('args',args)
     let data=[]
     // this will report files as separate entites
+    // XXXXXXXX
+    let new_formatted_data = helpers.parse_blast_refseq(results[i], args.opt, args.bid)
+    
+    
     if(args.opt === 'best' || args.opt === 'standard'){
        let formatted_data = helpers.parse_blast_best(results, args.opt, args.bid)
        return formatted_data
@@ -299,54 +292,9 @@ function run_custom_refseq_blast(results, args){
       }
       return data.join('<br><br>')
     }
-    // to combine files (best hits only and maybe top4hits)
-    
-    //console.log('data0',data[0])
    
 }
-//
-// function run_standard_refseq_blast(results, args){
-//     
-//     let query_strings =[],data=[]
-//     for(let i=0; i<results.length; i++){
-// 		//console.log('file',blastFiles[i])
-// 	   //console.log('config',config)
-// 	   //console.log('results-i',results[i].toString())
-// 		let query = helpers.parse_to_get_blast_query(results[i], args.cfg.blastFxn)
-// 		query_strings.push({query:query, file:args.files[i]})
-// 		//console.log('results[i]',i,results[i])
-// 		let parsed_data = helpers.parse_blast(results[i], args.cfg.blastFxn)
-// 		//console.log('parsed_data',i,parsed_data)
-// 		data.push(parsed_data) // in order of sequences
-//     }
-//     
-// 	if(data.length === 0){
-// 		// error no data
-// 		let errorFilePath = path.join(CFG.PATH_TO_BLAST_FILES, args.cfg.id, 'blasterror.log')
-// 		fs.readFile(errorFilePath, function tryReadErrorFile(err, content) {
-// 			if(err){
-// 				// continue on NO ERROR FILE PRESENT and no data  WTF?
-// 				// throw error 
-// 				req.flash('fail', 'BLAST Failed with no data and no error information')
-// 				res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
-// 				return            
-// 			}else{
-// 			  // file exists throw error
-// 				if(content.toString().trim()){  // means there was true error NOT zero length
-// 					//pyerror = { code: 1, msg:'BLAST Script Error:: ' + content }
-// 					req.flash('fail', 'BLAST Script Error:: '+ content)
-// 					res.redirect(config.returnTo) // this needs to redirect to either refseq or genome
-// 					return
-// 				}
-// 			}
-// 		})
-// 	}
-// 	let refseq_html = ''
-// 	refseq_html = getBlastHtmlTable(data, args.bid, args.scol, args.sdir)
-// 	 
-//    return refseq_html
-//                 
-// }
+
 //
 router.get('/blast_wait', async function blastWait(req, res, next) {
     helpers.print('in blast wait')
@@ -592,63 +540,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
 
     
 })
-//
-// router.post('/blastDownload2', function blastDownload2(req, res) {
-//     console.log('in blastDownload2')
-//     console.log('req.body',req.body)
-//     let blastID = req.body.blastID
-//     let type = req.body.dnldType || 'xls'
-//     let  data=[],blastFiles = [],files_array
-//     let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results')
-//     let result = getAllFilesWithExt(blastResultsDir, 'out')
-//     for(let i=0; i < result.length; i++){
-//             blastFiles.push(path.join(blastResultsDir, result[i]))
-//             if(type === 'zip'){
-//                zip.addLocalFile(path.join(blastResultsDir, result[i]))
-//             }
-//     }
-//     if(type === 'zip'){
-//        //
-//     }else{
-//        let fileData = {}
-//        let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
-//        fs.readFile(configFilePath, function readConfig(err,  configData) {
-//          if(err){
-//            req.flash('fail', 'blastID no longer Valid')
-//            res.redirect('/') // this needs to redirect to either refseq or genome
-//            return
-//          }else{
-//            let config = JSON.parse(configData)
-//             
-//             files_array = blastFiles
-//             
-//             let blastFilePromises = []
-//             for(let i=0; i < files_array.length; i++){
-//                 blastFilePromises.push(helpers.readFromFile(files_array[i],'txt'))
-//             }
-//             Promise.all(blastFilePromises)
-//               .then(results => {
-//                 
-//                     for(let i=0; i<files_array.length; i++){
-//                         let parsed_data = helpers.parse_blast_table(results[i], type)
-//                         data.push(parsed_data) // in order of sequences
-//                     }
-//                     let data_files = data.join('\n\n\n')
-//                     
-//                     if(type.substring(0,4) === 'text'){
-//                         res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
-//                     }else{  //excel
-//                         res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
-//                     }
-//                     res.send(data_files)
-//                     delete req.body
-//             })  // end promise.all    
-//          }
-//       })  // end readfile
-//     }
-//     
-// })
-//
+
 router.post('/blastDownload', function blastDownload(req, res) {
     //
     console.log('in blastDownload')
@@ -657,10 +549,10 @@ router.post('/blastDownload', function blastDownload(req, res) {
     let blastID = req.body.blastID
     let zip
     let type = req.body.dnldType
-    if(type === 'zip'){
+    if(type === 'zip-download'){
        zip = new AdmZip();
     }
-    if(type==='fasta'){
+    if(type==='fasta-download'){
      // blastdbcmd -db myBlastDBName -dbtype prot -entry_batch myContigList.txt -outfmt %f -out myHitContigs.fasta
      // gather <Hit_id>gnl|BL_ORD_ID|4937322</Hit_id>
       //return
@@ -679,7 +571,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
         result = getAllFilesWithExt(blastResultsDir, 'out')
         for(let i=0; i < result.length; i++){
             blastFiles.push(path.join(blastResultsDir, result[i]))
-            if(type === 'zip'){
+            if(type === 'zip-download'){
                zip.addLocalFile(path.join(blastResultsDir, result[i]))
             }
         }
@@ -688,7 +580,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
         for(let i=0; i < result.length; i++){
             xml_files.push(path.join(blastResultsDir, result[i]))
             
-            if(type === 'zip'){
+            if(type === 'zip-download'){
                zip.addLocalFile(path.join(blastResultsDir, result[i]))
             }
         }
@@ -698,7 +590,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
        return
     }
     
-    if(type === 'zip'){
+    if(type === 'zip-download'){
         const data = zip.toBuffer();
         res.set('Content-Type','application/octet-stream');
         res.set('Content-Disposition',"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".zip\"");
@@ -729,7 +621,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
             Promise.all(blastFilePromises)  //read the files
               .then(results => {
                 if(blastFxn ==='refseq'){
-                    if(type === 'fasta'){  // genome only????
+                    if(type === 'fasta-download'){  // genome only????
                         
 						// let hitid_ary,hitid_collector={},comma_string
 // 						for(let i=0; i<files_array.length; i++){
@@ -755,7 +647,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
 					}else{
                     for(let i=0; i<files_array.length; i++){
                         //let parsed_data = helpers.parse_blast(results[i], type)
-                        let parsed_data = helpers.parse_blast_custom_download(results[i], type, blastID, i)
+                        let parsed_data = helpers.parse_blast_custom(results[i], type, blastID, i)
                         data.push(parsed_data) // in order of sequences
                     }
                     //console.log('data[0]-refseq_custom',data[0])
@@ -769,7 +661,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
                     delete req.body
                     }
                 }else{   // genme xml files or fast
-                    if(type === 'fasta'){  // genome only????
+                    if(type === 'fasta-download'){  // genome only????
                         
 						let hitid_obj,hitid_collector={},comma_string
 						for(let i=0; i<files_array.length; i++){
@@ -792,7 +684,7 @@ router.post('/blastDownload', function blastDownload(req, res) {
 						
 					}else{
                     for(let i=0; i<xml_files.length; i++){
-                        let parsed_data = helpers.parse_blast_xml2json(JSON.parse(parser.toJson(results[i])), type)
+                        let parsed_data = helpers.parse_blast_xml2json(JSON.parse(parser.toJson(results[i])))
                         data.push(parsed_data) // in order of sequences
                         
                     }
@@ -814,148 +706,6 @@ router.post('/blastDownload', function blastDownload(req, res) {
     }  // end else
     
 })
-// router.post('/blastDownload_new', function blastDownload_new(req, res) {
-//     //
-//     console.log('in blastDownload')
-//     const AdmZip = require('adm-zip');
-//     console.log(req.body)
-//     let blastID = req.body.blastID
-//     let zip
-//     let type = req.body.dnldType
-//     if(type === 'zip'){
-//        zip = new AdmZip();
-//     }
-//     if(type==='fasta'){
-//      // blastdbcmd -db myBlastDBName -dbtype prot -entry_batch myContigList.txt -outfmt %f -out myHitContigs.fasta
-//      // gather <Hit_id>gnl|BL_ORD_ID|4937322</Hit_id>
-//       //return
-//     }
-//     let blastFxn = req.body.blastFxn
-//     console.log('type',type)
-//     
-//     if(!type || !blastID){
-//        return
-//     }
-//     let  data=[],blastFiles = [],xml_files=[],files_array,result
-//     // read directory CONFIG.json first
-//     let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
-//     let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results')
-//     if(blastFxn ==='refseq' || blastFxn === 'refseq_custom'){
-//         result = getAllFilesWithExt(blastResultsDir, 'out')
-//         for(let i=0; i < result.length; i++){
-//             blastFiles.push(path.join(blastResultsDir, result[i]))
-//             if(type === 'zip'){
-//                zip.addLocalFile(path.join(blastResultsDir, result[i]))
-//             }
-//         }
-//     }else{   // genome blast
-//         result = getAllFilesWithExt(blastResultsDir, 'xml')
-//         for(let i=0; i < result.length; i++){
-//             xml_files.push(path.join(blastResultsDir, result[i]))
-//             
-//             if(type === 'zip'){
-//                zip.addLocalFile(path.join(blastResultsDir, result[i]))
-//             }
-//         }
-//     }
-//     if(!result){
-//        throw new Error('The Blast ID "'+blastID+'" was not found.<BR>Probably expired if you are using and old link.')
-//        return
-//     }
-//     
-//     if(type === 'zip'){
-//         const data = zip.toBuffer();
-//         res.set('Content-Type','application/octet-stream');
-//         res.set('Content-Disposition',"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".zip\"");
-//         res.set('Content-Length',data.length);
-//         res.send(data);
-//     }else{
-//     //console.log('blastfiles')
-//     //console.log(blastFiles)
-//     let fileData = {}
-//     let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
-//     fs.readFile(configFilePath, function readConfig(err,  configData) {
-//      if(err){
-//         req.flash('fail', 'blastID no longer Valid')
-//         res.redirect('/') // this needs to redirect to either refseq or genome
-//         return
-//       }else{
-//             let config = JSON.parse(configData)
-//             if(blastFxn ==='refseq' || blastFxn === 'refseq_custom'){
-//                 files_array = blastFiles
-//             }else{  // genomic blast
-//                 files_array = xml_files
-//             }
-//             let blastFilePromises = []
-//             for(let i=0; i < files_array.length; i++){
-//                 blastFilePromises.push(helpers.readFromFile(files_array[i],'txt'))
-//             }
-//             
-//             Promise.all(blastFilePromises)
-//               .then(results => {
-//                 if(blastFxn === 'refseq'){
-//                     for(let i=0; i<files_array.length; i++){
-//                         let parsed_data = helpers.parse_blast(results[i], type)
-//                         data.push(parsed_data) // in order of sequences
-//                     }
-//                     
-//                     var table_tsv = create_blast_download_table(data, type, blastFxn)
-//                     
-//                 }else if(blastFxn === 'refseq_custom'){
-//                      
-//                      for(let i=0; i<files_array.length; i++){
-//                         // type = text1,text4 exl...
-//                         let parsed_data = helpers.parse_blast_custom_download(results[i], type, blastID, i)
-//                         data.push(parsed_data) // in order of sequences
-//                      }
-//                      console.log('data[0]-refseq_custom',data[0])
-//                      var table_tsv = create_blast_download_table(data, type, blastFxn)
-//                 }else{   // genme xml files or fast
-//                     if(type === 'fasta'){
-//                         
-// 						let hitid_obj,hitids=[],hitid_collector={},comma_string
-// 						for(let i=0; i<xml_files.length; i++){
-// 						    hitid_obj = helpers.parse_blast_query_xml(parser.toJson(results[i]), 'hitids')
-// 						    hitids.push(hitid_obj)
-// 						    for(let i in hitid_obj.hitid_ary){
-// 								hitid_collector[hitid_obj.hitid_ary[i]] = 1
-// 						    }
-// 						}
-// 						comma_string = Object.keys(hitid_collector)   //let blastdbcmd = 'blastdbcmd -entry '+comma_string+' -outfmt %f -out '+outfilename
-// 						//console.log('comma_string',comma_string.join(','))
-// 						let blastdbcmd = "cd "+path.join(config.blastdbPath,config.ext)+";blastdbcmd -db "+config.blastdb+" -entry '"+comma_string.join(',')+"' -outfmt %f"
-// 						console.log('blastdbcmd',blastdbcmd)
-// 						helpers.execute(blastdbcmd, function(fasta_result){
-//                             //console.log('fasta_result',fasta_result)
-//                             res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".fa\""})
-//                             res.send(fasta_result)
-//                             return
-//                         });
-// 						
-// 					}else{
-// 						for(let i=0; i<xml_files.length; i++){
-// 							let parsed_data = helpers.parse_blast_xml2json(JSON.parse(parser.toJson(results[i])), type)
-// 							data.push(parsed_data) // in order of sequences
-// 						}
-// 						
-// 						var table_tsv = create_blast_download_table(data, type, blastFxn)
-// 						
-//                     }
-//                 }
-//                 if(type.substring(0,4) === 'text'){
-// 					res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
-// 				}else{  //excel
-// 					res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
-// 				}
-// 				res.send(table_tsv)
-// 				delete req.body
-//                 //res.end()
-//              })   // end async files
-//       }
-//     })
-//     }  // end else
-//     
-// })
 //
 router.post('/openBlastWindow', function openBlastWindow(req, res) {
     //
@@ -1016,15 +766,15 @@ function create_blast_download_table(data_obj, type, fxn) {
      obj.data.sort(function sortIR2(a, b) {   //sort by bitscore
             return helpers.compareStrings_int(b.bitscore, a.bitscore);
      })
-     if(obj.data === 'no hits'){
+     if(obj.data[0] === 'no hits'){
         txt += obj.query+'\t'+obj.query_length+'\t\t\tNo Hits Found\t\t\t\t\n'
      }else{
          
-         if(type === 'text1' || type === 'excel1'){
+         if(type === 'text1-download' || type === 'excel1-download'){
              dnldInfo = 'Top BLAST Hit Only: '+obj.version+'\n'
              txt += obj.query+'\t'+obj.query_length+'\t'
          
-              //console.log('data[0]',data[n].data[0])
+              console.log('data[0]',obj.data[0])
             
               otid = helpers.make_otid_display_name(obj.data[0].otid)
               hit_id = obj.data[0].hit_id
@@ -1032,9 +782,9 @@ function create_blast_download_table(data_obj, type, fxn) {
                 txt += hit_id+'\t'+obj.data[0].identity+'\t'+obj.data[0].coverage+'\t'+obj.data[0].fpi+'\t'+obj.data[0].hmt+'\t'+obj.data[0].alength+'\t'+obj.data[0].mismatches+'\t'+obj.data[0].gaps+'\t'
                 txt += obj.data[0].qstart+'\t'+obj.data[0].qend+'\t'+obj.data[0].sstart+'\t'+obj.data[0].send+'\t'+obj.data[0].evalue+'\t'+obj.data[0].bitscore+'\t'+obj.data[0].stitle+'\n'
               }else{
-                txt += otid+'\t'+hit_id+'\t'+obj.data[0].stitle+'\t'+obj.data[0].identity+'\t'+obj.data[0].bitscore+'\t'+obj.data[0].expect+'\t'+obj.data[0].gaps+'\n'
+                txt += otid+'\t'+hit_id+'\t'+obj.data[0].hit_title+'\t'+obj.data[0].identity+'\t'+obj.data[0].bitscore+'\t'+obj.data[0].expect+'\t'+obj.data[0].gaps+'\n'
               }
-          }else if(type === 'textAll' || type === 'excelAll'){
+          }else if(type === 'textAll-download' || type === 'excelAll-download'){
              dnldInfo = 'All BLAST Hits: '+obj.version+'\n'
          
               //console.log('data[0]',data[n].data[0])
@@ -1047,14 +797,13 @@ function create_blast_download_table(data_obj, type, fxn) {
                      txt += hit_id+'\t'+obj.data[i].identity+'\t'+obj.data[i].coverage+'\t'+obj.data[i].fpi+'\t'+obj.data[i].hmt+'\t'+obj.data[i].alength+'\t'+obj.data[i].mismatches+'\t'+obj.data[i].gaps+'\t'
                      txt += obj.data[i].qstart+'\t'+obj.data[i].qend+'\t'+obj.data[i].sstart+'\t'+obj.data[i].send+'\t'+obj.data[i].evalue+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].stitle+'\n'
                   }else{
-                     
                      txt += otid+'\t'+hit_id+'\t'+obj.data[i].hit_title+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
                   }
                 }else{
                   //txt += '\t\t\t\t\t\t\t\t\n'
                 }
               }
-          }else if(type === 'text4' || type === 'excel4'){
+          }else if(type === 'text4-download' || type === 'excel4-download'){
              dnldInfo = 'Top 4 BLAST Hits: '+obj.version+'\n'
               //console.log('data[0]',data[n].data[0])
               for(let i=0;i<4;i++){
@@ -1072,7 +821,7 @@ function create_blast_download_table(data_obj, type, fxn) {
                   //txt += '\t\t\t\t\t\t\t\t\n'
                 }
               }
-           }else if(type === 'text20' || type === 'excel20'){
+           }else if(type === 'text20-download' || type === 'excel20-download'){
              dnldInfo = 'Top 20 BLAST Hits: '+obj.version+'\n'
               for(let i=0;i<20;i++){
                 //console.log('data[0]',i,obj.data[i])
@@ -1098,24 +847,7 @@ function create_blast_download_table(data_obj, type, fxn) {
   return retTxt
 }
 
-// function getHitValues(hit){
-//     
-//     let hitVals = {},hitItems
-//     hitItems = hit.description[0].title.split('|')
-//     hitVals.titleid = hitItems.shift()  // remove and return first item after cleaning off zeros
-//     hitVals.HMT = (parseInt(hitItems[1].split('-')[1].trim())).toString()
-//     hitVals.bitScore =     hit.hsps[0].bit_score.toFixed(1).toString()
-//     hitVals.identity = hit.hsps[0].identity
-//     hitVals.identityPct = (hit.hsps[0].identity * 100 / hit.hsps[0].align_len).toFixed(1).toString()
-//     hitVals.evalue = hit.hsps[0].evalue.toString()
-//     hitVals.qstart = hit.hsps[0].query_from
-//     hitVals.qend = hit.hsps[0].query_to
-//     hitVals.sstart = hit.hsps[0].hit_from
-//     hitVals.send = hit.hsps[0].hit_to
-//     hitVals.gaps = hit.hsps[0].gaps
-//     hitVals.hit_title = hitItems.join(' | ')
-//     return hitVals
-// }
+
 function createBlastOpts(reqBody) {
     let bOpts = {},dbItems
     bOpts.expect =    reqBody.blastExpect
