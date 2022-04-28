@@ -278,7 +278,7 @@ function run_custom_refseq_blast(results, args){
     let data=[]
     // this will report files as separate entites
     // XXXXXXXX
-    let new_formatted_data = helpers.parse_blast_refseq(results[i], args.opt, args.bid)
+    //let new_formatted_data = helpers.parse_blast_refseq(results[i], args.opt, args.bid)
     
     
     if(args.opt === 'best' || args.opt === 'standard'){
