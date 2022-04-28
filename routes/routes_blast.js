@@ -759,22 +759,27 @@ function create_blast_download_table(data_obj, type, fxn) {
   //console.log('data',data_obj)
   //console.log(data[0].hits[0].hsps[0])
   let hit,h,hitCountOutput,dnldInfo,otid,hit_id
-  
+  //console.log('obj',data_obj)
   for(let n in data_obj){
      let obj = data_obj[n]
-     //console.log('obj',obj)
-     obj.data.sort(function sortIR2(a, b) {   //sort by bitscore
-            return helpers.compareStrings_int(b.bitscore, a.bitscore);
-     })
-     if(obj.data[0] === 'no hits'){
-        txt += obj.query+'\t'+obj.query_length+'\t\t\tNo Hits Found\t\t\t\t\n'
+     let data = obj.data
+     //console.log('data',data)
+     if(!data){
+       txt += obj.query+'\t'+obj.query_length+'\t\t\tNo Hits Found\t\t\t\t\n'
      }else{
+       data.sort(function sortIR2(a, b) {   //sort by bitscore
+           return helpers.compareStrings_int(b.bitscore, a.bitscore);
+       })
+     
+       if(data[0] === 'no hits'){
+          txt += obj.query+'\t'+obj.query_length+'\t\t\tNo Hits Found\t\t\t\t\n'
+       }else{
          
          if(type === 'text1-download' || type === 'excel1-download'){
              dnldInfo = 'Top BLAST Hit Only: '+obj.version+'\n'
              txt += obj.query+'\t'+obj.query_length+'\t'
          
-              console.log('data[0]',obj.data[0])
+              //console.log('data[0]1',obj.data[0])
             
               otid = helpers.make_otid_display_name(obj.data[0].otid)
               hit_id = obj.data[0].hit_id
@@ -840,7 +845,8 @@ function create_blast_download_table(data_obj, type, fxn) {
                 }
               }
            }
-       }  
+       } 
+    }
      
   }
   let retTxt = dnldInfo + header + txt
