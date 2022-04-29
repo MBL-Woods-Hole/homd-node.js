@@ -140,6 +140,7 @@ router.get('/genome_table', function genomeTable(req, res) {
     // seqid_list: JSON.stringify(gid_obj_list),
     data: JSON.stringify(send_list),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
     letter: letter,
     otid: otid,
     phylum: phylum,
@@ -180,6 +181,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
     //seqid_list: JSON.stringify(gid_obj_list),
     data: JSON.stringify(sendList),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
     letter: 'all',  // dont us empty string: -for download fxn
     otid: '0',   // dont us empty string: -for download fxn
     phylum: '0',  // dont us empty string: -for download fxn
@@ -229,7 +231,8 @@ router.get('/jbrowse', function jbrowse (req, res) {
     gc:gc,
     genomes: JSON.stringify(genomeList),
     tgenomes: genomeList.length,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
   })
 })
 //
@@ -311,7 +314,8 @@ router.get('/genome_description', function genomeDescription (req, res) {
 		// data2: JSON.stringify(data2),
 		// data3: JSON.stringify(data3),
 		// data4: JSON.stringify(data4),
-		ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
+		ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+		user: JSON.stringify(req.user || {}),
 	  })
   })
 })
@@ -411,6 +415,7 @@ router.get('/explorer', function explorer (req, res) {
       pgname: 'genome/explorer', // for AbountThisPage 
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
       gid: args.gid,
       otid: args.otid,
       all_annos: JSON.stringify(args.allAnnosObj),
@@ -550,6 +555,7 @@ router.get('/blast', function blast_get(req, res) {
         pgname: 'blast', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
         blastFxn: 'genome',
         organism: organism,
         gid: chosen_gid,
@@ -645,6 +651,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
         pgname: 'genome/tree', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
         svg_data: JSON.stringify(data),
         otid: fullname
       })
@@ -665,6 +672,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
         pgname: 'genome/tree', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
         svg_data: JSON.stringify(data),
         otid: otid
       })
@@ -687,6 +695,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
       pgname: 'genome/tree', // for AbountThisPage
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
       svg_data: JSON.stringify(data),
       otid: otid
     })

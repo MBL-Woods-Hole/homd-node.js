@@ -23,7 +23,9 @@ router.get('/', function index(req, res) {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'home', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {})
+    
 
   })
 })
@@ -82,7 +84,8 @@ router.get('/download', function download(req, res) {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'download', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {})
 
   })
 })
@@ -92,7 +95,8 @@ router.get('/poster', function poster(req, res) {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {})
 
   })
 })
@@ -102,7 +106,8 @@ router.get('/oralgen', function oralgen(req, res) {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version })
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {})
 
   })
 })
@@ -290,6 +295,7 @@ router.post('/site_search', function site_search(req, res) {
         pgname: '', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
         search_text: searchText,
         otid_list: JSON.stringify(otidLst),
         gid_list: JSON.stringify(gidLst),

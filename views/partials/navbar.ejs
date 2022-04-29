@@ -1,5 +1,6 @@
 <% var version_info = JSON.parse(ver_info) %> 
 <% var cfg = JSON.parse(config) %> 
+<% var user = JSON.parse(user) %> 
 <style>
   
 </style>
@@ -103,6 +104,20 @@
          <li><a href="/oralgen">Oralgen Genome Info</a></li>
          </ul>
       </li>
+      <% if(cfg.env === 'development'){ %>
+      <li><a class='main-topic' href="">Account <font color="blue">&#187;</font></a>
+      <ul>
+       <li><a href='/admin/login' >Login</a></li>
+       <li><a href='/admin/signup' >Signup</a></li>
+       <li><a href='/admin/profile' >Profile</a></li>
+       <li><a href='/admin/logout' >Logout</a></li>
+       <% if(user){ %>
+          <li><a href='/admin/admin' >Admin</a></li>
+       <% } %>
+      </ul>
+      </li>
+      <% } %>
+      
     </ul>
    </li>
 <li id='first'><a class='main-topic' href="http://v2.homd.org/" title="HOMD (old version)">HOMD-V2</a></li> 
@@ -111,8 +126,8 @@
       <li><a href="/help/index" >HOMD Help Content</a></li>
      <!--  <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home-obsolete</a></li> -->
       <!-- <li><a href="https://wiki.homd.info/help/user_guide" target='_blank'>User's Guide (in a new window)</a></li> -->
-      <li><a href='/help/help-page?pagecode=cite' >How to Cite HOMD</a></li>
-      <li><a href='/help/help-page?pagecode=description' >Project Description</a></li>
+      <li><a href='/help/help-page?pagecode=cite'>How to Cite HOMD</a></li>
+      <li><a href='/help/help-page?pagecode=description'>Project Description</a></li>
       <li><a href='/help/help-page?pagecode=strains'>Strains and DNA Availability</a></li>
       <li><a href='/help/help-page?pagecode=team'>People</a></li>
       <li><a href='/help/help-page?pagecode=contact'>Contact Us</a></li>
@@ -128,18 +143,7 @@
     
   </li>   
   
-  <% if(cfg.env === 'development'){ %>
- 
-
-     <li><a class='main-topic' href=""><font color='red'>Account</font></a>
-     <ul>
-       <li><a href='/user/login' >Login</a></li>
-       <li><a href='/user/signup' >Signup</a></li>
-     </ul>
-    </li>
-
-    
-  <% } %>
+  
     
   <% if(pgname && ["home","lost"].indexOf(pgname) == -1){ %>
       <li ><a href='/help/help-page?pagecode=<%= pgname %>'><small  id='page-help'>[Page-Help]</small></a></li>
@@ -153,9 +157,20 @@
     
 </ul>
 </div>
+<% if(cfg.env === 'development'){ %>
+<span style='float:right;padding-right:15px;'><small>
+<%   if(user && user.username){ %>
+        <font color='green'>Logged in as <%= user.username %> (security-level: <%= user.security_level %>)</font>
+<%   }else{ %>
+        <font color='red'>Not Logged In</font>
+<%   } %>
+</small>
+</span>
+<% } %>
 
 <div id='version-info' >
       16S rRNA RefSeq: <a href="/help/help-page?pagecode=refseq/refseq_version">V<%= version_info.rna_ver %></a>
       &nbsp;&nbsp;&nbsp;Genomic RefSeq: <a href="/help/help-page?pagecode=genome/genome_version">V<%= version_info.gen_ver %></a>
 </div>
+
 

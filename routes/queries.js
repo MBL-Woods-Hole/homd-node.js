@@ -45,31 +45,3 @@ module.exports.get_contigs = (gid) => {   // always NCBI
 module.exports.get_db_updates_query = () => {
   return "SELECT otid, description, reason, date FROM updates WHERE `show`='1'"
 }
-///////////////////////////
-////// ACCOUNT ////////////
-//////////////////////////
-module.exports.get_user_by_name = (uname, passwd) =>{
-    var q = "SELECT user_id, username, email, institution, first_name, last_name, active, security_level,"
-     q += " encrypted_password, PASSWORD('"+passwd+"') as entered_pw, sign_in_count,"
-     q += " DATE_FORMAT(current_sign_in_at,'%Y-%m-%d %T') as current_sign_in_at,last_sign_in_at FROM user"
-     q += " WHERE username ='"+uname+"'"
-    return q;
-}
-//
-module.exports.insert_new_user = (mysql_new_user) => {
-    
-    var qInsertUser = "INSERT INTO user (username, encrypted_password, first_name, last_name, email, institution, active, sign_in_count, security_level, current_sign_in_at, last_sign_in_at)";
-    qInsertUser +=    " VALUES ('" + mysql_new_user.username +"', "+
-                                   // helpers.generateHash(mysql_new_user.password) +"', '"+
-                                    "PASSWORD('"+mysql_new_user.password+"'),   '"+
-                                    mysql_new_user.firstname +"', '"+
-                                    mysql_new_user.lastname +"', '"+
-                                    mysql_new_user.email +"', '"+
-                                    mysql_new_user.institution +"',"+                                    
-                                    " 1,"+
-                                     " 1, "+
-                                     mysql_new_user.security_level +","+
-                                    " CURRENT_TIMESTAMP(), "+
-                                     " CURRENT_TIMESTAMP() )";
-    return qInsertUser
-}

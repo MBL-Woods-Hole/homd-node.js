@@ -1,10 +1,16 @@
 <style>
-input{
-   border:1px solid brown;
-}
-#form_div{
+.form_div{
    margin-left:300px;
    padding:50px 100px;
+}
+
+.form_div form  { display: table;      }
+.form_div p     { display: table-row;  }
+.form_div label { display: table-cell; }
+.form_div input { 
+    display: table-cell; 
+    border:1px solid brown;
+    padding:2px 5px;
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -16,11 +22,11 @@ input{
     
     
     <div class='page-content' >
-          
-       <div class='title'>Register for an Account</div>
+    <div class='title'>Register for an Account</div>
     <%- include('../../partials/flash'); %>    
-    <div id='form_div' class='table' >All fields are required -- <a class='button' href='new_user'>Clear Form</a>
-    <form id='newuser_form' name='newuser_form' method='POST' action='/user/signup' >
+    <div id='form_div' class='form_div table' >All fields are required -- <a class='button' href='new_user'>Clear Form</a>
+    <br><br>
+    <form id='newuser_form' name='newuser_form' method='POST' action='/admin/signup' >
       <ul>
       <li> <input id='username'       name='username'       type="text"   value=''  \> Username <span class='tiny_font'>(alphanumeric only. no spaces.)</span>
 
@@ -35,9 +41,7 @@ input{
       </ul>
       <input    type="submit" value='Enter' \>
     </form>
-    
-
-  </div>
+    </div>
   
     </div> <!-- end: page-content -->
     

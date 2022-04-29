@@ -1,63 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
+<style>
+.form_div{
+   margin-left:300px;
+   padding:50px 100px;
+}
+
+.form_div form  { display: table;      }
+.form_div p     { display: table-row; margin:2px; }
+.form_div label { display: table-cell; }
+.form_div input { 
+    display: table-cell; 
+    border:1px solid brown;
+    padding:2px 5px;
+}
+</style>
 <%- include('../../partials/header_html'); %>
-<title><%= title %></title>
 
 <body>
-  <div id='wrapper'>		
-	    
-	    
-	<div id='header'>
-       <%- include('../../partials/header_img'); %>
-    </div>
-
-	
-	
-	<div id="navbar">
-            <%- include('../../partials/navbar'); %>
-    </div>
-    <div id='' class='page-content'>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
     
-	
-	  <div class='wide-content' id="">
-	  	
-	    <div id='' class="flash-message" >  	
-        <% if (messages.success) { %>
-          <div class="alert_flash_message_success"><%- messages.success %></div>
-        <% }else if(messages.fail){ %>
-          <div class="alert_flash_message_fail"><%- messages.fail %></div>
-        <% } %>
-        </div>
+    
+    <div class='page-content' >
+              
+       <div class='title'>Login</div>
+       <%- include('../../partials/flash'); %> 
+       <div id='form_div' class='form_div table' >All fields are required -- <a class='button' href='' onclick='clear_form(this.form)'>Clear Form</a>
+       <br>
+       <form action="/admin/login" method="POST">   
        
-        <div id='' class="center-box">				
-		  <form action="/admin/login" method="post">
-			<table><tr><td>
-				<label>Username:</label></td><td>
-				<input type="text" name="username"/>
-			</td></tr><tr><td>
-				<label>Password:</label></td><td>
-				<input type="password" name="password"/>
-			</td></tr><tr><td>
-				<input disabled type="submit" value="Log In"/>
-			</td></tr></table>
-		  </form>
-        </div>
-	  </div>
+          <p>
+              <label>Username:</label>
+              <input type="text" id='username' name="username"/>
+          </p>
+          <p>
+              <label>Password:</label>
+              <input type="password" id='password' name="password"/>
+          </p>
+          <p>
+              <input type="submit" value="Log In"/> <!-- <small><a href="forgot">Forgot Password?</a></small> -->
+          </p>
+          <input type='hidden' name='return_to_url' value=''/>
+      </form>
+      
+      </div>
+      <br>
+      <p>Need an account? <a href="/admin/signup">Signup</a></p>
+      
+
+      <p><a href="/admin/forgotten_password">Forgot your password?</a></p>      
+  
+
+
+      <p>Account help? email: <a href="mailto:admin@homd.org">admin@homd.org</a> (Including forgotten passwords.)</p>
+      
+
+    </div>
+  
     </div> <!-- end: page-content -->
     
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>
        
-   
-  </div> <!-- end wrapper -->
 </body>
 
 </html>
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
-
+<script type="text/javascript" src="/js/menu.js"></script>
 <script>
- 
-
+  mainmenu()
 </script>
+
+

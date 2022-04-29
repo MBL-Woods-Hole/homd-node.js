@@ -50,7 +50,7 @@ const async = require('async')
 
 
 const home     = require('./routes/index');
-//const admin    = require('./routes/routes_admin');
+const admin    = require('./routes/routes_admin');
 //const help      = require('./routes/routes_help');
 const taxa     = require('./routes/routes_taxa');
 const refseq   = require('./routes/routes_refseq');
@@ -58,7 +58,7 @@ const genome   = require('./routes/routes_genome');
 const phage    = require('./routes/routes_phage');
 const blast    = require('./routes/routes_blast');
 const help     = require('./routes/routes_help');
-const user    = require('./routes/routes_user')
+//const user    = require('./routes/routes_user')
 
 
 // PRODUCTION: log every restart
@@ -120,7 +120,8 @@ app.use('/genome', genome);
 app.use('/phage', phage);
 app.use('/blast', blast);
 app.use('/help', help);
-app.use('/user', user);
+//app.use('/user', user);
+app.use('/admin', admin);
 
 
 // error handler middleware:
@@ -131,12 +132,15 @@ app.use((error, req, res, next) => {
   if(CFG.ENV === 'production'){
      node_log.debug(error.toString())
   }
+  
+  let user = req.user || {}
   res.render('pages/lost', { 
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
       config : JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+      user: JSON.stringify(req.user  || {}),
       msg: 'We\'re Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:',
       trace: error.toString()
   });
@@ -152,8 +156,9 @@ app.use(function(req, res, next){
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
-      config : JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
+      config :  JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
+      user:     JSON.stringify(req.user) || {},
       msg: 'Sorry -- We can\'t find the page you requested.',
       trace: JSON.stringify(req.url)
     });

@@ -41,11 +41,32 @@ module.exports.isLoggedIn = (req, res, next) => {
   console.log("Oops! NOT isLoggedIn.req.isAuthenticated");
   // save the url in the session
   req.session.returnTo = req.originalUrl;
-  req.flash('fail', 'Please login or <a href="/admin/register">register</a> before continuing.');
-  res.redirect('admin/login');
+  req.flash('fail', 'Please login or <a href="/admin/signup">register</a> before continuing.');
+  res.redirect('/admin/login');
   // return;
 };
-
+//
+module.exports.isAdmin = (req, res, next) => {
+  if (req.user.security_level === 1) {
+    console.log("Hurray! USER is an Admin:", req.user.username);
+    return next();
+  }
+  // if they aren't redirect them to the home page
+  console.log("Whoa! NOT an Admin: ", req.user.username);
+  // save the url in the session
+  req.session.returnTo = req.path;
+  //console.log('URL Requested: '+JSON.stringify(req));
+  //console.log(util.inspect(req, {showHidden: false, depth: null}));
+  req.flash('fail', 'The page you are trying to access is for VAMPS admins only.');
+  res.redirect('/');
+  // return;
+};
+module.exports.log_timestamp = () => {
+  let date = new Date();
+  let day  = date.toLocaleDateString();
+  let time = date.toLocaleTimeString();
+  return day + " " + time;
+};
 // todo: use in file instead of those in the class
 module.exports.check_if_rank = (field_name) => {
 

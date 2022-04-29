@@ -31,7 +31,7 @@ router.get('/', function index(req, res) {
                 pgname: '', // for AbountThisPage
                 config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        
+                user: JSON.stringify(req.user || {}),
           })
      }
   })
@@ -106,6 +106,7 @@ router.get('/phage_table', function phage_table_get(req, res) {
     pgname: 'phage/phage_table', // for AbountThisPage
     config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
     pdata:    JSON.stringify(sendList),
     
     rank: rank,
@@ -160,6 +161,7 @@ router.post('/phage_table', function phage_table_post(req, res) {
     pgname: 'phage/phage_table', // for AbountThisPage
     config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
     pdata:    JSON.stringify(sendList),
     rank: 'family',
     cols: JSON.stringify(cols_to_show),
@@ -204,6 +206,7 @@ router.post('/search_phagetable', function search_phagetable(req, res) {
     pgname: 'phage/phage_table', // for AbountThisPage
     config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
     pdata:    JSON.stringify(sendList),
     
     rank:    'family',
@@ -231,6 +234,7 @@ router.get('/phagedesc', function phagedesc(req, res) {
         pgname: 'phage/phage_description', // for AbountThisPage
         config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV}),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
         phage_data: JSON.stringify(phage),
         pid: pid
       })
@@ -291,6 +295,7 @@ router.get('/search_questions', function search_questions(req, res) {
         pgname: '', // for AbountThisPage
         config:  JSON.stringify({ hostname:CFG.HOSTNAME, env:CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
       })
 })
 ////////////////////////////////

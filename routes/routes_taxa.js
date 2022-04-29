@@ -150,6 +150,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
     search_txt: '0',
     search_field:'0',
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
   })
 })
 
@@ -242,6 +243,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
     search_field:'0',
     
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
   })
 })
 //
@@ -252,6 +254,7 @@ router.get('/flags', function flags(req, res) {
       pgname: '',  //for AbountThisPage
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
     })
 
 
@@ -287,6 +290,7 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
     search_txt: search_txt,
     search_field: search_field,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
   })
   
   
@@ -308,6 +312,7 @@ router.get('/tax_hierarchy', (req, res) => {
       data: {},
       dhtmlx: JSON.stringify(C.dhtmlxTreeData),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
   })
 })
 router.get('/tax_level', function tax_level_get(req, res) {
@@ -324,6 +329,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
     level: 'domain',
     //oral: oral,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
   })
 })
 //
@@ -538,6 +544,7 @@ router.get('/tax_description', function tax_description(req, res){
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       message:message,
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
      })
      return
   }
@@ -622,6 +629,7 @@ router.get('/tax_description', function tax_description(req, res){
     links: JSON.stringify(links),
     lineage: lineage_string,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
   })
 })
 
@@ -815,6 +823,7 @@ router.get('/life', function life(req, res) {
       html: html,
       lineage:lineage_string,
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
     })
   
 })
@@ -962,6 +971,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
       pgname: 'taxon/ecology', // for AbountThisPage
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
       sole_arch:JSON.stringify(sole_arch),
       phyla: JSON.stringify(phyla),
       klasses: JSON.stringify(klasses),
@@ -1114,6 +1124,7 @@ router.get('/ecology', function ecology(req, res) {
       erenv1v3: JSON.stringify(erenv1v3_data),
       erenv3v5: JSON.stringify(erenv3v5_data),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
     })
 })
 router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
@@ -1245,6 +1256,7 @@ router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
       erenv1v3: JSON.stringify(erenv1v3_data),
       erenv3v5: JSON.stringify(erenv3v5_data),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
     })
 })
 //
@@ -1501,6 +1513,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
       pgname: '', // for AbountThisPage 
       config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
       data: JSON.stringify(top_ten),
       plot_order: C.base_abundance_order.concat(['NS']),
       site_names: JSON.stringify(C.abundance_names),

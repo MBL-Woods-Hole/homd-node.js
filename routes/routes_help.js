@@ -16,6 +16,7 @@ router.get('/index', function index(req, res) {
         pgname: '', // for AboutThisPage
         config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV, rootPath: CFG.PROCESS_DIR}),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
 
     })
   
@@ -35,7 +36,7 @@ router.get('/help-page', function help_page(req, res) {
           date_sort: date_sort,
           config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV, rootPath: CFG.PROCESS_DIR}),
           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-      
+          user: JSON.stringify(req.user || {}),
       })
     }
   
@@ -80,6 +81,7 @@ router.get('/search', function search(req, res) {
         pgname: '', // for AboutThisPage
         config:  JSON.stringify({hostname:CFG.HOSTNAME, env:CFG.ENV, rootPath: CFG.PROCESS_DIR}),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
     })
 })
 router.post('/help_search_result', function help_search_result(req, res) {
@@ -114,6 +116,7 @@ router.post('/help_search_result', function help_search_result(req, res) {
         pgname: '', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
         search_text: searchText,
         help_pages: JSON.stringify(helpLst),
       })

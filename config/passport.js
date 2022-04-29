@@ -1,4 +1,4 @@
-var queries       = require('../routes/queries');
+var queries       = require('../routes/queries_admin');
 var LocalStrategy = require('passport-local').Strategy;
 var path          = require('path');
 var User          = require(app_root + '/models/user_model');
@@ -61,7 +61,7 @@ module.exports = function passport_setup(passport, db) {
     }));
 
   // =========================================================================
-  // LOCAL RESET =============================================================
+  // LOCAL RESET password =============================================================
   // =========================================================================
   // we are using named strategies since we have one for login and one for signup
   // by default, if there was no name, it would just be called 'local'
@@ -135,7 +135,7 @@ module.exports = function passport_setup(passport, db) {
 function login_auth_user(req, username, password, done, db) {
 
   var qSelectUser = queries.get_user_by_name(username, password);
-
+  console.log('qSelectUser',qSelectUser)
   db.query(qSelectUser, function q_get_user_by_name1(err, rows) {
     if (err)
     //return done(err);

@@ -7,7 +7,7 @@
    border:1px solid brown;
 }
 </style>
-</style>
+<% u = JSON.parse(user) %>
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -17,13 +17,24 @@
     
     
     <div class='page-content' >
-
-       <div class='title'>Reset You Password</div>
-    <%- include('../../partials/flash'); %>    
-        old password
-    <br>new password
+              
+       <div class='title'>User Profile (ID: <%- u.user_id %>)</div>
+       <%- include('../../partials/flash'); %>    
+    <div class='form_div'>
+    <table border='1'>
+    <% for(i in u){ %>
+       <% if(["encrypted_password","current_sign_in_at","active"].indexOf(i) === -1){ %>
+       <tr><td><%= i %></td><td><%= u[i] %></td></tr>
+    <% } %> <% } %> 
+    </table>
+    <br>
     
-
+    <ul>
+    <li><a href='/user/reset_password'>update password</a>
+    <li><a href=''>change name</a> update
+    <li><a href=''>change institution</a> update
+    <li><a href=''>change email</a>  update
+    </ul>
     </div>
   
     </div> <!-- end: page-content -->
