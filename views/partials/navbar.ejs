@@ -1,6 +1,8 @@
 <% var version_info = JSON.parse(ver_info) %> 
 <% var cfg = JSON.parse(config) %> 
-<% var user = JSON.parse(user) %> 
+<% if(user) { %>
+<%     var user = JSON.parse(user) %> 
+<% } %>
 <style>
   
 </style>
