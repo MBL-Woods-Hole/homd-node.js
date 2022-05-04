@@ -148,7 +148,7 @@ app.use((error, req, res, next) => {
 })
 // LAST Middleware:
 app.use(function(req, res, next){
-  console.log('in 404')
+  console.log('in 404; Requested: ',req.url)
   res.status(404)
   // respond with html page
   let u = req.user || {}
