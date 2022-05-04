@@ -12,6 +12,9 @@
     border:1px solid brown;
     padding:2px 5px;
 }
+.form_div ul li{
+    padding:5px 0;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -23,20 +26,23 @@
     
     <div class='page-content' >
     <div class='title'>Register for an Account</div>
-    <%- include('../../partials/flash'); %>    
-    <div id='form_div' class='form_div table' >All fields are required -- <a class='button' href='new_user'>Clear Form</a>
-    <br><br>
+    <%- include('../../partials/flash'); %>
+    <%- include('../../partials/under_construction'); %>
+    <%- include('../../partials/account_info'); %> 
+     <br><br>
     <form id='newuser_form' name='newuser_form' method='POST' action='/admin/signup' >
+    <div id='form_div' class='form_div table' >All fields are required -- <input type='button' href='#' onclick="clear_register_form(this.form)" value='Clear Form'>
+   <br><br>
       <ul>
-      <li> <input id='username'       name='username'       type="text"   value=''  \> Username <span class='tiny_font'>(alphanumeric only. no spaces.)</span>
-
+      <li> <input id='username'  maxlength='20'        name='username'   type="text"   value=''  \> Username 
+           <span class='tiny_font'>(alphanumeric only; no spaces; 20 chars max)</span>
       </li>
-      <li> <input id='password'         name='password'         type="password" value='' \> Password <span class='tiny_font'>(between 6 and 12 characters.)</span></li>
-      <li> <input id='password_confirm' name='password_confirm' type="password" value='' \> Confirm Password</li>
-      <li> <input id='userfirstname'    name='firstname'  type="text"  value=''   \> First Name</li>
-      <li> <input id='userlastname'     name='lastname'   type="text"  value=''   \> Last Name</li>
-      <li> <input id='useremail'        name='email'      type="text"  value=''   \> Email <span class='tiny_font'>(must be correct email format)</span></li>
-      <li> <input id='userinstitution'  name='institution'type="text"  value=''   \> Institution</li>
+      <li> <input id='password'  maxlength='12'        name='password'   type="password" value='' \> Password <span class='tiny_font'>(between 6 and 12 characters.)</span></li>
+      <li> <input id='password_confirm' maxlength='12' name='password_confirm' type="password" value='' \> Confirm Password</li>
+      <li> <input id='userfirstname' maxlength='30'    name='firstname'  type="text"  value=''   \> First Name (30 chars max)</li>
+      <li> <input id='userlastname'  maxlength='30'    name='lastname'   type="text"  value=''   \> Last Name (30 chars max)</li>
+      <li> <input id='useremail'   maxlength='50'      name='email'      type="text"  value=''   \> Email <span class='tiny_font'>(must be correct email format; 50 chars max)</span></li>
+      <li> <input id='userinstitution' maxlength='50'  name='institution'type="text"  value=''   \> Institution (50 chars max)</li>
       <br>
       </ul>
       <input    type="submit" value='Enter' \>
@@ -57,6 +63,15 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
+  function clear_register_form(f){
+      f.username.value = ''
+      f.password.value = ''
+      f.password_confirm.value = ''
+      f.firstname.value = ''
+      f.lastname.value = ''
+      f.email.value = ''
+      f.institution.value = ''
+  }
 </script>
 
 

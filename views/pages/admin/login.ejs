@@ -5,7 +5,7 @@
 }
 
 .form_div form  { display: table;      }
-.form_div p     { display: table-row; margin:2px; }
+.form_div p     { display: table-row; margin: 2px; line-height: 5px;}
 .form_div label { display: table-cell; }
 .form_div input { 
     display: table-cell; 
@@ -24,8 +24,12 @@
     <div class='page-content' >
               
        <div class='title'>Login</div>
-       <%- include('../../partials/flash'); %> 
-       <div id='form_div' class='form_div table' >All fields are required -- <a class='button' href='' onclick='clear_form(this.form)'>Clear Form</a>
+       <%- include('../../partials/flash'); %>
+       <%- include('../../partials/under_construction'); %>
+       <%- include('../../partials/account_info'); %>
+       
+       
+       <div id='form_div' class='form_div table' >All fields are required
        <br>
        <form action="/admin/login" method="POST">   
        
@@ -33,6 +37,7 @@
               <label>Username:</label>
               <input type="text" id='username' name="username"/>
           </p>
+          
           <p>
               <label>Password:</label>
               <input type="password" id='password' name="password"/>
@@ -52,7 +57,7 @@
   
 
 
-      <p>Account help? email: <a href="mailto:admin@homd.org">admin@homd.org</a> (Including forgotten passwords.)</p>
+      <p>Account help? email: avoorhis@mbl.edu (Including forgotten passwords.)</p>
       
 
     </div>

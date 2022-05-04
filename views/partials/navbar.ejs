@@ -96,7 +96,7 @@
    
    <li><span class='main-topic' >Resources</span>
        <ul>
-      <li><a href='http://v2.homd.org/' target='_blank'>Old HOMD Site</a></li>
+      <li><a href='http://v2.homd.org/' target='_blank'>Old HOMD Site (v2)</a></li>
       <li><a href="/poster">Posters</a></li>
       <li><a href="">Oralgen <font color="blue">&#187;</font></a>
          <ul> 
@@ -104,24 +104,13 @@
          <li><a href="/oralgen">Oralgen Genome Info</a></li>
          </ul>
       </li>
-      <% if(cfg.env === 'development'){ %>
-      <li><a class='main-topic' href="">Account <font color="blue">&#187;</font></a>
-      <ul>
-       <li><a href='/admin/login' >Login</a></li>
-       <li><a href='/admin/signup' >Signup</a></li>
-       <li><a href='/admin/profile' >Profile</a></li>
-       <li><a href='/admin/logout' >Logout</a></li>
-       <% if(user){ %>
-          <li><a href='/admin/admin' >Admin</a></li>
-       <% } %>
-      </ul>
-      </li>
-      <% } %>
+      
       
     </ul>
    </li>
-<li id='first'><a class='main-topic' href="http://v2.homd.org/" title="HOMD (old version)">HOMD-V2</a></li> 
-  <li><span class='main-topic' >Help</span>
+  <li id='first'><a class='main-topic' href="http://v2.homd.org/" title="HOMD (old version)">HOMD-v2</a></li> 
+  <!-- HELP -->
+  <li><span class='main-topic'><i class="fa fa-question" aria-hidden="true"></i></span>
     <ul>
       <li><a href="/help/index" >HOMD Help Content</a></li>
      <!--  <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home-obsolete</a></li> -->
@@ -138,35 +127,48 @@
       
       <li><a href='/help/index'>Search Help</a></li>
     </ul>
-    
-    
-    
   </li>   
   
+  <!-- Account -->
+  <li><span class='main-topic' ><i class="fa fa-cog" aria-hidden="true"></i></span>
+     <ul>
+       <li><a href='/admin/login' >Login</a></li>
+       <li><a href='/admin/signup' >Register</a></li>
+       <li><a href='/admin/profile' >Profile</a></li>
+       <li><a href='/admin/logout' >Logout</a></li>
+       <% if(user){ %>
+          <li><a href='/admin/admin' >Admin</a></li>
+       <% } %>
+      </ul>
+  </li>
   
-    
+  
   <% if(pgname && ["home","lost"].indexOf(pgname) == -1){ %>
-      <li ><a href='/help/help-page?pagecode=<%= pgname %>'><small  id='page-help'>[Page-Help]</small></a></li>
+      <li><a id='page-help-li' href='/help/help-page?pagecode=<%= pgname %>' style='font-size:12px;color:blue;'>[Page-Help]</a></li>
   <% } %>
   
-   
-   <span id='homd-search' >
+  <span id='homd-search' >
     <input type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
     <input type="image" src='/images/search2.png'  id="search_button" height='15' onclick='search()' />
-   </span>
+  </span>
     
 </ul>
 </div>
-<% if(cfg.env === 'development'){ %>
-<span style='float:right;padding-right:15px;'><small>
+
+
+<span style='padding-right:15px;font-size:12px;'>
 <%   if(user && user.username){ %>
-        <font color='green'>Logged in as <%= user.username %> (security-level: <%= user.security_level %>)</font>
+        <% if(user.security_level === 1){ %>
+            <a href='/admin/profile'><font color='green'>Logged in as <%= user.username %> (security-level: Administrator)</font></a>
+        <% }else{ %>
+            <a href='/admin/profile'><font color='green'>Logged in as <%= user.username %> (security-level: <%= user.security_level %>)</font></a>
+        <% } %>
+        
 <%   }else{ %>
-        <font color='red'>Not Logged In</font>
+        <a href='/admin/login'><font color='red'>Not Logged In</font></a>
 <%   } %>
-</small>
 </span>
-<% } %>
+
 
 <div id='version-info' >
       16S rRNA RefSeq: <a href="/help/help-page?pagecode=refseq/refseq_version">V<%= version_info.rna_ver %></a>

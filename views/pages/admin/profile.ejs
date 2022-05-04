@@ -15,11 +15,14 @@
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     
-    
     <div class='page-content' >
               
        <div class='title'>User Profile (ID: <%- u.user_id %>)</div>
-       <%- include('../../partials/flash'); %>    
+       <%- include('../../partials/flash'); %>
+       <%- include('../../partials/under_construction'); %>
+       <%- include('../../partials/account_info'); %>
+       
+       
     <div class='form_div'>
     <table border='1'>
     <% for(i in u){ %>

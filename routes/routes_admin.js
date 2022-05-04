@@ -25,7 +25,7 @@ router.get('/login', (req, res) => {
             req.flash('success', "You are already logged in as '"+req.user.username+"'");
             res.render('pages/admin/profile', {
 				title: 'HOMD :: profile',
-				pgname: 'acct testing', // for AbountThisPage 
+				pgname: '', // for AbountThisPage 
 				config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
 				ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 				user: JSON.stringify(req.user || {})
@@ -54,7 +54,7 @@ router.post('/login',  passport.authenticate('local-login', {
       '/metadata/metadata_files',
       '/metadata/metadata_upload'
     ];
-    var url = req.body.return_to_url || '/';
+    var url = req.body.return_to_url || '/admin/profile';
     if (redirect_to_home.indexOf(req.body.return_to_url) !== -1) {
       url = '/';
     }
@@ -98,7 +98,7 @@ router.post('/login',  passport.authenticate('local-login', {
                 if(err) {console.log(err);} // ug+rwx
                 else{
                     console.log('Setting USER_FILES_BASE permissions to 0o777');
-                    console.log('=== url ===: req.body.return_to_url');
+                    console.log('=== url ===:',url);
                     console.log(url);
                     
                     //console.log('USER',req.user || {})
@@ -130,7 +130,7 @@ router.get('/signup', (req, res) => {
             req.flash('success', "You are already logged in as '"+req.user.username+"'");
             res.render('pages/admin/profile', {
 				title: 'HOMD :: profile',
-				pgname: 'acct testing', // for AbountThisPage 
+				pgname: '', // for AbountThisPage 
 				config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
 				ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 				user: JSON.stringify(req.user || {})
@@ -191,7 +191,7 @@ router.get('/profile', helpers.isLoggedIn, (req, res) => {
     console.log('PROFILE')    
     res.render('pages/admin/profile', {
           title: 'HOMD :: profile',
-         pgname: 'acct testing', // for AbountThisPage 
+         pgname: '', // for AbountThisPage 
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
@@ -216,7 +216,7 @@ router.get('/change_password', helpers.isLoggedIn, (req, res) => {
     res.render('pages/admin/change_password', {
               
               title: 'HOMD :: testing',
-         pgname: 'acct testing', // for AbountThisPage 
+         pgname: '', // for AbountThisPage 
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
@@ -267,7 +267,7 @@ router.get('/admin', [helpers.isLoggedIn, helpers.isAdmin], (req, res) => {
     console.log('in admin')
     res.render('pages/admin/admin', {
          title: 'HOMD :: ADMIN',
-         pgname: 'admin', // for AbountThisPage
+         pgname: '', // for AbountThisPage
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
@@ -328,7 +328,7 @@ router.get('/reset_password', helpers.isLoggedIn, (req, res) => {
     console.log('IN GET::reset_password')
     res.render('pages/user/reset_password', {
           title: 'HOMD :: testing',
-         pgname: 'acct testing', // for AbountThisPage 
+         pgname: '', // for AbountThisPage 
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),

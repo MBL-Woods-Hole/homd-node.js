@@ -4,7 +4,11 @@ const constants = {};
 constants.rRNA_refseq_version    = '15.22'
 constants.genomic_refseq_version = '9.15'
 constants.use_cluster = false
-
+constants.user_security_levels = {
+    '1': 'Administrator',
+    '50': 'Regular User',
+    '99': 'Guest User'
+}
 //constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
 constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
 constants.phyla = [ 'Actinobacteria',

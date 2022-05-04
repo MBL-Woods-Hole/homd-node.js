@@ -41,7 +41,7 @@ module.exports.isLoggedIn = (req, res, next) => {
   console.log("Oops! NOT isLoggedIn.req.isAuthenticated");
   // save the url in the session
   req.session.returnTo = req.originalUrl;
-  req.flash('fail', 'Please login or <a href="/admin/signup">register</a> before continuing.');
+  req.flash('fail', 'Please <a href="/admin/login">login</a> or <a href="/admin/signup">register</a> before continuing.');
   res.redirect('/admin/login');
   // return;
 };
@@ -562,8 +562,9 @@ module.exports.getAllDirFiles = function getAllDirFiles(dirPath, arrayOfFiles) {
 //
 module.exports.makeid = function makeid(length) {
     // Used for blast.id and spamguard
+    // REMOVE 1/I and 0/o confusing
     var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var characters       = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz23456789';
     var charactersLength = characters.length;
     for ( var i = 0; i < length; i++ ) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -993,8 +994,8 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
         //qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
         
           html += "<table id='newSortTable' class='sortable'><tr>"
-          html += '<th>Query-id</th><th>Hit-id</th><th>% Identity</th><th>% Cov</th><th>FPI<br>calc</th><th>FPI<br>mult</th><th>Alignment Length</th><th>Mis-<br>matches</th><th>Gaps</th>'
-          html += '<th>q-start</th><th>q-end</th><th>s-start</th><th>s-end</th><th>E-value</th><th>Bit Score</th><th>Query Length</th><th>HOMD Clone Name/Hit Title</th>'
+          html += "<th>Query-id</th><th>Hit-id</th><th>% Identity</th><th>% Cov</th><th title='Full Percent Identity:\n(% ident) x (coverage)'>FPI</th><th>Alignment Length</th><th>Mis-<br>matches</th><th>Gaps</th>"
+          html += "<th>q-start</th><th>q-end</th><th>s-start</th><th>s-end</th><th>E-value</th><th>Bit Score</th><th>Query Length</th><th>HOMD Clone Name/Hit Title</th>"
         }
         html += '</tr>'
     }
@@ -1023,8 +1024,8 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
         let hmt = title_items[2].trim()
         let otid = hmt.split('-')[1]
         let hitid = title_items[0]
-        let ALIGNMENT_FRAC = parseFloat(parseInt(qend) - parseInt(qstart) + 1.0) / parseFloat(row_items[indexes.qlen])
-        let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
+        //let ALIGNMENT_FRAC = parseFloat(parseInt(qend) - parseInt(qstart) + 1.0) / parseFloat(row_items[indexes.qlen])
+        //let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
         let full_pct_id_mult = parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100
         if(download){
             
@@ -1047,7 +1048,7 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
 				alength: row_items[indexes.length],
 				identity: row_items[indexes.pct_identity],
 				coverage: row_items[indexes.qcov],
-				fpi: full_pct_id_mult.toFixed(5).toString()
+				fpi: full_pct_id_mult.toFixed(2).toString()
             })
         
         }else{
@@ -1063,10 +1064,10 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
 			   html+="<td><a class='button' href='#' onclick=\"create_alignment_client('"+qid+"','"+stitle+"','"+qseq+"','"+sseq+"','"+qstart+"','"+qend+"','"+sstart+"','"+send+"','download')\">download</a></td>"
 			}else{
 				html+="<td><a href='/taxa/tax_description?otid="+otid+"'>"+row_items[indexes.hit_id]+'</a></td>'
-				html+="<td class='center'>"+row_items[indexes.pct_identity]+'</td>'
+				html+="<td class='center'>"+(parseFloat(row_items[indexes.pct_identity])).toFixed(2).toString()+'</td>'
 				html+="<td class='center'>"+row_items[indexes.qcov]+'</td>'
-				html+='<td>'+full_pct_id_calc.toFixed(5).toString()+'</td>'
-				html+="<td title='(% ident) x (coverage)'>"+full_pct_id_mult.toFixed(5).toString()+'</td>'
+				//html+='<td>'+full_pct_id_calc.toFixed(5).toString()+'</td>'
+				html+="<td title='Full Percent Identity:\n(% ident) x (coverage)'>"+full_pct_id_mult.toFixed(2).toString()+'</td>'
 				html+="<td class='center'>"+row_items[indexes.length]+'</td>'
 				html+="<td class='center'>"+row_items[indexes.mismatches]+'</td>'
 				html+="<td class='center'>"+row_items[indexes.gaps]+'</td>'
@@ -1078,8 +1079,6 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
 				html+="<td class='center'>"+row_items[indexes.bit_score]+'</td>'
 				html+="<td class='center'>"+row_items[indexes.qlen]+'</td>'
 				html+='<td>'+stitle+'</td>'
-			
-			
 			}
 			html+='</tr>'
         }

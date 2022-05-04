@@ -179,6 +179,9 @@ hr{
  /* Navbar container */
 /* The navigation menu */
 /* BGcolor:  #99cfe0 */
+.main-topic{
+    height:33px;
+}
 #nav-div{
   width:100%;
   background-color:#8D9EAA; 
@@ -187,7 +190,7 @@ hr{
 
 #nav {
    /* text-align: left; */
-   height:20px;  /* 42px; */
+   height:15px;  /* 42px; */
    position:relative;
    left: 0px;
    height:33px;
@@ -299,13 +302,36 @@ hr{
   color:#ffba3b;
   background-color:#033366; 
 }
-#page-help{
-   font-size:small;
-   color:blue;
+
+
+
+#page-help-li{
+   font-size:10px;
+   
+   padding:0;
+   
 }
-#page-help:hover{
-   color:white;
+#page-help-li:hover{
+   color:orange;
+   
 }
+#gear-li{
+  border:1px solid red;
+  padding:-10px;
+}
+#gear-li a{
+  
+  
+}
+#gear-li a img{
+  padding:0px;
+  height:15px;
+}
+gear-a{
+
+}
+
+
 /*  nav search: */
 #homd-search {
   display: flex;
