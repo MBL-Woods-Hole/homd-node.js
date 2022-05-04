@@ -133,14 +133,14 @@ app.use((error, req, res, next) => {
      node_log.debug(error.toString())
   }
   
-  let user = req.user || {}
+  let u = req.user || {}
   res.render('pages/lost', { 
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
       config : JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-      user: JSON.stringify(req.user  || {}),
+      user: JSON.stringify(u),
       msg: 'We\'re Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:',
       trace: error.toString()
   });
@@ -151,6 +151,7 @@ app.use(function(req, res, next){
   console.log('in 404')
   res.status(404)
   // respond with html page
+  let u = req.user || {}
   if (req.accepts('html')) {
     res.render('pages/lost', { 
       url: req.url,
@@ -158,7 +159,7 @@ app.use(function(req, res, next){
       title:'HOMD Lost',
       config :  JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-      user:     JSON.stringify(req.user) || {},
+      user:     JSON.stringify(u),
       msg: 'Sorry -- We can\'t find the page you requested.',
       trace: JSON.stringify(req.url)
     });
