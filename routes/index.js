@@ -19,7 +19,7 @@ router.get('/', function index(req, res) {
   
   console.log('Session ID:',req.session.id)
   console.log('CFG.ENV :',CFG.ENV )
-  res.render('pages/home_tc', {
+  res.render('pages/home', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'home', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),

@@ -4,7 +4,207 @@
 <%     var user = JSON.parse(user) %> 
 <% } %>
 <style>
+ /* Navbar container */
+/* The navigation menu */
+/* BGcolor:  #99cfe0 */
+.main-topic{
+    padding:0 0 10px 0;
+}
+#nav-div{
+  width:100%;
+  background-color:#8D9EAA; 
+  height:33px;
+}
+
+#nav {
+   /* text-align: left; */
+   height:15px;  /* 42px; */
+   position:relative;
+   left: 0px;
+   height:33px;
+   
+}
+#nav a {
+     font-family: Candara,  Sans-Serif; 
+     font-size: 15px;
+  }
+#nav ul {
+  margin-top:0px;
+  padding:0px 10px;
+  /* width:80%; */
+  background-color:#8D9EAA; 
+  left:0px;
+  border:1px solid black;
   
+    display:none;
+    position:absolute;
+    border-bottom-right-radius:10px;
+    border-bottom-left-radius:10px;
+   
+}
+#nav ul ul{
+  position:absolute;
+  left:100%;
+  top:0px;
+  border-top-right-radius:10px;
+  border-top-left-radius:10px;
+}
+
+
+#nav li{
+  display:block;
+  float:left; 
+  padding: 0px 0px 0px 0px;
+}
+
+#nav a, #nav div, #nav span{
+  display:block;
+  text-decoration:none;
+  padding:10px 10px 12px 10px;
+  line-height: 10px;
+  /* font-weight: bold; */
+  
+  color: white;
+  background-color: #8D9EAA;
+  
+  
+}
+
+
+#nav div{
+  cursor: default;
+}
+
+#nav ul li {
+  float:none;
+  text-align:left;
+  white-space:nowrap;
+  padding:2px 0;
+  margin:2px 0; 
+}
+#nav ul li a{
+  padding:8px;
+}
+#nav li:hover{
+  position:relative;
+  
+}
+
+#nav li a:hover, #nav li div:hover, #nav li span:hover{
+  position:relative;
+  background-color: #033366;
+  text-decoration:none;
+  
+  
+}
+#nav span:hover{
+  cursor: s-resize;
+}
+#first a:hover{
+  /* kludge */
+  padding-bottom:12px;
+}
+#nav li ul li a{
+  position:relative;
+  background-color:#8D9EAA;
+  
+  color: white;
+  text-decoration:none;
+  
+  top: 1px; 
+}
+
+
+#nav li ul li:hover>a {
+  display: block;
+  background-color:#033366;
+  color: #ffba3b; 
+  
+}
+
+#nav li ul li ul a{
+  position:relative;
+  background-color:#8D9EAA;
+  color: white;
+  text-decoration:none;
+  top: 1px; 
+}
+#nav li ul li ul a:hover{
+  color:#ffba3b;
+  background-color:#033366; 
+}
+
+#page-help-li a{
+   font-size:12px;
+   color:blue;
+}
+
+#page-help-li a:hover{
+   color:orange;
+}
+
+.main-topic-right{
+  
+}
+ 
+/*  nav search: */
+#homd-menu-right {
+  display: flex;
+  flex-wrap: wrap;
+  /* width: 220px; */
+  
+  position: absolute;
+  right: 5px;
+  height:33px;
+}
+#homd-menu-right li{
+   padding:0px 5px;
+  
+  
+}
+#homd-menu-right li ul{
+   margin:3px 0; 
+}
+#homd-menu-right img{
+    margin:-3px 0px;
+    padding:0 0 5px 0;
+    height:25px;
+}
+
+#homd-menu-right input[type=text] {
+   width:150px;
+   height: 20px;
+   border:1px solid grey;
+   font-size:15px;
+   border-radius:3px;
+   padding:0 0 5px 0;
+   margin:-4px 0 5px 0;
+}
+#homd-menu-right input[type=image] {
+  background: #8D9EAA;
+  
+  margin:-3px 0px;
+  padding:0 0 5px 0;
+}
+
+/* versioning */
+#version-info{
+  position:relative;
+  float:right;
+  top:-55px;
+  font-size:11px;
+  padding:3px 5px;
+  color:white;
+}
+#version-info a{
+  padding:0px;
+  margin:0px;
+  color: lightgrey;
+}
+#login-text{
+  padding-right:15px;
+  font-size:12px;
+}
 </style>
 <div id='nav-div' >
 <ul id="nav" style='z-index:1'>
@@ -111,54 +311,60 @@
     </ul>
    </li>
   <li id='first'><a class='main-topic' href="http://v2.homd.org/" title="HOMD (old version)">HOMD-v2</a></li> 
-  <!-- HELP -->
-  <li><span class='main-topic'><i class="fa fa-question" aria-hidden="true"></i></span>
-    <ul>
-      <li><a href="/help/index" >HOMD Help Content</a></li>
-     <!--  <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home-obsolete</a></li> -->
-      <!-- <li><a href="https://wiki.homd.info/help/user_guide" target='_blank'>User's Guide (in a new window)</a></li> -->
-      <li><a href='/help/help-page?pagecode=cite'>How to Cite HOMD</a></li>
-      <li><a href='/help/help-page?pagecode=description'>Project Description</a></li>
-      <li><a href='/help/help-page?pagecode=strains'>Strains and DNA Availability</a></li>
-      <li><a href='/help/help-page?pagecode=team'>People</a></li>
-      <li><a href='/help/help-page?pagecode=contact'>Contact Us</a></li>
-      <!-- <li><a href='/help/mailing'>Mailing List</a></li> -->
-      
-      <!-- <li><a href="/forum" target='_blank' rel="noopener noreferrer">Forum</a></li> -->
-      <li><a href='/help/help-page?pagecode=announcement'>Announcements</a></li>
-      
-      <li><a href='/help/index'>Search Help</a></li>
-    </ul>
-  </li>   
   
-  <!-- Account -->
-  <li><span class='main-topic' ><i class="fa fa-cog" aria-hidden="true"></i></span>
-     <ul>
-       <li><a href='/admin/login' >Login</a></li>
-       <li><a href='/admin/signup' >Register</a></li>
-       <li><a href='/admin/profile' >Profile</a></li>
-       <li><a href='/admin/logout' >Logout</a></li>
-       <% if(user){ %>
-          <li><a href='/admin/admin' >Admin</a></li>
-       <% } %>
-      </ul>
-  </li>
-  
-  
+
   <% if(pgname && ["home","lost"].indexOf(pgname) == -1){ %>
-      <li><a id='page-help-li' href='/help/help-page?pagecode=<%= pgname %>' style='font-size:12px;color:blue;'>[Page-Help]</a></li>
+      <li id='page-help-li'><a  href='/help/help-page?pagecode=<%= pgname %>' >[Page-Help]</a></li>
   <% } %>
   
-  <span id='homd-search' >
-    <input type="text" placeholder="Search.."  id='search_text' value='' maxlength='18' size='20'  />
-    <input type="image" src='/images/search2.png'  id="search_button" height='15' onclick='search()' />
-  </span>
+  
+    <span id='homd-menu-right' >
+    
+		<!-- HELP -->
+		<li><img src='/images/question.png'  ></i>
+		  <ul>
+		  <li><a href="/help/index" >HOMD Help Content</a></li>
+		 <!--  <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home-obsolete</a></li> -->
+		  <!-- <li><a href="https://wiki.homd.info/help/user_guide" target='_blank'>User's Guide (in a new window)</a></li> -->
+		  <li><a href='/help/help-page?pagecode=cite'>How to Cite HOMD</a></li>
+		  <li><a href='/help/help-page?pagecode=description'>Project Description</a></li>
+		  <li><a href='/help/help-page?pagecode=strains'>Strains and DNA Availability</a></li>
+		  <li><a href='/help/help-page?pagecode=team'>People</a></li>
+		  <li><a href='/help/help-page?pagecode=contact'>Contact Us</a></li>
+		  <!-- <li><a href='/help/mailing'>Mailing List</a></li> -->
+		  <!-- <li><a href="/forum" target='_blank' rel="noopener noreferrer">Forum</a></li> -->
+		  <li><a href='/help/help-page?pagecode=announcement'>Announcements</a></li>
+		  <li><a href='/help/index'>Search Help</a></li>
+		  </ul>
+		</li>
+		<!-- Account -->
+		
+		<li><img src='/images/gear.png' ></i>
+		  <ul>
+		   <%   if(user && user.username){ %>
+			   <li><a href='/admin/profile' >User Profile</a></li>
+			   <li><a href='/admin/logout' >Logout</a></li>
+			   <% if(user.security_level === 1){ %>
+				  <li><a href='/admin/admin' >Admin</a></li>
+			   <% } %>
+		   <%   }else{ %>
+			   <li><a href='/admin/login' >Login</a></li>
+			   <li><a href='/admin/signup' >Register</a></li>
+			   <li><a href='/admin/login'><font color='black'>Not Logged In</font></a></li>
+		   <%   } %>
+		  </ul>
+		</li>
+
+		<li><input type="text" placeholder="Search Site.."  id='search_text' value='' maxlength='18' size='20' /></li>
+		<li><input type="image" src='/images/search2.png'  id="search_button" height='20' onclick='search()' /></li>
+  	</span>
+  
     
 </ul>
 </div>
 
 
-<span style='padding-right:15px;font-size:12px;'>
+<span id='login-text'>
 <%   if(user && user.username){ %>
         <% if(user.security_level === 1){ %>
             <a href='/admin/profile'><font color='green'>Logged in as <%= user.username %> (security-level: Administrator)</font></a>
@@ -167,7 +373,7 @@
         <% } %>
         
 <%   }else{ %>
-        <a href='/admin/login'><font color='red'>Not Logged In</font></a>
+        <!-- <a href='/admin/login'><font color='red'>Not Logged In</font></a> -->
 <%   } %>
 </span>
 
