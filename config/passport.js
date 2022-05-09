@@ -39,8 +39,7 @@ module.exports = function passport_setup(passport, db) {
       passReqToCallback: true // allows us to pass back the entire request to the callback
     },
     function local_signup(req, username, password, done) {
-      console.log('passpt req.body',req.body);
-      console.log(done);
+      //console.log('passpt req.body',req.body);
       return signup_user(req, username, password, done, db);
     }));
 
@@ -57,6 +56,7 @@ module.exports = function passport_setup(passport, db) {
       passReqToCallback: true // allows us to pass back the entire request to the callback
     },
     function local_login(req, username, password, done) { // callback with username and password from our form
+      
       return login_auth_user(req, username, password, done, db);
     }));
 
@@ -133,25 +133,26 @@ module.exports = function passport_setup(passport, db) {
 // }
 
 function login_auth_user(req, username, password, done, db) {
-
+  console.log('in login_auth_user')
   var qSelectUser = queries.get_user_by_name(username, password);
   console.log('qSelectUser',qSelectUser)
   db.query(qSelectUser, function q_get_user_by_name1(err, rows) {
-    if (err)
-    //return done(err);
-    {
-      return done(null, false, {message: err});
+    if (err){
+       console.log('err returning0')
+       return done(null, false, req.flash('fail', err));
     }
     if (!rows.length) {
       // req.flash is the way to set flashdata using connect-flash
       {
-        return done(null, false, { message: 'Incorrect username.' });
+        console.log('err returning1')
+        return done(null, false, req.flash('fail', "The username: '"+username+"' was not found in the database"));
       }
     }
     // If the account is not active
     if (rows[0].active !== 1) {
-      {
-        return done(null, false, { message: 'That account is inactive -- send email to HOMD to request re-activation.'});
+      { 
+        console.log('err returning2')
+        return done(null, false, req.flash('fail', 'That account is inactive -- send email to HOMD to request re-activation.'));
       }
     }
 
@@ -165,7 +166,7 @@ function login_auth_user(req, username, password, done, db) {
       //console.log(q);
       db.query(qResetUserSignin, function q_reset_user_signin(err, rows) {
         if (err) {
-          console.log(err);
+          return done(null, false, req.flash('fail', err));
         }
       });
       // helpers
@@ -181,12 +182,10 @@ function login_auth_user(req, username, password, done, db) {
 //       } catch (e) {
 //         console.log(e)
 //       }
-    //  console.log('login_auth_user-2');
       return done(null, rows[0], req.flash('success', 'Login Successful'));
     }
 
     // if the user is found but the password is wrong:
-    // create the loginMessage and save it to session as flashdata
     return done(null, false, req.flash('fail', 'Wrong password -- try again.'));
     
   });
@@ -201,14 +200,16 @@ function signup_user(req, username, password, done, db) {
   // username -> no spaces or 'funny' chars
   // find a user whose email is the same as the forms email
   // we are checking to see if the user trying to login already exists
-  console.log(req.body)
+  console.log('in signup_user')
+  //console.log(req.body)
   var this_user_obj    = new User();
   var new_user         = this_user_obj.newUser(req.body, username, password);
   var confirm_password = req.body.password_confirm;
   var vaildate_res     = this_user_obj.validate_new_user(req, new_user, confirm_password);
 
-  if (vaildate_res[0] === 1) {
-    return done(null, false, vaildate_res[1]);
+  if (vaildate_res[0] === 1) {  // error
+    console.log('err',req.body.username)
+    return done(null, false, '');  // flask message(s) are set in User
   }
   console.log('Validated!')
   db.query(queries.get_user_by_name(new_user.username, new_user.password), 

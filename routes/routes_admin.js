@@ -1,17 +1,19 @@
+'use strict'
 const express = require('express');
 var router = express.Router();
 const passport = require('passport');
+var queries    = require('../routes/queries_admin');
 const helpers = require(app_root +'/routes/helpers/helpers');
+const { body, validationResult } = require('express-validator');
 const fs = require('fs-extra');
 const async = require('async');
-//const validator = require('validator');
-//const { check, validationResult } = require('express-validator');
+
 const path = require('path');
-//const nodemailer = require('nodemailer');
 const C     = require(app_root + '/public/constants');
 const CFG  = require(app_root + '/config/config');
+const nodemailer = require("nodemailer");
 
-new_user = {}
+let new_user = {}
 /* GET User List (index) page. */
 
 
@@ -19,41 +21,42 @@ new_user = {}
 // LOGIN ===============================
 // =====================================
 // show the login form
-router.get('/login', (req, res) => {
+router.get('/login', function login(req, res) {
     console.log('in login')
     if(req.user){
             req.flash('success', "You are already logged in as '"+req.user.username+"'");
-            res.render('pages/admin/profile', {
-				title: 'HOMD :: profile',
-				pgname: '', // for AbountThisPage 
-				config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-				ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-				user: JSON.stringify(req.user || {})
-			});
+            res.render('pages/user/profile', {
+                title: 'HOMD :: profile',
+                pgname: '', // for AbountThisPage 
+                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                user: JSON.stringify(req.user || {})
+            });
     }else{
-		res.render('pages/admin/login', { 
-			title   : 'HOMD:login',
-			pgname: '',
-			config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-			ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-			user: JSON.stringify(req.user || {}),
+        res.render('pages/user/login', { 
+            title   : 'HOMD:login',
+            pgname: '',
+            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            user: JSON.stringify(req.user || {}),
         });
-   }                    
+   }
 });
 
 
 router.post('/login',  passport.authenticate('local-login', { 
   // successRedirect: '/users/profile',
-  failureRedirect: 'login',   // on fail GET:login (empty form)
+  failureRedirect: '/admin/login',   // on fail GET:login (empty form)
   failureFlash: true }), (req, res) => {  
-    var data_dir = path.join(CFG.USER_FILES_BASE,req.user.username);
-    //str.startsWith('/metadata/file_utils')
-    var redirect_to_home = [
-      '/metadata/metadata_edit_form',
-      '/metadata/metadata_file_list',
-      '/metadata/metadata_files',
-      '/metadata/metadata_upload'
-    ];
+    console.log('login failure')
+     var data_dir = path.join(CFG.USER_FILES_BASE,req.user.username);
+//     //str.startsWith('/metadata/file_utils')
+     var redirect_to_home = [
+//       '/metadata/metadata_edit_form',
+//       '/metadata/metadata_file_list',
+//       '/metadata/metadata_files',
+//       '/metadata/metadata_upload'
+     ];
     var url = req.body.return_to_url || '/admin/profile';
     if (redirect_to_home.indexOf(req.body.return_to_url) !== -1) {
       url = '/';
@@ -101,7 +104,7 @@ router.post('/login',  passport.authenticate('local-login', {
                     console.log('=== url ===:',url);
                     console.log(url);
                     
-                    //console.log('USER',req.user || {})
+                    //console.log('USER',req.user)
                     res.redirect(url);    
                     delete req.session.returnTo;
                     req.body.return_to_url = '';
@@ -121,420 +124,400 @@ router.post('/login',  passport.authenticate('local-login', {
 // SIGNUP ==============================
 // =====================================
 // show the signup form
-router.get('/signup', (req, res) => {
-        new_user = {};
+router.get('/signup', function signup(req, res) {
+        let new_user = {};
         // render the page and pass in any flash data if it exists
         console.log('new_user--signup');
         //console.log(new_user)
         if(req.user){
             req.flash('success', "You are already logged in as '"+req.user.username+"'");
-            res.render('pages/admin/profile', {
-				title: 'HOMD :: profile',
-				pgname: '', // for AbountThisPage 
-				config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-				ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-				user: JSON.stringify(req.user || {})
-			});
+            res.render('pages/user/profile', {
+                title: 'HOMD :: profile',
+                pgname: '', // for AbountThisPage 
+                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                user: JSON.stringify(req.user || {})
+            });
         }else{
-            res.render('pages/admin/signup', { 
+            console.log('reqBODY',req.body)
+            res.render('pages/user/signup', { 
                 title   : 'HOMD::signup',
                 pgname: '',
                 config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                 user: JSON.stringify(req.user || {}),
                 hostname: CFG.hostname,
+                data: JSON.stringify({})
             });
         }
 });
-
-// process the signup form
-router.post('/signup', passport.authenticate('local-signup', {
-                successRedirect : '/admin/profile', // redirect to the secure profile section
-                failureRedirect : '/admin/signup', // redirect back to the signup page if there is an error
-                failureFlash : true ,        // allow flash messages
-                session: false
-}));
 // from https://stackoverflow.com/questions/27056195/nodejs-express-validator-with-passport
-// router.post('/signup',
-// 
-//     check('username', 'Username is required').notEmpty(),
-//     check('password', 'Password is required').notEmpty(),
-//     check('userfirstname', 'First Name is required').notEmpty(),
-//     check('userlastname', 'Last Name is required').exists(),
-//     check('useremail', 'Email is required').notEmpty(),
-//     check('userinstitution', 'Institution is required').notEmpty(),
-//     (req, res) => {
-//         // Finds the validation errors in this request and wraps them in an object with handy functions
-//    const errors = validationResult(req);
-//    if (!errors.isEmpty()) {
-//      return res.status(400).json({ errors: errors.array() });
-//    }else{
-//      console.log(' no errors - hopefully show profile page')
-//    }
-//  },
-//       //console.log('no errors - show profile page')
-//       passport.authenticate('local-signup', {
-//                 successRedirect : '/users/profile', // redirect to the secure profile section
-//                 failureRedirect : 'signup', // redirect back to the signup page if there is an error
-//                 failureFlash : true         // allow flash messages
-//            })
-//    
-//    
-// );
+router.post('/signup',
+  [
+  body('email').isEmail(),
+  body('password').isLength({ min: 6, max: 12 }),
+  body('password_confirm').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Password confirmation does not match password');
+    }
+    // Indicates the success of this synchronous custom validator
+    return true;
+  }),
+  body('username').not().isEmpty().trim().isLength({ min: 5, max: 20 }).escape(),
+  body('firstname').isLength({ min: 1, max: 30 }),
+  body('lastname').isLength({ min: 2, max: 30 }),
+  body('institution').isLength({ max: 50 }),
+  ],
+  function signup(req, res, next) {
+    // Finds the validation errors in this request and wraps them in an object with handy functions
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log('bdy',errors.array()[0])
+      //return res.status(400).json({ errors: errors.array() });
+      for(let i in errors.array()){
+         req.flash('fail','['+errors.array()[i].param+': '+errors.array()[i].msg+': "'+errors.array()[i].value+'"] ')
+      
+      }
+      res.render('pages/user/signup', { 
+                title   : 'HOMD::signup',
+                pgname: '',
+                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                user: JSON.stringify(req.user || {}),
+                hostname: CFG.hostname,
+                data: JSON.stringify(req.body)
+            });
+        return;
+        
+      
+    }
+    console.log('no errors')
+    next();
+    },
+   //  User.create({
+//       username: req.body.username,
+//       password: req.body.password,
+//     }).then(user => res.json(user));
+  
+  passport.authenticate('local-signup', {
+      successRedirect: '/admin/profile',
+      failureRedirect: '/admin/signup',
+      failureFlash : true
+    })
+);
+
 
 // =====================================
 // PROFILE SECTION =====================
 // =====================================
 // we will want this protected so you have to be logged in to visit
 // we will use route middleware to verify this (the isLoggedIn function)
-router.get('/profile', helpers.isLoggedIn, (req, res) => {
+router.get('/profile', helpers.isLoggedIn, function profile(req, res) {
     console.log('PROFILE')    
-    res.render('pages/admin/profile', {
+    
+    res.render('pages/user/profile', {
           title: 'HOMD :: profile',
          pgname: '', // for AbountThisPage 
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-         user: JSON.stringify(req.user || {}),
-    });        
-
+         user: JSON.stringify(req.user),
+         
+    });
 });
 
 // =====================================
 // LOGOUT ==============================
 // =====================================
-router.get('/logout', (req, res) => {
+router.get('/logout', function logout(req, res) {
     req.logout();
     res.redirect('/');
 });
-// =====================================
-// CHANGE PASSWORD =====================
-// =====================================
-router.get('/change_password', helpers.isLoggedIn, (req, res) => {
-    console.log('In change_password for logged in users');
 
 
-    res.render('pages/admin/change_password', {
-              
-              title: 'HOMD :: testing',
-         pgname: '', // for AbountThisPage 
+router.get('/index', [helpers.isLoggedIn, helpers.isAdmin], function admin(req, res) {
+    console.log('in admin')
+    
+    
+        //console.log(rows)
+        res.render('pages/admin/index', {
+         title: 'HOMD :: ADMIN',
+         pgname: '', // for AbountThisPage
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-         user: JSON.stringify(req.user || {}),
-            });  
-});
+         user: JSON.stringify(req.user),
+         
+        }); 
+})
 //
 //
-router.get('/change_password/:id', (req, res) => {
-    console.log('In change_password for forgotten passwords');
-    // should be private but not logged in
-    console.log(req.params)
+//
 
-    var file_code_path = path.join(CFG.TMP_FILES,'resetPW-'+req.params.id+'.json')
 
-    console.log(file_code_path)
-    // if file exists then valid? (or confirm some file content?) -- delete file after success
-    //if(helpers.fileExists(file_code_path)){
-    fs.readFile(file_code_path, (err,data) => {
-        if(err){
-            console.log('No file exists -- does not validate -1!!')
-            res.redirect('/')
-            return
+router.get('/update_account_info', [helpers.isLoggedIn], function update_account_info(req, res) {
+     console.log(req.user)
+     if(req.user){
+        res.render('pages/user/update_account_info', {
+         title: 'HOMD :: ADMIN',
+         pgname: '', // for AbountThisPage
+         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+         user: JSON.stringify(req.user),
+       }); 
+    } 
+})
+//
+router.post('/update_account_info', [
+      helpers.isLoggedIn,
+      body('firstname').isLength({ min: 1, max: 30 }),
+      body('lastname').isLength({ min: 2, max: 30 }),
+      body('institution').isLength({ max: 50 }),
+      body('email').isEmail()
+      ], 
+      function update_account_info(req, res, next) {
+        //console.log('xxxx',req.user)
+        //console.log('yyyyy',req.body)
+         
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log('bdy',errors.array()[0])
+            //return res.status(400).json({ errors: errors.array() });
+            for(let i in errors.array()){
+              req.flash('fail','['+errors.array()[i].param+': '+errors.array()[i].msg+': "'+errors.array()[i].value+'"] ')
+            }
+            res.render('pages/user/update_account_info', {
+                title: 'HOMD :: ADMIN',
+                pgname: '', // for AbountThisPage
+                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                user: JSON.stringify(req.user),
+            })
+   
+   
+        }else{
+
+            let new_info = {
+              user_id:     req.body.user_id,  // from page form hidden
+              // check req.body.user_id === req.user.user_id  ???
+              username:    req.user.username,
+              email:       req.body.email,
+              institution: req.body.institution,
+              first_name:  req.body.firstname,
+              last_name:   req.body.lastname,
+              active:      req.user.active,
+              security_level: req.user.security_level,
+              sign_in_count: req.user.sign_in_count
+            }
+            TDBConn.query(queries.update_user_info(req.body.user_id, new_info), (err, rows, fields) => {
+                if(err){ console.log(err);return }
+                    req.flash('success','Update Success')
+                    res.render('pages/user/profile', {
+                    title: 'HOMD :: ADMIN',
+                    pgname: '', // for AbountThisPage
+                    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                    user: JSON.stringify(new_info),
+                })
+                return;
+            });
         }
-        var data = JSON.parse(data)
-        console.log('File exists -- Validated!!')
-        res.render('pages/admin/change_password', {
-              title     : 'VAMPS:change-password',
-              form_type : 'forgotten2',
-              code      : req.params.id,
-              username  : data.username,
-              uid       : data.uid,
-              hostname  : CFG.hostname, // get the user out of session and pass to template
-              user: JSON.stringify(req.user || {}),
-        });  
-    })
+        console.log('no errors')
+})
+//
+router.get('/view_users_admin', [helpers.isLoggedIn, helpers.isAdmin], function view_users_admin(req, res) {
+     console.log(req.user)
+     TDBConn.query(queries.get_all_users(), (err, rows, fields) => {
+        if(err){ console.log(err);return }
+        res.render('pages/admin/view_users', {
+         title: 'HOMD :: ADMIN',
+         pgname: '', // for AbountThisPage
+         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+         user: JSON.stringify(req.user),
+         users: JSON.stringify(rows)
+       });
+       }); 
     
-});
+})
 //
+router.get('/create_user_admin', [helpers.isLoggedIn, helpers.isAdmin], function create_user_admin(req, res) {
+     console.log(req.user)
+     
+        res.render('pages/admin/create_user', {
+         title: 'HOMD :: ADMIN',
+         pgname: '', // for AbountThisPage
+         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+         user: JSON.stringify(req.user),
+       }); 
+    
+})
+router.post('/create_user_admin', 
+     [helpers.isLoggedIn, 
+     helpers.isAdmin,
+     body('email').isEmail(),
+     body('password').isLength({ min: 6, max: 12 }),
+     body('password_confirm').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Password confirmation does not match password');
+    }
+    // Indicates the success of this synchronous custom validator
+    return true;
+     }),
+     body('username').not().isEmpty().trim().isLength({ min: 5, max: 20 }).escape(),
+     body('firstname').isLength({ min: 1, max: 30 }),
+     body('lastname').isLength({ min: 2, max: 30 }),
+     body('institution').isLength({ max: 50 }),
+     ], 
+     function create_user_admin(req, res) {
+        console.log('in POST create_user_admin')
+        const errors = validationResult(req);
+        if (errors.isEmpty()) {
+			let newUserMysql            = {};
+			newUserMysql.username       = req.body.username;
+			newUserMysql.password       = req.body.password;  /// Password is HASHed in queries_admin
+			newUserMysql.firstname      = req.body.firstname;
+			newUserMysql.lastname       = req.body.lastname;
+			newUserMysql.email          = req.body.email;
+			newUserMysql.institution    = req.body.institution;
+			newUserMysql.security_level = 50;  //reg user
+			TDBConn.query(queries.insert_new_user(newUserMysql), (err, rows, fields) => {
+				if(err){ console.log(err);return }
+				req.flash('success','Created new user '+req.body.username)
+				res.render('pages/admin/create_user', {
+				 title: 'HOMD :: ADMIN',
+				 pgname: '', // for AbountThisPage
+				 config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+				 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+				 user: JSON.stringify(req.user),
+			   });
+		   }); 
+       
+       }else{
+            console.log('err',errors.array()[0])
+            for(let i in errors.array()){
+              req.flash('fail','['+errors.array()[i].param+': '+errors.array()[i].msg+': "'+errors.array()[i].value+'"] ')
+            }
+            res.render('pages/admin/create_user', {
+			 title: 'HOMD :: ADMIN',
+			 pgname: '', // for AbountThisPage
+			 config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+			 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+			 user: JSON.stringify(req.user),
+		    });
+       }
+    
+})
 //
+router.get('/reset_pw_admin', [helpers.isLoggedIn, helpers.isAdmin], function reset_pw_admin(req, res) {
+     console.log(req.user)
+     TDBConn.query(queries.get_all_users(), (err, rows, fields) => {
+        if(err){ console.log(err);return }
+        res.render('pages/admin/reset_pw_admin', {
+         title: 'HOMD :: ADMIN',
+         pgname: '', // for AbountThisPage
+         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+         user: JSON.stringify(req.user),
+         users: JSON.stringify(rows),
+       });
+       }); 
+     
+})
+router.post('/reset_pw_admin', 
+     [helpers.isLoggedIn, 
+     helpers.isAdmin,
+     body('new_pw').isLength({ min: 6, max: 12 }),
+     ], 
+     function reset_pw_admin(req, res) {
+        console.log('req.body',req.body)
+     
+        const errors = validationResult(req);
+        if (errors.isEmpty()) {
+           // back to admin page?
+           req.flash('success','Update pw Success')
+           TDBConn.query(queries.update_user_pw_admin(req.body.user_id, req.body.new_pw), (err, rows, fields) => {
+				if(err){ console.log(err);return }
+				res.render('pages/admin/index', {
+				 title: 'HOMD :: ADMIN',
+				 pgname: '', // for AbountThisPage
+				 config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+				 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+				 user: JSON.stringify(req.user),
+			    });
+           });
+        }else{
+           // show pw errors on update page
+           req.flash('fail','['+errors.array()[0].param+': '+errors.array()[0].msg+': "'+errors.array()[0].value+'"] ')
+           TDBConn.query(queries.get_all_users(), (err, rows, fields) => {
+           if(err){ console.log(err);return }
+           res.render('pages/admin/reset_pw_admin', {
+			 title: 'HOMD :: ADMIN',
+			 pgname: '', // for AbountThisPage
+			 config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+			 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+			 user: JSON.stringify(req.user),
+			 users: JSON.stringify(rows),
+		   });
+		   });
+        }
+     
+})
 //
-router.post('/change_password',  passport.authenticate('local-reset', { 
-                                        successRedirect: 'admin/login',        successFlash: true,
-                                        failureRedirect: 'admin/change_password',failureFlash: true 
-                                 })
-);
+router.get('/email_check', [helpers.isLoggedIn, helpers.isAdmin], (req, res) => {
 
-router.get('/admin', [helpers.isLoggedIn, helpers.isAdmin], (req, res) => {
-    console.log('in admin')
+    console.log('checking email');
+    
+    main().catch(console.error);
+    
     res.render('pages/admin/admin', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
-        });  
+    });  
+
 })
-//
-//
-//
 
-// router.post('/update_account', helpers.isLoggedIn, (req, res) => {
-//     console.log('In POST::update_account');
-//     console.log(req.body)
-//     
-//     //console.log(C.ALL_USERS_BY_UID[req.body.uid])
-//     var inst  = req.body.new_institution
-//     var email = req.body.new_email
-//     
-//     if (!validator.isEmail(email)) {
-//       req.flash('fail', 'Email address is empty or the wrong format.');
-//       res.redirect('/users/update_account');
-//       return;
-//     }
-//     if (validator.isEmpty(inst) || inst.length > 100) {
-//       req.flash('fail', 'Institution name is required. (size limit=100chars)');
-//       res.redirect('/users/update_account');
-//       return;
-//     }
-//     if(req.body.uid != req.user || {}.user_id){
-//         console.log('No match - get out of here.')
-//         req.flash('fail', 'Something went wrong - exiting');
-//         res.redirect('/users/update_account');
-//         return;
-//     }
-//     if(email == C.ALL_USERS_BY_UID[req.body.uid].email && inst == C.ALL_USERS_BY_UID[req.body.uid].institution){
-//         console.log('No Update Needed')
-//         req.flash('success', 'No Update Needed - Exiting');
-//         res.redirect('/users/update_account');
-//     }else{
-//         var query = "UPDATE user set email='"+email+"', institution='"+inst+"' where user_id='"+req.body.uid+"'"
-//         DBConn.query(query, (err, rows, fields) => {
-//             if (err)  {
-//                 req.flash('fail', 'Something went wrong with update - exiting');
-//                 res.redirect('/users/update_account');
-//                 return;
-//             }else{
-//                 req.flash('success', 'Update Success');
-//                 C.ALL_USERS_BY_UID[req.body.uid].email        = email
-//                 C.ALL_USERS_BY_UID[req.body.uid].institution  = inst
-//                 res.redirect('/users/update_account');
-//             }
-//         })
-//     }
-//     
-// });
-// //
-//
-router.get('/reset_password', helpers.isLoggedIn, (req, res) => {
-    console.log('IN GET::reset_password')
-    res.render('pages/user/reset_password', {
-          title: 'HOMD :: testing',
-         pgname: '', // for AbountThisPage 
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-         user: JSON.stringify(req.user || {}),
-    });
-});
-//
-//
-// router.post('/reset_password1', (req, res) => {
-//     console.log('IN POST::reset_password1')
-//     console.log(req.body);
-//     //{ username: 'avoorhis', email: 'avoorhis@mbl.edu' }
-//     // create new password and send via email to user
-//     //if username empty or not in users throw error
-//     // if email not email format or not in users throw error
-//     
-//     var email = req.body.email
-//     var username = req.body.username
-//     if (validator.isEmpty(username) || username.length > 30) {
-//       req.flash('fail', 'username is required.');
-//       res.redirect('/users/forgotten_password');
-//       return;
-//     }
-//     if (!validator.isEmail(email)) {
-//       req.flash('fail', 'Email address is empty or the wrong format.');
-//       res.redirect('/users/forgotten_password');
-//       return;
-//     }
-//     var query = "SELECT user_id from user where username='"+username+"' and email ='"+email+"'"
-//     console.log(query)
-//     DBConn.query(query, (err, rows, fields) => {
-//         if (err)  {
-//                 req.flash('fail', 'We cannot find that username--email combination. Please contact us [vamps@mbl.edu] for assistance.');
-//                 res.redirect('/users/forgotten_password');
-//                 return;
-//         }else{
-//                 if(rows.length !== 1){
-//                     req.flash('fail', 'We cannot find that username--email combination. Please contact us [vamps@mbl.edu] for assistance.');
-//                     res.redirect('/users/forgotten_password');
-//                     return;
-//                 }
-//                 let transporter = nodemailer.createTransport(CFG.smtp_connection_obj)
-//                 console.log(rows)
-//                 var uid = rows[0].user_id
-//       
-//                 // verify connection configuration
-//                 //create unique link: vamps2.mbl.edu/users/change_password?123xyz
-//                 //var link;
-//                 var rando = Math.floor((Math.random() * (999999 - 100000 + 1)) + 100000);
-//                 var link = CFG.server_url+'/users/change_password/'+rando
-//                 // if(CFG.hostname == 'localhost'){
-// //                     link = CFG.server_url+'/users/change_password/'+rando
-// //                 }else{
-// //                     link = 'https://vamps2.mbl.edu/users/change_password/'+rando
-// //                 }
-//                 // write json file to 
-// 
-//                 var file_path = path.join(CFG.TMP_FILES,'resetPW-'+rando+'.json')
-// 
-//                 console.log(file_path)
-//                 var file_text = { "username":username, "uid":uid, "email":email }
-//                 var message = {
-//                   from: "vamps@mbl.edu",
-//                   to:  email,
-//                   subject: "Reset VAMPS Password",
-//                   text: link +" <-- Follow this link to re-set your password.",
-//                   html: "<p>To reset your VAMPS password follow the link below:<br><br><a href=\""+link+"\">"+link+"</a></p>"
-//                 };
-//                 //console.log(message)
-//                 fs.writeFile(file_path, JSON.stringify(file_text), {mode: 0775}, err => {
-//                       if(err) {return console.log(err);}
-//                       else{
-//           
-//                         transporter.verify( (error, success) => {
-//                             if (error) {
-//                                 console.log(error);
-//                                 req.flash('fail', 'Something went wrong with request. Please send an email to: vamps@mbl.edu');
-//                                 res.redirect('/users/forgotten_password');
-//                                 return;
-//                             } else {
-//                                 console.log("Server is ready to take our messages");
-//                             }
-//                         });
-//                         transporter.sendMail(message, (error, info) => {
-//                             if (error) {
-//                                 console.log('Error occurred');
-//                                 console.log(error.message);            
-//                                 req.flash('fail', 'Something went wrong with request. Please send an email to: vamps@mbl.edu');
-//                                 res.redirect('/users/forgotten_password');
-//                                 return;
-//                             }
-// 
-//                             console.log('Message sent successfully!');
-//         
-//                         });
-//                         req.flash('success', 'Email Sent To: '+email);
-//                         res.redirect('/users/forgotten_password')
-//                  }
-//                 })
-//                 
-//                 
-//                 
-//         }
-//     })
-//     
-//     
-// });
-//
-//
-//
-// router.post('/reset_password2', (req, res) => {
-//     console.log('IN POST::reset_password2')
-//     console.log(req.body);
-//     const queries       = require('../routes/queries_admin');
-//     var new_password = req.body.new_password
-//     var confirm_password = req.body.confirm_password
-//     if (!validator.equals(new_password, confirm_password)) {
-//       req.flash('fail', 'Passwords do not match!');
-//       res.render('user_admin/change_password', {
-//               title     : 'VAMPS:change-password',
-//               form_type : 'forgotten2',
-//               code      : req.body.code,
-//               username  : req.body.username,
-//               uid       : req.body.uid,
-//               hostname  : CFG.hostname // get the user out of session and pass to template
-//         }); 
-//         return 
-//     }
-//     if (!validator.isLength(new_password, {min: 6, max: 12})) {
-//       req.flash('fail', 'Password must be between 6 and 12 characters.');
-//       res.render('user_admin/change_password', {
-//               title     : 'VAMPS:change-password',
-//               form_type : 'forgotten2',
-//               code      : req.body.code,
-//               username  : req.body.username,
-//               uid       : req.body.uid,
-//               hostname  : CFG.hostname // get the user out of session and pass to template
-//         }); 
-//         return 
-//     }
-//     // validate existence of file -- then delete it
-//     // file has been validated and deleted in router.get('/change_password/:id', (req, res) => {
-// 
-//     var file_code_path = path.join(CFG.TMP_FILES,'resetPW-'+req.body.code+'.json')
-// 
-//     //read file and validate username & email
-//     fs.readFile(file_code_path, (err,data) => {
-//         if(err){
-//             console.log('No file exists -- does not validate -2!!')
-//             res.redirect('/')
-//             return
-//         }
-//         var data = JSON.parse(data)
-//         // now delete file
-//         console.log('Deleting: '+file_code_path)
-//         // This will delete file leaving no trace....
-//         //fs.unlinkSync(file_code_path);
-//        
-//         // now valid must enter new PW in database and return user to logon screen
-//     
-//         console.log('Trying: '+queries.reset_user_password_by_uid(new_password, req.body.uid))
-//         DBConn.query(queries.reset_user_password_by_uid(new_password, req.body.uid), (err, rows, fields) => {
-//             if(err){ console.log(err);return }
-//             console.log('Success -- password Updated')
-//             req.flash('success', 'Password updated! Password updated! Password updated! Password updated! Password updated!');
-//             res.redirect('/users/login')
-//             return
-//         })
-//     }); 
-//     
-// });
-router.get('/:id', helpers.isLoggedIn, (req, res) => {
-   
-   var uid = req.params.id
-   console.log(C.ALL_USERS_BY_UID[uid]);
-   console.log('in indexusers:id')
-   //console.log(req.user || {})
-   if(C.ALL_USERS_BY_UID[uid] == undefined ){
-    res.render('index', {
-        title: 'VAMPS:Home',
-        user: JSON.stringify(req.user || {}),
-        hostname: CFG.hostname
-     });
-     return;  
-   }else{
-           var qSelect = "SELECT * from project where owner_user_id='"+uid+"'";
-           console.log(qSelect)
-           var collection = DBConn.query(qSelect, (err, rows, fields) => {
-            if (err)  {
-              msg = 'ERROR Message '+err;
-              helpers.render_error_page(req,res,msg);
-            } else {
-                res.render('admin/profile', {
-                  title     :'VAMPS:profile',
-                  projects  : rows,
-                  user_info : JSON.stringify(C.ALL_USERS_BY_UID[uid]),
-                  user: JSON.stringify(req.user || {}), hostname: CFG.hostname // get the user out of session and pass to template
-                });  
-     
-
-            }
-          });
-    }
-
-});
 
 
 
 module.exports = router;
+
+// async..await is not allowed in global scope, must use a wrapper
+async function main() {
+  // Generate test SMTP service account from ethereal.email
+  // Only needed if you don't have a real mail account for testing
+  let testAccount = await nodemailer.createTestAccount();
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: testAccount.user, // generated ethereal user
+      pass: testAccount.pass, // generated ethereal password
+    },
+  });
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: '"Fred Foo 👻" <foo@example.com>', // sender address
+    //to: "bar@example.com, baz@example.com", // list of receivers
+    //to:'zeketheturtle@gmail.com',
+    subject: "Hello ✔", // Subject line
+    text: "Hello world?", // plain text body
+    html: "<b>Hello world?</b>", // html body
+  });
+
+  console.log("Message sent: %s", info.messageId);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+  // Preview only available when sending through an Ethereal account
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+}
+
+//main().catch(console.error);
 

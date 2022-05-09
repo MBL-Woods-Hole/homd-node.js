@@ -1,0 +1,48 @@
+<style>
+</style>
+<link rel="stylesheet" href="/css/admin.css">
+<% u = JSON.parse(users) %>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <div class='title'>View All Users</div>
+       <a href='index'>Back to admin</a>
+    <center>
+       <table>
+       <tr><th>User ID</th><th>Username</th><th>Lastname</th><th>Firstname</th><th>Email</th></tr>
+       <% for(n in u){ %>
+          <tr>
+            <td><%= u[n].user_id %></td>
+            <td><%= u[n].username %></td>
+            <td><%= u[n].last_name %></td>
+            <td><%= u[n].first_name %></td>
+            <td><%= u[n].email %></td>
+          </tr>
+       <% } %>
+       </table>
+     </center>
+     
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

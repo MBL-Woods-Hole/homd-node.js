@@ -1,0 +1,28 @@
+table,form{
+   border:1px solid red;
+   padding:10px;
+   margin:10px;
+}
+.form_div{
+   margin-left:300px;
+   padding:50px 100px;
+}
+
+.form_div form  { display: table;      }
+.form_div p     { display: table-row;  }
+.form_div label { display: table-cell; }
+.form_div input { 
+    display: table-cell; 
+    border:1px solid brown;
+    padding:2px 5px;
+}
+.form_div ul li{
+    padding:5px 0;
+}
+#admin-table{
+
+}
+#admin-table td{
+  border:1px solid brown;
+  padding:1px 3px;
+}

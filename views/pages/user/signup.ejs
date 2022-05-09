@@ -1,0 +1,63 @@
+<style>
+</style>
+<link rel="stylesheet" href="/css/admin.css">
+<% b = JSON.parse(data) %>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+    <div class='title'>Register for an Account</div>
+    <%- include('../../partials/flash'); %>
+    <%- include('../../partials/under_construction'); %>
+    <%- include('../../partials/account_info'); %> 
+     <br><br>
+    <form id='newuser_form' name='newuser_form' method='POST' action='/admin/signup' >
+    <div id='form_div' class='form_div table' >All fields are required -- <input type='button' href='#' onclick="clear_register_form(this.form)" value='Clear Form'>
+   <br><br>
+      <ul>
+      <li> <input id='username'  maxlength='20'        name='username'   type="text"   value='<%= b.username %>'  \> Username 
+           <span class='tiny_font'>(alphanumeric only; between 5 and 20 characters.)</span>
+      </li>
+      <li> <input id='password'  maxlength='12'        name='password'   type="password" value='' \> Password <span class='tiny_font'>(between 6 and 12 characters.)</span></li>
+      <li> <input id='password_confirm' maxlength='12' name='password_confirm' type="password" value='' \> Confirm Password</li>
+      <li> <input id='firstname' maxlength='30'    name='firstname'  type="text"  value='<%= b.firstname %>'   \> First Name (30 chars max)</li>
+      <li> <input id='lastname'  maxlength='30'    name='lastname'   type="text"  value='<%= b.lastname %>'   \> Last Name (30 chars max)</li>
+      <li> <input id='email'   maxlength='50'      name='email'      type="text"  value='<%= b.email %>'   \> Email <span class='tiny_font'>(must be correct email format; 50 chars max)</span></li>
+      <li> <input id='institution' maxlength='50'  name='institution'type="text"  value='<%= b.institution %>'   \> Institution (50 chars max)</li>
+      <br>
+      </ul>
+      <input    type="submit" value='Enter' \>
+    </form>
+    </div>
+  
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+  function clear_register_form(f){
+      f.username.value = ''
+      f.password.value = ''
+      f.password_confirm.value = ''
+      f.firstname.value = ''
+      f.lastname.value = ''
+      f.email.value = ''
+      f.institution.value = ''
+  }
+</script>
+
+

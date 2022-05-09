@@ -1,12 +1,6 @@
 <style>
-.form_div{
-   margin-left:300px;
-   padding:50px 100px;
-}
-.form_div input{
-   border:1px solid brown;
-}
 </style>
+<link rel="stylesheet" href="/css/admin.css">
 <% u = JSON.parse(user) %>
 <%- include('../../partials/header_html'); %>
 
@@ -24,7 +18,7 @@
        
        
     <div class='form_div'>
-    <table border='1'>
+    <table id='admin-table' border='1'>
     <% for(i in u){ %>
        <% if(["encrypted_password","current_sign_in_at","active"].indexOf(i) === -1){ %>
        <tr><td><%= i %></td><td><%= u[i] %></td></tr>
@@ -32,12 +26,15 @@
     </table>
     <br>
     
-    <ul>
-    <li><a href='/user/reset_password'>update password</a>
-    <li><a href=''>change name</a> update
-    <li><a href=''>change institution</a> update
-    <li><a href=''>change email</a>  update
-    </ul>
+    
+    <br>Reset or change password or username:
+    Email us with request: avoorhis@mbl.edu
+     
+    <br>
+    
+    <a href='/admin/update_account_info'>To change your name, email, or institution with HOMD</a></li>
+    
+    
     </div>
   
     </div> <!-- end: page-content -->
