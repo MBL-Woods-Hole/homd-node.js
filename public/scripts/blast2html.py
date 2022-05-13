@@ -287,7 +287,7 @@ def jblink(hit, type='jbrowse', hsp=None):
     hit_parts = hit.split('_')
     link = "/jbrowse/index.html"
     loclink = ''
-    
+    gc = '0.37'  # default -- This is wrong!
     if args.db_type == 'protein':
         """
         PROKKA-type:
@@ -336,7 +336,6 @@ def jblink(hit, type='jbrowse', hsp=None):
     else:   # not protein
     #link = "/jbrowse/index.html?id={}&type=jbrowse&db=db".format(hit)
         acc = hit.replace('_','|')
-        gc = '0.37'  # default -- This is wrong!
         
         if hsp != None:
             
