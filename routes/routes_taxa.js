@@ -701,7 +701,9 @@ router.get('/life', function life(req, res) {
   }else {
     //console.log(upto)
     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
-    
+    if(!node){
+        console.log('taxnode error:',tax_name+'_'+rank)
+    }
     var lineage_list = make_lineage(node)  // [str obj]
       
     rank_id = C.ranks.indexOf(rank) +2
