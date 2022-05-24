@@ -126,6 +126,7 @@ router.post('/login',  passport.authenticate('local-login', {
 // show the signup form
 router.get('/signup', function signup(req, res) {
         let new_user = {};
+        
         // render the page and pass in any flash data if it exists
         console.log('new_user--signup');
         //console.log(new_user)
@@ -140,6 +141,7 @@ router.get('/signup', function signup(req, res) {
             });
         }else{
             console.log('reqBODY',req.body)
+            let sg = helpers.makeid(3).toUpperCase()
             res.render('pages/user/signup', { 
                 title   : 'HOMD::signup',
                 pgname: '',
@@ -147,6 +149,7 @@ router.get('/signup', function signup(req, res) {
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                 user: JSON.stringify(req.user || {}),
                 hostname: CFG.hostname,
+                spamguard: sg,
                 data: JSON.stringify({})
             });
         }
@@ -178,6 +181,7 @@ router.post('/signup',
          req.flash('fail','['+errors.array()[i].param+': '+errors.array()[i].msg+': "'+errors.array()[i].value+'"] ')
       
       }
+      let sg = helpers.makeid(3).toUpperCase()
       res.render('pages/user/signup', { 
                 title   : 'HOMD::signup',
                 pgname: '',
@@ -185,6 +189,7 @@ router.post('/signup',
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                 user: JSON.stringify(req.user || {}),
                 hostname: CFG.hostname,
+                spamguard: sg,
                 data: JSON.stringify(req.body)
             });
         return;

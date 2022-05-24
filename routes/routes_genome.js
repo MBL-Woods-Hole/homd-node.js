@@ -705,7 +705,8 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //
 router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', function dldTable (req, res) {
   helpers.accesslog(req, res)
-  console.log('in download table -genome')
+  console.log('in download table -genome:')
+  
   const type = req.params.type
   const letter = req.params.letter
   const phylum = req.params.phylum
@@ -719,13 +720,13 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
   let sendList = []
   let fileFilterText = ''
   if (letter && letter.match(/[A-Z]{1}/)) { // always caps
-    console.log('in letter dnld')
+    //console.log('in letter dnld')
     helpers.print(['MATCH Letter: ', letter])
     sendList = tempList.filter(item => item.genus.charAt(0) === letter)
     helpers.print(sendList)
     fileFilterText = "HOMD.org Genome Data::Letter Filter Applied (genus with first letter of '" + letter + "')"
   } else if (otid > 0) {
-    console.log('in otid dnld')
+    //console.log('in otid dnld')
     const gidList = C.taxon_lookup[otid].genomes
     // console.log('sil',seqid_list)
     for (let n in gidList) {
@@ -733,7 +734,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
     }
     fileFilterText = 'HOMD.org Genome Data::Oral TaxonID: HMT-' + ('000' + otid).slice(-3)
   } else if (phylum !== 0 && phylum !== '0') {
-    console.log('in phylum dnld')
+    //console.log('in phylum dnld')
     const lineageList = Object.values(C.taxon_lineage_lookup)
     const objList = lineageList.filter(item => item.phylum === phylum) // filter for phylum
     
@@ -752,7 +753,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
     fileFilterText = 'HOMD.org Genome Data::Search Text: ' + searchText
   } else {
     // whole list as last resort
-    console.log('in all dnld')
+    //console.log('in all dnld')
     sendList = tempList
     fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
   }
