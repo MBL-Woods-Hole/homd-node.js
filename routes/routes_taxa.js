@@ -618,7 +618,7 @@ router.get('/tax_description', function tax_description(req, res){
   C.pangenomes.map(function(el){
      if(otid.toString() === el.otid){
        //console.log('2GOT OTID')
-       links.pangenomes[el.pangenome_name] = {link:path.join(C.pangenome_base_link, el.pangenome_name),description:el.description}
+       links.pangenomes[el.pangenome_name] = {link: C.pangenome_base_link+'/'+el.pangenome_name, description: el.description}
        
      }
   })

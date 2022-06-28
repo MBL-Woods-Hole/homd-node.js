@@ -280,7 +280,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
     let pangenomes = {}
     C.pangenomes.map(function(el){
       if(el.seqids.indexOf(gid) !== -1){
-       pangenomes[el.pangenome_name] = {link:path.join(C.pangenome_base_link, el.pangenome_name),description:el.description}
+       pangenomes[el.pangenome_name] = {link: C.pangenome_base_link+'/'+el.pangenome_name, description: el.description}
       }
     })
 		/*
