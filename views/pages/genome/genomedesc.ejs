@@ -120,7 +120,7 @@
        
        <% if(pangenomes){ %>
        <% for(name in pangenomes){ %>
-         <a href='<%- pangenomes[name].link %>' title='<%- pangenomes[name].description %>' target='_blank'><%- name %></a>
+         <a href='<%= pangenomes[name].link %>' title='<%- pangenomes[name].description %>' target='_blank'><%- name %></a>
        <% } %>
        <% }else{ %>
          No Pangenome Assembly Available yet.
