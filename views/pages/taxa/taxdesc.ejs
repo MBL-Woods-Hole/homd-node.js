@@ -416,8 +416,17 @@
   </tr>
   
   <tr>
-    <td class='tbl-title'>Pangenome:</td>
-    <td><small>(not implemented yet)</small></td>
+    <td class='tbl-title'>Pangenome(s):<br><small>(Anvi`o-server hosted on <a href='https://vamps2.mbl.edu/' title='Visualization and Analysis of Microbial Population Structures' target='_blank'>VAMPS</a>)</small></td>
+    <td><small>
+    <% if(links.pangenomes){ %>
+    <% for(name in links.pangenomes){ %>
+     
+      <a href='<%- links.pangenomes[name].link %>' title='<%= links.pangenomes[name].description %>' target='_blank'><%- name %></a>
+    <% } %>
+    <% }else{ %>
+       No Pangenome Assembly Available yet.
+    <% } %>
+    </small></td>
   </tr>
   <tr>
     <td class='tbl-title'>Microbial Ecology<br><small>(Abundance/Prevalence)</small>:</td>
@@ -444,10 +453,7 @@
     <td class='tbl-title'>Proteomics:</td>
     <td><small></small></td>
   </tr>
-  <tr>
-    <td class='tbl-title'>Tools:</td>
-    <td><small>JBrowse; Anvi`o [Links not active yet]</small></td>
-  </tr>
+  
   <tr>
     <td class='tbl-title'>NCBI Taxon ID:</td>
     <td><small><%= data1.ncbi_taxid %> <span>[<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]</span></small></td>

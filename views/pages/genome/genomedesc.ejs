@@ -32,6 +32,7 @@
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data1) %>
 <% contigs = JSON.parse(contigs) %>
+<% pangenomes = JSON.parse(pangenomes) %>
 <link rel="stylesheet" href="/css/genome_pages.css" >
 <link href="/css/select2.min.css" rel="stylesheet" /> 
 <% taxidfullname = ("000" + ginfo.otid).slice(-3); %>
@@ -113,7 +114,20 @@
         <td>N/A</td>
        <% } %>
      </tr>
-     <tr class="table-active"><td>21</td><td>Comments for 16s rRNA Gene Sequence</td><td></td></tr>
+     <tr class="table-active"><td>21</td>
+     <td class=''>Pangenome(s): (Anvi`o-server <small>hosted on <a href='https://vamps2.mbl.edu/' title='Visualization and Analysis of Microbial Population Structures' target='_blank'>VAMPS</a>)</small></td>
+     <td>
+       
+       <% if(pangenomes){ %>
+       <% for(name in pangenomes){ %>
+         <a href='<%- pangenomes[name].link %>' title='<%- pangenomes[name].description %>' target='_blank'><%- name %></a>
+       <% } %>
+       <% }else{ %>
+         No Pangenome Assembly Available yet.
+       <% } %>
+    </td>
+     </tr>
+     <tr class="table-active"><td>22</td><td>Comments for 16s rRNA Gene Sequence</td><td></td></tr>
      </table>
 <% } %>		 
 </div>			 

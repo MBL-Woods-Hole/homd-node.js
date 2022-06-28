@@ -613,6 +613,17 @@ router.get('/tax_description', function tax_description(req, res){
         links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species,'lpsnlink':'species/'+data1.genus+'-'+data1.species}
      }
   }
+  //pangenomes
+  links.pangenomes = {}
+  C.pangenomes.map(function(el){
+     if(otid.toString() === el.otid){
+       //console.log('2GOT OTID')
+       links.pangenomes[el.pangenome_name] = {link:path.join(C.pangenome_base_link, el.pangenome_name),description:el.description}
+       
+     }
+  })
+  
+  //console.log('pangenome_link',links.pangenomes)
   res.render('pages/taxa/taxdesc', {
     title: 'HOMD :: Taxon Info', 
     pgname: 'taxon/description', // for AbountThisPage

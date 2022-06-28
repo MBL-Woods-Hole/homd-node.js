@@ -275,9 +275,14 @@ router.get('/genome_description', function genomeDescription (req, res) {
            contigs.push({contig: rows[r].accession.split('|')[1], gc: rows[r].GC})
         }
     }
-    //console.log('contigs',contigs)
-    
-
+    //console.log('gid',gid)
+    //Pangenome
+    let pangenomes = {}
+    C.pangenomes.map(function(el){
+      if(el.seqids.indexOf(gid) !== -1){
+       pangenomes[el.pangenome_name] = {link:path.join(C.pangenome_base_link, el.pangenome_name),description:el.description}
+      }
+    })
 		/*
 	  1 Oral Taxon ID 191 
 	  2 HOMD Sequence ID  SEQF1851  
@@ -300,7 +305,8 @@ router.get('/genome_description', function genomeDescription (req, res) {
 	  18  ATCC Medium Number  NA  
 	  19  Non-ATCC Medium NA
 	  20  16S rRNA gene sequence
-	  21  Comments
+	  21 pangenome
+	  22  Comments
 	  */
   //console.log(C.genome_lookup[gid])
 	  res.render('pages/genome/genomedesc', {
@@ -310,6 +316,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
 		// taxonid: otid,
 		data1: JSON.stringify(data),
 		gid: gid,
+		pangenomes: JSON.stringify(pangenomes),
 		contigs: JSON.stringify(contigs.sort()),
 		// data2: JSON.stringify(data2),
 		// data3: JSON.stringify(data3),

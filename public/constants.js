@@ -281,8 +281,42 @@ constants.species_w_subspecies = {
     'Peptostreptococcaceae_[G-7] [Eubacterium]_yurii': ['subsps._yurii_&_margaretiae','subsp._schtitka']
 }
 //
-
-
+constants.pangenome_base_link = "https://vamps.mbl.edu/anviserver/pangenomes/"
+constants.pangenomes = [
+    {
+      otid: '524', 
+      seqids:['SEQF1918','SEQF1939','SEQF2243'], 
+      pangenome_name: 'Veillonella_Atypica',
+      description: '18 genomes for <i>Veillonella atypica</> HMT-524 and associated <i>V.</> sp. refseq assemblies'
+    },
+    {
+      otid: '780', 
+      seqids:['SEQF1859'], 
+      pangenome_name: 'Veillonella_HMT780',
+      description: '6 genomes for <i>Veillonella sp.</> HMT-780 and associated <i>V.</> sp. refseq assemblies'
+    },
+    {
+      otid: '677', 
+      seqids:['SEQF1067','SEQF2001','SEQF2002','SEQF2003','SEQF2217','SEQF2218','SEQF2219',
+'SEQF2337','SEQF2338','SEQF2339','SEQF3169','SEQF3553','SEQF3554','SEQF3555','SEQF3556','SEQF3557',
+'SEQF3558','SEQF3559','SEQF3560','SEQF3561','SEQF3562','SEQF3563','SEQF3564','SEQF3565','SEQF3566','SEQF3567','SEQF3568',
+'SEQF3569','SEQF3571','SEQF3572','SEQF3573','SEQF3574','SEQF3575',
+'SEQF3576','SEQF3577','SEQF3578','SEQF3579','SEQF3580','SEQF3581',
+'SEQF3582','SEQF3583','SEQF3584','SEQF3585','SEQF3586','SEQF3587','SEQF3588',
+'SEQF3589','SEQF3590','SEQF3591','SEQF3592','SEQF3593','SEQF3594','SEQF3595','SEQF3596','SEQF3597',
+'SEQF3598','SEQF3599','SEQF3600','SEQF3601','SEQF3602','SEQF3603','SEQF3604',
+'SEQF3605','SEQF3606','SEQF3607','SEQF3608','SEQF3609','SEQF3610',
+'SEQF3611','SEQF3612','SEQF3613','SEQF3614','SEQF3615','SEQF3616','SEQF3617','SEQF3618','SEQF3619','SEQF3620','SEQF3621','SEQF3622',
+'SEQF3623','SEQF3624','SEQF3625','SEQF3626','SEQF3627','SEQF3628','SEQF3629','SEQF3630','SEQF3631',
+'SEQF3632','SEQF3633','SEQF3634','SEQF3635','SEQF3636','SEQF3637','SEQF3638','SEQF3639','SEQF3640',
+'SEQF3641','SEQF3642','SEQF3643','SEQF3644','SEQF3645','SEQF3646','SEQF3647','SEQF3648','SEQF3649',
+'SEQF3650','SEQF3651','SEQF3652','SEQF3653','SEQF3654','SEQF3655','SEQF3656','SEQF3657','SEQF3658',
+'SEQF3659','SEQF3660','SEQF3661','SEQF3662','SEQF3663','SEQF3664','SEQF3665','SEQF3666','SEQF3667',
+'SEQF3668','SEQF3669','SEQF3670','SEQF3671','SEQF3672','SEQF3673','SEQF3674','SEQF3675','SEQF3676'], 
+      pangenome_name: 'Mitis_Group',
+      description: 'All 134 Genomes from HMT-677 (<i>Stroptococcus Mitis</i>)'
+    }
+]
 
 
 module.exports = constants;
