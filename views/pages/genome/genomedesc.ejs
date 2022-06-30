@@ -32,7 +32,6 @@
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data1) %>
 <% contigs = JSON.parse(contigs) %>
-<% pangenomes = JSON.parse(pangenomes) %>
 <link rel="stylesheet" href="/css/genome_pages.css" >
 <link href="/css/select2.min.css" rel="stylesheet" /> 
 <% taxidfullname = ("000" + ginfo.otid).slice(-3); %>
@@ -118,9 +117,9 @@
      <td class=''>Pangenome(s): (Anvi`o-server <small>hosted on <a href='https://vamps2.mbl.edu/' title='Visualization and Analysis of Microbial Population Structures' target='_blank'>VAMPS</a>)</small></td>
      <td>
        
-       <% if(pangenomes){ %>
-       <% for(name in pangenomes){ %>
-         <a href='<%= pangenomes[name].link %>' title='<%- pangenomes[name].description %>' target='_blank'><%- name %></a>
+       <% if(ginfo.pangenomes){ %>
+       <% for(n in ginfo.pangenomes){ %>
+         <a href='<%= anviserver_link %>/<%= ginfo.pangenomes[n] %>'  target='_blank'><%- ginfo.pangenomes[n] %></a>
        <% } %>
        <% }else{ %>
          No Pangenome Assembly Available yet.

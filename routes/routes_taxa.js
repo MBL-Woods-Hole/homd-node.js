@@ -534,7 +534,7 @@ router.get('/tax_description', function tax_description(req, res){
   link_exceptions['377'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/Eubacterium-yurii-margaretiae'}
   
   data1 = C.taxon_lookup[otid]
-  //helpers.print(['data1',data1])
+  helpers.print(['data1',data1])
   if(C.dropped_taxids.indexOf(otid) !== -1){
      //helpers.print(data1)
      let message = "That is a dropped TaxonID: "+otid
@@ -614,14 +614,8 @@ router.get('/tax_description', function tax_description(req, res){
      }
   }
   //pangenomes
-  links.pangenomes = {}
-  C.pangenomes.map(function(el){
-     if(otid.toString() === el.otid){
-       //console.log('2GOT OTID')
-       links.pangenomes[el.pangenome_name] = {link: C.pangenome_base_link+'/'+el.pangenome_name, description: el.description}
-       
-     }
-  })
+  
+  links.anviserver_link = C.anviserver_link
   
   //console.log('pangenome_link',links.pangenomes)
   res.render('pages/taxa/taxdesc', {

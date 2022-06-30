@@ -67,55 +67,6 @@ first_genomes_query_no_flagid ="""
     JOIN species using(species_id)
     ORDER BY gid
 """.format(tbl1=genomes_tbl)
-# first_genomes_query ="""
-#     SELECT seq_id as gid,
-#     genus,
-#     species,
-#     genomes.status,
-#     IFNULL(number_contig, '') as ncontigs, 
-#     IFNULL(combined_length, '') as tlength,
-#     IFNULL(oral_pathogen, '') as oral_path,
-#     IFNULL(culture_collection, '') as ccolct,
-#     IFNULL(sequence_center, '') as seq_center,
-#     flag_id as flag
-#     
-#     ncbi_bioproject as ncbi_bpid,
-#     ncbi_taxon_id as ncbi_taxid,
-#     isolate_origin as io,
-#     gc, 
-#     atcc_medium_number as atcc_mn,
-#     non_atcc_medium as non_atcc_mn,
-#     genbank_accession as gb_acc,
-#     genbank_assembly as gb_asmbly,
-#     ncbi_biosample as  ncbi_bsid,
-#     IF(16s_rrna ='', '0','1') as 16s_rrna_flag  
-#     
-#     from {tbl1}
-#     JOIN otid_prime using(otid)
-#     JOIN taxonomy using(taxonomy_id)
-#     JOIN genus using(genus_id)
-#     JOIN species using(species_id)
-#     JOIN seqid_flag using(flag_id)
-#     WHERE flag_id in {flags}
-#     ORDER BY gid
-# """.format(tbl1=genomes_tbl,flags=acceptable_genome_flags)
-
-
-# extra_query2 ="""
-#     SELECT seq_id as gid,
-#     ncbi_bioproject as ncbi_bpid,
-#     ncbi_taxon_id as ncbi_taxid,
-#     isolate_origin as io,
-#     gc, 
-#     atcc_medium_number as atcc_mn,
-#     non_atcc_medium as non_atcc_mn,
-#     genbank_accession as gb_acc,
-#     genbank_assembly as gb_asmbly,
-#     ncbi_biosample as  ncbi_bsid,
-#     IF(16s_rrna ='', '0','1') as 16s_rrna_flag  
-#     from {tbl}
-# """.format(tbl=seq_extra_tbl)
-
 
 
 def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
@@ -164,7 +115,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     genome['non_atcc_mn'] = ''   # table 2
     genome['gb_acc'] 	= ''
     genome['gb_asmbly'] = ''
-    
+    genome['pangenomes'] = []   # array of pangenome names
     genome['16s_rrna_flag']   = '0'
     genome['flag']   = ''
     return genome
@@ -236,38 +187,19 @@ def run_second(args):
     #print(master_lookup)        
         
 def run_third(args):
+    """ Add Pangenome List to Object"""
     global master_lookup
-    result = myconn.execute_fetch_select_dict(extra_query2)    
+    g_query ="""   
+    SELECT seq_id as gid, name as pangenome
+    from pangenome
+    ORDER BY gid
+    """
+    result = myconn.execute_fetch_select_dict(g_query)    
     #seq_id as gid,genus,species,status,number_contig,combined_length,oral_path
         
     for obj in result:  
-        if obj['gid'] in master_lookup:
-            
-
-            for n in obj:
-                if n == 'gc':
-                    master_lookup[obj['gid']]['gc'] = obj['gc']
-                if n == 'ncbi_taxid':
-                    master_lookup[obj['gid']]['ncbi_taxid'] = obj['ncbi_taxid']
-                if n == 'ncbi_bpid':
-                    master_lookup[obj['gid']]['ncbi_bpid'] = obj['ncbi_bpid']
-                if n == 'ncbi_bsid':
-                    master_lookup[obj['gid']]['ncbi_bsid'] = obj['ncbi_bsid']
-            
-                if n == 'io':
-                    master_lookup[obj['gid']]['io'] = obj['io']
-                if n == 'atcc_mn':
-                    master_lookup[obj['gid']]['atcc_mn'] = obj['atcc_mn']
-                if n == 'non_atcc_mn':
-                    master_lookup[obj['gid']]['non_atcc_mn'] = obj['non_atcc_mn']
-                if n == 'gb_asmbly':
-                    master_lookup[obj['gid']]['gb_asmbly'] = obj['gb_asmbly']
-                if n == 'gb_acc':
-                    master_lookup[obj['gid']]['gb_acc'] = obj['gb_acc']
-                if n == '16s_rrna_flag':
-                    master_lookup[obj['gid']]['16s_rrna_flag'] = obj['16s_rrna_flag']
-            	
-    #print(len(master_lookup))
+         if obj['gid'] in master_lookup:
+            master_lookup[obj['gid']]['pangenomes'].append(obj['pangenome'])
     
         
             
@@ -319,7 +251,7 @@ if __name__ == "__main__":
         args.DATABASE = 'homd'
         dbhost = 'localhost'
     else:
-    	sys.exit('dbhost - error')
+        sys.exit('dbhost - error')
     args.indent = None
     if args.prettyprint:
         args.indent = 4
@@ -328,8 +260,8 @@ if __name__ == "__main__":
 
     print(args)
     run_first(args)
-    run_second(args)
-    #run_third(args)
+    run_second(args) # otid
+    run_third(args)  #pangenomes
     filename = os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
     print('writing',filename)
     with open(filename, 'w') as outfile:

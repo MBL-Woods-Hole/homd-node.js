@@ -70,7 +70,7 @@ def create_taxon(otid):
     taxon['rrna_sequences'] = []
     taxon['synonyms'] = []
     taxon['sites'] = []
-    
+    taxon['pangenomes'] = []
     return taxon
 
 
@@ -227,9 +227,22 @@ def run_rrna_sequences(ars):
         else:
             sys.exit('problem with rrna_sequence exiting') 
 
+def run_pangenomes(args):
+    global master_lookup
+    q =  "SELECT otid, name as pangenome from pangenome"
+    result = myconn.execute_fetch_select_dict(q)
+    for obj in result:
+        otid = str(obj['otid'])
+        if otid in master_lookup:
+            #if master_lookup[otid]['status'] != 'Dropped':
+            if obj['pangenome'] not in master_lookup[otid]['pangenomes']:
+                master_lookup[otid]['pangenomes'].append(obj['pangenome'])
+        else:
+            sys.exit('problem with rrna_sequence exiting') 
+    
+    
 def run_refseq(args):
     global refseq_lookup
-    global master_lookup
     query_refseqid = "SELECT otid, refseqid, seqname, strain, genbank FROM taxon_refseqid"
     result = myconn.execute_fetch_select_dict(query_refseqid)
     refseq_lookup = {}
@@ -332,8 +345,9 @@ def run_references(args):   ## REFERENCE Citations
     file = os.path.join(args.outdir,args.outfileprefix+'ReferencesLookup.json')
     print_dict(file, lookup)        
     
-   
 
+
+    
 
 
 
@@ -575,11 +589,15 @@ if __name__ == "__main__":
     run_sites(args)        # in master_lookup
     run_ref_strain(args)   # in master_lookup
     
-    run_rrna_sequences(args)
+    run_rrna_sequences(args)  # in master_lookup
+    run_pangenomes(args)   # in master_lookup
+    
     print_master_lookup(args)
-    run_refseq(args)       # in master_lookup
+    
+    run_refseq(args)       
     run_info(args)
     run_references(args)
+    
 
     
      # run lineage AFTER to get counts

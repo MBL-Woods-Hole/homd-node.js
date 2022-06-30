@@ -277,12 +277,12 @@ router.get('/genome_description', function genomeDescription (req, res) {
     }
     //console.log('gid',gid)
     //Pangenome
-    let pangenomes = {}
-    C.pangenomes.map(function(el){
-      if(el.seqids.indexOf(gid) !== -1){
-       pangenomes[el.pangenome_name] = {link: C.pangenome_base_link+'/'+el.pangenome_name, description: el.description}
-      }
-    })
+    // let pangenomes = {}
+//     C.pangenomes.map(function(el){
+//       if(el.seqids.indexOf(gid) !== -1){
+//        pangenomes[el.pangenome_name] = {link: C.pangenome_base_link+'/'+el.pangenome_name, description: el.description}
+//       }
+//     })
 		/*
 	  1 Oral Taxon ID 191 
 	  2 HOMD Sequence ID  SEQF1851  
@@ -316,7 +316,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
 		// taxonid: otid,
 		data1: JSON.stringify(data),
 		gid: gid,
-		pangenomes: JSON.stringify(pangenomes),
+		anviserver_link: C.anviserver_link,
 		contigs: JSON.stringify(contigs.sort()),
 		// data2: JSON.stringify(data2),
 		// data3: JSON.stringify(data3),

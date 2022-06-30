@@ -418,10 +418,10 @@
   <tr>
     <td class='tbl-title'>Pangenome(s):<br><small>(Anvi`o-server hosted on <a href='https://vamps2.mbl.edu/' title='Visualization and Analysis of Microbial Population Structures' target='_blank'>VAMPS</a>)</small></td>
     <td><small>
-    <% if(links.pangenomes){ %>
-    <% for(name in links.pangenomes){ %>
+    <% if(data1.pangenomes){ %>
+    <% for(n in data1.pangenomes){ %>
      
-      <a href='<%= links.pangenomes[name].link %>' title='<%= links.pangenomes[name].description %>' target='_blank'><%= name %></a>
+      <a href='<%= links.anviserver_link %>/<%= data1.pangenomes[n] %>' target='_blank'><%= data1.pangenomes[n] %></a>
     <% } %>
     <% }else{ %>
        No Pangenome Assembly Available yet.
