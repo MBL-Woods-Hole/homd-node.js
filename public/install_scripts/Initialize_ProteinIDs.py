@@ -87,7 +87,7 @@ def run(args, dbs):
         print('Running1 prokka',db)
         gid = db.split('_')[1]
         anno = 'ncbi'
-        
+        dupes = {}
         # pid = {anno,gid,gene,product}
         #if pid not in master_lookup:
         #    master_lookup[pid] = {}
@@ -100,81 +100,19 @@ def run(args, dbs):
             #print(row)
             pid = row['PID']
             if pid in master_lookup:
-                sys.exit('duplicat pid: '+pid)
-            master_lookup[pid] = {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']}
-#     for db in dbs['ncbi']:
-#         print('Running2 ncbi',db)
-#         gid = db.split('_')[1]
-#         anno = 'ncbi'
-#         # organism
-#         q1 = "select `field_value` from "+db+".assembly_stats WHERE field_name = 'Organism name'"
-#         resultq1 = myconn.execute_fetch_one(q1)
-#         organism = resultq1[0].strip()
-#         master_lookup[gid]['ncbi']['organism'] = organism
-#         # for CDS,rrna,trna,tmrna
-#         q2 = "SELECT `type`,count(*) AS count from "+db+".gff group by `type`"
-#         #print(q2)
-#         result2 = myconn.execute_fetch_select_dict(q2)
-#         for row in result2:
-#             #print(row)
-#             if row['type'] == 'CDS':
-#                master_lookup[gid]['ncbi']['CDS'] = row['count']
-#             if row['type'] == 'rRNA':
-#                master_lookup[gid]['ncbi']['rRNA'] = row['count']
-#             if row['type'] == 'tmRNA':
-#                master_lookup[gid]['ncbi']['tmRNA'] = row['count']
-#             if row['type'] == 'tRNA':
-#                master_lookup[gid]['ncbi']['tRNA'] = row['count']     
-#             
-#         q3 = "SELECT sum(bps) AS bases, count(*) AS contigs FROM "+db+".molecules "
-#         result3 = myconn.execute_fetch_select_dict(q3)
-#         for row in result3:
-#             #print(row)
-#             master_lookup[gid]['ncbi']['bases']   = int(row['bases'])
-#             master_lookup[gid]['ncbi']['contigs'] = int(row['contigs'])
-            
-    #print(master_lookup)
-#     
-    ## NEXT NCBI
-#     anno = 'ncbi' 
-#     for row in base_result:
-#         gid = row[0]
-#         #print(gid)
-#         # organism
-#         q1 = "select organism from annotation.ncbi_info where gid ='"+gid+"'"
-#         resultq1 = myconn.execute_fetch_one(q1)
-#         organism = resultq1[0]
-#         master_lookup[gid]['ncbi']['organism'] = organism
-#         master_lookup[gid]['ncbi']['gid'] = gid
-#         where_clause = "WHERE gid='"+gid+"' AND annotation='ncbi'"
-#         # for CDS,rrna,trna,tmrna
-#         q2 = "SELECT `type`,count(*) AS count from annotation.gff "+where_clause+" group by `type`"
-#         #print(q2)
-#         result2 = myconn.execute_fetch_select_dict(q2)
-#         for row in result2:
-#             #print(row)
-#             if row['type'] == 'CDS':
-#                master_lookup[gid]['ncbi']['CDS'] = row['count']
-#             if row['type'] == 'rRNA':
-#                master_lookup[gid]['ncbi']['rRNA'] = row['count']
-#             if row['type'] == 'tmRNA':
-#                master_lookup[gid]['ncbi']['tmRNA'] = row['count']
-#             if row['type'] == 'tRNA':
-#                master_lookup[gid]['ncbi']['tRNA'] = row['count']  
-#          
-#         q3 = "SELECT sum(bps) AS bases, count(*) AS contigs FROM annotation.molecule "+where_clause
-#         result3 = myconn.execute_fetch_select_dict(q3)
-#         for row in result3:
-#             #print(row)
-#             master_lookup[gid]['ncbi']['bases']=int(row['bases'])
-#             master_lookup[gid]['ncbi']['contigs']=int(row['contigs'])
-#         
-#         print(master_lookup[gid]['ncbi'])
-#     
-#     
-#     
+                #sys.exit('duplicate pid: '+pid)
+                if pid in dupes:
+                    dupes[pid].append( {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} )
+                else:
+                    dupes[pid] =  [ master_lookup[pid], {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} ]
+            else:
+                master_lookup[pid] = {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']}
+
+
     file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')  
     print_dict(file, master_lookup) 
+    print("dupes")
+    print(dupes)
 
 def print_dict(filename, dict):
     print('writing',filename)
