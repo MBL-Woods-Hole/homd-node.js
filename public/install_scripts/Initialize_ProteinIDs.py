@@ -59,6 +59,7 @@ def find_databases(args):
 def run(args, dbs):
     #global master_lookup
     master_lookup = {}
+    dupes = {}
     # prokka first
     for db in dbs['prokka']:
         print('Running1 prokka',db)
@@ -87,7 +88,7 @@ def run(args, dbs):
         print('Running1 prokka',db)
         gid = db.split('_')[1]
         anno = 'ncbi'
-        dupes = {}
+        
         # pid = {anno,gid,gene,product}
         #if pid not in master_lookup:
         #    master_lookup[pid] = {}
