@@ -11,6 +11,22 @@
 #srch_txt{
    color:orange;
 }
+table{
+   font-size:small;
+   border-collapse:collapse;
+}
+table th,td{
+   border:1px solid black;
+   
+   padding:0 2px;
+}
+.search_link{
+   color:blue;
+}
+.search_link:hover{
+   color:maroon;
+   cursor:pointer;
+}
 </style>
 <%- include('../partials/header_html'); %>
 <% var otids = JSON.parse(otid_list) %>
@@ -64,8 +80,15 @@
      <hr>  
     Annotations:
   <div class='search-box'>
-    PROKKA Annotation hits: <%= prokka_list_len %> Show results
-    <br>NCBI Annotation hits: <%= ncbi_list_len %> Show results
+    PROKKA Annotation hits: <%= num_prokka_genes %> genes (<small>in <%= prokka_list_len %> genomes</small>)
+    <% if(prokka_list_len > 0){ %>
+       --<span class='search_link' onclick="anno_search('<%= search_text %>','prokka')">show results</span>--
+    <% } %>
+    <br>NCBI Annotation hits: <%= num_ncbi_genes %> genes (<small>in <%= ncbi_list_len %> genomes</small>)
+    <% if(ncbi_list_len > 0){ %>
+     --<span class='search_link' onclick="anno_search('<%= search_text %>','ncbi')">show results</span>--
+    <% } %>
+    <div id='anno_result_box'></div>
   </div>
     
     
@@ -116,6 +139,7 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
+  
 </script>
 
 

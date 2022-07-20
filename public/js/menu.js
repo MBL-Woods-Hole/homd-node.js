@@ -76,3 +76,24 @@ function search(){
   f.submit()
 }
 
+function anno_search(search_text,anno){
+  //console.log('in anno_srch')
+  args = {}
+  args.anno = anno
+  args.search_text = search_text
+  var xmlhttp = new XMLHttpRequest();
+  
+  xmlhttp.open("POST", "/anno_search", true);
+  xmlhttp.setRequestHeader("Content-type","application/json");
+  xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = xmlhttp.responseText;
+        //console.log('anno search resp')
+        //console.log(resp)
+        document.getElementById('anno_result_box').innerHTML = resp
+        
+      }
+  }
+  xmlhttp.send(JSON.stringify(args));
+  
+}

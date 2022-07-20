@@ -18,7 +18,7 @@ var browseDir = require("browse-directory");
 router.get('/', function index(req, res) {
   
   console.log('Session ID:',req.session.id)
-  console.log('CFG.ENV :',CFG.ENV )
+  //console.log('CFG.ENV :',CFG.ENV )
   res.render('pages/home', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'home', // for AbountThisPage
@@ -111,7 +111,69 @@ router.get('/oralgen', function oralgen(req, res) {
 
   })
 })
+function get_proteins_for_search(search_text, anno){
+    let proteinObj = {}, data,gid,name
+    const searchTextLower = search_text.toLowerCase()
+    const proteinid_data = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDs'+anno.toUpperCase()+'Lookup.json'))
+    let pidKeysList = Object.keys(proteinid_data)
+    let protein_list = pidKeysList.filter(pid => {
+      data = proteinid_data[pid]  // an array
+      if (pid.toLowerCase().indexOf(searchTextLower) !== -1) {
+        return true;
+     }
+     for(let i in data){
+		if (data[i].gene && data[i].gene.toLowerCase().indexOf(searchTextLower) !== -1) {
+			return true;
+		}
+		if (data[i].product && data[i].product.toLowerCase().indexOf(searchTextLower) !== -1) {
+			return true;
+		}
+     }
+    
+   });
+   for(let n in protein_list){
+      let pid = protein_list[n]
+      let data = proteinid_data[pid]
+      for(let i in data){
+           gid = data[i].gid
+           name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+           
+           if(proteinObj.hasOwnProperty(gid) ){
+              proteinObj[gid].push({name:name, pid:pid, gene:data[i].gene, product:data[i].product})
+            }else{
+              proteinObj[gid] = [{name:name, pid:pid, gene:data[i].gene, product:data[i].product}]
+            }
+           
+      }
+   }
+   return proteinObj
+   
+}
+function create_protein_table(anno, obj){
+    let html = '',data_lst
+    html += "<center><table>"
+    html += '<tr><th>SEQ-ID</th><th>Open in<br>Explorer</th><th>Genome</th><th>'+anno.toUpperCase()+'<br>ProteinID</th><th>Gene</th><th>GeneProduct</th></tr>'
+    for(let gid in obj){
+        data_lst = obj[gid]
+        for(let i in data_lst){
+        html += '<tr><td>'+gid+'</td>'
+        html += "<td><a href='genome/explorer?gid="+gid+"&anno="+anno+"'>open</a></td>"
+        html += '<td>'+data_lst[i].name+'</td>'
+        html += '<td>'+data_lst[i].pid+'</td>'
+        html += '<td>'+data_lst[i].gene+'</td>'
+        html += '<td>'+data_lst[i].product+'</td></tr>'
+        }
+    }
+    html += '</table></center>'
+    return html
 
+}
+router.post('/anno_search', function anno_search(req, res) {
+    console.log(req.body)
+    //res.send('success:'+req.body.anno)
+    let resultObj = get_proteins_for_search(req.body.search_text, req.body.anno)
+    res.send(create_protein_table(req.body.anno, resultObj))
+})
 router.post('/site_search', function site_search(req, res) {
   helpers.accesslog(req, res)
   console.log('in index.js POST -Search')
@@ -129,7 +191,7 @@ router.post('/site_search', function site_search(req, res) {
   */
   
   
-//////////GENOMES////////////////////////////////////////////////////////////////////////////////
+////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
   
   const searchText = req.body.intext
   const searchTextLower = req.body.intext.toLowerCase()
@@ -155,43 +217,93 @@ router.post('/site_search', function site_search(req, res) {
   //console.log('gidObjList[0]',gidLst[0])
 
 
-//////////ANNOTATED GENES////////////////////////////////////////////////////////////////////////////////
+////////// ANNOTATED GENES ////////////////////////////////////////////////////////////////////////////////
    // Search Annotated ProteinIDs
-   let proteinObj_prokkalist = []
-   let proteinObj_ncbilist = []
-   const proteinid_data = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsLookup.json'))
-   console.log("proteinid_data['SEQF1003_00001']")
-   console.log(proteinid_data['SEQF1003_00001'])
+   let proteinObj_list = {}
+   let data,pid,gid,name
+   proteinObj_list.prokka = {}
+   proteinObj_list.ncbi   = {}
+   const proteinid_PROKKAdata = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsPROKKALookup.json'))
+   const proteinid_NCBIdata   = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsNCBILookup.json'))
    
-   // search the keys
-   let pidKeysList = Object.keys(proteinid_data)
-   const protein_list = pidKeysList.filter(el => {
-    if (el.toLowerCase().indexOf(searchTextLower) !== -1) {
+   
+   // search the prokka keys
+   const pidKeysListP = Object.keys(proteinid_PROKKAdata)
+   let protein_list = pidKeysListP.filter(pid => {
+     data = proteinid_PROKKAdata[pid]  // an array
+     if (pid.toLowerCase().indexOf(searchTextLower) !== -1) {
         return true;
-    }
+     }
+     for(let i in data){
+		if (data[i].gene && data[i].gene.toLowerCase().indexOf(searchTextLower) !== -1) {
+			return true;
+		}
+		if (data[i].product && data[i].product.toLowerCase().indexOf(searchTextLower) !== -1) {
+			return true;
+		}
+     }
+    
    });
+   //console.log('prokka protein_list.length')
+   //console.log(protein_list.length)
+   let num_prokka_genes = 0
    for(let n in protein_list){
-      let pid = protein_list[n]
-      let data = proteinid_data[pid]
+      pid = protein_list[n]
+      //console.log('pid '+pid)
+      data = proteinid_PROKKAdata[pid]
+      //console.log(data)
       for(let i in data){
-        if(data[i].anno === 'ncbi'){
-           proteinObj_ncbilist.push(  {pid:pid, data: data[i]})
-        }else{
-           proteinObj_prokkalist.push({pid:pid, data: data[i]})
-        }
+           gid = data[i].gid
+           name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+           if(proteinObj_list.prokka.hasOwnProperty(gid) ){
+              proteinObj_list.prokka[gid].push({pid:pid, data: data[i]})
+            }else{
+              proteinObj_list.prokka[gid] = [{pid:pid, data: data[i]}]
+            }
+            num_prokka_genes +=1
+      }
+   }
+   //console.log('proteinObj_list.prokka[SEQF3673].len')
+   //console.log(proteinObj_list.prokka['SEQF3673'].length)
+   // search the ncbi keys
+   const pidKeysListN = Object.keys(proteinid_NCBIdata)
+   protein_list = pidKeysListN.filter(pid => {
+     data = proteinid_NCBIdata[pid]  // an array
+     if (pid.toLowerCase().indexOf(searchTextLower) !== -1) {
+        return true;
+     }
+     for(let i in data){
+		if (data[i].gene && data[i].gene.toLowerCase().indexOf(searchTextLower) !== -1) {
+			return true;
+		}
+		if (data[i].product && data[i].product.toLowerCase().indexOf(searchTextLower) !== -1) {
+			return true;
+		}
+     }
+   });
+   //console.log('ncbi protein_list.length')
+   //console.log(protein_list.length)
+   let num_ncbi_genes = 0
+   for(let n in protein_list){
+      pid = protein_list[n]
+      data = proteinid_NCBIdata[pid]
+      for(let i in data){
+           gid = data[i].gid
+           name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+           if(proteinObj_list.ncbi.hasOwnProperty(gid) ){
+              proteinObj_list.ncbi[gid].push({pid:pid, data: data[i]})
+           }else{
+              proteinObj_list.ncbi[gid] = [{pid:pid, data: data[i]}]
+            }
+            num_ncbi_genes +=1
       }
    }
    
-   console.log(proteinObj_ncbilist)
+   //console.log(proteinObj_list.ncbi)
    //console.log(proteinid_data['SEQF1595_00001'])
-   //console.log(proteinid_data['SEQF1595_00010'])
-   let allPidObjList = Object.values(proteinid_data)
-   // search the arrays
-   
-   
-   
+ 
 
-/////////////OTIDs/////////////////////////////////////////////////////////////////////////////
+///////////// OTIDs /////////////////////////////////////////////////////////////////////////////
   // OTID Metadata
   const allOtidObjList = Object.values(C.taxon_lookup)
   const otidKeyList = Object.keys(allOtidObjList[0])
@@ -219,7 +331,7 @@ router.post('/site_search', function site_search(req, res) {
   }
   //console.log('otidLst[0]',otidLst)
 
-//////////////TAXON NAMES////////////////////////////////////////////////////////////////////////////
+////////////// TAXON NAMES ////////////////////////////////////////////////////////////////////////////
 
   // lets search the taxonomy names
   // Bacterial Taxonomy Names
@@ -260,7 +372,7 @@ router.post('/site_search', function site_search(req, res) {
     // 'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species
     // }
   }
-/////////////CONTIGS/////////////////////////////////////////////////////////////////////////////
+///////////// CONTIGS /////////////////////////////////////////////////////////////////////////////
 
   // search contigs
   let contigObj_list = []
@@ -276,7 +388,7 @@ router.post('/site_search', function site_search(req, res) {
       contigObj_list.push({contig:contig_list[n], gids: C.contig_lookup[contig_list[n]]})
   }
   
-/////////////PHAGE/////////////////////////////////////////////////////////////////////////////
+///////////// PHAGE /////////////////////////////////////////////////////////////////////////////
 
 
   //  Now the phage db
@@ -304,7 +416,7 @@ router.post('/site_search', function site_search(req, res) {
   // console.log(pidObjList)
   
   const phageIdLst = pidObjList.map(e => e.pid)
-//////////////////////////////////////////////////////////////////////////////////////////  
+//////////// HELP PAGES //////////////////////////////////////////////////////////////////////////////  
   // help pages uses grep
   let helpLst = []
   let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
@@ -338,8 +450,10 @@ router.post('/site_search', function site_search(req, res) {
         search_text: searchText,
         otid_list: JSON.stringify(otidLst),
         gid_list: JSON.stringify(gidLst),
-        prokka_list_len: proteinObj_prokkalist.length,
-        ncbi_list_len: proteinObj_ncbilist.length,
+        prokka_list_len: Object.keys(proteinObj_list.prokka).length,
+        num_prokka_genes:num_prokka_genes,
+        ncbi_list_len: Object.keys(proteinObj_list.ncbi).length,
+        num_ncbi_genes:num_ncbi_genes,
         taxon_otid_obj: JSON.stringify(taxonOtidObj),
         help_pages: JSON.stringify(helpLst),
         contig_list:JSON.stringify(contigObj_list),
