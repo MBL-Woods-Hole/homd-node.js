@@ -219,10 +219,16 @@ router.post('/site_search', function site_search(req, res) {
 
 ////////// ANNOTATED GENES ////////////////////////////////////////////////////////////////////////////////
    // Search Annotated ProteinIDs
+   let num_prokka_genes = 0
+   let num_ncbi_genes = 0
    let proteinObj_list = {}
-   let data,pid,gid,name
    proteinObj_list.prokka = {}
    proteinObj_list.ncbi   = {}
+   
+   if(CFG.ENV === 'development'){
+   
+   let data,pid,gid,name
+   
    const proteinid_PROKKAdata = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsPROKKALookup.json'))
    const proteinid_NCBIdata   = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsNCBILookup.json'))
    
@@ -246,7 +252,7 @@ router.post('/site_search', function site_search(req, res) {
    });
    //console.log('prokka protein_list.length')
    //console.log(protein_list.length)
-   let num_prokka_genes = 0
+   
    for(let n in protein_list){
       pid = protein_list[n]
       //console.log('pid '+pid)
@@ -298,7 +304,7 @@ router.post('/site_search', function site_search(req, res) {
             num_ncbi_genes +=1
       }
    }
-   
+   }  // end cfg.evn
    //console.log(proteinObj_list.ncbi)
    //console.log(proteinid_data['SEQF1595_00001'])
  
@@ -450,6 +456,7 @@ router.post('/site_search', function site_search(req, res) {
         search_text: searchText,
         otid_list: JSON.stringify(otidLst),
         gid_list: JSON.stringify(gidLst),
+        
         prokka_list_len: Object.keys(proteinObj_list.prokka).length,
         num_prokka_genes:num_prokka_genes,
         ncbi_list_len: Object.keys(proteinObj_list.ncbi).length,
