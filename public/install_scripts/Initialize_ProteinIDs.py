@@ -58,8 +58,8 @@ def find_databases(args):
 	    
 def run(args, dbs):
     #global master_lookup
-    master_lookup = {}
-    dupes = {}
+    master_lookup_prokka = {}
+    master_lookup_ncbi = {}
     # prokka first
     for db in dbs['prokka']:
         print('Running1 prokka',db)
@@ -77,9 +77,11 @@ def run(args, dbs):
         for row in result:
             #print(row)
             pid = row['PID']
-            if pid in master_lookup:
-                sys.exit('duplicat pid: '+pid)
-            master_lookup[pid] = {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']}
+            if pid in master_lookup_prokka:
+                master_lookup_prokka[pid].append( {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} )
+            else:
+                master_lookup_prokka[pid] = []
+                master_lookup_prokka[pid].append( {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} )
             # for n in row:
 #                 if n in master_lookup[pid]:
 #                     master_lookup[gid]['prokka'][n] = str(row[n]).strip()
@@ -100,20 +102,18 @@ def run(args, dbs):
         for row in result:
             #print(row)
             pid = row['PID']
-            if pid in master_lookup:
-                #sys.exit('duplicate pid: '+pid)
-                if pid in dupes:
-                    dupes[pid].append( {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} )
-                else:
-                    dupes[pid] =  [ master_lookup[pid], {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} ]
+            if pid in master_lookup_ncbi:
+                master_lookup_ncbi[pid].append( {'gene':row['gene'],'gid':gid,'product':row['product']} )
             else:
-                master_lookup[pid] = {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']}
+                master_lookup_ncbi[pid] = []
+                master_lookup_ncbi[pid].append( {'gene':row['gene'],'gid':gid,'product':row['product']} )
 
 
-    file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')  
-    print_dict(file, master_lookup) 
-    print("dupes")
-    print(dupes)
+    file1 =  os.path.join(args.outdir,args.outfileprefix+'NCBILookup.json')  
+    print_dict(file1, master_lookup_ncbi) 
+    file2 =  os.path.join(args.outdir,args.outfileprefix+'PROKKALookup.json')  
+    print_dict(file2, master_lookup_prokka) 
+    
 
 def print_dict(filename, dict):
     print('writing',filename)

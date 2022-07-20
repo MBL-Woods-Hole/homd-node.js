@@ -129,6 +129,7 @@ router.post('/site_search', function site_search(req, res) {
   */
   
   
+//////////GENOMES////////////////////////////////////////////////////////////////////////////////
   
   const searchText = req.body.intext
   const searchTextLower = req.body.intext.toLowerCase()
@@ -149,25 +150,61 @@ router.post('/site_search', function site_search(req, res) {
       }
     }
   })
-  
   //helpers.print(gidObjList[0])
   const gidLst = gidObjList.map(e => ({gid:e.gid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
   //console.log('gidObjList[0]',gidLst[0])
 
 
+//////////ANNOTATED GENES////////////////////////////////////////////////////////////////////////////////
+   // Search Annotated ProteinIDs
+   let proteinObj_prokkalist = []
+   let proteinObj_ncbilist = []
+   const proteinid_data = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsLookup.json'))
+   console.log("proteinid_data['SEQF1003_00001']")
+   console.log(proteinid_data['SEQF1003_00001'])
+   
+   // search the keys
+   let pidKeysList = Object.keys(proteinid_data)
+   const protein_list = pidKeysList.filter(el => {
+    if (el.toLowerCase().indexOf(searchTextLower) !== -1) {
+        return true;
+    }
+   });
+   for(let n in protein_list){
+      let pid = protein_list[n]
+      let data = proteinid_data[pid]
+      for(let i in data){
+        if(data[i].anno === 'ncbi'){
+           proteinObj_ncbilist.push(  {pid:pid, data: data[i]})
+        }else{
+           proteinObj_prokkalist.push({pid:pid, data: data[i]})
+        }
+      }
+   }
+   
+   console.log(proteinObj_ncbilist)
+   //console.log(proteinid_data['SEQF1595_00001'])
+   //console.log(proteinid_data['SEQF1595_00010'])
+   let allPidObjList = Object.values(proteinid_data)
+   // search the arrays
+   
+   
+   
+
+/////////////OTIDs/////////////////////////////////////////////////////////////////////////////
   // OTID Metadata
   const allOtidObjList = Object.values(C.taxon_lookup)
-  const otidkeylist = Object.keys(allOtidObjList[0])
+  const otidKeyList = Object.keys(allOtidObjList[0])
   const otidObjList = allOtidObjList.filter(function (el) {
-    for (let n in otidkeylist) {
+    for (let n in otidKeyList) {
       //console.log( 'el[otidkeylist[n]]',el[otidkeylist[n]] )
-      if (Array.isArray(el[otidkeylist[n]])) {
+      if (Array.isArray(el[otidKeyList[n]])) {
         // we're missing any arrays
       } else {
         
         //helpers.print(['el',el])
         
-        if ( Object.prototype.hasOwnProperty.call(el, otidkeylist[n]) && el[otidkeylist[n]].toString().toLowerCase().includes(searchTextLower)) {
+        if ( Object.prototype.hasOwnProperty.call(el, otidKeyList[n]) && el[otidKeyList[n]].toString().toLowerCase().includes(searchTextLower)) {
           return el.otid
         }
        
@@ -176,12 +213,13 @@ router.post('/site_search', function site_search(req, res) {
   })
   const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
   if(Object.keys(add_genome_to_otid).length > 0){
-  	for(let otid in add_genome_to_otid){
-  		otidLst.push({otid: otid, species: '<i>'+add_genome_to_otid[otid]+'</i>'})
-  	}
+      for(let otid in add_genome_to_otid){
+          otidLst.push({otid: otid, species: '<i>'+add_genome_to_otid[otid]+'</i>'})
+      }
   }
   //console.log('otidLst[0]',otidLst)
 
+//////////////TAXON NAMES////////////////////////////////////////////////////////////////////////////
 
   // lets search the taxonomy names
   // Bacterial Taxonomy Names
@@ -222,7 +260,8 @@ router.post('/site_search', function site_search(req, res) {
     // 'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species
     // }
   }
-  
+/////////////CONTIGS/////////////////////////////////////////////////////////////////////////////
+
   // search contigs
   let contigObj_list = []
   //console.log('C.contig_lookup',C.contig_lookup )
@@ -237,8 +276,8 @@ router.post('/site_search', function site_search(req, res) {
       contigObj_list.push({contig:contig_list[n], gids: C.contig_lookup[contig_list[n]]})
   }
   
-  // search help pages
-  // let dir = path.join(process.cwd(), 'public', 'static_help_files' )
+/////////////PHAGE/////////////////////////////////////////////////////////////////////////////
+
 
   //  Now the phage db
   // phageID, phage:family,genus,species, host:genus,species, ncbi ids
@@ -265,7 +304,7 @@ router.post('/site_search', function site_search(req, res) {
   // console.log(pidObjList)
   
   const phageIdLst = pidObjList.map(e => e.pid)
-  
+//////////////////////////////////////////////////////////////////////////////////////////  
   // help pages uses grep
   let helpLst = []
   let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
@@ -299,6 +338,8 @@ router.post('/site_search', function site_search(req, res) {
         search_text: searchText,
         otid_list: JSON.stringify(otidLst),
         gid_list: JSON.stringify(gidLst),
+        prokka_list_len: proteinObj_prokkalist.length,
+        ncbi_list_len: proteinObj_ncbilist.length,
         taxon_otid_obj: JSON.stringify(taxonOtidObj),
         help_pages: JSON.stringify(helpLst),
         contig_list:JSON.stringify(contigObj_list),

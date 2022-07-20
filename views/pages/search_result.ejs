@@ -60,6 +60,15 @@
        <%- gids[n].species %></a>
     <% } %>
     </div>
+    
+     <hr>  
+    Annotations:
+  <div class='search-box'>
+    PROKKA Annotation hits: <%= prokka_list_len %> Show results
+    <br>NCBI Annotation hits: <%= ncbi_list_len %> Show results
+  </div>
+    
+    
     <hr>  
     Matches from Contigs: (<%= contig_list.length %>)
     <div class='search-box'>
