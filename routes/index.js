@@ -150,7 +150,8 @@ router.get('/oralgen', function oralgen(req, res) {
 //    
 // }
 function create_protein_table(anno, obj){
-    let html = '',data_lst
+    let html = '',data_lst,name
+    html += "<center><table>"
     html += "<center><table>"
     html += '<tr><th>SEQ-ID</th><th>Open in<br>Explorer</th><th>Genome</th><th>'+anno.toUpperCase()+'<br>ProteinID</th><th>Gene</th><th>GeneProduct</th></tr>'
     
@@ -165,6 +166,28 @@ function create_protein_table(anno, obj){
         html += '<td>'+data_lst[i].product+'</td></tr>'
         }
     }
+    html += '</table></center>'
+    return html
+    
+    
+    
+   //  html += '<tr><th>SEQ-ID</th><th>Genome</th><th>hit count</th><th>Open in<br>Explorer</th></tr>'
+//     
+//     for(let gid in obj){
+//         data_lst = obj[gid]
+//         name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+//               
+//         //for(let i in data_lst){
+//         html += '<tr><td>'+gid+'</td>'
+//         
+//         html += '<td>'+name+'</td>'
+//         html += '<td>count</td>'
+//         html += "<td><a href='genome/explorer?gid="+gid+"&anno="+anno+"'>open</a></td>"
+//         // html += '<td>'+data_lst[i].pid+'</td>'
+// //         html += '<td>'+data_lst[i].gene+'</td>'
+// //         html += '<td>'+data_lst[i].product+'</td></tr>'
+//         //}
+//     }
     html += '</table></center>'
     return html
 
@@ -278,18 +301,17 @@ router.post('/site_search', function site_search(req, res) {
           || (obj.gene && obj.gene.toLowerCase().indexOf(searchTextLower) !== -1)
           || obj.product.toLowerCase().indexOf(searchTextLower) !== -1
        ){
-           console.log(obj)
+           //console.log(obj)
            if(obj.anno === 'ncbi'){
-               console.log('ncbi')
+               //console.log('ncbi')
                ++ncbi_gene_count
                if(ncbi_genome_count_lookup.hasOwnProperty(obj.gid)){
                    ncbi_genome_count_lookup[obj.gid] +=1
                 }else{
                    ncbi_genome_count_lookup[obj.gid] =1
                 }
-           
            }else{
-               console.log('prokka')
+               //console.log('prokka')
                ++prokka_gene_count
                if(prokka_genome_count_lookup.hasOwnProperty(obj.gid)){
                    prokka_genome_count_lookup[obj.gid] +=1
@@ -298,8 +320,6 @@ router.post('/site_search', function site_search(req, res) {
                 }
            }
        }
-       
-       
     });
    
    // fs.createReadStream(prokka_file).pipe(jsonStream.input);
@@ -307,93 +327,17 @@ router.post('/site_search', function site_search(req, res) {
 //        console.log(key, value);
 //    });
    pipeline.on('end', () => {
-        console.log('All Done');
-        console.log('prokka_gene_count')
-        console.log(prokka_gene_count)
-        console.log('prokka_genome_count')
-        console.log(Object.keys(prokka_genome_count_lookup).length)
-        console.log('ncbi_gene_count')
-        console.log(ncbi_gene_count)
-        console.log('ncbi_genome_count')
-        console.log(Object.keys(ncbi_genome_count_lookup).length)
+        // console.log('All Done');
+//         console.log('prokka_gene_count')
+//         console.log(prokka_gene_count)
+//         console.log('prokka_genome_count')
+//         console.log(Object.keys(prokka_genome_count_lookup).length)
+//         console.log('ncbi_gene_count')
+//         console.log(ncbi_gene_count)
+//         console.log('ncbi_genome_count')
+//         console.log(Object.keys(ncbi_genome_count_lookup).length)
         
-        
-  
-   
-   // search the prokka keys
-//    const pidKeysListP = Object.keys(proteinid_PROKKAdata)
-//    let protein_list = pidKeysListP.filter(pid => {
-//      data = proteinid_PROKKAdata[pid]  // an array
-//      if (pid.toLowerCase().indexOf(searchTextLower) !== -1) {
-//         return true;
-//      }
-//      for(let i in data){
-//      if (data[i].gene && data[i].gene.toLowerCase().indexOf(searchTextLower) !== -1) {
-//          return true;
-//      }
-//      if (data[i].product && data[i].product.toLowerCase().indexOf(searchTextLower) !== -1) {
-//          return true;
-//      }
-//      }
-//     
-//    });
-//    //console.log('prokka protein_list.length')
-//    //console.log(protein_list.length)
-//    
-//    for(let n in protein_list){
-//       pid = protein_list[n]
-//       //console.log('pid '+pid)
-//       data = proteinid_PROKKAdata[pid]
-//       //console.log(data)
-//       for(let i in data){
-//            gid = data[i].gid
-//            name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-//            if(proteinObj_list.prokka.hasOwnProperty(gid) ){
-//               proteinObj_list.prokka[gid].push({pid:pid, data: data[i]})
-//             }else{
-//               proteinObj_list.prokka[gid] = [{pid:pid, data: data[i]}]
-//             }
-//             num_prokka_genes +=1
-//       }
-//    }
-//    //console.log('proteinObj_list.prokka[SEQF3673].len')
-//    //console.log(proteinObj_list.prokka['SEQF3673'].length)
-//    // search the ncbi keys
-//    const pidKeysListN = Object.keys(proteinid_NCBIdata)
-//    protein_list = pidKeysListN.filter(pid => {
-//      data = proteinid_NCBIdata[pid]  // an array
-//      if (pid.toLowerCase().indexOf(searchTextLower) !== -1) {
-//         return true;
-//      }
-//      for(let i in data){
-//      if (data[i].gene && data[i].gene.toLowerCase().indexOf(searchTextLower) !== -1) {
-//          return true;
-//      }
-//      if (data[i].product && data[i].product.toLowerCase().indexOf(searchTextLower) !== -1) {
-//          return true;
-//      }
-//      }
-//    });
-//    //console.log('ncbi protein_list.length')
-//    //console.log(protein_list.length)
-//    
-//    for(let n in protein_list){
-//       pid = protein_list[n]
-//       data = proteinid_NCBIdata[pid]
-//       for(let i in data){
-//            gid = data[i].gid
-//            name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-//            if(proteinObj_list.ncbi.hasOwnProperty(gid) ){
-//               proteinObj_list.ncbi[gid].push({pid:pid, data: data[i]})
-//            }else{
-//               proteinObj_list.ncbi[gid] = [{pid:pid, data: data[i]}]
-//             }
-//             num_ncbi_genes +=1
-//       }
-//    }
-//    }  // end cfg.evn
-//    //console.log(proteinObj_list.ncbi)
-//    //console.log(proteinid_data['SEQF1595_00001'])
+  ////// ends later
  
 
 ///////////// OTIDs /////////////////////////////////////////////////////////////////////////////
