@@ -58,8 +58,7 @@ def find_databases(args):
 	    
 def run(args, dbs):
     #global master_lookup
-    master_lookup_prokka = {}
-    master_lookup_ncbi = {}
+    master_lookup = []
     # prokka first
     for db in dbs['prokka']:
         print('Running1 prokka',db)
@@ -76,15 +75,10 @@ def run(args, dbs):
         result = myconn.execute_fetch_select_dict(q)
         for row in result:
             #print(row)
-            pid = row['PID']
-            if pid in master_lookup_prokka:
-                master_lookup_prokka[pid].append( {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} )
-            else:
-                master_lookup_prokka[pid] = []
-                master_lookup_prokka[pid].append( {'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} )
-            # for n in row:
-#                 if n in master_lookup[pid]:
-#                     master_lookup[gid]['prokka'][n] = str(row[n]).strip()
+            
+            
+            master_lookup.append( {'pid':row['PID'],'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} )
+            
 #                         
     for db in dbs['ncbi']:
         print('Running1 prokka',db)
@@ -101,18 +95,13 @@ def run(args, dbs):
         result = myconn.execute_fetch_select_dict(q)
         for row in result:
             #print(row)
-            pid = row['PID']
-            if pid in master_lookup_ncbi:
-                master_lookup_ncbi[pid].append( {'gene':row['gene'],'gid':gid,'product':row['product']} )
-            else:
-                master_lookup_ncbi[pid] = []
-                master_lookup_ncbi[pid].append( {'gene':row['gene'],'gid':gid,'product':row['product']} )
+            
+            master_lookup.append( {'pid':row['PID'],'gene':row['gene'],'anno':anno,'gid':gid,'product':row['product']} )
+            
 
-
-    file1 =  os.path.join(args.outdir,args.outfileprefix+'NCBILookup.json')  
-    print_dict(file1, master_lookup_ncbi) 
-    file2 =  os.path.join(args.outdir,args.outfileprefix+'PROKKALookup.json')  
-    print_dict(file2, master_lookup_prokka) 
+    file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')  
+    print_dict(file, master_lookup) 
+    
     
 
 def print_dict(filename, dict):
