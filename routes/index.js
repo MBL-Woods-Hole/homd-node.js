@@ -275,14 +275,14 @@ router.post('/site_search', function site_search(req, res) {
    // Search Annotated ProteinIDs
    
    
-   //if(CFG.ENV === 'development'){
+   
    
    let obj,data
    let prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
    //https://github.com/uhop/stream-json/wiki/StreamValues
    
    //const jsonStream = StreamValues.withParser();
-   
+   if(CFG.ENV === 'development'){
    //const proteinid_PROKKAdata = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsPROKKALookup.json'))
    //const proteinid_NCBIdata   = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsNCBILookup.json'))
    //let prokka_file = path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsPROKKALookup.json')
@@ -327,18 +327,18 @@ router.post('/site_search', function site_search(req, res) {
 //        console.log(key, value);
 //    });
    pipeline.on('end', () => {
-        // console.log('All Done');
-//         console.log('prokka_gene_count')
-//         console.log(prokka_gene_count)
-//         console.log('prokka_genome_count')
-//         console.log(Object.keys(prokka_genome_count_lookup).length)
-//         console.log('ncbi_gene_count')
-//         console.log(ncbi_gene_count)
-//         console.log('ncbi_genome_count')
-//         console.log(Object.keys(ncbi_genome_count_lookup).length)
+        console.log('All Done');
+        console.log('prokka_gene_count')
+        console.log(prokka_gene_count)
+        console.log('prokka_genome_count')
+        console.log(Object.keys(prokka_genome_count_lookup).length)
+        console.log('ncbi_gene_count')
+        console.log(ncbi_gene_count)
+        console.log('ncbi_genome_count')
+        console.log(Object.keys(ncbi_genome_count_lookup).length)
         
-  ////// ends later
- 
+  })
+} 
 
 ///////////// OTIDs /////////////////////////////////////////////////////////////////////////////
   // OTID Metadata
@@ -503,7 +503,7 @@ router.post('/site_search', function site_search(req, res) {
    });
   
 })
- }); // end pipeline
+// }); // end pipeline
 
 module.exports = router
 
