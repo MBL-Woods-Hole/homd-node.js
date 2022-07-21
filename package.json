@@ -32,6 +32,7 @@
     "save": "^2.4.0",
     "selenium-webdriver": "^4.1.1",
     "simple-node-logger": "^21.8.12",
+    "stream-json": "^1.7.4",
     "winston": "^3.7.2",
     "xml2json": "^0.12.0"
   },
