@@ -416,7 +416,6 @@ router.get('/explorer', function explorer (req, res) {
   //const renderFxn = (req, res, gid, otid, organism,  allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
   const renderFxn = (req, res, args) => {
   
-    
     res.render('pages/genome/explorer', {
       title: 'HOMD :: ' + args.gid,
       pgname: 'genome/explorer', // for AbountThisPage 
@@ -428,7 +427,6 @@ router.get('/explorer', function explorer (req, res) {
       all_annos: JSON.stringify(args.allAnnosObj),
       anno_type: args.annoType,
       page_data: JSON.stringify(args.pageData),
-      
       organism: args.organism,
       gc: args.gc,
       info_data: JSON.stringify(args.annoInfoObj),

@@ -83,7 +83,7 @@ function anno_search(search_text,anno){
   args.search_text = search_text
   var xmlhttp = new XMLHttpRequest();
   
-  xmlhttp.open("POST", "/anno_search", true);
+  xmlhttp.open("POST", "/anno_protein_search", true);
   xmlhttp.setRequestHeader("Content-type","application/json");
   xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
