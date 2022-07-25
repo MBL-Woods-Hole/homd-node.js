@@ -1,4 +1,18 @@
 <style>
+body {
+            -webkit-transition: background-color 1s;
+            transition: background-color 1s;
+}
+html, body { min-height: 100%; }
+body.loading {
+	background: #333 url('http://code.jquery.com/mobile/1.3.1/images/ajax-loader.gif') no-repeat center 40%;
+	
+	-webkit-transition: background-color 0;
+	transition: background-color 0;
+	opacity: 50%;
+	-webkit-transition: opacity 0;
+	transition: opacity 0;
+}
 .search-box{
    height:200px;
    width:100%;
@@ -8,6 +22,7 @@
    background:lightyellow;
    border:1px solid black;
 }
+
 #srch_txt{
    color:orange;
 }
@@ -36,7 +51,7 @@ table th,td{
 <% var contig_list = JSON.parse(contig_list) %>
 <% var help_list = JSON.parse(help_pages) %>
 
-<body>
+<body class="loading">
   
     <div id='wrapper'>
     <%- include('../partials/header_img'); %>
@@ -157,7 +172,13 @@ table th,td{
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-  
+  var body = document.getElementsByTagName('body')[0];
+  var removeLoading = function() {
+    setTimeout(function() {
+        body.className = body.className.replace(/loading/, '');
+    }, 3000);
+};
+removeLoading();
 </script>
 
 
