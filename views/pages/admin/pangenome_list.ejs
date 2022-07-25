@@ -26,10 +26,10 @@
        <% for(n in pangenomes){ %>
           <tr>
             <td>
-              <input type='radio' name='pg' value='<%= pangenomes[n].pangenome_name %>'>
+              <input type='radio' name='pg' value='<%= pangenomes[n].name %>'>
             </td>
-            <td><%= pangenomes[n].pangenome_name %></td>
-            <td><%- pangenomes[n].description %></td>
+            <td><%= pangenomes[n].name %></td>
+            <td></td>
           </tr>
        <% } %>
        </table>
