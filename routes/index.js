@@ -309,6 +309,9 @@ router.post('/site_search', function site_search(req, res) {
    q += " or gene like '%"+searchTextLower+"%'"
    q += " or PID like '%"+searchTextLower+"%')"
    q += " GROUP BY anno"
+   if(CFG.ENV == 'production'){
+      q = "select 'a','b','c','d' from otid_prime limit 0"
+   }
    console.log(q)
    //const jsonStream = StreamValues.withParser();
 //   if(CFG.ENV === 'development'){
