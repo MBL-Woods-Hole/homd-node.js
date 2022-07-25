@@ -484,7 +484,59 @@ router.get('/email_check', [helpers.isLoggedIn, helpers.isAdmin], (req, res) => 
 
 })
 
+router.get('/pangenome_list', [helpers.isLoggedIn, helpers.isAdmin], (req, res) => {
 
+    console.log('pangenome_list-get');
+    
+    
+    
+    res.render('pages/admin/pangenome_list', {
+         title: 'HOMD :: ADMIN',
+         pgname: '', // for AbountThisPage
+         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+         user: JSON.stringify(req.user || {}),
+         pglist: JSON.stringify(C.pangenomes),
+    });  
+
+})
+router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res) => {
+
+    console.log('anvio_pangenome-post');
+    let pan_file = path.join(CFG.PATH_TO_PANGENOMES,req.body.pg,'PAN.db')
+    let genome_file = path.join(CFG.PATH_TO_PANGENOMES,req.body.pg,'GENOMES.db')
+    let pan_cmd = 'anvi-display-panAV.py'
+    let args = ['-p',pan_file,'-g',genome_file,'-I','homd.org','-P',8001]
+    console.log(genome_file)
+    console.log(pan_cmd + args.join(' '))
+    //https://www.digitalocean.com/community/tutorials/how-to-launch-child-processes-in-node-js
+    const { spawn } = require('child_process');
+
+    const child = spawn(pan_cmd, args);
+    child.stdout.on('data', data => {
+      console.log(`stdout:\n${data}`);
+    });
+
+    child.stderr.on('data', data => {
+      console.error(`stderr: ${data}`);
+    });
+    child.on('error', (error) => {
+      console.error(`error: ${error.message}`);
+    });
+
+    child.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+    res.render('pages/admin/pangenome_list', {
+         title: 'HOMD :: ADMIN',
+         pgname: '', // for AbountThisPage
+         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+         user: JSON.stringify(req.user || {}),
+         pglist: JSON.stringify(C.pangenomes),
+    });  
+
+})
 
 
 module.exports = router;

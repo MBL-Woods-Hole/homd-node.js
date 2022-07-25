@@ -194,39 +194,63 @@ function create_protein_table(anno, obj){
 }
 router.post('/anno_protein_search', function anno_search(req, res) {
     console.log(req.body)
-    let obj,data,name,resultObj={}
+    let obj,data,gid,name,resultObj={}
     const anno = req.body.anno
     const searchTextLower = req.body.search_text.toLowerCase()
-    let protein_file   = path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsLookup.json')
-    const pipeline = fs.createReadStream(protein_file).pipe(Stream.withParser());
-    pipeline.on('data', data => {
-       
-       //gid = data.gid,gene,pid,product
-      obj = data.value
-      
-//        console.log(obj)
-       if(obj.pid.toLowerCase().indexOf(searchTextLower) !== -1
-          || obj.gid.toLowerCase().indexOf(searchTextLower) !== -1
-          || (obj.gene && obj.gene.toLowerCase().indexOf(searchTextLower) !== -1)
-          || obj.product.toLowerCase().indexOf(searchTextLower) !== -1
-       ){
-           //console.log(obj)
-           if(obj.anno === anno){
-               //console.log('ncbi')
-               name = C.genome_lookup[obj.gid].genus +' '+C.genome_lookup[obj.gid].species+' '+C.genome_lookup[obj.gid].ccolct
-               if(resultObj.hasOwnProperty(obj.gid)){
-                   resultObj[obj.gid].push( {name:name, pid:obj.pid, gene:obj.gene, product:obj.product} )
-               }else{
-                   resultObj[obj.gid] = [ {name:name, pid:obj.pid, gene:obj.gene, product:obj.product} ]
-               }
-           }
+    let q = "SELECT  PID, gid, gene, product from protein_search WHERE("
+    q += " product like '%"+searchTextLower+"%'" 
+    q += " OR gene like '%"+searchTextLower+"%'"
+    q += " OR PID like '%"+searchTextLower+"%')"
+    q += " AND anno='"+anno+"'"
+    console.log(q)
+    TDBConn.query(q, (err, rows) => {
+    if (err) {
+        console.log(err)
+        return
+    }
+    
+       for(let i in rows){
+          gid = rows[i].gid
+          name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+          if(resultObj.hasOwnProperty(gid)){
+                   resultObj[gid].push( {name:name, pid:rows[i].PID, gene:rows[i].gene, product:rows[i].product} )
+          }else{
+                   resultObj[gid] = [ {name:name, pid:rows[i].PID, gene:rows[i].gene, product:rows[i].product} ]
+          }
        }
-       
-       
-    });
-    pipeline.on('end', () => {
+   
        res.send(create_protein_table(anno, resultObj))
-    });
+    })
+    // let protein_file   = path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsLookup.json')
+//     const pipeline = fs.createReadStream(protein_file).pipe(Stream.withParser());
+//     pipeline.on('data', data => {
+//        
+//        //gid = data.gid,gene,pid,product
+//       obj = data.value
+//       
+// //        console.log(obj)
+//        if(obj.pid.toLowerCase().indexOf(searchTextLower) !== -1
+//           || obj.gid.toLowerCase().indexOf(searchTextLower) !== -1
+//           || (obj.gene && obj.gene.toLowerCase().indexOf(searchTextLower) !== -1)
+//           || obj.product.toLowerCase().indexOf(searchTextLower) !== -1
+//        ){
+//            //console.log(obj)
+//            if(obj.anno === anno){
+//                //console.log('ncbi')
+//                name = C.genome_lookup[obj.gid].genus +' '+C.genome_lookup[obj.gid].species+' '+C.genome_lookup[obj.gid].ccolct
+//                if(resultObj.hasOwnProperty(obj.gid)){
+//                    resultObj[obj.gid].push( {name:name, pid:obj.pid, gene:obj.gene, product:obj.product} )
+//                }else{
+//                    resultObj[obj.gid] = [ {name:name, pid:obj.pid, gene:obj.gene, product:obj.product} ]
+//                }
+//            }
+//        }
+//        
+//        
+//     });
+//     pipeline.on('end', () => {
+//        res.send(create_protein_table(anno, resultObj))
+//     });
 })
 router.post('/site_search', function site_search(req, res) {
   helpers.accesslog(req, res)
@@ -278,67 +302,97 @@ router.post('/site_search', function site_search(req, res) {
    
    
    let obj,data
-   let prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+   let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
    //https://github.com/uhop/stream-json/wiki/StreamValues
-   
+   let q = "SELECT anno, count(DISTINCT gid) as gid_count, count(DISTINCT pid) as pid_count from protein_search WHERE("
+   q += " product like '%"+searchTextLower+"%'" 
+   q += " or gene like '%"+searchTextLower+"%'"
+   q += " or PID like '%"+searchTextLower+"%')"
+   q += " GROUP BY anno"
+   console.log(q)
    //const jsonStream = StreamValues.withParser();
-   if(CFG.ENV === 'development'){
+//   if(CFG.ENV === 'development'){
+   TDBConn.query(q, (err, rows) => {
+    if (err) {
+        console.log(err)
+        return
+    }
+    console.log('rows')
+    console.log(rows)
+    if(rows.length === 0){
+       //prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+    }else{
+       for(let i in rows){
+         if( rows[i].anno === 'prokka'){
+            prokka_genome_count = rows[i].gid_count
+            prokka_gene_count = rows[i].pid_count
+         }else if(rows[i].anno === 'ncbi'){
+            ncbi_genome_count = rows[i].gid_count
+            ncbi_gene_count = rows[i].pid_count
+         }
+       }
+    }
+    
+    //console.log(seqstr.length)
+    
+
+ 
    //const proteinid_PROKKAdata = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsPROKKALookup.json'))
    //const proteinid_NCBIdata   = require(path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsNCBILookup.json'))
    //let prokka_file = path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsPROKKALookup.json')
    //let ncbi_file   = path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsNCBILookup.json')
-   let protein_file   = path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsLookup.json')
-   const pipeline = fs.createReadStream(protein_file).pipe(Stream.withParser());
-   //let objectCounter = 0;
-   pipeline.on('data', data => {
-       
-       //gid = data.gid,gene,pid,product
-      obj = data.value
-      
-//        console.log(obj)
-       if(obj.pid.toLowerCase().indexOf(searchTextLower) !== -1
-          || obj.gid.toLowerCase().indexOf(searchTextLower) !== -1
-          || (obj.gene && obj.gene.toLowerCase().indexOf(searchTextLower) !== -1)
-          || obj.product.toLowerCase().indexOf(searchTextLower) !== -1
-       ){
-           //console.log(obj)
-           if(obj.anno === 'ncbi'){
-               //console.log('ncbi')
-               ++ncbi_gene_count
-               if(ncbi_genome_count_lookup.hasOwnProperty(obj.gid)){
-                   ncbi_genome_count_lookup[obj.gid] +=1
-                }else{
-                   ncbi_genome_count_lookup[obj.gid] =1
-                }
-           }else{
-               //console.log('prokka')
-               ++prokka_gene_count
-               if(prokka_genome_count_lookup.hasOwnProperty(obj.gid)){
-                   prokka_genome_count_lookup[obj.gid] +=1
-                }else{
-                   prokka_genome_count_lookup[obj.gid] =1
-                }
-           }
-       }
-    });
-   
-   // fs.createReadStream(prokka_file).pipe(jsonStream.input);
-//    jsonStream.on('data', ({key, value}) => {
-//        console.log(key, value);
-//    });
-   pipeline.on('end', () => {
-        console.log('All Done');
-        console.log('prokka_gene_count')
-        console.log(prokka_gene_count)
-        console.log('prokka_genome_count')
-        console.log(Object.keys(prokka_genome_count_lookup).length)
-        console.log('ncbi_gene_count')
-        console.log(ncbi_gene_count)
-        console.log('ncbi_genome_count')
-        console.log(Object.keys(ncbi_genome_count_lookup).length)
-        
-  })
-} 
+//    let protein_file   = path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsLookup.json')
+//    const pipeline = fs.createReadStream(protein_file).pipe(Stream.withParser());
+//    //let objectCounter = 0;
+//    pipeline.on('data', data => {
+//        
+//        //gid = data.gid,gene,pid,product
+//       obj = data.value
+//       
+// //        console.log(obj)
+//        if(obj.pid.toLowerCase().indexOf(searchTextLower) !== -1
+//           || obj.gid.toLowerCase().indexOf(searchTextLower) !== -1
+//           || (obj.gene && obj.gene.toLowerCase().indexOf(searchTextLower) !== -1)
+//           || obj.product.toLowerCase().indexOf(searchTextLower) !== -1
+//        ){
+//            //console.log(obj)
+//            if(obj.anno === 'ncbi'){
+//                //console.log('ncbi')
+//                ++ncbi_gene_count
+//                if(ncbi_genome_count_lookup.hasOwnProperty(obj.gid)){
+//                    ncbi_genome_count_lookup[obj.gid] +=1
+//                 }else{
+//                    ncbi_genome_count_lookup[obj.gid] =1
+//                 }
+//            }else{
+//                //console.log('prokka')
+//                ++prokka_gene_count
+//                if(prokka_genome_count_lookup.hasOwnProperty(obj.gid)){
+//                    prokka_genome_count_lookup[obj.gid] +=1
+//                 }else{
+//                    prokka_genome_count_lookup[obj.gid] =1
+//                 }
+//            }
+//        }
+//     });
+//    
+//    // fs.createReadStream(prokka_file).pipe(jsonStream.input);
+// //    jsonStream.on('data', ({key, value}) => {
+// //        console.log(key, value);
+// //    });
+//    pipeline.on('end', () => {
+//         console.log('All Done');
+//         console.log('prokka_gene_count')
+//         console.log(prokka_gene_count)
+//         console.log('prokka_genome_count')
+//         console.log(Object.keys(prokka_genome_count_lookup).length)
+//         console.log('ncbi_gene_count')
+//         console.log(ncbi_gene_count)
+//         console.log('ncbi_genome_count')
+//         console.log(Object.keys(ncbi_genome_count_lookup).length)
+//         
+//   })
+//} 
 
 ///////////// OTIDs /////////////////////////////////////////////////////////////////////////////
   // OTID Metadata
@@ -476,7 +530,12 @@ router.post('/site_search', function site_search(req, res) {
           helpLst.push(cleanfinal)
         }
       }
-      
+      if(CFG.ENV == 'production'){
+          prokka_genome_count=0
+          prokka_gene_count=0
+          ncbi_genome_count=0
+          ncbi_gene_count=0
+      }
 
       res.render('pages/search_result', {
         title: 'HOMD :: Site Search',
@@ -489,9 +548,9 @@ router.post('/site_search', function site_search(req, res) {
         gid_list: JSON.stringify(gidLst),
         
         //let prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
-        prokka_list_len: Object.keys(prokka_genome_count_lookup).length,
+        num_prokka_genomes: prokka_genome_count,
         num_prokka_genes: prokka_gene_count,
-        ncbi_list_len: Object.keys(ncbi_genome_count_lookup).length,
+        num_ncbi_genomes: ncbi_genome_count,
         num_ncbi_genes: ncbi_gene_count,
         
         
@@ -504,7 +563,7 @@ router.post('/site_search', function site_search(req, res) {
   
 })
 // }); // end pipeline
-
+ })  // end anno query
 module.exports = router
 
 // function get_options_by_node (node) {

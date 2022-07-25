@@ -88,14 +88,18 @@ table th,td{
     Annotations (in development):<center>Your Search String: "<%= search_text %>"</center>
     
     <div class='search-box'>
-    PROKKA Annotation hits: <%= num_prokka_genes %> genes (<small>in <%= prokka_list_len %> genomes</small>)
-    <% if(prokka_list_len > 0){ %>
+    PROKKA Annotation hits: 
+    <% if(num_prokka_genomes > 0){ %>
        --<span class='search_link' onclick="anno_search('<%= search_text %>','prokka')">show results</span>--
     <% } %>
-    <br>NCBI Annotation hits: <%= num_ncbi_genes %> genes (<small>in <%= ncbi_list_len %> genomes</small>)
-    <% if(ncbi_list_len > 0){ %>
+    <%= num_prokka_genes %> genes (<small>in <%= num_prokka_genomes %> genomes</small>)
+    
+    <br>NCBI Annotation hits: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <% if(num_ncbi_genomes > 0){ %>
      --<span class='search_link' onclick="anno_search('<%= search_text %>','ncbi')">show results</span>--
     <% } %>
+    <%= num_ncbi_genes %> genes (<small>in <%= num_ncbi_genomes %> genomes</small>)
+    
     <div id='anno_result_box'></div>
   </div>
     
