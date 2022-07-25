@@ -309,7 +309,7 @@ router.post('/site_search', function site_search(req, res) {
    q += " or gene like '%"+searchTextLower+"%'"
    q += " or PID like '%"+searchTextLower+"%')"
    q += " GROUP BY anno"
-   if(CFG.ENV == 'productionX'){
+   if(CFG.ENV == 'production'){
       q = "select 'a','b','c','d' from otid_prime limit 0"
    }
    console.log(q)
@@ -533,7 +533,7 @@ router.post('/site_search', function site_search(req, res) {
           helpLst.push(cleanfinal)
         }
       }
-      if(CFG.ENV == 'productionX'){
+      if(CFG.ENV == 'production'){
           prokka_genome_count=0
           prokka_gene_count=0
           ncbi_genome_count=0
