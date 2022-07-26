@@ -153,7 +153,7 @@ function create_protein_table(anno, obj){
     let html = '',data_lst,name
     html += "<center><table>"
     html += "<center><table>"
-    html += '<tr><th>SEQ-ID</th><th>Open in<br>Explorer</th><th>Genome</th><th>'+anno.toUpperCase()+'<br>ProteinID</th><th>Gene</th><th>GeneProduct</th></tr>'
+    html += '<tr><th>SEQ-ID</th><th>Open in<br>Explorer</th><th>Genome</th><th>'+anno.toUpperCase()+'<br>ProteinID</th><th>GeneProduct</th></tr>'
     
     for(let gid in obj){
         data_lst = obj[gid]
@@ -162,7 +162,7 @@ function create_protein_table(anno, obj){
         html += "<td><a href='genome/explorer?gid="+gid+"&anno="+anno+"'>open</a></td>"
         html += '<td>'+data_lst[i].name+'</td>'
         html += '<td>'+data_lst[i].pid+'</td>'
-        html += '<td>'+data_lst[i].gene+'</td>'
+        //html += '<td>'+data_lst[i].gene+'</td>'
         html += '<td>'+data_lst[i].product+'</td></tr>'
         }
     }
@@ -197,9 +197,9 @@ router.post('/anno_protein_search', function anno_search(req, res) {
     let obj,data,gid,name,resultObj={}
     const anno = req.body.anno
     const searchTextLower = req.body.search_text.toLowerCase()
-    let q = "SELECT  PID, gid, gene, product from protein_search WHERE("
+    let q = "SELECT  PID, gid, product from protein_search WHERE("
     q += " product like '%"+searchTextLower+"%'" 
-    q += " OR gene like '%"+searchTextLower+"%'"
+    //q += " OR gene like '%"+searchTextLower+"%'"
     q += " OR PID like '%"+searchTextLower+"%')"
     q += " AND anno='"+anno+"'"
     console.log(q)
@@ -213,9 +213,11 @@ router.post('/anno_protein_search', function anno_search(req, res) {
           gid = rows[i].gid
           name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
           if(resultObj.hasOwnProperty(gid)){
-                   resultObj[gid].push( {name:name, pid:rows[i].PID, gene:rows[i].gene, product:rows[i].product} )
+                   //resultObj[gid].push( {name:name, pid:rows[i].PID, gene:rows[i].gene, product:rows[i].product} )
+                   resultObj[gid].push( {name:name, pid:rows[i].PID, product:rows[i].product} )
           }else{
-                   resultObj[gid] = [ {name:name, pid:rows[i].PID, gene:rows[i].gene, product:rows[i].product} ]
+                   //resultObj[gid] = [ {name:name, pid:rows[i].PID, gene:rows[i].gene, product:rows[i].product} ]
+                   resultObj[gid] = [ {name:name, pid:rows[i].PID, product:rows[i].product} ]
           }
        }
    
@@ -306,10 +308,10 @@ router.post('/site_search', function site_search(req, res) {
    //https://github.com/uhop/stream-json/wiki/StreamValues
    let q = "SELECT anno, count(DISTINCT gid) as gid_count, count(DISTINCT pid) as pid_count from protein_search WHERE("
    q += " product like '%"+searchTextLower+"%'" 
-   q += " or gene like '%"+searchTextLower+"%'"
+   //q += " or gene like '%"+searchTextLower+"%'"
    q += " or PID like '%"+searchTextLower+"%')"
    q += " GROUP BY anno"
-   if(CFG.ENV == 'production'){
+   if(CFG.ENV == 'productionX'){
       q = "select 'a','b','c','d' from otid_prime limit 0"
    }
    console.log(q)
@@ -533,7 +535,7 @@ router.post('/site_search', function site_search(req, res) {
           helpLst.push(cleanfinal)
         }
       }
-      if(CFG.ENV == 'production'){
+      if(CFG.ENV == 'productionX'){
           prokka_genome_count=0
           prokka_gene_count=0
           ncbi_genome_count=0
