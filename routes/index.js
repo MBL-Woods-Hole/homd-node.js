@@ -164,7 +164,7 @@ function create_protein_table(anno, obj, searchtext){
             pid = data_lst[i].pid.toLowerCase()
             idx = pid.indexOf(searchtext)
             if(idx != -1){
-               html += '<td>'+data_lst[i].pid.slice(0,idx)+ "<font color='red'>"+searchtext +'</font>'+ data_lst[i].pid.slice(idx+searchtext.length)+'</td>'
+               html += '<td>'+data_lst[i].pid.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].pid.slice(idx+searchtext.length)+'</td>'
             }else{
                 html += '<td>'+data_lst[i].pid+'</td>'
             }
@@ -174,7 +174,7 @@ function create_protein_table(anno, obj, searchtext){
             idx = product.indexOf(searchtext)
             //console.log('product '+product)
             if(idx != -1){
-               html += '<td>'+data_lst[i].product.slice(0,idx)+ "<font color='red'>"+searchtext +'</font>'+ data_lst[i].product.slice(idx+searchtext.length)+'</td>'
+               html += '<td>'+data_lst[i].product.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].product.slice(idx+searchtext.length)+'</td>'
             }else{
                 html += '<td>'+data_lst[i].product+'</td>'
             }

@@ -13,6 +13,8 @@ $(document).ready(function(){
 function get_annotations_counts(intext){
     var xmlhttp = new XMLHttpRequest();
   args = {intext:intext}
+  document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+  document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
   xmlhttp.open("POST", "/get_annotations_counts_NEW", true);
   xmlhttp.setRequestHeader("Content-type","application/json");
   xmlhttp.onreadystatechange = function() {
@@ -21,15 +23,22 @@ function get_annotations_counts(intext){
         console.log('get_annotations_counts')
         console.log(resp)
         // [prokka_genome_count,prokka_gene_count,ncbi_genome_count,ncbi_gene_count]
-        if(resp[0] !== 0){
-            html1 = "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka')\">show results</span>--"
+        if(resp[0] === 0){
+            html1 = "0"
+        }else{
+            html1 = resp[1]+' genes in '+resp[0]+' genomes '
+            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka')\">show results</span>--"
+            
         }
-        document.getElementById('prokka_count_div').innerHTML = resp[1]+' genes in '+resp[0]+' genomes '+html1
+        document.getElementById('prokka_count_div').innerHTML = html1
         
-        if(resp[1] !== 0){
-            html2 = "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
+        if(resp[1] === 0){
+            html2 = "0"
+        }else{
+            html2 = resp[3]+' genes in '+resp[2]+' genomes '
+            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
         }
-        document.getElementById('ncbi_count_div').innerHTML = resp[3]+' genes in '+resp[2]+' genomes '+html2
+        document.getElementById('ncbi_count_div').innerHTML = html2
       }
   }
   xmlhttp.send(JSON.stringify(args));
