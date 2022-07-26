@@ -26,16 +26,24 @@ function get_annotations_counts(intext){
         if(parseInt(resp[0]) === 0){
             html1 = "0"
         }else{
-            html1 = resp[1]+' genes in '+resp[0]+' genomes '
+            if(parseInt(resp[0]) === 1){
+                html1 = resp[1]+' gene(s) in 1 genome '
+            }else{
+                html1 = resp[1]+' gene(s) in '+resp[0]+' genomes '
+            }
             html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka')\">show results</span>--"
             
         }
         document.getElementById('prokka_count_div').innerHTML = html1
         
-        if(parseInt(resp[1]) === 0){
+        if(parseInt(resp[2]) === 0){
             html2 = "0"
         }else{
-            html2 = resp[3]+' genes in '+resp[2]+' genomes '
+            if(parseInt(resp[2]) === 1){
+                html2 = resp[3]+' gene(s) in 1 genome '
+            }else{
+                html2 = resp[3]+' gene(s) in '+resp[2]+' genomes '
+            }
             html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
         }
         document.getElementById('ncbi_count_div').innerHTML = html2
