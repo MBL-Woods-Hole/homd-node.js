@@ -197,78 +197,21 @@ router.post('/anno_protein_search', function anno_search(req, res) {
     let obj,data,gid,name,resultObj={}
     const anno = req.body.anno
     const searchTextLower = req.body.search_text.toLowerCase()
-    let q = "SELECT  PID, gid, product from protein_search WHERE("
-    q += " product like '%"+searchTextLower+"%'" 
-    //q += " OR gene like '%"+searchTextLower+"%'"
-    q += " OR PID like '%"+searchTextLower+"%')"
-    q += " AND anno='"+anno+"'"
-    console.log(q)
-    TDBConn.query(q, (err, rows) => {
-    if (err) {
-        console.log(err)
-        return
-    }
     
-       for(let i in rows){
-          gid = rows[i].gid
-          name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-          if(resultObj.hasOwnProperty(gid)){
-                   //resultObj[gid].push( {name:name, pid:rows[i].PID, gene:rows[i].gene, product:rows[i].product} )
-                   resultObj[gid].push( {name:name, pid:rows[i].PID, product:rows[i].product} )
-          }else{
-                   //resultObj[gid] = [ {name:name, pid:rows[i].PID, gene:rows[i].gene, product:rows[i].product} ]
-                   resultObj[gid] = [ {name:name, pid:rows[i].PID, product:rows[i].product} ]
-          }
-       }
-   
-       res.send(create_protein_table(anno, resultObj))
-    })
-    // let protein_file   = path.join(CFG.PATH_TO_DATA, 'homdData-ProteinIDsLookup.json')
-//     const pipeline = fs.createReadStream(protein_file).pipe(Stream.withParser());
-//     pipeline.on('data', data => {
-//        
-//        //gid = data.gid,gene,pid,product
-//       obj = data.value
-//       
-// //        console.log(obj)
-//        if(obj.pid.toLowerCase().indexOf(searchTextLower) !== -1
-//           || obj.gid.toLowerCase().indexOf(searchTextLower) !== -1
-//           || (obj.gene && obj.gene.toLowerCase().indexOf(searchTextLower) !== -1)
-//           || obj.product.toLowerCase().indexOf(searchTextLower) !== -1
-//        ){
-//            //console.log(obj)
-//            if(obj.anno === anno){
-//                //console.log('ncbi')
-//                name = C.genome_lookup[obj.gid].genus +' '+C.genome_lookup[obj.gid].species+' '+C.genome_lookup[obj.gid].ccolct
-//                if(resultObj.hasOwnProperty(obj.gid)){
-//                    resultObj[obj.gid].push( {name:name, pid:obj.pid, gene:obj.gene, product:obj.product} )
-//                }else{
-//                    resultObj[obj.gid] = [ {name:name, pid:obj.pid, gene:obj.gene, product:obj.product} ]
-//                }
-//            }
-//        }
-//        
-//        
-//     });
-//     pipeline.on('end', () => {
-//        res.send(create_protein_table(anno, resultObj))
-//     });
+    if(anno === 'prokka'){
+        resultObj = req.session.site_search_result.prokka
+    }else{
+        resultObj = req.session.site_search_result.ncbi
+    }
+     
+    res.send(create_protein_table(anno, resultObj))
+    
 })
 router.post('/site_search', function site_search(req, res) {
   helpers.accesslog(req, res)
   console.log('in index.js POST -Search')
   console.log(req.body)
-  /*
-    Taxonomy DB - genus;species
-        TaxObjects:strain,refseqID,OTID
-    Genome DB   - genus;species
-        GeneObjects: SeqID
-    Phage DB - host Genus;Species
-        PhageObjects:
-    Help Pages
-    NCBI Genome Annot
-    Prokka Genome Annot
-  */
+
   
   
 ////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
@@ -303,14 +246,15 @@ router.post('/site_search', function site_search(req, res) {
    
    
    
-   let obj,data
+   let obj,data,gid,name,anno
    let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
    //https://github.com/uhop/stream-json/wiki/StreamValues
-   let q = "SELECT anno, count(DISTINCT gid) as gid_count, count(DISTINCT pid) as pid_count from protein_search WHERE("
-   q += " product like '%"+searchTextLower+"%'" 
-   //q += " or gene like '%"+searchTextLower+"%'"
-   q += " or PID like '%"+searchTextLower+"%')"
-   q += " GROUP BY anno"
+   let q = "SELECT  anno,gid,PID, product from protein_search WHERE("
+    q += " product like '%"+searchTextLower+"%'" 
+    //q += " OR gene like '%"+searchTextLower+"%'"
+    q += " OR PID like '%"+searchTextLower+"%')"
+    //q += " AND anno='"+anno+"'"
+    //q += " GROUP BY anno"
    if(CFG.ENV == 'productionX'){
       q = "select 'a','b','c','d' from otid_prime limit 0"
    }
@@ -324,20 +268,38 @@ router.post('/site_search', function site_search(req, res) {
     }
     console.log('rows')
     console.log(rows)
+    req.session.site_search_result = {}
+    req.session.site_search_result.prokka = {}
+    req.session.site_search_result.ncbi = {}
     if(rows.length === 0){
        //prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
     }else{
+       
        for(let i in rows){
-         if( rows[i].anno === 'prokka'){
-            prokka_genome_count = rows[i].gid_count
-            prokka_gene_count = rows[i].pid_count
-         }else if(rows[i].anno === 'ncbi'){
-            ncbi_genome_count = rows[i].gid_count
-            ncbi_gene_count = rows[i].pid_count
+         gid = rows[i].gid
+         anno = rows[i].anno
+         name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+         if( anno === 'prokka'){
+            if(gid in req.session.site_search_result.prokka){
+              req.session.site_search_result.prokka[gid].push({name:name, pid:rows[i].PID, product:rows[i].product})
+            }else{
+              req.session.site_search_result.prokka[gid] = [{name:name, pid:rows[i].PID, product:rows[i].product}]
+            }
+            
+            prokka_gene_count += 1 
+         }else if(anno === 'ncbi'){
+            if(gid in req.session.site_search_result.ncbi){
+              req.session.site_search_result.ncbi[gid].push({name:name, pid:rows[i].PID, product:rows[i].product})
+            }else{
+              req.session.site_search_result.ncbi[gid] = [{name:name, pid:rows[i].PID, product:rows[i].product}]
+            }
+            
+            ncbi_gene_count +=1
          }
        }
     }
-    
+    prokka_genome_count = Object.keys(req.session.site_search_result.prokka).length
+    ncbi_genome_count = Object.keys(req.session.site_search_result.ncbi).length
     //console.log(seqstr.length)
     
 
