@@ -272,8 +272,8 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
         console.log(err)
         return
     }
-    console.log('rows')
-    console.log(rows)
+    //console.log('rows')
+    //console.log(rows)
     req.session.site_search_result = {}
     req.session.site_search_result.prokka = {}
     req.session.site_search_result.ncbi = {}

@@ -23,7 +23,7 @@ function get_annotations_counts(intext){
         console.log('get_annotations_counts')
         console.log(resp)
         // [prokka_genome_count,prokka_gene_count,ncbi_genome_count,ncbi_gene_count]
-        if(resp[0] === 0){
+        if(parseInt(resp[0]) === 0){
             html1 = "0"
         }else{
             html1 = resp[1]+' genes in '+resp[0]+' genomes '
@@ -32,7 +32,7 @@ function get_annotations_counts(intext){
         }
         document.getElementById('prokka_count_div').innerHTML = html1
         
-        if(resp[1] === 0){
+        if(parseInt(resp[1]) === 0){
             html2 = "0"
         }else{
             html2 = resp[3]+' genes in '+resp[2]+' genomes '
