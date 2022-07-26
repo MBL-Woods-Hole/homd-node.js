@@ -149,8 +149,8 @@ router.get('/oralgen', function oralgen(req, res) {
 //    return proteinObj
 //    
 // }
-function create_protein_table(anno, obj){
-    let html = '',data_lst,name
+function create_protein_table(anno, obj, searchtext){
+    let html = '',data_lst,name,pid,product,idx
     html += "<center><table>"
     html += "<center><table>"
     html += '<tr><th>SEQ-ID</th><th>Open in<br>Explorer</th><th>Genome</th><th>'+anno.toUpperCase()+'<br>ProteinID</th><th>GeneProduct</th></tr>'
@@ -158,12 +158,27 @@ function create_protein_table(anno, obj){
     for(let gid in obj){
         data_lst = obj[gid]
         for(let i in data_lst){
-        html += '<tr><td>'+gid+'</td>'
-        html += "<td><a href='genome/explorer?gid="+gid+"&anno="+anno+"'>open</a></td>"
-        html += '<td>'+data_lst[i].name+'</td>'
-        html += '<td>'+data_lst[i].pid+'</td>'
-        //html += '<td>'+data_lst[i].gene+'</td>'
-        html += '<td>'+data_lst[i].product+'</td></tr>'
+            html += '<tr><td>'+gid+'</td>'
+            html += "<td><a href='genome/explorer?gid="+gid+"&anno="+anno+"'>open</a></td>"
+            html += '<td>'+data_lst[i].name+'</td>'
+            pid = data_lst[i].pid.toLowerCase()
+            idx = pid.indexOf(searchtext)
+            if(idx != -1){
+               html += '<td>'+data_lst[i].pid.slice(0,idx)+ "<font color='red'>"+searchtext +'</font>'+ data_lst[i].pid.slice(idx+searchtext.length)+'</td>'
+            }else{
+                html += '<td>'+data_lst[i].pid+'</td>'
+            }
+    
+            //html += '<td>'+data_lst[i].gene+'</td>'
+            product = data_lst[i].product.toLowerCase()
+            idx = product.indexOf(searchtext)
+            //console.log('product '+product)
+            if(idx != -1){
+               html += '<td>'+data_lst[i].product.slice(0,idx)+ "<font color='red'>"+searchtext +'</font>'+ data_lst[i].product.slice(idx+searchtext.length)+'</td>'
+            }else{
+                html += '<td>'+data_lst[i].product+'</td>'
+            }
+            html += '</tr>'
         }
     }
     html += '</table></center>'
@@ -197,56 +212,47 @@ router.post('/anno_protein_search', function anno_search(req, res) {
     let obj,data,gid,name,resultObj={}
     const anno = req.body.anno
     const searchTextLower = req.body.search_text.toLowerCase()
-    
     if(anno === 'prokka'){
         resultObj = req.session.site_search_result.prokka
     }else{
         resultObj = req.session.site_search_result.ncbi
     }
-     
-    res.send(create_protein_table(anno, resultObj))
-    
+    res.send(create_protein_table(anno, resultObj, searchTextLower))
 })
-router.post('/site_search', function site_search(req, res) {
+router.post('/site_searchOLD', function site_search(req, res) {
   helpers.accesslog(req, res)
-  console.log('in index.js POST -Search')
-  console.log(req.body)
-
-  
-  
-////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
-  
   const searchText = req.body.intext
   const searchTextLower = req.body.intext.toLowerCase()
-  let add_genome_to_otid = {}
-  // Genome  Metadata
-  const allGidObjList = Object.values(C.genome_lookup)
-  // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
-  const gidKeyList = Object.keys(allGidObjList[0])
-  const gidObjList = allGidObjList.filter(function (el) {
-    for (let n in gidKeyList) {
-      if (Array.isArray(el[gidKeyList[n]])) {
-        // we're missing any arrays
-      } else {
-        if ( Object.prototype.hasOwnProperty.call(el, gidKeyList[n]) && (el[gidKeyList[n]]).toString().toLowerCase().includes(searchTextLower)) {
-          add_genome_to_otid[el.otid] = el.genus+' '+el.species
-          return el.gid
-        }
-      }
-    }
-  })
-  //helpers.print(gidObjList[0])
-  const gidLst = gidObjList.map(e => ({gid:e.gid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-  //console.log('gidObjList[0]',gidLst[0])
-
-
-////////// ANNOTATED GENES ////////////////////////////////////////////////////////////////////////////////
-   // Search Annotated ProteinIDs
-   
-   
-   
-   
-   let obj,data,gid,name='',anno
+  console.log('in index.js POST -Search')
+  console.log(req.body)
+  res.render('pages/search_result_testing', {
+        title: 'HOMD :: Site Search',
+        pgname: '', // for AbountThisPage
+        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
+        search_text: searchText,
+        otid_list: JSON.stringify([]),
+        gid_list: JSON.stringify([]),
+    
+        //let prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+        num_prokka_genomes: 0,
+        num_prokka_genes: 0,
+        num_ncbi_genomes: 0,
+        num_ncbi_genes: 0,
+        taxon_otid_obj: JSON.stringify({}),
+        help_pages: JSON.stringify([]),
+        contig_list:JSON.stringify([]),
+        phage_id_list: JSON.stringify([]) // phageIDs
+    })
+  
+  
+})
+router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, res) {
+    console.log(req.body)
+    const searchText = req.body.intext
+    const searchTextLower = req.body.intext.toLowerCase()
+    let obj,data,gid,name='',anno
    let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
    //https://github.com/uhop/stream-json/wiki/StreamValues
    let q = "SELECT  anno,gid,PID, product from protein_search WHERE("
@@ -302,6 +308,106 @@ router.post('/site_search', function site_search(req, res) {
     }
     prokka_genome_count = Object.keys(req.session.site_search_result.prokka).length
     ncbi_genome_count = Object.keys(req.session.site_search_result.ncbi).length
+    
+    res.send([prokka_genome_count,prokka_gene_count,ncbi_genome_count,ncbi_gene_count])
+    })
+
+})
+router.post('/site_search', function site_search(req, res) {
+  helpers.accesslog(req, res)
+  console.log('in index.js POST -Search')
+  console.log(req.body)
+
+  
+  
+////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
+  
+  const searchText = req.body.intext
+  const searchTextLower = req.body.intext.toLowerCase()
+  let add_genome_to_otid = {}
+  // Genome  Metadata
+  const allGidObjList = Object.values(C.genome_lookup)
+  // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
+  const gidKeyList = Object.keys(allGidObjList[0])
+  const gidObjList = allGidObjList.filter(function (el) {
+    for (let n in gidKeyList) {
+      if (Array.isArray(el[gidKeyList[n]])) {
+        // we're missing any arrays
+      } else {
+        if ( Object.prototype.hasOwnProperty.call(el, gidKeyList[n]) && (el[gidKeyList[n]]).toString().toLowerCase().includes(searchTextLower)) {
+          add_genome_to_otid[el.otid] = el.genus+' '+el.species
+          return el.gid
+        }
+      }
+    }
+  })
+  //helpers.print(gidObjList[0])
+  const gidLst = gidObjList.map(e => ({gid:e.gid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
+  //console.log('gidObjList[0]',gidLst[0])
+
+
+////////// ANNOTATED GENES ////////////////////////////////////////////////////////////////////////////////
+   // Search Annotated ProteinIDs
+   
+   
+   
+   
+ //   let obj,data,gid,name='',anno
+//    let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
+//    //https://github.com/uhop/stream-json/wiki/StreamValues
+//    let q = "SELECT  anno,gid,PID, product from protein_search WHERE("
+//     q += " product like '%"+searchTextLower+"%'" 
+//     //q += " OR gene like '%"+searchTextLower+"%'"
+//     q += " OR PID like '%"+searchTextLower+"%')"
+//     //q += " AND anno='"+anno+"'"
+//     //q += " GROUP BY anno"
+//    if(CFG.ENV == 'productionX'){
+//       q = "select 'a','b','c','d' from otid_prime limit 0"
+//    }
+//    console.log(q)
+//    //const jsonStream = StreamValues.withParser();
+// //   if(CFG.ENV === 'development'){
+//    TDBConn.query(q, (err, rows) => {
+//     if (err) {
+//         console.log(err)
+//         return
+//     }
+//     console.log('rows')
+//     console.log(rows)
+//     req.session.site_search_result = {}
+//     req.session.site_search_result.prokka = {}
+//     req.session.site_search_result.ncbi = {}
+//     if(rows.length === 0){
+//        //prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+//     }else{
+//        
+//        for(let i in rows){
+//          gid = rows[i].gid
+//          anno = rows[i].anno
+//          if(gid in C.genome_lookup){
+//             name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+//          }
+//          if( anno === 'prokka'){
+//             if(gid in req.session.site_search_result.prokka){
+//               req.session.site_search_result.prokka[gid].push({name:name, pid:rows[i].PID, product:rows[i].product})
+//             }else{
+//               req.session.site_search_result.prokka[gid] = [{name:name, pid:rows[i].PID, product:rows[i].product}]
+//             }
+//             
+//             prokka_gene_count += 1 
+//          }else if(anno === 'ncbi'){
+//             if(gid in req.session.site_search_result.ncbi){
+//               req.session.site_search_result.ncbi[gid].push({name:name, pid:rows[i].PID, product:rows[i].product})
+//             }else{
+//               req.session.site_search_result.ncbi[gid] = [{name:name, pid:rows[i].PID, product:rows[i].product}]
+//             }
+//             
+//             ncbi_gene_count +=1
+//          }
+//        }
+//     }
+//     prokka_genome_count = Object.keys(req.session.site_search_result.prokka).length
+//     ncbi_genome_count = Object.keys(req.session.site_search_result.ncbi).length
     //console.log(seqstr.length)
     
 
@@ -499,12 +605,12 @@ router.post('/site_search', function site_search(req, res) {
           helpLst.push(cleanfinal)
         }
       }
-      if(CFG.ENV == 'productionX'){
-          prokka_genome_count=0
-          prokka_gene_count=0
-          ncbi_genome_count=0
-          ncbi_gene_count=0
-      }
+      //if(CFG.ENV == 'productionX'){
+      let prokka_genome_count=0
+      let prokka_gene_count=0
+      let ncbi_genome_count=0
+      let ncbi_gene_count=0
+      //}
 
       res.render('pages/search_result', {
         title: 'HOMD :: Site Search',
@@ -532,7 +638,7 @@ router.post('/site_search', function site_search(req, res) {
   
 })
 // }); // end pipeline
- })  // end anno query
+// })  // end anno query
 module.exports = router
 
 // function get_options_by_node (node) {

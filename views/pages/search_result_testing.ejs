@@ -4,6 +4,7 @@ body {
             transition: background-color 1s;
 }
 html, body { min-height: 100%; }
+/* 
 body.loading {
 	background: #333 url('http://code.jquery.com/mobile/1.3.1/images/ajax-loader.gif') no-repeat center 40%;
 	
@@ -13,6 +14,7 @@ body.loading {
 	-webkit-transition: opacity 0;
 	transition: opacity 0;
 }
+ */
 .search-box{
    height:200px;
    width:100%;
@@ -101,11 +103,17 @@ table th,td{
     
      <hr>  
     Annotations<br>(Searches ProteinIDs and GeneProductNames-in development):<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
+    
     <div class='search-box'>
-      PROKKA Annotation hits: <span id='prokka_count_div'>wOrKiNg</span>
-      <br>NCBI Annotation hits: <span id='ncbi_count_div'>wOrKiNg</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <div id='anno_result_box'></div>
-    </div>
+    PROKKA Annotation hits: <span id='prokka_count_div'></span>
+    
+    
+    
+    <br>NCBI Annotation hits: <span id='ncbi_count_div'></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    
+    
+    <div id='anno_result_box'></div>
+  </div>
     
     
     <hr>  
@@ -163,13 +171,15 @@ table th,td{
 <script>
   mainmenu()
   intext = '<%= search_text %>'
-  var body = document.getElementsByTagName('body')[0];
-  var removeLoading = function() {
-    setTimeout(function() {
-        body.className = body.className.replace(/loading/, '');
-    }, 3000);
-};
-removeLoading();
+  // var body = document.getElementsByTagName('body')[0];
+//   var removeLoading = function() {
+//     setTimeout(function() {
+//         body.className = body.className.replace(/loading/, '');
+//     }, 3000);
+//   };
+//   removeLoading();
+  
+  
 </script>
 
 
