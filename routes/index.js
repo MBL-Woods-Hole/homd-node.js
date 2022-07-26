@@ -246,7 +246,7 @@ router.post('/site_search', function site_search(req, res) {
    
    
    
-   let obj,data,gid,name,anno
+   let obj,data,gid,name='',anno
    let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
    //https://github.com/uhop/stream-json/wiki/StreamValues
    let q = "SELECT  anno,gid,PID, product from protein_search WHERE("
@@ -278,7 +278,9 @@ router.post('/site_search', function site_search(req, res) {
        for(let i in rows){
          gid = rows[i].gid
          anno = rows[i].anno
-         name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+         if(gid in C.genome_lookup){
+            name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+         }
          if( anno === 'prokka'){
             if(gid in req.session.site_search_result.prokka){
               req.session.site_search_result.prokka[gid].push({name:name, pid:rows[i].PID, product:rows[i].product})
