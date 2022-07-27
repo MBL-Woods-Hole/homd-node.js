@@ -507,9 +507,9 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     let pan_file = path.join(CFG.PATH_TO_PANGENOMES,req.body.pg,'PAN.db')
     let genome_file = path.join(CFG.PATH_TO_PANGENOMES,req.body.pg,'GENOMES.db')
     let pan_cmd = 'anvi-display-panAV.py'
-    let args = ['-p',pan_file,'-g',genome_file,'-I','homd.org','-P',8001]
+    let args = ['-p',pan_file,'-g',genome_file,'-I',CFG.ANVIO_URL,'-P',8001]
     console.log(genome_file)
-    console.log(pan_cmd + args.join(' '))
+    console.log(pan_cmd + ' ' + args.join(' '))
     //https://www.digitalocean.com/community/tutorials/how-to-launch-child-processes-in-node-js
     const { spawn } = require('child_process');
 
@@ -528,13 +528,14 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     child.on('close', (code) => {
       console.log(`child process exited with code ${code}`);
     });
+    let d = helpers.getAllDirFiles(CFG.PATH_TO_PANGENOMES)
     res.render('pages/admin/pangenome_list', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
-         pglist: JSON.stringify(C.pangenomes),
+         pglist: JSON.stringify(d.dirs),
     });  
 
 })
