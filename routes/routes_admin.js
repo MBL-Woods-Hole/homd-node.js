@@ -513,7 +513,8 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     //https://www.digitalocean.com/community/tutorials/how-to-launch-child-processes-in-node-js
     const { spawn } = require('child_process');
 
-    const child = spawn(pan_cmd, args);
+    const child = spawn(pan_cmd, args, {shell: true});
+    
     child.stdout.on('data', data => {
       console.log(`stdout:\n${data}`);
     });
