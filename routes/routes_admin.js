@@ -506,7 +506,7 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     
     let pan_file = path.join(CFG.PATH_TO_ANVISERVER,'pangenomes',req.body.pg,'PAN.db')
     let genome_file = path.join(CFG.PATH_TO_ANVISERVER,'pangenomes',req.body.pg,'GENOMES.db')
-    let pan_cmd = path.join(CFG.PATH_TO_ANVISERVER,'anvio','bin','anvi-display-panAV.py'
+    let pan_cmd = path.join(CFG.PATH_TO_ANVISERVER,'anvio','bin','anvi-display-panAV.py')
     let args = ['-p',pan_file,'-g',genome_file,'-I',CFG.ANVIO_URL,'-P',8001]
     console.log(genome_file)
     console.log(pan_cmd + ' ' + args.join(' '))
