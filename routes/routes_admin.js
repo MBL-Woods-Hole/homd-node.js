@@ -531,7 +531,7 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     });
     let d = helpers.getAllDirFiles(path.join(CFG.PATH_TO_ANVISERVER,'pangenomes'))
     //console.log(d)
-    res.render('pages/admin/pangenome_list', {
+    res.render('pages/admin/anvio_iframe', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
@@ -539,6 +539,14 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
          user: JSON.stringify(req.user || {}),
          pglist: JSON.stringify(d.dirs),
     });  
+    // res.render('pages/admin/pangenome_list', {
+//          title: 'HOMD :: ADMIN',
+//          pgname: '', // for AbountThisPage
+//          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//          user: JSON.stringify(req.user || {}),
+//          pglist: JSON.stringify(d.dirs),
+//     });  
 
 })
 
