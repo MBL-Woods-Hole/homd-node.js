@@ -497,6 +497,7 @@ router.get('/pangenome_list', [helpers.isLoggedIn, helpers.isAdmin], (req, res) 
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
          pglist: JSON.stringify(d.dirs),
+         load:0
     });  
 
 })
@@ -531,13 +532,15 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     });
     let d = helpers.getAllDirFiles(path.join(CFG.PATH_TO_ANVISERVER,'pangenomes'))
     //console.log(d)
-    res.render('pages/admin/anvio_iframe', {
+    
+    res.render('pages/admin/pangenome_list', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
          pglist: JSON.stringify(d.dirs),
+         load:1
     });  
     // res.render('pages/admin/pangenome_list', {
 //          title: 'HOMD :: ADMIN',
