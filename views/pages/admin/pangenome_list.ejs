@@ -56,10 +56,11 @@
 <script>
   mainmenu()
   load = '<%= load %>'  // if '1' then open anviserver
+  url = '<%= anviserver_url %>'
   console.log('load')
   console.log(load)
   if(load === '1' || load === 1){
-     window.open('https://anviserver.homd.info','_blank')  // set in nginx
+     window.open(url,'_blank')  // set in nginx
   }
 </script>
 

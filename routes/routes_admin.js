@@ -497,7 +497,8 @@ router.get('/pangenome_list', [helpers.isLoggedIn, helpers.isAdmin], (req, res) 
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
          pglist: JSON.stringify(d.dirs),
-         load:0
+         load:0,
+         anviserver_url:CFG.ANVISERVER_URL
     });  
 
 })
@@ -507,7 +508,9 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     
     let pan_file = path.join(CFG.PATH_TO_ANVISERVER,'pangenomes',req.body.pg,'PAN.db')
     let genome_file = path.join(CFG.PATH_TO_ANVISERVER,'pangenomes',req.body.pg,'GENOMES.db')
-    let pan_cmd = path.join(CFG.PATH_TO_ANVISERVER,'anvio','bin','anvi-display-panAV.py')
+    //let pan_cmd = path.join(CFG.PATH_TO_ANVISERVER,'anvio','bin','anvi-display-panAV.py')
+    let pan_cmd = path.join(CFG.PATH_TO_SCRIPTS,'anvi-display-panAV.py')
+    
     //let args = ['-p',pan_file,'-g',genome_file,'-I',CFG.ANVIO_URL,'-P',8001]
     let port_range = [8001, 8002, 8003, 8004, 8005, 8006] // see nginx /etc/nginx/conf.d/anviserver.conf
     let args = ['-p',pan_file,'-g',genome_file,'-I',CFG.ANVIO_URL,'-P',8001]
@@ -542,7 +545,8 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
          pglist: JSON.stringify(d.dirs),
-         load:1
+         load:1,
+         anviserver_url:CFG.ANVISERVER_URL
     });  
     // res.render('pages/admin/pangenome_list', {
 //          title: 'HOMD :: ADMIN',
