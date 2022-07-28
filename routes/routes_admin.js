@@ -510,7 +510,7 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     let pan_cmd = path.join(CFG.PATH_TO_ANVISERVER,'anvio','bin','anvi-display-panAV.py')
     //let args = ['-p',pan_file,'-g',genome_file,'-I',CFG.ANVIO_URL,'-P',8001]
     let port_range = [8001, 8002, 8003, 8004, 8005, 8006] // see nginx /etc/nginx/conf.d/anviserver.conf
-    let args = ['-p',pan_file,'-g',genome_file,'-I',CFG.ANVIO_URL]
+    let args = ['-p',pan_file,'-g',genome_file,'-I',CFG.ANVIO_URL,'-P',8001]
     console.log(genome_file)
     console.log(pan_cmd + ' ' + args.join(' '))
     //https://www.digitalocean.com/community/tutorials/how-to-launch-child-processes-in-node-js
