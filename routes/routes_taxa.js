@@ -1729,6 +1729,9 @@ function get_rank_display(rank,use_plural){
 ////////////
 function make_lineage(node){
     //console.log('in lineage-node',node)
+    if(!node){
+       return ['',{}]
+    }
     let lineage =''
     let lineage_obj = {}
     let tax_obj = C.homd_taxonomy.taxa_tree_dict_map_by_id
