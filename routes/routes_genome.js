@@ -369,7 +369,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   
   let q = 'SELECT ' + fieldName + ' as seq FROM ' + db + '.ORF_seq'
   q += " WHERE PID='" + pid + "'"
-  helpers.print('anno2 query'+q)
+  helpers.print('anno2 query '+q)
   
   ADBConn.query(q, (err, rows) => {
     if (err) {
@@ -389,7 +389,128 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   
 })
 //
+router.post('/open_explorer_search', function open_explorer_search (req, res) {
+    console.log('in POST:open_explorer_search')
+    console.log(req.body)
+    let gid = req.body.gid
+    let anno = req.body.anno
+    let searchtext = req.body.searchtext
+    let otid='',gc=0,annoInfoObj={}
+    let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
+       return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
+    })
+    allAnnosObj.sort(function sortAnnos (a, b) {
+       return helpers.compareStrings_alpha(a.org, b.org)
+    })
+    if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
+        otid = C.genome_lookup[gid].otid
+        gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
+    }
+    if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
+      annoInfoObj = C.annotation_lookup[gid][anno]
+    }
+    
+    console.log(req.session.site_search_result[anno][gid])
+//     const renderFxn = (req, res, args) => {
+//         res.render('pages/genome/explorer', {
+//           title: 'HOMD :: ' + args.gid,
+//           pgname: 'genome/explorer', // for AbountThisPage 
+//           config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//           user: JSON.stringify(req.user || {}),
+//           gid: args.gid,
+//           otid: args.otid,
+//           all_annos: JSON.stringify(args.allAnnosObj),
+//           anno_type: args.annoType,
+//           page_data: JSON.stringify(args.pageData),
+//           organism: args.organism,
+//           gc: args.gc,
+//           info_data: JSON.stringify(args.annoInfoObj),
+//           pid_list: JSON.stringify(args.pidList),
+//           returnTo: '/genome/explorer?gid='+args.gid,
+//       
+//         })
+//       }
+   //  {
+//     accession: 'SEQF1595|KI535340.1',
+//     GC: 47.09,
+//     PID: 'SEQF1595_00099',
+//     product: 'Oligopeptide-binding protein AppA',
+//     length: 1746,
+//     start: 104870,
+//     stop: 103125,
+//     len_na: 1746,
+//     len_aa: 581
+//   },
+    let page ={
+          page: 1,
+          trecords: req.session.site_search_result[anno][gid].length,
+          row_per_page: req.session.site_search_result[anno][gid].length,
+          number_of_pages: 1,
+          show_page: 1,
+          start_count: 1
+        }
 
+    let pid_list = req.session.site_search_result[anno][gid].map(el => el.pid)
+    const q = queries.get_annotation_query2(gid, anno, pid_list)
+    helpers.print('anno query '+q)
+    let tmp = []
+    ADBConn.query(q, (err, rows) => {
+      if (err) {
+        req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
+
+        let args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+        renderFxn(req, res, args)
+        return
+      } else {
+        if (rows.length === 0) {
+          console.log('no rows found')
+        }else{
+           
+           for(let i in rows){
+              // tmp[i] = rows[i]
+               // highlite/search only PID and product
+              // idx = rows[i].PID.toLowerCase().indexOf(searchtext)
+               // idx2 = rows[i].product.toLowerCase().indexOf(searchtext)
+             //   if(idx != -1){
+//                    //html += '<td>'+data_lst[i].pid.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].pid.slice(idx+searchtext.length)+'</td>'
+//                   tmp[i].PID = rows[i].PID.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+rows[i].PID.slice(idx+searchtext.length)
+//                }
+//                idx = rows[i].product.toLowerCase().indexOf(searchtext)
+//                if(idx != -1){
+//                    //html += '<td>'+data_lst[i].pid.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].pid.slice(idx+searchtext.length)+'</td>'
+//                   tmp[i].product = rows[i].product.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+rows[i].product.slice(idx+searchtext.length)
+//                }
+               
+           }
+        }
+    
+    
+        res.render('pages/genome/explorer', {
+          title: 'HOMD :: ' + gid,
+          pgname: 'genome/explorer', // for AbountThisPage 
+          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+          user: JSON.stringify(req.user || {}),
+          gid: gid,
+          otid: otid,
+          all_annos: JSON.stringify(allAnnosObj),
+          anno_type: anno,
+          page_data: JSON.stringify(page),
+          organism: organism,
+          gc: gc,
+          info_data: JSON.stringify(annoInfoObj),
+          pid_list: JSON.stringify(rows),
+          src_txt: searchtext,
+          returnTo: '/genome/explorer?gid='+gid,
+      
+        })
+    
+      }
+    })
+    
+})
 router.get('/explorer', function explorer (req, res) {
   console.log('in explorer')
   // let myurl = url.parse(req.url, true)
@@ -415,7 +536,7 @@ router.get('/explorer', function explorer (req, res) {
   let args = {}
   //const renderFxn = (req, res, gid, otid, organism,  allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
   const renderFxn = (req, res, args) => {
-  
+    console.log(pageData)
     res.render('pages/genome/explorer', {
       title: 'HOMD :: ' + args.gid,
       pgname: 'genome/explorer', // for AbountThisPage 
@@ -431,6 +552,7 @@ router.get('/explorer', function explorer (req, res) {
       gc: args.gc,
       info_data: JSON.stringify(args.annoInfoObj),
       pid_list: JSON.stringify(args.pidList),
+      src_txt:'',
       returnTo: '/genome/explorer?gid='+args.gid,
       
     })

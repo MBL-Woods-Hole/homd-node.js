@@ -150,59 +150,61 @@ router.get('/oralgen', function oralgen(req, res) {
 //    
 // }
 function create_protein_table(anno, obj, searchtext){
-    let html = '',data_lst,name,pid,product,idx
+    let html = '',data_lst,organism,pid,product,idx
     html += "<center><table>"
     html += "<center><table>"
-    html += '<tr><th>SEQ-ID</th><th>Open in<br>Explorer</th><th>Genome</th><th>'+anno.toUpperCase()+'<br>ProteinID</th><th>GeneProduct</th></tr>'
-    
+   // html += '<tr><th>SEQ-ID</th><th>Open in<br>Explorer</th><th>Genome</th><th>'+anno.toUpperCase()+'<br>ProteinID</th><th>GeneProduct</th></tr>'
+    html += '<tr><th>SEQ-ID</th><th>Genome</th><th>Number<br>of Hits</th><th></th></tr>'
     for(let gid in obj){
         data_lst = obj[gid]
-        for(let i in data_lst){
-            html += '<tr><td>'+gid+'</td>'
-            html += "<td><a href='genome/explorer?gid="+gid+"&anno="+anno+"'>open</a></td>"
-            html += '<td>'+data_lst[i].name+'</td>'
-            pid = data_lst[i].pid.toLowerCase()
-            idx = pid.indexOf(searchtext)
-            if(idx != -1){
-               html += '<td>'+data_lst[i].pid.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].pid.slice(idx+searchtext.length)+'</td>'
-            }else{
-                html += '<td>'+data_lst[i].pid+'</td>'
-            }
-    
-            //html += '<td>'+data_lst[i].gene+'</td>'
-            product = data_lst[i].product.toLowerCase()
-            idx = product.indexOf(searchtext)
-            //console.log('product '+product)
-            if(idx != -1){
-               html += '<td>'+data_lst[i].product.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].product.slice(idx+searchtext.length)+'</td>'
-            }else{
-                html += '<td>'+data_lst[i].product+'</td>'
-            }
-            html += '</tr>'
-        }
+        organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+        html += '<tr><td>'+gid+'</td>'
+        html += '<td>'+organism+'</td>'
+        html += '<td><center>'+data_lst.length+' items<center></td>'
+        //html += "<td><span class='link' onclick=\"open_explorer_search('"+gid+"','"+anno+"')\">View Results</span></td>"
+        html += '<td>'
+        html += " <form method='POST' action='/genome/open_explorer_search'>"
+        html += " <input type='hidden' name='anno' value='"+anno+"'>"
+        html += " <input type='hidden' name='gid' value='"+gid+"'>"
+        html += " <input type='hidden' name='searchtext' value='"+searchtext+"'>"
+        html += " <input class='link' type='submit' value='View Results'>"
+        html += " </form>"
+        html += '</td>'
+        html += '</tr>'
+       //  for(let i in data_lst){
+//             html += '<tr><td>'+gid+'</td>'
+//             html += "<td><a href='genome/explorer?gid="+gid+"&anno="+anno+"'>open</a></td>"
+//             html += '<td>'+data_lst[i].name+'</td>'
+//             pid = data_lst[i].pid.toLowerCase()
+//             idx = pid.indexOf(searchtext)
+//             if(idx != -1){
+//                html += '<td>'+data_lst[i].pid.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].pid.slice(idx+searchtext.length)+'</td>'
+//             }else{
+//                 html += '<td>'+data_lst[i].pid+'</td>'
+//             }
+//     
+//             //html += '<td>'+data_lst[i].gene+'</td>'
+//             product = data_lst[i].product.toLowerCase()
+//             idx = product.indexOf(searchtext)
+//             //console.log('product '+product)
+//             if(idx != -1){
+//                html += '<td>'+data_lst[i].product.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].product.slice(idx+searchtext.length)+'</td>'
+//             }else{
+//                 html += '<td>'+data_lst[i].product+'</td>'
+//             }
+//             html += '</tr>'
+//         }
+        
+        
+        
+        
     }
     html += '</table></center>'
     return html
     
     
     
-   //  html += '<tr><th>SEQ-ID</th><th>Genome</th><th>hit count</th><th>Open in<br>Explorer</th></tr>'
-//     
-//     for(let gid in obj){
-//         data_lst = obj[gid]
-//         name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-//               
-//         //for(let i in data_lst){
-//         html += '<tr><td>'+gid+'</td>'
-//         
-//         html += '<td>'+name+'</td>'
-//         html += '<td>count</td>'
-//         html += "<td><a href='genome/explorer?gid="+gid+"&anno="+anno+"'>open</a></td>"
-//         // html += '<td>'+data_lst[i].pid+'</td>'
-// //         html += '<td>'+data_lst[i].gene+'</td>'
-// //         html += '<td>'+data_lst[i].product+'</td></tr>'
-//         //}
-//     }
+
     html += '</table></center>'
     return html
 
@@ -252,7 +254,7 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
     console.log(req.body)
     const searchText = req.body.intext
     const searchTextLower = req.body.intext.toLowerCase()
-    let obj,data,gid,name='',anno
+    let obj,data,gid,organism='',anno
    let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
    //https://github.com/uhop/stream-json/wiki/StreamValues
    let q = "SELECT  anno,gid,PID, product from protein_search WHERE("
@@ -285,21 +287,21 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
          gid = rows[i].gid
          anno = rows[i].anno
          if(gid in C.genome_lookup){
-            name = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+            organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
          }
          if( anno === 'prokka'){
             if(gid in req.session.site_search_result.prokka){
-              req.session.site_search_result.prokka[gid].push({name:name, pid:rows[i].PID, product:rows[i].product})
+              req.session.site_search_result.prokka[gid].push({name:organism, pid:rows[i].PID, product:rows[i].product})
             }else{
-              req.session.site_search_result.prokka[gid] = [{name:name, pid:rows[i].PID, product:rows[i].product}]
+              req.session.site_search_result.prokka[gid] = [{name:organism, pid:rows[i].PID, product:rows[i].product}]
             }
             
             prokka_gene_count += 1 
          }else if(anno === 'ncbi'){
             if(gid in req.session.site_search_result.ncbi){
-              req.session.site_search_result.ncbi[gid].push({name:name, pid:rows[i].PID, product:rows[i].product})
+              req.session.site_search_result.ncbi[gid].push({name:organism, pid:rows[i].PID, product:rows[i].product})
             }else{
-              req.session.site_search_result.ncbi[gid] = [{name:name, pid:rows[i].PID, product:rows[i].product}]
+              req.session.site_search_result.ncbi[gid] = [{name:organism, pid:rows[i].PID, product:rows[i].product}]
             }
             
             ncbi_gene_count +=1

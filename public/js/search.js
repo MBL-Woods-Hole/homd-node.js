@@ -73,3 +73,25 @@ function anno_search(search_text,anno){
   xmlhttp.send(JSON.stringify(args));
   
 }
+
+// function open_explorer_search(gid,anno){
+//    //href='genome/explorer?gid="+gid+"&anno="+anno+"' 
+//   console.log('IN open_explorer_search')
+//   args = {}
+//   args.anno = anno
+//   args.gid = gid
+//   
+//   var xmlhttp = new XMLHttpRequest();
+//   xmlhttp.open("POST", "/genome/open_explorer_search", true);
+//   xmlhttp.setRequestHeader("Content-type","application/json");
+//   xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//         var resp = xmlhttp.responseText;
+//         console.log('anno search resp')
+//         console.log(resp)
+//         //document.getElementById('anno_result_box').innerHTML = resp
+//         
+//       }
+//   }
+//   xmlhttp.send(JSON.stringify(args));
+// }

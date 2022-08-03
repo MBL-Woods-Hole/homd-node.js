@@ -37,6 +37,13 @@ module.exports.get_annotation_query = (gid, anno) => {
   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
   return qSelectAnno
 }
+module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
+  const db = anno.toUpperCase() + '_' + gid
+  let qSelectAnno = 'SELECT accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
+  qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
+  qSelectAnno += " WHERE PID in ('"+pid_list.join("','")+"')"
+  return qSelectAnno
+}
 module.exports.get_contigs = (gid) => {   // always NCBI
   const db = 'NCBI_' + gid
   qSelectContigs = "SELECT accession,GC from "+db+".molecules"
