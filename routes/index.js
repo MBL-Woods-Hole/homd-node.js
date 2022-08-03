@@ -150,14 +150,16 @@ router.get('/oralgen', function oralgen(req, res) {
 //    
 // }
 function create_protein_table(anno, obj, searchtext){
-    let html = '',data_lst,organism,pid,product,idx
+    let html = '',data_lst,organism='',pid,product,idx
     html += "<center><table>"
     html += "<center><table>"
    // html += '<tr><th>SEQ-ID</th><th>Open in<br>Explorer</th><th>Genome</th><th>'+anno.toUpperCase()+'<br>ProteinID</th><th>GeneProduct</th></tr>'
     html += '<tr><th>SEQ-ID</th><th>Genome</th><th>Number<br>of Hits</th><th></th></tr>'
     for(let gid in obj){
         data_lst = obj[gid]
-        organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+        if(C.genome_lookup.hasOwnProperty(gid)){
+           organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+        }
         html += '<tr><td>'+gid+'</td>'
         html += '<td>'+organism+'</td>'
         html += '<td><center>'+data_lst.length+' items<center></td>'
