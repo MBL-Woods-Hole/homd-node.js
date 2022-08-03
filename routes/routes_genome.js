@@ -411,7 +411,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
       annoInfoObj = C.annotation_lookup[gid][anno]
     }
     
-    console.log(req.session.site_search_result[anno][gid])
+    //console.log(req.session.site_search_result[anno][gid])
 //     const renderFxn = (req, res, args) => {
 //         res.render('pages/genome/explorer', {
 //           title: 'HOMD :: ' + args.gid,
@@ -536,7 +536,7 @@ router.get('/explorer', function explorer (req, res) {
   let args = {}
   //const renderFxn = (req, res, gid, otid, organism,  allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
   const renderFxn = (req, res, args) => {
-    console.log(pageData)
+    //console.log(pageData)
     res.render('pages/genome/explorer', {
       title: 'HOMD :: ' + args.gid,
       pgname: 'genome/explorer', // for AbountThisPage 
