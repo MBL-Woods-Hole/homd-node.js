@@ -1007,11 +1007,13 @@ router.get('/ecology', function ecology(req, res) {
     let tax_name = req.query.name
     //let tax_name = req.params.name
     //console.log('req.params',req)
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
+    //console.log('rank',rank,'tax',tax_name)
     if(rank !== 'subspecies'){
         tax_name = tax_name[0].toUpperCase() + tax_name.substring(1); // string[0].toUpperCase() + string.substring(1)
     }
     //let segata_text = '',dewhirst_text='',erenv1v3_text='';
-    console.log('rank',rank,'tax',tax_name)
+    //console.log('rank',rank,'tax',tax_name)
     let segata_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
     let max = 0;
     let otid ='0';
@@ -1035,11 +1037,12 @@ router.get('/ecology', function ecology(req, res) {
         return helpers.compareStrings_alpha(a.taxon, b.taxon);
     })
     //console.log(tax_name,rank,node)
-    if(rank == 'species'){
+    if(rank === 'species'){
       if(node.hasOwnProperty('otid')){
           otid = node.otid
       }
-    }else if(rank == 'subspecies'){
+    }else if(rank === 'subspecies'){
+      console.log(node)
       otid = node.otid
     }
    //console.log('node',node)

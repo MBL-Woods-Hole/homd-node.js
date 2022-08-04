@@ -430,11 +430,15 @@
   </tr>
   <tr>
     <td class='tbl-title'>Microbial Ecology<br><small>(Abundance/Prevalence)</small>:</td>
+    
     <% if(data3.subspecies){ %>
-      <td><small>[<a href='ecology?rank=subspecies&name=<%= data3.subspecies %>'>Open Abundance/Prevalence Page for <i><%= data3.subspecies %></i></a>]</small></td>
+      <% ss = encodeURIComponent(data3.subspecies) %>
+      <% rankname = 'subspecies' %>
     <% }else{ %>
-      <td><small>[<a href='ecology?rank=species&name=<%= data3.species %>'>Open Abundance/Prevalence Page for <i><%= data3.species %></i></a>]</small></td>
+      <% ss = encodeURIComponent(data3.species) %>
+      <% rankname = 'species' %>
     <% } %>
+      <td><small>[<a href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance/Prevalence Page for <i><%= data3.subspecies %></i></a>]</small></td>
   
   </tr>
   
