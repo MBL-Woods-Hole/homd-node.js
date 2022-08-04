@@ -94,7 +94,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
         if(el.status != 'Dropped'){
               el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || ''
               var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
-              console.log(el)
+              //console.log(el)
               var lineage_list = make_lineage(node)
               
               if(lineage_list[0] in C.taxon_counts_lookup){
@@ -135,7 +135,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
   //helpers.print(C.tax_status_on)
   count_txt = count_txt0 + '<br><small>(Total:'+(big_tax_list0.length).toString()+')</small> '
   //helpers.print(['send_list[0]',send_list[0]])
-  console.log('send_list[0]',send_list[0])
+  //console.log('send_list[0]',send_list[0])
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 
     pgtitle: pgtitle,
