@@ -92,9 +92,11 @@ router.get('/tax_table', function tax_table_get(req, res) {
         el.ecology = 0  // change to 1 if we do
         
         if(el.status != 'Dropped'){
+              el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || ''
               var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
-          
+              console.log(el)
               var lineage_list = make_lineage(node)
+              
               if(lineage_list[0] in C.taxon_counts_lookup){
                   if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
                      el.ecology = 1
@@ -108,7 +110,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
               }
         }
   })
-  //console.log(big_tax_list2[0])
+  
     //console.log('send_tax_obj[0]',send_tax_obj[0])
     //sort
     //big_tax_list2.sort(function (a, b) {
@@ -133,7 +135,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
   //helpers.print(C.tax_status_on)
   count_txt = count_txt0 + '<br><small>(Total:'+(big_tax_list0.length).toString()+')</small> '
   //helpers.print(['send_list[0]',send_list[0]])
-  //console.log('send_list[0]',send_list[0])
+  console.log('send_list[0]',send_list[0])
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 
     pgtitle: pgtitle,
@@ -197,9 +199,10 @@ router.post('/tax_table', function tax_table_post(req, res) {
       send_list.map(function(el){
         el.ecology = '0'  // change to 1 if we do
         
+        
         if(el.status != 'Dropped'){
           var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
-      
+          el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || ''
           var lineage_list = make_lineage(node)
           if(lineage_list[0] in C.taxon_counts_lookup){
               if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){

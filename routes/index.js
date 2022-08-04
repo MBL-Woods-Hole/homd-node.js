@@ -259,7 +259,7 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
     let obj,data,gid,organism='',anno
    let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
    //https://github.com/uhop/stream-json/wiki/StreamValues
-   let q = "SELECT  anno,gid,PID, product from protein_search WHERE("
+   let q = "SELECT  anno, gid, PID, product from protein_search WHERE("
     q += " product like '%"+searchTextLower+"%'" 
     //q += " OR gene like '%"+searchTextLower+"%'"
     q += " OR PID like '%"+searchTextLower+"%')"

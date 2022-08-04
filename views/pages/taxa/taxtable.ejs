@@ -40,6 +40,7 @@ thead th { position: sticky; top: 0; }
         <th scope="col" nowrap>Taxon-ID</th>
         <th scope="col">Genus</th>
         <th scope="col">Species</th>
+        <th scope="col">Subspecies<br>or Strain</th>
         <th scope="col">Status</th>
        <!--  <th scope="col" nowrap>Body Site</th> -->
         <th scope="col">Ecology Link</th>
@@ -56,6 +57,8 @@ thead th { position: sticky; top: 0; }
        <td nowrap><%= taxidfullname  %></td>
        <td nowrap><i><b><a href='life?rank=genus&name=<%= list[n].genus %>'><%= list[n].genus  %></a></b></i></td>
        <td nowrap><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
+       <td nowrap><%= list[n].subsp  %></td>
+       
        <td><%= list[n].status  %></td>
      <!--   <td><%= list[n].sites  %></td> -->
        <% if(list[n].ecology === 1){ %>
