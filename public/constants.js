@@ -282,22 +282,17 @@ constants.species_w_subspecies = {
 }
 //
 constants.anviserver_link = "https://vamps.mbl.edu/anviserver/pangenomes/"
+// this should reflect what is avalable on HOMD (vamps/anviserver)
+// **** NOTE NOTE This data is obsolete!! Look at the mysql table:pangenomes and the script Initialize_Taxonomy.py
 constants.pangenomes = [
     {
-      otid: '524', 
-      pangenome_name: 'Veillonella_Atypica',
-      description: '18 genomes for <i>Veillonella atypica</> HMT-524 and associated <i>V.</> sp. refseq assemblies'
-    },
-    {
-      otid: '780', 
-      pangenome_name: 'Veillonella_HMT780',
-      description: '6 genomes for <i>Veillonella sp.</> HMT-780 and associated <i>V.</> sp. refseq assemblies'
-    },
-    {
-      otid: '677', 
-      pangenome_name: 'Mitis_Group',
-      description: 'All 134 Genomes from HMT-677 (<i>Stroptococcus Mitis</i>)'
+      otids: ['46','555','626','757','928'], 
+      pangenome_name: 'Gemella2022_07_05',
+      seqids:['SEQF2298','SEQF2460','SEQF1019','SEQF2070','SEQF2071','SEQF2783'],
+      description: 'Pangenome of the genus Gemella containing all 30 available genomes from GenBank with a RefSeq equivalent by 03/02/2021.'
     }
+    // **** NOTE NOTE This data is obsolete!!
+    
 ]
 
 

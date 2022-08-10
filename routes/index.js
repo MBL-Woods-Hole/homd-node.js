@@ -317,6 +317,9 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
     })
 
 })
+//
+//  Global Site Search
+//
 router.post('/site_search', function site_search(req, res) {
   helpers.accesslog(req, res)
   console.log('in index.js POST -Search')
@@ -494,11 +497,17 @@ router.post('/site_search', function site_search(req, res) {
     }
   })
   const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-  if(Object.keys(add_genome_to_otid).length > 0){
-      for(let otid in add_genome_to_otid){
-          otidLst.push({otid: otid, species: '<i>'+add_genome_to_otid[otid]+'</i>'})
-      }
-  }
+  //let otidLst = []
+  // if(Object.keys(add_genome_to_otid).length > 0){
+//      
+//       for(let otid in add_genome_to_otid){
+//           let o = {otid: otid, species: '<i>'+add_genome_to_otid[otid]+'</i>'}
+//           if(){
+//           
+//           }
+//           otidLst.push({otid: otid, species: '<i>'+add_genome_to_otid[otid]+'</i>'})
+//       }
+//   }
   //console.log('otidLst[0]',otidLst)
 
 ////////////// TAXON NAMES ////////////////////////////////////////////////////////////////////////////
