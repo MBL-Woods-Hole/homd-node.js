@@ -10,7 +10,15 @@ const C       = require(app_root + '/public/constants');
 const helpers   = require(app_root + '/routes/helpers/helpers');
 const open = require('open');
 
-
+router.get('/blast_server', function refseq_blast_server(req, res) {
+    res.render('pages/refseq/blast_server', {
+        title: 'HOMD :: HOMD Blast Server',
+        pgname: '', // for AbountThisPage
+        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {})
+      })
+})
 router.get('/refseq_blastn', function refseq_blastn(req, res) {
     console.log('MADEIT TO blastn-get')
     helpers.accesslog(req, res)
