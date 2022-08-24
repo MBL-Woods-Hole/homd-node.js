@@ -291,6 +291,7 @@ constants.pangenomes = [
       seqids:['SEQF2298','SEQF2460','SEQF1019','SEQF2070','SEQF2071','SEQF2783'],
       description: 'Pangenome of the genus Gemella containing all 30 available genomes from GenBank with a RefSeq equivalent by 03/02/2021.'
     }
+    
     // **** NOTE NOTE This data is obsolete!!
     
 ]
