@@ -1,5 +1,5 @@
 # HOMD (Human Oral Microbiome Database)  2021
-
+### Link: [HOMD Administration README](./HOMD-ADMIN.md) 
 This is a re-write of the php version pre-2015  (http://www.homd.org) using Node.js (javascript)
 
 You can clone this code on your system but you will need a database schema (and data)

@@ -24,8 +24,7 @@ newrelic.js
 *newrelic.js
 bin/versions.sh
 version.log
-config/db-connection*
-config/config*
+config/db-connection.js
 config/config.js
 config/db_vamps_node.sql.gz
 config/old/*
