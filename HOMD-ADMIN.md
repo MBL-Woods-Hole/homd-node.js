@@ -17,7 +17,8 @@ I almost always edit the code on my laptop and run homd locally to debug before 
 ```
 Then on the production AWS server pull the new code and restart the server for the changes to take effect.
 ```
-  cd to homd-node.js directory
+  ssh homd
+  cd to /home/ubuntu/homd/homd-node.js directory
   git pull
   sudo systemctl restart homd
 ```
@@ -54,7 +55,9 @@ github:  https://github.com/MBL-Woods-Hole/anviserver-HOMD
 sudo systemctl start/stop/restart/status anviserver
 ```
 ## MySQL Database
-
+``` 
+see homddb_schema.sql.gz in the root directory
+```
 ## Required Initialization Files and their Creation Scripts
 #### Creation scripts are here:``` public/install_scripts/```
 These scripts pull data from the MySQL database and create JSON files which the server to read into memory on startup.

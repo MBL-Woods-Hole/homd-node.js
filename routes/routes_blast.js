@@ -329,7 +329,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
 //       
 //       })
 //    }
-    if(req.session.blast.id){
+    if(req.session.blast && req.session.blast.id){
         let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, req.session.blast.id)
         //# blasterror.log will always be created
         //# whereas pythonerror.log will only be present if pyscript error
