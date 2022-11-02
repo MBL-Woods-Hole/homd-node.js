@@ -67,6 +67,8 @@ function anno_search(search_text,anno){
         //console.log('anno search resp')
         //console.log(resp)
         document.getElementById('anno_result_box').innerHTML = resp
+        var newTableObject = document.getElementById('anno_result_table')
+        sorttable.makeSortable(newTableObject);
         
       }
   }

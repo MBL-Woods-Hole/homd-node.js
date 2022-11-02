@@ -651,14 +651,16 @@ router.get('/explorer', function explorer (req, res) {
 //
 //
 router.get('/blast_server', function genome_blast_server(req, res) {
-    res.render('pages/genome/blast_server', {
+    res.render('pages/blast/blast_server', {
         title: 'HOMD :: HOMD Blast Server',
         pgname: '', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        user: JSON.stringify(req.user || {})
+        user: JSON.stringify(req.user || {}),
+        blast_type: 'genome'
       })
 })
+
 router.get('/blast', function blast_get(req, res) {
    console.log('in genome blast-GET')
    let chosen_gid = req.query.gid
