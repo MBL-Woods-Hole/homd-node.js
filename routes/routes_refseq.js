@@ -14,7 +14,7 @@ router.get('/blast_server', function refseq_blast_server(req, res) {
     res.render('pages/blast/blast_server', {
         title: 'HOMD :: HOMD Blast Server',
         pgname: '', // for AbountThisPage
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, blast_version: CFG.BLAST_VERSION }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         user: JSON.stringify(req.user || {}),
         blast_type: 'refseq'

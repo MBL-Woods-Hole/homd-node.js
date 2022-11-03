@@ -4,6 +4,7 @@ iframe{
    height:80%;
 }
 </style>
+<% var cfg = JSON.parse(config) %> 
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -15,11 +16,15 @@ iframe{
     <div class='page-content' >
       <% if(blast_type == 'refseq'){ %>    
          <div class='title' style='background:#CDFFCD;color:black;'>RefSeq BLAST</div>
-         <div class='subtitle' style='padding:10px;'>BLAST Against HOMD Reference Sequences</div>
+         <div class='subtitle' style='padding:10px;'>BLAST Against HOMD Reference Sequences
+           <small>(BLAST Version <%- cfg.blast_version %>)</small>
+         </div>
          <iframe src="https://wiki.homd.info/" title="HOMD BLAST Server"></iframe>
       <% }else{ %>
          <div class='title'style='background:#EE9090;color:black;'>Genome BLAST</div>
-         <div class='subtitle' style='padding:10px;'>BLAST Against HOMD Genomes</div>
+         <div class='subtitle' style='padding:10px;'>BLAST Against HOMD Genomes
+           <small>(BLAST Version <%- cfg.blast_version %>)</small>
+         </div>
          <iframe id='iframe_id' src="https://anviserver.homd.info/" title="HOMD BLAST Server"></iframe>
       <% } %>
     </div> <!-- end: page-content -->

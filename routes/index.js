@@ -79,7 +79,7 @@ function create_protein_table(anno, obj, searchtext){
     // for site search::protein
     let html = '',data_lst,organism='',pid,product,idx,send_obj={}
     html += "<center><small>(click header to sort)</small><table id='anno_result_table' class='table sortable'><thead>"
-    html += '<tr><th>SEQ-ID</th><th>Genome</th><th>Number<br>of Hits</th><th class="sorttable_nosort"></th></tr>'
+    html += '<tr><th>SEQ-ID</th><th>Genome ('+anno.toUpperCase()+')</th><th>Number<br>of Hits</th><th class="sorttable_nosort"></th></tr>'
     html += '</thead><tbody>'
     console.log('in create_protein_table')
     //console.log(obj)
