@@ -155,6 +155,9 @@ function getPageTitle(page){
     if(page === 'download'){
        return 'Downloading HOMD Data'
     }
+    if(page === 'publications'){
+       return 'Publications'
+    }
     if(page === 'announcement'){
        return 'Announcements'
     }
