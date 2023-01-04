@@ -335,6 +335,7 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 
   // express deprecated req.param(name): Use req.params, req.body, or req.query
   // See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
+  // SELECT seq from db.table
   let q = queries.get_16s_rRNA_sequence_query(gid)
   helpers.print(q)
   let html

@@ -102,18 +102,10 @@
      </td></tr>
      <tr class="table-active"><td>15</td><td>Combined Length (bps)</td><td><%= ginfo.tlength %></td></tr>
      <tr class="table-light"><td>16</td><td>GC Percentage</td><td><%= ginfo.gc %></td></tr>
-     <tr class="table-active"><td>17</td><td>Sequencing Center</td><td><%= ginfo.seq_center %></td></tr>
-     <tr class="table-light"><td>18</td><td>ATCC Medium Number</td><td><%= ginfo.atcc_mn %></td></tr>
-     <tr class="table-active"><td>19</td><td>Non-ATCC Medium</td><td><%= ginfo.non_atcc_mn %></td></tr>
-     <tr class="table-light">
-       <td>20</td><td>16S rRNA Gene Sequence</td>
-       <% if(ginfo['16s_rrna_flag'] === '1'){ %>
-        <td><a href='#' onclick="get_16s_seq('<%= ginfo.gid %>')">View Sequence</a></td>
-       <% }else{ %>
-        <td>N/A</td>
-       <% } %>
-     </tr>
-     <tr class="table-active"><td>21</td>
+     <tr class="table-active"><td>17</td><td>Submitter/Sequencing Center</td><td><%= ginfo.seq_center %></td></tr>
+     
+     
+     <tr class="table-active"><td>18</td>
      <td class=''>Pangenome(s): (<a href='https://vamps.mbl.edu/anviserver' target='_blank'>Anvi`o-server</a> <small>hosted on <a href='https://vamps2.mbl.edu/' title='Visualization and Analysis of Microbial Population Structures' target='_blank'>VAMPS</a>)</small></td>
      <td>
        
@@ -126,7 +118,7 @@
        <% } %>
     </td>
      </tr>
-     <tr class="table-active"><td>22</td><td>Comments for 16s rRNA Gene Sequence</td><td></td></tr>
+     
      </table>
 <% } %>		 
 </div>			 

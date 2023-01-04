@@ -161,7 +161,7 @@ constants.tax_sites_on =['oral', 'nasal', 'skin', 'vaginal', 'unassigned'];
 
 // tax filenames (fn)
 constants.genome_lookup_fn    = 'homdData-GenomeLookup.json'
-constants.info_lookup_fn    = 'homdData-TaxonInfoLookup.json'
+constants.info_lookup_fn      = 'homdData-TaxonInfoLookup.json'
 constants.references_lookup_fn  = 'homdData-TaxonReferencesLookup.json'
 constants.taxcounts_fn          = 'homdData-TaxonCounts.json'
 constants.taxon_lookup_fn     = 'homdData-TaxonLookup.json'

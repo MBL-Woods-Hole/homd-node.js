@@ -242,16 +242,18 @@ Promise.all(promises)
     //examples
     let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
     console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
-    console.log('C.taxon_references_lookup length',Object.keys(C.taxon_references_lookup).length)
+    
+    size = Buffer.byteLength(JSON.stringify(C.taxon_references_lookup))
+    console.log('C.taxon_references_lookup length',Object.keys(C.taxon_references_lookup).length,'\tsize(KB):',size/1024)
     //console.log(C.phage_lookup)
     size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup))
     console.log('C.taxon_lineage_lookup length',Object.keys(C.taxon_lineage_lookup).length,'\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.taxon_info_lookup))
-    console.log('C.taxon_info_lookup length',Object.keys(C.taxon_info_lookup).length)
+    console.log('C.taxon_info_lookup length',Object.keys(C.taxon_info_lookup).length,'\t\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.refseq_lookup))
-    console.log('C.refseq_lookup length',Object.keys(C.refseq_lookup).length)
+    console.log('C.refseq_lookup length',Object.keys(C.refseq_lookup).length,'\t\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.genome_lookup))
     console.log('C.genome_lookup length',Object.keys(C.genome_lookup).length,'\t\tsize(KB):',size/1024)
@@ -268,9 +270,9 @@ Promise.all(promises)
    //class
    //Absconditabacteria (SR1) [C-1]
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Burkholderiales_order'])
-    helpers.print(['lineage 701',C.taxon_lineage_lookup[701]])
+    //helpers.print(['lineage 701',C.taxon_lineage_lookup[701]])
     //console.log('refseq 12',C.refseq_lookup[12])
-    //console.log('SEQF1388',C.genome_lookup['SEQF1388'])
+    helpers.print(['SEQF1388',C.genome_lookup['SEQF1388']])
     //console.log(C.taxon_counts_lookup['Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Variovorax'])
     //console.log('755',C.taxon_lineage_lookup[755])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
