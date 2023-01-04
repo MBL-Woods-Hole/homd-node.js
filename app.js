@@ -190,17 +190,19 @@ const promises = [
     
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.taxon_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.lineage_lookup_fn),'json') ,
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
+  //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.genome_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.refseq_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.references_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.info_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
+ 
   helpers.readFromFile(path.join('public','data', C.image_location_locfn),'json'),  // image name and text
   helpers.readFromFile(path.join('public','data', C.image_location_taxfn),'json'),  // match image w/ otid or tax rank
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn),'json')
+   //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
+  
     // ETC ...
 ];
 Promise.all(promises)
@@ -208,29 +210,35 @@ Promise.all(promises)
     //baseList = result[0];
     //currentList = result[1];
     //console.log(results[0]['998'])
-    C.taxon_lookup              = results[0];// lookup by otid
+    C.taxon_lookup              = results[0];// lookup by otid  TaxonLookup
     //console.log('parsing1')
-    C.taxon_lineage_lookup        = results[1]; // lookup by otid
-    //console.log('parsing2') 
-    C.homd_taxonomy =  new CustomTaxa(results[2]);
-    //console.log('parsing3')
-    C.genome_lookup         = results[3];  // lookup by gid
+    C.taxon_lineage_lookup        = results[1]; // lookup by otid  TaxonLineagelookup
+   
+    
+    // let homd_taxonomy = Object.keys(C.taxon_lineage_lookup).map(function test(el){
+//         return C.taxon_lineage_lookup[el]
+//     })
+    let homd_taxonomy = Object.values(C.taxon_lineage_lookup)
+    //console.log(homd_taxonomy)
+    C.homd_taxonomy =  new CustomTaxa(homd_taxonomy); // TaxonHierarchy
+    
+    C.genome_lookup         = results[2];  // lookup by gid GenomeLookup
     //console.log('parsing4')
-    C.refseq_lookup             = results[4];
+    C.refseq_lookup             = results[3]; //  TaxonRefSeqLookup
     //console.log('parsing5')
-    C.taxon_references_lookup   = results[5];   // lookup by otid
+    C.taxon_references_lookup   = results[4];   // lookup by otid TaxonReferencesLookup
     //console.log('parsing6')
-    C.taxon_info_lookup         = results[6];  // lookup by otid
+    C.taxon_info_lookup         = results[5];  // lookup by otid TaxonInfoLookup
     //console.log('parsing7')
-    C.taxon_counts_lookup       = results[7];   // lookup by lineage
-    C.annotation_lookup         = results[8];
-    C.phage_lookup              = results[9];
-    //C.images              = results[10]);
+    C.taxon_counts_lookup       = results[6];   // lookup by lineage TaxonCounts
+    C.annotation_lookup         = results[7];  // AnnotationLookup
     
-    C.images_loc              = results[10];   // image name and text
-    C.images_tax              = results[11];   // match image w/ otid or tax rank
-    C.contig_lookup           = results[12];
+    C.images_loc              = results[8];   // image name and text
+    C.images_tax              = results[9];   // match image w/ otid or tax rank
+    C.contig_lookup           = results[10];
+    //C.phage_lookup              = results[12];
     
+    /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
     C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
     //helpers.print_size()
@@ -241,28 +249,35 @@ Promise.all(promises)
     
     //examples
     let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
-    console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
+    console.log('C.taxon_lookup #ofKeys:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.taxon_references_lookup))
-    console.log('C.taxon_references_lookup length',Object.keys(C.taxon_references_lookup).length,'\tsize(KB):',size/1024)
+    console.log('C.taxon_references_lookup #ofKeys',Object.keys(C.taxon_references_lookup).length,'\tsize(KB):',size/1024)
     //console.log(C.phage_lookup)
     size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup))
-    console.log('C.taxon_lineage_lookup length',Object.keys(C.taxon_lineage_lookup).length,'\tsize(KB):',size/1024)
+    console.log('C.taxon_lineage_lookup #ofKeys',Object.keys(C.taxon_lineage_lookup).length,'\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.taxon_info_lookup))
-    console.log('C.taxon_info_lookup length',Object.keys(C.taxon_info_lookup).length,'\t\tsize(KB):',size/1024)
+    console.log('C.taxon_info_lookup #ofKeys',Object.keys(C.taxon_info_lookup).length,'\t\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.refseq_lookup))
-    console.log('C.refseq_lookup length',Object.keys(C.refseq_lookup).length,'\t\tsize(KB):',size/1024)
+    console.log('C.refseq_lookup #ofKeys',Object.keys(C.refseq_lookup).length,'\t\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.genome_lookup))
-    console.log('C.genome_lookup length',Object.keys(C.genome_lookup).length,'\t\tsize(KB):',size/1024)
+    console.log('C.genome_lookup #ofKeys',Object.keys(C.genome_lookup).length,'\t\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.annotation_lookup))
-    console.log('C.annotation_lookup length',Object.keys(C.annotation_lookup).length,'\t\tsize(KB):',size/1024)
+    console.log('C.annotation_lookup #ofKeys',Object.keys(C.annotation_lookup).length,'\t\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.taxon_counts_lookup))
-    console.log('C.taxon_counts_lookup length',Object.keys(C.taxon_counts_lookup).length,'\tsize(KB):',size/1024)
+    console.log('C.taxon_counts_lookup #ofKeys',Object.keys(C.taxon_counts_lookup).length,'\tsize(KB):',size/1024)
+    
+    size = Buffer.byteLength(JSON.stringify(C.contig_lookup))
+    console.log('C.contig_lookup #ofKeys',Object.keys(C.contig_lookup).length,'\t\tsize(KB):',size/1024)
+    
+    size = Buffer.byteLength(JSON.stringify(C.homd_taxonomy))
+    console.log('C.homd_taxonomy','\t\t\tsize(KB):',size/1024)
+    
     for(var n in C.homd_taxonomy){
        console.log(n)
     }
