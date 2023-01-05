@@ -42,7 +42,7 @@ table th,td{
 <% var otids = JSON.parse(otid_list) %>
 <% var gids = JSON.parse(gid_list) %>
 <% var lineageids = JSON.parse(taxon_otid_obj) %>
-<% var phage_id_list = JSON.parse(phage_id_list) %>
+<% //var phage_id_list = JSON.parse(phage_id_list) %>
 <% var contig_list = JSON.parse(contig_list) %>
 <% var help_list = JSON.parse(help_pages) %>
 
@@ -117,19 +117,7 @@ table th,td{
     <% } %>
     </div>
     <% } %>
-<!-- 
-    
-    <hr>   
-    Matches from Phage Metadata: (<%= phage_id_list.length %>)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
-    <% if( phage_id_list.length > 0 ){ %>
-    <div class='search-box'>
-    <% for(n in phage_id_list){ %>
-       <% pid = phage_id_list[n] %>
-       <br><%= parseInt(n)+1 %>) <a href='/phage/phagedesc?pid=<%= pid %>'><%= pid %></a>
-    <% } %>
-    </div>
-    <% } %>
- -->
+
     
     
     <hr>

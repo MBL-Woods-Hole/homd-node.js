@@ -367,27 +367,27 @@ router.post('/site_search', function site_search(req, res) {
   // phageID, phage:family,genus,species, host:genus,species, ncbi ids
   // console.log(C.phage_lookup['HPT-000001'])
   // PHAGE Metadata
-  const allPhageObjList = Object.values(C.phage_lookup)
-  // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
-  // console.log(allPhageObjList[0])
-  const pidKeyList = Object.keys(allPhageObjList[0])
-  const pidObjList = allPhageObjList.filter(function (el) {
-    for (let n in pidKeyList) {
-      // console.log(pidkeylist[n]+'-'+searchTextLower)
-      if (Array.isArray(el[pidKeyList[n]])) {
-        // we're missing any arrays
-        // return 0
-      } else {
-        if ((el[pidKeyList[n]]).toString().toLowerCase().includes(searchTextLower)) {
-          return el.pid
-        }
-        // return 0
-      }
-    }
-  })
-  // console.log(pidObjList)
-  
-  const phageIdLst = pidObjList.map(e => e.pid)
+//   const allPhageObjList = Object.values(C.phage_lookup)
+//   // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
+//   // console.log(allPhageObjList[0])
+//   const pidKeyList = Object.keys(allPhageObjList[0])
+//   const pidObjList = allPhageObjList.filter(function (el) {
+//     for (let n in pidKeyList) {
+//       // console.log(pidkeylist[n]+'-'+searchTextLower)
+//       if (Array.isArray(el[pidKeyList[n]])) {
+//         // we're missing any arrays
+//         // return 0
+//       } else {
+//         if ((el[pidKeyList[n]]).toString().toLowerCase().includes(searchTextLower)) {
+//           return el.pid
+//         }
+//         // return 0
+//       }
+//     }
+//   })
+//   // console.log(pidObjList)
+//   
+//   const phageIdLst = pidObjList.map(e => e.pid)
 //////////// HELP PAGES //////////////////////////////////////////////////////////////////////////////  
   // help pages uses grep
   let helpLst = []
@@ -438,7 +438,7 @@ router.post('/site_search', function site_search(req, res) {
         taxon_otid_obj: JSON.stringify(taxonOtidObj),
         help_pages: JSON.stringify(helpLst),
         contig_list:JSON.stringify(contigObj_list),
-        phage_id_list: JSON.stringify(phageIdLst) // phageIDs
+        //phage_id_list: JSON.stringify(phageIdLst) // phageIDs
       })
    });
   
