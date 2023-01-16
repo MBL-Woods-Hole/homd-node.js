@@ -558,8 +558,8 @@ router.get('/tax_description', function tax_description(req, res){
     }
   
   // find list pids that are known use this taxon
-  let plist = Object.values(C.phage_lookup).filter(item => (item.host_otid === otid)) 
-  let pid_list = plist.map(item => item.pid)
+  //let plist = Object.values(C.phage_lookup).filter(item => (item.host_otid === otid)) 
+  //let pid_list = plist.map(item => item.pid)
   //console.log('pid_list',pid_list)
   let text_file = get_rank_text('species','',otid)
   console.log('text_file',text_file)
@@ -626,7 +626,7 @@ router.get('/tax_description', function tax_description(req, res){
     pgname: 'taxon/description', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     otid: otid,
-    pids: pid_list,
+    //pids: pid_list,
     image_array:JSON.stringify(image_array),
     data1: JSON.stringify(data1),
     text_file: text_file[0],   // only 666 so far
