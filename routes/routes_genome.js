@@ -271,10 +271,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
   // // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj
-  let path1161 = path.join(CFG.PATH_TO_NCBI,gid,C.genome_lookup[gid]['gb_asmbly']+'_'+C.genome_lookup[gid]['gb_acc']+'_.genomic.fna.gz')
-  if(gid =='SEQF1161'){
-      console.log(path1161)
-  }
+  
   ADBConn.query(q, (err, rows) => {
     if (err) {
         //console.log(err)
