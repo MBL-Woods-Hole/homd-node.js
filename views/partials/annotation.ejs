@@ -82,7 +82,7 @@
 			   <td nowrap>
 			     <% idx = mole[n].PID.toLowerCase().indexOf(src_txt) %>
 			     <% if(idx != -1){ %>
-			       <% html = mole[n].PID.slice(0,idx)+ "<font color='red'>"+src_txt.toUpperCase() +'</font>'+mole[n].PID.slice(idx+src_txt.length) %>
+			       <% html = mole[n].PID.slice(0,idx)+ "<font color='red'>"+src_txt.toUpperCase() +"</font>"+mole[n].PID.slice(idx+src_txt.length) %>
 			       <%- html %>
 			     <% }else{ %>
 			       <%- mole[n].PID %>
@@ -94,7 +94,7 @@
 			       [<a title='Amino Acid'   href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].PID %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')"><b>AA</b></a>]
 			   </td>
 			   <td><%= mole[n].length %>/<%= mole[n].len_aa %></td>
-			   <td><%= mole[n].start %>-<%= mole[n].stop %></td>			   
+			   <td><%= mole[n].start %>-<%= mole[n].stop %></td>
 			   <% idx = mole[n].product.toLowerCase().indexOf(src_txt) %>
 			   <% if(idx != -1){ %>
 			     <% html = mole[n].product.slice(0,idx)+ "<font color='red'>"+src_txt.toUpperCase() +'</font>'+mole[n].product.slice(idx+src_txt.length) %>

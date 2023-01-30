@@ -396,7 +396,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
           db = "`PROKKA_ffn`.`ffn_seq`"
        }
   }
-  let q = 'SELECT UNCOMPRESS(' + seq_compressed + ') as seq FROM ' + db
+  let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
   q += " WHERE protein_id='" + pid + "'"
   console.log('anno2 query '+q)
   TDBConn.query(q, (err, rows) => {
