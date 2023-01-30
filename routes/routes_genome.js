@@ -495,7 +495,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     
     
     console.log(q)
-    helpers.print('anno query '+q)
+    console.log('anno query '+q)
     let tmp = []
     
     
@@ -543,7 +543,7 @@ router.get('/explorer', function explorer (req, res) {
   // let myurl = url.parse(req.url, true)
   const gid = req.query.gid
   
-  let anno = req.query.anno || 'prokka'
+  let anno = req.query.anno || 'ncbi'
   
   
   helpers.print(['gid:', gid,'anno:',anno])
@@ -643,7 +643,7 @@ router.get('/explorer', function explorer (req, res) {
   q += " WHERE o.seq_id = '"+gid+"'"
   
   
-  helpers.print('anno query '+q)
+  console.log('anno query '+q)
   //ADBConn.query(q, (err, rows) => {
   TDBConn.query(q, (err, rows) => {
     if (err) {
