@@ -384,14 +384,14 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   
   let db
   if(req.body.type == 'aa'){   // NCBI
-      if(anno == 'NCBI'){
+      if(anno == 'NCBI' || anno == 'ncbi'){
           db = "`NCBI_faa`.`protein_seq`"
        }else{
           db = "`PROKKA_faa`.`protein_seq`"
        }
      
   }else{   //req.body.type == 'na':   // NCBI  na
-      if(anno == 'NCBI'){
+      if(anno == 'NCBI' || anno == 'ncbi'){
           db = "`NCBI_ffn`.`ffn_seq`"
        }else{
           db = "`PROKKA_ffn`.`ffn_seq`"
