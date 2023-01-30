@@ -455,6 +455,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
           page_data: JSON.stringify(args.pageData),
           organism: args.organism,
           gc: args.gc,
+          src_txt: args.searchtext,
           info_data: JSON.stringify(args.annoInfoObj),
           pid_list: JSON.stringify(args.pidList),
           returnTo: '/genome/explorer?gid='+args.gid,
@@ -504,7 +505,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
       if (err) {
         req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 
-        let args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+        let args = {searchtext:searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
         renderFxn(req, res, args)
         return
       } else {
@@ -512,7 +513,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
           console.log('no rows found')
         }else{
 
-           let args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
+           let args = {searchtext: searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
            renderFxn(req, res, args)
 				   //  res.render('pages/genome/explorer', {
 			//           title: 'HOMD :: ' + gid,
