@@ -377,28 +377,29 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
-  const anno = req.body.db.split('_')[0]
+  const db_pts = req.body.db.split('_')
   
   // let q = 'SELECT ' + fieldName + ' as seq FROM ' + db + '.ORF_seq'
 //   q += " WHERE PID='" + pid + "'"
   
   let db
+  let gid = db_pts[1]
   if(req.body.type == 'aa'){   // NCBI
-      if(anno == 'NCBI' || anno == 'ncbi'){
+      if(db_pts[0] == 'NCBI' || db_pts[0] == 'ncbi'){
           db = "`NCBI_faa`.`protein_seq`"
        }else{
           db = "`PROKKA_faa`.`protein_seq`"
        }
      
   }else{   //req.body.type == 'na':   // NCBI  na
-      if(anno == 'NCBI' || anno == 'ncbi'){
+      if(db_pts[0] == 'NCBI' || db_pts[0] == 'ncbi'){
           db = "`NCBI_ffn`.`ffn_seq`"
        }else{
           db = "`PROKKA_ffn`.`ffn_seq`"
        }
   }
   let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
-  q += " WHERE protein_id='" + pid + "'"
+  q += " WHERE seq_id ='"+gid+"' and protein_id='" + pid + "'"
   console.log('anno2 query '+q)
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
