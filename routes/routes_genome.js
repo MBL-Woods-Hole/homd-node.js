@@ -398,7 +398,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   }
   let q = 'SELECT UNCOMPRESS(' + seq_compressed + ') as seq FROM ' + db
   q += " WHERE protein_id='" + pid + "'"
-  helpers.print('anno2 query '+q)
+  console.log('anno2 query '+q)
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
     if (err) {
@@ -488,8 +488,8 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
 //   qSelectAnno += ' JOIN `' + anno + '_meta`.`molecules` ON `' + anno + '_meta`.`orf`.`mol_id`=`' + anno + '_meta`.`molecules`.id'
 //   qSelectAnno += " WHERE PID in ('"+pid_list.join("','")+"')"
     let q = 'SELECT o.accession,  GC, PID, product, length, `start`, `stop`'
-      q += ' FROM `'+anno+'_meta`.`orf` as o'
-      q += ' JOIN `'+anno+'_meta`.`molecules`  as m'
+      q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf` as o'
+      q += ' JOIN `'+anno.toUpperCase()+'_meta`.`molecules`  as m'
       q += ' ON o.`accession` = m.`accession`'
       q += " WHERE o.seq_id = '"+gid+"' and PID in ('"+pid_list.join("','")+"')"
     
@@ -637,8 +637,8 @@ router.get('/explorer', function explorer (req, res) {
 
   //const q = queries.get_annotation_query(gid, anno)
   let q = 'SELECT o.accession,  GC, PID, product, length, `start`, `stop`'
-  q += ' FROM `'+anno+'_meta`.`orf` as o'
-  q += ' JOIN `'+anno+'_meta`.`molecules`  as m'
+  q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf` as o'
+  q += ' JOIN `'+anno.toUpperCase()+'_meta`.`molecules`  as m'
   q += ' ON o.`accession` = m.`accession`'
   q += " WHERE o.seq_id = '"+gid+"'"
   
