@@ -3,12 +3,12 @@
 //const winston = require('winston');
 const CFG = require('./config/config');
 const taxdbconn = require('./config/database').taxon_pool;
-const annodbconn = require('./config/database').taxon_pool2;
+//const annodbconn = require('./config/database').taxon_pool2;
 //const gendbconn = require('./config/database').genome_pool;
 const path = require('path');
 // explicitly makes conn global
 global.TDBConn = taxdbconn;   // database:  homd
-global.ADBConn = annodbconn;  // database: genome
+//global.ADBConn = annodbconn;  // database: genome
 global.app_root = path.resolve(__dirname);
 const C = require('./public/constants');
 const helpers   = require(app_root + '/routes/helpers/helpers')

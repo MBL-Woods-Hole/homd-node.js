@@ -263,25 +263,29 @@ router.get('/genome_description', function genomeDescription (req, res) {
     data = {}
   }
   //console.log(data)
-  const q = queries.get_contigs(gid)
-  helpers.print(q)
+  //const q = queries.get_contigs(gid)
+  
   let contigs = []
   // try get contigs from file:
   // ncbi only
   // // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj
-  
-  ADBConn.query(q, (err, rows) => {
+  // qSelectContigs = "SELECT accession, GC from NCBI_"+gid+".molecules"
+  // NEW GENOME CODE
+  let q = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE seq_id = '"+gid+"'"
+  helpers.print(q)
+  TDBConn.query(q, (err, rows) => {
+  //ADBConn.query(q, (err, rows) => {
     if (err) {
         //console.log(err)
     }else{
         //console.log('contigs',rows)
         for(let r in rows){
-           contigs.push({contig: rows[r].accession.split('|')[1], gc: rows[r].GC})
+           contigs.push({contig: rows[r].accession, gc: rows[r].GC})
         }
     }
-    //console.log('gid',gid)
+    console.log('contigs',contigs)
     //Pangenome
     // let pangenomes = {}
 //     C.pangenomes.map(function(el){
@@ -370,15 +374,33 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   console.log('in get_NN_NA_seq -post')
   helpers.print(req.body)
-  const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
+  //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
-  const db = req.body.db.toUpperCase()
+  //const db = req.body.db.toUpperCase()
+  const anno = req.body.db.split('_')[0]
+  // let q = 'SELECT ' + fieldName + ' as seq FROM ' + db + '.ORF_seq'
+//   q += " WHERE PID='" + pid + "'"
   
-  let q = 'SELECT ' + fieldName + ' as seq FROM ' + db + '.ORF_seq'
-  q += " WHERE PID='" + pid + "'"
+  
+  if(req.body.type == 'aa'){   // NCBI
+      if(anno == 'NCBI'){
+          db = "`NCBI_faa`.`protein_seq`"
+       }else{
+          db = "`PROKKA_faa`.`protein_seq`"
+       }
+     
+  }else{   //req.body.type == 'na':   // NCBI  na
+      if(anno == 'NCBI'){
+          db = "`NCBI_ffn`.`ffn_seq`"
+       }else{
+          db = "`PROKKA_ffn`.`ffn_seq`"
+       }
+  }
+  let q = 'SELECT UNCOMPRESS(' + seq_compressed + ') as seq FROM ' + db
+  q += " WHERE protein_id='" + pid + "'"
   helpers.print('anno2 query '+q)
-  
-  ADBConn.query(q, (err, rows) => {
+  TDBConn.query(q, (err, rows) => {
+  //ADBConn.query(q, (err, rows) => {
     if (err) {
         console.log(err)
         return
@@ -419,26 +441,26 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     }
     
     //console.log(req.session.site_search_result[anno][gid])
-//     const renderFxn = (req, res, args) => {
-//         res.render('pages/genome/explorer', {
-//           title: 'HOMD :: ' + args.gid,
-//           pgname: 'genome/explorer', // for AbountThisPage 
-//           config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-//           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-//           user: JSON.stringify(req.user || {}),
-//           gid: args.gid,
-//           otid: args.otid,
-//           all_annos: JSON.stringify(args.allAnnosObj),
-//           anno_type: args.annoType,
-//           page_data: JSON.stringify(args.pageData),
-//           organism: args.organism,
-//           gc: args.gc,
-//           info_data: JSON.stringify(args.annoInfoObj),
-//           pid_list: JSON.stringify(args.pidList),
-//           returnTo: '/genome/explorer?gid='+args.gid,
-//       
-//         })
-//       }
+    const renderFxn = (req, res, args) => {
+        res.render('pages/genome/explorer', {
+          title: 'HOMD :: ' + args.gid,
+          pgname: 'genome/explorer', // for AbountThisPage 
+          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+          user: JSON.stringify(req.user || {}),
+          gid: args.gid,
+          otid: args.otid,
+          all_annos: JSON.stringify(args.allAnnosObj),
+          anno_type: args.annoType,
+          page_data: JSON.stringify(args.pageData),
+          organism: args.organism,
+          gc: args.gc,
+          info_data: JSON.stringify(args.annoInfoObj),
+          pid_list: JSON.stringify(args.pidList),
+          returnTo: '/genome/explorer?gid='+args.gid,
+      
+        })
+     }
    //  {
 //     accession: 'SEQF1595|KI535340.1',
 //     GC: 47.09,
@@ -460,10 +482,25 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
         }
 
     let pid_list = req.session.site_search_result[anno][gid].map(el => el.pid)
-    const q = queries.get_annotation_query2(gid, anno, pid_list)
+    //const q = queries.get_annotation_query2(gid, anno, pid_list)
+    
+   //  let qSelectAnno = 'SELECT o.accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM `' + anno + '_meta`.`orf`'
+//   qSelectAnno += ' JOIN `' + anno + '_meta`.`molecules` ON `' + anno + '_meta`.`orf`.`mol_id`=`' + anno + '_meta`.`molecules`.id'
+//   qSelectAnno += " WHERE PID in ('"+pid_list.join("','")+"')"
+    let q = 'SELECT o.accession,  GC, PID, product, length, `start`, `stop`'
+      q += ' FROM `'+anno+'_meta`.`orf` as o'
+      q += ' JOIN `'+anno+'_meta`.`molecules`  as m'
+      q += ' ON o.`accession` = m.`accession`'
+      q += " WHERE o.seq_id = '"+gid+"' and PID in ('"+pid_list.join("','")+"')"
+    
+    
+    console.log(q)
     helpers.print('anno query '+q)
     let tmp = []
-    ADBConn.query(q, (err, rows) => {
+    
+    
+    TDBConn.query(q, (err, rows) => {
+    //ADBConn.query(q, (err, rows) => {
       if (err) {
         req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 
@@ -474,49 +511,32 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
         if (rows.length === 0) {
           console.log('no rows found')
         }else{
-           
-           for(let i in rows){
-              // tmp[i] = rows[i]
-               // highlite/search only PID and product
-              // idx = rows[i].PID.toLowerCase().indexOf(searchtext)
-               // idx2 = rows[i].product.toLowerCase().indexOf(searchtext)
-             //   if(idx != -1){
-//                    //html += '<td>'+data_lst[i].pid.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].pid.slice(idx+searchtext.length)+'</td>'
-//                   tmp[i].PID = rows[i].PID.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+rows[i].PID.slice(idx+searchtext.length)
-//                }
-//                idx = rows[i].product.toLowerCase().indexOf(searchtext)
-//                if(idx != -1){
-//                    //html += '<td>'+data_lst[i].pid.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+ data_lst[i].pid.slice(idx+searchtext.length)+'</td>'
-//                   tmp[i].product = rows[i].product.slice(0,idx)+ "<font color='red'>"+searchtext.toUpperCase() +'</font>'+rows[i].product.slice(idx+searchtext.length)
-//                }
-               
-           }
+
+           let args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
+           renderFxn(req, res, args)
+				   //  res.render('pages/genome/explorer', {
+			//           title: 'HOMD :: ' + gid,
+			//           pgname: 'genome/explorer', // for AbountThisPage 
+			//           config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+			//           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+			//           user: JSON.stringify(req.user || {}),
+			//           gid: gid,
+			//           otid: otid,
+			//           all_annos: JSON.stringify(allAnnosObj),
+			//           anno_type: anno,
+			//           page_data: JSON.stringify(page),
+			//           organism: organism,
+			//           gc: gc,
+			//           info_data: JSON.stringify(annoInfoObj),
+			//           pid_list: JSON.stringify(rows),
+			//           src_txt: searchtext,
+			//           returnTo: '/genome/explorer?gid='+gid,
+			//       
+			//         })
+    
         }
-    
-    
-        res.render('pages/genome/explorer', {
-          title: 'HOMD :: ' + gid,
-          pgname: 'genome/explorer', // for AbountThisPage 
-          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-          user: JSON.stringify(req.user || {}),
-          gid: gid,
-          otid: otid,
-          all_annos: JSON.stringify(allAnnosObj),
-          anno_type: anno,
-          page_data: JSON.stringify(page),
-          organism: organism,
-          gc: gc,
-          info_data: JSON.stringify(annoInfoObj),
-          pid_list: JSON.stringify(rows),
-          src_txt: searchtext,
-          returnTo: '/genome/explorer?gid='+gid,
-      
-        })
-    
-      }
-    })
-    
+     }
+    })  // end Conn
 })
 router.get('/explorer', function explorer (req, res) {
   console.log('in explorer')
@@ -615,11 +635,17 @@ router.get('/explorer', function explorer (req, res) {
     return
   }
 
+  //const q = queries.get_annotation_query(gid, anno)
+  let q = 'SELECT o.accession,  GC, PID, product, length, `start`, `stop`'
+  q += ' FROM `'+anno+'_meta`.`orf` as o'
+  q += ' JOIN `'+anno+'_meta`.`molecules`  as m'
+  q += ' ON o.`accession` = m.`accession`'
+  q += " WHERE o.seq_id = '"+gid+"'"
   
-  const q = queries.get_annotation_query(gid, anno)
+  
   helpers.print('anno query '+q)
-
-  ADBConn.query(q, (err, rows) => {
+  //ADBConn.query(q, (err, rows) => {
+  TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 

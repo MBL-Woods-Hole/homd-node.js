@@ -49,13 +49,22 @@ def find_databases(args):
             dbs[anno].append(db)
     return dbs
     
-# def fix_typo(dbs):
-#     """ RISKY Don't Change the db"""
-#     for db in dbs['ncbi']:
-#         print(db)  
-#         
-#         q = "ALTER TABLE "+db+".`assembly_report' CHANGE `filed_value` `field_value` TEXT"  
-        
+
+#  "prokka": {   PROKKA_meta.prokka_info
+#             "organism": "Fusobacterium necrophorum BFTR-1",
+#             "contigs": "304",
+#             "bases": "2532319",
+#             "CDS": "2234",
+#             "rRNA": "3",
+#             "tRNA": "34",
+#             "tmRNA": "1"
+#         },
+# "ncbi": {
+# 	"CDS": "2388",
+# 	"rRNA": "4",
+# 	"tRNA": "34",
+# 	"tmRNA": "0"
+
 def run(args,dbs):
     #global master_lookup
     master_lookup = {}
