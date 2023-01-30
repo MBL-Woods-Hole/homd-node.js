@@ -285,7 +285,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
            contigs.push({contig: rows[r].accession, gc: rows[r].GC})
         }
     }
-    console.log('contigs',contigs)
+    //console.log('contigs',contigs)
     //Pangenome
     // let pangenomes = {}
 //     C.pangenomes.map(function(el){
