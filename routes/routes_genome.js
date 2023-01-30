@@ -373,15 +373,16 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 
 router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   console.log('in get_NN_NA_seq -post')
-  helpers.print(req.body)
+  console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
   const anno = req.body.db.split('_')[0]
+  
   // let q = 'SELECT ' + fieldName + ' as seq FROM ' + db + '.ORF_seq'
 //   q += " WHERE PID='" + pid + "'"
   
-  
+  let db
   if(req.body.type == 'aa'){   // NCBI
       if(anno == 'NCBI'){
           db = "`NCBI_faa`.`protein_seq`"
