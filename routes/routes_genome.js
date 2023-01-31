@@ -490,7 +490,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
    //  let qSelectAnno = 'SELECT o.accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM `' + anno + '_meta`.`orf`'
 //   qSelectAnno += ' JOIN `' + anno + '_meta`.`molecules` ON `' + anno + '_meta`.`orf`.`mol_id`=`' + anno + '_meta`.`molecules`.id'
 //   qSelectAnno += " WHERE PID in ('"+pid_list.join("','")+"')"
-    let q = 'SELECT o.accession,  GC, PID, product, length, `start`, `stop`'
+    let q = 'SELECT o.accession,  GC, PID, product, length_na,length_aa, `start`, `stop`'
       q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf` as o'
       q += ' JOIN `'+anno.toUpperCase()+'_meta`.`molecules`  as m'
       q += ' ON o.`accession` = m.`accession`'
@@ -639,7 +639,7 @@ router.get('/explorer', function explorer (req, res) {
   }
 
   //const q = queries.get_annotation_query(gid, anno)
-  let q = 'SELECT o.accession,  GC, PID, product, length, `start`, `stop`'
+  let q = 'SELECT o.accession,  GC, PID, product, length_na,length_aa, `start`, `stop`'
   q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf` as o'
   q += ' JOIN `'+anno.toUpperCase()+'_meta`.`molecules`  as m'
   q += ' ON o.`accession` = m.`accession`'
