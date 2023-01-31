@@ -3,12 +3,12 @@
 //const winston = require('winston');
 const CFG = require('./config/config');
 const taxdbconn = require('./config/database').taxon_pool;
-const annodbconn = require('./config/database').taxon_pool2;
+//const annodbconn = require('./config/database').taxon_pool2;
 //const gendbconn = require('./config/database').genome_pool;
 const path = require('path');
 // explicitly makes conn global
 global.TDBConn = taxdbconn;   // database:  homd
-global.ADBConn = annodbconn;  // database: genome
+//global.ADBConn = annodbconn;  // database: genome
 global.app_root = path.resolve(__dirname);
 const C = require('./public/constants');
 const helpers   = require(app_root + '/routes/helpers/helpers')
@@ -287,7 +287,7 @@ Promise.all(promises)
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[ 'Burkholderiales_order'])
     //helpers.print(['lineage 701',C.taxon_lineage_lookup[701]])
     //console.log('refseq 12',C.refseq_lookup[12])
-    helpers.print(['SEQF1388',C.genome_lookup['SEQF1388']])
+    helpers.print(['SEQF10010',C.genome_lookup['SEQF10010']])
     //console.log(C.taxon_counts_lookup['Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Variovorax'])
     //console.log('755',C.taxon_lineage_lookup[755])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])

@@ -118,6 +118,7 @@ function create_protein_table(anno, obj, searchtext){
 
 }
 router.post('/anno_protein_search', function anno_search(req, res) {
+    console.log('POST::anno_protein_search')
     console.log(req.body)
     let obj,data,gid,name,resultObj={}
     const anno = req.body.anno
@@ -159,22 +160,28 @@ router.post('/site_searchOLD', function site_search(req, res) {
   
 })
 router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, res) {
+    console.log('POST::get_annotations_counts_NEW')
     console.log(req.body)
     const searchText = req.body.intext
     const searchTextLower = req.body.intext.toLowerCase()
     let obj,data,gid,organism='',anno
    let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
+   // V10.1
    //https://github.com/uhop/stream-json/wiki/StreamValues
-   let q = "SELECT  anno, gid, PID, product from protein_search WHERE("
-    q += " product like '%"+searchTextLower+"%'" 
-    //q += " OR gene like '%"+searchTextLower+"%'"
-    q += " OR PID like '%"+searchTextLower+"%')"
+   let q = "SELECT 'ncbi' as anno, seq_id as gid, PID, product from `NCBI_meta`.orf WHERE product like '%"+searchTextLower+"%'"
+    q += ' UNION '
+    q += "SELECT 'prokka' as anno, seq_id as gid, PID, product from `PROKKA_meta`.orf WHERE product like '%"+searchTextLower+"%'"
+   
+   
+   
+   // OLD V9.1
+   // let q = "SELECT  anno, gid, PID, product from protein_search WHERE("
+//     q += " product like '%"+searchTextLower+"%'" 
+//     q += " OR PID like '%"+searchTextLower+"%')"
     //q += " AND anno='"+anno+"'"
     //q += " GROUP BY anno"
-   if(CFG.ENV == 'productionX'){
-      q = "select 'a','b','c','d' from otid_prime limit 0"
-   }
-   //console.log(q)
+   
+   console.log(q)
    //const jsonStream = StreamValues.withParser();
 //   if(CFG.ENV === 'development'){
    TDBConn.query(q, (err, rows) => {

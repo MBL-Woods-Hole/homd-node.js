@@ -5,9 +5,8 @@
 # to parse and show a taxonomy tree (Written for HOMD)
 
 import os, sys
-import json
+import json,gzip
 import argparse
-
 import datetime
 from datetime import datetime,date
 ranks = ['domain','phylum','klass','order','family','genus','species']
@@ -16,13 +15,21 @@ sys.path.append('../../../homd-data/')
 from connect import MyConnection
 usable_annotations = ['ncbi','prokka']
 # obj = {seqid:[]}             
-def make_anno_object():
+def make_anno_object_prokka():
 
     new_obj={}
-    new_obj['gid'] = ''
     new_obj['organism'] = ''
     new_obj['contigs'] = ''
     new_obj['bases'] = ''
+    new_obj['CDS'] = ''
+    new_obj['rRNA'] = ''
+    new_obj['tRNA'] = ''
+    new_obj['tmRNA'] = ''
+    ## ignore for now repeat_region, misc_RNA
+    return new_obj
+def make_anno_object_ncbi():
+
+    new_obj={}
     new_obj['CDS'] = ''
     new_obj['rRNA'] = ''
     new_obj['tRNA'] = ''
@@ -49,26 +56,91 @@ def find_databases(args):
             dbs[anno].append(db)
     return dbs
     
-
-#  "prokka": {   PROKKA_meta.prokka_info
-#             "organism": "Fusobacterium necrophorum BFTR-1",
-#             "contigs": "304",
-#             "bases": "2532319",
-#             "CDS": "2234",
-#             "rRNA": "3",
-#             "tRNA": "34",
-#             "tmRNA": "1"
-#         },
-# "ncbi": {
-# 	"CDS": "2388",
-# 	"rRNA": "4",
-# 	"tRNA": "34",
-# 	"tmRNA": "0"
-
+# "gid": "SEQF1003",
+# "organism": "Atopobium rimae ATCC 49626 (actinobacteria)",
+# "contigs": 9,
+# "bases": 1626291,
+# "CDS": "",
+# "rRNA": "",
+# "tRNA": "",
+# "tmRNA": ""
 def run(args,dbs):
     #global master_lookup
     master_lookup = {}
     # prokka first
+    anno = 'prokka'
+    for directory in os.listdir(args.prokka_indir):
+        d = os.path.join(args.prokka_indir, directory)
+        if os.path.isdir(d) and directory.startswith('SEQF'):
+            gid = directory
+            if gid not in master_lookup:
+                master_lookup[gid] = {}
+                master_lookup[gid]['prokka'] = make_anno_object_prokka()
+                master_lookup[gid]['ncbi']   = make_anno_object_ncbi()
+        
+            for filename in os.listdir(d):
+                f = os.path.join(d, filename)
+                if os.path.isfile(f) and f.endswith('.txt'):
+                    for line in open(f, 'r'):
+                        line = line.strip()
+                        #print(line)
+                        i = line.split(':')
+                        if line.startswith('organism'):
+                            master_lookup[gid][anno]['organism'] = i[1].strip()
+                        if line.startswith('contigs'):
+                            master_lookup[gid][anno]['contigs'] = i[1].strip()
+                        if line.startswith('bases'):
+                            master_lookup[gid][anno]['bases'] = i[1].strip()
+                        if line.startswith('CDS'):
+                            master_lookup[gid][anno]['CDS'] = i[1].strip()
+                        if line.startswith('rRNA'):
+                            master_lookup[gid][anno]['rRNA'] = i[1].strip()
+                        if line.startswith('tRNA'):
+                            master_lookup[gid][anno]['tRNA'] = i[1].strip()
+                        if line.startswith('tmRNA'):
+                            master_lookup[gid][anno]['tmRNA'] = i[1].strip()
+    
+    #ncbi look at features
+    anno = 'ncbi'
+    for directory in os.listdir(args.ncbi_indir):
+        d = os.path.join(args.ncbi_indir, directory)
+        if os.path.isdir(d) and directory.startswith('SEQF'):
+            gid = directory
+            if gid not in master_lookup:
+                master_lookup[gid] = {}
+                master_lookup[gid]['prokka'] = make_anno_object_prokka()
+                master_lookup[gid]['ncbi']   = make_anno_object_ncbi()
+            print('directory',directory)
+            for filename in os.listdir(d):
+                f = os.path.join(d, filename)
+                print('f',f)
+                if os.path.isfile(f) and f.endswith('feature_count.txt.gz'):
+                    CDSct = 0
+                    rRNAct = 0
+                    tRNAct = 0
+                    tmRNAct = 0
+                    for line in gzip.open(f, 'rt'):
+                        line=line.strip()
+                        i = line.split('\t')
+                        print(i)
+                        if line.startswith('CDS'):
+                            CDSct += int(i[-1])
+                        if line.startswith('rRNA'):
+                            rRNAct += int(i[-1])
+                        if line.startswith('tRNA'):
+                            tRNAct += int(i[-1])
+                        if line.startswith('tmRNA'):
+                            tmRNAct += int(i[-1])
+                    master_lookup[gid][anno]['CDS'] = str(CDSct)
+                    master_lookup[gid][anno]['rRNA'] = str(rRNAct)
+                    master_lookup[gid][anno]['tRNA'] = str(tRNAct)
+                    master_lookup[gid][anno]['tmRNA'] = str(tmRNAct)
+           
+    file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')  
+    print_dict(file, master_lookup) 
+    
+def old_way(args,dbs):
+    master_lookup = {}
     for db in dbs['prokka']:
         print('Running1',db)
         gid = db.split('_')[1]
@@ -90,7 +162,8 @@ def run(args,dbs):
                 if n in master_lookup[gid]['prokka']:
                     master_lookup[gid]['prokka'][n] = str(row[n]).strip()
                         
-    
+    # ncbi feature_count.txt  gzipped!
+    # prokka SEQF10131/GCA_000392455.3.txt
     for db in dbs['ncbi']:
         print('Running2',db)
         gid = db.split('_')[1]
@@ -122,46 +195,7 @@ def run(args,dbs):
             master_lookup[gid]['ncbi']['bases']   = int(row['bases'])
             master_lookup[gid]['ncbi']['contigs'] = int(row['contigs'])
             
-    #print(master_lookup)
-#     
-    ## NEXT NCBI
-#     anno = 'ncbi' 
-#     for row in base_result:
-#         gid = row[0]
-#         #print(gid)
-#         # organism
-#         q1 = "select organism from annotation.ncbi_info where gid ='"+gid+"'"
-#         resultq1 = myconn.execute_fetch_one(q1)
-#         organism = resultq1[0]
-#         master_lookup[gid]['ncbi']['organism'] = organism
-#         master_lookup[gid]['ncbi']['gid'] = gid
-#         where_clause = "WHERE gid='"+gid+"' AND annotation='ncbi'"
-#         # for CDS,rrna,trna,tmrna
-#         q2 = "SELECT `type`,count(*) AS count from annotation.gff "+where_clause+" group by `type`"
-#         #print(q2)
-#         result2 = myconn.execute_fetch_select_dict(q2)
-#         for row in result2:
-#             #print(row)
-#             if row['type'] == 'CDS':
-#                master_lookup[gid]['ncbi']['CDS'] = row['count']
-#             if row['type'] == 'rRNA':
-#                master_lookup[gid]['ncbi']['rRNA'] = row['count']
-#             if row['type'] == 'tmRNA':
-#                master_lookup[gid]['ncbi']['tmRNA'] = row['count']
-#             if row['type'] == 'tRNA':
-#                master_lookup[gid]['ncbi']['tRNA'] = row['count']  
-#          
-#         q3 = "SELECT sum(bps) AS bases, count(*) AS contigs FROM annotation.molecule "+where_clause
-#         result3 = myconn.execute_fetch_select_dict(q3)
-#         for row in result3:
-#             #print(row)
-#             master_lookup[gid]['ncbi']['bases']=int(row['bases'])
-#             master_lookup[gid]['ncbi']['contigs']=int(row['contigs'])
-#         
-#         print(master_lookup[gid]['ncbi'])
-#     
-#     
-#     
+
     file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')  
     print_dict(file, master_lookup) 
 
@@ -195,7 +229,7 @@ if __name__ == "__main__":
 
     #parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
     #                                                help=" ")
-    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-Annotation',
+    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-AnnotationNEW',
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")
@@ -218,10 +252,14 @@ if __name__ == "__main__":
         #args.DATABASE  = 'homd'
         dbhost_old = '192.168.1.51'
         #dbhost_new = '192.168.1.40'
-        
+        args.ncbi_indir = '/mnt/efs/bioinfo/projects/homd_add_genomes_V10.1/GCA_V10.1_all'
+        args.prokka_indir = '/mnt/efs/bioinfo/projects/homd_add_genomes_V10.1/prokka_V10.1_all'
     elif args.dbhost == 'localhost':  #default
         #args.DATABASE = 'homd'
         dbhost_old = 'localhost'
+        args.ncbi_indir = '/Users/avoorhis/programming/homd-work/new_genomesV10.1/GCA_V10.1_all'
+        args.prokka_indir = '/Users/avoorhis/programming/homd-work/new_genomesV10.1/prokka_V10.1_all'
+        
     else:
         sys.exit('dbhost - error')
     args.indent = None
@@ -231,10 +269,11 @@ if __name__ == "__main__":
     myconn = MyConnection(host=dbhost_old,   read_default_file = "~/.my.cnf_node")
 
     print(args)
-    
-    databases = find_databases(args)
+    databases ={}
+    #databases = find_databases(args)
     
     #print('dbs',databases)
     
     run(args,databases)
-
+    
+    

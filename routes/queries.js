@@ -19,7 +19,9 @@ module.exports.get_16s_rRNA_sequence_query = (gid) => {
 
   return qSelect16Sseq
 }
-
+module.exports.get_db_updates_query = () => {
+  return "SELECT otid, description, reason, date FROM updates WHERE `show`='1'"
+}
 // module.exports.get_annotation_query = (gid, anno) => {
 //   let qSelectAnno = 'SELECT accession, PID, product FROM annotation.orf_sequence'
 //   qSelectAnno += ' JOIN annotation.molecule ON orf_sequence.gid=molecule.gid'
@@ -30,7 +32,7 @@ module.exports.get_16s_rRNA_sequence_query = (gid) => {
 // 
 //   return qSelectAnno
 // }
-
+// GENOMES
 module.exports.get_annotation_query = (gid, anno) => {
   const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
   let qSelectAnno = 'SELECT accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
@@ -46,9 +48,10 @@ module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
 }
 module.exports.get_contigs = (gid) => {   // always NCBI
   const db = 'NCBI_' + gid
-  qSelectContigs = "SELECT accession,GC from "+db+".molecules"
+  // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
+  //                               PROKKA gb_asmbly+.fna.gz
+  // asm_name amd gb_asm are both from genomes_obj
+  qSelectContigs = "SELECT accession, GC from "+db+".molecules"
   return qSelectContigs
 }
-module.exports.get_db_updates_query = () => {
-  return "SELECT otid, description, reason, date FROM updates WHERE `show`='1'"
-}
+

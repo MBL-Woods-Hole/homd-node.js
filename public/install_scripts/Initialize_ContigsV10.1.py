@@ -5,15 +5,15 @@
 # to parse and show a taxonomy tree (Written for HOMD)
 
 import os, sys
-import json
+import json,gzip
 import argparse
-
+from Bio import SeqIO
 import datetime
 from datetime import datetime,date
 ranks = ['domain','phylum','klass','order','family','genus','species']
 today = str(date.today())
 sys.path.append('../../../homd-data/')
-from connect import MyConnection
+#from connect import MyConnection
 
 
 
@@ -37,11 +37,11 @@ def find_databases(args):
     return dbs
     
 # def fix_typo(dbs):
-#     """ RISKY Don't Change the db"""
-#     for db in dbs['ncbi']:
-#         print(db)  
-#         
-#         q = "ALTER TABLE "+db+".`assembly_report' CHANGE `filed_value` `field_value` TEXT"  
+#   """ RISKY Don't Change the db"""
+#   for db in dbs['ncbi']:
+#       print(db)  
+#       
+#       q = "ALTER TABLE "+db+".`assembly_report' CHANGE `filed_value` `field_value` TEXT"  
     
 """
 appending:  SEQF3075  to:  JH378873.1
@@ -71,29 +71,69 @@ def run(args, dbs):
     #global master_lookup
     master_lookup = {}
     
-    for db in dbs['ncbi']:
-        print('Running1',db)
-        
-        
-        q = "SELECT accession, GC from "+db+".molecules"
-        
-        result = myconn.execute_fetch_select_dict(q)
-        for row in result:
-            
-            parts = row['accession'].split('|')
-            contig = parts[1]
-            seqid = parts[0]
-            gc = row['GC']
-            #print('contig',contig)
-            if contig not in master_lookup:
-                #master_lookup[contig] = [{'sid':seqid,'gc':gc}]
-                master_lookup[contig] = [seqid]
-            else:
-                print('appending: ',seqid,' to: ',contig)
-                #master_lookup[contig].append({'sid':seqid,'gc':gc})
-                master_lookup[contig].append(seqid)
-    #print('master_lookup',master_lookup)           
+#     for db in dbs['ncbi']:
+#         print('Running1',db)
+#         
+#         # comes from file: genomic.fna.gz
+#         q = "SELECT accession, GC from "+db+".molecules"
+#         
+#         result = myconn.execute_fetch_select_dict(q)
+#         for row in result:
+#             
+#             parts = row['accession'].split('|')
+#             contig = parts[1]
+#             seqid = parts[0]
+#             gc = row['GC']
+#             #print('contig',contig)
+#             if contig not in master_lookup:
+#                 #master_lookup[contig] = [{'sid':seqid,'gc':gc}]
+#                 master_lookup[contig] = [seqid]
+#             else:
+#                 print('appending: ',seqid,' to: ',contig)
+#                 #master_lookup[contig].append({'sid':seqid,'gc':gc})
+#                 master_lookup[contig].append(seqid)
+    # using .gz files JUST NEED CONTIGS
+    count = 0
+    ## NCBI ONLY
+    db = NCBI_contig
+    table = contig_seq
+    q = "SELECT seq_id, record_id from `"+db+"`.`"+table+"`"
+    result = myconn.execute_fetch_select(q)
+    for row in result:
+        if row[1] not in master_lookup:
+            master_lookup[row[1]] = [row[0]]
+            #master_lookup[record.id] = seqid
+        else:
+            master_lookup[row[1]].append(row[0])
     
+ #    for directory in os.listdir(args.indir):
+#         d = os.path.join(args.indir, directory)
+#         seqid = directory
+#         count +=1
+#         print(count,seqid)
+#         for filename in os.listdir(d):
+#             f = os.path.join(d, filename)
+#             #print('directory',directory)
+#             
+#             if os.path.isfile(f) and f.endswith('genomic.fna.gz') and not f.endswith('rna_from_genomic.fna.gz') \
+#                              and not f.endswith('cds_from_genomic.fna.gz'):
+#                 with gzip.open(f, "rt") as handle:
+#                     for record in SeqIO.parse(handle, "fasta"):
+#                         #print(record.id)
+#                         #print(record.description)
+#                         
+#                         if record.id not in master_lookup:
+#                             master_lookup[record.id] = [seqid]
+#                             #master_lookup[record.id] = seqid
+#                         else:
+#                             master_lookup[record.id].append(seqid)
+#                             #print('DUPE',seqid,record.id)
+#                             #sys.exit() 
+                            
+    #print('master_lookup',master_lookup)           
+    # for rec in master_lookup:
+#        if len(master_lookup[rec]) >1:
+#            print('More than one seqid for this accno:',rec)
     #for db in dbs['prokka']:
     #    print('Running2',db)
         
@@ -132,7 +172,7 @@ if __name__ == "__main__":
 
     #parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
     #                                                help=" ")
-    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-Contigs',
+    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-ContigsNEW',
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")
@@ -155,23 +195,25 @@ if __name__ == "__main__":
         #args.DATABASE  = 'homd'
         dbhost_old = '192.168.1.51'
         #dbhost_new = '192.168.1.40'
-        
+        args.indir = '/mnt/efs/bioinfo/projects/homd_add_genomes_V10.1/GCA_V10.1_all'
     elif args.dbhost == 'localhost':  #default
         #args.DATABASE = 'homd'
         dbhost_old = 'localhost'
+        args.indir = '/Users/avoorhis/programming/homd-work/new_genomesV10.1/GCA_V10.1_all'
     else:
         sys.exit('dbhost - error')
     args.indent = None
     if args.prettyprint:
         args.indent = 4
     print()
-    myconn = MyConnection(host=dbhost_old,   read_default_file = "~/.my.cnf_node")
+    #myconn = MyConnection(host=dbhost_old,   read_default_file = "~/.my.cnf_node")
 
     print(args)
-    
-    databases = find_databases(args)
+    databases ={}
+    #databases = find_databases(args)
     
     #print('dbs',databases)
     
     run(args, databases)
-
+    
+    
