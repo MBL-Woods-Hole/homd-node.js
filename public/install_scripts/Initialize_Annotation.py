@@ -37,7 +37,7 @@ def find_databases(args):
     dbs['ncbi'] = []
     dbs['prokka'] = []
     for anno in dbs:
-        q = "SHOW DATABASES LIKE '"+anno.upper()+"\_%'"
+        q = "SHOW DATABASES LIKE '"+anno.upper()+"\_SEQF%'"
         print(q)
         result = myconn.execute_fetch_select(q)
         
