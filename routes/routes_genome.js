@@ -459,8 +459,9 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     let tmp = []
     ADBConn.query(q, (err, rows) => {
       if (err) {
-        req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
-
+        req.flash('fail', 'Query Error2: "'+anno+'" annotation for '+gid)
+        console.log('Failed Query'+q)
+        console.log(err)
         let args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
         renderFxn(req, res, args)
         return
@@ -615,8 +616,9 @@ router.get('/explorer', function explorer (req, res) {
 
   ADBConn.query(q, (err, rows) => {
     if (err) {
-      req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
-
+      req.flash('fail', 'Query Error1: "'+anno+'" annotation for '+gid)
+      console.log('Failed Query'+q)
+      console.log(err)
       args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
       renderFxn(req, res, args)
       return
