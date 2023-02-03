@@ -457,7 +457,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     const q = queries.get_annotation_query2(gid, anno, pid_list)
     console.log('anno query '+q)
     let tmp = []
-    TDBConn.query(q, (err, rows) => {
+    ADBConn.query(q, (err, rows) => {
       if (err) {
         req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 
@@ -611,9 +611,9 @@ router.get('/explorer', function explorer (req, res) {
 
   
   const q = queries.get_annotation_query(gid, anno)
-  helpers.print('anno query '+q)
+  console.log('anno query '+q)
 
-  TDBConn.query(q, (err, rows) => {
+  ADBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 
