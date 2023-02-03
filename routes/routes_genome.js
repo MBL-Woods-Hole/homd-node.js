@@ -490,11 +490,10 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
    //  let qSelectAnno = 'SELECT o.accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM `' + anno + '_meta`.`orf`'
 //   qSelectAnno += ' JOIN `' + anno + '_meta`.`molecules` ON `' + anno + '_meta`.`orf`.`mol_id`=`' + anno + '_meta`.`molecules`.id'
 //   qSelectAnno += " WHERE PID in ('"+pid_list.join("','")+"')"
-    let q = 'SELECT o.accession,  o.GC, PID, product, length_na,length_aa, `start`, `stop`'
-      q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf` as o'
-      q += ' JOIN `'+anno.toUpperCase()+'_meta`.`molecules`  as m'
-      q += ' ON o.`accession` = m.`accession`'
-      q += " WHERE o.seq_id = '"+gid+"' and PID in ('"+pid_list.join("','")+"')"
+    // NEW: takes TDB
+    let q = 'SELECT accession,  GC, PID, product, length_na,length_aa, `start`, `stop`'
+      q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+      q += " WHERE seq_id = '"+gid+"' and PID in ('"+pid_list.join("','")+"')"
     
     
     console.log(q)
@@ -503,7 +502,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     
     
     TDBConn.query(q, (err, rows) => {
-    //ADBConn.query(q, (err, rows) => {
+    //OLD ADBConn.query(q, (err, rows) => {
       if (err) {
         req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 
@@ -638,16 +637,17 @@ router.get('/explorer', function explorer (req, res) {
     return
   }
 
+  //OLD DB
   //const q = queries.get_annotation_query(gid, anno)
-  let q = 'SELECT o.accession,  o.GC, PID, product, length_na,length_aa, `start`, `stop`'
-  q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf` as o'
-  q += ' JOIN `'+anno.toUpperCase()+'_meta`.`molecules`  as m'
-  q += ' ON o.`accession` = m.`accession`'
-  q += " WHERE o.seq_id = '"+gid+"'"
+  //NEW DB
+  let q = 'SELECT accession,  GC, PID, product, length_na,length_aa, `start`, `stop`'
+  q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+  q += " WHERE seq_id = '"+gid+"'"
   
+  //select GC, PID, product, length_na,length_aa, `start`, `stop` FROM `PROKKA_meta`.`orf`  WHERE seq_id = 'SEQF1595'
   
   console.log('anno query '+q)
-  //ADBConn.query(q, (err, rows) => {
+  //OLD ADBConn.query(q, (err, rows) => {
   TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
