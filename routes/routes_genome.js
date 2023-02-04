@@ -491,15 +491,13 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
 //   qSelectAnno += ' JOIN `' + anno + '_meta`.`molecules` ON `' + anno + '_meta`.`orf`.`mol_id`=`' + anno + '_meta`.`molecules`.id'
 //   qSelectAnno += " WHERE PID in ('"+pid_list.join("','")+"')"
     // NEW: takes TDB
-    let q = 'SELECT accession,  GC, PID, product, length_na,length_aa, `start`, `stop`'
+    let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
       q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
       q += " WHERE seq_id = '"+gid+"' and PID in ('"+pid_list.join("','")+"')"
-    
     
     console.log(q)
     console.log('anno query '+q)
     let tmp = []
-    
     
     TDBConn.query(q, (err, rows) => {
     //OLD ADBConn.query(q, (err, rows) => {
@@ -640,7 +638,7 @@ router.get('/explorer', function explorer (req, res) {
   //OLD DB
   //const q = queries.get_annotation_query(gid, anno)
   //NEW DB
-  let q = 'SELECT accession,  GC, PID, product, length_na,length_aa, `start`, `stop`'
+  let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
   q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
   q += " WHERE seq_id = '"+gid+"'"
   
