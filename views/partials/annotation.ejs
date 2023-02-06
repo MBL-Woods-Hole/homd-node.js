@@ -87,16 +87,16 @@
 			     <% }else{ %>
 			       <%- mole[n].protein_id %>
 			     <% } %>
-			     <a title='Genome Viewer' href='/jbrowse/index.html?data=homd/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= contig_gc %>),GC Skew&loc=<%= mole[n].accession %>:<%= locstart %>..<%= locstop %>&highlight=<%= mole[n].accession %>:<%= start %>..<%= stop %>' target='_blank' rel="noopener noreferrer">jb</a>
+			     <a title='Genome Viewer' href='/jbrowse/index.html?data=homd_V10.1/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= contig_gc %>),GC Skew&loc=<%= mole[n].accession %>:<%= locstart %>..<%= locstop %>&highlight=<%= mole[n].accession %>:<%= start %>..<%= stop %>' target='_blank' rel="noopener noreferrer">jb</a>
 			    <!-- 
-			    https://devel.homd.org/jbrowse/index.html?data=homd%2FSEQF1595&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2CGC%20Content%20(pivot%20at%200.47)%2CGC%20Skew&loc=SEQF1595%7CKI535340.1%3A1..1587476&highlight= browse/index.html?data=homd%2FSEQF1622&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2CGC%20Content%20(pivot%20at%200.39)%2CGC%20Skew&loc=SEQF1622%7CCP001172.1%3A1504083..2256279&highlight=
-			   https://homd.org/jbrowse/index.html?data=homd/SEQF5379
+			    https://devel.homd.org/jbrowse/index.html?data=homd_V10.1%2FSEQF1595&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2CGC%20Content%20(pivot%20at%200.47)%2CGC%20Skew&loc=SEQF1595%7CKI535340.1%3A1..1587476&highlight= browse/index.html?data=homd_V10.1%2FSEQF1622&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2CGC%20Content%20(pivot%20at%200.39)%2CGC%20Skew&loc=SEQF1622%7CCP001172.1%3A1504083..2256279&highlight=
+			   https://homd.org/jbrowse/index.html?data=homd_V10.1/SEQF5379
 			        tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at 0.67),GC Skew
 			        loc=LN831029.1:2950574..2952573500
 			        highlight=LN831029.1:2951074..2952573
 			  
                from annotation page old version:
-			   https://v2.homd.org/jbrowse/index.html?data=homd/SEQF1851
+			   https://v2.homd.org/jbrowse/index.html?data=homd_V10.1/SEQF1851
 			         loc=SEQF1851 ACVN02000334.1 1736..3761& 
 			         highlight=SEQF1851 ACVN02000334.1 2242..3255& 
 			         tracks=DNA,prokka,ncbi

@@ -75,7 +75,7 @@ thead th { position: sticky; top: 0; }
     <% gc2 = (parseFloat(ginfo[n].gc)/100).toFixed(2) %>
     <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Info</a>
         <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a>
-        <a class='pill pill-lightseagreen' href='/jbrowse/index.html?data=homd/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
+        <a class='pill pill-lightseagreen' href='/jbrowse/index.html?data=homd_V10.1/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
         <!-- 
 <a class='pill pill-lightseagreen' href='/genome/jbrowse?gid=<%= ginfo[n].gid %>'>Genome Viewer</a>
         

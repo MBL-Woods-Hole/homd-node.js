@@ -1,16 +1,13 @@
 <style>
 </style>
-<link rel="stylesheet" type="text/css" href="/css/homd1.css" >
+<link rel="stylesheet" type="text/css" href="/css/home.css" >
 <% var version_info = JSON.parse(ver_info) %> 
 <%- include('../partials/header_html'); %>
     <title>HOMD Home Page</title>
     
-    
-
-
     <body>
-        <div align="center">
-        <table width="1250px" cellspacing="5" style="background-color:white">
+        <div class='body-div' align="center">
+        <table width="1250px" cellspacing="5" >
             <tr><td width="100%" style="background-color:#003366">
             <img src="/images/newbanner_demo/homd_new_banner_14.png"></td></tr>
             <tr><td align="left">
@@ -35,7 +32,7 @@
             <tr><td align="center">
             
             
-                <table class="maintab" width="1080px" cellspacing="10px">
+                <table class="maintab hide-for-mobile" width="1080px" cellspacing="10px">
                     <tr><td colspan="3" style="font-weight: normal;color:rgb(58, 58, 58)">Click on the menu items above or the tabs below for more resources:</td></tr>                 
                     <tr>
                         <td width="360px" align="center">
@@ -145,12 +142,12 @@
 
             <tr><td align="center">
                 <table cellspacing="10px" cellpadding="0px">
-                    <tr>
-                        <td style="border:1px solid gray"><a href="https://www.nidcr.nih.gov" target="_blank" style="cursor: pointer;"><img src="images/nidcr.png" height="50px"></a></td>
-                        <td style="border:1px solid gray"><a href="https://forsyth.org" target="_blank" style="cursor: pointer;"><img src="images/forsyth.png" height="50px"></a></td>
-                        <td style="border:1px solid gray"><a href="https://mbl.edu" target="_blank" style="cursor: pointer;"><img src="images/mbl.png" height="50px"></a></td>
-                        <td style="border:1px solid gray"><a href="https://dental.buffalo.edu" target="_blank" style="cursor: pointer;"><img src="images/ub.png" height="50px"></a></td>
-                        <td style="border:1px solid gray"><a href="https://cloud.nih.gov" target="_blank" style="cursor: pointer;"><img src="images/strides.png" height="50px"></a></td>
+                    <tr class='home-footer-image'>
+                        <td><a href="https://www.nidcr.nih.gov" target="_blank" ><img src="images/nidcr.png" height="50px"></a></td>
+                        <td><a href="https://forsyth.org" target="_blank" ><img src="images/forsyth.png" height="50px"></a></td>
+                        <td><a href="https://mbl.edu" target="_blank" ><img src="images/mbl.png" height="50px"></a></td>
+                        <td><a href="https://dental.buffalo.edu" target="_blank" ><img src="images/ub.png" height="50px"></a></td>
+                        <td><a href="https://cloud.nih.gov" target="_blank" ><img src="images/strides.png" height="50px"></a></td>
                     </tr>
                 </table>
             </td></tr>          
