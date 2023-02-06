@@ -18,7 +18,7 @@ function open_jbrowse_in_new_window(gidplusgc){
      document.getElementById("genome_iframe").height = '0'
      return
   }
-  let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
+  let url = "/jbrowse/index.html?data=homd_V10.1/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
   
   window.open(url)
 }
@@ -30,7 +30,7 @@ function offer_jbrowse(gid, contigplusgc){
    if(!contig){
       return
    }
-   let url = "/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
+   let url = "/jbrowse/index.html?data=homd_V10.1/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
    url += "&loc="+gid+'|'+contig
  
    document.getElementById("jbrowse_offer_span").innerHTML = "<a href='"+url+"' target='_blank'>Open in Genome Viewer</a>"
@@ -45,7 +45,7 @@ function offer_jbrowse(gid, contigplusgc){
 //   }
 //   // reload page form or ajax?
 //   
-//   let url ="/jbrowse/index.html?data=homd/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew"
+//   let url ="/jbrowse/index.html?data=homd_V10.1/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew"
 //   console.log(url)
 //   document.getElementById("genome_iframe").width = '100%'
 //   document.getElementById("genome_iframe").height = '800px'
