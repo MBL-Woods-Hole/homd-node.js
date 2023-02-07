@@ -437,7 +437,6 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
       annoInfoObj = C.annotation_lookup[gid][anno]
     }
     
-    //console.log(req.session.site_search_result[anno][gid])
     const renderFxn = (req, res, args) => {
         res.render('pages/genome/explorer', {
           title: 'HOMD :: ' + args.gid,
@@ -478,9 +477,9 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
           show_page: 1,
           start_count: 1
         }
-    console.log('req.session.site_search_resultncbi length')
-    console.log(req.session.site_search_result.ncbi[gid].length)
-    console.log('req.session.site_search_result length')
+    // console.log('req.session.site_search_resultncbi length')
+//     console.log(req.session.site_search_result.ncbi[gid].length)
+//     console.log('req.session.site_search_result length')
     
     let pid_list = req.session.site_search_result[anno][gid].map(el => el.pid)
     const q = queries.get_annotation_query2(gid, anno, pid_list)
@@ -960,7 +959,7 @@ function createTable (gids, source, type, startText) {
       const obj = C.genome_lookup[gid]
       // per FDewhirst: species needs to be unencumbered of genus for this table
       let species = obj.species.replace(obj.genus,'').trim()
-      const r = [gid, obj.otid, obj.genus, species, obj.status, obj.ncontigs, obj.seq_center, obj.tlength, obj.oral_path, obj.ccolct, obj.gc, obj.ncbi_genomeid, obj.ncbi_bpid, obj.ncbi_bsid, obj.io, obj.atcc_mn, obj.non_atcc_mn, obj.gb_acc, obj.gb_asmbly, obj['16s_rrna'], obj['16s_rrna_comment'], obj.flag]
+      const r = [gid, obj.otid, obj.genus, species, obj.status, obj.ncontigs, obj.submitter, obj.tlength, obj.oral_path, obj.ccolct, obj.gc, obj.ncbi_genomeid, obj.ncbi_bpid, obj.ncbi_bsid, obj.io, obj.atcc_mn, obj.non_atcc_mn, obj.gb_acc, obj.gb_asmbly, obj['16s_rrna'], obj['16s_rrna_comment'], obj.flag]
       txt += '\n' + r.join('\t')
     }
   }
@@ -986,8 +985,8 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
     sendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
   } else if (searchField === 'status') {
     sendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
-  } else if (searchField === 'seq_center') {
-    sendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
+  } else if (searchField === 'submitter') {
+    sendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
   } else {
      // gid
     tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
@@ -1030,8 +1029,8 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
-    // seq_center
-    tmpSendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
+    // submitter
+    tmpSendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
     // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
