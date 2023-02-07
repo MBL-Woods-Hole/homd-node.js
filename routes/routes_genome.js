@@ -119,7 +119,7 @@ router.get('/genome_table', function genomeTable(req, res) {
   
   send_list = gid_obj_list
   
-  //console.log('send_list',send_list[0])  
+  console.log('send_list',send_list[0])  
   // get each secid from C.genome_lookup
   //console.log('seqid_list',gid_obj_list[0])
   // send_list.sort(function (a, b) {
@@ -130,7 +130,7 @@ router.get('/genome_table', function genomeTable(req, res) {
 //     b.species - a.species || a.genus.localeCompare(b.genus),
 //   )
   send_list.sort(function (a, b) {
-      return helpers.compareStrings_alpha(a, b, 'organism');
+      return helpers.compareStrings_alpha(a.organism, b.organism);
   })
   count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
   res.render('pages/genome/genometable', {
