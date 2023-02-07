@@ -478,7 +478,10 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
           show_page: 1,
           start_count: 1
         }
-
+    console.log('req.session.site_search_resultncbi length')
+    console.log(req.session.site_search_result.ncbi[gid].length)
+    console.log('req.session.site_search_result length')
+    
     let pid_list = req.session.site_search_result[anno][gid].map(el => el.pid)
     const q = queries.get_annotation_query2(gid, anno, pid_list)
     

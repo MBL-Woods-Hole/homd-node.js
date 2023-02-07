@@ -199,17 +199,17 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
          }
          if( anno === 'prokka'){
             if(gid in req.session.site_search_result.prokka){
-              req.session.site_search_result.prokka[gid].push({name:organism, pid:rows[i].PID, product:rows[i].product})
+              req.session.site_search_result.prokka[gid].push({name:organism, pid:rows[i].protein_id, product:rows[i].product})
             }else{
-              req.session.site_search_result.prokka[gid] = [{name:organism, pid:rows[i].PID, product:rows[i].product}]
+              req.session.site_search_result.prokka[gid] = [{name:organism, pid:rows[i].protein_id, product:rows[i].product}]
             }
             
             prokka_gene_count += 1 
          }else if(anno === 'ncbi'){
             if(gid in req.session.site_search_result.ncbi){
-              req.session.site_search_result.ncbi[gid].push({name:organism, pid:rows[i].PID, product:rows[i].product})
+              req.session.site_search_result.ncbi[gid].push({name:organism, pid:rows[i].protein_id, product:rows[i].product})
             }else{
-              req.session.site_search_result.ncbi[gid] = [{name:organism, pid:rows[i].PID, product:rows[i].product}]
+              req.session.site_search_result.ncbi[gid] = [{name:organism, pid:rows[i].protein_id, product:rows[i].product}]
             }
             
             ncbi_gene_count +=1
