@@ -99,8 +99,8 @@ router.get('/genome_table', function genomeTable(req, res) {
     
     if (letter && letter.match(/[A-Z]{1}/)) {   // always caps
       // COOL....
-        console.log('big_temp_list[0]')
-        console.log(big_temp_list[0])
+        //console.log('big_temp_list[0]')
+        //console.log(big_temp_list[0])
         if(big_temp_list[0].hasOwnProperty('organism')){
           gid_obj_list = big_temp_list.filter(item => item.organism.toUpperCase().charAt(0) === letter)
         }else{
@@ -125,7 +125,7 @@ router.get('/genome_table', function genomeTable(req, res) {
   
   send_list = gid_obj_list
   
-  console.log('send_list',send_list[0])  
+  //console.log('send_list',send_list[0])  
   // get each secid from C.genome_lookup
   //console.log('seqid_list',gid_obj_list[0])
   // send_list.sort(function (a, b) {
@@ -999,6 +999,8 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
     sendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
   } else if (searchField === 'submitter') {
     sendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
+  }  else if (searchField === 'seq_center') {
+    sendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
   } else {
      // gid
     tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
@@ -1042,7 +1044,11 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // submitter
-    tmpSendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
+    if(gidObjList[0].hasOwnProperty('submitter')){
+      tmpSendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
+    }else{
+      tmpSendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
+    }
     // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
