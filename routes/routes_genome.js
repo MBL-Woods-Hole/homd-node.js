@@ -1013,17 +1013,25 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
-    // genus
-    tmpSendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::gid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    }
-    // species
-    tmpSendList = gidObjList.filter(item => item.species.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::gid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    
+    if(gidObjList[0].hasOwnProperty('organism')){
+		tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
+		// for uniqueness convert to object::gid
+		for (let n in tmpSendList) {
+		  tempObj[tmpSendList[n].gid] = tmpSendList[n]
+		}
+    }else{
+		tmpSendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
+		// for uniqueness convert to object::gid
+		for (let n in tmpSendList) {
+		  tempObj[tmpSendList[n].gid] = tmpSendList[n]
+		}
+		// species
+		tmpSendList = gidObjList.filter(item => item.species.toLowerCase().includes(searchText))
+		// for uniqueness convert to object::gid
+		for (let n in tmpSendList) {
+		  tempObj[tmpSendList[n].gid] = tmpSendList[n]
+		}
     }
     // culture collection
     tmpSendList = gidObjList.filter(item => item.ccolct.toLowerCase().includes(searchText))
