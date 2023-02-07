@@ -10,6 +10,7 @@ const helpers = require('./helpers/helpers')
 const CFG = require(app_root + '/config/config')
 const C = require(app_root + '/public/constants')
 const { exec, spawn } = require('child_process');
+const queries = require(app_root + '/routes/queries')
 // let timestamp = new Date() // getting current timestamp
 // var rs_ds = ds.get_datasets( () => {
 var browseDir = require("browse-directory");
@@ -168,18 +169,9 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
    let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
    // V10.1
    //https://github.com/uhop/stream-json/wiki/StreamValues
-   let q = "SELECT 'ncbi' as anno, seq_id as gid, PID, product from `NCBI_meta`.orf WHERE product like '%"+searchTextLower+"%'"
-    q += ' UNION '
-    q += "SELECT 'prokka' as anno, seq_id as gid, PID, product from `PROKKA_meta`.orf WHERE product like '%"+searchTextLower+"%'"
    
+   let q = queries.get_annotation_query3(searchTextLower)
    
-   
-   // OLD V9.1
-   // let q = "SELECT  anno, gid, PID, product from protein_search WHERE("
-//     q += " product like '%"+searchTextLower+"%'" 
-//     q += " OR PID like '%"+searchTextLower+"%')"
-    //q += " AND anno='"+anno+"'"
-    //q += " GROUP BY anno"
    
    console.log(q)
    //const jsonStream = StreamValues.withParser();

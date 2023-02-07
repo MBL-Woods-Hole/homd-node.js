@@ -56,6 +56,14 @@ module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
 //   qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
   return qSelectAnno
 }
+module.exports.get_annotation_query3 = (search_text) => {
+  
+  let qSelectAnno = "SELECT 'ncbi' as anno, seq_id as gid, protein_id, product from `NCBI_meta`.orf WHERE product like '%"+search_text+"%'"
+    qSelectAnno += ' UNION '
+    qSelectAnno += "SELECT 'prokka' as anno, seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%"+search_text+"%'"
+    
+  return qSelectAnno
+}
 module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
   let qSelectContigs = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE seq_id = '"+gid+"'"
