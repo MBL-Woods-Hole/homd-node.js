@@ -183,6 +183,7 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
     }
     //console.log('rows')
     //console.log(rows)
+    console.log('Query Success Num Rows: '+rows.length.toString())
     req.session.site_search_result = {}
     req.session.site_search_result.prokka = {}
     req.session.site_search_result.ncbi = {}
