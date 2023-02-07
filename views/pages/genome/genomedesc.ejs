@@ -35,7 +35,7 @@
 <link rel="stylesheet" href="/css/genome_pages.css" >
 <link href="/css/select2.min.css" rel="stylesheet" /> 
 <% taxidfullname = ("000" + ginfo.otid).slice(-3); %>
-<% taxidfullnameplus = 'HMT-'+taxidfullname; %>
+<% taxidfullnameplus = "HMT-"+taxidfullname; %>
 <% gc2 = (parseFloat(ginfo.gc)/100).toFixed(2) %>
 <body>
   	<div id='wrapper'>
@@ -64,28 +64,27 @@
 
      <table id='gnomdesc-table' class="table table-hover" border='0' >
      <tr class="table-active"><td>1</td><td>HOMD Sequence ID</td><td><%= ginfo.gid %></td></tr>
-     <tr class="table-light"><td>2</td><td>Oral Taxon ID</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= ginfo.otid %></a></td></tr>
+     <tr class="table-light"><td>2</td><td>Oral Taxon ID</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= taxidfullnameplus %></a></td></tr>
  
-     <tr class="table-active"><td>3</td><td>HOMD Name (Genus, Species)</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><i><%= ginfo.genus %> <%= ginfo.species %></i></a></td></tr>
-     <tr class="table-light"><td>4</td><td>Genome Sequence Name</td><td></td></tr>
-     <tr class="table-active"><td>5</td><td>Comments on Name</td><td></td></tr>
-     <tr class="table-light"><td>6</td><td>Culture Collection Entry Number</td><td><%= ginfo.ccolct %></td></tr>
-     <tr class="table-active"><td>7</td><td>Isolate Origin</td><td><%= ginfo.io %></td></tr>
-     <tr class="table-light"><td>8</td><td>Sequencing Status</td><td><%= ginfo.status %></td></tr>
-     <tr class="table-active"><td>9</td><td>NCBI Taxon ID (Strain Level)</td><td><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.ncbi_taxonid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_taxonid %></a></td></tr>
-     <tr class="table-light"><td>10</td><td>NCBI Genome BioProject ID</td><td><a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bpid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bpid %></a></td></tr>
-     <tr class="table-active"><td>11</td><td>NCBI Genome BioSample ID</td><td><a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_bsid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bsid %></a></td></tr>
-     <tr class="table-light"><td>12</td><td>Assembly Name</td><td><%= ginfo.asmbly_name %></td></tr>
+     <tr class="table-active"><td>3</td><td>Organism</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><i><%= ginfo.organism %></i></a></td></tr>
+     
+     <tr class="table-light"><td>4</td><td>Culture Collection or Strain</td><td><%= ginfo.ccolct %></td></tr>
+     <tr class="table-active"><td>5</td><td>Isolate Origin</td><td><%= ginfo.io %></td></tr>
+     <tr class="table-light"><td>6</td><td>Sequencing Status</td><td><%= ginfo.status %></td></tr>
+     <tr class="table-active"><td>7</td><td>NCBI TaxonID</td><td><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.ncbi_taxonid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_taxonid %></a></td></tr>
+     <tr class="table-light"><td>8</td><td>NCBI Genome BioProject ID</td><td><a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bpid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bpid %></a></td></tr>
+     <tr class="table-active"><td>9</td><td>NCBI Genome BioSample ID</td><td><a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_bsid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bsid %></a></td></tr>
+     <tr class="table-light"><td>10</td><td>Assembly Name</td><td><%= ginfo.asmbly_name %></td></tr>
      
      
-     <tr class="table-light"><td>12</td><td>GenBank Assembly ID</td>
+     <tr class="table-light"><td>11</td><td>GenBank Assembly ID</td>
        <td>
          <a href='https://www.ncbi.nlm.nih.gov/data-hub/genome/<%= ginfo.gb_asmbly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_asmbly %></a>
        </td>
       </tr>
      
-     <tr class="table-active"><td>13</td><td>RefSeq Assembly ID</td><td><a href='https://www.ncbi.nlm.nih.gov/data-hub/genome/<%= ginfo.rs_asmbly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.rs_asmbly %></a></td></tr>
-     <tr class="table-light"><td>14</td><td>Contigs and Singlets</td>
+     <tr class="table-active"><td>12</td><td>RefSeq Assembly ID</td><td><a href='https://www.ncbi.nlm.nih.gov/data-hub/genome/<%= ginfo.rs_asmbly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.rs_asmbly %></a></td></tr>
+     <tr class="table-light"><td>13</td><td>Contigs and Singlets</td>
      <td><%= ginfo.ncontigs %>
        <select id='selContig' style='width: 200px;' onchange="offer_jbrowse('<%= ginfo.gid %>',this.value)">
        <% for(n in contigs){ %>
@@ -99,12 +98,12 @@
        <% } %>
        </span>
      </td></tr>
-     <tr class="table-active"><td>15</td><td>Combined Length (bps)</td><td><%= ginfo.tlength %></td></tr>
-     <tr class="table-light"><td>16</td><td>GC Percentage</td><td><%= ginfo.gc %></td></tr>
-     <tr class="table-active"><td>17</td><td>Submitter/Sequencing Center</td><td><%= ginfo.seq_center %></td></tr>
+     <tr class="table-active"><td>14</td><td>Combined Length (bps)</td><td><%= ginfo.tlength %></td></tr>
+     <tr class="table-light"><td>15</td><td>GC Percentage</td><td><%= ginfo.gc %></td></tr>
+     <tr class="table-active"><td>16</td><td>Submitter or Sequencing Center</td><td><%= ginfo.seq_center %></td></tr>
      
      
-     <tr class="table-active"><td>18</td>
+     <tr class="table-active"><td>17</td>
      <td class=''>Pangenome(s): (<a href='https://vamps.mbl.edu/anviserver' target='_blank'>Anvi`o-server</a> <small>hosted on <a href='https://vamps2.mbl.edu/' title='Visualization and Analysis of Microbial Population Structures' target='_blank'>VAMPS</a>)</small></td>
      <td>
        
