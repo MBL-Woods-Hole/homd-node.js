@@ -604,7 +604,7 @@ def main():
     global myconn
     args = parser.parse_args()
     sys.path.append(path.dirname(__file__)+'/../../../homd-data/')
-    
+    sys.path.append(path.dirname(__file__)+'/../../config/')
     from connect import MyConnection
     
     args.myconn = MyConnection(host=args.dbhost,  read_default_file = "~/.my.cnf_node")
