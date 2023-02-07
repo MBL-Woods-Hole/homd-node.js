@@ -130,7 +130,7 @@ router.get('/genome_table', function genomeTable(req, res) {
 //     b.species - a.species || a.genus.localeCompare(b.genus),
 //   )
   send_list.sort(function (a, b) {
-      return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+      return helpers.compareStrings_alpha(a, b, 'organism');
   })
   count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
   res.render('pages/genome/genometable', {
