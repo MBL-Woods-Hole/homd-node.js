@@ -46,9 +46,8 @@ thead th { position: sticky; top: 0; }
 <tr>
 <th class='col2' scope="col" >SEQ-ID</th>
 <th class='col2' >TaxID</th>
-<th class='col3' scope="col" >Genus</th>
-<th class='' scope="col" >Species</th>
-<th class='col5' scope="col" >Strain/Culture</th>
+<th class='' scope="col" >Organism</th>
+
 
 <th class='col1' scope="col" >Contigs</th>
 <th class='col2' scope="col" >Combined<br>Length</th>
@@ -64,9 +63,9 @@ thead th { position: sticky; top: 0; }
   <tr class="">
     <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
     <td class='linkout center' nowrap ><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-    <td class='tax_name'><em><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>'><%= ginfo[n].genus %></a></em></td>
-    <td class='tax_name'><em><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= ginfo[n].species %></a></em></td>
-    <td ><%= ginfo[n].ccolct %></td>
+    <td class='tax_name'><em><%= ginfo[n].organism %></em></td>
+    
+    
     
     <td class='center'><%= ginfo[n].ncontigs %></td>
     <td class='center'><%= ginfo[n].tlength %></td>
