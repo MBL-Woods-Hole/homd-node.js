@@ -263,17 +263,12 @@ router.get('/genome_description', function genomeDescription (req, res) {
     data = {}
   }
   //console.log(data)
-  //const q = queries.get_contigs(gid)
+  const q = queries.get_contigs(gid)
   
   let contigs = []
   // try get contigs from file:
   // ncbi only
-  // // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
-  //                               PROKKA gb_asmbly+.fna.gz
-  // asm_name amd gb_asm are both from genomes_obj
-  // qSelectContigs = "SELECT accession, GC from NCBI_"+gid+".molecules"
-  // NEW GENOME CODE
-  let q = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE seq_id = '"+gid+"'"
+  
   helpers.print(q)
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
@@ -485,15 +480,15 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
         }
 
     let pid_list = req.session.site_search_result[anno][gid].map(el => el.pid)
-    //const q = queries.get_annotation_query2(gid, anno, pid_list)
+    const q = queries.get_annotation_query2(gid, anno, pid_list)
     
    //  let qSelectAnno = 'SELECT o.accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM `' + anno + '_meta`.`orf`'
 //   qSelectAnno += ' JOIN `' + anno + '_meta`.`molecules` ON `' + anno + '_meta`.`orf`.`mol_id`=`' + anno + '_meta`.`molecules`.id'
 //   qSelectAnno += " WHERE PID in ('"+pid_list.join("','")+"')"
     // NEW: takes TDB
-    let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
-      q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-      q += " WHERE seq_id = '"+gid+"' and PID in ('"+pid_list.join("','")+"')"
+    // let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
+//       q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+//       q += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
     
     console.log(q)
     console.log('anno query '+q)
@@ -636,11 +631,11 @@ router.get('/explorer', function explorer (req, res) {
   }
 
   //OLD DB
-  //const q = queries.get_annotation_query(gid, anno)
+  const q = queries.get_annotation_query(gid, anno)
   //NEW DB
-  let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
-  q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-  q += " WHERE seq_id = '"+gid+"'"
+  // let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
+//   q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+//   q += " WHERE seq_id = '"+gid+"'"
   
   //select GC, PID, product, length_na,length_aa, `start`, `stop` FROM `PROKKA_meta`.`orf`  WHERE seq_id = 'SEQF1595'
   

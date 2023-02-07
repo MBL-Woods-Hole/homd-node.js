@@ -34,24 +34,35 @@ module.exports.get_db_updates_query = () => {
 // }
 // GENOMES
 module.exports.get_annotation_query = (gid, anno) => {
-  const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
-  let qSelectAnno = 'SELECT accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
-  qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
+  
+  let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
+  qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+  qSelectAnno += " WHERE seq_id = '"+gid+"'"
+  
+  // const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
+//   let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
+//   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
   return qSelectAnno
 }
 module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
-  const db = anno.toUpperCase() + '_' + gid
-  let qSelectAnno = 'SELECT accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
-  qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
-  qSelectAnno += " WHERE PID in ('"+pid_list.join("','")+"')"
+  
+  let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
+      qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+      qSelectAnno += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
+      
+  //const db = anno.toUpperCase() + '_' + gid
+  // let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
+//   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
+//   qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
   return qSelectAnno
 }
-module.exports.get_contigs = (gid) => {   // always NCBI
-  const db = 'NCBI_' + gid
+module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
+  //const db = 'NCBI_' + gid
+  let qSelectContigs = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE seq_id = '"+gid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj
-  qSelectContigs = "SELECT accession, GC from "+db+".molecules"
+  //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
   return qSelectContigs
 }
 
