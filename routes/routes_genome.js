@@ -101,11 +101,9 @@ router.get('/genome_table', function genomeTable(req, res) {
       // COOL....
         //console.log('big_temp_list[0]')
         //console.log(big_temp_list[0])
-        if(big_temp_list[0].hasOwnProperty('organism')){
-          gid_obj_list = big_temp_list.filter(item => item.organism.toUpperCase().charAt(0) === letter)
-        }else{
-          gid_obj_list = big_temp_list.filter(item => item.genus.toUpperCase().charAt(0) === letter)
-        }
+        
+        gid_obj_list = big_temp_list.filter(item => item.genus.toUpperCase().charAt(0) === letter)
+    
       //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for genus starting with "' + letter + '"'
       
       count_txt0 = 'Showing ' + gid_obj_list.length.toString() +' genome(s) that start with "'+letter+'".'
@@ -135,15 +133,11 @@ router.get('/genome_table', function genomeTable(req, res) {
   // send_list.sort( (a, b) =>
 //     b.species - a.species || a.genus.localeCompare(b.genus),
 //   )
-  if(big_temp_list[0].hasOwnProperty('organism')){
-    send_list.sort(function (a, b) {
-      return helpers.compareStrings_alpha(a.organism, b.organism);
-    })
-  }else{
+  
     send_list.sort(function (a, b) {
       return helpers.compareByTwoStrings_alpha(a,b,'genus','species');
     })
-  }
+  
   count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 
@@ -1014,13 +1008,7 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     
-    if(gidObjList[0].hasOwnProperty('organism')){
-		tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
-		// for uniqueness convert to object::gid
-		for (let n in tmpSendList) {
-		  tempObj[tmpSendList[n].gid] = tmpSendList[n]
-		}
-    }else{
+    
 		tmpSendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
 		// for uniqueness convert to object::gid
 		for (let n in tmpSendList) {
@@ -1032,7 +1020,7 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
 		for (let n in tmpSendList) {
 		  tempObj[tmpSendList[n].gid] = tmpSendList[n]
 		}
-    }
+    
     // culture collection
     tmpSendList = gidObjList.filter(item => item.ccolct.toLowerCase().includes(searchText))
     // for uniqueness convert to object::gid
