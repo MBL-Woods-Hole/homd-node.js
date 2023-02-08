@@ -29,6 +29,11 @@ router.get('/genome_table', function genomeTable(req, res) {
   let count_txt, count_txt0, send_list, gid_obj_list,otid_grabber = {};
   helpers.print(['otid',otid,'phylum',phylum,'letter',letter])
   
+  let pageData = {}
+  pageData.page = req.query.page
+  if (!req.query.page) {
+    pageData.page = 1
+  }
   
   var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
   var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
@@ -139,17 +144,43 @@ router.get('/genome_table', function genomeTable(req, res) {
     })
   
   count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
+  
+  pageData.trecords = send_list.length
+  let genomeList = []
+  if (pageData.page) {
+	const trows = send_list.length
+	// console.log('trows',trows)
+	pageData.row_per_page = 1000
+	pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
+	if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
+	if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
+	helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+	pageData.show_page = pageData.page
+	if (pageData.show_page === 1) {
+	  genomeList = send_list.slice(0, pageData.row_per_page) // first 200
+	  pageData.start_count = 1
+	} else {
+	  genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
+	  pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
+	}
+	//console.log('start count', pageData.start_count)
+  }
+  
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 
     pgname: 'genome/genome_table', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, rootPath: CFG.PROCESS_DIR }),
     // seqid_list: JSON.stringify(gid_obj_list),
-    data: JSON.stringify(send_list),
+    //data: JSON.stringify(send_list),
+    data: JSON.stringify(genomeList),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
     letter: letter,
     otid: otid,
     phylum: phylum,
+    
+    page_data: JSON.stringify(pageData),
+    
     phyla: JSON.stringify(phyla.sort()),
     count_text: count_txt,
     search_txt: '0',

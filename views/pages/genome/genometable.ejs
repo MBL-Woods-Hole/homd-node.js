@@ -10,7 +10,7 @@ thead th { position: sticky; top: 0; }
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data) %>
-
+<% page_data = JSON.parse(page_data) %>
 
 
 
@@ -40,7 +40,19 @@ thead th { position: sticky; top: 0; }
 
 
 <div id='genome-box'>
-
+     <center>
+     <% if(phylum === 0 && letter === "all"){ %>
+     <span style='font-size:14px;font-weight:bold;'>
+     Genome Table [page:<%= page_data.show_page %>] 
+	 <% next_page = parseInt(page_data.show_page)+1 %>
+	 <% prev_page = parseInt(page_data.show_page)-1 %>
+	 Number of Records Found: <%= page_data.trecords %> [<%= page_data.number_of_pages %> Pages]
+	 <a href='genome_table?page=<%= prev_page %>'>Previous Page</a>
+	 <==>
+	 <a href='genome_table?page=<%= next_page %>'>Next Page</a>
+	 </span>
+	 </center>
+	 <% } %>
 <table id='gnom-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
 <thead>
 <tr>
@@ -81,7 +93,7 @@ thead th { position: sticky; top: 0; }
         
  -->
        
-        <a class='pill pill-midnightblue' href='blast?gid=<%= ginfo[n].gid %>'>BLAST</a></td>
+        <a class='pill pill-midnightblue' href='/genome_blsat'>BLAST</a></td>
         <td class='center'>
         <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
         <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>

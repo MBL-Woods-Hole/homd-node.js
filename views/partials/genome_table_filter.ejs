@@ -42,11 +42,18 @@
 </div>
 
 <div id="row2">
+
 	<span id='count_info'>
 	<small>
 	There are <%= all_genome_count %> genomes representing <%= taxa_wgenomes %> taxa <small>(excluding 'NonOralRef' and 'Dropped').</small>
-	<br><%- count_text %>
-	</small>
+	
+	
+	
+	<br><strong>Showing: <%= ginfo.length %></strong>
+     
+	 
+	 </small>
+	
 	</span>
 	
 	<div><center>Reload Whole Table</center>
@@ -55,8 +62,7 @@
 	   <small>
 	</div> 
 
-
-<form id='gtable_search' name='gtable_search' method='POST' action='search_genometable' >
+    <form id='gtable_search' name='gtable_search' method='POST' action='search_genometable' >
 	  
 	  
             Search This Table:
