@@ -244,54 +244,54 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
 // router.get('/jbrowse2/:id', function jbrowse2(req, res) {
 //  console.log('jbrowse2/:id -get')
 // })
-// router.get('/jbrowse', function jbrowse (req, res) {
-// //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-//   helpers.accesslog(req, res)
-//   console.log('jbrowse-get')
-//   //let myurl = url.parse(req.url, true);
-//     
-//   const gid = req.query.gid
-//   let gc = 0
-//   if(gid){
-//       gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
-//   }
-//   const glist = Object.values(C.genome_lookup)
-//   
-//   glist.sort(function sortGList (a, b) {
-//       return helpers.compareStrings_alpha(a.genus, b.genus)
-//     })
-//   // filter out empties then map to create list of sorted strings
-//   const genomeList = glist.filter(item => item.genus !== '')
-//     .map((el) => {
-//       return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, ccolct: el.ccolct }
-//     })
-//   res.render('pages/genome/jbrowse2_stub_iframe', {
-//     title: 'HOMD :: JBrowse', 
-//     pgname: 'genome/jbrowse', // for AbountThisPage
-//     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-//     gid: gid,  // default
-//     gc:gc,
-//     genomes: JSON.stringify(genomeList),
-//     tgenomes: genomeList.length,
-//     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-//     user: JSON.stringify(req.user || {}),
-//   })
-// })
-// //
-// router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
-//   console.log('AJAX JBrowse')
-//   helpers.print(req.body)
-//   // URL from old HOMD site:
-//   // ?data=homd/SEQF2029
-//   //  &tracks=DNA,prokka,ncbi
-//   //  &loc=SEQF2029|GL982453.1:2729587..4094422
-//   //  &highlight=
-//   //console.log(req.body);
-//   helpers.accesslog(req, res)
-//   //open(jburl)
-//   
-//   res.send(JSON.stringify({ response_data: req.body.gid }))
-// })
+router.get('/jbrowse', function jbrowse (req, res) {
+//router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
+  helpers.accesslog(req, res)
+  console.log('jbrowse-get')
+  //let myurl = url.parse(req.url, true);
+    
+  const gid = req.query.gid
+  let gc = 0
+  if(gid){
+      gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
+  }
+  const glist = Object.values(C.genome_lookup)
+  
+  glist.sort(function sortGList (a, b) {
+      return helpers.compareStrings_alpha(a.genus, b.genus)
+    })
+  // filter out empties then map to create list of sorted strings
+  const genomeList = glist.filter(item => item.genus !== '')
+    .map((el) => {
+      return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, ccolct: el.ccolct }
+    })
+  res.render('pages/genome/jbrowse2_stub_iframe', {
+    title: 'HOMD :: JBrowse', 
+    pgname: 'genome/jbrowse', // for AbountThisPage
+    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    gid: gid,  // default
+    gc:gc,
+    genomes: JSON.stringify(genomeList),
+    tgenomes: genomeList.length,
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
+  })
+})
+//
+router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
+  console.log('AJAX JBrowse')
+  helpers.print(req.body)
+  // URL from old HOMD site:
+  // ?data=homd/SEQF2029
+  //  &tracks=DNA,prokka,ncbi
+  //  &loc=SEQF2029|GL982453.1:2729587..4094422
+  //  &highlight=
+  //console.log(req.body);
+  helpers.accesslog(req, res)
+  //open(jburl)
+  
+  res.send(JSON.stringify({ response_data: req.body.gid }))
+})
 //
 router.get('/genome_description', function genomeDescription (req, res) {
   console.log('in genomedescription -get')

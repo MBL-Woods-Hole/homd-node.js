@@ -1,18 +1,20 @@
 <style>
             
 #genome_choices{
-  padding:20px 0 20px 50px;
-  margin-top:100px;
+  text-align:center;
+  padding:40px 0;
+  margin-top:50px;
   border:1px solid grey;
-  background:#C1E1C1;  /* #ffc0cb; */
+  background:lightgrey;  /* #ffc0cb; */
 }
 #iframe_div{
 
-}	
+}
+	
 </style>
 <%- include('../../partials/header_html'); %>
 <% gn = JSON.parse(genomes) %>
-
+<% var cfg = JSON.parse(config) %> 
 <% %>
 <link href="/css/select2.min.css" rel="stylesheet" /> 
 <body>
@@ -26,9 +28,11 @@
 
 		 	
 <div id='genome_choices'>
-<span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> (JBrowse opens in a New Window)</span>
+<span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> (JBrowse opens in a New Window)
+<br><small>Search by Organism name or Seq-ID number</small><br><br>
+</span>
 <select id='selGenome' style='width: 800px;' onchange='open_jbrowse_in_new_window(this.value)'>
-     <option id='' name='none' value='0'>Choose...</option>
+     <option id='' name='none' value='0'>Search & Select...</option>
      <% for(i in gn){ %>
         <% gc2 = (parseFloat(gn[i].gc)/100).toFixed(2) %>
 		<option id='' name='gnom' value='<%= gn[i].gid %>|<%= gc2 %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
@@ -60,6 +64,7 @@
   mainmenu()
   var gid = '<%- gid; %>'
   var gc = '<%- gc; %>'
+  var jb_path = '<%- cfg.jb_path %>'
   if(gid){
      
      open_jbrowse_in_new_window(gid+'|'+gc)
