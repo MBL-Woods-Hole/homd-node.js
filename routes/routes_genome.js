@@ -187,7 +187,6 @@ router.get('/genome_table', function genomeTable(req, res) {
     search_field:'0',
     all_genome_count: big_temp_list.length,
     taxa_wgenomes: taxa_wgenomes.length
-    
   })
 })
 //
