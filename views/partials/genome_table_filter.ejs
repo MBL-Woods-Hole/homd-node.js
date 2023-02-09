@@ -50,6 +50,13 @@
 	
 	
 	<br><strong>Showing: <%= ginfo.length %></strong>
+	<% if(letter !== "all"){ %>
+	   Genera Starting With: <b>"<%= letter %>"</b>
+	<% }else if(phylum !== 0){ %>
+	   All Phylum: <b><%= phylum %></b>
+	<% }else if(search_txt !== 0){ %>
+	   Search Text: <b>"<%= search_txt %>"</b>
+	<% } %>
      
 	 
 	 </small>

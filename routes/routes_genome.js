@@ -144,26 +144,31 @@ router.get('/genome_table', function genomeTable(req, res) {
     })
   
   count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
-  
-  pageData.trecords = send_list.length
   let genomeList = []
-  if (pageData.page) {
-	const trows = send_list.length
-	// console.log('trows',trows)
-	pageData.row_per_page = 1000
-	pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
-	if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
-	if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-	helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
-	pageData.show_page = pageData.page
-	if (pageData.show_page === 1) {
-	  genomeList = send_list.slice(0, pageData.row_per_page) // first 200
-	  pageData.start_count = 1
-	} else {
-	  genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
-	  pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
-	}
-	//console.log('start count', pageData.start_count)
+  console.log('p '+phylum.toString()+' L '+letter)
+  if(phylum === 0 && letter === "all"){
+      pageData.trecords = send_list.length
+  
+      if (pageData.page) {
+        const trows = send_list.length
+        // console.log('trows',trows)
+        pageData.row_per_page = 1000
+        pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
+        if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
+        if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
+        helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+        pageData.show_page = pageData.page
+        if (pageData.show_page === 1) {
+          genomeList = send_list.slice(0, pageData.row_per_page) // first 200
+          pageData.start_count = 1
+        } else {
+          genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
+          pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
+        }
+        //console.log('start count', pageData.start_count)
+      }
+  }else{
+    genomeList = send_list
   }
   
   res.render('pages/genome/genometable', {
@@ -183,10 +188,11 @@ router.get('/genome_table', function genomeTable(req, res) {
     
     phyla: JSON.stringify(phyla.sort()),
     count_text: count_txt,
-    search_txt: '0',
+    search_txt: 0,
     search_field:'0',
     all_genome_count: big_temp_list.length,
     taxa_wgenomes: taxa_wgenomes.length
+    
   })
 })
 //
@@ -203,7 +209,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
   // FIXME
   let bigGeneList = Object.values(C.genome_lookup);
   const sendList = getFilteredGenomeList(bigGeneList, searchTxt, searchField)
-
+  let pageData = {}
   let pgtitle = 'Search TaxTable'
   var phylaObj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
   var phyla = phylaObj.map(function mapPhylaObj2 (el) { return el.taxon; })
@@ -220,9 +226,9 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
     user: JSON.stringify(req.user || {}),
     letter: 'all',  // dont us empty string: -for download fxn
     otid: '0',   // dont us empty string: -for download fxn
-    phylum: '0',  // dont us empty string: -for download fxn
+    phylum: 0,  // dont us empty string: -for download fxn
     phyla: JSON.stringify(phyla.sort()),
-    
+    page_data: JSON.stringify(pageData),
     count_text: countTxt,
     search_txt: searchTxt,
     search_field: searchField,
