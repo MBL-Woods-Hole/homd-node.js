@@ -260,20 +260,18 @@ hr{
   justify-content: space-between; /* switched from default (flex-start, see below) */
   padding:20px 0;
   width:100%;
+  
 }
 #column_left1{
    padding:10px;
-   border:1px solid brown;
    width:auto;
 }
 #column_middle1{
-   padding:10px;
-   border:1px solid brown;
-   width:33%;
+   padding:0 5px;
+   width:32%;
 }
 #column_right1 {
   padding:10px 30px;
-  border:1px solid brown;
 }
 /*row2 and col2 is just  For Taxon Table inner srch */
 #row2 {

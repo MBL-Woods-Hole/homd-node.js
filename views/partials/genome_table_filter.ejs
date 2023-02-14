@@ -42,7 +42,7 @@
 </div>
 
 <div id="row2">
-
+  <div id="column_left1" >
 	<span id='count_info'>
 	<small>
 	There are <%= all_genome_count %> genomes representing <%= taxa_wgenomes %> taxa <small>(excluding 'NonOralRef' and 'Dropped').</small>
@@ -62,13 +62,25 @@
 	 </small>
 	
 	</span>
-	
-	<div><center>Reload Table Paging</center>
+  </div>	
+  <div id="column_middle1" >	
+	<div>
+	   <table border='1' style=''>
+	   <tr><td>
+	   <center>Reload Table Paging</center>
 	   <small>with Original Sorting:
-	   <a class="pill pill-brown pill-md" href='genome_table?reset=1'>Reload</a>
+	     <a class="pill pill-brown pill-md" href='genome_table?reset=1'>Reload</a>
+	   </small>
+	   </td><td>
+	   <center>Load All <%= all_genome_count %> Genomes</center>
 	   <small>
+	     <center><a class="pill pill-brown pill-md" href='genome_table?reset=all'>Load All</a></center>
+	   <small>
+	   </td></tr>
+	   </table>
 	</div> 
-
+  </div>	
+  <div id="column_right1" >    
     <form id='gtable_search' name='gtable_search' method='POST' action='search_genometable' >
 	  
 	  
@@ -96,6 +108,5 @@
 	  
 
 	</form>
-	
-	
+  </div>	
 </div>

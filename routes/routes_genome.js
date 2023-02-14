@@ -31,7 +31,13 @@ router.get('/genome_table', function genomeTable(req, res) {
   
   let pageData = {}
   pageData.page = req.query.page
-  if (!req.query.page) {
+  if(req.query.reset && req.query.reset === '1'){
+    console.log('RESETRESET')
+    pageData.page = 1
+  }else if(req.query.reset && req.query.reset === 'all'){
+    pageData.page = 'all'
+    console.log('RESET-ALL')
+  }else {
     pageData.page = 1
   }
   
@@ -146,7 +152,7 @@ router.get('/genome_table', function genomeTable(req, res) {
   count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
   let genomeList = []
   console.log('p '+phylum.toString()+' L '+letter)
-  if(phylum === 0 && letter === "all"){
+  if(phylum === 0 && letter === "all" && Number.isInteger(pageData.page)){
       pageData.trecords = send_list.length
   
       if (pageData.page) {
