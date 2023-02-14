@@ -95,7 +95,7 @@
        </select>
        <span id='jbrowse_offer_span'>
        <% if(contigs[0]){%>
-         <a href="<%= cfg.jb_path %><%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew&loc=<%= ginfo.gid %>|<%= contigs[0].contig %>" target='_blank'>Open in Genome Viewer</a>
+         <a href="<%= cfg.jb_path %><%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=<%= ginfo.gid %>|<%= contigs[0].contig %>" target='_blank'>Open in Genome Viewer</a>
        <% } %>
        </span>
      </td></tr>
