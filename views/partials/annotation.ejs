@@ -82,9 +82,9 @@
 			       <%- mole[n].protein_id %>
 			     <% } %>
 			     <% if(anno_type.toUpperCase() === 'PROKKA'){ %>
-			        seqacc = <%= mole[n].accession.replace('_','|') %>
+			        <%= seqacc = mole[n].accession.replace('_','|') %>
 			     <% }else{ %>
-			        seqacc = <%= gid %>+'|'+<%= mole[n].accession %>
+			        <%= seqacc = gid +'|'+ mole[n].accession %>
 			     <% } %>
 			     <a title='Genome Viewer' href='<%= cfg.jb_path %><%= gid %>&tracks=DNA,homd,prokka,ncbi&loc=<%= seqacc %>:<%= locstart %>..<%= locstop %>&highlight=<%= seqacc %>:<%= start %>..<%= stop %>' target='_blank' rel="noopener noreferrer">jb</a>
 			    
