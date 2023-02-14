@@ -245,7 +245,7 @@ if __name__ == "__main__":
         args.outdir = './'                         
     if args.dbhost == 'homd':
         args.DATABASE  = 'homd'
-        dbhost = '192.168.1.40'
+        dbhost = '192.168.1.42'
         
     elif args.dbhost == 'localhost':  #default
         args.DATABASE = 'homd'

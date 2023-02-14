@@ -606,8 +606,8 @@ router.get('/explorer', function explorer (req, res) {
     res.render('pages/genome/explorer', {
       title: 'HOMD :: ' + args.gid,
       pgname: 'genome/explorer', // for AbountThisPage 
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, jb_path:CFG.PATH_TO_JBROWSE }),
+      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
       gid: args.gid,
       otid: args.otid,
