@@ -429,11 +429,11 @@ function blastFormCheck_genome(){
      }
    }
    // test for single wo chosen
-   if(document.getElementById('single_genome').checked === true
-     && document.getElementById('choose_genome_select').value === '0'){
-     alert('You must choose a genome OR select "ALL Genomes"')
-     return
-   }
+   // if(document.getElementById('single_genome').checked === true
+//      && document.getElementById('choose_genome_select').value === '0'){
+//      alert('You must choose a genome OR select "ALL Genomes"')
+//      return
+//    }
    
    blastText = document.getElementById('textinput').value.trim()
    //alert(blastText)

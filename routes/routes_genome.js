@@ -750,6 +750,7 @@ router.get('/blast', function blast_get(req, res) {
    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
    })
+   
    allAnnosObj.sort(function sortAnnos (a, b) {
       return helpers.compareStrings_alpha(a.org, b.org)
    })
@@ -777,7 +778,7 @@ router.get('/blast', function blast_get(req, res) {
     }
     
     res.render('pages/genome/blast', {
-        title: 'HOMD :: Ribosomal Protein Tree',
+        title: 'HOMD :: BLAST',
         pgname: 'blast/blast', // for AbountThisPage
         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
