@@ -754,17 +754,26 @@ router.get('/blast', function blast_get(req, res) {
       return helpers.compareStrings_alpha(a.org, b.org)
    })
    //let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
-    if(! chosen_gid || chosen_gid == 0|| chosen_gid ==='all'){
-      dbChoices = C.all_genome_blastn_db_choices.nucleotide
-      organism = ''
+    if(! chosen_gid || chosen_gid == 0|| chosen_gid ==='all' || !C.annotation_lookup.hasOwnProperty(chosen_gid)){
+      
+      organism   = allAnnosObj[0].org
+      chosen_gid = allAnnosObj[0].gid
+          dbChoices = [
+          {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
+                   filename:'fna/'+chosen_gid+'.fna'},
+          {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
+                   filename:'ffn/'+chosen_gid+'.ffn'}
+          ]
     }else{
-      organism = C.annotation_lookup[chosen_gid].prokka.organism
-      dbChoices = [
-      {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
-               filename:'fna/'+chosen_gid+'.fna'},
-      {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
-               filename:'ffn/'+chosen_gid+'.ffn'}
-      ]
+      
+        organism = C.annotation_lookup[chosen_gid].prokka.organism
+        dbChoices = [
+          {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
+                   filename:'fna/'+chosen_gid+'.fna'},
+          {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
+                   filename:'ffn/'+chosen_gid+'.ffn'}
+          ]
+        
     }
     
     res.render('pages/genome/blast', {

@@ -48,7 +48,7 @@
 
 <div id='center70pct_div'>
     
-
+To BLAST against all HOMD genomes at once go to: <a href='/genome_blast' target='_blank'>Genome BLAST Server</a>
 
 <form id='blastForm' name='blastForm' method='POST' action='/blast/blast_post' enctype='multipart/form-data' >
 
@@ -96,16 +96,7 @@
           <td colspan='1'><input checked id='blast_ncbi_rb' type='radio' name='anno' value='ncbi'> NCBI</td>
           <td colspan='1'><input id='blast_prokka_rb' type='radio' name='anno' value='prokka'> PROKKA</td>
         </tr>
-        <tr>
-          <td nowrap>BLAST Against:</td>
-          <% if(!gid || gid === 'all'){ %>
-          <td colspan='1'><input checked type='radio' id='all_genomes' name='against' value='all' onclick="toggle_blast_genome_list('hide','<%= gid %>')"> All Genomes</td>
-          <td colspan='1'><input type='radio' id='single_genome' name='against' value='single' onclick="toggle_blast_genome_list('show','<%= gid %>')"> Single Genome</td>
-          <% }else{ %>
-           <td colspan='1'><input type='radio' id='all_genomes' name='against' value='all' onclick="toggle_blast_genome_list('hide','<%= gid %>')"> All Genomes</td>
-          <td colspan='1'><input checked type='radio' id='single_genome' name='against' value='single' onclick="toggle_blast_genome_list('show','<%= gid %>')"> Single Genome</td>
-          <% } %>
-        </tr>
+        
         </table>
         </td>
         <td class='res'>
@@ -119,7 +110,7 @@
         <% }else{ %>
            <div id='genome_choices' style='display:block;padding-top:5px;'>
         <% } %>
-          Choose a Genome: 
+          Choose Another Genome: 
           <!-- <select id='choose_genome_select' class='dropdown' onchange="if (this.value) window.location.href='blast?gid='+this.value  "> -->
            <select class='dropdown' id='choose_genome_select' style='width: 600px;' onchange='change_blast_genome(this.value)'>
            

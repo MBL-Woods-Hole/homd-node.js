@@ -484,9 +484,9 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   let dbPath
   if(req.body.blastFxn === 'genome'){
       if(anno === 'ncbi'){
-          dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_ncbi')
+          dbPath = CFG.BLAST_DB_PATH_GENOME_NCBI //path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_ncbi')
       }else{
-          dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes')
+          dbPath = CFG.BLAST_DB_PATH_GENOME_PROKKA  //path.join(CFG.BLAST_DB_PATH_GENOME,'genomes')
       }
       
   }else{
@@ -870,7 +870,6 @@ function createBlastOpts(reqBody) {
     // add dbPath later
     
     if(reqBody.blastFxn === 'genome') {
-      //bOpts.dbPath = CFG.BLAST_DB_PATH_GENOME
       bOpts.anno = reqBody.anno
       if(reqBody.blastDb){
       dbItems = reqBody.blastDb.split('/')
@@ -901,9 +900,9 @@ function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
        blastOpts.ext = 'faa'
        blastOpts.blastDb = blastOpts.blastDb.split('.')[0] + '.' + blastOpts.ext
        if(blastOpts.anno === 'prokka'){
-          blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes')
+          blastOpts.dbPath = CFG.BLAST_DB_PATH_GENOME_PROKKA  //path.join(CFG.BLAST_DB_PATH_GENOME,'genomes')
        }else{
-          blastOpts.dbPath = path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_ncbi')
+          blastOpts.dbPath = CFG.BLAST_DB_PATH_GENOME_NCBI //path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_ncbi')
        }
     }
     let config = {}
