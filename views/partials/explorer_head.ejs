@@ -22,17 +22,17 @@
                   <% if(anno_type == 'prokka'){ %>
                     <span class='an-button active' href=''>PROKKA</span>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
-                    <a class='an-button' href='/genome_blast?gid=<%= gid %>'>BLAST</a>
+                    <a class='an-button' href='/genome_blast?gid=<%= gid %>' target='_blank'>BLAST</a>
                     <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
                   <% } else if(anno_type == 'ncbi'){ %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <span class='an-button active' href=''>NCBI</span>
-                    <a class='an-button' href='/genome_blast?gid=<%= gid %>'>BLAST</a>
+                    <a class='an-button' href='/genome_blast?gid=<%= gid %>' target='_blank'>BLAST</a>
                     <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
                   <% } else { %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
-                    <a class='an-button' href='/genome_blast?gid=<%= gid %>'>BLAST</a>
+                    <a class='an-button' href='/genome_blast?gid=<%= gid %>' target='_blank'>BLAST</a>
                     <!-- <a class='an-button greyed' href='#'>BLAST-OFF</a> -->
                   <% } %>
                   |
