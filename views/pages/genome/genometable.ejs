@@ -37,12 +37,10 @@ thead th { position: sticky; top: 0; }
 
  <%- include('../../partials/genome_table_filter.ejs') %> 
 
-
-
-<div id='genome-box'>
-     <center>
-     <% if(phylum === 0 && letter === "all"){ %>
-       <span style='font-size:14px;font-weight:bold;'>
+ <span style='font-size:14px;font-weight:bold;'>
+ <% if(phylum === 0 && letter === "all" && search_txt === 0){ %>
+       
+       
        Genome Table [page:<%= page_data.show_page %>] 
 	   <% next_page = parseInt(page_data.show_page)+1 %>
 	   <% prev_page = parseInt(page_data.show_page)-1 %>
@@ -50,9 +48,20 @@ thead th { position: sticky; top: 0; }
 	   <a href='genome_table?page=<%= prev_page %>'>Previous Page</a>
 	   <==>
 	   <a href='genome_table?page=<%= next_page %>'>Next Page</a>
-	   </span>
-	   </center>
-	 <% } %>
+	   
+ <% }else if(phylum){ %>
+    	Showing all (<%= ginfo.length %>) of phylum: <%= phylum %>
+<% }else if(letter !== 'all'){ %>  
+       Showing all (<%= ginfo.length %>) genera starting with: <b>"<%= letter %>"
+       
+ <% }else if(search_txt){ %>
+    Showing all (<%= ginfo.length %>) hits with search term "<i><%= search_txt %></i>"
+ <% } %>
+ </span>
+  
+<div id='genome-box'>
+     
+     
 <table id='gnom-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
 <thead>
 <tr>

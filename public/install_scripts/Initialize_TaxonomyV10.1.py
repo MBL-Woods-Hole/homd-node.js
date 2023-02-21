@@ -11,11 +11,13 @@ import datetime
 ranks = ['domain','phylum','klass','order','family','genus','species','subspecies']
 #ranks = ['domain','phylum','klass','order','family','genus','species']
 today = str(datetime.date.today())
-sys.path.append('../../../homd-data/')
+sys.path.append('../homd-data/')
+sys.path.append('../../homd-data/')
+sys.path.append('../../config/')
 from connect import MyConnection
 
 # TABLES
-taxon_tbl           = 'otid_prime'   # UNIQUE  - This is the defining table 
+taxon_tbl           = 'otid_prime'   # UNIQUE  - This is the defining table
 genome_tbl = 'genomes'
 
 master_tax_lookup={}
@@ -29,8 +31,8 @@ dropped_otids = ['9',   '15',  '16',  '55',  '65',
   '826']
 query_taxa ="""
 SELECT otid, taxonomy_id, genus, species,
-`warning`,  
-`status`,  
+`warning`,
+`status`,
 ncbi_taxon_id as ncbi_taxid
 from otid_prime
 join taxonomy using(taxonomy_id)
@@ -54,14 +56,14 @@ counts = {}
 master_lookup = {}
 
 def create_taxon(otid):
-   
+
     taxon = {}
     taxon['otid'] = otid
     taxon['status'] = ''
     taxon['genus'] = ''
     taxon['species'] = ''
     taxon['warning'] = ''
-    
+
     taxon['ncbi_taxid'] = ''
     taxon['genomes'] = []
     taxon['tlength_str'] = ''
@@ -74,25 +76,25 @@ def create_taxon(otid):
     return taxon
 
 
-    
-       
-            
-            
+
+
+
+
 def run_taxa(args):
     global master_lookup
     #print(query_taxa)
     result = myconn.execute_fetch_select_dict(query_taxa)
     #split_code = '&lt;BR&gt;'
 
-    
+
     #print(result)
     for obj in result:
         #print(obj)
         otid = str(obj['otid'])
         if otid not in master_lookup:
             # create ne taxon object with empty values
-            taxonObj = create_taxon(otid) 
-            
+            taxonObj = create_taxon(otid)
+
             for n in obj:
                 #print('n',n)
                 toadd = str(obj[n]).strip()
@@ -101,41 +103,41 @@ def run_taxa(args):
                 #   pass
                 #else:
                 if n=='status':
-                    taxonObj['status'] = toadd 
+                    taxonObj['status'] = toadd
                 if n=='genus':  #list
-                    taxonObj['genus'] = toadd 
+                    taxonObj['genus'] = toadd
                 elif n=='species':  #list
                     taxonObj['species'] = toadd
                 elif n=='warning':  #list
-                    taxonObj['warning'] = toadd 
-        
+                    taxonObj['warning'] = toadd
+
                 elif n=='ncbi_taxid':  #list
-                    taxonObj['ncbi_taxid'] = toadd  
-                   
+                    taxonObj['ncbi_taxid'] = toadd
+
                 else:
                     #taxonObj[n] = toadd.replace('"','').replace("'","").replace(',','')
                     pass
             #master_lookup[obj['otid']] = ast.literal_eval(TaxonEncoder().encode(taxonObj))
             #print(taxonObj)
             master_lookup[otid] = taxonObj
-            
+
 
 
         else:
             # is already in master list
             pass
-    #print(master_lookup) 
-        
-           
+    #print(master_lookup)
+
+
 def run_get_genomes(args):  ## add this data to master_lookup
     global master_lookup
     global tlength_lookup
     ## SCREEN OUT BAD Genomes here in QUERY
     #print(query_gene_count_no_flagid)
     result = myconn.execute_fetch_select_dict(query_gene_count_no_flagid)
-    
+
     tlength_lookup ={}
-    
+
     for obj in result:
         #print(obj)
         otid = str(obj['otid'])
@@ -144,12 +146,12 @@ def run_get_genomes(args):  ## add this data to master_lookup
         if otid in master_lookup:
             #if master_lookup[otid]['status'] != 'Dropped':
             master_lookup[otid]['genomes'].append(obj['seq_id'])
-            
+
             tlength_lookup[otid].append(obj['tlength'])
-            
+
         else:
-            sys.exit('problem with genome exiting') 
-    
+            sys.exit('problem with genome exiting')
+
 def run_synonyms(args):
     global master_lookup
     q = """
@@ -162,10 +164,10 @@ def run_synonyms(args):
             #if master_lookup[otid]['status'] != 'Dropped':
             master_lookup[otid]['synonyms'].append(obj['synonym'])
         else:
-            sys.exit('problem with synonym exiting: '+otid) 
-    
-    
-    
+            sys.exit('problem with synonym exiting: '+otid)
+
+
+
 def run_type_strain(args):
     global master_lookup
     q = """
@@ -179,9 +181,9 @@ def run_type_strain(args):
             master_lookup[otid]['type_strains'].append(obj['type_strain'])
         else:
             pass
-            #sys.exit('problem with type_strain exiting: '+otid) 
-    
-    
+            #sys.exit('problem with type_strain exiting: '+otid)
+
+
 
 def run_sites(args):
     global master_lookup
@@ -195,10 +197,10 @@ def run_sites(args):
             #if master_lookup[otid]['status'] != 'Dropped':
             master_lookup[otid]['sites'].append(obj['site'])
         else:
-            sys.exit('problem with site exiting') 
-    
-    
-   
+            sys.exit('problem with site exiting')
+
+
+
 def run_ref_strain(args):
     global master_lookup
     q = """
@@ -211,7 +213,7 @@ def run_ref_strain(args):
             #if master_lookup[otid]['status'] != 'Dropped':
             master_lookup[otid]['ref_strains'].append(obj['reference_strain'])
         else:
-            sys.exit('problem with reference_strain exiting') 
+            sys.exit('problem with reference_strain exiting')
 
 def run_rrna_sequences(ars):
     global master_lookup
@@ -225,7 +227,7 @@ def run_rrna_sequences(ars):
             #if master_lookup[otid]['status'] != 'Dropped':
             master_lookup[otid]['rrna_sequences'].append(obj['rrna_sequence'])
         else:
-            sys.exit('problem with rrna_sequence exiting') 
+            sys.exit('problem with rrna_sequence exiting')
 
 def run_pangenomes(args):
     global master_lookup
@@ -238,9 +240,9 @@ def run_pangenomes(args):
             if obj['pangenome'] not in master_lookup[otid]['pangenomes']:
                 master_lookup[otid]['pangenomes'].append(obj['pangenome'])
         else:
-            sys.exit('problem with rrna_sequence exiting') 
-    
-    
+            sys.exit('problem with rrna_sequence exiting')
+
+
 def run_refseq(args):
     global refseq_lookup
     query_refseqid = "SELECT otid, refseqid, seqname, strain, genbank FROM taxon_refseqid"
@@ -249,23 +251,23 @@ def run_refseq(args):
     for obj in result:
         #print(obj)
         otid = str(obj['otid'])
-        
+
         if otid not in refseq_lookup:
             refseq_lookup[otid] = []
              #'refseqid': '956_1687', 'seqname': 'cinerea', 'strain': 'Strain: ATCC 14685', 'genbank': 'GB: NR_121687'}
         newobj = {}
         newobj['refseqid'] =  obj['refseqid']
         newobj['seqname']  =  obj['seqname']
-        newobj['strain']   =  obj['strain'] 
-        newobj['genbank']  =  obj['genbank'] 
-        #newobj['status']   =  obj['status'] 
-        #newobj['site']     =  obj['site'] 
-        #newobj['flag']     =  obj['flag']    
+        newobj['strain']   =  obj['strain']
+        newobj['genbank']  =  obj['genbank']
+        #newobj['status']   =  obj['status']
+        #newobj['site']     =  obj['site']
+        #newobj['flag']     =  obj['flag']
         refseq_lookup[otid].append(newobj)
     file=os.path.join(args.outdir,args.outfileprefix+'RefSeqLookup.json')
     print_dict(file, refseq_lookup)
 
-    
+
 
 #############################
 
@@ -278,7 +280,7 @@ def run_info(args):  ## prev general,  On its own lookup
 
     for obj in result:
         #print(obj)
-       
+
         #print(n)
         otid = str(obj['otid'])
         # remove any double quotes but single quotes are ok (to preserve links)
@@ -289,23 +291,23 @@ def run_info(args):  ## prev general,  On its own lookup
         lookup[otid]['general'] = obj['general'].strip()
         lookup[otid]['pheno']   = obj['phenotypic_characteristics'].strip()
         lookup[otid]['prev']    = obj['prevalence'].strip()
-            
-    file = os.path.join(args.outdir,args.outfileprefix+'InfoLookup.json')
-    print_dict(file, lookup) 
-    
 
-    
+    file = os.path.join(args.outdir,args.outfileprefix+'InfoLookup.json')
+    print_dict(file, lookup)
+
+
+
 
 def run_references(args):   ## REFERENCE Citations
-    
+
     lookup = {}
     q =  "SELECT otid, pubmed_id,journal,authors,`title` from reference"
     result = myconn.execute_fetch_select_dict(q)
-    
+
     for obj in result:
         #print(obj)
         otid = str(obj['otid'])
-        
+
         #if otid not in lookup:
         if otid not in lookup:
             lookup[otid] = {}
@@ -317,7 +319,7 @@ def run_references(args):   ## REFERENCE Citations
               'authors': obj['authors'],
               'title':   obj['title'].replace('"',"'").replace('&quot;',"'").replace('&#039;',"'").replace('\r',"").replace('\n',"")
             })
-        
+
     q2 =  """SELECT otid,
           NCBI_pubmed_search_count as a,
           NCBI_nucleotide_search_count as b,
@@ -325,7 +327,7 @@ def run_references(args):   ## REFERENCE Citations
           NCBI_genome_search_count as d,
           NCBI_taxonomy_search_count as e,
           NCBI_gene_search_count as f,
-          NCBI_genomeP_search_count as g 
+          NCBI_genomeP_search_count as g
           from extra_flat_info"""
     result = myconn.execute_fetch_select_dict(q2)
     for obj in result:
@@ -339,15 +341,15 @@ def run_references(args):   ## REFERENCE Citations
         lookup[otid]['NCBI_taxonomy_search_count'] = str(obj['e'])
         lookup[otid]['NCBI_gene_search_count'] = str(obj['f'])
         lookup[otid]['NCBI_genomeP_search_count'] = str(obj['g'])
-        
-        
-    
+
+
+
     file = os.path.join(args.outdir,args.outfileprefix+'ReferencesLookup.json')
-    print_dict(file, lookup)        
-    
+    print_dict(file, lookup)
 
 
-    
+
+
 
 
 
@@ -356,7 +358,7 @@ def run_lineage(args):
     global refseq_lookup
     global master_lookup
     """
-    we need both a list and a lookup 
+    we need both a list and a lookup
     lookup:
     {
     "1": {
@@ -365,7 +367,7 @@ def run_lineage(args):
         "phylum": "Proteobacteria",
         "klass": "Alphaproteobacteria",
         ......
-        
+
     list:
     [
     {
@@ -374,8 +376,8 @@ def run_lineage(args):
         "phylum": "Proteobacteria",
         "klass": "Alphaproteobacteria",
         ......
-    
-    
+
+
     select otid,domain,phylum,klass,`order`,family,genus,species
 from otid_prime
 JOIN taxonomy using(taxonomy_id)
@@ -386,9 +388,9 @@ JOIN `order` using(order_id)
 JOIN family  using(family_id)
 JOIN genus using(genus_id)
 JOIN species  using(species_id)
-JOIN subspecies  using(subspecies_id)    
+JOIN subspecies  using(subspecies_id)
     """
-## IMPORTANT -- DO NOT LET Dropped into hiearchy/Lineage/Counts    
+## IMPORTANT -- DO NOT LET Dropped into hiearchy/Lineage/Counts
     qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies
         FROM otid_prime
         JOIN taxonomy using(taxonomy_id)
@@ -402,30 +404,30 @@ JOIN subspecies  using(subspecies_id)
         JOIN subspecies  using(subspecies_id)
         WHERE status != 'Dropped'
       """
-    
+
     result = myconn.execute_fetch_select_dict(qtax)
-    
-        
+
+
     obj_list = []
     obj_lookup = {}
     for obj in result:
         #print(obj)
         # for each otid build up the taxonomy from species => domain
         this_obj = {}
-        
+
         otid = str(obj['otid'])
-        
+
         # how many seqs??
         # Number of 16S rRNA RefSeqs ??
         num_genomes = len(master_lookup[otid]['genomes'])
         num_refseqs = 0
         if otid in refseq_lookup:
             num_refseqs = len(refseq_lookup[otid])
-        
+
         # if otid in master_lookup and otid=='550':
 #             print('otid',otid,' num genomes:',num_genomes)
         obj_lookup[otid] = {}
-        
+
         #if obj['domain']:
         this_obj['otid'] = otid
         this_obj['domain'] = obj['domain']
@@ -439,39 +441,39 @@ JOIN subspecies  using(subspecies_id)
         #if obj['subspecies']:
         this_obj['subspecies'] = obj['subspecies']
         tax_list.append(obj['subspecies'])
-        
-        
+
+
         obj_list.append(this_obj)
         obj_lookup[otid] = this_obj
         #tax_list = [obj['domain'],obj['phylum'],obj['klass'],obj['order'],obj['family'],obj['genus'],obj['species']]
         #tax_list = obj_lookup.values()
         if obj['domain'] and otid not in dropped_otids:
             run_counts(tax_list, num_genomes, num_refseqs)
-    
+
     file1 = os.path.join(args.outdir,args.outfileprefix+'Lineagelookup.json')
     file2 = os.path.join(args.outdir,args.outfileprefix+'Hierarchy.json')
-    
+
     print_dict(file1, obj_lookup)
     print_dict(file2, obj_list)
-    
+
     file = os.path.join(args.outdir,args.outfileprefix+'Counts.json')
     print_dict(file, counts)
-    
-    
+
+
 def run_counts(taxlist, gcnt, rfcnt):
     global counts
     #print(taxlist)
-    
-        
+
+
     for m in range(len(ranks)): # 7
         #tax_name = taxlist[m]
-               
+
         sumdtaxname = []
         for d in range(m+1):
             sumdtaxname.append(taxlist[d])
-           
+
         long_tax_name = ';'.join(sumdtaxname)
-        
+
         if long_tax_name[-1] == ';':
             #remove it -- means subsp ==''
             continue
@@ -484,17 +486,20 @@ def run_counts(taxlist, gcnt, rfcnt):
         else:
             # this will always be species
             counts[long_tax_name] = { "tax_cnt": 1, "gcnt": gcnt, "refcnt": rfcnt}
-            
-    return counts        
-            
+
+    return counts
+
 def get_mbps(x):
     #return str(float(x)/1000000) + 'Mbps'
-    return "{:#.3g}".format(float(x)/1000000)
-    
+    if x:
+        return "{:#.3g}".format(float(x)/1000000)
+    else:
+        return "0"
+
 def print_master_lookup(args):
     global master_lookup
-    ## get genome length 
-    
+    ## get genome length
+
     for otid in master_lookup:
         min_glength = 0
         max_glength = 0
@@ -506,42 +511,44 @@ def print_master_lookup(args):
             #print('tlength_lookup[otid]',tlength_lookup[otid])
             min_glength = min(tlength_lookup[otid])
             max_glength = max(tlength_lookup[otid])
-            master_lookup[otid]['tlength_str'] = get_mbps(min_glength) +' - '+ get_mbps(max_glength)+ ' Mbps'
+            print('minmax',min_glength,max_glength)
             
+            master_lookup[otid]['tlength_str'] = get_mbps(min_glength) +' - '+ get_mbps(max_glength)+ ' Mbps'
+
         #master_lookup[otid]['genomes'].append(obj['seq_id'])
         #master_lookup[otid]['tlengths'].append(obj['tlength'])
     file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
-    print_dict(file, master_lookup) 
-      
+    print_dict(file, master_lookup)
+
 def print_dict(filename, dict):
     print('writing',filename)
     with open(filename, 'w') as outfile:
-        json.dump(dict, outfile, indent=args.indent)    
-               
+        json.dump(dict, outfile, indent=args.indent)
+
 if __name__ == "__main__":
 
     usage = """
     USAGE:
         homd_init_data.py
-        
+
         will print out the need initialization files for homd
         Needs MySQL: tries to read your ~/.my.cnf_node
-        
+
            -outdir Output directory [default]
         for homd site
            -host homd
-           
+
         for debugging
           -pp  pretty print
           -o <outfile>  Change outfile name from 'taxonomy'*
-        
+
     """
 
     parser = argparse.ArgumentParser(description="." ,usage=usage)
 
     parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
                                                     help=" ")
-    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-Taxon',
+    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='XhomdData-Taxon',
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")
@@ -552,12 +559,12 @@ if __name__ == "__main__":
                         required = False, action = 'store_true', dest = "prettyprint", default = False,
                         help = "output file is human friendly")
     parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", default=False,
-                                                    help="verbose print()") 
+                                                    help="verbose print()")
     args = parser.parse_args()
     #parser.print_help(usage)
     if not os.path.exists(args.outdir):
         print("\nThe out put directory doesn't exist:: using the current dir instead\n")
-        args.outdir = './'                         
+        args.outdir = './'
     if args.dbhost == 'homd':
         #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
         args.DATABASE  = 'homd'
@@ -567,47 +574,44 @@ if __name__ == "__main__":
         #args.json_file_path = '/Users/avoorhis/programming/homd-data/json'
         args.DATABASE  = 'homd'
         dbhost='localhost'
-        
+
     else:
         sys.exit('dbhost - error')
     args.indent = None
     if args.prettyprint:
         args.indent = 4
     myconn = MyConnection(host=dbhost, db=args.DATABASE,   read_default_file = "~/.my.cnf_node")
-   
+
 
     print(args)
     print('running taxa (run defs in order)')
-    
+
     run_taxa(args)   # RUN FIRST in master_lookup => homd_data_taxalookup.json
-   
+
     run_get_genomes(args)  # in master_lookup => homd_data_taxalookup.json
     run_synonyms(args)     # in master_lookup
-    
+
     run_type_strain(args)  # in master_lookup
-    
+
     run_sites(args)        # in master_lookup
     run_ref_strain(args)   # in master_lookup
-    
+
     run_rrna_sequences(args)  # in master_lookup
     run_pangenomes(args)   # in master_lookup
-    
+
     print_master_lookup(args)
-    
-    run_refseq(args)       
+
+    run_refseq(args)
     run_info(args)
     run_references(args)
-    
 
-    
+
+
      # run lineage AFTER to get counts
     run_lineage(args)
-    
+
     print('\nFinished -- Now run: ./Initialize_Abundance.py (data from abundance table)\n')
     # run abundance after lineach because uses counts data
     # run abundance is now in its own script: Initialize_Abundance.py
     # but still adds to TaxonCounts.json file
     #run_abundance(args)
-
-
-    

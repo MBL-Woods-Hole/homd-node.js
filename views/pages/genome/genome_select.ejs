@@ -27,7 +27,7 @@
 		 	
 <div id='genome_choices'>
 <span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> (<%= page_type %> Server opens in a New Window)
-<br><small>Search by Organism name or Seq-ID number</small><br><br>
+<br><small>Search by Seq-ID, Organism Name or Strain</small><br><br>
 </span>
 <% if(page_type == "JBrowse"){ %>
   <select id='selGenome' style='width: 800px;' onchange='open_jbrowse_in_new_window(this.value)'>

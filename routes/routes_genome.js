@@ -214,6 +214,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
   
   // FIXME
   let bigGeneList = Object.values(C.genome_lookup);
+  console.log(bigGeneList[0])
   const sendList = getFilteredGenomeList(bigGeneList, searchTxt, searchField)
   let pageData = {}
   let pgtitle = 'Search TaxTable'
@@ -1067,12 +1068,10 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
     sendList = gidObjList.filter(item => item.otid.toLowerCase().includes(searchText))
   } else if (searchField === 'seqid') {
     sendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
-  } else if (searchField === 'genus') {
-    sendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
-  } else if (searchField === 'species') {
-    sendList = gidObjList.filter(item => item.species.toLowerCase().includes(searchText))
   } else if (searchField === 'ccolct') {
     sendList = gidObjList.filter(item => item.ccolct.toLowerCase().includes(searchText))
+ } else if (searchField === 'organism') {
+    sendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
   } else if (searchField === 'io') {
     sendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
   } else if (searchField === 'status') {
@@ -1106,7 +1105,12 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
 		for (let n in tmpSendList) {
 		  tempObj[tmpSendList[n].gid] = tmpSendList[n]
 		}
-    
+    // organism
+    tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
+    // for uniqueness convert to object::gid
+    for (let n in tmpSendList) {
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    }
     // culture collection
     tmpSendList = gidObjList.filter(item => item.ccolct.toLowerCase().includes(searchText))
     // for uniqueness convert to object::gid

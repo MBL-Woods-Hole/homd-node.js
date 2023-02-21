@@ -45,24 +45,14 @@
   <div id="column_left1" >
 	<span id='count_info'>
 	<small>
-	There are <%= all_genome_count %> genomes representing <%= taxa_wgenomes %> taxa <small>(excluding 'NonOralRef' and 'Dropped').</small>
-	
-	
-	
-	<br><strong>Showing: <%= ginfo.length %></strong>
-	<% if(letter !== "all"){ %>
-	   Genera Starting With: <b>"<%= letter %>"</b>
-	<% }else if(phylum !== 0){ %>
-	   All Phylum: <b><%= phylum %></b>
-	<% }else if(search_txt !== 0){ %>
-	   Search Text: <b>"<%= search_txt %>"</b>
-	<% } %>
-     
-	 
-	 </small>
-	
+	  There are <%= all_genome_count %> genomes representing <%= taxa_wgenomes %> taxa <small>(excluding 'NonOralRef' and 'Dropped').</small>
+	  <% if(phylum === 0 && letter === "all"){ %>
+	    <br><strong>Showing: <%= ginfo.length %></strong>
+	  <% } %>
+	</small>
 	</span>
   </div>	
+  
   <div id="column_middle1" >	
 	<div>
 	   <table border='1' style=''>
@@ -86,13 +76,12 @@
 	  
             Search This Table:
             <div class="">
-              <input  id='gene_srch_text' type='text' placeholder="Search.." class='dropdown' name='gene_srch' maxlength='18' size='20'>
+              <input  id='gene_srch_text' type='text' placeholder="Search.." class='dropdown' name='gene_srch' maxlength='50' size='25'>
               <select class='dropdown' id='' class="" name='field' >
                 <optgroup>
               <option value='all'>All Fields</option>
               <option value='taxid'>Taxon-ID</option>
-              <option value='genus'>Genus</option>
-              <option value='species'>Species</option>
+              <option value='organism'>Organism</option>
               <option value='ccolct'>Culture Collection</option>
               <option value='io'>Isolation Origin</option>
               <option value='status'>Sequence Status</option>

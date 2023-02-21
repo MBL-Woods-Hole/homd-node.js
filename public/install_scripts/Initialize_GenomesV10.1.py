@@ -12,12 +12,14 @@ import datetime
 from datetime import datetime,date
 ranks = ['domain','phylum','klass','order','family','genus','species']
 today = str(date.today())
-sys.path.append('../../../homd-data/')
+sys.path.append('../homd-data/')
+sys.path.append('../../homd-data/')
+sys.path.append('../../config/')
 from connect import MyConnection
 
 # TABLES
 #update_date_tbl = 'static_genomes_update_date'  # this seems to be the LONG list of gids -- use it first then fill in
-#index_tbl       = 'seqid_otid_index'   # match w/ otid OTID Not Unique 
+#index_tbl       = 'seqid_otid_index'   # match w/ otid OTID Not Unique
 genomes_tbl = 'genomes' #  has genus,species,status,#ofcontigs,combinedlength,
 #seq_extra_tbl   = 'genomes_homd_extra' # has ncbi_id,ncbi_taxid,GC --and alot more
 # 1 --annotated at HOMD with NCBI ANNOTATION
@@ -33,43 +35,43 @@ acceptable_genome_flags = ('11','12','21','91')
 # 2
 
 # in db change gc_comment to genbank_assembly (MBL) VARCHAR(20)
-# change genbank_acc to genbank_accession: 
+# change genbank_acc to genbank_accession:
 # change goldstamp_id to ncbi_biosample
 # change ncbi_id to ncbi_bioproject
 # isolate origin varchar(200)
 first_genomes_query_no_flagid ="""
     SELECT seq_id as gid,
+    organism,
     genus,
     species,
     genomes.status,
-    IFNULL(ncontigs, '') as ncontigs, 
-    IFNULL(tlength, '') as tlength,
-    
-    IFNULL(culture_strain, '') as ccolct,
-    IFNULL(submitter, '') as submitter,
-    
+    ncontigs,
+    tlength,
+
+    culture_strain as ccolct,
+    submitter as submitter,
+
     ncbi_bioproject as ncbi_bpid,
     ncbi_taxonid,
-    isolate as io,
-    gc, 
+    isolate_origin as io,
+    gc,
     ncbi_assembly_name as asmbly_name,
     gb_assembly   as gb_asmbly,
     refseq_assembly as rs_asmbly,
     ncbi_biosample as  ncbi_bsid
-     
+
     from genomes
     JOIN otid_prime using(otid)
     JOIN taxonomy using(taxonomy_id)
     JOIN genus using(genus_id)
     JOIN species using(species_id)
-    ORDER BY gid
 
 """.format(tbl1=genomes_tbl)
 
 
 def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
-    """  alternative to a Class which seems to not play well with JSON 
-    
+    """  alternative to a Class which seems to not play well with JSON
+
     1 otid                              #table1
     2  homd seqid                       #table1
     3  genus species                    #table1
@@ -87,49 +89,51 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     15 combined lengths (bps)           # table
     16 GC percentage                   # table1
     17 sequencing center           # table1
-    
+
     20 16s rna gene sequence           # table  ????
     21 comments                    # table
     """
     genome = {}
     genome['gid']       = gid
     genome['otid']      = ''   # index table
+    genome['organism']     = ''   # table 1
     genome['genus']     = ''   # table 1
-    genome['species']   = ''   # table 1
+    genome['species']     = ''   # table 1
     genome['status']    = ''   # table 1
     genome['ncontigs']  = ''   # table 1
     genome['submitter'] = ''   # table 1
     genome['tlength']   = ''   # table 1
-    genome['ccolct']    = ''  # table 1 
+    genome['ccolct']    = ''  # table 1
     genome['gc']        = ''   # table 2
     genome['ncbi_taxonid'] = ''   # table 2
     genome['ncbi_bpid']     = ''   # table 2
     genome['ncbi_bsid'] = ''
     genome['io']        = ''   # table 2
-    
+
     genome['asmbly_name']    = ''
     genome['gb_asmbly'] = ''
     genome['rs_asmbly'] = ''
     genome['pangenomes'] = []   # array of pangenome names
-    
+
     return genome
 
 
-    
-master_lookup = {}    
 
-              
+master_lookup = {}
+
+
 def run_first(args):
     """ date not used"""
     global master_lookup
     #print(first_genomes_query)
     result = myconn.execute_fetch_select_dict(first_genomes_query_no_flagid)
-    
+
     for obj in result:
         #print(obj)
-        
+
         if obj['gid'] not in master_lookup:
-            taxonObj = create_genome(obj['gid']) 
+            taxonObj = create_genome(obj['gid'])
+            taxonObj['organism']     = obj['organism']
             taxonObj['genus']       = obj['genus']
             taxonObj['species']     = obj['species']
             taxonObj['status']      = obj['status']
@@ -145,68 +149,68 @@ def run_first(args):
             taxonObj['gb_asmbly']   = obj['gb_asmbly']
             taxonObj['rs_asmbly']   = obj['rs_asmbly']
             taxonObj['asmbly_name'] = obj['asmbly_name']
-            
+
 
         else:
             sys.exit('duplicate gid',obj['gid'])
-        master_lookup[obj['gid']] = taxonObj    
+        master_lookup[obj['gid']] = taxonObj
     #print(master_lookup)
-    
+
 def run_second(args):
     """  add otid to Object """
     global master_lookup
-    g_query ="""   
+    g_query ="""
     SELECT seq_id as gid, otid
     from genomes
     ORDER BY gid
     """
     result = myconn.execute_fetch_select_dict(g_query)
 
-    for obj in result:  
+    for obj in result:
          if obj['gid'] in master_lookup:
-            master_lookup[obj['gid']]['otid'] = str(obj['otid']) 
-    #print(master_lookup)        
-        
+            master_lookup[obj['gid']]['otid'] = str(obj['otid'])
+    #print(master_lookup)
+
 def run_third(args):
     """ Add Pangenome List to Object"""
     global master_lookup
-    g_query ="""   
+    g_query ="""
     SELECT seq_id as gid, name as pangenome
     from pangenome
     ORDER BY gid
     """
-    result = myconn.execute_fetch_select_dict(g_query)    
-        
-    for obj in result:  
+    result = myconn.execute_fetch_select_dict(g_query)
+
+    for obj in result:
          if obj['gid'] in master_lookup:
             master_lookup[obj['gid']]['pangenomes'].append(obj['pangenome'])
-    
-        
-            
+
+
+
 if __name__ == "__main__":
 
     usage = """
     USAGE:
         homd_init_genome_data.py
-        
+
         will print out the need initialization files for homd
         Needs MySQL: tries to read your ~/.my.cnf_node
-        
+
            -outdir Output directory [default]
         for homd site
            -host homd
-           
+
         for debugging
           -pp  pretty print
           -o <outfile>  Change outfile name from 'taxonomy'*
-        
+
     """
 
     parser = argparse.ArgumentParser(description="." ,usage=usage)
 
     parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
                                                     help=" ")
-    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-Genome',
+    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='XhomdData-Genome',
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")
@@ -217,16 +221,16 @@ if __name__ == "__main__":
                         required = False, action = 'store_true', dest = "prettyprint", default = False,
                         help = "output file is human friendly")
     parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", default=False,
-                                                    help="verbose print()") 
+                                                    help="verbose print()")
     args = parser.parse_args()
-    
+
     if not os.path.exists(args.outdir):
         print("\nThe out put directory doesn't exist:: using the current dir instead\n")
-        args.outdir = './'                         
+        args.outdir = './'
     if args.dbhost == 'homd':
         args.DATABASE  = 'homd'
         dbhost = '192.168.1.42'
-        
+
     elif args.dbhost == 'localhost':  #default
         args.DATABASE = 'homd'
         dbhost = 'localhost'
@@ -246,4 +250,3 @@ if __name__ == "__main__":
     print('writing',filename)
     with open(filename, 'w') as outfile:
         json.dump(master_lookup, outfile, indent=args.indent)
-    
