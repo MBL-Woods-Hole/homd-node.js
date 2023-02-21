@@ -271,12 +271,13 @@ router.get('/jbrowse', function jbrowse (req, res) {
     .map((el) => {
       return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, ccolct: el.ccolct }
     })
-  res.render('pages/genome/jbrowse2_stub_iframe', {
+  res.render('pages/genome/genome_select', {
     title: 'HOMD :: JBrowse', 
     pgname: 'genome/jbrowse', // for AbountThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
     gid: gid,  // default
     gc:gc,
+    page_type: 'JBrowse',
     genomes: JSON.stringify(genomeList),
     tgenomes: genomeList.length,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -739,7 +740,40 @@ router.get('/blast_server', function genome_blast_server(req, res) {
         blast_type: 'genome'
       })
 })
-
+router.get('/blast_per_genome', function blast_get(req, res) {
+   //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
+  helpers.accesslog(req, res)
+  console.log('jbrowse-get')
+  //let myurl = url.parse(req.url, true);
+    
+  const gid = req.query.gid
+  let gc = 0
+  if(gid){
+      gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
+  }
+  const glist = Object.values(C.genome_lookup)
+  
+  glist.sort(function sortGList (a, b) {
+      return helpers.compareStrings_alpha(a.genus, b.genus)
+    })
+  // filter out empties then map to create list of sorted strings
+  const genomeList = glist.filter(item => item.genus !== '')
+    .map((el) => {
+      return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, ccolct: el.ccolct }
+    })
+  res.render('pages/genome/genome_select', {
+    title: 'HOMD :: BLAST', 
+    pgname: 'genome/BLAST', // for AbountThisPage
+    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    gid: gid,  // default
+    gc:gc,
+    page_type: 'BLAST',
+    genomes: JSON.stringify(genomeList),
+    tgenomes: genomeList.length,
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
+  })
+})
 router.get('/blast', function blast_get(req, res) {
    console.log('in genome blast-GET')
    let chosen_gid = req.query.gid

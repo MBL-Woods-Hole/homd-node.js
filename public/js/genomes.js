@@ -7,6 +7,19 @@
 // 	//alert(form['gnom_select'].value)
 // 	form.submit()
 // }
+function open_blast_in_new_window(gid){
+  console.log(gid)
+  
+  if(gid=='0'){
+     document.getElementById("genome_iframe").src = "";	
+     document.getElementById("genome_iframe").width = '100%'
+     document.getElementById("genome_iframe").height = '0'
+     return
+  }
+  
+  let url = 'https://homd.org/genome_blast?gid='+gid
+  window.open(url)
+}
 function open_jbrowse_in_new_window(gidplusgc){
   console.log(gidplusgc)
   pts = gidplusgc.split('|')

@@ -20,23 +20,32 @@
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
-		<div class='title'>JBrowse (Select a Genome)</div>
+		<div class='title'><%= page_type %> (Select a Genome)</div>
 			 
 		   
 
 		 	
 <div id='genome_choices'>
-<span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> (JBrowse opens in a New Window)
+<span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> (<%= page_type %> Server opens in a New Window)
 <br><small>Search by Organism name or Seq-ID number</small><br><br>
 </span>
-<select id='selGenome' style='width: 800px;' onchange='open_jbrowse_in_new_window(this.value)'>
+<% if(page_type == "JBrowse"){ %>
+  <select id='selGenome' style='width: 800px;' onchange='open_jbrowse_in_new_window(this.value)'>
      <option id='' name='none' value='0'>Search & Select...</option>
      <% for(i in gn){ %>
         <% gc2 = (parseFloat(gn[i].gc)/100).toFixed(2) %>
 		<option id='' name='gnom' value='<%= gn[i].gid %>|<%= gc2 %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 	<% } %>
-</select>
-
+  </select>
+<% }else{ %>
+ 
+  <select id='selGenome' style='width: 800px;' onchange='open_blast_in_new_window(this.value)'>
+     <option id='' name='none' value='0'>Search & Select...</option>
+     <% for(i in gn){ %>
+        <option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
+	<% } %>
+  </select>
+<% } %>
 
 <br/>
 <div id='result'></div>
