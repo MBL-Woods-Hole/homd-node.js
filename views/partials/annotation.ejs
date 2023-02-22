@@ -87,7 +87,10 @@
 			     <% }else{ %>
 			        <% seqacc = gid +'|'+ mole[n].accession %>
 			     <% } %>
-			     <a title='Genome Viewer' href='<%= cfg.jb_path %><%= gid %>&tracks=DNA,homd,prokka,ncbi&loc=<%= seqacc %>:<%= locstart %>..<%= locstop %>&highlight=<%= seqacc %>:<%= start %>..<%= stop %>' target='_blank' rel="noopener noreferrer">jb</a>
+			     <% tracks = "DNA,homd,prokka,ncbi" %>
+			     <% loc = seqacc+":"+locstart+".."+locstop %>
+			     <% highlight = seqacc+":"+start+".."+stop %>
+			     <a title='Genome Viewer' href='<%= cfg.jb_path %><%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>&tracks=<%= tracks %>' target='_blank' rel="noopener noreferrer">jb</a>
 			    
 			   
 			   </td>
