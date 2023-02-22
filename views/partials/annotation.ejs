@@ -54,21 +54,25 @@
 			 <tbody>
 			 <% cnt = page_data.start_count %>
 			 <% for(n in mole){ %>
-			 <%   if(mole[n].start[0] === '<' ){ %>
+			 
+			 <%   if(mole[n].start[0] === "<" ){ %>
 			 <%     start = parseInt(mole[n].start.substring(1)) %>
 			 <%   }else{ %>
 			 <%     start = parseInt(mole[n].start) %>
 			 <%   } %>
-			 <%   if(mole[n]stop[0] === '>' ){ %>
+			 
+			 <%   if(mole[n].stop[0] === ">" ){ %>
 			 <%     stop = parseInt(mole[n].stop.substring(1)) %>
 			 <%   }else{ %>
 			 <%     stop = parseInt(mole[n].stop)%>
 			 <%   } %>
+			 
 			 <%   if(start > stop){ %>
 			 <%    tmp = stop %>
 			 <%    stop = start %>
 			 <%    start = tmp %>
 			 <%   } %>
+			 
 			 <%   locstart = start - 500 %>
 			 <%   locstop = stop + 500 %>
 			 <%   size = stop - start %>
