@@ -54,15 +54,23 @@
 			 <tbody>
 			 <% cnt = page_data.start_count %>
 			 <% for(n in mole){ %>
-			 <% if(mole[n].start > mole[n].stop){ %>
-			 <%    start = mole[n].stop %>
-			 <%    stop = mole[n].start %>
+			 <% if(mole[n].start[0] === '<' ){ %>
+			 <%   start == parseInt(mole[n].start.substring(1))%>
 			 <% }else{ %>
-			 <%    start = mole[n].start %>
-			 <%    stop = mole[n].stop %>
+			 <%   start == parseInt(mole[n].start)%>
 			 <% } %>
-			 <% locstart = start-500 %>
-			 <% locstop = stop+500 %>
+			 <% if(mole[n]stop[0] === '>' ){ %>
+			 <%   stop == parseInt(mole[n].stop.substring(1))%>
+			 <% }else{ %>
+			 <%   stop == parseInt(mole[n].stop)%>
+			 <% } %>
+			 <% if start > stop){ %>
+			 <%    tmp = stop %>
+			 <%    stop = start %>
+			 <%    start = tmp %>
+			 <% } %>
+			 <% locstart = start - 500 %>
+			 <% locstop = stop + 500 %>
 			 <% size = stop - start %>
 			 
 			 <% if(locstart < 1){ %>
@@ -88,8 +96,8 @@
 			        <% seqacc = gid +'|'+ mole[n].accession %>
 			     <% } %>
 			     <% tracks = "DNA,homd,prokka,ncbi" %>
-			     <% loc = seqacc+":"+locstart+".."+locstop %>
-			     <% highlight = seqacc+":"+start+".."+stop %>
+			     <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
+			     <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
 			     <a title='Genome Viewer' href='<%= cfg.jb_path %><%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>&tracks=<%= tracks %>' target='_blank' rel="noopener noreferrer">jb</a>
 			    
 			   
