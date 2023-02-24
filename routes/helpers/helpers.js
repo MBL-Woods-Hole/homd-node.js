@@ -746,7 +746,7 @@ module.exports.parse_blast_best = function parse_blast_best(file_data, opt, blas
     // file_data is file array of file strings
     let indexes ={ query_id:0, hit_id:1, pct_identity:2, length:3, mismatches:4, gaps:17, 
                    qstart:6, qend:7, sstart:8, send:9, evalue:10, 
-                   bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16  // qseq;11, sseq:12
+                   bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16, nident:18  // qseq;11, sseq:12
                  }
     
     let bbit_score,line_collector={},allheader='',header='',q_lookup = {}
@@ -935,7 +935,7 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
     // qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle qcov qseq sseq
     let indexes ={ query_id:0, hit_id:1, pct_identity:2, length:3, mismatches:4, gaps:17, 
                    qstart:6, qend:7, sstart:8, send:9, evalue:10, 
-                   bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16  // qseq;11, sseq:12
+                   bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16, nident:18  // qseq;11, sseq:12
                  }
     let query = '',version=''
     let allheader = '',header=''
@@ -994,7 +994,8 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
         //qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle
         
           html += "<table id='newSortTable' class='sortable'><tr>"
-          html += "<th>Query-id</th><th>Hit-id</th><th>% Identity</th><th>% Cov</th><th title='Full Percent Identity:\n(% ident) x (coverage)'>FPI</th><th>Alignment Length</th><th>Mis-<br>matches</th><th>Gaps</th>"
+          html += "<th>Query-id</th><th>Hit-id</th><th>% Identity</th><th>% Cov</th><th title='Full Percent Identity:\n(% ident) x (coverage)'>FPI</th>"
+          html += "<th>Alignment Length</th> <th>Matches</th> <th>Mis-<br>matches</th><th>Gaps</th>"
           html += "<th>q-start</th><th>q-end</th><th>s-start</th><th>s-end</th><th>E-value</th><th>Bit Score</th><th>Query Length</th><th>HOMD Clone Name/Hit Title</th>"
         }
         html += '</tr>'
@@ -1024,6 +1025,7 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
         let hmt = title_items[2].trim()
         let otid = hmt.split('-')[1]
         let hitid = title_items[0]
+        let nident = row_items[indexes.nident]
         //let ALIGNMENT_FRAC = parseFloat(parseInt(qend) - parseInt(qstart) + 1.0) / parseFloat(row_items[indexes.qlen])
         //let full_pct_id_calc = parseFloat(row_items[indexes.pct_identity]) * ALIGNMENT_FRAC
         let full_pct_id_mult = parseFloat(row_items[indexes.pct_identity]) * parseFloat(row_items[indexes.qcov])/100
@@ -1047,6 +1049,7 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
 				gaps: row_items[indexes.gaps],
 				alength: row_items[indexes.length],
 				identity: row_items[indexes.pct_identity],
+				nident: row_items[indexes.nident],
 				coverage: row_items[indexes.qcov],
 				fpi: full_pct_id_mult.toFixed(2).toString()
             })
@@ -1069,6 +1072,9 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
 				//html+='<td>'+full_pct_id_calc.toFixed(5).toString()+'</td>'
 				html+="<td title='Full Percent Identity:\n(% ident) x (coverage)'>"+full_pct_id_mult.toFixed(2).toString()+'</td>'
 				html+="<td class='center'>"+row_items[indexes.length]+'</td>'
+				
+				html+="<td class='center'>"+row_items[indexes.nident]+'</td>'
+				
 				html+="<td class='center'>"+row_items[indexes.mismatches]+'</td>'
 				html+="<td class='center'>"+row_items[indexes.gaps]+'</td>'
 				html+="<td class='center'>"+qstart+'</td>'
