@@ -29,7 +29,9 @@
 <span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> (<%= page_type %> Server opens in a New Window)
 <br><small>Search by Seq-ID, Organism Name or Strain</small><br><br>
 </span>
+
 <% if(page_type == "JBrowse"){ %>
+
   <select id='selGenome' style='width: 800px;' onchange='open_jbrowse_in_new_window(this.value)'>
      <option id='' name='none' value='0'>Search & Select...</option>
      <% for(i in gn){ %>
@@ -37,6 +39,7 @@
 		<option id='' name='gnom' value='<%= gn[i].gid %>|<%= gc2 %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 	<% } %>
   </select>
+  
 <% }else{ %>
  
   <select id='selGenome' style='width: 800px;' onchange='open_blast_in_new_window(this.value)'>
@@ -45,6 +48,20 @@
         <option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 	<% } %>
   </select>
+  
+  <br><br>TESTING Choose a genome blast database.
+  <br>
+  <select id='selGenome' style='width: 800px;' onchange='window_open_blast_test(this.value)')>
+     <option id='' name='none' value='0'>Search & Select...</option>
+     <% for(i in gn){ %>
+        <option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
+	<% } %>
+    </select>
+    
+
+   
+	
+  
 <% } %>
 
 <br/>
@@ -76,6 +93,16 @@
      
      open_jbrowse_in_new_window(gid+'|'+gc)
   }
+  
+  function window_open_blast_test(val){
+    urlString = 'blast_test'
+    //document.getElementById("button_click").href= 'blast_test?gid='+val;
+    //window.location = urlString + '?gid=' + val;
+    window.open(urlString + '?gid=' + val, '_blank');
+  }
+
+
+
   $(document).ready(function(){
  
   // Initialize select2
