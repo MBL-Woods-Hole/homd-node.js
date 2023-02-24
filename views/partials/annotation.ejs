@@ -54,7 +54,7 @@
 			 <tbody>
 			 <% cnt = page_data.start_count %>
 			 <% for(n in mole){ %>
-			 
+			 <!-- Clean up start/stop and parseInt -->
 			 <%   if(mole[n].start[0] === "<" ){ %>
 			 <%     start = parseInt(mole[n].start.substring(1)) %>
 			 <%   }else{ %>
