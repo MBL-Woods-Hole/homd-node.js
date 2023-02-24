@@ -744,7 +744,7 @@ module.exports.parse_blast_refseq = function parse_blast_refseq(file_data, opt, 
 module.exports.parse_blast_best = function parse_blast_best(file_data, opt, blastID){
     // for top-4-hits and best-hits-only
     // file_data is file array of file strings
-    let indexes ={ query_id:0, hit_id:1, pct_identity:2, length:3, mismatches:4, gaps:5, 
+    let indexes ={ query_id:0, hit_id:1, pct_identity:2, length:3, mismatches:4, gaps:17, 
                    qstart:6, qend:7, sstart:8, send:9, evalue:10, 
                    bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16  // qseq;11, sseq:12
                  }
@@ -920,7 +920,7 @@ module.exports.parse_blast_best = function parse_blast_best(file_data, opt, blas
 module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, blastID, filenumber){
     //opt = 'full'  // one,two,full
     // file_data is single file string
-    console.log('opt reqular',opt)  // alignments or full (or refseq custom download)
+    console.log('opt reqular (parse_blast_custom)',opt)  // alignments or full (or refseq custom download)
     let dnlds = ['text1-download','text4-download','text20-download','textAll-download',
          'excel1-download','excel4-download','excel20-download','excelAll-download']
     let download=false
@@ -933,7 +933,7 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
     // split the id line
     // calculate FULL_PCT_ID 
     // qaccver, saccver, pident, length, mismatch, gaps, qstart, qend, sstart, send, evalue, bitscore, qlen, stitle qcov qseq sseq
-    let indexes ={ query_id:0, hit_id:1, pct_identity:2, length:3, mismatches:4, gaps:5, 
+    let indexes ={ query_id:0, hit_id:1, pct_identity:2, length:3, mismatches:4, gaps:17, 
                    qstart:6, qend:7, sstart:8, send:9, evalue:10, 
                    bit_score:11, qlen:12, stitle:13, qcov:14, qseq:15, sseq:16  // qseq;11, sseq:12
                  }
