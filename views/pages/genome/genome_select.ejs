@@ -42,16 +42,18 @@
   
 <% }else{ %>
  
-  <select id='selGenome' style='width: 800px;' onchange='open_blast_in_new_window(this.value)'>
+  <!-- 
+<select id='selGenome' style='width: 800px;' onchange='open_blast_in_new_window(this.value)'>
      <option id='' name='none' value='0'>Search & Select...</option>
      <% for(i in gn){ %>
         <option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 	<% } %>
   </select>
   
+ -->
   <br><br>TESTING Choose a genome blast database.
   <br>
-  <select id='selGenome' style='width: 800px;' onchange='window_open_blast_test(this.value)')>
+  <select id='selGenome' style='width: 800px;' onchange="window.document.location.href='blast_server_single?gid='+this.value">
      <option id='' name='none' value='0'>Search & Select...</option>
      <% for(i in gn){ %>
         <option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
@@ -95,10 +97,10 @@
   }
   
   function window_open_blast_test(val){
-    urlString = 'blast_test'
+    urlString = 'blast_server_one'
     //document.getElementById("button_click").href= 'blast_test?gid='+val;
     //window.location = urlString + '?gid=' + val;
-    window.open(urlString + '?gid=' + val, '_blank');
+    window.location(urlString + '?gid=' + val);
   }
 
 

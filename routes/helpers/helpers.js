@@ -1183,6 +1183,88 @@ module.exports.readFromFile = function readFromFile(file, ext) {
         });
     });
 }
+function parse_blast_db_info(hit_data,ext,path){
+//  Database: ftp/faa/SEQF1595.faa
+// 	1,842 sequences; 605,679 total residues
+// 
+//  Date: Feb 7, 2022 11:14 PM	Longest sequence: 4,231 residues
+// 
+//  BLASTDB Version: 4
+// 
+//  Volumes:
+// 	/Users/avoorhis/programming/blast-db-alt/faa/SEQF1595.faa
+
+    let lines,line,tmp
+    let hit = {
+       path: path,
+       ext: ext,
+       mol_type: '',
+       name: '',
+       seqs: '',
+       bps: '',
+       date: '',
+       db_version: ''
+    }
+    if(ext === 'faa'){
+       hit.mol_type = 'protein'
+    }else{
+      hit.mol_type = 'nucleotide'
+    }
+    lines = hit_data.split('\n')
+    
+    for(let l in lines){
+       line = lines[l].trim()
+       if(line.substring(0,8) === "Database"){
+           hit.name = line.split(':')[1].trim()
+       }
+       if(line.indexOf('sequences;') != -1){
+           tmp = line.split('sequences;')
+           hit.seqs = tmp[0].trim().replace(/,/g,'')
+           hit.bps = tmp[1].trim().split(' ')[0].replace(/,/g,'')
+       }
+       if(line.substring(0,4) === "Date"){
+           hit.date = line.split('\t')[0].split(':')[1].trim()
+       }
+       if(line.substring(0,15) === "BLASTDB Version"){
+           hit.db_version = line.split(':')[1].trim()
+       }
+    } 
+    
+    
+    return hit
+    
+}
+module.exports.readFromblastDb = function readFromblastDb(filepath,gid,ext) {
+    return new Promise((resolve, reject) => {
+        let full_data = '',hit
+        let run = spawn('/Users/avoorhis/.sequenceserver/ncbi-blast-2.12.0+/bin/blastdbcmd',['-db',filepath,'-info'])
+           run.stdout.on("data", data => {
+                //console.log(`stdout: ${data}`);
+                full_data += data
+            });
+
+            run.stderr.on("data", data => {
+                console.log(`stderr: ${data}`);
+                //reject(data)
+            });
+
+            run.on('error', (error) => {
+                console.log(`error: ${error.message}`);
+                reject(data)
+            });
+
+            run.on("close", code => {
+                console.log(`readFromblastDb() spawn child process exited with code ${code}`);
+                if(code == 0){
+                  hit = parse_blast_db_info(full_data.toString(), ext, filepath)
+                  resolve(hit)
+                  //console.log('hit',exts[e],hit)
+                }else{
+                  resolve('No Database: '+filepath)
+                }
+            });
+    });
+}
 //
 /**
  * Executes a shell command and return it as a Promise.

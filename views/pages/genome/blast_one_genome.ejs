@@ -1,5 +1,6 @@
 <style>
 </style>
+<% var info = JSON.parse(data) %>
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -10,8 +11,18 @@
     
     <div class='page-content' >
               
-       <div class='title'>BLAST One Genome</div>
-    
+       <div class='title'>BLAST One Genome: <%= gid %></div>
+       <% length = info.length %>
+       <% got_one = false %>
+       <% for(n in info){ %>
+       <%    if(typeof info[n] !== 'string'){ %>
+                <br><%=  info[n].mol_type %> <%=  info[n].path %>
+                <% got_one = true %>
+       <%    } %>
+       <% } %>
+       <% if(!got_one){  %>
+          No Databases found for genome <%= gid %>
+       <% } %>
   
     </div> <!-- end: page-content -->
     

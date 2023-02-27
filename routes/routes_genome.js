@@ -776,18 +776,44 @@ router.get('/blast_per_genome', function blast_get(req, res) {
   })
 })
 
-router.get('/blast_test', function blast_test(req, res) {
+router.get('/blast_server_one', function blast_test(req, res) {
   console.log('blast_test')
   let gid = req.query.gid
-  
-  res.render('pages/genome/blast_one_genome', {
+  const { spawn } = require("child_process");
+  let info = {}, filepath
+  info[gid] = []
+    let dataPromises = []
+    let exts = ['faa', 'ffn', 'fna']
+    let paths = [CFG.BLAST_DB_PATH_GENOME_NCBI, CFG.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
+    for(let p in paths){
+       for(let e in exts){
+           filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
+           console.log(filepath)
+           
+           dataPromises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
+      }
+  }
+  Promise.all(dataPromises).then(result => {
+    //this code will be called in future after all readCSV Promises call resolve(..)
+    console.log('info-results',result)
+    
+    res.render('pages/genome/blast_one_genome', {
     title: 'HOMD :: BLAST', 
     pgname: '', // for AboutThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     gid: gid,  // default
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
+    data: JSON.stringify(result)
+    }) 
+  
   })
+  
+  
+  
+  
+  
+  
   
 })
 router.get('/blast', function blast_get(req, res) {
@@ -1159,5 +1185,115 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
   }
   return sendList
 }
+// function parse_blast_db_info(hit_data,ext,path){
+// //  Database: ftp/faa/SEQF1595.faa
+// // 	1,842 sequences; 605,679 total residues
+// // 
+// //  Date: Feb 7, 2022 11:14 PM	Longest sequence: 4,231 residues
+// // 
+// //  BLASTDB Version: 4
+// // 
+// //  Volumes:
+// // 	/Users/avoorhis/programming/blast-db-alt/faa/SEQF1595.faa
+// 
+//     let lines,line,tmp
+//     let hit = {
+//        path: path,
+//        ext: ext,
+//        mol_type: '',
+//        name: '',
+//        seqs: '',
+//        bps: '',
+//        date: '',
+//        db_version: ''
+//     }
+//     if(ext === 'faa'){
+//        hit.mol_type = 'protein'
+//     }else{
+//       hit.mol_type = 'nucleotide'
+//     }
+//     lines = hit_data.split('\n')
+//     
+//     for(let l in lines){
+//        line = lines[l].trim()
+//        if(line.substring(0,8) === "Database"){
+//            hit.name = line.split(':')[1].trim()
+//        }
+//        if(line.indexOf('sequences;') != -1){
+//            tmp = line.split('sequences;')
+//            hit.seqs = tmp[0].trim().replace(/,/g,'')
+//            hit.bps = tmp[1].trim().split(' ')[0].replace(/,/g,'')
+//        }
+//        if(line.substring(0,4) === "Date"){
+//            hit.date = line.split('\t')[0].split(':')[1].trim()
+//        }
+//        if(line.substring(0,15) === "BLASTDB Version"){
+//            hit.db_version = line.split(':')[1].trim()
+//        }
+//     } 
+//     
+//     
+//     return hit
+//     
+// }
+function get_blast_db_info(gid){
+    let info = {},run,filepath,hit
+    const { spawn } = require("child_process");
+    // get & check paths to six genome databases: 
+    //gid = 'SEQF1595'
+    info[gid] = []
+    let promises = []
+    let exts = ['faa', 'ffn', 'fna']
+    let paths = [CFG.BLAST_DB_PATH_GENOME_NCBI, CFG.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
+    for(let p in paths){
+       for(let e in exts){
+           filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
+           console.log(filepath)
+           let full_data = ''
+           promises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
+           // run = spawn('/Users/avoorhis/.sequenceserver/ncbi-blast-2.12.0+/bin/blastdbcmd',['-db',filepath,'-info'])
+//            run.stdout.on("data", data => {
+//                 //console.log(`stdout: ${data}`);
+//                 full_data += data
+//             });
+// 
+//             run.stderr.on("data", data => {
+//                 console.log(`stderr: ${data}`);
+//                 
+//             });
+// 
+//             run.on('error', (error) => {
+//                 console.log(`error: ${error.message}`);
+//             });
+// 
+//             run.on("close", code => {
+//                 console.log(`child process exited with code ${code}`);
+//                 if(code == 0){
+//                   hit = parse_blast_db_info(full_data.toString(), exts[e], paths[p])
+//                   
+//                   console.log('hit',exts[e],hit)
+//                 }
+//             });
+       }
+    }
+    const responses = Promise.all(promises)
+      .then(results => {
+      
+      return results
+    })
+    //console.log('info',info)
+    //blastdbcmd -recursive -list #{config[:database_dir]} -list_outfmt "%f	%t	%p	%n	%l	%d	%v"
+       //  %f means the BLAST database absolute file name path
+//         %t means the BLAST database title
+//    		%p means the BLAST database molecule type
+//    		%n means the number of sequences in the BLAST database
+//    		
+//    		%l means the number of bases/residues in th
+//e BLAST database
+//    		%d means the date of last update of the BLAST database
+//    		%v means the BLAST database format version 
 
+    
+    
+}
 module.exports = router
