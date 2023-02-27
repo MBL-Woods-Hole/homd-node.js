@@ -98,9 +98,9 @@ thead th { position: sticky; top: 0; }
         <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a>
         <a class='pill pill-lightseagreen' href='<%= cfg.jb_path %><%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
         
-       
-        <!-- <a class='pill pill-midnightblue' href='/genome_blast?gid=<%= ginfo[n].gid %>' target='_blank'>BLAST</a> -->
+       <a class='pill pill-midnightblue' href='/genome_blast_single?gid=<%= ginfo[n].gid %>' target='_blank'>BLAST</a>
         </td>
+        
         <td class='center'>
         <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
         <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
