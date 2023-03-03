@@ -56,7 +56,7 @@
 
   <br><br>TESTING Choose a genome BLAST database.
   <br>
-  <select id='selGenome' style='width: 800px;' onchange="window.document.location.href='/genome_blast_single?gid='+this.value">
+  <select id='selGenome' style='width: 800px;' onchange="window.open('/genome_blast_single?gid='+this.value, '_blank') ">
      <option id='' name='none' value='0'>Search & Select...</option>
      <% for(i in gn){ %>
         <option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
