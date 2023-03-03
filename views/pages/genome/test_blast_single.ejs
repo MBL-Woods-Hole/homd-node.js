@@ -1,0 +1,111 @@
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SequenceServer: Custom BLAST Server</title>
+  <meta name="author" content="Anurag Priyam">
+  <meta name="author" content="Ben J. Woodcroft">
+  <meta name="author" content="Vivek Rai">
+  <meta name="author" content="Cedric Wurm">
+  <meta name="author" content="Yannick Wurm">
+  <meta name="description" content="Custom BLAST server provided by SequenceServer (https://www.sequenceserver.com)">
+
+  <!-- CSS -->
+  
+    <link rel="stylesheet" href="/vendor/npm/webshim@1.15.8/js-webshim/minified/shims/styles/shim.css"><link rel="stylesheet" media="screen,print" type="text/css" href="css/sequenceserver.min.css?ver=2.0.0">
+  
+</head>
+
+  <body style="background:#abab98;">
+
+
+  <div class="navbar">
+    
+    <div class="container">
+      
+        <span class="homd-label">HOMD Genome BLAST Server</span>
+
+      
+      <a class="navbar-brand" href="https://sequenceserver.com" target="_blank">
+        <img class="logo" src="SequenceServer_logo.png" alt="sequenceserver_logo">
+        <small>
+          2.0.0
+        </small>
+      </a>
+      <ul class="nav navbar-nav navbar-right hover-reset focus-reset">
+        <li>
+          <a target="_blank" href="http://www.sequenceserver.com/#license-and-support">
+            <i class="fa fa-comment-o"></i>
+            &nbsp;Help &amp; Support
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+
+  <div class="container">
+    <noscript>
+      <div
+        class="nojs-error">
+        <h3>SequenceServer can't work without JavaScript.</h3>
+        <ul>
+          <li>Please see if you can enable JavaScript in your browser's preferences.</li>
+          <li>If your browser doesn't support JavaScript, please consider upgrading to the latest version or using Firefox or Chrome.</li>
+        </ul>
+      </div>
+    </noscript>
+  </div>
+
+  <!-- Optional hidden query sequence sent by the server -->
+<input type="hidden" id="input_sequence" value="">
+
+<!-- We will initialise React on this div -->
+<div id="view"><div><div class="dnd-overlay" style="display: none;"><div class="container dnd-overlay-container">
+<div class="row"><div class="col-md-offset-2 col-md-10"><p class="dnd-overlay-drop" style="display: none;">
+<i class="fa fa-2x fa-file-o"></i>Drop query sequence file here</p><p class="dnd-overlay-overwrite" style="display: none;">
+<i class="fa fa-2x fa-file-o"></i><span style="color: red;">Overwrite</span> query sequence file</p>
+<div class="dnd-errors"><div class="dnd-error row" id="dnd-multi-notification" style="display: none;">
+<div class="col-md-6 col-md-offset-3">One file at a time please.</div></div>
+<div class="dnd-error row" id="dnd-large-file-notification" style="display: none;">
+<div class="col-md-6 col-md-offset-3">Too big a file. Can only do less than 10 MB. &gt;_&lt;</div></div>
+<div class="dnd-error row" id="dnd-format-notification" style="display: none;">
+<div class="col-md-6 col-md-offset-3">Only FASTA files please.</div></div></div></div></div></div></div><div class="container">
+<div id="overlay" style="position: absolute; top: 0px; left: 0px; width: 100vw; height: 100vw; background: rgba(0, 0, 0, 0.2); display: none; z-index: 99;"></div>
+
+<form id="blast" method="post" class="form-horizontal">
+<div class="notifications" id="notifications">
+<div class="notification row" id="nucleotide-sequence-notification" style="display: none;">
+<div class="alert-info col-md-6 col-md-offset-3">Detected: nucleotide sequence(s).</div></div>
+<div class="notification row" id="protein-sequence-notification" style="display: none;">
+<div class="alert-info col-md-6 col-md-offset-3">Detected: amino-acid sequence(s).</div></div>
+<div class="notification row" id="mixed-sequence-notification" style="display: none;">
+<div class="alert-danger col-md-10 col-md-offset-1">Error: mixed nucleotide and amino-acid sequences detected.</div></div></div>
+<div class="form-group databases-container"><div class="col-md-6"><div class="panel panel-default">
+<div class="panel-heading">
+<h4 style="display: inline;"> Nucleotide Databases</h4></div>
+<ul class="list-group databases nucleotide"><li class="list-group-item"><label class="database">
+<input type="radio" name="databases[]" data-type="nucleotide" value="8bfd704f6dc94387f38f13fb4b632b19"><span class="brown"> NCBI::SEQF1595.2.ffn</span></label></li>
+<li class="list-group-item"><label class="database">
+<input type="radio" name="databases[]" data-type="nucleotide" value="d01f4cc04e007f2e832ae6e13a8d46a4"><span class="brown"> NCBI::SEQF1595.2.fna</span></label></li>
+<li class="list-group-item"><label class="database">
+<input type="radio" name="databases[]" data-type="nucleotide" value="63268327f4af99fc9a0f14d4ea03cd9c"><span class="brown"> PROKKA::SEQF1595.2.ffn</span></label></li>
+<li class="list-group-item"><label class="database">
+<input type="radio" name="databases[]" data-type="nucleotide" value="df98fe97f2a27fbbf1f316813ee27652"><span class="brown"> PROKKA::SEQF1595.2.fna</span></label></li>
+</ul></div></div>
+<div class="col-md-6"><div class="panel panel-default"><div class="panel-heading"
+><h4 style="display: inline;"> Protein Databases</h4></div><ul class="list-group databases protein"><li class="list-group-item"><label class="database">
+<input type="radio" name="databases[]" data-type="protein" value="a1ca7138e29af600ff1e377f259411de"><span class="brown"> NCBI::SEQF1595.2.faa</span></label></li>
+<li class="list-group-item"><label class="database">
+<input type="radio" name="databases[]" data-type="protein" value="fa91402f907804e2ff49a5f031e6bdb4"><span class="brown"> PROKKA::SEQF1595.2.faa</span></label></li></ul></div></div></div><div class="form-group query-container"><div class="col-md-12"><div class="sequence"><textarea id="sequence" class="form-control text-monospace" name="sequence" placeholder="Paste query sequence(s) or drag file containing query sequence(s) in FASTA format here ..." spellcheck="false">CTGGGCCGTGTCTCAGTCCCAATGTGGCCGTTTACCCTCTCAGGCCGGCTACGCATCATCGCCTTGGTGGGCCGTT</textarea></div><div class="" style="position: absolute; top: 4px; right: 19px;"><button type="button" class="btn btn-sm btn-default" id="btn-sequence-clear" title="Clear query sequence(s)."><span id="sequence-file"></span><i class="fa fa-times"></i></button></div></div></div><br><div class="form-group"><div class="col-md-7"><div class="form-group"><div class="col-md-12"><div class="input-group"><label class="control-label" for="advanced">Advanced parameters:<sup style="margin-left: 2px;"><a href="" data-toggle="modal" data-target="#help"><i class="fa fa-question-circle"></i></a></sup></label><input type="text" class="form-control yellow-background" id="advanced" name="advanced" placeholder="eg: -evalue 1.0e-5 -num_alignments 100" title="View, and enter advanced parameters." value="-task blastn -evalue 1e-5"><span class="input-group-btn dropdown"><button class="btn bnt-sm btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-caret-down"></i></button><ul id="advanced-params-dropdown" class="dropdown-menu dropdown-menu-right"><li class="yellow-background"><strong>default:</strong>&nbsp;-task blastn -evalue 1e-5</li><li><strong>custom:</strong>&nbsp;-task blastn -evalue 1e-5 -num_descriptions 100 -num_alignments 100</li></ul></span></div></div></div></div><div class="col-md-2"><div class="form-group" style="text-align: center; padding: 7px 0px;"><label><input type="checkbox" id="toggleNewTab"> Open results in new tab</label></div></div><div class="col-md-3"><div class="form-group"><div class="col-md-12"><div class="input-group" id="methods" data-original-title="" title="" style="">
+<button type="submit" class="btn btn-primary form-control text-uppercase" id="method" name="method" data-original-title="" title="" value="blastn">blast<strong>n</strong></button><div class="input-group-btn"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button><ul class="dropdown-menu dropdown-menu-right"><li class="text-uppercase">tblastx</li></ul></div></div></div></div></div></div></form></div></div></div>
+
+<!-- JS -->
+  <script src="/sequenceserver-search.min.js?ver=2.0.0"></script>
+
+          
+
+
+

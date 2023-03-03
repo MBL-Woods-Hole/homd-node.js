@@ -775,7 +775,48 @@ router.get('/blast_per_genome', function blast_get(req, res) {
     user: JSON.stringify(req.user || {}),
   })
 })
+router.get('/blast_single_test', function(req, res){
+   res.render('pages/genome/test_blast_single', {
+    title: 'HOMD :: BLAST', 
+    pgname: 'genome/BLAST', // for AboutThisPage
+    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
+  })
+})
+router.post('/blast_single_test', function(req, res){
+  console.log('IN POST blast_single_test')
+  console.log(req.body)
+   res.render('pages/genome/test_blast_single', {
+    title: 'HOMD :: BLAST', 
+    pgname: 'genome/BLAST', // for AboutThisPage
+    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
+  })
+})
+router.post('/blast_single', function blast_single(req, res) {
+    console.log(req.body)
+    // 'prokka|fna|SEQF1595.2|/Users/avoorhis/programming/blast-db-alt/fna/SEQF1595.2.fna'
+    let blast_db_parts = req.body.blastdb.split('|')
+    let anno    = blast_db_parts[0]
+    let ext     = blast_db_parts[1]
+    let gid     = blast_db_parts[2]
+    let db_path = blast_db_parts[3]
+    
+    // localhost:4567  or 0.0.0.
+    // production:  192.168.1.60:4569  for the SS-single
+    // How to fire submit on form from another host.server
+    var connect = require('connect');
+    //var http = require('http');
 
+    var app2 = connect();
+    app2.listen(4567, '0.0.0.0', function() {
+       console.log('Listening to port:  ' + 4567);
+    });
+
+
+})
 router.get('/blast_server_one', function blast_test(req, res) {
   console.log('blast_test')
   let gid = req.query.gid
@@ -795,16 +836,28 @@ router.get('/blast_server_one', function blast_test(req, res) {
   }
   Promise.all(dataPromises).then(result => {
     //this code will be called in future after all readCSV Promises call resolve(..)
-    console.log('info-results',result)
-    
+    //console.log('info-results',result)
+    let data = []
+    for(let n in result){
+       if(typeof result[n] !== 'string'){
+          if(result[n].path.includes('ncbi')){
+             result[n].anno = 'ncbi'
+          }else{
+             result[n].anno = 'prokka'
+          }
+          data.push(result[n])
+       }
+    }
+    console.log('data-results',data)
     res.render('pages/genome/blast_one_genome', {
     title: 'HOMD :: BLAST', 
     pgname: '', // for AboutThisPage
     config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
     gid: gid,  // default
+    org: C.genome_lookup[gid].organism,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
-    data: JSON.stringify(result)
+    data: JSON.stringify(data)
     }) 
   
   })

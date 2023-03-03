@@ -1,0 +1,100 @@
+<style>
+table{
+   margin-top:50px;
+   padding: 10px;
+}
+table td,th{
+   padding:15px;
+}
+textarea{
+  background:lightgrey;
+  margin-top:7px;
+  border:1px solid #E6B0AA;
+}
+.submit{
+  cursor:'pointer';
+}
+</style>
+<% var info = JSON.parse(data) %>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+           
+       <div class='title'>BLAST Against Single Genome: <%= gid %> <%= org %></div>
+       <% length = info.length %>
+       <% if(info.length === 0){ %>
+         No BLAST Databases found for genome <%= gid %>
+       <% }else{ %>
+       <form class='blast_form' method='POST' action='blast_single'  > 
+       <center>
+       <table border='1' style='border:1px solid black;border-collapse:collapse;'>
+       
+        <tr><th>Nucleotide</th><th>Protein</th></tr>
+       <tr>
+       <td> 
+       <% for(n in info){ %>
+
+                    <% if(info[n].mol_type == 'nucleotide'){ %>
+                      <%   got_one = true %>
+                      
+                      
+                      <% if(info[n].ext == 'fna'){ %>
+                         
+                         <input type='radio' name='blastdb' class='blastdb' value='<%=info[n].anno%>|<%=info[n].ext%>|<%=gid%>|<%=info[n].path%>' />
+                         <%=  info[n].anno.toUpperCase() %> (<%=  info[n].ext %>):
+                         Genomic DNA from HOMD genome <%= gid %>
+                      <% }else{ %>
+                         <input type='radio' name='blastdb' class='blastdb' value='<%=info[n].anno%>|<%=info[n].ext%>|<%=gid%>|<%=info[n].path%>' />
+                         <%=  info[n].anno.toUpperCase() %> (<%=  info[n].ext %>):
+                         DNA sequences of proteins from HOMD genome <%= gid %>
+                      <% } %>
+                      <br>
+                    <% } %>
+                 
+       <% } %>
+       </td>
+        <td>
+        <% for(n in info){ %>
+       
+                    
+                    <% if(info[n].mol_type == 'protein'){ %>
+                      <%   got_one = true %>
+                      <input type='radio' name='blastdb' class='blastdb' value='<%=info[n].anno%>|<%=info[n].ext%>|<%=gid%>|<%=info[n].path%>' />
+                      <%=  info[n].anno.toUpperCase() %> (<%=  info[n].ext %>): Proteins annotated from HOMD genome <%= gid %><br>
+                    <% } %>
+ 
+                 
+       <% } %>
+          </td>     
+        </tr></table>
+        
+        
+        <textarea name='query_seq' rows='10' cols='150' placeholder="Paste query sequence(s) here..."></textarea>
+        <br /><br />
+        <input class='button submit' type='submit' value='BLAST' >
+       </center>
+       </form>
+       <% } %>
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

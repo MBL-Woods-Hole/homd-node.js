@@ -42,15 +42,15 @@
   
 <% }else{ %>
  
-  <!-- 
-<select id='selGenome' style='width: 800px;' onchange='open_blast_in_new_window(this.value)'>
+  <!-- <select id='selGenome' style='width: 800px;' onchange='open_blast_in_new_window(this.value)'> -->
+  <select id='selGenome' style='width: 800px;' onchange="window.document.location.href='blast_server_one?gid='+this.value">
      <option id='' name='none' value='0'>Search & Select...</option>
      <% for(i in gn){ %>
         <option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 	<% } %>
   </select>
   
- -->
+
   <br><br>TESTING Choose a genome BLAST database.
   <br>
   <select id='selGenome' style='width: 800px;' onchange="window.document.location.href='/genome_blast_single?gid='+this.value">
