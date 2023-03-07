@@ -1,7 +1,8 @@
 <style>
 iframe{
    width:100%;
-   height:80%;
+   height:90%;
+   border:1px solid black
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -14,9 +15,9 @@ iframe{
     
     <div class='page-content' >
               
-       <div class='title'style='background:#EE9090;color:black;'>Genome BLAST</div>
+       <div class='title'style='background:lightgrey;color:black;'>Genome BLAST: <%= organism %> (<%= gid %>)</div>
        <div class='subtitle' style='padding:10px;'>BLAST Against HOMD Genomes</div>
-       <% if(anno == "ncbi"){ %>
+       <% if(annotation == "ncbi"){ %>
          <iframe id='iframe_id' src="https://devel.homd.org/genome_blast_all_ncbi/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
        <% }else{ %>
          <iframe id='iframe_id' src="https://devel.homd.org/genome_blast_all_prokka/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
