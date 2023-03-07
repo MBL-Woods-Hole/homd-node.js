@@ -16,8 +16,11 @@ iframe{
               
        <div class='title'style='background:#EE9090;color:black;'>Genome BLAST</div>
        <div class='subtitle' style='padding:10px;'>BLAST Against HOMD Genomes</div>
-       <iframe id='iframe_id' src="https://anviserver.homd.info/" title="HOMD BLAST Server"></iframe>
-  
+       <% if(anno == "ncbi"){ %>
+         <iframe id='iframe_id' src="https://devel.homd.org/genome_blast_all_ncbi/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+       <% }else{ %>
+         <iframe id='iframe_id' src="https://devel.homd.org/genome_blast_all_prokka/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+       <% } %>
     </div> <!-- end: page-content -->
     
     <div id='footer'>

@@ -52,16 +52,20 @@
 	<% } %>
   </select>
  -->
-  
-
-  <br><br>TESTING Choose a genome BLAST database.
+  <form name='' method='POST' action='blast_ss_single'>
+  Annotation:
+  <input type='radio' checked name='annotation' value='prokka'> PROKKA (Default)&nbsp;&nbsp;&nbsp;
+  <input type='radio'         name='annotation' value='ncbi'> NCBI
+  <br><br>Choose a genome BLAST database.
   <br>
-  <select id='selGenome' style='width: 800px;' onchange="window.open('/genome_blast_all_prokka?gid='+this.value, '_blank') ">
-     <option id='' name='none' value='0'>Search & Select...</option>
+  <select id='selGenome' name='gid' style='width: 800px;' onchange="this.form.submit()">
+     <option id=''  value='0'>Search & Select...</option>
      <% for(i in gn){ %>
-        <option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
+        <option id='' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].ccolct %></option>
 	<% } %>
-    </select>
+  </select>
+  
+  </form>
     
 
    

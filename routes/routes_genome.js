@@ -784,6 +784,20 @@ router.get('/blast_single_test', function(req, res){
     user: JSON.stringify(req.user || {}),
   })
 })
+router.post('/blast_ss_single', function(req, res){
+  console.log('IN POST blast_ss_single')
+  console.log(req.body)
+  res.render('pages/genome/blast_server_iframe', {
+    title: 'HOMD :: BLAST', 
+    pgname: 'genome/BLAST', // for AboutThisPage
+    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
+    gid: req.body.gid,
+    anno: req.body.annotation
+  })
+   
+})
 router.post('/blast_single_test', function(req, res){
   console.log('IN POST blast_single_test')
   console.log(req.body)
