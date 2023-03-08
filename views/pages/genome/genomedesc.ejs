@@ -59,7 +59,7 @@
     
 	<div id='header_buttons' >
 	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (<%= taxidfullnameplus %>)</a>
-	 <a class='gd-button' href="<%= cfg.jb_path %><%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
+	 <a class='gd-button' href="<%= cfg.JBROWSE_URL %><%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
 	 <form name='' class="form-inline" method='POST' action='blast_ss_single'>
          <input type='hidden' name='gid' value='<%= ginfo.gid %>'>
          <input type='hidden' name='annotation' value='prokka'>
@@ -105,7 +105,7 @@
        </select>
        <span id='jbrowse_offer_span'>
        <% if(contigs[0]){%>
-         <a href="<%= cfg.jb_path %><%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=<%= ginfo.gid %>|<%= contigs[0].contig %>" target='_blank'>Open in Genome Viewer</a>
+         <a href="<%= cfg.JBROWSE_URL %><%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=<%= ginfo.gid %>|<%= contigs[0].contig %>" target='_blank'>Open in Genome Viewer</a>
        <% } %>
        </span>
      </td></tr>

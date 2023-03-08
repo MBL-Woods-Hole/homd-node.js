@@ -102,7 +102,7 @@
 			     <% tracks = "DNA,homd,prokka,ncbi" %>
 			     <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
 			     <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
-			     <a title='Genome Viewer' href='<%= cfg.jb_path %><%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>&tracks=<%= tracks %>' target='_blank' rel="noopener noreferrer">jb</a>
+			     <a title='Genome Viewer' href='<%= cfg.JBROWSE_URL %><%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>&tracks=<%= tracks %>' target='_blank' rel="noopener noreferrer">jb</a>
 			    
 			   
 			   </td>
