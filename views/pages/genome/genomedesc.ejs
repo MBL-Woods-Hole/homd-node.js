@@ -118,12 +118,12 @@
      <td class=''>Pangenome(s): (<a href='https://vamps.mbl.edu/anviserver' target='_blank'>Anvi`o-server</a> <small>hosted on <a href='https://vamps2.mbl.edu/' title='Visualization and Analysis of Microbial Population Structures' target='_blank'>VAMPS</a>)</small></td>
      <td>
        
-       <% if(ginfo.pangenomes){ %>
-       <% for(n in ginfo.pangenomes){ %>
-         <a href='<%= anviserver_link %>/<%= ginfo.pangenomes[n] %>'  target='_blank'><%- ginfo.pangenomes[n] %></a>
-       <% } %>
+       <% if(ginfo.pangenomes.length > 0){ %>
+       <%   for(n in ginfo.pangenomes){ %>
+             <a href='<%= anviserver_link %>/<%= ginfo.pangenomes[n] %>'  target='_blank'><%- ginfo.pangenomes[n] %></a>
+       <%   } %>
        <% }else{ %>
-         No Pangenome Assembly Available yet.
+            <small>No Pangenome Assembly Available yet.</small>
        <% } %>
     </td>
      </tr>

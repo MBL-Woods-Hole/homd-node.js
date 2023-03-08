@@ -6,7 +6,7 @@
         Choose a Genome: 
        
         <select class='dropdown' id='selGenome' style='width: 800px;' onchange="if (this.value) window.location.href='explorer?gid='+this.value+'&anno=<%= anno_type %>'  ">
-           <option name='none' value='0'>Choose...</option>
+           <option name='none' value='0'>Search and Select...</option>
            <% for(n in all_annos){ %>
               <% if(all_annos[n].gid === gid){ %>
                 <option selected value='<%= all_annos[n].gid %>'><%= all_annos[n].org %> <small>(<%= all_annos[n].gid %>)</small></option>
