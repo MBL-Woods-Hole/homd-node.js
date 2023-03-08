@@ -787,7 +787,8 @@ router.get('/blast_single_test', function(req, res){
 router.post('/blast_ss_single', function(req, res){
   console.log('IN POST blast_ss_single')
   console.log(req.body)
-  let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].ccolect 
+  
+  let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].ccolct 
   //console.log(C.genome_lookup[req.body.gid])
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
