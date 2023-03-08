@@ -3,12 +3,12 @@
 <% var cfg = JSON.parse(config) %> 
 
 <link rel="stylesheet" href="/css/help.css">
-<%- include(cfg.rootPath+'views/partials/header_html'); %>
+<%- include("../../partials/header_html"); %>
 
 <body>
     <div id='wrapper'>
-    <%- include(cfg.rootPath+'views/partials/header_img'); %>
-    <%- include(cfg.rootPath+'views/partials/navbar'); %>
+    <%- include("../../partials/header_img"); %>
+    <%- include("../../partials/navbar"); %>
     
 <div class='page-content' >
     <div class='title'><%= pagetitle %></div>
@@ -16,12 +16,12 @@
     
     
     <div class='help-div'> 
-        <%- include(cfg.rootPath+'views/partials/help/'+pagecode); %>
+        <%- include("../../partials/help/"+pagecode); %>
     </div>  
 </div> <!-- end: page-content -->
     
 <div id='footer'>
-         <%- include(cfg.rootPath+'views/partials/footer'); %>
+         <%- include("../../partials/footer"); %>
 </div>
        
 </body>

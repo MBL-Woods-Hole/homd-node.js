@@ -23,7 +23,7 @@ router.get('/', function index(req, res) {
   res.render('pages/home', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'home', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {})
     
@@ -46,7 +46,7 @@ router.get('/download', function download(req, res) {
   res.render('pages/download', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'download', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {})
 
@@ -57,7 +57,7 @@ router.get('/poster', function poster(req, res) {
   res.render('pages/poster', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {})
 
@@ -68,7 +68,7 @@ router.get('/oralgen', function oralgen(req, res) {
   res.render('pages/oralgen', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {})
 
@@ -140,7 +140,7 @@ router.post('/site_searchOLD', function site_search(req, res) {
   res.render('pages/search_result_testing', {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         user: JSON.stringify(req.user || {}),
         search_text: searchText,
@@ -421,7 +421,7 @@ router.post('/site_search', function site_search(req, res) {
       res.render('pages/search_result', {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         user: JSON.stringify(req.user || {}),
         search_text: searchText,

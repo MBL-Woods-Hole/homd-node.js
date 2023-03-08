@@ -22,18 +22,29 @@
                   <% if(anno_type == 'prokka'){ %>
                     <span class='an-button active' href=''>PROKKA</span>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
-                    <a class='an-button' href='/genome_blast_single?gid=<%= gid %>' target='_blank'>BLAST</a>
+                    
+                    <form name='' class="form-inline" method='POST' action='blast_ss_single'>
+                      <input type='hidden' name='gid' value='<%= gid %>'>
+                      <input type='hidden' name='annotation' value='<%= anno_type %>'>
+                      <input type='submit' class='an-button' value='BLAST'>
+                    </form>
                     <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
                   <% } else if(anno_type == 'ncbi'){ %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <span class='an-button active' href=''>NCBI</span>
-                    <a class='an-button' href='/genome_blast_single?gid=<%= gid %>' target='_blank'>BLAST</a>
-                    <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
+                    <form name='' class="form-inline" method='POST' action='blast_ss_single'>
+                      <input type='hidden' name='gid' value='<%= gid %>'>
+                      <input type='hidden' name='annotation' value='<%= anno_type %>'>
+                      <input type='submit' class='an-button' value='BLAST'>
+                    </form>
                   <% } else { %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
-                    <a class='an-button' href='/genome_blast_single?gid=<%= gid %>' target='_blank'>BLAST</a>
-                    <!-- <a class='an-button greyed' href='#'>BLAST-OFF</a> -->
+                    <form name='' class="form-inline" method='POST' action='blast_ss_single'>
+                      <input type='hidden' name='gid' value='<%= gid %>'>
+                      <input type='hidden' name='annotation' value='<%= anno_type %>'>
+                      <input type='submit' class='an-button' value='BLAST'>
+                    </form>
                   <% } %>
                   |
                   <a class='an-button' href='<%= cfg.jb_path %><%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc %>),GC Skew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>

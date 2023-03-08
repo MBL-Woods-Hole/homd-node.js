@@ -244,15 +244,15 @@
       <li><a href="/genome/jbrowse">JBrowse Genome Viewer Tool</a></li>     
       <li><span href="">Genomic Trees <font color="blue">&#187;</font></span>
         <ul> 
-        <li><a href="/ftp/phylogenetic_trees/genome/V10.1/eHOMD_Genomic_PhyloPhlAn_Tree.svg">Conserved Protein Tree</a></li>
-        <li><a href="/ftp/phylogenetic_trees/genome/V10.1/eHOMD_Ribosomal_Protein_Tree.svg">Ribosomal Protein Tree</a></li>
-        <li><a href="/ftp/phylogenetic_trees/genome/V10.1/eHOMD_16S_rRNA_Tree.svg">16S rRNA Gene Tree</a></li>
+        <li><a href="<%= cfg.FTP_URL %>/phylogenetic_trees/genome/V10.1/eHOMD_Genomic_PhyloPhlAn_Tree.svg">Conserved Protein Tree</a></li>
+        <li><a href="<%= cfg.FTP_URL %>/phylogenetic_trees/genome/V10.1/eHOMD_Ribosomal_Protein_Tree.svg">Ribosomal Protein Tree</a></li>
+        <li><a href="<%= cfg.FTP_URL %>/phylogenetic_trees/genome/V10.1/eHOMD_16S_rRNA_Tree.svg">16S rRNA Gene Tree</a></li>
         
         </ul>
       </li> 
       <li><a href="/genome/explorer?gid=&anno=prokka">Genome Explorer and Annotations</a></li>
       
-      <li><a href="/genome_blast" target='_blank'>Genome BLAST Server -All Genomes</a></li> 
+      <li><a href="<%= cfg.BLAST_URL_BASE %>/genome_blast" target='_blank'>Genome BLAST Server -All Genomes</a></li> 
       <li><a href="/genome/blast_per_genome"     >Genome BLAST Server -Single Genome</a></li>  
       
       <!-- 
@@ -281,15 +281,15 @@
 
 <li><span class='main-topic' >Proteomes</span>
     <ul>
-        <li><a href="/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">View Genomic Tree based on Conserved Proteins</a></li>
-        <li><a href="/ftp/genomes/PROKKA/current/" target='_blank'>All Protein Sequences Annotated from Genomes</a></li>
+        <li><a href="<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">View Genomic Tree based on Conserved Proteins</a></li>
+        <li><a href="<%= cfg.FTP_URL %>p/genomes/PROKKA/current/" target='_blank'>All Protein Sequences Annotated from Genomes</a></li>
     </ul>
   </li> 
   
     <li><span class='main-topic' >16S rRNA Microbiome</span>
     <ul>
-          <li><a href="/refseq_blast" target='_blank'>RefSeq BLAST Server</a></li> 
-          <li><a href="/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg">View 16S rRNA RefSeq Phylogenetic Tree</a></li>
+          <li><a href="<%= cfg.BLAST_URL_BASE %>/refseq_blast" target='_blank'>RefSeq BLAST Server</a></li> 
+          <li><a href="<%= cfg.FTP_URL %>/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg">View 16S rRNA RefSeq Phylogenetic Tree</a></li>
           <li><a href="/download#refseq">Download RefSeq Data</a></li>
           <li><a href="/help/help-page?pagecode=refseq/refseq_version">Version History</a></li>
     </ul>
@@ -305,7 +305,7 @@
    <li><span class='main-topic' >Downloads</span>
     <ul>
       <li><a href="/download">Download Batch HOMD Data</a></li>
-      <li><a href="/ftp" target='_blank'>HOMD FTP Site</a></li>
+      <li><a href="<%= cfg.FTP_URL %>" target='_blank'>HOMD FTP Site</a></li>
        
     </ul>
    </li>

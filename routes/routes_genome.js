@@ -180,7 +180,7 @@ router.get('/genome_table', function genomeTable(req, res) {
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 
     pgname: 'genome/genome_table', // for AboutThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, rootPath: CFG.PROCESS_DIR, jb_path:CFG.PATH_TO_JBROWSE }),
+    config: JSON.stringify(CFG),
     // seqid_list: JSON.stringify(gid_obj_list),
     //data: JSON.stringify(send_list),
     data: JSON.stringify(genomeList),
@@ -225,7 +225,7 @@ router.post('/search_genometable', function searchGenomeTable(req, res) {
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 
     pgname: 'genome/genome_table', // for AboutThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    config: JSON.stringify(CFG),
     
     //seqid_list: JSON.stringify(gid_obj_list),
     data: JSON.stringify(sendList),
@@ -275,7 +275,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
   res.render('pages/genome/genome_select', {
     title: 'HOMD :: JBrowse', 
     pgname: 'genome/jbrowse', // for AboutThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    config: JSON.stringify(CFG),
     gid: gid,  // default
     gc:gc,
     page_type: 'JBrowse',
@@ -367,7 +367,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
 	  res.render('pages/genome/genomedesc', {
 		title: 'HOMD :: Genome Info',
 		pgname: 'genome/description', // for AboutThisPage 
-		config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+		config: JSON.stringify(CFG),
 		// taxonid: otid,
 		data1: JSON.stringify(data),
 		gid: gid,
@@ -491,7 +491,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
         res.render('pages/genome/explorer', {
           title: 'HOMD :: ' + args.gid,
           pgname: 'genome/explorer', // for AboutThisPage 
-          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+          config: JSON.stringify(CFG),
           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
           user: JSON.stringify(req.user || {}),
           gid: args.gid,
@@ -564,7 +564,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
 				   //  res.render('pages/genome/explorer', {
 			//           title: 'HOMD :: ' + gid,
 			//           pgname: 'genome/explorer', // for AboutThisPage 
-			//           config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+			//           config: JSON.stringify(CFG),
 			//           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 			//           user: JSON.stringify(req.user || {}),
 			//           gid: gid,
@@ -614,7 +614,7 @@ router.get('/explorer', function explorer (req, res) {
     res.render('pages/genome/explorer', {
       title: 'HOMD :: ' + args.gid,
       pgname: 'genome/explorer', // for AboutThisPage 
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+      config: JSON.stringify(CFG),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
       gid: args.gid,
@@ -735,7 +735,7 @@ router.get('/blast_server', function genome_blast_server(req, res) {
     res.render('pages/blast/blast_server', {
         title: 'HOMD :: HOMD Blast Server',
         pgname: '', // for AboutThisPage
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, blast_version: CFG.BLAST_VERSION }),
+        config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         user: JSON.stringify(req.user || {}),
         blast_type: 'genome'
@@ -765,7 +765,7 @@ router.get('/blast_per_genome', function blast_get(req, res) {
   res.render('pages/genome/genome_select', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    config: JSON.stringify(CFG),
     gid: gid,  // default
     gc:gc,
     page_type: 'BLAST',
@@ -779,7 +779,7 @@ router.get('/blast_single_test', function(req, res){
    res.render('pages/genome/test_blast_single', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
   })
@@ -793,7 +793,7 @@ router.post('/blast_ss_single', function(req, res){
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
     gid: req.body.gid,
@@ -808,7 +808,7 @@ router.post('/blast_single_test', function(req, res){
    res.render('pages/genome/test_blast_single', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, jb_path:CFG.PATH_TO_JBROWSE }),
+    config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
   })
@@ -870,7 +870,7 @@ router.get('/blast_server_one', function blast_test(req, res) {
     res.render('pages/genome/blast_one_genome', {
     title: 'HOMD :: BLAST', 
     pgname: '', // for AboutThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    config: JSON.stringify(CFG),
     gid: gid,  // default
     org: C.genome_lookup[gid].organism,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -927,7 +927,7 @@ router.get('/blast', function blast_get(req, res) {
     res.render('pages/genome/blast', {
         title: 'HOMD :: BLAST',
         pgname: 'blast/blast', // for AboutThisPage
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         user: JSON.stringify(req.user || {}),
         blastFxn: 'genome',
@@ -959,7 +959,7 @@ router.get('/blast', function blast_get(req, res) {
 //    res.render('pages/genome/blast', {
 //         title: 'HOMD :: Ribosomal Protein Tree',
 //         pgname: 'blast', // for AboutThisPage
-//         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//         config: JSON.stringify(CFG),
 //         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 //         blastFxn: 'genome',
 //         organism: '',
@@ -1023,7 +1023,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
       res.render('pages/genome/conserved_protein_tree', {
         title: 'HOMD :: Conserved Protein Tree',
         pgname: 'genome/tree', // for AboutThisPage
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         user: JSON.stringify(req.user || {}),
         svg_data: JSON.stringify(data),
@@ -1044,7 +1044,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
       res.render('pages/genome/ribosomal_protein_tree', {
         title: 'HOMD :: Ribosomal Protein Tree',
         pgname: 'genome/tree', // for AboutThisPage
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+        config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         user: JSON.stringify(req.user || {}),
         svg_data: JSON.stringify(data),
@@ -1067,7 +1067,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
     res.render('pages/genome/rRNA_gene_tree', {
       title: 'HOMD :: rRNA Gene Tree',
       pgname: 'genome/tree', // for AboutThisPage
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      config: JSON.stringify(CFG),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
       svg_data: JSON.stringify(data),

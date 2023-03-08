@@ -140,7 +140,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
     title: 'HOMD :: Taxon Table', 
     pgtitle: pgtitle,
     pgname: 'taxon/tax_table',  //for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    config: JSON.stringify(CFG),
     data: JSON.stringify(send_list),
     
     count_txt: count_txt,
@@ -234,7 +234,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
     title: 'HOMD :: Taxon Table', 
     pgtitle: 'List of Human Microbial Taxa',
     pgname: 'taxon/tax_table',  //for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    config: JSON.stringify(CFG),
     data: JSON.stringify(send_list),
     count_txt: count_txt,
     letter: 'all',
@@ -255,7 +255,7 @@ router.get('/flags', function flags(req, res) {
       title: 'HOMD :: Taxon Flags', 
       pgtitle:'Taxa Flag',
       pgname: '',  //for AbountThisPage
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      config: JSON.stringify(CFG),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
     })
@@ -281,7 +281,7 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
     title: 'HOMD :: Taxon Table', 
     pgtitle: 'Search TaxTable',
     pgname: 'taxon/tax_table',  //for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    config: JSON.stringify(CFG),
     data: JSON.stringify(send_list),
     count: Object.keys(send_list).length,
     count_txt: count_txt,
@@ -311,7 +311,7 @@ router.get('/tax_hierarchy', (req, res) => {
   res.render('pages/taxa/taxhierarchy', {
       title: 'HOMD :: Taxon Hierarchy',
       pgname: 'taxon/hierarchy', // for AbountThisPage
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      config: JSON.stringify(CFG),
       data: {},
       dhtmlx: JSON.stringify(C.dhtmlxTreeData),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -328,7 +328,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
   res.render('pages/taxa/taxlevel', {
     title: 'HOMD :: Taxon Level', 
     pgname: 'taxon/level', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    config: JSON.stringify(CFG),
     level: 'domain',
     //oral: oral,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -544,7 +544,7 @@ router.get('/tax_description', function tax_description(req, res){
      res.render('pages/lost_message', {
          title: 'HOMD :: Error',
          pgname: '', // for AbountThisPage 
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      config: JSON.stringify(CFG),
       message:message,
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
@@ -624,7 +624,7 @@ router.get('/tax_description', function tax_description(req, res){
   res.render('pages/taxa/taxdesc', {
     title: 'HOMD :: Taxon Info', 
     pgname: 'taxon/description', // for AbountThisPage
-    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+    config: JSON.stringify(CFG),
     otid: otid,
     //pids: pid_list,
     image_array:JSON.stringify(image_array),
@@ -821,7 +821,7 @@ router.get('/life', function life(req, res) {
   res.render('pages/taxa/life', {
       title: 'HOMD :: '+page_title, 
       pgname: 'taxon/life', // for AbountThisPage
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      config: JSON.stringify(CFG),
       data: {},
       tax_name: tax_name,
       //headline: 'Life: Cellular Organisms',
@@ -979,7 +979,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
     res.render('pages/taxa/ecology_index', {
       title: 'HOMD :: Ecology', 
       pgname: 'taxon/ecology', // for AbountThisPage
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      config: JSON.stringify(CFG),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
       sole_arch:JSON.stringify(sole_arch),
@@ -1116,7 +1116,7 @@ router.get('/ecology', function ecology(req, res) {
     res.render('pages/taxa/ecology', {
       title: 'HOMD ::'+rank+'::'+tax_name,
       pgname: 'taxon/ecology', // for AbountThisPage 
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      config: JSON.stringify(CFG),
       tax_name: tax_name,
       //headline: 'Life: Cellular Organisms',
       lineage: lineage_string,
@@ -1248,7 +1248,7 @@ router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
     res.render('pages/taxa/ecology', {
       title: 'HOMD ::'+rank+'::'+tax_name,
       pgname: 'taxon/ecology', // for AbountThisPage 
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      config: JSON.stringify(CFG),
       tax_name: tax_name,
       //headline: 'Life: Cellular Organisms',
       lineage: lineage_string,
@@ -1524,7 +1524,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     res.render('pages/taxa/abundance_by_site', {
       title: 'HOMD ::Abundance by oral site',
       pgname: '', // for AbountThisPage 
-      config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+      config: JSON.stringify(CFG),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
       data: JSON.stringify(top_ten),

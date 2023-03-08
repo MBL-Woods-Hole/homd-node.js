@@ -59,7 +59,7 @@ router.get('/blast_results_genome', function blastResults_genome(req, res) {
           res.render('pages/blast/blast_results_genome', {
                   title: 'HOMD :: Blast Results', 
                   pgname: 'blast/blast',
-                  config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, url: CFG.URL }),
+                  config: JSON.stringify(CFG),
                   hostname: CFG.HOSTNAME,
                   ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                   user: JSON.stringify(req.user || {}),
@@ -190,7 +190,7 @@ router.get('/blast_results_refseq', function blastResults_refseq(req, res) {
         res.render('pages/blast/blast_results_refseq', {
             title: 'HOMD :: Blast Results', 
             pgname: 'blast/blast',
-            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, url: CFG.URL }),
+            config: JSON.stringify(CFG),
             hostname: CFG.HOSTNAME,
             //url: CFG.URL,
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -310,7 +310,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
 //       res.render('pages/genome/explorer', {
 //         title: 'HOMD :: ' + gid,
 //         pgname: 'blast', // for AbountThisPage 
-//         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//         config: JSON.stringify(CFG),
 //         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 //           user: JSON.stringify(req.user || {}),
 //         gid: gid,
@@ -414,7 +414,7 @@ router.get('/blast_wait', async function blastWait(req, res, next) {
       res.render('pages/blast/blast_wait', {
         title: 'HOMD :: BLAST WAIT', 
         pgname: 'blast',
-        config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV, url: CFG.URL }),
+        config: JSON.stringify(CFG),
         hostname: CFG.HOSTNAME,
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         user: JSON.stringify(req.user || {}),

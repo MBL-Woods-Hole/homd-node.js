@@ -28,7 +28,7 @@ router.get('/login', function login(req, res) {
             res.render('pages/user/profile', {
                 title: 'HOMD :: profile',
                 pgname: '', // for AbountThisPage 
-                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                config: JSON.stringify(CFG),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                 user: JSON.stringify(req.user || {})
             });
@@ -36,7 +36,7 @@ router.get('/login', function login(req, res) {
         res.render('pages/user/login', { 
             title   : 'HOMD:login',
             pgname: '',
-            config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+            config: JSON.stringify(CFG),
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
             user: JSON.stringify(req.user || {}),
         });
@@ -135,7 +135,7 @@ router.get('/signup', function signup(req, res) {
             res.render('pages/user/profile', {
                 title: 'HOMD :: profile',
                 pgname: '', // for AbountThisPage 
-                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                config: JSON.stringify(CFG),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                 user: JSON.stringify(req.user || {})
             });
@@ -145,7 +145,7 @@ router.get('/signup', function signup(req, res) {
             res.render('pages/user/signup', { 
                 title   : 'HOMD::signup',
                 pgname: '',
-                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                config: JSON.stringify(CFG),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                 user: JSON.stringify(req.user || {}),
                 hostname: CFG.hostname,
@@ -185,7 +185,7 @@ router.post('/signup',
       res.render('pages/user/signup', { 
                 title   : 'HOMD::signup',
                 pgname: '',
-                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                config: JSON.stringify(CFG),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                 user: JSON.stringify(req.user || {}),
                 hostname: CFG.hostname,
@@ -223,7 +223,7 @@ router.get('/profile', helpers.isLoggedIn, function profile(req, res) {
     res.render('pages/user/profile', {
           title: 'HOMD :: profile',
          pgname: '', // for AbountThisPage 
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         config: JSON.stringify(CFG),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user),
          
@@ -247,7 +247,7 @@ router.get('/index', [helpers.isLoggedIn, helpers.isAdmin], function admin(req, 
         res.render('pages/admin/index', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         config: JSON.stringify(CFG),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user),
          
@@ -264,7 +264,7 @@ router.get('/update_account_info', [helpers.isLoggedIn], function update_account
         res.render('pages/user/update_account_info', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         config: JSON.stringify(CFG),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user),
        }); 
@@ -292,7 +292,7 @@ router.post('/update_account_info', [
             res.render('pages/user/update_account_info', {
                 title: 'HOMD :: ADMIN',
                 pgname: '', // for AbountThisPage
-                config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                config: JSON.stringify(CFG),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                 user: JSON.stringify(req.user),
             })
@@ -318,7 +318,7 @@ router.post('/update_account_info', [
                     res.render('pages/user/profile', {
                     title: 'HOMD :: ADMIN',
                     pgname: '', // for AbountThisPage
-                    config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+                    config: JSON.stringify(CFG),
                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                     user: JSON.stringify(new_info),
                 })
@@ -335,7 +335,7 @@ router.get('/view_users_admin', [helpers.isLoggedIn, helpers.isAdmin], function 
         res.render('pages/admin/view_users', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         config: JSON.stringify(CFG),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user),
          users: JSON.stringify(rows)
@@ -350,7 +350,7 @@ router.get('/create_user_admin', [helpers.isLoggedIn, helpers.isAdmin], function
         res.render('pages/admin/create_user', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         config: JSON.stringify(CFG),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user),
        }); 
@@ -391,7 +391,7 @@ router.post('/create_user_admin',
 				res.render('pages/admin/create_user', {
 				 title: 'HOMD :: ADMIN',
 				 pgname: '', // for AbountThisPage
-				 config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+				 config: JSON.stringify(CFG),
 				 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 				 user: JSON.stringify(req.user),
 			   });
@@ -405,7 +405,7 @@ router.post('/create_user_admin',
             res.render('pages/admin/create_user', {
 			 title: 'HOMD :: ADMIN',
 			 pgname: '', // for AbountThisPage
-			 config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+			 config: JSON.stringify(CFG),
 			 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 			 user: JSON.stringify(req.user),
 		    });
@@ -420,7 +420,7 @@ router.get('/reset_pw_admin', [helpers.isLoggedIn, helpers.isAdmin], function re
         res.render('pages/admin/reset_pw_admin', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         config: JSON.stringify(CFG),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user),
          users: JSON.stringify(rows),
@@ -445,7 +445,7 @@ router.post('/reset_pw_admin',
 				res.render('pages/admin/index', {
 				 title: 'HOMD :: ADMIN',
 				 pgname: '', // for AbountThisPage
-				 config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+				 config: JSON.stringify(CFG),
 				 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 				 user: JSON.stringify(req.user),
 			    });
@@ -458,7 +458,7 @@ router.post('/reset_pw_admin',
            res.render('pages/admin/reset_pw_admin', {
 			 title: 'HOMD :: ADMIN',
 			 pgname: '', // for AbountThisPage
-			 config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+			 config: JSON.stringify(CFG),
 			 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 			 user: JSON.stringify(req.user),
 			 users: JSON.stringify(rows),
@@ -477,7 +477,7 @@ router.get('/email_check', [helpers.isLoggedIn, helpers.isAdmin], (req, res) => 
     res.render('pages/admin/admin', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         config: JSON.stringify(CFG),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
     });  
@@ -493,7 +493,7 @@ router.get('/pangenome_list', [helpers.isLoggedIn, helpers.isAdmin], (req, res) 
     res.render('pages/admin/pangenome_list', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         config: JSON.stringify(CFG),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
          pglist: JSON.stringify(d.dirs),
@@ -542,7 +542,7 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     res.render('pages/admin/pangenome_list', {
          title: 'HOMD :: ADMIN',
          pgname: '', // for AbountThisPage
-         config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+         config: JSON.stringify(CFG),
          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
          user: JSON.stringify(req.user || {}),
          pglist: JSON.stringify(d.dirs),
@@ -552,7 +552,7 @@ router.post('/anvio_pangenome', [helpers.isLoggedIn, helpers.isAdmin], (req, res
     // res.render('pages/admin/pangenome_list', {
 //          title: 'HOMD :: ADMIN',
 //          pgname: '', // for AbountThisPage
-//          config: JSON.stringify({ hostname: CFG.HOSTNAME, env: CFG.ENV }),
+//          config: JSON.stringify(CFG),
 //          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 //          user: JSON.stringify(req.user || {}),
 //          pglist: JSON.stringify(d.dirs),
