@@ -767,7 +767,7 @@ router.get('/blast_per_genome', function blast_get(req, res) {
     pgname: 'genome/BLAST', // for AboutThisPage
     config: JSON.stringify(CFG),
     gid: gid,  // default
-    gc:gc,
+    gc: gc,
     page_type: 'BLAST',
     genomes: JSON.stringify(genomeList),
     tgenomes: genomeList.length,
@@ -775,21 +775,34 @@ router.get('/blast_per_genome', function blast_get(req, res) {
     user: JSON.stringify(req.user || {}),
   })
 })
-router.get('/blast_single_test', function(req, res){
-   res.render('pages/genome/test_blast_single', {
+router.get('/blast_sserver', function(req, res){
+   console.log(req.query)
+   let db_type = req.query.type
+   let page_title = 'BLAST: '+ db_type 
+   
+   
+   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
+    gid: '',
+    annotation: '',
+    organism: '',
+    db_type: db_type,
+    ptitle: page_title,
   })
 })
+
 router.post('/blast_ss_single', function(req, res){
   console.log('IN POST blast_ss_single')
   console.log(req.body)
-  
+  console.log(CFG.BLAST_URL_BASE)
   let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].ccolct 
   //console.log(C.genome_lookup[req.body.gid])
+  let page_title = 'Genome BLAST: '+organism +' ('+req.body.gid+')'
+  
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
@@ -798,7 +811,8 @@ router.post('/blast_ss_single', function(req, res){
     user: JSON.stringify(req.user || {}),
     gid: req.body.gid,
     annotation: req.body.annotation,
-    organism: organism
+    organism: organism,
+    ptitle: page_title,
   })
    
 })

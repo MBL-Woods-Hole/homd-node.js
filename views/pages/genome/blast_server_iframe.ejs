@@ -19,7 +19,7 @@ iframe{
     
     <div class='page-content' >
               
-       <div class='title'style='background:lightgrey;color:black;'>Genome BLAST: <%= organism %> (<%= gid %>)</div>
+       <div class='title'style='background:lightgrey;color:black;'><%= ptitle %></div>
        <div class='subtitle' style='padding:10px;'>BLAST Against HOMD Genomes
        
        <span style='float:right;'>
@@ -33,11 +33,20 @@ iframe{
        </td></tr></table>
        </span>
        </div>
+       XXX<%= cfg.BLAST_URL_BASE %>
        <% if(annotation == "ncbi"){ %>
-         <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>genome_blast_all_ncbi/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+         <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast_all_ncbi?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+       <% }else if(annotation == "prokka"){ %>
+         <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast_all_prokka?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
        <% }else{ %>
-         <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast_all_prokka/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+          <% if(db_type == 'refseq'){ %>
+            <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/refseq_blast %>" title="HOMD BLAST Server"></iframe>
+          <% }else{ %>
+            <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast %>" title="HOMD BLAST Server"></iframe>
+          <% } %>
        <% } %>
+       
+       
     </div> <!-- end: page-content -->
     
     <div id='footer'>
