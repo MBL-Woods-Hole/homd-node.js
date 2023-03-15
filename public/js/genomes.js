@@ -9,15 +9,17 @@
 // }
 function open_blast_in_new_window(gid){
   console.log(gid)
-  
+  let url = ''
   if(gid=='0'){
-     document.getElementById("genome_iframe").src = "";	
-     document.getElementById("genome_iframe").width = '100%'
-     document.getElementById("genome_iframe").height = '0'
      return
   }
-  
-  let url = 'https://homd.org/genome_blast?gid='+gid
+  form = document.getElementById("blast_single_form")
+  radios = document.getElementsByName("annotation")
+  if(radios[0].checked == true){
+    url = homd_path+'/genome_blast_all_prokka?gid='+gid
+  }else{
+    url = homd_path+'/genome_blast_all_ncbi?gid='+gid
+  }
   window.open(url)
 }
 function open_jbrowse_in_new_window(gidplusgc){
