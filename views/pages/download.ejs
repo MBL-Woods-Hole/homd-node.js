@@ -169,6 +169,12 @@ width:180px;
     <tr><td>Sequence Meta Information <a href='/genome/genome_table'>[page]</a></td><td><a href='/genome/dld_table/browser/all/0/0/0/0'>Tab Delimited Text<br>(View in browser)</a></td><td><a href='/genome/dld_table/text/all/0/0/0/0'>Tab Delimited Text<br>(Save to file)</a></td><td><a href='/genome/dld_table/excel/all/0/0/0/0'>MS Excel Format<br>(Save to file)</a></td></tr>
     
   </table>
+  <table class='download-table'>
+   <tr><td>NCBI Genome Annotations</td><td><a href='<%= cfg.FTP_URL %>/genomes/NCBI/V10.1'>[FTP Site for download]</a></td></tr>
+   <tr><td>PROKKA Genome Annotations</td><td><a href='<%= cfg.FTP_URL %>/genomes/PROKKA/V10.1'>[FTP Site for download]</a></td></tr>
+   <tr><td>Genomic Trees: <br>Conserved Protein, Ribosomal Protein and 16S rRNA</td><td><a href='<%= cfg.FTP_TREE_URL %>'>[FTP Site for download]</a></td></tr>
+   
+  </table>
   </center>
 </div>
 
@@ -185,19 +191,19 @@ width:180px;
         <td><a href='<%= cfg.FTP_URL %>/phylogenetic_trees/refseq/current/seqid_info.txt'>Sequence ID table</a></td>
     </tr>
     <tr><td>Phylogenetic tree of 16S rRNA gene sequences identified in HOMD genomes</td>
-        <td><a href="<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.svg">svg</a></td>
-        <td><a href='<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.tre'>newick</a></td>
-        <td><a href='<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/seqid_info_16S.txt'>Sequence ID table</a></td>
+        <td><a href="<%= cfg.FTP_TREE_URL %>/eHOMD_16S_rRNA_Tree.svg">svg</a></td>
+        <td><a href='<%= cfg.FTP_TREE_URL %>/eHOMD_16S_rRNA_Tree.tre'>newick</a></td>
+        <td><a href='<%= cfg.FTP_TREE_URL %>/seqid_info_16S.txt'>Sequence ID table</a></td>
     </tr>
     <tr><td>Phylogenomic tree based on conserved proteins identified from HOMD genomes</td>
-        <td><a href="<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">svg</a></td>
-        <td><a href='<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.tre'>newick</a></td>
-        <td><a href='<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table</a></td>
+        <td><a href="<%= cfg.FTP_TREE_URL %>/eHOMD_Genomic_PhyloPhlAn_Tree.svg">svg</a></td>
+        <td><a href='<%= cfg.FTP_TREE_URL %>/eHOMD_Genomic_PhyloPhlAn_Tree.tre'>newick</a></td>
+        <td><a href='<%= cfg.FTP_TREE_URL %>/SEQID_info.txt'>Sequence ID table</a></td>
     </tr>
     <tr><td>Phylogenetic tree of ribosomal proteins identified from HOMD genomes</td>
-        <td><a href="<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg">svg</a></td>
-        <td><a href='<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.tre'>newick</a></td>
-        <td><a href='<%= cfg.FTP_URL %>/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table</a></td>
+        <td><a href="<%= cfg.FTP_TREE_URL %>/eHOMD_Ribosomal_Protein_Tree.svg">svg</a></td>
+        <td><a href='<%= cfg.FTP_TREE_URL %>/eHOMD_Ribosomal_Protein_Tree.tre'>newick</a></td>
+        <td><a href='<%= cfg.FTP_TREE_URL %>/SEQID_info.txt'>Sequence ID table</a></td>
     </tr>
   
   </table>

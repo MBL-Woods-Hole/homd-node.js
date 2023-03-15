@@ -20,30 +20,62 @@ iframe{
     <div class='page-content' >
               
        <div class='title'style='background:lightgrey;color:black;'><%= ptitle %></div>
-       <div class='subtitle' style='padding:10px;'>BLAST Against HOMD Genomes
-       
-       <span style='float:right;'>
-       <table><tr><td>
-       <a class='button' href="/genome/blast_per_genome"     >New BLAST Job</a>
-       </td><td>
-       <form name='' method='POST' action='blast_ss_single'>
-         <input type='hidden' name='gid' value='<%= gid %>'>
-         <input type='submit' class='button' value='Edit BLAST Job'>
-       </form>
-       </td></tr></table>
-       </span>
-       </div>
-       XXX<%= cfg.BLAST_URL_BASE %>
        <% if(annotation == "ncbi"){ %>
-         <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast_all_ncbi?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+         <!-- <div class='subtitle' style='padding:10px;'>BLAST Against HOMD NCBI Genome -->
+         &nbsp;&nbsp;&nbsp;<small><a href='/genome/blast_sserver?type=genome'>BLAST against All HOMD genomes instead.</a></small>
        <% }else if(annotation == "prokka"){ %>
-         <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast_all_prokka?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+         <!-- <div class='subtitle' style='padding:10px;'>BLAST Against HOMD PROKKA Genome -->
+         &nbsp;&nbsp;&nbsp;<small><a href='/genome/blast_sserver?type=genome'>BLAST against All HOMD genomes instead.</a></small>
        <% }else{ %>
-          <% if(db_type == 'refseq'){ %>
+          <% if(db_type == "refseq"){ %>
+            <div class='subtitle' style='padding:10px;'>
+          <% }else{ %>
+            <!-- <div class='subtitle' style='padding:10px;'>BLAST Against All HOMD Genomes -->
+            &nbsp;&nbsp;&nbsp;<small><a href='/genome/blast_per_genome'>BLAST against a single genome instead.</a></small>
+          <% } %>
+       <% } %>
+       
+      
+       
+       
+       <!-- </div> -->
+       
+       <% if(annotation == "ncbi"){ %>
+         <span style='float:right;'>
+           <table><tr><td>
+           <a class='button' href="/genome/blast_per_genome"     >New BLAST Job</a>
+           </td><td>
+           <form name='' method='POST' action='blast_ss_single'>
+             <input type='hidden' name='gid' value='<%= gid %>'>
+             <input type='hidden' name='annotation' value='<%= annotation %>'>
+             <input type='submit' class='button' value='Edit BLAST Job'>
+           </form>
+           </td></tr></table>
+         </span>
+         <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_all_ncbi?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+       
+       <% }else if(annotation == "prokka"){ %>
+         <span style='float:right;'>
+           <table><tr><td>
+           <a class='button' href="/genome/blast_per_genome"     >New BLAST Job</a>
+           </td><td>
+           <form name='' method='POST' action='blast_ss_single'>
+             <input type='hidden' name='gid' value='<%= gid %>'>
+             <input type='hidden' name='annotation' value='<%= annotation %>'>
+             <input type='submit' class='button' value='Edit BLAST Job'>
+           </form>
+           </td></tr></table>
+         </span>
+         <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_all_prokka?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+       
+       <% }else{ %>
+       
+          <% if(db_type == "refseq"){ %>
             <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/refseq_blast %>" title="HOMD BLAST Server"></iframe>
           <% }else{ %>
             <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast %>" title="HOMD BLAST Server"></iframe>
           <% } %>
+          
        <% } %>
        
        

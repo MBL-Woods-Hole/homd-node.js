@@ -631,15 +631,28 @@ router.get('/explorer', function explorer (req, res) {
       
     })
   }
+  const glist = Object.values(C.genome_lookup)
+  
+  glist.sort(function sortGList (a, b) {
+      return helpers.compareStrings_alpha(a.genus, b.genus)
+    })
+  // filter out empties then map to create list of sorted strings
+  const allAnnosObj = glist.filter(item => item.genus !== '')
+    .map((el) => {
+      
+      //return { gid: el.gid, org: el.organism }
+      return { gid: el.gid, org: el.genus+' '+el.species+' '+el.ccolct }
+    })
+  
   
   // req, res, gid, otid,  organism, dbChoices,  allAnnosObj, anno
   // const tmpObj = Object.keys(C.annotation_lookup) // get prokka organisms [seqid,organism]
-  const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
-    return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
-  })
-  allAnnosObj.sort(function sortAnnos (a, b) {
-      return helpers.compareStrings_alpha(a.org, b.org)
-  })
+//   const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
+//     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
+//   })
+//   allAnnosObj.sort(function sortAnnos (a, b) {
+//       return helpers.compareStrings_alpha(a.org, b.org)
+//   })
   
   if (!gid || gid.toString() === '0') {
    
@@ -741,7 +754,7 @@ router.get('/blast_server', function genome_blast_server(req, res) {
         blast_type: 'genome'
       })
 })
-router.get('/blast_per_genome', function blast_get(req, res) {
+router.get('/blast_per_genome', function blast_per_genome(req, res) {
    //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
   helpers.accesslog(req, res)
   console.log('blast_per_genome')
@@ -775,11 +788,15 @@ router.get('/blast_per_genome', function blast_get(req, res) {
     user: JSON.stringify(req.user || {}),
   })
 })
-router.get('/blast_sserver', function(req, res){
+router.get('/blast_sserver', function blast_sserver(req, res){
    console.log(req.query)
    let db_type = req.query.type
-   let page_title = 'BLAST: '+ db_type 
-   
+   let page_title = ''
+   if(db_type == 'refseq'){
+     page_title = 'BLAST: RefSeq Databases'
+   }else{
+     page_title = 'Genomic BLAST: All-Genomes Databases'
+   }
    
    res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
@@ -795,14 +812,17 @@ router.get('/blast_sserver', function(req, res){
   })
 })
 
-router.post('/blast_ss_single', function(req, res){
+router.post('/blast_ss_single', function blast_ss_single(req, res){
   console.log('IN POST blast_ss_single')
   console.log(req.body)
-  console.log(CFG.BLAST_URL_BASE)
+  //console.log(CFG.BLAST_URL_BASE)
   let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].ccolct 
   //console.log(C.genome_lookup[req.body.gid])
-  let page_title = 'Genome BLAST: '+organism +' ('+req.body.gid+')'
   
+  let page_title = 'Genomic BLAST: '+organism +' ('+req.body.gid+')'
+  if(req.body.annotation){
+     page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
+  }
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
@@ -813,6 +833,7 @@ router.post('/blast_ss_single', function(req, res){
     annotation: req.body.annotation,
     organism: organism,
     ptitle: page_title,
+    db_type: ''
   })
    
 })
@@ -900,6 +921,10 @@ router.get('/blast_server_one', function blast_test(req, res) {
   
   
   
+})
+router.get('/genome_blast', function blast_get(req, res) {
+  console.log('in genome_blast')
+  console.log(req.query)
 })
 router.get('/blast', function blast_get(req, res) {
    console.log('in genome blast-GET')
