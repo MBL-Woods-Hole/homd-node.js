@@ -265,19 +265,19 @@ def run_refseq(args):
         #newobj['site']     =  obj['site']
         #newobj['flag']     =  obj['flag']
         refseq_lookup[otid].append(newobj)
-    tcount_wdropped=0
-    tcount_nodropped=0
-    for otid in refseq_lookup:
-        print('refseq',otid,len(refseq_lookup[otid]))
-        tcount_wdropped += len(refseq_lookup[otid])
-        if otid in nonoral_otids:
-           print('nonOralRef',otid)
-        if otid in dropped_otids:
-           print('dropped',otid)
-        else:
-           tcount_nodropped += len(refseq_lookup[otid])
-    print('Twdropped',tcount_wdropped) 
-    print('TNOdropped',tcount_nodropped) 
+    # tcount_wdropped=0
+#     tcount_nodropped=0
+#     for otid in refseq_lookup:
+#         print('refseq',otid,len(refseq_lookup[otid]))
+#         tcount_wdropped += len(refseq_lookup[otid])
+#         if otid in nonoral_otids:
+#            print('nonOralRef',otid)
+#         if otid in dropped_otids:
+#            print('dropped',otid)
+#         else:
+#            tcount_nodropped += len(refseq_lookup[otid])
+#     print('Twdropped',tcount_wdropped) 
+#     print('TNOdropped',tcount_nodropped) 
     file=os.path.join(args.outdir,args.outfileprefix+'RefSeqLookup.json')
     print_dict(file, refseq_lookup)
 
@@ -494,18 +494,18 @@ def run_counts(otid, taxlist, gcnt, rfcnt):
             #long_tax_name = long_tax_name[:-1]
         #print('long_tax_name ',long_tax_name)
         if long_tax_name in counts:
-            counts[long_tax_name]['refcnt']  += rfcnt
-            counts[long_tax_name]['gcnt']    += gcnt
-            if otid not in nonoral_otids:  
+            
+            
+            
+            if otid not in nonoral_otids and otid not in dropped_otids:  
                counts[long_tax_name]["tax_cnt"] += 1
+               counts[long_tax_name]['refcnt']  += rfcnt
+               counts[long_tax_name]['gcnt']    += gcnt
             
-            
-            if otid not in dropped_otids:
-               pass
                
         else:
             # this will always be species
-            if otid not in nonoral_otids:
+            if otid not in nonoral_otids and otid not in dropped_otids: 
                 counts[long_tax_name] = { "tax_cnt": 1, "gcnt": gcnt, "refcnt": rfcnt}
             else:
                 counts[long_tax_name] = { "tax_cnt": 0, "gcnt": gcnt, "refcnt": rfcnt}
