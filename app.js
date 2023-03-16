@@ -20,9 +20,9 @@ const node_log = require('simple-node-logger').createSimpleFileLogger(logFilePat
 
 const router = express.Router();
 const session = require('express-session');
-const passport = require('passport');
+//const passport = require('passport');
 //const passportConfig = require('./config/passportConfig');
-const passportConfig = require('./config/passport'); // pass passport for configuration
+//const passportConfig = require('./config/passport'); // pass passport for configuration
 
 const bodyParser = require('body-parser');
 const app = express();
@@ -50,15 +50,13 @@ const async = require('async')
 
 
 const home     = require('./routes/index');
-const admin    = require('./routes/routes_admin');
-//const help      = require('./routes/routes_help');
+
 const taxa     = require('./routes/routes_taxa');
 const refseq   = require('./routes/routes_refseq');
 const genome   = require('./routes/routes_genome');
 const phage    = require('./routes/routes_phage');
 const blast    = require('./routes/routes_blast');
 const help     = require('./routes/routes_help');
-//const user    = require('./routes/routes_user')
 
 
 // PRODUCTION: log every restart
@@ -71,9 +69,9 @@ const help     = require('./routes/routes_help');
 app.set('appName', 'HOMD');
 app.set('trust proxy', true);
 
-passportConfig(passport, TDBConn);
-app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
+//passportConfig(passport, TDBConn);
+//app.use(passport.initialize());
+//app.use(passport.session()); // persistent login sessions
 
 app.use(flash());
 
@@ -120,8 +118,6 @@ app.use('/genome', genome);
 app.use('/phage', phage);
 app.use('/blast', blast);
 app.use('/help', help);
-//app.use('/user', user);
-app.use('/admin', admin);
 
 
 // error handler middleware:

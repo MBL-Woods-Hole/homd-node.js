@@ -356,23 +356,8 @@
 		  <li><a href='/help/index'>Search Help</a></li>
 		  </ul>
 		</li>
-		<!-- Account -->
 		
-		<li><img src='/images/gear.png' ></i>
-		  <ul>
-		   <%   if(user && user.username){ %>
-			   <li><a href='/admin/profile' >User Profile</a></li>
-			   <li><a href='/admin/logout' >Logout</a></li>
-			   <% if(user.security_level === 1){ %>
-				  <li><a href='/admin/index' >Admin</a></li>
-			   <% } %>
-		   <%   }else{ %>
-			   <li><a href='/admin/login' >Login</a></li>
-			   <li><a href='/admin/signup' >Register</a></li>
-			   <li><a href='/admin/login'><font color='black'>Not Logged In</font></a></li>
-		   <%   } %>
-		  </ul>
-		</li>
+		
 
 		<li><input type="text" placeholder="Search Site.."  id='search_text' value='' maxlength='30' size='20' /></li>
 		<li><input type="image" src='/images/search2.png'  id="search_button" height='20' onclick='search()' /></li>
