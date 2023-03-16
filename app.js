@@ -239,8 +239,8 @@ Promise.all(promises)
     C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
     //helpers.print_size()
     //var  = C.dropped_obj
-    console.log('Dropped:',C.dropped_taxids)
-    //console.log('NonOralRef:',C.nonoralref_taxids)
+    console.log('Dropped:',C.dropped_taxids,C.dropped_taxids.length)
+    console.log('NonOralRef:',C.nonoralref_taxids,C.nonoralref_taxids.length)
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     
     //examples

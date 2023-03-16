@@ -352,7 +352,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
       
       const result = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
         // get lineage of taxitem
-        //console.log(taxitem)
+        
         let lineage = [taxitem.taxon]
         let new_search_id = taxitem.parent_id
         let new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
@@ -386,6 +386,10 @@ router.post('/tax_level', function tax_level_post(req, res) {
             let lineage_str = lineage.join(';')
                     //console.log(lineage_str)
             if(taxdata.hasOwnProperty(lineage_str)){
+                // console.log(lineage_str)
+//                 console.log(taxdata[lineage_str].tax_cnt)
+//                 console.log(taxdata[lineage_str].gcnt)
+//                 console.log(taxdata[lineage_str].refcnt)
                 return_obj.tax_count = taxdata[lineage_str].tax_cnt
                 return_obj.gne_count = taxdata[lineage_str].gcnt
                 return_obj.rrna_count = taxdata[lineage_str].refcnt

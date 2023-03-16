@@ -508,7 +508,7 @@ def run_counts(otid, taxlist, gcnt, rfcnt):
             if otid not in nonoral_otids and otid not in dropped_otids: 
                 counts[long_tax_name] = { "tax_cnt": 1, "gcnt": gcnt, "refcnt": rfcnt}
             else:
-                counts[long_tax_name] = { "tax_cnt": 0, "gcnt": gcnt, "refcnt": rfcnt}
+                counts[long_tax_name] = { "tax_cnt": 0, "gcnt": 0, "refcnt": 0}
     return counts
 
 def get_mbps(x):
@@ -533,7 +533,7 @@ def print_master_lookup(args):
             #print('tlength_lookup[otid]',tlength_lookup[otid])
             min_glength = min(tlength_lookup[otid])
             max_glength = max(tlength_lookup[otid])
-            print('minmax',min_glength,max_glength)
+            #print('minmax',min_glength,max_glength)
             
             master_lookup[otid]['tlength_str'] = get_mbps(min_glength) +' - '+ get_mbps(max_glength)+ ' Mbps'
 
