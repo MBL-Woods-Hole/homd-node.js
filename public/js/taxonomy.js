@@ -172,8 +172,9 @@ function change_level(rank) {
       //html += '<th>lineage (for debuging)</th>'
       
       html += '<th scope="col">Genome Count</th><th scope="col">16S rRNA Refseq Count</th></tr></thead><tbody>'
-      
-      
+      taxon_count_total = 0
+      genome_count_total = 0
+      refseq_count_total = 0
       for(n in static_data){
         html += '<tr class="table-warning">'
         if(rank != 'domain'){
@@ -195,15 +196,25 @@ function change_level(rank) {
         }else{
           html += "<td nowrap><a href='life?rank="+rank+"&name="+static_data[n].item_taxon+"'>"+static_data[n].item_taxon+"</a></td>"
         }
+        taxon_count_total += parseInt(static_data[n].tax_count)
+        genome_count_total += parseInt(static_data[n].gne_count)
+        refseq_count_total += parseInt(static_data[n].rrna_count)
         html += "<td style='text-align:center'>"+static_data[n].tax_count+'</td>'
-        
-        //html +="<td>"+static_data[n].lineage+"</td>"
+
         
         html += "<td style='text-align:center'>"+static_data[n].gne_count+'</td>'
         html += "<td style='text-align:center'>"+static_data[n].rrna_count+'</td>'
         
         html += '</tr>'
       }
+      if(rank === 'domain'){
+        html += "<tr><td>Totals</td><td style='text-align:center'><b>"+taxon_count_total.toString()+"</b></td><td style='text-align:center'><b>"+genome_count_total.toString()+"</b></td><td style='text-align:center'><b>"+refseq_count_total.toString()+"</b></td></tr>"
+      }else if(rank === 'species' || rank === 'subspecies'){
+        html += "<tr><td>Totals</td><td></td><td></td><td style='text-align:center'><b>"+taxon_count_total.toString()+"</b></td><td style='text-align:center'><b>"+genome_count_total.toString()+"</b></td><td style='text-align:center'><b>"+refseq_count_total.toString()+'</b></td></tr>'
+      }else{
+         html += "<tr><td>Totals</td><td></td><td style='text-align:center'><b>"+taxon_count_total.toString()+"</b></td><td style='text-align:center'><b>"+genome_count_total.toString()+"</b></td><td style='text-align:center'><b>"+refseq_count_total.toString()+'</b></td></tr>'
+      }
+      
       html += '</tbody></table>'
       document.getElementById('taxlevel_div').innerHTML = html
       
