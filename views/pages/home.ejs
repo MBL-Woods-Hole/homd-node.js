@@ -1,5 +1,11 @@
 <% var cfg = JSON.parse(config) %> 
 <style>
+#update{
+  color:purple;
+}
+#update a{
+  color:red;
+}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/home.css" >
 <% var version_info = JSON.parse(ver_info) %> 
@@ -17,6 +23,7 @@
 
             </td></tr>
             <tr><td align="center">
+                <span id='update'><i>e</i>HOMD has been updated to version 3.1 (<a href='/help/help-page?pagecode=announcement'>Update Detail</a>)</span>
                 <table class="introduction" width="1100px" cellpadding="20px">
                     <tr><td class="round bggray">
                     <tspan style="font-size:1.5em;font-weight:normal;color:rgb(150, 35, 44);font-style:italic">
