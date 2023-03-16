@@ -29,6 +29,7 @@ dropped_otids = ['9',   '15',  '16',  '55',  '65',
   '449', '452', '453', '462', '474',
   '486', '487', '502', '648', '729',
   '826']
+nonoral_otids = ['982','983','984','986','987','988','989','990','991','994','995','996','997','998','999']
 query_taxa ="""
 SELECT otid, taxonomy_id, genus, species,
 `warning`,
@@ -448,7 +449,7 @@ JOIN subspecies  using(subspecies_id)
         #tax_list = [obj['domain'],obj['phylum'],obj['klass'],obj['order'],obj['family'],obj['genus'],obj['species']]
         #tax_list = obj_lookup.values()
         if obj['domain'] and otid not in dropped_otids:
-            run_counts(tax_list, num_genomes, num_refseqs)
+            run_counts(otid, tax_list, num_genomes, num_refseqs)
 
     file1 = os.path.join(args.outdir,args.outfileprefix+'Lineagelookup.json')
     file2 = os.path.join(args.outdir,args.outfileprefix+'Hierarchy.json')
@@ -460,7 +461,7 @@ JOIN subspecies  using(subspecies_id)
     print_dict(file, counts)
 
 
-def run_counts(taxlist, gcnt, rfcnt):
+def run_counts(otid, taxlist, gcnt, rfcnt):
     global counts
     #print(taxlist)
 
@@ -480,13 +481,16 @@ def run_counts(taxlist, gcnt, rfcnt):
             #long_tax_name = long_tax_name[:-1]
         #print('long_tax_name ',long_tax_name)
         if long_tax_name in counts:
-            counts[long_tax_name]["tax_cnt"] += 1
+            if otid not in nonoral_otids:
+               counts[long_tax_name]["tax_cnt"] += 1
             counts[long_tax_name]['gcnt']    += gcnt
             counts[long_tax_name]['refcnt']  += rfcnt
         else:
             # this will always be species
-            counts[long_tax_name] = { "tax_cnt": 1, "gcnt": gcnt, "refcnt": rfcnt}
-
+            if otid not in nonoral_otids:
+                counts[long_tax_name] = { "tax_cnt": 1, "gcnt": gcnt, "refcnt": rfcnt}
+            else:
+                counts[long_tax_name] = { "tax_cnt": 0, "gcnt": gcnt, "refcnt": rfcnt}
     return counts
 
 def get_mbps(x):
@@ -548,7 +552,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
                                                     help=" ")
-    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='XhomdData-Taxon',
+    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-Taxon',
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")
