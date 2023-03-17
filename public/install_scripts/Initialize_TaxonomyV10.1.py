@@ -519,11 +519,12 @@ def run_counts(otid, taxlist, gcnt, rfcnt):
 #                 counts[long_tax_name]['gcnt_all']    += gcnt
 #         else:
 #             # this will always be species
-#             # cant be in both!
-#             if otid not in nonoral_otids or otid not in dropped_otids:
-#                 if otid not in nonoral_otids:
+#             # can NOT be in both!
+#             if otid in nonoral_otids or otid in dropped_otids:
+#                 
+#                 if otid in nonoral_otids:
 #                     counts[long_tax_name] = {"taxcnt_nono": 1, "gcnt_nono": gcnt, "refcnt_nono": rfcnt}
-#                 if otid not in dropped_otids:
+#                 if otid in dropped_otids:
 #                     counts[long_tax_name] = {  "taxcnt_nodr": 1, "gcnt_nodr": gcnt, "refcnt_nodr": rfcnt}
 #                     
 #                     
@@ -539,7 +540,8 @@ def run_counts(otid, taxlist, gcnt, rfcnt):
 #                      "taxcnt_all": 0,  "gcnt_all": 0,  "refcnt_all": 0
 #                 }
 
-# longtaxname": {"tax_cnt": 1, "gcnt": 5, "refcnt": 3   ....     
+# longtaxname": {"tax_cnt": 1, "gcnt": 5, "refcnt": 3   .... 
+#NO dropped or nor:  774	8607	999    
         if long_tax_name in counts:
             if otid not in nonoral_otids and otid not in dropped_otids:  
                counts[long_tax_name]["tax_cnt"] += 1
@@ -549,8 +551,8 @@ def run_counts(otid, taxlist, gcnt, rfcnt):
             # this will always be species
             if otid not in nonoral_otids and otid not in dropped_otids: 
                 counts[long_tax_name] = { "tax_cnt": 1, "gcnt": gcnt, "refcnt": rfcnt}
-            else:
-                counts[long_tax_name] = { "tax_cnt": 0, "gcnt": 0, "refcnt": 0}
+#            else:
+#                counts[long_tax_name] = { "tax_cnt": 0, "gcnt": 0, "refcnt": 0}
     
     
     return counts

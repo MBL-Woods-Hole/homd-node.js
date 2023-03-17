@@ -1,4 +1,5 @@
 
+/* 
 @media only screen and (max-width: 600px) {
   body {
     background-color: gold;
@@ -22,6 +23,7 @@
      left:0;
   }
 }
+ */
 
 :root {
 		--navy: #1e90ff;
