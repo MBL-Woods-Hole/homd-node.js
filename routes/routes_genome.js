@@ -1055,7 +1055,9 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   const otid = req.query.otid
   const fullname = helpers.make_otid_display_name(otid)
   helpers.print(fullname)
-  fs.readFile('public/trees/conserved_tree.svg', 'utf8', function readSVGFile1 (err, data) {
+  let filepath = CFG.FTP_TREE_URL +'/eHOMD_Genomic_PhyloPhlAn_Tree.svg'
+  //fs.readFile('public/trees/conserved_tree.svg', 'utf8', function readSVGFile1 (err, data) {
+  fs.readFile(filepath, 'utf8', function readSVGFile1 (err, data) {
     if (err) {
       console.log(err)
     } else {
@@ -1076,7 +1078,9 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   console.log('in ribosomal_protein_tree')
 
   const otid = req.query.otid
-  fs.readFile('public/trees/ribosomal_tree.svg', 'utf8', function readSVGFile2 (err, data) {
+  let filepath = CFG.FTP_TREE_URL +'/eHOMD_Ribosomal_Protein_Tree.svg'
+  //fs.readFile('public/trees/ribosomal_tree.svg', 'utf8', function readSVGFile2 (err, data) {
+  fs.readFile(filepath, 'utf8', function readSVGFile2 (err, data) {
     if (err) {
       console.log(err)
     } else {
@@ -1099,7 +1103,9 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   // const myurl = new url.URL(req.url)
   const otid = req.query.otid
   helpers.print(['otid', otid])
-  fs.readFile('public/trees/16S_rRNA_tree.svg', 'utf8', function readSVGFile3 (err, data) {
+  let filepath = CFG.FTP_TREE_URL +'/eHOMD_16S_rRNA_Tree.svg'
+  //fs.readFile('public/trees/16S_rRNA_tree.svg', 'utf8', function readSVGFile3 (err, data) {
+  fs.readFile(filepath, 'utf8', function readSVGFile3 (err, data) {
     if (err) {
       console.log(err)
     }

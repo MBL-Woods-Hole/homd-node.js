@@ -337,6 +337,8 @@ router.post('/tax_level', function tax_level_post(req, res) {
   helpers.print(req.body)
   
   let rank = req.body.rank
+  //let count_type = req.body.count_type
+  let count_type = 'default'
   
   const tax_resp = []
   fs.readFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn), 'utf8', function readTaxCountsFile(err, data) {
@@ -385,10 +387,16 @@ router.post('/tax_level', function tax_level_post(req, res) {
 //                 console.log(taxdata[lineage_str].taxcnt)
 //                 console.log(taxdata[lineage_str].gcnt)
 //                 console.log(taxdata[lineage_str].refcnt)
-                return_obj.tax_count = taxdata[lineage_str].taxcnt
-                return_obj.gne_count = taxdata[lineage_str].gcnt
-                return_obj.rrna_count = taxdata[lineage_str].refcnt
-                return_obj.lineage = lineage_str 
+                if(count_type == 'both'){
+                   return_obj.tax_count = parseInt(taxdata[lineage_str].taxcnt) + parseInt(taxdata[lineage_str].taxcnt_wnonoral) + parseInt(taxdata[lineage_str].taxcnt_wdropped)
+                   return_obj.gne_count = parseInt(taxdata[lineage_str].gcnt) + parseInt(taxdata[lineage_str].gcnt_wnonoral) + parseInt(taxdata[lineage_str].gcnt_wdropped)
+                   return_obj.rrna_count = parseInt(taxdata[lineage_str].refcnt) + parseInt(taxdata[lineage_str].refcnt_wnonoral) + parseInt(taxdata[lineage_str].refcnt_wdropped)
+                }else{
+                   return_obj.tax_count = taxdata[lineage_str].taxcnt
+                   return_obj.gne_count = taxdata[lineage_str].gcnt
+                   return_obj.rrna_count = taxdata[lineage_str].refcnt
+                   return_obj.lineage = lineage_str 
+                }
             }else {
                 return_obj.tax_count = 0
                 return_obj.gne_count = 0
@@ -409,7 +417,8 @@ router.post('/tax_level', function tax_level_post(req, res) {
       tax_resp.sort(function sortByTaxa(a, b) {
                 return helpers.compareStrings_alpha(a.item_taxon, b.item_taxon);
         })
-        //console.log(tax_resp)
+      //  console.log(tax_resp)
+        
       res.send(JSON.stringify(tax_resp));
   })
 })

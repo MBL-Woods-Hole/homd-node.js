@@ -135,7 +135,7 @@ function get_sublevels(lvl){
 }
 ///////
 
-function change_level(rank) {
+function change_level(rank, count_type) {
   // Use capitals here for ranks
   var args = {}
   //console.log(rank)
@@ -151,7 +151,7 @@ function change_level(rank) {
     xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = xmlhttp.responseText;
-            //console.log(response)
+            console.log(response)
             static_data = JSON.parse(response)
             
             //console.log(static_data)

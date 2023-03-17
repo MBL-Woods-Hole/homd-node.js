@@ -32,7 +32,7 @@ td a {
 }
 </style>
 <%- include('../../partials/header_html'); %>
-
+<% cnt_type = 'default' %>
 
 <body>
     <div id='wrapper'>
@@ -40,14 +40,14 @@ td a {
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
      <div class='title'>Human Oral Microbiome Taxonomic Level and Counts List</div>
+     
    <!-- 
-  
-     <div id='change_base_counts'>
+  <div id='change_base_counts'>
        <form id='' name='' method='POST' action='tax_level'>
        Default counts exclude Dropped and NonOralRef Taxons
         <br>Include 
-        <input type='checkbox' name='' value='' onChange="this.form.submit()" > Dropped
-        <input type='checkbox' name='' value=''onChange="this.form.submit()" > NonOralRef
+        <input type='checkbox' name='' value='' onChange="change_level('domain','add_dropped')" > Dropped
+        <input type='checkbox' name='' value=''onChange="change_level('domain','add_noref')" > NonOralRef
                 
          <input type='hidden' name='rank' value='domain' >
          
@@ -63,14 +63,14 @@ td a {
          <br>
         <small>[Select a Rank:]</small> 
         <div id='button-group'> 
-        <a class='level-button' type='button' href='#' id='domain' onclick="change_level('domain')">Domain</a> 
-        &gt; <a class='level-button' type='button'  href='#' id='phylum' onclick="change_level('phylum')">Phylum</a> 
-        &gt; <a class='level-button' type='button'  href='#' id='klass' onclick="change_level('klass')">Class</a> 
-        &gt; <a class='level-button' type='button'  href='#' id='order' onclick="change_level('order')">Order</a> 
-        &gt; <a class='level-button' type='button'  href='#' id='family' onclick="change_level('family')">Family</a> 
-        &gt; <a class='level-button' type='button'  href='#' id='genus' onclick="change_level('genus')">Genus</a> 
-        &gt; <a class='level-button' type='button'  href='#' id='species' onclick="change_level('species')">Species</a>
-        &gt; <a class='level-button' type='button'  href='#' id='subspecies' onclick="change_level('subspecies')">Subspecies</a>
+        <a class='level-button' type='button' href='#' id='domain' onclick="change_level('domain','<%= cnt_type %>')">Domain</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='phylum' onclick="change_level('phylum','<%= cnt_type %>')">Phylum</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='klass' onclick="change_level('klass','<%= cnt_type %>')">Class</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='order' onclick="change_level('order','<%= cnt_type %>')">Order</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='family' onclick="change_level('family','<%= cnt_type %>')">Family</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='genus' onclick="change_level('genus','<%= cnt_type %>')">Genus</a> 
+        &gt; <a class='level-button' type='button'  href='#' id='species' onclick="change_level('species','<%= cnt_type %>')">Species</a>
+        &gt; <a class='level-button' type='button'  href='#' id='subspecies' onclick="change_level('subspecies','<%= cnt_type %>')">Subspecies</a>
          </div>
       
       </div>
@@ -96,8 +96,10 @@ td a {
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
+  cnt_type = '<%= cnt_type %>'
+  //alert(cnt_type)
   $(document).ready(function(){                    
-    change_level('domain')
+    change_level('domain',cnt_type)
 });
 
 </script>

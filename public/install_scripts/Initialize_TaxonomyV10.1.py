@@ -468,7 +468,7 @@ JOIN subspecies  using(subspecies_id)
         
         if obj['domain']:
             # send all otids including dropped and nonOralRef
-            run_counts(otid, tax_list, num_genomes, num_refseqs)
+            run_counts2(otid, tax_list, num_genomes, num_refseqs)
 
     file1 = os.path.join(args.outdir,args.outfileprefix+'Lineagelookup.json')
     file2 = os.path.join(args.outdir,args.outfileprefix+'Hierarchy.json')
