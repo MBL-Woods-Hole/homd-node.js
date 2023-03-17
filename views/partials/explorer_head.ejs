@@ -47,7 +47,7 @@
                     </form>
                   <% } %>
                   |
-                  <a class='an-button' href='<%= cfg.JBROWSE_URL %><%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc %>),GC Skew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
+                  <a class='an-button' href='<%= cfg.JBROWSE_URL %>/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc %>),GC Skew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
                   <a class='an-button' href='/genome/genome_description?gid=<%= gid %>'>Genome Desc.</a>
                   <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Desc.</a>
                  </div>

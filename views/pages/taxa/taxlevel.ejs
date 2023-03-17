@@ -27,6 +27,9 @@ td a {
 #button-group{
    padding:10px 0 0 0;
 }
+#change_base_counts{
+   font-size:small;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -37,6 +40,21 @@ td a {
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
      <div class='title'>Human Oral Microbiome Taxonomic Level and Counts List</div>
+   <!-- 
+  
+     <div id='change_base_counts'>
+       <form id='' name='' method='POST' action='tax_level'>
+       Default counts exclude Dropped and NonOralRef Taxons
+        <br>Include 
+        <input type='checkbox' name='' value='' onChange="this.form.submit()" > Dropped
+        <input type='checkbox' name='' value=''onChange="this.form.submit()" > NonOralRef
+                
+         <input type='hidden' name='rank' value='domain' >
+         
+       </form>       
+     </div>
+ -->
+     
      <a id='download_browser_text_excel'  href='/download#taxon' >Download Options</a>   
      
       <center>
@@ -79,7 +97,6 @@ td a {
 <script>
   mainmenu()
   $(document).ready(function(){                    
-   
     change_level('domain')
 });
 

@@ -320,11 +320,6 @@ router.get('/tax_hierarchy', (req, res) => {
 })
 router.get('/tax_level', function tax_level_get(req, res) {
   
-  //var oral;
-    
-  //req.session.tax_obj = C.homd_taxonomy
-    //console.log(req.session.counts_file)
-  
   res.render('pages/taxa/taxlevel', {
     title: 'HOMD :: Taxon Level', 
     pgname: 'taxon/level', // for AbountThisPage
@@ -338,7 +333,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
 //
 //
 router.post('/tax_level', function tax_level_post(req, res) {
-  
+  console.log('in taxlevel POST')
   helpers.print(req.body)
   
   let rank = req.body.rank
@@ -387,10 +382,10 @@ router.post('/tax_level', function tax_level_post(req, res) {
                     //console.log(lineage_str)
             if(taxdata.hasOwnProperty(lineage_str)){
                 // console.log(lineage_str)
-//                 console.log(taxdata[lineage_str].tax_cnt)
+//                 console.log(taxdata[lineage_str].taxcnt)
 //                 console.log(taxdata[lineage_str].gcnt)
 //                 console.log(taxdata[lineage_str].refcnt)
-                return_obj.tax_count = taxdata[lineage_str].tax_cnt
+                return_obj.tax_count = taxdata[lineage_str].taxcnt
                 return_obj.gne_count = taxdata[lineage_str].gcnt
                 return_obj.rrna_count = taxdata[lineage_str].refcnt
                 return_obj.lineage = lineage_str 
@@ -700,11 +695,11 @@ router.get('/life', function life(req, res) {
      html += "<tr><td class='life-taxa-name'>&nbsp;Domains</td><td class='life-taxa'>"
      
      title = 'Domain: Archaea'
-     cts = C.taxon_counts_lookup['Archaea'].tax_cnt.toString()
+     cts = C.taxon_counts_lookup['Archaea'].taxcnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>("+cts+")</small>"
      html += " <span class='vist-taxon-page'><a href='ecology?rank=domain&name=Archaea'>Abundance</a></span><br>"
        title = 'Domain: Bacteria'
-       cts = C.taxon_counts_lookup['Bacteria'].tax_cnt.toString()
+       cts = C.taxon_counts_lookup['Bacteria'].taxcnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>("+cts+")</small>"
      html += " <span class='vist-taxon-page'><a href='ecology?rank=domain&name=Bacteria'>Abundance</a></span><br>"
 
@@ -735,13 +730,13 @@ router.get('/life', function life(req, res) {
 //    console.log(lin)
        //console.log('lineage: ',lineage_list[0])
           //var cts = get_counts(lineage_list[0])
-        //var cts = C.taxon_counts_lookup[lineage_list[0]].tax_cnt.toString()
+        //var cts = C.taxon_counts_lookup[lineage_list[0]].taxcnt.toString()
         //console.log('counts: ',cts)
        if(show_ranks[i] != last_rank){  // Last row of many items
           
           node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[lineage_list[1][show_ranks[i]]+'_'+show_ranks[i]]
           lin = make_lineage(node)
-          cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
+          cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString()
         
           title = rank_display+': '+lineage_list[1][show_ranks[i]]
           html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
@@ -801,7 +796,7 @@ router.get('/life', function life(req, res) {
              // list of not genus or species 
              node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+next_rank]
              lin = make_lineage(node)
-             cts = C.taxon_counts_lookup[lin[0]].tax_cnt.toString()
+             cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString()
              html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
              html += " <span class='vist-taxon-page'><a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>Abundance</a></span></span><br>"
             }
@@ -1866,7 +1861,7 @@ function get_options_by_node(node) {
 
 function get_counts(lineage){
     
-    let txt = "[<span class='red-text'>"+C.taxon_counts_lookup[lineage].tax_cnt.toString()+'</span>' 
+    let txt = "[<span class='red-text'>"+C.taxon_counts_lookup[lineage].taxcnt.toString()+'</span>' 
             + ", <span class='green-text'>"+C.taxon_counts_lookup[lineage].gcnt.toString()+'</span>'
             +", <span class='blue-text'>"+C.taxon_counts_lookup[lineage].refcnt.toString()+'</span>]';
         
@@ -1944,7 +1939,7 @@ function create_taxon_table(otids, source, type, head_txt) {
                 
                     lineage = old_lineage + C.taxon_lineage_lookup[otids[n]][rank]
                     //console.log(rank,lineage)
-                    cnts = C.taxon_counts_lookup[lineage].tax_cnt
+                    cnts = C.taxon_counts_lookup[lineage].taxcnt
                     if(rank == 'subspecies' ){
                           txt += C.taxon_lineage_lookup[otids[n]]['subspecies']+'\t'+otid_pretty // no counts
                     }else if(rank == 'species' ){
@@ -1990,7 +1985,7 @@ function create_taxon_table(otids, source, type, head_txt) {
                     cnts = C.taxon_counts_lookup[lineage]
                     //console.log(lineage)
                     //console.log(cnts)
-                    txt += cnts.tax_cnt +'\t'+cnts.gcnt +'\t'+cnts.refcnt +'\t'
+                    txt += cnts.taxcnt +'\t'+cnts.gcnt +'\t'+cnts.refcnt +'\t'
                     if(rank == 'species' ){
                       if(C.taxon_lineage_lookup[otids[n]]['subspecies'] == ''){
                          old_lineage = lineage
@@ -2326,7 +2321,7 @@ function get_major_genera(rank, node) {
                   let new_node4 = C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node3.children_ids[q]] // must be genus
                   //console.log('make_lineage(new_node4)')
                   //console.log(make_lineage(new_node4)[0])
-                  //counts = C.taxon_counts_lookup[make_lineage(new_node4)[0]].tax_cnt
+                  //counts = C.taxon_counts_lookup[make_lineage(new_node4)[0]].taxcnt
                   //console.log('counts', counts)
                   genera.push(new_node4)
                 }
