@@ -337,8 +337,8 @@ router.post('/tax_level', function tax_level_post(req, res) {
   helpers.print(req.body)
   
   let rank = req.body.rank
-  //let count_type = req.body.count_type
-  let count_type = 'default'
+  let count_type = req.body.count_type
+  //let count_type = 'both'
   
   const tax_resp = []
   fs.readFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn), 'utf8', function readTaxCountsFile(err, data) {
@@ -388,9 +388,17 @@ router.post('/tax_level', function tax_level_post(req, res) {
 //                 console.log(taxdata[lineage_str].gcnt)
 //                 console.log(taxdata[lineage_str].refcnt)
                 if(count_type == 'both'){
-                   return_obj.tax_count = parseInt(taxdata[lineage_str].taxcnt) + parseInt(taxdata[lineage_str].taxcnt_wnonoral) + parseInt(taxdata[lineage_str].taxcnt_wdropped)
-                   return_obj.gne_count = parseInt(taxdata[lineage_str].gcnt) + parseInt(taxdata[lineage_str].gcnt_wnonoral) + parseInt(taxdata[lineage_str].gcnt_wdropped)
-                   return_obj.rrna_count = parseInt(taxdata[lineage_str].refcnt) + parseInt(taxdata[lineage_str].refcnt_wnonoral) + parseInt(taxdata[lineage_str].refcnt_wdropped)
+                   return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wnonoral + taxdata[lineage_str].taxcnt_wdropped
+                   return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wnonoral + taxdata[lineage_str].gcnt_wdropped
+                   return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wnonoral + taxdata[lineage_str].refcnt_wdropped
+                }else if(count_type == 'wdropped'){
+                   return_obj.tax_count = taxdata[lineage_str].taxcnt +  taxdata[lineage_str].taxcnt_wdropped
+                   return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wdropped
+                   return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wdropped
+                }else if(count_type == 'wnonoralref'){
+                   return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wnonoral
+                   return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wnonoral
+                   return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wnonoral
                 }else{
                    return_obj.tax_count = taxdata[lineage_str].taxcnt
                    return_obj.gne_count = taxdata[lineage_str].gcnt
@@ -419,7 +427,8 @@ router.post('/tax_level', function tax_level_post(req, res) {
         })
       //  console.log(tax_resp)
         
-      res.send(JSON.stringify(tax_resp));
+      //res.send(JSON.stringify(tax_resp));
+      res.send(JSON.stringify([count_type, tax_resp]));
   })
 })
 //
@@ -436,10 +445,12 @@ router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
 router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
   //console.time("TIME: tax_custom_dhtmlx");
   //console.log('IN tax_custom_dhtmlx')
-  let cts,lineage,options_obj
+  let cts, lineage,options_obj
   //let myurl = url.parse(req.url, true);
   let id = req.query.id;
-
+  let count_type = req.query.ct
+  console.log('id',id)
+  console.log('count_type',count_type)
   let json = {};
   json.id = id;
   json.item = [];
@@ -462,7 +473,7 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
         C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
             //console.log('node1',node)
             lineage = make_lineage(node)  // [str obj]
-            cts = get_counts(lineage[0])
+            cts = get_counts(lineage[0],count_type)
             //console.log(node)
             options_obj = get_options_by_node(node);
             options_obj.text = options_obj.text + ' '+cts
@@ -480,7 +491,7 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
           //console.log('node2',node)
           lineage = make_lineage(node)  // [str obj]
           //console.log('lineage:',lineage)
-          cts = get_counts(lineage[0])
+          cts = get_counts(lineage[0],count_type)
           options_obj = get_options_by_node(node);
           options_obj.text = options_obj.text + ' '+cts
           options_obj.checked = false;
@@ -1868,12 +1879,28 @@ function get_options_by_node(node) {
 //
 //
 
-function get_counts(lineage){
-    
-    let txt = "[<span class='red-text'>"+C.taxon_counts_lookup[lineage].taxcnt.toString()+'</span>' 
-            + ", <span class='green-text'>"+C.taxon_counts_lookup[lineage].gcnt.toString()+'</span>'
-            +", <span class='blue-text'>"+C.taxon_counts_lookup[lineage].refcnt.toString()+'</span>]';
-        
+function get_counts(lineage, ctype){
+    let txt
+    let cts = C.taxon_counts_lookup[lineage]
+    if(ctype === 'both'){
+        txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wnonoral + cts.taxcnt_wdropped).toString()+'</span>' 
+            + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wnonoral   + cts.gcnt_wdropped).toString()+'</span>'
+            +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wnonoral + cts.refcnt_wdropped).toString()+'</span>]';
+    }else if(ctype === 'wdropped'){
+        txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>' 
+            + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
+            +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
+
+    }else if(ctype === 'wnonoralref'){
+        txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wnonoral).toString()+'</span>' 
+            + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wnonoral).toString()+'</span>'
+            +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wnonoral).toString()+'</span>]';
+
+    }else{
+        txt = "[<span class='red-text'>"+   cts.taxcnt.toString()+'</span>' 
+            + ", <span class='green-text'>"+cts.gcnt.toString()+'</span>'
+            +", <span class='blue-text'>"+  cts.refcnt.toString()+'</span>]';
+    }    
     return txt
 }
 /////////////////////////////////////////

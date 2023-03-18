@@ -42,7 +42,10 @@
   width:550px;
   border:1px solid black
 }
-
+#change_base_counts{
+   font-size:small;
+   float:left;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -55,7 +58,14 @@
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
        <h4 class='title text-info'>Human Oral Microbiome Taxonomic Hierarchy</h4>
-        
+           
+        <div id='change_base_counts'>
+       Default Counts Exclude Dropped and NonOralRef Taxons
+        <br>Include 
+        <input type='checkbox' name='countcb' value='' onChange="load_dhtmlx()" > Dropped
+        <input type='checkbox' name='countcb' value='' onChange="load_dhtmlx()" > NonOralRef    
+        <!--  <input type='hidden' name='rank' value='domain' > -->
+       </div>
 		   <a id='download_browser_text_excel'  href='/download#taxon' >Download Options</a>
 	   
 	
@@ -97,7 +107,6 @@
 <script>
   mainmenu()
   $(document).ready(function(){                    
-   
     //load_dhtmlx(<%- data %>)
     load_dhtmlx()
 });

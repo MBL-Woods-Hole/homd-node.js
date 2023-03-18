@@ -23,9 +23,29 @@
 /////////////////////////
 
 function load_dhtmlx(data) {
+    
+    var items = document.getElementsByName('countcb')
+    if(items[0].checked && items[1].checked){
+      count_type = 'both'
+      
+    }else if(items[0].checked){
+     count_type = 'wdropped'
+     console.log(customOldTree)
+     
+    }else if(items[1].checked){
+     count_type = 'wnonoralref'
+     
+    }else{
+      count_type = 'default'
+    }
+    
+    //if( typeof customOldTree != "undefined" ){
+    //   reset_tree_dhtmlx()
+    //}
     //console.log('loading dhtmlx')
     // dhtmlx version:5  has dynamic loading
     customOldTree = new dhtmlXTreeObject("custom_treebox","100%","100%",0);
+    //console.log(customOldTree)
     customOldTree.setImagesPath("/images/dhtmlx/imgs/");
     customOldTree.enableCheckBoxes(false);
     //customTree.enableThreeStateCheckboxes(true);
@@ -52,10 +72,10 @@ function load_dhtmlx(data) {
 //customOldTree.parse(dhtmlx_tree,"json");
 
 
-    customOldTree.setXMLAutoLoading("tax_custom_dhtmlx");
-  customOldTree.setDataMode("json");
+    customOldTree.setXMLAutoLoading("tax_custom_dhtmlx?ct="+count_type);
+    customOldTree.setDataMode("json");
     ////load first level of tree
-  customOldTree.load("tax_custom_dhtmlx?id=0","json");
+    customOldTree.load("tax_custom_dhtmlx?id=0&ct="+count_type,"json");
     
     // // dhtmlx version:7(free) dynamic loading is in pro version
     // customTree = new dhx.Tree("custom_treebox", {
@@ -79,18 +99,14 @@ function expand_tree_dhtmlx(id){
   //alert(level)
   if ( customOldTree.hasChildren(id) ) {
        
-      //clk_counter++;
-      //if(clk_counter+level <= 7){
+        //clk_counter++;
+        //if(clk_counter+level <= 7){
         //document.getElementById('custom_rank_info').innerHTML = 'opening;
         customOldTree.openAllItems(id,true); 
 
-      //}else{
-      //  alert('no more levels')
-      //}
-
-      
-       
-      
+        //}else{
+        //  alert('no more levels')
+        //}
   }else{
     alert('no sub-levels found')
   }
@@ -98,11 +114,14 @@ function expand_tree_dhtmlx(id){
 }
 function reset_tree_dhtmlx(){
   //customOldTree.closeAllItems(0);
+  console.log('reset')
   customOldTree.refreshItem()
   clk_counter = 0  // reset
   //customTree.collapseAll();
 }
+
 clk_counter = 0   // global
+
 function open_tree_dhtmlx(){
   // difficult with dynamic loading
   //console.log('open whole tree')
@@ -135,11 +154,23 @@ function get_sublevels(lvl){
 }
 ///////
 
-function change_level(rank, count_type) {
+function change_level(rank) {
   // Use capitals here for ranks
   var args = {}
   //console.log(rank)
   args.rank = rank.toLowerCase()
+  
+  var items = document.getElementsByName('countcb')
+  if(items[0].checked && items[1].checked){
+      count_type = 'both'
+  }else if(items[0].checked){
+     count_type = 'wdropped'
+  }else if(items[1].checked){
+     count_type = 'wnonoralref'
+  }else{
+      count_type = 'default'
+  }
+  args.count_type = count_type
   if(args.rank=='class'){args.rank='klass';}// for use in homd_taxonomy.taxa_tree_dict_map_by_rank
   var ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
   for(n in ranks){
@@ -151,9 +182,10 @@ function change_level(rank, count_type) {
     xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = xmlhttp.responseText;
-            console.log(response)
-            static_data = JSON.parse(response)
-            
+            //console.log(response)
+            stuff = JSON.parse(response)
+            //console.log('stuff[0]',stuff[0])
+            static_data = stuff[1]
             //console.log(static_data)
       var html = ''
       html += "<table id='level-table' class='table table-hover' border='0'>"
