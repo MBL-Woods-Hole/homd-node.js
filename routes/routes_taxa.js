@@ -449,8 +449,8 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
   //let myurl = url.parse(req.url, true);
   let id = req.query.id;
   let count_type = req.query.ct
-  console.log('id',id)
-  console.log('count_type',count_type)
+  //console.log('id',id)
+  //console.log('count_type',count_type)
   let json = {};
   json.id = id;
   json.item = [];

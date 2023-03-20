@@ -27,21 +27,17 @@ function load_dhtmlx(data) {
     var items = document.getElementsByName('countcb')
     if(items[0].checked && items[1].checked){
       count_type = 'both'
-      
     }else if(items[0].checked){
      count_type = 'wdropped'
-     console.log(customOldTree)
-     
     }else if(items[1].checked){
      count_type = 'wnonoralref'
-     
     }else{
       count_type = 'default'
     }
     
-    //if( typeof customOldTree != "undefined" ){
-    //   reset_tree_dhtmlx()
-    //}
+    if( typeof customOldTree != "undefined" ){
+      customOldTree.destructor();
+    }
     //console.log('loading dhtmlx')
     // dhtmlx version:5  has dynamic loading
     customOldTree = new dhtmlXTreeObject("custom_treebox","100%","100%",0);
@@ -114,7 +110,7 @@ function expand_tree_dhtmlx(id){
 }
 function reset_tree_dhtmlx(){
   //customOldTree.closeAllItems(0);
-  console.log('reset')
+  //console.log('reset')
   customOldTree.refreshItem()
   clk_counter = 0  // reset
   //customTree.collapseAll();
