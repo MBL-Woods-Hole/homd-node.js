@@ -1,9 +1,17 @@
 <% var cfg = JSON.parse(config) %> 
 <style>
 iframe{
+   position: relative; 
    width:100%;
    height:90%;
-   border:1px solid black
+   border:1px solid black;
+top: -25px;
+   
+ /* 
+  position: relative; 
+   left: -100px; 
+   top: -100px
+ */
 }
 .button{
    cursor:pointer;
@@ -52,8 +60,9 @@ iframe{
            </form>
            </td></tr></table>
          </span>
-         <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_all_ncbi?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
-       
+         <div style="width: 100%; height: 850px; overflow: hidden">
+           <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_all_ncbi?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+         </div>
        <% }else if(annotation == "prokka"){ %>
          <span style='float:right;'>
            <table><tr><td>
@@ -66,16 +75,17 @@ iframe{
            </form>
            </td></tr></table>
          </span>
-         <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_all_prokka?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
-       
+         <div style="width: 100%; height: 850px; overflow: hidden">
+           <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_all_prokka?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+         </div>
        <% }else{ %>
-       
+          <div style="width: 100%; height: 850px; overflow: hidden">
           <% if(db_type == "refseq"){ %>
             <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/refseq_blast %>" title="HOMD BLAST Server"></iframe>
           <% }else{ %>
             <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast %>" title="HOMD BLAST Server"></iframe>
           <% } %>
-          
+          </div>
        <% } %>
        
        
