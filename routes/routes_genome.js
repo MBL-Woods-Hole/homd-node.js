@@ -30,17 +30,22 @@ router.get('/genome_table', function genomeTable(req, res) {
   helpers.print(['otid',otid,'phylum',phylum,'letter',letter])
   
   let pageData = {}
+  
+  
   pageData.page = req.query.page
+  
   if(req.query.reset && req.query.reset === '1'){
     console.log('RESETRESET')
     pageData.page = 1
   }else if(req.query.reset && req.query.reset === 'all'){
     pageData.page = 'all'
     console.log('RESET-ALL')
-  }else {
+  }else if(req.query.page){
+     pageData.page = req.query.page
+  }else{
     pageData.page = 1
   }
-  
+  //console.log('2pageData.page',pageData.page)
   var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
   var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
   //console.log('phyla',phyla)
@@ -129,54 +134,64 @@ router.get('/genome_table', function genomeTable(req, res) {
         if (el.tlength) { 
             el.tlength = helpers.format_long_numbers(el.tlength); 
         }
-        
   })
   
   send_list = gid_obj_list
   
-  //console.log('send_list',send_list[0])  
-  // get each secid from C.genome_lookup
-  //console.log('seqid_list',gid_obj_list[0])
-  // send_list.sort(function (a, b) {
-  // return helpers.compareStrings_alpha(a.genus, b.genus);
-  //     })
-    // sort by two fields
-  // send_list.sort( (a, b) =>
-//     b.species - a.species || a.genus.localeCompare(b.genus),
-//   )
-  
-    send_list.sort(function (a, b) {
+  send_list.sort(function (a, b) {
       return helpers.compareByTwoStrings_alpha(a,b,'genus','species');
-    })
+  })
   
   count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
   let genomeList = []
-  console.log('p '+phylum.toString()+' L '+letter)
-  if(phylum === 0 && letter === "all" && Number.isInteger(pageData.page)){
-      pageData.trecords = send_list.length
-  
-      if (pageData.page) {
-        const trows = send_list.length
-        // console.log('trows',trows)
-        pageData.row_per_page = 1000
-        pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
-        if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
-        if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-        helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
-        pageData.show_page = pageData.page
-        if (pageData.show_page === 1) {
-          genomeList = send_list.slice(0, pageData.row_per_page) // first 200
-          pageData.start_count = 1
-        } else {
-          genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
-          pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
-        }
-        //console.log('start count', pageData.start_count)
-      }
+  console.log('phylum '+phylum.toString()+' L '+letter+' page: ',pageData.page)
+  pageData.trecords = send_list.length
+  if(phylum === 0 && letter === "all" && pageData.page){
+    const trows = send_list.length
+    //console.log('IN PD trows',trows)
+    pageData.row_per_page = 1000
+    pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
+    if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
+    if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
+    helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+    pageData.show_page = pageData.page
+    if (pageData.show_page === 1) {
+      genomeList = send_list.slice(0, pageData.row_per_page) // first 200
+      pageData.start_count = 1
+    } else {
+      genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
+      pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
+    }
+    //console.log('start count', pageData.start_count)
   }else{
     genomeList = send_list
   }
   
+//   if(phylum === 0 && letter === "all" && Number.isInteger(pageData.page)){
+//       pageData.trecords = send_list.length
+//   
+//       if (pageData.page) {
+//         const trows = send_list.length
+//         // console.log('trows',trows)
+//         pageData.row_per_page = 200
+//         pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
+//         if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
+//         if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
+//         helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+//         pageData.show_page = pageData.page
+//         if (pageData.show_page === 1) {
+//           genomeList = send_list.slice(0, pageData.row_per_page) // first 200
+//           pageData.start_count = 1
+//         } else {
+//           genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
+//           pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
+//         }
+//         //console.log('start count', pageData.start_count)
+//       }
+//   }else{
+//     genomeList = send_list
+//   }
+  //console.log(pageData)
   res.render('pages/genome/genometable', {
     title: 'HOMD :: Genome Table', 
     pgname: 'genome/genome_table', // for AboutThisPage
