@@ -30,7 +30,20 @@ router.get('/', function index(req, res) {
 
   })
 })
+router.get('/:id', function index(req, res) {
+  // sequence server
+  console.log('SS id: ' + req.params.id)
+  //console.log('CFG.ENV :',CFG.ENV )
+  res.render('pages/home', {
+    title: 'HOMD :: Human Oral Microbiome Database',
+    pgname: 'home', // for AbountThisPage
+    config: JSON.stringify(CFG),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {})
+    
 
+  })
+})
 
 router.get('/download_file', function search(req, res) {
   //let page = req.params.pagecode
