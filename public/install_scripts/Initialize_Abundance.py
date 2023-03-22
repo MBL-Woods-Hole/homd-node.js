@@ -378,7 +378,7 @@ if __name__ == "__main__":
         #args.TAX_DATABASE = 'HOMD_taxonomy'
         args.NEW_DATABASE = 'homd'
         #dbhost_old = '192.168.1.51'
-        dbhost_new= '192.168.1.40'
+        dbhost_new= '192.168.1.42'
 
     elif args.dbhost == 'localhost':
         #args.json_file_path = '/Users/avoorhis/programming/homd-data/json'
