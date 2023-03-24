@@ -15,6 +15,250 @@ var yyyy = today.getFullYear();
 today = yyyy + '-' + mm + '-' + dd;
 var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
+function renderTaxonTable(req, res, args) {
+        
+        res.render('pages/taxa/taxtable_filter', {
+            title: 'HOMD :: Taxon Table', 
+            pgtitle: 'List of Human Oral Microbial Taxa',
+            pgname: 'taxon/tax_table',  //for AbountThisPage
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            
+            data: JSON.stringify(args.send_list),
+            count_txt: args.count_txt,
+            filter: JSON.stringify(args.filter),
+              
+        })
+}
+function get_default_filter(){
+    let defaultfilter = {
+        status:{
+            named:'on',
+            unnamed:'on',
+            phylotype: 'on',
+            lost: 'on',
+            dropped:'off',
+            nonoralref:'off'
+        },
+        genomes:'both',
+        text:{
+            txt_srch: '',
+            field: 'all',
+        },
+        letter: '0',
+        sort_col: 'otid',
+        sort_rev: 'off'
+    }
+    return defaultfilter
+}
+function get_null_filter(){
+    let nullfilter = {
+        status:{
+            named:'off',
+            unnamed:'off',
+            phylotype: 'off',
+            lost: 'off',
+            dropped:'off',
+            nonoralref:'off'
+        },
+        genomes:'both',
+        text:{
+            txt_srch: '',
+            field: '',
+        },
+        letter: '0',
+        sort_col: 'otid',
+        sort_rev: 'off'
+    }
+    return nullfilter
+}
+function set_ttable_session(req) {
+    console.log('set sess body',req.body)
+    console.log('xsession',req.session)
+    let letter = '0'
+    if(req.session.ttable_filter && req.session.ttable_filter.letter){
+       letter = req.session.ttable_filter.letter
+    }
+    req.session.ttable_filter = get_null_filter()
+    req.session.ttable_filter.letter = letter
+    
+    for( let item in req.body){
+       if(item == 'letter'){
+         req.session.ttable_filter.letter = req.body.letter
+       }
+       if(item == 'genomes'){
+         req.session.ttable_filter.genomes = req.body.genomes
+       }
+       if(item == 'sort_col'){
+         req.session.ttable_filter.sort_col = req.body.sort_col
+       }
+       if(item == 'sort_rev'){
+         req.session.ttable_filter.sort_rev = 'on'
+       }
+       if(item == 'named'){
+         req.session.ttable_filter.status.named = 'on'
+       }
+       if(item == 'unnamed'){
+         req.session.ttable_filter.status.unnamed = 'on'
+       }
+       if(item == 'phylotype'){
+         req.session.ttable_filter.status.phylotype = 'on'
+       }
+       if(item == 'lost'){
+         req.session.ttable_filter.status.lost = 'on'
+       }
+       if(item == 'dropped'){
+         req.session.ttable_filter.status.dropped = 'on'
+       }
+       if(item == 'nonoralref'){
+         req.session.ttable_filter.status.nonoralref = 'on'
+       }
+       
+       if(item == 'txt_srch'){
+         req.session.ttable_filter.text.txt_srch = req.body.txt_srch
+       }
+       if(item == 'field'){
+         req.session.ttable_filter.text.field = req.body.field
+       }
+       
+    }
+    
+}
+function apply_ttable_filter(req, filter) {
+   
+    let big_tax_list = Object.values(C.taxon_lookup);
+    
+    let vals
+    //
+    // status 
+    if(req.session.ttable_filter){
+       vals = req.session.ttable_filter
+    }else{
+        vals = get_default_filter()
+    }
+    console.log('vals',vals)
+    if(vals.text.txt_srch !== ''){
+       big_tax_list = get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
+    }
+    let status = vals.status
+    // create array of 'on's
+    let status_on = Object.keys(status).filter(item => status[item] == 'on') 
+    console.log('status_on',status_on)
+    big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
+    //
+    //letter
+    if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
+      helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
+       // COOL.... filter the whole list
+      big_tax_list = big_tax_list.filter(item => item.genus.toUpperCase().charAt(0) === vals.letter)
+    }
+    //
+    // genomes
+    if(vals.genomes == 'wgenomes'){
+      big_tax_list = big_tax_list.filter(item => item.genomes.length >0)
+    }else if(vals.genomes == 'wogenomes'){
+      big_tax_list = big_tax_list.filter(item => item.genomes.length === 0)
+    }
+    
+    big_tax_list.map(function(el){
+        // do we have ecology/abundance data?  
+        // Is abundance the only thing on the ecology page?
+        el.ecology = 0  // change to 1 if we do
+        
+        if(el.status != 'Dropped'){
+              el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || ''
+              var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
+              //console.log(el)
+              var lineage_list = make_lineage(node)
+              
+              if(lineage_list[0] in C.taxon_counts_lookup){
+                  if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+                     el.ecology = 1
+                 }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
+                     el.ecology = 1
+                 }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
+                     el.ecology = 1
+                 }else {
+                     el.ecology = 0
+                 }
+              }
+        }
+    })
+    //sort column
+    if(vals.sort_rev === 'on'){
+        if(vals.sort_col === 'otid'){
+          big_tax_list.sort(function (b, a) {
+            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else{
+          big_tax_list.sort(function (b, a) {
+            return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }
+    }else{
+        if(vals.sort_col === 'genus'){
+          big_tax_list.sort(function (a, b) {
+            return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+          })
+        }else if(vals.sort_col === 'otid'){
+          big_tax_list.sort(function (a, b) {
+            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else{
+          console.log(big_tax_list[0])
+          console.log('sorting by ',vals.sort_col)
+          big_tax_list.sort(function (a, b) {
+            return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }
+    }
+    return big_tax_list
+
+}
+router.get('/reset_ttable', function tax_table_get(req, res) {
+   console.log('in RESET-session')
+   req.session.ttable_filter = get_default_filter()
+   res.redirect('back');
+})
+router.get('/tax_table_filter', function tax_table_get(req, res) {
+    let filter
+    console.log('get-session ',req.session.ttable_filter)
+    let send_list
+    if(req.session.ttable_filter){
+        console.log('filetr session')
+        filter = req.session.ttable_filter
+    }else{
+        console.log('filetr from default')
+        filter = get_default_filter()
+    }
+    
+    send_list = apply_ttable_filter(req, filter)
+    //let big_tax_list0 = Object.values(C.taxon_lookup);
+    //let big_tax_list1 = big_tax_list0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+    
+     //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
+     let count_text = 'Count: '+ send_list.length.toString()
+     
+     let args = {filter: filter, send_list: send_list, count_txt: count_text}
+     renderTaxonTable(req, res, args)
+     
+})
+router.post('/tax_table_filter', function tax_table_get(req, res) {
+    console.log('in POST tt filter')
+    console.log(req.body)
+    let send_list
+    set_ttable_session(req)
+    console.log('ttable_session',req.session.ttable_filter)
+    let filter = req.session.ttable_filter
+    
+    send_list = apply_ttable_filter(req, filter)
+    
+    let count_text = 'Count: '+ send_list.length.toString()
+     
+    let args = {filter:filter, send_list: send_list, count_txt: count_text}
+    renderTaxonTable(req, res, args)
+     
+})
 router.get('/tax_table', function tax_table_get(req, res) {
   
   helpers.print('in taxtable -get')
@@ -265,7 +509,7 @@ router.get('/flags', function flags(req, res) {
 router.post('/search_taxtable', function search_taxtable(req, res) {
   console.log(req.body)
   
-  let search_txt = req.body.tax_srch.toLowerCase()  // already filtered for empty string and extreme length
+  let search_txt = req.body.txt_srch.toLowerCase()  // already filtered for empty string and extreme length
   let search_field = req.body.field
   var count_txt, count_txt0
   
@@ -275,7 +519,7 @@ router.post('/search_taxtable', function search_taxtable(req, res) {
   let big_tax_list = Object.values(C.taxon_lookup);  // search_field=='all'
   let send_list = get_filtered_taxon_list(big_tax_list, search_txt, search_field)
   
-  count_txt0 =  'Showing '+(send_list.length).toString()+' rows using search string: "'+req.body.tax_srch+'".'
+  count_txt0 =  'Showing '+(send_list.length).toString()+' rows using search string: "'+req.body.txt_srch+'".'
   count_txt = count_txt0+'<br><small>(Total:'+(big_tax_list.length).toString()+')</small>'
   res.render('pages/taxa/taxtable', {
     title: 'HOMD :: Taxon Table', 

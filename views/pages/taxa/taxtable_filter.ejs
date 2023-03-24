@@ -1,0 +1,138 @@
+<style>
+/* Fix the tax table header */
+thead th { position: sticky; top: 0; }
+
+</style>
+<link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
+<%- include('../../partials/header_html'); %>
+
+<% list = JSON.parse(data) %>
+<% statusfltr = JSON.parse(filter) %>
+<% letter = statusfltr.letter %>
+
+
+<body>
+    <div id="loader" class="center-loader"></div>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+    
+  
+  
+     <div class='title'><%= pgtitle %></div>
+     <small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
+    
+       
+    <%- include('../../partials/tax_table_filter.ejs') %>
+     <br><%= count_txt %>
+<div id='tax-box' >
+
+     <table id='tax-table' class='table table-hover table-condensed sortable' >
+     <thead>
+      <tr>
+        <th scope="col" nowrap><span onclick="('otid')">Taxon-ID</span></th>
+        <th scope="col"><span onclick="('genus')">Genus</span></th>
+        <th scope="col"><span onclick="('species')">Species</span></th>
+        <th scope="col"><span onclick="('strain')">Subspecies</span><br>or Strain</th>
+        <th scope="col"><span onclick="('status')">Status</span></th>
+       <!--  <th scope="col" nowrap>Body Site</th> -->
+        <th scope="col" class="sorttable_nosort">Ecology Link</th>
+        <th scope="col" class="sorttable_nosort" nowrap>Taxon Link</th>
+        <th scope="col" class="sorttable_nosort" nowrap>Genome Link</th>
+        <th scope="col" nowrap class="sorttable_nosort">Genome Size</th>
+      </tr>
+     </thead>
+     <tbody>
+     <% for(n in list){ %>
+       <tr>
+       <% otid = list[n].otid %>
+       <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+       <td nowrap><%= taxidfullname  %></td>
+       <td nowrap><i><b><a href='life?rank=genus&name=<%= list[n].genus %>'><%= list[n].genus  %></a></b></i></td>
+       <td nowrap><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
+       <td nowrap><%= list[n].subsp  %></td>
+       
+       <td><%= list[n].status  %></td>
+     <!--   <td><%= list[n].sites  %></td> -->
+       <% if(list[n].ecology === 1){ %>
+         <td style='text-align:center' nowrap><a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>" class="pill pill-green" >Ecology</a></td>
+       <% }else{ %>
+         <td style='text-align:center' nowrap</td>
+       <% } %>
+       <td style='text-align:center' nowrap><a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Taxon Description</a></td>
+       <td style='text-align:center' nowrap>
+       <% num_genomes = list[n].genomes.length %>
+       <% if(num_genomes === 0){ %>
+         
+       <% }else if(num_genomes === 1){ %> 
+        <a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-lightseagreen" >1 Genome</a>
+       <% }else{ %>
+         
+         <a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-lightseagreen" ><%= num_genomes %> Genomes</a>
+         
+       <% } %>
+       </td>
+       <td nowrap><%= list[n].tlength_str  %></td>
+       </tr>
+     <% } %>
+     </tbody>
+     </table>
+     
+</div>  <!-- end: tax-box -->
+   
+    </div> <!-- end: page-content -->
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/taxonomy.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+  $(document).ready(function(){                    
+    
+    var letter = '<%- letter %>'
+  
+  if(letter && letter !== '0'){
+    document.getElementById(letter).style.color = 'red'
+    
+    document.getElementById(letter).style.textDecoration = 'underline'
+    
+    document.getElementById(letter).style.fontSize = 'medium'
+    //document.getElementById(letter).style = {color:'red',fontSize:'medium'}
+  }else if(letter){
+    document.getElementById(letter).style.color = 'red'
+  }
+  
+  
+  });
+
+ 
+  
+  document.onreadystatechange = function() {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                  '#tax-box').style.visibility = "hidden";
+                document.querySelector(
+                  "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                  "#loader").style.display = "none";
+                document.querySelector(
+                  '#tax-box').style.visibility = "visible";
+            }
+        };
+</script>
+
+
+
