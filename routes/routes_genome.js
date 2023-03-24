@@ -18,13 +18,17 @@ today = yyyy + '-' + mm + '-' + dd
 var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
 //const JB = require('jbrowse2')
 //app.use(createIframe)
-router.get('/genome_table', function genomeTable(req, res) {
+router.get('/genome_table', function genome_table(req, res) {
   console.log('in genometable -get')
     helpers.accesslog(req, res)
   let seqid_list;
   //let myurl = url.parse(req.url, true);
   let letter = req.query.k
   let otid = req.query.otid
+  if(otid && req.session.ttable_filter){
+      //console.log('got otid for ttable')
+      req.session.ttable_filter.otid = otid
+  }
   let phylum = req.query.phylum
   let count_txt, count_txt0, send_list, gid_obj_list,otid_grabber = {};
   helpers.print(['otid',otid,'phylum',phylum,'letter',letter])

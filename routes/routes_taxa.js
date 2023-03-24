@@ -17,7 +17,7 @@ var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in second
 
 function renderTaxonTable(req, res, args) {
         
-        res.render('pages/taxa/taxtable_filter', {
+        res.render('pages/taxa/taxtable', {
             title: 'HOMD :: Taxon Table', 
             pgtitle: 'List of Human Oral Microbial Taxa',
             pgname: 'taxon/tax_table',  //for AbountThisPage
@@ -32,6 +32,7 @@ function renderTaxonTable(req, res, args) {
 }
 function get_default_filter(){
     let defaultfilter = {
+        otid:'',
         status:{
             named:'on',
             unnamed:'on',
@@ -53,6 +54,7 @@ function get_default_filter(){
 }
 function get_null_filter(){
     let nullfilter = {
+        otid:'',
         status:{
             named:'off',
             unnamed:'off',
@@ -73,6 +75,12 @@ function get_null_filter(){
     return nullfilter
 }
 function set_ttable_session(req) {
+    // set req.session.ttable_filter.otid 5 places
+    // 1taxa/life
+    // 2taxa/tax_description
+    // 3taxa/ecology
+    // 4taxa/tax_description
+    // 5genome_genome_table
     console.log('set sess body',req.body)
     console.log('xsession',req.session)
     let letter = '0'
@@ -220,7 +228,7 @@ router.get('/reset_ttable', function tax_table_get(req, res) {
    req.session.ttable_filter = get_default_filter()
    res.redirect('back');
 })
-router.get('/tax_table_filter', function tax_table_get(req, res) {
+router.get('/tax_table', function tax_table_get(req, res) {
     let filter
     console.log('get-session ',req.session.ttable_filter)
     let send_list
@@ -230,6 +238,7 @@ router.get('/tax_table_filter', function tax_table_get(req, res) {
     }else{
         console.log('filetr from default')
         filter = get_default_filter()
+        req.session.ttable_filter = filter
     }
     
     send_list = apply_ttable_filter(req, filter)
@@ -243,7 +252,7 @@ router.get('/tax_table_filter', function tax_table_get(req, res) {
      renderTaxonTable(req, res, args)
      
 })
-router.post('/tax_table_filter', function tax_table_get(req, res) {
+router.post('/tax_table', function tax_table_get(req, res) {
     console.log('in POST tt filter')
     console.log(req.body)
     let send_list
@@ -756,6 +765,10 @@ router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
   let data1,data2={},data3,data4,data5,links
+  if(otid && req.session.ttable_filter){
+      //console.log('got otid for ttable')
+      req.session.ttable_filter.otid = otid
+  }
   /*
   This busy page needs:
   1  otid     type:string
@@ -927,11 +940,15 @@ router.post('/get_refseq', function get_refseq(req, res) {
 
 router.get('/life', function life(req, res) {
   
-  //console.log('in LIFE')
+  console.log('in LIFE')
   // let myurl = url.parse(req.url, true);
   let tax_name = req.query.name;
   let rank = (req.query.rank)
   let lin,lineage_string,otid
+  if(req.query.otid && req.session.ttable_filter){
+      //console.log('got otid for ttable')
+      req.session.ttable_filter.otid = req.query.otid
+  }
     //console.log('rank:',rank)
   //console.log('tax_name',tax_name)
   if(tax_name){
@@ -1055,6 +1072,7 @@ router.get('/life', function life(req, res) {
                //console.log('taxa_list[n]',taxa_list[n])
                //console.log('taxa_list[n]2',C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'])
                otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'].otid
+               
                html += "<span class=''>"+space+taxa_list[n]+"  </span>(<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)<br>'    
             }else {
              // list of not genus or species 
@@ -1268,6 +1286,11 @@ router.get('/ecology', function ecology(req, res) {
     helpers.print('in ecology new')
     let rank = req.query.rank;
     let tax_name = req.query.name
+    
+    if(req.query.otid && req.session.ttable_filter){
+      //console.log('got otid for ttable')
+      req.session.ttable_filter.otid = req.query.otid
+    }
     //let tax_name = req.params.name
     //console.log('req.params',req)
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
@@ -1665,8 +1688,8 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
 }) 
 //
 //   
-router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
-//router.get('/dld_table/:type/:letter/:sites/:stati', function dld_table_get(req, res) {
+//router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
+router.get('/dld_table/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
 
   
   console.log('in dld table - taxon')
@@ -1674,11 +1697,12 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
   let send_list = []
   let type = req.params.type
   let letter = req.params.letter
-  let sitefilter = JSON.parse(req.params.sites)
-  let statusfilter = JSON.parse(req.params.stati)
+  //let sitefilter = JSON.parse(req.params.sites)
+  console.log(req.params.stati)
+  let statusfilter = req.params.stati
   let search_txt = req.params.search_txt
   let search_field = req.params.search_field
-  //console.log(type,letter,sitefilter,statusfilter,search_txt,search_field)
+  console.log(type,letter,statusfilter,search_txt,search_field)
   // Apply filters
   let temp_list = Object.values(C.taxon_lookup);
   let file_filter_txt = ""
@@ -1690,7 +1714,7 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
       send_list = get_filtered_taxon_list(search_txt, search_field)
       file_filter_txt = "HOMD.org Taxon Data::Search Filter Applied (Search text '"+search_txt+"')"
   //}else if(sitefilter.length > 0 ||  statusfilter.length > 0){
-  }else if(statusfilter.length === 0 && sitefilter.length === 0){
+  }else if(statusfilter.length === 0){
     // this is for download default table. on the downloads page
     // you cant get here from the table itself (javascript prevents)
     helpers.print('in dwnld filters==[][]')
@@ -1700,37 +1724,17 @@ router.get('/dld_table/:type/:letter/:sites/:stati/:search_txt/:search_field', f
     console.log('in dwnld filters')
     
     if(statusfilter.length == 0){  // only items from site filter checked
+      send_list = temp_list
+    }else {
       send_list = temp_list.filter( function(e){
-          if(e.sites.length > 0){
-            for(var n in e.sites){
-              var site = e.sites[n].toLowerCase()  // nasal,oral
-              if( sitefilter.indexOf(site) !== -1 )
-                //nasal or oral if site item in s return only one instance
-         {
-         return e
-         }
-            }
-          }
           
-        }) 
-  }else if(sitefilter.length == 0){   // only items from status filter checked
-      send_list = temp_list.filter( function(e){
-          if( statusfilter.indexOf(e.status.toLowerCase()) !== -1 ){
-             return e
-          }
-        }) 
-  }else {
-      send_list = temp_list.filter( function(e){
-          if(e.sites.length > 0){
             for(var n in e.sites){
-              var site = e.sites[n].toLowerCase()  // nasal,oral
+              
               var status = e.status.toLowerCase()
-              if(sitefilter.indexOf(site) !== -1 && statusfilter.indexOf(status) !== -1 )
-              {
-                 return e
-              }
+              if( statusfilter.indexOf(status) !== -1 )
+              { return e }
             }
-          }
+         
         })
     } 
   } 

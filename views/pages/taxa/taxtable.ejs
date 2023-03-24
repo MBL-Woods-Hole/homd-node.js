@@ -7,8 +7,9 @@ thead th { position: sticky; top: 0; }
 <%- include('../../partials/header_html'); %>
 
 <% list = JSON.parse(data) %>
-<% statusfltrejs = JSON.parse(statusfltr) %>
-
+<% statusfltr = JSON.parse(filter) %>
+<% letter = statusfltr.letter %>
+<% filterotid = statusfltr.otid %>
 
 <body>
     <div id="loader" class="center-loader"></div>
@@ -23,46 +24,48 @@ thead th { position: sticky; top: 0; }
   
      <div class='title'><%= pgtitle %></div>
      <small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
+    <!-- 
+ 
      <div id='download_browser_text_excel'><b>Download this Taxon Data</b>: 
-     
-       <a href='dld_table/browser/<%= letter %>/[]/<%= statusfltr %>/<%= search_txt %>/<%= search_field %>' >[Browser]</a>
-       <a href='dld_table/text/<%= letter %>/[]/<%= statusfltr %>/<%= search_txt %>/<%= search_field %>' >[Text]</a>
-       <a href='dld_table/excel/<%= letter %>/[]/<%= statusfltr %>/<%= search_txt %>/<%= search_field %>' >[Excel]</a>
-     </div>    
+       <a href='dld_table/browser/<%= letter %>/[<%= Object.keys(statusfltr.status) %>]/<%= statusfltr.text.txt_srch %> /<%= statusfltr.text.field %>' >[Browser]</a>
+       <a href='dld_table/text/<%= letter %>/<%= Object.keys(statusfltr.status) %>/<%= statusfltr.text.txt_srch %> /<%= statusfltr.text.field %>' >[Text]</a>
+       <a href='dld_table/excel/<%= letter %>/<%= Object.keys(statusfltr.status) %>/<%= statusfltr.text.txt_srch %> /<%= statusfltr.text.field %>' >[Excel]</a>
+     </div>  
        
-  <%- include('../../partials/tax_table_filter_pt1.ejs') %>
-    <%- include('../../partials/tax_table_filter_pt2.ejs') %> 
+ -->
+    <%- include('../../partials/tax_table_filter.ejs') %>
+     <br><%= count_txt %>
 <div id='tax-box' >
 
      <table id='tax-table' class='table table-hover table-condensed sortable' >
      <thead>
       <tr>
-        <th scope="col" nowrap>Taxon-ID</th>
-        <th scope="col">Genus</th>
-        <th scope="col">Species</th>
-        <th scope="col">Subspecies<br>or Strain</th>
-        <th scope="col">Status</th>
+        <th scope="col" nowrap><span onclick="('otid')">Taxon-ID</span></th>
+        <th scope="col"><span onclick="('genus')">Genus</span></th>
+        <th scope="col"><span onclick="('species')">Species</span></th>
+        <th scope="col"><span onclick="('strain')">Subspecies</span><br>or Strain</th>
+        <th scope="col"><span onclick="('status')">Status</span></th>
        <!--  <th scope="col" nowrap>Body Site</th> -->
-        <th scope="col">Ecology Link</th>
+        <th scope="col" class="sorttable_nosort">Ecology Link</th>
         <th scope="col" class="sorttable_nosort" nowrap>Taxon Link</th>
         <th scope="col" class="sorttable_nosort" nowrap>Genome Link</th>
-        <th scope="col" nowrap>Genome Size</th>
+        <th scope="col" nowrap class="sorttable_nosort">Genome Size</th>
       </tr>
      </thead>
      <tbody>
      <% for(n in list){ %>
-       <tr>
        <% otid = list[n].otid %>
+       <tr id='<%= otid %>'>
        <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
        <td nowrap><%= taxidfullname  %></td>
-       <td nowrap><i><b><a href='life?rank=genus&name=<%= list[n].genus %>'><%= list[n].genus  %></a></b></i></td>
+       <td nowrap><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
        <td nowrap><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
        <td nowrap><%= list[n].subsp  %></td>
        
        <td><%= list[n].status  %></td>
      <!--   <td><%= list[n].sites  %></td> -->
        <% if(list[n].ecology === 1){ %>
-         <td style='text-align:center' nowrap><a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>" class="pill pill-green" >Ecology</a></td>
+         <td style='text-align:center' nowrap><a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>&otid=<%= otid %>" class="pill pill-green" >Ecology</a></td>
        <% }else{ %>
          <td style='text-align:center' nowrap</td>
        <% } %>
@@ -106,15 +109,38 @@ thead th { position: sticky; top: 0; }
   $(document).ready(function(){                    
     
     var letter = '<%- letter %>'
-
-  if(letter && letter !== 'all'){
+    var otid = '<%- filterotid %>'
+    if(letter && letter !== '0'){
     document.getElementById(letter).style.color = 'red'
+    
+    document.getElementById(letter).style.textDecoration = 'underline'
+    
     document.getElementById(letter).style.fontSize = 'medium'
-  }
+    //document.getElementById(letter).style = {color:'red',fontSize:'medium'}
+    }else if(letter){
+    document.getElementById(letter).style.color = 'red'
+    }
+    
+    //scrollto
+    table = $('tax-table')
+    tableContainer = $('#tax-box')
+    //otid = '325'
+    row = $('#'+otid)
+    // scroll 2 more rows == 41 x2 ==164
+    extra = 82
+    if(row.length) {
+      //console.log(row.offset().top);
+      //console.log(tableContainer.height()/2);
+      tableContainer.scrollTop(row.offset().top - (tableContainer.height()/2) - extra)
+    }
+
+  
+  
   });
 
-
-document.onreadystatechange = function() {
+ 
+  
+  document.onreadystatechange = function() {
             if (document.readyState !== "complete") {
                 document.querySelector(
                   '#tax-box').style.visibility = "hidden";

@@ -7,8 +7,7 @@ thead th { position: sticky; top: 0; }
 <%- include('../../partials/header_html'); %>
 
 <% list = JSON.parse(data) %>
-<% statusfltr = JSON.parse(filter) %>
-<% letter = statusfltr.letter %>
+<% statusfltrejs = JSON.parse(statusfltr) %>
 
 
 <body>
@@ -24,25 +23,29 @@ thead th { position: sticky; top: 0; }
   
      <div class='title'><%= pgtitle %></div>
      <small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
-    
+     <div id='download_browser_text_excel'><b>Download this Taxon Data</b>: 
+       <a href='dld_table/browser/<%= letter %>/[]/<%= statusfltr %>/<%= search_txt %>/<%= search_field %>' >[Browser]</a>
+       <a href='dld_table/text/<%= letter %>/[]/<%= statusfltr %>/<%= search_txt %>/<%= search_field %>' >[Text]</a>
+       <a href='dld_table/excel/<%= letter %>/[]/<%= statusfltr %>/<%= search_txt %>/<%= search_field %>' >[Excel]</a>
+     </div>    
        
-    <%- include('../../partials/tax_table_filter.ejs') %>
-     <br><%= count_txt %>
+  <%- include('../../partials/tax_table_filter_pt1.ejs') %>
+    <%- include('../../partials/tax_table_filter_pt2.ejs') %> 
 <div id='tax-box' >
 
      <table id='tax-table' class='table table-hover table-condensed sortable' >
      <thead>
       <tr>
-        <th scope="col" nowrap><span onclick="('otid')">Taxon-ID</span></th>
-        <th scope="col"><span onclick="('genus')">Genus</span></th>
-        <th scope="col"><span onclick="('species')">Species</span></th>
-        <th scope="col"><span onclick="('strain')">Subspecies</span><br>or Strain</th>
-        <th scope="col"><span onclick="('status')">Status</span></th>
+        <th scope="col" nowrap>Taxon-ID</th>
+        <th scope="col">Genus</th>
+        <th scope="col">Species</th>
+        <th scope="col">Subspecies<br>or Strain</th>
+        <th scope="col">Status</th>
        <!--  <th scope="col" nowrap>Body Site</th> -->
-        <th scope="col" class="sorttable_nosort">Ecology Link</th>
+        <th scope="col">Ecology Link</th>
         <th scope="col" class="sorttable_nosort" nowrap>Taxon Link</th>
         <th scope="col" class="sorttable_nosort" nowrap>Genome Link</th>
-        <th scope="col" nowrap class="sorttable_nosort">Genome Size</th>
+        <th scope="col" nowrap>Genome Size</th>
       </tr>
      </thead>
      <tbody>
@@ -102,24 +105,15 @@ thead th { position: sticky; top: 0; }
   $(document).ready(function(){                    
     
     var letter = '<%- letter %>'
-  
-  if(letter && letter !== '0'){
+
+  if(letter && letter !== 'all'){
     document.getElementById(letter).style.color = 'red'
-    
-    document.getElementById(letter).style.textDecoration = 'underline'
-    
     document.getElementById(letter).style.fontSize = 'medium'
-    //document.getElementById(letter).style = {color:'red',fontSize:'medium'}
-  }else if(letter){
-    document.getElementById(letter).style.color = 'red'
   }
-  
-  
   });
 
- 
-  
-  document.onreadystatechange = function() {
+
+document.onreadystatechange = function() {
             if (document.readyState !== "complete") {
                 document.querySelector(
                   '#tax-box').style.visibility = "hidden";

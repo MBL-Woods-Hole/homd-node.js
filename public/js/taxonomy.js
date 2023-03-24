@@ -462,7 +462,8 @@ function update_sb(){
     btn.style.color = 'orange'
     btn.style.background = 'black'
     btn.style.cursor = 'pointer'
-    btn.innerHTML = 'Update Table'
+    btn.style.fontSize ='large';
+    btn.innerHTML = '** Update Table **'
     
 }
 function clear_search_txt(){
@@ -471,7 +472,21 @@ function clear_search_txt(){
    txt.value = ''
    dd.value = 'all'
 }
-
-
+$('#tax-box').on('scroll', function() {
+    //console.log($("#tax-table").offset());
+    var rows = document.getElementById('tax-table').rows;
+    var tr = document.querySelector('tr').getBoundingClientRect().height;
+    //console.log('num rows',rows.length - 1)  // remove header
+    // min rows for scrolling ~27
+    //console.log(rows[0].offsetHeight)
+    //console.log('tr',tr)
+    // row height = 41  top of table = 363
+    //row0 = 363
+    //row1 = 363 + 41 
+    
+    
+    
+    
+});
 
 

@@ -1,0 +1,101 @@
+<% phyla = JSON.parse(phyla) %>
+
+
+<div id="row1">	
+
+  <div id='column_left1'  >
+	
+	<div id='phylum-filter' >
+
+		  Find Genomes by Phylum:
+		  <select class='dropdown' onchange="location = this.value;">
+
+		  <small>
+		  <optgroup>
+		  <option value='genome_table'>Select a Phylum</option>
+		  <% for(n in phyla) { %>
+			<% if(phyla[n] === phylum){ %>
+			  <option selected value='genome_table?phylum=<%= phyla[n] %>'><%= phyla[n] %></option>
+			<% }else{ %>
+			  <option value='genome_table?phylum=<%= phyla[n] %>'><%= phyla[n] %></option>
+			<% } %>
+		  <% } %>
+		  </optgroup>
+		  </select>
+		  </small>
+	</div>  <!-- end phylum-filter -->
+	
+    </div>	 <!--  end col-left1-->
+  
+    <div id="column_right1" >
+		<div class='alpha-select'>
+		  <center>
+			<small>Select Genus by Alphabet: <br>
+			<span class='alpha-list'> 
+			<a id='A' href='genome_table?k=A'>A</a>|<a id='B' href='genome_table?k=B'>B</a>|<a id='C' href='genome_table?k=C'>C</a>|<a id='D' href='genome_table?k=D'>D</a>|<a id='E' href='genome_table?k=E'>E</a>|<a id='F' href='genome_table?k=F'>F</a>|<a id='G' href='genome_table?k=G'>G</a>|<a id='H' href='genome_table?k=H'>H</a>|<a id='I' href='genome_table?k=I'>I</a>|<a id='J' href='genome_table?k=J'>J</a>|<a id='K' href='genome_table?k=K'>K</a>|<a id='L' href='genome_table?k=L'>L</a>|<a id='M' href='genome_table?k=M'>M</a>|<a id='N' href='genome_table?k=N'>N</a>|<a id='O' href='genome_table?k=O'>O</a>|<a id='P' href='genome_table?k=P'>P</a>|<a id='Q' href='genome_table?k=Q'>Q</a>|<a id='R' href='genome_table?k=R'>R</a>|<a id='S' href='genome_table?k=S'>S</a>|<a id='T' href='genome_table?k=T'>T</a>|<a id='U' href='genome_table?k=U'>U</a>|<a id='V' href='genome_table?k=V'>V</a>|<a id='W' href='genome_table?k=W'>W</a>|<a id='X' href='genome_table?k=X'>X</a>|<a id='Y' href='genome_table?k=Y'>Y</a>|<a id='Z' href='genome_table?k=Z'>Z</a>
+		    </span>
+			</small>
+			</center>
+		</div>
+	</div>
+	 	 
+</div>
+
+<div id="row2">
+  <div id="column_left1" >
+	<span id='count_info'>
+	<small>
+	  There are <%= all_genome_count %> genomes representing <%= taxa_wgenomes %> taxa <small>(excluding 'NonOralRef' and 'Dropped').</small>
+	  <% if(phylum === 0 && letter === "all"){ %>
+	    <br><strong>Showing: <%= ginfo.length %></strong>
+	  <% } %>
+	</small>
+	</span>
+  </div>	
+  
+  <div id="column_middle1" >	
+	<div>
+	   <table border='1' style=''>
+	   <tr><td>
+	   <center>Reload Table Paging</center>
+	   <small>with Original Sorting:
+	     <a class="pill pill-brown pill-md" href='genome_table?reset=1'>Reload</a>
+	   </small>
+	   </td><td>
+	   <center>View All <%= all_genome_count %> Genomes</center>
+	   <small>
+	     <center><a class="pill pill-brown pill-md" href='genome_table?reset=all'>Load All</a></center>
+	   <small>
+	   </td></tr>
+	   </table>
+	</div> 
+  </div>	
+  <div id="column_right1" >    
+    <form id='gtable_search' name='gtable_search' method='POST' action='search_genometable' >
+	  
+	  
+            Search This Table:
+            <div class="">
+              <input  id='gene_srch_text' type='text' placeholder="Search.." class='dropdown' name='gene_srch' maxlength='50' size='25'>
+              <select class='dropdown' id='' class="" name='field' >
+                <optgroup>
+              <option value='all'>All Fields</option>
+              <option value='taxid'>Taxon-ID</option>
+              <option value='organism'>Organism</option>
+              <option value='ccolct'>Culture Collection</option>
+              <option value='io'>Isolation Origin</option>
+              <option value='status'>Sequence Status</option>
+              <option value='submitter'>Submitter</option>
+              <option value='seqid'>Seq-ID</option>
+              </optgroup>
+              </select>
+ 
+              <input class="pill pill-brown pill-md float-right" type='button' value=' Go ' onclick='genome_table_search()'> 
+            </div>
+       
+	  
+	  
+
+	</form>
+  </div>	
+</div>
