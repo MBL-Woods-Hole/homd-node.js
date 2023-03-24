@@ -52,28 +52,28 @@ function get_default_filter(){
     }
     return defaultfilter
 }
-function get_null_filter(){
-    let nullfilter = {
-        otid:'',
-        status:{
-            named:'off',
-            unnamed:'off',
-            phylotype: 'off',
-            lost: 'off',
-            dropped:'off',
-            nonoralref:'off'
-        },
-        genomes:'both',
-        text:{
-            txt_srch: '',
-            field: '',
-        },
-        letter: '0',
-        sort_col: 'otid',
-        sort_rev: 'off'
-    }
-    return nullfilter
-}
+// function get_null_filter(){
+//     let nullfilter = {
+//         otid:'',
+//         status:{
+//             named:'off',
+//             unnamed:'off',
+//             phylotype: 'off',
+//             lost: 'off',
+//             dropped:'off',
+//             nonoralref:'off'
+//         },
+//         genomes:'both',
+//         text:{
+//             txt_srch: '',
+//             field: '',
+//         },
+//         letter: '0',
+//         sort_col: 'otid',
+//         sort_rev: 'off'
+//     }
+//     return nullfilter
+// }
 function set_ttable_session(req) {
     // set req.session.ttable_filter.otid 5 places
     // 1taxa/life
@@ -87,7 +87,7 @@ function set_ttable_session(req) {
     if(req.session.ttable_filter && req.session.ttable_filter.letter){
        letter = req.session.ttable_filter.letter
     }
-    req.session.ttable_filter = get_null_filter()
+    req.session.ttable_filter = get_default_filter()
     req.session.ttable_filter.letter = letter
     
     for( let item in req.body){
@@ -229,9 +229,9 @@ router.get('/reset_ttable', function tax_table_get(req, res) {
    res.redirect('back');
 })
 router.get('/tax_table', function tax_table_get(req, res) {
-    let filter
+    let filter,send_list
     console.log('get-session ',req.session.ttable_filter)
-    let send_list
+     
     if(req.session.ttable_filter){
         console.log('filetr session')
         filter = req.session.ttable_filter

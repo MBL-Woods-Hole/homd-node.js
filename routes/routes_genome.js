@@ -18,6 +18,59 @@ today = yyyy + '-' + mm + '-' + dd
 var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
 //const JB = require('jbrowse2')
 //app.use(createIframe)
+function renderGenomeTable(req, res, args) {
+        
+    res.render('pages/genome/genometable', {
+        title: 'HOMD :: Genome Table', 
+        pgname: 'genome/genome_table', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        
+        data: JSON.stringify(args.send_list),
+        filter: JSON.stringify(args.filter),
+
+        // letter: args.letter,
+//         otid: otid,
+//         phylum: phylum,
+        page_data: JSON.stringify(pageData),
+        phyla: JSON.stringify(phyla.sort()),
+        all_genome_count: big_temp_list.length,
+        taxa_wgenomes: taxa_wgenomes.length
+              
+    })
+}
+function get_default_filter(){
+    let defaultfilter = {
+        otid:'',
+        seqid:'',
+        phylum:'',
+        text:{
+            txt_srch: '',
+            field: 'all',
+        },
+        letter: '0',
+        sort_col: 'otid',
+        sort_rev: 'off'
+    }
+    return defaultfilter
+}
+
+router.get('/genome_table_filter', function genome_table(req, res) {
+    
+    if(req.session.gtable_filter){
+        console.log('gfiletr session')
+        filter = req.session.gtable_filter
+    }else{
+        console.log('gfiletr from default')
+        filter = get_default_filter()
+        req.session.gtable_filter = filter
+    }
+    
+    send_list = apply_ttable_filter(req, filter)
+
+
+
+})
 router.get('/genome_table', function genome_table(req, res) {
   console.log('in genometable -get')
     helpers.accesslog(req, res)
