@@ -462,7 +462,7 @@ function update_sb(){
     btn.style.color = 'orange'
     btn.style.background = 'black'
     btn.style.cursor = 'pointer'
-    btn.style.fontSize ='large';
+    btn.style.fontSize ='14px';
     btn.innerHTML = '** Update Table **'
     
 }
