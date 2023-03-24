@@ -43,7 +43,7 @@ app.use(session({
   //saveUninitialized: true,
   //Default cookie  { path: '/', httpOnly: true, secure: false, maxAge: null }
   cookie: { 
-     maxAge: 600000  // 1 hour==3600000
+     maxAge: 1800000  // 1 hour==3600000
   }  
   
 }));
