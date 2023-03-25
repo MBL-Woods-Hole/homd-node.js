@@ -768,8 +768,10 @@ router.get('/tax_description', function tax_description(req, res){
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
   let data1,data2={},data3,data4,data5,links
   if(otid && req.session.ttable_filter){
-      //console.log('got otid for ttable')
       req.session.ttable_filter.otid = otid
+  }
+  if(req.query.gid && req.session.gtable_filter){
+      req.session.gtable_filter.gid = req.query.gid
   }
   /*
   This busy page needs:
@@ -950,6 +952,10 @@ router.get('/life', function life(req, res) {
   if(req.query.otid && req.session.ttable_filter){
       //console.log('got otid for ttable')
       req.session.ttable_filter.otid = req.query.otid
+  }
+  if(req.query.gid && req.session.gtable_filter){
+      //console.log('got otid for ttable')
+      req.session.gtable_filter.gid = req.query.gid
   }
     //console.log('rank:',rank)
   //console.log('tax_name',tax_name)

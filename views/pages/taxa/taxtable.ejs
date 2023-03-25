@@ -110,15 +110,8 @@ thead th { position: sticky; top: 0; }
     
     var letter = '<%- letter %>'
     var otid = '<%- filterotid %>'
-    if(letter && letter !== '0'){
-    document.getElementById(letter).style.color = 'red'
-    
-    document.getElementById(letter).style.textDecoration = 'underline'
-    
-    document.getElementById(letter).style.fontSize = 'medium'
-    //document.getElementById(letter).style = {color:'red',fontSize:'medium'}
-    }else if(letter){
-    document.getElementById(letter).style.color = 'red'
+    if(letter){
+      document.getElementById(letter).style.color = 'red'
     }
     
     //scrollto

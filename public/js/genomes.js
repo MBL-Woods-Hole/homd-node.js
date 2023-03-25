@@ -214,10 +214,12 @@ function clear_search_txt(){
    dd = document.getElementById("field_select");
    txt.value = ''
    dd.value = 'all'
+   update_sb()
 }
 function clear_phylum(){
    
    dd = document.getElementById("phylum_select");
   
    dd.value = ''
+   update_sb()
 }
