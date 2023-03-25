@@ -138,19 +138,21 @@ function apply_ttable_filter(req, filter) {
     
     let vals
     //
-    // status 
+    
     if(req.session.ttable_filter){
        vals = req.session.ttable_filter
     }else{
         vals = get_default_filter()
     }
     console.log('vals',vals)
+    //
+    // txt_srch
     if(vals.text.txt_srch !== ''){
        big_tax_list = get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
     }
-    let status = vals.status
+    //status
     // create array of 'on's
-    let status_on = Object.keys(status).filter(item => status[item] == 'on') 
+    let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on') 
     console.log('status_on',status_on)
     big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     //

@@ -179,22 +179,45 @@ function genome_table_search(){
    }
    form.submit()
 }
-// function changeBlastGenomeDbs(gid, db) {
-//     //alert(gid)
-//     args = {}
-//     args.db = db
-//     args.gid = gid
-//     var xmlhttp = new XMLHttpRequest();
-//     xmlhttp.open("POST", "/genome/changeBlastGenomeDbs", true);
-//     xmlhttp.setRequestHeader("Content-type","application/json");
-//     xmlhttp.onreadystatechange = function() {
-//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//         var resp = xmlhttp.responseText;
-//         //console.log(resp)
-//         
-//         document.getElementById('genomeBlastDbChoices').innerHTML=resp
-//        }
-//     }
-//     xmlhttp.send(JSON.stringify(args));
-// 
-// }
+///////////////////////////////////////////////////////////
+// new filter stuff
+//
+function letter_submit(letter){
+   var form = document.getElementById("genome_filter_form");
+   const el = document.getElementById("letter");
+   if(el){
+       el.remove();
+    }
+    //if(letter !== '0'){
+       var i = document.createElement("input");
+       i.type = "hidden";
+       i.name = "letter";
+       i.id = "letter";
+       i.value = letter
+       form.appendChild(i);
+  // }
+   form.submit()
+}
+function update_sb(){ //submit button
+    //var form = document.getElementById("tax_filter_form");
+    
+    btn = document.getElementById("form_btn");
+    btn.style.color = 'orange'
+    btn.style.background = 'black'
+    btn.style.cursor = 'pointer'
+    btn.style.fontSize ='14px';
+    btn.innerHTML = '** Update Table **'
+    
+}
+function clear_search_txt(){
+   txt = document.getElementById("gene_srch_text");
+   dd = document.getElementById("field_select");
+   txt.value = ''
+   dd.value = 'all'
+}
+function clear_phylum(){
+   
+   dd = document.getElementById("phylum_select");
+  
+   dd.value = ''
+}

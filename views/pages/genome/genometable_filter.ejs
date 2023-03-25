@@ -12,12 +12,14 @@ thead th { position: sticky; top: 0; }
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data) %>
+<% fltr = JSON.parse(filter) %>
+<% phyla = JSON.parse(phyla) %>
 <% page_data = JSON.parse(page_data) %>
 <% var cfg = JSON.parse(config) %> 
 
 
 <body>
- <div id="loader" class="center-loader"></div>
+ <div id="loader" class="center-loader" style='z-index:1'></div>
 
   <div id='wrapper'>    
        
@@ -29,37 +31,11 @@ thead th { position: sticky; top: 0; }
   
   
   <div  class='page-content' >
-              
-    <div class='title text-info'>Human Oral Microbial Genomes</div>
-        <div id='download_browser_text_excel'><b>Download this Genome Data</b>: 
-       <a href='dld_table/browser/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Browser]</a>
-       <a href='dld_table/text/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Text]</a>
-       <a href='dld_table/excel/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Excel]</a>
-     </div>    
 
- <%- include('../../partials/genome_table_filter.ejs') %> 
 
- <span style='font-size:14px;font-weight:bold;'>
- <% if(phylum === 0 && letter === "all" && search_txt === 0){ %>
-       
-       
-       Genome Table [page:<%= page_data.show_page %>] 
-	   <% next_page = parseInt(page_data.show_page)+1 %>
-	   <% prev_page = parseInt(page_data.show_page)-1 %>
-	 Number of Records Found: <%= page_data.trecords %> [<%= page_data.number_of_pages %> Pages]
-	   <a href='genome_table?page=<%= prev_page %>'>Previous Page</a>
-	   <==>
-	   <a href='genome_table?page=<%= next_page %>'>Next Page</a>
-	   
- <% }else if(phylum){ %>
-    	Showing all (<%= ginfo.length %>) of phylum: <%= phylum %>
-<% }else if(letter !== 'all'){ %>  
-       Showing all (<%= ginfo.length %>) genera starting with: <b>"<%= letter %>"
-       
- <% }else if(search_txt){ %>
-    Showing all (<%= ginfo.length %>) hits with search string "<i><%= search_txt %></i>"
- <% } %>
- </span>
+ <%- include('../../partials/genome_table_filter2.ejs') %> 
+<br><%- count_txt %>
+
   
 <div id='genome-box'>
      
@@ -141,8 +117,8 @@ thead th { position: sticky; top: 0; }
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
     mainmenu()  // function in public/js/menu.js
-  var letter = '<%- letter %>'
-  if(letter && letter !== 'all'){
+  var letter = '<%- fltr.letter %>'
+  if(letter && letter !== '0'){
     document.getElementById(letter).style.color = 'red'
     document.getElementById(letter).style.fontSize = 'medium'
   }
@@ -153,11 +129,14 @@ thead th { position: sticky; top: 0; }
                   '#genome-box').style.visibility = "hidden";
                 document.querySelector(
                   "#loader").style.visibility = "visible";
+                
             } else {
                 document.querySelector(
                   "#loader").style.display = "none";
                 document.querySelector(
                   '#genome-box').style.visibility = "visible";
+                
+                  
             }
         };
 </script>

@@ -1,101 +1,183 @@
-<% phyla = JSON.parse(phyla) %>
+<style>
+.letter{
+  cursor:pointer;
+  color:blue;
+}
+.noletter{
+  cursor:pointer;
+  color:blue;
+}
+.alpha-list{
+   font-family: monospace;
+}
+#filter_form_div{
+   
+   
+   border:1px solid black;
+   padding:2px;
+}
+#form_btn{
+  width:100%;
+  color:lightgrey;
+}
+#genome_filter_form{
+   padding:0 10px;
+}
+#genome_filter_form table{
+   position:relative;
+   left:10px;
+   border-collapse:colapse;
+}
+#genome_filter_form table td{
+   border-top:1px solid brown;
+   padding: 2px 3px;
+}
+#reset_div{
+    float:left;
+}
+#sort_rev{
+   
+   border: 1px solid brown;
+   padding:2px 1px 1px 1px;
+   margin:1px;
+}
+.button{
+   cursor:pointer;
+}
+</style>
 
+<div id='filter_form_div'>
 
-<div id="row1">	
-
-  <div id='column_left1'  >
-	
-	<div id='phylum-filter' >
-
-		  Find Genomes by Phylum:
-		  <select class='dropdown' onchange="location = this.value;">
-
-		  <small>
-		  <optgroup>
-		  <option value='genome_table'>Select a Phylum</option>
+<form id='genome_filter_form' name='genome_filter_form' method='POST' action='genome_table_filter'>
+    
+    <div id='reset_div' style='float:right;'>
+      <a class='button'  href='reset_gtable'>Reset Filters</a> 
+    </div> 
+    <div class='alpha-select' style='float:right;'>
+			<br>
+			<small><span class='filter-title'>Genus by Alphabet:</span>
+			[<a class='noletter' id='0' onclick="letter_submit('0');"><small>All</small></a>]
+			<br>
+			<span class='alpha-list'>
+			<a class='letter' id='A' onclick="letter_submit('A');">A</a>|<a class='letter' id='B' onclick="letter_submit('B');">B</a>|<a class='letter' id='C' onclick="letter_submit('C');">C</a>|<a class='letter' id='D' onclick="letter_submit('D');">D</a>|<a class='letter' id='E' onclick="letter_submit('E');">E</a>|<a class='letter' id='F' onclick="letter_submit('F');">F</a>|<a class='letter' id='G' onclick="letter_submit('G');">G</a>|<a class='letter' id='H' onclick="letter_submit('H');">H</a>|<a class='letter' id='I' onclick="letter_submit('I');">I</a>|<a class='letter' id='J' onclick="letter_submit('J');">J</a>|<a class='letter' id='K' onclick="letter_submit('K');">K</a>|<a class='letter' id='L' onclick="letter_submit('L');">L</a>|<a class='letter' id='M' onclick="letter_submit('M');">M</a>
+			<br><a class='letter' id='N' onclick="letter_submit('N');">N</a>|<a class='letter' id='O' onclick="letter_submit('O');">O</a>|<a class='letter' id='P' onclick="letter_submit('P');">P</a>|<a class='letter' id='Q' onclick="letter_submit('Q');">Q</a>|<a class='letter' id='R' onclick="letter_submit('R');">R</a>|<a class='letter' id='S' onclick="letter_submit('S');">S</a>|<a class='letter' id='T' onclick="letter_submit('T');">T</a>|<a class='letter' id='U' onclick="letter_submit('U');">U</a>|<a class='letter' id='V' onclick="letter_submit('V');">V</a>|<a class='letter' id='W' onclick="letter_submit('W');">W</a>|<a class='letter' id='X' onclick="letter_submit('X');">X</a>|<a class='letter' id='Y' onclick="letter_submit('Y');">Y</a>|<a class='letter' id='Z' onclick="letter_submit('Z');">Z</a>
+			
+			</span>
+			</small>
+	</div>
+    
+    
+           
+<table border='1'>
+<tr><td>
+        <small>
+        <span class='filter-title'>Find Genomes by Phylum:</span>
+		<select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onclick='update_sb()'>
+		<optgroup>
+		  <option value=''>Select a Phylum</option>
 		  <% for(n in phyla) { %>
-			<% if(phyla[n] === phylum){ %>
-			  <option selected value='genome_table?phylum=<%= phyla[n] %>'><%= phyla[n] %></option>
+			<% if(phyla[n] === fltr.phylum){ %>
+			  <option selected value='<%= phyla[n] %>'><%= phyla[n] %></option>
 			<% }else{ %>
-			  <option value='genome_table?phylum=<%= phyla[n] %>'><%= phyla[n] %></option>
+			  <option value='<%= phyla[n] %>'><%= phyla[n] %></option>
 			<% } %>
 		  <% } %>
-		  </optgroup>
-		  </select>
-		  </small>
-	</div>  <!-- end phylum-filter -->
-	
-    </div>	 <!--  end col-left1-->
-  
-    <div id="column_right1" >
-		<div class='alpha-select'>
-		  <center>
-			<small>Select Genus by Alphabet: <br>
-			<span class='alpha-list'> 
-			<a id='A' href='genome_table?k=A'>A</a>|<a id='B' href='genome_table?k=B'>B</a>|<a id='C' href='genome_table?k=C'>C</a>|<a id='D' href='genome_table?k=D'>D</a>|<a id='E' href='genome_table?k=E'>E</a>|<a id='F' href='genome_table?k=F'>F</a>|<a id='G' href='genome_table?k=G'>G</a>|<a id='H' href='genome_table?k=H'>H</a>|<a id='I' href='genome_table?k=I'>I</a>|<a id='J' href='genome_table?k=J'>J</a>|<a id='K' href='genome_table?k=K'>K</a>|<a id='L' href='genome_table?k=L'>L</a>|<a id='M' href='genome_table?k=M'>M</a>|<a id='N' href='genome_table?k=N'>N</a>|<a id='O' href='genome_table?k=O'>O</a>|<a id='P' href='genome_table?k=P'>P</a>|<a id='Q' href='genome_table?k=Q'>Q</a>|<a id='R' href='genome_table?k=R'>R</a>|<a id='S' href='genome_table?k=S'>S</a>|<a id='T' href='genome_table?k=T'>T</a>|<a id='U' href='genome_table?k=U'>U</a>|<a id='V' href='genome_table?k=V'>V</a>|<a id='W' href='genome_table?k=W'>W</a>|<a id='X' href='genome_table?k=X'>X</a>|<a id='Y' href='genome_table?k=Y'>Y</a>|<a id='Z' href='genome_table?k=Z'>Z</a>
-		    </span>
-			</small>
-			</center>
-		</div>
-	</div>
-	 	 
-</div>
+		</optgroup>
+		</select>
+		<span class='button' onclick='clear_phylum()'>Clear</span>
+		<span style='float:right;'>Paging: 
+		  <% if(fltr.paging === 'on'){ %>
+		    <input type='radio' checked name='paging' value='on' onclick='update_sb()' > On&nbsp;
+		    <input type='radio'         name='paging' value='off' onclick='update_sb()' > Off&nbsp;
+		  <% }else{ %>
+		    <input type='radio'         name='paging' value='on' onclick='update_sb()' > On&nbsp;
+		    <input type='radio' checked name='paging' value='off' onclick='update_sb()' > Off&nbsp;
+		  <% } %>
+		</span>
+		</small>
+</td></tr>
+<tr><td>
+    <small>
+    <span class='filter-title'>Search This Table:</span>
+    <span class="">
+    <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='dropdown' name='txt_srch' maxlength='50' size='25' onclick='update_sb()'>
+    <select class='dropdown' id='field_select' value='<%= fltr.text.field %>' class="" name='field' onclick='update_sb()'>
+        <optgroup>
+        <option value='all'>All Fields</option>
+        <option value='seqid'>Seq-ID</option>
+        <option value='taxid'>Taxon-ID</option>
+        <option value='genus'>Genus</option>
+        <option value='species'>Species</option>
+        <option value='strain'>Strain</option>
+        <option value='io'>Isolation Origin</option>
+        <option value='status'>Sequence Status</option>
+        <option value='submitter'>Submitter</option>
+        </optgroup>
+    </select>
+    <span class='button' onclick='clear_search_txt()'>Clear</span>
+    </span>
+    </small>
+</td></tr>
+<tr><td>
+       <small>
+        <span class='filter-title'>Sort Column</span>:&nbsp;&nbsp;
+        <% if(fltr.sort_col === 'gid'){ %>
+        <input type='radio' checked name='sort_col' value='gid' onclick='update_sb()' > SEQ-ID&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='gid' onclick='update_sb()' > SEQ-ID&nbsp;
+        <% } %>
+        <% if(fltr.sort_col === 'otid'){ %>
+        <input type='radio' checked name='sort_col' value='otid' onclick='update_sb()' > Taxon-ID&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='otid' onclick='update_sb()' > Taxon-ID&nbsp;
+        <% } %>
+        
+        <% if(fltr.sort_col === 'genus'){ %>
+        <input type='radio' checked name='sort_col' value='genus' onclick='update_sb()' > Genus/Species&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='genus' onclick='update_sb()' > Genus/Species&nbsp;
+        <% } %>
+        <% if(fltr.sort_col === 'species'){ %>
+        <input type='radio' checked name='sort_col' value='species' onclick='update_sb()' > Species&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='species' onclick='update_sb()' > Species&nbsp;
+        <% } %>
+        <% if(fltr.sort_col === 'ccolct'){ %>
+        <input type='radio' checked name='sort_col' value='ccolct' onclick='update_sb()' > Strain&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='ccolct' onclick='update_sb()' > Strain&nbsp;
+        <% } %>
+        <% if(fltr.sort_col === 'ncontigs'){ %>
+        <input type='radio' checked name='sort_col' value='ncontigs' onclick='update_sb()' > Contigs
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='ncontigs' onclick='update_sb()' > Contigs
+        <% } %>
+        <% if(fltr.sort_col === 'tlength'){ %>
+        <input type='radio' checked name='sort_col' value='tlength' onclick='update_sb()' > Length
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='tlength' onclick='update_sb()' > Length
+        <% } %>
+        <% if(fltr.sort_col === 'gc'){ %>
+        <input type='radio' checked name='sort_col' value='gc' onclick='update_sb()' > GC
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='gc' onclick='update_sb()' > GC
+        <% } %>
+        <span id='sort_rev' title='Reverse the Sort Order'>
+          
+        <% if(fltr.sort_rev === 'on'){ %>
+        <input type='checkbox' checked name='sort_rev' onclick='update_sb()' > Reverse
+        <% }else{ %>
+        <input type='checkbox' name='sort_rev' onclick='update_sb()' > Reverse
+        <% } %>
+        </span>
+        </small>
+</td></tr>
+<tr><td>
+  <button id='form_btn' type='submit' class='button' value='Submit'>Submit</button>
+</td></tr>
+</table>
 
-<div id="row2">
-  <div id="column_left1" >
-	<span id='count_info'>
-	<small>
-	  There are <%= all_genome_count %> genomes representing <%= taxa_wgenomes %> taxa <small>(excluding 'NonOralRef' and 'Dropped').</small>
-	  <% if(phylum === 0 && letter === "all"){ %>
-	    <br><strong>Showing: <%= ginfo.length %></strong>
-	  <% } %>
-	</small>
-	</span>
-  </div>	
-  
-  <div id="column_middle1" >	
-	<div>
-	   <table border='1' style=''>
-	   <tr><td>
-	   <center>Reload Table Paging</center>
-	   <small>with Original Sorting:
-	     <a class="pill pill-brown pill-md" href='genome_table?reset=1'>Reload</a>
-	   </small>
-	   </td><td>
-	   <center>View All <%= all_genome_count %> Genomes</center>
-	   <small>
-	     <center><a class="pill pill-brown pill-md" href='genome_table?reset=all'>Load All</a></center>
-	   <small>
-	   </td></tr>
-	   </table>
-	</div> 
-  </div>	
-  <div id="column_right1" >    
-    <form id='gtable_search' name='gtable_search' method='POST' action='search_genometable' >
-	  
-	  
-            Search This Table:
-            <div class="">
-              <input  id='gene_srch_text' type='text' placeholder="Search.." class='dropdown' name='gene_srch' maxlength='50' size='25'>
-              <select class='dropdown' id='' class="" name='field' >
-                <optgroup>
-              <option value='all'>All Fields</option>
-              <option value='taxid'>Taxon-ID</option>
-              <option value='organism'>Organism</option>
-              <option value='ccolct'>Culture Collection</option>
-              <option value='io'>Isolation Origin</option>
-              <option value='status'>Sequence Status</option>
-              <option value='submitter'>Submitter</option>
-              <option value='seqid'>Seq-ID</option>
-              </optgroup>
-              </select>
+
+</form>	
  
-              <input class="pill pill-brown pill-md float-right" type='button' value=' Go ' onclick='genome_table_search()'> 
-            </div>
-       
-	  
-	  
-
-	</form>
-  </div>	
 </div>
