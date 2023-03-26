@@ -14,6 +14,7 @@ thead th { position: sticky; top: 0; }
 <% ginfo = JSON.parse(data) %>
 <% fltr = JSON.parse(filter) %>
 <% phyla = JSON.parse(phyla) %>
+
 <% filtergid = fltr.gid %>
 <% var cfg = JSON.parse(config) %> 
 
@@ -31,8 +32,8 @@ thead th { position: sticky; top: 0; }
   
   
   <div  class='page-content' >
-
-
+<div class='title'><%= pgtitle %></div>
+<span><small>There are <%= gcount %> genomes representing <%= tcount %> taxa (Including 'NonOralRef' and 'Dropped' Taxa).</small></span>
  <%- include('../../partials/genome_table_filter.ejs') %> 
 <br><%- count_txt %>
 
@@ -129,7 +130,7 @@ thead th { position: sticky; top: 0; }
     //otid = '325'
     row = $('#'+gid.split('.')[0])  // MUST remove the '.' for id
     // scroll 2 more rows == 41 x2 ==164
-    extra = 10
+    extra = 50
     if(row.length) {
       //console.log(row.offset().top);
       ///console.log(tableContainer.height()/2);

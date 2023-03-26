@@ -212,14 +212,18 @@ function update_sb(){ //submit button
 function clear_search_txt(){
    txt = document.getElementById("gene_srch_text");
    dd = document.getElementById("field_select");
+   if(txt.value !== '' && dd.value !== 'all'){
+     update_sb()
+   }
    txt.value = ''
    dd.value = 'all'
-   update_sb()
+   
 }
 function clear_phylum(){
    
    dd = document.getElementById("phylum_select");
-  
+   if(dd.value !== ''){
+     update_sb()
+   }
    dd.value = ''
-   update_sb()
 }

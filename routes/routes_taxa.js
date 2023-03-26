@@ -248,7 +248,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
     //let big_tax_list1 = big_tax_list0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
     
      //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
-     let count_text = 'Count: '+ send_list.length.toString()
+     let count_text = 'Number of Records Found: '+ send_list.length.toString()
      
      let args = {filter: filter, send_list: send_list, count_txt: count_text}
      renderTaxonTable(req, res, args)
@@ -264,7 +264,7 @@ router.post('/tax_table', function tax_table_get(req, res) {
     
     send_list = apply_ttable_filter(req, filter)
     
-    let count_text = 'Count: '+ send_list.length.toString()
+    let count_text = 'Number of Records Found: '+ send_list.length.toString()
      
     let args = {filter:filter, send_list: send_list, count_txt: count_text}
     renderTaxonTable(req, res, args)

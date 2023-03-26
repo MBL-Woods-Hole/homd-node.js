@@ -20,20 +20,30 @@ var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in second
 //app.use(createIframe)
 function renderGenomeTable(req, res, args) {
     console.log('render NEW filter') 
-       
+    let alltax_list = Object.values(C.taxon_lookup)  //.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+    let taxa_wgenomes = alltax_list.filter(item => item.genomes.length >0)
+    let gcount = 0
+    for(let n in alltax_list){
+       gcount +=  alltax_list[n].genomes.length
+    }
+    //let alltax_list = Object.values(C.genome_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+    
+    console.log('taxcount',taxa_wgenomes.length, gcount)
     res.render('pages/genome/genometable', {
         title: 'HOMD :: Genome Table', 
         pgname: 'genome/genome_table', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        
+        pgtitle: 'Genome Table',
         data: JSON.stringify(args.send_list),
         filter: JSON.stringify(args.filter),
         rows_per_page: args.pd.rows_per_page,
+        gcount: gcount, 
+        tcount: taxa_wgenomes.length,
         // letter: args.letter,
 //         otid: otid,
 //         phylum: phylum,
-       
+        
         phyla: JSON.stringify(get_all_phyla().sort()),
         count_txt: args.count_txt,
         taxa_wgenomes: get_taxa_wgenomes().length

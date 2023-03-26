@@ -11,29 +11,28 @@
    font-family: monospace;
 }
 #filter_form_div{
-   
-   
    border:1px solid black;
    padding:2px;
 }
 #form_btn{
   width:100%;
-  color:lightgrey;
+  color:grey;
 }
-#genome_filter_form{
-   padding:0 10px;
+#main_table td{
+   padding:0 30px;
+   /* border:1px solid red; */
+   
 }
-#genome_filter_form table{
-   position:relative;
-   left:10px;
+#filter_table{
+   
    border-collapse:colapse;
 }
-#genome_filter_form table td{
+#filter_table td{
    border-top:1px solid brown;
    padding: 2px 3px;
 }
-#reset_div{
-    float:left;
+#reset_div a{
+   font-size: 14px;
 }
 #sort_rev{
    
@@ -43,17 +42,17 @@
 }
 .button{
    cursor:pointer;
+   color:blue;
+   background:lightgrey;
 }
 </style>
 
 <div id='filter_form_div'>
 
 <form id='genome_filter_form' name='genome_filter_form' method='POST' action='genome_table'>
-    
-    <div id='reset_div' style='float:right;'>
-      <a class='button'  href='reset_gtable'>Reset Filters</a> 
-    </div> 
-    <div class='alpha-select' style='float:right;'>
+<table id='main_table'>    
+<tr><td valign='top'>    
+    <div class='alpha-select'>
 			<br>
 			<small><span class='filter-title'>Genus by Alphabet:</span>
 			[<a class='noletter' id='0' onclick="letter_submit('0');"><small>All</small></a>]
@@ -65,10 +64,16 @@
 			</span>
 			</small>
 	</div>
+	
+</td><td valign='top'> 
+   
+    <div id='reset_div' >
+      <a class='button'  href='reset_gtable'>Reset Filters</a> 
+    </div> 
     
-    
-           
-<table border='1'>
+</td><td> 
+          
+<table id='filter_table' border='1'>
 <tr><td>
         <small>
         <span class='filter-title'>Find Genomes by Phylum:</span>
@@ -178,6 +183,8 @@
 </td></tr>
 </table>
 
+</td></tr>
+</table>
 
 </form>	
  
