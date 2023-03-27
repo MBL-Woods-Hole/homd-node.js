@@ -66,11 +66,11 @@ const help     = require('./routes/routes_help');
 
 
 // PRODUCTION: log every restart
-//if(CFG.ENV === 'production'){
+if(CFG.ENV === 'production'){
     const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
     const restart_logger = new console.Console(output)
     restart_logger.log('Restart on '+helpers.timestamp(false))
-//}
+}
 
 
 //passportConfig(passport, TDBConn);
