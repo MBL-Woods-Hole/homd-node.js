@@ -1127,10 +1127,14 @@ router.get('/blast_sserver', function blast_sserver(req, res){
 router.post('/blast_ss_single', function blast_ss_single(req, res){
   console.log('IN POST blast_ss_single')
   console.log(req.body)
+  
   //console.log(CFG.BLAST_URL_BASE)
   let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].ccolct 
   //console.log(C.genome_lookup[req.body.gid])
-  
+  if(req.session.gtable_filter){
+        req.session.gtable_filter.gid = req.body.gid
+    } 
+    
   let page_title = 'Genomic BLAST: '+organism +' ('+req.body.gid+')'
   if(req.body.annotation){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
