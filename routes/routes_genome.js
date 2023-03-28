@@ -620,7 +620,7 @@ router.get('/explorer', function explorer (req, res) {
   let organism = 'Unknown', pidList
   //let dbChoices = []
   let otid = 0,gc = 0
-  //console.log('C.genome_lookup[gid]',C.genome_lookup[gid])
+  /console.log('C.genome_lookup[gid]',C.genome_lookup[gid])
  
   let args = {}
   //const renderFxn = (req, res, gid, otid, organism,  allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {

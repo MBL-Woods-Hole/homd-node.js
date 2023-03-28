@@ -472,7 +472,7 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
   
   //if(CFG.ENV === 'production'){
     let ip = helpers.getCallerIP(req)
-    const output = fs.createWriteStream('../homd-stats/blastUseIP.log', {flags : 'a'})
+    const output = fs.createWriteStream(CFG.STATS_DIR+'/blastUseIP.log', {flags : 'a'})
     const blastip_logger = new console.Console(output)
     blastip_logger.log(helpers.timestamp(true)+'\t'+ip+'\t'+req.body.blastFxn)
   //}
