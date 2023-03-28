@@ -78,7 +78,7 @@ function get_taxa_wgenomes(){
 }
 function init_page_data(){
    let page_data = {}
-   page_data.rows_per_page = 200
+   page_data.rows_per_page = 500
    
    return page_data
 }
