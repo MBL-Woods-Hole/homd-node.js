@@ -78,7 +78,7 @@ function get_taxa_wgenomes(){
 }
 function init_page_data(){
    let page_data = {}
-   page_data.rows_per_page = 500
+   page_data.rows_per_page = C.PAGER_ROWS
    
    return page_data
 }
@@ -239,7 +239,9 @@ router.get('/genome_table', function genome_table(req, res) {
         filter = get_default_filter()
         req.session.gtable_filter = filter
     }
-    
+    if(req.query.otid && req.session.ttable_filter){
+        req.session.ttable_filter.otid = req.query.otid
+    }
     send_list = apply_gtable_filter(req, filter)
     count_before_paging = send_list.length
     // Initial page = 1 for fast load
@@ -1031,7 +1033,7 @@ router.get('/explorer', function explorer (req, res) {
       if (pageData.page) {
         const trows = rows.length
         // console.log('trows',trows)
-        pageData.row_per_page = 200
+        pageData.row_per_page = C.PAGER_ROWS
         pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
         if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
         if (pageData.page < 1) { pageData.page = pageData.number_of_pages }

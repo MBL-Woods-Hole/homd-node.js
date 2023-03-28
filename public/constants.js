@@ -295,6 +295,6 @@ constants.pangenomes = [
     // **** NOTE NOTE This data is obsolete!!
     
 ]
-
+constants.PAGER_ROWS = 500
 
 module.exports = constants;
