@@ -33,9 +33,19 @@ thead th { position: sticky; top: 0; }
   
   <div  class='page-content' >
 <div class='title'><%= pgtitle %></div>
+
 <span><small>There are <%= gcount %> genomes representing <%= tcount %> taxa (Including 'NonOralRef' and 'Dropped' Taxa).</small></span>
+
+
+<div id='download_browser_text_excel'><b>Download this Genome Data</b>: 
+       <a href='dld_table/browser' >[Browser]</a>
+       <a href='dld_table/text' >[Text]</a>
+       <a href='dld_table/excel' >[Excel]</a>
+</div> 
+
  <%- include('../../partials/genome_table_filter.ejs') %> 
 <br><%- count_txt %>
+   
 
   
 <div id='genome-box'>
@@ -117,13 +127,19 @@ thead th { position: sticky; top: 0; }
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
     mainmenu()  // function in public/js/menu.js
-  var letter = '<%- fltr.letter %>'
-  var gid = '<%- filtergid %>'
-  if(letter){
-    document.getElementById(letter).style.color = 'red'
-    document.getElementById(letter).style.fontSize = 'medium'
-    document.getElementById(letter).style.textDecoration = 'underline'
-  }
+    var letter = '<%- fltr.letter %>'
+    var gid = '<%- filtergid %>'
+    var filter_on = '<%- filter_on %>'
+    if(letter){
+      document.getElementById(letter).style.color = 'red'
+      document.getElementById(letter).style.fontSize = 'medium'
+      document.getElementById(letter).style.textDecoration = 'underline'
+    }
+    if(filter_on === 'on'){
+       document.getElementById('reset').style.color = 'orange'
+       document.getElementById('reset').style.background = 'black'
+       document.getElementById('reset').style.cursor = 'pointer'
+    }
     //scrollto
     table = $('gnom-table')
     tableContainer = $('#genome-box')
