@@ -189,32 +189,46 @@ function apply_gtable_filter(req, filter) {
     
     //sort_col
     if(vals.sort_rev === 'on'){
-        if(vals.sort_col === 'otid' || vals.sort_col === 'contigs' || vals.sort_col === 'length' || vals.sort_col === 'gc'){
+        console.log('REV sorting by ',vals.sort_col)
+         if(vals.sort_col === 'genus'){
+          big_g_list.sort(function (b, a) {
+            return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+          })
+        }else if(vals.sort_col === 'otid' || vals.sort_col === 'ncontigs' || vals.sort_col === 'tlength'){
           big_g_list.sort(function (b, a) {
             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else if(vals.sort_col === 'gc'){
+          big_g_list.sort(function (b, a) {
+            return helpers.compareStrings_float(a[vals.sort_col], b[vals.sort_col]);
           })
         }else{
           big_g_list.sort(function (b, a) {
             return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
           })
         }
+        
     }else{
+        console.log('FWD sorting by ',vals.sort_col)
         if(vals.sort_col === 'genus'){
           big_g_list.sort(function (a, b) {
             return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
           })
-        }else if(vals.sort_col === 'otid' || vals.sort_col === 'contigs' || vals.sort_col === 'length' || vals.sort_col === 'gc'){
+        }else if(vals.sort_col === 'otid' || vals.sort_col === 'ncontigs' || vals.sort_col === 'tlength'){
           big_g_list.sort(function (a, b) {
             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
+        }else if(vals.sort_col === 'gc'){
+          big_g_list.sort(function (a, b) {
+            return helpers.compareStrings_float(a[vals.sort_col], b[vals.sort_col]);
+          })
         }else{
-          
-          console.log('sorting by ',vals.sort_col)
           big_g_list.sort(function (a, b) {
             return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
           })
         }
     }
+    // format big nums
     big_g_list.map(function mapGidObjList (el) {
         if (el.tlength) { 
             el.tlength = helpers.format_long_numbers(el.tlength); 
