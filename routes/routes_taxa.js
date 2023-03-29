@@ -19,7 +19,7 @@ function renderTaxonTable(req, res, args) {
         
         res.render('pages/taxa/taxtable', {
             title: 'HOMD :: Taxon Table', 
-            pgtitle: 'List of Human Oral Microbial Taxa',
+            pgtitle: 'Human Oral Microbial Taxa',
             pgname: 'taxon/tax_table',  //for AbountThisPage
             config: JSON.stringify(CFG),
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -52,28 +52,28 @@ function get_default_filter(){
     }
     return defaultfilter
 }
-// function get_null_filter(){
-//     let nullfilter = {
-//         otid:'',
-//         status:{
-//             named:'off',
-//             unnamed:'off',
-//             phylotype: 'off',
-//             lost: 'off',
-//             dropped:'off',
-//             nonoralref:'off'
-//         },
-//         genomes:'both',
-//         text:{
-//             txt_srch: '',
-//             field: '',
-//         },
-//         letter: '0',
-//         sort_col: 'otid',
-//         sort_rev: 'off'
-//     }
-//     return nullfilter
-// }
+function get_null_filter(){
+    let nullfilter = {
+        otid:'',
+        status:{
+            named:'off',
+            unnamed:'off',
+            phylotype: 'off',
+            lost: 'off',
+            dropped:'off',
+            nonoralref:'off'
+        },
+        genomes:'both',
+        text:{
+            txt_srch: '',
+            field: 'all',
+        },
+        letter: '0',
+        sort_col: 'otid',
+        sort_rev: 'off'
+    }
+    return nullfilter
+}
 function set_ttable_session(req) {
     // set req.session.ttable_filter.otid 5 places
     // 1taxa/life
@@ -87,7 +87,7 @@ function set_ttable_session(req) {
     if(req.session.ttable_filter && req.session.ttable_filter.letter){
        letter = req.session.ttable_filter.letter
     }
-    req.session.ttable_filter = get_default_filter()
+    req.session.ttable_filter = get_null_filter()
     req.session.ttable_filter.letter = letter
     
     for( let item in req.body){
