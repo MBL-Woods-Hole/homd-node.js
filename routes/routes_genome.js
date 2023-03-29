@@ -215,6 +215,11 @@ function apply_gtable_filter(req, filter) {
           })
         }
     }
+    big_g_list.map(function mapGidObjList (el) {
+        if (el.tlength) { 
+            el.tlength = helpers.format_long_numbers(el.tlength); 
+        }
+    })
     return big_g_list
 }
 function get_filter_on(f){
