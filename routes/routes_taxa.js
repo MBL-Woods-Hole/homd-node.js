@@ -82,8 +82,8 @@ function set_ttable_session(req) {
     // 3taxa/ecology
     // 4taxa/tax_description
     // 5genome_genome_table
-    console.log('set sess body',req.body)
-    console.log('xsession',req.session)
+    //console.log('set sess body',req.body)
+    //console.log('xsession',req.session)
     let letter = '0'
     if(req.session.ttable_filter && req.session.ttable_filter.letter){
        letter = req.session.ttable_filter.letter
@@ -145,7 +145,7 @@ function apply_ttable_filter(req, filter) {
     }else{
         vals = get_default_filter()
     }
-    console.log('vals',vals)
+    //console.log('vals',vals)
     //
     // txt_srch
     if(vals.text.txt_srch !== ''){
@@ -154,7 +154,7 @@ function apply_ttable_filter(req, filter) {
     //status
     // create array of 'on's
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on') 
-    console.log('status_on',status_on)
+    //console.log('status_on',status_on)
     big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     //
     //letter
@@ -216,8 +216,8 @@ function apply_ttable_filter(req, filter) {
             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
         }else{
-          console.log(big_tax_list[0])
-          console.log('sorting by ',vals.sort_col)
+          //console.log(big_tax_list[0])
+          //console.log('sorting by ',vals.sort_col)
           big_tax_list.sort(function (a, b) {
             return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
           })
@@ -237,19 +237,19 @@ function get_filter_on(f){
     }
 }
 router.get('/reset_ttable', function tax_table_reset(req, res) {
-   console.log('in RESET-session')
+   //console.log('in RESET-session')
    req.session.ttable_filter = get_default_filter()
    res.redirect('back');
 })
 router.get('/tax_table', function tax_table_get(req, res) {
     let filter,send_list
-    console.log('get-session ',req.session.ttable_filter)
+    //console.log('get-session ',req.session.ttable_filter)
      
     if(req.session.ttable_filter){
-        console.log('filetr session')
+        //console.log('filetr session')
         filter = req.session.ttable_filter
     }else{
-        console.log('filetr from default')
+        //console.log('filetr from default')
         filter = get_default_filter()
         req.session.ttable_filter = filter
     }
@@ -267,11 +267,11 @@ router.get('/tax_table', function tax_table_get(req, res) {
 })
 
 router.post('/tax_table', function tax_table_get(req, res) {
-    console.log('in POST tt filter')
-    console.log(req.body)
+    //console.log('in POST tt filter')
+    //console.log(req.body)
     let send_list
     set_ttable_session(req)
-    console.log('ttable_session',req.session.ttable_filter)
+    //console.log('ttable_session',req.session.ttable_filter)
     let filter = req.session.ttable_filter
     
     send_list = apply_ttable_filter(req, filter)
@@ -315,7 +315,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
 //
 //
 router.post('/tax_level', function tax_level_post(req, res) {
-  console.log('in taxlevel POST')
+  //console.log('in taxlevel POST')
   helpers.print(req.body)
   
   let rank = req.body.rank
@@ -569,7 +569,7 @@ router.get('/tax_description', function tax_description(req, res){
   //let pid_list = plist.map(item => item.pid)
   //console.log('pid_list',pid_list)
   let text_file = get_rank_text('species','',otid)
-  console.log('text_file',text_file)
+  //console.log('text_file',text_file)
   if(! text_file[0]){
 	  if(C.taxon_info_lookup[otid]){
 		  data2 = C.taxon_info_lookup[otid]
@@ -671,7 +671,7 @@ router.post('/get_refseq', function get_refseq(req, res) {
 
 router.get('/life', function life(req, res) {
   
-  console.log('in LIFE')
+  //console.log('in LIFE')
   // let myurl = url.parse(req.url, true);
   let tax_name = req.query.name;
   let rank = (req.query.rank)
@@ -855,7 +855,7 @@ router.get('/life', function life(req, res) {
 })
 //
 router.get('/ecology_home', function ecology_index(req, res) {
-    console.log('in ecology index')
+    //console.log('in ecology index')
     let bar_graph_data = []
     let site_species = {},sp_per_site = {}// {site,sp,abund} ordered by sp
     // let graph_site_order = C.base_abundance_order
@@ -1063,7 +1063,7 @@ router.get('/ecology', function ecology(req, res) {
           otid = node.otid
       }
     }else if(rank === 'subspecies'){
-      console.log(node)
+      //console.log(node)
       otid = node.otid
     }
    //console.log('node',node)
@@ -1327,7 +1327,7 @@ router.get('/download/:type/:fxn', function download(req, res) {
 })
 
 router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
-    console.log('in dld abund - taxon')
+    //console.log('in dld abund - taxon')
     let type = req.params.type
     let source = req.params.source
     //helpers.print('type: '+type+' source: '+source)
@@ -1427,19 +1427,19 @@ router.get('/dld_table/:type', function dld_tax_table(req, res) {
    // type == text excel browser
   // Using req.session.ttable_filter
   
-  console.log('in dld table - taxon')
+  //console.log('in dld table - taxon')
   //console.log(req.body)
   let send_list = []
   let type = req.params.type
   let letter = req.session.ttable_filter.letter
   //let sitefilter = JSON.parse(req.params.sites)
-  console.log(req.session.ttable_filter.status)
+  //console.log(req.session.ttable_filter.status)
   //let k = Object.keys(req.session.ttable_filter.status).filter(item => req.session.ttable_filter.status[item] === 'on')
   //console.log('K',k)
   let statusfilter = Object.keys(req.session.ttable_filter.status).filter(item => req.session.ttable_filter.status[item] === 'on')
   let search_txt = req.session.ttable_filter.text.txt_srch
   let search_field = req.session.ttable_filter.text.field
-  console.log(type,letter,statusfilter,search_txt,search_field)
+  //console.log(type,letter,statusfilter,search_txt,search_field)
   // Apply filters
   let temp_list = Object.values(C.taxon_lookup);
   let file_filter_txt = ""
@@ -1500,7 +1500,7 @@ router.get('/dld_table/:type', function dld_tax_table(req, res) {
 //
 //
 router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
-    console.log('in abundance_by_site')
+    //console.log('in abundance_by_site')
     
     let rank = req.params.rank
     let node_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank]
@@ -1539,7 +1539,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
 })
 //
 router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, res) {
-    console.log('in show_all_abundance')
+    //console.log('in show_all_abundance')
     let site = req.params.site
     let rank = req.params.rank
     //console.log('site2',site,'rank2',rank)
@@ -1585,7 +1585,7 @@ function get_rank_text(rank, tax_name, otid){
       if(C.names_w_text.genera.indexOf(tax_name) != -1){
         text[0] = 'genus/'+tax_name+'.ejs'
       }else if(C.names_w_text.provisional_genera.indexOf(tax_name) != -1){
-        console.log('GOT Provisional')
+        //console.log('GOT Provisional')
         //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
         let children_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'].children_ids
         let num_species = children_ids.length

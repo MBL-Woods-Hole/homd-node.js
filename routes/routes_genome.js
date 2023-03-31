@@ -19,7 +19,7 @@ var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in second
 //const JB = require('jbrowse2')
 //app.use(createIframe)
 function renderGenomeTable(req, res, args) {
-    console.log('render NEW filter') 
+    //console.log('render NEW filter') 
     let alltax_list = Object.values(C.taxon_lookup)  //.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
     let taxa_wgenomes = alltax_list.filter(item => item.genomes.length >0)
     let gcount = 0
@@ -80,12 +80,12 @@ function init_page_data(){
 function apply_pages(glist,fltr, pd){
   let genomeList
   pd.trecords = glist.length
-  console.log('fltr',fltr)
+  //console.log('fltr',fltr)
   
   const trows = pd.trecords
   if(trows > pd.rows_per_page){
     
-    console.log('IN PD trows',trows)
+    //console.log('IN PD trows',trows)
     
     pd.number_of_pages = Math.ceil(trows / pd.rows_per_page)
     if (pd.page > pd.number_of_pages) { pd.page = 1 }
@@ -108,8 +108,8 @@ function apply_pages(glist,fltr, pd){
 }
 function set_gtable_session(req) {
     
-    console.log('set sess body',req.body)
-    console.log('xsession',req.session)
+    //console.log('set sess body',req.body)
+    //console.log('xsession',req.session)
     let letter = '0'
     if(req.session.gtable_filter && req.session.gtable_filter.letter){
        letter = req.session.gtable_filter.letter
@@ -165,7 +165,7 @@ function filter_for_phylum(glist, phy){
 }
 function apply_gtable_filter(req, filter) {
     let big_g_list = Object.values(C.genome_lookup);
-    console.log(big_g_list[0])
+    //console.log(big_g_list[0])
     let vals
     if(req.session.gtable_filter){
        vals = req.session.gtable_filter
@@ -189,7 +189,7 @@ function apply_gtable_filter(req, filter) {
     
     //sort_col
     if(vals.sort_rev === 'on'){
-        console.log('REV sorting by ',vals.sort_col)
+        //console.log('REV sorting by ',vals.sort_col)
          if(vals.sort_col === 'genus'){
           big_g_list.sort(function (b, a) {
             return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
@@ -209,7 +209,7 @@ function apply_gtable_filter(req, filter) {
         }
         
     }else{
-        console.log('FWD sorting by ',vals.sort_col)
+        //console.log('FWD sorting by ',vals.sort_col)
         if(vals.sort_col === 'genus'){
           big_g_list.sort(function (a, b) {
             return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
@@ -247,7 +247,7 @@ function get_filter_on(f){
     }
 }
 router.get('/reset_gtable', function gen_table_reset(req, res) {
-   console.log('in RESET-session')
+   //console.log('in RESET-session')
    req.session.gtable_filter = get_default_filter()
    res.redirect('back');
 });
@@ -260,10 +260,10 @@ router.get('/genome_table', function genome_table(req, res) {
        page_data.page = 1
     }
     if(req.session.gtable_filter){
-        console.log('gfiletr session')
+        //console.log('gfiletr session')
         filter = req.session.gtable_filter
     }else{
-        console.log('gfiletr from default')
+        //console.log('gfiletr from default')
         filter = get_default_filter()
         req.session.gtable_filter = filter
     }
@@ -279,10 +279,10 @@ router.get('/genome_table', function genome_table(req, res) {
       ret = apply_pages(send_list, filter, page_data)
       send_list = ret.glist
       page_data = ret.pd
-      console.log('get init pd',page_data)
-      console.log(page_data)
+      //console.log('get init pd',page_data)
+      //console.log(page_data)
       if(count_before_paging > send_list.length){
-         console.log('must add pager txt')
+         //console.log('must add pager txt')
          pager_txt = '; [page: '+page_data.page + " (of "+page_data.number_of_pages+"p) ]"
          let next = (page_data.page + 1).toString()
          let prev = (page_data.page - 1).toString()
@@ -296,11 +296,11 @@ router.get('/genome_table', function genome_table(req, res) {
 
 });
 router.post('/genome_table', function genome_table_filter(req, res) {
-    console.log('in POST gt filter')
-    console.log(req.body)
+    //console.log('in POST gt filter')
+    //console.log(req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret,args,count_txt
     set_gtable_session(req)
-    console.log('gtable_session',req.session.gtable_filter)
+    //console.log('gtable_session',req.session.gtable_filter)
     filter = req.session.gtable_filter
    
     send_list = apply_gtable_filter(req, filter)
@@ -331,7 +331,7 @@ router.post('/genome_table', function genome_table_filter(req, res) {
 router.get('/jbrowse', function jbrowse (req, res) {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
   helpers.accesslog(req, res)
-  console.log('jbrowse-get')
+  ////console.log('jbrowse-get')
   //let myurl = url.parse(req.url, true);
     
   const gid = req.query.gid
@@ -364,7 +364,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
 })
 //
 router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
-  console.log('AJAX JBrowse')
+  //console.log('AJAX JBrowse')
   helpers.print(req.body)
   // URL from old HOMD site:
   // ?data=homd/SEQF2029
@@ -379,7 +379,7 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
 })
 //
 router.get('/genome_description', function genomeDescription (req, res) {
-  console.log('in genomedescription -get')
+  //console.log('in genomedescription -get')
   
   //let myurl = url.parse(req.url, true);
   if(req.query.gid && req.session.gtable_filter){
@@ -463,7 +463,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
 })
 
 router.post('/get_16s_seq', function get16sSeqPost (req, res) {
-  console.log('in get_16s_seq -post')
+  //console.log('in get_16s_seq -post')
   
   helpers.print(req.body)
   const gid = req.body.seqid
@@ -497,8 +497,8 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 })
 
 router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
-  console.log('in get_NN_NA_seq -post')
-  console.log(req.body)
+  //console.log('in get_NN_NA_seq -post')
+  //console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
@@ -525,7 +525,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   }
   let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
   q += " WHERE seq_id ='"+gid+"' and protein_id='" + pid + "'"
-  console.log('anno2 query '+q)
+  //console.log('anno2 query '+q)
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
     if (err) {
@@ -534,8 +534,8 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
     }
     //console.log(rows)
     const seqstr = (rows[0].seq).toString()
-    console.log(seqstr)
-    console.log(seqstr.length)
+    //console.log(seqstr)
+    //console.log(seqstr.length)
     const arr = helpers.chunkSubstr(seqstr, 80)
     const html = arr.join('<br>')
     //html = seqstr
@@ -546,8 +546,8 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
 })
 //
 router.post('/open_explorer_search', function open_explorer_search (req, res) {
-    console.log('in POST:open_explorer_search')
-    console.log(req.body)
+    //console.log('in POST:open_explorer_search')
+    //console.log(req.body)
     let gid = req.body.gid
     let anno = req.body.anno
     let searchtext = req.body.searchtext
@@ -622,8 +622,8 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
 //       q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
 //       q += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
     
-    console.log(q)
-    console.log('anno query '+q)
+    //console.log(q)
+    //console.log('anno query '+q)
     let tmp = []
     
     TDBConn.query(q, (err, rows) => {
@@ -666,7 +666,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     })  // end Conn
 })
 router.get('/explorer', function explorer (req, res) {
-  console.log('in explorer')
+  //console.log('in explorer')
   // let myurl = url.parse(req.url, true)
   const gid = req.query.gid
   if(gid && req.session.gtable_filter){
@@ -788,7 +788,7 @@ router.get('/explorer', function explorer (req, res) {
   
   //select GC, PID, product, length_na,length_aa, `start`, `stop` FROM `PROKKA_meta`.`orf`  WHERE seq_id = 'SEQF1595'
   
-  console.log('anno query '+q)
+  //console.log('anno query '+q)
   //OLD ADBConn.query(q, (err, rows) => {
   TDBConn.query(q, (err, rows) => {
     if (err) {
@@ -841,7 +841,7 @@ router.get('/blast_server', function genome_blast_server(req, res) {
 router.get('/blast_per_genome', function blast_per_genome(req, res) {
    //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
   helpers.accesslog(req, res)
-  console.log('blast_per_genome')
+  //console.log('blast_per_genome')
   //let myurl = url.parse(req.url, true);
     
   const gid = req.query.gid
@@ -872,8 +872,9 @@ router.get('/blast_per_genome', function blast_per_genome(req, res) {
     user: JSON.stringify(req.user || {}),
   })
 })
+
 router.get('/blast_sserver', function blast_sserver(req, res){
-   console.log(req.query)
+   //console.log(req.query)
    let db_type = req.query.type
    let page_title = ''
    if(db_type == 'refseq'){
@@ -884,7 +885,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
    
    res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
-    pgname: 'genome/BLAST', // for AboutThisPage
+    pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
@@ -897,8 +898,8 @@ router.get('/blast_sserver', function blast_sserver(req, res){
 })
 
 router.post('/blast_ss_single', function blast_ss_single(req, res){
-  console.log('IN POST blast_ss_single')
-  console.log(req.body)
+  //console.log('IN POST blast_ss_single')
+  //console.log(req.body)
   
   //console.log(CFG.BLAST_URL_BASE)
   let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].ccolct 
@@ -913,7 +914,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   }
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
-    pgname: 'genome/BLAST', // for AboutThisPage
+    pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
@@ -926,8 +927,8 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
    
 })
 router.post('/blast_single_test', function(req, res){
-  console.log('IN POST blast_single_test')
-  console.log(req.body)
+  //console.log('IN POST blast_single_test')
+  //console.log(req.body)
    res.render('pages/genome/test_blast_single', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
@@ -937,7 +938,7 @@ router.post('/blast_single_test', function(req, res){
   })
 })
 router.post('/blast_single', function blast_single(req, res) {
-    console.log(req.body)
+    //console.log(req.body)
     // 'prokka|fna|SEQF1595.2|/Users/avoorhis/programming/blast-db-alt/fna/SEQF1595.2.fna'
     let blast_db_parts = req.body.blastdb.split('|')
     let anno    = blast_db_parts[0]
@@ -959,7 +960,7 @@ router.post('/blast_single', function blast_single(req, res) {
 
 })
 router.get('/blast_server_one', function blast_test(req, res) {
-  console.log('blast_test')
+  //console.log('blast_test')
   let gid = req.query.gid
   const { spawn } = require("child_process");
   let info = {}, filepath
@@ -989,7 +990,7 @@ router.get('/blast_server_one', function blast_test(req, res) {
           data.push(result[n])
        }
     }
-    console.log('data-results',data)
+    //console.log('data-results',data)
     res.render('pages/genome/blast_one_genome', {
     title: 'HOMD :: BLAST', 
     pgname: '', // for AboutThisPage
@@ -1015,10 +1016,10 @@ router.get('/genome_blast', function blast_get(req, res) {
   console.log(req.query)
 })
 router.get('/blast', function blast_get(req, res) {
-   console.log('in genome blast-GET')
+   //console.log('in genome blast-GET')
    let chosen_gid = req.query.gid
    if(!chosen_gid){chosen_gid='all'}
-   console.log('chosen gid=',chosen_gid)
+   //console.log('chosen gid=',chosen_gid)
    let sg = helpers.makeid(3).toUpperCase()
    let organism,dbChoices
    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
@@ -1138,7 +1139,7 @@ router.get('/blast', function blast_get(req, res) {
 // The main menu goues through routes_homd::open_tree
 router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   
-  console.log('in conserved_protein_tree')
+  //console.log('in conserved_protein_tree')
   // let myurl = url.URL(req.url, true);
   const otid = req.query.otid
   const fullname = helpers.make_otid_display_name(otid)
@@ -1166,7 +1167,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
 })
 router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   helpers.accesslog(req, res)
-  console.log('in ribosomal_protein_tree')
+  //console.log('in ribosomal_protein_tree')
 
   const otid = req.query.otid
   // https://www.homd.org/ftp/phylogenetic_trees/genome/V10.1/eHOMD_Ribosomal_Protein_Tree.svg
@@ -1190,7 +1191,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
 })
 router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   helpers.accesslog(req, res)
-  console.log('in rRNA_gene_tree')
+  //console.log('in rRNA_gene_tree')
   // const myurl = url.URL(req.url, true)
   // const myurl = new url.URL(req.url)
   const otid = req.query.otid
@@ -1217,7 +1218,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //
 router.get('/dld_table/:type', function dldTable (req, res) {
   helpers.accesslog(req, res)
-  console.log('in download table -genome:')
+  //console.log('in download table -genome:')
   
   const type = req.params.type
   const letter = req.session.gtable_filter.letter
@@ -1457,7 +1458,7 @@ function get_blast_db_info(gid){
     for(let p in paths){
        for(let e in exts){
            filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
-           console.log(filepath)
+           //console.log(filepath)
            let full_data = ''
            promises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
            // run = spawn('/Users/avoorhis/.sequenceserver/ncbi-blast-2.12.0+/bin/blastdbcmd',['-db',filepath,'-info'])
