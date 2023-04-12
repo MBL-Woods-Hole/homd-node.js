@@ -2,15 +2,27 @@
 <html><head><title>HOMD RefSeq Tree</title>
 
 <meta charset="UTF-8">
+
 </head><body>
+
+	<!-- <object data="/trees/refseq_tree_V15.23.svg" type="image/svg+xml"></object> -->
+	<!-- <img src="/trees/refseq_tree_V15.23.svg" type="image/svg+xml" width='100%' /> -->
 	<%- svg %>
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
 <script>
 var otid = "<%= otid %>"
 taxidfullname = 'HMT-'+("000" + otid).slice(-3);
-console.log(taxidfullname)
-$("text:contains('"+taxidfullname+"')").css({"fill": "red"}, {"background-color": "#FFFF00" })
+// console.log(taxidfullname)
+// let y = $("text:contains('"+taxidfullname+"')").css({"font-size":"120%","fill": "red", "background-color": "green" })
+// let x = $("text:contains('"+taxidfullname+"')").closest("tspan").css({"background-color": "green" })
+// //$("text:contains('"+taxidfullname+"')").css("background-color", "coral");
 window.scrollTo(0, $("text:contains('"+taxidfullname+"')").offset().top-50)
+// console.log(x)
+
+let target = $("text:contains('"+taxidfullname+"')")
+//window.scrollTo(0,1200)
+$(target).children("tspan").css({"fill": "red","font-size":"120%" });
+//console.log(target)
 </script>
 
 </body>
