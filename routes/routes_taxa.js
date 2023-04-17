@@ -652,16 +652,20 @@ router.get('/tax_description', function tax_description(req, res){
 router.post('/get_refseq', function get_refseq(req, res) {
   helpers.print(req.body)
   var refseq_id = req.body.refid;
-
+  let html
   
   //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
   let q = queries.get_refseq_query(refseq_id)
   helpers.print(q)
   TDBConn.query(q, (err, rows) => {
     //console.log(rows)
-    let seqstr = rows[0].seq.toString()
-    let arr = helpers.chunkSubstr(seqstr,80)
-    let html = arr.join('<br>')
+    if(!rows || rows.length == 0){
+        html = 'No Seq Found'
+    }else{
+       let seqstr = rows[0].seq.toString()
+       let arr = helpers.chunkSubstr(seqstr,80)
+       html = arr.join('<br>')
+    }
     res.send(html)
   })
 })

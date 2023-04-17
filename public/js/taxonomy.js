@@ -328,10 +328,11 @@ function change_valid(val){
 }
 
 
-function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,site,flag) {
+function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,genomes) {
     
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
-    var defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
+    
+    var defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' |  Genomes: '+genomes.toString()
     console.log(defline)
     var args={}
     args.refid = seqid

@@ -364,17 +364,17 @@
       </span>
       <table class='small-tbl' border='0'>
         <% for( var n in data5){ %>
-            <!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+            <!-- OLD: >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+            <!-- NEW: >81531021 | Methanobrevibacter oralis | HMT-815 | Strain: DSM 7256 | PROKKA: SEQF3102_01675 | Status: Named | Genomes: 5 -->
             <% refseqid   = data5[n].refseqid %>
-            <% refseqname   = data5[n].seqname %>
+            <% refseqname = data5[n].seqname %>
             <% refstrain  = data5[n].strain %>
-            <% refgenbank   = data5[n].genbank %>
+            <% refgenbank = data5[n].genbank %>
             <% refstatus  = data1.status %>
-            <% refsite    = data1.site %>
-            <% refflag    = data1.genomes === [] ? 'Genome:No' : 'Genome:Yes' %>
+            
             <tr><td style='border:none;padding:0 1px;'>
                <span class='rs-span-1'>
-              RefSeq ID:<a href='#' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= refsite %>','<%= refflag %>')">
+              RefSeq ID:<a href='#' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= data1.genomes.length %>')">
               <%= refseqid %></a>
                </span>
             </td></tr>
