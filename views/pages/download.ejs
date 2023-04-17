@@ -98,14 +98,14 @@ width:180px;
     <div  class="" >
      <div  id="downloadMenu" >
       <div class="list-group">
-        <a href="#" onclick="scrollToAnchor('top')" >[top]</a>
-        <br><a href="#" onclick="scrollToAnchor('taxon')">Taxonomy data</a>
-        <br><a href="#" onclick="scrollToAnchor('abundance')">Abundance data</a>
-        <br><a href="#" onclick="scrollToAnchor('genome')">Genomic data</a>
-        <br><a href="#" onclick="scrollToAnchor('phylo')">Phylo data</a>
-       <!--  <br><a href="#" onclick="scrollToAnchor('taxon')">Phage data</a> -->
-        <br><a href="#" onclick="scrollToAnchor('refseq')">16S rRNA seqs</a>
-        <br><a href="#" onclick="scrollToAnchor('schema')">Database Schema</a>
+        <a href='#top'  >[top]</a>
+        <br><a href='#taxon' ">Taxonomy data</a>
+        <br><a href='#abundance' >Abundance data</a>
+        <br><a href='#genome' >Genomic data</a>
+        <br><a href='#phylo' >Phylo data</a>
+       <!--  <br><a href='#phage'>Phage data</a> -->
+        <br><a href='#refseq' >16S rRNA seqs</a>
+        <br><a href='#schema' ">Database Schema</a>
       
       </div>
      </div>
@@ -397,13 +397,14 @@ We have not yet updated our own GenBank sequences, and can not update those from
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
-function scrollToAnchor(aid){
-        const destination = $("a[name='"+ aid +"']");
-        console.log(aid)
-        $('html,body').animate({
-            scrollTop: destination.offset().top
-        },'slow');
-  }
+
+  $('a').click(function(){
+    $('html, body').animate({
+        scrollTop: $( $(this).attr('href') ).offset().top
+    }, 500);
+    return false;
+  });
+
   mainmenu()
   
   

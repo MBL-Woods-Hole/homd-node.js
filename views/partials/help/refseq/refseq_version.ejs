@@ -1,8 +1,9 @@
+<% var cfg = JSON.parse(config) %> 
 <div class='date'>2023-04-10</div>
 <div class='heading'>Version 15.23 Release Notes</div>
-Minor version release notes
-
-
+16S rRNA RefSeq Version 15.23 changed the taxonomy of each sequence based on the latest HOMD Taxonomy database. 
+The latest changes of taxonomy nomenclature was based on this <a href='<%= cfg.FTP_URL %>/homd_ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/current/homd_ncbi_blast_all_tophits-fd-24_old_and_new_names_short.xlsx'>
+Excel spreadsheet dated 2022-01-06</a>
 <div class='date'>2020-02-09</div>
 <div class='heading'>Version 15.22 Release Notes</div>
 
@@ -16,7 +17,7 @@ This is a minor typo correction for those genus names containing special charact
 <div class='date'>2019-09-02</div>
 <div class='heading'>Version 15.2 Release Notes</div>
 
-A total of 17 full-length 16S rRNA gene sequences were added:
+A total of 17 full-length 16S rRNA gene sequences were added: <small><span class='red-text'>[These sequences have the PROKKA: 'XXXX_XXXX' ID instead of GB: 'XXXXXXX' in the Fasta header line.]</span></small>
 <div class='inset'>
 1. 81526711 HMT-815 Methanobrevibacter oralis Strain: JMR01
 
