@@ -12,12 +12,15 @@ thead th { position: sticky; top: 0; }
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data) %>
-<% page_data = JSON.parse(page_data) %>
+<% fltr = JSON.parse(filter) %>
+<% phyla = JSON.parse(phyla) %>
+
+<% filtergid = fltr.gid %>
 <% var cfg = JSON.parse(config) %> 
 
 
 <body>
- <div id="loader" class="center-loader"></div>
+ <div id="loader" class="center-loader" style='z-index:1'></div>
 
   <div id='wrapper'>    
        
@@ -29,97 +32,80 @@ thead th { position: sticky; top: 0; }
   
   
   <div  class='page-content' >
-              
-    <div class='title text-info'>Human Oral Microbial Genomes</div>
-        <div id='download_browser_text_excel'><b>Download this Genome Data</b>: 
-       <a href='dld_table/browser/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Browser]</a>
-       <a href='dld_table/text/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Text]</a>
-       <a href='dld_table/excel/<%= letter %>/<%= phylum %>/<%= otid %>/<%= search_txt %>/<%= search_field %>' >[Excel]</a>
-     </div>    
+<div class='title'><%= pgtitle %></div>
+
+<span><small>There are <%= gcount %> genomes representing <%= tcount %> taxa (Including 'NonOralRef' and 'Dropped' Taxa).</small></span>
+
+
+<div id='download_browser_text_excel'><b>Download this Genome Data</b>: 
+       <a href='dld_table/browser' >[Browser]</a>
+       <a href='dld_table/text' >[Text]</a>
+       <a href='dld_table/excel' >[Excel]</a>
+</div> 
 
  <%- include('../../partials/genome_table_filter.ejs') %> 
+<br><%- count_txt %>
+   
 
- <span style='font-size:14px;font-weight:bold;'>
- <% if(phylum === 0 && letter === "all" && search_txt === 0){ %>
-       
-       
-       Genome Table [page:<%= page_data.show_page %>] 
-	   <% next_page = parseInt(page_data.show_page)+1 %>
-	   <% prev_page = parseInt(page_data.show_page)-1 %>
-	 Number of Records Found: <%= page_data.trecords %> [<%= page_data.number_of_pages %> Pages]
-	   <a href='genome_table?page=<%= prev_page %>'>Previous Page</a>
-	   <==>
-	   <a href='genome_table?page=<%= next_page %>'>Next Page</a>
-	   
- <% }else if(phylum){ %>
-    	Showing all (<%= ginfo.length %>) of phylum: <%= phylum %>
-<% }else if(letter !== 'all'){ %>  
-       Showing all (<%= ginfo.length %>) genera starting with: <b>"<%= letter %>"
-       
- <% }else if(search_txt){ %>
-    Showing all (<%= ginfo.length %>) hits with search string "<i><%= search_txt %></i>"
- <% } %>
- </span>
   
 <div id='genome-box'>
-     
-     
-<table id='gnom-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
-<thead>
-<tr>
-<th class='col2' scope="col" >SEQ-ID</th>
-<th class='col2' >TaxID</th>
-<th class='' scope="col" >Genus</th>
-<th class='' scope="col" >Species</th>
-<th class='col3' scope="col" >Strain/Culture</th>
+    <table id='gnom-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
+    <thead>
+    <tr>
+    <th class='col2' scope="col" >SEQ-ID</th>
+    <th class='col2' >TaxID</th>
+    <th class='' scope="col" >Genus</th>
+    <th class='' scope="col" >Species</th>
+    <th class='col3' scope="col" >Strain/Culture</th>
 
-<th class='col1' scope="col" >Contigs</th>
-<th class='col2' scope="col" >Combined<br>Length</th>
-<th class='col1' scope="col" >GC(%)</th>
-<th class="col9 sorttable_nosort"  >Genome Info and Tools</th>
-<th class="col10 sorttable_nosort" >Annotations</th>
-</tr>
-</thead>
-<tbody>
+    <th class='col1' scope="col" >Contigs</th>
+    <th class='col2' scope="col" >Combined<br>Length</th>
+    <th class='col1' scope="col" >GC(%)</th>
+    <th class="col9 sorttable_nosort"  >Genome Info and Tools</th>
+    <th class="col10 sorttable_nosort" >Annotations</th>
+    </tr>
+    </thead>
+    <tbody>
 
-<% for(n in ginfo){ %>
-  <% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
-  <tr class="">
-    <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
-    <td class='linkout center' nowrap ><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-    <td class='tax_name'><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>'><em><%= ginfo[n].genus %></em></a></td>
-    <td class='tax_name'><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'><em><%= ginfo[n].species %></em></a></td>
-    <td class='tax_name'><em><%= ginfo[n].ccolct %></em></td>
+    <% for(n in ginfo){ %>
+      <% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
+      <% rowid =  ginfo[n].gid.split('.')[0]; %>
+      <tr id='<%= rowid %>' >
+        <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
+        <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
+        <td class='tax_name'><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].genus %></em></a></td>
+        <td class='tax_name'><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].species %></em></a></td>
+        <td class='tax_name'><em><%= ginfo[n].ccolct %></em></td>
     
-    <td class='center'><%= ginfo[n].ncontigs %></td>
-    <td class='center'><%= ginfo[n].tlength %></td>
+        <td class='center'><%= ginfo[n].ncontigs %></td>
+        <td class='center'><%= ginfo[n].tlength %></td>
     
-    <td class='center'><%= ginfo[n].gc %></td>
-    <% gc2 = (parseFloat(ginfo[n].gc)/100).toFixed(2) %>
-    <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?otid=<%= ginfo[n].otid %>'>Taxon Info</a>
-        <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>'>Genome Info</a>
-        <a class='pill pill-lightseagreen' href='<%= cfg.JBROWSE_URL %>/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
+        <td class='center'><%= ginfo[n].gc %></td>
+        <% gc2 = (parseFloat(ginfo[n].gc)/100).toFixed(2) %>
+        <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info</a>
+            <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Genome Info</a>
+            <a class='pill pill-lightseagreen' href='<%= cfg.JBROWSE_URL %>/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
         
-       <form name='' class="form-inline" method='POST' action='blast_ss_single'>
-         <input type='hidden' name='gid' value='<%= ginfo[n].gid %>'>
-         <input type='hidden' name='annotation' value='prokka'>
-         <input type='submit' class='pill pill-midnightblue' value='BLAST'>
-       </form>
+           <form name='' class="form-inline" method='POST' action='blast_ss_single'>
+             <input type='hidden' name='gid' value='<%= ginfo[n].gid %>'>
+             <input type='hidden' name='annotation' value='prokka'>
+             <input type='submit' class='pill pill-midnightblue' value='BLAST'>
+           </form>
        
-      <!--  <a class='pill pill-midnightblue' href='/genome_blast_single?gid=<%= ginfo[n].gid %>' target='_blank'>BLAST</a> -->
+          <!--  <a class='pill pill-midnightblue' href='/genome_blast_single?gid=<%= ginfo[n].gid %>' target='_blank'>BLAST</a> -->
        
-        </td>
+            </td>
         
-        <td class='center'>
-        <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
-        <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
-        <!-- <span class="badge badge-light">HOMD</span></td> -->
-  </tr>
-<% } %>
+            <td class='center'>
+            <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
+            <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
+            <!-- <span class="badge badge-light">HOMD</span></td> -->
+      </tr>
+    <% } %>
 
-</tbody>
-</table>
-  </div>  <!-- end genome-box -->
+    </tbody>
+    </table>
+</div>  <!-- end genome-box -->
     
   
     </div> <!-- end: page-content -->
@@ -141,23 +127,47 @@ thead th { position: sticky; top: 0; }
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
     mainmenu()  // function in public/js/menu.js
-  var letter = '<%- letter %>'
-  if(letter && letter !== 'all'){
-    document.getElementById(letter).style.color = 'red'
-    document.getElementById(letter).style.fontSize = 'medium'
-  }
-  
+    var letter = '<%- fltr.letter %>'
+    var gid = '<%- filtergid %>'
+    var filter_on = '<%- filter_on %>'
+    if(letter){
+      document.getElementById(letter).style.color = 'red'
+      document.getElementById(letter).style.fontSize = 'medium'
+      document.getElementById(letter).style.textDecoration = 'underline'
+    }
+    if(filter_on === 'on'){
+       document.getElementById('reset').style.color = 'orange'
+       document.getElementById('reset').style.background = 'black'
+       document.getElementById('reset').style.cursor = 'pointer'
+    }
+    //scrollto
+    table = $('gnom-table')
+    tableContainer = $('#genome-box')
+    //otid = '325'
+    row = $('#'+gid.split('.')[0])  // MUST remove the '.' for id
+    // scroll 2 more rows == 41 x2 ==164
+    extra = 60
+    if(row.length) {
+      //console.log(row.offset().top);
+      ///console.log(tableContainer.height()/2);
+      tableContainer.scrollTop(row.offset().top - (tableContainer.height()/2) - extra)
+    }
+
+//console.log('gid',gid)
    document.onreadystatechange = function() {
             if (document.readyState !== "complete") {
                 document.querySelector(
                   '#genome-box').style.visibility = "hidden";
                 document.querySelector(
                   "#loader").style.visibility = "visible";
+                
             } else {
                 document.querySelector(
                   "#loader").style.display = "none";
                 document.querySelector(
                   '#genome-box').style.visibility = "visible";
+                
+                  
             }
         };
 </script>

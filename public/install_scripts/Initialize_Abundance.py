@@ -9,7 +9,9 @@ import json
 #from json import JSONEncoder
 import argparse
 import csv
-sys.path.append('../../../homd-data/')
+sys.path.append('../homd-data/')
+sys.path.append('../../homd-data/')
+sys.path.append('../../config/')
 from connect import MyConnection
 import datetime
 ranks = ['domain','phylum','klass','order','family','genus','species']

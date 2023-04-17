@@ -1,0 +1,224 @@
+<style>
+.letter{
+  cursor:pointer;
+  color:blue;
+}
+.noletter{
+  cursor:pointer;
+  color:blue;
+}
+.alpha-list{
+   font-family: monospace;
+}
+#filter_form_div{
+   border:1px solid black;
+   padding:2px;
+}
+#form_btn{
+  width:100%;
+  color:grey;
+  
+}
+#tax_filter_form{
+   padding:0 40px;
+}
+#main_table td{
+   padding:0 30px;
+   
+   
+}
+#filter_table{
+   
+   border-collapse:colapse;
+}
+#filter_table td{
+   border-top:1px solid brown;
+   padding: 2px 3px;
+}
+#reset_div a{
+   font-size: 14px;
+}
+#sort_rev{
+   
+   border: 1px solid brown;
+   padding:2px 1px 1px 1px;
+   margin:1px;
+}
+.button{
+   cursor:pointer;
+   color:blue;
+   background:lightgrey;
+}
+#reset{
+   cursor:default;
+   color:grey;
+   background:lightgrey;
+}
+</style>
+<div id='filter_form_div'>
+
+<form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
+<table id='main_table'>
+<tr><td valign='top'> 
+
+<div class='alpha-select' >
+        <br>
+        <small><span class='filter-title'>Genus by Alphabet:</span>
+        [<a class='noletter' id='0' onclick="letter_submit('0');"><small>All</small></a>]
+        <br>
+        <span class='alpha-list'>
+        <a class='letter' id='A' onclick="letter_submit('A');">A</a>|<a class='letter' id='B' onclick="letter_submit('B');">B</a>|<a class='letter' id='C' onclick="letter_submit('C');">C</a>|<a class='letter' id='D' onclick="letter_submit('D');">D</a>|<a class='letter' id='E' onclick="letter_submit('E');">E</a>|<a class='letter' id='F' onclick="letter_submit('F');">F</a>|<a class='letter' id='G' onclick="letter_submit('G');">G</a>|<a class='letter' id='H' onclick="letter_submit('H');">H</a>|<a class='letter' id='I' onclick="letter_submit('I');">I</a>|<a class='letter' id='J' onclick="letter_submit('J');">J</a>|<a class='letter' id='K' onclick="letter_submit('K');">K</a>|<a class='letter' id='L' onclick="letter_submit('L');">L</a>|<a class='letter' id='M' onclick="letter_submit('M');">M</a>
+        <br><a class='letter' id='N' onclick="letter_submit('N');">N</a>|<a class='letter' id='O' onclick="letter_submit('O');">O</a>|<a class='letter' id='P' onclick="letter_submit('P');">P</a>|<a class='letter' id='Q' onclick="letter_submit('Q');">Q</a>|<a class='letter' id='R' onclick="letter_submit('R');">R</a>|<a class='letter' id='S' onclick="letter_submit('S');">S</a>|<a class='letter' id='T' onclick="letter_submit('T');">T</a>|<a class='letter' id='U' onclick="letter_submit('U');">U</a>|<a class='letter' id='V' onclick="letter_submit('V');">V</a>|<a class='letter' id='W' onclick="letter_submit('W');">W</a>|<a class='letter' id='X' onclick="letter_submit('X');">X</a>|<a class='letter' id='Y' onclick="letter_submit('Y');">Y</a>|<a class='letter' id='Z' onclick="letter_submit('Z');">Z</a>
+        
+        </span>
+        </small>
+</div>
+
+</td><td valign='top'>	
+
+<div id='reset_div'>
+  <a class='button' id='reset' href='reset_ttable'>Reset Filters</a> 
+</div> 
+
+</td><td>	
+        
+<table id='filter_table' border='1'>
+
+<tr><td>
+         <small>
+            <span class='filter-title'>Status</span>:&nbsp;&nbsp;
+            <% if(statusfltr.status.named === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='named' name='named' onclick='update_sb()'\> Named&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='named' name='named' onclick='update_sb()'\> Named&nbsp;
+            <% } %>
+            <% if(statusfltr.status.unnamed === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='unnamed' name='unnamed' onclick='update_sb()' \> Unnamed&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='unnamed' name='unnamed' onclick='update_sb()' \> Unnamed&nbsp;
+            <% } %>
+            <% if(statusfltr.status.phylotype === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='phylotype' name='phylotype' onclick='update_sb()' \> Phylotypes&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='phylotype' name='phylotype' onclick='update_sb()' \> Phylotypes&nbsp;
+            <% } %>
+            <% if(statusfltr.status.lost === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='lost' name='lost' onclick='update_sb()' \> Lost&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='lost' name='lost' onclick='update_sb()' \> Lost&nbsp;
+            <% } %>
+            <% if(statusfltr.status.dropped === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
+            <% } %>
+            
+            <% if(statusfltr.status.nonoralref === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='nonoralref' name='nonoralref' onclick='update_sb()' \> NonOralRef&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' onclick='update_sb()' \> NonOralRef&nbsp;
+            <% } %> 
+             
+         </small>
+</td>
+</tr>
+<tr><td>
+  
+      
+      <small>
+       <span class='filter-title'>Include</span>:&nbsp;&nbsp;
+        <% if(statusfltr.genomes === 'both'){ %>
+          <input type='radio' checked name='genomes' value='both' onclick='update_sb()' > All&nbsp;
+       <% }else{ %>
+          <input type='radio' name='genomes' value='both' onclick='update_sb()' > All&nbsp;
+       <% } %>
+        <% if(statusfltr.genomes === 'wgenomes'){ %>
+          <input type='radio' checked name='genomes' value='wgenomes' onclick='update_sb()' > Only Taxa With Genomes&nbsp;
+       <% }else{ %>
+          <input type='radio' name='genomes' value='wgenomes' onclick='update_sb()' > Only Taxa With Genomes&nbsp;
+       <% } %>
+        <% if(statusfltr.genomes === 'wogenomes'){ %>
+          <input type='radio' checked name='genomes' value='wogenomes' onclick='update_sb()' > Only Taxa Without Genomes&nbsp;
+       <% }else{ %>
+          <input type='radio' name='genomes' value='wogenomes' onclick='update_sb()' > Only Taxa Without Genomes&nbsp;
+       <% } %>
+       </small>
+     
+</td>
+</tr>
+<tr>
+<td>
+   
+    <small>
+    <span class='filter-title'>Search This Table</span>:&nbsp;&nbsp;
+    </small>
+    <span class="">
+      <input id='txt_srch' type='text' name='txt_srch' placeholder="Search.." value='<%= statusfltr.text.txt_srch %>' class='dropdown'  maxlength='18' size='20'  onclick='update_sb()'>
+      <select class='dropdown' id='field_select' class="" name='field' onclick='update_sb()'>
+        <option value="all">All Fields</option>
+        <option value="taxid">Taxon-ID</option>
+        <option value="genus">Genus</option>
+        <option value="species">Species</option>
+        <option value="synonym">Synonyms</option>
+        <option value="type_strain">Type Strains</option>
+        <!-- <option value="rrna">16S rRNA ID</option> -->
+      </select>
+     <span class='button' onclick='clear_search_txt()'>Clear</span>
+      <!-- <input class="pill pill-brown pill-md" type='button' value=' Go ' onclick='tax_table_search()'> -->
+    </span>
+           
+ </td></tr>
+ 
+ <tr>
+ <td>
+        <small>
+        <span class='filter-title'>Sort Column</span>:&nbsp;&nbsp;
+        <% if(statusfltr.sort_col === 'otid'){ %>
+        <input type='radio' checked name='sort_col' value='otid' onclick='update_sb()' > Taxon-ID&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='otid' onclick='update_sb()' > Taxon-ID&nbsp;
+        <% } %>
+        <% if(statusfltr.sort_col === 'genus'){ %>
+        <input type='radio' checked name='sort_col' value='genus' onclick='update_sb()' > Genus/Species&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='genus' onclick='update_sb()' > Genus/Species&nbsp;
+        <% } %>
+        <% if(statusfltr.sort_col === 'species'){ %>
+        <input type='radio' checked name='sort_col' value='species' onclick='update_sb()' > Species&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='species' onclick='update_sb()' > Species&nbsp;
+        <% } %>
+        <% if(statusfltr.sort_col === 'subspecies'){ %>
+        <input type='radio' checked name='sort_col' value='subsp' onclick='update_sb()' > SubSpecies&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='subsp' onclick='update_sb()' > SubSpecies&nbsp;
+        <% } %>
+        <% if(statusfltr.sort_col === 'status'){ %>
+        <input type='radio' checked name='sort_col' value='status' onclick='update_sb()' > Status
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='status' onclick='update_sb()' > Status
+        <% } %>
+        
+        <span id='sort_rev' title='Reverse the Sort Order'>
+          
+        <% if(statusfltr.sort_rev === 'on'){ %>
+        <input type='checkbox' checked name='sort_rev' onclick='update_sb()' > Reverse
+        <% }else{ %>
+        <input type='checkbox' name='sort_rev' onclick='update_sb()' > Reverse
+        <% } %>
+        </span>
+        </small>
+            
+</td>
+ </tr>
+ <tr><td>
+ <button id='form_btn' type='submit' class='button' value='Submit'>Submit</button>
+ </td></tr>
+</table>
+
+</td></tr>	
+</table>
+</form>	
+ 
+</div>
+		 

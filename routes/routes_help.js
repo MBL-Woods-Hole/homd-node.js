@@ -220,6 +220,9 @@ function getPageTitle(page){
     if(page === 'blast/blast'){
        return 'Page Help::Blast Menu'
     }
+    if(page === 'blast/pagehelp'){
+       return 'Page Help::SequenceServer BLAST'
+    }
     if(page === 'blast/formats'){
        return 'Page Help::Blast Formats'
     }

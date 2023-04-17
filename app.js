@@ -33,12 +33,18 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+app.set('appName', 'HOMD');
+app.set('trust proxy', true);
+
 // https://blog.jscrambler.com/best-practices-for-secure-session-management-in-node
 app.use(session({
-  secret: 'gtf34ds',
-  resave: true,
-  saveUninitialized: true,
-  cookie: { maxage: 6000 }
+  secret: 'veryimportantsecret',
+  //resave: true,
+  //saveUninitialized: true,
+  //Default cookie  { path: '/', httpOnly: true, secure: false, maxAge: null }
+  cookie: { 
+     maxAge: 1800000  // 1 hour==3600000
+  }  
   
 }));
 
@@ -61,13 +67,12 @@ const help     = require('./routes/routes_help');
 
 // PRODUCTION: log every restart
 if(CFG.ENV === 'production'){
-    const output = fs.createWriteStream(CFG.STATS_DIR+'/restart.log', {flags : 'a'})
+
+    const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
     const restart_logger = new console.Console(output)
     restart_logger.log('Restart on '+helpers.timestamp(false))
 }
 
-app.set('appName', 'HOMD');
-app.set('trust proxy', true);
 
 //passportConfig(passport, TDBConn);
 //app.use(passport.initialize());
@@ -95,9 +100,7 @@ app.use(express.static('tmp'));
 //upload.single('singleInputFileName')
 //app.use(upload.single('singleInputFileName'));  // for multipart uploads: files
 
-//app.use(cookieParser());
 
-//app.use(compression());
 /**
  * maxAge used to cache the content, # msec
  * to "uncache" some pages: http://stackoverflow.com/questions/17407770/express-setting-different-maxage-for-certain-files

@@ -18,55 +18,139 @@ today = yyyy + '-' + mm + '-' + dd
 var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
 //const JB = require('jbrowse2')
 //app.use(createIframe)
-router.get('/genome_table', function genomeTable(req, res) {
-  console.log('in genometable -get')
-    helpers.accesslog(req, res)
-  let seqid_list;
-  //let myurl = url.parse(req.url, true);
-  let letter = req.query.k
-  let otid = req.query.otid
-  let phylum = req.query.phylum
-  let count_txt, count_txt0, send_list, gid_obj_list,otid_grabber = {};
-  helpers.print(['otid',otid,'phylum',phylum,'letter',letter])
+function renderGenomeTable(req, res, args) {
+    //console.log('render NEW filter') 
+    let alltax_list = Object.values(C.taxon_lookup)  //.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+    let taxa_wgenomes = alltax_list.filter(item => item.genomes.length >0)
+    let gcount = 0
+    for(let n in alltax_list){
+       gcount +=  alltax_list[n].genomes.length
+    }
+    //let alltax_list = Object.values(C.genome_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+    //console.log('args',args)
+    res.render('pages/genome/genometable', {
+        title: 'HOMD :: Genome Table', 
+        pgname: 'genome/genome_table', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        pgtitle: 'Genome Table',
+        data: JSON.stringify(args.send_list),
+        filter: JSON.stringify(args.filter),
+        rows_per_page: args.pd.rows_per_page,
+        gcount: gcount, 
+        tcount: taxa_wgenomes.length,
+        phyla: JSON.stringify(get_all_phyla().sort()),
+        count_txt: args.count_txt,
+        taxa_wgenomes: get_taxa_wgenomes().length,
+        filter_on: args.filter_on
+    })
+}
+function get_default_filter(){
+    let defaultfilter = {
+        gid:'',
+        otid:'',
+        phylum:'',
+        text:{
+            txt_srch: '',
+            field: 'all',
+        },
+        letter: '0',
+        sort_col: 'genus',
+        sort_rev: 'off',
+        paging:'on'
+    }
+    return defaultfilter
+}
+function get_all_phyla(){
+    var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
+    var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
+    return phyla
+}
+function get_taxa_wgenomes(){
+    let alltax_list = Object.values(C.taxon_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+    let taxa_wgenomes = alltax_list.filter(item => item.genomes.length >0)
+    return taxa_wgenomes
+}
+function init_page_data(){
+   let page_data = {}
+   page_data.rows_per_page = C.PAGER_ROWS
+   
+   return page_data
+}
+function apply_pages(glist,fltr, pd){
+  let genomeList
+  pd.trecords = glist.length
+  //console.log('fltr',fltr)
   
-  let pageData = {}
-  
-  
-  pageData.page = req.query.page
-  
-  if(req.query.reset && req.query.reset === '1'){
-    console.log('RESETRESET')
-    pageData.page = 1
-  }else if(req.query.reset && req.query.reset === 'all'){
-    pageData.page = 'all'
-    console.log('RESET-ALL')
-  }else if(req.query.page){
-     pageData.page = req.query.page
+  const trows = pd.trecords
+  if(trows > pd.rows_per_page){
+    
+    //console.log('IN PD trows',trows)
+    
+    pd.number_of_pages = Math.ceil(trows / pd.rows_per_page)
+    if (pd.page > pd.number_of_pages) { pd.page = 1 }
+    if (pd.page < 1) { pd.page = pd.number_of_pages }
+    helpers.print(['page_data.number_of_pages', pd.number_of_pages])
+    pd.show_page = pd.page
+    if (pd.show_page === 1) {
+      genomeList = glist.slice(0, pd.rows_per_page) // first 200
+      pd.start_count = 1
+    } else {
+      genomeList = glist.slice(pd.rows_per_page * (pd.show_page - 1), pd.rows_per_page * pd.show_page) // second 200
+      //genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page)
+      pd.start_count = pd.rows_per_page * (pd.show_page - 1) + 1
+    }
+    //console.log('start count', pageData.start_count)
   }else{
-    pageData.page = 1
+    genomeList = glist
   }
-  //console.log('2pageData.page',pageData.page)
-  var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
-  var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
-  //console.log('phyla',phyla)
-  let big_tax_list = Object.values(C.taxon_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-  let taxa_wgenomes = big_tax_list.filter(item => item.genomes.length >0)
-  
-  let big_temp_list = Object.values(C.genome_lookup);
-  
-  
-  if (phylum && phylum !== '0') {
-    //gid_obj_list = Object.values(C.genome_lookup);
-    otid = 0
-    letter='all'
+  return {glist: genomeList, pd: pd}
+}
+function set_gtable_session(req) {
+    
+    //console.log('set sess body',req.body)
+    //console.log('xsession',req.session)
+    let letter = '0'
+    if(req.session.gtable_filter && req.session.gtable_filter.letter){
+       letter = req.session.gtable_filter.letter
+    }
+    req.session.gtable_filter = get_default_filter()
+    req.session.gtable_filter.letter = letter
+    
+    for( let item in req.body){
+       if(item == 'letter'){
+         req.session.gtable_filter.letter = req.body.letter
+       }
+       if(item == 'sort_col'){
+         req.session.gtable_filter.sort_col = req.body.sort_col
+       }
+       if(item == 'sort_rev'){
+         req.session.gtable_filter.sort_rev = 'on'
+       }
+       if(item == 'phylum'){
+         req.session.gtable_filter.phylum = req.body.phylum
+       }
+       if(item == 'txt_srch'){
+         req.session.gtable_filter.text.txt_srch = req.body.txt_srch
+       }
+       if(item == 'field'){
+         req.session.gtable_filter.text.field = req.body.field
+       }
+       if(item == 'paging'){
+         req.session.gtable_filter.paging = req.body.paging
+       }
+    }
+    
+}
+function filter_for_phylum(glist, phy){
     var lineage_list = Object.values(C.taxon_lineage_lookup)
-    var obj_lst = lineage_list.filter(item => item.phylum === phylum)  //filter for phylum 
+    var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
     //console.log('obj_lst',obj_lst)
     var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
         return el.otid
     })
-    otid_grabber = {}
-    gid_obj_list = big_temp_list.filter(item => {   // filter genome obj list for inclusion in otid list
+    let otid_grabber = {}
+    let gid_obj_list = glist.filter(item => {   // filter genome obj list for inclusion in otid list
         if(otid_list.indexOf(item.otid) !== -1){
             otid_grabber[item.otid] = 1
             return true
@@ -77,199 +161,177 @@ router.get('/genome_table', function genomeTable(req, res) {
     //console.log('gid_obj_list',gid_obj_list)
     // now get just the otids from the selected gids
     gid_obj_list.map( (el) =>{ return el.otid })
-    let genom = 'are '+gid_obj_list.length.toString()+' genomes'
-    if(gid_obj_list.length === 1){
-        genom = 'is 1 genome'
+    return gid_obj_list
+}
+function apply_gtable_filter(req, filter) {
+    let big_g_list = Object.values(C.genome_lookup);
+    //console.log(big_g_list[0])
+    let vals
+    if(req.session.gtable_filter){
+       vals = req.session.gtable_filter
+    }else{
+        vals = get_default_filter()
     }
-    let taxa = 'taxa'
-    if(Object.keys(otid_grabber).length === 1){
-        taxa = 'taxon'
+    //
+    // txt_srch
+    big_g_list = getFilteredGenomeList(big_g_list, vals.text.txt_srch, vals.text.field)
+    //
+    //letter
+    if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
+      helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
+       // COOL.... filter the whole list
+      big_g_list = big_g_list.filter(item => item.genus.toUpperCase().charAt(0) === vals.letter)
     }
-    //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows from phylum: "' + phylum + '"'
-    count_txt0 = 'For Phylum ' + phylum + ' there '+genom+' representing '+Object.keys(otid_grabber).length.toString()+' '+taxa+'.'
-  
-  
-  } else if (otid && otid !== '0') {  // if otid 
-    // single gid
+    //phylum
+    if(vals.phylum  !== ''){
+       big_g_list = filter_for_phylum(big_g_list, vals.phylum)
+    }
     
-    seqid_list = C.taxon_lookup[otid].genomes
-    //console.log('sil',seqid_list)
-    gid_obj_list = []
-    for (var n in seqid_list) {
-        gid_obj_list.push(C.genome_lookup[seqid_list[n]])
-    }
-    
-    phylum=0
-    letter='all'
-    let genom = 'are '+gid_obj_list.length.toString()+' genomes.'
-    if(gid_obj_list.length === 1){
-        genom = 'is 1 genome.'
-    }
-    //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for TaxonID "HMT-' + otid + '"'
-    count_txt0 = 'For Taxon ' + helpers.make_otid_display_name(otid) + ' there  '+genom
-  } else {  // not phylum, otid
-    // all gids
-    phylum=0
-    otid = '0'
-    //gid_obj_list1 = Object.values(C.genome_lookup);
-    
-    if (letter && letter.match(/[A-Z]{1}/)) {   // always caps
-      // COOL....
-        //console.log('big_temp_list[0]')
-        //console.log(big_temp_list[0])
+    //sort_col
+    if(vals.sort_rev === 'on'){
+        //console.log('REV sorting by ',vals.sort_col)
+         if(vals.sort_col === 'genus'){
+          big_g_list.sort(function (b, a) {
+            return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+          })
+        }else if(vals.sort_col === 'otid' || vals.sort_col === 'ncontigs' || vals.sort_col === 'tlength'){
+          big_g_list.sort(function (b, a) {
+            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else if(vals.sort_col === 'gc'){
+          big_g_list.sort(function (b, a) {
+            return helpers.compareStrings_float(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else{
+          big_g_list.sort(function (b, a) {
+            return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }
         
-        gid_obj_list = big_temp_list.filter(item => item.genus.toUpperCase().charAt(0) === letter)
-    
-      //count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows for genus starting with "' + letter + '"'
-      
-      count_txt0 = 'Showing ' + gid_obj_list.length.toString() +' genome(s) that start with "'+letter+'".'
-    } else {
-      gid_obj_list = big_temp_list
-      count_txt0 = 'Showing ' + gid_obj_list.length.toString() + ' rows.'
-        letter='all'
+    }else{
+        //console.log('FWD sorting by ',vals.sort_col)
+        if(vals.sort_col === 'genus'){
+          big_g_list.sort(function (a, b) {
+            return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+          })
+        }else if(vals.sort_col === 'otid' || vals.sort_col === 'ncontigs' || vals.sort_col === 'tlength'){
+          big_g_list.sort(function (a, b) {
+            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else if(vals.sort_col === 'gc'){
+          big_g_list.sort(function (a, b) {
+            return helpers.compareStrings_float(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else{
+          big_g_list.sort(function (a, b) {
+            return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }
     }
-  }
-  
-  gid_obj_list.map(function mapGidObjList (el) {
+    // format big nums
+    big_g_list.map(function mapGidObjList (el) {
         if (el.tlength) { 
             el.tlength = helpers.format_long_numbers(el.tlength); 
         }
-  })
-  
-  send_list = gid_obj_list
-  
-  send_list.sort(function (a, b) {
-      return helpers.compareByTwoStrings_alpha(a,b,'genus','species');
-  })
-  
-  count_txt = count_txt0 //+ ' <small>(Total:' + (big_temp_list.length).toString() + ')</small> '
-  let genomeList = []
-  console.log('phylum '+phylum.toString()+' L '+letter+' page: ',pageData.page)
-  pageData.trecords = send_list.length
-  if(phylum === 0 && letter === "all" && pageData.page){
-    const trows = send_list.length
-    //console.log('IN PD trows',trows)
-    pageData.row_per_page = 1000
-    pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
-    if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
-    if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-    helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
-    pageData.show_page = pageData.page
-    if (pageData.show_page === 1) {
-      genomeList = send_list.slice(0, pageData.row_per_page) // first 200
-      pageData.start_count = 1
-    } else {
-      genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
-      pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
+    })
+    return big_g_list
+}
+function get_filter_on(f){
+    // for comparison stringify
+    let obj1 = JSON.stringify(get_default_filter())
+    let obj2 = JSON.stringify(f)
+    if(obj1 === obj2){
+      return 'off'
+    }else{
+      return 'on'
     }
-    //console.log('start count', pageData.start_count)
-  }else{
-    genomeList = send_list
-  }
-  
-//   if(phylum === 0 && letter === "all" && Number.isInteger(pageData.page)){
-//       pageData.trecords = send_list.length
-//   
-//       if (pageData.page) {
-//         const trows = send_list.length
-//         // console.log('trows',trows)
-//         pageData.row_per_page = 200
-//         pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
-//         if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
-//         if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-//         helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
-//         pageData.show_page = pageData.page
-//         if (pageData.show_page === 1) {
-//           genomeList = send_list.slice(0, pageData.row_per_page) // first 200
-//           pageData.start_count = 1
-//         } else {
-//           genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
-//           pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
-//         }
-//         //console.log('start count', pageData.start_count)
-//       }
-//   }else{
-//     genomeList = send_list
-//   }
-  //console.log(pageData)
-  res.render('pages/genome/genometable', {
-    title: 'HOMD :: Genome Table', 
-    pgname: 'genome/genome_table', // for AboutThisPage
-    config: JSON.stringify(CFG),
-    // seqid_list: JSON.stringify(gid_obj_list),
-    //data: JSON.stringify(send_list),
-    data: JSON.stringify(genomeList),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    user: JSON.stringify(req.user || {}),
-    letter: letter,
-    otid: otid,
-    phylum: phylum,
-    
-    page_data: JSON.stringify(pageData),
-    
-    phyla: JSON.stringify(phyla.sort()),
-    count_text: count_txt,
-    search_txt: 0,
-    search_field:'0',
-    all_genome_count: big_temp_list.length,
-    taxa_wgenomes: taxa_wgenomes.length
-    
-  })
+}
+router.get('/reset_gtable', function gen_table_reset(req, res) {
+   //console.log('in RESET-session')
+   req.session.gtable_filter = get_default_filter()
+   res.redirect('back');
+});
+router.get('/genome_table', function genome_table(req, res) {
+    let filter, send_list, showing,ret,count_before_paging,args,count_txt
+    let page_data = init_page_data()
+    if(req.query.page){
+       page_data.page = parseInt(req.query.page)
+    }else{
+       page_data.page = 1
+    }
+    if(req.session.gtable_filter){
+        //console.log('gfiletr session')
+        filter = req.session.gtable_filter
+    }else{
+        //console.log('gfiletr from default')
+        filter = get_default_filter()
+        req.session.gtable_filter = filter
+    }
+    if(req.query.otid && req.session.ttable_filter){
+        req.session.ttable_filter.otid = req.query.otid
+    }
+    send_list = apply_gtable_filter(req, filter)
+    count_before_paging = send_list.length
+    // Initial page = 1 for fast load
+    // no paging in POST side
+    let pager_txt = ''
+    if(filter.paging === 'on'){
+      ret = apply_pages(send_list, filter, page_data)
+      send_list = ret.glist
+      page_data = ret.pd
+      //console.log('get init pd',page_data)
+      //console.log(page_data)
+      if(count_before_paging > send_list.length){
+         //console.log('must add pager txt')
+         pager_txt = '; [page: '+page_data.page + " (of "+page_data.number_of_pages+"p) ]"
+         let next = (page_data.page + 1).toString()
+         let prev = (page_data.page - 1).toString()
+         pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
+         pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
+      }
+    }
+    count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
+    args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter)}
+    renderGenomeTable(req, res, args)
+
+});
+router.post('/genome_table', function genome_table_filter(req, res) {
+    //console.log('in POST gt filter')
+    //console.log(req.body)
+    let filter, send_list, page_data,count_before_paging,pager_txt,ret,args,count_txt
+    set_gtable_session(req)
+    //console.log('gtable_session',req.session.gtable_filter)
+    filter = req.session.gtable_filter
+   
+    send_list = apply_gtable_filter(req, filter)
+    count_before_paging = send_list.length
+    page_data = init_page_data()
+    page_data.page=1
+    pager_txt = ''
+    if(filter.paging === 'on'){
+       ret = apply_pages(send_list, filter, page_data)
+       send_list = ret.glist
+       page_data = ret.pd
+       if(count_before_paging > send_list.length){
+         pager_txt = '; [page: '+page_data.page + " (of "+page_data.number_of_pages+"p) ]"
+         let next = (page_data.page + 1).toString()
+         let prev = (page_data.page - 1).toString()
+         pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
+         pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
+      }
+    }
+    count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
+     
+    args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter)}
+    renderGenomeTable(req, res, args)
+     
 })
-//
-router.post('/search_genometable', function searchGenomeTable(req, res) {
-  helpers.print(req.body)
-  const searchTxt = req.body.gene_srch.toLowerCase()
-  const searchField = req.body.field
-  var countTxt, countTxt0;
-  //let seqrch_match = req.body.match
-  //let search_sub = req.body.sub
-  let big_tax_list = Object.values(C.taxon_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-  let taxa_wgenomes = big_tax_list.filter(item => item.genomes.length >0)
-  
-  // FIXME
-  let bigGeneList = Object.values(C.genome_lookup);
-  console.log(bigGeneList[0])
-  const sendList = getFilteredGenomeList(bigGeneList, searchTxt, searchField)
-  let pageData = {}
-  let pgtitle = 'Search TaxTable'
-  var phylaObj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
-  var phyla = phylaObj.map(function mapPhylaObj2 (el) { return el.taxon; })
-  countTxt0 =  'Showing ' + (sendList.length).toString() + ' rows using search string: "' + req.body.gene_srch + '".'
-  countTxt = countTxt0 //+ ' <small>(Total:' + (bigGeneList.length).toString() + ')</small>'
-  res.render('pages/genome/genometable', {
-    title: 'HOMD :: Genome Table', 
-    pgname: 'genome/genome_table', // for AboutThisPage
-    config: JSON.stringify(CFG),
-    
-    //seqid_list: JSON.stringify(gid_obj_list),
-    data: JSON.stringify(sendList),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-    user: JSON.stringify(req.user || {}),
-    letter: 'all',  // dont us empty string: -for download fxn
-    otid: '0',   // dont us empty string: -for download fxn
-    phylum: 0,  // dont us empty string: -for download fxn
-    phyla: JSON.stringify(phyla.sort()),
-    page_data: JSON.stringify(pageData),
-    count_text: countTxt,
-    search_txt: searchTxt,
-    search_field: searchField,
-    all_genome_count: bigGeneList.length,
-    taxa_wgenomes: taxa_wgenomes.length
-    
-  })
-  
-}) 
 
 
-//
-// router.get('/jbrowse2/:id', function jbrowse2(req, res) {
-//  console.log('jbrowse2/:id -get')
-// })
 router.get('/jbrowse', function jbrowse (req, res) {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
   helpers.accesslog(req, res)
-  console.log('jbrowse-get')
+  ////console.log('jbrowse-get')
   //let myurl = url.parse(req.url, true);
     
   const gid = req.query.gid
@@ -302,7 +364,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
 })
 //
 router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
-  console.log('AJAX JBrowse')
+  //console.log('AJAX JBrowse')
   helpers.print(req.body)
   // URL from old HOMD site:
   // ?data=homd/SEQF2029
@@ -317,9 +379,12 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
 })
 //
 router.get('/genome_description', function genomeDescription (req, res) {
-  console.log('in genomedescription -get')
+  //console.log('in genomedescription -get')
   
   //let myurl = url.parse(req.url, true);
+  if(req.query.gid && req.session.gtable_filter){
+      req.session.gtable_filter.gid = req.query.gid
+  }
   const gid = req.query.gid
   let data
   if(Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)){
@@ -398,7 +463,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
 })
 
 router.post('/get_16s_seq', function get16sSeqPost (req, res) {
-  console.log('in get_16s_seq -post')
+  //console.log('in get_16s_seq -post')
   
   helpers.print(req.body)
   const gid = req.body.seqid
@@ -432,8 +497,8 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 })
 
 router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
-  console.log('in get_NN_NA_seq -post')
-  console.log(req.body)
+  //console.log('in get_NN_NA_seq -post')
+  //console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
@@ -460,7 +525,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   }
   let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
   q += " WHERE seq_id ='"+gid+"' and protein_id='" + pid + "'"
-  console.log('anno2 query '+q)
+  //console.log('anno2 query '+q)
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
     if (err) {
@@ -469,8 +534,8 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
     }
     //console.log(rows)
     const seqstr = (rows[0].seq).toString()
-    console.log(seqstr)
-    console.log(seqstr.length)
+    //console.log(seqstr)
+    //console.log(seqstr.length)
     const arr = helpers.chunkSubstr(seqstr, 80)
     const html = arr.join('<br>')
     //html = seqstr
@@ -481,8 +546,8 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
 })
 //
 router.post('/open_explorer_search', function open_explorer_search (req, res) {
-    console.log('in POST:open_explorer_search')
-    console.log(req.body)
+    //console.log('in POST:open_explorer_search')
+    //console.log(req.body)
     let gid = req.body.gid
     let anno = req.body.anno
     let searchtext = req.body.searchtext
@@ -557,8 +622,8 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
 //       q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
 //       q += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
     
-    console.log(q)
-    console.log('anno query '+q)
+    //console.log(q)
+    //console.log('anno query '+q)
     let tmp = []
     
     TDBConn.query(q, (err, rows) => {
@@ -601,10 +666,14 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     })  // end Conn
 })
 router.get('/explorer', function explorer (req, res) {
-  console.log('in explorer')
+  //console.log('in explorer')
   // let myurl = url.parse(req.url, true)
   const gid = req.query.gid
-  
+  if(gid && req.session.gtable_filter){
+      //console.log('got otid for ttable')
+      req.session.gtable_filter.gid = gid
+  }
+  let otid = 0,gc = 0
   let anno = req.query.anno || 'ncbi'
   
   
@@ -619,8 +688,7 @@ router.get('/explorer', function explorer (req, res) {
   }
   let organism = 'Unknown', pidList
   //let dbChoices = []
-  let otid = 0,gc = 0
-  /console.log('C.genome_lookup[gid]',C.genome_lookup[gid])
+
  
   let args = {}
   //const renderFxn = (req, res, gid, otid, organism,  allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
@@ -719,7 +787,7 @@ router.get('/explorer', function explorer (req, res) {
   
   //select GC, PID, product, length_na,length_aa, `start`, `stop` FROM `PROKKA_meta`.`orf`  WHERE seq_id = 'SEQF1595'
   
-  console.log('anno query '+q)
+  //console.log('anno query '+q)
   //OLD ADBConn.query(q, (err, rows) => {
   TDBConn.query(q, (err, rows) => {
     if (err) {
@@ -736,7 +804,7 @@ router.get('/explorer', function explorer (req, res) {
       if (pageData.page) {
         const trows = rows.length
         // console.log('trows',trows)
-        pageData.row_per_page = 200
+        pageData.row_per_page = C.PAGER_ROWS
         pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
         if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
         if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
@@ -772,7 +840,7 @@ router.get('/blast_server', function genome_blast_server(req, res) {
 router.get('/blast_per_genome', function blast_per_genome(req, res) {
    //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
   helpers.accesslog(req, res)
-  console.log('blast_per_genome')
+  //console.log('blast_per_genome')
   //let myurl = url.parse(req.url, true);
     
   const gid = req.query.gid
@@ -803,8 +871,9 @@ router.get('/blast_per_genome', function blast_per_genome(req, res) {
     user: JSON.stringify(req.user || {}),
   })
 })
+
 router.get('/blast_sserver', function blast_sserver(req, res){
-   console.log(req.query)
+   //console.log(req.query)
    let db_type = req.query.type
    let page_title = ''
    if(db_type == 'refseq'){
@@ -815,7 +884,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
    
    res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
-    pgname: 'genome/BLAST', // for AboutThisPage
+    pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
@@ -828,19 +897,23 @@ router.get('/blast_sserver', function blast_sserver(req, res){
 })
 
 router.post('/blast_ss_single', function blast_ss_single(req, res){
-  console.log('IN POST blast_ss_single')
-  console.log(req.body)
+  //console.log('IN POST blast_ss_single')
+  //console.log(req.body)
+  
   //console.log(CFG.BLAST_URL_BASE)
   let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].ccolct 
   //console.log(C.genome_lookup[req.body.gid])
-  
+  if(req.session.gtable_filter){
+        req.session.gtable_filter.gid = req.body.gid
+    } 
+    
   let page_title = 'Genomic BLAST: '+organism +' ('+req.body.gid+')'
   if(req.body.annotation){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
   }
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
-    pgname: 'genome/BLAST', // for AboutThisPage
+    pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
@@ -853,8 +926,8 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
    
 })
 router.post('/blast_single_test', function(req, res){
-  console.log('IN POST blast_single_test')
-  console.log(req.body)
+  //console.log('IN POST blast_single_test')
+  //console.log(req.body)
    res.render('pages/genome/test_blast_single', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
@@ -864,7 +937,7 @@ router.post('/blast_single_test', function(req, res){
   })
 })
 router.post('/blast_single', function blast_single(req, res) {
-    console.log(req.body)
+    //console.log(req.body)
     // 'prokka|fna|SEQF1595.2|/Users/avoorhis/programming/blast-db-alt/fna/SEQF1595.2.fna'
     let blast_db_parts = req.body.blastdb.split('|')
     let anno    = blast_db_parts[0]
@@ -886,7 +959,7 @@ router.post('/blast_single', function blast_single(req, res) {
 
 })
 router.get('/blast_server_one', function blast_test(req, res) {
-  console.log('blast_test')
+  //console.log('blast_test')
   let gid = req.query.gid
   const { spawn } = require("child_process");
   let info = {}, filepath
@@ -916,7 +989,7 @@ router.get('/blast_server_one', function blast_test(req, res) {
           data.push(result[n])
        }
     }
-    console.log('data-results',data)
+    //console.log('data-results',data)
     res.render('pages/genome/blast_one_genome', {
     title: 'HOMD :: BLAST', 
     pgname: '', // for AboutThisPage
@@ -942,10 +1015,10 @@ router.get('/genome_blast', function blast_get(req, res) {
   console.log(req.query)
 })
 router.get('/blast', function blast_get(req, res) {
-   console.log('in genome blast-GET')
+   //console.log('in genome blast-GET')
    let chosen_gid = req.query.gid
    if(!chosen_gid){chosen_gid='all'}
-   console.log('chosen gid=',chosen_gid)
+   //console.log('chosen gid=',chosen_gid)
    let sg = helpers.makeid(3).toUpperCase()
    let organism,dbChoices
    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
@@ -1065,7 +1138,7 @@ router.get('/blast', function blast_get(req, res) {
 // The main menu goues through routes_homd::open_tree
 router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   
-  console.log('in conserved_protein_tree')
+  //console.log('in conserved_protein_tree')
   // let myurl = url.URL(req.url, true);
   const otid = req.query.otid
   const fullname = helpers.make_otid_display_name(otid)
@@ -1093,7 +1166,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
 })
 router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   helpers.accesslog(req, res)
-  console.log('in ribosomal_protein_tree')
+  //console.log('in ribosomal_protein_tree')
 
   const otid = req.query.otid
   // https://www.homd.org/ftp/phylogenetic_trees/genome/V10.1/eHOMD_Ribosomal_Protein_Tree.svg
@@ -1117,7 +1190,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
 })
 router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   helpers.accesslog(req, res)
-  console.log('in rRNA_gene_tree')
+  //console.log('in rRNA_gene_tree')
   // const myurl = url.URL(req.url, true)
   // const myurl = new url.URL(req.url)
   const otid = req.query.otid
@@ -1142,16 +1215,16 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 })
 //
 //
-router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', function dldTable (req, res) {
+router.get('/dld_table/:type', function dldTable (req, res) {
   helpers.accesslog(req, res)
-  console.log('in download table -genome:')
+  //console.log('in download table -genome:')
   
   const type = req.params.type
-  const letter = req.params.letter
-  const phylum = req.params.phylum
-  const otid = req.params.otid
-  const searchText = req.params.search_txt
-  const searchField = req.params.search_field
+  const letter = req.session.gtable_filter.letter
+  const phylum = req.session.gtable_filter.phylum
+  const otid = req.session.gtable_filter.otid
+  const searchText = req.session.gtable_filter.text.txt_srch
+  const searchField = req.session.gtable_filter.text.field
 
   helpers.print(['type', type,'letter', letter,'phylum', phylum,'otid', otid])
   // Apply filters
@@ -1164,7 +1237,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
     sendList = tempList.filter(item => item.genus.charAt(0) === letter)
     helpers.print(sendList)
     fileFilterText = "HOMD.org Genome Data::Letter Filter Applied (genus with first letter of '" + letter + "')"
-  } else if (otid > 0) {
+  } else if (otid !== '') {
     //console.log('in otid dnld')
     const gidList = C.taxon_lookup[otid].genomes
     // console.log('sil',seqid_list)
@@ -1172,7 +1245,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
       sendList.push(C.genome_lookup[gidList[n]])
     }
     fileFilterText = 'HOMD.org Genome Data::Oral TaxonID: HMT-' + ('000' + otid).slice(-3)
-  } else if (phylum !== 0 && phylum !== '0') {
+  } else if (phylum !== '') {
     //console.log('in phylum dnld')
     const lineageList = Object.values(C.taxon_lineage_lookup)
     const objList = lineageList.filter(item => item.phylum === phylum) // filter for phylum
@@ -1186,7 +1259,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
     })
     helpers.print(['cksend_list', sendList])
     fileFilterText = 'HOMD.org Genome Data::Phylum: ' + phylum
-  } else if (searchText !== '0') {
+  } else if (searchText !== '') {
     const bigGeneList = Object.values(C.genome_lookup)
     sendList = getFilteredGenomeList(bigGeneList, searchText, searchField)
     fileFilterText = 'HOMD.org Genome Data::Search Text: ' + searchText
@@ -1199,7 +1272,7 @@ router.get('/dld_table/:type/:letter/:phylum/:otid/:search_txt/:search_field', f
   const listOfGids = sendList.map(item => item.gid)
   fileFilterText = fileFilterText + ' Date: ' + today
 
-  helpers.print(['listOfGids', listOfGids])
+  //helpers.print(['listOfGids', listOfGids])
   // type = browser, text or excel
   const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
   if (type === 'browser') {
@@ -1384,7 +1457,7 @@ function get_blast_db_info(gid){
     for(let p in paths){
        for(let e in exts){
            filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
-           console.log(filepath)
+           //console.log(filepath)
            let full_data = ''
            promises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
            // run = spawn('/Users/avoorhis/.sequenceserver/ncbi-blast-2.12.0+/bin/blastdbcmd',['-db',filepath,'-info'])

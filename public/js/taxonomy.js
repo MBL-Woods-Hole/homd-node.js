@@ -433,30 +433,60 @@ function toggle_lower_ranks(){
     }
 }
 //
-//function tax_download(type,letter,page,sites,stati){
-// function tax_download(type,letter,page,sites,stati){
-//  console.log('type:',type)
-//  console.log('letter:',letter)
-//  console.log('page:',page)
-//  console.log('sites:',sites)
-//  console.log('stati:',stati)
-//  var xmlhttp = new XMLHttpRequest();
-//  xmlhttp.open("POST", "/taxa/dld_table", true);
-//  args = {}
-//  args.type = type
-//  args.letter = letter
-//  args.page = page
-//  args.sites = sites
-//  args.stati = stati
-//  xmlhttp.setRequestHeader("Content-type","application/json");
-//     xmlhttp.onreadystatechange = function() {
-//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//         var resp = xmlhttp.responseText;
-//         console.log(resp)
-//         document.write(resp)
-//        } 
-//     }
-//     xmlhttp.send(JSON.stringify(args));
-//   
-//    
-// }
+///////////////////////////////////////////////////////////
+// new filter stuff
+//
+function letter_submit(letter){
+   var form = document.getElementById("tax_filter_form");
+   const el = document.getElementById("letter");
+   if(el){
+       el.remove();
+    }
+    //if(letter !== '0'){
+       var i = document.createElement("input");
+       i.type = "hidden";
+       i.name = "letter";
+       i.id = "letter";
+       i.value = letter
+       form.appendChild(i);
+  // }
+   form.submit()
+
+
+
+}
+function update_sb(){
+    //var form = document.getElementById("tax_filter_form");
+    
+    btn = document.getElementById("form_btn");
+    btn.style.color = 'orange'
+    btn.style.background = 'black'
+    btn.style.cursor = 'pointer'
+    btn.style.fontSize ='14px';
+    btn.innerHTML = '** Update Table **'
+    
+}
+function clear_search_txt(){
+   txt = document.getElementById("txt_srch");
+   dd = document.getElementById("field_select");
+   txt.value = ''
+   dd.value = 'all'
+}
+$('#tax-box').on('scroll', function() {
+    //console.log($("#tax-table").offset());
+    var rows = document.getElementById('tax-table').rows;
+    var tr = document.querySelector('tr').getBoundingClientRect().height;
+    //console.log('num rows',rows.length - 1)  // remove header
+    // min rows for scrolling ~27
+    //console.log(rows[0].offsetHeight)
+    //console.log('tr',tr)
+    // row height = 41  top of table = 363
+    //row0 = 363
+    //row1 = 363 + 41 
+    
+    
+    
+    
+});
+
+

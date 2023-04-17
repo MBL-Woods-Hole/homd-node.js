@@ -50,27 +50,31 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
 //  
 // })
 router.get('/refseq_tree', function refseq_tree(req, res) {
-    console.log('in refseq_tree')
+  console.log('in refseq_tree')
+   //let filepath = path.join(CFG.FTP_URL,'16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/refseq_tree_V15.23.svg')
+  let filepath = 'public/trees/refseq_tree_V15.23.svg'
   helpers.accesslog(req, res)
   //let myurl = url.parse(req.url, true);
   let otid = req.query.otid
   console.log('otid',otid)
   let fullname = helpers.make_otid_display_name(otid)
   console.log(fullname)
-  fs.readFile('public/trees/refseq_tree.svg','utf8', (err, data) => {
+  fs.readFile(filepath,'utf8', (err, data) => {
+    
       if(err){
          console.log(err)
       }
-      res.render('pages/refseq/refseq_tree', {
-        title: 'HOMD :: Conserved Protein Tree',
-        pgname: 'refseq/tree', // for AbountThisPage, 
-        config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        user: JSON.stringify(req.user || {}),
-        svg_data: JSON.stringify(data),
-        otid: fullname,
-      })
-    
+      
+          res.render('pages/refseq/refseq_tree', {
+            title: 'HOMD :: Conserved Protein Tree',
+            pgname: 'refseq/tree', // for AbountThisPage, 
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            user: JSON.stringify(req.user || {}),
+            svg_data: JSON.stringify(data),
+            path: 'public/trees/refseq_tree_V15.22.svg',
+            otid: fullname,
+          })
     })
   
   // res.render('pages/refseq/refseq_tree', {

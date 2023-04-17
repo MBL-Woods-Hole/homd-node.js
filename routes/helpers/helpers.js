@@ -87,7 +87,6 @@ module.exports.compareByTwoStrings_alpha = (a, b, colA, colB) => {
   // Assuming you want case-insensitive comparison
   //a = a.toLowerCase();
   //b = b.toLowerCase();
-  
   if (a[colA].toLowerCase() === b[colA].toLowerCase()){
     return a[colB] < b[colB] ? -1 : 1
   } else {
@@ -97,9 +96,13 @@ module.exports.compareByTwoStrings_alpha = (a, b, colA, colB) => {
 };
 // Sort list of json objects numerically
 module.exports.compareStrings_int   = (a, b) => {
-  // Assuming you want case-insensitive comparison
   a = parseInt(a);
   b = parseInt(b);
+  return (a < b) ? -1 : (a > b) ? 1 : 0;
+};
+module.exports.compareStrings_float   = (a, b) => {
+  a = parseFloat(a);
+  b = parseFloat(b);
   return (a < b) ? -1 : (a > b) ? 1 : 0;
 };
 module.exports.show_session = (req) =>{

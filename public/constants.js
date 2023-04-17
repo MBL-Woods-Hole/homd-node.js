@@ -1,7 +1,7 @@
 const CFG   = require(app_root + '/config/config');
 const constants = {};
 
-constants.rRNA_refseq_version    = '15.22'
+constants.rRNA_refseq_version    = '15.23'
 constants.genomic_refseq_version = '10.1'
 constants.use_cluster = false
 constants.user_security_levels = {
@@ -295,6 +295,6 @@ constants.pangenomes = [
     // **** NOTE NOTE This data is obsolete!!
     
 ]
-
+constants.PAGER_ROWS = 500
 
 module.exports = constants;
