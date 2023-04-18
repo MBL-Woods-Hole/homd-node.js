@@ -48,7 +48,7 @@ function get_default_filter(){
             field: 'all',
         },
         letter: '0',
-        sort_col: 'otid',
+        sort_col: 'genus',
         sort_rev: 'off'
     }
     return defaultfilter
@@ -70,7 +70,7 @@ function get_null_filter(){
             field: 'all',
         },
         letter: '0',
-        sort_col: 'otid',
+        sort_col: 'genus',
         sort_rev: 'off'
     }
     return nullfilter

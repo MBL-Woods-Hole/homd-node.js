@@ -65,9 +65,14 @@ thead th { position: sticky; top: 0; }
     <th class="col10 sorttable_nosort" >Annotations</th>
     </tr>
     </thead>
+    
+    <% if(ginfo.length === 0){ %>
+       <tr><td>None Found</td></tr>
+    <% }else{ %>
+    
     <tbody>
-
     <% for(n in ginfo){ %>
+      
       <% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
       <% rowid =  ginfo[n].gid.split('.')[0]; %>
       <tr id='<%= rowid %>' >
@@ -104,6 +109,7 @@ thead th { position: sticky; top: 0; }
     <% } %>
 
     </tbody>
+    <% } %>
     </table>
 </div>  <!-- end genome-box -->
     

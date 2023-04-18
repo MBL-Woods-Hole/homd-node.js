@@ -267,10 +267,26 @@ router.get('/genome_table', function genome_table(req, res) {
         filter = get_default_filter()
         req.session.gtable_filter = filter
     }
-    if(req.query.otid && req.session.ttable_filter){
-        req.session.ttable_filter.otid = req.query.otid
+    
+    if(req.query.otid){
+       if(req.session.ttable_filter){
+           req.session.ttable_filter.otid = req.query.otid
+       }
+       //console.log('got otid '+req.query.otid)
+       let seqid_list = C.taxon_lookup[req.query.otid].genomes
+       //seqid_list =[ 'SEQF10000.1', 'SEQF10001.1', 'SEQF10010.1' ]
+       //console.log('sil',seqid_list)
+       send_list = []
+       for (var n in seqid_list) {
+          if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
+             send_list.push(C.genome_lookup[seqid_list[n]])
+          }
+       }
+    }else{
+    
+       send_list = apply_gtable_filter(req, filter)
     }
-    send_list = apply_gtable_filter(req, filter)
+    console.log('send_list[0]',send_list,send_list[0])
     count_before_paging = send_list.length
     // Initial page = 1 for fast load
     // no paging in POST side

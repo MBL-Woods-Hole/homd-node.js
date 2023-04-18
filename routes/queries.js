@@ -57,9 +57,9 @@ module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
   return qSelectAnno
 }
 module.exports.get_annotation_query3 = (search_text) => {
-  
+  // this query takes too long
   let qSelectAnno = "SELECT 'ncbi' as anno, seq_id as gid, protein_id, product from `NCBI_meta`.orf WHERE product like '%"+search_text+"%'"
-    qSelectAnno += ' UNION '
+    qSelectAnno += ' UNION ALL'  // UNION vs UNION ALL
     qSelectAnno += "SELECT 'prokka' as anno, seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%"+search_text+"%'"
     
   return qSelectAnno
