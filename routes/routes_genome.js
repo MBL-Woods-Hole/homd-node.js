@@ -818,6 +818,7 @@ router.get('/explorer', function explorer (req, res) {
 
   //OLD DB
   const q = queries.get_annotation_query(gid, anno)
+  //console.log(q)
   //NEW DB
   // let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
 //   q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
@@ -858,7 +859,17 @@ router.get('/explorer', function explorer (req, res) {
         //console.log('start count', pageData.start_count)
       }
       
-      args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:pageData,annoInfoObj:annoInfoObj,pidList:pidList}
+      args = {
+			gid: gid,
+			gc: 			gc,
+			otid: 			otid,
+			organism: 		organism,
+			allAnnosObj: 	allAnnosObj,
+			annoType: 		anno,
+			pageData: 		pageData,
+			annoInfoObj: 	annoInfoObj,
+			pidList: 		pidList
+			}
       renderFxn(req, res, args)
     }
   })
