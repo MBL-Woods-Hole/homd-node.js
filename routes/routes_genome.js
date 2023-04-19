@@ -246,6 +246,23 @@ function get_filter_on(f){
       return 'on'
     }
 }
+function apply_sspecies(lst){
+   let otid,sp=''
+   let subspecies = ''
+   
+   for(let i in lst){
+      otid = lst[i].otid
+      //sp = lst[i].species
+      lst[i].subspecies = ''
+      if(C.taxon_lineage_lookup[otid].subspecies){
+        //subspecies = ' <small>['+C.taxon_lineage_lookup[otid].subspecies+']</small>'
+        //lst[i].species = sp + subspecies
+        lst[i].subspecies = C.taxon_lineage_lookup[otid].subspecies
+      }
+   }
+   return lst
+
+}
 router.get('/reset_gtable', function gen_table_reset(req, res) {
    //console.log('in RESET-session')
    req.session.gtable_filter = get_default_filter()
@@ -287,10 +304,9 @@ router.get('/genome_table', function genome_table(req, res) {
           }
        }
     }else{
-    
        send_list = apply_gtable_filter(req, filter)
     }
-    console.log('send_list[0]',send_list,send_list[0])
+    //console.log('send_list[0]',send_list[0])
     count_before_paging = send_list.length
     // Initial page = 1 for fast load
     // no paging in POST side
@@ -311,6 +327,8 @@ router.get('/genome_table', function genome_table(req, res) {
       }
     }
     count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
+    // apply sub-species to species
+    send_list = apply_sspecies(send_list)
     args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter)}
     renderGenomeTable(req, res, args)
 
@@ -341,7 +359,7 @@ router.post('/genome_table', function genome_table_filter(req, res) {
       }
     }
     count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
-     
+    send_list = apply_sspecies(send_list)
     args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter)}
     renderGenomeTable(req, res, args)
      
