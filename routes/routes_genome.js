@@ -269,6 +269,10 @@ router.get('/genome_table', function genome_table(req, res) {
     }
     
     if(req.query.otid){
+       // reset gtable_filter here because we are coming from tax_table button
+       // and expect to see the few genomes for this one taxon
+       filter = get_default_filter()
+       req.session.gtable_filter = filter
        if(req.session.ttable_filter){
            req.session.ttable_filter.otid = req.query.otid
        }
