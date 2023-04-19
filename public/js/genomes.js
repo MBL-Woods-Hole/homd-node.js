@@ -136,13 +136,14 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
         var resp = xmlhttp.responseText;
         //console.log(defline)
         text = ''
+        var length = resp.length.toString()
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
         //text += '>'+product+' | '+mol+' | '+ org +'\n'
         if(type === 'prokka'){
-            text += '>' + gid +'|' + pid +' | ' + product + ' | ' + org + '\n'
+            text += '>' + gid +'|' + pid +' | ' + product + ' | ' + org + ' | length: ' + length + '\n'
         }else{
-             text += '>' + mol + ' | ' + product + ' | '+ org + '\n'
+             text += '>' + mol + ' | ' + product + ' | '+ org + ' | length: ' + length + '\n'
         }
         
         text += resp

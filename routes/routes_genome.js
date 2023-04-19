@@ -563,7 +563,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
   }
   let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
   q += " WHERE seq_id ='"+gid+"' and protein_id='" + pid + "'"
-  //console.log('anno2 query '+q)
+  console.log('anno2 query '+q)
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
     if (err) {
