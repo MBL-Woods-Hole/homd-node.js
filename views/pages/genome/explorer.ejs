@@ -149,5 +149,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     // Initialize select2
     $("#selGenome").select2();
   });
+    var filter_on = '<%- filter_on %>'
+    if(filter_on === 'on'){
+       document.getElementById('reset').style.color = 'orange'
+       document.getElementById('reset').style.background = 'black'
+       document.getElementById('reset').style.cursor = 'pointer'
+    }
 </script>
 

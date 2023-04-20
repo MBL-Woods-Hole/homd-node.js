@@ -201,7 +201,7 @@ function letter_submit(letter){
 }
 function update_sb(){ //submit button
     //var form = document.getElementById("tax_filter_form");
-    
+    // both gtable and atable??
     btn = document.getElementById("form_btn");
     btn.style.color = 'orange'
     btn.style.background = 'black'

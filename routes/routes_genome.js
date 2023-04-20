@@ -45,7 +45,18 @@ function renderGenomeTable(req, res, args) {
         filter_on: args.filter_on
     })
 }
-function get_default_filter(){
+function get_default_annot_filter(){
+    let defaultfilter = {
+        text:{
+            txt_srch: '',
+            field: 'all',
+        },
+        sort_col: 'molecule',
+        sort_rev: 'off'
+    }
+    return defaultfilter
+}
+function get_default_gtable_filter(){
     let defaultfilter = {
         gid:'',
         otid:'',
@@ -114,7 +125,7 @@ function set_gtable_session(req) {
     if(req.session.gtable_filter && req.session.gtable_filter.letter){
        letter = req.session.gtable_filter.letter
     }
-    req.session.gtable_filter = get_default_filter()
+    req.session.gtable_filter = get_default_gtable_filter()
     req.session.gtable_filter.letter = letter
     
     for( let item in req.body){
@@ -170,7 +181,7 @@ function apply_gtable_filter(req, filter) {
     if(req.session.gtable_filter){
        vals = req.session.gtable_filter
     }else{
-        vals = get_default_filter()
+        vals = get_default_gtable_filter()
     }
     //
     // txt_srch
@@ -236,9 +247,15 @@ function apply_gtable_filter(req, filter) {
     })
     return big_g_list
 }
-function get_filter_on(f){
+function get_filter_on(f, type){
     // for comparison stringify
-    let obj1 = JSON.stringify(get_default_filter())
+    let d,fxn
+    if(type == 'annot'){
+       d = get_default_annot_filter()
+    }else{
+       d = get_default_gtable_filter()
+    }
+    let obj1 = JSON.stringify(d)
     let obj2 = JSON.stringify(f)
     if(obj1 === obj2){
       return 'off'
@@ -265,7 +282,7 @@ function apply_sspecies(lst){
 }
 router.get('/reset_gtable', function gen_table_reset(req, res) {
    //console.log('in RESET-session')
-   req.session.gtable_filter = get_default_filter()
+   req.session.gtable_filter = get_default_gtable_filter()
    res.redirect('back');
 });
 router.get('/genome_table', function genome_table(req, res) {
@@ -281,14 +298,14 @@ router.get('/genome_table', function genome_table(req, res) {
         filter = req.session.gtable_filter
     }else{
         //console.log('gfiletr from default')
-        filter = get_default_filter()
+        filter = get_default_gtable_filter()
         req.session.gtable_filter = filter
     }
     
     if(req.query.otid){
        // reset gtable_filter here because we are coming from tax_table button
        // and expect to see the few genomes for this one taxon
-       filter = get_default_filter()
+       filter = get_default_gtable_filter()
        req.session.gtable_filter = filter
        if(req.session.ttable_filter){
            req.session.ttable_filter.otid = req.query.otid
@@ -329,7 +346,7 @@ router.get('/genome_table', function genome_table(req, res) {
     count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
     // apply sub-species to species
     send_list = apply_sspecies(send_list)
-    args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter)}
+    args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
     renderGenomeTable(req, res, args)
 
 });
@@ -360,7 +377,7 @@ router.post('/genome_table', function genome_table_filter(req, res) {
     }
     count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
     send_list = apply_sspecies(send_list)
-    args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter)}
+    args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
     renderGenomeTable(req, res, args)
      
 })
@@ -571,17 +588,64 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
         return
     }
     //console.log(rows)
-    const seqstr = (rows[0].seq).toString()
+    if(rows.length == 0){
+        html = "No sequence found in database"
+    }else{
+       const seqstr = (rows[0].seq).toString()
     //console.log(seqstr)
     //console.log(seqstr.length)
-    const arr = helpers.chunkSubstr(seqstr, 80)
-    const html = arr.join('<br>')
+       const arr = helpers.chunkSubstr(seqstr, 80)
+       const html = arr.join('<br>')
     //html = seqstr
+    }
     res.send(html)
 
   })
   
 })
+function render_explorer(req, res, args){
+    res.render('pages/genome/explorer', {
+          // title: 'HOMD :: ' + args.gid,
+//           pgname: 'genome/explorer', // for AboutThisPage 
+//           config: JSON.stringify(CFG),
+//           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//           user: JSON.stringify(req.user || {}),
+//           gid: args.gid,
+//           otid: args.otid,
+//           all_annos: JSON.stringify(args.allAnnosObj),
+//           anno_type: args.annoType,
+//           page_data: JSON.stringify(args.pageData),
+//           organism: args.organism,
+//           gc: args.gc,
+//           src_txt: args.searchtext,
+//           info_data: JSON.stringify(args.annoInfoObj),
+//           pid_list: JSON.stringify(args.pidList),
+//           returnTo: '/genome/explorer?gid='+args.gid,
+       
+       
+        
+        
+        title: 'HOMD :: ' + args.gid,
+        pgname: 'genome/explorer', // for AboutThisPage 
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        user: JSON.stringify(req.user || {}),
+        gid: args.gid,
+        otid: args.otid,
+        all_annos: JSON.stringify(args.allAnnosObj),
+        anno_type: args.annoType,
+        page_data: JSON.stringify(args.pageData),
+        organism: args.organism,
+        gc: args.gc,
+        info_data: JSON.stringify(args.annoInfoObj),
+        pid_list: JSON.stringify(args.pidList),
+        src_txt:'',
+        returnTo: '/genome/explorer?gid='+args.gid,
+        fltr: JSON.stringify(args.fltr),
+        filter_on: args.filter_on
+     })
+
+}
 //
 router.post('/open_explorer_search', function open_explorer_search (req, res) {
     //console.log('in POST:open_explorer_search')
@@ -605,27 +669,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
       annoInfoObj = C.annotation_lookup[gid][anno]
     }
     
-    const renderFxn = (req, res, args) => {
-        res.render('pages/genome/explorer', {
-          title: 'HOMD :: ' + args.gid,
-          pgname: 'genome/explorer', // for AboutThisPage 
-          config: JSON.stringify(CFG),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-          user: JSON.stringify(req.user || {}),
-          gid: args.gid,
-          otid: args.otid,
-          all_annos: JSON.stringify(args.allAnnosObj),
-          anno_type: args.annoType,
-          page_data: JSON.stringify(args.pageData),
-          organism: args.organism,
-          gc: args.gc,
-          src_txt: args.searchtext,
-          info_data: JSON.stringify(args.annoInfoObj),
-          pid_list: JSON.stringify(args.pidList),
-          returnTo: '/genome/explorer?gid='+args.gid,
-      
-        })
-     }
+
    //  {
 //     accession: 'SEQF1595|KI535340.1',
 //     GC: 47.09,
@@ -669,39 +713,230 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
       if (err) {
         req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 
-        let args = {searchtext:searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
-        renderFxn(req, res, args)
+        let args = {fltr:get_default_annot_filter(),filter_on:'off',searchtext:searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+        render_explorer(req, res, args)
         return
       } else {
         if (rows.length === 0) {
           console.log('no rows found')
         }else{
 
-           let args = {searchtext: searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
-           renderFxn(req, res, args)
-				   //  res.render('pages/genome/explorer', {
-			//           title: 'HOMD :: ' + gid,
-			//           pgname: 'genome/explorer', // for AboutThisPage 
-			//           config: JSON.stringify(CFG),
-			//           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-			//           user: JSON.stringify(req.user || {}),
-			//           gid: gid,
-			//           otid: otid,
-			//           all_annos: JSON.stringify(allAnnosObj),
-			//           anno_type: anno,
-			//           page_data: JSON.stringify(page),
-			//           organism: organism,
-			//           gc: gc,
-			//           info_data: JSON.stringify(annoInfoObj),
-			//           pid_list: JSON.stringify(rows),
-			//           src_txt: searchtext,
-			//           returnTo: '/genome/explorer?gid='+gid,
-			//       
-			//         })
+           let args = {fltr:get_default_annot_filter(),filter_on: 'off',searchtext: searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
+           render_explorer(req, res, args)
     
         }
      }
     })  // end Conn
+})
+function get_annot_table_filter(body){
+   let rev = 'off'
+    if (body.sort_rev && body.sort_rev == 'on'){
+      rev = 'on'
+    }
+    let filter = {
+          text:{
+            txt_srch: body.txt_srch,
+            field: body.field,
+          },
+          sort_col: body.sort_col,
+          sort_rev: rev
+    }
+    return filter
+}
+function apply_annot_table_filter(rows, filter){
+    console.log(filter)
+    console.log(rows.length)
+    let new_rows
+    if(filter.text.txt_srch !== ''){
+       new_rows = get_text_filtered_annot(rows, filter.text.txt_srch, filter.text.field)
+    }else{
+       new_rows = rows
+    }
+    if(filter.sort_rev === 'on'){
+		if(filter.sort_col === 'pid'){
+			  new_rows.sort(function (b, a) {
+				return helpers.compareStrings_alpha(a.protein_id, b.protein_id);
+			  })
+		}else if(filter.sort_col === 'molecule'){
+			  new_rows.sort(function (b, a) {
+				return helpers.compareStrings_alpha(a.accession, b.accession);
+			  })
+		}else if(filter.sort_col === 'product'){
+			  new_rows.sort(function (b, a) {
+				return helpers.compareStrings_alpha(a.product, b.product);
+			  })
+		}
+    }else{
+    	if(filter.sort_col === 'pid'){
+			  new_rows.sort(function (a, b) {
+				return helpers.compareStrings_alpha(a.protein_id, b.protein_id);
+			  })
+		}else if(filter.sort_col === 'molecule'){
+			  new_rows.sort(function (a, b) {
+				return helpers.compareStrings_alpha(a.accession, b.accession);
+			  })
+		}else if(filter.sort_col === 'product'){
+			  new_rows.sort(function (a, b) {
+				return helpers.compareStrings_alpha(a.product, b.product);
+			  })
+		}
+    }
+    
+    return new_rows
+    
+}
+function get_text_filtered_annot(annot_list, search_txt, search_field){
+
+  let send_list = []
+  if(search_field == 'pid'){
+      send_list = annot_list.filter(item => item.protein_id.toLowerCase().includes(search_txt))
+  }else if(search_field == 'product'){
+      send_list = annot_list.filter(item => item.product.toLowerCase().includes(search_txt))
+  }else if(search_field == 'molecule'){
+      send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
+  }else {
+      // search all
+      console.log('search all')
+      //send_list = send_tax_obj
+      let temp_obj = {}
+      var tmp_send_list = annot_list.filter(item => item.protein_id.toLowerCase().includes(search_txt))
+      // for uniqueness convert to object
+      for(var n in tmp_send_list){
+         temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+      }
+      
+      tmp_send_list = annot_list.filter(item => item.product.toLowerCase().includes(search_txt))
+      for(var n in tmp_send_list){
+         temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+      }
+      
+      tmp_send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
+      for(var n in tmp_send_list){
+         temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+      }
+      
+     //  tmp_send_list = annot_list.filter( function filterBigList2(e) {
+//          for(var n in e.synonyms){
+//             if(e.synonyms[n].toLowerCase().includes(search_txt)){
+//                return e
+//             }
+//          }
+//       })    
+//       for(var n in tmp_send_list){
+//          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+//       }
+//       
+//       tmp_send_list = big_tax_list.filter( function filterBigList3(e) {
+//          for(var n in e.type_strains){
+//             if(e.type_strains[n].toLowerCase().includes(search_txt)){
+//                return e
+//             }
+//          }
+//       })
+//       for(var n in tmp_send_list){
+//          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+//       }
+//       
+      // now back to a list
+      send_list = Object.values(temp_obj);
+      
+      
+  }
+  return send_list
+} 
+router.get('/reset_atable', function annot_table_reset(req, res) {
+   //console.log('in RESET-session')
+   //console.log(req.query)
+   req.session.atable_filter = get_default_annot_filter()
+   res.redirect('explorer?gid='+req.query.gid+'&anno='+req.query.anno);
+});
+router.post('/annotation_filter', function annotation_filter (req, res) {
+    console.log('IN annotation_filter')
+    console.log(req.body)
+    let pidList
+    let gid = req.body.gid
+    let anno = req.body.anno
+    let organism = C.annotation_lookup[gid].prokka.organism
+    let gc = ''
+    let otid = ''
+    if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
+        otid = C.genome_lookup[gid].otid
+        gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
+    }
+    let annoInfoObj = C.annotation_lookup[gid][anno]
+    const glist = Object.values(C.genome_lookup)
+    glist.sort(function sortGList (a, b) {
+      return helpers.compareStrings_alpha(a.genus, b.genus)
+    })
+    // filter out empties then map to create list of sorted strings
+    const allAnnosObj = glist.filter(item => item.genus !== '')
+      .map((el) => {
+      return { gid: el.gid, org: el.genus+' '+el.species+' '+el.ccolct }
+    })
+    
+    let pageData = {}
+    pageData.page = req.query.page
+    if (!req.query.page) {
+      pageData.page = 1
+    }
+    let atable_filter = get_annot_table_filter(req.body)
+    req.session.atable_filter = atable_filter
+    const q = queries.get_annotation_query(gid, req.body.anno)
+    console.log(q)
+    TDBConn.query(q, (err, rows) => {
+    if (err) {
+      req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
+      args = {fltr:{},filter_on: 'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
+      render_explorer(req, res, args)
+      return
+    } else {
+      if (rows.length === 0) {
+        console.log('no rows found')
+      }
+      let filtered_rows = apply_annot_table_filter(rows, atable_filter)
+      
+      pageData.trecords = filtered_rows.length
+      if(filtered_rows.length < C.PAGER_ROWS){
+         pidList = filtered_rows
+      }else{
+		  if (pageData.page) {
+			const trows = filtered_rows.length
+			// console.log('trows',trows)
+			pageData.row_per_page = C.PAGER_ROWS
+			pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
+			if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
+			if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
+			helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+			pageData.show_page = pageData.page
+			if (pageData.show_page === 1) {
+			  pidList = filtered_rows.slice(0, pageData.row_per_page) // first 200
+			  pageData.start_count = 1
+			} else {
+			  pidList = filtered_rows.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
+			  pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
+			}
+			//console.log('start count', pageData.start_count)
+		  }
+      }
+      //console.log('pidlist',pidList)
+      const args = {
+			gid: gid,
+			gc: 			gc,
+			otid: 			otid,
+			organism: 		organism,
+			allAnnosObj: 	allAnnosObj,
+			annoType: 		anno,
+			pageData: 		pageData,
+			annoInfoObj: 	annoInfoObj,
+			pidList: 		pidList,
+			fltr:  atable_filter,
+			filter_on: get_filter_on(atable_filter,'annot')
+      }
+			
+      render_explorer(req, res, args)
+    }
+  })
+    
 })
 router.get('/explorer', function explorer (req, res) {
   //console.log('in explorer')
@@ -718,6 +953,7 @@ router.get('/explorer', function explorer (req, res) {
   helpers.print(['gid:', gid,'anno:',anno])
   
   // anno == 
+  let atable_filter
   let annoInfoObj = {}
   let pageData = {}
   pageData.page = req.query.page
@@ -729,29 +965,7 @@ router.get('/explorer', function explorer (req, res) {
 
  
   let args = {}
-  //const renderFxn = (req, res, gid, otid, organism,  allAnnosObj, annoType, pageData, annoInfoObj, pidList) => {
-  const renderFxn = (req, res, args) => {
-    //console.log(pageData)
-    res.render('pages/genome/explorer', {
-      title: 'HOMD :: ' + args.gid,
-      pgname: 'genome/explorer', // for AboutThisPage 
-      config: JSON.stringify(CFG),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-      user: JSON.stringify(req.user || {}),
-      gid: args.gid,
-      otid: args.otid,
-      all_annos: JSON.stringify(args.allAnnosObj),
-      anno_type: args.annoType,
-      page_data: JSON.stringify(args.pageData),
-      organism: args.organism,
-      gc: args.gc,
-      info_data: JSON.stringify(args.annoInfoObj),
-      pid_list: JSON.stringify(args.pidList),
-      src_txt:'',
-      returnTo: '/genome/explorer?gid='+args.gid,
-      
-    })
-  }
+  
   const glist = Object.values(C.genome_lookup)
   
   glist.sort(function sortGList (a, b) {
@@ -777,8 +991,8 @@ router.get('/explorer', function explorer (req, res) {
   
   if (!gid || gid.toString() === '0') {
    
-    args = {gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
-    renderFxn(req, res, args)
+    args = {fltr:{},filter_on:'off',gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    render_explorer(req, res, args)
     return
   }else {
       if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
@@ -786,8 +1000,8 @@ router.get('/explorer', function explorer (req, res) {
       }else{
         req.flash('fail', 'Genome not found: "'+gid+'"')
         
-        args = {gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
-        renderFxn(req, res, args)
+        args = {fltr:{},filter_on:'off',gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+        render_explorer(req, res, args)
         return
       }
   }
@@ -799,46 +1013,54 @@ router.get('/explorer', function explorer (req, res) {
   }
   if(gid && !anno) {
       
-      args = {gid:gid,gc:gc,otid:0,organism:organism,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
-      renderFxn(req, res, args)
+      args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:0,organism:organism,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
+      render_explorer(req, res, args)
       return
   }
  
   
-  // now annotations
+  // NOW ANNOTATIONS
   if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
     annoInfoObj = C.annotation_lookup[gid][anno]
   } else {
     req.flash('fail', 'Could not find: "'+anno+'" annotation for '+gid)
 
-    args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
-    renderFxn(req, res, args)
+    args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+    render_explorer(req, res, args)
     return
   }
 
   //OLD DB
   const q = queries.get_annotation_query(gid, anno)
-  //console.log(q)
+  console.log(q)
   //NEW DB
   // let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
 //   q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
 //   q += " WHERE seq_id = '"+gid+"'"
   
   //select GC, PID, product, length_na,length_aa, `start`, `stop` FROM `PROKKA_meta`.`orf`  WHERE seq_id = 'SEQF1595'
-  
+  if(req.session.atable_filter){
+        //console.log('filetr session')
+        atable_filter = req.session.atable_filter
+    }else{
+        //console.log('filetr from default')
+        atable_filter = get_default_annot_filter()
+        req.session.atable_filter = atable_filter
+    }
   //console.log('anno query '+q)
   //OLD ADBConn.query(q, (err, rows) => {
   TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
 
-      args = {gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
-      renderFxn(req, res, args)
+      args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
+      render_explorer(req, res, args)
       return
     } else {
       if (rows.length === 0) {
         console.log('no rows found')
       }
+      let filtered_rows = apply_annot_table_filter(rows, atable_filter)
       pageData.trecords = rows.length
       if (pageData.page) {
         const trows = rows.length
@@ -858,7 +1080,16 @@ router.get('/explorer', function explorer (req, res) {
         }
         //console.log('start count', pageData.start_count)
       }
-      
+      if(req.session.atable_filter){
+        //console.log('filetr session')
+        atable_filter = req.session.atable_filter
+      }else{
+        //console.log('filetr from default')
+        atable_filter = get_default_annot_filter()
+        req.session.atable_filter = atable_filter
+      }
+      console.log('atable_filter',atable_filter)
+      console.log('default',get_default_annot_filter())
       args = {
 			gid: gid,
 			gc: 			gc,
@@ -868,12 +1099,16 @@ router.get('/explorer', function explorer (req, res) {
 			annoType: 		anno,
 			pageData: 		pageData,
 			annoInfoObj: 	annoInfoObj,
-			pidList: 		pidList
+			pidList: 		pidList,
+			fltr:  atable_filter,
+			filter_on: get_filter_on(atable_filter,'annot')
 			}
-      renderFxn(req, res, args)
+			
+      render_explorer(req, res, args)
     }
   })
 })
+
 //
 //
 router.get('/blast_server', function genome_blast_server(req, res) {
