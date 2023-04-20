@@ -134,10 +134,10 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        var resp = xmlhttp.responseText;
-        console.log(resp)
+        const responsex = xmlhttp.responseText;
+        console.log(responsex)
         text = ''
-        var length = resp.length.toString()
+        var length = responsex.length.toString()
         console.log('len',length)
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
@@ -148,7 +148,7 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
              text += '>' + mol + ' | ' + product + ' | '+ org + ' | length: ' + length + '\n'
         }
         
-        text += resp
+        text += responsex
         text += '</pre>'
     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
     var doc = win.document;
