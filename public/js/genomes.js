@@ -134,21 +134,24 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        const responsex = xmlhttp.responseText;
-        console.log(responsex)
+        const response = xmlhttp.responseText;
+        console.log(response)
         text = ''
-        var length = responsex.length.toString()
+        var length = ''
+        if(response.slice(0, 17) !== 'No sequence found'){
+           var length = ' | length: '+response.length.toString()
+        }
         console.log('len',length)
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
         //text += '>'+product+' | '+mol+' | '+ org +'\n'
         if(type === 'prokka'){
-            text += '>' + gid +'|' + pid +' | ' + product + ' | ' + org + ' | length: ' + length + '\n'
+            text += '>' + gid +'|' + pid +' | ' + product + ' | ' + org + length + '\n'
         }else{
-             text += '>' + mol + ' | ' + product + ' | '+ org + ' | length: ' + length + '\n'
+             text += '>' + mol + ' | ' + product + ' | '+ org + length + '\n'
         }
         
-        text += responsex
+        text += response
         text += '</pre>'
     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
     var doc = win.document;
