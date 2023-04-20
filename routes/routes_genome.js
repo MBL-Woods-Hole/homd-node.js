@@ -588,14 +588,15 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
         return
     }
     console.log('rows',rows)
+    let html = ''
     if(rows.length === 0){
-        const html = "No sequence found in database"
+        html += "No sequence found in database"
     }else{
        const seqstr = (rows[0].seq).toString()
-      console.log('seqstr',seqstr)
-    //console.log(seqstr.length)
+       console.log('seqstr',seqstr)
+       //console.log(seqstr.length)
        const arr = helpers.chunkSubstr(seqstr, 80)
-       const html = arr.join('<br>')
+       html += arr.join('<br>')
     //html = seqstr
     }
     
