@@ -819,7 +819,7 @@ router.get('/explorer', function explorer (req, res) {
 
   //OLD DB
   const q = queries.get_annotation_query(gid, anno)
-  //console.log(q)
+  console.log(q)
   //NEW DB
   // let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
 //   q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
