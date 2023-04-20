@@ -137,6 +137,7 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
         console.log(resp)
         text = ''
         var length = resp.length.toString()
+        console.log('len',length)
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
         //text += '>'+product+' | '+mol+' | '+ org +'\n'
