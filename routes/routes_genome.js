@@ -589,9 +589,11 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
     }
     console.log('rows',rows)
     let html = ''
+    let length = 0
     if(rows.length === 0){
         html += "No sequence found in database"
     }else{
+       length = rows[0].seq.length
        const seqstr = (rows[0].seq).toString()
        console.log('seqstr',seqstr)
        //console.log(seqstr.length)
@@ -600,7 +602,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
     //html = seqstr
     }
     
-    res.send(html)
+    res.send(JSON.stringify({html:html,length:length}))
 
   })
   

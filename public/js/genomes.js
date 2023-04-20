@@ -134,12 +134,13 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        const response = xmlhttp.responseText;
-        console.log(response)
+        const resp = JSON.parse(xmlhttp.responseText);
+        console.log(resp)
         text = ''
+        var leng = resp.length
         var length = ''
-        if(response.slice(0, 17) !== 'No sequence found'){
-           var length = ' | length: '+response.length.toString()
+        if(leng !== 0){
+           var length = ' | length: '+len.toString()
         }
         console.log('len',length)
         //text += '<pre>'+defline+'<br>'
@@ -151,7 +152,7 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
              text += '>' + mol + ' | ' + product + ' | '+ org + length + '\n'
         }
         
-        text += response
+        text += resp.html
         text += '</pre>'
     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
     var doc = win.document;
