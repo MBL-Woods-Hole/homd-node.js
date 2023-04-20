@@ -134,7 +134,7 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
-        //console.log(defline)
+        console.log(resp)
         text = ''
         var length = resp.length.toString()
         //text += '<pre>'+defline+'<br>'

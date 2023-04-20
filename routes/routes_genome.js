@@ -587,7 +587,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
         console.log(err)
         return
     }
-    //console.log(rows)
+    console.log('rows',rows)
     if(rows.length == 0){
         html = "No sequence found in database"
     }else{
