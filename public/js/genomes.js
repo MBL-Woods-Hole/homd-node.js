@@ -127,7 +127,8 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     args.db   = db
     args.mol  = mol
     args.org   = org
-    args.org   = product
+    args.product   = product
+    console.log('args',args)
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/get_NN_NA_seq", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
