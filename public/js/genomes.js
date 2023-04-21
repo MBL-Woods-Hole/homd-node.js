@@ -116,11 +116,11 @@ function get_16s_seq(seqid) {
 }
 //
 function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
-    console.log('in NNNA',type,pid)
+    //console.log('in NNNA',type,pid)
     // on genome explore page
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
-    console.log(type,pid)
+    //console.log(type,pid)
     args={}
     args.type = type
     args.pid  = pid
@@ -128,21 +128,21 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     args.mol  = mol
     args.org   = org
     args.product   = product
-    console.log('args',args)
+    //console.log('args',args)
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/get_NN_NA_seq", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         const resp = JSON.parse(xmlhttp.responseText);
-        console.log(resp)
+        //console.log(resp)
         text = ''
         var leng = resp.length
         var length = ''
         if(leng !== 0){
            var length = ' | length: '+leng.toString()
         }
-        console.log('len',length)
+        //console.log('len',length)
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
         //text += '>'+product+' | '+mol+' | '+ org +'\n'

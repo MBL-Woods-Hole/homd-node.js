@@ -587,7 +587,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
         console.log(err)
         return
     }
-    console.log('rows',rows)
+    //console.log('rows',rows)
     let html = ''
     let length = 0
     if(rows.length === 0){
@@ -595,7 +595,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
     }else{
        length = rows[0].seq.length
        const seqstr = (rows[0].seq).toString()
-       console.log('seqstr',seqstr)
+       //console.log('seqstr',seqstr)
        //console.log(seqstr.length)
        const arr = helpers.chunkSubstr(seqstr, 80)
        html += arr.join('<br>')
@@ -693,21 +693,11 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
           show_page: 1,
           start_count: 1
         }
-    // console.log('req.session.site_search_resultncbi length')
-//     console.log(req.session.site_search_result.ncbi[gid].length)
-//     console.log('req.session.site_search_result length')
     
     let pid_list = req.session.site_search_result[anno][gid].map(el => el.pid)
     const q = queries.get_annotation_query2(gid, anno, pid_list)
     
-   //  let qSelectAnno = 'SELECT o.accession, GC, PID, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM `' + anno + '_meta`.`orf`'
-//   qSelectAnno += ' JOIN `' + anno + '_meta`.`molecules` ON `' + anno + '_meta`.`orf`.`mol_id`=`' + anno + '_meta`.`molecules`.id'
-//   qSelectAnno += " WHERE PID in ('"+pid_list.join("','")+"')"
-    // NEW: takes TDB
-    // let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
-//       q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-//       q += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
-    
+
     //console.log(q)
     //console.log('anno query '+q)
     let tmp = []
@@ -724,10 +714,8 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
         if (rows.length === 0) {
           console.log('no rows found')
         }else{
-
            let args = {fltr:get_default_annot_filter(),filter_on: 'off',searchtext: searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
            render_explorer(req, res, args)
-    
         }
      }
     })  // end Conn
@@ -748,8 +736,8 @@ function get_annot_table_filter(body){
     return filter
 }
 function apply_annot_table_filter(rows, filter){
-    console.log(filter)
-    console.log(rows.length)
+    //console.log(filter)
+    //console.log(rows.length)
     let new_rows
     if(filter.text.txt_srch !== ''){
        new_rows = get_text_filtered_annot(rows, filter.text.txt_srch, filter.text.field)
@@ -769,6 +757,14 @@ function apply_annot_table_filter(rows, filter){
 			  new_rows.sort(function (b, a) {
 				return helpers.compareStrings_alpha(a.product, b.product);
 			  })
+		}else if(filter.sort_col === 'na'){
+			  new_rows.sort(function (b, a) {
+				return helpers.compareStrings_int(a.length_na, b.length_na);
+			  })
+		}else if(filter.sort_col === 'aa'){
+			  new_rows.sort(function (b, a) {
+				return helpers.compareStrings_int(a.length_aa, b.length_aa);
+			  })
 		}
     }else{
     	if(filter.sort_col === 'pid'){
@@ -782,6 +778,14 @@ function apply_annot_table_filter(rows, filter){
 		}else if(filter.sort_col === 'product'){
 			  new_rows.sort(function (a, b) {
 				return helpers.compareStrings_alpha(a.product, b.product);
+			  })
+		}else if(filter.sort_col === 'na'){
+			  new_rows.sort(function (a, b) {
+				return helpers.compareStrings_int(a.length_na, b.length_na);
+			  })
+		}else if(filter.sort_col === 'aa'){
+			  new_rows.sort(function (a, b) {
+				return helpers.compareStrings_int(a.length_aa, b.length_aa);
 			  })
 		}
     }
@@ -800,7 +804,6 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
       send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
   }else {
       // search all
-      console.log('search all')
       //send_list = send_tax_obj
       let temp_obj = {}
       var tmp_send_list = annot_list.filter(item => item.protein_id.toLowerCase().includes(search_txt))
@@ -819,28 +822,7 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
          temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
       }
       
-     //  tmp_send_list = annot_list.filter( function filterBigList2(e) {
-//          for(var n in e.synonyms){
-//             if(e.synonyms[n].toLowerCase().includes(search_txt)){
-//                return e
-//             }
-//          }
-//       })    
-//       for(var n in tmp_send_list){
-//          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-//       }
-//       
-//       tmp_send_list = big_tax_list.filter( function filterBigList3(e) {
-//          for(var n in e.type_strains){
-//             if(e.type_strains[n].toLowerCase().includes(search_txt)){
-//                return e
-//             }
-//          }
-//       })
-//       for(var n in tmp_send_list){
-//          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
-//       }
-//       
+
       // now back to a list
       send_list = Object.values(temp_obj);
       
@@ -855,8 +837,8 @@ router.get('/reset_atable', function annot_table_reset(req, res) {
    res.redirect('explorer?gid='+req.query.gid+'&anno='+req.query.anno);
 });
 router.post('/annotation_filter', function annotation_filter (req, res) {
-    console.log('IN annotation_filter')
-    console.log(req.body)
+    //console.log('IN annotation_filter')
+    //console.log(req.body)
     let pidList
     let gid = req.body.gid
     let anno = req.body.anno
@@ -1092,8 +1074,8 @@ router.get('/explorer', function explorer (req, res) {
         atable_filter = get_default_annot_filter()
         req.session.atable_filter = atable_filter
       }
-      console.log('atable_filter',atable_filter)
-      console.log('default',get_default_annot_filter())
+      //console.log('atable_filter',atable_filter)
+      //console.log('default',get_default_annot_filter())
       args = {
 			gid: gid,
 			gc: 			gc,

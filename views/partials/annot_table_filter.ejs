@@ -91,15 +91,28 @@
        <small>
         <span class='filter-title'>Sort Column</span>:&nbsp;&nbsp;
         <% if(fltr.sort_col === 'molecule'){ %>
-        <input type='radio' checked name='sort_col' value='molecule' onclick='update_sb()' > Molecule&nbsp;
+        <input type='radio' checked name='sort_col' value='molecule' onclick='update_sb()' > Molecule&nbsp;&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='molecule' onclick='update_sb()' > Molecule&nbsp;
+        <input type='radio' name='sort_col' value='molecule' onclick='update_sb()' > Molecule&nbsp;&nbsp;
         <% } %>
         <% if(fltr.sort_col === 'pid'){ %>
-        <input type='radio' checked name='sort_col' value='pid' onclick='update_sb()' > PID&nbsp;
+        <input type='radio' checked name='sort_col' value='pid' onclick='update_sb()' > PID&nbsp;&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='pid' onclick='update_sb()' > PID&nbsp;
+        <input type='radio' name='sort_col' value='pid' onclick='update_sb()' > PID&nbsp;&nbsp;
         <% } %>
+        
+        <% if(fltr.sort_col === 'na'){ %>
+        <input type='radio' checked name='sort_col' value='na' onclick='update_sb()' > NA&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='na' onclick='update_sb()' > NA&nbsp;&nbsp;
+        <% } %>
+        
+        <% if(fltr.sort_col === 'aa'){ %>
+        <input type='radio' checked name='sort_col' value='aa' onclick='update_sb()' > AA&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='aa' onclick='update_sb()' > AA&nbsp;&nbsp;
+        <% } %>
+        
         
         
         <% if(fltr.sort_col === 'product'){ %>
@@ -107,6 +120,10 @@
         <% }else{ %>
         <input type='radio' name='sort_col' value='product' onclick='update_sb()' > Gene Product Name&nbsp;
         <% } %>
+        
+        
+        
+        
         
         <span id='sort_rev' title='Reverse the Sort Order'>
           

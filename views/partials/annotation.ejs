@@ -1,9 +1,12 @@
 <style>
 #annotation-filter{
-  float:right;
+  /* float:right; */
   
   padding:5px;
   margin-top:10px;
+}
+#head-filter-table td{
+  padding:0 15px;
 }
 </style>
 		
@@ -13,7 +16,7 @@
   
 	<span id='anno-title2'><%= anno_type.toUpperCase() %> Annotation for <%= gid %></span>
 
-	<br>
+	
 	<table id='info-table' >
 	 <tr><th colspan='4'>Genome selected: <%= organism %> </th></tr>
 	 <tr>
@@ -40,39 +43,53 @@
 		 <div id='no-data'>There is no <%= anno_type.toUpperCase() %> annotation data available for <%= gid %></div>
 	 <% }else{ %>
 	 
+		 <table id='head-filter-table'>
+		 <tr><td>
 	 
-	 <div id='annotation-filter'>
-		FILTER This Annotation Table (filter/search all records)
-		<%- include('annot_table_filter.ejs') %>
-	 </div>
-	 Column headers only sort the current page.
-	 <br><br>
-	 <% if(page_data.trecords < 500){ %>
-	    Number of Records Found: <%= page_data.trecords %>
-	    <% cnt = 1 %>
-	 <% }else{ %>
-		 <% cnt = page_data.start_count %>
-		 <div id='pager'>
-		 Annotation Table [page:<%= page_data.show_page %>]
-		 <% next_page = parseInt(page_data.show_page)+1 %>
-		 <% prev_page = parseInt(page_data.show_page)-1 %>
-		 <br>Number of Records Found: <%= page_data.trecords %> <small>[<%= page_data.number_of_pages %> Pages]
-		 <a href='explorer?gid=<%= gid %>&anno=<%= anno_type %>&page=<%= prev_page %>'>Previous Page</a>
-		 <==>
-		 <a href='explorer?gid=<%= gid %>&anno=<%= anno_type %>&page=<%= next_page %>'>Next Page</a>
-		 </small>
+		 <% if(page_data.trecords < 500){ %>
+			Number of Records Found: <%= page_data.trecords %>
+			<% cnt = 1 %>
+		 <% }else{ %>
+			 <% cnt = page_data.start_count %>
+			 <div id='pager'>
+			 Annotation Table [page:<%= page_data.show_page %>]
+			 <% next_page = parseInt(page_data.show_page)+1 %>
+			 <% prev_page = parseInt(page_data.show_page)-1 %>
+			 <br>Number of Records Found: <%= page_data.trecords %> <small>[<%= page_data.number_of_pages %> Pages]
+			 </small>
+			 <br>
+			 <a href='explorer?gid=<%= gid %>&anno=<%= anno_type %>&page=<%= prev_page %>'>Previous Page</a>
+			 <==>
+			 <a href='explorer?gid=<%= gid %>&anno=<%= anno_type %>&page=<%= next_page %>'>Next Page</a>
+			 </div>
+		<% } %>
+		
+		</td><td>
+		
+		 <div id='annotation-filter'>
+			FILTER This Annotation Table (filter/search all records)
+			<%- include('annot_table_filter.ejs') %>
 		 </div>
-	 <% } %>
+		 
+		</td></tr>
+		</table>
+		<br>
+	
 	 
+	 <span class='pull-left'>Column headers only sort the current page.</span>
 	 <table id='annotation-table' class='sortable'>
 	 <thead>
 	  <tr>
 	   <th class='sorttable_nosortX'></th>
 	   <th class='col1'>Molecule</th>
 	   <th class='col2'>PID</th>
-	   <th class='col3 sorttable_nosort'>Sequences</th>
-	   <th class='col4' nowrap>Size (<small>NA/AA</small>)</th>
-	   <th class='col5'>Range</th>
+	   
+	   <th class='col3 center' nowrap>NA <small>(Length)(Seq)</small><br></th>
+	   
+	   <th class='col4 center' nowrap>AA <small>(Length)(Seq)</small><br></th>
+	   
+	   
+	   <th class='col5 sorttable_nosort'>Range</th>
 	   <th class='col6'>Gene Product Name</th>
 	  </tr>
 	 </thead>
@@ -133,12 +150,21 @@
 		
 	   
 	   </td>
-	   <td nowrap>
+	   
+	   
+	   <td class='center' nowrap>
+	   <%= mole[n].length_na %>
 		   [<a title='Nucleic Acid' href='#' onclick="get_NN_NA_seq('na','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')"><b>NA</b></a>] 
+		   
+		</td>
+		<td class='center' nowrap>
+		   <%= mole[n].length_aa %>
 		   [<a title='Amino Acid'   href='#' onclick="get_NN_NA_seq('aa','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')"><b>AA</b></a>]
-	   </td>
-	   <td><%= mole[n].length_na %>/<%= mole[n].length_aa %></td>
-	   <td><%= mole[n].start %>-<%= mole[n].stop %></td>
+	       
+	    </td>
+	   
+	   
+	   <td class='center'><%= mole[n].start %>-<%= mole[n].stop %></td>
 	   <% idx = mole[n].product.toLowerCase().indexOf(src_txt) %>
 	   <% if(idx != -1){ %>
 		 <% html = mole[n].product.slice(0,idx)+ "<font color='red'>"+src_txt.toUpperCase() +'</font>'+mole[n].product.slice(idx+src_txt.length) %>
