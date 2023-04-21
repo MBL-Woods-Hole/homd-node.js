@@ -47,7 +47,7 @@
 		 <tr><td>
 	 
 		 <% if(page_data.trecords < 500){ %>
-			Number of Records Found: <%= page_data.trecords %>
+			Number of Records Found: <%= page_data.trecords %> (1 page)
 			<% cnt = 1 %>
 		 <% }else{ %>
 			 <% cnt = page_data.start_count %>
@@ -76,7 +76,7 @@
 		<br>
 	
 	 
-	 <span class='pull-left'>Column headers only sort the current page.</span>
+	 <span class='pull-left'><small><b>Note:</b> Column headers only sort the current page.</small></span>
 	 <table id='annotation-table' class='sortable'>
 	 <thead>
 	  <tr>

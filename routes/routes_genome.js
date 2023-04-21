@@ -658,6 +658,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     let anno = req.body.anno
     let searchtext = req.body.searchtext
     let otid='',gc=0,annoInfoObj={}
+    //console.log('C.genome_lookup[gid]',gid,C.genome_lookup[gid])
     let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
     const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
        return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
@@ -687,14 +688,14 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
 //   },
     let page ={
           page: 1,
-          trecords: req.session.site_search_result[anno][gid].length,
-          row_per_page: req.session.site_search_result[anno][gid].length,
+          trecords: req.session['site_search_result_'+anno][gid].length,
+          row_per_page: req.session['site_search_result_'+anno][gid].length,
           number_of_pages: 1,
           show_page: 1,
           start_count: 1
         }
     
-    let pid_list = req.session.site_search_result[anno][gid].map(el => el.pid)
+    let pid_list = req.session['site_search_result_'+anno][gid].map(el => el.pid)
     const q = queries.get_annotation_query2(gid, anno, pid_list)
     
 

@@ -64,6 +64,16 @@ module.exports.get_annotation_query3 = (search_text) => {
     
   return qSelectAnno
 }
+module.exports.get_annotation_query4 = (search_text, anno_type) => {
+  // this query takes too long
+  let qSelectAnno
+  if(anno_type === 'ncbi'){
+     qSelectAnno = "SELECT seq_id as gid, protein_id, product from `NCBI_meta`.orf WHERE product like '%"+search_text+"%'"
+  }else{
+     qSelectAnno = "SELECT seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%"+search_text+"%'"
+  }
+  return qSelectAnno
+}
 module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
   let qSelectContigs = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE seq_id = '"+gid+"'"

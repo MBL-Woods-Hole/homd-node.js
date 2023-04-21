@@ -148,7 +148,14 @@ table th,td{
 <script>
   mainmenu()
   intext = '<%= search_text %>'
-  
+  $(document).ready(function(){
+      get_annotations_counts(intext)
+     
+      //get_annotations_counts_prokka(intext)
+      //get_annotations_counts_ncbi(intext)
+      
+  });
+
 </script>
 
 
