@@ -27,16 +27,18 @@ def run(args):
     
     # prokka first
     
-    q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"`"
+    #q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"` "+args.limit
+    q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"` WHERE seq_id like 'SEQF"+args.num+"%'"
     print(q)
     # seq_id-protein_id is UNIQUE
     fields = ['seq_id','protein_id','accession','product']
-    file =  os.path.join(args.outdir,args.outfileprefix+args.db+'Lookup.json')
+    file =  os.path.join(args.outdir,args.outfileprefix+args.db+args.num+'Lookup.json')
     fh = open(file,'w')
     fh.write('{\n')
     
     #SELECT seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%end%'
     result = myconn.execute_fetch_select(q)
+    count = 0
     for row in result:
        #print(row)
        unique = row[0]+'|'+row[1]
@@ -44,9 +46,11 @@ def run(args):
        #"SEQF4098|MBX3952457.1": "QGBS01000001.1|hypothetical protein",
        master_lookup[unique] = string
        fh.write('  "'+unique+'": "'+string+'"\n')
+       count += 1
     
-    
-    fh.write('}\n')
+    fh.write('}')
+    #fh.write(' '+str(count))
+    fh.write('\n')
     fh.close()
     #print_dict(file, master_lookup)
 
@@ -95,6 +99,8 @@ if __name__ == "__main__":
                         help = "output file is human friendly")
     parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", default=False,
                                                     help="verbose print()")
+    parser.add_argument("-n", "--num",   required=False,  action="store",    dest = "num", default='1',
+                                                    help="")
     args = parser.parse_args()
 
     if not os.path.exists(args.outdir):
@@ -121,4 +127,7 @@ if __name__ == "__main__":
     
     args.db = 'NCBI_meta'
     args.table='orf'
+    args.limit = ''
+    args.limit = "limit 1000"
+    
     run(args)

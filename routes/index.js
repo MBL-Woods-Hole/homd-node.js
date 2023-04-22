@@ -150,7 +150,69 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     res.send(create_protein_table(anno, resultObj, searchTextLower))
 })
 router.post('/get_annotations_counts_ncbi', function get_annotations_counts_ncbi(req, res) {
-    console.log('POST::get_annotations_counts_NEW')
+    console.log('POST::get_annotations_counts_ncbiGREP')
+    console.log(req.body)
+    let searchText = req.body.intext
+    let anno_type //= req.body.anno_type  // ncbi or prokka
+    let searchTextLower = req.body.intext.toLowerCase()
+    let obj,data,pid,gid,gid_count,organism=''
+    let ngenome_count=0, ngene_count=0
+    let output,subArr
+    //const grep_cmd = "/usr/bin/grep -liR "+searchText + " -e '" + helpers.addslashes(searchText) + "'" 
+    // -i === case insensitive
+    // -h never pring file name
+    let grep_cmd = "/usr/bin/grep -ih "+searchText+" "+ path.join(CFG.PATH_TO_DATA,"homdData-ORFNCBI_meta*")
+    console.log('grep_cmd',grep_cmd)
+    exec(grep_cmd, (err, stdout, stderr) => {
+      if (stderr) {
+        console.error('stderr',stderr);
+        return;
+      }
+      if(stdout){
+        var ar = [];
+        
+        var pid_count = 0
+        var gid_collector = {}
+        var sp = stdout.split('\n');
+        for (var i = 0; i < sp.length; i++) {
+            var sub = sp[i].trim().split(':');
+                if(sub[0]){
+                    let clean0 = sub[0].replace(/['"]+/g, '')
+                    let clean1 = sub[1].replace(/['"]+/g, '')
+                    let product = clean1.split('|')[1]
+                    let pts = clean0.split('|')
+                    pid = pts[1]
+                    gid = pts[0]
+                    gid_collector[gid] = 1
+                    if(gid in C.genome_lookup){
+                        organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+                    }
+                    if(! req.session.site_search_result_ncbi){
+                        req.session.site_search_result_ncbi = {}
+                    }
+                    if(gid in req.session.site_search_result_ncbi){
+                        req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:product})
+                    }else{
+                        req.session.site_search_result_ncbi[gid] = [{name:organism, pid:pid, product:product}]
+                    }
+                    pid_count += 1
+                    ar.push(sub[0].replace(/['"]+/g, ''));
+                }
+        }
+        gid_count = Object.keys(gid_collector).length // genome_count
+        // pid_count = pid_count   //gene_count
+
+      }
+      console.log(req.session.site_search_result_ncbi.length)
+      console.log(ar,ar.length)
+      console.log(gid_count, pid_count)
+      res.send([gid_count, pid_count])
+    })
+   
+   
+})
+router.post('/get_annotations_counts_ncbiXX', function get_annotations_counts_ncbi(req, res) {
+    console.log('POST::get_annotations_counts_ncbi')
     console.log(req.body)
     let searchText = req.body.intext
     let anno_type //= req.body.anno_type  // ncbi or prokka
