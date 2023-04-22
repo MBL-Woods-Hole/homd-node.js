@@ -34,7 +34,6 @@ def run(args):
     fields = ['seq_id','protein_id','accession','product']
     file =  os.path.join(args.outdir,args.outfileprefix+args.db+args.num+'Lookup.json')
     fh = open(file,'w')
-    fh.write('{\n')
     
     #SELECT seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%end%'
     result = myconn.execute_fetch_select(q)
@@ -45,10 +44,9 @@ def run(args):
        string = row[2]+'|'+row[3]
        #"SEQF4098|MBX3952457.1": "QGBS01000001.1|hypothetical protein",
        master_lookup[unique] = string
-       fh.write('  "'+unique+'": "'+string+'"\n')
+       fh.write(args.dbanno.lower()+'|'+unique+'|'+string+'\n')
        count += 1
     
-    fh.write('}')
     #fh.write(' '+str(count))
     fh.write('\n')
     fh.close()
@@ -89,8 +87,8 @@ if __name__ == "__main__":
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")
-    #parser.add_argument("-anno", "--annotation", required = True, action = 'store', dest = "anno",
-    #                     help = "PROKKA or NCBI")
+    parser.add_argument("-db", "--database", required = False, action = 'store', dest = "dbanno", default='NCBI',
+                        help = "PROKKA or NCBI")
     parser.add_argument("-host", "--host",
                         required = False, action = 'store', dest = "dbhost", default = 'localhost',
                         help = "choices=['homd',  'localhost']")
@@ -125,7 +123,7 @@ if __name__ == "__main__":
     myconn = MyConnection(host=dbhost,   read_default_file = "~/.my.cnf_node")
     
     
-    args.db = 'NCBI_meta'
+    args.db = args.dbanno.upper()+'_meta'
     args.table='orf'
     args.limit = ''
     args.limit = "limit 1000"
