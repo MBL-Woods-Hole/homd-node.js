@@ -5,7 +5,7 @@ function get_annotations_counts_ncbi(intext){
   args = {intext: intext, anno_type: 'ncbi'}
   //document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
   document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
-  xmlhttp.open("POST", "/get_annotations_counts_NEW", true);
+  xmlhttp.open("POST", "/get_annotations_counts_ncbi", true);
   xmlhttp.setRequestHeader("Content-type","application/json");
   xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -47,7 +47,7 @@ function get_annotations_counts_prokka(intext){
   args = {intext: intext, anno_type: 'prokka'}
   document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
   //document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
-  xmlhttp.open("POST", "/get_annotations_counts_NEW", true);
+  xmlhttp.open("POST", "/get_annotations_counts_prokka", true);
   xmlhttp.setRequestHeader("Content-type","application/json");
   xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {

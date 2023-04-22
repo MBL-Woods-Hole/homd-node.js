@@ -597,7 +597,7 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
        const seqstr = (rows[0].seq).toString()
        //console.log('seqstr',seqstr)
        //console.log(seqstr.length)
-       const arr = helpers.chunkSubstr(seqstr, 80)
+       const arr = helpers.chunkSubstr(seqstr, 100)
        html += arr.join('<br>')
     //html = seqstr
     }

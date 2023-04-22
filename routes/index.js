@@ -143,13 +143,144 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     console.log(req.session)
     console.log('chose:',anno,req.session['site_search_result_'+anno])
     //console.log('sess-ncbi',req.session.site_search_result.ncbi)
-    const searchTextLower = req.body.search_text.toLowerCase()
+    let searchTextLower = req.body.search_text.toLowerCase()
     
     resultObj = req.session['site_search_result_'+anno]
     
     res.send(create_protein_table(anno, resultObj, searchTextLower))
 })
+router.post('/get_annotations_counts_ncbi', function get_annotations_counts_ncbi(req, res) {
+    console.log('POST::get_annotations_counts_NEW')
+    console.log(req.body)
+    let searchText = req.body.intext
+    let anno_type //= req.body.anno_type  // ncbi or prokka
+    let searchTextLower = req.body.intext.toLowerCase()
+    let obj,data,gid,organism=''
+   let ngenome_count=0, ngene_count=0
+   // V10.1
+   //https://github.com/uhop/stream-json/wiki/StreamValues
+   //let q = queries.get_annotation_query4(searchTextLower, anno_type)
+   let q_ncbi   = queries.get_annotation_query4(searchTextLower, 'ncbi')
+   //let q_prokka = queries.get_annotation_query4(searchTextLower, 'prokka')
+   
+   console.log(q_ncbi)
+   //const jsonStream = StreamValues.withParser();
+//   if(CFG.ENV === 'development'){
+    TDBConn.query(q_ncbi, (err, rows) => {
+        if (err) {
+            console.log(err)
+            return
+        }
+    
+   
+        console.log(anno_type,'Query Success Num Rows: '+rows.length.toString())
+    
+        //req.session.site_search_result.prokka = {}
+        //req.session.site_search_result.ncbi = {}
+        if(rows.length === 0){
+           //prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+        }else{
+       
+           for(let i in rows){
+            gid = rows[i].gid
+         
+            if(gid in C.genome_lookup){
+                organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+            }
+            if(! req.session.site_search_result_ncbi){
+              //req.session.site_search_result = {}
+              //req.session.site_search_result.prokka = {}
+              req.session.site_search_result_ncbi = {}
+            }
+            
+        
+        
+            //req.session.site_search_result[anno_type] = {}
+            if(gid in req.session.site_search_result_ncbi){
+                req.session.site_search_result_ncbi[gid].push({name:organism, pid:rows[i].protein_id, product:rows[i].product})
+            }else{
+                req.session.site_search_result_ncbi[gid] = [{name:organism, pid:rows[i].protein_id, product:rows[i].product}]
+            }
+            
+            ngene_count += 1 
+         
+           }
+        }
+        //console.log('x',anno_type,req.session['site_search_result_'+anno_type])
+    
+        ngenome_count = Object.keys(req.session.site_search_result_ncbi).length
+        //console.log('x',anno_type, genome_count, gene_count)
+        
+        res.send([ngenome_count, ngene_count])
+    })
 
+})
+router.post('/get_annotations_counts_prokka', function get_annotations_counts_prokka(req, res) {
+    console.log('POST::get_annotations_counts_NEW')
+    console.log(req.body)
+    let searchText = req.body.intext
+    let anno_type //= req.body.anno_type  // ncbi or prokka
+    let searchTextLower = req.body.intext.toLowerCase()
+    let obj,data,gid,organism=''
+   let pgenome_count=0, pgene_count=0,ngenome_count=0, ngene_count=0
+   // V10.1
+   //https://github.com/uhop/stream-json/wiki/StreamValues
+   //let q = queries.get_annotation_query4(searchTextLower, anno_type)
+   //let q_ncbi   = queries.get_annotation_query4(searchTextLower, 'ncbi')
+   let q_prokka = queries.get_annotation_query4(searchTextLower, 'prokka')
+   
+   console.log(q_prokka)
+   //const jsonStream = StreamValues.withParser();
+//   if(CFG.ENV === 'development'){
+
+        //console.log('x',anno_type, genome_count, gene_count)
+        
+    TDBConn.query(q_prokka, (err, rows) => {
+            if (err) {
+                console.log(err)
+                return
+            }
+            //console.log(anno_type,'Query Success Num Rows: '+rows.length.toString())
+    
+            //req.session.site_search_result.prokka = {}
+            //req.session.site_search_result.ncbi = {}
+            if(rows.length === 0){
+               //prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+            }else{
+       
+               for(let i in rows){
+                gid = rows[i].gid
+         
+                if(gid in C.genome_lookup){
+                    organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+                }
+                
+                if(! req.session.site_search_result_prokka ){
+                  //req.session.site_search_result = {}
+                  req.session.site_search_result_prokka = {}
+                  //req.session.site_search_result.ncbi = {}
+                }
+        
+                //req.session.site_search_result[anno_type] = {}
+                if(gid in req.session.site_search_result_prokka){
+                    req.session.site_search_result_prokka[gid].push({name:organism, pid:rows[i].protein_id, product:rows[i].product})
+                }else{
+                    req.session.site_search_result_prokka[gid] = [{name:organism, pid:rows[i].protein_id, product:rows[i].product}]
+                }
+            
+                pgene_count += 1 
+         
+               }
+            }
+            //console.log('x',anno_type,req.session['site_search_result_'+anno_type])
+    
+            pgenome_count = Object.keys(req.session.site_search_result_prokka).length
+            //console.log('x',anno_type, genome_count, gene_count)
+            res.send([pgenome_count, pgene_count])
+        
+    })
+
+})
 router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, res) {
     console.log('POST::get_annotations_counts_NEW')
     console.log(req.body)
