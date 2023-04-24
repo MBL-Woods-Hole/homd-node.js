@@ -293,7 +293,7 @@ Promise.all(promises)
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Abiotrophia defectiva_species'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['clade_886_subspecies'])
-    
+    //session.site_search_result = {}
     let num_zeros = 0
     for(n in C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']){
        var m = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus'][n]

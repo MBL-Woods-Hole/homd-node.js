@@ -116,41 +116,48 @@ function get_16s_seq(seqid) {
 }
 //
 function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
-    console.log('in NNNA',type,pid)
+    //console.log('in NNNA',type,pid)
     // on genome explore page
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
-    console.log(type,pid)
+    //console.log(type,pid)
     args={}
     args.type = type
     args.pid  = pid
     args.db   = db
     args.mol  = mol
     args.org   = org
-    args.org   = product
-    var xmlhttp = new XMLHttpRequest();
+    args.product   = product
+    //console.log('args',args)
+    const xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/get_NN_NA_seq", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        var resp = JSON.parse(xmlhttp.responseText);
-        //console.log(defline)
-        var seq = resp.seq
-        var length = resp.len.toString()
+
+        const resp = JSON.parse(xmlhttp.responseText);
+        //console.log(resp)
         text = ''
-        
+        var leng = resp.length
+        var length = ''
+        if(leng !== 0){
+           var length = ' | length: '+leng.toString()
+        }
+        //console.log('len',length)
+
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
         //text += '>'+product+' | '+mol+' | '+ org +'\n'
         if(type === 'prokka'){
-            text += '>' + gid +'|' + pid +' | ' + product + ' | ' + org + ' | length: ' + length + '\n'
+            text += '>' + gid +'|' + pid +' | ' + product + ' | ' + org + length + '\n'
         }else{
-             text += '>' + mol + ' | ' + product + ' | '+ org + ' | length: ' + length + '\n'
+             text += '>' + mol + ' | ' + product + ' | '+ org + length + '\n'
         }
         
-        text += seq
+
+        text += resp.html
         text += '</pre>'
-    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=750,height=300");
     var doc = win.document;
     //doc.writeln("<title>yourtitle</title>");
     //doc.title = 'eHOMD Reference Sequence'
@@ -203,7 +210,7 @@ function letter_submit(letter){
 }
 function update_sb(){ //submit button
     //var form = document.getElementById("tax_filter_form");
-    
+    // both gtable and atable??
     btn = document.getElementById("form_btn");
     btn.style.color = 'orange'
     btn.style.background = 'black'

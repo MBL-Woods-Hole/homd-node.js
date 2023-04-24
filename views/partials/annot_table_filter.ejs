@@ -1,0 +1,148 @@
+<style>
+.letter{
+  cursor:pointer;
+  color:blue;
+}
+.noletter{
+  cursor:pointer;
+  color:blue;
+}
+.alpha-list{
+   font-family: monospace;
+}
+#filter_form_div{
+   border:1px solid black;
+   padding:2px;
+}
+#form_btn{
+  width:100%;
+  color:grey;
+}
+#main_table td{
+   padding:0 30px;
+   /* border:1px solid red; */
+   
+}
+#filter_table{
+   
+   border-collapse:colapse;
+}
+#filter_table td{
+   border-top:1px solid brown;
+   padding: 2px 3px;
+}
+#reset_div a{
+   font-size: 14px;
+}
+#sort_rev{
+   
+   border: 1px solid brown;
+   padding:2px 1px 1px 1px;
+   margin:1px;
+}
+.button{
+   cursor:pointer;
+   color:blue;
+   background:lightgrey;
+}
+#reset{
+   cursor:default;
+   color:grey;
+   background:lightgrey;
+}
+</style>
+<% fltr = JSON.parse(fltr) %>
+<div id='filter_form_div'>
+
+<form id='annot_filter_form' name='annot_filter_form' method='POST' action='annotation_filter'>
+<input type="hidden" name="gid" value="<%= gid %>" />
+<input type="hidden" name="anno" value="<%= anno_type %>" />
+<table id='main_table'>    
+<tr><td valign='top'>    
+    
+</td><td valign='top'> 
+   
+    <div id='reset_div' >
+      <a class='button' id='reset' href='reset_atable?gid=<%= gid %>&anno=<%= anno_type %>'>Reset Filter</a> 
+    </div> 
+    
+</td><td> 
+          
+<table id='filter_table' border='1'>
+
+<tr><td>
+    <small>
+    <span class='filter-title'>Search These Records:</span>
+    <span class="">
+    <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='dropdown' name='txt_srch' maxlength='50' size='25' onclick='update_sb()'>
+    <select class='dropdown' id='field_select' value='<%= fltr.text.field %>' class="" name='field' onclick='update_sb()'>
+        <optgroup>
+        <option value='all'>All Fields</option>
+        <option value='molecule'>Molecule</option>
+        <option value='pid'>Protein-ID (PID)</option>
+        <option value='product'>Gene Product</option>
+        </optgroup>
+    </select>
+    <span class='button' onclick='clear_search_txt()'>Clear</span>
+    </span>
+    </small>
+</td></tr>
+<tr><td>
+       <small>
+        <span class='filter-title'>Sort Column</span>:&nbsp;&nbsp;
+        <% if(fltr.sort_col === 'molecule'){ %>
+        <input type='radio' checked name='sort_col' value='molecule' onclick='update_sb()' > Molecule&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='molecule' onclick='update_sb()' > Molecule&nbsp;&nbsp;
+        <% } %>
+        <% if(fltr.sort_col === 'pid'){ %>
+        <input type='radio' checked name='sort_col' value='pid' onclick='update_sb()' > PID&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='pid' onclick='update_sb()' > PID&nbsp;&nbsp;
+        <% } %>
+        
+        <% if(fltr.sort_col === 'na'){ %>
+        <input type='radio' checked name='sort_col' value='na' onclick='update_sb()' > NA&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='na' onclick='update_sb()' > NA&nbsp;&nbsp;
+        <% } %>
+        
+        <% if(fltr.sort_col === 'aa'){ %>
+        <input type='radio' checked name='sort_col' value='aa' onclick='update_sb()' > AA&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='aa' onclick='update_sb()' > AA&nbsp;&nbsp;
+        <% } %>
+        
+        
+        
+        <% if(fltr.sort_col === 'product'){ %>
+        <input type='radio' checked name='sort_col' value='product' onclick='update_sb()' > Gene Product Name&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='product' onclick='update_sb()' > Gene Product Name&nbsp;
+        <% } %>
+        
+        
+        
+        
+        
+        <span id='sort_rev' title='Reverse the Sort Order'>
+          
+        <% if(fltr.sort_rev === 'on'){ %>
+        <input type='checkbox' checked name='sort_rev' onclick='update_sb()' > Reverse
+        <% }else{ %>
+        <input type='checkbox' name='sort_rev' onclick='update_sb()' > Reverse
+        <% } %>
+        </span>
+        </small>
+</td></tr>
+<tr><td>
+  <button id='form_btn' type='submit' class='button' value='Submit'>Submit</button>
+</td></tr>
+</table>
+
+</td></tr>
+</table>
+
+</form>	
+ 
+</div>
