@@ -34,7 +34,7 @@ def run(args):
     print(q)
     # seq_id-protein_id is UNIQUE
     fields = ['seq_id','protein_id','accession','product']
-    file =  os.path.join(args.outdir,args.outfileprefix+args.db+args.num+'Lookup.json')
+    file =  os.path.join(args.outdir,args.outfileprefix+args.db+args.num+'Search.list')
     fh = open(file,'w')
     
     #SELECT seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%end%'

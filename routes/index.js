@@ -415,6 +415,8 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
     const searchTextLower = req.body.intext.toLowerCase()
     let acc,pid,gid,prod,organism=''
    let pgid_count=0, ppid_count=0,ngid_count=0, npid_count=0
+   req.session.site_search_result_ncbi = {}
+   req.session.site_search_result_prokka = {}
    // V10.1
    //https://github.com/uhop/stream-json/wiki/StreamValues
    //let q = queries.get_annotation_query4(searchTextLower, anno_type)
@@ -448,9 +450,9 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
                     }
                     if(anno == 'ncbi'){
                         ngid_collector[gid] = 1
-                        if(! req.session.site_search_result_ncbi){
-                            req.session.site_search_result_ncbi = {}
-                        }
+                        // if(! req.session.site_search_result_ncbi){
+//                             req.session.site_search_result_ncbi = {}
+//                         }
                         if(gid in req.session.site_search_result_ncbi){
                             req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
                         }else{
@@ -459,9 +461,9 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
                         npid_count += 1
                     }else if(anno === 'prokka'){
                         pgid_collector[gid] = 1
-                        if(! req.session.site_search_result_prokka){
-                            req.session.site_search_result_prokka = {}
-                        }
+                        // if(! req.session.site_search_result_prokka){
+//                             req.session.site_search_result_prokka = {}
+//                         }
                         if(gid in req.session.site_search_result_prokka){
                             req.session.site_search_result_prokka[gid].push({name:organism, pid:pid, product:prod})
                         }else{
