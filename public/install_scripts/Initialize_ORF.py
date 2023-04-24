@@ -41,7 +41,7 @@ def run(args):
     result = myconn.execute_fetch_select(q)
     count = 0
     for row in result:
-       #print(row)
+       print(row)
        unique = row[0]+'|'+row[1]
        string = row[2]+'|'+row[3]
        #"SEQF4098|MBX3952457.1": "QGBS01000001.1|hypothetical protein",
