@@ -444,7 +444,7 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
         var ngid_collector = {}
         var sp = full_data.split('\n');
         for (var i = 0; i < sp.length; i++) {
-            console.log(sp[i])
+            //console.log(sp[i])
             var sub = sp[i].trim().split('|');
                 // ncbi|SEQF4098|MBX3952457.1|QGBS01000001.1|hypothetical protein
                 // 
