@@ -1,4 +1,5 @@
 <style>
+thead th { position: sticky; top: 0; }
 #annotation-filter{
   /* float:right; */
   
@@ -7,6 +8,10 @@
 }
 #head-filter-table td{
   padding:0 15px;
+}
+#table-container{
+   height:800px;
+   overflow:auto;
 }
 </style>
 		
@@ -62,6 +67,10 @@
 			 <==>
 			 <a href='explorer?gid=<%= gid %>&anno=<%= anno_type %>&page=<%= next_page %>'>Next Page</a>
 			 </div>
+			 Or Select Page:<br>[<% for(n=1;n<=page_data.number_of_pages;n++){ %>
+			   <a href='explorer?gid=<%= gid %>&anno=<%= anno_type %>&page=<%= n %>'><%= n %></a>&nbsp;
+			 <% } %>]
+			 
 		<% } %>
 		
 		</td><td>
@@ -77,6 +86,8 @@
 	
 	 
 	 <span class='pull-left'><small><b>Note:</b> Column headers only sort the current page.</small></span>
+	 <br>
+	 <div id='table-container'>
 	 <table id='annotation-table' class='sortable'>
 	 <thead>
 	  <tr>
@@ -84,9 +95,9 @@
 	   <th class='col1'>Molecule</th>
 	   <th class='col2'>PID</th>
 	   
-	   <th class='col3 center' nowrap>NA <small>(Length)(Seq)</small><br></th>
+	   <th class='col3 center sorttable_numeric' nowrap>NA <small>(Length)(Seq)</small><br></th>
 	   
-	   <th class='col4 center' nowrap>AA <small>(Length)(Seq)</small><br></th>
+	   <th class='col4 center sorttable_numeric' nowrap>AA <small>(Length)(Seq)</small><br></th>
 	   
 	   
 	   <th class='col5 sorttable_nosort'>Range</th>
@@ -179,6 +190,7 @@
 	 <% } %>
 	 </tbody>
 	 </table>
+	 </div>
 	 <% } %>  
 </div>
 		
