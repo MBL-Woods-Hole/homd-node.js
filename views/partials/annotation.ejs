@@ -13,6 +13,10 @@ thead th { position: sticky; top: 0; }
    height:800px;
    overflow:auto;
 }
+.col0{
+   width: 20px;
+   padding:0;
+}
 </style>
 		
 		
@@ -76,7 +80,7 @@ thead th { position: sticky; top: 0; }
 		</td><td>
 		
 		 <div id='annotation-filter'>
-			FILTER This Annotation Table (filter/search all records)
+			<strong>SEARCH & SORT all records</strong>
 			<%- include('annot_table_filter.ejs') %>
 		 </div>
 		 
@@ -91,7 +95,7 @@ thead th { position: sticky; top: 0; }
 	 <table id='annotation-table' class='sortable'>
 	 <thead>
 	  <tr>
-	   <th class='sorttable_nosort'>#</th>
+	   <th class='col0 sorttable_nosort'>#</th>
 	   <th class='col1'>Molecule</th>
 	   <th class='col2'>PID</th>
 	   
