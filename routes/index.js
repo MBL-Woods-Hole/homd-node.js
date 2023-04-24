@@ -478,8 +478,8 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
         // pid_count = pid_count   //gene_count
         
       }
-      console.log('req.session.site_search_result_prokka.length',req.session.site_search_result_prokka.length)
-      console.log('req.session.site_search_result_ncbi.length',req.session.site_search_result_ncbi.length)
+      console.log('req.session.site_search_result_prokka.length',Object.keys(req.session.site_search_result_prokka).length)
+      console.log('req.session.site_search_result_ncbi.length',Object.keys(req.session.site_search_result_ncbi).length)
       //console.log(ar,ar.length)
       //console.log(gid_count, pid_count)
       
