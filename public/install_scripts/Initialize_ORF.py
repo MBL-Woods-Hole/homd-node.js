@@ -28,7 +28,9 @@ def run(args):
     # prokka first
     
     #q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"` "+args.limit
-    q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"` WHERE seq_id like 'SEQF"+args.num+"%'"
+    q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"`"
+    q += " WHERE seq_id like 'SEQF"+args.num+"%' " +args.limit
+    
     print(q)
     # seq_id-protein_id is UNIQUE
     fields = ['seq_id','protein_id','accession','product']
@@ -99,6 +101,8 @@ if __name__ == "__main__":
                                                     help="verbose print()")
     parser.add_argument("-n", "--num",   required=False,  action="store",    dest = "num", default='1',
                                                     help="")
+    parser.add_argument("-l", "--limit",   required=False,  action="store",    dest = "limit", default='',
+                                                    help="")                                                
     args = parser.parse_args()
 
     if not os.path.exists(args.outdir):
@@ -125,7 +129,7 @@ if __name__ == "__main__":
     
     args.db = args.dbanno.upper()+'_meta'
     args.table='orf'
-    args.limit = ''
-    args.limit = "limit 1000"
+    if args.limit:
+       args.limit = "limit "+args.limit
     
     run(args)

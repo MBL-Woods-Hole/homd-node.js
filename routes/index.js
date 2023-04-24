@@ -140,8 +140,8 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     console.log(req.body)
     let obj,data,gid,name,resultObj={}
     let anno = req.body.anno
-    console.log(req.session)
-    console.log('chose:',anno,req.session['site_search_result_'+anno])
+    //console.log(req.session)
+    console.log('chose:',anno,Object.values(req.session['site_search_result_'+anno]).length)
     //console.log('sess-ncbi',req.session.site_search_result.ncbi)
     let searchTextLower = req.body.search_text.toLowerCase()
     

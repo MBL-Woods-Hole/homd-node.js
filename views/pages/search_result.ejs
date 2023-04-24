@@ -149,8 +149,12 @@ table th,td{
   mainmenu()
   intext = '<%= search_text %>'
   $(document).ready(function(){
-      get_annotations_counts(intext)
-     
+      if(intext.length > 4){
+         get_annotations_counts(intext)
+      }else{
+          document.getElementById('ncbi_count_div').innerHTML = 'word too small'
+          document.getElementById('prokka_count_div').innerHTML = 'word too small'
+      }
       //get_annotations_counts_prokka(intext)
       //get_annotations_counts_ncbi(intext)
       
