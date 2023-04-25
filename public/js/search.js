@@ -41,6 +41,7 @@ function get_annotations_counts_ncbi(intext){
   }
   xmlhttp.send(JSON.stringify(args));
 }
+
 function get_annotations_counts_prokka(intext){
   var xmlhttp = new XMLHttpRequest();
   var html =''

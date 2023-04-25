@@ -833,12 +833,14 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
   }
   return send_list
 } 
+
 router.get('/reset_atable', function annot_table_reset(req, res) {
    //console.log('in RESET-session')
    //console.log(req.query)
    req.session.atable_filter = get_default_annot_filter()
    res.redirect('explorer?gid='+req.query.gid+'&anno='+req.query.anno);
 });
+
 router.post('/annotation_filter', function annotation_filter (req, res) {
     //console.log('IN annotation_filter')
     //console.log(req.body)
