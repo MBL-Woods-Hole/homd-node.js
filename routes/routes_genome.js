@@ -657,6 +657,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     //console.log('in POST:open_explorer_search')
     //console.log(req.body)
     let gid = req.body.gid
+    let args
     let anno = req.body.anno
     let searchtext = req.body.searchtext
     let otid='',gc=0,annoInfoObj={}
@@ -701,9 +702,7 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     
     let pid_list = req.session['site_search_result_'+anno][gid].map(el => el.pid)
     const q = queries.get_annotation_query2(gid, anno, pid_list)
-    
-
-    //console.log(q)
+    console.log(q)
     //console.log('anno query '+q)
     let tmp = []
     
@@ -718,8 +717,10 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
       } else {
         if (rows.length === 0) {
           console.log('no rows found')
+          args = {fltr:get_default_annot_filter(),filter_on:'off',gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+          render_explorer(req, res, args)
         }else{
-           let args = {fltr:get_default_annot_filter(),filter_on: 'off',searchtext: searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
+           args = {fltr:get_default_annot_filter(),filter_on: 'off',searchtext: searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
            render_explorer(req, res, args)
         }
      }
