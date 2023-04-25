@@ -95,7 +95,7 @@ router.get('/oralgen', function oralgen(req, res) {
 //
 function create_protein_table(anno, obj, searchtext){
     // for site search::protein
-    console.log('in create_protein_table')
+    
     let html = '',data_lst,organism='',pid,product,idx,send_obj={}
     html += "<center><small>(click header to sort)</small><table id='anno_result_table' class='table sortable'><thead>"
     html += '<tr><th>SEQ-ID</th><th>Genome ('+anno.toUpperCase()+')</th><th>Number<br>of Hits</th><th class="sorttable_nosort"></th></tr>'
@@ -416,7 +416,7 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
     const searchTextLower = req.body.intext.toLowerCase()
     let acc,pid,gid,prod,organism=''
     let pgid_count=0, ppid_count=0,ngid_count=0, npid_count=0
-    var pgid_collector = {}, ngid_collector = {}
+    //var pgid_collector = {}, ngid_collector = {}
    req.session.site_search_result_ncbi = {}
    req.session.site_search_result_prokka = {}
 
@@ -458,12 +458,12 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
                     pid = sub[2]
                     acc =sub[3]
                     prod=sub[4]
-                    console.log('gid',gid)
+                    //console.log('gid',gid)
                     if(gid in C.genome_lookup){
                         organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
                     }
                     if(anno == 'ncbi'){
-                        ngid_collector[gid] = 1
+                        //ngid_collector[gid] = 1
                         // if(! req.session.site_search_result_ncbi){
 //                             req.session.site_search_result_ncbi = {}
 //                         }
@@ -474,7 +474,7 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
                         }
                         npid_count += 1
                     }else if(anno === 'prokka'){
-                        pgid_collector[gid] = 1
+                        //pgid_collector[gid] = 1
                         // if(! req.session.site_search_result_prokka){
 //                             req.session.site_search_result_prokka = {}
 //                         }
