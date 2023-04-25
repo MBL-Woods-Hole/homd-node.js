@@ -662,12 +662,14 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     let otid='',gc=0,annoInfoObj={}
     //console.log('C.genome_lookup[gid]',gid,C.genome_lookup[gid])
     let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+    
     const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
-       return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
+       return {gid: gid, org: organism}
     })
     allAnnosObj.sort(function sortAnnos (a, b) {
        return helpers.compareStrings_alpha(a.org, b.org)
     })
+    
     if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
         otid = C.genome_lookup[gid].otid
         gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
