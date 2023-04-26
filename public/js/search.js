@@ -108,7 +108,9 @@ function get_annotations_counts(intext){
             }else{
                 html2 = resp[3]+' gene(s) in '+resp[2]+' genomes '
             }
+            //html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
             html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
+            
         }
         document.getElementById('ncbi_count_div').innerHTML = html2
       }

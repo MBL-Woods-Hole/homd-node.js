@@ -57,7 +57,7 @@ function close_flash(m){
 
 function search(){
   //var form = document.getElementById('menu-search')
-  searchText = document.getElementById('search_text').value
+  searchText = document.getElementById('search_text').value.trim().toLowerCase()
   if(!searchText)
     return
   var f = document.createElement("form");

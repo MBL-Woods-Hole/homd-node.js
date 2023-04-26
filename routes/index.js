@@ -105,6 +105,9 @@ function create_protein_table(anno, obj, searchtext){
     let send_list = []
     for(let gid in obj){
         //data_lst = obj[gid]
+        // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
+        // anno|gid|pid|acc(molecule)|product|length_na|length_aa|start|stop
+        //let items = obj[gid].split('|')
         send_obj = {}
         if(C.genome_lookup.hasOwnProperty(gid)){
            organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
@@ -137,6 +140,21 @@ function create_protein_table(anno, obj, searchtext){
 
 }
 router.post('/anno_protein_search', function anno_protein_search(req, res) {
+    console.log('in POST::anno_protein_search')
+    console.log(req.body)
+    let obj,data,gid,name,resultObj={}
+    let anno = req.body.anno
+    let search_text = req.body.search_text
+    //console.log(req.session)
+    console.log('chose:',anno,Object.values(req.session['site_search_result_'+anno]).length)
+    //console.log('sess-ncbi',req.session.site_search_result.ncbi)
+    
+    
+    resultObj = req.session['site_search_result_'+anno]
+    
+    res.send(create_protein_table(anno, resultObj, search_text))
+})
+router.post('/anno_protein_searchORIG', function anno_protein_search(req, res) {
     console.log('in POST::anno_protein_search')
     console.log(req.body)
     let obj,data,gid,name,resultObj={}
@@ -420,7 +438,7 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
    req.session.site_search_result_ncbi = {}
    req.session.site_search_result_prokka = {}
 
-   let full_data = ''
+   let full_data = '',orfrow
    //https://github.com/uhop/stream-json/wiki/StreamValues
    //let q = queries.get_annotation_query4(searchTextLower, anno_type)
    let grep_cmd = "/usr/bin/grep -ih "+searchText+" "+ path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")
@@ -448,29 +466,35 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
         var sp = full_data.split('\n');
         for (var i = 0; i < sp.length; i++) {
             //console.log(sp[i])
-            var sub = sp[i].trim().split('|');
-                // ncbi|SEQF4098|MBX3952457.1|QGBS01000001.1|hypothetical protein
-                // 
-                if(sub.length == 5){
+            orfrow = sp[i].trim()
+            //console.log('orfrow',orfrow)
+            var sub = orfrow.split('|');
+                if(sub.length == 9){
                 //if(sub[0]){
                     anno = sub[0]
                     gid = sub[1]
-                    pid = sub[2]
-                    acc =sub[3]
-                    prod=sub[4]
+                    // pid = sub[2]
+//                     acc =sub[3]  // molecule
+//                     prod=sub[4]
+//                     length_na = sub[5]
+//                     length_aa = sub[6]
+//                     start = sub[7]
+//                     stop = sub[8]
+                    // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
                     //console.log('gid',gid)
-                    if(gid in C.genome_lookup){
-                        organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-                    }
+                    // if(gid in C.genome_lookup){
+//                         organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+//                     }
                     if(anno == 'ncbi'){
                         //ngid_collector[gid] = 1
                         // if(! req.session.site_search_result_ncbi){
 //                             req.session.site_search_result_ncbi = {}
 //                         }
                         if(gid in req.session.site_search_result_ncbi){
-                            req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
+                            //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
+                            req.session.site_search_result_ncbi[gid].push(orfrow)
                         }else{
-                            req.session.site_search_result_ncbi[gid] = [{name:organism, pid:pid, product:prod}]
+                            req.session.site_search_result_ncbi[gid] = [orfrow]
                         }
                         npid_count += 1
                     }else if(anno === 'prokka'){
@@ -479,9 +503,9 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
 //                             req.session.site_search_result_prokka = {}
 //                         }
                         if(gid in req.session.site_search_result_prokka){
-                            req.session.site_search_result_prokka[gid].push({name:organism, pid:pid, product:prod})
+                            req.session.site_search_result_prokka[gid].push(orfrow)
                         }else{
-                            req.session.site_search_result_prokka[gid] = [{name:organism, pid:pid, product:prod}]
+                            req.session.site_search_result_prokka[gid] = [orfrow]
                         }
                         ppid_count += 1
                     }

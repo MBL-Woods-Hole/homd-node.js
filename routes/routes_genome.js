@@ -661,6 +661,8 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
     let anno = req.body.anno
     let searchtext = req.body.searchtext
     let otid='',gc=0,annoInfoObj={}
+    // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
+    // anno|gid|pid|acc(molecule)|product|length_na|length_aa|start|stop
     //console.log('C.genome_lookup[gid]',gid,C.genome_lookup[gid])
     let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
     
@@ -679,17 +681,25 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
       annoInfoObj = C.annotation_lookup[gid][anno]
     }
     
-
+    // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
+    // anno|gid|pid|acc(molecule)|product|length_na|length_aa|start|stop
+    let search_list = req.session['site_search_result_'+anno][gid]
+    console.log(search_list)
+    let rows =[],items
+    for(let i in search_list){
+        items = search_list[i].split('|')
+        rows.push({accession:items[3],gc:'',protein_id:items[2],product:items[4],length:'',start:items[7],stop:items[8],length_na:items[5],length_aa:items[6]})
+    }
    //  {
 //     accession: 'SEQF1595|KI535340.1',
-//     GC: 47.09,
-//     PID: 'SEQF1595_00099',
+//     gc: 47.09,
+//     protein_id: 'SEQF1595_00099',
 //     product: 'Oligopeptide-binding protein AppA',
 //     length: 1746,
 //     start: 104870,
 //     stop: 103125,
-//     len_na: 1746,
-//     len_aa: 581
+//     length_na: 1746,
+//     length_aa: 581
 //   },
     let page ={
           page: 1,
@@ -699,32 +709,63 @@ router.post('/open_explorer_search', function open_explorer_search (req, res) {
           show_page: 1,
           start_count: 1
         }
-    
-    let pid_list = req.session['site_search_result_'+anno][gid].map(el => el.pid)
-    const q = queries.get_annotation_query2(gid, anno, pid_list)
-    console.log(q)
+    args = {
+             fltr:get_default_annot_filter(),
+             filter_on: 'off',
+             searchtext: searchtext,
+             gid:gid,
+             gc:gc,
+             otid:otid,
+             organism:organism,
+             allAnnosObj:allAnnosObj,
+             annoType:anno,
+             pageData:page,
+             annoInfoObj:annoInfoObj,
+             pidList:rows
+           }
+           render_explorer(req, res, args)
+    //let pid_list = req.session['site_search_result_'+anno][gid].map(el => el.pid)
+    // qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
+//       qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+//       //qSelectAnno += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
+//       qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
+    //const q = queries.get_annotation_query2(gid, anno, pid_list)
+    //console.log(q)
     //console.log('anno query '+q)
     let tmp = []
     
-    TDBConn.query(q, (err, rows) => {
-    //OLD ADBConn.query(q, (err, rows) => {
-      if (err) {
-        req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
-
-        let args = {fltr:get_default_annot_filter(),filter_on:'off',searchtext:searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
-        render_explorer(req, res, args)
-        return
-      } else {
-        if (rows.length === 0) {
-          console.log('no rows found')
-          args = {fltr:get_default_annot_filter(),filter_on:'off',gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
-          render_explorer(req, res, args)
-        }else{
-           args = {fltr:get_default_annot_filter(),filter_on: 'off',searchtext: searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
-           render_explorer(req, res, args)
-        }
-     }
-    })  // end Conn
+    // TDBConn.query(q, (err, rows) => {
+//     //OLD ADBConn.query(q, (err, rows) => {
+//       if (err) {
+//         req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
+// 
+//         args = {fltr:get_default_annot_filter(),filter_on:'off',searchtext:searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+//         render_explorer(req, res, args)
+//         return
+//       } else {
+//         if (rows.length === 0) {
+//           console.log('no rows found')
+//           args = {fltr:get_default_annot_filter(),filter_on:'off',searchtext:searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
+//           render_explorer(req, res, args)
+//         }else{
+//            args = {
+//              fltr:get_default_annot_filter(),
+//              filter_on: 'off',
+//              searchtext: searchtext,
+//              gid:gid,
+//              gc:gc,
+//              otid:otid,
+//              organism:organism,
+//              allAnnosObj:allAnnosObj,
+//              annoType:anno,
+//              pageData:page,
+//              annoInfoObj:annoInfoObj,
+//              pidList:rows
+//            }
+//            render_explorer(req, res, args)
+//         }
+//      }
+//     })  // end Conn
 })
 function get_annot_table_filter(body){
    let rev = 'off'

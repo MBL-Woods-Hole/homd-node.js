@@ -1,0 +1,159 @@
+<style>
+#genome-explorer{
+  width:100%;
+  height:auto;
+  border:1px solid black;
+  
+  
+}
+.form-inline {
+  display: inline;
+}
+.greyed{
+  cursor:arrow;
+}
+#header_buttons{
+   padding:5px 0;
+}
+.an-button{
+  background-color: lightgreen;
+  color: black;
+  padding:3px 3px;
+  text-decoration: none;
+  font-size:small;
+  border-radius:3px;
+  border:1px solid darkgreen;
+}
+.active{
+  background:#6b2f55;
+  color:white;
+}
+#annotation-info{
+  
+  height: auto;
+  padding:2px 10px;
+  
+  font-size:small;
+}
+#anno-title2 {
+   font-size:18px;
+   
+}
+#info-table, #info-table td,th {
+  border: 1px solid green;   
+  border-collapse: collapse;
+  padding:2px 10px;
+}
+#annotation-table-div{
+ 
+  margin:30px 0;
+  border:1px solid silver;
+  
+}
+#annotation-table{
+  width:100%;
+  margin:0px 0;
+  
+  background:lightgray;
+  
+}
+#annotation-table th{
+  padding:5px;
+  background:#6bb6ff;
+}
+#annotation-table td{
+  padding:2px 8px;
+  font-size:small;
+  
+}
+#annotation-table tr:nth-child(even) { 
+    background-color: #ffb46b; 
+ } 
+ #annotation-table tr:hover { 
+    background-color: #FBF9EA; 
+ } 
+
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+        content: " \25B4\25BE" 
+    }
+#no-data{
+    padding:10px;
+    background:orange
+}
+.col5{
+   width:150px;
+}
+
+</style>
+<%- include('../../partials/header_html'); %>
+<% info_data = JSON.parse(info_data) %>
+<% all_annos = JSON.parse(all_annos) %>
+<% page_data = JSON.parse(page_data) %>
+<% mole = JSON.parse(pid_list) %>
+<% db = anno_type+'_'+gid %>
+<% cfg = JSON.parse(config) %> 
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    <div class='page-content' >
+    
+    
+ <!-- GID:<%= gid %>     Anno:<%= anno_type %>   --> 
+<center>
+    <div id='genome-explorer'>
+      
+      <% if(!gid || gid.toString() === '0'){ %>
+         <% title ='Choose a Genome' %>
+      <% }else{ %>
+         <% title ='Genome Explorer: '+organism+' ('+gid+')' %>
+      <% } %>
+      <%- include('../../partials/explorer_head'); %>
+    
+    </div>
+    <%- include('../../partials/flash'); %>
+    <% if(!gid || gid.toString() === '0'){ %>
+         <!-- do nothing here  -->
+    
+    <% }else if(anno_type === 'prokka' || anno_type === 'ncbi' ) { %>
+             <%- include('../../partials/annotation'); %>
+    <% }else{ %>
+             Page Errror
+    <% } %>
+      
+</center>
+    
+    
+    <!-- https://vicbioinformatics.com/software.prokka.shtml -->
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/genomes.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/select2.min.js"></script>
+
+<script>
+  mainmenu()
+  $(document).ready(function(){
+    // Initialize select2
+    $("#selGenome").select2();
+  });
+    var filter_on = '<%- filter_on %>'
+    if(filter_on === 'on'){
+       document.getElementById('reset').style.color = 'orange'
+       document.getElementById('reset').style.background = 'black'
+       document.getElementById('reset').style.cursor = 'pointer'
+    }
+</script>
+

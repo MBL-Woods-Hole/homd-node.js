@@ -153,8 +153,8 @@ table th,td{
       if(intext.length > min_size){
          get_annotations_counts(intext)
       }else{
-          document.getElementById('ncbi_count_div').innerHTML = 'word too small: < '+min_size.toString()
-          document.getElementById('prokka_count_div').innerHTML = 'word too small: < '+min_size.toString()
+          document.getElementById('ncbi_count_div').innerHTML = 'word too small: <= '+min_size.toString()
+          document.getElementById('prokka_count_div').innerHTML = 'word too small: <= '+min_size.toString()
       }
       //get_annotations_counts_prokka(intext)
       //get_annotations_counts_ncbi(intext)
