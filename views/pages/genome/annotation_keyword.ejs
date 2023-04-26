@@ -1,54 +1,13 @@
 <style>
-#genome-explorer{
-  width:100%;
-  height:auto;
-  border:1px solid black;
-  
-  
+#orf_table_div{
+   height:200px;
+   overflow:auto;
 }
-.form-inline {
-  display: inline;
+table{
+  font-size:12px;
 }
-.greyed{
-  cursor:arrow;
-}
-#header_buttons{
-   padding:5px 0;
-}
-.an-button{
-  background-color: lightgreen;
-  color: black;
-  padding:3px 3px;
-  text-decoration: none;
-  font-size:small;
-  border-radius:3px;
-  border:1px solid darkgreen;
-}
-.active{
-  background:#6b2f55;
-  color:white;
-}
-#annotation-info{
-  
-  height: auto;
-  padding:2px 10px;
-  
-  font-size:small;
-}
-#anno-title2 {
-   font-size:18px;
-   
-}
-#info-table, #info-table td,th {
-  border: 1px solid green;   
-  border-collapse: collapse;
-  padding:2px 10px;
-}
-#annotation-table-div{
- 
-  margin:30px 0;
-  border:1px solid silver;
-  
+table td{
+   border-top:1px solid grey;
 }
 #annotation-table{
   width:100%;
@@ -72,88 +31,87 @@
  #annotation-table tr:hover { 
     background-color: #FBF9EA; 
  } 
-
-table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
-        content: " \25B4\25BE" 
-    }
-#no-data{
-    padding:10px;
-    background:orange
+#anno-pre-table td{
+   padding: 0 10px;
 }
-.col5{
-   width:150px;
-}
-
 </style>
-<%- include('../../partials/header_html'); %>
-<% info_data = JSON.parse(info_data) %>
-<% all_annos = JSON.parse(all_annos) %>
-<% page_data = JSON.parse(page_data) %>
-<% mole = JSON.parse(pid_list) %>
-<% db = anno_type+'_'+gid %>
 <% cfg = JSON.parse(config) %> 
+<% ncbid = JSON.parse(ncbi_data) %>
+<% prokkad = JSON.parse(prokka_data) %>
+<% pgids_sorted = JSON.parse(psorted) %>
+<% ngids_sorted = JSON.parse(nsorted) %>
+<% orgs = JSON.parse(org_obj) %>
+<%- include('../../partials/header_html'); %>
+
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
+    
+    
     <div class='page-content' >
-    
-    
- <!-- GID:<%= gid %>     Anno:<%= anno_type %>   --> 
-<center>
-    <div id='genome-explorer'>
-      
-      <% if(!gid || gid.toString() === '0'){ %>
-         <% title ='Choose a Genome' %>
-      <% }else{ %>
-         <% title ='Genome Explorer: '+organism+' ('+gid+')' %>
-      <% } %>
-      <%- include('../../partials/explorer_head'); %>
-    
-    </div>
-    <%- include('../../partials/flash'); %>
-    <% if(!gid || gid.toString() === '0'){ %>
-         <!-- do nothing here  -->
-    
-    <% }else if(anno_type === 'prokka' || anno_type === 'ncbi' ) { %>
-             <%- include('../../partials/annotation'); %>
+    <div class='title'>Annotation Search Text: <%= search_text %></div>
+    <div id="srch">
+    Search Results:
+    <table>
+      <tr><td>NCBI</td><td><%= ngids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('ncbi','<%= search_text %>')">Select</a></td></tr>
+      <tr><td>PROKKA</td><td><%= pgids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('prokka','<%= search_text %>')">Select</a></td></tr>
+    </table>
+    </div>    
+    <center>
+    <% if(anno==="ncbi"){ %>
+    <%   data = ncbid %>
+    <%   gids = ngids_sorted %>
     <% }else{ %>
-             Page Errror
+    <%   data = prokkad %>
+    <%   gids = pgids_sorted %>
     <% } %>
-      
-</center>
+    <div id='orf_table_div'>
+    <table border='1' id='anno-pre-table'>
+    <tr><td><%= anno %> SEQ-ID</td><td>Organism</td><td># Items</td><td class='center'></td><td>Full annotation</td></tr>
+    <% for(i in gids){ %>
+    <%    gid = gids[i] %>
+          <tr><td><%= gid %></td>
+          <td><%= orgs[gid] %></td>
+          
+          
+          <td class='center'><%= data[gid].length %></td>
+          <td><a href='#' onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View items in table</a></td>
+          <td>
+            <a class='pill pill-mediumorchid' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
+            <a class='pill pill-slateblue' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+          </td>
+          </tr>
+    <% } %>
+    </table>
+    </div>
+    </center>
+    
+    Viewing <%= anno.toUpperCase() %>
+    <div id='anno_result_div'>
+      <table>
+        <tr><td>Molecule</td><td>PID</td><td>NA (length)</td><td>AA (length)</td><td>Range</td><td>Product</td></tr>
+      </table>
+    </div>
     
     
-    <!-- https://vicbioinformatics.com/software.prokka.shtml -->
+    
+  
     </div> <!-- end: page-content -->
     
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>
        
-   
-  </div> <!-- end wrapper -->
 </body>
 
 </html>
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
-<script type="text/javascript" src="/js/genomes.js"></script>
-<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
-<script type="text/javascript" src="/js/select2.min.js"></script>
-
+<script type="text/javascript" src="/js/genomes.js"></script>
 <script>
   mainmenu()
-  $(document).ready(function(){
-    // Initialize select2
-    $("#selGenome").select2();
-  });
-    var filter_on = '<%- filter_on %>'
-    if(filter_on === 'on'){
-       document.getElementById('reset').style.color = 'orange'
-       document.getElementById('reset').style.background = 'black'
-       document.getElementById('reset').style.cursor = 'pointer'
-    }
 </script>
+
 

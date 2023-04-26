@@ -441,7 +441,7 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
    let full_data = '',orfrow
    //https://github.com/uhop/stream-json/wiki/StreamValues
    //let q = queries.get_annotation_query4(searchTextLower, anno_type)
-   let grep_cmd = "/usr/bin/grep -ih "+searchText+" "+ path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")
+   let grep_cmd = '/usr/bin/grep -ih "'+searchText+'" '+ path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
     console.log('grep_cmd',grep_cmd)
     let child = spawn("/bin/sh", ['-c',grep_cmd]) //, (err, stdout, stderr) => {
     
@@ -521,9 +521,10 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
         //console.log(gid_count, pid_count)
       
         res.send([pgid_count, ppid_count,ngid_count, npid_count])
-      }  //end if code ==0
-      
-      
+      }else{  //end if code ==0
+         console.log('nothing found')
+         res.send([0,0,0,0])
+      }
     });
     
 
