@@ -438,13 +438,13 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
    req.session.site_search_result_ncbi = {}
    req.session.site_search_result_prokka = {}
 
-   let full_data = '',orfrow
+   let full_data = '',orfrow,datapath
    //https://github.com/uhop/stream-json/wiki/StreamValues
    //let q = queries.get_annotation_query4(searchTextLower, anno_type)
    if(CFG.SITE === 'localmbl'){
-     let datapath = path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
+     datapath = path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
    }else{
-      let datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
+      datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
    }
    let grep_cmd = '/usr/bin/grep -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
     console.log('grep_cmd',grep_cmd)
