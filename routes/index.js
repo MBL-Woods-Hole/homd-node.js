@@ -528,10 +528,10 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
         //console.log(ar,ar.length)
         //console.log(gid_count, pid_count)
       
-        res.send([pgid_count, ppid_count,ngid_count, npid_count])
+        res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
       }else{  //end if code ==0
          console.log('nothing found')
-         res.send([0,0,0,0])
+         res.send(JSON.stringify([0,0,0,0]))
       }
     });
     
