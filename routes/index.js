@@ -119,9 +119,9 @@ router.get('/get_seq=*', function jb_seq(req, res) {
     res.writeHead(200, {
       'Content-Disposition': `attachment; filename="${fileName}"`,
       'Content-Type': 'text/plain',
-      'Cache-Control': 'no-cache, no-store, must-revalidate'
-      'Pragma': 'no-cache'
-       'Expires': '0'
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+       'Expires': '0',
     })
 
     //const download = Buffer.from(fileData.toString(), 'base64')
