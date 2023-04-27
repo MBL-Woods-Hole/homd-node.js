@@ -112,9 +112,10 @@ router.get('/get_seq=*', function jb_seq(req, res) {
        //console.log(seqstr.length)
        const arr = helpers.chunkSubstr(seqstr, 100)
        sequence += arr.join('\n')
-       show = ">"+gid+' | '+pid+' | '+acc+' | '+' length '+length.toString()+'\n'
+       show = ">"+gid+' | '+pid+' | '+acc+' | length '+length.toString()+'\n'
+       show = show + sequence
     }
-    show = show + sequence
+    
     res.writeHead(200, {
       'Content-Disposition': `attachment; filename="${fileName}"`,
       'Content-Type': 'text/plain',
