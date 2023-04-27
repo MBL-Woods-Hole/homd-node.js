@@ -18,7 +18,7 @@ var browseDir = require("browse-directory");
 /* GET home page. */
 router.get('/', function index(req, res) {
   
-  console.log('Session ID:',req.session.id)
+  //console.log('Session ID:',req.session.id)
   //console.log('CFG.ENV :',CFG.ENV )
   res.render('pages/home', {
     title: 'HOMD :: Human Oral Microbiome Database',
@@ -119,6 +119,9 @@ router.get('/get_seq=*', function jb_seq(req, res) {
     res.writeHead(200, {
       'Content-Disposition': `attachment; filename="${fileName}"`,
       'Content-Type': 'text/plain',
+      'Cache-Control': 'no-cache, no-store, must-revalidate'
+      'Pragma': 'no-cache'
+       'Expires': '0'
     })
 
     //const download = Buffer.from(fileData.toString(), 'base64')
