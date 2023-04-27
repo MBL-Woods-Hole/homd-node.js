@@ -83,8 +83,9 @@ function get_annotations_counts(intext){
     xmlhttp.timeout = 5000;
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
-      console.log('redystate: ',xmlhttp.readyState,xmlhttp.statusText)
+      console.log('readystate: ',xmlhttp.readyState,' ',xmlhttp.status,' ',xmlhttp.statusText)
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        console.log('before parse')
         var resp = JSON.parse(xmlhttp.responseText);
         console.log('get_annotations_counts')
         console.log(resp)
