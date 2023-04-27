@@ -86,7 +86,7 @@ router.get('/get_seq=*', function jb_seq(req, res) {
 //   //res.download(testdata)
 //   const fileData = testdata
   
-  const fileName = pid+'_'+type.toUpperCase()+'.fasta'
+  const fileName = 'HOMD_'+pid+'_'+type.toUpperCase()+'.fasta'
   
 
   
@@ -114,7 +114,7 @@ router.get('/get_seq=*', function jb_seq(req, res) {
        sequence += arr.join('\n')
        show = ">"+gid+' | '+pid+' | '+acc+' | '+' length '+length.toString()+'\n'
     }
-    show += sequence
+    show = show + sequence
     res.writeHead(200, {
       'Content-Disposition': `attachment; filename="${fileName}"`,
       'Content-Type': 'text/plain',
