@@ -449,7 +449,9 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
    }
    let grep_cmd = '/usr/bin/grep -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
     console.log('grep_cmd',grep_cmd)
-    let child = spawn("/bin/sh", ['-c',grep_cmd]) //, (err, stdout, stderr) => {
+    let child = spawn("/bin/sh", ['-c',grep_cmd], { 
+      //, (err, stdout, stderr) => {
+    }) 
     
     child.stdout.on('data', (data) => {
       //console.log(`child stdout:\n${data}`);
