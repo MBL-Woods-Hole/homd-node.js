@@ -76,12 +76,12 @@
 // }
 function get_annotations_counts(intext){
     var xmlhttp = new XMLHttpRequest();
-  var args = {intext:intext}
-  document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
-  document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
-  xmlhttp.open("POST", "/get_annotations_counts_NEW", true);
-  xmlhttp.setRequestHeader("Content-type","application/json");
-  xmlhttp.onreadystatechange = function() {
+    var args = {intext:intext}
+    document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+    document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+    xmlhttp.open("POST", "/get_annotations_counts_NEW", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = JSON.parse(xmlhttp.responseText);
         console.log('get_annotations_counts')
@@ -96,10 +96,10 @@ function get_annotations_counts(intext){
                 html1 = resp[1]+' gene(s) in '+resp[0]+' genomes '
             }
             html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka')\">show results</span>--"
-            
+        
         }
         document.getElementById('prokka_count_div').innerHTML = html1
-        
+    
         if(parseInt(resp[2]) === 0){
             html2 = "0"
         }else{
@@ -110,12 +110,12 @@ function get_annotations_counts(intext){
             }
             //html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
             html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
-            
+        
         }
         document.getElementById('ncbi_count_div').innerHTML = html2
       }
-  }
-  xmlhttp.send(JSON.stringify(args));
+    }
+    xmlhttp.send(JSON.stringify(args));
 }
 
 function anno_search(search_text, anno){

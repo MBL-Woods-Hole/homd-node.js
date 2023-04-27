@@ -18,7 +18,7 @@ var browseDir = require("browse-directory");
 /* GET home page. */
 router.get('/', function index(req, res) {
   
-  console.log('Session ID:',req.session.id)
+  //console.log('Session ID:',req.session.id)
   //console.log('CFG.ENV :',CFG.ENV )
   res.render('pages/home', {
     title: 'HOMD :: Human Oral Microbiome Database',
@@ -429,6 +429,7 @@ router.post('/anno_protein_searchORIG', function anno_protein_search(req, res) {
 router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, res) {
     console.log('POST::get_annotations_counts_NEW')
     console.log(req.body)
+    req.setTimeout(240000);
     const searchText = req.body.intext
     let anno //= req.body.anno_type  // ncbi or prokka
     const searchTextLower = req.body.intext.toLowerCase()
@@ -520,8 +521,8 @@ router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, 
         }
         pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
         ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
-        console.log('req.session.site_search_result_prokka.length',Object.keys(req.session.site_search_result_prokka).length)
-        console.log('req.session.site_search_result_ncbi.length',Object.keys(req.session.site_search_result_ncbi).length)
+        console.log('req.session.site_search_result_prokka.length',pgid_count)
+        console.log('req.session.site_search_result_ncbi.length',ngid_count)
         //console.log(ar,ar.length)
         //console.log(gid_count, pid_count)
       
