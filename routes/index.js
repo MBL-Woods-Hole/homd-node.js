@@ -426,13 +426,15 @@ router.post('/anno_protein_searchORIG', function anno_protein_search(req, res) {
 //     })
 // 
 // })
-router.post('/get_annotations_counts_NEW', function get_annotations_counts(req, res) {
+router.get('/get_annotations_counts_NEW', function get_annotations_counts(req, res) {
     console.log('POST::get_annotations_counts_NEW')
-    console.log(req.body)
+    console.log(req.query)
+    
     req.setTimeout(240000);
-    const searchText = req.body.intext
+    //const searchText = req.body.intext
+    const searchText = req.query.txt
     let anno //= req.body.anno_type  // ncbi or prokka
-    const searchTextLower = req.body.intext.toLowerCase()
+    const searchTextLower = searchText.toLowerCase()
     let acc,pid,gid,prod,organism=''
     let pgid_count=0, ppid_count=0,ngid_count=0, npid_count=0
     //var pgid_collector = {}, ngid_collector = {}
