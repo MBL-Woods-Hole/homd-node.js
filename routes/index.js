@@ -75,7 +75,7 @@ router.get('/get_seq=*', function jb_seq(req, res) {
           db = "`NCBI_ffn`.`ffn_seq`"
        }
   }
-  let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
+  let q = 'SELECT seq_id, mol_id, UNCOMPRESS(seq_compressed) as seq FROM ' + db
   q += " WHERE protein_id='" + pid + "'"
   console.log(q)
   // const filename = 'testJBDownload.seq'  // path.basename(url);
@@ -99,19 +99,22 @@ router.get('/get_seq=*', function jb_seq(req, res) {
         return
     }
     //console.log('rows',rows)
-    let sequence = ''
+    let sequence = '',gid,acc,show = ''
     let length = 0
     if(rows.length === 0){
         sequence += "No sequence found in database"
     }else{
        length = rows[0].seq.length
+       gid = rows[0].seq_id
+       acc = rows[0].mol_id
        const seqstr = (rows[0].seq).toString()
        //console.log('seqstr',seqstr)
        //console.log(seqstr.length)
        const arr = helpers.chunkSubstr(seqstr, 100)
-       sequence += arr.join('<br>')
-    //html = seqstr
+       sequence += arr.join('\n')
+       show = ">"+gid+' | '+pid+' | '+acc+' | '+' length '+length.toString()+'\n'
     }
+    show += sequence
     res.writeHead(200, {
       'Content-Disposition': `attachment; filename="${fileName}"`,
       'Content-Type': 'text/plain',
