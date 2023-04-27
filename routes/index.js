@@ -30,7 +30,7 @@ router.get('/', function index(req, res) {
 
   })
 })
-router.get('/taxon=(\\d+)', function index(req, res) {
+router.get('/taxon=(\\d+)', function taxon(req, res) {
   // sequence server
   //console.log('taxon=/.d/')
   var url = req.url;
@@ -39,7 +39,7 @@ router.get('/taxon=(\\d+)', function index(req, res) {
   res.redirect('/taxa/tax_description?otid='+otid)
   
 })
-router.get('/idn=SEQF(\\d+.\\d)', function index(req, res) {
+router.get('/idn=SEQF(\\d+.\\d)', function idn(req, res) {
   // sequence server
   //console.log('idn=SEQF')
   var url = req.url;
@@ -438,90 +438,12 @@ router.get('/get_annotations_counts_NEW', function get_annotations_counts(req, r
     let acc,pid,gid,prod,organism=''
     let pgid_count=0, ppid_count=0,ngid_count=0, npid_count=0
     //var pgid_collector = {}, ngid_collector = {}
-   req.session.site_search_result_ncbi = {}
-   req.session.site_search_result_prokka = {}
-
-   let full_data = '',orfrow,datapath
-   //https://github.com/uhop/stream-json/wiki/StreamValues
-   //let q = queries.get_annotation_query4(searchTextLower, anno_type)
-   if(CFG.SITE === 'localmbl'){
-     datapath = path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
-   }else{
-      datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
-   }
-   let grep_cmd = '/usr/bin/grep -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
-    console.log('grep_cmd',grep_cmd)
-    let child = spawn("/bin/sh", ['-c',grep_cmd], { 
-      //, (err, stdout, stderr) => {
-    }) 
-    
-    child.stdout.on('data', (data) => {
-      //console.log(`child stdout:\n${data}`);
-        //console.log('gathering grep data')
-        //console.log(data.toString())
-        full_data += data.toString()
-    });
-
-    child.stderr.on('data', (data) => {
-      console.error(`child stderr:\n${data}`);
-    });
-    
-    child.on('exit', function (code, signal) {
-      console.log('child process exited with ' +`code ${code} and signal ${signal}`);
-      if(code === 0){
-         //console.log(full_data)
-        
-        var pgid_collector = {}
-        var ngid_collector = {}
-        var sp = full_data.split('\n');
-        for (var i = 0; i < sp.length; i++) {
-            //console.log(sp[i])
-            orfrow = sp[i].trim()
-            //console.log('orfrow',orfrow)
-            var sub = orfrow.split('|');
-                if(sub.length == 9){
-                //if(sub[0]){
-                    anno = sub[0]
-                    gid = sub[1]
-                    // pid = sub[2]
-//                     acc =sub[3]  // molecule
-//                     prod=sub[4]
-//                     length_na = sub[5]
-//                     length_aa = sub[6]
-//                     start = sub[7]
-//                     stop = sub[8]
-                    // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
-                    //console.log('gid',gid)
-                    // if(gid in C.genome_lookup){
-//                         organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-//                     }
-                    if(anno == 'ncbi'){
-                        //ngid_collector[gid] = 1
-                        // if(! req.session.site_search_result_ncbi){
-//                             req.session.site_search_result_ncbi = {}
-//                         }
-                        if(gid in req.session.site_search_result_ncbi){
-                            //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
-                            req.session.site_search_result_ncbi[gid].push(orfrow)
-                        }else{
-                            req.session.site_search_result_ncbi[gid] = [orfrow]
-                        }
-                        npid_count += 1
-                    }else if(anno === 'prokka'){
-                        //pgid_collector[gid] = 1
-                        // if(! req.session.site_search_result_prokka){
-//                             req.session.site_search_result_prokka = {}
-//                         }
-                        if(gid in req.session.site_search_result_prokka){
-                            req.session.site_search_result_prokka[gid].push(orfrow)
-                        }else{
-                            req.session.site_search_result_prokka[gid] = [orfrow]
-                        }
-                        ppid_count += 1
-                    }
-                    
-                    //ar.push(sub[0].replace(/['"]+/g, ''));
-                }
+    if(req.query.ret){
+        for(let gid in req.session.site_search_result_prokka){
+            ppid_count += req.session.site_search_result_prokka[gid].length
+        }
+        for(let gid in req.session.site_search_result_ncbi){
+            npid_count += req.session.site_search_result_ncbi[gid].length
         }
         pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
         ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
@@ -529,14 +451,109 @@ router.get('/get_annotations_counts_NEW', function get_annotations_counts(req, r
         console.log('req.session.site_search_result_ncbi.length',ngid_count)
         //console.log(ar,ar.length)
         //console.log(gid_count, pid_count)
-      
         res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
-      }else{  //end if code ==0
-         console.log('nothing found')
-         res.send(JSON.stringify([0,0,0,0]))
-      }
-    });
+        
+        
+   }else{
+       req.session.site_search_result_ncbi = {}
+       req.session.site_search_result_prokka = {}
+
+       let full_data = '',orfrow,datapath
+       //https://github.com/uhop/stream-json/wiki/StreamValues
+       //let q = queries.get_annotation_query4(searchTextLower, anno_type)
+       if(CFG.SITE === 'localmbl'){
+         datapath = path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
+       }else{
+          datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
+       }
+       let grep_cmd = '/usr/bin/grep -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
+        console.log('grep_cmd',grep_cmd)
+        let child = spawn("/bin/sh", ['-c',grep_cmd], { 
+          //, (err, stdout, stderr) => {
+        }) 
     
+        child.stdout.on('data', (data) => {
+          //console.log(`child stdout:\n${data}`);
+            //console.log('gathering grep data')
+            //console.log(data.toString())
+            full_data += data.toString()
+        });
+
+        child.stderr.on('data', (data) => {
+          console.error(`child stderr:\n${data}`);
+        });
+    
+        child.on('exit', function (code, signal) {
+          console.log('child process exited with ' +`code ${code} and signal ${signal}`);
+          if(code === 0){
+             //console.log(full_data)
+        
+            var pgid_collector = {}
+            var ngid_collector = {}
+            var sp = full_data.split('\n');
+            for (var i = 0; i < sp.length; i++) {
+                //console.log(sp[i])
+                orfrow = sp[i].trim()
+                //console.log('orfrow',orfrow)
+                var sub = orfrow.split('|');
+                    if(sub.length == 9){
+                    //if(sub[0]){
+                        anno = sub[0]
+                        gid = sub[1]
+                        // pid = sub[2]
+    //                     acc =sub[3]  // molecule
+    //                     prod=sub[4]
+    //                     length_na = sub[5]
+    //                     length_aa = sub[6]
+    //                     start = sub[7]
+    //                     stop = sub[8]
+                        // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
+                        //console.log('gid',gid)
+                        // if(gid in C.genome_lookup){
+    //                         organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+    //                     }
+                        if(anno == 'ncbi'){
+                            //ngid_collector[gid] = 1
+                            // if(! req.session.site_search_result_ncbi){
+    //                             req.session.site_search_result_ncbi = {}
+    //                         }
+                            if(gid in req.session.site_search_result_ncbi){
+                                //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
+                                req.session.site_search_result_ncbi[gid].push(orfrow)
+                            }else{
+                                req.session.site_search_result_ncbi[gid] = [orfrow]
+                            }
+                            npid_count += 1
+                        }else if(anno === 'prokka'){
+                            //pgid_collector[gid] = 1
+                            // if(! req.session.site_search_result_prokka){
+    //                             req.session.site_search_result_prokka = {}
+    //                         }
+                            if(gid in req.session.site_search_result_prokka){
+                                req.session.site_search_result_prokka[gid].push(orfrow)
+                            }else{
+                                req.session.site_search_result_prokka[gid] = [orfrow]
+                            }
+                            ppid_count += 1
+                        }
+                    
+                        //ar.push(sub[0].replace(/['"]+/g, ''));
+                    }
+            }
+            pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
+            ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
+            console.log('req.session.site_search_result_prokka.length',pgid_count)
+            console.log('req.session.site_search_result_ncbi.length',ngid_count)
+            //console.log(ar,ar.length)
+            //console.log(gid_count, pid_count)
+      
+            res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
+          }else{  //end if code ==0
+             console.log('nothing found')
+             res.send(JSON.stringify([0,0,0,0]))
+          }
+        });
+    }
 
 
 })
