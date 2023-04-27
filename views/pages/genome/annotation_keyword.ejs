@@ -38,6 +38,10 @@ table td{
 #anno-pre-table td{
    padding: 0 10px;
 }
+button {
+    cursor:pointer;
+    color:blue;
+}
 </style>
 <% cfg = JSON.parse(config) %> 
 <% ncbid = JSON.parse(ncbi_data) %>
@@ -72,16 +76,16 @@ table td{
     <% } %>
     <div id='orf_table_div'>
     <%= anno.toUpperCase() %>
-    <table border='1' id='anno-pre-table'>
+    <table id="anno-pre-table">
     <tr><th>SEQ-ID</th><th>Organism</th><th># Hits</th><th class='center'></th><th>Full annotation</th></tr>
     <% for(i in gids){ %>
     <%    gid = gids[i] %>
-          <tr><td><%= gid %></td>
+          <tr id="<%= gid %>"><td><a href='genome_description?gid=<%= gid %>'><%= gid %></a></td>
           <td><%= orgs[gid] %></td>
           
           
           <td class='center'><%= data[gid].length %></td>
-          <td><a href='#' onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View item(s) in table</a></td>
+          <td><button onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View item(s) in table</button></td>
           <td>
             <a class='pill pill-mediumorchid' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
             <a class='pill pill-slateblue' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>

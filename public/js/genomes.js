@@ -265,6 +265,13 @@ function view_anno_items(gid, anno, search_text){
    args.gid = gid
    args.anno = anno
    args.search_text = search_text
+   var table = document.getElementById("anno-pre-table");   
+   var rows = table.getElementsByTagName("tr");   
+   for(i = 0; i < rows.length; i++){ 
+       console.log(rows[i])
+      rows[i].style.backgroundColor = 'white'
+   } 
+   
    var xmlhttp = new XMLHttpRequest();
    xmlhttp.open("POST", "/genome/make_anno_search_table", true);
    xmlhttp.setRequestHeader("Content-type","application/json");
@@ -276,6 +283,8 @@ function view_anno_items(gid, anno, search_text){
         document.getElementById('anno_result_div').innerHTML = resp
         //var newTableObject = document.getElementById('anno_result_table')
         //sorttable.makeSortable(newTableObject);
+        var row = document.getElementById(gid)
+        row.style.backgroundColor = '#7AC97A'
         
       }
    }
