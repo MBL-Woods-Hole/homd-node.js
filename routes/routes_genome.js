@@ -764,16 +764,29 @@ router.post('/orf_search', function orf_search (req, res) {
     }else if(anno === 'prokka' && prokka_data_keys.length > 0){
        gid = prokka_data_keys[0]
     }
-    if(gid)
-        organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-    if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
-        otid = C.genome_lookup[gid].otid
-    }
+    let tmpgid,ssp=''
+    
     for(let k in prokka_data_keys){
-       org_list[prokka_data_keys[k]] = organism
+       tmpgid = ncbi_data_keys[k]
+       if(C.genome_lookup.hasOwnProperty(tmpgid)){
+           if(C.genome_lookup[tmpgid].subspecies){
+              ssp = C.genome_lookup[tmpgid].subspecies+' '
+           }
+           let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].ccolct
+           org_list[tmpgid] = organism
+       }
+       
     }
+    
     for(let k in ncbi_data_keys){
-       org_list[ncbi_data_keys[k]] = organism
+       tmpgid = ncbi_data_keys[k]
+       if(C.genome_lookup.hasOwnProperty(tmpgid)){
+           if(C.genome_lookup[tmpgid] && C.genome_lookup[tmpgid].subspecies){
+              ssp = C.genome_lookup[tmpgid].subspecies+' '
+           }
+           let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].ccolct
+           org_list[tmpgid] = organism
+        }
     }
     res.render('pages/genome/annotation_keyword', {
 
@@ -782,14 +795,13 @@ router.post('/orf_search', function orf_search (req, res) {
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         //user: JSON.stringify(req.user || {}),
-        gid: gid,
-        otid: otid,
+        
         anno:anno,
         search_text: search_text,
         //all_annos: JSON.stringify(args.allAnnosObj),
         //anno_type: args.annoType,
         //page_data: JSON.stringify(args.pageData),
-        organism: organism,
+        
         ncbi_data: JSON.stringify(req.session.site_search_result_ncbi),
         prokka_data: JSON.stringify(req.session.site_search_result_prokka),
         psorted: JSON.stringify(prokka_data_keys),
