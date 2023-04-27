@@ -113,9 +113,9 @@ router.get('/get_seq=*', function jb_seq(req, res) {
        const arr = helpers.chunkSubstr(seqstr, 100)
        sequence += arr.join('\n')
        show = ">"+gid+' | '+pid+' | '+acc+' | length '+length.toString()+'\n'
-       show = show + sequence
+       
     }
-    
+    show = show + sequence
     res.writeHead(200, {
       'Content-Disposition': `attachment; filename="${fileName}"`,
       'Content-Type': 'text/plain',
@@ -125,7 +125,7 @@ router.get('/get_seq=*', function jb_seq(req, res) {
     })
 
     //const download = Buffer.from(fileData.toString(), 'base64')
-    res.end(sequence)
+    res.end(show)
     //res.send(JSON.stringify({html:html,length:length}))
     
   })
