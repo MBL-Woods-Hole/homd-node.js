@@ -2,6 +2,10 @@
 #orf_table_div{
    height:200px;
    overflow:auto;
+   overflow-y: scroll;
+   border:1px solid black;
+   padding:3px;
+   width: 80%;
 }
 table{
   font-size:12px;
@@ -67,8 +71,9 @@ table td{
     <%   gids = pgids_sorted %>
     <% } %>
     <div id='orf_table_div'>
+    <%= anno.toUpperCase() %>
     <table border='1' id='anno-pre-table'>
-    <tr><td><%= anno %> SEQ-ID</td><td>Organism</td><td># Items</td><td class='center'></td><td>Full annotation</td></tr>
+    <tr><td> SEQ-ID</td><td>Organism</td><td># Hits</td><td class='center'></td><td>Full annotation</td></tr>
     <% for(i in gids){ %>
     <%    gid = gids[i] %>
           <tr><td><%= gid %></td>
@@ -76,7 +81,7 @@ table td{
           
           
           <td class='center'><%= data[gid].length %></td>
-          <td><a href='#' onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View items in table</a></td>
+          <td><a href='#' onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View item(s) in table</a></td>
           <td>
             <a class='pill pill-mediumorchid' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
             <a class='pill pill-slateblue' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>

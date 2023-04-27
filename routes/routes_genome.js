@@ -640,8 +640,12 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     let anno = req.body.anno
     let search_text = req.body.search_text
     let gid = req.body.gid
-    let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-    let rowobj,start,stop,locstart,locstop,seqacc
+    let rowobj,start,stop,locstart,locstop,seqacc,ssp = ''
+    if(C.genome_lookup[gid].subspecies){
+       ssp = C.genome_lookup[gid].subspecies+' '
+    }
+    let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+ssp+C.genome_lookup[gid].ccolct
+    
     let html = "<table id='annotation-table' class='table'>"
     html += '<tr><th>Molecule</th><th>PID</th><th>NA (length)</th><th>AA (length)</th><th>Range</th><th>Product</th></tr>'
     let datastringlist = req.session['site_search_result_'+anno][gid]
@@ -699,10 +703,10 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
 	    } 
 	    let db = anno+'_'+gid
         html += '<tr>'
-        //rowobj.acc = rowobj.acc.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+        rowobj.acc = (rowobj.acc).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
         
         html += "<td>"+rowobj.acc+"</td>"   // molecule
-        //rowobj.pid = (rowobj.pid).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+        rowobj.pid = (rowobj.pid).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
         
         html += "<td>"+rowobj.pid
             if(anno === "prokka"){ 
