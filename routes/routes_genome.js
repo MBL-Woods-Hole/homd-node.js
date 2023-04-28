@@ -647,7 +647,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+ssp+C.genome_lookup[gid].ccolct
     
     let html = "<table id='annotation-table' class='table'>"
-    html += '<tr><th>Molecule</th><th>PID</th><th>NA (length)</th><th>AA (length)</th><th>Range</th><th>Product</th></tr>'
+    html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><th>Product</th></tr>'
     let datastringlist = req.session['site_search_result_'+anno][gid]
     var re = new RegExp(search_text,"gi");
     for(i in datastringlist){
@@ -811,120 +811,7 @@ router.post('/orf_search', function orf_search (req, res) {
 
     
 })
-router.post('/open_explorer_search', function open_explorer_search (req, res) {
-    //console.log('in POST:open_explorer_search')
-    //console.log(req.body)
-    let gid = req.body.gid
-    let args
-    let anno = req.body.anno
-    let searchtext = req.body.searchtext
-    let otid='',gc=0,annoInfoObj={}
-    // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
-    // anno|gid|pid|acc(molecule)|product|length_na|length_aa|start|stop
-    //console.log('C.genome_lookup[gid]',gid,C.genome_lookup[gid])
-    let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-    
-    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
-       return {gid: gid, org: organism}
-    })
-    allAnnosObj.sort(function sortAnnos (a, b) {
-       return helpers.compareStrings_alpha(a.org, b.org)
-    })
-    
-    if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
-        otid = C.genome_lookup[gid].otid
-        gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
-    }
-    if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
-      annoInfoObj = C.annotation_lookup[gid][anno]
-    }
-    
-    // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
-    // anno|gid|pid|acc(molecule)|product|length_na|length_aa|start|stop
-    let search_list = req.session['site_search_result_'+anno][gid]
-    console.log(search_list)
-    let rows =[],items
-    for(let i in search_list){
-        items = search_list[i].split('|')
-        rows.push({accession:items[3],gc:'',protein_id:items[2],product:items[4],length:'',start:items[7],stop:items[8],length_na:items[5],length_aa:items[6]})
-    }
-   //  {
-//     accession: 'SEQF1595|KI535340.1',
-//     gc: 47.09,
-//     protein_id: 'SEQF1595_00099',
-//     product: 'Oligopeptide-binding protein AppA',
-//     length: 1746,
-//     start: 104870,
-//     stop: 103125,
-//     length_na: 1746,
-//     length_aa: 581
-//   },
-    let page ={
-          page: 1,
-          trecords: req.session['site_search_result_'+anno][gid].length,
-          row_per_page: req.session['site_search_result_'+anno][gid].length,
-          number_of_pages: 1,
-          show_page: 1,
-          start_count: 1
-        }
-    args = {
-             fltr:get_default_annot_filter(),
-             filter_on: 'off',
-             searchtext: searchtext,
-             gid:gid,
-             gc:gc,
-             otid:otid,
-             organism:organism,
-             allAnnosObj:allAnnosObj,
-             annoType:anno,
-             pageData:page,
-             annoInfoObj:annoInfoObj,
-             pidList:rows
-           }
-           render_explorer(req, res, args)
-    //let pid_list = req.session['site_search_result_'+anno][gid].map(el => el.pid)
-    // qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
-//       qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-//       //qSelectAnno += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
-//       qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
-    //const q = queries.get_annotation_query2(gid, anno, pid_list)
-    //console.log(q)
-    //console.log('anno query '+q)
-    let tmp = []
-    
-    // TDBConn.query(q, (err, rows) => {
-//     //OLD ADBConn.query(q, (err, rows) => {
-//       if (err) {
-//         req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
-// 
-//         args = {fltr:get_default_annot_filter(),filter_on:'off',searchtext:searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
-//         render_explorer(req, res, args)
-//         return
-//       } else {
-//         if (rows.length === 0) {
-//           console.log('no rows found')
-//           args = {fltr:get_default_annot_filter(),filter_on:'off',searchtext:searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
-//           render_explorer(req, res, args)
-//         }else{
-//            args = {
-//              fltr:get_default_annot_filter(),
-//              filter_on: 'off',
-//              searchtext: searchtext,
-//              gid:gid,
-//              gc:gc,
-//              otid:otid,
-//              organism:organism,
-//              allAnnosObj:allAnnosObj,
-//              annoType:anno,
-//              pageData:page,
-//              annoInfoObj:annoInfoObj,
-//              pidList:rows
-//            }
-//            render_explorer(req, res, args)
-//         }
-//      }
-//     })  // end Conn
-})
+
 function get_annot_table_filter(body){
    let rev = 'off'
     if (body.sort_rev && body.sort_rev == 'on'){
@@ -1171,16 +1058,6 @@ router.get('/explorer', function explorer (req, res) {
       //return { gid: el.gid, org: el.organism }
       return { gid: el.gid, org: el.genus+' '+el.species+' '+el.ccolct }
     })
-  
-  
-  // req, res, gid, otid,  organism, dbChoices,  allAnnosObj, anno
-  // const tmpObj = Object.keys(C.annotation_lookup) // get prokka organisms [seqid,organism]
-//   const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
-//     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
-//   })
-//   allAnnosObj.sort(function sortAnnos (a, b) {
-//       return helpers.compareStrings_alpha(a.org, b.org)
-//   })
   
   if (!gid || gid.toString() === '0') {
    

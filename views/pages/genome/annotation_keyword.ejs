@@ -59,7 +59,7 @@ button {
     
     <div class='page-content' >
     <div class='title'>Annotation Search Text: <%= search_text %></div>
-    <a href='/get_annotations_counts_NEW?txt=<%= search_text %>&ret=1'>Return to search results</a>
+    <!-- <a href='/get_annotations_counts?txt=<%= search_text %>&ret=1'>Return to search results</a> -->
     <div id="srch">
     Search Results:
     <table>
@@ -100,7 +100,7 @@ button {
     Viewing <%= anno.toUpperCase() %>
     <div id='anno_result_div'>
       <table>
-        <tr><td>Molecule</td><td>PID</td><td>NA (length)</td><td>AA (length)</td><td>Range</td><td>Product</td></tr>
+        <tr><td>Molecule</td><td>PID</td><td>NA<br><small>(Length)(Seq)</small></td><td>AA<br><small>(Length)(Seq)</small></td><td>Range</td><td>Gene Product</td></tr>
       </table>
     </div>
     
