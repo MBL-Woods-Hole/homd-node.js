@@ -14,6 +14,14 @@ html, body { min-height: 100%; }
    background:lightyellow;
    border:1px solid black;
 }
+.search-box-small{
+   height:100px;
+   width:100%;
+   margin:0px 0px;
+   padding:0px 10px;
+   background:lightyellow;
+   border:1px solid black;
+}
 .loader-gif{
   height:20px;
   width:90px;
@@ -95,8 +103,9 @@ table th,td{
     <% } %>
     
      <hr>  
-    Annotations<br>(Searches ProteinIDs and GeneProductNames-in the database):<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
-    <div class='search-box'>
+    Annotations<br>(Searches Accession, Protein-IDs and Gene Product Names -in the HOMD annotation database (~40M records)):<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
+    <div class='search-box-small'>
+      Usually takes about a minute)<br><br>
       PROKKA Annotation hits: <span id='prokka_count_div' >wOrKiNg</span>
       <br>NCBI Annotation hits: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id='ncbi_count_div' >wOrKiNg</span>
       <div id='anno_result_box'></div>
@@ -153,8 +162,8 @@ table th,td{
       if(intext.length > min_size){
          get_annotations_counts(intext)
       }else{
-          document.getElementById('ncbi_count_div').innerHTML = 'word too small: < '+min_size.toString()
-          document.getElementById('prokka_count_div').innerHTML = 'word too small: < '+min_size.toString()
+          document.getElementById('ncbi_count_div').innerHTML = 'word too small: <= '+min_size.toString()
+          document.getElementById('prokka_count_div').innerHTML = 'word too small: <= '+min_size.toString()
       }
       //get_annotations_counts_prokka(intext)
       //get_annotations_counts_ncbi(intext)

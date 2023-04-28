@@ -116,7 +116,7 @@ function get_16s_seq(seqid) {
 }
 //
 function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
-    //console.log('in NNNA',type,pid)
+    console.log('in NNNA',type,pid)
     // on genome explore page
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
@@ -157,7 +157,7 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
 
         text += resp.html
         text += '</pre>'
-    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=750,height=300");
+    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=800,height=300");
     var doc = win.document;
     //doc.writeln("<title>yourtitle</title>");
     //doc.title = 'eHOMD Reference Sequence'
@@ -236,4 +236,57 @@ function clear_phylum(){
      update_sb()
    }
    dd.value = ''
+}
+function select_anno(anno, search_text){
+   console.log('in anno_srch')
+   let form = document.createElement("form");
+   document.getElementsByTagName("body")[0].appendChild(form);
+   form.setAttribute("method", "post");
+   form.setAttribute("action" , "/genome/orf_search");
+    
+   var i = document.createElement("input");
+   i.type = "hidden";
+   i.name = "anno";
+   i.id = "anno";
+   i.value = anno
+   form.appendChild(i);
+   var i = document.createElement("input");
+   i.type = "hidden";
+   i.name = "search_text";
+   i.id = "search_text";
+   i.value = search_text
+   form.appendChild(i);
+   form.submit()
+}
+
+function view_anno_items(gid, anno, search_text){
+   console.log('in anno_srch')
+   var args = {}
+   args.gid = gid
+   args.anno = anno
+   args.search_text = search_text
+   var table = document.getElementById("anno-pre-table");   
+   var rows = table.getElementsByTagName("tr");   
+   for(i = 0; i < rows.length; i++){ 
+       console.log(rows[i])
+      rows[i].style.backgroundColor = 'white'
+   } 
+   
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.open("POST", "/genome/make_anno_search_table", true);
+   xmlhttp.setRequestHeader("Content-type","application/json");
+   xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = xmlhttp.responseText;
+        //console.log('anno search resp')
+        //console.log(resp)
+        document.getElementById('anno_result_div').innerHTML = resp
+        //var newTableObject = document.getElementById('anno_result_table')
+        //sorttable.makeSortable(newTableObject);
+        var row = document.getElementById(gid)
+        row.style.backgroundColor = '#7AC97A'
+        
+      }
+   }
+   xmlhttp.send(JSON.stringify(args));
 }

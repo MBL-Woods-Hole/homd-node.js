@@ -611,25 +611,6 @@ router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
 })
 function render_explorer(req, res, args){
     res.render('pages/genome/explorer', {
-          // title: 'HOMD :: ' + args.gid,
-//           pgname: 'genome/explorer', // for AboutThisPage 
-//           config: JSON.stringify(CFG),
-//           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-//           user: JSON.stringify(req.user || {}),
-//           gid: args.gid,
-//           otid: args.otid,
-//           all_annos: JSON.stringify(args.allAnnosObj),
-//           anno_type: args.annoType,
-//           page_data: JSON.stringify(args.pageData),
-//           organism: args.organism,
-//           gc: args.gc,
-//           src_txt: args.searchtext,
-//           info_data: JSON.stringify(args.annoInfoObj),
-//           pid_list: JSON.stringify(args.pidList),
-//           returnTo: '/genome/explorer?gid='+args.gid,
-       
-       
-        
         
         title: 'HOMD :: ' + args.gid,
         pgname: 'genome/explorer', // for AboutThisPage 
@@ -653,76 +634,184 @@ function render_explorer(req, res, args){
 
 }
 //
-router.post('/open_explorer_search', function open_explorer_search (req, res) {
-    //console.log('in POST:open_explorer_search')
-    //console.log(req.body)
-    let gid = req.body.gid
+router.post('/make_anno_search_table', function make_anno_search_table (req, res) {
+    console.log('in POST:make_anno_search_table')
+    console.log(req.body)
     let anno = req.body.anno
-    let searchtext = req.body.searchtext
-    let otid='',gc=0,annoInfoObj={}
-    //console.log('C.genome_lookup[gid]',gid,C.genome_lookup[gid])
-    let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
-       return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
-    })
-    allAnnosObj.sort(function sortAnnos (a, b) {
-       return helpers.compareStrings_alpha(a.org, b.org)
-    })
-    if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
-        otid = C.genome_lookup[gid].otid
-        gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
+    let search_text = req.body.search_text
+    let gid = req.body.gid
+    let rowobj,start,stop,locstart,locstop,seqacc,ssp = ''
+    if(C.genome_lookup[gid].subspecies){
+       ssp = C.genome_lookup[gid].subspecies+' '
     }
-    if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
-      annoInfoObj = C.annotation_lookup[gid][anno]
+    let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+ssp+C.genome_lookup[gid].ccolct
+    
+    let html = "<table id='annotation-table' class='table'>"
+    html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><th>Product</th></tr>'
+    let datastringlist = req.session['site_search_result_'+anno][gid]
+    var re = new RegExp(search_text,"gi");
+    for(i in datastringlist){
+       // [
+//           'prokka',                  anno
+//           'SEQF6084.1',              gid
+//           'SEQF6084.1_04360',        pid
+//           'SEQF6084.1_CP009935.1',   acc (molecule)
+//           'Methionine--tRNA ligase', product
+//           '2028',                    length_na
+//           '675',                     length_aa
+//           '4382117',                 start
+//           '4384144'                  stop
+//         ]
+
+       let row = datastringlist[i].split('|')
+       //console.log(row)
+       
+       rowobj = {
+            anno:row[0],
+            gid:row[1],
+            pid:row[2],
+            acc:row[3],
+            product:row[4],
+            length_na:row[5],
+            length_aa:row[6],
+            start:row[7],
+            stop:row[8],
+            }
+        if(rowobj.start[0] === "<" ){
+	      start = parseInt(rowobj.start.substring(1))
+	    }else{
+	      start = parseInt(rowobj.start)
+	    }
+	    if(rowobj.stop[0] === ">" ){ 
+	      stop = parseInt(rowobj.stop.substring(1))
+	    }else{ 
+	      stop = parseInt(rowobj.stop)
+	    }
+	 
+	    if(start > stop){ 
+	     tmp = stop 
+	     stop = start 
+	     start = tmp 
+	    } 
+	 
+	    locstart = start - 500 
+	    locstop = stop + 500 
+	    //size = stop - start 
+	 
+	    if(locstart < 1){ 
+	      locstart = 1 
+	    } 
+	    let db = anno+'_'+gid
+        html += '<tr>'
+        rowobj.acc = (rowobj.acc).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+        
+        html += "<td>"+rowobj.acc+"</td>"   // molecule
+        rowobj.pid = (rowobj.pid).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+        
+        html += "<td>"+rowobj.pid
+            if(anno === "prokka"){ 
+                seqacc = rowobj.acc.replace('_','|')
+            }else{
+                seqacc = gid +'|'+ rowobj.acc
+            }
+            let jbtracks = "DNA,homd,prokka,ncbi"
+            let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
+            let highlight = seqacc+":"+start.toString()+".."+stop.toString()
+		    html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
+		
+        html += "</td>"   // pid (and JB)
+        
+        html += "<td>"+rowobj.length_na
+            html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+gid+"')\"><b>NA</b></a>]"
+        html += "</td>"   // NA length
+        html += "<td>"+rowobj.length_aa
+            html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+gid+"')\"><b>AA</b></a>]"
+        html += "</td>"   // AA length
+        html += "<td>"+start+'-'+stop+"</td>"   // Range
+        //if(rowobj.product.indexOf(search_text) != -1){
+        //  console.log('FOUND1 '+rowobj.product+' '+search_text)
+        
+        rowobj.product = rowobj.product.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+        //  console.log('FOUND2 '+rowobj.product)
+        //}
+        html += "<td>"+rowobj.product+"</td>"   // product
+        
+        html += "</tr>"
+       
     }
+    html += "</table>"
+    
+    res.send(html)
     
 
-   //  {
-//     accession: 'SEQF1595|KI535340.1',
-//     GC: 47.09,
-//     PID: 'SEQF1595_00099',
-//     product: 'Oligopeptide-binding protein AppA',
-//     length: 1746,
-//     start: 104870,
-//     stop: 103125,
-//     len_na: 1746,
-//     len_aa: 581
-//   },
-    let page ={
-          page: 1,
-          trecords: req.session['site_search_result_'+anno][gid].length,
-          row_per_page: req.session['site_search_result_'+anno][gid].length,
-          number_of_pages: 1,
-          show_page: 1,
-          start_count: 1
-        }
-    
-    let pid_list = req.session['site_search_result_'+anno][gid].map(el => el.pid)
-    const q = queries.get_annotation_query2(gid, anno, pid_list)
-    
 
-    //console.log(q)
-    //console.log('anno query '+q)
-    let tmp = []
-    
-    TDBConn.query(q, (err, rows) => {
-    //OLD ADBConn.query(q, (err, rows) => {
-      if (err) {
-        req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
-
-        let args = {fltr:get_default_annot_filter(),filter_on:'off',searchtext:searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
-        render_explorer(req, res, args)
-        return
-      } else {
-        if (rows.length === 0) {
-          console.log('no rows found')
-        }else{
-           let args = {fltr:get_default_annot_filter(),filter_on: 'off',searchtext: searchtext,gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:page,annoInfoObj:annoInfoObj,pidList:rows}
-           render_explorer(req, res, args)
-        }
-     }
-    })  // end Conn
 })
+router.post('/orf_search', function orf_search (req, res) {
+    console.log('in POST:orf_search')
+    console.log(req.body)
+    let anno = req.body.anno
+    let search_text = req.body.search_text,org_list = {}
+    let gid='',otid = '',organism=''
+    if(!req.session.site_search_result_prokka || !req.session.site_search_result_ncbi){
+      res.send('Session Expired')
+      return
+    }
+    let prokka_data_keys = Object.keys(req.session.site_search_result_prokka).sort()
+    let ncbi_data_keys   = Object.keys(req.session.site_search_result_ncbi).sort()
+    //console.log('ncbi_data',ncbi_data_keys)
+    if(anno === 'ncbi' && ncbi_data_keys.length > 0){
+       gid = ncbi_data_keys[0]
+    }else if(anno === 'prokka' && prokka_data_keys.length > 0){
+       gid = prokka_data_keys[0]
+    }
+    let tmpgid,ssp=''
+    
+    for(let k in prokka_data_keys){
+       tmpgid = ncbi_data_keys[k]
+       if(C.genome_lookup.hasOwnProperty(tmpgid)){
+           if(C.genome_lookup[tmpgid].subspecies){
+              ssp = C.genome_lookup[tmpgid].subspecies+' '
+           }
+           let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].ccolct
+           org_list[tmpgid] = organism
+       }
+       
+    }
+    
+    for(let k in ncbi_data_keys){
+       tmpgid = ncbi_data_keys[k]
+       if(C.genome_lookup.hasOwnProperty(tmpgid)){
+           if(C.genome_lookup[tmpgid] && C.genome_lookup[tmpgid].subspecies){
+              ssp = C.genome_lookup[tmpgid].subspecies+' '
+           }
+           let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].ccolct
+           org_list[tmpgid] = organism
+        }
+    }
+    res.render('pages/genome/annotation_keyword', {
+
+        title: 'HOMD :: text search',
+        pgname: 'genome/explorer', // for AboutThisPage 
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        //user: JSON.stringify(req.user || {}),
+        
+        anno:anno,
+        search_text: search_text,
+        //all_annos: JSON.stringify(args.allAnnosObj),
+        //anno_type: args.annoType,
+        //page_data: JSON.stringify(args.pageData),
+        
+        ncbi_data: JSON.stringify(req.session.site_search_result_ncbi),
+        prokka_data: JSON.stringify(req.session.site_search_result_prokka),
+        psorted: JSON.stringify(prokka_data_keys),
+        nsorted: JSON.stringify(ncbi_data_keys),
+        org_obj: JSON.stringify(org_list),
+     })
+
+    
+})
+
 function get_annot_table_filter(body){
    let rev = 'off'
     if (body.sort_rev && body.sort_rev == 'on'){
@@ -833,12 +922,14 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
   }
   return send_list
 } 
+
 router.get('/reset_atable', function annot_table_reset(req, res) {
    //console.log('in RESET-session')
    //console.log(req.query)
    req.session.atable_filter = get_default_annot_filter()
    res.redirect('explorer?gid='+req.query.gid+'&anno='+req.query.anno);
 });
+
 router.post('/annotation_filter', function annotation_filter (req, res) {
     //console.log('IN annotation_filter')
     //console.log(req.body)
@@ -967,16 +1058,6 @@ router.get('/explorer', function explorer (req, res) {
       //return { gid: el.gid, org: el.organism }
       return { gid: el.gid, org: el.genus+' '+el.species+' '+el.ccolct }
     })
-  
-  
-  // req, res, gid, otid,  organism, dbChoices,  allAnnosObj, anno
-  // const tmpObj = Object.keys(C.annotation_lookup) // get prokka organisms [seqid,organism]
-//   const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
-//     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
-//   })
-//   allAnnosObj.sort(function sortAnnos (a, b) {
-//       return helpers.compareStrings_alpha(a.org, b.org)
-//   })
   
   if (!gid || gid.toString() === '0') {
    

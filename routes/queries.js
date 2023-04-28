@@ -48,8 +48,8 @@ module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
   
   let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
       qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-      qSelectAnno += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
-      
+      //qSelectAnno += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
+      qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
   //const db = anno.toUpperCase() + '_' + gid
   // let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
 //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
