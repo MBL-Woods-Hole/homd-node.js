@@ -217,7 +217,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
        }else{
           datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
        }
-       let grep_cmd = '/usr/bin/grep -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
+       let grep_cmd = '/usr/bin/grep -ih "'+searchTextLower+'" '+ datapath  //homd_ORFSearch*
         console.log('grep_cmd',grep_cmd)
         let child = spawn("/bin/sh", ['-c',grep_cmd], { 
           //, (err, stdout, stderr) => {
