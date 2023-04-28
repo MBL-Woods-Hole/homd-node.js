@@ -225,7 +225,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
     
         child.stdout.on('data', (data) => {
           //console.log(`child stdout:\n${data}`);
-            //console.log('gathering grep data')
+            console.log('gathering grep data')
             //console.log(data.toString())
             full_data += data.toString()
         });
