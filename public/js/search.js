@@ -88,7 +88,7 @@ function get_annotations_counts(intext){
     document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
     document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
     xmlhttp.open("GET", "/get_annotations_counts?txt="+intext, true);
-    xmlhttp.timeout = 1200000;  // 10,000; timeout in ms, 10 seconds
+    //xmlhttp.timeout = 1200000;  // 10,000; timeout in ms, 10 seconds
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       console.log('readystate: ',xmlhttp.readyState)
