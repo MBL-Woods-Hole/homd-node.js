@@ -51,5 +51,5 @@ const server = http.createServer(options, app).listen(app.get('port'), function(
     //debug('Express server listening on port ' + server.address().port);
     console.log(`HOMD-Node.js server is listening on ${CFG.HOSTNAME}:${process.env.PORT}`)
 });
-server.timeout = 20 * 1000
+//server.timeout = 20 * 1000
 
