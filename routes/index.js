@@ -182,7 +182,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
     console.log('POST::get_annotations_counts')
     console.log(req.query)
     
-    req.setTimeout(240000);
+    //req.setTimeout(240000);
     //const searchText = req.body.intext
     const searchText = req.query.txt
     let anno //= req.body.anno_type  // ncbi or prokka
