@@ -76,13 +76,13 @@
 // }
 function get_annotations_counts(intext){
     var xmlhttp
-    if (window.XMLHttpRequest) {
+    //if (window.XMLHttpRequest) {
        // for modern browsers
-       xmlhttp = new XMLHttpRequest();
-    } else {
+    xmlhttp = new XMLHttpRequest();
+    //} else {
        // for IE6, IE5
-       xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
+    //   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    //}
     
     var args = {intext:intext}
     document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'

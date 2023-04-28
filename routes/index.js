@@ -184,9 +184,8 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
     
     //req.setTimeout(240000);
     //const searchText = req.body.intext
-    const searchText = req.query.txt
+    const searchTextLower = req.query.txt
     let anno //= req.body.anno_type  // ncbi or prokka
-    const searchTextLower = searchText.toLowerCase()
     let acc,pid,gid,prod,organism=''
     let pgid_count=0, ppid_count=0,ngid_count=0, npid_count=0
     //var pgid_collector = {}, ngid_collector = {}
