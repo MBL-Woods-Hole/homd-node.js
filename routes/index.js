@@ -50,46 +50,40 @@ router.get('/idn=SEQF(\\d+.\\d)', function index(req, res) {
 })
 router.get('/get_seq=*', function jb_seq(req, res) {
   // jbrowse link to retrieve seq
-  console.log('get_seq=')
+  //console.log('get_seq=')
    // https://www.homd.org/get_seq=xxxxxx&type=yy
    // https://www.homd.org/get_seq=KDE71052.1&type=aa
   var url = req.url;
-  console.log(url)
+  //console.log(url)
   // /get_seq=KDE71052.1&type=aa
-  let type,pid,sp,db
+  let type,pid,sp,db,anno
   sp = url.split('&')
   type = sp[1].split('=')[1].toLowerCase() // must be aa,AA,na or NA 
   pid = sp[0].split('=')[1]
-  console.log(type,pid)
+  //console.log(type,pid)
   // PROKKA pids (starting as SEQFXXX
   if(type === 'aa'){   // NCBI
       if(pid.substring(0,4) === 'SEQF'){
           db = "`PROKKA_faa`.`protein_seq`"
+          anno = 'PROKKA'
        }else{
           db = "`NCBI_faa`.`protein_seq`"
+          anno = 'NCBI'
        }
   }else{   //req.body.type == 'na':   // NCBI  na
       if(pid.substring(0,4) === 'SEQF'){
           db = "`PROKKA_ffn`.`ffn_seq`"
+          anno = 'PROKKA'
        }else{
           db = "`NCBI_ffn`.`ffn_seq`"
+          anno = 'NCBI'
        }
   }
   let q = 'SELECT seq_id, mol_id, UNCOMPRESS(seq_compressed) as seq FROM ' + db
   q += " WHERE protein_id='" + pid + "'"
-  console.log(q)
-  // const filename = 'testJBDownload.seq'  // path.basename(url);
-//   let testdata ='prokka|SEQF6480.1|SEQF6480.1_01131|SEQF6480.1_JAGXBX010000003.1|hypothetical protein|840|279|21850|22689'
-// testdata +='prokka|SEQF6480.1|SEQF6480.1_01132|SEQF6480.1_JAGXBX010000003.1|hypothetical protein|675|224|23035|23709'
-// testdata +='prokka|SEQF6480.1|SEQF6480.1_01133|SEQF6480.1_JAGXBX010000003.1|hypothetical protein|297|98|24089|24385'
-// testdata +='prokka|SEQF6480.1|SEQF6480.1_01134|SEQF6480.1_JAGXBX010000003.1|hypothetical protein|1014|337|24456|25469'
-//   //res.download(testdata)
-//   const fileData = testdata
+  //console.log(q)
   
-  const fileName = 'HOMD_'+pid+'_'+type.toUpperCase()+'.fasta'
-  
-
-  
+  const fileName = 'HOMD_'+anno+'_'+pid+'_'+type.toUpperCase()+'.fasta'
   
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
@@ -108,11 +102,9 @@ router.get('/get_seq=*', function jb_seq(req, res) {
        gid = rows[0].seq_id
        acc = rows[0].mol_id
        const seqstr = (rows[0].seq).toString()
-       //console.log('seqstr',seqstr)
-       //console.log(seqstr.length)
        const arr = helpers.chunkSubstr(seqstr, 100)
        sequence += arr.join('\n')
-       show = ">"+gid+' | '+pid+' | '+acc+' | length '+length.toString()+'\n'
+       show = ">"+gid+' | '+anno+' | Protein_id: '+pid+' | Accession: '+acc+' | length '+length.toString()+'\n'
        
     }
     show = show + sequence
@@ -121,17 +113,10 @@ router.get('/get_seq=*', function jb_seq(req, res) {
       'Content-Type': 'text/plain',
       'Cache-Control': 'no-cache, no-store, must-revalidate',
       'Pragma': 'no-cache',
-       'Expires': '0',
+      'Expires': '0',
     })
-
-    //const download = Buffer.from(fileData.toString(), 'base64')
     res.end(show)
-    //res.send(JSON.stringify({html:html,length:length}))
-    
   })
-  
-  
- 
 })
 router.get('/download_file', function search(req, res) {
   //let page = req.params.pagecode
