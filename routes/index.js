@@ -212,11 +212,11 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
        let full_data = '',orfrow,datapath
        //https://github.com/uhop/stream-json/wiki/StreamValues
        //let q = queries.get_annotation_query4(searchTextLower, anno_type)
-       if(CFG.SITE === 'localmbl'){
-         datapath = path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
-       }else{
+       //if(CFG.SITE === 'localmbl'){
+       //  datapath = path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
+       //}else{
           datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
-       }
+       //}
        let grep_cmd = '/usr/bin/grep -ih "'+searchTextLower+'" '+ datapath  //homd_ORFSearch*
         console.log('grep_cmd',grep_cmd)
         let child = spawn("/bin/sh", ['-c',grep_cmd], { 
@@ -224,9 +224,30 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
         }) 
     
         child.stdout.on('data', (data) => {
-          //console.log(`child stdout:\n${data}`);
-            console.log('gathering grep data')
+            //console.log(`child stdout:\n${data}`);
+            //console.log(typeof data);
+            let pts = data.toString().split('\n')
+            let len = pts.length
+            let i_first = pts[0]
+            let i_last = pts[len-1]
+            // okay if starts with ncbi or prokka
+            // but otherwise: it is the end of previous line
+            //console.log('first',i_first) 
+            // will always start with either ncbi or prokka
+            // partial if 1)not end with number or 2)not 9 parts
+            //console.log('last',i_last)
+            for(let i in pts){
+               //console.log('i=',pts[i])
+               
+            }
+            //console.log('gathering grep data', data.toString().substring(0,10))
             //console.log(data.toString())
+            
+            
+            
+            
+            
+            
             full_data += data.toString()
         });
 
