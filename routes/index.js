@@ -161,7 +161,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
             //console.log(typeof data)
             let lines = data.toString().split('\n')
             for(let i in lines){
-               let pts = lines[i].split('|').trim()
+               let pts = lines[i].split('|')
                //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
                if(pts.length === 9){
                    anno = pts[0]
