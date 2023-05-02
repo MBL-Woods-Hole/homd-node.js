@@ -268,7 +268,7 @@ function view_anno_items(gid, anno, search_text){
    var table = document.getElementById("anno-pre-table");   
    var rows = table.getElementsByTagName("tr");   
    for(i = 0; i < rows.length; i++){ 
-       console.log(rows[i])
+       //console.log(rows[i])
       rows[i].style.backgroundColor = 'white'
    } 
    
