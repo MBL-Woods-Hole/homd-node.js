@@ -10,16 +10,19 @@ const fs = require('fs-extra');
 
 available_environments = ['testing','development','production'];
 
+
 if(available_environments.indexOf(process.argv[2]) !== -1){
   process.env.NODE_ENV = process.argv[2];
 }else{
   console.log('Available Environments:', available_environments);
   if(CFG.HOSTNAME === '??????') {  // put production host here
       process.env.NODE_ENV = 'production';  // homd
+      process.env.NODE_OPTIONS = '--max-old-space-size=4096'
   }else if(CFG.HOSTNAME === 'localhost'){
       process.env.NODE_ENV = 'development';  // homddev
   }else{
       process.env.NODE_ENV = 'development';
+      process.env.NODE_OPTIONS = '--max-old-space-size=4096'
   }
 }
 console.log("Setting Environment to: "+process.env.NODE_ENV);
@@ -44,7 +47,7 @@ app.set('port', process.env.PORT);
 console.log('DATABASE: =>'+NODE_BACTERIAL_DATABASE+'<= (Databases set in config/db-connection.js)');
 
 
-console.log('ENV:',app.get('env'),'(Environment set in bin/www)');
+console.log('ENV:',app.get('env'),'(Environment set in bin/homd-node-start)');
 console.log('HOSTNAME: '+CFG.HOSTNAME)
 
 const server = http.createServer(options, app).listen(app.get('port'), function(){

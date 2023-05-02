@@ -116,7 +116,7 @@ function get_16s_seq(seqid) {
 }
 //
 function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
-    console.log('in NNNA',type,pid)
+    //console.log('in NNNA',type,pid)
     // on genome explore page
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
@@ -179,9 +179,9 @@ function clear_gene_srch(){
    gene_srch_text = document.getElementById("gene_srch_text")
    gene_srch_text.value=''
 }
-function select_annotation(gid,anno){
-    console.log(gid,anno)
-}
+// function select_annotation(gid,anno){
+//     console.log(gid,anno)
+// }
 function genome_table_search(){
    form = document.getElementById('gtable_search')
    if(form.gene_srch.value === ''){
@@ -238,7 +238,7 @@ function clear_phylum(){
    dd.value = ''
 }
 function select_anno(anno, search_text){
-   console.log('in anno_srch')
+   //console.log('in anno_srch')
    let form = document.createElement("form");
    document.getElementsByTagName("body")[0].appendChild(form);
    form.setAttribute("method", "post");
@@ -260,7 +260,7 @@ function select_anno(anno, search_text){
 }
 
 function view_anno_items(gid, anno, search_text){
-   console.log('in anno_srch')
+   //console.log('in anno_srch')
    var args = {}
    args.gid = gid
    args.anno = anno
@@ -268,7 +268,7 @@ function view_anno_items(gid, anno, search_text){
    var table = document.getElementById("anno-pre-table");   
    var rows = table.getElementsByTagName("tr");   
    for(i = 0; i < rows.length; i++){ 
-       console.log(rows[i])
+       //console.log(rows[i])
       rows[i].style.backgroundColor = 'white'
    } 
    

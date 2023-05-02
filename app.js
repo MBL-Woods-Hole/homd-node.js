@@ -13,6 +13,7 @@ global.app_root = path.resolve(__dirname);
 const C = require('./public/constants');
 const helpers   = require(app_root + '/routes/helpers/helpers')
 const fs = require('fs-extra');
+//require('dotenv').config({path: __dirname + '/.env'})
 //const createIframe = require("node-iframe");
 const express = require('express');
 const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
