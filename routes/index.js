@@ -161,7 +161,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
             //console.log(typeof data)
             let lines = data.toString().split('\n')
             for(let i in lines){
-               let pts = lines[i].split('|')
+               let pts = lines[i].split('|').trim()
                //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
                if(pts.length === 9){
                    anno = pts[0]
@@ -169,16 +169,16 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
                    if(lines[i].substring(0,4) === 'ncbi'){
                         if(gid in req.session.site_search_result_ncbi){
                                 //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
-                                req.session.site_search_result_ncbi[gid].push(orfrow)
+                                req.session.site_search_result_ncbi[gid].push(lines[i])
                         }else{
-                                req.session.site_search_result_ncbi[gid] = [orfrow]
+                                req.session.site_search_result_ncbi[gid] = [lines[i]]
                         }
                         npid_count += 1
                    }else if(lines[i].substring(0,6) === 'prokka'){
                         if(gid in req.session.site_search_result_prokka){
-                                req.session.site_search_result_prokka[gid].push(orfrow)
+                                req.session.site_search_result_prokka[gid].push(lines[i])
                         }else{
-                                req.session.site_search_result_prokka[gid] = [orfrow]
+                                req.session.site_search_result_prokka[gid] = [lines[i]]
                         }
                         ppid_count += 1
                    }else{
