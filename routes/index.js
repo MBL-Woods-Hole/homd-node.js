@@ -158,7 +158,39 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
         child.stdout.on('data', (data) => {
           //console.log(`child stdout:\n${data}`);
             //console.log('gathering grep data')
-            //console.log(data.toString())
+            //console.log(typeof data)
+            let lines = data.toString().split('\n')
+            for(let i in lines){
+               let pts = lines[i].split('|')
+               //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
+               if(pts.length === 9){
+                   anno = pts[0]
+                   gid = pts[1]
+                   if(lines[i].substring(0,4) === 'ncbi'){
+                        if(gid in req.session.site_search_result_ncbi){
+                                //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
+                                req.session.site_search_result_ncbi[gid].push(orfrow)
+                        }else{
+                                req.session.site_search_result_ncbi[gid] = [orfrow]
+                        }
+                        npid_count += 1
+                   }else if(lines[i].substring(0,6) === 'prokka'){
+                        if(gid in req.session.site_search_result_prokka){
+                                req.session.site_search_result_prokka[gid].push(orfrow)
+                        }else{
+                                req.session.site_search_result_prokka[gid] = [orfrow]
+                        }
+                        ppid_count += 1
+                   }else{
+                       //console.log('-i',lines[i])
+                       //pass for now
+                   }
+                }else{
+                   //console.log('remainder',lines[i])
+                }
+            }
+            
+            
             full_data += data.toString()
         });
 
@@ -171,18 +203,18 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
           if(code === 0){
              //console.log(full_data)
         
-            var pgid_collector = {}
-            var ngid_collector = {}
-            var sp = full_data.split('\n');
-            for (var i = 0; i < sp.length; i++) {
+            //var pgid_collector = {}
+            //var ngid_collector = {}
+            //var sp = full_data.split('\n');
+//            for (var i = 0; i < sp.length; i++) {
                 //console.log(sp[i])
-                orfrow = sp[i].trim()
+//                orfrow = sp[i].trim()
                 //console.log('orfrow',orfrow)
-                var sub = orfrow.split('|');
-                    if(sub.length == 9){
+//                var sub = orfrow.split('|');
+//                    if(sub.length == 9){
                     //if(sub[0]){
-                        anno = sub[0]
-                        gid = sub[1]
+//                        anno = sub[0]
+ //                       gid = sub[1]
                         // pid = sub[2]
     //                     acc =sub[3]  // molecule
     //                     prod=sub[4]
@@ -195,34 +227,34 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
                         // if(gid in C.genome_lookup){
     //                         organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
     //                     }
-                        if(anno == 'ncbi'){
+//                        if(anno == 'ncbi'){
                             //ngid_collector[gid] = 1
                             // if(! req.session.site_search_result_ncbi){
     //                             req.session.site_search_result_ncbi = {}
     //                         }
-                            if(gid in req.session.site_search_result_ncbi){
-                                //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
-                                req.session.site_search_result_ncbi[gid].push(orfrow)
-                            }else{
-                                req.session.site_search_result_ncbi[gid] = [orfrow]
-                            }
-                            npid_count += 1
-                        }else if(anno === 'prokka'){
+                           //  if(gid in req.session.site_search_result_ncbi){
+//                                 //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
+//                                 req.session.site_search_result_ncbi[gid].push(orfrow)
+//                             }else{
+//                                 req.session.site_search_result_ncbi[gid] = [orfrow]
+//                             }
+//                             npid_count += 1
+//                        }else if(anno === 'prokka'){
                             //pgid_collector[gid] = 1
                             // if(! req.session.site_search_result_prokka){
     //                             req.session.site_search_result_prokka = {}
     //                         }
-                            if(gid in req.session.site_search_result_prokka){
-                                req.session.site_search_result_prokka[gid].push(orfrow)
-                            }else{
-                                req.session.site_search_result_prokka[gid] = [orfrow]
-                            }
-                            ppid_count += 1
-                        }
+                           //  if(gid in req.session.site_search_result_prokka){
+//                                 req.session.site_search_result_prokka[gid].push(orfrow)
+//                             }else{
+//                                 req.session.site_search_result_prokka[gid] = [orfrow]
+//                             }
+//                             ppid_count += 1
+//                        }
                     
                         //ar.push(sub[0].replace(/['"]+/g, ''));
-                    }
-            }
+//                    }
+//            }
             pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
             ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
             console.log('req.session.site_search_result_prokka.length',pgid_count)
