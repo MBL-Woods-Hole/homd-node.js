@@ -206,22 +206,22 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
 //         
 //         
 //    }else{
-       req.session.site_search_result_ncbi = {}
-       req.session.site_search_result_prokka = {}
+        req.session.site_search_result_ncbi = {}
+        req.session.site_search_result_prokka = {}
 
-       let full_data = '',orfrow,datapath
-       //https://github.com/uhop/stream-json/wiki/StreamValues
-       //let q = queries.get_annotation_query4(searchTextLower, anno_type)
+        let full_data = '',orfrow,datapath
+        //https://github.com/uhop/stream-json/wiki/StreamValues
+        //let q = queries.get_annotation_query4(searchTextLower, anno_type)
 
-       if(CFG.SITE === 'localmbl' || CFG.SITE === 'localhome'){
+        if(CFG.SITE === 'localmbl' || CFG.SITE === 'localhome'){
           datapath = path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
-       }else{
+        }else{
           datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
-       //}
-       let grep_cmd = '/usr/bin/grep -ih "'+searchTextLower+'" '+ datapath  //homd_ORFSearch*
+        }
+        let grep_cmd = '/usr/bin/grep -ih "'+searchTextLower+'" '+ datapath  //homd_ORFSearch*
         console.log('grep_cmd',grep_cmd)
         let child = spawn("/bin/sh", ['-c',grep_cmd], { 
-          //, (err, stdout, stderr) => {
+            //, (err, stdout, stderr) => {
         }) 
     
         child.stdout.on('data', (data) => {
@@ -273,60 +273,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
         child.on('exit', function (code, signal) {
           console.log('child process exited with ' +`code ${code} and signal ${signal}`);
           if(code === 0){
-             //console.log(full_data)
-        
-            //var pgid_collector = {}
-            //var ngid_collector = {}
-            //var sp = full_data.split('\n');
-//            for (var i = 0; i < sp.length; i++) {
-                //console.log(sp[i])
-//                orfrow = sp[i].trim()
-                //console.log('orfrow',orfrow)
-//                var sub = orfrow.split('|');
-//                    if(sub.length == 9){
-                    //if(sub[0]){
-//                        anno = sub[0]
- //                       gid = sub[1]
-                        // pid = sub[2]
-    //                     acc =sub[3]  // molecule
-    //                     prod=sub[4]
-    //                     length_na = sub[5]
-    //                     length_aa = sub[6]
-    //                     start = sub[7]
-    //                     stop = sub[8]
-                        // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
-                        //console.log('gid',gid)
-                        // if(gid in C.genome_lookup){
-    //                         organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-    //                     }
-//                        if(anno == 'ncbi'){
-                            //ngid_collector[gid] = 1
-                            // if(! req.session.site_search_result_ncbi){
-    //                             req.session.site_search_result_ncbi = {}
-    //                         }
-                           //  if(gid in req.session.site_search_result_ncbi){
-//                                 //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
-//                                 req.session.site_search_result_ncbi[gid].push(orfrow)
-//                             }else{
-//                                 req.session.site_search_result_ncbi[gid] = [orfrow]
-//                             }
-//                             npid_count += 1
-//                        }else if(anno === 'prokka'){
-                            //pgid_collector[gid] = 1
-                            // if(! req.session.site_search_result_prokka){
-    //                             req.session.site_search_result_prokka = {}
-    //                         }
-                           //  if(gid in req.session.site_search_result_prokka){
-//                                 req.session.site_search_result_prokka[gid].push(orfrow)
-//                             }else{
-//                                 req.session.site_search_result_prokka[gid] = [orfrow]
-//                             }
-//                             ppid_count += 1
-//                        }
-                    
-                        //ar.push(sub[0].replace(/['"]+/g, ''));
-//                    }
-//            }
+
             pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
             ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
             console.log('req.session.site_search_result_prokka.length',pgid_count)
@@ -340,10 +287,9 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
              res.send(JSON.stringify([0,0,0,0]))
           }
         });
-//    }  // end if ret
-
 
 })
+
 //
 //  Global Site Search
 //
