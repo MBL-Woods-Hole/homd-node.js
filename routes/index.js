@@ -161,7 +161,8 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
             //console.log(typeof data)
             let lines = data.toString().split('\n')
             for(let i in lines){
-               let pts = lines[i].split('|')
+               let line = lines[i].trim()
+               let pts = line.split('|')
                //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
                if(pts.length === 9){
                    anno = pts[0]
@@ -169,29 +170,29 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
                    if(lines[i].substring(0,4) === 'ncbi'){
                         if(gid in req.session.site_search_result_ncbi){
                                 //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
-                                req.session.site_search_result_ncbi[gid].push(lines[i])
+                                req.session.site_search_result_ncbi[gid].push(line)
                         }else{
-                                req.session.site_search_result_ncbi[gid] = [lines[i]]
+                                req.session.site_search_result_ncbi[gid] = [line]
                         }
                         npid_count += 1
                    }else if(lines[i].substring(0,6) === 'prokka'){
                         if(gid in req.session.site_search_result_prokka){
-                                req.session.site_search_result_prokka[gid].push(lines[i])
+                                req.session.site_search_result_prokka[gid].push(line)
                         }else{
-                                req.session.site_search_result_prokka[gid] = [lines[i]]
+                                req.session.site_search_result_prokka[gid] = [line]
                         }
                         ppid_count += 1
                    }else{
-                       //console.log('-i',lines[i])
+                       //console.log('-i',line)
                        //pass for now
                    }
                 }else{
-                   //console.log('remainder',lines[i])
+                   //console.log('remainder',line)
                 }
             }
             
             
-            full_data += data.toString()
+            //full_data += data.toString()
         });
 
         child.stderr.on('data', (data) => {
@@ -261,7 +262,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
             console.log('req.session.site_search_result_ncbi.length',ngid_count)
             //console.log(ar,ar.length)
             //console.log(gid_count, pid_count)
-      console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
+            console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
             res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
           }else{  //end if code ==0
              console.log('nothing found')

@@ -639,7 +639,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     console.log(req.body)
     console.log('req.session.site_search_result_prokka.length',Object.keys(req.session.site_search_result_prokka).length)
     console.log('req.session.site_search_result_ncbi.length',Object.keys(req.session.site_search_result_ncbi).length)
-    console.log(req.session.site_search_result_ncbi)
+    //console.log(req.session.site_search_result_ncbi)
     let anno = req.body.anno
     let search_text = req.body.search_text
     let gid = req.body.gid
