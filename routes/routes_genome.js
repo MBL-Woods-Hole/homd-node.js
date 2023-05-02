@@ -643,7 +643,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     let anno = req.body.anno
     let search_text = req.body.search_text
     let gid = req.body.gid
-    let rowobj,start,stop,locstart,locstop,seqacc,ssp = ''
+    let rowobj,start,stop,locstart,locstop,seqacc,tmp,ssp = ''
     if(C.genome_lookup[gid].subspecies){
        ssp = C.genome_lookup[gid].subspecies+' '
     }
