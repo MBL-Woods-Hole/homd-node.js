@@ -261,7 +261,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
             console.log('req.session.site_search_result_ncbi.length',ngid_count)
             //console.log(ar,ar.length)
             //console.log(gid_count, pid_count)
-      
+      console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
             res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
           }else{  //end if code ==0
              console.log('nothing found')

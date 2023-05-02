@@ -637,6 +637,8 @@ function render_explorer(req, res, args){
 router.post('/make_anno_search_table', function make_anno_search_table (req, res) {
     console.log('in POST:make_anno_search_table')
     console.log(req.body)
+    console.log('req.session.site_search_result_prokka.length',Object.keys(req.session.site_search_result_prokka).length)
+    console.log('req.session.site_search_result_ncbi.length',Object.keys(req.session.site_search_result_ncbi).length)
     let anno = req.body.anno
     let search_text = req.body.search_text
     let gid = req.body.gid
@@ -649,6 +651,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     let html = "<table id='annotation-table' class='table'>"
     html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><th>Product</th></tr>'
     let datastringlist = req.session['site_search_result_'+anno][gid]
+    //console.log(datastringlist)
     var re = new RegExp(search_text,"gi");
     for(i in datastringlist){
        // [
@@ -662,7 +665,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
 //           '4382117',                 start
 //           '4384144'                  stop
 //         ]
-
+//console.log(datastringlist[i])
        let row = datastringlist[i].split('|')
        //console.log(row)
        
