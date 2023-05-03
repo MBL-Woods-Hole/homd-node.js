@@ -644,113 +644,107 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     let search_text = req.body.search_text
     let gid = req.body.gid
     let rowobj,start,stop,locstart,locstop,seqacc,tmp,ssp = ''
-    if(C.genome_lookup[gid].subspecies){
+    if(C.genome_lookup[gid] && C.genome_lookup[gid].subspecies){
        ssp = C.genome_lookup[gid].subspecies+' '
     }
-    let organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+ssp+C.genome_lookup[gid].ccolct
-    
+    let organism = ''
+    if(C.genome_lookup[gid]){
+        organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+ssp+C.genome_lookup[gid].ccolct
+    }
     let html = "<table id='annotation-table' class='table'>"
     html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><th>Product</th></tr>'
-    let datastringlist = req.session['site_search_result_'+anno][gid]
-    //console.log(datastringlist)
-    var re = new RegExp(search_text,"gi");
-    for(i in datastringlist){
-       // [
-//           'prokka',                  anno
-//           'SEQF6084.1',              gid
-//           'SEQF6084.1_04360',        pid
-//           'SEQF6084.1_CP009935.1',   acc (molecule)
-//           'Methionine--tRNA ligase', product
-//           '2028',                    length_na
-//           '675',                     length_aa
-//           '4382117',                 start
-//           '4384144'                  stop
-//         ]
-//console.log(datastringlist[i])
-       let row = datastringlist[i].split('|')
-       //console.log(row)
-       
-       rowobj = {
-            anno:row[0],
-            gid:row[1],
-            pid:row[2],
-            acc:row[3],
-            product:row[4],
-            length_na:row[5],
-            length_aa:row[6],
-            start:row[7],
-            stop:row[8],
-            }
-        if(rowobj.start[0] === "<" ){
-	      start = parseInt(rowobj.start.substring(1))
-	    }else{
-	      start = parseInt(rowobj.start)
-	    }
-	    if(rowobj.stop[0] === ">" ){ 
-	      stop = parseInt(rowobj.stop.substring(1))
-	    }else{ 
-	      stop = parseInt(rowobj.stop)
-	    }
+    let dataObj = req.session['site_search_result_'+anno][gid]
+    //console.log('datastringlist',datastringlist)
+    //const vals = Object.keys(datastringlist).map(key => datastringlist[key]);
+    var pid_list = dataObj.map(function mapSearchObj (el) { return el.pid; })
+    let q = queries.get_annotation_query2(gid, anno, pid_list)
+    // SELECT accession, gc, protein_id, product, length_na, length_aa, `start`, `stop`'
+    console.log(q)
+    TDBConn.query(q, (err, rows) => {
+		if (err) {
+			console.log(err)
+			return
+		}
+		if(rows.length === 0){
+			console.log('nothing found')
+		   //ncbi_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+		}else{
+			var re = new RegExp(search_text,"gi");
+			for(i in rows){
+	           let row = rows[i]
+	           //console.log('row-i ',i, rows[i])
+			   //let row = datastringlist[i].split('|')
+			   //console.log(row)
+				if(row.start[0] === "<" ){
+				  start = parseInt(row.start.substring(1))
+				}else{
+				  start = parseInt(row.start)
+				}
+				if(row.stop[0] === ">" ){ 
+				  stop = parseInt(row.stop.substring(1))
+				}else{ 
+				  stop = parseInt(row.stop)
+				}
 	 
-	    if(start > stop){ 
-	     tmp = stop 
-	     stop = start 
-	     start = tmp 
-	    } 
+				if(start > stop){ 
+				 tmp = stop 
+				 stop = start 
+				 start = tmp 
+				} 
 	 
-	    locstart = start - 500 
-	    locstop = stop + 500 
-	    //size = stop - start 
+				locstart = start - 500 
+				locstop = stop + 500 
+				//size = stop - start 
 	 
-	    if(locstart < 1){ 
-	      locstart = 1 
-	    } 
-	    let db = anno+'_'+gid
-        html += '<tr>'
-        rowobj.acc = (rowobj.acc).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
-        
-        html += "<td>"+rowobj.acc+"</td>"   // molecule
-        rowobj.pid = (rowobj.pid).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
-        
-        html += "<td>"+rowobj.pid
-            if(anno === "prokka"){ 
-                seqacc = rowobj.acc.replace('_','|')
-            }else{
-                seqacc = gid +'|'+ rowobj.acc
-            }
-            let jbtracks = "DNA,homd,prokka,ncbi"
-            let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
-            let highlight = seqacc+":"+start.toString()+".."+stop.toString()
-		    html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
+				if(locstart < 1){ 
+				  locstart = 1 
+				} 
+				let db = anno+'_'+gid
+				html += '<tr>'
+				row.accession = (row.accession).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
 		
-        html += "</td>"   // pid (and JB)
-        
-        html += "<td>"+rowobj.length_na
-            html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+gid+"')\"><b>NA</b></a>]"
-        html += "</td>"   // NA length
-        html += "<td>"+rowobj.length_aa
-            html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+gid+"')\"><b>AA</b></a>]"
-        html += "</td>"   // AA length
-        html += "<td>"+start+'-'+stop+"</td>"   // Range
-        //if(rowobj.product.indexOf(search_text) != -1){
-        //  console.log('FOUND1 '+rowobj.product+' '+search_text)
-        
-        rowobj.product = rowobj.product.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
-        //  console.log('FOUND2 '+rowobj.product)
-        //}
-        html += "<td>"+rowobj.product+"</td>"   // product
-        
-        html += "</tr>"
-       
-    }
-    html += "</table>"
+				html += "<td>"+row.accession+"</td>"   // molecule
+				row.protein_id = (row.protein_id).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+		
+				html += "<td>"+row.protein_id
+					if(anno === "prokka"){ 
+						seqacc = row.accession.replace('_','|')
+					}else{
+						seqacc = gid +'|'+ row.accession
+					}
+					let jbtracks = "DNA,homd,prokka,ncbi"
+					let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
+					let highlight = seqacc+":"+start.toString()+".."+stop.toString()
+					html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
+		
+				html += "</td>"   // pid (and JB)
+		
+				html += "<td>"+row.length_na
+					html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+row.protein_id+"','"+db+"','"+row.accession+"','"+organism+"','"+row.product+"','"+gid+"')\"><b>NA</b></a>]"
+				html += "</td>"   // NA length
+				html += "<td>"+row.length_aa
+					html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+row.protein_id+"','"+db+"','"+row.accession+"','"+organism+"','"+row.product+"','"+gid+"')\"><b>AA</b></a>]"
+				html += "</td>"   // AA length
+				html += "<td>"+start+'-'+stop+"</td>"   // Range
+				//if(rowobj.product.indexOf(search_text) != -1){
+				//  console.log('FOUND1 '+rowobj.product+' '+search_text)
+		
+				row.product = row.product.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+				//  console.log('FOUND2 '+rowobj.product)
+				//}
+				html += "<td>"+row.product+"</td>"   // product
+		
+				html += "</tr>"
+	   
+			}
+			html += "</table>"
+	
+			res.send(html)
     
-    res.send(html)
-    
-
-
+        }
+    })
 })
-router.post('/orf_search', function orf_search (req, res) {
+router.post('/orf_search', function orf_search(req, res) {
     console.log('in POST:orf_search')
     console.log(req.body)
     let anno = req.body.anno

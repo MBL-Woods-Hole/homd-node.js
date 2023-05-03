@@ -177,7 +177,102 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     
     res.send(create_protein_table(anno, resultObj, search_text))
 })
+router.post('/get_annotations_counts_mysql', function get_annotations_counts_mysql(req, res) {
+    console.log('POST::get_annotations_counts_mysql')
+    console.log(req.body)
+    let searchText = req.body.intext
+    
+    let searchTextLower = req.body.intext.toLowerCase()
+    let obj,data,gid,organism=''
+   let pgenome_count=0, pgene_count=0,ngenome_count=0, ngene_count=0
+   // V10.1
+   //https://github.com/uhop/stream-json/wiki/StreamValues
+  
+   let q_ncbi   = queries.get_annotation_query4(searchTextLower, 'ncbi')
+   let q_prokka = queries.get_annotation_query4(searchTextLower, 'prokka')
+   
+   console.log('running prokka',q_prokka)
+   //const jsonStream = StreamValues.withParser();
+//   if(CFG.ENV === 'development'){
 
+        
+        
+    TDBConn.query(q_prokka, (err, prows) => {
+            if (err) {
+                console.log(err)
+                return
+            }
+            
+    
+            //req.session.site_search_result.prokka = {}
+            //req.session.site_search_result.ncbi = {}
+            if(prows.length === 0){
+               //prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+               console.log('prokka nothing found')
+            }else{
+       
+               for(let i in prows){
+                gid = prows[i].gid
+                
+                if(! req.session.site_search_result_prokka ){
+                  //req.session.site_search_result = {}
+                  req.session.site_search_result_prokka = {}
+                  //req.session.site_search_result.ncbi = {}
+                }
+                
+                if(gid in req.session.site_search_result_prokka){
+                    req.session.site_search_result_prokka[gid].push({pid:prows[i].protein_id, product:prows[i].product})
+                }else{
+                    req.session.site_search_result_prokka[gid] = [{pid:prows[i].protein_id, product:prows[i].product}]
+                }
+            
+                pgene_count += 1 
+         
+               }
+            }
+            
+            // run second query here
+            console.log('running ncbi',q_ncbi)
+            TDBConn.query(q_ncbi, (err, nrows) => {
+                if (err) {
+                    console.log(err)
+                    return
+                }
+                if(nrows.length === 0){
+                    console.log('ncbi nothing found')
+                   //ncbi_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+                }else{
+                    for(let i in nrows){
+                    gid = nrows[i].gid
+                    if(! req.session.site_search_result_ncbi ){
+                      //req.session.site_search_result = {}
+                      req.session.site_search_result_ncbi = {}
+                      //req.session.site_search_result.ncbi = {}
+                    }
+                    
+                    if(gid in req.session.site_search_result_ncbi){
+                        req.session.site_search_result_ncbi[gid].push({pid:nrows[i].protein_id, product:nrows[i].product})
+                    }else{
+                        req.session.site_search_result_ncbi[gid] = [{pid:nrows[i].protein_id, product:nrows[i].product}]
+                    }
+                    ngene_count += 1 
+         
+                   }
+                }
+                
+                
+                pgenome_count = Object.keys(req.session.site_search_result_prokka).length
+                ngenome_count = Object.keys(req.session.site_search_result_ncbi).length
+                //console.log('x-ncbi',ngenome_count, ngene_count)
+                // returning to: public/js/search.js
+                res.send([pgenome_count, pgene_count, ngenome_count, ngene_count])
+                
+            })
+           
+        
+    })
+
+})
 router.get('/get_annotations_counts', function get_annotations_counts(req, res) {
     console.log('POST::get_annotations_counts')
     console.log(req.query)
@@ -239,7 +334,6 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
                    gid = pts[1]
                    if(lines[i].substring(0,4) === 'ncbi'){
                         if(gid in req.session.site_search_result_ncbi){
-                                //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
                                 req.session.site_search_result_ncbi[gid].push(line)
                         }else{
                                 req.session.site_search_result_ncbi[gid] = [line]

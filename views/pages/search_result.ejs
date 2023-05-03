@@ -160,7 +160,7 @@ table th,td{
   var min_size = 4
   $(document).ready(function(){
       if(intext.length > min_size){
-         get_annotations_counts(intext)
+         get_annotations_counts_mysql(intext)
       }else{
           document.getElementById('ncbi_count_div').innerHTML = 'word too small: <= '+min_size.toString()
           document.getElementById('prokka_count_div').innerHTML = 'word too small: <= '+min_size.toString()

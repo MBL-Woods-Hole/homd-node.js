@@ -74,6 +74,7 @@ module.exports.get_annotation_query4 = (search_text, anno_type) => {
   }
   return qSelectAnno
 }
+
 module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
   let qSelectContigs = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE seq_id = '"+gid+"'"
