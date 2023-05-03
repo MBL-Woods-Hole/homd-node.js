@@ -653,10 +653,11 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     }
     let html = "<table id='annotation-table' class='table'>"
     html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><th>Product</th></tr>'
-    let dataObj = req.session['site_search_result_'+anno][gid]
+    //let dataObj = req.session['site_search_result_'+anno][gid]
     //console.log('datastringlist',datastringlist)
     //const vals = Object.keys(datastringlist).map(key => datastringlist[key]);
-    var pid_list = dataObj.map(function mapSearchObj (el) { return el.pid; })
+    //var pid_list = dataObj.map(function mapSearchObj (el) { return el.pid; })
+    var pid_list = req.session['site_search_result_'+anno][gid]
     let q = queries.get_annotation_query2(gid, anno, pid_list)
     // SELECT accession, gc, protein_id, product, length_na, length_aa, `start`, `stop`'
     console.log(q)
