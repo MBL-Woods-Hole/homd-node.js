@@ -13,7 +13,7 @@ function get_annotations_counts(intext){
     var args = {intext:intext}
     document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
     document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
-    xmlhttp.open("GET", "/get_annotations_counts?txt="+intext, true);
+    xmlhttp.open("POST", "/get_annotations_counts_grep", true);
     //xmlhttp.timeout = 1200000;  // 10,000; timeout in ms, 10 seconds
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
@@ -54,8 +54,8 @@ function get_annotations_counts(intext){
         document.getElementById('ncbi_count_div').innerHTML = html2
       }
     }
-    //xmlhttp.send(JSON.stringify(args));
-    xmlhttp.send(null);
+    xmlhttp.send(JSON.stringify(args));
+    //xmlhttp.send(null);
 }
 
 function anno_search(search_text, anno){

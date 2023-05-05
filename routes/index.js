@@ -178,34 +178,15 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     res.send(create_protein_table(anno, resultObj, search_text))
 })
 
-router.get('/get_annotations_counts_grep', function get_annotations_counts_grep(req, res) {
-    console.log('POST::get_annotations_counts')
-    console.log(req.query)
+router.post('/get_annotations_counts_grep', function get_annotations_counts_grep(req, res) {
+    console.log('POST::get_annotations_counts_grep')
+    console.log(req.body)
     
-    //req.setTimeout(240000);
-    //const searchText = req.body.intext
-    const searchTextLower = req.query.txt
+    const searchTextLower = req.body.intext
     let anno //= req.body.anno_type  // ncbi or prokka
     let acc,pid,gid,prod,organism=''
     let pgid_count=0, ppid_count=0,ngid_count=0, npid_count=0
-    //var pgid_collector = {}, ngid_collector = {}
-//     if(req.query.ret){
-//         for(let gid in req.session.site_search_result_prokka){
-//             ppid_count += req.session.site_search_result_prokka[gid].length
-//         }
-//         for(let gid in req.session.site_search_result_ncbi){
-//             npid_count += req.session.site_search_result_ncbi[gid].length
-//         }
-//         pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
-//         ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
-//         console.log('req.session.site_search_result_prokka.length',pgid_count)
-//         console.log('req.session.site_search_result_ncbi.length',ngid_count)
-//         //console.log(ar,ar.length)
-//         //console.log(gid_count, pid_count)
-//         res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
-//         
-//         
-//    }else{
+    
         req.session.site_search_result_ncbi = {}
         req.session.site_search_result_prokka = {}
 
@@ -260,9 +241,6 @@ router.get('/get_annotations_counts_grep', function get_annotations_counts_grep(
                    //console.log('remainder',line)
                 }
             }
-            
-            
-            //full_data += data.toString()
 
         });
 
