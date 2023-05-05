@@ -44,8 +44,8 @@ button {
 }
 </style>
 <% cfg = JSON.parse(config) %> 
-<% ncbid = JSON.parse(ncbi_data) %>
-<% prokkad = JSON.parse(prokka_data) %>
+
+<% lendata = JSON.parse(lendata) %>
 <% pgids_sorted = JSON.parse(psorted) %>
 <% ngids_sorted = JSON.parse(nsorted) %>
 <% orgs = JSON.parse(org_obj) %>
@@ -69,10 +69,10 @@ button {
     </div>    
     <center>
     <% if(anno==="ncbi"){ %>
-    <%   data = ncbid %>
+    
     <%   gids = ngids_sorted %>
     <% }else{ %>
-    <%   data = prokkad %>
+    
     <%   gids = pgids_sorted %>
     <% } %>
     <div id='orf_table_div'>
@@ -85,7 +85,7 @@ button {
           <td><%= orgs[gid] %></td>
           
           
-          <td class='center'><%= data[gid].length %></td>
+          <td class='center'><%= lendata[gid].length %></td>
           <td><button onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View item(s) in table</button></td>
           <td>
             <a class='pill pill-mediumorchid' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>

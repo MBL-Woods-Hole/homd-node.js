@@ -655,29 +655,30 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     //console.log(datastringlist)
     var re = new RegExp(search_text,"gi");
     for(i in datastringlist){
-       // [
-//           'prokka',                  anno
-//           'SEQF6084.1',              gid
-//           'SEQF6084.1_04360',        pid
-//           'SEQF6084.1_CP009935.1',   acc (molecule)
-//           'Methionine--tRNA ligase', product
-//           '2028',                    length_na
-//           '675',                     length_aa
-//           '4382117',                 start
-//           '4384144'                  stop
-//         ]
+//        [
+//   'SEQF10003.1',
+//   'SEQF10003.1_00360',
+//   'SEQF10003.1_AUZI01000009.1',
+//   'ISL3 family transposase ISFnu5',
+//   '633',
+//   '210',
+//   '',
+//   '792',
+//   '160'
+// ]
 //console.log(datastringlist[i])
        let row = datastringlist[i].split('|')
        //console.log(row)
        
        rowobj = {
-            anno:row[0],
-            gid:row[1],
-            pid:row[2],
-            acc:row[3],
-            product:row[4],
-            length_na:row[5],
-            length_aa:row[6],
+            gid:row[0],
+            pid:row[1],
+            acc:row[2],
+            
+            product:row[3],
+            length_na:row[4],
+            length_aa:row[5],
+            gene:row[6],
             start:row[7],
             stop:row[8],
             }
@@ -754,19 +755,22 @@ router.post('/orf_search', function orf_search (req, res) {
     console.log('in POST:orf_search')
     console.log(req.body)
     let anno = req.body.anno
-    let search_text = req.body.search_text,org_list = {}
-    let gid='',otid = '',organism=''
+    let search_text = req.body.search_text
+    let org_list = {}
+    let gid='',otid = '',organism='',send_data
     if(!req.session.site_search_result_prokka || !req.session.site_search_result_ncbi){
       res.send('Session Expired')
       return
     }
     let prokka_data_keys = Object.keys(req.session.site_search_result_prokka).sort()
     let ncbi_data_keys   = Object.keys(req.session.site_search_result_ncbi).sort()
-    //console.log('ncbi_data',ncbi_data_keys)
+    //console.log('ncbi_data',req.session.site_search_result_ncbi)
     if(anno === 'ncbi' && ncbi_data_keys.length > 0){
        gid = ncbi_data_keys[0]
+       send_data = req.session.site_search_result_ncbi
     }else if(anno === 'prokka' && prokka_data_keys.length > 0){
        gid = prokka_data_keys[0]
+       send_data = req.session.site_search_result_prokka
     }
     let tmpgid,ssp=''
     
@@ -792,22 +796,17 @@ router.post('/orf_search', function orf_search (req, res) {
            org_list[tmpgid] = organism
         }
     }
+    
     res.render('pages/genome/annotation_keyword', {
-
         title: 'HOMD :: text search',
         pgname: 'genome/explorer', // for AboutThisPage 
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        //user: JSON.stringify(req.user || {}),
-        
         anno:anno,
         search_text: search_text,
-        //all_annos: JSON.stringify(args.allAnnosObj),
-        //anno_type: args.annoType,
-        //page_data: JSON.stringify(args.pageData),
-        
-        ncbi_data: JSON.stringify(req.session.site_search_result_ncbi),
-        prokka_data: JSON.stringify(req.session.site_search_result_prokka),
+        lendata: JSON.stringify(send_data),
+        //ncbi_length: req.session.site_search_result_ncbi.length
+        //prokka_data: JSON.stringify(req.session.site_search_result_prokka),
         psorted: JSON.stringify(prokka_data_keys),
         nsorted: JSON.stringify(ncbi_data_keys),
         org_obj: JSON.stringify(org_list),

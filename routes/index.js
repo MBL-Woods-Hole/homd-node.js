@@ -163,20 +163,20 @@ router.get('/oralgen', function oralgen(req, res) {
 //
 //
 
-router.post('/anno_protein_search', function anno_protein_search(req, res) {
-    console.log('in POST::anno_protein_search')
-    console.log(req.body)
-    let obj,data,gid,name,resultObj={}
-    let anno = req.body.anno
-    let search_text = req.body.search_text
-    //console.log(req.session)
-    console.log('chose:',anno,Object.values(req.session['site_search_result_'+anno]).length)
-    //console.log('sess-ncbi',req.session.site_search_result.ncbi)
-    
-    resultObj = req.session['site_search_result_'+anno]
-    
-    res.send(create_protein_table(anno, resultObj, search_text))
-})
+// router.post('/anno_protein_search', function anno_protein_search(req, res) {
+//     console.log('in POST::anno_protein_search')
+//     console.log(req.body)
+//     let obj,data,gid,name,resultObj={}
+//     let anno = req.body.anno
+//     let search_text = req.body.search_text
+//     //console.log(req.session)
+//     console.log('chose:',anno,Object.values(req.session['site_search_result_'+anno]).length)
+//     //console.log('sess-ncbi',req.session.site_search_result.ncbi)
+//     
+//     resultObj = req.session['site_search_result_'+anno]
+//     
+//     res.send(create_protein_table(anno, resultObj, search_text))
+// })
 async function selectquery(sqlquery){
     return new Promise((resolve, reject) => {
         TDBConn.query(sqlquery,(err,result)=>{
@@ -189,12 +189,12 @@ async function selectquery(sqlquery){
         });
     });
 }
-router.post('/get_annotations_counts', function get_annotations_counts(req, res) {
+router.post('/get_annotations_counts_fulltext', function get_annotations_counts_fulltext(req, res) {
     console.log('POST::get_annotations_counts')
     console.log(req.body)
     const searchText = req.body.intext
     const searchTextLower = req.body.intext.toLowerCase()
-    let obj,data,gid,nrows,prows,anno
+    let obj,data,gid,pid,nrows,prows,anno,pts
     let pgenome_count=0, pgene_count=0,ngenome_count=0, ngene_count=0
    // V10.1
    //https://github.com/uhop/stream-json/wiki/StreamValues
@@ -202,7 +202,7 @@ router.post('/get_annotations_counts', function get_annotations_counts(req, res)
     //let q = queries.get_annotation_query3(searchTextLower)
     let q_ncbi = queries.get_annotation_query5(searchTextLower,'ncbi')
     let q_prokka = queries.get_annotation_query5(searchTextLower,'prokka')
-    console.log(q_prokka)
+    console.log(q_ncbi)
    //const jsonStream = StreamValues.withParser();
 //   if(CFG.ENV === 'development'){
        Promise.all([selectquery(q_ncbi), selectquery(q_prokka)])
@@ -214,15 +214,18 @@ router.post('/get_annotations_counts', function get_annotations_counts(req, res)
                   req.session.site_search_result_ncbi[gid] = []
               }else{
                   for(let i in nrows){
-                    gid = nrows[i].gid
+                    //console.log(nrows[i].search_text)
+                    pts = nrows[i].search_text.split('|')
+                    gid = pts[0]
+                    pid = pts[1]
                     if(! req.session.site_search_result_ncbi ){
                       req.session.site_search_result_ncbi = {}
                     }
                 
                     if(gid in req.session.site_search_result_ncbi){
-                        req.session.site_search_result_ncbi[gid].push(nrows[i].protein_id)
+                        req.session.site_search_result_ncbi[gid].push(nrows[i].search_text)
                     }else{
-                        req.session.site_search_result_ncbi[gid] = [nrows[i].protein_id]
+                        req.session.site_search_result_ncbi[gid] = [nrows[i].search_text]
                     }
                     ngene_count += 1 
          
@@ -235,7 +238,9 @@ router.post('/get_annotations_counts', function get_annotations_counts(req, res)
                }else{
        
                    for(let i in prows){
-                    gid = prows[i].gid
+                    pts = prows[i].search_text.split('|')
+                    gid = pts[0]
+                    pid = pts[1]
                 
                     if(! req.session.site_search_result_prokka ){
                      
@@ -244,9 +249,9 @@ router.post('/get_annotations_counts', function get_annotations_counts(req, res)
                     }
                 
                     if(gid in req.session.site_search_result_prokka){
-                        req.session.site_search_result_prokka[gid].push(prows[i].protein_id)
+                        req.session.site_search_result_prokka[gid].push(prows[i].search_text)
                     }else{
-                        req.session.site_search_result_prokka[gid] = [prows[i].protein_id]
+                        req.session.site_search_result_prokka[gid] = [prows[i].search_text]
                     }
                     pgene_count += 1 
          
@@ -254,7 +259,11 @@ router.post('/get_annotations_counts', function get_annotations_counts(req, res)
                }
               pgenome_count = Object.keys(req.session.site_search_result_prokka).length
               ngenome_count = Object.keys(req.session.site_search_result_ncbi).length
-                //console.log('x-ncbi',ngenome_count, ngene_count)
+              //pgenome_count = Object.keys(req.session.site_search_result_prokka).length
+              //genome_count = Object.keys(req.session.site_search_result_ncbi).length
+              //console.log(req.session.site_search_result_ncbi)
+              console.log('x-ncbi',ngenome_count, ngene_count)
+              console.log('x-prokka',pgenome_count, pgene_count)
                 // returning to: public/js/search.js
               console.log('Returning:',ngenome_count,pgenome_count)
               res.send([pgenome_count, pgene_count, ngenome_count, ngene_count])
@@ -263,117 +272,7 @@ router.post('/get_annotations_counts', function get_annotations_counts(req, res)
         
 
 })
-router.get('/get_annotations_counts_grep', function get_annotations_counts_grep(req, res) {
-    console.log('POST::get_annotations_counts')
-    console.log(req.query)
-    
-    //req.setTimeout(240000);
-    //const searchText = req.body.intext
-    const searchTextLower = req.query.txt
-    let anno //= req.body.anno_type  // ncbi or prokka
-    let acc,pid,gid,prod,organism=''
-    let pgid_count=0, ppid_count=0,ngid_count=0, npid_count=0
-    //var pgid_collector = {}, ngid_collector = {}
-//     if(req.query.ret){
-//         for(let gid in req.session.site_search_result_prokka){
-//             ppid_count += req.session.site_search_result_prokka[gid].length
-//         }
-//         for(let gid in req.session.site_search_result_ncbi){
-//             npid_count += req.session.site_search_result_ncbi[gid].length
-//         }
-//         pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
-//         ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
-//         console.log('req.session.site_search_result_prokka.length',pgid_count)
-//         console.log('req.session.site_search_result_ncbi.length',ngid_count)
-//         //console.log(ar,ar.length)
-//         //console.log(gid_count, pid_count)
-//         res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
-//         
-//         
-//    }else{
-        req.session.site_search_result_ncbi = {}
-        req.session.site_search_result_prokka = {}
 
-        let full_data = '',orfrow,datapath
-        //https://github.com/uhop/stream-json/wiki/StreamValues
-        //let q = queries.get_annotation_query4(searchTextLower, anno_type)
-
-        if(CFG.SITE === 'localmbl' || CFG.SITE === 'localhome'){
-          datapath = path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
-        }else{
-          datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
-        }
-        let grep_cmd = '/usr/bin/grep -ih "'+searchTextLower+'" '+ datapath  //homd_ORFSearch*
-        console.log('grep_cmd',grep_cmd)
-        let child = spawn("/bin/sh", ['-c',grep_cmd], { 
-            //, (err, stdout, stderr) => {
-        }) 
-    
-        child.stdout.on('data', (data) => {
-
-          //console.log(`child stdout:\n${data}`);
-            //console.log('gathering grep data')
-            //console.log(typeof data)
-            let lines = data.toString().split('\n')
-            for(let i in lines){
-               let line = lines[i].trim()
-               let pts = line.split('|')
-               //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
-               if(pts.length === 9){
-                   anno = pts[0]
-                   gid = pts[1]
-                   if(lines[i].substring(0,4) === 'ncbi'){
-                        if(gid in req.session.site_search_result_ncbi){
-                                //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
-                                req.session.site_search_result_ncbi[gid].push(line)
-                        }else{
-                                req.session.site_search_result_ncbi[gid] = [line]
-                        }
-                        npid_count += 1
-                   }else if(lines[i].substring(0,6) === 'prokka'){
-                        if(gid in req.session.site_search_result_prokka){
-                                req.session.site_search_result_prokka[gid].push(line)
-                        }else{
-                                req.session.site_search_result_prokka[gid] = [line]
-                        }
-                        ppid_count += 1
-                   }else{
-                       //console.log('-i',line)
-                       //pass for now
-                   }
-                }else{
-                   //console.log('remainder',line)
-                }
-            }
-            
-            
-            //full_data += data.toString()
-
-        });
-
-        child.stderr.on('data', (data) => {
-          console.error(`child stderr:\n${data}`);
-        });
-    
-        child.on('exit', function (code, signal) {
-          console.log('child process exited with ' +`code ${code} and signal ${signal}`);
-          if(code === 0){
-
-            pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
-            ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
-            console.log('req.session.site_search_result_prokka.length',pgid_count)
-            console.log('req.session.site_search_result_ncbi.length',ngid_count)
-            //console.log(ar,ar.length)
-            //console.log(gid_count, pid_count)
-            console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
-            res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
-          }else{  //end if code ==0
-             console.log('nothing found')
-             res.send(JSON.stringify([0,0,0,0]))
-          }
-        });
-
-})
 
 //
 //  Global Site Search
