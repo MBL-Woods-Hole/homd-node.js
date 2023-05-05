@@ -178,7 +178,7 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     res.send(create_protein_table(anno, resultObj, search_text))
 })
 
-router.get('/get_annotations_counts', function get_annotations_counts(req, res) {
+router.get('/get_annotations_counts_grep', function get_annotations_counts_grep(req, res) {
     console.log('POST::get_annotations_counts')
     console.log(req.query)
     
