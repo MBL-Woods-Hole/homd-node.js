@@ -659,6 +659,8 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     //var pid_list = dataObj.map(function mapSearchObj (el) { return el.pid; })
     var pid_list = req.session['site_search_result_'+anno][gid]
     let q = queries.get_annotation_query2(gid, anno, pid_list)
+    //let q = "SELECT * FROM `ANNO_search`.`prokka_orf_search`"
+    //q += " WHERE MATCH(search_text) AGAINST (+"+search_text+" IN BOOLEAN MODE)"
     // SELECT accession, gc, protein_id, product, length_na, length_aa, `start`, `stop`'
     console.log(q)
     TDBConn.query(q, (err, rows) => {
