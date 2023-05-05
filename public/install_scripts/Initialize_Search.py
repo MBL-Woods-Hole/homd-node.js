@@ -45,6 +45,7 @@ def run(args):
     q_to += " VALUES('%s','%s')"
     # https://stackoverflow.com/questions/45669229/does-mysqls-fulltext-search-return-the-same-results-for-myisam-and-innodb#:~:text=There%20are%20actually%20some%20notable,excluded%20in%20the%20MyISAM%20results.
     # LOAD DATA LOCAL INFILE 'homd_PROKKA_ORF_Search-1-sql.tsv' INTO TABLE prokka_orf_search FIELDS TERMINATED BY '\t' IGNORE 1 LINES (protein_id,search_text);
+    # LOAD DATA LOCAL INFILE 'homd_NCBI_ORF_Search-9-sql.tsv' INTO TABLE ncbi_orf_search FIELDS TERMINATED BY '\t' IGNORE 1 LINES (protein_id,search_text);
     for num in integers:
         seqidnumber = args.num+num
         q2 = q_from % (seqidnumber)
