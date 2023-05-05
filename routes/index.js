@@ -210,6 +210,7 @@ router.post('/get_annotations_counts_mysql', function get_annotations_counts_mys
        .then(results => {
               nrows = results[0]
               prows = results[1]
+              /////////// NCBI /////////
               if(nrows.length === 0){
                   console.log('No ncbi rows')
                   req.session.site_search_result_ncbi[gid] = []
@@ -229,7 +230,7 @@ router.post('/get_annotations_counts_mysql', function get_annotations_counts_mys
          
                    }
               }
-              /////////////////////////////
+              //////// PROKKA /////////////////////
               if(prows.length === 0){
                //prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
                    console.log('prokka nothing found')
@@ -255,15 +256,11 @@ router.post('/get_annotations_counts_mysql', function get_annotations_counts_mys
                }
               pgenome_count = Object.keys(req.session.site_search_result_prokka).length
               ngenome_count = Object.keys(req.session.site_search_result_ncbi).length
-                //console.log('x-ncbi',ngenome_count, ngene_count)
-                // returning to: public/js/search.js
+              console.log('x-ncbi',ngenome_count, ngene_count)
+              // returning to: public/js/search.js
               res.send([pgenome_count, pgene_count, ngenome_count, ngene_count])
               
         })
-        
-        
-          
-          
 
 
 })
