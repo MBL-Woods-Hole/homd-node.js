@@ -177,7 +177,69 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     
     res.send(create_protein_table(anno, resultObj, search_text))
 })
+router.post('/get_annotations_counts', function get_annotations_counts(req, res) {
+    console.log('POST::get_annotations_counts')
+    console.log(req.body)
+    const searchText = req.body.intext
+    const searchTextLower = req.body.intext.toLowerCase()
+    let obj,data,gid,organism='',anno
+   let prokka_genome_count=0,prokka_gene_count=0,ncbi_genome_count=0,ncbi_gene_count=0
+   // V10.1
+   //https://github.com/uhop/stream-json/wiki/StreamValues
+   
+   //let q = queries.get_annotation_query3(searchTextLower)
+   let q_ncbi = queries.get_annotation_query5(searchTextLower,'ncbi')
+   let q_prokka = queries.get_annotation_query5(searchTextLower,'prokka')
+   console.log(q_prokka)
+   //const jsonStream = StreamValues.withParser();
+//   if(CFG.ENV === 'development'){
+   TDBConn.query(q_prokka, (err, rows) => {
+    if (err) {
+        console.log(err)
+        return
+    }
+    //console.log('rows')
+    //console.log(rows)
+    console.log('Query Success Num Rows: '+rows.length.toString())
+    req.session.site_search_result = {}
+    req.session.site_search_result.prokka = {}
+    req.session.site_search_result.ncbi = {}
+    if(rows.length === 0){
+       //prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
+    }else{
+       
+       for(let i in rows){
+         gid = rows[i].gid
+         anno = rows[i].anno
+         if(gid in C.genome_lookup){
+            organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
+         }
+         if( anno === 'prokka'){
+            if(gid in req.session.site_search_result.prokka){
+              req.session.site_search_result.prokka[gid].push({name:organism, pid:rows[i].protein_id, product:rows[i].product})
+            }else{
+              req.session.site_search_result.prokka[gid] = [{name:organism, pid:rows[i].protein_id, product:rows[i].product}]
+            }
+            
+            prokka_gene_count += 1 
+         }else if(anno === 'ncbi'){
+            if(gid in req.session.site_search_result.ncbi){
+              req.session.site_search_result.ncbi[gid].push({name:organism, pid:rows[i].protein_id, product:rows[i].product})
+            }else{
+              req.session.site_search_result.ncbi[gid] = [{name:organism, pid:rows[i].protein_id, product:rows[i].product}]
+            }
+            
+            ncbi_gene_count +=1
+         }
+       }
+    }
+    prokka_genome_count = Object.keys(req.session.site_search_result.prokka).length
+    ncbi_genome_count = Object.keys(req.session.site_search_result.ncbi).length
+    
+    res.send([prokka_genome_count,prokka_gene_count,ncbi_genome_count,ncbi_gene_count])
+    })
 
+})
 router.get('/get_annotations_counts_grep', function get_annotations_counts_grep(req, res) {
     console.log('POST::get_annotations_counts')
     console.log(req.query)
