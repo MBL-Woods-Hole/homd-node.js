@@ -42,6 +42,9 @@ button {
     cursor:pointer;
     color:blue;
 }
+.highlight{
+   background: #7AC97A;
+}
 </style>
 <% cfg = JSON.parse(config) %> 
 <% ncbid = JSON.parse(ncbi_data) %>
@@ -63,8 +66,13 @@ button {
     <div id="srch">
     Search Results:
     <table>
-      <tr><td>NCBI</td><td><%= ngids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('ncbi','<%= search_text %>')">Select</a></td></tr>
-      <tr><td>PROKKA</td><td><%= pgids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('prokka','<%= search_text %>')">Select</a></td></tr>
+      <% if(anno==="ncbi"){ %>
+         <tr id='ncbi' class='highlight'><td>NCBI</td><td><%= ngids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('ncbi','<%= search_text %>')">Select</a></td></tr>
+         <tr id='prokka'><td>PROKKA</td><td><%= pgids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('prokka','<%= search_text %>')">Select</a></td></tr>
+      <% }else{ %>
+         <tr id='ncbi'><td>NCBI</td><td><%= ngids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('ncbi','<%= search_text %>')">Select</a></td></tr>
+         <tr id='prokka' class='highlight'><td>PROKKA</td><td><%= pgids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('prokka','<%= search_text %>')">Select</a></td></tr>
+      <% } %>
     </table>
     </div>    
     <center>
