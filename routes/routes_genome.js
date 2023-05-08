@@ -643,7 +643,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     let anno = req.body.anno
     let search_text = req.body.search_text
     let gid = req.body.gid
-    let rowobj,start,stop,locstart,locstop,seqacc,tmp,ssp = ''
+    let rowobj, start, stop, locstart, locstop, seqacc, tmp, ssp = ''
     if(C.genome_lookup[gid].subspecies){
        ssp = C.genome_lookup[gid].subspecies+' '
     }
@@ -674,7 +674,6 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             gid:row[0],
             pid:row[1],
             acc:row[2],
-            
             product:row[3],
             length_na:row[4],
             length_aa:row[5],
