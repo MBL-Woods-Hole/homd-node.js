@@ -37,14 +37,17 @@ def run(args):
     # prokka first
     
     #q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"` "+args.limit
-    q_from = "SELECT seq_id,protein_id,IFNULL(accession, ''),product,IFNULL(length_na, ''),IFNULL(length_aa, ''),IFNULL(gene, ''),stop,start"
+    q_from = "SELECT seq_id,protein_id,IFNULL(accession, ''),product,IFNULL(length_na, ''),IFNULL(length_aa, 
+''),IFNULL(gene, ''),stop,start"
     q_from += " FROM `"+args.from_db+"`.`"+args.from_table+"`"
     q_from += " WHERE seq_id like 'SEQF%s%%' "
     
     q_to = "INSERT ignore into `"+args.to_db+"`.`"+args.to_table+"` (protein_id, search_text)"
     q_to += " VALUES('%s','%s')"
-    # https://stackoverflow.com/questions/45669229/does-mysqls-fulltext-search-return-the-same-results-for-myisam-and-innodb#:~:text=There%20are%20actually%20some%20notable,excluded%20in%20the%20MyISAM%20results.
-    # LOAD DATA LOCAL INFILE 'homd_PROKKA_ORF_Search-1-sql.tsv' INTO TABLE prokka_orf_search FIELDS TERMINATED BY '\t' IGNORE 1 LINES (protein_id,search_text);
+    # 
+https://stackoverflow.com/questions/45669229/does-mysqls-fulltext-search-return-the-same-results-for-myisam-and-innodb#:~:text=There%20are%20actually%20some%20notable,excluded%20in%20the%20MyISAM%20results.
+    # LOAD DATA LOCAL INFILE 'homd_PROKKA_ORF_Search-1-sql.tsv' INTO TABLE prokka_orf_search FIELDS TERMINATED BY 
+'\t' IGNORE 1 LINES (protein_id,search_text);
     for num in integers:
         seqidnumber = args.num+num
         q2 = q_from % (seqidnumber)
@@ -93,9 +96,11 @@ if __name__ == "__main__":
 
     #parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
     #                                                help=" ")
-    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-ORF',
+    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", 
+default='homdData-ORF',
                                                     help=" ")
-    parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
+    parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", 
+default = './',
                          help = "Not usually needed if -host is accurate")
     parser.add_argument("-db", "--database", required = False, action = 'store', dest = "dbanno", default='NCBI',
                         help = "PROKKA or NCBI")
@@ -104,7 +109,8 @@ if __name__ == "__main__":
                         help = "choices=['homd',  'localhost']")
     parser.add_argument("-n", "--num",   required=False,  action="store",    dest = "num", default='1',
                                                     help="")
-    parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", default=False,
+    parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", 
+default=False,
                                                     help="verbose print()")
     parser.add_argument("-l", "--limit",   required=False,  action="store",    dest = "limit", default='',
                                                     help="") 
