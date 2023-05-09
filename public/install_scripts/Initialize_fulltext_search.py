@@ -24,10 +24,10 @@ def run(args):
     master_lookup ={}
     if args.dbanno.upper() == 'PROKKA':
         args.from_db = 'PROKKA_meta'
-        args.to_table = 'prokka_orf_search'
+        args.to_table = 'prokka_orf_search2'
     elif args.dbanno.upper() == 'NCBI':
         args.from_db = 'NCBI_meta'
-        args.to_table = 'ncbi_orf_search'
+        args.to_table = 'ncbi_orf_search2'
     else:
         sys.exit('no DB')
     args.from_table = 'orf'
@@ -37,17 +37,19 @@ def run(args):
     # prokka first
     
     #q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"` "+args.limit
-    q_from = "SELECT seq_id,protein_id,IFNULL(accession, ''),product,IFNULL(length_na, ''),IFNULL(length_aa, 
-''),IFNULL(gene, ''),stop,start"
+    #q_from = "SELECT seq_id,protein_id,IFNULL(accession, ''),product,IFNULL(length_na, ''),IFNULL(length_aa, ''),IFNULL(gene, ''),stop,start"
+    q_from = "SELECT protein_id, product"
+    
     q_from += " FROM `"+args.from_db+"`.`"+args.from_table+"`"
     q_from += " WHERE seq_id like 'SEQF%s%%' "
     
-    q_to = "INSERT ignore into `"+args.to_db+"`.`"+args.to_table+"` (protein_id, search_text)"
+    #q_to = "INSERT ignore into `"+args.to_db+"`.`"+args.to_table+"` (protein_id, search_text)"
+    q_to = "INSERT ignore into `"+args.to_db+"`.`"+args.to_table+"` (protein_id, product)"
     q_to += " VALUES('%s','%s')"
     # 
-https://stackoverflow.com/questions/45669229/does-mysqls-fulltext-search-return-the-same-results-for-myisam-and-innodb#:~:text=There%20are%20actually%20some%20notable,excluded%20in%20the%20MyISAM%20results.
+    #https://stackoverflow.com/questions/45669229/does-mysqls-fulltext-search-return-the-same-results-for-myisam-and-innodb#:~:text=There%20are%20actually%20some%20notable,excluded%20in%20the%20MyISAM%20results.
     # LOAD DATA LOCAL INFILE 'homd_PROKKA_ORF_Search-1-sql.tsv' INTO TABLE prokka_orf_search FIELDS TERMINATED BY 
-'\t' IGNORE 1 LINES (protein_id,search_text);
+    #'\t' IGNORE 1 LINES (protein_id,search_text);
     for num in integers:
         seqidnumber = args.num+num
         q2 = q_from % (seqidnumber)
@@ -58,11 +60,15 @@ https://stackoverflow.com/questions/45669229/does-mysqls-fulltext-search-return-
             print('no data')
         for row in result:
             #print(row)
-            pid = row[1]
-            prod = row[3].replace("'","")  #product
-            text = '|'.join([row[0],pid,row[2],prod,row[4],row[5],row[6],row[7],row[8]])
+            # pid = row[1]
+#             prod = row[3].replace("'","")  #product
+#             text = '|'.join([row[0],pid,row[2],prod,row[4],row[5],row[6],row[7],row[8]])
+            
+            pid = row[0]
+            prod = row[1].replace("'","")  #product
+            
             #print(text)
-            q = q_to % (pid, text)
+            q = q_to % (pid, prod)
             #print(q)
             if pid:
                 myconn.execute_no_fetch(q)

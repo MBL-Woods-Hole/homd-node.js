@@ -493,7 +493,7 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
 router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
-  let data1,data2={},data3,data4,data5,links
+  let data1={},data2={},data3,data4,data5,links
   if(otid && req.session.ttable_filter){
       req.session.ttable_filter.otid = otid
   }
@@ -543,8 +543,6 @@ router.get('/tax_description', function tax_description(req, res){
   // subsp 377  Peptostreptococcaceae [XI][G-7] [Eubacterium] yurii subsps. yurii & margaretiae
   link_exceptions['377'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/Eubacterium-yurii-margaretiae'}
   
-  data1 = C.taxon_lookup[otid]
-  helpers.print(['data1',data1])
   if(C.dropped_taxids.indexOf(otid) !== -1){
      //helpers.print(data1)
      let message = "That is a dropped TaxonID: "+otid
@@ -562,7 +560,12 @@ router.get('/tax_description', function tax_description(req, res){
       req.flash('TRY AGAIN')
       res.send('That Taxon ID: ('+otid+') was not found1 - Use the Back Arrow and select another')
       return
-    }
+  }
+    
+  data1 = C.taxon_lookup[otid]
+  helpers.print(['data1',data1])
+  
+  
   
   // find list pids that are known use this taxon
   //let plist = Object.values(C.phage_lookup).filter(item => (item.host_otid === otid)) 
