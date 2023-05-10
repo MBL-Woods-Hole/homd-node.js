@@ -164,6 +164,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
                let line = lines[i].trim()
                let pts = line.split('|')
                //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
+               
                if(pts.length === 9){
                    anno = pts[0]
                    gid = pts[1]
@@ -262,7 +263,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
             console.log('req.session.site_search_result_ncbi.length',ngid_count)
             let size = Buffer.byteLength(JSON.stringify(req.session))
             console.log('req.session size(KB):',size/1024)
-    
+            // on dev  req.session size(KB): 38827.2841796875  == 38 MB
             //console.log(ar,ar.length)
             //console.log(gid_count, pid_count)
             console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
