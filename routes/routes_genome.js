@@ -637,7 +637,7 @@ function render_explorer(req, res, args){
 router.post('/make_anno_search_table', function make_anno_search_table (req, res) {
     console.log('in POST:make_anno_search_table')
     console.log(req.body)
-    let anno_path = path.join(CFG.PATH_TO_TMP,req.session.id)
+    let anno_path = path.join(CFG.PATH_TO_TMP,req.session.anno_search_dirname)
     let anno = req.body.anno
     let search_text = req.body.search_text
     let selected_gid = req.body.gid
@@ -870,7 +870,7 @@ router.post('/orf_search', function orf_search (req, res) {
     let anno = req.body.anno
     let search_text = req.body.search_text,org_list = {}
     let gid='',otid = '',organism=''
-    let anno_path = path.join(CFG.PATH_TO_TMP,req.session.id)
+    let anno_path = path.join(CFG.PATH_TO_TMP,req.session.anno_search_dirname)
     let site_search_result = {}
     let tmpgid,ssp=''
     fs.access(anno_path, function(error) {

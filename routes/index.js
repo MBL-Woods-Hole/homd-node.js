@@ -14,6 +14,7 @@ const queries = require(app_root + '/routes/queries')
 // let timestamp = new Date() // getting current timestamp
 // var rs_ds = ds.get_datasets( () => {
 var browseDir = require("browse-directory");
+const { v4: uuidv4 } = require('uuid'); // I chose v4 ‒ you can select othersc
 //const Stream = require( 'stream-json/streamers/StreamArray');
 /* GET home page. */
 router.get('/', function index(req, res) {
@@ -101,10 +102,10 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     let anno = req.body.anno
     let search_text = req.body.search_text
     //console.log(req.session)
-    console.log('chose:',anno,Object.values(req.session['site_search_result_'+anno]).length)
+    //console.log('chose:',anno,Object.values(req.session['site_search_result_'+anno]).length)
     //console.log('sess-ncbi',req.session.site_search_result.ncbi)
     
-    resultObj = req.session['site_search_result_'+anno]
+    //resultObj = req.session['site_search_result_'+anno]
     
     res.send(create_protein_table(anno, resultObj, search_text))
 })
@@ -113,7 +114,9 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
     console.log('POST::get_annotations_counts')
     console.log(req.query)
     
-    req.setTimeout(240000);
+    var dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
+    
+    //req.setTimeout(240000);
     //const searchText = req.body.intext
     const searchText = req.query.txt
     let anno //= req.body.anno_type  // ncbi or prokka
@@ -133,9 +136,9 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
        }
        let grep_cmd = '/usr/bin/grep -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
         console.log('grep_cmd',grep_cmd)
-        let anno_path = path.join(CFG.PATH_TO_TMP,req.session.id)
-        let panno_path = path.join(CFG.PATH_TO_TMP,req.session.id,'prokka')
-        let nanno_path = path.join(CFG.PATH_TO_TMP,req.session.id,'ncbi')
+        let anno_path = path.join(CFG.PATH_TO_TMP,dirname)
+        let panno_path = path.join(CFG.PATH_TO_TMP,dirname,'prokka')
+        let nanno_path = path.join(CFG.PATH_TO_TMP,dirname,'ncbi')
         fs.mkdirSync(anno_path)
         fs.mkdirSync(panno_path)
         fs.mkdirSync(nanno_path)
@@ -211,6 +214,8 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
             // req.session size(KB): 278541.3876953125 == 278 MB  family
             //console.log(ar,ar.length)
             //console.log(gid_count, pid_count)
+            req.session.anno_search_dirname = dirname
+            
             console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
             res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
           }else{  //end if code ==0

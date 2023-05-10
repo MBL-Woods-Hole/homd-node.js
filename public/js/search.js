@@ -52,6 +52,7 @@ function get_annotations_counts(intext){
         
         }
         document.getElementById('ncbi_count_div').innerHTML = html2
+        
       }
     }
     //xmlhttp.send(JSON.stringify(args));
