@@ -120,27 +120,9 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
     const searchTextLower = searchText.toLowerCase()
     let acc,pid,gid,prod,organism=''
     let pgid_count=0, ppid_count=0,ngid_count=0, npid_count=0
-    //var pgid_collector = {}, ngid_collector = {}
-//     if(req.query.ret){
-//         for(let gid in req.session.site_search_result_prokka){
-//             ppid_count += req.session.site_search_result_prokka[gid].length
-//         }
-//         for(let gid in req.session.site_search_result_ncbi){
-//             npid_count += req.session.site_search_result_ncbi[gid].length
-//         }
-//         pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
-//         ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
-//         console.log('req.session.site_search_result_prokka.length',pgid_count)
-//         console.log('req.session.site_search_result_ncbi.length',ngid_count)
-//         //console.log(ar,ar.length)
-//         //console.log(gid_count, pid_count)
-//         res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
-//         
-//         
-//    }else{
-       req.session.site_search_result_ncbi = {}
-       req.session.site_search_result_prokka = {}
-
+   
+       let prokka_gid_lookup = {}, ncbi_gid_lookup = {}
+       
        let full_data = '',orfrow,datapath
        //https://github.com/uhop/stream-json/wiki/StreamValues
        //let q = queries.get_annotation_query4(searchTextLower, anno_type)
@@ -151,6 +133,17 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
        }
        let grep_cmd = '/usr/bin/grep -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
         console.log('grep_cmd',grep_cmd)
+        let anno_path = path.join(CFG.PATH_TO_TMP,req.session.id)
+        let panno_path = path.join(CFG.PATH_TO_TMP,req.session.id,'prokka')
+        let nanno_path = path.join(CFG.PATH_TO_TMP,req.session.id,'ncbi')
+        fs.mkdirSync(anno_path)
+        fs.mkdirSync(panno_path)
+        fs.mkdirSync(nanno_path)
+        let pfile_name = path.join(panno_path,'data')
+        let nfile_name = path.join(nanno_path,'data')
+        
+        var pstream = fs.createWriteStream(pfile_name, {flags:'a'});
+        var nstream = fs.createWriteStream(nfile_name, {flags:'a'});
         let child = spawn("/bin/sh", ['-c',grep_cmd], { 
           //, (err, stdout, stderr) => {
         }) 
@@ -162,27 +155,25 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
             let lines = data.toString().split('\n')
             for(let i in lines){
                let line = lines[i].trim()
+               
                let pts = line.split('|')
                //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
                
                if(pts.length === 9){
                    anno = pts[0]
                    gid = pts[1]
+                   
                    if(lines[i].substring(0,4) === 'ncbi'){
-                        if(gid in req.session.site_search_result_ncbi){
-                                //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
-                                req.session.site_search_result_ncbi[gid].push(line)
-                        }else{
-                                req.session.site_search_result_ncbi[gid] = [line]
-                        }
-                        npid_count += 1
+                        //let fname_path = path.join(anno_path,'ncbi_'+gid)
+                          nstream.write(line + "\n");
+                          ncbi_gid_lookup[gid]=1
+                          npid_count += 1
                    }else if(lines[i].substring(0,6) === 'prokka'){
-                        if(gid in req.session.site_search_result_prokka){
-                                req.session.site_search_result_prokka[gid].push(line)
-                        }else{
-                                req.session.site_search_result_prokka[gid] = [line]
-                        }
+                        
+                        pstream.write(line + "\n");
+                        prokka_gid_lookup[gid]=1
                         ppid_count += 1
+                        
                    }else{
                        //console.log('-i',line)
                        //pass for now
@@ -202,68 +193,22 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
     
         child.on('exit', function (code, signal) {
           console.log('child process exited with ' +`code ${code} and signal ${signal}`);
+          pstream.end();
+          nstream.end();
           if(code === 0){
              //console.log(full_data)
         
-            //var pgid_collector = {}
-            //var ngid_collector = {}
-            //var sp = full_data.split('\n');
-//            for (var i = 0; i < sp.length; i++) {
-                //console.log(sp[i])
-//                orfrow = sp[i].trim()
-                //console.log('orfrow',orfrow)
-//                var sub = orfrow.split('|');
-//                    if(sub.length == 9){
-                    //if(sub[0]){
-//                        anno = sub[0]
- //                       gid = sub[1]
-                        // pid = sub[2]
-    //                     acc =sub[3]  // molecule
-    //                     prod=sub[4]
-    //                     length_na = sub[5]
-    //                     length_aa = sub[6]
-    //                     start = sub[7]
-    //                     stop = sub[8]
-                        // ncbi|SEQF3816.1|MBO4144030.1|JAGFVR010000001.1|hypothetical protein|249|82|22690|22938
-                        //console.log('gid',gid)
-                        // if(gid in C.genome_lookup){
-    //                         organism = C.genome_lookup[gid].genus +' '+C.genome_lookup[gid].species+' '+C.genome_lookup[gid].ccolct
-    //                     }
-//                        if(anno == 'ncbi'){
-                            //ngid_collector[gid] = 1
-                            // if(! req.session.site_search_result_ncbi){
-    //                             req.session.site_search_result_ncbi = {}
-    //                         }
-                           //  if(gid in req.session.site_search_result_ncbi){
-//                                 //req.session.site_search_result_ncbi[gid].push({name:organism, pid:pid, product:prod})
-//                                 req.session.site_search_result_ncbi[gid].push(orfrow)
-//                             }else{
-//                                 req.session.site_search_result_ncbi[gid] = [orfrow]
-//                             }
-//                             npid_count += 1
-//                        }else if(anno === 'prokka'){
-                            //pgid_collector[gid] = 1
-                            // if(! req.session.site_search_result_prokka){
-    //                             req.session.site_search_result_prokka = {}
-    //                         }
-                           //  if(gid in req.session.site_search_result_prokka){
-//                                 req.session.site_search_result_prokka[gid].push(orfrow)
-//                             }else{
-//                                 req.session.site_search_result_prokka[gid] = [orfrow]
-//                             }
-//                             ppid_count += 1
-//                        }
-                    
-                        //ar.push(sub[0].replace(/['"]+/g, ''));
-//                    }
-//            }
-            pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
-            ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
-            console.log('req.session.site_search_result_prokka.length',pgid_count)
-            console.log('req.session.site_search_result_ncbi.length',ngid_count)
-            let size = Buffer.byteLength(JSON.stringify(req.session))
-            console.log('req.session size(KB):',size/1024)
-            // on dev  req.session size(KB): 38827.2841796875  == 38 MB
+
+            //pgid_count = Object.keys(req.session.site_search_result_prokka).length // genome_count
+            //ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
+            pgid_count = Object.keys(prokka_gid_lookup).length
+            ngid_count = Object.keys(ncbi_gid_lookup).length
+            console.log('prokka_gid_lookup.length',pgid_count)
+            console.log('ncbi_gid_lookup.length',ngid_count)
+            //let size = Buffer.byteLength(JSON.stringify(req.session))
+            //console.log('req.session size(KB):',size/1024)
+            // on dev  req.session size(KB): 38827.2841796875  == 38 MB   tranposase
+            // req.session size(KB): 278541.3876953125 == 278 MB  family
             //console.log(ar,ar.length)
             //console.log(gid_count, pid_count)
             console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
@@ -471,8 +416,8 @@ router.post('/site_search', function site_search(req, res) {
       let ncbi_genome_count=0
       let ncbi_gene_count=0
       // set req.session.site_search_result = {} here before annotation collection
-      req.session.site_search_result_prokka = {}
-      req.session.site_search_result_ncbi = {}
+      //req.session.site_search_result_prokka = {}
+      //req.session.site_search_result_ncbi = {}
       res.render('pages/search_result', {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
