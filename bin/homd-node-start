@@ -23,7 +23,7 @@ if(available_environments.indexOf(process.argv[2]) !== -1){
       process.env.NODE_ENV = 'development';  // homddev
   }else{
       process.env.NODE_ENV = 'development';
-      process.env.NODE_OPTIONS = '--max-old-space-size=4096'
+      process.env.NODE_OPTIONS = '--max-old-space-size=2048'
   }
 }
 console.log("Setting Environment to: "+process.env.NODE_ENV);
