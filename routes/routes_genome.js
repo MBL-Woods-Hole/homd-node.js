@@ -868,7 +868,8 @@ router.post('/orf_search', function orf_search (req, res) {
     console.log('in POST:orf_search')
     console.log(req.body)
     let anno = req.body.anno
-    let search_text = req.body.search_text,org_list = {}
+    let search_text = req.body.search_text
+    let org_list = {}
     let gid='',otid = '',organism=''
     let anno_path = path.join(CFG.PATH_TO_TMP,req.session.anno_search_dirname)
     let site_search_result = {}

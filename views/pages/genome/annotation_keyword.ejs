@@ -45,6 +45,9 @@ button {
 .highlight{
    background: #7AC97A;
 }
+.button{
+   cursor:pointer;
+}
 </style>
 <% cfg = JSON.parse(config) %> 
 <% data = JSON.parse(data) %>
@@ -65,7 +68,20 @@ button {
     <!-- <a href='/get_annotations_counts?txt=<%= search_text %>&ret=1'>Return to search results</a> -->
     <div id="srch">
     Search Results:
-   
+    <table><tr><td>
+   <form  method='POST' action='orf_search'>
+      <input type='hidden' name='anno' value='prokka'>
+      <input type='hidden' name='search_text' value='<%= search_text %>'>
+      <input class='button' type='submit' name='submit' value='PROKKA'>
+   </form>
+   </td><td>
+   <form  method='POST' action='orf_search'>
+      <input type='hidden' name='anno' value='ncbi'>
+      <input type='hidden' name='search_text' value='<%= search_text %>'>
+      <input class='button' type='submit' name='submit' value='NCBI'>
+   </form>
+   </td></tr>
+   </table>
     </div>    
     <center>
 
