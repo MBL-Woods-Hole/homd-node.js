@@ -260,6 +260,9 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
             ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
             console.log('req.session.site_search_result_prokka.length',pgid_count)
             console.log('req.session.site_search_result_ncbi.length',ngid_count)
+            let size = Buffer.byteLength(JSON.stringify(req.session))
+            console.log('req.session size(KB):',size/1024)
+    
             //console.log(ar,ar.length)
             //console.log(gid_count, pid_count)
             console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
