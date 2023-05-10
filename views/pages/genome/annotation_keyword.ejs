@@ -64,10 +64,10 @@ button {
     
     
     <div class='page-content' >
-    <div class='title'>Annotation Search Text: <%= search_text %></div>
+    <div class='title'>Annotation Search Text: "<%= search_text %>"</div>
     <!-- <a href='/get_annotations_counts?txt=<%= search_text %>&ret=1'>Return to search results</a> -->
     <div id="srch">
-    Search Results:
+    Switch Search Results:
     <table><tr><td>
    <form  method='POST' action='orf_search'>
       <input type='hidden' name='anno' value='prokka'>
