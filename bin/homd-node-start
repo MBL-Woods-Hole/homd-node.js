@@ -18,12 +18,12 @@ if(available_environments.indexOf(process.argv[2]) !== -1){
   
   if(CFG.HOSTNAME === 'homd.org') {  // put production host here
       process.env.NODE_ENV = 'production';  // homd
-      process.env.NODE_OPTIONS = '--max-old-space-size=8192'
+      process.env.NODE_OPTIONS = '--max-old-space-size=4096'
   }else if(CFG.HOSTNAME === 'localhost'){
       process.env.NODE_ENV = 'development';  // homddev
   }else{
       process.env.NODE_ENV = 'development';
-      process.env.NODE_OPTIONS = '--max-old-space-size=8192'
+      process.env.NODE_OPTIONS = '--max-old-space-size=4096'
   }
 }
 console.log("Setting Environment to: "+process.env.NODE_ENV);
