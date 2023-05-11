@@ -552,8 +552,8 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 })
 
 router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
-  //console.log('in get_NN_NA_seq -post')
-  //console.log(req.body)
+  console.log('in get_NN_NA_seq -post')
+  console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
@@ -715,12 +715,13 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             } 
             let db = anno+'_'+line_gid
             html += '<tr>'
-            rowobj.acc = (rowobj.acc).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
-        
-            html += "<td>"+rowobj.acc+"</td>"   // molecule
-            rowobj.pid = (rowobj.pid).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
-        
-            html += "<td>"+rowobj.pid
+            
+            rowobj.acc_adorned = (rowobj.acc).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+            html += "<td>"+rowobj.acc_adorned+"</td>"   // molecule
+            
+            rowobj.pid_adorned = (rowobj.pid).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+            html += "<td>"+rowobj.pid_adorned
+            
             if(anno === "prokka"){ 
                 seqacc = rowobj.acc.replace('_','|')
             }else{
@@ -729,6 +730,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             let jbtracks = "DNA,homd,prokka,ncbi"
             let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
             let highlight = seqacc+":"+start.toString()+".."+stop.toString()
+            //console.log('XXX',rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+gid)
             html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
         
             html += "</td>"   // pid (and JB)
@@ -740,13 +742,9 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
                 html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+gid+"')\"><b>AA</b></a>]"
             html += "</td>"   // AA length
             html += "<td>"+start+'-'+stop+"</td>"   // Range
-            //if(rowobj.product.indexOf(search_text) != -1){
-            //  console.log('FOUND1 '+rowobj.product+' '+search_text)
         
-            rowobj.product = rowobj.product.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
-            //  console.log('FOUND2 '+rowobj.product)
-            //}
-            html += "<td>"+rowobj.product+"</td>"   // product
+            rowobj.product_adorned = rowobj.product.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+            html += "<td>"+rowobj.product_adorned+"</td>"   // product
         
             html += "</tr>"
        
@@ -770,6 +768,10 @@ router.post('/orf_search', function orf_search (req, res) {
     let search_text = req.body.search_text
     let org_list = {}
     let gid='',otid = '',organism=''
+    if(!req.session.anno_search_dirname){
+       res.send('Session Expired')
+       return
+    }
     let anno_path = path.join(CFG.PATH_TO_TMP,req.session.anno_search_dirname)
     let site_search_result = {}
     let tmpgid,ssp=''

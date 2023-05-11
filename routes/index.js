@@ -452,16 +452,3 @@ router.post('/site_search', function site_search(req, res) {
 // })  // end anno query
 module.exports = router
 
-// function get_options_by_node (node) {
-//   const optionsObj = {
-//     id: node.node_id,
-//     text: node.taxon,
-//     child: 0,
-//     tooltip: node.rank
-//   }
-//   if (node.children_ids.length > 0) {
-//     optionsObj.child = 1
-//     optionsObj.item = []
-//   }
-//   return optionsObj
-// }
