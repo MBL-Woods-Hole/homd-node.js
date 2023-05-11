@@ -134,7 +134,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
        }else{
           datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
        }
-       let grep_cmd = '/usr/bin/grep -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
+       let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
         console.log('grep_cmd',grep_cmd)
         let anno_path = path.join(CFG.PATH_TO_TMP,dirname)
         let panno_path = path.join(CFG.PATH_TO_TMP,dirname,'prokka')
@@ -396,7 +396,7 @@ router.post('/site_search', function site_search(req, res) {
   // help pages uses grep
   let helpLst = []
   let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
-  const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
+  const grep_cmd = CFG.GREP_CMD + " -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
   console.log('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
