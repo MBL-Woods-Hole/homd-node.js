@@ -641,15 +641,16 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     let anno = req.body.anno
     let search_text = req.body.search_text
     let selected_gid = req.body.gid
-    let rowobj,start,stop,locstart,locstop,seqacc,tmp,ssp = ''
+    let rowobj,start,stop,locstart,locstop,seqacc,tmp,ssp = '',organism=''
     var re = new RegExp(search_text,"gi");
-    if(C.genome_lookup[selected_gid].subspecies){
+    if(C.genome_lookup[selected_gid] && C.genome_lookup[selected_gid].subspecies){
        ssp = C.genome_lookup[selected_gid].subspecies+' '
     }
-    let organism = C.genome_lookup[selected_gid].genus +' '+C.genome_lookup[selected_gid].species+' '+ssp+C.genome_lookup[selected_gid].ccolct
-    
+    if(C.genome_lookup[selected_gid]){
+        organism = C.genome_lookup[selected_gid].genus +' '+C.genome_lookup[selected_gid].species+' '+ssp+C.genome_lookup[selected_gid].ccolct
+    }
     let html = "<table id='annotation-table' class='table'>"
-    html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><th>Product</th></tr>'
+    html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><td>Gene</td><th>Product</th></tr>'
     
     fs.access(anno_path, function(error) {
        if (error) {
@@ -659,35 +660,41 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
        } else {
          console.log("Directory exists.")
          let filepath = path.join(anno_path,anno,'data')
+         
          fs.readFile(filepath, 'utf8', function readOrfSearch (err, data) {
              if (err) {
                console.log(err)
                res.send('Session Expired')
                return
              }
+             //console.log('data',data)
             let data_rows = data.split('\n')
             for(let i in data_rows){
+              
               let row = data_rows[i].split('|')
+              //console.log('row',row)
               if(!row || row.length == 0 || row[0]==''){
                  continue
               }
+              console.log('data_rows[i]',data_rows[i])
               let line_gid = row[1]
               if(line_gid !== selected_gid){
                  continue
               }
              // prokka|SEQF3816.1|SEQF3816.1_00131|SEQF3816.1_JAGFVR010000001.1|putative M18 family aminopeptidase 2|1431|476|145027|146457
-              
+            // GENE::prokka|SEQF10010|GCA_902386295.1_00001|CABMIK010000001.1|thiC|Phosphomethylpyrimidine synthase|1302|433|598|1899
               //console.log(line_gid,'row ',row)
               rowobj = {
                 anno:row[0],
                 line_gid:row[1],
                 pid:row[2],
                 acc:row[3],
-                product:row[4],
-                length_na:row[5],
-                length_aa:row[6],
-                start:row[7],
-                stop:row[8],
+                gene:row[4],
+                product:row[5],
+                length_na:row[6],
+                length_aa:row[7],
+                start:row[8],
+                stop:row[9],
                 }
             if(rowobj.start[0] === "<" ){
               start = parseInt(rowobj.start.substring(1))
@@ -742,7 +749,10 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
                 html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+gid+"')\"><b>AA</b></a>]"
             html += "</td>"   // AA length
             html += "<td>"+start+'-'+stop+"</td>"   // Range
-        
+            
+            rowobj.gene_adorned = rowobj.gene.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+            html += "<td>"+rowobj.gene_adorned+"</td>"   // product
+            
             rowobj.product_adorned = rowobj.product.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
             html += "<td>"+rowobj.product_adorned+"</td>"   // product
         
@@ -791,7 +801,13 @@ router.post('/orf_search', function orf_search (req, res) {
              }
             let data_rows = data.split('\n')
             for(let i in data_rows){
+              
+              if(!data_rows[i]){
+                  continue
+              }
+              console.log(data_rows[i])
               let pts = data_rows[i].split('|')
+              
              // prokka|SEQF3816.1|SEQF3816.1_00131|SEQF3816.1_JAGFVR010000001.1|putative M18 family aminopeptidase 2|1431|476|145027|146457
               gid = pts[1]
               if(gid && gid in site_search_result){

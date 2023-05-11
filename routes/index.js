@@ -130,9 +130,9 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
        //https://github.com/uhop/stream-json/wiki/StreamValues
        //let q = queries.get_annotation_query4(searchTextLower, anno_type)
        if(CFG.SITE === 'localmbl' || CFG.SITE === 'localhome'){
-         datapath = path.join(CFG.PATH_TO_DATA,"homd_SHORT*")  //homd_ORFSearch*
+         datapath = path.join(CFG.PATH_TO_DATA,"homdData-GREP*")  //homd_ORFSearch*
        }else{
-          datapath = path.join(CFG.PATH_TO_DATA,"homd_ORFSearch*")  //homd_ORFSearch*
+          datapath = path.join(CFG.PATH_TO_DATA,"homdData-GREP*")  //homd_ORFSearch*
        }
        let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
         console.log('grep_cmd',grep_cmd)
@@ -155,14 +155,56 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
           //console.log(`child stdout:\n${data}`);
             //console.log('gathering grep data')
             //console.log(typeof data)
-            let lines = data.toString().split('\n')
-            for(let i in lines){
+//             let lines = data.toString().split('\n')
+//             for(let i in lines){
+//                let line = lines[i].trim()
+//            
+//                let pts = line.split('|')
+//                //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
+//                console.log('line',line)
+//                //if(pts.length === 9){
+//                    anno = pts[0]
+//                    gid = pts[1]
+//                
+//                    if(lines[i].substring(0,4) === 'ncbi'){
+//                         //let fname_path = path.join(anno_path,'ncbi_'+gid)
+//                           nstream.write(line + "\n");
+//                           ncbi_gid_lookup[gid]=1
+//                           npid_count += 1
+//                    }else if(lines[i].substring(0,6) === 'prokka'){
+//                     
+//                         pstream.write(line + "\n");
+//                         prokka_gid_lookup[gid]=1
+//                         ppid_count += 1
+//                     
+//                    }else{
+//                        //console.log('-i',line)
+//                        //pass for now
+//                    }
+//                 //}else{
+//                    //console.log('remainder',line)
+//                 //}
+//             }
+            
+            
+            full_data += data.toString()
+        });
+
+        child.stderr.on('data', (data) => {
+          console.error(`child stderr:\n${data}`);
+        });
+    
+        child.on('exit', function (code, signal) {
+          console.log('child process exited with ' +`code ${code} and signal ${signal}`);
+          
+          let lines = full_data.toString().split('\n')
+          for(let i in lines){
                let line = lines[i].trim()
                
                let pts = line.split('|')
                //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
-               
-               if(pts.length === 9){
+               console.log('line',line)
+               //if(pts.length === 9){
                    anno = pts[0]
                    gid = pts[1]
                    
@@ -181,21 +223,13 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
                        //console.log('-i',line)
                        //pass for now
                    }
-                }else{
+                //}else{
                    //console.log('remainder',line)
-                }
-            }
-            
-            
-            //full_data += data.toString()
-        });
-
-        child.stderr.on('data', (data) => {
-          console.error(`child stderr:\n${data}`);
-        });
-    
-        child.on('exit', function (code, signal) {
-          console.log('child process exited with ' +`code ${code} and signal ${signal}`);
+                //}
+          }
+          
+          
+          
           pstream.end();
           nstream.end();
           if(code === 0){
