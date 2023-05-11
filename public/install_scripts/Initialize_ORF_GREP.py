@@ -41,7 +41,7 @@ def run(args):
     result = myconn.execute_fetch_select(q)
     count = 0
     for row in result:
-        print(row)
+        #print(row)
         prod = row[4].replace("'","")
         greplist = (args.dbanno.lower(),row[0],row[1],row[2],row[3],prod,row[5],row[6],row[7],row[8])
        
