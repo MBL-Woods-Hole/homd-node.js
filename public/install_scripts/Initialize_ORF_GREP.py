@@ -116,7 +116,7 @@ if __name__ == "__main__":
     if args.dbhost == 'homd':
         #args.DATABASE  = 'homd'
         
-        dbhost = '192.168.1.42'
+        dbhost = '192.168.1.46'
         
     elif args.dbhost == 'localhost':  #default
         #args.DATABASE = 'homd'
