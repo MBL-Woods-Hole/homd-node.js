@@ -80,6 +80,7 @@
         <option value='all'>All Fields</option>
         <option value='molecule'>Molecule</option>
         <option value='pid'>Protein-ID (PID)</option>
+        <option value='gene'>Gene</option>
         <option value='product'>Gene Product</option>
         </optgroup>
     </select>
@@ -113,17 +114,17 @@
         <input type='radio' name='sort_col' value='aa' onclick='update_sb()' > AA&nbsp;&nbsp;
         <% } %>
         
-        
-        
-        <% if(fltr.sort_col === 'product'){ %>
-        <input type='radio' checked name='sort_col' value='product' onclick='update_sb()' > Gene Product Name&nbsp;
+        <% if(fltr.sort_col === 'gene'){ %>
+        <input type='radio' checked name='sort_col' value='gene' onclick='update_sb()' > Gene&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='product' onclick='update_sb()' > Gene Product Name&nbsp;
+        <input type='radio' name='sort_col' value='gene' onclick='update_sb()' > Gene&nbsp;
         <% } %>
         
-        
-        
-        
+        <% if(fltr.sort_col === 'product'){ %>
+        <input type='radio' checked name='sort_col' value='product' onclick='update_sb()' > Gene Product&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='product' onclick='update_sb()' > Gene Product&nbsp;
+        <% } %>
         
         <span id='sort_rev' title='Reverse the Sort Order'>
           
