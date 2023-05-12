@@ -316,7 +316,9 @@ hr{
 .green-text{
   color:green;
 }
-
+.gray{
+  background:lightgray;
+}
 .dropdown{
   border:1px solid brown;
   padding:1px;
