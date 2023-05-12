@@ -650,7 +650,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
         organism = C.genome_lookup[selected_gid].genus +' '+C.genome_lookup[selected_gid].species+' '+ssp+C.genome_lookup[selected_gid].ccolct
     }
     let html = "<table id='annotation-table' class='table'>"
-    html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><td>Gene</td><th>Product</th></tr>'
+    html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><th>Gene</th><th>Product</th></tr>'
     
     fs.access(anno_path, function(error) {
        if (error) {
@@ -676,7 +676,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
               if(!row || row.length == 0 || row[0]==''){
                  continue
               }
-              console.log('data_rows[i]',data_rows[i])
+              //console.log('data_rows[i]',data_rows[i])
               let line_gid = row[1]
               if(line_gid !== selected_gid){
                  continue
@@ -724,10 +724,10 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             html += '<tr>'
             
             rowobj.acc_adorned = (rowobj.acc).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
-            html += "<td>"+rowobj.acc_adorned+"</td>"   // molecule
+            html += "<td nowrap>"+rowobj.acc_adorned+"</td>"   // molecule
             
             rowobj.pid_adorned = (rowobj.pid).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
-            html += "<td>"+rowobj.pid_adorned
+            html += "<td nowrap>"+rowobj.pid_adorned
             
             if(anno === "prokka"){ 
                 seqacc = rowobj.acc.replace('_','|')
@@ -742,16 +742,16 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
         
             html += "</td>"   // pid (and JB)
         
-            html += "<td>"+rowobj.length_na
+            html += "<td nowrap>"+rowobj.length_na
                 html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+gid+"')\"><b>NA</b></a>]"
             html += "</td>"   // NA length
-            html += "<td>"+rowobj.length_aa
+            html += "<td nowrap>"+rowobj.length_aa
                 html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+gid+"')\"><b>AA</b></a>]"
             html += "</td>"   // AA length
-            html += "<td>"+start+'-'+stop+"</td>"   // Range
+            html += "<td nowrap>"+start+'-'+stop+"</td>"   // Range
             
             rowobj.gene_adorned = rowobj.gene.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
-            html += "<td>"+rowobj.gene_adorned+"</td>"   // product
+            html += "<td nowrap>"+rowobj.gene_adorned+"</td>"   // product
             
             rowobj.product_adorned = rowobj.product.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
             html += "<td>"+rowobj.product_adorned+"</td>"   // product
@@ -805,7 +805,7 @@ router.post('/orf_search', function orf_search (req, res) {
               if(!data_rows[i]){
                   continue
               }
-              console.log(data_rows[i])
+              //console.log(data_rows[i])
               let pts = data_rows[i].split('|')
               
              // prokka|SEQF3816.1|SEQF3816.1_00131|SEQF3816.1_JAGFVR010000001.1|putative M18 family aminopeptidase 2|1431|476|145027|146457

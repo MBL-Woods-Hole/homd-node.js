@@ -130,9 +130,9 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
        //https://github.com/uhop/stream-json/wiki/StreamValues
        //let q = queries.get_annotation_query4(searchTextLower, anno_type)
        if(CFG.SITE === 'localmbl' || CFG.SITE === 'localhome'){
-         datapath = path.join(CFG.PATH_TO_DATA,"homdData-GREP*")  //homd_ORFSearch*
+         datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search*")  //homd_ORFSearch*
        }else{
-          datapath = path.join(CFG.PATH_TO_DATA,"homdData-GREP*")  //homd_ORFSearch*
+          datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search*")  //homd_ORFSearch*
        }
        let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
         console.log('grep_cmd',grep_cmd)
@@ -203,7 +203,7 @@ router.get('/get_annotations_counts', function get_annotations_counts(req, res) 
                
                let pts = line.split('|')
                //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
-               console.log('line',line)
+               //console.log('line',line)
                //if(pts.length === 9){
                    anno = pts[0]
                    gid = pts[1]

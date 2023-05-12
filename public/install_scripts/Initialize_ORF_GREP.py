@@ -30,7 +30,9 @@ def run(args):
     #q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"` "+args.limit
     q = "SELECT seq_id,protein_id,IFNULL(accession,''),gene,product,IFNULL(length_na,''),IFNULL(length_aa,''),start,stop FROM `"+args.db+"`.`"+args.table+"`"
     q += " WHERE seq_id like 'SEQF"+args.num+"%' " +args.limit
-    
+    # Use this
+   # SELECT concat_ws('|',seq_id,protein_id,IFNULL(accession,''),gene,product,IFNULL(length_na,''),IFNULL(length_aa,''),start,stop) as grep 
+   # FROM `NCBI_meta`.`orf` WHERE seq_id like 'SEQF8%'
     print(q)
     # seq_id-protein_id is UNIQUE
     #fields = ['seq_id','protein_id','accession','gene','product']
