@@ -199,7 +199,7 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
        
        let full_data = '',orfrow,datapath
        //https://github.com/uhop/stream-json/wiki/StreamValues
-       //let q = queries.get_annotation_query4(searchTextLower, anno_type)
+
        if(CFG.SITE === 'localmbl' || CFG.SITE === 'localhome'){
          datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search*")  //homd_ORFSearch*
        }else{

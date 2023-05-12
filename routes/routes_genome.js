@@ -889,6 +889,10 @@ function apply_annot_table_filter(rows, filter){
               new_rows.sort(function (b, a) {
                 return helpers.compareStrings_alpha(a.accession, b.accession);
               })
+        }else if(filter.sort_col === 'gene'){
+              new_rows.sort(function (b, a) {
+                return helpers.compareStrings_alpha(a.gene, b.gene);
+              })
         }else if(filter.sort_col === 'product'){
               new_rows.sort(function (b, a) {
                 return helpers.compareStrings_alpha(a.product, b.product);
@@ -910,6 +914,10 @@ function apply_annot_table_filter(rows, filter){
         }else if(filter.sort_col === 'molecule'){
               new_rows.sort(function (a, b) {
                 return helpers.compareStrings_alpha(a.accession, b.accession);
+              })
+        }else if(filter.sort_col === 'gene'){
+              new_rows.sort(function (a, b) {
+                return helpers.compareStrings_alpha(a.gene, b.gene);
               })
         }else if(filter.sort_col === 'product'){
               new_rows.sort(function (a, b) {
@@ -936,6 +944,8 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
       send_list = annot_list.filter(item => item.protein_id.toLowerCase().includes(search_txt))
   }else if(search_field == 'product'){
       send_list = annot_list.filter(item => item.product.toLowerCase().includes(search_txt))
+  }else if(search_field == 'gene'){
+      send_list = annot_list.filter(item => item.gene.toLowerCase().includes(search_txt))
   }else if(search_field == 'molecule'){
       send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
   }else {
@@ -953,12 +963,16 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
          temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
       }
       
+      tmp_send_list = annot_list.filter(item => item.gene.toLowerCase().includes(search_txt))
+      for(var n in tmp_send_list){
+         temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+      }
+      
       tmp_send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
       for(var n in tmp_send_list){
          temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
       }
       
-
       // now back to a list
       send_list = Object.values(temp_obj);
       
@@ -1148,21 +1162,14 @@ router.get('/explorer', function explorer (req, res) {
   const q = queries.get_annotation_query(gid, anno)
   console.log(q)
   //NEW DB
-  // let q = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
-//   q += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-//   q += " WHERE seq_id = '"+gid+"'"
   
-  //select GC, PID, product, length_na,length_aa, `start`, `stop` FROM `PROKKA_meta`.`orf`  WHERE seq_id = 'SEQF1595'
   if(req.session.atable_filter){
-        //console.log('filetr session')
         atable_filter = req.session.atable_filter
     }else{
-        //console.log('filetr from default')
         atable_filter = get_default_annot_filter()
         req.session.atable_filter = atable_filter
     }
   //console.log('anno query '+q)
-  //OLD ADBConn.query(q, (err, rows) => {
   TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
@@ -1170,7 +1177,7 @@ router.get('/explorer', function explorer (req, res) {
       args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
       render_explorer(req, res, args)
       return
-    } else {
+    }
       if (rows.length === 0) {
         console.log('no rows found')
       }
@@ -1219,7 +1226,7 @@ router.get('/explorer', function explorer (req, res) {
             }
             
       render_explorer(req, res, args)
-    }
+
   })
 })
 

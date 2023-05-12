@@ -35,7 +35,7 @@ module.exports.get_db_updates_query = () => {
 // GENOMES
 module.exports.get_annotation_query = (gid, anno) => {
   
-  let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
+  let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`, gene'
   qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
   qSelectAnno += " WHERE seq_id = '"+gid+"'"
   
@@ -44,36 +44,36 @@ module.exports.get_annotation_query = (gid, anno) => {
 //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
   return qSelectAnno
 }
-module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
-  
-  let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
-      qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-      //qSelectAnno += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
-      qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
-  //const db = anno.toUpperCase() + '_' + gid
-  // let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
-//   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
-//   qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
-  return qSelectAnno
-}
-module.exports.get_annotation_query3 = (search_text) => {
-  // this query takes too long
-  let qSelectAnno = "SELECT 'ncbi' as anno, seq_id as gid, protein_id, product from `NCBI_meta`.orf WHERE product like '%"+search_text+"%'"
-    qSelectAnno += ' UNION ALL'  // UNION vs UNION ALL
-    qSelectAnno += "SELECT 'prokka' as anno, seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%"+search_text+"%'"
-    
-  return qSelectAnno
-}
-module.exports.get_annotation_query4 = (search_text, anno_type) => {
-  // this query takes too long
-  let qSelectAnno
-  if(anno_type === 'ncbi'){
-     qSelectAnno = "SELECT seq_id as gid, protein_id, product from `NCBI_meta`.orf WHERE product like '%"+search_text+"%'"
-  }else{
-     qSelectAnno = "SELECT seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%"+search_text+"%'"
-  }
-  return qSelectAnno
-}
+// module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
+//   
+//   let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
+//       qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+//       //qSelectAnno += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
+//       qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
+//   //const db = anno.toUpperCase() + '_' + gid
+//   // let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
+// //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
+// //   qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
+//   return qSelectAnno
+// }
+// module.exports.get_annotation_query3 = (search_text) => {
+//   // this query takes too long
+//   let qSelectAnno = "SELECT 'ncbi' as anno, seq_id as gid, protein_id, product from `NCBI_meta`.orf WHERE product like '%"+search_text+"%'"
+//     qSelectAnno += ' UNION ALL'  // UNION vs UNION ALL
+//     qSelectAnno += "SELECT 'prokka' as anno, seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%"+search_text+"%'"
+//     
+//   return qSelectAnno
+// }
+// module.exports.get_annotation_query4 = (search_text, anno_type) => {
+//   // this query takes too long
+//   let qSelectAnno
+//   if(anno_type === 'ncbi'){
+//      qSelectAnno = "SELECT seq_id as gid, protein_id, product from `NCBI_meta`.orf WHERE product like '%"+search_text+"%'"
+//   }else{
+//      qSelectAnno = "SELECT seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%"+search_text+"%'"
+//   }
+//   return qSelectAnno
+// }
 module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
   let qSelectContigs = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE seq_id = '"+gid+"'"
