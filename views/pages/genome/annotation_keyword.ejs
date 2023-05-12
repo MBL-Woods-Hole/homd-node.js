@@ -45,12 +45,17 @@ button {
 .highlight{
    background: #7AC97A;
 }
+
+.button{
+   cursor:pointer;
+}
+
 </style>
 <% cfg = JSON.parse(config) %> 
-<% ncbid = JSON.parse(ncbi_data) %>
-<% prokkad = JSON.parse(prokka_data) %>
-<% pgids_sorted = JSON.parse(psorted) %>
-<% ngids_sorted = JSON.parse(nsorted) %>
+<% data = JSON.parse(data) %>
+<% //prokkad = JSON.parse(prokka_data) %>
+<% sorted_gids = JSON.parse(sorted_gids) %>
+<% //ngids_sorted = JSON.parse(nsorted) %>
 <% orgs = JSON.parse(org_obj) %>
 <%- include('../../partials/header_html'); %>
 <script type="text/javascript" src="/js/genomes.js"></script>
@@ -61,41 +66,42 @@ button {
     
     
     <div class='page-content' >
-    <div class='title'>Annotation Search Text: <%= search_text %></div>
+    <div class='title'>Annotation Search Text: "<%= search_text %>"</div>
     <!-- <a href='/get_annotations_counts?txt=<%= search_text %>&ret=1'>Return to search results</a> -->
     <div id="srch">
-    Search Results:
-    <table>
-      <% if(anno==="ncbi"){ %>
-         <tr id='ncbi' class='highlight'><td>NCBI</td><td><%= ngids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('ncbi','<%= search_text %>')">Select</a></td></tr>
-         <tr id='prokka'><td>PROKKA</td><td><%= pgids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('prokka','<%= search_text %>')">Select</a></td></tr>
-      <% }else{ %>
-         <tr id='ncbi'><td>NCBI</td><td><%= ngids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('ncbi','<%= search_text %>')">Select</a></td></tr>
-         <tr id='prokka' class='highlight'><td>PROKKA</td><td><%= pgids_sorted.length %>Genomes</td><td><a href='#' onclick="select_anno('prokka','<%= search_text %>')">Select</a></td></tr>
-      <% } %>
-    </table>
+
+    Switch Search Results:
+    <table><tr><td>
+   <form  method='POST' action='orf_search'>
+      <input type='hidden' name='anno' value='prokka'>
+      <input type='hidden' name='search_text' value='<%= search_text %>'>
+      <input class='button' type='submit' name='submit' value='PROKKA'>
+   </form>
+   </td><td>
+   <form  method='POST' action='orf_search'>
+      <input type='hidden' name='anno' value='ncbi'>
+      <input type='hidden' name='search_text' value='<%= search_text %>'>
+      <input class='button' type='submit' name='submit' value='NCBI'>
+   </form>
+   </td></tr>
+   </table>
+
     </div>    
     <center>
-    <% if(anno==="ncbi"){ %>
-    <%   data = ncbid %>
-    <%   gids = ngids_sorted %>
-    <% }else{ %>
-    <%   data = prokkad %>
-    <%   gids = pgids_sorted %>
-    <% } %>
+
     <div id='orf_table_div'>
     <%= anno.toUpperCase() %>
     <table id="anno-pre-table">
     <tr><th>SEQ-ID</th><th>Organism</th><th># Hits</th><th class='center'></th><th>Full annotation</th></tr>
-    <% for(i in gids){ %>
-    <%    gid = gids[i] %>
+    <% for(i in sorted_gids){ %>
+    <%    gid = sorted_gids[i] %>
           <tr id="<%= gid %>"><td><a href='genome_description?gid=<%= gid %>'><%= gid %></a></td>
           <td><%= orgs[gid] %></td>
           
           
           <td class='center'><%= data[gid].length %></td>
           <td><button onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View item(s) in table</button></td>
-          <td>
+                   <td>
             <a class='pill pill-mediumorchid' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
             <a class='pill pill-slateblue' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
           </td>
@@ -108,7 +114,7 @@ button {
     Viewing <%= anno.toUpperCase() %>
     <div id='anno_result_div'>
       <table>
-        <tr><td>Molecule</td><td>PID</td><td>NA<br><small>(Length)(Seq)</small></td><td>AA<br><small>(Length)(Seq)</small></td><td>Range</td><td>Gene Product</td></tr>
+        <tr><td>Molecule</td><td>PID</td><td>NA<br><small>(Length)(Seq)</small></td><td>AA<br><small>(Length)(Seq)</small></td><td>Range</td><td>Gene</td><td>Gene Product</td></tr>
       </table>
     </div>
     

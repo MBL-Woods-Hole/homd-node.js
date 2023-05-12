@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
+<<<<<<< HEAD
 ## SEE https://docs.dhtmlx.com/suite/tree__api__refs__tree.html // new version 7 must load from json file
 # this script creates a list of json objects that allows the dhtmlx javascript library
+=======
+## SEE https://docs.dhtmlx.com/suite/tree__api__refs__tree.html // new 
+version 7 must load from json file
+# this script creates a list of json objects that allows the dhtmlx 
+javascript library
+>>>>>>> anno_search2
 # to parse and show a taxonomy tree (Written for HOMD)
 
 import os, sys
@@ -24,10 +31,12 @@ def run(args):
     master_lookup ={}
     if args.dbanno.upper() == 'PROKKA':
         args.from_db = 'PROKKA_meta'
+
         args.to_table = 'prokka_orf_search2'
     elif args.dbanno.upper() == 'NCBI':
         args.from_db = 'NCBI_meta'
         args.to_table = 'ncbi_orf_search2'
+
     else:
         sys.exit('no DB')
     args.from_table = 'orf'
@@ -36,6 +45,7 @@ def run(args):
     
     # prokka first
     
+
     #q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"` "+args.limit
     #q_from = "SELECT seq_id,protein_id,IFNULL(accession, ''),product,IFNULL(length_na, ''),IFNULL(length_aa, ''),IFNULL(gene, ''),stop,start"
     q_from = "SELECT protein_id, product"
@@ -50,6 +60,7 @@ def run(args):
     #https://stackoverflow.com/questions/45669229/does-mysqls-fulltext-search-return-the-same-results-for-myisam-and-innodb#:~:text=There%20are%20actually%20some%20notable,excluded%20in%20the%20MyISAM%20results.
     # LOAD DATA LOCAL INFILE 'homd_PROKKA_ORF_Search-1-sql.tsv' INTO TABLE prokka_orf_search FIELDS TERMINATED BY 
     #'\t' IGNORE 1 LINES (protein_id,search_text);
+
     for num in integers:
         seqidnumber = args.num+num
         q2 = q_from % (seqidnumber)
@@ -60,6 +71,7 @@ def run(args):
             print('no data')
         for row in result:
             #print(row)
+
             # pid = row[1]
 #             prod = row[3].replace("'","")  #product
 #             text = '|'.join([row[0],pid,row[2],prod,row[4],row[5],row[6],row[7],row[8]])
@@ -69,6 +81,7 @@ def run(args):
             
             #print(text)
             q = q_to % (pid, prod)
+
             #print(q)
             if pid:
                 myconn.execute_no_fetch(q)
@@ -100,6 +113,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="." ,usage=usage)
 
+
     #parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
     #                                                help=" ")
     parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", 
@@ -119,12 +133,15 @@ default = './',
 default=False,
                                                     help="verbose print()")
     parser.add_argument("-l", "--limit",   required=False,  action="store",    dest = "limit", default='',
+
                                                     help="") 
                                                   
     args = parser.parse_args()
 
     if not os.path.exists(args.outdir):
+
         print("\nThe out put directory doesn't exist:: using the current dir instead\n")
+
         args.outdir = './'
     if args.dbhost == 'homd':
         #args.DATABASE  = 'homd'
@@ -141,8 +158,10 @@ default=False,
         sys.exit('dbhost - error')
     args.indent = None
     
+
     # SELECT seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%end%'
     myconn = MyConnection(host=dbhost,   read_default_file = "~/.my.cnf_node")
+
     if args.limit:
        args.limit = "limit "+args.limit
     run(args)

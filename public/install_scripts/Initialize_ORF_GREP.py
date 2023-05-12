@@ -28,26 +28,33 @@ def run(args):
     # prokka first
     
     #q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"` "+args.limit
-    q = "SELECT seq_id,protein_id,accession,product FROM `"+args.db+"`.`"+args.table+"`"
+    q = "SELECT seq_id,protein_id,IFNULL(accession,''),gene,product,IFNULL(length_na,''),IFNULL(length_aa,''),start,stop FROM `"+args.db+"`.`"+args.table+"`"
     q += " WHERE seq_id like 'SEQF"+args.num+"%' " +args.limit
-    
+    # Use this
+   # SELECT concat_ws('|',seq_id,protein_id,IFNULL(accession,''),gene,product,IFNULL(length_na,''),IFNULL(length_aa,''),start,stop) as grep 
+   # FROM `NCBI_meta`.`orf` WHERE seq_id like 'SEQF8%'
     print(q)
     # seq_id-protein_id is UNIQUE
-    fields = ['seq_id','protein_id','accession','product']
-    file =  os.path.join(args.outdir,args.outfileprefix+args.db+args.num+'Search.list')
+    #fields = ['seq_id','protein_id','accession','gene','product']
+    file =  os.path.join(args.outdir,args.outfileprefix+'-'+args.db+args.num+'.list')
     fh = open(file,'w')
     
     #SELECT seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%end%'
     result = myconn.execute_fetch_select(q)
     count = 0
     for row in result:
-       print(row)
-       unique = row[0]+'|'+row[1]
-       string = row[2]+'|'+row[3]
-       #"SEQF4098|MBX3952457.1": "QGBS01000001.1|hypothetical protein",
-       master_lookup[unique] = string
-       fh.write(args.dbanno.lower()+'|'+unique+'|'+string+'\n')
-       count += 1
+        #print(row)
+        prod = row[4].replace("'","")
+        greplist = (args.dbanno.lower(),row[0],row[1],row[2],row[3],prod,row[5],row[6],row[7],row[8])
+       
+       
+       
+       # unique = row[0]+'|'+row[1]
+#        string = row[2]+'|'+row[3]
+#        #"SEQF4098|MBX3952457.1": "QGBS01000001.1|hypothetical protein",
+#        master_lookup[unique] = string
+        fh.write('|'.join(greplist)+'\n')
+#        count += 1
     
     #fh.write(' '+str(count))
     fh.write('\n')
@@ -85,7 +92,7 @@ if __name__ == "__main__":
 
     #parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
     #                                                help=" ")
-    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-ORF',
+    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-GREP',
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")
@@ -111,7 +118,7 @@ if __name__ == "__main__":
     if args.dbhost == 'homd':
         #args.DATABASE  = 'homd'
         
-        dbhost = '192.168.1.42'
+        dbhost = '192.168.1.46'
         
     elif args.dbhost == 'localhost':  #default
         #args.DATABASE = 'homd'
