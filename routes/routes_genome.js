@@ -551,7 +551,7 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
   })
 })
 
-router.post('/get_NN_NA_seq', function getNNNASeqPost (req, res) {
+router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
   console.log('in get_NN_NA_seq -post')
   console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
