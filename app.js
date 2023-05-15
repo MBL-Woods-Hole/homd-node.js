@@ -40,8 +40,8 @@ app.set('trust proxy', true);
 // https://blog.jscrambler.com/best-practices-for-secure-session-management-in-node
 app.use(session({
   secret: 'veryimportantsecret',
-  //resave: true,
-  //saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
   //Default cookie  { path: '/', httpOnly: true, secure: false, maxAge: null }
   cookie: { 
      maxAge: 1800000  // 1 hour==3600000

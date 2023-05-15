@@ -148,11 +148,11 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
         //text += '>'+product+' | '+mol+' | '+ org +'\n'
-        if(type === 'prokka'){
-            text += '>' + gid +'|' + pid +' | ' + product + ' | ' + org + length + '\n'
-        }else{
-             text += '>' + mol + ' | ' + product + ' | '+ org + length + '\n'
-        }
+        //if(type === 'prokka'){
+            text += '>' + gid +'| Protein ID: ' + pid +' | ' + product + ' | ' + org + length + '\n'
+        //}else{
+         //    text += '>' + mol + ' | ' + product + ' | '+ org + length + '\n'
+        //}
         
 
         text += resp.html

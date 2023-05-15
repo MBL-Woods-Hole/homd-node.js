@@ -3,8 +3,8 @@
    height:200px;
    overflow:auto;
    overflow-y: scroll;
-   border:1px solid black;
-   padding:3px;
+   border:1px solid gray;
+   padding:10px;
    width: 80%;
 }
 table{
@@ -12,6 +12,24 @@ table{
 }
 table td{
    border-top:1px solid grey;
+}
+#anno-pre-table{
+  width:100%;
+}
+#anno-pre-table td{
+   padding: 0 10px;
+}
+.gid_col{
+   width:30px;
+}
+.hits_col{
+   width: 40px;
+}
+.view_col{
+   width:150px;
+}
+.full_col{
+   width:120px;
 }
 #annotation-table{
   width:100%;
@@ -35,9 +53,7 @@ table td{
  #annotation-table tr:hover { 
     background-color: #FBF9EA; 
  } 
-#anno-pre-table td{
-   padding: 0 10px;
-}
+
 button {
     cursor:pointer;
     color:blue;
@@ -54,7 +70,7 @@ button {
 <% cfg = JSON.parse(config) %> 
 <% data = JSON.parse(data) %>
 <% //prokkad = JSON.parse(prokka_data) %>
-<% sorted_gids = JSON.parse(sorted_gids) %>
+<% org_sorted_gids = JSON.parse(sorted_gids) %>
 <% //ngids_sorted = JSON.parse(nsorted) %>
 <% orgs = JSON.parse(org_obj) %>
 <%- include('../../partials/header_html'); %>
@@ -90,11 +106,17 @@ button {
     <center>
 
     <div id='orf_table_div'>
-    <%= anno.toUpperCase() %>
+    Viewing <%= anno.toUpperCase() %> Annotations
     <table id="anno-pre-table">
-    <tr><th>SEQ-ID</th><th>Organism</th><th># Hits</th><th class='center'></th><th>Full annotation</th></tr>
-    <% for(i in sorted_gids){ %>
-    <%    gid = sorted_gids[i] %>
+    <tr>
+      <th class='gid_col'>SEQ-ID</th>
+      <th class='org_col'>Organism</th>
+      <th class='hits_col'># Hits</th>
+      <th class='center view_col'></th>
+      <th class='full_col'>Full Annotation</th>
+    </tr>
+    <% for(i in org_sorted_gids){ %>
+    <%    gid = org_sorted_gids[i] %>
           <tr id="<%= gid %>"><td><a href='genome_description?gid=<%= gid %>'><%= gid %></a></td>
           <td><%= orgs[gid] %></td>
           
@@ -111,7 +133,6 @@ button {
     </div>
     </center>
     
-    Viewing <%= anno.toUpperCase() %>
     <div id='anno_result_div'>
       <table>
         <tr><td>Molecule</td><td>PID</td><td>NA<br><small>(Length)(Seq)</small></td><td>AA<br><small>(Length)(Seq)</small></td><td>Range</td><td>Gene</td><td>Gene Product</td></tr>
