@@ -649,8 +649,15 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     if(C.genome_lookup[selected_gid]){
         organism = C.genome_lookup[selected_gid].genus +' '+C.genome_lookup[selected_gid].species+' '+ssp+C.genome_lookup[selected_gid].ccolct
     }
-    let html = "<table id='annotation-table' class='table'>"
-    html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><th>Gene</th><th>Gene Product</th></tr>'
+    let html = "<table id='annotation-table' class='table sortable'>"
+    html += '<tr>'
+    html += '<th>Molecule</th>'
+    html += '<th>PID</th>'
+    html += "<th class='sorttable_numeric'>NA<br><small>(Length)(Seq)</small></th>"
+    html += "<th class='sorttable_numeric'>AA<br><small>(Length)(Seq)</small></th>"
+    html += '<th class="sorttable_nosort">Range</th>'
+    html += '<th>Gene</th><th>Gene Product</th>'
+    html += '</tr>'
     
     fs.access(anno_path, function(error) {
        if (error) {

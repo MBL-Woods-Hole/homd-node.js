@@ -265,8 +265,8 @@ function view_anno_items(gid, anno, search_text){
    args.gid = gid
    args.anno = anno
    args.search_text = search_text
-   var table = document.getElementById("anno-pre-table");   
-   var rows = table.getElementsByTagName("tr");   
+   var pretable = document.getElementById("anno-pre-table");   
+   var rows = pretable.getElementsByTagName("tr");   
    for(i = 0; i < rows.length; i++){ 
        //console.log(rows[i])
       rows[i].style.backgroundColor = 'white'
@@ -285,6 +285,8 @@ function view_anno_items(gid, anno, search_text){
         //sorttable.makeSortable(newTableObject);
         var row = document.getElementById(gid)
         row.style.backgroundColor = '#7AC97A'
+        newTableObject = document.getElementById("annotation-table")
+        sorttable.makeSortable(newTableObject);
         
       }
    }
