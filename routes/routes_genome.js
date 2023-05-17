@@ -458,48 +458,20 @@ router.get('/genome_description', function genomeDescription (req, res) {
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
     if (err) {
-        //console.log(err)
+        console.log(err)
     }else{
         //console.log('contigs',rows)
         for(let r in rows){
            contigs.push({contig: rows[r].accession, gc: rows[r].GC})
         }
     }
-    //console.log('contigs',contigs)
-    //Pangenome
-    // let pangenomes = {}
-//     C.pangenomes.map(function(el){
-//       if(el.seqids.indexOf(gid) !== -1){
-//        pangenomes[el.pangenome_name] = {link: C.pangenome_base_link+'/'+el.pangenome_name, description: el.description}
-//       }
-//     })
-        /*
-      1 Oral Taxon ID 191 
-      2 HOMD Sequence ID  SEQF1851  
-      3 HOMD Name (Genus, Species)  Propionibacterium acidifaciens  
-      4 Genome Sequence Name
-      (Name associated with genomic sequence) Acidipropionibacterium acidifaciens 
-      5 Comments on Name  NCBI Name : Propionibacterium acidifaciens  
-      6 Culture Collection Entry Number F0233 
-      7 Isolate Origin  NA  
-      8 Sequencing Status High Coverage 
-      9 NCBI Taxonomy ID  553198  
-      10  NCBI Genome BioProject ID 31003 
-      11  NCBI Genome BioSample ID  SAMN02436184  
-      12  GenBank Accession ID  ACVN00000000.2  
-      13  Genbank Assembly ID GCA_000478805.1 
-      14  Number of Contigs and Singlets  334
-      15  Combined Length (bps) 3,017,605
-      16  GC Percentage 70.36
-      17  Sequencing Center The Forsyth Institute - J. Craig Venter Institute 
-      18  ATCC Medium Number  NA  
-      19  Non-ATCC Medium NA
-      20  16S rRNA gene sequence
-      21 pangenome
-      22  Comments
-      */
-  //console.log(C.genome_lookup[gid])
-      res.render('pages/genome/genomedesc', {
+
+// Crisper-cas
+// need to determine is CC data available for this genome(gid)
+// if dir exists  homdData-Crisper.json
+    let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
+    console.log('crisper_data:',crisper_data[gid])
+    res.render('pages/genome/genomedesc', {
         title: 'HOMD :: Genome Info',
         pgname: 'genome/description', // for AboutThisPage 
         config: JSON.stringify(CFG),
@@ -508,6 +480,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
         gid: gid,
         anviserver_link: C.anviserver_link,
         contigs: JSON.stringify(contigs.sort()),
+        crisper: crisper_data[gid] || 0,
         // data2: JSON.stringify(data2),
         // data3: JSON.stringify(data3),
         // data4: JSON.stringify(data4),
