@@ -18,6 +18,20 @@ today = yyyy + '-' + mm + '-' + dd
 var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
 //const JB = require('jbrowse2')
 //app.use(createIframe)
+router.get('/overview', function overview(req, res) {
+    //console.log('in RESET-session')
+    let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
+    console.log('crisper_data:',Object.keys(crisper_data).length)
+    res.render('pages/genome/overview', {
+        title: 'HOMD :: Genome Overview', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        pgtitle: 'Genome Overview',
+        crisper_size: Object.keys(crisper_data).length,
+        
+    })
+});
 function renderGenomeTable(req, res, args) {
     //console.log('render NEW filter') 
     let alltax_list = Object.values(C.taxon_lookup)  //.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))

@@ -1,0 +1,49 @@
+<% var cfg = JSON.parse(config) %> 
+<style>
+#info-box{
+   padding: 20px 50px;
+   text-align: left;
+}
+#info-box li {
+   padding: 20px;
+   
+}
+</style>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+      <div class='title'>HOMD Genomes Overview</div>
+      <div id='info-box'>
+        
+        <li>We have total of 8,622 genomes from 568 taxa
+       
+        <li>CRISPER-cas stats: <%= crisper_size %> genomes have CRISPER-cas data which are available  
+          for download from our <a href='<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/' target='_blank'>FTP site</a>
+           and for viewing in the Genome Browser (JBrowse).
+
+        <li>
+     </div>
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+
