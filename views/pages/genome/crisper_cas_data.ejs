@@ -26,21 +26,19 @@ th, td {
        <table id='crisper-table' class='table'>
        <tr>
        <th>Contig</th>
-       <th><a href="<%= cfg.JBROWSE_URL %>/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Skew" target='_blank' rel="noopener noreferrer">Operon</a></th>
+       <th>Operon</th>
        <th>Operon Position</th>
        <th>Prediction</th>
        <th>CRISPERs</th>
        <th>Distances</th>
        <th>Prediction-Cas</th>
        <th>Prediction-CRISPERS</th>
-       <th></th>
-       <th></th>
        </tr>
        <% for(i in cdata){ %>
        <% op = cdata[i] %>
        <tr>
          <td><%= op.contig %></td>
-         <td><a href=''><%= op.operon %></a></td>
+         <td><a href="<%= cfg.JBROWSE_URL %>/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Skew" target='_blank' rel="noopener noreferrer"><%= op.operon %></a></td>
          <td><%= op.operon_pos %></td>
          <td><%= op.prediction %></td>
          <td><%= op.crispers %></td>
