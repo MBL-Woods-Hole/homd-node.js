@@ -40,7 +40,7 @@ th, td {
          <td><%= op.contig %></td>
          <% loc = op.contig+":"+(op.op_pos1-500).toString()+".."+(op.op_pos2+500).toString() %>
          <% highlight = op.contig+":"+op.op_pos1.toString()+".."+op.op_pos2.toString() %>
-         <td><a href="<%= cfg.JBROWSE_URL %>/<%= gid %>&&loc=<%= loc %>&highlight=<%= highlight %>tracks=crispr" target='_blank' rel="noopener noreferrer"><%= op.operon %></a></td>
+         <td><a href="<%= cfg.JBROWSE_URL %>/<%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>tracks=crispr" target='_blank' rel="noopener noreferrer"><%= op.operon %></a></td>
          
          <td><%= op.op_pos1 %>, <%= op.op_pos2 %></td>
          <td><%= op.prediction %></td>
