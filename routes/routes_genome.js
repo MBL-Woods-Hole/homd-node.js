@@ -40,7 +40,6 @@ router.get('/crisper', function crisper(req, res) {
     let send_list = []
     for (var n in seqid_list) {
           if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
-             
              send_list.push(C.genome_lookup[seqid_list[n]])
           }
     }
@@ -63,13 +62,33 @@ router.get('/crisper', function crisper(req, res) {
 router.get('/crisper_cas_data', function crisper_cas_data(req, res) {
     console.log(req.query)
     let gid = req.query.gid
-    let q = "SELECT * from crisper_cas where seq_id='"+gid+"'"
+    let data = []
+    let q = "SELECT contig,operon,operon_pos,prediction,crispers,distances,prediction_cas,prediction_crispers"
+    q += " FROM crisper_cas where seq_id='"+gid+"'"
     TDBConn.query(q, (err, rows) => {
         if(err){
            console.log(err)
            return
         }
         console.log('rows',rows)
+		for(let r in rows){
+		   let obj = {}
+		   obj.contig = rows[r].contig
+		   obj.operon = rows[r].operon
+		   let pos = rows[r].operon_pos.split(', ')   //'[17903, 26228]',
+		   //console.log('pos',pos)
+		   obj.op_pos1 =pos[0].substring(1,pos[0].length)
+		   obj.op_pos2 =pos[1].substring(0,pos[0].length-1)
+		   obj.prediction = rows[r].prediction
+		   obj.crispers = rows[r].crispers
+		   obj.distances = rows[r].distances
+		   obj.prediction_cas = rows[r].prediction_cas
+		   obj.prediction_crispers = rows[r].prediction_crispers
+		   //console.log(obj)
+		   data.push(obj)
+		}
+		
+		
 		res.render('pages/genome/crisper_cas_data', {
 			title: 'HOMD :: CRISPER-Cas', 
 			pgname: '', // for AboutThisPage
@@ -77,7 +96,7 @@ router.get('/crisper_cas_data', function crisper_cas_data(req, res) {
 			ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
 			pgtitle: 'CRISPER-Cas',
 			gid: gid,
-			crisper_data: JSON.stringify(rows),
+			crisper_data: JSON.stringify(data),
 			
 		
 		})
