@@ -32,6 +32,58 @@ router.get('/overview', function overview(req, res) {
         
     })
 });
+router.get('/crisper', function crisper(req, res) {
+    //console.log('in RESET-session')
+    let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
+    console.log('crisper_data:',Object.keys(crisper_data)[0],Object.keys(crisper_data).length)
+    let seqid_list = Object.keys(crisper_data)
+    let send_list = []
+    for (var n in seqid_list) {
+          if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
+             
+             send_list.push(C.genome_lookup[seqid_list[n]])
+          }
+    }
+    send_list.sort(function (a, b) {
+            return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+    })
+    send_list = apply_sspecies(send_list)
+    console.log(send_list[0])
+    res.render('pages/genome/crisper_cas', {
+        title: 'HOMD :: CRISPER-Cas', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        pgtitle: 'CRISPER-Cas',
+        crisper_data: JSON.stringify(crisper_data),
+        gid_list: JSON.stringify(send_list)
+        
+    })
+});
+router.get('/crisper_cas_data', function crisper_cas_data(req, res) {
+    console.log(req.query)
+    let gid = req.query.gid
+    let q = "SELECT * from crisper_cas where seq_id='"+gid+"'"
+    TDBConn.query(q, (err, rows) => {
+        if(err){
+           console.log(err)
+           return
+        }
+        console.log('rows',rows)
+		res.render('pages/genome/crisper_cas_data', {
+			title: 'HOMD :: CRISPER-Cas', 
+			pgname: '', // for AboutThisPage
+			config: JSON.stringify(CFG),
+			ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+			pgtitle: 'CRISPER-Cas',
+			gid: gid,
+			crisper_data: JSON.stringify(rows),
+			
+		
+		})
+    
+    })
+})
 function renderGenomeTable(req, res, args) {
     //console.log('render NEW filter') 
     let alltax_list = Object.values(C.taxon_lookup)  //.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
