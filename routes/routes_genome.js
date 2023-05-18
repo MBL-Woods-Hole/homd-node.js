@@ -35,7 +35,7 @@ router.get('/overview', function overview(req, res) {
 router.get('/crisper', function crisper(req, res) {
     //console.log('in RESET-session')
     let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
-    console.log('crisper_data:',Object.keys(crisper_data)[0],Object.keys(crisper_data).length)
+    //console.log('crisper_data:',Object.keys(crisper_data)[0],Object.keys(crisper_data).length)
     let seqid_list = Object.keys(crisper_data)
     let send_list = []
     for (var n in seqid_list) {
@@ -47,7 +47,7 @@ router.get('/crisper', function crisper(req, res) {
             return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
     })
     send_list = apply_sspecies(send_list)
-    console.log(send_list[0])
+    //console.log(send_list[0])
     res.render('pages/genome/crisper_cas', {
         title: 'HOMD :: CRISPER-Cas', 
         pgname: '', // for AboutThisPage
@@ -59,6 +59,10 @@ router.get('/crisper', function crisper(req, res) {
         
     })
 });
+function list_clean(item){
+    //JSON.parse(item.replace('[','').replace(']','') 
+    return JSON.parse(item.replace(/'/g, '"'))
+}
 router.get('/crisper_cas_data', function crisper_cas_data(req, res) {
     console.log(req.query)
     let gid = req.query.gid
@@ -70,36 +74,42 @@ router.get('/crisper_cas_data', function crisper_cas_data(req, res) {
            console.log(err)
            return
         }
-        console.log('rows',rows)
-		for(let r in rows){
-		   let obj = {}
-		   obj.contig = rows[r].contig
-		   obj.operon = rows[r].operon
-		   let pos = rows[r].operon_pos.split(', ')   //'[17903, 26228]',
-		   //console.log('pos',pos)
-		   obj.op_pos1 =pos[0].substring(1,pos[0].length)
-		   obj.op_pos2 =pos[1].substring(0,pos[0].length-1)
-		   obj.prediction = rows[r].prediction
-		   obj.crispers = rows[r].crispers
-		   obj.distances = rows[r].distances
-		   obj.prediction_cas = rows[r].prediction_cas
-		   obj.prediction_crispers = rows[r].prediction_crispers
-		   //console.log(obj)
-		   data.push(obj)
-		}
-		
-		
-		res.render('pages/genome/crisper_cas_data', {
-			title: 'HOMD :: CRISPER-Cas', 
-			pgname: '', // for AboutThisPage
-			config: JSON.stringify(CFG),
-			ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-			pgtitle: 'CRISPER-Cas',
-			gid: gid,
-			crisper_data: JSON.stringify(data),
-			
-		
-		})
+        //console.log('rows',rows)
+        for(let r in rows){
+           let obj = {}
+           obj.contig = rows[r].contig
+           obj.operon = rows[r].operon
+           //console.log('operon',obj.operon)
+           //let pos = rows[r].operon_pos.split(', ')   //'[17903, 26228]',
+           obj.operon_pos = list_clean(rows[r].operon_pos)
+           //console.log('pos',pos)
+           obj.op_pos1 =obj.operon_pos[0] //.substring(1,pos[0].length)
+           obj.op_pos2 =obj.operon_pos[1]  //.substring(0,pos[1].length-1)
+           obj.prediction = rows[r].prediction
+           //obj.crispers = rows[r].crispers
+           //console.log('crispers',rows[r].crispers, typeof rows[r].crispers)
+           obj.crispers = list_clean(rows[r].crispers)
+           //obj.distances = rows[r].distances
+           obj.distances = list_clean(rows[r].distances)
+           obj.prediction_cas = rows[r].prediction_cas
+           //obj.prediction_crispers = rows[r].prediction_crispers
+           obj.prediction_crispers = list_clean(rows[r].prediction_crispers)
+           //console.log(obj)
+           data.push(obj)
+        }
+        
+        
+        res.render('pages/genome/crisper_cas_data', {
+            title: 'HOMD :: CRISPER-Cas', 
+            pgname: '', // for AboutThisPage
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            pgtitle: 'CRISPER-Cas',
+            gid: gid,
+            crisper_data: JSON.stringify(data),
+            
+        
+        })
     
     })
 })

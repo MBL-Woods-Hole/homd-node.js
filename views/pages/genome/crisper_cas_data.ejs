@@ -4,7 +4,7 @@
 }
 th, td {
   border: 1px solid black;
-  padding:1px 3px;
+  padding:3px 3px;
 }
 </style>
 
@@ -44,10 +44,22 @@ th, td {
          
          <td><%= op.op_pos1 %>, <%= op.op_pos2 %></td>
          <td><%= op.prediction %></td>
-         <td><%= op.crispers %></td>
-         <td><%= op.distances %></td>
+         <td>
+         <% for(i in op.crispers){ %>
+           <%= op.crispers[i] %><br>
+         <% } %>
+         </td>
+         <td>
+         <% for(i in op.distances){ %>
+           <%= op.distances[i] %><br>
+         <% } %>
+         </td>
          <td><%= op.prediction_cas %></td>
-         <td><%= op.prediction_crispers %></td>
+         <td>
+         <% for(i in op.prediction_crispers){ %>
+           <%= op.prediction_crispers[i] %><br>
+         <% } %>
+         </td>
        </tr>
        <% } %>
        </table>
