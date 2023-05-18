@@ -38,7 +38,7 @@ th, td {
        <% op = cdata[i] %>
        <tr>
          <td><%= op.contig %></td>
-         <td><a href="<%= cfg.JBROWSE_URL %>/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Skew" target='_blank' rel="noopener noreferrer"><%= op.operon %></a></td>
+         <td><a href="<%= cfg.JBROWSE_URL %>/<%= gid %>&tracks=crispr" target='_blank' rel="noopener noreferrer"><%= op.operon %></a></td>
          <td><%= op.operon_pos %></td>
          <td><%= op.prediction %></td>
          <td><%= op.crispers %></td>
