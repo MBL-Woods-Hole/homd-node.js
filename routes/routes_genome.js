@@ -20,23 +20,23 @@ var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in second
 //app.use(createIframe)
 router.get('/overview', function overview(req, res) {
     //console.log('in RESET-session')
-    let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
-    console.log('crisper_data:',Object.keys(crisper_data).length)
+    let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
+    console.log('crispr_data:',Object.keys(crispr_data).length)
     res.render('pages/genome/overview', {
         title: 'HOMD :: Genome Overview', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         pgtitle: 'Genome Overview',
-        crisper_size: Object.keys(crisper_data).length,
+        crispr_size: Object.keys(crispr_data).length,
         
     })
 });
-router.get('/crisper', function crisper(req, res) {
+router.get('/crispr', function crispr(req, res) {
     //console.log('in RESET-session')
-    let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
-    //console.log('crisper_data:',Object.keys(crisper_data)[0],Object.keys(crisper_data).length)
-    let seqid_list = Object.keys(crisper_data)
+    let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
+    //console.log('crispr_data:',Object.keys(crispr_data)[0],Object.keys(crispr_data).length)
+    let seqid_list = Object.keys(crispr_data)
     let send_list = []
     for (var n in seqid_list) {
           if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
@@ -48,13 +48,13 @@ router.get('/crisper', function crisper(req, res) {
     })
     send_list = apply_sspecies(send_list)
     //console.log(send_list[0])
-    res.render('pages/genome/crisper_cas', {
-        title: 'HOMD :: CRISPER-Cas', 
+    res.render('pages/genome/crispr_cas', {
+        title: 'HOMD :: CRISPR-Cas', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        pgtitle: 'CRISPER-Cas',
-        crisper_data: JSON.stringify(crisper_data),
+        pgtitle: 'CRISPR-Cas',
+        crispr_data: JSON.stringify(crispr_data),
         gid_list: JSON.stringify(send_list)
         
     })
@@ -63,12 +63,12 @@ function list_clean(item){
     //JSON.parse(item.replace('[','').replace(']','') 
     return JSON.parse(item.replace(/'/g, '"'))
 }
-router.get('/crisper_cas_data', function crisper_cas_data(req, res) {
+router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
     console.log(req.query)
     let gid = req.query.gid
     let data = []
-    let q = "SELECT contig,operon,operon_pos,prediction,crispers,distances,prediction_cas,prediction_crispers"
-    q += " FROM crisper_cas where seq_id='"+gid+"'"
+    let q = "SELECT contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
+    q += " FROM crispr_cas where seq_id='"+gid+"'"
     TDBConn.query(q, (err, rows) => {
         if(err){
            console.log(err)
@@ -86,27 +86,27 @@ router.get('/crisper_cas_data', function crisper_cas_data(req, res) {
            obj.op_pos1 =obj.operon_pos[0] //.substring(1,pos[0].length)
            obj.op_pos2 =obj.operon_pos[1]  //.substring(0,pos[1].length-1)
            obj.prediction = rows[r].prediction
-           //obj.crispers = rows[r].crispers
-           //console.log('crispers',rows[r].crispers, typeof rows[r].crispers)
-           obj.crispers = list_clean(rows[r].crispers)
+           //obj.crisprs = rows[r].crisprs
+           //console.log('crisprs',rows[r].crisprs, typeof rows[r].crisprs)
+           obj.crisprs = list_clean(rows[r].crisprs)
            //obj.distances = rows[r].distances
            obj.distances = list_clean(rows[r].distances)
            obj.prediction_cas = rows[r].prediction_cas
-           //obj.prediction_crispers = rows[r].prediction_crispers
-           obj.prediction_crispers = list_clean(rows[r].prediction_crispers)
+           //obj.prediction_crisprs = rows[r].prediction_crisprs
+           obj.prediction_crisprs = list_clean(rows[r].prediction_crisprs)
            //console.log(obj)
            data.push(obj)
         }
         
         
-        res.render('pages/genome/crisper_cas_data', {
-            title: 'HOMD :: CRISPER-Cas', 
+        res.render('pages/genome/crispr_cas_data', {
+            title: 'HOMD :: CRISPR-Cas', 
             pgname: '', // for AboutThisPage
             config: JSON.stringify(CFG),
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-            pgtitle: 'CRISPER-Cas',
+            pgtitle: 'CRISPR-Cas',
             gid: gid,
-            crisper_data: JSON.stringify(data),
+            crispr_data: JSON.stringify(data),
             
         
         })
@@ -564,8 +564,8 @@ router.get('/genome_description', function genomeDescription (req, res) {
 // Crisper-cas
 // need to determine is CC data available for this genome(gid)
 // if dir exists  homdData-Crisper.json
-    let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
-    console.log('crisper_data:',crisper_data[gid])
+    let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
+    console.log('crispr_data:',crispr_data[gid])
     res.render('pages/genome/genomedesc', {
         title: 'HOMD :: Genome Info',
         pgname: 'genome/description', // for AboutThisPage 
@@ -575,7 +575,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
         gid: gid,
         anviserver_link: C.anviserver_link,
         contigs: JSON.stringify(contigs.sort()),
-        crisper: crisper_data[gid] || 0,
+        crispr: crispr_data[gid] || 0,
         // data2: JSON.stringify(data2),
         // data3: JSON.stringify(data3),
         // data4: JSON.stringify(data4),
