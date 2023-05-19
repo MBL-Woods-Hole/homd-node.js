@@ -1,15 +1,22 @@
 <style>
+thead th { position: sticky; top: 0; }
 #crisper-table-div{
    padding:20px;
 }
 #crisper-table{
    padding:20px;
+   border-collapse:collapse;
 }
 th, td {
   border: 1px solid black;
   padding:1px 3px;
 }
-
+#crisper-table tr:nth-child(even) { 
+    background-color: #c6ffc4; 
+} 
+#crisper-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
 </style>
 <% var genomelist = JSON.parse(gid_list) %>
 <% var cdata = JSON.parse(crisper_data) %>
@@ -23,11 +30,14 @@ th, td {
     
     <div class='page-content' >
               
-       <div class='title'>CRISPR-Cas systems detected 3841 HOMD genomes</div>
+       <div class='title'>CRISPR-Cas systems detected in <%= genomelist.length %> HOMD genomes</div>
        
        <div id='crisper-table-div'>
        <table id='crisper-table' class='table'>
+       <thead>
        <tr><th>SEQ-ID</th><th>TaxID</th><th>Genus</th><th>Species</th><th>Strain/Culture</th><th>Contigs</th><th>Combined Length</th><th nowrap>CRISPR-Cas</th></tr>
+       </thead>
+       <tbody>
        <% for(i in genomelist){ %>
        <% g = genomelist[i] %>
        <% taxidfullname = 'HMT-'+("000" + g.otid).slice(-3); %>
@@ -43,6 +53,7 @@ th, td {
        <td class='center'><%= cdata[g.gid] %> [<a href='crisper_cas_data?gid=<%= g.gid %>'>view</a>]</td>
        </tr>
        <% } %>
+       </tbody>
        </table>
        
        </div>
