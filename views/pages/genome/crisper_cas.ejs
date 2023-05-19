@@ -18,6 +18,7 @@ th, td {
     background-color: #dce7f5; 
  } 
 </style>
+<% var cfg = JSON.parse(config) %> 
 <% var genomelist = JSON.parse(gid_list) %>
 <% var cdata = JSON.parse(crisper_data) %>
 <%- include('../../partials/header_html'); %>
@@ -50,7 +51,10 @@ th, td {
        <td><%= g.ccolct %></td>
        <td class='right-justify'><%= g.ncontigs %></td>
        <td class='center'><%= g.tlength %></td>
-       <td class='center'><%= cdata[g.gid] %> [<a href='crisper_cas_data?gid=<%= g.gid %>'>view</a>]</td>
+       <td class='center'>
+         <%= cdata[g.gid] %> [<a href='crisper_cas_data?gid=<%= g.gid %>'>view</a>]
+         [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
+       </td>
        </tr>
        <% } %>
        </tbody>
