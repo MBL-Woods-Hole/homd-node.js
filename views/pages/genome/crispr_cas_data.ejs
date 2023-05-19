@@ -1,5 +1,5 @@
 <style>
-#crisper-table-div{
+#crispr-table-div{
    padding:20px;
 }
 th, td {
@@ -8,7 +8,7 @@ th, td {
 }
 </style>
 
-<% var cdata = JSON.parse(crisper_data) %>
+<% var cdata = JSON.parse(crispr_data) %>
 <% var cfg = JSON.parse(config) %> 
 <%- include('../../partials/header_html'); %>
 
@@ -22,18 +22,18 @@ th, td {
               
        <div class='title'>CRISPR-Cas for Genome <%= gid %></div>
        
-       <div id='crisper-table-div'>
-       <button class='pill pill-slateblue' onclick="history.back()">back to SEQ-ID/CRISPER List</button>
-       <table id='crisper-table' class='table'>
+       <div id='crispr-table-div'>
+       <button class='pill pill-slateblue' onclick="history.back()">back to SEQ-ID/CRISPR List</button>
+       <table id='crispr-table' class='table'>
        <tr>
        <th>Contig</th>
        <th>Operon<br><small>(link to GenomeViewer)</small></th>
        <th>Operon Position</th>
        <th>Prediction</th>
-       <th>CRISPERs</th>
+       <th>CRISPRs</th>
        <th>Distances</th>
        <th>Prediction-Cas</th>
-       <th>Prediction-CRISPERS</th>
+       <th>Prediction-CRISPRS</th>
        </tr>
        <% for(i in cdata){ %>
        <% op = cdata[i] %>
@@ -46,8 +46,8 @@ th, td {
          <td><%= op.op_pos1 %>, <%= op.op_pos2 %></td>
          <td><%= op.prediction %></td>
          <td>
-         <% for(i in op.crispers){ %>
-           <%= op.crispers[i] %><br>
+         <% for(i in op.crisprs){ %>
+           <%= op.crisprs[i] %><br>
          <% } %>
          </td>
          <td>
@@ -57,8 +57,8 @@ th, td {
          </td>
          <td><%= op.prediction_cas %></td>
          <td>
-         <% for(i in op.prediction_crispers){ %>
-           <%= op.prediction_crispers[i] %><br>
+         <% for(i in op.prediction_crisprs){ %>
+           <%= op.prediction_crisprs[i] %><br>
          <% } %>
          </td>
        </tr>
