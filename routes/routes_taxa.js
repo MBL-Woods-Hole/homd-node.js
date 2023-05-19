@@ -759,6 +759,7 @@ router.get('/life', function life(req, res) {
           
           node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[lineage_list[1][show_ranks[i]]+'_'+show_ranks[i]]
           lin = make_lineage(node)
+          console.log('lin',lin)
           cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString()
         
           title = rank_display+': '+lineage_list[1][show_ranks[i]]

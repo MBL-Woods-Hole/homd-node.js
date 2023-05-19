@@ -18,6 +18,101 @@ today = yyyy + '-' + mm + '-' + dd
 var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
 //const JB = require('jbrowse2')
 //app.use(createIframe)
+router.get('/overview', function overview(req, res) {
+    //console.log('in RESET-session')
+    let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
+    console.log('crisper_data:',Object.keys(crisper_data).length)
+    res.render('pages/genome/overview', {
+        title: 'HOMD :: Genome Overview', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        pgtitle: 'Genome Overview',
+        crisper_size: Object.keys(crisper_data).length,
+        
+    })
+});
+router.get('/crisper', function crisper(req, res) {
+    //console.log('in RESET-session')
+    let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
+    //console.log('crisper_data:',Object.keys(crisper_data)[0],Object.keys(crisper_data).length)
+    let seqid_list = Object.keys(crisper_data)
+    let send_list = []
+    for (var n in seqid_list) {
+          if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
+             send_list.push(C.genome_lookup[seqid_list[n]])
+          }
+    }
+    send_list.sort(function (a, b) {
+            return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+    })
+    send_list = apply_sspecies(send_list)
+    //console.log(send_list[0])
+    res.render('pages/genome/crisper_cas', {
+        title: 'HOMD :: CRISPER-Cas', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        pgtitle: 'CRISPER-Cas',
+        crisper_data: JSON.stringify(crisper_data),
+        gid_list: JSON.stringify(send_list)
+        
+    })
+});
+function list_clean(item){
+    //JSON.parse(item.replace('[','').replace(']','') 
+    return JSON.parse(item.replace(/'/g, '"'))
+}
+router.get('/crisper_cas_data', function crisper_cas_data(req, res) {
+    console.log(req.query)
+    let gid = req.query.gid
+    let data = []
+    let q = "SELECT contig,operon,operon_pos,prediction,crispers,distances,prediction_cas,prediction_crispers"
+    q += " FROM crisper_cas where seq_id='"+gid+"'"
+    TDBConn.query(q, (err, rows) => {
+        if(err){
+           console.log(err)
+           return
+        }
+        //console.log('rows',rows)
+        for(let r in rows){
+           let obj = {}
+           obj.contig = rows[r].contig
+           obj.operon = rows[r].operon
+           //console.log('operon',obj.operon)
+           //let pos = rows[r].operon_pos.split(', ')   //'[17903, 26228]',
+           obj.operon_pos = list_clean(rows[r].operon_pos)
+           //console.log('pos',pos)
+           obj.op_pos1 =obj.operon_pos[0] //.substring(1,pos[0].length)
+           obj.op_pos2 =obj.operon_pos[1]  //.substring(0,pos[1].length-1)
+           obj.prediction = rows[r].prediction
+           //obj.crispers = rows[r].crispers
+           //console.log('crispers',rows[r].crispers, typeof rows[r].crispers)
+           obj.crispers = list_clean(rows[r].crispers)
+           //obj.distances = rows[r].distances
+           obj.distances = list_clean(rows[r].distances)
+           obj.prediction_cas = rows[r].prediction_cas
+           //obj.prediction_crispers = rows[r].prediction_crispers
+           obj.prediction_crispers = list_clean(rows[r].prediction_crispers)
+           //console.log(obj)
+           data.push(obj)
+        }
+        
+        
+        res.render('pages/genome/crisper_cas_data', {
+            title: 'HOMD :: CRISPER-Cas', 
+            pgname: '', // for AboutThisPage
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            pgtitle: 'CRISPER-Cas',
+            gid: gid,
+            crisper_data: JSON.stringify(data),
+            
+        
+        })
+    
+    })
+})
 function renderGenomeTable(req, res, args) {
     //console.log('render NEW filter') 
     let alltax_list = Object.values(C.taxon_lookup)  //.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
@@ -458,48 +553,20 @@ router.get('/genome_description', function genomeDescription (req, res) {
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
     if (err) {
-        //console.log(err)
+        console.log(err)
     }else{
         //console.log('contigs',rows)
         for(let r in rows){
            contigs.push({contig: rows[r].accession, gc: rows[r].GC})
         }
     }
-    //console.log('contigs',contigs)
-    //Pangenome
-    // let pangenomes = {}
-//     C.pangenomes.map(function(el){
-//       if(el.seqids.indexOf(gid) !== -1){
-//        pangenomes[el.pangenome_name] = {link: C.pangenome_base_link+'/'+el.pangenome_name, description: el.description}
-//       }
-//     })
-        /*
-      1 Oral Taxon ID 191 
-      2 HOMD Sequence ID  SEQF1851  
-      3 HOMD Name (Genus, Species)  Propionibacterium acidifaciens  
-      4 Genome Sequence Name
-      (Name associated with genomic sequence) Acidipropionibacterium acidifaciens 
-      5 Comments on Name  NCBI Name : Propionibacterium acidifaciens  
-      6 Culture Collection Entry Number F0233 
-      7 Isolate Origin  NA  
-      8 Sequencing Status High Coverage 
-      9 NCBI Taxonomy ID  553198  
-      10  NCBI Genome BioProject ID 31003 
-      11  NCBI Genome BioSample ID  SAMN02436184  
-      12  GenBank Accession ID  ACVN00000000.2  
-      13  Genbank Assembly ID GCA_000478805.1 
-      14  Number of Contigs and Singlets  334
-      15  Combined Length (bps) 3,017,605
-      16  GC Percentage 70.36
-      17  Sequencing Center The Forsyth Institute - J. Craig Venter Institute 
-      18  ATCC Medium Number  NA  
-      19  Non-ATCC Medium NA
-      20  16S rRNA gene sequence
-      21 pangenome
-      22  Comments
-      */
-  //console.log(C.genome_lookup[gid])
-      res.render('pages/genome/genomedesc', {
+
+// Crisper-cas
+// need to determine is CC data available for this genome(gid)
+// if dir exists  homdData-Crisper.json
+    let crisper_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crisper.json')))
+    console.log('crisper_data:',crisper_data[gid])
+    res.render('pages/genome/genomedesc', {
         title: 'HOMD :: Genome Info',
         pgname: 'genome/description', // for AboutThisPage 
         config: JSON.stringify(CFG),
@@ -508,6 +575,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
         gid: gid,
         anviserver_link: C.anviserver_link,
         contigs: JSON.stringify(contigs.sort()),
+        crisper: crisper_data[gid] || 0,
         // data2: JSON.stringify(data2),
         // data3: JSON.stringify(data3),
         // data4: JSON.stringify(data4),
@@ -649,8 +717,15 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     if(C.genome_lookup[selected_gid]){
         organism = C.genome_lookup[selected_gid].genus +' '+C.genome_lookup[selected_gid].species+' '+ssp+C.genome_lookup[selected_gid].ccolct
     }
-    let html = "<table id='annotation-table' class='table'>"
-    html += '<tr><th>Molecule</th><th>PID</th><th>NA<br><small>(Length)(Seq)</small></th><th>AA<br><small>(Length)(Seq)</small></th><th>Range</th><th>Gene</th><th>Gene Product</th></tr>'
+    let html = "<table id='annotation-table' class='table sortable'>"
+    html += '<tr>'
+    html += '<th>Molecule</th>'
+    html += '<th>PID</th>'
+    html += "<th class='sorttable_numeric'>NA<br><small>(Length)(Seq)</small></th>"
+    html += "<th class='sorttable_numeric'>AA<br><small>(Length)(Seq)</small></th>"
+    html += '<th class="sorttable_nosort">Range</th>'
+    html += '<th>Gene</th><th>Gene Product</th>'
+    html += '</tr>'
     
     fs.access(anno_path, function(error) {
        if (error) {
