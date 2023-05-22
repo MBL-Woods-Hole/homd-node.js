@@ -529,7 +529,7 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
 })
 //
 router.get('/genome_description', function genomeDescription (req, res) {
-  //console.log('in genomedescription -get')
+  console.log('in genomedescription -get')
   
   //let myurl = url.parse(req.url, true);
   if(req.query.gid && req.session.gtable_filter){
@@ -564,8 +564,14 @@ router.get('/genome_description', function genomeDescription (req, res) {
 // Crisper-cas
 // need to determine is CC data available for this genome(gid)
 // if dir exists  homdData-Crisper.json
-    let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
-    console.log('crispr_data:',crispr_data[gid])
+    let fpath = path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')
+    //console.log(fpath)
+    let crispr = 0
+    let crispr_data = JSON.parse(fs.readFileSync(fpath))
+    if(gid in crispr_data){
+        crispr = crispr_data[gid]
+    }
+    //console.log('crispr_data:',crispr_data[gid])
     res.render('pages/genome/genomedesc', {
         title: 'HOMD :: Genome Info',
         pgname: 'genome/description', // for AboutThisPage 
@@ -575,7 +581,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
         gid: gid,
         anviserver_link: C.anviserver_link,
         contigs: JSON.stringify(contigs.sort()),
-        crispr: crispr_data[gid] || 0,
+        crispr: crispr,
         // data2: JSON.stringify(data2),
         // data3: JSON.stringify(data3),
         // data4: JSON.stringify(data4),
