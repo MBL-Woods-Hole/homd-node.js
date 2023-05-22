@@ -24,7 +24,7 @@
 
 function load_dhtmlx(data) {
     
-    var items = document.getElementsByName('countcb')
+     var items = document.getElementsByName('countcb')
     if(items[0].checked && items[1].checked){
       count_type = 'both'
     }else if(items[0].checked){
@@ -40,7 +40,7 @@ function load_dhtmlx(data) {
     }
     //console.log('loading dhtmlx')
     // dhtmlx version:5  has dynamic loading
-    customOldTree = new dhtmlXTreeObject("custom_treebox","100%","100%",0);
+    customOldTree = new dhtmlXTreeObject("tree","100%","100%",0);
     //console.log(customOldTree)
     customOldTree.setImagesPath("/images/dhtmlx/imgs/");
     customOldTree.enableCheckBoxes(false);
@@ -54,27 +54,22 @@ function load_dhtmlx(data) {
     customOldTree.attachEvent("onDblClick", function(id){
         expand_tree_dhtmlx(id)
     });
-    // customOldTree.attachEvent("onClick", function(id){
-//      console.log('Item clicked',id)
-//      if(customOldTree.getOpenState(id)){
-//        customOldTree.closeItem(id);
-//      }else{
-//        customOldTree.openItem(id);
-//      }
-//      
-//      //return false;
-//  })
 
-//customOldTree.parse(dhtmlx_tree,"json");
-
-
-    customOldTree.setXMLAutoLoading("tax_custom_dhtmlx?ct="+count_type);
+    customOldTree.setXMLAutoLoading("tax_autoload?ct="+count_type);
     customOldTree.setDataMode("json");
     ////load first level of tree
-    customOldTree.load("tax_custom_dhtmlx?id=0&ct="+count_type,"json");
+    customOldTree.load("tax_autoload?id=0&ct="+count_type,"json");
+    
+    
+    
+    // taxTree = new dhx.Tree("tree", {
+//         autoload: "tax_autoload?ct="+count_type
+//     });
+//     ////load first level of tree
+//     taxTree.data.load("tax_autoload?id=tree&ct="+count_type);
     
     // // dhtmlx version:7(free) dynamic loading is in pro version
-    // customTree = new dhx.Tree("custom_treebox", {
+    // customTree = new dhx.Tree("tree", {
   //      icon: false
   //  });
   //  customTree.data.parse(data);

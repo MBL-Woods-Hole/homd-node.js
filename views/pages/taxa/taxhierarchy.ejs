@@ -35,9 +35,9 @@
     border:1px solid #A4BED4;
 }
 #count_info{
-   font-size:x-small;
-   
+   font-size:small;
 }
+
 #custom_tax_div{
   width:550px;
   border:1px solid black
@@ -50,7 +50,8 @@
 <%- include('../../partials/header_html'); %>
 
 <!-- <link rel="stylesheet" href="/css/tree.min.css" > -->
-<link rel="stylesheet" href="/css/dhtmlxtree.css">
+<link rel="stylesheet" href="/css/dhtmlxtree_edit.css">
+<!-- <link rel="stylesheet" href="/css/tree.min.css"> -->
 
 <body>
   	<div id='wrapper'>
@@ -84,11 +85,14 @@
 		  
 		    <table id='custom_tax_div' class="text-center" >
              <tr><td>
-              <div id="custom_treebox" class="text-center" style='padding:10px;background:#fdffca;'></div>
+              <div id="tree" class="text-center" style='padding:10px;background:#fdffca;'></div>
              </td></tr>
             </table>
     </center> 
-	 
+
+
+
+
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
@@ -102,6 +106,7 @@
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 
 <script type="text/javascript" src="/js/dhtmlxtree.js" ></script>
+<!-- <script type="text/javascript" src="/js/tree.js" ></script> -->
 <script type="text/javascript" src="/js/taxonomy.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
