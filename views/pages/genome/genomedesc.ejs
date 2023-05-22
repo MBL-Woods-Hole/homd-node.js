@@ -129,11 +129,11 @@
     </td>
      </tr>
      <tr class="table-active">
-       <td>18</td><td>CRISPER-cas</td>
-       <% if(crisper === 1){ %>
-          <td><a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= ginfo.gid %>" target='_blank'  >HOMD FTP Info Directory</a></td>
+       <td>18</td><td>CRISPR-cas</td>
+       <% if(crispr === 0){ %>
+           <td><small>No Available Data</small></td>
        <% }else{ %>
-          <td><small>No Available Data</small></td>
+          <td><a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= ginfo.gid %>" target='_blank'  >HOMD FTP Info Directory</a></td>
        <% } %>
      </tr>
      </table>
