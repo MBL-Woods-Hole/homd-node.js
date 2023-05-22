@@ -424,9 +424,9 @@ router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
 
 })
 // test: choose custom taxonomy, show tree
-router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
-  //console.time("TIME: tax_custom_dhtmlx");
-  //console.log('IN tax_custom_dhtmlx')
+router.get('/tax_autoload', function tax_autoload(req, res) {
+  console.log('IN tax_autoload')
+  console.log('req.query',req.query)
   let cts, lineage,options_obj
   //let myurl = url.parse(req.url, true);
   let id = req.query.id;
@@ -481,13 +481,15 @@ router.get('/tax_custom_dhtmlx', function tax_custom_dhtmlx(req, res) {
         })
   }
   //console.log(json)
+  console.log('returning',json.item)
   json.item.sort(function sortByAlpha(a, b) {
+    
     return helpers.compareStrings_alpha(a.text, b.text);
   })
 
   //console.timeEnd("TIME: tax_custom_dhtmlx");
 
-  res.json(json);
+  res.send(json);
 })
 /////////////////////////////////
 router.get('/tax_description', function tax_description(req, res){
