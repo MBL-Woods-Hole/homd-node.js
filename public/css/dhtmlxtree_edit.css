@@ -99,7 +99,7 @@ div.dhtmlxMenu_dhx_skyblue_SubLevelArea_ArrowDown_Disabled{
 .dhx_tree_textSign{font-size:8pt;font-family:monospace;width:21px;color:black;padding:0;margin:0;cursor:pointer;text-align:center;}
 .dhx_tree_opacity{opacity:0;filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none;}
 
-.dhx_bg_img_fix{height:15px;border:1px solid black;background-repeat:no-repeat;background-position:center;background-position-x:center;background-position-y:center;}
+.dhx_bg_img_fix{height:18px;border:1px solid gray;background-repeat:no-repeat;background-position:center;background-position-x:center;background-position-y:center;}
 
 
 
