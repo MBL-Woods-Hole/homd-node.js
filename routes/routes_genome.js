@@ -33,16 +33,30 @@ router.get('/overview', function overview(req, res) {
     })
 });
 router.get('/crispr', function crispr(req, res) {
-    //console.log('in RESET-session')
+    //console.log('in crispr')
+    //console.log('req.query',req.query)
+    let show =''
+    if(req.query.show){
+        show = req.query.show  // a, na or all
+    }
     let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
-    //console.log('crispr_data:',Object.keys(crispr_data)[0],Object.keys(crispr_data).length)
     let seqid_list = Object.keys(crispr_data)
+    let full_count = seqid_list.length
+    // filter ambiguous vs non-ambiguous
+    if(show && show === 'a'){
+        seqid_list = seqid_list.filter(item => crispr_data[item] === 'A')
+    }else if(show && show === 'na'){
+        seqid_list = seqid_list.filter(item => crispr_data[item] !== 'A')
+    }
+    
     let send_list = []
     for (var n in seqid_list) {
-          if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
+        if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
              send_list.push(C.genome_lookup[seqid_list[n]])
-          }
+        }
     }
+    
+    
     send_list.sort(function (a, b) {
             return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
     })
@@ -55,7 +69,9 @@ router.get('/crispr', function crispr(req, res) {
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
         pgtitle: 'CRISPR-Cas',
         crispr_data: JSON.stringify(crispr_data),
-        gid_list: JSON.stringify(send_list)
+        gid_list: JSON.stringify(send_list),
+        full_count: full_count,
+        show: show
         
     })
 });

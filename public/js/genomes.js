@@ -258,7 +258,7 @@ function select_anno(anno, search_text){
    form.appendChild(i);
    form.submit()
 }
-
+//
 function view_anno_items(gid, anno, search_text){
    //console.log('in anno_srch')
    var args = {}
@@ -292,3 +292,32 @@ function view_anno_items(gid, anno, search_text){
    }
    xmlhttp.send(JSON.stringify(args));
 }
+//
+function show_hide_cc(type){ // CRISPR_Cas
+    show = document.getElementsByName("show")
+    if(show[0].checked){  // all
+       q = 'all'
+    }else if(show[1].checked){  // na
+      q = 'na'
+    }else{  // a
+      q = 'a'
+    }
+    url = "/genome/crispr"
+    let form = document.createElement("form");
+    document.getElementsByTagName("body")[0].appendChild(form);
+    form.setAttribute("method", "GET");
+    form.setAttribute("action" , url);
+    
+    var i = document.createElement("input");
+    i.type = "hidden";
+    i.name = "show";
+    i.id = "show";
+    i.value = q
+    form.appendChild(i);
+   
+    form.submit()
+}
+
+
+
+
