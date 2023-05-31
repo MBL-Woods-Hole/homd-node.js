@@ -21,7 +21,7 @@ var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in second
 router.get('/overview', function overview(req, res) {
     //console.log('in RESET-session')
     let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
-    console.log('crispr_data:',Object.keys(crispr_data).length)
+    //console.log('crispr_data:',Object.keys(crispr_data).length)
     res.render('pages/genome/overview', {
         title: 'HOMD :: Genome Overview', 
         pgname: '', // for AboutThisPage
@@ -57,11 +57,16 @@ router.get('/crispr', function crispr(req, res) {
     }
     
     
+    
+    send_list.map(function mapGidObjList (el) {
+        if (el.tlength) { 
+            el.tlength = helpers.format_long_numbers(el.tlength); 
+        }
+    })
     send_list.sort(function (a, b) {
             return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
     })
     send_list = apply_sspecies(send_list)
-    //console.log(send_list[0])
     res.render('pages/genome/crispr_cas', {
         title: 'HOMD :: CRISPR-Cas', 
         pgname: '', // for AboutThisPage
@@ -80,7 +85,7 @@ function list_clean(item){
     return JSON.parse(item.replace(/'/g, '"'))
 }
 router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
-    console.log(req.query)
+    //console.log(req.query)
     let gid = req.query.gid
     let data = []
     let q = "SELECT contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
@@ -545,7 +550,7 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
 })
 //
 router.get('/genome_description', function genomeDescription (req, res) {
-  console.log('in genomedescription -get')
+  //console.log('in genomedescription -get')
   
   //let myurl = url.parse(req.url, true);
   if(req.query.gid && req.session.gtable_filter){
@@ -642,8 +647,8 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 })
 
 router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
-  console.log('in get_NN_NA_seq -post')
-  console.log(req.body)
+  //console.log('in get_NN_NA_seq -post')
+  //console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
@@ -670,7 +675,7 @@ router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
   }
   let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
   q += " WHERE seq_id ='"+gid+"' and protein_id='" + pid + "'"
-  console.log('anno2 query '+q)
+  //console.log('anno2 query '+q)
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
     if (err) {
@@ -726,7 +731,7 @@ function render_explorer(req, res, args){
 //
 router.post('/make_anno_search_table', function make_anno_search_table (req, res) {
     console.log('in POST:make_anno_search_table')
-    console.log(req.body)
+    //console.log(req.body)
     let anno_path = path.join(CFG.PATH_TO_TMP,req.session.anno_search_dirname)
     let anno = req.body.anno
     let search_text = req.body.search_text
@@ -870,7 +875,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
 })
 router.post('/orf_search', function orf_search (req, res) {
     console.log('in POST:orf_search')
-    console.log(req.body)
+    //console.log(req.body)
     let anno = req.body.anno
     let search_text = req.body.search_text
     let org_list = {}
