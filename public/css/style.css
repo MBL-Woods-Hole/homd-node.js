@@ -78,9 +78,13 @@ p {
    line-height: 140%;
    font-size: 18px;
 }
-input[type=radio] {
-    height: .8em;
+
+input[type="radio"] {
+  -ms-transform: scale(1.2); /* IE 9 */
+  -webkit-transform: scale(1.2); /* Chrome, Safari, Opera */
+  transform: scale(1.2);
 }
+
 .title{
    padding: 14px 0 10px 0px;  
    
@@ -157,6 +161,9 @@ hr{
 }
 .right-justify{
    text-align: right;
+}
+.left-justify{
+   text-align: left;
 }
 /*    End of header images CSS */
  .back_btn{

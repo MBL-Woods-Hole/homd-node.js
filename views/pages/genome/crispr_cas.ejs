@@ -31,10 +31,39 @@ th, td {
     
     <div class='page-content' >
               
-       <div class='title'>CRISPR-Cas systems detected in <%= genomelist.length %> HOMD genomes</div>
+       <div class='title'>CRISPR-Cas systems detected in <%= full_count %> HOMD genomes</div>
        
        <div id='crispr-table-div'>
-       <table id='crispr-table' class='table'>
+       
+       <span class=''>Show:
+            <% if(show === "a"){ %>
+            <input id='all_cb' type='radio' name='show' value='all' onclick="show_hide_cc('all')">
+            All&nbsp;&nbsp;
+            <input  id='nambi_rb' type='radio' name='show' value='na' onclick="show_hide_cc('na')">
+            Non-Ambiguous only&nbsp;&nbsp;
+            <input checked id='ambi_rb' type='radio' name='show' value='a' onclick="show_hide_cc('a')">
+            Ambiguous only
+            
+            <% }else if(show === "na"){ %>
+            <input id='all_cb' type='radio' name='show' value='all' onclick="show_hide_cc('all')">
+            All&nbsp;&nbsp;
+            <input checked id='nambi_rb' type='radio' name='show' value='na' onclick="show_hide_cc('na')">
+            Non-Ambiguous only&nbsp;&nbsp;
+            <input  id='ambi_rb' type='radio' name='show' value='a' onclick="show_hide_cc('a')">
+            Ambiguous only
+            
+            <% }else{ %>
+            <input checked id='all_cb' type='radio' name='show' value='all' onclick="show_hide_cc('all')">
+            All&nbsp;&nbsp;
+            <input  id='nambi_rb' type='radio' name='show' value='na' onclick="show_hide_cc('na')">
+            Non-Ambiguous only&nbsp;&nbsp;
+            <input  id='ambi_rb' type='radio' name='show' value='a' onclick="show_hide_cc('a')">
+            Ambiguous only
+            
+            <% } %>
+            &nbsp;&nbsp;&nbsp;&nbsp;<b>[Showing: <%= genomelist.length %>]</b>
+       </span>
+       <table id='crispr-table' class='table sortable'>
        <thead>
        <tr><th>SEQ-ID</th><th>TaxID</th><th>Genus</th><th>Species</th><th>Strain/Culture</th><th>Contigs</th><th>Combined Length</th><th nowrap>CRISPR-Cas</th></tr>
        </thead>
@@ -51,10 +80,21 @@ th, td {
        <td><%= g.ccolct %></td>
        <td class='right-justify'><%= g.ncontigs %></td>
        <td class='center'><%= g.tlength %></td>
-       <td class='center'>
-         <%= cdata[g.gid] %> [<a href='crispr_cas_data?gid=<%= g.gid %>'>view</a>]
-         [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
-       </td>
+       
+       
+       <% if(cdata[g.gid] === "A"){ %>
+             <td class='center left-justify' title='Ambiguous'>
+              <%= cdata[g.gid] %>
+             [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
+           </td>
+       <% }else{ %>
+           <td class='center left-justify'>
+              <%= cdata[g.gid] %>
+             [<a href='crispr_cas_data?gid=<%= g.gid %>'>view</a>]
+             [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
+           </td>
+       
+       <% } %>
        </tr>
        <% } %>
        </tbody>
@@ -75,6 +115,8 @@ th, td {
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/genomes.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script>
   mainmenu()
 </script>
