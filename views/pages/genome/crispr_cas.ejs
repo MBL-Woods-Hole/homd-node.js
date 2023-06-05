@@ -17,6 +17,19 @@ th, td {
 #crispr-table tr:hover { 
     background-color: #dce7f5; 
  } 
+/* code to add un-sortable numbers to left side */
+table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+table.sortable thead tr::before {
+    content: "";
+    display: table-cell;
+}
+table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+}
 </style>
 <% var cfg = JSON.parse(config) %> 
 <% var genomelist = JSON.parse(gid_list) %>
@@ -35,7 +48,8 @@ th, td {
        
        <div id='crispr-table-div'>
        
-       <span class=''>Show:
+       <span class=''>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Show:
             <% if(show === "a"){ %>
             <input id='all_cb' type='radio' name='show' value='all' onclick="show_hide_cc('all')">
             All&nbsp;&nbsp;

@@ -1722,6 +1722,26 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 })
 //
 //
+router.get('/dld_table_all/:type', function dldTableAll (req, res) {
+    const type = req.params.type
+    let fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
+    const sendList = Object.values(C.genome_lookup)
+    const listOfGids = sendList.map(item => item.gid)
+    fileFilterText = fileFilterText + ' Date: ' + today
+    const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
+    if (type === 'browser') {
+      res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+    } else if (type === 'text') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.txt"' })
+    } else if (type === 'excel') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.xls"' })
+    } else {
+      // error
+      console.log('Download table format ERROR')
+    }
+    res.send(tableTsv)
+    res.end()
+})
 router.get('/dld_table/:type', function dldTable (req, res) {
   helpers.accesslog(req, res)
   //console.log('in download table -genome:')
