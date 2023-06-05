@@ -138,7 +138,11 @@
                  Ambiguous
                  [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= ginfo.gid %>" target='_blank'>HOMD FTP Site</a>]
               <% }else{ %>
-                 <%= crispr %> Contig(s)
+                 <% if(crispr === 1){ %>
+                    <%= crispr %> Contig
+                 <% }else{ %>
+                    <%= crispr %> Contigs
+                 <% } %>
                  [<a href='crispr_cas_data?gid=<%= ginfo.gid %>'>View</a>]
                  [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= ginfo.gid %>" target='_blank'>HOMD FTP Site</a>]
               <% } %>

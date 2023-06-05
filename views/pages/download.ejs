@@ -122,9 +122,10 @@ width:180px;
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
     <tr><td>Taxon Table <a href='/taxa/tax_table'>[page]</a></td>
-      <td><a href='/taxa/dld_table/browser/all/[]/[]/0/0'>Tab Delimited Text<br>(View in browser)</a></td>
-      <td><a href='/taxa/dld_table/text/all/[]/[]/0/0'>Tab Delimited Text<br>(Save to file)</a></td>
-      <td><a href='/taxa/dld_table/excel/all/[]/[]/0/0'>MS Excel Format<br>(Save to file)</a></td>
+      
+      <td><a href='/taxa/dld_table_all/browser'>Tab Delimited Text<br>(View in browser)</a></td>
+      <td><a href='/taxa/dld_table_all/text'>Tab Delimited Text<br>(Save to file)</a></td>
+      <td><a href='/taxa/dld_table_all/excel'>MS Excel Format<br>(Save to file)</a></td>
     </tr>
  <!-- 
    
@@ -166,7 +167,7 @@ width:180px;
   <div class='subtitle'>Genomic Meta Information::Batch Downloads</div>
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
-    <tr><td>Sequence Meta Information <a href='/genome/genome_table'>[page]</a></td><td><a href='/genome/dld_table/browser/all/0/0/0/0'>Tab Delimited Text<br>(View in browser)</a></td><td><a href='/genome/dld_table/text/all/0/0/0/0'>Tab Delimited Text<br>(Save to file)</a></td><td><a href='/genome/dld_table/excel/all/0/0/0/0'>MS Excel Format<br>(Save to file)</a></td></tr>
+    <tr><td>Sequence Meta Information <a href='/genome/genome_table'>[page]</a></td><td><a href='/genome/dld_table_all/browser'>Tab Delimited Text<br>(View in browser)</a></td><td><a href='/genome/dld_table_all/text'>Tab Delimited Text<br>(Save to file)</a></td><td><a href='/genome/dld_table_all/excel'>MS Excel Format<br>(Save to file)</a></td></tr>
     
   </table>
   <table class='download-table'>
@@ -319,12 +320,20 @@ width:180px;
     <td><a href='<%= cfg.FTP_URL %>/publication_data/20190709/' target='_blank'>[Link Out]</a></td></tr>
 
 <tr><td class='download-refseq-title' colspan='3'>Other Download Formats</td> </tr>
+<tr><td>2021-02-09</td><td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.23 Aligned FASTA File</a></td>
+    <td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.aligned.fasta'>[Download]</a></td></tr>
+<tr><td>2021-02-09</td><td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.23 Taxonomy File for MOTHUR</a></td>
+    <td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.mothur.taxonomy'>[Download]</a></td></tr>  
+<tr><td>2021-02-09</td><td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.23 Taxonomy File for QIIME</a></td>
+    <td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.qiime.taxonomy'>[Download]</a></td></tr>
+
 <tr><td>2021-02-09</td><td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.22 Aligned FASTA File</a></td>
     <td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.aligned.fasta'>[Download]</a></td></tr>
 <tr><td>2021-02-09</td><td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.22 Taxonomy File for MOTHUR</a></td>
     <td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.mothur.taxonomy'>[Download]</a></td></tr>  
 <tr><td>2021-02-09</td><td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.22 Taxonomy File for QIIME</a></td>
     <td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.qiime.taxonomy'>[Download]</a></td></tr>
+
 <tr><td>2017-11-16</td><td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.1 Aligned FASTA File</a></td>
     <td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.aligned.fasta'>[Download]</a></td></tr>
 <tr><td>2017-11-16</td><td><a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.1 Taxonomy File for MOTHUR</a></td>

@@ -1431,21 +1431,35 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     res.end()
 }) 
 //
-//   
-router.get('/dld_table/:type', function dld_tax_table(req, res) {
+//
+router.get('/dld_table_all/:type/', function dldTableAll(req, res) {
+//router.get('/dld_table_all/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
+    let type = req.params.type
+    let file_filter_txt = "HOMD.org Taxon Data::No Filter Applied"+ " Date: "+today 
+    let send_list = Object.values(C.taxon_lookup);
+    let list_of_otids = send_list.map(item => item.otid)
+    
+    var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
+    if(type === 'browser'){
+      res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
+    }else if(type === 'text'){
+      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""})
+    }else if(type === 'excel'){
+      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""})
+    }else {
+      // error
+      console.log('Download table format ERROR')
+    }
+    res.send(table_tsv)
+    res.end()
+})
+router.get('/dld_table/:type', function dldTable(req, res) {
 //router.get('/dld_table/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
-   // type == text excel browser
-  // Using req.session.ttable_filter
-  
-  //console.log('in dld table - taxon')
-  //console.log(req.body)
+   
   let send_list = []
   let type = req.params.type
   let letter = req.session.ttable_filter.letter
-  //let sitefilter = JSON.parse(req.params.sites)
-  //console.log(req.session.ttable_filter.status)
-  //let k = Object.keys(req.session.ttable_filter.status).filter(item => req.session.ttable_filter.status[item] === 'on')
-  //console.log('K',k)
+  
   let statusfilter = Object.keys(req.session.ttable_filter.status).filter(item => req.session.ttable_filter.status[item] === 'on')
   let search_txt = req.session.ttable_filter.text.txt_srch
   let search_field = req.session.ttable_filter.text.field
@@ -1488,7 +1502,7 @@ router.get('/dld_table/:type', function dld_tax_table(req, res) {
     
     
 
-  file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter applied"+ " Date: "+today 
+  file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+today 
 
     let list_of_otids = send_list.map(item => item.otid)
     //console.log('list_of_otids',list_of_otids)

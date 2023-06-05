@@ -23,7 +23,8 @@ th, td {
        <div class='title'>CRISPR-Cas for Genome <%= gid %></div>
        
        <div id='crispr-table-div'>
-       <button class='pill pill-slateblue' onclick="history.back()">back to SEQ-ID/CRISPR List</button>
+       [<a href='#' class='' onclick="history.back()">Back</a>] |
+       [<a href='<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= gid %>'>HOMD FTP Site</a>]
        <table id='crispr-table' class='table'>
        <tr>
        <th>Contig</th>
