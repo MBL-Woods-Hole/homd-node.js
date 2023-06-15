@@ -382,14 +382,14 @@ if __name__ == "__main__":
     elif args.dbhost == 'homd_prod':
         #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
         #args.TAX_DATABASE = 'HOMD_taxonomy'
-        args.NEW_DATABASE = 'homd'
+        args.DATABASE = 'homd'
         #dbhost_old = '192.168.1.51'
         dbhost= '192.168.1.42'
 
     elif args.dbhost == 'localhost':
         #args.json_file_path = '/Users/avoorhis/programming/homd-data/json'
         #args.TAX_DATABASE  = 'HOMD_taxonomy'
-        args.NEW_DATABASE = 'homd'
+        args.DATABASE = 'homd'
         dbhost = 'localhost'
         #dbhost_old = 'localhost'
         
@@ -399,7 +399,7 @@ if __name__ == "__main__":
     if args.prettyprint:
         args.indent = 4
    
-    myconn_new = MyConnection(host=dbhost, db=args.NEW_DATABASE,  read_default_file = "~/.my.cnf_node")
+    myconn_new = MyConnection(host=dbhost, db=args.DATABASE,  read_default_file = "~/.my.cnf_node")
     run_abundance_db()
    
     
