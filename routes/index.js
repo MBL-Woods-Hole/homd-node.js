@@ -373,7 +373,7 @@ router.post('/site_search', function site_search(req, res) {
   gidLst.sort(function (a, b) {
        return helpers.compareStrings_alpha(a.species, b.species);
   })
-
+  //console.log('gidObjList',gidObjList)
 
 
 
@@ -381,11 +381,17 @@ router.post('/site_search', function site_search(req, res) {
   // OTID Metadata
   const allOtidObjList = Object.values(C.taxon_lookup)
   const otidKeyList = Object.keys(allOtidObjList[0])
-  const otidObjList = allOtidObjList.filter(function (el) {
+  
+  let otidObjList = allOtidObjList.filter(function (el) {
     for (let n in otidKeyList) {
       //console.log( 'el[otidkeylist[n]]',el[otidkeylist[n]] )
-      if (Array.isArray(el[otidKeyList[n]])) {
-        // we're missing any arrays
+      if (Array.isArray(el[otidKeyList[n]]) && el[otidKeyList[n]].length > 0) {
+        // we're catching any arrays: rrna_sequences, synonyms, sites, pangenomes, type_strains, ref_strains
+        //console.log('x0',el[otidKeyList[n]])
+          if(el[otidKeyList[n]].findIndex(element => element.toLowerCase().includes(searchTextLower)) !== -1){
+              return el.otid
+          }
+
       } else {
         
         //helpers.print(['el',el])
@@ -397,6 +403,7 @@ router.post('/site_search', function site_search(req, res) {
       }
     }
   })
+  
   const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
   //console.log('otidLst')
   otidLst.sort(function (a, b) {
@@ -533,6 +540,7 @@ router.post('/site_search', function site_search(req, res) {
       // set req.session.site_search_result = {} here before annotation collection
       //req.session.site_search_result_prokka = {}
       //req.session.site_search_result_ncbi = {}
+      console.log('st',searchText)
       res.render('pages/search_result', {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
