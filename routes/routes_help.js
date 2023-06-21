@@ -209,6 +209,9 @@ function getPageTitle(page){
     if(page === 'taxon/life'){
        return "Page Help::Taxon 'life' Pages"
     }
+    if(page === 'taxon/taxon_version'){
+       return 'HOMD Taxonomy Version History'
+    }
     // PHAGE
     if(page === 'phage/phage_table'){
        return 'Page Help::Phage Table'

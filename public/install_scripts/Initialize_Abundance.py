@@ -195,6 +195,8 @@ def run_abundance_db():
 #                 if tax_parts[6] in subspecies:
 #                     taxon_string =';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+subspecies[tax_parts[6]][0]+';'+subspecies[tax_parts[6]][1]
         if taxon_string not in TCcollector:
+            print()
+            print(row)
             print('!Missing from TaxonCounts.json -('+row['reference']+')::'+taxon_string)
             TCcollector[taxon_string] = {}
         TCcollector[taxon_string]['otid'] = row['otid']
