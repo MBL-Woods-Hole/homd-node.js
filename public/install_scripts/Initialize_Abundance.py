@@ -195,6 +195,8 @@ def run_abundance_db():
 #                 if tax_parts[6] in subspecies:
 #                     taxon_string =';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+subspecies[tax_parts[6]][0]+';'+subspecies[tax_parts[6]][1]
         if taxon_string not in TCcollector:
+            print()
+            print(row)
             print('!Missing from TaxonCounts.json -('+row['reference']+')::'+taxon_string)
             TCcollector[taxon_string] = {}
         TCcollector[taxon_string]['otid'] = row['otid']
@@ -375,18 +377,22 @@ if __name__ == "__main__":
     if not os.path.exists(args.outdir):
         print("\nThe out put directory doesn't exist:: using the current dir instead\n")
         args.outdir = './'                         
-    if args.dbhost == 'homd':
+    if args.dbhost == 'homd_dev':
+        #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
+        args.DATABASE  = 'homd'
+        dbhost = '192.168.1.46'
+    elif args.dbhost == 'homd_prod':
         #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
         #args.TAX_DATABASE = 'HOMD_taxonomy'
-        args.NEW_DATABASE = 'homd'
+        args.DATABASE = 'homd'
         #dbhost_old = '192.168.1.51'
-        dbhost_new= '192.168.1.42'
+        dbhost= '192.168.1.42'
 
     elif args.dbhost == 'localhost':
         #args.json_file_path = '/Users/avoorhis/programming/homd-data/json'
         #args.TAX_DATABASE  = 'HOMD_taxonomy'
-        args.NEW_DATABASE = 'homd'
-        dbhost_new = 'localhost'
+        args.DATABASE = 'homd'
+        dbhost = 'localhost'
         #dbhost_old = 'localhost'
         
     else:
@@ -395,7 +401,7 @@ if __name__ == "__main__":
     if args.prettyprint:
         args.indent = 4
    
-    myconn_new = MyConnection(host=dbhost_new, db=args.NEW_DATABASE,  read_default_file = "~/.my.cnf_node")
+    myconn_new = MyConnection(host=dbhost, db=args.DATABASE,  read_default_file = "~/.my.cnf_node")
     run_abundance_db()
    
     

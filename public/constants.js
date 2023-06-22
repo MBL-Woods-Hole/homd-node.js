@@ -11,22 +11,22 @@ constants.user_security_levels = {
 }
 //constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
 constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
-constants.phyla = [ 'Actinobacteria',
-          'Bacteroidetes',
-          'Chlamydiae',
-          'Chlorobi',
-          'Chloroflexi',
-          'Euryarchaeota',
-          'Firmicutes',
-          'Fusobacteria',
-          'Gracilibacteria (GN02)',
-          'Proteobacteria',
-          'Saccharibacteria (TM7)',
-          'Spirochaetes',
-          'SR1',
-          'Synergistetes',
-          'WPS-2'
-]
+// constants.phyla = [ 'Actinobacteria',
+//           'Bacteroidetes',
+//           'Chlamydiae',
+//           'Chlorobi',
+//           'Chloroflexi',
+//           'Euryarchaeota',
+//           'Firmicutes',
+//           'Fusobacteria',
+//           'Gracilibacteria (GN02)',
+//           'Proteobacteria',
+//           'Saccharibacteria (TM7)',
+//           'Spirochaetes',
+//           'SR1',
+//           'Synergistetes',
+//           'WPS-2'
+// ]
 constants.names_w_text = {
   genera:['Actinomyces','Campylobacter','Corynebacterium','Gemella','Leptotrichia',
     'Porphyromonas','Pseudoleptotrichia','Schaalia','Tannerella','Aggregatibacter','Capnocytophaga',

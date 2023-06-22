@@ -143,12 +143,16 @@ default=False,
         print("\nThe out put directory doesn't exist:: using the current dir instead\n")
 
         args.outdir = './'
-    if args.dbhost == 'homd':
+    if args.dbhost == 'homd_dev':
+        #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
+        args.DATABASE  = 'homd'
+        dbhost = '192.168.1.46'
+    elif args.dbhost == 'homd_prod':
         #args.DATABASE  = 'homd'
         
         #dbhost = '192.168.1.42'
         # CCD Drive
-        dbhost = '192.168.1.46'
+        dbhost = '192.168.1.42'
         
     elif args.dbhost == 'localhost':  #default
         #args.DATABASE = 'homd'
