@@ -10,12 +10,7 @@ const helpers   = require(app_root + '/routes/helpers/helpers')
 const queries = require(app_root + '/routes/queries')
 // const open = require('open')
 const createIframe = require("node-iframe")
-var today = new Date()
-var dd = String(today.getDate()).padStart(2, '0')
-var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
-var yyyy = today.getFullYear()
-today = yyyy + '-' + mm + '-' + dd
-var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
+
 //const JB = require('jbrowse2')
 //app.use(createIframe)
 router.get('/overview', function overview(req, res) {
@@ -1723,6 +1718,12 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //
 //
 router.get('/dld_table_all/:type', function dldTableAll (req, res) {
+    var today = new Date()
+var dd = String(today.getDate()).padStart(2, '0')
+var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
+var yyyy = today.getFullYear()
+today = yyyy + '-' + mm + '-' + dd
+var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
     const type = req.params.type
     let fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
     const sendList = Object.values(C.genome_lookup)
@@ -1745,7 +1746,12 @@ router.get('/dld_table_all/:type', function dldTableAll (req, res) {
 router.get('/dld_table/:type', function dldTable (req, res) {
   helpers.accesslog(req, res)
   //console.log('in download table -genome:')
-  
+  var today = new Date()
+  var dd = String(today.getDate()).padStart(2, '0')
+  var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
+  var yyyy = today.getFullYear()
+  today = yyyy + '-' + mm + '-' + dd
+  var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
   const type = req.params.type
   const letter = req.session.gtable_filter.letter
   const phylum = req.session.gtable_filter.phylum

@@ -12,12 +12,6 @@ const parser = require('xml2json');
 const helpers   = require(app_root + '/routes/helpers/helpers')
 const C       = require(app_root + '/public/constants')
 const async = require('async')
-var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = today.getFullYear();
-today = yyyy + '-' + mm + '-' + dd;
-var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
 /*  test seqs    
 
@@ -546,7 +540,13 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
 })
 
 router.post('/blastDownload', function blastDownload(req, res) {
-    //
+    var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+	today = yyyy + '-' + mm + '-' + dd;
+	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+
     console.log('in blastDownload')
     const AdmZip = require('adm-zip');
     //console.log(req.body)

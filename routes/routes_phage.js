@@ -8,12 +8,7 @@ const path     = require('path');
 const C     = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
 const queries = require(app_root + '/routes/queries')
-var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = today.getFullYear();
-today = yyyy + '-' + mm + '-' + dd;
-var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+
 
 router.get('/', function index(req, res) {
   console.log('in phage hello')
@@ -242,6 +237,12 @@ router.get('/phagedesc', function phagedesc(req, res) {
 
 router.get('/dld_table/:type/:letter/:rank/:search_txt/:search_field', function dld_table(req, res) {
   helpers.accesslog(req, res)
+  var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+today = yyyy + '-' + mm + '-' + dd;
+var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
   console.log('in dld phage-get')
   let sendList, sendList0
   let type = req.params.type

@@ -8,12 +8,12 @@ const path     = require('path');
 const C     = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
 const queries = require(app_root + '/routes/queries')
-var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = today.getFullYear();
-today = yyyy + '-' + mm + '-' + dd;
-var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+// var today = new Date();
+// var dd = String(today.getDate()).padStart(2, '0');
+// var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+// var yyyy = today.getFullYear();
+// today = yyyy + '-' + mm + '-' + dd;
+// var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
 function renderTaxonTable(req, res, args) {
         
@@ -1305,6 +1305,13 @@ router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
 })
 //
 router.get('/download/:type/:fxn', function download(req, res) {
+    var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+	today = yyyy + '-' + mm + '-' + dd;
+	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+
     let type = req.params.type   // browser, text or excel
     let fxn = req.params.fxn     // hierarchy or level
     helpers.print(['in download: '+type+'::'+fxn])
@@ -1338,6 +1345,13 @@ router.get('/download/:type/:fxn', function download(req, res) {
 
 router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     //console.log('in dld abund - taxon')
+    var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+	today = yyyy + '-' + mm + '-' + dd;
+	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+
     let type = req.params.type
     let source = req.params.source
     //helpers.print('type: '+type+' source: '+source)
@@ -1434,6 +1448,13 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
 //
 router.get('/dld_table_all/:type/', function dldTableAll(req, res) {
 //router.get('/dld_table_all/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
+    var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+	today = yyyy + '-' + mm + '-' + dd;
+	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+
     let type = req.params.type
     let file_filter_txt = "HOMD.org Taxon Data::No Filter Applied"+ " Date: "+today 
     let send_list = Object.values(C.taxon_lookup);
@@ -1455,7 +1476,13 @@ router.get('/dld_table_all/:type/', function dldTableAll(req, res) {
 })
 router.get('/dld_table/:type', function dldTable(req, res) {
 //router.get('/dld_table/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
-   
+    var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+	today = yyyy + '-' + mm + '-' + dd;
+	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+
   let send_list = []
   let type = req.params.type
   let letter = req.session.ttable_filter.letter
