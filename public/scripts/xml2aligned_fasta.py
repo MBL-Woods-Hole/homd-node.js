@@ -13,11 +13,11 @@ from Bio import AlignIO
 from Bio import Phylo
 
 from Bio.Phylo.TreeConstruction import DistanceCalculator
-from ete3 import Tree
-from ete3 import PhyloTree
+#from ete3 import Tree
+#from ete3 import PhyloTree
 #from connect import MyConnection
 import datetime
-from bs4 import BeautifulSoup   # cant read hyphen
+#from bs4 import BeautifulSoup   # cant read hyphen
 import xml.etree.ElementTree as ET
 today = str(datetime.date.today())
 
