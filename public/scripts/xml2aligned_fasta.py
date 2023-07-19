@@ -80,8 +80,9 @@ def run_alingnment(args):
     # https://github.com/taylor-lindsay/phylogenetics/blob/master/turtles/turtles.ipynb
     args.maligned = args.outfilepath+"-aligned.aln"
     infile = args.outfilepath
-    
-    subprocess.call([args.muscle, "-in",infile,'-out',args.maligned,'-clw'])
+    cmdls = [args.muscle, "-in",infile,'-out',args.maligned,'-clw']
+    print('Muscle',cmdls)
+    subprocess.call(cmdls)
 
 def run_tree(args):    
     with open(args.maligned,"r") as aln: 
