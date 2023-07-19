@@ -31,6 +31,57 @@ router.get('/', function index(req, res) {
 
   })
 })
+router.get('/blastdir=*', function taxon(req, res) {
+  // sequence server
+  console.log('blastdir=*')
+  var url = req.url;
+  console.log(url)
+  // /blastdir=zvCJASB75nUIIKUL4s5y
+  let dir = url.split('=')[1]
+  let dirpath = path.join(CFG.PATH_TO_BLAST_FILES,dir)
+  let filepath = path.join(dirpath,'sequenceserver-xml_report.xml')
+  console.log('file',filepath)
+  try{
+     let stats = fs.statSync(filepath)
+     if(stats.isFile()){
+           let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'xml2aligned_fasta.py')
+           //let cmd = pyscript +' -in '+ filepath
+           const ls = spawn('/Users/avoorhis/anaconda3/bin/python3', [pyscript,"-id", dirpath]);
+           ls.stdout.on("data", data => {
+                console.log(`stdout: ${data}`);
+            });
+
+            ls.stderr.on("data", data => {
+                console.log(`stderr: ${data}`);
+            });
+
+            ls.on('error', (error) => {
+                console.log(`error: ${error.message}`);
+            });
+
+            ls.on("close", code => {
+                console.log(`child process exited with code ${code}`);
+            });
+           res.render('pages/blast/tree', {
+              title: 'HOMD :: Human Oral Microbiome Database',
+              pgname: '', // for AbountThisPage
+              config: JSON.stringify(CFG),
+              ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+              user: JSON.stringify(req.user || {})
+    
+
+           })
+    }else{
+      req.flash('fail', 'Could Not Find File: '+filepath);
+      res.redirect('/')
+    }
+  }catch(e){
+      req.flash('fail', 'Could Not Find File: '+filepath);
+      res.redirect('/')
+  }
+  
+  
+})
 router.get('/taxon=(\\d+)', function taxon(req, res) {
   // sequence server
   //console.log('taxon=/.d/')
