@@ -81,7 +81,7 @@ def run_alingnment(args):
     args.maligned = args.outfilepath+"-aligned.aln"
     infile = args.outfilepath
     
-    subprocess.call(["muscle", "-in",infile,'-out',args.maligned,'-clw'])
+    subprocess.call([args.muscle, "-in",infile,'-out',args.maligned,'-clw'])
 
 def run_tree(args):    
     with open(args.maligned,"r") as aln: 
@@ -108,32 +108,11 @@ def run_tree(args):
     matplotlib.rc('font', size=12)              # fontsize of the leaf and node labels 
     matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
     matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
-    #turtle_tree.ladderize()
+   
     axes = fig.add_subplot(1, 1, 1)
     Phylo.draw(my_tree, axes=axes)
     #fig.savefig("my_cladogram")
     
-    sys.exit()
-    
-    output_handle = open(outfile, "w")
-    #alignment = AlignIO.read(open(args.outfile), "phylip")
-    #fsta = AlignIO.parse(args.outfile, "fasta")
-    alignment = AlignIO.parse(args.outfile,"fasta")
-    AlignIO.write(alignment, "my_example.phy", "phylip")
-    #print(type(fsta))
-    
-    print(distance_matrix)
-    #print("Alignment length %i" % alignment.get_alignment_length())
-    AlignIO.write(alignment, output_handle, "phylip")
-    #for record in alignment:
-    #    print(record.seq + " " + record.id)
-
-def tree(args):
-    
-    tree = Phylo.read("tree1", "newick")
-    print(tree)
-    Phylo.draw_ascii(tree)
-    #FastTree -nt -gtr -gamma input_aln.fasta > input.tre
     
 if __name__ == "__main__":
 
@@ -152,6 +131,8 @@ if __name__ == "__main__":
                                                     help=" ")
     
     parser.add_argument("-v", "--verbose",   required=False,  action="store_true",    dest = "verbose", default=False,
+                                                    help="verbose print()") 
+    parser.add_argument("-mp", "--muscle_path",   required=False,  action="store",    dest = "muscle", default='/Users/avoorhis/anaconda3/bin/muscle',
                                                     help="verbose print()") 
     args = parser.parse_args()
     args.filename = 'sequenceserver-xml_report.xml'

@@ -46,7 +46,7 @@ router.get('/blastdir=*', function taxon(req, res) {
      if(stats.isFile()){
            let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'xml2aligned_fasta.py')
            //let cmd = pyscript +' -in '+ filepath
-           const ls = spawn(CFG.PYTHON_EXE, [pyscript,"-id", dirpath]);
+           const ls = spawn(CFG.PYTHON_EXE, [pyscript,'-mp',CFG.MUSCLE_EXE,"-id", dirpath]);
            ls.stdout.on("data", data => {
                 console.log(`stdout: ${data}`);
             });
