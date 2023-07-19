@@ -81,7 +81,7 @@ def run_alingnment(args):
     args.maligned = args.outfilepath+"-aligned.aln"
     infile = args.outfilepath
     cmdls = [args.muscle, "-in",infile,'-out',args.maligned,'-clw']
-    print('Muscle',cmdls)
+    print('Muscle:',' '.join(cmdls))
     subprocess.call(cmdls)
 
 def run_tree(args):    
@@ -101,17 +101,17 @@ def run_tree(args):
     #import matplotlib
     #import matplotlib.pyplot as plt
     
-    #fig = Phylo.draw(my_tree)
+    fig = Phylo.draw(my_tree)
     
-    import matplotlib
-    import matplotlib.pyplot as plt
-    fig = plt.figure(figsize=(13, 5), dpi=100) # create figure & set the size 
-    matplotlib.rc('font', size=12)              # fontsize of the leaf and node labels 
-    matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
-    matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
-   
-    axes = fig.add_subplot(1, 1, 1)
-    Phylo.draw(my_tree, axes=axes)
+    # import matplotlib
+#     import matplotlib.pyplot as plt
+#     fig = plt.figure(figsize=(13, 5), dpi=100) # create figure & set the size 
+#     matplotlib.rc('font', size=12)              # fontsize of the leaf and node labels 
+#     matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
+#     matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
+#    
+#     axes = fig.add_subplot(1, 1, 1)
+#     Phylo.draw(my_tree, axes=axes)
     #fig.savefig("my_cladogram")
     
     
