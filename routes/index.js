@@ -38,7 +38,7 @@ router.get('/blastdir=*', function taxon(req, res) {
   console.log(url)
   // /blastdir=zvCJASB75nUIIKUL4s5y
   let dir = url.split('=')[1]
-  let dirpath = path.join(CFG.PATH_TO_BLAST_FILES,dir)
+  let dirpath = path.join(CFG.PATH_TO_SS_DIRS,dir)
   let filepath = path.join(dirpath,'sequenceserver-xml_report.xml')
   console.log('file',filepath)
   try{
