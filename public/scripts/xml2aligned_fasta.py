@@ -103,12 +103,12 @@ def run_tree(args):
     #Phylo.write(my_tree, "my_tree.xml", "phyloxml")
     #import matplotlib
     #import matplotlib.pyplot as plt
-    
-    fig = plt.figure(figsize=(13, 5), dpi=100) # create figure & set the size 
-    matplotlib.rc('font', size=12)              # fontsize of the leaf and node labels 
+    #fig = plt.figure(figsize=(13, 5), dpi=100)
+    fig = plt.figure(figsize=(20, 7), dpi=65) # create figure & set the size 
+    matplotlib.rc('font', size=20)              # fontsize of the leaf and node labels 
     matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
     matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
-    #turtle_tree.ladderize()
+    my_tree.ladderize()                       # optional view
     axes = fig.add_subplot(1, 1, 1)
     Phylo.draw(my_tree, axes=axes, do_show=False) # myst be present and False
     fig.savefig(os.path.join(args.sourcedir,"my_cladogram"))  # png
