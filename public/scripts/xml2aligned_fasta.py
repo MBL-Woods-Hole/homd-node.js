@@ -52,9 +52,17 @@ def run_unalingned(args):
         for child in hit:
             #print(child.tag)
             if child.tag == 'Hit_def':
-               l = [n.strip() for n in child.text.split('|')]
-               # 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
-               defline = '>'+ l[2]+';'+l[1].replace(' ','_')+';'+l[4].replace(' ','')
+               # REFSEQ:: 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
+               # GENOME:: SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
+               if child.text.startswith('SEQF'):
+                   # GENOME:: SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
+                   l = [n.strip() for n in child.text.split()]
+                   #defline = '>'+ l[1]+';'+l[2]+' '+l[3]+';'+l[0]
+                   defline = '>'+ l[0].split('|')[0]+';'+l[1]
+               else:
+                   # REFSEQ:: 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
+                   l = [n.strip() for n in child.text.split('|')]
+                   defline = '>'+ l[2]+';'+l[1].replace(' ','_')+';'+l[4].replace(' ','')
                print('Adding',defline)
                fout.write(defline+'\n')
                fasta_text += defline+'\n'
@@ -80,7 +88,7 @@ def run_alingnment(args):
     # https://github.com/taylor-lindsay/phylogenetics/blob/master/turtles/turtles.ipynb
     args.maligned = args.outfilepath+"-aligned.aln"
     infile = args.outfilepath
-    cmdls = [args.muscle, "-in",infile,'-out',args.maligned,'-clw']
+    cmdls = [args.muscle, "-in",infile,'-out',args.maligned]  #,'-clw']
     print('Muscle:',' '.join(cmdls))
     subprocess.call(cmdls)
 
@@ -88,7 +96,7 @@ def run_tree(args):
     import matplotlib
     import matplotlib.pyplot as plt
     with open(args.maligned,"r") as aln: 
-        alignment = AlignIO.read(aln,"clustal") 
+        alignment = AlignIO.read(aln,"fasta")  #"clustal") "fasta" "clustal"
     
     
     calculator = DistanceCalculator('identity')
@@ -104,7 +112,7 @@ def run_tree(args):
     #import matplotlib
     #import matplotlib.pyplot as plt
     #fig = plt.figure(figsize=(13, 5), dpi=100)
-    fig = plt.figure(figsize=(20, 7), dpi=65) # create figure & set the size 
+    fig = plt.figure(figsize=(20, 12), dpi=65) # create figure & set the size 
     matplotlib.rc('font', size=20)              # fontsize of the leaf and node labels 
     matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
     matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
