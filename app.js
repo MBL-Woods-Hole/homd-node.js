@@ -111,7 +111,7 @@ app.use(express.static('tmp'));
 
 //app.use(express.static('jbrowse2/static/js'));
 //path.join(__dirname, 'public', 'javascripts')
-app.use('/tree', express.static(CFG.PATH_TO_BLAST_FILES));
+app.use('/tree', express.static(CFG.PATH_TO_SS_DIRS));
 
 // ROUTES:
 app.use('/', home);
