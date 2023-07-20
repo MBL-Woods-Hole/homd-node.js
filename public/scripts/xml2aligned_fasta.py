@@ -85,6 +85,8 @@ def run_alingnment(args):
     subprocess.call(cmdls)
 
 def run_tree(args):    
+    import matplotlib
+    import matplotlib.pyplot as plt
     with open(args.maligned,"r") as aln: 
         alignment = AlignIO.read(aln,"clustal") 
     
@@ -96,23 +98,20 @@ def run_tree(args):
     constructor = DistanceTreeConstructor(calculator)
     my_tree = constructor.build_tree(alignment)
     my_tree.rooted = True
+    #Phylo.write(my_tree, "turtle_tree.xml", "phyloxml")
     #print(my_tree)
     #Phylo.write(my_tree, "my_tree.xml", "phyloxml")
     #import matplotlib
     #import matplotlib.pyplot as plt
     
-    fig = Phylo.draw(my_tree)
-    
-    # import matplotlib
-#     import matplotlib.pyplot as plt
-#     fig = plt.figure(figsize=(13, 5), dpi=100) # create figure & set the size 
-#     matplotlib.rc('font', size=12)              # fontsize of the leaf and node labels 
-#     matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
-#     matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
-#    
-#     axes = fig.add_subplot(1, 1, 1)
-#     Phylo.draw(my_tree, axes=axes)
-    #fig.savefig("my_cladogram")
+    fig = plt.figure(figsize=(13, 5), dpi=100) # create figure & set the size 
+    matplotlib.rc('font', size=12)              # fontsize of the leaf and node labels 
+    matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
+    matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
+    #turtle_tree.ladderize()
+    axes = fig.add_subplot(1, 1, 1)
+    Phylo.draw(my_tree, axes=axes, do_show=False) # myst be present and False
+    fig.savefig(os.path.join(args.sourcedir,"my_cladogram"))  # png
     
     
 if __name__ == "__main__":
@@ -142,4 +141,5 @@ if __name__ == "__main__":
     run_unalingned(args)
     run_alingnment(args)
     run_tree(args)
+    print('PyScript Finished')
     

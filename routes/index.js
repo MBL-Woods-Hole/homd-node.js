@@ -38,7 +38,7 @@ router.get('/blastdir=*', function taxon(req, res) {
   console.log(url)
   // /blastdir=zvCJASB75nUIIKUL4s5y
   let dir = url.split('=')[1]
-  let dirpath = path.join(CFG.PATH_TO_SS_DIRS,dir)
+  let dirpath = path.join(CFG.PATH_TO_SS_DIRS, dir)
   let filepath = path.join(dirpath,'sequenceserver-xml_report.xml')
   console.log('file',filepath)
   try{
@@ -61,16 +61,23 @@ router.get('/blastdir=*', function taxon(req, res) {
 
             ls.on("close", code => {
                 console.log(`child process exited with code ${code}`);
+                if(code === 0){
+                    let pngfile = path.join(dirpath,'my_cladogram.png')
+                    
+                    res.render('pages/blast/tree', {
+                      title: 'HOMD :: Human Oral Microbiome Database',
+                      pgname: '', // for AbountThisPage
+                      config: JSON.stringify(CFG),
+                      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                      user: JSON.stringify(req.user || {}),
+                      
+                      png_path: '/tree/'+dir+'/my_cladogram.png'
+                    })
+                }else{
+                   req.flash('fail', 'Tree Script Failed: '+filepath);
+                   res.redirect('/')
+                }
             });
-           res.render('pages/blast/tree', {
-              title: 'HOMD :: Human Oral Microbiome Database',
-              pgname: '', // for AbountThisPage
-              config: JSON.stringify(CFG),
-              ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-              user: JSON.stringify(req.user || {})
-    
-
-           })
     }else{
       req.flash('fail', 'Could Not Find File: '+filepath);
       res.redirect('/')
