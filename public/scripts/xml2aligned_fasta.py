@@ -45,7 +45,9 @@ def run_unalingned(args):
 #     
 #     print('Maxlength',maxlength)
     fasta_text = ''
+    args.hit_count = 0
     for hit in root.iter('Hit'):
+        args.hit_count += 1
         for child in hit:
             #print(child.tag)
             if child.tag == 'Hit_def':
@@ -87,10 +89,11 @@ def run_alingnment(args):
     args.maligned = args.outfilepath+"-aligned.aln"
     infile = args.outfilepath
     cmdls = [args.muscle, "-in",infile,'-out',args.maligned]  #,'-clw']
-    print('Muscle:',' '.join(cmdls))
+    #print('Muscle:',' '.join(cmdls))
     subprocess.call(cmdls)
 
 def run_tree(args):    
+    #print('HitCount',args.hit_count)
     import matplotlib
     import matplotlib.pyplot as plt
     with open(args.maligned,"r") as aln: 
@@ -110,7 +113,9 @@ def run_tree(args):
     #import matplotlib
     #import matplotlib.pyplot as plt
     #fig = plt.figure(figsize=(13, 5), dpi=100)
-    fig = plt.figure(figsize=(20, 12), dpi=65) # create figure & set the size 
+    h = args.hit_count + 5
+    w = 20
+    fig = plt.figure(figsize=(w, h), dpi=65) # create figure & set the size 
     matplotlib.rc('font', size=20)              # fontsize of the leaf and node labels 
     matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
     matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
