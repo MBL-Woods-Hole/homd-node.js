@@ -4,7 +4,7 @@
 # this script creates a list of json objects that allows the dhtmlx javascript library
 # to parse and show a taxonomy tree (Written for HOMD)
 ##
-import os, sys
+import os, sys, re
 import json
 #from json import JSONEncoder
 import argparse
@@ -30,23 +30,20 @@ def run_unalingned(args):
     #    data = f.read()
     args.outfilepath = os.path.join(args.sourcedir, args.outfile+'.fa')
     fout = open(args.outfilepath,'w')
-    # Passing the stored data inside
-    # the beautifulsoup parser, storing
-    # the returned object
     
     root = ET.parse(os.path.join(args.sourcedir,args.filename)).getroot()
     
-    maxlength = 0
-    for hsp in root.iter('Hsp'):
-        for child in hsp:
-            #print(child.tag)
-            if child.tag == 'Hsp_align-len':
-                #print(child.text)
-                if int(child.text) > maxlength:
-                    maxlength = int(child.text)
-    
-    
-    print('Maxlength',maxlength)
+    # maxlength = 0
+#     for hsp in root.iter('Hsp'):
+#         for child in hsp:
+#             #print(child.tag)
+#             if child.tag == 'Hsp_align-len':
+#                 #print(child.text)
+#                 if int(child.text) > maxlength:
+#                     maxlength = int(child.text)
+#     
+#     
+#     print('Maxlength',maxlength)
     fasta_text = ''
     for hit in root.iter('Hit'):
         for child in hit:
@@ -55,14 +52,20 @@ def run_unalingned(args):
                # REFSEQ:: 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
                # GENOME:: SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
                if child.text.startswith('SEQF'):
-                   # GENOME:: SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
-                   l = [n.strip() for n in child.text.split()]
-                   #defline = '>'+ l[1]+';'+l[2]+' '+l[3]+';'+l[0]
-                   defline = '>'+ l[0].split('|')[0]+';'+l[1]
+                   # NCBI:GENOME:: SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
+                   # PROKKA:GENOME SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
+                   x = child.text.split()  # split on white space
+                   if '|' in x[0]:   # NCBI
+                       defline = '>'+ x[0]+';'+x[1]
+                   else:   # PROKKA
+                       res = re.findall(r'\[.*?\]', child.text)
+                       bracket = res[0].lstrip('[').rstrip(']')
+                       #print('res',res,bracket)
+                       defline = '>' + x[0]+';'+bracket.split()[0]
                else:
                    # REFSEQ:: 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
-                   l = [n.strip() for n in child.text.split('|')]
-                   defline = '>'+ l[2]+';'+l[1].replace(' ','_')+';'+l[4].replace(' ','')
+                   x = [n.strip() for n in child.text.split('|')]
+                   defline = '>'+ x[2]+';'+x[1].replace(' ','_')+';'+x[4].replace(' ','')
                print('Adding',defline)
                fout.write(defline+'\n')
                fasta_text += defline+'\n'
@@ -70,11 +73,6 @@ def run_unalingned(args):
             #print(hsp.tag)
             for child in hsp:
                 if child.tag == 'Hsp_hseq':
-                    #print(child.text)
-                    #print(len(child.text))
-                    #if len(child.text) != maxlength:
-                    #    sequence = str(child.text).ljust(maxlength, 'N')
-                    #else:
                     sequence = str(child.text)
                     #print(sequence)
                     fout.write(sequence+'\n')
@@ -126,7 +124,8 @@ if __name__ == "__main__":
 
     usage = """
     USAGE:
-        -id In Directory
+        -id/--directory   --- Full Path Input Directory ()
+        -mp/--muscle_path --- Full Path to muscle (including executable)
         
     """
 
