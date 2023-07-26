@@ -205,14 +205,16 @@ def run_mafft():
     #infile = args.outfilepath
     args.mafft = os.path.join(args.sourcedir,'aligned.mafft')
     cmdls = [os.path.join(args.condabin,'mafft'),fasta,'>',args.mafft]  #,'-clw']
-    print('mafft:',' '.join(cmdls))
-    os.system(' '.join(cmdls))
+    cmd = ' '.join(cmdls)
+    print('mafft:',cmd)
+    os.system(cmd)
 
 def run_fasttree():
     newickfile = os.path.join(args.sourcedir,"newick.tre")
     cmdls = [os.path.join(args.condabin,'fasttree'), args.mafft,'>',newickfile]  #,'-clw']
-    print('FastTree:',' '.join(cmdls))
-    os.system(' '.join(cmdls))
+    cmd = ' '.join(cmdls)
+    print('FastTree:',cmd)
+    os.system(cmd)
 
 def run_nw_utils():
     #nw_reroot ParB.tre|nw_order -c n - > tree.reroot.order.tre
@@ -220,13 +222,15 @@ def run_nw_utils():
     rerootfile = os.path.join(args.sourcedir,"tree.reroot.order.tre")
     svgfile = os.path.join(args.sourcedir,"tree.svg")
     cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile+'|nw_order','-c','n','-','>',rerootfile]
-    print('nw_reroot:',' '.join(cmdls))
-    os.system(' '.join(cmdls))
+    cmd = ' '.join(cmdls)
+    print('nw_reroot:',cmd)
+    os.system(cmd)
     
     #   nw_display -R 40 -s -v 20 -i 'opacity:0' -b 'visibility:hidden' -l 'font-family:san-serif' -w 1000 -W 6 tree.reroot.order.tre > ParB.svg
     cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1000','-W','5',rerootfile,'>',svgfile       ]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
-    print('nw_display:',' '.join(cmdls))
-    os.system(' '.join(cmdls))
+    cmd = ' '.join(cmdls)
+    print('nw_display:',cmd)
+    os.system(cmd)
     
 if __name__ == "__main__":
 
