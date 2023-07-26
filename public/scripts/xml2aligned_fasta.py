@@ -204,33 +204,50 @@ def run_mafft():
     
     #infile = args.outfilepath
     args.mafft = os.path.join(args.sourcedir,'aligned.mafft')
+    f = open(args.mafft, "w")
     cmdls = [os.path.join(args.condabin,'mafft'),fasta,'>',args.mafft]  #,'-clw']
+    cmdls = [os.path.join(args.condabin,'mafft'),fasta]  #,'-clw']
     cmd = ' '.join(cmdls)
-    print('mafft:',cmd)
-    os.system(cmd)
+    print('mafft:',cmdls)
+    subprocess.run(cmdls, stdout=f)
+    f.close()
+    
 
 def run_fasttree():
     newickfile = os.path.join(args.sourcedir,"newick.tre")
+    f = open(newickfile, "w")
     cmdls = [os.path.join(args.condabin,'fasttree'), args.mafft,'>',newickfile]  #,'-clw']
+    cmdls = [os.path.join(args.condabin,'fasttree'), args.mafft]  #,'-clw']
     cmd = ' '.join(cmdls)
     print('FastTree:',cmd)
-    os.system(cmd)
+    #os.system(cmd)
+    subprocess.run(cmdls, stdout=f)
+    f.close()
+    
 
 def run_nw_utils():
     #nw_reroot ParB.tre|nw_order -c n - > tree.reroot.order.tre
     newickfile = os.path.join(args.sourcedir,"newick.tre")
     rerootfile = os.path.join(args.sourcedir,"tree.reroot.order.tre")
-    svgfile = os.path.join(args.sourcedir,"tree.svg")
-    cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile+'|nw_order','-c','n','-','>',rerootfile]
-    cmd = ' '.join(cmdls)
-    print('nw_reroot:',cmd)
-    os.system(cmd)
+    f = open(rerootfile, "w")
     
+    #cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile+'|nw_order','-c','n','-','>',rerootfile]
+    cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile]  #+'|nw_order','-c','n','-']
+    #cmd = ' '.join(cmdls)
+    #print('nw_reroot:',cmd)
+    subprocess.run(cmdls, stdout=f)
+    f.close()
+    
+    svgfile = os.path.join(args.sourcedir,"tree.svg")
+    f = open(svgfile, "w")
     #   nw_display -R 40 -s -v 20 -i 'opacity:0' -b 'visibility:hidden' -l 'font-family:san-serif' -w 1000 -W 6 tree.reroot.order.tre > ParB.svg
-    cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1000','-W','5',rerootfile,'>',svgfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
+    #cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1000','-W','5',rerootfile,'>',svgfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
+    cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1000','-W','5',rerootfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
+    
     cmd = ' '.join(cmdls)
     print('nw_display:',cmd)
-    os.system(cmd)
+    subprocess.run(cmdls, stdout=f)
+    f.close()
     
 if __name__ == "__main__":
 
