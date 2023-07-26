@@ -47,7 +47,7 @@ router.get('/blastdir=*', function taxon(req, res) {
            let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'xml2aligned_fasta.py')
            //let cmd = pyscript +' -in '+ filepath
            // -mp == Muscle Path  -id == In Directory
-           const ls = spawn(CFG.PYTHON_EXE, [pyscript,'-mp',CFG.MUSCLE_EXE,"-id", dirpath]);
+           const ls = spawn(CFG.PYTHON_EXE, [pyscript,'-c',CFG.CONDABIN,"-id", dirpath]);
            ls.stdout.on("data", data => {
                 console.log(`stdout: ${data}`);
             });
@@ -72,7 +72,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                       user: JSON.stringify(req.user || {}),
                       
-                      png_path: '/tree/'+dir+'/my_cladogram.png'
+                      svg_path: '/tree/'+dir+'/tree.svg'
                     })
                 }else{
                    req.flash('fail', 'Tree Script Failed: '+filepath);

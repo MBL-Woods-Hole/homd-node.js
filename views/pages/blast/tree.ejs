@@ -1,4 +1,9 @@
 <style>
+#svg_div{
+   width:100%;
+   border:1px solid red;
+   padding:10px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -12,10 +17,13 @@
               
        <div class='title'>BLAST Result Phlogenetic Tree</div>
     
-  image path testing: <%= png_path %>
+  image path testing: <%= svg_path %>
   <br>
-  <img src="<%= png_path %>" alt="HOMD Phylogenetic Tree" >
-    </div> <!-- end: page-content -->
+  <div id='svg_div'>
+     <img src="<%= svg_path %>" alt="HOMD Phylogenetic Tree" >
+  </div>
+  
+  </div> <!-- end: page-content -->
     
     <div id='footer'>
          <%- include('../../partials/footer'); %>
