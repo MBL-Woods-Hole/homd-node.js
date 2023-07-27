@@ -57,19 +57,29 @@ def run_unalingned(args):
                                 x = child_text.split()  # split on white space
 
                                 if '|' in x[0]:   # NCBI
-                                    # NCBI:GENOME:: SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
-                                    species = x[2] + '_' + x[3]
-                                    species = species.replace('[','').replace(']','')
-                                    hmt = x[1]
-                                    #defline = '>'+ x[0]+';'+x[1]
-                                    defline = '>' + species + '|' + hmt + '|' + x[0]
-                                else:   # PROKKA
-                                    # PROKKA:GENOME SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
+                                    # NCBI:NT::      SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
+                                    # NCBI:PROTEIN:: SEQF3213.1|RRG14429.1 O-succinylbenzoic acid--CoA ligase [Porphyromonas gingivalis] [HMT-619 Porphyromonas gingivalis 381OKJP]
                                     res = re.findall(r'\[.*?\]', child_text)
-                                    bracket = res[0].lstrip('[').rstrip(']').split()
+                                    if len(res) == 0:
+                                        # NT
+                                        species = x[2] + '_' + x[3]
+                                        species = species.replace('[','').replace(']','')
+                                        hmt = x[1]
+                                    else:
+                                        bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
+                                        species = bracket[1] + '_' + bracket[2]
+                                        species = species.replace('[','').replace(']','')
+                                        hmt = bracket[0]  
+                                    #defline = '>'+ x[0]+';'+x[1]
+                                    defline = '>' + species + '|' + hmt + '|'
+                                else:   # PROKKA
+                                    # PROKKA:NT::      SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
+                                    # PROKKA:PROTEIN:: SEQF3213.1_00735 2-succinylbenzoate--CoA ligase [HMT-619 Porphyromonas gingivalis 381OKJP]
+                                    res = re.findall(r'\[.*?\]', child_text)
+                                    bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
                                     species = bracket[1] + '_' + bracket[2]
                                     species = species.replace('[','').replace(']','')
-                                    hmt = bracket[0]
+                                    hmt = bracket[0]  
                                     #print('res',res,bracket)
                                     defline = '>' + species+'|' + hmt + '|' + x[0]
    
