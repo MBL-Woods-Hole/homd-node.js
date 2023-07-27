@@ -71,7 +71,7 @@ def run_unalingned(args):
                                         species = species.replace('[','').replace(']','')
                                         hmt = bracket[0]  
                                     #defline = '>'+ x[0]+';'+x[1]
-                                    defline = '>' + species + '|' + hmt + '|'
+                                    defline = '>' + species + '|' + hmt + '|'+x[0]
                                 else:   # PROKKA
                                     # PROKKA:NT::      SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
                                     # PROKKA:PROTEIN:: SEQF3213.1_00735 2-succinylbenzoate--CoA ligase [HMT-619 Porphyromonas gingivalis 381OKJP]
