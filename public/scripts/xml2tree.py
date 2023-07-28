@@ -103,7 +103,7 @@ def run_unalingned(args):
                                         bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
                                         species = bracket[1] + '_' + bracket[2]
                                         species = species.replace('[','').replace(']','')
-                                         
+                                        defline = '>' + species+'|' + hmt + '|' + x[0]
                                     else:  # PROKKA:NT::      
 # SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
                                         res = re.findall(r'\[.*?\]', child_text)

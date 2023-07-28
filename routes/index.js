@@ -63,17 +63,32 @@ router.get('/blastdir=*', function taxon(req, res) {
             ls.on("close", code => {
                 console.log(`child process exited with code ${code}`);
                 if(code === 0){
-                    let pngfile = path.join(dirpath,'my_cladogram.png')
-                    
-                    res.render('pages/blast/tree', {
-                      title: 'HOMD :: Human Oral Microbiome Database',
-                      pgname: '', // for AbountThisPage
-                      config: JSON.stringify(CFG),
-                      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-                      user: JSON.stringify(req.user || {}),
-                      file_dir: path.join(CFG.PATH_TO_BLAST_FILES,dir),
-                      svg_path: '/tree/'+dir+'/tree.svg'
-                    })
+                    var stats = fs.statSync(path.join(CFG.PATH_TO_BLAST_FILES,dir,'tree.svg'))
+                    var fileSizeInBytes = stats.size;
+                    console.log('File size',fileSizeInBytes)
+                    if(fileSizeInBytes === 0){
+                        res.render('pages/blast/tree', {
+                          title: 'HOMD :: Human Oral Microbiome Database',
+                          pgname: '', // for AbountThisPage
+                          config: JSON.stringify(CFG),
+                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                          user: JSON.stringify(req.user || {}),
+                          file_dir: path.join(CFG.PATH_TO_BLAST_FILES,dir),
+                          svg_path: '',
+                          error: true
+                        })
+                    }else{
+                        res.render('pages/blast/tree', {
+                          title: 'HOMD :: Human Oral Microbiome Database',
+                          pgname: '', // for AbountThisPage
+                          config: JSON.stringify(CFG),
+                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                          user: JSON.stringify(req.user || {}),
+                          file_dir: path.join(CFG.PATH_TO_BLAST_FILES,dir),
+                          svg_path: '/tree/'+dir+'/tree.svg',
+                          error: false
+                        })
+                    }
                 }else{
                    req.flash('fail', 'Tree Script Failed: '+filepath);
                    res.redirect('/')
