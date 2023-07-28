@@ -71,7 +71,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                       config: JSON.stringify(CFG),
                       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                       user: JSON.stringify(req.user || {}),
-                      
+                      file_dir: path.join(CFG.PATH_TO_BLAST_FILES,dir),
                       svg_path: '/tree/'+dir+'/tree.svg'
                     })
                 }else{

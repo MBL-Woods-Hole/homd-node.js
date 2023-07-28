@@ -4,6 +4,7 @@
    border:1px solid red;
    padding:10px;
 }
+
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -18,6 +19,17 @@
        <div class='title'>BLAST Result Phlogenetic Tree</div>
     
   image path testing: <%= svg_path %>
+  <div id='download'>
+<style>
+.button{
+    font-size: 13px;
+}
+</style>
+  Download:
+  <a class='button' href='download_file?filename=<%= file_dir %>/newick.reroot.order.tre'>Newick Tree File</a>
+  <a class='button' href='download_file?filename=<%= file_dir %>/blastout.fa'>Fasta File</a>
+  <a class='button' href='download_file?filename=<%= file_dir %>/tree.svg'>Tree as SVG File</a>
+  </div>
   <br>
   <div id='svg_div'>
      <img src="<%= svg_path %>" alt="HOMD Phylogenetic Tree" >
