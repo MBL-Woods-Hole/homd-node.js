@@ -63,7 +63,7 @@ router.get('/blastdir=*', function taxon(req, res) {
             ls.on("close", code => {
                 console.log(`child process exited with code ${code}`);
                 if(code === 0){
-                    var stats = fs.statSync(path.join(CFG.PATH_TO_BLAST_FILES,dir,'tree.svg'))
+                    var stats = fs.statSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'tree.svg'))
                     var fileSizeInBytes = stats.size;
                     console.log('File size',fileSizeInBytes)
                     if(fileSizeInBytes === 0){
@@ -73,7 +73,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                           config: JSON.stringify(CFG),
                           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                           user: JSON.stringify(req.user || {}),
-                          file_dir: path.join(CFG.PATH_TO_BLAST_FILES,dir),
+                          file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                           svg_path: '',
                           error: true
                         })
@@ -84,7 +84,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                           config: JSON.stringify(CFG),
                           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
                           user: JSON.stringify(req.user || {}),
-                          file_dir: path.join(CFG.PATH_TO_BLAST_FILES,dir),
+                          file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                           svg_path: '/tree/'+dir+'/tree.svg',
                           error: false
                         })

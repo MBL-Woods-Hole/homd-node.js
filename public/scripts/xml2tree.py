@@ -33,12 +33,12 @@ def run_unalingned(args):
     root = ET.parse(os.path.join(args.sourcedir,args.filename)).getroot()
     iter_count = 0
     prog = 'unknown'
-    seqtype = 'nt'  #OR protein [default=nt]
+    args.seqtype = 'nt'  #OR protein [default=nt]
     for description in root.iter('BlastOutput_program'):
         prog = description.text
     print('PROG',prog)
     if prog in ['blastp','blastx']:
-       seqtype = 'protein'
+       args.seqtype = 'protein'
     for iteration in root.iter('Iteration'):
         
         iter_count += 1
@@ -73,7 +73,7 @@ def run_unalingned(args):
                                 x = child_text.split()  # split on white space
 
                                 if '|' in x[0]:   # NCBI
-                                    if seqtype == 'protein': # NCBI:PROTEIN:: 
+                                    if args.seqtype == 'protein': # NCBI:PROTEIN:: 
 # SEQF3213.1|RRG14429.1 O-succinylbenzoic acid--CoA ligase [Porphyromonas gingivalis] [HMT-619 Porphyromonas gingivalis 381OKJP]
 # SEQF2456.1|ERI89612.1 putative CoA-substrate-specific enzyme activase [Clostridiales bacterium oral taxon 876 str. F0540] [HMT-876 Clostridiales [F-3][G-1] bacterium HMT 876 F0540]
                                         res = re.findall(r'\[.*?\]', child_text)
@@ -96,7 +96,7 @@ def run_unalingned(args):
 
                                         defline = '>' + species + '|' + hmt + '|' + x[0]
                                 else:   # PROKKA
-                                    if seqtype == 'protein':
+                                    if args.seqtype == 'protein':
 # PROKKA:PROTEIN:: 
 # SEQF3213.1_00735 2-succinylbenzoate--CoA ligase [HMT-619 Porphyromonas gingivalis 381OKJP]
                                         res = re.findall(r'\[.*?\]', child_text)
@@ -341,7 +341,7 @@ def run_fasttree():
     newickfile = os.path.join(args.sourcedir,"newick.tre")
     f = open(newickfile, "w")
     #cmdls = [os.path.join(args.condabin,'fasttree'), args.mafft,'>',newickfile]  #,'-clw']
-    if args.protein:
+    if args.seqtype == 'protein':
         cmdls = [os.path.join(args.condabin,'fasttree'), args.aligned]  #,'-clw']
     else:
         cmdls = [os.path.join(args.condabin,'fasttree'), '-nt',args.aligned]  #,'-clw']
