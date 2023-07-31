@@ -4,7 +4,10 @@
    border:1px solid red;
    padding:10px;
 }
-
+textarea{
+   border:1px solid red;
+   padding:3px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 
@@ -27,13 +30,23 @@
 </style>
   Download:
   <a class='button' href='download_file?filename=<%= file_dir %>/sequenceserver-xml_report.xml'>BLAST Output File (XML)</a>
-  <a class='button' href='download_file?filename=<%= file_dir %>/newick.reroot.order.tre'>Newick Tree File</a>
   <a class='button' href='download_file?filename=<%= file_dir %>/blastout.fa'>Fasta File</a>
+  <a class='button' href='download_file?filename=<%= file_dir %>/newick.tre'>Newick Tree File</a>
   <a class='button' href='download_file?filename=<%= file_dir %>/tree.svg'>Tree as SVG File</a>
   </div>
   <br>
   <% if(error){ %>
-      Error Reading File
+      Error Reading SVG Image File (0 length file)
+      <a class='button' href='download_file?filename=<%= file_dir %>/err.txt'>Download Error File</a>
+      <br><br>
+      Newick Tree:
+      <br>
+      <textarea rows="12" cols="180">
+        <%= newick %>
+      </textarea>
+      <br>Error File:<br><textarea rows="15" cols="180">
+        <%= error %>
+      </textarea>
   <% }else{ %>
   <div id='svg_div'>
      <img src="<%= svg_path %>" alt="HOMD Phylogenetic Tree" >

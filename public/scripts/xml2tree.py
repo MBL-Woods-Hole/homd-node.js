@@ -318,11 +318,12 @@ def run_mafft():
     #infile = args.outfilepath
     args.aligned = os.path.join(args.sourcedir,'aligned.mafft')
     f = open(args.aligned, "w")
+    #args.e.write('\nmafft\n')
     #cmdls = [os.path.join(args.condabin,'mafft'),fasta,'>',args.mafft]  #,'-clw']
     cmdls = [os.path.join(args.condabin,'mafft'),fasta]  #,'-clw']
     cmd = ' '.join(cmdls)
     print('mafft:',cmd)
-    subprocess.run(cmdls, stdout=f)
+    subprocess.run(cmdls, stdout=f, stderr=args.e)
     f.close()
     
 def run_muscle():
@@ -331,15 +332,19 @@ def run_muscle():
     #infile = args.outfilepath
     args.aligned = os.path.join(args.sourcedir,'aligned.muscle')
     f = open(args.aligned, "w")
+    #args.e.write('\nMuscle\n')
     cmdls = [os.path.join(args.condabin,'muscle'),'-in',fasta]  #,'-clw']
     cmd = ' '.join(cmdls)
     print('muscle:',cmd)
-    subprocess.run(cmdls, stdout=f)
+    subprocess.run(cmdls, stdout=f, stderr=args.e)
     f.close()    
 
 def run_fasttree():
     newickfile = os.path.join(args.sourcedir,"newick.tre")
+    
     f = open(newickfile, "w")
+    
+    #args.e.write('\nFastTree\n')
     #cmdls = [os.path.join(args.condabin,'fasttree'), args.mafft,'>',newickfile]  #,'-clw']
     if args.seqtype == 'protein':
         cmdls = [os.path.join(args.condabin,'fasttree'), args.aligned]  #,'-clw']
@@ -348,8 +353,9 @@ def run_fasttree():
     cmd = ' '.join(cmdls)
     print('FastTree:',cmd)
     #os.system(cmd)
-    subprocess.run(cmdls, stdout=f)
+    subprocess.run(cmdls, stdout=f, stderr=args.e)
     f.close()
+    
     
 
 def run_nw_utils():
@@ -357,23 +363,24 @@ def run_nw_utils():
     newickfile = os.path.join(args.sourcedir,"newick.tre")
     rerootfile = os.path.join(args.sourcedir,"newick.reroot.order.tre")
     f = open(rerootfile, "w")
-    
+    #args.e.write('\nnw_reroot\n')
     #cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile+'|nw_order','-c','n','-','>',rerootfile]
     cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile]  #+'|nw_order','-c','n','-']
     cmd = ' '.join(cmdls)
     print('nw_reroot:',cmd)
-    subprocess.run(cmdls, stdout=f)
+    subprocess.run(cmdls, stdout=f, stderr=args.e)
     f.close()
     
     svgfile = os.path.join(args.sourcedir,"tree.svg")
     f = open(svgfile, "w")
+    #args.e.write('\nw_display\n')
     #   nw_display -R 40 -s -v 20 -i 'opacity:0' -b 'visibility:hidden' -l 'font-family:san-serif' -w 1000 -W 6 tree.reroot.order.tre > ParB.svg
     #cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1000','-W','5',rerootfile,'>',svgfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
     cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1200','-W','10',rerootfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
     
     cmd = ' '.join(cmdls)
     print('nw_display:',cmd)
-    subprocess.run(cmdls, stdout=f)
+    subprocess.run(cmdls, stdout=f, stderr=args.e)
     f.close()
     
 if __name__ == "__main__":
@@ -420,12 +427,16 @@ if __name__ == "__main__":
 #   nw_display -R 40 -s -v 20 -i 'opacity:0' -b 'visibility:hidden' -l 'font-family:san-serif' -w 1000 -W 6 tree.reroot.order.tre > ParB.svg
 # 
 #   ./replace_longname.pl ParB.svg $VERSION
+    errorfile = os.path.join(args.sourcedir,"err.txt")
+    
+    args.e = open(errorfile, "w")
     run_unalingned(args)
     #run_mafft()
     run_muscle()   # fasta     -> alignment
     run_fasttree() # alignment -> newick
     run_nw_utils() # newick    -> tree.svg
     
+    args.e.close()
     
     
     

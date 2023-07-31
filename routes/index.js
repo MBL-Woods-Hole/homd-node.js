@@ -67,6 +67,9 @@ router.get('/blastdir=*', function taxon(req, res) {
                     var fileSizeInBytes = stats.size;
                     console.log('File size',fileSizeInBytes)
                     if(fileSizeInBytes === 0){
+                        var newick = fs.readFileSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'newick.tre'),'utf8')
+                        var error = fs.readFileSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'err.txt'),'utf8')
+                        console.log('newick',newick)
                         res.render('pages/blast/tree', {
                           title: 'HOMD :: Human Oral Microbiome Database',
                           pgname: '', // for AbountThisPage
@@ -75,7 +78,8 @@ router.get('/blastdir=*', function taxon(req, res) {
                           user: JSON.stringify(req.user || {}),
                           file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                           svg_path: '',
-                          error: true
+                          error: error,
+                          newick: newick
                         })
                     }else{
                         res.render('pages/blast/tree', {
@@ -86,11 +90,12 @@ router.get('/blastdir=*', function taxon(req, res) {
                           user: JSON.stringify(req.user || {}),
                           file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                           svg_path: '/tree/'+dir+'/tree.svg',
-                          error: false
+                          error: '',
+                          newick: ''
                         })
                     }
                 }else{
-                   req.flash('fail', 'Tree Script Failed: '+filepath);
+                   req.flash('fail', 'Tree Script Failure: '+filepath);
                    res.redirect('/')
                 }
             });
