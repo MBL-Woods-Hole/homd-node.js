@@ -90,8 +90,12 @@ def run_unalingned(args):
                                         defline = '>' + species + '|' + hmt + '|' + x[0]
                                     else:  # NCBI:NT::      
 # SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
+# SEQF4338.1|QEQA01000023.1 Aggregatibacter aphrophilus strain C2009017515 C2009017515_S25_ctg_1684_ whole genome shotgun sequence [HMT-545 Aggregatibacter aphrophilu
                                             # NT
-                                        species = x[2] + '_' + x[3]
+                                        if x[1] == hmt:
+                                            species = x[2] + '_' + x[3]
+                                        else:
+                                            species = x[1] + '_' + x[2]
                                         species = species.replace('[','').replace(']','')
 
                                         defline = '>' + species + '|' + hmt + '|' + x[0]
