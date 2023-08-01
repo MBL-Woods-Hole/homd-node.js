@@ -431,8 +431,8 @@ if __name__ == "__main__":
     
     args.e = open(errorfile, "w")
     run_unalingned(args)
-    #run_mafft()
-    run_muscle()   # fasta     -> alignment
+    run_mafft()
+    #run_muscle()   # fasta     -> alignment
     run_fasttree() # alignment -> newick
     run_nw_utils() # newick    -> tree.svg
     
