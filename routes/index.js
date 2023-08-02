@@ -67,7 +67,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                           user: JSON.stringify(req.user || {}),
                           file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                           svg_path: '',
-                          svg: {},
+                          svg: '',
                           error: 'LOW HIT Count',
                           newick: ''
                     })
@@ -116,7 +116,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                               user: JSON.stringify(req.user || {}),
                               file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                               svg_path: '/tree/'+dir+'/tree.svg',
-                              svg: JSON.stringify(data),
+                              svg: data,
                               error: '',
                               newick: ''
                             })

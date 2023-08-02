@@ -126,8 +126,9 @@ def run_unalingned(args):
 #     ncbiNT  PID=CP031243.1
 #     SEQF7477.1|CP031243.1 Haemophilus haemolyticus strain M19346 chromosome, complete genome [HMT-851 Haemophilus haemolyticus M19346]
 # SEQF2456.1|ERI89612.1 putative CoA-substrate-specific enzyme activase [Clostridiales bacterium oral taxon 876 str. F0540] [HMT-876 Clostridiales [F-3][G-1] bacterium HMT 876 F0540]
-
+# SEQF1831.1|lcl|GG698249.1_cds_EES96044.1_115 [protein=hypothetical protein] [frame=2] [protein_id=EES96044.1] [location=<1..187] [gbkey=CDS] [HMT-550 Staphylococcus aureus TCH130]
                                     pid = x[0].split('|')[1]
+                                    loc = 'unknown'
                                     res = re.findall(r'\[.*?\]', child_text)
                                     try:
                                         bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
@@ -137,9 +138,25 @@ def run_unalingned(args):
                                         bracket = res[0].lstrip('[').rstrip(']').split()  # choose last one if >1
                                         species = bracket[1] + '_' + bracket[2]
                                         species = species.replace('[','').replace(']','')
-                                    defline = hmt + '|'+ species+ '|' + pid
-                                
-                                    show    = "<tspan fill='blue'>"+hmt+"</tspan>" + ' | '+ "<tspan fill='brown', style='font-style: italic;'>"+species.replace(' ','_')+"</tspan>"+ ' | ProteinID: ' + pid.replace(' ','_')
+                                    if pid == 'lcl':  # ffn?
+                                        # look for [protein_id=EES96044.1]
+                                        pid = 'unknown'
+                                        loc
+                                        for b in res:
+                                            if 'protein_id=' in b:
+                                                bracket = b.split('=')
+                                                pid = bracket[1].rstrip(']')
+                                            if 'location=' in b:
+                                                bracket = b.split('=')
+                                                loc = bracket[1].rstrip(']')
+                                    if pid == 'unknown':
+                                        # use location
+                                        defline = hmt + '|'+ species+ '|Location=' + loc
+                                        show    = "<tspan fill='blue'>"+hmt+"</tspan>" + ' | '+ "<tspan fill='brown', style='font-style: italic;'>"+species.replace(' ','_')+"</tspan>"+ ' | Location: ' + loc.replace(' ','_')
+                                        
+                                    else:
+                                        defline = hmt + '|'+ species+ '|' + pid
+                                        show    = "<tspan fill='blue'>"+hmt+"</tspan>" + ' | '+ "<tspan fill='brown', style='font-style: italic;'>"+species.replace(' ','_')+"</tspan>"+ ' | ProteinID: ' + pid.replace(' ','_')
                                         
 #                                 if '_' in x[0]:   # prokkaProtein ONLY
 #                                     print('PROKKA - protein')
@@ -195,7 +212,7 @@ def run_unalingned(args):
                         print('Adding',defline)
                         fout.write('>'+defline+'\n')
                         #flabel.write(defline.replace('_',' ')+'\t'+show+'\n')
-                        flabel.write('s^'+defline.replace('_',' ')+'^'+show+'^g'+'\n')
+                        flabel.write('s$'+defline.replace('_',' ')+'$'+show+'$g'+'\n')
                         fasta_text += defline+'\n'
                         
                 for hsp in hit.iter('Hsp'):
@@ -298,7 +315,7 @@ def run_nw_utils():
     #args.e.write('\nw_display\n')
     #   nw_display -R 40 -s -v 20 -i 'opacity:0' -b 'visibility:hidden' -l 'font-family:san-serif' -w 1000 -W 6 tree.reroot.order.tre > ParB.svg
     #cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1000','-W','5',rerootfile,'>',svgfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
-    cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-R','80','-s','-v','40','-w','1200','-W','10',rerootfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
+    cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-R','80','-s','-S','-v','40','-w','1200','-W','10',rerootfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
     
     cmd = ' '.join(cmdls)
     print('nw_display:',cmd)
