@@ -22,18 +22,41 @@ import datetime
 import xml.etree.ElementTree as ET
 today = str(datetime.date.today())
 
-
 def run_unalingned(args): 
     collector = {}
+    
+#     ncbiNT
+#     SEQF7477.1|CP031243.1 Haemophilus haemolyticus strain M19346 chromosome, complete genome [HMT-851 Haemophilus haemolyticus M19346]
+#     ncbiProtein
+#     SEQF6632.1|SCQ21379.1 2-succinylbenzoate--CoA ligase [Tannerella forsythia] [HMT-613 Tannerella forsythia UB4]
+
+#     prokkaNT
+#     SEQF7477.1|CP031243.1 HMT-851 Haemophilus haemolyticus M19346
+#     prokkaProtein
+#     SEQF5300.1_01578 2-succinylbenzoate--CoA ligase [HMT-619 Porphyromonas gingivalis TV14]
+
+#     REFSEQ:: 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
+
     #with open(args.infile, 'r') as f:
     #    data = f.read()
+    args.leaflabels = os.path.join(args.sourcedir, 'leaflabels.sed')
+    flabel = open(args.leaflabels,'w')
     args.outfilepath = os.path.join(args.sourcedir, args.outfile+'.fa')
     fout = open(args.outfilepath,'w')
     use_original_defline = False
     root = ET.parse(os.path.join(args.sourcedir,args.filename)).getroot()
     iter_count = 0
     prog = 'unknown'
+    args.anno = 'unknown'
     args.seqtype = 'nt'  #OR protein [default=nt]
+    
+    for anno in root.iter('BlastOutput_db'):
+        if 'prokka' in anno.text:
+            args.anno = 'prokka'
+        elif 'ncbi' in anno.text:
+            args.anno = 'ncbi'
+    print('anno',args.anno)
+    
     for description in root.iter('BlastOutput_program'):
         prog = description.text
     print('PROG',prog)
@@ -68,63 +91,110 @@ def run_unalingned(args):
                             # REFSEQ:: 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
                             # GENOME::NCBI:   SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
                             #         PROKKA: SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
-                            if child_text.startswith('SEQF'):   # GENOMIC
+                            if child_text.startswith('SEQF'):   # GENOMIC ncbi or prokka
                                 
                                 x = child_text.split()  # split on white space
+                                if args.anno == 'prokka':
 
-                                if '|' in x[0]:   # NCBI
-                                    if args.seqtype == 'protein': # NCBI:PROTEIN:: 
-# SEQF3213.1|RRG14429.1 O-succinylbenzoic acid--CoA ligase [Porphyromonas gingivalis] [HMT-619 Porphyromonas gingivalis 381OKJP]
-# SEQF2456.1|ERI89612.1 putative CoA-substrate-specific enzyme activase [Clostridiales bacterium oral taxon 876 str. F0540] [HMT-876 Clostridiales [F-3][G-1] bacterium HMT 876 F0540]
+                                    if '_' in x[0]:   # prokkaProtein ONLY
+#     prokkaProtein   PID=SEQF5300.1_01578
+#     SEQF5300.1_01578 2-succinylbenzoate--CoA ligase [HMT-619 Porphyromonas gingivalis TV14]
+                                    #   SEQF5300.1_01578 2-succinylbenzoate--CoA ligase [HMT-619 Porphyromonas gingivalis TV14]
+                                        print('PROKKA - protein')
+                                        pid = x[0]
                                         res = re.findall(r'\[.*?\]', child_text)
-                                        print('bracket res',res)
-                                        try:
-                                            bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
-                                            species = bracket[1] + '_' + bracket[2]
-                                            species = species.replace('[','').replace(']','')
-                                        except:
-                                            bracket = res[0].lstrip('[').rstrip(']').split()  # choose last one if >1
-                                            species = bracket[1] + '_' + bracket[2]
-                                            species = species.replace('[','').replace(']','')
+                                        bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
+                                        species = bracket[1] + '_' + bracket[2]
+                                        species = species.replace('[','').replace(']','')
+                                        defline = hmt + '|'+ species+ '|' + pid
+                                        show    = "<tspan fill='blue'>"+hmt+"</tspan>" + ' | '+ "<tspan fill='brown', style='font-style: italic;'>"+species.replace(' ','_')+"</tspan>"+ ' | ProteinID: ' + pid.replace(' ','_')
+                                        #show    = hmt + ' | '+ species.replace(' ','_')+ ' | ' + pid.replace(' ','_')
+                                    
+                                    else:   # prokka NT
+#     prokkaNT  PID=SEQF7477.1|CP031243.1
+#     SEQF7477.1|CP031243.1 HMT-851 Haemophilus haemolyticus M19346
+                                        print('PROKKA - NT')
+                                        pid = x[0]
+                                        species = x[2]+'_'+x[3]
+                                        defline = hmt + '|'+ species+ '|' + pid
+                                        show    = "<tspan fill='blue'>"+hmt+"</tspan>" + ' | '+ "<tspan fill='brown', style='font-style: italic;'>"+species.replace(' ','_')+"</tspan>"+ ' | ProteinID: ' + pid.replace(' ','_')
                                         
-                                        defline = '>' + species + '|' + hmt + '|' + x[0]
-                                    else:  # NCBI:NT::      
-# SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
-# SEQF4338.1|QEQA01000023.1 Aggregatibacter aphrophilus strain C2009017515 C2009017515_S25_ctg_1684_ whole genome shotgun sequence [HMT-545 Aggregatibacter aphrophilu
-                                            # NT
-                                        if x[1] == hmt:
-                                            species = x[2] + '_' + x[3]
-                                        else:
-                                            species = x[1] + '_' + x[2]
-                                        species = species.replace('[','').replace(']','')
+                                else:   # NCBI 
+#     ncbiProtein  PID=SCQ21379.1
+#     SEQF6632.1|SCQ21379.1 2-succinylbenzoate--CoA ligase [Tannerella forsythia] [HMT-613 Tannerella forsythia UB4]
+#     ncbiNT  PID=CP031243.1
+#     SEQF7477.1|CP031243.1 Haemophilus haemolyticus strain M19346 chromosome, complete genome [HMT-851 Haemophilus haemolyticus M19346]
+# SEQF2456.1|ERI89612.1 putative CoA-substrate-specific enzyme activase [Clostridiales bacterium oral taxon 876 str. F0540] [HMT-876 Clostridiales [F-3][G-1] bacterium HMT 876 F0540]
 
-                                        defline = '>' + species + '|' + hmt + '|' + x[0]
-                                else:   # PROKKA
-                                    if args.seqtype == 'protein':
-# PROKKA:PROTEIN:: 
-# SEQF3213.1_00735 2-succinylbenzoate--CoA ligase [HMT-619 Porphyromonas gingivalis 381OKJP]
-                                        res = re.findall(r'\[.*?\]', child_text)
+                                    pid = x[0].split('|')[1]
+                                    res = re.findall(r'\[.*?\]', child_text)
+                                    try:
                                         bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
                                         species = bracket[1] + '_' + bracket[2]
                                         species = species.replace('[','').replace(']','')
-                                        defline = '>' + species+'|' + hmt + '|' + x[0]
-                                    else:  # PROKKA:NT::      
-# SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
-                                        res = re.findall(r'\[.*?\]', child_text)
-                                        bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
+                                    except:
+                                        bracket = res[0].lstrip('[').rstrip(']').split()  # choose last one if >1
                                         species = bracket[1] + '_' + bracket[2]
-                                        species = species.replace('[','').replace(']','') 
-                                        #print('res',res,bracket)
-                                        defline = '>' + species+'|' + hmt + '|' + x[0]
-   
+                                        species = species.replace('[','').replace(']','')
+                                    defline = hmt + '|'+ species+ '|' + pid
+                                
+                                    show    = "<tspan fill='blue'>"+hmt+"</tspan>" + ' | '+ "<tspan fill='brown', style='font-style: italic;'>"+species.replace(' ','_')+"</tspan>"+ ' | ProteinID: ' + pid.replace(' ','_')
+                                        
+#                                 if '_' in x[0]:   # prokkaProtein ONLY
+#                                     print('PROKKA - protein')
+#                                     pid = x[0]
+# #     prokkaProtein   PID=SEQF5300.1_01578
+# #     SEQF5300.1_01578 2-succinylbenzoate--CoA ligase [HMT-619 Porphyromonas gingivalis TV14]
+#                                     #   SEQF5300.1_01578 2-succinylbenzoate--CoA ligase [HMT-619 Porphyromonas gingivalis TV14]
+#                                     res = re.findall(r'\[.*?\]', child_text)
+#                                     bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
+#                                     species = bracket[1] + '_' + bracket[2]
+#                                     species = species.replace('[','').replace(']','')
+#                                     defline = '>' + hmt + '|'+ species+ '|' + pid
+#                                 else:   # prokkaNT, ncbiProtein, ncbiNT
+#                                     pid = x[0].split('|')[1]
+#                                     
+#                                     
+#                                     
+#                                     if args.seqtype == 'protein':
+#                                         # ncbiProtein ONLY
+#                                         print('NCBI - protein')
+# #     ncbiProtein  PID=SCQ21379.1
+# #     SEQF6632.1|SCQ21379.1 2-succinylbenzoate--CoA ligase [Tannerella forsythia] [HMT-613 Tannerella forsythia UB4]
+#                                         res = re.findall(r'\[.*?\]', child_text)
+#                                         bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
+#                                         species = bracket[1] + '_' + bracket[2]
+#                                         species = species.replace('[','').replace(']','')
+#                                         #defline = '>' + species+'|' + hmt + '|' + x[0]
+#                                         defline = '>' + hmt + ' | '+ species+ ' | ' + pid
+#                                     else:  # PROKKA:NT::NCBI:NT
+#                                        
+#                                         print('PROKKA - NT and NCBI - NT')
+# #     prokkaNT  PID=SEQF7477.1|CP031243.1
+# #     SEQF7477.1|CP031243.1 HMT-851 Haemophilus haemolyticus M19346
+# #     ncbiNT  PID=CP031243.1
+# #     SEQF7477.1|CP031243.1 Haemophilus haemolyticus strain M19346 chromosome, complete genome [HMT-851 Haemophilus haemolyticus M19346]
+#                                         
+#                                         res = re.findall(r'\[.*?\]', child_text)
+#                                         bracket = res[-1].lstrip('[').rstrip(']').split()  # choose last one if >1
+#                                         species = bracket[1] + '_' + bracket[2]
+#                                         species = species.replace('[','').replace(']','') 
+#                                         #print('res',res,bracket)
+#                                         #defline = '>' + species+'|' + hmt + '|' + x[0]
+#                                         defline = '>' + hmt + ' | '+species+ ' | ' + pid
                             else:   # REFSEQ:: 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
                                 # always nucleotide
                                 x = [n.strip() for n in child_text.split('|')]
                                 species = x[1].replace(' ','_').replace('[','').replace(']','')
                                 #defline = '>'+ x[2]+';'+x[1].replace(' ','_')+';'+x[4].replace(' ','')
-                                defline = '>' + species + '|' + hmt + '|' + x[0]
+                                defline = hmt + '|' + species + '|' + x[0]
+                                #show = "<span class='blue'>"+hmt+"<\/span>" + ' | ' + species.replace(' ','_') + ' | ' + x[0].replace(' ','_')
+                                show = "<tspan fill='blue'>"+hmt+"</tspan>" + ' | ' + "<tspan fill='brown', style='font-style: italic;'>"+species.replace(' ','_')+"</tspan>" + ' | ' + x[0].replace(' ','_')
+    
                         print('Adding',defline)
-                        fout.write(defline+'\n')
+                        fout.write('>'+defline+'\n')
+                        #flabel.write(defline.replace('_',' ')+'\t'+show+'\n')
+                        flabel.write('s^'+defline.replace('_',' ')+'^'+show+'^g'+'\n')
                         fasta_text += defline+'\n'
                 for hsp in hit.iter('Hsp'):
                     #print('hsp.tag',hsp.tag)
@@ -135,184 +205,12 @@ def run_unalingned(args):
                             fout.write(sequence+'\n')
                             fasta_text += defline+'\n'
     fout.close()
+    flabel.close()
     
         
-        
-# def run_unalingned2(args): 
-#     collector = {}
-#     #with open(args.infile, 'r') as f:
-#     #    data = f.read()
-#     args.outfilepath = os.path.join(args.sourcedir, args.outfile+'.fa')
-#     fout = open(args.outfilepath,'w')
-#     use_original_defline = False
-#     root = ET.parse(os.path.join(args.sourcedir,args.filename)).getroot()
-#     
-#     # maxlength = 0
-# #     for hsp in root.iter('Hsp'):
-# #         for child in hsp:
-# #             #print(child.tag)
-# #             if child.tag == 'Hsp_align-len':
-# #                 #print(child.text)
-# #                 if int(child.text) > maxlength:
-# #                     maxlength = int(child.text)
-# #     
-# #     
-# #     print('Maxlength',maxlength)
-#     fasta_text = ''
-#     args.hit_count = 0
-#     
-#     for hit in root.iter('Hit'):
-#         args.hit_count += 1
-#         for child in hit:
-#             print('child',child.tag)
-#             if child.tag == 'Hit_def':
-#                 # fasttree no like :,()
-#                 if use_original_defline:
-#                    # no whitespace
-#                    defline = '>'+child.text.replace(' ','')
-#                 else:
-#                     child_text = child.text.replace(':','=').replace(',','_').replace('(','_').replace(')','_')
-#                     # REFSEQ:: 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
-#                     # GENOME::NCBI:   SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
-#                     #         PROKKA: SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
-#                     if child_text.startswith('SEQF'):
-#                         # NCBI:GENOME:: SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
-#                         # PROKKA:GENOME SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
-#                         x = child_text.split()  # split on white space
-# 
-#                         if '|' in x[0]:   # NCBI
-#                             # NCBI:GENOME:: SEQF9758.1|UGNQ01000001.1 HMT-855 Kytococcus sedentarius NCTC11040
-#                             species = x[2] + '_' + x[3]
-#                             species = species.replace('[','').replace(']','')
-#                             hmt = x[1]
-#                             #defline = '>'+ x[0]+';'+x[1]
-#                             defline = '>' + species + '|' + hmt + '|' + x[0]
-#                         else:   # PROKKA
-#                             # PROKKA:GENOME SEQF5240.1_02338 16S ribosomal RNA [HMT-188 Rothia aeria C6B]
-#                             res = re.findall(r'\[.*?\]', child_text)
-#                             bracket = res[0].lstrip('[').rstrip(']').split()
-#                             species = bracket[1] + '_' + bracket[2]
-#                             species = species.replace('[','').replace(']','')
-#                             hmt = bracket[0]
-#                             #print('res',res,bracket)
-#                             defline = '>' + species+'|' + hmt + '|' + x[0]
-#    
-#                     else:
-#                         # REFSEQ:: 189AW006 | Kocuria atrinae | HMT-189 | Clone: AW006 | GB: AF385532
-#                         
-#                         x = [n.strip() for n in child_text.split('|')]
-#                         species = x[1].replace(' ','_').replace('[','').replace(']','')
-#                         hmt = x[2]
-#                         #defline = '>'+ x[2]+';'+x[1].replace(' ','_')+';'+x[4].replace(' ','')
-#                         defline = '>' + species + '|' + hmt + '|' + x[0]
-#                 print('Adding',defline)
-#                 fout.write(defline+'\n')
-#                 fasta_text += defline+'\n'
-#         for hsp in hit.iter('Hsp'):
-#             #print(hsp.tag)
-#             for child in hsp:
-#                 if child.tag == 'Hsp_hseq':
-#                     sequence = str(child.text)
-#                     #print(sequence)
-#                     fout.write(sequence+'\n')
-#                     fasta_text += defline+'\n'
-#   fout.close()
-#     
 
-    
-# def run_alingnment(args): 
-#     # https://taylor-lindsay.github.io/phylogenetics/
-#     # https://github.com/taylor-lindsay/phylogenetics/blob/master/turtles/turtles.ipynb
-#     args.maligned = args.outfilepath+"-aligned.aln"
-#     infile = args.outfilepath
-#     cmdls = [os.path.join(args.condabin,'muscle'), "-in",infile,'-out',args.maligned]  #,'-clw']
-#     #print('Muscle:',' '.join(cmdls))
-#     subprocess.call(cmdls)
-#     
-# def run_newick(args):
-#     args.maligned = args.outfilepath+"-aligned.aln"
-#     newickfile = os.path.join(args.sourcedir,"newick.tre")
-#     cmdls = [os.path.join(args.condabin,'fasttree'), "<",args.maligned,'>',newickfile]  #,'-clw']
-#     print('FastTree:',' '.join(cmdls))
-#     os.system(' '.join(cmdls))
-    
-    
-# def run_tree1(args):    
-#     #print('HitCount',args.hit_count)
-#     import matplotlib
-#     import matplotlib.pyplot as plt
-#     newickfile = os.path.join(args.sourcedir,"newick.tre")
-#     my_tree = Phylo.read(newickfile, "newick")
-#     
-#     my_tree.rooted = True
-#     
-#     h = args.hit_count -3
-#     w = 15
-#     fig = plt.figure(figsize=(w, h), dpi=100) # create figure & set the size 
-#     #plt.margins(0.2)
-#     matplotlib.rc('font', size=10)              # fontsize of the leaf and node labels 
-#     #matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
-#     #matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
-#     my_tree.ladderize()                        # optional view
-#     #axes = fig.add_subplot()
-#     #plt.subplots_adjust(right=0.7)
-#     #xlim = axes.get_xbound()
-#     #print('xlim',xlim)
-#     #axes.set_xbound([xlim[0],xlim[1]+10])
-#     
-#     Phylo.draw(my_tree, label_func=get_label,   do_show=False) # myst be present and False
-#     
-#     pylab.savefig(os.path.join(args.sourcedir,'tree.svg'), format='svg',  dpi=1200)
-   
-# def run_tree(args):    
-#     #print('HitCount',args.hit_count)
-#     import matplotlib
-#     import matplotlib.pyplot as plt
-#     newickfile = os.path.join(args.sourcedir,"newick.tre")
-#     my_tree = Phylo.read(newickfile, "newick")
-#     #print('tree',tree)
-#     #sys.exit()
-#     
-#     with open(args.maligned,"r") as aln: 
-#         alignment = AlignIO.read(aln,"fasta")  #"clustal") "fasta" "clustal"
-#     
-#     #subprocess.call(cmdls)
-# 
-#     # print('ALN',alignment)
-# #     calculator = DistanceCalculator('identity')
-# #     distance_matrix = calculator.get_distance(alignment)
-# #     print('DM:',distance_matrix)
-# #     
-# #     from Bio.Phylo.TreeConstruction import DistanceTreeConstructor
-# #     constructor = DistanceTreeConstructor(calculator)
-# #     
-# #     my_tree = constructor.build_tree(alignment)
-# #     print('mytree',my_tree)
-# #     #Phylo.write(my_tree, os.path.join(args.sourcedir,"newick.tre"), "newick")
-# #     #print('NW',my_tree)
-#     my_tree.rooted = True
-#     #Phylo.write(my_tree, "turtle_tree.xml", "phyloxml")
-#     #print(my_tree)
-#     #Phylo.write(my_tree, "my_tree.xml", "phyloxml")
-#     #import matplotlib
-#     #import matplotlib.pyplot as plt
-#     #fig = plt.figure(figsize=(13, 5), dpi=100)
-#     h = args.hit_count -3
-#     w = 20
-#     fig = plt.figure(figsize=(w, h), dpi=150) # create figure & set the size 
-#     
-#     #matplotlib.rc('font', size=20)              # fontsize of the leaf and node labels 
-#     #matplotlib.rc('xtick', labelsize=10)       # fontsize of the tick labels
-#     #matplotlib.rc('ytick', labelsize=10)       # fontsize of the tick labels
-#     my_tree.ladderize()                        # optional view
-#     #plt.xticks([])
-#     axes = fig.add_subplot()
-#     Phylo.draw(my_tree, label_func=get_label, axes=axes,  do_show=False) # myst be present and False
-#     #Phylo.draw(my_tree, label_func=get_label,  do_show=False)
-#     #pylab.axis('off')
-#     pylab.savefig(os.path.join(args.sourcedir,'tree2.svg'),format='svg', bbox_inches='tight', dpi=300)
-#     #fig.savefig(os.path.join(args.sourcedir,"my_cladogram"))  # png
-    
+
+
 def get_label(leaf):
     return leaf.name    
 
@@ -370,20 +268,47 @@ def run_nw_utils():
     #args.e.write('\nnw_reroot\n')
     #cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile+'|nw_order','-c','n','-','>',rerootfile]
     cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile]  #+'|nw_order','-c','n','-']
+    #cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile+'|nw_order','-c','n','-']
     cmd = ' '.join(cmdls)
     print('nw_reroot:',cmd)
     subprocess.run(cmdls, stdout=f, stderr=args.e)
     f.close()
+    
+    # rerootfile = os.path.join(args.sourcedir,"newick.reroot.order.tre")
+#     f = open(rerootfile, "w")
+#     #args.e.write('\nnw_reroot\n')
+#     #cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile+'|nw_order','-c','n','-','>',rerootfile]
+#     #cmdls = [os.path.join(args.condabin,'nw_reroot'), newickfile]  #+'|nw_order','-c','n','-']
+#     cmdls = [os.path.join(args.condabin,'nw_order'),'-c','n',rerootfile]
+#     cmd = ' '.join(cmdls)
+#     print('nw_order:',cmd)
+#     subprocess.run(cmdls, stdout=f, stderr=args.e)
+#     f.close()
     
     svgfile = os.path.join(args.sourcedir,"tree.svg")
     f = open(svgfile, "w")
     #args.e.write('\nw_display\n')
     #   nw_display -R 40 -s -v 20 -i 'opacity:0' -b 'visibility:hidden' -l 'font-family:san-serif' -w 1000 -W 6 tree.reroot.order.tre > ParB.svg
     #cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1000','-W','5',rerootfile,'>',svgfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
-    cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1200','-W','10',rerootfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
+    cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','color:red;','-R','80','-s','-v','40','-w','1200','-W','10',rerootfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
     
     cmd = ' '.join(cmdls)
     print('nw_display:',cmd)
+    subprocess.run(cmdls, stdout=f, stderr=args.e)
+    f.close()
+
+def run_sed():
+    #sed -f leaflabels.sed tree.svg > tree.relabel.tre
+    renamefile = os.path.join(args.sourcedir,"tree.relabel.svg")
+    svgfile = os.path.join(args.sourcedir,"tree.svg")
+    f = open(renamefile, "w")
+    #args.e.write('\nw_display\n')
+    #   nw_display -R 40 -s -v 20 -i 'opacity:0' -b 'visibility:hidden' -l 'font-family:san-serif' -w 1000 -W 6 tree.reroot.order.tre > ParB.svg
+    #cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1000','-W','5',rerootfile,'>',svgfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
+    cmdls = ['sed','-f', args.leaflabels, svgfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
+    
+    cmd = ' '.join(cmdls)
+    print('sed:',cmd)
     subprocess.run(cmdls, stdout=f, stderr=args.e)
     f.close()
     
@@ -439,7 +364,7 @@ if __name__ == "__main__":
     #run_muscle()   # fasta     -> alignment
     run_fasttree() # alignment -> newick
     run_nw_utils() # newick    -> tree.svg
-    
+    run_sed()
     args.e.close()
     
     

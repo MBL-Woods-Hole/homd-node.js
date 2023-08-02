@@ -47,6 +47,7 @@ router.get('/blastdir=*', function taxon(req, res) {
            let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'xml2tree.py')
            //let cmd = pyscript +' -in '+ filepath
            // -mp == Muscle Path  -id == In Directory
+           let treefilepath = path.join(CFG.PATH_TO_SS_DIRS,dir,'tree.relabel.svg')
            const ls = spawn(CFG.PYTHON_EXE, [pyscript,'-c',CFG.CONDABIN,"-id", dirpath]);
            ls.stdout.on("data", data => {
                 console.log(`stdout: ${data}`);
@@ -63,7 +64,7 @@ router.get('/blastdir=*', function taxon(req, res) {
             ls.on("close", code => {
                 console.log(`child process exited with code ${code}`);
                 if(code === 0){
-                    var stats = fs.statSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'tree.svg'))
+                    var stats = fs.statSync(treefilepath)
                     var fileSizeInBytes = stats.size;
                     console.log('File size',fileSizeInBytes)
                     if(fileSizeInBytes === 0){
@@ -78,20 +79,28 @@ router.get('/blastdir=*', function taxon(req, res) {
                           user: JSON.stringify(req.user || {}),
                           file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                           svg_path: '',
+                          svg: '',
                           error: error,
                           newick: newick
                         })
                     }else{
-                        res.render('pages/blast/tree', {
-                          title: 'HOMD :: Human Oral Microbiome Database',
-                          pgname: '', // for AbountThisPage
-                          config: JSON.stringify(CFG),
-                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-                          user: JSON.stringify(req.user || {}),
-                          file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
-                          svg_path: '/tree/'+dir+'/tree.svg',
-                          error: '',
-                          newick: ''
+                        fs.readFile(treefilepath, 'utf8', function readSVGTree (err, data) {
+                           if (err) {
+                              console.log(err)
+                           } else {
+                            res.render('pages/blast/tree', {
+                              title: 'HOMD :: Human Oral Microbiome Database',
+                              pgname: '', // for AbountThisPage
+                              config: JSON.stringify(CFG),
+                              ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                              user: JSON.stringify(req.user || {}),
+                              file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
+                              svg_path: '/tree/'+dir+'/tree.svg',
+                              svg: JSON.stringify(data),
+                              error: '',
+                              newick: ''
+                            })
+                          }
                         })
                     }
                 }else{

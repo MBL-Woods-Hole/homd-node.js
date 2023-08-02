@@ -10,7 +10,7 @@ textarea{
 }
 </style>
 <%- include('../../partials/header_html'); %>
-
+<% svg = JSON.parse(svg) %>
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -33,6 +33,8 @@ textarea{
   <a class='button' href='download_file?filename=<%= file_dir %>/blastout.fa'>Fasta File</a>
   <a class='button' href='download_file?filename=<%= file_dir %>/newick.tre'>Newick Tree File</a>
   <a class='button' href='download_file?filename=<%= file_dir %>/tree.svg'>Tree as SVG File</a>
+  <a class='button' href='download_file?filename=<%= file_dir %>/err.txt'>Script Output</a>
+  
   </div>
   <br>
   <% if(error){ %>
@@ -42,15 +44,16 @@ textarea{
       Newick Tree:
       <br>
       <textarea rows="12" cols="180">
-        <%= newick %>
+        <%- newick %>
       </textarea>
       <br>Error File:<br><textarea rows="15" cols="180">
         <%= error %>
       </textarea>
   <% }else{ %>
-  <div id='svg_div'>
-     <img src="<%= svg_path %>" alt="HOMD Phylogenetic Tree" >
-  </div>
+    <div id='svg_div'>
+     <!-- <img src="<%- svg_path %>" alt="HOMD Phylogenetic Tree" > -->
+     <%- svg %>
+    </div>
   <% } %>
   </div> <!-- end: page-content -->
     
