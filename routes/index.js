@@ -55,6 +55,25 @@ router.get('/blastdir=*', function taxon(req, res) {
 
             ls.stderr.on("data", data => {
                 console.log(`stderr: ${data}`);
+                console.log(data.toString().trim())
+                if(data.toString().trim() === 'Low Hit Count'){
+                    console.log('We Got low hits')
+                    var error = fs.readFileSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'err.txt'),'utf8')
+                    res.render('pages/blast/tree', {
+                          title: 'HOMD :: Human Oral Microbiome Database',
+                          pgname: '', // for AbountThisPage
+                          config: JSON.stringify(CFG),
+                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                          user: JSON.stringify(req.user || {}),
+                          file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
+                          svg_path: '',
+                          svg: {},
+                          error: 'LOW HIT Count',
+                          newick: ''
+                    })
+                    return
+                }
+                
             });
 
             ls.on('error', (error) => {
@@ -83,6 +102,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                           error: error,
                           newick: newick
                         })
+                        return
                     }else{
                         fs.readFile(treefilepath, 'utf8', function readSVGTree (err, data) {
                            if (err) {
@@ -104,8 +124,8 @@ router.get('/blastdir=*', function taxon(req, res) {
                         })
                     }
                 }else{
-                   req.flash('fail', 'Tree Script Failure: '+filepath);
-                   res.redirect('/')
+                   //req.flash('fail', 'Tree Script Failure: '+filepath);
+                   //res.redirect('/')
                 }
             });
     }else{

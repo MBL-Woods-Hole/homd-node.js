@@ -39,6 +39,7 @@ def run_unalingned(args):
 
     #with open(args.infile, 'r') as f:
     #    data = f.read()
+    use_tspan = False
     args.leaflabels = os.path.join(args.sourcedir, 'leaflabels.sed')
     flabel = open(args.leaflabels,'w')
     args.outfilepath = os.path.join(args.sourcedir, args.outfile+'.fa')
@@ -196,6 +197,7 @@ def run_unalingned(args):
                         #flabel.write(defline.replace('_',' ')+'\t'+show+'\n')
                         flabel.write('s^'+defline.replace('_',' ')+'^'+show+'^g'+'\n')
                         fasta_text += defline+'\n'
+                        
                 for hsp in hit.iter('Hsp'):
                     #print('hsp.tag',hsp.tag)
                     for child in hsp:
@@ -204,8 +206,14 @@ def run_unalingned(args):
                             #print(sequence)
                             fout.write(sequence+'\n')
                             fasta_text += defline+'\n'
+                args.hit_count += 1
+    print('HIT Count',args.hit_count)
+    
     fout.close()
     flabel.close()
+    if args.hit_count < 10:
+        print('exiting-low hits')
+        sys.exit('Low Hit Count')
     
         
 
@@ -290,7 +298,7 @@ def run_nw_utils():
     #args.e.write('\nw_display\n')
     #   nw_display -R 40 -s -v 20 -i 'opacity:0' -b 'visibility:hidden' -l 'font-family:san-serif' -w 1000 -W 6 tree.reroot.order.tre > ParB.svg
     #cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','font-family:san-serif','-R','80','-s','-v','40','-w','1000','-W','5',rerootfile,'>',svgfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
-    cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-l','color:red;','-R','80','-s','-v','40','-w','1200','-W','10',rerootfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
+    cmdls = [os.path.join(args.condabin,'nw_display'),'-b','visibility:hidden','-R','80','-s','-v','40','-w','1200','-W','10',rerootfile]  #newickfile+'|nw_order','-c','n','-','>',rerootfile]
     
     cmd = ' '.join(cmdls)
     print('nw_display:',cmd)
