@@ -562,45 +562,45 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
 #             }
     return counts    
         
-def run_counts(otid, taxlist, gcnt, rfcnt):
-    global counts
-    #print(taxlist)
-
-
-    for m in range(len(ranks)): # 7
-        #tax_name = taxlist[m]
-
-        sumdtaxname = []
-        for d in range(m+1):
-            sumdtaxname.append(taxlist[d])
-
-        long_tax_name = ';'.join(sumdtaxname)
-
-        if long_tax_name[-1] == ';':
-            #remove it -- means subsp ==''
-            continue
-            #long_tax_name = long_tax_name[:-1]
-        #print('long_tax_name ',long_tax_name)
-        #print('otid ',otid)
-        
-
-# longtaxname": {"tax_cnt": 1, "gcnt": 5, "refcnt": 3   .... 
-#NO dropped or nor:  774	8607	999 
-# ALL    
-        if long_tax_name in counts:
-            if otid not in nonoral_otids and otid not in dropped_otids:  
-               counts[long_tax_name]["taxcnt"] += 1
-               counts[long_tax_name]['refcnt']  += rfcnt
-               counts[long_tax_name]['gcnt']    += gcnt
-        else:
-            # this will always be species
-            if otid not in nonoral_otids and otid not in dropped_otids: 
-                counts[long_tax_name] = { "taxcnt": 1, "gcnt": gcnt, "refcnt": rfcnt}
-#            else:
-#               counts[long_tax_name] = { "taxcnt": 0, "gcnt": 0, "refcnt": 0}
-    
-    
-    return counts
+# def run_counts(otid, taxlist, gcnt, rfcnt):
+#     global counts
+#     #print(taxlist)
+# 
+# 
+#     for m in range(len(ranks)): # 7
+#         #tax_name = taxlist[m]
+# 
+#         sumdtaxname = []
+#         for d in range(m+1):
+#             sumdtaxname.append(taxlist[d])
+# 
+#         long_tax_name = ';'.join(sumdtaxname)
+# 
+#         if long_tax_name[-1] == ';':
+#             #remove it -- means subsp ==''
+#             continue
+#             #long_tax_name = long_tax_name[:-1]
+#         #print('long_tax_name ',long_tax_name)
+#         #print('otid ',otid)
+#         
+# 
+# # longtaxname": {"tax_cnt": 1, "gcnt": 5, "refcnt": 3   .... 
+# #NO dropped or nor:  774	8607	999 
+# # ALL    
+#         if long_tax_name in counts:
+#             if otid not in nonoral_otids and otid not in dropped_otids:  
+#                counts[long_tax_name]["taxcnt"] += 1
+#                counts[long_tax_name]['refcnt']  += rfcnt
+#                counts[long_tax_name]['gcnt']    += gcnt
+#         else:
+#             # this will always be species
+#             if otid not in nonoral_otids and otid not in dropped_otids: 
+#                 counts[long_tax_name] = { "taxcnt": 1, "gcnt": gcnt, "refcnt": rfcnt}
+# #            else:
+# #               counts[long_tax_name] = { "taxcnt": 0, "gcnt": 0, "refcnt": 0}
+#     
+#     
+#     return counts
 
 def get_mbps(x):
     #return str(float(x)/1000000) + 'Mbps'

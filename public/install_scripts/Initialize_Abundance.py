@@ -169,7 +169,10 @@ def run_abundance_db():
 'PT_prev': '6.9', 'PT_sd': '0.03', 'Throat_mean': '0', 'Throat_prev': '3.2', 'Throat_sd': '0', 'Saliva_mean': '0', 'Saliva_prev': '6.1', 'Saliva_sd': '0.001', 'SupP_mean': '0', 'SupP_prev': '5.7', 'SupP_sd': '0.001', 
 'SubP_mean': '0.021', 'SubP_prev': '9.7', 'SubP_sd': '0.1', 'Stool_mean': '', 'Stool_prev': '', 'Stool_sd': ''}
     """
-    
+    #Missing (Segata2012)::Bacteria;Pseudomonadota;Alphaproteobacteria;Rhodobacterales;Rhodobacteraceae;Rhodobacter
+    #Missing (Segata2012)::Bacteria;Synergistota;Synergistia;Synergistales;Synergistaceae;Pyramidobacter
+    #Missing (Eren2014_v1v3)::Bacteria;Actinomycetota;Actinomycetia;Propionibacteriales;Propionibacteriaceae;Cutibacterium
+    #Missing (Dewhirst35x9)::Bacteria;Actinomycetota;Actinomycetia;Propionibacteriales;Propionibacteriaceae;Propionibacteriaceae_[G-1]
     #header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
     #header_prefixes = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS','ST']
     #segata_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
@@ -179,7 +182,8 @@ def run_abundance_db():
     segata_site_prefixes   = site_prefixes + ['ST']
     dewhirst_site_prefixes = site_prefixes + ['NS'] 
     #['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','NS']
-    print(segata_site_prefixes)
+    #print(segata_site_prefixes)
+    missing_count =0
     for row in result:
         #print(row)
         max_segata, max_eren, max_dewhirst = 0,0,0
@@ -194,10 +198,12 @@ def run_abundance_db():
 #                 #print('found clade')
 #                 if tax_parts[6] in subspecies:
 #                     taxon_string =';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+subspecies[tax_parts[6]][0]+';'+subspecies[tax_parts[6]][1]
+        
         if taxon_string not in TCcollector:
-            print()
-            print(row)
-            print('!Missing from TaxonCounts.json -('+row['reference']+')::'+taxon_string)
+            #print()
+            #print(row)
+            missing_count +=1
+            print(missing_count,'!Missing from TaxonCounts.json -('+row['reference']+')::'+taxon_string)
             TCcollector[taxon_string] = {}
         TCcollector[taxon_string]['otid'] = row['otid']
         #TCcollector[taxon_string]['max_all'] = row['max']
