@@ -1168,10 +1168,11 @@ router.get('/ecology', function ecology(req, res) {
     }
    //console.log('segata_data',segata_data)
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
-    console.log('nihv3v5_max',nihv3v5_max)
+    console.log('nihv3v5_notes',nihv3v5_max)
     console.log('nihv1v3_max',nihv1v3_max)
-    console.log('dewhirst_max',dewhirst_max)
-    console.log('erenv3v5_max',erenv3v5_max)
+    console.log('dewhirst_notes',dewhirst_notes)
+    console.log('erenv1v3_notes',erenv1v3_notes)
+    console.log('erenv3v5_notes',erenv3v5_notes)
     res.render('pages/taxa/ecology', {
       title: 'HOMD ::'+rank+'::'+tax_name,
       pgname: 'taxon/ecology', // for AbountThisPage 
@@ -1391,10 +1392,10 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     let abundance_order
     let header = 'HOMD (https://homd.org/)::'
     if(source === 'nihv1v3'){
-        header += 'Data from NIH; '
+        header += 'Data from NIH V1V3 Unpublished; '
         abundance_order = C.base_abundance_order
     }else if(source === 'nihv3v5'){
-        header += 'Data from NIH; '
+        header += 'Data from NIH V3V5 Unpublished; '
         abundance_order = C.base_abundance_order
     }else if(source === 'dewhirst'){
         header += 'Data from Dewhirst(unpublished); '
@@ -1415,13 +1416,23 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     }
     table_tsv += '\n'
     for(let tax_string in C.taxon_counts_lookup){
-      
-      if(source === 'segata' 
-                && C.taxon_counts_lookup[tax_string].hasOwnProperty('segata') 
-                && Object.keys(C.taxon_counts_lookup[tax_string]['segata']).length > 0)
+      if(source === 'nihv1v3' 
+                && C.taxon_counts_lookup[tax_string].hasOwnProperty('nih_v1v3') 
+                && Object.keys(C.taxon_counts_lookup[tax_string]['nih_v1v3']).length > 0)
             {
             table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
-            row = C.taxon_counts_lookup[tax_string]['segata']
+            row = C.taxon_counts_lookup[tax_string]['nih_v1v3']
+            for(let n in abundance_order){
+                site = abundance_order[n]
+                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+            }
+            table_tsv += '\n'
+      }else if(source === 'nihv3v5' 
+                && C.taxon_counts_lookup[tax_string].hasOwnProperty('nih_v3v5') 
+                && Object.keys(C.taxon_counts_lookup[tax_string]['nih_v3v5']).length > 0)
+            {
+            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
+            row = C.taxon_counts_lookup[tax_string]['nih_v3v5']
             for(let n in abundance_order){
                 site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
@@ -1761,20 +1772,42 @@ function get_site_avgs(obj,rank){
        }
        
     }
+//constants.base_abundance_order X2    = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SAL','STO','SUBP','SUPP','THR','TDO','VIN']
+//constants.eren_abundance_order X2    = ['AKE',      'BMU','HPA',                        'PTO',            'SAL','STO','SUBP','SUPP','THR','TDO']
+//constants.dewhirst_abundance_order X1 = ['AKE','ANA','BMU','HPA',                        'PTO',            'SAL',      'SUBP','SUPP','THR','TDO']
+
     //console.log('counter SV',counter_per_site['SV'])
-    console.log('countSV',count,return_obj)
+    //console.log('countSV',count,return_obj)
     for(let site in return_obj){
-          //let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
-          if(site == 'NS'){   // only Dewhirst
-            let result = (return_obj[site]).toFixed(3)  // divide by 1 ONLY Dewhirst
+          if(['AKE','BMU','HPA','PTO','SAL','SUBP','SUPP','THR','TDO'].indexOf(site) != -1){
+            // divide by 5
+            let result = (return_obj[site] / 5).toFixed(3)  // divide by 5
             return_obj[site] = result 
-          }else if(rank === 'species'){  //only dewhirst and erinx2
-            let result = (return_obj[site] / 3).toFixed(3)  // divide by 4 a
-            return_obj[site] = result 
-          }else{
+          }else if(site == 'STO'){
+            // divide by 4
             let result = (return_obj[site] / 4).toFixed(3)  // divide by 4 a
             return_obj[site] = result 
+          }else if(site == 'ANA'){
+             // divide by 3
+             let result = (return_obj[site] / 3).toFixed(3)  // divide by 3
+            return_obj[site] = result 
+          }else{  //#7
+            //divide by 2
+            let result = (return_obj[site] / 2).toFixed(3)  // divide by 2
+            return_obj[site] = result 
           }
+    
+          //let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
+          // if(site == 'NS'){   // only Dewhirst
+//             let result = (return_obj[site]).toFixed(3)  // divide by 1 ONLY Dewhirst
+//             return_obj[site] = result 
+//           }else if(rank === 'species'){  //only dewhirst and erinx2
+//             let result = (return_obj[site] / 3).toFixed(3)  // divide by 4 a
+//             return_obj[site] = result 
+//           }else{
+//             let result = (return_obj[site] / 4).toFixed(3)  // divide by 4 a
+//             return_obj[site] = result 
+//           }
           
           // }else{
 //               return_obj[site] = '0.000'

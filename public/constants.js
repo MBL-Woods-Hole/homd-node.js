@@ -52,8 +52,8 @@ constants.names_w_text = {
 //constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
 constants.abundance_refs = ['eren_v1v3','eren_v3v5','dewhirst','nih_v1v3','nih_v3v5']
 constants.base_abundance_order     = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SAL','STO','SUBP','SUPP','THR','TDO','VIN']
-constants.eren_abundance_order     = ['AKE','BMU','HPA','PTO','SAL','STO','SUBP','SUPP','THR','TDO']
-constants.dewhirst_abundance_order = ['AKE','ANA','BMU','HPA','PTO','SAL','SUBP','SUPP','THR','TDO']
+constants.eren_abundance_order     = ['AKE',      'BMU','HPA',                        'PTO',            'SAL','STO','SUBP','SUPP','THR','TDO']
+constants.dewhirst_abundance_order = ['AKE','ANA','BMU','HPA',                        'PTO',            'SAL',      'SUBP','SUPP','THR','TDO']
 
 constants.abundance_names = { 
 'ANA':'Anterior Nares (nasal)',

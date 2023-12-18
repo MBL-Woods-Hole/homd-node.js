@@ -35,7 +35,7 @@ ul li{
 }
 
 .right {
-  width: 31%;
+  
   
 }
 .middle {
@@ -57,7 +57,7 @@ ul li{
 #legend-content{
   padding:3px 5px;;
   border:1px solid brown;
-  width:85%;
+  width:100%;
 }
 
 .menu-title{
@@ -66,13 +66,13 @@ ul li{
    text-align:center;
    background:ivory;
    border:1px solid brown;
-   width:85%;
+   width:100%;
 
 }
 #links-content{
   padding:3px;
   border:1px solid brown;
-  width:85%
+  width:100%
 }
 
 .plot-title{
@@ -105,7 +105,7 @@ ul li{
 }
 .notes-td{
    vertical-align:top;
-   
+   padding:10px;
 }
 .nonote{
    font-size:10px;
@@ -122,14 +122,27 @@ ul li{
   border:1px solid brown;
   overflow: auto;
 }
+#fixed-text-box{
+    background-color:#ddd;
+    position: absolute;
+    padding: 1.1em;
+    right: 100px;
+    width:500px;
+    height:250px;
+    overflow:auto;
+    top: 200px;
+    border:1px solid brown;
+    /* transform: translateX(-50%); */
+    font-size:11px;
+  
+}
 #text{
-   
    border:1px solid brown;
-   background-color:lightgrey;
-   font-size:13px;
+   font-size:12px;
    line-height:150%;
    margin:0 5px;
    padding:10px;
+
 }
 </style>
 <% nihv1v3_data = JSON.parse(nihv1v3) %>
@@ -291,9 +304,13 @@ ul li{
     </div>
         
   </td><td class='notes-td'>
-    
+    <% if(text_file){ %>
+     <div id='textX'><%- include('../../partials/static/'+text_file); %></div>
+   <% }else if(text_format){ %>
+    <div id='textX'><%- text_format %></div>
+   <%} %>
     <% if(notes.nihv1v3 == ''){ %>
-        <div class='nonote'>No Notes</div>
+        <div class='nonote'>No NIH Specific Notes</div>
     <% }else{ %>
         <% parts = notes.nihv1v3.split(';') %>
         <div class='note'>
@@ -492,15 +509,15 @@ ul li{
 
 </table>
 </div>  <!-- column middle -->
-  
-<div class='column right'>
+ <!-- 
+<div id='fixed-text-box'>
    <% if(text_file){ %>
-     <div id='text'><%- include('../../partials/static/'+text_file); %></div>
+     <div id='textX'><%- include('../../partials/static/'+text_file); %></div>
    <% }else if(text_format){ %>
-    <div id='text'><%- text_format %></div>
+    <div id='textX'><%- text_format %></div>
    <%} %>
 </div>
-
+-->
     
 </div>  <!-- end row -->
 
