@@ -1,0 +1,758 @@
+<style>
+ul li{
+ padding: 5px;
+}
+#taxon-page-div {
+   margin:20px 0;
+   padding:10px;
+   border:1px solid green;
+   
+}
+
+
+.abund-table-div{
+   
+}
+.abund-table-div table {
+   border-collapse:collapse;
+   
+}
+.abund-table-div table td,th{
+   font-size:14px;
+   border:1px solid black;
+   padding:1px 3px;
+   
+}
+.column {
+  float: left;
+  min-height: 420px;
+}
+
+.left {
+  width: 15%;
+  font-size:12px;
+  height: 200px; /* only to hold column open */
+}
+
+.right {
+  width: 31%;
+  
+}
+.middle {
+  width: 54%;
+  border:1px solid black;
+  
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+#legend-links{
+  position:fixed;
+  
+}
+
+#legend-content{
+  padding:3px 5px;;
+  border:1px solid brown;
+}
+
+.menu-title{
+   
+   font-size:13px;
+   text-align:center;
+   background:ivory;
+   border:1px solid brown;
+
+}
+#links-content{
+  padding:3px;
+  border:1px solid brown;
+}
+
+.plot-title{
+   background:lightblue;
+   padding:0 3px;
+   border:1px solid grey;
+}
+#plot_table_master{
+   width:100%;
+}
+.plot{
+   padding:0 10px;
+}
+
+.plot_table{
+  border-collapse:collapse;
+  
+}
+.plot_table td{
+  vertical-align:top;
+  
+  
+}
+.plot-td{
+   min-width:350px;
+}
+.wide{
+   padding:10px 0;
+   background:grey;
+}
+.notes-td{
+   vertical-align:top;
+   
+}
+.nonote{
+   font-size:10px;
+   padding:10px 4px;
+   margin-left:250px;
+   
+}
+.note{
+  font-size:12px;
+  padding:10px 4px;
+  width:auto;
+  height:auto;
+  
+  border:1px solid brown;
+  overflow: auto;
+}
+#text{
+   
+   border:1px solid brown;
+   background-color:lightgrey;
+   font-size:13px;
+   line-height:150%;
+   margin:0 5px;
+   padding:10px;
+}
+</style>
+<% segata_data = JSON.parse(segata) %>
+<% dewhirst_data = JSON.parse(dewhirst) %>
+<% erenv1v3_data = JSON.parse(erenv1v3) %>
+<% erenv3v5_data = JSON.parse(erenv3v5) %>
+
+<% children_lst = JSON.parse(children) %>
+<% genera = JSON.parse(genera) %>
+<% notes = JSON.parse(notes) %>
+<%- include('../../partials/header_html'); %>
+<% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    <% if(rank == 'klass' || rank == 'Klass'){  %>
+        <% rank_show = 'Class' %>
+    <% }else{ %> 
+       <% rank_show = rank.charAt(0).toUpperCase() + rank.slice(1) %>
+    <% } %>
+    <div class='page-content' >
+    
+    
+    <% if(rank=='species') { %>           
+       <div class='title'><b><%= rank_show %>:</b> <span class='yellow'><em><%= tax_name %></em></span></div>
+    <% }else{ %>
+         <div class='title'><b><%= rank_show %>:</b> <span class='yellow'><%= tax_name %></span></div>
+      <% } %>
+      
+    <a id='download_browser_text_excel'  href='/download#abundance' >Download Options</a>   
+    <div id='taxon-page-div'>
+        
+        Full Lineage: <%- lineage %>
+        <% if(children_lst.length == 0){ %>
+           
+        <% }else{ %>
+           
+           <br><small>Lower rank member(s): 
+           <% if(children_lst.length <= 5){ %>
+               <% for(n in children_lst){ %>
+                 <span >[<%- children_lst[n] %>]</span>
+               <% } %>
+             
+           <% }else{ %>
+            <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
+        
+            <div id='lower-rank-items-div' style='display:none'>
+               <% cols = 5 %>
+               <table id='tbl'><tr>
+               <% for(n in children_lst){ %>
+               <% if(n % cols == 0){  %><!-- // modulus/modulo-->
+                </tr><tr>
+               <% } %>
+               <td>[<%- children_lst[n] %>]</td>
+               <% } %>
+               </tr></table>
+            </div>
+          <% } %>  <!-- End of if(children_lst.length <5 -->
+  
+        <% } %>
+        
+        
+        <% if(['phylum','klass','order'].indexOf(rank) != -1){ %>
+          <br>Genera:
+          <select class='dropdown' onchange="location = this.value;">
+          <option value="" disabled selected>Select a genus</option>
+          <% for(n in genera){ %>
+              <option value='/taxa/ecology?rank=genus&name=<%= genera[n].taxon %>'><%= genera[n].taxon %></option>
+          <% } %>
+          </select>
+        <% } %>
+        
+        </small>
+        
+    </div>  <!-- end taxon-page-div -->
+
+<div class='row'> 
+     <div class='column left'>
+      <div id='legend-links'>
+      <div class='menu-title'>Links:</div>
+          <div id='links-content'>
+            <ul>
+            <% if(children_lst.length == 0){ %>
+                <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description:<br>&nbsp;&nbsp;<small><%= taxidfullname %></small></a></li>
+            <% }else{ %>
+                <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%- tax_name.split(' ').join('<br>') %></small></a>
+            <% } %>
+            
+            <li><a href='/taxa/ecology_home'>Ecology Home</a>
+            
+            
+            </ul>
+          </div>
+      
+      <br>
+    
+        <div id='legend'>
+        <div class='menu-title'>Legend:</div>
+            <div id='legend-content'>
+            <ul>
+              <br>BM - Buccal Mucosa
+              <br>KG - Keratinized Gingiva
+              <br>HP - Hard Palate
+              <br>
+              <br>TD - Tongue Dorsum
+              <br>PT - Palatine Tonsils
+              <br>TH - Throat
+              <br>SV - Saliva
+              <br>  
+              <br>SupP - Supra-gingival Plaque
+              <br>SubP - Sub-gingival Plaque
+              <br>
+              <br>NS - Nasal
+              <br>
+              <br>ST - Stool
+              <hr>
+              Prev - Prevalence
+              <br>10<sup>th</sup>p - 10<sup>th</sup> percentile
+              <br>90<sup>th</sup>p - 90<sup>th</sup> percentile
+            </ul>  
+            </div>
+        </div>
+      </div>  
+    </div>   <!-- end column left -->
+   
+    
+
+  
+
+
+
+
+<div class='column middle'>
+<table id='plot_table_master'>
+<tr>
+  <td>
+  
+  <table class='plot_table'><tr><td class='plot-td'>
+    
+    <div class='plot-title'>
+        <small>
+        From: <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
+            Segata et al.(2012)</a>
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_segata_here"></div> 
+    </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.segata == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.segata.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(segata_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- segata_table %></div>  
+    <% } %>  
+    
+    
+    </td></tr></table>
+    
+    
+  </td>
+</tr>
+
+<tr><td class='wide' colspan='2'></td></tr>
+
+<tr><td>
+    <table class='plot_table'><tr><td class='plot-td'>
+    
+    <div class='plot-title'>
+        <small>
+          From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
+            Eren et al.(2014) (V1-V3)</a>
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_erenv1v3_here"></div> 
+    </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.erenv1v3 == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.erenv1v3.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(erenv1v3_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- erenv1v3_table %></div>  
+    <% } %>  
+    
+    
+    </td></tr></table>
+
+
+</td>
+</tr>
+
+<tr><td class='wide' colspan='2'></td></tr>
+
+<tr><td>
+    <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot-title'>
+        <small>
+          From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
+            Eren et al.(2014) (V3-V5)</a>
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_erenv3v5_here"></div> 
+    </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.erenv3v5 == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.erenv3v5.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(erenv3v5_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- erenv3v5_table %></div>  
+    <% } %>  
+    
+    
+    </td></tr></table>
+    
+    
+
+</td>
+</tr>
+<tr><td class='wide'></td></tr>
+<tr><td>
+    <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot-title'>
+        <small>
+        From: Dewhirst 35x9 data <small>(not published yet)</small>
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_dewhirst_here"></div> 
+    </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.dewhirst == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.dewhirst.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(dewhirst_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- dewhirst_table %></div>  
+    <% } %>  
+    
+    
+    </td></tr></table>
+
+
+</td>
+</tr>
+
+
+</table>
+</div>  <!-- column middle -->
+  
+<div class='column right'>
+   <% if(text_file){ %>
+     <div id='text'><%- include('../../partials/static/'+text_file); %></div>
+   <% }else if(text_format){ %>
+    <div id='text'><%- text_format %></div>
+   <%} %>
+</div>
+
+    
+</div>  <!-- end row -->
+
+
+
+    </div> <!-- end: page-content -->
+    </div> <!-- end: wrapper -->
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src="/js/taxonomy.js"></script>
+<script>
+  mainmenu()
+  max =   JSON.parse('<%- max %>')
+  sdata = JSON.parse('<%- segata %>')
+  ddata = JSON.parse('<%- dewhirst %>')
+  edatav1v3 = JSON.parse('<%- erenv1v3 %>')
+  edatav3v5 = JSON.parse('<%- erenv3v5 %>')
+  // set the dimensions and margins of the graph
+  w = 350
+  h = 300
+  var margin = {top: 30, right: 30, bottom: 70, left: 40},
+      width = w - margin.left - margin.right,
+      height = h - margin.top - margin.bottom;
+  //
+  // Dewhirst
+  //
+  //
+  //
+  // console.log('s',max.segata)
+//   console.log('d',max.dewhirst)
+//   console.log('e',max.erenv1v3)
+  
+  if(Object.keys(ddata).length == 0){
+     document.getElementById("plot_dewhirst_here").innerHTML = '<small>No Data</small>'
+  }else{
+    
+    if(max.dewhirst < 0.001){
+       max_ceil = 0.001
+    }else if(max.dewhirst < 0.01){
+       max_ceil = 0.01
+    }else if(max.dewhirst < 0.1){
+       max_ceil = 0.1
+    }else{
+       max_ceil = Math.ceil(max.dewhirst)  // smallest at 1.0
+    }
+    //max_ceil = Math.ceil(max.dewhirst) 
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_dewhirst_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+  // X axis horizontal
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(ddata.map(function(d) { return d.site; }))
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+  // Add Y axis - vertical
+  var y = d3.scaleLinear();
+   // .domain([0, max_ceil])
+   // .range([ height, 0]);
+   //console.log('max_ceil',max_ceil) 
+   //console.log('d3.min(data)',d3.min(ddata)) 
+   //console.log('d3.max(data)',d3.max(ddata))
+  y.domain([0, max_ceil]);
+  y.range([ height, 0]);  
+  
+  //y.range([ , -height]);  
+  svg.append("g")
+    .call(d3.axisLeft(y));
+    
+    // Bars
+    var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+  //var colors = d3.scaleOrdinal().domain(ddata).range(d3.schemeSet2);
+  svg.selectAll("mybar")
+    .data(ddata)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { 
+      //console.log('x(d.site)', d.site, x(d.site))
+      return x(d.site); 
+    })
+    .attr("y", function(d) { 
+       //console.log('y(d.avg)', d.avg, y(d.avg))
+       return y(d.avg); 
+    
+    })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(ddata, i) {
+              return colors(i);
+    });
+  }
+  //
+  // Erenv3v5
+  //
+  //
+  if(Object.keys(edatav3v5).length == 0){
+     document.getElementById("plot_erenv3v5_here").innerHTML = '<small>No Data</small>'
+  }else{
+     //max_ceil = Math.ceil(max.erenv3v5)
+    if(max.erenv3v5 < 0.001){
+       max_ceil = 0.001
+    }else if(max.erenv3v5 < 0.01){
+       max_ceil = 0.01
+    }else if(max.erenv3v5 < 0.1){
+       max_ceil = 0.1
+    }else{
+       max_ceil = Math.ceil(max.erenv3v5)  // smallest at 1.0
+    }
+    //console.log(max.eren)
+    
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_erenv3v5_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+      // X axis
+      var x = d3.scaleBand()
+        .range([ 0, width ])
+        .domain(edatav3v5.map(function(d) { return d.site; }))
+        .padding(0.2);
+      svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+
+      // Add Y axis
+      var y = d3.scaleLinear()
+        .domain([0, max_ceil])
+        .range([ height, 0]);
+      svg.append("g")
+        .call(d3.axisLeft(y));
+    
+    // Bars
+    var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+      //var colors = d3.scaleOrdinal().domain(edata).range(d3.schemeSet2);
+      svg.selectAll("mybar")
+        .data(edatav3v5)
+        .enter()
+        .append("rect")
+        .attr("x", function(d) { return x(d.site); })
+        .attr("y", function(d) { return y(d.avg); })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d.avg); })
+        .attr("fill", function(edatav3v5, i) {
+                  return colors(i);
+            });
+  }
+  //
+  // Erenv1v3
+  //
+  //
+  if(Object.keys(edatav1v3).length == 0){
+     document.getElementById("plot_erenv1v3_here").innerHTML = '<small>No Data</small>'
+  }else{
+    //console.log(edata)
+    //max = max([item.avg for item in data])
+    //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
+    //max_ceil = Math.ceil(max.erenv1v3)
+    if(max.erenv1v3 < 0.001){
+       max_ceil = 0.001
+    }else if(max.erenv1v3 < 0.01){
+       max_ceil = 0.01
+    }else if(max.erenv1v3 < 0.1){
+       max_ceil = 0.1
+    }else{
+       max_ceil = Math.ceil(max.erenv1v3)  // smallest at 1.0
+    }
+    //console.log(max.eren)
+    
+    
+    
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_erenv1v3_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+      // X axis
+      var x = d3.scaleBand()
+        .range([ 0, width ])
+        .domain(edatav1v3.map(function(d) { return d.site; }))
+        .padding(0.2);
+      svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+
+      // Add Y axis
+      var y = d3.scaleLinear()
+        .domain([0, max_ceil])
+        .range([ height, 0]);
+      svg.append("g")
+        .call(d3.axisLeft(y));
+    
+        // Bars
+      var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+      //var colors = d3.scaleOrdinal().domain(edata).range(d3.schemeSet2);
+      svg.selectAll("mybar")
+        .data(edatav1v3)
+        .enter()
+        .append("rect")
+        .attr("x", function(d) { return x(d.site); })
+        .attr("y", function(d) { return y(d.avg); })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d.avg); })
+        .attr("fill", function(edatav1v3, i) {
+                  return colors(i);
+                 });
+  }
+  
+  // Segata
+  if(Object.keys(sdata).length == 0){
+     document.getElementById("plot_segata_here").innerHTML = '<small>No Data</small>'
+  }else{
+    //console.log(sdata)
+    //max = max([item.avg for item in data])
+    //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
+    //max_ceil = Math.ceil(max.segata)
+    if(max.segata < 0.001){
+       max_ceil = 0.001
+    }else if(max.segata < 0.01){
+       max_ceil = 0.01
+    }else if(max.segata < 0.1){
+       max_ceil = 0.1
+    }else{
+       max_ceil = Math.ceil(max.segata)  // smallest at 1.0
+    }
+    
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_segata_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+  // X axis
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(sdata.map(function(d) { return d.site; }))
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, max_ceil])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
+    
+    // Bars
+    var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
+  //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
+  svg.selectAll("mybar")
+    .data(sdata)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(sdata, i) {
+              return colors(i);
+             });
+} // end else
+
+
+</script>
+
+

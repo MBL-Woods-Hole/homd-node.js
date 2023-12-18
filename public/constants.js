@@ -49,29 +49,32 @@ constants.names_w_text = {
   ],
   species:['666']
 }
-constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
-//constants.abundance_order = ['BM',"KG",'HP','TD','PT','TH','SV',"SupP","SubP",'ST']
-constants.base_abundance_order       = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD'] //,'NS','ST']
-//constants.base_abundance_graphs      = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS']
-//constants.segata_order =   constants.base_abundance_order.concat(['ST'])
-//constants.eren_order = constants.base_abundance_order.concat(['ST'])
-//constants.dewhirst_order  = constants.base_abundance_order.concat(['NS'])
-//constants.eren_order =     ['BM',"KG",'HP','TD','PT','TH','SV','SupP','SubP','ST']
-//constants.site_order      = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS','ST']
-constants.abundance_names = {
-      'BM': "Buccal Mucosa (BM)",
-      "KG": "Keratinized Gingiva (KG)",
-      'HP': 'Hard Palate (HP)',
-      'TH': "Throat (TH)",
-      "PT": "Palatine Tonsils (PT)",
-      "TD": 'Tongue Dorsum (TD)',
-      "SV": "Saliva (SV)",
-      "SupP": "Supra-gingival Plaque (SupP)",
-      "SubP": "Sub-gingival Plaque (SubP)",
-      "NS": "Nasal (NS)",
-      "ST": "Stool (ST)"
-}  
+//constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
+constants.abundance_refs = ['eren_v1v3','eren_v3v5','dewhirst','nih_v1v3','nih_v3v5']
+constants.base_abundance_order     = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SAL','STO','SUBP','SUPP','THR','TDO','VIN']
+constants.eren_abundance_order     = ['AKE','BMU','HPA','PTO','SAL','STO','SUBP','SUPP','THR','TDO']
+constants.dewhirst_abundance_order = ['AKE','ANA','BMU','HPA','PTO','SAL','SUBP','SUPP','THR','TDO']
 
+constants.abundance_names = { 
+'ANA':'Anterior Nares (nasal)',
+'AKE':'Attached Keratinized Gingiva (oral)',
+'BMU':'Buccal Mucosa (oral)',
+'HPA':'Hard Palate (oral)',
+'LAF':'L_Antecubital Fossa (skin)',
+'LRC':'L_Retroauricular Crease (skin)',
+'MVA':'Mid Vagina (vaginal)',
+'PTO':'Palatine Tonsils (oral)',
+'PFO':'Posterior Fornix (vaginal)',
+'RAF':'R_Antecubital Fossa (skin)',
+'RRC':'R_Retroauricular Crease (skin)',
+'SAL':'Saliva (oral)',
+'STO':'Stool (gut)',
+'SUBP':'Subgingival Plaque (oral)',
+'SUPP':'Supragingival Plaque (oral)',
+'THR':'Throat (oral)',
+'TDO':'Tongue Dorsum (oral)',
+'VIN':'Vaginal Introitus (vaginal)'
+}
 //All the Capnocytophaga can be the same color;
 let capno_color = ['#a1ee0a','#98fb98','#00ff7f','#adff2f']  // 4 greens
 //both Corynebacterium matruchotii and Corynebacterium durum can be the same color;

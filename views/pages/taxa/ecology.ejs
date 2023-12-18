@@ -39,7 +39,8 @@ ul li{
   
 }
 .middle {
-  width: 54%;
+  /* width: 54%; */
+  width:85%;
   border:1px solid black;
   
 }
@@ -56,6 +57,7 @@ ul li{
 #legend-content{
   padding:3px 5px;;
   border:1px solid brown;
+  width:85%;
 }
 
 .menu-title{
@@ -64,11 +66,13 @@ ul li{
    text-align:center;
    background:ivory;
    border:1px solid brown;
+   width:85%;
 
 }
 #links-content{
   padding:3px;
   border:1px solid brown;
+  width:85%
 }
 
 .plot-title{
@@ -128,7 +132,8 @@ ul li{
    padding:10px;
 }
 </style>
-<% segata_data = JSON.parse(segata) %>
+<% nihv1v3_data = JSON.parse(nihv1v3) %>
+<% nihv3v5_data = JSON.parse(nihv3v5) %>
 <% dewhirst_data = JSON.parse(dewhirst) %>
 <% erenv1v3_data = JSON.parse(erenv1v3) %>
 <% erenv3v5_data = JSON.parse(erenv3v5) %>
@@ -227,27 +232,36 @@ ul li{
         <div id='legend'>
         <div class='menu-title'>Legend:</div>
             <div id='legend-content'>
-            <ul>
-              <br>BM - Buccal Mucosa
-              <br>KG - Keratinized Gingiva
-              <br>HP - Hard Palate
-              <br>
-              <br>TD - Tongue Dorsum
-              <br>PT - Palatine Tonsils
-              <br>TH - Throat
-              <br>SV - Saliva
-              <br>  
-              <br>SupP - Supra-gingival Plaque
-              <br>SubP - Sub-gingival Plaque
-              <br>
-              <br>NS - Nasal
-              <br>
-              <br>ST - Stool
+            <ol>
+              <li><b>Oral:</b>
+                <br>&nbsp;ANA<br>&nbsp;&nbsp;--Attached Keratinized Gingiva
+                <br>&nbsp;BRU --Buccal Mucosa
+                <br>&nbsp;HPA --Hard Palate
+                <br>&nbsp;PTO --Palatine Tonsils
+                <br>&nbsp;SAL --Saliva
+                <br>&nbsp;SUBP --Subgingival Plaque
+                <br>&nbsp;SUPP<br>&nbsp;&nbsp;--Supragingival Plaque
+                <br>&nbsp;THR --Throat
+                <br>&nbsp;TDO --Tongue Dorsum
+              <li><b>Nasal:</b>
+                <br>&nbsp;AKE --Anterior Nares
+              <li><b>Skin:</b>
+                <br>&nbsp;LAF --L_Antecubital Fossa
+                <br>&nbsp;LRC<br>&nbsp;&nbsp;--L_Retroauricular Crease
+                <br>&nbsp;RAF --R_Antecubital Fossa
+                <br>&nbsp;RRC<br>&nbsp;&nbsp;--R_Retroauricular Crease
+              <li><b>Gut:</b>
+                <br>&nbsp;STO --Stool
+              <li><b>Vaginal:</b>
+                <br>&nbsp;MVA --Mid Vagina
+                <br>&nbsp;PFO --Posterior Fornix
+                <br>&nbsp;VIN --Vaginal Introitus
+              
               <hr>
               Prev - Prevalence
               <br>10<sup>th</sup>p - 10<sup>th</sup> percentile
               <br>90<sup>th</sup>p - 90<sup>th</sup> percentile
-            </ul>  
+            </ol>  
             </div>
         </div>
       </div>  
@@ -269,20 +283,19 @@ ul li{
     
     <div class='plot-title'>
         <small>
-        From: <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42' target='_blank'>
-            Segata et al.(2012)</a>
+        NIH V1V3 Citation
         </small>
     </div>
     <div class='plot' >
-        <div id="plot_segata_here"></div> 
+        <div id="plot_nihv1v3_here"></div> 
     </div>
         
   </td><td class='notes-td'>
     
-    <% if(notes.segata == ''){ %>
+    <% if(notes.nihv1v3 == ''){ %>
         <div class='nonote'>No Notes</div>
     <% }else{ %>
-        <% parts = notes.segata.split(';') %>
+        <% parts = notes.nihv1v3.split(';') %>
         <div class='note'>
         <b>Notes:</b>
         <% for(n in parts){ %>
@@ -294,9 +307,9 @@ ul li{
   </td></tr>
   
   <tr><td class='data' colspan='2'>
-    <% if(Object.keys(segata_data).length !== 0){ %>
+    <% if(Object.keys(nihv1v3_data).length !== 0){ %>
       <small>percent abundance</small>
-      <div class='abund-table-div'><%- segata_table %></div>  
+      <div class='abund-table-div'><%- nihv1v3_table %></div>  
     <% } %>  
     
     
@@ -306,6 +319,48 @@ ul li{
   </td>
 </tr>
 
+
+<tr><td class='wide' colspan='2'></td></tr>
+<tr><td>
+    <table class='plot_table'><tr><td class='plot-td'>
+    
+    <div class='plot-title'>
+        <small>
+          NIH V3V5 Citation
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_nihv3v5_here"></div> 
+    </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.nihv3v5 == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.nihv3v5.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(nihv3v5_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- nihv3v5_table %></div>  
+    <% } %>  
+    
+    
+    </td></tr></table>
+
+
+</td>
+</tr>
 <tr><td class='wide' colspan='2'></td></tr>
 
 <tr><td>
@@ -468,7 +523,8 @@ ul li{
 <script>
   mainmenu()
   max =   JSON.parse('<%- max %>')
-  sdata = JSON.parse('<%- segata %>')
+  ndatav1v3 = JSON.parse('<%- nihv1v3 %>')
+  ndatav3v5 = JSON.parse('<%- nihv3v5 %>')
   ddata = JSON.parse('<%- dewhirst %>')
   edatav1v3 = JSON.parse('<%- erenv1v3 %>')
   edatav3v5 = JSON.parse('<%- erenv3v5 %>')
@@ -483,7 +539,7 @@ ul li{
   //
   //
   //
-  // console.log('s',max.segata)
+  // console.log('s',max.nihv1v3)
 //   console.log('d',max.dewhirst)
 //   console.log('e',max.erenv1v3)
   
@@ -688,28 +744,27 @@ ul li{
                   return colors(i);
                  });
   }
-  
-  // Segata
-  if(Object.keys(sdata).length == 0){
-     document.getElementById("plot_segata_here").innerHTML = '<small>No Data</small>'
+  // NIH V1V3
+    if(Object.keys(ndatav1v3).length == 0){
+     document.getElementById("plot_nihv1v3_here").innerHTML = '<small>No Data</small>'
   }else{
     //console.log(sdata)
     //max = max([item.avg for item in data])
     //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
-    //max_ceil = Math.ceil(max.segata)
-    if(max.segata < 0.001){
+    //max_ceil = Math.ceil(max.nihv1v3)
+    if(max.nihv1v3 < 0.001){
        max_ceil = 0.001
-    }else if(max.segata < 0.01){
+    }else if(max.nihv1v3 < 0.01){
        max_ceil = 0.01
-    }else if(max.segata < 0.1){
+    }else if(max.nihv1v3 < 0.1){
        max_ceil = 0.1
     }else{
-       max_ceil = Math.ceil(max.segata)  // smallest at 1.0
+       max_ceil = Math.ceil(max.nihv1v3)  // smallest at 1.0
     }
     
 
     // append the svg object to the body of the page
-    var svg = d3.select("#plot_segata_here")
+    var svg = d3.select("#plot_nihv1v3_here")
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -720,7 +775,70 @@ ul li{
   // X axis
   var x = d3.scaleBand()
     .range([ 0, width ])
-    .domain(sdata.map(function(d) { return d.site; }))
+    .domain(ndatav1v3.map(function(d) { return d.site; }))
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, max_ceil])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
+    
+    // Bars
+    var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
+  //var colors = d3.scaleOrdinal().domain(ndatav1v3).range(d3.schemeSet1);
+  svg.selectAll("mybar")
+    .data(ndatav1v3)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(ndatav1v3, i) {
+              return colors(i);
+             });
+  } // end else
+
+  // NIH V3V5
+    if(Object.keys(ndatav3v5).length == 0){
+     document.getElementById("plot_nihv3v5_here").innerHTML = '<small>No Data</small>'
+  }else{
+    //console.log(sdata)
+    //max = max([item.avg for item in data])
+    //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
+    //max_ceil = Math.ceil(max.nihv1v3)
+    if(max.nihv3v5 < 0.001){
+       max_ceil = 0.001
+    }else if(max.nihv3v5 < 0.01){
+       max_ceil = 0.01
+    }else if(max.nihv3v5 < 0.1){
+       max_ceil = 0.1
+    }else{
+       max_ceil = Math.ceil(max.nihv3v5)  // smallest at 1.0
+    }
+    
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_nihv3v5_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+  // X axis
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(ndatav3v5.map(function(d) { return d.site; }))
     .padding(0.2);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -740,17 +858,80 @@ ul li{
     var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
   //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
   svg.selectAll("mybar")
-    .data(sdata)
+    .data(ndatav3v5)
     .enter()
     .append("rect")
     .attr("x", function(d) { return x(d.site); })
     .attr("y", function(d) { return y(d.avg); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.avg); })
-    .attr("fill", function(sdata, i) {
+    .attr("fill", function(ndatav3v5, i) {
               return colors(i);
              });
-} // end else
+  } // end else
+
+  // Segata
+//   if(Object.keys(sdata).length == 0){
+//      document.getElementById("plot_nihv1v3_here").innerHTML = '<small>No Data</small>'
+//   }else{
+//     //console.log(sdata)
+//     //max = max([item.avg for item in data])
+//     //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
+//     //max_ceil = Math.ceil(max.nihv1v3)
+//     if(max.nihv1v3 < 0.001){
+//        max_ceil = 0.001
+//     }else if(max.nihv1v3 < 0.01){
+//        max_ceil = 0.01
+//     }else if(max.nihv1v3 < 0.1){
+//        max_ceil = 0.1
+//     }else{
+//        max_ceil = Math.ceil(max.nihv1v3)  // smallest at 1.0
+//     }
+//     
+// 
+//     // append the svg object to the body of the page
+//     var svg = d3.select("#plot_nihv1v3_here")
+//       .append("svg")
+//       .attr("width", width + margin.left + margin.right)
+//       .attr("height", height + margin.top + margin.bottom)
+//       .append("g")
+//       .attr("transform",
+//           "translate(" + margin.left + "," + margin.top + ")");
+//   
+//   // X axis
+//   var x = d3.scaleBand()
+//     .range([ 0, width ])
+//     .domain(sdata.map(function(d) { return d.site; }))
+//     .padding(0.2);
+//   svg.append("g")
+//     .attr("transform", "translate(0," + height + ")")
+//     .call(d3.axisBottom(x))
+//     .selectAll("text")
+//     .attr("transform", "translate(-10,0)rotate(-45)")
+//     .style("text-anchor", "end");
+// 
+//   // Add Y axis
+//   var y = d3.scaleLinear()
+//     .domain([0, max_ceil])
+//     .range([ height, 0]);
+//   svg.append("g")
+//     .call(d3.axisLeft(y));
+//     
+//     // Bars
+//     var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
+//   //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
+//   svg.selectAll("mybar")
+//     .data(sdata)
+//     .enter()
+//     .append("rect")
+//     .attr("x", function(d) { return x(d.site); })
+//     .attr("y", function(d) { return y(d.avg); })
+//     .attr("width", x.bandwidth())
+//     .attr("height", function(d) { return height - y(d.avg); })
+//     .attr("fill", function(sdata, i) {
+//               return colors(i);
+//              });
+//   } // end else
 
 
 </script>

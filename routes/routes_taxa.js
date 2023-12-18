@@ -183,7 +183,10 @@ function apply_ttable_filter(req, filter) {
               var lineage_list = make_lineage(node)
               
               if(lineage_list[0] in C.taxon_counts_lookup){
-                  if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+                 // if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+                 //    el.ecology = 1
+                 
+                 if('nih' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['nih']).length != 0){
                      el.ecology = 1
                  }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
                      el.ecology = 1
@@ -871,7 +874,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
     // let graph_site_order = C.base_abundance_order
 //     graph_site_order.push('NS')
 //     console.log('PUSH',C.base_abundance_order,graph_site_order)
-    let abundance_graph_order = C.base_abundance_order.concat(['NS'])
+    let abundance_graph_order = C.base_abundance_order
     //console.log('g ORDER',abundance_graph_order,C.base_abundance_order)
     let sole_arch = {'domain':'Archaea','phylum':'Euryarchaeota','klass':'Methanobacteria','order':'Methanobacteriales','family':'Methanobacteriaceae','genus':'Methanobrevibacter'}
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
@@ -918,7 +921,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
             spcount += 1
             abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],'species')
             //console.log('abund_obj',abund_obj)
-            delete abund_obj['ST']
+            
             group_collector[lineage_list[0]]={}
             group_collector[lineage_list[0]] = abund_obj
             for(let site in abund_obj){
@@ -1045,14 +1048,17 @@ router.get('/ecology', function ecology(req, res) {
     }
     //let segata_text = '',dewhirst_text='',erenv1v3_text='';
     //console.log('rank',rank,'tax',tax_name)
-    let segata_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
+    let nihv1v3_notes = '',nihv3v5_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
     let max = 0;
     let otid ='0';
     let max_obj = {};
     //let major_genera=0;
-    let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
-    let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
-    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
+    //let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
+    let dewhirst_data={},erenv1v3_data={},erenv3v5_data={},nihv1v3_data={},nihv3v5_data={};
+    //let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
+    let dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0,nihv1v3_max=0,nihv3v5_max=0;
+    //let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
+    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',nihv1v3_table='',nihv3v5_table='';
     //console.log('rank: '+rank+' name: '+tax_name);
     // TODO::should be in constants???
     let text = get_rank_text(rank,tax_name)
@@ -1091,29 +1097,48 @@ router.get('/ecology', function ecology(req, res) {
       console.log('ERROR Node')
    }
    let lineage_list = make_lineage(node)
-   
+   //console.log(C.taxon_counts_lookup)
    if(!lineage_list[0]){
       lineage_list[0] = ''
       console.log('ERROR Lineage')
    }else {
        if(lineage_list[0] in C.taxon_counts_lookup){
          
-         if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
-             segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
-             segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
-             let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
-             segata_table = build_abundance_table('segata',clone_segata_data, C.base_abundance_order.concat(['ST']))
-             if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-                 segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
+         // if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+//              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
+//              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
+//              let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
+//              segata_table = build_abundance_table('segata',clone_segata_data, C.base_abundance_order.concat(['ST']))
+//              if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+//                  segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
+//              }
+//          }
+         if('nih_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['nih_v1v3']).length != 0){
+             nihv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_nihv1v3']
+             nihv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['nih_v1v3'])
+             let clone_nih_data = JSON.parse(JSON.stringify(nihv1v3_data)) // clone to avoid difficult errors
+             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+             nihv1v3_table = build_abundance_table('nih_v1v3', clone_nih_data, C.base_abundance_order)
+             if('nih_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+                 nihv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['nih_v1v3']
              }
          }
-         
+         if('nih_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['nih_v3v5']).length != 0){
+             nihv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_nihv3v5']
+             nihv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['nih_v3v5'])
+             let clone_nih_data = JSON.parse(JSON.stringify(nihv1v3_data)) // clone to avoid difficult errors
+             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+             nihv3v5_table = build_abundance_table('nih_v3v5', clone_nih_data, C.base_abundance_order)
+             if('nih_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+                 nihv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['nih_v3v5']
+             }
+         }
          if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
              //console.log('in Dewhirst')
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
-             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.base_abundance_order.concat(['NS']))
+             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.dewhirst_abundance_order)
              if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
              }
@@ -1123,7 +1148,7 @@ router.get('/ecology', function ecology(req, res) {
              erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
              let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.base_abundance_order.concat(['ST']))
+             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.eren_abundance_order)
              if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
              }
@@ -1133,7 +1158,7 @@ router.get('/ecology', function ecology(req, res) {
              erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
              let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.base_abundance_order.concat(['ST']))
+             erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.eren_abundance_order)
              if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
                  erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
              }
@@ -1143,7 +1168,10 @@ router.get('/ecology', function ecology(req, res) {
     }
    //console.log('segata_data',segata_data)
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
-   
+    console.log('nihv3v5_max',nihv3v5_max)
+    console.log('nihv1v3_max',nihv1v3_max)
+    console.log('dewhirst_max',dewhirst_max)
+    console.log('erenv3v5_max',erenv3v5_max)
     res.render('pages/taxa/ecology', {
       title: 'HOMD ::'+rank+'::'+tax_name,
       pgname: 'taxon/ecology', // for AbountThisPage 
@@ -1152,18 +1180,21 @@ router.get('/ecology', function ecology(req, res) {
       //headline: 'Life: Cellular Organisms',
       lineage: lineage_string,
       rank: rank,
-      max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
+      max: JSON.stringify({'nihv1v3':nihv1v3_max,'nihv3v5':nihv3v5_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
       otid: otid,  // zero unless species
       genera: JSON.stringify(genera),
       text_file: text[0],
       text_format: text[1],
       children: JSON.stringify(children_list),
-      notes: JSON.stringify({'segata':segata_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
-      segata_table: segata_table,
+      notes: JSON.stringify({'nihv1v3':nihv1v3_notes,'nihv3v5':nihv3v5_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
+      nihv1v3_table: nihv1v3_table,
+      nihv3v5_table: nihv3v5_table,
       dewhirst_table: dewhirst_table,
       erenv1v3_table: erenv1v3_table,
       erenv3v5_table: erenv3v5_table,
-      segata: JSON.stringify(segata_data),
+      //segata: JSON.stringify(segata_data),
+      nihv1v3: JSON.stringify(nihv1v3_data),
+      nihv3v5: JSON.stringify(nihv3v5_data),
       dewhirst: JSON.stringify(dewhirst_data),
       erenv1v3: JSON.stringify(erenv1v3_data),
       erenv3v5: JSON.stringify(erenv3v5_data),
@@ -1171,138 +1202,138 @@ router.get('/ecology', function ecology(req, res) {
       user: JSON.stringify(req.user || {}),
     })
 })
-router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
-    helpers.print('in ecology')
-    let rank = req.params.level;
-    //let tax_name = req.params.name
-    //console.log('req.params',req)
-    let tax_name = req.params.taxname[0].toUpperCase() + req.params.taxname.substring(1); // string[0].toUpperCase() + string.substring(1)
-    //let segata_text = '',dewhirst_text='',erenv1v3_text='';
-    let segata_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
-    let max = 0;
-    let otid ='0';
-    let max_obj = {};
-    //let major_genera=0;
-    let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
-    let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
-    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
-    //console.log('rank: '+rank+' name: '+tax_name);
-    // TODO::should be in constants???
-    let text = get_rank_text(rank,tax_name)
-   
-    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
-    //console.log(tax_name+'_'+rank,node)
-    if(!node){
-      console.log('ERROR - could not find node for',tax_name+'_'+rank)
-    }
-    let genera = get_major_genera(rank, node)
-    // sort genera list 
-    genera.sort(function sortByTaxa(a, b) {
-        return helpers.compareStrings_alpha(a.taxon, b.taxon);
-    })
-    //console.log(tax_name,rank,node)
-    if(rank == 'species'){
-      if(node.hasOwnProperty('otid')){
-          otid = node.otid
-      }
-    }else if(rank == 'subspecies'){
-      otid = node.otid
-    }
-   //console.log('node',node)
-   //console.log(node)
-   // /subspecies/subsp.%20dentisani%20clade%20058
-   //console.log(node)
-   var children_list = []
-   for(var i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
-      let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
-      //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
-      children_list.push("<a href='/taxa/ecology?rank="+n.rank+"&name="+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
-   }
-   
-   if(!node){
-      console.log('ERROR Node')
-   }
-   let lineage_list = make_lineage(node)
-   
-   if(!lineage_list[0]){
-      lineage_list[0] = ''
-      console.log('ERROR Lineage')
-   }else {
-       if(lineage_list[0] in C.taxon_counts_lookup){
-         
-         if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
-             segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
-             segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
-             let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
-             segata_table = build_abundance_table('segata',clone_segata_data, C.base_abundance_order.concat(['ST']))
-             if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-                 segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
-             }
-         }
-         
-         if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
-             dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
-             //console.log('in Dewhirst')
-             dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
-             let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
-             dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.base_abundance_order.concat(['NS']))
-             if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-                 dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
-             }
-         }
-         if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3']).length != 0){
-             erenv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv1v3']
-             erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
-             let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
-             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.base_abundance_order.concat(['ST']))
-             if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-                 erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
-             }
-         }
-         if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5']).length != 0){
-             erenv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
-             erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
-             let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
-             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.base_abundance_order.concat(['ST']))
-             if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-                 erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
-             }
-         }
-         
-      }
-    }
-   //console.log('segata_data',segata_data)
-    let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
-   
-    res.render('pages/taxa/ecology', {
-      title: 'HOMD ::'+rank+'::'+tax_name,
-      pgname: 'taxon/ecology', // for AbountThisPage 
-      config: JSON.stringify(CFG),
-      tax_name: tax_name,
-      //headline: 'Life: Cellular Organisms',
-      lineage: lineage_string,
-      rank: rank,
-      max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
-      otid: otid,  // zero unless species
-      genera: JSON.stringify(genera),
-      text_file: text[0],
-      text_format: text[1],
-      children: JSON.stringify(children_list),
-      notes: JSON.stringify({'segata':segata_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
-      segata_table: segata_table,
-      dewhirst_table: dewhirst_table,
-      erenv1v3_table: erenv1v3_table,
-      erenv3v5_table: erenv3v5_table,
-      segata: JSON.stringify(segata_data),
-      dewhirst: JSON.stringify(dewhirst_data),
-      erenv1v3: JSON.stringify(erenv1v3_data),
-      erenv3v5: JSON.stringify(erenv3v5_data),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-      user: JSON.stringify(req.user || {}),
-    })
-})
+// router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
+//     helpers.print('in ecology')
+//     let rank = req.params.level;
+//     //let tax_name = req.params.name
+//     //console.log('req.params',req)
+//     let tax_name = req.params.taxname[0].toUpperCase() + req.params.taxname.substring(1); // string[0].toUpperCase() + string.substring(1)
+//     //let segata_text = '',dewhirst_text='',erenv1v3_text='';
+//     let segata_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
+//     let max = 0;
+//     let otid ='0';
+//     let max_obj = {};
+//     //let major_genera=0;
+//     let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
+//     let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
+//     let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
+//     //console.log('rank: '+rank+' name: '+tax_name);
+//     // TODO::should be in constants???
+//     let text = get_rank_text(rank,tax_name)
+//    
+//     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+//     //console.log(tax_name+'_'+rank,node)
+//     if(!node){
+//       console.log('ERROR - could not find node for',tax_name+'_'+rank)
+//     }
+//     let genera = get_major_genera(rank, node)
+//     // sort genera list 
+//     genera.sort(function sortByTaxa(a, b) {
+//         return helpers.compareStrings_alpha(a.taxon, b.taxon);
+//     })
+//     //console.log(tax_name,rank,node)
+//     if(rank == 'species'){
+//       if(node.hasOwnProperty('otid')){
+//           otid = node.otid
+//       }
+//     }else if(rank == 'subspecies'){
+//       otid = node.otid
+//     }
+//    //console.log('node',node)
+//    //console.log(node)
+//    // /subspecies/subsp.%20dentisani%20clade%20058
+//    //console.log(node)
+//    var children_list = []
+//    for(var i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
+//       let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
+//       //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
+//       children_list.push("<a href='/taxa/ecology?rank="+n.rank+"&name="+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
+//    }
+//    
+//    if(!node){
+//       console.log('ERROR Node')
+//    }
+//    let lineage_list = make_lineage(node)
+//    
+//    if(!lineage_list[0]){
+//       lineage_list[0] = ''
+//       console.log('ERROR Lineage')
+//    }else {
+//        if(lineage_list[0] in C.taxon_counts_lookup){
+//          
+//          if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
+//              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
+//              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
+//              let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
+//              segata_table = build_abundance_table('segata',clone_segata_data, C.base_abundance_order.concat(['ST']))
+//              if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+//                  segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
+//              }
+//          }
+//          
+//          if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
+//              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
+//              //console.log('in Dewhirst')
+//              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
+//              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
+//              dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.base_abundance_order.concat(['NS']))
+//              if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+//                  dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
+//              }
+//          }
+//          if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3']).length != 0){
+//              erenv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv1v3']
+//              erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
+//              let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
+//              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+//              erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.base_abundance_order.concat(['ST']))
+//              if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+//                  erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
+//              }
+//          }
+//          if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5']).length != 0){
+//              erenv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
+//              erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
+//              let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
+//              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+//              erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.base_abundance_order.concat(['ST']))
+//              if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+//                  erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
+//              }
+//          }
+//          
+//       }
+//     }
+//    //console.log('segata_data',segata_data)
+//     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
+//    
+//     res.render('pages/taxa/ecology', {
+//       title: 'HOMD ::'+rank+'::'+tax_name,
+//       pgname: 'taxon/ecology', // for AbountThisPage 
+//       config: JSON.stringify(CFG),
+//       tax_name: tax_name,
+//       //headline: 'Life: Cellular Organisms',
+//       lineage: lineage_string,
+//       rank: rank,
+//       max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
+//       otid: otid,  // zero unless species
+//       genera: JSON.stringify(genera),
+//       text_file: text[0],
+//       text_format: text[1],
+//       children: JSON.stringify(children_list),
+//       notes: JSON.stringify({'segata':segata_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
+//       segata_table: segata_table,
+//       dewhirst_table: dewhirst_table,
+//       erenv1v3_table: erenv1v3_table,
+//       erenv3v5_table: erenv3v5_table,
+//       segata: JSON.stringify(segata_data),
+//       dewhirst: JSON.stringify(dewhirst_data),
+//       erenv1v3: JSON.stringify(erenv1v3_data),
+//       erenv3v5: JSON.stringify(erenv3v5_data),
+//       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//       user: JSON.stringify(req.user || {}),
+//     })
+// })
 //
 router.get('/download/:type/:fxn', function download(req, res) {
     var today = new Date();
@@ -1359,18 +1390,21 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
     let temp_list = Object.values(C.taxon_counts_lookup)
     let abundance_order
     let header = 'HOMD (https://homd.org/)::'
-    if(source === 'segata'){
-        header += 'Data from Segata(2012); '
-        abundance_order = C.base_abundance_order.concat(['ST'])
+    if(source === 'nihv1v3'){
+        header += 'Data from NIH; '
+        abundance_order = C.base_abundance_order
+    }else if(source === 'nihv3v5'){
+        header += 'Data from NIH; '
+        abundance_order = C.base_abundance_order
     }else if(source === 'dewhirst'){
         header += 'Data from Dewhirst(unpublished); '
-        abundance_order = C.base_abundance_order.concat(['NS'])
+        abundance_order = C.dewhirst_abundance_order
     }else if(source === 'erenv1v3'){
         header += 'Data from Eren(2014) V1-V3; '
-        abundance_order = C.base_abundance_order.concat(['ST'])
+        abundance_order = C.eren_abundance_order
     }else if(source === 'erenv3v5'){
         header += 'Data from Eren(2014) V3-V5; '
-        abundance_order = C.base_abundance_order.concat(['ST'])
+        abundance_order = C.eren_abundance_order
     }
     header += 'HMT == Human Microbial Taxon'
     table_tsv += header+'\nTAX\tHMT' 
@@ -1583,7 +1617,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
       data: JSON.stringify(top_ten),
-      plot_order: C.base_abundance_order.concat(['NS']),
+      plot_order: C.base_abundance_order,
       site_names: JSON.stringify(C.abundance_names),
       rank:rank
     })
@@ -1695,7 +1729,7 @@ function sortByKeyDEC(array, key) {
 }
 //
 function get_site_avgs(obj,rank){
-    //console.log('\nin obj',obj)
+    console.log('\nin obj',obj)
     let return_obj = {}
     let ref,site,count
     let abund_refs = C.abundance_refs
@@ -1728,7 +1762,7 @@ function get_site_avgs(obj,rank){
        
     }
     //console.log('counter SV',counter_per_site['SV'])
-    //console.log('countSV',count,return_obj['SV'])
+    console.log('countSV',count,return_obj)
     for(let site in return_obj){
           //let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
           if(site == 'NS'){   // only Dewhirst
@@ -2323,44 +2357,62 @@ function get_abundance_text(max, data, names, rank, tax_name){
 } 
 function build_abundance_table(cite, data, order){
     //console.log('data',data)
-    
+    //C.abundance_names
+    let datapt = ''
     var html = '<table><thead><tr><td></td>'
     for(var n in order){
-        html += '<th>'+order[n]+'</th>'
+        html += "<th title='"+C.abundance_names[order[n]]+"'>"+order[n]+'</th>'
     }
     html += '</tr></thead><tbody>'
    
     html += '<tr><th>Avg</th>'
     for(var n in data){
-        html += '<td class="right-justify">'+(parseFloat(data[n].avg)).toFixed(3)+'</td>'
+        datapt = (parseFloat(data[n].avg)).toFixed(3)
+        if(datapt == 'NaN'){
+           datapt = ''
+        }
+        html += '<td class="right-justify">'+datapt+'</td>'
     }
     html += '</tr>'
-    if(['dewhirst','eren_v1v3','eren_v3v5'].indexOf(cite) != -1){
+    
         html += '<tr><th>10<sup>th</sup>p</th>'
         for(var n in data){
-            html += '<td class="right-justify">'+(parseFloat(data[n]['10p'])).toFixed(3)+'</td>'
+            datapt = (parseFloat(data[n]['10p'])).toFixed(3)
+            if(datapt == 'NaN'){datapt = '';}
+            html += '<td class="right-justify">'+datapt+'</td>'
         }
         html += '</tr>'
         html += '<tr><th>90<sup>th</sup>p</th>'
         for(var n in data){
-            html += '<td class="right-justify">'+(parseFloat(data[n]['90p'])).toFixed(3)+'</td>'
+            datapt = (parseFloat(data[n]['90p'])).toFixed(3)
+            if(datapt == 'NaN'){datapt = '';}
+            html += '<td class="right-justify">'+datapt+'</td>'
         }
         html += '</tr>'
-    }
+ 
     
     html += '<tr><th>Stdev</th>'
     for(var n in data){
-        html += '<td class="right-justify">'+(parseFloat(data[n].sd)).toFixed(3)+'</td>'
+        
+        datapt = (parseFloat(data[n].sd)).toFixed(3)
+        if(datapt == 'NaN'){
+           datapt = ''
+        }
+        html += '<td class="right-justify">'+datapt+'</td>'
     }
     html += '</tr>'
-    // dewhirst, eren  (Not for Segata)
-    if(['dewhirst','eren_v1v3','eren_v3v5'].indexOf(cite) != -1){
+    
+    
       html += '<tr><th>Prev</th>'
       for(var n in data){
-        html += '<td class="right-justify">'+(parseFloat(data[n].prev)).toFixed(3)+'</td>'
+        datapt = (parseFloat(data[n].prev)).toFixed(3)
+        if(datapt == 'NaN'){
+               datapt = ''
+        }
+         html += '<td class="right-justify">'+datapt+'</td>'
       }
       html += '</tr>'
-    }
+  
     html += '</tbody></table>'
     return html
 }   

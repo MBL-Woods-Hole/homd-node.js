@@ -1,0 +1,206 @@
+<style>
+#info{
+   font-size:14px;
+   padding:0px 5px 20px 5px;
+   width:70%;
+   
+}
+#eco_table{
+   font-size:13px;
+   width:100%;
+}
+#eco_table tr,td{
+   border:1px solid black;
+   border-collapse: collapse;
+   padding:3px;
+   white-space: nowrap;
+}
+
+.rank_div{
+   height:300px;
+   overflow:auto;
+   
+}
+#top-10-link{
+   padding:3px;
+   top: 150px;
+   border:1px solid brown;
+   float:right;
+   
+}
+#outer_div{
+   padding:3px;
+   border: 1px solid brown;
+   background: lightgrey;
+}
+.toolTip table td{
+  border: 0px;
+  font-size: small;
+}
+.toolTip {
+  position: absolute;
+  display: block;
+  background:#B0B0B0;
+  /* top:100px; */
+/*   min-width: 280px; */
+  min-height: 60px;
+  /* background: none repeat scroll 0 0 #ffffff; */
+  border: 1px solid #6F257F;
+  padding: 14px;
+  text-align: left;
+}
+</style>
+<% sole_arch = JSON.parse(sole_arch) %>
+<% phla = JSON.parse(phyla) %>
+<% klasses = JSON.parse(klasses) %>
+<% orders = JSON.parse(orders) %>
+<% families = JSON.parse(families) %>
+<% genera = JSON.parse(genera) %>
+
+
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+
+        <div class='title'>Ecology (Abundance) Pages</div>
+        <a id='download_browser_text_excel'  href='/download#abundance' >Download Options</a> 
+<br><span id='top-10-link'><a href='abundance_by_site/phylum'>Most abundant taxa for each oral sub-habitat</a>.
+       </span> 
+        <div id='info'>
+            The following abundance pages show available data with bar charts for the ranks in each taxon name (from domain to species) in the HOMD database.
+
+            Listed on this page are taxonomic names from domain through genus for the taxa in HOMD. Each name in the table below is a link
+              to a page showing abundance data from the three sources: 
+              <br>
+            <a href='https://www.pnas.org/content/111/28/E2875.short'>Eren (2014)</a> ,
+            <a href='https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-6-r42'>Segata (2012)</a>,
+            and Dewhirst (not published)
+       
+        
+        </div>
+      
+  <!-- <div class='tooltip' id='data'></div> -->
+  <div id='bar-chart' ></div>
+  
+  <br>
+  <div>
+    <center>
+            <table id='eco_table' border='1'>
+            <tr><th>Domain</th><th>Phylum</th><th>Class</th><th>Order</th><th>Family</th><th>Genus</th></tr>
+            <tr>
+              <td><a href='ecology?rank=domain&name=<%= sole_arch.domain %>'><%= sole_arch.domain %></a></td>
+              <td><a href='ecology?rank=phylum&name=<%= sole_arch.phylum %>'><%= sole_arch.phylum %></a></td>
+              <td><a href='ecology?rank=klass&name=<%= sole_arch.klass %>'><%= sole_arch.klass %></a></td>
+              <td><a href='ecology?rank=order&name=<%= sole_arch.order %>'><%= sole_arch.order %></a></td>
+              <td><a href='ecology?rank=family&name=<%= sole_arch.family %>'><%= sole_arch.family %></a></td>
+              <td><a href='ecology?rank=genus&name=<%= sole_arch.genus %>'><%= sole_arch.genus %></a></td>
+              
+            </tr>
+            <tr>
+              <td valign="top"><a href='ecology?rank=domain&name=Bacteria'>Bacteria</a></td>
+              <td>
+                <% no_data_list = ['Chlamydiae','Chlorobi','Gracilibacteria (GN02)','WPS-2'] %>
+                <div class='rank_div'>
+                <% for(n in phla){ %>
+                    
+                       <a href='ecology?rank=phylum&name=<%= phla[n] %>'><%= phla[n] %></a><br>
+                    
+                <% } %>
+                </div>
+              </td>
+              <td>
+                <div class='rank_div'>
+                <% for(n in klasses){ %>
+                    <a href='ecology?rank=klass&name=<%= klasses[n] %>'><%= klasses[n] %></a><br>
+                <% } %>
+                </div>
+              </td>
+              <td>
+                <div class='rank_div'>
+                <% for(n in orders){ %>
+                    <a href='ecology?rank=order&name=<%= orders[n] %>'><%= orders[n] %></a><br>
+                <% } %>
+                </div>
+              </td>
+              <td>
+                <div class='rank_div'>
+                <% for(n in families){ %>
+                    <a href='ecology?rank=family&name=<%= families[n] %>'><%= families[n] %></a><br>
+                <% } %>
+                </div>
+              </td>
+              <td>
+                <div class='rank_div'>
+                <% for(n in genera){ %>
+                    <a href='ecology?rank=genus&name=<%= genera[n] %>'><%= genera[n] %></a><br>
+                <% } %>
+                </div>
+              </td>
+            </tr>
+            </table>
+      <center>
+      </div>
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<!-- <script src="https://d3js.org/d3.v7.min.js"></script> -->
+<!-- Must use d3 v4 NOT v7! -->
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+<script type="text/javascript" src="/js/d3_barplot.js"></script>
+<script>
+  mainmenu()
+  
+  var site_order = JSON.parse('<%- site_order %>')
+  plot_order = site_order.slice().reverse();
+  //var site_order = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS'] // per JMW
+  
+  
+  var ccolors = JSON.parse('<%- constant_colors %>')
+  //console.log('species colors ',ccolors)
+  
+  // sites = 'NS":{ sp1:val1, sp2:val2 ......}
+  var sp_per_site = JSON.parse('<%- bar_data1 %>')
+  var sp_and_site = JSON.parse('<%- bar_data2 %>')
+  var ab_names = JSON.parse('<%- ab_names %>')
+  //console.log('sp_and_site.length',sp_and_site)
+  //console.log('sp_per_site.length',sp_per_site.length)
+  // site_species == {'site': site,'species': sp, 'abundance': val}
+  var site_species = JSON.parse('<%- site_species %>')
+  //console.log('site_species BM',site_species['BM'])
+  //var site_names = sites.map(el => el.site)
+  //console.log(sp_per_site['BM'])
+  var species = Object.keys(sp_per_site['BM'])  // any site will do
+  //species.shift()  // remove 'site'
+  species.sort()
+  //console.log(species)
+  //width=1300
+  // Prep the tooltip bits, initial display is hidden
+
+initStackedBarChart.draw({
+    data: sp_and_site,
+    key: species,
+    element: 'bar-chart',
+    colors: ccolors
+});
+
+
+
+</script>
+
+
