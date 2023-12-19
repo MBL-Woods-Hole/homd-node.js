@@ -919,6 +919,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
         }else{
             //console.log('in list',sp,C.taxon_counts_lookup[lineage_list[0]])
             spcount += 1
+            //console.log('lineage_list1',lineage_list)
             abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],'species')
             //console.log('abund_obj',abund_obj)
             
@@ -1600,6 +1601,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     //console.log('in abundance_by_site')
     
     let rank = req.params.rank
+    
     let node_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank]
     //let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
     let abund_sites = Object.keys(C.abundance_names) 
@@ -1609,7 +1611,9 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
         //console.log(phyla[p])
         node = node_list[i]
         lineage_list = make_lineage(node)
-        //console.log('lineage_list',lineage_list)
+        //console.log('rank',rank)
+        //console.log('lineage_list2',lineage_list[0])
+        
         //let avg = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
         group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],rank)
         
@@ -1651,7 +1655,7 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
         //console.log(phyla[p])
         node = group[i]
         lineage_list = make_lineage(node)
-        //console.log('lineage_list',lineage_list)
+        //console.log('lineage_list3',lineage_list[0])
         group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],rank)
     }
     top_names = get_sorted_abund_names(group_collector, site, rank, 'all')
@@ -1741,7 +1745,7 @@ function sortByKeyDEC(array, key) {
 }
 //
 function get_site_avgs(obj,rank){
-    console.log('\nin obj',obj)
+    //console.log('\nin obj',obj)
     let return_obj = {}
     let ref,site,count
     let abund_refs = C.abundance_refs
@@ -1917,11 +1921,16 @@ function make_lineage(node){
         let gn = tax_obj[node.parent_id]
         //console.log('genus1',gn)
         let fn = tax_obj[gn.parent_id]
-        //console.log('family1',fn)
+        
         let on = tax_obj[fn.parent_id]
         let kn = tax_obj[on.parent_id]
         let pn = tax_obj[kn.parent_id]
         let dn = tax_obj[pn.parent_id]
+        // console.log('phylum1',pn)
+//         console.log('class1',kn)
+//         console.log('order1',on)
+//         console.log('family1',fn)
+        
         lineage = dn.taxon+';'+pn.taxon+';'+kn.taxon+';'+ on.taxon+';'+ fn.taxon+';'+ gn.taxon+';'+ node.taxon
         lineage_obj.domain = tax_obj[pn.parent_id].taxon
         lineage_obj.phylum = tax_obj[kn.parent_id].taxon

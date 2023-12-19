@@ -68,10 +68,10 @@ function add_children_to_parent(dictMap_by_id, current_dict)
   
   if (parent_node)
   {
-    //if(current_dict.rank=='species' && current_dict.taxon=='vaginalis'){
-      //console.log(4,parent_node)
-      //console.log(5,current_dict)
-    //}
+    // if(current_dict.rank=='family' && current_dict.taxon=='Aminobacteriaceae'){
+//       console.log('4 parent',parent_node)
+//       console.log('5 currant',current_dict)
+//     }
     //console.log(parent_node.taxon)
     parent_node.children_ids.push(current_dict.node_id);
   }
@@ -108,7 +108,7 @@ function make_taxa_tree_dict(taxonomy_obj)
 // }
 
     
-	  let in_obj = taxonomy_obj[i];
+      let in_obj = taxonomy_obj[i];
     //console.log("\ntaxon_objs[i] = " + JSON.stringify(in_obj));
     let i_am_a_parent = 0;
     for (let field_name in in_obj)
@@ -128,23 +128,23 @@ function make_taxa_tree_dict(taxonomy_obj)
         let parent_node = {};
         let current_dict = {};
         let taxa_rank = field_name;
-		
+        
         if (in_obj.hasOwnProperty(taxa_rank))
         {
           let taxa_name = in_obj[taxa_rank];
           if (taxa_name) {
-				
-				let node = get_by_key(dictMap_by_name_n_rank, taxa_name + "_" + taxa_rank);
-				//console.log("old_node = " + JSON.stringify(node));
+                
+                let node = get_by_key(dictMap_by_name_n_rank, taxa_name + "_" + taxa_rank);
+                //console.log("old_node = " + JSON.stringify(node));
 // if(taxa_name =='Terrahaemophilus'){
-// 				console.log("name_rank1 = " + taxa_name + " - " + taxa_rank);
-// 				console.log("old_node = " + JSON.stringify(node));
-// 				console.log("taxon_name_id = ", taxon_name_id);
+//              console.log("name_rank1 = " + taxa_name + " - " + taxa_rank);
+//              console.log("old_node = " + JSON.stringify(node));
+//              console.log("taxon_name_id = ", taxon_name_id);
 // }
-				if (node) {
-					
-					i_am_a_parent = node.node_id;
-            	} else {//(!node)
+                if (node) {
+                    
+                    i_am_a_parent = node.node_id;
+                } else {//(!node)
                     
                     current_dict = make_current_dict(taxa_name, taxa_rank, i_am_a_parent, taxon_name_id, otid);
                     //console.log("current_dict = " + JSON.stringify(current_dict,null,4))
