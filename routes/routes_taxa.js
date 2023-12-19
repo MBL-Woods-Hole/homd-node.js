@@ -1117,6 +1117,8 @@ router.get('/ecology', function ecology(req, res) {
          if('nih_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['nih_v1v3']).length != 0){
              nihv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_nihv1v3']
              nihv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['nih_v1v3'])
+             nihv1v3_data = sort_obj_by_abundance_order(nihv1v3_data,C.base_abundance_order)
+             // order by constants.bas_abundance_order
              let clone_nih_data = JSON.parse(JSON.stringify(nihv1v3_data)) // clone to avoid difficult errors
              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              nihv1v3_table = build_abundance_table('nih_v1v3', clone_nih_data, C.base_abundance_order)
@@ -1127,6 +1129,8 @@ router.get('/ecology', function ecology(req, res) {
          if('nih_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['nih_v3v5']).length != 0){
              nihv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_nihv3v5']
              nihv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['nih_v3v5'])
+             nihv3v5_data = sort_obj_by_abundance_order(nihv3v5_data,C.base_abundance_order)
+             // order by constants.bas_abundance_order
              let clone_nih_data = JSON.parse(JSON.stringify(nihv1v3_data)) // clone to avoid difficult errors
              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              nihv3v5_table = build_abundance_table('nih_v3v5', clone_nih_data, C.base_abundance_order)
@@ -1138,6 +1142,8 @@ router.get('/ecology', function ecology(req, res) {
              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
              //console.log('in Dewhirst')
              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
+             dewhirst_data = sort_obj_by_abundance_order(dewhirst_data,C.dewhirst_abundance_order)
+             // order by constants.dewhirst_abundance_order
              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
              dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.dewhirst_abundance_order)
              if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
@@ -1147,6 +1153,8 @@ router.get('/ecology', function ecology(req, res) {
          if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3']).length != 0){
              erenv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv1v3']
              erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
+             erenv1v3_data = sort_obj_by_abundance_order(erenv1v3_data,C.eren_abundance_order)
+             // order by constants.eren_abundance_order
              let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.eren_abundance_order)
@@ -1157,6 +1165,12 @@ router.get('/ecology', function ecology(req, res) {
          if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5']).length != 0){
              erenv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
              erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
+             // order by constants.eren_abundance_order 
+             // erenv3v5_data.sort(function (b, a) {
+//                 return helpers.compareStrings_alpha(a.site, b.site);
+//              })
+             erenv3v5_data = sort_obj_by_abundance_order(erenv3v5_data,C.eren_abundance_order)
+             //console.log('eren3v5-sorted',erenv3v5_data)
              let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.eren_abundance_order)
@@ -1169,11 +1183,11 @@ router.get('/ecology', function ecology(req, res) {
     }
    //console.log('segata_data',segata_data)
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
-    console.log('nihv3v5_notes',nihv3v5_max)
-    console.log('nihv1v3_max',nihv1v3_max)
-    console.log('dewhirst_notes',dewhirst_notes)
-    console.log('erenv1v3_notes',erenv1v3_notes)
-    console.log('erenv3v5_notes',erenv3v5_notes)
+    
+//     console.log('nihv1v3_max',nihv1v3_max)
+//     console.log('dewhirst_notes',dewhirst_notes)
+//     console.log('erenv1v3_notes',erenv1v3_notes)
+//     console.log('erenv3v5_notes',erenv3v5_notes)
     //ecology?rank=genus&name=Fusobacterium
     res.render('pages/taxa/ecology', {
       title: 'HOMD ::'+rank+'::'+tax_name,
@@ -1205,6 +1219,17 @@ router.get('/ecology', function ecology(req, res) {
       user: JSON.stringify(req.user || {}),
     })
 })
+function sort_obj_by_abundance_order(obj,order){
+    let new_obj = []
+    for(let n in order){
+        for(let j in obj){
+           if(obj[j].site == order[n]){
+               new_obj.push(obj[j])
+           }
+        }
+    }
+    return new_obj
+}
 // router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
 //     helpers.print('in ecology')
 //     let rank = req.params.level;

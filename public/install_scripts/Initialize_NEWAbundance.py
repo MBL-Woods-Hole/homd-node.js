@@ -252,10 +252,10 @@ def run_abundance_db():
     #segata_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
     #eren_header_prefixes =   ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
     #site_prefixes    = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD']
-    all_site_prefixes = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SAL','STO','SUBP','SUPP','THR','TDO','VIN']
-    eren_site_prefixes     = ['AKE','BMU','HPA','PTO','SAL','STO','SUBP','SUPP','THR','TDO']
+    all_site_prefixes = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
+    eren_site_prefixes     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO',                                                'STO']
     #segata_site_prefixes   = all_site_prefixes
-    dewhirst_site_prefixes = ['AKE','ANA','BMU','HPA','PTO','SAL','SUBP','SUPP','THR','TDO']
+    dewhirst_site_prefixes = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']
     #['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','NS']
     #print(segata_site_prefixes)
     missing_count =0

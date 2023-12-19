@@ -51,10 +51,31 @@ constants.names_w_text = {
 }
 //constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
 constants.abundance_refs = ['eren_v1v3','eren_v3v5','dewhirst','nih_v1v3','nih_v3v5']
-constants.base_abundance_order     = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SAL','STO','SUBP','SUPP','THR','TDO','VIN']
-constants.eren_abundance_order     = ['AKE',      'BMU','HPA',                        'PTO',            'SAL','STO','SUBP','SUPP','THR','TDO']
-constants.dewhirst_abundance_order = ['AKE','ANA','BMU','HPA',                        'PTO',            'SAL',      'SUBP','SUPP','THR','TDO']
-
+// constants.base_abundance_order     = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SAL','STO','SUBP','SUPP','THR','TDO','VIN']
+// constants.eren_abundance_order     = ['AKE',      'BMU','HPA',                        'PTO',            'SAL','STO','SUBP','SUPP','THR','TDO']
+// constants.dewhirst_abundance_order = ['AKE','ANA','BMU','HPA',                        'PTO',            'SAL',      'SUBP','SUPP','THR','TDO']
+constants.base_abundance_order     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
+constants.eren_abundance_order     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO',                                                'STO']
+constants.dewhirst_abundance_order = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']
+//CORRECT ORDER
+// SubP 
+// SupP
+// KG = AKE
+// BM = BMU
+// HP = HPA
+// SV = SAL
+// TH = THR
+// PT = PTO
+// TD = TDO
+// Nares = ANA
+// Retroauricular crease Left = LRC
+// Retroauricular crease Right = RRC
+// Anterior fossa Left =LAF
+// Anterior fossa Right = RAF
+// Vaginal introitus =VIN
+// mid-vagina = MVA
+// posterior fornix = PFO 
+// Stool = STO
 constants.abundance_names = { 
 'ANA':'Anterior Nares (nasal)',
 'AKE':'Attached Keratinized Gingiva (oral)',
