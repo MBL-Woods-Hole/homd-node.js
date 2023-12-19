@@ -1173,6 +1173,7 @@ router.get('/ecology', function ecology(req, res) {
     console.log('dewhirst_notes',dewhirst_notes)
     console.log('erenv1v3_notes',erenv1v3_notes)
     console.log('erenv3v5_notes',erenv3v5_notes)
+    //ecology?rank=genus&name=Fusobacterium
     res.render('pages/taxa/ecology', {
       title: 'HOMD ::'+rank+'::'+tax_name,
       pgname: 'taxon/ecology', // for AbountThisPage 

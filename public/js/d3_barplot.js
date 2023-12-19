@@ -34,7 +34,7 @@ var initStackedBarChart = {
         color = d3.scaleOrdinal(config.colors) //d3.scaleOrdinal(d3.schemeCategory20),
         xAxis = d3.axisBottom(xScale),
         yAxis =  d3.axisLeft(yScale),
-        xlabel = 'Major Species-Level Abundances for Each Oral Site'
+        xlabel = 'Major Species-Level Abundances for Each Site'
         svg = d3.select("#"+domEle).append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -76,7 +76,7 @@ var initStackedBarChart = {
                   //var yPosition = d3.mouse(this)[1] - 5;
                   var id_node = this.parentNode.id.split('-|-')
                   var html = '<div id="outer_div"><table><tr><td><span style="background:'+id_node[1]+';border:1px solid grey;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Species:</td><td><i>'+id_node[0]+'</i></td></tr>'
-                  html += '<tr><td>Oral Site:</td><td>'+ab_names[site_order[i]]+'</td></tr>'
+                  html += '<tr><td>Site:</td><td>'+ab_names[site_order[i]]+'</td></tr>'
                   html += '<tr><td>Abundance:</td><td>'+sp_per_site[site_order[i]][id_node[0]]+'%</td></tr></table></div>'
                   //var x = d3.event.pageX - document.getElementById('bar-chart').getBoundingClientRect().x + 10
                   //var y = d3.event.pageY - document.getElementById('bar-chart').getBoundingClientRect().y + 10
