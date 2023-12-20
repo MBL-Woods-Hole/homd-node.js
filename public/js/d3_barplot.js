@@ -93,20 +93,20 @@ var initStackedBarChart = {
                               //console.log(d3.mouse(svg.node())[0],d3.mouse(this)[0])
                              // .style("left", d3.mouse(this)[0] + 155 + "px")  // X side-2-side home mbook
                              //  .style("top",  d3.mouse(this)[1] + 268 + "px")  // Y up-down home macbook
-						.style('top', d3.event.pageY + 5 + 'px')
-						.style('left', d3.event.pageX + 'px')
+                        .style('top', d3.event.pageY + 5 + 'px')
+                        .style('left', d3.event.pageX + 'px')
 
-						//.style("left", pos['x'] + 10 + "px")
-						//.style("top",  ( window.pageYOffset+pos['y'] + 10) + "px")
+                        //.style("left", pos['x'] + 10 + "px")
+                        //.style("top",  ( window.pageYOffset+pos['y'] + 10) + "px")
 
 
-						.style("display", "inline-block")
-						.style("margin",  "10px")
-						.style("padding",  "10px")
-						.style("width","auto")
-						.style("text-align","left")
-						//.style("width",species[i].length +"px")
-						.html(html);
+                        .style("display", "inline-block")
+                        .style("margin",  "10px")
+                        .style("padding",  "10px")
+                        .style("width","auto")
+                        .style("text-align","left")
+                        //.style("width",species[i].length +"px")
+                        .html(html);
                 });
               
         var tooltip = d3.select("body").append("div").attr("class", "toolTip");             

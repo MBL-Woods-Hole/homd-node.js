@@ -297,7 +297,7 @@ Promise.all(promises)
     //console.log('id 598 class',C.homd_taxonomy.taxa_tree_dict_map_by_id[598])
     //console.log('id 599 order',C.homd_taxonomy.taxa_tree_dict_map_by_id[599])
     //console.log('id 603 fam ERR',C.homd_taxonomy.taxa_tree_dict_map_by_id[603])
-    //console.log('id 604 gen',C.homd_taxonomy.taxa_tree_dict_map_by_id[604])
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank)
     
 // phylum1 {
 //   parent_id: 1,
