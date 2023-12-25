@@ -1118,7 +1118,7 @@ router.post('/annotation_filter', function annotation_filter (req, res) {
     let atable_filter = get_annot_table_filter(req.body)
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
-    console.log(q)
+    //console.log(q)
     TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
