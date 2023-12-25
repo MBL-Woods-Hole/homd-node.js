@@ -2085,7 +2085,9 @@ router.post('/anvio_post', (req, res) => {
         pg = 'Veillonella_HMT780'
     }
     console.log('Selected Pangenome:',pg)
-    let port = anvio_ports()
+    //let port = anvio_ports()
+    let default_open_ports = [8080,8081,8082,8083,8084,8085] 
+    let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
     console.log('port',port)
     if(!port){
         return res.send('No Ports Left')
