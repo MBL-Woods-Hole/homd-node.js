@@ -1261,7 +1261,7 @@ router.get('/explorer', function explorer (req, res) {
 
   //OLD DB
   const q = queries.get_annotation_query(gid, anno)
-  console.log(q)
+  //console.log(q)
   //NEW DB
   
   if(req.session.atable_filter){
