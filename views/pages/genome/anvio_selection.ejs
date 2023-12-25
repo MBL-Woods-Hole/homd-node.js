@@ -52,16 +52,16 @@ function find_anvio(pg){
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 ) {
-         var result = xmlhttp.responseText;
+         var url = xmlhttp.responseText;
          // port will be '0' if no ports left
          //var url = parseInt(result)
-         console.log('Return url',result)
+         console.log('Return url',url)
          
             //url = 'http://localhost:3010/anvio?port=8080&pg=Prochlorococcus_31'
             //delay(result)
-            window.open(result,'_blank')
+            window.open(url,'_blank')
             text = 'Anvio` should open in a new tab, but if not follow this link:'
-            document.getElementById('message').innerHTML = text+" <a href='"+result+"' target='_blank'>"+result+"</a>"
+            document.getElementById('message').innerHTML = text+" <a href='"+url+"' target='_blank'>"+url+"</a>"
          // }else{
 //             loader.hideLoader();
 //             text = "No Ports available to open Anvio`"

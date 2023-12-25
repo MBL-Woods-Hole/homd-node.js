@@ -2055,28 +2055,28 @@ router.get('/anvio-server', function blast_sserver(req, res){
     
   })
 })
-function anvio_ports(){
-    let open_ports, op
-    let default_open_ports = [8080,8081,8082,8083,8084,8085] //port_range
-    // file to be present in docker 'anvio' container
-    
-    var open_ports_file = path.join(CFG.PATH_TO_PANGENOMES,'open_ports.txt')
-    try{
-      op = fs.readFileSync(open_ports_file, 'utf8').toString()
-      open_ports = JSON.parse(op.replaceAll('\'', '"'))
-    } catch (err) {
-      open_ports = default_open_ports  // give it a try - it may work
-    }
-    
-    if(open_ports.length > 0){
-        op = open_ports[Math.floor(Math.random() * open_ports.length)]
-        console.log('Returning Good Port',op)
-        return op;
-    }else{
-        return 0
-    }
-    
-}
+// function anvio_ports(){
+//     let open_ports, op
+//     let default_open_ports = [8080,8081,8082,8083,8084,8085] //port_range
+//     // file to be present in docker 'anvio' container
+//     
+//     var open_ports_file = path.join(CFG.PATH_TO_PANGENOMES,'open_ports.txt')
+//     try{
+//       op = fs.readFileSync(open_ports_file, 'utf8').toString()
+//       open_ports = JSON.parse(op.replaceAll('\'', '"'))
+//     } catch (err) {
+//       open_ports = default_open_ports  // give it a try - it may work
+//     }
+//     
+//     if(open_ports.length > 0){
+//         op = open_ports[Math.floor(Math.random() * open_ports.length)]
+//         console.log('Returning Good Port',op)
+//         return op;
+//     }else{
+//         return 0
+//     }
+//     
+// }
 router.post('/anvio_post', (req, res) => {
     console.log('In anvio_post',req.body)
     
@@ -2086,18 +2086,15 @@ router.post('/anvio_post', (req, res) => {
     }
     console.log('Selected Pangenome:',pg)
     //let port = anvio_ports()
-    let default_open_ports = [8080,8081,8082,8083,8084,8085] 
-    let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
-    console.log('port',port)
-    if(!port){
-        return res.send('No Ports Left')
-    }
+    //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
+    //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
+    
     let url
     //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
     if(CFG.DBHOST == 'localhost'){
-        url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
+        url = "http://localhost:3010/anvio?pg="+pg
     }else{
-        url = "http://anvio.homd.org/anvio?port="+port.toString()+'&pg='+pg
+        url = "http://anvio.homd.org/anvio?pg="+pg
     }
     return res.send(url)
 });
