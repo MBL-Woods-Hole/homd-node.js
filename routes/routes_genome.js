@@ -920,6 +920,7 @@ router.post('/orf_search', function orf_search (req, res) {
                 tmpgid = tmp_data_keys[k]
                 org_list[tmpgid] = ''
                 if(C.genome_lookup.hasOwnProperty(tmpgid)){
+                   ssp = ''
                    if(C.genome_lookup[tmpgid].subspecies){
                       ssp = C.genome_lookup[tmpgid].subspecies+' '
                    }
@@ -1174,7 +1175,8 @@ router.post('/annotation_filter', function annotation_filter (req, res) {
     
 })
 router.get('/explorer', function explorer (req, res) {
-  //console.log('in explorer')
+  console.log('in explorer')
+  //console.log(C.annotation_lookup)
   // let myurl = url.parse(req.url, true)
   const gid = req.query.gid
   if(gid && req.session.gtable_filter){
@@ -1245,6 +1247,8 @@ router.get('/explorer', function explorer (req, res) {
  
   
   // NOW ANNOTATIONS
+  //console.log('C.annotation_lookup',C.annotation_lookup)
+  // localhost http://0.0.0.0:3001/genome/explorer?gid=SEQF4098&anno=ncbi
   if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
     annoInfoObj = C.annotation_lookup[gid][anno]
   } else {
@@ -2038,4 +2042,61 @@ function get_blast_db_info(gid){
     
     
 }
+router.get('/anvio-server', function blast_sserver(req, res){
+   //console.log(req.query)
+   // docker exec','anvio','anvi-display-pan','-P',port,'-p',pg+'/PAN.db','-g',pg+'/GENOMES.db'
+   
+   res.render('pages/genome/anvio_selection', {
+    title: 'HOMD :: BLAST', 
+    pgname: '', // for AboutThisPage
+    config: JSON.stringify(CFG),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
+    
+  })
+})
+function anvio_ports(){
+    let open_ports, op
+    let default_open_ports = [8080,8081,8082,8083,8084,8085] //port_range
+    // file to be present in docker 'anvio' container
+    
+    var open_ports_file = path.join(CFG.PATH_TO_PANGENOMES,'open_ports.txt')
+    try{
+      op = fs.readFileSync(open_ports_file, 'utf8').toString()
+      open_ports = JSON.parse(op.replaceAll('\'', '"'))
+    } catch (err) {
+      open_ports = default_open_ports  // give it a try - it may work
+    }
+    
+    if(open_ports.length > 0){
+        op = open_ports[Math.floor(Math.random() * open_ports.length)]
+        console.log('Returning Good Port',op)
+        return op;
+    }else{
+        return 0
+    }
+    
+}
+router.post('/anvio_post', (req, res) => {
+    console.log('In anvio_post',req.body)
+    
+    let pg = req.body.pg
+    if(!pg){
+        pg = 'Veillonella_HMT780'
+    }
+    console.log('Selected Pangenome:',pg)
+    let port = anvio_ports()
+    console.log('port',port)
+    if(!port){
+        return res.send('No Ports Left')
+    }
+    let url
+    //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
+    if(CFG.DBHOST == 'localhost'){
+        url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
+    }else{
+        url = "http://anvio.homd.org/anvio?port="+port.toString()+'&pg='+pg
+    }
+    return res.send(url)
+});
 module.exports = router

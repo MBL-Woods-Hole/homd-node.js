@@ -1,0 +1,76 @@
+<style>
+</style>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <div class='title'>Pangenome Anvio Selection</div>
+    
+  <ul>
+<li></li>
+<li><a href='#' class='pg' onclick="find_anvio('Gemella2022_07_05/')">Gemella2022_07_05/</a></li>
+<li><a href='#' class='pg' onclick="find_anvio('Mitis_Group')">Mitis_Group</a></li>
+<li><a href='#' class='pg' onclick="find_anvio('Prochlorococcus_31')">Prochlorococcus_31</a></li>
+<li><a href='#' class='pg' onclick="find_anvio('Veillonella_Atypica')">Veillonella_Atypica</a></li>
+<li><a href='#' class='pg' onclick="find_anvio('Veillonella_HMT780/')">Veillonella_HMT780/</a></li>
+</ul>
+<br><br>[<span id='message'>Info</span>]
+  
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+
+
+function find_anvio(pg){
+    // called on click of pg link
+    //loader.showLoader();
+    var xmlhttp = new XMLHttpRequest();
+    document.getElementById('message').innerHTML = ''
+    //console.log(pg)
+    target = 'anvio_post'
+    args = {}
+    args.pg = pg;
+
+    xmlhttp.open("POST", target, false);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 ) {
+         var result = xmlhttp.responseText;
+         // port will be '0' if no ports left
+         //var url = parseInt(result)
+         console.log('Return url',result)
+         
+            //url = 'http://localhost:3010/anvio?port=8080&pg=Prochlorococcus_31'
+            //delay(result)
+            window.open(result,'_blank')
+            text = 'Anvio` should open in a new tab, but if not follow this link:'
+            document.getElementById('message').innerHTML = text+" <a href='"+result+"' target='_blank'>"+result+"</a>"
+         // }else{
+//             loader.hideLoader();
+//             text = "No Ports available to open Anvio`"
+//             document.getElementById('message').innerHTML = result
+//          }
+         
+      }
+    };
+    xmlhttp.send(JSON.stringify(args));
+  }
+</script>
+
