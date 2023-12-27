@@ -1175,7 +1175,7 @@ router.post('/annotation_filter', function annotation_filter (req, res) {
     
 })
 router.get('/explorer', function explorer (req, res) {
-  console.log('in explorer')
+  //console.log('in explorer')
   //console.log(C.annotation_lookup)
   // let myurl = url.parse(req.url, true)
   const gid = req.query.gid
