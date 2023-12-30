@@ -123,6 +123,25 @@ app.use('/phage', phage);
 app.use('/blast', blast);
 app.use('/help', help);
 
+// for non-routing pages such as heatmap, counts and bar_charts
+app.get('/*', function(req, res, next){
+    console.warn('req.params',req.params);
+    console.warn('req.uri',req.uri);
+    // var url = req.params[0];
+//     // I want to create a page like: counts_table_2014080_13452.html
+//     // for each link
+//     if (url === 'visuals/user_viz_data/ctable.html') { //
+//         // Yay this is the File A...
+//         console.warn("The user file  has been requested");
+//         router.get('/visuals/user_viz_data/ctable.html',  function(req, res) {
+//             console.warn('trying to open ctable.html');
+//         });
+//     } else {
+//         // we don't care about any other file, let it download too
+//         console.warn("No Route Found");
+//         next();
+//     }
+});
 
 // error handler middleware:
 app.use((error, req, res, next) => {
