@@ -2092,7 +2092,7 @@ router.post('/anvio_post', (req, res) => {
     let url
     //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
     if(CFG.DBHOST == 'localhost'){
-        url = "http://localhost:3010/anvio?pg="+pg
+        url = "http://localhost:3010?pg="+pg
     }else{
         url = "http://anvio.homd.org/anvio?pg="+pg
     }
