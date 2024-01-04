@@ -2047,7 +2047,7 @@ router.get('/anvio-server', function blast_sserver(req, res){
    // docker exec','anvio','anvi-display-pan','-P',port,'-p',pg+'/PAN.db','-g',pg+'/GENOMES.db'
    
    res.render('pages/genome/anvio_selection', {
-    title: 'HOMD :: BLAST', 
+    title: 'HOMD :: Anvio', 
     pgname: '', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
