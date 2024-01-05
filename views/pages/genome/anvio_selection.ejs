@@ -16,35 +16,41 @@
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     
-    
     <div class='page-content' >
 
-    <div class='title'>Anvio Pangenome Selection</div>
+    <div class='title'>Anvio` Pangenome Selection</div>
 
 <div id='pgtable'>
+<center>
 <table border='1'>
-<tr><th>Available Pangenomes</th><th>Description</th></tr>
+<tr><th>Available Pangenomes</th><th>Description</th><th>Download</th></tr>
 <tr>
   <td><a href='#' class='pg' onclick="find_anvio('Gemella2022_07_05')">Gemella2022_07_05</a></td>
-  <td>Pangenome of the genus Gemella containing all 30 available genomes from GenBank with a RefSeq equivalent by 03/02/2021.</td>
+  <td>Pangenome of the genus Gemella containing all 30 available genomes<br>from GenBank with a RefSeq equivalent by 03/02/2021.</td>
+  <td></td>
 </tr>
 <tr>
   <td><a href='#' class='pg' onclick="find_anvio('Mitis_Group')">Mitis_Group</a></td>
   <td>All 134 Genomes from HMT-677 (<i>Stroptococcus Mitis</i>)</td>
+  <td></td>
 </tr>
 <tr>
-  <td><a href='#' class='pg' onclick="find_anvio('Prochlorococcus_31')">Prochlorococcus_31</a></td>
+  <td><a href='#' class='pg' onclick="find_anvio('Prochlorococcus_31')">Prochlorococcus_31</a><br><small>(Non-HOMD)</small></td>
+  <td>31 Prochlorococcus genome dataset from Meren's site:<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href='https://merenlab.org/2016/11/08/pangenomics-v2' target='_blank'>https://merenlab.org/2016/11/08/pangenomics-v2</a></td>
   <td></td>
 </tr>
 <tr>
   <td><a href='#' class='pg' onclick="find_anvio('Veillonella_Atypica')">Veillonella_Atypica</a></td>
-  <td>18 genomes for <i>Veillonella atypica</> HMT-524 and associated <i>V.</> sp. refseq assemblies</td>
+  <td>18 genomes for <i>Veillonella atypica</i> HMT-524 and associated <i>V.</i> sp. refseq assemblies</td>
+  <td></td>
 </tr>
 <tr>
   <td><a href='#' class='pg' onclick="find_anvio('Veillonella_HMT780')">Veillonella_HMT780</a></td>
-  <td>6 genomes for <i>Veillonella sp.</> HMT-780 and associated <i>V.</> sp. refseq assemblies</td>
+  <td>6 genomes for <i>Veillonella sp.</i> HMT-780 and associated <i>V.</i> sp. refseq assemblies</td>
+  <td></td>
 </tr>
 </table>
+</center>
 </div>
 
 <br><br><span id='message'></span>

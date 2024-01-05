@@ -1931,57 +1931,7 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
   }
   return sendList
 }
-// function parse_blast_db_info(hit_data,ext,path){
-// //  Database: ftp/faa/SEQF1595.faa
-// //   1,842 sequences; 605,679 total residues
-// // 
-// //  Date: Feb 7, 2022 11:14 PM   Longest sequence: 4,231 residues
-// // 
-// //  BLASTDB Version: 4
-// // 
-// //  Volumes:
-// //   /Users/avoorhis/programming/blast-db-alt/faa/SEQF1595.faa
-// 
-//     let lines,line,tmp
-//     let hit = {
-//        path: path,
-//        ext: ext,
-//        mol_type: '',
-//        name: '',
-//        seqs: '',
-//        bps: '',
-//        date: '',
-//        db_version: ''
-//     }
-//     if(ext === 'faa'){
-//        hit.mol_type = 'protein'
-//     }else{
-//       hit.mol_type = 'nucleotide'
-//     }
-//     lines = hit_data.split('\n')
-//     
-//     for(let l in lines){
-//        line = lines[l].trim()
-//        if(line.substring(0,8) === "Database"){
-//            hit.name = line.split(':')[1].trim()
-//        }
-//        if(line.indexOf('sequences;') != -1){
-//            tmp = line.split('sequences;')
-//            hit.seqs = tmp[0].trim().replace(/,/g,'')
-//            hit.bps = tmp[1].trim().split(' ')[0].replace(/,/g,'')
-//        }
-//        if(line.substring(0,4) === "Date"){
-//            hit.date = line.split('\t')[0].split(':')[1].trim()
-//        }
-//        if(line.substring(0,15) === "BLASTDB Version"){
-//            hit.db_version = line.split(':')[1].trim()
-//        }
-//     } 
-//     
-//     
-//     return hit
-//     
-// }
+
 function get_blast_db_info(gid){
     let info = {},run,filepath,hit
     const { spawn } = require("child_process");
@@ -1997,29 +1947,7 @@ function get_blast_db_info(gid){
            //console.log(filepath)
            let full_data = ''
            promises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
-           // run = spawn('/Users/avoorhis/.sequenceserver/ncbi-blast-2.12.0+/bin/blastdbcmd',['-db',filepath,'-info'])
-//            run.stdout.on("data", data => {
-//                 //console.log(`stdout: ${data}`);
-//                 full_data += data
-//             });
-// 
-//             run.stderr.on("data", data => {
-//                 console.log(`stderr: ${data}`);
-//                 
-//             });
-// 
-//             run.on('error', (error) => {
-//                 console.log(`error: ${error.message}`);
-//             });
-// 
-//             run.on("close", code => {
-//                 console.log(`child process exited with code ${code}`);
-//                 if(code == 0){
-//                   hit = parse_blast_db_info(full_data.toString(), exts[e], paths[p])
-//                   
-//                   console.log('hit',exts[e],hit)
-//                 }
-//             });
+
        }
     }
     const responses = Promise.all(promises)
@@ -2027,21 +1955,8 @@ function get_blast_db_info(gid){
       
       return results
     })
-    //console.log('info',info)
-    //blastdbcmd -recursive -list #{config[:database_dir]} -list_outfmt "%f %t  %p  %n  %l  %d  %v"
-       //  %f means the BLAST database absolute file name path
-//         %t means the BLAST database title
-//          %p means the BLAST database molecule type
-//          %n means the number of sequences in the BLAST database
-//          
-//          %l means the number of bases/residues in th
-//e BLAST database
-//          %d means the date of last update of the BLAST database
-//          %v means the BLAST database format version 
-
-    
-    
 }
+//
 router.get('/anvio-server', function blast_sserver(req, res){
    //console.log(req.query)
    // docker exec','anvio','anvi-display-pan','-P',port,'-p',pg+'/PAN.db','-g',pg+'/GENOMES.db'
@@ -2055,28 +1970,7 @@ router.get('/anvio-server', function blast_sserver(req, res){
     
   })
 })
-// function anvio_ports(){
-//     let open_ports, op
-//     let default_open_ports = [8080,8081,8082,8083,8084,8085] //port_range
-//     // file to be present in docker 'anvio' container
-//     
-//     var open_ports_file = path.join(CFG.PATH_TO_PANGENOMES,'open_ports.txt')
-//     try{
-//       op = fs.readFileSync(open_ports_file, 'utf8').toString()
-//       open_ports = JSON.parse(op.replaceAll('\'', '"'))
-//     } catch (err) {
-//       open_ports = default_open_ports  // give it a try - it may work
-//     }
-//     
-//     if(open_ports.length > 0){
-//         op = open_ports[Math.floor(Math.random() * open_ports.length)]
-//         console.log('Returning Good Port',op)
-//         return op;
-//     }else{
-//         return 0
-//     }
-//     
-// }
+//
 router.post('/anvio_post', (req, res) => {
     console.log('In anvio_post',req.body)
     

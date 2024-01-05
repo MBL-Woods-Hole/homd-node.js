@@ -125,8 +125,8 @@ app.use('/help', help);
 
 // for non-routing pages such as heatmap, counts and bar_charts
 app.get('/*', function(req, res, next){
-    console.warn('req.params',req.params);
-    console.warn('req.uri',req.uri);
+    //console.warn('req.params',req.params);
+    
     // var url = req.params[0];
 //     // I want to create a page like: counts_table_2014080_13452.html
 //     // for each link
