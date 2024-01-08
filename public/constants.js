@@ -318,13 +318,39 @@ constants.anviserver_link = "https://vamps.mbl.edu/anviserver/pangenomes/"
 constants.pangenomes = [
     {
       otids: ['46','555','626','757','928'], 
-      pangenome_name: 'Gemella2022_07_05',
+      name: 'Gemella2022_07_05',
       seqids:['SEQF2298','SEQF2460','SEQF1019','SEQF2070','SEQF2071','SEQF2783'],
-      description: 'Pangenome of the genus Gemella containing all 30 available genomes from GenBank with a RefSeq equivalent by 03/02/2021.'
+      description: 'Pangenome of the genus Gemella containing all 30 available genomes from GenBank with a RefSeq equivalent by 03/02/2021.',
+      file_size: '170'
+    },
+    {
+      otids: [], 
+      name: 'Mitis_Group',
+      seqids:[],
+      description: 'All 134 Genomes from HMT-677 (<i>Stroptococcus Mitis</i>)',
+      file_size: '463'
+    },
+    {
+      otids: [], 
+      name: 'Prochlorococcus_31',
+      seqids:[],
+      description: "31 Prochlorococcus genome dataset from Meren's site:<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href='https://merenlab.org/2016/11/08/pangenomics-v2' target='_blank'>https://merenlab.org/2016/11/08/pangenomics-v2</a>",
+      file_size: '111'
+    },
+    {
+      otids: [], 
+      name: 'Veillonella_Atypica',
+      seqids:[],
+      description: '18 genomes for <i>Veillonella atypica</i> HMT-524 and associated <i>V.</i> sp. refseq assemblies',
+      file_size: '459'
+    },
+    {
+      otids: [], 
+      name: 'Veillonella_HMT780',
+      seqids:[],
+      description: '6 genomes for <i>Veillonella sp.</i> HMT-780 and associated <i>V.</i> sp. refseq assemblies',
+      file_size: '448'
     }
-    
-    // **** NOTE NOTE This data is obsolete!!
-    
 ]
 constants.PAGER_ROWS = 500
 

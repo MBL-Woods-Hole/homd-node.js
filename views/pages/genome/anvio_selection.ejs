@@ -1,16 +1,19 @@
+
 <style>
+table{
+  border-collapse:collapse;
+}
 #pgtable{
-   border-collapse:collapse;
-   border:1px solid black;
+   
    padding:20px;
 }
-#pgtable td{
-   padding: 1px 5px;
+#pgtable td,th{
+   padding: 5px 10px;
    border:1px solid black;
 }
 </style>
 <%- include('../../partials/header_html'); %>
-
+<% pgs = JSON.parse(pangenomes) %>
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -23,32 +26,17 @@
 <div id='pgtable'>
 <center>
 <table border='1'>
-<tr><th>Available Pangenomes</th><th>Description</th><th>Download</th></tr>
-<tr>
-  <td><a href='#' class='pg' onclick="find_anvio('Gemella2022_07_05')">Gemella2022_07_05</a></td>
-  <td>Pangenome of the genus Gemella containing all 30 available genomes<br>from GenBank with a RefSeq equivalent by 03/02/2021.</td>
-  <td></td>
-</tr>
-<tr>
-  <td><a href='#' class='pg' onclick="find_anvio('Mitis_Group')">Mitis_Group</a></td>
-  <td>All 134 Genomes from HMT-677 (<i>Stroptococcus Mitis</i>)</td>
-  <td></td>
-</tr>
-<tr>
-  <td><a href='#' class='pg' onclick="find_anvio('Prochlorococcus_31')">Prochlorococcus_31</a><br><small>(Non-HOMD)</small></td>
-  <td>31 Prochlorococcus genome dataset from Meren's site:<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href='https://merenlab.org/2016/11/08/pangenomics-v2' target='_blank'>https://merenlab.org/2016/11/08/pangenomics-v2</a></td>
-  <td></td>
-</tr>
-<tr>
-  <td><a href='#' class='pg' onclick="find_anvio('Veillonella_Atypica')">Veillonella_Atypica</a></td>
-  <td>18 genomes for <i>Veillonella atypica</i> HMT-524 and associated <i>V.</i> sp. refseq assemblies</td>
-  <td></td>
-</tr>
-<tr>
-  <td><a href='#' class='pg' onclick="find_anvio('Veillonella_HMT780')">Veillonella_HMT780</a></td>
-  <td>6 genomes for <i>Veillonella sp.</i> HMT-780 and associated <i>V.</i> sp. refseq assemblies</td>
-  <td></td>
-</tr>
+<tr><td><b>Available Pangenomes</b><br><small>(Link opens pangenome in Anvio`)</small></td><th>Size<br>(MB)</th><th>Description</th><th>Download</th></tr>
+
+<% for(i in pgs){ %>
+ <tr>
+  <td><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].name %>')"><%= pgs[i].name %></a></td>
+  <td><%= pgs[i].file_size %></td>
+  <td><%- pgs[i].description %></td>
+  <td>coming soon</td>
+ </tr>
+<% } %>
+
 </table>
 </center>
 </div>

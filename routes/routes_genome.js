@@ -1967,6 +1967,7 @@ router.get('/anvio-server', function blast_sserver(req, res){
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
+    pangenomes: JSON.stringify(C.pangenomes)
     
   })
 })
