@@ -1993,4 +1993,19 @@ router.post('/anvio_post', (req, res) => {
     }
     return res.send(url)
 });
+router.get('/dnld_pg',(req, res) => {
+    console.log('req query',req.query)
+    let fullpath = path.join(CFG.PATH_TO_PANGENOMES,req.query.pg,'HOMD_'+req.query.pg+'.tar.gz')
+    
+    helpers.print('file path: '+fullpath)
+    res.download(fullpath)
+
+});
+router.get('/download_file', function search(req, res) {
+  //let page = req.params.pagecode
+  let fullpath = path.join(CFG.PATH_TO_DATA,req.query.filename)
+  helpers.print('file path: '+fullpath)
+  res.download(fullpath)
+  //res.end()
+})
 module.exports = router
