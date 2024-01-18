@@ -2001,11 +2001,5 @@ router.get('/dnld_pg',(req, res) => {
     res.download(fullpath)
 
 });
-router.get('/download_file', function search(req, res) {
-  //let page = req.params.pagecode
-  let fullpath = path.join(CFG.PATH_TO_DATA,req.query.filename)
-  helpers.print('file path: '+fullpath)
-  res.download(fullpath)
-  //res.end()
-})
+
 module.exports = router

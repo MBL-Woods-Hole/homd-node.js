@@ -163,18 +163,14 @@ constants.plot_species = [  // to be put in db with species_id
     {otid:'550',name:'Staphylococcus aureus',color: staph_color[0]},
     {otid:'601',name:'Staphylococcus epidermidis',color: staph_color[1]},
     {otid:'73',name:'Streptococcus australis',color:'#008080'},
-    
     {otid:'578',name:'Streptococcus cristatus',color:'#008080'},
     {otid:'886',name:'Streptococcus cristatus',color:'#008080'},
     {otid:'431',name:'Streptococcus infantis',color: strep_color[0]},
     {otid:'638',name:'Streptococcus infantis',color: strep_color[0]},
-    
     {otid:'677',name:'Streptococcus mitis',color: strep_color[1]},
     {otid:'707',name:'Streptococcus oralis',color: strep_color[2]},
-    
     {otid:'411',name:'Streptococcus parasanguinis',color:'#3CBC3C'},
     {otid:'721',name:'Streptococcus parasanguinis',color:'#3CBC3C'},
-    
     {otid:'755',name:'Streptococcus salivarius',color:'#50D050'},
     {otid:'758',name:'Streptococcus sanguinis',color:'#008080'},
     {otid:'74',name:'Streptococcus sp._HMT_074',color: strep_color[3]},

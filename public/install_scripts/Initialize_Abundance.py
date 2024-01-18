@@ -12,6 +12,7 @@ import csv
 sys.path.append('../homd-data/')
 sys.path.append('../../homd-data/')
 sys.path.append('../../config/')
+sys.path.append('/Users/avoorhis/programming/')
 from connect import MyConnection
 import datetime
 ranks = ['domain','phylum','klass','order','family','genus','species']
@@ -20,25 +21,25 @@ today = str(datetime.date.today())
 # segata_headers=['BM','KG','HP','Throat','PT','TD','Saliva','SupP','SubP','Stool']
 # dewhirst_headers=['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP']
 # eren_headers=['BM','KG','HP','TD','PT','Throat','Saliva','SupP','SubP','Stool']
-headers = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS','ST']
-
+#headers = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS','ST']
+headers = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SAL','STO','SUBP','SUPP','THR','TDO','VIN']
    
-hmt_index = 2  # only for dewhirst and eren
-rank_index=3  # rank
-max_segata_index=6
-max_dewhirst_index=7
-max_eren_index=8
-max_any_index=9
-start_segata_index=11
-segata_col_count=20  # header row =='BM'
-start_dewhirst_index=31
-dewhirst_col_count=27  # header row =='BM'
-start_eren_index=59
-eren_col_count=20  # header row =='BM'
-data_start_index=11
-segata_cols = ['mean','stdev']
-eren_cols = ['mean','prevalence']
-dewhirst_cols = ['mean','stdev','prevalence']
+# hmt_index = 2  # only for dewhirst and eren
+# rank_index=3  # rank
+# max_nih_index=6
+# max_dewhirst_index=7
+# max_eren_index=8
+# max_any_index=9
+# start_segata_index=11
+# nih_col_count=20  # header row =='BM'
+# start_dewhirst_index=31
+# dewhirst_col_count=27  # header row =='BM'
+# start_eren_index=59
+# eren_col_count=20  # header row =='BM'
+# data_start_index=11
+# segata_cols = ['mean','stdev']
+# eren_cols = ['mean','prevalence']
+# dewhirst_cols = ['mean','stdev','prevalence']
 
 # to correct for the few subspecies in HOMD::
 subspecies = {}
@@ -63,56 +64,113 @@ subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp._polymorphum']
 subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp._vincentii'] 
 """
 CREATE TABLE `abundance` (
-  `abundance_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `reference` varchar(300) NOT NULL DEFAULT '',
+  `abundance_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `reference` varchar(30) NOT NULL DEFAULT '',
   `otid` varchar(11) NOT NULL DEFAULT '',
-  `domain_id` int(11) unsigned NOT NULL,
-  `phylum_id` int(11) unsigned NOT NULL,
-  `klass_id` int(11) unsigned NOT NULL,
-  `order_id` int(11) unsigned NOT NULL,
-  `family_id` int(11) unsigned NOT NULL,
-  `genus_id` int(11) unsigned NOT NULL,
-  `species_id` int(11) unsigned NOT NULL,
-  `subspecies_id` int(11) unsigned NOT NULL,
-  `notes` text,
+  `domain_id` int(10) unsigned NOT NULL,
+  `phylum_id` int(10) unsigned NOT NULL,
+  `klass_id` int(10) unsigned NOT NULL,
+  `order_id` int(10) unsigned NOT NULL,
+  `family_id` int(10) unsigned NOT NULL,
+  `genus_id` int(10) unsigned NOT NULL,
+  `species_id` int(10) unsigned NOT NULL,
+  `subspecies_id` int(10) unsigned NOT NULL,
+  `notes` text NOT NULL,
   `level` varchar(12) NOT NULL DEFAULT '',
   `max` varchar(10) NOT NULL DEFAULT '',
-  `BM_mean` varchar(11) NOT NULL DEFAULT '',
-  `BM_prev` varchar(11) DEFAULT '',
-  `BM_sd` varchar(11) NOT NULL DEFAULT '',
-  `KG_mean` varchar(11) NOT NULL DEFAULT '',
-  `KG_prev` varchar(11) NOT NULL DEFAULT '',
-  `KG_sd` varchar(11) NOT NULL DEFAULT '',
-  `HP_mean` varchar(11) NOT NULL DEFAULT '',
-  `HP_prev` varchar(11) NOT NULL DEFAULT '',
-  `HP_sd` varchar(11) NOT NULL DEFAULT '',
-  `TD_mean` varchar(11) NOT NULL DEFAULT '',
-  `TD_prev` varchar(11) NOT NULL DEFAULT '',
-  `TD_sd` varchar(11) NOT NULL DEFAULT '',
-  `PT_mean` varchar(11) NOT NULL DEFAULT '',
-  `PT_prev` varchar(11) NOT NULL DEFAULT '',
-  `PT_sd` varchar(11) NOT NULL DEFAULT '',
-  `TH_mean` varchar(11) NOT NULL DEFAULT '',
-  `TH_prev` varchar(11) NOT NULL DEFAULT '',
-  `TH_sd` varchar(11) NOT NULL DEFAULT '',
-  `SV_mean` varchar(11) NOT NULL DEFAULT '',
-  `SV_prev` varchar(11) NOT NULL DEFAULT '',
-  `SV_sd` varchar(11) NOT NULL DEFAULT '',
-  `SupP_mean` varchar(11) NOT NULL DEFAULT '',
-  `SupP_prev` varchar(11) NOT NULL DEFAULT '',
-  `SupP_sd` varchar(11) NOT NULL DEFAULT '',
-  `SubP_mean` varchar(11) NOT NULL DEFAULT '',
-  `SubP_prev` varchar(11) NOT NULL DEFAULT '',
-  `SubP_sd` varchar(11) NOT NULL DEFAULT '',
-  `NS_mean` varchar(11) DEFAULT ' ',
-  `NS_prev` varchar(11) DEFAULT '',
-  `NS_sd` varchar(11) NOT NULL DEFAULT '',
-  `ST_mean` varchar(11) NOT NULL DEFAULT '',
-  `ST_prev` varchar(11) NOT NULL DEFAULT '',
-  `ST_sd` varchar(11) NOT NULL DEFAULT '',
+  `AKE_mean` varchar(11) NOT NULL DEFAULT '',
+  `AKE_10p` varchar(11) DEFAULT '',
+  `AKE_90p` varchar(11) NOT NULL DEFAULT '',
+  `AKE_prev` varchar(11) NOT NULL DEFAULT '',
+  `AKE_sd` varchar(11) NOT NULL DEFAULT '',
+  `ANA_mean` varchar(11) DEFAULT '',
+  `ANA_10p` varchar(11) NOT NULL DEFAULT '',
+  `ANA_90p` varchar(11) NOT NULL DEFAULT '',
+  `ANA_prev` varchar(11) NOT NULL DEFAULT '',
+  `ANA_sd` varchar(11) NOT NULL DEFAULT '',
+  `BMU_mean` varchar(11) NOT NULL DEFAULT '',
+  `BMU_10p` varchar(11) NOT NULL DEFAULT '',
+  `BMU_90p` varchar(11) NOT NULL DEFAULT '',
+  `BMU_prev` varchar(11) NOT NULL DEFAULT '',
+  `BMU_sd` varchar(11) NOT NULL DEFAULT '',
+  `HPA_mean` varchar(11) NOT NULL DEFAULT '',
+  `HPA_10p` varchar(11) NOT NULL DEFAULT '',
+  `HPA_90p` varchar(11) NOT NULL DEFAULT '',
+  `HPA_prev` varchar(11) NOT NULL DEFAULT '',
+  `HPA_sd` varchar(11) NOT NULL DEFAULT '',
+  `LAF_mean` varchar(11) NOT NULL DEFAULT '',
+  `LAF_10p` varchar(11) NOT NULL DEFAULT '',
+  `LAF_90p` varchar(11) NOT NULL DEFAULT '',
+  `LAF_prev` varchar(11) NOT NULL DEFAULT '',
+  `LAF_sd` varchar(11) NOT NULL DEFAULT '',
+  `LRC_mean` varchar(11) NOT NULL DEFAULT '',
+  `LRC_10p` varchar(11) NOT NULL DEFAULT '',
+  `LRC_90p` varchar(11) NOT NULL DEFAULT '',
+  `LRC_prev` varchar(11) NOT NULL DEFAULT '',
+  `LRC_sd` varchar(11) NOT NULL DEFAULT '',
+  `MVA_mean` varchar(11) NOT NULL DEFAULT '',
+  `MVA_10p` varchar(11) NOT NULL DEFAULT '',
+  `MVA_90p` varchar(11) NOT NULL DEFAULT '',
+  `MVA_prev` varchar(11) NOT NULL DEFAULT '',
+  `MVA_sd` varchar(11) NOT NULL DEFAULT '',
+  `PFO_mean` varchar(11) NOT NULL DEFAULT '',
+  `PFO_10p` varchar(11) NOT NULL DEFAULT '',
+  `PFO_90p` varchar(11) NOT NULL DEFAULT '',
+  `PFO_prev` varchar(11) NOT NULL DEFAULT '',
+  `PFO_sd` varchar(11) NOT NULL DEFAULT '',
+  `PTO_mean` varchar(11) NOT NULL DEFAULT '',
+  `PTO_10p` varchar(11) NOT NULL DEFAULT '',
+  `PTO_90p` varchar(11) NOT NULL DEFAULT '',
+  `PTO_prev` varchar(11) NOT NULL DEFAULT '',
+  `PTO_sd` varchar(11) NOT NULL DEFAULT '',
+  `RAF_mean` varchar(11) NOT NULL DEFAULT ' ',
+  `RAF_10p` varchar(11) NOT NULL DEFAULT '',
+  `RAF_90p` varchar(11) NOT NULL DEFAULT '',
+  `RAF_prev` varchar(11) NOT NULL DEFAULT '',
+  `RAF_sd` varchar(11) NOT NULL DEFAULT '',
+  `RRC_mean` varchar(11) NOT NULL DEFAULT '',
+  `RRC_10p` varchar(11) NOT NULL DEFAULT '',
+  `RRC_90p` varchar(11) NOT NULL DEFAULT '',
+  `RRC_prev` varchar(11) NOT NULL DEFAULT '',
+  `RRC_sd` varchar(11) NOT NULL DEFAULT '',
+  `SAL_mean` varchar(11) NOT NULL DEFAULT '',
+  `SAL_10p` varchar(11) NOT NULL DEFAULT '',
+  `SAL_90p` varchar(11) NOT NULL DEFAULT '',
+  `SAL_prev` varchar(11) NOT NULL DEFAULT '',
+  `SAL_sd` varchar(11) NOT NULL DEFAULT '',
+  `STO_mean` varchar(11) NOT NULL DEFAULT '',
+  `STO_10p` varchar(11) NOT NULL DEFAULT '',
+  `STO_90p` varchar(11) NOT NULL DEFAULT '',
+  `STO_prev` varchar(11) NOT NULL DEFAULT '',
+  `STO_sd` varchar(11) NOT NULL DEFAULT '',
+  `SUBP_mean` varchar(11) NOT NULL DEFAULT '',
+  `SUBP_10p` varchar(11) NOT NULL DEFAULT '',
+  `SUBP_90p` varchar(11) NOT NULL DEFAULT '',
+  `SUBP_prev` varchar(11) NOT NULL DEFAULT '',
+  `SUBP_sd` varchar(11) NOT NULL DEFAULT '',
+  `SUPP_mean` varchar(11) NOT NULL DEFAULT '',
+  `SUPP_10p` varchar(11) NOT NULL DEFAULT '',
+  `SUPP_90p` varchar(11) NOT NULL DEFAULT '',
+  `SUPP_prev` varchar(11) NOT NULL DEFAULT '',
+  `SUPP_sd` varchar(11) NOT NULL DEFAULT '',
+  `THR_mean` varchar(11) NOT NULL DEFAULT '',
+  `THR_10p` varchar(11) NOT NULL DEFAULT '',
+  `THR_90p` varchar(11) NOT NULL DEFAULT '',
+  `THR_prev` varchar(11) NOT NULL DEFAULT '',
+  `THR_SD` varchar(11) NOT NULL DEFAULT '',
+  `TDO_mean` varchar(11) NOT NULL DEFAULT '',
+  `TDO_10p` varchar(11) NOT NULL DEFAULT '',
+  `TDO_90p` varchar(11) NOT NULL DEFAULT '',
+  `TDO_prev` varchar(11) NOT NULL DEFAULT '',
+  `TDO_sd` varchar(11) NOT NULL DEFAULT '',
+  `VIN_mean` varchar(11) NOT NULL DEFAULT '',
+  `VIN_10p` varchar(11) NOT NULL DEFAULT '',
+  `VIN_90p` varchar(11) NOT NULL DEFAULT '',
+  `VIN_prev` varchar(11) NOT NULL DEFAULT '',
+  `VIN_sd` varchar(11) NOT NULL DEFAULT '',
   PRIMARY KEY (`abundance_id`),
-  UNIQUE KEY `reference` (`reference`,`BM_mean`,`domain_id`,`phylum_id`,`klass_id`,`order_id`,`family_id`,`genus_id`,`species_id`,`subspecies_id`),
-  KEY `abundance_id_ibfk_3` (`otid`),
+  UNIQUE KEY `reference` (`reference`,`AKE_mean`,`domain_id`,`phylum_id`,`klass_id`,`order_id`,`family_id`,`genus_id`,`species_id`,`subspecies_id`),
+  KEY `abundance_id_ibfk_4` (`otid`),
   KEY `phylum_id` (`phylum_id`),
   KEY `klass_id` (`klass_id`),
   KEY `order_id` (`order_id`),
@@ -120,14 +178,15 @@ CREATE TABLE `abundance` (
   KEY `genus_id` (`genus_id`),
   KEY `species_id` (`species_id`),
   KEY `subspecies_id` (`subspecies_id`),
-  CONSTRAINT `abundance_copy4_ibfk_1` FOREIGN KEY (`domain_id`) REFERENCES `domain` (`domain_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_2` FOREIGN KEY (`phylum_id`) REFERENCES `phylum` (`phylum_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_3` FOREIGN KEY (`klass_id`) REFERENCES `klass` (`klass_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_4` FOREIGN KEY (`order_id`) REFERENCES `order` (`order_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_5` FOREIGN KEY (`family_id`) REFERENCES `family` (`family_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_6` FOREIGN KEY (`genus_id`) REFERENCES `genus` (`genus_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_7` FOREIGN KEY (`species_id`) REFERENCES `species` (`species_id`) ON UPDATE CASCADE,
-  CONSTRAINT `abundance_copy4_ibfk_8` FOREIGN KEY (`subspecies_id`) REFERENCES `subspecies` (`subspecies_id`) ON UPDATE CASCADE
+  KEY `abundance_copy4_ibfk_1` (`domain_id`),
+  CONSTRAINT `abundance_ibfk_1` FOREIGN KEY (`domain_id`) REFERENCES `domain` (`domain_id`) ON UPDATE CASCADE,
+  CONSTRAINT `abundance_ibfk_2` FOREIGN KEY (`phylum_id`) REFERENCES `phylum` (`phylum_id`) ON UPDATE CASCADE,
+  CONSTRAINT `abundance_ibfk_3` FOREIGN KEY (`klass_id`) REFERENCES `klass` (`klass_id`) ON UPDATE CASCADE,
+  CONSTRAINT `abundance_ibfk_4` FOREIGN KEY (`order_id`) REFERENCES `order` (`order_id`) ON UPDATE CASCADE,
+  CONSTRAINT `abundance_ibfk_5` FOREIGN KEY (`family_id`) REFERENCES `family` (`family_id`) ON UPDATE CASCADE,
+  CONSTRAINT `abundance_ibfk_6` FOREIGN KEY (`genus_id`) REFERENCES `genus` (`genus_id`) ON UPDATE CASCADE,
+  CONSTRAINT `abundance_ibfk_7` FOREIGN KEY (`species_id`) REFERENCES `species` (`species_id`) ON UPDATE CASCADE,
+  CONSTRAINT `abundance_ibfk_8` FOREIGN KEY (`subspecies_id`) REFERENCES `subspecies` (`subspecies_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 """
@@ -164,10 +223,25 @@ def run_abundance_db():
     
     result = myconn_new.execute_fetch_select_dict(q)
     """
-    {'abundance_id': 1148, 'reference': 'Dewhirst35x9', 'otid': '362', 'taxonomy': 'Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;Fretibacterium;sp. HMT 362', 'level': 'Species', 'max': '0.02095498', 'BM_mean': 
-'0.002', 'BM_prev': '12.5', 'BM_sd': '0.007', 'KG_mean': '0', 'KG_prev': '5.9', 'KG_sd': '0.001', 'HP_mean': '0', 'HP_prev': '7.7', 'HP_sd': '0.001', 'TD_mean': '0', 'TD_prev': '3.1', 'TD_sd': '0.001', 'PT_mean': '0.006', 
-'PT_prev': '6.9', 'PT_sd': '0.03', 'Throat_mean': '0', 'Throat_prev': '3.2', 'Throat_sd': '0', 'Saliva_mean': '0', 'Saliva_prev': '6.1', 'Saliva_sd': '0.001', 'SupP_mean': '0', 'SupP_prev': '5.7', 'SupP_sd': '0.001', 
-'SubP_mean': '0.021', 'SubP_prev': '9.7', 'SubP_sd': '0.1', 'Stool_mean': '', 'Stool_prev': '', 'Stool_sd': ''}
+    
+# 'AKE_mean','AKE_90p','AKE_10p','AKE_sd','AKE_prev',
+# 'ANA_mean','ANA_90p','ANA_10p','ANA_sd','ANA_prev',
+# 'BMU_mean','BMU_90p','BMU_10p','BMU_sd','BMU_prev',
+# 'HPA_mean','HPA_90p','HPA_10p','HPA_sd','HPA_prev',
+# 'LAF_mean','LAF_90p','LAF_10p','LAF_sd','LAF_prev',
+# 'LRC_mean','LRC_90p','LRC_10p','LRC_sd','LRC_prev',
+# 'MVA_mean','MVA_90p','MVA_10p','MVA_sd','MVA_prev',
+# 'PFO_mean','PFO_90p','PFO_10p','PFO_sd','PFO_prev',
+# 'PTO_mean','PTO_90p','PTO_10p','PTO_sd','PTO_prev',
+# 'RAF_mean','RAF_90p','RAF_10p','RAF_sd','RAF_prev',
+# 'RRC_mean','RRC_90p','RRC_10p','RRC_sd','RRC_prev',
+# 'SAL_mean','SAL_90p','SAL_10p','SAL_sd','SAL_prev',
+# 'STO_mean','STO_90p','STO_10p','STO_sd','STO_prev',
+# 'SUBP_mean','SUBP_90p','SUBP_10p','SUBP_sd','SUBP_prev',
+# 'SUPP_mean','SUPP_90p','SUPP_10p','SUPP_sd','SUPP_prev',
+# 'THR_mean','THR_90p','THR_10p','THR_sd','THR_prev',
+# 'TDO_mean','TDO_90p','TDO_10p','TDO_sd','TDO_prev',
+# 'VIN_mean','VIN_90p','VIN_10p','VIN_sd','VIN_prev'
     """
     #Missing (Segata2012)::Bacteria;Pseudomonadota;Alphaproteobacteria;Rhodobacterales;Rhodobacteraceae;Rhodobacter
     #Missing (Segata2012)::Bacteria;Synergistota;Synergistia;Synergistales;Synergistaceae;Pyramidobacter
@@ -177,16 +251,17 @@ def run_abundance_db():
     #header_prefixes = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS','ST']
     #segata_header_prefixes = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
     #eren_header_prefixes =   ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST']
-    site_prefixes    = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD']
-    eren_site_prefixes     = site_prefixes + ['ST']
-    segata_site_prefixes   = site_prefixes + ['ST']
-    dewhirst_site_prefixes = site_prefixes + ['NS'] 
+    #site_prefixes    = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD']
+    all_site_prefixes = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
+    eren_site_prefixes     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO',                                                'STO']
+    #segata_site_prefixes   = all_site_prefixes
+    dewhirst_site_prefixes = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']
     #['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','NS']
     #print(segata_site_prefixes)
     missing_count =0
     for row in result:
         #print(row)
-        max_segata, max_eren, max_dewhirst = 0,0,0
+        max_nih, max_eren, max_dewhirst = 0,0,0
         taxon_string = fix_taxonomy(row['taxonomy'])
         #taxon_string = row['taxonomy']
         # tax_parts = taxon_string.split(';')
@@ -209,8 +284,10 @@ def run_abundance_db():
         #TCcollector[taxon_string]['max_all'] = row['max']
         if 'notes' not in TCcollector[taxon_string]:
             TCcollector[taxon_string]['notes'] = {}
-        if 'segata' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['segata'] = {}
+        if 'nih_v1v3' not in TCcollector[taxon_string]:
+            TCcollector[taxon_string]['nih_v1v3'] = {}
+        if 'nih_v3v5' not in TCcollector[taxon_string]:
+            TCcollector[taxon_string]['nih_v3v5'] = {}
         if 'eren_v1v3' not in TCcollector[taxon_string]:
             TCcollector[taxon_string]['eren_v1v3'] = {}
         if 'eren_v3v5' not in TCcollector[taxon_string]:
@@ -218,13 +295,18 @@ def run_abundance_db():
         if 'dewhirst' not in TCcollector[taxon_string]:
             TCcollector[taxon_string]['dewhirst'] = {}
         
-        if row['reference'].startswith('Segata'):
-            for p in segata_site_prefixes:
-                
-                max_segata = get_max(row, p, max_segata)
-                TCcollector[taxon_string]['segata'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd']}
-            TCcollector[taxon_string]['max_segata'] = max_segata
-            TCcollector[taxon_string]['notes']['segata'] = row['notes']
+        if row['reference'].startswith('NIH_v1v3'):
+            for p in all_site_prefixes:
+                max_nih = get_max(row, p, max_nih)
+                TCcollector[taxon_string]['nih_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+            TCcollector[taxon_string]['max_nihv1v3'] = max_nih
+            TCcollector[taxon_string]['notes']['nih_v1v3'] = row['notes']
+        if row['reference'].startswith('NIH_v3v5'):
+            for p in all_site_prefixes:
+                max_nih = get_max(row, p, max_nih)
+                TCcollector[taxon_string]['nih_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+            TCcollector[taxon_string]['max_nihv3v5'] = max_nih
+            TCcollector[taxon_string]['notes']['nih_v3v5'] = row['notes']
         if row['reference'].startswith('Eren2014_v1v3'):
             for p in eren_site_prefixes:
                 max_eren = get_max(row, p, max_eren)
@@ -240,6 +322,7 @@ def run_abundance_db():
         if row['reference'].startswith('Dewhirst'):
             for p in dewhirst_site_prefixes:
                 max_dewhirst = get_max(row, p, max_dewhirst)
+                #print('max_dewhirst',max_dewhirst)
                 TCcollector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
             TCcollector[taxon_string]['max_dewhirst'] = max_dewhirst
             TCcollector[taxon_string]['notes']['dewhirst'] = row['notes']
