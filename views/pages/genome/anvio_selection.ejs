@@ -33,7 +33,7 @@ table{
   <td><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].name %>')"><%= pgs[i].name %></a></td>
   <td><%= pgs[i].file_size %></td>
   <td><%- pgs[i].description %></td>
-  <td><a href="dnld_pg?pg=<%= pgs[i].name %>">dld</a></td>
+  <td class='center'><a href="dnld_pg?pg=<%= pgs[i].name %>"><i class="fa fa-download" aria-hidden="true"></i></a></td>
  </tr>
 <% } %>
 

@@ -1957,7 +1957,7 @@ function get_blast_db_info(gid){
     })
 }
 //
-router.get('/anvio-server', function blast_sserver(req, res){
+router.get('/anvio-server', function anvio_server(req, res){
    //console.log(req.query)
    // docker exec','anvio','anvi-display-pan','-P',port,'-p',pg+'/PAN.db','-g',pg+'/GENOMES.db'
    
@@ -1984,13 +1984,13 @@ router.post('/anvio_post', (req, res) => {
     //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
     //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
     
-    let url
+    let url = CFG.ANVIO_URL + '?pg=' + pg
     //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
-    if(CFG.DBHOST == 'localhost'){
-        url = "http://localhost:3010?pg="+pg
-    }else{
-        url = "http://anvio.homd.org/anvio?pg="+pg
-    }
+    // if(CFG.DBHOST == 'localhost'){
+//         url = "http://localhost:3010?pg="+pg
+//     }else{
+//         url = "https://anvio.homd.org/anvio?pg="+pg
+//     }
     return res.send(url)
 });
 router.get('/dnld_pg',(req, res) => {
