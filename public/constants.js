@@ -317,36 +317,85 @@ constants.pangenomes = [
       name: 'Gemella2022_07_05',
       seqids:['SEQF2298','SEQF2460','SEQF1019','SEQF2070','SEQF2071','SEQF2783'],
       description: 'Pangenome of the genus Gemella containing all 30 available genomes from GenBank with a RefSeq equivalent by 03/02/2021.',
-      file_size: '170'
+      file_size: '200'
     },
     {
       otids: [], 
       name: 'Mitis_Group',
       seqids:[],
       description: 'All 134 Genomes from HMT-677 (<i>Stroptococcus Mitis</i>)',
-      file_size: '463'
+      file_size: '586'
     },
     {
       otids: [], 
       name: 'Prochlorococcus_31',
       seqids:[],
-      description: "31 Prochlorococcus genome dataset from Meren's site:<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href='https://merenlab.org/2016/11/08/pangenomics-v2' target='_blank'>https://merenlab.org/2016/11/08/pangenomics-v2</a>",
-      file_size: '111'
+      description: "31 Prochlorococcus genome dataset from Meren's site (Non-HOMD):<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href='https://merenlab.org/2016/11/08/pangenomics-v2' target='_blank'>https://merenlab.org/2016/11/08/pangenomics-v2</a>",
+      file_size: '139'
     },
     {
       otids: [], 
       name: 'Veillonella_Atypica',
       seqids:[],
-      description: '18 genomes for <i>Veillonella atypica</i> HMT-524 and associated <i>V.</i> sp. refseq assemblies',
-      file_size: '459'
+      description: 'This pangenome was build using Anvi’o v7 with Python v3.7.9 and consists of 18 <i>Veillonella atypica</> (HMT-524) refseq assemblies and associated <i>V.</> sp. refseq assemblies downloaded from NCBI on 12/15/2022. Genomes are annotated with the Pfams data base (<a href="https://www.ebi.ac.uk/interpro/" target="_blank">https://www.ebi.ac.uk/interpro/</a>).',
+      file_size: '442'
+    },
+    {
+      otids: [], 
+      name: 'Veillonella_Denticariosi',
+      seqids:[],
+      description: 'This pangenome was build using Anvi’o v7 with Python v3.7.9 and consists of 2 <i>Veillonella denticariosi</> (HMT-887) refseq assemblies and associated <i>V.</> sp. refseq assemblies downloaded from NCBI on 12/15/2022. Genomes are annotated with the Pfams data base (<a href="https://www.ebi.ac.uk/interpro/" target="_blank">https://www.ebi.ac.uk/interpro/</a>).',
+      file_size: '428'
+    },
+    {
+      otids: [], 
+      name: 'Veillonella_Dispar',
+      seqids:[],
+      description: 'This pangenome was build using Anvi’o v7 with Python v3.7.9 and consists of 18 <i>Veillonella dispar</> *(HMT-160) refseq assemblies and associated <i>V.</> sp. refseq assemblies downloaded from NCBI on 12/15/2022. Genomes are annotated with the Pfams data base (<a href="https://www.ebi.ac.uk/interpro/" target="_blank">https://www.ebi.ac.uk/interpro/</a>).',
+      file_size: '444'
     },
     {
       otids: [], 
       name: 'Veillonella_HMT780',
       seqids:[],
       description: '6 genomes for <i>Veillonella sp.</i> HMT-780 and associated <i>V.</i> sp. refseq assemblies',
-      file_size: '448'
-    }
+      file_size: '327'
+    },
+    {
+      otids: [], 
+      name: 'Veillonella_Infantium',
+      seqids:[],
+      description: 'This pangenome was build using Anvi’o v7 with Python v3.7.9 and consists of 2 <i>Veillonella infantium</> refseq assemblies and associated <i>V.</> sp. refseq assemblies downloaded from NCBI on 12/15/2022. Genomes are annotated with the Pfams data base (<a href="https://www.ebi.ac.uk/interpro/" target="_blank">https://www.ebi.ac.uk/interpro/</a>).',
+      file_size: '428'
+    },
+    {
+      otids: [], 
+      name: 'Veillonella_Parvula',
+      seqids:[],
+      description: 'This pangenome was build using Anvi’o v7 with Python v3.7.9 and consists of 29 <i>Veillonella atypica</> (HMT-161) refseq assemblies and associated <i>V.</> sp. refseq assemblies downloaded from NCBI on 12/15/2022. Genomes are annotated with the Pfams data base (<a href="https://www.ebi.ac.uk/interpro/" target="_blank">https://www.ebi.ac.uk/interpro/</a>).',
+      file_size: '454'
+    },
+    {
+      otids: [], 
+      name: 'Veillonella_Rogosae',
+      seqids:[],
+      description: 'This pangenome was build using Anvi’o v7 with Python v3.7.9 and consists of 3 <i>Veillonella rogosae</> (HMT-158) refseq assemblies and associated <i>V.</> sp. refseq assemblies downloaded from NCBI on 12/15/2022. Genomes are annotated with the Pfams data base (<a href="https://www.ebi.ac.uk/interpro/" target="_blank">https://www.ebi.ac.uk/interpro/</a>).',
+      file_size: '429'
+    },
+    {
+      otids: [], 
+      name: 'Veillonella_Tobetsuensis',
+      seqids:[],
+      description: 'This pangenome was build using Anvi’o v7 with Python v3.7.9 and consists of 4 <i>Veillonella tobetsuensis</> refseq assemblies downloaded from NCBI on 12/15/2022. Genomes are annotated with the Pfams data base (<a href="https://www.ebi.ac.uk/interpro/" target="_blank">https://www.ebi.ac.uk/interpro/</a>).',
+      file_size: '430'
+    },
+    {
+      otids: [], 
+      name: 'Veillonella_genus',
+      seqids:[],
+      description: 'This pangenome was build using Anvi’o v7 with Python v3.7.9 and consists of 101 <i>Veillonella</> refseq assemblies downloaded from NCBI on 12/15/2022. Genomes are annotated with the Pfams data base (<a href="https://www.ebi.ac.uk/interpro/" target="_blank">https://www.ebi.ac.uk/interpro/</a>).',
+      file_size: '719'
+    },
 ]
 constants.PAGER_ROWS = 500
 

@@ -1985,6 +1985,8 @@ router.post('/anvio_post', (req, res) => {
     //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
     
     let url = CFG.ANVIO_URL + '?pg=' + pg
+    // localhost:::   http://localhost:3010
+    // Dev      :::   https://anvio.homd.org/anvio
     //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
     // if(CFG.DBHOST == 'localhost'){
 //         url = "http://localhost:3010?pg="+pg
