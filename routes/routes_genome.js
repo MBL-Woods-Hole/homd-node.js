@@ -1997,7 +1997,18 @@ router.post('/anvio_post', (req, res) => {
 });
 router.get('/dnld_pg',(req, res) => {
     console.log('req query',req.query)
-    let fullpath = path.join(CFG.PATH_TO_PANGENOMES,req.query.pg,'HOMD_'+req.query.pg+'.tar.gz')
+    let pg = req.query.pg
+    let ver = req.query.V
+    let fn
+    let obj = C.pangenomes.find(o => o.name === pg);
+    
+    if(ver === '7'){
+       fn = obj.dnld_v7
+    }else{
+       fn = obj.dnld_v8
+    }
+    
+    let fullpath = path.join(CFG.PATH_TO_PANGENOMES, req.query.pg, fn)
     
     helpers.print('file path: '+fullpath)
     res.download(fullpath)
