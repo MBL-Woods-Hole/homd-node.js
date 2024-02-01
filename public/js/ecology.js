@@ -5,14 +5,58 @@
   var margin = {top: 30, right: 30, bottom: 70, left: 40},
       width = w - margin.left - margin.right,
       height = h - margin.top - margin.bottom;
+      //.range(["gold", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"])
+      // ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", 
+      //"#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"
+      site_colors1 = {
+    'AKE': 'gold', //Attached_Keratinized_gingiva
+    'ANA': 'blue', //#Anterior_nares
+    'BMU':  'green', //#Buccal_mucosa
+    'HPA':  'yellow', //#Hard_palate
+    'LAF':  'black', //#L_Antecubital_fossa  # not in HMP
+    'PERIO': 'grey',  //# ONLY in HMP
+    'LRC': 'darkgreen',  //#L_Retroauricular_crease
+    'MVA': 'pink',  //#Mid_vagina
+    'PFO': 'brown',  //#Posterior_fornix
+    'PTO': 'slateblue',  //#Palatine_Tonsils
+    'RAF': 'grey1',  //#R_Antecubital_fossa
+    'RRC': 'orange',  //#R_Retroauricular_crease
+    'SAL': '#3366cc',  //#Saliva
+    'STO': '#dc3912',  //#Stool
+    'SUBP': '#ff9900', //#Subgingival_plaque
+    'SUPP': '#109618', //#Supragingival_plaque
+    'THR': '#990099',  //#Throat
+    'TDO': '#0099c6',  //#Tongue_dorsum
+    'VIN':'#dd4477'   //#Vaginal_introitus
+    }
+    site_colors2 = {
+    'AKE': '#3366cc', //Attached_Keratinized_gingiva
+    'ANA': '#0099c6', //#Anterior_nares
+    
+    
+    'BMU':  '#ff9900', //#Buccal_mucosa
+    'HPA':  '#109618', //#Hard_palate
+    'LAF':  '#990099', //#L_Antecubital_fossa  # not in HMP
+    'PERIO': '',  //# ONLY in HMP
+    'LRC': '#dd4477',  //#L_Retroauricular_crease
+    'MVA': '#66aa00',  //#Mid_vagina
+    'PFO': 'yellow',  //#Posterior_fornix
+    'PTO': '#316395',  //#Palatine_Tonsils
+    'RAF': '#994499',  //#R_Antecubital_fossa
+    'RRC': '#22aa99',  //#R_Retroauricular_crease
+    'SAL': '#dc3912',  //#Saliva
+    
+    
+    'STO': 'brown',  //#Stool
+    'SUBP': 'slateblue', //#Subgingival_plaque
+    'SUPP': 'red', //#Supragingival_plaque
+    'THR': 'pink',  //#Throat
+    'TDO': 'black',  //#Tongue_dorsum
+    'VIN':'grey'   //#Vaginal_introitus
+    }
   //
   // Dewhirst
   //
-  //
-  //
-  // console.log('s',max.nihv1v3)
-//   console.log('d',max.dewhirst)
-//   console.log('e',max.erenv1v3)
   
   if(Object.keys(ddata).length == 0){
      document.getElementById("plot_dewhirst_here").innerHTML = '<small>No Data</small>'
@@ -38,9 +82,10 @@
           "translate(" + margin.left + "," + margin.top + ")");
   
   // X axis horizontal
+  var site_array = ddata.map(function(d) { return d.site; })
   var x = d3.scaleBand()
     .range([ 0, width ])
-    .domain(ddata.map(function(d) { return d.site; }))
+    .domain(site_array)
     .padding(0.2);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -64,8 +109,12 @@
     .call(d3.axisLeft(y));
     
     // Bars
-    var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-  //var colors = d3.scaleOrdinal().domain(ddata).range(d3.schemeSet2);
+    var colors_array =[]
+    for(s in site_array){
+       colors_array.push(site_colors2[site_array[s]])
+    }
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+  var colors = d3.scaleOrdinal().range(colors_array);
   svg.selectAll("mybar")
     .data(ddata)
     .enter()
@@ -114,9 +163,10 @@
           "translate(" + margin.left + "," + margin.top + ")");
   
       // X axis
+      var site_array = edatav3v5.map(function(d) { return d.site; })
       var x = d3.scaleBand()
         .range([ 0, width ])
-        .domain(edatav3v5.map(function(d) { return d.site; }))
+        .domain(site_array)
         .padding(0.2);
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -133,7 +183,13 @@
         .call(d3.axisLeft(y));
     
     // Bars
-    var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+    var colors_array =[]
+    for(s in site_array){
+       colors_array.push(site_colors2[site_array[s]])
+    }
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+    var colors = d3.scaleOrdinal().range(colors_array);
+
       //var colors = d3.scaleOrdinal().domain(edata).range(d3.schemeSet2);
       svg.selectAll("mybar")
         .data(edatav3v5)
@@ -182,9 +238,10 @@
           "translate(" + margin.left + "," + margin.top + ")");
   
       // X axis
+      var site_array = edatav1v3.map(function(d) { return d.site; })
       var x = d3.scaleBand()
         .range([ 0, width ])
-        .domain(edatav1v3.map(function(d) { return d.site; }))
+        .domain(site_array)
         .padding(0.2);
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -201,7 +258,13 @@
         .call(d3.axisLeft(y));
     
         // Bars
-      var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+        var colors_array =[]
+        for(s in site_array){
+           colors_array.push(site_colors2[site_array[s]])
+        }
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+      var colors = d3.scaleOrdinal().range(colors_array);
+      //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
       //var colors = d3.scaleOrdinal().domain(edata).range(d3.schemeSet2);
       svg.selectAll("mybar")
         .data(edatav1v3)
@@ -244,9 +307,10 @@
           "translate(" + margin.left + "," + margin.top + ")");
   
   // X axis
+  var site_array = ndatav1v3.map(function(d) { return d.site; })
   var x = d3.scaleBand()
     .range([ 0, width ])
-    .domain(ndatav1v3.map(function(d) { return d.site; }))
+    .domain(site_array)
     .padding(0.2);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -263,7 +327,13 @@
     .call(d3.axisLeft(y));
     
     // Bars
-    var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
+        var colors_array =[]
+        for(s in site_array){
+           colors_array.push(site_colors2[site_array[s]])
+        }
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+      var colors = d3.scaleOrdinal().range(colors_array);
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
   //var colors = d3.scaleOrdinal().domain(ndatav1v3).range(d3.schemeSet1);
   svg.selectAll("mybar")
     .data(ndatav1v3)
@@ -307,9 +377,10 @@
           "translate(" + margin.left + "," + margin.top + ")");
   
   // X axis
+  var site_array = ndatav3v5.map(function(d) { return d.site; })
   var x = d3.scaleBand()
     .range([ 0, width ])
-    .domain(ndatav3v5.map(function(d) { return d.site; }))
+    .domain(site_array)
     .padding(0.2);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -326,7 +397,13 @@
     .call(d3.axisLeft(y));
     
     // Bars
-    var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
+        var colors_array =[]
+        for(s in site_array){
+           colors_array.push(site_colors2[site_array[s]])
+        }
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+      var colors = d3.scaleOrdinal().range(colors_array);
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
   //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
   svg.selectAll("mybar")
     .data(ndatav3v5)
@@ -370,9 +447,10 @@
           "translate(" + margin.left + "," + margin.top + ")");
   
   // X axis
+  var site_array = hmpdata.map(function(d) { return d.site; })
   var x = d3.scaleBand()
     .range([ 0, width ])
-    .domain(hmpdata.map(function(d) { return d.site; }))
+    .domain(site_array)
     .padding(0.2);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -389,7 +467,13 @@
     .call(d3.axisLeft(y));
     
     // Bars
-    var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
+        var colors_array =[]
+        for(s in site_array){
+           colors_array.push(site_colors2[site_array[s]])
+        }
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+      var colors = d3.scaleOrdinal().range(colors_array);
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
   //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
   svg.selectAll("mybar")
     .data(hmpdata)
