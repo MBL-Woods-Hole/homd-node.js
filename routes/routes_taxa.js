@@ -1441,7 +1441,7 @@ router.get('/download/:type/:fxn', function download(req, res) {
     
 })
 
-router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
+router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
     //console.log('in dld abund - taxon')
     var today = new Date();
 	var dd = String(today.getDate()).padStart(2, '0');
@@ -1467,9 +1467,19 @@ router.get('/dld_abund/:type/:source/', function dld_abund_table(req, res) {
         header += 'Data from Dewhirst(unpublished); '
         abundance_order = C.dewhirst_abundance_order
     }else if(source === 'erenv1v3'){
+        if(type === 'samples_file'){
+            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'eren2014_v1v3_rank_abundance_sums_2023-08-11_homd.csv.gz')
+            res.download(fullpath)
+            return 
+        }
         header += 'Data from Eren(2014) V1-V3; '
         abundance_order = C.eren_abundance_order
     }else if(source === 'erenv3v5'){
+        if(type === 'samples_file'){
+            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'eren2014_v3v5_rank_abundance_sums_2023-08-11_homd.csv.gz')
+            res.download(fullpath)
+            return
+        }
         header += 'Data from Eren(2014) V3-V5; '
         abundance_order = C.eren_abundance_order
     }
