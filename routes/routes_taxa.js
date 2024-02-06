@@ -1458,13 +1458,13 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
     let abundance_order
     let header = 'HOMD (https://homd.org/)::'
     if(source === 'nihv1v3'){
-        header += 'Data from NIH V1V3 Unpublished; '
+        header += 'HOMD Data from NIH V1V3 Unpublished; '
         abundance_order = C.base_abundance_order
     }else if(source === 'nihv3v5'){
-        header += 'Data from NIH V3V5 Unpublished; '
+        header += 'HOMD Data from NIH V3V5 Unpublished; '
         abundance_order = C.base_abundance_order
     }else if(source === 'dewhirst'){
-        header += 'Data from Dewhirst(unpublished); '
+        header += 'HOMD Data from Dewhirst(unpublished); '
         abundance_order = C.dewhirst_abundance_order
     }else if(source === 'erenv1v3'){
         if(type === 'samples_file'){
@@ -1472,7 +1472,7 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
             res.download(fullpath)
             return 
         }
-        header += 'Data from Eren(2014) V1-V3; '
+        header += 'HOMD Data from Eren(2014) V1-V3; '
         abundance_order = C.eren_abundance_order
     }else if(source === 'erenv3v5'){
         if(type === 'samples_file'){
@@ -1480,8 +1480,11 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
             res.download(fullpath)
             return
         }
-        header += 'Data from Eren(2014) V3-V5; '
+        header += 'HOMD Data from Eren(2014) V3-V5; '
         abundance_order = C.eren_abundance_order
+    }else if(source === 'hmpmeta'){
+        header += 'HOMD Data from HMP MetaPhlan(unpublished); '
+        abundance_order = C.hmp_metaphlan_abundance_order
     }
     header += 'HMT == Human Microbial Taxon'
     table_tsv += header+'\nTAX\tHMT' 
@@ -1542,6 +1545,17 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
             {
             table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
             row = C.taxon_counts_lookup[tax_string]['eren_v3v5']
+            for(let n in abundance_order){
+                site = abundance_order[n]
+                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+            }
+            table_tsv += '\n'
+      }else if(source === 'hmpmeta' 
+                && C.taxon_counts_lookup[tax_string].hasOwnProperty('hmp_metaphlan')
+                &&  Object.keys(C.taxon_counts_lookup[tax_string]['hmp_metaphlan']).length > 0)
+            {
+            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
+            row = C.taxon_counts_lookup[tax_string]['hmp_metaphlan']
             for(let n in abundance_order){
                 site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
