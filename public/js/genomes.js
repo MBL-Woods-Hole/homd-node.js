@@ -16,9 +16,9 @@ function open_blast_in_new_window(gid){
   form = document.getElementById("blast_single_form")
   radios = document.getElementsByName("annotation")
   if(radios[0].checked == true){
-    url = homd_path+'/genome_blast_all_prokka?gid='+gid
+    url = homd_path+'/genome_blast_single_prokka?gid='+gid
   }else{
-    url = homd_path+'/genome_blast_all_ncbi?gid='+gid
+    url = homd_path+'/genome_blast_single_ncbi?gid='+gid
   }
   window.open(url)
 }

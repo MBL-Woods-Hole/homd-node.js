@@ -62,7 +62,7 @@ iframe{
            </td></tr></table>
          </span>
          <div style="width: 100%; height: 850px; overflow: hidden">
-           <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_all_ncbi?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+           <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_single_ncbi?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
          </div>
        <% }else if(annotation == "prokka"){ %>
          <span style='float:right;'>
@@ -77,8 +77,11 @@ iframe{
            </td></tr></table>
          </span>
          <div style="width: 100%; height: 850px; overflow: hidden">
-           <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_all_prokka?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+         
+           <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_single_prokka?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+         
          </div>
+         
        <% }else{ %>
           <div style="width: 100%; height: 850px; overflow: hidden">
           <% if(db_type == "refseq"){ %>
