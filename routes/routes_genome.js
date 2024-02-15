@@ -1417,6 +1417,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   if(req.body.annotation){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
   }
+  console.log('SingleBLASTURL: '+CFG.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+req.body.gid)
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage

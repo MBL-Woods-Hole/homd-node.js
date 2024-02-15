@@ -1070,17 +1070,17 @@ router.get('/ecology', function ecology(req, res) {
     }
     //let segata_text = '',dewhirst_text='',erenv1v3_text='';
     //console.log('rank',rank,'tax',tax_name)
-    let nihv1v3_notes = '',nihv3v5_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='',hmp_metaphlan_notes='';
+    let nihv1v3_notes='',nihv3v5_notes='',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='',hmp_metaphlan_notes='',hmp_refseqv1v3_notes='',hmp_refseqv3v5_notes='';
     let max = 0;
     let otid ='0';
     let max_obj = {};
     //let major_genera=0;
     //let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
-    let dewhirst_data={},erenv1v3_data={},erenv3v5_data={},nihv1v3_data={},nihv3v5_data={},hmp_metaphlan_data={};
+    let dewhirst_data={},erenv1v3_data={},erenv3v5_data={},nihv1v3_data={},nihv3v5_data={},hmp_metaphlan_data={},hmp_refseqv1v3_data={},hmp_refseqv3v5_data={};
     //let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
-    let dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0,nihv1v3_max=0,nihv3v5_max=0,hmp_metaphlan_max =0;
+    let dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0,nihv1v3_max=0,nihv3v5_max=0,hmp_metaphlan_max =0,hmp_refseqv1v3_max=0,hmp_refseqv3v5_max=0;
     //let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
-    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',nihv1v3_table='',nihv3v5_table='',hmp_metaphlan_table='';
+    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',nihv1v3_table='',nihv3v5_table='',hmp_metaphlan_table='',hmp_refseqv1v3_table,hmp_refseqv3v5_table;
     //console.log('rank: '+rank+' name: '+tax_name);
     // TODO::should be in constants???
     let text = get_rank_text(rank,tax_name)
@@ -1215,6 +1215,30 @@ router.get('/ecology', function ecology(req, res) {
                  hmp_metaphlan_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['hmp_metaphlan']
              }
          }
+         if('hmp_refseq_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['hmp_refseq_v1v3']).length != 0){
+             hmp_refseqv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_hmp_refseq_v1v3']
+             hmp_refseqv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['hmp_refseq_v1v3'])
+             hmp_refseqv1v3_data = sort_obj_by_abundance_order(hmp_refseqv1v3_data,C.hmp_refseq_abundance_order)
+             //console.log('eren3v5-sorted',erenv3v5_data)
+             let clone_hmp_refseqv1v3_data = JSON.parse(JSON.stringify(hmp_refseqv1v3_data)) // clone to avoid difficult errors
+             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+             hmp_refseqv1v3_table = build_abundance_table('hmp_refseqv1v3', clone_hmp_refseqv1v3_data, C.hmp_refseq_abundance_order)
+             if('hmp_refseq_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+                 hmp_refseqv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['hmp_refseq_v1v3']
+             }
+         }
+         if('hmp_refseq_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['hmp_refseq_v3v5']).length != 0){
+             hmp_refseqv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_hmp_refseq_v3v5']
+             hmp_refseqv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['hmp_refseq_v3v5'])
+             hmp_refseqv3v5_data = sort_obj_by_abundance_order(hmp_refseqv3v5_data,C.hmp_refseq_abundance_order)
+             //console.log('eren3v5-sorted',erenv3v5_data)
+             let clone_hmp_refseqv3v5_data = JSON.parse(JSON.stringify(hmp_refseqv3v5_data)) // clone to avoid difficult errors
+             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+             hmp_refseqv3v5_table = build_abundance_table('hmp_refseqv3v5', clone_hmp_refseqv3v5_data, C.hmp_refseq_abundance_order)
+             if('hmp_refseq_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
+                 hmp_refseqv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['hmp_refseq_v3v5']
+             }
+         }
          
       }
     }
@@ -1234,19 +1258,21 @@ router.get('/ecology', function ecology(req, res) {
       //headline: 'Life: Cellular Organisms',
       lineage: lineage_string,
       rank: rank,
-      max: JSON.stringify({'hmp_metaphlan':hmp_metaphlan_max,'nihv1v3':nihv1v3_max,'nihv3v5':nihv3v5_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
+      max: JSON.stringify({'hmp_refseqv1v3':hmp_refseqv1v3_max,'hmp_refseqv3v5':hmp_refseqv3v5_max,'hmp_metaphlan':hmp_metaphlan_max,'nihv1v3':nihv1v3_max,'nihv3v5':nihv3v5_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
       otid: otid,  // zero unless species
       genera: JSON.stringify(genera),
       text_file: text[0],
       text_format: text[1],
       children: JSON.stringify(children_list),
-      notes: JSON.stringify({'hmp_metaphlan':hmp_metaphlan_notes,'nihv1v3':nihv1v3_notes,'nihv3v5':nihv3v5_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
+      notes: JSON.stringify({'hmp_refseqv1v3':hmp_refseqv1v3_notes,'hmp_refseqv3v5':hmp_refseqv3v5_notes,'hmp_metaphlan':hmp_metaphlan_notes,'nihv1v3':nihv1v3_notes,'nihv3v5':nihv3v5_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
       nihv1v3_table: nihv1v3_table,
       nihv3v5_table: nihv3v5_table,
       dewhirst_table: dewhirst_table,
       erenv1v3_table: erenv1v3_table,
       erenv3v5_table: erenv3v5_table,
       hmp_metaphlan_table: hmp_metaphlan_table,
+      hmp_refseqv1v3_table: hmp_refseqv1v3_table,
+      hmp_refseqv3v5_table: hmp_refseqv3v5_table,
       //segata: JSON.stringify(segata_data),
       nihv1v3: JSON.stringify(nihv1v3_data),
       nihv3v5: JSON.stringify(nihv3v5_data),
@@ -1254,6 +1280,8 @@ router.get('/ecology', function ecology(req, res) {
       erenv1v3: JSON.stringify(erenv1v3_data),
       erenv3v5: JSON.stringify(erenv3v5_data),
       hmp_metaphlan: JSON.stringify(hmp_metaphlan_data),
+      hmp_refseqv1v3: JSON.stringify(hmp_refseqv1v3_data),
+      hmp_refseqv3v5: JSON.stringify(hmp_refseqv3v5_data),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
     })
@@ -1561,6 +1589,7 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
+            
       }else{
          // error
       }

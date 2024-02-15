@@ -151,7 +151,8 @@ ul li{
 <% erenv1v3_data = JSON.parse(erenv1v3) %>
 <% erenv3v5_data = JSON.parse(erenv3v5) %>
 <% hmp_metaphlan_data = JSON.parse(hmp_metaphlan) %>
-
+<% hmp_refseqv1v3_data = JSON.parse(hmp_refseqv1v3) %>
+<% hmp_refseqv3v5_data = JSON.parse(hmp_refseqv3v5) %>
 <% children_lst = JSON.parse(children) %>
 <% genera = JSON.parse(genera) %>
 <% notes = JSON.parse(notes) %>
@@ -548,7 +549,85 @@ ul li{
 
 </td>
 </tr>
+<!-- END HMP MetaPhlan -->
+<tr><td>
+    
+    <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot-title'>
+        <small>
+        HMP 16S RefSeq <small>(not published)</small>
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_hmp_refseqv1v3_here"></div> 
+    </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.hmp_refseqv1v3 == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.hmp_refseqv1v3.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- hmp_refseqv1v3_table %></div>  
+    <% } %>  
+    </td></tr></table>
 
+
+</td>
+</tr>
+<!-- END HMP RefSeq V1V3 -->
+<tr><td>
+    
+    <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot-title'>
+        <small>
+        HMP RefSeq V3V5 <small>(not published)</small>
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_hmp_refseqv3v5_here"></div> 
+    </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.hmp_refseqv3v5 == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.hmp_refseqv3v5.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(hmp_refseqv3v5_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- hmp_refseqv3v5_table %></div>  
+    <% } %>  
+    </td></tr></table>
+
+
+</td>
+</tr>
+  <!-- END HMP RefSeq V3V5 -->
 </table>
 </div>  <!-- column middle -->
  <!-- 
@@ -588,7 +667,9 @@ ul li{
   ddata     = JSON.parse('<%- dewhirst %>')
   edatav1v3 = JSON.parse('<%- erenv1v3 %>')
   edatav3v5 = JSON.parse('<%- erenv3v5 %>')
-  hmpdata   = JSON.parse('<%- hmp_metaphlan %>')
+  hmp_metaphlan_data    = JSON.parse('<%- hmp_metaphlan %>')
+  hmp_refseqv1v3_data   = JSON.parse('<%- hmp_refseqv1v3 %>')
+  hmp_refseqv3v5_data   = JSON.parse('<%- hmp_refseqv3v5 %>')
 </script>
 <script type="text/javascript" src="/js/ecology.js"></script>
 

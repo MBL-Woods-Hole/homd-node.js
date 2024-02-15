@@ -257,13 +257,14 @@ def run_abundance_db():
     #segata_site_prefixes   = all_site_prefixes
     dewhirst_site_prefixes = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']
     hmp_metaphlan_prefixes = ['SUBP','SUPP','PERIO','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','RAF','VIN','MVA','PFO','STO']
+    hmp_refseq_prefixes = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
 
     #['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','NS']
     #print(segata_site_prefixes)
     missing_count =0
     for row in result:
         #print(row)
-        max_nih, max_eren, max_dewhirst, max_hmp_metaphlan = 0,0,0,0
+        max_nih, max_eren, max_dewhirst, max_hmp_metaphlan,max_hmp_refseq = 0,0,0,0,0
         taxon_string = fix_taxonomy(row['taxonomy'])
         #taxon_string = row['taxonomy']
         # tax_parts = taxon_string.split(';')
@@ -298,6 +299,10 @@ def run_abundance_db():
             TCcollector[taxon_string]['dewhirst'] = {}
         if 'hmp_metaphlan' not in TCcollector[taxon_string]:
             TCcollector[taxon_string]['hmp_metaphlan'] = {}
+        if 'hmp_refseq_v1v3' not in TCcollector[taxon_string]:
+            TCcollector[taxon_string]['hmp_refseq_v1v3'] = {}
+        if 'hmp_refseq_v3v5' not in TCcollector[taxon_string]:
+            TCcollector[taxon_string]['hmp_refseq_v3v5'] = {}
             
         if row['reference'].startswith('NIH_v1v3'):
             for p in all_site_prefixes:
@@ -337,6 +342,21 @@ def run_abundance_db():
                 TCcollector[taxon_string]['hmp_metaphlan'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
             TCcollector[taxon_string]['max_hmp_metaphlan'] = max_hmp_metaphlan
             TCcollector[taxon_string]['notes']['hmp_metaphlan'] = row['notes']
+            
+        if row['reference'].startswith('HMP_16S_RefSeq_v1v3'):
+            for p in hmp_refseq_prefixes:
+                max_hmp_refseq = get_max(row, p, max_hmp_refseq)
+                #print('max_dewhirst',max_dewhirst)
+                TCcollector[taxon_string]['hmp_refseq_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+            TCcollector[taxon_string]['max_hmp_refseq_v1v3'] = max_hmp_refseq
+            TCcollector[taxon_string]['notes']['hmp_refseq_v1v3'] = row['notes']
+        if row['reference'].startswith('HMP_16S_RefSeq_v3v5'):
+            for p in hmp_refseq_prefixes:
+                max_hmp_refseq = get_max(row, p, max_hmp_refseq)
+                #print('max_dewhirst',max_dewhirst)
+                TCcollector[taxon_string]['hmp_refseq_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+            TCcollector[taxon_string]['max_hmp_refseq_v3v5'] = max_hmp_refseq
+            TCcollector[taxon_string]['notes']['hmp_refseq_v3v5'] = row['notes']
     #print(TCcollector)
     #for s in TCcollector:
     #    print('max_eren-s',s,TCcollector[s])

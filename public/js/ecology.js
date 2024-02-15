@@ -419,7 +419,7 @@
   } // end else
 
   // HMP_MetaPhlan
-  if(Object.keys(hmpdata).length == 0){
+  if(Object.keys(hmp_metaphlan_data).length == 0){
      document.getElementById("plot_hmp_metaphlan_here").innerHTML = '<small>No Data</small>'
   }else{
     //console.log(sdata)
@@ -447,7 +447,7 @@
           "translate(" + margin.left + "," + margin.top + ")");
   
   // X axis
-  var site_array = hmpdata.map(function(d) { return d.site; })
+  var site_array = hmp_metaphlan_data.map(function(d) { return d.site; })
   var x = d3.scaleBand()
     .range([ 0, width ])
     .domain(site_array)
@@ -476,17 +476,159 @@
     //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
   //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
   svg.selectAll("mybar")
-    .data(hmpdata)
+    .data(hmp_metaphlan_data)
     .enter()
     .append("rect")
     .attr("x", function(d) { return x(d.site); })
     .attr("y", function(d) { return y(d.avg); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.avg); })
-    .attr("fill", function(hmpdata, i) {
+    .attr("fill", function(hmp_metaphlan_data, i) {
               return colors(i);
              });
   } // end else
+
+// HMP_RefSeq V1V3
+  if(Object.keys(hmp_refseqv1v3_data).length == 0){
+     document.getElementById("plot_hmp_refseqv1v3_here").innerHTML = '<small>No Data</small>'
+  }else{
+    //console.log(sdata)
+    //max = max([item.avg for item in data])
+    //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
+    //max_ceil = Math.ceil(max.nihv1v3)
+    if(max.hmp_refseqv1v3 < 0.001){
+       max_ceil = 0.001
+    }else if(max.hmp_refseqv1v3 < 0.01){
+       max_ceil = 0.01
+    }else if(max.hmp_refseqv1v3 < 0.1){
+       max_ceil = 0.1
+    }else{
+       max_ceil = Math.ceil(max.hmp_refseqv1v3)  // smallest at 1.0
+    }
+    //console.log('max.hmp_metaphlan',max.hmp_metaphlan)
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_hmp_refseqv1v3_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+  // X axis
+  var site_array = hmp_refseqv1v3_data.map(function(d) { return d.site; })
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(site_array)
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, max_ceil])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
+    
+    // Bars
+        var colors_array =[]
+        for(s in site_array){
+           colors_array.push(site_colors2[site_array[s]])
+        }
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+      var colors = d3.scaleOrdinal().range(colors_array);
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
+  //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
+  svg.selectAll("mybar")
+    .data(hmp_refseqv1v3_data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(hmp_refseqv1v3_data, i) {
+              return colors(i);
+             });
+  } // end else
+
+
+// HMP_RefSeq V3V5
+  if(Object.keys(hmp_refseqv3v5_data).length == 0){
+     document.getElementById("plot_hmp_refseqv3v5_here").innerHTML = '<small>No Data</small>'
+  }else{
+    //console.log(sdata)
+    //max = max([item.avg for item in data])
+    //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
+    //max_ceil = Math.ceil(max.nihv1v3)
+    if(max.hmp_refseqv3v5 < 0.001){
+       max_ceil = 0.001
+    }else if(max.hmp_refseqv3v5 < 0.01){
+       max_ceil = 0.01
+    }else if(max.hmp_refseqv3v5 < 0.1){
+       max_ceil = 0.1
+    }else{
+       max_ceil = Math.ceil(max.hmp_refseqv3v5)  // smallest at 1.0
+    }
+    //console.log('max.hmp_metaphlan',max.hmp_metaphlan)
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#plot_hmp_refseqv3v5_here")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+  
+  // X axis
+  var site_array = hmp_refseqv3v5_data.map(function(d) { return d.site; })
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(site_array)
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, max_ceil])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
+    
+    // Bars
+        var colors_array =[]
+        for(s in site_array){
+           colors_array.push(site_colors2[site_array[s]])
+        }
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
+      var colors = d3.scaleOrdinal().range(colors_array);
+    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
+  //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
+  svg.selectAll("mybar")
+    .data(hmp_refseqv3v5_data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(hmp_refseqv3v5_data, i) {
+              return colors(i);
+             });
+  } // end else
+
 
 
   // Segata

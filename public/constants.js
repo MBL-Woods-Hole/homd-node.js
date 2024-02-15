@@ -58,6 +58,8 @@ constants.base_abundance_order     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR
 constants.eren_abundance_order     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO',                                                'STO']
 constants.dewhirst_abundance_order = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']
 constants.hmp_metaphlan_abundance_order=['SUBP','SUPP','PERIO','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','RAF','VIN','MVA','PFO','STO']
+constants.hmp_refseq_abundance_order   =['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
+
 //CORRECT ORDER
 // SubP 
 // SupP
