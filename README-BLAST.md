@@ -24,8 +24,13 @@ That is why it is split into prokka and ncbi versions: so that each only loads o
 To find the one database that is called for in the URL (ie ?gid=SEQF1595.2) I have recorded all the database IDs  
 into files (one prokka and one ncbi) which is loaded at runtime and searched to display the (usually) three  
 genome databases (faa, ffn and fna). The Database ID is used and derived from an MD5HASH() of the BLAST database full-path.  
-If the path changes in the future we will need to re-create the ID files. There is a script in homd-scripts  
-that will re-create the ID data files: ```blast_get_SS_databaseIDs.py```
+If the path changes in the future we will need to re-create the ID files. 
+There is a script in homd-scripts that will re-create the ID data files: ```blast_get_SS_databaseIDs.py```
+Run like this: 
+   ./blast_get_SS_databaseIDs.py -i /mnt/xvdb/blastdb/genomes_prokka/V10.1a > PROKKA-IDs.csv
+   ./blast_get_SS_databaseIDs.py -i /mnt/xvdb/blastdb/genomes_ncbi/V10.1a > NCBI-IDs.csv
+   and install the PROKKA and NCBI  -IDs.csv files in the root directories (keep the names as 'PROKKA-IDs.csv' and 'NCBI-IDs.csv')
+
 
 
 
