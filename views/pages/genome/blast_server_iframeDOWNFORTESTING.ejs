@@ -48,40 +48,13 @@ iframe{
        
        
        <!-- </div> -->
-       
-       <% if(annotation == "ncbi"){ %>
-         <span style='float:right;'>
-           <table><tr><td>
-           <a class='button' href="/genome/blast_per_genome"     >New BLAST Job</a>
-           </td><td>
-           <form name='' method='POST' action='blast_ss_single'>
-             <input type='hidden' name='gid' value='<%= gid %>'>
-             <input type='hidden' name='annotation' value='<%= annotation %>'>
-             <input type='submit' class='button' value='Edit BLAST Job'>
-           </form>
-           </td></tr></table>
-         </span>
-         <div style="width: 100%; height: 850px; overflow: hidden">
-           <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_single_ncbi?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
-         </div>
-       <% }else if(annotation == "prokka"){ %>
-         <span style='float:right;'>
-           <table><tr><td>
-           <a class='button' href="/genome/blast_per_genome"     >New BLAST Job</a>
-           </td><td>
-           <form name='' method='POST' action='blast_ss_single'>
-             <input type='hidden' name='gid' value='<%= gid %>'>
-             <input type='hidden' name='annotation' value='<%= annotation %>'>
-             <input type='submit' class='button' value='Edit BLAST Job'>
-           </form>
-           </td></tr></table>
-         </span>
-         <div style="width: 100%; height: 850px; overflow: hidden">
-         
-           <iframe id='iframe_id' src="<%- cfg.BLAST_URL_BASE %>/genome_blast_single_prokka?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
-         
-         </div>
-         
+   <!-- Change -->
+       <% if(annotation == "ncbi" || annotation == "prokka"){ %>
+           <br><br>
+           <h2><span style='color:orange;'>The Single-Genome BLAST server is currently down for troubleshooting.</span></h2>
+           <br><br>Try <a href='/genome/blast_sserver?type=genome'>BLASTing against all HOMD genomes instead</a>
+  <!-- Change   -->
+        
        <% }else{ %>
           <div style="width: 100%; height: 850px; overflow: hidden">
           <% if(db_type == "refseq"){ %>
