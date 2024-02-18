@@ -188,17 +188,17 @@ module.exports.clean_rank_name_for_show = (rank) =>{
     }
     return rank.charAt(0).toUpperCase() + rank.slice(1)
 }
-module.exports.make_lineage_string_with_links = function make_lineage_string_with_links(lineage_list, link) {
+module.exports.make_lineage_string_with_links = function make_lineage_string_with_links(lineage_list, link, page) {
      let tmp = ''
      let i = 0 
      for(let n in lineage_list[1]){
          if(link == 'life'){
-           tmp += "<a href='/taxa/"+link+"?rank="+C.ranks[i]+"&name=\""+lineage_list[1][n]+"\"'>"+lineage_list[1][n]+'</a>; '
+           tmp += "<a href='/taxa/"+link+"?rank="+C.ranks[i]+"&name=\""+lineage_list[1][n]+"&page=\""+page+  "\"'>"+lineage_list[1][n]+'</a>; '
          }else{
            if(i === (Object.keys(lineage_list[1])).length - 1){
                tmp += lineage_list[1][n]
            }else{
-               tmp += "<a href='/taxa/"+link+"?rank="+C.ranks[i]+"&name="+lineage_list[1][n]+"'>"+lineage_list[1][n]+'</a>; '
+               tmp += "<a href='/taxa/"+link+"?rank="+C.ranks[i]+"&name="+lineage_list[1][n]+"&page="+page+"'>"+lineage_list[1][n]+'</a>; '
             }
          }
          i += 1

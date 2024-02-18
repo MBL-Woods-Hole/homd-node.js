@@ -1418,6 +1418,19 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
   }
   console.log('SingleBLASTURL: '+CFG.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+req.body.gid)
+  // res.render('pages/genome/blast_server_iframe', {
+//     title: 'HOMD :: BLAST', 
+//     pgname: 'blast/pagehelp', // for AboutThisPage
+//     config: JSON.stringify(CFG),
+//     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//     user: JSON.stringify(req.user || {}),
+//     gid: req.body.gid,
+//     annotation: req.body.annotation,
+//     organism: organism,
+//     ptitle: page_title,
+//     db_type: ''
+//   })
+//   
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage

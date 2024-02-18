@@ -1056,7 +1056,20 @@ router.get('/ecology', function ecology(req, res) {
     helpers.print('in ecology new')
     let rank = req.query.rank;
     let tax_name = req.query.name
+    let target = 'ecology',page
+    if(req.query.page){
+       page = req.query.page
+       if(page == 'plots'){
+          target = 'ecology_barcharts_only'
+       }else if(page == 'tables'){
+           target = 'ecology_tables_only'
+       }else{
+           target = 'ecology'
+       }
     
+    }else{
+        page = 'all'
+    }
     if(req.query.otid && req.session.ttable_filter){
       //console.log('got otid for ttable')
       req.session.ttable_filter.otid = req.query.otid
@@ -1112,7 +1125,7 @@ router.get('/ecology', function ecology(req, res) {
    for(var i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
       let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
       //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
-      children_list.push("<a href='/taxa/ecology?rank="+n.rank+"&name="+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
+      children_list.push("<a href='/taxa/ecology?rank="+n.rank+"&name="+n.taxon+"&page="+page+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
    }
    
    if(!node){
@@ -1242,26 +1255,31 @@ router.get('/ecology', function ecology(req, res) {
          
       }
     }
-    //console.log('hmp_metaphlan_data',hmp_metaphlan_data)
-    let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
+    children_list.sort()
+    //console.log('lineage_list',lineage_list)
+    
+    let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology', page)
     
 //     console.log('nihv1v3_max',nihv1v3_max)
 //     console.log('dewhirst_notes',dewhirst_notes)
 //     console.log('erenv1v3_notes',erenv1v3_notes)
 //     console.log('erenv3v5_notes',erenv3v5_notes)
     //ecology?rank=genus&name=Fusobacterium
-    res.render('pages/taxa/ecology', {
+    //res.render('pages/taxa/ecology', {
+    res.render('pages/taxa/'+target, {
       title: 'HOMD ::'+rank+'::'+tax_name,
       pgname: 'taxon/ecology', // for AbountThisPage 
       config: JSON.stringify(CFG),
       tax_name: tax_name,
       //headline: 'Life: Cellular Organisms',
       lineage: lineage_string,
+      lin: lineage_list[0],
       rank: rank,
       max: JSON.stringify({'hmp_refseqv1v3':hmp_refseqv1v3_max,'hmp_refseqv3v5':hmp_refseqv3v5_max,'hmp_metaphlan':hmp_metaphlan_max,'nihv1v3':nihv1v3_max,'nihv3v5':nihv3v5_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
       otid: otid,  // zero unless species
       genera: JSON.stringify(genera),
       text_file: text[0],
+      page: page,
       text_format: text[1],
       children: JSON.stringify(children_list),
       notes: JSON.stringify({'hmp_refseqv1v3':hmp_refseqv1v3_notes,'hmp_refseqv3v5':hmp_refseqv3v5_notes,'hmp_metaphlan':hmp_metaphlan_notes,'nihv1v3':nihv1v3_notes,'nihv3v5':nihv3v5_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
@@ -1511,8 +1529,14 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
         header += 'HOMD Data from Eren(2014) V3-V5; '
         abundance_order = C.eren_abundance_order
     }else if(source === 'hmpmeta'){
-        header += 'HOMD Data from HMP MetaPhlan(unpublished); '
+        header += 'HOMD Data from HMP MetaPhlan (unpublished); '
         abundance_order = C.hmp_metaphlan_abundance_order
+    }else if(source === 'hmprefseqv1v3'){
+        header += 'HOMD Data from HMP 16S RefSeq V1-V3 (unpublished); '
+        abundance_order = C.hmp_refseq_abundance_order
+    }else if(source === 'hmprefseqv3v5'){
+        header += 'HOMD Data from HMP 16S RefSeq V3-V5 (unpublished); '
+        abundance_order = C.hmp_refseq_abundance_order
     }
     header += 'HMT == Human Microbial Taxon'
     table_tsv += header+'\nTAX\tHMT' 
@@ -1590,6 +1614,29 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
             }
             table_tsv += '\n'
             
+            
+      }else if(source === 'hmprefseqv1v3'
+              && C.taxon_counts_lookup[tax_string].hasOwnProperty('hmp_refseq_v1v3')
+                &&  Object.keys(C.taxon_counts_lookup[tax_string]['hmp_refseq_v1v3']).length > 0)
+            {
+            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
+            row = C.taxon_counts_lookup[tax_string]['hmp_refseq_v1v3']
+            for(let n in abundance_order){
+                site = abundance_order[n]
+                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+            }
+            table_tsv += '\n'
+      }else if(source === 'hmprefseqv3v5'
+              && C.taxon_counts_lookup[tax_string].hasOwnProperty('hmp_refseq_v3v5')
+                &&  Object.keys(C.taxon_counts_lookup[tax_string]['hmp_refseq_v3v5']).length > 0)
+            {
+            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
+            row = C.taxon_counts_lookup[tax_string]['hmp_refseq_v3v5']
+            for(let n in abundance_order){
+                site = abundance_order[n]
+                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+            }
+            table_tsv += '\n'
       }else{
          // error
       }

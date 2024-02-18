@@ -1,38 +1,34 @@
   
   // set the dimensions and margins of the graph
-  w = 350
-  h = 300
-  var margin = {top: 30, right: 30, bottom: 70, left: 40},
-      width = w - margin.left - margin.right,
-      height = h - margin.top - margin.bottom;
+
       //.range(["gold", "blue", "green", "yellow", "black", "grey", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"])
       // ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", 
       //"#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"
-      site_colors1 = {
-    'AKE': 'gold', //Attached_Keratinized_gingiva
-    'ANA': 'blue', //#Anterior_nares
-    'BMU':  'green', //#Buccal_mucosa
-    'HPA':  'yellow', //#Hard_palate
-    'LAF':  'black', //#L_Antecubital_fossa  # not in HMP
-    'PERIO': 'grey',  //# ONLY in HMP
-    'LRC': 'darkgreen',  //#L_Retroauricular_crease
-    'MVA': 'pink',  //#Mid_vagina
-    'PFO': 'brown',  //#Posterior_fornix
-    'PTO': 'slateblue',  //#Palatine_Tonsils
-    'RAF': 'grey1',  //#R_Antecubital_fossa
-    'RRC': 'orange',  //#R_Retroauricular_crease
-    'SAL': '#3366cc',  //#Saliva
-    'STO': '#dc3912',  //#Stool
-    'SUBP': '#ff9900', //#Subgingival_plaque
-    'SUPP': '#109618', //#Supragingival_plaque
-    'THR': '#990099',  //#Throat
-    'TDO': '#0099c6',  //#Tongue_dorsum
-    'VIN':'#dd4477'   //#Vaginal_introitus
+    
+    siteLongNames = {
+    'AKE': '(AKE) Attached Keratinized Gingiva (oral)', //Attached_Keratinized_gingiva
+    'ANA': '(ANA)Anterior Nares (nasal)', //#Anterior_nares
+    'BMU': '(BMU) Buccal Mucosa (oral)', //#Buccal_mucosa
+    'HPA': '(HPA) Hard Palate (oral)', //#Hard_palate
+    'LAF': '(LAF) Left Antecubital Fossa (skin)', //#L_Antecubital_fossa  # not in HMP
+    'PERIO': '(PERIO) Periodontal (oral)',  //# ONLY in HMP
+    'LRC': '(LRC) Left Retroauricular Crease (skin)',  //#L_Retroauricular_crease
+    'MVA': '(MVA) Mid Vagina',  //#Mid_vagina
+    'PFO': '(PFO) Posterior Fornix (vaginal)',  //#Posterior_fornix
+    'PTO': '(PTO) Palatine Tonsils (oral)',  //#Palatine_Tonsils
+    'RAF': '(RAF) Right Antecubital Fossa (skin)',  //#R_Antecubital_fossa
+    'RRC': '(RRC) Right Retroauricular Crease (skin)',  //#R_Retroauricular_crease
+    'SAL': '(SAL) Saliva (oral)',  //#Saliva
+    'STO': '(STO) Stool (gut)',  //#Stool
+    'SUBP': '(SUBP) Subgingival Plaque (oral)', //#Subgingival_plaque
+    'SUPP': '(SUPP) Supragingival Plaque (oral)', //#Supragingival_plaque
+    'THR': '(THR) Throat (oral)',  //#Throat
+    'TDO': '(TDO) Tongue Dorsum (oral)',  //#Tongue_dorsum
+    'VIN': '(VIN) Vaginal Introitus '   //#Vaginal_introitus
     }
     site_colors2 = {
     'AKE': '#3366cc', //Attached_Keratinized_gingiva
     'ANA': '#0099c6', //#Anterior_nares
-    
     
     'BMU':  '#ff9900', //#Buccal_mucosa
     'HPA':  '#109618', //#Hard_palate
@@ -46,7 +42,6 @@
     'RRC': '#22aa99',  //#R_Retroauricular_crease
     'SAL': '#dc3912',  //#Saliva
     
-    
     'STO': 'brown',  //#Stool
     'SUBP': 'slateblue', //#Subgingival_plaque
     'SUPP': 'red', //#Supragingival_plaque
@@ -54,12 +49,25 @@
     'TDO': 'black',  //#Tongue_dorsum
     'VIN':'grey'   //#Vaginal_introitus
     }
+    // ----------------
+    // Create  tooltips
+    // ----------------
+    var tooltips = {}
+    tooltips.dewhirst = d3.select("#plot_dewhirst_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.erenv1v3 = d3.select("#plot_erenv1v3_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.erenv3v5 = d3.select("#plot_erenv3v5_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.nihdatav1v3 = d3.select("#plot_nihv1v3_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.nihdatav3v5 = d3.select("#plot_nihv3v5_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.hmpmetaphlan = d3.select("#plot_hmp_metaphlan_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.hmprefseqv1v3 = d3.select("#plot_hmp_refseqv1v3_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.hmprefseqv3v5 = d3.select("#plot_hmp_refseqv3v5_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+
   //
   // Dewhirst
   //
   
-  if(Object.keys(ddata).length == 0){
-     document.getElementById("plot_dewhirst_here").innerHTML = '<small>No Data</small>'
+  if(Object.keys(dewhirst).length == 0){
+     document.getElementById("plot_dewhirst_here").innerHTML = "<span class='nodata'>No Data</span>"
   }else{
     
     if(max.dewhirst < 0.001){
@@ -79,67 +87,69 @@
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+          "translate(" + margin.left + "," + margin.top + ")")
+       
+
+    
+  // Three function that change the tooltip when user hover / move / leave a cell
+  var mouseover = function(d){ 
+         var plotName = 'Dewhirst 35x9';//d3.select(this.parentNode).datum().key;
+         var siteName = siteLongNames[d.site]
+         var plotValue = d.avg;
+         tooltips.dewhirst.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         return tooltips.dewhirst.style("visibility", "visible");
+     }
   
-  // X axis horizontal
-  var site_array = ddata.map(function(d) { return d.site; })
-  var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(site_array)
-    .padding(0.2);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
+  var mousemove = function(d) {
+    //console.log('this',this)
+    return tooltips.dewhirst.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+  }
+  var mouseleave = function(d) {
+    return tooltips.dewhirst.style("visibility", "hidden");
+  }
+  
+  // X axis
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(dewhirst.map(function(d) { return d.site; }))
+  .padding(0.2);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
-  // Add Y axis - vertical
-  var y = d3.scaleLinear();
-   // .domain([0, max_ceil])
-   // .range([ height, 0]);
-   //console.log('max_ceil',max_ceil) 
-   //console.log('d3.min(data)',d3.min(ddata)) 
-   //console.log('d3.max(data)',d3.max(ddata))
-  y.domain([0, max_ceil]);
-  y.range([ height, 0]);  
-  
-  //y.range([ , -height]);  
-  svg.append("g")
-    .call(d3.axisLeft(y));
-    
-    // Bars
-    var colors_array =[]
-    for(s in site_array){
-       colors_array.push(site_colors2[site_array[s]])
-    }
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-  var colors = d3.scaleOrdinal().range(colors_array);
-  svg.selectAll("mybar")
-    .data(ddata)
-    .enter()
-    .append("rect")
-    .attr("x", function(d) { 
-      //console.log('x(d.site)', d.site, x(d.site))
-      return x(d.site); 
-    })
-    .attr("y", function(d) { 
-       //console.log('y(d.avg)', d.avg, y(d.avg))
-       return y(d.avg); 
-    
-    })
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, max_ceil])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+// Bars
+svg.selectAll("mybar")
+  .data(dewhirst)
+  .enter()
+  .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.avg); })
-    .attr("fill", function(ddata, i) {
-              return colors(i);
-    });
-  }
+    .attr("fill", function(d) {
+            return site_colors2[d.site];
+     })
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout", mouseleave)
+
+}
+  
+
   //
   // Erenv3v5
   //
   //
-  if(Object.keys(edatav3v5).length == 0){
-     document.getElementById("plot_erenv3v5_here").innerHTML = '<small>No Data</small>'
+  if(Object.keys(erenv3v5).length == 0){
+     document.getElementById("plot_erenv3v5_here").innerHTML = "<span class='nodata'>No Data</span>"
   }else{
      //max_ceil = Math.ceil(max.erenv3v5)
     if(max.erenv3v5 < 0.001){
@@ -161,54 +171,64 @@
       .append("g")
       .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
+    // Three function that change the tooltip when user hover / move / leave a cell
+  var mouseover = function(d){ 
+         var plotName = 'Eren (2014) V3-V5';//d3.select(this.parentNode).datum().key;
+         var siteName = siteLongNames[d.site]
+         var plotValue = d.avg;
+         tooltips.erenv3v5.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         return tooltips.erenv3v5.style("visibility", "visible");
+     }
   
-      // X axis
-      var site_array = edatav3v5.map(function(d) { return d.site; })
-      var x = d3.scaleBand()
-        .range([ 0, width ])
-        .domain(site_array)
-        .padding(0.2);
-      svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
-
-      // Add Y axis
-      var y = d3.scaleLinear()
-        .domain([0, max_ceil])
-        .range([ height, 0]);
-      svg.append("g")
-        .call(d3.axisLeft(y));
-    
-    // Bars
-    var colors_array =[]
-    for(s in site_array){
-       colors_array.push(site_colors2[site_array[s]])
-    }
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-    var colors = d3.scaleOrdinal().range(colors_array);
-
-      //var colors = d3.scaleOrdinal().domain(edata).range(d3.schemeSet2);
-      svg.selectAll("mybar")
-        .data(edatav3v5)
-        .enter()
-        .append("rect")
-        .attr("x", function(d) { return x(d.site); })
-        .attr("y", function(d) { return y(d.avg); })
-        .attr("width", x.bandwidth())
-        .attr("height", function(d) { return height - y(d.avg); })
-        .attr("fill", function(edatav3v5, i) {
-                  return colors(i);
-            });
+  var mousemove = function(d) {
+    //console.log('this',this)
+    return tooltips.erenv3v5.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
   }
+  var mouseleave = function(d) {
+    return tooltips.erenv3v5.style("visibility", "hidden");
+  }
+  
+  // X axis
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(erenv3v5.map(function(d) { return d.site; }))
+  .padding(0.2);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, max_ceil])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+// Bars
+svg.selectAll("mybar")
+  .data(erenv3v5)
+  .enter()
+  .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(d) {
+            return site_colors2[d.site];
+     })
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout", mouseleave)
+
+}
+
   //
   // Erenv1v3
   //
   //
-  if(Object.keys(edatav1v3).length == 0){
-     document.getElementById("plot_erenv1v3_here").innerHTML = '<small>No Data</small>'
+  if(Object.keys(erenv1v3).length == 0){
+     document.getElementById("plot_erenv1v3_here").innerHTML = "<span class='nodata'>No Data</span>"
   }else{
     //console.log(edata)
     //max = max([item.avg for item in data])
@@ -237,50 +257,61 @@
       .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
   
-      // X axis
-      var site_array = edatav1v3.map(function(d) { return d.site; })
-      var x = d3.scaleBand()
-        .range([ 0, width ])
-        .domain(site_array)
-        .padding(0.2);
-      svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
-
-      // Add Y axis
-      var y = d3.scaleLinear()
-        .domain([0, max_ceil])
-        .range([ height, 0]);
-      svg.append("g")
-        .call(d3.axisLeft(y));
-    
-        // Bars
-        var colors_array =[]
-        for(s in site_array){
-           colors_array.push(site_colors2[site_array[s]])
-        }
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-      var colors = d3.scaleOrdinal().range(colors_array);
-      //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-      //var colors = d3.scaleOrdinal().domain(edata).range(d3.schemeSet2);
-      svg.selectAll("mybar")
-        .data(edatav1v3)
-        .enter()
-        .append("rect")
-        .attr("x", function(d) { return x(d.site); })
-        .attr("y", function(d) { return y(d.avg); })
-        .attr("width", x.bandwidth())
-        .attr("height", function(d) { return height - y(d.avg); })
-        .attr("fill", function(edatav1v3, i) {
-                  return colors(i);
-                 });
+        var mouseover = function(d){ 
+         var plotName = 'Eren (2014) V1-V3';//d3.select(this.parentNode).datum().key;
+         var siteName = siteLongNames[d.site]
+         var plotValue = d.avg;
+         tooltips.erenv1v3.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         return tooltips.erenv1v3.style("visibility", "visible");
+     }
+  
+  var mousemove = function(d) {
+    //console.log('this',this)
+    return tooltips.erenv1v3.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
   }
+  var mouseleave = function(d) {
+    return tooltips.erenv1v3.style("visibility", "hidden");
+  }
+  
+  // X axis
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(erenv1v3.map(function(d) { return d.site; }))
+  .padding(0.2);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, max_ceil])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+// Bars
+svg.selectAll("mybar")
+  .data(erenv1v3)
+  .enter()
+  .append("rect")
+    .attr("x", function(d) { return x(d.site); })
+    .attr("y", function(d) { return y(d.avg); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.avg); })
+    .attr("fill", function(d) {
+            return site_colors2[d.site];
+     })
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout", mouseleave)
+
+  }
+  
+  
   // NIH V1V3
-    if(Object.keys(ndatav1v3).length == 0){
-     document.getElementById("plot_nihv1v3_here").innerHTML = '<small>No Data</small>'
+    if(Object.keys(nihdatav1v3).length == 0){
+     document.getElementById("plot_nihv1v3_here").innerHTML = "<span class='nodata'>No Data</span>"
   }else{
     //console.log(sdata)
     //max = max([item.avg for item in data])
@@ -306,51 +337,60 @@
       .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
   
+    var mouseover = function(d){ 
+         var plotName = 'NIH Data V1-V3';//d3.select(this.parentNode).datum().key;
+         var siteName = siteLongNames[d.site]
+         var plotValue = d.avg;
+         tooltips.nihdatav1v3.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         return tooltips.nihdatav1v3.style("visibility", "visible");
+     }
+  
+  var mousemove = function(d) {
+    //console.log('this',this)
+    return tooltips.nihdatav1v3.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+  }
+  var mouseleave = function(d) {
+    return tooltips.nihdatav1v3.style("visibility", "hidden");
+  }
+  
   // X axis
-  var site_array = ndatav1v3.map(function(d) { return d.site; })
-  var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(site_array)
-    .padding(0.2);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(nihdatav1v3.map(function(d) { return d.site; }))
+  .padding(0.2);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
-  // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([0, max_ceil])
-    .range([ height, 0]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
-    
-    // Bars
-        var colors_array =[]
-        for(s in site_array){
-           colors_array.push(site_colors2[site_array[s]])
-        }
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-      var colors = d3.scaleOrdinal().range(colors_array);
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
-  //var colors = d3.scaleOrdinal().domain(ndatav1v3).range(d3.schemeSet1);
-  svg.selectAll("mybar")
-    .data(ndatav1v3)
-    .enter()
-    .append("rect")
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, max_ceil])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+// Bars
+svg.selectAll("mybar")
+  .data(nihdatav1v3)
+  .enter()
+  .append("rect")
     .attr("x", function(d) { return x(d.site); })
     .attr("y", function(d) { return y(d.avg); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.avg); })
-    .attr("fill", function(ndatav1v3, i) {
-              return colors(i);
-             });
+    .attr("fill", function(d) {
+            return site_colors2[d.site];
+     })
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout", mouseleave)
+
   } // end else
 
   // NIH V3V5
-    if(Object.keys(ndatav3v5).length == 0){
-     document.getElementById("plot_nihv3v5_here").innerHTML = '<small>No Data</small>'
+    if(Object.keys(nihdatav3v5).length == 0){
+     document.getElementById("plot_nihv3v5_here").innerHTML = "<span class='nodata'>No Data</span>"
   }else{
     //console.log(sdata)
     //max = max([item.avg for item in data])
@@ -376,51 +416,60 @@
       .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
   
+    var mouseover = function(d){ 
+         var plotName = 'NIH Data V3-V5';//d3.select(this.parentNode).datum().key;
+         var siteName = siteLongNames[d.site]
+         var plotValue = d.avg;
+         tooltips.nihdatav3v5.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         return tooltips.nihdatav3v5.style("visibility", "visible");
+     }
+  
+  var mousemove = function(d) {
+    //console.log('this',this)
+    return tooltips.nihdatav3v5.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+  }
+  var mouseleave = function(d) {
+    return tooltips.nihdatav3v5.style("visibility", "hidden");
+  }
+  
   // X axis
-  var site_array = ndatav3v5.map(function(d) { return d.site; })
-  var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(site_array)
-    .padding(0.2);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(nihdatav3v5.map(function(d) { return d.site; }))
+  .padding(0.2);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
-  // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([0, max_ceil])
-    .range([ height, 0]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
-    
-    // Bars
-        var colors_array =[]
-        for(s in site_array){
-           colors_array.push(site_colors2[site_array[s]])
-        }
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-      var colors = d3.scaleOrdinal().range(colors_array);
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
-  //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
-  svg.selectAll("mybar")
-    .data(ndatav3v5)
-    .enter()
-    .append("rect")
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, max_ceil])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+// Bars
+svg.selectAll("mybar")
+  .data(nihdatav3v5)
+  .enter()
+  .append("rect")
     .attr("x", function(d) { return x(d.site); })
     .attr("y", function(d) { return y(d.avg); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.avg); })
-    .attr("fill", function(ndatav3v5, i) {
-              return colors(i);
-             });
+    .attr("fill", function(d) {
+            return site_colors2[d.site];
+     })
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout", mouseleave)
+
   } // end else
 
   // HMP_MetaPhlan
-  if(Object.keys(hmp_metaphlan_data).length == 0){
-     document.getElementById("plot_hmp_metaphlan_here").innerHTML = '<small>No Data</small>'
+  if(Object.keys(hmpmetaphlan).length == 0){
+     document.getElementById("plot_hmp_metaphlan_here").innerHTML = "<span class='nodata'>No Data</span>"
   }else{
     //console.log(sdata)
     //max = max([item.avg for item in data])
@@ -446,51 +495,60 @@
       .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
   
+    var mouseover = function(d){ 
+         var plotName = 'HMP Metaphlan';//d3.select(this.parentNode).datum().key;
+         var siteName = siteLongNames[d.site]
+         var plotValue = d.avg;
+         tooltips.hmpmetaphlan.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         return tooltips.hmpmetaphlan.style("visibility", "visible");
+     }
+  
+  var mousemove = function(d) {
+    //console.log('this',this)
+    return tooltips.hmpmetaphlan.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+  }
+  var mouseleave = function(d) {
+    return tooltips.hmpmetaphlan.style("visibility", "hidden");
+  }
+  
   // X axis
-  var site_array = hmp_metaphlan_data.map(function(d) { return d.site; })
-  var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(site_array)
-    .padding(0.2);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(hmpmetaphlan.map(function(d) { return d.site; }))
+  .padding(0.2);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
-  // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([0, max_ceil])
-    .range([ height, 0]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
-    
-    // Bars
-        var colors_array =[]
-        for(s in site_array){
-           colors_array.push(site_colors2[site_array[s]])
-        }
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-      var colors = d3.scaleOrdinal().range(colors_array);
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
-  //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
-  svg.selectAll("mybar")
-    .data(hmp_metaphlan_data)
-    .enter()
-    .append("rect")
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, max_ceil])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+// Bars
+svg.selectAll("mybar")
+  .data(hmpmetaphlan)
+  .enter()
+  .append("rect")
     .attr("x", function(d) { return x(d.site); })
     .attr("y", function(d) { return y(d.avg); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.avg); })
-    .attr("fill", function(hmp_metaphlan_data, i) {
-              return colors(i);
-             });
+    .attr("fill", function(d) {
+            return site_colors2[d.site];
+     })
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout", mouseleave)
+
   } // end else
 
 // HMP_RefSeq V1V3
-  if(Object.keys(hmp_refseqv1v3_data).length == 0){
-     document.getElementById("plot_hmp_refseqv1v3_here").innerHTML = '<small>No Data</small>'
+  if(Object.keys(hmprefseqv1v3).length == 0){
+     document.getElementById("plot_hmp_refseqv1v3_here").innerHTML = "<span class='nodata'>No Data</span>"
   }else{
     //console.log(sdata)
     //max = max([item.avg for item in data])
@@ -517,51 +575,61 @@
           "translate(" + margin.left + "," + margin.top + ")");
   
   // X axis
-  var site_array = hmp_refseqv1v3_data.map(function(d) { return d.site; })
-  var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(site_array)
-    .padding(0.2);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
+    var mouseover = function(d){ 
+         var plotName = 'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
+         var siteName = siteLongNames[d.site]
+         var plotValue = d.avg;
+         tooltips.hmprefseqv1v3.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         return tooltips.hmprefseqv1v3.style("visibility", "visible");
+     }
+  
+  var mousemove = function(d) {
+    //console.log('this',this)
+    return tooltips.hmprefseqv1v3.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+  }
+  var mouseleave = function(d) {
+    return tooltips.hmprefseqv1v3.style("visibility", "hidden");
+  }
+  
+  // X axis
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(hmprefseqv1v3.map(function(d) { return d.site; }))
+  .padding(0.2);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
-  // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([0, max_ceil])
-    .range([ height, 0]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
-    
-    // Bars
-        var colors_array =[]
-        for(s in site_array){
-           colors_array.push(site_colors2[site_array[s]])
-        }
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-      var colors = d3.scaleOrdinal().range(colors_array);
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
-  //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
-  svg.selectAll("mybar")
-    .data(hmp_refseqv1v3_data)
-    .enter()
-    .append("rect")
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, max_ceil])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+// Bars
+svg.selectAll("mybar")
+  .data(hmprefseqv1v3)
+  .enter()
+  .append("rect")
     .attr("x", function(d) { return x(d.site); })
     .attr("y", function(d) { return y(d.avg); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.avg); })
-    .attr("fill", function(hmp_refseqv1v3_data, i) {
-              return colors(i);
-             });
+    .attr("fill", function(d) {
+            return site_colors2[d.site];
+     })
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout", mouseleave)
+
   } // end else
 
 
 // HMP_RefSeq V3V5
-  if(Object.keys(hmp_refseqv3v5_data).length == 0){
-     document.getElementById("plot_hmp_refseqv3v5_here").innerHTML = '<small>No Data</small>'
+  if(Object.keys(hmprefseqv3v5).length == 0){
+     document.getElementById("plot_hmp_refseqv3v5_here").innerHTML = "<span class='nodata'>No Data</span>"
   }else{
     //console.log(sdata)
     //max = max([item.avg for item in data])
@@ -588,108 +656,60 @@
           "translate(" + margin.left + "," + margin.top + ")");
   
   // X axis
-  var site_array = hmp_refseqv3v5_data.map(function(d) { return d.site; })
-  var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(site_array)
-    .padding(0.2);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
+    var mouseover = function(d){ 
+         var plotName = 'HMP 16S RefSeq V3-V5';//d3.select(this.parentNode).datum().key;
+         var siteName = siteLongNames[d.site]
+         var plotValue = d.avg;
+         tooltips.hmprefseqv3v5.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         return tooltips.hmprefseqv3v5.style("visibility", "visible");
+     }
+  
+  var mousemove = function(d) {
+    //console.log('this',this)
+    return tooltips.hmprefseqv3v5.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+  }
+  var mouseleave = function(d) {
+    return tooltips.hmprefseqv3v5.style("visibility", "hidden");
+  }
+  
+  // X axis
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(hmprefseqv3v5.map(function(d) { return d.site; }))
+  .padding(0.2);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
-  // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([0, max_ceil])
-    .range([ height, 0]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
-    
-    // Bars
-        var colors_array =[]
-        for(s in site_array){
-           colors_array.push(site_colors2[site_array[s]])
-        }
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99"]);
-      var colors = d3.scaleOrdinal().range(colors_array);
-    //var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
-  //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
-  svg.selectAll("mybar")
-    .data(hmp_refseqv3v5_data)
-    .enter()
-    .append("rect")
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, max_ceil])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+// Bars
+svg.selectAll("mybar")
+  .data(hmprefseqv3v5)
+  .enter()
+  .append("rect")
     .attr("x", function(d) { return x(d.site); })
     .attr("y", function(d) { return y(d.avg); })
     .attr("width", x.bandwidth())
     .attr("height", function(d) { return height - y(d.avg); })
-    .attr("fill", function(hmp_refseqv3v5_data, i) {
-              return colors(i);
-             });
+    .attr("fill", function(d) {
+            return site_colors2[d.site];
+     })
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout", mouseleave)
+
   } // end else
 
+function change_view(v,r,t){
+    console.log(v,r,t)
+    window.open('ecology?rank='+r+'&name='+t+'&page='+v,'_self')
+}
 
-
-  // Segata
-//   if(Object.keys(sdata).length == 0){
-//      document.getElementById("plot_nihv1v3_here").innerHTML = '<small>No Data</small>'
-//   }else{
-//     //console.log(sdata)
-//     //max = max([item.avg for item in data])
-//     //max = Math.max.apply(Math, data.map(function(o) { return o.avg; }))
-//     //max_ceil = Math.ceil(max.nihv1v3)
-//     if(max.nihv1v3 < 0.001){
-//        max_ceil = 0.001
-//     }else if(max.nihv1v3 < 0.01){
-//        max_ceil = 0.01
-//     }else if(max.nihv1v3 < 0.1){
-//        max_ceil = 0.1
-//     }else{
-//        max_ceil = Math.ceil(max.nihv1v3)  // smallest at 1.0
-//     }
-//     
-// 
-//     // append the svg object to the body of the page
-//     var svg = d3.select("#plot_nihv1v3_here")
-//       .append("svg")
-//       .attr("width", width + margin.left + margin.right)
-//       .attr("height", height + margin.top + margin.bottom)
-//       .append("g")
-//       .attr("transform",
-//           "translate(" + margin.left + "," + margin.top + ")");
-//   
-//   // X axis
-//   var x = d3.scaleBand()
-//     .range([ 0, width ])
-//     .domain(sdata.map(function(d) { return d.site; }))
-//     .padding(0.2);
-//   svg.append("g")
-//     .attr("transform", "translate(0," + height + ")")
-//     .call(d3.axisBottom(x))
-//     .selectAll("text")
-//     .attr("transform", "translate(-10,0)rotate(-45)")
-//     .style("text-anchor", "end");
-// 
-//   // Add Y axis
-//   var y = d3.scaleLinear()
-//     .domain([0, max_ceil])
-//     .range([ height, 0]);
-//   svg.append("g")
-//     .call(d3.axisLeft(y));
-//     
-//     // Bars
-//     var colors = d3.scaleOrdinal().range(["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", ]);
-//   //var colors = d3.scaleOrdinal().domain(sdata).range(d3.schemeSet1);
-//   svg.selectAll("mybar")
-//     .data(sdata)
-//     .enter()
-//     .append("rect")
-//     .attr("x", function(d) { return x(d.site); })
-//     .attr("y", function(d) { return y(d.avg); })
-//     .attr("width", x.bandwidth())
-//     .attr("height", function(d) { return height - y(d.avg); })
-//     .attr("fill", function(sdata, i) {
-//               return colors(i);
-//              });
-//   } // end else
+ 

@@ -144,10 +144,6 @@ ul li{
    padding:10px;
 
 }
-.nodata{
-   padding:10px;
-   
-}
 #child-table td{
     padding: 0 5px;
     font-size: small;
@@ -287,7 +283,6 @@ ul li{
             </ol>  
             </div>
         </div>
-        
       </div>  
     </div>   <!-- end column left -->
    
@@ -324,9 +319,7 @@ ul li{
         NIH V1V3 Citation
         </small>
     </div>
-    <div class='plot' >
-        <div id="plot_nihv1v3_here"></div> 
-    </div>
+    
         
   </td><td class='notes-td'>
     <% if(text_file){ %>
@@ -371,9 +364,7 @@ ul li{
           NIH V3V5 Citation
         </small>
     </div>
-    <div class='plot' >
-        <div id="plot_nihv3v5_here"></div> 
-    </div>
+    
         
   </td><td class='notes-td'>
     
@@ -414,9 +405,7 @@ ul li{
             Eren et al.(2014) (V1-V3)</a>
         </small>
     </div>
-    <div class='plot' >
-        <div id="plot_erenv1v3_here"></div> 
-    </div>
+    
         
   </td><td class='notes-td'>
     
@@ -457,9 +446,7 @@ ul li{
             Eren et al.(2014) (V3-V5)</a>
         </small>
     </div>
-    <div class='plot' >
-        <div id="plot_erenv3v5_here"></div> 
-    </div>
+    
         
   </td><td class='notes-td'>
     
@@ -501,9 +488,7 @@ ul li{
         From: Dewhirst 35x9 data <small>(not published yet)</small>
         </small>
     </div>
-    <div class='plot' >
-        <div id="plot_dewhirst_here"></div> 
-    </div>
+    
         
   </td><td class='notes-td'>
     
@@ -542,9 +527,7 @@ ul li{
         From: HMP MetaPhlan Data <small>(not published)</small>
         </small>
     </div>
-    <div class='plot' >
-        <div id="plot_hmp_metaphlan_here"></div> 
-    </div>
+    
         
   </td><td class='notes-td'>
     
@@ -572,7 +555,7 @@ ul li{
 
 </td>
 </tr>
-<tr><td class='spacer' colspan='2'></td></tr>
+<tr><td class='spacer'></td></tr>
 <!-- END HMP MetaPhlan -->
 <tr><td>
     
@@ -582,9 +565,7 @@ ul li{
         HMP 16S RefSeq (V1-V3) <small>(not published)</small>
         </small>
     </div>
-    <div class='plot' >
-        <div id="plot_hmp_refseqv1v3_here"></div> 
-    </div>
+    
         
   </td><td class='notes-td'>
     
@@ -612,7 +593,7 @@ ul li{
 
 </td>
 </tr>
-<tr><td class='spacer' colspan='2'></td></tr>
+<tr><td class='spacer'></td></tr>
 <!-- END HMP RefSeq V1V3 -->
 <tr><td>
     
@@ -622,9 +603,7 @@ ul li{
         HMP RefSeq (V3-V5) <small>(not published)</small>
         </small>
     </div>
-    <div class='plot' >
-        <div id="plot_hmp_refseqv3v5_here"></div> 
-    </div>
+    
         
   </td><td class='notes-td'>
     
@@ -690,8 +669,8 @@ ul li{
   nihdatav1v3 = JSON.parse('<%- nihv1v3 %>')
   nihdatav3v5 = JSON.parse('<%- nihv3v5 %>')
   dewhirst     = JSON.parse('<%- dewhirst %>')
-  erenv1v3        = JSON.parse('<%- erenv1v3 %>')
-  erenv3v5        = JSON.parse('<%- erenv3v5 %>')
+  erenv1v3 = JSON.parse('<%- erenv1v3 %>')
+  erenv3v5 = JSON.parse('<%- erenv3v5 %>')
   hmpmetaphlan    = JSON.parse('<%- hmp_metaphlan %>')
   hmprefseqv1v3   = JSON.parse('<%- hmp_refseqv1v3 %>')
   hmprefseqv3v5   = JSON.parse('<%- hmp_refseqv3v5 %>')

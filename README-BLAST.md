@@ -31,7 +31,8 @@ Run like this:
    ./blast_get_SS_databaseIDs.py -i /mnt/xvdb/blastdb/genomes_ncbi/V10.1a > NCBI-IDs.csv
    and install the PROKKA and NCBI  -IDs.csv files in the root directories (keep the names as 'PROKKA-IDs.csv' and 'NCBI-IDs.csv')
 
-
+***IMPORTANT that the blast database path is the same between what is used for the '-i' input parameter for 
+blast_get_SS_databaseIDs.py script and that in the config file
 
 
 ### On 192.168.0.42 (the WebServer)
