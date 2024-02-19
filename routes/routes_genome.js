@@ -202,7 +202,7 @@ function init_page_data(){
 function apply_pages(glist,fltr, pd){
   let genomeList
   pd.trecords = glist.length
-  //console.log('fltr',fltr)
+  //console.log('fltr',fltr,pd)
   
   const trows = pd.trecords
   if(trows > pd.rows_per_page){
@@ -215,16 +215,25 @@ function apply_pages(glist,fltr, pd){
     helpers.print(['page_data.number_of_pages', pd.number_of_pages])
     pd.show_page = pd.page
     if (pd.show_page === 1) {
-      genomeList = glist.slice(0, pd.rows_per_page) // first 200
+      
+      genomeList = glist.slice(0, pd.rows_per_page) // first 500
+      
       pd.start_count = 1
     } else {
+    //let obj1a = glist.filter(o => o.species === 'coli');
+    //console.log('coli1a',obj1a.length)
+    //console.log(pd.rows_per_page * (pd.show_page - 1), pd.rows_per_page * pd.show_page)
       genomeList = glist.slice(pd.rows_per_page * (pd.show_page - 1), pd.rows_per_page * pd.show_page) // second 200
+    //let obj1b = genomeList.filter(o => o.species === 'coli');
+    //console.log('coli1b',obj1b.length)
       //genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page)
       pd.start_count = pd.rows_per_page * (pd.show_page - 1) + 1
     }
     //console.log('start count', pageData.start_count)
   }else{
+    
     genomeList = glist
+    
   }
   return {glist: genomeList, pd: pd}
 }
@@ -321,9 +330,11 @@ function apply_gtable_filter(req, filter) {
             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
         }else if(vals.sort_col === 'gc'){
+          
           big_g_list.sort(function (b, a) {
             return helpers.compareStrings_float(a[vals.sort_col], b[vals.sort_col]);
           })
+          
         }else{
           big_g_list.sort(function (b, a) {
             return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
@@ -341,9 +352,12 @@ function apply_gtable_filter(req, filter) {
             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
         }else if(vals.sort_col === 'gc'){
+          //console.log('sortgc1',big_g_list[0],big_g_list[1],big_g_list[2],big_g_list[3])
           big_g_list.sort(function (a, b) {
             return helpers.compareStrings_float(a[vals.sort_col], b[vals.sort_col]);
           })
+          //console.log('sortgc2',big_g_list[0],big_g_list[1],big_g_list[2],big_g_list[3])
+          
         }else{
           big_g_list.sort(function (a, b) {
             return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
@@ -356,6 +370,7 @@ function apply_gtable_filter(req, filter) {
             el.tlength = helpers.format_long_numbers(el.tlength); 
         }
     })
+    
     return big_g_list
 }
 function get_filter_on(f, type){
@@ -452,6 +467,11 @@ router.get('/genome_table', function genome_table(req, res) {
          let prev = (page_data.page - 1).toString()
          pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
          pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
+         pager_txt += "   [[Jump to page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
+         for(var i=1;i<=page_data.number_of_pages;i++){
+            pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
+         }
+         pager_txt += "</select>]]"
       }
     }
     count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
@@ -468,8 +488,10 @@ router.post('/genome_table', function genome_table_filter(req, res) {
     set_gtable_session(req)
     //console.log('gtable_session',req.session.gtable_filter)
     filter = req.session.gtable_filter
-   
+    //console.log(filter)
     send_list = apply_gtable_filter(req, filter)
+    //let obj1 = send_list.filter(o => o.species === 'coli');
+    //console.log('coli1',obj1.length)
     count_before_paging = send_list.length
     page_data = init_page_data()
     page_data.page=1
@@ -478,17 +500,29 @@ router.post('/genome_table', function genome_table_filter(req, res) {
        ret = apply_pages(send_list, filter, page_data)
        send_list = ret.glist
        page_data = ret.pd
+       //console.log('pd1',page_data)
        if(count_before_paging > send_list.length){
          pager_txt = '; [page: '+page_data.page + " (of "+page_data.number_of_pages+"p) ]"
          let next = (page_data.page + 1).toString()
          let prev = (page_data.page - 1).toString()
          pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
          pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
+         //pager_txt += "[[Jump to page: <select \"window.location.reload()\" style='border: 1px solid orange;'>"
+  
+         pager_txt += "   [[Jump to page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
+         for(var i=1;i<=page_data.number_of_pages;i++){
+            pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
+         }
+         pager_txt += "</select>]]"
       }
     }
     count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
+    //console.log('pd2',page_data)
     send_list = apply_sspecies(send_list)
+    //console.log('pt',pager_txt)
     args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
+    //let obj2 = send_list.filter(o => o.species === 'coli');
+    //console.log('coli2',obj2.length)
     renderGenomeTable(req, res, args)
      
 })

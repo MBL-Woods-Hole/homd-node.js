@@ -97,13 +97,13 @@
 		<span class='button' onclick='clear_phylum()'>Clear</span>
 		<span style='float:right;'>Paging: 
 		  <% if(fltr.paging === 'on'){ %>
-		    <input type='radio' checked name='paging' value='on' onclick='update_sb()' > On&nbsp;
+		    <input type='radio' checked name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
 		    <input type='radio'         name='paging' value='off' onclick='update_sb()' > Off&nbsp;
 		  <% }else{ %>
-		    <input type='radio'         name='paging' value='on' onclick='update_sb()' > On&nbsp;
+		    <input type='radio'         name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
 		    <input type='radio' checked name='paging' value='off' onclick='update_sb()' > Off&nbsp;
 		  <% } %>
-		  <small>(<%= rows_per_page %> rows / page)</small>
+		  
 		</span>
 		</small>
 </td></tr>

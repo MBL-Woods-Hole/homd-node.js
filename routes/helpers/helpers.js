@@ -101,6 +101,8 @@ module.exports.compareStrings_int   = (a, b) => {
   return (a < b) ? -1 : (a > b) ? 1 : 0;
 };
 module.exports.compareStrings_float   = (a, b) => {
+  if(!a){a=0}
+  if(!b){b=0}
   a = parseFloat(a);
   b = parseFloat(b);
   return (a < b) ? -1 : (a > b) ? 1 : 0;
