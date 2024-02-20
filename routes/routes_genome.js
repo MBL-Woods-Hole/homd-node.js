@@ -1388,7 +1388,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
    }else{
      page_title = 'Genomic BLAST: All-Genomes Databases'
    }
-   
+   helpers.accesslog(req, res)
    res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
@@ -1418,6 +1418,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   if(req.body.annotation){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
   }
+  helpers.accesslog(req, res)
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
