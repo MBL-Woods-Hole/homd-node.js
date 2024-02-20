@@ -1398,6 +1398,7 @@ router.get('/blast_per_genome', function blast_per_genome(req, res) {
     .map((el) => {
       return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, ccolct: el.ccolct }
     })
+  
   res.render('pages/genome/genome_select', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
@@ -1421,7 +1422,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
    }else{
      page_title = 'Genomic BLAST: All-Genomes Databases'
    }
-   
+   console.log('BLAST SequenceServer','Type:',db_type,'IP:',req.ip)
    res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
@@ -1451,6 +1452,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   if(req.body.annotation){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
   }
+  console.log('BLAST SequenceServer','Type:SingleGenome',gid,'IP:',req.ip)
   console.log('SingleBLASTURL: '+CFG.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+req.body.gid)
   // res.render('pages/genome/blast_server_iframe', {
 //     title: 'HOMD :: BLAST', 

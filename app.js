@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.set('appName', 'HOMD');
-app.set('trust proxy', true);
+app.set('trust proxy', true);  // now req.ip SHOULD return the requesting IP address
 //app.timeout = 240000 // default is 120000
 // https://blog.jscrambler.com/best-practices-for-secure-session-management-in-node
 app.use(session({
