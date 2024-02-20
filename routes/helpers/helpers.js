@@ -117,7 +117,7 @@ module.exports.accesslog = (req, res) =>{
     accesslog(req, res, C.access_log_format, function(s) {
       //console.log(s);
       //fs.writeFileSync(C.access_logfile, s+'\n', {flag:'a'})
-        fs.writeFile(C.access_logfile, s+'\n', err => {
+        fs.appendFile(C.access_logfile, s+'\n', err => {
              if (err) {
                  console.error(err)
                  return

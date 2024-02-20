@@ -1,6 +1,9 @@
 const CFG   = require(app_root + '/config/config');
 const constants = {};
 
+constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'
+constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // if you want a non-relative url use: config.js
+
 constants.rRNA_refseq_version    = '15.23'
 constants.genomic_refseq_version = '10.1'
 constants.use_cluster = false
@@ -217,9 +220,6 @@ constants.hires_images = {
    }
 //['Capnocytophaga','Coryne_matruch','Leptotrichia','MarkWelch2016_Fig4B','Schaalia_Rothmuc_Neiss_Veill']
 //constants.access_log_format = 'url=":url" method=":method" statusCode=":statusCode" delta=":delta" ip=":ip"'
-constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'
-
-constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // if you want a non-relative url use: config.js
 
 constants.default_phage_cols = [  // six at most
        {name:'pid', view:'Phage-ID', width:'col1', order:'1'},
