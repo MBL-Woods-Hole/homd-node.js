@@ -115,7 +115,8 @@ module.exports.show_session = (req) =>{
 };
 module.exports.accesslog = (req, res) =>{
     accesslog(req, res, C.access_log_format, function(s) {
-      //console.log(s);
+      var testout = 'BLAST Request from:'+req.ip+ s+'\n'
+      console.log(testout);
       //fs.writeFileSync(C.access_logfile, s+'\n', {flag:'a'})
         fs.appendFile(C.access_logfile, s+'\n', err => {
              if (err) {
@@ -123,6 +124,7 @@ module.exports.accesslog = (req, res) =>{
                  return
              }
              //file written successfully
+             
          })
     });
 }

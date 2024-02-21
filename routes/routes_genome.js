@@ -1378,7 +1378,7 @@ router.get('/blast_per_genome', function blast_per_genome(req, res) {
     user: JSON.stringify(req.user || {}),
   })
 })
-
+// Used for ALL RefSeq and ALL Genome
 router.get('/blast_sserver', function blast_sserver(req, res){
    //console.log(req.query)
    let db_type = req.query.type
