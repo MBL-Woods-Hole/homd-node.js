@@ -1122,7 +1122,7 @@ router.post('/annotation_filter', function annotation_filter (req, res) {
     let atable_filter = get_annot_table_filter(req.body)
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
-    console.log(q)
+    //console.log(q)
     TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
@@ -1262,7 +1262,7 @@ router.get('/explorer', function explorer (req, res) {
 
   //OLD DB
   const q = queries.get_annotation_query(gid, anno)
-  console.log(q)
+  //console.log(q)
   //NEW DB
   
   if(req.session.atable_filter){
@@ -1478,7 +1478,7 @@ router.get('/blast_server_one', function blast_test(req, res) {
     for(let p in paths){
        for(let e in exts){
            filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
-           console.log(filepath)
+           //console.log(filepath)
            
            dataPromises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
       }
@@ -1520,7 +1520,7 @@ router.get('/blast_server_one', function blast_test(req, res) {
 })
 router.get('/genome_blast', function blast_get(req, res) {
   console.log('in genome_blast')
-  console.log(req.query)
+  //console.log(req.query)
 })
 router.get('/blast', function blast_get(req, res) {
    //console.log('in genome blast-GET')
