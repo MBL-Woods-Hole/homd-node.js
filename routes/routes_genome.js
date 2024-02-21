@@ -1673,9 +1673,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   })
 })
 router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
-  helpers.accesslog(req, res)
-  //console.log('in ribosomal_protein_tree')
-
+  
   const otid = req.query.otid
   // https://www.homd.org/ftp/phylogenetic_trees/genome/V10.1/eHOMD_Ribosomal_Protein_Tree.svg
   let filepath = CFG.FTP_TREE_URL_LOCAL +'/eHOMD_Ribosomal_Protein_Tree.svg'
@@ -1697,10 +1695,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   })
 })
 router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
-  helpers.accesslog(req, res)
-  //console.log('in rRNA_gene_tree')
-  // const myurl = url.URL(req.url, true)
-  // const myurl = new url.URL(req.url)
+  
   const otid = req.query.otid
   helpers.print(['otid', otid])
   // https://www.homd.org/ftp/phylogenetic_trees/genome/V10.1/eHOMD_16S_rRNA_Tree_V10.1.svg
@@ -1744,8 +1739,6 @@ router.get('/dld_table_all/:type', function dldTableAll (req, res) {
     res.end()
 })
 router.get('/dld_table/:type', function dldTable (req, res) {
-  helpers.accesslog(req, res)
-  //console.log('in download table -genome:')
   
   const type = req.params.type
   const letter = req.session.gtable_filter.letter
