@@ -114,7 +114,7 @@ module.exports.show_session = (req) =>{
     console.log('req.session.id',req.session.id)
 };
 module.exports.accesslog = (req, res) =>{
-    accesslog(req, res, 'RemoteIP:'+req.ip+';'+ C.access_log_format, function(s) {
+    accesslog(req, res, 'RemoteIP:'+req.ip+':'+ C.access_log_format, function(s) {
        var testout = 'BLAST Request from:'+req.ip+ s+'\n'
        console.log(testout);
         fs.appendFile(C.access_logfile, s+'\n', err => {
