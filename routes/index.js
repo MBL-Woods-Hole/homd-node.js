@@ -449,7 +449,7 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
 //  Global Site Search
 //
 router.post('/site_search', function site_search(req, res) {
-  helpers.accesslog(req, res)
+  
   console.log('in index.js POST -Search')
   console.log(req.body)
 

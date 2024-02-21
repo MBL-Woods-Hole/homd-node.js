@@ -1693,7 +1693,6 @@ router.get('/blast', function blast_get(req, res) {
 // These functions are used to open trees with a search for odid or genomeID
 // The main menu goues through routes_homd::open_tree
 router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
-  
   //console.log('in conserved_protein_tree')
   // let myurl = url.URL(req.url, true);
   const otid = req.query.otid
@@ -1721,7 +1720,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   })
 })
 router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
-  helpers.accesslog(req, res)
+  
   //console.log('in ribosomal_protein_tree')
 
   const otid = req.query.otid
@@ -1745,7 +1744,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   })
 })
 router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
-  helpers.accesslog(req, res)
+  
   //console.log('in rRNA_gene_tree')
   // const myurl = url.URL(req.url, true)
   // const myurl = new url.URL(req.url)
@@ -1798,7 +1797,7 @@ var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in second
     res.end()
 })
 router.get('/dld_table/:type', function dldTable (req, res) {
-  helpers.accesslog(req, res)
+  
   //console.log('in download table -genome:')
   var today = new Date()
   var dd = String(today.getDate()).padStart(2, '0')

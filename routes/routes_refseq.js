@@ -41,19 +41,11 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
   })
 })
 
-// router.get('/refseq_tree', function refseq_tree(req, res) {
-//     console.log('phylo_tree')
-//  helpers.accesslog(req, res)
-//  let myurl = url.parse(req.url, true);
-//  let otid = myurl.query.otid
-//  console.log('otid',otid)
-//  
-// })
+
 router.get('/refseq_tree', function refseq_tree(req, res) {
   console.log('in refseq_tree')
    //let filepath = path.join(CFG.FTP_URL,'16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/refseq_tree_V15.23.svg')
   let filepath = 'public/trees/refseq_tree_V15.23.svg'
-  helpers.accesslog(req, res)
   //let myurl = url.parse(req.url, true);
   let otid = req.query.otid
   console.log('otid',otid)

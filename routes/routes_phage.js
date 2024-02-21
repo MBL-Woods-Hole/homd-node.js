@@ -12,7 +12,6 @@ const queries = require(app_root + '/routes/queries')
 
 router.get('/', function index(req, res) {
   console.log('in phage hello')
-  helpers.accesslog(req, res)
   fs.readFile(path.join(CFG.PATH_TO_DATA, C.phage_list_fn), 'utf8', (err, data) => {
       if (err)
           console.log(err)
@@ -34,7 +33,6 @@ router.get('/', function index(req, res) {
 
 router.get('/phage_table', function phage_table_get(req, res) {
   console.log('in phage table GET')
-  helpers.accesslog(req, res)
   //let myurl = url.parse(req.url, true);
   let host_otid = req.query.host_otid;
   let letter    = req.query.k
@@ -219,7 +217,6 @@ router.post('/search_phagetable', function search_phagetable(req, res) {
 
 router.get('/phagedesc', function phagedesc(req, res) {
   console.log('in phage desc')
-  helpers.accesslog(req, res)
   //let myurl = url.parse(req.url, true);
   let pid = req.query.pid;
   let phage = C.phage_lookup[pid]
@@ -236,7 +233,6 @@ router.get('/phagedesc', function phagedesc(req, res) {
 })
 
 router.get('/dld_table/:type/:letter/:rank/:search_txt/:search_field', function dld_table(req, res) {
-  helpers.accesslog(req, res)
   var today = new Date();
 var dd = String(today.getDate()).padStart(2, '0');
 var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
