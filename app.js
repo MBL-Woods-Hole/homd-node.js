@@ -148,9 +148,9 @@ app.use((error, req, res, next) => {
   console.error(error);
   //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
   //if(CFG.ENV === 'development'){
-  if(CFG.ENV === 'production'){
-     node_log.debug(error.toString())
-  }
+  //if(CFG.ENV === 'production'){
+  node_log.debug(error.toString())
+  //}
   
   let u = req.user || {}
   res.render('pages/lost', { 

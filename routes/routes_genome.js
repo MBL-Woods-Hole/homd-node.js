@@ -462,12 +462,12 @@ router.get('/genome_table', function genome_table(req, res) {
       //console.log(page_data)
       if(count_before_paging > send_list.length){
          //console.log('must add pager txt')
-         pager_txt = '; [page: '+page_data.page + " (of "+page_data.number_of_pages+"p) ]"
+         pager_txt = "; [page: <span class='red-text gray'>"+page_data.page + "</span><span class='gray'> (of "+page_data.number_of_pages+"p)</span> ]"
          let next = (page_data.page + 1).toString()
          let prev = (page_data.page - 1).toString()
          pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
          pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
-         pager_txt += "   [[Jump to page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
+         pager_txt += "   [[Jump to Page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
          for(var i=1;i<=page_data.number_of_pages;i++){
             pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
          }
@@ -502,14 +502,12 @@ router.post('/genome_table', function genome_table_filter(req, res) {
        page_data = ret.pd
        //console.log('pd1',page_data)
        if(count_before_paging > send_list.length){
-         pager_txt = '; [page: '+page_data.page + " (of "+page_data.number_of_pages+"p) ]"
+         pager_txt = "; [page: <span class='red-text gray'>"+page_data.page + "</span><span class='gray'> (of "+page_data.number_of_pages+"p)</span> ]"
          let next = (page_data.page + 1).toString()
          let prev = (page_data.page - 1).toString()
          pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
          pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
-         //pager_txt += "[[Jump to page: <select \"window.location.reload()\" style='border: 1px solid orange;'>"
-  
-         pager_txt += "   [[Jump to page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
+         pager_txt += "   [[Jump to Page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
          for(var i=1;i<=page_data.number_of_pages;i++){
             pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
          }
