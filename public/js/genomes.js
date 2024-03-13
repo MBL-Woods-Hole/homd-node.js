@@ -107,7 +107,8 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   if(page == 'genome_desc'){ 
       gid = value
       contigplusgc = document.getElementById("select-contig").value
-      pts = value.split('|')
+      //console.log('contigplusgc',contigplusgc)
+      pts = contigplusgc.split('|')
       contig = pts[0]
       gc = pts[1]
       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew&loc="+gid+"|"+contig
