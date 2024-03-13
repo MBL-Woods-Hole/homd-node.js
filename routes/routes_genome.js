@@ -1331,7 +1331,62 @@ router.get('/explorer', function explorer (req, res) {
 
   })
 })
+router.get('/anvio-server', function anvio_server(req, res){
+   //console.log(req.query)
+   // docker exec','anvio','anvi-display-pan','-P',port,'-p',pg+'/PAN.db','-g',pg+'/GENOMES.db'
+   
+   res.render('pages/genome/anvio_selection', {
+    title: 'HOMD :: Anvio', 
+    pgname: '', // for AboutThisPage
+    config: JSON.stringify(CFG),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {}),
+    pangenomes: JSON.stringify(C.pangenomes)
+    
+  })
+})
+router.post('/anvio_post', (req, res) => {
+    console.log('In anvio_post',req.body)
+    
+    let pg = req.body.pg
+    if(!pg){
+        pg = 'Veillonella_HMT780'
+    }
+    console.log('Selected Pangenome:',pg)
+    //let port = anvio_ports()
+    //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
+    //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
+    
+    let url = CFG.ANVIO_URL + '?pg=' + pg
+    // localhost:::   http://localhost:3010
+    // Dev      :::   https://anvio.homd.org/anvio
+    //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
+    // if(CFG.DBHOST == 'localhost'){
+//         url = "http://localhost:3010?pg="+pg
+//     }else{
+//         url = "https://anvio.homd.org/anvio?pg="+pg
+//     }
+    return res.send(url)
+});
+router.get('/dnld_pg',(req, res) => {
+    console.log('req query',req.query)
+    let pg = req.query.pg
+    let ver = req.query.V
+    let fn
+    let obj = C.pangenomes.find(o => o.name === pg);
+    
+    if(ver === '7'){
+       fn = obj.dnld_v7
+    }else{
+       fn = obj.dnld_v8
+    }
+    
+    let fullpath = path.join(CFG.PATH_TO_PANGENOMES, req.query.pg, fn)
+    
+    helpers.print('file path: '+fullpath)
+    res.download(fullpath)
 
+});
 //
 //
 router.get('/blast_server', function genome_blast_server(req, res) {
