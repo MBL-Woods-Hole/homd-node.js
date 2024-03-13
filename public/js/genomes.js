@@ -97,7 +97,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   /*
   value: may be gid or gid|gc or gid|contig
   page = may be the specific page:
-     genome_table, main_menu, genome_desc, explorer, anno_table
+     genome_table, main_menu, genome_desc, explorer(covers:head sect of exp and desc), anno_table
   annotation either ncbi or prokka
   gc may or may not be used
   
