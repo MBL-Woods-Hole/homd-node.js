@@ -1371,7 +1371,7 @@ router.get('/blast_server', function genome_blast_server(req, res) {
 })
 router.get('/blast_per_genome', function blast_per_genome(req, res) {
    //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-  helpers.accesslog(req, res)
+  //helpers.accesslog(req, res)
   //console.log('blast_per_genome')
   //let myurl = url.parse(req.url, true);
     
@@ -1407,7 +1407,7 @@ router.get('/blast_per_genome', function blast_per_genome(req, res) {
 
 router.get('/blast_sserver', function blast_sserver(req, res){
    //console.log(req.query)
-   helpers.accesslog(req, res)
+   //helpers.accesslog(req, res)
    let db_type = req.query.type
    let page_title = ''
    if(db_type == 'refseq'){
@@ -1445,7 +1445,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   if(req.body.annotation){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
   }
-  helpers.accesslog(req, res)
+  
   console.log('BLAST SequenceServer','Type:SingleGenome',req.body.gid,'IP:',req.ip)
   console.log('SingleBLASTURL: '+CFG.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+req.body.gid)
   // res.render('pages/genome/blast_server_iframe', {
