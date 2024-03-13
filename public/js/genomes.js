@@ -123,7 +123,10 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       
   }else if(page == 'anno_table'){
       gid = value
-      url = jb_path+'/'+gid+"&loc=<%= loc %>&highlight=<%= highlight %>&tracks=DNA,homd,prokka,ncbi"
+      url = jb_path+'/'+gid+"&loc="+loc+"&highlight="+highlight+"&tracks=DNA,homd,prokka,ncbi"
+  }else{
+      console.log('error')
+      
   }
   console.log(url)
   
