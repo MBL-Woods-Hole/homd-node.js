@@ -612,7 +612,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
     if(gid in crispr_data){
         crispr = crispr_data[gid]
     }
-    //console.log('crispr_data:',crispr_data[gid])
+    console.log('contigs:',contigs)
     res.render('pages/genome/genomedesc', {
         title: 'HOMD :: Genome Info',
         pgname: 'genome/description', // for AboutThisPage 

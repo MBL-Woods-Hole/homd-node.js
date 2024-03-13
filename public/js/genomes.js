@@ -103,27 +103,31 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   
   */
   var url
+  var tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
   if(page == 'genome_desc'){ 
       gid = value
-      contig = document.getElementById("select-contig").value
-      url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc="+gid+"|"+contig
+      contigplusgc = document.getElementById("select-contig").value
+      pts = value.split('|')
+      contig = pts[0]
+      gc = pts[1]
+      url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew&loc="+gid+"|"+contig
      
   }else if(page == 'genome_table'){
        gid = value
-       url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
+       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
       
   }else if(page == 'main_menu'){
       pts = value.split('|')
       gid = pts[0]
       gc = pts[1]
-      url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
+      url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
   }else if(page == 'explorer'){
       gid = value
-      url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
+      url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
       
   }else if(page == 'anno_table'){
       gid = value
-      url = jb_path+'/'+gid+"&loc="+loc+"&highlight="+hilit+"&tracks=DNA,homd,prokka,ncbi"
+      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+hilit
   }else{
       console.log('error')
       
