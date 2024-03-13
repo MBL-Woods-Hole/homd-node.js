@@ -535,8 +535,8 @@ router.get('/jbrowse', function jbrowse (req, res) {
 })
 //
 router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
-  //console.log('AJAX JBrowse')
-  helpers.print(req.body)
+  console.log('AJAX JBrowse')
+  //helpers.print(req.body)
   // URL from old HOMD site:
   // ?data=homd/SEQF2029
   //  &tracks=DNA,prokka,ncbi
@@ -545,8 +545,8 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
   //console.log(req.body);
   helpers.accesslog(req, res)
   //open(jburl)
-  
-  res.send(JSON.stringify({ response_data: req.body.gid }))
+  res.send('Okay')
+  //res.send(JSON.stringify({ response_data: req.body.gid }))
 })
 //
 router.get('/genome_description', function genomeDescription (req, res) {

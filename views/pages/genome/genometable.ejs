@@ -92,8 +92,8 @@ thead th { position: sticky; top: 0; }
         <% gc2 = (parseFloat(ginfo[n].gc)/100).toFixed(2) %>
         <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info</a>
             <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Genome Info</a>
-            <a class='pill pill-lightseagreen' href='<%= cfg.JBROWSE_URL %>/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome Viewer</a>
-        
+           <!--  <a class='pill pill-lightseagreen' href='<%= cfg.JBROWSE_URL %>/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome Viewer</a> -->
+           <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Genome Viewer</a>
            <form name='' class="form-inline" method='POST' action='blast_ss_single'>
              <input type='hidden' name='gid' value='<%= ginfo[n].gid %>'>
              <input type='hidden' name='annotation' value='prokka'>
@@ -139,6 +139,7 @@ thead th { position: sticky; top: 0; }
     var letter = '<%- fltr.letter %>'
     var gid = '<%- filtergid %>'
     var filter_on = '<%- filter_on %>'
+    var jb_path = '<%- cfg.JBROWSE_URL %>'
     if(letter){
       document.getElementById(letter).style.color = 'red'
       document.getElementById(letter).style.fontSize = 'medium'

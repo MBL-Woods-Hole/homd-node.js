@@ -22,6 +22,57 @@ function open_blast_in_new_window(gid){
   }
   window.open(url)
 }
+function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
+  console.log('open_jbrowse',value,page)
+  /*
+  value: may be gid or gid|gc or gid|contig
+  page = may be the specific page:
+     genome_table, main_menu, genome_desc, explorer, anno_table
+  annotation either ncbi or prokka
+  gc may or may not be used
+  
+  */
+  var url
+  if(page == 'genome_desc'){ 
+      gid = value
+      contig = document.getElementById("select-contig").value
+      url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc="+gid+"|"+contig
+     
+  }else if(page == 'genome_table'){
+       gid = value
+       url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
+      
+  }else if(page == 'main_menu'){
+      pts = value.split('|')
+      gid = pts[0]
+      gc = pts[1]
+      url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
+  }else if(page == 'explorer'){
+      gid = value
+      url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
+      
+  }else if(page == 'anno_table'){
+      gid = value
+      url = jb_path+'/'+gid+"&loc="+loc+"&highlight="+hilit+"&tracks=DNA,homd,prokka,ncbi"
+  }else{
+      console.log('error')
+      
+  }
+  console.log(url)
+  
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("POST", "/genome/jbrowse_ajax", true);
+  xmlhttp.setRequestHeader("Content-type","application/json");
+  xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = xmlhttp.responseText;
+        console.log(resp)
+        window.open(url)
+      }
+  }
+  xmlhttp.send();
+  
+}
 function open_jbrowse_in_new_window(gidplusgc){
   console.log(gidplusgc)
   pts = gidplusgc.split('|')
