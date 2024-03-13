@@ -559,7 +559,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
   })
 })
 //
-router.post('/jbrowse_ajax1', function jbrowseAjaxPost (req, res) {
+router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
   console.log('AJAX JBrowse')
   
   // for logging
