@@ -59,8 +59,9 @@
     
 	<div id='header_buttons' >
 	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (<%= taxidfullnameplus %>)</a>
-	 <a class='gd-button' href="<%= cfg.JBROWSE_URL %>/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a>
-	 
+	 <!-- <a class='gd-button' href="<%= cfg.JBROWSE_URL %>/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a> -->
+	 <a class='gd-button' href='#' onclick="open_jbrowse_in_new_window('<%= ginfo.gid %>|<%= gc2 %>')">Genome Viewer</a>
+        
 	 <form name='' class="form-inline" method='POST' action='blast_ss_single'>
          <input type='hidden' name='gid' value='<%= ginfo.gid %>'>
          <input type='hidden' name='annotation' value='prokka'>
@@ -98,17 +99,21 @@
      <tr class="table-active"><td>12</td><td>RefSeq Assembly ID</td><td><a href='https://www.ncbi.nlm.nih.gov/data-hub/genome/<%= ginfo.rs_asmbly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.rs_asmbly %></a></td></tr>
      <tr class="table-light"><td>13</td><td>Contigs and Singlets</td>
      <td><%= ginfo.ncontigs %>
-       <select id='selContig' style='width: 200px;' onchange="offer_jbrowse('<%= ginfo.gid %>',this.value)">
+       <select id='select-contig' style='width: 200px;'>
        <% for(n in contigs){ %>
-          <option value='<%= contigs[n].contig %>|<%= contigs[n].gc %>'><%= contigs[n].contig %></option>
-          
+          <option value='<%= contigs[n].contig %> %>'><%= contigs[n].contig %></option>
        <% } %>
        </select>
-       <span id='jbrowse_offer_span'>
+       <a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>
+        
+       <!-- 
+<span id='jbrowse_offer_span'>
        <% if(contigs[0]){%>
-         <a href="<%= cfg.JBROWSE_URL %>/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=<%= ginfo.gid %>|<%= contigs[0].contig %>" target='_blank'>Open in Genome Viewer</a>
+         <a href="<%= cfg.JBROWSE_URL %>/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=<%= ginfo.gid %>|<%= contigs[0].contig %>" target='_blank'>Open in Genome Viewerxxx</a>
        <% } %>
        </span>
+ -->
+       
      </td></tr>
      <tr class="table-active"><td>14</td><td>Combined Length (bps)</td><td><%= ginfo.tlength %></td></tr>
      <tr class="table-light"><td>15</td><td>GC Percentage</td><td><%= ginfo.gc %></td></tr>
@@ -176,7 +181,7 @@
 <script type="text/javascript" src="/js/select2.min.js"></script>
 <script>
   mainmenu()
-  var jb_path = '<%- cfg.jb_path %>'
+  var jb_path = '<%- cfg.JBROWSE_URL %>'
   $(document).ready(function(){
  
     // Initialize select2

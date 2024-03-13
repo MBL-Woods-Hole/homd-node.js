@@ -155,10 +155,11 @@ thead th { position: sticky; top: 0; }
          <% }else{ %>
             <% seqacc = gid +'|'+ mole[n].accession %>
          <% } %>
-         <% tracks = "DNA,homd,prokka,ncbi" %>
+         <!-- <% tracks = "DNA,homd,prokka,ncbi" %> -->
          <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
          <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
-         <a title='JBrowse/Genome Viewer' href='<%= cfg.JBROWSE_URL %>/<%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>&tracks=<%= tracks %>' target='_blank' rel="noopener noreferrer">JB</a>
+         <!-- <a title='JBrowse/Genome Viewer' href='<%= cfg.JBROWSE_URL %>/<%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>&tracks=<%= tracks %>' target='_blank' rel="noopener noreferrer">JB</a> -->
+        <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('<%= gid %>','anno_table','','','<%= anno_type %>','<%= loc %>','<%= highlight %>')">JB</a>
         
        
        </td>

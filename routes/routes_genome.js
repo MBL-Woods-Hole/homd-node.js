@@ -11,8 +11,6 @@ const queries = require(app_root + '/routes/queries')
 // const open = require('open')
 const createIframe = require("node-iframe")
 
-//const JB = require('jbrowse2')
-//app.use(createIframe)
 router.get('/overview', function overview(req, res) {
     //console.log('in RESET-session')
     let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
@@ -528,7 +526,7 @@ router.post('/genome_table', function genome_table_filter(req, res) {
 
 router.get('/jbrowse', function jbrowse (req, res) {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-  helpers.accesslog(req, res)
+  //helpers.accesslog(req, res)
   ////console.log('jbrowse-get')
   //let myurl = url.parse(req.url, true);
     
@@ -561,19 +559,14 @@ router.get('/jbrowse', function jbrowse (req, res) {
   })
 })
 //
-router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
-  //console.log('AJAX JBrowse')
-  helpers.print(req.body)
-  // URL from old HOMD site:
-  // ?data=homd/SEQF2029
-  //  &tracks=DNA,prokka,ncbi
-  //  &loc=SEQF2029|GL982453.1:2729587..4094422
-  //  &highlight=
-  //console.log(req.body);
+router.post('/jbrowse_ajax1', function jbrowseAjaxPost (req, res) {
+  console.log('AJAX JBrowse')
+  
+  // for logging
   helpers.accesslog(req, res)
   //open(jburl)
   
-  res.send(JSON.stringify({ response_data: req.body.gid }))
+  res.send('Okay')
 })
 //
 router.get('/genome_description', function genomeDescription (req, res) {
@@ -867,8 +860,9 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
             let highlight = seqacc+":"+start.toString()+".."+stop.toString()
             //console.log('XXX',rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid)
-            html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+selected_gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
-        
+            //html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+selected_gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
+            html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+selected_gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >JB</a>"
+            
             html += "</td>"   // pid (and JB)
         
             html += "<td nowrap>"+rowobj.length_na
