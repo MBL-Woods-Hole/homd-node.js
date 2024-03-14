@@ -2057,5 +2057,15 @@ router.get('/dnld_pg',(req, res) => {
     res.download(fullpath)
 
 });
+//
+router.get('/oralgen', function oralgen(req, res) {
+  res.render('pages/genome/oralgen', {
+    title: 'HOMD :: Human Oral Microbiome Database',
+    pgname: '', // for AbountThisPage
+    config: JSON.stringify(CFG),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    user: JSON.stringify(req.user || {})
 
+  })
+})
 module.exports = router

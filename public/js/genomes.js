@@ -97,7 +97,9 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   /*
   value: may be gid or gid|gc or gid|contig
   page = may be the specific page:
-     genome_table, main_menu, genome_desc, explorer(covers:head sect of exp and desc), anno_table
+     genome_table, main_menu, genome_desc, 
+     explorer(covers:head sect of exp and desc), 
+     anno_table, crispr, oralgen
   annotation either ncbi or prokka
   gc may or may not be used
   
@@ -125,10 +127,16 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   }else if(page == 'explorer'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
-      
   }else if(page == 'anno_table'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+hilit
+  }else if(page == 'crispr'){
+      tracks = 'crispr'
+      gid = value
+      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+hilit
+  }else if(page == 'oralgen'){
+      gid = value
+      url = jb_path+'/'+gid+"&tracks="+tracks
   }else{
       console.log('error')
       

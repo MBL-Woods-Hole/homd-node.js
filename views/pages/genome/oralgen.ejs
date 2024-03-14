@@ -1,7 +1,4 @@
-<% var cfg = JSON.parse(config) %>
-<style>
-</style>
-<%- include('../partials/header_html'); %>
+
 <style>
 #oralgen{
   border:1px solid black;
@@ -60,8 +57,9 @@
 <% var cfg = JSON.parse(config) %> 
 <body>
   	<div id='wrapper'>
-    <%- include('../partials/header_img'); %>
-    <%- include('../partials/navbar'); %>
+  	<%- include('../../partials/header_html'); %>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
     
     
     <div class='page-content' >
@@ -86,9 +84,11 @@
 <td class='blackfg center'>3,042,856</td>
 
 <td class='center bold'>YES</td><td>
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF2386&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='/genome/explorer?gid=SEQF2386&anno=prokka'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('anae')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF2386&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF2386.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='/genome/explorer?gid=SEQF2386&anno=prokka'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF2386.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('anae')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Actinomyces_naeslundii_MG1">FTP</a> <span class='greenfg large bold'>*</span></td>
 </tr>
@@ -102,9 +102,11 @@
 <td class='redfg center'>2,192,643</td>
 
 <td class='center bold'>YES</td><td>
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1078&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Fusobacterium_nucleatum_uid295'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('fnuc')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1078&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1078.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Fusobacterium_nucleatum_uid295'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1078.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('fnuc')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Fusobacterium_nucleatum_ATCC_25586">FTP</a> <span class='greenfg large bold'>*</span></td>
 </tr>
@@ -118,9 +120,11 @@
 <td class='blackfg center'>2,354,886</td>
 
 <td class='center bold'>YES</td><td>
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1538&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Porphyromonas_gingivalis_ATCC_33277_uid19051'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('pgin2')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1538&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1538.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Porphyromonas_gingivalis_ATCC_33277_uid19051'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1538.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('pgin2')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Porphyromonas_gingivalis_ATCC_33277">FTP</a> <span class='greenfg large bold'>*</span></td>
 </tr>
@@ -134,9 +138,11 @@
 <td class='redfg center'>2,343,479</td>
 
 <td class='center bold'>YES</td><td>
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1064&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Porphyromonas_gingivalis_W83_uid48'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('pgin')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1064&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1064.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Porphyromonas_gingivalis_W83_uid48'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1064.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('pgin')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Porphyromonas_gingivalis">FTP</a> <span class='greenfg large bold'>*</span></td>
 </tr>
@@ -150,9 +156,11 @@
 <td class='redfg center'>2,135,969</td>
 
 <td class='center bold'>YES</td><td>
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1065&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Prevotella_intermedia_17_uid175'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('pintnew')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1065&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1065.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Prevotella_intermedia_17_uid175'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1065.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('pintnew')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Prevotella_intermedia_17">FTP</a> <span class='greenfg large bold'>*</span></td>
 </tr>
@@ -166,9 +174,11 @@
 <td class='blackfg center'>2,196,662</td>
 
 <td class='center bold'>YES</td><td>
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1066&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Streptococcus_gordonii_Challis_substr_CH1_uid66'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('sgor')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1066&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1066.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Streptococcus_gordonii_Challis_substr_CH1_uid66'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1066.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('sgor')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Streptococcus_gordonii_Challis_substr._CH1">FTP</a> <span class='greenfg large bold'>*</span></td>
 </tr>
@@ -182,9 +192,11 @@
 <td class='blackfg center'>2,045,857</td>
 
 <td class='center bold'>YES</td><td>
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF3169&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=smit'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('smit')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF3169&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF3169.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=smit'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF3169.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('smit')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Streptococcus_mitis_NCTC_12261">FTP</a> <span class='greenfg large bold'>*</span></td>
 </tr>
@@ -198,9 +210,11 @@
 <td class='blackfg center'>2,388,435</td>
 
 <td class='center bold'>YES</td><td>
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1070&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Streptococcus_sanguinis_SK36_uid13942'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('ssan')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1070&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1070.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Streptococcus_sanguinis_SK36_uid13942'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1070.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('ssan')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Streptococcus_sanguinis_SK36">FTP</a> <span class='greenfg large bold'>*</span></td>
 </tr>
@@ -214,9 +228,11 @@
 <td class='redfg center'>2,846,850</td>
 
 <td class='center bold'>YES</td><td>
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1061&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Treponema_denticola_ATCC_35405_uid4'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('tden_new')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1061&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1061.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=Treponema_denticola_ATCC_35405_uid4'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1061.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('tden_new')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Treponema_denticola_ATCC_35405">FTP</a> <span class='greenfg large bold'>*</span></td>
 </tr>
@@ -228,9 +244,11 @@
 <td class='redfg center'>2</td>
 <td class='redfg center'>2,130,910</td>
 <td class='redfg bold center'>NO</td><td> 
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1074&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=aact'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('aact')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1074&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1074.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=aact'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1074.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('aact')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Actinobacillus_actinomycetemcomitans_HK1651">FTP</a> <span class='greenfg large bold'>*</span> <span class='bluefg large bold'>*</span>
 </td>
@@ -243,9 +261,11 @@
 <td class='redfg center'>2</td>
 <td class='redfg center'>2,441,532</td>
 <td class='redfg bold center'>NO</td><td> 
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1075&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=pgin'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('fnucp')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1075&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1075.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=pgin'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1075.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('fnucp')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Fusobacterium_nucleatum_polymorphum">FTP</a> <span class='greenfg large bold'>*</span> <span class='bluefg large bold'>*</span>
 </td>
@@ -258,9 +278,11 @@
 <td class='redfg center'>8</td>
 <td class='redfg center'>2,088,156</td>
 <td class='redfg bold center'>NO</td><td> 
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1069&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=smut'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('smut')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1069&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1069.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=smut'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1069.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('smut')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Streptococcus_mutans_UA159">FTP</a> <span class='greenfg large bold'>*</span> <span class='bluefg large bold'>*</span>
 </td>
@@ -273,9 +295,11 @@
 <td class='redfg center'>5</td>
 <td class='redfg center'>3,505,077</td>
 <td class='redfg bold center'>NO</td><td> 
-<input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1072&tracks=DNA,homd_gene,oralgen_gene'"> 
-<input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=bfor'"> 
-<input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('tfor')">
+<!-- <input class="pill pill-khaki" type="button" value="HOMD JBrowse" onclick="location.href='<%= cfg.JBROWSE_URL %>/SEQF1072&tracks=DNA,homd_gene,oralgen_gene'">  -->
+<a class='pill pill-khaki' href='#' onclick="open_jbrowse('SEQF1072.1','oralgen')">HOMD JBrowse</a>
+<!-- <input class="pill pill-green" type="button" value="HOMD Annotation" onclick="location.href='http://www.homd.org/index.php?name=GenomeExpGM&gprog=danno&org=bfor'">  -->
+<a class='pill pill-green' href='/genome/explorer?gid=SEQF1072.1&anno=prokka' >HOMD Annotation</a>
+<!-- <input class="pill pill-indigo" type="button" value="ORALGEN" onclick="gotooralgen('tfor')"> -->
 </td>
 <td><a href="<%= cfg.FTP_URL %>/lanl_oralgen/Tannerella_forsythensis_ATCC_43037">FTP</a> <span class='greenfg large bold'>*</span> <span class='bluefg large bold'>*</span>
 </td>
@@ -348,7 +372,7 @@ a file named either: <br><br><b>lanl_gene_id_2_ncbi_blastp.csv</b> <br>or<br> <b
     </div> <!-- end: page-content -->
     
     <div id='footer'>
-         <%- include('../partials/footer'); %>
+         <%- include('../../partials/footer'); %>
     </div>
        
 </body>
@@ -357,8 +381,11 @@ a file named either: <br><br><b>lanl_gene_id_2_ncbi_blastp.csv</b> <br>or<br> <b
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/genomes.js"></script>
+
 <script>
   mainmenu()
+  var jb_path = '<%- cfg.JBROWSE_URL %>'
 </script>
 
 
