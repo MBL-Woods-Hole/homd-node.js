@@ -152,6 +152,10 @@ ul li{
     padding: 0 5px;
     font-size: small;
 }
+.y {
+   font-weight: normal;
+   font-size: small;
+}
 </style>
 <% nihv1v3_data = JSON.parse(nihv1v3) %>
 <% nihv3v5_data = JSON.parse(nihv3v5) %>
@@ -253,7 +257,7 @@ ul li{
       <br>
     
         <div id='legend'>
-        <div class='menu-title'>Legend:</div>
+        <div class='menu-title'>Body Site Legend:</div>
             <div id='legend-content'>
             <ol>
               <li><b>Oral:</b>
@@ -314,6 +318,86 @@ ul li{
   </span>
 <div class='column middle'>
 <table id='plot_table_master'>
+<tr><td>
+    
+    <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot-title'>
+        <small>
+        HMP 16S RefSeq (V1-V3) <small>(not published)</small>
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_hmp_refseqv1v3_here"></div> 
+    </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.hmp_refseqv1v3 == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.hmp_refseqv1v3.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- hmp_refseqv1v3_table %></div>  
+    <% } %>  
+    </td></tr></table>
+
+
+</td>
+</tr>
+<tr><td class='spacer' colspan='2'></td></tr>
+<!-- END HMP RefSeq V1V3 -->
+<tr><td>
+    
+    <table class='plot_table'><tr><td class='plot-td'>
+    <div class='plot-title'>
+        <small>
+        HMP RefSeq (V3-V5) <small>(not published)</small>
+        </small>
+    </div>
+    <div class='plot' >
+        <div id="plot_hmp_refseqv3v5_here"></div> 
+    </div>
+        
+  </td><td class='notes-td'>
+    
+    <% if(notes.hmp_refseqv3v5 == ''){ %>
+        <div class='nonote'>No Notes</div>
+    <% }else{ %>
+        <% parts = notes.hmp_refseqv3v5.split(';') %>
+        <div class='note'>
+        <b>Notes:</b>
+        <% for(n in parts){ %>
+         <br><br><%- parts[n] %>
+        <% } %>
+        </div>
+    <% } %>
+    
+  </td></tr>
+  
+  <tr><td class='data' colspan='2'>
+    <% if(Object.keys(hmp_refseqv3v5_data).length !== 0){ %>
+      <small>percent abundance</small>
+      <div class='abund-table-div'><%- hmp_refseqv3v5_table %></div>  
+    <% } %>  
+    </td></tr></table>
+
+
+</td>
+</tr>
+  <!-- END HMP RefSeq V3V5 -->
+
 <tr>
   <td>
   
@@ -574,85 +658,8 @@ ul li{
 </tr>
 <tr><td class='spacer' colspan='2'></td></tr>
 <!-- END HMP MetaPhlan -->
-<tr><td>
-    
-    <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot-title'>
-        <small>
-        HMP 16S RefSeq (V1-V3) <small>(not published)</small>
-        </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_hmp_refseqv1v3_here"></div> 
-    </div>
-        
-  </td><td class='notes-td'>
-    
-    <% if(notes.hmp_refseqv1v3 == ''){ %>
-        <div class='nonote'>No Notes</div>
-    <% }else{ %>
-        <% parts = notes.hmp_refseqv1v3.split(';') %>
-        <div class='note'>
-        <b>Notes:</b>
-        <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
-        <% } %>
-        </div>
-    <% } %>
-    
-  </td></tr>
-  
-  <tr><td class='data' colspan='2'>
-    <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- hmp_refseqv1v3_table %></div>  
-    <% } %>  
-    </td></tr></table>
 
 
-</td>
-</tr>
-<tr><td class='spacer' colspan='2'></td></tr>
-<!-- END HMP RefSeq V1V3 -->
-<tr><td>
-    
-    <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot-title'>
-        <small>
-        HMP RefSeq (V3-V5) <small>(not published)</small>
-        </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_hmp_refseqv3v5_here"></div> 
-    </div>
-        
-  </td><td class='notes-td'>
-    
-    <% if(notes.hmp_refseqv3v5 == ''){ %>
-        <div class='nonote'>No Notes</div>
-    <% }else{ %>
-        <% parts = notes.hmp_refseqv3v5.split(';') %>
-        <div class='note'>
-        <b>Notes:</b>
-        <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
-        <% } %>
-        </div>
-    <% } %>
-    
-  </td></tr>
-  
-  <tr><td class='data' colspan='2'>
-    <% if(Object.keys(hmp_refseqv3v5_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- hmp_refseqv3v5_table %></div>  
-    <% } %>  
-    </td></tr></table>
-
-
-</td>
-</tr>
-  <!-- END HMP RefSeq V3V5 -->
 </table>
 </div>  <!-- column middle -->
  <!-- 

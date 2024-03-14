@@ -1165,7 +1165,7 @@ router.get('/ecology', function ecology(req, res) {
              nihv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['nih_v3v5'])
              nihv3v5_data = sort_obj_by_abundance_order(nihv3v5_data,C.base_abundance_order)
              // order by constants.bas_abundance_order
-             let clone_nih_data = JSON.parse(JSON.stringify(nihv1v3_data)) // clone to avoid difficult errors
+             let clone_nih_data = JSON.parse(JSON.stringify(nihv3v5_data)) // clone to avoid difficult errors
              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
              nihv3v5_table = build_abundance_table('nih_v3v5', clone_nih_data, C.base_abundance_order)
              if('nih_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
