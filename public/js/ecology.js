@@ -125,6 +125,14 @@ var y = d3.scaleLinear()
   .range([ height, 0]);
 svg.append("g")
   .call(d3.axisLeft(y));
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", -30)
+    .attr("x", -100 )
+    .attr("transform", "rotate(-90)")
+    .text("% Abundance");
+
 // Bars
 svg.selectAll("mybar")
   .data(dewhirst)
@@ -140,9 +148,7 @@ svg.selectAll("mybar")
     .on("mouseover", mouseover)
     .on("mousemove", mousemove)
     .on("mouseout", mouseleave)
-
 }
-  
 
   //
   // Erenv3v5
@@ -205,6 +211,13 @@ var y = d3.scaleLinear()
   .range([ height, 0]);
 svg.append("g")
   .call(d3.axisLeft(y));
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", -30)
+    .attr("x", -100 )
+    .attr("transform", "rotate(-90)")
+    .text("% Abundance");
 // Bars
 svg.selectAll("mybar")
   .data(erenv3v5)
@@ -290,6 +303,13 @@ var y = d3.scaleLinear()
   .range([ height, 0]);
 svg.append("g")
   .call(d3.axisLeft(y));
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", -30)
+    .attr("x", -100 )
+    .attr("transform", "rotate(-90)")
+    .text("% Abundance");
 // Bars
 svg.selectAll("mybar")
   .data(erenv1v3)
@@ -370,6 +390,13 @@ var y = d3.scaleLinear()
   .range([ height, 0]);
 svg.append("g")
   .call(d3.axisLeft(y));
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", -30)
+    .attr("x", -100 )
+    .attr("transform", "rotate(-90)")
+    .text("% Abundance");
 // Bars
 svg.selectAll("mybar")
   .data(nihdatav1v3)
@@ -449,6 +476,13 @@ var y = d3.scaleLinear()
   .range([ height, 0]);
 svg.append("g")
   .call(d3.axisLeft(y));
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", -30)
+    .attr("x", -100 )
+    .attr("transform", "rotate(-90)")
+    .text("% Abundance");
 // Bars
 svg.selectAll("mybar")
   .data(nihdatav3v5)
@@ -528,6 +562,13 @@ var y = d3.scaleLinear()
   .range([ height, 0]);
 svg.append("g")
   .call(d3.axisLeft(y));
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", -30)
+    .attr("x", -100 )
+    .attr("transform", "rotate(-90)")
+    .text("% Abundance");
 // Bars
 svg.selectAll("mybar")
   .data(hmpmetaphlan)
@@ -608,6 +649,13 @@ var y = d3.scaleLinear()
   .range([ height, 0]);
 svg.append("g")
   .call(d3.axisLeft(y));
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", -30)
+    .attr("x", -100 )
+    .attr("transform", "rotate(-90)")
+    .text("% Abundance");
 // Bars
 svg.selectAll("mybar")
   .data(hmprefseqv1v3)
@@ -689,6 +737,13 @@ var y = d3.scaleLinear()
   .range([ height, 0]);
 svg.append("g")
   .call(d3.axisLeft(y));
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", -30)
+    .attr("x", -100 )
+    .attr("transform", "rotate(-90)")
+    .text("% Abundance");
 // Bars
 svg.selectAll("mybar")
   .data(hmprefseqv3v5)
