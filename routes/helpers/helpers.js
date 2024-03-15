@@ -115,7 +115,7 @@ module.exports.show_session = (req) =>{
 };
 module.exports.accesslog = (req, res) =>{
     accesslog(req, res, 'RemoteIP:'+req.ip+':'+ C.access_log_format, function(s) {
-      var testout = 'BLAST Request from:'+req.ip+ s+'\n'
+    var testout = 'BLAST Request from:'+req.ip+ s+'\n'
       console.log(testout);
       //fs.writeFileSync(C.access_logfile, s+'\n', {flag:'a'})
         fs.appendFile(C.access_logfile, s+'\n', err => {

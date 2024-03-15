@@ -22,7 +22,7 @@ router.get('/blast_server', function refseq_blast_server(req, res) {
 })
 router.get('/refseq_blastn', function refseq_blastn(req, res) {
     console.log('MADEIT TO blastn-get')
-    helpers.accesslog(req, res)
+    
   
   res.render('pages/refseq/blastn', {
     title: 'HOMD :: RefSeq Blast', 

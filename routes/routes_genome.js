@@ -501,7 +501,7 @@ router.post('/genome_table', function genome_table_filter(req, res) {
 
 router.get('/jbrowse', function jbrowse (req, res) {
 //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-  helpers.accesslog(req, res)
+  
   ////console.log('jbrowse-get')
   //let myurl = url.parse(req.url, true);
     
@@ -1401,9 +1401,6 @@ router.get('/blast_server', function genome_blast_server(req, res) {
 })
 router.get('/blast_per_genome', function blast_per_genome(req, res) {
    //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-  helpers.accesslog(req, res)
-  //console.log('blast_per_genome')
-  //let myurl = url.parse(req.url, true);
     
   const gid = req.query.gid
   let gc = 0
@@ -1443,7 +1440,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
    }else{
      page_title = 'Genomic BLAST: All-Genomes Databases'
    }
-   helpers.accesslog(req, res)
+   
    res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
@@ -1473,7 +1470,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   if(req.body.annotation){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
   }
-  helpers.accesslog(req, res)
+  
   res.render('pages/genome/blast_server_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
