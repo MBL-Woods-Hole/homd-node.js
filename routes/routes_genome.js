@@ -2018,6 +2018,8 @@ router.get('/anvio-server', function anvio_server(req, res){
 router.post('/anvio_post', (req, res) => {
     console.log('In anvio_post',req.body)
     
+    helpers.accesslog(req, res)
+    
     let pg = req.body.pg
     if(!pg){
         pg = 'Veillonella_HMT780'
