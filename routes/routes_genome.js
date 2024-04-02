@@ -965,7 +965,7 @@ function get_annot_table_filter(body){
     }
     let filter = {
           text:{
-            txt_srch: body.txt_srch,
+            txt_srch: body.txt_srch.toLowerCase(),
             field: body.field,
           },
           sort_col: body.sort_col,
