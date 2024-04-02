@@ -124,7 +124,7 @@ function set_ttable_session(req) {
        }
        
        if(item == 'txt_srch'){
-         req.session.ttable_filter.text.txt_srch = req.body.txt_srch
+         req.session.ttable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
        }
        if(item == 'field'){
          req.session.ttable_filter.text.field = req.body.field
