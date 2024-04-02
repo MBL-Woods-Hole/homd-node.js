@@ -78,7 +78,7 @@ thead th { position: sticky; top: 0; }
       <tr id='<%= rowid %>' >
         <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
         <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-        <td class='tax_name'><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].genus %></em></a></td>
+        <td class='tax_name' title='<%= ginfo[n].genus %>'><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].genus %></em></a></td>
         
         <td class='tax_name' title="<%- ginfo[n].species %> <%- ginfo[n].subspecies %>"><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>&gid=<%= ginfo[n].gid %>'><em><%- ginfo[n].species %></em>
         <%- ginfo[n].subspecies %></a></td>

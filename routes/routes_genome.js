@@ -260,7 +260,7 @@ function set_gtable_session(req) {
          req.session.gtable_filter.phylum = req.body.phylum
        }
        if(item == 'txt_srch'){
-         req.session.gtable_filter.text.txt_srch = req.body.txt_srch
+         req.session.gtable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
        }
        if(item == 'field'){
          req.session.gtable_filter.text.field = req.body.field
