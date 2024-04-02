@@ -754,7 +754,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     //console.log(req.body)
     let anno_path = path.join(CFG.PATH_TO_TMP,req.session.anno_search_dirname)
     let anno = req.body.anno
-    let search_text = req.body.search_text
+    let search_text = req.body.search_text.toLowerCase()
     let selected_gid = req.body.gid
     let rowobj,start,stop,locstart,locstop,seqacc,tmp,ssp = '',organism=''
     var re = new RegExp(search_text,"gi");
@@ -845,10 +845,10 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             let db = anno+'_'+line_gid
             html += '<tr>'
             
-            rowobj.acc_adorned = (rowobj.acc).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+            rowobj.acc_adorned = (rowobj.acc).replace(re, "<font color='red'>"+search_text+"</font>");
             html += "<td nowrap>"+rowobj.acc_adorned+"</td>"   // molecule
             
-            rowobj.pid_adorned = (rowobj.pid).replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+            rowobj.pid_adorned = (rowobj.pid).replace(re, "<font color='red'>"+search_text+"</font>");
             html += "<td nowrap>"+rowobj.pid_adorned
             
             if(anno === "prokka"){ 
@@ -873,10 +873,10 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             html += "</td>"   // AA length
             html += "<td nowrap>"+start+'-'+stop+"</td>"   // Range
             
-            rowobj.gene_adorned = rowobj.gene.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+            rowobj.gene_adorned = rowobj.gene.replace(re, "<font color='red'>"+search_text+"</font>");
             html += "<td nowrap>"+rowobj.gene_adorned+"</td>"   // product
             
-            rowobj.product_adorned = rowobj.product.replace(re, "<font color='red'>"+search_text.toLowerCase()+"</font>");
+            rowobj.product_adorned = rowobj.product.replace(re, "<font color='red'>"+search_text+"</font>");
             html += "<td>"+rowobj.product_adorned+"</td>"   // product
         
             html += "</tr>"
