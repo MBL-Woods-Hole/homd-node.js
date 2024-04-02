@@ -987,7 +987,7 @@ function get_annot_table_filter(body){
     }
     let filter = {
           text:{
-            txt_srch: body.txt_srch,
+            txt_srch: body.txt_srch.toLowerCase(),
             field: body.field,
           },
           sort_col: body.sort_col,
@@ -1144,7 +1144,7 @@ router.post('/annotation_filter', function annotation_filter (req, res) {
     let atable_filter = get_annot_table_filter(req.body)
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
-    //console.log(q)
+    console.log(q)
     TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
@@ -1296,7 +1296,8 @@ router.get('/explorer', function explorer (req, res) {
         atable_filter = get_default_annot_filter()
         req.session.atable_filter = atable_filter
     }
-  //console.log('anno query '+q)
+  console.log('anno query '+q)
+  // local host:  explorer?gid=SEQF4098.1&anno=ncbi
   TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
