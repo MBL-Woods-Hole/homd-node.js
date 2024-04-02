@@ -29,7 +29,7 @@
 {
   padding:5px;
  /*  width:1200px; */
-  table-layout:fixed;
+  /* table-layout:fixed; */
   width:100%;
   background:lightgrey;
 }
@@ -48,7 +48,6 @@
   color: #303030;
   overflow: hidden;
 
-
   /* text-overflow: ellipsis; */
 
   white-space: nowrap;
@@ -60,8 +59,28 @@
  #tax-table tr:hover { 
     background-color: #dce7f5; 
  } 
- 
- 
+#tax-table .col1{
+    width:50px;
+    text-align:center;
+}
+#tax-table .col2{
+    /* width:300px; */
+}
+#tax-table .col4{
+    /* width:100px; */
+}
+#tax-table .col6{
+    width:50px;
+    text-align:center;
+}
+#tax-table .col7{
+    width:50px;
+    text-align:center;
+}
+#tax-table .col8{
+    width:50px;
+    text-align:center;
+}
  #status-div {
    padding:5px;font-size:12px;
  }
