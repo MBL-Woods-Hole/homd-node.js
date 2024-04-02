@@ -63,8 +63,8 @@ thead th { position: sticky; top: 0; }
        <tr id='<%= otid %>'>
        <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
        <td nowrap><%= taxidfullname  %></td>
-       <td nowrap><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
-       <td nowrap><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
+       <td nowrap title='<%= list[n].genus  %>'><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
+       <td nowrap title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
        <td nowrap><%= list[n].subsp  %></td>
        
        <td><%= list[n].status  %></td>

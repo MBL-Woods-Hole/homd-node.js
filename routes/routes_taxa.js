@@ -124,7 +124,7 @@ function set_ttable_session(req) {
        }
        
        if(item == 'txt_srch'){
-         req.session.ttable_filter.text.txt_srch = req.body.txt_srch
+         req.session.ttable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
        }
        if(item == 'field'){
          req.session.ttable_filter.text.field = req.body.field
@@ -148,9 +148,11 @@ function apply_ttable_filter(req, filter) {
     //console.log('vals',vals)
     //
     // txt_srch
+    //console.log('big_tax_list.length',big_tax_list.length)
     if(vals.text.txt_srch !== ''){
        big_tax_list = get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
     }
+    //console.log('big_tax_list',big_tax_list)
     //status
     // create array of 'on's
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on') 
@@ -2437,18 +2439,27 @@ function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
   }else {
       // search all
       //send_list = send_tax_obj
+      
+      
       let temp_obj = {}
       var tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+      //var tmp_send_list = big_tax_list.filter(screen_tax_list)
+      
       // for uniqueness convert to object
       for(var n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
+      
+      //console.log('srchfield',search_field, search_txt)
+      //console.log('big_tax_list2.length',big_tax_list.length)
       tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
+      
+      //console.log('tmp_send_list1',tmp_send_list)
       for(var n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
-      
+      //console.log('tmp_send_list2',tmp_send_list)
       tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
       for(var n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
@@ -2483,6 +2494,11 @@ function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
   }
   return send_list
 } 
+// function screen_tax_list(item){
+//     console.log('item',item)
+//     if(item.otid
+// 
+// }
 //
 //
 function get_abundance_text(max, data, names, rank, tax_name){

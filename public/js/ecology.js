@@ -95,7 +95,7 @@
          var plotName = 'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
          var siteName = siteLongNames[d.site]
          var plotValue = d.avg;
-         tooltips.hmprefseqv1v3.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         tooltips.hmprefseqv1v3.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: <span style='border:1px solid black;padding:1px 10px;background:"+site_colors2[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
          return tooltips.hmprefseqv1v3.style("visibility", "visible");
      }
   
@@ -183,7 +183,7 @@ svg.selectAll("mybar")
          var plotName = 'HMP 16S RefSeq V3-V5';//d3.select(this.parentNode).datum().key;
          var siteName = siteLongNames[d.site]
          var plotValue = d.avg;
-         tooltips.hmprefseqv3v5.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         tooltips.hmprefseqv3v5.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
          return tooltips.hmprefseqv3v5.style("visibility", "visible");
      }
   
@@ -270,7 +270,7 @@ svg.selectAll("mybar")
          var plotName = 'Dewhirst 35x9';//d3.select(this.parentNode).datum().key;
          var siteName = siteLongNames[d.site]
          var plotValue = d.avg;
-         tooltips.dewhirst.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         tooltips.dewhirst.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
          return tooltips.dewhirst.style("visibility", "visible");
      }
   
@@ -357,7 +357,7 @@ svg.selectAll("mybar")
          var plotName = 'Eren (2014) V3-V5';//d3.select(this.parentNode).datum().key;
          var siteName = siteLongNames[d.site]
          var plotValue = d.avg;
-         tooltips.erenv3v5.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         tooltips.erenv3v5.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
          return tooltips.erenv3v5.style("visibility", "visible");
      }
   
@@ -449,7 +449,7 @@ svg.selectAll("mybar")
          var plotName = 'Eren (2014) V1-V3';//d3.select(this.parentNode).datum().key;
          var siteName = siteLongNames[d.site]
          var plotValue = d.avg;
-         tooltips.erenv1v3.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         tooltips.erenv1v3.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
          return tooltips.erenv1v3.style("visibility", "visible");
      }
   
@@ -536,7 +536,7 @@ svg.selectAll("mybar")
          var plotName = 'NIH Data V1-V3';//d3.select(this.parentNode).datum().key;
          var siteName = siteLongNames[d.site]
          var plotValue = d.avg;
-         tooltips.nihdatav1v3.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         tooltips.nihdatav1v3.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
          return tooltips.nihdatav1v3.style("visibility", "visible");
      }
   
@@ -622,7 +622,7 @@ svg.selectAll("mybar")
          var plotName = 'NIH Data V3-V5';//d3.select(this.parentNode).datum().key;
          var siteName = siteLongNames[d.site]
          var plotValue = d.avg;
-         tooltips.nihdatav3v5.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         tooltips.nihdatav3v5.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
          return tooltips.nihdatav3v5.style("visibility", "visible");
      }
   
@@ -708,7 +708,7 @@ svg.selectAll("mybar")
          var plotName = 'HMP Metaphlan';//d3.select(this.parentNode).datum().key;
          var siteName = siteLongNames[d.site]
          var plotValue = d.avg;
-         tooltips.hmpmetaphlan.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Name: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+         tooltips.hmpmetaphlan.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: " + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
          return tooltips.hmpmetaphlan.style("visibility", "visible");
      }
   
