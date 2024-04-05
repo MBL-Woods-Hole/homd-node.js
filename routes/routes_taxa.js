@@ -1258,7 +1258,11 @@ router.get('/ecology', function ecology(req, res) {
       }
     }
     children_list.sort()
-    //console.log('lineage_list',lineage_list)
+    console.log('otid',otid)
+    if(C.hmp_v3v5_to_suppress.indexOf(otid) != -1){
+        hmp_refseqv3v5_notes = 'No data – the v3v5 region of the 16S rRNA gene does not distinguish this species from its close relatives.'
+    }
+    console.log('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
     
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology', page)
     
