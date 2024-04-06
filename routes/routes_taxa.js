@@ -786,7 +786,7 @@ router.get('/life', function life(req, res) {
           }
           html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+lineage_list[1][show_ranks[i]]+"' target='_blank'>LPSN.dsmz.de</a>]"
 
-          html += "&nbsp;&nbsp;[<a href='ecology?rank="+show_ranks[i]+"&name="+lineage_list[1][show_ranks[i]]+"'>HOMD Abundance</a>]</span>"
+          html += "[<a href='ecology?rank="+show_ranks[i]+"&name="+lineage_list[1][show_ranks[i]]+"'>HOMD Abundance</a>]</span>"
           html += '</td></tr>'
        }else {  // Gather rows before the last row
          
@@ -832,7 +832,7 @@ router.get('/life', function life(req, res) {
                
                html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
 
-               html += "&nbsp;&nbsp;[<a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>HOMD Abundance</a>]</span></span><br>"
+               html += "<br>[<a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>HOMD Abundance</a>]</span></span><br>"
                }
          
          }else {
@@ -855,7 +855,7 @@ router.get('/life', function life(req, res) {
              }
              html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+taxa_list[n]+"' target='_blank'>LPSN.dsmz.de</a>]"
 
-             html += " &nbsp;&nbsp;[<a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>HOMD Abundance</a>]</span></span><br>"
+             html += " <br>[<a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>HOMD Abundance</a>]</span></span><br>"
             }
          } 
          html += "</li>"
