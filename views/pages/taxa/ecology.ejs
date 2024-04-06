@@ -108,13 +108,13 @@ ul li{
    padding:10px;
 }
 .nonote{
-   font-size:10px;
+   font-size:11px;
    padding:10px 4px;
    margin-left:250px;
    
 }
 .note{
-  font-size:12px;
+  font-size:13px;
   padding:10px 4px;
   width:auto;
   height:auto;
@@ -337,9 +337,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.hmp_refseqv1v3.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -377,9 +377,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.hmp_refseqv3v5.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -423,9 +423,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.nihv1v3.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -466,9 +466,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.nihv3v5.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -509,9 +509,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.erenv1v3.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -552,9 +552,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.erenv3v5.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -596,9 +596,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.dewhirst.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -637,9 +637,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.hmp_metaphlan.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>

@@ -82,10 +82,15 @@
 }
 .vist-taxon-page{
   float:right;
-  font-size:x-small;
+  font-size:12px;
 }
 .vist-taxon-page a{
-  color:steelblue;
+  color:green;
+  
+}
+li {
+   padding:5px;
+   border-bottom:1px solid black;
 }
 </style>
 <% images = JSON.parse(image_array)  %>
@@ -191,7 +196,9 @@
      <tr><th></th><th><i>e</i>HOMD Taxonomy</th><tr>
     </thead>
     <tbody>
-     <tr><td class='life-taxa-name'>Life</td><td class='life-taxa'><a href='life'>Cellular Organisms</a></td></tr>
+     <tr><td class='life-taxa-name'>Life</td><td class='life-taxa'><a href='life'>Cellular Organisms</a></td>
+     
+     </tr>
      <%- html %>
     
     </tbody>

@@ -727,11 +727,15 @@ router.get('/life', function life(req, res) {
      title = 'Domain: Archaea'
      cts = C.taxon_counts_lookup['Archaea'].taxcnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>("+cts+")</small>"
-     html += " <span class='vist-taxon-page'><a href='ecology?rank=domain&name=Archaea'>Abundance</a></span><br>"
+     html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/domain/Archaea' target='_blank'>LPSN.dsmz.de</a>]"
+
+     html += "&nbsp;&nbsp;[<a href='ecology?rank=domain&name=Archaea'>Abundance</a>]</span><br>"
        title = 'Domain: Bacteria'
        cts = C.taxon_counts_lookup['Bacteria'].taxcnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>("+cts+")</small>"
-     html += " <span class='vist-taxon-page'><a href='ecology?rank=domain&name=Bacteria'>Abundance</a></span><br>"
+     html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/domain/Bacteria' target='_blank'>LPSN.dsmz.de</a>]"
+
+     html += "&nbsp;&nbsp;[<a href='ecology?rank=domain&name=Bacteria'>Abundance</a>]</span><br>"
 
      html += '</td></tr>'
      image_array =[{'name':'cellular_organisms.png','text':''}]
@@ -776,8 +780,13 @@ router.get('/life', function life(req, res) {
           }else {
             html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a> ('+cts+')'
           }
-         
-          html += " <span class='vist-taxon-page'><a href='ecology?rank="+show_ranks[i]+"&name="+lineage_list[1][show_ranks[i]]+"'>Abundance</a></span>"
+          let lpsn_rank = show_ranks[i]
+          if(show_ranks[i] == 'klass'){
+              lpsn_rank = 'class'
+          }
+          html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+lineage_list[1][show_ranks[i]]+"' target='_blank'>LPSN.dsmz.de</a>]"
+
+          html += "&nbsp;&nbsp;[<a href='ecology?rank="+show_ranks[i]+"&name="+lineage_list[1][show_ranks[i]]+"'>HOMD Abundance</a>]</span>"
           html += '</td></tr>'
        }else {  // Gather rows before the last row
          
@@ -802,6 +811,7 @@ router.get('/life', function life(req, res) {
        for(var n in taxa_list){
          //console.log('SHOW RANKS',show_ranks.length)
          title = rank_display+': '+taxa_list[n]
+         html += "<li>"
          if(rank === 'genus'){
 
                childern_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].children_ids
@@ -813,7 +823,16 @@ router.get('/life', function life(req, res) {
                  otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
                //console.log('otid',otid)
                html += "<span class=''>"+space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
-               html += " <span class='vist-taxon-page'><a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>Abundance</a></span></span><br>"
+               let lpsn_link = taxa_list[n].replace(' ','-')
+               let lpsn_rank = show_ranks[i]
+               if(taxa_list[n].includes('HMT')){
+                   lpsn_link = taxa_list[n].split(' ')[0]
+                   lpsn_rank = show_ranks[i-1]
+               }
+               
+               html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
+
+               html += "&nbsp;&nbsp;[<a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>HOMD Abundance</a>]</span></span><br>"
                }
          
          }else {
@@ -830,9 +849,16 @@ router.get('/life', function life(req, res) {
              lin = make_lineage(node)
              cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString()
              html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
-             html += " <span class='vist-taxon-page'><a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>Abundance</a></span></span><br>"
+             let lpsn_rank = show_ranks[i]
+             if(show_ranks[i] == 'klass'){
+               lpsn_rank = 'class'
+             }
+             html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+taxa_list[n]+"' target='_blank'>LPSN.dsmz.de</a>]"
+
+             html += " &nbsp;&nbsp;[<a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>HOMD Abundance</a>]</span></span><br>"
             }
          } 
+         html += "</li>"
        }
        html += '</td></tr>'
       }
@@ -1258,11 +1284,11 @@ router.get('/ecology', function ecology(req, res) {
       }
     }
     children_list.sort()
-    console.log('otid',otid)
+    //console.log('otid',otid)
     if(C.hmp_v3v5_to_suppress.indexOf(otid) != -1){
         hmp_refseqv3v5_notes = 'No data – the v3v5 region of the 16S rRNA gene does not distinguish this species from its close relatives.'
     }
-    console.log('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
+    //console.log('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
     
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology', page)
     
