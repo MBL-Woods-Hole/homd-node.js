@@ -786,7 +786,7 @@ router.get('/life', function life(req, res) {
           }
           html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+lineage_list[1][show_ranks[i]]+"' target='_blank'>LPSN.dsmz.de</a>]"
 
-          html += "[<a href='ecology?rank="+show_ranks[i]+"&name="+lineage_list[1][show_ranks[i]]+"'>HOMD Abundance</a>]</span>"
+          html += "&nbsp;&nbsp;[<a href='ecology?rank="+show_ranks[i]+"&name="+lineage_list[1][show_ranks[i]]+"'>HOMD Abundance</a>]</span>"
           html += '</td></tr>'
        }else {  // Gather rows before the last row
          
@@ -1546,7 +1546,7 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
         abundance_order = C.dewhirst_abundance_order
     }else if(source === 'erenv1v3'){
         if(type === 'samples_file'){
-            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'eren2014_v1v3_rank_abundance_sums_2023-08-11_homd.csv.gz')
+            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'eren2014_v1v3_rank_abundance_sums_homd.csv.gz')
             res.download(fullpath)
             return 
         }
@@ -1554,7 +1554,7 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
         abundance_order = C.eren_abundance_order
     }else if(source === 'erenv3v5'){
         if(type === 'samples_file'){
-            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'eren2014_v3v5_rank_abundance_sums_2023-08-11_homd.csv.gz')
+            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'eren2014_v3v5_rank_abundance_sums_homd.csv.gz')
             res.download(fullpath)
             return
         }
@@ -1564,9 +1564,19 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
         header += 'HOMD Data from HMP MetaPhlan (unpublished); '
         abundance_order = C.hmp_metaphlan_abundance_order
     }else if(source === 'hmprefseqv1v3'){
+        if(type === 'samples_file'){
+            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'HMP_16SRefseq_Ranked_Abundance_v1v3_homd.tar.gz')
+            res.download(fullpath)
+            return 
+        }
         header += 'HOMD Data from HMP 16S RefSeq V1-V3 (unpublished); '
         abundance_order = C.hmp_refseq_abundance_order
     }else if(source === 'hmprefseqv3v5'){
+        if(type === 'samples_file'){
+            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'HMP_16SRefseq_Ranked_Abundance_v3v5_homd.tar.gz')
+            res.download(fullpath)
+            return 
+        }
         header += 'HOMD Data from HMP 16S RefSeq V3-V5 (unpublished); '
         abundance_order = C.hmp_refseq_abundance_order
     }
