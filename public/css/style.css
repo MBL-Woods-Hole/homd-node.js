@@ -60,11 +60,22 @@ p {
 .xsmall {
     font-size: x-small;
 }
+
 #wrapper {
+  /* 
   border: 1px solid #000;
   width: 1350px;
-  margin: auto;
+  margin: auto; 
+  */
+
+  
+  padding: 0;
+  max-width: 80%; /* // or any percentage that match previous `25rem` horizontal padding value, or just any size that you want */
+  margin: 0 auto; /* // don't forget to set horizontal margin to `auto` to make it centered */
+  border: 1px solid #000;
 }
+
+
 .page-content {
   padding:15px 5px;
   margin: 5px;
@@ -104,7 +115,8 @@ input[type="radio"] {
  */
 /* header images masthead */
 #masthead {
-  width:1350px;
+  /* width:1350px; */
+  width: 100%;
   background: #013366;
   
 }

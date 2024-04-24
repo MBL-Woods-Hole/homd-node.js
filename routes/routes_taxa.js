@@ -185,10 +185,8 @@ function apply_ttable_filter(req, filter) {
               var lineage_list = make_lineage(node)
               
               if(lineage_list[0] in C.taxon_counts_lookup){
-                 // if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
-                 //    el.ecology = 1
-                 
-                 if('nih' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['nih']).length != 0){
+                 //console.log('kkk',C.taxon_counts_lookup[lineage_list[0]])
+                 if('refseq' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['refseq']).length != 0){
                      el.ecology = 1
                  }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
                      el.ecology = 1
@@ -1111,17 +1109,17 @@ router.get('/ecology', function ecology(req, res) {
     }
     //let segata_text = '',dewhirst_text='',erenv1v3_text='';
     //console.log('rank',rank,'tax',tax_name)
-    let nihv1v3_notes='',nihv3v5_notes='',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='',hmp_metaphlan_notes='',hmp_refseqv1v3_notes='',hmp_refseqv3v5_notes='';
+    let dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='',hmp_metaphlan_notes='',hmp_refseqv1v3_notes='',hmp_refseqv3v5_notes='';
     let max = 0;
     let otid ='0';
     let max_obj = {};
     //let major_genera=0;
     //let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
-    let dewhirst_data={},erenv1v3_data={},erenv3v5_data={},nihv1v3_data={},nihv3v5_data={},hmp_metaphlan_data={},hmp_refseqv1v3_data={},hmp_refseqv3v5_data={};
+    let dewhirst_data={},erenv1v3_data={},erenv3v5_data={},hmp_metaphlan_data={},hmp_refseqv1v3_data={},hmp_refseqv3v5_data={};
     //let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
-    let dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0,nihv1v3_max=0,nihv3v5_max=0,hmp_metaphlan_max =0,hmp_refseqv1v3_max=0,hmp_refseqv3v5_max=0;
+    let dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0,hmp_metaphlan_max =0,hmp_refseqv1v3_max=0,hmp_refseqv3v5_max=0;
     //let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
-    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',nihv1v3_table='',nihv3v5_table='',hmp_metaphlan_table='',hmp_refseqv1v3_table,hmp_refseqv3v5_table;
+    let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',hmp_metaphlan_table='',hmp_refseqv1v3_table,hmp_refseqv3v5_table;
     //console.log('rank: '+rank+' name: '+tax_name);
     // TODO::should be in constants???
     let text = get_rank_text(rank,tax_name)
@@ -1167,39 +1165,6 @@ router.get('/ecology', function ecology(req, res) {
    }else {
        if(lineage_list[0] in C.taxon_counts_lookup){
          
-         // if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
-//              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
-//              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
-//              let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
-//              segata_table = build_abundance_table('segata',clone_segata_data, C.base_abundance_order.concat(['ST']))
-//              if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-//                  segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
-//              }
-//          }
-         if('nih_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['nih_v1v3']).length != 0){
-             nihv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_nihv1v3']
-             nihv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['nih_v1v3'])
-             nihv1v3_data = sort_obj_by_abundance_order(nihv1v3_data,C.base_abundance_order)
-             // order by constants.bas_abundance_order
-             let clone_nih_data = JSON.parse(JSON.stringify(nihv1v3_data)) // clone to avoid difficult errors
-             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             nihv1v3_table = build_abundance_table('nih_v1v3', clone_nih_data, C.base_abundance_order)
-             if('nih_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-                 nihv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['nih_v1v3']
-             }
-         }
-         if('nih_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['nih_v3v5']).length != 0){
-             nihv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_nihv3v5']
-             nihv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['nih_v3v5'])
-             nihv3v5_data = sort_obj_by_abundance_order(nihv3v5_data,C.base_abundance_order)
-             // order by constants.bas_abundance_order
-             let clone_nih_data = JSON.parse(JSON.stringify(nihv3v5_data)) // clone to avoid difficult errors
-             //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-             nihv3v5_table = build_abundance_table('nih_v3v5', clone_nih_data, C.base_abundance_order)
-             if('nih_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-                 nihv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['nih_v3v5']
-             }
-         }
          if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
              //console.log('in Dewhirst')
@@ -1292,7 +1257,7 @@ router.get('/ecology', function ecology(req, res) {
     
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology', page)
     
-//     console.log('nihv1v3_max',nihv1v3_max)
+
 //     console.log('dewhirst_notes',dewhirst_notes)
 //     console.log('erenv1v3_notes',erenv1v3_notes)
 //     console.log('erenv3v5_notes',erenv3v5_notes)
@@ -1307,16 +1272,15 @@ router.get('/ecology', function ecology(req, res) {
       lineage: lineage_string,
       lin: lineage_list[0],
       rank: rank,
-      max: JSON.stringify({'hmp_refseqv1v3':hmp_refseqv1v3_max,'hmp_refseqv3v5':hmp_refseqv3v5_max,'hmp_metaphlan':hmp_metaphlan_max,'nihv1v3':nihv1v3_max,'nihv3v5':nihv3v5_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
+      max: JSON.stringify({'hmp_refseqv1v3':hmp_refseqv1v3_max,'hmp_refseqv3v5':hmp_refseqv3v5_max,'hmp_metaphlan':hmp_metaphlan_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
       otid: otid,  // zero unless species
       genera: JSON.stringify(genera),
       text_file: text[0],
       page: page,
       text_format: text[1],
       children: JSON.stringify(children_list),
-      notes: JSON.stringify({'hmp_refseqv1v3':hmp_refseqv1v3_notes,'hmp_refseqv3v5':hmp_refseqv3v5_notes,'hmp_metaphlan':hmp_metaphlan_notes,'nihv1v3':nihv1v3_notes,'nihv3v5':nihv3v5_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
-      nihv1v3_table: nihv1v3_table,
-      nihv3v5_table: nihv3v5_table,
+      notes: JSON.stringify({'hmp_refseqv1v3':hmp_refseqv1v3_notes,'hmp_refseqv3v5':hmp_refseqv3v5_notes,'hmp_metaphlan':hmp_metaphlan_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
+      
       dewhirst_table: dewhirst_table,
       erenv1v3_table: erenv1v3_table,
       erenv3v5_table: erenv3v5_table,
@@ -1324,8 +1288,7 @@ router.get('/ecology', function ecology(req, res) {
       hmp_refseqv1v3_table: hmp_refseqv1v3_table,
       hmp_refseqv3v5_table: hmp_refseqv3v5_table,
       //segata: JSON.stringify(segata_data),
-      nihv1v3: JSON.stringify(nihv1v3_data),
-      nihv3v5: JSON.stringify(nihv3v5_data),
+      
       dewhirst: JSON.stringify(dewhirst_data),
       erenv1v3: JSON.stringify(erenv1v3_data),
       erenv3v5: JSON.stringify(erenv3v5_data),
@@ -1347,139 +1310,7 @@ function sort_obj_by_abundance_order(obj,order){
     }
     return new_obj
 }
-// router.get('/ecologyX/:level/:taxname', function ecology(req, res) {
-//     helpers.print('in ecology')
-//     let rank = req.params.level;
-//     //let tax_name = req.params.name
-//     //console.log('req.params',req)
-//     let tax_name = req.params.taxname[0].toUpperCase() + req.params.taxname.substring(1); // string[0].toUpperCase() + string.substring(1)
-//     //let segata_text = '',dewhirst_text='',erenv1v3_text='';
-//     let segata_notes = '',dewhirst_notes='',erenv1v3_notes='',erenv3v5_notes='';
-//     let max = 0;
-//     let otid ='0';
-//     let max_obj = {};
-//     //let major_genera=0;
-//     let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
-//     let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
-//     let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
-//     //console.log('rank: '+rank+' name: '+tax_name);
-//     // TODO::should be in constants???
-//     let text = get_rank_text(rank,tax_name)
-//    
-//     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
-//     //console.log(tax_name+'_'+rank,node)
-//     if(!node){
-//       console.log('ERROR - could not find node for',tax_name+'_'+rank)
-//     }
-//     let genera = get_major_genera(rank, node)
-//     // sort genera list 
-//     genera.sort(function sortByTaxa(a, b) {
-//         return helpers.compareStrings_alpha(a.taxon, b.taxon);
-//     })
-//     //console.log(tax_name,rank,node)
-//     if(rank == 'species'){
-//       if(node.hasOwnProperty('otid')){
-//           otid = node.otid
-//       }
-//     }else if(rank == 'subspecies'){
-//       otid = node.otid
-//     }
-//    //console.log('node',node)
-//    //console.log(node)
-//    // /subspecies/subsp.%20dentisani%20clade%20058
-//    //console.log(node)
-//    var children_list = []
-//    for(var i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
-//       let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
-//       //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
-//       children_list.push("<a href='/taxa/ecology?rank="+n.rank+"&name="+n.taxon+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
-//    }
-//    
-//    if(!node){
-//       console.log('ERROR Node')
-//    }
-//    let lineage_list = make_lineage(node)
-//    
-//    if(!lineage_list[0]){
-//       lineage_list[0] = ''
-//       console.log('ERROR Lineage')
-//    }else {
-//        if(lineage_list[0] in C.taxon_counts_lookup){
-//          
-//          if('segata' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['segata']).length != 0){
-//              segata_max = C.taxon_counts_lookup[lineage_list[0]]['max_segata']
-//              segata_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['segata'])
-//              let clone_segata_data = JSON.parse(JSON.stringify(segata_data)) // clone to avoid difficult errors
-//              segata_table = build_abundance_table('segata',clone_segata_data, C.base_abundance_order.concat(['ST']))
-//              if('segata' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-//                  segata_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['segata']
-//              }
-//          }
-//          
-//          if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
-//              dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
-//              //console.log('in Dewhirst')
-//              dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
-//              let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
-//              dewhirst_table = build_abundance_table('dewhirst',clone_dewhirst_data, C.base_abundance_order.concat(['NS']))
-//              if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-//                  dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
-//              }
-//          }
-//          if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3']).length != 0){
-//              erenv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv1v3']
-//              erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
-//              let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
-//              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-//              erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.base_abundance_order.concat(['ST']))
-//              if('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-//                  erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
-//              }
-//          }
-//          if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5']).length != 0){
-//              erenv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
-//              erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
-//              let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
-//              //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
-//              erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.base_abundance_order.concat(['ST']))
-//              if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']){
-//                  erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
-//              }
-//          }
-//          
-//       }
-//     }
-//    //console.log('segata_data',segata_data)
-//     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology')
-//    
-//     res.render('pages/taxa/ecology', {
-//       title: 'HOMD ::'+rank+'::'+tax_name,
-//       pgname: 'taxon/ecology', // for AbountThisPage 
-//       config: JSON.stringify(CFG),
-//       tax_name: tax_name,
-//       //headline: 'Life: Cellular Organisms',
-//       lineage: lineage_string,
-//       rank: rank,
-//       max: JSON.stringify({'segata':segata_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
-//       otid: otid,  // zero unless species
-//       genera: JSON.stringify(genera),
-//       text_file: text[0],
-//       text_format: text[1],
-//       children: JSON.stringify(children_list),
-//       notes: JSON.stringify({'segata':segata_notes,'dewhirst':dewhirst_notes,'erenv1v3':erenv1v3_notes,'erenv3v5':erenv3v5_notes}),
-//       segata_table: segata_table,
-//       dewhirst_table: dewhirst_table,
-//       erenv1v3_table: erenv1v3_table,
-//       erenv3v5_table: erenv3v5_table,
-//       segata: JSON.stringify(segata_data),
-//       dewhirst: JSON.stringify(dewhirst_data),
-//       erenv1v3: JSON.stringify(erenv1v3_data),
-//       erenv3v5: JSON.stringify(erenv3v5_data),
-//       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-//       user: JSON.stringify(req.user || {}),
-//     })
-// })
-//
+
 router.get('/download/:type/:fxn', function download(req, res) {
     var today = new Date();
 	var dd = String(today.getDate()).padStart(2, '0');
@@ -1535,13 +1366,7 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
     let temp_list = Object.values(C.taxon_counts_lookup)
     let abundance_order
     let header = 'HOMD (https://homd.org/)::'
-    if(source === 'nihv1v3'){
-        header += 'HOMD Data from NIH V1V3 Unpublished; '
-        abundance_order = C.base_abundance_order
-    }else if(source === 'nihv3v5'){
-        header += 'HOMD Data from NIH V3V5 Unpublished; '
-        abundance_order = C.base_abundance_order
-    }else if(source === 'dewhirst'){
+    if(source === 'dewhirst'){
         header += 'HOMD Data from Dewhirst(unpublished); '
         abundance_order = C.dewhirst_abundance_order
     }else if(source === 'erenv1v3'){
@@ -1589,29 +1414,7 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
     }
     table_tsv += '\n'
     for(let tax_string in C.taxon_counts_lookup){
-      if(source === 'nihv1v3' 
-                && C.taxon_counts_lookup[tax_string].hasOwnProperty('nih_v1v3') 
-                && Object.keys(C.taxon_counts_lookup[tax_string]['nih_v1v3']).length > 0)
-            {
-            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
-            row = C.taxon_counts_lookup[tax_string]['nih_v1v3']
-            for(let n in abundance_order){
-                site = abundance_order[n]
-                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
-            }
-            table_tsv += '\n'
-      }else if(source === 'nihv3v5' 
-                && C.taxon_counts_lookup[tax_string].hasOwnProperty('nih_v3v5') 
-                && Object.keys(C.taxon_counts_lookup[tax_string]['nih_v3v5']).length > 0)
-            {
-            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
-            row = C.taxon_counts_lookup[tax_string]['nih_v3v5']
-            for(let n in abundance_order){
-                site = abundance_order[n]
-                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
-            }
-            table_tsv += '\n'
-      }else if(source === 'dewhirst' 
+      if(source === 'dewhirst' 
                 && C.taxon_counts_lookup[tax_string].hasOwnProperty('dewhirst') 
                 && Object.keys(C.taxon_counts_lookup[tax_string]['dewhirst']).length > 0)
             {
@@ -2622,7 +2425,7 @@ function build_abundance_table(cite, data, order){
     //console.log('data',data)
     //C.abundance_names
     let datapt = ''
-    var html = '<table><thead><tr><td></td>'
+    var html = "<table class='abundance-table'><thead><tr><td></td>"
     for(var n in order){
         html += "<th title='"+C.abundance_names[order[n]]+"'>"+order[n]+'</th>'
     }
@@ -2634,7 +2437,7 @@ function build_abundance_table(cite, data, order){
         if(datapt == 'NaN'){
            datapt = ''
         }
-        html += '<td class="right-justify">'+datapt+'</td>'
+        html += "<td class='right-justify'>"+datapt+"</td>"
     }
     html += '</tr>'
     
@@ -2642,41 +2445,41 @@ function build_abundance_table(cite, data, order){
         for(var n in data){
             datapt = (parseFloat(data[n]['10p'])).toFixed(3)
             if(datapt == 'NaN'){datapt = '';}
-            html += '<td class="right-justify">'+datapt+'</td>'
+            html += "<td class='right-justify'>"+datapt+"</td>"
         }
-        html += '</tr>'
-        html += '<tr><th>90<sup>th</sup>p</th>'
+        html += "</tr>"
+        html += "<tr><th>90<sup>th</sup>p</th>"
         for(var n in data){
             datapt = (parseFloat(data[n]['90p'])).toFixed(3)
             if(datapt == 'NaN'){datapt = '';}
-            html += '<td class="right-justify">'+datapt+'</td>'
+            html += "<td class='right-justify'>"+datapt+"</td>"
         }
-        html += '</tr>'
+        html += "</tr>"
  
     
-    html += '<tr><th>Stdev</th>'
+    html += "<tr><th>Stdev</th>"
     for(var n in data){
         
         datapt = (parseFloat(data[n].sd)).toFixed(3)
         if(datapt == 'NaN'){
            datapt = ''
         }
-        html += '<td class="right-justify">'+datapt+'</td>'
+        html += "<td class='right-justify'>"+datapt+"</td>"
     }
-    html += '</tr>'
+    html += "</tr>"
     
     
-      html += '<tr><th>Prev</th>'
+      html += "<tr><th>Prev</th>"
       for(var n in data){
         datapt = (parseFloat(data[n].prev)).toFixed(3)
         if(datapt == 'NaN'){
                datapt = ''
         }
-         html += '<td class="right-justify">'+datapt+'</td>'
+         html += "<td class='right-justify'>"+datapt+"</td>"
       }
-      html += '</tr>'
+      html += "</tr>"
   
-    html += '</tbody></table>'
+    html += "</tbody></table>"
     return html
 }   
 //

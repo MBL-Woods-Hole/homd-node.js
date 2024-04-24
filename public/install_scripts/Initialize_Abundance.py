@@ -26,12 +26,12 @@ headers = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SA
    
 # hmt_index = 2  # only for dewhirst and eren
 # rank_index=3  # rank
-# max_nih_index=6
+
 # max_dewhirst_index=7
 # max_eren_index=8
 # max_any_index=9
 # start_segata_index=11
-# nih_col_count=20  # header row =='BM'
+
 # start_dewhirst_index=31
 # dewhirst_col_count=27  # header row =='BM'
 # start_eren_index=59
@@ -264,7 +264,7 @@ def run_abundance_db():
     missing_count =0
     for row in result:
         #print(row)
-        max_nih, max_eren, max_dewhirst, max_hmp_metaphlan,max_hmp_refseq = 0,0,0,0,0
+        max_eren, max_dewhirst, max_hmp_metaphlan,max_hmp_refseq = 0,0,0,0,0
         taxon_string = fix_taxonomy(row['taxonomy'])
         #taxon_string = row['taxonomy']
         # tax_parts = taxon_string.split(';')
@@ -287,10 +287,7 @@ def run_abundance_db():
         #TCcollector[taxon_string]['max_all'] = row['max']
         if 'notes' not in TCcollector[taxon_string]:
             TCcollector[taxon_string]['notes'] = {}
-        if 'nih_v1v3' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['nih_v1v3'] = {}
-        if 'nih_v3v5' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['nih_v3v5'] = {}
+        
         if 'eren_v1v3' not in TCcollector[taxon_string]:
             TCcollector[taxon_string]['eren_v1v3'] = {}
         if 'eren_v3v5' not in TCcollector[taxon_string]:
@@ -304,18 +301,7 @@ def run_abundance_db():
         if 'hmp_refseq_v3v5' not in TCcollector[taxon_string]:
             TCcollector[taxon_string]['hmp_refseq_v3v5'] = {}
             
-        if row['reference'].startswith('NIH_v1v3'):
-            for p in all_site_prefixes:
-                max_nih = get_max(row, p, max_nih)
-                TCcollector[taxon_string]['nih_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-            TCcollector[taxon_string]['max_nihv1v3'] = max_nih
-            TCcollector[taxon_string]['notes']['nih_v1v3'] = row['notes']
-        if row['reference'].startswith('NIH_v3v5'):
-            for p in all_site_prefixes:
-                max_nih = get_max(row, p, max_nih)
-                TCcollector[taxon_string]['nih_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-            TCcollector[taxon_string]['max_nihv3v5'] = max_nih
-            TCcollector[taxon_string]['notes']['nih_v3v5'] = row['notes']
+        
         if row['reference'].startswith('Eren2014_v1v3'):
             for p in eren_site_prefixes:
                 max_eren = get_max(row, p, max_eren)

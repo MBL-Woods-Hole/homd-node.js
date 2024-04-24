@@ -467,7 +467,11 @@ router.get('/genome_table', function genome_table(req, res) {
          pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
          pager_txt += "   [[Jump to Page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
          for(var i=1;i<=page_data.number_of_pages;i++){
-            pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
+            if(i == parseInt(page_data.page)){
+              pager_txt +='<option selected value="'+i+'">pg: '+i+'</option>'
+            }else{
+              pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
+            }
          }
          pager_txt += "</select>]]"
       }
@@ -507,7 +511,11 @@ router.post('/genome_table', function genome_table_filter(req, res) {
          pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
          pager_txt += "   [[Jump to Page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
          for(var i=1;i<=page_data.number_of_pages;i++){
-            pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
+            if(i == parseInt(page_data.page)){
+              pager_txt +='<option selected value="'+i+'">pg: '+i+'</option>'
+            }else{
+              pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
+            }
          }
          pager_txt += "</select>]]"
       }

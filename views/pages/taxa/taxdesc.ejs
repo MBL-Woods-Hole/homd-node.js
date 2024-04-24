@@ -2,12 +2,21 @@
 
 
 
+.description_wimage{
+  float:left; 
+  width:49%; 
+  height:220px;
+  max-height:230px;
+  overflow:auto;
+  border:1px solid darkgreen;
+}
 .description{
   font-size:13px;
   padding:5px;
   max-height:200px;
   overflow:auto;
   border:1px solid darkgreen;
+  
 }
 #description_tbl{
   width:100%;
@@ -195,9 +204,9 @@
 
     
 <% if(images.length > 0 ) { %>    
-   <div class='description' style='float:left; width:49%; height:220px;max-height:230px;'>
+   <div class='description_wimage'>
 <% }else{ %>
-   <div class='description' style=''>
+   <div class='description'>
 <% } %>
   <% if(text_file){ %>
     <%- include("../../partials/static/"+text_file); %>
@@ -214,8 +223,7 @@
           <% if(data2.prev){ %>
             <br><br><b>Prevalence and Source</b>:<br><%- data2.prev %>
           <% } %>
-          <!-- <br><b>Cultivability</b>:<br>&nbsp;&nbsp;<%- data2.culta %> -->
-          <!-- <br><b>Phenotypic Characteristics</b>:<br>&nbsp;&nbsp;<%- data2.pheno %> -->
+          
         
     <% } %>
   <% } %>
@@ -416,13 +424,12 @@
   </tr>
   
   <tr>
-    <td class='tbl-title'>Pangenome(s):<br><small>(<a href='https://vamps.mbl.edu/anviserver' target='_blank'>Anvi`o-server</a> hosted on <a href='https://vamps2.mbl.edu/' title='Visualization and Analysis of Microbial Population Structures' target='_blank'>VAMPS</a>)</small></td>
+    <td class='tbl-title'><a href='/genome/anvio-server'>Pangenome(s)</a>:</td>
     <td><small>
-    <% if(data1.pangenomes){ %>
-    <% for(n in data1.pangenomes){ %>
-     
-      <a href='<%= links.anviserver_link %>/<%= data1.pangenomes[n] %>' target='_blank'><%= data1.pangenomes[n] %></a>
-    <% } %>
+    <% if(data1.pangenomes.length >0){ %>
+    <%   for(n in data1.pangenomes){ %>
+           <a href='<%= links.anviserver_link %>/<%= data1.pangenomes[n] %>' target='_blank'><%= data1.pangenomes[n] %></a>
+    <%   } %>
     <% }else{ %>
        No Pangenome Assembly Available yet.
     <% } %>

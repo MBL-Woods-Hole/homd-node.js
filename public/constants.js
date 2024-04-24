@@ -53,7 +53,7 @@ constants.names_w_text = {
   species:['666']
 }
 //constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
-constants.abundance_refs = ['eren_v1v3','eren_v3v5','dewhirst','nih_v1v3','nih_v3v5']
+constants.abundance_refs = ['eren_v1v3','eren_v3v5','dewhirst','hmp_refseq_v1v3','hmp_refseq_v3v5']
 constants.base_abundance_order     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
 constants.eren_abundance_order     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO',                                                'STO']
 constants.dewhirst_abundance_order = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']

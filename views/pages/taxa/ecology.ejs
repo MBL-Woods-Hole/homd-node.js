@@ -8,28 +8,28 @@ ul li{
    border:1px solid green;
    
 }
-
-
 .abund-table-div{
    
 }
-.abund-table-div table {
+.abundance-table {
    border-collapse:collapse;
    
 }
-.abund-table-div table td,th{
-   font-size:14px;
+.abundance-table td,th{
+   font-size:small;
    border:1px solid black;
-   padding:1px 3px;
+   padding:1px;
    
-}
+  }
+
+
 .column {
   float: left;
   min-height: 420px;
 }
 
 .left {
-  width: 15%;
+  width: 16%;
   font-size:12px;
   height: 200px; /* only to hold column open */
 }
@@ -40,7 +40,7 @@ ul li{
 }
 .middle {
   /* width: 54%; */
-  width:85%;
+  width:80%;
   border:1px solid black;
   
 }
@@ -81,7 +81,7 @@ ul li{
    border:1px solid grey;
 }
 #plot_table_master{
-   width:100%;
+   width:70%;
 }
 .plot{
    padding:0 10px;
@@ -157,8 +157,7 @@ ul li{
    font-size: small;
 }
 </style>
-<% nihv1v3_data = JSON.parse(nihv1v3) %>
-<% nihv3v5_data = JSON.parse(nihv3v5) %>
+
 <% dewhirst_data = JSON.parse(dewhirst) %>
 <% erenv1v3_data = JSON.parse(erenv1v3) %>
 <% erenv3v5_data = JSON.parse(erenv3v5) %>
@@ -345,7 +344,7 @@ ul li{
     <% } %>
     
   </td></tr>
-  
+  <tr><td><span id='table-tooltip'>hover for graph</span></td></tr>
   <tr><td class='data' colspan='2'>
     <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
       <small>percent abundance</small>
@@ -398,95 +397,6 @@ ul li{
 </tr>
   <!-- END HMP RefSeq V3V5 -->
 
-<tr>
-  <td>
-  
-  <table class='plot_table'><tr><td class='plot-td'>
-    
-    <div class='plot-title'>
-        <small>
-        NIH V1V3 Citation
-        </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_nihv1v3_here"></div> 
-    </div>
-        
-  </td><td class='notes-td'>
-    <% if(text_file){ %>
-     <div id='textX'><%- include('../../partials/static/'+text_file); %></div>
-   <% }else if(text_format){ %>
-    <div id='textX'><%- text_format %></div>
-   <%} %>
-    <% if(notes.nihv1v3 == ''){ %>
-        <div class='nonote'>No NIH Specific Notes</div>
-    <% }else{ %>
-        <% parts = notes.nihv1v3.split(';') %>
-        <div class='note'>
-        <b>Notes:</b><br>
-        <% for(n in parts){ %>
-         <%- parts[n] %><br><br>
-        <% } %>
-        </div>
-    <% } %>
-    
-  </td></tr>
-  
-  <tr><td class='data' colspan='2'>
-    <% if(Object.keys(nihv1v3_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- nihv1v3_table %></div>  
-    <% } %>  
-    
-    
-    </td></tr></table>
-    
-    
-  </td>
-</tr>
-
-
-<tr><td class='spacer' colspan='2'></td></tr>
-<tr><td>
-    <table class='plot_table'><tr><td class='plot-td'>
-    
-    <div class='plot-title'>
-        <small>
-          NIH V3V5 Citation
-        </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_nihv3v5_here"></div> 
-    </div>
-        
-  </td><td class='notes-td'>
-    
-    <% if(notes.nihv3v5 == ''){ %>
-        <div class='nonote'>No Notes</div>
-    <% }else{ %>
-        <% parts = notes.nihv3v5.split(';') %>
-        <div class='note'>
-        <b>Notes:</b><br>
-        <% for(n in parts){ %>
-         <%- parts[n] %><br><br>
-        <% } %>
-        </div>
-    <% } %>
-    
-  </td></tr>
-  
-  <tr><td class='data' colspan='2'>
-    <% if(Object.keys(nihv3v5_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- nihv3v5_table %></div>  
-    <% } %>  
-    
-    
-    </td></tr></table>
-
-
-</td>
-</tr>
 <tr><td class='spacer' colspan='2'></td></tr>
 
 <tr><td>
@@ -694,14 +604,14 @@ ul li{
 <script>
   mainmenu()
   max       =   JSON.parse('<%- max %>')
-  nihdatav1v3 = JSON.parse('<%- nihv1v3 %>')
-  nihdatav3v5 = JSON.parse('<%- nihv3v5 %>')
+
   dewhirst     = JSON.parse('<%- dewhirst %>')
   erenv1v3        = JSON.parse('<%- erenv1v3 %>')
   erenv3v5        = JSON.parse('<%- erenv3v5 %>')
   hmpmetaphlan    = JSON.parse('<%- hmp_metaphlan %>')
   hmprefseqv1v3   = JSON.parse('<%- hmp_refseqv1v3 %>')
   hmprefseqv3v5   = JSON.parse('<%- hmp_refseqv3v5 %>')
+  hmpv1v3table    = "<%- hmp_refseqv1v3_table %>"
   lineage         = '<%= lin %>'
   
   w = 350
@@ -709,6 +619,23 @@ ul li{
   var margin = {top: 30, right: 30, bottom: 70, left: 60},
       width = w - margin.left - margin.right,
       height = h - margin.top - margin.bottom;
+
+  //hmptablev1v3tt = d3.select("#table-tooltip").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+  //var svg = d3.select("#table-tooltip")
+  
+  var circle = document.querySelector("#table-tooltip");
+  //var x = document.getElementById("table-tooltip");
+//x.querySelector(".example").innerHTML = "Hello World!";
+  var tooltip = document.querySelector("#tooltip");
+
+circle.addEventListener("mouseover", function() {
+  tooltip.style.visibility = "visible";
+});
+
+circle.addEventListener("mouseout", function() {
+  tooltip.style.visibility = "hidden";
+});
+
 </script>
 <script type="text/javascript" src="/js/ecology.js"></script>
 

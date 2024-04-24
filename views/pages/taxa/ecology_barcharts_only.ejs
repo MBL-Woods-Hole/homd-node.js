@@ -153,8 +153,7 @@ ul li{
     font-size: small;
 }
 </style>
-<% nihv1v3_data = JSON.parse(nihv1v3) %>
-<% nihv3v5_data = JSON.parse(nihv3v5) %>
+
 <% dewhirst_data = JSON.parse(dewhirst) %>
 <% erenv1v3_data = JSON.parse(erenv1v3) %>
 <% erenv3v5_data = JSON.parse(erenv3v5) %>
@@ -312,39 +311,7 @@ ul li{
 </td>
 </tr>
   <!-- END HMP RefSeq V3V5 -->
-<tr>
-<td>
-  
-		  <table class='plot_table'><tr><td class='plot-td'>
-			<div class='plot-title'>
-				<small>
-				NIH V1V3 Citation
-				</small>
-			</div>
-			<div class='plot' >
-				<div id="plot_nihv1v3_here"></div> 
-			</div>
-		  </td></tr>
-		  </table>
-    
-    
-</td>
-<td>
-			<table class='plot_table'><tr><td class='plot-td'>
-			<div class='plot-title'>
-				<small>
-				  NIH V3V5 Citation
-				</small>
-			</div>
-			<div class='plot' >
-				<div id="plot_nihv3v5_here"></div> 
-			</div>
-		  </td></tr>
-		  </table>
 
-
-  </td>
-</tr>
 <tr>
   <td>
 			<table class='plot_table'><tr><td class='plot-td'>
@@ -455,8 +422,7 @@ ul li{
 <script>
   mainmenu()
   max       =   JSON.parse('<%- max %>')
-  nihdatav1v3 = JSON.parse('<%- nihv1v3 %>')
-  nihdatav3v5 = JSON.parse('<%- nihv3v5 %>')
+
   dewhirst     = JSON.parse('<%- dewhirst %>')
   erenv1v3 = JSON.parse('<%- erenv1v3 %>')
   erenv3v5 = JSON.parse('<%- erenv3v5 %>')
