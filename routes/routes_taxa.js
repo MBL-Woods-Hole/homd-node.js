@@ -686,7 +686,11 @@ router.get('/life', function life(req, res) {
   //console.log('in LIFE')
   // let myurl = url.parse(req.url, true);
   let tax_name = req.query.name;
+  //console.log('tax_name1',tax_name)
+  tax_name = helpers.ltrim(helpers.rtrim(tax_name, '"'),'"')
+  //console.log('tax_name1a',tax_name)
   let rank = (req.query.rank)
+  //console.log('rank',rank)
   let lin,lineage_string,otid
   if(req.query.otid && req.session.ttable_filter){
       //console.log('got otid for ttable')
@@ -699,7 +703,7 @@ router.get('/life', function life(req, res) {
     //console.log('rank:',rank)
   //console.log('tax_name',tax_name)
   if(tax_name){
-    tax_name = req.query.name.replace(/"/g,'')
+    //tax_name = req.query.name.replace(/"/g,'')
   }
   var image_array =[]
   if(rank){
@@ -738,7 +742,7 @@ router.get('/life', function life(req, res) {
      html += '</td></tr>'
      image_array =[{'name':'cellular_organisms.png','text':''}]
   }else {
-    //console.log(upto)
+    //console.log('tax_name2',tax_name+'_'+rank)
     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
     if(!node){
         console.log('taxnode error:',tax_name+'_'+rank)

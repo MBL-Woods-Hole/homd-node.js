@@ -1287,3 +1287,20 @@ module.exports.execShellCommand = function execShellCommand(cmd) {
   });
  });
 }
+
+module.exports.rtrim = function rtrim(x, characters) {
+  var start = 0;
+  var end = x.length - 1;
+  while (characters.indexOf(x[end]) >= 0) {
+    end -= 1;
+  }
+  return x.substr(0, end + 1);
+}
+module.exports.ltrim = function ltrim(x, characters) {
+  var start = 0;
+  while (characters.indexOf(x[start]) >= 0) {
+    start += 1;
+  }
+  var end = x.length - 1;
+  return x.substr(start);
+}
