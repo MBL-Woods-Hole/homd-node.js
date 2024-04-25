@@ -475,12 +475,8 @@
   <tr>
     <td class='tbl-title'>LPSN.dsmz.de:</td>
     <td>
-      <% link = "https://lpsn.dsmz.de/species/"+data1.genus+"-"+data1.species %>
-      <% show = "<em>"+data1.genus+" "+data1.species+"</em>" %>
-      <% if( data1.species.includes("HMT") ){ %>
-      <%    link = "https://lpsn.dsmz.de/genus/"+data1.genus %>
-      <%    show = "<em>"+data1.genus+" (genus level)</em>" %>
-      <% } %>
+      <% link = "https://lpsn.dsmz.de/"+links["lpsnlink"] %>
+      <% show = data1.genus+ " "+data1.species %>
       <small>
         
         <span>

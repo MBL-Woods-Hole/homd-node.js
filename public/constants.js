@@ -14,22 +14,8 @@ constants.user_security_levels = {
 }
 //constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
 constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
-// constants.phyla = [ 'Actinobacteria',
-//           'Bacteroidetes',
-//           'Chlamydiae',
-//           'Chlorobi',
-//           'Chloroflexi',
-//           'Euryarchaeota',
-//           'Firmicutes',
-//           'Fusobacteria',
-//           'Gracilibacteria (GN02)',
-//           'Proteobacteria',
-//           'Saccharibacteria (TM7)',
-//           'Spirochaetes',
-//           'SR1',
-//           'Synergistetes',
-//           'WPS-2'
-// ]
+
+  
 constants.names_w_text = {
   genera:['Actinomyces','Campylobacter','Corynebacterium','Gemella','Leptotrichia',
     'Porphyromonas','Pseudoleptotrichia','Schaalia','Tannerella','Aggregatibacter','Capnocytophaga',
@@ -443,5 +429,27 @@ constants.hmp_v3v5_to_suppress =[
 '298','313','469','572','885','306','323','324','380','412','902','903','700','326','335','336',
 ]
 
+// links on taxa description page
+constants.link_exceptions = {}
+constants.link_exceptions['105'] = {'ncbilink':'Eubacterium-infirmum','gcmlink':'Eubacterium%20infirmum','lpsnlink':'species/eubacterium-infirmum'}
+constants.link_exceptions['467'] = {'ncbilink':'Eubacterium-sulci','gcmlink':'Eubacterium%20sulci','lpsnlink':'species/eubacterium-sulci'}
+constants.link_exceptions['759'] = {'ncbilink':'Eubacterium-saphenum','gcmlink':'Eubacterium%20saphenum','lpsnlink':'species/eubacterium-saphenum'}
+constants.link_exceptions['673'] = {'ncbilink':'Eubacterium-minutum','gcmlink':'Eubacterium%20minutum','lpsnlink':'species/eubacterium-minutum'}
+constants.link_exceptions['694'] = {'ncbilink':'Eubacterium-nodatum','gcmlink':'Eubacterium%20nodatum','lpsnlink':'species/eubacterium-nodatum'}
+constants.link_exceptions['557'] = {'ncbilink':'Eubacterium-brachy','gcmlink':'Eubacterium%20brachy','lpsnlink':'species/eubacterium-brachy'}
+constants.link_exceptions['106'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/eubacterium-yurii-schtitka'}
+constants.link_exceptions['377'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/Eubacterium-yurii-margaretiae'}
+// constants.link_exceptions['174'] = {'lpsnlink':'family/Neisseriaceae'}
+// constants.link_exceptions['327'] = {'lpsnlink':'family/Neisseriaceae'}
+// constants.link_exceptions['274'] = {'lpsnlink':'order/Bacteroidales'}
+// constants.link_exceptions[''] = {'lpsnlink':''}
+// constants.link_exceptions[''] = {'lpsnlink':''}
+// constants.link_exceptions[''] = {'lpsnlink':''}
+// constants.link_exceptions[''] = {'lpsnlink':''}
+// constants.link_exceptions[''] = {'lpsnlink':''}
+// constants.link_exceptions[''] = {'lpsnlink':''}
+// constants.link_exceptions[''] = {'lpsnlink':''}
+// constants.link_exceptions[''] = {'lpsnlink':''}
+// constants.link_exceptions[''] = {'lpsnlink':''}
 
 module.exports = constants;

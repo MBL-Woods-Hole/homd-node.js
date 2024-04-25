@@ -536,21 +536,10 @@ router.get('/tax_description', function tax_description(req, res){
 
   
   */
-  let link_exceptions = {}
-  link_exceptions['105'] = {'ncbilink':'Eubacterium-infirmum','gcmlink':'Eubacterium%20infirmum','lpsnlink':'species/eubacterium-infirmum'}
-  link_exceptions['467'] = {'ncbilink':'Eubacterium-sulci','gcmlink':'Eubacterium%20sulci','lpsnlink':'species/eubacterium-sulci'}
-  link_exceptions['759'] = {'ncbilink':'Eubacterium-saphenum','gcmlink':'Eubacterium%20saphenum','lpsnlink':'species/eubacterium-saphenum'}
-  link_exceptions['673'] = {'ncbilink':'Eubacterium-minutum','gcmlink':'Eubacterium%20minutum','lpsnlink':'species/eubacterium-minutum'}
-  link_exceptions['694'] = {'ncbilink':'Eubacterium-nodatum','gcmlink':'Eubacterium%20nodatum','lpsnlink':'species/eubacterium-nodatum'}
-  link_exceptions['557'] = {'ncbilink':'Eubacterium-brachy','gcmlink':'Eubacterium%20brachy','lpsnlink':'species/eubacterium-brachy'}
-  // susp 106   Peptostreptococcaceae [XI][G-7] [Eubacterium] yurii subsp. schtitka
-  link_exceptions['106'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/eubacterium-yurii-schtitka'}
-  // subsp 377  Peptostreptococcaceae [XI][G-7] [Eubacterium] yurii subsps. yurii & margaretiae
-  link_exceptions['377'] = {'ncbilink':'Eubacterium-yurii','gcmlink':'Eubacterium%20yurii','lpsnlink':'subspecies/Eubacterium-yurii-margaretiae'}
   
   if(C.dropped_taxids.indexOf(otid) !== -1){
      //helpers.print(data1)
-     let message = "That is a dropped TaxonID: "+otid
+     let message = "This TaxonID ("+otid+") has been dropped."
      res.render('pages/lost_message', {
          title: 'HOMD :: Error',
          pgname: '', // for AbountThisPage 
@@ -622,15 +611,17 @@ router.get('/tax_description', function tax_description(req, res){
   let image_array = find_otid_images('species', otid)
   
   let lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
-  if(otid in link_exceptions){
-     links = link_exceptions[otid]
-  }else{
+  //if(otid in C.link_exceptions){
+  //   links = C.link_exceptions[otid]
+  //}else{
      if(data3.subspecies){
-        links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species+'%20'+data3.subspecies,'lpsnlink':'subspecies/'+data1.genus+'-'+data1.species+'-'+data3.subspecies.split(' ')[1]}
+        links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species+'%20'+data3.subspecies,'lpsnlink':'subspecies/'+data1.genus+'-'+data1.species+'-'+data3.subspecies.split(/\s/)[1]}
      }else{
-        links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species,'lpsnlink':'species/'+data1.genus+'-'+data1.species}
+        
+        links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species}
+        links['lpsnlink'] = helpers.get_lpsn_link(data1, data3)
      }
-  }
+  //}
   //pangenomes
   
   links.anviserver_link = C.anviserver_link
@@ -828,7 +819,7 @@ router.get('/life', function life(req, res) {
                let lpsn_link = taxa_list[n].replace(' ','-')
                let lpsn_rank = show_ranks[i]
                if(taxa_list[n].includes('HMT')){
-                   lpsn_link = taxa_list[n].split(' ')[0]
+                   lpsn_link = taxa_list[n].split(/\s/)[0]
                    lpsn_rank = show_ranks[i-1]
                }
                
@@ -956,7 +947,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
         let lineage_list = make_lineage(node)
         if(!lineage_list[0]){
            // must be ssp
-           let pts = species_for_plot[i].split(' ')
+           let pts = species_for_plot[i].split(/\s/)
            node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[pts[pts.length-1]+'_subspecies']
            lineage_list = make_lineage(node)
            
@@ -2077,7 +2068,7 @@ function create_taxon_table(otids, source, type, head_txt) {
                let rstrains = o1.ref_strains.join(' | ')
                let rnaseq = o1.rrna_sequences.join(' | ')
                // per FDewhirst: species needs to be unencumbered of genus for this table
-               // let species_pts = o2.species.split(' ')
+               // let species_pts = o2.species.split(/\s/)
 //                species_pts.shift()
 //                let species = species_pts.join(' ')
                

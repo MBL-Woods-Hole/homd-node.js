@@ -653,14 +653,14 @@ module.exports.parse_blast_query_xml = function parse_blast_query_xml(jsondata, 
 				   // possibly many
 				   for(let i in hits){
 			          //console.log('**i in hits**',i,hits[i])
-			          homdhitid = hits[i].Hit_def.split(' ')[0]
+			          homdhitid = hits[i].Hit_def.split(/\s/)[0]
 			          
 				    }
 				   
 				}else{
 				   //console.log('**hits**obj',hits)
 				   // single
-				   homdhitid = hits['Hit_def'].split(' ')[0]
+				   homdhitid = hits['Hit_def'].split(/\s/)[0]
 				}
 				ret.hitid_ary.push(homdhitid)
 				
@@ -715,7 +715,7 @@ module.exports.parse_blast_xml2json = function parse_blast_xml2json(jsondata){
         
             //console.log('hit Hsps',hit['Hit_hsps']['Hsp'])
             hit_title = hit['Hit_def']
-            split_name = hit_title.split(' ')
+            split_name = hit_title.split(/\s/)
             hit_id = split_name[0].trim()
             // SEQF1595_KI535341.1 [HMT-389 Abiotrophia defectiva ATCC 49176]
             
@@ -775,7 +775,7 @@ module.exports.parse_blast_best = function parse_blast_best(file_data, opt, blas
                  header += lines[i]+'<br>'
               }
               if(lines[i].startsWith('# Query:')){
-                 queryid = lines[i].split(' ')[2]
+                 queryid = lines[i].split(/\s/)[2]
               }
               if(lines[i] === '# 0 hits found'){
                  //console.log('linesXXX',n,lines)
@@ -966,7 +966,7 @@ module.exports.parse_blast_custom = function parse_blast_custom(file_data, opt, 
                  header += lines[i]+'<br>'
               }
               if(lines[i].startsWith('# Query:')){
-                 query = lines[i] //.split(' ')[2,]
+                 query = lines[i] //.split(/\s/)[2,]
               }
           
         }else{
@@ -1225,7 +1225,7 @@ function parse_blast_db_info(hit_data,ext,path){
        if(line.indexOf('sequences;') != -1){
            tmp = line.split('sequences;')
            hit.seqs = tmp[0].trim().replace(/,/g,'')
-           hit.bps = tmp[1].trim().split(' ')[0].replace(/,/g,'')
+           hit.bps = tmp[1].trim().split(/\s/)[0].replace(/,/g,'')
        }
        if(line.substring(0,4) === "Date"){
            hit.date = line.split('\t')[0].split(':')[1].trim()
@@ -1303,4 +1303,36 @@ module.exports.ltrim = function ltrim(x, characters) {
   }
   var end = x.length - 1;
   return x.substr(start);
+}
+module.exports.get_lpsn_link = function get_lpsn_link(obj1, lineage){
+   //console.log('obj',obj1,lineage)
+   if(lineage['genus'].includes('[')){
+       let gpts = lineage['genus'].split(/\s/)
+       let g = gpts.shift()
+       
+       let l = gpts.length
+       //console.log('l',g,l)
+       if(l == 1){
+           return 'family/'+lineage['family']
+       }
+       if(l == 2){
+           return 'order/'+lineage['order']
+       }
+       if(l == 3){
+           return 'class/'+lineage['klass']
+       }
+       if(l == 4){
+           let ppts = lineage['phylum'].split(/\s/)
+           //console.log('l2',lineage['phylum'],ppts)
+           if(ppts.length == 2){
+              return 'phylum/'+ppts[1]
+           }else{
+              return 'phylum/'+lineage['phylum']
+           }
+       }
+   }else if(obj1['species'].includes('HMT')){  //Anaerococcus sp. HMT-290
+      return 'genus/'+obj1['genus']
+   }else{
+      return 'species/'+obj1['genus']+'-'+obj1['species']
+   }
 }
