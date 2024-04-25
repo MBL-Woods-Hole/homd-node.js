@@ -20,22 +20,23 @@ from connect import MyConnection
 taxon_tbl           = 'otid_prime'   # UNIQUE  - This is the defining table
 genome_tbl = 'genomes'
 
-master_tax_lookup={}
+#master_tax_lookup={}
 #acceptable_genome_flags = ('11','12','21','91')
-dropped_otids = ['9',   '15',  '16',  '55',  '65',
-  '67',  '68',  '69',  '140', '143',
-  '177', '210', '220', '255', '292','293','296',
-  '310', '372', '395', '437', '446',
-  '449', '452', '453', '462', '474',
-  '486', '487', '502', '648', '729',
-  '826']
-#dropped_otids = []  # must get dropped from DB
-nonoral_otids = ['982','983','984','986','987','988','989','990','991','994','995','996','997','998','999']
+# dropped_otids = ['9',   '15',  '16',  '55',  '65',
+#   '67',  '68',  '69',  '140', '143',
+#   '177', '210', '220', '255', '292','293','296',
+#   '310', '372', '395', '437', '446',
+#   '449', '452', '453', '462', '474',
+#   '486', '487', '502', '648', '729',
+#   '826']
+
+#nonoral_otids = ['982','983','984','986','987','988','989','990','991','994','995','996','997','998','999']
+dropped_otids = []  # must get dropped from DB
+nonoral_otids = []  # must get from DB
 
 query_taxa ="""
 SELECT otid, taxonomy_id, genus, species,
-`warning`,
-`status`,
+warning, status, notes,
 ncbi_taxon_id as ncbi_taxid
 from otid_prime
 join taxonomy using(taxonomy_id)
@@ -49,11 +50,11 @@ ORDER BY otid
 """.format(tbl=genome_tbl)
 
 
-query_gene_count2 ="""
-SELECT otid, seq_id
-from {tbl}
-ORDER BY otid
-""".format(tbl=genome_tbl)
+# query_gene_count2 ="""
+# SELECT otid, seq_id
+# from {tbl}
+# ORDER BY otid
+# """.format(tbl=genome_tbl)
 
 counts = {}
 master_lookup = {}
@@ -63,6 +64,7 @@ def create_taxon(otid):
     taxon = {}
     taxon['otid'] = otid
     taxon['status'] = ''
+    taxon['notes'] = ''
     taxon['genus'] = ''
     taxon['species'] = ''
     taxon['warning'] = ''
@@ -87,49 +89,28 @@ def run_taxa(args):
     global master_lookup
     #print(query_taxa)
     result = myconn.execute_fetch_select_dict(query_taxa)
-    #split_code = '&lt;BR&gt;'
-
 
     #print(result)
     for obj in result:
         #print(obj)
         otid = str(obj['otid'])
-        if otid not in master_lookup:
-            # create ne taxon object with empty values
-            taxonObj = create_taxon(otid)
-
-            for n in obj:
-                #print('n',n)
-                toadd = str(obj[n]).strip()
-                #print(n,toadd)
-                #if n=='status' and toadd == 'Dropped':
-                #   pass
-                #else:
-                if n=='status':
-                    taxonObj['status'] = toadd
-                if n=='genus':  #list
-                    taxonObj['genus'] = toadd
-                elif n=='species':  #list
-                    taxonObj['species'] = toadd
-                elif n=='warning':  #list
-                    taxonObj['warning'] = toadd
-
-                elif n=='ncbi_taxid':  #list
-                    taxonObj['ncbi_taxid'] = toadd
-
-                else:
-                    #taxonObj[n] = toadd.replace('"','').replace("'","").replace(',','')
-                    pass
-            #master_lookup[obj['otid']] = ast.literal_eval(TaxonEncoder().encode(taxonObj))
-            #print(taxonObj)
-            master_lookup[otid] = taxonObj
+        taxonObj = create_taxon(otid)
+        
+        if obj['status'] == 'Dropped':
+            dropped_otids.append(otid)
+        if obj['status'] == 'NonOralRef':
+            nonoral_otids.append(otid)
+        
+        taxonObj['status']     = obj['status']
+        taxonObj['genus']      = obj['genus']
+        taxonObj['species']    = obj['species']
+        taxonObj['warning']    = obj['warning']
+        taxonObj['notes']      = obj['notes']
+        taxonObj['ncbi_taxid'] = obj['ncbi_taxid']
+        
+        master_lookup[otid] = taxonObj
 
 
-
-        else:
-            # is already in master list
-            pass
-    #print(master_lookup)
 
 
 def run_get_genomes(args):  ## add this data to master_lookup
@@ -557,51 +538,10 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
                 counts[long_tax_name]['gcnt_wdropped']   = 0
             
             
-          #   counts[long_tax_name] = { "taxcnt": 1, "gcnt": gcnt, "refcnt": rfcnt,
-#                 "taxcnt_wdropped": 1, "gcnt_wdropped": gcnt, "refcnt_wdropped": rfcnt,
-#                 "taxcnt_wnonoral": 1, "gcnt_wnonoral": gcnt, "refcnt_wnonoral": rfcnt
-#             }
+
     return counts    
         
-# def run_counts(otid, taxlist, gcnt, rfcnt):
-#     global counts
-#     #print(taxlist)
-# 
-# 
-#     for m in range(len(ranks)): # 7
-#         #tax_name = taxlist[m]
-# 
-#         sumdtaxname = []
-#         for d in range(m+1):
-#             sumdtaxname.append(taxlist[d])
-# 
-#         long_tax_name = ';'.join(sumdtaxname)
-# 
-#         if long_tax_name[-1] == ';':
-#             #remove it -- means subsp ==''
-#             continue
-#             #long_tax_name = long_tax_name[:-1]
-#         #print('long_tax_name ',long_tax_name)
-#         #print('otid ',otid)
-#         
-# 
-# # longtaxname": {"tax_cnt": 1, "gcnt": 5, "refcnt": 3   .... 
-# #NO dropped or nor:  774	8607	999 
-# # ALL    
-#         if long_tax_name in counts:
-#             if otid not in nonoral_otids and otid not in dropped_otids:  
-#                counts[long_tax_name]["taxcnt"] += 1
-#                counts[long_tax_name]['refcnt']  += rfcnt
-#                counts[long_tax_name]['gcnt']    += gcnt
-#         else:
-#             # this will always be species
-#             if otid not in nonoral_otids and otid not in dropped_otids: 
-#                 counts[long_tax_name] = { "taxcnt": 1, "gcnt": gcnt, "refcnt": rfcnt}
-# #            else:
-# #               counts[long_tax_name] = { "taxcnt": 0, "gcnt": 0, "refcnt": 0}
-#     
-#     
-#     return counts
+
 
 def get_mbps(x):
     #return str(float(x)/1000000) + 'Mbps'
@@ -705,7 +645,7 @@ if __name__ == "__main__":
     print('running taxa (run defs in order)')
 
     run_taxa(args)   # RUN FIRST in master_lookup => homd_data_taxalookup.json
-
+    
     run_get_genomes(args)  # in master_lookup => homd_data_taxalookup.json
     run_synonyms(args)     # in master_lookup
 

@@ -264,7 +264,7 @@ def run_abundance_db():
     missing_count =0
     for row in result:
         #print(row)
-        max_eren, max_dewhirst, max_hmp_metaphlan,max_hmp_refseq = 0,0,0,0,0
+        max_eren, max_dewhirst, max_hmp_metaphlan, max_hmp_refseq = 0,0,0,0
         taxon_string = fix_taxonomy(row['taxonomy'])
         #taxon_string = row['taxonomy']
         # tax_parts = taxon_string.split(';')
