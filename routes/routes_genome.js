@@ -394,8 +394,9 @@ function apply_sspecies(lst){
    for(let i in lst){
       otid = lst[i].otid
       //sp = lst[i].species
+      //console.log('otid',otid)
       lst[i].subspecies = ''
-      if(C.taxon_lineage_lookup[otid].subspecies){
+      if(C.taxon_lineage_lookup.hasOwnProperty(otid) && C.taxon_lineage_lookup[otid].subspecies){
         //subspecies = ' <small>['+C.taxon_lineage_lookup[otid].subspecies+']</small>'
         //lst[i].species = sp + subspecies
         lst[i].subspecies = C.taxon_lineage_lookup[otid].subspecies

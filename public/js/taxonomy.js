@@ -199,6 +199,7 @@ function change_level(rank) {
       genome_count_total = 0
       refseq_count_total = 0
       for(n in static_data){
+        
         html += '<tr class="table-warning">'
         if(rank != 'domain'){
           html += "<td nowrap><a href='life?rank="+ranks[ranks.indexOf(rank)-1]+"&name="+static_data[n].parent_taxon+"'>"+static_data[n].parent_taxon+"</a></td>"
@@ -207,15 +208,17 @@ function change_level(rank) {
         if(rank == 'species'){
             
             if(static_data[n].otid){
+               hmt = static_data[n].otid.padStart(3, '0')
                html += "<td nowrap>"+static_data[n].item_taxon+"</td>"
-               html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
+               html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+hmt+"</a></td>"
             }else{
                html += "<td nowrap><a href='life?rank="+rank+"&name="+static_data[n].item_taxon+"'>"+static_data[n].item_taxon+"</a></td>"
                html +="<td nowrap><small>[<a href='life?rank=species&name=\""+static_data[n].item_taxon+"\"'>open-subsp.</a>]</small></td>"
             }
         }else if(rank == 'subspecies'){
+          hmt = static_data[n].otid.padStart(3, '0')
           html += "<td nowrap>"+static_data[n].item_taxon+"</td>"
-          html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+static_data[n].otid+"</a></td>"
+          html +="<td style='text-align:center'><a href='tax_description?otid="+static_data[n].otid+"'>"+hmt+"</a></td>"
         }else{
           html += "<td nowrap><a href='life?rank="+rank+"&name="+static_data[n].item_taxon+"'>"+static_data[n].item_taxon+"</a></td>"
         }
