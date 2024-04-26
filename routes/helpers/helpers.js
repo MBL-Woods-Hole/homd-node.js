@@ -1304,7 +1304,7 @@ module.exports.ltrim = function ltrim(x, characters) {
   var end = x.length - 1;
   return x.substr(start);
 }
-module.exports.get_lpsn_link = function get_lpsn_link(obj1, lineage){
+module.exports.get_lpsn_outlink = function get_lpsn_link(obj1, lineage){
    //console.log('obj',obj1,lineage)
    if(lineage['genus'].includes('[')){
        let gpts = lineage['genus'].split(/\s/)

@@ -602,7 +602,7 @@ router.get('/tax_description', function tax_description(req, res){
   //let tmp_list = Object.values(C.phage_lookup).filter(item => item.host_otid === otid)
   //let pids = tmp_list.map()
   //console.log('d1',data1)
-  //console.log('d2',data2)
+  //console.log('d3',data3)
   // get_genus photos
   let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
   //console.log('node',node)
@@ -611,17 +611,16 @@ router.get('/tax_description', function tax_description(req, res){
   let image_array = find_otid_images('species', otid)
   
   let lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
-  //if(otid in C.link_exceptions){
-  //   links = C.link_exceptions[otid]
-  //}else{
-     if(data3.subspecies){
-        links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species+'%20'+data3.subspecies,'lpsnlink':'subspecies/'+data1.genus+'-'+data1.species+'-'+data3.subspecies.split(/\s/)[1]}
-     }else{
-        
+  if(otid in C.link_exceptions){
+     links = C.link_exceptions[otid]
+  }else{
+     //if(data3.subspecies){
+     //   links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species+'%20'+data3.subspecies,'lpsnlink':'subspecies/'+data1.genus+'-'+data1.species+'-'+data3.subspecies.split(/\s/)[1]}
+     //}else{
         links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species}
-        links['lpsnlink'] = helpers.get_lpsn_link(data1, data3)
-     }
-  //}
+        links['lpsnlink'] = helpers.get_lpsn_outlink(data1, data3)
+     //}
+  }
   //pangenomes
   
   links.anviserver_link = C.anviserver_link
