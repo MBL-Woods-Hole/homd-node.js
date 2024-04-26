@@ -618,7 +618,7 @@ router.get('/tax_description', function tax_description(req, res){
      //   links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species+'%20'+data3.subspecies,'lpsnlink':'subspecies/'+data1.genus+'-'+data1.species+'-'+data3.subspecies.split(/\s/)[1]}
      //}else{
         links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species}
-        links['lpsnlink'] = helpers.get_lpsn_outlink(data1, data3)
+        links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
      //}
   }
   //pangenomes
@@ -677,7 +677,9 @@ router.get('/life', function life(req, res) {
   // let myurl = url.parse(req.url, true);
   let tax_name = req.query.name;
   //console.log('tax_name1',tax_name)
-  tax_name = helpers.ltrim(helpers.rtrim(tax_name, '"'),'"')
+  if(tax_name){
+     tax_name = helpers.ltrim(helpers.rtrim(tax_name, '"'),'"')
+  }
   //console.log('tax_name1a',tax_name)
   let rank = (req.query.rank)
   //console.log('rank',rank)
@@ -773,10 +775,20 @@ router.get('/life', function life(req, res) {
             html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a> ('+cts+')'
           }
           let lpsn_rank = show_ranks[i]
-          if(show_ranks[i] == 'klass'){
-              lpsn_rank = 'class'
-          }
-          html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+lineage_list[1][show_ranks[i]]+"' target='_blank'>LPSN.dsmz.de</a>]"
+          //console.log('lin',lineage_list[1][show_ranks[i]])
+          
+          let lpsn_link = helpers.get_lpsn_outlink2(lpsn_rank,lineage_list[1],lineage_list[1][show_ranks[i]])
+          //console.log('xx link ',lpsn_link)
+          // if(show_ranks[i] == 'klass'){
+//               lpsn_rank = 'class'
+//           }
+          //let lpsn_taxname = lineage_list[1][show_ranks[i]]
+          
+          // if(lineage_list[1][show_ranks[i]].includes('[')){
+//               let pts = lineage_list[1][show_ranks[i]].split(/\s/)
+//               lpsn_taxname = pts[0]
+//           }
+          html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
 
           html += "&nbsp;&nbsp;[<a href='ecology?rank="+show_ranks[i]+"&name="+lineage_list[1][show_ranks[i]]+"'>HOMD Abundance</a>]</span>"
           html += '</td></tr>'
@@ -815,14 +827,15 @@ router.get('/life', function life(req, res) {
                  otid = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'species'].otid
                //console.log('otid',otid)
                html += "<span class=''>"+space+'<em>'+taxa_list[n]+"</em> (<a title='"+title+"' href='tax_description?otid="+otid+"'>"+helpers.make_otid_display_name(otid)+'</a>)'
-               let lpsn_link = taxa_list[n].replace(' ','-')
-               let lpsn_rank = show_ranks[i]
-               if(taxa_list[n].includes('HMT')){
-                   lpsn_link = taxa_list[n].split(/\s/)[0]
-                   lpsn_rank = show_ranks[i-1]
-               }
-               
-               html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
+               //let lpsn_link = taxa_list[n].replace(' ','-')
+               //let lpsn_rank = show_ranks[i]
+               // if(taxa_list[n].includes('HMT')){
+//                    lpsn_link = taxa_list[n].split(/\s/)[0]
+//                    lpsn_rank = show_ranks[i-1]
+//                }
+               let lpsn_link = helpers.get_lpsn_outlink2(show_ranks[i],lineage_list[1],taxa_list[n])
+               //console.log('yy link ',lpsn_link)
+               html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
 
                html += "<br>[<a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>HOMD Abundance</a>]</span></span><br>"
                }
@@ -841,11 +854,16 @@ router.get('/life', function life(req, res) {
              lin = make_lineage(node)
              cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString()
              html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
-             let lpsn_rank = show_ranks[i]
-             if(show_ranks[i] == 'klass'){
-               lpsn_rank = 'class'
-             }
-             html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_rank+"/"+taxa_list[n]+"' target='_blank'>LPSN.dsmz.de</a>]"
+             // let lpsn_rank = show_ranks[i]
+//              if(show_ranks[i] == 'klass'){
+//                lpsn_rank = 'class'
+//              }
+             //console.log('show_ranks[i]',lin[1])
+             
+             let lpsn_link = helpers.get_lpsn_outlink2(show_ranks[i],lineage_list[1],taxa_list[n])
+             //let lpsn_link = 'zz'
+             //console.log('zz link ',lpsn_link)
+             html += " <span class='vist-taxon-page'>[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
 
              html += " <br>[<a href='ecology?rank="+show_ranks[i]+"&name="+taxa_list[n]+"'>HOMD Abundance</a>]</span></span><br>"
             }
