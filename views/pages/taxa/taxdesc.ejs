@@ -303,9 +303,15 @@
       <% }else{ %>
          <tr><td>Species:</td><td><i><%= data1.species %></i></td></tr>
       <% } %>
-    </table>
+      </table>
     </td>
   </tr>
+  <% if(data1.notes){ %>
+     <tr><td class='tbl-title'>Notes:</td>
+        <td class='red-text'><small><%- data1.notes %></small></td>
+     </tr>
+  <% } %>
+  
   <tr>
     <td class='tbl-title'><strong>Status:</strong></td>
     <% if(data1.status === 'Lost'){ %>
