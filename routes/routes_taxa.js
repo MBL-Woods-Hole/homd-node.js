@@ -721,15 +721,15 @@ router.get('/life', function life(req, res) {
      title = 'Domain: Archaea'
      cts = C.taxon_counts_lookup['Archaea'].taxcnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>("+cts+")</small>"
-     html += " <span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/domain/Archaea' target='_blank'>LPSN.dsmz.de</a>]"
+     html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/domain/Archaea' target='_blank'>LPSN.dsmz.de</a>]"
 
-     html += "&nbsp;&nbsp;[<a href='ecology?rank=domain&name=Archaea'>Abundance</a>]</span><br>"
+     html += "<a href='ecology?rank=domain&name=Archaea'>HOMD Abundance</a></span><br>"
        title = 'Domain: Bacteria'
        cts = C.taxon_counts_lookup['Bacteria'].taxcnt.toString()
      html += "<a title='"+title+"' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>("+cts+")</small>"
-     html += " <span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/domain/Bacteria' target='_blank'>LPSN.dsmz.de</a>]"
+     html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/domain/Bacteria' target='_blank'>LPSN.dsmz.de</a>]"
 
-     html += "&nbsp;&nbsp;[<a href='ecology?rank=domain&name=Bacteria'>Abundance</a>]</span><br>"
+     html += "<a href='ecology?rank=domain&name=Bacteria'>HOMD Abundance</a></span><br>"
 
      html += '</td></tr>'
      image_array =[{'name':'cellular_organisms.png','text':''}]
