@@ -3,7 +3,7 @@
 *.fna
 *.fasta
 
-
+package-lock.json
 .vagrant
 .vscode
 .idea
