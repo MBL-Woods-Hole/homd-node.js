@@ -176,7 +176,11 @@
 }
 
 .tooltip_templates { display: none; }
-
+#tooltip_content ul{
+  background:lightgrey;
+  padding:8px;
+  color:black;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -216,26 +220,26 @@
 <tr><td style="width: 500px; vertical-align:top">
   <table id='left-tbl'>
   <tr><td colspan='2'>
-		
-		<div class='description'>
-		
-		  <% if(text_file){ %>
-			<%- include("../../partials/static/"+text_file); %>
-		  <% }else{ %>
-			<b>Taxon Description</b>:
-			<% if(Object.keys(data2).length === 0) { %>
-			  Not Available
-			<% }else{ %>
-				  <br><%- data2.general %>
-				  <% if(data2.disease){ %>
-					<br><br><b>Disease Associations</b>:<br><%- data2.disease %>
-				  <% } %>
-				  <% if(data2.prev){ %>
-					<br><br><b>Prevalence and Source</b>:<br><%- data2.prev %>
-				  <% } %>
-			<% } %>
-		<% } %>
-		</div>
+        
+        <div class='description'>
+        
+          <% if(text_file){ %>
+            <%- include("../../partials/static/"+text_file); %>
+          <% }else{ %>
+            <b>Taxon Description</b>:
+            <% if(Object.keys(data2).length === 0) { %>
+              Not Available
+            <% }else{ %>
+                  <br><%- data2.general %>
+                  <% if(data2.disease){ %>
+                    <br><br><b>Disease Associations</b>:<br><%- data2.disease %>
+                  <% } %>
+                  <% if(data2.prev){ %>
+                    <br><br><b>Prevalence and Source</b>:<br><%- data2.prev %>
+                  <% } %>
+            <% } %>
+        <% } %>
+        </div>
 
   </td></tr>
   
@@ -287,12 +291,14 @@
       </td></tr>
       <div class="tooltip_templates">
            <span id="tooltip_content">
+              The bracketed letters indicate 
+              <br>that the taxonomic name at this 
+              <br>level has not been established.
               <ul>
-              <li>C1 - Class
-              <li>O1 - Order
-              <li>F1 - Family
-              <li>G1 - Genus
-              
+              <li><small>C1 - Class</small>
+              <li><small>O1 - Order</small>
+              <li><small>F1 - Family</small>
+              <li><small>G1 - Genus</small>
               </ul>
            </span>
       </div>
@@ -424,52 +430,52 @@
   <table id='right-tbl'>
   <tr><td colspan='2'>
   
-		<div class=''>
-		<% if(images.length === 0 ) { %>
-			 <!-- no box -->
-			 <div class='images'>no image available</div>
-		<% }else if(images.length === 1 ) { %>
-			  <div class='images'>
-			  <table border='0'>
-				<tr><td valign='top'>
-				<% im_id = "none" %>
-				<% if(images[0].hires){ %>
-				<%   im_id = "myImg0" %>
-				<% } %>
-				<img id="<%= im_id %>" class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
-				</td><td valign='top' class='txt'>
-				<small><%- images[0].text %></small>
-				</td></tr>
-			  </table>
-			  </div>
+        <div class=''>
+        <% if(images.length === 0 ) { %>
+             <!-- no box -->
+             <div class='images'>no image available</div>
+        <% }else if(images.length === 1 ) { %>
+              <div class='images'>
+              <table border='0'>
+                <tr><td valign='top'>
+                <% im_id = "none" %>
+                <% if(images[0].hires){ %>
+                <%   im_id = "myImg0" %>
+                <% } %>
+                <img id="<%= im_id %>" class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
+                </td><td valign='top' class='txt'>
+                <small><%- images[0].text %></small>
+                </td></tr>
+              </table>
+              </div>
   
-		<% }else{ %>
-			  <div class='images'>
-			  <table class='image-table' border='0'>
-					  <% for(n in images){ %>
-						<% if(n==0 || n==2){ %>
-						<tr><td valign='top'>
-						<% }else{ %>
-						<td valign='top'>
-						<% } %>
-						 <div>
-						   <% im_id = "none" %>
-							<% if(images[n].hires){ %>
-							<%   im_id = "myImg"+n.toString() %>
-							<% } %>
-							<img  id="<%= im_id %>" class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
-						<small class='txt'><%- images[n].text %></small>
-						 </div>
-					   <% if(n==0 || n==2){ %>
-						</td>
-						<% }else{ %>
-						</td></tr>
-						<% } %>
-					  <% } %>
-			  </table>
-			  </div>
-		  <% } %>
-		</div>
+        <% }else{ %>
+              <div class='images'>
+              <table class='image-table' border='0'>
+                      <% for(n in images){ %>
+                        <% if(n==0 || n==2){ %>
+                        <tr><td valign='top'>
+                        <% }else{ %>
+                        <td valign='top'>
+                        <% } %>
+                         <div>
+                           <% im_id = "none" %>
+                            <% if(images[n].hires){ %>
+                            <%   im_id = "myImg"+n.toString() %>
+                            <% } %>
+                            <img  id="<%= im_id %>" class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
+                        <small class='txt'><%- images[n].text %></small>
+                         </div>
+                       <% if(n==0 || n==2){ %>
+                        </td>
+                        <% }else{ %>
+                        </td></tr>
+                        <% } %>
+                      <% } %>
+              </table>
+              </div>
+          <% } %>
+        </div>
 
   </td></tr>
   <tr>
@@ -674,32 +680,32 @@ var modalImg = document.getElementById("img0");
 
 var captionText = document.getElementById("caption");
 if(img0){
-	img0.onclick = function(){
-	  modal.style.display = "block";
-	  modalImg.src = '/images/life-images/hires/'+images[0].hires;   // this will open the same image- we want another
-	  captionText.innerHTML = images[0].hires;
-	}
+    img0.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = '/images/life-images/hires/'+images[0].hires;   // this will open the same image- we want another
+      captionText.innerHTML = images[0].hires;
+    }
 }
 if(img1){
-	img1.onclick = function(){
-	  modal.style.display = "block";
-	  modalImg.src = '/images/life-images/hires/'+images[1].hires;   // this will open the same image- we want another
-	  captionText.innerHTML = images[1].hires;
-	}
+    img1.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = '/images/life-images/hires/'+images[1].hires;   // this will open the same image- we want another
+      captionText.innerHTML = images[1].hires;
+    }
 }
 // if(img2){
-// 	img2.onclick = function(){
-// 	  modal.style.display = "block";
-// 	  modalImg.src = '/images/life-images/hires/'+images[2].hires;   // this will open the same image- we want another
-// 	  captionText.innerHTML = images[2].hires;
-// 	}
+//  img2.onclick = function(){
+//    modal.style.display = "block";
+//    modalImg.src = '/images/life-images/hires/'+images[2].hires;   // this will open the same image- we want another
+//    captionText.innerHTML = images[2].hires;
+//  }
 // }
 // if(img3){
-// 	img3.onclick = function(){
-// 	  modal.style.display = "block";
-// 	  modalImg3.src = '/images/life-images/hires/'+images[3].hires;   // this will open the same image- we want another
-// 	  captionText.innerHTML = images[3].hires;
-// 	}
+//  img3.onclick = function(){
+//    modal.style.display = "block";
+//    modalImg3.src = '/images/life-images/hires/'+images[3].hires;   // this will open the same image- we want another
+//    captionText.innerHTML = images[3].hires;
+//  }
 // }
 
 // Get the <span> element that closes the modal
@@ -708,8 +714,8 @@ var closers = document.getElementsByClassName("close");
 // When the user clicks on <span> (x), close the modal
 //alert(closers)
 for(n in closers){
-	closers[n].onclick = function() {
-	  modal.style.display = "none";
-	}
+    closers[n].onclick = function() {
+      modal.style.display = "none";
+    }
 }
 </script>
