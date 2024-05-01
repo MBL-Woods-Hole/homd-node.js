@@ -1630,68 +1630,7 @@ router.get('/blast', function blast_get(req, res) {
       })
    
 })
-// router.post('/blast', function blast_post(req, res) {
-//    console.log('in genome blast POST')
-//    console.log('body',req.body)
-//    const chosen_gid = req.body.gid
-//    
-//    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
-//     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
-//    })
-//    allAnnosObj.sort(function sortAnnos (a, b) {
-//       return helpers.compareStrings_alpha(a.org, b.org)
-//    })
-//    let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
-// 
-//    res.render('pages/genome/blast', {
-//         title: 'HOMD :: Ribosomal Protein Tree',
-//         pgname: 'blast', // for AboutThisPage
-//         config: JSON.stringify(CFG),
-//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-//         blastFxn: 'genome',
-//         organism: '',
-//         gid: chosen_gid,
-//         all_annos: JSON.stringify(allAnnosObj),
-//         blast_prg: JSON.stringify(C.blastPrograms),
-//         db_choices: JSON.stringify(dbChoices),
-//         returnTo: '/genome/blast',
-//         blastmax: JSON.stringify(C.blast_max_file),
-//       })
-//    
-// })
-// router.post('/changeBlastGenomeDbs', function changeBlastGenomeDbs (req, res) {
-//     console.log('in changeBlastGenomeDbs AJAX')
-//     helpers.print(req.body)
-//     let db = req.body.db
-//     let gid = req.body.gid
-//     let organism = '',dbChoices
-//     if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
-//        organism = C.annotation_lookup[gid].prokka.organism
-//      }
-//     
-//     let html = "<select class='dropdown' id='blastDb' name='blastDb'>"
-//     if(db === 'blastn' || db === 'tblastn' || db ==='tblastx'){
-//        dbChoices = C.all_genome_blastn_db_choices.nucleotide.map((x) => x)
-//        if(gid != 'all'){
-//            html += "<option value='fna/"+gid+".fna'>This Organism's ("+organism + ") Genomic DNA</option>"
-//            html += "<option value='ffn/"+gid+".ffn'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
-//        }else{
-//            html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
-//            html += "<option value='"+dbChoices[1].filename+"'>"+dbChoices[1].name+"</option>"
-//        }
-//        
-//     }else{  // blastp and blastx
-//        dbChoices = C.all_genome_blastn_db_choices.protein.map((x) => x)
-//        if(gid != 'all'){
-//            html += "<option value='faa/"+gid+".faa'>This Organism's ("+organism + ") DNA of Annotated Proteins</option>"
-//        }else{
-//            html += "<option value='"+dbChoices[0].filename+"'>"+dbChoices[0].name+"</option>"
-//        }
-//     }
-//     html += "</select>"
-//     res.send(html)
-//     
-// })
+
 // 2021-06-15  opening trees in new tab because thet take too long to open in an iframe
 // which makes the main menu non functional
 // These functions are used to open trees with a search for odid or genomeID
@@ -1702,11 +1641,10 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   const otid = req.query.otid
   const fullname = helpers.make_otid_display_name(otid)
   helpers.print(fullname)
-  // https://www.homd.org/ftp/phylogenetic_trees/genome/V10.1/eHOMD_Genomic_PhyloPhlAn_Tree.svg
-  let filepath = CFG.FTP_TREE_URL_LOCAL +'/eHOMD_Genomic_PhyloPhlAn_Tree.svg'
+  // Actual: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg
+  // Copied to puplic/trees/eHOMD_Genomic_PhyloPhlAn_Tree.svg
+  let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Genomic_PhyloPhlAn_Tree.svg'
   
-  
-  //fs.readFile('public/trees/conserved_tree.svg', 'utf8', function readSVGFile1 (err, data) {
   fs.readFile(filepath, 'utf8', function readSVGFile1 (err, data) {
     if (err) {
       console.log(err)
@@ -1728,9 +1666,9 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   //console.log('in ribosomal_protein_tree')
 
   const otid = req.query.otid
-  // https://www.homd.org/ftp/phylogenetic_trees/genome/V10.1/eHOMD_Ribosomal_Protein_Tree.svg
-  let filepath = CFG.FTP_TREE_URL_LOCAL +'/eHOMD_Ribosomal_Protein_Tree.svg'
-  //fs.readFile('public/trees/ribosomal_tree.svg', 'utf8', function readSVGFile2 (err, data) {
+  // Actual:: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg
+  // Copied to public/trees/eHOMD_Ribosomal_Protein_Tree.svg
+  let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Ribosomal_Protein_Tree.svg'
   fs.readFile(filepath, 'utf8', function readSVGFile2 (err, data) {
     if (err) {
       console.log(err)
@@ -1754,9 +1692,9 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   // const myurl = new url.URL(req.url)
   const otid = req.query.otid
   helpers.print(['otid', otid])
-  // https://www.homd.org/ftp/phylogenetic_trees/genome/V10.1/eHOMD_16S_rRNA_Tree_V10.1.svg
-  let filepath = CFG.FTP_TREE_URL_LOCAL +'/eHOMD_16S_rRNA_Tree.svg'
-  //fs.readFile('public/trees/16S_rRNA_tree.svg', 'utf8', function readSVGFile3 (err, data) {
+  // https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.svg
+  let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_16S_rRNA_Tree.svg'
+  
   fs.readFile(filepath, 'utf8', function readSVGFile3 (err, data) {
     if (err) {
       console.log(err)

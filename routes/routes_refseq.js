@@ -44,8 +44,11 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
 
 router.get('/refseq_tree', function refseq_tree(req, res) {
   console.log('in refseq_tree')
-   //let filepath = path.join(CFG.FTP_URL,'16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/refseq_tree_V15.23.svg')
-  let filepath = 'public/trees/refseq_tree_V15.23.svg'
+   
+  // https://www.homd.org/ftp//phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg
+  // here from taxdescription page  public/trees/
+  let fname = 'eHOMD_16S_rRNA_RefSeq.svg'
+  let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+fname
   //let myurl = url.parse(req.url, true);
   let otid = req.query.otid
   console.log('otid',otid)
@@ -64,7 +67,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
             user: JSON.stringify(req.user || {}),
             svg_data: JSON.stringify(data),
-            path: 'public/trees/refseq_tree_V15.22.svg',
+            path: 'public/trees/'+fname,
             otid: fullname,
           })
     })

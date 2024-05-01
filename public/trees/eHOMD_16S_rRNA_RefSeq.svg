@@ -1,3 +1,5 @@
+<?xml version='1.0' standalone='no'?>
+<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
 <svg width='2400' height='20850' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' >
 <defs>
 <style type='text/css'>
@@ -13,8 +15,7 @@
  .scale {font-family:arial}
 <text class='leaf-label' x='60' y='40'><tspan style="font-style:bold;font-size:2em"><tspan style="font-style:italic">e</tspan>HOMD 16S rRNA Reference Sequence Tree Version 15.23</tspan> </text>
 <text class='leaf-label' x='60' y='70'>A total of 1,015 reference sequences in 781 taxa</text>
-<text class='leaf-label' x='60' y='90' style="fill:gray;font-size:0.9em;font-style:italic">Tree constructed on 2023-04-10 using FastTree version 2.1.10.Dbl</text>
-
+<text class='leaf-label' x='60' y='90' style="fill:gray;font-size:0.9em;font-style:italic">Tree constructed on 2023-04-14 using FastTree version 2.1.10.Dbl</text>
 <g transform='translate(40,120)'>
 <g  style='stroke:black;fill:none;stroke-width:1;stroke-linecap:round'>
 <line class='clade_0' x1='258.4951' y1='0.0000' x2='258.4951' y2='0.0000'/>
@@ -3200,7 +3201,7 @@
 <text class='edge-label' x='518.104151' y='776.000000'>0.000731119</text>
 <text class='leaf-label' x='530.8763' y='804.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=952">HMT-952</a></tspan> | 952-TM7x | <tspan style="fill:brown">Saccharibacteria_(TM7)_[G-1] bacterium_HMT_952</tspan> | Strain: TM7x | GB: tbd | Status: Unnamed | Genome: yes | Genomes: 2</text>
 <text class='edge-label' x='520.732946' y='796.000000'>0.000759197</text>
-<text class='leaf-label' x='541.8854' y='824.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=488">HMT-488</a></tspan> | 488HD027 | <tspan style="fill:brown">Saccharibacteria_(TM7)_[G-1] bacterium_HMT_488</tspan> | Clone: HD027 | GB: AY349415 | Status: Phylotype | Genome: no | Genomes: 12</text>
+<text class='leaf-label' x='541.8854' y='824.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=488">HMT-488</a></tspan> | 488HD027 | <tspan style="fill:brown">Saccharibacteria_(TM7)_[G-1] bacterium_HMT_488</tspan> | Clone: HD027 | GB: AY349415 | Status: Unnamed | Genome: no | Genomes: 12</text>
 <text class='edge-label' x='526.237522' y='816.000000'>0.029912230</text>
 <text class='inner-label' x='530.5896' y='814.0000'>0.980</text>
 <text class='edge-label' x='519.277850' y='806.000000'>0.006947200</text>
@@ -3343,7 +3344,7 @@
 <text class='edge-label' x='562.061748' y='1516.000000'>0.026690667</text>
 <text class='leaf-label' x='572.9085' y='1544.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=380">HMT-380</a></tspan> | 380F0488 | <tspan style="fill:brown">Capnocytophaga sp._HMT_380</tspan> | Strain: F0488 | GB: tbd | Status: Unnamed | Genome: yes | Genome: None</text>
 <text class='edge-label' x='562.286683' y='1536.000000'>0.003292983</text>
-<text class='leaf-label' x='577.2133' y='1564.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=903">HMT-903</a></tspan> | 903-Wade | <tspan style="fill:brown">Capnocytophaga sp._HMT_903</tspan> | Clone: HS5_2W_I24 | GB: KC203061 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='577.2133' y='1564.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=903">HMT-903</a></tspan> | 903-Wade | <tspan style="fill:brown">Capnocytophaga sp._HMT_903</tspan> | Clone: HS5_2W_I24 | GB: KC203061 | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='565.718736' y='1556.000000'>0.007915473</text>
 <text class='leaf-label' x='582.7203' y='1584.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=700">HMT-700</a></tspan> | 700_4635 | <tspan style="fill:brown">Capnocytophaga ochracea</tspan> | Strain: ATCC 33596 | GB: L14635 | Status: Named | Genome: yes | Genomes: 9</text>
 <text class='edge-label' x='569.887933' y='1576.000000'>0.015000428</text>
@@ -3367,7 +3368,7 @@
 <text class='edge-label' x='562.944538' y='1575.375000'>0.006777082</text>
 <text class='inner-label' x='571.6649' y='1563.6875'>0.832</text>
 <text class='edge-label' x='560.421975' y='1555.687500'>0.006582779</text>
-<text class='leaf-label' x='574.7693' y='1684.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=902">HMT-902</a></tspan> | 902-Wade | <tspan style="fill:brown">Capnocytophaga sp._HMT_902</tspan> | Clone: FL163 | GB: JQ406542 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='574.7693' y='1684.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=902">HMT-902</a></tspan> | 902-Wade | <tspan style="fill:brown">Capnocytophaga sp._HMT_902</tspan> | Clone: FL163 | GB: JQ406542 | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='562.974781' y='1676.000000'>0.009504257</text>
 <text class='leaf-label' x='575.9233' y='1704.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=864">HMT-864</a></tspan> | 864F0512 | <tspan style="fill:brown">Capnocytophaga sp._HMT_864</tspan> | Strain: F0512 | GB: tbd | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='565.637030' y='1696.000000'>0.001516209</text>
@@ -3541,7 +3542,7 @@
 <text class='edge-label' x='570.044969' y='2455.375000'>0.002567554</text>
 <text class='leaf-label' x='584.2117' y='2564.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=278">HMT-278</a></tspan> | 278BS045 | <tspan style="fill:brown">Porphyromonas sp._HMT_278</tspan> | Clone: BS045 | GB: AF385560 | Status: Unnamed | Genome: yes | Genome: None</text>
 <text class='edge-label' x='574.169352' y='2556.000000'>0.000224523</text>
-<text class='leaf-label' x='590.4385' y='2584.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=275">HMT-275</a></tspan> | 275AW032 | <tspan style="fill:brown">Porphyromonas sp._HMT_275</tspan> | Clone: AW032 | GB: AF393476 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='590.4385' y='2584.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=275">HMT-275</a></tspan> | 275AW032 | <tspan style="fill:brown">Porphyromonas sp._HMT_275</tspan> | Clone: AW032 | GB: AF393476 | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='579.559697' y='2576.000000'>0.004654133</text>
 <text class='leaf-label' x='594.2035' y='2604.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=277">HMT-277</a></tspan> | 277BR037 | <tspan style="fill:brown">Porphyromonas sp._HMT_277</tspan> | Clone: BR037 | GB: AF385555 | Status: Phylotype | Genome: no | Genome: None</text>
 <text class='edge-label' x='582.948300' y='2596.000000'>0.006647652</text>
@@ -3755,7 +3756,7 @@
 <text class='edge-label' x='613.657972' y='3636.000000'>0.059784683</text>
 <text class='leaf-label' x='663.9304' y='3664.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=794">HMT-794</a></tspan> | 794_0414 | <tspan style="fill:brown">Prevotella multisaccharivorax</tspan> | Strain: JCM 12954 | GB: AB200414 | Status: Named | Genome: yes | Genome: None</text>
 <text class='edge-label' x='636.720433' y='3656.000000'>0.091146741</text>
-<text class='leaf-label' x='652.5040' y='3684.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=293">HMT-293</a></tspan> | 293AO009 | <tspan style="fill:brown">Prevotella sp._HMT_293</tspan> | Clone: AO009 | GB: AY005059 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='652.5040' y='3684.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=293">HMT-293</a></tspan> | 293AO009 | <tspan style="fill:brown">Prevotella sp._HMT_293</tspan> | Clone: AO009 | GB: AY005059 | Status: Dropped | Genome: no | Genome: None</text>
 <text class='edge-label' x='638.639732' y='3676.000000'>0.020465781</text>
 <text class='leaf-label' x='672.2173' y='3704.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=305">HMT-305</a></tspan> | 305_0424 | <tspan style="fill:brown">Prevotella sp._HMT_305</tspan> | Clone: 070055_034 | GB: JQ460424 | Status: Phylotype | Genome: no | Genome: None</text>
 <text class='edge-label' x='661.896363' y='3696.000000'>0.001699652</text>
@@ -3769,9 +3770,9 @@
 <text class='edge-label' x='647.026638' y='3756.000000'>0.002778548</text>
 <text class='leaf-label' x='658.2356' y='3784.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=300">HMT-300</a></tspan> | 300_0563 | <tspan style="fill:brown">Prevotella sp._HMT_300</tspan> | Clone: ncd2142e01c1 | GB: JF180563 | Status: Phylotype | Genome: no | Genome: None</text>
 <text class='edge-label' x='648.235596' y='3776.000000'>0.000000005</text>
-<text class='leaf-label' x='672.6267' y='3804.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=292">HMT-292</a></tspan> | 292AH125 | <tspan style="fill:brown">Prevotella sp._HMT_292</tspan> | Clone: AH125 | GB: AY005060 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='672.6267' y='3804.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=292">HMT-292</a></tspan> | 292AH125 | <tspan style="fill:brown">Prevotella sp._HMT_292</tspan> | Clone: AH125 | GB: AY005060 | Status: Dropped | Genome: no | Genome: None</text>
 <text class='edge-label' x='660.869365' y='3796.000000'>0.009307222</text>
-<text class='leaf-label' x='669.2223' y='3824.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=292">HMT-292</a></tspan> | 292AU120 | <tspan style="fill:brown">Prevotella sp._HMT_292</tspan> | Clone: AU120 | GB: GQ422735 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='669.2223' y='3824.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=292">HMT-292</a></tspan> | 292AU120 | <tspan style="fill:brown">Prevotella sp._HMT_292</tspan> | Clone: AU120 | GB: GQ422735 | Status: Dropped | Genome: no | Genome: None</text>
 <text class='edge-label' x='659.167165' y='3816.000000'>0.000292123</text>
 <text class='inner-label' x='669.1120' y='3814.0000'>1.000</text>
 <text class='edge-label' x='653.673801' y='3806.000000'>0.028801528</text>
@@ -4559,7 +4560,7 @@
 <text class='edge-label' x='552.493427' y='7656.000000'>0.004569765</text>
 <text class='inner-label' x='561.6306' y='7654.0000'>0.961</text>
 <text class='edge-label' x='550.494896' y='7646.000000'>0.006014746</text>
-<text class='leaf-label' x='564.3642' y='7684.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=513">HMT-513</a></tspan> | 513_3635 | <tspan style="fill:brown">Aggregatibacter sp._HMT_513</tspan> | Clone: MB3_C38 | GB: DQ003635 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='564.3642' y='7684.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=513">HMT-513</a></tspan> | 513_3635 | <tspan style="fill:brown">Aggregatibacter sp._HMT_513</tspan> | Clone: MB3_C38 | GB: DQ003635 | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='553.704848' y='7676.000000'>0.003492217</text>
 <text class='leaf-label' x='570.2008' y='7704.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=458">HMT-458</a></tspan> | 458JM053 | <tspan style="fill:brown">Aggregatibacter sp._HMT_458</tspan> | Clone: JM053 | GB: AY349380 | Status: Unnamed | Genome: yes | Genome: None</text>
 <text class='edge-label' x='558.447682' y='7696.000000'>0.009284744</text>
@@ -4607,9 +4608,9 @@
 <text class='edge-label' x='535.918254' y='7776.000000'>0.065440493</text>
 <text class='leaf-label' x='567.5438' y='7804.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=258">HMT-258</a></tspan> | 258_C009 | <tspan style="fill:brown">Treponema sp._HMT_258</tspan> | Clone: _C009 | GB: AF023042 | Status: Phylotype | Genome: no | Genome: None</text>
 <text class='edge-label' x='555.257684' y='7796.000000'>0.012107860</text>
-<text class='leaf-label' x='565.7366' y='7824.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=490">HMT-490</a></tspan> | 490_9247 | <tspan style="fill:brown">Treponema sp._HMT_490</tspan> | Strain: OMZ 839 | GB: AY369247 | Status: Unnamed | Genome: no | Genome: None</text>
+<text class='leaf-label' x='565.7366' y='7824.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=490">HMT-490</a></tspan> | 490_9247 | <tspan style="fill:brown">Treponema sp._HMT_490</tspan> | Strain: OMZ 839 | GB: AY369247 | Status: Lost | Genome: no | Genome: None</text>
 <text class='edge-label' x='555.254498' y='7816.000000'>0.002553377</text>
-<text class='leaf-label' x='566.9078' y='7844.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=490">HMT-490</a></tspan> | 490JU025 | <tspan style="fill:brown">Treponema sp._HMT_490</tspan> | Clone: JU025 | GB: AY349417 | Status: Unnamed | Genome: no | Genome: None</text>
+<text class='leaf-label' x='566.9078' y='7844.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=490">HMT-490</a></tspan> | 490JU025 | <tspan style="fill:brown">Treponema sp._HMT_490</tspan> | Clone: JU025 | GB: AY349417 | Status: Lost | Genome: no | Genome: None</text>
 <text class='edge-label' x='555.840084' y='7836.000000'>0.005654724</text>
 <text class='inner-label' x='564.7724' y='7834.0000'>0.704</text>
 <text class='edge-label' x='553.871949' y='7826.000000'>0.004768803</text>
@@ -5072,7 +5073,7 @@
 <text class='edge-label' x='527.041964' y='10146.000000'>0.053627015</text>
 <text class='inner-label' x='526.9163' y='10139.0000'>0.695</text>
 <text class='edge-label' x='515.292173' y='10131.000000'>0.008601582</text>
-<text class='leaf-label' x='540.9293' y='10184.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=194">HMT-194</a></tspan> | 194BN085 | <tspan style="fill:brown">Arachnia rubra</tspan> | Clone: BN085 | GB: AF287757 | Status: Phylotype | Genome: no | Genomes: 2</text>
+<text class='leaf-label' x='540.9293' y='10184.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=194">HMT-194</a></tspan> | 194BN085 | <tspan style="fill:brown">Arachnia rubra</tspan> | Clone: BN085 | GB: AF287757 | Status: Named | Genome: no | Genomes: 2</text>
 <text class='edge-label' x='526.686980' y='10176.000000'>0.022468112</text>
 <text class='leaf-label' x='539.8577' y='10204.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=739">HMT-739</a></tspan> | 739_5953 | <tspan style="fill:brown">Arachnia propionica</tspan> | Strain: DSM 43307 | GB: AJ315953 | Status: Named | Genome: yes | Genomes: 8</text>
 <text class='edge-label' x='526.151173' y='10196.000000'>0.019630396</text>
@@ -5438,7 +5439,7 @@
 <text class='edge-label' x='579.401154' y='12051.000000'>0.005939358</text>
 <text class='leaf-label' x='600.6292' y='12104.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=645">HMT-645</a></tspan> | 645_2450 | <tspan style="fill:brown">Actinomyces israelii</tspan> | Strain: CIP 103259 | GB: X82450 | Status: Named | Genome: yes | Genome: None</text>
 <text class='edge-label' x='587.321392' y='12096.000000'>0.017518602</text>
-<text class='leaf-label' x='620.1981' y='12124.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=897">HMT-897</a></tspan> | 897-Wade | <tspan style="fill:brown">Actinomyces sp._HMT_897</tspan> | Clone: HS14_2W_C6 | GB: KC203057 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='620.1981' y='12124.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=897">HMT-897</a></tspan> | 897-Wade | <tspan style="fill:brown">Actinomyces sp._HMT_897</tspan> | Clone: HS14_2W_C6 | GB: KC203057 | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='601.532210' y='12116.000000'>0.045895870</text>
 <text class='leaf-label' x='626.3982' y='12144.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=414">HMT-414</a></tspan> | 414_8610 | <tspan style="fill:brown">Actinomyces sp._HMT_414</tspan> | Clone: C3ALM064 | GB: AY278610 | Status: Unnamed | Genome: yes | Genome: None</text>
 <text class='edge-label' x='612.403476' y='12136.000000'>0.021156762</text>
@@ -5664,7 +5665,7 @@
 <text class='edge-label' x='543.700944' y='13053.500000'>0.046053634</text>
 <text class='leaf-label' x='587.8964' y='13124.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=498">HMT-498</a></tspan> | 498IK040 | <tspan style="fill:brown">Leptotrichia sp._HMT_498</tspan> | Clone: IK040 | GB: AY349387 | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='572.657164' y='13116.000000'>0.027747762</text>
-<text class='leaf-label' x='593.1809' y='13144.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=218">HMT-218</a></tspan> | 218EI013 | <tspan style="fill:brown">Leptotrichia sp._HMT_218</tspan> | Clone: EI013 | GB: AF385571 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='593.1809' y='13144.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=218">HMT-218</a></tspan> | 218EI013 | <tspan style="fill:brown">Leptotrichia sp._HMT_218</tspan> | Clone: EI013 | GB: AF385571 | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='578.136717' y='13136.000000'>0.026714936</text>
 <text class='leaf-label' x='597.3338' y='13164.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=847">HMT-847</a></tspan> | 847F0260 | <tspan style="fill:brown">Leptotrichia sp._HMT_847</tspan> | Strain: F0260 | GB: FJ577250 | Status: Unnamed | Genome: yes | Genome: None</text>
 <text class='edge-label' x='580.213137' y='13156.000000'>0.037711959</text>
@@ -5696,7 +5697,7 @@
 <text class='edge-label' x='556.424201' y='13221.000000'>0.006820931</text>
 <text class='leaf-label' x='578.4023' y='13304.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=463">HMT-463</a></tspan> | 463GT020 | <tspan style="fill:brown">Leptotrichia sp._HMT_463</tspan> | Clone: GT020 | GB: AY349385 | Status: Phylotype | Genome: no | Genome: None</text>
 <text class='edge-label' x='562.523183' y='13296.000000'>0.031136773</text>
-<text class='leaf-label' x='588.2149' y='13324.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=223">HMT-223</a></tspan> | 223F138 | <tspan style="fill:brown">Leptotrichia sp._HMT_223</tspan> | Clone: _F138 | GB: AF287814 | Status: Phylotype | Genome: no | Genome: None</text>
+<text class='leaf-label' x='588.2149' y='13324.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=223">HMT-223</a></tspan> | 223F138 | <tspan style="fill:brown">Leptotrichia sp._HMT_223</tspan> | Clone: _F138 | GB: AF287814 | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='573.741006' y='13316.000000'>0.023694650</text>
 <text class='leaf-label' x='586.3988' y='13344.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=909">HMT-909</a></tspan> | 909-Wade | <tspan style="fill:brown">Leptotrichia sp._HMT_909</tspan> | Clone: CP4_C6 | GB: KC203062 | Status: Phylotype | Genome: no | Genome: None</text>
 <text class='edge-label' x='572.832914' y='13336.000000'>0.018885263</text>
@@ -6142,9 +6143,9 @@
 <text class='edge-label' x='529.526973' y='15536.000000'>0.065040653</text>
 <text class='leaf-label' x='552.4130' y='15564.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=89">HMT-089</a></tspan> | 089CK004 | <tspan style="fill:brown">Lachnoanaerobaculum sp._HMT_089</tspan> | Clone: CK004 | GB: AF287776 | Status: Phylotype | Genome: no | Genome: None</text>
 <text class='edge-label' x='535.860855' y='15556.000000'>0.034701086</text>
-<text class='leaf-label' x='553.1412' y='15584.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=83">HMT-083</a></tspan> | 083BR088 | <tspan style="fill:brown">Lachnoanaerobaculum sp._HMT_083</tspan> | Clone: BR088 | GB: AF385557 | Status: Phylotype | Genome: yes | Genome: None</text>
+<text class='leaf-label' x='553.1412' y='15584.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=83">HMT-083</a></tspan> | 083BR088 | <tspan style="fill:brown">Lachnoanaerobaculum sp._HMT_083</tspan> | Clone: BR088 | GB: AF385557 | Status: Unnamed | Genome: yes | Genome: None</text>
 <text class='edge-label' x='541.797507' y='15576.000000'>0.007116287</text>
-<text class='leaf-label' x='552.9714' y='15604.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=83">HMT-083</a></tspan> | 083BS091 | <tspan style="fill:brown">Lachnoanaerobaculum sp._HMT_083</tspan> | Clone: BS091 | GB: AF385562 | Status: Phylotype | Genome: yes | Genome: None</text>
+<text class='leaf-label' x='552.9714' y='15604.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=83">HMT-083</a></tspan> | 083BS091 | <tspan style="fill:brown">Lachnoanaerobaculum sp._HMT_083</tspan> | Clone: BS091 | GB: AF385562 | Status: Unnamed | Genome: yes | Genome: None</text>
 <text class='edge-label' x='541.712601' y='15596.000000'>0.006666614</text>
 <text class='inner-label' x='550.4538' y='15594.0000'>0.997</text>
 <text class='edge-label' x='536.727366' y='15586.000000'>0.019735914</text>
@@ -6490,7 +6491,7 @@
 <text class='edge-label' x='562.817104' y='17326.000000'>0.006962154</text>
 <text class='inner-label' x='571.5025' y='17319.0000'>0.826</text>
 <text class='edge-label' x='559.662028' y='17311.000000'>0.009747586</text>
-<text class='leaf-label' x='592.7047' y='17364.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=290">HMT-290</a></tspan> | 290N129A | <tspan style="fill:brown">Anaerococcus sp._HMT_290</tspan> | Clone: L | GB: KC169766 | Status: Unnamed | Genome: yes | Genome: None</text>
+<text class='leaf-label' x='592.7047' y='17364.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=290">HMT-290</a></tspan> | 290N129A | <tspan style="fill:brown">Anaerococcus sp._HMT_290</tspan> | Clone: L | GB: KC169766 | Status: Lost | Genome: yes | Genome: None</text>
 <text class='edge-label' x='579.957284' y='17356.000000'>0.014550957</text>
 <text class='leaf-label' x='593.5480' y='17384.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=295">HMT-295</a></tspan> | 295N131A | <tspan style="fill:brown">Anaerococcus sp._HMT_295</tspan> | Clone: 8405254 | GB: HM587319 | Status: Phylotype | Genome: no | Genome: None</text>
 <text class='edge-label' x='580.378933' y='17376.000000'>0.016784073</text>
@@ -7031,7 +7032,7 @@
 <text class='edge-label' x='561.766305' y='20086.000000'>0.000218316</text>
 <text class='leaf-label' x='574.5819' y='20124.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=707">HMT-707</a></tspan> | 707_3932 | <tspan style="fill:brown">Streptococcus oralis subsp._oralis</tspan> | Strain: ATCC 35037 | GB: AF003932 | Status: Named | Genome: yes | Genomes: 11</text>
 <text class='edge-label' x='564.186202' y='20116.000000'>0.002095933</text>
-<text class='leaf-label' x='575.8960' y='20144.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=61">HMT-061</a></tspan> | 061DN025 | <tspan style="fill:brown">Streptococcus sp._HMT_061</tspan> | Clone: DN025 | GB: AF432131 | Status: Lost | Genome: no | Genome: None</text>
+<text class='leaf-label' x='575.8960' y='20144.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=61">HMT-061</a></tspan> | 061DN025 | <tspan style="fill:brown">Streptococcus sp._HMT_061</tspan> | Clone: DN025 | GB: AF432131 | Status: Unnamed | Genome: no | Genome: None</text>
 <text class='edge-label' x='565.414678' y='20136.000000'>0.002549114</text>
 <text class='leaf-label' x='578.3926' y='20164.0000'><tspan style="fill:blue"><a target="_blank" href="https://homd.org/taxa/tax_description?otid=74">HMT-074</a></tspan> | 074-T4E3 | <tspan style="fill:brown">Streptococcus sp._HMT_074</tspan> | Strain: T4-E3 | GB: AF385526 | Status: Lost | Genome: no | Genome: None</text>
 <text class='edge-label' x='566.662981' y='20156.000000'>0.009160306</text>

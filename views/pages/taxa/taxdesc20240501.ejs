@@ -1,24 +1,22 @@
 <style>
 
 
-/* 
 
 .description_wimage{
   float:left; 
-  width:99%; 
+  width:49%; 
   height:220px;
   max-height:230px;
   overflow:auto;
   border:1px solid darkgreen;
 }
- */
 .description{
   font-size:13px;
   padding:5px;
-  /* width:99%; */
-  max-height:220px;
-  overflow:scroll;
-  border:1px solid black;
+  width:49%; 
+  max-height:200px;
+  overflow:auto;
+  border:1px solid darkgreen;
   
 }
 #description_tbl{
@@ -27,27 +25,9 @@
 }
 #description_tbl td{
   padding-left:5px;
-}
-.images{
-   
-   max-height:220px;
-   overflow:scroll;
-   border:1px solid black;
-   padding:5px;
-   /* width:49%; */
-   
+  
   
 }
-/* 
-.noimage{
-   float:right;
-   border:1px solid black;
-   padding:1px 5px;
-   width:49%;
-   font-size:small;
-  
-}
- */
 .tbl-title{
   background:lightblue;
 }
@@ -104,7 +84,24 @@
     border-bottom:none;
     
 }
-
+.images{
+   float:right;
+   max-height:220px;
+   overflow:auto;
+   border:1px solid black;
+   padding:10px;
+   width:49%;
+   
+  
+}
+.noimage{
+   float:right;
+   border:1px solid black;
+   padding:1px 5px;
+   width:49%;
+   font-size:small;
+  
+}
 #myImg0:hover {opacity: 0.7;cursor:pointer;}
 #myImg1:hover {opacity: 0.7;cursor:pointer;}
 #myImg2:hover {opacity: 0.7;cursor:pointer;}
@@ -175,8 +172,6 @@
   cursor: pointer;
 }
 
-.tooltip_templates { display: none; }
-
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -190,9 +185,8 @@
 <% taxidfullname = ("000" + otid).slice(-3); %>
 <% taxidfullnameplus = 'HMT-'+taxidfullname; %>
 <% images = JSON.parse(image_array)  %>
-<!-- <link rel="stylesheet" type="text/css" href="tooltipster/dist/css/tooltipster.bundle.min.css" /> -->
+
 <body>
-    <link rel="stylesheet" type="text/css" href="/css/tooltipster.bundle.min.css" />
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
@@ -209,93 +203,101 @@
   </div>
 <% } %>
 
+    
+<% if(images.length > 0 ) { %>    
+   <div class='description_wimage'>
+<% }else{ %>
+   <div class='description'>
+<% } %>
+  <% if(text_file){ %>
+    <%- include("../../partials/static/"+text_file); %>
+  <% }else{ %>
+    <b>Taxon Description</b>:
+    <% if(Object.keys(data2).length === 0) { %>
+      Not Available
+    <% }else{ %>
+        
+          <br><%- data2.general %>
+          <% if(data2.disease){ %>
+            <br><br><b>Disease Associations</b>:<br><%- data2.disease %>
+          <% } %>
+          <% if(data2.prev){ %>
+            <br><br><b>Prevalence and Source</b>:<br><%- data2.prev %>
+          <% } %>
+          
+        
+    <% } %>
+  <% } %>
+</div>
+     
+     
+      
+<div class=''>
+  <% if(images.length === 0 ) { %>
+     <!-- no box -->
+     <div class='noimage'>no image available</div>
+  <% }else if(images.length === 1 ) { %>
+      <div class='images'>
+      <table border='0'>
+        <tr><td valign='top'>
+        <% im_id = "none" %>
+        <% if(images[0].hires){ %>
+        <%   im_id = "myImg0" %>
+        <% } %>
+        <img id="<%= im_id %>" class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
+        </td><td valign='top' class='txt'>
+        <small><%- images[0].text %></small>
+        </td></tr>
+      </table>
+      </div>
+  
+  <% }else{ %>
+      <div class='images'>
+      <table class='image-table' border='0'>
+              <% for(n in images){ %>
+                <% if(n==0 || n==2){ %>
+                <tr><td valign='top'>
+                <% }else{ %>
+                <td valign='top'>
+                <% } %>
+                 <div>
+                   <% im_id = "none" %>
+					<% if(images[n].hires){ %>
+					<%   im_id = "myImg"+n.toString() %>
+					<% } %>
+                    <img  id="<%= im_id %>" class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
+                <small class='txt'><%- images[n].text %></small>
+                 </div>
+               <% if(n==0 || n==2){ %>
+                </td>
+                <% }else{ %>
+                </td></tr>
+                <% } %>
+              <% } %>
+      </table>
+      </div>
+  <% } %>
+</div>
+
+
+
 
 <div id='tables'>
 <br><!-- <div id='status'>Preferred Body Site(s): [<%= data1.sites %>]</div> -->
 <table id='description_tbl' border='1'>
 <tr><td style="width: 500px; vertical-align:top">
   <table id='left-tbl'>
-  <tr><td colspan='2'>
-		
-		<div class='description'>
-		
-		  <% if(text_file){ %>
-			<%- include("../../partials/static/"+text_file); %>
-		  <% }else{ %>
-			<b>Taxon Description</b>:
-			<% if(Object.keys(data2).length === 0) { %>
-			  Not Available
-			<% }else{ %>
-				  <br><%- data2.general %>
-				  <% if(data2.disease){ %>
-					<br><br><b>Disease Associations</b>:<br><%- data2.disease %>
-				  <% } %>
-				  <% if(data2.prev){ %>
-					<br><br><b>Prevalence and Source</b>:<br><%- data2.prev %>
-				  <% } %>
-			<% } %>
-		<% } %>
-		</div>
-
-  </td></tr>
-  
   <tr>
     <td class='tbl-title'>Classification:</td>
     <td>
     <table id='tax_lineage'>
-      <tr><td>Domain:</td>
-      <td><a href='life?rank=domain&name=<%= data3.domain %>'><%= data3.domain %></a></td></tr>
-      <tr><td>Phylum:</td>
-      <td><a href='life?rank=phylum&name=<%= data3.phylum %>'><%= data3.phylum %></a></td></tr>
-      <tr><td>Class:</td>
-      <td>
-        <a href='life?rank=klass&name=<%= data3.klass %>'><%= data3.klass %></a>
-        <% if(data3.klass.includes("[")){ %>
-          <span class="tooltip" data-tooltip-content="#tooltip_content">
-            <img src="/images/question.png" width='20'>
-          </span>
-        <% } %>
-      </td></tr>
-      <tr><td>Order:</td>
-      <td>
-        <a href='life?rank=order&name=<%= data3.order %>'><%= data3.order %></a>
-        <% if(data3.order.includes("[")){ %>
-          <span class="tooltip" data-tooltip-content="#tooltip_content">
-          <img src="/images/question.png" width='20'>
-          </span>
-        <% } %>
-      </td></tr>
+      <tr><td>Domain:</td><td><a href='life?rank=domain&name=<%= data3.domain %>'><%= data3.domain %></a></td></tr>
+      <tr><td>Phylum:</td><td><a href='life?rank=phylum&name=<%= data3.phylum %>'><%= data3.phylum %></a></td></tr>
+      <tr><td>Class:</td><td> <a href='life?rank=klass&name=<%= data3.klass %>'><%= data3.klass %></a></td></tr>
+      <tr><td>Order:</td><td> <a href='life?rank=order&name=<%= data3.order %>'><%= data3.order %></a></td></tr>
+      <tr><td>Family:</td><td><a href='life?rank=family&name=<%= data3.family %>'><%= data3.family %></a></td></tr>
+      <tr><td>Genus:</td><td> <a href='life?rank=genus&name=<%= data3.genus %>'><%= data1.genus %></a></td></tr>
       
-      
-      <tr><td>Family:</td>
-      <td>
-        <a href='life?rank=family&name=<%= data3.family %>'><%= data3.family %></a>
-        <% if(data3.family.includes("[")){ %>
-        <span class="tooltip" data-tooltip-content="#tooltip_content">
-          <img src="/images/question.png" width='20'>
-          </span>
-        <% } %>
-      </td></tr>
-      <tr><td>Genus:</td>
-      <td>
-        <a href='life?rank=genus&name=<%= data3.genus %>'><%= data1.genus %></a>
-        <% if(data3.genus.includes("[")){ %>
-          <span class="tooltip" data-tooltip-content="#tooltip_content">
-          <img src="/images/question.png" width='20'>
-          </span>
-        <% } %>
-      </td></tr>
-      <div class="tooltip_templates">
-           <span id="tooltip_content">
-              <ul>
-              <li>C1 - Class
-              <li>O1 - Order
-              <li>F1 - Family
-              <li>G1 - Genus
-              
-              </ul>
-           </span>
-      </div>
       <% if(data3.subspecies){ %>
         <tr><td>Species:</td><td> <a href='life?rank=species&name=<%= data3.species %>'><%= data1.species %></a></td></tr>
         <tr><td>Subspecies:<br>or Clade:</td><td><%= data3.subspecies %></td></tr>
@@ -422,56 +424,7 @@
 </td><td style="width: 500px; vertical-align:top">
 
   <table id='right-tbl'>
-  <tr><td colspan='2'>
   
-		<div class=''>
-		<% if(images.length === 0 ) { %>
-			 <!-- no box -->
-			 <div class='images'>no image available</div>
-		<% }else if(images.length === 1 ) { %>
-			  <div class='images'>
-			  <table border='0'>
-				<tr><td valign='top'>
-				<% im_id = "none" %>
-				<% if(images[0].hires){ %>
-				<%   im_id = "myImg0" %>
-				<% } %>
-				<img id="<%= im_id %>" class='img' src='/images/life-images/<%= images[0].name %>' alt='<%= images[0].name %>'  \>
-				</td><td valign='top' class='txt'>
-				<small><%- images[0].text %></small>
-				</td></tr>
-			  </table>
-			  </div>
-  
-		<% }else{ %>
-			  <div class='images'>
-			  <table class='image-table' border='0'>
-					  <% for(n in images){ %>
-						<% if(n==0 || n==2){ %>
-						<tr><td valign='top'>
-						<% }else{ %>
-						<td valign='top'>
-						<% } %>
-						 <div>
-						   <% im_id = "none" %>
-							<% if(images[n].hires){ %>
-							<%   im_id = "myImg"+n.toString() %>
-							<% } %>
-							<img  id="<%= im_id %>" class='img' src='/images/life-images/<%= images[n].name %>' alt='<%= images[n].name %>'  \><br>
-						<small class='txt'><%- images[n].text %></small>
-						 </div>
-					   <% if(n==0 || n==2){ %>
-						</td>
-						<% }else{ %>
-						</td></tr>
-						<% } %>
-					  <% } %>
-			  </table>
-			  </div>
-		  <% } %>
-		</div>
-
-  </td></tr>
   <tr>
     <td class='tbl-title'>Cultivability:</td>
     <td>
@@ -633,31 +586,17 @@
     <div id='footer'>
          <%- include('../../partials/footer'); %>
     </div>
-  </div> <!-- end wrapper   -->
-  
- 
-
+  </div> <!-- end wrapper   -->   
 </body>
+
 </html>
 
-<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
-<script type="text/javascript" src="/js/tooltipster.bundle.min.js"></script>
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/taxonomy.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
-  //$(document).ready(function() {
-    $('.tooltip').tooltipster({
-       contentCloning: true, theme: 'tooltipster-noir'
-    });
-  //}
   mainmenu()
   images = JSON.parse(`<%- image_array %>`)
-  //var tooltip = new Tooltip(document.querySelector('.trigger'));
-  //$(document).ready(function() {
-        // https://calebjacob.github.io/tooltipster/
-        
-  //});
-
   //for(x in images){
      //alert(images[x].hires)
   //}
