@@ -1,18 +1,8 @@
 <style>
 
 
-/* 
 
-.description_wimage{
-  float:left; 
-  width:99%; 
-  height:220px;
-  max-height:230px;
-  overflow:auto;
-  border:1px solid darkgreen;
-}
- */
-.description{
+.desc-box{
   font-size:13px;
   padding:5px;
   /* width:99%; */
@@ -28,26 +18,8 @@
 #description_tbl td{
   padding-left:5px;
 }
-.images{
-   font-size:13px;
-   max-height:220px;
-   overflow:scroll;
-   border:1px solid black;
-   padding:5px;
-   /* width:49%; */
-   
-  
-}
-/* 
-.noimage{
-   float:right;
-   border:1px solid black;
-   padding:1px 5px;
-   width:49%;
-   font-size:small;
-  
-}
- */
+
+
 .tbl-title{
   background:lightblue;
 }
@@ -126,7 +98,7 @@
   background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
 }
 
-/* Modal Content (Image) */
+/* Modal Content (for Images) */
 .modal-content {
   margin: auto;
   display: block;
@@ -221,7 +193,7 @@
   <table id='left-tbl'>
   <tr><td colspan='2'>
         
-        <div class='description'>
+        <div class='desc-box'>
         
           <% if(text_file){ %>
             <%- include("../../partials/static/"+text_file); %>
@@ -254,31 +226,37 @@
       <tr><td>Class:</td>
       <td>
         <a href='life?rank=klass&name=<%= data3.klass %>'><%= data3.klass %></a>
-        <% if(data3.klass.includes("[")){ %>
+        <!-- 
+<% if(data3.klass.includes("[")){ %>
           <span class="tooltip" data-tooltip-content="#tooltip_content">
             <img src="/images/question.png" width='20'>
           </span>
         <% } %>
+ -->
       </td></tr>
       <tr><td>Order:</td>
       <td>
         <a href='life?rank=order&name=<%= data3.order %>'><%= data3.order %></a>
-        <% if(data3.order.includes("[")){ %>
+        <!-- 
+<% if(data3.order.includes("[")){ %>
           <span class="tooltip" data-tooltip-content="#tooltip_content">
           <img src="/images/question.png" width='20'>
           </span>
         <% } %>
+ -->
       </td></tr>
       
       
       <tr><td>Family:</td>
       <td>
         <a href='life?rank=family&name=<%= data3.family %>'><%= data3.family %></a>
-        <% if(data3.family.includes("[")){ %>
+        <!-- 
+<% if(data3.family.includes("[")){ %>
         <span class="tooltip" data-tooltip-content="#tooltip_content">
           <img src="/images/question.png" width='20'>
           </span>
         <% } %>
+ -->
       </td></tr>
       <tr><td>Genus:</td>
       <td>
@@ -295,10 +273,11 @@
               <br>that the taxonomic name at this 
               <br>level has not been established.
               <ul>
-              <li><small>C1 - Class</small>
-              <li><small>O1 - Order</small>
-              <li><small>F1 - Family</small>
-              <li><small>G1 - Genus</small>
+              <li><small>Examples:</small>
+              <li><small>C1 – first unnamed Class</small>
+              <li><small>O1 – first unnamed Order</small>
+              <li><small>F2 – second unnamed Family</small>
+              <li><small>G3 – third unnamed Genus</small>
               </ul>
            </span>
       </div>
@@ -424,18 +403,18 @@
   </tr>
   
   </table>
-
+<!-- End Left table -->
 </td><td style="width: 500px; vertical-align:top">
-
+<!-- Start Right table -->
   <table id='right-tbl'>
   <tr><td colspan='2'>
   
-        <div class=''>
+        <div class='desc-box'>
         <% if(images.length === 0 ) { %>
              <!-- no box -->
-             <div class='images'>no image available</div>
+             no image available
         <% }else if(images.length === 1 ) { %>
-              <div class='images'>
+             
               <table border='0'>
                 <tr><td valign='top'>
                 <% im_id = "none" %>
@@ -447,10 +426,10 @@
                 <small><%- images[0].text %></small>
                 </td></tr>
               </table>
-              </div>
+              
   
         <% }else{ %>
-              <div class='images'>
+              
               <table class='image-table' border='0'>
                       <% for(n in images){ %>
                         <% if(n==0 || n==2){ %>
@@ -473,7 +452,6 @@
                         <% } %>
                       <% } %>
               </table>
-              </div>
           <% } %>
         </div>
 
