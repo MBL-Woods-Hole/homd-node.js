@@ -536,20 +536,45 @@ router.get('/tax_description', function tax_description(req, res){
 
   
   */
-  
+  let text_file = get_rank_text('species','',otid)
   if(C.dropped_taxids.indexOf(otid) !== -1){
      //helpers.print(data1)
      let message = "This TaxonID ("+otid+") has been dropped."
-     res.render('pages/lost_message', {
-         title: 'HOMD :: Error',
-         pgname: '', // for AbountThisPage 
-      config: JSON.stringify(CFG),
-      message:message,
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-      user: JSON.stringify(req.user || {}),
+     data1 = C.taxon_lookup[otid]
+     //data3 = get_special_lineage_from_db(otid)
+     let q = queries.get_lineage_query(otid)
+     //console.log(q)
+     TDBConn.query(q, (err, rows) => {
+         if(err){ console.log(err);return }
+         
+         //console.log('data1',data1)
+         data1.notes = "This taxon has been dropped from HOMD"
+         //console.log('rows',rows)
+         data3 = rows[0]
+         let lineage_string = data3.domain+';'+data3.phylum+';'+ data3.klass +';'+data3.order +';'+data3.family +';'+data3.genus +';'+data3.species +';'+data3.subspecies
+         res.render('pages/taxa/taxdesc', {
+            title: 'HOMD :: Taxon Info', 
+            pgname: 'taxon/description', // for AbountThisPage
+            config: JSON.stringify(CFG),
+            otid: otid,
+            //pids: pid_list,
+            image_array:JSON.stringify({}),
+            data1: JSON.stringify(data1),
+            text_file: text_file[0],   // only 666 so far
+            data2: JSON.stringify({}),  // description 
+            data3: JSON.stringify(data3),  // lineage domain=>subspecies
+            data4: JSON.stringify({}),  // publications
+            data5: JSON.stringify({}), // refseq, seqname, strain , genbank
+            links: JSON.stringify({}),
+            lineage: lineage_string,
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            user: JSON.stringify(req.user || {}),
+          })
+          return
      })
      return
   }
+
   if( C.taxon_lookup[otid] === undefined){
       req.flash('TRY AGAIN')
       res.send('That Taxon ID: ('+otid+') was not found1 - Use the Back Arrow and select another')
@@ -565,15 +590,15 @@ router.get('/tax_description', function tax_description(req, res){
   //let plist = Object.values(C.phage_lookup).filter(item => (item.host_otid === otid)) 
   //let pid_list = plist.map(item => item.pid)
   //console.log('pid_list',pid_list)
-  let text_file = get_rank_text('species','',otid)
+  
   //console.log('text_file',text_file)
   if(! text_file[0]){
-	  if(C.taxon_info_lookup[otid]){
-		  data2 = C.taxon_info_lookup[otid]
-	  }else {
-		  console.warn('No taxon_info for HMT:',otid,' in C.taxon_info_lookup')
-		  data2 = {}
-	  }
+      if(C.taxon_info_lookup[otid]){
+          data2 = C.taxon_info_lookup[otid]
+      }else {
+          console.warn('No taxon_info for HMT:',otid,' in C.taxon_info_lookup')
+          data2 = {}
+      }
   }
   //helpers.print(['data2',data2])
   if(C.taxon_lineage_lookup[otid] ){
@@ -1324,11 +1349,11 @@ function sort_obj_by_abundance_order(obj,order){
 
 router.get('/download/:type/:fxn', function download(req, res) {
     var today = new Date();
-	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-	var yyyy = today.getFullYear();
-	today = yyyy + '-' + mm + '-' + dd;
-	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
     let type = req.params.type   // browser, text or excel
     let fxn = req.params.fxn     // hierarchy or level
@@ -1364,11 +1389,11 @@ router.get('/download/:type/:fxn', function download(req, res) {
 router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
     //console.log('in dld abund - taxon')
     var today = new Date();
-	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-	var yyyy = today.getFullYear();
-	today = yyyy + '-' + mm + '-' + dd;
-	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
     let type = req.params.type
     let source = req.params.source
@@ -1516,11 +1541,11 @@ router.get('/dld_abund/:type/:source/', function dld_abund(req, res) {
 router.get('/dld_table_all/:type/', function dldTableAll(req, res) {
 //router.get('/dld_table_all/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
     var today = new Date();
-	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-	var yyyy = today.getFullYear();
-	today = yyyy + '-' + mm + '-' + dd;
-	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
     let type = req.params.type
     let file_filter_txt = "HOMD.org Taxon Data::No Filter Applied"+ " Date: "+today 
@@ -1544,11 +1569,11 @@ router.get('/dld_table_all/:type/', function dldTableAll(req, res) {
 router.get('/dld_table/:type', function dldTable(req, res) {
 //router.get('/dld_table/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
     var today = new Date();
-	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-	var yyyy = today.getFullYear();
-	today = yyyy + '-' + mm + '-' + dd;
-	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
   let send_list = []
   let type = req.params.type

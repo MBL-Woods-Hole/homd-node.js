@@ -6,6 +6,7 @@ constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // JBROWSE if you wan
 
 constants.rRNA_refseq_version    = '15.23'
 constants.genomic_refseq_version = '10.1'
+constants.homd_taxonomy_version = '4.0'  // this is not used! yet
 constants.use_cluster = false
 constants.user_security_levels = {
     '1': 'Administrator',

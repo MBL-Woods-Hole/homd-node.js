@@ -44,6 +44,20 @@ module.exports.get_annotation_query = (gid, anno) => {
 //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
   return qSelectAnno
 }
+module.exports.get_lineage_query = (otid) => {
+   let qSelectTaxnames = 'SELECT domain,phylum,klass,`order`,family,genus,species,subspecies from otid_prime'
+    qSelectTaxnames += ' join taxonomy using(taxonomy_id)'
+    qSelectTaxnames += ' join domain using(domain_id)'
+    qSelectTaxnames += ' join phylum using(phylum_id)'
+    qSelectTaxnames += ' join klass using(klass_id)'
+    qSelectTaxnames += ' join `order` using(order_id)'
+    qSelectTaxnames += ' join family using(family_id)'
+    qSelectTaxnames += ' join genus using(genus_id)'
+    qSelectTaxnames += ' join species using(species_id)'
+    qSelectTaxnames += ' join subspecies using(subspecies_id)'
+    qSelectTaxnames += " WHERE otid='"+otid+"'"
+    return qSelectTaxnames
+}
 // module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
 //   
 //   let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
