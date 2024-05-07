@@ -2048,7 +2048,7 @@ function create_taxon_table(otids, source, type, head_txt) {
         let obj4 = C.taxon_references_lookup 
         //console.log('o1-3')
         //console.log(obj1[3])
-        headers = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
+        headers = ["HMT_ID","Domain","Phylum","Class","Order","Family","Genus","Species","Subspecies","Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count","Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count","NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info","Cultivability","Phenotypic_characteristics","Prevalence","Disease","References"]
         
         txt +=  headers.join('\t')
         var o1,o2,o3,o4
@@ -2061,7 +2061,7 @@ function create_taxon_table(otids, source, type, head_txt) {
             if(otid in obj2){
                o2 = obj2[otid]
             }else {
-               o2 = {'domain':'','phylum':'','klass':'','order':'','family':'','genus':'','species':''}
+               o2 = {'domain':'','phylum':'','klass':'','order':'','family':'','genus':'','species':'','subspecies':''}
             }
             if(otid in obj3){
                o3 = obj3[otid]
@@ -2076,7 +2076,7 @@ function create_taxon_table(otids, source, type, head_txt) {
             // list! o1.type_strain, o1,genomes, o1,synonyms, o1.sites, o1.ref_strains, o1,rrna_sequences
             // clone counts
             if(o2.domain){  // weeds out dropped
-               //console.log(o2)
+               //console.log('o2',o2)
                let tstrains = o1.type_strains.join(' | ')
                let gn = o1.genomes.join(' | ')
                let syn = o1.synonyms.join(' | ')
@@ -2088,8 +2088,8 @@ function create_taxon_table(otids, source, type, head_txt) {
 //                species_pts.shift()
 //                let species = species_pts.join(' ')
                
-               let species = o2.species.replace(o2.genus,'').trim()
-               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o1.status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
+               let species = o2.species.replace(o2.genus,'').trim()  // removing gens from species name
+               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,o1.status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease,,]
                var row = r.join('\t')
                txt += '\n'+row
             }
