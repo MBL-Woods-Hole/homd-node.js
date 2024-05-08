@@ -498,7 +498,7 @@ router.get('/tax_autoload', function tax_autoload(req, res) {
 router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
-  let data1={},data2={},data3,data4,data5,links
+  let data1={},data2={},data3,data4,data5,links={}
   if(otid && req.session.ttable_filter){
       req.session.ttable_filter.otid = otid
   }
@@ -546,12 +546,13 @@ router.get('/tax_description', function tax_description(req, res){
      //console.log(q)
      TDBConn.query(q, (err, rows) => {
          if(err){ console.log(err);return }
-         
          //console.log('data1',data1)
-         
+         //links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
          data1.notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
          //console.log('rows',rows)
          data3 = rows[0]
+         links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
+         //console.log(links)
          let lineage_string = data3.domain+';'+data3.phylum+';'+ data3.klass +';'+data3.order +';'+data3.family +';'+data3.genus +';'+data3.species +';'+data3.subspecies
          res.render('pages/taxa/taxdesc', {
             title: 'HOMD :: Taxon Info', 
@@ -566,7 +567,7 @@ router.get('/tax_description', function tax_description(req, res){
             data3: JSON.stringify(data3),  // lineage domain=>subspecies
             data4: JSON.stringify({}),  // publications
             data5: JSON.stringify({}), // refseq, seqname, strain , genbank
-            links: JSON.stringify({}),
+            links: JSON.stringify(links),
             lineage: lineage_string,
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
             user: JSON.stringify(req.user || {}),
@@ -585,14 +586,7 @@ router.get('/tax_description', function tax_description(req, res){
   data1 = C.taxon_lookup[otid]
   helpers.print(['data1',data1])
   
-  
-  
-  // find list pids that are known use this taxon
-  //let plist = Object.values(C.phage_lookup).filter(item => (item.host_otid === otid)) 
-  //let pid_list = plist.map(item => item.pid)
-  //console.log('pid_list',pid_list)
-  
-  //console.log('text_file',text_file)
+
   if(! text_file[0]){
       if(C.taxon_info_lookup[otid]){
           data2 = C.taxon_info_lookup[otid]
@@ -650,6 +644,8 @@ router.get('/tax_description', function tax_description(req, res){
   //pangenomes
   
   links.anviserver_link = C.anviserver_link
+  
+  
   
   //console.log('pangenome_link',links.pangenomes)
   res.render('pages/taxa/taxdesc', {
