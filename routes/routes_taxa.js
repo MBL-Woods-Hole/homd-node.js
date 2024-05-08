@@ -548,7 +548,8 @@ router.get('/tax_description', function tax_description(req, res){
          if(err){ console.log(err);return }
          
          //console.log('data1',data1)
-         data1.notes = "This taxon has been dropped from HOMD"
+         
+         data1.notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
          //console.log('rows',rows)
          data3 = rows[0]
          let lineage_string = data3.domain+';'+data3.phylum+';'+ data3.klass +';'+data3.order +';'+data3.family +';'+data3.genus +';'+data3.species +';'+data3.subspecies
@@ -558,7 +559,7 @@ router.get('/tax_description', function tax_description(req, res){
             config: JSON.stringify(CFG),
             otid: otid,
             //pids: pid_list,
-            image_array:JSON.stringify({}),
+            image_array:JSON.stringify([]),
             data1: JSON.stringify(data1),
             text_file: text_file[0],   // only 666 so far
             data2: JSON.stringify({}),  // description 

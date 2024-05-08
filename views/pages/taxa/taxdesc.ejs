@@ -15,20 +15,22 @@
   width:100%;
   font-size:small;
 }
-#description_tbl td{
+
+#description_tbl td td{
   padding-left:5px;
 }
 
 
 .tbl-title{
   background:lightblue;
+  padding-left:4px;
 }
 #left-tbl td{
-  padding:4px;
+  padding:4px 0;
   border-bottom:1px solid darkgrey;
 }
 #right-tbl td{
-  padding:4px;
+  padding:4px 0;
   border-bottom:1px solid darkgrey;
 }
 #references{
@@ -153,6 +155,7 @@
   padding:8px;
   color:black;
 }
+
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -194,7 +197,6 @@
   <tr><td colspan='2'>
         
         <div class='desc-box'>
-        
           <% if(text_file){ %>
             <%- include("../../partials/static/"+text_file); %>
           <% }else{ %>
@@ -210,7 +212,7 @@
                     <br><br><b>Prevalence and Source</b>:<br><%- data2.prev %>
                   <% } %>
             <% } %>
-        <% } %>
+          <% } %>
         </div>
 
   </td></tr>
@@ -409,10 +411,10 @@
   <table id='right-tbl'>
   <tr><td colspan='2'>
   
-        <div class='desc-box'>
+    <div class='desc-box'>
         <% if(images.length === 0 ) { %>
              <!-- no box -->
-             no image available
+             No Images Available
         <% }else if(images.length === 1 ) { %>
              
               <table border='0'>
@@ -426,10 +428,7 @@
                 <small><%- images[0].text %></small>
                 </td></tr>
               </table>
-              
-  
         <% }else{ %>
-              
               <table class='image-table' border='0'>
                       <% for(n in images){ %>
                         <% if(n==0 || n==2){ %>
@@ -452,8 +451,8 @@
                         <% } %>
                       <% } %>
               </table>
-          <% } %>
-        </div>
+        <% } %>
+    </div>
 
   </td></tr>
   <tr>
