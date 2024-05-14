@@ -77,7 +77,8 @@
 
      <table id='gnomdesc-table' class="table " border='0' >
 	<tr class=""><td>Genome Assembly Name</td><td><%= ginfo.ncbi_assembly_name %></td></tr>
-	<tr class=""><td>Organism name</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><i><%= ginfo.organism %></i></a></td></tr>
+	<tr class=""><td>Organism name (as deposited)</td><td><i><%= ginfo.organism %></i></td></tr>
+	<tr class=""><td>Organism name (in use)</td><td><i><%= ginfo.genus %> <%= ginfo.species %></i></td></tr>
 	<tr class=""><td>Infraspecific Name</td><td><%= ginfo.culture_strain %></td></tr>
 	<tr class=""><td>BioSample</td><td><a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_biosample %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_biosample %></a></td></tr>
     <tr class=""><td>BioProject</td><td><a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bioproject %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bioproject %></a></td></tr>
@@ -98,7 +99,7 @@
 	
      <tr class=""><td>HOMD Sequence ID</td><td><%= ginfo.gid %></td></tr>
      <tr class=""><td>HOMD Taxon ID</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= taxidfullnameplus %></a></td></tr>
-     <tr class=""><td>WGS project</td><td><a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= ginfo.wgs %>'><%= ginfo.wgs %></a></td></tr>
+     <tr class=""><td title='Whole Genome Sequence'>WGS project</td><td><a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= ginfo.wgs %>'><%= ginfo.wgs %></a></td></tr>
      
      
      <tr class=""><td>Isolate Origin</td><td><%= ginfo.isolate_origin %></td></tr>
