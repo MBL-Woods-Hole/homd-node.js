@@ -98,7 +98,7 @@
 	
      <tr class=""><td>HOMD Sequence ID</td><td><%= ginfo.gid %></td></tr>
      <tr class=""><td>HOMD Taxon ID</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= taxidfullnameplus %></a></td></tr>
-     <tr class=""><td>WGS project</td><td><%= ginfo.wgs %></td></tr>
+     <tr class=""><td>WGS project</td><td><a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= ginfo.wgs %>'><%= ginfo.wgs %></a></td></tr>
      
      
      <tr class=""><td>Isolate Origin</td><td><%= ginfo.isolate_origin %></td></tr>

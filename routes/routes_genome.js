@@ -606,6 +606,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
          data.otid = C.genome_lookup[gid].otid
          data.genus =C.genome_lookup[gid].genus
          data.species =C.genome_lookup[gid].species
+         data.tlength = helpers.format_long_numbers(data.tlength)
          //console.log('rows',rows)
          const q_contig = queries.get_contigs(gid)
          let contigs = []
