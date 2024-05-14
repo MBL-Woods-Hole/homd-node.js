@@ -55,6 +55,7 @@ first_genomes_query_no_flagid ="""
     ncbi_taxonid,
     isolate_origin as io,
     gc,
+    wgs,
     ncbi_assembly_name as asmbly_name,
     gb_assembly   as gb_asmbly,
     refseq_assembly as rs_asmbly,
@@ -105,6 +106,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     genome['tlength']   = ''   # table 1
     genome['ccolct']    = ''  # table 1
     genome['gc']        = ''   # table 2
+    genome['wgs']        = ''   # 
     genome['ncbi_taxonid'] = ''   # table 2
     genome['ncbi_bpid']     = ''   # table 2
     genome['ncbi_bsid'] = ''
@@ -142,6 +144,7 @@ def run_first(args):
             taxonObj['tlength']     = obj['tlength']
             taxonObj['ccolct']      = obj['ccolct']
             taxonObj['gc']          = obj['gc']
+            taxonObj['wgs']          = obj['wgs']
             taxonObj['ncbi_taxonid'] = obj['ncbi_taxonid']
             taxonObj['ncbi_bpid']   = obj['ncbi_bpid']
             taxonObj['ncbi_bsid']   = obj['ncbi_bsid']

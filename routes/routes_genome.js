@@ -411,6 +411,8 @@ router.get('/reset_gtable', function gen_table_reset(req, res) {
    res.redirect('back');
 });
 router.get('/genome_table', function genome_table(req, res) {
+    // https://www.ncbi.nlm.nih.gov/assembly/GCF_000160075.2/?shouldredirect=false
+    
     let filter, send_list, showing,ret,count_before_paging,args,count_txt
     let page_data = init_page_data()
     if(req.query.page){
@@ -448,7 +450,7 @@ router.get('/genome_table', function genome_table(req, res) {
     }else{
        send_list = apply_gtable_filter(req, filter)
     }
-    //console.log('send_list[0]',send_list[0])
+    console.log('send_list[0]',send_list[0])
     count_before_paging = send_list.length
     // Initial page = 1 for fast load
     // no paging in POST side
@@ -587,58 +589,70 @@ router.get('/genome_description', function genomeDescription (req, res) {
   }
   const gid = req.query.gid
   let data
-  if(Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)){
-    data = C.genome_lookup[gid]
-  }else{
-    data = {}
-  }
-  //console.log(data)
-  const q = queries.get_contigs(gid)
+  // if(Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)){
+//     data = C.genome_lookup[gid]
+//   }else{
+//     data = {}
+//   }
+  //console.log('data',data)
+  const q_genome = queries.get_genome(gid)
+  //console.log('q',q_genome)
+  TDBConn.query(q_genome, (err, rows) => {
+     if (err) {
+         console.log(err)
+     }else{
+         data = rows[0]
+         data.gid = gid
+         data.otid = C.genome_lookup[gid].otid
+         data.genus =C.genome_lookup[gid].genus
+         data.species =C.genome_lookup[gid].species
+         //console.log('rows',rows)
+         const q_contig = queries.get_contigs(gid)
+         let contigs = []
+         // try get contigs from file:
+         // ncbi only
   
-  let contigs = []
-  // try get contigs from file:
-  // ncbi only
-  
-  helpers.print(q)
-  TDBConn.query(q, (err, rows) => {
-  //ADBConn.query(q, (err, rows) => {
-    if (err) {
-        console.log(err)
-    }else{
-        //console.log('contigs',rows)
-        for(let r in rows){
-           contigs.push({contig: rows[r].accession, gc: rows[r].GC})
-        }
-    }
+         helpers.print(q_contig)
+         TDBConn.query(q_contig, (err, rows) => {
+            if (err) {
+              console.log(err)
+            }else{
+              //console.log('contigs',rows)
+              for(let r in rows){
+                 contigs.push({contig: rows[r].accession, gc: rows[r].GC})
+              }
+            }
 
-// Crisper-cas
-// need to determine is CC data available for this genome(gid)
-// if dir exists  homdData-Crisper.json
-    let fpath = path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')
-    //console.log(fpath)
-    let crispr = 0
-    let crispr_data = JSON.parse(fs.readFileSync(fpath))
-    if(gid in crispr_data){
-        crispr = crispr_data[gid]
-    }
-    console.log('contigs:',contigs)
-    res.render('pages/genome/genomedesc', {
-        title: 'HOMD :: Genome Info',
-        pgname: 'genome/description', // for AboutThisPage 
-        config: JSON.stringify(CFG),
-        // taxonid: otid,
-        data1: JSON.stringify(data),
-        gid: gid,
-        anviserver_link: C.anviserver_link,
-        contigs: JSON.stringify(contigs.sort()),
-        crispr: crispr,
-        // data2: JSON.stringify(data2),
-        // data3: JSON.stringify(data3),
-        // data4: JSON.stringify(data4),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        user: JSON.stringify(req.user || {}),
-      })
-  })
+            // Crisper-cas
+            // need to determine is CC data available for this genome(gid)
+            // if dir exists  homdData-Crisper.json
+            let fpath = path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')
+            //console.log(fpath)
+            let crispr = 0
+            let crispr_data = JSON.parse(fs.readFileSync(fpath))
+            if(gid in crispr_data){
+                 crispr = crispr_data[gid]
+            }
+            console.log('contigs:',contigs)
+            res.render('pages/genome/genomedesc', {
+               title: 'HOMD :: Genome Info',
+               pgname: 'genome/description', // for AboutThisPage 
+               config: JSON.stringify(CFG),
+               // taxonid: otid,
+               data1: JSON.stringify(data),
+               gid: gid,
+               anviserver_link: C.anviserver_link,
+               contigs: JSON.stringify(contigs.sort()),
+               crispr: crispr,
+               // data2: JSON.stringify(data2),
+               // data3: JSON.stringify(data3),
+               // data4: JSON.stringify(data4),
+               ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+               user: JSON.stringify(req.user || {}),
+            })
+       })  // end TDBConn.query(q_contig
+     } // end else
+  })// end TDBConn.query(q_genome)
 })
 
 router.post('/get_16s_seq', function get16sSeqPost (req, res) {

@@ -88,6 +88,35 @@ module.exports.get_lineage_query = (otid) => {
 //   }
 //   return qSelectAnno
 // }
+module.exports.get_genome = (gid) => {   // always NCBI for taxon description
+  
+  let qSelectGenome = "SELECT  culture_strain,organism,coverage,status,"
+        qSelectGenome +=' date,'
+        qSelectGenome +=' submitter,'
+        qSelectGenome +=' ncontigs,'
+        qSelectGenome +=' tlength,'
+        qSelectGenome +=' isolate_origin,'
+        qSelectGenome +=' ncbi_bioproject,'
+        qSelectGenome +=' ncbi_taxonid,'
+        qSelectGenome +=' ncbi_biosample,'
+        qSelectGenome +=' ncbi_assembly_name,'
+        qSelectGenome +=' gc,'
+        qSelectGenome +=' gb_assembly,'
+        qSelectGenome +=' refseq_assembly,'
+        qSelectGenome +=' assembly_type,'
+        qSelectGenome +=' release_type,'
+        qSelectGenome +=' assembly_level,'
+        qSelectGenome +=' genome_rep,'
+        qSelectGenome +=' method,'
+        qSelectGenome +=' wgs,'
+        qSelectGenome +=' seqtech,'
+        qSelectGenome +=' crisper_cas'
+        qSelectGenome +=' FROM genomes'
+        qSelectGenome +=" WHERE seq_id = '"+gid+"'"
+ 
+
+    return qSelectGenome
+}
 module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
   let qSelectContigs = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE seq_id = '"+gid+"'"
