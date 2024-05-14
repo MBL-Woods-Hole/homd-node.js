@@ -266,6 +266,8 @@ def run_abundance_db():
         #print(row)
         max_eren, max_dewhirst, max_hmp_metaphlan, max_hmp_refseq = 0,0,0,0
         taxon_string = fix_taxonomy(row['taxonomy'])
+        
+            
         #taxon_string = row['taxonomy']
         # tax_parts = taxon_string.split(';')
 #         if len(tax_parts) == 7:
