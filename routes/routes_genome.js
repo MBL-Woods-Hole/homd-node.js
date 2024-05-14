@@ -925,6 +925,7 @@ router.post('/orf_search', function orf_search (req, res) {
                 tmpgid = tmp_data_keys[k]
                 org_list[tmpgid] = ''
                 if(C.genome_lookup.hasOwnProperty(tmpgid)){
+                   ssp = ''
                    if(C.genome_lookup[tmpgid].subspecies){
                       ssp = C.genome_lookup[tmpgid].subspecies+' '
                    }
