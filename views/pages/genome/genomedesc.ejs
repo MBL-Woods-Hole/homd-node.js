@@ -114,14 +114,21 @@
      <tr class=""><td>Genome Coverage</td><td><%= ginfo.coverage %></td></tr>
      
      <tr class=""><td>Contigs and Singlets</td>
-     <td><%= ginfo.ncontigs %>
-       <select id='select-contig' style='width: 200px;'>
-       <% for(n in contigs){ %>
-          <option value='<%= contigs[n].contig %>|<%= contigs[n].gc %>'><%= contigs[n].contig %></option>
+     <td>
+       <% if(contigs.length == 0){ %>
+          no contigs to show
+       <% } else if(contigs.length == 1){ %>
+          <%= ginfo.ncontigs %> 
+          <a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= contigs[0].contig %>'><%= contigs[0].contig %></a>
+       <% }else{ %>
+          <%= ginfo.ncontigs %>
+          <select id='select-contig' style='width: 200px;'>
+          <% for(n in contigs){ %>
+             <option value='<%= contigs[n].contig %>|<%= contigs[n].gc %>'><%= contigs[n].contig %></option>
+          <% } %>
+          </select>
+          <a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>
        <% } %>
-       </select>
-       <a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>
-        
        <!-- 
 <span id='jbrowse_offer_span'>
        <% if(contigs[0]){%>
