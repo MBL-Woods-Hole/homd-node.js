@@ -53,7 +53,7 @@ first_genomes_query_no_flagid ="""
 
     ncbi_bioproject as ncbi_bpid,
     ncbi_taxonid,
-    isolate_origin as io,
+    
     gc,
     wgs,
     ncbi_assembly_name as asmbly_name,
@@ -97,24 +97,24 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     genome = {}
     genome['gid']       = gid
     genome['otid']      = ''   # index table
-    genome['organism']     = ''   # table 1
+    #genome['organism']     = ''   # table 1
     genome['genus']     = ''   # table 1
     genome['species']     = ''   # table 1
-    genome['status']    = ''   # table 1
+    #genome['status']    = ''   # table 1
     genome['ncontigs']  = ''   # table 1
-    genome['submitter'] = ''   # table 1
+    #genome['submitter'] = ''   # table 1
     genome['tlength']   = ''   # table 1
     genome['ccolct']    = ''  # table 1
     genome['gc']        = ''   # table 2
-    genome['wgs']        = ''   # 
-    genome['ncbi_taxonid'] = ''   # table 2
-    genome['ncbi_bpid']     = ''   # table 2
-    genome['ncbi_bsid'] = ''
-    genome['io']        = ''   # table 2
+    #genome['wgs']        = ''   # 
+    #genome['ncbi_taxonid'] = ''   # table 2
+    #genome['ncbi_bpid']     = ''   # table 2
+    #genome['ncbi_bsid'] = ''
+    #genome['io']        = ''   # table 2
 
-    genome['asmbly_name']    = ''
+    #genome['asmbly_name']    = ''
     genome['gb_asmbly'] = ''
-    genome['rs_asmbly'] = ''
+    #genome['rs_asmbly'] = ''
     genome['pangenomes'] = []   # array of pangenome names
 
     return genome
@@ -135,23 +135,23 @@ def run_first(args):
 
         if obj['gid'] not in master_lookup:
             taxonObj = create_genome(obj['gid'])
-            taxonObj['organism']     = obj['organism']
+            #taxonObj['organism']     = obj['organism']
             taxonObj['genus']       = obj['genus']
             taxonObj['species']     = obj['species']
-            taxonObj['status']      = obj['status']
+            #taxonObj['status']      = obj['status']
             taxonObj['ncontigs']    = obj['ncontigs']
-            taxonObj['submitter']   = obj['submitter']
+            #taxonObj['submitter']   = obj['submitter']
             taxonObj['tlength']     = obj['tlength']
             taxonObj['ccolct']      = obj['ccolct']
             taxonObj['gc']          = obj['gc']
-            taxonObj['wgs']          = obj['wgs']
-            taxonObj['ncbi_taxonid'] = obj['ncbi_taxonid']
-            taxonObj['ncbi_bpid']   = obj['ncbi_bpid']
-            taxonObj['ncbi_bsid']   = obj['ncbi_bsid']
-            taxonObj['io']          = obj['io']
+            #taxonObj['wgs']          = obj['wgs']
+            #taxonObj['ncbi_taxonid'] = obj['ncbi_taxonid']
+            #taxonObj['ncbi_bpid']   = obj['ncbi_bpid']
+            #taxonObj['ncbi_bsid']   = obj['ncbi_bsid']
+            #taxonObj['io']          = obj['io']
             taxonObj['gb_asmbly']   = obj['gb_asmbly']
-            taxonObj['rs_asmbly']   = obj['rs_asmbly']
-            taxonObj['asmbly_name'] = obj['asmbly_name']
+            #taxonObj['rs_asmbly']   = obj['rs_asmbly']
+            #taxonObj['asmbly_name'] = obj['asmbly_name']
 
 
         else:

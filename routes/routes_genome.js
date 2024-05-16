@@ -1857,23 +1857,31 @@ function createTable (gids, source, type, startText) {
 function getFilteredGenomeList (gidObjList, searchText, searchField) {
   let sendList, tmpSendList
   const tempObj = {}
-  if (searchField === 'taxid') {
-    sendList = gidObjList.filter(item => item.otid.toLowerCase().includes(searchText))
-  } else if (searchField === 'seqid') {
-    sendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
+  //if (searchField === 'taxid') {
+  //  sendList = gidObjList.filter(item => item.otid.toLowerCase().includes(searchText))
+  //} else 
+  //console.log(searchField,gidObjList[0])
+  //console.log(searchText,'SEARCHING')
+  if (searchField === 'accession') {
+    //console.log('SEARCHING')
+    sendList = gidObjList.filter(item => item.gb_asmbly.toLowerCase().includes(searchText))
   } else if (searchField === 'ccolct') {
     sendList = gidObjList.filter(item => item.ccolct.toLowerCase().includes(searchText))
- } else if (searchField === 'organism') {
-    sendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
-  } else if (searchField === 'io') {
-    sendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
-  } else if (searchField === 'status') {
-    sendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
-  } else if (searchField === 'submitter') {
-    sendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
-  }  else if (searchField === 'seq_center') {
-    sendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
+ //} else if (searchField === 'organism') {
+   // sendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
+  //} else if (searchField === 'io') {
+   // sendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
+  //} else if (searchField === 'status') {
+   // sendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
+  //} else if (searchField === 'submitter') {
+  //  sendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
+  //}  else if (searchField === 'seq_center') {
+   // sendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
   } else {
+    tmpSendList = gidObjList.filter(item => item.gb_asmbly.toLowerCase().includes(searchText))
+    for (let n in tmpSendList) {
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    }
      // gid
     tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
     for (let n in tmpSendList) {
@@ -1887,23 +1895,23 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
     }
     
     
-        tmpSendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
+    tmpSendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
         // for uniqueness convert to object::gid
         for (let n in tmpSendList) {
           tempObj[tmpSendList[n].gid] = tmpSendList[n]
         }
         // species
-        tmpSendList = gidObjList.filter(item => item.species.toLowerCase().includes(searchText))
+    tmpSendList = gidObjList.filter(item => item.species.toLowerCase().includes(searchText))
         // for uniqueness convert to object::gid
         for (let n in tmpSendList) {
           tempObj[tmpSendList[n].gid] = tmpSendList[n]
         }
     // organism
-    tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
+    //tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
     // for uniqueness convert to object::gid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    }
+    //for (let n in tmpSendList) {
+    //  tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    //}
     // culture collection
     tmpSendList = gidObjList.filter(item => item.ccolct.toLowerCase().includes(searchText))
     // for uniqueness convert to object::gid
@@ -1911,23 +1919,23 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // isolation origin
-    tmpSendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
+    //tmpSendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
     // for uniqueness convert to object::gid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    }
+    //for (let n in tmpSendList) {
+    //  tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    //}
     // seq status
-    tmpSendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
+    //tmpSendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
     // for uniqueness convert to object::gid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    }
+    //for (let n in tmpSendList) {
+    //  tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    //}
     // submitter
-    if(gidObjList[0].hasOwnProperty('submitter')){
-      tmpSendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
-    }else{
-      tmpSendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
-    }
+    //if(gidObjList[0].hasOwnProperty('submitter')){
+    //  tmpSendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
+    //}else{
+    //  tmpSendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
+    //}
     // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
