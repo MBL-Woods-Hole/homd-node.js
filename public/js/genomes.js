@@ -93,7 +93,7 @@ function open_blast_in_new_window(gid){
 //   
 // }
 function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
-  console.log('open_jbrowse',value,page)
+  //console.log('open_jbrowse',value,page)
   /*
   value: may be gid or gid|gc or gid|contig
   page = may be the specific page:
@@ -109,7 +109,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   if(page == 'genome_desc_single'){ 
       gid = value
       contigplusgc = document.getElementById("select-contig").innerHTML
-      console.log('contigplusgc',contigplusgc)
+      //console.log('contigplusgc',contigplusgc)
       pts = contigplusgc.split('|')
       contig = pts[0]
       gc = pts[1]
@@ -158,7 +158,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
-        console.log(resp)
+        //console.log(resp)
         window.open(url)
       }
   }
@@ -166,7 +166,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   
 }
 function open_ncbi(type){
-    console.log('type',type)
+    //console.log('type',type)
     if(type == 'single'){
        contig = document.getElementById("select-contig").innerHTML
        url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig
@@ -175,7 +175,7 @@ function open_ncbi(type){
        url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig.split('|')[0]
     }
     
-    console.log(url)
+    //console.log(url)
     window.open(url)
 }
 // function offer_jbrowse(gid, contigplusgc){
