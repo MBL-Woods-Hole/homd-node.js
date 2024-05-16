@@ -156,6 +156,12 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   xmlhttp.send();
   
 }
+function open_ncbi(){
+    contig = document.getElementById("select-contig").value
+    url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig
+    console.log(url)
+    window.open(url)
+}
 // function offer_jbrowse(gid, contigplusgc){
 //    console.log('offer_jbrowse',contigplusgc)
 //    pts = contigplusgc.split('|')

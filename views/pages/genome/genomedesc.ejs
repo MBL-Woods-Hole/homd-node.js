@@ -116,7 +116,7 @@
      <tr class=""><td>Contigs and Singlets</td>
      <td>
        <% if(contigs.length == 0){ %>
-          no contigs to show
+          no contigs found
        <% } else if(contigs.length == 1){ %>
           <a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= contigs[0].contig %>' target='_blank'><%= contigs[0].contig %></a>
        <% }else{ %>
@@ -126,7 +126,10 @@
              <option value='<%= contigs[n].contig %>|<%= contigs[n].gc %>'><%= contigs[n].contig %></option>
           <% } %>
           </select>
-          <a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>
+          <small>
+          [<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>]
+          &nbsp;&nbsp;[<a href='#' onclick="open_ncbi()">Linkout to NCBI</a>]
+          </small>
        <% } %>
        <!-- 
 <span id='jbrowse_offer_span'>
