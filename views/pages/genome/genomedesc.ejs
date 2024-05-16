@@ -118,8 +118,7 @@
        <% if(contigs.length == 0){ %>
           no contigs to show
        <% } else if(contigs.length == 1){ %>
-          <%= ginfo.ncontigs %> 
-          <a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= contigs[0].contig %>'><%= contigs[0].contig %></a>
+          <a href='https://www.ncbi.nlm.nih.gov/nuccore/<%= contigs[0].contig %>' target='_blank'><%= contigs[0].contig %></a>
        <% }else{ %>
           <%= ginfo.ncontigs %>
           <select id='select-contig' style='width: 200px;'>
