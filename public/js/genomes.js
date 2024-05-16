@@ -109,7 +109,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   if(page == 'genome_desc_single'){ 
       gid = value
       contigplusgc = document.getElementById("select-contig").innrHTML
-      //console.log('contigplusgc',contigplusgc)
+      console.log('contigplusgc',contigplusgc)
       pts = contigplusgc.split('|')
       contig = pts[0]
       gc = pts[1]
