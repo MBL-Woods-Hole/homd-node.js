@@ -108,7 +108,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   var tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
   if(page == 'genome_desc_single'){ 
       gid = value
-      contigplusgc = document.getElementById("select-contig").innrHTML
+      contigplusgc = document.getElementById("select-contig").innerHTML
       console.log('contigplusgc',contigplusgc)
       pts = contigplusgc.split('|')
       contig = pts[0]
