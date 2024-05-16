@@ -119,8 +119,10 @@
           no contigs found
        <% } else if(contigs.length == 1){ %>
           <span id='select-contig'><%= contigs[0].contig %></span>
-          [<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>]
-          &nbsp;&nbsp;[<a href='#' onclick="open_ncbi()">Linkout to NCBI</a>]
+          <small>
+          [<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc_single')">Open in Genome Viewer</a>]
+          &nbsp;&nbsp;[<a href='#' onclick="open_ncbi('single')">Linkout to NCBI</a>]
+          </small>
        <% }else{ %>
           <%= ginfo.ncontigs %>
           <select id='select-contig' style='width: 200px;'>
@@ -130,7 +132,7 @@
           </select>
           <small>
           [<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>]
-          &nbsp;&nbsp;[<a href='#' onclick="open_ncbi()">Linkout to NCBI</a>]
+          &nbsp;&nbsp;[<a href='#' onclick="open_ncbi('select')">Linkout to NCBI</a>]
           </small>
        <% } %>
        <!-- 

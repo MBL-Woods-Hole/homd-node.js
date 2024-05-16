@@ -106,6 +106,15 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   */
   var url
   var tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
+  if(page == 'genome_desc_single'){ 
+      gid = value
+      contigplusgc = document.getElementById("select-contig").innrHTML
+      //console.log('contigplusgc',contigplusgc)
+      pts = contigplusgc.split('|')
+      contig = pts[0]
+      gc = pts[1]
+      url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew&loc="+gid+"|"+contig
+     
   if(page == 'genome_desc'){ 
       gid = value
       contigplusgc = document.getElementById("select-contig").value
@@ -156,8 +165,12 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   xmlhttp.send();
   
 }
-function open_ncbi(){
-    contig = document.getElementById("select-contig").value
+function open_ncbi(type){
+    if(type=='single'){
+       contig = document.getElementById("select-contig").innerHTML
+    }else{
+       contig = document.getElementById("select-contig").value
+    }
     url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig.split('|')[0]
     console.log(url)
     window.open(url)
