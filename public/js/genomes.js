@@ -158,7 +158,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
 }
 function open_ncbi(){
     contig = document.getElementById("select-contig").value
-    url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig
+    url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig.split('|')[0]
     console.log(url)
     window.open(url)
 }
