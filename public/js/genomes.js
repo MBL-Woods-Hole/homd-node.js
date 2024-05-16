@@ -115,7 +115,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       gc = pts[1]
       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew&loc="+gid+"|"+contig
      
-  if(page == 'genome_desc'){ 
+  }else if(page == 'genome_desc'){ 
       gid = value
       contigplusgc = document.getElementById("select-contig").value
       //console.log('contigplusgc',contigplusgc)
@@ -166,12 +166,15 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   
 }
 function open_ncbi(type){
-    if(type=='single'){
+    console.log('type',type)
+    if(type == 'single'){
        contig = document.getElementById("select-contig").innerHTML
+       url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig
     }else{
        contig = document.getElementById("select-contig").value
+       url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig.split('|')[0]
     }
-    url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig.split('|')[0]
+    
     console.log(url)
     window.open(url)
 }
