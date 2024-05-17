@@ -1739,19 +1739,31 @@ var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in second
     const sendList = Object.values(C.genome_lookup)
     const listOfGids = sendList.map(item => item.gid)
     fileFilterText = fileFilterText + ' Date: ' + today
-    const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
-    if (type === 'browser') {
-      res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-    } else if (type === 'text') {
-      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.txt"' })
-    } else if (type === 'excel') {
-      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.xls"' })
-    } else {
-      // error
-      console.log('Download table format ERROR')
-    }
-    res.send(tableTsv)
-    res.end()
+    
+    let q = "SELECT * from genomes"
+    console.log(q)
+    TDBConn.query(q, (err, mysqlrows) => {
+        if(err){
+           console.log(err)
+           return
+        }
+        //console.log(mysqlrows)
+        //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
+        const tableTsv = createFullTable(mysqlrows, fileFilterText)
+    
+        if (type === 'browser') {
+          res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        } else if (type === 'text') {
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.txt"' })
+        } else if (type === 'excel') {
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.xls"' })
+        } else {
+          // error
+          console.log('Download table format ERROR')
+        }
+        res.send(tableTsv)
+        res.end()
+    })
 })
 router.get('/dld_table/:type', function dldTable (req, res) {
   
@@ -1818,35 +1830,64 @@ router.get('/dld_table/:type', function dldTable (req, res) {
   //helpers.print(['listOfGids', listOfGids])
   // type = browser, text or excel
   const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
+
   if (type === 'browser') {
     res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
   } else if (type === 'text') {
-    res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.txt"' })
+    let fname = 'HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.txt'
+    res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
   } else if (type === 'excel') {
-    res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.xls"' })
+    let fname = 'HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.xls'
+    res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
   } else {
     // error
     console.log('Download table format ERROR')
   }
   res.send(tableTsv)
   res.end()
+  
 })
 
 // /////////////////////////////
+function createFullTable (sqlrows, startText) {
+    let txt = startText + '\n'
+    let tmp,data,i,n,hmt
+    const headersRow = Object.keys(sqlrows[0])
+    txt += headersRow.join('\t')+'\n'
+    //console.log('sqlrows',headersRow)
+    for(n in sqlrows){
+        tmp = []
+        for(i in headersRow){
+          data = []
+          if(headersRow[i] == 'otid'){
+              hmt = helpers.make_otid_display_name(sqlrows[n][headersRow[i]])
+              data.push(hmt)
+          }else{
+              data.push(sqlrows[n][headersRow[i]])
+          }
+          tmp.push(data)
+          //console.log('hd',sqlrows[n][headersRow[i]])
+        }
+        txt += tmp.join('\t')
+        txt += '\n'
+    }
+    return txt
+}
 // ////////////////////////////
 function createTable (gids, source, type, startText) {
   let txt = startText + '\n'
   if (source === 'table') {
-    const headersRow = ['Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species', 'Status', 'No. Contigs', 'Sequencing Center', 'Total Length', 'Oral Pathogen', 'Culture Collection', 'GC %', 'NCBI Genome-ID', 'NCBI BioProject-ID', 'NCBI BioSample-ID', 'Isolate Origin', 'atcc_mn', 'non_atcc_mn', 'Genbank Acc no.', 'Genbank Assembly', '16S rRNA', '16S rRNA Comment', 'flag_id']
-    txt += headersRow.join('\t')
-
+    const headersRow = ['Genbank Acc no.','Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species',  'No. Contigs',  'Total Length',  'Infraspecific Names', 'GC %']
+    txt += headersRow.join('\t')+'\n'
+    console.log('SEQF5379.1',C.genome_lookup['SEQF5379.1'])
     for (let n in gids) {
       const gid = gids[n]
       const obj = C.genome_lookup[gid]
       // per FDewhirst: species needs to be unencumbered of genus for this table
       let species = obj.species.replace(obj.genus,'').trim()
-      const r = [gid, obj.otid, obj.genus, species, obj.status, obj.ncontigs, obj.submitter, obj.tlength, obj.oral_path, obj.ccolct, obj.gc, obj.ncbi_genomeid, obj.ncbi_bpid, obj.ncbi_bsid, obj.io, obj.atcc_mn, obj.non_atcc_mn, obj.gb_acc, obj.gb_asmbly, obj['16s_rrna'], obj['16s_rrna_comment'], obj.flag]
-      txt += '\n' + r.join('\t')
+      let hmt = helpers.make_otid_display_name(obj.otid)
+      const r = [obj.gb_asmbly, gid, hmt, obj.genus, obj.species, obj.ncontigs, obj.tlength, obj.ccolct, obj.gc]
+      txt += r.join('\t') +'\n'
     }
   }
   // console.log(txt)
