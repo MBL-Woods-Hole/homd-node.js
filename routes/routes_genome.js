@@ -748,6 +748,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     html += '<tr>'
     html += '<th>Molecule</th>'
     html += '<th>PID</th>'
+    html += '<th class="sorttable_nosort">Genome<br>Viewer</th>'
     html += "<th class='sorttable_numeric'>NA<br><small>(Length)(Seq)</small></th>"
     html += "<th class='sorttable_numeric'>AA<br><small>(Length)(Seq)</small></th>"
     html += '<th class="sorttable_nosort">Range</th>'
@@ -839,11 +840,14 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             let jbtracks = "DNA,homd,prokka,ncbi"
             let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
             let highlight = seqacc+":"+start.toString()+".."+stop.toString()
-            //console.log('XXX',rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid)
-            html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+selected_gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
-        
-            html += "</td>"   // pid (and JB)
-        
+            
+            html += "</td>"   // pid
+            
+            html += "<td class='center'>" 
+            html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+selected_gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
+            html += "</td>" //  JB)
+            
+            
             html += "<td nowrap>"+rowobj.length_na
                 html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid+"')\"><b>NA</b></a>]"
             html += "</td>"   // NA length
@@ -937,7 +941,7 @@ router.post('/orf_search', function orf_search (req, res) {
                 return helpers.compareStrings_alpha(org_list[a], org_list[b]);
              })
             
-            //console.log('data',site_search_result)
+            console.log('CFG',CFG.JBROWSE_URL)
             res.render('pages/genome/annotation_keyword', {
 
                 title: 'HOMD :: text search',
@@ -1932,7 +1936,9 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
           tempObj[tmpSendList[n].gid] = tmpSendList[n]
         }
     // organism
-    tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
+    if(gidObjList[0].hasOwnProperty('organism')){
+     tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
+    }
     // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
@@ -1944,21 +1950,27 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // isolation origin
-    tmpSendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
+    if(gidObjList[0].hasOwnProperty('io')){
+      tmpSendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
+    }
     // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // seq status
-    tmpSendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
+    if(gidObjList[0].hasOwnProperty('status')){
+      tmpSendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
+    }
     // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     // submitter
+    
     if(gidObjList[0].hasOwnProperty('submitter')){
       tmpSendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
-    }else{
+    }
+    if(gidObjList[0].hasOwnProperty('seq_center')){
       tmpSendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
     }
     // for uniqueness convert to object::gid
