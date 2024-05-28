@@ -871,10 +871,10 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             html += '<tr>'
             
             rowobj.acc_adorned = (rowobj.acc).replace(re, "<font color='red'>"+search_text+"</font>");
-            html += "<td nowrap>"+rowobj.acc_adorned+"</td>"   // molecule
+            html += "<td class='center' nowrap>"+rowobj.acc_adorned+"</td>"   // molecule
             
             rowobj.pid_adorned = (rowobj.pid).replace(re, "<font color='red'>"+search_text+"</font>");
-            html += "<td nowrap>"+rowobj.pid_adorned
+            html += "<td class='center' nowrap>"+rowobj.pid_adorned
             
             if(anno === "prokka"){ 
                 seqacc = rowobj.acc.replace('_','|')
@@ -895,13 +895,13 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             html += "</td>" //  JB)
             
             
-            html += "<td nowrap>"+rowobj.length_na
+            html += "<td class='center' nowrap>"+rowobj.length_na
                 html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid+"')\"><b>NA</b></a>]"
             html += "</td>"   // NA length
-            html += "<td nowrap>"+rowobj.length_aa
+            html += "<td class='center' nowrap>"+rowobj.length_aa
                 html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid+"')\"><b>AA</b></a>]"
             html += "</td>"   // AA length
-            html += "<td nowrap>"+start+'-'+stop+"</td>"   // Range
+            html += "<td  class='center' nowrap>"+start+'-'+stop+"</td>"   // Range
             
             rowobj.gene_adorned = rowobj.gene.replace(re, "<font color='red'>"+search_text+"</font>");
             html += "<td nowrap>"+rowobj.gene_adorned+"</td>"   // product
