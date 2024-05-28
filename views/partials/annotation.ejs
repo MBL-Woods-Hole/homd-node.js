@@ -98,6 +98,7 @@ thead th { position: sticky; top: 0; }
        <th class='col0 sorttable_nosort'>#</th>
        <th class='col1'>Molecule</th>
        <th class='col2'>PID</th>
+       <th class='col2a sorttable_nosort'>Genome<br>Viewer</th>
        <th class='col3 center sorttable_numeric' nowrap>NA <small>(Length)(Seq)</small><br></th>
        <th class='col4 center sorttable_numeric' nowrap>AA <small>(Length)(Seq)</small><br></th>
        <th class='col5 sorttable_nosort'>Range</th>
@@ -159,11 +160,12 @@ thead th { position: sticky; top: 0; }
          <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
          <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
          <!-- <a title='JBrowse/Genome Viewer' href='<%= cfg.JBROWSE_URL %>/<%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>&tracks=<%= tracks %>' target='_blank' rel="noopener noreferrer">JB</a> -->
-        <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('<%= gid %>','anno_table','','','<%= anno_type %>','<%= loc %>','<%= highlight %>')">JB</a>
         
        
        </td>
-       
+       <td class='center' nowrap>
+         <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('<%= gid %>','anno_table','','','<%= anno_type %>','<%= loc %>','<%= highlight %>')">open</a>
+       </td>
        
        <td class='center' nowrap>
        <%= mole[n].length_na %>

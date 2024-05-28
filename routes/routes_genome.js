@@ -792,6 +792,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     html += '<tr>'
     html += '<th>Molecule</th>'
     html += '<th>PID</th>'
+    html += '<th class="sorttable_nosort">Genome<br>Viewer</th>'
     html += "<th class='sorttable_numeric'>NA<br><small>(Length)(Seq)</small></th>"
     html += "<th class='sorttable_numeric'>AA<br><small>(Length)(Seq)</small></th>"
     html += '<th class="sorttable_nosort">Range</th>'
@@ -885,10 +886,15 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             let highlight = seqacc+":"+start.toString()+".."+stop.toString()
             //console.log('XXX',rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid)
             //html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+selected_gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
-            html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+selected_gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >JB</a>"
+            //html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+selected_gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >JB</a>"
             
-            html += "</td>"   // pid (and JB)
-        
+            html += "</td>"   // pid
+            
+            html += "<td class='center'>" 
+            html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+selected_gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
+            html += "</td>" //  JB)
+            
+            
             html += "<td nowrap>"+rowobj.length_na
                 html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid+"')\"><b>NA</b></a>]"
             html += "</td>"   // NA length
