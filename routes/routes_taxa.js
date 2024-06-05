@@ -1001,7 +1001,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
     orders.sort()
     families.sort()
     genera.sort()
-    //console.log('bar_graph_data',bar_graph_data)
+    console.log('sp_per_site',sp_per_site)
     res.render('pages/taxa/ecology_index', {
       title: 'HOMD :: Ecology', 
       pgname: 'taxon/ecology', // for AbountThisPage
