@@ -1194,7 +1194,7 @@ router.get('/explorer', function explorer (req, res) {
   let otid = 0,gc = 0
   let anno = req.query.anno || 'ncbi'
   
-  
+  helpers.accesslog(req, res)
   helpers.print(['gid:', gid,'anno:',anno])
   
   // anno == 

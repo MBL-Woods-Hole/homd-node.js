@@ -1029,6 +1029,9 @@ router.get('/ecology_home', function ecology_index(req, res) {
 //router.get('/ecology/:level/:taxname', function ecology(req, res) {
 router.get('/ecology', function ecology(req, res) {
     helpers.print('in ecology new')
+    
+    helpers.accesslog(req, res)
+    
     let rank = req.query.rank;
     let tax_name = req.query.name
     
