@@ -871,7 +871,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
     // let graph_site_order = C.base_abundance_order
 //     graph_site_order.push('NS')
 //     console.log('PUSH',C.base_abundance_order,graph_site_order)
-    let abundance_graph_order = C.base_abundance_order.concat(['NS'])
+    let abundance_graph_order = C.base_abundance_order
     //console.log('g ORDER',abundance_graph_order,C.base_abundance_order)
     let sole_arch = {'domain':'Archaea','phylum':'Euryarchaeota','klass':'Methanobacteria','order':'Methanobacteriales','family':'Methanobacteriaceae','genus':'Methanobrevibacter'}
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']

@@ -43,11 +43,11 @@ constants.names_w_text = {
 }
 //constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
 constants.abundance_refs = ['eren_v1v3','eren_v3v5','dewhirst','hmp_refseq_v1v3','hmp_refseq_v3v5']
-constants.base_abundance_order     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
+constants.base_abundance_order     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']//,'LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
 constants.eren_abundance_order     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO',                                                'STO']
 constants.dewhirst_abundance_order = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']
-constants.hmp_metaphlan_abundance_order=['SUBP','SUPP','PERIO','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','RAF','VIN','MVA','PFO','STO']
-constants.hmp_refseq_abundance_order   =['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
+constants.hmp_metaphlan_abundance_order=['SUBP','SUPP','PERIO','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']//,'LRC','RRC','RAF','VIN','MVA','PFO','STO']
+constants.hmp_refseq_abundance_order   =['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']//,'LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
 
 //CORRECT ORDER
 // SubP 
