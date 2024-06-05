@@ -1234,6 +1234,8 @@ router.get('/explorer', function explorer (req, res) {
   //console.log('in explorer')
   //console.log(C.annotation_lookup)
   // let myurl = url.parse(req.url, true)
+  helpers.accesslog(req, res)
+
   const gid = req.query.gid
   if(gid && req.session.gtable_filter){
       //console.log('got otid for ttable')
