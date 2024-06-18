@@ -2060,6 +2060,33 @@ router.post('/anvio_post', (req, res) => {
 //     }
     return res.send(url)
 });
+router.post('/anvio_post2', (req, res) => {
+    console.log('In anvio_post2',req.body)
+    
+    //helpers.accesslog(req, res)
+    
+    let pg = req.body.pg
+    if(!pg){
+        pg = 'Veillonella_HMT780'
+    }
+    console.log('Selected Pangenome:',pg)
+    //let port = anvio_ports()
+    //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
+    //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
+    // https://anvio.homd.org/anvio
+    //let url = CFG.ANVIO_URL + '?pg=' + pg
+    let url = 'https://bioinformatics.forsyth.org/anvio' + '?pg=' + pg
+    console.log('trying',url)
+    // localhost:::   http://localhost:3010
+    // Dev      :::   https://anvio.homd.org/anvio
+    //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
+    // if(CFG.DBHOST == 'localhost'){
+//         url = "http://localhost:3010?pg="+pg
+//     }else{
+//         url = "https://anvio.homd.org/anvio?pg="+pg
+//     }
+    return res.send(url)
+});
 router.get('/dnld_pg',(req, res) => {
     console.log('req query',req.query)
     let pg = req.query.pg
