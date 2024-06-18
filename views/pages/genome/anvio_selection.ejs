@@ -113,30 +113,32 @@ function find_anvio2(pg){
     target = 'anvio_post2'
     args = {}
     args.pg = pg;
-
-    xmlhttp.open("POST", target, false);
-    xmlhttp.setRequestHeader("Content-type","application/json");
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 ) {
-         var prelimurl = xmlhttp.responseText;
-         // port will be '0' if no ports left
-         //var url = parseInt(result)
-         console.log('Return url',prelimurl)
-         
-            //url = 'http://localhost:3010?pg=Prochlorococcus_31'
-            //url = 'http://anvio.homd.org/anvio?pg=Prochlorococcus_31'
-            //delay(result)
-            window.open(prelimurl,'_blank')
-          
-         // }else{
-//             loader.hideLoader();
-//             text = "No Ports available to open Anvio`"
-//             document.getElementById('message').innerHTML = result
-//          }
-         
-      }
-    };
-    xmlhttp.send(JSON.stringify(args));
+    let url = 'https://bioinformatics.forsyth.org/anvio' + '?pg=' + pg
+    console.log('opening',url)
+    window.open(prelimurl,'_blank')
+    // xmlhttp.open("POST", target, false);
+//     xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 ) {
+//          var prelimurl = xmlhttp.responseText;
+//          // port will be '0' if no ports left
+//          //var url = parseInt(result)
+//          console.log('Return url',prelimurl)
+//          
+//             //url = 'http://localhost:3010?pg=Prochlorococcus_31'
+//             //url = 'http://anvio.homd.org/anvio?pg=Prochlorococcus_31'
+//             //delay(result)
+//             window.open(prelimurl,'_blank')
+//           
+//          // }else{
+// //             loader.hideLoader();
+// //             text = "No Ports available to open Anvio`"
+// //             document.getElementById('message').innerHTML = result
+// //          }
+//          
+//       }
+//     };
+//     xmlhttp.send(JSON.stringify(args));
   }
 </script>
 
