@@ -26,13 +26,13 @@ table{
 <div id='pgtable'>
 <center>
 <table border='1'>
-<tr><td><b>Available Pangenomes</b><br><small>(Link opens pangenome in Anvio`)</small></td><td>TestLink</td><th>Size<br>(MB)</th><th>Description</th>
+<tr><td><b>Available Pangenomes</b><br><small>(Link opens pangenome in Anvio`)</small></td><th>Size<br>(MB)</th><th>Description</th>
 <th>Download<br>Files v7</th><th>Download<br>Files v8</th></tr>
 
 <% for(i in pgs){ %>
  <tr>
   <td nowrap><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].name %>')"><%- pgs[i].show %></a></td>
-  <td nowrap><a href='#' class='pg' onclick="find_anvio2('<%= pgs[i].name %>')">open</a></td>
+  
   <td><%= pgs[i].file_size %></td>
   <td><%- pgs[i].description %></td>
   <% if(pgs[i].dnld_v7) { %>
@@ -104,18 +104,18 @@ function find_anvio(pg){
     };
     xmlhttp.send(JSON.stringify(args));
   }
-function find_anvio2(pg){
-    // called on click of pg link
-    //loader.showLoader();
-    var xmlhttp = new XMLHttpRequest();
-    document.getElementById('message').innerHTML = ''
-    //console.log(pg)
-    target = 'anvio_post2'
-    args = {}
-    args.pg = pg;
-    let url = 'https://bioinformatics.forsyth.org/anvio' + '?pg=' + pg
-    console.log('opening',url)
-    window.open(prelimurl,'_blank')
+// function find_anvio2(pg){
+//     // called on click of pg link
+//     //loader.showLoader();
+//     var xmlhttp = new XMLHttpRequest();
+//     document.getElementById('message').innerHTML = ''
+//     //console.log(pg)
+//     target = 'anvio_post2'
+//     args = {}
+//     args.pg = pg;
+//     let url = 'https://bioinformatics.forsyth.org/anvio' + '?pg=' + pg
+//     console.log('opening',url)
+//     window.open(prelimurl,'_blank')
     // xmlhttp.open("POST", target, false);
 //     xmlhttp.setRequestHeader("Content-type","application/json");
 //     xmlhttp.onreadystatechange = function() {
@@ -139,6 +139,6 @@ function find_anvio2(pg){
 //       }
 //     };
 //     xmlhttp.send(JSON.stringify(args));
-  }
+//  }
 </script>
 
