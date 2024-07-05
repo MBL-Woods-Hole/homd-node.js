@@ -105,8 +105,8 @@ site_colors3 = {
     tooltips.erenv1v3_log = d3.select("#plot_log_erenv1v3_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
     tooltips.erenv3v5_log = d3.select("#plot_log_erenv3v5_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
     tooltips.hmpmetaphlan_log = d3.select("#plot_log_hmp_metaphlan_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
-    mousemoveX = 30
-    mousemoveY = 150
+    //mousemoveX = 30
+    //mousemoveY = 150
 // HMP_Log_RefSeq V1V3
 //LOGLOGLOG
 // https://d3-graph-gallery.com/graph/lollipop_basic.html
@@ -146,7 +146,7 @@ if(Object.keys(hmprefseqv1v3).length == 0){
     //console.log(coordinates)
     //var x = coordinates[0];
     //var y = coordinates[1];
-    console.log(e)
+    //console.log(e)
     return tooltips.hmprefseqv1v3_log.style("left", (e.pageX+20) + "px")
                                   .style("top",  (e.pageY) + "px")
 
@@ -168,23 +168,27 @@ var y = d3.scaleSymlog()
 
 svg.append("g")
   .call(d3.axisLeft(y).scale(y));
-  svg.append("text")
-    .attr("class", "y label")
+
+svg.append("text")
     .attr("text-anchor", "middle")
     .attr("y", -45)
     .attr("x", -150 )
     .attr("transform", "rotate(-90)")
     .text("Log % Abundance");
-    
+
 svg.append("g")
   .attr("transform", "translate(0," + heightlog + ")")
   .call(d3.axisBottom(x))
-  //.call(d3.axisLeft(y))
-  //.call(yAxis)
   .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
-
+    .style("text-anchor", "end")
+    
+svg.append("text")             
+      .attr("transform",
+            "translate(" + ((widthlog/2)-50) + " ," + 
+                           (heightlog + marginlog.top + 10) + ")")
+      .style("text-anchor", "middle")
+      .text("Body Site");
 // Lines
 svg.selectAll("myline")
   .data(hmprefseqv1v3)
@@ -192,7 +196,7 @@ svg.selectAll("myline")
   .append("line")
     .attr("x1", function(d) { return x(d.site); })
     .attr("x2", function(d) { return x(d.site); })
-    .attr("y1", function(d) { return y(d.avg); })
+    .attr("y1", function(d) { return y(d.avg);  })
     .attr("y2", y(0))
     .attr("stroke", "grey")
 
@@ -207,7 +211,7 @@ svg.selectAll("mycircle")
      .attr("fill", function(d) {return site_colors3[d.site];})
     .on("mouseover", mouseover)
     .on("mousemove", mousemove)
-    .on("mouseout", mouseleave)
+    .on("mouseout",  mouseleave)
   
 
 } // end else LOG
@@ -270,7 +274,6 @@ var y = d3.scaleSymlog()
 svg.append("g")
   .call(d3.axisLeft(y).scale(y));
   svg.append("text")
-    .attr("class", "y label")
     .attr("text-anchor", "middle")
     .attr("y", -45)
     .attr("x", -150 )
@@ -285,7 +288,12 @@ svg.append("g")
   .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
+svg.append("text")             
+      .attr("transform",
+            "translate(" + ((widthlog/2)-50) + " ," + 
+                           (heightlog + marginlog.top + 10) + ")")
+      .style("text-anchor", "middle")
+      .text("Body Site");
 // Lines
 svg.selectAll("myline")
   .data(hmprefseqv3v5)
@@ -348,7 +356,7 @@ if(Object.keys(dewhirst).length == 0){
     //var x = coordinates[0];
     //var y = coordinates[1];
     //console.log(x,y)
-    console.log(e)
+    //console.log(e)
     return tooltips.dewhirst_log.style("left", (e.pageX+20) + "px")
                                   .style("top",  (e.pageY) + "px")
 
@@ -371,7 +379,6 @@ var y = d3.scaleSymlog()
 svg.append("g")
   .call(d3.axisLeft(y).scale(y));
   svg.append("text")
-    .attr("class", "y label")
     .attr("text-anchor", "middle")
     .attr("y", -45)
     .attr("x", -150 )
@@ -385,7 +392,13 @@ svg.append("g")
   .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
+svg.append("text")             
+      .attr("transform",
+            "translate(" + ((widthlog/2)-50) + " ," + 
+                           (heightlog + marginlog.top + 10) + ")")
+      .style("text-anchor", "middle")
+      .text("Body Site");
+      
 // Lines
 svg.selectAll("myline")
   .data(dewhirst)
@@ -471,7 +484,6 @@ var y = d3.scaleSymlog()
 svg.append("g")
   .call(d3.axisLeft(y).scale(y));
   svg.append("text")
-    .attr("class", "y label")
     .attr("text-anchor", "middle")
     .attr("y", -45)
     .attr("x", -150 )
@@ -486,7 +498,12 @@ svg.append("g")
   .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
+svg.append("text")             
+      .attr("transform",
+            "translate(" + ((widthlog/2)-50) + " ," + 
+                           (heightlog + marginlog.top + 10) + ")")
+      .style("text-anchor", "middle")
+      .text("Body Site");
 // Lines
 svg.selectAll("myline")
   .data(erenv1v3)
@@ -571,7 +588,6 @@ var y = d3.scaleSymlog()
 svg.append("g")
   .call(d3.axisLeft(y).scale(y));
   svg.append("text")
-    .attr("class", "y label")
     .attr("text-anchor", "middle")
     .attr("y", -45)
     .attr("x", -150 )
@@ -586,7 +602,12 @@ svg.append("g")
   .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
+svg.append("text")             
+      .attr("transform",
+            "translate(" + ((widthlog/2)-50) + " ," + 
+                           (heightlog + marginlog.top + 10) + ")")
+      .style("text-anchor", "middle")
+      .text("Body Site");
 // Lines
 svg.selectAll("myline")
   .data(erenv3v5)
@@ -671,7 +692,6 @@ var y = d3.scaleSymlog()
 svg.append("g")
   .call(d3.axisLeft(y).scale(y));
   svg.append("text")
-    .attr("class", "y label")
     .attr("text-anchor", "middle")
     .attr("y", -45)
     .attr("x", -150 )
@@ -686,7 +706,12 @@ svg.append("g")
   .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
-
+svg.append("text")             
+      .attr("transform",
+            "translate(" + ((widthlog/2)-50) + " ," + 
+                           (heightlog + marginlog.top + 10) + ")")
+      .style("text-anchor", "middle")
+      .text("Body Site");
 // Lines
 svg.selectAll("myline")
   .data(hmpmetaphlan)
