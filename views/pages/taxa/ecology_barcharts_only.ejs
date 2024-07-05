@@ -255,17 +255,25 @@ ul li{
 
   <span style='float:right;'>
      <% if(page == 'tables'){ %>
-         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> Charts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
          <input type='radio' value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
-         <input type='radio' checked value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only
+         <input type='radio' checked value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
      <% }else if(page == 'plots'){ %>
-         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> Charts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
          <input type='radio' checked value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
-         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only
+         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
+     <% }else if(page == 'lollipop'){ %>
+         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio'  value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' checked value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
      <% }else{ %>
-         <input type='radio' checked value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> Charts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio' checked value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
          <input type='radio' value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
-         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only
+         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
      <% } %>
   </span>
 
@@ -416,7 +424,7 @@ ul li{
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
 <script type="text/javascript" src="/js/taxonomy.js"></script>
 
 <script>

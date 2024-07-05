@@ -1123,6 +1123,8 @@ router.get('/ecology', function ecology(req, res) {
           target = 'ecology_barcharts_only'
        }else if(page == 'tables'){
            target = 'ecology_tables_only'
+       }else if(page == 'lollipop'){
+           target = 'ecology_lollipop'
        }else{
            target = 'ecology'
        }
@@ -1291,7 +1293,7 @@ router.get('/ecology', function ecology(req, res) {
     
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology', page)
     
-
+console.log('data=>',hmp_refseqv1v3_data,'<=data')
 //     console.log('dewhirst_notes',dewhirst_notes)
 //     console.log('erenv1v3_notes',erenv1v3_notes)
 //     console.log('erenv3v5_notes',erenv3v5_notes)

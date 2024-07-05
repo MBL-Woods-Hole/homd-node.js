@@ -8,8 +8,6 @@ ul li{
    border:1px solid green;
    
 }
-
-
 .abund-table-div{
    
 }
@@ -25,14 +23,16 @@ ul li{
    border:1px solid black;
    padding:1px;
    
-}
+  }
+
+
 .column {
   float: left;
   min-height: 420px;
 }
 
 .left {
-  width: 15%;
+  width: 16%;
   font-size:12px;
   height: 200px; /* only to hold column open */
 }
@@ -43,7 +43,7 @@ ul li{
 }
 .middle {
   /* width: 54%; */
-  width:85%;
+  width:83%;
   border:1px solid black;
   
 }
@@ -84,7 +84,7 @@ ul li{
    border:1px solid grey;
 }
 #plot_table_master{
-   width:100%;
+   
 }
 .plot{
    padding:0 10px;
@@ -111,13 +111,13 @@ ul li{
    padding:10px;
 }
 .nonote{
-   font-size:10px;
+   font-size:11px;
    padding:10px 4px;
    margin-left:250px;
    
 }
 .note{
-  font-size:12px;
+  font-size:13px;
   padding:10px 4px;
   width:auto;
   height:auto;
@@ -147,11 +147,18 @@ ul li{
    padding:10px;
 
 }
+.nodata{
+   padding:10px;
+   
+}
 #child-table td{
     padding: 0 5px;
     font-size: small;
 }
-
+.y {
+   font-weight: normal;
+   font-size: small;
+}
 </style>
 
 <% dewhirst_data = JSON.parse(dewhirst) %>
@@ -252,7 +259,7 @@ ul li{
       <br>
     
         <div id='legend'>
-        <div class='menu-title'>Legend:</div>
+        <div class='menu-title'>Body Site Legend:</div>
             <div id='legend-content'>
             <ol>
               <li><b>Oral:</b>
@@ -286,6 +293,7 @@ ul li{
             </ol>  
             </div>
         </div>
+        
       </div>  
     </div>   <!-- end column left -->
    
@@ -328,24 +336,26 @@ ul li{
         HMP 16S RefSeq (V1-V3) <small>(not published)</small>
         </small>
     </div>
+    <div class='plot' >
+        <div id="plot_log_hmp_refseqv1v3_here"></div> 
+    </div>
     
-        
   </td><td class='notes-td'>
-    
     <% if(notes.hmp_refseqv1v3 == ''){ %>
         <div class='nonote'>No Notes</div>
     <% }else{ %>
         <% parts = notes.hmp_refseqv1v3.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
     
-  </td></tr>
+  </td>
   
+  </tr>
   <tr><td class='data' colspan='2'>
     <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
       <small>percent abundance</small>
@@ -356,17 +366,19 @@ ul li{
 
 </td>
 </tr>
-<tr><td class='spacer'></td></tr>
+<tr><td class='spacer' colspan='2'></td></tr>
 <!-- END HMP RefSeq V1V3 -->
 <tr><td>
     
     <table class='plot_table'><tr><td class='plot-td'>
     <div class='plot-title'>
         <small>
-        HMP RefSeq (V3-V5) <small>(not published)</small>
+        HMP 16S RefSeq (V3-V5) <small>(not published)</small>
         </small>
     </div>
-    
+    <div class='plot' >
+        <div id="plot_log_hmp_refseqv3v5_here"></div> 
+    </div>
         
   </td><td class='notes-td'>
     
@@ -375,9 +387,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.hmp_refseqv3v5.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -407,7 +419,9 @@ ul li{
             Eren et al.(2014) (V1-V3)</a>
         </small>
     </div>
-    
+    <div class='plot' >
+        <div id="plot_log_erenv1v3_here"></div> 
+    </div>
         
   </td><td class='notes-td'>
     
@@ -416,9 +430,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.erenv1v3.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -448,7 +462,9 @@ ul li{
             Eren et al.(2014) (V3-V5)</a>
         </small>
     </div>
-    
+    <div class='plot' >
+        <div id="plot_log_erenv3v5_here"></div> 
+    </div>
         
   </td><td class='notes-td'>
     
@@ -457,9 +473,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.erenv3v5.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -490,7 +506,9 @@ ul li{
         From: Dewhirst 35x9 data <small>(not published yet)</small>
         </small>
     </div>
-    
+    <div class='plot' >
+        <div id="plot_log_dewhirst_here"></div> 
+    </div>
         
   </td><td class='notes-td'>
     
@@ -499,9 +517,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.dewhirst.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -529,7 +547,9 @@ ul li{
         From: HMP MetaPhlan Data <small>(not published)</small>
         </small>
     </div>
-    
+    <div class='plot' >
+        <div id="plot_log_hmp_metaphlan_here"></div> 
+    </div>
         
   </td><td class='notes-td'>
     
@@ -538,9 +558,9 @@ ul li{
     <% }else{ %>
         <% parts = notes.hmp_metaphlan.split(';') %>
         <div class='note'>
-        <b>Notes:</b>
+        <b>Notes:</b><br>
         <% for(n in parts){ %>
-         <br><br><%- parts[n] %>
+         <%- parts[n] %><br><br>
         <% } %>
         </div>
     <% } %>
@@ -557,8 +577,9 @@ ul li{
 
 </td>
 </tr>
-<tr><td class='spacer'></td></tr>
+<tr><td class='spacer' colspan='2'></td></tr>
 <!-- END HMP MetaPhlan -->
+
 
 </table>
 </div>  <!-- column middle -->
@@ -594,19 +615,24 @@ ul li{
 <script>
   mainmenu()
   max       =   JSON.parse('<%- max %>')
+
   dewhirst     = JSON.parse('<%- dewhirst %>')
-  erenv1v3 = JSON.parse('<%- erenv1v3 %>')
-  erenv3v5 = JSON.parse('<%- erenv3v5 %>')
+  erenv1v3        = JSON.parse('<%- erenv1v3 %>')
+  erenv3v5        = JSON.parse('<%- erenv3v5 %>')
   hmpmetaphlan    = JSON.parse('<%- hmp_metaphlan %>')
   hmprefseqv1v3   = JSON.parse('<%- hmp_refseqv1v3 %>')
   hmprefseqv3v5   = JSON.parse('<%- hmp_refseqv3v5 %>')
+  hmpv1v3table    = "<%- hmp_refseqv1v3_table %>"
   lineage         = '<%= lin %>'
   
   w = 350
   h = 300
-  var margin = {top: 30, right: 30, bottom: 70, left: 40},
-      width = w - margin.left - margin.right,
-      height = h - margin.top - margin.bottom;
+  var marginlog = {top: 40, right: 40, bottom: 90, left: 60},
+    widthlog = 460 - marginlog.left - marginlog.right,
+    heightlog = 500 - marginlog.top - marginlog.bottom;
+
+
+
 </script>
-<script type="text/javascript" src="/js/ecology.js"></script>
+<script type="text/javascript" src="/js/ecology_lollipop.js"></script>
 

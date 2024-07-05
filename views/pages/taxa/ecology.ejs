@@ -305,17 +305,25 @@ ul li{
 
   <span style='float:right;'>
      <% if(page == 'tables'){ %>
-         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> Charts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
          <input type='radio' value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
-         <input type='radio' checked value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only
+         <input type='radio' checked value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
      <% }else if(page == 'plots'){ %>
-         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> Charts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
          <input type='radio' checked value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
-         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only
+         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
+     <% }else if(page == 'lollipop'){ %>
+         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio'  value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' checked value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
      <% }else{ %>
-         <input type='radio' checked value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> Charts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio' checked value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
          <input type='radio' value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
-         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only
+         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
      <% } %>
   </span>
 <div class='column middle'>
@@ -331,9 +339,8 @@ ul li{
     <div class='plot' >
         <div id="plot_hmp_refseqv1v3_here"></div> 
     </div>
-        
-  </td><td class='notes-td'>
     
+  </td><td class='notes-td'>
     <% if(notes.hmp_refseqv1v3 == ''){ %>
         <div class='nonote'>No Notes</div>
     <% }else{ %>
@@ -346,7 +353,11 @@ ul li{
         </div>
     <% } %>
     
-  </td></tr>
+  </td>
+    
+  </td>
+  
+  </tr>
   <tr><td class='data' colspan='2'>
     <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
       <small>percent abundance</small>
@@ -600,7 +611,7 @@ ul li{
 
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/menu.js"></script>
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
 <script type="text/javascript" src="/js/taxonomy.js"></script>
 
 <script>
@@ -625,18 +636,18 @@ ul li{
   //hmptablev1v3tt = d3.select("#table-tooltip").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
   //var svg = d3.select("#table-tooltip")
   
-  var circle = document.querySelector("#table-tooltip");
+ // var circle = document.querySelector("#table-tooltip");
   //var x = document.getElementById("table-tooltip");
 //x.querySelector(".example").innerHTML = "Hello World!";
-  var tooltip = document.querySelector("#tooltip");
+//  var tooltip = document.querySelector("#tooltip");
 
-circle.addEventListener("mouseover", function() {
-  tooltip.style.visibility = "visible";
-});
-
-circle.addEventListener("mouseout", function() {
-  tooltip.style.visibility = "hidden";
-});
+// circle.addEventListener("mouseover", function() {
+//   tooltip.style.visibility = "visible";
+// });
+// 
+// circle.addEventListener("mouseout", function() {
+//   tooltip.style.visibility = "hidden";
+// });
 
 </script>
 <script type="text/javascript" src="/js/ecology.js"></script>
