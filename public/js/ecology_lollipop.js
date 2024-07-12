@@ -117,8 +117,211 @@ site_colors3 = {
 if(Object.keys(hmprefseqv1v3).length == 0){
      document.getElementById("plot_log_hmp_refseqv1v3_here").innerHTML = "<span class='nodata'>No Data</span>"
 }else{
-    
     // append the svg object to the body of the page
+if(rank == 'species'){
+       ///////////////////////////////////////////////////////////////////
+       data = hmprefseqv1v3
+       //console.log('data_ary')
+       data_ary = hmprefseqv1v3.filter( (x) => { return x.avg > 0})
+       ND_ary   = hmprefseqv1v3.filter( (x) => { return x.avg == 0})
+       data = data_ary
+       //console.log(ND_ary)
+       var svg = d3.select("#plot_log_hmp_refseqv1v3_here")
+      .append("svg")
+      .attr("width", widthlog + marginlog.left + marginlog.right)
+      .attr("height", heightlog + marginlog.top + marginlog.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + marginlog.left + "," + marginlog.top + ")");
+          
+    var mouseover = function(e,d){ 
+        var plotName = 'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
+        var siteName = siteLongNames[d.site]
+        var plotValue = d.avg;
+        var prev = d.prev;
+        tooltips.hmprefseqv1v3_log.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors3[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Value: " + plotValue+"% Abundance"+ "<br>" + "Prevalence: " + prev+" %")
+         //console.log(e.x,e.y)
+        return tooltips.hmprefseqv1v3_log.style("visibility", "visible");
+     }
+  
+    var mousemove = function(e,d) {
+        return tooltips.hmprefseqv1v3_log.style("left", (e.pageX+20) + "px")
+                                  .style("top",  (e.pageY) + "px")
+
+  }
+  var mouseleave = function(d) {
+    return tooltips.hmprefseqv1v3_log.style("visibility", "hidden");
+  }
+var scalex = d3.scaleBand()
+  .range([ 0, widthlog ])
+  .domain(hmprefseqv1v3.map(function(d) { return d.site; }))
+  .padding(1);
+  
+var nd_axis = d3.scaleBand()
+  .range([ 0, widthlog ])
+  .domain(hmprefseqv1v3.map(function(d) { return d.site; }))
+  .padding(1);
+
+  
+  //let ndaxis = d3.axisBottom(nd)
+//var scaley = d3.scaleLog()
+var scaley = d3.scaleLog()
+  //.domain([d3.min(data, function(d) { return +d.avg; }), d3.max(data, function(d) { return +d.avg; })])
+  //.base(10)
+  .range([ heightlog, 0.0 ])
+  .domain([2e-3, 2e2])
+  
+var prev_y = d3.scaleLinear()
+  .range([ heightlog, 0.0 ])
+  .domain([0, 100])
+
+  
+  //.range([ 20, heightlog - 20])
+  
+  // Add scales to axis
+var y_axis = d3.axisLeft()
+        .scale(scaley)
+        .tickValues([0.002, 0.02, 0.2, 2, 20,200])
+y_axis.ticks(10, ",f")
+
+var prev_axis = d3.axisRight()
+        .scale(prev_y)
+        
+svg.append("g")
+.attr("transform", "translate("+widthlog+",0)")
+  .call(prev_axis)
+
+svg.append("g")
+  .call(y_axis)
+
+svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("y", -heightlog - 10)
+    .attr("x", widthlog-180 )
+    .attr("transform", "rotate(90)")
+    .text("Prevalence (%) (open circles)");
+  
+svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("y", -45)
+    .attr("x", -150 )
+    .attr("transform", "rotate(-90)")
+    .text("Log % Abundance (colored circles)");
+svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("y", 120)
+    .attr("x", -5 )
+    .style("font-size", "11px")
+    .style("font-style", "italic")
+    .style('fill', 'darkOrange')
+    //.attr("transform", "rotate(-90)")
+    .text("High");
+svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("y", 190)
+    .attr("x", -5 )
+    .style("font-size", "11px")
+    .style("font-style", "italic")
+    .style('fill', 'darkOrange')
+    //.attr("transform", "rotate(-90)")
+    .text("Med");
+svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("y", 260)
+    .attr("x", -5 )
+    .style("font-size", "11px")
+    .style("font-style", "italic")
+    .style('fill', 'darkOrange')
+    //.attr("transform", "rotate(-90)")
+    .text("Low");
+svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("y", 335)
+    .attr("x", -5 )
+    .style("font-size", "11px")
+    .style("font-style", "italic")
+    .style('fill', 'darkOrange')
+    //.attr("transform", "rotate(-90)")
+    .text("Scarce");
+svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("y", 390)
+    .attr("x", -5 )
+    .style("font-size", "11px")
+    .style('fill', 'black')
+    //.attr("transform", "rotate(-90)")
+    .text("ND");
+    
+svg.append("g")
+  .attr("transform", "translate(0," + (heightlog) + ")")
+  .call(d3.axisBottom(scalex))
+  .selectAll("text")
+    .attr("transform", "translate(-5,20)rotate(-45)")
+    .style("text-anchor", "end")
+    
+svg.append("g")
+  .attr("transform", "translate(0," + (heightlog+ 15) + ")")
+  .call(d3.axisBottom(nd_axis).tickValues([]))
+  
+    
+svg.append("text")             
+      .attr("transform",
+            "translate(" + ((widthlog/2)-50) + " ," + 
+                           (heightlog + marginlog.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text("Body Site");
+// Lines - lollipop
+svg.selectAll("myline")
+  .data(data)
+  .enter()
+  .append("line")
+    .attr("x1", function(d) { return scalex(d.site); })
+    .attr("y1", heightlog+20)
+    .attr("x2", function(d) { return scalex(d.site); })
+    .attr("y2", function(d) { return scaley(d.avg); })
+    .attr("stroke", "grey")
+
+// Circles colored
+svg.selectAll("mycircle1")
+  .data(data)
+  .enter()
+  .append("circle")
+    .attr("cx", function(d) { return scalex(d.site); })
+    .attr("cy", function(d) { return scaley(d.avg);  })
+    .attr("r", "7")
+     .attr("fill", function(d) {return site_colors3[d.site];})
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout",  mouseleave)
+    
+svg.selectAll("mycircle2")  // prev 
+  .data(data)
+  .enter()
+  .append("circle")
+    .attr("cx", function(d) { return scalex(d.site); })
+    .attr("cy", function(d) { return prev_y(d.prev);  })
+    .attr("r", "7")
+    .style("stroke", "green")
+     .attr("fill", "none")
+    
+  
+svg.selectAll("mycircle")
+  .data(ND_ary)
+  .enter()
+  .append("circle")
+    .attr("cx", function(d) { return nd_axis(d.site); })
+    .attr("cy", heightlog +15  )
+    //.attr("cy", 0 )
+    .attr("r", "7")
+     .attr("fill", function(d) {return site_colors3[d.site];})
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseout",  mouseleave)
+  
+
+       
+       //////////////////////////////////////////////////////////////////
+}else{
     var svg = d3.select("#plot_log_hmp_refseqv1v3_here")
       .append("svg")
       .attr("width", widthlog + marginlog.left + marginlog.right)
@@ -128,32 +331,21 @@ if(Object.keys(hmprefseqv1v3).length == 0){
           "translate(" + marginlog.left + "," + marginlog.top + ")");
   
     var mouseover = function(e,d){ 
-         var plotName = 'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
-         var siteName = siteLongNames[d.site]
-         var plotValue = d.avg;
-         tooltips.hmprefseqv1v3_log.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors3[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
+        var plotName = 'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
+        var siteName = siteLongNames[d.site]
+        var plotValue = d.avg;
+        tooltips.hmprefseqv1v3_log.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors3[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Value: " + plotValue+"% Abundance")
          //console.log(e.x,e.y)
-         return tooltips.hmprefseqv1v3_log.style("visibility", "visible");
-         
-         //tooltips.hmptablev1v3.html(hmpv1v3table)
-         //return tooltips.hmptablev1v3.style("visibility", "visible");
+        return tooltips.hmprefseqv1v3_log.style("visibility", "visible");
      }
   
-  var mousemove = function(e,d) {
-    //console.log('this',this)
-    //console.log(e.x,e.y)
-    //var coordinates= d3.pointer(e);
-    //console.log(coordinates)
-    //var x = coordinates[0];
-    //var y = coordinates[1];
-    //console.log(e)
-    return tooltips.hmprefseqv1v3_log.style("left", (e.pageX+20) + "px")
+    var mousemove = function(e,d) {
+        return tooltips.hmprefseqv1v3_log.style("left", (e.pageX+20) + "px")
                                   .style("top",  (e.pageY) + "px")
 
   }
   var mouseleave = function(d) {
     return tooltips.hmprefseqv1v3_log.style("visibility", "hidden");
-    //return tooltips.hmptablev1v3.style("visibility", "hidden");
   }
 var x = d3.scaleBand()
   .range([ 0, widthlog ])
@@ -215,7 +407,7 @@ svg.selectAll("mycircle")
   
 
 } // end else LOG
-
+} // end else species
 
 ////////////////////////////////////////////////////////////
 // HMP_RefSeq V3V5

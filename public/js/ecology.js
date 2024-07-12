@@ -604,7 +604,7 @@ svg.selectAll("mybar")
 
 
 function change_view(v,r,t){
-    console.log(v,r,t)
+    //console.log(v,r,t)
     window.open('ecology?rank='+r+'&name='+t+'&page='+v,'_self')
 }
 

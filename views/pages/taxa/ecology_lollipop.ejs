@@ -615,7 +615,7 @@ ul li{
 <script>
   mainmenu()
   max       =   JSON.parse('<%- max %>')
-
+  rank      =   '<%- rank %>'
   dewhirst     = JSON.parse('<%- dewhirst %>')
   erenv1v3        = JSON.parse('<%- erenv1v3 %>')
   erenv3v5        = JSON.parse('<%- erenv3v5 %>')
@@ -627,7 +627,7 @@ ul li{
   
   w = 350
   h = 300
-  var marginlog = {top: 40, right: 40, bottom: 90, left: 60},
+  var marginlog = {top: 40, right: 60, bottom: 90, left: 60},
     widthlog = 460 - marginlog.left - marginlog.right,
     heightlog = 500 - marginlog.top - marginlog.bottom;
 
