@@ -12,7 +12,8 @@ ul li{
    
 }
 .data{
-   padding-left:20px;
+   
+   padding:0 20px 20px 20px
 }
 .abundance-table {
    border-collapse:collapse;
@@ -29,10 +30,11 @@ ul li{
 .column {
   float: left;
   min-height: 420px;
+  min-width: 250px;
 }
 
 .left {
-  width: 16%;
+  width: 20%;
   font-size:12px;
   height: 200px; /* only to hold column open */
 }
@@ -43,8 +45,8 @@ ul li{
 }
 .middle {
   /* width: 54%; */
-  width:83%;
-  border:1px solid black;
+  width:78%;
+  /* border:1px solid red; */
   
 }
 .row:after {
@@ -54,13 +56,13 @@ ul li{
 }
 #legend-links{
   position:fixed;
-  
+  width:250px;
 }
 
 #legend-content{
   padding:3px 5px;;
   border:1px solid brown;
-  width:100%;
+  
 }
 
 .menu-title{
@@ -69,7 +71,7 @@ ul li{
    text-align:center;
    background:ivory;
    border:1px solid brown;
-   width:100%;
+   
 
 }
 #links-content{
@@ -82,9 +84,11 @@ ul li{
    background:lightblue;
    padding:0 3px;
    border:1px solid grey;
-}
-#plot_table_master{
    
+}
+#plot_table_master td{
+   /* text-align: center;  */
+    /* vertical-align: middle; */
 }
 .plot{
    padding:0 10px;
@@ -92,15 +96,17 @@ ul li{
 
 .plot_table{
   border-collapse:collapse;
-  
+  border:1px solid green;
+  /* width:100%; */
 }
 .plot_table td{
   vertical-align:top;
-  
+  /* text-align: center;  */
+      
   
 }
 .plot-td{
-   min-width:350px;
+   
 }
 .spacer{
    padding:10px 0;
@@ -110,21 +116,37 @@ ul li{
    vertical-align:top;
    padding:10px;
 }
+
 .nonote{
    font-size:11px;
-   padding:10px 4px;
-   margin-left:250px;
+   /* padding:10px 4px; */
+   /* margin-left:250px; */
+   text-align: center;
+}
+.hover{
+   font-size:15px;
+   /* padding:10px 4px; */
+   /* margin-left:250px; */
    
 }
 .note{
   font-size:13px;
-  padding:10px 4px;
-  width:auto;
-  height:auto;
-  
+  padding:10px;
+  width:940px;
   border:1px solid brown;
-  overflow: auto;
+  
+  position: absolute;
+  background:black;
+  color:white;
+  /* visibility:hidden; */
+  display:none;
 }
+a:hover + .note {
+    /* visibility:visible; */
+    display:block;
+    
+}
+/* Lineage search stuff */
 #fixed-text-box{
     background-color:#ddd;
     position: absolute;
@@ -147,10 +169,7 @@ ul li{
    padding:10px;
 
 }
-.nodata{
-   padding:10px;
-   
-}
+
 #child-table td{
     padding: 0 5px;
     font-size: small;
@@ -158,6 +177,10 @@ ul li{
 .y {
    font-weight: normal;
    font-size: small;
+}
+td {
+  text-align: center;
+  
 }
 </style>
 
@@ -263,33 +286,34 @@ ul li{
             <div id='legend-content'>
             <ol>
               <li><b>Oral:</b>
-                <br>&nbsp;SUBP --Subgingival Plaque
-                <br>&nbsp;SUPP<br>&nbsp;&nbsp;&nbsp;--Supragingival Plaque
-                <br>&nbsp;PERIO --Periodontal
-                <br>&nbsp;AKE<br>&nbsp;&nbsp;&nbsp;--Attached Keratinized Gingiva
-                <br>&nbsp;BMU --Buccal Mucosa
-                <br>&nbsp;HPA --Hard Palate
-                <br>&nbsp;SAL --Saliva
-                <br>&nbsp;THR --Throat
-                <br>&nbsp;PTO --Palatine Tonsils
-                <br>&nbsp;TDO --Tongue Dorsum
+                <br>&nbsp;SUBP -- Subgingival Plaque
+                <br>&nbsp;SUPP -- Supragingival Plaque
+                <br>&nbsp;PERIO -- Periodontal
+                <br>&nbsp;AKE -- Attached Keratinized Gingiva
+                <br>&nbsp;BMU -- Buccal Mucosa
+                <br>&nbsp;HPA -- Hard Palate
+                <br>&nbsp;SAL -- Saliva
+                <br>&nbsp;THR -- Throat
+                <br>&nbsp;PTO -- Palatine Tonsils
+                <br>&nbsp;TDO -- Tongue Dorsum
               <li><b>Nasal:</b>
-                <br>&nbsp;ANA --Anterior Nares
+                <br>&nbsp;ANA -- Anterior Nares
               <li><b>Skin:</b>
-                <br>&nbsp;LRC<br>&nbsp;&nbsp;&nbsp;--L_Retroauricular Crease
-                <br>&nbsp;RRC<br>&nbsp;&nbsp;&nbsp;--R_Retroauricular Crease
-                <br>&nbsp;LAF --L_Antecubital Fossa
-                <br>&nbsp;RAF --R_Antecubital Fossa
+                <br>&nbsp;LRC -- L_Retroauricular Crease
+                <br>&nbsp;RRC -- R_Retroauricular Crease
+                <br>&nbsp;LAF -- L_Antecubital Fossa
+                <br>&nbsp;RAF -- R_Antecubital Fossa
               <li><b>Vaginal:</b>
-                <br>&nbsp;VIN --Vaginal Introitus
-                <br>&nbsp;MVA --Mid Vagina
-                <br>&nbsp;PFO --Posterior Fornix
+                <br>&nbsp;VIN -- Vaginal Introitus
+                <br>&nbsp;MVA -- Mid Vagina
+                <br>&nbsp;PFO -- Posterior Fornix
               <li><b>Gut:</b>
-                <br>&nbsp;STO --Stool
+                <br>&nbsp;STO -- Stool
               <hr>
               Prev - Prevalence
               <br>10<sup>th</sup>p - 10<sup>th</sup> percentile
               <br>90<sup>th</sup>p - 90<sup>th</sup> percentile
+              <br>ND - less than 0.001%
             </ol>  
             </div>
         </div>
@@ -303,7 +327,7 @@ ul li{
 
 
 
-  <span style='float:right;'>
+  <span>
      <% if(page == 'tables'){ %>
          <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
          <input type='radio' value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
@@ -326,261 +350,251 @@ ul li{
          <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
      <% } %>
   </span>
+  
+  
 <div class='column middle'>
-<table id='plot_table_master'>
-<tr><td>
+
+
     
-    <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot-title'>
+  <table class='plot_table' border='1'>
+    <tr>
+    <td class='plot-td'>
+      <div class='plot-title'>
         <small>
         HMP 16S RefSeq (V1-V3) <small>(not published)</small>
         </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_log_hmp_refseqv1v3_here"></div> 
-    </div>
-    
-  </td><td class='notes-td'>
-    <% if(notes.hmp_refseqv1v3 == ''){ %>
+        
+      </div>
+      <% if(notes.hmp_refseqv1v3 == ''){ %>
         <div class='nonote'>No Notes</div>
-    <% }else{ %>
+      <% }else{ %>
         <% parts = notes.hmp_refseqv1v3.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
         <div class='note'>
         <b>Notes:</b><br>
         <% for(n in parts){ %>
          <%- parts[n] %><br><br>
         <% } %>
         </div>
-    <% } %>
+      <% } %>
     
-  </td>
+      <div class='plot' >
+        <div id="plot_log_hmp_refseqv1v3_here"></div> 
+      </div>
+    
+    </td>
   
   </tr>
-  <tr><td class='data' colspan='2'>
+  <tr>
+    <td class='data' >
     <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- hmp_refseqv1v3_table %></div>  
+      <div class='abund-table-div'>
+        <%- hmp_refseqv1v3_table %>
+      </div>  
     <% } %>  
-    </td></tr></table>
-
-
-</td>
-</tr>
-<tr><td class='spacer' colspan='2'></td></tr>
+    </td>
+  </tr>
+  
 <!-- END HMP RefSeq V1V3 -->
-<tr><td>
-    
-    <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot-title'>
+<tr>
+    <td class='plot-td'>
+      <div class='plot-title'>
         <small>
         HMP 16S RefSeq (V3-V5) <small>(not published)</small>
         </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_log_hmp_refseqv3v5_here"></div> 
-    </div>
         
-  </td><td class='notes-td'>
-    
-    <% if(notes.hmp_refseqv3v5 == ''){ %>
+      </div>
+      <% if(notes.hmp_refseqv3v5 == ''){ %>
         <div class='nonote'>No Notes</div>
-    <% }else{ %>
+      <% }else{ %>
         <% parts = notes.hmp_refseqv3v5.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
         <div class='note'>
         <b>Notes:</b><br>
         <% for(n in parts){ %>
          <%- parts[n] %><br><br>
         <% } %>
         </div>
-    <% } %>
+      <% } %>
     
-  </td></tr>
+      <div class='plot' >
+        <div id="plot_log_hmp_refseqv3v5_here"></div> 
+      </div>
+    
+    </td>
   
-  <tr><td class='data' colspan='2'>
+  </tr>
+  <tr>
+    <td class='data' >
     <% if(Object.keys(hmp_refseqv3v5_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- hmp_refseqv3v5_table %></div>  
+      <div class='abund-table-div'>
+        <%- hmp_refseqv3v5_table %>
+      </div>  
     <% } %>  
-    </td></tr></table>
+    </td>
+  </tr>
+ 
 
+<!-- END HMP RefSeq V3V5 -->
 
-</td>
-</tr>
-  <!-- END HMP RefSeq V3V5 -->
-
-<tr><td class='spacer' colspan='2'></td></tr>
-
-<tr><td>
-    <table class='plot_table'><tr><td class='plot-td'>
-    
-    <div class='plot-title'>
+<tr>
+    <td class='plot-td'>
+      <div class='plot-title'>
         <small>
-          From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
-            Eren et al.(2014) (V1-V3)</a>
+        Dewhirst (35x9) <small>(not published)</small>
         </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_log_erenv1v3_here"></div> 
-    </div>
         
-  </td><td class='notes-td'>
-    
-    <% if(notes.erenv1v3 == ''){ %>
+      </div>
+      <% if(notes.dewhirst == ''){ %>
         <div class='nonote'>No Notes</div>
-    <% }else{ %>
-        <% parts = notes.erenv1v3.split(';') %>
-        <div class='note'>
-        <b>Notes:</b><br>
-        <% for(n in parts){ %>
-         <%- parts[n] %><br><br>
-        <% } %>
-        </div>
-    <% } %>
-    
-  </td></tr>
-  
-  <tr><td class='data' colspan='2'>
-    <% if(Object.keys(erenv1v3_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- erenv1v3_table %></div>  
-    <% } %>  
-    
-    
-    </td></tr></table>
-
-
-</td>
-</tr>
-
-<tr><td class='spacer' colspan='2'></td></tr>
-
-<tr><td>
-    <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot-title'>
-        <small>
-          From: <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>
-            Eren et al.(2014) (V3-V5)</a>
-        </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_log_erenv3v5_here"></div> 
-    </div>
-        
-  </td><td class='notes-td'>
-    
-    <% if(notes.erenv3v5 == ''){ %>
-        <div class='nonote'>No Notes</div>
-    <% }else{ %>
-        <% parts = notes.erenv3v5.split(';') %>
-        <div class='note'>
-        <b>Notes:</b><br>
-        <% for(n in parts){ %>
-         <%- parts[n] %><br><br>
-        <% } %>
-        </div>
-    <% } %>
-    
-  </td></tr>
-  
-  <tr><td class='data' colspan='2'>
-    <% if(Object.keys(erenv3v5_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- erenv3v5_table %></div>  
-    <% } %>  
-    
-    
-    </td></tr></table>
-    
-    
-
-</td>
-</tr>
-
-<tr><td class='spacer'></td></tr>
-
-<tr><td>
-    
-    <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot-title'>
-        <small>
-        From: Dewhirst 35x9 data <small>(not published yet)</small>
-        </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_log_dewhirst_here"></div> 
-    </div>
-        
-  </td><td class='notes-td'>
-    
-    <% if(notes.dewhirst == ''){ %>
-        <div class='nonote'>No Notes</div>
-    <% }else{ %>
+      <% }else{ %>
         <% parts = notes.dewhirst.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
         <div class='note'>
         <b>Notes:</b><br>
         <% for(n in parts){ %>
          <%- parts[n] %><br><br>
         <% } %>
         </div>
-    <% } %>
+      <% } %>
     
-  </td></tr>
+      <div class='plot' >
+        <div id="plot_log_dewhirst_here"></div> 
+      </div>
+    
+    </td>
   
-  <tr><td class='data' colspan='2'>
+  </tr>
+  <tr>
+    <td class='data' >
     <% if(Object.keys(dewhirst_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- dewhirst_table %></div>  
+      <div class='abund-table-div'>
+        <%- dewhirst_table %>
+      </div>  
     <% } %>  
-    </td></tr></table>
+    </td>
+  </tr>
+  
+<!-- END Dewhirst -->
 
-
-</td>
-</tr>
-
-<tr><td class='spacer'></td></tr>
-
-<tr><td>
-    
-    <table class='plot_table'><tr><td class='plot-td'>
-    <div class='plot-title'>
+<tr>
+    <td class='plot-td'>
+      <div class='plot-title'>
         <small>
-        From: HMP MetaPhlan Data <small>(not published)</small>
+        HMP Metaphlan <small>(not published)</small>
         </small>
-    </div>
-    <div class='plot' >
-        <div id="plot_log_hmp_metaphlan_here"></div> 
-    </div>
         
-  </td><td class='notes-td'>
-    
-    <% if(notes.hmp_metaphlan == ''){ %>
+      </div>
+      <% if(notes.hmp_metaphlan == ''){ %>
         <div class='nonote'>No Notes</div>
-    <% }else{ %>
+      <% }else{ %>
         <% parts = notes.hmp_metaphlan.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
         <div class='note'>
         <b>Notes:</b><br>
         <% for(n in parts){ %>
          <%- parts[n] %><br><br>
         <% } %>
         </div>
-    <% } %>
+      <% } %>
     
-  </td></tr>
+      <div class='plot' >
+        <div id="plot_log_hmp_metaphlan_here"></div> 
+      </div>
+    
+    </td>
   
-  <tr><td class='data' colspan='2'>
+  </tr>
+  <tr>
+    <td class='data' >
     <% if(Object.keys(hmp_metaphlan_data).length !== 0){ %>
-      <small>percent abundance</small>
-      <div class='abund-table-div'><%- hmp_metaphlan_table %></div>  
+      <div class='abund-table-div'>
+        <%- hmp_metaphlan_table %>
+      </div>  
     <% } %>  
-    </td></tr></table>
+    </td>
+  </tr>
 
+<!-- END Metaphlan -->
 
-</td>
-</tr>
-<tr><td class='spacer' colspan='2'></td></tr>
-<!-- END HMP MetaPhlan -->
+<tr>
+    <td class='plot-td'>
+      <div class='plot-title'>
+        <small>
+        Eren V1-V3 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
+        </small>
+        
+      </div>
+      <% if(notes.erenv1v3 == ''){ %>
+        <div class='nonote'>No Notes</div>
+      <% }else{ %>
+        <% parts = notes.erenv1v3.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
+        <div class='note'>
+        <b>Notes:</b><br>
+        <% for(n in parts){ %>
+         <%- parts[n] %><br><br>
+        <% } %>
+        </div>
+      <% } %>
+    
+      <div class='plot' >
+        <div id="plot_log_erenv1v3_here"></div> 
+      </div>
+    
+    </td>
+  
+  </tr>
+  <tr>
+    <td class='data' >
+    <% if(Object.keys(erenv1v3_data).length !== 0){ %>
+      <div class='abund-table-div'>
+        <%- erenv1v3_table %>
+      </div>  
+    <% } %>  
+    </td>
+  </tr>
 
+<!-- END Eren v1v3 -->
+<tr>
+    <td class='plot-td'>
+      <div class='plot-title'>
+        <small>
+        Eren V3-V5 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
+        </small>
+        
+      </div>
+      <% if(notes.erenv3v5 == ''){ %>
+        <div class='nonote'>No Notes</div>
+      <% }else{ %>
+        <% parts = notes.erenv3v5.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
+        <div class='note'>
+        <b>Notes:</b><br>
+        <% for(n in parts){ %>
+         <%- parts[n] %><br><br>
+        <% } %>
+        </div>
+      <% } %>
+    
+      <div class='plot' >
+        <div id="plot_log_erenv3v5_here"></div> 
+      </div>
+    
+    </td>
+  
+  </tr>
+  <tr>
+    <td class='data' >
+    <% if(Object.keys(erenv3v5_data).length !== 0){ %>
+      <div class='abund-table-div'>
+        <%- erenv3v5_table %>
+      </div>  
+    <% } %>  
+    </td>
+  </tr>
 
+<!-- END Eren v3v5 -->
 </table>
 </div>  <!-- column middle -->
  <!-- 
@@ -625,14 +639,116 @@ ul li{
   hmpv1v3table    = "<%- hmp_refseqv1v3_table %>"
   lineage         = '<%= lin %>'
   
-  w = 350
-  h = 300
-  var marginlog = {top: 40, right: 60, bottom: 90, left: 60},
-    widthlog = 460 - marginlog.left - marginlog.right,
-    heightlog = 500 - marginlog.top - marginlog.bottom;
+  box_width = 445
+  gap = 30
+  box_height = 580
+  
+  var margin = {top: 40, right: 20, bottom: 90, left: 60},
+    width = (box_width*2) + gap - margin.left - margin.right,
+    height = box_height - margin.top - margin.bottom;
+
+    siteLongNames = {
+    'AKE': '(AKE) Attached Keratinized Gingiva (oral)', //Attached_Keratinized_gingiva
+    'ANA': '(ANA) Anterior Nares (nasal)', //#Anterior_nares
+    'BMU': '(BMU) Buccal Mucosa (oral)', //#Buccal_mucosa
+    'HPA': '(HPA) Hard Palate (oral)', //#Hard_palate
+    'LAF': '(LAF) Left Antecubital Fossa (skin)', //#L_Antecubital_fossa  # not in HMP
+    'PERIO': '(PERIO) Periodontal (oral)',  //# ONLY in HMP
+    'LRC': '(LRC) Left Retroauricular Crease (skin)',  //#L_Retroauricular_crease
+    'MVA': '(MVA) Mid Vagina',  //#Mid_vagina
+    'PFO': '(PFO) Posterior Fornix (vaginal)',  //#Posterior_fornix
+    'PTO': '(PTO) Palatine Tonsils (oral)',  //#Palatine_Tonsils
+    'RAF': '(RAF) Right Antecubital Fossa (skin)',  //#R_Antecubital_fossa
+    'RRC': '(RRC) Right Retroauricular Crease (skin)',  //#R_Retroauricular_crease
+    'SAL': '(SAL) Saliva (oral)',  //#Saliva
+    'STO': '(STO) Stool (gut)',  //#Stool
+    'SUBP': '(SUBP) Subgingival Plaque (oral)', //#Subgingival_plaque
+    'SUPP': '(SUPP) Supragingival Plaque (oral)', //#Supragingival_plaque
+    'THR': '(THR) Throat (oral)',  //#Throat
+    'TDO': '(TDO) Tongue Dorsum (oral)',  //#Tongue_dorsum
+    'VIN': '(VIN) Vaginal Introitus '   //#Vaginal_introitus
+    }
+    site_colors2 = {
+    'AKE': '#3366cc', //Attached_Keratinized_gingiva
+    'ANA': '#0099c6', //#Anterior_nares
+    
+    'BMU':  '#ff9900', //#Buccal_mucosa
+    'HPA':  '#109618', //#Hard_palate
+    'LAF':  '#990099', //#L_Antecubital_fossa  # not in HMP
+    'PERIO': '',  //# ONLY in HMP
+    'LRC': '#dd4477',  //#L_Retroauricular_crease
+    'MVA': '#66aa00',  //#Mid_vagina
+    'PFO': 'yellow',  //#Posterior_fornix
+    'PTO': '#316395',  //#Palatine_Tonsils
+    'RAF': '#994499',  //#R_Antecubital_fossa
+    'RRC': '#22aa99',  //#R_Retroauricular_crease
+    'SAL': '#dc3912',  //#Saliva
+    
+    'STO': 'brown',  //#Stool
+    'SUBP': 'slateblue', //#Subgingival_plaque
+    'SUPP': 'red', //#Supragingival_plaque
+    'THR': 'pink',  //#Throat
+    'TDO': 'black',  //#Tongue_dorsum
+    'VIN':'grey'   //#Vaginal_introitus
+    }
+
+site_colors3 = {
+    'AKE': '#ff7f0e', //Attached_Keratinized_gingiva
+    'ANA': '#ffbb78', //#Anterior_nares
+    
+    'BMU':  '#2ca02c', //#Buccal_mucosa
+    'HPA':  '#98df8a', //#Hard_palate
+    'LAF':  '#d62728', //#L_Antecubital_fossa  # not in HMP
+    'PERIO': '#aec7e8',  //# ONLY in HMP
+    'LRC': '#ff9896',  //#L_Retroauricular_crease
+    'MVA': '#9467bd',  //#Mid_vagina
+    'PFO': '#c5b0d5',  //#Posterior_fornix
+    'PTO': '#8c564b',  //#Palatine_Tonsils
+    'RAF': '#c49c94',  //#R_Antecubital_fossa
+    'RRC': '#e377c2',  //#R_Retroauricular_crease
+    'SAL': '#f7b6d2',  //#Saliva
+    
+    'STO': '#7f7f7f',  //#Stool
+    'SUBP': '#c7c7c7', //#Subgingival_plaque
+    'SUPP': '#bcbd22', //#Supragingival_plaque
+    'THR': '#dbdb8d',  //#Throat
+    'TDO': '#17becf',  //#Tongue_dorsum
+    'VIN':'#9edae5'   //#Vaginal_introitus
+    }
+    // ----------------
+    // Create  tooltips
+    // ----------------
+    var tooltips = {}
+    //tooltips.hmprefseqv1v3 = d3.select("#plot_hmp_refseqv1v3_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    
+    tooltips.hmprefseqv1v3_log = d3.select("#plot_log_hmp_refseqv1v3_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
+    tooltips.hmprefseqv3v5_log = d3.select("#plot_log_hmp_refseqv3v5_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
+    tooltips.dewhirst_log = d3.select("#plot_log_dewhirst_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
+    tooltips.erenv1v3_log = d3.select("#plot_log_erenv1v3_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
+    tooltips.erenv3v5_log = d3.select("#plot_log_erenv3v5_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
+    tooltips.hmpmetaphlan_log = d3.select("#plot_log_hmp_metaphlan_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
+    
+    // Hover Notes
+    tooltips.hmprefseqv1v3_notes = d3.select("#show_hmp_refseqv1v3_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.hmprefseqv3v5_notes = d3.select("#show_hmp_refseqv3v5_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.dewhirst_notes = d3.select("#show_dewhirst_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.hmpmetaphlan_notes = d3.select("#show_hmp_metaphlan_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.erenv1v3_notes = d3.select("#show_erenv1v3_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+    tooltips.erenv3v5_notes = d3.select("#show_erenv3v5_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
 
 
+function change_view(v,r,t){
+    console.log(v,r,t)
+    window.open('ecology?rank='+r+'&name='+t+'&page='+v,'_self')
+}
 
 </script>
 <script type="text/javascript" src="/js/ecology_lollipop.js"></script>
-
+<!-- 
+<script type="text/javascript" src="/js/ecology_lollipop_hmprefseqv1v3.js"></script>
+<script type="text/javascript" src="/js/ecology_lollipop_hmprefseqv3v5.js"></script>
+<script type="text/javascript" src="/js/ecology_lollipop_dewhirst.js"></script>
+<script type="text/javascript" src="/js/ecology_lollipop_metaphlan.js"></script>
+<script type="text/javascript" src="/js/ecology_lollipop_erenv1v3.js"></script>
+<script type="text/javascript" src="/js/ecology_lollipop_erenv3v5.js"></script>
+ -->

@@ -1,49 +1,23 @@
 
 
+    
+// HMP_Log_RefSeq V1V3
+//LOGLOGLOG
+// https://d3-graph-gallery.com/graph/lollipop_basic.html
 
-plots = ['hmprefseqv1v3', 'hmprefseqv3v5', 'dewhirst', 'hmpmetaphlan', 'erenv1v3', 'erenv3v5']
-metadata ={}
-metadata['hmprefseqv1v3'] = {
-    "data":hmprefseqv1v3,"target":"plot_log_hmp_refseqv1v3_here","plot_name":"HMP 16S RefSeq V1-V3","tt":tooltips.hmprefseqv1v3_log
-    }
-metadata['hmprefseqv3v5'] = {
-    "data":hmprefseqv3v5,"target":"plot_log_hmp_refseqv3v5_here","plot_name":"HMP 16S RefSeq V3-V5","tt":tooltips.hmprefseqv3v5_log
-    } 
-metadata['dewhirst'] = {
-    "data":dewhirst,"target":"plot_log_dewhirst_here","plot_name":"Dewhirst (35x9)","tt":tooltips.dewhirst_log
-    } 
-metadata['hmpmetaphlan'] = {
-    "data":dewhirst,"target":"plot_log_hmp_metaphlan_here","plot_name":"HMP Metaphlan","tt":tooltips.hmpmetaphlan_log
-    }
-metadata['erenv1v3'] = {
-    "data":erenv1v3,"target":"plot_log_erenv1v3_here","plot_name":"Eren V1-V3","tt":tooltips.erenv1v3_log
-    }
-metadata['erenv3v5'] = {
-    "data":erenv3v5,"target":"plot_log_erenv3v5_here","plot_name":"Eren V3-V5","tt":tooltips.erenv3v5_log
-    }
-for(let i = 0; i < plots.length; i++) {
-    //console.log(metadata[plots[i]])
-    create_plot(metadata[plots[i]])
-}
-// data = data_ary[0]
-// dataNDs = data_ary[1]
-// console.log(data_ary[0])
-function create_plot(obj){
-   plot_data = obj['data']
-   //console.log(obj['target'])
-  if(Object.keys(plot_data).length == 0){
-     document.getElementById(obj['target']).innerHTML = "<span class='nodata'>No Data</span>"
+  if(Object.keys(hmprefseqv1v3).length == 0){
+     document.getElementById("plot_log_hmp_refseqv1v3_here").innerHTML = "<span class='nodata'>No Data</span>"
   }else{
     // append the svg object to the body of the page
-    if(rank != 'speciesx'){
+    if(rank == 'species'){
        ///////////////////////////////////////////////////////////////////
-       data = plot_data
+       data = hmprefseqv1v3
        //console.log('data_ary')
-       data_ary = plot_data.filter( (x) => { return x.avg > 0})
-       ND_ary   = plot_data.filter( (x) => { return x.avg == 0})
+       data_ary = hmprefseqv1v3.filter( (x) => { return x.avg > 0})
+       ND_ary   = hmprefseqv1v3.filter( (x) => { return x.avg == 0})
        data = data_ary
        //console.log(ND_ary)
-       var svg = d3.select("#"+obj['target'])
+       var svg = d3.select("#plot_log_hmp_refseqv1v3_here")
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -52,35 +26,35 @@ function create_plot(obj){
           "translate(" + margin.left + "," + margin.top + ")");
           
     var mouseover = function(e,d){ 
-        var plotName = obj['plot_name'] //'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
+        var plotName = 'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
         var siteName = siteLongNames[d.site]
         var plotValue = d.avg;
         var prev = d.prev;
-        obj['tt'].html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors3[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Abundance: " + plotValue+" % "+ "<br>" + "Prevalence: " + prev+" %")
+        tooltips.hmprefseqv1v3_log.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors3[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Abundance: " + plotValue+" % "+ "<br>" + "Prevalence: " + prev+" %")
          //console.log(e.x,e.y)
-        return obj['tt'].style("visibility", "visible");
+        return tooltips.hmprefseqv1v3_log.style("visibility", "visible");
      }
   
     var mousemove = function(e,d) {
-        return obj['tt'].style("left", (e.pageX+20) + "px")
+        return tooltips.hmprefseqv1v3_log.style("left", (e.pageX+20) + "px")
                                   .style("top",  (e.pageY) + "px")
 
   }
   var mouseleave = function(d) {
-    return obj['tt'].style("visibility", "hidden");
+    return tooltips.hmprefseqv1v3_log.style("visibility", "hidden");
   }
 var abund_scale_x = d3.scaleBand()
   .range([ 0, (width/2)-gap ])
-  .domain(plot_data.map(function(d) { return d.site; }))
+  .domain(hmprefseqv1v3.map(function(d) { return d.site; }))
   .padding(1);
 var nd_axis = d3.scaleBand()
   .range([ 0, (width/2)-gap ])
-  .domain(plot_data.map(function(d) { return d.site; }))
+  .domain(hmprefseqv1v3.map(function(d) { return d.site; }))
   .padding(1);
 
 var prev_scale_x = d3.scaleBand()
   .range([ (width/2)+gap, width])
-  .domain(plot_data.map(function(d) { return d.site; }))
+  .domain(hmprefseqv1v3.map(function(d) { return d.site; }))
   .padding(1);
   
   //let ndaxis = d3.axisBottom(nd)
@@ -250,7 +224,7 @@ svg.selectAll("mycircle_nd")
     
 // Lines Prev- lollipop
 svg.selectAll("myline_prev")
-  .data(plot_data)
+  .data(hmprefseqv1v3)
   .enter()
   .append("line")
     .attr("x1", function(d) { return prev_scale_x(d.site); })
@@ -261,7 +235,7 @@ svg.selectAll("myline_prev")
 
 // Circles Prev
 svg.selectAll("mycircle_prev")
-  .data(plot_data)
+  .data(hmprefseqv1v3)
   .enter()
   .append("circle")
     .attr("cx", function(d) { return prev_scale_x(d.site); })
@@ -306,13 +280,14 @@ svg.selectAll("myline_grid3")
     //.attr("stroke-opacity", '0.5');
     .attr('opacity', 0.02)
 
-  //////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////     
+  
+
+  
+
+       
        //////////////////////////////////////////////////////////////////
   }else{  // NOT species level
-    var svg = d3.select("#"+obj['target'])
+    var svg = d3.select("#plot_log_hmp_refseqv1v3_here")
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -321,31 +296,31 @@ svg.selectAll("myline_grid3")
           "translate(" + margin.left + "," + margin.top + ")");
   
     var mouseover = function(e,d){ 
-        var plotName = obj['plot_name'];//d3.select(this.parentNode).datum().key;
+        var plotName = 'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
         var siteName = siteLongNames[d.site]
         var plotValue = d.avg;
         var prev = d.prev;
-        obj['tt'].html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors3[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Abundance: " + plotValue+" % "+ "<br>" + "Prevalence: " + prev+" %")
+        tooltips.hmprefseqv1v3_log.html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors3[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Abundance: " + plotValue+" % "+ "<br>" + "Prevalence: " + prev+" %")
          //console.log(e.x,e.y)
-        return obj['tt'].style("visibility", "visible");
+        return tooltips.hmprefseqv1v3_log.style("visibility", "visible");
      }
   
     var mousemove = function(e,d) {
-        return obj['tt'].style("left", (e.pageX+20) + "px")
+        return tooltips.hmprefseqv1v3_log.style("left", (e.pageX+20) + "px")
                                   .style("top",  (e.pageY) + "px")
 
   }
   var mouseleave = function(d) {
-    return obj['tt'].style("visibility", "hidden");
+    return tooltips.hmprefseqv1v3_log.style("visibility", "hidden");
   }
 var x = d3.scaleBand()
   .range([ 0, width ])
-  .domain(plot_data.map(function(d) { return d.site; }))
+  .domain(hmprefseqv1v3.map(function(d) { return d.site; }))
   .padding(1);
 //let ndaxis = d3.axisBottom(nd)
 var y = d3.scaleSymlog()
   //.domain([d3.min(data, function(d) { return +d.avg; }), d3.max(data, function(d) { return +d.avg; })])
-  .domain([0, d3.max(plot_data, function(d) { return +d.avg; })])
+  .domain([0, d3.max(hmprefseqv1v3, function(d) { return +d.avg; })])
   //.constant()
   .range([ height, 0.0 ]);
 
@@ -374,7 +349,7 @@ svg.append("text")
       .text("Body Site");
 // Lines
 svg.selectAll("myline")
-  .data(plot_data)
+  .data(hmprefseqv1v3)
   .enter()
   .append("line")
     .attr("x1", function(d) { return x(d.site); })
@@ -385,7 +360,7 @@ svg.selectAll("myline")
 
 // Circles
 svg.selectAll("mycircle")
-  .data(plot_data)
+  .data(hmprefseqv1v3)
   .enter()
   .append("circle")
     .attr("cx", function(d) { return x(d.site); })
@@ -399,5 +374,5 @@ svg.selectAll("mycircle")
 
   } // end else LOG
   } // end else species
-}//end fxn
+
 
