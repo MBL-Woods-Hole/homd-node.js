@@ -1118,6 +1118,7 @@ router.get('/ecology', function ecology(req, res) {
     let tax_name = req.query.name
     let target = 'ecology',page
     if(req.query.page){
+       
        page = req.query.page
        if(page == 'plots'){
           target = 'ecology_barcharts_only'
@@ -1130,8 +1131,12 @@ router.get('/ecology', function ecology(req, res) {
        }
     
     }else{
-        page = 'all'
+       target = 'ecology_lollipop'
+       page = 'lollipop'
+        
     }
+    
+    console.log('target',target,req.query.page)
     if(req.query.otid && req.session.ttable_filter){
       //console.log('got otid for ttable')
       req.session.ttable_filter.otid = req.query.otid
@@ -1293,7 +1298,7 @@ router.get('/ecology', function ecology(req, res) {
     
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology', page)
     
-console.log('data=>',erenv1v3_data,'<=data')
+   //console.log('data=>',erenv1v3_data,'<=data')
 //     console.log('dewhirst_notes',dewhirst_notes)
 //     console.log('erenv1v3_notes',erenv1v3_notes)
 //     console.log('erenv3v5_notes',erenv3v5_notes)
