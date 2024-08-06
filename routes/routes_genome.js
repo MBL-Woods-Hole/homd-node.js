@@ -2117,4 +2117,40 @@ router.get('/oralgen', function oralgen(req, res) {
 
   })
 })
+//////////////////
+router.get('/protein_peptide', function protein_peptide(req, res) {
+    let q ="SELECT Protein_Accession,Peptide,Product,`Unique`,Length,`start`,`end` from protein_peptide"
+    let pid,sid,prod,genome,temp,pep
+    //console.log(q)
+    TDBConn.query(q, (err, rows) => {
+       if (err) {
+          console.log("protein_peptide select error",err)
+          return
+       }
+       //console.log('1')
+       let send_list = []
+       for(let r in rows){
+           pid = rows[r].Protein_Accession
+           prod = rows[r].Product
+           pep = rows[r].Peptide
+           sid = pid.split('_')[0]
+           if(C.genome_lookup.hasOwnProperty(sid)){
+             genome = C.genome_lookup[sid]
+             temp = {pid:pid,product:prod,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].Unique,length:rows[r].Length,start:rows[r].start,stop:rows[r].stop}
+             //console.log(rows[r])
+             //console.log(C.genome_lookup[sid])
+             send_list.push(temp)
+           }
+       }
+       res.render('pages/genome/protein_peptide', {
+       title: 'HOMD :: Human Oral Microbiome Database',
+       pgname: '', // for AbountThisPage
+       config: JSON.stringify(CFG),
+       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+       user: JSON.stringify(req.user || {}),
+       data: JSON.stringify(send_list)
+
+       })
+    })
+})
 module.exports = router
