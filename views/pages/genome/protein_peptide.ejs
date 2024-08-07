@@ -2,6 +2,13 @@
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 
+#peptide-table{
+   border-collapse:collapse;
+}
+#peptide-table td{
+   border:1px solid black;
+   padding:0 2px;
+}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <%- include('../../partials/header_html'); %>
@@ -26,23 +33,22 @@ thead th { position: sticky; top: 0; }
      <table id='peptide-table' class='table table-hover table-condensed sortable' >
      <thead>
       <tr>
-        <th scope="col" nowrap><span onclick="('otid')">PID</span></th>
-        <th scope="col"><span onclick="('genus')">Genus</span></th>
-        <th scope="col"><span onclick="('species')">Species</span></th>
-        
+        <th scope="colx" nowrap>PID</th>
+        <th scope="colx" nowrap>Taxon-ID</th>
+        <th scope="colx" nowrap>Organism</th>
         <th nowrap>Peptide</th>
-        <th nowrap>Product</th>
+        <th nowrap>Gene Product</th>
         
        
       </tr>
      </thead>
      <tbody>
      <% for(n in list){ %>
+     <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        <tr>
        <td><%= list[n]['pid'] %></td>
-       <td><%= list[n]['genus'] %></td>
-       <td><%= list[n]['species'] %></td>
-       
+       <td><a href='/taxa/tax_description?gid=<%= list[n]['sid'] %>&otid=<%= list[n]['otid'] %>'><%= taxidfullname %></a></td>
+       <td><%= list[n]['organism'] %></td>
        <td><%= list[n]['peptide'] %></td>
        <td><%= list[n]['product'] %></td>
        </tr>
@@ -63,7 +69,6 @@ thead th { position: sticky; top: 0; }
 
 </html>
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
-
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
