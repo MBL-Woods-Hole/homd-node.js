@@ -1,16 +1,59 @@
+<link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 
-#peptide-table{
-   border-collapse:collapse;
+
+
+#peptide-table {
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
+  width:100%;
+}
+#peptide-table th{
+  color:white;
+  background: var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+  
 }
 #peptide-table td{
-   border:1px solid black;
-   padding:0 2px;
+  padding:3px 2px;
+  font-size:small;
+  color: #303030;
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+  white-space: nowrap;
+}
+#peptide-box{
+   height:700px;
+   overflow:auto;
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
+   margin-top:5px;
+}
+#peptide-table .badge{
+  
+  font-size:0.8em;
+  
+}
+
+#peptide-table tr:nth-child(even) { 
+    background-color: #bccd9c; 
+ } 
+ #peptide-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
+.col1{
+   width: 130px;
+}
+.col2{
+   width: 100px;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
+
 <%- include('../../partials/header_html'); %>
 
 <% list = JSON.parse(data) %>
@@ -24,17 +67,17 @@ thead th { position: sticky; top: 0; }
     
     
     <div class='page-content' >
-    
+    <div class='title'><%= pgtitle %></div>
   
-  
+  <%- include('../../partials/peptide_table_filter.ejs') %> 
      
-<div id='table-box' >
-
-     <table id='peptide-table' class='table table-hover table-condensed sortable' >
+<div id='peptide-box' >
+     <small>row count: <%= row_count %></small>
+     <table id='peptide-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
      <thead>
       <tr>
-        <th scope="colx" nowrap>PID</th>
-        <th scope="colx" nowrap>Taxon-ID</th>
+        <th class="col1" nowrap>PID</th>
+        <th class="col2" nowrap>Taxon-ID</th>
         <th scope="colx" nowrap>Organism</th>
         <th nowrap>Peptide</th>
         <th nowrap>Gene Product</th>
@@ -47,7 +90,7 @@ thead th { position: sticky; top: 0; }
      <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        <tr>
        <td><%= list[n]['pid'] %></td>
-       <td><a href='/taxa/tax_description?gid=<%= list[n]['sid'] %>&otid=<%= list[n]['otid'] %>'><%= taxidfullname %></a></td>
+       <td class='center'><a href='/taxa/tax_description?gid=<%= list[n]['sid'] %>&otid=<%= list[n]['otid'] %>'><%= taxidfullname %></a></td>
        <td><%= list[n]['organism'] %></td>
        <td><%= list[n]['peptide'] %></td>
        <td><%= list[n]['product'] %></td>
