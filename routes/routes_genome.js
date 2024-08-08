@@ -933,7 +933,7 @@ router.post('/orf_search_full', function orf_search_full (req, res) {
     let search_text = req.body.search_text
     let org_list = {}
     let gid='',otid = '',organism=''
-    let bigdata = JSON.parse(decodeURI(req.body.dataobj))
+    let bigdata = req.session.anno_search_full //JSON.parse(decodeURI(req.body.dataobj))
     console.log('Parsed Data1',bigdata)
     if(anno == 'prokka'){
         site_search_result = bigdata.pdata  // by gid

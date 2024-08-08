@@ -277,6 +277,7 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     
     res.send(create_protein_table(anno, resultObj, search_text))
 })
+
 router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(req, res) {
     console.log('POST::get_annotations_counts_sql')
     //console.log(req.body)
@@ -321,7 +322,9 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
                 ndata[gid].push(nrows[n])
             }
            }
-           res.send(JSON.stringify({phits:phits,nhits:nhits,pdata:pdata,ndata:ndata}))
+           let obj = {phits:phits,nhits:nhits,pdata:pdata,ndata:ndata}
+           req.session.anno_search_full = obj
+           res.send(JSON.stringify(obj))
         })
            
     })
