@@ -3,7 +3,20 @@
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 
-
+/* 
+table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+table.sortable thead tr::before {
+    content: "";
+    display: table-cell;
+}
+table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+}
+ */
 
 #peptide-table {
   padding:5px;
@@ -76,7 +89,7 @@ thead th { position: sticky; top: 0; }
      <table id='peptide-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
      <thead>
       <tr>
-        <th class="col1" nowrap>PID</th>
+        <th class="col1" title='Protein ID' nowrap>PID</th>
         <th class="col2" nowrap>Taxon-ID</th>
         <th scope="colx" nowrap>Organism</th>
         <th nowrap>Peptide</th>
@@ -91,9 +104,9 @@ thead th { position: sticky; top: 0; }
        <tr>
        <td><%= list[n]['pid'] %></td>
        <td class='center'><a href='/taxa/tax_description?gid=<%= list[n]['sid'] %>&otid=<%= list[n]['otid'] %>'><%= taxidfullname %></a></td>
-       <td><%= list[n]['organism'] %></td>
-       <td><%= list[n]['peptide'] %></td>
-       <td><%= list[n]['product'] %></td>
+       <td title='<%= list[n]['organism'] %>'><%= list[n]['organism'] %></td>
+       <td title='<%= list[n]['peptide'] %>'><%= list[n]['peptide'] %></td>
+       <td title='<%= list[n]['product'] %>'><%= list[n]['product'] %></td>
        </tr>
      <% } %>
      </tbody>

@@ -45,10 +45,13 @@
    color:blue;
    background:lightgrey;
 }
-#reset{
-   cursor:default;
-   color:grey;
+#sch_txt{
+   
+   color:blue;
    background:lightgrey;
+   padding:0 5px;
+   border:1px solid black;
+   font-style:italic;
 }
 </style>
 
@@ -81,7 +84,7 @@
 </td>
 <td>
 <% if(search_text){ %>
-   Search Text: <%= search_text %>
+   Search Text: <span id='sch_txt'><%= search_text %></span>
 <% } %>
 </td>
 </tr>
