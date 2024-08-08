@@ -121,9 +121,7 @@ function anno_search(search_text, anno, type, dataobj){  //type is full or parti
    document.getElementsByTagName("body")[0].appendChild(form);
    form.setAttribute("method", "post");
    form.setAttribute("action" , target);
-   if(type == 'partial'){
-       
-   }else{
+   if(type == 'full'){
        var i = document.createElement("input");
        i.type = "hidden";
        i.name = "dataobj";
