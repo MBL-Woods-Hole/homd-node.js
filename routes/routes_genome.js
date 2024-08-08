@@ -924,6 +924,64 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
 
 
 })
+//
+router.post('/orf_search_full', function orf_search_full (req, res) {
+    console.log('in POST:orf_search_full')
+    //console.log(req.body)
+    let site_search_result,tmpgid,ssp,data_keys
+    let anno = req.body.anno
+    let search_text = req.body.search_text
+    let org_list = {}
+    let gid='',otid = '',organism=''
+    let bigdata = JSON.parse(decodeURI(req.body.dataobj))
+    //console.log('Parsed Data1',bigdata)
+    if(anno == 'prokka'){
+        site_search_result = bigdata.pdata  // by gid
+    }else{
+        site_search_result = bigdata.ndata   // by gid
+    }
+    //console.log('Parsed Data2',site_search_result)
+        let tmp_data_keys = Object.keys(site_search_result)
+        
+        for(let k in tmp_data_keys){
+            tmpgid = tmp_data_keys[k]
+            org_list[tmpgid] = ''
+            if(C.genome_lookup.hasOwnProperty(tmpgid)){
+               ssp = ''
+               if(C.genome_lookup[tmpgid].subspecies){
+                  ssp = C.genome_lookup[tmpgid].subspecies+' '
+               }
+               let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].ccolct
+               org_list[tmpgid] = organism
+            }
+        }
+//             let data_keys = Object.keys(org_list).sort(function (a, b) {
+//                 return helpers.compareStrings_alpha(org_list[a], org_list[b]);
+//              })
+        
+        //console.log('data',site_search_result)
+        
+        data_keys = Object.keys(site_search_result)
+        res.render('pages/genome/annotation_keyword', {
+
+            title: 'HOMD :: text search',
+            pgname: 'genome/explorer', // for AboutThisPage 
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+
+            anno: anno,
+            search_text: search_text,
+            data: JSON.stringify(site_search_result),
+            
+            sorted_gids: JSON.stringify(data_keys),
+            org_obj: JSON.stringify(org_list),
+            show_table:true
+
+        })
+         
+    
+
+})
 router.post('/orf_search', function orf_search (req, res) {
     console.log('in POST:orf_search')
     //console.log(req.body)
@@ -1001,6 +1059,7 @@ router.post('/orf_search', function orf_search (req, res) {
                 data: JSON.stringify(site_search_result),
                 sorted_gids: JSON.stringify(data_keys),
                 org_obj: JSON.stringify(org_list),
+                show_table:false
             })
              
          }) // end readFile
