@@ -2292,7 +2292,7 @@ router.get('/peptide_table2', function peptide_table2(req, res) {
     //
     let send_list = {}
     
-    for(n in genome_list){
+    for(let n in genome_list){
         gid = genome_list[n]
         gdata = C.genome_lookup[gid]
         //console.log(gdata)
