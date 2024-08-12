@@ -2285,7 +2285,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
 router.get('/peptide_table2', function peptide_table2(req, res) {
     
     
-    let genome_list = Object.values(C.genome_lookup).filter(item => (item.has_hsp == '1'))
+    let genome_list = Object.values(C.genome_lookup).filter(item => (item.hsp_study == '1'))
     console.log(genome_list)
     let q ="SELECT otid,organism,Protein_Accession,Molecule,Peptide,Product,`Unique`,Length,`Start`,`End` from protein_peptide"
     let gid,gdata,gsp
