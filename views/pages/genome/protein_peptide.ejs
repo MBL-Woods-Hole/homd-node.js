@@ -125,12 +125,19 @@ table.sortable tbody tr::before {
      <%   if(locstart < 1){ %>
      <%     locstart = 1 %>
      <%   } %>
-     <% seqacc = list[n].gid +"|"+ list[n].pid %>
+     <% anno_type = 'prokka' %>
+     <% if(anno_type.toUpperCase() === "PROKKA"){ %>
+            <% seqacc = list[n].mol.replace('_','|') %>
+      <% }else{ %>
+            <% seqacc = list[n].mol %>
+      <% } %>
+     
       <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
       <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
       
      <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        <tr>
+       
        <td title='Genome Viewer'><a href='#' onclick="open_jbrowse('<%= list[n].gid %>','protein_peptide','','','prokka','<%= loc %>','<%= highlight %>')"><%= list[n].pid %></a></td>
        <td class='center'><a href='/taxa/tax_description?gid=<%= list[n].gid %>&otid=<%= list[n].otid %>'><%= taxidfullname %></a></td>
        <td title='<%= list[n].organism %>'><a href='genome_description?gid=<%= list[n].gid %>'><%= list[n].organism %></a></td>
