@@ -2178,8 +2178,8 @@ router.get('/oralgen', function oralgen(req, res) {
 })
 //////////////////
 router.get('/protein_peptide', function protein_peptide(req, res) {
-    let q ="SELECT otid,organism,Protein_Accession,Peptide,Product,`Unique`,Length,`Start`,`End` from protein_peptide"
-    let pid,gid,prod,genome,temp,pep,otid,org
+    let q ="SELECT otid,organism,Protein_Accession,Molecule,Peptide,Product,`Unique`,Length,`Start`,`End` from protein_peptide"
+    let pid,gid,prod,genome,temp,pep,otid,org,mol
     //console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2195,11 +2195,12 @@ router.get('/protein_peptide', function protein_peptide(req, res) {
            gid = pid.split('_')[0]
            otid = rows[r].otid
            org = rows[r].organism
+           mol = rows[r].Molecule
            
            if(C.genome_lookup.hasOwnProperty(gid)){
              genome = C.genome_lookup[gid]
              console.log(genome)
-             temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].Unique,length:rows[r].Length,start:rows[r].Start,stop:rows[r].End}
+             temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].Unique,length:rows[r].Length,start:rows[r].Start,stop:rows[r].End}
              console.log(temp)
              //console.log(C.genome_lookup[gid])
              send_list.push(temp)
