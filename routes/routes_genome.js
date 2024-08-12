@@ -2286,6 +2286,9 @@ router.get('/peptide_table2', function peptide_table2(req, res) {
     
     //console.log(C.genome_lookup)
     let send_list = Object.values(C.genome_lookup).filter(item => (item.hsp_study == '1'))
+    send_list.sort(function (a, b) {
+        return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+    })
     //console.log('sel genome_list',genome_list)
     //let q ="SELECT otid,organism,Protein_Accession,Molecule,Peptide,Product,`Unique`,Length,`Start`,`End` from protein_peptide"
     // let gid,gdata,gsp

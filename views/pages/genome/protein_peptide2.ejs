@@ -93,8 +93,8 @@ table.sortable tbody tr::before {
         <th class="col2" nowrap>Taxon-ID</th>
         <th scope="colx" nowrap>Genome Name</th>
         <th nowrap>Studies</th>
-        <th nowrap>Proteins Detected in HSP*</th> 
-        <th nowrap>Peptides Detected in HSP*</th>
+        <th nowrap>Number of Proteins<br>Detected in HSP*</th> 
+        <th nowrap>Number of Proteins<br>Peptides Detected in HSP*</th>
         
        
       </tr>
@@ -104,12 +104,12 @@ table.sortable tbody tr::before {
      <% for(n in list){ %>
        <% gid = list[n].gid %>
        <% otid = list[n].otid %>
-       <% org = list[n].genus + " " +list[n].species %>
+       <% org = list[n].genus + " " +list[n].species +" " +list[n].ccolct %>
        <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        
        
        <tr>
-       <td><%= gid %></td>
+       <td><a href='genome_description?gid=<%= gid %>'><%= gid %></td>
        <td class='center'><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= otid %>'><%= taxidfullname %></a></td>
        <td title='<%= org %>'><a href='genome_description?gid=<%= gid %>'><%= org %></a></td>
        <td></td>
