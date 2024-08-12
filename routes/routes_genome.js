@@ -2285,20 +2285,20 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
 router.get('/peptide_table2', function peptide_table2(req, res) {
     
     //console.log(C.genome_lookup)
-    let genome_list = Object.values(C.genome_lookup).filter(item => (item.hsp_study == '1'))
+    let send_list = Object.values(C.genome_lookup).filter(item => (item.hsp_study == '1'))
     //console.log('sel genome_list',genome_list)
-    let q ="SELECT otid,organism,Protein_Accession,Molecule,Peptide,Product,`Unique`,Length,`Start`,`End` from protein_peptide"
-    let gid,gdata,gsp
-    //
-    let send_list = {}
-    
-    for(let n in genome_list){
-        gid = genome_list[n].gid
-        console.log('gid',gid)
-        gdata = C.genome_lookup[gid]
-        console.log('gdata',gdata)
-        send_list[gid] = gdata
-    }
+    //let q ="SELECT otid,organism,Protein_Accession,Molecule,Peptide,Product,`Unique`,Length,`Start`,`End` from protein_peptide"
+    // let gid,gdata,gsp
+//     //
+//     let send_list = {}
+//     
+//     for(let n in genome_list){
+//         gid = genome_list[n].gid
+//         console.log('gid',gid)
+//         gdata = C.genome_lookup[gid]
+//         console.log('gdata',gdata)
+//         send_list[gid] = gdata
+//     }
     
     
 //     TDBConn.query(q, (err, rows) => {

@@ -100,10 +100,11 @@ table.sortable tbody tr::before {
       </tr>
      </thead>
      <tbody>
-     <% let gid_list = Object.values(list) %>
-     <% for(n in gid_list){ %>
-       <% gid = gid_list[n] %>
-       <%= list[gid][n].gid %>
+     
+     <% for(n in list){ %>
+       <% gid = list[n].gid %>
+       <% otid = list[n].otid %>
+       <% org = list[n].genus + " " +list[n].species %>
        
        
        
