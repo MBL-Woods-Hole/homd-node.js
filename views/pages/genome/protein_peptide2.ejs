@@ -105,13 +105,13 @@ table.sortable tbody tr::before {
        <% gid = list[n].gid %>
        <% otid = list[n].otid %>
        <% org = list[n].genus + " " +list[n].species %>
-       
+       <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        
        
        <tr>
        <td><%= gid %></td>
-       <td class='center'></td>
-       <td></td>
+       <td class='center'><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= otid %>'><%= taxidfullname %></a></td>
+       <td title='<%= org %>'><a href='genome_description?gid=<%= gid %>'><%= org %></a></td>
        <td></td>
        <td></td>
        <td></td>
