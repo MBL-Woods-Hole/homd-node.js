@@ -105,7 +105,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   
   */
   var url
-  var tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
+  var tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,hsp'
   if(page == 'genome_desc_single'){ 
       gid = value
       contigplusgc = document.getElementById("select-contig").innerHTML
@@ -127,6 +127,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   }else if(page == 'genome_table'){
        gid = value
        url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
+  
       
   }else if(page == 'main_menu'){
       pts = value.split('|')
@@ -139,6 +140,11 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   }else if(page == 'anno_table'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+hilit
+  
+  }else if(page == 'protein_peptide'){
+       gid = value
+       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+hilit
+       
   }else if(page == 'crispr'){
       tracks = 'crispr'
       gid = value

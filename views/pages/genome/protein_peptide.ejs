@@ -70,7 +70,7 @@ table.sortable tbody tr::before {
 <%- include('../../partials/header_html'); %>
 
 <% list = JSON.parse(data) %>
-
+<% var cfg = JSON.parse(config) %> 
 
 <body>
     
@@ -100,13 +100,42 @@ table.sortable tbody tr::before {
      </thead>
      <tbody>
      <% for(n in list){ %>
+     <%   if(list[n].start[0] === "<" ){ %>
+     <%     start = parseInt(list[n].start.substring(1)) %>
+     <%   }else{ %>
+     <%     start = parseInt(list[n].start) %>
+     <%   } %>
+     
+     <%   if(list[n].stop[0] === ">" ){ %>
+     <%     stop = parseInt(list[n].stop.substring(1)) %>
+     <%   }else{ %>
+     <%     stop = parseInt(list[n].stop)%>
+     <%   } %>
+     
+     <%   if(start > stop){ %>
+     <%    tmp = stop %>
+     <%    stop = start %>
+     <%    start = tmp %>
+     <%   } %>
+     
+     <%   locstart = start - 500 %>
+     <%   locstop = stop + 500 %>
+     <%   size = stop - start %>
+     
+     <%   if(locstart < 1){ %>
+     <%     locstart = 1 %>
+     <%   } %>
+     <% seqacc = list[n].gid +"|"+ list[n].pid %>
+      <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
+      <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
+      
      <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        <tr>
-       <td><%= list[n]['pid'] %></td>
-       <td class='center'><a href='/taxa/tax_description?gid=<%= list[n]['sid'] %>&otid=<%= list[n]['otid'] %>'><%= taxidfullname %></a></td>
-       <td title='<%= list[n]['organism'] %>'><%= list[n]['organism'] %></td>
-       <td title='<%= list[n]['peptide'] %>'><%= list[n]['peptide'] %></td>
-       <td title='<%= list[n]['product'] %>'><%= list[n]['product'] %></td>
+       <td title='Genome Viewer'><a href='#' onclick="open_jbrowse('<%= list[n].gid %>','protein_peptide','','','prokka','<%= loc %>','<%= highlight %>')"><%= list[n].pid %></a></td>
+       <td class='center'><a href='/taxa/tax_description?gid=<%= list[n].gid %>&otid=<%= list[n].otid %>'><%= taxidfullname %></a></td>
+       <td title='<%= list[n].organism %>'><a href='genome_description?gid=<%= list[n].gid %>'><%= list[n].organism %></a></td>
+       <td title='<%= list[n].peptide %>'><%= list[n].peptide %></td>
+       <td title='<%= list[n].product %>'><%= list[n].product %></td>
        </tr>
      <% } %>
      </tbody>
@@ -127,9 +156,10 @@ table.sortable tbody tr::before {
 <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/genomes.js"></script>
 <script>
   mainmenu()
-  
+  var jb_path = '<%- cfg.JBROWSE_URL %>'
 </script>
 
 
