@@ -2280,4 +2280,62 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
     
     
 })
+//
+//
+router.get('/peptide_table2', function peptide_table2(req, res) {
+    
+    
+    let genome_list = Object.values(C.genome_lookup).filter(item => (item.has_hsp == '1'))
+    console.log(genome_list)
+    let q ="SELECT otid,organism,Protein_Accession,Molecule,Peptide,Product,`Unique`,Length,`Start`,`End` from protein_peptide"
+    let gid,gdata,gsp
+    console.log(C.genome_lookup)
+    let send_list = {}
+    
+    for(n in genome_list){
+        gid = genome_list[n]
+        gdata = C.genome_lookup[gid]
+        console.log(gdata)
+        send_list[gid] = gdata
+    }
+    
+    
+//     TDBConn.query(q, (err, rows) => {
+//        if (err) {
+//           console.log("protein_peptide select error-GET",err)
+//           return
+//        }
+//        //console.log('1')
+//        
+//        for(let r in rows){
+//            pid = rows[r].Protein_Accession
+//            prod = rows[r].Product
+//            pep = rows[r].Peptide
+//            gid = pid.split('_')[0]
+//            otid = rows[r].otid
+//            org = rows[r].organism
+//            mol = rows[r].Molecule
+//            
+//            if(C.genome_lookup.hasOwnProperty(gid)){
+//              genome = C.genome_lookup[gid]
+//              //console.log(genome)
+//              temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].Unique,length:rows[r].Length,start:rows[r].Start,stop:rows[r].End}
+//              //console.log(temp)
+//              //console.log(C.genome_lookup[gid])
+//              send_list.push(temp)
+//            }
+//        }
+       res.render('pages/genome/protein_peptide2', {
+          title: 'HOMD :: Human Oral Microbiome Database',
+          pgname: '', // for AbountThisPage
+          pgtitle: 'Protein Peptide Table',
+          config: JSON.stringify(CFG),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+          user: JSON.stringify(req.user || {}),
+          data: JSON.stringify(send_list),
+          row_count:send_list.length,
+          search_text:''
+       })
+//    })
+})
 module.exports = router
