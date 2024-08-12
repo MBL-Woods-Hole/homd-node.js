@@ -101,7 +101,7 @@ table.sortable tbody tr::before {
      </thead>
      <tbody>
      <% for(gid in list){ %>
-      <% org = list[gid].genus + " " list[gid].species %>
+      <% org = list[gid].genus + " " + list[gid].species %>
       <% otid = list[gid].otid %>
        <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
        
