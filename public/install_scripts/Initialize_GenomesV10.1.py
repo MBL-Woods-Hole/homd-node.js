@@ -59,7 +59,8 @@ first_genomes_query_no_flagid ="""
     ncbi_assembly_name as asmbly_name,
     gb_assembly   as gb_asmbly,
     refseq_assembly as rs_asmbly,
-    ncbi_biosample as  ncbi_bsid
+    ncbi_biosample as  ncbi_bsid,
+    has_hsp_study as hsp_study
 
     from genomes
     JOIN otid_prime using(otid)
@@ -111,7 +112,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     #genome['ncbi_bpid']     = ''   # table 2
     #genome['ncbi_bsid'] = ''
     #genome['io']        = ''   # table 2
-
+    genome['hsp_study'] = ''
     #genome['asmbly_name']    = ''
     genome['gb_asmbly'] = ''
     #genome['rs_asmbly'] = ''
@@ -152,7 +153,7 @@ def run_first(args):
             taxonObj['gb_asmbly']   = obj['gb_asmbly']
             #taxonObj['rs_asmbly']   = obj['rs_asmbly']
             #taxonObj['asmbly_name'] = obj['asmbly_name']
-
+            taxonObj['hsp_study']   = str(obj['hsp_study'])
 
         else:
             sys.exit('duplicate gid',obj['gid'])

@@ -2177,7 +2177,7 @@ router.get('/oralgen', function oralgen(req, res) {
   })
 })
 //////////////////
-router.get('/protein_peptide', function protein_peptide(req, res) {
+router.get('/peptide_table', function protein_peptide(req, res) {
     let q ="SELECT otid,organism,Protein_Accession,Molecule,Peptide,Product,`Unique`,Length,`Start`,`End` from protein_peptide"
     let pid,gid,prod,genome,temp,pep,otid,org,mol
     //console.log(q)
