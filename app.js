@@ -230,6 +230,7 @@ Promise.all(promises)
     //console.log(results[0]['998'])
     C.taxon_lookup              = results[0];// lookup by otid  TaxonLookup
     //console.log('parsing1')
+    //console.log('C.taxon_lookup1',C.taxon_lookup['374'])
     C.taxon_lineage_lookup        = results[1]; // lookup by otid  TaxonLineagelookup
    
     

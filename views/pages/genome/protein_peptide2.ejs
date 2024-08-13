@@ -82,10 +82,10 @@ table.sortable tbody tr::before {
     <div class='page-content' >
     <div class='title'>Genomes with proteins/peptides detected in human salivary proteome</div>
   
-  <%- include('../../partials/peptide_table_filter.ejs') %> 
+  <!-- <%- include('../../partials/peptide_table_filter.ejs') %>  -->
      
 <div id='peptide-box' >
-     <small>row count: <%= row_count %></small>
+     <small>row count: <%= row_count %></small> <small style='float:right;'>* HSP: Human Salivary Proteome <a href='https://salivaryproteome.org' target='_blank'>https://salivaryproteome.org/</a></small>
      <table id='peptide-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
      <thead>
       <tr>
