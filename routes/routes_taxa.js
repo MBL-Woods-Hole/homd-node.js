@@ -1579,48 +1579,67 @@ router.get('/dld_table/:type', function dldTable(req, res) {
     var yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
     var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
-
-  let send_list = []
-  let type = req.params.type
-  let letter = req.session.ttable_filter.letter
-  
-  let statusfilter = Object.keys(req.session.ttable_filter.status).filter(item => req.session.ttable_filter.status[item] === 'on')
-  let search_txt = req.session.ttable_filter.text.txt_srch
-  let search_field = req.session.ttable_filter.text.field
+    let letter='all',statusfilter='on',search_txt='',search_field=''
+    let send_list = []
+    let type = req.params.type
+  if(req.session.ttable_filter){
+     if(req.session.ttable_filter.letter){
+        letter = req.session.ttable_filter.letter
+     }
+     if(req.session.ttable_filter.status){
+        statusfilter = Object.keys(req.session.ttable_filter.status).filter(item => req.session.ttable_filter.status[item] === 'on')
+     }
+     if(req.session.ttable_filter.txt_srch){
+        search_txt = req.session.ttable_filter.text.txt_srch
+     }
+     if(req.session.ttable_filter.field){
+        search_field = req.session.ttable_filter.text.field
+     }
+  }
   //console.log(type,letter,statusfilter,search_txt,search_field)
   // Apply filters
+  //console.log('C.taxon_lookup-1',C.taxon_lookup['1'])
+  //console.log('C.taxon_lookup374',C.taxon_lookup['374'])
   let temp_list = Object.values(C.taxon_lookup);
+  //console.log('list_of_otids1',temp_list.indexOf('374'))
   let file_filter_txt = ""
   if(letter && letter.match(/[A-Z]{1}/)){
-      //helpers.print(['MATCH Letter: ',letter])
+      helpers.print(['MATCH Letter: ',letter])
       send_list = temp_list.filter(item => item.genus.charAt(0) === letter)
+      //console.log('list_of_otids2',temp_list.indexOf('374'))
       file_filter_txt = "HOMD.org Taxon Data::Letter Filter Applied (genus with first letter of '"+letter+"')"
   }else if(search_txt !== ''){
       send_list = get_filtered_taxon_list(search_txt, search_field)
+      //console.log('list_of_otids3',temp_list.indexOf('374'))
       file_filter_txt = "HOMD.org Taxon Data::Search Filter Applied (Search text '"+search_txt+"')"
   //}else if(sitefilter.length > 0 ||  statusfilter.length > 0){
   }else if(statusfilter.length === 0){
     // this is for download default table. on the downloads page
     // you cant get here from the table itself (javascript prevents)
-    //helpers.print('in dwnld filters==[][]')
+    helpers.print('in dwnld filters==[][]')
     send_list = temp_list
+    //console.log('list_of_otids4',temp_list.indexOf('374'))
   }else {
     // apply site/status filter as last resort
-    //console.log('in dwnld filters')
+    //console.log('in dwnld filters',statusfilter)
     
     if(statusfilter.length == 0){  // only items from site filter checked
       send_list = temp_list
     }else {
       send_list = temp_list.filter( function(e){
-          
+        if(e.sites.length == 0){
+            return e  // important to capture taxa with no presence in sites table
+        }else{
             for(var n in e.sites){
               
               var status = e.status.toLowerCase()
               if( statusfilter.indexOf(status) !== -1 )
               { return e }
             }
+        }
          
         })
+        //console.log('list_of_otids5',temp_list.indexOf('374'))
     } 
   } 
     
@@ -1629,7 +1648,7 @@ router.get('/dld_table/:type', function dldTable(req, res) {
   file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+today 
 
     let list_of_otids = send_list.map(item => item.otid)
-    //console.log('list_of_otids',list_of_otids)
+    
   // type = browser, text or excel
   var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
   if(type === 'browser'){
