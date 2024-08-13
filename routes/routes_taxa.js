@@ -1492,12 +1492,16 @@ router.get('/dld_table/:type', function dldTable(req, res) {
     }else {
       send_list = temp_list.filter( function(e){
           
+        if(e.sites.length == 0){
+            return e  // important to capture taxa with no presence in sites table
+        }else{
             for(var n in e.sites){
               
               var status = e.status.toLowerCase()
               if( statusfilter.indexOf(status) !== -1 )
               { return e }
             }
+        }
          
         })
     } 
