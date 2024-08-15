@@ -56,6 +56,9 @@ table.sortable tbody tr::before {
 #peptide-table tr:nth-child(even) { 
     background-color: #94c973; 
  } 
+#peptide-table tr:nth-child(odd) { 
+    background-color: #E8FFE8; 
+ } 
  #peptide-table tr:hover { 
     background-color: #dce7f5; 
  } 
@@ -98,6 +101,7 @@ table.sortable tbody tr::before {
       <tr>
         <th class="col1" title='StudyID' nowrap>Study ID</th>
         <th class="col1" title='PID' nowrap>Protein ID</th>
+        <th class="col1" title='JBrowse' nowrap>Genome Tools</th>
         <th scope="colx" nowrap>Peptide</th>
         <th nowrap>Gene Product</th>
         
@@ -115,8 +119,8 @@ table.sortable tbody tr::before {
        
        <tr>
        <td class='center'><%= studies[s] %></td>
-       <td><a href='#' onclick="open_jbrowse('<%= gid %>','protein_peptide','','','prokka','<%= list[n].loc %>','<%= list[n].hlite %>')"><%= pid %></a></td>
-       
+       <td class='center'><%= pid %> </td>
+       <td class='center'><a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= gid %>','protein_peptide','','','prokka','<%= list[n].loc %>','<%= list[n].hlite %>')">Genome Viewer</a></td>
        <td><%= list[n].pep %></td>
        <td><%= list[n].prod %></td>
        
