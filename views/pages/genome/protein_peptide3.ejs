@@ -54,7 +54,7 @@ table.sortable tbody tr::before {
 }
 
 #peptide-table tr:nth-child(even) { 
-    background-color: #bccd9c; 
+    background-color: #94c973; 
  } 
  #peptide-table tr:hover { 
     background-color: #dce7f5; 
@@ -70,7 +70,8 @@ table.sortable tbody tr::before {
 <%- include('../../partials/header_html'); %>
 
 <% list = JSON.parse(data) %>
-<% var cfg = JSON.parse(config) %> 
+<% var cfg = JSON.parse(config) %>
+<% studies = JSON.parse(stud) %>
 
 <body>
     
@@ -80,7 +81,7 @@ table.sortable tbody tr::before {
     
     
     <div class='page-content' >
-    <div class='title'>Proteins and Peptides detected in <%= org %></div>
+    <div class='title'>Proteins and Peptides detected in <i><%= org %></i></div>
   
  
      
@@ -100,61 +101,27 @@ table.sortable tbody tr::before {
         <th scope="colx" nowrap>Peptide</th>
         <th nowrap>Gene Product</th>
         
+        
        
       </tr>
      </thead>
      <tbody>
-     
+     <% for(s in studies){ %>
      <% for(n in list){ %>
        
        <% pid = list[n].pid %>
        
-       <% start = list[n].start %>
-       <% stop = list[n].stop %>
-       
-       <%   if(list[n].start[0] === "<" ){ %>
-     <%     start = parseInt(list[n].start.substring(1)) %>
-     <%   }else{ %>
-     <%     start = parseInt(list[n].start) %>
-     <%   } %>
-     
-     <%   if(list[n].stop[0] === ">" ){ %>
-     <%     stop = parseInt(list[n].stop.substring(1)) %>
-     <%   }else{ %>
-     <%     stop = parseInt(list[n].stop)%>
-     <%   } %>
-     
-     <%   if(start > stop){ %>
-     <%    tmp = stop %>
-     <%    stop = start %>
-     <%    start = tmp %>
-     <%   } %>
-     
-     <%   locstart = start - 500 %>
-     <%   locstop = stop + 500 %>
-     <%   size = stop - start %>
-     
-     <%   if(locstart < 1){ %>
-     <%     locstart = 1 %>
-     <%   } %>
-     <% anno_type = 'prokka' %>
-     <% if(anno_type.toUpperCase() === "PROKKA"){ %>
-            <% seqacc = list[n].mol.replace('_','|') %>
-      <% }else{ %>
-            <% seqacc = list[n].mol %>
-      <% } %>
-     
-      <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
-      <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
+      
        
        <tr>
-       <td></td>
-       <td><a href='#' onclick="open_jbrowse('<%= gid %>','protein_peptide','','','prokka','<%= loc %>','<%= highlight %>')"><%= pid %></a></td>
+       <td class='center'><%= studies[s] %></td>
+       <td><a href='#' onclick="open_jbrowse('<%= gid %>','protein_peptide','','','prokka','<%= list[n].loc %>','<%= list[n].hlite %>')"><%= pid %></a></td>
        
        <td><%= list[n].pep %></td>
        <td><%= list[n].prod %></td>
        
        </tr>
+     <% } %>
      <% } %>
      </tbody>
      </table>

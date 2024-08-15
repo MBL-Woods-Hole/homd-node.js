@@ -2417,7 +2417,8 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
     q += " JOIN protein_peptide_counts using (seq_id)"
     q += " JOIN genomes using (seq_id)"
     q += " where seq_id='"+gid+"'"
-    let temp,pid,otid,org,prod,pep,start,stop,mol,studies_ary
+    let temp,pid,otid,org,prod,pep,start,stop,mol,studies_ary,study
+    let locstart,locstop,size,seqacc,loc,highlight
     console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2460,11 +2461,56 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
               studies_ary.push('7')
            }
            
-           temp = {otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop}
+           /////////////////////////////////////////
            
-           send_list.push(temp)
+       
+          if(start[0] === "<" ){
+            start = parseInt(start.substring(1))
+          }else{
+            start = parseInt(start)
+          }
+     
+          if(stop[0] === ">" ){
+            stop = parseInt(list[n].stop.substring(1))
+          }else{
+            stop = parseInt(stop)
+          }
+     
+         if(start > stop){ 
+           tmp = stop 
+           stop = start 
+           start = tmp 
+         }
+         
+         locstart = start - 500 
+         locstop = stop + 500
+         size = stop - start
+     
+         if(locstart < 1){
+           locstart = 1
+         }
+         let anno_type = 'prokka'
+         if(anno_type.toUpperCase() === "PROKKA"){
+            seqacc = mol.replace('_','|') 
+         }else{ 
+          seqacc = mol 
+         } 
+     
+         loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
+         highlight = seqacc+":"+start.toString()+".."+stop.toString()
+           // for(let s in studies_ary){
+//            
+//                study = studies_ary[s]
+         temp = {study:study,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop,loc:loc,hlite:highlight}
+//                
+//            }
+           
+        send_list.push(temp)
+           
          
        }
+       
+       
        res.render('pages/genome/protein_peptide3', {
           title: 'HOMD :: Human Oral Microbiome Database',
           pgname: '', // for AbountThisPage
@@ -2474,6 +2520,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
           user: JSON.stringify(req.user || {}),
           data: JSON.stringify(send_list),
           row_count:send_list.length,
+          stud:JSON.stringify(studies_ary),
           org:org,
           gid:gid,
           otid:otid

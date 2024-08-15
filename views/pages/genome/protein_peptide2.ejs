@@ -3,20 +3,7 @@
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 
-/* 
-table.sortable tbody {
-    counter-reset: sortabletablescope;
-}
-table.sortable thead tr::before {
-    content: "";
-    display: table-cell;
-}
-table.sortable tbody tr::before {
-    content: counter(sortabletablescope);
-    counter-increment: sortabletablescope;
-    display: table-cell;
-}
- */
+
 
 #peptide-table {
   padding:5px;
@@ -35,7 +22,7 @@ table.sortable tbody tr::before {
 #peptide-table td{
   padding:3px 2px;
   font-size:small;
-  color: #303030;
+  
   overflow: hidden;
   /* text-overflow: ellipsis; */
   white-space: nowrap;
@@ -54,7 +41,7 @@ table.sortable tbody tr::before {
 }
 
 #peptide-table tr:nth-child(even) { 
-    background-color: #bccd9c; 
+    background-color: #b1d8b7; 
  } 
  #peptide-table tr:hover { 
     background-color: #dce7f5; 
@@ -90,13 +77,13 @@ table.sortable tbody tr::before {
      <thead>
       <tr>
         <th class="col1" title='GenomeID' nowrap>HOMD<br>Sequence ID</th>
-        <th class="col1" title='GenomeID' nowrap>Link to<br>Peptides Table</th>
+        
         <th class="col2" nowrap>Taxon-ID</th>
         <th scope="colx" nowrap>Organism</th>
         <th nowrap>Studies</th>
         <th nowrap>Number of Proteins<br>Detected in HSP*</th> 
         <th nowrap>Number of Peptides<br>Detected in HSP*</th>
-        
+        <th nowrap>Genome and Taxon Info</th>
        
       </tr>
      </thead>
@@ -110,13 +97,19 @@ table.sortable tbody tr::before {
        
        
        <tr>
-       <td><a href='genome_description?gid=<%= gid %>'><%= gid %></td>
-       <td><a href='peptide_table3?gid=<%= gid %>'>open</td>
-       <td class='center'><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= otid %>'><%= taxidfullname %></a></td>
-       <td title='<%= org %>'><a href='genome_description?gid=<%= gid %>'><%= org %></a></td>
+       <td><a href='peptide_table3?gid=<%= gid %>'><%= gid %></td>
+       
+       <td class='center'><a href='peptide_table3?gid=<%= gid %>'><%= taxidfullname %></a></td>
+       <td title='<%= org %>'><a href='peptide_table3?gid=<%= gid %>'><%= org %></a></td>
        <td class='center'><%= list[n].studies %></td>
        <td class='center'><%= list[n].prot_count %></td>
        <td class='center'><%= list[n].pep_count %></td>
+       
+       <td class='center'>
+         <a class='pill pill-khaki' href='genome_description?gid=<%= gid %>&otid=<%= otid %>'>Genome Info</a>
+         <a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= gid %>&otid=<%= otid %>'>Taxon Info</a>
+         
+       </td>
        </tr>
      <% } %>
      </tbody>
