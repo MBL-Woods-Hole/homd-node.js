@@ -1648,7 +1648,7 @@ router.get('/dld_table/:type', function dldTable(req, res) {
   file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+today 
 
     let list_of_otids = send_list.map(item => item.otid)
-    
+
   // type = browser, text or excel
   var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
   if(type === 'browser'){

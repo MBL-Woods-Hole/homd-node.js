@@ -1,6 +1,54 @@
 
-
-function get_annotations_counts(intext){
+function get_annotations_counts_full(intext){
+    // search SQL orf table for both prokka and ncbi WHOLE PID Only
+    // if no result then go to partial search
+    var xmlhttp
+    //if (window.XMLHttpRequest) {
+       // for modern browsers
+    xmlhttp = new XMLHttpRequest();
+    
+    
+    var args = {intext:intext}
+    document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+    document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+    xmlhttp.open("POST", "/get_annotations_counts_sql", true);
+    //xmlhttp.timeout = 1200000;  // 10,000; timeout in ms, 10 seconds
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      //console.log('readystate: ',xmlhttp.readyState)
+      //console.log('status: ',xmlhttp.status)
+      //console.log('txt: ',xmlhttp.statusText)
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        //console.log('before parse')
+        var resp = JSON.parse(xmlhttp.responseText);
+        console.log('get_annotations_counts SQL', resp)
+        // [prokka_genome_count,prokka_gene_count,ncbi_genome_count,ncbi_gene_count]
+        if(resp['phits'] == 0){
+            html1 = "0"
+        }else{
+            html1 = resp['phits'].length.toString()
+            console.log('sendhtml',xmlhttp.responseText)
+            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka','full')\">show results</span>--"
+        
+        }
+        document.getElementById('prokka_count_div_full').innerHTML = html1
+    
+        if(resp['nhits'] == 0){
+            html2 = "0"
+        }else{
+            html2 = resp['nhits'].length.toString()
+            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi','full')\">show results</span>--"
+        
+        }
+        document.getElementById('ncbi_count_div_full').innerHTML = html2
+        
+      }
+    }
+    xmlhttp.send(JSON.stringify(args));
+    //xmlhttp.send(null);
+}
+function get_annotations_counts_partial(intext){
+    
     var xmlhttp
     //if (window.XMLHttpRequest) {
        // for modern browsers
@@ -34,7 +82,7 @@ function get_annotations_counts(intext){
             }else{
                 html1 = resp[1]+' gene(s) in '+resp[0]+' genomes '
             }
-            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka')\">show results</span>--"
+            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka','partial')\">show results</span>--"
         
         }
         document.getElementById('prokka_count_div').innerHTML = html1
@@ -48,7 +96,7 @@ function get_annotations_counts(intext){
                 html2 = resp[3]+' gene(s) in '+resp[2]+' genomes '
             }
             //html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
-            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
+            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi','partial')\">show results</span>--"
         
         }
         document.getElementById('ncbi_count_div').innerHTML = html2
@@ -59,16 +107,21 @@ function get_annotations_counts(intext){
     //xmlhttp.send(null);
 }
 
-function anno_search(search_text, anno){
-   //console.log('in anno_srch')
+function anno_search(search_text, anno, type){  //type is full or partial
+   console.log('in anno_srch',search_text)
    //var args = {}
    //args.anno = anno
    //args.search_text = search_text
    let form = document.createElement("form");
+   if(type == 'partial'){
+       target = "/genome/orf_search"
+   }else{
+       target = "/genome/orf_search_full"
+   }
    document.getElementsByTagName("body")[0].appendChild(form);
    form.setAttribute("method", "post");
-   form.setAttribute("action" , "/genome/orf_search");
-    
+   form.setAttribute("action" , target);
+   
    var i = document.createElement("input");
    i.type = "hidden";
    i.name = "anno";

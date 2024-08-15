@@ -278,6 +278,57 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
     res.send(create_protein_table(anno, resultObj, search_text))
 })
 
+router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(req, res) {
+    console.log('POST::get_annotations_counts_sql')
+    //console.log(req.body)
+    const searchText = req.body.intext
+    let phits=0, nhits=0, pdata={},ndata={},gid,ssp,organism
+    let q_prokka = "SELECT * from PROKKA_meta.orf WHERE protein_id='"+searchText+"' OR accession = '"+searchText+"'"
+    let q_ncbi = "SELECT * from NCBI_meta.orf WHERE protein_id ='"+searchText+"' OR accession = '"+searchText+"'"
+    TDBConn.query(q_prokka, (err, prows) => {
+        if (err) {
+          console.log("prokka select error",err)
+          return
+        }
+        if(prows.length >0){
+            //[pgid_count, ppid_count,ngid_count, npid_count]
+            phits = prows
+            for(let n in prows){
+                gid = prows[n].seq_id  // genomeid SEQF
+                
+                
+                if(!pdata.hasOwnProperty(gid)){
+                   
+                   pdata[gid] = []
+                }
+                pdata[gid].push(prows[n])
+            }
+        }
+        
+        TDBConn.query(q_ncbi, (err, nrows) => {
+           if (err) {
+             console.log("ncbi select error",err)
+             return
+           }
+           if(nrows.length >0){
+            //[pgid_count, ppid_count,ngid_count, npid_count]
+            nhits = nrows
+            for(let n in nrows){
+                gid = nrows[n].seq_id
+                
+                if(!ndata.hasOwnProperty(gid)){
+                   ndata[gid] = []
+                }
+                ndata[gid].push(nrows[n])
+            }
+           }
+           let obj = {phits:phits,nhits:nhits,pdata:pdata,ndata:ndata}
+           req.session.anno_search_full = obj
+           res.send(JSON.stringify(obj))
+        })
+           
+    })
+})
 router.post('/get_annotations_counts_grep', function get_annotations_counts_grep(req, res) {
     console.log('POST::get_annotations_counts_grep')
     console.log(req.body)
@@ -563,6 +614,9 @@ router.post('/site_search', function site_search(req, res) {
     // 'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species
     // }
   }
+
+
+  
   
 ///////////// CONTIGS /////////////////////////////////////////////////////////////////////////////
 

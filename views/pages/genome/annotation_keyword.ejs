@@ -5,6 +5,7 @@
    overflow-y: scroll;
    border:1px solid gray;
    padding:10px;
+   
    width: 80%;
 }
 table{
@@ -69,9 +70,9 @@ button {
 </style>
 <% cfg = JSON.parse(config) %> 
 <% data = JSON.parse(data) %>
-<% //prokkad = JSON.parse(prokka_data) %>
+
 <% org_sorted_gids = JSON.parse(sorted_gids) %>
-<% //ngids_sorted = JSON.parse(nsorted) %>
+
 <% orgs = JSON.parse(org_obj) %>
 <%- include('../../partials/header_html'); %>
 <script type="text/javascript" src="/js/genomes.js"></script>
@@ -85,7 +86,7 @@ button {
     <div class='title'>Annotation Search Text: "<%= search_text %>"</div>
     <!-- <a href='/get_annotations_counts?txt=<%= search_text %>&ret=1'>Return to search results</a> -->
     <div id="srch">
-
+<% if(!show_table){ %>
     Switch Search Results:
     <table><tr><td>
    <form  method='POST' action='orf_search'>
@@ -101,7 +102,7 @@ button {
    </form>
    </td></tr>
    </table>
-
+<% } %>
     </div>    
     <center>
 
@@ -122,8 +123,12 @@ button {
           
           
           <td class='center'><%= data[gid].length %></td>
-          <td><button onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View item(s) in table</button></td>
-                   <td>
+          <td>
+          <% if(!show_table){ %>
+            <button onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View item(s) in table</button>
+          <% } %>
+          </td>
+            <td>
             <a class='pill pill-mediumorchid' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
             <a class='pill pill-slateblue' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
           </td>
@@ -132,9 +137,73 @@ button {
     </table>
     </div>
     </center>
-    
     <div id='anno_result_div'>
-      <table>
+    <% if(show_table){ %>
+      
+      <table id='annotation-table'>
+       <tr><td>Molecule</td>
+        <td>PID</td>
+        <td>Genome<br>Viewer</td>
+        <td>NA<br><small>(Length)(Seq)</small></td>
+        <td>AA<br><small>(Length)(Seq)</small></td>
+        <td>Range</td><td>Gene</td>
+        <td>Gene Product</td>
+        </tr>
+      <% for(gid in data){ %>
+         <% for(n in data[gid]){ %>
+            <tr><td><%= data[gid][n].accession %></td>
+            <td><%= data[gid][n].protein_id %></td>
+<%
+            if(data[gid][n].start[0] === "<" ){
+              start = parseInt(data[gid][n].start.substring(1))
+            }else{
+              start = parseInt(data[gid][n].start)
+            }
+            if(data[gid][n].stop[0] === ">" ){ 
+              stop = parseInt(data[gid][n].stop.substring(1))
+            }else{ 
+              stop = parseInt(data[gid][n].stop)
+            }
+            if(start > stop){ 
+             tmp = stop 
+             stop = start 
+             start = tmp 
+            }
+            locstart = start - 500 
+            locstop = stop + 500 
+            if(locstart < 1){ 
+              locstart = 1 
+            } 
+            let db = anno+"_"+gid
+            if(anno === "prokka"){ 
+                seqacc = data[gid][n].accession.replace('_','|')
+            }else{
+                seqacc = gid +"|"+ data[gid][n].accession
+            }
+            let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
+            let highlight = seqacc+":"+start.toString()+".."+stop.toString()
+            
+            
+%>
+            <td><a title="JBrowse/Genome Viewer" href="#" onclick="open_jbrowse('<%= gid %>','anno_table','','','<%= anno %>','<%= loc %>','<%= highlight %>')">open</a></td>
+            <!-- <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')">open</a> -->
+            <td><%= data[gid][n].length_na %>
+            [<a title="Nucleic Acid" href="#" onclick="get_NN_NA_seq('na','<%= data[gid][n].protein_id %>','<%= db %>','<% data[gid][n].accession %>','<%= orgs[gid] %>','<%= data[gid][n].product %>','<% gid %>')"><b>NA</b></a>]
+            </td>
+            <td><%= data[gid][n].length_aa %>
+            [<a title="Amino Acid" href="#" onclick="get_NN_NA_seq('aa','<%= data[gid][n].protein_id %>','<%= db %>','<% data[gid][n].accession %>','<%= orgs[gid] %>','<%= data[gid][n].product %>','<% gid %>')"><b>AA</b></a>]
+            </td>
+            <td><%= data[gid][n].start %>-<%= data[gid][n].stop %></td>
+            <td><%= data[gid][n].gene %></td>
+            <td><%= data[gid][n].product %></td>
+            </tr>
+         <% } %>
+         
+      <% } %>
+      </table>
+    <% }else{ %>
+    
+      <table id='annotation-table'>
         <tr><td>Molecule</td>
         <td>PID</td>
         <td>Genome<br>Viewer</td>
@@ -143,8 +212,9 @@ button {
         <td>Range</td><td>Gene</td>
         <td>Gene Product</td></tr>
       </table>
-    </div>
     
+    <% } %>
+    </div>
     
     
   
