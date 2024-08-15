@@ -80,22 +80,25 @@ table.sortable tbody tr::before {
     
     
     <div class='page-content' >
-    <div class='title'>Genomes with proteins/peptides detected in human salivary proteome</div>
+    <div class='title'>Proteins and Peptides detected in <%= org %></div>
   
  
      
 <div id='peptide-box' >
-     <small>row count: <%= row_count %></small> <small style='float:right;'>* HSP: Human Salivary Proteome <a href='https://salivaryproteome.org' target='_blank'>https://salivaryproteome.org/</a></small>
+     <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+     <small>row count: <%= row_count %></small> 
+     <span style='font-size:18px;padding-left:12px;'>Selected HOMD Taxon-ID: <a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= otid %>'><%= taxidfullname %></a> 
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected HOMD Sequence-ID: <a href='/genome/genome_description?gid=<%= gid %>&otid=<%= otid %>'><%= gid %></a>
+     </span>
+     
+     <small style='float:right;'>* HSP: Human Salivary Proteome <a href='https://salivaryproteome.org' target='_blank'>https://salivaryproteome.org/</a></small>
      <table id='peptide-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
      <thead>
       <tr>
-        <th class="col1" title='GenomeID' nowrap>HOMD<br>Sequence ID</th>
-        <th class="col1" title='GenomeID' nowrap>Link to<br>Peptides Table</th>
-        <th class="col2" nowrap>Taxon-ID</th>
-        <th scope="colx" nowrap>Organism</th>
-        <th nowrap>Studies</th>
-        <th nowrap>Number of Proteins<br>Detected in HSP*</th> 
-        <th nowrap>Number of Peptides<br>Detected in HSP*</th>
+        <th class="col1" title='StudyID' nowrap>Study ID</th>
+        <th class="col1" title='PID' nowrap>Protein ID</th>
+        <th scope="colx" nowrap>Peptide</th>
+        <th nowrap>Gene Product</th>
         
        
       </tr>
@@ -103,20 +106,54 @@ table.sortable tbody tr::before {
      <tbody>
      
      <% for(n in list){ %>
-       <% gid = list[n].gid %>
-       <% otid = list[n].otid %>
-       <% org = list[n].org %>
-       <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        
+       <% pid = list[n].pid %>
+       
+       <% start = list[n].start %>
+       <% stop = list[n].stop %>
+       
+       <%   if(list[n].start[0] === "<" ){ %>
+     <%     start = parseInt(list[n].start.substring(1)) %>
+     <%   }else{ %>
+     <%     start = parseInt(list[n].start) %>
+     <%   } %>
+     
+     <%   if(list[n].stop[0] === ">" ){ %>
+     <%     stop = parseInt(list[n].stop.substring(1)) %>
+     <%   }else{ %>
+     <%     stop = parseInt(list[n].stop)%>
+     <%   } %>
+     
+     <%   if(start > stop){ %>
+     <%    tmp = stop %>
+     <%    stop = start %>
+     <%    start = tmp %>
+     <%   } %>
+     
+     <%   locstart = start - 500 %>
+     <%   locstop = stop + 500 %>
+     <%   size = stop - start %>
+     
+     <%   if(locstart < 1){ %>
+     <%     locstart = 1 %>
+     <%   } %>
+     <% anno_type = 'prokka' %>
+     <% if(anno_type.toUpperCase() === "PROKKA"){ %>
+            <% seqacc = list[n].mol.replace('_','|') %>
+      <% }else{ %>
+            <% seqacc = list[n].mol %>
+      <% } %>
+     
+      <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
+      <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
        
        <tr>
-       <td><a href='genome_description?gid=<%= gid %>'><%= gid %></td>
-       <td><a href='peptide_table3?gid=<%= gid %>'>open</td>
-       <td class='center'><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= otid %>'><%= taxidfullname %></a></td>
-       <td title='<%= org %>'><a href='genome_description?gid=<%= gid %>'><%= org %></a></td>
-       <td class='center'><%= list[n].studies %></td>
-       <td class='center'><%= list[n].prot_count %></td>
-       <td class='center'><%= list[n].pep_count %></td>
+       <td></td>
+       <td><a href='#' onclick="open_jbrowse('<%= gid %>','protein_peptide','','','prokka','<%= loc %>','<%= highlight %>')"><%= pid %></a></td>
+       
+       <td><%= list[n].pep %></td>
+       <td><%= list[n].prod %></td>
+       
        </tr>
      <% } %>
      </tbody>
