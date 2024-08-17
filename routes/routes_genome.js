@@ -2180,7 +2180,7 @@ router.get('/oralgen', function oralgen(req, res) {
 router.get('/peptide_table', function protein_peptide(req, res) {
     let q = "SELECT genomes.otid, seq_id, organism, protein_accession,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
     q += " JOIN genomes using (seq_id)"
-    let pid,gid,prod,genome,temp,pep,otid,org,mol
+    let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size
     //console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2197,15 +2197,51 @@ router.get('/peptide_table', function protein_peptide(req, res) {
            otid = rows[r].otid
            org = rows[r].organism
            mol = rows[r].molecule
-           
-           if(C.genome_lookup.hasOwnProperty(gid)){
+           start = rows[r].start
+           stop = rows[r].end
+           if(start[0] === "<" ){
+            start = parseInt(start.substring(1))
+          }else{
+            start = parseInt(start)
+          }
+     
+          if(stop[0] === ">" ){
+            stop = parseInt(list[n].stop.substring(1))
+          }else{
+            stop = parseInt(stop)
+          }
+     
+         if(start > stop){ 
+           tmp = stop 
+           stop = start 
+           start = tmp 
+         }
+         
+         locstart = start - 500 
+         locstop = stop + 500
+         size = stop - start
+     
+         if(locstart < 1){
+           locstart = 1
+         }
+         let anno_type = 'prokka'
+         if(anno_type.toUpperCase() === "PROKKA"){
+            seqacc = mol.replace('_','|') 
+         }else{ 
+          seqacc = mol 
+         } 
+     
+         loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
+         highlight = seqacc+":"+start.toString()+".."+stop.toString()
+         
+           //if(C.genome_lookup.hasOwnProperty(gid)){
              genome = C.genome_lookup[gid]
              //console.log('genome',genome)
-             temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end}
+             temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
              //console.log('temp',temp)
              //console.log(C.genome_lookup[gid])
              send_list.push(temp)
-           }
+           //}
        }
        res.render('pages/genome/protein_peptide', {
           title: 'HOMD :: Human Oral Microbiome Database',
@@ -2227,7 +2263,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
     
     let q = "SELECT genomes.otid, seq_id, organism, protein_accession,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
     q += " JOIN genomes using (seq_id)"
-    let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol
+    let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size
     //console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2247,13 +2283,47 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
            org = rows[r].organism
            mol = rows[r].molecule
            
-           if(C.genome_lookup.hasOwnProperty(gid)){
+           if(start[0] === "<" ){
+            start = parseInt(start.substring(1))
+          }else{
+            start = parseInt(start)
+          }
+     
+          if(stop[0] === ">" ){
+            stop = parseInt(list[n].stop.substring(1))
+          }else{
+            stop = parseInt(stop)
+          }
+     
+         if(start > stop){ 
+           tmp = stop 
+           stop = start 
+           start = tmp 
+         }
+         
+         locstart = start - 500 
+         locstop = stop + 500
+         size = stop - start
+     
+         if(locstart < 1){
+           locstart = 1
+         }
+         let anno_type = 'prokka'
+         if(anno_type.toUpperCase() === "PROKKA"){
+            seqacc = mol.replace('_','|') 
+         }else{ 
+          seqacc = mol 
+         } 
+     
+         loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
+         highlight = seqacc+":"+start.toString()+".."+stop.toString()
+           //if(C.genome_lookup.hasOwnProperty(gid)){
              genome = C.genome_lookup[gid]
              //console.log('genome',genome) 
-             temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end}
+             temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
              
              full_send_list.push(temp)
-           }
+           //}
        }
        // will search all == PID,HMT,Organism,Peptide,Product
        let send_list = full_send_list.filter( function(item){
@@ -2348,10 +2418,12 @@ router.get('/peptide_table2XX', function peptide_table2(req, res) {
 //    })
 })
 router.get('/peptide_table2', function protein_peptide(req, res) {
-    let q = "SELECT seq_id, genomes.otid, organism, protein_count, peptide_count,study_1,study_2,study_3,study_4,study_5,study_6,study_7 from protein_peptide_counts "
+    let q = "SELECT seq_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
     q += " JOIN genomes using (seq_id)"
-    let gid,otid,org,prot_count,pep_count,temp,studies_ary
-    //console.log(q)
+    q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
+    q += " JOIN protein_peptide_studies using (study_id)"
+    let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
+    console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
           console.log("protein_peptide select error-GET",err)
@@ -2360,32 +2432,28 @@ router.get('/peptide_table2', function protein_peptide(req, res) {
        //console.log('1')
        let send_list = []
        let org_list = []
+       study_collector = {}
+       row_collector= {}
        for(let r in rows){
-           studies_ary = []
            
-           if(rows[r].study_1){
-              studies_ary.push('1')
+           gid = rows[r].seq_id
+           study_id = rows[r].study_id
+           if(!study_collector.hasOwnProperty(gid)){
+                study_collector[gid] = [rows[r].study_id]
+           }else{
+                study_collector[gid].push(rows[r].study_id) 
            }
-           if(rows[r].study_2){
-              studies_ary.push('2')
-           }
-           if(rows[r].study_3){
-              studies_ary.push('3')
-           }
-           if(rows[r].study_4){
-              studies_ary.push('4')
-           }
-           if(rows[r].study_5){
-              studies_ary.push('5')
-           }
-           if(rows[r].study_6){
-              studies_ary.push('6')
-           }
-           if(rows[r].study_7){
-              studies_ary.push('7')
-           }
+           row_collector[gid] = rows[r]
+        }
+        for(gid in row_collector){
            
-           temp = {gid:rows[r].seq_id, otid:rows[r].otid, org:rows[r].organism, prot_count:rows[r].protein_count,pep_count:rows[r].peptide_count,studies:studies_ary.join(',')}
+           ///gid = rows[r].seq_id
+           studies = study_collector[gid].join(',')
+           row = row_collector[gid]
+           //console.log('row',row)
+           //temp = {gid:rows[r].seq_id, otid:rows[r].otid, org:rows[r].organism, prot_count:rows[r].protein_count,pep_count:rows[r].peptide_count,studies:studies}
+           temp = {gid:gid, otid:row.otid, org:row.organism, prot_count:row.protein_count,pep_count:row.peptide_count,studies:studies}
+           
            send_list.push(temp)
            // if(C.genome_lookup.hasOwnProperty(gid)){
 //              genome = C.genome_lookup[gid]
@@ -2412,12 +2480,16 @@ router.get('/peptide_table2', function protein_peptide(req, res) {
 router.get('/peptide_table3', function protein_peptide(req, res) {
     console.log(req.query)
     let gid = req.query.gid
-    let q = "SELECT organism as org,protein_accession as pid,molecule as mol,genomes.otid,product,peptide,start,end, study_1,study_2,study_3,study_4,study_5,study_6,study_7"
-    q += " from protein_peptide"
+    let q = "SELECT organism as org,protein_accession as pid,molecule as mol,genomes.otid,product,peptide,`start`,`end`,study_id,study_name"
+    q += " FROM protein_peptide"
     q += " JOIN protein_peptide_counts using (seq_id)"
     q += " JOIN genomes using (seq_id)"
+    q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
+    q += " JOIN protein_peptide_studies using (study_id)"
+    
+    //q += " JOIN protein_peptide_studies using (seq_id)"
     q += " where seq_id='"+gid+"'"
-    let temp,pid,otid,org,prod,pep,start,stop,mol,studies_ary,study
+    let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study
     let locstart,locstop,size,seqacc,loc,highlight
     console.log(q)
     TDBConn.query(q, (err, rows) => {
@@ -2430,7 +2502,8 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
        
        for(let r in rows){
            temp = {}
-           studies_ary = []
+           study = rows[r].study_id
+           study_name = rows[r].study_name
            pid = rows[r].pid
            prod = rows[r].product
            pep = rows[r].peptide
@@ -2439,27 +2512,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
            org = rows[r].org
            otid = rows[r].otid
            mol = rows[r].mol
-           if(rows[r].study_1){
-              studies_ary.push('1')
-           }
-           if(rows[r].study_2){
-              studies_ary.push('2')
-           }
-           if(rows[r].study_3){
-              studies_ary.push('3')
-           }
-           if(rows[r].study_4){
-              studies_ary.push('4')
-           }
-           if(rows[r].study_5){
-              studies_ary.push('5')
-           }
-           if(rows[r].study_6){
-              studies_ary.push('6')
-           }
-           if(rows[r].study_7){
-              studies_ary.push('7')
-           }
+           
            
            /////////////////////////////////////////
            
@@ -2501,7 +2554,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
            // for(let s in studies_ary){
 //            
 //                study = studies_ary[s]
-         temp = {study:study,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop,loc:loc,hlite:highlight}
+         temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop,loc:loc,hlite:highlight}
 //                
 //            }
            
@@ -2520,7 +2573,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
           user: JSON.stringify(req.user || {}),
           data: JSON.stringify(send_list),
           row_count:send_list.length,
-          stud:JSON.stringify(studies_ary),
+          //stud:JSON.stringify(studies_ary),
           org:org,
           gid:gid,
           otid:otid

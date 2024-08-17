@@ -74,7 +74,7 @@ table.sortable tbody tr::before {
 
 <% list = JSON.parse(data) %>
 <% var cfg = JSON.parse(config) %>
-<% studies = JSON.parse(stud) %>
+
 
 <body>
     
@@ -95,7 +95,8 @@ table.sortable tbody tr::before {
      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected HOMD Sequence-ID: <a href='/genome/genome_description?gid=<%= gid %>&otid=<%= otid %>'><%= gid %></a>
      </span>
      
-     <small style='float:right;'>* HSP: Human Salivary Proteome <a href='https://salivaryproteome.org' target='_blank'>https://salivaryproteome.org/</a></small>
+     <span style='float:right;'><small>* HSP: Human Salivary Proteome <a href='https://salivaryproteome.org' target='_blank'>https://salivaryproteome.org/</a>
+     &nbsp;&nbsp;&nbsp;&nbsp;<a href='/download#peptide'>Download Options</a></small></span>
      <table id='peptide-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
      <thead>
       <tr>
@@ -110,7 +111,7 @@ table.sortable tbody tr::before {
       </tr>
      </thead>
      <tbody>
-     <% for(s in studies){ %>
+     
      <% for(n in list){ %>
        
        <% pid = list[n].pid %>
@@ -118,7 +119,7 @@ table.sortable tbody tr::before {
       
        
        <tr>
-       <td class='center'><%= studies[s] %></td>
+       <td class='center'><%= list[n].study %></td>
        <td class='center'><%= pid %> </td>
        <td class='center'><a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= gid %>','protein_peptide','','','prokka','<%= list[n].loc %>','<%= list[n].hlite %>')">Genome Viewer</a></td>
        <td><%= list[n].pep %></td>
@@ -126,7 +127,7 @@ table.sortable tbody tr::before {
        
        </tr>
      <% } %>
-     <% } %>
+     
      </tbody>
      </table>
      

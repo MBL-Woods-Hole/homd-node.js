@@ -83,7 +83,7 @@ table.sortable tbody tr::before {
     <div class='title'><%= pgtitle %></div>
   
   <%- include('../../partials/peptide_table_filter.ejs') %> 
-     
+     <span class='pull-rightxx'>Download Options</span>
 <div id='peptide-box' >
      <small>row count: <%= row_count %></small>
      <table id='peptide-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
@@ -100,45 +100,12 @@ table.sortable tbody tr::before {
      </thead>
      <tbody>
      <% for(n in list){ %>
-     <%   if(list[n].start[0] === "<" ){ %>
-     <%     start = parseInt(list[n].start.substring(1)) %>
-     <%   }else{ %>
-     <%     start = parseInt(list[n].start) %>
-     <%   } %>
      
-     <%   if(list[n].stop[0] === ">" ){ %>
-     <%     stop = parseInt(list[n].stop.substring(1)) %>
-     <%   }else{ %>
-     <%     stop = parseInt(list[n].stop)%>
-     <%   } %>
-     
-     <%   if(start > stop){ %>
-     <%    tmp = stop %>
-     <%    stop = start %>
-     <%    start = tmp %>
-     <%   } %>
-     
-     <%   locstart = start - 500 %>
-     <%   locstop = stop + 500 %>
-     <%   size = stop - start %>
-     
-     <%   if(locstart < 1){ %>
-     <%     locstart = 1 %>
-     <%   } %>
-     <% anno_type = 'prokka' %>
-     <% if(anno_type.toUpperCase() === "PROKKA"){ %>
-            <% seqacc = list[n].mol.replace('_','|') %>
-      <% }else{ %>
-            <% seqacc = list[n].mol %>
-      <% } %>
-     
-      <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
-      <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
       
      <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        <tr>
        
-       <td title='Genome Viewer'><a href='#' onclick="open_jbrowse('<%= list[n].gid %>','protein_peptide','','','prokka','<%= loc %>','<%= highlight %>')"><%= list[n].pid %></a></td>
+       <td title='Genome Viewer'><a href='#' onclick="open_jbrowse('<%= list[n].gid %>','protein_peptide','','','prokka','<%= list[n].loc %>','<%= list[n].hlite %>')"><%= list[n].pid %></a></td>
        <td class='center'><a href='/taxa/tax_description?gid=<%= list[n].gid %>&otid=<%= list[n].otid %>'><%= taxidfullname %></a></td>
        <td title='<%= list[n].organism %>'><a href='genome_description?gid=<%= list[n].gid %>'><%= list[n].organism %></a></td>
        <td title='<%= list[n].peptide %>'><%= list[n].peptide %></td>
