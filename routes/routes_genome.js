@@ -1794,6 +1794,11 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 })
 //
 //
+router.get('/dld_peptide_table_all/:type', function dldTableAll (req, res) {
+    let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'homd_protein-peptides_study7.csv')
+    res.download(fullpath)
+    return 
+})
 router.get('/dld_table_all/:type', function dldTableAll (req, res) {
     var today = new Date()
 var dd = String(today.getDate()).padStart(2, '0')

@@ -1,0 +1,125 @@
+<link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
+<style>
+/* Fix the tax table header */
+thead th { position: sticky; top: 0; }
+
+
+
+#dropped-table {
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
+  width:100%;
+}
+#dropped-table th{
+  color:white;
+  background: var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+  
+}
+#dropped-table td{
+  padding:3px 2px;
+  font-size:small;
+  color: #303030;
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+  white-space: nowrap;
+}
+#dropped-box{
+   height:700px;
+   overflow:auto;
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
+   margin-top:5px;
+}
+#dropped-table .badge{
+  
+  font-size:0.8em;
+  
+}
+
+#dropped-table tr:nth-child(even) { 
+    background-color: #c5c6d0; 
+    color:white;
+ } 
+ #dropped-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
+.col1{
+   width: 20px;
+}
+.col2{
+   width: 100px;
+}
+</style>
+
+<%- include('../../partials/header_html'); %>
+
+<% list = JSON.parse(data) %>
+<% var cfg = JSON.parse(config) %> 
+
+<body>
+    
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+    <div class='title'><%= pgtitle %></div>
+  
+     
+<div id='dropped-box' >
+     <small>row count: <%= row_count %></small>
+     <table id='dropped-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
+     <thead>
+      <tr>
+        <th class="col1 sorttable_nosort" nowrap></th>
+        <th class="col2" nowrap>Taxon-ID</th>
+        <th scope="colx" nowrap>Genus-Species</th>
+        <th nowrap>Reason</th>
+        
+       
+      </tr>
+     </thead>
+     <tbody>
+     <% for(n in list){ %>
+     
+      
+     <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
+       <tr>
+       
+       <td class='col1'><%= parseInt(n)+1 %></td>
+       <td class='center'><a href='/taxa/tax_description?gid=&otid=<%= list[n].otid %>'><%= taxidfullname %></a></td>
+       <td title=''><%= list[n].genus %> <%= list[n].species %></td>
+       <td title=''><%= list[n].notes %></td>
+       </tr>
+     <% } %>
+     </tbody>
+     </table>
+     
+</div>  <!-- end: table-box -->
+   
+    </div> <!-- end: page-content -->
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script> 
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/genomes.js"></script>
+<script>
+  mainmenu()
+  var jb_path = '<%- cfg.JBROWSE_URL %>'
+</script>
+
+
+

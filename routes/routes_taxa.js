@@ -1746,6 +1746,34 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
     res.send(txt)
     
 })
+//
+router.get('/dropped', function dropped(req, res) {
+    let q = "SELECT otid,`status`,notes, genus, species from otid_prime"
+    q += " JOIN taxonomy using(taxonomy_id)"
+    q += " JOIN genus using (genus_id)"
+    q += " JOIN species using (species_id)"
+    q += " WHERE status='Dropped' "
+    
+    
+    //console.log(q)
+    TDBConn.query(q, (err, rows) => {
+        if (err) {
+          console.log("dropped select error-GET",err)
+          return
+        }
+        res.render('pages/taxa/dropped', {
+          title: 'HOMD :: Human Oral Microbiome Database',
+          pgname: '', // for AbountThisPage
+          pgtitle: 'Dropped Taxa Table',
+          config: JSON.stringify(CFG),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+          user: JSON.stringify(req.user || {}),
+          data: JSON.stringify(rows),
+          row_count:rows.length,
+          
+        })
+    })
+})
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
