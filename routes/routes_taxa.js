@@ -1752,7 +1752,7 @@ router.get('/dropped', function dropped(req, res) {
     q += " JOIN taxonomy using(taxonomy_id)"
     q += " JOIN genus using (genus_id)"
     q += " JOIN species using (species_id)"
-    q += " WHERE status='Dropped' "
+    q += " WHERE status='Dropped'   Order By genus,species"
     
     
     //console.log(q)
