@@ -97,15 +97,16 @@ thead th { position: sticky; top: 0; }
        
        
        <tr>
-       <td><a href='peptide_table3?gid=<%= gid %>'><%= gid %></td>
+       <td><%= gid %></td>
        
-       <td class='center'><a href='peptide_table3?gid=<%= gid %>'><%= taxidfullname %></a></td>
-       <td title='<%= org %>'><a href='peptide_table3?gid=<%= gid %>'><%= org %></a></td>
+       <td class='center'><%= taxidfullname %></td>
+       <td title='<%= org %>'><%= org %></td>
        <td class='center'><%= list[n].studies %></td>
        <td class='center'><%= list[n].prot_count %></td>
        <td class='center'><%= list[n].pep_count %></td>
        
        <td class='center'>
+       <a class='pill pill-khaki' href='peptide_table3?gid=<%= gid %>'>Proteins/Peptides</a>
          <a class='pill pill-khaki' href='genome_description?gid=<%= gid %>&otid=<%= otid %>'>Genome Info</a>
          <a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= gid %>&otid=<%= otid %>'>Taxon Info</a>
          
