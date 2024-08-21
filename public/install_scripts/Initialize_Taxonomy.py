@@ -172,7 +172,7 @@ def run_type_strain(args):
 def run_sites(args):
     global master_lookup
     q = """
-    select otid, site from site
+    SELECT otid, site FROM otid_site JOIN sites USING (site_id)
     """
     result = myconn.execute_fetch_select_dict(q)
     for obj in result:

@@ -52,6 +52,9 @@ thead th { position: sticky; top: 0; }
 .col2{
    width: 100px;
 }
+.col_narrow{
+   width: 140px;
+}
 </style>
 
 <%- include('../../partials/header_html'); %>
@@ -78,11 +81,11 @@ thead th { position: sticky; top: 0; }
       <tr>
         <th class="col1" title='GenomeID' nowrap>HOMD<br>Sequence ID</th>
         
-        <th class="col2" nowrap>Taxon-ID</th>
-        <th scope="colx" nowrap>Organism</th>
-        <th nowrap>Studies</th>
-        <th nowrap>Number of Proteins<br>Detected in HSP*</th> 
-        <th nowrap>Number of Peptides<br>Detected in HSP*</th>
+        <th class="col_narrow" nowrap>Taxon-ID</th>
+        <th nowrap>Organism</th>
+        <th class="col_narrow" nowrap>Studies</th>
+        <th class="col_narrow" nowrap>Number of Proteins<br>Detected in HSP*</th> 
+        <th class="col_narrow" nowrap>Number of Peptides<br>Detected in HSP*</th>
         <th nowrap>Genome and Taxon Info</th>
        
       </tr>
@@ -97,7 +100,7 @@ thead th { position: sticky; top: 0; }
        
        
        <tr>
-       <td><%= gid %></td>
+       <td class='center'><%= gid %></td>
        
        <td class='center'><%= taxidfullname %></td>
        <td title='<%= org %>'><%= org %></td>

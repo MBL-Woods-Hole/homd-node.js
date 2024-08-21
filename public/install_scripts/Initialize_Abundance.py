@@ -208,7 +208,7 @@ def run_abundance_db():
         sites.append(n+'_90p')
         sites.append(n+'_sd')
         sites.append(n+'_prev')
-    q = "SELECT otid,notes,`level`,reference,concat_ws(';',`domain`,`phylum`,`klass`,`order`,`family`,`genus`,`species`,`subspecies`) as taxonomy, "+','.join(sites)
+    q = "SELECT otid,notes,`level`,reference,concat_ws(';',`domain`,`phylum`,`klass`,`order`,`family`,`genus`,`species`,`subspecies`) as taxonomy,"+ ','.join(sites)
     q += " FROM abundance"
     q += " JOIN `domain` using(domain_id)"
     q += " JOIN `phylum` using(phylum_id)"
@@ -422,7 +422,7 @@ def fix_taxonomyX(taxonomy):
     return ';'.join(new_tax)
     
 def get_max(row, p, max_ref):
-    #print('row',row)
+    print('row',row)
     #if row['reference'] =='HMP_MetaPhlan':
     #    print('row',row['taxonomy'])
     test = row[p+'_mean']
