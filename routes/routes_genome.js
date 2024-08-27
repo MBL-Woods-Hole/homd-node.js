@@ -2332,14 +2332,17 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
            //}
        }
        // will search all == PID,HMT,Organism,Peptide,Product
-       let send_list = full_send_list.filter( function(item){
+       let send_list = full_send_list
+       if(search_text){
+          console.log('searching',search_text)
+          send_list = full_send_list.filter( function(item){
                return item.organism.toLowerCase().includes(search_text) ||
                   item.product.toLowerCase().includes(search_text)      ||
                   item.peptide.toLowerCase().includes(search_text)      ||
                   item.pid.toLowerCase().includes(search_text)          ||
                   item.hmt.toLowerCase().includes(search_text)
            })
-       
+       }
        // let send_list = full_send_list.filter(
 //            item => item.organism.toLowerCase().includes(search_text) ||
 //            item => item.product.toLowerCase().includes(search_text) ||
@@ -2363,71 +2366,12 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
 })
 //
 //
-router.get('/peptide_table2XX', function peptide_table2(req, res) {
-    
-    //console.log(C.genome_lookup)
-    let send_list = Object.values(C.genome_lookup).filter(item => (item.hsp_study == '1'))
-    send_list.sort(function (a, b) {
-        return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
-    })
-    //console.log('sel genome_list',genome_list)
-    //let q ="SELECT otid,organism,Protein_Accession,Molecule,Peptide,Product,`Unique`,Length,`Start`,`End` from protein_peptide"
-    // let gid,gdata,gsp
-//     //
-//     let send_list = {}
-//     
-//     for(let n in genome_list){
-//         gid = genome_list[n].gid
-//         console.log('gid',gid)
-//         gdata = C.genome_lookup[gid]
-//         console.log('gdata',gdata)
-//         send_list[gid] = gdata
-//     }
-    
-    
-//     TDBConn.query(q, (err, rows) => {
-//        if (err) {
-//           console.log("protein_peptide select error-GET",err)
-//           return
-//        }
-//        //console.log('1')
-//        
-//        for(let r in rows){
-//            pid = rows[r].Protein_Accession
-//            prod = rows[r].Product
-//            pep = rows[r].Peptide
-//            gid = pid.split('_')[0]
-//            otid = rows[r].otid
-//            org = rows[r].organism
-//            mol = rows[r].Molecule
-//            
-//            if(C.genome_lookup.hasOwnProperty(gid)){
-//              genome = C.genome_lookup[gid]
-//              //console.log(genome)
-//              temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].Unique,length:rows[r].Length,start:rows[r].Start,stop:rows[r].End}
-//              //console.log(temp)
-//              //console.log(C.genome_lookup[gid])
-//              send_list.push(temp)
-//            }
-//        }
-       res.render('pages/genome/protein_peptide2', {
-          title: 'HOMD :: Human Oral Microbiome Database',
-          pgname: '', // for AbountThisPage
-          pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(CFG),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-          user: JSON.stringify(req.user || {}),
-          data: JSON.stringify(send_list),
-          row_count:send_list.length,
-          search_text:''
-       })
-//    })
-})
-router.get('/peptide_table2', function protein_peptide(req, res) {
-    let q = "SELECT seq_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
+router.get('/peptide_table2', function peptide_table2(req, res) {
+ let q = "SELECT seq_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
     q += " JOIN genomes using (seq_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies using (study_id)"
+    
     let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
     TDBConn.query(q, (err, rows) => {
@@ -2436,7 +2380,7 @@ router.get('/peptide_table2', function protein_peptide(req, res) {
           return
        }
        //console.log('1')
-       let send_list = []
+       let full_send_list = []
        let org_list = []
        study_collector = {}
        row_collector= {}
@@ -2460,7 +2404,7 @@ router.get('/peptide_table2', function protein_peptide(req, res) {
            //temp = {gid:rows[r].seq_id, otid:rows[r].otid, org:rows[r].organism, prot_count:rows[r].protein_count,pep_count:rows[r].peptide_count,studies:studies}
            temp = {gid:gid, otid:row.otid, org:row.organism, prot_count:row.protein_count,pep_count:row.peptide_count,studies:studies}
            
-           send_list.push(temp)
+           full_send_list.push(temp)
            // if(C.genome_lookup.hasOwnProperty(gid)){
 //              genome = C.genome_lookup[gid]
 //              console.log('genome',genome)
@@ -2469,6 +2413,81 @@ router.get('/peptide_table2', function protein_peptide(req, res) {
 //              //console.log(C.genome_lookup[gid])
 //              send_list.push(temp)
 //            }
+       }
+       let send_list = full_send_list
+       
+       res.render('pages/genome/protein_peptide2', {
+          title: 'HOMD :: Human Oral Microbiome Database',
+          pgname: '', // for AbountThisPage
+          pgtitle: 'Protein Peptide Table',
+          config: JSON.stringify(CFG),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+          user: JSON.stringify(req.user || {}),
+          data: JSON.stringify(send_list),
+          row_count:send_list.length,
+          search_text:''
+          
+       })
+    })
+})
+router.post('/peptide_table2', function protein_peptide(req, res) {
+    let q = "SELECT seq_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
+    q += " JOIN genomes using (seq_id)"
+    q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
+    q += " JOIN protein_peptide_studies using (study_id)"
+    let search_text = req.body.txt_srch.toLowerCase()
+    let gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
+    console.log(q)
+    TDBConn.query(q, (err, rows) => {
+       if (err) {
+          console.log("protein_peptide select error-GET",err)
+          return
+       }
+       //console.log('1')
+       let full_send_list = []
+       let org_list = []
+       study_collector = {}
+       row_collector= {}
+       for(let r in rows){
+           
+           gid = rows[r].seq_id
+           study_id = rows[r].study_id
+           if(!study_collector.hasOwnProperty(gid)){
+                study_collector[gid] = [rows[r].study_id]
+           }else{
+                study_collector[gid].push(rows[r].study_id) 
+           }
+           row_collector[gid] = rows[r]
+        }
+        for(gid in row_collector){
+           
+           ///gid = rows[r].seq_id
+           studies = study_collector[gid].join(',')
+           
+           row = row_collector[gid]
+           hmt = helpers.make_otid_display_name(row.otid)
+           //console.log('row',row)
+           //temp = {gid:rows[r].seq_id, otid:rows[r].otid, org:rows[r].organism, prot_count:rows[r].protein_count,pep_count:rows[r].peptide_count,studies:studies}
+           temp = {gid:gid, otid:row.otid, hmt:hmt,org:row.organism, prot_count:row.protein_count,pep_count:row.peptide_count,studies:studies}
+           
+           full_send_list.push(temp)
+           // if(C.genome_lookup.hasOwnProperty(gid)){
+//              genome = C.genome_lookup[gid]
+//              console.log('genome',genome)
+//              temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end}
+//              console.log('temp',temp)
+//              //console.log(C.genome_lookup[gid])
+//              send_list.push(temp)
+//            }
+       }
+       let send_list = full_send_list
+       if(search_text){
+          console.log('searching',search_text)
+          send_list = full_send_list.filter( function(item){
+               return item.org.toLowerCase().includes(search_text) ||
+                  item.gid.toLowerCase().includes(search_text)          ||
+                  item.hmt.toLowerCase().includes(search_text)
+           })
        }
        res.render('pages/genome/protein_peptide2', {
           title: 'HOMD :: Human Oral Microbiome Database',
@@ -2479,6 +2498,7 @@ router.get('/peptide_table2', function protein_peptide(req, res) {
           user: JSON.stringify(req.user || {}),
           data: JSON.stringify(send_list),
           row_count:send_list.length,
+          search_text:req.body.txt_srch
           
        })
     })
