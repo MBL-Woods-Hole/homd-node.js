@@ -2269,7 +2269,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
     let q = "SELECT genomes.otid, seq_id, organism, protein_accession,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
     q += " JOIN genomes using (seq_id)"
     let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size
-    //console.log(q)
+    console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
           console.log("protein_peptide select error-POST",err)
@@ -2281,7 +2281,8 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
            prod = rows[r].product
            pep = rows[r].peptide
            gid = pid.split('_')[0]
-           
+           start = rows[r].start
+           stop = rows[r].end
            
            otid = rows[r].otid
            hmt = helpers.make_otid_display_name(otid)
@@ -2295,7 +2296,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
           }
      
           if(stop[0] === ">" ){
-            stop = parseInt(list[n].stop.substring(1))
+            stop = parseInt(stop.substring(1))
           }else{
             stop = parseInt(stop)
           }
