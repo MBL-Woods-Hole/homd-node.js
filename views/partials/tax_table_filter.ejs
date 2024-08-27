@@ -83,8 +83,47 @@
 </td><td>	
         
 <table id='filter_table' border='1'>
-
-<tr><td>
+<tr>
+<td>
+         <small>
+            <span class='filter-title'>Body Site</span>:&nbsp;&nbsp;
+            <% if(statusfltr.site.oral === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='oral' name='oral' onclick='update_sb()'\> Oral&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='oral' name='oral' onclick='update_sb()'\> Oral&nbsp;
+            <% } %>
+            <% if(statusfltr.site.nasal === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='nasal' name='nasal' onclick='update_sb()' \> Nasal&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='nasal' name='nasal' onclick='update_sb()' \> Nasal&nbsp;
+            <% } %>
+            <% if(statusfltr.site.skin === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='skin' name='skin' onclick='update_sb()' \> Skin&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='skin' name='skin' onclick='update_sb()' \> Skin&nbsp;
+            <% } %>
+            <% if(statusfltr.site.gut === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='gut' name='gut' onclick='update_sb()' \> Gut&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='gut' name='gut' onclick='update_sb()' \> Gut&nbsp;
+            <% } %>
+            <% if(statusfltr.site.vaginal === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='vaginal' name='vaginal' onclick='update_sb()' \> Vaginal&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' onclick='update_sb()' \> Vaginal&nbsp;
+            <% } %>
+            
+            <% if(statusfltr.site.unassigned === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='unassigned' name='unassigned' onclick='update_sb()' \> Unassigned&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='unassigned' name='unassigned' onclick='update_sb()' \> Unassigned&nbsp;
+            <% } %> 
+             
+         </small>
+</td>
+</tr>
+<tr>
+<td>
          <small>
             <span class='filter-title'>Status</span>:&nbsp;&nbsp;
             <% if(statusfltr.status.named === 'on'){ %>

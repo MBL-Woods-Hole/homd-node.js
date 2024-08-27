@@ -42,6 +42,14 @@ function get_default_filter(){
             dropped:'off',
             nonoralref:'off'
         },
+        site:{
+           oral:'on',
+           nasal:'on',
+           skin:'on',
+           gut:'on',
+           vaginal:'on',
+           unassigned:'on'
+        },
         genomes:'both',
         text:{
             txt_srch: '',
@@ -63,6 +71,14 @@ function get_null_filter(){
             lost: 'off',
             dropped:'off',
             nonoralref:'off'
+        },
+        site:{
+           oral:'off',
+           nasal:'off',
+           skin:'off',
+           gut:'off',
+           vaginal:'off',
+           unassigned:'off'
         },
         genomes:'both',
         text:{
@@ -123,6 +139,25 @@ function set_ttable_session(req) {
          req.session.ttable_filter.status.nonoralref = 'on'
        }
        
+       if(item == 'oral'){
+         req.session.ttable_filter.site.oral = 'on'
+       }
+       if(item == 'nasal'){
+         req.session.ttable_filter.site.nasal = 'on'
+       }
+       if(item == 'skin'){
+         req.session.ttable_filter.site.skin = 'on'
+       }
+       if(item == 'gut'){
+         req.session.ttable_filter.site.gut = 'on'
+       }
+       if(item == 'vaginal'){
+         req.session.ttable_filter.site.vaginal = 'on'
+       }
+       if(item == 'unassigned'){
+         req.session.ttable_filter.site.unassigned = 'on'
+       }
+       
        if(item == 'txt_srch'){
          req.session.ttable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
        }
@@ -153,11 +188,32 @@ function apply_ttable_filter(req, filter) {
        big_tax_list = get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
     }
     //console.log('big_tax_list',big_tax_list)
+    //console.log('vals',vals)
     //status
     // create array of 'on's
-    let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on') 
+    let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
+     
     //console.log('status_on',status_on)
     big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
+    
+    //site
+    // create array of 'on's
+    let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
+     
+    //console.log('site_on',site_on)
+    //big_tax_list = big_tax_list.filter(item => site_on.indexOf(item.sites.toLowerCase()) !== -1 )
+    //big_tax_list = big_tax_list.filter(item => site_on.includes(item.toLowerCase()));
+    
+    big_tax_list = big_tax_list.filter( function(item){
+        //sites = item.sites.join(",")
+        for(let n in item.sites){
+           //console.log('n',n,'site',item.sites[n])
+           if(site_on.includes(item.sites[n].toLowerCase())){
+              return item
+           }
+        }
+    })
+    
     //
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
@@ -263,13 +319,13 @@ router.get('/tax_table', function tax_table_get(req, res) {
     
      //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
      let count_text = 'Number of Records Found: '+ send_list.length.toString()
-     
+     //console.log('filter',filter)
      let args = {filter: filter, send_list: send_list, count_txt: count_text, filter_on: get_filter_on(filter)}
      renderTaxonTable(req, res, args)
      
 })
 
-router.post('/tax_table', function tax_table_get(req, res) {
+router.post('/tax_table', function tax_table_post(req, res) {
     //console.log('in POST tt filter')
     //console.log(req.body)
     let send_list

@@ -50,6 +50,7 @@ thead th { position: sticky; top: 0; }
         <th scope="col"><span onclick="('species')">Species</span></th>
         <th scope="col"><span onclick="('strain')">Subspecies</span><br>or Strain</th>
         <th scope="col"><span onclick="('status')">Status</span></th>
+        <th scope="col"><span onclick="('site')">Body<br>Site(s)</span></th>
        <!--  <th scope="col" nowrap>Body Site</th> -->
         <th scope="col" class="sorttable_nosort">Ecology<br>Link</th>
         <th scope="col" class="sorttable_nosort" nowrap>Taxon<br>Link</th>
@@ -68,6 +69,12 @@ thead th { position: sticky; top: 0; }
        <td nowrap class='col4' title='<%= list[n].subsp  %>'><%= list[n].subsp  %></td>
        
        <td class='col5'><%= list[n].status  %></td>
+       <% if(list[n].sites.length > 0){ %>
+           <% sites = list[n].sites.join(",") %>
+           <td class='col5'><%= sites  %></td>
+       <% }else{ %>
+           <td class='col5'></td>
+       <% } %>
      <!--   <td><%= list[n].sites  %></td> -->
        <% if(list[n].ecology === 1){ %>
          <td class='col6' nowrap><a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>&otid=<%= otid %>" class="pill pill-green" >Ecology</a></td>
