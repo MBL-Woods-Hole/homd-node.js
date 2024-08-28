@@ -171,7 +171,7 @@ function set_ttable_session(req) {
 function apply_ttable_filter(req, filter) {
    
     let big_tax_list = Object.values(C.taxon_lookup);
-    
+    //console.log('olength-0',big_tax_list.length)
     let vals
     //
     
@@ -192,7 +192,7 @@ function apply_ttable_filter(req, filter) {
     //status
     // create array of 'on's
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
-     
+     //console.log('olength-1',big_tax_list.length)
     //console.log('status_on',status_on)
     big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     
@@ -200,9 +200,8 @@ function apply_ttable_filter(req, filter) {
     // create array of 'on's
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
      
-    //console.log('site_on',site_on)
-    //big_tax_list = big_tax_list.filter(item => site_on.indexOf(item.sites.toLowerCase()) !== -1 )
-    //big_tax_list = big_tax_list.filter(item => site_on.includes(item.toLowerCase()));
+    // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
+    // taxon will be excluded here from the taxon table
     
     big_tax_list = big_tax_list.filter( function(item){
         //sites = item.sites.join(",")
@@ -213,7 +212,7 @@ function apply_ttable_filter(req, filter) {
            }
         }
     })
-    
+    //console.log('olength-2',big_tax_list.length)
     //
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
@@ -254,6 +253,7 @@ function apply_ttable_filter(req, filter) {
               }
         }
     })
+    //console.log('olength-3',big_tax_list.length)
     //sort column
     if(vals.sort_rev === 'on'){
         if(vals.sort_col === 'otid'){
@@ -282,16 +282,20 @@ function apply_ttable_filter(req, filter) {
           })
         }
     }
+    //console.log('olength-4',big_tax_list.length)
     return big_tax_list
 
 }
 function get_filter_on(f){
     // for comparison stringify
+    //console.log('get_filter_on')
     let obj1 = JSON.stringify(get_default_filter())
     let obj2 = JSON.stringify(f)
     if(obj1 === obj2){
+      //console.log('off')
       return 'off'
     }else{
+      //console.log('on')
       return 'on'
     }
 }
@@ -314,6 +318,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
     }
     
     send_list = apply_ttable_filter(req, filter)
+    //console.log('LENGTH',send_list.length)
     //let big_tax_list0 = Object.values(C.taxon_lookup);
     //let big_tax_list1 = big_tax_list0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
     
@@ -2400,6 +2405,7 @@ function find_life_images(rank, tax_name) {
 function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
 
   let send_list = []
+  //console.log('txt srch',search_txt,search_field)
   if(search_field == 'taxid'){
       send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
   }else if(search_field == 'genus'){

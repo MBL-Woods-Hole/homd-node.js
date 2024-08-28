@@ -182,6 +182,11 @@ def run_sites(args):
             master_lookup[otid]['sites'].append(obj['site'])
         else:
             sys.exit('problem with site exiting')
+    # this takes care of otids that are missing from otid_site
+    # which would make them not show on taxon table
+    for otid in master_lookup:
+        if len(master_lookup[otid]['sites']) == 0:
+            master_lookup[otid]['sites'].append('Unassigned')
 
 
 
