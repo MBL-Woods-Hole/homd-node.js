@@ -17,7 +17,7 @@ sys.path.append('../../config/')
 from connect import MyConnection
 
 # TABLES
-taxon_tbl           = 'otid_prime'   # UNIQUE  - This is the defining table
+taxon_tbl  = 'otid_prime'   # UNIQUE  - This is the defining table
 genome_tbl = 'genomes'
 
 #master_tax_lookup={}
@@ -109,6 +109,9 @@ def run_taxa(args):
         taxonObj['ncbi_taxid'] = obj['ncbi_taxid']
         
         master_lookup[otid] = taxonObj
+    print('count dropped',len(dropped_otids))
+    print('count nonoral',len(nonoral_otids))
+    print('count all',len(master_lookup))
 
 
 
