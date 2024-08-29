@@ -348,7 +348,6 @@ def run_references(args):   ## REFERENCE Citations
         lookup[otid]['NCBI_genomeP_search_count'] = str(obj['g'])
 
 
-
     file = os.path.join(args.outdir,args.outfileprefix+'ReferencesLookup.json')
     print_dict(file, lookup)
 
