@@ -13,7 +13,7 @@ metadata['dewhirst'] = {
     "data":dewhirst,"target":"plot_log_dewhirst_here","plot_name":"Dewhirst (35x9)","tt":tooltips.dewhirst_log
     } 
 metadata['hmpmetaphlan'] = {
-    "data":dewhirst,"target":"plot_log_hmp_metaphlan_here","plot_name":"HMP Metaphlan","tt":tooltips.hmpmetaphlan_log
+    "data":hmpmetaphlan,"target":"plot_log_hmp_metaphlan_here","plot_name":"HMP Metaphlan","tt":tooltips.hmpmetaphlan_log
     }
 metadata['erenv1v3'] = {
     "data":erenv1v3,"target":"plot_log_erenv1v3_here","plot_name":"Eren V1-V3","tt":tooltips.erenv1v3_log
