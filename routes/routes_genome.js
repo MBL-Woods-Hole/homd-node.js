@@ -2183,9 +2183,9 @@ router.get('/oralgen', function oralgen(req, res) {
 })
 //////////////////
 router.get('/peptide_table', function protein_peptide(req, res) {
-    let q = "SELECT genomes.otid, seq_id, organism, protein_accession,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
+    let q = "SELECT genomes.otid, seq_id, organism, protein_accession,jb_link,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
     q += " JOIN genomes using (seq_id)"
-    let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size
+    let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size,jb_link
     //console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2202,47 +2202,48 @@ router.get('/peptide_table', function protein_peptide(req, res) {
            otid = rows[r].otid
            org = rows[r].organism
            mol = rows[r].molecule
-           start = rows[r].start
-           stop = rows[r].end
-           if(start[0] === "<" ){
-            start = parseInt(start.substring(1))
-          }else{
-            start = parseInt(start)
-          }
-     
-          if(stop[0] === ">" ){
-            stop = parseInt(list[n].stop.substring(1))
-          }else{
-            stop = parseInt(stop)
-          }
-     
-         if(start > stop){ 
-           tmp = stop 
-           stop = start 
-           start = tmp 
-         }
-         
-         locstart = start - 500 
-         locstop = stop + 500
-         size = stop - start
-     
-         if(locstart < 1){
-           locstart = 1
-         }
-         let anno_type = 'prokka'
-         if(anno_type.toUpperCase() === "PROKKA"){
-            seqacc = mol.replace('_','|') 
-         }else{ 
-          seqacc = mol 
-         } 
-     
-         loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
-         highlight = seqacc+":"+start.toString()+".."+stop.toString()
+           jb_link = rows[r].jb_link
+           // start = rows[r].start
+//            stop = rows[r].end
+//            if(start[0] === "<" ){
+//             start = parseInt(start.substring(1))
+//           }else{
+//             start = parseInt(start)
+//           }
+//      
+//           if(stop[0] === ">" ){
+//             stop = parseInt(list[n].stop.substring(1))
+//           }else{
+//             stop = parseInt(stop)
+//           }
+//      
+//          if(start > stop){ 
+//            tmp = stop 
+//            stop = start 
+//            start = tmp 
+//          }
+//          
+//          locstart = start - 500 
+//          locstop = stop + 500
+//          size = stop - start
+//      
+//          if(locstart < 1){
+//            locstart = 1
+//          }
+//          let anno_type = 'prokka'
+//          if(anno_type.toUpperCase() === "PROKKA"){
+//             seqacc = mol.replace('_','|') 
+//          }else{ 
+//           seqacc = mol 
+//          } 
+//      
+//          loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
+//          highlight = seqacc+":"+start.toString()+".."+stop.toString()
          
            //if(C.genome_lookup.hasOwnProperty(gid)){
              genome = C.genome_lookup[gid]
              //console.log('genome',genome)
-             temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
+             temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,jb_link:jb_link}
              //console.log('temp',temp)
              //console.log(C.genome_lookup[gid])
              send_list.push(temp)
@@ -2266,9 +2267,9 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
     let search_text = req.body.txt_srch.toLowerCase()
     let big_p_list //= Object.values(C.genome_lookup);
     
-    let q = "SELECT genomes.otid, seq_id, organism, protein_accession,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
+    let q = "SELECT genomes.otid, seq_id, organism, protein_accession,jb_link,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
     q += " JOIN genomes using (seq_id)"
-    let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size
+    let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size,jb_link
     console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2281,53 +2282,55 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
            prod = rows[r].product
            pep = rows[r].peptide
            gid = pid.split('_')[0]
-           start = rows[r].start
-           stop = rows[r].end
+           //start = rows[r].start
+           //stop = rows[r].end
            
            otid = rows[r].otid
            hmt = helpers.make_otid_display_name(otid)
            org = rows[r].organism
            mol = rows[r].molecule
-           
-           if(start[0] === "<" ){
-            start = parseInt(start.substring(1))
-          }else{
-            start = parseInt(start)
-          }
-     
-          if(stop[0] === ">" ){
-            stop = parseInt(stop.substring(1))
-          }else{
-            stop = parseInt(stop)
-          }
-     
-         if(start > stop){ 
-           tmp = stop 
-           stop = start 
-           start = tmp 
-         }
-         
-         locstart = start - 500 
-         locstop = stop + 500
-         size = stop - start
-     
-         if(locstart < 1){
-           locstart = 1
-         }
-         let anno_type = 'prokka'
-         if(anno_type.toUpperCase() === "PROKKA"){
-            seqacc = mol.replace('_','|') 
-         }else{ 
-          seqacc = mol 
-         } 
-     
-         loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
-         highlight = seqacc+":"+start.toString()+".."+stop.toString()
+           jb_link = rows[r].jb_link
+           //console.log('jblink',jb_link)
+          //  if(start[0] === "<" ){
+//             start = parseInt(start.substring(1))
+//           }else{
+//             start = parseInt(start)
+//           }
+//      
+//           if(stop[0] === ">" ){
+//             stop = parseInt(stop.substring(1))
+//           }else{
+//             stop = parseInt(stop)
+//           }
+//      
+//          if(start > stop){ 
+//            tmp = stop 
+//            stop = start 
+//            start = tmp 
+//          }
+//          
+//          locstart = start - 500 
+//          locstop = stop + 500
+//          size = stop - start
+//      
+//          if(locstart < 1){
+//            locstart = 1
+//          }
+//          let anno_type = 'prokka'
+//          if(anno_type.toUpperCase() === "PROKKA"){
+//             seqacc = mol.replace('_','|') 
+//          }else{ 
+//           seqacc = mol 
+//          } 
+//      
+//          loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
+//          highlight = seqacc+":"+start.toString()+".."+stop.toString()
            //if(C.genome_lookup.hasOwnProperty(gid)){
-             genome = C.genome_lookup[gid]
+        genome = C.genome_lookup[gid]
              //console.log('genome',genome) 
-             temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
-             
+        //temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
+          temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,jb_link:jb_link}
+           
              full_send_list.push(temp)
            //}
        }
