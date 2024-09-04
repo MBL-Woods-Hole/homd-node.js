@@ -2509,7 +2509,7 @@ router.post('/peptide_table2', function protein_peptide(req, res) {
 router.get('/peptide_table3', function protein_peptide(req, res) {
     console.log(req.query)
     let gid = req.query.gid
-    let q = "SELECT organism as org,protein_accession as pid,molecule as mol,genomes.otid,product,peptide,`start`,`end`,study_id,study_name"
+    let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,study_id,study_name"
     q += " FROM protein_peptide"
     q += " JOIN protein_peptide_counts using (seq_id)"
     q += " JOIN genomes using (seq_id)"
@@ -2518,7 +2518,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
     
     //q += " JOIN protein_peptide_studies using (seq_id)"
     q += " where seq_id='"+gid+"'"
-    let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study
+    let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study,peptide_id,jb_link
     let locstart,locstop,size,seqacc,loc,highlight
     console.log(q)
     TDBConn.query(q, (err, rows) => {
@@ -2536,54 +2536,57 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
            pid = rows[r].pid
            prod = rows[r].product
            pep = rows[r].peptide
-           start = rows[r].start
-           stop = rows[r].end
+           //start = rows[r].start
+           //stop = rows[r].end
            org = rows[r].org
            otid = rows[r].otid
            mol = rows[r].mol
-           
+           peptide_id = rows[r].peptide_id
+           jb_link = rows[r].jb_link
            
            /////////////////////////////////////////
            
        
-          if(start[0] === "<" ){
-            start = parseInt(start.substring(1))
-          }else{
-            start = parseInt(start)
-          }
-     
-          if(stop[0] === ">" ){
-            stop = parseInt(list[n].stop.substring(1))
-          }else{
-            stop = parseInt(stop)
-          }
-     
-         if(start > stop){ 
-           tmp = stop 
-           stop = start 
-           start = tmp 
-         }
-         
-         locstart = start - 500 
-         locstop = stop + 500
-         size = stop - start
-     
-         if(locstart < 1){
-           locstart = 1
-         }
-         let anno_type = 'prokka'
-         if(anno_type.toUpperCase() === "PROKKA"){
-            seqacc = mol.replace('_','|') 
-         }else{ 
-          seqacc = mol 
-         } 
-     
-         loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
-         highlight = seqacc+":"+start.toString()+".."+stop.toString()
+         //  if(start[0] === "<" ){
+//             start = parseInt(start.substring(1))
+//           }else{
+//             start = parseInt(start)
+//           }
+//      
+//           if(stop[0] === ">" ){
+//             stop = parseInt(list[n].stop.substring(1))
+//           }else{
+//             stop = parseInt(stop)
+//           }
+//      
+//          if(start > stop){ 
+//            tmp = stop 
+//            stop = start 
+//            start = tmp 
+//          }
+//          
+//          locstart = start - 500 
+//          locstop = stop + 500
+//          size = stop - start
+//      
+//          if(locstart < 1){
+//            locstart = 1
+//          }
+//          let anno_type = 'prokka'
+//          if(anno_type.toUpperCase() === "PROKKA"){
+//             seqacc = mol.replace('_','|') 
+//          }else{ 
+//           seqacc = mol 
+//          } 
+//      
+//          loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
+//          highlight = seqacc+":"+start.toString()+".."+stop.toString()
            // for(let s in studies_ary){
 //            
 //                study = studies_ary[s]
-         temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop,loc:loc,hlite:highlight}
+         //temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop,loc:loc,hlite:highlight}
+         temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, jb_link:jb_link,peptide_id:peptide_id}
+//       
 //                
 //            }
            
