@@ -101,6 +101,7 @@ table.sortable tbody tr::before {
      <thead>
       <tr>
         <th class="col1" title='StudyID' nowrap>Study ID</th>
+        <th class="col1" title='PID' nowrap>Peptide ID</th>
         <th class="col1" title='PID' nowrap>Protein ID</th>
         <th class="col1" title='JBrowse' nowrap>Genome Tools</th>
         <th scope="colx" nowrap>Peptide</th>
@@ -120,8 +121,11 @@ table.sortable tbody tr::before {
        
        <tr>
        <td class='center'><%= list[n].study %></td>
+       <td class='center'><%= list[n].peptide_id %></td>
        <td class='center'><%= pid %> </td>
-       <td class='center'><a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= gid %>','protein_peptide','','','prokka','<%= list[n].loc %>','<%= list[n].hlite %>')">Genome Viewer</a></td>
+       <td class='center'><a class='pill pill-lightseagreen' href='<%= list[n].jb_link %>' target='_blank'>Genome Viewer</a></td>
+       <!-- on click="open_jbrowse('<%= gid %>','protein_peptide','','','prokka','<%= list[n].loc %>','<%= list[n].hlite %>')">Genome Viewer</a></td> -->
+       
        <td><%= list[n].pep %></td>
        <td><%= list[n].prod %></td>
        
