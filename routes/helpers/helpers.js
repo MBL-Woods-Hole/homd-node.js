@@ -10,7 +10,10 @@ const util        = require('util');
 const path        = require('path');
 const {exec, spawn} = require('child_process');
 
-// route middleware to make sure a user is logged in
+
+module.exports.getKeyByValue = (object, value) => {
+  return Object.keys(object).find(key => object[key] === value);
+}
 module.exports.timestamp = (dateonly) => {
     //var today = new Date().toUTCString();
     if(dateonly){

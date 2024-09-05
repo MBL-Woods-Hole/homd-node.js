@@ -175,7 +175,7 @@ def run_type_strain(args):
 def run_sites(args):
     global master_lookup
     q = """
-    SELECT otid, site FROM otid_site JOIN sites USING (site_id)
+    SELECT otid, site FROM otid_site JOIN sites USING (site_id) ORDER BY otid,priority
     """
     result = myconn.execute_fetch_select_dict(q)
     for obj in result:

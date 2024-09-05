@@ -48,7 +48,24 @@ function get_default_filter(){
            skin:'on',
            gut:'on',
            vaginal:'on',
-           unassigned:'on'
+           unassigned:'on',
+           oral_high   :'on',
+			oral_med     :'on',
+			oral_low     :'on',
+			oral_scarce  :'on',
+			enviro      :'on',
+			enviro_food  :'on',
+			enviro_soil  :'on',
+			enviro_sewage:'on',
+			path_oppo    :'on',
+			path_syst    :'on',
+			oral_perio   :'on',
+			oral_caries  :'on',
+			enviro_air   :'on',
+			nasal_low    :'on',
+			nasal_scarce :'on',
+			non_human    :'on'
+           
         },
         genomes:'both',
         text:{
@@ -78,7 +95,23 @@ function get_null_filter(){
            skin:'off',
            gut:'off',
            vaginal:'off',
-           unassigned:'off'
+           unassigned:'off',
+           oral_high   :'off',
+			oral_med     :'off',
+			oral_low     :'off',
+			oral_scarce  :'off',
+			enviro      :'off',
+			enviro_food  :'off',
+			enviro_soil  :'off',
+			enviro_sewage:'off',
+			path_oppo    :'off',
+			path_syst    :'off',
+			oral_perio   :'off',
+			oral_caries  :'off',
+			enviro_air   :'off',
+			nasal_low    :'off',
+			nasal_scarce :'off',
+			non_human    :'off'
         },
         genomes:'both',
         text:{
@@ -139,25 +172,36 @@ function set_ttable_session(req) {
          req.session.ttable_filter.status.nonoralref = 'on'
        }
        
-       if(item == 'oral'){
-         req.session.ttable_filter.site.oral = 'on'
-       }
-       if(item == 'nasal'){
-         req.session.ttable_filter.site.nasal = 'on'
-       }
-       if(item == 'skin'){
-         req.session.ttable_filter.site.skin = 'on'
-       }
-       if(item == 'gut'){
-         req.session.ttable_filter.site.gut = 'on'
-       }
-       if(item == 'vaginal'){
-         req.session.ttable_filter.site.vaginal = 'on'
-       }
-       if(item == 'unassigned'){
-         req.session.ttable_filter.site.unassigned = 'on'
-       }
        
+       // sites
+       for(let site_code in C.tax_sites_all){
+            
+            if(item == site_code){
+                //console.log('C.tax_sites_all[n]',item,C.tax_sites_all[site_code])
+               req.session.ttable_filter.site[site_code] = 'on'
+            }
+       }
+       console.log('req.session.ttable_filter.site',req.session.ttable_filter.site)
+       // if(item == 'oral'){
+//          req.session.ttable_filter.site.oral = 'on'
+//        }
+//        
+//        if(item == 'nasal'){
+//          req.session.ttable_filter.site.nasal = 'on'
+//        }
+//        if(item == 'skin'){
+//          req.session.ttable_filter.site.skin = 'on'
+//        }
+//        if(item == 'gut'){
+//          req.session.ttable_filter.site.gut = 'on'
+//        }
+//        if(item == 'vaginal'){
+//          req.session.ttable_filter.site.vaginal = 'on'
+//        }
+//        if(item == 'unassigned'){
+//          req.session.ttable_filter.site.unassigned = 'on'
+//        }
+       //////
        if(item == 'txt_srch'){
          req.session.ttable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
        }
@@ -174,10 +218,12 @@ function apply_ttable_filter(req, filter) {
     //console.log('olength-0',big_tax_list.length)
     let vals
     //
-    
+    console.log('req.session.ttable_filter',req.session.ttable_filter)
     if(req.session.ttable_filter){
+       console.log('vals from session ttfilter')
        vals = req.session.ttable_filter
     }else{
+        console.log('vals from default ttfilter')
         vals = get_default_filter()
     }
     //console.log('vals',vals)
@@ -188,31 +234,38 @@ function apply_ttable_filter(req, filter) {
        big_tax_list = get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
     }
     //console.log('big_tax_list',big_tax_list)
-    //console.log('vals',vals)
+    console.log('vals',vals)
     //status
     // create array of 'on's
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
-     //console.log('olength-1',big_tax_list.length)
+     console.log('olength-1',big_tax_list.length)
     //console.log('status_on',status_on)
     big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     
     //site
     // create array of 'on's
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
+    //let site_on = Object.keys(vals.site).filter(item => vals.site[0][helpers.getKeyByValue(C.tax_sites_all,item.sites[0])] == 'on')
      
     // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
     // taxon will be excluded here from the taxon table
-    
+    console.log('site_on1',site_on)
     big_tax_list = big_tax_list.filter( function(item){
         //sites = item.sites.join(",")
+        // ie: item.sites[0] == 'Oral (periodontitis)'
+        // ie site_on == 'oral_perio'
+        
         for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])
-           if(site_on.includes(item.sites[n].toLowerCase())){
+           if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all,item.sites[0]))){
+           //if(site_on.includes(item.sites[n].toLowerCase())){
               return item
            }
         }
     })
-    //console.log('olength-2',big_tax_list.length)
+    //console.log('btl',big_tax_list)
+    console.log('olength-2',big_tax_list.length)
+    
     //
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
@@ -305,14 +358,15 @@ router.get('/reset_ttable', function tax_table_reset(req, res) {
    res.redirect('back');
 })
 router.get('/tax_table', function tax_table_get(req, res) {
+    console.log('in TT get')
     let filter,send_list
     //console.log('get-session ',req.session.ttable_filter)
      
     if(req.session.ttable_filter){
-        //console.log('filetr session')
+        console.log('filetr session')
         filter = req.session.ttable_filter
     }else{
-        //console.log('filetr from default')
+        console.log('filetr from default')
         filter = get_default_filter()
         req.session.ttable_filter = filter
     }
@@ -331,13 +385,13 @@ router.get('/tax_table', function tax_table_get(req, res) {
 })
 
 router.post('/tax_table', function tax_table_post(req, res) {
-    //console.log('in POST tt filter')
+    console.log('in TT post')
     //console.log(req.body)
     let send_list
     set_ttable_session(req)
     //console.log('ttable_session',req.session.ttable_filter)
     let filter = req.session.ttable_filter
-    
+    console.log('filter',filter)
     send_list = apply_ttable_filter(req, filter)
     
     let count_text = 'Number of Records Found: '+ send_list.length.toString()
@@ -345,8 +399,16 @@ router.post('/tax_table', function tax_table_post(req, res) {
     renderTaxonTable(req, res, args)
      
 })
+router.get('/advanced_taxtable_search', function advanced_taxtable_search(req, res) {
+   res.render('pages/taxa/tax_table_filter_advanced', {
+      title: 'HOMD :: Taxon Hierarchy',
+      pgname: '', // for AbountThisPage
+      config: JSON.stringify(CFG),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
+    })
 
-
+})
 //
 //
 router.get('/tax_hierarchy', (req, res) => {

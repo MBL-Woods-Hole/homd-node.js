@@ -33,7 +33,7 @@
 }
 #filter_table td{
    border-top:1px solid brown;
-   padding: 3px 3px 1px 3px;
+   padding: 8px 3px 1px 3px;
 }
 #reset_div a{
    font-size: 14px;
@@ -55,62 +55,150 @@
    background:lightgrey;
 }
 </style>
-<div id='filter_form_div'>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <div class='title'>HOMD Taxon Table Search</div>
+    
+     <div id='filter_form_div'>
 
 <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
-<table id='main_table'>
-<tr><td valign='top'> 
-
-<div class='alpha-select' >
-        <br>
-        <small><span class='filter-title'>Genus by Alphabet:</span>
-        [<a class='noletter' id='0' onclick="letter_submit('0');"><small>All</small></a>]
-        <br>
-        <span class='alpha-list'>
-        <a class='letter' id='A' onclick="letter_submit('A');">A</a>|<a class='letter' id='B' onclick="letter_submit('B');">B</a>|<a class='letter' id='C' onclick="letter_submit('C');">C</a>|<a class='letter' id='D' onclick="letter_submit('D');">D</a>|<a class='letter' id='E' onclick="letter_submit('E');">E</a>|<a class='letter' id='F' onclick="letter_submit('F');">F</a>|<a class='letter' id='G' onclick="letter_submit('G');">G</a>|<a class='letter' id='H' onclick="letter_submit('H');">H</a>|<a class='letter' id='I' onclick="letter_submit('I');">I</a>|<a class='letter' id='J' onclick="letter_submit('J');">J</a>|<a class='letter' id='K' onclick="letter_submit('K');">K</a>|<a class='letter' id='L' onclick="letter_submit('L');">L</a>|<a class='letter' id='M' onclick="letter_submit('M');">M</a>
-        <br><a class='letter' id='N' onclick="letter_submit('N');">N</a>|<a class='letter' id='O' onclick="letter_submit('O');">O</a>|<a class='letter' id='P' onclick="letter_submit('P');">P</a>|<a class='letter' id='Q' onclick="letter_submit('Q');">Q</a>|<a class='letter' id='R' onclick="letter_submit('R');">R</a>|<a class='letter' id='S' onclick="letter_submit('S');">S</a>|<a class='letter' id='T' onclick="letter_submit('T');">T</a>|<a class='letter' id='U' onclick="letter_submit('U');">U</a>|<a class='letter' id='V' onclick="letter_submit('V');">V</a>|<a class='letter' id='W' onclick="letter_submit('W');">W</a>|<a class='letter' id='X' onclick="letter_submit('X');">X</a>|<a class='letter' id='Y' onclick="letter_submit('Y');">Y</a>|<a class='letter' id='Z' onclick="letter_submit('Z');">Z</a>
-        
-        </span>
-        </small>
-</div>
-
-</td><td valign='top'>	
-
 <div id='reset_div'>
   <a class='button' id='reset' href='reset_ttable'>Reset Filters</a> 
 </div> 
 
-</td><td>
-        
+<table id='main_table'>
+<tr>
 <table id='filter_table' border='1'>
 <tr>
 <td>
          <small>
             <span class='filter-title'>Primary Body Site</span>:&nbsp;&nbsp;
+            
             <% if(statusfltr.site.oral === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='oral' name='oral' onclick='update_sb()'\> Oral&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='oral' name='oral' onclick='update_sb()'\> Oral&nbsp;
             <% } %>
+            <% if(statusfltr.site.oral_scarce === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='oral_scarce' name='oral_scarce' onclick='update_sb()'\> Oral (scarce)&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='oral_scarce' name='oral_scarce' onclick='update_sb()'\> Oral (scarce)&nbsp;
+            <% } %>
+            <% if(statusfltr.site.oral_low === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='oral_low' name='oral_low' onclick='update_sb()'\> Oral (low)&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='oral_low' name='oral_low' onclick='update_sb()'\> Oral (low)&nbsp;
+            <% } %>
+            <% if(statusfltr.site.oral_med === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='oral_med' name='oral_med' onclick='update_sb()'\> Oral (med)&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='oral_med' name='oral_med' onclick='update_sb()'\> Oral (med)&nbsp;
+            <% } %>
+            <% if(statusfltr.site.oral_high === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='oral_high' name='oral_high' onclick='update_sb()'\> Oral (high)&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='oral_high' name='oral_high' onclick='update_sb()'\> Oral (high)&nbsp;
+            <% } %>
+            <% if(statusfltr.site.oral_caries === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='oral_caries' name='oral_caries' onclick='update_sb()'\> Oral (caries)&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='oral_caries' name='oral_caries' onclick='update_sb()'\> Oral (caries)&nbsp;
+            <% } %>
+            <% if(statusfltr.site.oral_perio === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='oral_perio' name='oral_perio' onclick='update_sb()'\> Oral (periodontitis)&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='oral_perio' name='oral_perio' onclick='update_sb()'\> Oral (periodontitis)&nbsp;
+            <% } %>
+            
+            <br>
+           
+            
             <% if(statusfltr.site.nasal === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='nasal' name='nasal' onclick='update_sb()' \> Nasal&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='nasal' name='nasal' onclick='update_sb()' \> Nasal&nbsp;
             <% } %>
+            <% if(statusfltr.site.nasal_low === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='nasal_low' name='nasal_low' onclick='update_sb()' \> Nasal (low)&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='nasal_low' name='nasal_low' onclick='update_sb()' \> Nasal (low)&nbsp;
+            <% } %>
+            <% if(statusfltr.site.nasal_scarce === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='nasal_scarce' name='nasal_scarce' onclick='update_sb()' \> Nasal (scarce)&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='nasal_scarce' name='nasal_scarce' onclick='update_sb()' \> Nasal (scarce)&nbsp;
+            <% } %>
+
             <% if(statusfltr.site.skin === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='skin' name='skin' onclick='update_sb()' \> Skin&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='skin' name='skin' onclick='update_sb()' \> Skin&nbsp;
             <% } %>
+            
             <% if(statusfltr.site.gut === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='gut' name='gut' onclick='update_sb()' \> Gut&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='gut' name='gut' onclick='update_sb()' \> Gut&nbsp;
             <% } %>
+            
             <% if(statusfltr.site.vaginal === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='vaginal' name='vaginal' onclick='update_sb()' \> Vaginal&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' onclick='update_sb()' \> Vaginal&nbsp;
+            <% } %>
+            
+            <br>
+            
+            <% if(statusfltr.site.enviro === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='enviro' name='enviro' onclick='update_sb()' \> Environmental&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='enviro' name='enviro' onclick='update_sb()' \> Environmental&nbsp;
+            <% } %>
+            <% if(statusfltr.site.enviro_air === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='enviro_air' name='enviro_air' onclick='update_sb()' \> Environmental_air&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='enviro_air' name='enviro_air' onclick='update_sb()' \> Environmental_air&nbsp;
+            <% } %>
+            <% if(statusfltr.site.enviro_food === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='enviro_food' name='enviro_food' onclick='update_sb()' \> Environmental_food&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='enviro_food' name='enviro_food' onclick='update_sb()' \> Environmental_food&nbsp;
+            <% } %>
+            <% if(statusfltr.site.enviro_sewage === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='enviro_sewage' name='enviro_sewage' onclick='update_sb()' \> Environmental_sewage&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='enviro_sewage' name='enviro_sewage' onclick='update_sb()' \> Environmental_sewage&nbsp;
+            <% } %>
+            <% if(statusfltr.site.enviro_soil === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='enviro_soil' name='enviro_soil' onclick='update_sb()' \> Environmental (soil)&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='enviro_soil' name='enviro_soil' onclick='update_sb()' \> Environmental (soil)&nbsp;
+            <% } %>
+            
+            <br>
+            
+            <% if(statusfltr.site.non_human === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='non_human' name='non_human' onclick='update_sb()' \> Non-Human Animal&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='non_human' name='non_human' onclick='update_sb()' \> Non-Human Animal&nbsp;
+            <% } %>
+            <% if(statusfltr.site.path_oppo === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='path_oppo' name='path_oppo' onclick='update_sb()' \> Opportunistic Pathogen&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='path_oppo' name='path_oppo' onclick='update_sb()' \> Opportunistic Pathogen&nbsp;
+            <% } %>
+            <% if(statusfltr.site.path_syst === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='path_syst' name='path_syst' onclick='update_sb()' \> Systemic Pathogen&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='path_syst' name='path_syst' onclick='update_sb()' \> Systemic Pathogen&nbsp;
             <% } %>
             
             <% if(statusfltr.site.unassigned === 'on'){ %>
@@ -260,4 +348,21 @@
 </form>	
  
 </div>
-		 
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>  
+<script type="text/javascript" src="/js/taxonomy.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

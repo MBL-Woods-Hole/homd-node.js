@@ -2266,7 +2266,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
     let search_text = req.body.txt_srch.toLowerCase()
     let big_p_list //= Object.values(C.genome_lookup);
     
-    let q = "SELECT genomes.otid, seq_id, organism, protein_accession,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
+    let q = "SELECT genomes.otid, seq_id, organism, protein_accession,jb_link,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
     q += " JOIN genomes using (seq_id)"
     let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size
     console.log(q)
@@ -2324,11 +2324,12 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
          loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
          highlight = seqacc+":"+start.toString()+".."+stop.toString()
            //if(C.genome_lookup.hasOwnProperty(gid)){
-             genome = C.genome_lookup[gid]
+        genome = C.genome_lookup[gid]
              //console.log('genome',genome) 
-             temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
-             
-             full_send_list.push(temp)
+        temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
+        //temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
+              
+        full_send_list.push(temp)
            //}
        }
        // will search all == PID,HMT,Organism,Peptide,Product
