@@ -218,7 +218,10 @@ const promises = [
  
   helpers.readFromFile(path.join('public','data', C.image_location_locfn),'json'),  // image name and text
   helpers.readFromFile(path.join('public','data', C.image_location_taxfn),'json'),  // match image w/ otid or tax rank
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn),'json')
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn),'json'),
+  
+  //2024-Sept
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.site_lookup_fn),'json'),
    //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
   
     // ETC ...
@@ -255,6 +258,7 @@ Promise.all(promises)
     C.images_loc              = results[8];   // image name and text
     C.images_tax              = results[9];   // match image w/ otid or tax rank
     C.contig_lookup           = results[10];
+    C.site_lookup           = results[11];
     //C.phage_lookup              = results[12];
     
     /// END of results files

@@ -177,30 +177,40 @@ constants.tax_status_on =['named','unnamed','phylotype','lost'];
 
 //constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralref'];
 //constants.tax_sites_on = ['oral','nasal','skin','vaginal','unassigned'];
-  constants.tax_sites_all = {
-'unassigned'   :'Unassigned',
-'oral'         :'Oral',
-'nasal'        :'Nasal',
-'skin'         :'Skin',
-'gut'          :'Gut',
-'vaginal'      :'Vaginal',
-'oral_high'    :'Oral (high abundance)',
-'oral_med'     :'Oral (medium abundance)',
-'oral_low'     :'Oral (low abundance)',
-'oral_scarce'  :'Oral (scarce abundance)',
-'enviro'       :'Environmental',
-'enviro_food'  :'Environmental (food)',
-'enviro_soil'  :'Environmental (soil/water)',
-'enviro_sewage':'Environmental (sewage sludge)',
-'path_oppo'    :'Opportunistic pathogen',
-'path_syst'    :'Systemic pathogen',
-'oral_perio'   :'Oral (periodontitis)',
-'oral_caries'  :'Oral (caries)',
-'enviro_air'   :'Environmental (air)',
-'nasal_low'    :'Nasal (low)',
-'nasal_scarce' :'Nasal (scarce)',
-'non_human'    :'Non-Human Animal'
+constants.tax_sites_all ={
+   'oral'         :'Oral',
+   'nasal'        :'Nasal',
+   'skin'         :'Skin',
+   'gut'          :'Gut',
+   'vaginal'      :'Vaginal',
+   'pathogen'     :'Pathogen',
+   'enviro'       :'Environmental',
+   'unassigned'   :'Unassigned'
 }
+ //  constants.tax_sites_all = {
+// 'unassigned'   :'Unassigned',
+// 'oral'         :'Oral',
+// 'nasal'        :'Nasal',
+// 'skin'         :'Skin',
+// 'gut'          :'Gut',
+// 'vaginal'      :'Vaginal',
+// 'oral_high'    :'Oral (high abundance)',
+// 'oral_med'     :'Oral (medium abundance)',
+// 'oral_low'     :'Oral (low abundance)',
+// 'oral_scarce'  :'Oral (scarce abundance)',
+// 'enviro'       :'Environmental',
+// 'enviro_food'  :'Environmental (food)',
+// 'enviro_soil'  :'Environmental (soil/water)',
+// 'enviro_sewage':'Environmental (sewage sludge)',
+// 'path_oppo'    :'Opportunistic pathogen',
+// 'path_syst'    :'Systemic pathogen',
+// 'oral_perio'   :'Oral (periodontitis)',
+// 'oral_caries'  :'Oral (caries)',
+// 'enviro_air'   :'Environmental (air)',
+// 'nasal_low'    :'Nasal (low)',
+// 'nasal_scarce' :'Nasal (scarce)',
+// 'non_human'    :'Non-Human Animal'
+// }
 constants.tax_sites_on = constants.tax_sites_all
 
 // constants.tax_sites_all = ['unassigned',
@@ -241,6 +251,7 @@ constants.phage_list_fn         = 'homdData-PhageList.json'
 constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
 constants.annotation_lookup_fn  = 'homdData-AnnotationLookup.json'
 constants.contig_lookup_fn      = 'homdData-ContigsLookup.json'
+constants.site_lookup_fn      = 'homdData-TaxonSiteLookup.json'
 //constants.image_location_fn     = 'ImageLocation.js'
 
 constants.image_location_locfn     = 'ImageLocation_loc.js'

@@ -73,7 +73,14 @@
         </span>
         </small>
 </div>
-
+<br>
+<div class='alpha-select' >
+        
+        <small><span class='filter-title'>Phylum by Alphabet:</span>
+        TBD
+        
+        </small>
+</div>
 </td><td valign='top'>	
 
 <div id='reset_div'>
@@ -85,6 +92,8 @@
 <table id='filter_table' border='1'>
 <tr>
 <td>
+      
+         
          <small>
             <span class='filter-title'>Primary Body Site</span>:&nbsp;&nbsp;
             <% if(statusfltr.site.oral === 'on'){ %>
@@ -112,6 +121,19 @@
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' onclick='update_sb()' \> Vaginal&nbsp;
             <% } %>
+            
+            <% if(statusfltr.site.pathogen === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='pathogen' name='pathogen' onclick='update_sb()' \> Pathogen&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='pathogen' name='pathogen' onclick='update_sb()' \> Pathogen&nbsp;
+            <% } %>
+            <% if(statusfltr.site.enviro === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='enviro' name='enviro' onclick='update_sb()' \> Environmental&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='enviro' name='enviro' onclick='update_sb()' \> Environmental&nbsp;
+            <% } %>
+            
+            
             
             <% if(statusfltr.site.unassigned === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='unassigned' name='unassigned' onclick='update_sb()' \> Unassigned&nbsp;
