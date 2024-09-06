@@ -222,7 +222,7 @@ function apply_ttable_filter(req, filter) {
     // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
     // taxon will be excluded here from the taxon table
 
-    console.log('olength-1',big_tax_list.length)
+    //console.log('olength-1',big_tax_list.length)
 
     big_tax_list = big_tax_list.filter( function(item){
         //sites = item.sites.join(",")
@@ -239,7 +239,7 @@ function apply_ttable_filter(req, filter) {
         }
     })
 
-    console.log('olength-2',big_tax_list.length)
+//console.log('olength-2',big_tax_list.length)
 
     //
     //letter
@@ -350,7 +350,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
     //console.log('LENGTH',send_list.length)
     //let big_tax_list0 = Object.values(C.taxon_lookup);
     let specific = send_list.filter(item => (item.otid == '831'))
-    console.log('sendlist831',specific)
+    //console.log('sendlist831',specific)
      //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
      let count_text = 'Number of Records Found: '+ send_list.length.toString()
      //console.log('filter',filter)
@@ -366,7 +366,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
     set_ttable_session(req)
     //console.log('ttable_session',req.session.ttable_filter)
     let filter = req.session.ttable_filter
-    console.log('filter',filter)
+    //console.log('filter',filter)
     send_list = apply_ttable_filter(req, filter)
     
     let count_text = 'Number of Records Found: '+ send_list.length.toString()
