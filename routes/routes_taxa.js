@@ -192,7 +192,7 @@ function apply_ttable_filter(req, filter) {
     //status
     // create array of 'on's
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
-     //console.log('olength-1',big_tax_list.length)
+     
     //console.log('status_on',status_on)
     big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     
@@ -202,17 +202,17 @@ function apply_ttable_filter(req, filter) {
      
     // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
     // taxon will be excluded here from the taxon table
-    
+    console.log('olength-1',big_tax_list.length)
     big_tax_list = big_tax_list.filter( function(item){
         //sites = item.sites.join(",")
         for(let n in item.sites){
-           //console.log('n',n,'site',item.sites[n])
+           console.log('n',n,'site',item.sites[n])
            if(site_on.includes(item.sites[n].toLowerCase())){
               return item
            }
         }
     })
-    //console.log('olength-2',big_tax_list.length)
+    console.log('olength-2',big_tax_list.length)
     //
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
