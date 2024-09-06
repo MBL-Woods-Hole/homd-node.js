@@ -2381,6 +2381,14 @@ router.get('/peptide_table2', function peptide_table2(req, res) {
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies using (study_id)"
     
+//     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
+// FROM protein_peptide 
+// JOIN protein_peptide_counts using (seq_id) 
+// JOIN genomes using (seq_id) 
+// JOIN protein_peptide_counts_study using (protein_peptide_counts_id) 
+// JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) 
+// where seq_id='SEQF9928.1'
+
     let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
     TDBConn.query(q, (err, rows) => {
@@ -2444,6 +2452,13 @@ router.post('/peptide_table2', function protein_peptide(req, res) {
     q += " JOIN genomes using (seq_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies using (study_id)"
+//     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
+// FROM protein_peptide 
+// JOIN protein_peptide_counts using (seq_id) 
+// JOIN genomes using (seq_id) 
+// JOIN protein_peptide_counts_study using (protein_peptide_counts_id) 
+// JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) 
+// where seq_id='SEQF9928.1'
     let search_text = req.body.txt_srch.toLowerCase()
     let gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
@@ -2515,13 +2530,21 @@ router.post('/peptide_table2', function protein_peptide(req, res) {
 router.get('/peptide_table3', function protein_peptide(req, res) {
     console.log(req.query)
     let gid = req.query.gid
-    let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,study_id,study_name"
+    let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name"
     q += " FROM protein_peptide"
     q += " JOIN protein_peptide_counts using (seq_id)"
     q += " JOIN genomes using (seq_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
-    q += " JOIN protein_peptide_studies using (study_id)"
+    q += " JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) "
     
+//     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
+// FROM protein_peptide 
+// JOIN protein_peptide_counts using (seq_id) 
+// JOIN genomes using (seq_id) 
+// JOIN protein_peptide_counts_study using (protein_peptide_counts_id) 
+// JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) 
+// where seq_id='SEQF9928.1'
+
     //q += " JOIN protein_peptide_studies using (seq_id)"
     q += " where seq_id='"+gid+"'"
     let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study,peptide_id,jb_link
