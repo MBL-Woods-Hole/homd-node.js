@@ -593,7 +593,7 @@ router.get('/tax_autoload', function tax_autoload(req, res) {
 router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
-  let data1={},data2={},data3,data4,data5,links={}
+  let data1={},data2={},data3,data4,data5,links={},sites
   if(otid && req.session.ttable_filter){
       req.session.ttable_filter.otid = otid
   }
@@ -650,16 +650,19 @@ router.get('/tax_description', function tax_description(req, res){
          //console.log(links)
          let lineage_string = data3.domain+';'+data3.phylum+';'+ data3.klass +';'+data3.order +';'+data3.family +';'+data3.genus +';'+data3.species +';'+data3.subspecies
          
-         let sites = C.site_lookup[otid]['s1']
-         // = Object.values(C.site_lookup[otid]).join('<br>')
-         if(C.site_lookup[otid]['s2']){
-            sites += '<br>'+C.site_lookup[otid]['s2']
-         }
-         if(C.site_lookup[otid]['s3']){
-            sites += '<br>'+C.site_lookup[otid]['s3']
-         }
-         if(C.site_lookup[otid]['note']){
-            sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
+         sites = ''
+         if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
+           sites = C.site_lookup[otid]['s1']
+           // = Object.values(C.site_lookup[otid]).join('<br>')
+           if(C.site_lookup[otid]['s2']){
+              sites += '<br>'+C.site_lookup[otid]['s2']
+           }
+           if(C.site_lookup[otid]['s3']){
+              sites += '<br>'+C.site_lookup[otid]['s3']
+           }
+           if(C.site_lookup[otid]['note']){
+             sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
+           }
          }
          
          res.render('pages/taxa/taxdesc', {
@@ -754,8 +757,10 @@ router.get('/tax_description', function tax_description(req, res){
   
   links.anviserver_link = C.anviserver_link
   
-  console.log('sites',C.site_lookup[otid])
-  let sites = C.site_lookup[otid]['s1']
+  // console.log('sites',C.site_lookup[otid])
+  sites = ''
+  if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
+     sites = C.site_lookup[otid]['s1']
          // = Object.values(C.site_lookup[otid]).join('<br>')
 	 if(C.site_lookup[otid]['s2']){
 		sites += '<br>'+C.site_lookup[otid]['s2']
@@ -766,6 +771,7 @@ router.get('/tax_description', function tax_description(req, res){
 	 if(C.site_lookup[otid]['note']){
 		sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
 	 }
+  }
   //console.log('pangenome_link',links.pangenomes)
   res.render('pages/taxa/taxdesc', {
     title: 'HOMD :: Taxon Info', 
