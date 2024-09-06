@@ -60,10 +60,13 @@ table.sortable tbody tr::before {
     background-color: #dce7f5; 
  } 
 .col1{
-   width: 130px;
+   width: 80px;
 }
 .col2{
-   width: 100px;
+   width: 120px;
+}
+.col5{
+   width: 130px;
 }
 </style>
 
@@ -89,9 +92,11 @@ table.sortable tbody tr::before {
      <table id='peptide-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
      <thead>
       <tr>
-        <th class="col1" title='Protein ID' nowrap>PID</th>
-        <th class="col2" nowrap>Taxon-ID</th>
-        <th scope="colx" nowrap>Organism</th>
+        <th class="col1" title='Study ID' nowrap>Study-ID</th>
+        <th class="col2" title='Protein ID' nowrap>PID</th>
+        <th class="col1" nowrap>Taxon-ID</th>
+        <th nowrap>Organism</th>
+        <th class="col5" nowrap>Peptide-ID</th>
         <th nowrap>Peptide</th>
         <th nowrap>Gene Product</th>
         
@@ -104,12 +109,13 @@ table.sortable tbody tr::before {
       
      <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        <tr>
-       
+       <td class='center'><%= list[n].study_id %></td>
       
        <td title='Genome Viewer'><a href='<%= list[n].jb_link %>' target='_blank'><%= list[n].pid %></a></td>
       
        <td class='center'><a href='/taxa/tax_description?gid=<%= list[n].gid %>&otid=<%= list[n].otid %>'><%= taxidfullname %></a></td>
        <td title='<%= list[n].organism %>'><a href='genome_description?gid=<%= list[n].gid %>'><%= list[n].organism %></a></td>
+       <td class='center'><%= list[n].peptide_id %></td>
        <td title='<%= list[n].peptide %>'><%= list[n].peptide %></td>
        <td title='<%= list[n].product %>'><%= list[n].product %></td>
        </tr>

@@ -2183,9 +2183,9 @@ router.get('/oralgen', function oralgen(req, res) {
 })
 //////////////////
 router.get('/peptide_table', function protein_peptide(req, res) {
-    let q = "SELECT genomes.otid, seq_id, organism, protein_accession,jb_link,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
+    let q = "SELECT genomes.otid, study_id,seq_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
     q += " JOIN genomes using (seq_id)"
-    let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size,jb_link
+    let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
     //console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2198,11 +2198,13 @@ router.get('/peptide_table', function protein_peptide(req, res) {
            pid = rows[r].protein_accession
            prod = rows[r].product
            pep = rows[r].peptide
+           pepid = rows[r].peptide_id
            gid = pid.split('_')[0]
            otid = rows[r].otid
            org = rows[r].organism
            mol = rows[r].molecule
            jb_link = rows[r].jb_link
+           study_id = rows[r].study_id
            // start = rows[r].start
 //            stop = rows[r].end
 //            if(start[0] === "<" ){
@@ -2243,12 +2245,13 @@ router.get('/peptide_table', function protein_peptide(req, res) {
            //if(C.genome_lookup.hasOwnProperty(gid)){
              genome = C.genome_lookup[gid]
              //console.log('genome',genome)
-             temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,jb_link:jb_link}
+             temp = {gc:genome.gc,study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide_id:pepid,peptide:pep,jb_link:jb_link}
              //console.log('temp',temp)
              //console.log(C.genome_lookup[gid])
              send_list.push(temp)
            //}
        }
+       //console.log(send_list[0])
        res.render('pages/genome/protein_peptide', {
           title: 'HOMD :: Human Oral Microbiome Database',
           pgname: '', // for AbountThisPage
@@ -2267,9 +2270,9 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
     let search_text = req.body.txt_srch.toLowerCase()
     let big_p_list //= Object.values(C.genome_lookup);
     
-    let q = "SELECT genomes.otid, seq_id, organism, protein_accession,jb_link,molecule,peptide,product,`unique`,`start`,`end` from protein_peptide"
+    let q = "SELECT genomes.otid, seq_id, study_id,organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
     q += " JOIN genomes using (seq_id)"
-    let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,stop,start,tmp,locstart,locstop,seqacc,loc,highlight,size,jb_link
+    let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
     console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2281,6 +2284,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
            pid = rows[r].protein_accession
            prod = rows[r].product
            pep = rows[r].peptide
+           pepid = rows[r].peptide_id
            gid = pid.split('_')[0]
            //start = rows[r].start
            //stop = rows[r].end
@@ -2290,6 +2294,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
            org = rows[r].organism
            mol = rows[r].molecule
            jb_link = rows[r].jb_link
+           study_id = rows[r].study_id
            //console.log('jblink',jb_link)
           //  if(start[0] === "<" ){
 //             start = parseInt(start.substring(1))
@@ -2330,7 +2335,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
              //console.log('genome',genome) 
 
         //temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
-          temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,jb_link:jb_link}
+          temp = {pid:pid,study_id:study_id,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,peptide_id:pepid,jb_link:jb_link}
            
              full_send_list.push(temp)
            //}
