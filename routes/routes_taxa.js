@@ -346,8 +346,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
     send_list = apply_ttable_filter(req, filter)
     //console.log('LENGTH',send_list.length)
     //let big_tax_list0 = Object.values(C.taxon_lookup);
-    //let big_tax_list1 = big_tax_list0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-    //console.log('sendlist0',send_list[0])
+    let specific = send_list.filter(item => (item.otid == '831'))
+    console.log('sendlist831',specific)
      //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
      let count_text = 'Number of Records Found: '+ send_list.length.toString()
      //console.log('filter',filter)
