@@ -165,6 +165,7 @@
 <% data4 = JSON.parse(data4) %>
 <% data5 = JSON.parse(data5) //refseq  %>
 <% links = JSON.parse(links) //refseq  %>
+<% sites = JSON.parse(sites) %>
 
 <% taxidfullname = ("000" + otid).slice(-3); %>
 <% taxidfullnameplus = 'HMT-'+taxidfullname; %>
@@ -320,8 +321,8 @@
     <td><small><%= statusWords %> </small></td>
   </tr>
   <tr>
-    <td class='tbl-title'> Body Site(s):</td>
-    <td><%= data1.sites %></td>
+    <td class='tbl-title'> Body Site (or source):</td>
+    <td><%- sites %></td>
     
   </tr>
   

@@ -1,0 +1,56 @@
+<style>
+table td{
+   padding: 2px 5px;
+   border:1px solid black;
+}
+table {
+   
+   border-collapse:collapse;
+}
+</style>
+<link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
+<% data = JSON.parse(sites) %>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <div class='title'>HOMD Taxa Preferred Body Sites</div>
+       <table  class='table table-hover table-condensed sortable'>
+       <tr><th>HMT-ID</th><th>Genus Species</th><th>Primary Body Site</th><th>Other Body Sites</th><th>Notes</th></tr>
+       <% for(n in data){ %>
+           <% otid = data[n].otid %>
+           <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+           <tr>
+             <td nowrap><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
+             <td nowrap><i><%= data[n]['gsp'] %></i></td> 
+             <td nowrap><%= data[n]['s1'] %></td>
+             <td nowrap><%= data[n]['s2'] %> <%= data[n]['s3'] %></td>
+             <td><%= data[n]['note'] %></td>
+           </tr>
+       <% } %>
+       </table>
+  
+        </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

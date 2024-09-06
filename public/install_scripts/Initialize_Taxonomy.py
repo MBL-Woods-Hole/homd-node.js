@@ -174,15 +174,14 @@ def run_type_strain(args):
 
 def run_sites(args):
     global master_lookup
-    q = """
-    SELECT otid, site FROM otid_site JOIN sites USING (site_id)
-    """
+    #q = "SELECT otid, site FROM otid_site JOIN sites USING (site_id) ORDER BY otid,priority"
+    q = "SELECT otid, primary_body_site FROM otid_prime"
     result = myconn.execute_fetch_select_dict(q)
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
             #if master_lookup[otid]['status'] != 'Dropped':
-            master_lookup[otid]['sites'].append(obj['site'])
+            master_lookup[otid]['sites'].append(obj['primary_body_site'])
         else:
             sys.exit('problem with site exiting')
     # this takes care of otids that are missing from otid_site
@@ -190,7 +189,32 @@ def run_sites(args):
     for otid in master_lookup:
         if len(master_lookup[otid]['sites']) == 0:
             master_lookup[otid]['sites'].append('Unassigned')
-
+    
+    # NEW 1,2,3 sites
+    lookup = {}
+    q = "SELECT otid, site, priority, site_notes FROM otid_site JOIN sites USING (site_id) JOIN otid_prime using(otid)"
+    result = myconn.execute_fetch_select_dict(q)
+    for obj in result:
+        otid = str(obj['otid'])
+        note = obj['site_notes']
+        if otid not in lookup:
+            lookup[otid] = {}
+            lookup[otid]['note'] = note
+        if otid in master_lookup:
+            #if master_lookup[otid]['status'] != 'Dropped':
+            #print('obj',obj)
+            if obj['priority'] == 1:
+                lookup[otid]['s1'] = obj['site']
+            if obj['priority'] == 2:
+                lookup[otid]['s2'] = obj['site']
+            if obj['priority'] == 3:
+                lookup[otid]['s3'] = obj['site']
+            
+        else:
+            sys.exit('problem with site exiting')
+    
+    file = os.path.join(args.outdir,args.outfileprefix+'SiteLookup.json')
+    print_dict(file, lookup)
 
 
 def run_ref_strain(args):

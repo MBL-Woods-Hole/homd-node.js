@@ -48,7 +48,10 @@ function get_default_filter(){
            skin:'on',
            gut:'on',
            vaginal:'on',
-           unassigned:'on'
+           unassigned:'on',
+           enviro      :'on',
+           pathogen    :'on',
+           
         },
         genomes:'both',
         text:{
@@ -78,7 +81,9 @@ function get_null_filter(){
            skin:'off',
            gut:'off',
            vaginal:'off',
-           unassigned:'off'
+           unassigned:'off',
+           enviro      :'off',
+           pathogen    :'off',
         },
         genomes:'both',
         text:{
@@ -139,25 +144,36 @@ function set_ttable_session(req) {
          req.session.ttable_filter.status.nonoralref = 'on'
        }
        
-       if(item == 'oral'){
-         req.session.ttable_filter.site.oral = 'on'
-       }
-       if(item == 'nasal'){
-         req.session.ttable_filter.site.nasal = 'on'
-       }
-       if(item == 'skin'){
-         req.session.ttable_filter.site.skin = 'on'
-       }
-       if(item == 'gut'){
-         req.session.ttable_filter.site.gut = 'on'
-       }
-       if(item == 'vaginal'){
-         req.session.ttable_filter.site.vaginal = 'on'
-       }
-       if(item == 'unassigned'){
-         req.session.ttable_filter.site.unassigned = 'on'
-       }
        
+       // sites
+       for(let site_code in C.tax_sites_all){
+            
+            if(item == site_code){
+                //console.log('C.tax_sites_all[n]',item,C.tax_sites_all[site_code])
+               req.session.ttable_filter.site[site_code] = 'on'
+            }
+       }
+       //console.log('req.session.ttable_filter.site',req.session.ttable_filter.site)
+       // if(item == 'oral'){
+//          req.session.ttable_filter.site.oral = 'on'
+//        }
+//        
+//        if(item == 'nasal'){
+//          req.session.ttable_filter.site.nasal = 'on'
+//        }
+//        if(item == 'skin'){
+//          req.session.ttable_filter.site.skin = 'on'
+//        }
+//        if(item == 'gut'){
+//          req.session.ttable_filter.site.gut = 'on'
+//        }
+//        if(item == 'vaginal'){
+//          req.session.ttable_filter.site.vaginal = 'on'
+//        }
+//        if(item == 'unassigned'){
+//          req.session.ttable_filter.site.unassigned = 'on'
+//        }
+       //////
        if(item == 'txt_srch'){
          req.session.ttable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
        }
@@ -174,10 +190,12 @@ function apply_ttable_filter(req, filter) {
     //console.log('olength-0',big_tax_list.length)
     let vals
     //
-    
+    //console.log('req.session.ttable_filter',req.session.ttable_filter)
     if(req.session.ttable_filter){
+       //console.log('vals from session ttfilter')
        vals = req.session.ttable_filter
     }else{
+        //console.log('vals from default ttfilter')
         vals = get_default_filter()
     }
     //console.log('vals',vals)
@@ -199,20 +217,30 @@ function apply_ttable_filter(req, filter) {
     //site
     // create array of 'on's
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
+    //let site_on = Object.keys(vals.site).filter(item => vals.site[0][helpers.getKeyByValue(C.tax_sites_all,item.sites[0])] == 'on')
      
     // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
     // taxon will be excluded here from the taxon table
+
     console.log('olength-1',big_tax_list.length)
+
     big_tax_list = big_tax_list.filter( function(item){
         //sites = item.sites.join(",")
+        // ie: item.sites[0] == 'Oral (periodontitis)'
+        // ie site_on == 'oral_perio'
+        
         for(let n in item.sites){
-           console.log('n',n,'site',item.sites[n])
-           if(site_on.includes(item.sites[n].toLowerCase())){
+
+           //console.log('n',n,'site',item.sites[n])
+           if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all,item.sites[0]))){
+           //if(site_on.includes(item.sites[n].toLowerCase())){
               return item
            }
         }
     })
+
     console.log('olength-2',big_tax_list.length)
+
     //
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
@@ -305,14 +333,15 @@ router.get('/reset_ttable', function tax_table_reset(req, res) {
    res.redirect('back');
 })
 router.get('/tax_table', function tax_table_get(req, res) {
+    console.log('in TT get')
     let filter,send_list
     //console.log('get-session ',req.session.ttable_filter)
      
     if(req.session.ttable_filter){
-        //console.log('filetr session')
+        console.log('filetr session')
         filter = req.session.ttable_filter
     }else{
-        //console.log('filetr from default')
+        console.log('filetr from default')
         filter = get_default_filter()
         req.session.ttable_filter = filter
     }
@@ -320,8 +349,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
     send_list = apply_ttable_filter(req, filter)
     //console.log('LENGTH',send_list.length)
     //let big_tax_list0 = Object.values(C.taxon_lookup);
-    //let big_tax_list1 = big_tax_list0.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-    
+    let specific = send_list.filter(item => (item.otid == '831'))
+    console.log('sendlist831',specific)
      //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
      let count_text = 'Number of Records Found: '+ send_list.length.toString()
      //console.log('filter',filter)
@@ -331,13 +360,13 @@ router.get('/tax_table', function tax_table_get(req, res) {
 })
 
 router.post('/tax_table', function tax_table_post(req, res) {
-    //console.log('in POST tt filter')
+    console.log('in TT post')
     //console.log(req.body)
     let send_list
     set_ttable_session(req)
     //console.log('ttable_session',req.session.ttable_filter)
     let filter = req.session.ttable_filter
-    
+    console.log('filter',filter)
     send_list = apply_ttable_filter(req, filter)
     
     let count_text = 'Number of Records Found: '+ send_list.length.toString()
@@ -345,8 +374,16 @@ router.post('/tax_table', function tax_table_post(req, res) {
     renderTaxonTable(req, res, args)
      
 })
+router.get('/advanced_taxtable_search', function advanced_taxtable_search(req, res) {
+   res.render('pages/taxa/tax_table_filter_advanced', {
+      title: 'HOMD :: Taxon Hierarchy',
+      pgname: '', // for AbountThisPage
+      config: JSON.stringify(CFG),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user: JSON.stringify(req.user || {}),
+    })
 
-
+})
 //
 //
 router.get('/tax_hierarchy', (req, res) => {
@@ -559,7 +596,7 @@ router.get('/tax_autoload', function tax_autoload(req, res) {
 router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
-  let data1={},data2={},data3,data4,data5,links={}
+  let data1={},data2={},data3,data4,data5,links={},sites
   if(otid && req.session.ttable_filter){
       req.session.ttable_filter.otid = otid
   }
@@ -615,6 +652,22 @@ router.get('/tax_description', function tax_description(req, res){
          links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
          //console.log(links)
          let lineage_string = data3.domain+';'+data3.phylum+';'+ data3.klass +';'+data3.order +';'+data3.family +';'+data3.genus +';'+data3.species +';'+data3.subspecies
+         
+         sites = ''
+         if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
+           sites = C.site_lookup[otid]['s1']
+           // = Object.values(C.site_lookup[otid]).join('<br>')
+           if(C.site_lookup[otid]['s2']){
+              sites += '<br>'+C.site_lookup[otid]['s2']
+           }
+           if(C.site_lookup[otid]['s3']){
+              sites += '<br>'+C.site_lookup[otid]['s3']
+           }
+           if(C.site_lookup[otid]['note']){
+             sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
+           }
+         }
+         
          res.render('pages/taxa/taxdesc', {
             title: 'HOMD :: Taxon Info', 
             pgname: 'taxon/description', // for AbountThisPage
@@ -629,6 +682,7 @@ router.get('/tax_description', function tax_description(req, res){
             data4: JSON.stringify({}),  // publications
             data5: JSON.stringify({}), // refseq, seqname, strain , genbank
             links: JSON.stringify(links),
+            sites: JSON.stringify(sites),
             lineage: lineage_string,
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
             user: JSON.stringify(req.user || {}),
@@ -706,8 +760,21 @@ router.get('/tax_description', function tax_description(req, res){
   
   links.anviserver_link = C.anviserver_link
   
-  
-  
+  // console.log('sites',C.site_lookup[otid])
+  sites = ''
+  if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
+     sites = C.site_lookup[otid]['s1']
+         // = Object.values(C.site_lookup[otid]).join('<br>')
+	 if(C.site_lookup[otid]['s2']){
+		sites += '<br>'+C.site_lookup[otid]['s2']
+	 }
+	 if(C.site_lookup[otid]['s3']){
+		sites += '<br>'+C.site_lookup[otid]['s3']
+	 }
+	 if(C.site_lookup[otid]['note']){
+		sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
+	 }
+  }
   //console.log('pangenome_link',links.pangenomes)
   res.render('pages/taxa/taxdesc', {
     title: 'HOMD :: Taxon Info', 
@@ -723,6 +790,7 @@ router.get('/tax_description', function tax_description(req, res){
     data4: JSON.stringify(data4),
     data5: JSON.stringify(data5),
     links: JSON.stringify(links),
+    sites: JSON.stringify(sites),
     lineage: lineage_string,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
     user: JSON.stringify(req.user || {}),
@@ -1170,7 +1238,35 @@ router.get('/ecology_home', function ecology_index(req, res) {
     })
 })
 //
+router.get('/body_sites', function body_sites(req, res) {
 
+    let send_list = [],obj
+    for(let otid in C.site_lookup){
+       obj = {}
+       //console.log(C.taxon_lookup[otid])
+       obj.otid = otid
+       obj.s1 = C.site_lookup[otid].s1
+       obj.s2 = C.site_lookup[otid].s2
+       obj.s3 = C.site_lookup[otid].s3
+       obj.note = C.site_lookup[otid].note
+       obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
+       send_list.push(obj)
+    }
+    //console.log(C.site_lookup )
+    send_list.sort(function (b, a) {
+        return helpers.compareStrings_alpha(b.gsp, a.gsp);
+    })
+    
+    res.render('pages/taxa/body_sites', {
+      title: 'HOMD :: Body Sites', 
+      pgname: '', // for AbountThisPage
+      config: JSON.stringify(CFG),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      user:  JSON.stringify(req.user || {}),
+      sites: JSON.stringify(send_list)
+      
+    })
+})
 //router.get('/ecology/:level/:taxname', function ecology(req, res) {
 router.get('/ecology', function ecology(req, res) {
     helpers.print('in ecology new')

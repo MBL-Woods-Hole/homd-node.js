@@ -20,8 +20,6 @@ thead th { position: sticky; top: 0; }
     
     <div class='page-content' >
     
-  
-  
      <div class='title'><%= pgtitle %></div>
      <small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
      <div id='download_browser_text_excel'><b>Download this Taxon Data</b>: 
@@ -29,7 +27,7 @@ thead th { position: sticky; top: 0; }
        <a href='dld_table/text %>' >[Text]</a>
        <a href='dld_table/excel %>' >[Excel]</a>
      </div>  
-    <!-- 
+<!-- 
  
      <div id='download_browser_text_excel'><b>Download this Taxon Data</b>: 
        <a href='dld_table/browser/<%= letter %>/[<%= Object.keys(statusfltr.status) %>]/<%= statusfltr.text.txt_srch %> /<%= statusfltr.text.field %>' >[Browser]</a>
@@ -38,7 +36,8 @@ thead th { position: sticky; top: 0; }
      </div>  
        
  -->
-    <%- include('../../partials/tax_table_filter.ejs') %>
+    <%- include("../../partials/tax_table_filter.ejs") %>
+  <!--   <a href='advanced_taxtable_search'>Advanced Search</a> -->
      <br><%= count_txt %>
 <div id='tax-box' >
 
@@ -50,7 +49,7 @@ thead th { position: sticky; top: 0; }
         <th scope="col"><span onclick="('species')">Species</span></th>
         <th scope="col"><span onclick="('strain')">Subspecies</span></th>
         <th scope="col"><span onclick="('status')">Status</span></th>
-        <th scope="col"><span onclick="('site')">Body<br>Site(s)</span></th>
+        <th scope="col"><span onclick="('site')">Primary Body<br>Site</span></th>
        <!--  <th scope="col" nowrap>Body Site</th> -->
         <th scope="col" class="sorttable_nosort">Ecology<br>Link</th>
         <th scope="col" class="sorttable_nosort" nowrap>Taxon<br>Link</th>
@@ -70,8 +69,8 @@ thead th { position: sticky; top: 0; }
        
        <td class='col5'><%= list[n].status  %></td>
        <% if(list[n].sites.length > 0){ %>
-           <% sites = list[n].sites.join(",") %>
-           <td class='col5'><%= sites  %></td>
+           
+           <td class='col5'><%= list[n].sites[0]  %></td>
        <% }else{ %>
            <td class='col5'></td>
        <% } %>
