@@ -1793,178 +1793,6 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   })
 })
 //
-//
-router.get('/dld_peptide_table_all/:type', function dldTableAll (req, res) {
-    let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'homd_protein-peptides_study7.csv')
-    res.download(fullpath)
-    return 
-})
-router.get('/dld_table_all/:type', function dldTableAll (req, res) {
-    var today = new Date()
-var dd = String(today.getDate()).padStart(2, '0')
-var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
-var yyyy = today.getFullYear()
-today = yyyy + '-' + mm + '-' + dd
-var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
-    const type = req.params.type
-    let fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
-    const sendList = Object.values(C.genome_lookup)
-    const listOfGids = sendList.map(item => item.gid)
-    fileFilterText = fileFilterText + ' Date: ' + today
-    
-    let q = "SELECT * from genomes"
-    console.log(q)
-    TDBConn.query(q, (err, mysqlrows) => {
-        if(err){
-           console.log(err)
-           return
-        }
-        //console.log(mysqlrows)
-        //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
-        const tableTsv = createFullTable(mysqlrows, fileFilterText)
-    
-        if (type === 'browser') {
-          res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-        } else if (type === 'text') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.txt"' })
-        } else if (type === 'excel') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.xls"' })
-        } else {
-          // error
-          console.log('Download table format ERROR')
-        }
-        res.send(tableTsv)
-        res.end()
-    })
-})
-router.get('/dld_table/:type', function dldTable (req, res) {
-  
-  //console.log('in download table -genome:')
-  var today = new Date()
-  var dd = String(today.getDate()).padStart(2, '0')
-  var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
-  var yyyy = today.getFullYear()
-  today = yyyy + '-' + mm + '-' + dd
-  var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
-  const type = req.params.type
-  const letter = req.session.gtable_filter.letter
-  const phylum = req.session.gtable_filter.phylum
-  const otid = req.session.gtable_filter.otid
-  const searchText = req.session.gtable_filter.text.txt_srch
-  const searchField = req.session.gtable_filter.text.field
-
-  helpers.print(['type', type,'letter', letter,'phylum', phylum,'otid', otid])
-  // Apply filters
-  const tempList = Object.values(C.genome_lookup)
-  let sendList = []
-  let fileFilterText = ''
-  if (letter && letter.match(/[A-Z]{1}/)) { // always caps
-    //console.log('in letter dnld')
-    helpers.print(['MATCH Letter: ', letter])
-    sendList = tempList.filter(item => item.genus.charAt(0) === letter)
-    helpers.print(sendList)
-    fileFilterText = "HOMD.org Genome Data::Letter Filter Applied (genus with first letter of '" + letter + "')"
-  } else if (otid !== '') {
-    //console.log('in otid dnld')
-    const gidList = C.taxon_lookup[otid].genomes
-    // console.log('sil',seqid_list)
-    for (let n in gidList) {
-      sendList.push(C.genome_lookup[gidList[n]])
-    }
-    fileFilterText = 'HOMD.org Genome Data::Oral TaxonID: HMT-' + ('000' + otid).slice(-3)
-  } else if (phylum !== '') {
-    //console.log('in phylum dnld')
-    const lineageList = Object.values(C.taxon_lineage_lookup)
-    const objList = lineageList.filter(item => item.phylum === phylum) // filter for phylum
-    
-    const otidList = objList.map((el) => { // get list of otids with this phylum
-      return el.otid
-    })
-    helpers.print(['otid_list', otidList])
-    sendList = tempList.filter(item => { // filter genome obj list for inclusion in otid list
-      return otidList.indexOf(item.otid) !== -1
-    })
-    helpers.print(['cksend_list', sendList])
-    fileFilterText = 'HOMD.org Genome Data::Phylum: ' + phylum
-  } else if (searchText !== '') {
-    const bigGeneList = Object.values(C.genome_lookup)
-    sendList = getFilteredGenomeList(bigGeneList, searchText, searchField)
-    fileFilterText = 'HOMD.org Genome Data::Search Text: ' + searchText
-  } else {
-    // whole list as last resort
-    //console.log('in all dnld')
-    sendList = tempList
-    fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
-  }
-  const listOfGids = sendList.map(item => item.gid)
-  fileFilterText = fileFilterText + ' Date: ' + today
-
-  //helpers.print(['listOfGids', listOfGids])
-  // type = browser, text or excel
-  const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
-
-  if (type === 'browser') {
-    res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-  } else if (type === 'text') {
-    let fname = 'HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.txt'
-    res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
-  } else if (type === 'excel') {
-    let fname = 'HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.xls'
-    res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
-  } else {
-    // error
-    console.log('Download table format ERROR')
-  }
-  res.send(tableTsv)
-  res.end()
-  
-})
-
-// /////////////////////////////
-function createFullTable (sqlrows, startText) {
-    let txt = startText + '\n'
-    let tmp,data,i,n,hmt
-    const headersRow = Object.keys(sqlrows[0])
-    txt += headersRow.join('\t')+'\n'
-    //console.log('sqlrows',headersRow)
-    for(n in sqlrows){
-        tmp = []
-        for(i in headersRow){
-          data = []
-          if(headersRow[i] == 'otid'){
-              hmt = helpers.make_otid_display_name(sqlrows[n][headersRow[i]])
-              data.push(hmt)
-          }else{
-              data.push(sqlrows[n][headersRow[i]])
-          }
-          tmp.push(data)
-          //console.log('hd',sqlrows[n][headersRow[i]])
-        }
-        txt += tmp.join('\t')
-        txt += '\n'
-    }
-    return txt
-}
-// ////////////////////////////
-function createTable (gids, source, type, startText) {
-  let txt = startText + '\n'
-  if (source === 'table') {
-    const headersRow = ['Genbank Acc no.','Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species',  'No. Contigs',  'Total Length',  'Infraspecific Names', 'GC %']
-    txt += headersRow.join('\t')+'\n'
-    console.log('SEQF5379.1',C.genome_lookup['SEQF5379.1'])
-    for (let n in gids) {
-      const gid = gids[n]
-      const obj = C.genome_lookup[gid]
-      // per FDewhirst: species needs to be unencumbered of genus for this table
-      let species = obj.species.replace(obj.genus,'').trim()
-      let hmt = helpers.make_otid_display_name(obj.otid)
-      const r = [obj.gb_asmbly, gid, hmt, obj.genus, obj.species, obj.ncontigs, obj.tlength, obj.ccolct, obj.gc]
-      txt += r.join('\t') +'\n'
-    }
-  }
-  // console.log(txt)
-  return txt
-}
 
 //
 function getFilteredGenomeList (gidObjList, searchText, searchField) {
@@ -2151,25 +1979,7 @@ router.post('/anvio_post', (req, res) => {
 // //     }
 //     return res.send(url)
 // });
-router.get('/dnld_pg',(req, res) => {
-    console.log('req query',req.query)
-    let pg = req.query.pg
-    let ver = req.query.V
-    let fn
-    let obj = C.pangenomes.find(o => o.name === pg);
-    
-    if(ver === '7'){
-       fn = obj.dnld_v7
-    }else{
-       fn = obj.dnld_v8
-    }
-    
-    let fullpath = path.join(CFG.PATH_TO_PANGENOMES, req.query.pg, fn)
-    
-    helpers.print('file path: '+fullpath)
-    res.download(fullpath)
 
-});
 //
 router.get('/oralgen', function oralgen(req, res) {
   res.render('pages/genome/oralgen', {
@@ -2205,42 +2015,7 @@ router.get('/peptide_table', function protein_peptide(req, res) {
            mol = rows[r].molecule
            jb_link = rows[r].jb_link
            study_id = rows[r].study_id
-           // start = rows[r].start
-//            stop = rows[r].end
-//            if(start[0] === "<" ){
-//             start = parseInt(start.substring(1))
-//           }else{
-//             start = parseInt(start)
-//           }
-//      
-//           if(stop[0] === ">" ){
-//             stop = parseInt(list[n].stop.substring(1))
-//           }else{
-//             stop = parseInt(stop)
-//           }
-//      
-//          if(start > stop){ 
-//            tmp = stop 
-//            stop = start 
-//            start = tmp 
-//          }
-//          
-//          locstart = start - 500 
-//          locstop = stop + 500
-//          size = stop - start
-//      
-//          if(locstart < 1){
-//            locstart = 1
-//          }
-//          let anno_type = 'prokka'
-//          if(anno_type.toUpperCase() === "PROKKA"){
-//             seqacc = mol.replace('_','|') 
-//          }else{ 
-//           seqacc = mol 
-//          } 
-//      
-//          loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
-//          highlight = seqacc+":"+start.toString()+".."+stop.toString()
+
          
            //if(C.genome_lookup.hasOwnProperty(gid)){
              genome = C.genome_lookup[gid]
@@ -2286,8 +2061,6 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
            pep = rows[r].peptide
            pepid = rows[r].peptide_id
            gid = pid.split('_')[0]
-           //start = rows[r].start
-           //stop = rows[r].end
            
            otid = rows[r].otid
            hmt = helpers.make_otid_display_name(otid)
@@ -2296,40 +2069,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
            jb_link = rows[r].jb_link
            study_id = rows[r].study_id
            //console.log('jblink',jb_link)
-          //  if(start[0] === "<" ){
-//             start = parseInt(start.substring(1))
-//           }else{
-//             start = parseInt(start)
-//           }
-//      
-//           if(stop[0] === ">" ){
-//             stop = parseInt(stop.substring(1))
-//           }else{
-//             stop = parseInt(stop)
-//           }
-//      
-//          if(start > stop){ 
-//            tmp = stop 
-//            stop = start 
-//            start = tmp 
-//          }
-//          
-//          locstart = start - 500 
-//          locstop = stop + 500
-//          size = stop - start
-//      
-//          if(locstart < 1){
-//            locstart = 1
-//          }
-//          let anno_type = 'prokka'
-//          if(anno_type.toUpperCase() === "PROKKA"){
-//             seqacc = mol.replace('_','|') 
-//          }else{ 
-//           seqacc = mol 
-//          } 
-//      
-//          loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
-//          highlight = seqacc+":"+start.toString()+".."+stop.toString()
+
            //if(C.genome_lookup.hasOwnProperty(gid)){
         genome = C.genome_lookup[gid]
              //console.log('genome',genome) 
@@ -2575,44 +2315,6 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
            
            /////////////////////////////////////////
            
-       
-         //  if(start[0] === "<" ){
-//             start = parseInt(start.substring(1))
-//           }else{
-//             start = parseInt(start)
-//           }
-//      
-//           if(stop[0] === ">" ){
-//             stop = parseInt(list[n].stop.substring(1))
-//           }else{
-//             stop = parseInt(stop)
-//           }
-//      
-//          if(start > stop){ 
-//            tmp = stop 
-//            stop = start 
-//            start = tmp 
-//          }
-//          
-//          locstart = start - 500 
-//          locstop = stop + 500
-//          size = stop - start
-//      
-//          if(locstart < 1){
-//            locstart = 1
-//          }
-//          let anno_type = 'prokka'
-//          if(anno_type.toUpperCase() === "PROKKA"){
-//             seqacc = mol.replace('_','|') 
-//          }else{ 
-//           seqacc = mol 
-//          } 
-//      
-//          loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
-//          highlight = seqacc+":"+start.toString()+".."+stop.toString()
-           // for(let s in studies_ary){
-//            
-//                study = studies_ary[s]
          //temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop,loc:loc,hlite:highlight}
          temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, jb_link:jb_link,peptide_id:peptide_id}
 //       
