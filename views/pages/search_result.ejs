@@ -136,7 +136,7 @@ table td{
 
      
 
-      PROKKA Annotation hits: <span id='prokka_count_div_full' >wOrKiNg</span>
+          PROKKA Annotation hits: <span id='prokka_count_div_full' >wOrKiNg</span>
       <br>NCBI Annotation hits: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id='ncbi_count_div_full' >wOrKiNg</span>
       <div id='anno_result_box_full'></div>
     </div> 
@@ -146,7 +146,7 @@ table td{
 
       (Usually takes about a minute)<br><br>
 
-      PROKKA Annotation hits: <span id='prokka_count_div' >wOrKiNg</span>
+          PROKKA Annotation hits: <span id='prokka_count_div' >wOrKiNg</span>
       <br>NCBI Annotation hits: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id='ncbi_count_div' >wOrKiNg</span>
       <div id='anno_result_box'></div>
     </div>
@@ -208,13 +208,12 @@ table td{
   $(document).ready(function(){
       if(intext.length >= min_size){
          get_annotations_counts_full(intext)    // sql from orf
-         //get_annotations_counts_partial(intext)  // grep
+         get_annotations_counts_partial(intext)  // grep
       }else{
           document.getElementById('ncbi_count_div').innerHTML = 'word too small: < '+min_size.toString()+' chars.'
           document.getElementById('prokka_count_div').innerHTML = 'word too small: < '+min_size.toString()+' chars.'
       }
-      //get_annotations_counts_prokka(intext)
-      //get_annotations_counts_ncbi(intext)
+      
       
   });
 
