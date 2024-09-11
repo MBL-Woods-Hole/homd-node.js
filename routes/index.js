@@ -327,7 +327,7 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
            }
            let obj = {phits:phits,nhits:nhits,pdata:pdata,ndata:ndata}
            console.log('tryobj')
-           console.log('obj',phits,nhits,pdata.length,ndata.length)
+           console.log('obj',phits,nhits,pdata,ndata)
            req.session.anno_search_full = obj
            res.send(JSON.stringify(obj))
         })
