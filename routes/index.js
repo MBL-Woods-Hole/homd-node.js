@@ -313,6 +313,7 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
              return
            }
            if(nrows.length >0){
+             console.log('ncbi zero length')
             //[pgid_count, ppid_count,ngid_count, npid_count]
             nhits = nrows
             for(let n in nrows){
@@ -325,6 +326,8 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
             }
            }
            let obj = {phits:phits,nhits:nhits,pdata:pdata,ndata:ndata}
+           console.log('tryobj')
+           console.log('obj',phits,nhits,pdata.length,ndata.length)
            req.session.anno_search_full = obj
            res.send(JSON.stringify(obj))
         })
