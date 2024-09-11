@@ -23,20 +23,22 @@ function get_annotations_counts_full(intext){
         var resp = JSON.parse(xmlhttp.responseText);
         console.log('get_annotations_counts SQL', resp)
         // [prokka_genome_count,prokka_gene_count,ncbi_genome_count,ncbi_gene_count]
-        if(resp['phits'] == 0){
+        if(resp.phits == 0){
             html1 = "0"
+            console.log('found phits 0')
         }else{
-            html1 = resp['phits'].length.toString()
+            html1 = resp.phits.length.toString()
             console.log('sendhtml',xmlhttp.responseText)
             html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka','full')\">show results</span>--"
         
         }
         document.getElementById('prokka_count_div_full').innerHTML = html1
     
-        if(resp['nhits'] == 0){
+        if(resp.nhits == 0){
             html2 = "0"
+            console.log('found nhits 0')
         }else{
-            html2 = resp['nhits'].length.toString()
+            html2 = resp.nhits.length.toString()
             html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi','full')\">show results</span>--"
         
         }
