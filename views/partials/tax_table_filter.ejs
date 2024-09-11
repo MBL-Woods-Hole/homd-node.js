@@ -95,7 +95,13 @@
       
          
          <small>
-            <span class='filter-title'>Primary Body Site</span>:&nbsp;&nbsp;
+            
+            <% if(statusfltr.site.p_or_pst === 'primary_site'){ %>
+              <span class='filter-title' id='body_site_title'>Primary Body Site:</span>&nbsp;&nbsp;
+            <% }else{ %>
+              <span class='filter-title' id='body_site_title'>Primary, Secondary and Tertiary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <% } %>
+            
             <% if(statusfltr.site.oral === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='oral' name='oral' onclick='update_sb()'\> Oral&nbsp;
             <% }else{ %>
@@ -140,6 +146,21 @@
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='unassigned' name='unassigned' onclick='update_sb()' \> Unassigned&nbsp;
             <% } %> 
+            
+            <small><span  id='toggle_cb_sites_span'>[<a class="pill pill-orange" href='#' onclick="toggle_cb_sites('off')">Toggle On/Off</a>]</span></small>
+             
+             <br>&nbsp;&nbsp;&nbsp;&nbsp;** 
+             <% if(statusfltr.site.p_or_pst === 'primary_site'){ %>
+                <span  id='pst_filter_span'>Filter/Search from Primary, Secondary and Tertiary Body Sites Instead:&nbsp;
+                <a class="pill pill-green" href='#' onclick="toggle_site_filter('P')">Toggle</a> See <a href='body_sites'>Preferred Body Sites</a>
+                <input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>
+                </span>
+             <% }else{ %>
+                <span  id='pst_filter_span'>Filter/Search from Primary Body Sites Only:&nbsp;
+                <a class="pill pill-green" href='#' onclick="toggle_site_filter('PST')">Toggle()</a>
+                <input type='hidden' id='p_or_pst' name='p_or_pst' value='pst_site' \>
+                </span>
+            <% } %> 
              
          </small>
 </td>
@@ -180,6 +201,7 @@
                 <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' onclick='update_sb()' \> NonOralRef&nbsp;
             <% } %> 
              
+             <small><span  id='toggle_cb_status_span'>[<a class="pill pill-orange" href='#' onclick="toggle_cb_status('off')">Toggle On/Off</a>]</span></small>
          </small>
 </td>
 </tr>

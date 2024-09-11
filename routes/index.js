@@ -265,7 +265,7 @@ router.get('/poster', function poster(req, res) {
 
 router.post('/anno_protein_search', function anno_protein_search(req, res) {
     console.log('in POST::anno_protein_search')
-    console.log(req.body)
+    console.log('req.body',req.body)
     let obj,data,gid,name,resultObj={}
     let anno = req.body.anno
     let search_text = req.body.search_text
@@ -285,6 +285,7 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
     let phits=0, nhits=0, pdata={},ndata={},gid,ssp,organism
     let q_prokka = "SELECT * from PROKKA_meta.orf WHERE protein_id='"+searchText+"' OR accession = '"+searchText+"'"
     let q_ncbi = "SELECT * from NCBI_meta.orf WHERE protein_id ='"+searchText+"' OR accession = '"+searchText+"'"
+    console.log('q_prokka',q_prokka)
     TDBConn.query(q_prokka, (err, prows) => {
         if (err) {
           console.log("prokka select error",err)
@@ -357,7 +358,7 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
        }
        let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
 
-        console.log('grep_cmd',grep_cmd)
+        console.log('grep_cmd1',grep_cmd)
         let anno_path = path.join(CFG.PATH_TO_TMP,dirname)
         let panno_path = path.join(CFG.PATH_TO_TMP,dirname,'prokka')
         let nanno_path = path.join(CFG.PATH_TO_TMP,dirname,'ncbi')
@@ -667,7 +668,7 @@ router.post('/site_search', function site_search(req, res) {
   let helpLst = []
   let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
   const grep_cmd = CFG.GREP_CMD + " -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
-  console.log('grep_cmd',grep_cmd)
+  console.log('grep_cmd2',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
         console.error('stderr',stderr);

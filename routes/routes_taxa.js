@@ -51,6 +51,7 @@ function get_default_filter(){
            unassigned:'on',
            enviro      :'on',
            pathogen    :'on',
+           p_or_pst    :'primary_site'
            
         },
         genomes:'both',
@@ -84,6 +85,7 @@ function get_null_filter(){
            unassigned:'off',
            enviro      :'off',
            pathogen    :'off',
+           p_or_pst    :'primary_site'
         },
         genomes:'both',
         text:{
@@ -153,6 +155,9 @@ function set_ttable_session(req) {
                req.session.ttable_filter.site[site_code] = 'on'
             }
        }
+       if(item == 'p_or_pst'){
+         req.session.ttable_filter.site.p_or_pst = req.body.p_or_pst
+       }
        //console.log('req.session.ttable_filter.site',req.session.ttable_filter.site)
        // if(item == 'oral'){
 //          req.session.ttable_filter.site.oral = 'on'
@@ -210,10 +215,7 @@ function apply_ttable_filter(req, filter) {
     //status
     // create array of 'on's
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
-     
-    //console.log('status_on',status_on)
-    big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
-    
+     big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     //site
     // create array of 'on's
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
@@ -223,21 +225,39 @@ function apply_ttable_filter(req, filter) {
     // taxon will be excluded here from the taxon table
 
     //console.log('olength-1',big_tax_list.length)
-
-    big_tax_list = big_tax_list.filter( function(item){
-        //sites = item.sites.join(",")
-        // ie: item.sites[0] == 'Oral (periodontitis)'
-        // ie site_on == 'oral_perio'
-        
-        for(let n in item.sites){
-
+     console.log('site_on',site_on)
+    console.log('C.site_lookup[328] ',Object.values(C.site_lookup[328]) )
+    if(filter.site.p_or_pst == 'primary_site'){
+       big_tax_list = big_tax_list.filter( function(item){
+         for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])
            if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all,item.sites[0]))){
            //if(site_on.includes(item.sites[n].toLowerCase())){
               return item
            }
-        }
-    })
+         }
+       })
+        
+    }else{
+        //C.site_lookup[1]
+        big_tax_list = big_tax_list.filter( function(item){
+         //let otid = item.otid
+         //console.log('otid',item)
+         if(item.otid in C.site_lookup){
+           //console.log('looking1')
+           let to_include = Object.values(C.site_lookup[item.otid])  // C.site_lookup[559]  [ '', 'Environmental (soil/water)', 'Opportunistic pathogen' ]
+           for(let n in site_on){  //'oral', 'nasal', 'skin','gut','vaginal','unassigned','enviro','pathogen'
+             let glom = to_include.join(' ').toLowerCase()
+             //console.log('site_on[n]',site_on[n],'glom',glom)
+             if(glom.includes(site_on[n])){
+                //if(site_on.includes(item.sites[n].toLowerCase())){
+                 return item
+             }
+           }
+         }
+       })
+    }
+    
 
 //console.log('olength-2',big_tax_list.length)
 
@@ -335,6 +355,7 @@ router.get('/reset_ttable', function tax_table_reset(req, res) {
 router.get('/tax_table', function tax_table_get(req, res) {
     console.log('in TT get')
     let filter,send_list
+    
     //console.log('get-session ',req.session.ttable_filter)
      
     if(req.session.ttable_filter){
@@ -361,16 +382,18 @@ router.get('/tax_table', function tax_table_get(req, res) {
 
 router.post('/tax_table', function tax_table_post(req, res) {
     console.log('in TT post')
-    //console.log(req.body)
+    console.log(req.body)
     let send_list
     set_ttable_session(req)
     //console.log('ttable_session',req.session.ttable_filter)
     let filter = req.session.ttable_filter
-    //console.log('filter',filter)
+    //console.log('filter1',filter)
     send_list = apply_ttable_filter(req, filter)
     
     let count_text = 'Number of Records Found: '+ send_list.length.toString()
+    //console.log('filter2',filter)
     let args = {filter:filter, send_list: send_list, count_txt: count_text, filter_on: get_filter_on(filter)}
+    
     renderTaxonTable(req, res, args)
      
 })
@@ -2078,29 +2101,35 @@ function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
       
       
       let temp_obj = {}
+      
+      //OTID
       var tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
       //var tmp_send_list = big_tax_list.filter(screen_tax_list)
-      
       // for uniqueness convert to object
       for(var n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
       
+      //Genus
       //console.log('srchfield',search_field, search_txt)
       //console.log('big_tax_list2.length',big_tax_list.length)
       tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
-      
       //console.log('tmp_send_list1',tmp_send_list)
       for(var n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
+      
+      
+      // Species
       //console.log('tmp_send_list2',tmp_send_list)
       tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
       for(var n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
+      
+      //Synonyms
       tmp_send_list = big_tax_list.filter( function filterBigList2(e) {
          for(var n in e.synonyms){
             if(e.synonyms[n].toLowerCase().includes(search_txt)){
@@ -2112,12 +2141,30 @@ function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
+      
+      //type_strains
       tmp_send_list = big_tax_list.filter( function filterBigList3(e) {
          for(var n in e.type_strains){
             if(e.type_strains[n].toLowerCase().includes(search_txt)){
                return e
             }
          }
+      })
+      for(var n in tmp_send_list){
+         temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+      }
+      
+      //Body Sites and their Notes
+      tmp_send_list = big_tax_list.filter( function filterBigList4(e) {
+         if(e.otid in C.site_lookup){
+             let to_include = Object.values(C.site_lookup[e.otid])
+             let glom = to_include.join(' ').toLowerCase()
+             //console.log('site_on[n]',site_on[n],'glom',glom)
+             if(glom.includes(search_txt)){
+                //if(site_on.includes(item.sites[n].toLowerCase())){
+                 return e
+             }
+          }
       })
       for(var n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]

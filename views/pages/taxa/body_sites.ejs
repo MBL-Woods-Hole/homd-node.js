@@ -1,10 +1,21 @@
 <style>
+/* Fix the tax table header */
+thead th { position: sticky; top: 0; }
+table th{
+   background:#C1E1C1;
+   border:1px solid black;
+}
 table td{
    padding: 2px 5px;
    border:1px solid black;
 }
+
+#body-sites-div{
+   padding:20px 0;
+   height:800px;
+   overflow:auto;
+}
 table {
-   
    border-collapse:collapse;
 }
 </style>
@@ -21,6 +32,8 @@ table {
     <div class='page-content' >
               
        <div class='title'>HOMD Taxa Preferred Body Sites</div>
+       
+       <div id='body-sites-div'>
        <table  class='table table-hover table-condensed sortable'>
        <tr><th>HMT-ID</th><th>Genus Species</th><th>Primary Body Site</th><th>Other Body Sites</th><th>Notes</th></tr>
        <% for(n in data){ %>
@@ -30,12 +43,16 @@ table {
              <td nowrap><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
              <td nowrap><i><%= data[n]['gsp'] %></i></td> 
              <td nowrap><%= data[n]['s1'] %></td>
-             <td nowrap><%= data[n]['s2'] %> <%= data[n]['s3'] %></td>
+             
+             <td nowrap><%= data[n]['s2'] %>
+             <% if(data[n]['s3']){%>
+                -- <%= data[n]['s3'] %></td>
+             <% } %>
              <td><%= data[n]['note'] %></td>
            </tr>
        <% } %>
        </table>
-  
+       </div>
         </div> <!-- end: page-content -->
     
     <div id='footer'>
