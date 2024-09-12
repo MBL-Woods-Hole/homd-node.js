@@ -225,14 +225,23 @@ function apply_ttable_filter(req, filter) {
     // taxon will be excluded here from the taxon table
 
     //console.log('olength-1',big_tax_list.length)
-     console.log('site_on',site_on)
-    console.log('C.site_lookup[328] ',Object.values(C.site_lookup[328]) )
+     //console.log('site_on',site_on)
+    //console.log('C.site_lookup[328] ',Object.values(C.site_lookup[328]) )
     if(filter.site.p_or_pst == 'primary_site'){
        big_tax_list = big_tax_list.filter( function(item){
          for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])
-           if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all,item.sites[0]))){
+           //console.log('item.sites',item.sites)
+           if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.sites[0]))){
            //if(site_on.includes(item.sites[n].toLowerCase())){
+              item.site = item.sites[0]
+              
+              // new code for JMW 2024-09-12
+              //console.log(item)
+              
+              if(item.otid in C.site_lookup){
+                 item.site = C.site_lookup[item.otid].s1
+              }
               return item
            }
          }
@@ -251,6 +260,7 @@ function apply_ttable_filter(req, filter) {
              //console.log('site_on[n]',site_on[n],'glom',glom)
              if(glom.includes(site_on[n])){
                 //if(site_on.includes(item.sites[n].toLowerCase())){
+                 item.site = item.sites[0]
                  return item
              }
            }
@@ -359,10 +369,10 @@ router.get('/tax_table', function tax_table_get(req, res) {
     //console.log('get-session ',req.session.ttable_filter)
      
     if(req.session.ttable_filter){
-        console.log('filetr session')
+        //console.log('filetr session')
         filter = req.session.ttable_filter
     }else{
-        console.log('filetr from default')
+        //console.log('filetr from default')
         filter = get_default_filter()
         req.session.ttable_filter = filter
     }
@@ -382,7 +392,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 
 router.post('/tax_table', function tax_table_post(req, res) {
     console.log('in TT post')
-    console.log(req.body)
+    //console.log(req.body)
     let send_list
     set_ttable_session(req)
     //console.log('ttable_session',req.session.ttable_filter)
@@ -759,7 +769,7 @@ router.get('/tax_description', function tax_description(req, res){
   // phage known to infect
   //let tmp_list = Object.values(C.phage_lookup).filter(item => item.host_otid === otid)
   //let pids = tmp_list.map()
-  console.log('d1',data1)
+  //console.log('d1',data1)
   //console.log('d3',data3)
   // get_genus photos
   let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
@@ -1264,14 +1274,24 @@ router.get('/ecology_home', function ecology_index(req, res) {
 router.get('/body_sites', function body_sites(req, res) {
 
     let send_list = [],obj
-    for(let otid in C.site_lookup){
+    //for(let otid in C.site_lookup){
+    for(let otid in C.taxon_lookup){
        obj = {}
        //console.log(C.taxon_lookup[otid])
        obj.otid = otid
-       obj.s1 = C.site_lookup[otid].s1
-       obj.s2 = C.site_lookup[otid].s2
-       obj.s3 = C.site_lookup[otid].s3
-       obj.note = C.site_lookup[otid].note
+       if(otid in C.site_lookup){
+         obj.s1 = C.site_lookup[otid].s1
+         obj.s2 = C.site_lookup[otid].s2
+         obj.s3 = C.site_lookup[otid].s3
+         obj.note = C.site_lookup[otid].note
+       }else{
+         obj.s1 = 'Unassigned'
+         obj.s2 = ''
+         obj.s3 = ''
+         obj.note = 'Missing From Database (C.site_lookup)'
+       }
+       obj.status = C.taxon_lookup[otid].status
+         
        obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
        send_list.push(obj)
     }
@@ -1316,7 +1336,7 @@ router.get('/ecology', function ecology(req, res) {
         
     }
     
-    console.log('target',target,req.query.page)
+    //console.log('target',target,req.query.page)
     if(req.query.otid && req.session.ttable_filter){
       //console.log('got otid for ttable')
       req.session.ttable_filter.otid = req.query.otid

@@ -35,13 +35,14 @@ table {
        
        <div id='body-sites-div'>
        <table  class='table table-hover table-condensed sortable'>
-       <tr><th>HMT-ID</th><th>Genus Species</th><th>Primary Body Site</th><th>Other Body Sites</th><th>Notes</th></tr>
+       <tr><th>HMT-ID</th><th>Genus Species</th><th>Status</th><th>Primary Body Site</th><th>Other Body Sites</th><th>Notes</th></tr>
        <% for(n in data){ %>
            <% otid = data[n].otid %>
            <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
            <tr>
              <td nowrap><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
              <td nowrap><i><%= data[n]['gsp'] %></i></td> 
+             <td nowrap><%= data[n].status %></td> 
              <td nowrap><%= data[n]['s1'] %></td>
              
              <td nowrap><%= data[n]['s2'] %>

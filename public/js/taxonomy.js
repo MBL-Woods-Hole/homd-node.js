@@ -515,7 +515,7 @@ function toggle_cb_sites(x){
         document.getElementById("pathogen").checked = false;
         document.getElementById("enviro").checked = false;
         document.getElementById("unassigned").checked = false;
-        var link_html = "[<a class=\"pill pill-orange\" href='#' onclick=\"toggle_cb_sites('on')\">Toggle On/Off</a>]"
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_sites('on')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_sites_span').innerHTML = link_html
     }else{
         document.getElementById("oral").checked = true;
@@ -526,7 +526,7 @@ function toggle_cb_sites(x){
         document.getElementById("pathogen").checked = true;
         document.getElementById("enviro").checked = true;
         document.getElementById("unassigned").checked = true;
-        var link_html = "[<a class=\"pill pill-orange\" href='#' onclick=\"toggle_cb_sites('off')\">Toggle On/Off</a>]"
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_sites('off')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_sites_span').innerHTML = link_html
     }
     update_sb()
@@ -540,7 +540,7 @@ function toggle_cb_status(x){
         document.getElementById("dropped").checked = false;
         document.getElementById("nonoralref").checked = false;
         
-        var link_html = "[<a class=\"pill pill-orange\" href='#' onclick=\"toggle_cb_status('on')\">Toggle On/Off</a>]"
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_status('on')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_status_span').innerHTML = link_html
     }else{
         document.getElementById("named").checked = true;
@@ -550,7 +550,7 @@ function toggle_cb_status(x){
         document.getElementById("dropped").checked = true;
         document.getElementById("nonoralref").checked = true;
         
-        var link_html = "[<a class=\"pill pill-orange\" href='#' onclick=\"toggle_cb_status('off')\">Toggle On/Off</a>]"
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_status('off')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_status_span').innerHTML = link_html
     }
     update_sb()
