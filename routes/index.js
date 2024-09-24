@@ -265,7 +265,7 @@ router.get('/poster', function poster(req, res) {
 
 router.post('/anno_protein_search', function anno_protein_search(req, res) {
     console.log('in POST::anno_protein_search')
-    console.log(req.body)
+    console.log('req.body',req.body)
     let obj,data,gid,name,resultObj={}
     let anno = req.body.anno
     let search_text = req.body.search_text
@@ -286,7 +286,7 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
     let q_prokka = "SELECT * from PROKKA_meta.orf WHERE protein_id='"+searchText+"' OR accession = '"+searchText+"'"
     let q_ncbi = "SELECT * from NCBI_meta.orf WHERE protein_id ='"+searchText+"' OR accession = '"+searchText+"'"
     console.log('q_prokka',q_prokka)
-    console.log('q_ncbi',q_ncbi)
+
     TDBConn.query(q_prokka, (err, prows) => {
         if (err) {
           console.log("prokka select error",err)
@@ -672,7 +672,7 @@ router.post('/site_search', function site_search(req, res) {
   let helpLst = []
   let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
   const grep_cmd = CFG.GREP_CMD + " -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
-  console.log('help grep_cmd2',grep_cmd)
+
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
         console.error('stderr',stderr);

@@ -255,6 +255,11 @@ hr{
   border:  1px solid black;;
   color: white;
 }
+.pill-lightpink {
+  background-color: LightPink;
+  border:  1px solid black;;
+  color: black;
+}
 .pill-slateblue {
   background-color: SlateBlue;
   border:  1px solid black;;

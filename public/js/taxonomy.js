@@ -482,10 +482,76 @@ $('#tax-box').on('scroll', function() {
     // row height = 41  top of table = 363
     //row0 = 363
     //row1 = 363 + 41 
-    
-    
-    
-    
 });
 
+function toggle_site_filter(filter_to_show) {
+    // either 'PST' Primary, Secondary or Tertiary
+    // Or 'P' for primary only
+    if(filter_to_show == 'PST'){
+      var link_html = "Filter/Search from Primary, Secondary or Tertiary Body Sites Instead: <a class=\"pill pill-green\" href='#' onclick=\"toggle_site_filter('P')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
+      link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>"
+       var title = 'Primary Body Site:'
+    }else{
+      var link_html = "Filter/Search from Primary Body Sites Only: <a class=\"pill pill-lightseagreen\" href='#' onclick=\"toggle_site_filter('PST')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
+      link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='pst_site' \>"
+      var title = 'Primary, Secondary and Tertiary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+      
+    }
+    update_sb()
+    document.getElementById('pst_filter_span').innerHTML = link_html
+    document.getElementById('body_site_title').innerHTML = title
+    document.getElementById('reset').style.color = 'orange'
+    document.getElementById('reset').style.background = 'black'
+    document.getElementById('reset').style.cursor = 'pointer'
 
+}
+function toggle_cb_sites(x){
+    if(x == 'off'){
+        document.getElementById("oral").checked = false;
+        document.getElementById("nasal").checked = false;
+        document.getElementById("skin").checked = false;
+        document.getElementById("gut").checked = false;
+        document.getElementById("vaginal").checked = false;
+        document.getElementById("pathogen").checked = false;
+        document.getElementById("enviro").checked = false;
+        document.getElementById("unassigned").checked = false;
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_sites('on')\">Toggle On/Off</a>]"
+        document.getElementById('toggle_cb_sites_span').innerHTML = link_html
+    }else{
+        document.getElementById("oral").checked = true;
+        document.getElementById("nasal").checked = true;
+        document.getElementById("skin").checked = true;
+        document.getElementById("gut").checked = true;
+        document.getElementById("vaginal").checked = true;
+        document.getElementById("pathogen").checked = true;
+        document.getElementById("enviro").checked = true;
+        document.getElementById("unassigned").checked = true;
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_sites('off')\">Toggle On/Off</a>]"
+        document.getElementById('toggle_cb_sites_span').innerHTML = link_html
+    }
+    update_sb()
+}
+function toggle_cb_status(x){
+    if(x == 'off'){
+        document.getElementById("named").checked = false;
+        document.getElementById("unnamed").checked = false;
+        document.getElementById("phylotype").checked = false;
+        document.getElementById("lost").checked = false;
+        document.getElementById("dropped").checked = false;
+        document.getElementById("nonoralref").checked = false;
+        
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_status('on')\">Toggle On/Off</a>]"
+        document.getElementById('toggle_cb_status_span').innerHTML = link_html
+    }else{
+        document.getElementById("named").checked = true;
+        document.getElementById("unnamed").checked = true;
+        document.getElementById("phylotype").checked = true;
+        document.getElementById("lost").checked = true;
+        document.getElementById("dropped").checked = true;
+        document.getElementById("nonoralref").checked = true;
+        
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_status('off')\">Toggle On/Off</a>]"
+        document.getElementById('toggle_cb_status_span').innerHTML = link_html
+    }
+    update_sb()
+}
