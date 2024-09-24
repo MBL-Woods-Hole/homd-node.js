@@ -44,11 +44,14 @@ table {
              <td nowrap><i><%= data[n]['gsp'] %></i></td> 
              <td nowrap><%= data[n].status %></td> 
              <td nowrap><%= data[n]['s1'] %></td>
-             
-             <td nowrap><%= data[n]['s2'] %>
-             <% if(data[n]['s3']){%>
-                -- <%= data[n]['s3'] %></td>
+             <td nowrap>
+             <% if(data[n]['s2']){%>
+                [<%= data[n]['s2'] %>]
              <% } %>
+             <% if(data[n]['s3']){%>
+                &nbsp;[<%= data[n]['s3'] %>]
+             <% } %>
+             </td>
              <td><%= data[n]['note'] %></td>
            </tr>
        <% } %>
