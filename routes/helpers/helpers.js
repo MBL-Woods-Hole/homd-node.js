@@ -1654,7 +1654,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     //console.log('olength-1',big_tax_list.length)
      //console.log('site_on',site_on)
     //console.log('C.site_lookup[328] ',Object.values(C.site_lookup[328]) )
-    if(filter.site.p_or_pst == 'primary_site'){
+    if(filter && filter.site.p_or_pst == 'primary_site'){
        big_tax_list = big_tax_list.filter( function(item){
          for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])
