@@ -329,9 +329,30 @@ td {
 
 
   <span>
-     
+     <% if(page == 'tables'){ %>
+         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' checked value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
+     <% }else if(page == 'plots'){ %>
+         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio' checked value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
+     <% }else if(page == 'lollipop'){ %>
+         <input type='radio' value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio'  value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' checked value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
+         
+     <% }else{ %>
+         <input type='radio' checked value='all' name='all' onclick="change_view('all','<%= rank %>','<%= tax_name %>')"> BarCharts and Tables&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='plots' name='plots' onclick="change_view('plots','<%= rank %>','<%= tax_name %>')"> Bar Charts Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='tables' name='tables' onclick="change_view('tables','<%= rank %>','<%= tax_name %>')"> Data Tables Only&nbsp;&nbsp;&nbsp;
+         <input type='radio' value='lollipop' name='lollipop' onclick="change_view('lollipop','<%= rank %>','<%= tax_name %>')"> Log-Lollipops
+     <% } %>
      <% if(rank == "species"){ %>
-        <span style=''><small>[<a href='body_sites?otid=<%= otid %>'>see all body sites data: <%= taxidfullname %></a>]</small></span>
+        <span style='margin-left:200px;'><small>[<a href='body_sites?otid=<%= otid %>'>see all body sites</a>]</small></span>
      <% } %>
   </span>
   

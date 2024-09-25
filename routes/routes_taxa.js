@@ -1574,10 +1574,12 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
         //console.log(phyla[p])
         node = node_list[i]
         lineage_list = helpers.make_lineage(node)
+        //console.log('node',node)
         //console.log('rank',rank)
-        //console.log('lineage_list2',lineage_list[0])
+        //console.log('lineage_list-2',lineage_list)
         
         //let avg = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
+        //console.log('C.taxon_counts_lookup[lineage_list[0]]',C.taxon_counts_lookup[lineage_list[0]])
         group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],rank)
         
     }
@@ -1738,6 +1740,10 @@ function sortByKeyDEC(array, key) {
 function get_site_avgs(obj,rank){
     //console.log('\nin obj',obj)
     let return_obj = {}
+    if(!obj){
+        return return_obj
+    }
+    
     let ref,site,count
     let abund_refs = C.abundance_refs
     //let abund_refs = ['dewhirst']
