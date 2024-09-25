@@ -70,7 +70,7 @@
     /* width:100px; */
 }
 #tax-table .col6{
-    width:50px;
+    width:250px;
     text-align:center;
 }
 #tax-table .col7{
@@ -100,7 +100,6 @@
    width:80%;
    border:1px solid red;
 }
-
 
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
 	content: " \25B4\25BE" 

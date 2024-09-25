@@ -18,6 +18,9 @@ table td{
 table {
    border-collapse:collapse;
 }
+.selected{
+   background:#FF7F50;
+}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <% data = JSON.parse(sites) %>
@@ -30,30 +33,37 @@ table {
     
     
     <div class='page-content' >
-              
+       
        <div class='title'>HOMD Taxa Preferred Body Sites</div>
        
+       <span class=''><a href='body_sites'>Reload Page</a></span>
        <div id='body-sites-div'>
-       <table  class='table table-hover table-condensed sortable'>
+       
+       <table id='main-table' class='table table-hover table-condensed sortable'>
        <tr><th>HMT-ID</th><th>Genus Species</th><th>Status</th><th>Primary Body Site</th><th>Other Body Sites</th><th>Notes</th></tr>
        <% for(n in data){ %>
            <% otid = data[n].otid %>
            <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
-           <tr>
-             <td nowrap><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
-             <td nowrap><i><%= data[n]['gsp'] %></i></td> 
-             <td nowrap><%= data[n].status %></td> 
-             <td nowrap><%= data[n]['s1'] %></td>
-             <td nowrap>
-             <% if(data[n]['s2']){%>
-                [<%= data[n]['s2'] %>]
-             <% } %>
-             <% if(data[n]['s3']){%>
-                &nbsp;[<%= data[n]['s3'] %>]
-             <% } %>
-             </td>
-             <td><%= data[n]['note'] %></td>
-           </tr>
+           <% if(selected == otid){ %>
+               <tr id='<%= otid %>' class='selected'>
+            <% }else{ %>
+                <tr id='<%= otid %>' class=''>
+            <% } %>
+                 <td nowrap><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
+                 <td nowrap><i><%= data[n]['gsp'] %></i></td> 
+                 <td nowrap><%= data[n].status %></td> 
+                 <td nowrap><%= data[n]['s1'] %></td>
+                 <td nowrap>
+                 <% if(data[n]['s2']){%>
+                    [<%= data[n]['s2'] %>]
+                 <% } %>
+                 <% if(data[n]['s3']){%>
+                    &nbsp;[<%= data[n]['s3'] %>]
+                 <% } %>
+                 </td>
+                 <td><%= data[n]['note'] %></td>
+               </tr>
+           
        <% } %>
        </table>
        </div>
@@ -72,6 +82,21 @@ table {
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
+  var div = document.getElementById("body-sites-div")
+  var otid = '<%= selected %>'
+  //table.scrollToRow({index: 100})
+  var $container = $(div),
+  
+  $scrollTo = $('#'+otid);
+
+  $container.scrollTop(
+    $scrollTo.offset().top - $container.offset().top + $container.scrollTop() -100
+  );
+
+  // Or you can animate the scrolling:
+  //$container.animate({
+      //scrollTop: $scrollTo.offset().top - $container.offset().top + $container.scrollTop()
+  //});​
 </script>
 
 

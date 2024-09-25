@@ -1272,8 +1272,13 @@ router.get('/ecology_home', function ecology_index(req, res) {
 })
 //
 router.get('/body_sites', function body_sites(req, res) {
-
-    let send_list = [],obj
+    //console.log('in body sites')
+    
+    let send_list = [],obj,selected_otid=''
+    if(req.query && req.query.otid){
+        selected_otid = req.query.otid
+    }
+    
     //for(let otid in C.site_lookup){
     for(let otid in C.taxon_lookup){
        obj = {}
@@ -1306,7 +1311,8 @@ router.get('/body_sites', function body_sites(req, res) {
       config: JSON.stringify(CFG),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user:  JSON.stringify(req.user || {}),
-      sites: JSON.stringify(send_list)
+      sites: JSON.stringify(send_list),
+      selected: selected_otid
       
     })
 })

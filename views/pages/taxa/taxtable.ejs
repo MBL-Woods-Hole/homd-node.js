@@ -44,19 +44,19 @@ thead th { position: sticky; top: 0; }
      <table id='tax-table' class='table table-hover table-condensed sortable' >
      <thead>
       <tr>
-        <th scope="col" nowrap><span onclick="('otid')">Taxon-ID</span></th>
-        <th scope="col"><span onclick="('genus')">Genus</span></th>
-        <th scope="col"><span onclick="('species')">Species</span></th>
-        <th scope="col"><span onclick="('strain')">Subspecies</span></th>
-        <th scope="col"><span onclick="('status')">Status</span></th>
+        <th class="col1" nowrap><span onclick="('otid')">Taxon-ID</span></th>
+        <th class='' scope="col"><span onclick="('genus')">Genus</span></th>
+        <th class='' scope="col"><span onclick="('species')">Species</span></th>
+        <th class="col4"><span onclick="('strain')">Subspecies</span></th>
+        <th class="col5"><span onclick="('status')">Status</span></th>
         
-        <th scope="col"><span id='' ">Primary Body<br>Site</span></th>
+        <th class="col6"><span id='' ">Primary Body<br>Site</span></th>
         
        <!--  <th scope="col" nowrap>Body Site</th> -->
-        <th scope="col" class="sorttable_nosort">Ecology<br>Link</th>
-        <th scope="col" class="sorttable_nosort" nowrap>Taxon<br>Link</th>
-        <th scope="col" class="sorttable_nosort" nowrap>Genome<br>Link</th>
-        <th scope="col" nowrap class="sorttable_nosort">Genome Size</th>
+        <th class="col7" class="sorttable_nosort">Ecology<br>Link</th>
+        <th class="col8" class="sorttable_nosort" nowrap>Taxon<br>Link</th>
+        <th class="col8" class="sorttable_nosort" nowrap>Genome<br>Link</th>
+        <th class="col8" nowrap class="sorttable_nosort">Genome Size</th>
       </tr>
      </thead>
      <tbody>
@@ -64,24 +64,24 @@ thead th { position: sticky; top: 0; }
        <% otid = list[n].otid %>
        <tr id='<%= otid %>'>
        <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
-       <td nowrap class='col1' ><%= taxidfullname  %></td>
-       <td nowrap class='col2' title='<%= list[n].genus  %>'><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
-       <td nowrap class='col3' title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
-       <td nowrap class='col4' title='<%= list[n].subsp  %>'><%= list[n].subsp  %></td>
+       <td nowrap ><%= taxidfullname  %></td>
+       <td nowrap title='<%= list[n].genus  %>'><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
+       <td nowrap title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
+       <td nowrap title='<%= list[n].subsp  %>'><%= list[n].subsp  %></td>
        
-       <td class='col5'><%= list[n].status  %></td>
+       <td ><%= list[n].status  %></td>
        
            
-       <td class='col5'><%= list[n].site  %></td>
+       <td><%= list[n].site  %> <span style='float:right'><small>[<a href='body_sites?otid=<%= otid %>'>see all sites</a>]</small></span></td>
        
      <!--   <td><%= list[n].sites  %></td> -->
        <% if(list[n].ecology === 1){ %>
-         <td class='col6' nowrap><a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>&otid=<%= otid %>" class="pill pill-green" >Ecology</a></td>
+         <td  nowrap><a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>&otid=<%= otid %>" class="pill pill-green" >Ecology</a></td>
        <% }else{ %>
-         <td class='col6' nowrap</td>
+         <td  nowrap</td>
        <% } %>
-       <td class='col7' nowrap><a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Taxon Description</a></td>
-       <td class='col8' nowrap>
+       <td  nowrap><a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Taxon Description</a></td>
+       <td  nowrap>
        <% num_genomes = list[n].genomes.length %>
        <% if(num_genomes === 0){ %>
          
@@ -93,7 +93,7 @@ thead th { position: sticky; top: 0; }
          
        <% } %>
        </td>
-       <td class='col9' nowrap><%= list[n].tlength_str  %></td>
+       <td  nowrap><%= list[n].tlength_str  %></td>
        </tr>
      <% } %>
      </tbody>
