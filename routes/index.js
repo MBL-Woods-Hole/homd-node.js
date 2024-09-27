@@ -336,7 +336,7 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
 })
 router.post('/get_annotations_counts_grep', function get_annotations_counts_grep(req, res) {
     console.log('POST::get_annotations_counts_grep')
-    console.log(req.body)
+    //console.log(req.body)
     
 
     var dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'

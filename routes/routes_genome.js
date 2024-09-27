@@ -10,6 +10,7 @@ const helpers   = require(app_root + '/routes/helpers/helpers')
 const queries = require(app_root + '/routes/queries')
 // const open = require('open')
 const createIframe = require("node-iframe")
+const https = require('https'); 
 
 router.get('/overview', function overview(req, res) {
     //console.log('in RESET-session')
@@ -1725,23 +1726,48 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   helpers.print(fullname)
   // Actual: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg
   // Copied to puplic/trees/eHOMD_Genomic_PhyloPhlAn_Tree.svg
-  let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Genomic_PhyloPhlAn_Tree.svg'
+  //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Genomic_PhyloPhlAn_Tree.svg'
+  let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_Genomic_PhyloPhlAn_Tree.svg'
+  https.get(filepath, (response) => { 
+     let data = ''; 
+ 
+     response.on('data', (chunk) => { 
+        data += chunk; 
+     }); 
+ 
+     response.on('end', () => { 
+        
+        //console.log('data',data); 
+         res.render('pages/genome/conserved_protein_tree', {
+           title: 'HOMD :: Conserved Protein Tree',
+           pgname: 'genome/tree', // for AboutThisPage
+           config: JSON.stringify(CFG),
+           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+           user: JSON.stringify(req.user || {}),
+           svg_data: JSON.stringify(data),
+           otid: fullname
+         }); 
+     });
+  }).on('error', (error) => { 
+    console.error(`Error fetching data: ${error.message}`); 
+  }); 
   
-  fs.readFile(filepath, 'utf8', function readSVGFile1 (err, data) {
-    if (err) {
-      console.log(err)
-    } else {
-      res.render('pages/genome/conserved_protein_tree', {
-        title: 'HOMD :: Conserved Protein Tree',
-        pgname: 'genome/tree', // for AboutThisPage
-        config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        user: JSON.stringify(req.user || {}),
-        svg_data: JSON.stringify(data),
-        otid: fullname
-      })
-    }
-  })
+  
+//   fs.readFile(filepath, 'utf8', function readSVGFile1 (err, data) {
+//     if (err) {
+//       console.log(err)
+//     } else {
+//       res.render('pages/genome/conserved_protein_tree', {
+//         title: 'HOMD :: Conserved Protein Tree',
+//         pgname: 'genome/tree', // for AboutThisPage
+//         config: JSON.stringify(CFG),
+//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//         user: JSON.stringify(req.user || {}),
+//         svg_data: JSON.stringify(data),
+//         otid: fullname
+//       })
+//     }
+//   })
 })
 router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   
@@ -1750,22 +1776,51 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   const otid = req.query.otid
   // Actual:: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg
   // Copied to public/trees/eHOMD_Ribosomal_Protein_Tree.svg
-  let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Ribosomal_Protein_Tree.svg'
-  fs.readFile(filepath, 'utf8', function readSVGFile2 (err, data) {
-    if (err) {
-      console.log(err)
-    } else {
-      res.render('pages/genome/ribosomal_protein_tree', {
-        title: 'HOMD :: Ribosomal Protein Tree',
-        pgname: 'genome/tree', // for AboutThisPage
-        config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-        user: JSON.stringify(req.user || {}),
-        svg_data: JSON.stringify(data),
-        otid: otid
-      })
-    }
-  })
+  //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Ribosomal_Protein_Tree.svg'
+  let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_Ribosomal_Protein_Tree.svg'
+  https.get(filepath, (response) => { 
+     let data = ''; 
+ 
+     response.on('data', (chunk) => { 
+        data += chunk; 
+     }); 
+ 
+     response.on('end', () => { 
+        
+        //console.log('data',data); 
+         res.render('pages/genome/ribosomal_protein_tree', {
+           title: 'HOMD :: Ribosomal Protein Tree',
+           pgname: 'genome/tree', // for AboutThisPage
+           config: JSON.stringify(CFG),
+           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+           user: JSON.stringify(req.user || {}),
+           svg_data: JSON.stringify(data),
+           otid: otid
+         }); 
+     });
+  }).on('error', (error) => { 
+    console.error(`Error fetching data: ${error.message}`); 
+  }); 
+  
+  
+  
+  
+  
+//   fs.readFile(filepath, 'utf8', function readSVGFile2 (err, data) {
+//     if (err) {
+//       console.log(err)
+//     } else {
+//       res.render('pages/genome/ribosomal_protein_tree', {
+//         title: 'HOMD :: Ribosomal Protein Tree',
+//         pgname: 'genome/tree', // for AboutThisPage
+//         config: JSON.stringify(CFG),
+//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//         user: JSON.stringify(req.user || {}),
+//         svg_data: JSON.stringify(data),
+//         otid: otid
+//       })
+//     }
+//   })
 })
 router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   
@@ -1775,22 +1830,48 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   const otid = req.query.otid
   helpers.print(['otid', otid])
   // https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.svg
-  let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_16S_rRNA_Tree.svg'
+  //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_16S_rRNA_Tree.svg'
+  let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_16S_rRNA_Tree.svg'
   
-  fs.readFile(filepath, 'utf8', function readSVGFile3 (err, data) {
-    if (err) {
-      console.log(err)
-    }
-    res.render('pages/genome/rRNA_gene_tree', {
-      title: 'HOMD :: rRNA Gene Tree',
-      pgname: 'genome/tree', // for AboutThisPage
-      config: JSON.stringify(CFG),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
-      user: JSON.stringify(req.user || {}),
-      svg_data: JSON.stringify(data),
-      otid: otid
-    })
-  })
+  https.get(filepath, (response) => { 
+     let data = ''; 
+ 
+     response.on('data', (chunk) => { 
+        data += chunk; 
+     }); 
+ 
+     response.on('end', () => { 
+        
+        //console.log('data',data); 
+         res.render('pages/genome/rRNA_gene_tree', {
+           title: 'HOMD :: rRNA Gene Tree',
+           pgname: 'genome/tree', // for AboutThisPage
+           config: JSON.stringify(CFG),
+           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+           user: JSON.stringify(req.user || {}),
+           svg_data: JSON.stringify(data),
+           otid: otid
+         })
+     });
+  }).on('error', (error) => { 
+    console.error(`Error fetching data: ${error.message}`); 
+  }); 
+  
+  
+//   fs.readFile(filepath, 'utf8', function readSVGFile3 (err, data) {
+//     if (err) {
+//       console.log(err)
+//     }
+//     res.render('pages/genome/rRNA_gene_tree', {
+//       title: 'HOMD :: rRNA Gene Tree',
+//       pgname: 'genome/tree', // for AboutThisPage
+//       config: JSON.stringify(CFG),
+//       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+//       user: JSON.stringify(req.user || {}),
+//       svg_data: JSON.stringify(data),
+//       otid: otid
+//     })
+//   })
 })
 //
 
