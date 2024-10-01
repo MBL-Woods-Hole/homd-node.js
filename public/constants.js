@@ -87,6 +87,28 @@ constants.abundance_names = {
 'VIN':'Vaginal Introitus (vaginal)',
 'PERIO':'Periodontal (oral)'
 }
+constants.abundance_site_colors ={
+    'AKE': '#ff7f0e', //Attached_Keratinized_gingiva
+    'ANA': '#ffbb78', //#Anterior_nares
+    'BMU':  '#2ca02c', //#Buccal_mucosa
+    'HPA':  '#98df8a', //#Hard_palate
+    'LAF':  '#d62728', //#L_Antecubital_fossa  # not in HMP
+    'PERIO': '#aec7e8',  //# ONLY in HMP
+    'LRC': '#ff9896',  //#L_Retroauricular_crease
+    'MVA': '#9467bd',  //#Mid_vagina
+    'PFO': '#c5b0d5',  //#Posterior_fornix
+    'PTO': '#8c564b',  //#Palatine_Tonsils
+    'RAF': '#c49c94',  //#R_Antecubital_fossa
+    'RRC': '#e377c2',  //#R_Retroauricular_crease
+    'SAL': '#f7b6d2',  //#Saliva
+    
+    'STO': '#7f7f7f',  //#Stool
+    'SUBP': '#c7c7c7', //#Subgingival_plaque
+    'SUPP': '#bcbd22', //#Supragingival_plaque
+    'THR': '#dbdb8d',  //#Throat
+    'TDO': '#17becf',  //#Tongue_dorsum
+    'VIN':'#9edae5'   //#Vaginal_introitus
+}
 //All the Capnocytophaga can be the same color;
 let capno_color = ['#a1ee0a','#98fb98','#00ff7f','#adff2f']  // 4 greens
 //both Corynebacterium matruchotii and Corynebacterium durum can be the same color;

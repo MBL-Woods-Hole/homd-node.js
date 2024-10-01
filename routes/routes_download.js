@@ -156,6 +156,10 @@ router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
     }else if(fxn == 'hierarchy'){
         file_filter_txt = "HOMD.org Taxon Data::Taxonomic Hierarchy" 
         table_tsv = create_taxon_table(list_of_otids, 'hierarchy', type, file_filter_txt )
+    }else if(fxn == 'lineage'){
+        file_filter_txt = "HOMD.org Taxon Data::Taxonomic Lineage" 
+        table_tsv = create_taxon_table(list_of_otids, 'lineage', type, file_filter_txt )
+    
     }else {
        // type error
     }
@@ -545,6 +549,25 @@ function create_taxon_table(otids, source, type, head_txt) {
                         ]
                var row = r.join('\t')
                txt += '\n'+row
+            }
+        }
+    }else if(source === 'lineage'){
+       headers = ['HMT-ID','Domain','Phylum','Class','Order','Family','Genus','Species','Subspecies']
+       txt +=  headers.join('\t')+'\n'
+       for(var n in otids){
+            otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
+            console.log('hmt',otids[n])
+            console.log(C.taxon_lineage_lookup[otids[n]])
+            if(otids[n] in C.taxon_lineage_lookup){
+                txt += otid_pretty+'\t'+C.taxon_lineage_lookup[otids[n]].domain
+                txt += '\t'+C.taxon_lineage_lookup[otids[n]].phylum
+                txt += '\t'+C.taxon_lineage_lookup[otids[n]].klass
+                txt += '\t'+C.taxon_lineage_lookup[otids[n]].order
+                txt += '\t'+C.taxon_lineage_lookup[otids[n]].family
+                txt += '\t'+C.taxon_lineage_lookup[otids[n]].genus
+                txt += '\t'+C.taxon_lineage_lookup[otids[n]].species
+                txt += '\t'+C.taxon_lineage_lookup[otids[n]].subspecies
+                txt += '\n'
             }
         }
     }else if(source === 'level'){

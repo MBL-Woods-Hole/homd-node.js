@@ -1544,6 +1544,7 @@ router.get('/ecology', function ecology(req, res) {
       hmp_refseqv3v5: JSON.stringify(hmp_refseqv3v5_data),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
       user: JSON.stringify(req.user || {}),
+      site_colors: JSON.stringify(C.abundance_site_colors),
     })
 })
 function sort_obj_by_abundance_order(obj,order){
@@ -2299,7 +2300,7 @@ function build_abundance_table(cite, data, order){
     let datapt = ''
     var html = "<table class='abundance-table'><thead><tr><td></td>"
     for(var n in order){
-        html += "<th title='"+C.abundance_names[order[n]]+"'>"+order[n]+'</th>'
+        html += "<th title='"+C.abundance_names[order[n]]+"' style='background:"+C.abundance_site_colors[order[n]]+"'>"+order[n]+'</th>'
     }
     html += '</tr></thead><tbody>'
    

@@ -186,14 +186,6 @@ td {
 .legend_item{
   padding:1px;
 }
-#legend-table{
-   width:100%;
-}
-#legend-table td{
-   font-size:small;
-   text-align: left;
-   padding-left:2px;
-}
 </style>
 
 <% dewhirst_data = JSON.parse(dewhirst) %>
@@ -297,33 +289,31 @@ td {
         <div id='legend'>
         <div class='menu-title'>Body Site Legend:</div>
             <div id='legend-content'>
-            <table id='legend-table'>
-              <tr><td><center><b>Oral:</b></center></td></tr>
-              <tr><td class='legend_item' style="background:<%= site_colors_html['SUBP'] %>">SUBP-- Subgingival Plaque</td></tr>
-                <tr><td  class='legend_item' style="background:<%= site_colors_html['SUPP'] %>">SUPP -- Supragingival Plaque</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['PERIO'] %>">PERIO -- Periodontal</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['AKE'] %>">AKE -- Attached Keratinized Gingiva</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['BMU'] %>">BMU -- Buccal Mucosa</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['HPA'] %>">HPA -- Hard Palate</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['SAL'] %>">SAL -- Saliva</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['THR'] %>">THR -- Throat</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['PTO'] %>">PTO -- Palatine Tonsils</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['TDO'] %>">TDO -- Tongue Dorsum</td></tr>
-              <tr><td><center><b>Nasal:</b></center></td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['ANA'] %>">ANA -- Anterior Nares</td></tr>
-              <tr><td><center><b>Skin:</b></center></td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['LRC'] %>">LRC -- L_Retroauricular Crease</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['RRC'] %>">RRC -- R_Retroauricular Crease</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['LAF'] %>">LAF -- L_Antecubital Fossa</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['RAF'] %>">RAF -- R_Antecubital Fossa</td></tr>
-              <tr><td><center><b>Vaginal:</b></center></td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['VIN'] %>">VIN -- Vaginal Introitus</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['MVA'] %>">MVA -- Mid Vagina</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['PFO'] %>">PFO -- Posterior Fornix</td></tr>
-              <tr><td><center><b>Gut:</b></td></center></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['STO'] %>">STO -- Stool</td></tr>
-              </table>
-              
+            <ol>
+              <li><b>Oral:</b>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['SUBP'] %>">SUBP -- Subgingival Plaque</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['SUPP'] %>">SUPP -- Supragingival Plaque</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['PERIO'] %>">PERIO -- Periodontal</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['AKE'] %>">AKE -- Attached Keratinized Gingiva</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['BMU'] %>">BMU -- Buccal Mucosa</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['HPA'] %>">HPA -- Hard Palate</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['SAL'] %>">SAL -- Saliva</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['THR'] %>">THR -- Throat</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['PTO'] %>">PTO -- Palatine Tonsils</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['TDO'] %>">TDO -- Tongue Dorsum</span>
+              <li><b>Nasal:</b>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['ANA'] %>">ANA -- Anterior Nares</span>
+              <li><b>Skin:</b>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['LRC'] %>">LRC -- L_Retroauricular Crease</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['RRC'] %>">RRC -- R_Retroauricular Crease</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['LAF'] %>">LAF -- L_Antecubital Fossa</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['RAF'] %>">RAF -- R_Antecubital Fossa</span>
+              <li><b>Vaginal:</b>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['VIN'] %>">VIN -- Vaginal Introitus</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['MVA'] %>">MVA -- Mid Vagina</span>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['PFO'] %>">PFO -- Posterior Fornix</span>
+              <li><b>Gut:</b>
+                <br>&nbsp;<span class='legend_item' style="background:<%= site_colors_html['STO'] %>">STO -- Stool</span>
               <hr>
               Prev - Prevalence
               <br>10<sup>th</sup>p - 10<sup>th</sup> percentile

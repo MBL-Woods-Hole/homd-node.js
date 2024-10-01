@@ -155,7 +155,9 @@
   padding:8px;
   color:black;
 }
-
+#lineage{
+    
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -189,7 +191,11 @@
   </div>
 <% } %>
 
-
+<center><span id='lineage'><%= data3.domain %>;<%= data3.phylum %>;<%= data3.klass %>;<%= data3.order %>;<%= data3.family %>;<%= data1.genus %>;<%= data1.species %>
+<% if(data3.subspecies){ %>
+  <%= data3.subspecies %>
+<% } %>
+</span></center>
 <div id='tables'>
 <br><!-- <div id='status'>Preferred Body Site(s): [<%= data1.sites %>]</div> -->
 <table id='description_tbl' border='1'>
