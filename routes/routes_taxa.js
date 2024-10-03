@@ -1404,6 +1404,7 @@ router.get('/ecology', function ecology(req, res) {
    if(!node){
       console.log('ERROR Node')
    }
+   console.log('node',node)
    let lineage_list = helpers.make_lineage(node)
    //console.log(C.taxon_counts_lookup)
    if(!lineage_list[0]){
@@ -1501,7 +1502,7 @@ router.get('/ecology', function ecology(req, res) {
         hmp_refseqv3v5_notes = 'No data – the v3v5 region of the 16S rRNA gene does not distinguish this species from its close relatives.'
     }
     //console.log('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
-    
+    console.log('lineage_list',lineage_list)
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology', page)
     
    //console.log('data=>',erenv1v3_data,'<=data')

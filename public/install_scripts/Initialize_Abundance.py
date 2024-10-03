@@ -168,6 +168,11 @@ CREATE TABLE `abundance` (
   `VIN_90p` varchar(11) NOT NULL DEFAULT '',
   `VIN_prev` varchar(11) NOT NULL DEFAULT '',
   `VIN_sd` varchar(11) NOT NULL DEFAULT '',
+  `PERIO_mean` varchar(11) NOT NULL DEFAULT '',
+  `PERIO_10p` varchar(11) DEFAULT '',
+  `PERIO_90p` varchar(11) DEFAULT '',
+  `PERIO_prev` varchar(11) DEFAULT '',
+  `PERIO_sd` varchar(11) DEFAULT '',
   PRIMARY KEY (`abundance_id`),
   UNIQUE KEY `reference` (`reference`,`AKE_mean`,`domain_id`,`phylum_id`,`klass_id`,`order_id`,`family_id`,`genus_id`,`species_id`,`subspecies_id`),
   KEY `abundance_id_ibfk_4` (`otid`),
@@ -187,7 +192,7 @@ CREATE TABLE `abundance` (
   CONSTRAINT `abundance_ibfk_6` FOREIGN KEY (`genus_id`) REFERENCES `genus` (`genus_id`) ON UPDATE CASCADE,
   CONSTRAINT `abundance_ibfk_7` FOREIGN KEY (`species_id`) REFERENCES `species` (`species_id`) ON UPDATE CASCADE,
   CONSTRAINT `abundance_ibfk_8` FOREIGN KEY (`subspecies_id`) REFERENCES `subspecies` (`subspecies_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 """
 
@@ -281,7 +286,7 @@ def run_abundance_db():
         
         if taxon_string not in TCcollector:
             #print()
-            #print(row)
+            print(row)
             missing_count +=1
             print(missing_count,'!Missing from TaxonCounts.json -('+row['reference']+')::'+taxon_string)
             TCcollector[taxon_string] = {}
@@ -422,7 +427,7 @@ def fix_taxonomyX(taxonomy):
     return ';'.join(new_tax)
     
 def get_max(row, p, max_ref):
-    print('row',row)
+    #print('row',row)
     #if row['reference'] =='HMP_MetaPhlan':
     #    print('row',row['taxonomy'])
     test = row[p+'_mean']

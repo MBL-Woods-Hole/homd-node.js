@@ -186,6 +186,7 @@ function TaxonomyTree(rows) {
   this.taxa_tree_dict_map_by_rank = make_dictMap_by_rank(this.taxa_tree_dict);
   //console.log("HHH1");
   //console.log("taxonomy_obj = " + JSON.stringify(this.taxonomy_obj));
+  //console.log("taxonomy_obj673 = " + JSON.stringify(this.taxonomy_obj.filter(item => item.otid=='673')));
   //console.log("HHH");
 }
 
