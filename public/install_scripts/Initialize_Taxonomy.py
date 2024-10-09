@@ -36,7 +36,7 @@ nonoral_otids = []  # must get from DB
 
 query_taxa ="""
 SELECT otid, taxonomy_id, genus, species,
-warning, status, notes,
+warning, status,naming_status, cultivation_status,notes,
 ncbi_taxon_id as ncbi_taxid
 from otid_prime
 join taxonomy using(taxonomy_id)
@@ -64,6 +64,8 @@ def create_taxon(otid):
     taxon = {}
     taxon['otid'] = otid
     taxon['status'] = ''
+    taxon['naming_status'] = ''
+    taxon['cultivation_status'] = ''
     taxon['notes'] = ''
     taxon['genus'] = ''
     taxon['species'] = ''
@@ -96,12 +98,12 @@ def run_taxa(args):
         otid = str(obj['otid'])
         taxonObj = create_taxon(otid)
         
-        if obj['status'] == 'Dropped':
+        if obj['naming_status'] == 'Dropped' and  obj['cultivation_status'] == 'Dropped':
             dropped_otids.append(otid)
-        if obj['status'] == 'NonOralRef':
-            nonoral_otids.append(otid)
         
         taxonObj['status']     = obj['status']
+        taxonObj['naming_status']     = obj['naming_status']
+        taxonObj['cultivation_status']  = obj['cultivation_status']
         taxonObj['genus']      = obj['genus']
         taxonObj['species']    = obj['species']
         taxonObj['warning']    = obj['warning']
@@ -131,7 +133,7 @@ def run_get_genomes(args):  ## add this data to master_lookup
         if otid not in tlength_lookup:
             tlength_lookup[otid] = []
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['genomes'].append(obj['seq_id'])
 
             tlength_lookup[otid].append(obj['tlength'])
@@ -148,7 +150,7 @@ def run_synonyms(args):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['synonyms'].append(obj['synonym'])
         else:
             sys.exit('problem with synonym exiting: '+otid)
@@ -164,7 +166,7 @@ def run_type_strain(args):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['type_strains'].append(obj['type_strain'])
         else:
             pass
@@ -180,7 +182,7 @@ def run_sites(args):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['sites'].append(obj['primary_body_site'])
         else:
             sys.exit('problem with site exiting')
@@ -201,7 +203,7 @@ def run_sites(args):
             lookup[otid] = {}
             lookup[otid]['note'] = note
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             #print('obj',obj)
             if obj['priority'] == 1:
                 lookup[otid]['s1'] = obj['site']
@@ -226,7 +228,7 @@ def run_ref_strain(args):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['ref_strains'].append(obj['reference_strain'])
         else:
             sys.exit('problem with reference_strain exiting')
@@ -240,7 +242,7 @@ def run_rrna_sequences(ars):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['rrna_sequences'].append(obj['rrna_sequence'])
         else:
             sys.exit('problem with rrna_sequence exiting')
@@ -252,7 +254,7 @@ def run_pangenomes(args):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             if obj['pangenome'] not in master_lookup[otid]['pangenomes']:
                 master_lookup[otid]['pangenomes'].append(obj['pangenome'])
         else:
@@ -276,23 +278,9 @@ def run_refseq(args):
         newobj['seqname']  =  obj['seqname']
         newobj['strain']   =  obj['strain']
         newobj['genbank']  =  obj['genbank']
-        #newobj['status']   =  obj['status']
-        #newobj['site']     =  obj['site']
-        #newobj['flag']     =  obj['flag']
+        
         refseq_lookup[otid].append(newobj)
-    # tcount_wdropped=0
-#     tcount_nodropped=0
-#     for otid in refseq_lookup:
-#         print('refseq',otid,len(refseq_lookup[otid]))
-#         tcount_wdropped += len(refseq_lookup[otid])
-#         if otid in nonoral_otids:
-#            print('nonOralRef',otid)
-#         if otid in dropped_otids:
-#            print('dropped',otid)
-#         else:
-#            tcount_nodropped += len(refseq_lookup[otid])
-#     print('Twdropped',tcount_wdropped) 
-#     print('TNOdropped',tcount_nodropped) 
+   
     file=os.path.join(args.outdir,args.outfileprefix+'RefSeqLookup.json')
     print_dict(file, refseq_lookup)
 
@@ -419,7 +407,7 @@ JOIN species  using(species_id)
 JOIN subspecies  using(subspecies_id)
     """
 ## IMPORTANT -- DO NOT LET Dropped into hiearchy/Lineage/Counts
-    qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies,status
+    qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies,status,naming_status,cultivation_status
         FROM otid_prime
         JOIN taxonomy using(taxonomy_id)
         JOIN domain using(domain_id)
