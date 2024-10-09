@@ -27,7 +27,8 @@ function renderTaxonTable(req, res, args) {
             data: JSON.stringify(args.send_list),
             count_txt: args.count_txt,
             filter: JSON.stringify(args.filter),
-            filter_on: args.filter_on
+            filter_on: args.filter_on,
+            phyla: JSON.stringify(helpers.get_all_phyla().sort()),
               
         })
 }
@@ -380,8 +381,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
     send_list = helpers.apply_ttable_filter(req, filter)
     //console.log('LENGTH',send_list.length)
     //let big_tax_list0 = Object.values(C.taxon_lookup);
-    let specific = send_list.filter(item => (item.otid == '831'))
-    //console.log('sendlist831',specific)
+    let specific = send_list.filter(item => (item.otid == '209'))
+    console.log('sendlist209',specific)
      //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
      let count_text = 'Number of Records Found: '+ send_list.length.toString()
      //console.log('filter',filter)

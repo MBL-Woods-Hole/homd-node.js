@@ -43,65 +43,74 @@
 <% gc2 = (parseFloat(ginfo.gc)/100).toFixed(2) %>
 <% var cfg = JSON.parse(config) %> 
 <body>
-  	<div id='wrapper'>
+    <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
 <span class='back_btn' ><a href='/genome/genome_table'>Back To Genome Table</a></span>     
-<center>	
-		
-		<div class='title'>Genome Meta Information: 
-		<i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.culture_strain %></div>
+<center>    
+        
+        <div class='title'>Genome Meta Information: 
+        <i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.culture_strain %></div>
 
 <% if(Object.keys(ginfo).length ==0 ) { %>
-    <br><br>No Data Found for Genome: <%= gid %>		
+    <br><br>No Data Found for Genome: <%= gid %>        
 <% }else{ %>
     
-	<div id='header_buttons' >
-	 <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (<%= taxidfullnameplus %>)</a>
-	 <!-- <a class='gd-button' href="<%= cfg.JBROWSE_URL %>/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a> -->
-	 <a class='gd-button' href='#' onclick="open_jbrowse('<%= ginfo.gid %>','explorer','<%= gc2 %>')">Genome Viewer</a>
+    <div id='header_buttons' >
+     <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page: (<%= taxidfullnameplus %>)</a>
+     <!-- <a class='gd-button' href="<%= cfg.JBROWSE_URL %>/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a> -->
+     <a class='gd-button' href='#' onclick="open_jbrowse('<%= ginfo.gid %>','explorer','<%= gc2 %>')">Genome Viewer</a>
         
-	 <form name='' class="form-inline" method='POST' action='blast_ss_single'>
+     <form name='' class="form-inline" method='POST' action='blast_ss_single'>
          <input type='hidden' name='gid' value='<%= ginfo.gid %>'>
          <input type='hidden' name='annotation' value='prokka'>
          <input type='submit' class='gd-button' value='BLAST'>
      </form>
-	 <!-- <a class='gd-button' href='/genome_blast_single?gid=<%= ginfo.gid %>' target='_blank'>BLAST</a> -->
-	 
-	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA Annotation</a>
-	 <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI Annotation</a>
-	</div>
-    <div id='table_div' >						
+     <!-- <a class='gd-button' href='/genome_blast_single?gid=<%= ginfo.gid %>' target='_blank'>BLAST</a> -->
+     
+     <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA Annotation</a>
+     <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI Annotation</a>
+    </div>
+    <div id='table_div' >                       
 
 
      <table id='gnomdesc-table' class="table " border='0' >
-	<tr class=""><td>Genome Assembly Name</td><td><%= ginfo.ncbi_assembly_name %></td></tr>
-	<tr class=""><td>Organism Name (as deposited)</td><td><i><%= ginfo.organism %></i></td></tr>
-	<tr class=""><td>Organism Name (in use)</td><td><i><%= ginfo.genus %> <%= ginfo.species %></i></td></tr>
-	<tr class=""><td>Infraspecific Name</td><td><%= ginfo.culture_strain %></td></tr>
-	<tr class=""><td>BioSample</td><td><a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_biosample %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_biosample %></a></td></tr>
-    <tr class=""><td>BioProject</td><td><a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bioproject %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_bioproject %></a></td></tr>
+    <tr class=""><td>Genome Assembly Name</td><td><%= ginfo.ncbi_assembly_name %></td></tr>
+    <tr class=""><td>Organism Name (as deposited)</td><td><i><%= ginfo.organism %></i></td></tr>
+    <tr class=""><td>Organism Name (in use)</td><td><i><%= ginfo.genus %> <%= ginfo.species %></i></td></tr>
+    <tr class=""><td>Infraspecific Name</td><td><%= ginfo.culture_strain %></td></tr>
+    <tr class=""><td>BioSample</td>
+      <td><%= ginfo.ncbi_biosample %>
+        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_biosample %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+      </td>
+    </tr>
+    <tr class=""><td>BioProject</td>
+      <td><%= ginfo.ncbi_bioproject %>
+        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bioproject %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+      </td>
+    </tr>
     <tr class=""><td>Submitter or Sequencing Center</td><td><%= ginfo.submitter %></td></tr>
     <tr class=""><td>Date</td><td><%= ginfo.date %></td></tr>
-	<tr class=""><td>Assembly Type</td><td><%= ginfo.assembly_type %></td></tr>
-	<tr class=""><td>Assembly Method</td><td><%= ginfo.method %></td></tr>
-	<tr class=""><td>Assembly Level</td><td><%= ginfo.assembly_level %></td></tr>
+    <tr class=""><td>Assembly Type</td><td><%= ginfo.assembly_type %></td></tr>
+    <tr class=""><td>Assembly Method</td><td><%= ginfo.method %></td></tr>
+    <tr class=""><td>Assembly Level</td><td><%= ginfo.assembly_level %></td></tr>
      
      
-	<tr class=""><td>GenBank Assembly Accession</td>
-       <td>
-         <a href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_assembly %></a>
+    <tr class=""><td>GenBank Assembly Accession</td>
+       <td><%= ginfo.gb_assembly %>
+         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+         &nbsp;&nbsp;[<a title='Genome Taxonomy Database' href='https://gtdb.ecogenomic.org/genome?gid=<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">GTDB</a>]
        </td>
-	</tr>
-	<tr class=""><td title='Genome Taxonomy Database'>Genome Taxonomy Database (GTDB)</td>
-       <td>
-         <a href='https://gtdb.ecogenomic.org/genome?gid=<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.gb_assembly %></a>
+    </tr>
+    
+    <tr class=""><td>RefSeq Assembly Accession</td>
+       <td><%= ginfo.refseq_assembly %>
+         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.refseq_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
        </td>
-	</tr>
-	 <tr class=""><td>RefSeq Assembly Accession</td><td><a href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.refseq_assembly %>' target='_blank' rel="noopener noreferrer"><%= ginfo.refseq_assembly %></a></td></tr>
+    </tr>
      
-	
+    
      <tr class=""><td>HOMD Sequence ID</td><td><%= ginfo.gid %></td></tr>
      <tr class=""><td>HOMD Taxon ID</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= taxidfullnameplus %></a></td></tr>
      <tr class=""><td title='Whole Genome Sequence'>WGS Project</td><td><a href='https://www.ncbi.nlm.nih.gov/Traces/wgs/<%= ginfo.wgs %>' target='_blank' rel="noopener noreferrer"><%= ginfo.wgs %></a></td></tr>

@@ -77,11 +77,25 @@
 <div class='alpha-select' >
         
         <small><span class='filter-title'>Phylum by Alphabet:</span>
-        TBD
+        <br>
+        <select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onchange="phylum_submit(this.value)">
+        <optgroup>
+          <option value=''>Select a Phylum</option>
+          <% for(n in phyla) { %>
+            <% if(phyla[n] === statusfltr.phylum){ %>
+              <option selected value='<%= phyla[n] %>'><%= phyla[n] %></option>
+            <% }else{ %>
+              <option value='<%= phyla[n] %>'><%= phyla[n] %></option>
+            <% } %>
+          <% } %>
+        </optgroup>
+        </select>
+        
+        
         
         </small>
 </div>
-</td><td valign='top'>	
+</td><td valign='top'>  
 
 <div id='reset_div'>
   <a class='button' id='reset' href='reset_ttable'>Reset Filters</a> 
@@ -299,9 +313,9 @@
  </td></tr>
 </table>
 
-</td></tr>	
+</td></tr>  
 </table>
-</form>	
+</form> 
  
 </div>
-		 
+         

@@ -1545,6 +1545,9 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
        if(item == 'letter'){
          req.session.ttable_filter.letter = req.body.letter
        }
+       if(item == 'phylum'){
+         req.session.ttable_filter.phylum = req.body.phylum
+       }
        if(item == 'genomes'){
          req.session.ttable_filter.genomes = req.body.genomes
        }
@@ -1911,6 +1914,7 @@ module.exports.get_default_filter = function get_default_filter(){
             field: 'all',
         },
         letter: '0',
+        phylum:'0',
         sort_col: 'genus',
         sort_rev: 'off'
     }
@@ -1944,8 +1948,14 @@ module.exports.get_null_filter = function get_null_filter(){
             field: 'all',
         },
         letter: '0',
+        phylum:'0',
         sort_col: 'genus',
         sort_rev: 'off'
     }
     return nullfilter
+}
+module.exports.get_all_phyla = function get_all_phyla(){
+    var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
+    var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
+    return phyla
 }

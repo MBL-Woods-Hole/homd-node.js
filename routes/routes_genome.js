@@ -149,7 +149,7 @@ function renderGenomeTable(req, res, args) {
         rows_per_page: args.pd.rows_per_page,
         gcount: gcount, 
         tcount: taxa_wgenomes.length,
-        phyla: JSON.stringify(get_all_phyla().sort()),
+        phyla: JSON.stringify(helpers.get_all_phyla().sort()),
         count_txt: args.count_txt,
         taxa_wgenomes: get_taxa_wgenomes().length,
         filter_on: args.filter_on
@@ -182,11 +182,7 @@ function get_default_gtable_filter(){
     }
     return defaultfilter
 }
-function get_all_phyla(){
-    var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
-    var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
-    return phyla
-}
+
 function get_taxa_wgenomes(){
     let alltax_list = Object.values(C.taxon_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
     let taxa_wgenomes = alltax_list.filter(item => item.genomes.length >0)
