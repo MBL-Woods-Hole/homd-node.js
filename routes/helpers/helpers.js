@@ -1557,17 +1557,24 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
        if(item == 'sort_rev'){
          req.session.ttable_filter.sort_rev = 'on'
        }
-       if(item == 'named'){
-         req.session.ttable_filter.status.named = 'on'
+       
+// Named Cultivated
+// Unnamed Uncultivated
+// Named Uncultivated
+// Dropped Dropped
+// Unnamed Cultivated
+
+       if(item == 'named_cultivated'){
+         req.session.ttable_filter.status.named_cultivated = 'on'
        }
-       if(item == 'unnamed'){
-         req.session.ttable_filter.status.unnamed = 'on'
+       if(item == 'unnamed_uncultivated'){
+         req.session.ttable_filter.status.unnamed_uncultivated = 'on'
        }
-       if(item == 'phylotype'){
-         req.session.ttable_filter.status.phylotype = 'on'
+       if(item == 'named_uncultivated'){
+         req.session.ttable_filter.status.named_uncultivated = 'on'
        }
-       if(item == 'lost'){
-         req.session.ttable_filter.status.lost = 'on'
+       if(item == 'unnamed_cultivated'){
+         req.session.ttable_filter.status.unnamed_cultivated = 'on'
        }
        if(item == 'dropped'){
          req.session.ttable_filter.status.dropped = 'on'
@@ -1640,12 +1647,27 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     if(vals.text.txt_srch !== ''){
        big_tax_list = helpers.get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
     }
-    //console.log('big_tax_list',big_tax_list)
+    //console.log('big_tax_list',big_tax_list[0])
     //console.log('vals',vals)
     //status
     // create array of 'on's
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
-     big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
+    //console.log('status_on',status_on)
+    let combo = ''
+    big_tax_list = big_tax_list.filter( function filterStatus(item) {
+        combo = (item.naming_status.split(/(\s+)/)[0] +'_'+item.cultivation_status.split(/(\s+)/)[0]).toLowerCase()
+        if(item.naming_status =='Dropped' || item.naming_status =='NonOralRef'){
+            combo = item.naming_status.toLowerCase()
+        }
+        //console.log(combo)
+        if(status_on.indexOf(combo) !==-1){
+            return item
+        }
+    })
+
+    //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
+    
+    
     //site
     // create array of 'on's
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
@@ -1889,12 +1911,13 @@ module.exports.get_default_filter = function get_default_filter(){
     let defaultfilter = {
         otid:'',
         status:{
-            named:'on',
-            unnamed:'on',
-            phylotype: 'on',
-            lost: 'on',
+            named_cultivated:'on',
+            named_uncultivated:'on',
+            unnamed_cultivated: 'on',
+            unnamed_uncultivated: 'on',
             dropped:'off',
             nonoralref:'off'
+            
         },
         site:{
            oral:'on',
@@ -1924,12 +1947,13 @@ module.exports.get_null_filter = function get_null_filter(){
     let nullfilter = {
         otid:'',
         status:{
-            named:'off',
-            unnamed:'off',
-            phylotype: 'off',
-            lost: 'off',
+            named_cultivated:'off',
+            named_uncultivated:'off',
+            unnamed_cultivated: 'off',
+            unnamed_uncultivated: 'off',
             dropped:'off',
             nonoralref:'off'
+            
         },
         site:{
            oral:'off',

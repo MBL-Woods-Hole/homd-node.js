@@ -183,37 +183,37 @@
 <td>
          <small>
             <span class='filter-title'>Status</span>:&nbsp;&nbsp;
-            <% if(statusfltr.status.named === 'on'){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='named' name='named' onclick='update_sb()'\> Named&nbsp;
+            <% if(statusfltr.status.named_cultivated === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='named_cultivated' name='named_cultivated' onclick='update_sb()'\> Named/Cultivated&nbsp;
             <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='named' name='named' onclick='update_sb()'\> Named&nbsp;
+                <input type='checkbox' class='filter_ckbx' id='named_cultivated' name='named_cultivated' onclick='update_sb()'\> Named/Cultivated&nbsp;
             <% } %>
-            <% if(statusfltr.status.unnamed === 'on'){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='unnamed' name='unnamed' onclick='update_sb()' \> Unnamed&nbsp;
+            <% if(statusfltr.status.named_uncultivated === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='named_uncultivated' name='named_uncultivated' onclick='update_sb()' \> Named/Uncultivated&nbsp;
             <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='unnamed' name='unnamed' onclick='update_sb()' \> Unnamed&nbsp;
+                <input type='checkbox' class='filter_ckbx' id='named_uncultivated' name='named_uncultivated' onclick='update_sb()' \> Named/Uncultivated&nbsp;
             <% } %>
-            <% if(statusfltr.status.phylotype === 'on'){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='phylotype' name='phylotype' onclick='update_sb()' \> Phylotypes&nbsp;
+            <% if(statusfltr.status.unnamed_cultivated === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='unnamed_cultivated' name='unnamed_cultivated' onclick='update_sb()' \> Unnamed/Cultivated&nbsp;
             <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='phylotype' name='phylotype' onclick='update_sb()' \> Phylotypes&nbsp;
+                <input type='checkbox' class='filter_ckbx' id='unnamed_cultivated' name='unnamed_cultivated' onclick='update_sb()' \> Unnamed/Cultivated&nbsp;
             <% } %>
-            <% if(statusfltr.status.lost === 'on'){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='lost' name='lost' onclick='update_sb()' \> Lost&nbsp;
+            <% if(statusfltr.status.unnamed_uncultivated === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='unnamed_uncultivated' name='unnamed_uncultivated' onclick='update_sb()' \> Unnamed/Uncultivated&nbsp;
             <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='lost' name='lost' onclick='update_sb()' \> Lost&nbsp;
+                <input type='checkbox' class='filter_ckbx' id='unnamed_uncultivated' name='unnamed_uncultivated' onclick='update_sb()' \> Unnamed/Uncultivated&nbsp;
             <% } %>
             <% if(statusfltr.status.dropped === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
             <% } %>
-            
             <% if(statusfltr.status.nonoralref === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='nonoralref' name='nonoralref' onclick='update_sb()' \> NonOralRef&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' onclick='update_sb()' \> NonOralRef&nbsp;
-            <% } %> 
+            <% } %>
+            
              
              <small><span  id='toggle_cb_status_span'>[<a class="pill pill-lightpink" href='#' onclick="toggle_cb_status('off')">Toggle On/Off</a>]</span></small>
          </small>

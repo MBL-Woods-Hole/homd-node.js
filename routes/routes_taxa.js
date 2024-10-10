@@ -381,8 +381,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
     send_list = helpers.apply_ttable_filter(req, filter)
     //console.log('LENGTH',send_list.length)
     //let big_tax_list0 = Object.values(C.taxon_lookup);
-    let specific = send_list.filter(item => (item.otid == '209'))
-    console.log('sendlist209',specific)
+    //let specific = send_list.filter(item => (item.otid == '209'))
+    //console.log('sendlist209',specific)
      //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
      let count_text = 'Number of Records Found: '+ send_list.length.toString()
      //console.log('filter',filter)
@@ -1296,8 +1296,8 @@ router.get('/body_sites', function body_sites(req, res) {
          obj.s3 = ''
          obj.note = 'Missing From Database (C.site_lookup)'
        }
-       obj.status = C.taxon_lookup[otid].status
-         
+       obj.naming_status = C.taxon_lookup[otid].naming_status
+       obj.cultivation_status = C.taxon_lookup[otid].cultivation_status
        obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
        send_list.push(obj)
     }
@@ -1647,7 +1647,7 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
 })
 //
 router.get('/dropped', function dropped(req, res) {
-    let q = "SELECT otid,`status`,notes, genus, species from otid_prime"
+    let q = "SELECT otid,naming_status,cultivation_status,notes, genus, species from otid_prime"
     q += " JOIN taxonomy using(taxonomy_id)"
     q += " JOIN genus using (genus_id)"
     q += " JOIN species using (species_id)"

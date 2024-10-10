@@ -282,48 +282,48 @@ function clear_filter_form(){
   document.getElementById('valid2').checked = false
 }
 
-function check_then_post_filter(form){
-    //console.log(form)
-    var filter_status = ['named','unnamed','phylotype','lost','dropped']
-  var filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
-    var els = document.getElementsByClassName('filter_ckbx')
-    var got_one_status = 0
-    var got_one_sites = 0
-    for(i = 0; i < els.length; i++){
-    if(els[i].checked == true){
-      if(filter_status.indexOf(els[i].name) != -1){
-        got_one_status = 1
-      }
-      if(filter_sites.indexOf(els[i].name) != -1){
-        got_one_sites = 1
-      }
-    }
-  }
-  if (got_one_sites == 0 && got_one_status == 0){
-     alert('You must choose at least one from "Status".')
-     return;
-  }
-    form.submit()
-}
+// function check_then_post_filter(form){
+//     //console.log(form)
+//     var filter_status = ['named','unnamed','phylotype','lost','dropped']
+//     var filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
+//     var els = document.getElementsByClassName('filter_ckbx')
+//     var got_one_status = 0
+//     var got_one_sites = 0
+//     for(i = 0; i < els.length; i++){
+//     if(els[i].checked == true){
+//       if(filter_status.indexOf(els[i].name) != -1){
+//         got_one_status = 1
+//       }
+//       if(filter_sites.indexOf(els[i].name) != -1){
+//         got_one_sites = 1
+//       }
+//     }
+//   }
+//   if (got_one_sites == 0 && got_one_status == 0){
+//      alert('You must choose at least one from "Status".')
+//      return;
+//   }
+//     form.submit()
+// }
 
-function change_valid(val){
-    // used from taxtable filter valid
-    //console.log(val)
-    var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
-    var extra= ['dropped','nonoralref']
-    if(val == 'all'){
-        for(n in extra){
-            document.getElementById(extra[n]).checked = true
-        }
-    }else{
-         for(n in extra){
-            document.getElementById(extra[n]).checked = false
-        }
-    }
-    for(n in lst){
-        document.getElementById(lst[n]).checked = true
-    }
-}
+// function change_valid(val){
+//     // used from taxtable filter valid
+//     //console.log(val)
+//     var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
+//     var extra= ['dropped','nonoralref']
+//     if(val == 'all'){
+//         for(n in extra){
+//             document.getElementById(extra[n]).checked = true
+//         }
+//     }else{
+//          for(n in extra){
+//             document.getElementById(extra[n]).checked = false
+//         }
+//     }
+//     for(n in lst){
+//         document.getElementById(lst[n]).checked = true
+//     }
+// }
 
 
 function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,genomes) {
@@ -542,20 +542,20 @@ function toggle_cb_sites(x){
 }
 function toggle_cb_status(x){
     if(x == 'off'){
-        document.getElementById("named").checked = false;
-        document.getElementById("unnamed").checked = false;
-        document.getElementById("phylotype").checked = false;
-        document.getElementById("lost").checked = false;
+        document.getElementById("named_cultivated").checked = false;
+        document.getElementById("named_uncultivated").checked = false;
+        document.getElementById("unnamed_cultivated").checked = false;
+        document.getElementById("unnamed_uncultivated").checked = false;
         document.getElementById("dropped").checked = false;
         document.getElementById("nonoralref").checked = false;
         
         var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_status('on')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_status_span').innerHTML = link_html
     }else{
-        document.getElementById("named").checked = true;
-        document.getElementById("unnamed").checked = true;
-        document.getElementById("phylotype").checked = true;
-        document.getElementById("lost").checked = true;
+        document.getElementById("named_cultivated").checked = true;
+        document.getElementById("named_uncultivated").checked = true;
+        document.getElementById("unnamed_cultivated").checked = true;
+        document.getElementById("unnamed_uncultivated").checked = true;
         document.getElementById("dropped").checked = true;
         document.getElementById("nonoralref").checked = true;
         

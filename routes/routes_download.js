@@ -494,7 +494,7 @@ function create_taxon_table(otids, source, type, head_txt) {
         
         headers = ["HMT_ID",
                    "Domain","Phylum","Class","Order","Family","Genus","Species","Subspecies",
-                   "Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count",
+                   "Naming_Status","Cultivation_Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count",
                    "Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count",
                    "NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info",
                    "Cultivability","Phenotypic_characteristics","Prevalence","Disease","References",
@@ -542,7 +542,7 @@ function create_taxon_table(otids, source, type, head_txt) {
                
                let species = o2.species.replace(o2.genus,'').trim()  // removing gens from species name
                var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,
-                        o1.status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,
+                        o1.naming_status,o1.cultivation_status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,
                         o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,
                         o3.culta,o3.pheno,o3.prev,o3.disease,,
                         o1.tlength_str
