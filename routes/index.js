@@ -536,7 +536,7 @@ router.post('/site_search', function site_search(req, res) {
   // OTID Metadata
   const allOtidObjList = Object.values(C.taxon_lookup)
   const otidKeyList = Object.keys(allOtidObjList[0])
-  
+  //helpers.print(['allOtidObjList[0]',allOtidObjList[0]]) // site is undefined
   let otidObjList = allOtidObjList.filter(function (el) {
     for (let n in otidKeyList) {
       //console.log( 'el[otidkeylist[n]]',el[otidkeylist[n]] )
@@ -550,8 +550,10 @@ router.post('/site_search', function site_search(req, res) {
       } else {
         
         //helpers.print(['el',el])
-        
-        if ( Object.prototype.hasOwnProperty.call(el, otidKeyList[n]) && el[otidKeyList[n]].toString().toLowerCase().includes(searchTextLower)) {
+        //helpers.print(['otidKeyList[n]',otidKeyList[n]]) // site is undefined
+        if ( Object.prototype.hasOwnProperty.call(el, otidKeyList[n]) 
+             && el[otidKeyList[n]]
+             && el[otidKeyList[n]].toString().toLowerCase().includes(searchTextLower)) {
           return el.otid
         }
        

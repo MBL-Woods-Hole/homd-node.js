@@ -311,6 +311,7 @@ Promise.all(promises)
    //Absconditabacteria (SR1) [C-1]
     //console.log(C.homd_taxonomy)
     helpers.print(['lineage 673',C.taxon_lineage_lookup[673]])
+    helpers.print(['Lookup 673',C.taxon_lookup[673]])
     //console.log('refseq 12',C.refseq_lookup[12])
     //helpers.print(['SEQF10010',C.genome_lookup['SEQF10010']])
     //console.log(C.taxon_counts_lookup['Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Variovorax'])
