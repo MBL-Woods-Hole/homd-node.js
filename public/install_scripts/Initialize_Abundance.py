@@ -223,7 +223,7 @@ def run_abundance_db():
     q += " JOIN `genus` using(genus_id)"
     q += " JOIN `species` using(species_id)"
     q += " JOIN `subspecies` using(subspecies_id)"
-    print(q)
+    #print(q)
     
     
     result = myconn_new.execute_fetch_select_dict(q)
@@ -286,7 +286,7 @@ def run_abundance_db():
         
         if taxon_string not in TCcollector:
             #print()
-            print(row)
+            #print(row)
             missing_count +=1
             print(missing_count,'!Missing from TaxonCounts.json -('+row['reference']+')::'+taxon_string)
             TCcollector[taxon_string] = {}

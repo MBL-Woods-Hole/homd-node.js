@@ -1649,18 +1649,22 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     }
     //console.log('big_tax_list',big_tax_list[0])
     //console.log('vals',vals)
-    //status
-    // create array of 'on's
+    ///// status /////
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
     //console.log('status_on',status_on)
     let combo = ''
     big_tax_list = big_tax_list.filter( function filterStatus(item) {
         combo = (item.naming_status.split(/(\s+)/)[0] +'_'+item.cultivation_status.split(/(\s+)/)[0]).toLowerCase()
+        
         if(item.naming_status =='Dropped' || item.naming_status =='NonOralRef'){
             combo = item.naming_status.toLowerCase()
         }
-        //console.log(combo)
+        //console.log('combo',combo)
         if(status_on.indexOf(combo) !==-1){
+            return item
+        }else if(item.status == 'NonOralRef' && vals.status.nonoralref == 'on'){
+            return item
+        }else if(item.status == 'Dropped' && vals.status.dropped == 'on'){
             return item
         }
     })
@@ -1720,9 +1724,12 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
        })
     }
     
-
+    //phylum
+    if(vals.phylum != '0'){
+       big_tax_list = helpers.ttfilter_for_phylum(big_tax_list, vals.phylum)
+    }
 //console.log('olength-2',big_tax_list.length)
-
+  //console.log('vals',vals)
     //
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
@@ -1982,4 +1989,26 @@ module.exports.get_all_phyla = function get_all_phyla(){
     var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
     var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
     return phyla
+}
+
+module.exports.ttfilter_for_phylum = function ttfilter_for_phylum(tlist, phy){
+    var lineage_list = Object.values(C.taxon_lineage_lookup)
+    var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
+    //console.log('obj_lst',obj_lst)
+    var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
+        return el.otid
+    })
+    let otid_grabber = {}
+    let gid_obj_list = tlist.filter(item => {   // filter genome obj list for inclusion in otid list
+        if(otid_list.indexOf(item.otid) !== -1){
+            otid_grabber[item.otid] = 1
+            return true
+        }
+        //return otid_list.indexOf(item.otid) !== -1
+    })
+    //console.log('otid_grabber',otid_grabber)
+    //console.log('gid_obj_list',gid_obj_list)
+    // now get just the otids from the selected gids
+    gid_obj_list.map( (el) =>{ return el.otid })
+    return gid_obj_list
 }

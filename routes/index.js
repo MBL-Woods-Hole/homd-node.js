@@ -550,7 +550,7 @@ router.post('/site_search', function site_search(req, res) {
       } else {
         
         //helpers.print(['el',el])
-        //helpers.print(['otidKeyList[n]',otidKeyList[n]]) // site is undefined
+        
         if ( Object.prototype.hasOwnProperty.call(el, otidKeyList[n]) 
              && el[otidKeyList[n]]
              && el[otidKeyList[n]].toString().toLowerCase().includes(searchTextLower)) {

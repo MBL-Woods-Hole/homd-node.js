@@ -454,13 +454,6 @@ function letter_submit(letter){
 function phylum_submit(phylum){
    console.log('phylum',phylum)
    var form = document.getElementById("tax_filter_form");
-   
-       var i = document.createElement("input");
-       i.type = "hidden";
-       i.name = "phylum";
-       i.id = "phylum";
-       i.value = phylum
-       form.appendChild(i);
    form.submit()
 }
 function update_sb(){

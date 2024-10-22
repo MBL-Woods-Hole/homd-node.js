@@ -23,7 +23,7 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
     let file_filter_txt = "HOMD.org Taxon Data::No Filter Applied"+ " Date: "+today 
     let send_list = Object.values(C.taxon_lookup);
     let list_of_otids = send_list.map(item => item.otid)
-    
+    console.log('ALL::Count of OTIDs:',list_of_otids.length)
     var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
     if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
@@ -50,78 +50,15 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
     let letter='all',statusfilter='on',search_txt='',search_field=''
     let send_list = []
     let type = req.params.type
-//   if(req.session.ttable_filter){
-//      console.log('dld_taxtable/:type --filter')
-//      
-//      if(req.session.ttable_filter.letter){
-//         letter = req.session.ttable_filter.letter
-//      }
-//      if(req.session.ttable_filter.status){
-//         statusfilter = Object.keys(req.session.ttable_filter.status).filter(item => req.session.ttable_filter.status[item] === 'on')
-//      }
-//      if(req.session.ttable_filter.txt_srch){
-//         search_txt = req.session.ttable_filter.text.txt_srch
-//      }
-//      if(req.session.ttable_filter.field){
-//         search_field = req.session.ttable_filter.text.field
-//      }
-//   }
-//   
-//   //console.log(type,letter,statusfilter,search_txt,search_field)
-//   // Apply filters
-//   //console.log('C.taxon_lookup-1',C.taxon_lookup['1'])
-//   //console.log('C.taxon_lookup374',C.taxon_lookup['374'])
-//   let temp_list = Object.values(C.taxon_lookup);
-//   //console.log('list_of_otids1',temp_list.indexOf('374'))
-//   let file_filter_txt = ""
-//   if(letter && letter.match(/[A-Z]{1}/)){
-//       helpers.print(['MATCH Letter: ',letter])
-//       send_list = temp_list.filter(item => item.genus.charAt(0) === letter)
-//       //console.log('list_of_otids2',temp_list.indexOf('374'))
-//       file_filter_txt = "HOMD.org Taxon Data::Letter Filter Applied (genus with first letter of '"+letter+"')"
-//   }else if(search_txt !== ''){
-//       send_list = get_filtered_taxon_list(search_txt, search_field)
-//       //console.log('list_of_otids3',temp_list.indexOf('374'))
-//       file_filter_txt = "HOMD.org Taxon Data::Search Filter Applied (Search text '"+search_txt+"')"
-//   //}else if(sitefilter.length > 0 ||  statusfilter.length > 0){
-//   }else if(statusfilter.length === 0){
-//     // this is for download default table. on the downloads page
-//     // you cant get here from the table itself (javascript prevents)
-//     helpers.print('in dwnld filters==[][]')
-//     send_list = temp_list
-//     //console.log('list_of_otids4',temp_list.indexOf('374'))
-//   }else {
-//     // apply site/status filter as last resort
-//     //console.log('in dwnld filters',statusfilter)
-//     
-//     if(statusfilter.length == 0){  // only items from site filter checked
-//       send_list = temp_list
-//     }else {
-//       send_list = temp_list.filter( function(e){
-//         if(e.sites.length == 0){
-//             return e  // important to capture taxa with no presence in sites table
-//         }else{
-//             for(var n in e.sites){
-//               
-//               var status = e.status.toLowerCase()
-//               if( statusfilter.indexOf(status) !== -1 )
-//               { return e }
-//             }
-//         }
-//          
-//         })
-//         //console.log('list_of_otids5',temp_list.indexOf('374'))
-//     } 
-//   } 
-//     
+
     
-   send_list = helpers.apply_ttable_filter(req, req.session.ttable_filter)
-  let file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+today 
+    send_list = helpers.apply_ttable_filter(req, req.session.ttable_filter)
+    let file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+today 
 
-  let list_of_otids = send_list.map(item => item.otid)
-
-  // type = browser, text or excel
-  var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
+    let list_of_otids = send_list.map(item => item.otid)
+    console.log('Table::Count of OTIDs:',list_of_otids.length)
+    // type = browser, text or excel
+    var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
   if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
   }else if(type === 'text'){
