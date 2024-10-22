@@ -1656,24 +1656,24 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     big_tax_list = big_tax_list.filter( function filterStatus(item) {
         combo = (item.naming_status.split(/(\s+)/)[0] +'_'+item.cultivation_status.split(/(\s+)/)[0]).toLowerCase()
         
-        if(item.naming_status =='Dropped' || item.naming_status =='NonOralRef'){
+        if(item.naming_status =='Dropped'){ // || item.naming_status =='NonOralRef'){
             combo = item.naming_status.toLowerCase()
         }
         //console.log('combo',combo)
         if(status_on.indexOf(combo) !==-1 ){  //818
             //if(vals.status.nonoralref == 'off' && item.status == 'NonOralRef'){
-            if(vals.status.nonoralref == 'on' || item.status != 'NonOralRef'){
+            //if(vals.status.nonoralref == 'on' || item.status != 'NonOralRef'){
             
             //}else{
                return item
-            }
+            //}
             
         }
-        else if(item.status == 'NonOralRef' && vals.status.nonoralref == 'on'){
-            return item
-        }else if(item.status == 'Dropped' && vals.status.dropped == 'on'){
-            return item
-        }
+        // else if(item.status == 'NonOralRef' && vals.status.nonoralref == 'on'){
+//             return item
+//         }else if(item.status == 'Dropped' && vals.status.dropped == 'on'){
+//             return item
+//         }
     })
 
     //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
@@ -1688,10 +1688,14 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     // taxon will be excluded here from the taxon table
 
     //console.log('olength-1',big_tax_list.length)
-     //console.log('site_on',site_on)
-    //console.log('C.site_lookup[328] ',Object.values(C.site_lookup[328]) )
+    //console.log('site_on',site_on)
+    //console.log('C.site_lookup[988] ',Object.values(C.site_lookup[988]) )
+    
     if(filter && filter.site.p_or_pst == 'primary_site'){
        big_tax_list = big_tax_list.filter( function(item){
+         //if(item.otid =='988'){
+           //console.log('item.sites988',item)
+         //}
          for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])
            //console.log('item.sites',item.sites)
@@ -1930,7 +1934,7 @@ module.exports.get_default_filter = function get_default_filter(){
             unnamed_cultivated: 'on',
             unnamed_uncultivated: 'on',
             dropped:'off',
-            nonoralref:'off'
+            //nonoralref:'off'
             
         },
         site:{
@@ -1941,6 +1945,7 @@ module.exports.get_default_filter = function get_default_filter(){
            vaginal:'on',
            unassigned:'on',
            enviro      :'on',
+           ref         :'off',
            pathogen    :'on',
            p_or_pst    :'primary_site'
            
@@ -1966,7 +1971,7 @@ module.exports.get_null_filter = function get_null_filter(){
             unnamed_cultivated: 'off',
             unnamed_uncultivated: 'off',
             dropped:'off',
-            nonoralref:'off'
+            //nonoralref:'off'
             
         },
         site:{
@@ -1977,6 +1982,7 @@ module.exports.get_null_filter = function get_null_filter(){
            vaginal:'off',
            unassigned:'off',
            enviro      :'off',
+           ref         :'off',
            pathogen    :'off',
            p_or_pst    :'primary_site'
         },

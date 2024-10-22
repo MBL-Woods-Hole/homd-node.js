@@ -153,7 +153,11 @@
                 <input type='checkbox' class='filter_ckbx' id='enviro' name='enviro' onclick='update_sb()' \> Environmental&nbsp;
             <% } %>
             
-            
+            <% if(statusfltr.site.ref === 'on'){ %>
+                <input title='Was NonOralRef' type='checkbox' checked class='filter_ckbx' id='ref' name='ref' onclick='update_sb()' \> Reference&nbsp;
+            <% }else{ %>
+                <input title='Was NonOralRef' type='checkbox' class='filter_ckbx' id='ref' name='ref' onclick='update_sb()' \> Reference&nbsp;
+            <% } %>
             
             <% if(statusfltr.site.unassigned === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='unassigned' name='unassigned' onclick='update_sb()' \> Unassigned&nbsp;
@@ -208,11 +212,13 @@
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
             <% } %>
-            <% if(statusfltr.status.nonoralref === 'on'){ %>
+<!-- 
+<% if(statusfltr.status.nonoralref === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='nonoralref' name='nonoralref' onclick='update_sb()' \> NonOralRef&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='nonoralref' name='nonoralref' onclick='update_sb()' \> NonOralRef&nbsp;
             <% } %>
+ -->
             
              
              <small><span  id='toggle_cb_status_span'>[<a class="pill pill-lightpink" href='#' onclick="toggle_cb_status('off')">Toggle On/Off</a>]</span></small>
@@ -290,12 +296,16 @@
         <% }else{ %>
         <input type='radio' name='sort_col' value='subsp' onclick='update_sb()' > SubSpecies&nbsp;
         <% } %>
-        <% if(statusfltr.sort_col === 'status'){ %>
-        <input type='radio' checked name='sort_col' value='status' onclick='update_sb()' > Status
+        <% if(statusfltr.sort_col === 'naming_status'){ %>
+        <input type='radio' checked name='sort_col' value='naming_status' onclick='update_sb()' > Naming Status&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='status' onclick='update_sb()' > Status
+        <input type='radio' name='sort_col' value='naming_status' onclick='update_sb()' > Naming Status&nbsp;
         <% } %>
-        
+        <% if(statusfltr.sort_col === 'cultivation_status'){ %>
+        <input type='radio' checked name='sort_col' value='cultivation_status' onclick='update_sb()' > Cultivation Status
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='cultivation_status' onclick='update_sb()' > Cultivation Status
+        <% } %>
         <span id='sort_rev' title='Reverse the Sort Order'>
           
         <% if(statusfltr.sort_rev === 'on'){ %>

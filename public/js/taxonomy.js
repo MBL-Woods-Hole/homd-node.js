@@ -516,6 +516,7 @@ function toggle_cb_sites(x){
         document.getElementById("vaginal").checked = false;
         document.getElementById("pathogen").checked = false;
         document.getElementById("enviro").checked = false;
+        document.getElementById("ref").checked = false;
         document.getElementById("unassigned").checked = false;
         var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_sites('on')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_sites_span').innerHTML = link_html
@@ -527,6 +528,7 @@ function toggle_cb_sites(x){
         document.getElementById("vaginal").checked = true;
         document.getElementById("pathogen").checked = true;
         document.getElementById("enviro").checked = true;
+        document.getElementById("ref").checked = true;
         document.getElementById("unassigned").checked = true;
         var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_sites('off')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_sites_span').innerHTML = link_html
@@ -540,7 +542,7 @@ function toggle_cb_status(x){
         document.getElementById("unnamed_cultivated").checked = false;
         document.getElementById("unnamed_uncultivated").checked = false;
         document.getElementById("dropped").checked = false;
-        document.getElementById("nonoralref").checked = false;
+        //document.getElementById("nonoralref").checked = false;
         
         var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_status('on')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_status_span').innerHTML = link_html
@@ -550,7 +552,7 @@ function toggle_cb_status(x){
         document.getElementById("unnamed_cultivated").checked = true;
         document.getElementById("unnamed_uncultivated").checked = true;
         document.getElementById("dropped").checked = true;
-        document.getElementById("nonoralref").checked = true;
+        //document.getElementById("nonoralref").checked = true;
         
         var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_status('off')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_status_span').innerHTML = link_html
