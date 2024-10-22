@@ -1660,9 +1660,16 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
             combo = item.naming_status.toLowerCase()
         }
         //console.log('combo',combo)
-        if(status_on.indexOf(combo) !==-1){
-            return item
-        }else if(item.status == 'NonOralRef' && vals.status.nonoralref == 'on'){
+        if(status_on.indexOf(combo) !==-1 ){  //818
+            //if(vals.status.nonoralref == 'off' && item.status == 'NonOralRef'){
+            if(vals.status.nonoralref == 'on' || item.status != 'NonOralRef'){
+            
+            //}else{
+               return item
+            }
+            
+        }
+        else if(item.status == 'NonOralRef' && vals.status.nonoralref == 'on'){
             return item
         }else if(item.status == 'Dropped' && vals.status.dropped == 'on'){
             return item
