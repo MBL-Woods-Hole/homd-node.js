@@ -32,7 +32,7 @@ genome_tbl = 'genomes'
 
 #nonoral_otids = ['982','983','984','986','987','988','989','990','991','994','995','996','997','998','999']
 dropped_otids = []  # must get dropped from DB
-nonoral_otids = []  # must get from DB
+#nonoral_otids = []  # must get from DB
 
 query_taxa ="""
 SELECT otid, taxonomy_id, genus, species,
@@ -112,7 +112,7 @@ def run_taxa(args):
         
         master_lookup[otid] = taxonObj
     print('count dropped',len(dropped_otids))
-    print('count nonoral',len(nonoral_otids))
+    #print('count nonoral',len(nonoral_otids))
     print('count all',len(master_lookup))
 
 
@@ -507,15 +507,19 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
 
         
         if long_tax_name in counts:
-            if otid in nonoral_otids or otid in dropped_otids:
-                if otid in nonoral_otids:
-                    counts[long_tax_name]["taxcnt_wnonoral"] += 1
-                    counts[long_tax_name]['refcnt_wnonoral'] += rfcnt
-                    counts[long_tax_name]['gcnt_wnonoral']   += gcnt
-                else:  # in dropped only
-                    counts[long_tax_name]["taxcnt_wdropped"] += 1
-                    counts[long_tax_name]['refcnt_wdropped'] += rfcnt
-                    counts[long_tax_name]['gcnt_wdropped']   += gcnt
+            if otid in dropped_otids:
+                counts[long_tax_name]["taxcnt_wdropped"] += 1
+                counts[long_tax_name]['refcnt_wdropped'] += rfcnt
+                counts[long_tax_name]['gcnt_wdropped']   += gcnt
+            # if otid in nonoral_otids or otid in dropped_otids:
+#                 if otid in nonoral_otids:
+#                     #counts[long_tax_name]["taxcnt_wnonoral"] += 1
+#                     counts[long_tax_name]['refcnt_wnonoral'] += rfcnt
+#                     counts[long_tax_name]['gcnt_wnonoral']   += gcnt
+#                 else:  # in dropped only
+#                     counts[long_tax_name]["taxcnt_wdropped"] += 1
+#                     counts[long_tax_name]['refcnt_wdropped'] += rfcnt
+#                     counts[long_tax_name]['gcnt_wdropped']   += gcnt
             else:   #in neither least default
                 counts[long_tax_name]["taxcnt"] += 1
                 counts[long_tax_name]['refcnt']  += rfcnt
@@ -523,35 +527,49 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
         else:
             # this will always be species
             counts[long_tax_name] = {}
-            if otid in nonoral_otids or otid in dropped_otids:
-                if otid in nonoral_otids:
-                    counts[long_tax_name]["taxcnt"] = 0
-                    counts[long_tax_name]['refcnt'] = 0
-                    counts[long_tax_name]['gcnt']   = 0
-                    counts[long_tax_name]["taxcnt_wnonoral"] = 1
-                    counts[long_tax_name]['refcnt_wnonoral'] = rfcnt
-                    counts[long_tax_name]['gcnt_wnonoral']   = gcnt
-                    counts[long_tax_name]["taxcnt_wdropped"] = 0
-                    counts[long_tax_name]['refcnt_wdropped'] = 0
-                    counts[long_tax_name]['gcnt_wdropped']   = 0
-                else:  # in dropped only
-                    counts[long_tax_name]["taxcnt"] = 0
-                    counts[long_tax_name]['refcnt'] = 0
-                    counts[long_tax_name]['gcnt']   = 0
-                    counts[long_tax_name]["taxcnt_wnonoral"] = 0
-                    counts[long_tax_name]['refcnt_wnonoral'] = 0
-                    counts[long_tax_name]['gcnt_wnonoral']   = 0
-                    counts[long_tax_name]["taxcnt_wdropped"] = 1
-                    counts[long_tax_name]['refcnt_wdropped'] = rfcnt
-                    counts[long_tax_name]['gcnt_wdropped']   = gcnt
+            
+            if otid in dropped_otids:
+                
+                counts[long_tax_name]["taxcnt"] = 0
+                counts[long_tax_name]['refcnt'] = 0
+                counts[long_tax_name]['gcnt']   = 0
+                #counts[long_tax_name]["taxcnt_wnonoral"] = 0
+                #counts[long_tax_name]['refcnt_wnonoral'] = 0
+                #counts[long_tax_name]['gcnt_wnonoral']   = 0
+                counts[long_tax_name]["taxcnt_wdropped"] = 1
+                counts[long_tax_name]['refcnt_wdropped'] = rfcnt
+                counts[long_tax_name]['gcnt_wdropped']   = gcnt
+                    
+                    
+#             if otid in nonoral_otids or otid in dropped_otids:
+#                 if otid in nonoral_otids:
+#                     counts[long_tax_name]["taxcnt"] = 0
+#                     counts[long_tax_name]['refcnt'] = 0
+#                     counts[long_tax_name]['gcnt']   = 0
+#                     counts[long_tax_name]["taxcnt_wnonoral"] = 1
+#                     counts[long_tax_name]['refcnt_wnonoral'] = rfcnt
+#                     counts[long_tax_name]['gcnt_wnonoral']   = gcnt
+#                     counts[long_tax_name]["taxcnt_wdropped"] = 0
+#                     counts[long_tax_name]['refcnt_wdropped'] = 0
+#                     counts[long_tax_name]['gcnt_wdropped']   = 0
+#                 else:  # in dropped only
+#                     counts[long_tax_name]["taxcnt"] = 0
+#                     counts[long_tax_name]['refcnt'] = 0
+#                     counts[long_tax_name]['gcnt']   = 0
+#                     counts[long_tax_name]["taxcnt_wnonoral"] = 0
+#                     counts[long_tax_name]['refcnt_wnonoral'] = 0
+#                     counts[long_tax_name]['gcnt_wnonoral']   = 0
+#                     counts[long_tax_name]["taxcnt_wdropped"] = 1
+#                     counts[long_tax_name]['refcnt_wdropped'] = rfcnt
+#                     counts[long_tax_name]['gcnt_wdropped']   = gcnt
             else:   #in neither least default
                 
                 counts[long_tax_name]["taxcnt"] = 1
                 counts[long_tax_name]['refcnt'] = rfcnt
                 counts[long_tax_name]['gcnt']   = gcnt
-                counts[long_tax_name]["taxcnt_wnonoral"] = 0
-                counts[long_tax_name]['refcnt_wnonoral'] = 0
-                counts[long_tax_name]['gcnt_wnonoral']   = 0
+                #counts[long_tax_name]["taxcnt_wnonoral"] = 0
+                #counts[long_tax_name]['refcnt_wnonoral'] = 0
+                #counts[long_tax_name]['gcnt_wnonoral']   = 0
                 counts[long_tax_name]["taxcnt_wdropped"] = 0
                 counts[long_tax_name]['refcnt_wdropped'] = 0
                 counts[long_tax_name]['gcnt_wdropped']   = 0

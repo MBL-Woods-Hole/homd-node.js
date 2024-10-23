@@ -25,15 +25,22 @@
 function load_dhtmlx(data) {
     
      var items = document.getElementsByName('countcb')
-    if(items[0].checked && items[1].checked){
-      count_type = 'both'
-    }else if(items[0].checked){
-     count_type = 'wdropped'
-    }else if(items[1].checked){
-     count_type = 'wnonoralref'
-    }else{
-      count_type = 'default'
+     
+     if(items[0].checked){
+       count_type = 'wdropped'
+     }else{
+       count_type = 'default'
     }
+    
+//     if(items[0].checked && items[1].checked){
+//       count_type = 'both'
+//     }else if(items[0].checked){
+//      count_type = 'wdropped'
+//     }else if(items[1].checked){
+//      count_type = 'wnonoralref'
+//     }else{
+//       count_type = 'default'
+//     }
     
     if( typeof customOldTree != "undefined" ){
       customOldTree.destructor();
@@ -152,15 +159,22 @@ function change_level(rank) {
   args.rank = rank.toLowerCase()
   
   var items = document.getElementsByName('countcb')
-  if(items[0].checked && items[1].checked){
-      count_type = 'both'
-  }else if(items[0].checked){
+  if(items[0].checked){
      count_type = 'wdropped'
-  }else if(items[1].checked){
-     count_type = 'wnonoralref'
   }else{
       count_type = 'default'
   }
+  
+//   if(items[0].checked && items[1].checked){
+//       count_type = 'both'
+//   }else if(items[0].checked){
+//      count_type = 'wdropped'
+//   }else if(items[1].checked){
+//      count_type = 'wnonoralref'
+//   }else{
+//       count_type = 'default'
+//   }
+  
   args.count_type = count_type
   if(args.rank=='class'){args.rank='klass';}// for use in homd_taxonomy.taxa_tree_dict_map_by_rank
   var ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];

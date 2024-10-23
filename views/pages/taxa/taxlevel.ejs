@@ -41,13 +41,20 @@ td a {
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
      <div class='title'>Human Oral Microbiome Taxonomic Level and Counts List</div>
-     
+<!-- 
      <div id='change_base_counts'>
        Default Counts Exclude Dropped and NonOralRef Taxons
         <br>Include:&nbsp;&nbsp;
         <input type='checkbox' name='countcb' value='' onChange="change_level('domain')" > Dropped
         &nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='countcb' value='' onChange="change_level('domain')" > NonOralRef    
-        <!--  <input type='hidden' name='rank' value='domain' > -->
+        <!~~  <input type='hidden' name='rank' value='domain' > ~~>
+     </div>
+     
+ -->
+     <div id='change_base_counts'>
+       Default Counts Exclude Dropped Taxa
+        <br>Include:&nbsp;&nbsp;
+        <input type='checkbox' name='countcb' value='' onChange="change_level('domain')" > Dropped
      </div>
 
      

@@ -1579,9 +1579,9 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
        if(item == 'dropped'){
          req.session.ttable_filter.status.dropped = 'on'
        }
-       if(item == 'nonoralref'){
-         req.session.ttable_filter.status.nonoralref = 'on'
-       }
+       // if(item == 'nonoralref'){
+//          req.session.ttable_filter.status.nonoralref = 'on'
+//        }
        
        
        // sites
