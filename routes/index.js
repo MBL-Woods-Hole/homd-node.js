@@ -562,7 +562,7 @@ router.post('/site_search', function site_search(req, res) {
   })
   
   const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-  //console.log('otidLst')
+  //console.log('otidLst',otidLst[0])
   otidLst.sort(function (a, b) {
        return helpers.compareStrings_alpha(a.species, b.species);
   })
@@ -603,7 +603,23 @@ router.post('/site_search', function site_search(req, res) {
   })
   //  Now get the otids
   const taxonOtidObj = {}
+  let pototid = parseInt(searchTextLower)
+  if(pototid && pototid in C.taxon_lookup){
+     if(C.dropped_taxids.indexOf(pototid.toString()) != -1){
+        taxonOtidObj[pototid] = 'This taxon has been dropped from HOMD.'
+     }else{
+        console.log('got OTID int')
+        taxonOtidObj[pototid] = C.taxon_lineage_lookup[pototid].domain
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].phylum
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].klass
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].order
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].family
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].genus
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].species
+     }
+  }
   const taxonOtidList = taxonList.map(e => e.otid)
+  
   for (let n in taxonOtidList) {
     const otid = taxonOtidList[n]
     taxonOtidObj[otid] = C.taxon_lineage_lookup[otid].domain

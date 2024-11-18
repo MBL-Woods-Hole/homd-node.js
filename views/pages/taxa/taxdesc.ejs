@@ -227,12 +227,12 @@
     <td class='tbl-title'>Classification:</td>
     <td class='taxon_data'>
     <table id='tax_lineage'>
-      <tr><td class='taxon_data'>Domain:</td>
-      <td><a href='life?rank=domain&name=<%= data3.domain %>'><%= data3.domain %></a></td></tr>
-      <tr><td class='taxon_data'>Phylum:</td>
-      <td><a href='life?rank=phylum&name=<%= data3.phylum %>'><%= data3.phylum %></a></td></tr>
-      <tr><td class='taxon_data'>Class:</td>
-      <td>
+      <tr><td>Domain:</td>
+      <td class='taxon_data'><a href='life?rank=domain&name=<%= data3.domain %>'><%= data3.domain %></a></td></tr>
+      <tr><td>Phylum:</td>
+      <td class='taxon_data'><a href='life?rank=phylum&name=<%= data3.phylum %>'><%= data3.phylum %></a></td></tr>
+      <tr><td>Class:</td>
+      <td class='taxon_data'>
         <a href='life?rank=klass&name=<%= data3.klass %>'><%= data3.klass %></a>
         <!-- 
 <% if(data3.klass.includes("[")){ %>
@@ -242,8 +242,8 @@
         <% } %>
  -->
       </td></tr>
-      <tr><td class='taxon_data'>Order:</td>
-      <td>
+      <tr><td>Order:</td>
+      <td class='taxon_data'>
         <a href='life?rank=order&name=<%= data3.order %>'><%= data3.order %></a>
         <!-- 
 <% if(data3.order.includes("[")){ %>
@@ -255,7 +255,7 @@
       </td></tr>
       
       
-      <tr><td class='taxon_data'>Family:</td>
+      <tr><td>Family:</td>
       <td class='taxon_data'>
         <a href='life?rank=family&name=<%= data3.family %>'><%= data3.family %></a>
         <!-- 
@@ -266,7 +266,7 @@
         <% } %>
  -->
       </td></tr>
-      <tr><td class='taxon_data'>Genus:</td>
+      <tr><td>Genus:</td>
       <td class='taxon_data'>
         <a href='life?rank=genus&name=<%= data3.genus %>'><%= data1.genus %></a>
         <% if(data3.genus.includes("[")){ %>
@@ -290,10 +290,10 @@
            </span>
       </div>
       <% if(data3.subspecies){ %>
-        <tr><td class='taxon_data'>Species:</td><td class='taxon_data'> <a href='life?rank=species&name=<%= data3.species %>'><%= data1.species %></a></td></tr>
-        <tr><td class='taxon_data'>Subspecies:<br>or Clade:</td><td class='taxon_data'><%= data3.subspecies %></td></tr>
+        <tr><td>Species:</td><td class='taxon_data'> <a href='life?rank=species&name=<%= data3.species %>'><%= data1.species %></a></td></tr>
+        <tr><td>Subspecies:<br>or Clade:</td><td class='taxon_data'><%= data3.subspecies %></td></tr>
       <% }else{ %>
-         <tr><td class='taxon_data'>Species:</td><td class='taxon_data'><%= data1.species %></td></tr>
+         <tr><td>Species:</td><td class='taxon_data'><%= data1.species %></td></tr>
       <% } %>
       </table>
     </td>
