@@ -471,8 +471,8 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
             //ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
             pgid_count = Object.keys(prokka_gid_lookup).length
             ngid_count = Object.keys(ncbi_gid_lookup).length
-            console.log('prokka_gid_lookup.length',pgid_count)
-            console.log('ncbi_gid_lookup.length',ngid_count)
+            //console.log('prokka_gid_lookup.length',pgid_count)
+            //console.log('ncbi_gid_lookup.length',ngid_count)
             //let size = Buffer.byteLength(JSON.stringify(req.session))
             //console.log('req.session size(KB):',size/1024)
             // on dev  req.session size(KB): 38827.2841796875  == 38 MB   tranposase
@@ -482,7 +482,7 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
             //console.log(gid_count, pid_count)
             req.session.anno_search_dirname = dirname
             
-            console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
+            //console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
             res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
           }else{  //end if code ==0
              console.log('nothing found')

@@ -42,26 +42,26 @@ headers = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SA
 # dewhirst_cols = ['mean','stdev','prevalence']
 
 # to correct for the few subspecies in HOMD::
-subspecies = {}
-subspecies['reuteri clade 818'] = ['reuteri','clade_818']  # tax_parts 6 and 7
-subspecies['reuteri clade 938'] = ['reuteri','clade_938'] 
-subspecies['cristatus clade 578'] = ['cristatus','clade_578'] 
-subspecies['cristatus clade 886'] = ['cristatus','clade_886'] 
-subspecies['infantis clade 431'] = ['infantis','clade_431'] 
-subspecies['infantis clade 638'] = ['infantis','clade_638'] 
-subspecies['oralis subsp. dentisani clade 058'] = ['oralis','subsp._dentisani_clade_058'] 
-subspecies['oralis subsp. dentisani clade 398'] = ['oralis','subsp._dentisani_clade_398'] 
-subspecies['oralis subsp. oralis'] = ['oralis','subsp._oralis'] 
-subspecies['oralis subsp. tigurinus clade 070'] = ['oralis','subsp._tigurinus_clade_070'] 
-subspecies['oralis subsp. tigurinus clade 071'] = ['oralis','subsp._tigurinus_clade_071'] 
-subspecies['parasanguinis clade 411'] = ['parasanguinis','clade_411']
-subspecies['parasanguinis clade 721'] = ['parasanguinis','clade_721']
-subspecies['[Eubacterium] yurii subsp. schtitka'] = ['[Eubacterium] yurii','subsp._schtitka'] 
-subspecies['[Eubacterium] yurii subsps. yurii & margaretiae'] = ['[Eubacterium] yurii','subsps._yurii_&_margaretiae']
-subspecies['nucleatum subsp. animalis'] = ['nucleatum','subsp._animalis'] 
-subspecies['nucleatum subsp. nucleatum'] = ['nucleatum','subsp._nucleatum'] 
-subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp._polymorphum'] 
-subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp._vincentii'] 
+# subspecies = {}
+# subspecies['reuteri clade 818'] = ['reuteri','clade_818']  # tax_parts 6 and 7
+# subspecies['reuteri clade 938'] = ['reuteri','clade_938'] 
+# subspecies['cristatus clade 578'] = ['cristatus','clade_578'] 
+# subspecies['cristatus clade 886'] = ['cristatus','clade_886'] 
+# subspecies['infantis clade 431'] = ['infantis','clade_431'] 
+# subspecies['infantis clade 638'] = ['infantis','clade_638'] 
+# subspecies['oralis subsp. dentisani clade 058'] = ['oralis','subsp._dentisani_clade_058'] 
+# subspecies['oralis subsp. dentisani clade 398'] = ['oralis','subsp._dentisani_clade_398'] 
+# subspecies['oralis subsp. oralis'] = ['oralis','subsp._oralis'] 
+# subspecies['oralis subsp. tigurinus clade 070'] = ['oralis','subsp._tigurinus_clade_070'] 
+# subspecies['oralis subsp. tigurinus clade 071'] = ['oralis','subsp._tigurinus_clade_071'] 
+# subspecies['parasanguinis clade 411'] = ['parasanguinis','clade_411']
+# subspecies['parasanguinis clade 721'] = ['parasanguinis','clade_721']
+# subspecies['[Eubacterium] yurii subsp. schtitka'] = ['[Eubacterium] yurii','subsp._schtitka'] 
+# subspecies['[Eubacterium] yurii subsps. yurii & margaretiae'] = ['[Eubacterium] yurii','subsps._yurii_&_margaretiae']
+# subspecies['nucleatum subsp. animalis'] = ['nucleatum','subsp._animalis'] 
+# subspecies['nucleatum subsp. nucleatum'] = ['nucleatum','subsp._nucleatum'] 
+# subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp._polymorphum'] 
+# subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp._vincentii'] 
 """
 CREATE TABLE `abundance` (
   `abundance_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -223,6 +223,7 @@ def run_abundance_db():
     q += " JOIN `genus` using(genus_id)"
     q += " JOIN `species` using(species_id)"
     q += " JOIN `subspecies` using(subspecies_id)"
+    q += " ORDER BY `otid`"
     #print(q)
     
     
@@ -268,10 +269,14 @@ def run_abundance_db():
     #print(segata_site_prefixes)
     missing_count =0
     for row in result:
-        #print(row)
-        max_eren, max_dewhirst, max_hmp_metaphlan, max_hmp_refseq = 0,0,0,0
-        taxon_string = fix_taxonomy(row['taxonomy'])
         
+        max_eren, max_dewhirst, max_hmp_metaphlan, max_hmp_refseq = 0,0,0,0
+        if row['otid'] in (71,81,106,123,138,178,187,192,243,274,306,332,374,375,377,386,398,411,431,578,638,809,818,820,922,928):
+        #if row['otid'] in ('071','081','081','106','123','138','178','187','192','243','274','306','332','374','375','377','386','398','411','431','578','638','809','818','820','922','928'):
+            print('pre ',row['otid'],row['taxonomy'])
+        taxon_string = fix_taxonomy(row['taxonomy'])
+        if row['otid'] in (71,81,106,123,138,178,187,192,243,274,306,332,374,375,377,386,398,411,431,578,638,809,818,820,922,928):
+            print('post',row['otid'],taxon_string)
             
         #taxon_string = row['taxonomy']
         # tax_parts = taxon_string.split(';')
