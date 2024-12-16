@@ -426,6 +426,7 @@ function create_taxon_table(otids, source, type, head_txt) {
         let obj2 = C.taxon_lineage_lookup
         let obj3 = C.taxon_info_lookup 
         let obj4 = C.taxon_references_lookup 
+        let obj5 = C.site_lookup 
         //console.log('o1-3')
         //console.log(obj1[3])
         
@@ -468,7 +469,10 @@ function create_taxon_table(otids, source, type, head_txt) {
                let tstrains = o1.type_strains.join(' | ')
                let gn = o1.genomes.join(' | ')
                let syn = o1.synonyms.join(' | ')
-               let sites = o1.sites.join(' | ')
+               let sites = obj5[otid].s1
+               if(obj5[otid].hasOwnProperty('s2')){
+                   sites = sites + ' | ' +obj5[otid].s2
+               }
                let rstrains = o1.ref_strains.join(' | ')
                let rnaseq = o1.rrna_sequences.join(' | ')
                
