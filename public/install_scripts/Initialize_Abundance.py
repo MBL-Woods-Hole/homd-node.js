@@ -271,12 +271,12 @@ def run_abundance_db():
     for row in result:
         
         max_eren, max_dewhirst, max_hmp_metaphlan, max_hmp_refseq = 0,0,0,0
-        if row['otid'] in (71,81,106,123,138,178,187,192,243,274,306,332,374,375,377,386,398,411,431,578,638,809,818,820,922,928):
+        #if row['otid'] in (71,81,106,123,138,178,187,192,243,274,306,332,374,375,377,386,398,411,431,578,638,809,818,820,922,928):
         #if row['otid'] in ('071','081','081','106','123','138','178','187','192','243','274','306','332','374','375','377','386','398','411','431','578','638','809','818','820','922','928'):
-            print('pre ',row['otid'],row['taxonomy'])
+        #    print('pre ',row['otid'],row['taxonomy'])
         taxon_string = fix_taxonomy(row['taxonomy'])
-        if row['otid'] in (71,81,106,123,138,178,187,192,243,274,306,332,374,375,377,386,398,411,431,578,638,809,818,820,922,928):
-            print('post',row['otid'],taxon_string)
+        #if row['otid'] in (71,81,106,123,138,178,187,192,243,274,306,332,374,375,377,386,398,411,431,578,638,809,818,820,922,928):
+         #   print('post',row['otid'],taxon_string)
             
         #taxon_string = row['taxonomy']
         # tax_parts = taxon_string.split(';')

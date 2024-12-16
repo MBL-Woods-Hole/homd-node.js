@@ -501,16 +501,16 @@ $('#tax-box').on('scroll', function() {
 });
 
 function toggle_site_filter(filter_to_show) {
-    // either 'PST' Primary, Secondary or Tertiary
+    // either 'PST' Primary, Secondary
     // Or 'P' for primary only
     if(filter_to_show == 'PST'){
-      var link_html = "Filter/Search from Primary, Secondary or Tertiary Body Sites Instead: <a class=\"pill pill-green\" href='#' onclick=\"toggle_site_filter('P')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
+      var link_html = "Filter/Search from Primary or Secondary Body Sites Instead: <a class=\"pill pill-green\" href='#' onclick=\"toggle_site_filter('P')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>"
        var title = 'Primary Body Site:'
     }else{
       var link_html = "Filter/Search from Primary Body Sites Only: <a class=\"pill pill-lightseagreen\" href='#' onclick=\"toggle_site_filter('PST')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='pst_site' \>"
-      var title = 'Primary, Secondary and Tertiary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+      var title = 'Primary and Secondary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
       
     }
     update_sb()

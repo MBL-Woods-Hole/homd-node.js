@@ -113,7 +113,7 @@
             <% if(statusfltr.site.p_or_pst === 'primary_site'){ %>
               <span class='filter-title' id='body_site_title'>Primary Body Site:</span>&nbsp;&nbsp;
             <% }else{ %>
-              <span class='filter-title' id='body_site_title'>Primary, Secondary and Tertiary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <span class='filter-title' id='body_site_title'>Primary and Secondary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <% } %>
             
             <% if(statusfltr.site.oral === 'on'){ %>
@@ -169,7 +169,7 @@
              
              <br>&nbsp;&nbsp;&nbsp;&nbsp;** 
              <% if(statusfltr.site.p_or_pst === 'primary_site'){ %>
-                <span  id='pst_filter_span'>Filter/Search from Primary, Secondary and Tertiary Body Sites Instead:&nbsp;
+                <span  id='pst_filter_span'>Filter/Search from Primary and Secondary Body Sites Instead:&nbsp;
                 <a class="pill pill-green" href='#' onclick="toggle_site_filter('P')">Toggle</a> See: [<a href='body_sites'>Preferred Body Sites Page</a>]
                 <input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>
                 </span>

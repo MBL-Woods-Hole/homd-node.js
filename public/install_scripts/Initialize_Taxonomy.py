@@ -176,44 +176,113 @@ def run_type_strain(args):
 
 def run_sites(args):
     global master_lookup
+    short_site_names = {
+       'Oral' : ['Oral','Oral (high abundance)','Oral (medium abundance)','Oral (low abundance)','Oral (scarce abundance)','Oral (caries)','Oral (periodontitis)'],
+       'Nasal': ['Nasal','Nasal (scarce)','Nasal (low)','Nasal & Skin'],
+       'Skin' : ['Skin','Nasal & Skin'],
+       'Gut'  : ['Gut'],
+       'Vaginal':['Vaginal'],
+       'Pathogen':['Systemic pathogen','Opportunistic pathogen'],
+       'Environmental':['Environmental','Environmental (food)','Environmental (soil/water)','Environmental (sewage sludge)','Environmental (air)','Environment (non-human animal)'],
+       'Reference':['Reference'],
+       'Unassigned':['Unassigned'],
+       'Human-Associated':['Human-Associated, Primary Site Uncertain']
+    }
     #q = "SELECT otid, site FROM otid_site JOIN sites USING (site_id) ORDER BY otid,priority"
-    q = "SELECT otid, primary_body_site FROM otid_prime"
-    result = myconn.execute_fetch_select_dict(q)
-    for obj in result:
-        otid = str(obj['otid'])
-        if otid in master_lookup:
-            
-            master_lookup[otid]['sites'].append(obj['primary_body_site'])
-        else:
-            sys.exit('problem with site exiting')
-    # this takes care of otids that are missing from otid_site
-    # which would make them not show on taxon table
-    for otid in master_lookup:
-        if len(master_lookup[otid]['sites']) == 0:
-            master_lookup[otid]['sites'].append('Unassigned')
-    
-    # NEW 1,2,3 sites
+    #q = "SELECT otid, primary_body_site FROM otid_prime"
+    #q = "SELECT otid, site FROM otid_prime JOIN sites on otid_prime.primary_body_site_id=sites.site_id"
+    q = "SELECT otid, p1.site as p1, p2.site as p2 FROM otid_prime"
+    q += " JOIN sites p1 on otid_prime.primary_body_site_id=p1.site_id"
+    q += " JOIN sites p2 on otid_prime.secondary_body_site_id=p2.site_id  ORDER BY otid"
     lookup = {}
-    q = "SELECT otid, site, priority, site_notes FROM otid_site JOIN sites USING (site_id) JOIN otid_prime using(otid)"
     result = myconn.execute_fetch_select_dict(q)
     for obj in result:
         otid = str(obj['otid'])
-        note = obj['site_notes']
-        if otid not in lookup:
-            lookup[otid] = {}
-            lookup[otid]['note'] = note
-        if otid in master_lookup:
+        primary_site = obj['p1']
+        lookup[otid] = {}
+        lookup[otid]['s1'] = primary_site
+        if obj['p2']:
+            lookup[otid]['s2'] = obj['p2']
+        
+        for site in short_site_names:
+            #print('psite ',primary_site,site)
+            if site == 'Human-Associated':
+                master_lookup[otid]['sites'].append('Human-Associated')
+                if primary_site in short_site_names['Oral']:
+                    master_lookup[otid]['sites'].append('Oral')
+                if primary_site in short_site_names['Nasal']:
+                    master_lookup[otid]['sites'].append('Nasal')
+                if primary_site in short_site_names['Skin']:
+                    master_lookup[otid]['sites'].append('Skin')
+                if primary_site in short_site_names['Vaginal']:
+                    master_lookup[otid]['sites'].append('Vaginal')
+                if primary_site in short_site_names['Gut']:
+                    master_lookup[otid]['sites'].append('Gut')
+            else:
+                if primary_site in short_site_names[site]:
+                    master_lookup[otid]['sites'].append(site)
+        if len(master_lookup[otid]['sites']) == 0:
+            sys.exit('no short sites found '+str(otid))  # add site to dict above
+    
+# 0	Unassigned
+# 1	Oral
+# 2	Nasal
+# 3	Skin
+# 4	Gut
+# 5	Vaginal
+# 6	Oral (high abundance)
+# 7	Oral (medium abundance)
+# 8	Oral (low abundance)
+# 9	Oral (scarce abundance)
+# 10	Environmental
+# 11	Environmental (food)
+# 12	Environmental (soil/water)
+# 13	Environmental (sewage sludge)
+# 14	Opportunistic pathogen
+# 15	Systemic pathogen
+# 16	Oral (periodontitis)
+# 17	Oral (caries)
+# 18	Environmental (air)
+# 19	Nasal (low)
+# 20	Nasal (scarce)
+# 21	Environment (non-human animal)
+# 22	Reference
+# 23	Human-Associated, Primary Site Uncertain
+# 24	Nasal & Skin
+# 25	
+#         if otid in master_lookup:
+#             
+#             master_lookup[otid]['sites'].append(obj['primary_body_site'])
+#         else:
+#             sys.exit('problem with site exiting')
+#     # this takes care of otids that are missing from otid_site
+#     # which would make them not show on taxon table
+#     for otid in master_lookup:
+#         if len(master_lookup[otid]['sites']) == 0:
+#             master_lookup[otid]['sites'].append('Unassigned')
+#     
+#     # NEW 1,2,3 sites
+#     lookup = {}
+#     q = "SELECT otid, site, priority, site_notes FROM otid_site JOIN sites USING (site_id) JOIN otid_prime using(otid)"
+#     result = myconn.execute_fetch_select_dict(q)
+#     for obj in result:
+#         otid = str(obj['otid'])
+#         note = obj['site_notes']
+#         if otid not in lookup:
+#             lookup[otid] = {}
+#             lookup[otid]['note'] = note
+#         if otid in master_lookup:
             
             #print('obj',obj)
-            if obj['priority'] == 1:
-                lookup[otid]['s1'] = obj['site']
-            if obj['priority'] == 2:
-                lookup[otid]['s2'] = obj['site']
-            if obj['priority'] == 3:
-                lookup[otid]['s3'] = obj['site']
+            # if obj['priority'] == 1:
+#                 lookup[otid]['s1'] = obj['site']
+#             if obj['priority'] == 2:
+#                 lookup[otid]['s2'] = obj['site']
+#             if obj['priority'] == 3:
+#                 lookup[otid]['s3'] = obj['site']
             
-        else:
-            sys.exit('problem with site exiting')
+        #else:
+        #    sys.exit('problem with site exiting')
     
     file = os.path.join(args.outdir,args.outfileprefix+'SiteLookup.json')
     print_dict(file, lookup)
