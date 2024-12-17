@@ -450,7 +450,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
 //
 //
 router.post('/tax_level', function tax_level_post(req, res) {
-  //console.log('in taxlevel POST')
+  console.log('in taxlevel POST')
   helpers.print(req.body)
   
   let rank = req.body.rank

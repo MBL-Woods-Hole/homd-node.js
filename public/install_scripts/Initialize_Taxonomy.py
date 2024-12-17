@@ -20,18 +20,10 @@ from connect import MyConnection
 taxon_tbl  = 'otid_prime'   # UNIQUE  - This is the defining table
 genome_tbl = 'genomes'
 
-#master_tax_lookup={}
-#acceptable_genome_flags = ('11','12','21','91')
-# dropped_otids = ['9',   '15',  '16',  '55',  '65',
-#   '67',  '68',  '69',  '140', '143',
-#   '177', '210', '220', '255', '292','293','296',
-#   '310', '372', '395', '437', '446',
-#   '449', '452', '453', '462', '474',
-#   '486', '487', '502', '648', '729',
-#   '826']
+
 
 #nonoral_otids = ['982','983','984','986','987','988','989','990','991','994','995','996','997','998','999']
-dropped_otids = []  # must get dropped from DB
+dropped_otids = []  # must get dropped from DB status=Dropped
 #nonoral_otids = []  # must get from DB
 
 query_taxa ="""
@@ -98,7 +90,8 @@ def run_taxa(args):
         otid = str(obj['otid'])
         taxonObj = create_taxon(otid)
         
-        if obj['naming_status'] == 'Dropped' and  obj['cultivation_status'] == 'Dropped':
+        if obj['status'] == 'Dropped':
+            print('dropped',otid)
             dropped_otids.append(otid)
         
         taxonObj['status']     = obj['status']
