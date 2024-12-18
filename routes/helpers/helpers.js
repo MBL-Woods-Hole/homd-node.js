@@ -1689,7 +1689,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     // taxon will be excluded here from the taxon table
 
     //console.log('olength-1',big_tax_list.length)
-    //console.log('site_on',site_on)
+    console.log('site_on',site_on)
     //console.log('C.site_lookup[988] ',Object.values(C.site_lookup[988]) )
     
     if(filter && filter.site.p_or_pst == 'primary_site'){
@@ -1698,23 +1698,20 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
            console.log('item.sites999',item)
          }
          
-         // for(let n in item.sites){
-//            //console.log('n',n,'site',item.sites[n])
-//            //console.log('item.sites',item.sites)
-//            if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.sites[0]))){
-//            //if(site_on.includes(item.sites[n].toLowerCase())){
-//               item.site = item.sites[0]
-//               
-//               // new code for JMW 2024-09-12
-//               //console.log(item)
-//               
-//               if(item.otid in C.site_lookup){
-//                  item.site = C.site_lookup[item.otid].s1
-//               }
-//               return item
-//            }
-           return item
-        // }
+         for(let n in item.sites){
+           //console.log('n',n,'site',item.sites[n])
+           //console.log('item.sites',item.sites)
+           if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.sites[0]))){
+           //if(site_on.includes(item.sites[n].toLowerCase())){
+              item.site = item.sites[0]
+              
+              if(item.otid in C.site_lookup){
+                 item.site = C.site_lookup[item.otid].s1
+              }
+              return item
+           }
+           
+         }
        })
         
     }else{
