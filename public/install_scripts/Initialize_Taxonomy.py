@@ -188,7 +188,9 @@ def run_sites(args):
     q += " JOIN sites p1 on otid_prime.primary_body_site_id=p1.site_id"
     q += " JOIN sites p2 on otid_prime.secondary_body_site_id=p2.site_id  ORDER BY otid"
     lookup = {}
+    print(q)
     result = myconn.execute_fetch_select_dict(q)
+    print(result)
     for obj in result:
         otid = str(obj['otid'])
         primary_site = obj['p1']
