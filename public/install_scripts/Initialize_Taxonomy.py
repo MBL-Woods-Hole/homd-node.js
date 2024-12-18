@@ -91,7 +91,7 @@ def run_taxa(args):
         taxonObj = create_taxon(otid)
         
         if obj['status'] == 'Dropped':
-            print('dropped',otid)
+            #print('dropped',otid)
             dropped_otids.append(otid)
         
         taxonObj['status']     = obj['status']

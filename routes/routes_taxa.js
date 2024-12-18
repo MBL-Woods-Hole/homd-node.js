@@ -463,11 +463,12 @@ router.post('/tax_level', function tax_level_post(req, res) {
           console.log(err)
       else
       var taxdata = JSON.parse(data);
-      
+      //console.log('taxdata ',taxdata)
       const result = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
         // get lineage of taxitem
         
         let lineage = [taxitem.taxon]
+        
         let new_search_id = taxitem.parent_id
         let new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
         //console.log(new_search_id,new_search_rank)
@@ -482,6 +483,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
         return_obj.item_rank = rank
         
         if(rank === 'species' || rank === 'subspecies'){
+          //console.log('rank '+rank+' = '+taxitem.otid)
           return_obj.otid = taxitem.otid
           // console.log('species')
 //          // here we 'fix' the species to exclude the genus so that
