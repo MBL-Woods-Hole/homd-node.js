@@ -310,6 +310,7 @@ Promise.all(promises)
    //class
    //Absconditabacteria (SR1) [C-1]
     //console.log(C.homd_taxonomy)
+    console.log('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
     helpers.print(['lineage 673',C.taxon_lineage_lookup[673]])
     helpers.print(['Lookup 673',C.taxon_lookup[673]])
     //console.log('refseq 12',C.refseq_lookup[12])

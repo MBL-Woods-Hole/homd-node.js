@@ -1654,7 +1654,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     //console.log('status_on',status_on)
     let combo = ''
     big_tax_list = big_tax_list.filter( function filterStatus(item) {
-        console.log('item',item)
+        //console.log('item',item)
         combo = (item.naming_status.split(/(\s+)/)[0] +'_'+item.cultivation_status.split(/(\s+)/)[0]).toLowerCase()
         
         if(item.naming_status =='Dropped'){ // || item.naming_status =='NonOralRef'){
