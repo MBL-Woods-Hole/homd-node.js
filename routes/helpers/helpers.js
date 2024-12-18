@@ -1629,7 +1629,7 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
 module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
    
     let big_tax_list = Object.values(C.taxon_lookup);
-    //console.log('olength-0',big_tax_list.length)
+    console.log('olength-0',big_tax_list.length)
     let vals
     //
     //console.log('req.session.ttable_filter',req.session.ttable_filter)
@@ -1643,7 +1643,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     //console.log('vals',vals)
     //
     // txt_srch
-    //console.log('big_tax_list.length',big_tax_list.length)
+    console.log('big_tax_list.length-1',big_tax_list.length)
     if(vals.text.txt_srch !== ''){
        big_tax_list = helpers.get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
     }
@@ -1676,7 +1676,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
 //             return item
 //         }
     })
-
+  console.log('big_tax_list.length-2',big_tax_list.length)
     //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     
     
@@ -1735,7 +1735,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
          }
        })
     }
-    
+    console.log('big_tax_list.length-3',big_tax_list.length)
     //phylum
     if(vals.phylum != '0'){
        big_tax_list = helpers.ttfilter_for_phylum(big_tax_list, vals.phylum)
@@ -1782,7 +1782,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
               }
         }
     })
-    //console.log('olength-3',big_tax_list.length)
+    console.log('big_tax_list.length-4',big_tax_list.length)
     //sort column
     if(vals.sort_rev === 'on'){
         if(vals.sort_col === 'otid'){
@@ -1811,7 +1811,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
           })
         }
     }
-    //console.log('olength-4',big_tax_list.length)
+    console.log('big_tax_list.length-5',big_tax_list.length)
     return big_tax_list
 
 }
