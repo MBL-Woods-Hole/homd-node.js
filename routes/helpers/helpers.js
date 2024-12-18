@@ -1557,24 +1557,31 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
        if(item == 'sort_rev'){
          req.session.ttable_filter.sort_rev = 'on'
        }
-       if(item == 'named'){
-         req.session.ttable_filter.status.named = 'on'
+       
+// Named Cultivated
+// Unnamed Uncultivated
+// Named Uncultivated
+// Dropped Dropped
+// Unnamed Cultivated
+
+       if(item == 'named_cultivated'){
+         req.session.ttable_filter.status.named_cultivated = 'on'
        }
-       if(item == 'unnamed'){
-         req.session.ttable_filter.status.unnamed = 'on'
+       if(item == 'unnamed_uncultivated'){
+         req.session.ttable_filter.status.unnamed_uncultivated = 'on'
        }
-       if(item == 'phylotype'){
-         req.session.ttable_filter.status.phylotype = 'on'
+       if(item == 'named_uncultivated'){
+         req.session.ttable_filter.status.named_uncultivated = 'on'
        }
-       if(item == 'lost'){
-         req.session.ttable_filter.status.lost = 'on'
+       if(item == 'unnamed_cultivated'){
+         req.session.ttable_filter.status.unnamed_cultivated = 'on'
        }
        if(item == 'dropped'){
          req.session.ttable_filter.status.dropped = 'on'
        }
-       if(item == 'nonoralref'){
-         req.session.ttable_filter.status.nonoralref = 'on'
-       }
+       // if(item == 'nonoralref'){
+//          req.session.ttable_filter.status.nonoralref = 'on'
+//        }
        
        
        // sites
@@ -1640,12 +1647,39 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     if(vals.text.txt_srch !== ''){
        big_tax_list = helpers.get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
     }
-    //console.log('big_tax_list',big_tax_list)
+    //console.log('big_tax_list',big_tax_list[0])
     //console.log('vals',vals)
-    //status
-    // create array of 'on's
+    ///// status /////
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
-     big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
+    //console.log('status_on',status_on)
+    let combo = ''
+    big_tax_list = big_tax_list.filter( function filterStatus(item) {
+        console.log('item',item)
+        combo = (item.naming_status.split(/(\s+)/)[0] +'_'+item.cultivation_status.split(/(\s+)/)[0]).toLowerCase()
+        
+        if(item.naming_status =='Dropped'){ // || item.naming_status =='NonOralRef'){
+            combo = item.naming_status.toLowerCase()
+        }
+        //console.log('combo',combo)
+        if(status_on.indexOf(combo) !==-1 ){  //818
+            //if(vals.status.nonoralref == 'off' && item.status == 'NonOralRef'){
+            //if(vals.status.nonoralref == 'on' || item.status != 'NonOralRef'){
+            
+            //}else{
+               return item
+            //}
+            
+        }
+        // else if(item.status == 'NonOralRef' && vals.status.nonoralref == 'on'){
+//             return item
+//         }else if(item.status == 'Dropped' && vals.status.dropped == 'on'){
+//             return item
+//         }
+    })
+
+    //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
+    
+    
     //site
     // create array of 'on's
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
@@ -1655,10 +1689,14 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     // taxon will be excluded here from the taxon table
 
     //console.log('olength-1',big_tax_list.length)
-     //console.log('site_on',site_on)
-    //console.log('C.site_lookup[328] ',Object.values(C.site_lookup[328]) )
+    //console.log('site_on',site_on)
+    //console.log('C.site_lookup[988] ',Object.values(C.site_lookup[988]) )
+    
     if(filter && filter.site.p_or_pst == 'primary_site'){
        big_tax_list = big_tax_list.filter( function(item){
+         //if(item.otid =='988'){
+           //console.log('item.sites988',item)
+         //}
          for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])
            //console.log('item.sites',item.sites)
@@ -1698,9 +1736,12 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
        })
     }
     
-
+    //phylum
+    if(vals.phylum != '0'){
+       big_tax_list = helpers.ttfilter_for_phylum(big_tax_list, vals.phylum)
+    }
 //console.log('olength-2',big_tax_list.length)
-
+  //console.log('vals',vals)
     //
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
@@ -1889,12 +1930,13 @@ module.exports.get_default_filter = function get_default_filter(){
     let defaultfilter = {
         otid:'',
         status:{
-            named:'on',
-            unnamed:'on',
-            phylotype: 'on',
-            lost: 'on',
+            named_cultivated:'on',
+            named_uncultivated:'on',
+            unnamed_cultivated: 'on',
+            unnamed_uncultivated: 'on',
             dropped:'off',
-            nonoralref:'off'
+            //nonoralref:'off'
+            
         },
         site:{
            oral:'on',
@@ -1904,6 +1946,7 @@ module.exports.get_default_filter = function get_default_filter(){
            vaginal:'on',
            unassigned:'on',
            enviro      :'on',
+           ref         :'off',
            pathogen    :'on',
            p_or_pst    :'primary_site'
            
@@ -1924,12 +1967,13 @@ module.exports.get_null_filter = function get_null_filter(){
     let nullfilter = {
         otid:'',
         status:{
-            named:'off',
-            unnamed:'off',
-            phylotype: 'off',
-            lost: 'off',
+            named_cultivated:'off',
+            named_uncultivated:'off',
+            unnamed_cultivated: 'off',
+            unnamed_uncultivated: 'off',
             dropped:'off',
-            nonoralref:'off'
+            //nonoralref:'off'
+            
         },
         site:{
            oral:'off',
@@ -1939,6 +1983,7 @@ module.exports.get_null_filter = function get_null_filter(){
            vaginal:'off',
            unassigned:'off',
            enviro      :'off',
+           ref         :'off',
            pathogen    :'off',
            p_or_pst    :'primary_site'
         },
@@ -1958,4 +2003,26 @@ module.exports.get_all_phyla = function get_all_phyla(){
     var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
     var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
     return phyla
+}
+
+module.exports.ttfilter_for_phylum = function ttfilter_for_phylum(tlist, phy){
+    var lineage_list = Object.values(C.taxon_lineage_lookup)
+    var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
+    //console.log('obj_lst',obj_lst)
+    var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
+        return el.otid
+    })
+    let otid_grabber = {}
+    let gid_obj_list = tlist.filter(item => {   // filter genome obj list for inclusion in otid list
+        if(otid_list.indexOf(item.otid) !== -1){
+            otid_grabber[item.otid] = 1
+            return true
+        }
+        //return otid_list.indexOf(item.otid) !== -1
+    })
+    //console.log('otid_grabber',otid_grabber)
+    //console.log('gid_obj_list',gid_obj_list)
+    // now get just the otids from the selected gids
+    gid_obj_list.map( (el) =>{ return el.otid })
+    return gid_obj_list
 }

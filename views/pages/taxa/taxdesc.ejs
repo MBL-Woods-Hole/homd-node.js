@@ -1,7 +1,14 @@
 <style>
 
 
-
+.taxon_data{
+   font-family: "Lucida Console", "Courier New", monospace;
+   font-weight:bold;
+}
+.taxon_data a{
+   font-family: "Lucida Console", "Courier New", monospace;
+   font-weight:bold;
+}
 .desc-box{
   font-size:13px;
   padding:5px;
@@ -69,15 +76,7 @@
   float:right;
 }
 
-.small-tbl{
-    border-collapse:collapse;
-}
-.small-tbl tr{
-    font-size:12px;
-    border:none;
-    border-bottom:none;
-    
-}
+
 
 #myImg0:hover {opacity: 0.7;cursor:pointer;}
 #myImg1:hover {opacity: 0.7;cursor:pointer;}
@@ -224,16 +223,16 @@
 
   </td></tr>
   
-  <tr>
+  <tr class='taxon_data'>
     <td class='tbl-title'>Classification:</td>
-    <td>
+    <td class='taxon_data'>
     <table id='tax_lineage'>
       <tr><td>Domain:</td>
-      <td><a href='life?rank=domain&name=<%= data3.domain %>'><%= data3.domain %></a></td></tr>
+      <td class='taxon_data'><a href='life?rank=domain&name=<%= data3.domain %>'><%= data3.domain %></a></td></tr>
       <tr><td>Phylum:</td>
-      <td><a href='life?rank=phylum&name=<%= data3.phylum %>'><%= data3.phylum %></a></td></tr>
+      <td class='taxon_data'><a href='life?rank=phylum&name=<%= data3.phylum %>'><%= data3.phylum %></a></td></tr>
       <tr><td>Class:</td>
-      <td>
+      <td class='taxon_data'>
         <a href='life?rank=klass&name=<%= data3.klass %>'><%= data3.klass %></a>
         <!-- 
 <% if(data3.klass.includes("[")){ %>
@@ -244,7 +243,7 @@
  -->
       </td></tr>
       <tr><td>Order:</td>
-      <td>
+      <td class='taxon_data'>
         <a href='life?rank=order&name=<%= data3.order %>'><%= data3.order %></a>
         <!-- 
 <% if(data3.order.includes("[")){ %>
@@ -257,7 +256,7 @@
       
       
       <tr><td>Family:</td>
-      <td>
+      <td class='taxon_data'>
         <a href='life?rank=family&name=<%= data3.family %>'><%= data3.family %></a>
         <!-- 
 <% if(data3.family.includes("[")){ %>
@@ -268,7 +267,7 @@
  -->
       </td></tr>
       <tr><td>Genus:</td>
-      <td>
+      <td class='taxon_data'>
         <a href='life?rank=genus&name=<%= data3.genus %>'><%= data1.genus %></a>
         <% if(data3.genus.includes("[")){ %>
           <span class="tooltip" data-tooltip-content="#tooltip_content">
@@ -278,29 +277,29 @@
       </td></tr>
       <div class="tooltip_templates">
            <span id="tooltip_content">
-              The bracketed letters indicate 
+              Bracketed letters indicate 
               <br>that the taxonomic name at this 
               <br>level has not been established.
               <ul>
               <li><small>Examples:</small>
-              <li><small>C1 – first unnamed Class</small>
-              <li><small>O1 – first unnamed Order</small>
-              <li><small>F2 – second unnamed Family</small>
-              <li><small>G3 – third unnamed Genus</small>
+              <li><small>C1 – First Unnamed Class</small>
+              <li><small>O1 – First Unnamed Order</small>
+              <li><small>F2 – Second Unnamed Family</small>
+              <li><small>G3 – Third Unnamed Genus</small>
               </ul>
            </span>
       </div>
       <% if(data3.subspecies){ %>
-        <tr><td>Species:</td><td> <a href='life?rank=species&name=<%= data3.species %>'><%= data1.species %></a></td></tr>
-        <tr><td>Subspecies:<br>or Clade:</td><td><%= data3.subspecies %></td></tr>
+        <tr><td>Species:</td><td class='taxon_data'> <a href='life?rank=species&name=<%= data3.species %>'><%= data1.species %></a></td></tr>
+        <tr><td>Subspecies:<br>or Clade:</td><td class='taxon_data'><%= data3.subspecies %></td></tr>
       <% }else{ %>
-         <tr><td>Species:</td><td><%= data1.species %></td></tr>
+         <tr><td>Species:</td><td class='taxon_data'><%= data1.species %></td></tr>
       <% } %>
       </table>
     </td>
   </tr>
   <tr><td class='tbl-title'>Bacterial Name:</td>
-        <td><i><%= data1.genus %> <%= data1.species %> <%= data3.subspecies %></i></td>
+        <td class='taxon_data'><i><%= data1.genus %> <%= data1.species %> <%= data3.subspecies %></i></td>
   </tr>
   
   <% if(data1.notes){ %>
@@ -310,25 +309,18 @@
   <% } %>
   
   <tr>
-    <td class='tbl-title'><strong>Status:</strong></td>
-    <% if(data1.status === 'Lost'){ %>
-       <% statusWords = 'Unnamed - Culture Lost' %>
-    <% }else if(data1.status === 'Named'){ %>
-       <% statusWords = 'Named - Cultured' %>
-    <% }else if(data1.status === 'Unnamed'){ %>
-       <% statusWords = 'Unnamed - Cultured' %>
-    <% }else if(data1.status === 'Phylotype'){ %>
-       <% statusWords = 'Phylotype - Uncultured' %>
-    <% }else if(data1.status === 'NonOralRef'){ %>
-       <% statusWords = 'NonOral Reference Taxon' %>
-    <% }else{ %> <!-- // error -->
-       <% statusWords = data1.status %>
-    <% } %>
-    <td><small><%= statusWords %> </small></td>
+    <td class='tbl-title'>Naming Status:</td>
+    
+    <td class='taxon_data'><%= data1.naming_status %></td>
+  </tr>
+  <tr>
+    <td class='tbl-title'>Cultivation Status:</td>
+    
+    <td class='taxon_data'><%= data1.cultivation_status %></td>
   </tr>
   <tr>
     <td class='tbl-title'> Body Site (or source):</td>
-    <td><%- sites %></td>
+    <td class='taxon_data'><%- sites %></td>
     
   </tr>
   
@@ -337,7 +329,7 @@
     <% if(data1.status === 'Named') { %>
         <!-- USE type strains -->
        
-        <td><small>
+        <td class='taxon_data'>
         
         <% if(data1.type_strains.length > 0){ %>
            <%- data1.type_strains.join(', ') %>
@@ -351,21 +343,19 @@
         
     <% }else{ %>                                     <!--  if status is Named - Cultured also -->
         <!-- Use Reference Strains -->
-        <td><small>
+        <td class='taxon_data'>
         <% if(data1.ref_strains.length > 0){ %>
            <%- data1.ref_strains.join(', ') %>
-        <% }else{ %>
-           None, not yet cultivated
         <% } %>
     <% } %>
-        </small></td>
+        </td>
   </tr>
   <tr>
     <td class='tbl-title'>Former Names or Synonyms:</td>
-    <td>
-       <table class='small-tbl' border='0'>
+    <td class='taxon_data'>
+       <table class='' border='0'>
        <% for(n=0;n<data1.synonyms.length;n++){ %>
-          <tr><td style='border:none;padding:0 1px;'><i><%- data1.synonyms[n] %></i></td></tr>
+          <tr><td class='taxon_data' style='border:none;padding:0 1px;'><i><%- data1.synonyms[n] %></i></td></tr>
        <% } %>
        </table>
     
@@ -373,13 +363,13 @@
   </tr>
   <tr>
     <td class='tbl-title'>16S rRNA Reference Sequences:</td>
-    <td><small>
+    <td class='taxon_data'>
     
       <span class='rs-span-2' style='border:1px solid black;padding:1px;'>
       &nbsp;&nbsp;&nbsp;<a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>view in<br>RefSeq tree</a>
       </span>
-      <table class='small-tbl' border='0'>
-        <% for( var n in data5){ %>
+      <table class='' border='0'>
+        <% for(n in data5){ %>
             <!-- OLD: >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
             <!-- NEW: >81531021 | Methanobrevibacter oralis | HMT-815 | Strain: DSM 7256 | PROKKA: SEQF3102_01675 | Status: Named | Genomes: 5 -->
             <% refseqid   = data5[n].refseqid %>
@@ -388,7 +378,7 @@
             <% refgenbank = data5[n].genbank %>
             <% refstatus  = data1.status %>
             
-            <tr><td style='border:none;padding:0 1px;'>
+            <tr><td class='taxon_data' style='border:none;padding:0 1px;'>
                <span class='rs-span-1'>
               RefSeq ID:<a href='#' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data1.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= data1.genomes.length %>')">
               <%= refseqid %></a>
@@ -399,17 +389,17 @@
       </table>
     <br><br><a href='/download/#refseq'>Download latest 16S rRNA reference gene sequences.</a>
     
-    </small>
+    
     </td>
   </tr>
   <tr>
     <td class='tbl-title'>Genotypic Description:</td>
-    <td><small></small></td>
+    <td class='taxon_data'><small></small></td>
   </tr>
   
   <tr>
     <td class='tbl-title'>Phenotypic Characteristics:</td>
-    <td>
+    <td class='taxon_data'>
     <% if(data2.pheno !==''){ %>
       <small><%- data2.pheno %></small>
     <% } %>
@@ -469,7 +459,7 @@
   </td></tr>
   <tr>
     <td class='tbl-title'>Cultivability:</td>
-    <td>
+    <td class='taxon_data'>
     <% if(data2.culta !==''){ %>
       <small><%- data2.culta %></small>
     <% } %>
@@ -478,7 +468,7 @@
   
   <tr>
     <td class='tbl-title'><a href='/genome/anvio-server'>Pangenome(s)</a>:</td>
-    <td><small>
+    <td class='taxon_data'>
     <% if(data1.pangenomes.length >0){ %>
     <%   for(n in data1.pangenomes){ %>
            <a href='<%= links.anviserver_link %>/<%= data1.pangenomes[n] %>' target='_blank'><%= data1.pangenomes[n] %></a>
@@ -486,7 +476,7 @@
     <% }else{ %>
        No Pangenome Assembly Available yet.
     <% } %>
-    </small></td>
+    </td>
   </tr>
   <tr>
     <td class='tbl-title'>Microbial Ecology<br><small>(Abundance/Prevalence)</small>:</td>
@@ -498,7 +488,9 @@
       <% ss = encodeURIComponent(data3.species) %>
       <% rankname = 'species' %>
     <% } %>
-      <td><small>[<a href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance/Prevalence Page for <i><%= data3.subspecies %></i></a>]</small></td>
+      <td class='taxon_data'>[<a href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance/Prevalence Page for 
+         <i><%= data3.subspecies %></i></a>]
+      </td>
   
   </tr>
   
@@ -506,35 +498,35 @@
   
   <tr>
     <td class='tbl-title'>Proteomics:</td>
-    <td><small></small></td>
+    <td class='taxon_data'></td>
   </tr>
   
   <tr>
     <td class='tbl-title'>NCBI Taxon ID:</td>
-    <td>
+    <td class='taxon_data'>
     <% if(data1.ncbi_taxid === "0"){ %>
       Not Available
     <% }else{ %>
-      <small>
+      
         <%= data1.ncbi_taxid %> 
         <span>
         [<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data1.ncbi_taxid %>' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]
         </span>
-      </small>
+      
       <% } %>
       </td>
   </tr>
   
   <tr>
     <td class='tbl-title' title='List of Prokaryotic names with Standing in Nomenclature'>LPSN.dsmz.de:</td>
-    <td>
+    <td class='taxon_data'>
       <% link = "https://lpsn.dsmz.de/"+links["lpsnlink"] %>
       <% show = data1.genus+ " "+data1.species %>
-      <small>
+      
         <span>
         <a href='<%- link %>' target='_blank' rel="noopener noreferrer"><em><%- show %></em></a>
         </span>
-      </small>
+      
       </td>
   </tr>
   
@@ -542,10 +534,10 @@
   
   <tr>
     <td class='tbl-title'>PubMed Searches:</td>
-    <td><small>
-      <% if(data1.status === 'Named') { %>
+    <td class='taxon_data'>
+      <% if(data1.naming_status === 'Named') { %>
          
-       <table class='small-tbl' border='0'>
+       <table class='' border='0'>
          
             <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td style='padding:0 1px;border:none;'>[<a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link</a>]</td></tr>
             <!-- nuccore/?term="genus+species"   -->
@@ -555,35 +547,35 @@
          
        </table>
       <% }else{ %>
-         Status: <%= data1.status %>
+         Status: <%= data1.naming_status %>
       <% } %>
-      </small>
+      
     </td>
   </tr>
   <tr>
     <td class='tbl-title'>Number of<br>Genome Sequences:</td>
-    <td>
-      <small>
+    <td class='taxon_data'>
+      
       <% g_length = data1.genomes.length %>
       <% if(g_length === 0){ %>
        No Genomes
       <% }else{ %>
        <%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> See List </a>
       <% } %>
-      </small>
+      
     </td>
   </tr>
   <tr>
     <td class='tbl-title'>Phylogenetic Trees:</td>
-    <td>
+    <td class='taxon_data'>
     <% if(g_length > 0){ %>
-      <table class='small-tbl' border='0'>
+      <table class='' border='0'>
           <tr><td style='border:none;padding:0 1px;'><a href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>View in genome tree</a></td></tr>
           <tr><td style='border:none;padding:0 1px;'><a href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>View in ribosome protein tree</a></td></tr>
           <tr><td style='border:none;padding:0 1px;'><a href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>View in 16S rRNA gene tree</a></td></tr>
       </table>
     <% }else{ %>
-      <table class='small-tbl' border='0'>
+      <table class='' border='0'>
           <tr><td style='border:none;padding:0 1px;'>View in genome tree (no genomes)</td></tr>
           <tr><td style='border:none;padding:0 1px;'>View in ribosome protein tree (no genomes)</td></tr>
           <tr><td style='border:none;padding:0 1px;'>View in 16S rRNA gene tree (no genomes)</td></tr>

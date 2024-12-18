@@ -25,15 +25,22 @@
 function load_dhtmlx(data) {
     
      var items = document.getElementsByName('countcb')
-    if(items[0].checked && items[1].checked){
-      count_type = 'both'
-    }else if(items[0].checked){
-     count_type = 'wdropped'
-    }else if(items[1].checked){
-     count_type = 'wnonoralref'
-    }else{
-      count_type = 'default'
+     
+     if(items[0].checked){
+       count_type = 'wdropped'
+     }else{
+       count_type = 'default'
     }
+    
+//     if(items[0].checked && items[1].checked){
+//       count_type = 'both'
+//     }else if(items[0].checked){
+//      count_type = 'wdropped'
+//     }else if(items[1].checked){
+//      count_type = 'wnonoralref'
+//     }else{
+//       count_type = 'default'
+//     }
     
     if( typeof customOldTree != "undefined" ){
       customOldTree.destructor();
@@ -152,15 +159,22 @@ function change_level(rank) {
   args.rank = rank.toLowerCase()
   
   var items = document.getElementsByName('countcb')
-  if(items[0].checked && items[1].checked){
-      count_type = 'both'
-  }else if(items[0].checked){
+  if(items[0].checked){
      count_type = 'wdropped'
-  }else if(items[1].checked){
-     count_type = 'wnonoralref'
   }else{
       count_type = 'default'
   }
+  
+//   if(items[0].checked && items[1].checked){
+//       count_type = 'both'
+//   }else if(items[0].checked){
+//      count_type = 'wdropped'
+//   }else if(items[1].checked){
+//      count_type = 'wnonoralref'
+//   }else{
+//       count_type = 'default'
+//   }
+  
   args.count_type = count_type
   if(args.rank=='class'){args.rank='klass';}// for use in homd_taxonomy.taxa_tree_dict_map_by_rank
   var ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
@@ -282,48 +296,48 @@ function clear_filter_form(){
   document.getElementById('valid2').checked = false
 }
 
-function check_then_post_filter(form){
-    //console.log(form)
-    var filter_status = ['named','unnamed','phylotype','lost','dropped']
-  var filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
-    var els = document.getElementsByClassName('filter_ckbx')
-    var got_one_status = 0
-    var got_one_sites = 0
-    for(i = 0; i < els.length; i++){
-    if(els[i].checked == true){
-      if(filter_status.indexOf(els[i].name) != -1){
-        got_one_status = 1
-      }
-      if(filter_sites.indexOf(els[i].name) != -1){
-        got_one_sites = 1
-      }
-    }
-  }
-  if (got_one_sites == 0 && got_one_status == 0){
-     alert('You must choose at least one from "Status".')
-     return;
-  }
-    form.submit()
-}
+// function check_then_post_filter(form){
+//     //console.log(form)
+//     var filter_status = ['named','unnamed','phylotype','lost','dropped']
+//     var filter_sites = ['oral','nasal','skin','vaginal','unassigned','nonoralref']
+//     var els = document.getElementsByClassName('filter_ckbx')
+//     var got_one_status = 0
+//     var got_one_sites = 0
+//     for(i = 0; i < els.length; i++){
+//     if(els[i].checked == true){
+//       if(filter_status.indexOf(els[i].name) != -1){
+//         got_one_status = 1
+//       }
+//       if(filter_sites.indexOf(els[i].name) != -1){
+//         got_one_sites = 1
+//       }
+//     }
+//   }
+//   if (got_one_sites == 0 && got_one_status == 0){
+//      alert('You must choose at least one from "Status".')
+//      return;
+//   }
+//     form.submit()
+// }
 
-function change_valid(val){
-    // used from taxtable filter valid
-    //console.log(val)
-    var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
-    var extra= ['dropped','nonoralref']
-    if(val == 'all'){
-        for(n in extra){
-            document.getElementById(extra[n]).checked = true
-        }
-    }else{
-         for(n in extra){
-            document.getElementById(extra[n]).checked = false
-        }
-    }
-    for(n in lst){
-        document.getElementById(lst[n]).checked = true
-    }
-}
+// function change_valid(val){
+//     // used from taxtable filter valid
+//     //console.log(val)
+//     var lst = ['named','unnamed','phylotype','lost','oral','nasal','skin','vaginal','unassigned']
+//     var extra= ['dropped','nonoralref']
+//     if(val == 'all'){
+//         for(n in extra){
+//             document.getElementById(extra[n]).checked = true
+//         }
+//     }else{
+//          for(n in extra){
+//             document.getElementById(extra[n]).checked = false
+//         }
+//     }
+//     for(n in lst){
+//         document.getElementById(lst[n]).checked = true
+//     }
+// }
 
 
 function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,genomes) {
@@ -454,13 +468,6 @@ function letter_submit(letter){
 function phylum_submit(phylum){
    console.log('phylum',phylum)
    var form = document.getElementById("tax_filter_form");
-   
-       var i = document.createElement("input");
-       i.type = "hidden";
-       i.name = "phylum";
-       i.id = "phylum";
-       i.value = phylum
-       form.appendChild(i);
    form.submit()
 }
 function update_sb(){
@@ -494,16 +501,16 @@ $('#tax-box').on('scroll', function() {
 });
 
 function toggle_site_filter(filter_to_show) {
-    // either 'PST' Primary, Secondary or Tertiary
+    // either 'PST' Primary, Secondary
     // Or 'P' for primary only
     if(filter_to_show == 'PST'){
-      var link_html = "Filter/Search from Primary, Secondary or Tertiary Body Sites Instead: <a class=\"pill pill-green\" href='#' onclick=\"toggle_site_filter('P')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
+      var link_html = "Filter/Search from Primary or Secondary Body Sites Instead: <a class=\"pill pill-green\" href='#' onclick=\"toggle_site_filter('P')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>"
        var title = 'Primary Body Site:'
     }else{
       var link_html = "Filter/Search from Primary Body Sites Only: <a class=\"pill pill-lightseagreen\" href='#' onclick=\"toggle_site_filter('PST')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='pst_site' \>"
-      var title = 'Primary, Secondary and Tertiary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+      var title = 'Primary and Secondary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
       
     }
     update_sb()
@@ -523,6 +530,7 @@ function toggle_cb_sites(x){
         document.getElementById("vaginal").checked = false;
         document.getElementById("pathogen").checked = false;
         document.getElementById("enviro").checked = false;
+        document.getElementById("ref").checked = false;
         document.getElementById("unassigned").checked = false;
         var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_sites('on')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_sites_span').innerHTML = link_html
@@ -534,6 +542,7 @@ function toggle_cb_sites(x){
         document.getElementById("vaginal").checked = true;
         document.getElementById("pathogen").checked = true;
         document.getElementById("enviro").checked = true;
+        document.getElementById("ref").checked = true;
         document.getElementById("unassigned").checked = true;
         var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_sites('off')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_sites_span').innerHTML = link_html
@@ -542,22 +551,22 @@ function toggle_cb_sites(x){
 }
 function toggle_cb_status(x){
     if(x == 'off'){
-        document.getElementById("named").checked = false;
-        document.getElementById("unnamed").checked = false;
-        document.getElementById("phylotype").checked = false;
-        document.getElementById("lost").checked = false;
+        document.getElementById("named_cultivated").checked = false;
+        document.getElementById("named_uncultivated").checked = false;
+        document.getElementById("unnamed_cultivated").checked = false;
+        document.getElementById("unnamed_uncultivated").checked = false;
         document.getElementById("dropped").checked = false;
-        document.getElementById("nonoralref").checked = false;
+        //document.getElementById("nonoralref").checked = false;
         
         var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_status('on')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_status_span').innerHTML = link_html
     }else{
-        document.getElementById("named").checked = true;
-        document.getElementById("unnamed").checked = true;
-        document.getElementById("phylotype").checked = true;
-        document.getElementById("lost").checked = true;
+        document.getElementById("named_cultivated").checked = true;
+        document.getElementById("named_uncultivated").checked = true;
+        document.getElementById("unnamed_cultivated").checked = true;
+        document.getElementById("unnamed_uncultivated").checked = true;
         document.getElementById("dropped").checked = true;
-        document.getElementById("nonoralref").checked = true;
+        //document.getElementById("nonoralref").checked = true;
         
         var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_status('off')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_status_span').innerHTML = link_html

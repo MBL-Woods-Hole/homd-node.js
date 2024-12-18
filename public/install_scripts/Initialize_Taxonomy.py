@@ -20,23 +20,15 @@ from connect import MyConnection
 taxon_tbl  = 'otid_prime'   # UNIQUE  - This is the defining table
 genome_tbl = 'genomes'
 
-#master_tax_lookup={}
-#acceptable_genome_flags = ('11','12','21','91')
-# dropped_otids = ['9',   '15',  '16',  '55',  '65',
-#   '67',  '68',  '69',  '140', '143',
-#   '177', '210', '220', '255', '292','293','296',
-#   '310', '372', '395', '437', '446',
-#   '449', '452', '453', '462', '474',
-#   '486', '487', '502', '648', '729',
-#   '826']
+
 
 #nonoral_otids = ['982','983','984','986','987','988','989','990','991','994','995','996','997','998','999']
-dropped_otids = []  # must get dropped from DB
-nonoral_otids = []  # must get from DB
+dropped_otids = []  # must get dropped from DB status=Dropped
+#nonoral_otids = []  # must get from DB
 
 query_taxa ="""
 SELECT otid, taxonomy_id, genus, species,
-warning, status, notes,
+warning, status,naming_status, cultivation_status,notes,
 ncbi_taxon_id as ncbi_taxid
 from otid_prime
 join taxonomy using(taxonomy_id)
@@ -64,6 +56,8 @@ def create_taxon(otid):
     taxon = {}
     taxon['otid'] = otid
     taxon['status'] = ''
+    taxon['naming_status'] = ''
+    taxon['cultivation_status'] = ''
     taxon['notes'] = ''
     taxon['genus'] = ''
     taxon['species'] = ''
@@ -97,11 +91,12 @@ def run_taxa(args):
         taxonObj = create_taxon(otid)
         
         if obj['status'] == 'Dropped':
+            #print('dropped',otid)
             dropped_otids.append(otid)
-        if obj['status'] == 'NonOralRef':
-            nonoral_otids.append(otid)
         
         taxonObj['status']     = obj['status']
+        taxonObj['naming_status']     = obj['naming_status']
+        taxonObj['cultivation_status']  = obj['cultivation_status']
         taxonObj['genus']      = obj['genus']
         taxonObj['species']    = obj['species']
         taxonObj['warning']    = obj['warning']
@@ -110,7 +105,7 @@ def run_taxa(args):
         
         master_lookup[otid] = taxonObj
     print('count dropped',len(dropped_otids))
-    print('count nonoral',len(nonoral_otids))
+    #print('count nonoral',len(nonoral_otids))
     print('count all',len(master_lookup))
 
 
@@ -131,7 +126,7 @@ def run_get_genomes(args):  ## add this data to master_lookup
         if otid not in tlength_lookup:
             tlength_lookup[otid] = []
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['genomes'].append(obj['seq_id'])
 
             tlength_lookup[otid].append(obj['tlength'])
@@ -148,7 +143,7 @@ def run_synonyms(args):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['synonyms'].append(obj['synonym'])
         else:
             sys.exit('problem with synonym exiting: '+otid)
@@ -164,7 +159,7 @@ def run_type_strain(args):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['type_strains'].append(obj['type_strain'])
         else:
             pass
@@ -174,44 +169,113 @@ def run_type_strain(args):
 
 def run_sites(args):
     global master_lookup
+    short_site_names = {
+       'Oral' : ['Oral','Oral (high abundance)','Oral (medium abundance)','Oral (low abundance)','Oral (scarce abundance)','Oral (caries)','Oral (periodontitis)'],
+       'Nasal': ['Nasal','Nasal (scarce)','Nasal (low)','Nasal & Skin'],
+       'Skin' : ['Skin','Nasal & Skin'],
+       'Gut'  : ['Gut'],
+       'Vaginal':['Vaginal'],
+       'Pathogen':['Systemic pathogen','Opportunistic pathogen'],
+       'Environmental':['Environmental','Environmental (food)','Environmental (soil/water)','Environmental (sewage sludge)','Environmental (air)','Environment (non-human animal)'],
+       'Reference':['Reference'],
+       'Unassigned':['Unassigned'],
+       'Human-Associated':['Human-Associated, Primary Site Uncertain']
+    }
     #q = "SELECT otid, site FROM otid_site JOIN sites USING (site_id) ORDER BY otid,priority"
-    q = "SELECT otid, primary_body_site FROM otid_prime"
-    result = myconn.execute_fetch_select_dict(q)
-    for obj in result:
-        otid = str(obj['otid'])
-        if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
-            master_lookup[otid]['sites'].append(obj['primary_body_site'])
-        else:
-            sys.exit('problem with site exiting')
-    # this takes care of otids that are missing from otid_site
-    # which would make them not show on taxon table
-    for otid in master_lookup:
-        if len(master_lookup[otid]['sites']) == 0:
-            master_lookup[otid]['sites'].append('Unassigned')
-    
-    # NEW 1,2,3 sites
+    #q = "SELECT otid, primary_body_site FROM otid_prime"
+    #q = "SELECT otid, site FROM otid_prime JOIN sites on otid_prime.primary_body_site_id=sites.site_id"
+    q = "SELECT otid, p1.site as p1, p2.site as p2 FROM otid_prime"
+    q += " JOIN sites p1 on otid_prime.primary_body_site_id=p1.site_id"
+    q += " JOIN sites p2 on otid_prime.secondary_body_site_id=p2.site_id  ORDER BY otid"
     lookup = {}
-    q = "SELECT otid, site, priority, site_notes FROM otid_site JOIN sites USING (site_id) JOIN otid_prime using(otid)"
     result = myconn.execute_fetch_select_dict(q)
     for obj in result:
         otid = str(obj['otid'])
-        note = obj['site_notes']
-        if otid not in lookup:
-            lookup[otid] = {}
-            lookup[otid]['note'] = note
-        if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
-            #print('obj',obj)
-            if obj['priority'] == 1:
-                lookup[otid]['s1'] = obj['site']
-            if obj['priority'] == 2:
-                lookup[otid]['s2'] = obj['site']
-            if obj['priority'] == 3:
-                lookup[otid]['s3'] = obj['site']
+        primary_site = obj['p1']
+        lookup[otid] = {}
+        lookup[otid]['s1'] = primary_site
+        if obj['p2']:
+            lookup[otid]['s2'] = obj['p2']
+        
+        for site in short_site_names:
+            #print('psite ',primary_site,site)
+            if site == 'Human-Associated':
+                master_lookup[otid]['sites'].append('Human-Associated')
+                if primary_site in short_site_names['Oral']:
+                    master_lookup[otid]['sites'].append('Oral')
+                if primary_site in short_site_names['Nasal']:
+                    master_lookup[otid]['sites'].append('Nasal')
+                if primary_site in short_site_names['Skin']:
+                    master_lookup[otid]['sites'].append('Skin')
+                if primary_site in short_site_names['Vaginal']:
+                    master_lookup[otid]['sites'].append('Vaginal')
+                if primary_site in short_site_names['Gut']:
+                    master_lookup[otid]['sites'].append('Gut')
+            else:
+                if primary_site in short_site_names[site]:
+                    master_lookup[otid]['sites'].append(site)
+        if len(master_lookup[otid]['sites']) == 0:
+            sys.exit('no short sites found '+str(otid))  # add site to dict above
+    
+# 0	Unassigned
+# 1	Oral
+# 2	Nasal
+# 3	Skin
+# 4	Gut
+# 5	Vaginal
+# 6	Oral (high abundance)
+# 7	Oral (medium abundance)
+# 8	Oral (low abundance)
+# 9	Oral (scarce abundance)
+# 10	Environmental
+# 11	Environmental (food)
+# 12	Environmental (soil/water)
+# 13	Environmental (sewage sludge)
+# 14	Opportunistic pathogen
+# 15	Systemic pathogen
+# 16	Oral (periodontitis)
+# 17	Oral (caries)
+# 18	Environmental (air)
+# 19	Nasal (low)
+# 20	Nasal (scarce)
+# 21	Environment (non-human animal)
+# 22	Reference
+# 23	Human-Associated, Primary Site Uncertain
+# 24	Nasal & Skin
+# 25	
+#         if otid in master_lookup:
+#             
+#             master_lookup[otid]['sites'].append(obj['primary_body_site'])
+#         else:
+#             sys.exit('problem with site exiting')
+#     # this takes care of otids that are missing from otid_site
+#     # which would make them not show on taxon table
+#     for otid in master_lookup:
+#         if len(master_lookup[otid]['sites']) == 0:
+#             master_lookup[otid]['sites'].append('Unassigned')
+#     
+#     # NEW 1,2,3 sites
+#     lookup = {}
+#     q = "SELECT otid, site, priority, site_notes FROM otid_site JOIN sites USING (site_id) JOIN otid_prime using(otid)"
+#     result = myconn.execute_fetch_select_dict(q)
+#     for obj in result:
+#         otid = str(obj['otid'])
+#         note = obj['site_notes']
+#         if otid not in lookup:
+#             lookup[otid] = {}
+#             lookup[otid]['note'] = note
+#         if otid in master_lookup:
             
-        else:
-            sys.exit('problem with site exiting')
+            #print('obj',obj)
+            # if obj['priority'] == 1:
+#                 lookup[otid]['s1'] = obj['site']
+#             if obj['priority'] == 2:
+#                 lookup[otid]['s2'] = obj['site']
+#             if obj['priority'] == 3:
+#                 lookup[otid]['s3'] = obj['site']
+            
+        #else:
+        #    sys.exit('problem with site exiting')
     
     file = os.path.join(args.outdir,args.outfileprefix+'SiteLookup.json')
     print_dict(file, lookup)
@@ -226,7 +290,7 @@ def run_ref_strain(args):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['ref_strains'].append(obj['reference_strain'])
         else:
             sys.exit('problem with reference_strain exiting')
@@ -240,7 +304,7 @@ def run_rrna_sequences(ars):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             master_lookup[otid]['rrna_sequences'].append(obj['rrna_sequence'])
         else:
             sys.exit('problem with rrna_sequence exiting')
@@ -252,7 +316,7 @@ def run_pangenomes(args):
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
-            #if master_lookup[otid]['status'] != 'Dropped':
+            
             if obj['pangenome'] not in master_lookup[otid]['pangenomes']:
                 master_lookup[otid]['pangenomes'].append(obj['pangenome'])
         else:
@@ -276,23 +340,9 @@ def run_refseq(args):
         newobj['seqname']  =  obj['seqname']
         newobj['strain']   =  obj['strain']
         newobj['genbank']  =  obj['genbank']
-        #newobj['status']   =  obj['status']
-        #newobj['site']     =  obj['site']
-        #newobj['flag']     =  obj['flag']
+        
         refseq_lookup[otid].append(newobj)
-    # tcount_wdropped=0
-#     tcount_nodropped=0
-#     for otid in refseq_lookup:
-#         print('refseq',otid,len(refseq_lookup[otid]))
-#         tcount_wdropped += len(refseq_lookup[otid])
-#         if otid in nonoral_otids:
-#            print('nonOralRef',otid)
-#         if otid in dropped_otids:
-#            print('dropped',otid)
-#         else:
-#            tcount_nodropped += len(refseq_lookup[otid])
-#     print('Twdropped',tcount_wdropped) 
-#     print('TNOdropped',tcount_nodropped) 
+   
     file=os.path.join(args.outdir,args.outfileprefix+'RefSeqLookup.json')
     print_dict(file, refseq_lookup)
 
@@ -419,7 +469,7 @@ JOIN species  using(species_id)
 JOIN subspecies  using(subspecies_id)
     """
 ## IMPORTANT -- DO NOT LET Dropped into hiearchy/Lineage/Counts
-    qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies,status
+    qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies,status,naming_status,cultivation_status
         FROM otid_prime
         JOIN taxonomy using(taxonomy_id)
         JOIN domain using(domain_id)
@@ -519,15 +569,19 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
 
         
         if long_tax_name in counts:
-            if otid in nonoral_otids or otid in dropped_otids:
-                if otid in nonoral_otids:
-                    counts[long_tax_name]["taxcnt_wnonoral"] += 1
-                    counts[long_tax_name]['refcnt_wnonoral'] += rfcnt
-                    counts[long_tax_name]['gcnt_wnonoral']   += gcnt
-                else:  # in dropped only
-                    counts[long_tax_name]["taxcnt_wdropped"] += 1
-                    counts[long_tax_name]['refcnt_wdropped'] += rfcnt
-                    counts[long_tax_name]['gcnt_wdropped']   += gcnt
+            if otid in dropped_otids:
+                counts[long_tax_name]["taxcnt_wdropped"] += 1
+                counts[long_tax_name]['refcnt_wdropped'] += rfcnt
+                counts[long_tax_name]['gcnt_wdropped']   += gcnt
+            # if otid in nonoral_otids or otid in dropped_otids:
+#                 if otid in nonoral_otids:
+#                     #counts[long_tax_name]["taxcnt_wnonoral"] += 1
+#                     counts[long_tax_name]['refcnt_wnonoral'] += rfcnt
+#                     counts[long_tax_name]['gcnt_wnonoral']   += gcnt
+#                 else:  # in dropped only
+#                     counts[long_tax_name]["taxcnt_wdropped"] += 1
+#                     counts[long_tax_name]['refcnt_wdropped'] += rfcnt
+#                     counts[long_tax_name]['gcnt_wdropped']   += gcnt
             else:   #in neither least default
                 counts[long_tax_name]["taxcnt"] += 1
                 counts[long_tax_name]['refcnt']  += rfcnt
@@ -535,35 +589,49 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
         else:
             # this will always be species
             counts[long_tax_name] = {}
-            if otid in nonoral_otids or otid in dropped_otids:
-                if otid in nonoral_otids:
-                    counts[long_tax_name]["taxcnt"] = 0
-                    counts[long_tax_name]['refcnt'] = 0
-                    counts[long_tax_name]['gcnt']   = 0
-                    counts[long_tax_name]["taxcnt_wnonoral"] = 1
-                    counts[long_tax_name]['refcnt_wnonoral'] = rfcnt
-                    counts[long_tax_name]['gcnt_wnonoral']   = gcnt
-                    counts[long_tax_name]["taxcnt_wdropped"] = 0
-                    counts[long_tax_name]['refcnt_wdropped'] = 0
-                    counts[long_tax_name]['gcnt_wdropped']   = 0
-                else:  # in dropped only
-                    counts[long_tax_name]["taxcnt"] = 0
-                    counts[long_tax_name]['refcnt'] = 0
-                    counts[long_tax_name]['gcnt']   = 0
-                    counts[long_tax_name]["taxcnt_wnonoral"] = 0
-                    counts[long_tax_name]['refcnt_wnonoral'] = 0
-                    counts[long_tax_name]['gcnt_wnonoral']   = 0
-                    counts[long_tax_name]["taxcnt_wdropped"] = 1
-                    counts[long_tax_name]['refcnt_wdropped'] = rfcnt
-                    counts[long_tax_name]['gcnt_wdropped']   = gcnt
+            
+            if otid in dropped_otids:
+                
+                counts[long_tax_name]["taxcnt"] = 0
+                counts[long_tax_name]['refcnt'] = 0
+                counts[long_tax_name]['gcnt']   = 0
+                #counts[long_tax_name]["taxcnt_wnonoral"] = 0
+                #counts[long_tax_name]['refcnt_wnonoral'] = 0
+                #counts[long_tax_name]['gcnt_wnonoral']   = 0
+                counts[long_tax_name]["taxcnt_wdropped"] = 1
+                counts[long_tax_name]['refcnt_wdropped'] = rfcnt
+                counts[long_tax_name]['gcnt_wdropped']   = gcnt
+                    
+                    
+#             if otid in nonoral_otids or otid in dropped_otids:
+#                 if otid in nonoral_otids:
+#                     counts[long_tax_name]["taxcnt"] = 0
+#                     counts[long_tax_name]['refcnt'] = 0
+#                     counts[long_tax_name]['gcnt']   = 0
+#                     counts[long_tax_name]["taxcnt_wnonoral"] = 1
+#                     counts[long_tax_name]['refcnt_wnonoral'] = rfcnt
+#                     counts[long_tax_name]['gcnt_wnonoral']   = gcnt
+#                     counts[long_tax_name]["taxcnt_wdropped"] = 0
+#                     counts[long_tax_name]['refcnt_wdropped'] = 0
+#                     counts[long_tax_name]['gcnt_wdropped']   = 0
+#                 else:  # in dropped only
+#                     counts[long_tax_name]["taxcnt"] = 0
+#                     counts[long_tax_name]['refcnt'] = 0
+#                     counts[long_tax_name]['gcnt']   = 0
+#                     counts[long_tax_name]["taxcnt_wnonoral"] = 0
+#                     counts[long_tax_name]['refcnt_wnonoral'] = 0
+#                     counts[long_tax_name]['gcnt_wnonoral']   = 0
+#                     counts[long_tax_name]["taxcnt_wdropped"] = 1
+#                     counts[long_tax_name]['refcnt_wdropped'] = rfcnt
+#                     counts[long_tax_name]['gcnt_wdropped']   = gcnt
             else:   #in neither least default
                 
                 counts[long_tax_name]["taxcnt"] = 1
                 counts[long_tax_name]['refcnt'] = rfcnt
                 counts[long_tax_name]['gcnt']   = gcnt
-                counts[long_tax_name]["taxcnt_wnonoral"] = 0
-                counts[long_tax_name]['refcnt_wnonoral'] = 0
-                counts[long_tax_name]['gcnt_wnonoral']   = 0
+                #counts[long_tax_name]["taxcnt_wnonoral"] = 0
+                #counts[long_tax_name]['refcnt_wnonoral'] = 0
+                #counts[long_tax_name]['gcnt_wnonoral']   = 0
                 counts[long_tax_name]["taxcnt_wdropped"] = 0
                 counts[long_tax_name]['refcnt_wdropped'] = 0
                 counts[long_tax_name]['gcnt_wdropped']   = 0

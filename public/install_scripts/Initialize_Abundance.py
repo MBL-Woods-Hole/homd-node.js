@@ -42,26 +42,26 @@ headers = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SA
 # dewhirst_cols = ['mean','stdev','prevalence']
 
 # to correct for the few subspecies in HOMD::
-subspecies = {}
-subspecies['reuteri clade 818'] = ['reuteri','clade_818']  # tax_parts 6 and 7
-subspecies['reuteri clade 938'] = ['reuteri','clade_938'] 
-subspecies['cristatus clade 578'] = ['cristatus','clade_578'] 
-subspecies['cristatus clade 886'] = ['cristatus','clade_886'] 
-subspecies['infantis clade 431'] = ['infantis','clade_431'] 
-subspecies['infantis clade 638'] = ['infantis','clade_638'] 
-subspecies['oralis subsp. dentisani clade 058'] = ['oralis','subsp._dentisani_clade_058'] 
-subspecies['oralis subsp. dentisani clade 398'] = ['oralis','subsp._dentisani_clade_398'] 
-subspecies['oralis subsp. oralis'] = ['oralis','subsp._oralis'] 
-subspecies['oralis subsp. tigurinus clade 070'] = ['oralis','subsp._tigurinus_clade_070'] 
-subspecies['oralis subsp. tigurinus clade 071'] = ['oralis','subsp._tigurinus_clade_071'] 
-subspecies['parasanguinis clade 411'] = ['parasanguinis','clade_411']
-subspecies['parasanguinis clade 721'] = ['parasanguinis','clade_721']
-subspecies['[Eubacterium] yurii subsp. schtitka'] = ['[Eubacterium] yurii','subsp._schtitka'] 
-subspecies['[Eubacterium] yurii subsps. yurii & margaretiae'] = ['[Eubacterium] yurii','subsps._yurii_&_margaretiae']
-subspecies['nucleatum subsp. animalis'] = ['nucleatum','subsp._animalis'] 
-subspecies['nucleatum subsp. nucleatum'] = ['nucleatum','subsp._nucleatum'] 
-subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp._polymorphum'] 
-subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp._vincentii'] 
+# subspecies = {}
+# subspecies['reuteri clade 818'] = ['reuteri','clade_818']  # tax_parts 6 and 7
+# subspecies['reuteri clade 938'] = ['reuteri','clade_938'] 
+# subspecies['cristatus clade 578'] = ['cristatus','clade_578'] 
+# subspecies['cristatus clade 886'] = ['cristatus','clade_886'] 
+# subspecies['infantis clade 431'] = ['infantis','clade_431'] 
+# subspecies['infantis clade 638'] = ['infantis','clade_638'] 
+# subspecies['oralis subsp. dentisani clade 058'] = ['oralis','subsp._dentisani_clade_058'] 
+# subspecies['oralis subsp. dentisani clade 398'] = ['oralis','subsp._dentisani_clade_398'] 
+# subspecies['oralis subsp. oralis'] = ['oralis','subsp._oralis'] 
+# subspecies['oralis subsp. tigurinus clade 070'] = ['oralis','subsp._tigurinus_clade_070'] 
+# subspecies['oralis subsp. tigurinus clade 071'] = ['oralis','subsp._tigurinus_clade_071'] 
+# subspecies['parasanguinis clade 411'] = ['parasanguinis','clade_411']
+# subspecies['parasanguinis clade 721'] = ['parasanguinis','clade_721']
+# subspecies['[Eubacterium] yurii subsp. schtitka'] = ['[Eubacterium] yurii','subsp._schtitka'] 
+# subspecies['[Eubacterium] yurii subsps. yurii & margaretiae'] = ['[Eubacterium] yurii','subsps._yurii_&_margaretiae']
+# subspecies['nucleatum subsp. animalis'] = ['nucleatum','subsp._animalis'] 
+# subspecies['nucleatum subsp. nucleatum'] = ['nucleatum','subsp._nucleatum'] 
+# subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp._polymorphum'] 
+# subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp._vincentii'] 
 """
 CREATE TABLE `abundance` (
   `abundance_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -195,7 +195,16 @@ CREATE TABLE `abundance` (
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 """
+dropped_taxa = []
+def get_dropped():
+    q ="SELECT otid, status from otid_prime WHERE status='Dropped'"
+    result = myconn.execute_fetch_select_dict(q)
 
+    #print(result)
+    for obj in result:
+        dropped_taxa.append(obj['otid'])
+    #print(dropped_taxa)
+    
 
     
 def run_abundance_db(): 
@@ -223,10 +232,11 @@ def run_abundance_db():
     q += " JOIN `genus` using(genus_id)"
     q += " JOIN `species` using(species_id)"
     q += " JOIN `subspecies` using(subspecies_id)"
-    print(q)
+    q += " ORDER BY `otid`"
+    #print(q)
     
     
-    result = myconn_new.execute_fetch_select_dict(q)
+    result = myconn.execute_fetch_select_dict(q)
     """
     
 # 'AKE_mean','AKE_90p','AKE_10p','AKE_sd','AKE_prev',
@@ -268,10 +278,14 @@ def run_abundance_db():
     #print(segata_site_prefixes)
     missing_count =0
     for row in result:
-        #print(row)
-        max_eren, max_dewhirst, max_hmp_metaphlan, max_hmp_refseq = 0,0,0,0
-        taxon_string = fix_taxonomy(row['taxonomy'])
         
+        max_eren, max_dewhirst, max_hmp_metaphlan, max_hmp_refseq = 0,0,0,0
+        #if row['otid'] in (71,81,106,123,138,178,187,192,243,274,306,332,374,375,377,386,398,411,431,578,638,809,818,820,922,928):
+        #if row['otid'] in ('071','081','081','106','123','138','178','187','192','243','274','306','332','374','375','377','386','398','411','431','578','638','809','818','820','922','928'):
+        #    print('pre ',row['otid'],row['taxonomy'])
+        taxon_string = fix_taxonomy(row['taxonomy'])
+        #if row['otid'] in (71,81,106,123,138,178,187,192,243,274,306,332,374,375,377,386,398,411,431,578,638,809,818,820,922,928):
+         #   print('post',row['otid'],taxon_string)
             
         #taxon_string = row['taxonomy']
         # tax_parts = taxon_string.split(';')
@@ -286,70 +300,71 @@ def run_abundance_db():
         
         if taxon_string not in TCcollector:
             #print()
-            print(row)
+            #print(row)
             missing_count +=1
             print(missing_count,'!Missing from TaxonCounts.json -('+row['reference']+')::'+taxon_string)
             TCcollector[taxon_string] = {}
-        TCcollector[taxon_string]['otid'] = row['otid']
-        #TCcollector[taxon_string]['max_all'] = row['max']
-        if 'notes' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['notes'] = {}
-        
-        if 'eren_v1v3' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['eren_v1v3'] = {}
-        if 'eren_v3v5' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['eren_v3v5'] = {}
-        if 'dewhirst' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['dewhirst'] = {}
-        if 'hmp_metaphlan' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['hmp_metaphlan'] = {}
-        if 'hmp_refseq_v1v3' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['hmp_refseq_v1v3'] = {}
-        if 'hmp_refseq_v3v5' not in TCcollector[taxon_string]:
-            TCcollector[taxon_string]['hmp_refseq_v3v5'] = {}
+        if row['otid'] not in dropped_taxa:
+            TCcollector[taxon_string]['otid'] = row['otid']
+            #TCcollector[taxon_string]['max_all'] = row['max']
+            if 'notes' not in TCcollector[taxon_string]:
+                TCcollector[taxon_string]['notes'] = {}
             
-        
-        if row['reference'].startswith('Eren2014_v1v3'):
-            for p in eren_site_prefixes:
-                max_eren = get_max(row, p, max_eren)
-                TCcollector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-            TCcollector[taxon_string]['max_erenv1v3'] = max_eren
-            TCcollector[taxon_string]['notes']['eren_v1v3'] = row['notes']
-        if row['reference'].startswith('Eren2014_v3v5'):
-            for p in eren_site_prefixes:
-                max_eren = get_max(row, p, max_eren)
-                TCcollector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-            TCcollector[taxon_string]['max_erenv3v5'] = max_eren
-            TCcollector[taxon_string]['notes']['eren_v3v5'] = row['notes']
-        if row['reference'].startswith('Dewhirst'):
-            for p in dewhirst_site_prefixes:
-                max_dewhirst = get_max(row, p, max_dewhirst)
-                #print('max_dewhirst',max_dewhirst)
-                TCcollector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-            TCcollector[taxon_string]['max_dewhirst'] = max_dewhirst
-            TCcollector[taxon_string]['notes']['dewhirst'] = row['notes']
-        if row['reference'].startswith('HMP_MetaPhlan'):
-            for p in hmp_metaphlan_prefixes:
-                max_hmp_metaphlan = get_max(row, p, max_hmp_metaphlan)
-                #print('max_dewhirst',max_dewhirst)
-                TCcollector[taxon_string]['hmp_metaphlan'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-            TCcollector[taxon_string]['max_hmp_metaphlan'] = max_hmp_metaphlan
-            TCcollector[taxon_string]['notes']['hmp_metaphlan'] = row['notes']
+            if 'eren_v1v3' not in TCcollector[taxon_string]:
+                TCcollector[taxon_string]['eren_v1v3'] = {}
+            if 'eren_v3v5' not in TCcollector[taxon_string]:
+                TCcollector[taxon_string]['eren_v3v5'] = {}
+            if 'dewhirst' not in TCcollector[taxon_string]:
+                TCcollector[taxon_string]['dewhirst'] = {}
+            if 'hmp_metaphlan' not in TCcollector[taxon_string]:
+                TCcollector[taxon_string]['hmp_metaphlan'] = {}
+            if 'hmp_refseq_v1v3' not in TCcollector[taxon_string]:
+                TCcollector[taxon_string]['hmp_refseq_v1v3'] = {}
+            if 'hmp_refseq_v3v5' not in TCcollector[taxon_string]:
+                TCcollector[taxon_string]['hmp_refseq_v3v5'] = {}
+                
             
-        if row['reference'].startswith('HMP_16S_RefSeq_v1v3'):
-            for p in hmp_refseq_prefixes:
-                max_hmp_refseq = get_max(row, p, max_hmp_refseq)
-                #print('max_dewhirst',max_dewhirst)
-                TCcollector[taxon_string]['hmp_refseq_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-            TCcollector[taxon_string]['max_hmp_refseq_v1v3'] = max_hmp_refseq
-            TCcollector[taxon_string]['notes']['hmp_refseq_v1v3'] = row['notes']
-        if row['reference'].startswith('HMP_16S_RefSeq_v3v5'):
-            for p in hmp_refseq_prefixes:
-                max_hmp_refseq = get_max(row, p, max_hmp_refseq)
-                #print('max_dewhirst',max_dewhirst)
-                TCcollector[taxon_string]['hmp_refseq_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-            TCcollector[taxon_string]['max_hmp_refseq_v3v5'] = max_hmp_refseq
-            TCcollector[taxon_string]['notes']['hmp_refseq_v3v5'] = row['notes']
+            if row['reference'].startswith('Eren2014_v1v3'):
+                for p in eren_site_prefixes:
+                    max_eren = get_max(row, p, max_eren)
+                    TCcollector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCcollector[taxon_string]['max_erenv1v3'] = max_eren
+                TCcollector[taxon_string]['notes']['eren_v1v3'] = row['notes']
+            if row['reference'].startswith('Eren2014_v3v5'):
+                for p in eren_site_prefixes:
+                    max_eren = get_max(row, p, max_eren)
+                    TCcollector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCcollector[taxon_string]['max_erenv3v5'] = max_eren
+                TCcollector[taxon_string]['notes']['eren_v3v5'] = row['notes']
+            if row['reference'].startswith('Dewhirst'):
+                for p in dewhirst_site_prefixes:
+                    max_dewhirst = get_max(row, p, max_dewhirst)
+                    #print('max_dewhirst',max_dewhirst)
+                    TCcollector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCcollector[taxon_string]['max_dewhirst'] = max_dewhirst
+                TCcollector[taxon_string]['notes']['dewhirst'] = row['notes']
+            if row['reference'].startswith('HMP_MetaPhlan'):
+                for p in hmp_metaphlan_prefixes:
+                    max_hmp_metaphlan = get_max(row, p, max_hmp_metaphlan)
+                    #print('max_dewhirst',max_dewhirst)
+                    TCcollector[taxon_string]['hmp_metaphlan'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCcollector[taxon_string]['max_hmp_metaphlan'] = max_hmp_metaphlan
+                TCcollector[taxon_string]['notes']['hmp_metaphlan'] = row['notes']
+                
+            if row['reference'].startswith('HMP_16S_RefSeq_v1v3'):
+                for p in hmp_refseq_prefixes:
+                    max_hmp_refseq = get_max(row, p, max_hmp_refseq)
+                    #print('max_dewhirst',max_dewhirst)
+                    TCcollector[taxon_string]['hmp_refseq_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCcollector[taxon_string]['max_hmp_refseq_v1v3'] = max_hmp_refseq
+                TCcollector[taxon_string]['notes']['hmp_refseq_v1v3'] = row['notes']
+            if row['reference'].startswith('HMP_16S_RefSeq_v3v5'):
+                for p in hmp_refseq_prefixes:
+                    max_hmp_refseq = get_max(row, p, max_hmp_refseq)
+                    #print('max_dewhirst',max_dewhirst)
+                    TCcollector[taxon_string]['hmp_refseq_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCcollector[taxon_string]['max_hmp_refseq_v3v5'] = max_hmp_refseq
+                TCcollector[taxon_string]['notes']['hmp_refseq_v3v5'] = row['notes']
     #print(TCcollector)
     #for s in TCcollector:
     #    print('max_eren-s',s,TCcollector[s])
@@ -516,7 +531,8 @@ if __name__ == "__main__":
     if args.prettyprint:
         args.indent = 4
    
-    myconn_new = MyConnection(host=dbhost, db=args.DATABASE,  read_default_file = "~/.my.cnf_node")
+    myconn = MyConnection(host=dbhost, db=args.DATABASE,  read_default_file = "~/.my.cnf_node")
+    get_dropped()
     run_abundance_db()
    
     

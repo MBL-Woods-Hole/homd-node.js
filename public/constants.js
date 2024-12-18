@@ -194,8 +194,10 @@ constants.plot_species = [  // to be put in db with species_id
     {otid:'158',name:'Veillonella rogosae',color:'#fba0e3'},
     {otid:'780',name:'Veillonella sp._HMT_780',color:'deeppink'}
 ]   
-constants.tax_status_all =['named','unnamed','phylotype','lost','dropped','nonoralref'];
-constants.tax_status_on =['named','unnamed','phylotype','lost'];
+//constants.tax_status_all =['named','unnamed','phylotype','lost','dropped','nonoralref'];
+//constants.tax_status_on =['named','unnamed','phylotype','lost'];
+constants.tax_status_all =['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated','dropped'];
+constants.tax_status_on =['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated'];
 
 //constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralref'];
 //constants.tax_sites_on = ['oral','nasal','skin','vaginal','unassigned'];
@@ -207,6 +209,7 @@ constants.tax_sites_all ={
    'vaginal'      :'Vaginal',
    'pathogen'     :'Pathogen',
    'enviro'       :'Environmental',
+   'ref'          :'Reference',  // Was NonOralRef
    'unassigned'   :'Unassigned'
 }
  //  constants.tax_sites_all = {

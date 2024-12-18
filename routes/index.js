@@ -471,8 +471,8 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
             //ngid_count = Object.keys(req.session.site_search_result_ncbi).length // genome_count
             pgid_count = Object.keys(prokka_gid_lookup).length
             ngid_count = Object.keys(ncbi_gid_lookup).length
-            console.log('prokka_gid_lookup.length',pgid_count)
-            console.log('ncbi_gid_lookup.length',ngid_count)
+            //console.log('prokka_gid_lookup.length',pgid_count)
+            //console.log('ncbi_gid_lookup.length',ngid_count)
             //let size = Buffer.byteLength(JSON.stringify(req.session))
             //console.log('req.session size(KB):',size/1024)
             // on dev  req.session size(KB): 38827.2841796875  == 38 MB   tranposase
@@ -482,7 +482,7 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
             //console.log(gid_count, pid_count)
             req.session.anno_search_dirname = dirname
             
-            console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
+            //console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
             res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
           }else{  //end if code ==0
              console.log('nothing found')
@@ -536,7 +536,7 @@ router.post('/site_search', function site_search(req, res) {
   // OTID Metadata
   const allOtidObjList = Object.values(C.taxon_lookup)
   const otidKeyList = Object.keys(allOtidObjList[0])
-  
+  //helpers.print(['allOtidObjList[0]',allOtidObjList[0]]) // site is undefined
   let otidObjList = allOtidObjList.filter(function (el) {
     for (let n in otidKeyList) {
       //console.log( 'el[otidkeylist[n]]',el[otidkeylist[n]] )
@@ -551,7 +551,9 @@ router.post('/site_search', function site_search(req, res) {
         
         //helpers.print(['el',el])
         
-        if ( Object.prototype.hasOwnProperty.call(el, otidKeyList[n]) && el[otidKeyList[n]].toString().toLowerCase().includes(searchTextLower)) {
+        if ( Object.prototype.hasOwnProperty.call(el, otidKeyList[n]) 
+             && el[otidKeyList[n]]
+             && el[otidKeyList[n]].toString().toLowerCase().includes(searchTextLower)) {
           return el.otid
         }
        
@@ -560,7 +562,7 @@ router.post('/site_search', function site_search(req, res) {
   })
   
   const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-  //console.log('otidLst')
+  //console.log('otidLst',otidLst[0])
   otidLst.sort(function (a, b) {
        return helpers.compareStrings_alpha(a.species, b.species);
   })
@@ -601,7 +603,23 @@ router.post('/site_search', function site_search(req, res) {
   })
   //  Now get the otids
   const taxonOtidObj = {}
+  let pototid = parseInt(searchTextLower)
+  if(pototid && pototid in C.taxon_lookup){
+     if(C.dropped_taxids.indexOf(pototid.toString()) != -1){
+        taxonOtidObj[pototid] = 'This taxon has been dropped from HOMD.'
+     }else{
+        console.log('got OTID int')
+        taxonOtidObj[pototid] = C.taxon_lineage_lookup[pototid].domain
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].phylum
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].klass
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].order
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].family
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].genus
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].species
+     }
+  }
   const taxonOtidList = taxonList.map(e => e.otid)
+  
   for (let n in taxonOtidList) {
     const otid = taxonOtidList[n]
     taxonOtidObj[otid] = C.taxon_lineage_lookup[otid].domain

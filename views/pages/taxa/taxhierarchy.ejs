@@ -59,18 +59,25 @@
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
        <h4 class='title text-info'>Human Oral Microbiome Taxonomic Hierarchy</h4>
-           
+        
+        <div id='change_base_counts'>
+       Default Counts Exclude Dropped Taxa
+        <br>Include:&nbsp;&nbsp;
+        <input type='checkbox' name='countcb' value='' onChange="load_dhtmlx()" > Dropped
+       </div>
+<!-- 
         <div id='change_base_counts'>
        Default Counts Exclude Dropped and NonOralRef Taxons
         <br>Include:&nbsp;&nbsp;
         <input type='checkbox' name='countcb' value='' onChange="load_dhtmlx()" > Dropped
         &nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='countcb' value='' onChange="load_dhtmlx()" > NonOralRef    
-        <!--  <input type='hidden' name='rank' value='domain' > -->
+        <!~~  <input type='hidden' name='rank' value='domain' > ~~>
        </div>
-		   <a id='download_browser_text_excel'  href='/download#taxon' >Download Options</a>
-	   
-	
-	 					
+ -->
+
+<a id='download_browser_text_excel'  href='/download#taxon' >Download Options</a>
+
+
 	   <center> 
             <br><br><br>
             <input type='button' class='pill pill-brown' name='' value='Reset Tree' onclick='reset_tree_dhtmlx()'> ||

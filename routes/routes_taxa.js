@@ -381,8 +381,8 @@ router.get('/tax_table', function tax_table_get(req, res) {
     send_list = helpers.apply_ttable_filter(req, filter)
     //console.log('LENGTH',send_list.length)
     //let big_tax_list0 = Object.values(C.taxon_lookup);
-    let specific = send_list.filter(item => (item.otid == '209'))
-    console.log('sendlist209',specific)
+    //let specific = send_list.filter(item => (item.otid == '209'))
+    //console.log('sendlist209',specific)
      //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
      let count_text = 'Number of Records Found: '+ send_list.length.toString()
      //console.log('filter',filter)
@@ -450,7 +450,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
 //
 //
 router.post('/tax_level', function tax_level_post(req, res) {
-  //console.log('in taxlevel POST')
+  console.log('in taxlevel POST')
   helpers.print(req.body)
   
   let rank = req.body.rank
@@ -463,11 +463,12 @@ router.post('/tax_level', function tax_level_post(req, res) {
           console.log(err)
       else
       var taxdata = JSON.parse(data);
-      
+      //console.log('taxdata ',taxdata)
       const result = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank].map(taxitem =>{
         // get lineage of taxitem
         
         let lineage = [taxitem.taxon]
+        
         let new_search_id = taxitem.parent_id
         let new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
         //console.log(new_search_id,new_search_rank)
@@ -482,6 +483,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
         return_obj.item_rank = rank
         
         if(rank === 'species' || rank === 'subspecies'){
+          //console.log('rank '+rank+' = '+taxitem.otid)
           return_obj.otid = taxitem.otid
           // console.log('species')
 //          // here we 'fix' the species to exclude the genus so that
@@ -504,18 +506,23 @@ router.post('/tax_level', function tax_level_post(req, res) {
 //                 console.log(taxdata[lineage_str].taxcnt)
 //                 console.log(taxdata[lineage_str].gcnt)
 //                 console.log(taxdata[lineage_str].refcnt)
-                if(count_type == 'both'){
-                   return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wnonoral + taxdata[lineage_str].taxcnt_wdropped
-                   return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wnonoral + taxdata[lineage_str].gcnt_wdropped
-                   return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wnonoral + taxdata[lineage_str].refcnt_wdropped
-                }else if(count_type == 'wdropped'){
+                if(count_type == 'wdropped'){
                    return_obj.tax_count = taxdata[lineage_str].taxcnt +  taxdata[lineage_str].taxcnt_wdropped
                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wdropped
                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wdropped
-                }else if(count_type == 'wnonoralref'){
-                   return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wnonoral
-                   return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wnonoral
-                   return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wnonoral
+                   
+                // if(count_type == 'both'){
+//                    return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wnonoral + taxdata[lineage_str].taxcnt_wdropped
+//                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wnonoral + taxdata[lineage_str].gcnt_wdropped
+//                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wnonoral + taxdata[lineage_str].refcnt_wdropped
+//                 }else if(count_type == 'wdropped'){
+//                    return_obj.tax_count = taxdata[lineage_str].taxcnt +  taxdata[lineage_str].taxcnt_wdropped
+//                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wdropped
+//                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wdropped
+//                 }else if(count_type == 'wnonoralref'){
+//                    return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wnonoral
+//                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wnonoral
+//                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wnonoral
                 }else{
                    return_obj.tax_count = taxdata[lineage_str].taxcnt
                    return_obj.gne_count = taxdata[lineage_str].gcnt
@@ -1296,8 +1303,8 @@ router.get('/body_sites', function body_sites(req, res) {
          obj.s3 = ''
          obj.note = 'Missing From Database (C.site_lookup)'
        }
-       obj.status = C.taxon_lookup[otid].status
-         
+       obj.naming_status = C.taxon_lookup[otid].naming_status
+       obj.cultivation_status = C.taxon_lookup[otid].cultivation_status
        obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
        send_list.push(obj)
     }
@@ -1647,7 +1654,7 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
 })
 //
 router.get('/dropped', function dropped(req, res) {
-    let q = "SELECT otid,`status`,notes, genus, species from otid_prime"
+    let q = "SELECT otid,naming_status,cultivation_status,notes, genus, species from otid_prime"
     q += " JOIN taxonomy using(taxonomy_id)"
     q += " JOIN genus using (genus_id)"
     q += " JOIN species using (species_id)"
@@ -1995,19 +2002,26 @@ function get_options_by_node(node) {
 function get_counts(lineage, ctype){
     let txt
     let cts = C.taxon_counts_lookup[lineage]
-    if(ctype === 'both'){
-        txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wnonoral + cts.taxcnt_wdropped).toString()+'</span>' 
-            + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wnonoral   + cts.gcnt_wdropped).toString()+'</span>'
-            +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wnonoral + cts.refcnt_wdropped).toString()+'</span>]';
-    }else if(ctype === 'wdropped'){
+    if(ctype === 'wdropped'){
         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>' 
             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
 
-    }else if(ctype === 'wnonoralref'){
-        txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wnonoral).toString()+'</span>' 
-            + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wnonoral).toString()+'</span>'
-            +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wnonoral).toString()+'</span>]';
+
+
+   //  if(ctype === 'both'){
+//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wnonoral + cts.taxcnt_wdropped).toString()+'</span>' 
+//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wnonoral   + cts.gcnt_wdropped).toString()+'</span>'
+//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wnonoral + cts.refcnt_wdropped).toString()+'</span>]';
+//     }else if(ctype === 'wdropped'){
+//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>' 
+//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
+//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
+// 
+//     }else if(ctype === 'wnonoralref'){
+//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wnonoral).toString()+'</span>' 
+//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wnonoral).toString()+'</span>'
+//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wnonoral).toString()+'</span>]';
 
     }else{
         txt = "[<span class='red-text'>"+   cts.taxcnt.toString()+'</span>' 

@@ -47,7 +47,7 @@ router.get('/help-page', function help_page(req, res) {
       
       TDBConn.query(q, (err, rows) => {
         if(err) console.log(err)
-        console.log('row',rows)
+        //console.log('row',rows)
         for(let n in rows){
            if(rows[n].date in byDate){
              byDate[rows[n].date].push({otid:rows[n].otid, description:rows[n].description, reason:rows[n].reason})
@@ -58,7 +58,7 @@ router.get('/help-page', function help_page(req, res) {
            
            //rowarray.push({otid:rows[n].otid,description:rows[n].description,reason:rows[n].reason,date:rows[n].date})
         }
-        console.log(byDate)
+        //console.log(byDate)
         let date_array = Object.keys(byDate)
         //console.log('date_array1',date_array)
         date_array.sort(function(a, b){

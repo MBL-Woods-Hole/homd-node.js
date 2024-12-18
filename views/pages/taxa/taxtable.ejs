@@ -12,6 +12,7 @@ thead th { position: sticky; top: 0; }
 <% filterotid = statusfltr.otid %>
 <% phyla = JSON.parse(phyla) %>
 
+
 <body>
     <div id="loader" class="center-loader" style='z-index:1'></div>
     <div id='wrapper'>
@@ -49,7 +50,8 @@ thead th { position: sticky; top: 0; }
         <th class='' scope="col"><span onclick="('genus')">Genus</span></th>
         <th class='' scope="col"><span onclick="('species')">Species</span></th>
         <th class="col4"><span onclick="('strain')">Subspecies</span></th>
-        <th class="col5"><span onclick="('status')">Status</span></th>
+        <th class="col5"><span onclick="('naming_status')">Naming<br>Status</span></th>
+        <th class="col5"><span onclick="('cult_status')">Cultivation<br>Status</span></th>
         
         <th class="col6"><span id='' ">Primary Body<br>Site</span></th>
         
@@ -70,8 +72,8 @@ thead th { position: sticky; top: 0; }
        <td nowrap title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
        <td nowrap title='<%= list[n].subsp  %>'><%= list[n].subsp  %></td>
        
-       <td ><%= list[n].status  %></td>
-       
+       <td ><%= list[n].naming_status  %></td>
+       <td ><%= list[n].cultivation_status  %></td>
            
        <td><%= list[n].site  %> <span style='float:right'><small>[<a href='body_sites?otid=<%= otid %>'>see all sites</a>]</small></span></td>
        
