@@ -178,8 +178,7 @@ def run_sites(args):
        'Pathogen':['Systemic pathogen','Opportunistic pathogen'],
        'Environmental':['Environmental','Environmental (food)','Environmental (soil/water)','Environmental (sewage sludge)','Environmental (air)','Environment (non-human animal)'],
        'Reference':['Reference'],
-       'Unassigned':['Unassigned'],
-       'Human-Associated':['Human-Associated, Primary Site Uncertain']
+       'Unassigned':['Unassigned','Human-Associated, Primary Site Uncertain']
     }
     #q = "SELECT otid, site FROM otid_site JOIN sites USING (site_id) ORDER BY otid,priority"
     #q = "SELECT otid, primary_body_site FROM otid_prime"
