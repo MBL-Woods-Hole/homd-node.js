@@ -1694,9 +1694,10 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     
     if(filter && filter.site.p_or_pst == 'primary_site'){
        big_tax_list = big_tax_list.filter( function(item){
-         //if(item.otid =='988'){
-           //console.log('item.sites988',item)
-         //}
+         if(item.otid =='999'){
+           console.log('item.sites999',item)
+         }
+         
          for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])
            //console.log('item.sites',item.sites)

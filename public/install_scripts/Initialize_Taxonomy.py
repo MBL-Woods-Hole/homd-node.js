@@ -199,21 +199,21 @@ def run_sites(args):
         
         for site in short_site_names:
             #print('psite ',primary_site,site)
-            if site == 'Human-Associated':
-                master_lookup[otid]['sites'].append('Human-Associated')
-                if primary_site in short_site_names['Oral']:
-                    master_lookup[otid]['sites'].append('Oral')
-                if primary_site in short_site_names['Nasal']:
-                    master_lookup[otid]['sites'].append('Nasal')
-                if primary_site in short_site_names['Skin']:
-                    master_lookup[otid]['sites'].append('Skin')
-                if primary_site in short_site_names['Vaginal']:
-                    master_lookup[otid]['sites'].append('Vaginal')
-                if primary_site in short_site_names['Gut']:
-                    master_lookup[otid]['sites'].append('Gut')
-            else:
-                if primary_site in short_site_names[site]:
-                    master_lookup[otid]['sites'].append(site)
+            # if site == 'Human-Associated':
+#                 master_lookup[otid]['sites'].append('Human-Associated')
+#                 if primary_site in short_site_names['Oral']:
+#                     master_lookup[otid]['sites'].append('Oral')
+#                 if primary_site in short_site_names['Nasal']:
+#                     master_lookup[otid]['sites'].append('Nasal')
+#                 if primary_site in short_site_names['Skin']:
+#                     master_lookup[otid]['sites'].append('Skin')
+#                 if primary_site in short_site_names['Vaginal']:
+#                     master_lookup[otid]['sites'].append('Vaginal')
+#                 if primary_site in short_site_names['Gut']:
+#                     master_lookup[otid]['sites'].append('Gut')
+#             else:
+            if primary_site in short_site_names[site]:
+                master_lookup[otid]['sites'].append(site)
         if len(master_lookup[otid]['sites']) == 0:
             sys.exit('no short sites found '+str(otid))  # add site to dict above
     
