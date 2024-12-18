@@ -1698,22 +1698,23 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
            console.log('item.sites999',item)
          }
          
-         for(let n in item.sites){
-           //console.log('n',n,'site',item.sites[n])
-           //console.log('item.sites',item.sites)
-           if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.sites[0]))){
-           //if(site_on.includes(item.sites[n].toLowerCase())){
-              item.site = item.sites[0]
-              
-              // new code for JMW 2024-09-12
-              //console.log(item)
-              
-              if(item.otid in C.site_lookup){
-                 item.site = C.site_lookup[item.otid].s1
-              }
-              return item
-           }
-         }
+         // for(let n in item.sites){
+//            //console.log('n',n,'site',item.sites[n])
+//            //console.log('item.sites',item.sites)
+//            if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.sites[0]))){
+//            //if(site_on.includes(item.sites[n].toLowerCase())){
+//               item.site = item.sites[0]
+//               
+//               // new code for JMW 2024-09-12
+//               //console.log(item)
+//               
+//               if(item.otid in C.site_lookup){
+//                  item.site = C.site_lookup[item.otid].s1
+//               }
+//               return item
+//            }
+           return item
+        // }
        })
         
     }else{
