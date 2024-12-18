@@ -176,7 +176,7 @@ def run_sites(args):
        'Gut'  : ['Gut'],
        'Vaginal':['Vaginal'],
        'Pathogen':['Systemic pathogen','Opportunistic pathogen'],
-       'Environmental':['Environmental','Environmental (food)','Environmental (soil/water)','Environmental (sewage sludge)','Environmental (air)','Environment (non-human animal)'],
+       'Environmental':['Environmental','Environmental (food)','Environmental (soil/water)','Environmental (sewage sludge)','Environmental (air)','Environmental (non-human animal)'],
        'Reference':['Reference'],
        'Unassigned':['Unassigned','Human-Associated, Primary Site Uncertain']
     }
