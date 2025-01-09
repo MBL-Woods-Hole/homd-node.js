@@ -1629,7 +1629,7 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
 module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
    
     let big_tax_list = Object.values(C.taxon_lookup);
-    console.log('olength-0',big_tax_list.length)
+    //console.log('olength-0',big_tax_list.length)
     let vals
     //
     //console.log('req.session.ttable_filter',req.session.ttable_filter)
@@ -1643,7 +1643,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     //console.log('vals',vals)
     //
     // txt_srch
-    console.log('big_tax_list.length-1',big_tax_list.length)
+    //console.log('big_tax_list.length-1',big_tax_list.length)
     if(vals.text.txt_srch !== ''){
        big_tax_list = helpers.get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
     }
@@ -1657,11 +1657,13 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
         //console.log('item',item)
         combo = (item.naming_status.split(/(\s+)/)[0] +'_'+item.cultivation_status.split(/(\s+)/)[0]).toLowerCase()
         
-        if(item.naming_status =='Dropped'){ // || item.naming_status =='NonOralRef'){
+        if(item.status =='Dropped'){ // || item.naming_status =='NonOralRef'){
             combo = item.naming_status.toLowerCase()
         }
         //console.log('combo',combo)
-        if(status_on.indexOf(combo) !==-1 ){  //818
+        if(status_on.indexOf('dropped') != -1 && item.status =='Dropped'){
+            return item
+        }else if(status_on.indexOf(combo) !==-1 ){  //818
             //if(vals.status.nonoralref == 'off' && item.status == 'NonOralRef'){
             //if(vals.status.nonoralref == 'on' || item.status != 'NonOralRef'){
             
@@ -1676,7 +1678,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
 //             return item
 //         }
     })
-  console.log('big_tax_list.length-2',big_tax_list.length)
+    //console.log('big_tax_list.length-2',big_tax_list.length)
     //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     
     
@@ -1689,14 +1691,14 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     // taxon will be excluded here from the taxon table
 
     //console.log('olength-1',big_tax_list.length)
-    console.log('site_on',site_on)
+    //console.log('site_on',site_on)
     //console.log('C.site_lookup[988] ',Object.values(C.site_lookup[988]) )
     
     if(filter && filter.site.p_or_pst == 'primary_site'){
        big_tax_list = big_tax_list.filter( function(item){
-         if(item.otid =='999'){
-           console.log('item.sites999',item)
-         }
+         // if(item.otid =='999'){
+//            console.log('item.sites999',item)
+//          }
          
          for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])
@@ -1734,7 +1736,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
          }
        })
     }
-    console.log('big_tax_list.length-3',big_tax_list.length)
+    //console.log('big_tax_list.length-3',big_tax_list.length)
     //phylum
     if(vals.phylum != '0'){
        big_tax_list = helpers.ttfilter_for_phylum(big_tax_list, vals.phylum)
@@ -1781,7 +1783,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
               }
         }
     })
-    console.log('big_tax_list.length-4',big_tax_list.length)
+    //console.log('big_tax_list.length-4',big_tax_list.length)
     //sort column
     if(vals.sort_rev === 'on'){
         if(vals.sort_col === 'otid'){
@@ -1810,7 +1812,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
           })
         }
     }
-    console.log('big_tax_list.length-5',big_tax_list.length)
+    //console.log('big_tax_list.length-5',big_tax_list.length)
     return big_tax_list
 
 }

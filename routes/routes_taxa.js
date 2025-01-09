@@ -506,23 +506,20 @@ router.post('/tax_level', function tax_level_post(req, res) {
 //                 console.log(taxdata[lineage_str].taxcnt)
 //                 console.log(taxdata[lineage_str].gcnt)
 //                 console.log(taxdata[lineage_str].refcnt)
-                if(count_type == 'wdropped'){
+                
+                   
+                if(count_type == 'both'){
+                   return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wreference + taxdata[lineage_str].taxcnt_wdropped
+                   return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wreference + taxdata[lineage_str].gcnt_wdropped
+                   return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wreference + taxdata[lineage_str].refcnt_wdropped
+                }else if(count_type == 'wdropped'){
                    return_obj.tax_count = taxdata[lineage_str].taxcnt +  taxdata[lineage_str].taxcnt_wdropped
                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wdropped
                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wdropped
-                   
-                // if(count_type == 'both'){
-//                    return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wnonoral + taxdata[lineage_str].taxcnt_wdropped
-//                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wnonoral + taxdata[lineage_str].gcnt_wdropped
-//                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wnonoral + taxdata[lineage_str].refcnt_wdropped
-//                 }else if(count_type == 'wdropped'){
-//                    return_obj.tax_count = taxdata[lineage_str].taxcnt +  taxdata[lineage_str].taxcnt_wdropped
-//                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wdropped
-//                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wdropped
-//                 }else if(count_type == 'wnonoralref'){
-//                    return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wnonoral
-//                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wnonoral
-//                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wnonoral
+                }else if(count_type == 'wreference'){
+                   return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wreference
+                   return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wreference
+                   return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wreference
                 }else{
                    return_obj.tax_count = taxdata[lineage_str].taxcnt
                    return_obj.gne_count = taxdata[lineage_str].gcnt
@@ -537,9 +534,9 @@ router.post('/tax_level', function tax_level_post(req, res) {
             }
         }else {
             return_obj.tax_count = 0
-                    return_obj.gne_count = 0
-                    return_obj.rrna_count = 0
-                    return_obj.lineage = '' 
+            return_obj.gne_count = 0
+            return_obj.rrna_count = 0
+            return_obj.lineage = '' 
         }
         tax_resp.push(return_obj)
         return return_obj
@@ -2002,26 +1999,26 @@ function get_options_by_node(node) {
 function get_counts(lineage, ctype){
     let txt
     let cts = C.taxon_counts_lookup[lineage]
-    if(ctype === 'wdropped'){
+    // if(ctype === 'wdropped'){
+//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>' 
+//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
+//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
+
+
+
+    if(ctype === 'both'){
+        txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wreference + cts.taxcnt_wdropped).toString()+'</span>' 
+            + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wreference   + cts.gcnt_wdropped).toString()+'</span>'
+            +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wreference + cts.refcnt_wdropped).toString()+'</span>]';
+    }else if(ctype === 'wdropped'){
         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>' 
             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
 
-
-
-   //  if(ctype === 'both'){
-//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wnonoral + cts.taxcnt_wdropped).toString()+'</span>' 
-//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wnonoral   + cts.gcnt_wdropped).toString()+'</span>'
-//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wnonoral + cts.refcnt_wdropped).toString()+'</span>]';
-//     }else if(ctype === 'wdropped'){
-//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>' 
-//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
-//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
-// 
-//     }else if(ctype === 'wnonoralref'){
-//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wnonoral).toString()+'</span>' 
-//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wnonoral).toString()+'</span>'
-//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wnonoral).toString()+'</span>]';
+    }else if(ctype === 'wreference'){
+        txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wreference).toString()+'</span>' 
+            + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wreference).toString()+'</span>'
+            +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wreference).toString()+'</span>]';
 
     }else{
         txt = "[<span class='red-text'>"+   cts.taxcnt.toString()+'</span>' 
