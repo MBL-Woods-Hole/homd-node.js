@@ -265,11 +265,12 @@ Promise.all(promises)
     
     /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
-    C.nonoralref_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'NonOralRef')).map(x => x.otid)
+    C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'Reference')).map(x => x.otid)
+    
     //helpers.print_size()
     //var  = C.dropped_obj
-    console.log('Dropped:',C.dropped_taxids,C.dropped_taxids.length)
-    console.log('NonOralRef:',C.nonoralref_taxids,C.nonoralref_taxids.length)
+    console.log('Dropped Taxa:',C.dropped_taxids,C.dropped_taxids.length)
+    console.log('Reference Taxa:',C.reference_taxids,C.reference_taxids.length)
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     
     //examples
@@ -311,15 +312,15 @@ Promise.all(promises)
    //Absconditabacteria (SR1) [C-1]
     //console.log(C.homd_taxonomy)
     console.log('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
-    helpers.print(['lineage 673',C.taxon_lineage_lookup[673]])
-    helpers.print(['Lookup 673',C.taxon_lookup[673]])
+    //helpers.print(['lineage 673',C.taxon_lineage_lookup[673]])
+    //helpers.print(['Lookup 673',C.taxon_lookup[673]])
     //console.log('refseq 12',C.refseq_lookup[12])
     //helpers.print(['SEQF10010',C.genome_lookup['SEQF10010']])
     //console.log(C.taxon_counts_lookup['Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Variovorax'])
     //console.log('362 Correct',C.taxon_lineage_lookup[362])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Hornefia minuta_species'])
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['family'])
+    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
     //console.log('id 944 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[944])
     //console.log('id 943 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[943])
     //console.log('id 30 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[30])
@@ -328,45 +329,19 @@ Promise.all(promises)
     //console.log('id 599 order',C.homd_taxonomy.taxa_tree_dict_map_by_id[599])
     //console.log('id 603 fam ERR',C.homd_taxonomy.taxa_tree_dict_map_by_id[603])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank)
+    C.taxa_with_subspecies = Object.values(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies']).map(x => x.otid)
+    console.log('C.taxa_with_subspecies',C.taxa_with_subspecies,C.taxa_with_subspecies.length)
     
-// phylum1 {
-//   parent_id: 1,
-//   children_ids: [ 598 ],
-//   taxon: 'Synergistota',
-//   rank: 'phylum',
-//   node_id: 597
-// }
-// class1 {
-//   parent_id: 597,
-//   children_ids: [ 599 ],
-//   taxon: 'Synergistia',
-//   rank: 'klass',
-//   node_id: 598
-// }
-// order1 {
-//   parent_id: 598,
-//   children_ids: [ 600, 603, 609 ],
-//   taxon: 'Synergistales',
-//   rank: 'order',
-//   node_id: 599
-// }
-// family1 {
-//   parent_id: 599,
-//   children_ids: [ 604 ],
-//   taxon: 'Aminobacteriaceae',
-//   rank: 'family',
-//   node_id: 603
-// }
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['clade_886_subspecies'])
+
     //session.site_search_result = {}
-    let num_zeros = 0
-    for(n in C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']){
-       var m = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus'][n]
-       if(m.parent_id==0){
-          console.log(m)
-          num_zeros += 1
-       }
-    }
+    // let num_zeros = 0
+//     for(n in C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']){
+//        var m = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus'][n]
+//        if(m.parent_id==0){
+//           console.log(m)
+//           num_zeros += 1
+//        }
+//     }
    // console.log("number
     // do more stuff
 });
