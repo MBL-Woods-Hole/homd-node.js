@@ -22,9 +22,13 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
     let type = req.params.type
     let file_filter_txt = "HOMD.org Taxon Data::No Filter Applied"+ " Date: "+today 
     let send_list = Object.values(C.taxon_lookup);
+    
     let list_of_otids = send_list.map(item => item.otid)
+    
     console.log('ALL::Count of OTIDs:',list_of_otids.length)
+    
     var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
+    
     if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
     }else if(type === 'text'){
@@ -56,21 +60,21 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
     let file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+today 
 
     let list_of_otids = send_list.map(item => item.otid)
-    console.log('Table::Count of OTIDs:',list_of_otids.length)
+    console.log('Table::Count of OTIDs:',list_of_otids)
     // type = browser, text or excel
     var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
-  if(type === 'browser'){
+    if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
-  }else if(type === 'text'){
+    }else if(type === 'text'){
       res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""})
-  }else if(type === 'excel'){
+    }else if(type === 'excel'){
       res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""})
-  }else {
+    }else {
       // error
       console.log('Download table format ERROR')
-  }
-  res.send(table_tsv)
-  res.end()
+    }
+    res.send(table_tsv)
+    res.end()
 })
 router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
     var today = new Date();
@@ -427,8 +431,8 @@ function create_taxon_table(otids, source, type, head_txt) {
         let obj3 = C.taxon_info_lookup 
         let obj4 = C.taxon_references_lookup 
         let obj5 = C.site_lookup 
-        //console.log('o1-3')
-        //console.log(obj1[3])
+        //console.log('in create_taxon_table: '+source)
+        //console.log('otids',otids)
         
         headers = ["HMT_ID",
                    "Domain","Phylum","Class","Order","Family","Genus","Species","Subspecies",
@@ -444,52 +448,65 @@ function create_taxon_table(otids, source, type, head_txt) {
         for(var n in otids){
             
             let otid = otids[n].toString()
-            o1 = obj1[otid]
-             //console.log('otid',otid)
-             
-            if(otid in obj2){
-               o2 = obj2[otid]
-            }else {
-               o2 = {'domain':'','phylum':'','klass':'','order':'','family':'','genus':'','species':'','subspecies':''}
-            }
-            if(otid in obj3){
-               o3 = obj3[otid]
-            }else {
-               o3 = {'general':'','culta':'','pheno':'','prev':'','disease':''}
-            }
-            if(otid in obj4){
-               o4 = obj4[otid]
-            }else {
-               o4 = {NCBI_pubmed_search_count: '0',NCBI_nucleotide_search_count: '0',NCBI_protein_search_count: '0'}
-            }
-            // list! o1.type_strain, o1,genomes, o1,synonyms, o1.sites, o1.ref_strains, o1,rrna_sequences
-            // clone counts
-            if(o2.domain){  // weeds out dropped
-               //console.log('o2',o2)
-               let tstrains = o1.type_strains.join(' | ')
-               let gn = o1.genomes.join(' | ')
-               let syn = o1.synonyms.join(' | ')
-               let sites = obj5[otid].s1
-               if(obj5[otid].hasOwnProperty('s2')){
-                   sites = sites + ' | ' +obj5[otid].s2
-               }
-               let rstrains = o1.ref_strains.join(' | ')
-               let rnaseq = o1.rrna_sequences.join(' | ')
-               
-               // per FDewhirst: species needs to be unencumbered of genus for this table
-               // let species_pts = o2.species.split(/\s/)
-//                species_pts.shift()
-//                let species = species_pts.join(' ')
-               
-               let species = o2.species.replace(o2.genus,'').trim()  // removing gens from species name
-               var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,
-                        o1.naming_status,o1.cultivation_status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,
-                        o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,
-                        o3.culta,o3.pheno,o3.prev,o3.disease,,
-                        o1.tlength_str
+            if(C.dropped_taxids.indexOf(otid) != -1){
+                let data1 = C.taxon_lookup[otid]
+                //console.log('data1',data1)
+                var r = [("000" + otid).slice(-3),,
+                        
                         ]
-               var row = r.join('\t')
-               txt += '\n'+row
+                var row = ('000' + otid).slice(-3) +  '\tDROPPED Taxon\t\t\t\t\t' + data1.genus+'\t'+data1.species  //r.join('\t')
+                txt += '\n'+row
+                
+            }else{
+            
+                o1 = obj1[otid]
+                 //console.log('otid',otid)
+                 
+                if(otid in obj2){
+                   o2 = obj2[otid]
+                }else {
+                   o2 = {'domain':'','phylum':'','klass':'','order':'','family':'','genus':'','species':'','subspecies':''}
+                }
+                if(otid in obj3){
+                   o3 = obj3[otid]
+                }else {
+                   o3 = {'general':'','culta':'','pheno':'','prev':'','disease':''}
+                }
+                if(otid in obj4){
+                   o4 = obj4[otid]
+                }else {
+                   o4 = {NCBI_pubmed_search_count: '0',NCBI_nucleotide_search_count: '0',NCBI_protein_search_count: '0'}
+                }
+                // list! o1.type_strain, o1,genomes, o1,synonyms, o1.sites, o1.ref_strains, o1,rrna_sequences
+                // clone counts
+                if(o2.domain){  // weeds out dropped
+                   //console.log('o2',o2)
+                   let tstrains = o1.type_strains.join(' | ')
+                   let gn = o1.genomes.join(' | ')
+                   let syn = o1.synonyms.join(' | ')
+                   let sites = obj5[otid].s1
+                   if(obj5[otid].hasOwnProperty('s2')){
+                       sites = sites + ' | ' +obj5[otid].s2
+                   }
+                   let rstrains = o1.ref_strains.join(' | ')
+                   let rnaseq = o1.rrna_sequences.join(' | ')
+                   
+                   // per FDewhirst: species needs to be unencumbered of genus for this table
+                   // let species_pts = o2.species.split(/\s/)
+    //                species_pts.shift()
+    //                let species = species_pts.join(' ')
+                   
+                   let species = o2.species.replace(o2.genus,'').trim()  // removing gens from species name
+                   var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,
+                            o1.naming_status,o1.cultivation_status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,
+                            o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,
+                            o3.culta,o3.pheno,o3.prev,o3.disease,,
+                            o1.tlength_str
+                            ]
+                            
+                   var row = r.join('\t')
+                   txt += '\n'+row
+                }
             }
         }
     }else if(source === 'lineage'){
@@ -497,8 +514,8 @@ function create_taxon_table(otids, source, type, head_txt) {
        txt +=  headers.join('\t')+'\n'
        for(var n in otids){
             otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
-            console.log('hmt',otids[n])
-            console.log(C.taxon_lineage_lookup[otids[n]])
+            //console.log('hmt',otids[n])
+            //console.log(C.taxon_lineage_lookup[otids[n]])
             if(otids[n] in C.taxon_lineage_lookup){
                 txt += otid_pretty+'\t'+C.taxon_lineage_lookup[otids[n]].domain
                 txt += '\t'+C.taxon_lineage_lookup[otids[n]].phylum
@@ -593,8 +610,7 @@ function create_taxon_table(otids, source, type, head_txt) {
        // source ERROR
        return 'ERROR'
     }
-    //console.log(C.homd_taxonomy)
-    //console.log(C.taxon_counts_lookup )
+   
     return txt
 }        
 //
