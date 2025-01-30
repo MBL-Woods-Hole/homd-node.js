@@ -542,11 +542,19 @@ router.post('/tax_level', function tax_level_post(req, res) {
         return return_obj
     
       })
-      
-      tax_resp.sort(function sortByTaxa(a, b) {
+      if(rank === 'domain'){
+         //sort by domain only
+         tax_resp.sort(function sortByTaxa(a, b) {
                 return helpers.compareStrings_alpha(a.item_taxon, b.item_taxon);
-        })
-      //  console.log(tax_resp)
+         })
+      }else{
+         // sort by parent then item
+         tax_resp.sort(function two_strings(a, b,) {
+                return helpers.compareByTwoStrings_alpha(a,b,'parent_taxon', 'item_taxon');
+         })
+     }
+     
+      //console.log(tax_resp)
         
       //res.send(JSON.stringify(tax_resp));
       res.send(JSON.stringify([count_type, tax_resp]));
