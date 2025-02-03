@@ -809,14 +809,12 @@ router.get('/tax_description', function tax_description(req, res){
   // console.log('sites',C.site_lookup[otid])
   sites = ''
   if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
-     sites = C.site_lookup[otid]['s1']
+     sites = 'Primary: '+C.site_lookup[otid]['s1']
          // = Object.values(C.site_lookup[otid]).join('<br>')
-	 if(C.site_lookup[otid]['s2']){
-		sites += '<br>'+C.site_lookup[otid]['s2']
+	 if(C.site_lookup[otid]['s2'] && C.site_lookup[otid]['s2'] != 'Unassigned'){
+		sites += '<br>Secondary: '+C.site_lookup[otid]['s2']
 	 }
-	 if(C.site_lookup[otid]['s3']){
-		sites += '<br>'+C.site_lookup[otid]['s3']
-	 }
+	 
 	 if(C.site_lookup[otid]['note']){
 		sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
 	 }
@@ -1303,19 +1301,23 @@ router.get('/body_sites', function body_sites(req, res) {
        if(C.dropped_taxids.indexOf(otid) !=-1){
          obj.s1 = 'Unassigned'
          obj.s2 = ''
-         obj.s3 = ''
+        
          obj.note = ''
          obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species+' (<b>DROPPED</b>)'
        }else if(otid in C.site_lookup){
          obj.s1 = C.site_lookup[otid].s1
-         obj.s2 = C.site_lookup[otid].s2
-         obj.s3 = C.site_lookup[otid].s3
+         if(C.site_lookup[otid].s2 == 'Unassigned'){
+             obj.s2 = ''
+         }else{
+             obj.s2 = C.site_lookup[otid].s2
+         }
+         
          obj.note = C.site_lookup[otid].note
          obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
        }else{
          obj.s1 = 'Unassigned'
          obj.s2 = ''
-         obj.s3 = ''
+         
          obj.note = 'Missing From Database (C.site_lookup)'
          obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
        }
