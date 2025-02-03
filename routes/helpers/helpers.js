@@ -1630,7 +1630,7 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
 module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
    
     let big_tax_list = Object.values(C.taxon_lookup);
-    //console.log('olength-0',big_tax_list.length)
+    //console.log('olength-0',big_tax_list)
     let vals
     //
     //console.log('req.session.ttable_filter',req.session.ttable_filter)
@@ -1692,14 +1692,14 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     // taxon will be excluded here from the taxon table
 
     //console.log('olength-1',big_tax_list.length)
-    //console.log('site_on',site_on)
+    console.log('site_on',site_on)
     //console.log('C.site_lookup[988] ',Object.values(C.site_lookup[988]) )
     
     if(filter && filter.site.p_or_pst == 'primary_site'){
        big_tax_list = big_tax_list.filter( function(item){
-         // if(item.otid =='999'){
-//            console.log('item.sites999',item)
-//          }
+         if(item.otid =='999'){
+           console.log('item.sites999',item)
+         }
          
          for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])

@@ -1293,27 +1293,38 @@ router.get('/body_sites', function body_sites(req, res) {
     }
     
     //for(let otid in C.site_lookup){
+    
     for(let otid in C.taxon_lookup){
        obj = {}
        //console.log(C.taxon_lookup[otid])
+       //console.log(otid)
        obj.otid = otid
-       if(otid in C.site_lookup){
+       
+       if(C.dropped_taxids.indexOf(otid) !=-1){
+         obj.s1 = 'Unassigned'
+         obj.s2 = ''
+         obj.s3 = ''
+         obj.note = ''
+         obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species+' (<b>DROPPED</b>)'
+       }else if(otid in C.site_lookup){
          obj.s1 = C.site_lookup[otid].s1
          obj.s2 = C.site_lookup[otid].s2
          obj.s3 = C.site_lookup[otid].s3
          obj.note = C.site_lookup[otid].note
+         obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
        }else{
          obj.s1 = 'Unassigned'
          obj.s2 = ''
          obj.s3 = ''
          obj.note = 'Missing From Database (C.site_lookup)'
+         obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
        }
        obj.naming_status = C.taxon_lookup[otid].naming_status
        obj.cultivation_status = C.taxon_lookup[otid].cultivation_status
-       obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
+       
        send_list.push(obj)
     }
-    //console.log(C.site_lookup )
+    //console.log(send_list )
     send_list.sort(function (b, a) {
         return helpers.compareStrings_alpha(b.gsp, a.gsp);
     })

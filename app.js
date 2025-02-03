@@ -304,10 +304,13 @@ Promise.all(promises)
     size = Buffer.byteLength(JSON.stringify(C.homd_taxonomy))
     console.log('C.homd_taxonomy','\t\t\tsize(KB):',size/1024)
     
+    size = Buffer.byteLength(JSON.stringify(C.site_lookup))
+    console.log('C.site_lookup #ofKeys',Object.keys(C.site_lookup).length,'\t\tsize(KB):',size/1024)
+    
     for(var n in C.homd_taxonomy){
        console.log(n)
     }
-   // console.log(C.homd_taxonomy.taxonomy_obj)
+   //console.log(C.taxon_lookup)
    //class
    //Absconditabacteria (SR1) [C-1]
     //console.log(C.homd_taxonomy)

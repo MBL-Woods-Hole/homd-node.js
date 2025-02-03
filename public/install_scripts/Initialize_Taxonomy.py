@@ -172,17 +172,67 @@ def run_type_strain(args):
 
 def run_sites(args):
     global master_lookup
-    short_site_names = {
-       'Oral' : ['Oral','Oral (high abundance)','Oral (medium abundance)','Oral (low abundance)','Oral (scarce abundance)','Oral (caries)','Oral (periodontitis)'],
-       'Nasal': ['Nasal','Nasal (scarce)','Nasal (low)','Nasal & Skin'],
-       'Skin' : ['Skin','Nasal & Skin'],
-       'Gut'  : ['Gut'],
-       'Vaginal':['Vaginal'],
-       'Pathogen':['Systemic pathogen','Opportunistic pathogen'],
-       'Environmental':['Environmental','Environmental (food)','Environmental (soil/water)','Environmental (sewage sludge)','Environmental (air)','Environmental (non-human animal)'],
-       'Reference':['Reference'],
-       'Unassigned':['Unassigned','Human-Associated, Primary Site Uncertain']
-    }
+    # short_site_names = {
+#        'Oral' : ['Oral','Oral (Abundance: High)',
+#                  'Oral (Abundance: Low)',
+#                  'Oral (Abundance: Medium)',
+#                  'Oral (Abundance: No data)',
+#                  'Oral (Abundance: Scarce)'],
+#        'Nasal': ['Nasal','Nasal (Abundance: High)',
+#                  'Nasal (Abundance: Low)',
+#                  'Nasal (Abundance: Medium)',
+#                  'Nasal (Abundance: Scarce)'],
+#        'Skin' : ['Skin','Nasal & Skin'],
+#        'Gut'  : ['Gut'],
+#        'Vaginal':['Vaginal'],
+#        'Pathogen':['Systemic pathogen','Opportunistic pathogen'],
+#        'Environmental':['Environmental','Environmental (food)','Environmental (soil/water)','Environmental (sewage sludge)','Environmental (air)','Environmental (non-human animal)'],
+#        'Reference':['Reference'],
+#        'Unassigned':['Unassigned','Human-Associated, Primary Site Uncertain']
+#     }
+    # short_site_names = {
+#        'Oral' : ['Oral','Oral (Abundance: High)',
+#                  'Oral (Abundance: Low)',
+#                  'Oral (Abundance: Medium)',
+#                  'Oral (Abundance: No data)',
+#                  'Oral (Abundance: Scarce)'],
+#        'Nasal': ['Nasal','Nasal (Abundance: High)',
+#                  'Nasal (Abundance: Low)',
+#                  'Nasal (Abundance: Medium)',
+#                  'Nasal (Abundance: Scarce)'],
+#        'Skin' : ['Skin','Nasal & Skin','Skin (Abundance: High)',
+#                  'Skin (Abundance: Low)',
+#                  'Skin (Abundance: Medium)',
+#                  'Skin (Abundance: Scarce)',
+#                  'Skin/Ear (Abundance: Scarce)',
+#                  'Skin/External ear canal (Abundance: Scarce)'],
+#        'Gut'  : ['Gut','Gastrointestinal Tract (Abundance: High)',
+#                  'Gastrointestinal Tract (Abundance: Medium)',
+#                  'Gastrointestinal Tract (Abundance: Scarce)',
+#                  'Gastrointestinal Tract (Abundance: No data)'],
+#        'Vaginal':['Vaginal','Vaginal (Abundance: High)',
+#                   'Vaginal (Abundance: Low)',
+#                   'Vaginal (Abundance: Medium)',
+#                   'Vaginal (Abundance: No data)'],
+#        'Pathogen':['Pathogen (Abundance: Low)',
+#                    'Pathogen (Abundance: No data)',
+#                    'Pathogen (Abundance: Scarce)',
+#                    'Opportunistic Pathogen (Abundance: Scarce)',
+#                    'Zoonotic Pathogen (Abundance: No data)',
+#                    'Opportunistic Pathogen (Abundance: No data)'],
+#        'Environmental':['Environmental -Food (Abundance: Scarce)',
+#                         'Environmental -Food (Abundance: Scarce)',
+#                         'Environmental -Non-Human Animal (Abundance: Scarce)',
+#                         'Environmental -Soil/Water (Abundance: Scarce)',
+#                         'Environmental Probiotic (Abundance: No data)'],
+#        'Reference':['Reference','Taxonomic Reference (Abundance: Scarce)'],
+#        'Unassigned':['Unassigned','Human-Associated, Primary Site Uncertain',
+#                      'Human-Associated, Primary Site Uncertain (Abundance: Low)',
+#                      'Human-Associated, Primary Site Uncertain (Abundance: Medium)',
+#                      'Human-Associated, Primary Site Uncertain (Abundance: High)',
+#                      'Human-Associated, Primary Site Uncertain (Abundance: No data)']
+#         }
+    primary_short_sites =['Oral','Nasal','Skin','Gut','Vaginal','Pathogen','Environmental','Reference','Unassigned']
     #q = "SELECT otid, site FROM otid_site JOIN sites USING (site_id) ORDER BY otid,priority"
     #q = "SELECT otid, primary_body_site FROM otid_prime"
     #q = "SELECT otid, site FROM otid_prime JOIN sites on otid_prime.primary_body_site_id=sites.site_id"
@@ -190,7 +240,7 @@ def run_sites(args):
     q += " JOIN sites p1 on otid_prime.primary_body_site_id=p1.site_id"
     q += " JOIN sites p2 on otid_prime.secondary_body_site_id=p2.site_id  ORDER BY otid"
     lookup = {}
-    #print(q)
+    print(q)
     result = myconn.execute_fetch_select_dict(q)
     #print(result)
     for obj in result:
@@ -202,9 +252,20 @@ def run_sites(args):
         if obj['p2']:
             lookup[otid]['s2'] = obj['p2']
         
-        for site in short_site_names:
-            if primary_site in short_site_names[site]:
+        for site in primary_short_sites:
+            if primary_site.startswith(site):
                 master_lookup[otid]['sites'].append(site)
+            elif site == 'Gut' and primary_site.startswith('Gastro'):
+                master_lookup[otid]['sites'].append(site)
+            elif site == 'Pathogen' and 'Pathogen' in primary_site:
+                master_lookup[otid]['sites'].append(site)
+            elif site == 'Reference' and 'Reference' in primary_site:
+                master_lookup[otid]['sites'].append(site)
+            elif site == 'Unassigned' and 'Human-Associated' in primary_site:
+                master_lookup[otid]['sites'].append(site)
+        # for site in short_site_names:
+#             if primary_site in short_site_names[site]:
+#                 master_lookup[otid]['sites'].append(site)
         if len(master_lookup[otid]['sites']) == 0:
             master_lookup[otid]['sites'].append('')  # add site to dict above
     
