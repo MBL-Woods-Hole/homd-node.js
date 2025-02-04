@@ -434,13 +434,12 @@ function create_taxon_table(otids, source, type, head_txt) {
         //console.log('in create_taxon_table: '+source)
         //console.log('otids',otids)
         
-        headers = ["HMT_ID",
+        headers = ["HMT-ID",
                    "Domain","Phylum","Class","Order","Family","Genus","Species","Subspecies",
-                   "Naming_Status","Cultivation_Status","Body_site","Warning","Type_strain","16S_rRNA","Clone_count",
-                   "Clone_%","Clone_rank","Synonyms","NCBI_taxon_id","NCBI_pubmed_count",
-                   "NCBI_nucleotide_count","NCBI_protein_count","Genome_ID","General_info",
-                   "Cultivability","Phenotypic_characteristics","Prevalence","Disease","References",
-                   "Genome_Size"
+                   "Naming Status","Cultivation Status","Body Site(s)","Type Strain","16S_rRNA",
+                   "Synonyms","NCBI Taxon ID","NCBI Pubmed Count",
+                   "NCBI Nucleotide Count","NCBI Protein Count","Genome IDs","Genome Size Range", "General Info",
+                   "Cultivability","Phenotypic Characteristics","Prevalence","Disease"
                    ]
         
         txt +=  headers.join('\t')
@@ -496,12 +495,13 @@ function create_taxon_table(otids, source, type, head_txt) {
     //                species_pts.shift()
     //                let species = species_pts.join(' ')
                    
+                   otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
                    let species = o2.species.replace(o2.genus,'').trim()  // removing gens from species name
-                   var r = [("000" + otid).slice(-3),o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,
-                            o1.naming_status,o1.cultivation_status,sites,o1.warning,tstrains,rnaseq,,,,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,
-                            o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o3.general,
-                            o3.culta,o3.pheno,o3.prev,o3.disease,,
-                            o1.tlength_str
+                   var r = [otid_pretty,o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,
+                            o1.naming_status,o1.cultivation_status,sites,tstrains,rnaseq,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,
+                            o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o1.tlength_str,o3.general,
+                            o3.culta,o3.pheno,o3.prev,o3.disease
+                            
                             ]
                             
                    var row = r.join('\t')

@@ -809,13 +809,15 @@ router.get('/tax_description', function tax_description(req, res){
   if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
      sites = 'Primary: '+C.site_lookup[otid]['s1']
          // = Object.values(C.site_lookup[otid]).join('<br>')
-	 if(C.site_lookup[otid]['s2'] && C.site_lookup[otid]['s2'] != 'Unassigned'){
-		sites += '<br>Secondary: '+C.site_lookup[otid]['s2']
-	 }
-	 
-	 if(C.site_lookup[otid]['note']){
-		sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
-	 }
+     if(C.site_lookup[otid]['s2'] && C.site_lookup[otid]['s2'] != 'Unassigned'){
+        sites += '<br>Secondary: '+C.site_lookup[otid]['s2']
+     }
+     if(C.site_lookup[otid]['ref_link']){
+        sites += "<br><small>Reference: <a href='"+C.site_lookup[otid]['ref_link']+"' target='_blank'>"+C.site_lookup[otid]['ref_link']+'</a></small>'
+     }
+     if(C.site_lookup[otid]['note']){
+        sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
+     }
   }
   //console.log('pangenome_link',links.pangenomes)
   res.render('pages/taxa/taxdesc', {
