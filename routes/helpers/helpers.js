@@ -1676,7 +1676,11 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
      //console.log('abundOn',abund_on)
      big_tax_list = big_tax_list.filter( function filterAbundance(item) {
         //console.log('item',C.site_lookup[item.otid])
-        let site_item_primary = C.site_lookup[item.otid].s1
+        if(abund_on.length == 4){
+            return item
+        }else{
+        if(C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1){
+           let site_item_primary = C.site_lookup[item.otid].s1
         //console.log('site_item_primary',site_item_primary)
         //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund' ]
         
@@ -1686,6 +1690,8 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
             if(site_item_primary.includes(test)){
                return item
             }
+        }
+        }
         }
        
       
