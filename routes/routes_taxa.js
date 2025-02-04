@@ -701,14 +701,12 @@ router.get('/tax_description', function tax_description(req, res){
          
          sites = ''
          if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
-           sites = C.site_lookup[otid]['s1']
+           sites = 'Primary: '+C.site_lookup[otid]['s1']
            // = Object.values(C.site_lookup[otid]).join('<br>')
            if(C.site_lookup[otid]['s2']){
-              sites += '<br>'+C.site_lookup[otid]['s2']
+              sites += '<br>Secondary: '+C.site_lookup[otid]['s2']
            }
-           if(C.site_lookup[otid]['s3']){
-              sites += '<br>'+C.site_lookup[otid]['s3']
-           }
+           
            if(C.site_lookup[otid]['note']){
              sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
            }
