@@ -19,7 +19,7 @@ function renderTaxonTable(req, res, args) {
         
         res.render('pages/taxa/taxtable', {
             title: 'HOMD :: Taxon Table', 
-            pgtitle: 'Human Oral Microbial Taxa',
+            pgtitle: 'Human Oral/Nasal Microbial Taxa',
             pgname: 'taxon/tax_table',  //for AbountThisPage
             config: JSON.stringify(CFG),
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
@@ -32,319 +32,7 @@ function renderTaxonTable(req, res, args) {
               
         })
 }
-// function get_default_filter(){
-//     let defaultfilter = {
-//         otid:'',
-//         status:{
-//             named:'on',
-//             unnamed:'on',
-//             phylotype: 'on',
-//             lost: 'on',
-//             dropped:'off',
-//             nonoralref:'off'
-//         },
-//         site:{
-//            oral:'on',
-//            nasal:'on',
-//            skin:'on',
-//            gut:'on',
-//            vaginal:'on',
-//            unassigned:'on',
-//            enviro      :'on',
-//            pathogen    :'on',
-//            p_or_pst    :'primary_site'
-//            
-//         },
-//         genomes:'both',
-//         text:{
-//             txt_srch: '',
-//             field: 'all',
-//         },
-//         letter: '0',
-//         sort_col: 'genus',
-//         sort_rev: 'off'
-//     }
-//     return defaultfilter
-// }
-// function get_null_filter(){
-//     let nullfilter = {
-//         otid:'',
-//         status:{
-//             named:'off',
-//             unnamed:'off',
-//             phylotype: 'off',
-//             lost: 'off',
-//             dropped:'off',
-//             nonoralref:'off'
-//         },
-//         site:{
-//            oral:'off',
-//            nasal:'off',
-//            skin:'off',
-//            gut:'off',
-//            vaginal:'off',
-//            unassigned:'off',
-//            enviro      :'off',
-//            pathogen    :'off',
-//            p_or_pst    :'primary_site'
-//         },
-//         genomes:'both',
-//         text:{
-//             txt_srch: '',
-//             field: 'all',
-//         },
-//         letter: '0',
-//         sort_col: 'genus',
-//         sort_rev: 'off'
-//     }
-//     return nullfilter
-// }
-// function set_ttable_session(req) {
-//     // set req.session.ttable_filter.otid 5 places
-//     // 1taxa/life
-//     // 2taxa/tax_description
-//     // 3taxa/ecology
-//     // 4taxa/tax_description
-//     // 5genome_genome_table
-//     //console.log('set sess body',req.body)
-//     //console.log('xsession',req.session)
-//     let letter = '0'
-//     if(req.session.ttable_filter && req.session.ttable_filter.letter){
-//        letter = req.session.ttable_filter.letter
-//     }
-//     req.session.ttable_filter = helpers.get_null_filter()
-//     req.session.ttable_filter.letter = letter
-//     
-//     for( let item in req.body){
-//        if(item == 'letter'){
-//          req.session.ttable_filter.letter = req.body.letter
-//        }
-//        if(item == 'genomes'){
-//          req.session.ttable_filter.genomes = req.body.genomes
-//        }
-//        if(item == 'sort_col'){
-//          req.session.ttable_filter.sort_col = req.body.sort_col
-//        }
-//        if(item == 'sort_rev'){
-//          req.session.ttable_filter.sort_rev = 'on'
-//        }
-//        if(item == 'named'){
-//          req.session.ttable_filter.status.named = 'on'
-//        }
-//        if(item == 'unnamed'){
-//          req.session.ttable_filter.status.unnamed = 'on'
-//        }
-//        if(item == 'phylotype'){
-//          req.session.ttable_filter.status.phylotype = 'on'
-//        }
-//        if(item == 'lost'){
-//          req.session.ttable_filter.status.lost = 'on'
-//        }
-//        if(item == 'dropped'){
-//          req.session.ttable_filter.status.dropped = 'on'
-//        }
-//        if(item == 'nonoralref'){
-//          req.session.ttable_filter.status.nonoralref = 'on'
-//        }
-//        
-//        
-//        // sites
-//        for(let site_code in C.tax_sites_all){
-//             
-//             if(item == site_code){
-//                 //console.log('C.tax_sites_all[n]',item,C.tax_sites_all[site_code])
-//                req.session.ttable_filter.site[site_code] = 'on'
-//             }
-//        }
-//        if(item == 'p_or_pst'){
-//          req.session.ttable_filter.site.p_or_pst = req.body.p_or_pst
-//        }
-//        //console.log('req.session.ttable_filter.site',req.session.ttable_filter.site)
-//        // if(item == 'oral'){
-// //          req.session.ttable_filter.site.oral = 'on'
-// //        }
-// //        
-// //        if(item == 'nasal'){
-// //          req.session.ttable_filter.site.nasal = 'on'
-// //        }
-// //        if(item == 'skin'){
-// //          req.session.ttable_filter.site.skin = 'on'
-// //        }
-// //        if(item == 'gut'){
-// //          req.session.ttable_filter.site.gut = 'on'
-// //        }
-// //        if(item == 'vaginal'){
-// //          req.session.ttable_filter.site.vaginal = 'on'
-// //        }
-// //        if(item == 'unassigned'){
-// //          req.session.ttable_filter.site.unassigned = 'on'
-// //        }
-//        //////
-//        if(item == 'txt_srch'){
-//          req.session.ttable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
-//        }
-//        if(item == 'field'){
-//          req.session.ttable_filter.text.field = req.body.field
-//        }
-//        
-//     }
-//     
-// }
-// function apply_ttable_filter(req, filter) {
-//    
-//     let big_tax_list = Object.values(C.taxon_lookup);
-//     //console.log('olength-0',big_tax_list.length)
-//     let vals
-//     //
-//     //console.log('req.session.ttable_filter',req.session.ttable_filter)
-//     if(req.session.ttable_filter){
-//        //console.log('vals from session ttfilter')
-//        vals = req.session.ttable_filter
-//     }else{
-//         //console.log('vals from default ttfilter')
-//         vals = helpers.get_default_filter()
-//     }
-//     //console.log('vals',vals)
-//     //
-//     // txt_srch
-//     //console.log('big_tax_list.length',big_tax_list.length)
-//     if(vals.text.txt_srch !== ''){
-//        big_tax_list = helpers.get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
-//     }
-//     //console.log('big_tax_list',big_tax_list)
-//     //console.log('vals',vals)
-//     //status
-//     // create array of 'on's
-//     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
-//      big_tax_list = big_tax_list.filter(item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
-//     //site
-//     // create array of 'on's
-//     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
-//     //let site_on = Object.keys(vals.site).filter(item => vals.site[0][helpers.getKeyByValue(C.tax_sites_all,item.sites[0])] == 'on')
-//      
-//     // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
-//     // taxon will be excluded here from the taxon table
-// 
-//     //console.log('olength-1',big_tax_list.length)
-//      //console.log('site_on',site_on)
-//     //console.log('C.site_lookup[328] ',Object.values(C.site_lookup[328]) )
-//     if(filter.site.p_or_pst == 'primary_site'){
-//        big_tax_list = big_tax_list.filter( function(item){
-//          for(let n in item.sites){
-//            //console.log('n',n,'site',item.sites[n])
-//            //console.log('item.sites',item.sites)
-//            if(site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.sites[0]))){
-//            //if(site_on.includes(item.sites[n].toLowerCase())){
-//               item.site = item.sites[0]
-//               
-//               // new code for JMW 2024-09-12
-//               //console.log(item)
-//               
-//               if(item.otid in C.site_lookup){
-//                  item.site = C.site_lookup[item.otid].s1
-//               }
-//               return item
-//            }
-//          }
-//        })
-//         
-//     }else{
-//         //C.site_lookup[1]
-//         big_tax_list = big_tax_list.filter( function(item){
-//          //let otid = item.otid
-//          //console.log('otid',item)
-//          if(item.otid in C.site_lookup){
-//            //console.log('looking1')
-//            let to_include = Object.values(C.site_lookup[item.otid])  // C.site_lookup[559]  [ '', 'Environmental (soil/water)', 'Opportunistic pathogen' ]
-//            for(let n in site_on){  //'oral', 'nasal', 'skin','gut','vaginal','unassigned','enviro','pathogen'
-//              let glom = to_include.join(' ').toLowerCase()
-//              //console.log('site_on[n]',site_on[n],'glom',glom)
-//              if(glom.includes(site_on[n])){
-//                 //if(site_on.includes(item.sites[n].toLowerCase())){
-//                  item.site = item.sites[0]
-//                  return item
-//              }
-//            }
-//          }
-//        })
-//     }
-//     
-// 
-// //console.log('olength-2',big_tax_list.length)
-// 
-//     //
-//     //letter
-//     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
-//       helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
-//        // COOL.... filter the whole list
-//       big_tax_list = big_tax_list.filter(item => item.genus.toUpperCase().charAt(0) === vals.letter)
-//     }
-//     //
-//     // genomes
-//     if(vals.genomes == 'wgenomes'){
-//       big_tax_list = big_tax_list.filter(item => item.genomes.length >0)
-//     }else if(vals.genomes == 'wogenomes'){
-//       big_tax_list = big_tax_list.filter(item => item.genomes.length === 0)
-//     }
-//     
-//     big_tax_list.map(function(el){
-//         // do we have ecology/abundance data?  
-//         // Is abundance the only thing on the ecology page?
-//         el.ecology = 0  // change to 1 if we do
-//         
-//         if(el.status != 'Dropped'){
-//               el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || ''
-//               var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
-//               //console.log(el)
-//               var lineage_list = helpers.make_lineage(node)
-//               
-//               if(lineage_list[0] in C.taxon_counts_lookup){
-//                  //console.log('kkk',C.taxon_counts_lookup[lineage_list[0]])
-//                  if('refseq' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['refseq']).length != 0){
-//                      el.ecology = 1
-//                  }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
-//                      el.ecology = 1
-//                  }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
-//                      el.ecology = 1
-//                  }else {
-//                      el.ecology = 0
-//                  }
-//               }
-//         }
-//     })
-//     //console.log('olength-3',big_tax_list.length)
-//     //sort column
-//     if(vals.sort_rev === 'on'){
-//         if(vals.sort_col === 'otid'){
-//           big_tax_list.sort(function (b, a) {
-//             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
-//           })
-//         }else{
-//           big_tax_list.sort(function (b, a) {
-//             return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
-//           })
-//         }
-//     }else{
-//         if(vals.sort_col === 'genus'){
-//           big_tax_list.sort(function (a, b) {
-//             return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
-//           })
-//         }else if(vals.sort_col === 'otid'){
-//           big_tax_list.sort(function (a, b) {
-//             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
-//           })
-//         }else{
-//           //console.log(big_tax_list[0])
-//           //console.log('sorting by ',vals.sort_col)
-//           big_tax_list.sort(function (a, b) {
-//             return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
-//           })
-//         }
-//     }
-//     //console.log('olength-4',big_tax_list.length)
-//     return big_tax_list
-// 
-// }
+
 function get_filter_on(f){
     // for comparison stringify
     //console.log('get_filter_on')
@@ -368,15 +56,17 @@ router.get('/tax_table', function tax_table_get(req, res) {
     let filter,send_list
     
     //console.log('get-session ',req.session.ttable_filter)
-     
-    if(req.session.ttable_filter){
-        //console.log('filetr session')
-        filter = req.session.ttable_filter
-    }else{
-        //console.log('filetr from default')
-        filter = helpers.get_default_filter()
-        req.session.ttable_filter = filter
-    }
+    // QUESTION - Should filter hold through EVERYTHING?
+    filter = helpers.get_default_filter()
+    req.session.ttable_filter = filter
+    // if(req.session.ttable_filter){
+//         //console.log('filetr session')
+//         filter = req.session.ttable_filter
+//     }else{
+//         //console.log('filetr from default')
+//         filter = helpers.get_default_filter()
+//         req.session.ttable_filter = filter
+//     }
     
     send_list = helpers.apply_ttable_filter(req, filter)
     //console.log('LENGTH',send_list.length)
@@ -1430,7 +1120,7 @@ router.get('/ecology', function ecology(req, res) {
    if(!node){
       console.log('ERROR Node')
    }
-   console.log('node',node)
+   //console.log('node',node)
    let lineage_list = helpers.make_lineage(node)
    //console.log(C.taxon_counts_lookup)
    if(!lineage_list[0]){
@@ -1528,7 +1218,7 @@ router.get('/ecology', function ecology(req, res) {
         hmp_refseqv3v5_notes = 'No data – the v3v5 region of the 16S rRNA gene does not distinguish this species from its close relatives.'
     }
     //console.log('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
-    console.log('lineage_list',lineage_list)
+    //console.log('lineage_list',lineage_list)
     let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology', page)
     
    //console.log('data=>',erenv1v3_data,'<=data')

@@ -1580,42 +1580,32 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
        if(item == 'dropped'){
          req.session.ttable_filter.status.dropped = 'on'
        }
-       // if(item == 'nonoralref'){
-//          req.session.ttable_filter.status.nonoralref = 'on'
-//        }
+       
        
        
        // sites
        for(let site_code in C.tax_sites_all){
-            
             if(item == site_code){
                 //console.log('C.tax_sites_all[n]',item,C.tax_sites_all[site_code])
                req.session.ttable_filter.site[site_code] = 'on'
             }
        }
+       
        if(item == 'p_or_pst'){
          req.session.ttable_filter.site.p_or_pst = req.body.p_or_pst
        }
-       //console.log('req.session.ttable_filter.site',req.session.ttable_filter.site)
-       // if(item == 'oral'){
-//          req.session.ttable_filter.site.oral = 'on'
-//        }
-//        
-//        if(item == 'nasal'){
-//          req.session.ttable_filter.site.nasal = 'on'
-//        }
-//        if(item == 'skin'){
-//          req.session.ttable_filter.site.skin = 'on'
-//        }
-//        if(item == 'gut'){
-//          req.session.ttable_filter.site.gut = 'on'
-//        }
-//        if(item == 'vaginal'){
-//          req.session.ttable_filter.site.vaginal = 'on'
-//        }
-//        if(item == 'unassigned'){
-//          req.session.ttable_filter.site.unassigned = 'on'
-//        }
+       if(item == 'high_abund'){
+         req.session.ttable_filter.abund.high_abund = 'on'
+       }
+       if(item == 'medium_abund'){
+         req.session.ttable_filter.abund.medium_abund = 'on'
+       }
+       if(item == 'low_abund'){
+         req.session.ttable_filter.abund.low_abund = 'on'
+       }
+       if(item == 'scarce_abund'){
+         req.session.ttable_filter.abund.scarce_abund = 'on'
+       }
        //////
        if(item == 'txt_srch'){
          req.session.ttable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
@@ -1681,8 +1671,25 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     })
     //console.log('big_tax_list.length-2',big_tax_list.length)
     //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
-    
-    
+    //Abundance
+     let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on')
+     //console.log('abundOn',abund_on)
+     big_tax_list = big_tax_list.filter( function filterAbundance(item) {
+        //console.log('item',C.site_lookup[item.otid])
+        let site_item_primary = C.site_lookup[item.otid].s1
+        //console.log('site_item_primary',site_item_primary)
+        //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund' ]
+        
+        for(let n in abund_on){
+            let test = helpers.capitalizeFirst(abund_on[n].split('_')[0])
+            //console.log('test',test)
+            if(site_item_primary.includes(test)){
+               return item
+            }
+        }
+       
+      
+    })
     //site
     // create array of 'on's
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
@@ -1697,9 +1704,9 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     
     if(filter && filter.site.p_or_pst == 'primary_site'){
        big_tax_list = big_tax_list.filter( function(item){
-         if(item.otid =='999'){
-           console.log('item.sites999',item)
-         }
+         // if(item.otid =='999'){
+//            console.log('item.sites999',item)
+//          }
          
          for(let n in item.sites){
            //console.log('n',n,'site',item.sites[n])
@@ -1943,15 +1950,21 @@ module.exports.get_default_filter = function get_default_filter(){
         site:{
            oral:'on',
            nasal:'on',
-           skin:'on',
-           gut:'on',
-           vaginal:'on',
-           unassigned:'on',
-           enviro      :'on',
+           skin:'off',
+           gut:'off',
+           vaginal:'off',
+           unassigned:'off',
+           enviro      :'off',
            ref         :'off',
-           pathogen    :'on',
+           pathogen    :'off',
            p_or_pst    :'primary_site'
            
+        },
+        abund:{
+           high_abund:'on',
+           medium_abund:'on',
+           low_abund:'on',
+           scarce_abund:'on'
         },
         genomes:'both',
         text:{
@@ -1988,6 +2001,12 @@ module.exports.get_null_filter = function get_null_filter(){
            ref         :'off',
            pathogen    :'off',
            p_or_pst    :'primary_site'
+        },
+        abund:{
+           high_abund:'off',
+           medium_abund:'off',
+           low_abund:'off',
+           scarce_abund:'off'
         },
         genomes:'both',
         text:{
