@@ -71,7 +71,7 @@ width: 1500px;
 
 /* Add a red background color to the cancel button */
 .form-container .cancel{
-  background-color: red;
+  background-color: #B22222;
 }
 
 /* Add some hover effects to buttons */
@@ -88,6 +88,9 @@ width: 1500px;
    
    padding:20px;
    border-top: 2px solid black;
+}
+#pst_filter_span{
+   
 }
 </style>
 <center>Taxonomy Table Advanced Filter</center>
@@ -156,15 +159,16 @@ width: 1500px;
                 <input type='checkbox' class='filter_ckbx' id='adv_unassigned' name='unassigned' onclick='adv_update_sb()' \> Unassigned&nbsp;
             <% } %> 
             
-            <span  id='adv_toggle_cb_sites_span'>[<a class="pill pill-lightpink" href='#' onclick="adv_toggle_cb_sites('off')">Toggle On/Off</a>]</span>
+            <span  id='adv_toggle_cb_sites_span'><a class="pill pill-lightpink" href='#' onclick="adv_toggle_cb_sites('off')">Toggle CheckBoxes On/Off</a></span>
              
-             <br>&nbsp;&nbsp;&nbsp;&nbsp;** 
+            <br><br>&nbsp;&nbsp;&nbsp;&nbsp;** 
              
-                <span  id='pst_filter_span'>Filter/Search from Primary and Secondary Body Sites Instead:&nbsp;
-                <a class="pill pill-green" href='#' onclick="adv_toggle_site_filter('P')">Toggle</a> 
-                <input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>
-                </span>
-             <span style='float:right;'>See: [<a href='body_sites'>Preferred Body Sites Page</a>]</span>
+            <span id='pst_filter_span'>Filter/Search from both Primary and Secondary Body Sites Instead:&nbsp;
+                  <a class="pill pill-green" href='#' onclick="adv_toggle_site_filter('P')">Toggle</a> 
+                  <input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>
+            </span>
+                
+            <span style='float:right;'>See: [<a href='body_sites'>Preferred Body Sites Page</a>]</span>
              
          
 </td>
@@ -198,7 +202,7 @@ width: 1500px;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='adv_scarce_abund' name='scarce_abund' onclick='adv_update_sb()' \> Scarce&nbsp;
             <% } %>
-           <span  id='adv_toggle_cb_abund_span'>[<a class="pill pill-lightpink" href='#' onclick="adv_toggle_cb_abund('off')">Toggle On/Off</a>]</span>
+           <span  id='adv_toggle_cb_abund_span'><a class="pill pill-lightpink" href='#' onclick="adv_toggle_cb_abund('off')">Toggle CheckBoxes On/Off</a></span>
 </td>
 </tr>
 <tr><td class='spacer'></td></tr>
@@ -234,7 +238,7 @@ width: 1500px;
 
             
              
-             <span  id='adv_toggle_cb_status_span'>[<a class="pill pill-lightpink" href='#' onclick="adv_toggle_cb_status('off')">Toggle On/Off</a>]</span>
+             <span  id='adv_toggle_cb_status_span'><a class="pill pill-lightpink" href='#' onclick="adv_toggle_cb_status('off')">Toggle CheckBoxes On/Off</a></span>
          
 </td>
 </tr>
@@ -282,9 +286,8 @@ width: 1500px;
         <option value="type_strain">Type Strains</option>
         <!-- <option value="rrna">16S rRNA ID</option> -->
       </select>
-     <span class='button' onclick='clear_search_txt()'>Clear</span>
-      <!-- <input class="pill pill-brown pill-md" type='button' value=' Go ' onclick='tax_table_search()'> -->
-    <input id='txt_srch' type='text' name='txt_srch' placeholder="Search.." value='<%= statusfltr.text.txt_srch %>' class='dropdown'  maxlength='100' size='20'  onclick='adv_update_sb()'>
+      <span class='button' onclick='clear_search_txt()'>Clear</span>
+      <input id='txt_srch' type='text' name='txt_srch' placeholder="Search.." value='<%= statusfltr.text.txt_srch %>' class='dropdown'  maxlength='100' size='20'  onclick='adv_update_sb()'>
     </span>
            
  </td></tr>
