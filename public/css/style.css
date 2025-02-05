@@ -245,6 +245,11 @@ hr{
   border:  1px solid black;;
   color: black;
 }
+.pill-aqua {
+  background-color: #88d8c0;
+  border:  1px solid black;;
+  color: black;
+}
 .pill-mediumorchid {
   background-color: MediumOrchid;
   border:  1px solid black;;
