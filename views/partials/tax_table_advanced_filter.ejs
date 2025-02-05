@@ -1,109 +1,13 @@
-<style>
-.letter{
-  cursor:pointer;
-  color:blue;
-}
-.noletter{
-  cursor:pointer;
-  color:blue;
-}
-.alpha-list{
-   font-family: monospace;
-}
-#filter_form_div{
-   border:1px solid black;
-   padding:2px;
-}
-#form_btn{
-  width:100%;
-  color:grey;
-  
-}
-#tax_filter_form{
-   padding:0 40px;
-}
-#main_table td{
-   padding:0 30px;
-   
-   
-}
-#filter_table{
-   
-   border-collapse:colapse;
-}
-#filter_table td{
-   border-top:1px solid brown;
-   padding: 3px 3px 1px 3px;
-}
-#reset_div a{
-   font-size: 14px;
-}
-#sort_rev{
-   
-   border: 1px solid brown;
-   padding:2px 1px 1px 1px;
-   margin:1px;
-}
-.button{
-   cursor:pointer;
-   color:blue;
-   background:lightgrey;
-}
-#reset{
-   cursor:default;
-   color:grey;
-   background:lightgrey;
-}
-</style>
-<div id='filter_form_div'>
 
 <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
-<table id='main_table'>
+<table id='main_tableX'>
 <tr><td valign='top'> 
 
-<div class='alpha-select' >
-        <br>
-        <small><span class='filter-title'>Genus by Alphabet:</span>
-        [<a class='noletter' id='0' onclick="letter_submit('0');"><small>All</small></a>]
-        <br>
-        <span class='alpha-list'>
-        <a class='letter' id='A' onclick="letter_submit('A');">A</a>|<a class='letter' id='B' onclick="letter_submit('B');">B</a>|<a class='letter' id='C' onclick="letter_submit('C');">C</a>|<a class='letter' id='D' onclick="letter_submit('D');">D</a>|<a class='letter' id='E' onclick="letter_submit('E');">E</a>|<a class='letter' id='F' onclick="letter_submit('F');">F</a>|<a class='letter' id='G' onclick="letter_submit('G');">G</a>|<a class='letter' id='H' onclick="letter_submit('H');">H</a>|<a class='letter' id='I' onclick="letter_submit('I');">I</a>|<a class='letter' id='J' onclick="letter_submit('J');">J</a>|<a class='letter' id='K' onclick="letter_submit('K');">K</a>|<a class='letter' id='L' onclick="letter_submit('L');">L</a>|<a class='letter' id='M' onclick="letter_submit('M');">M</a>
-        <br><a class='letter' id='N' onclick="letter_submit('N');">N</a>|<a class='letter' id='O' onclick="letter_submit('O');">O</a>|<a class='letter' id='P' onclick="letter_submit('P');">P</a>|<a class='letter' id='Q' onclick="letter_submit('Q');">Q</a>|<a class='letter' id='R' onclick="letter_submit('R');">R</a>|<a class='letter' id='S' onclick="letter_submit('S');">S</a>|<a class='letter' id='T' onclick="letter_submit('T');">T</a>|<a class='letter' id='U' onclick="letter_submit('U');">U</a>|<a class='letter' id='V' onclick="letter_submit('V');">V</a>|<a class='letter' id='W' onclick="letter_submit('W');">W</a>|<a class='letter' id='X' onclick="letter_submit('X');">X</a>|<a class='letter' id='Y' onclick="letter_submit('Y');">Y</a>|<a class='letter' id='Z' onclick="letter_submit('Z');">Z</a>
-        
-        </span>
-        </small>
-</div>
-<br>
-<div class='alpha-select' >
-        
-        <small><span class='filter-title'>Phylum by Alphabet:</span>
-        <br>
-        <select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onchange="phylum_submit(this.value)">
-        <optgroup>
-          <option value='0'>Select a Phylum</option>
-          <% for(n in phyla) { %>
-            <% if(phyla[n] === statusfltr.phylum){ %>
-              <option selected value='<%= phyla[n] %>'><%= phyla[n] %></option>
-            <% }else{ %>
-              <option value='<%= phyla[n] %>'><%= phyla[n] %></option>
-            <% } %>
-          <% } %>
-        </optgroup>
-        </select>
-        
-        
-        
-        </small>
-</div>
-</td><td valign='top'>  
 
-<div id='reset_div'>
-  <a class='button' id='reset' href='reset_ttable'>Reset Filters</a> 
-</div> 
 
 </td><td>
         
-<table id='filter_table' border='1'>
+<table id='filter_tableX' border='1'>
 <tr>
 <td>
       
@@ -251,13 +155,6 @@
 </tr>
 
 
-
-
-
-
-
-
-
 <tr><td>
   
       
@@ -359,6 +256,4 @@
 </td></tr>  
 </table>
 </form> 
- 
-</div>
          

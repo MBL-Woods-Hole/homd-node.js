@@ -1,60 +1,4 @@
-<style>
-.letter{
-  cursor:pointer;
-  color:blue;
-}
-.noletter{
-  cursor:pointer;
-  color:blue;
-}
-.alpha-list{
-   font-family: monospace;
-}
-#filter_form_div{
-   border:1px solid black;
-   padding:2px;
-}
-#form_btn{
-  width:100%;
-  color:grey;
-  
-}
-#tax_filter_form{
-   padding:0 40px;
-}
-#main_table td{
-   padding:0 30px;
-   
-   
-}
-#filter_table{
-   
-   border-collapse:colapse;
-}
-#filter_table td{
-   border-top:1px solid brown;
-   padding: 3px 3px 1px 3px;
-}
-#reset_div a{
-   font-size: 14px;
-}
-#sort_rev{
-   
-   border: 1px solid brown;
-   padding:2px 1px 1px 1px;
-   margin:1px;
-}
-.button{
-   cursor:pointer;
-   color:blue;
-   background:lightgrey;
-}
-#reset{
-   cursor:default;
-   color:grey;
-   background:lightgrey;
-}
-</style>
+
 <div id='filter_form_div'>
 
 <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
@@ -243,9 +187,7 @@
 
 
 
-<tr><td>
-Advanced Filter (Link PLACEHOLDER)
-</td></tr>
+
 
 
  <tr><td>
@@ -256,6 +198,24 @@ Advanced Filter (Link PLACEHOLDER)
 </td></tr>  
 </table>
 </form> 
- 
+
+<!-- A button to open the popup form -->
+<!-- <button style='float:right' class="open-button" onclick="XopenForm()">Advanced Filter</button> -->
+
 </div>
-         
+
+<div class="form-popup" id="myForm">
+  <%- include("../partials/tax_table_TEST_filter.ejs") %>
+  <!-- include("../partials/tax_table_advanced_filter.ejs" -->
+</div>
+
+
+<script>
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+</script>

@@ -1679,22 +1679,20 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
         if(abund_on.length == 4){
             return item
         }else{
-        if(C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1){
-           let site_item_primary = C.site_lookup[item.otid].s1
-        //console.log('site_item_primary',site_item_primary)
-        //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund' ]
+          if(C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1){
+            let site_item_primary = C.site_lookup[item.otid].s1
+            //console.log('site_item_primary',site_item_primary)
+            //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund' ]
         
-        for(let n in abund_on){
-            let test = helpers.capitalizeFirst(abund_on[n].split('_')[0])
-            //console.log('test',test)
-            if(site_item_primary.includes(test)){
+            for(let n in abund_on){
+              let test = helpers.capitalizeFirst(abund_on[n].split('_')[0])
+              //console.log('test',test)
+              if(site_item_primary.includes(test)){
                return item
+              }
             }
+          }
         }
-        }
-        }
-       
-      
     })
     //site
     // create array of 'on's
