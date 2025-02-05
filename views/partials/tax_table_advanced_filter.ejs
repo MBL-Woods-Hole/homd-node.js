@@ -29,7 +29,7 @@
   z-index: 9;
   background-color: #DCDCDC;
   padding:10px;
-  border: 2px solid green;
+  border: 2px solid grey;
 }
 
 /* Add styles to the form container */
@@ -64,7 +64,7 @@ width: 1500px;
   padding: 5px 20px;
   border: none;
   cursor: pointer;
-  width: 100%;
+  width: 70%;
   margin-bottom:10px;
   
 }
@@ -80,20 +80,28 @@ width: 1500px;
 }
 
 #adv_filter_table{
-   border: 1px solid green;
+   border: 1px solid grey;
    width:100%;
    padding:20px;
 }
+#adv_filter_table td{
+   padding:8px 20px;
+   vertical-align: middle;
+   /* border: 1px solid grey; */
+   
+
+}
 .spacer{
    
-   padding:20px;
+   /* padding:20px; */
    border-top: 2px solid black;
+
 }
 #pst_filter_span{
    
 }
 </style>
-<center>Taxonomy Table Advanced Filter</center>
+<center><strong>Taxonomy Table Advanced Filter</strong></center>
 <form class='form-container' id='adv_tax_filter_form' name='adv_tax_filter_form' method='POST' action='tax_table'>
 
         
@@ -348,10 +356,12 @@ width: 1500px;
 </td>
  </tr>
  <tr><td class='spacer'></td></tr>
- <tr><td>
+ <tr>
+ <td><center>
  <button id='adv_form_btn' type='submit' class='btn apply' value='Submit'>Apply</button>
  <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
- </td></tr>
+ </center></td>
+ </tr>
 </table>
 
 
