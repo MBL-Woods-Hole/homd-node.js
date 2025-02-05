@@ -75,8 +75,9 @@ router.get('/tax_table', function tax_table_get(req, res) {
     //console.log('sendlist209',specific)
      //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
      let count_text = 'Number of Records Found: '+ send_list.length.toString()
-     //console.log('filter',filter)
+     //console.log('statusfltr',filter)
      let args = {filter: filter, send_list: send_list, count_txt: count_text, filter_on: get_filter_on(filter)}
+     
      renderTaxonTable(req, res, args)
      
 })

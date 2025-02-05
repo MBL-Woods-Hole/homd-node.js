@@ -482,6 +482,17 @@ function update_sb(){
     btn.innerHTML = '** Update Table **'
     
 }
+function adv_update_sb(){
+    //var form = document.getElementById("tax_filter_form");
+    
+    btn = document.getElementById("adv_form_btn");
+    btn.style.color = 'orange'
+    btn.style.background = 'black'
+    btn.style.cursor = 'pointer'
+    btn.style.fontSize ='14px';
+    btn.innerHTML = '** Update Table **'
+    
+}
 function clear_search_txt(){
    txt = document.getElementById("txt_srch");
    dd = document.getElementById("field_select");
@@ -501,22 +512,22 @@ $('#tax-box').on('scroll', function() {
     //row1 = 363 + 41 
 });
 
-function toggle_site_filter(filter_to_show) {
+function adv_toggle_site_filter(filter_to_show) {
     // either 'PST' Primary, Secondary
     // Or 'P' for primary only
     if(filter_to_show == 'PST'){
-      var link_html = "Filter/Search from Primary or Secondary Body Sites Instead: <a class=\"pill pill-green\" href='#' onclick=\"toggle_site_filter('P')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
+      var link_html = "Filter/Search from Primary or Secondary Body Sites Instead: <a class=\"pill pill-green\" href='#' onclick=\"adv_toggle_site_filter('P')\">Toggle</a>"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>"
        var title = 'Primary Body Site:'
     }else{
-      var link_html = "Filter/Search from Primary Body Sites Only: <a class=\"pill pill-lightseagreen\" href='#' onclick=\"toggle_site_filter('PST')\">Toggle</a> See [<a href='body_sites'>Preferred Body Sites Page</a>]"
+      var link_html = "Filter/Search from Primary Body Sites Only: <a class=\"pill pill-lightseagreen\" href='#' onclick=\"adv_toggle_site_filter('PST')\">Toggle</a>"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='pst_site' \>"
-      var title = 'Primary and Secondary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+      var title = 'Primary and Secondary Body Sites:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
       
     }
-    update_sb()
+    adv_update_sb()
     document.getElementById('pst_filter_span').innerHTML = link_html
-    document.getElementById('body_site_title').innerHTML = title
+    document.getElementById('adv_body_site_title').innerHTML = title
     document.getElementById('reset').style.color = 'orange'
     document.getElementById('reset').style.background = 'black'
     document.getElementById('reset').style.cursor = 'pointer'
@@ -545,10 +556,58 @@ function toggle_cb_sites(x){
         document.getElementById("enviro").checked = true;
         document.getElementById("ref").checked = true;
         document.getElementById("unassigned").checked = true;
-        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"toggle_cb_sites('off')\">Toggle On/Off</a>]"
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"adv_toggle_cb_sites('off')\">Toggle On/Off</a>]"
         document.getElementById('toggle_cb_sites_span').innerHTML = link_html
     }
     update_sb()
+}
+function adv_toggle_cb_sites(x){
+    if(x == 'off'){
+        document.getElementById("adv_oral").checked = false;
+        document.getElementById("adv_nasal").checked = false;
+        document.getElementById("adv_skin").checked = false;
+        document.getElementById("adv_gut").checked = false;
+        document.getElementById("adv_vaginal").checked = false;
+        document.getElementById("adv_pathogen").checked = false;
+        document.getElementById("adv_enviro").checked = false;
+        document.getElementById("adv_ref").checked = false;
+        document.getElementById("adv_unassigned").checked = false;
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"adv_toggle_cb_sites('on')\">Toggle On/Off</a>]"
+        document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html
+    }else{
+        document.getElementById("adv_oral").checked = true;
+        document.getElementById("adv_nasal").checked = true;
+        document.getElementById("adv_skin").checked = true;
+        document.getElementById("adv_gut").checked = true;
+        document.getElementById("adv_vaginal").checked = true;
+        document.getElementById("adv_pathogen").checked = true;
+        document.getElementById("adv_enviro").checked = true;
+        document.getElementById("adv_ref").checked = true;
+        document.getElementById("adv_unassigned").checked = true;
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"adv_toggle_cb_sites('off')\">Toggle On/Off</a>]"
+        document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html
+    }
+    adv_update_sb()
+}
+function adv_toggle_cb_abund(x){
+    if(x == 'off'){
+        document.getElementById("adv_high_abund").checked = false;
+        document.getElementById("adv_medium_abund").checked = false;
+        document.getElementById("adv_low_abund").checked = false;
+        document.getElementById("adv_scarce_abund").checked = false;
+        
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"adv_toggle_cb_abund('on')\">Toggle On/Off</a>]"
+        document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html
+    }else{
+        document.getElementById("adv_high_abund").checked = true;
+        document.getElementById("adv_medium_abund").checked = true;
+        document.getElementById("adv_low_abund").checked = true;
+        document.getElementById("adv_scarce_abund").checked = true;
+        
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"adv_toggle_cb_abund('off')\">Toggle On/Off</a>]"
+        document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html
+    }
+    adv_update_sb()
 }
 function toggle_cb_status(x){
     if(x == 'off'){
@@ -573,4 +632,28 @@ function toggle_cb_status(x){
         document.getElementById('toggle_cb_status_span').innerHTML = link_html
     }
     update_sb()
+}
+function adv_toggle_cb_status(x){
+    if(x == 'off'){
+        document.getElementById("adv_named_cultivated").checked = false;
+        document.getElementById("adv_named_uncultivated").checked = false;
+        document.getElementById("adv_unnamed_cultivated").checked = false;
+        document.getElementById("adv_unnamed_uncultivated").checked = false;
+        document.getElementById("adv_dropped").checked = false;
+        //document.getElementById("nonoralref").checked = false;
+        
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"adv_toggle_cb_status('on')\">Toggle On/Off</a>]"
+        document.getElementById('adv_toggle_cb_status_span').innerHTML = link_html
+    }else{
+        document.getElementById("adv_named_cultivated").checked = true;
+        document.getElementById("adv_named_uncultivated").checked = true;
+        document.getElementById("adv_unnamed_cultivated").checked = true;
+        document.getElementById("adv_unnamed_uncultivated").checked = true;
+        document.getElementById("adv_dropped").checked = true;
+        //document.getElementById("nonoralref").checked = true;
+        
+        var link_html = "[<a class=\"pill pill-lightpink\" href='#' onclick=\"adv_toggle_cb_status('off')\">Toggle On/Off</a>]"
+        document.getElementById('adv_toggle_cb_status_span').innerHTML = link_html
+    }
+    adv_update_sb()
 }

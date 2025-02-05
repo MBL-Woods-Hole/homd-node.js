@@ -54,11 +54,9 @@
          
          <small>
             
-            <% if(statusfltr.site.p_or_pst === 'primary_site'){ %>
-              <span class='filter-title' id='body_site_title'>Primary Body Site:</span>&nbsp;&nbsp;
-            <% }else{ %>
-              <span class='filter-title' id='body_site_title'>Primary and Secondary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <% } %>
+            
+            <span class='filter-title' id='body_site_title'>Primary Body Site:</span>&nbsp;&nbsp;
+            
             
             <% if(statusfltr.site.oral === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='oral' name='oral' onclick='update_sb()'\> Oral&nbsp;
@@ -191,7 +189,7 @@
 
 
  <tr><td>
- <button id='form_btn' type='submit' class='button' value='Submit'>Submit</button>
+ <button id='form_btn' type='submit' class='button' value='Submit'>Apply</button>
  </td></tr>
 </table>
 
@@ -199,23 +197,7 @@
 </table>
 </form> 
 
-<!-- A button to open the popup form -->
-<!-- <button style='float:right' class="open-button" onclick="XopenForm()">Advanced Filter</button> -->
-
-</div>
-
-<div class="form-popup" id="myForm">
-  <%- include("../partials/tax_table_TEST_filter.ejs") %>
-  <!-- include("../partials/tax_table_advanced_filter.ejs" -->
-</div>
 
 
-<script>
-function openForm() {
-  document.getElementById("myForm").style.display = "block";
-}
 
-function closeForm() {
-  document.getElementById("myForm").style.display = "none";
-}
-</script>
+

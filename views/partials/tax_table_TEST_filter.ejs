@@ -1,11 +1,17 @@
 
 
+<!-- The form -->
 <div class="form-popup" id="myForm">
-  <form id='adv_tax_filter_form' name='adv_tax_filter_form' method='POST' action='tax_table'>
-    <table id='adv_filter_table' border='1'>
+  <form action="/action_page.php" class="form-container">
+    <h1>Login</h1>
 
-    <tr><td><button type="submit" class="btn">Submit</button></td></tr>
-    <tr><td><button type="button" class="btn cancel" onclick="closeForm()">Close</button></td></tr>
-    </table>
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" required>
+
+    <button type="submit" class="btn">Login</button>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
   </form>
 </div>

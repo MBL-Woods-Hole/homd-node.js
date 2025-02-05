@@ -35,8 +35,9 @@ thead th { position: sticky; top: 0; }
 
    
     <%- include("../../partials/tax_table_basic_filter.ejs") %>
-    
-  <!--   <a href='advanced_taxtable_search'>Advanced Search</a> -->
+      <!-- A button to open the popup form -->
+    <button style='float:right' class="open-button" onclick="openForm()">Advanced Filter</button>
+      <!--   <a href='advanced_taxtable_search'>Advanced Search</a> -->
      <br><%= count_txt %>
 <div id='tax-box' >
 
@@ -97,6 +98,13 @@ thead th { position: sticky; top: 0; }
      <% } %>
      </tbody>
      </table>
+  
+
+
+</div>
+
+
+  
      
 </div>  <!-- end: tax-box -->
    
@@ -107,6 +115,13 @@ thead th { position: sticky; top: 0; }
        
    
   </div> <!-- end wrapper -->
+
+<div class="form-popup" id="myForm">
+  <%- include("../../partials/tax_table_advanced_filter.ejs") %>
+  <!-- include("../partials/tax_table_advanced_filter.ejs" -->
+  <!-- include("../partials/tax_table_TEST_filter.ejs" -->
+</div>
+  
 </body>
 
 </html>
@@ -160,6 +175,13 @@ thead th { position: sticky; top: 0; }
                   '#tax-box').style.visibility = "visible";
             }
         };
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
 </script>
 
 
