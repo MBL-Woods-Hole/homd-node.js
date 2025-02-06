@@ -452,20 +452,22 @@ router.get('/genome_table', function genome_table(req, res) {
     // Initial page = 1 for fast load
     // no paging in POST side
     let pager_txt = ''
+    let space = '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'
     if(filter.paging === 'on'){
       ret = apply_pages(send_list, filter, page_data)
       send_list = ret.glist
       page_data = ret.pd
       //console.log('get init pd',page_data)
       //console.log(page_data)
+      
       if(count_before_paging > send_list.length){
          //console.log('must add pager txt')
-         pager_txt = "; [page: <span class='red-text gray'>"+page_data.page + "</span><span class='gray'> (of "+page_data.number_of_pages+"p)</span> ]"
+         pager_txt = "page: <span class='red-text gray'>"+page_data.page + "</span><span class='gray'> (of "+page_data.number_of_pages+"p)</span>"+space
          let next = (page_data.page + 1).toString()
          let prev = (page_data.page - 1).toString()
          pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
          pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
-         pager_txt += "   [[Jump to Page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
+         pager_txt += space+"Jump to Page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
          for(var i=1;i<=page_data.number_of_pages;i++){
             if(i == parseInt(page_data.page)){
               pager_txt +='<option selected value="'+i+'">pg: '+i+'</option>'
@@ -473,12 +475,15 @@ router.get('/genome_table', function genome_table(req, res) {
               pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
             }
          }
-         pager_txt += "</select>]] (<a href='genome_table?page=1'>Return to Page1</a>)"
+         pager_txt += "</select>"+space+"(<a href='genome_table?page=1'>Return to Page1</a>)"
       }
     }
     page_data.count_before_paging = count_before_paging
     //console.log('pagedata',page_data)
-    count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
+    if(pager_txt != ''){
+        pager_txt = space+pager_txt
+    }
+    count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+ pager_txt
     // apply sub-species to species
     send_list = apply_sspecies(send_list)
     args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
@@ -500,18 +505,19 @@ router.post('/genome_table', function genome_table_filter(req, res) {
     page_data = init_page_data()
     page_data.page=1
     pager_txt = ''
+    let space = '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'
     if(filter.paging === 'on'){
        ret = apply_pages(send_list, filter, page_data)
        send_list = ret.glist
        page_data = ret.pd
        //console.log('pd1',page_data)
        if(count_before_paging > send_list.length){
-         pager_txt = "; [page: <span class='red-text gray'>"+page_data.page + "</span><span class='gray'> (of "+page_data.number_of_pages+"p)</span> ]"
+         pager_txt = space+"page: <span class='red-text gray'>"+page_data.page + "</span><span class='gray'> (of "+page_data.number_of_pages+"p)</span>"
          let next = (page_data.page + 1).toString()
          let prev = (page_data.page - 1).toString()
          pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
          pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
-         pager_txt += "   [[Jump to Page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
+         pager_txt += space+"Jump to Page: <select onchange=\"document.location.href='genome_table?page='+this.value\" style='border: 1px solid orange;'>"
          for(var i=1;i<=page_data.number_of_pages;i++){
             if(i == parseInt(page_data.page)){
               pager_txt +='<option selected value="'+i+'">pg: '+i+'</option>'
@@ -519,11 +525,12 @@ router.post('/genome_table', function genome_table_filter(req, res) {
               pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
             }
          }
-         pager_txt += "</select>]] (<a href='genome_table?page=1'>Return to Page1</a>)"
+         pager_txt += "</select>"+space+"(<a href='genome_table?page=1'>Return to Page1</a>)"
       }
     }
+    
     page_data.count_before_paging = count_before_paging
-    count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
+    count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+  pager_txt
     //console.log('pd2',page_data)
     send_list = apply_sspecies(send_list)
     //console.log('pt',pager_txt)
