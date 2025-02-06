@@ -516,11 +516,11 @@ function adv_toggle_site_filter(filter_to_show) {
     // either 'PST' Primary, Secondary
     // Or 'P' for primary only
     if(filter_to_show == 'PST'){
-      var link_html = "Filter/Search from both Primary and Secondary Body Sites Instead: <a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_site_filter('P')\">Toggle</a>"
+      var link_html = "Filter/Search from both Primary and Secondary Body Sites Instead: <a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_site_filter('P')\">Toggle</a>"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>"
        var title = 'Primary Body Site:'
     }else{
-      var link_html = "Filter/Search from Primary Body Sites Only: <a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_site_filter('PST')\">Toggle</a>"
+      var link_html = "Filter/Search from Primary Body Sites Only: <a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_site_filter('PST')\">Toggle</a>"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='pst_site' \>"
       var title = 'Primary and Secondary Body Sites:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
       
@@ -572,7 +572,7 @@ function adv_toggle_cb_sites(x){
         document.getElementById("adv_enviro").checked = false;
         document.getElementById("adv_ref").checked = false;
         document.getElementById("adv_unassigned").checked = false;
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_sites('on')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('on')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html
     }else{
         document.getElementById("adv_oral").checked = true;
@@ -584,7 +584,7 @@ function adv_toggle_cb_sites(x){
         document.getElementById("adv_enviro").checked = true;
         document.getElementById("adv_ref").checked = true;
         document.getElementById("adv_unassigned").checked = true;
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_sites('off')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('off')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html
     }
     adv_update_sb()
@@ -616,7 +616,7 @@ function adv_toggle_cb_abund(x){
         document.getElementById("adv_low_abund").checked = false;
         document.getElementById("adv_scarce_abund").checked = false;
         
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_abund('on')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('on')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html
     }else{
         document.getElementById("adv_high_abund").checked = true;
@@ -624,7 +624,7 @@ function adv_toggle_cb_abund(x){
         document.getElementById("adv_low_abund").checked = true;
         document.getElementById("adv_scarce_abund").checked = true;
         
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_abund('off')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('off')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html
     }
     adv_update_sb()
@@ -662,7 +662,7 @@ function adv_toggle_cb_status(x){
         document.getElementById("adv_dropped").checked = false;
         //document.getElementById("nonoralref").checked = false;
         
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_status('on')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('on')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_status_span').innerHTML = link_html
     }else{
         document.getElementById("adv_named_cultivated").checked = true;
@@ -672,7 +672,7 @@ function adv_toggle_cb_status(x){
         document.getElementById("adv_dropped").checked = true;
         //document.getElementById("nonoralref").checked = true;
         
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_status('off')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('off')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_status_span').innerHTML = link_html
     }
     adv_update_sb()
