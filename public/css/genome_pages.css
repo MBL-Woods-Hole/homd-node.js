@@ -44,9 +44,12 @@
  } 
 
 
+
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
         content: " \25B4\25BE" 
-    }
+}
+
+
 .red {
 	color: #cc0000;
 }
@@ -87,29 +90,42 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     color:purple
 }
 
-
-.col1{
-   width: 70px;
+#gnom-table .col0{
+   width: 40px;
 }
-.col2 {
-    width: 80px;
+#gnom-table .col1{
+   width: 120px;
 }
-.col3 {
-    width: 130px;
+#gnom-table .col2 {
+    width: 70px;
 }
-.col4 {
-    width: 160px;
+#gnom-table .col3 {
+    
 }
-.col5 {
-    width: 180px;
+#gnom-table .col4 {
+    
 }
-.col9{
+#gnom-table .col5 {
+    
+}
+#gnom-table .col6 {
+    width: 50px;
+}
+#gnom-table .col7 {
+    width: 60px;
+}
+#gnom-table .col8 {
+    width: 90px;
+}
+#gnom-table .col9{
+   width: 60px;
+}
+#gnom-table .col10{
    width: 320px;
 }
-.col10{
-   width: 100px;
+#gnom-table .col11 {
+    width: 130px;
 }
-
 
 .tax_name{
   font-size:x-small;
@@ -120,8 +136,12 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .center {
     text-align:center;
 }
-
-
+.right {
+    text-align:right;
+}
+.left {
+    text-align:left;
+}
 #phylum-filter{
   padding:15px 0 0 0;
   

@@ -651,7 +651,7 @@ function create_genome_table (gids, source, type, startText) {
       // per FDewhirst: species needs to be unencumbered of genus for this table
       let species = obj.species.replace(obj.genus,'').trim()
       let hmt = helpers.make_otid_display_name(obj.otid)
-      const r = [obj.gb_asmbly, gid, hmt, obj.genus, obj.species, obj.ncontigs, obj.tlength, obj.ccolct, obj.gc]
+      const r = [obj.gb_asmbly, gid, hmt, obj.genus, obj.species, obj.ncontigs, obj.tlength, obj.strain, obj.gc]
       txt += r.join('\t') +'\n'
     }
   }

@@ -13,18 +13,25 @@
 #filter_form_div{
    border:1px solid black;
    padding:2px;
+   width:100%;
 }
 #form_btn{
   width:100%;
   color:grey;
 }
-#main_table td{
-   padding:0 30px;
+#main_table{
+   width:100%;
    /* border:1px solid red; */
    
 }
-#filter_table{
+#main_table td{
+   padding:0 30px;
    
+   
+}
+#filter_table{
+   /* border:1px solid green; */
+   width:90%;
    border-collapse:colapse;
 }
 #filter_table td{
@@ -97,11 +104,11 @@
 		<span class='button' onclick='clear_phylum()'>Clear</span>
 		<span style='float:right;'>Paging: 
 		  <% if(fltr.paging === 'on'){ %>
-		    <input type='radio' checked name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
-		    <input type='radio'         name='paging' value='off' onclick='update_sb()' > Off&nbsp;
+		    <input type='radio' checked name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
+		    <input type='radio'         name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
 		  <% }else{ %>
-		    <input type='radio'         name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
-		    <input type='radio' checked name='paging' value='off' onclick='update_sb()' > Off&nbsp;
+		    <input type='radio'         name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
+		    <input type='radio' checked name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
 		  <% } %>
 		  
 		</span>
@@ -150,10 +157,10 @@
         <% }else{ %>
         <input type='radio' name='sort_col' value='species' onclick='update_sb()' > Species&nbsp;
         <% } %>
-        <% if(fltr.sort_col === 'ccolct'){ %>
-        <input type='radio' checked name='sort_col' value='ccolct' onclick='update_sb()' > Strain&nbsp;
+        <% if(fltr.sort_col === 'strain'){ %>
+        <input type='radio' checked name='sort_col' value='strain' onclick='update_sb()' > Strain&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='ccolct' onclick='update_sb()' > Strain&nbsp;
+        <input type='radio' name='sort_col' value='strain' onclick='update_sb()' > Strain&nbsp;
         <% } %>
         <% if(fltr.sort_col === 'ncontigs'){ %>
         <input type='radio' checked name='sort_col' value='ncontigs' onclick='update_sb()' > Contigs

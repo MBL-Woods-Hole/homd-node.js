@@ -48,7 +48,7 @@ first_genomes_query_no_flagid ="""
     ncontigs,
     tlength,
 
-    culture_strain as ccolct,
+    strain_or_isolate as strain,
     submitter as submitter,
 
     ncbi_bioproject as ncbi_bpid,
@@ -105,7 +105,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     genome['ncontigs']  = ''   # table 1
     #genome['submitter'] = ''   # table 1
     genome['tlength']   = ''   # table 1
-    genome['ccolct']    = ''  # table 1
+    genome['strain']    = ''  # table 1
     genome['gc']        = ''   # table 2
     #genome['wgs']        = ''   # 
     #genome['ncbi_taxonid'] = ''   # table 2
@@ -143,7 +143,7 @@ def run_first(args):
             taxonObj['ncontigs']    = obj['ncontigs']
             #taxonObj['submitter']   = obj['submitter']
             taxonObj['tlength']     = obj['tlength']
-            taxonObj['ccolct']      = obj['ccolct']
+            taxonObj['strain']      = obj['strain']
             taxonObj['gc']          = obj['gc']
             #taxonObj['wgs']          = obj['wgs']
             #taxonObj['ncbi_taxonid'] = obj['ncbi_taxonid']

@@ -14,9 +14,20 @@ thead th { position: sticky; top: 0; }
 <% ginfo = JSON.parse(data) %>
 <% fltr = JSON.parse(filter) %>
 <% phyla = JSON.parse(phyla) %>
-
+<% pgdata = JSON.parse(pd) %>
 <% filtergid = fltr.gid %>
 <% var cfg = JSON.parse(config) %> 
+
+<!-- 
+pagedata {
+  rows_per_page: 500,
+  page: 2,
+  trecords: 8622,
+  number_of_pages: 18,
+  show_page: 2,
+  start_count: 501
+}
+ -->
 
 
 <body>
@@ -52,18 +63,18 @@ thead th { position: sticky; top: 0; }
 <div id='genome-box'>
     <table id='gnom-table' class='table table-hover table-condensed ' style='background: lightgrey;'>
     <thead>
-    <tr>
-    <th class='col3' scope="col" >GenBank<br>Assembly ID</th>
-    <th class='col2' >Taxon-ID</th>
-    <th class='' scope="col" >Genus</th>
-    <th class='' scope="col" >Species</th>
-    <th class='col3' scope="col" >Strain/Culture</th>
-
-    <th class='col1' scope="col" >Contigs</th>
-    <th class='col2' scope="col" >Combined<br>Length</th>
-    <th class='col1' scope="col" >GC(%)</th>
-    <th class="col9 sorttable_nosort"  >Genome Info and Tools</th>
-    <th class="col10 sorttable_nosort" >Annotations</th>
+    <tr><th class='col0' ></th>
+    <th class='col1' scope='col' >GenBank<br>Assembly ID</th>
+    <th class='col2' scope='col' nowrap>Taxon-ID</th>
+    <th class='col3' scope='col' >Genus</th>
+    <th class='col4' scope='col' >Species</th>
+    <th class='col5' scope='col' >Strain or Isolate</th>
+    <th class='col6' title='MAG: Metagenome-Assembled Genome' scope='col' >MAG</th>
+    <th class='col7' scope='col' >Contigs</th>
+    <th class='col8' scope='col' >Combined<br>Length</th>
+    <th class='col9' scope='col' >GC(%)</th>
+    <th class="col10 sorttable_nosort" scope='col' >Genome Info and Tools</th>
+    <th class="col11 sorttable_nosort" scope='col' >Annotations</th>
     </tr>
     </thead>
     
@@ -72,11 +83,18 @@ thead th { position: sticky; top: 0; }
     <% }else{ %>
     
     <tbody>
+    <% rowcount = pgdata.start_count %>
+    
     <% for(n in ginfo){ %>
       
       <% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
       <% rowid =  ginfo[n].gid.split('.')[0]; %>
       <tr id='<%= rowid %>' >
+         <% if(filter_on == 'off'){  %>
+            <td class='right'><%= rowcount %></td>
+        <% }else{ %>
+            <td class='right'><%= parseInt(n) + 1 %></td>
+      <% } %>
         <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gb_asmbly %></a></td>
         <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
         <td class='tax_name' title='<%= ginfo[n].genus %>'><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].genus %></em></a></td>
@@ -84,8 +102,8 @@ thead th { position: sticky; top: 0; }
         <td class='tax_name' title="<%- ginfo[n].species %> <%- ginfo[n].subspecies %>"><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>&gid=<%= ginfo[n].gid %>'><em><%- ginfo[n].species %></em>
         <%- ginfo[n].subspecies %></a></td>
         
-        <td class='tax_name'><em><%= ginfo[n].ccolct %></em></td>
-    
+        <td class='tax_name'><em><%= ginfo[n].strain %></em></td>
+        <td class='tax_name'></td>
         <td class='center'><%= ginfo[n].ncontigs %></td>
         <td class='center'><%= ginfo[n].tlength %></td>
     
@@ -112,6 +130,7 @@ thead th { position: sticky; top: 0; }
             <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
             <!-- <span class="badge badge-light">HOMD</span></td> -->
       </tr>
+      <% rowcount = rowcount + 1 %>
     <% } %>
 
     </tbody>

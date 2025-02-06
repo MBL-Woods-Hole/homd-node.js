@@ -137,7 +137,7 @@ function renderGenomeTable(req, res, args) {
        gcount +=  alltax_list[n].genomes.length
     }
     //let alltax_list = Object.values(C.genome_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
-    //console.log('args',args)
+    //console.log('args.filter_on',args.filter_on)
     res.render('pages/genome/genometable', {
         title: 'HOMD :: Genome Table', 
         pgname: 'genome/genome_table', // for AboutThisPage
@@ -146,7 +146,7 @@ function renderGenomeTable(req, res, args) {
         pgtitle: 'Genome Table',
         data: JSON.stringify(args.send_list),
         filter: JSON.stringify(args.filter),
-        rows_per_page: args.pd.rows_per_page,
+        pd: JSON.stringify(args.pd),
         gcount: gcount, 
         tcount: taxa_wgenomes.length,
         phyla: JSON.stringify(helpers.get_all_phyla().sort()),
@@ -447,7 +447,7 @@ router.get('/genome_table', function genome_table(req, res) {
     }else{
        send_list = apply_gtable_filter(req, filter)
     }
-    console.log('send_list[0]',send_list[0])
+    //console.log('send_list[0]',send_list[0])
     count_before_paging = send_list.length
     // Initial page = 1 for fast load
     // no paging in POST side
@@ -473,10 +473,12 @@ router.get('/genome_table', function genome_table(req, res) {
               pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
             }
          }
-         pager_txt += "</select>]]"
+         pager_txt += "</select>]] (<a href='genome_table?page=1'>Return to Page1</a>)"
       }
     }
-    count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
+    page_data.count_before_paging = count_before_paging
+    //console.log('pagedata',page_data)
+    count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
     // apply sub-species to species
     send_list = apply_sspecies(send_list)
     args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
@@ -517,10 +519,11 @@ router.post('/genome_table', function genome_table_filter(req, res) {
               pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
             }
          }
-         pager_txt += "</select>]]"
+         pager_txt += "</select>]] (<a href='genome_table?page=1'>Return to Page1</a>)"
       }
     }
-    count_txt = 'Number of Records Found: '+count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
+    page_data.count_before_paging = count_before_paging
+    count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ ' Showing: '+send_list.length.toString() + pager_txt
     //console.log('pd2',page_data)
     send_list = apply_sspecies(send_list)
     //console.log('pt',pager_txt)
@@ -551,7 +554,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
   // filter out empties then map to create list of sorted strings
   const genomeList = glist.filter(item => item.genus !== '')
     .map((el) => {
-      return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, ccolct: el.ccolct }
+      return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, strain: el.strain }
     })
   res.render('pages/genome/genome_select', {
     title: 'HOMD :: JBrowse', 
@@ -783,7 +786,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
        ssp = C.genome_lookup[selected_gid].subspecies+' '
     }
     if(C.genome_lookup[selected_gid]){
-        organism = C.genome_lookup[selected_gid].genus +' '+C.genome_lookup[selected_gid].species+' '+ssp+C.genome_lookup[selected_gid].ccolct
+        organism = C.genome_lookup[selected_gid].genus +' '+C.genome_lookup[selected_gid].species+' '+ssp+C.genome_lookup[selected_gid].strain
     }
     let html = "<table id='annotation-table' class='table sortable'>"
     html += '<tr>'
@@ -948,7 +951,7 @@ router.post('/orf_search_full', function orf_search_full (req, res) {
                if(C.genome_lookup[tmpgid].subspecies){
                   ssp = C.genome_lookup[tmpgid].subspecies+' '
                }
-               let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].ccolct
+               let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].strain
                org_list[tmpgid] = organism
             }
         }
@@ -1035,7 +1038,7 @@ router.post('/orf_search', function orf_search (req, res) {
                    if(C.genome_lookup[tmpgid].subspecies){
                       ssp = C.genome_lookup[tmpgid].subspecies+' '
                    }
-                   let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].ccolct
+                   let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].strain
                    org_list[tmpgid] = organism
                 }
             }
@@ -1219,7 +1222,7 @@ router.post('/annotation_filter', function annotation_filter (req, res) {
     // filter out empties then map to create list of sorted strings
     const allAnnosObj = glist.filter(item => item.genus !== '')
       .map((el) => {
-      return { gid: el.gid, org: el.genus+' '+el.species+' '+el.ccolct }
+      return { gid: el.gid, org: el.genus+' '+el.species+' '+el.strain }
     })
     
     let pageData = {}
@@ -1327,7 +1330,7 @@ router.get('/explorer', function explorer (req, res) {
     .map((el) => {
       
       //return { gid: el.gid, org: el.organism }
-      return { gid: el.gid, org: el.genus+' '+el.species+' '+el.ccolct }
+      return { gid: el.gid, org: el.genus+' '+el.species+' '+el.strain }
     })
   
   if (!gid || gid.toString() === '0') {
@@ -1477,7 +1480,7 @@ router.get('/blast_per_genome', function blast_per_genome(req, res) {
   // filter out empties then map to create list of sorted strings
   const genomeList = glist.filter(item => item.genus !== '')
     .map((el) => {
-      return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, ccolct: el.ccolct }
+      return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, strain: el.strain }
     })
   
   res.render('pages/genome/genome_select', {
@@ -1524,7 +1527,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   //console.log(req.body)
   
   //console.log(CFG.BLAST_URL_BASE)
-  let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].ccolct 
+  let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].strain 
   //console.log(C.genome_lookup[req.body.gid])
   if(req.session.gtable_filter){
         req.session.gtable_filter.gid = req.body.gid
@@ -1883,8 +1886,8 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
   if (searchField === 'accession') {
     //console.log('SEARCHING')
     sendList = gidObjList.filter(item => item.gb_asmbly.toLowerCase().includes(searchText))
-  } else if (searchField === 'ccolct') {
-    sendList = gidObjList.filter(item => item.ccolct.toLowerCase().includes(searchText))
+  } else if (searchField === 'strain') {
+    sendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText))
  //} else if (searchField === 'organism') {
    // sendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
   //} else if (searchField === 'io') {
@@ -1931,7 +1934,7 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
     //  tempObj[tmpSendList[n].gid] = tmpSendList[n]
     //}
     // culture collection
-    tmpSendList = gidObjList.filter(item => item.ccolct.toLowerCase().includes(searchText))
+    tmpSendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText))
     // for uniqueness convert to object::gid
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
