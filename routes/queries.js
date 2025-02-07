@@ -90,7 +90,7 @@ module.exports.get_lineage_query = (otid) => {
 // }
 module.exports.get_genome = (gid) => {   // always NCBI for taxon description
   
-  let qSelectGenome = "SELECT  culture_strain,organism,coverage,status,"
+  let qSelectGenome = "SELECT  strain_or_isolate,organism,coverage,status,"
         qSelectGenome +=' date,'
         qSelectGenome +=' submitter,'
         qSelectGenome +=' ncontigs,'
