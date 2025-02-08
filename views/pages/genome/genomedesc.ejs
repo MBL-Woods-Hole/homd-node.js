@@ -6,19 +6,60 @@
 #table_div {
   
   border:1px solid grey;
-  padding:10px 100px
+  padding:10px 10px;
 }
-#gnomdesc-table{
-  width:80%;
+#outer_genome_table{
+    width:100%;
+    /* border:1px solid red; */
+}
+#outer_genome_table td{
+    
+    vertical-align:top;
+    padding:10px 40px;
+}
+#gnomdesc-table-chars{
+  width:100%;
+  /* padding-right:10px; */
   border:1px solid black;
   background:lightgrey;
+  border-collapse:collapse;
 }
-#gnomdesc-table td{
-  padding:3px;
+#gnomdesc-table-chars td{
+  padding:5px 3px;
+  border:1px solid darkgreen;
+  width:50%;
 }
-#gnomdesc-table tr:nth-child(even) { 
-    background-color: #D79A9A; 
- } 
+#gnomdesc-table-chars th{
+  padding:15px;
+  background:white;
+  border:1px solid darkgreen;
+}
+#gnomdesc-table-ncbi{
+  width:100%;
+  /* padding:10px; */
+  border:1px solid black;
+  background:lightgrey;
+  border-collapse:collapse;
+}
+#gnomdesc-table-ncbi td{
+  padding:5px 3px;
+  border:1px solid darkgreen;
+  width:50%;
+}
+#gnomdesc-table-ncbi th{
+  padding:15px;
+  background:white;
+  border:1px solid darkgreen;
+}
+.field{
+  background:#f3d17c;  /* 9ca590; */
+}
+.value{
+  background:#d0edef; 
+  }
+.inner-value{
+   
+}
 .gd-button{
   background-color: lightgrey;
   color: black;
@@ -51,7 +92,7 @@
 <center>    
         
         <div class='title'>Genome Meta Information: 
-        <i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.culture_strain %></div>
+        <i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.strain_or_isolate %> (<%= ginfo.gb_assembly %>)</div>
 
 <% if(Object.keys(ginfo).length ==0 ) { %>
     <br><br>No Data Found for Genome: <%= gid %>        
@@ -74,63 +115,23 @@
     </div>
     <div id='table_div' >                       
 
-
-     <table id='gnomdesc-table' class="table " border='0' >
-    <tr class=""><td>Genome Assembly Name</td><td><%= ginfo.ncbi_assembly_name %></td></tr>
-    <tr class=""><td>Organism Name (as deposited)</td><td><i><%= ginfo.organism %></i></td></tr>
-    <tr class=""><td>Organism Name (in use)</td><td><i><%= ginfo.genus %> <%= ginfo.species %></i></td></tr>
-    <tr class=""><td>Infraspecific Name</td><td><%= ginfo.culture_strain %></td></tr>
-    <tr class=""><td>BioSample</td>
-      <td><%= ginfo.ncbi_biosample %>
-        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_biosample %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
-      </td>
-    </tr>
-    <tr class=""><td>BioProject</td>
-      <td><%= ginfo.ncbi_bioproject %>
-        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bioproject %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
-      </td>
-    </tr>
-    <tr class=""><td>Submitter or Sequencing Center</td><td><%= ginfo.submitter %></td></tr>
-    <tr class=""><td>Date</td><td><%= ginfo.date %></td></tr>
-    <tr class=""><td>Assembly Type</td><td><%= ginfo.assembly_type %></td></tr>
-    <tr class=""><td>Assembly Method</td><td><%= ginfo.method %></td></tr>
-    <tr class=""><td>Assembly Level</td><td><%= ginfo.assembly_level %></td></tr>
+<table id='outer_genome_table' >
+<tr><td>
+<table id='gnomdesc-table-chars' class="table gnomdesc-table" border='0' >
+    <tr class="header" ><th colspan='2'>Genome Characteristics</th></tr>
+    <tr class="header" ><th>Fields</th><th>Values</th></tr>
+    <tr class=""><td class='field'>HOMD Genome-ID</td><td class='value'><span class='inner-value'><%= ginfo.gb_assembly %></span></td></tr>
+    <tr class=""><td class='field'>HOMD Taxon-ID</td><td class='value'><span class='inner-value'><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= taxidfullnameplus %></a></span></td></tr>
+    <tr class=""><td class='field'>Organism Name (as deposited)</td><td class='value'><span class='inner-value'><i><%= ginfo.organism %></i></span></td></tr>
+    <tr class=""><td class='field'>Organism Name (in use)</td><td class='value'><span class='inner-value'><i><%= ginfo.genus %> <%= ginfo.species %></i></span></td></tr>
+    <tr class=""><td class='field'>Strain or Isolate</td><td class='value'><span class='inner-value'><%= ginfo.strain_or_isolate %></span></td></tr>
      
-     
-    <tr class=""><td>GenBank Assembly Accession</td>
-       <td><%= ginfo.gb_assembly %>
-         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
-         &nbsp;&nbsp;[<a title='Genome Taxonomy Database' href='https://gtdb.ecogenomic.org/genome?gid=<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">GTDB</a>]
-       </td>
-    </tr>
-    
-    <tr class=""><td>RefSeq Assembly Accession</td>
-       <td><%= ginfo.refseq_assembly %>
-         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.refseq_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
-       </td>
-    </tr>
-     
-    
-     <tr class=""><td>HOMD Sequence ID</td><td><%= ginfo.gid %></td></tr>
-     <tr class=""><td>HOMD Taxon ID</td><td><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= taxidfullnameplus %></a></td></tr>
-     <tr class=""><td title='Whole Genome Sequence'>WGS Project</td><td><a href='https://www.ncbi.nlm.nih.gov/Traces/wgs/<%= ginfo.wgs %>' target='_blank' rel="noopener noreferrer"><%= ginfo.wgs %></a></td></tr>
-     
-     
-     
-     <tr class=""><td>Sequencing Status</td><td><%= ginfo.status %></td></tr>
-     <tr class=""><td>NCBI TaxonID</td><td><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.ncbi_taxonid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_taxonid %></a></td></tr>
-     
-    
-     
-    
-     
-     <tr class=""><td>Sequencing Technology</td><td><%= ginfo.seqtech %></td></tr>
-     <tr class=""><td>Genome Coverage</td><td><%= ginfo.coverage %></td></tr>
-     
-     <tr class=""><td>Contigs and Singlets</td>
-     <td>
+    <tr class=""><td class='field'>Sequencing Technology</td><td class='value'><span class='inner-value'><%= ginfo.seqtech %></span></td></tr>
+    <tr class=""><td class='field'>Genome Coverage</td><td class='value'><span class='inner-value'><%= ginfo.coverage %></span></td></tr>
+    <tr class=""><td class='field'>Contigs and Singlets</td>
+    <td class='value'><span class='inner-value'>
        <% if(contigs.length == 0){ %>
-          no contigs found  <!-- localhost only -->
+          no contigs found (localhost only) <!-- localhost only -->
        <% } else if(contigs.length == 1){ %>
           <span id='select-contig'><%= contigs[0].contig %></span>
           <small>
@@ -149,24 +150,23 @@
           &nbsp;&nbsp;[<a href='#' onclick="open_ncbi('select')">Linkout to NCBI</a>]
           </small>
        <% } %>
-       <!-- 
-<span id='jbrowse_offer_span'>
-       <% if(contigs[0]){%>
-         <a href="<%= cfg.JBROWSE_URL %>/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=<%= ginfo.gid %>|<%= contigs[0].contig %>" target='_blank'>Open in Genome Viewerxxx</a>
-       <% } %>
-       </span>
- -->
-       
-     </td></tr>
-     <tr class=""><td>Total Sequence Length</td><td><%= ginfo.tlength %></td></tr>
-     <tr class=""><td>GC Percentage</td><td><%= ginfo.gc %></td></tr>
-     
-     <tr class="">
-       <td>CRISPR-cas</td>
+    </span></td></tr>
+    
+    <tr class=""><td class='field'>Total Sequence Length</td><td class='value'><span class='inner-value'><%= ginfo.tlength %> (bp)</td></tr>
+    <tr class=""><td class='field'>GC Percentage</td><td class='value'><span class='inner-value'><%= ginfo.gc %></span></td></tr>
+    <tr class=""><td class='field'>CheckM</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>CheckM2</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>MAG (Metagenome-Assembled Genome)</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>5S Count</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>16S Count</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>23S Count</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>tRNA Count</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class="">
+      <td class='field'>CRISPR-cas</td>
        <% if(crispr === 0){ %>
-           <td><small>No Available Data</small></td>
+           <td class='value'><span class='inner-value'><small>No Available Data</small></span></td>
        <% }else{ %>
-          <td class=''>
+          <td  class='value'><span class='inner-value'>
               <% if(crispr === "A"){ %>
                  Ambiguous
                  [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= ginfo.gid %>" target='_blank'>HOMD FTP Site</a>]
@@ -181,10 +181,69 @@
               <% } %>
              
              
-           </td>
+           </span></td>
        <% } %>
-     </tr>
-     </table>
+    </tr>
+</table>
+</td>  </tr><tr>  <td>
+<table id='gnomdesc-table-ncbi' class="table gnomdesc-table" border='0' >
+
+    <tr class="header" ><th colspan='2'>NCBI Genome Metadata</th class='value'></tr>
+    <tr class="header" ><th>Fields</th><th>Values</th></tr>
+    <tr class=""><td class='field'>Genome Assembly Name</td><td class='value'><span class='inner-value'><%= ginfo.ncbi_assembly_name %></span></td></tr>
+    <tr class=""><td class='field'>BioSample</td>
+      <td class='value'><span class='inner-value'><%= ginfo.ncbi_biosample %>
+        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_biosample %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+      </span></td>
+    </tr>
+    <tr class=""><td class='field'>BioProject</td>
+      <td class='value'><span class='inner-value'><%= ginfo.ncbi_bioproject %>
+        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bioproject %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+      </span></td>
+    </tr>
+    <tr class=""><td class='field'>Submitter</td><td class='value'><span class='inner-value'><%= ginfo.submitter %></span></td></tr>
+    <tr class=""><td class='field'>Date Submitted</td><td class='value'><span class='inner-value'><%= ginfo.date %></span></td></tr>
+    <tr class=""><td class='field'>Assembly Type</td><td class='value'><span class='inner-value'><%= ginfo.assembly_type %></span></td></tr>
+    <tr class=""><td class='field'>Assembly Method</td><td class='value'><span class='inner-value'><%= ginfo.method %></span></td></tr>
+    <tr class=""><td class='field'>Assembly Level</td><td class='value'><span class='inner-value'><%= ginfo.assembly_level %></span></td></tr>
+    <tr class=""><td class='field'>GenBank Assembly Accession</td>
+       <td class='value'><span class='inner-value'><%= ginfo.gb_assembly %>
+         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+         &nbsp;&nbsp;[<a title='Genome Taxonomy Database' href='https://gtdb.ecogenomic.org/genome?gid=<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">GTDB</a>]
+       </span></td>
+    </tr>
+    
+    <tr class=""><td class='field'>RefSeq Assembly Accession</td>
+       <td class='value'><span class='inner-value'><%= ginfo.refseq_assembly %>
+         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.refseq_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+       </span></td>
+    </tr>
+    <tr class=""><td class='field'>Sequencing Status</td><td class='value'><span class='inner-value'><%= ginfo.status %></span></td></tr>
+    
+    <tr class=""><td class='field' title='Whole Genome Sequence'>WGS Project</td><td class='value'><span class='inner-value'><a href='https://www.ncbi.nlm.nih.gov/Traces/wgs/<%= ginfo.wgs %>' target='_blank' rel="noopener noreferrer"><%= ginfo.wgs %></span></a></td></tr>
+    <tr class=""><td class='field'>NCBI TaxID</td><td class='value'><span class='inner-value'><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.ncbi_taxonid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_taxonid %></a></span></td></tr>
+    <tr class=""><td class='field'>Version Status</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Isolation Source</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>CDS Count</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Country</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Isolate</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Isolation Source</td><td class='value'><span class='inner-value'><%= ginfo.isolate_origin %></span></td></tr>
+    <tr class=""><td class='field'>Latitude / Longitude</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Molecule Count</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Refseq Category</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>seq_rel_date</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Spanned Gaps</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Species Taxid</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>SSU Count</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Total Gap Length</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>translation_table</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>tRNA Count (total)</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Genome Representation</td><td class='value'><span class='inner-value'><%= ginfo.genome_rep %></span></td></tr>
+     
+</table>
+</td></tr>
+</table>  <!-- Outer table -->
+
 <% } %>
 </div>
 </center>
