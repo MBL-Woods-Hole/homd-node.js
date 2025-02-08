@@ -44,6 +44,7 @@
 /* The popup form - hidden by default */
 .form-popup {
   display: none;
+  /* visibility: hidden; */
   position: fixed;
   top: 150px;
   left: 150px;
@@ -128,6 +129,8 @@ width: 1500px;
 
 
 </style>
+<!-- <div class="popuptext" id="myPopup"> -->
+
 <center><strong>Advanced Taxonomy Table Filter</strong></center>
 <form class='form-container' id='adv_tax_filter_form' name='adv_tax_filter_form' method='POST' action='tax_table'>
 
@@ -386,11 +389,11 @@ width: 1500px;
  <tr>
  <td><center>
  <button id='adv_form_btn' type='submit' class='btn apply' value='Submit'>Apply</button>
- <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+ <button type="button" class="btn cancel" onclick="closeAdvancedForm()">Close</button>
  </center></td>
  </tr>
 </table>
 
 
 </form> 
-         
+<!-- </div> -->

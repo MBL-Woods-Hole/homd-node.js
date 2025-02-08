@@ -2,6 +2,23 @@
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 
+.popup .show {
+  visibility: visible;
+  /* display: block; */
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <%- include('../../partials/header_html'); %>
@@ -36,8 +53,15 @@ thead th { position: sticky; top: 0; }
    
     <%- include("../../partials/tax_table_basic_filter.ejs") %>
       <!-- A button to open the popup form -->
-    <button style='float:right;border:1px solid grey;' class="open-button" onclick="openForm()">Advanced Filter</button>
-      <!--   <a href='advanced_taxtable_search'>Advanced Search</a> -->
+    <!-- 
+<button style='float:right;border:1px solid grey;' class="open-button" onclick="openAdvancedForm()">Advanced Filter
+    
+    </button>
+ -->
+    <div style='float:right;border:1px solid grey;' class="popup open-button" onclick="openAdvancedForm()">Advanced Filter
+     
+    </div>
+     
      <br><%= count_txt %>
 <div id='tax-box' >
 
@@ -116,10 +140,10 @@ thead th { position: sticky; top: 0; }
    
   </div> <!-- end wrapper -->
 
-<div class="form-popup" id="myForm">
+<div class="form-popup" id="myAdvancedForm">
   <%- include("../../partials/tax_table_advanced_filter.ejs") %>
-  <!-- include("../partials/tax_table_advanced_filter.ejs" -->
-  <!-- include("../partials/tax_table_TEST_filter.ejs" -->
+  <!-- include("../../partials/tax_table_advanced_filter.ejs") -->
+  <!-- include("../partials/tax_table_TEST_filter.ejs") -->
 </div>
   
 </body>
@@ -175,12 +199,14 @@ thead th { position: sticky; top: 0; }
                   '#tax-box').style.visibility = "visible";
             }
         };
-function openForm() {
-  document.getElementById("myForm").style.display = "block";
+function openAdvancedForm() {
+  var form = document.getElementById("myAdvancedForm") //.style.display// = "block";
+  $(form).fadeIn();
+  
 }
 
-function closeForm() {
-  document.getElementById("myForm").style.display = "none";
+function closeAdvancedForm() {
+  document.getElementById("myAdvancedForm").style.display = "none";
 }
 </script>
 

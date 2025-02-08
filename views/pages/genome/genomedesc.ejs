@@ -191,6 +191,18 @@
     <tr class="header" ><th colspan='2'>NCBI Genome Metadata</th class='value'></tr>
     <tr class="header" ><th>Fields</th><th>Values</th></tr>
     <tr class=""><td class='field'>Genome Assembly Name</td><td class='value'><span class='inner-value'><%= ginfo.ncbi_assembly_name %></span></td></tr>
+    <tr class=""><td class='field'>GenBank Assembly Accession</td>
+       <td class='value'><span class='inner-value'><%= ginfo.gb_assembly %>
+         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+         &nbsp;&nbsp;[<a title='Genome Taxonomy Database' href='https://gtdb.ecogenomic.org/genome?gid=<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">GTDB</a>]
+       </span></td>
+    </tr>
+    
+    <tr class=""><td class='field'>RefSeq Assembly Accession</td>
+       <td class='value'><span class='inner-value'><%= ginfo.refseq_assembly %>
+         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.refseq_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+       </span></td>
+    </tr>
     <tr class=""><td class='field'>BioSample</td>
       <td class='value'><span class='inner-value'><%= ginfo.ncbi_biosample %>
         &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_biosample %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
@@ -206,18 +218,7 @@
     <tr class=""><td class='field'>Assembly Type</td><td class='value'><span class='inner-value'><%= ginfo.assembly_type %></span></td></tr>
     <tr class=""><td class='field'>Assembly Method</td><td class='value'><span class='inner-value'><%= ginfo.method %></span></td></tr>
     <tr class=""><td class='field'>Assembly Level</td><td class='value'><span class='inner-value'><%= ginfo.assembly_level %></span></td></tr>
-    <tr class=""><td class='field'>GenBank Assembly Accession</td>
-       <td class='value'><span class='inner-value'><%= ginfo.gb_assembly %>
-         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
-         &nbsp;&nbsp;[<a title='Genome Taxonomy Database' href='https://gtdb.ecogenomic.org/genome?gid=<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">GTDB</a>]
-       </span></td>
-    </tr>
     
-    <tr class=""><td class='field'>RefSeq Assembly Accession</td>
-       <td class='value'><span class='inner-value'><%= ginfo.refseq_assembly %>
-         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.refseq_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
-       </span></td>
-    </tr>
     <tr class=""><td class='field'>Sequencing Status</td><td class='value'><span class='inner-value'><%= ginfo.status %></span></td></tr>
     
     <tr class=""><td class='field' title='Whole Genome Sequence'>WGS Project</td><td class='value'><span class='inner-value'><a href='https://www.ncbi.nlm.nih.gov/Traces/wgs/<%= ginfo.wgs %>' target='_blank' rel="noopener noreferrer"><%= ginfo.wgs %></span></a></td></tr>
@@ -231,7 +232,7 @@
     <tr class=""><td class='field'>Latitude / Longitude</td><td class='value'><span class='inner-value'></span></td></tr>
     <tr class=""><td class='field'>Molecule Count</td><td class='value'><span class='inner-value'></span></td></tr>
     <tr class=""><td class='field'>Refseq Category</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>seq_rel_date</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Sequence Release Date</td><td class='value'><span class='inner-value'></span></td></tr>
     <tr class=""><td class='field'>Spanned Gaps</td><td class='value'><span class='inner-value'></span></td></tr>
     <tr class=""><td class='field'>Species Taxid</td><td class='value'><span class='inner-value'></span></td></tr>
     <tr class=""><td class='field'>SSU Count</td><td class='value'><span class='inner-value'></span></td></tr>
