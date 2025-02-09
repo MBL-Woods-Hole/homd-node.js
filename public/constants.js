@@ -128,7 +128,7 @@ let lepto2_color = '#96152e'
 // and it would be good if S. mitis, S. oralis, and S. infantis, and S. spp. HMT 074 and 423 
 //were very similar color or the same color to emphasize that we can't really tell them apart with this data. 
 let strep_color = ['#acbf60','#b0c24a','#a4c639','#8c9e5e','#9ab973'] // 5 green
-constants.plot_species = [  // to be put in db with species_id
+constants.plot_species_colors = [  // to be put in db with species_id
     {otid:'866',name:'Actinomyces graevenitzii',color:'lightsalmon'},
     {otid:'176',name:'Actinomyces naeslundii',color:'#dc143c'},
     {otid:'893',name:'Actinomyces oris',color:'#ff4040'},
@@ -177,13 +177,13 @@ constants.plot_species = [  // to be put in db with species_id
     {otid:'601',name:'Staphylococcus epidermidis',color: staph_color[1]},
     {otid:'73',name:'Streptococcus australis',color:'#008080'},
     {otid:'578',name:'Streptococcus cristatus',color:'#008080'},
-    {otid:'886',name:'Streptococcus cristatus',color:'#008080'},
+    {otid:'886',name:'Streptococcus cristatus',color:'#008080'},  //DROPPED
     {otid:'431',name:'Streptococcus infantis',color: strep_color[0]},
     {otid:'638',name:'Streptococcus infantis',color: strep_color[0]},
     {otid:'677',name:'Streptococcus mitis',color: strep_color[1]},
     {otid:'707',name:'Streptococcus oralis',color: strep_color[2]},
     {otid:'411',name:'Streptococcus parasanguinis',color:'#3CBC3C'},
-    {otid:'721',name:'Streptococcus parasanguinis',color:'#3CBC3C'},
+    {otid:'721',name:'Streptococcus parasanguinis',color:'#3CBC3C'},  //DROPPED
     {otid:'755',name:'Streptococcus salivarius',color:'#50D050'},
     {otid:'758',name:'Streptococcus sanguinis',color:'#008080'},
     {otid:'74',name:'Streptococcus sp._HMT_074',color: strep_color[3]},

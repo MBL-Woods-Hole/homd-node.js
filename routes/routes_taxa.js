@@ -807,13 +807,18 @@ router.get('/ecology_home', function ecology_index(req, res) {
     let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']
     let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
     let group_collector={}
-    //let species_for_plot = C.plot_species.map(el => el.name)
-    let otids_for_plot = C.plot_species.map(el => el.otid)
+    //let species_for_plot = C.plot_species_colors.map(el => el.name)
+    let otids_for_plot = C.plot_species_colors.map(el => el.otid)
+    
+    
+    
     let species_for_plot = []
     for(let n in otids_for_plot){
-         //console.log(otids_for_plot[n])
+         //console.log('otids_for_plot[n]',n,otids_for_plot[n])
+         
          //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otids_for_plot[n]+'_species'])
          let obj = C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank
+         
          if(obj.hasOwnProperty(otids_for_plot[n]+'_subspecies')){
              
              let parent_id = obj[otids_for_plot[n]+'_subspecies'].parent_id
@@ -823,14 +828,15 @@ router.get('/ecology_home', function ecology_index(req, res) {
              species_for_plot.push(parent_taxon +' '+ssp_taxon)
              
          }else{
-             species_for_plot.push(obj[otids_for_plot[n]+'_species'].taxon)
-             
+             if(obj.hasOwnProperty(otids_for_plot[n]+'_species')){
+                species_for_plot.push(obj[otids_for_plot[n]+'_species'].taxon)
+             }
          }
          //tmp_sp.push(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otids_for_plot[n]+'_species'].taxon)
      }
     //console.log('species_for_plot',species_for_plot)
     species_for_plot.push('other')
-    let colors_for_plot = C.plot_species.map(el => el.color)
+    let colors_for_plot = C.plot_species_colors.map(el => el.color)
     colors_for_plot.push('grey')
     let spcount = 0
     let other_collector = {}, test_all_collector={},abund_obj
