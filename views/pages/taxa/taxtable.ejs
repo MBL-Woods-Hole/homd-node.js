@@ -173,14 +173,16 @@ thead th { position: sticky; top: 0; }
     //scrollto
     table = $('tax-table')
     tableContainer = $('#tax-box')
-    //otid = '325'
-    row = $('#'+otid)
-    // scroll 2 more rows == 41 x2 ==164
-    extra = 82
-    if(row.length) {
-      //console.log(row.offset().top);
-      //console.log(tableContainer.height()/2);
-      tableContainer.scrollTop(row.offset().top - (tableContainer.height()/2) - extra)
+    console.log('otid',otid)
+    if(otid){
+       row = $('#'+otid.toString())
+       //     // scroll 2 more rows == 41 x2 ==164
+       //     extra = 82
+       if(row.length) {
+         //console.log(row.offset().top);
+         //console.log(tableContainer.height()/2);
+         tableContainer.scrollTop(row.offset().top - (tableContainer.height()/2) - extra)
+       }
     }
 
   
