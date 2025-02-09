@@ -57,7 +57,9 @@ pagedata {
 
  <%- include('../../partials/genome_table_filter.ejs') %> 
 <br><%- count_txt %>
-   
+<% if(cfg.DBHOST == "localhost"){ %>
+<span style='float:right;'><small><b>localhost</b> available PROKKA Annos: SEQF10000, 10001, 10010</small></span>
+<% } %>
 
   
 <div id='genome-box'>
@@ -188,21 +190,18 @@ pagedata {
     }
 
 //console.log('gid',gid)
-   document.onreadystatechange = function() {
-            if (document.readyState !== "complete") {
-                document.querySelector(
-                  '#genome-box').style.visibility = "hidden";
-                document.querySelector(
-                  "#loader").style.visibility = "visible";
-                
-            } else {
-                document.querySelector(
-                  "#loader").style.display = "none";
-                document.querySelector(
-                  '#genome-box').style.visibility = "visible";
-                
-                  
-            }
-        };
+document.onreadystatechange = function() {
+        if (document.readyState !== "complete") {
+            document.querySelector(
+                '#genome-box').style.visibility = "hidden";
+            document.querySelector(
+                "#loader").style.visibility = "visible";
+        } else {
+            document.querySelector(
+                "#loader").style.display = "none";
+            document.querySelector(
+                '#genome-box').style.visibility = "visible";
+        }
+};
 </script>
 

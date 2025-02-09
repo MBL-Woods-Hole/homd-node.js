@@ -156,7 +156,7 @@ thead th { position: sticky; top: 0; }
 <script>
   mainmenu()
  
-  $(document).ready(function(){                    
+$(document).ready(function(){                    
     
     var letter = '<%- letter %>'
     var otid = '<%- filterotid %>'
@@ -186,22 +186,21 @@ thead th { position: sticky; top: 0; }
     }
 
   
-  
-  });
+});
 
-  document.onreadystatechange = function() {
-            if (document.readyState !== "complete") {
-                document.querySelector(
-                  '#tax-box').style.visibility = "hidden";
-                document.querySelector(
-                  "#loader").style.visibility = "visible";
-            } else {
-                document.querySelector(
-                  "#loader").style.display = "none";
-                document.querySelector(
-                  '#tax-box').style.visibility = "visible";
-            }
-        };
+document.onreadystatechange = function() {
+        if (document.readyState !== "complete") {
+            document.querySelector(
+                '#tax-box').style.visibility = "hidden";
+            document.querySelector(
+                "#loader").style.visibility = "visible";
+        } else {
+            document.querySelector(
+                "#loader").style.display = "none";
+            document.querySelector(
+                '#tax-box').style.visibility = "visible";
+        }
+};
 function openAdvancedForm() {
   var form = document.getElementById("myAdvancedForm") //.style.display// = "block";
   $(form).fadeIn();
