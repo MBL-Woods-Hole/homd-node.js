@@ -45,17 +45,28 @@
 .form-popup {
   display: none;
   /* visibility: hidden; */
-  position: fixed;
+   position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+
+  /* 
+position: relative;
   top: 150px;
   left: 150px;
   width: 1500px;
-  
+  */
   border: 2px solid var(--border1);
   z-index: 9;
   background-color: var(--bg);
   padding:10px;
+ 
   
+  
+ 
 }
+
 
 /* Add styles to the form container */
 .form-container {

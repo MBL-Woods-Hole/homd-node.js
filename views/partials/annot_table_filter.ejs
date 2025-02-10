@@ -12,13 +12,14 @@
 }
 #filter_form_div{
    border:1px solid black;
-   padding:2px;
+   padding:12px;
+   width:100%;
 }
 #form_btn{
   width:100%;
   color:grey;
 }
-#main_table td{
+#outer_table td{
    padding:0 30px;
    /* border:1px solid red; */
    
@@ -29,10 +30,11 @@
 }
 #filter_table td{
    border-top:1px solid brown;
-   padding: 2px 3px;
+   padding:8px 5px;
 }
 #reset_div a{
    font-size: 14px;
+   white-space: nowrap;
 }
 #sort_rev{
    
@@ -54,10 +56,10 @@
 <% fltr = JSON.parse(fltr) %>
 <div id='filter_form_div'>
 
-<form id='annot_filter_form' name='annot_filter_form' method='POST' action='annotation_filter'>
+<form id='annot_filter_form' name='annot_filter_form' method='POST' action='explorer'>
 <input type="hidden" name="gid" value="<%= gid %>" />
 <input type="hidden" name="anno" value="<%= anno_type %>" />
-<table id='main_table'>    
+<table id='outer_table'>    
 <tr><td valign='top'>    
     
 </td><td valign='top'> 

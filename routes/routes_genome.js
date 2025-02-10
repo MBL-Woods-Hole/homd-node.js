@@ -620,7 +620,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
          // try get contigs from file:
          // ncbi only
   
-         helpers.print(q_contig)
+         helpers.print('In Genome_Descriptin: '+q_contig)
          TDBConn.query(q_contig, (err, rows) => {
             if (err) {
               console.log(err)
@@ -1208,8 +1208,8 @@ router.get('/reset_atable', function annot_table_reset(req, res) {
    res.redirect('explorer?gid='+req.query.gid+'&anno='+req.query.anno);
 });
 
-router.post('/annotation_filter', function annotation_filter (req, res) {
-    //console.log('IN annotation_filter')
+router.post('/explorer', function explorer_post (req, res) {
+    //console.log('IN explorer_post')
     //console.log(req.body)
     let pidList
     let gid = req.body.gid
@@ -1296,8 +1296,8 @@ router.post('/annotation_filter', function annotation_filter (req, res) {
   })
     
 })
-router.get('/explorer', function explorer (req, res) {
-  //console.log('in explorer')
+router.get('/explorer', function explorer_get (req, res) {
+  //console.log('in explorerGET')
   //console.log(C.annotation_lookup)
   // let myurl = url.parse(req.url, true)
   helpers.accesslog(req, res)
@@ -1394,7 +1394,7 @@ router.get('/explorer', function explorer (req, res) {
         atable_filter = get_default_annot_filter()
         req.session.atable_filter = atable_filter
     }
-  console.log('anno query '+q)
+  helpers.print('explorer::anno query: '+q)
   // local host:  explorer?gid=SEQF4098.1&anno=ncbi
   TDBConn.query(q, (err, rows) => {
     if (err) {
@@ -1437,6 +1437,7 @@ router.get('/explorer', function explorer (req, res) {
       }
       //console.log('atable_filter',atable_filter)
       //console.log('default',get_default_annot_filter())
+      console.log('annoInfoObj',annoInfoObj)
       args = {
             gid: gid,
             gc:             gc,

@@ -2,23 +2,7 @@
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 
-.popup .show {
-  visibility: visible;
-  /* display: block; */
-  -webkit-animation: fadeIn 1s;
-  animation: fadeIn 1s
-}
 
-/* Add animation (fade in the popup) */
-@-webkit-keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity:1 ;}
-}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <%- include('../../partials/header_html'); %>
@@ -173,7 +157,7 @@ $(document).ready(function(){
     //scrollto
     table = $('tax-table')
     tableContainer = $('#tax-box')
-    console.log('otid',otid)
+    //console.log('otid',otid)
     if(otid){
        row = $('#'+otid.toString())
        //     // scroll 2 more rows == 41 x2 ==164
@@ -202,8 +186,28 @@ document.onreadystatechange = function() {
         }
 };
 function openAdvancedForm() {
+
+ //  var i = document.createElement("div");
+//        i.type = "hidden";
+//        i.name = "hiddenDiv";
+//        i.id = "hiddenDiv";
+//        i.style.width = "100%";
+//        i.style.height = "100%";
+//        i.style.background = "red";
+//        i.style.color = "white";
+//   
+//   
+//   i.addEventListener("click", function(){
+//   
+//     alert('dd')
+//     form.style.display = 'none'; 
+//   })
+//   //document.body.appendChild(i);
+//   document.getElementsByTagName("body")[0].appendChild(i);
   var form = document.getElementById("myAdvancedForm") //.style.display// = "block";
   $(form).fadeIn();
+  
+  
 }
 
 function closeAdvancedForm() {

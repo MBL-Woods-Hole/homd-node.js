@@ -32,7 +32,6 @@
   
   height: auto;
   padding:2px 10px;
-  
   font-size:small;
 }
 #anno-title2 {
@@ -44,12 +43,7 @@
   border-collapse: collapse;
   padding:2px 10px;
 }
-#annotation-table-div{
- 
-  margin:30px 0;
-  border:1px solid silver;
-  
-}
+
 #annotation-table{
   width:100%;
   margin:0px 0;
@@ -99,29 +93,29 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     <div class='page-content' >
     
     
- <!-- GID:<%= gid %>     Anno:<%= anno_type %>   --> 
+ 
 <center>
     <div id='genome-explorer'>
       
-      <% if(!gid || gid.toString() === '0'){ %>
-         <% title ='Choose a Genome' %>
+      <% if(!gid || gid.toString() === "0"){ %>
+         <% title ="Choose a Genome" %>
       <% }else{ %>
-         <% title ='Genome Explorer: '+organism+' ('+gid+')' %>
+         <% title ="Genome Explorer: "+organism+" ("+gid+")" %>
       <% } %>
-      <%- include('../../partials/explorer_head'); %>
-    
+      <%- include("../../partials/explorer_head"); %>
     </div>
-    <%- include('../../partials/flash'); %>
-    <% if(!gid || gid.toString() === '0'){ %>
+    <%- include("../../partials/flash"); %>
+ </center> 
+ 
+<% if(!gid || gid.toString() === '0'){ %>
          <!-- do nothing here  -->
-    
-    <% }else if(anno_type === 'prokka' || anno_type === 'ncbi' ) { %>
-             <%- include('../../partials/annotation'); %>
-    <% }else{ %>
+<% }else if(anno_type === "prokka" || anno_type === "ncbi" ) { %>
+             <%- include("../../partials/annotation"); %>
+<% }else{ %>
              Page Errror
-    <% } %>
+<% } %>
       
-</center>
+
     
     
     <!-- https://vicbioinformatics.com/software.prokka.shtml -->
