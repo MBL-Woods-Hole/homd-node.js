@@ -15,7 +15,7 @@ router.get('/index', function index(req, res) {
         title: 'HOMD :: Help Pages',
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
         user: JSON.stringify(req.user || {}),
 
     })
@@ -35,7 +35,7 @@ router.get('/help-page', function help_page(req, res) {
           db_updates: JSON.stringify(updates),
           date_sort: date_sort,
           config: JSON.stringify(CFG),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
           user: JSON.stringify(req.user || {}),
       })
     }
@@ -80,7 +80,7 @@ router.get('/search', function search(req, res) {
         title: 'HOMD :: Help Search',
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
         user: JSON.stringify(req.user || {}),
     })
 })
@@ -115,7 +115,7 @@ router.post('/help_search_result', function help_search_result(req, res) {
         title: 'HOMD :: Help Search',
         pgname: '', // for AbountThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
         user: JSON.stringify(req.user || {}),
         search_text: searchText,
         help_pages: JSON.stringify(helpLst),

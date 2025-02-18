@@ -138,13 +138,25 @@ width: 1500px;
 
 }
 
-
+.close-btn {
+  font-size: 50px;
+  font-weight: 10;
+  color: #000;
+  position:absolute;
+  right:20px;
+  top:20px;
+  cursor: pointer;
+  
+}
 </style>
 <!-- <div class="popuptext" id="myPopup"> -->
 
 <center><strong>Advanced Taxonomy Table Filter</strong></center>
-<form class='form-container' id='adv_tax_filter_form' name='adv_tax_filter_form' method='POST' action='tax_table'>
 
+<form class='form-container' id='adv_tax_filter_form' name='adv_tax_filter_form' method='POST' action='tax_table'>
+<span>
+<span class="close-btn" onclick="closeAdvancedForm()">&times;</span>
+</span>
         
 <table id='adv_filter_table' border='1'>
 <tr>

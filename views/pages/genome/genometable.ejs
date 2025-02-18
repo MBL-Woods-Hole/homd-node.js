@@ -58,7 +58,7 @@ pagedata {
  <%- include('../../partials/genome_table_filter.ejs') %> 
 <br><%- count_txt %>
 <% if(cfg.DBHOST == "localhost"){ %>
-<span style='float:right;'><small><b>localhost</b> available PROKKA Annos: SEQF10000, 10001, 10010</small></span>
+<br><span style=''><small><b>localhost</b> available PROKKA Annos: SEQF10000, 10001, 10010</small></span>
 <% } %>
 
   
@@ -104,7 +104,7 @@ pagedata {
         <td class='tax_name' title="<%- ginfo[n].species %> <%- ginfo[n].subspecies %>"><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>&gid=<%= ginfo[n].gid %>'><em><%- ginfo[n].species %></em>
         <%- ginfo[n].subspecies %></a></td>
         
-        <td class='tax_name'><em><%= ginfo[n].strain %></em></td>
+        <td class='tax_name' title='<%= ginfo[n].strain %>'><em><%= ginfo[n].strain %></em></td>
         <td class='tax_name'></td>
         <td class='center'><%= ginfo[n].ncontigs %></td>
         <td class='center'><%= ginfo[n].tlength %></td>

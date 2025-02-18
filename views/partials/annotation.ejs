@@ -54,7 +54,7 @@ thead th { position: sticky; top: 0; }
         <th class='gray'>tmRNA</th><th class='gray'>tRNA</th>
     </tr>
     <tr>
-        <td><%= info_data.contigs %>    </td><td><%= info_data.bases %> bps</td>   
+        <td><%= info_data.contigs %>    </td><td><%= info_data.bases %></td>   
         <td><%= info_data.CDS %>   </td><td><%= info_data.rRNA %></td>
         <td><%= info_data.tmRNA %>   </td><td><%= info_data.tRNA %> </td>
     </tr>
@@ -99,7 +99,7 @@ thead th { position: sticky; top: 0; }
         
         
     <br><hr>
-    <span><small><b>Note:</b> Column headers only sort the current page.</small></span>
+    <span><small><b>Note:</b> Column headers only sort the current page. Select [NA] or [AA] links to show sequences.</small></span>
      
      
      <div id='table-container'>
@@ -108,15 +108,15 @@ thead th { position: sticky; top: 0; }
      <table id='annotation-table' class='sortable'>
      <thead>
       <tr>
-       <th class='col0 sorttable_nosort'>#</th>
-       <th class='col1'>Molecule</th>
-       <th title='Protein ID' class='col2'>PID</th>
+       <th class='col0 sorttable_nosort'></th>
+       <th class='col1'>Molecule-ID</th>
+       <th title='Protein ID' class='col2'>Protein-ID</th>
        <th class='col2a sorttable_nosort'>Genome<br>Viewer</th>
-       <th title='Nucleic Acid' class='col3 center sorttable_numeric' nowrap>NA<br><small>(Length)(Seq)</small><br></th>
-       <th title='Amino Acid' class='col4 center sorttable_numeric' nowrap>AA<br><small>(Length)(Seq)</small><br></th>
-       <th class='col5 sorttable_nosort'>Range</th>
+       <th title='Nucleic Acid Length (bp)' class='col3 center sorttable_numeric' nowrap>NA<br><small>(Length)[Seq]</small><br></th>
+       <th title='Amino Acid Length (bp)' class='col4 center sorttable_numeric' nowrap>AA<br><small>(Length)[Seq]</small><br></th>
+       <th class='col5 sorttable_nosort'>Range<br><small>(bp)</small></th>
        <th class='col6'>Gene</th>
-       <th class='col7'>Gene Product</th>
+       <th class='col7'>Gene<br>Product</th>
       </tr>
      </thead>
      <tbody>

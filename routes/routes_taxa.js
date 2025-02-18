@@ -22,7 +22,7 @@ function renderTaxonTable(req, res, args) {
             pgtitle: 'Human Oral/Nasal Microbial Taxa',
             pgname: 'taxon/tax_table',  //for AbountThisPage
             config: JSON.stringify(CFG),
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
             
             data: JSON.stringify(args.send_list),
             count_txt: args.count_txt,
@@ -104,7 +104,7 @@ router.get('/advanced_taxtable_search', function advanced_taxtable_search(req, r
       title: 'HOMD :: Taxon Hierarchy',
       pgname: '', // for AbountThisPage
       config: JSON.stringify(CFG),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
       user: JSON.stringify(req.user || {}),
     })
 
@@ -122,7 +122,7 @@ router.get('/tax_hierarchy', (req, res) => {
       config: JSON.stringify(CFG),
       data: {},
       dhtmlx: JSON.stringify(C.dhtmlxTreeData),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
       user: JSON.stringify(req.user || {}),
   })
 })
@@ -134,7 +134,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
     config: JSON.stringify(CFG),
     level: 'domain',
     //oral: oral,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
     user: JSON.stringify(req.user || {}),
   })
 })
@@ -419,7 +419,7 @@ router.get('/tax_description', function tax_description(req, res){
             links: JSON.stringify(links),
             sites: JSON.stringify(sites),
             lineage: lineage_string,
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
             user: JSON.stringify(req.user || {}),
           })
           return
@@ -527,7 +527,7 @@ router.get('/tax_description', function tax_description(req, res){
     links: JSON.stringify(links),
     sites: JSON.stringify(sites),
     lineage: lineage_string,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
     user: JSON.stringify(req.user || {}),
   })
 })
@@ -784,7 +784,7 @@ router.get('/life', function life(req, res) {
       text_format: text[1],
       html: html,
       lineage:lineage_string,
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
       user: JSON.stringify(req.user || {}),
     })
   
@@ -960,7 +960,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
       title: 'HOMD :: Ecology', 
       pgname: 'taxon/ecology', // for AbountThisPage
       config: JSON.stringify(CFG),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
       user: JSON.stringify(req.user || {}),
       sole_arch:JSON.stringify(sole_arch),
       phyla: JSON.stringify(phyla),
@@ -1032,7 +1032,7 @@ router.get('/body_sites', function body_sites(req, res) {
       title: 'HOMD :: Body Sites', 
       pgname: '', // for AbountThisPage
       config: JSON.stringify(CFG),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
       user:  JSON.stringify(req.user || {}),
       sites: JSON.stringify(send_list),
       selected: selected_otid
@@ -1266,7 +1266,7 @@ router.get('/ecology', function ecology(req, res) {
       hmp_metaphlan: JSON.stringify(hmp_metaphlan_data),
       hmp_refseqv1v3: JSON.stringify(hmp_refseqv1v3_data),
       hmp_refseqv3v5: JSON.stringify(hmp_refseqv3v5_data),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
       user: JSON.stringify(req.user || {}),
       site_colors: JSON.stringify(C.abundance_site_colors),
     })
@@ -1320,7 +1320,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
       title: 'HOMD ::Abundance by oral site',
       pgname: '', // for AbountThisPage 
       config: JSON.stringify(CFG),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
       user: JSON.stringify(req.user || {}),
       data: JSON.stringify(top_ten),
       plot_order: C.base_abundance_order,
@@ -1387,7 +1387,7 @@ router.get('/dropped', function dropped(req, res) {
           pgname: '', // for AbountThisPage
           pgtitle: 'Dropped Taxa Table',
           config: JSON.stringify(CFG),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
           user: JSON.stringify(req.user || {}),
           data: JSON.stringify(rows),
           row_count:rows.length,

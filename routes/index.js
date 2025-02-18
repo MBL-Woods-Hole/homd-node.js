@@ -63,7 +63,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                           title: 'HOMD :: Human Oral Microbiome Database',
                           pgname: '', // for AbountThisPage
                           config: JSON.stringify(CFG),
-                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
                           user: JSON.stringify(req.user || {}),
                           file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                           svg_path: '',
@@ -94,7 +94,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                           title: 'HOMD :: Human Oral Microbiome Database',
                           pgname: '', // for AbountThisPage
                           config: JSON.stringify(CFG),
-                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
                           user: JSON.stringify(req.user || {}),
                           file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                           svg_path: '',
@@ -112,7 +112,7 @@ router.get('/blastdir=*', function taxon(req, res) {
                               title: 'HOMD :: Human Oral Microbiome Database',
                               pgname: '', // for AbountThisPage
                               config: JSON.stringify(CFG),
-                              ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                              ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
                               user: JSON.stringify(req.user || {}),
                               file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
                               svg_path: '/tree/'+dir+'/tree.svg',
@@ -242,7 +242,7 @@ router.get('/download', function download(req, res) {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'download', // for AbountThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
     user: JSON.stringify(req.user || {})
 
   })
@@ -253,7 +253,7 @@ router.get('/poster', function poster(req, res) {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
     user: JSON.stringify(req.user || {})
 
   })
@@ -721,7 +721,7 @@ router.post('/site_search', function site_search(req, res) {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
         user: JSON.stringify(req.user || {}),
         search_text: searchText,
         otid_list: JSON.stringify(otidLst),

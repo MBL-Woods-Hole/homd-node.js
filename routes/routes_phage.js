@@ -24,7 +24,7 @@ router.get('/', function index(req, res) {
                 title: 'HOMD :: Human Oral Phage Database',
                 pgname: '', // for AbountThisPage
                 config: JSON.stringify(CFG),
-                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
                 user: JSON.stringify(req.user || {}),
           })
      }
@@ -98,7 +98,7 @@ router.get('/phage_table', function phage_table_get(req, res) {
     title: 'HOMD :: Human Oral Phage Database',
     pgname: 'phage/phage_table', // for AbountThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
     user: JSON.stringify(req.user || {}),
     pdata:    JSON.stringify(sendList),
     
@@ -153,7 +153,7 @@ router.post('/phage_table', function phage_table_post(req, res) {
     title: 'HOMD :: Human Oral Phage Database',
     pgname: 'phage/phage_table', // for AbountThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
     user: JSON.stringify(req.user || {}),
     pdata:    JSON.stringify(sendList),
     rank: 'family',
@@ -198,7 +198,7 @@ router.post('/search_phagetable', function search_phagetable(req, res) {
     title: 'HOMD :: Human Oral Phage Database',
     pgname: 'phage/phage_table', // for AbountThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
     user: JSON.stringify(req.user || {}),
     pdata:    JSON.stringify(sendList),
     
@@ -225,7 +225,7 @@ router.get('/phagedesc', function phagedesc(req, res) {
         title: 'HOMD :: Human Oral Phage Database',
         pgname: 'phage/phage_description', // for AbountThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
         user: JSON.stringify(req.user || {}),
         phage_data: JSON.stringify(phage),
         pid: pid
@@ -291,7 +291,7 @@ router.get('/search_questions', function search_questions(req, res) {
         title: 'HOMD :: Human Oral Phage Questions',
         pgname: '', // for AbountThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
         user: JSON.stringify(req.user || {}),
       })
 })
