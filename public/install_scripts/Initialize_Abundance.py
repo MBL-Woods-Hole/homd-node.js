@@ -306,6 +306,7 @@ def run_abundance_db():
             TCcollector[taxon_string] = {}
         if row['otid'] not in dropped_taxa:
             TCcollector[taxon_string]['otid'] = row['otid']
+            TCcollector[taxon_string]['ecology'] = '1'
             #TCcollector[taxon_string]['max_all'] = row['max']
             if 'notes' not in TCcollector[taxon_string]:
                 TCcollector[taxon_string]['notes'] = {}

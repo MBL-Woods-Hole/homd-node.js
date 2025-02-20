@@ -189,24 +189,24 @@ hr{
    color:orange;
  }  
  #download_browser_text_excel {
-  float:right;
-  top:2px;
-  font-size:12px;
+  float: right;
+  top: 2px;
+  font-size: 12px;
 }  
 #footer {
-   border:1px solid black;
-   padding:10px 30px;
-   margin:5px;
+   border: 1px solid black;
+   padding: 10px 30px;
+   margin: 5px;
 } 
 
 
 /* Pill BUTTONS */
 .button{
-  padding:2px 5px;
-  border:1px solid black;
-  background:grey;
-  font-size:10px;
-  color:white;
+  padding: 2px 5px;
+  border: 1px solid black;
+  background: grey;
+  font-size: 10px;
+  color: white;
 }
 .pill {
   padding: 0px 4px;
@@ -215,7 +215,7 @@ hr{
   display: inline-block;
   margin: 0px 0px;
   cursor: pointer;
-  font-size:11px;
+  font-size: 11px;
   border-radius: 16px;
 }
 .pill-md{

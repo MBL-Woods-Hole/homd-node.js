@@ -332,6 +332,7 @@ router.get('/tax_autoload', function tax_autoload(req, res) {
 /////////////////////////////////
 router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
+  //helpers.print(['pre data1',C.taxon_lookup[389]])
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
   let data1={},data2={},data3,data4,data5,links={},sites
   if(otid && req.session.ttable_filter){
@@ -374,8 +375,12 @@ router.get('/tax_description', function tax_description(req, res){
   let text_file = get_rank_text('species','',otid)
   if(C.dropped_taxids.indexOf(otid) !== -1){
      //helpers.print(data1)
-     let message = "This TaxonID ("+otid+") has been dropped."
+     
      data1 = C.taxon_lookup[otid]
+     let hmt = 'HMT-'+("000" + otid).slice(-3)
+     let message = "This TaxonID ("+hmt+") has been Dropped.<br>Reason: "+data1.notes
+     //let dropped_notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
+     //data1.notes= "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
      //data3 = get_special_lineage_from_db(otid)
      let q = queries.get_lineage_query(otid)
      //console.log(q)
@@ -383,7 +388,7 @@ router.get('/tax_description', function tax_description(req, res){
          if(err){ console.log(err);return }
          //console.log('data1',data1)
          //links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
-         data1.notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
+         
          //console.log('rows',rows)
          data3 = rows[0]
          links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
@@ -411,6 +416,7 @@ router.get('/tax_description', function tax_description(req, res){
             //pids: pid_list,
             image_array:JSON.stringify([]),
             data1: JSON.stringify(data1),
+            msg: message,
             text_file: text_file[0],   // only 666 so far
             data2: JSON.stringify({}),  // description 
             data3: JSON.stringify(data3),  // lineage domain=>subspecies
@@ -445,6 +451,7 @@ router.get('/tax_description', function tax_description(req, res){
           data2 = {}
       }
   }
+  
   //helpers.print(['data2',data2])
   if(C.taxon_lineage_lookup[otid] ){
       data3 = C.taxon_lineage_lookup[otid]
@@ -453,6 +460,7 @@ router.get('/tax_description', function tax_description(req, res){
       console.warn('NO taxon_lineage for HMT:',otid,' in C.taxon_lineage_lookup')
       data3 = {}
   }
+  //helpers.print(['data3',data3])
   //console.log('389')
   //console.log(C.taxon_references_lookup['389'])
   if(C.taxon_references_lookup[otid]){
@@ -519,6 +527,7 @@ router.get('/tax_description', function tax_description(req, res){
     //pids: pid_list,
     image_array:JSON.stringify(image_array),
     data1: JSON.stringify(data1),
+    msg: data1.notes,
     text_file: text_file[0],   // only 666 so far
     data2: JSON.stringify(data2),
     data3: JSON.stringify(data3),

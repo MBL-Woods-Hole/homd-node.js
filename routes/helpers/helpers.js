@@ -1753,7 +1753,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     if(vals.phylum != '0'){
        big_tax_list = helpers.ttfilter_for_phylum(big_tax_list, vals.phylum)
     }
-//console.log('olength-2',big_tax_list.length)
+  //console.log('olength-2',big_tax_list.length)
   //console.log('vals',vals)
     //
     //letter
@@ -1773,7 +1773,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     big_tax_list.map(function(el){
         // do we have ecology/abundance data?  
         // Is abundance the only thing on the ecology page?
-        el.ecology = 0  // change to 1 if we do
+        
         
         if(el.status != 'Dropped'){
               el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || ''
@@ -1781,18 +1781,25 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
               //console.log(el)
               var lineage_list = helpers.make_lineage(node)
               
-              if(lineage_list[0] in C.taxon_counts_lookup){
-                 //console.log('kkk',C.taxon_counts_lookup[lineage_list[0]])
-                 if('refseq' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['refseq']).length != 0){
-                     el.ecology = 1
-                 }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
-                     el.ecology = 1
-                 }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
-                     el.ecology = 1
-                 }else {
-                     el.ecology = 0
-                 }
+//               if(lineage_list[0] in C.taxon_counts_lookup){
+//                  //console.log('kkk',C.taxon_counts_lookup[lineage_list[0]])
+//                  if('refseq' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['refseq']).length != 0){
+//                      el.ecology = 1
+//                  }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
+//                      el.ecology = 1
+//                  }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
+//                      el.ecology = 1
+//                  }else {
+//                      el.ecology = 0
+//                  }
+//               }
+
+              if( C.taxon_counts_lookup.hasOwnProperty(lineage_list[0]) && C.taxon_counts_lookup[lineage_list[0]].ecology == '1'){
+                el.ecology = 1
+              }else {
+                el.ecology = 0
               }
+              
         }
     })
     //console.log('big_tax_list.length-4',big_tax_list.length)
@@ -1859,7 +1866,6 @@ module.exports.get_filtered_taxon_list = function get_filtered_taxon_list(big_ta
   }else {
       // search all
       //send_list = send_tax_obj
-      
       
       let temp_obj = {}
       

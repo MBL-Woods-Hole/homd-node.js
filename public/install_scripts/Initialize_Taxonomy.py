@@ -564,6 +564,9 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
         
         
         if long_tax_name in counts:
+        
+            counts[long_tax_name]["ecology"] = '0'
+            
             if otid in dropped_otids:
                 #if otid in ('720','502'):
                 #   print('got-1',otid,long_tax_name)
@@ -581,7 +584,7 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
         else:
             # this will always be species
             counts[long_tax_name] = {}
-            
+            counts[long_tax_name]["ecology"] = '0'
             if otid in dropped_otids:
                 #if otid in ('720','502'):
                 #   print('got-2',otid)

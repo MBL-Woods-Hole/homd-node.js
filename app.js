@@ -312,6 +312,7 @@ Promise.all(promises)
     }
    //console.log(C.taxon_lookup)
    //class
+   //helpers.print(['app data1',C.taxon_lookup[389]])
    //Absconditabacteria (SR1) [C-1]
     //console.log(C.homd_taxonomy)
     console.log('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
