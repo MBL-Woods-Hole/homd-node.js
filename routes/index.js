@@ -499,13 +499,73 @@ router.post('/site_search', function site_search(req, res) {
   
   console.log('in index.js POST -Search')
   console.log(req.body)
-
+  const searchText = req.body.intext
+  const searchTextLower = req.body.intext.toLowerCase()
   
+////////////// TAXON NAMES ////////////////////////////////////////////////////////////////////////////
+
+  // lets search the taxonomy names
+  // Bacterial Taxonomy Names
+  //helpers.print(Object.keys(C.taxon_counts_lookup)[0])
+  const taxonList = Object.values(C.taxon_lineage_lookup).filter(function (e) {
+    if (Object.keys(e).length !== 0) {
+      // console.log(e)
+      if (e.domain.toLowerCase().includes(searchTextLower) ||
+        e.phylum.toLowerCase().includes(searchTextLower) ||
+        e.klass.toLowerCase().includes(searchTextLower) ||
+        e.order.toLowerCase().includes(searchTextLower) ||
+        e.family.toLowerCase().includes(searchTextLower) ||
+        e.genus.toLowerCase().includes(searchTextLower) ||
+        e.species.toLowerCase().includes(searchTextLower) ||
+        e.subspecies.toLowerCase().includes(searchTextLower)) {
+        return e
+      }
+    }
+    //
+  })
+  //  Now get the otids
+  const taxonOtidObj = {}
+  let pototid = parseInt(searchTextLower)
+  if(pototid && pototid in C.taxon_lookup){
+     if(C.dropped_taxids.indexOf(pototid.toString()) != -1){
+        taxonOtidObj[pototid] = 'This taxon has been dropped from HOMD.'
+     }else{
+        console.log('got OTID int')
+        taxonOtidObj[pototid] = C.taxon_lineage_lookup[pototid].domain
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].phylum
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].klass
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].order
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].family
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].genus
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].species
+        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].subspecies
+     }
+  }
+  const taxonOtidList = taxonList.map(e => e.otid)
+  
+  for (let n in taxonOtidList) {
+    const otid = taxonOtidList[n]
+    taxonOtidObj[otid] = C.taxon_lineage_lookup[otid].domain
+    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].phylum
+    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].klass
+    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].order
+    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].family
+    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].genus
+    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].species
+    //if (C.taxon_lineage_lookup[otid].subspecies !== '') {
+      taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].subspecies
+    //}
+
+    // {
+    // 'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species
+    // }
+  }
+
+
   
 ////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
   
-  const searchText = req.body.intext
-  const searchTextLower = req.body.intext.toLowerCase()
+  
   let add_genome_to_otid = {}
   // Genome  Metadata
   const allGidObjList = Object.values(C.genome_lookup)
@@ -579,64 +639,6 @@ router.post('/site_search', function site_search(req, res) {
 //       }
 //   }
   //console.log('otidLst[0]',otidLst)
-
-////////////// TAXON NAMES ////////////////////////////////////////////////////////////////////////////
-
-  // lets search the taxonomy names
-  // Bacterial Taxonomy Names
-  //helpers.print(Object.keys(C.taxon_counts_lookup)[0])
-  const taxonList = Object.values(C.taxon_lineage_lookup).filter(function (e) {
-    if (Object.keys(e).length !== 0) {
-      // console.log(e)
-      if (e.domain.toLowerCase().includes(searchTextLower) ||
-        e.phylum.toLowerCase().includes(searchTextLower) ||
-        e.klass.toLowerCase().includes(searchTextLower) ||
-        e.order.toLowerCase().includes(searchTextLower) ||
-        e.family.toLowerCase().includes(searchTextLower) ||
-        e.genus.toLowerCase().includes(searchTextLower) ||
-        e.species.toLowerCase().includes(searchTextLower) ||
-        e.subspecies.toLowerCase().includes(searchTextLower)) {
-        return e
-      }
-    }
-    //
-  })
-  //  Now get the otids
-  const taxonOtidObj = {}
-  let pototid = parseInt(searchTextLower)
-  if(pototid && pototid in C.taxon_lookup){
-     if(C.dropped_taxids.indexOf(pototid.toString()) != -1){
-        taxonOtidObj[pototid] = 'This taxon has been dropped from HOMD.'
-     }else{
-        console.log('got OTID int')
-        taxonOtidObj[pototid] = C.taxon_lineage_lookup[pototid].domain
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].phylum
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].klass
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].order
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].family
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].genus
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].species
-     }
-  }
-  const taxonOtidList = taxonList.map(e => e.otid)
-  
-  for (let n in taxonOtidList) {
-    const otid = taxonOtidList[n]
-    taxonOtidObj[otid] = C.taxon_lineage_lookup[otid].domain
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].phylum
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].klass
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].order
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].family
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].genus
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].species
-    if (C.taxon_lineage_lookup[otid].subspecies !== '') {
-      taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].subspecies
-    }
-
-    // {
-    // 'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species
-    // }
-  }
 
 
   

@@ -1946,46 +1946,72 @@ module.exports.get_filtered_taxon_list = function get_filtered_taxon_list(big_ta
 } 
 //
 module.exports.get_default_filter = function get_default_filter(){
-    let defaultfilter = {
-        otid:'',
-        status:{
-            named_cultivated:'on',
-            named_uncultivated:'on',
-            unnamed_cultivated: 'on',
-            unnamed_uncultivated: 'on',
-            dropped:'off',
-            //nonoralref:'off'
-            
-        },
-        site:{
-           oral:'on',
-           nasal:'on',
-           skin:'off',
-           gut:'off',
-           vaginal:'off',
-           unassigned:'off',
-           enviro      :'off',
-           ref         :'off',
-           pathogen    :'off',
-           p_or_pst    :'primary_site'
-           
-        },
-        abund:{
-           high_abund:'on',
-           medium_abund:'on',
-           low_abund:'on',
-           scarce_abund:'on'
-        },
-        genomes:'both',
-        text:{
+    
+    let defaultfilter = {otid:'',status:{},site:{},abund:{}}
+    
+    // body sites
+    let body_sites = Object.keys(C.tax_sites_all)
+    for(let n in body_sites){
+        defaultfilter.site[body_sites[n]] = 'off' // turn all 'off'
+    }
+    for(let n in C.tax_sites_default){
+        defaultfilter.site[C.tax_sites_default[n]] = 'on'  // then turn all 'on'
+    }
+    defaultfilter.site['p_or_pst'] = 'primary_site'
+    // abundance
+    for(let n in C.tax_abund_all){
+        defaultfilter.abund[C.tax_abund_all[n]] = 'off' // turn all 'off'
+    }
+    for(let n in C.tax_abund_default){
+        defaultfilter.abund[C.tax_abund_default[n]] = 'on' // then turn all 'on'
+    }
+    // status
+    for(let n in C.tax_status_all){
+        defaultfilter.status[C.tax_status_all[n]] = 'off' // turn all 'off'
+    }
+    for(let n in C.tax_status_default){
+        defaultfilter.status[C.tax_status_default[n]] = 'on' // then turn all 'on'
+    }
+    
+    
+//         status:{
+//             named_cultivated:'on',
+//             named_uncultivated:'on',
+//             unnamed_cultivated: 'on',
+//             unnamed_uncultivated: 'on',
+//             dropped:'off',
+//             //nonoralref:'off'
+//             
+//         },
+//         site:{
+//            oral:'on',
+//            nasal:'on',
+//            skin:'off',
+//            gut:'off',
+//            vaginal:'off',
+//            unassigned:'off',
+//            enviro      :'off',
+//            ref         :'off',
+//            pathogen    :'off',
+//            p_or_pst    :'primary_site'
+//            
+//         },
+//         abund:{
+//            high_abund:'on',
+//            medium_abund:'on',
+//            low_abund:'on',
+//            scarce_abund:'on'
+//         },
+        defaultfilter.genomes='both'
+        defaultfilter.text={
             txt_srch: '',
             field: 'all',
-        },
-        letter: '0',
-        phylum:'0',
-        sort_col: 'genus',
-        sort_rev: 'off'
-    }
+        }
+        defaultfilter.letter='0'
+        defaultfilter.phylum='0'
+        defaultfilter.sort_col='genus'
+        defaultfilter.sort_rev= 'off'
+    
     return defaultfilter
 }
 module.exports.get_null_filter = function get_null_filter(){

@@ -194,10 +194,6 @@ constants.plot_species_colors = [  // to be put in db with species_id
     {otid:'158',name:'Veillonella rogosae',color:'#fba0e3'},
     {otid:'780',name:'Veillonella sp._HMT_780',color:'deeppink'}
 ]   
-//constants.tax_status_all =['named','unnamed','phylotype','lost','dropped','nonoralref'];
-//constants.tax_status_on =['named','unnamed','phylotype','lost'];
-constants.tax_status_all =['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated','dropped'];
-constants.tax_status_on =['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated'];
 
 //constants.tax_sites_all =['oral','nasal','skin','vaginal','unassigned','nonoralref'];
 //constants.tax_sites_on = ['oral','nasal','skin','vaginal','unassigned'];
@@ -212,8 +208,15 @@ constants.tax_sites_all ={
    'ref'          :'Reference',  // Was NonOralRef
    'unassigned'   :'Unassigned'
 }
- 
-constants.tax_sites_on = constants.tax_sites_all
+constants.tax_sites_default = ['oral', 'nasal', 'skin','gut', 'vaginal', 'pathogen', 'enviro', 'ref', 'unassigned']
+//constants.tax_status_all =['named','unnamed','phylotype','lost','dropped','nonoralref'];
+//constants.tax_status_on =['named','unnamed','phylotype','lost'];
+constants.tax_status_all     = ['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated','dropped'];
+constants.tax_status_default = ['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated','dropped'];
+
+constants.tax_abund_all     = ['high_abund','medium_abund','low_abund','scarce_abund'];
+constants.tax_abund_default = ['high_abund','medium_abund','low_abund','scarce_abund'];
+
 
 
 
