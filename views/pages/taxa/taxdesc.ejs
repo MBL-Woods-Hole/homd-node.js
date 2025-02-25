@@ -42,7 +42,7 @@
 }
 #references{
    padding:4px;
-   margin:4px;
+   margin:14px;
    border-top:2px dashed #336633;
 }
 
@@ -157,14 +157,43 @@
 #lineage{
     
 }
+#info-table-div{
+   padding:20px;
+   
+   margin-top:10px;
+   width:100%;
+}
+#info-table{
+  border-collapse:collapse;
+  width:100%;
+  
+}
+#info-table td{
+  border:1px solid darkgrey;
+  padding:5px;
+  
+}
+.taxon-extra-title{
+   width:15%;
+}
+.taxon-extra{
+   width:85%;
+}
+#pubs-table{
+   
+}
+#pubs-table td{
+   border:0;
+   padding:5px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
 <% data_lookup = JSON.parse(data1) %>
-<% data_info = JSON.parse(data2) %>
-<% data_lineage = JSON.parse(data3) %>
 <% data_pubs = JSON.parse(data4) %>
-<% data_refseq = JSON.parse(data5) //refseq  %>
+<% data_info = JSON.parse(tinfo) %>
+<% data_lineage = JSON.parse(lin) %>
+<% data_refseq = JSON.parse(refseq_info) %>
 <% links = JSON.parse(links) //refseq  %>
 <% sites = JSON.parse(sites) %>
 
@@ -191,6 +220,7 @@
   <%= data_lineage.subspecies %>
 
 </span></center>
+
 <div id='tables'>
 <br><!-- <div id='status'>Preferred Body Site(s): [<%= data_lookup.sites %>]</div> -->
 <table id='description_tbl' border='1'>
@@ -202,18 +232,10 @@
           <% if(text_file){ %>
             <%- include("../../partials/static/"+text_file); %>
           <% }else{ %>
-            <b>Taxon Description</b>:
-            <% if(Object.keys(data_info).length === 0) { %>
-              Not Available
-            <% }else{ %>
-                  <br><%- data_info.general %>
-                  <% if(data_info.disease){ %>
-                    <br><br><b>Disease Associations</b>:<br><%- data_info.disease %>
-                  <% } %>
-                  <% if(data_info.prev){ %>
-                    <br><br><b>Prevalence and Source</b>:<br><%- data_info.prev %>
-                  <% } %>
+            <% if(data_info.notes){ %>
+                    <b>Notes</b>: <span class='red-text'><%- data_info.notes %></span><br><br>
             <% } %>
+            <b>Taxon Description</b>: <%- data_info.general %><br>
           <% } %>
         </div>
 
@@ -370,19 +392,9 @@
     
     </td>
   </tr>
-  <tr>
-    <td class='tbl-title'>Genotypic Description:</td>
-    <td class='taxon_data'><small></small></td>
-  </tr>
   
-  <tr>
-    <td class='tbl-title'>Phenotypic Characteristics:</td>
-    <td class='taxon_data'>
-    <% if(data_info.pheno !==''){ %>
-      <small><%- data_info.pheno %></small>
-    <% } %>
-    </td>
-  </tr>
+  
+  
   
   </table>
 <!-- End Left table -->
@@ -435,14 +447,7 @@
     </div>
 
   </td></tr>
-  <tr>
-    <td class='tbl-title'>Cultivability:</td>
-    <td class='taxon_data'>
-    <% if(data_info.culta !==''){ %>
-      <small><%- data_info.culta %></small>
-    <% } %>
-    </td>
-  </tr>
+  
   
   <tr>
     <td class='tbl-title'><a href='/genome/anvio-server'>Pangenome(s)</a>:</td>
@@ -569,14 +574,85 @@
 </table>
 </div>
 
-<div id='references'>References:</div>
-<% if(data_pubs.pubs){ %>
-  <div class='extra'>
-  <% for (i in data_pubs.pubs){ %>
-    <br>[<b><%= parseInt(i)+1 %></b>] <%= data_pubs.pubs[i].authors %> <%= data_pubs.pubs[i].title %> <%= data_pubs.pubs[i].journal %>
-  <% } %>
-  </div>
-<% } %>
+<center>
+<div id='info-table-div'>
+<table id='info-table' border='1'>
+  
+  <tr>
+    <td class='taxon-extra-title'>Disease Associations:</td>
+    <td class='taxon-extra'>
+    <% if(!data_info.disease){ %>
+      <small>not available</small>
+    <% }else{ %>
+      <small><%- data_info.disease %></small>
+    <% } %>
+    </td>
+  </tr>
+  <tr>
+    <td class='taxon-extra-title'>Prevalence and Source:</td>
+    <td class='taxon-extra'>
+    <% if(!data_info.prev){ %>
+      <small>not available</small>
+    <% }else{ %>
+      <small><%- data_info.prev %></small>
+    <% } %>
+    </td>
+  </tr>
+  
+  <tr>
+    <td class='taxon-extra-title'>Genotypic Description:</td>
+    <td class='taxon-extra'><small></small>
+    <% if(!data_info.geno){ %>
+      <small>not available</small>
+    <% }else{ %>
+      <small><%- data_info.geno %></small>
+    <% } %>
+    </td>
+  </tr>
+  <tr>
+    <td class='taxon-extra-title'>Phenotypic Characteristics:</td>
+    <td class='taxon-extra'>
+    <% if(!data_info.pheno){ %>
+      <small>not available</small>
+    <% }else{ %>
+    <small><%- data_info.pheno %></small>
+    <% } %>
+    
+    </td>
+  </tr>
+  <tr>
+    <td class='taxon-extra-title'>Cultivability:</td>
+    <td class='taxon-extra'>
+    <% if( !data_info.culta){ %>
+      <small>not available</small>
+    <% }else{ %>
+    <small><%- data_info.culta %></small>
+    <% } %>
+    </td>
+  </tr>
+  
+  <tr>
+    <td class='taxon-extra-title'>References:</td>
+    <td class='taxon-extra'>
+      <% if(!data_pubs.pubs){ %>
+          <small>not available</small>
+      <% }else{ %>
+          <table id='pubs-table' border='0'>
+          <% for (i in data_pubs.pubs){ %>
+            <tr><td>
+            [<b><%= parseInt(i)+1 %></b>] <%= data_pubs.pubs[i].authors %> <%= data_pubs.pubs[i].title %> <%= data_pubs.pubs[i].journal %>
+            </td></tr>
+          <% } %>
+          </table>
+          
+      <% } %>
+    </td>
+  </tr>
+  
+</table>
+</div>
+</center>
+
 
 
  

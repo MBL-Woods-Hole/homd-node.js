@@ -1952,25 +1952,30 @@ module.exports.get_default_filter = function get_default_filter(){
     // body sites
     let body_sites = Object.keys(C.tax_sites_all)
     for(let n in body_sites){
-        defaultfilter.site[body_sites[n]] = 'off' // turn all 'off'
-    }
-    for(let n in C.tax_sites_default){
-        defaultfilter.site[C.tax_sites_default[n]] = 'on'  // then turn all 'on'
+        if(C.tax_sites_default.indexOf(body_sites[n]) == -1){
+            defaultfilter.site[body_sites[n]] = 'off' // then turn all 'on'
+        }else{
+            defaultfilter.site[body_sites[n]] = 'on' // then turn all 'on'
+        }
     }
     defaultfilter.site['p_or_pst'] = 'primary_site'
+    
     // abundance
     for(let n in C.tax_abund_all){
-        defaultfilter.abund[C.tax_abund_all[n]] = 'off' // turn all 'off'
+        if(C.tax_abund_default.indexOf(C.tax_abund_all[n]) == -1){
+            defaultfilter.abund[C.tax_abund_default[n]] = 'off' // then turn all 'on'
+        }else{
+            defaultfilter.abund[C.tax_abund_default[n]] = 'on' // then turn all 'on'
+        }
     }
-    for(let n in C.tax_abund_default){
-        defaultfilter.abund[C.tax_abund_default[n]] = 'on' // then turn all 'on'
-    }
+    
     // status
     for(let n in C.tax_status_all){
-        defaultfilter.status[C.tax_status_all[n]] = 'off' // turn all 'off'
-    }
-    for(let n in C.tax_status_default){
-        defaultfilter.status[C.tax_status_default[n]] = 'on' // then turn all 'on'
+        if(C.tax_status_default.indexOf(C.tax_status_all[n]) == -1){
+            defaultfilter.status[C.tax_status_default[n]] = 'off' // then turn all 'on'
+        }else{
+            defaultfilter.status[C.tax_status_default[n]] = 'on' // then turn all 'on'
+        }
     }
     
     

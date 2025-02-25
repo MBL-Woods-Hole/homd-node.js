@@ -214,7 +214,7 @@ const promises = [
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.genome_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.refseq_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.references_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.info_lookup_fn),'json'),
+  //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.info_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),'json'),
  
@@ -252,15 +252,15 @@ Promise.all(promises)
     //console.log('parsing5')
     C.taxon_references_lookup   = results[4];   // lookup by otid TaxonReferencesLookup
     //console.log('parsing6')
-    C.taxon_info_lookup         = results[5];  // lookup by otid TaxonInfoLookup
+    //C.taxon_info_lookup         = results[5];  // lookup by otid TaxonInfoLookup
     //console.log('parsing7')
-    C.taxon_counts_lookup       = results[6];   // lookup by lineage TaxonCounts
-    C.annotation_lookup         = results[7];  // AnnotationLookup
+    C.taxon_counts_lookup       = results[5];   // lookup by lineage TaxonCounts
+    C.annotation_lookup         = results[6];  // AnnotationLookup
     
-    C.images_loc              = results[8];   // image name and text
-    C.images_tax              = results[9];   // match image w/ otid or tax rank
-    C.contig_lookup           = results[10];
-    C.site_lookup           = results[11];
+    C.images_loc              = results[7];   // image name and text
+    C.images_tax              = results[8];   // match image w/ otid or tax rank
+    C.contig_lookup           = results[9];
+    C.site_lookup           = results[10];
     //C.phage_lookup              = results[12];
     
     /// END of results files
@@ -283,8 +283,8 @@ Promise.all(promises)
     size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup))
     console.log('C.taxon_lineage_lookup #ofKeys',Object.keys(C.taxon_lineage_lookup).length,'\tsize(KB):',size/1024)
     
-    size = Buffer.byteLength(JSON.stringify(C.taxon_info_lookup))
-    console.log('C.taxon_info_lookup #ofKeys',Object.keys(C.taxon_info_lookup).length,'\t\tsize(KB):',size/1024)
+    //size = Buffer.byteLength(JSON.stringify(C.taxon_info_lookup))
+    //console.log('C.taxon_info_lookup #ofKeys',Object.keys(C.taxon_info_lookup).length,'\t\tsize(KB):',size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.refseq_lookup))
     console.log('C.refseq_lookup #ofKeys',Object.keys(C.refseq_lookup).length,'\t\tsize(KB):',size/1024)

@@ -334,7 +334,7 @@ router.get('/tax_description', function tax_description(req, res){
   // let myurl = url.parse(req.url, true);
   //helpers.print(['pre data1',C.taxon_lookup[389]])
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
-  let data1={},data2={},data3,data4,data5,links={},sites
+  let lookup_data={},data4,refseq=[],links={},sites,taxon_info
   if(otid && req.session.ttable_filter){
       req.session.ttable_filter.otid = otid
   }
@@ -372,17 +372,19 @@ router.get('/tax_description', function tax_description(req, res){
 
   
   */
+  let lineage = C.taxon_lineage_lookup[otid]
+  //console.log('lin',lineage)
   let text_file = get_rank_text('species','',otid)
   if(C.dropped_taxids.indexOf(otid) !== -1){
      //helpers.print(data1)
-     
-     data1 = C.taxon_lookup[otid]
+     // DROPPED
+     lookup_data = C.taxon_lookup[otid]
      let hmt = 'HMT-'+("000" + otid).slice(-3)
-     let message = "This TaxonID ("+hmt+") has been Dropped.<br>Reason: "+data1.notes
+     let message = "This TaxonID ("+hmt+") has been Dropped.<br>Reason: "+lookup_data.notes
      //let dropped_notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
      //data1.notes= "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
      //data3 = get_special_lineage_from_db(otid)
-     let q = queries.get_lineage_query(otid)
+     let q = queries.get_lineage_query(otid)  // dont need query 
      //console.log(q)
      TDBConn.query(q, (err, rows) => {
          if(err){ console.log(err);return }
@@ -390,8 +392,8 @@ router.get('/tax_description', function tax_description(req, res){
          //links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
          
          //console.log('rows',rows)
-         data3 = rows[0]
-         links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
+         let data3 = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
+         links['lpsnlink'] = helpers.get_lpsn_outlink1(lookup_data, data3)
          //console.log(links)
          let lineage_string = data3.domain+';'+data3.phylum+';'+ data3.klass +';'+data3.order +';'+data3.family +';'+data3.genus +';'+data3.species +';'+data3.subspecies
          
@@ -415,13 +417,13 @@ router.get('/tax_description', function tax_description(req, res){
             otid: otid,
             //pids: pid_list,
             image_array:JSON.stringify([]),
-            data1: JSON.stringify(data1),
+            data1: JSON.stringify(lookup_data),
             msg: message,
             text_file: text_file[0],   // only 666 so far
-            data2: JSON.stringify({}),  // description 
-            data3: JSON.stringify(data3),  // lineage domain=>subspecies
+            tinfo: JSON.stringify({}),  // description 
+            lin: JSON.stringify(data3),  // lineage domain=>subspecies
             data4: JSON.stringify({}),  // publications
-            data5: JSON.stringify({}), // refseq, seqname, strain , genbank
+            refseq_info: JSON.stringify({}), // refseq, seqname, strain , genbank
             links: JSON.stringify(links),
             sites: JSON.stringify(sites),
             lineage: lineage_string,
@@ -429,8 +431,8 @@ router.get('/tax_description', function tax_description(req, res){
             user: JSON.stringify(req.user || {}),
           })
           return
-     })
-     return
+    })
+    return
   }
 
   if( C.taxon_lookup[otid] === undefined){
@@ -438,107 +440,91 @@ router.get('/tax_description', function tax_description(req, res){
       res.send('That Taxon ID: ('+otid+') was not found1 - Use the Back Arrow and select another')
       return
   }
-    
-  data1 = C.taxon_lookup[otid]
-  helpers.print(['data1',data1])
   
-
-  if(! text_file[0]){
-      if(C.taxon_info_lookup[otid]){
-          data2 = C.taxon_info_lookup[otid]
-      }else {
-          console.warn('No taxon_info for HMT:',otid,' in C.taxon_info_lookup')
-          data2 = {}
-      }
-  }
-  
-  //helpers.print(['data2',data2])
-  if(C.taxon_lineage_lookup[otid] ){
-      data3 = C.taxon_lineage_lookup[otid]
-      //helpers.print(data3)
-  }else {
-      console.warn('NO taxon_lineage for HMT:',otid,' in C.taxon_lineage_lookup')
-      data3 = {}
-  }
-  //helpers.print(['data3',data3])
+  // TODO use query here instead of data1,data2....
+  // 
+  lookup_data = C.taxon_lookup[otid]
+  helpers.print(['lookup_data',lookup_data])
+ 
   //console.log('389')
   //console.log(C.taxon_references_lookup['389'])
   if(C.taxon_references_lookup[otid]){
     data4 = C.taxon_references_lookup[otid]
-    
   }else {
     console.warn('No taxon_references for HMT:',otid,'in C.taxon_references_lookup')
     data4 = {}
   }
-  if(C.refseq_lookup[otid]){
-    data5 = C.refseq_lookup[otid]
-  }else {
-    console.warn('No refseq for HMT:',otid,'in C.refseq_lookup')
-    data5 = []
-  }
-  // phage known to infect
-  //let tmp_list = Object.values(C.phage_lookup).filter(item => item.host_otid === otid)
-  //let pids = tmp_list.map()
-  //console.log('d1',data1)
-  //console.log('d3',data3)
-  // get_genus photos
-  let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[data3.species+'_species']
-  //console.log('node',node)
-  let lineage_list = helpers.make_lineage(node)  // [str obj]
+    let image_array = find_otid_images('species', otid)
+    //refseq = {}
+    //info = {'general':'','cultavability':'','prevalence':'','disease_associations':'','phenotypic':''}  // unique per otid
+    //counts = 
+    let q_refseq_metadata = queries.get_refseq_metadata_query(otid)    // dont need query 
+    //console.log(q_refseq_metadata)
+    let q_info = queries.get_taxon_info_query(otid)
+    //console.log(q_info)
+    TDBConn.query(q_refseq_metadata, (err, refseq_rows) => {
+        //console.log('refseq',refseq_rows)
+        refseq = refseq_rows
+        
+        TDBConn.query(q_info, (err, taxon_info_rows) => {  // picks-up notes and general,prev,cult
+            taxon_info = taxon_info_rows[0]
+            if(taxon_info_rows.length == 0){
+               taxon_info = []
+            }
+            
+            //console.log('info rows',taxon_info)
+            
+            
   
-  let image_array = find_otid_images('species', otid)
-  
-  let lineage_string = lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>'
-  if(otid in C.link_exceptions){
-     links = C.link_exceptions[otid]
-  }else{
-     //if(data3.subspecies){
-     //   links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species+'%20'+data3.subspecies,'lpsnlink':'subspecies/'+data1.genus+'-'+data1.species+'-'+data3.subspecies.split(/\s/)[1]}
-     //}else{
-        links = {'ncbilink':data1.genus+'-'+data1.species,'gcmlink':data1.genus+'%20'+data1.species}
-        links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
-     //}
-  }
-  //pangenomes
-  
-  links.anviserver_link = C.anviserver_link
-  
-  // console.log('sites',C.site_lookup[otid])
-  sites = ''
-  if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
-     sites = 'Primary: '+C.site_lookup[otid]['s1']
-         // = Object.values(C.site_lookup[otid]).join('<br>')
-     if(C.site_lookup[otid]['s2'] && C.site_lookup[otid]['s2'] != 'Unassigned'){
-        sites += '<br>Secondary: '+C.site_lookup[otid]['s2']
-     }
-     if(C.site_lookup[otid]['ref_link']){
-        sites += "<br><small>Reference: <a href='"+C.site_lookup[otid]['ref_link']+"' target='_blank'>"+C.site_lookup[otid]['ref_link']+'</a></small>'
-     }
-     if(C.site_lookup[otid]['note']){
-        sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
-     }
-  }
-  //console.log('pangenome_link',links.pangenomes)
-  res.render('pages/taxa/taxdesc', {
-    title: 'HOMD :: Taxon Info', 
-    pgname: 'taxon/description', // for AbountThisPage
-    config: JSON.stringify(CFG),
-    otid: otid,
-    //pids: pid_list,
-    image_array:JSON.stringify(image_array),
-    data1: JSON.stringify(data1),
-    msg: data1.notes,
-    text_file: text_file[0],   // only 666 so far
-    data2: JSON.stringify(data2),
-    data3: JSON.stringify(data3),
-    data4: JSON.stringify(data4),
-    data5: JSON.stringify(data5),
-    links: JSON.stringify(links),
-    sites: JSON.stringify(sites),
-    lineage: lineage_string,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
-  })
+
+            if(otid in C.link_exceptions){
+                links = C.link_exceptions[otid]
+            }else{
+                links = {'ncbilink':lookup_data.genus+'-'+lookup_data.species,'gcmlink':lookup_data.genus+'%20'+lookup_data.species}
+                links['lpsnlink'] = helpers.get_lpsn_outlink1(lookup_data, lineage)
+            }
+            
+            //pangenomes
+            links.anviserver_link = C.anviserver_link
+          
+            // console.log('sites',C.site_lookup[otid])
+            sites = ''
+            if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
+               sites = 'Primary: '+C.site_lookup[otid]['s1']
+                 // = Object.values(C.site_lookup[otid]).join('<br>')
+               if(C.site_lookup[otid]['s2'] && C.site_lookup[otid]['s2'] != 'Unassigned'){
+                sites += '<br>Secondary: '+C.site_lookup[otid]['s2']
+               }
+               if(C.site_lookup[otid]['ref_link']){
+                sites += "<br><small>Reference: <a href='"+C.site_lookup[otid]['ref_link']+"' target='_blank'>"+C.site_lookup[otid]['ref_link']+'</a></small>'
+               }
+               if(C.site_lookup[otid]['note']){
+                sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
+               }
+            }
+          //console.log('pangenome_link',links.pangenomes)
+          res.render('pages/taxa/taxdesc', {
+            title: 'HOMD :: Taxon Info', 
+            pgname: 'taxon/description', // for AbountThisPage
+            config: JSON.stringify(CFG),
+            otid: otid,
+            //pids: pid_list,
+            image_array:JSON.stringify(image_array),
+            data1: JSON.stringify(lookup_data),
+            msg: lookup_data.notes,
+            text_file: text_file[0],   // only 666 so far
+            tinfo: JSON.stringify(taxon_info),
+            lin: JSON.stringify(lineage),
+            data4: JSON.stringify(data4),
+            refseq_info: JSON.stringify(refseq),
+            links: JSON.stringify(links),
+            sites: JSON.stringify(sites),
+            
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+            user: JSON.stringify(req.user || {}),
+          })
+      })  // end refseq query
+  })  // end info query
 })
 
 

@@ -394,27 +394,27 @@ def run_references(args):   ## REFERENCE Citations
               'title':   obj['title'].replace('"',"'").replace('&quot;',"'").replace('&#039;',"'").replace('\r',"").replace('\n',"")
             })
 
-    q2 =  """SELECT otid,
-          NCBI_pubmed_search_count as a,
-          NCBI_nucleotide_search_count as b,
-          NCBI_protein_search_count as c,
-          NCBI_genome_search_count as d,
-          NCBI_taxonomy_search_count as e,
-          NCBI_gene_search_count as f,
-          NCBI_genomeP_search_count as g
-          from extra_flat_info"""
-    result = myconn.execute_fetch_select_dict(q2)
-    for obj in result:
-        otid = str(obj['otid'])
-        if otid not in lookup:
-            lookup[otid] = {}
-        lookup[otid]['NCBI_pubmed_search_count'] = str(obj['a'])
-        lookup[otid]['NCBI_nucleotide_search_count'] = str(obj['b'])
-        lookup[otid]['NCBI_protein_search_count'] = str(obj['c'])
-        lookup[otid]['NCBI_genome_search_count'] = str(obj['d'])
-        lookup[otid]['NCBI_taxonomy_search_count'] = str(obj['e'])
-        lookup[otid]['NCBI_gene_search_count'] = str(obj['f'])
-        lookup[otid]['NCBI_genomeP_search_count'] = str(obj['g'])
+    # q2 =  """SELECT otid,
+#           NCBI_pubmed_search_count as a,
+#           NCBI_nucleotide_search_count as b,
+#           NCBI_protein_search_count as c,
+#           NCBI_genome_search_count as d,
+#           NCBI_taxonomy_search_count as e,
+#           NCBI_gene_search_count as f,
+#           NCBI_genomeP_search_count as g
+#           from extra_flat_info"""
+#     result = myconn.execute_fetch_select_dict(q2)
+#     for obj in result:
+#         otid = str(obj['otid'])
+#         if otid not in lookup:
+#             lookup[otid] = {}
+#         lookup[otid]['NCBI_pubmed_search_count'] = str(obj['a'])
+#         lookup[otid]['NCBI_nucleotide_search_count'] = str(obj['b'])
+#         lookup[otid]['NCBI_protein_search_count'] = str(obj['c'])
+#         lookup[otid]['NCBI_genome_search_count'] = str(obj['d'])
+#         lookup[otid]['NCBI_taxonomy_search_count'] = str(obj['e'])
+#         lookup[otid]['NCBI_gene_search_count'] = str(obj['f'])
+#         lookup[otid]['NCBI_genomeP_search_count'] = str(obj['g'])
 
 
     file = os.path.join(args.outdir,args.outfileprefix+'ReferencesLookup.json')
@@ -746,7 +746,7 @@ if __name__ == "__main__":
     print_master_lookup(args)
 
     run_refseq(args)
-    run_info(args)
+    #run_info(args) # this only on taxon_description page AND used for downloads ->query
     run_references(args)
 
 

@@ -60,7 +60,7 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
     let file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+today 
 
     let list_of_otids = send_list.map(item => item.otid)
-    console.log('Table::Count of OTIDs:',list_of_otids)
+    //console.log('Table::Count of OTIDs:',list_of_otids)
     // type = browser, text or excel
     var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
     if(type === 'browser'){
@@ -428,7 +428,7 @@ function create_taxon_table(otids, source, type, head_txt) {
     if(source === 'table'){
         let obj1 = C.taxon_lookup
         let obj2 = C.taxon_lineage_lookup
-        let obj3 = C.taxon_info_lookup 
+        //let obj3 = C.taxon_info_lookup  // discontinued 2025-02-24
         let obj4 = C.taxon_references_lookup 
         let obj5 = C.site_lookup 
         //console.log('in create_taxon_table: '+source)
@@ -437,13 +437,11 @@ function create_taxon_table(otids, source, type, head_txt) {
         headers = ["HMT-ID",
                    "Domain","Phylum","Class","Order","Family","Genus","Species","Subspecies",
                    "Naming Status","Cultivation Status","Body Site(s)","Type Strain","16S_rRNA",
-                   "Synonyms","NCBI Taxon ID","NCBI Pubmed Count",
-                   "NCBI Nucleotide Count","NCBI Protein Count","Genome IDs","Genome Size Range", "General Info",
-                   "Cultivability","Phenotypic Characteristics","Prevalence","Disease"
+                   "Synonyms","NCBI Taxon ID","Genome IDs","Genome Size Range"
                    ]
         
         txt +=  headers.join('\t')
-        var o1,o2,o3,o4
+        var o1,o2 //,o3,o4
         for(var n in otids){
             
             let otid = otids[n].toString()
@@ -466,16 +464,16 @@ function create_taxon_table(otids, source, type, head_txt) {
                 }else {
                    o2 = {'domain':'','phylum':'','klass':'','order':'','family':'','genus':'','species':'','subspecies':''}
                 }
-                if(otid in obj3){
-                   o3 = obj3[otid]
-                }else {
-                   o3 = {'general':'','culta':'','pheno':'','prev':'','disease':''}
-                }
-                if(otid in obj4){
-                   o4 = obj4[otid]
-                }else {
-                   o4 = {NCBI_pubmed_search_count: '0',NCBI_nucleotide_search_count: '0',NCBI_protein_search_count: '0'}
-                }
+                // if(otid in obj3){
+//                    o3 = obj3[otid]
+//                 }else {
+//                    o3 = {'general':'','culta':'','pheno':'','prev':'','disease':''}
+//                 }
+                // if(otid in obj4){
+//                    o4 = obj4[otid]
+//                 }else {
+//                    o4 = {NCBI_pubmed_search_count: '0',NCBI_nucleotide_search_count: '0',NCBI_protein_search_count: '0'}
+//                 }
                 // list! o1.type_strain, o1,genomes, o1,synonyms, o1.sites, o1.ref_strains, o1,rrna_sequences
                 // clone counts
                 if(o2.domain){  // weeds out dropped
@@ -498,9 +496,10 @@ function create_taxon_table(otids, source, type, head_txt) {
                    otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
                    let species = o2.species.replace(o2.genus,'').trim()  // removing gens from species name
                    var r = [otid_pretty,o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,
-                            o1.naming_status,o1.cultivation_status,sites,tstrains,rnaseq,syn,o1.ncbi_taxid,o4.NCBI_pubmed_search_count,
-                            o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count,gn,o1.tlength_str,o3.general,
-                            o3.culta,o3.pheno,o3.prev,o3.disease
+                            o1.naming_status,o1.cultivation_status,sites,tstrains,rnaseq,syn,o1.ncbi_taxid
+                            //,o4.NCBI_pubmed_search_count,o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count
+                            ,gn,o1.tlength_str
+                            //,o3.general,o3.culta,o3.pheno,o3.prev,o3.disease
                             
                             ]
                             

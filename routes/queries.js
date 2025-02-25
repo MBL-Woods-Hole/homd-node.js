@@ -12,7 +12,31 @@ module.exports.get_refseq_query = (refid) => {
 
   return qSelectRefseq
 }
+module.exports.get_refseq_metadata_query = (otid) => {
+  let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
+  qSelectRefseqInfo += " WHERE otid='" + otid + "'"
 
+  return qSelectRefseqInfo
+}
+module.exports.get_taxon_info_query = (otid) => {
+  let q = "SELECT  notes,`general`,prevalence as prev,cultivability as culta,disease_associations as disease,phenotypic_characteristics as pheno"
+  q += " from taxon_info"
+  q += " WHERE otid='"+otid+"'"
+  return q
+}
+// module.exports.taxon_description_info = (otid) => {
+//     let q = "select refseqid,seqname,strain,genbank, pubmed_id,journal,`authors`,title,"
+//     q += "NCBI_pubmed_search_count as a,NCBI_nucleotide_search_count as b,NCBI_protein_search_count as c,NCBI_genome_search_count as d,"
+//     q += "NCBI_taxonomy_search_count as e,        NCBI_gene_search_count as f, NCBI_genomeP_search_count as g,"
+//     q += "`general`,prevalence as prev,cultivability as culta,disease_associations as disease,phenotypic_characteristics as pheno"
+//     q += " from otid_prime"
+//     q += " left join taxon_refseqid using (otid)"
+//     q += " left join extra_flat_info using (otid)"
+//     q += " left join reference using(otid)"
+//     q += " left join taxon_info using (otid)"
+//     q += " WHERE otid='"+otid+"'"
+//     return q
+// }
 module.exports.get_16s_rRNA_sequence_query = (gid) => {
   let qSelect16Sseq = 'SELECT 16s_rRNA from genomes '
   qSelect16Sseq += "WHERE seq_id='" + gid + "'"
