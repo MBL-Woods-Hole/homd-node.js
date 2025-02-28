@@ -11,6 +11,7 @@ const path        = require('path');
 const {exec, spawn} = require('child_process');
 const helpers = require(app_root + '/routes/helpers/helpers');
 
+//let hmt = 'HMT-'+("000" + otid).slice(-3)
 
 module.exports.getKeyByValue = (object, value) => {
   return Object.keys(object).find(key => object[key] === value);

@@ -1,0 +1,100 @@
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+
+
+.links {
+  fill: none;
+  stroke: #000;
+  
+}
+
+.link-extensions {
+  fill: none;
+  stroke: #000;
+  /* stroke-opacity: .25; */
+}
+
+.labels {
+  font: 10px sans-serif;
+}
+
+.link--active {
+  stroke: #000 !important;
+  stroke-width: 1.5px;
+  
+}
+
+.link-extension--active {
+  stroke-opacity: .6;
+  
+}
+
+.label--active {
+  font-weight: bold;
+  font-size: 20px;
+  
+}
+#taxon{
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background:lightgrey;
+  padding:10px;
+  border:1px solid black;
+}
+#show-length {
+  position: fixed;
+  top: 50px;
+  left: 10px;
+}
+#legend{
+  /* float:left; */
+  position: fixed;
+  width:260px;
+  top:100px;
+  height:100px;
+  /* border:1px solid black; */
+}
+#file-name{
+  position: fixed;
+  right:10px;
+  float:right;
+}
+</style>
+<% //tdata_one = JSON.parse(tdata) %>
+<% //mdata_one = JSON.parse(mdata) %>
+<% //unique_phyla = JSON.parse(uphyla) %>
+<body>
+   <span id='file-name'>FileName: <%= fname %></span>
+    <span id='taxon'>place-holder</span>
+      <label id="show-length">
+         <input type="checkbox" \> Show branch length
+      </label>
+     <div id='legend'></div>
+      <center><div id='tree'></div></center>
+   
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<!-- Copyright 2011 Jason Davies https://github.com/jasondavies/newick.js -->
+<script>function parseNewick(a){for(var e=[],r={},s=a.split(/\s*(;|\(|\)|,|:)\s*/),t=0;t<s.length;t++){var n=s[t];switch(n){case"(":var c={};r.branchset=[c],e.push(r),r=c;break;case",":var c={};e[e.length-1].branchset.push(c),r=c;break;case")":r=e.pop();break;case":":break;default:var h=s[t-1];")"==h||"("==h||","==h?r.name=n:":"==h&&(r.length=parseFloat(n))}}return r}</script>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<script>
+  metadata   = JSON.parse('<%- mdata %>')
+  mydata     = '<%- tdata %>'
+  phyla     = JSON.parse('<%- uphyla %>')
+  //console.log(phyla)
+  mainmenu()
+</script>
+<script type="text/javascript" src="/js/tree.js"></script>

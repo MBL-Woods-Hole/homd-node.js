@@ -1390,6 +1390,60 @@ router.get('/dropped', function dropped(req, res) {
         })
     })
 })
+router.get('/tree_d3', function tree_d3(req, res) {
+
+    let unique_phyla_obj = {}
+    let file_name = 'HOMD_16S_rRNA_RefSeq_V15.23.reroot.order.tre'
+    fs.readFile(path.join("public/"+file_name), 'utf8', function readTreeFile(err, data) {
+      if (err){
+          console.log('xxx',err)
+      }else{
+          //var treedata = JSON.parse(data);
+        let refseq_tree_lookup = {}
+        for(let otid in C.refseq_lookup){
+            let hmt = 'HMT-'+("000" + otid).slice(-3)
+            //console.log(otid, C.refseq_lookup[otid], C.taxon_lineage_lookup[otid])
+            for(let n in C.refseq_lookup[otid]){
+               
+              refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid] = {}
+              refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].hmt = hmt
+              if(C.taxon_lineage_lookup.hasOwnProperty(otid)){
+                unique_phyla_obj[C.taxon_lineage_lookup[otid].phylum] = 1
+                refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].phylum = C.taxon_lineage_lookup[otid].phylum
+                refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species = C.taxon_lineage_lookup[otid].species.replace(/"/g, '')
+                if(C.taxon_lineage_lookup[otid].subspecies){
+                   refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species = C.taxon_lineage_lookup[otid].species.replace(/"/g, '') +' '+C.taxon_lineage_lookup[otid].subspecies
+                }
+              }else{
+                
+                refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].phylum = 'Dropped'
+                refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species = C.taxon_lookup[otid].genus+' '+C.taxon_lookup[otid].species.replace(/"/g, '')
+              }
+              
+              
+              //refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species = C.taxon_lineage_lookup[otid].species +' '+C.taxon_lineage_lookup[otid].subspecies
+            }
+        }
+        unique_phyla_obj['Dropped'] = 1
+        //console.log(refseq_tree_lookup)
+        let unique_phyla = Object.keys(unique_phyla_obj)
+        
+        res.render('pages/taxa/tree_d3', {
+          title: 'HOMD :: tree',
+          pgname: '', // for AbountThisPage
+          pgtitle: 'D3 Tree',
+          config: JSON.stringify(CFG),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+          user: JSON.stringify(req.user || {}),
+          mdata: JSON.stringify(refseq_tree_lookup),
+          tdata: JSON.stringify(data),
+          uphyla: JSON.stringify(unique_phyla),
+          fname: file_name
+          
+        })
+      }
+    })
+})
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////

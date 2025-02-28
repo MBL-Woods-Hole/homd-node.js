@@ -271,6 +271,7 @@ Promise.all(promises)
     //var  = C.dropped_obj
     console.log('Dropped Taxa:',C.dropped_taxids,C.dropped_taxids.length)
     console.log('Reference Taxa:',C.reference_taxids,C.reference_taxids.length)
+    
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     
     //examples
