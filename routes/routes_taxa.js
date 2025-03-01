@@ -1424,9 +1424,12 @@ router.get('/tree_d3', function tree_d3(req, res) {
               //refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species = C.taxon_lineage_lookup[otid].species +' '+C.taxon_lineage_lookup[otid].subspecies
             }
         }
-        unique_phyla_obj['Dropped'] = 1
-        //console.log(refseq_tree_lookup)
         let unique_phyla = Object.keys(unique_phyla_obj)
+        let unique_phyla_sorted = unique_phyla.sort()
+        unique_phyla_sorted.push('Dropped')
+        //unique_phyla_obj['Dropped'] = 1
+        //console.log(refseq_tree_lookup)
+        
         
         res.render('pages/taxa/tree_d3', {
           title: 'HOMD :: tree',
@@ -1437,7 +1440,7 @@ router.get('/tree_d3', function tree_d3(req, res) {
           user: JSON.stringify(req.user || {}),
           mdata: JSON.stringify(refseq_tree_lookup),
           tdata: JSON.stringify(data),
-          uphyla: JSON.stringify(unique_phyla),
+          uphyla: JSON.stringify(unique_phyla_sorted),
           fname: file_name
           
         })
