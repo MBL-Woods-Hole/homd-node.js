@@ -238,6 +238,30 @@ var mouseDown = false;
 shape.addEventListener("mousemove", mousemove);
 shape.addEventListener("mousedown", mousedown);
 shape.addEventListener("wheel", wheel);
+shape.addEventListener("dblclick", dblclick);
+function dblclick(e){
+  console.log('dblclick')
+  // var scale = (e.deltaY < 0) ? 0.8 : 1.2;
+//   console.log('deltay',mousePosition,e,e.deltaY,scale)
+//   if ((viewboxScale * scale < 8.) && (viewboxScale * scale > 1./256.))
+//   {  
+//     // var mpos = {x: mousePosition.x * viewboxScale, y: mousePosition.y * viewboxScale};
+// //     var vpos = {x: viewboxPosition.x, y: viewboxPosition.y};
+// //     var cpos = {x: mpos.x + vpos.x, y: mpos.y + vpos.y}
+// //     viewboxPosition.x = (viewboxPosition.x + cpos.x) * scale + cpos.x;
+// //     viewboxPosition.y = (viewboxPosition.y + cpos.y) * scale + cpos.y;
+// //     viewboxScale *= scale;
+//     var mpos = {x: mousePosition.x * viewboxScale, y: mousePosition.y * viewboxScale};
+//     var vpos = {x: viewboxPosition.x, y: viewboxPosition.y};
+//     var cpos = {x: mpos.x + vpos.x, y: mpos.y + vpos.y}
+//     
+//     viewboxPosition.x = (viewboxPosition.x + cpos.x) * scale + cpos.x;
+//     viewboxPosition.y = (viewboxPosition.y + cpos.y) * scale + cpos.y;
+//     viewboxScale *= scale;
+//   
+//     setviewbox();
+//   }
+}
 function mousedown(e) {
   mouseStartPosition.x = e.pageX;
   mouseStartPosition.y = e.pageY;

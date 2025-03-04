@@ -448,10 +448,10 @@ function create_taxon_table(otids, source, type, head_txt) {
             if(C.dropped_taxids.indexOf(otid) != -1){
                 let data1 = C.taxon_lookup[otid]
                 //console.log('data1',data1)
-                var r = [("000" + otid).slice(-3),,
-                        
-                        ]
-                var row = ('000' + otid).slice(-3) +  '\tDROPPED Taxon\t\t\t\t\t' + data1.genus+'\t'+data1.species  //r.join('\t')
+                // var r = [("000" + otid).slice(-3),,
+//                         
+//                         ]
+                var row = 'HMT-'+('000' + otid).slice(-3) +  '\tDROPPED Taxon\t\t\t\t\t' + data1.genus+'\t'+data1.species  //r.join('\t')
                 txt += '\n'+row
                 
             }else{
