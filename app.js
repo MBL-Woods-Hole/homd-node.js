@@ -269,8 +269,7 @@ Promise.all(promises)
     
     //helpers.print_size()
     //var  = C.dropped_obj
-    console.log('Dropped Taxa:',C.dropped_taxids,C.dropped_taxids.length)
-    console.log('Reference Taxa:',C.reference_taxids,C.reference_taxids.length)
+    
     
    // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     
@@ -335,6 +334,8 @@ Promise.all(promises)
     //console.log('id 603 fam ERR',C.homd_taxonomy.taxa_tree_dict_map_by_id[603])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank)
     C.taxa_with_subspecies = Object.values(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies']).map(x => x.otid)
+    console.log('Dropped Taxa:',C.dropped_taxids,C.dropped_taxids.length)
+    console.log('Reference Taxa:',C.reference_taxids,C.reference_taxids.length)
     console.log('C.taxa_with_subspecies',C.taxa_with_subspecies,C.taxa_with_subspecies.length)
     
 
