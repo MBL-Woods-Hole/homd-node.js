@@ -223,9 +223,9 @@
       
       <li><a href="/download#taxon">Download Taxonomy Data</a></li>
       <li><a href="/help/help-page?pagecode=taxon/taxon_version">Taxonomy Version History</a></li>
-      <% //if(cfg.DBHOST === "localhost"){ %>
+      <% if(cfg.DBHOST === "localhost"){ %>
         <li><a href="/taxa/tree_d3" target='_blank'>D3 Tree Testing</a></li>
-      <% //} %>
+      <% } %>
     </ul>
   </li>
   <% if(cfg.XXX === 'development'){ %>
