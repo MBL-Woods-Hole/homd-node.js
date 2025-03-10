@@ -82,8 +82,8 @@ router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
     //console.log(req.query)
     let gid = req.query.gid
     let data = []
-    let q = "SELECT contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
-    q += " FROM crispr_cas where genome_id='"+gid+"'"
+    
+    const q = queries.get_crispr_cas_data(gid)
     TDBConn.query(q, (err, rows) => {
         if(err){
            console.log(err)
@@ -734,8 +734,8 @@ router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
           db = "`PROKKA_ffn`.`ffn_seq`"
        }
   }
-  let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
-  q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
+  
+  const q = queries.get_NN_NA(db, gid, pid)
   helpers.print(q)
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
@@ -2094,8 +2094,8 @@ router.get('/oralgen', function oralgen(req, res) {
 })
 //////////////////
 router.get('/peptide_table', function protein_peptide(req, res) {
-    let q = "SELECT genomes.otid, study_id,genome_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
-    q += " JOIN genomes using (genome_id)"
+    
+    const q = queries.get_peptide()
     let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
     //console.log(q)
     TDBConn.query(q, (err, rows) => {
@@ -2145,9 +2145,8 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
     console.log('req.body',req.body)
     let search_text = req.body.txt_srch.toLowerCase()
     let big_p_list //= Object.values(C.genome_lookup);
+    const q = queries.get_peptide()
     
-    let q = "SELECT genomes.otid, genome_id, study_id,organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
-    q += " JOIN genomes using (genome_id)"
     let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
     console.log(q)
     TDBConn.query(q, (err, rows) => {
@@ -2371,23 +2370,8 @@ router.post('/peptide_table2', function protein_peptide(req, res) {
 router.get('/peptide_table3', function protein_peptide(req, res) {
     console.log(req.query)
     let gid = req.query.gid
-    let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name"
-    q += " FROM protein_peptide"
-    q += " JOIN protein_peptide_counts using (genome_id)"
-    q += " JOIN genomes using (genome_id)"
-    q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
-    q += " JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) "
     
-//     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
-// FROM protein_peptide 
-// JOIN protein_peptide_counts using (seq_id) 
-// JOIN genomes using (seq_id) 
-// JOIN protein_peptide_counts_study using (protein_peptide_counts_id) 
-// JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) 
-// where seq_id='SEQF9928.1'
-
-    //q += " JOIN protein_peptide_studies using (seq_id)"
-    q += " where genome_id='"+gid+"'"
+    const q = queries.get_peptide3(gid)
     let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study,peptide_id,jb_link
     let locstart,locstop,size,seqacc,loc,highlight
     console.log(q)
