@@ -613,7 +613,9 @@ router.get('/genome_description', function genomeDescription (req, res) {
      if (err) {
          console.log(err)
      }else{
-         
+         if(rows.length ==0){
+             return
+         }
          data = rows[0]
          console.log(gid,data)
          data.gid = gid
