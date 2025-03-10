@@ -123,10 +123,9 @@
     <select class='dropdown' id='field_select' value='<%= fltr.text.field %>' class="" name='field' onclick='update_sb()'>
         <optgroup>
         <option value='all'>All Fields</option>
-        <option value='accession'>Assembly-ID</option>
+        <option value='genomeid'>Genome-ID</option>
         <option value='taxid'>Taxon-ID</option>
-        <option value='genus'>Genus</option>
-        <option value='species'>Species</option>
+        <option value='organism'>Organism</option>
         <option value='strain'>Strain</option>
         </optgroup>
     </select>
@@ -138,9 +137,9 @@
        <small>
         <span class='filter-title'>Sort Column</span>:&nbsp;&nbsp;
         <% if(fltr.sort_col === 'gid'){ %>
-        <input type='radio' checked name='sort_col' value='gid' onclick='update_sb()' > SEQ-ID&nbsp;
+        <input type='radio' checked name='sort_col' value='gid' onclick='update_sb()' > Genome-ID&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='gid' onclick='update_sb()' > SEQ-ID&nbsp;
+        <input type='radio' name='sort_col' value='gid' onclick='update_sb()' > Genome-ID&nbsp;
         <% } %>
         <% if(fltr.sort_col === 'otid'){ %>
         <input type='radio' checked name='sort_col' value='otid' onclick='update_sb()' > Taxon-ID&nbsp;
@@ -148,35 +147,31 @@
         <input type='radio' name='sort_col' value='otid' onclick='update_sb()' > Taxon-ID&nbsp;
         <% } %>
         
-        <% if(fltr.sort_col === 'genus'){ %>
-        <input type='radio' checked name='sort_col' value='genus' onclick='update_sb()' > Genus/Species&nbsp;
+        <% if(fltr.sort_col === 'organism'){ %>
+        <input type='radio' checked name='sort_col' value='organism' onclick='update_sb()' > Organism&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='genus' onclick='update_sb()' > Genus/Species&nbsp;
+        <input type='radio' name='sort_col' value='organism' onclick='update_sb()' > Organism&nbsp;
         <% } %>
-        <% if(fltr.sort_col === 'species'){ %>
-        <input type='radio' checked name='sort_col' value='species' onclick='update_sb()' > Species&nbsp;
-        <% }else{ %>
-        <input type='radio' name='sort_col' value='species' onclick='update_sb()' > Species&nbsp;
-        <% } %>
+        
         <% if(fltr.sort_col === 'strain'){ %>
         <input type='radio' checked name='sort_col' value='strain' onclick='update_sb()' > Strain&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='strain' onclick='update_sb()' > Strain&nbsp;
         <% } %>
-        <% if(fltr.sort_col === 'ncontigs'){ %>
-        <input type='radio' checked name='sort_col' value='ncontigs' onclick='update_sb()' > Contigs
+        <% if(fltr.sort_col === 'contigs'){ %>
+        <input type='radio' checked name='sort_col' value='contigs' onclick='update_sb()' > Contigs&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='ncontigs' onclick='update_sb()' > Contigs
+        <input type='radio' name='sort_col' value='contigs' onclick='update_sb()' > Contigs&nbsp;
         <% } %>
-        <% if(fltr.sort_col === 'tlength'){ %>
-        <input type='radio' checked name='sort_col' value='tlength' onclick='update_sb()' > Length
+        <% if(fltr.sort_col === 'combined_size'){ %>
+        <input type='radio' checked name='sort_col' value='combined_size' onclick='update_sb()' > Length&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='tlength' onclick='update_sb()' > Length
+        <input type='radio' name='sort_col' value='combined_size' onclick='update_sb()' > Length&nbsp;
         <% } %>
         <% if(fltr.sort_col === 'gc'){ %>
-        <input type='radio' checked name='sort_col' value='gc' onclick='update_sb()' > GC
+        <input type='radio' checked name='sort_col' value='gc' onclick='update_sb()' > GC&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='gc' onclick='update_sb()' > GC
+        <input type='radio' name='sort_col' value='gc' onclick='update_sb()' > GC&nbsp;
         <% } %>
         <span id='sort_rev' title='Reverse the Sort Order'>
           

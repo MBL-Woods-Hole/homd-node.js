@@ -268,6 +268,7 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
     //console.log(type,pid,db,mol,org,product,gid)
     args={}
+    args.gid = gid
     args.type = type
     args.pid  = pid
     args.db   = db

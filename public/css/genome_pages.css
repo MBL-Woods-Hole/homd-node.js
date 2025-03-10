@@ -106,22 +106,22 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     
 }
 #gnom-table .col5 {
-    
-}
-#gnom-table .col6 {
-    width: 50px;
-}
-#gnom-table .col7 {
     width: 60px;
 }
+#gnom-table .col6 {
+    width: 60px;
+}
+#gnom-table .col7 {
+    width: 70px;
+}
 #gnom-table .col8 {
-    width: 90px;
+    width: 60px;
 }
 #gnom-table .col9{
    width: 60px;
 }
 #gnom-table .col10{
-   width: 320px;
+   width: 300px;
 }
 #gnom-table .col11 {
     width: 130px;

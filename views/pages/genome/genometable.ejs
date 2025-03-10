@@ -58,7 +58,9 @@ pagedata {
  <%- include('../../partials/genome_table_filter.ejs') %> 
 <br><%- count_txt %>
 <% if(cfg.DBHOST == "localhost"){ %>
-<br><span style=''><small><b>localhost</b> available PROKKA Annos: SEQF10000, 10001, 10010</small></span>
+<br><span style=''><small><b>Localhost</b>
+  Available V11.0-PROKKA Annos: GCA_000174175.1, GCA_016648925.1, GCA_030450175.1, GCA_900105505.1, GCA_938028245.1
+</small></span>
 <% } %>
 
   
@@ -66,15 +68,14 @@ pagedata {
     <table id='gnom-table' class='table table-hover table-condensed ' style='background: lightgrey;'>
     <thead>
     <tr><th class='col0' ></th>
-    <th class='col1' scope='col' >GenBank<br>Assembly ID</th>
+    <th class='col1' scope='col' >Genome-ID</th>
     <th class='col2' scope='col' nowrap>Taxon-ID</th>
-    <th class='col3' scope='col' >Genus</th>
-    <th class='col4' scope='col' >Species</th>
-    <th class='col5' scope='col' >Strain or Isolate</th>
-    <th class='col6' title='MAG: Metagenome-Assembled Genome' scope='col' >MAG</th>
-    <th class='col7' scope='col' >Contigs</th>
-    <th class='col8' scope='col' >Combined<br>Length</th>
-    <th class='col9' scope='col' >GC(%)</th>
+    <th class='col3' scope='col' >Organism</th>
+    <th class='col4' scope='col' >Strain</th>
+    <th class='col5' title='MAG: Metagenome-Assembled Genome' scope='col' >MAG</th>
+    <th class='col6' scope='col' >Contigs</th>
+    <th class='col7' scope='col' >Combined<br>Length</th>
+    <th class='col8' scope='col' >GC(%)</th>
     <th class="col10 sorttable_nosort" scope='col' >Genome Info and Tools</th>
     <th class="col11 sorttable_nosort" scope='col' >Annotations</th>
     </tr>
@@ -97,17 +98,17 @@ pagedata {
         <% }else{ %>
             <td class='right'><%= parseInt(n) + 1 %></td>
       <% } %>
-        <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gb_asmbly %></a></td>
+        <% genus = ginfo[n].organism.split(" ")[0] %>
+        <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
         <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-        <td class='tax_name' title='<%= ginfo[n].genus %>'><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].genus %></em></a></td>
+        <td class='tax_name' title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].organism %></em></a></td>
         
-        <td class='tax_name' title="<%- ginfo[n].species %> <%- ginfo[n].subspecies %>"><a href='/taxa/tax_description?otid=<%= ginfo[n].otid %>&gid=<%= ginfo[n].gid %>'><em><%- ginfo[n].species %></em>
-        <%- ginfo[n].subspecies %></a></td>
+       
         
         <td class='tax_name' title='<%= ginfo[n].strain %>'><em><%= ginfo[n].strain %></em></td>
-        <td class='tax_name'></td>
-        <td class='center'><%= ginfo[n].ncontigs %></td>
-        <td class='center'><%= ginfo[n].tlength %></td>
+        <td class='center'><%= ginfo[n].mag %></td>
+        <td class='center'><%= ginfo[n].contigs %></td>
+        <td class='center'><%= ginfo[n].combined_size %></td>
     
         <td class='center'><%= ginfo[n].gc %></td>
         <% gc2 = (parseFloat(ginfo[n].gc)/100).toFixed(2) %>

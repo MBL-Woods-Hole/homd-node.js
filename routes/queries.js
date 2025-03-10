@@ -39,7 +39,7 @@ module.exports.get_taxon_info_query = (otid) => {
 // }
 module.exports.get_16s_rRNA_sequence_query = (gid) => {
   let qSelect16Sseq = 'SELECT 16s_rRNA from genomes '
-  qSelect16Sseq += "WHERE seq_id='" + gid + "'"
+  qSelect16Sseq += "WHERE genome_id='" + gid + "'"
 
   return qSelect16Sseq
 }
@@ -61,7 +61,7 @@ module.exports.get_annotation_query = (gid, anno) => {
   
   let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`, gene'
   qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-  qSelectAnno += " WHERE seq_id = '"+gid+"'"
+  qSelectAnno += " WHERE genome_id = '"+gid+"'"
   
   // const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
 //   let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
@@ -113,30 +113,42 @@ module.exports.get_lineage_query = (otid) => {
 //   return qSelectAnno
 // }
 module.exports.get_genome = (gid) => {   // always NCBI for taxon description
+  // data for genome description
+  // NCBI Fields
+  // fields = ['organism','assembly_level', 'assembly_method', 'bioproject', 'biosample', 'submission_date', 'geo_loc_name', 'isolation_source', 'status', 'seqtech', 'submitter', 'GC',  'coverage', 'contigs', 'combined_size', 'ANI', 'checkM_completeness', 'checkM_percentile', 'checkM_contamination', 'taxid', 'refseq_assembly', 'WGS']
+ 
+  let qSelectGenome = "SELECT `genomesV11.0`.strain,`genomesV11.0`.organism,`genomesV11.0`.contigs,`genomesV11.0`.combined_size,`genomesV11.0`.MAG,`genomesV11.0`.GC, "
+        qSelectGenome +=' bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,'
+        qSelectGenome +=' submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_percentile,checkM_contamination,refseq_assembly,WGS,'
+        qSelectGenome +=' `genomes_prokkaV11.0`.contigs,bases,CDS,gene,mRNA,misc_RNA,rRNA,tRNA,tmRNA,repeat_region'
+        qSelectGenome +=' FROM `genomesV11.0`'
+        qSelectGenome +=" left JOIN `genomes_prokkaV11.0` using(genome_id)"
+        qSelectGenome +=" left JOIN `genomes_ncbiV11.0` using(genome_id)"
+        qSelectGenome +=" WHERE genome_id = '"+gid+"'"
   
-  let qSelectGenome = "SELECT strain_or_isolate,organism,coverage,status,"
-        qSelectGenome +=' date,'
-        qSelectGenome +=' submitter,'
-        qSelectGenome +=' ncontigs,'
-        qSelectGenome +=' tlength,'
-        qSelectGenome +=' isolate_origin,'
-        qSelectGenome +=' ncbi_bioproject,'
-        qSelectGenome +=' ncbi_taxonid,'
-        qSelectGenome +=' ncbi_biosample,'
-        qSelectGenome +=' ncbi_assembly_name,'
-        qSelectGenome +=' gc,'
-        qSelectGenome +=' gb_assembly,'
-        qSelectGenome +=' refseq_assembly,'
-        qSelectGenome +=' assembly_type,'
-        qSelectGenome +=' release_type,'
-        qSelectGenome +=' assembly_level,'
-        qSelectGenome +=' genome_rep,'
-        qSelectGenome +=' method,'
-        qSelectGenome +=' wgs,'
-        qSelectGenome +=' seqtech,'
-        qSelectGenome +=' crisper_cas'
-        qSelectGenome +=' FROM genomes'
-        qSelectGenome +=" WHERE seq_id = '"+gid+"'"
+//   let qSelectGenome = "SELECT strain_or_isolate,organism,coverage,status,"
+//         qSelectGenome +=' date,'
+//         qSelectGenome +=' submitter,'
+//         qSelectGenome +=' ncontigs,'
+//         qSelectGenome +=' tlength,'
+//         qSelectGenome +=' isolate_origin,'
+//         qSelectGenome +=' ncbi_bioproject,'
+//         qSelectGenome +=' ncbi_taxonid,'
+//         qSelectGenome +=' ncbi_biosample,'
+//         qSelectGenome +=' ncbi_assembly_name,'
+//         qSelectGenome +=' gc,'
+//         qSelectGenome +=' gb_assembly,'
+//         qSelectGenome +=' refseq_assembly,'
+//         qSelectGenome +=' assembly_type,'
+//         qSelectGenome +=' release_type,'
+//         qSelectGenome +=' assembly_level,'
+//         qSelectGenome +=' genome_rep,'
+//         qSelectGenome +=' method,'
+//         qSelectGenome +=' wgs,'
+//         qSelectGenome +=' seqtech,'
+//         qSelectGenome +=' crisper_cas'
+//         qSelectGenome +=' FROM genomesV11.0'
+//         qSelectGenome +=" WHERE genome_id = '"+gid+"'"
 // let qSelectGenome = "SELECT  otid,"
 //         qSelectGenome +=' strain_or_isolate,'
 //         qSelectGenome +=' MAG,'
@@ -188,7 +200,7 @@ module.exports.get_genome = (gid) => {   // always NCBI for taxon description
 }
 module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
-  let qSelectContigs = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE seq_id = '"+gid+"'"
+  let qSelectContigs = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE genome_id = '"+gid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj

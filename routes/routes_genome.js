@@ -53,8 +53,8 @@ router.get('/crispr', function crispr(req, res) {
     
     
     send_list.map(function mapGidObjList (el) {
-        if (el.tlength) { 
-            el.tlength = helpers.format_long_numbers(el.tlength); 
+        if (el.combined_size) { 
+            el.combined_size = helpers.format_long_numbers(el.combined_size); 
         }
     })
     send_list.sort(function (a, b) {
@@ -83,7 +83,7 @@ router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
     let gid = req.query.gid
     let data = []
     let q = "SELECT contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
-    q += " FROM crispr_cas where seq_id='"+gid+"'"
+    q += " FROM crispr_cas where genome_id='"+gid+"'"
     TDBConn.query(q, (err, rows) => {
         if(err){
            console.log(err)
@@ -176,7 +176,7 @@ function get_default_gtable_filter(){
             field: 'all',
         },
         letter: '0',
-        sort_col: 'genus',
+        sort_col: 'organism',
         sort_rev: 'off',
         paging:'on'
     }
@@ -291,22 +291,23 @@ function filter_for_phylum(glist, phy){
 }
 function apply_gtable_filter(req, filter) {
     let big_g_list = Object.values(C.genome_lookup);
-    //console.log(big_g_list[0])
+    
     let vals
     if(req.session.gtable_filter){
        vals = req.session.gtable_filter
     }else{
         vals = get_default_gtable_filter()
     }
+    console.log('vals',vals)
     //
     // txt_srch
     big_g_list = getFilteredGenomeList(big_g_list, vals.text.txt_srch, vals.text.field)
-    //
+    console.log(big_g_list[0],vals)
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
       helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
        // COOL.... filter the whole list
-      big_g_list = big_g_list.filter(item => item.genus.toUpperCase().charAt(0) === vals.letter)
+      big_g_list = big_g_list.filter(item => item.organism.toUpperCase().charAt(0) === vals.letter)
     }
     //phylum
     if(vals.phylum  !== ''){
@@ -316,11 +317,12 @@ function apply_gtable_filter(req, filter) {
     //sort_col
     if(vals.sort_rev === 'on'){
         //console.log('REV sorting by ',vals.sort_col)
-         if(vals.sort_col === 'genus'){
+        if(vals.sort_col === 'organism'){
           big_g_list.sort(function (b, a) {
-            return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+            //return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
-        }else if(vals.sort_col === 'otid' || vals.sort_col === 'ncontigs' || vals.sort_col === 'tlength'){
+        }else if(vals.sort_col === 'otid' || vals.sort_col === 'contigs' || vals.sort_col === 'combined_size'){
           big_g_list.sort(function (b, a) {
             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
@@ -338,11 +340,12 @@ function apply_gtable_filter(req, filter) {
         
     }else{
         //console.log('FWD sorting by ',vals.sort_col)
-        if(vals.sort_col === 'genus'){
+        if(vals.sort_col === 'organism'){
           big_g_list.sort(function (a, b) {
-            return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+            //return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
-        }else if(vals.sort_col === 'otid' || vals.sort_col === 'ncontigs' || vals.sort_col === 'tlength'){
+        }else if(vals.sort_col === 'otid' || vals.sort_col === 'contigs' || vals.sort_col === 'combined_size'){
           big_g_list.sort(function (a, b) {
             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
@@ -354,15 +357,17 @@ function apply_gtable_filter(req, filter) {
           //console.log('sortgc2',big_g_list[0],big_g_list[1],big_g_list[2],big_g_list[3])
           
         }else{
+          // default: sort by organism
           big_g_list.sort(function (a, b) {
+            
             return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
           })
         }
     }
     // format big nums
     big_g_list.map(function mapGidObjList (el) {
-        if (el.tlength) { 
-            el.tlength = helpers.format_long_numbers(el.tlength); 
+        if (el.combined_size) { 
+            el.combined_size = helpers.format_long_numbers(el.combined_size); 
         }
     })
     
@@ -490,8 +495,8 @@ router.get('/genome_table', function genome_table(req, res) {
     renderGenomeTable(req, res, args)
 
 });
-router.post('/genome_table', function genome_table_filter(req, res) {
-    //console.log('in POST gt filter')
+router.post('/genome_table', function genome_table_post(req, res) {
+    console.log('in POST gt filter')
     //console.log(req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret,args,count_txt
     set_gtable_session(req)
@@ -603,24 +608,27 @@ router.get('/genome_description', function genomeDescription (req, res) {
 //   }
   //console.log('data',data)
   const q_genome = queries.get_genome(gid)
-  //console.log('q',q_genome)
+  helpers.print('In Genome_Descriptin1: '+q_genome)
   TDBConn.query(q_genome, (err, rows) => {
      if (err) {
          console.log(err)
      }else{
+         
          data = rows[0]
+         console.log(gid,data)
          data.gid = gid
          data.otid = C.genome_lookup[gid].otid
-         data.genus =C.genome_lookup[gid].genus
-         data.species =C.genome_lookup[gid].species
-         data.tlength = helpers.format_long_numbers(data.tlength)
-         console.log('row',rows)
+         
+         data.genus =C.taxon_lookup[data.otid].genus
+         data.species =C.taxon_lookup[data.otid].species
+         data.combined_size = helpers.format_long_numbers(data.combined_size)
+         
          const q_contig = queries.get_contigs(gid)
          let contigs = []
          // try get contigs from file:
          // ncbi only
   
-         helpers.print('In Genome_Descriptin: '+q_contig)
+         helpers.print('In Genome_Descriptin2: '+q_contig)
          TDBConn.query(q_contig, (err, rows) => {
             if (err) {
               console.log(err)
@@ -699,7 +707,7 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 
 router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
   //console.log('in get_NN_NA_seq -post')
-  //console.log(req.body)
+  console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
@@ -709,7 +717,7 @@ router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
 //   q += " WHERE PID='" + pid + "'"
   
   let db
-  let gid = db_pts[1]
+  let gid = req.body.gid
   if(req.body.type == 'aa'){   // NCBI
       if(db_pts[0] == 'NCBI' || db_pts[0] == 'ncbi'){
           db = "`NCBI_faa`.`protein_seq`"
@@ -725,8 +733,8 @@ router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
        }
   }
   let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
-  q += " WHERE seq_id ='"+gid+"' and protein_id='" + pid + "'"
-  //console.log('anno2 query '+q)
+  q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
+  helpers.print(q)
   TDBConn.query(q, (err, rows) => {
   //ADBConn.query(q, (err, rows) => {
     if (err) {
@@ -1330,14 +1338,14 @@ router.get('/explorer', function explorer_get (req, res) {
   const glist = Object.values(C.genome_lookup)
   
   glist.sort(function sortGList (a, b) {
-      return helpers.compareStrings_alpha(a.genus, b.genus)
+      return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
-  const allAnnosObj = glist.filter(item => item.genus !== '')
+  const allAnnosObj = glist.filter(item => item.organism !== '')
     .map((el) => {
       
       //return { gid: el.gid, org: el.organism }
-      return { gid: el.gid, org: el.genus+' '+el.species+' '+el.strain }
+      return { gid: el.gid, org: el.organism+' '+el.strain }
     })
   
   if (!gid || gid.toString() === '0') {
@@ -1347,10 +1355,11 @@ router.get('/explorer', function explorer_get (req, res) {
     return
   }else {
       if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
-        organism = C.annotation_lookup[gid].prokka.organism
+        //organism = C.annotation_lookup[gid].prokka.organism
+        organism = C.genome_lookup[gid].organism
       }else{
         req.flash('fail', 'Genome not found: "'+gid+'"')
-        
+        console.log('no anno1')
         args = {fltr:{},filter_on:'off',gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
         render_explorer(req, res, args)
         return
@@ -1360,10 +1369,11 @@ router.get('/explorer', function explorer_get (req, res) {
   
   if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
         otid = C.genome_lookup[gid].otid
-        gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
+        //gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
+        gc = C.genome_lookup[gid].gc
   }
   if(gid && !anno) {
-      
+      console.log('no anno2')
       args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:0,organism:organism,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
       render_explorer(req, res, args)
       return
@@ -1385,7 +1395,7 @@ router.get('/explorer', function explorer_get (req, res) {
 
   //OLD DB
   const q = queries.get_annotation_query(gid, anno)
-  //console.log(q)
+  console.log(q)
   //NEW DB
   
   if(req.session.atable_filter){
@@ -1886,15 +1896,9 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 function getFilteredGenomeList (gidObjList, searchText, searchField) {
   let sendList, tmpSendList
   const tempObj = {}
-  //if (searchField === 'taxid') {
-  //  sendList = gidObjList.filter(item => item.otid.toLowerCase().includes(searchText))
-  //} else 
-  //console.log(searchField,gidObjList[0])
-  //console.log(searchText,'SEARCHING')
-  if (searchField === 'accession') {
-    //console.log('SEARCHING')
-    sendList = gidObjList.filter(item => item.gb_asmbly.toLowerCase().includes(searchText))
-  } else if (searchField === 'strain') {
+  
+  //console.log('gidObjList',gidObjList)
+  if (searchField === 'strain') {
     sendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText))
  //} else if (searchField === 'organism') {
    // sendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
@@ -1907,34 +1911,41 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
   //}  else if (searchField === 'seq_center') {
    // sendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
   } else {
-    tmpSendList = gidObjList.filter(item => item.gb_asmbly.toLowerCase().includes(searchText))
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    }
+    // tmpSendList = gidObjList.filter(item => item.gb_asmbly.toLowerCase().includes(searchText))
+//     for (let n in tmpSendList) {
+//       tempObj[tmpSendList[n].gid] = tmpSendList[n]
+//     }
      // gid
+    console.log('searchText',searchText)
     tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
     //otid
-    tmpSendList = gidObjList.filter(item => item.otid.toLowerCase().includes(searchText))
+    tmpSendList = gidObjList.filter(item => item.otid.toString().includes(searchText))
     // for uniqueness convert to object::otid THIS is WRONG: Must be gid
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     }
-    
-    
-    tmpSendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
+    tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
         // for uniqueness convert to object::gid
         for (let n in tmpSendList) {
           tempObj[tmpSendList[n].gid] = tmpSendList[n]
         }
         // species
-    tmpSendList = gidObjList.filter(item => item.species.toLowerCase().includes(searchText))
-        // for uniqueness convert to object::gid
-        for (let n in tmpSendList) {
-          tempObj[tmpSendList[n].gid] = tmpSendList[n]
-        }
+    
+    
+    // tmpSendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
+//         // for uniqueness convert to object::gid
+//         for (let n in tmpSendList) {
+//           tempObj[tmpSendList[n].gid] = tmpSendList[n]
+//         }
+//         // species
+//     tmpSendList = gidObjList.filter(item => item.species.toLowerCase().includes(searchText))
+//         // for uniqueness convert to object::gid
+//         for (let n in tmpSendList) {
+//           tempObj[tmpSendList[n].gid] = tmpSendList[n]
+//         }
     // organism
     //tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
     // for uniqueness convert to object::gid
@@ -2081,8 +2092,8 @@ router.get('/oralgen', function oralgen(req, res) {
 })
 //////////////////
 router.get('/peptide_table', function protein_peptide(req, res) {
-    let q = "SELECT genomes.otid, study_id,seq_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
-    q += " JOIN genomes using (seq_id)"
+    let q = "SELECT genomes.otid, study_id,genome_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
+    q += " JOIN genomes using (genome_id)"
     let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
     //console.log(q)
     TDBConn.query(q, (err, rows) => {
@@ -2133,8 +2144,8 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
     let search_text = req.body.txt_srch.toLowerCase()
     let big_p_list //= Object.values(C.genome_lookup);
     
-    let q = "SELECT genomes.otid, seq_id, study_id,organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
-    q += " JOIN genomes using (seq_id)"
+    let q = "SELECT genomes.otid, genome_id, study_id,organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
+    q += " JOIN genomes using (genome_id)"
     let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
     console.log(q)
     TDBConn.query(q, (err, rows) => {
@@ -2204,8 +2215,8 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
 //
 //
 router.get('/peptide_table2', function peptide_table2(req, res) {
- let q = "SELECT seq_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
-    q += " JOIN genomes using (seq_id)"
+ let q = "SELECT genome_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
+    q += " JOIN genomes using (genome_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies using (study_id)"
     
@@ -2231,7 +2242,7 @@ router.get('/peptide_table2', function peptide_table2(req, res) {
        row_collector= {}
        for(let r in rows){
            
-           gid = rows[r].seq_id
+           gid = rows[r].genome_id
            study_id = rows[r].study_id
            if(!study_collector.hasOwnProperty(gid)){
                 study_collector[gid] = [rows[r].study_id]
@@ -2276,8 +2287,8 @@ router.get('/peptide_table2', function peptide_table2(req, res) {
     })
 })
 router.post('/peptide_table2', function protein_peptide(req, res) {
-    let q = "SELECT seq_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
-    q += " JOIN genomes using (seq_id)"
+    let q = "SELECT genome_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
+    q += " JOIN genomes using (genome_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies using (study_id)"
 //     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
@@ -2302,7 +2313,7 @@ router.post('/peptide_table2', function protein_peptide(req, res) {
        row_collector= {}
        for(let r in rows){
            
-           gid = rows[r].seq_id
+           gid = rows[r].genome_id
            study_id = rows[r].study_id
            if(!study_collector.hasOwnProperty(gid)){
                 study_collector[gid] = [rows[r].study_id]
@@ -2360,8 +2371,8 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
     let gid = req.query.gid
     let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name"
     q += " FROM protein_peptide"
-    q += " JOIN protein_peptide_counts using (seq_id)"
-    q += " JOIN genomes using (seq_id)"
+    q += " JOIN protein_peptide_counts using (genome_id)"
+    q += " JOIN genomes using (genome_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) "
     
@@ -2374,7 +2385,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
 // where seq_id='SEQF9928.1'
 
     //q += " JOIN protein_peptide_studies using (seq_id)"
-    q += " where seq_id='"+gid+"'"
+    q += " where genome_id='"+gid+"'"
     let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study,peptide_id,jb_link
     let locstart,locstop,size,seqacc,loc,highlight
     console.log(q)

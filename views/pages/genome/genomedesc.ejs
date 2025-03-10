@@ -92,7 +92,7 @@
 <center>    
         
         <div class='title'>Genome Meta Information: 
-        <i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.strain_or_isolate %> (<%= ginfo.gb_assembly %>)</div>
+        <i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.strain %> (<%= ginfo.gid %>)</div>
 
 <% if(Object.keys(ginfo).length ==0 ) { %>
     <br><br>No Data Found for Genome: <%= gid %>        
@@ -120,18 +120,18 @@
 <table id='gnomdesc-table-chars' class="table gnomdesc-table" border='0' >
     <tr class="header" ><th colspan='2'>Genome Characteristics</th></tr>
     <tr class="header" ><th>Fields</th><th>Values</th></tr>
-    <tr class=""><td class='field'>HOMD Genome-ID</td><td class='value'><span class='inner-value'><%= ginfo.gb_assembly %></span></td></tr>
+    <tr class=""><td class='field'>HOMD Genome-ID</td><td class='value'><span class='inner-value'><%= ginfo.gid %></span></td></tr>
     <tr class=""><td class='field'>HOMD Taxon-ID</td><td class='value'><span class='inner-value'><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= taxidfullnameplus %></a></span></td></tr>
     <tr class=""><td class='field'>Organism Name (as deposited)</td><td class='value'><span class='inner-value'><i><%= ginfo.organism %></i></span></td></tr>
     <tr class=""><td class='field'>Organism Name (in use)</td><td class='value'><span class='inner-value'><i><%= ginfo.genus %> <%= ginfo.species %></i></span></td></tr>
-    <tr class=""><td class='field'>Strain or Isolate</td><td class='value'><span class='inner-value'><%= ginfo.strain_or_isolate %></span></td></tr>
+    <tr class=""><td class='field'>Strain or Isolate</td><td class='value'><span class='inner-value'><%= ginfo.strain %></span></td></tr>
      
     <tr class=""><td class='field'>Sequencing Technology</td><td class='value'><span class='inner-value'><%= ginfo.seqtech %></span></td></tr>
     <tr class=""><td class='field'>Genome Coverage</td><td class='value'><span class='inner-value'><%= ginfo.coverage %></span></td></tr>
-    <tr class=""><td class='field'>Contigs and Singlets</td>
+    <tr class=""><td class='field'>Contigs</td>
     <td class='value'><span class='inner-value'>
        <% if(contigs.length == 0){ %>
-          no contigs found (localhost only) <!-- localhost only -->
+          <%= ginfo.contigs %> (localhost only) <!-- localhost only -->
        <% } else if(contigs.length == 1){ %>
           <span id='select-contig'><%= contigs[0].contig %></span>
           <small>
@@ -139,7 +139,7 @@
           &nbsp;&nbsp;[<a href='#' onclick="open_ncbi('single')">Linkout to NCBI</a>]
           </small>
        <% }else{ %>
-          <%= ginfo.ncontigs %>
+          <%= ginfo.contigs %>
           <select id='select-contig' style='width: 200px;'>
           <% for(n in contigs){ %>
              <option value='<%= contigs[n].contig %>|<%= contigs[n].gc %>'><%= contigs[n].contig %></option>
@@ -152,15 +152,19 @@
        <% } %>
     </span></td></tr>
     
-    <tr class=""><td class='field'>Total Sequence Length</td><td class='value'><span class='inner-value'><%= ginfo.tlength %> (bp)</td></tr>
-    <tr class=""><td class='field'>GC Percentage</td><td class='value'><span class='inner-value'><%= ginfo.gc %></span></td></tr>
-    <tr class=""><td class='field'>CheckM</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>CheckM2</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>MAG (Metagenome-Assembled Genome)</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>5S Count</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>16S Count</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>23S Count</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>tRNA Count</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field'>Total Sequence Length</td><td class='value'><span class='inner-value'><%= ginfo.combined_size %> (bp)</td></tr>
+    <tr class=""><td class='field'>GC Percentage</td><td class='value'><span class='inner-value'><%= ginfo.GC %></span></td></tr>
+    <tr class=""><td class='field'>MAG (Metagenome-Assembled Genome)</td><td class='value'><span class='inner-value'><%= ginfo.MAG %></span></td></tr>
+    <tr class=""><td class='field'>Bases</td><td class='value'><span class='inner-value'><%= ginfo.bases %></span></td></tr>
+    <tr class=""><td class='field'>CDS</td><td class='value'><span class='inner-value'><%= ginfo.CDS %></span></td></tr>
+    <tr class=""><td class='field'>Genes</td><td class='value'><span class='inner-value'><%= ginfo.gene %></span></td></tr>
+    <tr class=""><td class='field'>mRNA</td><td class='value'><span class='inner-value'><%= ginfo.mRNA %></span></td></tr>
+    <tr class=""><td class='field'>misc RNA</td><td class='value'><span class='inner-value'><%= ginfo.misc_RNA %></span></td></tr>
+    <tr class=""><td class='field'>rRNA</td><td class='value'><span class='inner-value'><%= ginfo.rRNA %></span></td></tr>
+    <tr class=""><td class='field'>tRNA</td><td class='value'><span class='inner-value'><%= ginfo.tRNA %></span></td></tr>
+    <tr class=""><td class='field'>tmRNA</td><td class='value'><span class='inner-value'><%= ginfo.tmRNA %></span></td></tr>
+    <tr class=""><td class='field'>Repeat Regions</td><td class='value'><span class='inner-value'><%= ginfo.repeat_region %></span></td></tr>
+    
     <tr class="">
       <td class='field'>CRISPR-cas</td>
        <% if(crispr === 0){ %>
@@ -190,11 +194,11 @@
 
     <tr class="header" ><th colspan='2'>NCBI Genome Metadata</th class='value'></tr>
     <tr class="header" ><th>Fields</th><th>Values</th></tr>
-    <tr class=""><td class='field'>Genome Assembly Name</td><td class='value'><span class='inner-value'><%= ginfo.ncbi_assembly_name %></span></td></tr>
+    <tr class=""><td class='field'>Genome Assembly Name</td><td class='value'><span class='inner-value'><%= ginfo.assembly_name %></span></td></tr>
     <tr class=""><td class='field'>GenBank Assembly Accession</td>
-       <td class='value'><span class='inner-value'><%= ginfo.gb_assembly %>
-         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
-         &nbsp;&nbsp;[<a title='Genome Taxonomy Database' href='https://gtdb.ecogenomic.org/genome?gid=<%= ginfo.gb_assembly %>' target='_blank' rel="noopener noreferrer">GTDB</a>]
+       <td class='value'><span class='inner-value'><%= ginfo.gid %>
+         &nbsp;&nbsp;[<a title='National Center for Biotechnology Information' href='https://www.ncbi.nlm.nih.gov/datasets/genome/<%= ginfo.gid %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+         &nbsp;&nbsp;[<a title='Genome Taxonomy Database' href='https://gtdb.ecogenomic.org/genome?gid=<%= ginfo.gid %>' target='_blank' rel="noopener noreferrer">GTDB</a>]
        </span></td>
     </tr>
     
@@ -204,13 +208,13 @@
        </span></td>
     </tr>
     <tr class=""><td class='field'>BioSample</td>
-      <td class='value'><span class='inner-value'><%= ginfo.ncbi_biosample %>
-        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.ncbi_biosample %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+      <td class='value'><span class='inner-value'><%= ginfo.biosample %>
+        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/biosample/<%= ginfo.biosample %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
       </span></td>
     </tr>
     <tr class=""><td class='field'>BioProject</td>
-      <td class='value'><span class='inner-value'><%= ginfo.ncbi_bioproject %>
-        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.ncbi_bioproject %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
+      <td class='value'><span class='inner-value'><%= ginfo.bioproject %>
+        &nbsp;&nbsp;[<a href='https://www.ncbi.nlm.nih.gov/bioproject/?term=<%= ginfo.bioproject %>' target='_blank' rel="noopener noreferrer">NCBI</a>]
       </span></td>
     </tr>
     <tr class=""><td class='field'>Submitter</td><td class='value'><span class='inner-value'><%= ginfo.submitter %></span></td></tr>
@@ -221,25 +225,17 @@
     
     <tr class=""><td class='field'>Sequencing Status</td><td class='value'><span class='inner-value'><%= ginfo.status %></span></td></tr>
     
-    <tr class=""><td class='field' title='Whole Genome Sequence'>WGS Project</td><td class='value'><span class='inner-value'><a href='https://www.ncbi.nlm.nih.gov/Traces/wgs/<%= ginfo.wgs %>' target='_blank' rel="noopener noreferrer"><%= ginfo.wgs %></span></a></td></tr>
-    <tr class=""><td class='field'>NCBI TaxID</td><td class='value'><span class='inner-value'><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.ncbi_taxonid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.ncbi_taxonid %></a></span></td></tr>
-    <tr class=""><td class='field'>Version Status</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>Isolation Source</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>CDS Count</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>Country</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>Isolate</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>Isolation Source</td><td class='value'><span class='inner-value'><%= ginfo.isolate_origin %></span></td></tr>
-    <tr class=""><td class='field'>Latitude / Longitude</td><td class='value'><span class='inner-value'></span></td></tr>
+    <tr class=""><td class='field' title='Whole Genome Sequence'>WGS Project</td><td class='value'><span class='inner-value'><a href='https://www.ncbi.nlm.nih.gov/Traces/wgs/<%= ginfo.wgs %>' target='_blank' rel="noopener noreferrer"><%= ginfo.WGS %></span></a></td></tr>
+    <tr class=""><td class='field'>NCBI TaxID</td><td class='value'><span class='inner-value'><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.taxid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.taxid %></a></span></td></tr>
+    <tr class=""><td class='field'>Version Status</td><td class='value'><span class='inner-value'>TBD</span></td></tr>
+    <tr class=""><td class='field'>Isolation Source</td><td class='value'><span class='inner-value'><%= ginfo.isolation_source %></span></td></tr>
+    <tr class=""><td class='field'>CDS Count (prokka)</td><td class='value'><span class='inner-value'>TBD</span></td></tr>
+    <tr class=""><td class='field'>Geo Location</td><td class='value'><span class='inner-value'><%= ginfo.geo_loc_name %></span></td></tr>
+    <tr class=""><td class='field'>Isolate</td><td class='value'><span class='inner-value'>TBD</span></td></tr>
     <tr class=""><td class='field'>Molecule Count</td><td class='value'><span class='inner-value'></span></td></tr>
     <tr class=""><td class='field'>Refseq Category</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>Sequence Release Date</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>Spanned Gaps</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>Species Taxid</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>SSU Count</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>Total Gap Length</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>translation_table</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>tRNA Count (total)</td><td class='value'><span class='inner-value'></span></td></tr>
-    <tr class=""><td class='field'>Genome Representation</td><td class='value'><span class='inner-value'><%= ginfo.genome_rep %></span></td></tr>
+    <tr class=""><td class='field'>Submission Date</td><td class='value'><span class='inner-value'><%= ginfo.submission_date %></span></td></tr>
+    <tr class=""><td class='field'>Genome Representation</td><td class='value'><span class='inner-value'>TBD <%= ginfo.genome_rep %></span></td></tr>
      
 </table>
 </td></tr>

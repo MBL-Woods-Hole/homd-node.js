@@ -17,106 +17,28 @@ sys.path.append('../../homd-data/')
 sys.path.append('../../config/')
 from connect import MyConnection
 
-# TABLES
-#update_date_tbl = 'static_genomes_update_date'  # this seems to be the LONG list of gids -- use it first then fill in
-#index_tbl       = 'seqid_otid_index'   # match w/ otid OTID Not Unique
-genomes_tbl = 'genomes' #  has genus,species,status,#ofcontigs,combinedlength,
-#seq_extra_tbl   = 'genomes_homd_extra' # has ncbi_id,ncbi_taxid,GC --and alot more
-# 1 --annotated at HOMD with NCBI ANNOTATION
-# 12 --annotated at HOMD without NCBI Annotation
-# 21 --Genomes with NCBI annotation
-# Plus 91 is for those Nonoralref genomes
-acceptable_genome_flags = ('11','12','21','91')
-# first_query ="""
-#     SELECT seq_id as gid, date
-#     from {tbl}
-#     ORDER BY gid
-# """.format(tbl=update_date_tbl)
-# 2
 
-# in db change gc_comment to genbank_assembly (MBL) VARCHAR(20)
-# change genbank_acc to genbank_accession:
-# change goldstamp_id to ncbi_biosample
-# change ncbi_id to ncbi_bioproject
-# isolate origin varchar(200)
-first_genomes_query_no_flagid ="""
-    SELECT seq_id as gid,
-    organism,
-    genus,
-    species,
-    genomes.status,
-    ncontigs,
-    tlength,
+genomes_query = """
+   SELECT genome_id as gid, otid, strain, MAG, organism, contigs, combined_size, GC
+   FROM `genomesV11.0`
+"""
 
-    strain_or_isolate as strain,
-    submitter as submitter,
-
-    ncbi_bioproject as ncbi_bpid,
-    ncbi_taxonid,
-    
-    gc,
-    wgs,
-    ncbi_assembly_name as asmbly_name,
-    gb_assembly   as gb_asmbly,
-    refseq_assembly as rs_asmbly,
-    ncbi_biosample as  ncbi_bsid,
-    has_hsp_study as hsp_study
-
-    from genomes
-    JOIN otid_prime using(otid)
-    JOIN taxonomy using(taxonomy_id)
-    JOIN genus using(genus_id)
-    JOIN species using(species_id)
-
-""".format(tbl1=genomes_tbl)
 
 
 def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     """  alternative to a Class which seems to not play well with JSON
 
-    1 otid                              #table1
-    2  homd seqid                       #table1
-    3  genus species                    #table1
-    4  genome sequence name  # How is this different than genus-species?
-    5  comments on name
-    6  culture collection entry number  # table
-    7  isolate origin                   # table2
-    8  sequencing status                # table
-    9  ncbi tax(genome)id                       # table1
-    10 ncbi genome bioproject id        # table
-    11 ncbi genome biosample id         # table
-    12 genbank acc id                   # table2
-    13 genbank assbly id                # table
-    14 number of contigs and singlets      # table
-    15 combined lengths (bps)           # table
-    16 GC percentage                   # table1
-    17 sequencing center           # table1
-
-    20 16s rna gene sequence           # table  ????
-    21 comments                    # table
+ 
     """
     genome = {}
     genome['gid']       = gid
     genome['otid']      = ''   # index table
-    #genome['organism']     = ''   # table 1
-    genome['genus']     = ''   # table 1
-    genome['species']     = ''   # table 1
-    #genome['status']    = ''   # table 1
-    genome['ncontigs']  = ''   # table 1
-    #genome['submitter'] = ''   # table 1
-    genome['tlength']   = ''   # table 1
+    genome['organism']  = ''   # table 1
+    genome['contigs']  = ''   # table 1
+    genome['combined_size']   = ''   # table 1
     genome['strain']    = ''  # table 1
     genome['gc']        = ''   # table 2
-    #genome['wgs']        = ''   # 
-    #genome['ncbi_taxonid'] = ''   # table 2
-    #genome['ncbi_bpid']     = ''   # table 2
-    #genome['ncbi_bsid'] = ''
-    #genome['io']        = ''   # table 2
-    genome['hsp_study'] = ''
-    #genome['asmbly_name']    = ''
-    genome['gb_asmbly'] = ''
-    #genome['rs_asmbly'] = ''
-    genome['pangenomes'] = []   # array of pangenome names
+    genome['mag']        = ''   # table 2
 
     return genome
 
@@ -126,39 +48,27 @@ master_lookup = {}
 
 
 def run_first(args):
-    """ date not used"""
+    
     global master_lookup
     #print(first_genomes_query)
-    result = myconn.execute_fetch_select_dict(first_genomes_query_no_flagid)
+    result = myconn.execute_fetch_select_dict(genomes_query)
 
     for obj in result:
-        #print(obj)
+        print('obj',obj)
 
         if obj['gid'] not in master_lookup:
             taxonObj = create_genome(obj['gid'])
-            #taxonObj['organism']     = obj['organism']
-            taxonObj['genus']       = obj['genus']
-            taxonObj['species']     = obj['species']
-            #taxonObj['status']      = obj['status']
-            taxonObj['ncontigs']    = obj['ncontigs']
-            #taxonObj['submitter']   = obj['submitter']
-            taxonObj['tlength']     = obj['tlength']
+            taxonObj['organism']     = obj['organism']
+            taxonObj['contigs']    = obj['contigs']
+            taxonObj['combined_size']     = obj['combined_size']
             taxonObj['strain']      = obj['strain']
-            taxonObj['gc']          = obj['gc']
-            #taxonObj['wgs']          = obj['wgs']
-            #taxonObj['ncbi_taxonid'] = obj['ncbi_taxonid']
-            #taxonObj['ncbi_bpid']   = obj['ncbi_bpid']
-            #taxonObj['ncbi_bsid']   = obj['ncbi_bsid']
-            #taxonObj['io']          = obj['io']
-            taxonObj['gb_asmbly']   = obj['gb_asmbly']
-            #taxonObj['rs_asmbly']   = obj['rs_asmbly']
-            #taxonObj['asmbly_name'] = obj['asmbly_name']
-            taxonObj['hsp_study']   = str(obj['hsp_study'])
-
+            taxonObj['gc']          = obj['GC']
+            taxonObj['mag']          = obj['MAG']
+            taxonObj['otid']          = obj['otid']
         else:
             sys.exit('duplicate gid',obj['gid'])
         master_lookup[obj['gid']] = taxonObj
-    #print(master_lookup)
+    print(master_lookup)
 
 def run_second(args):
     """  add otid to Object """
@@ -252,8 +162,8 @@ if __name__ == "__main__":
 
     print(args)
     run_first(args)
-    run_second(args) # otid
-    run_third(args)  #pangenomes
+    #run_second(args) # otid
+    #run_third(args)  #pangenomes
     filename = os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
     print('writing',filename)
     with open(filename, 'w') as outfile:
