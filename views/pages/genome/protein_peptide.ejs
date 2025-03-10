@@ -1,0 +1,148 @@
+<link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
+<style>
+/* Fix the tax table header */
+thead th { position: sticky; top: 0; }
+
+/* 
+table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+table.sortable thead tr::before {
+    content: "";
+    display: table-cell;
+}
+table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+}
+ */
+
+#peptide-table {
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
+  width:100%;
+}
+#peptide-table th{
+  color:white;
+  background: var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+  
+}
+#peptide-table td{
+  padding:3px 2px;
+  font-size:small;
+  color: #303030;
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+  white-space: nowrap;
+}
+#peptide-box{
+   height:700px;
+   overflow:auto;
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
+   margin-top:5px;
+}
+#peptide-table .badge{
+  
+  font-size:0.8em;
+  
+}
+
+#peptide-table tr:nth-child(even) { 
+    background-color: #bccd9c; 
+ } 
+ #peptide-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
+.col1{
+   width: 80px;
+}
+.col2{
+   width: 120px;
+}
+.col5{
+   width: 130px;
+}
+</style>
+
+<%- include('../../partials/header_html'); %>
+
+<% list = JSON.parse(data) %>
+<% var cfg = JSON.parse(config) %> 
+
+<body>
+    
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+    <div class='title'><%= pgtitle %></div>
+  
+  <%- include('../../partials/peptide_table_filter.ejs') %> 
+     <span class='pull-rightxx'>Download Options</span>
+<div id='peptide-box' >
+     <small>row count: <%= row_count %></small>
+     <table id='peptide-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
+     <thead>
+      <tr>
+        <th class="col1" title='Study ID' nowrap>Study-ID</th>
+        <th class="col2" title='Protein ID' nowrap>PID</th>
+        <th class="col1" nowrap>Taxon-ID</th>
+        <th nowrap>Organism</th>
+        <th class="col5" nowrap>Peptide-ID</th>
+        <th nowrap>Peptide</th>
+        <th nowrap>Gene Product</th>
+        
+       
+      </tr>
+     </thead>
+     <tbody>
+     <% for(n in list){ %>
+     
+      
+     <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
+       <tr>
+       <td class='center'><%= list[n].study_id %></td>
+      
+       <td title='Genome Viewer'><a href='<%= list[n].jb_link %>' target='_blank'><%= list[n].pid %></a></td>
+      
+       <td class='center'><a href='/taxa/tax_description?gid=<%= list[n].gid %>&otid=<%= list[n].otid %>'><%= taxidfullname %></a></td>
+       <td title='<%= list[n].organism %>'><a href='genome_description?gid=<%= list[n].gid %>'><%= list[n].organism %></a></td>
+       <td class='center'><%= list[n].peptide_id %></td>
+       <td title='<%= list[n].peptide %>'><%= list[n].peptide %></td>
+       <td title='<%= list[n].product %>'><%= list[n].product %></td>
+       </tr>
+     <% } %>
+     </tbody>
+     </table>
+     
+</div>  <!-- end: table-box -->
+   
+    </div> <!-- end: page-content -->
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/genomes.js"></script>
+<script>
+  mainmenu()
+  var jb_path = '<%- cfg.JBROWSE_URL %>'
+</script>
+
+
+
