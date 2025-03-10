@@ -67,7 +67,7 @@
   <select id='selGenome' name='gid' style='width: 800px;' onchange="this.form.submit()">
      <option id=''  value='0'>Search & Select...</option>
      <% for(i in gn){ %>
-        <option id='' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].strain %></option>
+        <option id='' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].organism %></option>
 	<% } %>
   </select>
 

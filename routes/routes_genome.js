@@ -1495,12 +1495,13 @@ router.get('/blast_per_genome', function blast_per_genome(req, res) {
   const glist = Object.values(C.genome_lookup)
   
   glist.sort(function sortGList (a, b) {
-      return helpers.compareStrings_alpha(a.genus, b.genus)
+      return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
   const genomeList = glist.filter(item => item.genus !== '')
     .map((el) => {
-      return { gid: el.gid, gc:el.gc, genus: el.genus, species: el.species, strain: el.strain }
+      
+      return { gid: el.gid, gc:el.gc, organism: el.organism }
     })
   
   res.render('pages/genome/genome_select', {

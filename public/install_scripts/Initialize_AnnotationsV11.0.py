@@ -101,7 +101,7 @@ def run(args):
     #q_prokka_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `PROKKA_meta`.`prokka_info` WHERE genome_id='%s'"
     #q_ncbi_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `NCBI_meta`.`ncbi_info` WHERE genome_id='%s'"
     q_prokka_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `homd`.`genomes_prokkaV11.0` WHERE genome_id='%s'"
-    q_ncbi_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `homd`.`genomes_ncbiV11.0` WHERE genome_id='%s'"
+    q_ncbi_base = "SELECT organism,contigs, bases,CDS,rRNA,tRNA,tmRNA FROM `homd`.`genomes_ncbiV11.0` WHERE genome_id='%s'"
     fields = ['organism','contigs','bases','CDS','rRNA','tRNA','tmRNA']
     
     for gid in args.seqids_from_db:
