@@ -2232,7 +2232,7 @@ router.get('/peptide_table2', function peptide_table2(req, res) {
        row_collector= {}
        for(let r in rows){
            
-           gid = rows[r].genome_id
+           gid = rows[r].seq_id
            study_id = rows[r].study_id
            if(!study_collector.hasOwnProperty(gid)){
                 study_collector[gid] = [rows[r].study_id]
@@ -2300,7 +2300,7 @@ router.post('/peptide_table2', function protein_peptide(req, res) {
        row_collector= {}
        for(let r in rows){
            
-           gid = rows[r].genome_id
+           gid = rows[r].seq_id
            study_id = rows[r].study_id
            if(!study_collector.hasOwnProperty(gid)){
                 study_collector[gid] = [rows[r].study_id]
