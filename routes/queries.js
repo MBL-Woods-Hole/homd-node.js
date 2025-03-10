@@ -133,13 +133,6 @@ module.exports.get_peptide3 = (gid) => {
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) "
     
-	//     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
-	// FROM protein_peptide 
-	// JOIN protein_peptide_counts using (seq_id) 
-	// JOIN genomes using (seq_id) 
-	// JOIN protein_peptide_counts_study using (protein_peptide_counts_id) 
-	// JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) 
-	// where seq_id='SEQF9928.1'
 
     //q += " JOIN protein_peptide_studies using (seq_id)"
     q += " where genome_id='"+gid+"'"
