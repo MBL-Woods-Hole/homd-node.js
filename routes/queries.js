@@ -84,3 +84,30 @@ module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   return qSelectContigs
 }
 
+module.exports.get_peptide = () => {
+    let qSelectPeptide = "SELECT `genomes`.otid, study_id, seq_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
+    qSelectPeptide += " JOIN `genomes` using (seq_id)"
+    
+    return qSelectPeptide
+}
+module.exports.get_peptide2 = () => {
+    let q = "SELECT seq_id, `genomes`.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
+    q += " JOIN `genomes` using (seq_id)"
+    q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
+    q += " JOIN protein_peptide_studies using (study_id)"
+    return q
+}
+module.exports.get_peptide3 = (gid) => {
+    let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,`genomes`.otid,product,peptide,jb_link,protein_peptide.study_id,study_name"
+    q += " FROM protein_peptide"
+    q += " JOIN protein_peptide_counts using (seq_id)"
+    q += " JOIN `genomes` using (seq_id)"
+    q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
+    q += " JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) "
+    
+
+    //q += " JOIN protein_peptide_studies using (seq_id)"
+    q += " where seq_id='"+gid+"'"
+    
+    return q
+}
