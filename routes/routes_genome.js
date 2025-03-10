@@ -629,7 +629,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
          let contigs = []
          // try get contigs from file:
          // ncbi only
-  
+         console.log('q_contig',q_contig)
          helpers.print('In Genome_Descriptin2: '+q_contig)
          TDBConn.query(q_contig, (err, rows) => {
             if (err) {
@@ -1250,7 +1250,7 @@ router.post('/explorer', function explorer_post (req, res) {
     let atable_filter = get_annot_table_filter(req.body)
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
-    console.log(q)
+    console.log('get_annotation_query-post',q)
     TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
@@ -1397,7 +1397,7 @@ router.get('/explorer', function explorer_get (req, res) {
 
   //OLD DB
   const q = queries.get_annotation_query(gid, anno)
-  console.log(q)
+  console.log('get_annotation_query-GET',q)
   //NEW DB
   
   if(req.session.atable_filter){
