@@ -1350,7 +1350,7 @@ router.get('/explorer', function explorer_get (req, res) {
       return { gid: el.gid, org: el.organism+' '+el.strain }
     })
   
-  if (!gid || gid.toString() === '0') {
+  if (!gid || gid.toString() === '0' || !C.genome_lookup.hasOwnProperty(gid)) {
    
     args = {fltr:{},filter_on:'off',gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
     render_explorer(req, res, args)
