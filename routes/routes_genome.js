@@ -2216,18 +2216,9 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
 //
 //
 router.get('/peptide_table2', function peptide_table2(req, res) {
- let q = "SELECT genome_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
-    q += " JOIN genomes using (genome_id)"
-    q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
-    q += " JOIN protein_peptide_studies using (study_id)"
+ 
     
-//     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
-// FROM protein_peptide 
-// JOIN protein_peptide_counts using (seq_id) 
-// JOIN genomes using (seq_id) 
-// JOIN protein_peptide_counts_study using (protein_peptide_counts_id) 
-// JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) 
-// where seq_id='SEQF9928.1'
+    const q = queries.get_peptide2()
 
     let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
@@ -2288,10 +2279,7 @@ router.get('/peptide_table2', function peptide_table2(req, res) {
     })
 })
 router.post('/peptide_table2', function protein_peptide(req, res) {
-    let q = "SELECT genome_id, genomes.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
-    q += " JOIN genomes using (genome_id)"
-    q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
-    q += " JOIN protein_peptide_studies using (study_id)"
+    const q = queries.get_peptide2()
 //     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
 // FROM protein_peptide 
 // JOIN protein_peptide_counts using (seq_id) 

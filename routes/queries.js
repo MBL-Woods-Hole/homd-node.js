@@ -118,11 +118,18 @@ module.exports.get_peptide = () => {
     
     return qSelectPeptide
 }
+module.exports.get_peptide2 = () => {
+    let q = "SELECT genome_id, `genomesV11.0`.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
+    q += " JOIN `genomesV11.0` using (genome_id)"
+    q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
+    q += " JOIN protein_peptide_studies using (study_id)"
+    return q
+}
 module.exports.get_peptide3 = (gid) => {
-    let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name"
+    let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,`genomesV11.0`.otid,product,peptide,jb_link,protein_peptide.study_id,study_name"
     q += " FROM protein_peptide"
     q += " JOIN protein_peptide_counts using (genome_id)"
-    q += " JOIN genomes using (genome_id)"
+    q += " JOIN `genomesV11.0` using (genome_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) "
     
