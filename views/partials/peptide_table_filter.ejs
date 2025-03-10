@@ -1,0 +1,97 @@
+<style>
+.letter{
+  cursor:pointer;
+  color:blue;
+}
+.noletter{
+  cursor:pointer;
+  color:blue;
+}
+.alpha-list{
+   font-family: monospace;
+}
+#filter_form_div{
+   border:1px solid black;
+   padding:2px;
+}
+#form_btn{
+  width:100%;
+  color:grey;
+}
+#main_table td{
+   padding:0 30px;
+   /* border:1px solid red; */
+   
+}
+#filter_table{
+   
+   border-collapse:colapse;
+}
+#filter_table td{
+   border-top:1px solid brown;
+   padding: 3px 3px 1px 3px;
+}
+#reset_div a{
+   font-size: 14px;
+}
+#sort_rev{
+   
+   border: 1px solid brown;
+   padding:2px 1px 1px 1px;
+   margin:1px;
+}
+.button{
+   cursor:pointer;
+   color:blue;
+   background:lightgrey;
+}
+#sch_txt{
+   
+   color:blue;
+   background:lightgrey;
+   padding:0 5px;
+   border:1px solid black;
+   font-style:italic;
+}
+</style>
+
+<div id='filter_form_div'>
+
+<form id='peptide_filter_form' name='peptide_filter_form' method='POST' action='peptide_table'>
+<table id='main_table'>    
+<tr><td valign='top'> 
+   
+    <div id='reset_div' >
+      <a href='peptide_table'>Reload Entire Table</a> 
+    </div> 
+    
+</td><td> 
+          
+<table id='filter_table' border='1'>
+
+<tr><td>
+    <small>
+    <span class='filter-title'>Search This Table:</span>
+    <input  id='pep_srch_text' type='text' placeholder="Search.." value=''  name='txt_srch' maxlength='100' size='25' >
+    </small>
+</td></tr>
+
+<tr><td>
+  <button id='form_btn' type='submit' class='button' value='Submit'>Submit</button>
+</td></tr>
+</table>
+
+</td>
+<td>
+<% if(search_text){ %>
+   Search Text: <span id='sch_txt'><%= search_text %></span>
+<% } %>
+</td>
+</tr>
+
+
+</table>
+
+</form>
+ 
+</div>
