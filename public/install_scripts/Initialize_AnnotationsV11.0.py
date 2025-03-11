@@ -100,9 +100,9 @@ def run(args):
     
     #q_prokka_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `PROKKA_meta`.`prokka_info` WHERE genome_id='%s'"
     #q_ncbi_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `NCBI_meta`.`ncbi_info` WHERE genome_id='%s'"
-    q_prokka_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `homd`.`genomes_prokkaV11.0` WHERE genome_id='%s'"
-    q_ncbi_base = "SELECT organism,contigs, bases,CDS,rRNA,tRNA,tmRNA FROM `homd`.`genomes_ncbiV11.0` WHERE genome_id='%s'"
-    fields = ['organism','contigs','bases','CDS','rRNA','tRNA','tmRNA']
+    q_prokka_base = "SELECT organism,contigs, gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_prokkaV11.0` WHERE genome_id='%s'"
+    q_ncbi_base   = "SELECT organism,contigs, gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_ncbiV11.0`   WHERE genome_id='%s'"
+    fields = ['organism','contigs','gene','CDS','rRNA','tRNA','tmRNA','mRNA']
     
     for gid in args.seqids_from_db:
         #print(gid)
@@ -111,25 +111,27 @@ def run(args):
         
         if not gid in master_lookup:
             master_lookup[gid]={}
-        if not 'prokka' in master_lookup[gid]:
+        if 'prokka' not in master_lookup[gid]:
             master_lookup[gid]['prokka']={}
         
         q1 = q_prokka_base % (gid)
+        #print(q1)
         row = myconn.execute_fetch_select(q1)
             
         if myconn.cursor.rowcount > 0:
             
             master_lookup[gid][anno]['organism'] = row[0][0]
             master_lookup[gid][anno]['contigs']  = row[0][1]
-            master_lookup[gid][anno]['bases']    = row[0][2]
+            master_lookup[gid][anno]['gene']    = row[0][2]
             master_lookup[gid][anno]['CDS']      = row[0][3]
             master_lookup[gid][anno]['rRNA']     = row[0][4]
             master_lookup[gid][anno]['tRNA']     = row[0][5]
             master_lookup[gid][anno]['tmRNA']    = row[0][6]
+            master_lookup[gid][anno]['mRNA']    = row[0][7]
     
    
         anno = 'ncbi'
-        if not 'ncbi' in master_lookup[gid]:
+        if 'ncbi' not in master_lookup[gid]:
             master_lookup[gid]['ncbi']={}
         q2 = q_ncbi_base % (gid)
         row = myconn.execute_fetch_select(q2)
@@ -138,12 +140,12 @@ def run(args):
             
             master_lookup[gid][anno]['organism'] = row[0][0]
             master_lookup[gid][anno]['contigs']  = row[0][1]
-            master_lookup[gid][anno]['bases']    = row[0][2]
+            master_lookup[gid][anno]['gene']    = row[0][2]
             master_lookup[gid][anno]['CDS']      = row[0][3]
             master_lookup[gid][anno]['rRNA']     = row[0][4]
             master_lookup[gid][anno]['tRNA']     = row[0][5]
             master_lookup[gid][anno]['tmRNA']    = row[0][6]
-
+            master_lookup[gid][anno]['mRNA']    = row[0][7]
 
     file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
     print_dict(file, master_lookup)

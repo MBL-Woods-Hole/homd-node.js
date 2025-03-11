@@ -60,7 +60,7 @@ router.get('/crispr', function crispr(req, res) {
     send_list.sort(function (a, b) {
             return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
     })
-    send_list = apply_sspecies(send_list)
+    send_list = apply_species(send_list)
     res.render('pages/genome/crispr_cas', {
         title: 'HOMD :: CRISPR-Cas', 
         pgname: '', // for AboutThisPage
@@ -389,7 +389,7 @@ function get_filter_on(f, type){
       return 'on'
     }
 }
-function apply_sspecies(lst){
+function apply_species(lst){
    let otid,sp=''
    let subspecies = ''
    
@@ -397,6 +397,8 @@ function apply_sspecies(lst){
       otid = lst[i].otid
       //sp = lst[i].species
       //console.log('otid',otid)
+      lst[i].genus = C.taxon_lineage_lookup[otid].genus
+      lst[i].species = C.taxon_lineage_lookup[otid].species
       lst[i].subspecies = ''
       if(C.taxon_lineage_lookup.hasOwnProperty(otid) && C.taxon_lineage_lookup[otid].subspecies){
         //subspecies = ' <small>['+C.taxon_lineage_lookup[otid].subspecies+']</small>'
@@ -490,7 +492,7 @@ router.get('/genome_table', function genome_table(req, res) {
     }
     count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+ pager_txt
     // apply sub-species to species
-    send_list = apply_sspecies(send_list)
+    send_list = apply_species(send_list)
     args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
     renderGenomeTable(req, res, args)
 
@@ -537,7 +539,7 @@ router.post('/genome_table', function genome_table_post(req, res) {
     page_data.count_before_paging = count_before_paging
     count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+  pager_txt
     //console.log('pd2',page_data)
-    send_list = apply_sspecies(send_list)
+    send_list = apply_species(send_list)
     //console.log('pt',pager_txt)
     args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
     //let obj2 = send_list.filter(o => o.species === 'coli');

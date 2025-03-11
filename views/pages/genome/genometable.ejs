@@ -101,7 +101,7 @@ pagedata {
         <% genus = ginfo[n].organism.split(" ")[0] %>
         <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
         <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-        <td class='tax_name' title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].organism %></em></a></td>
+        <td class='tax_name' title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].species %> <%= ginfo[n].subspecies %></em></a></td>
         
        
         
