@@ -563,7 +563,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
   const glist = Object.values(C.genome_lookup)
   
   glist.sort(function sortGList (a, b) {
-      return helpers.compareStrings_alpha(a.genus, b.genus)
+      return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
   const genomeList = glist.filter(item => item.genus !== '')
@@ -619,7 +619,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
              return
          }
          data = rows[0]
-         console.log(gid,data)
+         helpers.print(data)
          data.gid = gid
          data.otid = C.genome_lookup[gid].otid
          

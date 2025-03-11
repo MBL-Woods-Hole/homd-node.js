@@ -93,7 +93,7 @@ function open_blast_in_new_window(gid){
 //   
 // }
 function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
-  //console.log('open_jbrowse',value,page)
+  console.log('open_jbrowse', value, page)
   /*
   value: may be gid or gid|gc or gid|contig
   page = may be the specific page:
@@ -105,7 +105,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   
   */
   var url
-  var tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,hsp'
+  var tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
   if(page == 'genome_desc_single'){ 
       gid = value
       contigplusgc = document.getElementById("select-contig").innerHTML
@@ -139,16 +139,16 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
   }else if(page == 'anno_table'){
       gid = value
-      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+hilit
+      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
   
   }else if(page == 'protein_peptide'){
        gid = value
-       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+hilit
+       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
        
   }else if(page == 'crispr'){
       tracks = 'crispr'
       gid = value
-      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+hilit
+      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
   }else if(page == 'oralgen'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks
