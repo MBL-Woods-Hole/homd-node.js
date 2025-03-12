@@ -18,7 +18,7 @@ from connect import MyConnection
 
 # TABLES
 taxon_tbl  = 'otid_prime'   # UNIQUE  - This is the defining table
-genome_tbl = 'genomes'
+genome_tbl = 'genomesV11.0'
 
 
 
@@ -36,8 +36,8 @@ join genus using(genus_id)
 join species using(species_id)
 """
 query_gene_count_no_flagid ="""
-SELECT otid, seq_id, tlength
-from {tbl}
+SELECT otid, genome_id, combined_size
+from `{tbl}`
 ORDER BY otid
 """.format(tbl=genome_tbl)
 
@@ -130,9 +130,9 @@ def run_get_genomes(args):  ## add this data to master_lookup
             tlength_lookup[otid] = []
         if otid in master_lookup:
             
-            master_lookup[otid]['genomes'].append(obj['seq_id'])
+            master_lookup[otid]['genomes'].append(obj['genome_id'])
 
-            tlength_lookup[otid].append(obj['tlength'])
+            tlength_lookup[otid].append(obj['combined_size'])
 
         else:
             sys.exit('problem with genome exiting')

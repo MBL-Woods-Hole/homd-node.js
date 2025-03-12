@@ -43,8 +43,9 @@ th, td {
          <% loc = op.contig+":"+(parseInt(op.op_pos1)-500).toString()+".."+(parseInt(op.op_pos2)+500).toString() %>
          <% highlight = op.contig+":"+op.op_pos1+".."+op.op_pos2 %>
          <td>
-         <!-- <a href="<%= cfg.JBROWSE_URL %>/<%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>&tracks=crispr" target='_blank' rel="noopener noreferrer"><%= op.operon %></a></td> -->
-         <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('<%= gid %>','crispr','','','','<%= loc %>','<%= highlight %>')"><%= op.operon %></a>
+         <a href="https://www.homd.org/jbrowse/?data=homd_V10.1/<%= gid %>&loc=<%= loc %>&highlight=<%= highlight %>&tracks=crispr" target='_blank' rel="noopener noreferrer"><%= op.operon %></a></td>
+         
+        <!--  <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('<%= gid %>','crispr','','','','<%= loc %>','<%= highlight %>')"><%= op.operon %></a> -->
         
          <td><%= op.op_pos1 %>, <%= op.op_pos2 %></td>
          <td><%= op.prediction %></td>

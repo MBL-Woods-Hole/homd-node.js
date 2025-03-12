@@ -30,6 +30,11 @@ table.sortable tbody tr::before {
     counter-increment: sortabletablescope;
     display: table-cell;
 }
+#alert{
+   padding: 15px;
+   background: gold;
+   
+}
 </style>
 <% var cfg = JSON.parse(config) %> 
 <% var genomelist = JSON.parse(gid_list) %>
@@ -47,7 +52,8 @@ table.sortable tbody tr::before {
        <div class='title'>CRISPR-Cas systems detected in <%= full_count %> HOMD genomes</div>
        
        <div id='crispr-table-div'>
-       
+       <center><div id='alert'>This data is for HOMD genomes version 10.1 and will be updated to version 11.0 soon.
+       </div></center>
        <span class=''>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Show:
             <% if(show === "a"){ %>
@@ -79,7 +85,7 @@ table.sortable tbody tr::before {
        </span>
        <table id='crispr-table' class='table sortable'>
        <thead>
-       <tr><th>SEQ-ID</th><th>TaxID</th><th>Genus</th><th>Species</th><th>Strain/Culture</th><th>Contigs</th><th>Combined Length</th><th nowrap>CRISPR-Cas</th></tr>
+       <tr><th>SEQ-ID</th><th>TaxID</th><th>Organism</th><th>Contigs</th><th>Combined Length</th><th nowrap>CRISPR-Cas</th></tr>
        </thead>
        <tbody>
        <% for(i in genomelist){ %>
@@ -89,9 +95,8 @@ table.sortable tbody tr::before {
        <tr>
        <td><a href='genome_description?gid=<%= g.gid %>'><%= g.gid %></a></td>
        <td nowrap><a href='/taxa/tax_description?otid=<%= g.otid %>'><%= taxidfullname %></a></td>
-       <td><%= g.genus %></td>
-       <td><%= g.species %></td>
-       <td><%= g.strain %></td>
+       <td><%= g.organism %></td>
+       
        <td class='right-justify'><%= g.ncontigs %></td>
        <td class='center'><%= g.tlength %></td>
        

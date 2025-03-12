@@ -27,6 +27,7 @@ router.get('/overview', function overview(req, res) {
     })
 });
 router.get('/crispr', function crispr(req, res) {
+    // page-1
     //console.log('in crispr')
     //console.log('req.query',req.query)
     let show =''
@@ -44,24 +45,38 @@ router.get('/crispr', function crispr(req, res) {
     }
     
     let send_list = []
-    for (var n in seqid_list) {
-        if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
-             send_list.push(C.genome_lookup[seqid_list[n]])
-        }
+    //for (var n in seqid_list) {
+        //if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
+        //     send_list.push(C.genome_lookup[seqid_list[n]])
+        //}
+    //}
+    
+    console.log('crispr-cas',seqid_list)
+    let q = "SELECT seq_id as gid,tlength,otid,organism,ncontigs FROM genomes WHERE seq_id in ("
+    for(let k in seqid_list){
+        q = q + "'"+seqid_list[k] + "',"
     }
+    q = q.slice(0, -1) +')'
+    TDBConn.query(q, (err, rows) => {
+       if (err) {
+          console.log("Crispr-cas V10 Genomes-GET",err)
+          return
+       }
+       for(let p in rows){
+           console.log('row',rows[p])
+           send_list.push(rows[p])
+       }
     
-    
-    
-    send_list.map(function mapGidObjList (el) {
-        if (el.combined_size) { 
-            el.combined_size = helpers.format_long_numbers(el.combined_size); 
-        }
-    })
-    send_list.sort(function (a, b) {
-            return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
-    })
-    send_list = apply_species(send_list)
-    res.render('pages/genome/crispr_cas', {
+    // send_list.map(function mapGidObjList (el) {
+//         if (el.combined_size) { 
+//             el.combined_size = helpers.format_long_numbers(el.combined_size); 
+//         }
+//     })
+      send_list.sort(function (a, b) {
+            return helpers.compareByTwoStrings_alpha(a, b, 'organism','organism');
+      })
+      //send_list = apply_species(send_list)
+      res.render('pages/genome/crispr_cas', {
         title: 'HOMD :: CRISPR-Cas', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
@@ -72,18 +87,21 @@ router.get('/crispr', function crispr(req, res) {
         full_count: full_count,
         show: show
         
-    })
+      })
+      })
 });
 function list_clean(item){
     //JSON.parse(item.replace('[','').replace(']','') 
     return JSON.parse(item.replace(/'/g, '"'))
 }
 router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
+    // page -2
     //console.log(req.query)
     let gid = req.query.gid
     let data = []
-    
+    console.log('crispr_cas_data',gid)
     const q = queries.get_crispr_cas_data(gid)
+    
     TDBConn.query(q, (err, rows) => {
         if(err){
            console.log(err)
@@ -434,6 +452,7 @@ router.get('/genome_table', function genome_table(req, res) {
     }
     
     if(req.query.otid){
+    console.log('GT GOT otid',otid)
        // reset gtable_filter here because we are coming from tax_table button
        // and expect to see the few genomes for this one taxon
        filter = get_default_gtable_filter()
@@ -444,7 +463,7 @@ router.get('/genome_table', function genome_table(req, res) {
        //console.log('got otid '+req.query.otid)
        let seqid_list = C.taxon_lookup[req.query.otid].genomes
        //seqid_list =[ 'SEQF10000.1', 'SEQF10001.1', 'SEQF10010.1' ]
-       //console.log('sil',seqid_list)
+       console.log('sil',seqid_list)
        send_list = []
        for (var n in seqid_list) {
           if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
