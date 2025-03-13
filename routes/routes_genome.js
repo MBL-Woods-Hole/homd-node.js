@@ -1434,49 +1434,62 @@ router.get('/blast_per_genome', function blast_per_genome(req, res) {
   })
 })
 
-router.get('/blast_sserver', function blast_sserver(req, res){
-   //console.log(req.query)
-   //helpers.accesslog(req, res)
-   let db_type = req.query.type
-   let page_title = ''
-   if(db_type == 'refseq'){
-     page_title = 'BLAST: RefSeq Databases'
-   }else{
-     page_title = 'Genomic BLAST: All-Genomes Databases'
-   }
-   console.log('BLAST SequenceServer','Type:',db_type,'IP:',req.ip)
-   res.render('pages/genome/blast_server_iframe', {
-    title: 'HOMD :: BLAST', 
-    pgname: 'blast/pagehelp', // for AboutThisPage
-    config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
-    gid: '',
-    annotation: '',
-    organism: '',
-    db_type: db_type,
-    ptitle: page_title,
-  })
-})
+// router.get('/blast_sserver', function blast_sserver(req, res){
+//    //console.log(req.query)
+//    //helpers.accesslog(req, res)
+//    let db_type = req.query.type
+//    let page_title = ''
+//    if(db_type == 'refseq'){
+//      page_title = 'BLAST: RefSeq Databases'
+//    }else{
+//      page_title = 'Genomic BLAST: All-Genomes Databases'
+//    }
+//    console.log('BLAST SequenceServer','Type:',db_type,'IP:',req.ip)
+//    res.render('pages/genome/blast_server_no_iframe', {
+//     title: 'HOMD :: BLAST', 
+//     pgname: 'blast/pagehelp', // for AboutThisPage
+//     config: JSON.stringify(CFG),
+//     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//     user: JSON.stringify(req.user || {}),
+//     gid: '',
+//     annotation: '',
+//     organism: '',
+//     db_type: db_type,
+//     ptitle: page_title,
+//   })
+//   
+//    // res.render('pages/genome/blast_server_iframe', {
+// //     title: 'HOMD :: BLAST', 
+// //     pgname: 'blast/pagehelp', // for AboutThisPage
+// //     config: JSON.stringify(CFG),
+// //     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+// //     user: JSON.stringify(req.user || {}),
+// //     gid: '',
+// //     annotation: '',
+// //     organism: '',
+// //     db_type: db_type,
+// //     ptitle: page_title,
+// //   })
+// })
 
 router.post('/blast_ss_single', function blast_ss_single(req, res){
   //console.log('IN POST blast_ss_single')
   //console.log(req.body)
-  
+  let gid = req.body.gid
   //console.log(CFG.BLAST_URL_BASE)
-  let organism = C.genome_lookup[req.body.gid].organism +' '+C.genome_lookup[req.body.gid].strain 
+  let organism = C.genome_lookup[gid].organism +' '+C.genome_lookup[gid].strain 
   //console.log(C.genome_lookup[req.body.gid])
   if(req.session.gtable_filter){
-        req.session.gtable_filter.gid = req.body.gid
+        req.session.gtable_filter.gid = gid
     } 
     
-  let page_title = 'Genomic BLAST: '+organism +' ('+req.body.gid+')'
+  let page_title = 'Genomic BLAST: '+organism +' ('+gid+')'
   if(req.body.annotation){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
   }
   
-  console.log('BLAST SequenceServer','Type:SingleGenome',req.body.gid,'IP:',req.ip)
-  console.log('SingleBLASTURL: '+CFG.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+req.body.gid)
+  //console.log('BLAST SequenceServer','Type:SingleGenome',gid,'IP:',req.ip)
+  //console.log('SingleBLASTURL: '+CFG.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+gid)
   // res.render('pages/genome/blast_server_iframe', {
 //     title: 'HOMD :: BLAST', 
 //     pgname: 'blast/pagehelp', // for AboutThisPage
@@ -1490,17 +1503,17 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
 //     db_type: ''
 //   })
 //   
-  res.render('pages/genome/blast_server_iframe', {
+  let url = 'https://devel.homd.org/genome_blast_single_prokka/?gid='+gid
+  console.log('url',url)
+  
+  res.render('pages/genome/blast_server_no_iframe', {
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
     user: JSON.stringify(req.user || {}),
-    gid: req.body.gid,
-    annotation: req.body.annotation,
-    organism: organism,
-    ptitle: page_title,
-    db_type: ''
+    gid: gid,
+    url: url
   })
    
 })

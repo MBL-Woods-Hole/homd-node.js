@@ -37,7 +37,7 @@ button{
     <div class='page-content' >
               
        <div class='title'style='background:lightgrey;color:black;'><%= ptitle %></div>
-       <button onclick="single()">Single</button> | <button onclick="refseq()">RefSeq</button> | <button onclick="genome()">ALL Genome</button>
+       <button onclick="single('<%= gid %>')">Single</button> | <button onclick="refseq()">RefSeq</button> | <button onclick="genome()">ALL Genome</button>
        
        
        <% if(annotation == "ncbi"){ %>
@@ -121,17 +121,17 @@ button{
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-  function single() {
+  function single(gid) {
     //window.open('https://devel.homd.org/genome_blast_single_prokka/?gid=GCA_900105505.1','_blank');
-    window.open('https://devel.homd.org/genome_blast_single_prokka/?gid=GCA_900105505.1');
+    window.open('https://devel.homd.org/genome_blast_single_prokka/?gid='+gid);
   }
   function refseq() {
     //window.open('https://devel.homd.org/refseq_blast','_blank');
-    window.open('https://devel.homd.org/refseq_blast');
+    window.open('https://devel.homd.org/refseq_blast/');
   }
   function genome() {
     //window.open('https://devel.homd.org/genome_blast','_blank');
-    window.open('https://devel.homd.org/genome_blast');
+    window.open('https://devel.homd.org/genome_blast/');
   }
 </script>
 
