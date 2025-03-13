@@ -37,8 +37,7 @@ button{
     <div class='page-content' >
               
        <div class='title'style='background:lightgrey;color:black;'><%= ptitle %></div>
-       <button onclick="single('<%= gid %>')">Single</button> | <button onclick="refseq()">RefSeq</button> | <button onclick="genome()">ALL Genome</button>
-       
+        
        
        <% if(annotation == "ncbi"){ %>
          <!-- <div class='subtitle' style='padding:10px;'>BLAST Against HOMD NCBI Genome -->
@@ -56,7 +55,6 @@ button{
        <% } %>
        
       
-       For LOCALHOST:<%- cfg.BLAST_URL_BASE %>/genome_blast_single_prokka?gid=<%= gid %>
        
        <!-- </div> -->
        
@@ -73,7 +71,7 @@ button{
            </td></tr></table>
          </span>
          <div style="width: 100%; height: 850px; overflow: hidden">
-           <iframe id='iframe_id' src="https://devel.homd.org/genome_blast_single_ncbi?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+           <iframe id='iframe_id' src="https://devel.homd.org/genome_blast_single_ncbi/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
          </div>
        <% }else if(annotation == "prokka"){ %>
          <span style='float:right;'>
@@ -93,15 +91,15 @@ button{
          <!-- https://devel.homd.org/refseq_blast -->
          <!-- https://devel.homd.org/genome_blast_single_prokka/?gid=GCA_900105505.1 -->
          
-           <iframe id='iframe_id' src="https://devel.homd.org/genome_blast_single_prokka?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>         
+           <iframe id='iframe_id' src="https://devel.homd.org/genome_blast_single_prokka/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>         
          </div>
          
        <% }else{ %>
           <div style="width: 100%; height: 850px; overflow: hidden">
           <% if(db_type == "refseq"){ %>
-            <iframe id='iframe_id' src="https://devel.homd.org/refseq_blast %>" title="HOMD BLAST Server"></iframe>
+            <iframe id='iframe_id' src="https://devel.homd.org/refseq_blast/" title="HOMD BLAST Server"></iframe>
           <% }else{ %>
-            <iframe id='iframe_id' src="https://devel.homd.org/genome_blast %>" title="HOMD BLAST Server"></iframe>
+            <iframe id='iframe_id' src="https://devel.homd.org/genome_blast/" title="HOMD BLAST Server"></iframe>
           <% } %>
           </div>
        <% } %>
