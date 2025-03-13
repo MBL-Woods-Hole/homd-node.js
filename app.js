@@ -224,7 +224,7 @@ const promises = [
   
   //2024-Sept
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.site_lookup_fn),'json'),
-  //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv')
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv')
    //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
   
     // ETC ...
@@ -262,7 +262,7 @@ Promise.all(promises)
     C.images_tax              = results[8];   // match image w/ otid or tax rank
     C.contig_lookup           = results[9];
     C.site_lookup           = results[10];
-    //C.no_ncbi_annotation    = result[11];
+    C.no_ncbi_annotation    = results[11];
     //C.phage_lookup              = results[12];
     
     /// END of results files
@@ -316,7 +316,7 @@ Promise.all(promises)
    //class
    //helpers.print(['app data1',C.taxon_lookup[389]])
    //Absconditabacteria (SR1) [C-1]
-    //console.log(C.homd_taxonomy)
+    console.log('C.no_ncbi_annotation',C.no_ncbi_annotation)
     console.log('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
     //helpers.print(['lineage 673',C.taxon_lineage_lookup[673]])
     //helpers.print(['Lookup 673',C.taxon_lookup[673]])

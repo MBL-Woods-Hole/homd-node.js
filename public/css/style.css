@@ -282,7 +282,12 @@ hr{
   border: 1px solid black;
   color: white;
 }
-
+.pill-grayed {
+  background-color: lightgrey;
+  border: 1px solid grey;
+  color: grey;
+  cursor:default;
+}
 /* For genome table AND Taxon Table alphabet srch */
 #row1 {
   display: flex;                  /* establish flex container */

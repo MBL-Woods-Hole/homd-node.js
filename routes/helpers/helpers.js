@@ -4,6 +4,7 @@ const C       = require(app_root + '/public/constants');
 const CFG  = require(app_root + '/config/config');
 const express     = require('express');
 const fs          = require('fs-extra');
+const readline = require('readline');
 var accesslog = require('access-log');
 const async = require('async')
 const util        = require('util');
@@ -1187,6 +1188,19 @@ module.exports.readFromFile = function readFromFile(file, ext) {
             else {
                 if(ext == 'json'){
                    resolve(JSON.parse(data));
+                }else if(ext == 'csv'){
+                   let gids = []
+                   //console.log(data.toString())
+                   let pts = data.toString().split('\n')
+                   for( let i in pts){
+                      gids.push(pts[i].split(' ')[0])
+                   }
+                   
+                  // const allFileContents = fs.readFileSync('broadband.sql', 'utf-8');
+// allFileContents.split(/\r?\n/).forEach(line =>  {
+//   console.log(`Line from file: ${line}`);
+// });
+                    resolve(gids);
                 }else{
                    console.log(data)
                    resolve(data);

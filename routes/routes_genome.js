@@ -51,7 +51,8 @@ function renderGenomeTable(req, res, args) {
         phyla: JSON.stringify(helpers.get_all_phyla().sort()),
         count_txt: args.count_txt,
         taxa_wgenomes: get_taxa_wgenomes().length,
-        filter_on: args.filter_on
+        filter_on: args.filter_on,
+        no_ncbi_annot: JSON.stringify(C.no_ncbi_annotation)
     })
 }
 function get_default_annot_filter(){
@@ -204,11 +205,11 @@ function apply_gtable_filter(req, filter) {
     }else{
         vals = get_default_gtable_filter()
     }
-    console.log('vals',vals)
+    //console.log('vals',vals)
     //
     // txt_srch
     big_g_list = getFilteredGenomeList(big_g_list, vals.text.txt_srch, vals.text.field)
-    console.log('1',big_g_list[0],vals)
+    //console.log('1',big_g_list[0],vals)
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
       helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
@@ -216,11 +217,11 @@ function apply_gtable_filter(req, filter) {
       big_g_list = big_g_list.filter(item => item.organism.toUpperCase().charAt(0) === vals.letter)
     }
     //phylum
-    console.log('2',big_g_list[0],vals)
+    //console.log('2',big_g_list[0],vals)
     if(vals.phylum  !== ''){
        big_g_list = filter_for_phylum(big_g_list, vals.phylum)
     }
-    console.log('3',big_g_list[0],vals)
+    //console.log('3',big_g_list[0],vals)
     //sort_col
     if(vals.sort_rev === 'on'){
         //console.log('REV sorting by ',vals.sort_col)

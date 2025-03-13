@@ -17,7 +17,7 @@ thead th { position: sticky; top: 0; }
 <% pgdata = JSON.parse(pd) %>
 <% filtergid = fltr.gid %>
 <% var cfg = JSON.parse(config) %> 
-
+<% no_ncbi_annotation = JSON.parse(no_ncbi_annot) %>
 <!-- 
 pagedata {
   rows_per_page: 500,
@@ -130,7 +130,11 @@ pagedata {
         
             <td class='center'>
             <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
-            <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
+            <% if(no_ncbi_annotation.indexOf(ginfo[n].gid) == -1 ){ %>
+                <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
+            <% }else{ %>
+                <span class='pill pill-grayed' href=''>NCBI</span>
+            <% } %>
             <!-- <span class="badge badge-light">HOMD</span></td> -->
       </tr>
       <% rowcount = rowcount + 1 %>
