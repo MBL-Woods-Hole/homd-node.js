@@ -26,126 +26,7 @@ router.get('/overview', function overview(req, res) {
         
     })
 });
-router.get('/crispr', function crispr(req, res) {
-    // page-1
-    //console.log('in crispr')
-    //console.log('req.query',req.query)
-    let show =''
-    if(req.query.show){
-        show = req.query.show  // a, na or all
-    }
-    let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
-    let seqid_list = Object.keys(crispr_data)
-    let full_count = seqid_list.length
-    // filter ambiguous vs non-ambiguous
-    if(show && show === 'a'){
-        seqid_list = seqid_list.filter(item => crispr_data[item] === 'A')
-    }else if(show && show === 'na'){
-        seqid_list = seqid_list.filter(item => crispr_data[item] !== 'A')
-    }
-    
-    let send_list = []
-    //for (var n in seqid_list) {
-        //if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
-        //     send_list.push(C.genome_lookup[seqid_list[n]])
-        //}
-    //}
-    
-    console.log('crispr-cas',seqid_list)
-    let q = "SELECT seq_id as gid,tlength,otid,organism,ncontigs FROM genomes WHERE seq_id in ("
-    for(let k in seqid_list){
-        q = q + "'"+seqid_list[k] + "',"
-    }
-    q = q.slice(0, -1) +')'
-    TDBConn.query(q, (err, rows) => {
-       if (err) {
-          console.log("Crispr-cas V10 Genomes-GET",err)
-          return
-       }
-       for(let p in rows){
-           console.log('row',rows[p])
-           send_list.push(rows[p])
-       }
-    
-    // send_list.map(function mapGidObjList (el) {
-//         if (el.combined_size) { 
-//             el.combined_size = helpers.format_long_numbers(el.combined_size); 
-//         }
-//     })
-      send_list.sort(function (a, b) {
-            return helpers.compareByTwoStrings_alpha(a, b, 'organism','organism');
-      })
-      //send_list = apply_species(send_list)
-      res.render('pages/genome/crispr_cas', {
-        title: 'HOMD :: CRISPR-Cas', 
-        pgname: '', // for AboutThisPage
-        config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-        pgtitle: 'CRISPR-Cas',
-        crispr_data: JSON.stringify(crispr_data),
-        gid_list: JSON.stringify(send_list),
-        full_count: full_count,
-        show: show
-        
-      })
-      })
-});
-function list_clean(item){
-    //JSON.parse(item.replace('[','').replace(']','') 
-    return JSON.parse(item.replace(/'/g, '"'))
-}
-router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
-    // page -2
-    //console.log(req.query)
-    let gid = req.query.gid
-    let data = []
-    console.log('crispr_cas_data',gid)
-    const q = queries.get_crispr_cas_data(gid)
-    
-    TDBConn.query(q, (err, rows) => {
-        if(err){
-           console.log(err)
-           return
-        }
-        //console.log('rows',rows)
-        for(let r in rows){
-           let obj = {}
-           obj.contig = rows[r].contig
-           obj.operon = rows[r].operon
-           //console.log('operon',obj.operon)
-           //let pos = rows[r].operon_pos.split(', ')   //'[17903, 26228]',
-           obj.operon_pos = list_clean(rows[r].operon_pos)
-           //console.log('pos',pos)
-           obj.op_pos1 =obj.operon_pos[0] //.substring(1,pos[0].length)
-           obj.op_pos2 =obj.operon_pos[1]  //.substring(0,pos[1].length-1)
-           obj.prediction = rows[r].prediction
-           //obj.crisprs = rows[r].crisprs
-           //console.log('crisprs',rows[r].crisprs, typeof rows[r].crisprs)
-           obj.crisprs = list_clean(rows[r].crisprs)
-           //obj.distances = rows[r].distances
-           obj.distances = list_clean(rows[r].distances)
-           obj.prediction_cas = rows[r].prediction_cas
-           //obj.prediction_crisprs = rows[r].prediction_crisprs
-           obj.prediction_crisprs = list_clean(rows[r].prediction_crisprs)
-           //console.log(obj)
-           data.push(obj)
-        }
-        
-        
-        res.render('pages/genome/crispr_cas_data', {
-            title: 'HOMD :: CRISPR-Cas', 
-            pgname: '', // for AboutThisPage
-            config: JSON.stringify(CFG),
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-            pgtitle: 'CRISPR-Cas',
-            gid: gid,
-            crispr_data: JSON.stringify(data),
-            
-        
-        })
-    
-    })
-})
+
 function renderGenomeTable(req, res, args) {
     //console.log('render NEW filter') 
     let alltax_list = Object.values(C.taxon_lookup)  //.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
@@ -287,12 +168,15 @@ function set_gtable_session(req) {
     
 }
 function filter_for_phylum(glist, phy){
+    console.log('phy',phy)
+    console.log('glist',glist.length)
     var lineage_list = Object.values(C.taxon_lineage_lookup)
     var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
-    //console.log('obj_lst',obj_lst)
+    
     var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
         return el.otid
     })
+    console.log('otid_list',otid_list.length)
     let otid_grabber = {}
     let gid_obj_list = glist.filter(item => {   // filter genome obj list for inclusion in otid list
         if(otid_list.indexOf(item.otid) !== -1){
@@ -301,10 +185,14 @@ function filter_for_phylum(glist, phy){
         }
         //return otid_list.indexOf(item.otid) !== -1
     })
-    //console.log('otid_grabber',otid_grabber)
-    //console.log('gid_obj_list',gid_obj_list)
+    console.log('otid_grabber',otid_list)
+    console.log('gid_obj_list',gid_obj_list)
     // now get just the otids from the selected gids
-    gid_obj_list.map( (el) =>{ return el.otid })
+    gid_obj_list.map( (el) =>{ 
+       console.log('el',el)
+       return el.otid 
+    
+    })
     return gid_obj_list
 }
 function apply_gtable_filter(req, filter) {
@@ -320,7 +208,7 @@ function apply_gtable_filter(req, filter) {
     //
     // txt_srch
     big_g_list = getFilteredGenomeList(big_g_list, vals.text.txt_srch, vals.text.field)
-    console.log(big_g_list[0],vals)
+    console.log('1',big_g_list[0],vals)
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
       helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
@@ -328,10 +216,11 @@ function apply_gtable_filter(req, filter) {
       big_g_list = big_g_list.filter(item => item.organism.toUpperCase().charAt(0) === vals.letter)
     }
     //phylum
+    console.log('2',big_g_list[0],vals)
     if(vals.phylum  !== ''){
        big_g_list = filter_for_phylum(big_g_list, vals.phylum)
     }
-    
+    console.log('3',big_g_list[0],vals)
     //sort_col
     if(vals.sort_rev === 'on'){
         //console.log('REV sorting by ',vals.sort_col)
@@ -452,7 +341,7 @@ router.get('/genome_table', function genome_table(req, res) {
     }
     
     if(req.query.otid){
-    console.log('GT GOT otid',otid)
+    //console.log('GT GOT otid',otid)
        // reset gtable_filter here because we are coming from tax_table button
        // and expect to see the few genomes for this one taxon
        filter = get_default_gtable_filter()
@@ -463,7 +352,7 @@ router.get('/genome_table', function genome_table(req, res) {
        //console.log('got otid '+req.query.otid)
        let seqid_list = C.taxon_lookup[req.query.otid].genomes
        //seqid_list =[ 'SEQF10000.1', 'SEQF10001.1', 'SEQF10010.1' ]
-       console.log('sil',seqid_list)
+       //console.log('sil',seqid_list)
        send_list = []
        for (var n in seqid_list) {
           if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
@@ -512,6 +401,9 @@ router.get('/genome_table', function genome_table(req, res) {
     count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+ pager_txt
     // apply sub-species to species
     send_list = apply_species(send_list)
+    send_list.sort(function (a, b) {
+        return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+    })
     args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
     renderGenomeTable(req, res, args)
 
@@ -560,6 +452,9 @@ router.post('/genome_table', function genome_table_post(req, res) {
     //console.log('pd2',page_data)
     send_list = apply_species(send_list)
     //console.log('pt',pager_txt)
+    send_list.sort(function (a, b) {
+        return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+    })
     args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
     //let obj2 = send_list.filter(o => o.species === 'coli');
     //console.log('coli2',obj2.length)
@@ -1643,7 +1538,7 @@ router.post('/blast_single', function blast_single(req, res) {
 
 })
 router.get('/blast_server_one', function blast_test(req, res) {
-  //console.log('blast_test')
+  console.log('blast_test')
   let gid = req.query.gid
   const { spawn } = require("child_process");
   let info = {}, filepath
@@ -1940,7 +1835,7 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
 //       tempObj[tmpSendList[n].gid] = tmpSendList[n]
 //     }
      // gid
-    console.log('searchText',searchText)
+    //console.log('searchText',searchText)
     tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n]
@@ -2011,6 +1906,7 @@ function getFilteredGenomeList (gidObjList, searchText, searchField) {
 }
 
 function get_blast_db_info(gid){
+    console.log('in get_blast_db_info')
     let info = {},run,filepath,hit
     const { spawn } = require("child_process");
     // get & check paths to six genome databases: 
@@ -2141,9 +2037,10 @@ router.get('/peptide_table', function protein_peptide(req, res) {
 
          
            //if(C.genome_lookup.hasOwnProperty(gid)){
-             genome = C.genome_lookup[gid]
+             //genome = C.genome_lookup[gid]
              //console.log('genome',genome)
-             temp = {gc:genome.gc,study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide_id:pepid,peptide:pep,jb_link:jb_link}
+             temp = {study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,peptide_id:pepid,peptide:pep,jb_link:jb_link}
+             //temp = {gc:genome.gc,study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide_id:pepid,peptide:pep,jb_link:jb_link}
              //console.log('temp',temp)
              //console.log(C.genome_lookup[gid])
              send_list.push(temp)
@@ -2193,12 +2090,13 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
            //console.log('jblink',jb_link)
 
            //if(C.genome_lookup.hasOwnProperty(gid)){
-        genome = C.genome_lookup[gid]
+        //genome = C.genome_lookup[gid]
              //console.log('genome',genome) 
 
         //temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
-          temp = {pid:pid,study_id:study_id,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,peptide_id:pepid,jb_link:jb_link}
-           
+          //temp = {pid:pid,study_id:study_id,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,peptide_id:pepid,jb_link:jb_link}
+           temp = {study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,peptide_id:pepid,peptide:pep,jb_link:jb_link}
+             
              full_send_list.push(temp)
            //}
        }
@@ -2256,7 +2154,8 @@ router.get('/peptide_table2', function peptide_table2(req, res) {
        row_collector= {}
        for(let r in rows){
            
-           gid = rows[r].genome_id
+           gid = rows[r].seq_id
+           
            study_id = rows[r].study_id
            if(!study_collector.hasOwnProperty(gid)){
                 study_collector[gid] = [rows[r].study_id]
@@ -2324,7 +2223,7 @@ router.post('/peptide_table2', function protein_peptide(req, res) {
        row_collector= {}
        for(let r in rows){
            
-           gid = rows[r].genome_id
+           gid = rows[r].seq_id
            study_id = rows[r].study_id
            if(!study_collector.hasOwnProperty(gid)){
                 study_collector[gid] = [rows[r].study_id]
@@ -2437,6 +2336,129 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
           otid:otid
           
        })
+    })
+})
+router.get('/crispr', function crispr(req, res) {
+    // page-1
+    //console.log('in crispr')
+    //console.log('req.query',req.query)
+    let show =''
+    if(req.query.show){
+        show = req.query.show  // a, na or all
+    }
+    let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
+    let seqid_list = Object.keys(crispr_data)
+    let full_count = seqid_list.length
+    // filter ambiguous vs non-ambiguous
+    if(show && show === 'a'){
+        seqid_list = seqid_list.filter(item => crispr_data[item] === 'A')
+    }else if(show && show === 'na'){
+        seqid_list = seqid_list.filter(item => crispr_data[item] !== 'A')
+    }
+    
+    let send_list = []
+    //for (var n in seqid_list) {
+        //if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
+        //     send_list.push(C.genome_lookup[seqid_list[n]])
+        //}
+    //}
+    
+    console.log('crispr-cas',seqid_list)
+    let q = "SELECT seq_id as gid,tlength,otid,organism,ncontigs FROM genomes WHERE seq_id in ("
+    for(let k in seqid_list){
+        q = q + "'"+seqid_list[k] + "',"
+    }
+    q = q.slice(0, -1) +')'
+    TDBConn.query(q, (err, rows) => {
+       if (err) {
+          console.log("Crispr-cas V10 Genomes-GET",err)
+          return
+       }
+       for(let p in rows){
+           console.log('row',rows[p])
+           send_list.push(rows[p])
+       }
+    
+    // send_list.map(function mapGidObjList (el) {
+//         if (el.combined_size) { 
+//             el.combined_size = helpers.format_long_numbers(el.combined_size); 
+//         }
+//     })
+     send_list.sort(function (a, b) {
+            return helpers.compareStrings_alpha(a.organism, b.organism);
+      })
+      // send_list.sort(function (a, b) {
+//             return helpers.compareByTwoStrings_alpha(a, b, 'organism','organism');
+//       })
+      //send_list = apply_species(send_list)
+      res.render('pages/genome/crispr_cas', {
+        title: 'HOMD :: CRISPR-Cas', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        pgtitle: 'CRISPR-Cas',
+        crispr_data: JSON.stringify(crispr_data),
+        gid_list: JSON.stringify(send_list),
+        full_count: full_count,
+        show: show
+        
+      })
+      })
+});
+function list_clean(item){
+    //JSON.parse(item.replace('[','').replace(']','') 
+    return JSON.parse(item.replace(/'/g, '"'))
+}
+router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
+    // page -2
+    //console.log(req.query)
+    let gid = req.query.gid
+    let data = []
+    console.log('crispr_cas_data',gid)
+    const q = queries.get_crispr_cas_data(gid)
+    
+    TDBConn.query(q, (err, rows) => {
+        if(err){
+           console.log(err)
+           return
+        }
+        //console.log('rows',rows)
+        for(let r in rows){
+           let obj = {}
+           obj.contig = rows[r].contig
+           obj.operon = rows[r].operon
+           //console.log('operon',obj.operon)
+           //let pos = rows[r].operon_pos.split(', ')   //'[17903, 26228]',
+           obj.operon_pos = list_clean(rows[r].operon_pos)
+           //console.log('pos',pos)
+           obj.op_pos1 =obj.operon_pos[0] //.substring(1,pos[0].length)
+           obj.op_pos2 =obj.operon_pos[1]  //.substring(0,pos[1].length-1)
+           obj.prediction = rows[r].prediction
+           //obj.crisprs = rows[r].crisprs
+           //console.log('crisprs',rows[r].crisprs, typeof rows[r].crisprs)
+           obj.crisprs = list_clean(rows[r].crisprs)
+           //obj.distances = rows[r].distances
+           obj.distances = list_clean(rows[r].distances)
+           obj.prediction_cas = rows[r].prediction_cas
+           //obj.prediction_crisprs = rows[r].prediction_crisprs
+           obj.prediction_crisprs = list_clean(rows[r].prediction_crisprs)
+           //console.log(obj)
+           data.push(obj)
+        }
+        
+        
+        res.render('pages/genome/crispr_cas_data', {
+            title: 'HOMD :: CRISPR-Cas', 
+            pgname: '', // for AboutThisPage
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+            pgtitle: 'CRISPR-Cas',
+            gid: gid,
+            crispr_data: JSON.stringify(data),
+            
+        
+        })
+    
     })
 })
 module.exports = router

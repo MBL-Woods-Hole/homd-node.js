@@ -68,6 +68,11 @@ table.sortable tbody tr::before {
 .col5{
    width: 130px;
 }
+#alert{
+   padding: 15px;
+   background: gold;
+   
+}
 </style>
 
 <%- include('../../partials/header_html'); %>
@@ -88,6 +93,10 @@ table.sortable tbody tr::before {
   <%- include('../../partials/peptide_table_filter.ejs') %> 
      <span class='pull-rightxx'>Download Options</span>
 <div id='peptide-box' >
+       
+       <center><div id='alert'>This data is for HOMD genomes version 10.1 and will be updated to version 11.0 soon.
+       </div></center>
+       
      <small>row count: <%= row_count %></small>
      <table id='peptide-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
      <thead>

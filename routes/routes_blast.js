@@ -892,7 +892,7 @@ function createBlastOpts(reqBody) {
 //
 function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
     
-    //console.log('blastOpts',blastOpts)
+    console.log('blastOpts',blastOpts)
     //console.log('opts',opts)
     if(blastOpts.program === 'blastp'){
        // this serves to fix possible bug 

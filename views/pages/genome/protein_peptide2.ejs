@@ -55,6 +55,11 @@ thead th { position: sticky; top: 0; }
 .col_narrow{
    width: 140px;
 }
+#alert{
+   padding: 15px;
+   background: gold;
+   
+}
 </style>
 
 <%- include('../../partials/header_html'); %>
@@ -73,6 +78,8 @@ thead th { position: sticky; top: 0; }
     <div class='title'>Genomes with proteins/peptides detected in human salivary proteome</div>
     
 <div id='peptide-box' >
+     <center><div id='alert'>This data is for HOMD genomes version 10.1 and will be updated to version 11.0 soon.
+       </div></center>
      <%- include('../../partials/peptide_table_filter2.ejs') %> 
      <small>row count: <%= row_count %></small> <span style='float:right;'><small>* HSP: Human Salivary Proteome <a href='https://salivaryproteome.org' target='_blank'>https://salivaryproteome.org/</a>
      &nbsp;&nbsp;&nbsp;&nbsp;<a href='/download#peptide'>Download Options</a></small></span>

@@ -1188,6 +1188,7 @@ module.exports.readFromFile = function readFromFile(file, ext) {
                 if(ext == 'json'){
                    resolve(JSON.parse(data));
                 }else{
+                   console.log(data)
                    resolve(data);
                 }
             }

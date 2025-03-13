@@ -68,6 +68,11 @@ table.sortable tbody tr::before {
 .col2{
    width: 100px;
 }
+#alert{
+   padding: 15px;
+   background: gold;
+   
+}
 </style>
 
 <%- include('../../partials/header_html'); %>
@@ -89,6 +94,8 @@ table.sortable tbody tr::before {
  
      
 <div id='peptide-box' >
+     <center><div id='alert'>This data is for HOMD genomes version 10.1 and will be updated to version 11.0 soon.
+       </div></center>
      <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
      <small>row count: <%= row_count %></small> 
      <span style='font-size:18px;padding-left:12px;'>Selected HOMD Taxon-ID: <a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= otid %>'><%= taxidfullname %></a> 
