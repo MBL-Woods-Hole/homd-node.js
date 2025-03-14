@@ -1498,7 +1498,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version }),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
     user: JSON.stringify(req.user || {}),
     gid: req.body.gid,
     annotation: req.body.annotation,
@@ -1668,7 +1668,8 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   // Actual: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg
   // Copied to puplic/trees/eHOMD_Genomic_PhyloPhlAn_Tree.svg
   //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Genomic_PhyloPhlAn_Tree.svg'
-  let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_Genomic_PhyloPhlAn_Tree.svg'
+  //let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_Genomic_PhyloPhlAn_Tree.svg'
+  let filepath = CFG.FTP_TREE_URL +'/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg'
   https.get(filepath, (response) => { 
      let data = ''; 
  
@@ -1718,7 +1719,8 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   // Actual:: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg
   // Copied to public/trees/eHOMD_Ribosomal_Protein_Tree.svg
   //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Ribosomal_Protein_Tree.svg'
-  let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_Ribosomal_Protein_Tree.svg'
+  //let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_Ribosomal_Protein_Tree.svg'
+  let filepath = CFG.FTP_TREE_URL +'/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
   https.get(filepath, (response) => { 
      let data = ''; 
  
