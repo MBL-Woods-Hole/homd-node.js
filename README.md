@@ -73,4 +73,14 @@ The exact directory is defined in the /config/config.js file as config.DATA
 
 ### nginx
     nginx for homd, sequenceserver, pangenomeserver
+
+### JBrowse - There are ? JB links
+    1) HOME page image
+    2) Genome Table
+    3) Top of Genome Description
+    4) Top of Genome Explorer (Annotation) Page
+    5) Annotation Table row on Genome Explorer (Annotation) Page 
+        PROKKA(LINK FIX NEEDED)
+        NCBI No Yellow But No Error
+    6) BLAST Results Page (SequenceServer)
     

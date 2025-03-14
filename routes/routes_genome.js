@@ -332,14 +332,12 @@ router.get('/genome_table', function genome_table(req, res) {
     }else{
        page_data.page = 1
     }
-    if(req.session.gtable_filter){
-        //console.log('gfiletr session')
-        filter = req.session.gtable_filter
-    }else{
+    
         //console.log('gfiletr from default')
-        filter = get_default_gtable_filter()
-        req.session.gtable_filter = filter
-    }
+    // Filter defaults to nul on initial GET
+    filter = get_default_gtable_filter()
+    req.session.gtable_filter = filter
+    
     
     if(req.query.otid){
     //console.log('GT GOT otid',otid)

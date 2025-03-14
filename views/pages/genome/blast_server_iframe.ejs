@@ -54,6 +54,24 @@ button{
           <% } %>
        <% } %>
        
+       <% if(gid != ""){ %>
+         <center>
+         Switch Databases:&nbsp;&nbsp;
+         <form name='' class="form-inline" id='switch_dbs_form' method='POST' action='blast_ss_single'>
+         <% if(annotation == "ncbi"){ %>
+             <input type='radio'  name='annotation'  value='prokka'       onclick="switch_dbs()" /> PROKKA&nbsp;&nbsp;
+             <input type='radio' checked  name='annotation' value='ncbi'  onclick="switch_dbs()" /> NCBI
+             
+        
+         <% }else{ %>
+             <input type='radio' checked  name='annotation' value='prokka' onclick="switch_dbs()" /> PROKKA&nbsp;&nbsp;
+             <input type='radio'  name='annotation' value='ncbi'           onclick="switch_dbs()" /> NCBI
+             
+        <% } %>
+        <input type='hidden' name='gid' value='<%= gid %>'>
+        </form>
+        </center>
+       <% } %>
       
        
        <!-- </div> -->
@@ -61,7 +79,7 @@ button{
        <% if(annotation == "ncbi"){ %>
          <span style='float:right;'>
            <table><tr><td>
-           <a class='button' href="/genome/blast_per_genome"     >New BLAST Job</a>
+           <a class='button' href="/genome/blast_per_genome"     >Select A Different Genome</a>
            </td><td>
            <form name='' method='POST' action='blast_ss_single'>
              <input type='hidden' name='gid' value='<%= gid %>'>
@@ -76,7 +94,7 @@ button{
        <% }else if(annotation == "prokka"){ %>
          <span style='float:right;'>
            <table><tr><td>
-           <a class='button' href="/genome/blast_per_genome"     >New BLAST Job</a>
+           <a class='button' href="/genome/blast_per_genome"     >Select A Different Genome</a>
            </td><td>
            <form name='' method='POST' action='blast_ss_single'>
              <input type='hidden' name='gid' value='<%= gid %>'>
@@ -119,17 +137,23 @@ button{
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-  function single(gid) {
-    //window.open('https://devel.homd.org/genome_blast_single_prokka/?gid=GCA_900105505.1','_blank');
-    window.open('https://devel.homd.org/genome_blast_single_prokka/?gid='+gid);
-  }
-  function refseq() {
-    //window.open('https://devel.homd.org/refseq_blast','_blank');
-    window.open('https://devel.homd.org/refseq_blast/');
-  }
-  function genome() {
-    //window.open('https://devel.homd.org/genome_blast','_blank');
-    window.open('https://devel.homd.org/genome_blast/');
+  // function single(gid) {
+//     //window.open('https://devel.homd.org/genome_blast_single_prokka/?gid=GCA_900105505.1','_blank');
+//     window.open('https://devel.homd.org/genome_blast_single_prokka/?gid='+gid);
+//   }
+//   function refseq() {
+//     //window.open('https://devel.homd.org/refseq_blast','_blank');
+//     window.open('https://devel.homd.org/refseq_blast/');
+//   }
+//   function genome() {
+//     //window.open('https://devel.homd.org/genome_blast','_blank');
+//     window.open('https://devel.homd.org/genome_blast/');
+//   }
+  function switch_dbs(){
+     console.log('in switch dbs')
+     form = document.getElementById("switch_dbs_form")
+     console.log(form)
+     form.submit()
   }
 </script>
 
