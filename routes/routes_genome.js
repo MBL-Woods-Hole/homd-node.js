@@ -1149,6 +1149,7 @@ router.post('/explorer', function explorer_post (req, res) {
         gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
     }
     let annoInfoObj = C.annotation_lookup[gid][anno]
+    annoInfoObj.bases = C.genome_lookup[gid].combined_size
     const glist = Object.values(C.genome_lookup)
     glist.sort(function sortGList (a, b) {
       return helpers.compareStrings_alpha(a.genus, b.genus)
@@ -1304,6 +1305,7 @@ router.get('/explorer', function explorer_get (req, res) {
   // localhost http://0.0.0.0:3001/genome/explorer?gid=SEQF4098&anno=ncbi
   if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
     annoInfoObj = C.annotation_lookup[gid][anno]
+    annoInfoObj.bases = C.genome_lookup[gid].combined_size
   } else {
     req.flash('fail', 'Could not find: "'+anno+'" annotation for '+gid)
 
@@ -1366,9 +1368,10 @@ router.get('/explorer', function explorer_get (req, res) {
       }
       //console.log('atable_filter',atable_filter)
       //console.log('default',get_default_annot_filter())
-      //console.log('annoInfoObj',annoInfoObj)
+      console.log('annoInfoObj',annoInfoObj)
       args = {
             gid: gid,
+            
             gc:             gc,
             otid:           otid,
             organism:       organism,

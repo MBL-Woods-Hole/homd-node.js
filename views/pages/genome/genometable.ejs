@@ -133,7 +133,7 @@ pagedata {
             <% if(no_ncbi_annotation.indexOf(ginfo[n].gid) == -1 ){ %>
                 <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
             <% }else{ %>
-                <span class='pill pill-grayed' href=''>NCBI</span>
+                <span class='pill pill-grayed' title='NCBI Annotation Not Available' href=''>NCBI</span>
             <% } %>
             <!-- <span class="badge badge-light">HOMD</span></td> -->
       </tr>

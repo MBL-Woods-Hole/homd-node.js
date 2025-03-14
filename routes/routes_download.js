@@ -320,12 +320,19 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   today = yyyy + '-' + mm + '-' + dd
   var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
   const type = req.params.type
-  const letter = req.session.gtable_filter.letter
-  const phylum = req.session.gtable_filter.phylum
-  const otid = req.session.gtable_filter.otid
-  const searchText = req.session.gtable_filter.text.txt_srch
-  const searchField = req.session.gtable_filter.text.field
-
+  
+  const letter = '0'
+  const phylum = ''
+  const otid = ''
+  const searchText = ''
+  const searchField = ''
+  if(req.session.hasOwnProperty('gtable_filter')){
+     letter = req.session.gtable_filter.letter
+     phylum = req.session.gtable_filter.phylum
+     otid = req.session.gtable_filter.otid
+     searchText = req.session.gtable_filter.text.txt_srch
+     searchField = req.session.gtable_filter.text.field
+  }
   helpers.print(['type', type,'letter', letter,'phylum', phylum,'otid', otid])
   // Apply filters
   const tempList = Object.values(C.genome_lookup)
@@ -641,16 +648,20 @@ function create_full_genome_table (sqlrows, startText) {
 function create_genome_table (gids, source, type, startText) {
   let txt = startText + '\n'
   if (source === 'table') {
-    const headersRow = ['Genbank Acc no.','Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species',  'No. Contigs',  'Total Length',  'Infraspecific Names', 'GC %']
+    const headersRow = ['Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species', 'SubSpecies', 'Strain','No. Contigs',  'Total Length',   'MAG','GC %']
     txt += headersRow.join('\t')+'\n'
-    console.log('SEQF5379.1',C.genome_lookup['SEQF5379.1'])
+    ///console.log('SEQF5379.1',C.genome_lookup['SEQF5379.1'])
     for (let n in gids) {
       const gid = gids[n]
       const obj = C.genome_lookup[gid]
+      console.log(obj)
       // per FDewhirst: species needs to be unencumbered of genus for this table
-      let species = obj.species.replace(obj.genus,'').trim()
+      //let species = obj.species.replace(obj.genus,'').trim()
+      let genus = C.taxon_lookup[obj.otid].genus
+      let species = C.taxon_lookup[obj.otid].species
+      let subspecies = C.taxon_lookup[obj.otid].subspecies
       let hmt = helpers.make_otid_display_name(obj.otid)
-      const r = [obj.gb_asmbly, gid, hmt, obj.genus, obj.species, obj.ncontigs, obj.tlength, obj.strain, obj.gc]
+      const r = [ gid, hmt, genus, species, subspecies, obj.strain, obj.contigs, obj.combined_size, obj.mag,obj.gc]
       txt += r.join('\t') +'\n'
     }
   }
