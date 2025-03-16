@@ -78,7 +78,8 @@ function get_default_gtable_filter(){
         letter: '0',
         sort_col: 'organism',
         sort_rev: 'off',
-        paging:'on'
+        paging:'on',
+        mags:'default'
     }
     return defaultfilter
 }
@@ -165,6 +166,9 @@ function set_gtable_session(req) {
        if(item == 'paging'){
          req.session.gtable_filter.paging = req.body.paging
        }
+       if(item == 'mags'){
+         req.session.gtable_filter.mags = req.body.mags
+       }
     }
     
 }
@@ -198,7 +202,7 @@ function filter_for_phylum(glist, phy){
 }
 function apply_gtable_filter(req, filter) {
     let big_g_list = Object.values(C.genome_lookup);
-    
+    //console.log('big_g_list-0',big_g_list[0])
     let vals
     if(req.session.gtable_filter){
        vals = req.session.gtable_filter
@@ -207,55 +211,102 @@ function apply_gtable_filter(req, filter) {
     }
     //console.log('vals',vals)
     //
+    //console.log('big_g_list-1',big_g_list[0])
+    //console.log('big_g_list-2',big_g_list.filter(item => item.gid=== 'GCA_000006625.1'))
     // txt_srch
-    big_g_list = getFilteredGenomeList(big_g_list, vals.text.txt_srch, vals.text.field)
     //console.log('1',big_g_list[0],vals)
+    big_g_list = getFilteredGenomeList(big_g_list, vals.text.txt_srch, vals.text.field)
+    //console.log('big_g_list-2',big_g_list[0])
+    //console.log('big_g_list-2.1',big_g_list.filter(item => item.gid=== 'GCA_000006625.1'))
     //letter
     if(vals.letter && vals.letter.match(/[A-Z]{1}/)){   // always caps
       helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
        // COOL.... filter the whole list
       big_g_list = big_g_list.filter(item => item.organism.toUpperCase().charAt(0) === vals.letter)
+      
     }
     //phylum
-    //console.log('2',big_g_list[0],vals)
+    //console.log('2.5',big_g_list[0])
     if(vals.phylum  !== ''){
        big_g_list = filter_for_phylum(big_g_list, vals.phylum)
     }
-    //console.log('3',big_g_list[0],vals)
+    //console.log('3',big_g_list)
     //sort_col
     if(vals.sort_rev === 'on'){
-        //console.log('REV sorting by ',vals.sort_col)
-        if(vals.sort_col === 'organism'){
-          big_g_list.sort(function (b, a) {
-            //return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
-            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+        //console.log('REV sorting by ',vals.sort_col,' ',big_g_list.length)
+        if(vals.sort_col === 'gid'){
+          big_g_list.sort(function (b,a) {
+            return helpers.compareStrings_alpha(a.gid,b.gid);
+            //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
-        }else if(vals.sort_col === 'otid' || vals.sort_col === 'contigs' || vals.sort_col === 'combined_size'){
-          big_g_list.sort(function (b, a) {
-            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+        }else if(vals.sort_col === 'otid'){
+          big_g_list.sort(function (b,a) {
+            return helpers.compareStrings_int(a.otid, b.otid);
+          })
+        }else if(vals.sort_col === 'strain'){
+          big_g_list.sort(function (b,a) {
+            return helpers.compareStrings_alpha(a.strain,b.strain);
+            //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else if(vals.sort_col === 'mag'){
+          big_g_list.sort(function (b,a) {
+            return helpers.compareStrings_alpha(a.mag,b.mag);
+            //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else if(vals.sort_col === 'contigs'){
+          big_g_list.sort(function (b,a) {
+            return helpers.compareStrings_int(a.contigs, b.contigs);
+          })
+        }else if(vals.sort_col === 'combined_size'){
+          big_g_list.sort(function (b,a) {
+            return helpers.compareStrings_int(a.combined_size, b.combined_size);
           })
         }else if(vals.sort_col === 'gc'){
-          
-          big_g_list.sort(function (b, a) {
+          //console.log('sortgc1',big_g_list[0],big_g_list[1],big_g_list[2],big_g_list[3])
+          big_g_list.sort(function (b,a) {
             return helpers.compareStrings_float(a[vals.sort_col], b[vals.sort_col]);
           })
+          //console.log('sortgc2',big_g_list[0],big_g_list[1],big_g_list[2],big_g_list[3])
           
         }else{
-          big_g_list.sort(function (b, a) {
-            return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
+          // default: sort by organism
+          big_g_list.sort(function (b,a) {
+            return helpers.compareStrings_alpha(a.organism, b.organism);
           })
         }
         
     }else{
-        //console.log('FWD sorting by ',vals.sort_col)
-        if(vals.sort_col === 'organism'){
+        //console.log('FWD sorting by ',vals.sort_col,' ',big_g_list[0])
+        if(vals.sort_col === 'gid'){
+          //big_g_list = helpers.sortDataBy(big_g_list,'gid','alpha')
+          //console.log('big_g_list-[0]',big_g_list[0])
           big_g_list.sort(function (a, b) {
-            //return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
-            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+            return helpers.compareStrings_alpha(a.gid,b.gid);
+            
+            //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
-        }else if(vals.sort_col === 'otid' || vals.sort_col === 'contigs' || vals.sort_col === 'combined_size'){
+        }else if(vals.sort_col === 'otid'){
           big_g_list.sort(function (a, b) {
-            return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+            return helpers.compareStrings_int(a.otid, b.otid);
+          })
+        }else if(vals.sort_col === 'strain'){
+          big_g_list.sort(function (a, b) {
+            return helpers.compareStrings_alpha(a.strain,b.strain);
+            //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else if(vals.sort_col === 'mag'){
+          big_g_list.sort(function (a, b) {
+            return helpers.compareStrings_alpha(a.mag,b.mag);
+            //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else if(vals.sort_col === 'contigs'){
+          big_g_list.sort(function (a, b) {
+            return helpers.compareStrings_int(a.contigs, b.contigs);
+          })
+        }else if(vals.sort_col === 'combined_size'){
+          big_g_list.sort(function (a, b) {
+            //console.log('a.combined_size',a.combined_size)
+            return helpers.compareStrings_int(a.combined_size, b.combined_size);
           })
         }else if(vals.sort_col === 'gc'){
           //console.log('sortgc1',big_g_list[0],big_g_list[1],big_g_list[2],big_g_list[3])
@@ -267,18 +318,19 @@ function apply_gtable_filter(req, filter) {
         }else{
           // default: sort by organism
           big_g_list.sort(function (a, b) {
-            
-            return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
+            return helpers.compareStrings_alpha(a.organism, b.organism);
           })
         }
     }
-    // format big nums
-    big_g_list.map(function mapGidObjList (el) {
-        if (el.combined_size) { 
-            el.combined_size = helpers.format_long_numbers(el.combined_size); 
-        }
-    })
+    // MAGs
+    //console.log('vals',vals)
+    if(vals.mags === 'nomags'){
+        big_g_list = big_g_list.filter(item => item.mag === '')
+    }else if(vals.mags === 'onlymags'){
+        big_g_list = big_g_list.filter(item => item.mag === 'yes')
+    }
     
+    //console.log('big_g_list-2',big_g_list)
     return big_g_list
 }
 function get_filter_on(f, type){
@@ -323,19 +375,23 @@ router.get('/reset_gtable', function gen_table_reset(req, res) {
    res.redirect('back');
 });
 router.get('/genome_table', function genome_table(req, res) {
-    // https://www.ncbi.nlm.nih.gov/assembly/GCF_000160075.2/?shouldredirect=false
     
+    // https://www.ncbi.nlm.nih.gov/assembly/GCF_000160075.2/?shouldredirect=false
+    helpers.print('In GET Genome Table')
     let filter, send_list, showing,ret,count_before_paging,args,count_txt
     let page_data = init_page_data()
+    //console.log('page data',page_data)
     if(req.query.page){
        page_data.page = parseInt(req.query.page)
+       filter = req.session.gtable_filter
     }else{
        page_data.page = 1
+       filter = get_default_gtable_filter()
     }
-    
-        //console.log('gfiletr from default')
+    //console.log('filter',filter)
+    //console.log('gfiletr from default')
     // Filter defaults to nul on initial GET
-    filter = get_default_gtable_filter()
+    //filter = get_default_gtable_filter()
     req.session.gtable_filter = filter
     
     
@@ -361,6 +417,7 @@ router.get('/genome_table', function genome_table(req, res) {
     }else{
        send_list = apply_gtable_filter(req, filter)
     }
+    
     //console.log('send_list[0]',send_list[0])
     count_before_paging = send_list.length
     // Initial page = 1 for fast load
@@ -400,10 +457,14 @@ router.get('/genome_table', function genome_table(req, res) {
     count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+ pager_txt
     // apply sub-species to species
     send_list = apply_species(send_list)
-    send_list.sort(function (a, b) {
-        return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+    send_list.map(function mapGidObjList (el) {
+        if (el.combined_size) { 
+            el.combined_size = helpers.format_long_numbers(el.combined_size); 
+        }
     })
+    // DONOT SORT HERE == SORT IN FILTER
     args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
+    //console.log('list[0]',send_list[0])
     renderGenomeTable(req, res, args)
 
 });
@@ -416,6 +477,8 @@ router.post('/genome_table', function genome_table_post(req, res) {
     filter = req.session.gtable_filter
     //console.log(filter)
     send_list = apply_gtable_filter(req, filter)
+    // format big nums
+    
     //let obj1 = send_list.filter(o => o.species === 'coli');
     //console.log('coli1',obj1.length)
     count_before_paging = send_list.length
@@ -450,10 +513,13 @@ router.post('/genome_table', function genome_table_post(req, res) {
     count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+  pager_txt
     //console.log('pd2',page_data)
     send_list = apply_species(send_list)
-    //console.log('pt',pager_txt)
-    send_list.sort(function (a, b) {
-        return helpers.compareByTwoStrings_alpha(a, b, 'genus','species');
+    send_list.map(function mapGidObjList (el) {
+        if (el.combined_size) { 
+            el.combined_size = helpers.format_long_numbers(el.combined_size); 
+        }
     })
+    //console.log('pt',pager_txt)
+    // DON NOT SORT HERE - SORTING DONE IN FILTER
     args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
     //let obj2 = send_list.filter(o => o.species === 'coli');
     //console.log('coli2',obj2.length)

@@ -82,6 +82,25 @@ module.exports.check_if_rank = (field_name) => {
   return ranks.includes(field_name);
 };
 
+// module.exports.sortDataBy = (obj, key, type) => {
+//   // https://dev.to/madanlal/how-to-sort-array-of-object-using-object-keys-in-javascript-58f1
+//   let sortedData;
+//   if(type == 'alpha'){
+//     sortedData = obj.sort(function(a,b){
+//       let x = a[key].toLowerCase();
+//       let y = b[key].toLowerCase();
+//       if(x>y){return 1;}
+//       if(x<y){return -1;}
+//       return 0;
+//     });
+//   }else{
+//     sortedData = obj.sort(function(a,b){
+//       return a[key] - b[key];
+//     })
+//   }
+//   return sortedData;
+// }
+
 module.exports.compareStrings_alpha = (a, b) => {
   // Assuming you want case-insensitive comparison
   a = a.toLowerCase();
@@ -103,9 +122,12 @@ module.exports.compareByTwoStrings_alpha = (a, b, colA, colB) => {
 };
 // Sort list of json objects numerically
 module.exports.compareStrings_int   = (a, b) => {
-  a = parseInt(a);
-  b = parseInt(b);
-  return (a < b) ? -1 : (a > b) ? 1 : 0;
+  
+  let numa = parseInt(a.toString().replaceAll(',',''))
+  let numb = parseInt(b.toString().replaceAll(',',''))
+  //console.log('numa',numa)
+  
+  return (numa < numb) ? -1 : (numa > numb) ? 1 : 0;
 };
 module.exports.compareStrings_float   = (a, b) => {
   if(!a){a=0}

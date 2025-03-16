@@ -25,18 +25,21 @@
    
 }
 #main_table td{
-   padding:0 30px;
+   padding:0 5px;
    
    
 }
 #filter_table{
    /* border:1px solid green; */
-   width:90%;
+   width:100%;
    border-collapse:colapse;
 }
 #filter_table td{
    border-top:1px solid brown;
-   padding: 3px 3px 1px 3px;
+   padding: 3px 1px 1px 1px;
+}
+.border-on-right{
+   border-right:1px solid brown;
 }
 #reset_div a{
    font-size: 14px;
@@ -66,74 +69,99 @@
 <table id='main_table'>    
 <tr><td valign='top'>    
     <div class='alpha-select'>
-			<br>
-			<small><span class='filter-title'>Genus by Alphabet:</span>
-			[<a class='noletter' id='0' onclick="letter_submit('0');"><small>All</small></a>]
-			<br>
-			<span class='alpha-list'>
-			<a class='letter' id='A' onclick="letter_submit('A');">A</a>|<a class='letter' id='B' onclick="letter_submit('B');">B</a>|<a class='letter' id='C' onclick="letter_submit('C');">C</a>|<a class='letter' id='D' onclick="letter_submit('D');">D</a>|<a class='letter' id='E' onclick="letter_submit('E');">E</a>|<a class='letter' id='F' onclick="letter_submit('F');">F</a>|<a class='letter' id='G' onclick="letter_submit('G');">G</a>|<a class='letter' id='H' onclick="letter_submit('H');">H</a>|<a class='letter' id='I' onclick="letter_submit('I');">I</a>|<a class='letter' id='J' onclick="letter_submit('J');">J</a>|<a class='letter' id='K' onclick="letter_submit('K');">K</a>|<a class='letter' id='L' onclick="letter_submit('L');">L</a>|<a class='letter' id='M' onclick="letter_submit('M');">M</a>
-			<br><a class='letter' id='N' onclick="letter_submit('N');">N</a>|<a class='letter' id='O' onclick="letter_submit('O');">O</a>|<a class='letter' id='P' onclick="letter_submit('P');">P</a>|<a class='letter' id='Q' onclick="letter_submit('Q');">Q</a>|<a class='letter' id='R' onclick="letter_submit('R');">R</a>|<a class='letter' id='S' onclick="letter_submit('S');">S</a>|<a class='letter' id='T' onclick="letter_submit('T');">T</a>|<a class='letter' id='U' onclick="letter_submit('U');">U</a>|<a class='letter' id='V' onclick="letter_submit('V');">V</a>|<a class='letter' id='W' onclick="letter_submit('W');">W</a>|<a class='letter' id='X' onclick="letter_submit('X');">X</a>|<a class='letter' id='Y' onclick="letter_submit('Y');">Y</a>|<a class='letter' id='Z' onclick="letter_submit('Z');">Z</a>
-			
-			</span>
-			</small>
-	</div>
-	
+            <br>
+            <small><span class='filter-title'>Genus by Alphabet:</span>
+            [<a class='noletter' id='0' onclick="letter_submit('0');"><small>All</small></a>]
+            <br>
+            <span class='alpha-list'>
+            <a class='letter' id='A' onclick="letter_submit('A');">A</a>|<a class='letter' id='B' onclick="letter_submit('B');">B</a>|<a class='letter' id='C' onclick="letter_submit('C');">C</a>|<a class='letter' id='D' onclick="letter_submit('D');">D</a>|<a class='letter' id='E' onclick="letter_submit('E');">E</a>|<a class='letter' id='F' onclick="letter_submit('F');">F</a>|<a class='letter' id='G' onclick="letter_submit('G');">G</a>|<a class='letter' id='H' onclick="letter_submit('H');">H</a>|<a class='letter' id='I' onclick="letter_submit('I');">I</a>|<a class='letter' id='J' onclick="letter_submit('J');">J</a>|<a class='letter' id='K' onclick="letter_submit('K');">K</a>|<a class='letter' id='L' onclick="letter_submit('L');">L</a>|<a class='letter' id='M' onclick="letter_submit('M');">M</a>
+            <br><a class='letter' id='N' onclick="letter_submit('N');">N</a>|<a class='letter' id='O' onclick="letter_submit('O');">O</a>|<a class='letter' id='P' onclick="letter_submit('P');">P</a>|<a class='letter' id='Q' onclick="letter_submit('Q');">Q</a>|<a class='letter' id='R' onclick="letter_submit('R');">R</a>|<a class='letter' id='S' onclick="letter_submit('S');">S</a>|<a class='letter' id='T' onclick="letter_submit('T');">T</a>|<a class='letter' id='U' onclick="letter_submit('U');">U</a>|<a class='letter' id='V' onclick="letter_submit('V');">V</a>|<a class='letter' id='W' onclick="letter_submit('W');">W</a>|<a class='letter' id='X' onclick="letter_submit('X');">X</a>|<a class='letter' id='Y' onclick="letter_submit('Y');">Y</a>|<a class='letter' id='Z' onclick="letter_submit('Z');">Z</a>
+            
+            </span>
+            </small>
+    </div>
+    
 </td><td valign='top'> 
    
     <div id='reset_div' >
       <a class='button' id='reset' href='reset_gtable'>Reset Filters</a> 
     </div> 
-    
 </td><td> 
           
 <table id='filter_table' border='1'>
-<tr><td>
+<tr>
+    <td class='border-on-right'>
         <small>
         <span class='filter-title'>Find Genomes by Phylum:</span>
-		<select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onclick='update_sb()'>
-		<optgroup>
-		  <option value=''>Select a Phylum</option>
-		  <% for(n in phyla) { %>
-			<% if(phyla[n] === fltr.phylum){ %>
-			  <option selected value='<%= phyla[n] %>'><%= phyla[n] %></option>
-			<% }else{ %>
-			  <option value='<%= phyla[n] %>'><%= phyla[n] %></option>
-			<% } %>
-		  <% } %>
-		</optgroup>
-		</select>
-		<span class='button' onclick='clear_phylum()'>Clear</span>
-		<span style='float:right;'>Paging: 
-		  <% if(fltr.paging === 'on'){ %>
-		    <input type='radio' checked name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
-		    <input type='radio'         name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
-		  <% }else{ %>
-		    <input type='radio'         name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
-		    <input type='radio' checked name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
-		  <% } %>
-		  
-		</span>
-		</small>
-</td></tr>
-<tr><td>
-    <small>
-    <span class='filter-title'>Search This Table:</span>
-    <span class="">
-    <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='dropdown' name='txt_srch' maxlength='100' size='25' onclick='update_sb()'>
-    <select class='dropdown' id='field_select' value='<%= fltr.text.field %>' class="" name='field' onclick='update_sb()'>
+        <select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onclick='update_sb()'>
         <optgroup>
-        <option value='all'>All Fields</option>
-        <option value='genomeid'>Genome-ID</option>
-        <option value='taxid'>Taxon-ID</option>
-        <option value='organism'>Organism</option>
-        <option value='strain'>Strain</option>
+          <option value=''>Select a Phylum</option>
+          <% for(n in phyla) { %>
+            <% if(phyla[n] === fltr.phylum){ %>
+              <option selected value='<%= phyla[n] %>'><%= phyla[n] %></option>
+            <% }else{ %>
+              <option value='<%= phyla[n] %>'><%= phyla[n] %></option>
+            <% } %>
+          <% } %>
         </optgroup>
-    </select>
-    <span class='button' onclick='clear_search_txt()'>Clear</span>
-    </span>
-    </small>
-</td></tr>
-<tr><td>
+        </select>
+        <span class='button' onclick='clear_phylum()'>Clear</span>
+        </small>
+    </td><td>
+        <small>
+        <span style=''>Paging: &nbsp;
+          <% if(fltr.paging === 'on'){ %>
+            <input type='radio' checked name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
+            <input type='radio'         name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
+          <% }else{ %>
+            <input type='radio'         name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
+            <input type='radio' checked name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
+          <% } %>
+          
+        </span>
+        </small></td>
+</tr>
+<tr>
+    <td class='border-on-right'>
+        <small>
+        <span class='filter-title'>Search This Table:</span>
+        <span class="">
+        <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='dropdown' name='txt_srch' maxlength='100' size='25' onclick='update_sb()'>
+        <select class='dropdown' id='field_select' value='<%= fltr.text.field %>' class="" name='field' onclick='update_sb()'>
+            <optgroup>
+            <option value='all'>All Fields</option>
+            <option value='genomeid'>Genome-ID</option>
+            <option value='taxid'>Taxon-ID</option>
+            <option value='organism'>Organism</option>
+            <option value='strain'>Strain</option>
+            </optgroup>
+        </select>
+        <span class='button' onclick='clear_search_txt()'>Clear</span>
+        </span>
+        </small>
+    </td><td>
+        <small>
+        <span style=''>MAGs: &nbsp;
+          <% if(fltr.mags === 'nomags'){ %>
+            <input type='radio'         name='mags' value='default' onclick='update_sb()' > Include&nbsp;&nbsp;
+            <input type='radio'         name='mags' value='onlymags' onclick='update_sb()' > Only MAGs&nbsp;&nbsp;
+            <input type='radio' checked name='mags' value='nomags' onclick='update_sb()' > No MAGs
+          <% }else if(fltr.mags === 'onlymags'){ %>
+            <input type='radio'         name='mags' value='default' onclick='update_sb()' > Include&nbsp;&nbsp;
+            <input type='radio' checked name='mags' value='onlymags' onclick='update_sb()' > Only MAGs&nbsp;&nbsp;
+            <input type='radio'         name='mags' value='nomags' onclick='update_sb()' > No MAGs
+          <% }else{ %>  <!-- Default -->
+            <input type='radio' checked name='mags' value='default' onclick='update_sb()' > Include&nbsp;&nbsp;
+            <input type='radio'         name='mags' value='onlymags' onclick='update_sb()' > Only MAGs&nbsp;&nbsp;
+            <input type='radio'         name='mags' value='nomags' onclick='update_sb()' > No MAGs
+          <% } %>
+          
+        </span>
+        </small>
+    </td></td>
+</tr>
+<tr>
+    <td class='border-on-right'>
        <small>
         <span class='filter-title'>Sort Column</span>:&nbsp;&nbsp;
         <% if(fltr.sort_col === 'gid'){ %>
@@ -158,6 +186,11 @@
         <% }else{ %>
         <input type='radio' name='sort_col' value='strain' onclick='update_sb()' > Strain&nbsp;
         <% } %>
+        <% if(fltr.sort_col === 'mag'){ %>
+        <input type='radio' checked name='sort_col' value='mag' onclick='update_sb()' > MAG&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='mag' onclick='update_sb()' > MAG&nbsp;
+        <% } %>
         <% if(fltr.sort_col === 'contigs'){ %>
         <input type='radio' checked name='sort_col' value='contigs' onclick='update_sb()' > Contigs&nbsp;
         <% }else{ %>
@@ -173,8 +206,8 @@
         <% }else{ %>
         <input type='radio' name='sort_col' value='gc' onclick='update_sb()' > GC&nbsp;
         <% } %>
-        <span id='sort_rev' title='Reverse the Sort Order'>
-          
+        
+        <span id='sort_rev' title='Reverse the Sort Order'>  
         <% if(fltr.sort_rev === 'on'){ %>
         <input type='checkbox' checked name='sort_rev' onclick='update_sb()' > Reverse
         <% }else{ %>
@@ -182,10 +215,13 @@
         <% } %>
         </span>
         </small>
-</td></tr>
-<tr><td>
+    </td><td></td></td>
+</tr>
+<tr>
+  <td colspan='2'>
   <button id='form_btn' type='submit' class='button' value='Submit'>Submit</button>
-</td></tr>
+  </td></td>
+</tr>
 </table>
 
 </td></tr>
