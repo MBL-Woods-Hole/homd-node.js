@@ -387,6 +387,7 @@ router.get('/genome_table', function genome_table(req, res) {
        filter = req.session.gtable_filter
     }else{
        page_data.page = 1
+       page_data.start_count = 1
        filter = get_default_gtable_filter()
     }
     //console.log('filter',filter)

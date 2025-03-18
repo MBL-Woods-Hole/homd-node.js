@@ -1394,6 +1394,7 @@ router.get('/tree_d3', function tree_d3(req, res) {
 
     let unique_phyla_obj = {}
     let file_name = 'HOMD_16S_rRNA_RefSeq_V15.23.reroot.order.tre'
+    //let file_name = 'HOMD_16S_rRNA_RefSeq_Tree_V16.tre'
     fs.readFile(path.join("public/"+file_name), 'utf8', function readTreeFile(err, data) {
       if (err){
           console.log('xxx',err)

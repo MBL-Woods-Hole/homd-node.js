@@ -46,6 +46,7 @@
 {
   padding:3px 2px;
   font-size:small;
+  font-weight:bold;
   color: #303030;
   overflow: hidden;
 
@@ -68,12 +69,12 @@
 #tax-table .col2{
 /* Genus */
     /* width:20px; */
-    width:190px;
+    width:160px;
 }
 #tax-table .col3{
 /*Species */
     /* width:20px; */
-    width:150px;
+    width:140px;
 }
 #tax-table .col4{
 /* SubSpecies */
@@ -98,20 +99,25 @@
 #tax-table .col7{
     width:300px;
 }
+#tax-table .col8head{
+    width:260px;
+    /* text-align:center; */
+}
 #tax-table .col8{
-    width:50px;
+    width:30px;
     text-align:center;
 }
+
 #tax-table .col9{
-    width:80px;
+    width:30px;
     text-align:center;
 }
 #tax-table .col10{
-    width:70px;
+    width:30px;
     text-align:center;
 }
 #tax-table .col11{
-    width:100px;
+    width:120px;
     text-align:center;
 }
 #tax-table.sortable tbody {
