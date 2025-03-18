@@ -244,13 +244,14 @@
     <ul>
       <!-- <li><a href="/genome/overview">Overview</a></li> -->
       <li><a href="/genome/genome_table">Genome Table</a></li>
-      <li><a href="/genome/crispr">CRISPR-Cas</a></li>
+      <!-- <li><a href="/genome/crispr">CRISPR-Cas</a></li> -->
+      <li><a href="https://v31.homd.org/genome/crispr" target='_blank'>CRISPR-Cas (V3.1 data)</a></li>
       <!-- <li><a href="/taxa/tax_table?annot=1">Taxon Table<br>&nbsp;&nbsp;&nbsp;(only taxa w/ genomes)</a></li> -->
       <li><a href="/genome/jbrowse">JBrowse Genome Viewer Tool</a></li>     
       <li><span href="">Genomic Trees <font color="blue">&#187;</font></span>
         <ul> 
-        <li><a href="<%= cfg.FTP_TREE_URL %>/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg">Conserved Protein Tree</a></li>
-        <li><a href="<%= cfg.FTP_TREE_URL %>/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg">Ribosomal Protein Tree</a></li>
+        <li><a href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg">Conserved Protein Tree</a></li>
+        <li><a href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg">Ribosomal Protein Tree</a></li>
         <!-- <li><a href="<%= cfg.FTP_TREE_URL %>/genome/current/eHOMD_16S_rRNA_Tree.svg">16S rRNA Gene Tree</a></li> -->
         
         </ul>
@@ -289,10 +290,10 @@
 
 <li><span class='main-topic' >Proteomes</span>
     <ul>
-        <li><a href="<%= cfg.FTP_TREE_URL %>/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg" target='_blank'>View Genomic Tree based on Conserved Proteins</a></li>
-        <li><a href="<%= cfg.FTP_URL %>/genomes/PROKKA/V11.0/" target='_blank'>All Protein Sequences Annotated from Genomes</a></li>
-        <li><a href="/genome/peptide_table"     >Proteins Detected in Human Saliva</a></li>  
-        <li><a href="/genome/peptide_table2"     >Genomes with Proteins Detected in Human Saliva</a></li>  
+        <li><a href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg">View Genomic Tree based on Conserved Proteins</a></li>
+        <li><a href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/PROKKA/V11.0/" target='_blank'>All Protein Sequences Annotated from Genomes</a></li>
+        <li><a href="https://v31.homd.org/genome/peptide_table"  target='_blank'   >Proteins Detected in Human Saliva</a></li>  
+        <li><a href="https://v31.homd.org/genome/peptide_table2" target='_blank'    >Genomes with Proteins Detected in Human Saliva</a></li>  
     </ul>
   </li> 
   
@@ -303,7 +304,7 @@
       
           <!-- <li><a href="/refseq_blast" target='_blank' >RefSeq BLAST Server</a></li> -->
           <!-- <li><a href="/refseq/refseq_blastn">Old 16S BLAST</a></li> -->
-          <li><a href="<%= cfg.FTP_TREE_URL %>/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg">View 16S rRNA RefSeq Phylogenetic Tree</a></li>
+          <li><a href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg">View 16S rRNA RefSeq Phylogenetic Tree</a></li>
           <li><a href="/download#refseq">Download RefSeq Data</a></li>
           <li><a href="/help/help-page?pagecode=refseq/refseq_version">Version History</a></li>
     </ul>
@@ -319,14 +320,14 @@
    <li><span class='main-topic' >Downloads</span>
     <ul>
       <li><a href="/download">Download Batch HOMD Data</a></li>
-      <li><a href="<%= cfg.FTP_URL %>" target='_blank'>HOMD FTP Site</a></li>
+      <li><a href="<%= cfg.HOMD_URL_BASE %>/ftp/" target='_blank'>HOMD FTP Site</a></li>
        
     </ul>
    </li>
    
    <li><span class='main-topic' >Resources</span>
        <ul>
-      <li><a href='http://v2.homd.org/' target='_blank'>Old HOMD Site (v2)</a></li>
+      <li><a href='http://v31.homd.org/' target='_blank'>Old HOMD Site (V3)</a></li>
       <li><a href="/poster">Posters</a></li>
       <li><a href='/help/help-page?pagecode=publications'>Publications</a></li>
       <li><a href="">Oralgen <font color="blue">&#187;</font></a>
@@ -335,12 +336,12 @@
          <li><a href="/genome/oralgen">Oralgen Genome Info</a></li>
          </ul>
       </li>
-      <li><a href="<%= cfg.FTP_URL %>" target='_blank'>HOMD FTP Site</a></li>
+      <li><a href="<%= cfg.HOMD_URL_BASE %>/ftp" target='_blank'>HOMD FTP Site</a></li>
       
       
     </ul>
    </li>
-  <li id='first'><a class='main-topic' href="http://v2.homd.org/" title="HOMD (old version)">HOMD-v2</a></li> 
+  <li id='first'><a class='main-topic' href="http://v31.homd.org/" title="HOMD (old version)">HOMD-V3</a></li> 
   <li><a href='/help/help-page?pagecode=contact'>Contact Us</a></li>
 
   <% if(pgname && ["home","lost"].indexOf(pgname) == -1){ %>

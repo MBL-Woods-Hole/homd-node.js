@@ -48,10 +48,10 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
    
   // https://www.homd.org/ftp//phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg
   // here from taxdescription page  public/trees/
-  //let fname = 'eHOMD_16S_rRNA_RefSeq.svg'
-  //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+fname
-  //let filepath = CFG.FTP_TREE_URL +'/refseq/current/'+'eHOMD_16S_rRNA_RefSeq.svg'
-  let filepath = CFG.FTP_TREE_URL +'/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg'
+  
+  //let filepath = CFG.FTP_TREE_URL +'/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg'
+  let filepath = CFG.HOMD_URL_BASE +"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
+  
   //let myurl = url.parse(req.url, true);
   let otid = req.query.otid
   //console.log('otid',otid)

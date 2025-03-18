@@ -30,6 +30,7 @@
   padding:5px;
  /*  width:1200px; */
   table-layout:fixed;
+  /* table-layout:auto */
   width:100%;
   background:lightgrey;
 }
@@ -65,17 +66,18 @@
     text-align:center;
 }
 #tax-table .col2{
-/* #tax-table td:nth-of-type(2){ */
+/* Genus */
     /* width:20px; */
-    
+    width:190px;
 }
 #tax-table .col3{
-/* #tax-table td:nth-of-type(3){ */
+/*Species */
     /* width:20px; */
+    width:150px;
 }
 #tax-table .col4{
-/* #tax-table td:nth-of-type(4){ */
-    width:130px;
+/* SubSpecies */
+    width: 80px;
 }
 #tax-table .col5{
 /* #tax-table td:nth-of-type(5){ */
@@ -97,19 +99,19 @@
     width:300px;
 }
 #tax-table .col8{
-    width:100px;
+    width:50px;
     text-align:center;
 }
 #tax-table .col9{
-    width:100px;
+    width:80px;
     text-align:center;
 }
 #tax-table .col10{
-    width:100px;
+    width:70px;
     text-align:center;
 }
 #tax-table .col11{
-    width:120px;
+    width:100px;
     text-align:center;
 }
 #tax-table.sortable tbody {
