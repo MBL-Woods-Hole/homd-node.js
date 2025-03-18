@@ -32,13 +32,14 @@
 #filter_table{
    /* border:1px solid green; */
    width:100%;
-   border-collapse:colapse;
+   border-collapse: collapse;
 }
 #filter_table td{
-   border-top:1px solid brown;
-   padding: 3px 1px 1px 1px;
+   border:1px solid brown;
+   
+   padding: 3px 1px 1px 3px;
 }
-.border-on-right{
+.border-on-rightX{
    border-right:1px solid brown;
 }
 #reset_div a{
@@ -88,9 +89,9 @@
     </div> 
 </td><td> 
           
-<table id='filter_table' border='1'>
+<table id='filter_table'>
 <tr>
-    <td class='border-on-right'>
+    <td class=''>
         <small>
         <span class='filter-title'>Find Genomes by Phylum:</span>
         <select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onclick='update_sb()'>
@@ -107,7 +108,7 @@
         </select>
         <span class='button' onclick='clear_phylum()'>Clear</span>
         </small>
-    </td><td>
+    </td><td class=''>
         <small>
         <span style=''>Paging: &nbsp;
           <% if(fltr.paging === 'on'){ %>
@@ -122,7 +123,7 @@
         </small></td>
 </tr>
 <tr>
-    <td class='border-on-right'>
+    <td class=''>
         <small>
         <span class='filter-title'>Search This Table:</span>
         <span class="">
@@ -139,7 +140,7 @@
         <span class='button' onclick='clear_search_txt()'>Clear</span>
         </span>
         </small>
-    </td><td>
+    </td><td class=''>
         <small>
         <span style=''>MAGs: &nbsp;
           <% if(fltr.mags === 'nomags'){ %>
@@ -215,7 +216,7 @@
         <% } %>
         </span>
         </small>
-    </td><td></td></td>
+    </td><td class='border-on-right'></td></td>
 </tr>
 <tr>
   <td colspan='2'>

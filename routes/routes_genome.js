@@ -173,28 +173,29 @@ function set_gtable_session(req) {
     
 }
 function filter_for_phylum(glist, phy){
-    console.log('phy',phy)
-    console.log('glist',glist.length)
+    //console.log('phy',phy)
+    //console.log('glist',glist.length)
     var lineage_list = Object.values(C.taxon_lineage_lookup)
     var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
-    
     var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
         return el.otid
     })
-    console.log('otid_list',otid_list.length)
+    //console.log('otid_list1',otid_list.length)
     let otid_grabber = {}
+    //console.log('glist1',glist[1])
     let gid_obj_list = glist.filter(item => {   // filter genome obj list for inclusion in otid list
-        if(otid_list.indexOf(item.otid) !== -1){
+        if(otid_list.indexOf(item.otid.toString()) !== -1){
             otid_grabber[item.otid] = 1
             return true
         }
         //return otid_list.indexOf(item.otid) !== -1
     })
-    console.log('otid_grabber',otid_list)
-    console.log('gid_obj_list',gid_obj_list)
+    //console.log('obj_lst',obj_lst)
+    //console.log('otid_grabber2',otid_list)
+    //console.log('gid_obj_list',gid_obj_list)
     // now get just the otids from the selected gids
     gid_obj_list.map( (el) =>{ 
-       console.log('el',el)
+       //console.log('el',el)
        return el.otid 
     
     })
@@ -226,7 +227,7 @@ function apply_gtable_filter(req, filter) {
       
     }
     //phylum
-    //console.log('2.5',big_g_list[0])
+    console.log('2.5',big_g_list[0])
     if(vals.phylum  !== ''){
        big_g_list = filter_for_phylum(big_g_list, vals.phylum)
     }
@@ -1537,6 +1538,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
     organism: '',
     db_type: db_type,
     ptitle: page_title,
+    no_ncbi_blast: JSON.stringify([])
   })
 })
 
@@ -1568,7 +1570,8 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
     annotation: req.body.annotation,
     organism: organism,
     ptitle: page_title,
-    db_type: ''
+    db_type: '',
+    no_ncbi_blast: JSON.stringify(C.no_ncbi_blast_dbs)
   })
   
    

@@ -1215,7 +1215,8 @@ module.exports.readFromFile = function readFromFile(file, ext) {
                    //console.log(data.toString())
                    let pts = data.toString().split('\n')
                    for( let i in pts){
-                      gids.push(pts[i].split(' ')[0])
+                     //#re.findall(r'\S+', s)
+                      gids.push(pts[i].split(/(\s+)/)[0])
                    }
                    
                   // const allFileContents = fs.readFileSync('broadband.sql', 'utf-8');
@@ -1223,6 +1224,7 @@ module.exports.readFromFile = function readFromFile(file, ext) {
 //   console.log(`Line from file: ${line}`);
 // });
                     resolve(gids);
+                
                 }else{
                    console.log(data)
                    resolve(data);

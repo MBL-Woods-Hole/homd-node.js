@@ -26,6 +26,7 @@ button{
    
 }
 </style>
+<% no_ncbi_blast_dbs = JSON.parse(no_ncbi_blast) %>
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -60,12 +61,20 @@ button{
          <form name='' class="form-inline" id='switch_dbs_form' method='POST' action='blast_ss_single'>
          <% if(annotation == "ncbi"){ %>
              <input type='radio'  name='annotation'  value='prokka'       onclick="switch_dbs()" /> PROKKA&nbsp;&nbsp;
-             <input type='radio' checked  name='annotation' value='ncbi'  onclick="switch_dbs()" /> NCBI
-             
+             <% if(no_ncbi_blast_dbs.indexOf(gid) != -1){ %>
+               <input type='radio' disabled  name='annotation' value='ncbi'  onclick="switch_dbs()" /> NCBI -Not Available
+             <% }else{ %>
+                <input type='radio' checked  name='annotation' value='ncbi'  onclick="switch_dbs()" /> NCBI
+             <% } %>
         
          <% }else{ %>
              <input type='radio' checked  name='annotation' value='prokka' onclick="switch_dbs()" /> PROKKA&nbsp;&nbsp;
-             <input type='radio'  name='annotation' value='ncbi'           onclick="switch_dbs()" /> NCBI
+             
+             <% if(no_ncbi_blast_dbs.indexOf(gid) != -1){ %>
+               <input type='radio' disabled  name='annotation' value='ncbi'  onclick="switch_dbs()" /> NCBI -Not Available
+             <% }else{ %>
+                <input type='radio' name='annotation' value='ncbi'  onclick="switch_dbs()" /> NCBI
+             <% } %>
              
         <% } %>
         <input type='hidden' name='gid' value='<%= gid %>'>

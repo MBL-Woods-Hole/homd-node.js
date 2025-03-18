@@ -48,10 +48,16 @@
 
   
   <form id='blast_single_form' name='' method='POST' action='blast_ss_single'>
-  Annotation:
+  
+  <!-- 
+Annotation:
   <input type='radio' checked name='annotation' value='prokka'> PROKKA (Default)&nbsp;&nbsp;&nbsp;
   <input type='radio'         name='annotation' value='ncbi'> NCBI
+  
+ -->
+  <input type='hidden' name='annotation' value='prokka'>
   <br><br>Choose a genome BLAST database.
+  
   <br>
   
  <!-- 

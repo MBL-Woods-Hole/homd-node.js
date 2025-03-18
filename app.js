@@ -224,7 +224,8 @@ const promises = [
   
   //2024-Sept
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.site_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv')
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv')
    //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
   
     // ETC ...
@@ -263,6 +264,7 @@ Promise.all(promises)
     C.contig_lookup           = results[9];
     C.site_lookup           = results[10];
     C.no_ncbi_annotation    = results[11];
+    C.no_ncbi_blast_dbs     = results[12];
     //C.phage_lookup              = results[12];
     
     /// END of results files
@@ -309,14 +311,19 @@ Promise.all(promises)
     size = Buffer.byteLength(JSON.stringify(C.site_lookup))
     console.log('C.site_lookup #ofKeys',Object.keys(C.site_lookup).length,'\t\tsize(KB):',size/1024)
     
+    console.log('C.no_ncbi_annotation #of els',C.no_ncbi_annotation.length)
+    console.log('C.no_ncbi_blast_dbs #of els',C.no_ncbi_blast_dbs.length)
+    
     for(var n in C.homd_taxonomy){
        console.log(n)
     }
+    ///////// TESTING ////////////////////////////////////////////////////////////////////
    //console.log(C.taxon_lookup)
    //class
    //helpers.print(['app data1',C.taxon_lookup[389]])
    //Absconditabacteria (SR1) [C-1]
     //console.log('C.no_ncbi_annotation',C.no_ncbi_annotation)
+    //console.log('C.no_ncbi_blast_dbs',C.no_ncbi_blast_dbs)
     //console.log('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
     //helpers.print(['lineage 673',C.taxon_lookup[673]])
     //helpers.print(['Lookup 673',C.taxon_lookup[673]])
@@ -326,6 +333,7 @@ Promise.all(promises)
     //console.log('362 Correct',C.taxon_lineage_lookup[362])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Hornefia minuta_species'])
+    
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
     //console.log('id 944 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[944])
     //console.log('id 943 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[943])
@@ -334,7 +342,8 @@ Promise.all(promises)
     //console.log('id 598 class',C.homd_taxonomy.taxa_tree_dict_map_by_id[598])
     //console.log('id 599 order',C.homd_taxonomy.taxa_tree_dict_map_by_id[599])
     //console.log('id 603 fam ERR',C.homd_taxonomy.taxa_tree_dict_map_by_id[603])
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank)
+    //console.log('998_phylum',C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank['427_family'])
+    /////////////////////////////////////////////////////////////////////////////////////
     C.taxa_with_subspecies = Object.values(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies']).map(x => x.otid)
     console.log('Dropped Taxa:',C.dropped_taxids,C.dropped_taxids.length)
     console.log('Reference Taxa:',C.reference_taxids,C.reference_taxids.length)
