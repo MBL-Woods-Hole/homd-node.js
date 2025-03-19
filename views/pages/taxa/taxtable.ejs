@@ -91,14 +91,15 @@ thead th { position: sticky; top: 0; }
        <% if(list[n].ecology === 1){ %>
              <a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>&otid=<%= otid %>" class="pill pill-green" >Ecology</a>
        <% }else{ %>
-             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+             <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+             <a href="#" style='visibility:hidden;' class="pill pill-green" >Ecology</a>  <!-- visibility:hidden will maintain space -->
        <% } %>
        &nbsp;&nbsp;<a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Taxon Description</a>
        
        <% num_genomes = list[n].genomes.length %>
        
        <% if(num_genomes === 0){ %>
-              <!-- nothing here -->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <a href="#" style='visibility:hidden;' class="pill pill-aqua" >1 Genome</a>
        <% }else if(num_genomes === 1){ %> 
               &nbsp;&nbsp;<a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-aqua" >1 Genome</a>
        <% }else{ %>

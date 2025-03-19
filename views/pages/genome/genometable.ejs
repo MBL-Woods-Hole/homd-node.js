@@ -45,7 +45,7 @@ pagedata {
   <div  class='page-content' >
 <div class='title'><%= pgtitle %></div>
 
-<span><small>There are <%= gcount %> genomes representing <%= tcount %> taxa (Including 'NonOralRef' and 'Dropped' Taxa).</small></span>
+<span><small>There are <%= gcount %> genomes representing <%= tcount %> taxa (Including 'Reference' and 'Dropped' Taxa).</small></span>
 
 
 <div id='download_browser_text_excel'><b>Download this Genome Data</b>: 
@@ -55,7 +55,7 @@ pagedata {
        <b>OR</b> <a href='/download#genome'>Batch Genomic Data</a>
 </div> 
 
- <%- include('../../partials/genome_table_filter.ejs') %> 
+ <%- include("../../partials/genome_table_filter.ejs") %> 
 <br><%- count_txt %>
 <% if(cfg.DBHOST == "localhost"){ %>
 <br><span style=''><small><b>Localhost</b>
@@ -90,10 +90,10 @@ pagedata {
     
     <% for(n in ginfo){ %>
       
-      <% taxidfullname = 'HMT-'+("000" + ginfo[n].otid).slice(-3); %>
+      <% taxidfullname = "HMT-"+("000" + ginfo[n].otid).slice(-3); %>
       <% rowid =  ginfo[n].gid.split('.')[0]; %>
       <tr id='<%= rowid %>' >
-         <% if(filter_on == 'off'){  %>
+         <% if(filter_on == "off"){  %>
             <td class='right'><%= rowcount %></td>
         <% }else{ %>
             <td class='right'><%= parseInt(n) + 1 %></td>

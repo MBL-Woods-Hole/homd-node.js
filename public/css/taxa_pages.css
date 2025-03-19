@@ -44,7 +44,8 @@
 }
 #tax-table td
 {
-  padding:3px 2px;
+  padding:3px 2px 2px 5px;
+  
   font-size:small;
   font-weight:bold;
   color: #303030;

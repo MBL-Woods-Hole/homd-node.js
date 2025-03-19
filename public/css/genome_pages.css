@@ -15,9 +15,10 @@
 #gnom-table td{
   padding:3px 2px;
   font-size:small;
+  font-weight:bold;
   color: #303030;
   overflow: hidden;
-  /* text-overflow: ellipsis; */
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 #genome-box{
@@ -100,10 +101,12 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     width: 70px;
 }
 #gnom-table .col3 {
-    
+    /*  Organism  */
+    width:180px;
 }
 #gnom-table .col4 {
-    
+    /* Strain  */
+    width:240px;
 }
 #gnom-table .col5 {
     width: 60px;
