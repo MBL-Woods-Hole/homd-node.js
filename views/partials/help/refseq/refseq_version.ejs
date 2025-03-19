@@ -2,7 +2,7 @@
 <div class='date'>2023-04-10</div>
 <div class='heading'>Version 15.23 Release Notes</div>
 16S rRNA RefSeq Version 15.23 changed the taxonomy of each sequence based on the latest HOMD Taxonomy database. 
-The latest changes of taxonomy nomenclature was based on this <a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/homd_ncbi_blast_all_tophits-fd-24_old_and_new_names_short.xlsx'>
+The latest changes of taxonomy nomenclature was based on this <a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/homd_ncbi_blast_all_tophits-fd-24_old_and_new_names_short.xlsx'>
 Excel spreadsheet dated 2022-01-06</a>
 <div class='date'>2020-02-09</div>
 <div class='heading'>Version 15.22 Release Notes</div>
@@ -105,7 +105,7 @@ Version 14.51 is a minor update of version 14.5 with only naming modification fo
 
 Version 14.5 is a major update (versions 14.1 to 14.4 were used internally and not publically released).  
 The revisions are not just to 16S rRNA Reference Sequences, but to HOMD and its provisional taxonomic structure.  
-The accompanying Excel file (<a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/3_Database_additions_corrections-V14-5.xlsx'>click to download</a>) details the many added and deleted taxa and changes in status 
+The accompanying Excel file (<a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/3_Database_additions_corrections-V14-5.xlsx'>click to download</a>) details the many added and deleted taxa and changes in status 
 (Named, Unnamed, Phylotype).  Twenty-seven previously overlooked or newly named oral taxa were added.  Thirty taxa were deleted as their sequences were chimeric or damaged.  In most cases, chimeras deleted were derived from crossover of sequences within a genus.  Fourteen non oral taxa were added so that there would be reference genomes in phyla with no or few oral representatives (Chlorobi, Chloroflexi, GN02, TM7, SR1, WPPS-2 ).  Genomes are critical for metagenomic, transcriptomic and proteomic studies where you only see sequences that can be mapped back to reference genomes.  r In this update, reference sequences were compared to all those in GenBank for the same taxa.  Reference sequences that had several mismatches to other sequences in a taxon were replaced by a higher quality sequence that was representative of the taxon.  When sequences within a taxon fall into multiple subgroups, RefSeqs representing divergent subgroups were added.  Some changes to HOMD taxonomy are not included in the Excell file, such as changes in several class names which now in in “ia” (previously phylum and class names were the same for many taxa, but now we have Spirochaetes and Spirochaetia).  A number of taxa which were previously uncultured Phylotypes, have been cultured and are now designated as Unnamed.  A number of Unnamed taxa have been named and their status has been changed to Named.  The headers for the RefSeqs contain the following information: File identifier; Name; HOT-ID; Clone or Strain #; GenBank accession #; Status (Named/Unnamed/Phylotype/Lost); Genome status (G=yes, X= no); log +1 of sequences seen in a study of 27 subjects at 9 oral sites (14 million sequences).  
  
 
@@ -121,7 +121,7 @@ The accompanying Excel file (<a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16
 <div class='date'>2013-05-08:</div>
 <div class='heading'>Version 13.2 Release Notes</div>
 Version 13.2 is a minor correction of 13.0 due to two duplicated reference sequences. 
-Detail changes were shown in the Excel file HOMD version 13.2 [<a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/Corrections_post_V_13.2.xlsx'>Download the Excel File Here</a>].
+Detail changes were shown in the Excel file HOMD version 13.2 [<a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/Corrections_post_V_13.2.xlsx'>Download the Excel File Here</a>].
 
 We now also included an option to search against these reference sequences that include the forward (5') primer sequences:
 
@@ -130,13 +130,13 @@ We now also included an option to search against these reference sequences that 
 
 <br><br>In addition, we are also providing the following additional files:
 
-<br>1. Aligned sequences arranged in phylogenetic orders. [<a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.aligned.fasta'>Download</a>].
+<br>1. Aligned sequences arranged in phylogenetic orders. [<a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.aligned.fasta'>Download</a>].
 
-<br>2. FASTA sequences in mothur format. [<a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.fasta'>Download</a>].
+<br>2. FASTA sequences in mothur format. [<a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.fasta'>Download</a>].
 
-<br>3. Taxonomy file required by mothur. [<a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'>Download</a>].
+<br>3. Taxonomy file required by mothur. [<a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'>Download</a>].
 
-<br>All of these files can also be downloaded from the web download page or <a href='<%= cfg.FTP_URL %>'>HOMD FTP site</a>.
+<br>All of these files can also be downloaded from the web download page or <a href='<%= cfg.HOMD_URL_BASE %>/ftp'>HOMD FTP site</a>.
  
 
 
@@ -144,7 +144,7 @@ We now also included an option to search against these reference sequences that 
 
 <div class='heading'>Version 13.0 Release Notes</div>
 Cumulative additions and corrections to the HOMD Taxon Table and Taxon Description pages have been made since last update. 
-These changes were shown in the Excel file HOMD version 13.0 [<a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/Corrections_post_V_13.xlsx'>Download the Excel File Here</a>].
+These changes were shown in the Excel file HOMD version 13.0 [<a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/Corrections_post_V_13.xlsx'>Download the Excel File Here</a>].
 
 The default 16S rRNA reference set has been updated to version 13.0 The Extended set which includes the provisional taxa A00-H067 has not yet been updated and therefore should be used with caution.
  
@@ -154,7 +154,7 @@ The default 16S rRNA reference set has been updated to version 13.0 The Extended
 
 <div class='heading'>Version 12.0 Release Notes</div>
 Cumulative additions and corrections to the HOMD Taxon Table and Taxon Description pages have been made since last update. 
-These changes were shown in the Excel file HOMD version 12.0 [<a href='<%= cfg.FTP_URL %>/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/Corrections_post_V_12.xlsx'>Download the Excel File Here</a>].
+These changes were shown in the Excel file HOMD version 12.0 [<a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/Corrections_post_V_12.xlsx'>Download the Excel File Here</a>].
 
 The default 16S rRNA reference set has been updated to version 12.0 The Extended set which includes the provisional taxa A00-H067 has not yet been updated and therefore should be used with caution.
  

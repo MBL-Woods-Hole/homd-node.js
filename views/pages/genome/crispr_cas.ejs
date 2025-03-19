@@ -104,13 +104,13 @@ table.sortable tbody tr::before {
        <% if(cdata[g.gid] === "A"){ %>
              <td class='center left-justify' title='Ambiguous'>
               <%= cdata[g.gid] %>
-             [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
+             [<a href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
            </td>
        <% }else{ %>
            <td class='center left-justify'>
               <%= cdata[g.gid] %>
              [<a href='crispr_cas_data?gid=<%= g.gid %>'>view</a>]
-             [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
+             [<a href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
            </td>
        
        <% } %>

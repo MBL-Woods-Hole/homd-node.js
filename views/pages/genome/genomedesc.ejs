@@ -172,7 +172,7 @@
           <td  class='value'><span class='inner-value'>
               <% if(crispr === "A"){ %>
                  Ambiguous
-                 [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= ginfo.gid %>" target='_blank'>HOMD FTP Site</a>]
+                 [<a href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/CRISPR_Cas/CCTyper/<%= ginfo.gid %>" target='_blank'>HOMD FTP Site</a>]
               <% }else{ %>
                  <% if(crispr === 1){ %>
                     <%= crispr %> Contig
@@ -180,7 +180,7 @@
                     <%= crispr %> Contigs
                  <% } %>
                  [<a href='crispr_cas_data?gid=<%= ginfo.gid %>'>View</a>]
-                 [<a href="<%= cfg.FTP_URL %>/genomes/CRISPR_Cas/CCTyper/<%= ginfo.gid %>" target='_blank'>HOMD FTP Site</a>]
+                 [<a href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/CRISPR_Cas/CCTyper/<%= ginfo.gid %>" target='_blank'>HOMD FTP Site</a>]
               <% } %>
              
              
