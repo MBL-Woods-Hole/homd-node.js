@@ -138,9 +138,12 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
   }else if(page == 'anno_table'){
+      //console.log('value',value)
+      //console.log('loc',loc)
+      //console.log('hilit',hilit)
       gid = value
-      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
-  
+      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+gid+'|'+loc+"&highlight="+gid+'|'+hilit
+      //console.log('myurl',url)
   }else if(page == 'protein_peptide'){
        gid = value
        url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
@@ -164,7 +167,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
-        //console.log(resp)
+        //console.log(url)
         window.open(url)
       }
   }
