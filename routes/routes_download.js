@@ -312,7 +312,7 @@ var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in second
 //
 router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   
-  //console.log('in download table -genome:')
+  console.log('in download table partial-genome:')
   var today = new Date()
   var dd = String(today.getDate()).padStart(2, '0')
   var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
@@ -326,57 +326,64 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   let otid = ''
   let searchText = ''
   let searchField = ''
+  let filter = helpers.get_default_gtable_filter()
   if(req.session.hasOwnProperty('gtable_filter')){
-     console.log('req.session.gtable_filter',req.session.gtable_filter)
-     letter = req.session.gtable_filter.letter
-     phylum = req.session.gtable_filter.phylum
-     otid = req.session.gtable_filter.otid
-     searchText = req.session.gtable_filter.text.txt_srch
-     searchField = req.session.gtable_filter.text.field
-  }
-  helpers.print(['type', type,'letter', letter,'phylum', phylum,'otid', otid])
-  // Apply filters
-  const tempList = Object.values(C.genome_lookup)
-  let sendList = []
-  let fileFilterText = ''
-  if (letter && letter.match(/[A-Z]{1}/)) { // always caps
-    //console.log('in letter dnld')
-    helpers.print(['MATCH Letter: ', letter])
-    sendList = tempList.filter(item => item.genus.charAt(0) === letter)
-    helpers.print(sendList)
-    fileFilterText = "HOMD.org Genome Data::Letter Filter Applied (genus with first letter of '" + letter + "')"
-  } else if (otid !== '') {
-    //console.log('in otid dnld')
-    const gidList = C.taxon_lookup[otid].genomes
-    // console.log('sil',seqid_list)
-    for (let n in gidList) {
-      sendList.push(C.genome_lookup[gidList[n]])
-    }
-    fileFilterText = 'HOMD.org Genome Data::Oral TaxonID: HMT-' + ('000' + otid).slice(-3)
-  } else if (phylum !== '') {
-    //console.log('in phylum dnld')
-    const lineageList = Object.values(C.taxon_lineage_lookup)
-    const objList = lineageList.filter(item => item.phylum === phylum) // filter for phylum
+    filter = req.session.gtable_filter
+    //console.log('filter',filter)
     
-    const otidList = objList.map((el) => { // get list of otids with this phylum
-      return el.otid
-    })
-    helpers.print(['otid_list', otidList])
-    sendList = tempList.filter(item => { // filter genome obj list for inclusion in otid list
-      return otidList.indexOf(item.otid) !== -1
-    })
-    helpers.print(['cksend_list', sendList])
-    fileFilterText = 'HOMD.org Genome Data::Phylum: ' + phylum
-  } else if (searchText !== '') {
-    const bigGeneList = Object.values(C.genome_lookup)
-    sendList = helpers.get_filtered_genome_list(bigGeneList, searchText, searchField)
-    fileFilterText = 'HOMD.org Genome Data::Search Text: ' + searchText
-  } else {
-    // whole list as last resort
-    //console.log('in all dnld')
-    sendList = tempList
-    fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
   }
+  let sendList = helpers.apply_gtable_filter(req, filter)
+ //  if(req.session.hasOwnProperty('gtable_filter')){
+//      console.log('req.session.gtable_filter',req.session.gtable_filter)
+//      letter = req.session.gtable_filter.letter
+//      phylum = req.session.gtable_filter.phylum
+//      otid = req.session.gtable_filter.otid
+//      searchText = req.session.gtable_filter.text.txt_srch
+//      searchField = req.session.gtable_filter.text.field
+//   }
+//   //helpers.print(['type', type,'letter', letter,'phylum', phylum,'otid', otid])
+//   // Apply filters
+//   const tempList = Object.values(C.genome_lookup)
+//   let sendList = []
+//   let fileFilterText = ''
+//   if (letter && letter.match(/[A-Z]{1}/)) { // always caps
+//     //console.log('in letter dnld')
+//     helpers.print(['MATCH Letter: ', letter])
+//     sendList = tempList.filter(item => item.organism.charAt(0) === letter)
+//     //helpers.print(sendList)
+//     fileFilterText = "HOMD.org Genome Data::Letter Filter Applied (genus with first letter of '" + letter + "')"
+//   } else if (otid !== '') {
+//     //console.log('in otid dnld')
+//     const gidList = C.taxon_lookup[otid].genomes
+//     // console.log('sil',seqid_list)
+//     for (let n in gidList) {
+//       sendList.push(C.genome_lookup[gidList[n]])
+//     }
+//     fileFilterText = 'HOMD.org Genome Data::Oral TaxonID: HMT-' + ('000' + otid).slice(-3)
+//   } else if (phylum !== '') {
+//     //console.log('in phylum dnld')
+//     const lineageList = Object.values(C.taxon_lineage_lookup)
+//     const objList = lineageList.filter(item => item.phylum === phylum) // filter for phylum
+//     
+//     const otidList = objList.map((el) => { // get list of otids with this phylum
+//       return el.otid
+//     })
+//     //helpers.print(['otid_list', otidList])
+//     sendList = tempList.filter(item => { // filter genome obj list for inclusion in otid list
+//       return otidList.indexOf(item.otid) !== -1
+//     })
+//     //helpers.print(['cksend_list', sendList])
+//     fileFilterText = 'HOMD.org Genome Data::Phylum: ' + phylum
+//   } else if (searchText !== '') {
+//     const bigGeneList = Object.values(C.genome_lookup)
+//     sendList = helpers.get_filtered_genome_list(bigGeneList, searchText, searchField)
+//     fileFilterText = 'HOMD.org Genome Data::Search Text: ' + searchText
+//   } else {
+//     // whole list as last resort
+//     //console.log('in all dnld')
+//     sendList = tempList
+     let fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
+//   }
   const listOfGids = sendList.map(item => item.gid)
   fileFilterText = fileFilterText + ' Date: ' + today
 
@@ -649,20 +656,20 @@ function create_full_genome_table (sqlrows, startText) {
 function create_genome_table (gids, source, type, startText) {
   let txt = startText + '\n'
   if (source === 'table') {
-    const headersRow = ['Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species', 'SubSpecies', 'Strain','No. Contigs',  'Total Length',   'MAG','GC %']
+    const headersRow = ['Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species', 'SubSpecies', 'Strain','No. Contigs',  'Total Length',   'Category','GC %']
     txt += headersRow.join('\t')+'\n'
     ///console.log('SEQF5379.1',C.genome_lookup['SEQF5379.1'])
     for (let n in gids) {
       const gid = gids[n]
       const obj = C.genome_lookup[gid]
-      console.log(obj)
+      //console.log(obj)
       // per FDewhirst: species needs to be unencumbered of genus for this table
       //let species = obj.species.replace(obj.genus,'').trim()
       let genus = C.taxon_lookup[obj.otid].genus
       let species = C.taxon_lookup[obj.otid].species
       let subspecies = C.taxon_lookup[obj.otid].subspecies
       let hmt = helpers.make_otid_display_name(obj.otid)
-      const r = [ gid, hmt, genus, species, subspecies, obj.strain, obj.contigs, obj.combined_size, obj.mag,obj.gc]
+      const r = [ gid, hmt, genus, species, subspecies, obj.strain, obj.contigs, obj.combined_size, obj.category,obj.gc]
       txt += r.join('\t') +'\n'
     }
   }
