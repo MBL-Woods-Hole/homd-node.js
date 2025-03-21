@@ -220,7 +220,7 @@ constants.tax_abund_default = ['high_abund','medium_abund','low_abund','scarce_a
 
 constants.genome_categories_all = {
   'complete_genome':'Complete Genome',
-  'scaffild':       'Scaffold',
+  'scaffold':       'Scaffold',
   'contig':         'Contig',
   'chromosome':     'Chromosome',
   'mag':            'MAG'
