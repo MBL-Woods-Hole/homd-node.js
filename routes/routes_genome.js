@@ -216,7 +216,7 @@ function apply_gtable_filter(req, filter) {
     //console.log('big_g_list-2',big_g_list.filter(item => item.gid=== 'GCA_000006625.1'))
     // txt_srch
     //console.log('1',big_g_list[0],vals)
-    big_g_list = getFilteredGenomeList(big_g_list, vals.text.txt_srch, vals.text.field)
+    big_g_list = helpers.get_filtered_genome_list(big_g_list, vals.text.txt_srch, vals.text.field)
     //console.log('big_g_list-2',big_g_list[0])
     //console.log('big_g_list-2.1',big_g_list.filter(item => item.gid=== 'GCA_000006625.1'))
     //letter
@@ -1894,98 +1894,6 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //
 
 //
-function getFilteredGenomeList (gidObjList, searchText, searchField) {
-  let sendList, tmpSendList
-  const tempObj = {}
-  
-  //console.log('gidObjList',gidObjList)
-  if (searchField === 'strain') {
-    sendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText))
- //} else if (searchField === 'organism') {
-   // sendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
-  //} else if (searchField === 'io') {
-   // sendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
-  //} else if (searchField === 'status') {
-   // sendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
-  //} else if (searchField === 'submitter') {
-  //  sendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
-  //}  else if (searchField === 'seq_center') {
-   // sendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
-  } else {
-    // tmpSendList = gidObjList.filter(item => item.gb_asmbly.toLowerCase().includes(searchText))
-//     for (let n in tmpSendList) {
-//       tempObj[tmpSendList[n].gid] = tmpSendList[n]
-//     }
-     // gid
-    //console.log('searchText',searchText)
-    tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    }
-    //otid
-    tmpSendList = gidObjList.filter(item => item.otid.toString().includes(searchText))
-    // for uniqueness convert to object::otid THIS is WRONG: Must be gid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    }
-    tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
-        // for uniqueness convert to object::gid
-        for (let n in tmpSendList) {
-          tempObj[tmpSendList[n].gid] = tmpSendList[n]
-        }
-        // species
-    
-    
-    // tmpSendList = gidObjList.filter(item => item.genus.toLowerCase().includes(searchText))
-//         // for uniqueness convert to object::gid
-//         for (let n in tmpSendList) {
-//           tempObj[tmpSendList[n].gid] = tmpSendList[n]
-//         }
-//         // species
-//     tmpSendList = gidObjList.filter(item => item.species.toLowerCase().includes(searchText))
-//         // for uniqueness convert to object::gid
-//         for (let n in tmpSendList) {
-//           tempObj[tmpSendList[n].gid] = tmpSendList[n]
-//         }
-    // organism
-    //tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::gid
-    //for (let n in tmpSendList) {
-    //  tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    //}
-    // culture collection
-    tmpSendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::gid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    }
-    // isolation origin
-    //tmpSendList = gidObjList.filter(item => item.io.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::gid
-    //for (let n in tmpSendList) {
-    //  tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    //}
-    // seq status
-    //tmpSendList = gidObjList.filter(item => item.status.toLowerCase().includes(searchText))
-    // for uniqueness convert to object::gid
-    //for (let n in tmpSendList) {
-    //  tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    //}
-    // submitter
-    //if(gidObjList[0].hasOwnProperty('submitter')){
-    //  tmpSendList = gidObjList.filter(item => item.submitter.toLowerCase().includes(searchText))
-    //}else{
-    //  tmpSendList = gidObjList.filter(item => item.seq_center.toLowerCase().includes(searchText))
-    //}
-    // for uniqueness convert to object::gid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n]
-    }
-    // now back to a list
-    sendList = Object.values(tempObj)
-  }
-  return sendList
-}
 
 function get_blast_db_info(gid){
     console.log('in get_blast_db_info')

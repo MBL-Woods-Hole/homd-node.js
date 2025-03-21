@@ -1876,7 +1876,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
 
 }
 //
-module.exports.get_filtered_taxon_list = function get_filtered_taxon_list(big_tax_list, search_txt, search_field){
+module.exports.get_filtered_taxon_list = function getFilteredTaxonList(big_tax_list, search_txt, search_field){
 
   let send_list = []
   //console.log('txt srch',search_txt,search_field)
@@ -1983,7 +1983,58 @@ module.exports.get_filtered_taxon_list = function get_filtered_taxon_list(big_ta
       
   }
   return send_list
-} 
+}
+ 
+module.exports.get_filtered_genome_list =function getFilteredGenomeList (gidObjList, searchText, searchField) {
+  let sendList, tmpSendList
+  const tempObj = {}
+  
+  //console.log('gidObjList',gidObjList)
+  if (searchField === 'strain') {
+    sendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText))
+
+  } else {
+    // tmpSendList = gidObjList.filter(item => item.gb_asmbly.toLowerCase().includes(searchText))
+//     for (let n in tmpSendList) {
+//       tempObj[tmpSendList[n].gid] = tmpSendList[n]
+//     }
+     // gid
+    //console.log('searchText',searchText)
+    tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText))
+    for (let n in tmpSendList) {
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    }
+    //otid
+    tmpSendList = gidObjList.filter(item => item.otid.toString().includes(searchText))
+    // for uniqueness convert to object::otid THIS is WRONG: Must be gid
+    for (let n in tmpSendList) {
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    }
+    tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText))
+        // for uniqueness convert to object::gid
+        for (let n in tmpSendList) {
+          tempObj[tmpSendList[n].gid] = tmpSendList[n]
+        }
+        // species
+    
+    
+
+    // culture collection
+    tmpSendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText))
+    // for uniqueness convert to object::gid
+    for (let n in tmpSendList) {
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    }
+
+    for (let n in tmpSendList) {
+      tempObj[tmpSendList[n].gid] = tmpSendList[n]
+    }
+    // now back to a list
+    sendList = Object.values(tempObj)
+  }
+  return sendList
+}
+
 //
 module.exports.get_default_filter = function get_default_filter(){
     

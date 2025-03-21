@@ -321,12 +321,13 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
   const type = req.params.type
   
-  const letter = '0'
-  const phylum = ''
-  const otid = ''
-  const searchText = ''
-  const searchField = ''
+  let letter = '0'
+  let phylum = ''
+  let otid = ''
+  let searchText = ''
+  let searchField = ''
   if(req.session.hasOwnProperty('gtable_filter')){
+     console.log('req.session.gtable_filter',req.session.gtable_filter)
      letter = req.session.gtable_filter.letter
      phylum = req.session.gtable_filter.phylum
      otid = req.session.gtable_filter.otid
@@ -368,7 +369,7 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
     fileFilterText = 'HOMD.org Genome Data::Phylum: ' + phylum
   } else if (searchText !== '') {
     const bigGeneList = Object.values(C.genome_lookup)
-    sendList = getFilteredGenomeList(bigGeneList, searchText, searchField)
+    sendList = helpers.get_filtered_genome_list(bigGeneList, searchText, searchField)
     fileFilterText = 'HOMD.org Genome Data::Search Text: ' + searchText
   } else {
     // whole list as last resort
