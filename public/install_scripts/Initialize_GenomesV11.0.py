@@ -19,7 +19,7 @@ from connect import MyConnection
 
 
 genomes_query = """
-   SELECT genome_id as gid, otid, strain, MAG, organism, contigs, combined_size, GC
+   SELECT genome_id as gid, otid, strain, category, organism, contigs, combined_size, GC
    FROM `genomesV11.0`
 """
 
@@ -38,7 +38,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     genome['combined_size']   = ''   # table 1
     genome['strain']    = ''  # table 1
     genome['gc']        = ''   # table 2
-    genome['mag']        = ''   # table 2
+    genome['category']  = ''   # Complete Genome,Scaffold,Contig,Chromosome,MAG
 
     return genome
 
@@ -54,7 +54,7 @@ def run_first(args):
     result = myconn.execute_fetch_select_dict(genomes_query)
 
     for obj in result:
-        print('obj',obj)
+        #print('obj',obj)
 
         if obj['gid'] not in master_lookup:
             taxonObj = create_genome(obj['gid'])
@@ -63,12 +63,12 @@ def run_first(args):
             taxonObj['combined_size']     = obj['combined_size']
             taxonObj['strain']      = obj['strain']
             taxonObj['gc']          = obj['GC']
-            taxonObj['mag']          = obj['MAG']
-            taxonObj['otid']          = obj['otid']
+            taxonObj['category']    = obj['category']
+            taxonObj['otid']        = obj['otid']
         else:
             sys.exit('duplicate gid',obj['gid'])
         master_lookup[obj['gid']] = taxonObj
-    print(master_lookup)
+    #print(master_lookup)
 
 def run_second(args):
     """  add otid to Object """

@@ -79,7 +79,13 @@ function get_default_gtable_filter(){
         sort_col: 'organism',
         sort_rev: 'off',
         paging:'on',
-        mags:'default'
+        category:{
+            complete_genome:'on',
+            scaffold:'on',
+            contig:'on',
+            chromosome:'on',
+            mag:'on'
+        }
     }
     return defaultfilter
 }
@@ -143,7 +149,11 @@ function set_gtable_session(req) {
     }
     req.session.gtable_filter = get_default_gtable_filter()
     req.session.gtable_filter.letter = letter
-    
+    req.session.gtable_filter.category.complete_genome = 'off'
+    req.session.gtable_filter.category.scaffold = 'off'
+    req.session.gtable_filter.category.contig = 'off'
+    req.session.gtable_filter.category.chromosome = 'off'
+    req.session.gtable_filter.category.mag = 'off'
     for( let item in req.body){
        if(item == 'letter'){
          req.session.gtable_filter.letter = req.body.letter
@@ -166,8 +176,21 @@ function set_gtable_session(req) {
        if(item == 'paging'){
          req.session.gtable_filter.paging = req.body.paging
        }
-       if(item == 'mags'){
-         req.session.gtable_filter.mags = req.body.mags
+       // Genome Category
+       if(item == 'complete_genome'){
+         req.session.gtable_filter.category.complete_genome = 'on'
+       }
+       if(item == 'scaffold'){
+         req.session.gtable_filter.category.scaffold = 'on'
+       }
+       if(item == 'contig'){
+         req.session.gtable_filter.category.contig = 'on'
+       }
+       if(item == 'chromosome'){
+         req.session.gtable_filter.category.chromosome = 'on'
+       }
+       if(item == 'mag'){
+         req.session.gtable_filter.category.mag = 'on'
        }
     }
     
@@ -249,9 +272,9 @@ function apply_gtable_filter(req, filter) {
             return helpers.compareStrings_alpha(a.strain,b.strain);
             //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
-        }else if(vals.sort_col === 'mag'){
+        }else if(vals.sort_col === 'category'){
           big_g_list.sort(function (b,a) {
-            return helpers.compareStrings_alpha(a.mag,b.mag);
+            return helpers.compareStrings_alpha(a.category,b.category);
             //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
         }else if(vals.sort_col === 'contigs'){
@@ -295,9 +318,9 @@ function apply_gtable_filter(req, filter) {
             return helpers.compareStrings_alpha(a.strain,b.strain);
             //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
-        }else if(vals.sort_col === 'mag'){
+        }else if(vals.sort_col === 'category'){
           big_g_list.sort(function (a, b) {
-            return helpers.compareStrings_alpha(a.mag,b.mag);
+            return helpers.compareStrings_alpha(a.category,b.category);
             //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
         }else if(vals.sort_col === 'contigs'){
@@ -323,13 +346,45 @@ function apply_gtable_filter(req, filter) {
           })
         }
     }
-    // MAGs
+    // Category
+    let category_on = Object.keys(vals.category).filter(item => vals.category[item] == 'on')
     //console.log('vals',vals)
-    if(vals.mags === 'nomags'){
-        big_g_list = big_g_list.filter(item => item.mag === '')
-    }else if(vals.mags === 'onlymags'){
-        big_g_list = big_g_list.filter(item => item.mag === 'yes')
-    }
+    //console.log('category_on',category_on)
+    
+    
+    big_g_list = big_g_list.filter( function(item){
+         // if(item.otid =='999'){
+//            console.log('item.sites999',item)
+//          }
+//console.log('helpers.getKeyByValue(C.genome_categories_all, item.category)',helpers.getKeyByValue(C.genome_categories_all, item.category))
+         //console.log('item',item)  // item.category == caps
+         //for(let n in item.category){
+           //console.log('n',n,'site',item.sites[n])
+           //console.log('item.sites',item.sites)
+           if(category_on.includes(helpers.getKeyByValue(C.genome_categories_all, item.category))){
+           //if(site_on.includes(item.sites[n].toLowerCase())){
+              //item.category = item.sites[0]
+              
+              return item
+           }
+           
+         //}
+       })
+       
+       
+   //  if(vals.category.complete_genome === 'on'){
+//         big_g_list = big_g_list.filter(item => item.category === 'complete_genome')
+//     
+//     
+//     }else if(vals.category.scaffold === 'on'){
+//         big_g_list = big_g_list.filter(item => item.category === 'scaffold')
+//     }else if(vals.category.contig === 'on'){
+//         big_g_list = big_g_list.filter(item => item.category === 'contig')
+//     }else if(vals.category.scaffold === 'on'){
+//         big_g_list = big_g_list.filter(item => item.category === 'scaffold')
+//     }else if(vals.category.scaffold === 'on'){
+//         big_g_list = big_g_list.filter(item => item.category === 'scaffold')
+//     }
     
     //console.log('big_g_list-2',big_g_list)
     return big_g_list
@@ -482,7 +537,7 @@ router.post('/genome_table', function genome_table_post(req, res) {
     set_gtable_session(req)
     //console.log('gtable_session',req.session.gtable_filter)
     filter = req.session.gtable_filter
-    //console.log(filter)
+    //console.log('filter',filter)
     send_list = apply_gtable_filter(req, filter)
     // format big nums
     
@@ -525,7 +580,7 @@ router.post('/genome_table', function genome_table_post(req, res) {
             el.combined_size = helpers.format_long_numbers(el.combined_size); 
         }
     })
-    //console.log('pt',pager_txt)
+    
     // DON NOT SORT HERE - SORTING DONE IN FILTER
     args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
     //let obj2 = send_list.filter(o => o.species === 'coli');
@@ -617,7 +672,7 @@ router.get('/genome_description', function genomeDescription (req, res) {
          let contigs = []
          // try get contigs from file:
          // ncbi only
-         console.log('q_contig',q_contig)
+         //console.log('q_contig',q_contig)
          helpers.print('In Genome_Descriptin2: '+q_contig)
          TDBConn.query(q_contig, (err, rows) => {
             if (err) {
@@ -697,7 +752,7 @@ router.post('/get_16s_seq', function get16sSeqPost (req, res) {
 
 router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
   //console.log('in get_NN_NA_seq -post')
-  console.log(req.body)
+  //console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
@@ -1350,7 +1405,7 @@ router.get('/explorer', function explorer_get (req, res) {
         organism = C.genome_lookup[gid].organism
       }else{
         req.flash('fail', 'Genome not found: "'+gid+'"')
-        console.log('no anno1')
+        //console.log('no anno1')
         args = {fltr:{},filter_on:'off',gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
         render_explorer(req, res, args)
         return
@@ -1364,7 +1419,7 @@ router.get('/explorer', function explorer_get (req, res) {
         gc = C.genome_lookup[gid].gc
   }
   if(gid && !anno) {
-      console.log('no anno2')
+      //console.log('no anno2')
       args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:0,organism:organism,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
       render_explorer(req, res, args)
       return

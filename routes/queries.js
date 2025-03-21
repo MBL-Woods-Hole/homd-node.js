@@ -156,7 +156,7 @@ module.exports.get_genome = (gid) => {   // always NCBI for taxon description
   // NCBI Fields
   // fields = ['organism','assembly_level', 'assembly_method', 'bioproject', 'biosample', 'submission_date', 'geo_loc_name', 'isolation_source', 'status', 'seqtech', 'submitter', 'GC',  'coverage', 'contigs', 'combined_size', 'ANI', 'checkM_completeness', 'checkM_percentile', 'checkM_contamination', 'taxid', 'refseq_assembly', 'WGS']
  
-  let qSelectGenome = "SELECT `genomesV11.0`.strain,`genomesV11.0`.organism,`genomesV11.0`.contigs,`genomesV11.0`.combined_size,`genomesV11.0`.MAG,`genomesV11.0`.GC, "
+  let qSelectGenome = "SELECT `genomesV11.0`.strain,`genomesV11.0`.organism,`genomesV11.0`.contigs,`genomesV11.0`.combined_size,`genomesV11.0`.category,`genomesV11.0`.GC,`genomesV11.0`.url, "
         qSelectGenome +=' bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,'
         qSelectGenome +=' submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_percentile,checkM_contamination,refseq_assembly,WGS,'
         qSelectGenome +=' `genomes_prokkaV11.0`.contigs as prokka_contigs,`genomes_prokkaV11.0`.CDS as prokka_CDS,`genomes_prokkaV11.0`.gene as prokka_gene,`genomes_prokkaV11.0`.mRNA as prokka_mRNA,`genomes_prokkaV11.0`.misc_RNA as prokka_misc_RNA,`genomes_prokkaV11.0`.rRNA as prokka_rRNA,`genomes_prokkaV11.0`.tRNA as prokka_tRNA,`genomes_prokkaV11.0`.tmRNA as prokka_tmRNA'

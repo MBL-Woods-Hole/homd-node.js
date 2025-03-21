@@ -127,6 +127,42 @@
         </small></td>
 </tr>
 <tr>
+<td>
+         <small>
+            <span class='filter-title' id='body_site_title'>Genome Category:</span>&nbsp;&nbsp;
+            
+            <% if(fltr.category.complete_genome === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='complete_genome' name='complete_genome' onclick='update_sb()'\> Complete Genome&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='complete_genome' name='complete_genome' onclick='update_sb()'\> Complete Genome&nbsp;
+            <% } %>
+            <% if(fltr.category.scaffold === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='scaffold' name='scaffold' onclick='update_sb()' \> Scaffold&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='scaffold' name='scaffold' onclick='update_sb()' \> Scaffold&nbsp;
+            <% } %>
+            <% if(fltr.category.contig === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='contig' name='contig' onclick='update_sb()' \> Contig&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='contig' name='contig' onclick='update_sb()' \> Contig&nbsp;
+            <% } %>
+            <% if(fltr.category.chromosome === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='chromosome' name='chromosome' onclick='update_sb()' \> Chromosome&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='chromosome' name='chromosome' onclick='update_sb()' \> Chromosome&nbsp;
+            <% } %>
+            <% if(fltr.category.mag === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='mag' name='mag' onclick='update_sb()' \> MAG&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='mag' name='mag' onclick='update_sb()' \> MAG&nbsp;
+            <% } %>
+            <small><span  id='toggle_cb_categories_span'><a class="pill pill-aqua" href='#' onclick="toggle_cb_categories('off')">Toggle CheckBoxes On/Off</a></span></small>
+             
+             
+         </small>
+</td>
+</tr>
+<tr>
     <td class=''>
         <small>
         <span class='filter-title'>Search This Table:</span>
@@ -145,24 +181,6 @@
         </span>
         </small>
     </td><td class=''>
-        <small>
-        <span style=''>MAGs: &nbsp;
-          <% if(fltr.mags === 'nomags'){ %>
-            <input type='radio'         name='mags' value='default' onclick='update_sb()' > Include&nbsp;&nbsp;
-            <input type='radio'         name='mags' value='onlymags' onclick='update_sb()' > Only MAGs&nbsp;&nbsp;
-            <input type='radio' checked name='mags' value='nomags' onclick='update_sb()' > No MAGs
-          <% }else if(fltr.mags === 'onlymags'){ %>
-            <input type='radio'         name='mags' value='default' onclick='update_sb()' > Include&nbsp;&nbsp;
-            <input type='radio' checked name='mags' value='onlymags' onclick='update_sb()' > Only MAGs&nbsp;&nbsp;
-            <input type='radio'         name='mags' value='nomags' onclick='update_sb()' > No MAGs
-          <% }else{ %>  <!-- Default -->
-            <input type='radio' checked name='mags' value='default' onclick='update_sb()' > Include&nbsp;&nbsp;
-            <input type='radio'         name='mags' value='onlymags' onclick='update_sb()' > Only MAGs&nbsp;&nbsp;
-            <input type='radio'         name='mags' value='nomags' onclick='update_sb()' > No MAGs
-          <% } %>
-          
-        </span>
-        </small>
     </td></td>
 </tr>
 <tr>
@@ -191,10 +209,10 @@
         <% }else{ %>
         <input type='radio' name='sort_col' value='strain' onclick='update_sb()' > Strain&nbsp;
         <% } %>
-        <% if(fltr.sort_col === 'mag'){ %>
-        <input type='radio' checked name='sort_col' value='mag' onclick='update_sb()' > MAG&nbsp;
+        <% if(fltr.sort_col === 'category'){ %>
+        <input type='radio' checked name='sort_col' value='category' onclick='update_sb()' > Category&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='mag' onclick='update_sb()' > MAG&nbsp;
+        <input type='radio' name='sort_col' value='category' onclick='update_sb()' > Category&nbsp;
         <% } %>
         <% if(fltr.sort_col === 'contigs'){ %>
         <input type='radio' checked name='sort_col' value='contigs' onclick='update_sb()' > Contigs&nbsp;

@@ -36,7 +36,7 @@ function renderTaxonTable(req, res, args) {
 function get_filter_on(f){
     // for comparison stringify
     //console.log('get_filter_on')
-    let obj1 = JSON.stringify(helpers.get_default_filter())
+    let obj1 = JSON.stringify(helpers.get_default_tax_filter())
     let obj2 = JSON.stringify(f)
     if(obj1 === obj2){
       //console.log('off')
@@ -48,7 +48,7 @@ function get_filter_on(f){
 }
 router.get('/reset_ttable', function tax_table_reset(req, res) {
    //console.log('in RESET-session')
-   req.session.ttable_filter = helpers.get_default_filter()
+   req.session.ttable_filter = helpers.get_default_tax_filter()
    res.redirect('back');
 })
 router.get('/tax_table', function tax_table_get(req, res) {
@@ -57,14 +57,14 @@ router.get('/tax_table', function tax_table_get(req, res) {
     
     //console.log('get-session ',req.session.ttable_filter)
     // QUESTION - Should filter hold through EVERYTHING?
-    filter = helpers.get_default_filter()
+    filter = helpers.get_default_tax_filter()
     req.session.ttable_filter = filter
     // if(req.session.ttable_filter){
 //         //console.log('filetr session')
 //         filter = req.session.ttable_filter
 //     }else{
 //         //console.log('filetr from default')
-//         filter = helpers.get_default_filter()
+//         filter = helpers.get_default_tax_filter()
 //         req.session.ttable_filter = filter
 //     }
     

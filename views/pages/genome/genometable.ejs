@@ -72,7 +72,7 @@ pagedata {
     <th class='col2' scope='col' nowrap>Taxon-ID</th>
     <th class='col3' scope='col' >Organism</th>
     <th class='col4' scope='col' >Strain</th>
-    <th class='col5' title='MAG: Metagenome-Assembled Genome' scope='col' >MAG</th>
+    <th class='col5' title='Genome Category' scope='col' >Category</th>
     <th class='col6' scope='col' >Contigs</th>
     <th class='col7' scope='col' >Combined<br>Length</th>
     <th class='col8' scope='col' >GC(%)</th>
@@ -106,7 +106,7 @@ pagedata {
        
         
         <td class='tax_name' title='<%= ginfo[n].strain %>'><em><%= ginfo[n].strain %></em></td>
-        <td class='center'><%= ginfo[n].mag %></td>
+        <td class=''><%= ginfo[n].category %></td>
         <td class='center'><%= ginfo[n].contigs %></td>
         <td class='center'><%= ginfo[n].combined_size %></td>
     

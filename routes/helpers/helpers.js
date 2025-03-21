@@ -1226,7 +1226,7 @@ module.exports.readFromFile = function readFromFile(file, ext) {
                     resolve(gids);
                 
                 }else{
-                   console.log(data)
+                   //console.log(data)
                    resolve(data);
                 }
             }
@@ -1669,7 +1669,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
        vals = req.session.ttable_filter
     }else{
         //console.log('vals from default ttfilter')
-        vals = helpers.get_default_filter()
+        vals = helpers.get_default_tax_filter()
     }
     //console.log('vals',vals)
     //
@@ -1820,19 +1820,6 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
               var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
               //console.log(el)
               var lineage_list = helpers.make_lineage(node)
-              
-//               if(lineage_list[0] in C.taxon_counts_lookup){
-//                  //console.log('kkk',C.taxon_counts_lookup[lineage_list[0]])
-//                  if('refseq' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['refseq']).length != 0){
-//                      el.ecology = 1
-//                  }else if('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length != 0){
-//                      el.ecology = 1
-//                  }else if('eren' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren']).length != 0){
-//                      el.ecology = 1
-//                  }else {
-//                      el.ecology = 0
-//                  }
-//               }
 
               if( C.taxon_counts_lookup.hasOwnProperty(lineage_list[0]) && C.taxon_counts_lookup[lineage_list[0]].ecology == '1'){
                 el.ecology = 1
@@ -2036,7 +2023,7 @@ module.exports.get_filtered_genome_list =function getFilteredGenomeList (gidObjL
 }
 
 //
-module.exports.get_default_filter = function get_default_filter(){
+module.exports.get_default_tax_filter = function getDefaultTaxFilter(){
     
     let defaultfilter = {otid:'',status:{},site:{},abund:{}}
     

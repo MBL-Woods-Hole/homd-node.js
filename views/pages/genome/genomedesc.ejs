@@ -154,7 +154,11 @@
     
     <tr class=""><td class='field'>Total Sequence Length</td><td class='value'><span class='inner-value'><%= ginfo.combined_size %> (bp)</td></tr>
     <tr class=""><td class='field'>GC Percentage</td><td class='value'><span class='inner-value'><%= ginfo.GC %></span></td></tr>
-    <tr class=""><td class='field'>MAG (Metagenome-Assembled Genome)</td><td class='value'><span class='inner-value'><%= ginfo.MAG %></span></td></tr>
+    <tr class=""><td class='field'>Genome Category</td><td class='value'><span class='inner-value'><%= ginfo.category %></span></td></tr>
+    <% url_sub = ginfo.url.replace('ftp','https') %>
+    <tr class=""><td class='field'>NCBI URL</td><td class='value'><span class='inner-value'><a href='<%= url_sub %>' target='_blank'>
+        <%= ginfo.url %></a></span></td>
+    </tr>
    
     <tr class=""><td class='field'>CDS</td><td class='value'><span class='inner-value'><%= ginfo.prokka_CDS %></span></td></tr>
     <tr class=""><td class='field'>Genes</td><td class='value'><span class='inner-value'><%= ginfo.prokka_gene %></span></td></tr>
