@@ -1872,7 +1872,7 @@ router.get('/oralgen', function oralgen(req, res) {
   })
 })
 //////////////////
-router.get('/peptide_table', function protein_peptide(req, res) {
+router.get('/peptide_table', function peptide_table_get(req, res) {
     
     const q = queries.get_peptide()
     let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
@@ -1921,7 +1921,7 @@ router.get('/peptide_table', function protein_peptide(req, res) {
        })
     })
 })
-router.post('/peptide_table', function genome_table_filter(req, res) {
+router.post('/peptide_table', function peptide_table_post(req, res) {
     console.log('req.body',req.body)
     let search_text = req.body.txt_srch.toLowerCase()
     let big_p_list //= Object.values(C.genome_lookup);
@@ -1996,7 +1996,7 @@ router.post('/peptide_table', function genome_table_filter(req, res) {
 })
 //
 //
-router.get('/peptide_table2', function peptide_table2(req, res) {
+router.get('/peptide_table2', function peptide_table2_get(req, res) {
  
     
     const q = queries.get_peptide2()
@@ -2060,7 +2060,7 @@ router.get('/peptide_table2', function peptide_table2(req, res) {
        })
     })
 })
-router.post('/peptide_table2', function protein_peptide(req, res) {
+router.post('/peptide_table2', function peptide_table2_post(req, res) {
     const q = queries.get_peptide2()
 //     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
 // FROM protein_peptide 

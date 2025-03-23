@@ -1,0 +1,422 @@
+<style>
+:root {
+  --bg:#c2bdb9;
+  --btn1: #083370;    /* #006699; */
+  --btn2: #81B1A1;    /* #006699; */
+  --border1:#4E7F6F;    /* lite green */
+  --border2:#102C23;
+  --okay-btn:#b3cde3;   /* golden yellow */
+  --btn-text:#f0f0f0;
+  --srch-bg:#ccebc5;
+  --text:black;
+  --cancel-btn:#B22222;
+  --div-bg016:#f0f0f0;   /* Pastel grey */
+  
+}
+{box-sizing: border-box;}
+/* https://www.w3schools.com/colors/colors_monochromatic.asp */
+/* Button used to open the contact form - fixed at the bottom of the page */
+
+.open-button {
+  background: var(--bg);
+  border: 1px solid red; /* var(--border2); */
+  color: var(--black);
+  padding: 5px 5px;
+  border: none;
+  cursor: pointer;
+  /* opacity: 0.8; */
+ /* 
+ position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+ */
+}
+#field_select{
+    font-size:18px;
+    background: var(--div-bg016);
+}
+#txt_srch{
+   font-size:18px;
+   
+   background: var(--div-bg016);
+}
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  /* visibility: hidden; */
+   position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+
+  /* 
+position: relative;
+  top: 150px;
+  left: 150px;
+  width: 1500px;
+  */
+  border: 2px solid var(--border1);
+  z-index: 9;
+  background-color: var(--bg);
+  padding:10px;
+ 
+  
+  
+ 
+}
+
+
+/* Add styles to the form container */
+.form-container {
+    
+  /* 
+width: 1500px;
+  padding: 10px;
+  background-color: white;
+ */
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  /* background: #f1f1f1; */
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  /* background-color: #ddd; */
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: var(--btn1);
+  color: var(--btn-text);
+  padding: 5px 20px;
+  border: none;
+  cursor: pointer;
+  width: 70%;
+  margin-bottom:10px;
+  
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel{
+  background-color: var(--cancel-btn);
+}
+.pill-btn{
+    background-color: var(--btn2);
+    border: 1px solid var(--border2);
+    color: var(--text);
+}
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+#adv_filter_table{
+   border: 1px solid var(--border2);   /* var(--border1); */
+   width:100%;
+   padding:20px;
+}
+#adv_filter_table td{
+   padding:8px 20px;
+   vertical-align: middle;
+   /* border: 1px solid grey; */
+   
+
+}
+.spacer{
+   
+   /* padding:20px; */
+   border-top: 2px solid var(--text);
+
+}
+
+.close-btn {
+  font-size: 50px;
+  font-weight: 10;
+  color: #000;
+  position:absolute;
+  right:20px;
+  top:20px;
+  cursor: pointer;
+  
+}
+</style>
+<!-- <div class="popuptext" id="myPopup"> -->
+
+<center><strong>Advanced Taxonomy Table Filter</strong></center>
+
+<form class='form-container' id='adv_tax_filter_form' name='adv_tax_filter_form' method='POST' action='tax_table'>
+<span>
+<span class="close-btn" onclick="closeAdvancedForm()">&times;</span>
+</span>
+        
+<table id='adv_filter_table' border='1'>
+<tr>
+<td>
+      
+         
+         
+            
+            <% if(statusfltr.site.p_or_pst === 'primary_site'){ %>
+              <span class='adv-filter-title' id='adv_body_site_title'>Primary Body Site:</span><br>&nbsp;&nbsp;
+            <% }else{ %>
+              <span class='adv-filter-title' id='adv_body_site_title'>Primary and Secondary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <% } %>
+            
+            <% if(statusfltr.site.oral === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_oral' name='oral' onclick='adv_update_sb()'\> Oral&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_oral' name='oral' onclick='adv_update_sb()'\> Oral&nbsp;&nbsp;&nbsp;
+            <% } %>
+            <% if(statusfltr.site.nasal === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_nasal' name='nasal' onclick='adv_update_sb()' \> Nasal&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_nasal' name='nasal' onclick='adv_update_sb()' \> Nasal&nbsp;&nbsp;&nbsp;
+            <% } %>
+            
+            
+            
+            
+           
+            <% if(statusfltr.site.skin === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_skinx' name='skin' onclick='adv_update_sb()' \> Skin&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_skinx' name='skin' onclick='adv_update_sb()' \> Skin&nbsp;&nbsp;&nbsp;
+            <% } %>
+            
+            
+            
+            
+            <% if(statusfltr.site.gut === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_gut' name='gut' onclick='adv_update_sb()' \> Gut&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_gut' name='gut' onclick='adv_update_sb()' \> Gut&nbsp;&nbsp;&nbsp;
+            <% } %>
+            <% if(statusfltr.site.vaginal === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_vaginal' name='vaginal' onclick='adv_update_sb()' \> Vaginal&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_vaginal' name='vaginal' onclick='adv_update_sb()' \> Vaginal&nbsp;&nbsp;&nbsp;
+            <% } %>
+            
+            <% if(statusfltr.site.pathogen === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_pathogen' name='pathogen' onclick='adv_update_sb()' \> Pathogen&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_pathogen' name='pathogen' onclick='adv_update_sb()' \> Pathogen&nbsp;&nbsp;&nbsp;
+            <% } %>
+            <% if(statusfltr.site.enviro === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_enviro' name='enviro' onclick='adv_update_sb()' \> Environmental&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_enviro' name='enviro' onclick='adv_update_sb()' \> Environmental&nbsp;&nbsp;&nbsp;
+            <% } %>
+            
+            <% if(statusfltr.site.ref === 'on'){ %>
+                <input title='Was NonOralRef' type='checkbox' checked class='filter_ckbx' id='ref' name='adv_ref' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input title='Was NonOralRef' type='checkbox' class='filter_ckbx' id='adv_ref' name='ref' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
+            <% } %>
+            
+            <% if(statusfltr.site.unassigned === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_unassigned' name='unassigned' onclick='adv_update_sb()' \> Unassigned&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_unassigned' name='unassigned' onclick='adv_update_sb()' \> Unassigned&nbsp;&nbsp;
+            <% } %> 
+            
+            <span  id='adv_toggle_cb_sites_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_sites('off')">Toggle CheckBoxes On/Off</a></span>
+             
+            <br><br>&nbsp;&nbsp;&nbsp;&nbsp;** 
+             
+            <span id='pst_filter_span'>Filter/Search from both Primary and Secondary Body Sites Instead:&nbsp;
+                  <a class="pill pill-btn" href='#' onclick="adv_toggle_site_filter('P')">Toggle</a> 
+                  <input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>
+            </span>
+                
+            <span style='float:right;'>See <a href='body_sites'>Preferred Body Sites</a> Page</span>
+             
+         
+</td>
+</tr>
+<tr><td class='spacer'></td></tr>
+<tr>
+<td>
+         
+            <span class='adv-filter-title'>Body Site Abundance</span>:&nbsp;&nbsp;
+            
+            <% if(statusfltr.abund.high_abund === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_high_abund' name='high_abund' onclick='adv_update_sb()'\> High&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_high_abund' name='high_abund' onclick='adv_update_sb()'\> High&nbsp;&nbsp;&nbsp;
+            <% } %>
+            
+            <% if(statusfltr.abund.medium_abund === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_medium_abund' name='medium_abund' onclick='adv_update_sb()' \> Medium&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_medium_abund' name='medium_abund' onclick='adv_update_sb()' \> Medium&nbsp;&nbsp;&nbsp;
+            <% } %>
+            
+            <% if(statusfltr.abund.low_abund === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_low_abund' name='low_abund' onclick='adv_update_sb()' \> Low&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_low_abund' name='low_abund' onclick='adv_update_sb()' \> Low&nbsp;&nbsp;&nbsp;
+            <% } %>
+            
+            <% if(statusfltr.abund.scarce_abund === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_scarce_abund' name='scarce_abund' onclick='adv_update_sb()' \> Scarce&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_scarce_abund' name='scarce_abund' onclick='adv_update_sb()' \> Scarce&nbsp;&nbsp;
+            <% } %>
+           <span  id='adv_toggle_cb_abund_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_abund('off')">Toggle CheckBoxes On/Off</a></span>
+</td>
+</tr>
+<tr><td class='spacer'></td></tr>
+<tr>
+<td>
+         
+            <span class='adv-filter-title'>Status</span>:&nbsp;&nbsp;
+            <% if(statusfltr.status.named_cultivated === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_named_cultivated' name='named_cultivated' onclick='adv_update_sb()'\> Named / Cultivated&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_named_cultivated' name='named_cultivated' onclick='adv_update_sb()'\> Named / Cultivated&nbsp;&nbsp;&nbsp;
+            <% } %>
+            <% if(statusfltr.status.named_uncultivated === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_named_uncultivated' name='named_uncultivated' onclick='adv_update_sb()' \> Named / Uncultivated&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_named_uncultivated' name='named_uncultivated' onclick='adv_update_sb()' \> Named / Uncultivated&nbsp;&nbsp;&nbsp;
+            <% } %>
+            <% if(statusfltr.status.unnamed_cultivated === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_unnamed_cultivated' name='unnamed_cultivated' onclick='adv_update_sb()' \> Unnamed / Cultivated&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_unnamed_cultivated' name='unnamed_cultivated' onclick='adv_update_sb()' \> Unnamed / Cultivated&nbsp;&nbsp;&nbsp;
+            <% } %>
+            <% if(statusfltr.status.unnamed_uncultivated === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_unnamed_uncultivated' name='unnamed_uncultivated' onclick='adv_update_sb()' \> Unnamed / Uncultivated&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_unnamed_uncultivated' name='unnamed_uncultivated' onclick='adv_update_sb()' \> Unnamed / Uncultivated&nbsp;&nbsp;&nbsp;
+            <% } %>
+            <% if(statusfltr.status.dropped === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_dropped' name='dropped' onclick='adv_update_sb()' \> Dropped&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_dropped' name='dropped' onclick='adv_update_sb()' \> Dropped&nbsp;&nbsp;
+            <% } %>
+
+            
+             
+             <span  id='adv_toggle_cb_status_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_status('off')">Toggle CheckBoxes On/Off</a></span>
+         
+</td>
+</tr>
+<tr><td class='spacer'></td></tr>
+
+<tr><td>
+  
+      
+      
+       <span class='adv-filter-title'>Include</span>:&nbsp;&nbsp;
+        <% if(statusfltr.genomes === 'both'){ %>
+          <input type='radio' checked name='genomes' value='both' onclick='adv_update_sb()' > All&nbsp;&nbsp;&nbsp;
+       <% }else{ %>
+          <input type='radio' name='genomes' value='both' onclick='adv_update_sb()' > All&nbsp;&nbsp;&nbsp;
+       <% } %>
+        <% if(statusfltr.genomes === 'wgenomes'){ %>
+          <input type='radio' checked name='genomes' value='wgenomes' onclick='adv_update_sb()' > Only Taxa With Genomes&nbsp;&nbsp;&nbsp;
+       <% }else{ %>
+          <input type='radio' name='genomes' value='wgenomes' onclick='adv_update_sb()' > Only Taxa With Genomes&nbsp;&nbsp;&nbsp;
+       <% } %>
+        <% if(statusfltr.genomes === 'wogenomes'){ %>
+          <input type='radio' checked name='genomes' value='wogenomes' onclick='adv_update_sb()' > Only Taxa Without Genomes&nbsp;&nbsp;
+       <% }else{ %>
+          <input type='radio' name='genomes' value='wogenomes' onclick='adv_update_sb()' > Only Taxa Without Genomes&nbsp;&nbsp;
+       <% } %>
+       
+     
+</td>
+</tr>
+<tr><td class='spacer'></td></tr>
+<tr>
+<td>
+   
+    
+    <span class='adv-filter-title'>Search This Table</span>:&nbsp;&nbsp;
+    
+    <span class="">
+      
+      <select class='dropdown' id='field_select' class="" name='field' onclick='adv_update_sb()'>
+        <option value="all">All Fields</option>
+        <option value="taxid">Taxon-ID</option>
+        <option value="genus">Genus</option>
+        <option value="species">Species</option>
+        <option value="synonym">Synonyms</option>
+        <option value="type_strain">Type Strains</option>
+        <!-- <option value="rrna">16S rRNA ID</option> -->
+      </select>
+      <span class='btn' onclick='clear_search_txt()'>Clear</span>
+      <input id='txt_srch' type='text' name='txt_srch' placeholder="Search.." value='<%= statusfltr.text.txt_srch %>' class='dropdown'  maxlength='100' size='20'  onclick='adv_update_sb()'>
+    </span>
+           
+ </td></tr>
+ <tr><td class='spacer'></td></tr>
+ <tr>
+ <td>
+        
+        <span class='adv-filter-title'>Sort Column</span>:&nbsp;&nbsp;
+        <% if(statusfltr.sort_col === 'otid'){ %>
+        <input type='radio' checked name='sort_col' value='otid' onclick='adv_update_sb()' > Taxon-ID&nbsp;&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='otid' onclick='adv_update_sb()' > Taxon-ID&nbsp;&nbsp;&nbsp;
+        <% } %>
+        <% if(statusfltr.sort_col === 'genus'){ %>
+        <input type='radio' checked name='sort_col' value='genus' onclick='adv_update_sb()' > Genus/Species&nbsp;&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='genus' onclick='adv_update_sb()' > Genus/Species&nbsp;&nbsp;&nbsp;
+        <% } %>
+        <% if(statusfltr.sort_col === 'species'){ %>
+        <input type='radio' checked name='sort_col' value='species' onclick='adv_update_sb()' > Species&nbsp;&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='species' onclick='adv_update_sb()' > Species&nbsp;&nbsp;&nbsp;
+        <% } %>
+        <% if(statusfltr.sort_col === 'subspecies'){ %>
+        <input type='radio' checked name='sort_col' value='subsp' onclick='adv_update_sb()' > SubSpecies&nbsp;&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='subsp' onclick='adv_update_sb()' > SubSpecies&nbsp;&nbsp;&nbsp;
+        <% } %>
+        <% if(statusfltr.sort_col === 'naming_status'){ %>
+        <input type='radio' checked name='sort_col' value='naming_status' onclick='adv_update_sb()' > Naming Status&nbsp;&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='naming_status' onclick='adv_update_sb()' > Naming Status&nbsp;&nbsp;&nbsp;
+        <% } %>
+        <% if(statusfltr.sort_col === 'cultivation_status'){ %>
+        <input type='radio' checked name='sort_col' value='cultivation_status' onclick='adv_update_sb()' > Cultivation Status&nbsp;&nbsp;&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='cultivation_status' onclick='adv_update_sb()' > Cultivation Status&nbsp;&nbsp;&nbsp;
+        <% } %>
+        <span id='sort_rev' title='Reverse the Sort Order'>
+          
+        <% if(statusfltr.sort_rev === 'on'){ %>
+        <input type='checkbox' checked name='sort_rev' onclick='adv_update_sb()' > Reverse
+        <% }else{ %>
+        <input type='checkbox' name='sort_rev' onclick='adv_update_sb()' > Reverse
+        <% } %>
+        </span>
+        
+            
+</td>
+ </tr>
+ <tr><td class='spacer'></td></tr>
+ <tr>
+ <td><center>
+ <button id='adv_form_btn' type='submit' class='btn apply' value='Submit'>Apply</button>
+ <button type="button" class="btn cancel" onclick="closeAdvancedForm()">Close</button>
+ </center></td>
+ </tr>
+</table>
+
+
+</form> 
+<!-- </div> -->
