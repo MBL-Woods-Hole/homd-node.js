@@ -62,7 +62,7 @@ const taxa     = require('./routes/routes_taxa');
 const refseq   = require('./routes/routes_refseq');
 const genome   = require('./routes/routes_genome');
 const phage    = require('./routes/routes_phage');
-const blast    = require('./routes/routes_blast');
+//const blast    = require('./routes/routes_blast');
 const help     = require('./routes/routes_help');
 const download = require('./routes/routes_download');
 
@@ -120,7 +120,7 @@ app.use('/taxa', taxa);
 app.use('/refseq', refseq);
 app.use('/genome', genome);
 app.use('/phage', phage);
-app.use('/blast', blast);
+//app.use('/blast', blast);
 app.use('/help', help);
 app.use('/download', download);
 

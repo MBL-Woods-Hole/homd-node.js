@@ -9,7 +9,7 @@
   padding:10px 10px;
 }
 #outer_genome_table{
-    width:100%;
+    width:70%;
     /* border:1px solid red; */
 }
 #outer_genome_table td{
@@ -25,9 +25,10 @@
   border-collapse:collapse;
 }
 #gnomdesc-table-chars td{
-  padding:5px 3px;
+  padding:5px 8px;
   border:1px solid darkgreen;
   width:50%;
+  
 }
 #gnomdesc-table-chars th{
   padding:15px;
@@ -42,7 +43,7 @@
   border-collapse:collapse;
 }
 #gnomdesc-table-ncbi td{
-  padding:5px 3px;
+  padding:5px 8px;
   border:1px solid darkgreen;
   width:50%;
 }
@@ -53,6 +54,7 @@
 }
 .field{
   background:#f3d17c;  /* 9ca590; */
+  font-weight:bold;
 }
 .value{
   background:#d0edef; 
@@ -122,8 +124,9 @@
     <tr class="header" ><th>Fields</th><th>Values</th></tr>
     <tr class=""><td class='field'>HOMD Genome-ID</td><td class='value'><span class='inner-value'><%= ginfo.gid %></span></td></tr>
     <tr class=""><td class='field'>HOMD Taxon-ID</td><td class='value'><span class='inner-value'><a href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= taxidfullnameplus %></a></span></td></tr>
+    
+    <tr class=""><td class='field'>Species Name (in use by HOMD)</td><td class='value'><span class='inner-value'><i><%= ginfo.genus %> <%= ginfo.species %></i></span></td></tr>
     <tr class=""><td class='field'>Organism Name (as deposited)</td><td class='value'><span class='inner-value'><i><%= ginfo.organism %></i></span></td></tr>
-    <tr class=""><td class='field'>Organism Name (in use)</td><td class='value'><span class='inner-value'><i><%= ginfo.genus %> <%= ginfo.species %></i></span></td></tr>
     <tr class=""><td class='field'>Strain or Isolate</td><td class='value'><span class='inner-value'><%= ginfo.strain %></span></td></tr>
      
     <tr class=""><td class='field'>Sequencing Technology</td><td class='value'><span class='inner-value'><%= ginfo.seqtech %></span></td></tr>
@@ -229,14 +232,15 @@
     
     <tr class=""><td class='field' title='Whole Genome Sequence'>WGS Project</td><td class='value'><span class='inner-value'><a href='https://www.ncbi.nlm.nih.gov/Traces/wgs/<%= ginfo.wgs %>' target='_blank' rel="noopener noreferrer"><%= ginfo.WGS %></span></a></td></tr>
     <tr class=""><td class='field'>NCBI TaxID</td><td class='value'><span class='inner-value'><a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=<%= ginfo.taxid %>' target='_blank' rel="noopener noreferrer"><%= ginfo.taxid %></a></span></td></tr>
-    <tr class=""><td class='field'>Version Status</td><td class='value'><span class='inner-value'>TBD</span></td></tr>
+    
     <tr class=""><td class='field'>Isolation Source</td><td class='value'><span class='inner-value'><%= ginfo.isolation_source %></span></td></tr>
-    <tr class=""><td class='field'>CDS Count (prokka)</td><td class='value'><span class='inner-value'>TBD</span></td></tr>
+    
     <tr class=""><td class='field'>Geo Location</td><td class='value'><span class='inner-value'><%= ginfo.geo_loc_name %></span></td></tr>
-    <tr class=""><td class='field'>Isolate</td><td class='value'><span class='inner-value'>TBD</span></td></tr>
     
-    
-    <tr class=""><td class='field'>Genome Representation</td><td class='value'><span class='inner-value'>TBD <%= ginfo.genome_rep %></span></td></tr>
+    <tr class=""><td class='field'>ANI (Average Nucluotide Identity)</td><td class='value'><span class='inner-value'><%= ginfo.ANI %></span></td></tr>
+    <tr class=""><td class='field'>CheckM Completeness</td><td class='value'><span class='inner-value'><%= ginfo.checkM_completeness %></span></td></tr>
+    <tr class=""><td class='field'>CheckM Precentile</td><td class='value'><span class='inner-value'><%= ginfo.checkM_percentile %></span></td></tr>
+    <tr class=""><td class='field'>CheckM Contamination</td><td class='value'><span class='inner-value'><%= ginfo.checkM_contamination %></span></td></tr>
      
 </table>
 </td></tr>

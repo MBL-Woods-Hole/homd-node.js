@@ -31,114 +31,114 @@ router.get('/', function index(req, res) {
 
   })
 })
-router.get('/blastdir=*', function taxon(req, res) {
-  // sequence server
-  console.log('blastdir=*')
-  var url = req.url;
-  console.log(url)
-  // /blastdir=zvCJASB75nUIIKUL4s5y
-  let dir = url.split('=')[1]
-  let dirpath = path.join(CFG.PATH_TO_SS_DIRS, dir)
-  let filepath = path.join(dirpath,'sequenceserver-xml_report.xml')
-  console.log('file',filepath)
-  try{
-     let stats = fs.statSync(filepath)
-     if(stats.isFile()){
-           let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'xml2tree.py')
-           //let cmd = pyscript +' -in '+ filepath
-           // -mp == Muscle Path  -id == In Directory
-           let treefilepath = path.join(CFG.PATH_TO_SS_DIRS,dir,'tree.relabel.svg')
-           const ls = spawn(CFG.PYTHON_EXE, [pyscript,'-c',CFG.CONDABIN,"-id", dirpath]);
-           ls.stdout.on("data", data => {
-                console.log(`stdout: ${data}`);
-            });
-
-            ls.stderr.on("data", data => {
-                console.log(`stderr: ${data}`);
-                console.log(data.toString().trim())
-                if(data.toString().trim() === 'Low Hit Count'){
-                    console.log('We Got low hits')
-                    var error = fs.readFileSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'err.txt'),'utf8')
-                    res.render('pages/blast/tree', {
-                          title: 'HOMD :: Human Oral Microbiome Database',
-                          pgname: '', // for AbountThisPage
-                          config: JSON.stringify(CFG),
-                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-                          user: JSON.stringify(req.user || {}),
-                          file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
-                          svg_path: '',
-                          svg: '',
-                          error: 'LOW HIT Count',
-                          newick: ''
-                    })
-                    return
-                }
-                
-            });
-
-            ls.on('error', (error) => {
-                console.log(`error: ${error.message}`);
-            });
-
-            ls.on("close", code => {
-                console.log(`child process exited with code ${code}`);
-                if(code === 0){
-                    var stats = fs.statSync(treefilepath)
-                    var fileSizeInBytes = stats.size;
-                    console.log('File size',fileSizeInBytes)
-                    if(fileSizeInBytes === 0){
-                        var newick = fs.readFileSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'newick.tre'),'utf8')
-                        var error = fs.readFileSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'err.txt'),'utf8')
-                        console.log('newick',newick)
-                        res.render('pages/blast/tree', {
-                          title: 'HOMD :: Human Oral Microbiome Database',
-                          pgname: '', // for AbountThisPage
-                          config: JSON.stringify(CFG),
-                          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-                          user: JSON.stringify(req.user || {}),
-                          file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
-                          svg_path: '',
-                          svg: '',
-                          error: error,
-                          newick: newick
-                        })
-                        return
-                    }else{
-                        fs.readFile(treefilepath, 'utf8', function readSVGTree (err, data) {
-                           if (err) {
-                              console.log(err)
-                           } else {
-                            res.render('pages/blast/tree', {
-                              title: 'HOMD :: Human Oral Microbiome Database',
-                              pgname: '', // for AbountThisPage
-                              config: JSON.stringify(CFG),
-                              ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-                              user: JSON.stringify(req.user || {}),
-                              file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
-                              svg_path: '/tree/'+dir+'/tree.svg',
-                              svg: data,
-                              error: '',
-                              newick: ''
-                            })
-                          }
-                        })
-                    }
-                }else{
-                   //req.flash('fail', 'Tree Script Failure: '+filepath);
-                   //res.redirect('/')
-                }
-            });
-    }else{
-      req.flash('fail', 'Could Not Find File: '+filepath);
-      res.redirect('/')
-    }
-  }catch(e){
-      req.flash('fail', 'Could Not Find File: '+filepath);
-      res.redirect('/')
-  }
-  
-  
-})
+// router.get('/blastdir=*', function taxon(req, res) {
+//   // sequence server
+//   console.log('blastdir=*')
+//   var url = req.url;
+//   console.log(url)
+//   // /blastdir=zvCJASB75nUIIKUL4s5y
+//   let dir = url.split('=')[1]
+//   let dirpath = path.join(CFG.PATH_TO_SS_DIRS, dir)
+//   let filepath = path.join(dirpath,'sequenceserver-xml_report.xml')
+//   console.log('file',filepath)
+//   try{
+//      let stats = fs.statSync(filepath)
+//      if(stats.isFile()){
+//            let pyscript = path.join(CFG.PATH_TO_SCRIPTS,'xml2tree.py')
+//            //let cmd = pyscript +' -in '+ filepath
+//            // -mp == Muscle Path  -id == In Directory
+//            let treefilepath = path.join(CFG.PATH_TO_SS_DIRS,dir,'tree.relabel.svg')
+//            const ls = spawn(CFG.PYTHON_EXE, [pyscript,'-c',CFG.CONDABIN,"-id", dirpath]);
+//            ls.stdout.on("data", data => {
+//                 console.log(`stdout: ${data}`);
+//             });
+// 
+//             ls.stderr.on("data", data => {
+//                 console.log(`stderr: ${data}`);
+//                 console.log(data.toString().trim())
+//                 if(data.toString().trim() === 'Low Hit Count'){
+//                     console.log('We Got low hits')
+//                     var error = fs.readFileSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'err.txt'),'utf8')
+//                     res.render('pages/blast/tree', {
+//                           title: 'HOMD :: Human Oral Microbiome Database',
+//                           pgname: '', // for AbountThisPage
+//                           config: JSON.stringify(CFG),
+//                           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//                           user: JSON.stringify(req.user || {}),
+//                           file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
+//                           svg_path: '',
+//                           svg: '',
+//                           error: 'LOW HIT Count',
+//                           newick: ''
+//                     })
+//                     return
+//                 }
+//                 
+//             });
+// 
+//             ls.on('error', (error) => {
+//                 console.log(`error: ${error.message}`);
+//             });
+// 
+//             ls.on("close", code => {
+//                 console.log(`child process exited with code ${code}`);
+//                 if(code === 0){
+//                     var stats = fs.statSync(treefilepath)
+//                     var fileSizeInBytes = stats.size;
+//                     console.log('File size',fileSizeInBytes)
+//                     if(fileSizeInBytes === 0){
+//                         var newick = fs.readFileSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'newick.tre'),'utf8')
+//                         var error = fs.readFileSync(path.join(CFG.PATH_TO_SS_DIRS,dir,'err.txt'),'utf8')
+//                         console.log('newick',newick)
+//                         res.render('pages/blast/tree', {
+//                           title: 'HOMD :: Human Oral Microbiome Database',
+//                           pgname: '', // for AbountThisPage
+//                           config: JSON.stringify(CFG),
+//                           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//                           user: JSON.stringify(req.user || {}),
+//                           file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
+//                           svg_path: '',
+//                           svg: '',
+//                           error: error,
+//                           newick: newick
+//                         })
+//                         return
+//                     }else{
+//                         fs.readFile(treefilepath, 'utf8', function readSVGTree (err, data) {
+//                            if (err) {
+//                               console.log(err)
+//                            } else {
+//                             res.render('pages/blast/tree', {
+//                               title: 'HOMD :: Human Oral Microbiome Database',
+//                               pgname: '', // for AbountThisPage
+//                               config: JSON.stringify(CFG),
+//                               ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//                               user: JSON.stringify(req.user || {}),
+//                               file_dir: path.join(CFG.PATH_TO_SS_DIRS,dir),
+//                               svg_path: '/tree/'+dir+'/tree.svg',
+//                               svg: data,
+//                               error: '',
+//                               newick: ''
+//                             })
+//                           }
+//                         })
+//                     }
+//                 }else{
+//                    //req.flash('fail', 'Tree Script Failure: '+filepath);
+//                    //res.redirect('/')
+//                 }
+//             });
+//     }else{
+//       req.flash('fail', 'Could Not Find File: '+filepath);
+//       res.redirect('/')
+//     }
+//   }catch(e){
+//       req.flash('fail', 'Could Not Find File: '+filepath);
+//       res.redirect('/')
+//   }
+//   
+//   
+// })
 router.get('/taxon=(\\d+)', function taxon(req, res) {
   // sequence server
   //console.log('taxon=/.d/')
@@ -566,24 +566,27 @@ router.post('/site_search', function site_search(req, res) {
 ////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
   
   
-  let add_genome_to_otid = {}
+  //let add_genome_to_otid = {}
   // Genome  Metadata
   const allGidObjList = Object.values(C.genome_lookup)
   // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
   const gidKeyList = Object.keys(allGidObjList[0])
   const gidObjList = allGidObjList.filter(function (el) {
+  
     for (let n in gidKeyList) {
       if (Array.isArray(el[gidKeyList[n]])) {
         // we're missing any arrays
       } else {
         if ( Object.prototype.hasOwnProperty.call(el, gidKeyList[n]) && (el[gidKeyList[n]]).toString().toLowerCase().includes(searchTextLower)) {
-          add_genome_to_otid[el.otid] = el.genus+' '+el.species
+          //add_genome_to_otid[el.otid] = el.organism
+          el.species = C.taxon_lookup[el.otid].species
+          el.genus = C.taxon_lookup[el.otid].genus
           return el.gid
         }
       }
     }
   })
-  //helpers.print(gidObjList[0])
+  helpers.print(['gidObjList[0]',gidObjList[0]])
   const gidLst = gidObjList.map(e => ({gid:e.gid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
   gidLst.sort(function (a, b) {
        return helpers.compareStrings_alpha(a.species, b.species);

@@ -7,6 +7,7 @@ const fs       = require('fs-extra');
 const path     = require('path');
 const C     = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
+const helpers_taxa = require(app_root + '/routes/helpers/helpers_taxa');
 const queries = require(app_root + '/routes/queries')
 // var today = new Date();
 // var dd = String(today.getDate()).padStart(2, '0');
@@ -28,7 +29,7 @@ function renderTaxonTable(req, res, args) {
             count_txt: args.count_txt,
             filter: JSON.stringify(args.filter),
             filter_on: args.filter_on,
-            phyla: JSON.stringify(helpers.get_all_phyla().sort()),
+            phyla: JSON.stringify(helpers_taxa.get_all_phyla().sort()),
               
         })
 }
@@ -36,7 +37,7 @@ function renderTaxonTable(req, res, args) {
 function get_filter_on(f){
     // for comparison stringify
     //console.log('get_filter_on')
-    let obj1 = JSON.stringify(helpers.get_default_tax_filter())
+    let obj1 = JSON.stringify(helpers_taxa.get_default_tax_filter())
     let obj2 = JSON.stringify(f)
     if(obj1 === obj2){
       //console.log('off')
@@ -48,7 +49,7 @@ function get_filter_on(f){
 }
 router.get('/reset_ttable', function tax_table_reset(req, res) {
    //console.log('in RESET-session')
-   req.session.ttable_filter = helpers.get_default_tax_filter()
+   req.session.ttable_filter = helpers_taxa.get_default_tax_filter()
    res.redirect('back');
 })
 router.get('/tax_table', function tax_table_get(req, res) {
@@ -57,18 +58,18 @@ router.get('/tax_table', function tax_table_get(req, res) {
     
     //console.log('get-session ',req.session.ttable_filter)
     // QUESTION - Should filter hold through EVERYTHING?
-    filter = helpers.get_default_tax_filter()
+    filter = helpers_taxa.get_default_tax_filter()
     req.session.ttable_filter = filter
     // if(req.session.ttable_filter){
 //         //console.log('filetr session')
 //         filter = req.session.ttable_filter
 //     }else{
 //         //console.log('filetr from default')
-//         filter = helpers.get_default_tax_filter()
+//         filter = helpers_taxa.get_default_tax_filter()
 //         req.session.ttable_filter = filter
 //     }
     
-    send_list = helpers.apply_ttable_filter(req, filter)
+    send_list = helpers_taxa.apply_ttable_filter(req, filter)
     //console.log('LENGTH',send_list.length)
     //let big_tax_list0 = Object.values(C.taxon_lookup);
     //let specific = send_list.filter(item => (item.otid == '209'))
@@ -86,11 +87,11 @@ router.post('/tax_table', function tax_table_post(req, res) {
     console.log('in TT post')
     //console.log(req.body)
     let send_list
-    helpers.set_ttable_session(req)
+    helpers_taxa.set_ttable_session(req)
     //console.log('ttable_session',req.session.ttable_filter)
     let filter = req.session.ttable_filter
     //console.log('filter1',filter)
-    send_list = helpers.apply_ttable_filter(req, filter)
+    send_list = helpers_taxa.apply_ttable_filter(req, filter)
     
     let count_text = 'Number of Records Found: '+ send_list.length.toString()
     //console.log('filter2',filter)
@@ -292,7 +293,7 @@ router.get('/tax_autoload', function tax_autoload(req, res) {
     
         C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
             //console.log('node1',node)
-            lineage = helpers.make_lineage(node)  // [str obj]
+            lineage = helpers_taxa.make_lineage(node)  // [str obj]
             cts = get_counts(lineage[0],count_type)
             //console.log(node)
             options_obj = get_options_by_node(node);
@@ -309,7 +310,7 @@ router.get('/tax_autoload', function tax_autoload(req, res) {
         const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
         objects_w_this_parent_id.map(node => {
           //console.log('node2',node)
-          lineage = helpers.make_lineage(node)  // [str obj]
+          lineage = helpers_taxa.make_lineage(node)  // [str obj]
           //console.log('lineage:',lineage)
           cts = get_counts(lineage[0],count_type)
           options_obj = get_options_by_node(node);
@@ -389,11 +390,11 @@ router.get('/tax_description', function tax_description(req, res){
      TDBConn.query(q, (err, rows) => {
          if(err){ console.log(err);return }
          //console.log('data1',data1)
-         //links['lpsnlink'] = helpers.get_lpsn_outlink1(data1, data3)
+         //links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(data1, data3)
          
          //console.log('rows',rows)
          let data3 = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
-         links['lpsnlink'] = helpers.get_lpsn_outlink1(lookup_data, data3)
+         links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, data3)
          //console.log(links)
          let lineage_string = data3.domain+';'+data3.phylum+';'+ data3.klass +';'+data3.order +';'+data3.family +';'+data3.genus +';'+data3.species +';'+data3.subspecies
          
@@ -481,7 +482,7 @@ router.get('/tax_description', function tax_description(req, res){
                 links = C.link_exceptions[otid]
             }else{
                 links = {'ncbilink':lookup_data.genus+'-'+lookup_data.species,'gcmlink':lookup_data.genus+'%20'+lookup_data.species}
-                links['lpsnlink'] = helpers.get_lpsn_outlink1(lookup_data, lineage)
+                links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage)
             }
             
             //pangenomes
@@ -615,27 +616,27 @@ router.get('/life', function life(req, res) {
      html += '</td></tr>'
      image_array =[{'name':'cellular_organisms.png','text':''}]
   }else {
-    //console.log('tax_name2',tax_name+'_'+rank)
+    console.log('tax_name2',tax_name+'_'+rank)
     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
     if(!node){
         console.log('taxnode error:',tax_name+'_'+rank)
     }
-    var lineage_list = helpers.make_lineage(node)  // [str obj]
+    var lineage_list = helpers_taxa.make_lineage(node)  // [str obj]
       
     rank_id = C.ranks.indexOf(rank) +2
     show_ranks = C.ranks.slice(0,rank_id)
-    
-    //console.log('show_ranks',show_ranks)
+    helpers.print(['node',node])
+    console.log('show_ranks',show_ranks)
     last_rank = show_ranks[show_ranks.length -1]
     
     space = '&nbsp;' 
     for(var i in show_ranks){
        
        rank_display = get_rank_display(show_ranks[i],false)
-       // let name_n_rank = tax_name+'_'+level
-//    console.log(name_n_rank)
+       //let name_n_rank = tax_name+'_'+level
+       //console.log(name_n_rank)
 //    let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[name_n_rank]
-//    let lin = helpers.make_lineage(node)
+//    let lin = helpers_taxa.make_lineage(node)
 //    console.log(lin)
        //console.log('lineage: ',lineage_list[0])
           //var cts = get_counts(lineage_list[0])
@@ -644,7 +645,7 @@ router.get('/life', function life(req, res) {
        if(show_ranks[i] != last_rank){  // Last row of many items
           
           node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[lineage_list[1][show_ranks[i]]+'_'+show_ranks[i]]
-          lin = helpers.make_lineage(node)
+          lin = helpers_taxa.make_lineage(node)
           //console.log('lin',lin)
           cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString()
         
@@ -655,19 +656,7 @@ router.get('/life', function life(req, res) {
           }else {
             html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'>"+lineage_list[1][show_ranks[i]]+'</a> ('+cts+')'
           }
-          //let lpsn_rank = show_ranks[i]
-          //console.log('lin',lineage_list[1][show_ranks[i]])
-          //let lpsn_link = helpers.get_lpsn_outlink2(lpsn_rank,lineage_list[1],lineage_list[1][show_ranks[i]])
-          //console.log('xx link ',lpsn_link)
-          // if(show_ranks[i] == 'klass'){
-//               lpsn_rank = 'class'
-//           }
-          //let lpsn_taxname = lineage_list[1][show_ranks[i]]
-          
-          // if(lineage_list[1][show_ranks[i]].includes('[')){
-//               let pts = lineage_list[1][show_ranks[i]].split(/\s/)
-//               lpsn_taxname = pts[0]
-//           }
+         
           html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
           html += "<a href='ecology?rank="+show_ranks[i]+"&name="+lineage_list[1][show_ranks[i]]+"'>HOMD Abundance</a></span>"
           html += '</td></tr>'
@@ -731,7 +720,7 @@ router.get('/life', function life(req, res) {
             }else {
              // list of not genus or species 
              node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+next_rank]
-             lin = helpers.make_lineage(node)
+             lin = helpers_taxa.make_lineage(node)
              cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString()
              html += "<span class=''>"+space+"<a title='"+title+"' href='life?rank="+next_rank+"&name=\""+taxa_list[n]+"\"'>"+taxa_list[n]+'</a> <small>('+cts+')</small>'
              html += "</span>"
@@ -847,12 +836,12 @@ router.get('/ecology_home', function ecology_index(req, res) {
     for(let i in species_for_plot){
         //console.log('species_for_plot[i]',species_for_plot[i])
         let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[species_for_plot[i]+'_species']
-        let lineage_list = helpers.make_lineage(node)
+        let lineage_list = helpers_taxa.make_lineage(node)
         if(!lineage_list[0]){
            // must be ssp
            let pts = species_for_plot[i].split(/\s/)
            node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[pts[pts.length-1]+'_subspecies']
-           lineage_list = helpers.make_lineage(node)
+           lineage_list = helpers_taxa.make_lineage(node)
            
         }
         //console.log('lineage_list[0]',lineage_list)
@@ -1116,14 +1105,14 @@ router.get('/ecology', function ecology(req, res) {
    for(var i in node.children_ids){ // must sort?? by getting list of nodes=>sort=>then create list
       let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]]
       //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
-      children_list.push("<a href='/taxa/ecology?rank="+n.rank+"&name="+n.taxon+"&page="+page+"'>"+helpers.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
+      children_list.push("<a href='/taxa/ecology?rank="+n.rank+"&name="+n.taxon+"&page="+page+"'>"+helpers_taxa.clean_rank_name_for_show(n.rank)+":"+n.taxon+ "</a>")
    }
    
    if(!node){
       console.log('ERROR Node')
    }
    //console.log('node',node)
-   let lineage_list = helpers.make_lineage(node)
+   let lineage_list = helpers_taxa.make_lineage(node)
    //console.log(C.taxon_counts_lookup)
    if(!lineage_list[0]){
       lineage_list[0] = ''
@@ -1221,7 +1210,7 @@ router.get('/ecology', function ecology(req, res) {
     }
     //console.log('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
     //console.log('lineage_list',lineage_list)
-    let lineage_string = helpers.make_lineage_string_with_links(lineage_list, 'ecology', page)
+    let lineage_string = helpers_taxa.make_lineage_string_with_links(lineage_list, 'ecology', page)
     
    //console.log('data=>',erenv1v3_data,'<=data')
 //     console.log('dewhirst_notes',dewhirst_notes)
@@ -1293,7 +1282,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     for(let i in node_list){
         //console.log(phyla[p])
         node = node_list[i]
-        lineage_list = helpers.make_lineage(node)
+        lineage_list = helpers_taxa.make_lineage(node)
         //console.log('node',node)
         //console.log('rank',rank)
         //console.log('lineage_list-2',lineage_list)
@@ -1339,7 +1328,7 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
     for(let i in group){
         //console.log(phyla[p])
         node = group[i]
-        lineage_list = helpers.make_lineage(node)
+        lineage_list = helpers_taxa.make_lineage(node)
         //console.log('lineage_list3',lineage_list[0])
         group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]],rank)
     }

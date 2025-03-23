@@ -7,6 +7,8 @@ const fs        = require('fs-extra')
 const path      = require('path')
 const C       = require(app_root + '/public/constants')
 const helpers   = require(app_root + '/routes/helpers/helpers')
+const helpers_taxa   = require(app_root + '/routes/helpers/helpers_taxa')
+const helpers_genomes   = require(app_root + '/routes/helpers/helpers_genomes')
 const queries = require(app_root + '/routes/queries')
 // const open = require('open')
 const createIframe = require("node-iframe")
@@ -48,7 +50,7 @@ function renderGenomeTable(req, res, args) {
         pd: JSON.stringify(args.pd),
         gcount: gcount, 
         tcount: taxa_wgenomes.length,
-        phyla: JSON.stringify(helpers.get_all_phyla().sort()),
+        phyla: JSON.stringify(helpers_taxa.get_all_phyla().sort()),
         count_txt: args.count_txt,
         taxa_wgenomes: get_taxa_wgenomes().length,
         filter_on: args.filter_on,
@@ -125,7 +127,7 @@ function set_gtable_session(req) {
     if(req.session.gtable_filter && req.session.gtable_filter.letter){
        letter = req.session.gtable_filter.letter
     }
-    req.session.gtable_filter = helpers.get_default_gtable_filter()
+    req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
     req.session.gtable_filter.letter = letter
     req.session.gtable_filter.category.complete_genome = 'off'
     req.session.gtable_filter.category.scaffold = 'off'
@@ -209,7 +211,7 @@ function get_filter_on(f, type){
     if(type == 'annot'){
        d = get_default_annot_filter()
     }else{
-       d = helpers.get_default_gtable_filter()
+       d = helpers_genomes.get_default_gtable_filter()
     }
     let obj1 = JSON.stringify(d)
     let obj2 = JSON.stringify(f)
@@ -241,7 +243,7 @@ function apply_species(lst){
 }
 router.get('/reset_gtable', function gen_table_reset(req, res) {
    //console.log('in RESET-session')
-   req.session.gtable_filter = helpers.get_default_gtable_filter()
+   req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
    res.redirect('back');
 });
 router.get('/genome_table', function genome_table(req, res) {
@@ -257,12 +259,12 @@ router.get('/genome_table', function genome_table(req, res) {
        if(req.session.gtable_filter){
           filter = req.session.gtable_filter
        }else{
-          filter = helpers.get_default_gtable_filter()
+          filter = helpers_genomes.get_default_gtable_filter()
        }
     }else{
        page_data.page = 1
        page_data.start_count = 1
-       filter = helpers.get_default_gtable_filter()
+       filter = helpers_genomes.get_default_gtable_filter()
     }
     //console.log('filter',filter)
     //console.log('gfiletr from default')
@@ -275,7 +277,7 @@ router.get('/genome_table', function genome_table(req, res) {
     //console.log('GT GOT otid',otid)
        // reset gtable_filter here because we are coming from tax_table button
        // and expect to see the few genomes for this one taxon
-       filter = helpers.get_default_gtable_filter()
+       filter = helpers_genomes.get_default_gtable_filter()
        req.session.gtable_filter = filter
        if(req.session.ttable_filter){
            req.session.ttable_filter.otid = req.query.otid
@@ -291,7 +293,7 @@ router.get('/genome_table', function genome_table(req, res) {
           }
        }
     }else{
-       send_list = helpers.apply_gtable_filter(req, filter)
+       send_list = helpers_genomes.apply_gtable_filter(req, filter)
     }
     
     //console.log('send_list[0]',send_list[0])
@@ -352,7 +354,7 @@ router.post('/genome_table', function genome_table_post(req, res) {
     //console.log('gtable_session',req.session.gtable_filter)
     filter = req.session.gtable_filter
     //console.log('filter',filter)
-    send_list = helpers.apply_gtable_filter(req, filter)
+    send_list = helpers_genomes.apply_gtable_filter(req, filter)
     // format big nums
     
     //let obj1 = send_list.filter(o => o.species === 'coli');
@@ -413,7 +415,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
   const gid = req.query.gid
   let gc = 0
   if(gid){
-      gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
+      gc = helpers_genomes.get_gc_for_gccontent(C.genome_lookup[gid].gc)
   }
   const glist = Object.values(C.genome_lookup)
   

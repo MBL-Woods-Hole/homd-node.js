@@ -539,106 +539,144 @@ router.post('/blast_post', upload.single('blastFile'),  async function blast_pos
     
 })
 
-router.post('/blastDownload', function blastDownload(req, res) {
-    var today = new Date();
-	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-	var yyyy = today.getFullYear();
-	today = yyyy + '-' + mm + '-' + dd;
-	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
-
-    console.log('in blastDownload')
-    const AdmZip = require('adm-zip');
-    //console.log(req.body)
-    let blastID = req.body.blastID
-    let zip
-    let type = req.body.dnldType
-    if(type === 'zip-download'){
-       zip = new AdmZip();
-    }
-    if(type==='fasta-download'){
-     // blastdbcmd -db myBlastDBName -dbtype prot -entry_batch myContigList.txt -outfmt %f -out myHitContigs.fasta
-     // gather <Hit_id>gnl|BL_ORD_ID|4937322</Hit_id>
-      //return
-    }
-    let blastFxn = req.body.blastFxn
-    //console.log('type',type)
-    
-    if(!type || !blastID){
-       return
-    }
-    let  data=[],blastFiles = [],xml_files=[],files_array,result
-    // read directory CONFIG.json first
-    let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
-    let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results')
-    if(blastFxn ==='refseq'){
-        result = getAllFilesWithExt(blastResultsDir, 'out')
-        for(let i=0; i < result.length; i++){
-            blastFiles.push(path.join(blastResultsDir, result[i]))
-            if(type === 'zip-download'){
-               zip.addLocalFile(path.join(blastResultsDir, result[i]))
-            }
-        }
-    }else{   // genome blast
-        result = getAllFilesWithExt(blastResultsDir, 'xml')
-        for(let i=0; i < result.length; i++){
-            xml_files.push(path.join(blastResultsDir, result[i]))
-            
-            if(type === 'zip-download'){
-               zip.addLocalFile(path.join(blastResultsDir, result[i]))
-            }
-        }
-    }
-    if(!result){
-       throw new Error('The Blast ID "'+blastID+'" was not found.<BR>Probably expired if you are using and old link.')
-       return
-    }
-    
-    if(type === 'zip-download'){
-        const data = zip.toBuffer();
-        res.set('Content-Type','application/octet-stream');
-        res.set('Content-Disposition',"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".zip\"");
-        res.set('Content-Length',data.length);
-        res.send(data);
-    }else{
-    //console.log('blastfiles')
-    //console.log(blastFiles)
-    let fileData = {}
-    let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
-    fs.readFile(configFilePath, function readConfig(err,  configData) {
-     if(err){
-        req.flash('fail', 'blastID no longer Valid')
-        res.redirect('/') // this needs to redirect to either refseq or genome
-        return
-      }else{
-            let config = JSON.parse(configData)
-            if(blastFxn ==='refseq'){
-                files_array = blastFiles
-            }else{  // genomic blast
-                files_array = xml_files
-            }
-            let blastFilePromises = []
-            for(let i=0; i < files_array.length; i++){
-                blastFilePromises.push(helpers.readFromFile(files_array[i],'txt'))
-            }
-            
-            Promise.all(blastFilePromises)  //read the files
-              .then(results => {
-                if(blastFxn ==='refseq'){
-                    if(type === 'fasta-download'){  // genome only????
-                        
-						// let hitid_ary,hitid_collector={},comma_string
+// router.post('/blastDownload', function blastDownload(req, res) {
+//     var today = new Date();
+// 	var dd = String(today.getDate()).padStart(2, '0');
+// 	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+// 	var yyyy = today.getFullYear();
+// 	today = yyyy + '-' + mm + '-' + dd;
+// 	var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+// 
+//     console.log('in blastDownload')
+//     const AdmZip = require('adm-zip');
+//     //console.log(req.body)
+//     let blastID = req.body.blastID
+//     let zip
+//     let type = req.body.dnldType
+//     if(type === 'zip-download'){
+//        zip = new AdmZip();
+//     }
+//     if(type==='fasta-download'){
+//      // blastdbcmd -db myBlastDBName -dbtype prot -entry_batch myContigList.txt -outfmt %f -out myHitContigs.fasta
+//      // gather <Hit_id>gnl|BL_ORD_ID|4937322</Hit_id>
+//       //return
+//     }
+//     let blastFxn = req.body.blastFxn
+//     //console.log('type',type)
+//     
+//     if(!type || !blastID){
+//        return
+//     }
+//     let  data=[],blastFiles = [],xml_files=[],files_array,result
+//     // read directory CONFIG.json first
+//     let blastDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID)
+//     let blastResultsDir = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results')
+//     if(blastFxn ==='refseq'){
+//         result = getAllFilesWithExt(blastResultsDir, 'out')
+//         for(let i=0; i < result.length; i++){
+//             blastFiles.push(path.join(blastResultsDir, result[i]))
+//             if(type === 'zip-download'){
+//                zip.addLocalFile(path.join(blastResultsDir, result[i]))
+//             }
+//         }
+//     }else{   // genome blast
+//         result = getAllFilesWithExt(blastResultsDir, 'xml')
+//         for(let i=0; i < result.length; i++){
+//             xml_files.push(path.join(blastResultsDir, result[i]))
+//             
+//             if(type === 'zip-download'){
+//                zip.addLocalFile(path.join(blastResultsDir, result[i]))
+//             }
+//         }
+//     }
+//     if(!result){
+//        throw new Error('The Blast ID "'+blastID+'" was not found.<BR>Probably expired if you are using and old link.')
+//        return
+//     }
+//     
+//     if(type === 'zip-download'){
+//         const data = zip.toBuffer();
+//         res.set('Content-Type','application/octet-stream');
+//         res.set('Content-Disposition',"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".zip\"");
+//         res.set('Content-Length',data.length);
+//         res.send(data);
+//     }else{
+//     //console.log('blastfiles')
+//     //console.log(blastFiles)
+//     let fileData = {}
+//     let configFilePath = path.join(CFG.PATH_TO_BLAST_FILES, blastID,'CONFIG.json')
+//     fs.readFile(configFilePath, function readConfig(err,  configData) {
+//      if(err){
+//         req.flash('fail', 'blastID no longer Valid')
+//         res.redirect('/') // this needs to redirect to either refseq or genome
+//         return
+//       }else{
+//             let config = JSON.parse(configData)
+//             if(blastFxn ==='refseq'){
+//                 files_array = blastFiles
+//             }else{  // genomic blast
+//                 files_array = xml_files
+//             }
+//             let blastFilePromises = []
+//             for(let i=0; i < files_array.length; i++){
+//                 blastFilePromises.push(helpers.readFromFile(files_array[i],'txt'))
+//             }
+//             
+//             Promise.all(blastFilePromises)  //read the files
+//               .then(results => {
+//                 if(blastFxn ==='refseq'){
+//                     if(type === 'fasta-download'){  // genome only????
+//                         
+// 						// let hitid_ary,hitid_collector={},comma_string
+// // 						for(let i=0; i<files_array.length; i++){
+// // 						    
+// // 						    hitid_ary = helpers.parse_blast_gather_hits(results[i], 'hitids')
+// // 						    //hitids.push(hitid_obj)
+// // 						    for(let i in hitid_ary){
+// // 								
+// // 								hitid_collector[hitid_ary[i]] = 1  // uniquing
+// // 						    }
+// // 						}
+// // 						comma_string = Object.keys(hitid_collector)   //let blastdbcmd = 'blastdbcmd -entry '+comma_string+' -outfmt %f -out '+outfilename
+// // 						//console.log('comma_string',comma_string.join(','))
+// // 						let blastdbcmd = "cd "+path.join(config.blastdbPath,config.ext)+";blastdbcmd -db "+config.blastdb+" -entry '"+comma_string.join(',')+"' -outfmt %f"
+// // 						console.log('blastdbcmd',blastdbcmd)
+// // 						helpers.execute(blastdbcmd, function(fasta_result){
+// //                             //console.log('fasta_result',fasta_result)
+// //                             res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".fa\""})
+// //                             res.send(fasta_result)
+// //                             return
+// //                         });
+// 						
+// 					}else{
+//                     for(let i=0; i<files_array.length; i++){
+//                         //let parsed_data = helpers.parse_blast(results[i], type)
+//                         let parsed_data = helpers.parse_blast_custom(results[i], type, blastID, i)
+//                         data.push(parsed_data) // in order of sequences
+//                     }
+//                     //console.log('data[0]-refseq_custom',data[0])
+//                     var table_tsv = create_blast_download_table(data, type, blastFxn)
+//                     if(type.substring(0,4) === 'text'){
+//                         res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
+//                     }else{  //excel
+//                         res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
+//                     }
+//                     res.send(table_tsv)
+//                     delete req.body
+//                     }
+//                 }else{   // genme xml files or fast
+//                     if(type === 'fasta-download'){  // genome only????
+//                         
+// 						let hitid_obj,hitid_collector={},comma_string
 // 						for(let i=0; i<files_array.length; i++){
-// 						    
-// 						    hitid_ary = helpers.parse_blast_gather_hits(results[i], 'hitids')
+// 						    hitid_obj = helpers.parse_blast_query_xml(parser.toJson(results[i]), 'hitids')
 // 						    //hitids.push(hitid_obj)
-// 						    for(let i in hitid_ary){
-// 								
-// 								hitid_collector[hitid_ary[i]] = 1  // uniquing
+// 						    for(let i in hitid_obj.hitid_ary){
+// 								hitid_collector[hitid_obj.hitid_ary[i]] = 1
 // 						    }
 // 						}
 // 						comma_string = Object.keys(hitid_collector)   //let blastdbcmd = 'blastdbcmd -entry '+comma_string+' -outfmt %f -out '+outfilename
-// 						//console.log('comma_string',comma_string.join(','))
+// 						console.log('comma_string',comma_string.join(','))
 // 						let blastdbcmd = "cd "+path.join(config.blastdbPath,config.ext)+";blastdbcmd -db "+config.blastdb+" -entry '"+comma_string.join(',')+"' -outfmt %f"
 // 						console.log('blastdbcmd',blastdbcmd)
 // 						helpers.execute(blastdbcmd, function(fasta_result){
@@ -647,96 +685,58 @@ router.post('/blastDownload', function blastDownload(req, res) {
 //                             res.send(fasta_result)
 //                             return
 //                         });
-						
-					}else{
-                    for(let i=0; i<files_array.length; i++){
-                        //let parsed_data = helpers.parse_blast(results[i], type)
-                        let parsed_data = helpers.parse_blast_custom(results[i], type, blastID, i)
-                        data.push(parsed_data) // in order of sequences
-                    }
-                    //console.log('data[0]-refseq_custom',data[0])
-                    var table_tsv = create_blast_download_table(data, type, blastFxn)
-                    if(type.substring(0,4) === 'text'){
-                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
-                    }else{  //excel
-                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
-                    }
-                    res.send(table_tsv)
-                    delete req.body
-                    }
-                }else{   // genme xml files or fast
-                    if(type === 'fasta-download'){  // genome only????
-                        
-						let hitid_obj,hitid_collector={},comma_string
-						for(let i=0; i<files_array.length; i++){
-						    hitid_obj = helpers.parse_blast_query_xml(parser.toJson(results[i]), 'hitids')
-						    //hitids.push(hitid_obj)
-						    for(let i in hitid_obj.hitid_ary){
-								hitid_collector[hitid_obj.hitid_ary[i]] = 1
-						    }
-						}
-						comma_string = Object.keys(hitid_collector)   //let blastdbcmd = 'blastdbcmd -entry '+comma_string+' -outfmt %f -out '+outfilename
-						console.log('comma_string',comma_string.join(','))
-						let blastdbcmd = "cd "+path.join(config.blastdbPath,config.ext)+";blastdbcmd -db "+config.blastdb+" -entry '"+comma_string.join(',')+"' -outfmt %f"
-						console.log('blastdbcmd',blastdbcmd)
-						helpers.execute(blastdbcmd, function(fasta_result){
-                            //console.log('fasta_result',fasta_result)
-                            res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".fa\""})
-                            res.send(fasta_result)
-                            return
-                        });
-						
-					}else{
-                    for(let i=0; i<xml_files.length; i++){
-                        let parsed_data = helpers.parse_blast_xml2json(JSON.parse(parser.toJson(results[i])))
-                        data.push(parsed_data) // in order of sequences
-                        
-                    }
-                    //console.log('data[0]2',data[0])
-                    var table_tsv = create_blast_download_table(data, type, blastFxn)
-                    if(type.substring(0,4) === 'text'){
-                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
-                    }else{  //excel
-                        res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
-                    }
-                    res.send(table_tsv)
-                    delete req.body
-                    }
-                }
-                //res.end()
-             })   // end async files
-      }
-    })
-    }  // end else
-    
-})
+// 						
+// 					}else{
+//                     for(let i=0; i<xml_files.length; i++){
+//                         let parsed_data = helpers.parse_blast_xml2json(JSON.parse(parser.toJson(results[i])))
+//                         data.push(parsed_data) // in order of sequences
+//                         
+//                     }
+//                     //console.log('data[0]2',data[0])
+//                     var table_tsv = create_blast_download_table(data, type, blastFxn)
+//                     if(type.substring(0,4) === 'text'){
+//                         res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".txt\""})
+//                     }else{  //excel
+//                         res.set({"Content-Disposition":"attachment; filename=\"HOMD_blast"+today+'_'+currentTimeInSeconds+".xls\""})
+//                     }
+//                     res.send(table_tsv)
+//                     delete req.body
+//                     }
+//                 }
+//                 //res.end()
+//              })   // end async files
+//       }
+//     })
+//     }  // end else
+//     
+// })
 //
-router.post('/openBlastWindow', function openBlastWindow(req, res) {
-    //
-    console.log('in openBlastWindow')
-    //console.log(req.body)
-    let type = req.body.type
-    let num = req.body.num
-    let blastID = req.body.id
-    //console.log('type',type)
-    //console.log('id',blastID)
-    //console.log('num',num)
-    let file
-    if(type === 'res'){
-        file = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results', 'blast' + num + '.fa.out')
-    }else{  // type = seq
-        file = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast' + num + '.fa')
-    }
-    //console.log('file',file)
-    fs.readFile(file, 'utf8', function readBlastFile(err, data) {
-      if (err)
-          console.log(err)
-      else
-          //console.log(data)
-          res.send(data)
-    
-    })
-})
+// router.post('/openBlastWindow', function openBlastWindow(req, res) {
+//     //
+//     console.log('in openBlastWindow')
+//     //console.log(req.body)
+//     let type = req.body.type
+//     let num = req.body.num
+//     let blastID = req.body.id
+//     //console.log('type',type)
+//     //console.log('id',blastID)
+//     //console.log('num',num)
+//     let file
+//     if(type === 'res'){
+//         file = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast_results', 'blast' + num + '.fa.out')
+//     }else{  // type = seq
+//         file = path.join(CFG.PATH_TO_BLAST_FILES, blastID, 'blast' + num + '.fa')
+//     }
+//     //console.log('file',file)
+//     fs.readFile(file, 'utf8', function readBlastFile(err, data) {
+//       if (err)
+//           console.log(err)
+//       else
+//           //console.log(data)
+//           res.send(data)
+//     
+//     })
+// })
 
 
 
@@ -749,295 +749,295 @@ router.post('/openBlastWindow', function openBlastWindow(req, res) {
 //        console.log('data_obj',n, data_obj[n])
 //    }
 // }
-function create_blast_download_table(data_obj, type, fxn) {
-  let txt = ''
-  
-  let header=''
-  if(fxn === 'refseq'){
-        header += 'Query-id\tQuery Length\tHit-id\t% Identity\tcoverage\tFPI\tHMT\tAlignment Length\tMis-matches\tGaps'
-        header += '\tq-start\tq-end\ts-start\ts-end\tE-value\tBit Score\tHOMD Clone Name/Hit Title\n'
-    // 
-  }else{
-      header += 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentities(%)\tScore (bits)\tEvalue\tGaps\n'
-  }
-  //console.log('data',data_obj)
-  //console.log(data[0].hits[0].hsps[0])
-  let hit,h,hitCountOutput,dnldInfo,otid,hit_id
-  //console.log('obj',data_obj)
-  for(let n in data_obj){
-     let obj = data_obj[n]
-     let data = obj.data
-     //console.log('data',data)
-     if(!data){
-       txt += obj.query+'\t'+obj.query_length+'\t\t\tNo Hits Found\t\t\t\t\n'
-     }else{
-       data.sort(function sortIR2(a, b) {   //sort by bitscore
-           return helpers.compareStrings_int(b.bitscore, a.bitscore);
-       })
-     
-       if(data[0] === 'no hits'){
-          txt += obj.query+'\t'+obj.query_length+'\t\t\tNo Hits Found\t\t\t\t\n'
-       }else{
-         
-         if(type === 'text1-download' || type === 'excel1-download'){
-             dnldInfo = 'Top BLAST Hit Only: '+obj.version+'\n'
-             txt += obj.query+'\t'+obj.query_length+'\t'
-         
-              //console.log('data[0]1',obj.data[0])
-            
-              otid = helpers.make_otid_display_name(obj.data[0].otid)
-              hit_id = obj.data[0].hit_id
-              if(fxn==='refseq'){
-                txt += hit_id+'\t'+obj.data[0].identity+'\t'+obj.data[0].coverage+'\t'+obj.data[0].fpi+'\t'+obj.data[0].hmt+'\t'+obj.data[0].alength+'\t'+obj.data[0].mismatches+'\t'+obj.data[0].gaps+'\t'
-                txt += obj.data[0].qstart+'\t'+obj.data[0].qend+'\t'+obj.data[0].sstart+'\t'+obj.data[0].send+'\t'+obj.data[0].evalue+'\t'+obj.data[0].bitscore+'\t'+obj.data[0].stitle+'\n'
-              }else{
-                txt += otid+'\t'+hit_id+'\t'+obj.data[0].hit_title+'\t'+obj.data[0].identity+'\t'+obj.data[0].bitscore+'\t'+obj.data[0].expect+'\t'+obj.data[0].gaps+'\n'
-              }
-          }else if(type === 'textAll-download' || type === 'excelAll-download'){
-             dnldInfo = 'All BLAST Hits: '+obj.version+'\n'
-         
-              //console.log('data[0]',data[n].data[0])
-              for(let i in obj.data){
-                if(obj.data[i]){
-                  otid = helpers.make_otid_display_name(obj.data[i].otid)
-                  hit_id = obj.data[i].hit_id
-                  txt += obj.query+'\t'+obj.query_length+'\t'
-                  if(fxn==='refseq'){
-                     txt += hit_id+'\t'+obj.data[i].identity+'\t'+obj.data[i].coverage+'\t'+obj.data[i].fpi+'\t'+obj.data[i].hmt+'\t'+obj.data[i].alength+'\t'+obj.data[i].mismatches+'\t'+obj.data[i].gaps+'\t'
-                     txt += obj.data[i].qstart+'\t'+obj.data[i].qend+'\t'+obj.data[i].sstart+'\t'+obj.data[i].send+'\t'+obj.data[i].evalue+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].stitle+'\n'
-                  }else{
-                     txt += otid+'\t'+hit_id+'\t'+obj.data[i].hit_title+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
-                  }
-                }else{
-                  //txt += '\t\t\t\t\t\t\t\t\n'
-                }
-              }
-          }else if(type === 'text4-download' || type === 'excel4-download'){
-             dnldInfo = 'Top 4 BLAST Hits: '+obj.version+'\n'
-              //console.log('data[0]',data[n].data[0])
-              for(let i=0;i<4;i++){
-                if(obj.data[i]){
-                  otid = helpers.make_otid_display_name(obj.data[i].otid)
-                  hit_id = obj.data[i].hit_id
-                  txt += obj.query+'\t'+obj.query_length+'\t'
-                  if(fxn==='refseq'){
-                     txt += hit_id+'\t'+obj.data[i].identity+'\t'+obj.data[i].coverage+'\t'+obj.data[i].fpi+'\t'+obj.data[i].hmt+'\t'+obj.data[i].alength+'\t'+obj.data[i].mismatches+'\t'+obj.data[i].gaps+'\t'
-                     txt += obj.data[i].qstart+'\t'+obj.data[i].qend+'\t'+obj.data[i].sstart+'\t'+obj.data[i].send+'\t'+obj.data[i].evalue+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].stitle+'\n'
-                  }else{
-                     txt += otid+'\t'+hit_id+'\t'+obj.data[i].hit_title+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
-                  }
-                }else{
-                  //txt += '\t\t\t\t\t\t\t\t\n'
-                }
-              }
-           }else if(type === 'text20-download' || type === 'excel20-download'){
-             dnldInfo = 'Top 20 BLAST Hits: '+obj.version+'\n'
-              for(let i=0;i<20;i++){
-                //console.log('data[0]',i,obj.data[i])
-                if(obj.data[i]){
-                  otid = helpers.make_otid_display_name(obj.data[i].otid)
-                  hit_id = obj.data[i].hit_id
-                  txt += obj.query+'\t'+obj.query_length+'\t'
-                  if(fxn==='refseq'){
-                     txt += hit_id+'\t'+obj.data[i].identity+'\t'+obj.data[i].coverage+'\t'+obj.data[i].fpi+'\t'+obj.data[i].hmt+'\t'+obj.data[i].alength+'\t'+obj.data[i].mismatches+'\t'+obj.data[i].gaps+'\t'
-                     txt += obj.data[i].qstart+'\t'+obj.data[i].qend+'\t'+obj.data[i].sstart+'\t'+obj.data[i].send+'\t'+obj.data[i].evalue+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].stitle+'\n'
-                  }else{
-                     txt += otid+'\t'+hit_id+'\t'+obj.data[i].hit_title+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
-                  }
-                }else{
-                  //txt += '\t\t\t\t\t\t\t\t\n'
-                }
-              }
-           }
-       } 
-    }
-     
-  }
-  let retTxt = dnldInfo + header + txt
-  return retTxt
-}
+// function create_blast_download_table(data_obj, type, fxn) {
+//   let txt = ''
+//   
+//   let header=''
+//   if(fxn === 'refseq'){
+//         header += 'Query-id\tQuery Length\tHit-id\t% Identity\tcoverage\tFPI\tHMT\tAlignment Length\tMis-matches\tGaps'
+//         header += '\tq-start\tq-end\ts-start\ts-end\tE-value\tBit Score\tHOMD Clone Name/Hit Title\n'
+//     // 
+//   }else{
+//       header += 'Query Title\tQuery Length\tHit HMT\tHOMD Seq Name\tHOMD Clone name\tIdentities(%)\tScore (bits)\tEvalue\tGaps\n'
+//   }
+//   //console.log('data',data_obj)
+//   //console.log(data[0].hits[0].hsps[0])
+//   let hit,h,hitCountOutput,dnldInfo,otid,hit_id
+//   //console.log('obj',data_obj)
+//   for(let n in data_obj){
+//      let obj = data_obj[n]
+//      let data = obj.data
+//      //console.log('data',data)
+//      if(!data){
+//        txt += obj.query+'\t'+obj.query_length+'\t\t\tNo Hits Found\t\t\t\t\n'
+//      }else{
+//        data.sort(function sortIR2(a, b) {   //sort by bitscore
+//            return helpers.compareStrings_int(b.bitscore, a.bitscore);
+//        })
+//      
+//        if(data[0] === 'no hits'){
+//           txt += obj.query+'\t'+obj.query_length+'\t\t\tNo Hits Found\t\t\t\t\n'
+//        }else{
+//          
+//          if(type === 'text1-download' || type === 'excel1-download'){
+//              dnldInfo = 'Top BLAST Hit Only: '+obj.version+'\n'
+//              txt += obj.query+'\t'+obj.query_length+'\t'
+//          
+//               //console.log('data[0]1',obj.data[0])
+//             
+//               otid = helpers.make_otid_display_name(obj.data[0].otid)
+//               hit_id = obj.data[0].hit_id
+//               if(fxn==='refseq'){
+//                 txt += hit_id+'\t'+obj.data[0].identity+'\t'+obj.data[0].coverage+'\t'+obj.data[0].fpi+'\t'+obj.data[0].hmt+'\t'+obj.data[0].alength+'\t'+obj.data[0].mismatches+'\t'+obj.data[0].gaps+'\t'
+//                 txt += obj.data[0].qstart+'\t'+obj.data[0].qend+'\t'+obj.data[0].sstart+'\t'+obj.data[0].send+'\t'+obj.data[0].evalue+'\t'+obj.data[0].bitscore+'\t'+obj.data[0].stitle+'\n'
+//               }else{
+//                 txt += otid+'\t'+hit_id+'\t'+obj.data[0].hit_title+'\t'+obj.data[0].identity+'\t'+obj.data[0].bitscore+'\t'+obj.data[0].expect+'\t'+obj.data[0].gaps+'\n'
+//               }
+//           }else if(type === 'textAll-download' || type === 'excelAll-download'){
+//              dnldInfo = 'All BLAST Hits: '+obj.version+'\n'
+//          
+//               //console.log('data[0]',data[n].data[0])
+//               for(let i in obj.data){
+//                 if(obj.data[i]){
+//                   otid = helpers.make_otid_display_name(obj.data[i].otid)
+//                   hit_id = obj.data[i].hit_id
+//                   txt += obj.query+'\t'+obj.query_length+'\t'
+//                   if(fxn==='refseq'){
+//                      txt += hit_id+'\t'+obj.data[i].identity+'\t'+obj.data[i].coverage+'\t'+obj.data[i].fpi+'\t'+obj.data[i].hmt+'\t'+obj.data[i].alength+'\t'+obj.data[i].mismatches+'\t'+obj.data[i].gaps+'\t'
+//                      txt += obj.data[i].qstart+'\t'+obj.data[i].qend+'\t'+obj.data[i].sstart+'\t'+obj.data[i].send+'\t'+obj.data[i].evalue+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].stitle+'\n'
+//                   }else{
+//                      txt += otid+'\t'+hit_id+'\t'+obj.data[i].hit_title+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
+//                   }
+//                 }else{
+//                   //txt += '\t\t\t\t\t\t\t\t\n'
+//                 }
+//               }
+//           }else if(type === 'text4-download' || type === 'excel4-download'){
+//              dnldInfo = 'Top 4 BLAST Hits: '+obj.version+'\n'
+//               //console.log('data[0]',data[n].data[0])
+//               for(let i=0;i<4;i++){
+//                 if(obj.data[i]){
+//                   otid = helpers.make_otid_display_name(obj.data[i].otid)
+//                   hit_id = obj.data[i].hit_id
+//                   txt += obj.query+'\t'+obj.query_length+'\t'
+//                   if(fxn==='refseq'){
+//                      txt += hit_id+'\t'+obj.data[i].identity+'\t'+obj.data[i].coverage+'\t'+obj.data[i].fpi+'\t'+obj.data[i].hmt+'\t'+obj.data[i].alength+'\t'+obj.data[i].mismatches+'\t'+obj.data[i].gaps+'\t'
+//                      txt += obj.data[i].qstart+'\t'+obj.data[i].qend+'\t'+obj.data[i].sstart+'\t'+obj.data[i].send+'\t'+obj.data[i].evalue+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].stitle+'\n'
+//                   }else{
+//                      txt += otid+'\t'+hit_id+'\t'+obj.data[i].hit_title+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
+//                   }
+//                 }else{
+//                   //txt += '\t\t\t\t\t\t\t\t\n'
+//                 }
+//               }
+//            }else if(type === 'text20-download' || type === 'excel20-download'){
+//              dnldInfo = 'Top 20 BLAST Hits: '+obj.version+'\n'
+//               for(let i=0;i<20;i++){
+//                 //console.log('data[0]',i,obj.data[i])
+//                 if(obj.data[i]){
+//                   otid = helpers.make_otid_display_name(obj.data[i].otid)
+//                   hit_id = obj.data[i].hit_id
+//                   txt += obj.query+'\t'+obj.query_length+'\t'
+//                   if(fxn==='refseq'){
+//                      txt += hit_id+'\t'+obj.data[i].identity+'\t'+obj.data[i].coverage+'\t'+obj.data[i].fpi+'\t'+obj.data[i].hmt+'\t'+obj.data[i].alength+'\t'+obj.data[i].mismatches+'\t'+obj.data[i].gaps+'\t'
+//                      txt += obj.data[i].qstart+'\t'+obj.data[i].qend+'\t'+obj.data[i].sstart+'\t'+obj.data[i].send+'\t'+obj.data[i].evalue+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].stitle+'\n'
+//                   }else{
+//                      txt += otid+'\t'+hit_id+'\t'+obj.data[i].hit_title+'\t'+obj.data[i].identity+'\t'+obj.data[i].bitscore+'\t'+obj.data[i].expect+'\t'+obj.data[i].gaps+'\n'
+//                   }
+//                 }else{
+//                   //txt += '\t\t\t\t\t\t\t\t\n'
+//                 }
+//               }
+//            }
+//        } 
+//     }
+//      
+//   }
+//   let retTxt = dnldInfo + header + txt
+//   return retTxt
+// }
 
 
-function createBlastOpts(reqBody) {
-    let bOpts = {},dbItems
-    bOpts.expect =    reqBody.blastExpect
-    //descriptions: req.body.blastDescriptions,
-    //alignments: req.body.blastAlignments,
-    bOpts.maxTargetSeqs = reqBody.blastMaxTargetSeqs,
-    bOpts.advanced = reqBody.advancedOpts,
-    bOpts.program = reqBody.blastProg
-    //bOpts.outfmt = reqBody.outformat
-    // add dbPath later
-    
-    if(reqBody.blastFxn === 'genome') {
-      bOpts.anno = reqBody.anno
-      if(reqBody.blastDb){
-      dbItems = reqBody.blastDb.split('/')
-      }else{
-        dbItems = ''
-      }
-      bOpts.blastDb = dbItems[1]
-      bOpts.ext = dbItems[0]
-      bOpts.genome_dbhost = CFG.GENOME_DBHOST
-    } else {
-      //bOpts.dbPath = CFG.BLAST_DB_PATH_REFSEQ
-      bOpts.blastDb = reqBody.blastDb
-      bOpts.ext = ''
-    }
-    if(reqBody.blastFilter){
-      bOpts.fitler = '-F F'
-    }
-    return bOpts
-}
+// function createBlastOpts(reqBody) {
+//     let bOpts = {},dbItems
+//     bOpts.expect =    reqBody.blastExpect
+//     //descriptions: req.body.blastDescriptions,
+//     //alignments: req.body.blastAlignments,
+//     bOpts.maxTargetSeqs = reqBody.blastMaxTargetSeqs,
+//     bOpts.advanced = reqBody.advancedOpts,
+//     bOpts.program = reqBody.blastProg
+//     //bOpts.outfmt = reqBody.outformat
+//     // add dbPath later
+//     
+//     if(reqBody.blastFxn === 'genome') {
+//       bOpts.anno = reqBody.anno
+//       if(reqBody.blastDb){
+//       dbItems = reqBody.blastDb.split('/')
+//       }else{
+//         dbItems = ''
+//       }
+//       bOpts.blastDb = dbItems[1]
+//       bOpts.ext = dbItems[0]
+//       bOpts.genome_dbhost = CFG.GENOME_DBHOST
+//     } else {
+//       //bOpts.dbPath = CFG.BLAST_DB_PATH_REFSEQ
+//       bOpts.blastDb = reqBody.blastDb
+//       bOpts.ext = ''
+//     }
+//     if(reqBody.blastFilter){
+//       bOpts.fitler = '-F F'
+//     }
+//     return bOpts
+// }
 //
-function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
-    
-    console.log('blastOpts',blastOpts)
-    //console.log('opts',opts)
-    if(blastOpts.program === 'blastp'){
-       // this serves to fix possible bug 
-       // where blastp is matched with 'ffn'
-       blastOpts.ext = 'faa'
-       blastOpts.blastDb = blastOpts.blastDb.split('.')[0] + '.' + blastOpts.ext
-       if(blastOpts.anno === 'prokka'){
-          blastOpts.dbPath = CFG.BLAST_DB_PATH_GENOME_PROKKA  //path.join(CFG.BLAST_DB_PATH_GENOME,'genomes')
-       }else{
-          blastOpts.dbPath = CFG.BLAST_DB_PATH_GENOME_NCBI //path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_ncbi')
-       }
-    }
-    let config = {}
-    config.site = CFG.SITE  //  local, mbl or homd;; this determines blast db
-    config.id = opts.blastSessionID
-    config.blastdbPath = blastOpts.dbPath
-    config.ext = blastOpts.ext  // used only for genome
-    config.blastdb = blastOpts.blastDb
-    //config.outfmt = blastOpts.outfmt
-    config.blastDir = blastDir
-    config.dataType = opts.type
-    config.expect = blastOpts.expect
-    config.blastFxn = req.body.blastFxn
-    config.anno = blastOpts.anno
-    config.genome_dbhost = blastOpts.genome_dbhost
-    config.advanced = blastOpts.advanced
-    config.maxTargetSeqs = blastOpts.maxTargetSeqs
-    config.program = blastOpts.program
-    config.programPath = CFG.PATH_TO_BLAST_PROG
-    config.returnTo = opts.returnTo
-    let pyScriptPath = path.join(CFG.PATH_TO_SCRIPTS, 'run_blast_no_cluster.py') 
-    config.command = pyScriptPath +' -c '+ path.join(blastDir, 'CONFIG.json')
-    config.filePath = ''
-    config.textInput = ''
-    // config.seqcount
-    
-    if(opts.type == 'fileInput'){
-        config.filePath = dataOrPath
-    }else{
-        config.textInput = '"'+dataOrPath+'"'
-    }
-    
-    return config
-}
-//
-//
-function getBlastHtmlTable(data_arr, blastID, sortCol, sortDir){
-    let desc,id,html,init,split_items,hmt,seqid,odd,bgcolor
-    //console.log('data_arr',  data_arr)
-    // sort data_arr
-    html =''
-   
-    html += "<table><thead>"
-    html += '<tr>'
-    //html += "<th><input type='checkbox'  value='master' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
-    
-    html += '<th>Query</th><th>Length<br>(nt)</th>'
-    html += '<th>Query<br>Sequence</th><th>Alignment</th><th>Hit</th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<br>(%)</th></tr>'
-    html += '</thead><tbody>'
-    if(sortCol ==='query'){
-         //console.log(sortDir)
-         if(sortDir === 'fwd'){
-           data_arr.sort(function sortDA(a, b) {
-            return helpers.compareStrings_alpha(b.query, a.query);
-            })
-         }else{
-           data_arr.sort(function sortDA(b, a) {
-            return helpers.compareStrings_alpha(b.query, a.query);
-            })
-         }
-    }else{ 
-        //if(sortCol ==='sequence'){  // original: by sequence
-         
-    }
-    //console.log('data_arr',data_arr)
-    for(let i in data_arr){
-        //console.log('YYY', i, data_arr[i].data)
-        odd = i % 2  // will be either 0 or 1
-       if(odd){
-         bgcolor = 'blastBGodd'
-       }else{
-         bgcolor = 'blastBGeven'
-       }
-       
-       
-       if(data_arr[i].data == 'no hits'){
-           html += "<tr class='"+bgcolor+"'><td>"+data_arr[i].query+"</td>"
-           html += "<td class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
-           html += "<td class='blastcol2 center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
-           html += "<td></td>"
-           html += '<td></td>'+"<td>No Hits Found"+'</td><td></td><td></td><td></td>'
-           html += '</tr>'
-       }else{
-         html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td>"
-        html += "<td rowspan='4' class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
-         //sort data_arr[i].data by bitscore
-         if(sortCol ==='bitscore'){
-           if(sortDir === 'fwd'){
-               data_arr[i].data.sort(function sortDA(a, b) {
-                return helpers.compareStrings_int(b.bitscore, a.bitscore);
-                })
-             }else{
-               data_arr[i].data.sort(function sortDA(b, a) {
-                return helpers.compareStrings_int(b.bitscore, a.bitscore);
-                })
-             }
-         }else if(sortCol ==='identity'){
-            if(sortDir === 'fwd'){
-               data_arr[i].data.sort(function sortDA(a, b) {
-                return helpers.compareStrings_alpha(b.identity, a.identity);
-                })
-             }else{
-               data_arr[i].data.sort(function sortDA(b, a) {
-                return helpers.compareStrings_alpha(b.identity, a.identity);
-                })
-             }
-         }else{
-           // original
-           data_arr[i].data.sort(function sortDA(a, b) {
-            return helpers.compareStrings_int(b.bitscore, a.bitscore);
-           })
-         }
-         html += "<td rowspan='4' class='blastcol2 center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
-         html += "<td rowspan='4' class='blastcol2 center' nowrap><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
-         for(let n=0;n<4;n++){
-           //console.log('XXX', n, data_arr[i].data[n])
-           if(data_arr[i] && data_arr[i].data[n]){
-           html += "<td nowrap class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid="+data_arr[i].data[n].otid+"'>"+data_arr[i].data[n].hit_id+'</a></td>'
-           
-           html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].hit_title+"</td>"
-           html += "<td class='right-justify "+bgcolor+"' nowrap>"+data_arr[i].data[n].expect+"</td>"
-           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].bitscore+"</td>"
-           html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].identity+"</td>"
-           html += '</tr>'
-           }else{
-             html += "<td colspan='4'>error</td></tr>"
-           }
-         }
-       }
-       
-    }
-    
-    html += '</tbody></table>'
-    return html
-}
+// function createConfig(req, opts, blastOpts, blastDir, dataOrPath ) {
+//     
+//     console.log('blastOpts',blastOpts)
+//     //console.log('opts',opts)
+//     if(blastOpts.program === 'blastp'){
+//        // this serves to fix possible bug 
+//        // where blastp is matched with 'ffn'
+//        blastOpts.ext = 'faa'
+//        blastOpts.blastDb = blastOpts.blastDb.split('.')[0] + '.' + blastOpts.ext
+//        if(blastOpts.anno === 'prokka'){
+//           blastOpts.dbPath = CFG.BLAST_DB_PATH_GENOME_PROKKA  //path.join(CFG.BLAST_DB_PATH_GENOME,'genomes')
+//        }else{
+//           blastOpts.dbPath = CFG.BLAST_DB_PATH_GENOME_NCBI //path.join(CFG.BLAST_DB_PATH_GENOME,'genomes_ncbi')
+//        }
+//     }
+//     let config = {}
+//     config.site = CFG.SITE  //  local, mbl or homd;; this determines blast db
+//     config.id = opts.blastSessionID
+//     config.blastdbPath = blastOpts.dbPath
+//     config.ext = blastOpts.ext  // used only for genome
+//     config.blastdb = blastOpts.blastDb
+//     //config.outfmt = blastOpts.outfmt
+//     config.blastDir = blastDir
+//     config.dataType = opts.type
+//     config.expect = blastOpts.expect
+//     config.blastFxn = req.body.blastFxn
+//     config.anno = blastOpts.anno
+//     config.genome_dbhost = blastOpts.genome_dbhost
+//     config.advanced = blastOpts.advanced
+//     config.maxTargetSeqs = blastOpts.maxTargetSeqs
+//     config.program = blastOpts.program
+//     config.programPath = CFG.PATH_TO_BLAST_PROG
+//     config.returnTo = opts.returnTo
+//     let pyScriptPath = path.join(CFG.PATH_TO_SCRIPTS, 'run_blast_no_cluster.py') 
+//     config.command = pyScriptPath +' -c '+ path.join(blastDir, 'CONFIG.json')
+//     config.filePath = ''
+//     config.textInput = ''
+//     // config.seqcount
+//     
+//     if(opts.type == 'fileInput'){
+//         config.filePath = dataOrPath
+//     }else{
+//         config.textInput = '"'+dataOrPath+'"'
+//     }
+//     
+//     return config
+// }
+// //
+// //
+// function getBlastHtmlTable(data_arr, blastID, sortCol, sortDir){
+//     let desc,id,html,init,split_items,hmt,seqid,odd,bgcolor
+//     //console.log('data_arr',  data_arr)
+//     // sort data_arr
+//     html =''
+//    
+//     html += "<table><thead>"
+//     html += '<tr>'
+//     //html += "<th><input type='checkbox'  value='master' onclick=\"blastCkboxMaster('"+blastID+"')\"><br><sup>1</sup></th>"
+//     
+//     html += '<th>Query</th><th>Length<br>(nt)</th>'
+//     html += '<th>Query<br>Sequence</th><th>Alignment</th><th>Hit</th><th>HOMD Clone Name</th>  <th>evalue</th><th>bit<br>score</th><th>Identity<br>(%)</th></tr>'
+//     html += '</thead><tbody>'
+//     if(sortCol ==='query'){
+//          //console.log(sortDir)
+//          if(sortDir === 'fwd'){
+//            data_arr.sort(function sortDA(a, b) {
+//             return helpers.compareStrings_alpha(b.query, a.query);
+//             })
+//          }else{
+//            data_arr.sort(function sortDA(b, a) {
+//             return helpers.compareStrings_alpha(b.query, a.query);
+//             })
+//          }
+//     }else{ 
+//         //if(sortCol ==='sequence'){  // original: by sequence
+//          
+//     }
+//     //console.log('data_arr',data_arr)
+//     for(let i in data_arr){
+//         //console.log('YYY', i, data_arr[i].data)
+//         odd = i % 2  // will be either 0 or 1
+//        if(odd){
+//          bgcolor = 'blastBGodd'
+//        }else{
+//          bgcolor = 'blastBGeven'
+//        }
+//        
+//        
+//        if(data_arr[i].data == 'no hits'){
+//            html += "<tr class='"+bgcolor+"'><td>"+data_arr[i].query+"</td>"
+//            html += "<td class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
+//            html += "<td class='blastcol2 center' ><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
+//            html += "<td></td>"
+//            html += '<td></td>'+"<td>No Hits Found"+'</td><td></td><td></td><td></td>'
+//            html += '</tr>'
+//        }else{
+//          html += "<tr class='"+bgcolor+"'><td rowspan='4'>"+data_arr[i].query+"</td>"
+//         html += "<td rowspan='4' class='blastcol2 center'>"+data_arr[i].query_length+'</td>'
+//          //sort data_arr[i].data by bitscore
+//          if(sortCol ==='bitscore'){
+//            if(sortDir === 'fwd'){
+//                data_arr[i].data.sort(function sortDA(a, b) {
+//                 return helpers.compareStrings_int(b.bitscore, a.bitscore);
+//                 })
+//              }else{
+//                data_arr[i].data.sort(function sortDA(b, a) {
+//                 return helpers.compareStrings_int(b.bitscore, a.bitscore);
+//                 })
+//              }
+//          }else if(sortCol ==='identity'){
+//             if(sortDir === 'fwd'){
+//                data_arr[i].data.sort(function sortDA(a, b) {
+//                 return helpers.compareStrings_alpha(b.identity, a.identity);
+//                 })
+//              }else{
+//                data_arr[i].data.sort(function sortDA(b, a) {
+//                 return helpers.compareStrings_alpha(b.identity, a.identity);
+//                 })
+//              }
+//          }else{
+//            // original
+//            data_arr[i].data.sort(function sortDA(a, b) {
+//             return helpers.compareStrings_int(b.bitscore, a.bitscore);
+//            })
+//          }
+//          html += "<td rowspan='4' class='blastcol2 center'><a href='#' onclick=\"getFileContent('seq','"+blastID+"','"+i.toString()+"')\">view</a></td>"
+//          html += "<td rowspan='4' class='blastcol2 center' nowrap><a href='#' onclick=\"getFileContent('res','"+blastID+"','"+i.toString()+"')\">open</a></td>"
+//          for(let n=0;n<4;n++){
+//            //console.log('XXX', n, data_arr[i].data[n])
+//            if(data_arr[i] && data_arr[i].data[n]){
+//            html += "<td nowrap class='blastcol3 center "+bgcolor+"'><a href='/taxa/tax_description?otid="+data_arr[i].data[n].otid+"'>"+data_arr[i].data[n].hit_id+'</a></td>'
+//            
+//            html += "<td class='blastcol4 xsmall "+bgcolor+"'>"+data_arr[i].data[n].hit_title+"</td>"
+//            html += "<td class='right-justify "+bgcolor+"' nowrap>"+data_arr[i].data[n].expect+"</td>"
+//            html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].bitscore+"</td>"
+//            html += "<td class='right-justify "+bgcolor+"'>"+data_arr[i].data[n].identity+"</td>"
+//            html += '</tr>'
+//            }else{
+//              html += "<td colspan='4'>error</td></tr>"
+//            }
+//          }
+//        }
+//        
+//     }
+//     
+//     html += '</tbody></table>'
+//     return html
+// }
 //
 
 

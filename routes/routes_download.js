@@ -6,7 +6,9 @@ const fs       = require('fs-extra');
 // const url = require('url');
 const path     = require('path');
 const C     = require(app_root + '/public/constants');
-const helpers = require(app_root + '/routes/helpers/helpers');
+const helpers         = require(app_root + '/routes/helpers/helpers');
+const helpers_taxa    = require(app_root + '/routes/helpers/helpers_taxa');
+const helpers_genomes = require(app_root + '/routes/helpers/helpers_genomes');
 const queries = require(app_root + '/routes/queries')
 
 
@@ -56,7 +58,7 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
     let type = req.params.type
 
     
-    send_list = helpers.apply_ttable_filter(req, req.session.ttable_filter)
+    send_list = helpers_taxa.apply_ttable_filter(req, req.session.ttable_filter)
     let file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+today 
 
     let list_of_otids = send_list.map(item => item.otid)
@@ -273,11 +275,11 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 router.get('/dld_genome_table_all/:type', function dld_genome_table_all (req, res) {
     var today = new Date()
-var dd = String(today.getDate()).padStart(2, '0')
-var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
-var yyyy = today.getFullYear()
-today = yyyy + '-' + mm + '-' + dd
-var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
+    var dd = String(today.getDate()).padStart(2, '0')
+    var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
+    var yyyy = today.getFullYear()
+    today = yyyy + '-' + mm + '-' + dd
+    var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
     const type = req.params.type
     let fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
     const sendList = Object.values(C.genome_lookup)
@@ -326,13 +328,13 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   let otid = ''
   let searchText = ''
   let searchField = ''
-  let filter = helpers.get_default_gtable_filter()
+  let filter = helpers_genomes.get_default_gtable_filter()
   if(req.session.hasOwnProperty('gtable_filter')){
     filter = req.session.gtable_filter
     //console.log('filter',filter)
     
   }
-  let sendList = helpers.apply_gtable_filter(req, filter)
+  let sendList = helpers_genomes.apply_gtable_filter(req, filter)
  //  if(req.session.hasOwnProperty('gtable_filter')){
 //      console.log('req.session.gtable_filter',req.session.gtable_filter)
 //      letter = req.session.gtable_filter.letter
@@ -382,7 +384,7 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
 //     // whole list as last resort
 //     //console.log('in all dnld')
 //     sendList = tempList
-     let fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
+     let fileFilterText = 'HOMD.org Genome Data:: Filtered Genome Data'
 //   }
   const listOfGids = sendList.map(item => item.gid)
   fileFilterText = fileFilterText + ' Date: ' + today
