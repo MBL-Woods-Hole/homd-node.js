@@ -25,7 +25,7 @@
    
 }
 #main_table td{
-   padding:0 5px;
+   padding:0px 5px;
    
    
 }
@@ -37,7 +37,7 @@
 #filter_table td{
    border:1px solid brown;
    
-   padding: 3px 1px 1px 3px;
+   padding: 3px 2px;
 }
 .border-on-rightX{
    border-right:1px solid brown;
@@ -85,20 +85,11 @@
             </span>
             </small>
     </div>
-    
-</td><td valign='top'> 
-   
-    <div id='reset_div' >
-      <a class='button' id='reset' href='reset_gtable'>Reset Filters</a> 
-    </div> 
-</td><td> 
-          
-<table id='filter_table'>
-<tr>
-    <td class=''>
-        <small>
-        <span class='filter-title'>Find Genomes by Phylum:</span>
-        <select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onclick='update_sb()'>
+    <br>
+<small>
+        <span class='filter-title'>Genomes by Phylum:</span>
+        <br>
+        <select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onchange='phylum_submit(this.value)'>
         <optgroup>
           <option value=''>Select a Phylum</option>
           <% for(n in phyla) { %>
@@ -110,8 +101,19 @@
           <% } %>
         </optgroup>
         </select>
-        <span class='button' onclick='clear_phylum()'>Clear</span>
+        
         </small>
+</td><td valign='top'> 
+   
+    <div id='reset_div' >
+      <a class='button' id='reset' href='reset_gtable'>Reset Filters</a> 
+    </div> 
+</td><td> 
+          
+<table id='filter_table'>
+<tr>
+    <td class=''>
+       
     </td><td class=''>
         <small>
         <span style=''>Paging: &nbsp;
@@ -129,7 +131,7 @@
 <tr>
 <td>
          <small>
-            <span class='filter-title' id='body_site_title'>Genome Categories:</span>&nbsp;&nbsp;
+            <span class='filter-title' id='category_title'>Genome Categories:</span>&nbsp;&nbsp;
             
             <% if(fltr.category.complete_genome === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='complete_genome' name='complete_genome' onclick='update_sb()'\> Complete Genome&nbsp;
@@ -163,27 +165,6 @@
 </td><td></td>
 </tr>
 <tr>
-    <td class=''>
-        <small>
-        <span class='filter-title'>Search This Table:</span>
-        <span class="">
-        <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='dropdown' name='txt_srch' maxlength='100' size='25' onclick='update_sb()'>
-        <select class='dropdown' id='field_select' value='<%= fltr.text.field %>' class="" name='field' onclick='update_sb()'>
-            <optgroup>
-            <option value='all'>All Fields</option>
-            <option value='genomeid'>Genome-ID</option>
-            <option value='taxid'>Taxon-ID</option>
-            <option value='organism'>Organism</option>
-            <option value='strain'>Strain</option>
-            </optgroup>
-        </select>
-        <span class='button' onclick='clear_search_txt()'>Clear</span>
-        </span>
-        </small>
-    </td><td class=''>
-    </td></td>
-</tr>
-<tr>
     <td class='border-on-right'>
        <small>
         <span class='filter-title'>Sort Column</span>:&nbsp;&nbsp;
@@ -199,9 +180,9 @@
         <% } %>
         
         <% if(fltr.sort_col === 'organism'){ %>
-        <input type='radio' checked name='sort_col' value='organism' onclick='update_sb()' > Organism&nbsp;
+        <input type='radio' checked name='sort_col' value='organism' onclick='update_sb()' > Species&nbsp;
         <% }else{ %>
-        <input type='radio' name='sort_col' value='organism' onclick='update_sb()' > Organism&nbsp;
+        <input type='radio' name='sort_col' value='organism' onclick='update_sb()' > Species&nbsp;
         <% } %>
         
         <% if(fltr.sort_col === 'strain'){ %>
@@ -240,6 +221,7 @@
         </small>
     </td><td class='border-on-right'></td></td>
 </tr>
+
 <tr>
   <td colspan='2'>
   <button id='form_btn' type='submit' class='button' value='Submit'>Submit</button>
@@ -249,6 +231,24 @@
 
 </td></tr>
 </table>
+<input type='hidden' name='oral'  value='on'>
+<input type='hidden' name='nasal' value='on'>
+<input type='hidden' name='skin'  value='on'>
+<input type='hidden' name='gut'   value='on'>
+<input type='hidden' name='vaginal' value='on'>
+<input type='hidden' name='enviro' value='on'>
+<input type='hidden' name='ref' value='on'>
+<input type='hidden' name='pathogen' value='on'>
+<input type='hidden' name='unassigned' value='on'>
+<input type='hidden' name='named_cultivated' value='on'>
+<input type='hidden' name='named_uncultivated' value='on'>
+<input type='hidden' name='unnamed_cultivated' value='on'>
+<input type='hidden' name='unnamed_uncultivated' value='on'>
+<input type='hidden' name='dropped' value='on'>
+<input type='hidden' name='high_abund' value='on'>
+<input type='hidden' name='medium_abund' value='on'>
+<input type='hidden' name='low_abund' value='on'>
+<input type='hidden' name='scarce_abund' value='on'>
 
 </form>
  

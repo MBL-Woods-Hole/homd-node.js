@@ -125,7 +125,8 @@ width: 1500px;
    padding:20px;
 }
 #adv_filter_table td{
-   padding:8px 20px;
+   
+   padding:2px 0px 8px 20px;
    vertical-align: middle;
    /* border: 1px solid grey; */
    
@@ -346,7 +347,6 @@ width: 1500px;
     <span class='adv-filter-title'>Search This Table</span>:&nbsp;&nbsp;
     
     <span class="">
-      
       <select class='dropdown' id='field_select' class="" name='field' onclick='adv_update_sb()'>
         <option value="all">All Fields</option>
         <option value="taxid">Taxon-ID</option>
@@ -356,7 +356,7 @@ width: 1500px;
         <option value="type_strain">Type Strains</option>
         <!-- <option value="rrna">16S rRNA ID</option> -->
       </select>
-      <span class='btn' onclick='clear_search_txt()'>Clear</span>
+      <span class='btn' onclick='adv_clear_search_txt()'>Clear</span>
       <input id='txt_srch' type='text' name='txt_srch' placeholder="Search.." value='<%= statusfltr.text.txt_srch %>' class='dropdown'  maxlength='100' size='20'  onclick='adv_update_sb()'>
     </span>
            

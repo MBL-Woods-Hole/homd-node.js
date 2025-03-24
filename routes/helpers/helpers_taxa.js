@@ -26,27 +26,21 @@ module.exports.clean_rank_name_for_show = (rank) =>{
     }
     return rank.charAt(0).toUpperCase() + rank.slice(1)
 }
-module.exports.ttfilter_for_phylum = function ttfilter_for_phylum(tlist, phy){
-    var lineage_list = Object.values(C.taxon_lineage_lookup)
-    var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
-    //console.log('obj_lst',obj_lst)
-    var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
-        return el.otid
-    })
-    let otid_grabber = {}
-    let gid_obj_list = tlist.filter(item => {   // filter genome obj list for inclusion in otid list
-        if(otid_list.indexOf(item.otid) !== -1){
-            otid_grabber[item.otid] = 1
-            return true
-        }
-        //return otid_list.indexOf(item.otid) !== -1
-    })
-    //console.log('otid_grabber',otid_grabber)
-    //console.log('gid_obj_list',gid_obj_list)
-    // now get just the otids from the selected gids
-    gid_obj_list.map( (el) =>{ return el.otid })
-    return gid_obj_list
-}
+
+// module.exports.ttfilter_for_phylum = function ttfilter_for_phylum(tlist, phy){
+//     //console.log('tlist[0]',tlist[0])
+//     //console.log('C.taxon_lineage_lookup',C.taxon_lineage_lookup['1'])
+//     let gid_obj_list = tlist.filter(item => {   // filter genome obj list for inclusion in otid list
+//         console.log('item.otid',item.otid)
+//         if(C.taxon_lineage_lookup.hasOwnProperty(item.otid) && C.taxon_lineage_lookup[item.otid].phylum == phy){
+//             return true
+//         }
+//     })
+//     
+//  
+//     return gid_obj_list
+// }
+
 module.exports.get_default_tax_filter = function getDefaultTaxFilter(){
     
     let defaultfilter = {otid:'',status:{},site:{},abund:{}}
@@ -80,8 +74,6 @@ module.exports.get_default_tax_filter = function getDefaultTaxFilter(){
         }
     }
     
-    
-
         defaultfilter.genomes='both'
         defaultfilter.text={
             txt_srch: '',
@@ -94,7 +86,7 @@ module.exports.get_default_tax_filter = function getDefaultTaxFilter(){
     
     return defaultfilter
 }
-module.exports.get_null_filter = function get_null_filter(){
+module.exports.get_null_tax_filter = function get_null_tax_filter(){
     let nullfilter = {
         otid:'',
         status:{
@@ -574,7 +566,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     //console.log('big_tax_list.length-3',big_tax_list.length)
     //phylum
     if(vals.phylum != '0'){
-       big_tax_list = helpers_taxa.ttfilter_for_phylum(big_tax_list, vals.phylum)
+       big_tax_list = helpers.filter_for_phylum(big_tax_list, vals.phylum)
     }
   //console.log('olength-2',big_tax_list.length)
   //console.log('vals',vals)

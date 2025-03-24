@@ -127,13 +127,11 @@ function set_gtable_session(req) {
     if(req.session.gtable_filter && req.session.gtable_filter.letter){
        letter = req.session.gtable_filter.letter
     }
-    req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
+    //req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
+    req.session.gtable_filter = helpers_genomes.get_null_gtable_filter()
     req.session.gtable_filter.letter = letter
-    req.session.gtable_filter.category.complete_genome = 'off'
-    req.session.gtable_filter.category.scaffold = 'off'
-    req.session.gtable_filter.category.contig = 'off'
-    req.session.gtable_filter.category.chromosome = 'off'
-    req.session.gtable_filter.category.mag = 'off'
+    
+    
     for( let item in req.body){
        if(item == 'letter'){
          req.session.gtable_filter.letter = req.body.letter
@@ -157,53 +155,37 @@ function set_gtable_session(req) {
          req.session.gtable_filter.paging = req.body.paging
        }
        // Genome Category
-       if(item == 'complete_genome'){
-         req.session.gtable_filter.category.complete_genome = 'on'
+       let cat_array = ['complete_genome','scaffold','contig','chromosome','mag']
+       for(let item in cat_array){
+           if(Object.prototype.hasOwnProperty.call(req.body,cat_array[item])){
+               req.session.gtable_filter.category[cat_array[item]] = req.body[cat_array[item]]
+           }
        }
-       if(item == 'scaffold'){
-         req.session.gtable_filter.category.scaffold = 'on'
+       // Tax Status
+       let status_array = ['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated','dropped']
+       for(let item in status_array){
+           if(Object.prototype.hasOwnProperty.call(req.body,status_array[item])){
+           req.session.gtable_filter.status[status_array[item]] = req.body[status_array[item]]
+           }
        }
-       if(item == 'contig'){
-         req.session.gtable_filter.category.contig = 'on'
+       // Tax Site
+       let site_array = ['oral','nasal','skin','gut','vaginal','unassigned','enviro','ref','pathogen']
+       for(let item in site_array){
+           if(Object.prototype.hasOwnProperty.call(req.body,site_array[item])){
+           req.session.gtable_filter.site[site_array[item]] = req.body[site_array[item]]
+           }
        }
-       if(item == 'chromosome'){
-         req.session.gtable_filter.category.chromosome = 'on'
-       }
-       if(item == 'mag'){
-         req.session.gtable_filter.category.mag = 'on'
+       // Tax Abundance
+       let abund_array = ['high_abund','medium_abund','low_abund','scarce_abund']
+       for(let item in abund_array){
+           if(Object.prototype.hasOwnProperty.call(req.body,abund_array[item])){
+           req.session.gtable_filter.abund[abund_array[item]] = req.body[abund_array[item]]
+           }
        }
     }
     
 }
-function filter_for_phylum(glist, phy){
-    //console.log('phy',phy)
-    //console.log('glist',glist.length)
-    var lineage_list = Object.values(C.taxon_lineage_lookup)
-    var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
-    var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
-        return el.otid
-    })
-    //console.log('otid_list1',otid_list.length)
-    let otid_grabber = {}
-    //console.log('glist1',glist[1])
-    let gid_obj_list = glist.filter(item => {   // filter genome obj list for inclusion in otid list
-        if(otid_list.indexOf(item.otid.toString()) !== -1){
-            otid_grabber[item.otid] = 1
-            return true
-        }
-        //return otid_list.indexOf(item.otid) !== -1
-    })
-    //console.log('obj_lst',obj_lst)
-    //console.log('otid_grabber2',otid_list)
-    //console.log('gid_obj_list',gid_obj_list)
-    // now get just the otids from the selected gids
-    gid_obj_list.map( (el) =>{ 
-       //console.log('el',el)
-       return el.otid 
-    
-    })
-    return gid_obj_list
-}
+
 
 function get_filter_on(f, type){
     // for comparison stringify
@@ -348,10 +330,10 @@ router.get('/genome_table', function genome_table(req, res) {
 });
 router.post('/genome_table', function genome_table_post(req, res) {
     console.log('in POST gt filter')
-    //console.log(req.body)
+    console.log('req.body',req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret,args,count_txt
     set_gtable_session(req)
-    //console.log('gtable_session',req.session.gtable_filter)
+    console.log('gtable_session',req.session.gtable_filter)
     filter = req.session.gtable_filter
     //console.log('filter',filter)
     send_list = helpers_genomes.apply_gtable_filter(req, filter)

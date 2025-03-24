@@ -36,7 +36,7 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
     //phylum
     
     if(vals.phylum  !== ''){
-       big_g_list = filter_for_phylum(big_g_list, vals.phylum)
+       big_g_list = helpers.filter_for_phylum(big_g_list, vals.phylum)
     }
     
     //sort_col
@@ -133,20 +133,73 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
     let category_on = Object.keys(vals.category).filter(item => vals.category[item] == 'on')
     //console.log('vals',vals)
     //console.log('category_on',category_on)
-    
-    
     big_g_list = big_g_list.filter( function(item){
-
-           if(category_on.includes(helpers.getKeyByValue(C.genome_categories_all, item.category))){
+        if(category_on.includes(helpers.getKeyByValue(C.genome_categories_all, item.category))){
+            return item
+        }
+    })
+       
+    // ADV::Tax Status ////////////////////////////////////////////////
+    let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
+    //console.log('status_on',status_on)
+    //console.log('big_g_list[0]',big_g_list[0])
+    let default_length_of_status = 5
+    big_g_list = big_g_list.filter( function(item) {
+         if(status_on.length == default_length_of_status){
+            return item
+         }else{
            
-              
+           //console.log('Status',C.site_lookup[item.otid].s1)
+           let status = (C.taxon_lookup[item.otid].naming_status +'_'+ C.taxon_lookup[item.otid].cultivation_status).toLowerCase()
+           //console.log('status',status)
+           if(status_on.includes(status)){
               return item
            }
-           
-         //}
-       })
-       
-       
+         }
+         
+    })
+    // ADV::Tax Sites ////////////////////////////////////////////////
+    let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
+    let default_length_of_site = 9
+    //console.log('big_g_list[]',big_g_list[0])
+    big_g_list = big_g_list.filter( function(item) {
+         if(site_on.length == default_length_of_site){
+            return item
+         }else{
+           //console.log('Sites',C.site_lookup[item.otid].s1)
+           let site = C.site_lookup[item.otid].s1.split(' ')[0].toLowerCase()
+           //console.log('site',site)
+           if(site_on.includes(site)){
+            return item
+           }
+         }
+         
+    })
+    // ADV::Tax Abundance ////////////////////////////////////////////////
+    //console.log('vals',vals)
+    let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on')
+    let default_length_of_abund = 4
+    //console.log('abundOn',abund_on)
+    big_g_list = big_g_list.filter( function filterAbundance(item) {
+        //console.log('item',C.site_lookup[item.otid])
+        if(abund_on.length == default_length_of_abund){
+            return item
+        }else{
+          if(C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1){
+            let site_item_primary = C.site_lookup[item.otid].s1
+            //console.log('site_item_primary',site_item_primary)
+            //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund' ]
+        
+            for(let n in abund_on){
+              let high_to_scarce = helpers.capitalizeFirst(abund_on[n].split('_')[0])
+              //console.log('test',high_to_scarce)
+              if(site_item_primary.includes(high_to_scarce)){
+               return item
+              }
+            }
+          }
+        }
+    })
 
     
     return big_g_list
@@ -220,7 +273,109 @@ module.exports.get_default_gtable_filter = function get_default_gtable_filter(){
             contig:'on',
             chromosome:'on',
             mag:'on'
-        }
+        },
+        
+        // Taxa Items
+        status:{
+            named_cultivated:'on',
+            named_uncultivated:'on',
+            unnamed_cultivated: 'on',
+            unnamed_uncultivated: 'on',
+            dropped:'on',
+            //nonoralref:'off'
+            
+        },
+        site:{
+           oral:'on',
+           nasal:'on',
+           skin:'on',
+           gut:'on',
+           vaginal:'on',
+           unassigned:'on',
+           enviro      :'on',
+           ref         :'on',
+           pathogen    :'on'
+           //p_or_pst    :'primary_site'
+        },
+        abund:{
+           high_abund:'on',
+           medium_abund:'on',
+           low_abund:'on',
+           scarce_abund:'on'
+        },
     }
     return defaultfilter
 }
+module.exports.get_null_gtable_filter = function get_null_gtable_filter(){
+    let defaultfilter = {
+        gid:'',
+        otid:'',
+        phylum:'',
+        text:{
+            txt_srch: '',
+            field: 'all',
+        },
+        letter: '0',
+        sort_col: 'organism',
+        sort_rev: 'off',
+        paging:'on',
+        category:{
+            complete_genome:'off',
+            scaffold:'off',
+            contig:'off',
+            chromosome:'off',
+            mag:'off'
+        },
+        
+        // Taxa Items
+        status:{
+            named_cultivated:'off',
+            named_uncultivated:'off',
+            unnamed_cultivated: 'off',
+            unnamed_uncultivated: 'off',
+            dropped:'off',
+            //nonoralref:'off'
+            
+        },
+        site:{
+           oral:'off',
+           nasal:'off',
+           skin:'off',
+           gut:'off',
+           vaginal:'off',
+           unassigned:'off',
+           enviro      :'off',
+           ref         :'off',
+           pathogen    :'off'
+           //p_or_pst    :'primary_site'
+        },
+        abund:{
+           high_abund:'off',
+           medium_abund:'off',
+           low_abund:'off',
+           scarce_abund:'off'
+        },
+    }
+    return defaultfilter
+}
+// module.exports.gtfilter_for_phylum = function gtfilter_for_phylum(glist, phy){
+//     
+//     //console.log('glist[0]',glist[0])
+//     //var lineage_list = Object.values(C.taxon_lineage_lookup)
+//     //var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
+//     //console.log('obj_lst',obj_lst)
+//     //var otid_list = glist.map( (el) =>{  // get list of otids with this phylum
+//     //    return el.otid
+//     //})
+//     //let otid_grabber = {}
+//     let gid_obj_list = glist.filter(item => {   // filter genome obj list for inclusion in otid list
+//         if(C.taxon_lineage_lookup.hasOwnProperty(item.otid) && C.taxon_lineage_lookup[item.otid].phylum == phy){
+//             return true
+//         }
+//     })
+//     //console.log('otid_grabber',otid_grabber)
+//     //console.log('gid_obj_list',gid_obj_list)
+//     // now get just the otids from the selected gids
+//     //gid_obj_list.map( (el) =>{ return el.otid })
+//     return gid_obj_list
+// }

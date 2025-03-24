@@ -493,7 +493,7 @@ function adv_update_sb(){
     btn.innerHTML = '** Apply Updated Filter to Table. **'
     
 }
-function clear_search_txt(){
+function adv_clear_search_txt(){
    txt = document.getElementById("txt_srch");
    dd = document.getElementById("field_select");
    txt.value = ''
