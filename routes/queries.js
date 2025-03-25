@@ -151,6 +151,9 @@ module.exports.get_NN_NA = (db, gid, pid) => {
     
     return q
 }
+module.exports.get_all_genomes = () => {
+    return "SELECT * from `genomesV11.0`"
+}
 module.exports.get_genome = (gid) => {   // always NCBI for taxon description
   // data for genome description
   // NCBI Fields
