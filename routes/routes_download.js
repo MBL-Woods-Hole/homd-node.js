@@ -286,8 +286,9 @@ router.get('/dld_genome_table_all/:type', function dld_genome_table_all (req, re
     const listOfGids = sendList.map(item => item.gid)
     fileFilterText = fileFilterText + ' Date: ' + today
     
-    let q = "SELECT * from genomes"
-    console.log(q)
+    
+    const q = queries.get_all_genomes()
+    //console.log(q)
     TDBConn.query(q, (err, mysqlrows) => {
         if(err){
            console.log(err)

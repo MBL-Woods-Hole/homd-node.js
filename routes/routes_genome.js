@@ -1325,10 +1325,10 @@ router.get('/blast_server', function genome_blast_server(req, res) {
         blast_type: 'genome'
       })
 })
-router.get('/blast_per_genome', function blast_per_genome(req, res) {
+router.get('/blast_select_genome', function blast_select_genome(req, res) {
    //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
   //helpers.accesslog(req, res)
-  //console.log('blast_per_genome')
+  //console.log('blast_select_genome')
   //let myurl = url.parse(req.url, true);
     
   const gid = req.query.gid

@@ -1,4 +1,19 @@
-
+<style>
+.advanced-filter-btn{
+   
+   padding: 0px 4px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   margin: 0px 0px;
+   cursor: pointer;
+   font-size: 14px;
+   border-radius: 16px;
+   background-color: brown;
+   border: 1px solid black;
+   color: white;
+}
+</style>
 <div id='filter_form_div'>
 
 <form id='tax_filter_form' name='tax_filter_form' method='POST' action='tax_table'>
@@ -49,6 +64,14 @@
         
 <table id='filter_table' border='1'>
 <tr>
+<td class=''>
+       <center>
+         <span style='float:right;' class="advanced-filter-btn" onclick="openAdvancedForm()">Open Advanced Table Filter</span>
+       </center>
+</td>
+</tr>
+<tr>
+
 <td>
       
          

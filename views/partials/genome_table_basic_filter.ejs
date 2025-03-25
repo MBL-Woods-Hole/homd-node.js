@@ -66,6 +66,20 @@
    padding:1px 4px;
    border:1px solid darkgray;
 }
+.advanced-filter-btn{
+   
+   padding: 0px 4px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   margin: 0px 0px;
+   cursor: pointer;
+   font-size: 14px;
+   border-radius: 16px;
+   background-color: brown;
+   border: 1px solid black;
+   color: white;
+}
 </style>
 
 <div id='filter_form_div'>
@@ -113,8 +127,11 @@
 <table id='filter_table'>
 <tr>
     <td class=''>
-       
-    </td><td class=''>
+       <center>
+         <span style='float:right;' class="advanced-filter-btn" onclick="openAdvancedForm()">Open Advanced Table Filter</span>
+       </center>
+    </td>
+    <td class=''>
         <small>
         <span style=''>Paging: &nbsp;
           <% if(fltr.paging === 'on'){ %>

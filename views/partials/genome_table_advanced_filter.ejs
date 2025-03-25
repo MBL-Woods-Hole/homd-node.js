@@ -1,6 +1,6 @@
 <style>
 :root {
-  --bg:#c2bdb9;
+  --bg:#dce7f5;   /* #c2bdb9; */
   --btn1: #083370;    /* #006699; */
   --btn2: #81B1A1;    /* #006699; */
   --border1:#4E7F6F;    /* lite green */
@@ -158,7 +158,7 @@ width: 1500px;
 </style>
 <!-- <div class="popuptext" id="myPopup"> -->
 
-<center><strong>Advanced Genome Table Filter (BETA: Non Functional)</strong></center>
+<center><strong>Advanced Genome Table Filter</strong></center>
 
 <form class='form-container' id='adv_genome_filter_form' name='adv_genome_filter_form' method='POST' action='genome_table'>
 <span>
@@ -249,11 +249,11 @@ width: 1500px;
           <% if(fltr.paging === 'on'){ %>
             <input type='radio' checked name='paging' value='on' onclick='adv_update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
             <br><br>
-            <input type='radio'         name='paging' value='off' onclick='adv_update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
+            <input type='radio'         name='paging' value='off' onclick='adv_update_sb()' > Off&nbsp;<small>(show all filtered rows in one table)</small>
           <% }else{ %>
             <input type='radio'         name='paging' value='on' onclick='adv_update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
             <br><br>
-            <input type='radio' checked name='paging' value='off' onclick='adv_update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
+            <input type='radio' checked name='paging' value='off' onclick='adv_update_sb()' > Off&nbsp;<small>(show all filtered rows in one table)</small>
           <% } %>
           
         </span>

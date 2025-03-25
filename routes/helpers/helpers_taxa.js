@@ -354,7 +354,7 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
     if(req.session.ttable_filter && req.session.ttable_filter.letter){
        letter = req.session.ttable_filter.letter
     }
-    req.session.ttable_filter = helpers_taxa.get_null_filter()
+    req.session.ttable_filter = helpers_taxa.get_null_tax_filter()
     req.session.ttable_filter.letter = letter
     
     for( let item in req.body){

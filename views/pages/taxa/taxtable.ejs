@@ -42,9 +42,7 @@ thead th { position: sticky; top: 0; }
     
     </button>
  -->
-    <div style='float:right;border:1px solid grey;' class="popup open-button" onclick="openAdvancedForm()">Advanced Filter
-     
-    </div>
+   
      
      <br><%= count_txt %>
 <div id='tax-box' >
@@ -81,8 +79,8 @@ thead th { position: sticky; top: 0; }
        <td class="col3" nowrap title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
        <td class="col4" nowrap title='<%= list[n].subsp  %>'><%= list[n].subsp  %></td>
        
-       <td class="col5"><%= list[n].naming_status  %></td>
-       <td class="col6"><%= list[n].cultivation_status  %></td>
+       <td class="col5" title='<%= list[n].naming_status  %>'><%= list[n].naming_status  %></td>
+       <td class="col6" title='<%= list[n].cultivation_status  %>'><%= list[n].cultivation_status  %></td>
            
        <td class="col7" title='Body Site: <%= list[n].site  %>'><a href='body_sites?otid=<%= otid %>'><%= list[n].site  %></a></small></span></td>
        
