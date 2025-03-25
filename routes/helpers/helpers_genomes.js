@@ -161,13 +161,15 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
     // ADV::Tax Sites ////////////////////////////////////////////////
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
     let default_length_of_site = 9
+    console.log('site_on',site_on)
     //console.log('big_g_list[]',big_g_list[0])
     big_g_list = big_g_list.filter( function(item) {
          if(site_on.length == default_length_of_site){
             return item
          }else{
-           //console.log('Sites',C.site_lookup[item.otid].s1)
-           let site = C.site_lookup[item.otid].s1.split(' ')[0].toLowerCase()
+           //console.log('Sites:',C.site_lookup[item.otid].s1)
+           console.log('Sites2:',C.taxon_lookup[item.otid].sites[0].toLowerCase())
+           let site = C.taxon_lookup[item.otid].sites[0].toLowerCase()
            //console.log('site',site)
            if(site_on.includes(site)){
             return item
