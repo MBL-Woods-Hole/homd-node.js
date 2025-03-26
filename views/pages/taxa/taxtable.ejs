@@ -46,21 +46,22 @@ thead th { position: sticky; top: 0; }
      
     </div>
      
-     <br><%= count_txt %>
+     <br><span><%= count_txt %></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+     Sorted By: <span id='sortby_notice'><%= statusfltr.sort_col %></span>
 <div id='tax-box' >
 
      <table id='tax-table' class='table table-hover table-condensed sortable' >
      <thead>
       <tr>
         
-        <th class="col1"><span onclick="('otid')">Taxon-ID</span></th>
-        <th class='col2'><span onclick="('genus')">Genus</span></th>
-        <th class='col3'><span onclick="('species')">Species</span></th>
-        <th class="col4"><span onclick="('strain')">Subspecies</span></th>
-        <th class="col5"><span onclick="('naming_status')">Naming<br>Status</span></th>
-        <th class="col6"><span onclick="('cult_status')">Cultivation<br>Status</span></th>
+        <th class="col1"><span onclick="change_sortby_notice()">Taxon-ID</span></th>
+        <th class='col2'><span onclick="change_sortby_notice()">Genus</span></th>
+        <th class='col3'><span onclick="change_sortby_notice()">Species</span></th>
+        <th class="col4"><span onclick="change_sortby_notice()">Subspecies</span></th>
+        <th class="col5"><span onclick="change_sortby_notice()">Naming<br>Status</span></th>
+        <th class="col6"><span onclick="change_sortby_notice()">Cultivation<br>Status</span></th>
         
-        <th class="col7"><span id='' ">Primary Body Site</span></th>
+        <th class="col7"><span id='' onclick="change_sortby_notice()">Primary Body Site</span></th>
         
         <!-- 
 <th class="col8 sorttable_nosort"></th>

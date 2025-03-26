@@ -17,10 +17,12 @@ sys.path.append('../../homd-data/')
 sys.path.append('../../config/')
 from connect import MyConnection
 
-
+#SELECT genome_id as gid, otid, strain, category, organism, contigs, combined_size, GC
+#   FROM `genomesV11.0`
 genomes_query = """
-   SELECT genome_id as gid, otid, strain, category, organism, contigs, combined_size, GC
+   SELECT genome_id as gid, MAG as mag,otid, strain, assembly_level as level,  `genomesV11.0`.organism, `genomesV11.0`.contigs, `genomesV11.0`.combined_size, `genomesV11.0`.GC
    FROM `genomesV11.0`
+   JOIN `genomes_ncbiV11.0` using(genome_id)
 """
 
 
@@ -38,7 +40,8 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     genome['combined_size']   = ''   # table 1
     genome['strain']    = ''  # table 1
     genome['gc']        = ''   # table 2
-    genome['category']  = ''   # Complete Genome,Scaffold,Contig,Chromosome,MAG
+    genome['level']  = ''   # Complete Genome,Scaffold,Contig,Chromosome,MAG
+    genome['mag']  = ''
 
     return genome
 
@@ -63,7 +66,8 @@ def run_first(args):
             taxonObj['combined_size']     = obj['combined_size']
             taxonObj['strain']      = obj['strain']
             taxonObj['gc']          = obj['GC']
-            taxonObj['category']    = obj['category']
+            taxonObj['level']    = obj['level']
+            taxonObj['mag']    = obj['mag']
             taxonObj['otid']        = obj['otid']
         else:
             sys.exit('duplicate gid',obj['gid'])

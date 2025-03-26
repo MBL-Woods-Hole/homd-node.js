@@ -683,3 +683,6 @@ function adv_toggle_cb_status(x){
     }
     adv_update_sb()
 }
+function change_sortby_notice(){
+    document.getElementById('sortby_notice').innerHTML = "Custom"
+}

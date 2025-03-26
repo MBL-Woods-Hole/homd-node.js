@@ -358,24 +358,21 @@ function letter_submit(letter){
   // }
    form.submit()
 }
-function toggle_cb_categories(x){
+function toggle_cb_levels(x){
     if(x == 'off'){
         document.getElementById("complete_genome").checked = false;
         document.getElementById("scaffold").checked = false;
         document.getElementById("contig").checked = false;
         document.getElementById("chromosome").checked = false;
-        document.getElementById("mag").checked = false;
-        
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_categories('on')\">Toggle CheckBoxes On/Off</a>"
-        document.getElementById('toggle_cb_categories_span').innerHTML = link_html
+        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_levels('on')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('toggle_cb_levels_span').innerHTML = link_html
     }else{
         document.getElementById("complete_genome").checked = true;
         document.getElementById("scaffold").checked = true;
         document.getElementById("contig").checked = true;
         document.getElementById("chromosome").checked = true;
-        document.getElementById("mag").checked = true;
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_categories('off')\">Toggle CheckBoxes On/Off</a>"
-        document.getElementById('toggle_cb_categories_span').innerHTML = link_html
+        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_levels('off')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('toggle_cb_levels_span').innerHTML = link_html
     }
     update_sb()
 }

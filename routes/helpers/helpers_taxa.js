@@ -26,27 +26,7 @@ module.exports.clean_rank_name_for_show = (rank) =>{
     }
     return rank.charAt(0).toUpperCase() + rank.slice(1)
 }
-module.exports.ttfilter_for_phylum = function ttfilter_for_phylum(tlist, phy){
-    var lineage_list = Object.values(C.taxon_lineage_lookup)
-    var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
-    //console.log('obj_lst',obj_lst)
-    var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
-        return el.otid
-    })
-    let otid_grabber = {}
-    let gid_obj_list = tlist.filter(item => {   // filter genome obj list for inclusion in otid list
-        if(otid_list.indexOf(item.otid) !== -1){
-            otid_grabber[item.otid] = 1
-            return true
-        }
-        //return otid_list.indexOf(item.otid) !== -1
-    })
-    //console.log('otid_grabber',otid_grabber)
-    //console.log('gid_obj_list',gid_obj_list)
-    // now get just the otids from the selected gids
-    gid_obj_list.map( (el) =>{ return el.otid })
-    return gid_obj_list
-}
+
 module.exports.get_default_tax_filter = function getDefaultTaxFilter(){
     
     let defaultfilter = {otid:'',status:{},site:{},abund:{}}
@@ -574,7 +554,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     //console.log('big_tax_list.length-3',big_tax_list.length)
     //phylum
     if(vals.phylum != '0'){
-       big_tax_list = helpers_taxa.ttfilter_for_phylum(big_tax_list, vals.phylum)
+       big_tax_list = helpers.filter_for_phylum(big_tax_list, vals.phylum)
     }
   //console.log('olength-2',big_tax_list.length)
   //console.log('vals',vals)
@@ -619,6 +599,19 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
           big_tax_list.sort(function (b, a) {
             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
+        }else if(vals.sort_col === 'lineage'){
+           //console.log('sorting by lineage')
+           big_tax_list.sort(function (b, a) {
+                let lin_a = C.taxon_lineage_lookup[a.otid].domain
+                let lin_b = C.taxon_lineage_lookup[b.otid].domain
+                //,lin_barray = []
+                let ranks_tmp = C.ranks.slice(1,)
+                for(let n in ranks_tmp){
+                    lin_a = lin_a +';'+C.taxon_lineage_lookup[a.otid][ranks_tmp[n]]
+                    lin_b = lin_b +';'+C.taxon_lineage_lookup[b.otid][ranks_tmp[n]]
+                }
+                return helpers.compareStrings_alpha(lin_a, lin_b);
+            })
         }else{
           big_tax_list.sort(function (b, a) {
             return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
@@ -633,6 +626,23 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
           big_tax_list.sort(function (a, b) {
             return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
+        }else if(vals.sort_col === 'lineage'){
+           //console.log('sorting by lineage')
+           big_tax_list.sort(function (a, b) {
+                //console.log('a',a)
+                //C.taxon_lineage_lookup
+                let lin_a = C.taxon_lineage_lookup[a.otid].domain
+                let lin_b = C.taxon_lineage_lookup[b.otid].domain
+                //,lin_barray = []
+                let ranks_tmp = C.ranks.slice(1,)  // remove domain
+                for(let n in ranks_tmp){
+                    lin_a = lin_a +';'+C.taxon_lineage_lookup[a.otid][ranks_tmp[n]]
+                    lin_b = lin_b +';'+C.taxon_lineage_lookup[b.otid][ranks_tmp[n]]
+                }
+                //console.log('lina',lin_a)
+                return helpers.compareStrings_alpha(lin_a, lin_b);
+            })
+        
         }else{
           //console.log(big_tax_list[0])
           //console.log('sorting by ',vals.sort_col)

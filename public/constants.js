@@ -218,12 +218,11 @@ constants.tax_status_default = ['named_cultivated','named_uncultivated','unnamed
 constants.tax_abund_all     = ['high_abund','medium_abund','low_abund','scarce_abund'];
 constants.tax_abund_default = ['high_abund','medium_abund','low_abund','scarce_abund'];
 
-constants.genome_categories_all = {
+constants.genome_level_all = {
   'complete_genome':'Complete Genome',
   'scaffold':       'Scaffold',
   'contig':         'Contig',
-  'chromosome':     'Chromosome',
-  'mag':            'MAG'
+  'chromosome':     'Chromosome'
 }
 
 

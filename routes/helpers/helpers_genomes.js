@@ -36,7 +36,7 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
     //phylum
     
     if(vals.phylum  !== ''){
-       big_g_list = filter_for_phylum(big_g_list, vals.phylum)
+       big_g_list = helpers.filter_for_phylum(big_g_list, vals.phylum)
     }
     
     //sort_col
@@ -56,9 +56,14 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
             return helpers.compareStrings_alpha(a.strain,b.strain);
             //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
-        }else if(vals.sort_col === 'category'){
+        }else if(vals.sort_col === 'level'){
           big_g_list.sort(function (b,a) {
-            return helpers.compareStrings_alpha(a.category,b.category);
+            return helpers.compareStrings_alpha(a.level,b.level);
+            //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else if(vals.sort_col === 'mag'){
+          big_g_list.sort(function (b,a) {
+            return helpers.compareStrings_alpha(a.mag,b.mag);
             //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
         }else if(vals.sort_col === 'contigs'){
@@ -101,9 +106,14 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
             return helpers.compareStrings_alpha(a.strain,b.strain);
             //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
-        }else if(vals.sort_col === 'category'){
+        }else if(vals.sort_col === 'level'){
           big_g_list.sort(function (a, b) {
-            return helpers.compareStrings_alpha(a.category,b.category);
+            return helpers.compareStrings_alpha(a.level,b.level);
+            //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
+          })
+        }else if(vals.sort_col === 'mag'){
+          big_g_list.sort(function (a,b) {
+            return helpers.compareStrings_alpha(a.mag,b.mag);
             //return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
           })
         }else if(vals.sort_col === 'contigs'){
@@ -129,15 +139,15 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
           })
         }
     }
-    // Category
-    let category_on = Object.keys(vals.category).filter(item => vals.category[item] == 'on')
+    // Assembly Level
+    let level_on = Object.keys(vals.level).filter(item => vals.level[item] == 'on')
     //console.log('vals',vals)
-    //console.log('category_on',category_on)
+    //console.log('level_on',level_on)
     
     
     big_g_list = big_g_list.filter( function(item){
 
-           if(category_on.includes(helpers.getKeyByValue(C.genome_categories_all, item.category))){
+           if(level_on.includes(helpers.getKeyByValue(C.genome_level_all, item.level))){
            
               
               return item
@@ -214,12 +224,12 @@ module.exports.get_default_gtable_filter = function get_default_gtable_filter(){
         sort_col: 'organism',
         sort_rev: 'off',
         paging:'on',
-        category:{
+        mag:'',
+        level:{
             complete_genome:'on',
             scaffold:'on',
             contig:'on',
-            chromosome:'on',
-            mag:'on'
+            chromosome:'on'
         }
     }
     return defaultfilter

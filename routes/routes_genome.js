@@ -129,11 +129,11 @@ function set_gtable_session(req) {
     }
     req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
     req.session.gtable_filter.letter = letter
-    req.session.gtable_filter.category.complete_genome = 'off'
-    req.session.gtable_filter.category.scaffold = 'off'
-    req.session.gtable_filter.category.contig = 'off'
-    req.session.gtable_filter.category.chromosome = 'off'
-    req.session.gtable_filter.category.mag = 'off'
+    req.session.gtable_filter.level.complete_genome = 'off'
+    req.session.gtable_filter.level.scaffold = 'off'
+    req.session.gtable_filter.level.contig = 'off'
+    req.session.gtable_filter.level.chromosome = 'off'
+    req.session.gtable_filter.mag = 'off'
     for( let item in req.body){
        if(item == 'letter'){
          req.session.gtable_filter.letter = req.body.letter
@@ -156,21 +156,21 @@ function set_gtable_session(req) {
        if(item == 'paging'){
          req.session.gtable_filter.paging = req.body.paging
        }
-       // Genome Category
+       // Genome Assembly Level
        if(item == 'complete_genome'){
-         req.session.gtable_filter.category.complete_genome = 'on'
+         req.session.gtable_filter.level.complete_genome = 'on'
        }
        if(item == 'scaffold'){
-         req.session.gtable_filter.category.scaffold = 'on'
+         req.session.gtable_filter.level.scaffold = 'on'
        }
        if(item == 'contig'){
-         req.session.gtable_filter.category.contig = 'on'
+         req.session.gtable_filter.level.contig = 'on'
        }
        if(item == 'chromosome'){
-         req.session.gtable_filter.category.chromosome = 'on'
+         req.session.gtable_filter.level.chromosome = 'on'
        }
        if(item == 'mag'){
-         req.session.gtable_filter.category.mag = 'on'
+         req.session.gtable_filter.mag = 'on'
        }
     }
     
