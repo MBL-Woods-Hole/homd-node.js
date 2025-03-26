@@ -90,7 +90,7 @@ def run_taxa(args):
         otid = str(obj['otid'])
         taxonObj = create_taxon(otid)
         
-        if obj['status'] == 'Dropped':
+        if obj['status'].lower() == 'dropped':
             #print('dropped',otid)
             dropped_otids.append(otid)
        
@@ -595,12 +595,14 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
                 counts[long_tax_name]['gcnt_wdropped']   = gcnt
             else:   #in neither least default
                 # I don't know why this is needed!!!!!!!!!
-                if long_tax_name == 'Bacteria':
-                    counts[long_tax_name]["taxcnt"] = 0
-                    counts[long_tax_name]["taxcnt_wdropped"] = 1
-                else:
-                    counts[long_tax_name]["taxcnt"] = 1
-                    counts[long_tax_name]["taxcnt_wdropped"] = 0
+                # if long_tax_name == 'Bacteria':
+#                     counts[long_tax_name]["taxcnt"] = 0
+#                     counts[long_tax_name]["taxcnt_wdropped"] = 1
+#                 else:
+#                     counts[long_tax_name]["taxcnt"] = 1
+#                     counts[long_tax_name]["taxcnt_wdropped"] = 0
+                counts[long_tax_name]["taxcnt"] = 1
+                counts[long_tax_name]["taxcnt_wdropped"] = 0
                 counts[long_tax_name]['refcnt'] = rfcnt
                 counts[long_tax_name]['gcnt']   = gcnt 
                 counts[long_tax_name]['refcnt_wdropped'] = 0
