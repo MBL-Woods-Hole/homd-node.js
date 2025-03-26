@@ -93,15 +93,13 @@ def run_taxa(args):
         if obj['status'] == 'Dropped':
             #print('dropped',otid)
             dropped_otids.append(otid)
-        if obj['status'] == 'Reference':
-            #print('dropped',otid)
-            reference_otids.append(otid)
+       
             
-        taxonObj['status']     = obj['status']
-        taxonObj['naming_status']     = obj['naming_status']
-        taxonObj['cultivation_status']  = obj['cultivation_status']
-        taxonObj['genus']      = obj['genus']
-        taxonObj['species']    = obj['species']
+        taxonObj['status']             = obj['status']
+        taxonObj['naming_status']      = obj['naming_status']
+        taxonObj['cultivation_status'] = obj['cultivation_status']
+        taxonObj['genus']              = obj['genus']
+        taxonObj['species']            = obj['species']
         
         taxonObj['notes']      = obj['notes']
         taxonObj['ncbi_taxid'] = obj['ncbi_taxid']
@@ -524,9 +522,9 @@ JOIN subspecies  using(subspecies_id)
         #tax_list = obj_lookup.values()
         
         
-        if obj['domain']:
+        #if obj['domain']:
             # send all otids including dropped and nonOralRef
-            run_counts2(otid, tax_list, num_genomes, num_refseqs)
+        run_counts2(otid, tax_list, num_genomes, num_refseqs)
 
     file1 = os.path.join(args.outdir,args.outfileprefix+'Lineagelookup.json')
     file2 = os.path.join(args.outdir,args.outfileprefix+'Hierarchy.json')
@@ -536,11 +534,15 @@ JOIN subspecies  using(subspecies_id)
     print_dict(file2, obj_list)
 
     file = os.path.join(args.outdir,args.outfileprefix+'Counts.json')
+    print()
+    print('Bact',counts['Bacteria'])
+    print('Bact;Actinomycetota',counts['Bacteria;Actinomycetota'])
+    print('Arch',counts['Archaea'])
     print_dict(file, counts)
 
 def run_counts2(otid, taxlist, gcnt, rfcnt):
     global counts
-    #print(taxlist)
+    #print('taxlist',otid,gcnt,rfcnt,taxlist)
 
 
     for m in range(len(ranks)): # 7
@@ -565,7 +567,7 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
         
         if long_tax_name in counts:
         
-            counts[long_tax_name]["ecology"] = '0'
+            counts[long_tax_name]["ecology"] = 0
             
             if otid in dropped_otids:
                 #if otid in ('720','502'):
@@ -573,10 +575,6 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
                 counts[long_tax_name]["taxcnt_wdropped"] += 1
                 counts[long_tax_name]['refcnt_wdropped'] += rfcnt
                 counts[long_tax_name]['gcnt_wdropped']   += gcnt
-            elif otid in reference_otids:
-                counts[long_tax_name]["taxcnt_wreference"] += 1
-                counts[long_tax_name]['refcnt_wreference'] += rfcnt
-                counts[long_tax_name]['gcnt_wreference']   += gcnt
             else:   #in neither least default
                 counts[long_tax_name]["taxcnt"] += 1
                 counts[long_tax_name]['refcnt']  += rfcnt
@@ -584,47 +582,32 @@ def run_counts2(otid, taxlist, gcnt, rfcnt):
         else:
             # this will always be species
             counts[long_tax_name] = {}
-            counts[long_tax_name]["ecology"] = '0'
+            counts[long_tax_name]["ecology"] = 0
+            
             if otid in dropped_otids:
                 #if otid in ('720','502'):
                 #   print('got-2',otid)
                 counts[long_tax_name]["taxcnt"] = 0
                 counts[long_tax_name]['refcnt'] = 0
                 counts[long_tax_name]['gcnt']   = 0
-                counts[long_tax_name]["taxcnt_wreference"] = 0
-                counts[long_tax_name]['refcnt_wreference'] = 0
-                counts[long_tax_name]['gcnt_wreference']   = 0
                 counts[long_tax_name]["taxcnt_wdropped"] = 1
                 counts[long_tax_name]['refcnt_wdropped'] = rfcnt
                 counts[long_tax_name]['gcnt_wdropped']   = gcnt
-                    
-                    
-            elif otid in reference_otids:
-                
-                counts[long_tax_name]["taxcnt"] = 0
-                counts[long_tax_name]['refcnt'] = 0
-                counts[long_tax_name]['gcnt']   = 0
-                counts[long_tax_name]["taxcnt_wreference"] = 1
-                counts[long_tax_name]['refcnt_wreference'] = rfcnt
-                counts[long_tax_name]['gcnt_wreference']   = gcnt
-                counts[long_tax_name]["taxcnt_wdropped"] = 0
-                counts[long_tax_name]['refcnt_wdropped'] = 0
-                counts[long_tax_name]['gcnt_wdropped']   = 0
-                
             else:   #in neither least default
-                
-                counts[long_tax_name]["taxcnt"] = 1
+                # I don't know why this is needed!!!!!!!!!
+                if long_tax_name == 'Bacteria':
+                    counts[long_tax_name]["taxcnt"] = 0
+                    counts[long_tax_name]["taxcnt_wdropped"] = 1
+                else:
+                    counts[long_tax_name]["taxcnt"] = 1
+                    counts[long_tax_name]["taxcnt_wdropped"] = 0
                 counts[long_tax_name]['refcnt'] = rfcnt
-                counts[long_tax_name]['gcnt']   = gcnt
-                counts[long_tax_name]["taxcnt_wreference"] = 0
-                counts[long_tax_name]['refcnt_wreference'] = 0
-                counts[long_tax_name]['gcnt_wreference']   = 0
-                counts[long_tax_name]["taxcnt_wdropped"] = 0
+                counts[long_tax_name]['gcnt']   = gcnt 
                 counts[long_tax_name]['refcnt_wdropped'] = 0
                 counts[long_tax_name]['gcnt_wdropped']   = 0
             
             
-
+    
     return counts    
         
 

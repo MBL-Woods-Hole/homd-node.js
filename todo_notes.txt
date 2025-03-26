@@ -1,4 +1,18 @@
 HOMD Notes
+2025-03-25
+DONE-fix right side main menus; "About Us"; 
+
+DONE- add 'row#' to tt and gt
+DONE -hot link HMT in TT
+DONE-update footer to 2025
+DONE- get rid of pg help links
+DONE- turn off dropped taxa as default
+DONE- remove 'reference' from dynamic tree and rank_level
+DONE - correct counts on home page and link to tt
+- from email (Julian) 'assembly level', 'assembly source', and 'sequencing platform'
+- from email MAG column??
+- taxonTable lineage sort
+---------------------------------------------
 2022-04-21 mtg
 refseq blast out
 -- get coverage. qcov vs qcovhsp??

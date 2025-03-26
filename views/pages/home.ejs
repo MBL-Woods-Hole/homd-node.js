@@ -7,11 +7,17 @@
 #update a{
   color:red;
 }
+.underline a{
+    text-decoration: underline;
+}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/home.css" >
 <% var version_info = JSON.parse(ver_info) %> 
 <%- include('../partials/header_html'); %>
 <%- include('../partials/flash'); %>
+<% t_count = "834" %>
+<% oral_t_count = "518" %>
+<% nasal_t_count = "67" %>
     <title>HOMD Home Page</title>
     
     <body>
@@ -34,7 +40,10 @@
     eHOMD are primarily oral or nasal and which can be found in the mouth but primarily reside at a different body site or in the environment. 
 <br><br>
     
-    eHOMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract. Of the 824 taxa in the database, 518 are primarily oral and 67 primarily nasal. Of the oral taxa, 49% are named, 21% unnamed but cultivated and 29% are known only as uncultivated phylotypes. 
+    eHOMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract. 
+    Of the <span class='underline'><a href='#' onclick="show_specific_ttable('no_dropped')"><%= t_count %> taxa</a></span> in the database, 
+    <span class='underline'><a href='#' onclick="show_specific_ttable('oral_only')"><%= oral_t_count %></a></span> are primarily oral and 
+    <span class='underline'><a href='#' onclick="show_specific_ttable('nasal_only')"><%= nasal_t_count %></a></span> primarily nasal. Of the oral taxa, 49% are named, 21% unnamed but cultivated and 29% are known only as uncultivated phylotypes. 
     
     eHOMD taxonomy provides a provisional naming scheme for the currently unnamed taxa, based on both genomic and 16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can be directly linked to a stably named reference scheme.
 <br>
@@ -185,4 +194,50 @@
 // this should run on every page for main menu open speed
 mainmenu()
 
+function show_specific_ttable(f){
+  // f:  no_dropped, oral_only, nasal_only
+  body_items = {}
+  if(f == 'oral_only'){
+    body_items.oral  = 'on'
+  }else if(f == 'nasal_only'){
+    body_items.nasal = 'on'
+  }else{
+    body_items.oral       = 'on'
+    body_items.nasal      = 'on'
+    body_items.skin       = 'on'
+    body_items.gut        = 'on'
+    body_items.vaginal    = 'on'
+    body_items.pathogen   = 'on'
+    body_items.enviro     = 'on'
+    body_items.ref        = 'on'
+    body_items.unassigned = 'on'
+  }
+  
+  body_items.phylum               = '0'
+  body_items.high_abund           = 'on'
+  body_items.medium_abund         = 'on'
+  body_items.low_abund            = 'on'
+  body_items.scarce_abund         = 'on'
+  body_items.named_cultivated     = 'on'
+  body_items.named_uncultivated   = 'on'
+  body_items.unnamed_cultivated   = 'on'
+  body_items.unnamed_uncultivated = 'on'
+  //console.log('body_items',body_items)
+  let form = document.createElement("form");
+    document.getElementsByTagName("body")[0].appendChild(form);
+    form.setAttribute("method", "POST");
+    form.setAttribute("action" , '/taxa/tax_table');
+    
+    for(item in body_items){
+      //console.log('item',item,body_items.item)
+      var i = document.createElement("input");
+      i.type = "hidden";
+      i.name = item;
+      i.id = item;
+      i.value = body_items[item]
+      form.appendChild(i);
+    }
+   
+    form.submit()
+}
 </script>

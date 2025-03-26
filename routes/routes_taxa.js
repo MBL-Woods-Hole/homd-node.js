@@ -198,26 +198,35 @@ router.post('/tax_level', function tax_level_post(req, res) {
 //                 console.log(taxdata[lineage_str].taxcnt)
 //                 console.log(taxdata[lineage_str].gcnt)
 //                 console.log(taxdata[lineage_str].refcnt)
-                
-                   
-                if(count_type == 'both'){
-                   return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wreference + taxdata[lineage_str].taxcnt_wdropped
-                   return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wreference + taxdata[lineage_str].gcnt_wdropped
-                   return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wreference + taxdata[lineage_str].refcnt_wdropped
-                }else if(count_type == 'wdropped'){
-                   return_obj.tax_count = taxdata[lineage_str].taxcnt +  taxdata[lineage_str].taxcnt_wdropped
+                if(count_type == 'wdropped'){
+                   return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wdropped
                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wdropped
                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wdropped
-                }else if(count_type == 'wreference'){
-                   return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wreference
-                   return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wreference
-                   return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wreference
                 }else{
                    return_obj.tax_count = taxdata[lineage_str].taxcnt
                    return_obj.gne_count = taxdata[lineage_str].gcnt
                    return_obj.rrna_count = taxdata[lineage_str].refcnt
-                   return_obj.lineage = lineage_str 
                 }
+                
+                   
+                // if(count_type == 'both'){
+//                    return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wreference + taxdata[lineage_str].taxcnt_wdropped
+//                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wreference + taxdata[lineage_str].gcnt_wdropped
+//                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wreference + taxdata[lineage_str].refcnt_wdropped
+//                 }else if(count_type == 'wdropped'){
+//                    return_obj.tax_count = taxdata[lineage_str].taxcnt +  taxdata[lineage_str].taxcnt_wdropped
+//                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wdropped
+//                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wdropped
+//                 }else if(count_type == 'wreference'){
+//                    return_obj.tax_count = taxdata[lineage_str].taxcnt + taxdata[lineage_str].taxcnt_wreference
+//                    return_obj.gne_count = taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wreference
+//                    return_obj.rrna_count = taxdata[lineage_str].refcnt + taxdata[lineage_str].refcnt_wreference
+//                 }else{
+//                    return_obj.tax_count = taxdata[lineage_str].taxcnt
+//                    return_obj.gne_count = taxdata[lineage_str].gcnt
+//                    return_obj.rrna_count = taxdata[lineage_str].refcnt
+//                    return_obj.lineage = lineage_str 
+//                 }
             }else {
                 return_obj.tax_count = 0
                 return_obj.gne_count = 0
@@ -266,7 +275,7 @@ router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
 router.get('/tax_autoload', function tax_autoload(req, res) {
   //console.log('IN tax_autoload')
   //console.log('req.query',req.query)
-  let cts, lineage,options_obj
+  let cts, lineage, options_obj
   //let myurl = url.parse(req.url, true);
   let id = req.query.id;
   let count_type = req.query.ct
@@ -1764,27 +1773,38 @@ function get_counts(lineage, ctype){
 //             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
 //             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
 
-
-
-    if(ctype === 'both'){
-        txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wreference + cts.taxcnt_wdropped).toString()+'</span>' 
-            + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wreference   + cts.gcnt_wdropped).toString()+'</span>'
-            +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wreference + cts.refcnt_wdropped).toString()+'</span>]';
-    }else if(ctype === 'wdropped'){
+    if(ctype === 'wdropped'){
         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>' 
             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
-
-    }else if(ctype === 'wreference'){
-        txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wreference).toString()+'</span>' 
-            + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wreference).toString()+'</span>'
-            +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wreference).toString()+'</span>]';
-
     }else{
-        txt = "[<span class='red-text'>"+   cts.taxcnt.toString()+'</span>' 
-            + ", <span class='green-text'>"+cts.gcnt.toString()+'</span>'
-            +", <span class='blue-text'>"+  cts.refcnt.toString()+'</span>]';
-    }    
+        txt = "[<span class='red-text'>"+   (cts.taxcnt).toString()+'</span>' 
+            + ", <span class='green-text'>"+(cts.gcnt).toString()+'</span>'
+            +", <span class='blue-text'>"+  (cts.refcnt).toString()+'</span>]';
+
+    } 
+
+   //  if(ctype === 'both'){
+//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wreference + cts.taxcnt_wdropped).toString()+'</span>' 
+//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wreference   + cts.gcnt_wdropped).toString()+'</span>'
+//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wreference + cts.refcnt_wdropped).toString()+'</span>]';
+//     }else if(ctype === 'wdropped'){
+//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>' 
+//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
+//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
+// 
+//     }else if(ctype === 'wreference'){
+//         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wreference).toString()+'</span>' 
+//             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wreference).toString()+'</span>'
+//             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wreference).toString()+'</span>]';
+// 
+//     }else{  // deault
+//         txt = "[<span class='red-text'>"+   cts.taxcnt.toString()+'</span>' 
+//             + ", <span class='green-text'>"+cts.gcnt.toString()+'</span>'
+//             +", <span class='blue-text'>"+  cts.refcnt.toString()+'</span>]';
+//     }    
+    
+    
     return txt
 }
 

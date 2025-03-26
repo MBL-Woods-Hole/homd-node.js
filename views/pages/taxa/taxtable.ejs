@@ -52,6 +52,7 @@ thead th { position: sticky; top: 0; }
      <table id='tax-table' class='table table-hover table-condensed sortable' >
      <thead>
       <tr>
+        
         <th class="col1"><span onclick="('otid')">Taxon-ID</span></th>
         <th class='col2'><span onclick="('genus')">Genus</span></th>
         <th class='col3'><span onclick="('species')">Species</span></th>
@@ -76,7 +77,7 @@ thead th { position: sticky; top: 0; }
        <% otid = list[n].otid %>
        <tr id='<%= otid %>'>
        <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
-       <td class="col1" nowrap ><%= taxidfullname  %></td>
+       <td class="col1" nowrap ><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname  %></a></td>
        <td class="col2" nowrap title='<%= list[n].genus  %>'><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
        <td class="col3" nowrap title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
        <td class="col4" nowrap title='<%= list[n].subsp  %>'><%= list[n].subsp  %></td>
