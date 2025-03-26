@@ -1,12 +1,20 @@
 <style>
 
 
-.taxon_data{
-   font-family: "Lucida Console", "Courier New", monospace;
+.taxon-data{
+   /* font-family: "Lucida Console", "Courier New", monospace; */
+   font-weight:normal;
+}
+.taxon-data a{
+   /* font-family: "Lucida Console", "Courier New", monospace; */
+   font-weight:normal;
+}
+.taxon-bold{
+   /* font-family: "Lucida Console", "Courier New", monospace; */
    font-weight:bold;
 }
-.taxon_data a{
-   font-family: "Lucida Console", "Courier New", monospace;
+.taxon-bold a{
+   /* font-family: "Lucida Console", "Courier New", monospace; */
    font-weight:bold;
 }
 .desc-box{
@@ -241,33 +249,33 @@
 
   </td></tr>
   
-  <tr class='taxon_data'>
-    <td class='tbl-title'>Classification:</td>
-    <td class='taxon_data'>
+  <tr>
+    <td class='taxon-bold tbl-title'>Classification:</td>
+    <td class='taxon-data'>
     <table id='tax_lineage'>
-      <tr><td>Domain:</td>
-      <td class='taxon_data'><a href='life?rank=domain&name=<%= data_lineage.domain %>'><%= data_lineage.domain %></a></td></tr>
-      <tr><td>Phylum:</td>
-      <td class='taxon_data'><a href='life?rank=phylum&name=<%= data_lineage.phylum %>'><%= data_lineage.phylum %></a></td></tr>
-      <tr><td>Class:</td>
-      <td class='taxon_data'>
+      <tr><td class='taxon-bold'>Domain:</td>
+      <td class='taxon-data'><a href='life?rank=domain&name=<%= data_lineage.domain %>'><%= data_lineage.domain %></a></td></tr>
+      <tr><td class='taxon-bold'>Phylum:</td>
+      <td class='taxon-data'><a href='life?rank=phylum&name=<%= data_lineage.phylum %>'><%= data_lineage.phylum %></a></td></tr>
+      <tr><td class='taxon-bold'>Class:</td>
+      <td class='taxon-data'>
         <a href='life?rank=klass&name=<%= data_lineage.klass %>'><%= data_lineage.klass %></a>
 
       </td></tr>
-      <tr><td>Order:</td>
-      <td class='taxon_data'>
+      <tr><td class='taxon-bold'>Order:</td>
+      <td class='taxon-data'>
         <a href='life?rank=order&name=<%= data_lineage.order %>'><%= data_lineage.order %></a>
 
       </td></tr>
       
       
-      <tr><td>Family:</td>
-      <td class='taxon_data'>
+      <tr><td class='taxon-bold'>Family:</td>
+      <td class='taxon-data'>
         <a href='life?rank=family&name=<%= data_lineage.family %>'><%= data_lineage.family %></a>
 
       </td></tr>
-      <tr><td>Genus:</td>
-      <td class='taxon_data'>
+      <tr><td class='taxon-bold'>Genus:</td>
+      <td class='taxon-data'>
         <a href='life?rank=genus&name=<%= data_lineage.genus %>'><%= data_lookup.genus %></a>
         <% if(data_lineage.genus.includes("[")){ %>
           <span class="tooltip" data-tooltip-content="#tooltip_content">
@@ -290,46 +298,46 @@
            </span>
       </div>
       <% if(data_lineage.subspecies){ %>
-        <tr><td>Species:</td><td class='taxon_data'> <a href='life?rank=species&name=<%= data_lineage.species %>'><%= data_lookup.species %></a></td></tr>
-        <tr><td>Subspecies:<br>or Clade:</td><td class='taxon_data'><%= data_lineage.subspecies %></td></tr>
+        <tr><td class='taxon-bold'>Species:</td><td class='taxon-data'> <a href='life?rank=species&name=<%= data_lineage.species %>'><%= data_lookup.species %></a></td></tr>
+        <tr><td class='taxon-bold'>Subspecies:<br>or Clade:</td><td class='taxon-data'><%= data_lineage.subspecies %></td></tr>
       <% }else{ %>
-         <tr><td>Species:</td><td class='taxon_data'><%= data_lookup.species %></td></tr>
+         <tr><td class='taxon-bold'>Species:</td><td class='taxon-data'><%= data_lookup.species %></td></tr>
       <% } %>
       </table>
     </td>
   </tr>
-  <tr><td class='tbl-title'>Bacterial Name:</td>
-        <td class='taxon_data'><i><%= data_lineage.species %></i></td>
+  <tr><td class='taxon-bold tbl-title'>Bacterial Name:</td>
+        <td class='taxon-data'><i><%= data_lineage.species %></i></td>
   </tr>
   
   <% if(msg){ %>
-     <tr><td class='tbl-title'>Notes:</td>
+     <tr><td class='taxon-bold tbl-title'>Notes:</td>
         <td class='red-text'><small><%- msg %></small></td>
      </tr>
   <% } %>
   
   <tr>
-    <td class='tbl-title'>Naming Status:</td>
+    <td class='taxon-bold tbl-title'>Naming Status:</td>
     
-    <td class='taxon_data'><%= data_lookup.naming_status %></td>
+    <td class='taxon-data'><%= data_lookup.naming_status %></td>
   </tr>
   <tr>
-    <td class='tbl-title'>Cultivation Status:</td>
+    <td class='taxon-bold tbl-title'>Cultivation Status:</td>
     
-    <td class='taxon_data'><%= data_lookup.cultivation_status %></td>
+    <td class='taxon-data'><%= data_lookup.cultivation_status %></td>
   </tr>
   <tr>
-    <td class='tbl-title'> Body Site (or source):</td>
-    <td class='taxon_data'><%- sites %></td>
+    <td class='taxon-bold tbl-title'> Body Site (or source):</td>
+    <td class='taxon-data'><%- sites %></td>
     
   </tr>
   
   <tr>
-    <td class='tbl-title'> Type/Reference Strain:</td>
+    <td class='taxon-bold tbl-title'> Type/Reference Strain:</td>
     <% if(data_lookup.status === 'Named') { %>
         <!-- USE type strains -->
        
-        <td class='taxon_data'>
+        <td class='taxon-data'>
         
         <% if(data_lookup.type_strains.length > 0){ %>
            <%- data_lookup.type_strains.join(', ') %>
@@ -343,7 +351,7 @@
         
     <% }else{ %>                                     <!--  if status is Named - Cultured also -->
         <!-- Use Reference Strains -->
-        <td class='taxon_data'>
+        <td class='taxon-data'>
         <% if(data_lookup.ref_strains.length > 0){ %>
            <%- data_lookup.ref_strains.join(', ') %>
         <% } %>
@@ -351,19 +359,19 @@
         </td>
   </tr>
   <tr>
-    <td class='tbl-title'>Former Names or Synonyms:</td>
+    <td class='taxon-bold tbl-title'>Former Names or Synonyms:</td>
     <td>
        <table class='' border='0'>
        <% for(n=0;n<data_lookup.synonyms.length;n++){ %>
-          <tr><td class='taxon_data' style='border:none;padding:0 1px;'><i><%- data_lookup.synonyms[n] %></i></td></tr>
+          <tr><td class='taxon-data' style='border:none;padding:0 1px;'><i><%- data_lookup.synonyms[n] %></i></td></tr>
        <% } %>
        </table>
     
     </td>
   </tr>
   <tr>
-    <td class='tbl-title'>16S rRNA Reference Sequences:</td>
-    <td class='taxon_data'>
+    <td class='taxon-bold tbl-title'>16S rRNA Reference Sequences:</td>
+    <td class='taxon-data'>
     
       <span class='rs-span-2' style='border:1px solid black;padding:1px;'>
       &nbsp;&nbsp;&nbsp;<a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>view in<br>RefSeq tree</a>
@@ -380,7 +388,7 @@
             
             <tr><td class='' style='border:none;padding:0 1px;'>
                
-              RefSeq ID: <span class='rs-span-1 taxon_data'><%= refseqid %></span> <a href='#' class='button' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data_lookup.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= data_lookup.genomes.length %>')">
+              RefSeq ID: <span class='rs-span-1 taxon-data'><%= refseqid %></span> <a href='#' class='button' onclick="get_refseq('<%= taxidfullnameplus %>','<%= refseqid %>','<%= data_lookup.genus %>','<%= refseqname %>','<%= refstrain %>','<%= refgenbank %>','<%= refstatus %>','<%= data_lookup.genomes.length %>')">
               Show Sequence</a>
                
             </td></tr>
@@ -450,8 +458,8 @@
   
   
   <tr>
-    <td class='tbl-title'><a href='/genome/anvio-server'>Pangenome(s)</a>:</td>
-    <td class='taxon_data'>
+    <td class='taxon-bold tbl-title'><a href='/genome/anvio-server'>Pangenome(s)</a>:</td>
+    <td class='taxon-data'>
     <% if(data_lookup.pangenomes.length >0){ %>
     <%   for(n in data_lookup.pangenomes){ %>
            <a href='<%= links.anviserver_link %>/<%= data_lookup.pangenomes[n] %>' target='_blank'><%= data_lookup.pangenomes[n] %></a>
@@ -462,7 +470,7 @@
     </td>
   </tr>
   <tr>
-    <td class='tbl-title'>Microbial Ecology<br><small>(Abundance/Prevalence)</small>:</td>
+    <td class='taxon-bold tbl-title'>Microbial Ecology<br><small>(Abundance/Prevalence)</small>:</td>
     
     <% if(data_lineage.subspecies){ %>
       <% ss = encodeURIComponent(data_lineage.subspecies) %>
@@ -471,7 +479,7 @@
       <% ss = encodeURIComponent(data_lineage.species) %>
       <% rankname = "species" %>
     <% } %>
-      <td class='taxon_data'><a href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance/Prevalence Page for:<br> 
+      <td class='taxon-data'><a href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance/Prevalence Page for:<br> 
          &nbsp;&nbsp;&nbsp;<i><%= data_lineage.species %> <%= data_lineage.subspecies %></i></a>
       </td>
   
@@ -480,13 +488,13 @@
 
   
   <tr>
-    <td class='tbl-title'>Proteomics:</td>
-    <td class='taxon_data'></td>
+    <td class='taxon-bold tbl-title'>Proteomics:</td>
+    <td class='taxon-data'></td>
   </tr>
   
   <tr>
-    <td class='tbl-title'>NCBI Taxon ID:</td>
-    <td class='taxon_data'>
+    <td class='taxon-bold tbl-title'>NCBI Taxon ID:</td>
+    <td class='taxon-data'>
     <% if(data_lookup.ncbi_taxid === "0"){ %>
       Not Available
     <% }else{ %>
@@ -501,8 +509,8 @@
   </tr>
   
   <tr>
-    <td class='tbl-title' title='List of Prokaryotic names with Standing in Nomenclature'>LPSN.dsmz.de:</td>
-    <td class='taxon_data'>
+    <td class='taxon-bold tbl-title' title='List of Prokaryotic names with Standing in Nomenclature'>LPSN.dsmz.de:</td>
+    <td class='taxon-data'>
       <% link = "https://lpsn.dsmz.de/"+links["lpsnlink"] %>
       <% show = data_lineage.species %>
       
@@ -516,8 +524,8 @@
   
   
   <tr>
-    <td class='tbl-title'>PubMed Searches:</td>
-    <td class='taxon_data'>
+    <td class='taxon-bold tbl-title'>PubMed Searches:</td>
+    <td class='taxon-data'>
       <% if(data_lookup.naming_status === 'Named') { %>
          
        <table class='' border='0'>
@@ -536,8 +544,8 @@
     </td>
   </tr>
   <tr>
-    <td class='tbl-title'>Number of<br>Genome Sequences:</td>
-    <td class='taxon_data'>
+    <td class='taxon-bold tbl-title'>Number of<br>Genome Sequences:</td>
+    <td class='taxon-data'>
       
       <% g_length = data_lookup.genomes.length %>
       <% if(g_length === 0){ %>
@@ -549,8 +557,8 @@
     </td>
   </tr>
   <tr>
-    <td class='tbl-title'>Phylogenetic Trees:</td>
-    <td class='taxon_data'>
+    <td class='taxon-bold tbl-title'>Phylogenetic Trees:</td>
+    <td class='taxon-data'>
     <% if(g_length > 0){ %>
       <table class='' border='0'>
           <tr><td style='border:none;padding:0 1px;'><a href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>View in genome tree</a></td></tr>
@@ -577,66 +585,50 @@
 <center>
 <div id='info-table-div'>
 <table id='info-table' border='1'>
-  
-  <tr>
+  <% if(data_info.disease){ %>
+    <tr>
     <td class='taxon-extra-title'>Disease Associations:</td>
     <td class='taxon-extra'>
-    <% if(!data_info.disease){ %>
-      <small>not available</small>
-    <% }else{ %>
       <small><%- data_info.disease %></small>
-    <% } %>
     </td>
-  </tr>
+    </tr>
+  <% } %>
+  <% if(data_info.prev){ %>
   <tr>
     <td class='taxon-extra-title'>Prevalence and Source:</td>
     <td class='taxon-extra'>
-    <% if(!data_info.prev){ %>
-      <small>not available</small>
-    <% }else{ %>
       <small><%- data_info.prev %></small>
-    <% } %>
     </td>
   </tr>
-  
+  <% } %>
+  <% if(data_info.geno){ %>
   <tr>
     <td class='taxon-extra-title'>Genotypic Description:</td>
     <td class='taxon-extra'><small></small>
-    <% if(!data_info.geno){ %>
-      <small>not available</small>
-    <% }else{ %>
       <small><%- data_info.geno %></small>
-    <% } %>
     </td>
   </tr>
+  <% } %>
+  <% if(data_info.pheno){ %>
   <tr>
     <td class='taxon-extra-title'>Phenotypic Characteristics:</td>
     <td class='taxon-extra'>
-    <% if(!data_info.pheno){ %>
-      <small>not available</small>
-    <% }else{ %>
-    <small><%- data_info.pheno %></small>
-    <% } %>
-    
+      <small><%- data_info.pheno %></small>
     </td>
   </tr>
+  <% } %>
+  <% if( data_info.culta){ %>
   <tr>
     <td class='taxon-extra-title'>Cultivability:</td>
     <td class='taxon-extra'>
-    <% if( !data_info.culta){ %>
-      <small>not available</small>
-    <% }else{ %>
-    <small><%- data_info.culta %></small>
-    <% } %>
+      <small><%- data_info.culta %></small>
     </td>
   </tr>
-  
+  <% } %>
+  <% if(data_pubs.pubs && data_pubs.pubs.length >0){ %>
   <tr>
     <td class='taxon-extra-title'>References:</td>
     <td class='taxon-extra'>
-      <% if(!data_pubs.pubs){ %>
-          <small>not available</small>
-      <% }else{ %>
           <table id='pubs-table' border='0'>
           <% for (i in data_pubs.pubs){ %>
             <tr><td>
@@ -644,11 +636,9 @@
             </td></tr>
           <% } %>
           </table>
-          
-      <% } %>
     </td>
   </tr>
-  
+  <% } %>
 </table>
 </div>
 </center>

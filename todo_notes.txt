@@ -12,6 +12,7 @@ DONE - correct counts on home page and link to tt
 - from email (Julian) 'assembly level', 'assembly source', and 'sequencing platform'
 - from email MAG column??
 - taxonTable lineage sort
+- same font on desc page
 ---------------------------------------------
 2022-04-21 mtg
 refseq blast out

@@ -179,7 +179,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
   color:blue;
 }
 .alpha-list{
-   font-family: monospace;
+   font-family: Sans-Serif;
 }
 #filter_form_div{
    border:1px solid black;
