@@ -21,72 +21,37 @@
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
 		<div class='title'><%= page_type %> (Select a Genome)</div>
-			 
-		   
 
-		 	
 <div id='genome_choices'>
-<span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> (<%= page_type %> Server opens in a New Window)
-<br><small>Search by Genome ID, Organism Name or Strain</small><br><br>
-</span>
+  <span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> 
+    <br><small>Search by Genome ID, Organism Name or Strain</small><br><br>
+  </span>
 
 <% if(page_type == "JBrowse"){ %>
-
+  <br>Select a genome (Genome Viewer will open in a new window).
+    <br>
   <select id='selGenome' style='width: 800px;' onchange="open_jbrowse(this.value,'main_menu')">
      <option id='' name='none' value='0'>Search & Select...</option>
      <% for(i in gn){ %>
         <% gc2 = (parseFloat(gn[i].gc)/100).toFixed(2) %>
-		<option id='' name='gnom' value='<%= gn[i].gid %>|<%= gc2 %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].strain %></option>
-	<% } %>
+        <option id='' name='gnom' value='<%= gn[i].gid %>|<%= gc2 %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].strain %></option>
+     <% } %>
   </select>
   
 <% }else{ %>
  
-  <!-- <select id='selGenome' style='width: 800px;' onchange='open_blast_in_new_window(this.value)'> -->
-  
-  
-
-  
   <form id='blast_single_form' name='' method='POST' action='blast_ss_single'>
-  
-  <!-- 
-Annotation:
-  <input type='radio' checked name='annotation' value='prokka'> PROKKA (Default)&nbsp;&nbsp;&nbsp;
-  <input type='radio'         name='annotation' value='ncbi'> NCBI
-  
- -->
-  <input type='hidden' name='annotation' value='prokka'>
-  <br><br>Choose a genome BLAST database.
-  
-  <br>
-  
- <!-- 
- <select id='selGenome' style='width: 800px;' onchange="open_blast_in_new_window(this.value)">
-     <option id='' name='none' value='0'>Search & Select...</option>
-     <% for(i in gn){ %>
-        <option id='' name='gnom' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].genus %> <%= gn[i].species %> <%= gn[i].strain %></option>
-	<% } %>
-  </select>
- -->
- 
- <!--  iFrame  -->
-  <select id='selGenome' name='gid' style='width: 800px;' onchange="this.form.submit()">
+    <input type='hidden' name='annotation' value='prokka'>
+    <br>Select a genome to load a BLAST database.
+    <br>
+    <select id='selGenome' name='gid' style='width: 800px;' onchange="this.form.submit()">
      <option id=''  value='0'>Search & Select...</option>
      <% for(i in gn){ %>
         <option id='' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].organism %></option>
-	<% } %>
-  </select>
-
-  
-  
-  
+     <% } %>
+    </select>
   </form>
     
-
-
-   
-	
-  
 <% } %>
 
 <br/>

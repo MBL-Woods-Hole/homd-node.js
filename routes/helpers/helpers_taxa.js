@@ -27,6 +27,7 @@ module.exports.clean_rank_name_for_show = (rank) =>{
     return rank.charAt(0).toUpperCase() + rank.slice(1)
 }
 
+
 module.exports.get_default_tax_filter = function getDefaultTaxFilter(){
     
     let defaultfilter = {otid:'',status:{},site:{},abund:{}}
@@ -60,8 +61,6 @@ module.exports.get_default_tax_filter = function getDefaultTaxFilter(){
         }
     }
     
-    
-
         defaultfilter.genomes='both'
         defaultfilter.text={
             txt_srch: '',
@@ -74,7 +73,7 @@ module.exports.get_default_tax_filter = function getDefaultTaxFilter(){
     
     return defaultfilter
 }
-module.exports.get_null_filter = function get_null_filter(){
+module.exports.get_null_tax_filter = function get_null_tax_filter(){
     let nullfilter = {
         otid:'',
         status:{
@@ -342,7 +341,7 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
     if(req.session.ttable_filter && req.session.ttable_filter.letter){
        letter = req.session.ttable_filter.letter
     }
-    req.session.ttable_filter = helpers_taxa.get_null_filter()
+    req.session.ttable_filter = helpers_taxa.get_null_tax_filter()
     req.session.ttable_filter.letter = letter
     
     for( let item in req.body){

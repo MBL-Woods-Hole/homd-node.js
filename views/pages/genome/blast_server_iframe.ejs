@@ -51,7 +51,7 @@ button{
             <div class='subtitle' style='padding:10px;'>
           <% }else{ %>
             <!-- <div class='subtitle' style='padding:10px;'>BLAST Against All HOMD Genomes -->
-            &nbsp;&nbsp;&nbsp;<small><a href='/genome/blast_per_genome'>BLAST against a single genome instead.</a></small>
+            &nbsp;&nbsp;&nbsp;<small><a href='/genome/blast_select_genome'>BLAST against a single genome instead.</a></small>
           <% } %>
        <% } %>
        
@@ -88,7 +88,7 @@ button{
        <% if(annotation == "ncbi"){ %>
          <span style='float:right;'>
            <table><tr><td>
-           <a class='button' href="/genome/blast_per_genome"     >Select A Different Genome</a>
+           <a class='button' href="/genome/blast_select_genome"     >Select A Different Genome</a>
            </td><td>
            <form name='' method='POST' action='blast_ss_single'>
              <input type='hidden' name='gid' value='<%= gid %>'>
@@ -103,7 +103,7 @@ button{
        <% }else if(annotation == "prokka"){ %>
          <span style='float:right;'>
            <table><tr><td>
-           <a class='button' href="/genome/blast_per_genome"     >Select A Different Genome</a>
+           <a class='button' href="/genome/blast_select_genome"     >Select A Different Genome</a>
            </td><td>
            <form name='' method='POST' action='blast_ss_single'>
              <input type='hidden' name='gid' value='<%= gid %>'>

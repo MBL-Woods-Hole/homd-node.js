@@ -397,6 +397,7 @@ module.exports.ltrim = function ltrim(x, characters) {
   var end = x.length - 1;
   return x.substr(start);
 }
+
 module.exports.filter_for_phylum = function filter_for_phylum(list, phy){
     //console.log('list[0]',list[0])
     var lineage_list = Object.values(C.taxon_lineage_lookup)
@@ -420,3 +421,16 @@ module.exports.filter_for_phylum = function filter_for_phylum(list, phy){
     gid_obj_list.map( (el) =>{ return el.otid })
     return gid_obj_list
 }
+
+module.exports.filter_for_phylumXX = function filter_for_phylum(obj_list, phylum){
+    //console.log('tlist[0]',tlist[0])
+    //console.log('C.taxon_lineage_lookup',C.taxon_lineage_lookup['1'])
+    let new_obj_list = obj_list.filter(item => {   // filter genome obj list for inclusion in otid list
+        if(C.taxon_lineage_lookup.hasOwnProperty(item.otid) && C.taxon_lineage_lookup[item.otid].phylum == phylum){
+            return true
+        }
+    })
+    return new_obj_list
+}
+
+

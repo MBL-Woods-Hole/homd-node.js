@@ -376,6 +376,99 @@ function toggle_cb_levels(x){
     }
     update_sb()
 }
+function adv_toggle_cb_levels(x){
+    if(x == 'off'){
+        document.getElementById("adv_complete_genome").checked = false;
+        document.getElementById("adv_scaffold").checked = false;
+        document.getElementById("adv_contig").checked = false;
+        document.getElementById("adv_chromosome").checked = false;
+        
+        
+        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_levels('on')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('adv_toggle_cb_levels_span').innerHTML = link_html
+    }else{
+        document.getElementById("adv_complete_genome").checked = true;
+        document.getElementById("adv_scaffold").checked = true;
+        document.getElementById("adv_contig").checked = true;
+        document.getElementById("adv_chromosome").checked = true;
+        
+        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_levels('off')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('adv_toggle_cb_levels_span').innerHTML = link_html
+    }
+    adv_update_sb()
+}
+function adv_toggle_cb_sites(x){
+    if(x == 'off'){
+        document.getElementById("adv_oral").checked = false;
+        document.getElementById("adv_nasal").checked = false;
+        document.getElementById("adv_skinx").checked = false;
+        document.getElementById("adv_gut").checked = false;
+        document.getElementById("adv_vaginal").checked = false;
+        document.getElementById("adv_pathogen").checked = false;
+        document.getElementById("adv_enviro").checked = false;
+        document.getElementById("adv_ref").checked = false;
+        document.getElementById("adv_unassigned").checked = false;
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('on')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html
+    }else{
+        document.getElementById("adv_oral").checked = true;
+        document.getElementById("adv_nasal").checked = true;
+        document.getElementById("adv_skinx").checked = true;
+        document.getElementById("adv_gut").checked = true;
+        document.getElementById("adv_vaginal").checked = true;
+        document.getElementById("adv_pathogen").checked = true;
+        document.getElementById("adv_enviro").checked = true;
+        document.getElementById("adv_ref").checked = true;
+        document.getElementById("adv_unassigned").checked = true;
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('off')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html
+    }
+    adv_update_sb()
+}
+function adv_toggle_cb_abund(x){
+    if(x == 'off'){
+        document.getElementById("adv_high_abund").checked = false;
+        document.getElementById("adv_medium_abund").checked = false;
+        document.getElementById("adv_low_abund").checked = false;
+        document.getElementById("adv_scarce_abund").checked = false;
+        
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('on')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html
+    }else{
+        document.getElementById("adv_high_abund").checked = true;
+        document.getElementById("adv_medium_abund").checked = true;
+        document.getElementById("adv_low_abund").checked = true;
+        document.getElementById("adv_scarce_abund").checked = true;
+        
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('off')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html
+    }
+    adv_update_sb()
+}
+function adv_toggle_cb_status(x){
+    if(x == 'off'){
+        document.getElementById("adv_named_cultivated").checked = false;
+        document.getElementById("adv_named_uncultivated").checked = false;
+        document.getElementById("adv_unnamed_cultivated").checked = false;
+        document.getElementById("adv_unnamed_uncultivated").checked = false;
+        document.getElementById("adv_dropped").checked = false;
+        //document.getElementById("nonoralref").checked = false;
+        
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('on')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('adv_toggle_cb_status_span').innerHTML = link_html
+    }else{
+        document.getElementById("adv_named_cultivated").checked = true;
+        document.getElementById("adv_named_uncultivated").checked = true;
+        document.getElementById("adv_unnamed_cultivated").checked = true;
+        document.getElementById("adv_unnamed_uncultivated").checked = true;
+        document.getElementById("adv_dropped").checked = true;
+        //document.getElementById("nonoralref").checked = true;
+        
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('off')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById('adv_toggle_cb_status_span').innerHTML = link_html
+    }
+    adv_update_sb()
+}
 function update_sb(){ //submit button
     //var form = document.getElementById("tax_filter_form");
     // both gtable and atable??
@@ -385,23 +478,37 @@ function update_sb(){ //submit button
     btn.style.cursor = 'pointer'
     btn.style.fontSize ='14px';
     btn.innerHTML = '** Update Table **'
-    
 }
-function clear_search_txt(){
+function adv_update_sb(){
+    btn = document.getElementById("adv_form_btn");
+    btn.style.color = 'orange'
+    btn.style.background = 'black'
+    btn.style.cursor = 'pointer'
+    btn.style.fontSize ='14px';
+    btn.innerHTML = '** Apply Updated Filter to Table. **'
+}
+function adv_clear_search_txt(){
    txt = document.getElementById("gene_srch_text");
    dd = document.getElementById("field_select");
    if(txt.value !== '' && dd.value !== 'all'){
-     update_sb()
+     adv_update_sb()
    }
    txt.value = ''
    dd.value = 'all'
    
 }
-function clear_phylum(){
+function phylum_submit(phylum){
+   console.log('phylum',phylum)
+   var form = document.getElementById("genome_filter_form");
+   form.submit()
+}
+function adv_clear_phylum(){
    
-   dd = document.getElementById("phylum_select");
+   dd = document.getElementById("adv_phylum_select");
+   console.log('dd',dd)
+   console.log('dd',dd.value)
    if(dd.value !== ''){
-     update_sb()
+     adv_update_sb()
    }
    dd.value = ''
 }

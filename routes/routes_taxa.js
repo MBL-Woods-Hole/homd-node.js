@@ -454,7 +454,7 @@ router.get('/tax_description', function tax_description(req, res){
   // TODO use query here instead of data1,data2....
   // 
   lookup_data = C.taxon_lookup[otid]
-  helpers.print(['lookup_data',lookup_data])
+  //helpers.print(['lookup_data',lookup_data])
  
   //console.log('389')
   //console.log(C.taxon_references_lookup['389'])

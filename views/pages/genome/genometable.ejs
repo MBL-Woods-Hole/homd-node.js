@@ -56,6 +56,8 @@ pagedata {
 </div> 
 
  <%- include("../../partials/genome_table_basic_filter.ejs") %> 
+
+
 <br><%- count_txt %>
 <% if(cfg.DBHOST == "localhost"){ %>
 <br><span style=''><small><b>Localhost</b>
@@ -73,10 +75,10 @@ pagedata {
     <th class='col3' scope='col' >Species Name</th>
     <th class='col4' scope='col' >Strain</th>
     <th class='col5' scope='col' >MAG</th>
-    <th class='col5' title='Assembly Level' scope='col' >Assembly Level</th>
-    <th class='col6' scope='col' >Contigs</th>
-    <th class='col7' scope='col' >Combined<br>Length</th>
-    <th class='col8' scope='col' >GC(%)</th>
+    <th class='col6' title='Assembly Level' scope='col' >Assembly Level</th>
+    <th class='col7' scope='col' >Contigs</th>
+    <th class='col8' scope='col' >Combined<br>Length</th>
+    <th class='col9' scope='col' >GC(%)</th>
     <th class="col10 sorttable_nosort" scope='col' >Genome Info and Tools</th>
     <th class="col11 sorttable_nosort" scope='col' >Annotations</th>
     </tr>
@@ -107,7 +109,7 @@ pagedata {
        
         
         <td class='tax_name' title='<%= ginfo[n].strain %>'><em><%= ginfo[n].strain %></em></td>
-        <td class=''><%= ginfo[n].mag %></td>
+        <td class='center'><%= ginfo[n].mag %></td>
         <td class=''><%= ginfo[n].level %></td>
         <td class='center'><%= ginfo[n].contigs %></td>
         <td class='center'><%= ginfo[n].combined_size %></td>
@@ -156,15 +158,20 @@ pagedata {
        
    
   </div> <!-- end wrapper -->
+<div class="form-popup" id="myAdvancedForm">
+  <%- include("../../partials/genome_table_advanced_filter.ejs") %>
+  <!-- include("../../partials/tax_table_advanced_filter.ejs") -->
+  <!-- include("../partials/tax_table_TEST_filter.ejs") -->
+</div>
 </body>
 
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/genomes.js"></script>
-
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
+
 <script>
     mainmenu()  // function in public/js/menu.js
     var letter = '<%- fltr.letter %>'
@@ -210,5 +217,13 @@ document.onreadystatechange = function() {
                 '#genome-box').style.visibility = "visible";
         }
 };
+function openAdvancedForm() {
+    var form = document.getElementById("myAdvancedForm") //.style.display// = "block";
+    $(form).fadeIn();
+}
+
+function closeAdvancedForm() {
+    document.getElementById("myAdvancedForm").style.display = "none";
+}
 </script>
 

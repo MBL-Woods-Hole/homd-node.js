@@ -42,9 +42,7 @@ thead th { position: sticky; top: 0; }
     
     </button>
  -->
-    <div style='float:right;border:1px solid grey;' class="popup open-button" onclick="openAdvancedForm()">Advanced Filter
-     
-    </div>
+   
      
      <br><span><%= count_txt %></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
      Sorted By: <span id='sortby_notice'><%= statusfltr.sort_col %></span>
@@ -83,8 +81,8 @@ thead th { position: sticky; top: 0; }
        <td class="col3" nowrap title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
        <td class="col4" nowrap title='<%= list[n].subsp  %>'><%= list[n].subsp  %></td>
        
-       <td class="col5"><%= list[n].naming_status  %></td>
-       <td class="col6"><%= list[n].cultivation_status  %></td>
+       <td class="col5" title='<%= list[n].naming_status  %>'><%= list[n].naming_status  %></td>
+       <td class="col6" title='<%= list[n].cultivation_status  %>'><%= list[n].cultivation_status  %></td>
            
        <td class="col7" title='Body Site: <%= list[n].site  %>'><a href='body_sites?otid=<%= otid %>'><%= list[n].site  %></a></small></span></td>
        
@@ -215,32 +213,12 @@ document.onreadystatechange = function() {
         }
 };
 function openAdvancedForm() {
-
- //  var i = document.createElement("div");
-//        i.type = "hidden";
-//        i.name = "hiddenDiv";
-//        i.id = "hiddenDiv";
-//        i.style.width = "100%";
-//        i.style.height = "100%";
-//        i.style.background = "red";
-//        i.style.color = "white";
-//   
-//   
-//   i.addEventListener("click", function(){
-//   
-//     alert('dd')
-//     form.style.display = 'none'; 
-//   })
-//   //document.body.appendChild(i);
-//   document.getElementsByTagName("body")[0].appendChild(i);
-  var form = document.getElementById("myAdvancedForm") //.style.display// = "block";
-  $(form).fadeIn();
-  
-  
+    var form = document.getElementById("myAdvancedForm") //.style.display// = "block";
+    $(form).fadeIn();
 }
 
 function closeAdvancedForm() {
-  document.getElementById("myAdvancedForm").style.display = "none";
+    document.getElementById("myAdvancedForm").style.display = "none";
 }
 </script>
 

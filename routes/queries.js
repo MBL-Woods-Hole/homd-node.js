@@ -151,6 +151,7 @@ module.exports.get_NN_NA = (db, gid, pid) => {
     
     return q
 }
+
 module.exports.get_all_genomes = () => {
     return "SELECT * from `genomesV11.0`"
 }

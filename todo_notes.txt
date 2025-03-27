@@ -1,3 +1,34 @@
+Hi,
+    Julian - Thanks for the help! -- I fixed the issues with the 'Genome Category'
+    that I was using and now use "Assembly Level" as the table column. I also
+    separated out the MAGs into a separate column as you suggested.
+    
+    Floyd - I've add the sorting ability for 'taxon lineage' on the advanced
+    filter for the taxon table page.
+    
+Andy
+
+
+   After our meeting yesterday, here is what I've done so far:
+   
+   1) Fixed up the right side of the main menu (About Us)
+   2) added 'row#' to the header bar of the taxonomy and genome tables.
+   3) added hot links to the HMT-xxx IDs on the taxonomy table.
+   4) Updated the site footer dates.
+   5) Removed the "[site-help]" menu links (rarely used links on per-page basis).
+   6) Turned OFF the default selection for Dropped taxa on the Taxon Table.
+   7) Removed 'Reference' taxon selection on the Dynamic and Rank Level pages.
+   8) Verified that the counts for Tax and Genomes are correct on the Dynamic
+      and Rank Level pages (still not sure about RefSeq counts).
+   9) Added hot links on the main home page from the Tax Table counts to the TaxTable,
+       and corrected the counts for default,only oral and only nasal.
+   10) Removed 'monospace' font from Taxon Description page
+   
+   Still to do:
+   TaxonTable lineage sort
+   Assess email from Julian about genome MAGs etc
+   
+   
 HOMD Notes
 2025-03-25
 DONE-fix right side main menus; "About Us"; 
@@ -9,10 +40,11 @@ DONE- get rid of pg help links
 DONE- turn off dropped taxa as default
 DONE- remove 'reference' from dynamic tree and rank_level
 DONE - correct counts on home page and link to tt
-- from email (Julian) 'assembly level', 'assembly source', and 'sequencing platform'
+- hide taxon disease,genotype,prevalence,cultivability,reference when not available
+- from email (Julian) '*assembly level', 'assembly source', and '*sequencing platform'
 - from email MAG column??
 - taxonTable lineage sort
-- same font on desc page
+Done- same font on desc page
 ---------------------------------------------
 2022-04-21 mtg
 refseq blast out

@@ -109,19 +109,19 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     width:240px;
 }
 #gnom-table .col5 {
-    width: 100px;
-}
-#gnom-table .col6 {
-    width: 60px;
-}
-#gnom-table .col7 {
-    width: 70px;
-}
-#gnom-table .col8 {
     width: 50px;
 }
+#gnom-table .col6 {
+    width: 120px;
+}
+#gnom-table .col7 {
+    width: 50px;
+}
+#gnom-table .col8 {
+    width: 70px;
+}
 #gnom-table .col9{
-   width: 60px;
+   width: 50px;
 }
 #gnom-table .col10{
    width: 300px;
