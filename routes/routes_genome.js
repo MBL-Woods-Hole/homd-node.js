@@ -523,7 +523,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
     const mid = req.body.mid
     const contig = req.body.contig
     let q = queries.get_contig(gid,contig)
-    console.log('contig query',q)
+    //console.log('contig query',q)
     let html='',length = 0
     TDBConn.query(q, (err, rows) => {
         if (err) {
@@ -539,11 +539,11 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
            //console.log('seqstr',seqstr)
            //console.log(seqstr.length)
            const arr = helpers.chunkSubstr(seqstr, 100)
-           console.log('arr[0]',arr[0])
+           //console.log('arr[0]',arr[0])
            html += arr.join('<br>')
            //html = seqstr
         }
-        console.log('html:',html.substring(0,8))
+        //console.log('html:',html.substring(0,8))
         res.send(JSON.stringify({html:html,length:length}))
      })
 
