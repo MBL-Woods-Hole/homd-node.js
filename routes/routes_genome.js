@@ -534,7 +534,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
         if(rows.length === 0){
            html += "No sequence found in database"
         }else{
-           length = rows[0].seq.length
+           //length = rows[0].seq.length
            const seqstr = (rows[0].seq).toString()
            //console.log('seqstr',seqstr)
            //console.log(seqstr.length)
@@ -543,7 +543,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
            //html = seqstr
         }
     
-        res.send(JSON.stringify({html:html,length:length}))
+        res.send(JSON.stringify({html:html}))
      })
 
 })

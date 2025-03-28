@@ -254,12 +254,7 @@ function get_contig_seq(gid, mid, type) {
         const resp = JSON.parse(xmlhttp.responseText);
         //console.log(resp)
         text = ''
-        var leng = resp.length
-        var length = ''
-        if(leng !== 0){
-           var length = ' | length: '+leng.toString()
-        }
-        //console.log('len',length)
+        
 
         
         text = '<pre>'
@@ -269,7 +264,7 @@ function get_contig_seq(gid, mid, type) {
 
         text += resp.html
         text += '</pre>'
-        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=800,height=300");
+        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300");
         var doc = win.document;
         //doc.writeln("<title>yourtitle</title>");
         //doc.title = 'eHOMD Reference Sequence'
