@@ -530,10 +530,21 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
           console.log(err)
           return
         }
-        let seq = rows[0].seq.toString()
-        console.log('se',seq)
-        res.send(seq)
-    })
+        //let seq = rows[0].seq.toString()
+        if(rows.length === 0){
+           html += "No sequence found in database"
+        }else{
+           length = rows[0].seq.length
+           const seqstr = (rows[0].seq).toString()
+           //console.log('seqstr',seqstr)
+           //console.log(seqstr.length)
+           const arr = helpers.chunkSubstr(seqstr, 100)
+           html += arr.join('<br>')
+           //html = seqstr
+        }
+    
+        res.send(JSON.stringify({html:html,length:length}))
+     })
 
 })
 // router.post('/get_16s_seq', function get16sSeqPost (req, res) {

@@ -250,21 +250,33 @@ function get_contig_seq(gid, mid, type) {
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        var resp = xmlhttp.responseText;
-        //console.log(defline)
+
+        const resp = JSON.parse(xmlhttp.responseText);
+        //console.log(resp)
         text = ''
-        text += '<pre>'+defline+'<br>'
-        //text = '<pre>'
-        text += resp
+        var leng = resp.length
+        var length = ''
+        if(leng !== 0){
+           var length = ' | length: '+leng.toString()
+        }
+        //console.log('len',length)
+
+        
+        text = '<pre>'
+        
+        text += '>' + gid +' | ' + contig + '\n'
+        
+
+        text += resp.html
         text += '</pre>'
-    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
-    var doc = win.document;
-    //doc.writeln("<title>yourtitle</title>");
-    //doc.title = 'eHOMD Reference Sequence'
-    doc.open("text/html");
+        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=800,height=300");
+        var doc = win.document;
+        //doc.writeln("<title>yourtitle</title>");
+        //doc.title = 'eHOMD Reference Sequence'
+        doc.open("text/html");
   
-    doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
-    doc.close();
+        doc.write("<title>eHOMD Contig Sequence</title>"+text);
+        doc.close();
       }
     }
     xmlhttp.send(JSON.stringify(args));
@@ -343,14 +355,14 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
 
         text += resp.html
         text += '</pre>'
-    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=800,height=300");
-    var doc = win.document;
-    //doc.writeln("<title>yourtitle</title>");
-    //doc.title = 'eHOMD Reference Sequence'
-    doc.open("text/html");
+        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=800,height=300");
+        var doc = win.document;
+        //doc.writeln("<title>yourtitle</title>");
+        //doc.title = 'eHOMD Reference Sequence'
+        doc.open("text/html");
   
-    doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
-    doc.close();
+        doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
+        doc.close();
       }
     }
     xmlhttp.send(JSON.stringify(args));
