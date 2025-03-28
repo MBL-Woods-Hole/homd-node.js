@@ -398,31 +398,31 @@ module.exports.ltrim = function ltrim(x, characters) {
   return x.substr(start);
 }
 
-module.exports.filter_for_phylum = function filter_for_phylum(list, phy){
-    //console.log('list[0]',list[0])
-    var lineage_list = Object.values(C.taxon_lineage_lookup)
-    var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
-    //console.log('obj_lst[0]',obj_lst[0])
-    var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
-        return el.otid
-    })
-    //console.log('otid_list.length',otid_list.length)
-    let otid_grabber = {}
-    let gid_obj_list = list.filter(item => {   // filter genome obj list for inclusion in otid list
-        if(otid_list.indexOf(item.otid.toString()) !== -1){
-            otid_grabber[item.otid] = 1
-            return true
-        }
-        //return otid_list.indexOf(item.otid) !== -1
-    })
-    //console.log('otid_grabber',otid_grabber)
-    //console.log('gid_obj_list',gid_obj_list)
-    // now get just the otids from the selected gids
-    gid_obj_list.map( (el) =>{ return el.otid })
-    return gid_obj_list
-}
+// module.exports.filter_for_phylumXX = function filter_for_phylum(list, phy){
+//     //console.log('list[0]',list[0])
+//     var lineage_list = Object.values(C.taxon_lineage_lookup)
+//     var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
+//     //console.log('obj_lst[0]',obj_lst[0])
+//     var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
+//         return el.otid
+//     })
+//     //console.log('otid_list.length',otid_list.length)
+//     let otid_grabber = {}
+//     let gid_obj_list = list.filter(item => {   // filter genome obj list for inclusion in otid list
+//         if(otid_list.indexOf(item.otid.toString()) !== -1){
+//             otid_grabber[item.otid] = 1
+//             return true
+//         }
+//         //return otid_list.indexOf(item.otid) !== -1
+//     })
+//     //console.log('otid_grabber',otid_grabber)
+//     //console.log('gid_obj_list',gid_obj_list)
+//     // now get just the otids from the selected gids
+//     gid_obj_list.map( (el) =>{ return el.otid })
+//     return gid_obj_list
+// }
 
-module.exports.filter_for_phylumXX = function filter_for_phylum(obj_list, phylum){
+module.exports.filter_for_phylum = function filter_for_phylum(obj_list, phylum){
     //console.log('tlist[0]',tlist[0])
     //console.log('C.taxon_lineage_lookup',C.taxon_lineage_lookup['1'])
     let new_obj_list = obj_list.filter(item => {   // filter genome obj list for inclusion in otid list

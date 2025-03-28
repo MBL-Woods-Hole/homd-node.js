@@ -81,9 +81,7 @@ module.exports.get_null_tax_filter = function get_null_tax_filter(){
             named_uncultivated:'off',
             unnamed_cultivated: 'off',
             unnamed_uncultivated: 'off',
-            dropped:'off',
-            //nonoralref:'off'
-            
+            dropped:'off'
         },
         site:{
            oral:'off',
@@ -450,26 +448,16 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
         //console.log('item',item)
         combo = (item.naming_status.split(/(\s+)/)[0] +'_'+item.cultivation_status.split(/(\s+)/)[0]).toLowerCase()
         
-        if(item.status =='Dropped'){ // || item.naming_status =='NonOralRef'){
+        if(item.status.toLowerCase() =='dropped'){ 
             combo = item.naming_status.toLowerCase()
         }
         //console.log('combo',combo)
-        if(status_on.indexOf('dropped') != -1 && item.status =='Dropped'){
+        if(status_on.indexOf('dropped') != -1 && item.status.toLowerCase() =='dropped'){
             return item
         }else if(status_on.indexOf(combo) !==-1 ){  //818
-            //if(vals.status.nonoralref == 'off' && item.status == 'NonOralRef'){
-            //if(vals.status.nonoralref == 'on' || item.status != 'NonOralRef'){
-            
-            //}else{
                return item
-            //}
-            
         }
-        // else if(item.status == 'NonOralRef' && vals.status.nonoralref == 'on'){
-//             return item
-//         }else if(item.status == 'Dropped' && vals.status.dropped == 'on'){
-//             return item
-//         }
+        
     })
     //console.log('big_tax_list.length-2',big_tax_list.length)
     //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
@@ -577,7 +565,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
         // Is abundance the only thing on the ecology page?
         
         
-        if(el.status != 'Dropped'){
+        if(el.status.toLowerCase() != 'dropped'){
               el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || ''
               var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
               //console.log(el)

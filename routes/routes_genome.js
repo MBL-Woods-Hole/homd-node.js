@@ -31,13 +31,13 @@ router.get('/overview', function overview(req, res) {
 
 function renderGenomeTable(req, res, args) {
     //console.log('render NEW filter') 
-    let alltax_list = Object.values(C.taxon_lookup)  //.filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+    let alltax_list = Object.values(C.taxon_lookup)  
     let taxa_wgenomes = alltax_list.filter(item => item.genomes.length >0)
     let gcount = 0
     for(let n in alltax_list){
        gcount +=  alltax_list[n].genomes.length
     }
-    //let alltax_list = Object.values(C.genome_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+    
     //console.log('args.filter_on',args.filter_on)
     res.render('pages/genome/genometable', {
         title: 'HOMD :: Genome Table', 
@@ -71,7 +71,7 @@ function get_default_annot_filter(){
 
 
 function get_taxa_wgenomes(){
-    let alltax_list = Object.values(C.taxon_lookup).filter(item => (item.status !== 'Dropped' && item.status !== 'NonOralRef'))
+    let alltax_list = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped'))
     let taxa_wgenomes = alltax_list.filter(item => item.genomes.length >0)
     return taxa_wgenomes
 }

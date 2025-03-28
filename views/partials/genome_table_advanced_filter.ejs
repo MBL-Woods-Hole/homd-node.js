@@ -130,9 +130,7 @@ and (min-width : 1224px) {
 		   
 		
 		}
-		.dropdown{
-		   font-size:12px;
-		}
+		
 }
 
 /* Large screens ----------- */
@@ -194,7 +192,7 @@ and (min-width : 1824px) {
 		   
 		
 		}
-		.dropdown{
+		.adv_dropdown{
 		   font-size:18px;
 		}
 }
@@ -265,7 +263,7 @@ and (min-width : 1824px) {
     <td class=''>
         
         <span class='adv-filter-title'>Genomes by Phylum:</span>
-        <select id='adv_phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onclick='adv_update_sb()'>
+        <select id='adv_phylum_select' placeholder="Select a Phylum" class='adv_dropdown' name='phylum' onclick='adv_update_sb()'>
         <optgroup>
           <option value=''>Select a Phylum</option>
           <% for(n in phyla) { %>
@@ -320,7 +318,7 @@ and (min-width : 1824px) {
         
         <span class='adv-filter-title'>Search This Table:</span>
         <span class="">
-          <select class='dropdown' id='field_select' value='<%= fltr.text.field %>' class="" name='field' onclick='adv_update_sb()'>
+          <select class='adv_dropdown' id='field_select' value='<%= fltr.text.field %>' class="" name='field' onclick='adv_update_sb()'>
             <optgroup>
             <option value='all'>All Fields</option>
             <option value='genomeid'>Genome-ID</option>
@@ -330,7 +328,7 @@ and (min-width : 1824px) {
             </optgroup>
           </select>
           <span class='button' onclick='adv_clear_search_txt()'>Clear</span>
-          <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='dropdown' name='txt_srch' maxlength='100' size='25' onclick='adv_update_sb()'>
+          <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='adv_dropdown' name='txt_srch' maxlength='100' size='25' onclick='adv_update_sb()'>
         </span>
         
     </td>

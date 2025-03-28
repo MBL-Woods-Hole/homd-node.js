@@ -7,7 +7,10 @@ constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // JBROWSE if you wan
 constants.rRNA_refseq_version    = '16.0'  //'15.23'
 constants.genomic_refseq_version = '11.0'  //'10.1'
 constants.homd_taxonomy_version = '4.0'  // Used on title page
-constants.use_cluster = false
+
+constants.genomes_table_name = 'genomesV11.0'
+constants.genomes_prokka_table_name = 'genomes_prokkaV11.0'
+constants.genomes_ncbi_table_name = 'genomes_ncbiV11.0'
 constants.user_security_levels = {
     '1': 'Administrator',
     '50': 'Regular User',

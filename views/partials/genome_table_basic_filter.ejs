@@ -68,17 +68,21 @@
 }
 .advanced-filter-btn{
    
-   padding: 0px 4px;
+   padding: 3px 4px 2px 4px;
    text-align: center;
    text-decoration: none;
    display: inline-block;
    margin: 0px 0px;
+   
    cursor: pointer;
    font-size: 14px;
    border-radius: 16px;
    background-color: brown;
    border: 1px solid black;
    color: white;
+}
+.dropdown{
+   font-size:12px;
 }
 </style>
 
@@ -100,7 +104,9 @@
             </small>
     </div>
     <br>
-<small>
+    <div class='alpha-select' >
+    
+        <small>
         <span class='filter-title'>Genomes by Phylum:</span>
         <br>
         <select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onchange='phylum_submit(this.value)'>
@@ -115,8 +121,8 @@
           <% } %>
         </optgroup>
         </select>
-        
         </small>
+    </div>
 </td><td valign='top'> 
    
     <div id='reset_div' >
@@ -128,7 +134,7 @@
 <tr>
     <td class=''>
        <center>
-         <span style='float:right;' class="advanced-filter-btn" onclick="openAdvancedForm()">Open Advanced Table Filter</span>
+         <span style='float:right;' class="advanced-filter-btn" onclick="openAdvancedForm()">Open Advanced Filter</span>
        </center>
     </td>
     <td class=''>

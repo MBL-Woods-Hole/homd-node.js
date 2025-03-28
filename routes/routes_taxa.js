@@ -420,6 +420,7 @@ router.get('/tax_description', function tax_description(req, res){
            }
          }
          
+         //DROPPED-DROPPED
          res.render('pages/taxa/taxdesc', {
             title: 'HOMD :: Taxon Info', 
             pgname: 'taxon/description', // for AbountThisPage
@@ -512,7 +513,7 @@ router.get('/tax_description', function tax_description(req, res){
                 sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
                }
             }
-          //console.log('pangenome_link',links.pangenomes)
+          console.log('refseq',refseq)
           res.render('pages/taxa/taxdesc', {
             title: 'HOMD :: Taxon Info', 
             pgname: 'taxon/description', // for AbountThisPage

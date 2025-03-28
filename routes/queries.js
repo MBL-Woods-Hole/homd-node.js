@@ -3,17 +3,19 @@
 // const CFG = require(app_root + '/config/config')
 // const fs = require('fs-extra')
 // const path = require('path')
-// const C = require(app_root + '/public/constants')
+const C = require(app_root + '/public/constants')
 // const helpers = require(app_root + '/routes/helpers/helpers')
 
 module.exports.get_refseq_query = (refid) => {
-  let qSelectRefseq = 'SELECT UNCOMPRESS(seq_trim9) as seq from taxon_refseqid '
-  qSelectRefseq += " WHERE refseqid='" + refid + "'"
+  let qSelectRefseq = 'SELECT UNCOMPRESS(seq_compressed) as seq from 16S_refseq '
+  qSelectRefseq += " WHERE seq_id='" + refid + "'"
 
   return qSelectRefseq
 }
 module.exports.get_refseq_metadata_query = (otid) => {
-  let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
+  // let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
+//   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
+  let qSelectRefseqInfo = 'SELECT seq_id,species from 16S_refseq '
   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
 
   return qSelectRefseqInfo
@@ -113,12 +115,14 @@ module.exports.get_lineage_query = (otid) => {
 //   return qSelectAnno
 // }
 module.exports.get_peptide = () => {
+/// USING Ver 3.1
     let qSelectPeptide = "SELECT `genomes`.otid, study_id, seq_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
     qSelectPeptide += " JOIN `genomes` using (seq_id)"
     
     return qSelectPeptide
 }
 module.exports.get_peptide2 = () => {
+/// USING Ver 3.1
     let q = "SELECT seq_id, `genomes`.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
     q += " JOIN `genomes` using (seq_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
@@ -126,6 +130,7 @@ module.exports.get_peptide2 = () => {
     return q
 }
 module.exports.get_peptide3 = (gid) => {
+    /// USING Ver 3.1
     let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,`genomes`.otid,product,peptide,jb_link,protein_peptide.study_id,study_name"
     q += " FROM protein_peptide"
     q += " JOIN protein_peptide_counts using (seq_id)"
@@ -153,21 +158,23 @@ module.exports.get_NN_NA = (db, gid, pid) => {
 }
 
 module.exports.get_all_genomes = () => {
-    return "SELECT * from `genomesV11.0`"
+    return "SELECT * from `"+C.genomes_table_name+"`"
 }
 module.exports.get_genome = (gid) => {   // always NCBI for taxon description
   // data for genome description
   // NCBI Fields
   // fields = ['organism','assembly_level', 'assembly_method', 'bioproject', 'biosample', 'submission_date', 'geo_loc_name', 'isolation_source', 'status', 'seqtech', 'submitter', 'GC',  'coverage', 'contigs', 'combined_size', 'ANI', 'checkM_completeness', 'checkM_percentile', 'checkM_contamination', 'taxid', 'refseq_assembly', 'WGS']
- 
-  let qSelectGenome = "SELECT `genomesV11.0`.strain,`genomes_prokkaV11.0`.organism,`genomesV11.0`.contigs,`genomesV11.0`.combined_size,`genomesV11.0`.MAG,`genomesV11.0`.GC,`genomesV11.0`.url, "
-        qSelectGenome +=' bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,'
-        qSelectGenome +=' submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_percentile,checkM_contamination,refseq_assembly,WGS,'
-        qSelectGenome +=' `genomes_prokkaV11.0`.contigs as prokka_contigs,`genomes_prokkaV11.0`.CDS as prokka_CDS,`genomes_prokkaV11.0`.gene as prokka_gene,`genomes_prokkaV11.0`.mRNA as prokka_mRNA,`genomes_prokkaV11.0`.misc_RNA as prokka_misc_RNA,`genomes_prokkaV11.0`.rRNA as prokka_rRNA,`genomes_prokkaV11.0`.tRNA as prokka_tRNA,`genomes_prokkaV11.0`.tmRNA as prokka_tmRNA'
+  let tbl = C.genomes_table_name
+  let ntbl = C.genomes_ncbi_table_name
+  let ptbl = C.genomes_prokka_table_name
+  let qSelectGenome = "SELECT `"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url, "
+        qSelectGenome +=" bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,"
+        qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_percentile,checkM_contamination,refseq_assembly,WGS,"
+        qSelectGenome +=" `"+ptbl+"`.contigs as prokka_contigs,`"+ptbl+"`.CDS as prokka_CDS,`"+ptbl+"`.gene as prokka_gene,`"+ptbl+"`.mRNA as prokka_mRNA,`"+ptbl+"`.misc_RNA as prokka_misc_RNA,`"+ptbl+"`.rRNA as prokka_rRNA,`"+ptbl+"`.tRNA as prokka_tRNA,`"+ptbl+"`.tmRNA as prokka_tmRNA"
         
-        qSelectGenome +=' FROM `genomesV11.0`'
-        qSelectGenome +=" left JOIN `genomes_prokkaV11.0` using(genome_id)"
-        qSelectGenome +=" left JOIN `genomes_ncbiV11.0` using(genome_id)"
+        qSelectGenome +=" FROM `"+tbl+"`"
+        qSelectGenome +=" left JOIN `"+ptbl+"` using(genome_id)"
+        qSelectGenome +=" left JOIN `"+ntbl+"` using(genome_id)"
         qSelectGenome +=" WHERE genome_id = '"+gid+"'"
   
 
