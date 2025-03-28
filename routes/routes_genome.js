@@ -524,7 +524,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
     const contig = req.body.contig
     let q = queries.get_contig(gid,contig)
     console.log('contig query',q)
-    let html
+    let html,length = 0
     TDBConn.query(q, (err, rows) => {
         if (err) {
           console.log(err)
@@ -534,7 +534,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
         if(rows.length === 0){
            html += "No sequence found in database"
         }else{
-           let length = rows[0].seq.length
+           length = rows[0].seq.length
            const seqstr = (rows[0].seq).toString()
            //console.log('seqstr',seqstr)
            //console.log(seqstr.length)
