@@ -534,16 +534,17 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
         if(rows.length === 0){
            html += "No sequence found in database"
         }else{
-           //length = rows[0].seq.length
+           length = rows[0].seq.toString().length
            const seqstr = (rows[0].seq).toString()
            //console.log('seqstr',seqstr)
            //console.log(seqstr.length)
            const arr = helpers.chunkSubstr(seqstr, 100)
+           console.log('arr[0]',arr[0])
            html += arr.join('<br>')
            //html = seqstr
         }
-        console.log('html',html)
-        res.send(JSON.stringify({html:html}))
+        
+        res.send(JSON.stringify({html:html,length:length}))
      })
 
 })
