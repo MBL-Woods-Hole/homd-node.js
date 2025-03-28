@@ -521,7 +521,8 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
     helpers.print(req.body)
     const gid = req.body.gid
     const mid = req.body.mid
-    let q = queries.get_contig(gid,mid)
+    const contig = req.body.contig
+    let q = queries.get_contig(gid,contig)
     console.log('contig query',q)
     let html
     TDBConn.query(q, (err, rows) => {

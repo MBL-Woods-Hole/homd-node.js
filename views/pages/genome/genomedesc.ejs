@@ -144,7 +144,7 @@
           <small>
           [<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc_single')">Open in Genome Viewer</a>]
           &nbsp;&nbsp;[<a href='#' onclick="open_ncbi('single')">Linkout to NCBI</a>]
-          &nbsp;&nbsp;[<a href='#' onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[n].contig %>')">Show Sequence</a>]
+          &nbsp;&nbsp;[<a href='#' onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[0].contig %>','single')">Show Sequence</a>]
           </small>
        <% }else{ %>
           <%= ginfo.contigs %>
@@ -156,6 +156,7 @@
           <small>
           [<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>]
           &nbsp;&nbsp;[<a href='#' onclick="open_ncbi('select')">Linkout to NCBI</a>]
+          &nbsp;&nbsp;[<a href='#' onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[0].contig %>','select')">Show Sequence</a>]
           </small>
        <% } %>
     </span></td></tr>
