@@ -252,11 +252,10 @@ function get_contig_seq(gid, mid, type) {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 
         const resp = JSON.parse(xmlhttp.responseText);
-        //console.log(resp)
+        console.log(resp.substring(0,8))
         
         text = '<pre>'
-        text += defline +' | Length: '+resp.length.toString()+ "\n"
-        text += resp.html
+        text += defline +' | Length: '+resp.length.toString()+ " bp\n"+resp.html
         text += '</pre>'
         var win = window.open("Contig Sequence", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300");
         var doc = win.document;
@@ -334,7 +333,7 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
         text = '<pre>'
         //text += '>'+product+' | '+mol+' | '+ org +'\n'
         //if(type === 'prokka'){
-            text += '>' + gid +'| Protein ID: ' + pid +' | ' + product + ' | ' + org + length + '\n'
+            text += '>' + gid +'| Protein ID: ' + pid +' | ' + product + ' | ' + org + length + ' bp\n'
         //}else{
          //    text += '>' + mol + ' | ' + product + ' | '+ org + length + '\n'
         //}
