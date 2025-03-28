@@ -255,16 +255,11 @@ function get_contig_seq(gid, mid, type) {
         //console.log(resp)
         
         text = '<pre>'
-        
-        text += defline +' | Length: '+resp.length.toString()
-        
-
+        text += defline +' | Length: '+resp.length.toString()+ "\n"
         text += resp.html
         text += '</pre>'
-        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300");
+        var win = window.open("Contig Sequence", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300");
         var doc = win.document;
-        //doc.writeln("<title>yourtitle</title>");
-        //doc.title = 'eHOMD Reference Sequence'
         doc.open("text/html");
   
         doc.write("<title>eHOMD Contig Sequence</title>"+text);
