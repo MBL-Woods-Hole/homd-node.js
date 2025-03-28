@@ -303,7 +303,7 @@ module.exports.print = function print(thing) {
     // console.log only if development
     // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
     let date = new Date().toISOString()
-    if(CFG.ENV != 'production') {
+    if(CFG.ENV == 'localhost' ) {
         console.log('\x1b[31m%s\x1b[0m',date, thing)  
     }
     

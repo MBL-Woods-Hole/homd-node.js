@@ -55,17 +55,13 @@
 .field{
   background:#959FAC;  /* 9ca590; */
   font-weight:bold;
+  vertical-align: center;
+  
 }
 .value{
   background:#ACA195;  /*  #d0edef;  */
-  
 }
-.value span{
- 
-}
-.inner-value{
-   
-}
+
 .gd-button{
   background-color: lightgrey;
   color: black;
@@ -78,6 +74,15 @@
 }
 #header_buttons{
    padding:5px 0;
+}
+.contig-table td{
+   border:0px solid black;
+}
+.contig-table td li{
+   padding:2px;
+}
+.contig-span{
+   margin-top:2px;
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -138,26 +143,41 @@
     <tr class=""><td class='field'>Contigs</td>
     <td class='value'><span class='inner-value'>
        <% if(contigs.length == 0){ %>
-          <%= ginfo.contigs %> (localhost only) <!-- localhost only -->
+          <%= ginfo.contigs %> No Contigs Found<!-- localhost only -->
        <% } else if(contigs.length == 1){ %>
-          <span id='select-contig'><%= contigs[0].contig %></span>
-          <small>
-          [<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc_single')">Open in Genome Viewer</a>]
-          &nbsp;&nbsp;[<a href='#' onclick="open_ncbi('single')">Linkout to NCBI</a>]
-          &nbsp;&nbsp;[<a href='#' onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[0].contig %>','single')">Show Sequence</a>]
-          </small>
+          <table class='contig-table' style='border:2px solid red;'><tr>
+          <td>
+            One Contig Found<br>
+            <span class='contig-span' id='select-contig'><%= contigs[0].contig %></span>
+          </td>
+          <td>
+            <small>
+            <li>[<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc_single')">Open in Genome Viewer</a>]
+            <li>[<a href='#' onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[0].contig %>','single')">Show Sequence</a>]
+            <li>[<a href='#' onclick="open_ncbi('single')">Linkout to NCBI</a>]
+            </small>
+          </td></tr>
+          </table>
        <% }else{ %>
-          <%= ginfo.contigs %>
-          <select id='select-contig' style='width: 200px;'>
-          <% for(n in contigs){ %>
-             <option value='<%= contigs[n].contig %>|<%= contigs[n].gc %>'><%= contigs[n].contig %></option>
-          <% } %>
-          </select>
-          <small>
-          [<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>]
-          &nbsp;&nbsp;[<a href='#' onclick="open_ncbi('select')">Linkout to NCBI</a>]
-          &nbsp;&nbsp;[<a href='#' onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[0].contig %>','select')">Show Sequence</a>]
-          </small>
+          
+          <table class='contig-table' border='0'><tr>
+          <td>
+            <small>Number of Contigs: <%= ginfo.contigs %></small><br>
+            <select  class='contig-span' id='select-contig' >
+              <% for(n in contigs){ %>
+               <option value='<%= contigs[n].contig %>|<%= contigs[n].gc %>'><%= contigs[n].contig %></option>
+              <% } %>
+            </select>
+          </td>
+          <td>
+            <small>
+            <li>[<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open in Genome Viewer</a>]
+            <li>[<a href='#' onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[0].contig %>','select')">Show Sequence</a>]
+            <li>[<a href='#' onclick="open_ncbi('select')">Linkout to NCBI</a>]
+            </small>
+          </td></tr>
+          </table>
+          
        <% } %>
     </span></td></tr>
     

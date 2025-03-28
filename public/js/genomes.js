@@ -257,7 +257,7 @@ function get_contig_seq(gid, mid, type) {
         text = '<pre>'
         text += defline +' | Length: '+resp.length.toString()+ " bp\n"+resp['html']
         text += '</pre>'
-        var win = window.open("Contig Sequence", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300");
+        var win = window.open("Contig Sequence", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=1");
         var doc = win.document;
         doc.open("text/html");
   
@@ -341,7 +341,7 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
 
         text += resp.html
         text += '</pre>'
-        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=800,height=300");
+        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=1");
         var doc = win.document;
         //doc.writeln("<title>yourtitle</title>");
         //doc.title = 'eHOMD Reference Sequence'
