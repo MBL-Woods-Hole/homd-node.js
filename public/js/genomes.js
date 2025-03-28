@@ -235,16 +235,16 @@ function toggle_options(){
 function get_contig_seq(gid, mid, type) {
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
-    if(type == 'single'){
-       contig = document.getElementById("select-contig").innerHTML
-    }else{
-       contig = document.getElementById("select-contig").value
-    }
+    //if(type == 'single'){
+       //contig = document.getElementById("select-contig").innerHTML
+    //}else{
+       contig = document.getElementById("select-contig").value.split('|')[0]
+    //}
     args={}
     args.gid = gid
     args.mid = mid
     args.contig = contig
-    defline = '>'+gid+' | '+mid
+    defline = '>'+gid+' | '+contig
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/get_contig_seq", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
@@ -253,8 +253,8 @@ function get_contig_seq(gid, mid, type) {
         var resp = xmlhttp.responseText;
         //console.log(defline)
         text = ''
-        //text += '<pre>'+defline+'<br>'
-        text = '<pre>'
+        text += '<pre>'+defline+'<br>'
+        //text = '<pre>'
         text += resp
         text += '</pre>'
     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
