@@ -256,7 +256,7 @@ function get_contig_seq(gid, mid, type) {
         
         text = '<pre>'
         
-        text += defline +' | Length: '+resp.length.toString()+ '\n'
+        text += defline +' | Length: '+resp.length.toString()
         
 
         text += resp.html
