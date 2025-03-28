@@ -253,13 +253,10 @@ function get_contig_seq(gid, mid, type) {
 
         const resp = JSON.parse(xmlhttp.responseText);
         //console.log(resp)
-        text = ''
-        
-
         
         text = '<pre>'
         
-        text += '>' + gid +' | ' + contig + '\n'
+        text += defline + '\n'
         
 
         text += resp.html
