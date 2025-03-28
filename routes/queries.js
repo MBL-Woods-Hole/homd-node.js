@@ -179,7 +179,7 @@ module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
 }
 module.exports.get_contig = (gid, mid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
-  let qSelectContigs = "SELECT UNCOMPRESS(seq_compressed) from `NCBI_contig`.`contig_seq` WHERE genome_id = '"+gid+"' and mol_id='"+mid+"'"
+  let qSelectContigs = "SELECT UNCOMPRESS(seq_compressed) as seq from `NCBI_contig`.`contig_seq` WHERE genome_id = '"+gid+"' and mol_id='"+mid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj

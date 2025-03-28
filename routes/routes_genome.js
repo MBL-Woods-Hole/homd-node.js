@@ -530,7 +530,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
           console.log(err)
           return
         }
-        let seq = rows[0]
+        let seq = str(rows[0].seq)
         console.log('se',seq)
         res.send(seq)
     })
