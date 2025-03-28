@@ -517,40 +517,57 @@ router.get('/genome_description', function genomeDescription (req, res) {
      } // end else
   })// end TDBConn.query(q_genome)
 })
+router.post('/get_contig_seq', function get_contig_seq (req, res) {
+    helpers.print(req.body)
+    const gid = req.body.gid
+    const mid = req.body.mid
+    let q = queries.get_contig(gid,mid)
+    console.log('contig query',q)
+    let html
+    TDBConn.query(q, (err, rows) => {
+        if (err) {
+          console.log(err)
+          return
+        }
+        let seq = rows[0]
+        console.log('se',seq)
+        res.send(seq)
+    })
 
-router.post('/get_16s_seq', function get16sSeqPost (req, res) {
-  //console.log('in get_16s_seq -post')
-  
-  helpers.print(req.body)
-  const gid = req.body.seqid
-
-  // express deprecated req.param(name): Use req.params, req.body, or req.query
-  // See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
-  // SELECT seq from db.table
-  let q = queries.get_16s_rRNA_sequence_query(gid)
-  helpers.print(q)
-  let html
-  TDBConn.query(q, (err, rows) => {
-    if (err) {
-      console.log(err)
-      return
-    }
-    // console.log(rows)
-    let seq = (rows[0]['16s_rRNA']).toUpperCase()
-    helpers.print(['seq',seq])
-    if(seq === "&LT;DIV ID=VIETDEVDIVID STYLE=&QUOT;POSITION:RELATIVE;FONT-FAMILY:ARIAL;FONT-SIZE:11PX&QUOT;&GT;&LT;/DIV&GT;"){
-        html = 'No Sequence Found'
-    }else{
-        html = seq.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&quot;/gi, '"').replace(/&amp;gt;/gi, '>').replace(/&amp;lt;/gi, '<')
-    }
-    helpers.print(['html',html])
-    if (html === '') {
-       html = 'No Sequence Found'
-    }
-    //console.log(html)
-    res.send(html)
-  })
 })
+// router.post('/get_16s_seq', function get16sSeqPost (req, res) {
+//   //console.log('in get_16s_seq -post')
+//   
+//   helpers.print(req.body)
+//   const gid = req.body.seqid
+// 
+//   // express deprecated req.param(name): Use req.params, req.body, or req.query
+//   // See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
+//   // SELECT seq from db.table
+//   let q = queries.get_16s_rRNA_sequence_query(gid)
+//   helpers.print(q)
+//   let html
+//   TDBConn.query(q, (err, rows) => {
+//     if (err) {
+//       console.log(err)
+//       return
+//     }
+//     // console.log(rows)
+//     let seq = (rows[0]['16s_rRNA']).toUpperCase()
+//     helpers.print(['seq',seq])
+//     if(seq === "&LT;DIV ID=VIETDEVDIVID STYLE=&QUOT;POSITION:RELATIVE;FONT-FAMILY:ARIAL;FONT-SIZE:11PX&QUOT;&GT;&LT;/DIV&GT;"){
+//         html = 'No Sequence Found'
+//     }else{
+//         html = seq.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&quot;/gi, '"').replace(/&amp;gt;/gi, '>').replace(/&amp;lt;/gi, '<')
+//     }
+//     helpers.print(['html',html])
+//     if (html === '') {
+//        html = 'No Sequence Found'
+//     }
+//     //console.log(html)
+//     res.send(html)
+//   })
+// })
 
 router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
   //console.log('in get_NN_NA_seq -post')

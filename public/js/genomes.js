@@ -232,16 +232,16 @@ function toggle_options(){
 		document.getElementById("goptions").innerHTML = 'Options [+]'
 	}
 }
-
-function get_16s_seq(seqid) {
-    // on taxon description page
+function get_contig_seq(gid, mid) {
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
     args={}
-    args.seqid = seqid
+    args.gid = gid
+    args.mid = mid
+    defline = '>'+gid+' | '+mid
     var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", "/genome/get_16s_seq", true);
-	xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.open("POST", "/genome/get_contig_seq", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
@@ -263,6 +263,36 @@ function get_16s_seq(seqid) {
     }
     xmlhttp.send(JSON.stringify(args));
 }
+// function get_16s_seq(seqid) {
+//     // on taxon description page
+//     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+//     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
+//     args={}
+//     args.seqid = seqid
+//     var xmlhttp = new XMLHttpRequest();
+// 	xmlhttp.open("POST", "/genome/get_16s_seq", true);
+// 	xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//         var resp = xmlhttp.responseText;
+//         //console.log(defline)
+//         text = ''
+//         //text += '<pre>'+defline+'<br>'
+//         text = '<pre>'
+//         text += resp
+//         text += '</pre>'
+//     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
+//     var doc = win.document;
+//     //doc.writeln("<title>yourtitle</title>");
+//     //doc.title = 'eHOMD Reference Sequence'
+//     doc.open("text/html");
+//   
+//     doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
+//     doc.close();
+//       }
+//     }
+//     xmlhttp.send(JSON.stringify(args));
+// }
 //
 function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     //console.log('in NNNA',type,pid)

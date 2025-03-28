@@ -144,6 +144,7 @@
           <small>
           [<a href='#' onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc_single')">Open in Genome Viewer</a>]
           &nbsp;&nbsp;[<a href='#' onclick="open_ncbi('single')">Linkout to NCBI</a>]
+          &nbsp;&nbsp;[<a href='#' onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[n].contig %>')">Show Sequence</a>]
           </small>
        <% }else{ %>
           <%= ginfo.contigs %>

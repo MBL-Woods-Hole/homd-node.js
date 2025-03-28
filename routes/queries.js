@@ -26,25 +26,13 @@ module.exports.get_taxon_info_query = (otid) => {
   q += " WHERE otid='"+otid+"'"
   return q
 }
-// module.exports.taxon_description_info = (otid) => {
-//     let q = "select refseqid,seqname,strain,genbank, pubmed_id,journal,`authors`,title,"
-//     q += "NCBI_pubmed_search_count as a,NCBI_nucleotide_search_count as b,NCBI_protein_search_count as c,NCBI_genome_search_count as d,"
-//     q += "NCBI_taxonomy_search_count as e,        NCBI_gene_search_count as f, NCBI_genomeP_search_count as g,"
-//     q += "`general`,prevalence as prev,cultivability as culta,disease_associations as disease,phenotypic_characteristics as pheno"
-//     q += " from otid_prime"
-//     q += " left join taxon_refseqid using (otid)"
-//     q += " left join extra_flat_info using (otid)"
-//     q += " left join reference using(otid)"
-//     q += " left join taxon_info using (otid)"
-//     q += " WHERE otid='"+otid+"'"
-//     return q
-// }
-module.exports.get_16s_rRNA_sequence_query = (gid) => {
-  let qSelect16Sseq = 'SELECT 16s_rRNA from genomes '
-  qSelect16Sseq += "WHERE genome_id='" + gid + "'"
 
-  return qSelect16Sseq
-}
+// module.exports.get_16s_rRNA_sequence_query = (gid) => {
+//   let qSelect16Sseq = 'SELECT 16s_rRNA from genomes '
+//   qSelect16Sseq += "WHERE genome_id='" + gid + "'"
+// 
+//   return qSelect16Sseq
+// }
 module.exports.get_db_updates_query = () => {
   return "SELECT otid, description, reason, date FROM updates WHERE `show`='1'"
 }
@@ -189,4 +177,12 @@ module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
   return qSelectContigs
 }
-
+module.exports.get_contig = (gid, mid) => {   // always NCBI for taxon description
+  //const db = 'NCBI_' + gid
+  let qSelectContigs = "SELECT UNCOMPRESS(seq_compressed) from `NCBI_contig`.`contig_seq` WHERE genome_id = '"+gid+"' and mol_id='"+mid+"'"
+  // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
+  //                               PROKKA gb_asmbly+.fna.gz
+  // asm_name amd gb_asm are both from genomes_obj
+  //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
+  return qSelectContigs
+}
