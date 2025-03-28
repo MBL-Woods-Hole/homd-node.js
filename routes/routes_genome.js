@@ -543,7 +543,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
            html += arr.join('<br>')
            //html = seqstr
         }
-        
+        console.log('html:',html.substring(0,8))
         res.send(JSON.stringify({html:html,length:length}))
      })
 
