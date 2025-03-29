@@ -11,8 +11,9 @@ function get_annotations_counts_full(intext){
     var args = {intext:intext}
     document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
     document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+    
     xmlhttp.open("POST", "/get_annotations_counts_sql", true);
-    //xmlhttp.timeout = 1200000;  // 10,000; timeout in ms, 10 seconds
+    
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       //console.log('readystate: ',xmlhttp.readyState)
@@ -29,7 +30,7 @@ function get_annotations_counts_full(intext){
         }else{
             html1 = resp.phits.length.toString()
             console.log('sendhtml',xmlhttp.responseText)
-            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka','full')\">show results</span>--"
+            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka','full')\"> show results</span>--"
         
         }
         document.getElementById('prokka_count_div_full').innerHTML = html1
@@ -39,7 +40,7 @@ function get_annotations_counts_full(intext){
             console.log('found nhits 0')
         }else{
             html2 = resp.nhits.length.toString()
-            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi','full')\">show results</span>--"
+            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi','full')\"> show results</span>--"
         
         }
         document.getElementById('ncbi_count_div_full').innerHTML = html2
@@ -84,7 +85,7 @@ function get_annotations_counts_partial(intext){
             }else{
                 html1 = resp[1]+' gene(s) in '+resp[0]+' genomes '
             }
-            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka','partial')\">show results</span>--"
+            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka','partial')\"> show results</span>--"
         
         }
         document.getElementById('prokka_count_div').innerHTML = html1
@@ -98,7 +99,7 @@ function get_annotations_counts_partial(intext){
                 html2 = resp[3]+' gene(s) in '+resp[2]+' genomes '
             }
             //html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi')\">show results</span>--"
-            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi','partial')\">show results</span>--"
+            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi','partial')\"> show results</span>--"
         
         }
         document.getElementById('ncbi_count_div').innerHTML = html2

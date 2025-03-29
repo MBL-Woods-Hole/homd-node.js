@@ -282,11 +282,11 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
     console.log('POST::get_annotations_counts_sql')
     //console.log(req.body)
     const searchText = req.body.intext
-    let phits=0, nhits=0, pdata={},ndata={},gid,ssp,organism
-    let q_prokka = "SELECT * from PROKKA_meta.orf WHERE protein_id='"+searchText+"' OR accession = '"+searchText+"'"
-    let q_ncbi = "SELECT * from NCBI_meta.orf WHERE protein_id ='"+searchText+"' OR accession = '"+searchText+"'"
+    let phits=[], nhits=[], pdata={},ndata={},gid,ssp,organism
+    let q_prokka = "SELECT * from PROKKA_meta.orf WHERE protein_id like '"+searchText+"%' OR accession like '"+searchText+"%' OR gene like '"+searchText+"%'"
+    let q_ncbi = "SELECT * from NCBI_meta.orf WHERE protein_id like '"+searchText+"%' OR accession like '"+searchText+"%' OR gene like '"+searchText+"%'"
     console.log('q_prokka',q_prokka)
-
+    console.log('q_ncbi',q_ncbi)
     TDBConn.query(q_prokka, (err, prows) => {
         if (err) {
           console.log("prokka select error",err)
@@ -296,7 +296,7 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
             //[pgid_count, ppid_count,ngid_count, npid_count]
             phits = prows
             for(let n in prows){
-                gid = prows[n].seq_id  // genomeid SEQF
+                gid = prows[n].genome_id  // genomeid SEQF
                 
                 
                 if(!pdata.hasOwnProperty(gid)){
@@ -317,7 +317,7 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
             //[pgid_count, ppid_count,ngid_count, npid_count]
             nhits = nrows
             for(let n in nrows){
-                gid = nrows[n].seq_id
+                gid = nrows[n].genome_id
                 
                 if(!ndata.hasOwnProperty(gid)){
                    ndata[gid] = []
@@ -326,10 +326,15 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
             }
            }
            let obj = {phits:phits,nhits:nhits,pdata:pdata,ndata:ndata}
+           let sendobj = {phits:phits,nhits:nhits}
            console.log('tryobj')
-           console.log('obj',phits,nhits,pdata,ndata)
+           console.log('obj-p',phits.length,pdata)
+           console.log('obj-n',nhits.length,ndata)
+           console.log('object',obj)
+           console.log('req.session-index1',req.session)
            req.session.anno_search_full = obj
-           res.send(JSON.stringify(obj))
+           console.log('req.session-index2',req.session)
+           res.send(JSON.stringify(sendobj))
         })
            
     })

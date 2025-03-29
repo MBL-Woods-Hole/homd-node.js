@@ -826,7 +826,8 @@ router.post('/orf_search_full', function orf_search_full (req, res) {
     let org_list = {}
     let gid='',otid = '',organism=''
     let bigdata = req.session.anno_search_full //JSON.parse(decodeURI(req.body.dataobj))
-    //console.log('Parsed Data1',bigdata)
+    console.log('req.session',req.session)
+    console.log('Parsed Data1',bigdata)
     if(anno == 'prokka'){
         site_search_result = bigdata.pdata  // by gid
     }else{
@@ -875,6 +876,7 @@ router.post('/orf_search_full', function orf_search_full (req, res) {
 
 })
 router.post('/orf_search', function orf_search (req, res) {
+    // From GREP Search
     console.log('in POST:orf_search')
     //console.log(req.body)
     let anno = req.body.anno
@@ -910,8 +912,8 @@ router.post('/orf_search', function orf_search (req, res) {
               }
               //console.log(data_rows[i])
               let pts = data_rows[i].split('|')
-              
-             // prokka|SEQF3816.1|SEQF3816.1_00131|SEQF3816.1_JAGFVR010000001.1|putative M18 family aminopeptidase 2|1431|476|145027|146457
+              //ncbi|GCA_900105505.1|FNRU01000001.1|SAMN04488531_0007|SEB28551.1|hypothetical protein
+              //ncbi|genome_id|accession|gene|protein_id|product
               gid = pts[1]
               if(gid && gid in site_search_result){
                  site_search_result[gid].push(data_rows[i])

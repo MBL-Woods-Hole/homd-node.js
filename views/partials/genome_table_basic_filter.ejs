@@ -82,7 +82,8 @@
    color: white;
 }
 .dropdown{
-   font-size:12px;
+   font-size:18px;
+   height:25px;
 }
 </style>
 
@@ -133,9 +134,13 @@
 <table id='filter_table'>
 <tr>
     <td class=''>
-       <center>
-         <span style='float:right;' class="advanced-filter-btn" onclick="openAdvancedForm()">Open Advanced Filter</span>
-       </center>
+       
+        <span style='float:right;' class="advanced-filter-btn" onclick="openAdvancedForm()">Open Advanced Filter</span>
+        <small>
+        <span class='filter-title'>Text Search:</span>
+        
+        <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='dropdown' name='txt_srch' maxlength='100' size='50' onclick='update_sb()'>
+       </small>
     </td>
     <td class=''>
         <small>
