@@ -1,0 +1,56 @@
+<style>
+</style>
+<%- include('../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../partials/header_img'); %>
+    <%- include('../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <div class='title'>Full Site Search</div>
+  <form id='' class='' method='POST' action='advanced_site_search'>
+      <table>
+      <tr><td>
+        <input type='checkbox'  name='taxonomy' value='on'  > Search Taxonomy
+      </td></tr>
+      <tr><td>
+        <input type='checkbox'  name='genomes' value='on'  > Search Genomes
+      </td></tr>
+      <tr><td>
+        <input type='checkbox'  name='annotations' value='on'  > Search Annotations
+      </td></tr>
+      <tr><td>
+        <input type='checkbox'  name='help' value='on'  > Search Help
+      </td></tr>
+      <tr><td>
+         <input type='text'  name='text_string' value=''  > 
+      </td></tr>
+      <tr><td>
+        <input type='submit'  name='submit' value='Submit'  >
+      </td></tr>
+      
+      </table>
+     
+      
+  </form>
+  
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

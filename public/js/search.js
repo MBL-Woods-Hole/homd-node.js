@@ -2,15 +2,13 @@
 function get_annotations_counts_full(intext){
     // search SQL orf table for both prokka and ncbi WHOLE PID Only
     // if no result then go to partial search
-    var xmlhttp
-    //if (window.XMLHttpRequest) {
-       // for modern browsers
-    xmlhttp = new XMLHttpRequest();
+    console.log('get_annotations_counts_full',intext)
+    var xmlhttp = new XMLHttpRequest();
     
     
     var args = {intext:intext}
-    document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
-    document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+    //document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+    //document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
     
     xmlhttp.open("POST", "/get_annotations_counts_sql", true);
     

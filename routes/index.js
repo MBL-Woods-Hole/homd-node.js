@@ -259,7 +259,28 @@ router.get('/poster', function poster(req, res) {
   })
 })
 
+router.get('/advanced_site_search', function advanced_site_searchGET(req, res) {
+  res.render('pages/advanced_site_search', {
+    title: 'HOMD :: Human Oral Microbiome Database',
+    pgname: '', // for AbountThisPage
+    config: JSON.stringify(CFG),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    user: JSON.stringify(req.user || {})
 
+  })
+})
+router.post('/advanced_site_search', function advanced_site_searchPOST(req, res) {
+  console.log(req.body)
+  
+  res.render('pages/advanced_site_search', {
+    title: 'HOMD :: Human Oral Microbiome Database',
+    pgname: '', // for AbountThisPage
+    config: JSON.stringify(CFG),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    user: JSON.stringify(req.user || {})
+
+  })
+})
 //
 //
 
@@ -508,165 +529,19 @@ router.post('/site_search', function site_search(req, res) {
   const searchTextLower = req.body.intext.toLowerCase()
   
 ////////////// TAXON NAMES ////////////////////////////////////////////////////////////////////////////
-
-  // lets search the taxonomy names
-  // Bacterial Taxonomy Names
-  //helpers.print(Object.keys(C.taxon_counts_lookup)[0])
-  const taxonList = Object.values(C.taxon_lineage_lookup).filter(function (e) {
-    if (Object.keys(e).length !== 0) {
-      // console.log(e)
-      if (e.domain.toLowerCase().includes(searchTextLower) ||
-        e.phylum.toLowerCase().includes(searchTextLower) ||
-        e.klass.toLowerCase().includes(searchTextLower) ||
-        e.order.toLowerCase().includes(searchTextLower) ||
-        e.family.toLowerCase().includes(searchTextLower) ||
-        e.genus.toLowerCase().includes(searchTextLower) ||
-        e.species.toLowerCase().includes(searchTextLower) ||
-        e.subspecies.toLowerCase().includes(searchTextLower)) {
-        return e
-      }
-    }
-    //
-  })
-  //  Now get the otids
-  const taxonOtidObj = {}
-  let pototid = parseInt(searchTextLower)
-  if(pototid && pototid in C.taxon_lookup){
-     if(C.dropped_taxids.indexOf(pototid.toString()) != -1){
-        taxonOtidObj[pototid] = 'This taxon has been dropped from HOMD.'
-     }else{
-        console.log('got OTID int')
-        taxonOtidObj[pototid] = C.taxon_lineage_lookup[pototid].domain
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].phylum
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].klass
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].order
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].family
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].genus
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].species
-        taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].subspecies
-     }
-  }
-  const taxonOtidList = taxonList.map(e => e.otid)
-  
-  for (let n in taxonOtidList) {
-    const otid = taxonOtidList[n]
-    taxonOtidObj[otid] = C.taxon_lineage_lookup[otid].domain
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].phylum
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].klass
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].order
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].family
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].genus
-    taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].species
-    //if (C.taxon_lineage_lookup[otid].subspecies !== '') {
-      taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].subspecies
-    //}
-
-    // {
-    // 'genus':C.taxon_lineage_lookup[otid].genus,'species':C.taxon_lineage_lookup[otid].species
-    // }
-  }
-
-
-  
-////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
-  
-  
-  //let add_genome_to_otid = {}
-  // Genome  Metadata
-  const allGidObjList = Object.values(C.genome_lookup)
-  // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
-  const gidKeyList = Object.keys(allGidObjList[0])
-  const gidObjList = allGidObjList.filter(function (el) {
-  
-    for (let n in gidKeyList) {
-      if (Array.isArray(el[gidKeyList[n]])) {
-        // we're missing any arrays
-      } else {
-        if ( Object.prototype.hasOwnProperty.call(el, gidKeyList[n]) && (el[gidKeyList[n]]).toString().toLowerCase().includes(searchTextLower)) {
-          //add_genome_to_otid[el.otid] = el.organism
-          el.species = C.taxon_lookup[el.otid].species
-          el.genus = C.taxon_lookup[el.otid].genus
-          return el.gid
-        }
-      }
-    }
-  })
-  helpers.print(['gidObjList[0]',gidObjList[0]])
-  const gidLst = gidObjList.map(e => ({gid:e.gid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-  gidLst.sort(function (a, b) {
-       return helpers.compareStrings_alpha(a.species, b.species);
-  })
-  //console.log('gidObjList',gidObjList)
-
-
+  let taxonOtidObj = search_taxonomy(searchTextLower, 'names')
 
 ///////////// OTIDs /////////////////////////////////////////////////////////////////////////////
-  // OTID Metadata
-  const allOtidObjList = Object.values(C.taxon_lookup)
-  const otidKeyList = Object.keys(allOtidObjList[0])
-  //helpers.print(['allOtidObjList[0]',allOtidObjList[0]]) // site is undefined
-  let otidObjList = allOtidObjList.filter(function (el) {
-    for (let n in otidKeyList) {
-      //console.log( 'el[otidkeylist[n]]',el[otidkeylist[n]] )
-      if (Array.isArray(el[otidKeyList[n]]) && el[otidKeyList[n]].length > 0) {
-        // we're catching any arrays: rrna_sequences, synonyms, sites, pangenomes, type_strains, ref_strains
-        //console.log('x0',el[otidKeyList[n]])
-          if(el[otidKeyList[n]].findIndex(element => element.toLowerCase().includes(searchTextLower)) !== -1){
-              return el.otid
-          }
+   let otidLst = search_taxonomy(searchTextLower, 'otids')
+   
+///////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
+  let gidLst = search_genomes(searchTextLower)
+  //console.log('gidObjList',gidObjList)
 
-      } else {
-        
-        //helpers.print(['el',el])
-        
-        if ( Object.prototype.hasOwnProperty.call(el, otidKeyList[n]) 
-             && el[otidKeyList[n]]
-             && el[otidKeyList[n]].toString().toLowerCase().includes(searchTextLower)) {
-          return el.otid
-        }
-       
-      }
-    }
-  })
-  
-  const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-  //console.log('otidLst',otidLst[0])
-  otidLst.sort(function (a, b) {
-       return helpers.compareStrings_alpha(a.species, b.species);
-  })
-  //console.log(otidLst)
-  //let otidLst = []
-  // if(Object.keys(add_genome_to_otid).length > 0){
-//      
-//       for(let otid in add_genome_to_otid){
-//           let o = {otid: otid, species: '<i>'+add_genome_to_otid[otid]+'</i>'}
-//           if(){
-//           
-//           }
-//           otidLst.push({otid: otid, species: '<i>'+add_genome_to_otid[otid]+'</i>'})
-//       }
-//   }
-  //console.log('otidLst[0]',otidLst)
-
-
-  
-  
 ///////////// CONTIGS /////////////////////////////////////////////////////////////////////////////
 
-  // search contigs
-  let contigObj_list = []
-  //console.log('C.contig_lookup',C.contig_lookup )
-  let all_contigs = Object.keys(C.contig_lookup)
-  const contig_list = all_contigs.filter(el => {
-    if (el.toLowerCase().indexOf(searchTextLower) !== -1) {
-        return true;
-    }
-  });
-  for(let n in contig_list){
-      
-      contigObj_list.push({contig:contig_list[n], gids: C.contig_lookup[contig_list[n]]})
-  }
   
+  let contigObj_list = search_contigs(searchTextLower)
 ///////////// PHAGE /////////////////////////////////////////////////////////////////////////////
 
 
@@ -752,6 +627,145 @@ router.post('/site_search', function site_search(req, res) {
    });
   
 })
+function search_taxonomy(text_string, type){
+   // type is names or otids
+  // lets search the taxonomy names
+  // Bacterial Taxonomy Names
+  //helpers.print(Object.keys(C.taxon_counts_lookup)[0])
+  if(type == 'names'){
+      const taxonList = Object.values(C.taxon_lineage_lookup).filter(function (e) {
+        if (Object.keys(e).length !== 0) {
+          // console.log(e)
+          if (e.domain.toLowerCase().includes(text_string) ||
+            e.phylum.toLowerCase().includes(text_string) ||
+            e.klass.toLowerCase().includes(text_string) ||
+            e.order.toLowerCase().includes(text_string) ||
+            e.family.toLowerCase().includes(text_string) ||
+            e.genus.toLowerCase().includes(text_string) ||
+            e.species.toLowerCase().includes(text_string) ||
+            e.subspecies.toLowerCase().includes(text_string)) {
+            return e
+          }
+        }
+        //
+      })
+      //  Now get the otids
+      const taxonOtidObj = {}
+      let pototid = parseInt(text_string)
+      if(pototid && pototid in C.taxon_lookup){
+         if(C.dropped_taxids.indexOf(pototid.toString()) != -1){
+            taxonOtidObj[pototid] = 'This taxon has been dropped from HOMD.'
+         }else{
+            console.log('got OTID int')
+            taxonOtidObj[pototid] = C.taxon_lineage_lookup[pototid].domain
+            taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].phylum
+            taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].klass
+            taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].order
+            taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].family
+            taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].genus
+            taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].species
+            taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].subspecies
+         }
+      }
+      const taxonOtidList = taxonList.map(e => e.otid)
+      
+      for (let n in taxonOtidList) {
+        const otid = taxonOtidList[n]
+        taxonOtidObj[otid] = C.taxon_lineage_lookup[otid].domain
+        taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].phylum
+        taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].klass
+        taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].order
+        taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].family
+        taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].genus
+        taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].species
+        //if (C.taxon_lineage_lookup[otid].subspecies !== '') {
+          taxonOtidObj[otid] += ';' + C.taxon_lineage_lookup[otid].subspecies
+        
+      }
+      return taxonOtidObj
+      
+    }else if(type == 'otids'){
+      // OTID Metadata
+      const allOtidObjList = Object.values(C.taxon_lookup)
+      const otidKeyList = Object.keys(allOtidObjList[0])
+      //helpers.print(['allOtidObjList[0]',allOtidObjList[0]]) // site is undefined
+      let otidObjList = allOtidObjList.filter(function (el) {
+        for (let n in otidKeyList) {
+          //console.log( 'el[otidkeylist[n]]',el[otidkeylist[n]] )
+          if (Array.isArray(el[otidKeyList[n]]) && el[otidKeyList[n]].length > 0) {
+            // we're catching any arrays: rrna_sequences, synonyms, sites, pangenomes, type_strains, ref_strains
+            //console.log('x0',el[otidKeyList[n]])
+              if(el[otidKeyList[n]].findIndex(element => element.toLowerCase().includes(text_string)) !== -1){
+                  return el.otid
+              }
+    
+          } else {
+            
+            //helpers.print(['el',el])
+            
+            if ( Object.prototype.hasOwnProperty.call(el, otidKeyList[n]) 
+                 && el[otidKeyList[n]]
+                 && el[otidKeyList[n]].toString().toLowerCase().includes(text_string)) {
+              return el.otid
+            }
+           
+          }
+        }
+      })
+      
+      const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
+      //console.log('otidLst',otidLst[0])
+      otidLst.sort(function (a, b) {
+           return helpers.compareStrings_alpha(a.species, b.species);
+      })
+      return otidLst
+    }
+}
+function search_genomes(text_string){
+  //let add_genome_to_otid = {}
+  // Genome  Metadata
+  const allGidObjList = Object.values(C.genome_lookup)
+  // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
+  const gidKeyList = Object.keys(allGidObjList[0])
+  const gidObjList = allGidObjList.filter(function (el) {
+  
+    for (let n in gidKeyList) {
+      if (Array.isArray(el[gidKeyList[n]])) {
+        // we're missing any arrays
+      } else {
+        if ( Object.prototype.hasOwnProperty.call(el, gidKeyList[n]) && (el[gidKeyList[n]]).toString().toLowerCase().includes(text_string)) {
+          //add_genome_to_otid[el.otid] = el.organism
+          el.species = C.taxon_lookup[el.otid].species
+          el.genus = C.taxon_lookup[el.otid].genus
+          return el.gid
+        }
+      }
+    }
+  })
+  helpers.print(['gidObjList[0]',gidObjList[0]])
+  let gidLst = gidObjList.map(e => ({gid:e.gid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
+  gidLst.sort(function (a, b) {
+       return helpers.compareStrings_alpha(a.species, b.species);
+  })
+  return gidLst
+}
+
+function search_contigs(text_string){
+  // search contigs
+  let contigObj_list = []
+  //console.log('C.contig_lookup',C.contig_lookup )
+  let all_contigs = Object.keys(C.contig_lookup)
+  const contig_list = all_contigs.filter(el => {
+    if (el.toLowerCase().indexOf(text_string) !== -1) {
+        return true;
+    }
+  });
+  for(let n in contig_list){
+      
+      contigObj_list.push({contig:contig_list[n], gids: C.contig_lookup[contig_list[n]]})
+  }
+  return contigObj_list
+}
 // }); // end pipeline
 // })  // end anno query
 module.exports = router
