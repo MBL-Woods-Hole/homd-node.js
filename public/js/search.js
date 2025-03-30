@@ -1,5 +1,5 @@
 
-function get_annotations_counts_full(intext){
+function get_annotations_counts_sql(intext){
     // search SQL orf table for both prokka and ncbi WHOLE PID Only
     // if no result then go to partial search
     var xmlhttp
@@ -9,8 +9,8 @@ function get_annotations_counts_full(intext){
     
     
     var args = {intext:intext}
-    document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
-    document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+    //document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+    //document.getElementById('ncbi_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
     
     xmlhttp.open("POST", "/get_annotations_counts_sql", true);
     
@@ -24,33 +24,34 @@ function get_annotations_counts_full(intext){
         var resp = JSON.parse(xmlhttp.responseText);
         console.log('get_annotations_counts SQL', resp)
         // [prokka_genome_count,prokka_gene_count,ncbi_genome_count,ncbi_gene_count]
+        dirname = resp.dirname
         if(resp.phits == 0){
             html1 = "0"
             console.log('found phits 0')
         }else{
             html1 = resp.phits.length.toString()
             console.log('sendhtml',xmlhttp.responseText)
-            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka','full')\"> show results</span>--"
+            html1 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','prokka','sql','"+dirname+"')\"> show results</span>--"
         
         }
-        document.getElementById('prokka_count_div_full').innerHTML = html1
+        document.getElementById('prokka_count_div_sql').innerHTML = html1
     
         if(resp.nhits == 0){
             html2 = "0"
             console.log('found nhits 0')
         }else{
             html2 = resp.nhits.length.toString()
-            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi','full')\"> show results</span>--"
+            html2 += "--<span class='search_link' onclick=\"anno_search('"+intext+"','ncbi','sql','"+dirname+"')\"> show results</span>--"
         
         }
-        document.getElementById('ncbi_count_div_full').innerHTML = html2
+        document.getElementById('ncbi_count_div_sql').innerHTML = html2
         
       }
     }
     xmlhttp.send(JSON.stringify(args));
     //xmlhttp.send(null);
 }
-function get_annotations_counts_partial(intext){
+function get_annotations_counts_partialXXX(intext){
     
     var xmlhttp
     //if (window.XMLHttpRequest) {
@@ -110,16 +111,16 @@ function get_annotations_counts_partial(intext){
     //xmlhttp.send(null);
 }
 
-function anno_search(search_text, anno, type){  //type is full or partial
+function anno_search(search_text, anno, type, dirname){  //type is sql or partial
    console.log('in anno_srch',search_text)
    //var args = {}
    //args.anno = anno
    //args.search_text = search_text
    let form = document.createElement("form");
    if(type == 'partial'){
-       target = "/genome/orf_search"
+       target = "/genome/orf_search"   // GREP
    }else{
-       target = "/genome/orf_search_full"
+       target = "/genome/orf_search_sql"
    }
    document.getElementsByTagName("body")[0].appendChild(form);
    form.setAttribute("method", "post");
@@ -136,6 +137,12 @@ function anno_search(search_text, anno, type){  //type is full or partial
    i.name = "search_text";
    i.id = "search_text";
    i.value = search_text
+   form.appendChild(i);
+   var i = document.createElement("input");
+   i.type = "hidden";
+   i.name = "dirname";
+   i.id = "dirname";
+   i.value = dirname
    form.appendChild(i);
    form.submit()
   

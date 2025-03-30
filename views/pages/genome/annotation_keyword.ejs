@@ -89,15 +89,17 @@ button {
 <% if(!show_table){ %>
     Switch Search Results:
     <table><tr><td>
-   <form  method='POST' action='orf_search'>
+   <form  method='POST' action='orf_search_sql'>
       <input type='hidden' name='anno' value='prokka'>
       <input type='hidden' name='search_text' value='<%= search_text %>'>
+      <input type='hidden' name='dirname' value='<%= dirname %>'>
       <input class='button' type='submit' name='submit' value='PROKKA'>
    </form>
    </td><td>
-   <form  method='POST' action='orf_search'>
+   <form  method='POST' action='orf_search_sql'>
       <input type='hidden' name='anno' value='ncbi'>
       <input type='hidden' name='search_text' value='<%= search_text %>'>
+      <input type='hidden' name='dirname' value='<%= dirname %>'>
       <input class='button' type='submit' name='submit' value='NCBI'>
    </form>
    </td></tr>
@@ -107,7 +109,7 @@ button {
     <center>
 
     <div id='orf_table_div'>
-    Viewing <%= anno.toUpperCase() %> Annotations
+    Viewing <span style='background:darkgrey;color:green;padding:3px;'><%= anno.toUpperCase() %></span> Annotations
     <table id="anno-pre-table">
     <tr>
       <th class='gid_col'>SEQ-ID</th>
@@ -125,7 +127,7 @@ button {
           <td class='center'><%= data[gid].length %></td>
           <td>
           <% if(!show_table){ %>
-            <button onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>')">View item(s) in table</button>
+            <button onclick="view_anno_items('<%= gid %>','<%= anno %>','<%= search_text %>','<%= dirname %>')">View item(s) in table</button>
           <% } %>
           </td>
             <td>
@@ -141,8 +143,8 @@ button {
     <% if(show_table){ %>
       
       <table id='annotation-table'>
-       <tr><td>Molecule</td>
-        <td>PID</td>
+        <tr><td>Accession</td>
+        <td>Protein_id</td>
         <td>Genome<br>Viewer</td>
         <td>NA<br><small>(Length)(Seq)</small></td>
         <td>AA<br><small>(Length)(Seq)</small></td>
@@ -153,7 +155,9 @@ button {
          <% for(n in data[gid]){ %>
             <tr><td><%= data[gid][n].accession %></td>
             <td><%= data[gid][n].protein_id %></td>
-<%
+            
+            
+            <%   // opening tag
             if(data[gid][n].start[0] === "<" ){
               start = parseInt(data[gid][n].start.substring(1))
             }else{
@@ -175,16 +179,13 @@ button {
               locstart = 1 
             } 
             let db = anno+"_"+gid
-            if(anno === "prokka"){ 
-                seqacc = data[gid][n].accession.replace('_','|')
-            }else{
-                seqacc = gid +"|"+ data[gid][n].accession
-            }
+            
+            seqacc = gid +"|"+ data[gid][n].accession
+        
             let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
             let highlight = seqacc+":"+start.toString()+".."+stop.toString()
-            
-            
-%>
+            %>   <!-- closing tag -->
+
             <td><a title="JBrowse/Genome Viewer" href="#" onclick="open_jbrowse('<%= gid %>','anno_table','','','<%= anno %>','<%= loc %>','<%= highlight %>')">open</a></td>
             <!-- <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')">open</a> -->
             <td><%= data[gid][n].length_na %>

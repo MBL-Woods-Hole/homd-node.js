@@ -668,7 +668,8 @@ function render_explorer(req, res, args){
 router.post('/make_anno_search_table', function make_anno_search_table (req, res) {
     console.log('in POST:make_anno_search_table')
     //console.log(req.body)
-    let anno_path = path.join(CFG.PATH_TO_TMP,req.session.anno_search_dirname)
+    let anno_path = path.join(CFG.PATH_TO_TMP,req.body.dirname)
+    
     let anno = req.body.anno
     let search_text = req.body.search_text.toLowerCase()
     let selected_gid = req.body.gid
@@ -683,7 +684,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     let html = "<table id='annotation-table' class='table sortable'>"
     html += '<tr>'
     html += '<th>Molecule</th>'
-    html += '<th>PID</th>'
+    html += '<th>Protein-ID</th>'
     html += '<th class="sorttable_nosort">Genome<br>Viewer</th>'
     html += "<th class='sorttable_numeric'>NA<br><small>(Length)(Seq)</small></th>"
     html += "<th class='sorttable_numeric'>AA<br><small>(Length)(Seq)</small></th>"
@@ -698,7 +699,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
          return
        } else {
          console.log("Directory exists.")
-         let filepath = path.join(anno_path,anno,'data')
+         let filepath = path.join(anno_path,anno+'_data')
          
          fs.readFile(filepath, 'utf8', function readOrfSearch (err, data) {
              if (err) {
@@ -726,12 +727,12 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
               rowobj = {
                 anno:row[0],
                 line_gid:row[1],
-                pid:row[2],
-                acc:row[3],
-                gene:row[4],
+                acc:row[2],
+                gene:row[3],
+                pid:row[4],
                 product:row[5],
-                length_na:row[6],
-                length_aa:row[7],
+                length_aa:row[6],
+                length_na:row[7],
                 start:row[8],
                 stop:row[9],
                 }
@@ -768,22 +769,20 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             rowobj.pid_adorned = (rowobj.pid).replace(re, "<font color='red'>"+search_text+"</font>");
             html += "<td class='center' nowrap>"+rowobj.pid_adorned
             
-            if(anno === "prokka"){ 
-                seqacc = rowobj.acc.replace('_','|')
-            }else{
-                seqacc = selected_gid +'|'+ rowobj.acc
-            }
-            let jbtracks = "DNA,homd,prokka,ncbi"
+            
+            seqacc = rowobj.acc
+            
+            
             let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
             let highlight = seqacc+":"+start.toString()+".."+stop.toString()
             //console.log('XXX',rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid)
             //html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+selected_gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
             //html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+selected_gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >JB</a>"
-            
+            //console.log('JB',rowobj.line_gid,'loc',loc,'hl',highlight)
             html += "</td>"   // pid
             
             html += "<td class='center'>" 
-            html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+selected_gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
+            html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+rowobj.line_gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
             html += "</td>" //  JB)
             
             
@@ -817,62 +816,95 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
 
 })
 //
-router.post('/orf_search_full', function orf_search_full (req, res) {
-    console.log('in POST:orf_search_full')
+router.post('/orf_search_sql', function orf_search_full (req, res) {
+    console.log('in POST:orf_search_sql')
     //console.log(req.body)
-    let site_search_result,tmpgid,ssp,data_keys
+    let site_search_result={},tmpgid,ssp,data_keys,obj
     let anno = req.body.anno
     let search_text = req.body.search_text
+    let dirname = req.body.dirname
+    let anno_path = path.join(CFG.PATH_TO_TMP,dirname)
+    
+    
     let org_list = {}
     let gid='',otid = '',organism=''
-    let bigdata = req.session.anno_search_full //JSON.parse(decodeURI(req.body.dataobj))
-    console.log('req.session',req.session)
-    console.log('Parsed Data1',bigdata)
-    if(anno == 'prokka'){
-        site_search_result = bigdata.pdata  // by gid
-    }else{
-        site_search_result = bigdata.ndata   // by gid
-    }
-    //console.log('Parsed Data2',site_search_result)
-        let tmp_data_keys = Object.keys(site_search_result)
-        
-        for(let k in tmp_data_keys){
-            tmpgid = tmp_data_keys[k]
-            org_list[tmpgid] = ''
-            if(C.genome_lookup.hasOwnProperty(tmpgid)){
-               ssp = ''
-               if(C.genome_lookup[tmpgid].subspecies){
-                  ssp = C.genome_lookup[tmpgid].subspecies+' '
-               }
-               let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].strain
-               org_list[tmpgid] = organism
+    //let bigdata = req.session.anno_search_full //JSON.parse(decodeURI(req.body.dataobj))
+    //console.log('req.session',req.session)
+    //console.log('Parsed Data1',bigdata)
+    fs.access(anno_path, function(error) {
+       if (error) {
+         console.log("Directory does not exist.")
+         res.send('Session Expired')
+         return
+       } else {
+         console.log("Directory exists.")
+         let filepath = path.join(anno_path,anno+'_data')
+         fs.readFile(filepath, 'utf8', function readSQLOrfSearch (err, data) {
+            if (err) {
+               console.log(err)
+               res.send('Session Expired')
+               return
+             }
+             
+            let data_rows = data.split('\n')
+            //console.log('data_rows[10]',data_rows[10])
+            for(let i in data_rows){
+                if(!data_rows[i]){
+                  continue
+                }
+                //console.log('data_rows[i]',data_rows[i])
+                
+                let pts = data_rows[i].split('|')
+                //console.log('pts',pts)
+                //ncbi|GCA_030450175.1|CP073095.1|J8246_11660|WKE52990.1|hypothetical protein|286|861|2438500|2439360
+                //ncbi|genome_id|accession|gene|protein_id|product|length_aa|length_na|start|stop
+                gid = pts[1]
+                
+                //console.log('gid',gid)
+                obj = {accession:pts[2],gene:pts[3],protein_id:pts[4],product:pts[5],length_aa:pts[6],length_na:pts[7],start:pts[8],stop:pts[9]}
+                if(gid && gid in site_search_result){
+                    site_search_result[gid].push(obj)
+                }else{
+                    site_search_result[gid]= [obj]
+                }
             }
-        }
-//             let data_keys = Object.keys(org_list).sort(function (a, b) {
-//                 return helpers.compareStrings_alpha(org_list[a], org_list[b]);
-//              })
-        
-        //console.log('data',site_search_result)
-        
-        data_keys = Object.keys(site_search_result)
-        res.render('pages/genome/annotation_keyword', {
-
-            title: 'HOMD :: text search',
-            pgname: 'genome/explorer', // for AboutThisPage 
-            config: JSON.stringify(CFG),
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-
-            anno: anno,
-            search_text: search_text,
-            data: JSON.stringify(site_search_result),
+            let tmp_data_keys = Object.keys(site_search_result)
+            //console.log('tmp_data_keys',tmp_data_keys)
+            for(let k in tmp_data_keys){
+                    tmpgid = tmp_data_keys[k]
+                    org_list[tmpgid] = ''
+                    if(C.genome_lookup.hasOwnProperty(tmpgid)){
+                       let organism = C.genome_lookup[tmpgid].organism+' '+C.genome_lookup[tmpgid].strain
+                       org_list[tmpgid] = organism
+                    }
+            }
             
-            sorted_gids: JSON.stringify(data_keys),
-            org_obj: JSON.stringify(org_list),
-            show_table:true
+            let data_keys = Object.keys(org_list).sort(function (a, b) {
+                return helpers.compareStrings_alpha(org_list[a], org_list[b]);
+            })
+            
+            //console.log('data_keys[0]',data_keys[0])
+            //console.log('site_search_result[data_keys[0]]',site_search_result[data_keys[0]])
+            res.render('pages/genome/annotation_keyword', {
 
-        })
-         
+                title: 'HOMD :: text search',
+                pgname: 'genome/explorer', // for AboutThisPage 
+                config: JSON.stringify(CFG),
+                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+                dirname: dirname,
+                anno: anno,
+                search_text: search_text,
+                data: JSON.stringify(site_search_result),
+                sorted_gids: JSON.stringify(data_keys),
+                org_obj: JSON.stringify(org_list),
+                show_table:false
+            })
+        })  //end fs.readfile
+        
+        }  //end else
+        })  //end fs.access
     
+
 
 })
 router.post('/orf_search', function orf_search (req, res) {

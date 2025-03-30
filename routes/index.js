@@ -279,14 +279,29 @@ router.post('/anno_protein_search', function anno_protein_search(req, res) {
 })
 
 router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(req, res) {
+    
+    var dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
+    dirname = dirname+'_sql'
+    
     console.log('POST::get_annotations_counts_sql')
     //console.log(req.body)
     const searchText = req.body.intext
-    let phits=[], nhits=[], pdata={},ndata={},gid,ssp,organism
-    let q_prokka = "SELECT * from PROKKA_meta.orf WHERE protein_id like '"+searchText+"%' OR accession like '"+searchText+"%' OR gene like '"+searchText+"%'"
-    let q_ncbi = "SELECT * from NCBI_meta.orf WHERE protein_id like '"+searchText+"%' OR accession like '"+searchText+"%' OR gene like '"+searchText+"%'"
+    let line,phits=[], nhits=[], pdata={},ndata={},gid,ssp,organism
+    let fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
+    let q_prokka = "SELECT "+fields.join(",")+" from PROKKA_meta.orf WHERE protein_id like '"+searchText+"%' OR accession like '"+searchText+"%' OR gene like '"+searchText+"%'"
+    let q_ncbi = "SELECT "+fields.join(",")+" from NCBI_meta.orf WHERE protein_id like '"+searchText+"%' OR accession like '"+searchText+"%' OR gene like '"+searchText+"%'"
     console.log('q_prokka',q_prokka)
     console.log('q_ncbi',q_ncbi)
+    let anno_path = path.join(CFG.PATH_TO_TMP, dirname)
+    //let panno_path = path.join(CFG.PATH_TO_TMP,dirname,'prokka')
+    //let nanno_path = path.join(CFG.PATH_TO_TMP,dirname,'ncbi')
+    fs.mkdirSync(anno_path)
+    //fs.mkdirSync(panno_path)
+    //fs.mkdirSync(nanno_path)
+    let pfile_name = path.join(anno_path,'prokka_data')
+    let nfile_name = path.join(anno_path,'ncbi_data')
+    var pstream = fs.createWriteStream(pfile_name, {flags:'a'});
+    var nstream = fs.createWriteStream(nfile_name, {flags:'a'});
     TDBConn.query(q_prokka, (err, prows) => {
         if (err) {
           console.log("prokka select error",err)
@@ -297,13 +312,14 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
             phits = prows
             for(let n in prows){
                 gid = prows[n].genome_id  // genomeid SEQF
-                
-                
-                if(!pdata.hasOwnProperty(gid)){
-                   
-                   pdata[gid] = []
+ 
+                line = 'prokka'
+                for(let i in fields){
+                    line = line+'|'+prows[n][fields[i]]
                 }
-                pdata[gid].push(prows[n])
+                //console.log('SQL-prows-line',line)
+                
+                pstream.write(line + "\n");
             }
         }
         
@@ -319,33 +335,33 @@ router.post('/get_annotations_counts_sql', function get_annotations_counts_sql(r
             for(let n in nrows){
                 gid = nrows[n].genome_id
                 
-                if(!ndata.hasOwnProperty(gid)){
-                   ndata[gid] = []
+                
+                line = 'ncbi'
+                for(let i in fields){
+                    line = line+'|'+nrows[n][fields[i]]
                 }
-                ndata[gid].push(nrows[n])
+                //console.log('SQL-nrows-line',line)
+                
+                nstream.write(line + "\n");
             }
            }
            let obj = {phits:phits,nhits:nhits,pdata:pdata,ndata:ndata}
-           let sendobj = {phits:phits,nhits:nhits}
-           console.log('tryobj')
-           console.log('obj-p',phits.length,pdata)
-           console.log('obj-n',nhits.length,ndata)
-           console.log('object',obj)
-           console.log('req.session-index1',req.session)
-           req.session.anno_search_full = obj
-           console.log('req.session-index2',req.session)
+           
+           let sendobj = {phits:phits,nhits:nhits,dirname:dirname}
+           //req.session.anno_search_dirname_sql = dirname
+           
            res.send(JSON.stringify(sendobj))
         })
            
     })
 })
-router.post('/get_annotations_counts_grep', function get_annotations_counts_grep(req, res) {
+router.post('/get_annotations_counts_grepZZZ', function get_annotations_counts_grep(req, res) {
     console.log('POST::get_annotations_counts_grep')
     //console.log(req.body)
     
 
     var dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
-    
+    dirname = dirname+'_grep'
     //req.setTimeout(240000);
     //const searchText = req.body.intext
     const searchText = req.body.intext
@@ -359,12 +375,8 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
        
        let full_data = '',orfrow,datapath
        //https://github.com/uhop/stream-json/wiki/StreamValues
-
-       if(CFG.SITE === 'localmbl' || CFG.SITE === 'localhome'){
-         datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search*")  //homd_ORFSearch*
-       }else{
-          datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search*")  //homd_ORFSearch*
-       }
+       datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search*")  //homd_ORFSearch*
+       
        let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath  //homd_ORFSearch*
 
         console.log('grep_cmd1',grep_cmd)
@@ -376,53 +388,15 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
         fs.mkdirSync(nanno_path)
         let pfile_name = path.join(panno_path,'data')
         let nfile_name = path.join(nanno_path,'data')
-        
         var pstream = fs.createWriteStream(pfile_name, {flags:'a'});
         var nstream = fs.createWriteStream(nfile_name, {flags:'a'});
+        
         let child = spawn("/bin/sh", ['-c',grep_cmd], { 
             //, (err, stdout, stderr) => {
         }) 
     
         child.stdout.on('data', (data) => {
-
-          //console.log(`child stdout:\n${data}`);
-            //console.log('gathering grep data')
-            //console.log(typeof data)
-
-//             let lines = data.toString().split('\n')
-//             for(let i in lines){
-//                let line = lines[i].trim()
-//            
-//                let pts = line.split('|')
-//                //if(pts.length === 9 && parseInt(pts[pts.length -1]) ){
-//                console.log('line',line)
-//                //if(pts.length === 9){
-//                    anno = pts[0]
-//                    gid = pts[1]
-//                
-//                    if(lines[i].substring(0,4) === 'ncbi'){
-//                         //let fname_path = path.join(anno_path,'ncbi_'+gid)
-//                           nstream.write(line + "\n");
-//                           ncbi_gid_lookup[gid]=1
-//                           npid_count += 1
-//                    }else if(lines[i].substring(0,6) === 'prokka'){
-//                     
-//                         pstream.write(line + "\n");
-//                         prokka_gid_lookup[gid]=1
-//                         ppid_count += 1
-//                     
-//                    }else{
-//                        //console.log('-i',line)
-//                        //pass for now
-//                    }
-//                 //}else{
-//                    //console.log('remainder',line)
-//                 //}
-//             }
-            
-            
             full_data += data.toString()
-
         });
 
         child.stderr.on('data', (data) => {
@@ -485,7 +459,7 @@ router.post('/get_annotations_counts_grep', function get_annotations_counts_grep
 
             //console.log(ar,ar.length)
             //console.log(gid_count, pid_count)
-            req.session.anno_search_dirname = dirname
+            req.session.anno_search_dirname_grep = dirname
             
             //console.log('counts',pgid_count, ppid_count,ngid_count, npid_count)
             res.send(JSON.stringify([pgid_count, ppid_count,ngid_count, npid_count]))
