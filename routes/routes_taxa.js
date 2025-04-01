@@ -415,8 +415,8 @@ router.get('/tax_description', function tax_description(req, res){
               sites += '<br>Secondary: '+C.site_lookup[otid]['s2']
            }
            
-           if(C.site_lookup[otid]['note']){
-             sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
+           if(C.site_lookup[otid]['notes']){
+             sites += '<br><small>Note: '+C.site_lookup[otid]['notes']+'</small>'
            }
          }
          
@@ -509,11 +509,11 @@ router.get('/tax_description', function tax_description(req, res){
                if(C.site_lookup[otid]['ref_link']){
                 sites += "<br><small>Reference: <a href='"+C.site_lookup[otid]['ref_link']+"' target='_blank'>"+C.site_lookup[otid]['ref_link']+'</a></small>'
                }
-               if(C.site_lookup[otid]['note']){
-                sites += '<br><small>Note: '+C.site_lookup[otid]['note']+'</small>'
+               if(C.site_lookup[otid]['notes']){
+                sites += '<br><small>Note: '+C.site_lookup[otid]['notes']+'</small>'
                }
             }
-          console.log('refseq',refseq)
+          //console.log('refseq',refseq)
           res.render('pages/taxa/taxdesc', {
             title: 'HOMD :: Taxon Info', 
             pgname: 'taxon/description', // for AbountThisPage
