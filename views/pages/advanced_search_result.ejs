@@ -1,0 +1,210 @@
+<style>
+body {
+            -webkit-transition: background-color 1s;
+            transition: background-color 1s;
+}
+html, body { min-height: 100%; }
+
+.search-box{
+   height:200px;
+   width:100%;
+   overflow:auto;
+   margin:0px 0px;
+   padding:0px 10px;
+   background:lightgreen;
+   border:1px solid black;
+}
+.search-box-anno{
+   height:600px;
+   width:100%;
+   overflow:auto;
+   margin:0px 0px;
+   padding:10px 10px;
+   background:lightgreen;
+   border:1px solid black;
+   
+}
+.loader-gif{
+  height:20px;
+  width:90px;
+}
+#srch_txt{
+   color:purple;
+}
+table{
+   /* font-size:small; */
+   border-collapse:collapse;
+   margin:5px 0;
+   width:90%;
+}
+table th{
+   border:1px solid black;
+   padding:3px 4px;
+}
+table td{
+   border:1px solid black;
+   padding:1px 4px;
+}
+.search_link{
+   color:blue;
+}
+.search_link:hover{
+   color:maroon;
+   cursor:pointer;
+}
+#search-text-div{
+    padding:8px;
+    font-size:18px;
+    
+}
+</style>
+<%- include('../partials/header_html'); %>
+<% var otids = JSON.parse(otid_list) %>
+<% var gids = JSON.parse(gid_list) %>
+<% var lineageids = JSON.parse(taxon_otid_obj) %>
+<% anno_list = JSON.parse(annotationList)  %>
+<% var search_type  = JSON.parse(form_type) %>  <!-- array of taxonomy, genomes or annotation -->
+
+<body>
+  
+    <div id='wrapper'>
+    <%- include('../partials/header_img'); %>
+    <%- include('../partials/navbar'); %>
+    <div class='page-content' > 
+       <div class='title'>Search Result  </div>
+<!-- 'HMT-'+("000" + otid).slice(-3);  -->
+     <center><div id='search-text-div'>
+     Search String: <span id='srch_txt'>"<%= search_text %>"</span> <small>(case insensitive)</small>
+     </div></center>
+<% if(search_type.indexOf("taxonomy") != -1){ %>
+        <br>Hits from Bacterial Taxon Names: <%= Object.keys(lineageids).length %> <span class='float-right small'></span>
+        <% if( Object.keys(lineageids).length > 0 ){ %>
+        <div class='search-box'>
+        <% n = 0 %>
+        <center><table class='sortable'>
+        <tr><th nowrap>HMT-ID</th><th>Taxonomy (click to sort)</th></tr>
+        <% for(otid in lineageids){ %>
+           <tr>
+           <% n += 1 %>
+           <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+           
+           <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
+           <td><a href='/taxa/tax_description?otid=<%= otid %>'><%= lineageids[otid] %></a></td>
+           </tr>
+        <% } %>
+        </table>
+        </center>
+        </div>
+        <% } %>
+        <hr> 
+    
+    
+        Hits from Oral Taxon-ID Metadata: <%= otids.length %> <span class='float-right small'></span> 
+        <% if( otids.length > 0 ){ %>
+        <div class='search-box'>
+        <center><table class='sortable'>
+        <tr><th nowrap>HMT-ID</th><th>Taxonomy (click to sort)</th></tr>
+        <% for(n in otids){ %>
+         <% otid = otids[n].otid %>
+         <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+         <tr>
+         
+         <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td>
+         <td><a href='/taxa/tax_description?otid=<%= otid %>'><%- otids[n].species %></a></td>
+         </tr>
+        <% } %>
+        </table>
+        </center>
+        </div>
+        <% } %>
+        <hr> 
+<% } %>
+  
+    
+<% if(search_type.indexOf("genomes") != -1){ %> 
+    Hits from Genome Metadata: <%= gids.length %> <span class='float-right small'></span>
+    <% if( gids.length > 0 ){ %>
+    <div class='search-box'>
+    <center><table class='sortable'>
+    <tr><th nowrap>HMT-ID</th><th nowrap>Genome-ID</th><th>Taxonomy (click to sort)</th></tr>
+    <% for(n in gids){ %>
+       <% gid  = gids[n].gid %>
+       <% otid = gids[n].otid %>
+       <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+       <tr>
+       <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td>
+       <td><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
+       <td><a href='/genome/genome_description?gid=<%= gid %>'><%- gids[n].species %></a></td>
+       </tr>
+    <% } %>
+    </table>
+    </center>
+    </div>
+    <% } %>
+    <hr> 
+<% } %>
+<% if(search_type.indexOf("annotations") != -1){ %> 
+     Annotations <small>(Searches only Accessions(Molecule), Protein-IDs,Gene and Gene Product (~20M records)):<span class='float-right small'></span></small>
+     <div class='search-box-anno'>
+     
+		 Hits: <%= anno_list.length %>&nbsp;&nbsp;|&nbsp;&nbsp; Selected Annotation: <%= anno.toUpperCase() %>
+		 <br>
+		 <% if(anno_list.length != 0){ %>
+		   <table>
+		   <tr><th>Genome-ID</th><th>Accession</th><th>Protein-ID</th><th>Gene</th><th>Gene Product</th><th>Length AA</th><th>Length NA</th><th>Start</th><th>Stop</th></tr>
+		   <% for(x in anno_list){ %>
+		     <% gid  = anno_list[x].genome_id %>
+			 <tr>
+			   <td><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></td>
+			   <td><%= anno_list[x].accession %></td>
+			   <td><%= anno_list[x].protein_id %></td>
+			   <td><%= anno_list[x].gene %></td>
+			   <td><%= anno_list[x].product %></td>
+			   <td><%= anno_list[x].length_aa %></td>
+			   <td><%= anno_list[x].length_na %></td>
+			   <td><%= anno_list[x].start %></td>
+			   <td><%= anno_list[x].stop %></td>
+			</tr>
+			   
+		   <% } %>
+		   </table>
+		 
+		 <% } %>
+     </div>
+<% } %>
+    
+
+    
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
+  </div>     
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/search.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+
+<script>
+  mainmenu()
+  intext = '<%= search_text %>'
+  var min_size = 3
+  $(document).ready(function(){
+      if(intext.length >= min_size){
+         get_annotations_counts_full(intext)    // sql from orf
+         get_annotations_counts_partial(intext)  // grep from files
+
+      }else{
+          document.getElementById('ncbi_count_div').innerHTML = 'word too small: < '+min_size.toString()+' chars.'
+          document.getElementById('prokka_count_div').innerHTML = 'word too small: < '+min_size.toString()+' chars.'
+      }
+      
+      
+  });
+
+</script>

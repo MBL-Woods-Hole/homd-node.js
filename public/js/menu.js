@@ -55,14 +55,14 @@ function close_flash(m){
 // }
 
 
-function search(){
+function basic_search(){
   //var form = document.getElementById('menu-search')
   searchText = document.getElementById('search_text').value.trim()
   if(!searchText)
     return
   var f = document.createElement("form");
   f.setAttribute('method',"post");
-  f.setAttribute('action',"/site_search"); 
+  f.setAttribute('action',"/basic_site_search"); 
   
   //create input element
   var i = document.createElement("input");

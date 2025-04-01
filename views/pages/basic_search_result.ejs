@@ -94,7 +94,7 @@ table td{
     <hr> 
     
     
-    Matches from Oral Taxon-ID Metadata: (<%= otids.length %> hits) <span class='float-right small'>Your Search String: "<%= search_text %>"</span> 
+    Matches from Taxon-ID Metadata: (<%= otids.length %> hits) <span class='float-right small'>Your Search String: "<%= search_text %>"</span> 
     <% if( otids.length > 0 ){ %>
     <div class='search-box'>
     <center><table class='sortable'>
@@ -112,15 +112,19 @@ table td{
     </center>
   </div>
   <% } %>
+    <!-- Genomes -->
     <hr>  
     Matches from Genome Metadata: (<%= gids.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
     <% if( gids.length > 0 ){ %>
     <div class='search-box'>
     <center><table class='sortable'>
-    <tr><th nowrap>Genome-ID</th><th>Taxonomy (click to sort)</th></tr>
+    <tr><th nowrap>HMT-ID</th><th nowrap>Genome-ID</th><th>Taxonomy (click to sort)</th></tr>
     <% for(n in gids){ %>
        <% gid = gids[n].gid %>
+       <% otid = gids[n].otid %>
+       <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
        <tr>
+       <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td>
        <td><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
        <td><a href='/genome/genome_description?gid=<%= gid %>'><%- gids[n].species %></a></td>
        </tr>
@@ -130,22 +134,10 @@ table td{
     </div>
     <% } %>
     
-     <hr> 
-     Annotations <b>(full text words only)</b><br>(Searches only Accessions(Molecule), Protein-IDs (~40M records)):<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
-    <div class='search-box-small'>
 
      
-
-          PROKKA Annotation hits: <span id='prokka_count_div_sql' >wOrKiNg</span>
-      <br>NCBI Annotation hits: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id='ncbi_count_div_sql' >wOrKiNg</span>
-      <div id='anno_result_box_sql'></div>
-    </div> 
-    <br>
-    
-    
-    
-    
     <hr>  
+
     Matches from Contigs: (<%= contig_list.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
     <% if( contig_list.length > 0 ){ %>
     <div class='search-box'>
@@ -166,8 +158,10 @@ table td{
     </center>
     </div>
     <% } %>
-
     
+    
+     
+
     
     <hr>
     Matches from Help Pages: (<%= help_list.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
@@ -199,13 +193,16 @@ table td{
   intext = '<%= search_text %>'
   var min_size = 3
   $(document).ready(function(){
+      console.log('in doc ready',intext)
       if(intext.length >= min_size){
-         get_annotations_counts_sql(intext)    // sql from orf
+
+         get_annotations_counts_sql(intext)    // code:search.js   sql from orf :: writes to file
          //get_annotations_counts_partial(intext)  // grep from files  SAVE FOR ADVANCED FILTER
 
       }else{
           //document.getElementById('ncbi_count_div').innerHTML = 'word too small: < '+min_size.toString()+' chars.'
           //document.getElementById('prokka_count_div').innerHTML = 'word too small: < '+min_size.toString()+' chars.'
+
       }
       
       

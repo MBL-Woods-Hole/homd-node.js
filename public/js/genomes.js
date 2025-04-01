@@ -142,13 +142,11 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       //console.log('loc',loc)
       //console.log('hilit',hilit)
       gid = value
-      // BAD  https://www.homd.org//jbrowse/?data=homd_V11.0/GCA_030450175.1&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=GCA_030450175.1|GCA_030450175.1|J8246_00020:2997..5412&highlight=GCA_030450175.1|GCA_030450175.1|J8246_00020:3497..4912
-       //  https://www.homd.org//jbrowse/?data=homd_V11.0/GCA_030450175.1&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=GCA_030450175.1|J8246_00020:2997..5412&highlight=GCA_030450175.1|J8246_00020:3497..4912
-       //
+      
        //Good https://www.homd.org//jbrowse/?data=homd_V11.0/GCA_030450175.1&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=GCA_030450175.1|CP073095.1:1..2445683&highlight=GCA_030450175.1|CP073095.1:455..2445183
       //https://www.homd.org//jbrowse/?data=homd_V11.0/GCA_030450175.1&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=GCA_030450175.1|GCA_030450175.1|CP073095.1:1..2445683&highlight=GCA_030450175.1|GCA_030450175.1|CP073095.1:455..2445183
       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+gid+'|'+loc+"&highlight="+gid+'|'+hilit
-      console.log('myurl',url)
+      //console.log('myurl',url)
   }else if(page == 'protein_peptide'){
        gid = value
        url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit

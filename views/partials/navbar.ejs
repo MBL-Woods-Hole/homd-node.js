@@ -364,6 +364,9 @@
 		  <!-- <li><a href='/help/mailing'>Mailing List</a></li> -->
 		  <!-- <li><a href="/forum" target='_blank' rel="noopener noreferrer">Forum</a></li> -->
 		  <li><a href='/help/help-page?pagecode=announcement'>Announcements</a></li>
+		  <% if(cfg.DBHOST === "localhost"){ %>
+		     <li><a href='/advanced_site_search'>Site Search</a></li>
+		  <% } %>
 		  <li><a href='/help/index'>Search Help</a></li>
 		  </ul>
 	</li>
@@ -371,7 +374,7 @@
 		
    <span id='homd-menu-right' >
 		<li><input type="text" placeholder="Search Site.."  id='search_text' value='' maxlength='30' size='20' /></li>
-		<li><input type="image" src='/images/search2.png'  id="search_button" height='20' onclick='search()' /></li>
+		<li><input type="image" src='/images/search2.png'  id="search_button" height='20' onclick='basic_search()' /></li>
    </span>
   
     

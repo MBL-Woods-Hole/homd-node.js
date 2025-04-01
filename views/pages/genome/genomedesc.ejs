@@ -143,9 +143,9 @@
     <tr class=""><td class='field'>Contigs</td>
     <td class='value'><span class='inner-value'>
        <% if(contigs.length == 0){ %>
-          <%= ginfo.contigs %> No Contigs Found<!-- localhost only -->
+          <%= ginfo.contigs %> No Contigs Found (localhost?)<!-- localhost only -->
        <% } else if(contigs.length == 1){ %>
-          <table class='contig-table' style='border:2px solid red;'><tr>
+          <table class='contig-table' border='0'><tr>
           <td>
             One Contig Found<br>
             <span class='contig-span' id='select-contig'><%= contigs[0].contig %></span>

@@ -158,9 +158,9 @@ app.use((error, req, res, next) => {
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
-      config : JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
-      ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
-      user: JSON.stringify(u),
+      config: JSON.stringify(CFG),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+      user: JSON.stringify(req.user || {}),
       msg: 'We\'re Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:',
       trace: error.toString()
   });

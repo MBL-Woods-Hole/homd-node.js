@@ -173,7 +173,7 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
     // ADV::Tax Sites ////////////////////////////////////////////////
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
     let default_length_of_site = 9
-    console.log('site_on',site_on)
+    //console.log('site_on',site_on)
     //console.log('big_g_list[]',big_g_list[0])
     big_g_list = big_g_list.filter( function(item) {
          if(site_on.length == default_length_of_site){
@@ -215,7 +215,7 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
         }
     })
     // MAGs /////////////////////////////////////////////////
-    console.log('vals',vals)
+    //console.log('vals',vals)
     big_g_list = big_g_list.filter( function filterMAGs(item) {
        //console.log('item',item)
        if(vals.mags == 'no_mags'){

@@ -1,0 +1,155 @@
+<style>
+.table{
+  border-collapse:collapse;
+  margin-top:20px;
+}
+.table td{
+  padding:10px;
+  border:1px solid red;
+}
+#adv_search_text{
+    border:2px solid black;
+    height:35px;
+    font-size:18px;
+}
+#search_text_anno{
+    border:2px solid black;
+    height:35px;
+    font-size:18px;
+}
+.submit-button{
+   background:green;
+   padding:10px;
+   cursor:pointer;
+}
+#submit-button-anno{
+    background:orange;
+}
+</style>
+<%- include('../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../partials/header_img'); %>
+    <%- include('../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <div class='title'>Full Site Search</div>
+  <center>
+  
+  <form id='adv-search-form' class='' method='POST' action='advanced_site_search'>
+      <table class='table'>
+      <tr><td>
+        <input type='checkbox' class='tax_cb' checked id='taxonomy' name='taxonomy' value='on'  > Search Taxonomy Database&nbsp;&nbsp;&nbsp;
+        
+        <input type='checkbox' checked class='tax_cb' id='genomes' name='genomes' value='on'  > Search Genomes Database&nbsp;&nbsp;&nbsp;
+        
+        
+         
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Enter Search Text: 
+          <input type="text" placeholder="Search Site.." name='adv_search_text' id='adv_search_text' value='' maxlength='80' size='50' /> 
+        </td>
+      </tr>
+      
+      </table>
+     
+      <input type='button' class='submit-button' id='submit-button' name='submit-button' value='Submit' onclick="validate_search_form('taxNgenomes')" \>
+  </form>
+  
+  <form id='adv-search-form-annotations' class='' method='POST' action='advanced_site_search_annotations'>
+      <table class='table'>
+      <tr><td><center>
+        Search Annotations:<br>Accession (Molecule-ID), Protein_ID, Gene and Gene Product
+        </center>
+        </td>
+      </tr>
+      <tr><td>
+      <input type='radio' class='anno_cb' checked id='prokka_cb' name='adv_anno_radio' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
+        
+      <input type='radio' class='anno_cb' id='ncbi_cb' name='adv_anno_radio' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
+        
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Enter Search Text: 
+          <input type="text" placeholder="Search Site.." name='search_text_anno' id='search_text_anno' value='' maxlength='80' size='50' /> 
+        </td>
+      </tr>
+      
+      </table>
+     
+      <input type='button' class='submit-button' id='submit-button-anno' name='submit-button' value='Submit' onclick="validate_search_form('anno')" \>
+  </form>
+  </center>
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+  function validate_search_form(form_type){
+     // validate cbs
+     if(form_type == 'taxNgenomes'){
+         const checkboxes = document.getElementsByClassName('tax_cb');
+         var cb_count = checkboxes.length
+         var checked_count = 0
+         for(var i in checkboxes){
+             if(checkboxes[i].checked){
+                 //console.log('got one',checkboxes[i])
+                 checked_count += 1
+             }
+         }
+         if(checked_count == 0){
+             alert('Must check at least one (Taxonomy or Genomes)!')
+             return
+         }
+         // validate search_string
+         var ss = document.getElementById('adv_search_text').value
+         //var ss = document.querySelector('#search_textx').value;
+         if(ss.length <=2){
+             alert('Search string is too short (must be at least 3 characters)!')
+             return
+         }
+           var f = document.getElementById('adv-search-form');
+     }else{
+         const checkboxes = document.getElementsByClassName('anno_cb');
+         var cb_count = checkboxes.length
+         var checked_count = 0
+         for(var i in checkboxes){
+             if(checkboxes[i].checked){
+                 //console.log('got one',checkboxes[i])
+                 checked_count += 1
+             }
+         }
+         if(checked_count == 0){
+             alert('Must check at least one (PROKKA or NCBI)!')
+             return
+         }
+         var ss = document.getElementById('search_text_anno').value
+         //var ss = document.querySelector('#search_textx').value;
+         if(ss.length <=2){
+             alert('Search string is too short (must be at least 3 characters)!')
+             return
+         }
+           var f = document.getElementById('adv-search-form-annotations');
+     }
+     f.submit()
+  }
+</script>
+
+
