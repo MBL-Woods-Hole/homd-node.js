@@ -5,13 +5,17 @@ table.sortable tbody {
     counter-reset: sortabletablescope;
 }
 table.sortable thead tr::before {
-    content: "";
+    content: "Row#";
     display: table-cell;
+    background:#C1E1C1;
+    border:1px solid black;
 }
 table.sortable tbody tr::before {
     content: counter(sortabletablescope);
     counter-increment: sortabletablescope;
     display: table-cell;
+    text-align:right;
+    padding:0 2px;
 }
 table th{
    background:#C1E1C1;

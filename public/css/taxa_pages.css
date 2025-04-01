@@ -84,12 +84,12 @@
 #tax-table .col5{
 /* #tax-table td:nth-of-type(5){ */
     width:80px;
-    text-align:center;
+    text-align:left;
 }
 #tax-table .col6{
 /* #tax-table td:nth-of-type(6) { */
   width:90px;
-  text-align:center;
+  text-align:left;
 }/*Setting the width of column 6.*/
 /* 
 #tax-table .col6{

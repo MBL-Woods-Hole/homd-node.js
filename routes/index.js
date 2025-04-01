@@ -37,94 +37,94 @@ router.get('/', function index(req, res) {
   })
 })
 
-router.get('/taxon=(\\d+)', function taxon(req, res) {
-  // sequence server
-  //console.log('taxon=/.d/')
-  var url = req.url;
-  //console.log(url)
-  let otid = url.split('=')[1]
-  res.redirect('/taxa/tax_description?otid='+otid)
-  
-})
-router.get('/idn=SEQF(\\d+.\\d)', function idn(req, res) {
-  // sequence server
-  //console.log('idn=SEQF')
-  var url = req.url;
-  //console.log(url)
-  let gid = url.split('=')[1]
-  res.redirect('/genome/genome_description?gid='+gid)
- 
-})
-router.get('/get_seq=*', function jb_seq(req, res) {
-  // jbrowse link to retrieve seq
-  //console.log('get_seq=')
-   // https://www.homd.org/get_seq=xxxxxx&type=yy
-   // https://www.homd.org/get_seq=KDE71052.1&type=aa
-  var url = req.url;
-  //console.log(url)
-  // /get_seq=KDE71052.1&type=aa
-  let type,pid,sp,db,anno
-  sp = url.split('&')
-  type = sp[1].split('=')[1].toLowerCase() // must be aa,AA,na or NA 
-  pid = sp[0].split('=')[1]
-  //console.log(type,pid)
-  // PROKKA pids (starting as SEQFXXX
-  if(type === 'aa'){   // NCBI
-      if(pid.substring(0,4) === 'SEQF'){
-          db = "`PROKKA_faa`.`protein_seq`"
-          anno = 'PROKKA'
-       }else{
-          db = "`NCBI_faa`.`protein_seq`"
-          anno = 'NCBI'
-       }
-  }else{   //req.body.type == 'na':   // NCBI  na
-      if(pid.substring(0,4) === 'SEQF'){
-          db = "`PROKKA_ffn`.`ffn_seq`"
-          anno = 'PROKKA'
-       }else{
-          db = "`NCBI_ffn`.`ffn_seq`"
-          anno = 'NCBI'
-       }
-  }
-  let q = 'SELECT seq_id, mol_id, UNCOMPRESS(seq_compressed) as seq FROM ' + db
-  q += " WHERE protein_id='" + pid + "'"
-  //console.log(q)
-  
-  const fileName = 'HOMD_'+anno+'_'+pid+'_'+type.toUpperCase()+'.fasta'
-  
-  TDBConn.query(q, (err, rows) => {
-  //ADBConn.query(q, (err, rows) => {
-    if (err) {
-        console.log(err)
-        res.send(err)
-        return
-    }
-    //console.log('rows',rows)
-    let sequence = '',gid,acc,show = ''
-    let length = 0
-    if(rows.length === 0){
-        sequence += "No sequence found in database"
-    }else{
-       length = rows[0].seq.length
-       gid = rows[0].seq_id
-       acc = rows[0].mol_id
-       const seqstr = (rows[0].seq).toString()
-       const arr = helpers.chunkSubstr(seqstr, 100)
-       sequence += arr.join('\n')
-       show = ">"+gid+' | '+anno+' | Protein_id: '+pid+' | Accession: '+acc+' | length '+length.toString()+'\n'
-       
-    }
-    show = show + sequence
-    res.writeHead(200, {
-      'Content-Disposition': `attachment; filename="${fileName}"`,
-      'Content-Type': 'text/plain',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0',
-    })
-    res.end(show)
-  })
-})
+// router.get('/taxon=(\\d+)', function taxon(req, res) {
+//   // sequence server
+//   //console.log('taxon=/.d/')
+//   var url = req.url;
+//   //console.log(url)
+//   let otid = url.split('=')[1]
+//   res.redirect('/taxa/tax_description?otid='+otid)
+//   
+// })
+// router.get('/idn=SEQF(\\d+.\\d)', function idn(req, res) {
+//   // sequence server
+//   //console.log('idn=SEQF')
+//   var url = req.url;
+//   //console.log(url)
+//   let gid = url.split('=')[1]
+//   res.redirect('/genome/genome_description?gid='+gid)
+//  
+// })
+// router.get('/get_seq=*', function jb_seq(req, res) {
+//   // jbrowse link to retrieve seq
+//   //console.log('get_seq=')
+//    // https://www.homd.org/get_seq=xxxxxx&type=yy
+//    // https://www.homd.org/get_seq=KDE71052.1&type=aa
+//   var url = req.url;
+//   //console.log(url)
+//   // /get_seq=KDE71052.1&type=aa
+//   let type,pid,sp,db,anno
+//   sp = url.split('&')
+//   type = sp[1].split('=')[1].toLowerCase() // must be aa,AA,na or NA 
+//   pid = sp[0].split('=')[1]
+//   //console.log(type,pid)
+//   // PROKKA pids (starting as SEQFXXX
+//   if(type === 'aa'){   // NCBI
+//       if(pid.substring(0,4) === 'SEQF'){
+//           db = "`PROKKA_faa`.`protein_seq`"
+//           anno = 'PROKKA'
+//        }else{
+//           db = "`NCBI_faa`.`protein_seq`"
+//           anno = 'NCBI'
+//        }
+//   }else{   //req.body.type == 'na':   // NCBI  na
+//       if(pid.substring(0,4) === 'SEQF'){
+//           db = "`PROKKA_ffn`.`ffn_seq`"
+//           anno = 'PROKKA'
+//        }else{
+//           db = "`NCBI_ffn`.`ffn_seq`"
+//           anno = 'NCBI'
+//        }
+//   }
+//   let q = 'SELECT seq_id, mol_id, UNCOMPRESS(seq_compressed) as seq FROM ' + db
+//   q += " WHERE protein_id='" + pid + "'"
+//   //console.log(q)
+//   
+//   const fileName = 'HOMD_'+anno+'_'+pid+'_'+type.toUpperCase()+'.fasta'
+//   
+//   TDBConn.query(q, (err, rows) => {
+//   //ADBConn.query(q, (err, rows) => {
+//     if (err) {
+//         console.log(err)
+//         res.send(err)
+//         return
+//     }
+//     //console.log('rows',rows)
+//     let sequence = '',gid,acc,show = ''
+//     let length = 0
+//     if(rows.length === 0){
+//         sequence += "No sequence found in database"
+//     }else{
+//        length = rows[0].seq.length
+//        gid = rows[0].seq_id
+//        acc = rows[0].mol_id
+//        const seqstr = (rows[0].seq).toString()
+//        const arr = helpers.chunkSubstr(seqstr, 100)
+//        sequence += arr.join('\n')
+//        show = ">"+gid+' | '+anno+' | Protein_id: '+pid+' | Accession: '+acc+' | length '+length.toString()+'\n'
+//        
+//     }
+//     show = show + sequence
+//     res.writeHead(200, {
+//       'Content-Disposition': `attachment; filename="${fileName}"`,
+//       'Content-Type': 'text/plain',
+//       'Cache-Control': 'no-cache, no-store, must-revalidate',
+//       'Pragma': 'no-cache',
+//       'Expires': '0',
+//     })
+//     res.end(show)
+//   })
+// })
 router.get('/download_file', function search(req, res) {
   //let page = req.params.pagecode
   let fullpath = req.query.filename
@@ -201,7 +201,25 @@ router.post('/advanced_site_search', function advanced_site_searchPOST(req, res)
     
  
 })
+function get_grep_rows(cmd){
+    let full_data = '',lines
+    let child = spawn("/bin/sh", ['-c',cmd], { 
+             //, (err, stdout, stderr) => {
+    })
+    child.stdout.on('data', (data) => {
+            full_data += data.toString()
+    });
 
+    child.stderr.on('data', (data) => {
+          console.error(`child stderr:\n${data}`);
+    });
+    child.on('exit', function (code, signal) {
+           console.log('child process exited with ' +`code ${code} and signal ${signal}`);
+           
+           lines = full_data.toString().split('\n')
+           return lines
+    })
+}
 router.post('/advanced_site_search_annotations', function advanced_site_search_annoPOST(req, res) {
     console.log(req.body)
     const searchText = req.body.search_text_anno.toLowerCase()
@@ -215,11 +233,17 @@ router.post('/advanced_site_search_annotations', function advanced_site_search_a
         console.log('ERROR')
         return
     }
-    const query = util.promisify(TDBConn.query).bind(TDBConn);
+    console.log(q)
+    //const query = util.promisify(TDBConn.query).bind(TDBConn);
+    let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio.toUpperCase()+"*")
+    let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath
+    console.log(grep_cmd)
+    
     (async () => {
       try {
-        const rows = await query(q);
-        //console.log('rows',rows);
+        //const rows = await query(q);
+        const rows = await get_grep_rows(grep_cmd)
+        console.log('rows',rows);
         res.render('pages/advanced_search_result', {
                     title: 'HOMD :: Search Results',
                     pgname: '', // for AboutThisPage 
