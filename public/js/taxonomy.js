@@ -636,6 +636,7 @@ function toggle_cb_abund(x){
         document.getElementById("medium_abund").checked = false;
         document.getElementById("low_abund").checked = false;
         document.getElementById("scarce_abund").checked = false;
+        document.getElementById("nodata_abund").checked = false;
         
         var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_abund('on')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('toggle_cb_abund_span').innerHTML = link_html
@@ -644,6 +645,7 @@ function toggle_cb_abund(x){
         document.getElementById("medium_abund").checked = true;
         document.getElementById("low_abund").checked = true;
         document.getElementById("scarce_abund").checked = true;
+        document.getElementById("nodata_abund").checked = true;
         
         var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_abund('off')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('toggle_cb_abund_span').innerHTML = link_html
@@ -656,6 +658,7 @@ function adv_toggle_cb_abund(x){
         document.getElementById("adv_medium_abund").checked = false;
         document.getElementById("adv_low_abund").checked = false;
         document.getElementById("adv_scarce_abund").checked = false;
+        document.getElementById("adv_nodata_abund").checked = false;
         
         var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('on')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html
@@ -664,6 +667,7 @@ function adv_toggle_cb_abund(x){
         document.getElementById("adv_medium_abund").checked = true;
         document.getElementById("adv_low_abund").checked = true;
         document.getElementById("adv_scarce_abund").checked = true;
+        document.getElementById("adv_nodata_abund").checked = true;
         
         var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('off')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html

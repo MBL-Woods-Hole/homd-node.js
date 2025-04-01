@@ -218,8 +218,8 @@ constants.tax_sites_default = ['oral', 'nasal', 'skin','gut', 'vaginal', 'pathog
 constants.tax_status_all     = ['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated','dropped'];
 constants.tax_status_default = ['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated'];
 
-constants.tax_abund_all     = ['high_abund','medium_abund','low_abund','scarce_abund'];
-constants.tax_abund_default = ['high_abund','medium_abund','low_abund','scarce_abund'];
+constants.tax_abund_all     = ['high_abund','medium_abund','low_abund','scarce_abund','nodata_abund'];
+constants.tax_abund_default = ['high_abund','medium_abund','low_abund','scarce_abund','nodata_abund'];
 
 constants.genome_level_all = {
   'complete_genome':'Complete Genome',

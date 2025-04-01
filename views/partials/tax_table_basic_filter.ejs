@@ -160,6 +160,12 @@
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='scarce_abund' name='scarce_abund' onclick='update_sb()' \> Scarce&nbsp;
             <% } %>
+            
+            <% if(statusfltr.abund.nodata_abund === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='nodata_abund' name='nodata_abund' onclick='update_sb()' \> No Data&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='nodata_abund' name='nodata_abund' onclick='update_sb()' \> No Data&nbsp;
+            <% } %>
             <span  id='toggle_cb_abund_span'><a class="pill pill-aqua" href='#' onclick="toggle_cb_abund('off')">Toggle CheckBoxes On/Off</a></span>
          </small>
 </td>

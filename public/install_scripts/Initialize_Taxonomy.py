@@ -175,7 +175,7 @@ def run_sites(args):
     #q = "SELECT otid, site FROM otid_site JOIN sites USING (site_id) ORDER BY otid,priority"
     #q = "SELECT otid, primary_body_site FROM otid_prime"
     #q = "SELECT otid, site FROM otid_prime JOIN sites on otid_prime.primary_body_site_id=sites.site_id"
-    q = "SELECT otid, p1.site as p1, p2.site as p2,body_site_reference as ref FROM otid_prime"
+    q = "SELECT otid, site_notes, p1.site as p1, p2.site as p2,body_site_reference as ref FROM otid_prime"
     q += " JOIN sites p1 on otid_prime.primary_body_site_id=p1.site_id"
     q += " JOIN sites p2 on otid_prime.secondary_body_site_id=p2.site_id  ORDER BY otid"
     lookup = {}
@@ -193,6 +193,7 @@ def run_sites(args):
         if not obj['ref']:
             obj['ref'] = ''
         lookup[otid]['ref_link'] = obj['ref']
+        lookup[otid]['notes'] = obj['site_notes']
         for site in primary_short_sites:
             if primary_site.startswith(site):
                 master_lookup[otid]['sites'].append(site)

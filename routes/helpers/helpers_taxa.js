@@ -99,7 +99,8 @@ module.exports.get_null_tax_filter = function get_null_tax_filter(){
            high_abund:'off',
            medium_abund:'off',
            low_abund:'off',
-           scarce_abund:'off'
+           scarce_abund:'off',
+           nodata_abund:'off'
         },
         genomes:'both',
         text:{
@@ -406,6 +407,9 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
        if(item == 'scarce_abund'){
          req.session.ttable_filter.abund.scarce_abund = 'on'
        }
+       if(item == 'nodata_abund'){
+         req.session.ttable_filter.abund.nodata_abund = 'on'
+       }
        //////
        if(item == 'txt_srch'){
          req.session.ttable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
@@ -463,27 +467,30 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     //Abundance
      let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on')
-     //console.log('abundOn',abund_on)
+     console.log('abundOn',abund_on)
      big_tax_list = big_tax_list.filter( function filterAbundance(item) {
         //console.log('item',C.site_lookup[item.otid])
-        if(abund_on.length == 4){
+        if(abund_on.length == C.tax_abund_all.length){
             return item
         }else{
           if(C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1){
-            let site_item_primary = C.site_lookup[item.otid].s1
-            //console.log('site_item_primary',site_item_primary)
-            //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund' ]
-        
+            let site_item_primary = C.site_lookup[item.otid].s1.toLowerCase().replace(/\s/g,'')
+            if(item.otid == 400){
+                console.log('400site_item_primary',item.otid,site_item_primary)
+            }
+            //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund','nodata_abund' ]
+            
             for(let n in abund_on){
-              let test = helpers.capitalizeFirst(abund_on[n].split('_')[0])
-              //console.log('test',test)
+              let test = abund_on[n].slice(0,-6).toLowerCase() // 
+              console.log('test',test)
               if(site_item_primary.includes(test)){
-               return item
+                return item
               }
             }
           }
         }
     })
+    console.log('big_tax_list length',big_tax_list.length)
     //site
     // create array of 'on's
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')

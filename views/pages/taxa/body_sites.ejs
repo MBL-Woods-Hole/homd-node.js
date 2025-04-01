@@ -1,6 +1,18 @@
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
+table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+table.sortable thead tr::before {
+    content: "";
+    display: table-cell;
+}
+table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+}
 table th{
    background:#C1E1C1;
    border:1px solid black;

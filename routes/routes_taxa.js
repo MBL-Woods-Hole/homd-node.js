@@ -993,7 +993,7 @@ router.get('/body_sites', function body_sites(req, res) {
          obj.s1 = 'Unassigned'
          obj.s2 = ''
         
-         obj.note = ''
+         obj.notes = ''
          obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species+' (<b>DROPPED</b>)'
        }else if(otid in C.site_lookup){
          obj.s1 = C.site_lookup[otid].s1
@@ -1003,7 +1003,7 @@ router.get('/body_sites', function body_sites(req, res) {
              obj.s2 = C.site_lookup[otid].s2
          }
          
-         obj.note = C.site_lookup[otid].note
+         obj.note = C.site_lookup[otid].notes
          obj.gsp = C.taxon_lookup[otid].genus +' '+C.taxon_lookup[otid].species
        }else{
          obj.s1 = 'Unassigned'

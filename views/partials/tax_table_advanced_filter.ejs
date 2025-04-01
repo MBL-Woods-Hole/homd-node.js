@@ -276,6 +276,12 @@ width: 1500px;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='adv_scarce_abund' name='scarce_abund' onclick='adv_update_sb()' \> Scarce&nbsp;&nbsp;
             <% } %>
+            
+            <% if(statusfltr.abund.nodata_abund === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_nodata_abund' name='nodata_abund' onclick='adv_update_sb()' \> No Data&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='adv_nodata_abund' name='nodata_abund' onclick='adv_update_sb()' \> No Data&nbsp;
+            <% } %>
            <span  id='adv_toggle_cb_abund_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_abund('off')">Toggle CheckBoxes On/Off</a></span>
 </td>
 </tr>
