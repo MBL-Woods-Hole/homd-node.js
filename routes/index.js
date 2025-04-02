@@ -299,11 +299,11 @@ router.post('/advanced_site_search_annotations', function advanced_site_search_a
         console.log('ERROR')
         return
     }
-    console.log(q)
+    //console.log(q)
     //const query = util.promisify(TDBConn.query).bind(TDBConn);
     let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio.toUpperCase()+"*")
     let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath
-    //console.log(grep_cmd)
+    console.log(grep_cmd)
     main(req, res, grep_cmd)
     return
     // (async () => {
