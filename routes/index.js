@@ -329,6 +329,8 @@ router.post('/advanced_site_search_annotations', async function advanced_site_se
         let args = ['-ih',searchText,datapath]
         //const rows = await get_grep_rows(grep_cmd);
         const rows_lst = await execPromise(CFG.GREP_CMD,args);
+        console.log('rows_lst length',rows_lst.length)
+        console.log('rows_lst[0]',rows_lst[0])
         rows = rows_lst.join('')
         //console.log('rows',rows)
         row_array = rows.split('\n')

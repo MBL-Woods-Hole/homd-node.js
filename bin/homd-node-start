@@ -24,7 +24,7 @@ if(available_environments.indexOf(process.argv[2]) !== -1){
   }else{
       process.env.NODE_ENV = 'development';
       // this isn't used (use "node ----max-old-space-size=4096 app" instead) '
-      process.env.NODE_OPTIONS = '--max-old-space-size=4096'
+      process.env.NODE_OPTIONS = '--max-old-space-size=8192'
   }
 }
 console.log("Setting Environment to: ",process.env.NODE_ENV);
