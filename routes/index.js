@@ -226,12 +226,12 @@ function execPromise(cmd, args) {
 //             if (err) return reject(err);
 //             resolve(stdout);
 //         });
-        let data_array
+        let data_array,data_sum=''
         const process = spawn(cmd, args, { shell: true });
         process.stdout.on('data', (data) => {
           // Process the data received from stdout
           //console.log(`stdout: ${data}`);
-          data_array = data.toString().split('\n')
+          data_sum += data.toString()
         });
         process.stderr.on("data", data => {
             console.log(`stderr: ${data}`);
@@ -240,7 +240,7 @@ function execPromise(cmd, args) {
         process.on('close', function (code) { // Should probably be 'exit', not 'close'
           // *** Process completed
           console.log('code',code)
-          resolve(data_array);
+          resolve(data_sum);
         });
         process.on('error', function (err) {
           // *** Process creation failed
@@ -326,9 +326,9 @@ router.post('/advanced_site_search_annotations', async function advanced_site_se
         console.log(grep_cmd)
         let args = ['-ih',searchText,datapath]
         //const rows = await get_grep_rows(grep_cmd);
-        const row_array = await execPromise(CFG.GREP_CMD,args);
+        const rows = await execPromise(CFG.GREP_CMD,args);
         //console.log('rows',rows)
-        //row_array = rows.split('\n')
+        row_array = rows.split('\n')
         for(let n in row_array){
             if(row_array[n] != ''){
                 obj = {}

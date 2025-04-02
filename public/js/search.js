@@ -2,7 +2,7 @@
 function get_annotations_counts_sql(intext){
     // search SQL orf table for both prokka and ncbi WHOLE PID Only
     // if no result then go to partial search
-    console.log('get_annotations_counts_full',intext)
+    console.log('get_annotations_counts_aql',intext)
     var xmlhttp = new XMLHttpRequest();
     
     
