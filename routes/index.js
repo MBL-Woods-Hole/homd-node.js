@@ -231,7 +231,9 @@ function execPromise(cmd, args) {
         process.stdout.on('data', (data) => {
           // Process the data received from stdout
           //console.log(`stdout: ${data}`);
-          data_sum += data.toString()
+          if(data){
+            data_sum += data.toString()
+          }
         });
         process.stderr.on("data", data => {
             console.log(`stderr: ${data}`);
