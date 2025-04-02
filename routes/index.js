@@ -201,33 +201,33 @@ router.post('/advanced_site_search', function advanced_site_searchPOST(req, res)
     
  
 })
-// function get_grep_rows(cmd){
-//     let full_data = '',lines
-//     let child = spawn("/bin/sh", ['-c',cmd], { 
-//              //, (err, stdout, stderr) => {
-//     })
-//     child.stdout.on('data', (data) => {
-//             full_data += data.toString()
-//     });
-// 
-//     child.stderr.on('data', (data) => {
-//           console.error(`child stderr:\n${data}`);
-//     });
-//     child.on('exit', function (code, signal) {
-//            console.log('child process exited with ' +`code ${code} and signal ${signal}`);
-//            
-//            lines = full_data.toString().split('\n')
-//            return lines
-//     })
-// }
-// function execPromise = function(cmd) {
-//     return new Promise(function(resolve, reject) {
-//         exec(cmd, function(err, stdout) {
-//             if (err) return reject(err);
-//             resolve(stdout);
-//         });
-//     });
-// }
+function get_grep_rows(cmd){
+    let full_data = '',lines
+    let child = spawn("/bin/sh", ['-c',cmd], { 
+             //, (err, stdout, stderr) => {
+    })
+    child.stdout.on('data', (data) => {
+            full_data += data.toString()
+    });
+
+    child.stderr.on('data', (data) => {
+          console.error(`child stderr:\n${data}`);
+    });
+    child.on('exit', function (code, signal) {
+           console.log('child process exited with ' +`code ${code} and signal ${signal}`);
+           
+           lines = full_data.toString().split('\n')
+           return lines
+    })
+}
+function execPromise(cmd) {
+    return new Promise(function(resolve, reject) {
+        exec(cmd, function(err, stdout) {
+            if (err) return reject(err);
+            resolve(stdout);
+        });
+    });
+}
 const utilexec = util.promisify(require('child_process').exec);
 async function runCommand(command) {
   try {
@@ -286,47 +286,89 @@ async function main(req, res, cmd) {
     }
     
 }
-router.post('/advanced_site_search_annotations', function advanced_site_search_annoPOST(req, res) {
+router.post('/advanced_site_search_annotations', async function advanced_site_search_annoPOST(req, res) {
     console.log(req.body)
     const searchText = req.body.search_text_anno.toLowerCase()
-    let fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
-    let q
+    let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
+    let grep_fields = ['anno','genome_id','accession','gene','protein_id','product']
+    let q,row_array,obj,obj_array = []
     if(req.body.adv_anno_radio == 'prokka'){
-        q = "SELECT "+fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
+        q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
     }else if(req.body.adv_anno_radio == 'ncbi'){
-        q = "SELECT "+fields.join(",")+" from NCBI_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
+        q = "SELECT "+sql_fields.join(",")+" from NCBI_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
     }else{
         console.log('ERROR')
         return
     }
+    try{
+        let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio.toUpperCase()+"*")
+        let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath
+        //const rows = await get_grep_rows(grep_cmd);
+        const rows = await execPromise(grep_cmd);
+        //console.log('rows',rows)
+        row_array = rows.split('\n')
+        for(let n in row_array){
+            if(row_array[n] != ''){
+                obj = {}
+                let pts = row_array[n].split('|')
+                for(let i in grep_fields){
+                    obj[grep_fields[i]] = pts[i]
+                }
+                obj_array.push(obj)
+            }
+        }
+        res.render('pages/advanced_search_result', {
+            title: 'HOMD :: Search Results',
+            pgname: '', // for AboutThisPage 
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+            user: JSON.stringify(req.user || {}),
+            anno: req.body.adv_anno_radio,
+            search_text: req.body.search_text_anno,
+            otid_list: JSON.stringify([]),
+            gid_list: JSON.stringify([]),
+            taxon_otid_obj: JSON.stringify({}),
+            annotationList: JSON.stringify(obj_array),
+            form_type: JSON.stringify(['annotations'])
+                    
+        })
+    }
+    catch(e){
+          console.log("error",e);
+      }
+      
+    return
     //console.log(q)
     //const query = util.promisify(TDBConn.query).bind(TDBConn);
     let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio.toUpperCase()+"*")
     let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath
     console.log(grep_cmd)
-    main(req, res, grep_cmd)
-    return
+    //const rows = await runCommand(grep_cmd);
+    const rows = await get_grep_rows(grep_cmd);
+    console.log('rows',rows)
+    //main(req, res, grep_cmd)
+    //return
     // (async () => {
 //       try {
 //         //const rows = await query(q);
 //         //const rows = await get_grep_rows(grep_cmd)
 //         const rows = await runCommand(grep_cmd);
 //         console.log('rows',rows);
-//         res.render('pages/advanced_search_result', {
-//                     title: 'HOMD :: Search Results',
-//                     pgname: '', // for AboutThisPage 
-//                     config: JSON.stringify(CFG),
-//                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//                     user: JSON.stringify(req.user || {}),
-//                     anno: req.body.adv_anno_radio,
-//                     search_text: req.body.search_text_anno,
-//                     otid_list: JSON.stringify([]),
-//                     gid_list: JSON.stringify([]),
-//                     taxon_otid_obj: JSON.stringify({}),
-//                     annotationList: JSON.stringify(rows),
-//                     form_type: JSON.stringify(['annotations'])
-//                     
-//         })
+        res.render('pages/advanced_search_result', {
+                    title: 'HOMD :: Search Results',
+                    pgname: '', // for AboutThisPage 
+                    config: JSON.stringify(CFG),
+                    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+                    user: JSON.stringify(req.user || {}),
+                    anno: req.body.adv_anno_radio,
+                    search_text: req.body.search_text_anno,
+                    otid_list: JSON.stringify([]),
+                    gid_list: JSON.stringify([]),
+                    taxon_otid_obj: JSON.stringify({}),
+                    annotationList: JSON.stringify(rows),
+                    form_type: JSON.stringify(['annotations'])
+                    
+        })
 //       } finally {
 //         //TDBConn.end();
 //         
