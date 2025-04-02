@@ -220,13 +220,33 @@ function get_grep_rows(cmd){
            return lines
     })
 }
-function execPromise(cmd) {
+function execPromise(cmd, args) {
     return new Promise(function(resolve, reject) {
-        exec(cmd, function(err, stdout) {
-            if (err) return reject(err);
-            resolve(stdout);
+        // spawn(cmd, function(err, stdout) {
+//             if (err) return reject(err);
+//             resolve(stdout);
+//         });
+        let data_array
+        const process = spawn(cmd, args, { shell: true });
+        process.stdout.on('data', (data) => {
+          // Process the data received from stdout
+          //console.log(`stdout: ${data}`);
+          data_array = data.toString().split('\n')
         });
-    });
+        process.stderr.on("data", data => {
+            console.log(`stderr: ${data}`);
+            //reject(data)
+        });
+        process.on('close', function (code) { // Should probably be 'exit', not 'close'
+          // *** Process completed
+          console.log('code',code)
+          resolve(data_array);
+        });
+        process.on('error', function (err) {
+          // *** Process creation failed
+          reject(err);
+        });
+        });
 }
 const utilexec = util.promisify(require('child_process').exec);
 async function runCommand(command) {
@@ -303,10 +323,12 @@ router.post('/advanced_site_search_annotations', async function advanced_site_se
     try{
         let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio.toUpperCase()+"*")
         let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath
+        console.log(grep_cmd)
+        let args = ['-ih',searchText,datapath]
         //const rows = await get_grep_rows(grep_cmd);
-        const rows = await execPromise(grep_cmd);
+        const row_array = await execPromise(CFG.GREP_CMD,args);
         //console.log('rows',rows)
-        row_array = rows.split('\n')
+        //row_array = rows.split('\n')
         for(let n in row_array){
             if(row_array[n] != ''){
                 obj = {}
