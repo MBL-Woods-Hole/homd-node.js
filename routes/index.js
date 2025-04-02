@@ -201,24 +201,90 @@ router.post('/advanced_site_search', function advanced_site_searchPOST(req, res)
     
  
 })
-function get_grep_rows(cmd){
-    let full_data = '',lines
-    let child = spawn("/bin/sh", ['-c',cmd], { 
-             //, (err, stdout, stderr) => {
+// function get_grep_rows(cmd){
+//     let full_data = '',lines
+//     let child = spawn("/bin/sh", ['-c',cmd], { 
+//              //, (err, stdout, stderr) => {
+//     })
+//     child.stdout.on('data', (data) => {
+//             full_data += data.toString()
+//     });
+// 
+//     child.stderr.on('data', (data) => {
+//           console.error(`child stderr:\n${data}`);
+//     });
+//     child.on('exit', function (code, signal) {
+//            console.log('child process exited with ' +`code ${code} and signal ${signal}`);
+//            
+//            lines = full_data.toString().split('\n')
+//            return lines
+//     })
+// }
+// function execPromise = function(cmd) {
+//     return new Promise(function(resolve, reject) {
+//         exec(cmd, function(err, stdout) {
+//             if (err) return reject(err);
+//             resolve(stdout);
+//         });
+//     });
+// }
+const utilexec = util.promisify(require('child_process').exec);
+async function runCommand(command) {
+  try {
+    const { stdout, stderr } = await utilexec(command);
+    //console.log('stdout:', stdout);
+    //console.error('stderr:', stderr);
+    return { stdout, stderr };
+  } catch (error) {
+    //console.error('exec error:', error);
+    //throw error;
+    return ['No Data'];
+  }
+}
+async function main(req, res, cmd) {
+  try {
+    //await runCommand(cmd);
+    let obj_array = [],obj,row_array
+    const rows = await runCommand(cmd);
+    //await runCommand('echo "Hello, world!"');
+    // 'prokka|GCA_030450175.1|CP073095.1||GCA_030450175.1_00170|hypothetical protein',
+    let grep_file_order =['anno','genome_id','accession','gene','protein_id','product']
+    if(rows.hasOwnProperty('stdout')){
+       row_array = rows.stdout.split('\n')
+    }else{
+       row_array = []
+    }
+     
+    for(let n in row_array){
+        if(row_array[n] != ''){
+            obj = {}
+            let pts = row_array[n].split('|')
+            for(let i in grep_file_order){
+                obj[grep_file_order[i]] = pts[i]
+            }
+            obj_array.push(obj)
+        }
+    }
+    //console.log('rows',obj_array);
+    res.render('pages/advanced_search_result', {
+            title: 'HOMD :: Search Results',
+            pgname: '', // for AboutThisPage 
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+            user: JSON.stringify(req.user || {}),
+            anno: req.body.adv_anno_radio,
+            search_text: req.body.search_text_anno,
+            otid_list: JSON.stringify([]),
+            gid_list: JSON.stringify([]),
+            taxon_otid_obj: JSON.stringify({}),
+            annotationList: JSON.stringify(obj_array),
+            form_type: JSON.stringify(['annotations'])
+                    
     })
-    child.stdout.on('data', (data) => {
-            full_data += data.toString()
-    });
-
-    child.stderr.on('data', (data) => {
-          console.error(`child stderr:\n${data}`);
-    });
-    child.on('exit', function (code, signal) {
-           console.log('child process exited with ' +`code ${code} and signal ${signal}`);
-           
-           lines = full_data.toString().split('\n')
-           return lines
-    })
+    } finally {
+        console.log('Done');
+    }
+    
 }
 router.post('/advanced_site_search_annotations', function advanced_site_search_annoPOST(req, res) {
     console.log(req.body)
@@ -237,33 +303,35 @@ router.post('/advanced_site_search_annotations', function advanced_site_search_a
     //const query = util.promisify(TDBConn.query).bind(TDBConn);
     let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio.toUpperCase()+"*")
     let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath
-    console.log(grep_cmd)
-    
-    (async () => {
-      try {
-        //const rows = await query(q);
-        const rows = await get_grep_rows(grep_cmd)
-        console.log('rows',rows);
-        res.render('pages/advanced_search_result', {
-                    title: 'HOMD :: Search Results',
-                    pgname: '', // for AboutThisPage 
-                    config: JSON.stringify(CFG),
-                    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-                    user: JSON.stringify(req.user || {}),
-                    anno: req.body.adv_anno_radio,
-                    search_text: req.body.search_text_anno,
-                    otid_list: JSON.stringify([]),
-                    gid_list: JSON.stringify([]),
-                    taxon_otid_obj: JSON.stringify({}),
-                    annotationList: JSON.stringify(rows),
-                    form_type: JSON.stringify(['annotations'])
-                    
-        })
-      } finally {
-        //TDBConn.end();
-        
-      }
-    })()
+    //console.log(grep_cmd)
+    main(req, res, grep_cmd)
+    return
+    // (async () => {
+//       try {
+//         //const rows = await query(q);
+//         //const rows = await get_grep_rows(grep_cmd)
+//         const rows = await runCommand(grep_cmd);
+//         console.log('rows',rows);
+//         res.render('pages/advanced_search_result', {
+//                     title: 'HOMD :: Search Results',
+//                     pgname: '', // for AboutThisPage 
+//                     config: JSON.stringify(CFG),
+//                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//                     user: JSON.stringify(req.user || {}),
+//                     anno: req.body.adv_anno_radio,
+//                     search_text: req.body.search_text_anno,
+//                     otid_list: JSON.stringify([]),
+//                     gid_list: JSON.stringify([]),
+//                     taxon_otid_obj: JSON.stringify({}),
+//                     annotationList: JSON.stringify(rows),
+//                     form_type: JSON.stringify(['annotations'])
+//                     
+//         })
+//       } finally {
+//         //TDBConn.end();
+//         
+//       }
+//    })()
    return
 
 
