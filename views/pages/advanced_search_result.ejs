@@ -145,31 +145,35 @@ table td{
 <% } %>
 <% if(search_type.indexOf("annotations") != -1){ %> 
      Annotations <small>(Searches only Accessions(Molecule), Protein-IDs,Gene and Gene Product (~20M records)):<span class='float-right small'></span></small>
+     <br>Hits: <%= anno_list.length %>&nbsp;&nbsp;|&nbsp;&nbsp; Selected Annotation: <%= anno.toUpperCase() %>
+             <br>
      <div class='search-box-anno'>
-     
-		 Hits: <%= anno_list.length %>&nbsp;&nbsp;|&nbsp;&nbsp; Selected Annotation: <%= anno.toUpperCase() %>
-		 <br>
-		 <% if(anno_list.length != 0){ %>
-		   <table>
-		   <tr><th>Genome-ID</th><th>Accession</th><th>Protein-ID</th><th>Gene</th><th>Gene Product</th><th>Length AA</th><th>Length NA</th><th>Start</th><th>Stop</th></tr>
-		   <% for(x in anno_list){ %>
-		     <% gid  = anno_list[x].genome_id %>
-			 <tr>
-			   <td><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></td>
-			   <td><%= anno_list[x].accession %></td>
-			   <td><%= anno_list[x].protein_id %></td>
-			   <td><%= anno_list[x].gene %></td>
-			   <td><%= anno_list[x].product %></td>
-			   <td><%= anno_list[x].length_aa %></td>
-			   <td><%= anno_list[x].length_na %></td>
-			   <td><%= anno_list[x].start %></td>
-			   <td><%= anno_list[x].stop %></td>
-			</tr>
-			   
-		   <% } %>
-		   </table>
-		 
-		 <% } %>
+         <% if(anno_list.hasOwnProperty("too_long")){  %>
+               Too Many Hits (>10,000). Try to refine your search.
+         <% }else{ %>
+             
+             <% if(anno_list.length != 0){ %>
+               <table>
+               <tr><th>Genome-ID</th><th>Accession</th><th>Protein-ID</th><th>Gene</th><th>Gene Product</th><th>Length AA</th><th>Length NA</th><th>Start</th><th>Stop</th></tr>
+               <% for(x in anno_list){ %>
+                 <% gid  = anno_list[x].genome_id %>
+                 <tr>
+                   <td><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></td>
+                   <td><%= anno_list[x].accession %></td>
+                   <td><%= anno_list[x].protein_id %></td>
+                   <td><%= anno_list[x].gene %></td>
+                   <td><%= anno_list[x].product %></td>
+                   <td><%= anno_list[x].length_aa %></td>
+                   <td><%= anno_list[x].length_na %></td>
+                   <td><%= anno_list[x].start %></td>
+                   <td><%= anno_list[x].stop %></td>
+                </tr>
+                   
+               <% } %>
+               </table>
+             
+             <% } %>
+         <% } %>
      </div>
 <% } %>
     

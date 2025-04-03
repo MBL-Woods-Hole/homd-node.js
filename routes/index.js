@@ -226,13 +226,19 @@ function execPromise(cmd, args) {
 //             if (err) return reject(err);
 //             resolve(stdout);
 //         });
-        let data_array = [],data_sum=''
+        let data_array = [],chunk_rows=[],line_count = 0
         const process = spawn(cmd, args, { shell: true });
         process.stdout.on('data', (data) => {
           // Process the data received from stdout
           //console.log(`stdout: ${data}`);
           if(data){
-            data_array.push(data.toString())
+            chunk_rows = data.toString().split('\n')
+            line_count += chunk_rows.length
+            //data_array.push(data.toString())
+            if(line_count > 10000){
+                resolve(['too_long']);
+            }
+            data_array.push(...chunk_rows)
           }
         });
         process.stderr.on("data", data => {
@@ -324,26 +330,35 @@ router.post('/advanced_site_search_annotations', async function advanced_site_se
     }
     try{
         let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio.toUpperCase()+"*")
-        let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath
+        
+        
+        let args = ['-ih','"'+searchText+'"',datapath]
+        let grep_cmd = CFG.GREP_CMD + ' ' + args.join(' ')
         console.log(grep_cmd)
-        let args = ['-ih',searchText,datapath]
         //const rows = await get_grep_rows(grep_cmd);
-        const rows_lst = await execPromise(CFG.GREP_CMD,args);
-        console.log('rows_lst length',rows_lst.length)
+        const row_array = await execPromise(CFG.GREP_CMD, args);
+        console.log('rows_lst length',row_array.length)
         //console.log('rows_lst[0]',rows_lst[0])
-        rows = rows_lst.join('')
-        //console.log('rows',rows)
-        row_array = rows.split('\n')
-        for(let n in row_array){
-            if(row_array[n] != ''){
-                obj = {}
-                let pts = row_array[n].split('|')
-                for(let i in grep_fields){
-                    obj[grep_fields[i]] = pts[i]
+        //rows = rows_lst.join('')
+        if(row_array[0] == 'too_long'){
+            obj_array = {'too_long':'too_long'}
+        }else{
+            //console.log('rows',rows)
+            //row_array = rows.split('\n')
+            for(let n in row_array){
+                if(row_array[n] != ''){
+                    obj = {}
+                    let pts = row_array[n].split('|')
+                    if(['prokka','ncbi'].indexOf(pts[0]) != -1 ){
+                      for(let i in grep_fields){
+                            obj[grep_fields[i]] = pts[i]
+                      }
+                      obj_array.push(obj)
+                    }
                 }
-                obj_array.push(obj)
             }
         }
+        //console.log('obj_array',obj_array)
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
