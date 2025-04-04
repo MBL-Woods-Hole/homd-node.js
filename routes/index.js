@@ -582,7 +582,7 @@ router.post('/advanced_site_search_sql', function get_annotations_counts_sql(req
     console.log('POST::advanced_site_search_sql',req.body)
     const query = util.promisify(TDBConn.query).bind(TDBConn);
     //console.log(req.body)
-    let limit = 5000
+    let limit = 20000
     const searchText = req.body.search_text_anno.toLowerCase()
     let q,row_obj ={}
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
