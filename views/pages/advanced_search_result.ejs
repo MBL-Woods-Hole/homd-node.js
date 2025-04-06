@@ -52,7 +52,7 @@ table td{
    color:maroon;
    cursor:pointer;
 }
-#search-text-div{
+.search-text-div{
     padding:8px;
     font-size:18px;
     
@@ -73,7 +73,7 @@ table td{
     <div class='page-content' > 
        <div class='title'>Search Result  </div>
 <!-- 'HMT-'+("000" + otid).slice(-3);  -->
-     <center><div id='search-text-div'>
+     <center><div class='search-text-div'>
      Search String: <span id='srch_txt'>"<%= search_text %>"</span> <small>(case insensitive)</small>
      </div></center>
 <% if(search_type.indexOf("taxonomy") != -1){ %>
@@ -144,12 +144,18 @@ table td{
     <hr> 
 <% } %>
 <% if(search_type.indexOf("annotations") != -1){ %> 
-     Annotations <small>(Searches only Accessions(Molecule), Protein-IDs,Gene and Gene Product (~20M records)):<span class='float-right small'></span></small>
-     <br>Hits: <%= anno_list.length %>&nbsp;&nbsp;|&nbsp;&nbsp; Selected Annotation: <%= anno.toUpperCase() %>
-             <br>
+     
+    <center><span class='search-text-div'>Selected Annotation: <%= anno.toUpperCase() %></span></center>
+    Annotations <small>(Searches only Genome-IDs, Accessions(Molecule), Protein-IDs, Gene and Gene Product (~20M records)):<span class='small'></span></small>
+     <% if(anno_list.hasOwnProperty("too_long")){  %>
+        <br>Hits: ><%= max %>
+    <% }else{ %>
+        <br>Hits: <%= anno_list.length %>
+    <% } %>
+    <br>
      <div class='search-box-anno'>
          <% if(anno_list.hasOwnProperty("too_long")){  %>
-               Too Many Hits (>10,000). Try to refine your search.
+               Too Many Hits (><%= max %>). Try to refine your search.
          <% }else{ %>
              
              <% if(anno_list.length != 0){ %>

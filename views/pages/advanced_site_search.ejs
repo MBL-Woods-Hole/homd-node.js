@@ -12,7 +12,7 @@
     height:35px;
     font-size:18px;
 }
-#search_text_anno{
+.search_text_anno{
     border:2px solid black;
     height:35px;
     font-size:18px;
@@ -26,6 +26,7 @@
 #submit-button-anno{
     background:orange;
 }
+
 </style>
 <%- include('../partials/header_html'); %>
 
@@ -63,31 +64,59 @@
       <input type='button' class='submit-button' id='submit-button' name='submit-button' value='Submit' onclick="validate_search_form('taxNgenomes')" \>
   </form>
   
-  <form id='adv-search-form-annotations' class='' method='POST' action='advanced_site_search_sql'>  <!-- advanced_site_search_annotations -->
+  <form id='adv-search-form-annotations_sql' class='' method='POST' action='advanced_site_search_sql'>  <!-- advanced_site_search_annotations -->
       <table class='table'>
       <tr><td><center>
-        Search Annotations:<br>Accession (Molecule-ID), Protein_ID, Gene and Gene Product
+        Search Annotations (sql):<br>Accession (Molecule-ID), Protein_ID, Gene and Gene Product
         </center>
         </td>
       </tr>
       <tr><td>
-      <input type='radio' class='anno_cb' checked id='prokka_cb' name='adv_anno_radio' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_sql' checked id='prokka_cb_sql' name='adv_anno_radio_sql' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
         
-      <input type='radio' class='anno_cb' id='ncbi_cb' name='adv_anno_radio' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_sql' id='ncbi_cb_sql' name='adv_anno_radio_sql' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
         
         </td>
       </tr>
       <tr>
         <td>
           Enter Search Text: 
-          <input type="text" placeholder="Search Site.." name='search_text_anno' id='search_text_anno' value='' maxlength='80' size='50' /> 
+          <input type="text" class='search_text_anno' placeholder="Search Site.." name='search_text_anno_sql' id='search_text_anno_sql' value='' maxlength='80' size='50' /> 
         </td>
       </tr>
       
       </table>
      
-      <input type='button' class='submit-button' id='submit-button-anno' name='submit-button' value='Submit' onclick="validate_search_form('anno')" \>
+      <input type='button' class='submit-button' id='submit-button-anno' name='submit-button' value='Submit' onclick="validate_search_form('anno_sql')" \>
   </form>
+  
+  <form id='adv-search-form-annotations_grep' class='' method='POST' action='advanced_site_search_grep'>  <!-- advanced_site_search_annotations -->
+      <table class='table'>
+      <tr><td><center>
+        Search Annotations (grep):<br>Accession (Molecule-ID), Protein_ID, Gene and Gene Product
+        </center>
+        </td>
+      </tr>
+      <tr><td>
+      <input type='radio' class='anno_cb_grep' checked id='prokka_cb_grep' name='adv_anno_radio_grep' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
+        
+      <input type='radio' class='anno_cb_grep' id='ncbi_cb_grep' name='adv_anno_radio_grep' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
+        
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Enter Search Text: 
+          <input type="text" class='search_text_anno' placeholder="Search Site.." name='search_text_anno_grep' id='search_text_anno_grep' value='' maxlength='80' size='50' /> 
+        </td>
+      </tr>
+      
+      </table>
+     
+      <input type='button' class='submit-button' id='submit-button-anno' name='submit-button' value='Submit' onclick="validate_search_form('anno_grep')" \>
+  </form>
+  
+  
   </center>
     </div> <!-- end: page-content -->
     
@@ -127,8 +156,9 @@
              return
          }
            var f = document.getElementById('adv-search-form');
-     }else{
-         const checkboxes = document.getElementsByClassName('anno_cb');
+     
+     }else if(form_type == 'anno_sql'){
+         const checkboxes = document.getElementsByClassName('anno_cb_sql');
          var cb_count = checkboxes.length
          var checked_count = 0
          for(var i in checkboxes){
@@ -141,13 +171,34 @@
              alert('Must check at least one (PROKKA or NCBI)!')
              return
          }
-         var ss = document.getElementById('search_text_anno').value
+         var ss = document.getElementById('search_text_anno_sql').value
          //var ss = document.querySelector('#search_textx').value;
          if(ss.length <=2){
              alert('Search string is too short (must be at least 3 characters)!')
              return
          }
-           var f = document.getElementById('adv-search-form-annotations');
+           var f = document.getElementById('adv-search-form-annotations_sql');
+     }else{
+         const checkboxes = document.getElementsByClassName('anno_cb_grep');
+         var cb_count = checkboxes.length
+         var checked_count = 0
+         for(var i in checkboxes){
+             if(checkboxes[i].checked){
+                 //console.log('got one',checkboxes[i])
+                 checked_count += 1
+             }
+         }
+         if(checked_count == 0){
+             alert('Must check at least one (PROKKA or NCBI)!')
+             return
+         }
+         var ss = document.getElementById('search_text_anno_grep').value
+         //var ss = document.querySelector('#search_textx').value;
+         if(ss.length <=2){
+             alert('Search string is too short (must be at least 3 characters)!')
+             return
+         }
+           var f = document.getElementById('adv-search-form-annotations_grep');
      }
      f.submit()
   }

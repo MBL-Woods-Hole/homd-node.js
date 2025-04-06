@@ -177,7 +177,7 @@ app.use(function(req, res, next){
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
-      config :  JSON.stringify({hostname: CFG.HOSTNAME,env: CFG.ENV}),
+      config: JSON.stringify(CFG),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
       user:     JSON.stringify(u),
       msg: 'Sorry -- We can\'t find the page you requested.',

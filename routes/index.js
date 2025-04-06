@@ -220,7 +220,7 @@ function get_grep_rows(cmd){
            return lines
     })
 }
-function execPromise(cmd, args) {
+function execPromise(cmd, args, max) {
     return new Promise(function(resolve, reject) {
         // spawn(cmd, function(err, stdout) {
 //             if (err) return reject(err);
@@ -237,7 +237,7 @@ function execPromise(cmd, args) {
             chunk_rows = data.toString().split('\n')
             line_count += chunk_rows.length
             //data_array.push(data.toString())
-            if(line_count > 10000){
+            if(line_count > max / 5){
                 data_array = []
                 resolve(['too_long']);
             }
@@ -317,11 +317,12 @@ function execPromise(cmd, args) {
 //     }
 //     
 // }
-router.post('/advanced_site_search_annotations', async function advanced_site_search_annoPOST(req, res) {
+router.post('/advanced_site_search_grep', async function advanced_site_search_annoPOST(req, res) {
     console.log(req.body)
-    const searchText = req.body.search_text_anno.toLowerCase()
+    const searchText = req.body.search_text_anno_grep.toLowerCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
-    let grep_fields = ['anno','genome_id','accession','gene','protein_id','product']
+    let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
+    
     let q,rows,row_array,obj,obj_array = []
     // if(req.body.adv_anno_radio == 'prokka'){
 //         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
@@ -332,16 +333,17 @@ router.post('/advanced_site_search_annotations', async function advanced_site_se
 //         return
 //     }
     try{
-        let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio.toUpperCase()+"*")
-        var filename = uuidv4();  //CFG.PATH_TO_TMP
-        var filepath = path.join(CFG.PATH_TO_TMP, filename)
-        
+        let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
+        //var filename = uuidv4();  //CFG.PATH_TO_TMP
+        //var filepath = path.join(CFG.PATH_TO_TMP, filename)
+        let max_rows = 20000
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
-        let args = ['-ih','-m 5000','"'+searchText+'"',datapath]
+        let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
+        //let args = ['-h','"'+searchText+'"',datapath]
         let grep_cmd = CFG.GREP_CMD + ' ' + args.join(' ')
         console.log(grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
-        const row_array = await execPromise(CFG.GREP_CMD, args);
+        const row_array = await execPromise(CFG.GREP_CMD, args, max_rows);
         console.log('rows_lst length',row_array.length)
         //console.log('rows_lst[0]',rows_lst[0])
         //rows = rows_lst.join('')
@@ -354,9 +356,22 @@ router.post('/advanced_site_search_annotations', async function advanced_site_se
                 if(row_array[n] != ''){
                     obj = {}
                     let pts = row_array[n].split('|')
-                    if(['prokka','ncbi'].indexOf(pts[0]) != -1 ){
+                    if(pts.length == 6 && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
                       for(let i in grep_fields){
-                            obj[grep_fields[i]] = pts[i]
+                            //obj[grep_fields[i]] = pts[i]
+                            if(grep_fields[i] == 'genome_id'){
+                                obj.genome_id = pts[i].toUpperCase()
+                            }else if(grep_fields[i] == 'accession'){
+                                obj.accession = pts[i].toUpperCase()
+                            }else if(grep_fields[i] == 'protein_id'){
+                                obj.protein_id = pts[i].toUpperCase()
+                            }else if(grep_fields[i] == 'gene'){
+                                obj.gene = pts[i].toUpperCase()
+                            }else if(grep_fields[i] == 'product'){
+                                obj.product = pts[i]
+                            }else{
+                                obj[grep_fields[i]] = pts[i]
+                            }
                       }
                       obj_array.push(obj)
                     }
@@ -370,12 +385,13 @@ router.post('/advanced_site_search_annotations', async function advanced_site_se
             config: JSON.stringify(CFG),
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
             user: JSON.stringify(req.user || {}),
-            anno: req.body.adv_anno_radio,
-            search_text: req.body.search_text_anno,
+            anno: req.body.adv_anno_radio_grep,
+            search_text: req.body.search_text_anno_grep,
             otid_list: JSON.stringify([]),
             gid_list: JSON.stringify([]),
             taxon_otid_obj: JSON.stringify({}),
             annotationList: JSON.stringify(obj_array),
+            max:max_rows,
             form_type: JSON.stringify(['annotations'])
                     
         })
@@ -583,20 +599,21 @@ router.post('/advanced_site_search_sql', function get_annotations_counts_sql(req
     const query = util.promisify(TDBConn.query).bind(TDBConn);
     //console.log(req.body)
     let limit = 20000
-    const searchText = req.body.search_text_anno.toLowerCase()
+    const searchText = req.body.search_text_anno_sql.toLowerCase()
     let q,row_obj ={}
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
-    if(req.body.adv_anno_radio == 'prokka'){
+    if(req.body.adv_anno_radio_sql == 'prokka'){
         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%' LIMIT "+limit
-    }else if(req.body.adv_anno_radio == 'ncbi'){
+    }else if(req.body.adv_anno_radio_sql == 'ncbi'){
         q = "SELECT "+sql_fields.join(",")+" from NCBI_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%' LIMIT "+limit
     }else{
-        console.log('ERROR')
+        console.log('ERROR',q)
         return
     }
     (async () => {
        try {
         const rows = await query(q);
+        console.log(rows,rows.length)
         if(rows.length >= limit){
             row_obj = {'too_long':'too_long'}
         }else{
@@ -609,8 +626,8 @@ router.post('/advanced_site_search_sql', function get_annotations_counts_sql(req
                     config: JSON.stringify(CFG),
                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
                     user: JSON.stringify(req.user || {}),
-                    anno: req.body.adv_anno_radio,
-                    search_text: req.body.search_text_anno,
+                    anno: req.body.adv_anno_radio_sql,
+                    search_text: req.body.search_text_anno_sql,
                     otid_list: JSON.stringify([]),
                     gid_list: JSON.stringify([]),
                     taxon_otid_obj: JSON.stringify({}),
