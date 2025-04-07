@@ -222,6 +222,7 @@
       <!-- <li><a href="/taxa/flags">Taxon Flags (in progress)</a></li> -->
       
       <li><a href="/download#taxon">Download Taxonomy Data</a></li>
+      <li><a href='/taxa/dropped'>Dropped Taxa</a></li>
       <li><a href="/help/help-page?pagecode=taxon/taxon_version">Taxonomy Version History</a></li>
       <% if(cfg.DBHOST === "localhost"){ %>
         <li><a href="/taxa/tree_d3" target='_blank'>D3 Tree Testing</a></li>
@@ -325,7 +326,7 @@
     </ul>
    </li>
    
-   <li><span class='main-topic' >Resources</span>
+   <li><span class='main-topic' >Resources/Tools</span>
        <ul>
       <li><a href='http://v31.homd.org/' target='_blank'>HOMD Site (V3.1)</a></li>
       <li><a href="/poster">Posters</a></li>
@@ -338,6 +339,11 @@
          <li><a href="/genome/oralgen">Oralgen Genome Info</a></li>
          </ul>
       </li>
+      
+        <% if(cfg.DBHOST === "localhost"){ %>
+        <li><a href='advanced_site_search'>Site Search</a></li>
+      <% } %>
+      <li><a href='/help/index'>Search Help</a></li>
       
       
     </ul>
@@ -357,17 +363,13 @@
 		  <li><a href='/help/help-page?pagecode=cite'>How to Cite HOMD</a></li>
 		  <li><a href='/help/help-page?pagecode=description'>Project Description</a></li>
 		  <li><a href='/help/help-page?pagecode=strains'>Strains and DNA Availability</a></li>
-		  <li><a href='/taxa/dropped'>Dropped Taxa</a></li>
+		  
 		  <li><a href='/help/help-page?pagecode=team'>People</a></li>
 		  <li><a href='/help/help-page?pagecode=publications'>Publications</a></li>
 		  <li><a href='/help/help-page?pagecode=contact'>Contact Us</a></li>
 		  <!-- <li><a href='/help/mailing'>Mailing List</a></li> -->
 		  <!-- <li><a href="/forum" target='_blank' rel="noopener noreferrer">Forum</a></li> -->
 		  <li><a href='/help/help-page?pagecode=announcement'>Announcements</a></li>
-		  <% if(cfg.DBHOST === "localhost"){ %>
-		     <li><a href='/advanced_site_search'>Site Search</a></li>
-		  <% } %>
-		  <li><a href='/help/index'>Search Help</a></li>
 		  </ul>
 	</li>
 		

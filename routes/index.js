@@ -227,37 +227,45 @@ function execPromise(cmd, args, max) {
 //             resolve(stdout);
 //         });
         let data_array = [],chunk_rows=[],line_count = 0
-        const process = spawn(cmd, args, { shell: true });
+        let bufferArray= []
+        const process = spawn(cmd, args, { shell: true });  // shell:true need expand wildcard '*'
         process.stdout.on('data', (data) => {
           // Process the data received from stdout
           //console.log(`stdout: ${data}`);
           // STRATEGY:: protein_id is unique
           // grab accessions
-          if(data){
+          //console.log(`stdout: ${data}`);
+          
+          
+          //if(data){
             chunk_rows = data.toString().split('\n')
             line_count += chunk_rows.length
             //data_array.push(data.toString())
             if(line_count > max / 5){
-                data_array = []
+                bufferArray = []
                 resolve(['too_long']);
             }
-            data_array.push(...chunk_rows)
-          }
+            //data_array.push(...chunk_rows)
+            bufferArray.push(data)
+          //}
         });
         process.stderr.on("data", data => {
             console.log(`stderr: ${data}`);
-            //reject(data)
+            reject(data)
         });
         process.on('close', function (code) { 
           // *** Process completed
           console.log('code',code)
-          resolve(data_array);
+          let dataBuffer =  Buffer.concat(bufferArray);
+          let dataBufferArray = dataBuffer.toString().split('\n')
+          //console.log('resolving okay',dataBufferArray[0])
+          resolve(dataBufferArray);
         });
         process.on('error', function (err) {
           // *** Process creation failed
           reject(err);
         });
-        });
+    });
 }
 // const utilexec = util.promisify(require('child_process').exec);
 // async function runCommand(command) {
@@ -336,7 +344,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
         let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
         //var filename = uuidv4();  //CFG.PATH_TO_TMP
         //var filepath = path.join(CFG.PATH_TO_TMP, filename)
-        let max_rows = 20000
+        let max_rows = 50000
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
         let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
         //let args = ['-h','"'+searchText+'"',datapath]
@@ -598,7 +606,7 @@ router.post('/advanced_site_search_sql', function get_annotations_counts_sql(req
     console.log('POST::advanced_site_search_sql',req.body)
     const query = util.promisify(TDBConn.query).bind(TDBConn);
     //console.log(req.body)
-    let limit = 20000
+    let limit = 50000
     const searchText = req.body.search_text_anno_sql.toLowerCase()
     let q,row_obj ={}
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
@@ -632,7 +640,8 @@ router.post('/advanced_site_search_sql', function get_annotations_counts_sql(req
                     gid_list: JSON.stringify([]),
                     taxon_otid_obj: JSON.stringify({}),
                     annotationList: JSON.stringify(row_obj),
-                    form_type: JSON.stringify(['annotations'])
+                    form_type: JSON.stringify(['annotations']),
+                    max:limit,
                     
         })
       } finally {
