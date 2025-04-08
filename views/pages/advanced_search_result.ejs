@@ -4,7 +4,27 @@ body {
             transition: background-color 1s;
 }
 html, body { min-height: 100%; }
-
+.result-table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+.result-table.sortable thead tr::before {
+    content: "row#";
+    display: table-cell;
+    width:30px;
+    /* padding-left:1px; */
+    vertical-align: middle;
+    
+    padding:5px;
+    font-size:13px;
+    text-align: center;
+}
+.result-table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+    text-align:right;
+    font-size:small;
+}
 .search-box{
    height:250px;
    width:100%;
@@ -90,7 +110,7 @@ table td{
         <% if( Object.keys(lineageids).length > 0 ){ %>
         <div class='search-box'>
         <% n = 0 %>
-        <center><table class='sortable'>
+        <center><table class='result-table sortable'>
         <tr><th nowrap>HMT-ID</th><th>Species (click to sort)</th></tr>
         <% for(otid in lineageids){ %>
            <tr>
@@ -134,7 +154,7 @@ table td{
     Hits from Genome Metadata: <%= gids.length %> <span class='float-right small'></span>
     <% if( gids.length > 0 ){ %>
     <div class='search-box'>
-    <center><table class='sortable'>
+    <center><table class='result-table sortable'>
     <tr><th nowrap>HMT-ID</th><th nowrap>Genome-ID</th><th>Species (click to sort)</th></tr>
     <% for(n in gids){ %>
        <% gid  = gids[n].gid %>
@@ -173,7 +193,7 @@ table td{
              <div class='search-box-anno'>
              <span class='search-text-div'>Selected Annotation: <%= anno.toUpperCase() %></span>
              <% if(anno_list.length != 0){ %>
-               <table class='sortable'>
+               <table class='result-table sortable'>
                <tr><th>Genome-ID</th><th>Accession</th><th>Protein-ID</th><th>Gene</th><th>Gene Product</th>
                  <!-- <th>Length AA</th><th>Length NA</th><th>Start</th><th>Stop</th> -->
                  </tr>

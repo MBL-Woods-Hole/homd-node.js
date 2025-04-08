@@ -410,7 +410,12 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   res.end()
   
 })
-
+router.get('/dld_static_file/:fname', function dld_static_file (req, res) {
+    const fname = req.params.fname
+    let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,fname)
+    res.download(fullpath)
+    return 
+})
 // /////////////////////////////
 router.get('/dld_peptide_table_all/:study', function dld_peptide_table_all (req, res) {
     const study = req.params.study

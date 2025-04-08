@@ -155,7 +155,7 @@ module.exports.get_genome = (gid) => {   // always NCBI for taxon description
   let tbl = C.genomes_table_name
   let ntbl = C.genomes_ncbi_table_name
   let ptbl = C.genomes_prokka_table_name
-  let qSelectGenome = "SELECT `"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url, "
+  let qSelectGenome = "SELECT `"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
         qSelectGenome +=" bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,"
         qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_percentile,checkM_contamination,refseq_assembly,WGS,"
         qSelectGenome +=" `"+ptbl+"`.contigs as prokka_contigs,`"+ptbl+"`.CDS as prokka_CDS,`"+ptbl+"`.gene as prokka_gene,`"+ptbl+"`.mRNA as prokka_mRNA,`"+ptbl+"`.misc_RNA as prokka_misc_RNA,`"+ptbl+"`.rRNA as prokka_rRNA,`"+ptbl+"`.tRNA as prokka_tRNA,`"+ptbl+"`.tmRNA as prokka_tmRNA"

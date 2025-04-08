@@ -68,8 +68,8 @@ table td{
        <div class='title'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span> (Case Insensitive)</small>]
        </div>
 <!-- 'HMT-'+("000" + otid).slice(-3);  -->
- 
-    
+    <br>
+    <center>To Search Annotations: <a href='advanced_site_search'>Try The Advanced Search</a></center>
     <br>Matches from Bacterial Taxon Names: (<%= Object.keys(lineageids).length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
   <% if( Object.keys(lineageids).length > 0 ){ %>
   <div class='search-box'>
