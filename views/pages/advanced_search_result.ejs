@@ -96,7 +96,18 @@ table td{
     <%- include('../partials/header_img'); %>
     <%- include('../partials/navbar'); %>
     <div class='page-content' > 
-       <div class='title'><%= search_type %> Search Result  </div>
+       <% if(search_type.length == 1){ %>
+         <div class='title'><%= search_type[0][0].toUpperCase() + search_type[0].slice(1).toLowerCase(); %> Search Result  </div>
+       <% }else{ %>
+         <% 
+           show = ''
+           for(i in search_type){
+             show += search_type[i][0].toUpperCase() + search_type[i].slice(1).toLowerCase() + ', '
+           }
+           show = show.slice(0,-2)
+         %>
+         <div class='title'><%= show %> Search Result  </div>
+       <% } %>
 <!-- 'HMT-'+("000" + otid).slice(-3);  -->
      <span style='float:right;'><a href='advanced_site_search'>Search Again</a></span> 
      <center>
@@ -131,7 +142,7 @@ table td{
         Hits from Oral Taxon-ID Metadata: <%= otids.length %> <span class='float-right small'></span> 
         <% if( otids.length > 0 ){ %>
         <div class='search-box'>
-        <center><table class='sortable'>
+        <center><table class='result-table sortable'>
         <tr><th nowrap>HMT-ID</th><th>Species (click to sort)</th></tr>
         <% for(n in otids){ %>
          <% otid = otids[n].otid %>
