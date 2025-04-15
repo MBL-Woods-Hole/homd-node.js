@@ -20,7 +20,7 @@ from connect import MyConnection
 #SELECT genome_id as gid, otid, strain, category, organism, contigs, combined_size, GC
 #   FROM `genomesV11.0`
 genomes_query = """
-   SELECT genome_id as gid, MAG as mag,otid, strain, assembly_level as level,  `genomesV11.0`.organism, `genomesV11.0`.contigs, `genomesV11.0`.combined_size, `genomesV11.0`.GC
+   SELECT genome_id as gid, MAG as mag,otid, strain, `genomes_ncbiV11.0`.assembly_level as level,  `genomesV11.0`.organism, `genomesV11.0`.contigs, `genomesV11.0`.combined_size, `genomesV11.0`.GC
    FROM `genomesV11.0`
    JOIN `genomes_ncbiV11.0` using(genome_id)
 """

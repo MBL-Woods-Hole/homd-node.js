@@ -1,11 +1,15 @@
 <style>
 .table{
   border-collapse:collapse;
-  margin-top:20px;
+  /* margin-top:20px; */
 }
 .table td{
   padding:10px;
   border:1px solid red;
+}
+form{
+   padding:30px;
+   margin-top:20px;
 }
 #adv_search_text{
     border:2px solid black;
@@ -31,7 +35,8 @@
 }
 .mid-title{
     font-size: 18px;
-    /* font-weight:bold; */
+    font-weight:bold;
+    margin-top:20px;
 }
 </style>
 <%- include('../partials/header_html'); %>
@@ -48,15 +53,13 @@
   <center>
   <div id='adv-search-form-div'>
   <form id='adv-search-form' class='' method='POST' action='advanced_site_search'>
-      <br><span class='mid-title'>Search Taxonomy and/or Genome Databases</span>
+      <br><span class='mid-title'>Search the Taxonomy and/or Genome Databases</span>
       <table class='table'>
       <tr><td>
         <input type='checkbox' class='tax_cb' checked id='taxonomy' name='taxonomy' value='on'  > Search Taxonomy Database&nbsp;&nbsp;&nbsp;
         
         <input type='checkbox' checked class='tax_cb' id='genomes' name='genomes' value='on'  > Search Genomes Database&nbsp;&nbsp;&nbsp;
-        
-        
-         
+
         </td>
       </tr>
       <tr>
@@ -75,10 +78,10 @@
   
   
   <form id='adv-search-form-annotations_grep' class='' method='POST' action='advanced_site_search_grep'>  <!-- advanced_site_search_annotations -->
-      <br><span class='mid-title'>Search Annotations</span>
+      <br><span class='mid-title'>Search the Annotations Database</span>
       <table class='table'>
       <tr><td><center>
-        Genome-ID, Accession (Molecule-ID), Protein-ID, Gene and Gene Product
+        Searches: Genome-ID, Accession (Molecule-ID), Protein-ID, Gene and Gene Product
         </center>
         </td>
       </tr>

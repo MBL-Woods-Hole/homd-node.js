@@ -496,7 +496,9 @@ router.get('/genome_description', function genomeDescription (req, res) {
             if(gid in crispr_data){
                  crispr = crispr_data[gid]
             }
-            
+            let n = data.GTDB_taxonomy.lastIndexOf(';')
+            data.GTDB_taxonomy = data.GTDB_taxonomy.substring(0, n+1) + "<br>" + data.GTDB_taxonomy.substring(n+1) 
+            console.log('GTDB_taxonomy',data.GTDB_taxonomy)
             res.render('pages/genome/genomedesc', {
                title: 'HOMD :: Genome Info',
                pgname: 'genome/description', // for AboutThisPage 
