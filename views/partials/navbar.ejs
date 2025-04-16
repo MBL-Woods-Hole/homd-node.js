@@ -264,7 +264,7 @@
       
       <!-- NO IFRAME -->
       <!-- <li><a href="/genome/genome_blast_no_iframe" target='_blank' >BLAST Against All Genomes</a></li>  -->
-      <li><a href="#" onclick='window.open("https://v4.homd.org/genome_blast/","_self")' >BLAST Against All Genomes</a></li> 
+      <li><a href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast/","_self")' >BLAST Against All Genomes</a></li> 
       
       
       <li><a href="/genome/blast_select_genome"     >BLAST Against A Single Genome</a></li>  
@@ -306,7 +306,7 @@
     <li><span class='main-topic' >16S rRNA Microbiome</span>
     <ul>
           <!-- <li><a href="/genome/blast_sserver?type=refseq">RefSeq BLAST Server</a></li>  -->
-          <li><a href="#" onclick='window.open("https://v4.homd.org/refseq_blast/","_self")' >RefSeq BLAST Server</a></li> 
+          <li><a href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/refseq_blast/","_self")' >RefSeq BLAST Server</a></li> 
       
           <!-- <li><a href="/refseq_blast" target='_blank' >RefSeq BLAST Server</a></li> -->
           <!-- <li><a href="/refseq/refseq_blastn">Old 16S BLAST</a></li> -->

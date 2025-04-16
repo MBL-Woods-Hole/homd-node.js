@@ -1505,9 +1505,9 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   
   let url = ''
   if(req.body.annotation == 'ncbi'){
-      url = 'https://v4.homd.org/genome_blast_single_ncbi/?gid='+req.body.gid
+      url = CFG.BLAST_URL_BASE+'/genome_blast_single_ncbi/?gid='+req.body.gid
   }else{
-      url = 'https://v4.homd.org/genome_blast_single_prokka/?gid='+req.body.gid
+      url = CFG.BLAST_URL_BASE+'/genome_blast_single_prokka/?gid='+req.body.gid
   }
   
   res.render('pages/genome/blast_server_no_iframe', {
@@ -1616,7 +1616,7 @@ router.get('/genome_blast_no_iframe', function genome_blast_no_iframe(req, res) 
   console.log(req.query)
      //console.log(req.query)
    //helpers.accesslog(req, res)
-   let url = 'https://v4.homd.org/genome_blast/'
+   let url = CFG.BLAST_URL_BASE+'/genome_blast/'
    let db_type = req.query.type
    let page_title = ''
    if(db_type == 'refseq'){

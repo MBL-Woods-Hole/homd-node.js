@@ -98,7 +98,7 @@ button{
            </td></tr></table>
          </span>
          <div style="width: 100%; height: 850px; overflow: hidden">
-           <iframe id='iframe_id' src="https://v4.homd.org/genome_blast_single_ncbi/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
+           <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast_single_ncbi/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>
          </div>
        <% }else if(annotation == "prokka"){ %>
          <span style='float:right;'>
@@ -114,19 +114,17 @@ button{
          </span>
          
          <div style="width: 100%; height: 850px; overflow: hidden">
-         <!-- https://v4.homd.org/genome_blast_single_prokka?gid=GCA_900105505.1 -->
-         <!-- https://v4.homd.org/refseq_blast -->
-         <!-- https://v4.homd.org/genome_blast_single_prokka/?gid=GCA_900105505.1 -->
          
-           <iframe id='iframe_id' src="https://v4.homd.org/genome_blast_single_prokka/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>         
+         
+           <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= gid %>" title="HOMD BLAST Server"></iframe>         
          </div>
          
        <% }else{ %>
           <div style="width: 100%; height: 850px; overflow: hidden">
           <% if(db_type == "refseq"){ %>
-            <iframe id='iframe_id' src="https://v4.homd.org/refseq_blast/" title="HOMD BLAST Server"></iframe>
+            <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/refseq_blast/" title="HOMD BLAST Server"></iframe>
           <% }else{ %>
-            <iframe id='iframe_id' src="https://v4.homd.org/genome_blast/" title="HOMD BLAST Server"></iframe>
+            <iframe id='iframe_id' src="<%= cfg.BLAST_URL_BASE %>/genome_blast/" title="HOMD BLAST Server"></iframe>
           <% } %>
           </div>
        <% } %>
@@ -146,18 +144,7 @@ button{
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-  // function single(gid) {
-//     //window.open('https://v4.homd.org/genome_blast_single_prokka/?gid=GCA_900105505.1','_blank');
-//     window.open('https://v4.homd.org/genome_blast_single_prokka/?gid='+gid);
-//   }
-//   function refseq() {
-//     //window.open('https://v4.homd.org/refseq_blast','_blank');
-//     window.open('https://v4.homd.org/refseq_blast/');
-//   }
-//   function genome() {
-//     //window.open('https://v4.homd.org/genome_blast','_blank');
-//     window.open('https://v4.homd.org/genome_blast/');
-//   }
+ 
   function switch_dbs(){
      console.log('in switch dbs')
      form = document.getElementById("switch_dbs_form")

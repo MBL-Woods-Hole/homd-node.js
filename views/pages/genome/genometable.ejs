@@ -121,7 +121,7 @@ pagedata {
             <!-- <a class='pill pill-lightseagreen' href='<%= cfg.JBROWSE_URL %>/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome ViewerO</a> -->
           <!-- <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse_in_new_window('<%= ginfo[n].gid %>|<%= ginfo[n].gc %>')">Genome Viewer</a> -->
         <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Genome Viewer</a>
-        <a class='pill pill-midnightblue' href='#' onclick='window.open("https://v4.homd.org/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>","_self")'>BLAST</a> 
+        <a class='pill pill-midnightblue' href='#' onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>","_self")'>BLAST</a> 
           
        
           <!--  <a class='pill pill-midnightblue' href='/genome_blast_single?gid=<%= ginfo[n].gid %>' target='_blank'>BLAST</a> -->

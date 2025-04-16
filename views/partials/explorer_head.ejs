@@ -22,21 +22,21 @@
                   <% if(anno_type == 'prokka'){ %>
                     <span class='an-button active' href=''>PROKKA</span>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
-                    <a class='an-button' href='#' onclick='window.open("https://v4.homd.org/genome_blast_single_prokka/?gid=<%= gid %>","_self")'>BLAST</a> 
+                    <a class='an-button' href='#' onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= gid %>","_self")'>BLAST</a> 
         
                     
                     <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
                   <% } else if(anno_type == 'ncbi'){ %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <span class='an-button active' href=''>NCBI</span>
-                    <a class='an-button' href='#' onclick='window.open("https://v4.homd.org/genome_blast_single_ncbi/?gid=<%= gid %>","_self")'>BLAST</a> 
+                    <a class='an-button' href='#' onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast_single_ncbi/?gid=<%= gid %>","_self")'>BLAST</a> 
         
                     
                     
                   <% } else { %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
-                    <a class='an-button' href='#' onclick='window.open("https://v4.homd.org/genome_blast_single_<%= anno_type %>/?gid=<%= gid %>","_self")'>BLAST</a> 
+                    <a class='an-button' href='#' onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast_single_<%= anno_type %>/?gid=<%= gid %>","_self")'>BLAST</a> 
         
                     
                     
@@ -45,8 +45,8 @@
                   <!-- <a class='an-button' href='<%= cfg.JBROWSE_URL %>/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc %>),GC Skew' target='_blank' rel="noopener noreferrer">Genome Viewer</a> -->
                   <a class='an-button' href='#' onclick="open_jbrowse('<%= gid %>','explorer','<%= gc %>','','<%= anno_type %>')">Genome Viewer</a>
                   
-                  <a class='an-button' href='/genome/genome_description?gid=<%= gid %>'>Genome Desc.</a>
-                  <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Desc.</a>
+                  <a class='an-button' href='/genome/genome_description?gid=<%= gid %>'>Genome Information</a>
+                  <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Information</a>
                  </div>
          <% }else{ %>
              <div id='header_buttons' >
@@ -55,8 +55,8 @@
                     <a class='an-button greyed' href='#'>BLAST</a>
                     |
                     <a class='an-button greyed' href='#'>Genome Viewer</a>
-                    <a class='an-button greyed' href='#'>Genome Desc.</a>
-                    <a class='an-button greyed' href='#'>Taxon Desc.</a>
+                    <a class='an-button greyed' href='#'>Genome Information</a>
+                    <a class='an-button greyed' href='#'>Taxon Information</a>
               </div>
          <% } %>
        

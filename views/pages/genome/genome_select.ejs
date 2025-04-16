@@ -45,8 +45,8 @@
     <br>Select a genome to load a BLAST database.
     <br>
     <!-- <select id='selGenome' name='gid' style='width: 800px;' onchange="this.form.submit()"> -->
-    <!-- https://v4.homd.org/genome_blast_single_prokka/?gid='+req.body.gid -->
-    <select id='selGenome' name='gid' style='width: 800px;' onchange='window.open("https://v4.homd.org/genome_blast_single_prokka/?gid="+this.value,"_self")'
+    <!-- https://<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid='+req.body.gid -->
+    <select id='selGenome' name='gid' style='width: 800px;' onchange='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid="+this.value,"_self")'
      <option id=''  value='0'>Search & Select...</option>
      <% for(i in gn){ %>
         <option id='' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].organism %></option>
