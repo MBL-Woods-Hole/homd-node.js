@@ -22,29 +22,24 @@
                   <% if(anno_type == 'prokka'){ %>
                     <span class='an-button active' href=''>PROKKA</span>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+                    <a class='an-button' href='#' onclick='window.open("https://v4.homd.org/genome_blast_single_prokka/?gid=<%= gid %>","_self")'>BLAST</a> 
+        
                     
-                    <form name='' class="form-inline" method='POST' action='blast_ss_single'>
-                      <input type='hidden' name='gid' value='<%= gid %>'>
-                      <input type='hidden' name='annotation' value='<%= anno_type %>'>
-                      <input type='submit' class='an-button' value='BLAST'>
-                    </form>
                     <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
                   <% } else if(anno_type == 'ncbi'){ %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <span class='an-button active' href=''>NCBI</span>
-                    <form name='' class="form-inline" method='POST' action='blast_ss_single'>
-                      <input type='hidden' name='gid' value='<%= gid %>'>
-                      <input type='hidden' name='annotation' value='<%= anno_type %>'>
-                      <input type='submit' class='an-button' value='BLAST'>
-                    </form>
+                    <a class='an-button' href='#' onclick='window.open("https://v4.homd.org/genome_blast_single_ncbi/?gid=<%= gid %>","_self")'>BLAST</a> 
+        
+                    
+                    
                   <% } else { %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
-                    <form name='' class="form-inline" method='POST' action='blast_ss_single'>
-                      <input type='hidden' name='gid' value='<%= gid %>'>
-                      <input type='hidden' name='annotation' value='<%= anno_type %>'>
-                      <input type='submit' class='an-button' value='BLAST'>
-                    </form>
+                    <a class='an-button' href='#' onclick='window.open("https://v4.homd.org/genome_blast_single_<%= anno_type %>/?gid=<%= gid %>","_self")'>BLAST</a> 
+        
+                    
+                    
                   <% } %>
                   |
                   <!-- <a class='an-button' href='<%= cfg.JBROWSE_URL %>/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc %>),GC Skew' target='_blank' rel="noopener noreferrer">Genome Viewer</a> -->

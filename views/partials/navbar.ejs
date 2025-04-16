@@ -259,14 +259,19 @@
       </li> 
       <li><a href="/genome/explorer?gid=&anno=prokka">Genome Explorer and Annotations</a></li>
       
-      <li><a href="/genome/blast_sserver?type=genome" >BLAST Against All Genomes</a></li> 
+      <!-- IFRAME -->
+      <!-- <li><a href="/genome/blast_sserver?type=genome" >BLAST Against All Genomes</a></li>  -->
       
-      <!-- <li><a href="/genome_blast" target='_blank' >BLAST Against All Genomes</a></li>  -->
+      <!-- NO IFRAME -->
+      <!-- <li><a href="/genome/genome_blast_no_iframe" target='_blank' >BLAST Against All Genomes</a></li>  -->
+      <li><a href="#" onclick='window.open("https://v4.homd.org/genome_blast/","_self")' >BLAST Against All Genomes</a></li> 
+      
+      
       <li><a href="/genome/blast_select_genome"     >BLAST Against A Single Genome</a></li>  
-      <!-- <li><a href="#" onclick='window.open("https://devel.homd.org/genome_blast/","_self")' >BLAST Against All Genomes</a></li>  -->
       
-      <!-- 
-<li><span href="">BLAST TESTING<font color="blue">&#187;</font></span>
+      
+<!-- 
+      <li><span href="">BLAST TESTING<font color="blue">&#187;</font></span>
        <ul>
        <li><a href="/genome/blast_select_genome" >Genome BLAST -Single Genome TESTING</a></li>  
       <li><a href="/genome/blast_single_test" >Genome BLAST -Single SEQF1595:HOMD</a></li> 
@@ -300,8 +305,8 @@
   
     <li><span class='main-topic' >16S rRNA Microbiome</span>
     <ul>
-          <li><a href="/genome/blast_sserver?type=refseq">RefSeq BLAST Server</a></li> 
-          <!-- <li><a href="#" onclick='window.open("https://devel.homd.org/refseq_blast/","_self")' >RefSeq BLAST Server -no iFrame</a></li>  -->
+          <!-- <li><a href="/genome/blast_sserver?type=refseq">RefSeq BLAST Server</a></li>  -->
+          <li><a href="#" onclick='window.open("https://v4.homd.org/refseq_blast/","_self")' >RefSeq BLAST Server</a></li> 
       
           <!-- <li><a href="/refseq_blast" target='_blank' >RefSeq BLAST Server</a></li> -->
           <!-- <li><a href="/refseq/refseq_blastn">Old 16S BLAST</a></li> -->
