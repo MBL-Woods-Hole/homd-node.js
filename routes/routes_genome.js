@@ -165,7 +165,7 @@ function set_gtable_session(req) {
            }
        }
        // Tax Status
-       let status_array = ['named_cultivated','named_uncultivated','unnamed_cultivated','unnamed_uncultivated','dropped']
+       let status_array = ['named_cultivated','named_uncultivated','unnamed_cultivated','phylotype','dropped']
        for(let item in status_array){
            if(Object.prototype.hasOwnProperty.call(req.body,status_array[item])){
            req.session.gtable_filter.status[status_array[item]] = req.body[status_array[item]]

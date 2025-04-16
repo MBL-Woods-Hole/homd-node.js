@@ -80,7 +80,7 @@ module.exports.get_null_tax_filter = function get_null_tax_filter(){
             named_cultivated:'off',
             named_uncultivated:'off',
             unnamed_cultivated: 'off',
-            unnamed_uncultivated: 'off',
+            phylotype: 'off',
             dropped:'off'
         },
         site:{
@@ -364,19 +364,20 @@ module.exports.set_ttable_session = function set_ttable_session(req) {
 // Unnamed Uncultivated
 // Named Uncultivated
 // Dropped Dropped
-// Unnamed Cultivated
+// Phylotype
 
        if(item == 'named_cultivated'){
          req.session.ttable_filter.status.named_cultivated = 'on'
        }
-       if(item == 'unnamed_uncultivated'){
-         req.session.ttable_filter.status.unnamed_uncultivated = 'on'
-       }
+       
        if(item == 'named_uncultivated'){
          req.session.ttable_filter.status.named_uncultivated = 'on'
        }
        if(item == 'unnamed_cultivated'){
          req.session.ttable_filter.status.unnamed_cultivated = 'on'
+       }
+       if(item == 'phylotype'){
+         req.session.ttable_filter.status.phylotype = 'on'
        }
        if(item == 'dropped'){
          req.session.ttable_filter.status.dropped = 'on'
@@ -450,24 +451,29 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     let combo = ''
     big_tax_list = big_tax_list.filter( function filterStatus(item) {
         //console.log('item',item)
+        // choices: dropped,phylotype, named_cultivated,named_uncultivated,unnamed_cultivated
         combo = (item.naming_status.split(/(\s+)/)[0] +'_'+item.cultivation_status.split(/(\s+)/)[0]).toLowerCase()
-        
-        if(item.status.toLowerCase() =='dropped'){ 
-            combo = item.naming_status.toLowerCase()
-        }
         //console.log('combo',combo)
-        if(status_on.indexOf('dropped') != -1 && item.status.toLowerCase() =='dropped'){
+        // if(item.status.toLowerCase() =='dropped'){ 
+//             combo = item.naming_status.toLowerCase()
+//         }
+        //console.log('combo',combo)
+        if(status_on.indexOf('dropped') != -1 && item.naming_status.toLowerCase() =='dropped'){
             return item
-        }else if(status_on.indexOf(combo) !==-1 ){  //818
-               return item
         }
-        
+        if(status_on.indexOf('phylotype') != -1 && item.naming_status.toLowerCase() =='phylotype'){
+            return item
+        }
+        if(status_on.indexOf(combo) != -1){
+            return item
+        }
     })
+    //console.log('status_on',status_on)
     //console.log('big_tax_list.length-2',big_tax_list.length)
     //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
     //Abundance
      let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on')
-     console.log('abundOn',abund_on)
+     //console.log('abundOn',abund_on)
      big_tax_list = big_tax_list.filter( function filterAbundance(item) {
         //console.log('item',C.site_lookup[item.otid])
         if(abund_on.length == C.tax_abund_all.length){

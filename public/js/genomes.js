@@ -488,7 +488,7 @@ function adv_toggle_cb_status(x){
         document.getElementById("adv_named_cultivated").checked = false;
         document.getElementById("adv_named_uncultivated").checked = false;
         document.getElementById("adv_unnamed_cultivated").checked = false;
-        document.getElementById("adv_unnamed_uncultivated").checked = false;
+        document.getElementById("adv_phylotype").checked = false;
         document.getElementById("adv_dropped").checked = false;
         //document.getElementById("nonoralref").checked = false;
         
@@ -498,7 +498,7 @@ function adv_toggle_cb_status(x){
         document.getElementById("adv_named_cultivated").checked = true;
         document.getElementById("adv_named_uncultivated").checked = true;
         document.getElementById("adv_unnamed_cultivated").checked = true;
-        document.getElementById("adv_unnamed_uncultivated").checked = true;
+        document.getElementById("adv_phylotype").checked = true;
         document.getElementById("adv_dropped").checked = true;
         //document.getElementById("nonoralref").checked = true;
         

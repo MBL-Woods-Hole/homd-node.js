@@ -309,7 +309,7 @@ module.exports.get_default_gtable_filter = function get_default_gtable_filter(){
             named_cultivated:'on',
             named_uncultivated:'on',
             unnamed_cultivated: 'on',
-            unnamed_uncultivated: 'on',
+            phylotype: 'on',
             dropped:'on',
             //nonoralref:'off'
             
@@ -362,7 +362,7 @@ module.exports.get_null_gtable_filter = function get_null_gtable_filter(){
             named_cultivated:'off',
             named_uncultivated:'off',
             unnamed_cultivated: 'off',
-            unnamed_uncultivated: 'off',
+            phylotype: 'off',
             dropped:'off',
             //nonoralref:'off'
             

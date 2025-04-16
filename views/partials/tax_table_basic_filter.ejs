@@ -189,10 +189,10 @@
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='unnamed_cultivated' name='unnamed_cultivated' onclick='update_sb()' \> Unnamed/Cultivated&nbsp;
             <% } %>
-            <% if(statusfltr.status.unnamed_uncultivated === 'on'){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='unnamed_uncultivated' name='unnamed_uncultivated' onclick='update_sb()' \> Unnamed/Uncultivated&nbsp;
+            <% if(statusfltr.status.phylotype === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='phylotype' name='phylotype' onclick='update_sb()' \> Phylotype&nbsp;
             <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='unnamed_uncultivated' name='unnamed_uncultivated' onclick='update_sb()' \> Unnamed/Uncultivated&nbsp;
+                <input type='checkbox' class='filter_ckbx' id='phylotype' name='phylotype' onclick='update_sb()' \> Phylotype&nbsp;
             <% } %>
             <% if(statusfltr.status.dropped === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
