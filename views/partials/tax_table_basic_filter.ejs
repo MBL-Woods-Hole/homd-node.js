@@ -62,9 +62,20 @@
 <table id='filter_table' border='1'>
 <tr>
 <td class=''>
-       <center>
-         <span style='float:right;' class="advanced-filter-btn" onclick="openAdvancedForm()">Open Advanced Filter</span>
-       </center>
+       
+         
+    <span style='float:right;' class="advanced-filter-btn" onclick="openAdvancedForm()">Open Advanced Filter</span>
+    <small>
+    <span class='filter-title'>Search This Table</span>:&nbsp;&nbsp;
+    
+    <span class="">
+      
+      
+      <input id='txt_srch' type='text' name='txt_srch' placeholder="Search.." value='<%= statusfltr.text.txt_srch %>' class='dropdown'  maxlength='100' size='50'  onclick='update_sb()'>
+      
+    </span>
+    <small>
+       
 </td>
 </tr>
 <tr>
