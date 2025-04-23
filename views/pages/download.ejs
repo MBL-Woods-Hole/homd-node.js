@@ -19,6 +19,7 @@
 .download-table{
   width:auto;
   text-align:center;
+  border-collapse:collapse;
 }
 .download-table th{
   background:palegreen;
@@ -27,6 +28,7 @@
   background:lightgrey;
   padding: 5px 20px;
   font-size:small;
+  border:1px solid black;
 }
 
 #download-refseq-table-div {
@@ -101,15 +103,15 @@ width:180px;
     <div  class="" >
      <div  id="downloadMenu" >
       <div class="list-group">
-        <a href='#top' >[top]</a>
-        <li><a href='#taxon' ">Taxonomy data</a></li>
-        <li><a href='#abundance' >Abundance data</a></li>
-        <li><a href='#genome' >Genomic data</a></li>
-        <li><a href='#phylo' >Phylo data</a></li>
-        <li><a href='#peptide' >Protein/Peptide data</a></li>
-       <!--  <li><a href='#phage'>Phage data</a></li> -->
-        <li><a href='#refseq' >16S rRNA seqs</a></li>
-        <li><a href='#schema' ">Database Schema</a></li>
+        <a href='#top' onclick="shift_page_view('top')">[top]</a>
+        <li><a href='#taxon' onclick="shift_page_view('taxon')">Taxonomy Data</a></li>
+        <li><a href='#abundance' onclick="shift_page_view('abundance')">Abundance Data</a></li>
+        <li><a href='#genome' onclick="shift_page_view('genome')">Genomic Data</a></li>
+        <li><a href='#phylo' onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
+        <li><a href='#peptide' onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
+       <!--  <li><a href='#phage' onclick="shift_page_view('phage')">Phage data</a></li> -->
+        <li><a href='#refseq' onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
+        <li><a href='#schema' onclick="shift_page_view('schema')">Database Schema</a></li>
       </div>
      </div>
 </div>           
@@ -157,12 +159,11 @@ width:180px;
       <td><a href='/download/dld_tax/text/lineage'>Tab Delimited Text<br>(Save to file)</a></td>
       <td><a href='/download/dld_tax/excel/lineage'>MS Excel Format<br>(Save to file)</a></td>
     </tr>
-    HOMD_Compare_V3.1_V4.0_Taxonomy.xls
     <tr><td>Compare V3.1 vs V4.0 HOMD Taxonomy </td><td><a href='/download/dld_static_file/HOMD_Compare_V3.1_V4.0_Taxonomy.xls'>[download]</a></td>
   </table>
   </center>
 </div>
-
+</a>
 <hr>
 <a name='abundance'>
 <div id='abundance' class='dnld-block'>
@@ -182,10 +183,11 @@ width:180px;
     </tr>
     <tr><td>Dewhirst </td><td><a href='/download/dld_taxabund/browser/dewhirst'>Tab Delimited Text<br>(View in browser)</a></td>
       <td><a href='/download/dld_taxabund/text/dewhirst'>Tab Delimited Text<br>(Save to file)</a></td>
-      <td><a href='/download/dld_taxabund/excel/dewhirst'>MS Excel Format<br>(Save to file)</a></td></tr>
+      <td><a href='/download/dld_taxabund/excel/dewhirst'>MS Excel Format<br>(Save to file)</a></td><td></td></tr>
+      
     <tr><td>HMP MetaPhlan </td><td><a href='/download/dld_taxabund/browser/hmpmeta'>Tab Delimited Text<br>(View in browser)</a></td>
       <td><a href='/download/dld_taxabund/text/hmpmeta'>Tab Delimited Text<br>(Save to file)</a></td>
-      <td><a href='/download/dld_taxabund/excel/hmpmeta'>MS Excel Format<br>(Save to file)</a></td></tr>
+      <td><a href='/download/dld_taxabund/excel/hmpmeta'>MS Excel Format<br>(Save to file)</a></td><td></td></tr>
       <tr><td>HMP RefSeq (v1v3) </td><td><a href='/download/dld_taxabund/browser/hmprefseqv1v3'>Tab Delimited Text<br>(View in browser)</a></td>
       <td><a href='/download/dld_taxabund/text/hmprefseqv1v3'>Tab Delimited Text<br>(Save to file)</a></td>
       <td><a href='/download/dld_taxabund/excel/hmprefseqv1v3'>MS Excel Format<br>(Save to file)</a></td>
@@ -200,7 +202,7 @@ width:180px;
   </table>
   </center>
 </div>
-
+</a>
 <hr>
 <a name='genome'>
 <div id='genome' class='dnld-block'>
@@ -226,7 +228,7 @@ width:180px;
   </table>
   </center>
 </div>
-
+</a>
 <hr>
 <a name='phylo'>
 <div id='phylo' class='dnld-block'>
@@ -264,6 +266,8 @@ width:180px;
   </table>
   </center>
 </div>
+</a>
+
 
 <hr>
 <a name='peptide'>
@@ -281,6 +285,7 @@ width:180px;
   </table>
   </center>
 </div>
+</a>
 <!-- 
 
 <hr>
@@ -299,6 +304,7 @@ width:180px;
   </table>
   </center>
 </div>
+</a>
  -->
 
 <hr>
@@ -306,7 +312,7 @@ width:180px;
 <div id='refseq' class='dnld-block'>
 
   <div class='subtitle'>Download HOMD 16S rRNA Gene Sequences</div>
-<div class='refseq-text'>    
+  <div class='refseq-text'>    
   HOMD provides two different sets of 16S rRNA Gene Reference Sequence (RefSeq) for download and BLAST search:
   <br><br>
   <pre>
@@ -320,142 +326,147 @@ width:180px;
   please refer to our publication <a href='https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-020-00841-w' target='_blank' >Escapa et al, 2020</a>.
     <br><br>
   In addition, the entire collection of all cloned sequences (clonal collection) upon which the Refseq was derived from, is also provided for download on this page and on the <a href='<%= cfg.HOMD_URL_BASE %>/ftp/'>HOMD FTP site</a>.
-</div>
+  </div>
 
 <div id='download-refseq-table-div'>
-<small>[<a href='/help/help-page?pagecode=refseq/refseq_version'>View Version History</a>]</small>
-
-
-<table id='download-refseq-table' border='1'>
-<tr><th>Date</th>  <th>Version Name</th>  <th></th> </tr>
-
-<tr class='download-refseq-title' ><td class='download-refseq-title' colspan='2'></a>HOMD 16S rRNA RefSeq *</td><td><span class='rtclk'>Right-click to download<br>or click to open</span></td> </tr>
-
-<tr><td>2025-03-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.1/HOMD_16S_rRNA_RefSeq_V16.1_full.fasta' >eHOMD 16S rRNA RefSeq Version 16.1</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.1/HOMD_16S_rRNA_RefSeq_V16.1_full.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
-</tr>
-<tr><td>2025-03-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0_full.fasta' >eHOMD 16S rRNA RefSeq Version 16.0</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0_full.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
-</tr>
-
-
-<tr><td>2023-04-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.fasta' >eHOMD 16S rRNA RefSeq Version 15.23 (Starts from position 28)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
-</tr>
-<tr><td>2023-04-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.p9.fasta' >eHOMD 16S rRNA RefSeq Version 15.23 (Starts from position 9)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.p9.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
-</tr>
-
-
-<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.fasta' >eHOMD 16S rRNA RefSeq Version 15.22 (Starts from position 28)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
-</tr>
-<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta' >eHOMD 16S rRNA RefSeq Version 15.22 (Starts from position 9)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
-</tr>
-<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.fasta' download='homd_V15.1.fasta'>eHOMD 16S rRNA RefSeq Version 15.1 (Starts from position 28)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td>
-</tr>
-<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.p9.fasta' download='homd_V15.1_p9.fasta'>eHOMD 16S rRNA RefSeq Version 15.1 (Starts from position 9)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.p9.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.fasta' download='homd_V14.51.fasta'>HOMD 16S rRNA RefSeq Version 14.51 (Starts from position 28)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.p9.fasta' download='homd_V14.51_p9.fasta'>HOMD 16S rRNA RefSeq Version 14.51 (Starts from position 9)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.p9.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.fasta' download='homd_V14.5.fasta'>HOMD 16S rRNA RefSeq Version 14.5 (Starts from position 28)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.p9.fasta' download='homd_V14.5_p9.fasta'>HOMD 16S rRNA RefSeq Version 14.5 (Starts from position 9)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.p9.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2013-05-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.fasta' download='homd_V13.2.fasta'>HOMD 16S rRNA RefSeq Version 13.2 (Starts at position 28)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2013-05-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.p9.fasta' download='homd_V13.2_p9.fasta'>HOMD 16S rRNA RefSeq Version 13.2 (Starts at position 9)</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.p9.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2013-03-25</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.fasta' >HOMD 16S rRNA RefSeq Version 13.0</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2013-01-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V12.fasta' >HOMD 16S rRNA RefSeq Version 12.0</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V12.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2012-02-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V11.fasta' >HOMD 16S rRNA RefSeq Version 11.0</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V11.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2010-02-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V10.1.fasta' >HOMD 16S rRNA RefSeq Version 10.1</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V10.1.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2009-02-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V10.fasta' >HOMD 16S rRNA RefSeq Version 10</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V10.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-
-<tr><td class='download-refseq-title' colspan='3'>HOMD 16S rRNA Extended RefSeq *</td> </tr>
-<tr><td>2010-02-19</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Extended_RefSeq/HOMD_16S_rRNA_RefSeq_Extended_V1.1.fasta' >HOMD 16S rRNA RefSeq Extended Version 1.1</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Extended_RefSeq/HOMD_16S_rRNA_RefSeq_Extended_V1.1.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2009-02-25</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Extended_RefSeq/HOMD_16S_rRNA_RefSeq_Extended_V1.fasta' >HOMD 16S rRNA RefSeq Extended Version 1</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Extended_RefSeq/HOMD_16S_rRNA_RefSeq_Extended_V1.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-
-<tr><td class='download-refseq-title' colspan='3'>HOMD 16S rRNA Gene Sequence Clonal Collection</td> </tr>
-<tr><td>2010-02-07</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Gene_Sequence_Clonal_Collection/HOMD_16S_rRNA_Gene_Sequence_Clonal_Collection_V1.fasta'>HOMD 16S rRNA Gene Sequence Clonal Collection Version 1</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Gene_Sequence_Clonal_Collection/HOMD_16S_rRNA_Gene_Sequence_Clonal_Collection_V1.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-
-<tr><td class='download-refseq-title' colspan='3'>eHOMD 16S rRNA training sequence sets</td> </tr>
-<tr><td>2018-12-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/eHOMDv15.1_FL_Compilation_TS.fa.gz' >eHOMD 16S rRNA full-length training set</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/eHOMDv15.1_FL_Compilation_TS.fa.gz' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2018-12-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/eHOMDv15.1_V1V3_Supraspecies_TS.fa.gz' >eHOMD 16S rRNA V1V3 training set</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/eHOMDv15.1_V1V3_Supraspecies_TS.fa.gz' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td></td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/'>Other training set related files [link to FTP site]</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/' target='_blank'>[Link Out]</a></td></tr>
-
-<tr><td class='download-refseq-title' colspan='3'>Other Download Formats</td> </tr>
-
-<tr><td>2025-03-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.0 Taxonomy File for MOTHUR</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
-<tr><td>2025-03-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.0 Taxonomy File for QIIME</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-
-
-<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.23 Aligned FASTA File</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.aligned.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.23 Taxonomy File for MOTHUR</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
-<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.23 Taxonomy File for QIIME</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-
-<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.22 Aligned FASTA File</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.aligned.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.22 Taxonomy File for MOTHUR</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
-<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.22 Taxonomy File for QIIME</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-
-<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.1 Aligned FASTA File</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.aligned.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.1 Taxonomy File for MOTHUR</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.qiime.taxonomy' >eHOMD 16S rRNA RefSeq Version 15.1 Taxonomy File for QIIME</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.qiime.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.aligned.fasta' >HOMD 16S rRNA RefSeq Version 14.51 Aligned FASTA File</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.aligned.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.mothur.taxonomy' >HOMD 16S rRNA RefSeq Version 14.51 Taxonomy File for MOTHUR</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.mothur.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.qiime.taxonomy' >HOMD 16S rRNA RefSeq Version 14.51 Taxonomy File for QIIME</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.qiime.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.aligned.fasta' >HOMD 16S rRNA RefSeq Version 14.5 Aligned FASTA File</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.aligned.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.mothur.taxonomy' >HOMD 16S rRNA RefSeq Version 14.5 Taxonomy File for MOTHUR</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.mothur.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.qiime.taxonomy' >HOMD 16S rRNA RefSeq Version 14.5 Taxonomy File for QIIME</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.qiime.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2013-05-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.aligned.fasta' >HOMD 16S rRNA RefSeq Version 13.2 Aligned FASTA File</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.aligned.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2013-05-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.qiime.fasta'>HOMD 16S rRNA RefSeq Version 13.2 FASTA File in QIIME Format</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.qiime.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2014-09-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.fasta' >HOMD 16S rRNA RefSeq Version 13.2 FASTA File for mothur</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-<tr><td>2014-09-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'>HOMD 16S rRNA RefSeq Version 13.2 Taxonomy File for mothur</a></td>
-    <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
-
-</table>
-</div>  
-  
-<div id='table-note'> 
-* These sequences are corrected consensus sequences. Many have been corrected and extended based on alignment with other sequences for that taxon and Ns and indels removed. Therefore, for many sequences, there will be differences between the Reference Sequence and the GenBank sequence listed in the header information. 
-We have not yet updated our own GenBank sequences, and can not update those from other depositors. We believe these are currently the best reference sequences available, and for the purposes of BLAST analysis, have the advantage of being of a uniform length.  
+	<small>[<a href='/help/help-page?pagecode=refseq/refseq_version'>View Version History</a>]</small>
+	
+	
+	<table id='download-refseq-table' class='download-table' border='1'>
+	<tr><th>Date</th>  <th>Version Name</th>  <th></th> </tr>
+	
+	<tr class='download-refseq-title' ><td class='download-refseq-title' colspan='2'></a>HOMD 16S rRNA RefSeq *</td><td><span class='rtclk'>Right-click to download<br>or click to open</span></td> </tr>
+	
+	<tr><td>2025-03-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.1/HOMD_16S_rRNA_RefSeq_V16.1_full.fasta' >eHOMD 16S rRNA RefSeq Version 16.1</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.1/HOMD_16S_rRNA_RefSeq_V16.1_full.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
+	</tr>
+	<tr><td>2025-03-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0_full.fasta' >eHOMD 16S rRNA RefSeq Version 16.0</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0_full.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
+	</tr>
+	
+	
+	<tr><td>2023-04-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.fasta' >eHOMD 16S rRNA RefSeq Version 15.23 (Starts from position 28)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
+	</tr>
+	<tr><td>2023-04-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.p9.fasta' >eHOMD 16S rRNA RefSeq Version 15.23 (Starts from position 9)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.p9.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
+	</tr>
+	
+	
+	<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.fasta' >eHOMD 16S rRNA RefSeq Version 15.22 (Starts from position 28)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
+	</tr>
+	<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta' >eHOMD 16S rRNA RefSeq Version 15.22 (Starts from position 9)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.p9.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
+	</tr>
+	<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.fasta' download='homd_V15.1.fasta'>eHOMD 16S rRNA RefSeq Version 15.1 (Starts from position 28)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td>
+	</tr>
+	<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.p9.fasta' download='homd_V15.1_p9.fasta'>eHOMD 16S rRNA RefSeq Version 15.1 (Starts from position 9)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.p9.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.fasta' download='homd_V14.51.fasta'>HOMD 16S rRNA RefSeq Version 14.51 (Starts from position 28)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.p9.fasta' download='homd_V14.51_p9.fasta'>HOMD 16S rRNA RefSeq Version 14.51 (Starts from position 9)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.p9.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.fasta' download='homd_V14.5.fasta'>HOMD 16S rRNA RefSeq Version 14.5 (Starts from position 28)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.p9.fasta' download='homd_V14.5_p9.fasta'>HOMD 16S rRNA RefSeq Version 14.5 (Starts from position 9)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.p9.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2013-05-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.fasta' download='homd_V13.2.fasta'>HOMD 16S rRNA RefSeq Version 13.2 (Starts at position 28)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2013-05-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.p9.fasta' download='homd_V13.2_p9.fasta'>HOMD 16S rRNA RefSeq Version 13.2 (Starts at position 9)</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.p9.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2013-03-25</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.fasta' >HOMD 16S rRNA RefSeq Version 13.0</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2013-01-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V12.fasta' >HOMD 16S rRNA RefSeq Version 12.0</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V12.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2012-02-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V11.fasta' >HOMD 16S rRNA RefSeq Version 11.0</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V11.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2010-02-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V10.1.fasta' >HOMD 16S rRNA RefSeq Version 10.1</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V10.1.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2009-02-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V10.fasta' >HOMD 16S rRNA RefSeq Version 10</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V10.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	
+	<tr><td class='download-refseq-title' colspan='3'>HOMD 16S rRNA Extended RefSeq *</td> </tr>
+	<tr><td>2010-02-19</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Extended_RefSeq/HOMD_16S_rRNA_RefSeq_Extended_V1.1.fasta' >HOMD 16S rRNA RefSeq Extended Version 1.1</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Extended_RefSeq/HOMD_16S_rRNA_RefSeq_Extended_V1.1.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2009-02-25</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Extended_RefSeq/HOMD_16S_rRNA_RefSeq_Extended_V1.fasta' >HOMD 16S rRNA RefSeq Extended Version 1</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Extended_RefSeq/HOMD_16S_rRNA_RefSeq_Extended_V1.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	
+	<tr><td class='download-refseq-title' colspan='3'>HOMD 16S rRNA Gene Sequence Clonal Collection</td> </tr>
+	<tr><td>2010-02-07</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Gene_Sequence_Clonal_Collection/HOMD_16S_rRNA_Gene_Sequence_Clonal_Collection_V1.fasta'>HOMD 16S rRNA Gene Sequence Clonal Collection Version 1</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_Gene_Sequence_Clonal_Collection/HOMD_16S_rRNA_Gene_Sequence_Clonal_Collection_V1.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	
+	<tr><td class='download-refseq-title' colspan='3'>eHOMD 16S rRNA training sequence sets</td> </tr>
+	<tr><td>2018-12-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/eHOMDv15.1_FL_Compilation_TS.fa.gz' >eHOMD 16S rRNA full-length training set</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/eHOMDv15.1_FL_Compilation_TS.fa.gz' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2018-12-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/eHOMDv15.1_V1V3_Supraspecies_TS.fa.gz' >eHOMD 16S rRNA V1V3 training set</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/eHOMDv15.1_V1V3_Supraspecies_TS.fa.gz' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td></td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/'>Other training set related files [link to FTP site]</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/publication_data/20190709/' target='_blank'>[Link Out]</a></td></tr>
+	
+	<tr><td class='download-refseq-title' colspan='3'>Other Download Formats</td> </tr>
+	
+	<tr><td>2025-03-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.0 Taxonomy File for MOTHUR</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
+	<tr><td>2025-03-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.0 Taxonomy File for QIIME</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	
+	
+	<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.23 Aligned FASTA File</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.aligned.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.23 Taxonomy File for MOTHUR</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
+	<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.23 Taxonomy File for QIIME</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	
+	<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.22 Aligned FASTA File</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.aligned.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.22 Taxonomy File for MOTHUR</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
+	<tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.22 Taxonomy File for QIIME</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	
+	<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.1 Aligned FASTA File</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.aligned.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.1 Taxonomy File for MOTHUR</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2017-11-16</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.qiime.taxonomy' >eHOMD 16S rRNA RefSeq Version 15.1 Taxonomy File for QIIME</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V15.1.qiime.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.aligned.fasta' >HOMD 16S rRNA RefSeq Version 14.51 Aligned FASTA File</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.aligned.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.mothur.taxonomy' >HOMD 16S rRNA RefSeq Version 14.51 Taxonomy File for MOTHUR</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.mothur.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2017-01-03</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.qiime.taxonomy' >HOMD 16S rRNA RefSeq Version 14.51 Taxonomy File for QIIME</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.51.qiime.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.aligned.fasta' >HOMD 16S rRNA RefSeq Version 14.5 Aligned FASTA File</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.aligned.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.mothur.taxonomy' >HOMD 16S rRNA RefSeq Version 14.5 Taxonomy File for MOTHUR</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.mothur.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2016-03-29</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.qiime.taxonomy' >HOMD 16S rRNA RefSeq Version 14.5 Taxonomy File for QIIME</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V14.5.qiime.taxonomy' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2013-05-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.aligned.fasta' >HOMD 16S rRNA RefSeq Version 13.2 Aligned FASTA File</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.aligned.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2013-05-08</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.qiime.fasta'>HOMD 16S rRNA RefSeq Version 13.2 FASTA File in QIIME Format</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.qiime.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2014-09-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.fasta' >HOMD 16S rRNA RefSeq Version 13.2 FASTA File for mothur</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	<tr><td>2014-09-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'>HOMD 16S rRNA RefSeq Version 13.2 Taxonomy File for mothur</a></td>
+		<td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+	
+	</table>
+	  
+	  
+	<div id='table-note'> 
+	* These sequences are corrected consensus sequences. Many have been corrected and extended based on alignment with other sequences for that taxon and Ns and indels removed. Therefore, for many sequences, there will be differences between the Reference Sequence and the GenBank sequence listed in the header information. 
+	We have not yet updated our own GenBank sequences, and can not update those from other depositors. We believe these are currently the best reference sequences available, and for the purposes of BLAST analysis, have the advantage of being of a uniform length.  
+	</div>
 </div>
-  
+</div>
+</a>
+
+
+<hr>
 <a name='schema'>
 <div id='schema' class='dnld-block'>
   <center>
@@ -472,14 +483,12 @@ We have not yet updated our own GenBank sequences, and can not update those from
 
       </td>
      </tr> 
-      
-    
   </table>
-  </center>
-</div>  
+  
 
-</div>
-</center>
+  </center>
+</div
+</a>
     </div> <!-- end: page-content -->
     
     <div id='footer'>

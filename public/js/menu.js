@@ -76,3 +76,19 @@ function basic_search(){
   f.submit()
 }
 
+function shift_page_view(item){
+    //all_groups = ['top','taxon','abundance','genome','phylo','phage','refseq','schema']
+    all_groups = ['top','taxon','abundance','genome','phylo','peptide','refseq','schema']
+    for(g in all_groups){
+      if(all_groups[g] != 'top'){
+        group = document.getElementById(all_groups[g]).getElementsByClassName("subtitle")[0]
+        if(all_groups[g] == item){
+          group.style.background = 'orange';
+          document.getElementById(all_groups[g]).style.background = 'LemonChiffon'
+        }else{
+          group.style.background = 'lightgrey';
+          document.getElementById(all_groups[g]).style.background = 'white'
+        }
+      }
+    }
+}
