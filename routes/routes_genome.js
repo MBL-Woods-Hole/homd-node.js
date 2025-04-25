@@ -1710,8 +1710,8 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   // Actual: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg
   // Copied to puplic/trees/eHOMD_Genomic_PhyloPhlAn_Tree.svg
   
-  //let filepath = CFG.FTP_TREE_URL +'/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg'
-  let filepath = CFG.HOMD_URL_BASE +'/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg'
+  let filepath = CFG.HOMD_URL_BASE+CFG.CP_TREE_PATH//'/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg'
+  
   https.get(filepath, (response) => { 
      let data = ''; 
  
@@ -1763,7 +1763,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Ribosomal_Protein_Tree.svg'
   //let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_Ribosomal_Protein_Tree.svg'
   //let filepath = CFG.FTP_TREE_URL +'/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
-  let filepath = CFG.HOMD_URL_BASE +'/ftp/phylogenetic_trees/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
+  let filepath = CFG.HOMD_URL_BASE+CFG.RP_TREE_PATH  //'/ftp/phylogenetic_trees/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
   https.get(filepath, (response) => { 
      let data = ''; 
  
@@ -1815,11 +1815,8 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   // const myurl = new url.URL(req.url)
   const otid = req.query.otid
   helpers.print(['otid', otid])
-  // https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.svg
-  //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_16S_rRNA_Tree.svg'
-  //let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_16S_rRNA_Tree.svg'
-  //let filepath = CFG.HOMD_URL_BASE +'/ftp/phylogenetic_trees/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
-  let filepath = CFG.HOMD_URL_BASE +"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
+  
+  let filepath = CFG.HOMD_URL_BASE+CGF.GENE_TREE_PATH   //"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
   https.get(filepath, (response) => { 
      let data = ''; 
  

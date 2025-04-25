@@ -78,9 +78,9 @@ function basic_search(){
 
 function shift_page_view(item){
     //all_groups = ['top','taxon','abundance','genome','phylo','phage','refseq','schema']
-    all_groups = ['top','taxon','abundance','genome','phylo','peptide','refseq','schema']
+    all_groups = ['topx','taxon','abundance','genome','phylo','peptide','refseq','schema']
     for(g in all_groups){
-      if(all_groups[g] != 'top'){
+      if(all_groups[g] != 'topx'){
         group = document.getElementById(all_groups[g]).getElementsByClassName("subtitle")[0]
         if(all_groups[g] == item){
           group.style.background = 'orange';
@@ -89,6 +89,10 @@ function shift_page_view(item){
           group.style.background = 'lightgrey';
           document.getElementById(all_groups[g]).style.background = 'white'
         }
+      }else{
+          //groupx = document.getElementById('topx')
+          //groupx.style.background = 'lightgrey';
+          //document.getElementById(all_groups[g]).style.background = 'white'
       }
     }
 }
