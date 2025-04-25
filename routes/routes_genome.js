@@ -1816,7 +1816,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   const otid = req.query.otid
   helpers.print(['otid', otid])
   
-  let filepath = CFG.HOMD_URL_BASE+CGF.GENE_TREE_PATH   //"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
+  let filepath = CFG.HOMD_URL_BASE+CFG.GENE_TREE_PATH   //"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
   https.get(filepath, (response) => { 
      let data = ''; 
  
