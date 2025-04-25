@@ -4,8 +4,8 @@ const constants = {};
 constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'
 constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // JBROWSE if you want a non-relative url use: config.js
 
-constants.rRNA_refseq_version    = '16.01'  //'15.23'
-constants.genomic_refseq_version = '11.0'  //'10.1'
+constants.rRNA_refseq_version    = '16.01'
+constants.genomic_refseq_version = '11.01'
 constants.homd_taxonomy_version = '4.0'  // Used on title page
 
 constants.genomes_table_name = 'genomesV11.0'
