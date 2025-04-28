@@ -197,7 +197,7 @@ CREATE TABLE `abundance` (
 """
 dropped_taxa = []
 def get_dropped():
-    q ="SELECT otid, status from otid_prime WHERE status='Dropped'"
+    q ="SELECT otid, status from otid_prime JOIN status using(otid) WHERE status='Dropped'"
     result = myconn.execute_fetch_select_dict(q)
 
     #print(result)

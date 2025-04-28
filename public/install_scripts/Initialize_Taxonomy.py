@@ -28,10 +28,11 @@ reference_otids = []  # must get from DB
 
 query_taxa ="""
 SELECT otid, taxonomy_id, genus, species,
-status, naming_status, cultivation_status,notes,
+`status`, naming_status, cultivation_status, notes,
 ncbi_taxon_id as ncbi_taxid
 from otid_prime
 join taxonomy using(taxonomy_id)
+join `status` using(otid)
 join genus using(genus_id)
 join species using(species_id)
 """
@@ -176,8 +177,9 @@ def run_sites(args):
     #q = "SELECT otid, primary_body_site FROM otid_prime"
     #q = "SELECT otid, site FROM otid_prime JOIN sites on otid_prime.primary_body_site_id=sites.site_id"
     q = "SELECT otid, site_notes, p1.site as p1, p2.site as p2,body_site_reference as ref FROM otid_prime"
-    q += " JOIN sites p1 on otid_prime.primary_body_site_id=p1.site_id"
-    q += " JOIN sites p2 on otid_prime.secondary_body_site_id=p2.site_id  ORDER BY otid"
+    q += " JOIN `status` using(otid)"
+    q += " JOIN sites p1 on `status`.primary_body_site_id=p1.site_id"
+    q += " JOIN sites p2 on `status`.secondary_body_site_id=p2.site_id  ORDER BY otid"
     lookup = {}
     #print(q)
     result = myconn.execute_fetch_select_dict(q)
@@ -465,6 +467,7 @@ JOIN subspecies  using(subspecies_id)
     qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies,status,naming_status,cultivation_status
         FROM otid_prime
         JOIN taxonomy using(taxonomy_id)
+        JOIN `status` using(otid)
         JOIN domain using(domain_id)
         JOIN phylum using(phylum_id)
         JOIN klass using(klass_id)

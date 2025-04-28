@@ -268,14 +268,10 @@ Promise.all(promises)
     //C.phage_lookup              = results[12];
     
     /// END of results files
-    C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status === 'Dropped')).map(x => x.otid)
-    C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status === 'Reference')).map(x => x.otid)
-    
-    //helpers.print_size()
-    //var  = C.dropped_obj
+    C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)
+    C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference')).map(x => x.otid)
     
     
-   // C.oral_homd_taxonomy    =  new CustomTaxa(JSON.parse(results[5]));
     
     //examples
     let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
