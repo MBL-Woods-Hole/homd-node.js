@@ -507,7 +507,14 @@ router.get('/tax_description', function tax_description(req, res){
                 sites += '<br>Secondary: '+C.site_lookup[otid]['s2']
                }
                if(C.site_lookup[otid]['ref_link']){
-                sites += "<br><small>Reference: <a href='"+C.site_lookup[otid]['ref_link']+"' target='_blank'>"+C.site_lookup[otid]['ref_link']+'</a></small>'
+                let ref_link_lst = C.site_lookup[otid]['ref_link'].split(/\s/)
+                sites += "<br><small>Reference(s):"
+
+                for(let i in ref_link_lst){
+                  sites += "<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href='"+ref_link_lst[i]+"' target='_blank'>"+ref_link_lst[i]+'</a>'
+                }
+                
+                sites += '</small>'
                }
                if(C.site_lookup[otid]['notes']){
                 sites += '<br><small>Note: '+C.site_lookup[otid]['notes']+'</small>'
