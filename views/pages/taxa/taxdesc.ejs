@@ -322,7 +322,17 @@
     <td class='taxon-data'>
         <%= data_lookup.naming_status %>
         <% if(data_lookup.naming_status == "Named Issue"){ %>
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;<small>Issue: <span class='red-text'><%- data_lookup.status_issue %></span></small>
+            <% pts = data_lookup.status_issue.split("&&")%>
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;
+            <small>Issue:
+            <% if(pts.length == 2){ %> 
+              <a style="text-decoration-line: underline;" href='<%- pts[1] %>' target='_blank'>
+                <span class='red-text'><%- pts[0] %></span>
+              </a>
+            <% }else{ %>
+              <span class='red-text'><%- data_lookup.status_issue %></span>
+            <% } %>
+            </small>
         <% } %>
     </td>
     
