@@ -28,7 +28,7 @@ reference_otids = []  # must get from DB
 
 query_taxa ="""
 SELECT otid, taxonomy_id, genus, species,
-`status`, naming_status, cultivation_status, notes,
+`status`, status_issue, naming_status, cultivation_status, notes,
 ncbi_taxon_id as ncbi_taxid
 from otid_prime
 join taxonomy using(taxonomy_id)
@@ -58,6 +58,7 @@ def create_taxon(otid):
     taxon['otid'] = otid
     taxon['status'] = ''
     taxon['naming_status'] = ''
+    taxon['status_issue'] = ''
     taxon['cultivation_status'] = ''
     taxon['notes'] = ''
     taxon['genus'] = ''
@@ -98,6 +99,7 @@ def run_taxa(args):
             
         taxonObj['status']             = obj['status']
         taxonObj['naming_status']      = obj['naming_status']
+        taxonObj['status_issue']      = obj['status_issue']
         taxonObj['cultivation_status'] = obj['cultivation_status']
         taxonObj['genus']              = obj['genus']
         taxonObj['species']            = obj['species']
@@ -464,10 +466,11 @@ JOIN species  using(species_id)
 JOIN subspecies  using(subspecies_id)
     """
 ## IMPORTANT -- DO NOT LET Dropped into hiearchy/Lineage/Counts
-    qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies,status,naming_status,cultivation_status
+    #qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies,status,naming_status,cultivation_status
+    qtax = """SELECT otid,domain,phylum,klass,`order`,family,genus,species,subspecies
         FROM otid_prime
         JOIN taxonomy using(taxonomy_id)
-        JOIN `status` using(otid)
+       
         JOIN domain using(domain_id)
         JOIN phylum using(phylum_id)
         JOIN klass using(klass_id)

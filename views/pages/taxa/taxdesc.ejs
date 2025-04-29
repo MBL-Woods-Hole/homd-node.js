@@ -319,7 +319,13 @@
   <tr>
     <td class='taxon-bold tbl-title'>Naming Status:</td>
     
-    <td class='taxon-data'><%= data_lookup.naming_status %></td>
+    <td class='taxon-data'>
+        <%= data_lookup.naming_status %>
+        <% if(data_lookup.naming_status == "Named Issue"){ %>
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;<small>Issue: <span class='red-text'><%- data_lookup.status_issue %></span></small>
+        <% } %>
+    </td>
+    
   </tr>
   <tr>
     <td class='taxon-bold tbl-title'>Cultivation Status:</td>

@@ -546,7 +546,7 @@ router.get('/tax_description', function tax_description(req, res){
 
 router.post('/get_refseq', function get_refseq(req, res) {
   helpers.print(req.body)
-  var refseq_id = req.body.refid;
+  var refseq_id = req.body.refseqid;
   let html
   
   //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
