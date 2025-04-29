@@ -347,70 +347,74 @@ function clear_filter_form(){
 // }
 
 
-function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,genomes) {
-    
-    //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
-    
-    var defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' |  Genomes: '+genomes.toString()
-    console.log(defline)
-    var args={}
-    args.refid = seqid
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "/taxa/get_refseq", true);
-    xmlhttp.setRequestHeader("Content-type","application/json");
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        var resp = xmlhttp.responseText;
-        console.log(resp)
-        text = ''
-        //text += '<pre>'+defline+'<br>'
-        text = '<pre>'
-        text += defline+'\n'
-        text += resp
-        text += '</pre>'
-    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
-    var doc = win.document;
-    //doc.writeln("<title>yourtitle</title>");
-    //doc.title = 'eHOMD Reference Sequence'
-    doc.open("text/html");
-    
-    doc.write("<title>eHOMD Reference Sequence</title>"+text);
-    doc.close();
-        
-        
-      }
-    }
-    xmlhttp.send(JSON.stringify(args));
-}
+// function get_refseq(taxfullname,seqid,genus,species,strain,genbank,status,genomes) {
+//     
+//     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+//     
+//     var defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' |  Genomes: '+genomes.toString()
+//     console.log(defline)
+//     var args={}
+//     args.refid = seqid
+//     var win = window.open("RefSeq: "+species, null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+//     var doc = win.document;
+//     doc.open("text/html");
+//     var xmlhttp = new XMLHttpRequest();
+//     xmlhttp.open("POST", "/taxa/get_refseq", true);
+//     xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//         var resp = xmlhttp.responseText;
+//         console.log(resp)
+//         text = ''
+//         //text += '<pre>'+defline+'<br>'
+//         text = '<pre>'
+//         text += defline+'\n'
+//         text += resp
+//         text += '</pre>'
+//     
+//     
+//     doc.write("<title>eHOMD Reference Sequence</title>"+text);
+//     doc.close();
+//         
+//         
+//       }
+//     }
+//     xmlhttp.send(JSON.stringify(args));
+// }
 function get_refseqV16(taxfullname,seqid,species) {
     
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     
     var defline = '>'+seqid+' | '+taxfullname+' | '+species
-    console.log(defline)
+    console.log('xx'+defline)
     var args={}
     args.refid = seqid
     var xmlhttp = new XMLHttpRequest();
+    //use fake url to avoid error
+    var win = window.open("http://example.com/waiting.html", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+    var doc = win.document;
+    doc.open("text/html");
+    
     xmlhttp.open("POST", "/taxa/get_refseq", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
-        console.log(resp)
+        //console.log(resp)
         text = ''
         //text += '<pre>'+defline+'<br>'
         text = '<pre>'
         text += defline+'\n'
         text += resp
         text += '</pre>'
-    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
-    var doc = win.document;
+    //var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+    //var doc = win.document;
     //doc.writeln("<title>yourtitle</title>");
-    //doc.title = 'eHOMD Reference Sequence'
-    doc.open("text/html");
+        doc.title = 'eHOMD Reference Sequence'
+    //doc.open("text/html");
     
-    doc.write("<title>eHOMD Reference Sequence</title>"+text);
-    doc.close();
+        doc.write("<title>eHOMD Reference Sequence</title>"+text);
+        doc.close();
         
         
       }
@@ -419,7 +423,10 @@ function get_refseqV16(taxfullname,seqid,species) {
 }
 function get_abund_sorted(site,rank) {
     
-    //console.log('site',site,'rank',rank)
+    //use fake url to avoid error
+    var win = window.open("http://example.com/waiting.html", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+    var doc = win.document;
+    doc.open("text/html");
     
     var xmlhttp = new XMLHttpRequest();
     //xmlhttp.open("POST", "/taxa/get_refseq", true);
@@ -430,12 +437,6 @@ function get_abund_sorted(site,rank) {
         var response = xmlhttp.responseText;
         //console.log(response)
         
-        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
-        var doc = win.document;
-        //doc.writeln("<title>yourtitle</title>");
-        //doc.title = 'eHOMD Reference Sequence'
-        doc.open("text/html");
-    
         doc.write("<title>Sorted Abundances</title>"+response);
         doc.close();
         

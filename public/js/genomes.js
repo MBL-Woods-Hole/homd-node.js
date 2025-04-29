@@ -22,76 +22,7 @@ function open_blast_in_new_window(gid){
   }
   window.open(url)
 }
-// function open_jbrowse_in_new_windowORIG(gidplusgc){
-//   console.log('open_jbrowse_in_new_window',gidplusgc)
-//   pts = gidplusgc.split('|')
-//   gid = pts[0]
-//   gc = pts[1]
-//   if(gid=='0'){
-//      document.getElementById("genome_iframe").src = "";	
-//      document.getElementById("genome_iframe").width = '100%'
-//      document.getElementById("genome_iframe").height = '0'
-//      return
-//   }
-//   //let url = "/jbrowse/index.html?data=homd_V10.1/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
-//   let url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
-//   
-//   window.open(url)
-// }
-// function open_jbrowse_in_new_window(gidplusgc){
-//   console.log('open_jbrowse_in_new_window',gidplusgc)
-//   console.log('1-jb from choose gid')
-//   pts = gidplusgc.split('|')
-//   gid = pts[0]
-//   gc = pts[1]
-//   if(!gc){gc='0'}
-//   if(gid=='0'){
-//      document.getElementById("genome_iframe").src = "";	
-//      document.getElementById("genome_iframe").width = '100%'
-//      document.getElementById("genome_iframe").height = '0'
-//      return
-//   }
-//   
-//   var xmlhttp = new XMLHttpRequest();
-// 	xmlhttp.open("POST", "/genome/jbrowse_ajax1", true);
-// 	xmlhttp.setRequestHeader("Content-type","application/json");
-//     xmlhttp.onreadystatechange = function() {
-//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//         var resp = xmlhttp.responseText;
-//         //console.log(defline)
-//         let url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
-//         console.log(url)
-//         window.open(url)
-//       }
-//     }
-//     xmlhttp.send();
-//   //let url = "/jbrowse/index.html?data=homd_V10.1/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
-//   
-// }
-// function open_jbrowse_in_new_window2(gid){
-//   console.log('open_jbrowse_in_new_window2',gidplusgc)
-//   console.log('1-jb from choose gid')
-//   
-//   contig = document.getElementById("select-contig").value
-//      
-//   var xmlhttp = new XMLHttpRequest();
-// 	xmlhttp.open("POST", "/genome/jbrowse_ajax1", true);
-// 	xmlhttp.setRequestHeader("Content-type","application/json");
-//     xmlhttp.onreadystatechange = function() {
-//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//         var resp = xmlhttp.responseText;
-//         //console.log(defline)
-//         //let url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
-//         let url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc="+gid+"|"+contig
-//      
-//         console.log(url)
-//         window.open(url)
-//       }
-//     }
-//     xmlhttp.send();
-//   //let url = "/jbrowse/index.html?data=homd_V10.1/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
-//   
-// }
+
 function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
   console.log('open_jbrowse', value, page)
   /*
@@ -248,6 +179,10 @@ function get_contig_seq(gid, mid, type) {
     args.mid = mid
     args.contig = contig
     defline = '>'+gid+' | '+contig
+    var win = window.open("Contig Sequence", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=yes");
+    var doc = win.document;
+    doc.open("text/html");
+        
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/get_contig_seq", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
@@ -260,47 +195,14 @@ function get_contig_seq(gid, mid, type) {
         text = '<pre>'
         text += defline +' | Length: '+resp.length.toString()+ " bp\n"+resp['html']
         text += '</pre>'
-        //var win = window.open("Contig Sequence", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=yes");
-        var win = window.open("Contig Sequence", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=yes");
-        var doc = win.document;
-        doc.open("text/html");
-  //doc.write("<title>eHOMD Contig Sequence</title><body style='overflow:auto; height:100%;'>"+text+"</body>");
+        
         doc.write("<title>eHOMD Contig Sequence</title><body><div style='overflow:auto; height:100%;'>"+text+"</div></body>");
         doc.close();
       }
     }
     xmlhttp.send(JSON.stringify(args));
 }
-// function get_16s_seq(seqid) {
-//     // on taxon description page
-//     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
-//     //defline = '>'+seqid+' | '+genus+' '+species+' | '+taxfullname+' | '+strain+' | '+genbank+' | Status: '+status+' | Preferred Habitat: '+site+' | '+flag
-//     args={}
-//     args.seqid = seqid
-//     var xmlhttp = new XMLHttpRequest();
-// 	xmlhttp.open("POST", "/genome/get_16s_seq", true);
-// 	xmlhttp.setRequestHeader("Content-type","application/json");
-//     xmlhttp.onreadystatechange = function() {
-//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//         var resp = xmlhttp.responseText;
-//         //console.log(defline)
-//         text = ''
-//         //text += '<pre>'+defline+'<br>'
-//         text = '<pre>'
-//         text += resp
-//         text += '</pre>'
-//     var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=950,height=400");
-//     var doc = win.document;
-//     //doc.writeln("<title>yourtitle</title>");
-//     //doc.title = 'eHOMD Reference Sequence'
-//     doc.open("text/html");
-//   
-//     doc.write("<title>eHOMD 16s rRNA Gene Sequence</title>"+text);
-//     doc.close();
-//       }
-//     }
-//     xmlhttp.send(JSON.stringify(args));
-// }
+
 //
 function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     //console.log('in NNNA',type,pid)
@@ -317,6 +219,12 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
     args.org   = org
     args.product   = product
     //console.log('args',args)
+    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=yes");
+    var doc = win.document;
+        //doc.writeln("<title>yourtitle</title>");
+        //doc.title = 'eHOMD Reference Sequence'
+    doc.open("text/html");
+        
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/get_NN_NA_seq", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
@@ -345,11 +253,7 @@ function get_NN_NA_seq(type,pid,db,mol,org,product,gid) {  // type=nn or na
 
         text += resp.html
         text += '</pre>'
-        var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=yes");
-        var doc = win.document;
-        //doc.writeln("<title>yourtitle</title>");
-        //doc.title = 'eHOMD Reference Sequence'
-        doc.open("text/html");
+        
   
         doc.write("<title>eHOMD 16s rRNA Gene Sequence</title><body><div style='overflow:auto; height:100%;'>"+text+"</div></body>");
         doc.close();
