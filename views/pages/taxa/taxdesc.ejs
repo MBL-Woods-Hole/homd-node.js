@@ -310,20 +310,19 @@
         <td class='taxon-data'><i><%= data_lineage.species %></i></td>
   </tr>
   
-  <% if(msg){ %>
-     <tr><td class='taxon-bold tbl-title'>Notes:</td>
-        <td class='red-text'><small><%- msg %></small></td>
-     </tr>
-  <% } %>
-  
   <tr>
     <td class='taxon-bold tbl-title'>Naming Status:</td>
     
     <td class='taxon-data'>
-        <%= data_lookup.naming_status %>
-        <% if(data_lookup.naming_status == "Named Issue"){ %>
-            <% pts = data_lookup.status_issue.split("&&")%>
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;
+        
+        <% if(data_lookup.naming_status.substring(data_lookup.naming_status.length-2, data_lookup.naming_status.length) == "**"){ %>
+            
+            <%= data_lookup.naming_status.substring(0, data_lookup.naming_status.length-2) %><span class='red-text'>**</span>
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;<small><span class='red-text'>**</span> See Notes Below</small>
+            <!-- 
+<% pts = data_lookup.status_issue.split("&&")%>
+            
+            
             <small>Issue:
             <% if(pts.length == 2){ %> 
               <a style="text-decoration-line: underline;" href='<%- pts[1] %>' target='_blank'>
@@ -333,6 +332,11 @@
               <span class='red-text'><%- data_lookup.status_issue %></span>
             <% } %>
             </small>
+ -->
+            
+            
+        <% }else{ %>
+            <%= data_lookup.naming_status %>
         <% } %>
     </td>
     
@@ -342,6 +346,23 @@
     
     <td class='taxon-data'><%= data_lookup.cultivation_status %></td>
   </tr>
+  
+  <% if(msg){ %>
+     <tr><td class='taxon-bold tbl-title'>Notes:</td>
+        <% pts = msg.split(";;")%>
+        <td class='red-text'>
+        <% if(pts.length == 1){ %> 
+           <small><%- msg %></small>
+        <% }else{ %>
+        <%   for(i in pts){ %>
+                <small><%- pts[i] %></small><br>
+        <%   } %>
+        <% } %>
+        </td>
+        
+     </tr>
+  <% } %>
+  
   <tr>
     <td class='taxon-bold tbl-title'> Body Site (or Source): <span class='red-text'><small>(in beta)</small></span></td>
     <td class='taxon-data'><%- sites %></td>

@@ -447,26 +447,36 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     //console.log('vals',vals)
     ///// status /////
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
-    //console.log('status_on',status_on)
-    let combo = ''
+    console.log('status_on',status_on)
+    let check,combo = '',first_part='',second_part=''
     big_tax_list = big_tax_list.filter( function filterStatus(item) {
-        //console.log('item',item)
+        // console.log('item',item)
         // choices: dropped,phylotype, named_cultivated,named_uncultivated,unnamed_cultivated
-        combo = (item.naming_status.split(/(\s+)/)[0] +'_'+item.cultivation_status.split(/(\s+)/)[0]).toLowerCase()
-        //console.log('combo',combo)
-        // if(item.status.toLowerCase() =='dropped'){ 
-//             combo = item.naming_status.toLowerCase()
-//         }
-        //console.log('combo',combo)
-        if(status_on.indexOf('dropped') != -1 && item.naming_status.toLowerCase() =='dropped'){
-            return item
+        if(item.naming_status.substring(0,5).toLowerCase() == 'named' ){
+           first_part = 'named'
+        }else if(item.naming_status.substring(0,7).toLowerCase() == 'unnamed'){
+           first_part = 'unnamed'
         }
-        if(status_on.indexOf('phylotype') != -1 && item.naming_status.toLowerCase() =='phylotype'){
-            return item
+        
+        if(item.cultivation_status.substring(0,10).toLowerCase() == 'cultivated' ){
+           second_part = 'cultivated'
+        }else if(item.cultivation_status.substring(0,12).toLowerCase() == 'uncultivated'){
+           second_part = 'uncultivated'
         }
-        if(status_on.indexOf(combo) != -1){
-            return item
+        
+        if(item.naming_status.toLowerCase() =='dropped'){
+            check = 'dropped'
+        }else if(item.naming_status.toLowerCase() =='phylotype'){
+            check = 'phylotype'
+        }else{
+            check = first_part+'_'+second_part
         }
+        for(let i in status_on){ 
+            if(status_on[i] == check){
+                return item
+            }
+        }
+
     })
     //console.log('status_on',status_on)
     //console.log('big_tax_list.length-2',big_tax_list.length)
