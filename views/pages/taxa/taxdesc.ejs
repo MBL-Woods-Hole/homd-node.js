@@ -349,15 +349,21 @@
   
   <% if(msg){ %>
      <tr><td class='taxon-bold tbl-title'>Notes:</td>
+        
         <% pts = msg.split(";;")%>
         <td class='red-text'>
-        <% if(pts.length == 1){ %> 
-           <small><%- msg %></small>
-        <% }else{ %>
-        <%   for(i in pts){ %>
-                <small><%- pts[i] %></small><br>
-        <%   } %>
-        <% } %>
+        <small>
+          <% for(i in pts){ %>
+            <% pts2 = pts[i].split("&&") %>
+            <% if(pts2.length == 2){ %>
+                <a style="text-decoration-line: underline;" href='<%- pts2[1] %>' target='_blank'>
+                    <span class='red-text'><%- pts2[0] %></span>
+                </a>
+            <% }else{ %>
+                  <%- pts[i] %><br>
+            <% } %>
+          <% } %>
+        </small>
         </td>
         
      </tr>
