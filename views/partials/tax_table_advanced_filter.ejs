@@ -222,15 +222,15 @@ width: 1500px;
             <% } %>
             
             <% if(statusfltr.site.ref === 'on'){ %>
-                <input title='Was NonOralRef' type='checkbox' checked class='filter_ckbx' id='adv_ref' name='adv_ref' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
+                <input title='Was NonOralRef' type='checkbox' checked class='filter_ckbx' id='adv_ref' name='ref' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
             <% }else{ %>
-                <input title='Was NonOralRef' type='checkbox' class='filter_ckbx' id='adv_ref' name='adv_ref' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
+                <input title='Was NonOralRef' type='checkbox' class='filter_ckbx' id='adv_ref' name='ref' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
             <% } %>
             
             <% if(statusfltr.site.unassigned === 'on'){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='adv_unassigned' name='adv_unassigned' onclick='adv_update_sb()' \> Unassigned&nbsp;&nbsp;
+                <input type='checkbox' checked class='filter_ckbx' id='adv_unassigned' name='unassigned' onclick='adv_update_sb()' \> Unassigned&nbsp;&nbsp;
             <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='adv_unassigned' name='adv_unassigned' onclick='adv_update_sb()' \> Unassigned&nbsp;&nbsp;
+                <input type='checkbox' class='filter_ckbx' id='adv_unassigned' name='unassigned' onclick='adv_update_sb()' \> Unassigned&nbsp;&nbsp;
             <% } %> 
             
             <span  id='adv_toggle_cb_sites_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_sites('off')">Toggle CheckBoxes On/Off</a></span>

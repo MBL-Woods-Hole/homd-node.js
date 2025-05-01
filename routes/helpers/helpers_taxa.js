@@ -115,7 +115,7 @@ module.exports.get_null_tax_filter = function get_null_tax_filter(){
     return nullfilter
 }
 
-module.exports.get_filtered_taxon_list = function getFilteredTaxonList(big_tax_list, search_txt, search_field){
+module.exports.get_text_filtered_taxon_list = function getTextFilteredTaxonList(big_tax_list, search_txt, search_field){
 
   let send_list = []
   //console.log('txt srch',search_txt,search_field)
@@ -216,6 +216,21 @@ module.exports.get_filtered_taxon_list = function getFilteredTaxonList(big_tax_l
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
+      // SEARCH '**' and 'NVP' in naming_status, cultivation_status
+      //if(search_txt == '**' || search_txt == 'nvp'){
+      //console.log('TEXT3',big_tax_list.length,Object.keys(temp_obj).length)
+          tmp_send_list = big_tax_list.filter( function filterBigList5(e) {
+                if(e.naming_status.toLowerCase().includes(search_txt) || e.cultivation_status.toLowerCase().includes(search_txt)){
+                   //console.log('TEXT3',e)
+                   return e
+                }
+          })    
+          for(var n in tmp_send_list){
+             temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
+          }
+      //}
+      
+      //console.log('TEXT4',Object.keys(temp_obj).length)
       // now back to a list
       send_list = Object.values(temp_obj);
       
@@ -438,16 +453,16 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
     }
     //console.log('vals',vals)
     //
-    // txt_srch
-    //console.log('big_tax_list.length-1',big_tax_list.length)
+    // SEARCH txt_srch
+    //console.log('TEXT',vals.text.txt_srch, vals.text.field)
     if(vals.text.txt_srch !== ''){
-       big_tax_list = helpers_taxa.get_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
+       big_tax_list = helpers_taxa.get_text_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field)
     }
     //console.log('big_tax_list',big_tax_list[0])
     //console.log('vals',vals)
-    ///// status /////
+    ///// SEARCH status /////
     let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
-    console.log('status_on',status_on)
+    //console.log('status_on',status_on)
     let check,combo = '',first_part='',second_part=''
     big_tax_list = big_tax_list.filter( function filterStatus(item) {
         // console.log('item',item)
@@ -479,9 +494,9 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
 
     })
     //console.log('status_on',status_on)
-    //console.log('big_tax_list.length-2',big_tax_list.length)
+    //console.log('big_tax_list.length-1',big_tax_list.length)
     //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
-    //Abundance
+    //SEARCH Abundance
      let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on')
      //console.log('abundOn',abund_on)
      big_tax_list = big_tax_list.filter( function filterAbundance(item) {
@@ -492,13 +507,13 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
           if(C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1){
             let site_item_primary = C.site_lookup[item.otid].s1.toLowerCase().replace(/\s/g,'')
             if(item.otid == 400){
-                console.log('400site_item_primary',item.otid,site_item_primary)
+                //console.log('400site_item_primary',item.otid,site_item_primary)
             }
             //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund','nodata_abund' ]
             
             for(let n in abund_on){
               let test = abund_on[n].slice(0,-6).toLowerCase() // 
-              console.log('test',test)
+              //console.log('test',test)
               if(site_item_primary.includes(test)){
                 return item
               }
@@ -506,7 +521,7 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
           }
         }
     })
-    console.log('big_tax_list length',big_tax_list.length)
+    //console.log('big_tax_list length2',big_tax_list.length)
     //site
     // create array of 'on's
     let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
