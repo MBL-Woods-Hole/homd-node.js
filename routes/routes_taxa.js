@@ -789,7 +789,7 @@ router.get('/life', function life(req, res) {
   
 })
 //
-router.get('/ecology_home', function ecology_index(req, res) {
+router.get('/ecology_home', function ecology_home(req, res) {
     //console.log('in ecology index')
     let bar_graph_data = []
     let site_species = {},sp_per_site = {}// {site,sp,abund} ordered by sp
@@ -955,7 +955,7 @@ router.get('/ecology_home', function ecology_index(req, res) {
     families.sort()
     genera.sort()
     //console.log('bar_graph_data',bar_graph_data)
-    res.render('pages/taxa/ecology_index', {
+    res.render('pages/taxa/ecology_home', {
       title: 'HOMD :: Ecology', 
       pgname: 'taxon/ecology', // for AbountThisPage
       config: JSON.stringify(CFG),

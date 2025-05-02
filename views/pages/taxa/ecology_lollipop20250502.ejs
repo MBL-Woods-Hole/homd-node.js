@@ -52,9 +52,29 @@ ul li{
    
 }
 #plot_table_master td{
+   text-align: center; 
+    /* vertical-align: middle; */
+}
+.plot{
+   padding:0 10px;
    
 }
 
+.plot_table{
+  border-collapse:collapse;
+  border:1px solid green;
+  
+  /* width:100%; */
+}
+.plot_table td{
+  vertical-align:top;
+  
+      
+  
+}
+.plot-td{
+   
+}
 .spacer{
    padding:10px 0;
    background:grey;
@@ -136,21 +156,14 @@ td {
   .row{
     
   }
-  .plot{
-   /* padding:0 10px; */
-
-}
-
-
-  .plot-td{
-   
-  }
   .plot_table{
+  border-collapse:collapse;
   border:1px solid green;
-  padding:10px
-  }
+  width:80%;
+  text-align:center;
+}
   .column{
-  
+  text-align:center;
   }
   .left {
   width: 15%;
@@ -159,8 +172,8 @@ td {
   }
   .middle {
   /* width: 54%; */
-  /* border:2px dashed red; */
-  padding:10px;
+  width:78%;
+  
   /* border:1px solid red; */
   
   }
@@ -175,23 +188,20 @@ td {
 @media only screen and (min-width : 1824px) {
   /* Styles */
   .plot_table{
-     border:1px solid green;
-     padding:10px;
-  }
-  .plot{
-   /* padding:0 10px; */
-
-}
-
-
-.plot-td{
-   
+  border-collapse:collapse;
+  border:1px solid red;
+  width:100%;
 }
   .left {
-  
+  width: 20%;
+  font-size:12px;
+  height: 200px; /* only to hold column open */
   }
   .middle {
-     
+  /* width: 54%; */
+  width:78%;
+  /* border:1px solid red; */
+  
   }
   .right {
   
@@ -285,13 +295,14 @@ td {
     <%- include('./ecology_lollipop_legend'); %>
 
   <span>
+     
      <% if(rank == "species"){ %>
         <span style=''><small>[<a href='body_sites?otid=<%= otid %>'>see all body sites data: <%= taxidfullname %></a>]</small></span>
      <% } %>
   </span>
   
   
-<div class='middle'>
+<div class='column middle'>
 
 
     <center>

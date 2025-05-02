@@ -26,19 +26,28 @@ var initStackedBarChart = {
         domEle = config.element,
         stackKey = config.key,
         data = config.data,
-        margin = {top: 20, right: 20, bottom: 25, left: 150},
-        width = 1200 - margin.left - margin.right,
+        margin = {top: 20, right: 20, bottom: 25, left: 50},
+        width_large = 1400 - margin.left - margin.right,
+        width_small = 600 - margin.left - margin.right,
+        //width = 600 - margin.left - margin.right,
         height = 220 - margin.top - margin.bottom,
-        xScale = d3.scaleLinear().rangeRound([0, width]),
+        xScale = d3.scaleLinear().rangeRound([0, width_large]),
         yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
         color = d3.scaleOrdinal(config.colors) //d3.scaleOrdinal(d3.schemeCategory20),
         xAxis = d3.axisBottom(xScale),
         yAxis =  d3.axisLeft(yScale),
-        xlabel = 'Major Species-Level Abundances for Each Site'
+        xlabel = 'Major Species-Level Abundances (%) for Each Body Site'
         svg = d3.select("#"+domEle).append("svg")
-                .attr("width", width + margin.left + margin.right)
+                //.attr("width", width_large + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
+                //.style("width", width_large + 'px')
+                .style("width", '80vw')
+                
                 .append("g")
+                //working
+                //.attr("class", "x-axis")  // Add a class for styling
+                //.attr("id", "xAxis")  // Or an ID
+                
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         var stack = d3.stack()
@@ -82,7 +91,7 @@ var initStackedBarChart = {
                   //var y = d3.event.pageY - document.getElementById('bar-chart').getBoundingClientRect().y + 10
                   var matrix = this.getScreenCTM().translate(+ this.getAttribute("cx"), + this.getAttribute("cy"));
                   var pos = d3.select(this).node().getBoundingClientRect();
-                  console.log(matrix.e, matrix.f)
+                  //console.log(matrix.e, matrix.f)
                   tooltip
                          //d3.mouse(container)::
                          //Returns the x and y coordinates of the current event relative to the specified container.     
@@ -125,12 +134,26 @@ var initStackedBarChart = {
         // text label for the x axis
         svg.append("text")             
           .attr("transform",
-                "translate(" + (-80) + " ," + 
+                "translate(" + (-10) + " ," + 
                                ( margin.top - 25) + ")")
           .style("text-anchor", "left")
           .style("font-size", "small")
           .text(xlabel);                          
     }  // end of draw
+    
+    
 }
-
+// function resize() {
+//         console.log('in resize')
+//         const containerWidth = d3.select('#bar-chart').node().offsetWidth; // Get container width
+//         d3.select('svg')
+//             .attr('width', containerWidth)
+//             .attr('height', containerWidth / 1.6); // Example aspect ratio
+// 
+//         // Update D3 elements within the SVG based on the new width
+//         d3.selectAll('.bar')
+//             .attr('width', containerWidth / 10); // Example bar width
+//     }
+// d3.select(window).on('resize', resize); // Call resize on window resize
+// resize()
 

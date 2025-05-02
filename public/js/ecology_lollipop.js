@@ -45,7 +45,8 @@ function create_plot(obj){
        //console.log(ND_ary)
        var svg = d3.select("#"+obj['target'])
       .append("svg")
-      .attr("width", width + margin.left + margin.right)
+      //.attr("width", width + margin.left + margin.right)
+      .style("width", '80vw')
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform",
