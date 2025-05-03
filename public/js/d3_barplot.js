@@ -1,24 +1,24 @@
-//   // Prep the tooltip bits, initial display is hidden
-// var div = d3.select("body").append("div")
-//     .attr("class", "tooltip")
-//     .style("opacity", 0);
-//             
-// function handleMouseOver (event, d) {
-//        d3.select(this).attr("fill", "orange");
-//        tooltip.style("visibility", "visible");
-// };
-//   
-// function handleMouseMove (event, d) {
-//       var xPosition = d3.mouse(this)[0] - 5;
-//       var yPosition = d3.mouse(this)[1] - 5;
-//       //console.log(xPosition,yPosition)
-//       tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-//       tooltip.select("text").text('Species: '+species[d]);
-// };
-// function handleMouseOut (event, d) {
-//        d3.select(this).attr("fill", "blue");
-//        tooltip.style("visibility", "hidden");
-// };
+  // Prep the tooltip bits, initial display is hidden
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+            
+function handleMouseOver (event, d) {
+       d3.select(this).attr("fill", "orange");
+       tooltip.style("visibility", "visible");
+};
+  
+function handleMouseMove (event, d) {
+      var xPosition = d3.mouse(this)[0] - 5;
+      var yPosition = d3.mouse(this)[1] - 5;
+      //console.log(xPosition,yPosition)
+      tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+      tooltip.select("text").text('Species: '+species[d]);
+};
+function handleMouseOut (event, d) {
+       d3.select(this).attr("fill", "blue");
+       tooltip.style("visibility", "hidden");
+};
   // https://gist.github.com/gawain91/9fedf9a94d615a4f540fc2ff5792c952
 var initStackedBarChart = {
     draw: function(config) {
@@ -88,7 +88,7 @@ var initStackedBarChart = {
                 .attr("height", yScale.bandwidth())
                 .attr("width", function(d) {  return xScale(d[1]) - xScale(d[0]) })
 
-                .on("mouseover", function(event,d) { tooltip.style("display", null); })
+                .on("mouseover", function() { tooltip.style("display", null); })
                 .on("mouseout", function() { tooltip.style("display", "none"); })
                 //.on("mousemove", function(d,i) {
                 .on("mousemove", function(event,d) {
@@ -117,8 +117,8 @@ var initStackedBarChart = {
                   html += '<tr><td>Abundance:</td><td>'+abund+'%</td></tr></table></div>'
                   //var x = d3.event.pageX - document.getElementById('bar-chart').getBoundingClientRect().x + 10
                   //var y = d3.event.pageY - document.getElementById('bar-chart').getBoundingClientRect().y + 10
-                  var matrix = this.getScreenCTM().translate(+ this.getAttribute("cx"), + this.getAttribute("cy"));
-                  var pos = d3.select(this).node().getBoundingClientRect();
+                  //var matrix = this.getScreenCTM().translate(+ this.getAttribute("cx"), + this.getAttribute("cy"));
+                  //var pos = d3.select(this).node().getBoundingClientRect();
                   //console.log(matrix.e, matrix.f)
                   tooltip
                          //d3.mouse(container)::
@@ -137,16 +137,16 @@ var initStackedBarChart = {
                         //.style("top",  ( window.pageYOffset+pos['y'] + 10) + "px")
 
 
-                        .style("display", "inline-block")
-                        .style("margin",  "10px")
-                        .style("padding",  "10px")
-                        .style("width","auto")
+                        .style("display",   "inline-block")
+                        .style("margin",    "10px")
+                        .style("padding",   "10px")
+                        .style("width",     "auto")
                         .style("text-align","left")
                         //.style("width",species[i].length +"px")
                         .html(html);
                 });
               
-        var tooltip = d3.select("body").append("div").attr("class", "toolTip");             
+        var tooltip = d3.select("body").append("div").attr("class", "toolTip").style("display","none");             
 
         svg.append("g")
         .attr("class", "axis axis--x")
