@@ -24,8 +24,11 @@ var initStackedBarChart = {
     draw: function(config) {
         me = this,
         domEle = config.element,
-        stackKey = config.key,
+        species = config.species,
         data = config.data,
+        colors = config.colors,
+        //console.log('data',data),
+        //console.log('c1',config.colors)
         margin = {top: 20, right: 20, bottom: 25, left: 50},
         width_large = 1400 - margin.left - margin.right,
         width_small = 600 - margin.left - margin.right,
@@ -33,7 +36,10 @@ var initStackedBarChart = {
         height = 220 - margin.top - margin.bottom,
         xScale = d3.scaleLinear().rangeRound([0, width_large]),
         yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
-        color = d3.scaleOrdinal(config.colors) //d3.scaleOrdinal(d3.schemeCategory20),
+        //config.colors.map(el => el.color)
+        color = d3.scaleOrdinal(colors) //d3.scaleOrdinal(d3.schemeCategory20),
+        //color = d3.scaleOrdinal(config.colors.map(el => el.color))
+        
         xAxis = d3.axisBottom(xScale),
         yAxis =  d3.axisLeft(yScale),
         xlabel = 'Major Species-Level Abundances (%) for Each Body Site'
@@ -51,7 +57,7 @@ var initStackedBarChart = {
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         var stack = d3.stack()
-            .keys(stackKey)   // species
+            .keys(species)   // species
             /*.order(d3.stackOrder)*/
             .offset(d3.stackOffsetNone);
     
@@ -64,11 +70,15 @@ var initStackedBarChart = {
             .enter().append("g")
             .attr("class", "layer")
             .attr("id", function(d,i) {   // needed to find species and color for ttip
-                   //console.log(species[i])
+                   //console.log('species ',d,'i',i)
                    return species[i]+'-|-'+color(i)
                })
             
-            .style("fill", function(d, i) { return color(i); })
+            .style("fill", function(d, i) { 
+                //console.log('cl',d);
+                
+                return colors[i] 
+            })
     
           layer.selectAll("rect")
               .data(function(d) { return d; })
@@ -76,17 +86,35 @@ var initStackedBarChart = {
                 .attr("y", function(d) { return yScale(d.data.site); })
                 .attr("x", function(d) { return xScale(d[0]); })
                 .attr("height", yScale.bandwidth())
-                .attr("width", function(d) { return xScale(d[1]) - xScale(d[0]) })
+                .attr("width", function(d) {  return xScale(d[1]) - xScale(d[0]) })
 
-                .on("mouseover", function() { tooltip.style("display", null); })
+                .on("mouseover", function(event,d) { tooltip.style("display", null); })
                 .on("mouseout", function() { tooltip.style("display", "none"); })
-                .on("mousemove", function(d,i) {
+                //.on("mousemove", function(d,i) {
+                .on("mousemove", function(event,d) {
                   //var xPosition = d3.mouse(this)[0] - 5;
                   //var yPosition = d3.mouse(this)[1] - 5;
+                  //console.log('d.data',d.data);
                   var id_node = this.parentNode.id.split('-|-')
+                  var site = d.data.site
+                  
+                  var abund = d.data[id_node[0]]
+                  
+                  
+                  //console.log('d.data',d.data)
                   var html = '<div id="outer_div"><table><tr><td><span style="background:'+id_node[1]+';border:1px solid grey;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Species:</td><td><i>'+id_node[0]+'</i></td></tr>'
-                  html += '<tr><td>Site:</td><td>'+ab_names[site_order[i]]+'</td></tr>'
-                  html += '<tr><td>Abundance:</td><td>'+sp_per_site[site_order[i]][id_node[0]]+'%</td></tr></table></div>'
+                  //var html = '<div id="outer_div"><table><tr><td><span style="background-color:'+color+';border:1px solid grey;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Species:</td><td><i>'+id_node[0]+'</i></td></tr>'
+                  
+                  // html += '<tr><td>Site:</td><td>'+ab_names[site_order[i]]+'</td></tr>'
+                  html += '<tr><td>Site:</td><td>'+ab_names[site]+'</td></tr>'
+                  //html += '<tr><td>Site:</td><td>'+site+'</td></tr>'
+                  //html += '<tr><td>Color:</td><td>'+color+'</td></tr>'
+                  //console.log('sp_per_site',sp_per_site) 
+                  // site_order[i] == SUBP or AKE ...
+                  //
+                  //console.log('site_order[i]',i,site_order[i])
+                  //html += '<tr><td>Abundance:</td><td>'+sp_per_site[site_order[i]][id_node[0]]+'%</td></tr></table></div>'
+                  html += '<tr><td>Abundance:</td><td>'+abund+'%</td></tr></table></div>'
                   //var x = d3.event.pageX - document.getElementById('bar-chart').getBoundingClientRect().x + 10
                   //var y = d3.event.pageY - document.getElementById('bar-chart').getBoundingClientRect().y + 10
                   var matrix = this.getScreenCTM().translate(+ this.getAttribute("cx"), + this.getAttribute("cy"));
@@ -102,8 +130,8 @@ var initStackedBarChart = {
                               //console.log(d3.mouse(svg.node())[0],d3.mouse(this)[0])
                              // .style("left", d3.mouse(this)[0] + 155 + "px")  // X side-2-side home mbook
                              //  .style("top",  d3.mouse(this)[1] + 268 + "px")  // Y up-down home macbook
-                        .style('top', d3.event.pageY + 5 + 'px')
-                        .style('left', d3.event.pageX + 'px')
+                        .style('top', event.pageY + 5 + 'px')
+                        .style('left', event.pageX + 'px')
 
                         //.style("left", pos['x'] + 10 + "px")
                         //.style("top",  ( window.pageYOffset+pos['y'] + 10) + "px")

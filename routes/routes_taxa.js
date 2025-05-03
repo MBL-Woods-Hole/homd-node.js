@@ -807,36 +807,50 @@ router.get('/ecology_home', function ecology_home(req, res) {
     let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
     let group_collector={}
     //let species_for_plot = C.plot_species_colors.map(el => el.name)
-    let otids_for_plot = C.plot_species_colors.map(el => el.otid)
+    //let otids_for_plot = C.plot_species_colors.map(el => el.otid)
+    let otids_for_plot = Object.keys(C.plot_species_colors)
     
     
     
-    let species_for_plot = []
+    let species_for_plot = [] // list of species (and ssp)
     for(let n in otids_for_plot){
+         //console.log(otids_for_plot[n])
+         let sp = C.taxon_lineage_lookup[parseInt(otids_for_plot[n])].species
+         if(C.taxon_lineage_lookup[otids_for_plot[n]].subspecies){
+            sp += ' '+C.taxon_lineage_lookup[otids_for_plot[n]].subspecies
+         }
+         species_for_plot.push(sp)
+         
          //console.log('otids_for_plot[n]',n,otids_for_plot[n])
          
          //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otids_for_plot[n]+'_species'])
-         let obj = C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank
-         
-         if(obj.hasOwnProperty(otids_for_plot[n]+'_subspecies')){
-             
-             let parent_id = obj[otids_for_plot[n]+'_subspecies'].parent_id
-             let ssp_taxon = obj[otids_for_plot[n]+'_subspecies'].taxon
-             let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id].taxon
-             //console.log('SSP TAXON',parent_taxon +'-'+ssp_taxon)
-             species_for_plot.push(parent_taxon +' '+ssp_taxon)
-             
-         }else{
-             if(obj.hasOwnProperty(otids_for_plot[n]+'_species')){
-                species_for_plot.push(obj[otids_for_plot[n]+'_species'].taxon)
-             }
-         }
+         // let obj = C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank
+//          
+//          if(obj.hasOwnProperty(otids_for_plot[n]+'_subspecies')){
+//              
+//              let parent_id = obj[otids_for_plot[n]+'_subspecies'].parent_id
+//              let ssp_taxon = obj[otids_for_plot[n]+'_subspecies'].taxon
+//              let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id].taxon
+//              //console.log('SSP TAXON',parent_taxon +'-'+ssp_taxon)
+//              species_for_plot.push(parent_taxon +' '+ssp_taxon)
+//              
+//          }else{
+//              if(obj.hasOwnProperty(otids_for_plot[n]+'_species')){
+//                 species_for_plot.push(obj[otids_for_plot[n]+'_species'].taxon)
+//              }
+//          }
          //tmp_sp.push(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otids_for_plot[n]+'_species'].taxon)
      }
-    //console.log('species_for_plot',species_for_plot)
+    
     species_for_plot.push('other')
-    let colors_for_plot = C.plot_species_colors.map(el => el.color)
+    //console.log('species_for_plot',species_for_plot)
+    //let colors_for_plot = C.plot_species_colors //.map(el => {el.color, el.species})
+    let colors_for_plot = Object.values(C.plot_species_colors) // [{}]
+    let colors_for_plot_lookup = {}
+    
+    //console.log('colors_for_plot',colors_for_plot)
     colors_for_plot.push('grey')
+    //console.log('colors_for_plot',colors_for_plot)
     let spcount = 0
     let other_collector = {}, test_all_collector={},abund_obj
     for(let n in abundance_graph_order){
@@ -885,7 +899,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
     //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
     
     //console.log('site_order',site_order)
-    let tmp,sp
+    let tmp,sp,color
     for(let n in abundance_graph_order){//Object.keys(C.abundance_names)){
         let site = abundance_graph_order[n]
         //console.log('site',site)
@@ -901,13 +915,24 @@ router.get('/ecology_home', function ecology_home(req, res) {
                sp = sp_pts[sp_pts.length -1]
             }
             
-            let val = parseFloat(group_collector[species][site])
+            let abund = parseFloat(group_collector[species][site])
             //let c = group_collector[species].color
-            tmp[sp] = val
+            // let obj = C.plot_species_colors.find(o => o.name === sp);
+//             if(!obj){
+//                color = 'grey'
+//             }else{
+//                 color = obj.color
+//             }
+            //tmp[sp] = {abundance:abund,color:colors_for_plot[species_for_plot.indexOf(sp)]}
+            tmp[sp] = abund
+            //tmp[sp] = {abundance:abund,color:color}
             //console.log('sp',sp)
             //xconsole.log('val',val)
-            sp_per_site[site][sp] = val  // {site,sp,sp,sp,sp,sp....}
-            site_species[site].push({'site':site,'species': sp, 'abundance': val})
+            //sp_per_site[site][sp] = abund  // {site,sp,sp,sp,sp,sp....}
+            
+            //console.log('sp',sp,'color',colors_for_plot[species_for_plot.indexOf(sp)])
+            
+            //site_species[site].push({site:site, species:sp, abundance:abund, color:colors_for_plot[species_for_plot.indexOf(sp)]})
             //site_species[site][sp] = 
         }
         //console.log('tmp',tmp)
@@ -967,11 +992,13 @@ router.get('/ecology_home', function ecology_home(req, res) {
       orders: JSON.stringify(orders),
       families: JSON.stringify(families),
       genera: JSON.stringify(genera),
-      constant_colors: JSON.stringify(colors_for_plot),
       
-      bar_data1: JSON.stringify(sp_per_site),
+      colors_ordered_list: JSON.stringify(colors_for_plot),
+      species_ordered_list: JSON.stringify(species_for_plot),
+      
+      //bar_data1: JSON.stringify(sp_per_site),
       bar_data2: JSON.stringify(bar_graph_data),
-      site_species: JSON.stringify(site_species),
+      //site_species: JSON.stringify(site_species),
       site_order: JSON.stringify(abundance_graph_order),
       ab_names: JSON.stringify(C.abundance_names)
       

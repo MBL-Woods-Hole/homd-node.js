@@ -326,7 +326,7 @@ Promise.all(promises)
     //console.log('refseq 12',C.refseq_lookup[12])
     //helpers.print(['SEQF10010',C.genome_lookup['SEQF10010']])
     //console.log(C.taxon_counts_lookup['Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Variovorax'])
-    //console.log('362 Correct',C.taxon_lineage_lookup[362])
+    console.log('362 Correct',C.taxon_lineage_lookup[886])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Hornefia minuta_species'])
     

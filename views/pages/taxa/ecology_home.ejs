@@ -50,7 +50,7 @@
   text-align: left;
 }
 /* Desktops and laptops ----------- */
-@media only screen and (min-width : 1224px) {
+@media only screen and (min-width : 1100px) {
   /* Styles */
   svg{
     width:800px;
@@ -64,7 +64,7 @@
 }
 
 /* Large screens ----------- */
-@media only screen and (min-width : 1824px) {
+@media only screen and (min-width : 1624px) {
   /* Styles */
   svg{
     width:1200px;
@@ -113,7 +113,7 @@
       
   <!-- <div class='tooltip' id='data'></div> -->
   <div id='bar-chart' ></div>
-  
+  <a href="#" id="download">Download</a>
   <br>
   <div>
     <center>
@@ -183,10 +183,11 @@
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <script type="text/javascript" src="/js/menu.js"></script>
-<!-- <script src="https://d3js.org/d3.v7.min.js"></script> -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
 <!-- Must use d3 v4 NOT v7! -->
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
 
 <script type="text/javascript" src="/js/d3_barplot.js"></script>
 <script>
@@ -197,21 +198,24 @@
   //var site_order = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS'] // per JMW
   
   
-  var ccolors = JSON.parse('<%- constant_colors %>')
-  //console.log('species colors ',ccolors)
-  
+  var color_order = JSON.parse('<%- colors_ordered_list %>')
+  var species_order = JSON.parse('<%- species_ordered_list %>')
+  //console.log('color_order ',color_order,color_order.length)
+  //console.log('species_order ',species_order,species_order.length)
   // sites = 'NS":{ sp1:val1, sp2:val2 ......}
-  var sp_per_site = JSON.parse('<%- bar_data1 %>')
+  
   var sp_and_site = JSON.parse('<%- bar_data2 %>')
+  //console.log('sp_and_site ',sp_and_site)
   var ab_names = JSON.parse('<%- ab_names %>')
   //console.log('sp_and_site.length',sp_and_site)
   //console.log('sp_per_site.length',sp_per_site.length)
   // site_species == {'site': site,'species': sp, 'abundance': val}
-  var site_species = JSON.parse('<%- site_species %>')
+  //
   //console.log('site_species BM',site_species['BM'])
   //var site_names = sites.map(el => el.site)
-  //console.log(sp_per_site['BM'])
-  var species = Object.keys(sp_per_site['BMU'])  // any site will do
+  
+  var species = Object.values(sp_and_site)  // any site will do
+  //console.log("speciesxx",Object.keys(species[0]))
   //species.shift()  // remove 'site'
   species.sort()
   //console.log(species)
@@ -220,11 +224,38 @@
 
 initStackedBarChart.draw({
 	data: sp_and_site,
-	key: species,
+	species: species_order,
 	element: 'bar-chart',
-	colors: ccolors
+	colors: color_order,
+	ab_names: ab_names
 });
 
+//https://gist.github.com/miklobit/f33d93190a762f665114
+// d3.select("#download")
+//     .on("mouseover", writeDownloadLink);
+// 
+// function writeDownloadLink(){
+//     var html = d3.select("#bar-chart")
+//         .attr("title", "svg_title")
+//         .attr("version", 1.1)
+//         .attr("xmlns", "http://www.w3.org/2000/svg")
+//         .node().parentNode.innerHTML;
+//     
+//     d3.select(this)
+//         .attr("href-lang", "image/svg+xml")
+//         .attr("href", "data:image/svg+xml;base64,\n" + btoa(html))
+//         .on("mousedown", function(){
+//             if(event.button != 2){
+//                 d3.select(this)
+//                     .attr("href", null)
+//                     .html("Use right click");
+//             }
+//         })
+//         .on("mouseout", function(){
+//             d3.select(this)
+//                 .html("Download");
+//         });
+// };
 
 
 </script>
