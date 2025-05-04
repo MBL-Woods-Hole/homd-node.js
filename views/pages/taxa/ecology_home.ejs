@@ -95,7 +95,7 @@
     
     <div class='page-content' >
 
-        <div class='title'>Ecology (Abundance) Pages</div>
+        <div class='title'>Ecology / Abundance Pages</div>
         <a id='download_browser_text_excel'  href='/download#abundance' >Download Options</a> 
 <br><span id='top-10-link'><a href='abundance_by_site/phylum'>Most abundant taxa for each oral sub-habitat</a>.
        </span> 
@@ -194,10 +194,11 @@
   mainmenu()
   
   var site_order = JSON.parse('<%- site_order %>')
-  plot_order = site_order.slice().reverse();
+  //plot_order = site_order.slice().reverse();
   //var site_order = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD','NS'] // per JMW
-  
-  
+  //console.log('site_order ',site_order)
+  //console.log('site_order slice',site_order.slice())
+  //['SUBP', 'SUPP', 'AKE', 'BMU', 'HPA', 'SAL', 'THR', 'PTO', 'TDO', 'ANA', 'LRC', 'RRC', 'LAF', 'RAF', 'VIN', 'MVA', 'PFO', 'STO']
   var color_order = JSON.parse('<%- colors_ordered_list %>')
   var species_order = JSON.parse('<%- species_ordered_list %>')
   //console.log('color_order ',color_order,color_order.length)
@@ -214,19 +215,19 @@
   //console.log('site_species BM',site_species['BM'])
   //var site_names = sites.map(el => el.site)
   
-  var species = Object.values(sp_and_site)  // any site will do
+  //var species = Object.values(sp_and_site)  // any site will do
   //console.log("speciesxx",Object.keys(species[0]))
-  //species.shift()  // remove 'site'
-  species.sort()
+  
   //console.log(species)
   //width=1300
   // Prep the tooltip bits, initial display is hidden
 
 initStackedBarChart.draw({
-	data: sp_and_site,
-	species: species_order,
+	data:     sp_and_site,
+	species:  species_order,
+	sites:    site_order,
 	element: 'bar-chart',
-	colors: color_order,
+	colors:   color_order,
 	ab_names: ab_names
 });
 

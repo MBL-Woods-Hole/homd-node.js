@@ -27,13 +27,16 @@ var initStackedBarChart = {
         species = config.species,
         data = config.data,
         colors = config.colors,
+        sites = config.sites.reverse()
         //console.log('data',data),
         //console.log('c1',config.colors)
         margin = {top: 20, right: 20, bottom: 25, left: 50},
         width_large = 1400 - margin.left - margin.right,
-        width_small = 600 - margin.left - margin.right,
-        //width = 600 - margin.left - margin.right,
-        height = 220 - margin.top - margin.bottom,
+        
+        // Bar Height is only changed here by adjusting the 'height' param
+        height = 300 - margin.top - margin.bottom,  //==175
+        
+        //console.log('height',height)
         xScale = d3.scaleLinear().rangeRound([0, width_large]),
         yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
         //config.colors.map(el => el.color)
@@ -62,7 +65,8 @@ var initStackedBarChart = {
             .offset(d3.stackOffsetNone);
     
         var layers= stack(data);
-            yScale.domain(plot_order)
+            yScale.domain(sites)
+            
             xScale.domain([0, 100]).nice('%');
 
         var layer = svg.selectAll(".layer")
@@ -86,7 +90,12 @@ var initStackedBarChart = {
                 .attr("y", function(d) { return yScale(d.data.site); })
                 .attr("x", function(d) { return xScale(d[0]); })
                 .attr("height", yScale.bandwidth())
-                .attr("width", function(d) {  return xScale(d[1]) - xScale(d[0]) })
+                .attr("width", function(d) {  
+                    //console.log('xScale(d[1]) - xScale(d[0])',xScale(d[1]),d[1],d[0])
+                    //if(d[0] && d[1]){
+                       return xScale(d[1]) - xScale(d[0]) 
+                    //}
+                })
 
                 .on("mouseover", function() { tooltip.style("display", null); })
                 .on("mouseout", function() { tooltip.style("display", "none"); })
@@ -106,7 +115,7 @@ var initStackedBarChart = {
                   //var html = '<div id="outer_div"><table><tr><td><span style="background-color:'+color+';border:1px solid grey;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Species:</td><td><i>'+id_node[0]+'</i></td></tr>'
                   
                   // html += '<tr><td>Site:</td><td>'+ab_names[site_order[i]]+'</td></tr>'
-                  html += '<tr><td>Site:</td><td>'+ab_names[site]+'</td></tr>'
+                  html += '<tr><td>Site:</td><td>('+site+') '+ab_names[site]+'</td></tr>'
                   //html += '<tr><td>Site:</td><td>'+site+'</td></tr>'
                   //html += '<tr><td>Color:</td><td>'+color+'</td></tr>'
                   //console.log('sp_per_site',sp_per_site) 
@@ -142,6 +151,7 @@ var initStackedBarChart = {
                         .style("padding",   "10px")
                         .style("width",     "auto")
                         .style("text-align","left")
+                        //.style("font-size", "20px")
                         //.style("width",species[i].length +"px")
                         .html(html);
                 });
@@ -156,16 +166,19 @@ var initStackedBarChart = {
         svg.append("g")
         .attr("class", "axis axis--y")
         .attr("transform", "translate(0,0)")
-        .call(yAxis); 
+        .style("font-size", "12px")
+        .call(yAxis);
+        //.text('ylabel'); 
         
-     
+        
+        
         // text label for the x axis
         svg.append("text")             
           .attr("transform",
                 "translate(" + (-10) + " ," + 
                                ( margin.top - 25) + ")")
           .style("text-anchor", "left")
-          .style("font-size", "small")
+          .style("font-size", "16px")
           .text(xlabel);                          
     }  // end of draw
     
