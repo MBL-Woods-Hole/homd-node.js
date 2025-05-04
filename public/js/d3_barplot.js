@@ -102,9 +102,18 @@ var initStackedBarChart = {
                     //taxa/ecology?rank=species&name=Staphylococcus%20aureus&page=lollipop
                     var id_node = this.parentNode.id.split('-|-')
                     url = 'ecology?rank=species&name='+id_node[0]+'&page=lollipop'
-                    //console.log('clicked',id_node[0],url)
+                    console.log('clicked',id_node,url)
                     if(id_node[0] != 'other'){
-                      window.location.href = url;
+                    // ecology?rank=species&name=Actinomyces oris clade-893&page=lollipop
+                    //http://0.0.0.0:3001/taxa/ecology?rank=subspecies&name=clade-893&page=lollipop
+                       pts = id_node[0].split(/\s+/)
+                       if(pts.length == 3){  // has subspecies
+                           //['Actinomyces oris clade-893', '#ff4040']
+                           url = 'ecology?rank=subspecies&name='+pts[2]+'&page=lollipop'
+                       }else{
+                           url = 'ecology?rank=species&name='+id_node[0]+'&page=lollipop'
+                       }
+                          window.location.href = url;
                     }
                 })
 
