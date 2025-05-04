@@ -96,6 +96,17 @@ var initStackedBarChart = {
                        return xScale(d[1]) - xScale(d[0]) 
                     //}
                 })
+                .style("cursor", "pointer")
+                .on("click", function(d) { 
+                    // your callback 
+                    //taxa/ecology?rank=species&name=Staphylococcus%20aureus&page=lollipop
+                    var id_node = this.parentNode.id.split('-|-')
+                    url = 'ecology?rank=species&name='+id_node[0]+'&page=lollipop'
+                    //console.log('clicked',id_node[0],url)
+                    if(id_node[0] != 'other'){
+                      window.location.href = url;
+                    }
+                })
 
                 .on("mouseover", function() { tooltip.style("display", null); })
                 .on("mouseout", function() { tooltip.style("display", "none"); })

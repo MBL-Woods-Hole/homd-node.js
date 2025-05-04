@@ -481,7 +481,7 @@ function toggle_lower_ranks(){
     el = document.getElementById('lower-rank-items-div')
     if(el.style.display == 'none'){
        el.style.display = 'inline'
-       document.getElementById('tbl').style.marginLeft = "30px";
+       //document.getElementById('tbl').style.marginLeft = "30px";
        toggle_btn.innerHTML="<a href='#' onclick='toggle_lower_ranks()'>hide[-]</a>"
     }else{
        el.style.display = 'none'
