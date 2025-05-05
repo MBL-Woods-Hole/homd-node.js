@@ -158,13 +158,13 @@
 
     
    
-
+<!-- TOP LEGEND Smaller Screen  -->
 <div id='top-legend'>
 <span>
      <% if(otid != 0){ %>
         <span style=''><small>
-          [<a href='body_sites?otid=<%= otid %>'>Body Sites Data: <%= taxidfullname %></a>]
-          [<a href='tax_description?otid=<%= otid %>'>Taxon Description: <%= taxidfullname %></a>]
+          <%= taxidfullname %>: [<a href='body_sites?otid=<%= otid %>'>Body Sites Data</a>]
+          [<a href='tax_description?otid=<%= otid %>'>Taxon Description</a>]
         </small></span>
      <% } %>
   </span>
@@ -211,7 +211,7 @@
     </center>
 </div>
 
-<!-- SIDE LEGEND -->
+<!-- SIDE LEGEND Larger Screen -->
 
 <div id='side-legend' class='column left'>
     <center>
@@ -282,12 +282,7 @@
 
 
 
-  <span>
-     
-     <% if(rank == "species"){ %>
-        <span style=''><small>[<a href='body_sites?otid=<%= otid %>'>see all body sites data: <%= taxidfullname %></a>]</small></span>
-     <% } %>
-  </span>
+ 
   
   
        

@@ -502,18 +502,21 @@
   </tr>
   <tr>
     <td class='taxon-bold tbl-title'>Microbial Ecology<br><small>(Abundance/Prevalence)</small>:</td>
+    <% if(otid_has_abundance){ %>
+       <% if(data_lineage.subspecies){ %>
+         <% ss = encodeURIComponent(data_lineage.subspecies) %>
+         <% rankname = "subspecies" %>
+       <% }else{ %>
+         <% ss = encodeURIComponent(data_lineage.species) %>
+         <% rankname = "species" %>
+       <% } %>
     
-    <% if(data_lineage.subspecies){ %>
-      <% ss = encodeURIComponent(data_lineage.subspecies) %>
-      <% rankname = "subspecies" %>
-    <% }else{ %>
-      <% ss = encodeURIComponent(data_lineage.species) %>
-      <% rankname = "species" %>
-    <% } %>
-      <td class='taxon-data'><a href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance/Prevalence Page for:<br> 
+       <td class='taxon-data'><a href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance/Prevalence Page for:<br> 
          &nbsp;&nbsp;&nbsp;<i><%= data_lineage.species %> <%= data_lineage.subspecies %></i></a>
-      </td>
-  
+       </td>
+    <% }else{ %>
+         <td class='taxon-data'>No Abundance Data</td>
+    <% } %>
   </tr>
   
 

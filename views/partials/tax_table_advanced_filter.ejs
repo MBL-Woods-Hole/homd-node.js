@@ -170,9 +170,9 @@ width: 1500px;
          
             
             <% if(statusfltr.site.p_or_pst === 'primary_site'){ %>
-              <span class='adv-filter-title' id='adv_body_site_title'>Primary Body Site:</span><br>&nbsp;&nbsp;
+              <span class='adv-filter-title' id='adv_body_site_title'>Primary Body Site <small>(in Beta)</small>:</span><br>&nbsp;&nbsp;
             <% }else{ %>
-              <span class='adv-filter-title' id='adv_body_site_title'>Primary and Secondary Body Sites:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <span class='adv-filter-title' id='adv_body_site_title'>Primary and Secondary Body Sites <small>(in Beta)</small>:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <% } %>
             
             <% if(statusfltr.site.oral === 'on'){ %>
@@ -251,7 +251,7 @@ width: 1500px;
 <tr>
 <td>
          
-            <span class='adv-filter-title'>Body Site Abundance</span>:&nbsp;&nbsp;
+            <span class='adv-filter-title'>Body Site Abundance <small>(in Beta)</small>:</span>&nbsp;&nbsp;
             
             <% if(statusfltr.abund.high_abund === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='adv_high_abund' name='high_abund' onclick='adv_update_sb()'\> High&nbsp;&nbsp;&nbsp;

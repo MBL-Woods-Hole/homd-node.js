@@ -560,11 +560,11 @@ function adv_toggle_site_filter(filter_to_show) {
     if(filter_to_show == 'PST'){
       var link_html = "Filter/Search from both Primary and Secondary Body Sites Instead: <a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_site_filter('P')\">Toggle</a>"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>"
-       var title = 'Primary Body Site:'
+       var title = 'Primary Body Site <small>(in Beta)</small>:'
     }else{
       var link_html = "Filter/Search from Primary Body Sites Only: <a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_site_filter('PST')\">Toggle</a>"
       link_html += "<input type='hidden' id='p_or_pst' name='p_or_pst' value='pst_site' \>"
-      var title = 'Primary and Secondary Body Sites:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+      var title = 'Primary and Secondary Body Sites <small>(in Beta)</small>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
       
     }
     adv_update_sb()

@@ -420,7 +420,10 @@ router.get('/tax_description', function tax_description(req, res){
            }
          }
          
-         //DROPPED-DROPPED
+         //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+         //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+         //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+         //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
          res.render('pages/taxa/taxdesc', {
             title: 'HOMD :: Taxon Info', 
             pgname: 'taxon/description', // for AbountThisPage
@@ -437,6 +440,7 @@ router.get('/tax_description', function tax_description(req, res){
             refseq_info: JSON.stringify({}), // refseq, seqname, strain , genbank
             links: JSON.stringify(links),
             sites: JSON.stringify(sites),
+            otid_has_abundance:false,
             lineage: lineage_string,
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
             user: JSON.stringify(req.user || {}),
@@ -518,6 +522,10 @@ router.get('/tax_description', function tax_description(req, res){
                 sites += '<br><small>Note: '+C.site_lookup[otid]['notes']+'</small>'
                }
             }
+          let otid_has_abundance = false  
+          if(C.otids_w_abundance.indexOf(otid) != -1){
+              otid_has_abundance = true
+          } 
           //console.log('refseq',refseq)
           res.render('pages/taxa/taxdesc', {
             title: 'HOMD :: Taxon Info', 
@@ -535,7 +543,7 @@ router.get('/tax_description', function tax_description(req, res){
             refseq_info: JSON.stringify(refseq),
             links: JSON.stringify(links),
             sites: JSON.stringify(sites),
-            
+            otid_has_abundance:otid_has_abundance,
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
             user: JSON.stringify(req.user || {}),
           })

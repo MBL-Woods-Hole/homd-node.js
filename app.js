@@ -270,8 +270,15 @@ Promise.all(promises)
     /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)
     C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference')).map(x => x.otid)
+   
+    C.otids_w_abundance = Object.values(C.taxon_counts_lookup).filter(item => {
+        if(item.otid != ''){
+            return item.otid
+        }
+    }).map(x => (parseInt(x.otid)).toString())  // turns '010' to '10'
     
-    
+    //console.log('C.otids_w_abundance',C.otids_w_abundance)
+    //console.log('')
     
     //examples
     let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
@@ -325,7 +332,7 @@ Promise.all(promises)
     //helpers.print(['Lookup 673',C.taxon_lookup[673]])
     //console.log('refseq 12',C.refseq_lookup[12])
     //helpers.print(['SEQF10010',C.genome_lookup['SEQF10010']])
-    //console.log(C.taxon_counts_lookup['Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Variovorax'])
+    
     console.log('362 Correct',C.taxon_lineage_lookup[886])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
     //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Hornefia minuta_species'])
