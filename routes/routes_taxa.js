@@ -1270,7 +1270,7 @@ router.get('/ecology', function ecology(req, res) {
       lin: lineage_list[0],
       rank: rank,
       max: JSON.stringify({'hmp_refseqv1v3':hmp_refseqv1v3_max,'hmp_refseqv3v5':hmp_refseqv3v5_max,'hmp_metaphlan':hmp_metaphlan_max,'dewhirst':dewhirst_max,'erenv1v3':erenv1v3_max,'erenv3v5':erenv3v5_max}),
-      otid: otid,  // zero unless species
+      otid: otid,  // zero unless species (or subspecies)
       genera: JSON.stringify(genera),
       text_file: text[0],
       page: page,

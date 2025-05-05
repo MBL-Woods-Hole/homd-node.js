@@ -14,7 +14,7 @@
   #top-legend{
     display:block;
     /* visibility:visible; */
-    position:fixed;
+    position:relative;
     /* left:200px; */
     margin-left:10px;
     
@@ -30,7 +30,7 @@
   height: 200px; /* only to hold column open */
   }
   .middle {
-    padding-top:120px;
+    padding-top:10px;
   
   }
   .right {
@@ -160,8 +160,16 @@
    
 
 <div id='top-legend'>
+<span>
+     <% if(otid != 0){ %>
+        <span style=''><small>
+          [<a href='body_sites?otid=<%= otid %>'>Body Sites Data: <%= taxidfullname %></a>]
+          [<a href='tax_description?otid=<%= otid %>'>Taxon Description: <%= taxidfullname %></a>]
+        </small></span>
+     <% } %>
+  </span>
 <center>
-    This page is best viewed on a larger screen.
+    Please decrease the zoom for better viewing.
     <table id='small-legend-table' >
               <tr><td rowspan='2'><center><b>Oral:</b></center></td>
                 <td class='legend_item' style="background:<%= site_colors_html['SUBP'] %>">SUBP-- Subgingival Plaque</td>
@@ -212,7 +220,8 @@
       <div id='links-content'>
             <ul>
             <% if(children_lst.length == 0){ %>
-                <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description:<br>&nbsp;&nbsp;<small><%= taxidfullname %></small></a></li>
+                <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description: <small><%= taxidfullname %></small></a></li>
+                <li><a href='body_sites?otid=<%= otid %>'>Body Sites Data: <small><%= taxidfullname %></small></a></li>
             <% }else{ %>
                 <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%- tax_name.split(' ').join('<br>') %></small></a>
             <% } %>

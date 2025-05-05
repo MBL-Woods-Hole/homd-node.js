@@ -226,13 +226,18 @@ td {
     <% } %>
     <div class='page-content' >
     
-    
+    <div class='title'><b><%= rank_show %>:</b> <span class='yellow'>
     <% if(rank=='species') { %>           
-       <div class='title'><b><%= rank_show %>:</b> <span class='yellow'><em><%= tax_name %></em></span></div>
+         <em><%= tax_name %></em>
     <% }else{ %>
-         <div class='title'><b><%= rank_show %>:</b> <span class='yellow'><%= tax_name %></span></div>
-      <% } %>
-      
+         <%= tax_name %>
+    <% } %>
+    
+    </span>
+    <% if(otid != 0){ %>
+       <small>(<%= taxidfullname %>)</small>
+    <% } %>
+    </div>
     <a id='download_browser_text_excel'  href='/download#abundance' >Download Options</a>   
     <div id='taxon-page-div'>
         
@@ -284,11 +289,7 @@ td {
      
     <%- include('./ecology_lollipop_legend'); %>
 
-  <span>
-     <% if(rank == "species"){ %>
-        <span style=''><small>[<a href='body_sites?otid=<%= otid %>'>see all body sites data: <%= taxidfullname %></a>]</small></span>
-     <% } %>
-  </span>
+  
   
   
 <div class='middle'>
