@@ -107,7 +107,10 @@ var initStackedBarChart = {
                     // ecology?rank=species&name=Actinomyces oris clade-893&page=lollipop
                     //http://0.0.0.0:3001/taxa/ecology?rank=subspecies&name=clade-893&page=lollipop
                        pts = id_node[0].split(/\s+/)
-                       if(pts.length == 3){  // has subspecies
+                       // Alloprevotella sp. HMT-473 => SPECIAL CASE of Unnamed split on <space>
+                       // Absconditicoccaceae [G1] bacterium HMT-345 => SPECIAL CASE of Unnamed split on <space>
+                       // Anaerovoracaceae [G1] sulci => SPECIAL CASE of Unnamed split on <space>
+                       if(pts.length == 3 && pts[1] != 'sp.' && pts[1].substring(0,1) != '[' ){  // has subspecies
                            //['Actinomyces oris clade-893', '#ff4040']
                            url = 'ecology?rank=subspecies&name='+pts[2]+'&page=lollipop'
                        }else{
