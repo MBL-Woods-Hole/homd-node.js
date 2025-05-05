@@ -57,22 +57,7 @@
    width:100%;
 
   }
-  #links-content{
-  padding:1px;
-  border:1px solid brown;
-  width:100%
-  }
-
-  #legend-links{
-  position:fixed;
   
-  }
-  #legend-content{
-    font-size:9px;
-    padding:1px;
-    border:1px solid brown;
-    width:100%;
-  }
   .legend_item{
   padding:1px 2px;
   font-size:11px;
@@ -123,14 +108,10 @@
    /* width:100%; */
 
   }
-  #links-content{
-  padding:3px;
-  border:1px solid brown;
-  width:100%
-  }
+  
 
-  #legend-links{
-  position:fixed;
+  #legend{
+  position:relative;
   
   }
   #legend-content{
@@ -153,23 +134,28 @@
   }
 
 }
+.links{
+   padding:5px 5px;
+   /* background:lightseagreen; */
+}
 </style>
 
-
-    
-   
+<center>
+<div class='links'>
+     LINKS: <a href='/taxa/ecology_home'>Ecology Home</a>&nbsp;|&nbsp;
+     <% if(otid != 0){ %>
+        <span style=''>
+          <a href='body_sites?otid=<%= otid %>'><%= taxidfullname %>: Body Sites Data</a>&nbsp;|&nbsp;
+          <a href='tax_description?otid=<%= otid %>'><%= taxidfullname %>: Taxon Description</a>&nbsp;|&nbsp;
+        </span>
+     <% } %>
+     <a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page: <%- tax_name %></a>
+</div>
+</center> 
 <!-- TOP LEGEND Smaller Screen  -->
 <div id='top-legend'>
-<span>
-     <% if(otid != 0){ %>
-        <span style=''><small>
-          <%= taxidfullname %>: [<a href='body_sites?otid=<%= otid %>'>Body Sites Data</a>]
-          [<a href='tax_description?otid=<%= otid %>'>Taxon Description</a>]
-        </small></span>
-     <% } %>
-  </span>
+
 <center>
-    Please decrease the zoom for better viewing.
     <table id='small-legend-table' >
               <tr><td rowspan='2'><center><b>Oral:</b></center></td>
                 <td class='legend_item' style="background:<%= site_colors_html['SUBP'] %>">SUBP-- Subgingival Plaque</td>
@@ -215,26 +201,9 @@
 
 <div id='side-legend' class='column left'>
     <center>
-    <div id='legend-links'>
-      <div class='menu-title'>Links:</div>
-      <div id='links-content'>
-            <ul>
-            <% if(children_lst.length == 0){ %>
-                <li><a href='/taxa/tax_description?otid=<%= otid %>'>Taxon Description: <small><%= taxidfullname %></small></a></li>
-                <li><a href='body_sites?otid=<%= otid %>'>Body Sites Data: <small><%= taxidfullname %></small></a></li>
-            <% }else{ %>
-                <li><a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page:<br>&nbsp;&nbsp;<small><%- tax_name.split(' ').join('<br>') %></small></a>
-            <% } %>
-            
-            <li><a href='/taxa/ecology_home'>Ecology Home</a>
-            
-            
-            </ul>
-    </div>  <!-- end legend links -->
-      
-      <br>
     
-        <div id='legend'>
+    
+    <div id='legend'>
         <div class='menu-title'>Body Site Legend:</div>
             <div id='legend-content'>
             <table id='legend-table'>
@@ -270,10 +239,10 @@
               <br>90<sup>th</sup>p - 90<sup>th</sup> percentile
               <br>ND - less than 0.001%
             </ol>  
-            </div>
         </div>
+    </div>
         
-      </div>  
+       
 </div>   <!-- end column left -->
    
     

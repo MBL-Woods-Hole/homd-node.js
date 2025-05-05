@@ -38,10 +38,10 @@ function create_plot(obj){
         console.log('xx',rank)
         data = plot_data
         //console.log('data_ary')
-		data_ary = plot_data.filter( (x) => { return x.avg > 0})
-		ND_ary   = plot_data.filter( (x) => { return x.avg == 0})
-		data = data_ary
-		var svg = d3.select("#"+obj['target'])
+        data_ary = plot_data.filter( (x) => { return x.avg > 0})
+        ND_ary   = plot_data.filter( (x) => { return x.avg == 0})
+        data = data_ary
+        var svg = d3.select("#"+obj['target'])
               .append("svg")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom)
@@ -49,66 +49,66 @@ function create_plot(obj){
               .attr("transform",
                   "translate(" + margin.left + "," + margin.top + ")");
         var mouseover = function(e,d){ 
-		var plotName = obj['plot_name'] //'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
-		var siteName = siteLongNames[d.site]
-		var plotValue = d.avg;
-		var prev = d.prev;
-		obj['tt'].html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors_js[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Abundance: " + plotValue+" % "+ "<br>" + "Prevalence: " + prev+" %")
-		 //console.log(e.x,e.y)
-			return obj['tt'].style("visibility", "visible");
-		}
-		var mousemove = function(e,d) {
-			return obj['tt'].style("left", (e.pageX+20) + "px")
-					.style("top",  (e.pageY) + "px")
-		}
-		var mouseleave = function(d) {
-			return obj['tt'].style("visibility", "hidden");
-		}
-		var abund_scale_x = d3.scaleBand()
-			.range([ 0, (width/2)-gap ])
-			.domain(plot_data.map(function(d) { return d.site; }))
-			.padding(1);
-		var nd_axis = d3.scaleBand()
-			.range([ 0, (width/2)-gap ])
-			.domain(plot_data.map(function(d) { return d.site; }))
-			.padding(1);
-		var prev_scale_x = d3.scaleBand()
-			.range([ (width/2)+gap, width])
-			.domain(plot_data.map(function(d) { return d.site; }))
-			.padding(1);
-		var abund_scale_y = d3.scaleLog()
-			.range([ height, 0.0 ])
-			.domain([1e-3, 1e2])
-		
-		var prev_scale_y = d3.scaleLinear()
-			.range([ height+15, 0.0 ])
-			.domain([0, 100])
-		// Add scales to axis
+        var plotName = obj['plot_name'] //'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
+        var siteName = siteLongNames[d.site]
+        var plotValue = d.avg;
+        var prev = d.prev;
+        obj['tt'].html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Body Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors_js[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Abundance: " + plotValue+" % "+ "<br>" + "Prevalence: " + prev+" %")
+         //console.log(e.x,e.y)
+            return obj['tt'].style("visibility", "visible");
+        }
+        var mousemove = function(e,d) {
+            return obj['tt'].style("left", (e.pageX+20) + "px")
+                    .style("top",  (e.pageY) + "px")
+        }
+        var mouseleave = function(d) {
+            return obj['tt'].style("visibility", "hidden");
+        }
+        var abund_scale_x = d3.scaleBand()
+            .range([ 0, (width/2)-gap ])
+            .domain(plot_data.map(function(d) { return d.site; }))
+            .padding(1);
+        var nd_axis = d3.scaleBand()
+            .range([ 0, (width/2)-gap ])
+            .domain(plot_data.map(function(d) { return d.site; }))
+            .padding(1);
+        var prev_scale_x = d3.scaleBand()
+            .range([ (width/2)+gap, width])
+            .domain(plot_data.map(function(d) { return d.site; }))
+            .padding(1);
+        var abund_scale_y = d3.scaleLog()
+            .range([ height, 0.0 ])
+            .domain([1e-3, 1e2])
+        
+        var prev_scale_y = d3.scaleLinear()
+            .range([ height+15, 0.0 ])
+            .domain([0, 100])
+        // Add scales to axis
         var abund_y_axis = d3.axisLeft()
-			.scale(abund_scale_y)
-			.tickValues([0.001, 0.01, 0.1, 1, 10, 100])
+            .scale(abund_scale_y)
+            .tickValues([0.001, 0.01, 0.1, 1, 10, 100])
         abund_y_axis.ticks(10, ",f")
         
         var prev_y_axis = d3.axisLeft()
             .scale(prev_scale_y)
         svg.append("g")
-			.attr("transform", "translate("+((width/2)+gap)+",0)")
-			.call(prev_y_axis)
-		
-		svg.append("g")
-			.call(abund_y_axis)
-		svg.append("text")
-			.attr("text-anchor", "start")
-			.attr("y", -45)
-			.attr("x", -height/2-60 )
-			.attr("transform", "rotate(-90)")
-			.text("Log % Abundance");
-		svg.append("text")
-			.attr("text-anchor", "start")
-			.attr("y", (width/2)-10)
-			.attr("x", -height/2 -60 )
-			.attr("transform", "rotate(-90)")
-			.text("% Prevalence");
+            .attr("transform", "translate("+((width/2)+gap)+",0)")
+            .call(prev_y_axis)
+        
+        svg.append("g")
+            .call(abund_y_axis)
+        svg.append("text")
+            .attr("text-anchor", "start")
+            .attr("y", -45)
+            .attr("x", -height/2-60 )
+            .attr("transform", "rotate(-90)")
+            .text("Log % Abundance");
+        svg.append("text")
+            .attr("text-anchor", "start")
+            .attr("y", (width/2)-10)
+            .attr("x", -height/2 -60 )
+            .attr("transform", "rotate(-90)")
+            .text("% Prevalence");
         svg.append("text")
             .attr("text-anchor", "end")
             .attr("y", height+20)
@@ -179,17 +179,17 @@ function create_plot(obj){
           
             
         svg.append("text")             
-		  .attr("transform",
-				"translate(" + ((width/4 - 40)) + " ," + 
-							   (height + margin.top + 20) + ")")
-		  .style("text-anchor", "middle")
-		  .text("Body Site");
+          .attr("transform",
+                "translate(" + ((width/4 - 40)) + " ," + 
+                               (height + margin.top + 20) + ")")
+          .style("text-anchor", "middle")
+          .text("Body Site");
         svg.append("text")             
-		  .attr("transform",
-				"translate(" + ((width - 220)) + " ," + 
-							   (height + margin.top + 20) + ")")
-		  .style("text-anchor", "middle")
-		  .text("Body Site");
+          .attr("transform",
+                "translate(" + ((width - 220)) + " ," + 
+                               (height + margin.top + 20) + ")")
+          .style("text-anchor", "middle")
+          .text("Body Site");
         // Lines Abund- lollipop
         svg.selectAll("myline_abund")
           .data(data)

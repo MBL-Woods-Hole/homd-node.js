@@ -135,7 +135,7 @@ var initStackedBarChart = {
                   //var html = '<div id="outer_div"><table><tr><td><span style="background-color:'+color+';border:1px solid grey;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Species:</td><td><i>'+id_node[0]+'</i></td></tr>'
                   
                   // html += '<tr><td>Site:</td><td>'+ab_names[site_order[i]]+'</td></tr>'
-                  html += '<tr><td>Site:</td><td>('+site+') '+ab_names[site]+'</td></tr>'
+                  html += '<tr><td>Body Site:</td><td>('+site+') '+ab_names[site]+'</td></tr>'
                   //html += '<tr><td>Site:</td><td>'+site+'</td></tr>'
                   //html += '<tr><td>Color:</td><td>'+color+'</td></tr>'
                   //console.log('sp_per_site',sp_per_site) 
