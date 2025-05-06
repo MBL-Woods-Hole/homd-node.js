@@ -1,0 +1,49 @@
+<style>
+.date{
+   background:lightblue;
+   border:1px solid gray;
+   padding:10px;
+}
+.entry{
+   margin:0 0 20px 0;
+   padding:5px;
+}
+.inset{
+   padding:20px;
+   background:lightgray;
+}
+li{
+    padding:2px;
+}
+</style>
+<% var cfg = JSON.parse(config) %> 
+<% pdata = JSON.parse(data) %>
+<%- include('../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../partials/header_img'); %>
+    <%- include('../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+        <div class='title'><%= pagetitle %></div>
+        <br><br>
+        <%- pdata %>
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

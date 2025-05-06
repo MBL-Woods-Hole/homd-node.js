@@ -1,6 +1,7 @@
 'use strict'
 const express  = require('express');
 var router   = express.Router();
+const fs       = require('fs-extra');
 const CFG   = require(app_root + '/config/config');
 const C     = require(app_root + '/public/constants');
 const path  = require('path')
@@ -24,8 +25,22 @@ router.get('/index', function index(req, res) {
 router.get('/help-page', function help_page(req, res) {
   //let page = req.params.pagecode
   let page = req.query.pagecode
-  //console.log('page',page)
-  const renderFxn = (req, res, page, updates, date_sort) => {
+  console.log('page',page)
+  const renderVersionFxn = (req, res, type, data) => {
+      //console.log('updates',updates)
+      res.render('pages/version_history', {
+        title: 'HOMD :: Version History',
+          pgname: '', // for AboutThisPage
+          version_type: type,
+          pagetitle: type,
+          data: JSON.stringify(data),
+          //date_sort: date_sort,
+          config: JSON.stringify(CFG),
+          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+          user: JSON.stringify(req.user || {}),
+      })
+  }
+  const renderHelpFxn = (req, res, page, updates, date_sort) => {
       //console.log('updates',updates)
       res.render('pages/help/helppage', {
         title: 'HOMD :: Help Pages',
@@ -38,9 +53,40 @@ router.get('/help-page', function help_page(req, res) {
           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
           user: JSON.stringify(req.user || {}),
       })
-    }
-  
-  if(page === 'database_update'){
+  }
+  if(page == 'genome/genome_version'){
+      // read file path.join(CFG.PATH_TO_DATA,'genomic_version_history.txt)
+      fs.readFile(path.join(CFG.PATH_TO_DATA,'genomic_version_history.txt'), 'utf8', (err, data) => {
+        if (err) {
+           console.error(err);
+           return;
+        }
+        //console.log(data.trim());
+        renderVersionFxn(req, res, 'HOMD Genomic Version History', data.trim())
+        return;
+      })
+  }else if(page == 'taxon/taxon_version'){
+      // read file path.join(CFG.PATH_TO_DATA,'genomic_version_history.txt)
+      fs.readFile(path.join(CFG.PATH_TO_DATA,'taxonomy_version_history.txt'), 'utf8', (err, data) => {
+        if (err) {
+           console.error(err);
+           return;
+        }
+        //console.log(data.trim());
+        renderVersionFxn(req, res, 'HOMD Taxonomy Version History', data.trim())
+        return;
+      })
+  }else if(page == 'refseq/refseq_version'){
+      // read file path.join(CFG.PATH_TO_DATA,'refseq_version_history.txt)
+      fs.readFile(path.join(CFG.PATH_TO_DATA,'refseq_version_history.txt'), 'utf8', (err, data) => {
+        if (err) {
+           console.error(err);
+           return;
+        }
+        renderVersionFxn(req, res, 'HOMD RefSeq Version History', data.trim())
+      })
+  }else if(page == 'database_update'){
+      // NOT USED!!!!
       let q = queries.get_db_updates_query()
       let rowarray = []
       let byDate = {}
@@ -67,10 +113,10 @@ router.get('/help-page', function help_page(req, res) {
             return date2 - date1;
         })
         //console.log('date_array2',date_array)
-        renderFxn(req, res, page, byDate, date_array)
+        renderHelpFxn(req, res, page, byDate, date_array)
       })
   }else{
-    renderFxn(req, res, page, [], [])
+    renderHelpFxn(req, res, page, [], [])
   }
 })
 
