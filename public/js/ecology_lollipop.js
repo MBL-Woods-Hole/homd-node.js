@@ -35,7 +35,7 @@ function create_plot(obj){
        document.getElementById(obj['target']).innerHTML = "<span class='nodata'>No Data</span>"
     }else{
         // append the svg object to the body of the page
-        console.log('xx',rank)
+        //console.log('xx',rank)
         data = plot_data
         //console.log('data_ary')
         data_ary = plot_data.filter( (x) => { return x.avg > 0})

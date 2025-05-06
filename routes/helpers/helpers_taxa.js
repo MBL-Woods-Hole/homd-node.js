@@ -796,7 +796,7 @@ module.exports.get_lpsn_outlink2 = function get_lpsn_link2(rank, lineage, nextta
 //
 ////////////
 module.exports.make_lineage_string_with_links = function make_lineage_string_with_links(lineage_list, link, page) {
-     let tmp = ''
+     let tmp = "<span class='lineage'>"
      let i = 0 
      for(let n in lineage_list[1]){
          if(link == 'life'){
@@ -810,6 +810,7 @@ module.exports.make_lineage_string_with_links = function make_lineage_string_wit
          }
          i += 1
      }
+     tmp += '</span>'
      //console.log(tmp)
      return tmp
 }

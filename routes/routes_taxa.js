@@ -1079,25 +1079,9 @@ router.get('/ecology', function ecology(req, res) {
     helpers.accesslog(req, res)
     let rank = req.query.rank;
     let tax_name = req.query.name
-    let target = 'ecology',page
-    if(req.query.page){
-       
-       page = req.query.page
-       if(page == 'plots'){
-          target = 'ecology_barcharts_only'
-       }else if(page == 'tables'){
-           target = 'ecology_tables_only'
-       }else if(page == 'lollipop'){
-           target = 'ecology_lollipop'
-       }else{
-           target = 'ecology'
-       }
+    //let target = 'ecology_lollipop'
+    let page   = 'lollipop'
     
-    }else{
-       target = 'ecology_lollipop'
-       page = 'lollipop'
-        
-    }
     
     //console.log('target',target,req.query.page)
     if(req.query.otid && req.session.ttable_filter){
@@ -1254,21 +1238,22 @@ router.get('/ecology', function ecology(req, res) {
       }
     }
     children_list.sort()
-    //console.log('otid',otid)
+    //console.log('children_list',children_list)
+    
     if(C.hmp_v3v5_to_suppress.indexOf(otid) != -1){
         hmp_refseqv3v5_notes = 'No data – the v3v5 region of the 16S rRNA gene does not distinguish this species from its close relatives.'
     }
     //console.log('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
     //console.log('lineage_list',lineage_list)
     let lineage_string = helpers_taxa.make_lineage_string_with_links(lineage_list, 'ecology', page)
-    
+    //console.log('lineage_string',lineage_string)
    //console.log('data=>',erenv1v3_data,'<=data')
 //     console.log('dewhirst_notes',dewhirst_notes)
 //     console.log('erenv1v3_notes',erenv1v3_notes)
 //     console.log('erenv3v5_notes',erenv3v5_notes)
     //ecology?rank=genus&name=Fusobacterium
     //res.render('pages/taxa/ecology', {
-    res.render('pages/taxa/'+target, {
+    res.render('pages/taxa/ecology_lollipop', {
       title: 'HOMD ::'+rank+'::'+tax_name,
       pgname: 'taxon/ecology', // for AbountThisPage 
       config: JSON.stringify(CFG),

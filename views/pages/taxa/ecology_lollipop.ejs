@@ -129,77 +129,82 @@ td {
   text-align: center;
   
 }
-
+.lineage a{
+   text-decoration:underline;
+   color:blue;
+}
 /* SMALL ----------- */
 @media only screen and (min-width : 1100px) {
-  /* Styles */
-  .row{
-    
-  }
-  .plot{
-   /* padding:0 10px; */
+	/* Styles */
+	.row{
+	
+	}
+	.plot{
+	/* padding:0 10px; */
+	
+	}
+	
+	
+	.plot-td{
+	
+	}
+	.plot_table{
+	border:1px solid green;
+	padding:10px
+	}
+	.column{
+	
+	}
+	.left {
+	width: 15%;
+	font-size:12px;
+	height: 200px; /* only to hold column open */
+	}
+	.middle {
+	/* width: 54%; */
+	/* border:2px dashed red; */
+	padding:10px;
+	/* border:1px solid red; */
+	
+	}
+	.right {
+	
+	
+	}
 
-}
-
-
-  .plot-td{
-   
-  }
-  .plot_table{
-  border:1px solid green;
-  padding:10px
-  }
-  .column{
-  
-  }
-  .left {
-  width: 15%;
-  font-size:12px;
-  height: 200px; /* only to hold column open */
-  }
-  .middle {
-  /* width: 54%; */
-  /* border:2px dashed red; */
-  padding:10px;
-  /* border:1px solid red; */
-  
-  }
-  .right {
-  
-  
-  }
-
-}
+}  /* End SMALL SCREEN MEDIA */
 
 /* Large screens ----------- */
 @media only screen and (min-width : 1624px) {
-  /* Styles */
-  .plot_table{
-     border:1px solid green;
-     padding:10px;
-  }
-  .plot{
-   /* padding:0 10px; */
-
-}
-
-
-.plot-td{
-   
-}
-  .left {
-  
-  }
-  .middle {
-     
-  }
-  .right {
-  
-  
-  }
+	/* Styles */
+	.plot_table{
+	 border:1px solid green;
+	 padding:10px;
+	}
+	.plot{
+	/* padding:0 10px; */
+	
+	}
+	
+	
+	.plot-td{
+	
+	}
+	.left {
+	
+	}
+	.middle {
+	 
+	}
+	.right {
+	
+	
+	}
  
 
-}
+}  /* End LARGE SCREEN MEDIA */
+
+
 </style>
 
 <% dewhirst_data = JSON.parse(dewhirst) %>
@@ -240,7 +245,7 @@ td {
     </div>
     <a id='download_browser_text_excel'  href='/download#abundance' >Download Options</a>   
     <div id='taxon-page-div'>
-        
+        <small>Each rank name is a link to abundance plots at that rank:</small><br>
         <center>Full Lineage: <%- lineage %></center>
         <% if(children_lst.length == 0){ %>
            
@@ -253,19 +258,19 @@ td {
                <% } %>
              
            <% }else{ %>
-            <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
+               <span id='toggle_ranks'><a href='#' onclick='toggle_lower_ranks()'>show[+]</a></span>
         
-            <div id='lower-rank-items-div' style='display:none'>
-               <% cols = 5 %>
-               <table id='child-table'><tr>
-               <% for(n in children_lst){ %>
-               <% if(n % cols == 0){  %><!-- // modulus/modulo-->
-                </tr><tr>
-               <% } %>
-               <td>[<%- children_lst[n] %>]</td>
-               <% } %>
-               </tr></table>
-            </div>
+               <div id='lower-rank-items-div' style='display:none'>
+                 <% cols = 5 %>
+                 <table id='child-table'><tr>
+                 <% for(n in children_lst){ %>
+                   <% if(n % cols == 0){  %><!-- // modulus/modulo-->
+                     </tr><tr>
+                   <% } %>
+                   <td>[<%- children_lst[n] %>]</td>
+                 <% } %>
+                 </tr></table>
+               </div>
           <% } %>  <!-- End of if(children_lst.length <5 -->
   
         <% } %>

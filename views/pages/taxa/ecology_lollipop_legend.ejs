@@ -138,18 +138,22 @@
    padding:5px 5px;
    /* background:lightseagreen; */
 }
+.links a{
+   text-decoration:underline;
+   color:blue;
+}
 </style>
 
 <center>
 <div class='links'>
-     LINKS: <a href='/taxa/ecology_home'>Ecology Home</a>&nbsp;|&nbsp;
+     LINKS: <a href='/taxa/ecology_home'>Ecology Home</a>
      <% if(otid != 0){ %>
         <span style=''>
-          <a href='body_sites?otid=<%= otid %>'><%= taxidfullname %>: Body Sites Data</a>&nbsp;|&nbsp;
-          <a href='tax_description?otid=<%= otid %>'><%= taxidfullname %>: Taxon Description</a>&nbsp;|&nbsp;
+          |&nbsp;<a href='body_sites?otid=<%= otid %>'><%= taxidfullname %>: Body Sites Data</a>
+          |&nbsp;<a href='tax_description?otid=<%= otid %>'><%= taxidfullname %>: Taxon Description</a>
         </span>
      <% } %>
-     <a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page: <%- tax_name %></a>
+     |&nbsp;<a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page: <%- tax_name %></a>
 </div>
 </center> 
 <!-- TOP LEGEND Smaller Screen  -->
