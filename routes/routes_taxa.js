@@ -1390,6 +1390,7 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
 router.get('/dropped', function dropped(req, res) {
     let q = "SELECT otid,naming_status,cultivation_status,notes, genus, species from otid_prime"
     q += " JOIN taxonomy using(taxonomy_id)"
+    q += " JOIN status using(otid)"
     q += " JOIN genus using (genus_id)"
     q += " JOIN species using (species_id)"
     q += " WHERE status='Dropped'   Order By genus,species"
