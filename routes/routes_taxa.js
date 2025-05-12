@@ -1388,14 +1388,8 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
 })
 //
 router.get('/dropped', function dropped(req, res) {
-    let q = "SELECT otid,naming_status,cultivation_status,notes, genus, species from otid_prime"
-    q += " JOIN taxonomy using(taxonomy_id)"
-    q += " JOIN status using(otid)"
-    q += " JOIN genus using (genus_id)"
-    q += " JOIN species using (species_id)"
-    q += " WHERE status='Dropped'   Order By genus,species"
-    
-    
+   
+    let q = queries.get_dropped_taxa()
     //console.log(q)
     TDBConn.query(q, (err, rows) => {
         if (err) {
@@ -1477,11 +1471,12 @@ router.get('/tree_d3', function tree_d3(req, res) {
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 function get_rank_text(rank, tax_name, otid){
+    console.log(rank,tax_name,otid)
     let text = [false,false]
     if(rank === "genus"){
       if(C.names_w_text.genera.indexOf(tax_name) != -1){
         text[0] = 'genus/'+tax_name+'.ejs'
-      }else if(C.names_w_text.provisional_genera.indexOf(tax_name) != -1){
+      }else if(C.names_w_text.provisional_genera_v4.indexOf(tax_name) != -1){
         //console.log('GOT Provisional')
         //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
         let children_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'].children_ids

@@ -27,6 +27,16 @@ module.exports.get_taxon_info_query = (otid) => {
   return q
 }
 
+module.exports.get_dropped_taxa = () => {
+  
+  let q = "SELECT otid, naming_status, cultivation_status, notes, genus, species from otid_prime"
+    q += " JOIN taxonomy using(taxonomy_id)"
+    q += " JOIN status using(otid)"
+    q += " JOIN genus using (genus_id)"
+    q += " JOIN species using (species_id)"
+    q += " WHERE status='Dropped'   Order By genus,species"
+  return q
+}
 // module.exports.get_16s_rRNA_sequence_query = (gid) => {
 //   let qSelect16Sseq = 'SELECT 16s_rRNA from genomes '
 //   qSelect16Sseq += "WHERE genome_id='" + gid + "'"

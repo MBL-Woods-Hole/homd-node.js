@@ -550,39 +550,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
      })
 
 })
-// router.post('/get_16s_seq', function get16sSeqPost (req, res) {
-//   //console.log('in get_16s_seq -post')
-//   
-//   helpers.print(req.body)
-//   const gid = req.body.seqid
-// 
-//   // express deprecated req.param(name): Use req.params, req.body, or req.query
-//   // See https://discuss.codecademy.com/t/whats-the-difference-between-req-params-and-req-query/405705
-//   // SELECT seq from db.table
-//   let q = queries.get_16s_rRNA_sequence_query(gid)
-//   helpers.print(q)
-//   let html
-//   TDBConn.query(q, (err, rows) => {
-//     if (err) {
-//       console.log(err)
-//       return
-//     }
-//     // console.log(rows)
-//     let seq = (rows[0]['16s_rRNA']).toUpperCase()
-//     helpers.print(['seq',seq])
-//     if(seq === "&LT;DIV ID=VIETDEVDIVID STYLE=&QUOT;POSITION:RELATIVE;FONT-FAMILY:ARIAL;FONT-SIZE:11PX&QUOT;&GT;&LT;/DIV&GT;"){
-//         html = 'No Sequence Found'
-//     }else{
-//         html = seq.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&quot;/gi, '"').replace(/&amp;gt;/gi, '>').replace(/&amp;lt;/gi, '<')
-//     }
-//     helpers.print(['html',html])
-//     if (html === '') {
-//        html = 'No Sequence Found'
-//     }
-//     //console.log(html)
-//     res.send(html)
-//   })
-// })
+
 
 router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
   //console.log('in get_NN_NA_seq -post')
@@ -591,9 +559,6 @@ router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
   const db_pts = req.body.db.split('_')
-  
-  // let q = 'SELECT ' + fieldName + ' as seq FROM ' + db + '.ORF_seq'
-//   q += " WHERE PID='" + pid + "'"
   
   let db
   let gid = req.body.gid
@@ -2157,13 +2122,7 @@ router.get('/peptide_table2', function peptide_table2_get(req, res) {
 })
 router.post('/peptide_table2', function peptide_table2_post(req, res) {
     const q = queries.get_peptide2()
-//     SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,genomes.otid,product,peptide,jb_link,protein_peptide.study_id,study_name 
-// FROM protein_peptide 
-// JOIN protein_peptide_counts using (seq_id) 
-// JOIN genomes using (seq_id) 
-// JOIN protein_peptide_counts_study using (protein_peptide_counts_id) 
-// JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) 
-// where seq_id='SEQF9928.1'
+
     let search_text = req.body.txt_srch.toLowerCase()
     let gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
@@ -2313,11 +2272,7 @@ router.get('/crispr', function crispr(req, res) {
     }
     
     let send_list = []
-    //for (var n in seqid_list) {
-        //if(C.genome_lookup.hasOwnProperty(seqid_list[n])){
-        //     send_list.push(C.genome_lookup[seqid_list[n]])
-        //}
-    //}
+    
     
     console.log('crispr-cas',seqid_list)
     let q = "SELECT seq_id as gid,tlength,otid,organism,ncontigs FROM genomes WHERE seq_id in ("
@@ -2325,6 +2280,7 @@ router.get('/crispr', function crispr(req, res) {
         q = q + "'"+seqid_list[k] + "',"
     }
     q = q.slice(0, -1) +')'
+    
     TDBConn.query(q, (err, rows) => {
        if (err) {
           console.log("Crispr-cas V10 Genomes-GET",err)
