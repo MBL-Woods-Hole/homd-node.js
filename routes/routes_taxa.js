@@ -1476,7 +1476,9 @@ function get_rank_text(rank, tax_name, otid){
     if(rank === "genus"){
       if(C.names_w_text.genera.indexOf(tax_name) != -1){
         text[0] = 'genus/'+tax_name+'.ejs'
-      }else if(C.names_w_text.provisional_genera_v4.indexOf(tax_name) != -1){
+      //}else if(C.names_w_text.provisional_genera_v4.indexOf(tax_name) != -1){
+      }else if(tax_name.includes('[')){
+      
         //console.log('GOT Provisional')
         //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
         let children_ids = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'].children_ids
