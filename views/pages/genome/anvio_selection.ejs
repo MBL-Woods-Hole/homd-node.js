@@ -31,7 +31,10 @@ table{
 
 <% for(i in pgs){ %>
  <tr>
-  <td nowrap><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].name %>')"><%- pgs[i].show %></a></td>
+  <td nowrap>
+     <a href='#' class='pg' onclick="find_anvio('<%= pgs[i].name %>','homd')"><%- pgs[i].show %></a>
+     
+  </td>
   
   <td><%= pgs[i].file_size %></td>
   <td><%- pgs[i].description %></td>
@@ -70,7 +73,7 @@ table{
   mainmenu()
 
 
-function find_anvio(pg){
+function find_anvio(pg,source){
     // called on click of pg link
     //loader.showLoader();
     var xmlhttp = new XMLHttpRequest();
@@ -79,6 +82,7 @@ function find_anvio(pg){
     target = 'anvio_post'
     args = {}
     args.pg = pg;
+    args.source = source
 
     xmlhttp.open("POST", target, false);
     xmlhttp.setRequestHeader("Content-type","application/json");

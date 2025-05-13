@@ -500,8 +500,9 @@ router.get('/tax_description', function tax_description(req, res){
             }
             
             //pangenomes
-            links.anviserver_link = C.anviserver_link
-          
+            //links.anviserver_link = C.anviserver_link
+            links.anviserver_link       = CFG.ANVIO_URL  //https://anvio.homd.org/anvio?pg=Mitis_Group
+            //links.anviserver_link_vamps = CFG.ANVIO_URL_VAMPS //https://vamps.mbl.edu/anviserver/pangenomes/Mitis_Group
             // console.log('sites',C.site_lookup[otid])
             sites = ''
             if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){

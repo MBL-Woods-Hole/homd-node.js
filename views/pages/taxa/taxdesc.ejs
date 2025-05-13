@@ -511,9 +511,10 @@
   <tr>
     <td class='taxon-bold tbl-title'><a href='/genome/anvio-server'>Pangenome(s)</a>:</td>
     <td class='taxon-data'>
-    <% if(data_lookup.pangenomes.length >0){ %>
+    <% if(data_lookup.pangenomes.length > 0){ %>
     <%   for(n in data_lookup.pangenomes){ %>
-           <a href='<%= links.anviserver_link %>/<%= data_lookup.pangenomes[n] %>' target='_blank'><%= data_lookup.pangenomes[n] %></a>
+           <a href='<%= links.anviserver_link %>?pg=<%= data_lookup.pangenomes[n] %>' target='_blank'>(Genomes V10.1)
+           <%= data_lookup.pangenomes[n] %></a>
     <%   } %>
     <% }else{ %>
        No Pangenome Assembly Available yet.

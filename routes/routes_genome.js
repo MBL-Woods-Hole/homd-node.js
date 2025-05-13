@@ -1871,8 +1871,9 @@ router.post('/anvio_post', (req, res) => {
     console.log('In anvio_post',req.body)
     
     helpers.accesslog(req, res)
-    
+    let url
     let pg = req.body.pg
+    let source = req.body.source
     if(!pg){
         pg = 'Veillonella_HMT780'
     }
@@ -1880,8 +1881,13 @@ router.post('/anvio_post', (req, res) => {
     //let port = anvio_ports()
     //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
     //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
+    if(source == 'vamps'){
+       url = CFG.ANVIO_URL_VAMPS + '/' + pg
+    }else{
+       url = CFG.ANVIO_URL + '?pg=' + pg
+    }
     
-    let url = CFG.ANVIO_URL + '?pg=' + pg
+    console.log('Opening ',url)
     // localhost:::   http://localhost:3010
     // Dev      :::   https://anvio.homd.org/anvio
     //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg

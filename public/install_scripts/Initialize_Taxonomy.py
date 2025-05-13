@@ -309,6 +309,7 @@ def run_rrna_sequences(ars):
 
 def run_pangenomes(args):
     global master_lookup
+    # query for taxon description page
     q =  "SELECT otid, name as pangenome from pangenome"
     result = myconn.execute_fetch_select_dict(q)
     for obj in result:
