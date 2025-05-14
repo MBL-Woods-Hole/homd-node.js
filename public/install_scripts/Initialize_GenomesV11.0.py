@@ -17,13 +17,23 @@ sys.path.append('../../homd-data/')
 sys.path.append('../../config/')
 from connect import MyConnection
 
+# TABLES
+taxon_tbl  = 'otid_prime'   # UNIQUE  - This is the defining table
+genome_tbl = 'genomesV11.0'
+gncbi_tbl = 'genomes_ncbiV11.0'
+gprokka_tbl = 'genomes_prokkaV11.0'
+
 #SELECT genome_id as gid, otid, strain, category, organism, contigs, combined_size, GC
 #   FROM `genomesV11.0`
-genomes_query = """
-   SELECT genome_id as gid, MAG as mag,otid, strain, `genomes_ncbiV11.0`.assembly_level as level,  `genomesV11.0`.organism, `genomesV11.0`.contigs, `genomesV11.0`.combined_size, `genomesV11.0`.GC
-   FROM `genomesV11.0`
-   JOIN `genomes_ncbiV11.0` using(genome_id)
-"""
+# genomes_query = """
+#    SELECT genome_id as gid, MAG as mag,otid, strain, `genomes_ncbiV11.0`.assembly_level as level,  `genomesV11.0`.organism, `genomesV11.0`.contigs, `genomesV11.0`.combined_size, `genomesV11.0`.GC
+#    FROM `genomesV11.0`
+#    JOIN `genomes_ncbiV11.0` using(genome_id)
+# """
+genomes_query = "SELECT genome_id as gid, MAG as mag,otid, strain, `"+gncbi_tbl+"`.assembly_level as level,"
+genomes_query += " `"+genome_tbl+"`.organism, `"+genome_tbl+"`.contigs, `"+genome_tbl+"`.combined_size, `"+genome_tbl+"`.GC"
+genomes_query += " FROM `"+genome_tbl+"`"
+genomes_query += " JOIN `"+gncbi_tbl+"` using(genome_id)"
 
 
 
@@ -74,34 +84,34 @@ def run_first(args):
         master_lookup[obj['gid']] = taxonObj
     #print(master_lookup)
 
-def run_second(args):
-    """  add otid to Object """
-    global master_lookup
-    g_query ="""
-    SELECT seq_id as gid, otid
-    from genomes
-    ORDER BY gid
-    """
-    result = myconn.execute_fetch_select_dict(g_query)
-
-    for obj in result:
-         if obj['gid'] in master_lookup:
-            master_lookup[obj['gid']]['otid'] = str(obj['otid'])
+# def run_second(args):
+#     """  add otid to Object """
+#     global master_lookup
+#     g_query ="""
+#     SELECT seq_id as gid, otid
+#     from genomes
+#     ORDER BY gid
+#     """
+#     result = myconn.execute_fetch_select_dict(g_query)
+# 
+#     for obj in result:
+#          if obj['gid'] in master_lookup:
+#             master_lookup[obj['gid']]['otid'] = str(obj['otid'])
     #print(master_lookup)
 
-def run_third(args):
-    """ Add Pangenome List to Object"""
-    global master_lookup
-    g_query ="""
-    SELECT seq_id as gid, name as pangenome
-    from pangenome
-    ORDER BY gid
-    """
-    result = myconn.execute_fetch_select_dict(g_query)
-
-    for obj in result:
-         if obj['gid'] in master_lookup:
-            master_lookup[obj['gid']]['pangenomes'].append(obj['pangenome'])
+# def run_third(args):
+#     """ Add Pangenome List to Object"""
+#     global master_lookup
+#     g_query ="""
+#     SELECT genome_id as gid, pangenome_name as pangenome
+#     from pangenome_genome
+#     ORDER BY gid
+#     """
+#     result = myconn.execute_fetch_select_dict(g_query)
+# 
+#     for obj in result:
+#          if obj['gid'] in master_lookup:
+#             master_lookup[obj['gid']]['pangenomes'].append(obj['pangenome'])
 
 
 

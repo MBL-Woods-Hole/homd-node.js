@@ -513,7 +513,7 @@
     <td class='taxon-data'>
     <% if(data_lookup.pangenomes.length > 0){ %>
     <%   for(n in data_lookup.pangenomes){ %>
-           <a href='<%= links.anviserver_link %>?pg=<%= data_lookup.pangenomes[n] %>' target='_blank'>(Genomes V10.1)
+           <a href='<%= links.anviserver_link %><%= data_lookup.pangenomes[n] %>' target='_blank'>(Genomes V10.1)
            <%= data_lookup.pangenomes[n] %></a>
     <%   } %>
     <% }else{ %>

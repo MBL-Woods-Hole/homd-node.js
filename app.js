@@ -345,7 +345,7 @@ Promise.all(promises)
     //console.log('id 598 class',C.homd_taxonomy.taxa_tree_dict_map_by_id[598])
     //console.log('id 599 order',C.homd_taxonomy.taxa_tree_dict_map_by_id[599])
     //console.log('id 603 fam ERR',C.homd_taxonomy.taxa_tree_dict_map_by_id[603])
-    //console.log('998_phylum',C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank['427_family'])
+    console.log('100_species',C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank['100_species'])
     /////////////////////////////////////////////////////////////////////////////////////
     C.taxa_with_subspecies = Object.values(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies']).map(x => x.otid)
     console.log('Dropped Taxa:',C.dropped_taxids,C.dropped_taxids.length)

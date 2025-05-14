@@ -1855,16 +1855,21 @@ function get_blast_db_info(gid){
 router.get('/anvio-server', function anvio_server(req, res){
    //console.log(req.query)
    // docker exec','anvio','anvi-display-pan','-P',port,'-p',pg+'/PAN.db','-g',pg+'/GENOMES.db'
-   
-   res.render('pages/genome/anvio_selection', {
-    title: 'HOMD :: Anvio', 
-    pgname: '', // for AboutThisPage
-    config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
-    pangenomes: JSON.stringify(C.pangenomes)
-    
-  })
+   let q = 'SELECT pangenome_name,homd_genome_version,description,on_vamps FROM pangenome_v4 ORDER by pangenome_name'
+   TDBConn.query(q, (err, rows) => {
+       console.log('pangenome rows[0]',rows[0])
+       
+       res.render('pages/genome/anvio_selection', {
+        title: 'HOMD :: Anvio', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        user: JSON.stringify(req.user || {}),
+        //pangenomes: JSON.stringify(C.pangenomes)
+        pangenomes: JSON.stringify(rows)
+        
+        })
+    })
 })
 //
 router.post('/anvio_post', (req, res) => {

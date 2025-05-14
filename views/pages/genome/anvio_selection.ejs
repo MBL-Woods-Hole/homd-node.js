@@ -26,29 +26,35 @@ table{
 <div id='pgtable'>
 <center>
 <table border='1'>
-<tr><td><b>Available Pangenomes</b><br><small>(Link opens pangenome in Anvio`)</small></td><th>Size<br>(MB)</th><th>Description</th>
-<th>Download<br>Files v7</th><th>Download<br>Files v8</th></tr>
+<tr>
+  <td><b>Available Pangenomes</b><br><small>(Link opens pangenome in Anvio`)</small></td>
+  <th>HOMD Genome Version</th>
+  <th>Size<br>(MB)</th><th>Description</th>
+  <th>Download<br>Files v7</th>
+  <th>Download<br>Files v8</th>
+</tr>
 
 <% for(i in pgs){ %>
+ <% if(pgs[i].on_vamps){ %>
  <tr>
   <td nowrap>
-     <a href='#' class='pg' onclick="find_anvio('<%= pgs[i].name %>','homd')"><%- pgs[i].show %></a>
-     
+     <% url = pgs[i].pangenome_name + pgs[i].homd_genome_version.replace('.','_') %>
+     <br><a href='#' class='pg' onclick="find_anvio('<%= url %>','vamps')">
+        <%- pgs[i].pangenome_name %> 
+         (vamps)</a>
   </td>
-  
+  <td nowrap  class='center'>
+    <%- pgs[i].homd_genome_version %>
+  </td>
   <td><%= pgs[i].file_size %></td>
   <td><%- pgs[i].description %></td>
-  <% if(pgs[i].dnld_v7) { %>
-     <td class='center'><a href="/download/dnld_pangenome?pg=<%= pgs[i].name %>&V=7"><i class="fa fa-download" aria-hidden="true"></i></a></td>
-  <% }else{ %>
+  
      <td class='center'></td>
-  <% } %>
-  <% if(pgs[i].dnld_v8) { %>
-  <td class='center'><a href="/download/dnld_pangenome?pg=<%= pgs[i].name %>&V=8"><i class="fa fa-download" aria-hidden="true"></i></a></td>
-  <% }else{ %>
+  
      <td class='center'></td>
-  <% } %>
+  
  </tr>
+<% } %>
 <% } %>
 
 </table>

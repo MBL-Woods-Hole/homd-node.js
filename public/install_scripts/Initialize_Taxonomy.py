@@ -310,7 +310,10 @@ def run_rrna_sequences(ars):
 def run_pangenomes(args):
     global master_lookup
     # query for taxon description page
-    q =  "SELECT otid, name as pangenome from pangenome"
+    #q =  "SELECT otid, name as pangenome from pangenome"
+    q = "SELECT otid, pangenome_name as pangenome from pangenome_genome"
+    q += " JOIN `"+genome_tbl+"` using(genome_id)
+
     result = myconn.execute_fetch_select_dict(q)
     for obj in result:
         otid = str(obj['otid'])
@@ -319,7 +322,7 @@ def run_pangenomes(args):
             if obj['pangenome'] not in master_lookup[otid]['pangenomes']:
                 master_lookup[otid]['pangenomes'].append(obj['pangenome'])
         else:
-            sys.exit('problem with rrna_sequence exiting')
+            sys.exit('problem with pangenome query. exiting')
 
 
 def run_refseq(args):
@@ -733,7 +736,7 @@ if __name__ == "__main__":
     run_ref_strain(args)   # in master_lookup
 
     run_rrna_sequences(args)  # in master_lookup
-    run_pangenomes(args)   # in master_lookup
+    #run_pangenomes(args)   # in master_lookup
 
     print_master_lookup(args)
 

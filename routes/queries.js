@@ -102,16 +102,13 @@ module.exports.get_lineage_query = (otid) => {
 //     
 //   return qSelectAnno
 // }
-// module.exports.get_annotation_query4 = (search_text, anno_type) => {
-//   // this query takes too long
-//   let qSelectAnno
-//   if(anno_type === 'ncbi'){
-//      qSelectAnno = "SELECT seq_id as gid, protein_id, product from `NCBI_meta`.orf WHERE product like '%"+search_text+"%'"
-//   }else{
-//      qSelectAnno = "SELECT seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%"+search_text+"%'"
-//   }
-//   return qSelectAnno
-// }
+module.exports.get_pangenomes_query = (otid) => {
+    // this query takes too long
+    let q = "SELECT pangenome_name from pangenome_genome"
+    q += " JOIN `"+C.genomes_table_name+"` using(genome_id)"
+    q += " WHERE otid='"+otid+"'"
+    return q
+}
 module.exports.get_peptide = () => {
 /// USING Ver 3.1
     let qSelectPeptide = "SELECT `genomes`.otid, study_id, seq_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
