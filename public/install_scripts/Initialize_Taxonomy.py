@@ -312,7 +312,7 @@ def run_pangenomes(args):
     # query for taxon description page
     #q =  "SELECT otid, name as pangenome from pangenome"
     q = "SELECT otid, pangenome_name as pangenome from pangenome_genome"
-    q += " JOIN `"+genome_tbl+"` using(genome_id)
+    q += " JOIN `"+genome_tbl+"` using(genome_id)"
 
     result = myconn.execute_fetch_select_dict(q)
     for obj in result:
