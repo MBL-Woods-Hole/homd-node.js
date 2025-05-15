@@ -1853,12 +1853,9 @@ function get_blast_db_info(gid){
 }
 //
 router.get('/anvio-server', function anvio_server(req, res){
-   //console.log(req.query)
-   
-   // docker exec','anvio','anvi-display-pan','-P',port,'-p',pg+'/PAN.db','-g',pg+'/GENOMES.db'
-   let q = 'SELECT pangenome_name,homd_genome_version,description,on_vamps FROM pangenome_v4 ORDER by pangenome_name'
+   let q = queries.get_all_pangenomes_query()
    TDBConn.query(q, (err, rows) => {
-       console.log('pangenome rows[0]',rows[0])
+       //console.log('pangenome rows[0]',rows[0])
 //        let dir = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'pangenome_files')
 //         walk(dir)
 //        for(let n in rows){

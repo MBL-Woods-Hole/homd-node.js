@@ -102,8 +102,12 @@ module.exports.get_lineage_query = (otid) => {
 //     
 //   return qSelectAnno
 // }
+module.exports.get_all_pangenomes_query = () => {
+    let q = 'SELECT pangenome_name,homd_genome_version,description,on_vamps FROM pangenome_v4 ORDER by pangenome_name'
+    return q
+}
 module.exports.get_pangenomes_query = (otid) => {
-    // this query takes too long
+    
     let q = "SELECT pangenome_name from pangenome_genome"
     q += " JOIN `"+C.genomes_table_name+"` using(genome_id)"
     q += " WHERE otid='"+otid+"'"

@@ -38,12 +38,20 @@ table{
 <% for(i in pgs){ %>
  <% if(pgs[i].on_vamps){ %>
    <% url = pgs[i].pangenome_name + pgs[i].homd_genome_version.replace('.','_') %>
+   <% url_aws = pgs[i].pangenome_name %>
    <tr>
    <td nowrap>
      
-     <br><a href='#' class='pg' onclick="find_anvio('<%= url %>','vamps')">
-        <%- pgs[i].pangenome_name %> 
-         (vamps)</a>
+     <a href='#' class='pg' onclick="find_anvio('<%= url %>','vamps')">
+        <%- pgs[i].pangenome_name %></a>
+         <small>(VAMPS)</small>
+     <% if(pgs[i].pangenome_name == 'Mitis_Group'){ %>
+        <br><a href='#' class='pg' onclick="find_anvio('<%= url_aws %>','homd')">Mitis_Group</a> <small>(AWS testing)</small>
+     <% } %>
+     <% if(pgs[i].pangenome_name == 'Prochlorococcus_31'){ %>
+        <br><a href='#' class='pg' onclick="find_anvio('<%= url_aws %>','homd')">Prochlorococcus_31</a> <small>(AWS testing)</small>
+     <% } %>
+  
   </td>
   <td nowrap  class='center'>
     <%- pgs[i].homd_genome_version %>
