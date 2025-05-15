@@ -1854,10 +1854,26 @@ function get_blast_db_info(gid){
 //
 router.get('/anvio-server', function anvio_server(req, res){
    //console.log(req.query)
+   
    // docker exec','anvio','anvi-display-pan','-P',port,'-p',pg+'/PAN.db','-g',pg+'/GENOMES.db'
    let q = 'SELECT pangenome_name,homd_genome_version,description,on_vamps FROM pangenome_v4 ORDER by pangenome_name'
    TDBConn.query(q, (err, rows) => {
        console.log('pangenome rows[0]',rows[0])
+//        let dir = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'pangenome_files')
+//         walk(dir)
+//        for(let n in rows){
+//            //console.log(rows[n].pangenome_name)
+//            let pname = rows[n].pangenome_name+rows[n].homd_genome_version.replace('.','_')
+//           // let dir = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'pangenome_files',pname)
+//           // walk(dir)
+// 			//            if (fs.existsSync(path.join(CFG.PATH_TO_STATIC_DOWNLOADS"/tmp/myfile")) {
+// 			//   console.log("/tmp/myfile exists!");
+// 			// } else {
+// 			//   console.log("/tmp/myfile does not exist!");
+// 			// }
+// 			// 
+// 			//            if(CFG.PATH_TO_STATIC_DOWNLOADS
+//        }
        
        res.render('pages/genome/anvio_selection', {
         title: 'HOMD :: Anvio', 
@@ -1866,12 +1882,58 @@ router.get('/anvio-server', function anvio_server(req, res){
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
         user: JSON.stringify(req.user || {}),
         //pangenomes: JSON.stringify(C.pangenomes)
-        pangenomes: JSON.stringify(rows)
+        pangenomes: JSON.stringify(rows),
+        files:[]
         
         })
     })
 })
 //
+function walk(dir){
+// a simple walk method
+
+ 
+    // get the contents of dir
+    console.log('dir',dir)
+    
+    fs.readdir(dir, (e, items) => {
+         
+        // for each item in the contents
+        if(e){
+          console.log('e',e)
+          return
+        }else{
+          items.forEach((item) => {
+             
+            // get the item path
+            let itemPath = path.join(dir, item);
+ 
+            // get the stats of the item
+            fs.stat(itemPath, (e, stats) => {
+ 
+                // Just log the item path for now
+                console.log('walking',itemPath);
+ 
+                // for now just use stats to find out
+                // if the current item is a dir
+                if (stats.isDirectory()) {
+ 
+                    // if so walk that too, by calling this
+                    // method recursively
+                    walk(itemPath);
+ 
+                }
+ 
+            });
+ 
+          });
+        }
+        
+ 
+    });
+ 
+};
+
 router.post('/anvio_post', (req, res) => {
     console.log('In anvio_post',req.body)
     

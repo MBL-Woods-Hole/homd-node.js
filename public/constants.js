@@ -449,6 +449,7 @@ constants.all_genome_blastn_db_choices = {
 //constants.anviserver_link = "https://vamps.mbl.edu/anviserver/pangenomes/"
 // this should reflect what is avalable on HOMD (vamps/anviserver)
 // **** NOTE NOTE This data is obsolete!! Look at the mysql table:pangenomes and the script Initialize_Taxonomy.py
+
 // constants.pangenomes = [
 //     {
 //       otids: ['46','555','626','757','928'], 

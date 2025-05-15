@@ -14,6 +14,7 @@ table{
 </style>
 <%- include('../../partials/header_html'); %>
 <% pgs = JSON.parse(pangenomes) %>
+<% cfg = JSON.parse(config) %>
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -36,9 +37,10 @@ table{
 
 <% for(i in pgs){ %>
  <% if(pgs[i].on_vamps){ %>
- <tr>
-  <td nowrap>
-     <% url = pgs[i].pangenome_name + pgs[i].homd_genome_version.replace('.','_') %>
+   <% url = pgs[i].pangenome_name + pgs[i].homd_genome_version.replace('.','_') %>
+   <tr>
+   <td nowrap>
+     
      <br><a href='#' class='pg' onclick="find_anvio('<%= url %>','vamps')">
         <%- pgs[i].pangenome_name %> 
          (vamps)</a>
@@ -49,9 +51,17 @@ table{
   <td><%= pgs[i].file_size %></td>
   <td><%- pgs[i].description %></td>
   
-     <td class='center'></td>
+  <% if(cfg.PANGENOME_DOWNLOAD_FILES.hasOwnProperty(url) && cfg.PANGENOME_DOWNLOAD_FILES[url].hasOwnProperty("dnld_v7")){ %>
   
+     <td class='center'><a href="/download/dld_static_file/<%= cfg.PANGENOME_DOWNLOAD_FILES[url]['dnld_v7'] %>"><i class="fa fa-download" aria-hidden="true"></i></a></td>
+  <% }else{ %>
      <td class='center'></td>
+  <% } %>
+  <% if(cfg.PANGENOME_DOWNLOAD_FILES.hasOwnProperty(url) && cfg.PANGENOME_DOWNLOAD_FILES[url].hasOwnProperty("dnld_v8")){ %>
+     <td class='center'><a href="/download/dld_static_file/<%= cfg.PANGENOME_DOWNLOAD_FILES[url]['dnld_v8'] %>"><i class="fa fa-download" aria-hidden="true"></i></a></td>
+  <% }else{ %>
+     <td class='center'></td>
+  <% } %>
   
  </tr>
 <% } %>

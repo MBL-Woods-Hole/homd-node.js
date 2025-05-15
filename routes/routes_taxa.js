@@ -579,6 +579,7 @@ router.get('/tax_description', async (req, res) => {
     refseq     = await get_taxon_refseq(q_refseq_metadata)
     const info       = await get_taxon_info(q_info)
     const pangenomes = await get_taxon_pangenomes(q_pangenome)
+    //https://medium.com/@amymurphy_40966/node-mysql-chained-promises-vs-async-await-9d0c8e8f5ee1
     Promise.all([refseq,info,pangenomes]).then((results) => {
 		if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
                sites = 'Primary: '+C.site_lookup[otid]['s1']
