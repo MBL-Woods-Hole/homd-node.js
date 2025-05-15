@@ -472,6 +472,8 @@ if __name__ == "__main__":
         MUST be run AFTER Initialize_Taxonomy.py
         ./Initialize_Abundance.py (now gets data from DB table: 'abundance')
         
+        -host [localhost (default), homd_v4, homd_v3] :: db_host
+        
         OLD:
         Run 3 times (once for each abundance.csv file
           ./Initialize_Abundance.py -i Segata2021-09-07.csv -s segata
@@ -508,11 +510,11 @@ if __name__ == "__main__":
     if not os.path.exists(args.outdir):
         print("\nThe out put directory doesn't exist:: using the current dir instead\n")
         args.outdir = './'                         
-    if args.dbhost == 'homd_dev':
+    if args.dbhost == 'homd_v4':
         #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
         args.DATABASE  = 'homd'
         dbhost = '192.168.1.46'
-    elif args.dbhost == 'homd_prod':
+    elif args.dbhost == 'homd_v3':
         #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
         #args.TAX_DATABASE = 'HOMD_taxonomy'
         args.DATABASE = 'homd'

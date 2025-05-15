@@ -169,7 +169,7 @@ if __name__ == "__main__":
 
            -outdir Output directory [default]
         for homd site
-           -host homd
+           -host [localhost (default), homd_v4, homd_v3] :: db_host
 
         for debugging
           -pp  pretty print
@@ -200,11 +200,11 @@ if __name__ == "__main__":
     if not os.path.exists(args.outdir):
         print("\nThe out put directory doesn't exist:: using the current dir instead\n")
         args.outdir = './'
-    if args.dbhost == 'homd_dev':
+    if args.dbhost == 'homd_v4':
         #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
         args.DATABASE  = 'homd'
         dbhost = '192.168.1.46'
-    elif args.dbhost == 'homd_prod':
+    elif args.dbhost == 'homd_v3':
         #args.DATABASE  = 'homd'
         
         dbhost = '192.168.1.42'
