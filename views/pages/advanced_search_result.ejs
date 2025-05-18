@@ -14,6 +14,7 @@ html, body { min-height: 100%; }
     /* padding-left:1px; */
     vertical-align: middle;
     
+    
     padding:5px;
     font-size:13px;
     text-align: center;
@@ -44,10 +45,15 @@ html, body { min-height: 100%; }
    border:1px solid black;
    
 }
-.outlier{
+.outlier-max{
     padding:20px;
     background:brown;
     color:ivory;
+}
+.outlier-zero{
+    padding:20px;
+    background:lightgreen;
+    color:brown;
 }
 .loader-gif{
   height:20px;
@@ -82,12 +88,21 @@ table td{
     font-size:18px;
     
 }
+#anno-result{
+   display:none;
+   margin-top:10px;
+}
+.center{
+   text-align:center;
+}
 </style>
 <%- include('../partials/header_html'); %>
 <% var otids = JSON.parse(otid_list) %>
 <% var gids = JSON.parse(gid_list) %>
 <% var lineageids = JSON.parse(taxon_otid_obj) %>
-<% anno_list = JSON.parse(annotationList)  %>
+<% anno_sort_lst = JSON.parse(sort_list)  %>
+<% no_ncbi_annotation = JSON.parse(no_ncbi_annot) %>
+<% anno_list2 = JSON.parse(annotationList2)  %>
 <% var search_type  = JSON.parse(form_type) %>  <!-- array of taxonomy, genomes or annotation -->
 
 <body>
@@ -188,48 +203,49 @@ table td{
     
     
     Annotations <small>(Searches only Genome-IDs, Accessions(Molecule), Protein-IDs, Gene and Gene Product (~20M records)):<span class='small'></span></small>
-     <% if(anno_list.hasOwnProperty("too_long")){  %>
+     <% if(anno_list2.hasOwnProperty("too_long")){  %>
         <br>Hits: ><%= max %>
     <% }else{ %>
-        <br>Hits: <%= anno_list.length %>
+        <br>Hits: <%= total_hits %>
     <% } %>
     <br>
      
-         <% if(anno_list.hasOwnProperty("too_long")){  %>
-               
-               <center><div class='outlier'>Too Many Hits (><%= max %>). Try to refine your search. (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
-         <% }else if(anno_list.length == 0){ %>
-               <center><div class='outlier'>Zero Hits (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
+         <% if(anno_list2.hasOwnProperty("too_long")){  %>
+               <center><div class='outlier-max'>Too Many Hits (><%= max %>). Try to refine your search. (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
+         <% }else if(total_hits == 0){ %>
+               <center><div class='outlier-zero'>Zero Hits (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
          <% }else{ %>
-             <div class='search-box-anno'>
+             <div id='anno-div' class='search-box-anno'>
              <span class='search-text-div'>Selected Annotation: <%= anno.toUpperCase() %></span>
-             <% if(anno_list.length != 0){ %>
-               <table class='result-table sortable'>
-               <tr><th>Genome-ID</th><th>Accession</th><th>Protein-ID</th><th>Gene</th><th>Gene Product</th>
-                 <!-- <th>Length AA</th><th>Length NA</th><th>Start</th><th>Stop</th> -->
-                 </tr>
-               <% for(x in anno_list){ %>
-                 <% gid  = anno_list[x].genome_id %>
-                 <tr>
-                   <td><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
-                   
-                   <td><a href='/genome/explorer?gid=<%= gid %>&anno=<%= anno %>'><%= anno_list[x].accession %></a></td>
-                   <td><a href='/genome/explorer?gid=<%= gid %>&anno=<%= anno %>'><%= anno_list[x].protein_id %></a></td>
-                   <td><%= anno_list[x].gene %></td>
-                   <td><%= anno_list[x].product %></td>
-<!-- 
-                   <td><%= anno_list[x].length_aa %></td>
-                   <td><%= anno_list[x].length_na %></td>
-                   <td><%= anno_list[x].start %></td>
-                   <td><%= anno_list[x].stop %></td>
- -->
-                </tr>
-                   
-               <% } %>
-               </table>
              
-             <% } %>
+               
+               <table id='anno-table' class='result-table2 sortable'>
+               <tr><th>Genome-ID</th><th>Species (strain)</th><th class='sorttable_nosort'># Hits</th><th class='sorttable_nosort'>Full Annotations</th></tr>
+        <% for(i in anno_sort_lst){ %>
+                <% gid = anno_sort_lst[i].gid %>
+                <tr id='<%= gid %>' class='anno-row'>
+                   <td nowrap class='center'><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
+                   <td><i><%= anno_list2[gid][0].species %></i> <%= anno_list2[gid][0].strain %></td>
+                   
+                   <td nowrap class='center'>
+                       <%= anno_list2[gid].length %>
+                       <% data = JSON.stringify(anno_list2[gid]) %>
+                       <small>(<a href='#' onclick="show_table('<%= data %>','<%= gid %>')">view hits</a>)</small>
+                    </td>
+                   <td nowrap class='center'>
+            <a class='pill pill-mediumorchid' href='/genome/explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
+            <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
+                <a class='pill pill-slateblue' href='/genome/explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+            <% }else{ %>
+                <span class='pill pill-grayed' title='NCBI Annotation Not Available' href=''>NCBI</span>
+            <% } %>
+                   </td>
+                </tr>
+        <% } %>
+               </table>
+
              </div>
+             <div id='anno-result'>hidden</div>
          <% } %>
      
 <% } %>
@@ -267,6 +283,58 @@ table td{
       
       
   });
+  function close_anno(){
+      //console.log('inclose')
+      newbox = document.getElementById('anno-result')
+      newbox.style.display = 'none'
+      annobox.style.height = "800px"
+  };
+  
+  function show_table(obj,gid){
+     var data = JSON.parse(obj)
+     //console.log('obj',data)
+     //console.log('data[gid]',data[0])
+     var html = '<center>'+gid+' | <i>'+data[0].species+'</i> | '+data[0].strain+'</center>'
+     html += "<span style='float:right;'><a href='#' onclick=\"close_anno()\">close</a></span>"
+     html += "<br><table>"
+     html += "<tr><th>Accession</th><th>Protein-ID</th><th>Gene</th><th>Gene Product</th></tr>"
+     annobox = document.getElementById('anno-div')
+     selected_row = document.getElementById(gid)
+     //console.log('selectedrow',selected_row)
+     allrows = document.getElementsByClassName('anno-row')
+     tblrows = document.getElementById("anno-table").rows
+     //console.log('rowcount-tblrows',tblrows.length)
+     //console.log('rowcount-allrows',allrows.length)
+     //for(let i = 0; i < total_hits-1; i++){
+     for(n in allrows){
+         //console.log('allrows[n]',n,allrows[n])
+        if(n <= allrows.length){
+            allrows[n].style.background = "lightgreen";
+        }
+     }
+     
+     selected_row.style.background = "white";
+     
+     
+     annobox.style.padding = "10px";
+     annobox.style.height = "400px"
+     
+     //newbox = document.getElementById(gid+'-result')
+     newbox = document.getElementById('anno-result')
+     newbox.style.display = 'block'
+     newbox.style.background = "lightblue";
+     newbox.style.padding = "10px";
+     for(n in data){
+        html += "<tr>"
+        html += "<td>"+data[n].acc+"</td>"
+        html += "<td>"+data[n].pid+"</td>"
+        html += "<td>"+data[n].gene+"</td>"
+        html += "<td>"+data[n].prod+"</td>"
+        html += "</tr>"
+     }
+     html += "</table>"
+     newbox.innerHTML = html
+  }
 // document.onreadystatechange = function() {
 //         if (document.readyState !== "complete") {
 //             document.querySelector(

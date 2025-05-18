@@ -126,16 +126,18 @@ pagedata {
        
           <!--  <a class='pill pill-midnightblue' href='/genome_blast_single?gid=<%= ginfo[n].gid %>' target='_blank'>BLAST</a> -->
        
-            </td>
+        </td>
         
-            <td class='center'>
+        <td class='center'>
             <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
             <% if(no_ncbi_annotation.indexOf(ginfo[n].gid) == -1 ){ %>
                 <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
             <% }else{ %>
                 <span class='pill pill-grayed' title='NCBI Annotation Not Available' href=''>NCBI</span>
             <% } %>
-            <!-- <span class="badge badge-light">HOMD</span></td> -->
+        
+            <!-- <span class="badge badge-light">HOMD</span> -->
+        </td>
       </tr>
       <% rowcount = rowcount + 1 %>
     <% } %>

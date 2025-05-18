@@ -158,6 +158,7 @@ router.get('/poster', function poster(req, res) {
 })
 
 router.get('/advanced_site_search', function advanced_site_searchGET(req, res) {
+  console.log('advanced_site_searchGET')
   res.render('pages/advanced_site_search', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
@@ -168,7 +169,7 @@ router.get('/advanced_site_search', function advanced_site_searchGET(req, res) {
   })
 })
 router.post('/advanced_site_search', function advanced_site_searchPOST(req, res) {
-  console.log('req.body',req.body)
+  console.log('advanced_site_searchPOST req.body',req.body)
   var searchTextLower = req.body.adv_search_text.toLowerCase()
   let taxonOtidObj = {},otidLst = [],gidLst=[],ret_obj={}
   let form_type = []
@@ -259,6 +260,7 @@ function execPromise(cmd, args, max) {
           let dataBuffer =  Buffer.concat(bufferArray);
           let dataBufferArray = dataBuffer.toString().split('\n')
           //console.log('resolving okay',dataBufferArray[0])
+          
           resolve(dataBufferArray);
         });
         process.on('error', function (err) {
@@ -326,12 +328,13 @@ function execPromise(cmd, args, max) {
 //     
 // }
 router.post('/advanced_site_search_grep', async function advanced_site_search_annoPOST(req, res) {
+    console.log('in advanced_site_search_grep')
     console.log(req.body)
     const searchText = req.body.search_text_anno_grep.toLowerCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
     
-    let q,rows,row_array,obj,obj_array = []
+    let q,rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain
     // if(req.body.adv_anno_radio == 'prokka'){
 //         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
 //     }else if(req.body.adv_anno_radio == 'ncbi'){
@@ -352,41 +355,63 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
         console.log(grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
         const row_array = await execPromise(CFG.GREP_CMD, args, max_rows);
-        console.log('rows_lst length',row_array.length)
-        //console.log('rows_lst[0]',rows_lst[0])
+        //console.log('rows_lst length',row_array.length)
+        
+        let total_length = row_array.length - 1
         //rows = rows_lst.join('')
         if(row_array[0] == 'too_long'){
-            obj_array = {'too_long':'too_long'}
+            obj2 = {'too_long':'too_long'}
         }else{
             //console.log('rows',rows)
             //row_array = rows.split('\n')
             for(let n in row_array){
                 if(row_array[n] != ''){
-                    obj = {}
+                    
+                    
+                    // ['anno','genome_id','accession','protein_id','gene','product']
+                    // prokka|gca_045159905.1|cp077181.1|gca_045159905.1_00005||hypothetical protein
+                    // prokka|gca_045159905.1|cp077181.1|gca_045159905.1_00004|yidc2|membrane protein insertase yidc 2
                     let pts = row_array[n].split('|')
                     if(pts.length == 6 && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
-                      for(let i in grep_fields){
-                            //obj[grep_fields[i]] = pts[i]
-                            if(grep_fields[i] == 'genome_id'){
-                                obj.genome_id = pts[i].toUpperCase()
-                            }else if(grep_fields[i] == 'accession'){
-                                obj.accession = pts[i].toUpperCase()
-                            }else if(grep_fields[i] == 'protein_id'){
-                                obj.protein_id = pts[i].toUpperCase()
-                            }else if(grep_fields[i] == 'gene'){
-                                obj.gene = pts[i].toUpperCase()
-                            }else if(grep_fields[i] == 'product'){
-                                obj.product = pts[i]
-                            }else{
-                                obj[grep_fields[i]] = pts[i]
-                            }
+                     
+                      gid = pts[1].toUpperCase()
+                      
+                      otid = C.genome_lookup[gid]['otid']
+                      strain = C.genome_lookup[gid]['strain']
+                      species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+                      if(obj2.hasOwnProperty(gid)){
+                          
+                          obj2[gid].push({gid:gid,species:species,strain:strain,acc:pts[2].toUpperCase(),pid:pts[3].toUpperCase(),gene:pts[4],prod:pts[5]})
+                      }else{
+                          sort_lst.push({gid:gid,species:species,strain:strain})
+                          obj2[gid] = [{gid:gid,species:species,strain:strain,acc:pts[2].toUpperCase(),pid:pts[3].toUpperCase(),gene:pts[4],prod:pts[5]}]
                       }
-                      obj_array.push(obj)
+                      
+                      // for(let i in grep_fields){
+//                             //obj[grep_fields[i]] = pts[i]
+//                             if(grep_fields[i] == 'genome_id'){
+//                                 obj.genome_id = pts[i].toUpperCase()
+//                             }else if(grep_fields[i] == 'accession'){
+//                                 obj.accession = pts[i].toUpperCase()
+//                             }else if(grep_fields[i] == 'protein_id'){
+//                                 obj.protein_id = pts[i].toUpperCase()
+//                             }else if(grep_fields[i] == 'gene'){
+//                                 obj.gene = pts[i].toUpperCase()
+//                             }else if(grep_fields[i] == 'product'){
+//                                 obj.product = pts[i]
+//                             }else{
+//                                 obj[grep_fields[i]] = pts[i]
+//                             }
+//                       }
+//                       obj_array.push(obj)
                     }
                 }
             }
         }
-        //console.log('obj_array',obj_array)
+        sort_lst.sort(function (a, b) {
+           return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
+        })
+        //console.log('sort_lst',sort_lst)
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
@@ -398,9 +423,13 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
             otid_list: JSON.stringify([]),
             gid_list: JSON.stringify([]),
             taxon_otid_obj: JSON.stringify({}),
-            annotationList: JSON.stringify(obj_array),
+            //annotationList: JSON.stringify(obj_array),
+            annotationList2: JSON.stringify(obj2),
+            sort_list: JSON.stringify(sort_lst),
+            total_hits: total_length,
             max:max_rows,
-            form_type: JSON.stringify(['annotations'])
+            form_type: JSON.stringify(['annotations']),
+            no_ncbi_annot: JSON.stringify(C.no_ncbi_annotation)
                     
         })
     }
