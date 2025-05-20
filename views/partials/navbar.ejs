@@ -18,7 +18,7 @@
 
 #nav {
    /* text-align: left; */
-   height:15px;  /* 42px; */
+   
    position:relative;
    left: 0px;
    height:33px;
@@ -101,7 +101,6 @@
   cursor: s-resize;
 }
 #first a:hover{
-  /* kludge */
   padding-bottom:12px;
 }
 #nav li ul li a{
@@ -148,44 +147,25 @@
 }
  
 /*  nav search: */
-#homd-menu-right {
-  display: flex;
-  flex-wrap: wrap;
-  /* width: 220px; */
-  
-  position: absolute;
-  right: 5px;
-  height:33px;
+#last {
+   /* border:1px solid yellow; */
+   /* height:15px; */
 }
-#homd-menu-right li{
-   padding:0px 5px;
-  
-  
+#last a{
+   /* padding-bottom:5px; */
 }
-#homd-menu-right li ul{
-   margin:3px 0; 
+#last a:hover{
+  /* kludge */
+  /* border:1px solid green; */
+ 
 }
-#homd-menu-right img{
-    margin:-3px 0px;
-    padding:0 0 5px 0;
-    height:25px;
+#last img{
+  /* border:1px solid red; */
+  
+ 
 }
 
-#homd-menu-right input[type=text] {
-   width:150px;
-   height: 20px;
-   border:1px solid grey;
-   font-size:15px;
-   border-radius:3px;
-   padding:0 0 5px 0;
-   margin:-4px 0 5px 0;
-}
-#homd-menu-right input[type=image] {
-  background: #8D9EAA;
-  
-  margin:-3px 0px;
-  padding:0 0 5px 0;
-}
+ 
 
 /* versioning */
 #version-info{
@@ -378,13 +358,12 @@
 		  </ul>
 	</li>
 		
-		
-   <span id='homd-menu-right' >
-		<li><input type="text" placeholder="Search Site.."  id='search_text' value='' maxlength='30' size='20' /></li>
-		<li><input type="image" src='/images/search2.png'  id="search_button" height='20' onclick='basic_search()' /></li>
-   </span>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <li id='last' >
+        <a href='/advanced_site_search'>Site Search</a>
+   </li>
   
-    
+    <!--  <img src="/images/search2.png" height='20' alt="LookingGlass" /> -->
 </ul>
 </div>
 

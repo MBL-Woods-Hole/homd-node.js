@@ -70,7 +70,7 @@ table td{
 <!-- 'HMT-'+("000" + otid).slice(-3);  -->
     <br>
     <center><a href='advanced_site_search'>Search Genome Annotations</a></center>
-    <br>Matches from Bacterial Taxon Names: (<%= Object.keys(lineageids).length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
+    <br>Matches from <strong>Bacterial Taxon Names</strong>: (<%= Object.keys(lineageids).length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
   <% if( Object.keys(lineageids).length > 0 ){ %>
   <div class='search-box'>
     <% n = 0 %>
@@ -94,7 +94,7 @@ table td{
     <hr> 
     
     
-    Matches from Taxon-ID Metadata: (<%= otids.length %> hits) <span class='float-right small'>Your Search String: "<%= search_text %>"</span> 
+    Matches from <strong>Taxon-ID Metadata</strong>: (<%= otids.length %> hits) <span class='float-right small'>Your Search String: "<%= search_text %>"</span> 
     <% if( otids.length > 0 ){ %>
     <div class='search-box'>
     <center><table class='sortable'>
@@ -114,7 +114,7 @@ table td{
   <% } %>
     <!-- Genomes -->
     <hr>  
-    Matches from Genome Metadata: (<%= gids.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
+    Matches from <strong>Genome Metadata</strong>: (<%= gids.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
     <% if( gids.length > 0 ){ %>
     <div class='search-box'>
     <center><table class='sortable'>
@@ -138,7 +138,7 @@ table td{
      
     <hr>  
 
-    Matches from Contigs: (<%= contig_list.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
+    Matches from <strong>Contig Names</strong>: (<%= contig_list.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
     <% if( contig_list.length > 0 ){ %>
     <div class='search-box'>
     <center><table class='sortable'>
@@ -164,7 +164,7 @@ table td{
 
     
     <hr>
-    Matches from Help Pages: (<%= help_list.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
+    Matches from <strong>Help Pages</strong>: (<%= help_list.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
     <% if( help_list.length > 0 ){ %>
     <div class='search-box'>
     <% for(n in help_list){ %>
