@@ -373,7 +373,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
         //var filename = uuidv4();  //CFG.PATH_TO_TMP
         //var filepath = path.join(CFG.PATH_TO_TMP, filename)
         let max_rows = 50000
-        let split_length = 10
+        let split_length = 6
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
         let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
         //let args = ['-h','"'+searchText+'"',datapath]
@@ -397,6 +397,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                     //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
                     //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
+                    console.log('pts',pts)
                     if(pts.length == split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
                       gid = pts[1].toUpperCase()
