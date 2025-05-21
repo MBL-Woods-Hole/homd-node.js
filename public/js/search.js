@@ -86,7 +86,7 @@ function show_table(obj, anno, gid){
                 }else{
                     start = parseInt(resp_data[n].start)
                 }
-                if(data[n].stop[0] === ">" ){ 
+                if(resp_data[n].stop[0] === ">" ){ 
                     stop = parseInt(resp_data[n].stop.substring(1))
                 }else{ 
                     stop = parseInt(resp_data[n].stop)
