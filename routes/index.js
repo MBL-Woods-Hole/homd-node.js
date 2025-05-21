@@ -336,8 +336,8 @@ router.post('/advanced_anno_orf_search', function advanced_anno_orf_searchPOST(r
     //console.log('pidlist',req.body.pid_list)
     let anno = req.body.anno.toUpperCase()
     
-    let q = "SELECT * from "+anno+"_meta.orf WHERE protein_id in ("+req.body.pid_list+")"
-    //console.log(q)
+    let q = "SELECT * from `"+anno+"_meta`.orf WHERE protein_id in ("+req.body.pid_list+")"
+    console.log(q)
     TDBConn.query(q, (err, rows) => {
         if (err) {
             console.log(err)
@@ -397,7 +397,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                     //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
                     //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
-                    console.log('pts',pts)
+                    //console.log('pts',pts)
                     if(pts.length == split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
                       gid = pts[1].toUpperCase()
@@ -418,7 +418,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                           start:pts[8],
 //                           stop:pts[9]
                       }
-                      console.log('tmp_obj',tmp_obj)
+                      //console.log('tmp_obj',tmp_obj)
                       if(obj2.hasOwnProperty(gid)){
                           obj2[gid].push(tmp_obj)
                       }else{
@@ -431,11 +431,11 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                 }
             }
         }
-        console.log('sort_lst1',sort_lst)
+        //console.log('sort_lst1',sort_lst)
         sort_lst.sort(function (a, b) {
            return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
         })
-        console.log('sort_lst2',sort_lst)
+        //console.log('sort_lst2',sort_lst)
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
