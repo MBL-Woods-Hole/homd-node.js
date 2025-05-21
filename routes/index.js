@@ -417,6 +417,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                           start:pts[8],
 //                           stop:pts[9]
                       }
+                      console.log('tmp_obj',tmp_obj)
                       if(obj2.hasOwnProperty(gid)){
                           obj2[gid].push(tmp_obj)
                       }else{
@@ -429,10 +430,11 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                 }
             }
         }
+        console.log('sort_lst1',sort_lst)
         sort_lst.sort(function (a, b) {
            return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
         })
-        console.log('sort_lst',sort_lst)
+        console.log('sort_lst2',sort_lst)
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
