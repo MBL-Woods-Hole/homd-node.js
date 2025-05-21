@@ -330,6 +330,28 @@ function execPromise(cmd, args, max) {
 //     }
 //     
 // }
+router.post('/advanced_anno_orf_search', function advanced_anno_orf_searchPOST(req, res) {
+    console.log('in advanced_anno_orf_search')
+    console.log(req.body)
+    //console.log('pidlist',req.body.pid_list)
+    let anno = req.body.anno.toUpperCase()
+    
+    let q = "SELECT * from "+anno+"_meta.orf WHERE protein_id in ("+req.body.pid_list+")"
+    //console.log(q)
+    TDBConn.query(q, (err, rows) => {
+        if (err) {
+            console.log(err)
+            res.send(err)
+            return
+        }
+        //console.log('rows',rows)
+        res.send(JSON.stringify(rows))
+        return
+    })
+    
+    //res.send('OKAY')
+})
+
 router.post('/advanced_site_search_grep', async function advanced_site_search_annoPOST(req, res) {
     console.log('in advanced_site_search_grep')
     console.log(req.body)
@@ -351,6 +373,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
         //var filename = uuidv4();  //CFG.PATH_TO_TMP
         //var filepath = path.join(CFG.PATH_TO_TMP, filename)
         let max_rows = 50000
+        let split_length = 10
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
         let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
         //let args = ['-h','"'+searchText+'"',datapath]
@@ -365,29 +388,40 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
         if(row_array[0] == 'too_long'){
             obj2 = {'too_long':'too_long'}
         }else{
-            //console.log('rows',rows)
+            //console.log('row_array[0]',row_array[0])
             //row_array = rows.split('\n')
             for(let n in row_array){
                 if(row_array[n] != ''){
                     
-                    
-                    // ['anno','genome_id','accession','protein_id','gene','product']
-                    // prokka|gca_045159905.1|cp077181.1|gca_045159905.1_00005||hypothetical protein
-                    // prokka|gca_045159905.1|cp077181.1|gca_045159905.1_00004|yidc2|membrane protein insertase yidc 2
+                    //ncbi|gca_045159995.1|cp077160.1|kst12_00050|wyk98014.1|hypothetical protein|942|313|6825|7766
+                    //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
+                    //0anno|1gid|2acc|3gene|4pid|5prod|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
-                    if(pts.length == 6 && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
-                     
+                    if(pts.length == split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
+                      //console.log('pts',pts)
                       gid = pts[1].toUpperCase()
                       
                       otid = C.genome_lookup[gid]['otid']
                       strain = C.genome_lookup[gid]['strain']
                       species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+                      let tmp_obj = {
+                          gid:gid,
+                          species:species,
+                          strain:strain,
+                          acc:pts[2].toUpperCase(),
+                          gene:pts[3].toUpperCase(),
+                          pid:pts[4],
+                          prod:pts[5],
+                          length_na:pts[6],
+                          length_aa:pts[7],
+                          start:pts[8],
+                          stop:pts[9]
+                      }
                       if(obj2.hasOwnProperty(gid)){
-                          
-                          obj2[gid].push({gid:gid,species:species,strain:strain,acc:pts[2].toUpperCase(),pid:pts[3].toUpperCase(),gene:pts[4],prod:pts[5]})
+                          obj2[gid].push(tmp_obj)
                       }else{
                           sort_lst.push({gid:gid,species:species,strain:strain})
-                          obj2[gid] = [{gid:gid,species:species,strain:strain,acc:pts[2].toUpperCase(),pid:pts[3].toUpperCase(),gene:pts[4],prod:pts[5]}]
+                          obj2[gid] = [tmp_obj]
                       }
                       
                       // for(let i in grep_fields){
@@ -1030,14 +1064,15 @@ function search_genomes(text_string){
           //add_genome_to_otid[el.otid] = el.organism
           el.species = C.taxon_lookup[el.otid].species
           el.genus = C.taxon_lookup[el.otid].genus
+          
           return el.gid
         }
       }
     }
   })
   //helpers.print(['gidObjList[0]',gidObjList[0]])
-  let gidLst = gidObjList.map(e => ({gid: e.gid, otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-  //helpers.print(gidLst)
+  let gidLst = gidObjList.map(e => ({gid: e.gid, strain:e.strain, otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
+  helpers.print(gidLst)
   gidLst.sort(function (a, b) {
        //console.log('a',a)
        return helpers.compareStrings_alpha(a.species, b.species);

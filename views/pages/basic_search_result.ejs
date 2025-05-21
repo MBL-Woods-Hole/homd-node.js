@@ -68,6 +68,7 @@ table td{
        <div class='title'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span> (Case Insensitive)</small>]
        </div>
 <!-- 'HMT-'+("000" + otid).slice(-3);  -->
+<span style='float:right;'><a href='advanced_site_search'>Search Again</a></span> 
     <br>
     <center><a href='advanced_site_search'>Search Genome Annotations</a></center>
     <br>Matches from <strong>Bacterial Taxon Names</strong>: (<%= Object.keys(lineageids).length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
@@ -118,7 +119,7 @@ table td{
     <% if( gids.length > 0 ){ %>
     <div class='search-box'>
     <center><table class='sortable'>
-    <tr><th nowrap>HMT-ID</th><th nowrap>Genome-ID</th><th>Taxonomy (click to sort)</th></tr>
+    <tr><th nowrap>HMT-ID</th><th nowrap>Genome-ID</th><th>Species (click to sort)</th></tr>
     <% for(n in gids){ %>
        <% gid = gids[n].gid %>
        <% otid = gids[n].otid %>
@@ -126,7 +127,7 @@ table td{
        <tr>
        <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td>
        <td><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
-       <td><a href='/genome/genome_description?gid=<%= gid %>'><%- gids[n].species %></a></td>
+       <td><a href='/genome/genome_description?gid=<%= gid %>'><%- gids[n].species %> <%- gids[n].strain %></a></td>
        </tr>
     <% } %>
     </table>
@@ -192,20 +193,6 @@ table td{
   mainmenu()
   intext = '<%= search_text %>'
   var min_size = 3
-  $(document).ready(function(){
-      console.log('in doc ready',intext)
-      if(intext.length >= min_size){
-
-         get_annotations_counts_sql(intext)    // code:search.js   sql from orf :: writes to file
-         //get_annotations_counts_partial(intext)  // grep from files  SAVE FOR ADVANCED FILTER
-
-      }else{
-          //document.getElementById('ncbi_count_div').innerHTML = 'word too small: < '+min_size.toString()+' chars.'
-          //document.getElementById('prokka_count_div').innerHTML = 'word too small: < '+min_size.toString()+' chars.'
-
-      }
-      
-      
-  });
+  
 
 </script>

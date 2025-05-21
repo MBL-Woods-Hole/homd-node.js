@@ -553,8 +553,8 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
 
 
 router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
-  //console.log('in get_NN_NA_seq -post')
-  //console.log(req.body)
+  console.log('in get_NN_NA_seq -post')
+  console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()

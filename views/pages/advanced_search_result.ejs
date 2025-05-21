@@ -103,6 +103,7 @@ table td{
 <% anno_sort_lst = JSON.parse(anno_sort_list)  %>
 <% no_ncbi_annotation = JSON.parse(no_ncbi_annot) %>
 <% anno_list2 = JSON.parse(annotationList2)  %>
+<% var cfg = JSON.parse(config) %> 
 <% var search_type  = JSON.parse(form_type) %>  <!-- array of taxonomy, genomes or annotation -->
 
 <body>
@@ -175,7 +176,7 @@ table td{
         <hr> 
 <% } %>
   
-    
+<!-- Not Used: Uses basic instead -->
 <% if(search_type.indexOf("genomes") != -1){ %> 
     Hits from Genome Metadata: <%= gids.length %> <span class='float-right small'></span>
     <% if( gids.length > 0 ){ %>
@@ -221,27 +222,33 @@ table td{
              
                
                <table id='anno-table' class='result-table2 sortable'>
-               <tr><th>Genome-ID</th><th>Species (strain)</th><th class='sorttable_nosort'># Hits</th><th class='sorttable_nosort'>Full Annotations</th></tr>
+               <tr>
+                 <th>Genome-ID</th><th>Species (strain)</th>
+                 
+                 <th class='sorttable_nosort'># Hits</th>
+                 <th class='sorttable_nosort'>Full Annotations</th>
+               </tr>
         <% for(i in anno_sort_lst){ %>
-                <% gid = anno_sort_lst[i].gid %>
-                <tr id='<%= gid %>' class='anno-row'>
-                   <td nowrap class='center'><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
-                   <td><i><%= anno_list2[gid][0].species %></i> <%= anno_list2[gid][0].strain %></td>
+            <% gid = anno_sort_lst[i].gid %>
+            <tr id='<%= gid %>' class='anno-row'>
+                <td nowrap class='center'><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
+                <td><i><%= anno_list2[gid][0].species %></i> <%= anno_list2[gid][0].strain %></td>
                    
-                   <td nowrap class='center'>
+                <td nowrap class='center'>
                        <%= anno_list2[gid].length %>
                        <% data = JSON.stringify(anno_list2[gid]) %>
-                       <small>(<a href='#' onclick="show_table('<%= data %>','<%= gid %>')">view hits</a>)</small>
-                    </td>
-                   <td nowrap class='center'>
-            <a class='pill pill-mediumorchid' href='/genome/explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
-            <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
-                <a class='pill pill-slateblue' href='/genome/explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
-            <% }else{ %>
-                <span class='pill pill-grayed' title='NCBI Annotation Not Available' href=''>NCBI</span>
-            <% } %>
-                   </td>
-                </tr>
+                       <small>(<a href='#' onclick="show_table('<%= data %>','<%= anno %>','<%= gid %>')">view hits</a>)</small>
+                </td>
+                
+                <td nowrap class='center'>
+                  <a class='pill pill-mediumorchid' href='/genome/explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
+                  <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
+                    <a class='pill pill-slateblue' href='/genome/explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+                  <% }else{ %>
+                    <span class='pill pill-grayed' title='NCBI Annotation Not Available' href=''>NCBI</span>
+                  <% } %>
+                </td>
+            </tr>
         <% } %>
                </table>
 
@@ -266,11 +273,13 @@ table td{
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script type="text/javascript" src="/js/search.js"></script>
+<script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 
 <script>
   mainmenu()
   intext = '<%= search_text %>'
+  var jb_path = '<%- cfg.JBROWSE_URL %>'
   var min_size = 3
   $(document).ready(function(){
       if(intext.length >= min_size){
@@ -284,69 +293,5 @@ table td{
       
       
   });
-  function close_anno(){
-      //console.log('inclose')
-      newbox = document.getElementById('anno-result')
-      newbox.style.display = 'none'
-      annobox.style.height = "800px"
-  };
   
-  function show_table(obj,gid){
-     var data = JSON.parse(obj)
-     //console.log('obj',data)
-     //console.log('data[gid]',data[0])
-     var html = '<center>'+gid+' | <i>'+data[0].species+'</i> | '+data[0].strain+'</center>'
-     html += "<span style='float:right;'><a href='#' onclick=\"close_anno()\">close</a></span>"
-     html += "<br><table>"
-     html += "<tr><th>Accession</th><th>Protein-ID</th><th>Gene</th><th>Gene Product</th></tr>"
-     annobox = document.getElementById('anno-div')
-     selected_row = document.getElementById(gid)
-     //console.log('selectedrow',selected_row)
-     allrows = document.getElementsByClassName('anno-row')
-     tblrows = document.getElementById("anno-table").rows
-     //console.log('rowcount-tblrows',tblrows.length)
-     //console.log('rowcount-allrows',allrows.length)
-     //for(let i = 0; i < total_hits-1; i++){
-     for(n in allrows){
-         //console.log('allrows[n]',n,allrows[n])
-        if(n <= allrows.length){
-            allrows[n].style.background = "lightgreen";
-        }
-     }
-     
-     selected_row.style.background = "white";
-     
-     
-     annobox.style.padding = "10px";
-     annobox.style.height = "400px"
-     
-     //newbox = document.getElementById(gid+'-result')
-     newbox = document.getElementById('anno-result')
-     newbox.style.display = 'block'
-     newbox.style.background = "lightblue";
-     newbox.style.padding = "10px";
-     for(n in data){
-        html += "<tr>"
-        html += "<td>"+data[n].acc+"</td>"
-        html += "<td>"+data[n].pid+"</td>"
-        html += "<td>"+data[n].gene+"</td>"
-        html += "<td>"+data[n].prod+"</td>"
-        html += "</tr>"
-     }
-     html += "</table>"
-     newbox.innerHTML = html
-  }
-// document.onreadystatechange = function() {
-//         if (document.readyState !== "complete") {
-//             document.querySelector(
-//                 '#genome-box').style.visibility = "hidden";
-//             document.querySelector(
-//                 "#loader").style.visibility = "visible";
-//         } else {
-//             document.querySelector(
-//                 "#loader").style.display = "none";
-//             document.querySelector(
-//                 '#genome-box').style.visibility = "visible";
-//         }
-// };
 </script>
