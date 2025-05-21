@@ -158,7 +158,7 @@ router.get('/poster', function poster(req, res) {
 })
 
 router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, res) {
-  console.log('advanced_site_searchGET')
+  //console.log('advanced_site_searchGET')
   res.render('pages/advanced_site_search', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage

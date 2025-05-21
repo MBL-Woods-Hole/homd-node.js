@@ -185,6 +185,31 @@
   padding-right:15px;
   font-size:12px;
 }
+
+/*  nav search: */
+#homd-menu-right {
+  display: flex;
+  flex-wrap: wrap;
+  /* width: 220px; */
+  
+  position: absolute;
+  right: 10px;
+  top:10px;
+  
+  height:50px;
+  background:steelblue;
+  color:ivory;
+  border-radius: 20px;
+  border:1px solid black;
+  
+}
+#homd-menu-right a{
+    /* border:1px solid green; */
+    background:steelblue;
+}
+
+
+
 </style>
 <div id='nav-div' >
 <ul id="nav" style='z-index:1'>
@@ -339,35 +364,37 @@
   
    
     
-	<!-- HELP -->
-	<li><span class='main-topic' >About Us</span>
-		  <ul>
-		  <li><a href="/help/index" >HOMD Help Content</a></li>
-		 <!--  <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home-obsolete</a></li> -->
-		  <!-- <li><a href="https://wiki.homd.info/help/user_guide" target='_blank'>User's Guide (in a new window)</a></li> -->
-		  <li><a href='/help/help-page?pagecode=cite'>How to Cite HOMD</a></li>
-		  <li><a href='/help/help-page?pagecode=description'>Project Description</a></li>
-		  <li><a href='/help/help-page?pagecode=strains'>Strains and DNA Availability</a></li>
-		  
-		  <li><a href='/help/help-page?pagecode=team'>People</a></li>
-		  <li><a href='/help/help-page?pagecode=publications'>Publications</a></li>
-		  <li><a href='/help/help-page?pagecode=contact'>Contact Us</a></li>
-		  <!-- <li><a href='/help/mailing'>Mailing List</a></li> -->
-		  <!-- <li><a href="/forum" target='_blank' rel="noopener noreferrer">Forum</a></li> -->
-		  <li><a href='/help/help-page?pagecode=announcement'>Announcements</a></li>
-		  </ul>
-	</li>
-		
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   <li id='last' >
-        <a href='/advanced_site_search'>Site Search</a>
-   </li>
+    <!-- HELP -->
+    <li><span class='main-topic' >About Us</span>
+          <ul>
+          <li><a href="/help/index" >HOMD Help Content</a></li>
+         <!--  <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home-obsolete</a></li> -->
+          <!-- <li><a href="https://wiki.homd.info/help/user_guide" target='_blank'>User's Guide (in a new window)</a></li> -->
+          <li><a href='/help/help-page?pagecode=cite'>How to Cite HOMD</a></li>
+          <li><a href='/help/help-page?pagecode=description'>Project Description</a></li>
+          <li><a href='/help/help-page?pagecode=strains'>Strains and DNA Availability</a></li>
+          
+          <li><a href='/help/help-page?pagecode=team'>People</a></li>
+          <li><a href='/help/help-page?pagecode=publications'>Publications</a></li>
+          <li><a href='/help/help-page?pagecode=contact'>Contact Us</a></li>
+          <!-- <li><a href='/help/mailing'>Mailing List</a></li> -->
+          <!-- <li><a href="/forum" target='_blank' rel="noopener noreferrer">Forum</a></li> -->
+          <li><a href='/help/help-page?pagecode=announcement'>Announcements</a></li>
+          </ul>
+    </li>
+        
+<span id='homd-menu-right' style='background:steelblue;'>
+   
+          <a href='/advanced_site_search'>Site Search</a> 
+          <!-- <img src='/images/search2.png' height='20' id="search_button" /> -->
   
+</span>
+   
     <!--  <img src="/images/search2.png" height='20' alt="LookingGlass" /> -->
 </ul>
+
+
 </div>
-
-
 <span id='login-text'>
 <%   if(user && user.username){ %>
         <% if(user.security_level === 1){ %>

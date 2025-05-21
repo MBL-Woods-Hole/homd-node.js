@@ -1,15 +1,15 @@
 // Get the search box input field
-var input = document.getElementById("search_text");
-// Execute a function when the user releases a key on the keyboard
-input.addEventListener("keyup", function(event) {
-  // Number 13 is the "Enter" key on the keyboard
-  if (event.keyCode === 13) {
-    // Cancel the default action, if needed
-    event.preventDefault();
-    // Trigger the button element with a click
-    document.getElementById("search_button").click();
-  }
-});
+// var input = document.getElementById("search_text");
+// // Execute a function when the user releases a key on the keyboard
+// input.addEventListener("keyup", function(event) {
+//   // Number 13 is the "Enter" key on the keyboard
+//   if (event.keyCode === 13) {
+//     // Cancel the default action, if needed
+//     event.preventDefault();
+//     // Trigger the button element with a click
+//     document.getElementById("search_button").click();
+//   }
+// });
 
 // this should run on every page for main menu open speed
 function mainmenu(){
@@ -55,26 +55,26 @@ function close_flash(m){
 // }
 
 
-function basic_search(){
-  //var form = document.getElementById('menu-search')
-  searchText = document.getElementById('search_text').value.trim()
-  if(!searchText)
-    return
-  var f = document.createElement("form");
-  f.setAttribute('method',"post");
-  f.setAttribute('action',"/basic_site_search"); 
-  
-  //create input element
-  var i = document.createElement("input");
-  i.type = "text";
-  i.name = "intext";
-  i.id = "intext";
-  i.value = searchText
-  // add all elements to the form
-  f.appendChild(i);
-  document.getElementsByTagName('body')[0].appendChild(f); //pure javascript
-  f.submit()
-}
+// function basic_search(){
+//   //var form = document.getElementById('menu-search')
+//   searchText = document.getElementById('search_text').value.trim()
+//   if(!searchText)
+//     return
+//   var f = document.createElement("form");
+//   f.setAttribute('method',"post");
+//   f.setAttribute('action',"/basic_site_search"); 
+//   
+//   //create input element
+//   var i = document.createElement("input");
+//   i.type = "text";
+//   i.name = "intext";
+//   i.id = "intext";
+//   i.value = searchText
+//   // add all elements to the form
+//   f.appendChild(i);
+//   document.getElementsByTagName('body')[0].appendChild(f); //pure javascript
+//   f.submit()
+// }
 
 function shift_page_view(item){
     //all_groups = ['top','taxon','abundance','genome','phylo','phage','refseq','schema']

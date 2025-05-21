@@ -108,8 +108,8 @@ function show_table(obj, anno, gid){
                 let highlight = seqacc+":"+start.toString()+".."+stop.toString()
                 
                 html += "<tr>"
-                html += "<td>"+resp_data[n].accession+"</td>"
-                html += "<td>"+resp_data[n].protein_id+"</td>"
+                html += "<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+resp_data[n].accession+"' target='_blank'>"+resp_data[n].accession+"</a></td>"
+                html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].protein_id+"' target='_blank'>"+resp_data[n].protein_id+"</td>"
                 html += "<td class='center'>" 
                 //in genomes.js open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
                 html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"

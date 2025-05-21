@@ -203,7 +203,7 @@ table td{
 <% if(search_type.indexOf("annotations") != -1){ %> 
     
     
-    Annotations <small>(Searches only Genome-IDs, Accessions(Molecule), Protein-IDs, Gene and Gene Product (~20M records)):<span class='small'></span></small>
+     <%= anno.toUpperCase() %> Annotations <small>(Searches only Genome-IDs, Accessions(Molecule), Protein-IDs, Gene and Gene Product (~20M records)):<span class='small'></span></small>
      <% if(anno_list2.hasOwnProperty("too_long")){  %>
         <br>Hits: ><%= max %>
     <% }else{ %>
