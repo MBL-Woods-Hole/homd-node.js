@@ -424,23 +424,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                           obj2[gid] = [tmp_obj]
                       }
                       
-                      // for(let i in grep_fields){
-//                             //obj[grep_fields[i]] = pts[i]
-//                             if(grep_fields[i] == 'genome_id'){
-//                                 obj.genome_id = pts[i].toUpperCase()
-//                             }else if(grep_fields[i] == 'accession'){
-//                                 obj.accession = pts[i].toUpperCase()
-//                             }else if(grep_fields[i] == 'protein_id'){
-//                                 obj.protein_id = pts[i].toUpperCase()
-//                             }else if(grep_fields[i] == 'gene'){
-//                                 obj.gene = pts[i].toUpperCase()
-//                             }else if(grep_fields[i] == 'product'){
-//                                 obj.product = pts[i]
-//                             }else{
-//                                 obj[grep_fields[i]] = pts[i]
-//                             }
-//                       }
-//                       obj_array.push(obj)
+
                     }
                 }
             }
@@ -448,7 +432,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
         sort_lst.sort(function (a, b) {
            return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
         })
-        //console.log('sort_lst',sort_lst)
+        console.log('sort_lst',sort_lst)
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
