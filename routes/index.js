@@ -395,7 +395,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                     
                     //ncbi|gca_045159995.1|cp077160.1|kst12_00050|wyk98014.1|hypothetical protein|942|313|6825|7766
                     //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
-                    //0anno|1gid|2acc|3gene|4pid|5prod|6lna|7laa|8start|9stop
+                    //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
                     if(pts.length == split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
@@ -411,11 +411,11 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                           acc:pts[2].toUpperCase(),
                           gene:pts[3].toUpperCase(),
                           pid:pts[4],
-                          prod:pts[5],
-                          length_na:pts[6],
-                          length_aa:pts[7],
-                          start:pts[8],
-                          stop:pts[9]
+                          prod:pts[5]
+                          // length_na:pts[6],
+//                           length_aa:pts[7],
+//                           start:pts[8],
+//                           stop:pts[9]
                       }
                       if(obj2.hasOwnProperty(gid)){
                           obj2[gid].push(tmp_obj)
