@@ -142,28 +142,7 @@
    color:orange;
 }
 
-.main-topic-right{
-  
-}
- 
-/*  nav search: */
-#last {
-   /* border:1px solid yellow; */
-   /* height:15px; */
-}
-#last a{
-   /* padding-bottom:5px; */
-}
-#last a:hover{
-  /* kludge */
-  /* border:1px solid green; */
- 
-}
-#last img{
-  /* border:1px solid red; */
-  
- 
-}
+
 
  
 
@@ -194,20 +173,24 @@
   
   position: absolute;
   right: 10px;
-  top:10px;
+  top:0px;
   
-  height:50px;
+  height:33px;
   background:steelblue;
   color:ivory;
   border-radius: 20px;
   border:1px solid black;
   
 }
-#homd-menu-right a{
-    /* border:1px solid green; */
-    background:steelblue;
-}
 
+
+#homd-menu-right:hover{
+  /* kludge */
+  border:1px solid green;
+  background:ivory;
+  color:green;
+  cursor: pointer;
+}
 
 
 </style>
@@ -383,12 +366,11 @@
           </ul>
     </li>
         
-<span id='homd-menu-right' style='background:steelblue;'>
+
    
-          <a href='/advanced_site_search'>Site Search</a> 
-          <!-- <img src='/images/search2.png' height='20' id="search_button" /> -->
+    <a id='homd-menu-right' href='/advanced_site_search'>Site Search</a> 
   
-</span>
+
    
     <!--  <img src="/images/search2.png" height='20' alt="LookingGlass" /> -->
 </ul>
