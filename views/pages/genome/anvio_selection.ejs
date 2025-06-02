@@ -30,46 +30,29 @@ table{
 <tr>
   <td><b>Available Pangenomes</b><br><small>(Link opens pangenome in Anvio`)</small></td>
   <th>HOMD Genome Version</th>
-  <th>Size<br>(MB)</th><th>Description</th>
-  <th>Download<br>Files v7</th>
-  <th>Download<br>Files v8</th>
+  <th>Description</th>
+  
 </tr>
 
 <% for(i in pgs){ %>
  <% if(pgs[i].on_vamps){ %>
-   <% url = pgs[i].pangenome_name + pgs[i].homd_genome_version.replace('.','_') %>
-   <% url_aws = pgs[i].pangenome_name %>
+   
+   <% url = pgs[i].pangenome_name %>
    <tr>
    <td nowrap>
      
-     <a href='#' class='pg' onclick="find_anvio('<%= url %>','vamps')">
+     <a href='#' class='pg' onclick="find_anvio('<%= url %>','homd')">
         <%- pgs[i].pangenome_name %></a>
-         <small>(VAMPS)</small>
-     <% if(pgs[i].pangenome_name == 'Mitis_Group'){ %>
-        <br><a href='#' class='pg' onclick="find_anvio('<%= url_aws %>','homd')">Mitis_Group</a> <small>(AWS testing)</small>
-     <% } %>
-     <% if(pgs[i].pangenome_name == 'Prochlorococcus_31'){ %>
-        <br><a href='#' class='pg' onclick="find_anvio('<%= url_aws %>','homd')">Prochlorococcus_31</a> <small>(AWS testing)</small>
-     <% } %>
-  
+         
+     
   </td>
   <td nowrap  class='center'>
     <%- pgs[i].homd_genome_version %>
   </td>
-  <td><%= pgs[i].file_size %></td>
+  
   <td><%- pgs[i].description %></td>
   
-  <% if(cfg.PANGENOME_DOWNLOAD_FILES.hasOwnProperty(url) && cfg.PANGENOME_DOWNLOAD_FILES[url].hasOwnProperty("dnld_v7")){ %>
-  
-     <td class='center'><a href="/download/dld_static_file/<%= cfg.PANGENOME_DOWNLOAD_FILES[url]['dnld_v7'] %>"><i class="fa fa-download" aria-hidden="true"></i></a></td>
-  <% }else{ %>
-     <td class='center'></td>
-  <% } %>
-  <% if(cfg.PANGENOME_DOWNLOAD_FILES.hasOwnProperty(url) && cfg.PANGENOME_DOWNLOAD_FILES[url].hasOwnProperty("dnld_v8")){ %>
-     <td class='center'><a href="/download/dld_static_file/<%= cfg.PANGENOME_DOWNLOAD_FILES[url]['dnld_v8'] %>"><i class="fa fa-download" aria-hidden="true"></i></a></td>
-  <% }else{ %>
-     <td class='center'></td>
-  <% } %>
+ 
   
  </tr>
 <% } %>
@@ -106,7 +89,7 @@ function find_anvio(pg,source){
     target = 'anvio_post'
     args = {}
     args.pg = pg;
-    args.source = source
+    
 
     xmlhttp.open("POST", target, false);
     xmlhttp.setRequestHeader("Content-type","application/json");
