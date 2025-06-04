@@ -1871,7 +1871,7 @@ router.get('/anvio-server', function anvio_server(req, res){
 // 			// 
 // 			//            if(CFG.PATH_TO_STATIC_DOWNLOADS
 //        }
-       
+       //console.log('rows',rows)
        res.render('pages/genome/anvio_selection', {
         title: 'HOMD :: Anvio', 
         pgname: '', // for AboutThisPage
@@ -1886,95 +1886,25 @@ router.get('/anvio-server', function anvio_server(req, res){
     })
 })
 //
-function walk(dir){
-// a simple walk method
 
- 
-    // get the contents of dir
-    console.log('dir',dir)
-    
-    fs.readdir(dir, (e, items) => {
-         
-        // for each item in the contents
-        if(e){
-          console.log('e',e)
-          return
-        }else{
-          items.forEach((item) => {
-             
-            // get the item path
-            let itemPath = path.join(dir, item);
- 
-            // get the stats of the item
-            fs.stat(itemPath, (e, stats) => {
- 
-                // Just log the item path for now
-                console.log('walking',itemPath);
- 
-                // for now just use stats to find out
-                // if the current item is a dir
-                if (stats.isDirectory()) {
- 
-                    // if so walk that too, by calling this
-                    // method recursively
-                    walk(itemPath);
- 
-                }
- 
-            });
- 
-          });
-        }
-        
- 
-    });
- 
-};
 
-router.post('/anvio_post', (req, res) => {
-    console.log('In anvio_post',req.body)
-    
-    helpers.accesslog(req, res)
-    let url
-    let pg = req.body.pg
-    
-    
-    console.log('Selected Pangenome:',pg)
-    //let port = anvio_ports()
-    //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
-    //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
-    
-    url = CFG.ANVIO_URL + '/' + pg
-    
-    
-    console.log('Opening ',url)
-    // localhost:::   http://localhost:3010
-    // Dev      :::   https://anvio.homd.org/anvio
-    //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
-    // if(CFG.DBHOST == 'localhost'){
-//         url = "http://localhost:3010?pg="+pg
-//     }else{
-//         url = "https://anvio.homd.org/anvio?pg="+pg
-//     }
-    return res.send(url)
-});
-// router.post('/anvio_post2', (req, res) => {
-//     console.log('In anvio_post2',req.body)
+// router.post('/anvio_post', (req, res) => {
+//     console.log('In anvio_post',req.body)
 //     
-//     //helpers.accesslog(req, res)
-//     
+//     helpers.accesslog(req, res)
+//     let url
 //     let pg = req.body.pg
-//     if(!pg){
-//         pg = 'Veillonella_HMT780'
-//     }
+//     
+//     // pg needs to be exactly as is is on 1.233::/mnt/efs/homd_v4/pangenomes_homd
 //     console.log('Selected Pangenome:',pg)
 //     //let port = anvio_ports()
 //     //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
 //     //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
-//     // https://anvio.homd.org/anvio
-//     //let url = CFG.ANVIO_URL + '?pg=' + pg
-//     let url = 'https://bioinformatics.forsyth.org/anvio' + '?pg=' + pg
-//     console.log('trying',url)
+//     
+//     url = CFG.ANVIO_URL + '/' + pg
+//     
+//     
+//     console.log('Opening ',url)
 //     // localhost:::   http://localhost:3010
 //     // Dev      :::   https://anvio.homd.org/anvio
 //     //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
@@ -1985,6 +1915,39 @@ router.post('/anvio_post', (req, res) => {
 // //     }
 //     return res.send(url)
 // });
+router.get('/anvio_iframe', (req, res) => {
+    console.log('In anvio_iframe')
+    
+    //helpers.accesslog(req, res)
+    
+    let pg = req.query.pg
+    
+    console.log('Selected Pangenome:',pg)
+    //let port = anvio_ports()
+    //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
+    //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
+    // https://anvio.homd.org/anvio
+    //let url = CFG.ANVIO_URL + '?pg=' + pg
+    
+    // localhost:::   http://localhost:3010
+    // Dev      :::   https://anvio.homd.org/anvio
+    //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
+    // if(CFG.DBHOST == 'localhost'){
+//         url = "http://localhost:3010?pg="+pg
+//     }else{
+//         url = "https://anvio.homd.org/anvio?pg="+pg
+//     }
+
+    res.render('pages/genome/anvi_server_iframe', {
+        title: 'HOMD :: Anvio', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        user: JSON.stringify(req.user || {}),
+        pangenome: pg,
+        
+        })
+});
 
 //
 router.get('/oralgen', function oralgen(req, res) {

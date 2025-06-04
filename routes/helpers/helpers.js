@@ -433,4 +433,47 @@ module.exports.filter_for_phylum = function filter_for_phylum(obj_list, phylum){
     return new_obj_list
 }
 
+module.exports.walk = function walk(dir){
+// a simple walk method
 
+ 
+    // get the contents of dir
+    console.log('dir',dir)
+    
+    fs.readdir(dir, (e, items) => {
+         
+        // for each item in the contents
+        if(e){
+          console.log('e',e)
+          return
+        }else{
+          items.forEach((item) => {
+             
+            // get the item path
+            let itemPath = path.join(dir, item);
+ 
+            // get the stats of the item
+            fs.stat(itemPath, (e, stats) => {
+ 
+                // Just log the item path for now
+                console.log('walking',itemPath);
+ 
+                // for now just use stats to find out
+                // if the current item is a dir
+                if (stats.isDirectory()) {
+ 
+                    // if so walk that too, by calling this
+                    // method recursively
+                    walk(itemPath);
+ 
+                }
+ 
+            });
+ 
+          });
+        }
+        
+ 
+    });
+ 
+};

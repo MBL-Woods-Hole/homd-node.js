@@ -23,6 +23,8 @@ table{
     <div class='page-content' >
 
     <div class='title'>HOMD Pangenome Selection</div>
+<!-- iFrame or New_Window? -->
+<% mode = 'iframe'  // 'new_window'  'iframe' %>
 
 <div id='pgtable'>
 <center>
@@ -35,27 +37,27 @@ table{
 </tr>
 
 <% for(i in pgs){ %>
- <% if(pgs[i].on_vamps){ %>
-   
-   <% url = pgs[i].pangenome_name %>
+
    <tr>
-   <td nowrap>
-     
-     <a href='#' class='pg' onclick="find_anvio('<%= url %>','homd')">
+    <% if(mode=="new_window"){ %>
+      <td nowrap><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].pangenome_name %>','homd')">
         <%- pgs[i].pangenome_name %></a>
-         
-     
-  </td>
-  <td nowrap  class='center'>
+      </td>
+   <% }else{ %>
+      <td><a href='anvio_iframe?pg=<%= pgs[i].pangenome_name %>' class='pg'>
+        <%- pgs[i].pangenome_name %> 2</a>
+      </td>
+    <% } %>
+   <td nowrap  class='center'>
     <%- pgs[i].homd_genome_version %>
-  </td>
+   </td>
   
-  <td><%- pgs[i].description %></td>
+   <td><%- pgs[i].description %></td>
   
  
   
  </tr>
-<% } %>
+
 <% } %>
 
 </table>
@@ -78,8 +80,8 @@ table{
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-
-
+  
+  anvio_path = '<%- cfg.ANVIO_URL %>'
 function find_anvio(pg,source){
     // called on click of pg link
     //loader.showLoader();
@@ -87,33 +89,13 @@ function find_anvio(pg,source){
     document.getElementById('message').innerHTML = ''
     //console.log(pg)
     target = 'anvio_post'
+    //target = 'anvio_iframe'
     args = {}
     args.pg = pg;
+    console.log('anvio_path',anvio_path)
+    window.open(anvio_path + '/' + pg,'_blank')
+    return
     
-
-    xmlhttp.open("POST", target, false);
-    xmlhttp.setRequestHeader("Content-type","application/json");
-    xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState == 4 ) {
-         var prelimurl = xmlhttp.responseText;
-         // port will be '0' if no ports left
-         //var url = parseInt(result)
-         console.log('Return url',prelimurl)
-         
-            //url = 'http://localhost:3010?pg=Prochlorococcus_31'
-            //url = 'http://anvio.homd.org/anvio?pg=Prochlorococcus_31'
-            //delay(result)
-            window.open(prelimurl,'_blank')
-          
-         // }else{
-//             loader.hideLoader();
-//             text = "No Ports available to open Anvio`"
-//             document.getElementById('message').innerHTML = result
-//          }
-         
-      }
-    };
-    xmlhttp.send(JSON.stringify(args));
   }
 // function find_anvio2(pg){
 //     // called on click of pg link
