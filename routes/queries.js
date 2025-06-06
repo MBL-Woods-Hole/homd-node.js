@@ -103,7 +103,8 @@ module.exports.get_lineage_query = (otid) => {
 //   return qSelectAnno
 // }
 module.exports.get_all_pangenomes_query = () => {
-    let q = 'SELECT pangenome_name,homd_genome_version,description,on_vamps FROM pangenome_v4 ORDER by pangenome_name'
+    let q = "SELECT pangenome_name,homd_genome_version,description FROM pangenome_v4"
+    q += " WHERE active='1' ORDER by pangenome_name"
     return q
 }
 module.exports.get_pangenomes_query = (otid) => {

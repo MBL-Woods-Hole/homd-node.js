@@ -5,7 +5,7 @@ table{
 }
 #pgtable{
    
-   padding:20px;
+   padding:0 20px;
 }
 #pgtable td,th{
    padding: 5px 10px;
@@ -22,17 +22,21 @@ table{
     
     <div class='page-content' >
 
-    <div class='title'>HOMD Pangenome Selection</div>
+    <div class='title'>HOMD Available Pangenomes</div>
+    <br>
+    <center>
+         Anvi`o (<a href='https://anvio.org/' target='_blank'>https://anvio.org</a>) is used to display pangenomes. Anvi`o is a visualization platform for microbial 'omics.
+    </center>
 <!-- iFrame or New_Window? -->
-<% mode = 'iframe'  // 'new_window'  'iframe' %>
+<% mode = "iframe"  // 'new_window'  'iframe' %>
 
 <div id='pgtable'>
 <center>
-<table border='1'>
+<table class='sortable' border='1'>
 <tr>
-  <td><b>Available Pangenomes</b><br><small>(Link opens pangenome in Anvio`)</small></td>
-  <th>HOMD Genome Version</th>
-  <th>Description</th>
+  <td nowrap><b>Pangenome Name</b><br><small>(Link opens pangenome in Anvi`o)<br>Click to Sort</small></td>
+  <th class="sorttable_nosort">HOMD Genome Version</th>
+  <th class="sorttable_nosort">Description</th>
   
 </tr>
 
@@ -45,7 +49,7 @@ table{
       </td>
    <% }else{ %>
       <td><a href='anvio_iframe?pg=<%= pgs[i].pangenome_name %>' class='pg'>
-        <%- pgs[i].pangenome_name %> 2</a>
+        <%- pgs[i].pangenome_name %></a>
       </td>
     <% } %>
    <td nowrap  class='center'>
@@ -77,6 +81,7 @@ table{
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
