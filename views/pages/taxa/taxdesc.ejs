@@ -507,7 +507,19 @@
 
   </td></tr>
   
-  
+  <tr>
+    <td class='taxon-bold tbl-title'>Number of<br>Genome Sequences:</td>
+    <td class='taxon-data'>
+      
+      <% g_length = data_lookup.genomes.length %>
+      <% if(g_length === 0){ %>
+       No Genomes
+      <% }else{ %>
+       <%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> See List </a>
+      <% } %>
+      
+    </td>
+  </tr>
   <tr>
     <td class='taxon-bold tbl-title'><a href='/genome/anvio-server'>Pangenome(s)</a>:</td>
     <td class='taxon-data'>
@@ -539,8 +551,6 @@
          <td class='taxon-data'>No Abundance Data</td>
     <% } %>
   </tr>
-  
-
   
   <tr>
     <td class='taxon-bold tbl-title'>Proteomics:</td>
@@ -598,19 +608,7 @@
       
     </td>
   </tr>
-  <tr>
-    <td class='taxon-bold tbl-title'>Number of<br>Genome Sequences:</td>
-    <td class='taxon-data'>
-      
-      <% g_length = data_lookup.genomes.length %>
-      <% if(g_length === 0){ %>
-       No Genomes
-      <% }else{ %>
-       <%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> See List </a>
-      <% } %>
-      
-    </td>
-  </tr>
+  
   <tr>
     <td class='taxon-bold tbl-title'>Phylogenetic Trees:</td>
     <td class='taxon-data'>

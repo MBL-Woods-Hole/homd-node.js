@@ -230,7 +230,7 @@ function apply_species(lst){
 router.get('/reset_gtable', function gen_table_reset(req, res) {
    //console.log('in RESET-session')
    req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
-   res.redirect('back');
+   res.redirect('genome_table');
 });
 router.get('/genome_table', function genome_table(req, res) {
     
@@ -258,8 +258,9 @@ router.get('/genome_table', function genome_table(req, res) {
     //filter = helpers.get_default_gtable_filter()
     req.session.gtable_filter = filter
     
-    
-    if(req.query.otid){
+    let filter_on = 'off'
+    if(req.query.otid){ 
+       
     //console.log('GT GOT otid',otid)
        // reset gtable_filter here because we are coming from tax_table button
        // and expect to see the few genomes for this one taxon
@@ -327,7 +328,12 @@ router.get('/genome_table', function genome_table(req, res) {
         }
     })
     // DONOT SORT HERE == SORT IN FILTER
-    args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
+    if(req.query.otid){
+       filter_on = 'on'
+    }else{
+       filter_on = get_filter_on(filter,'genome')
+    }
+    args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: filter_on}
     //console.log('list[0]',send_list[0])
     renderGenomeTable(req, res, args)
 

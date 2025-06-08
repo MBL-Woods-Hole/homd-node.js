@@ -79,7 +79,7 @@ pagedata {
     <th class='col7' scope='col' >Contigs</th>
     <th class='col8' scope='col' >Combined<br>Length</th>
     <th class='col9' scope='col' >GC(%)</th>
-    <th class="col10 sorttable_nosort" scope='col' >Genome Info and Tools</th>
+    <th class="col10 sorttable_nosort" scope='col' >More Information and Tools</th>
     <th class="col11 sorttable_nosort" scope='col' >Annotations</th>
     </tr>
     </thead>
@@ -117,10 +117,10 @@ pagedata {
         <td class='center'><%= ginfo[n].gc %></td>
         <% gc2 = (parseFloat(ginfo[n].gc)/100).toFixed(2) %>
         <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info</a>
-            <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Genome Info</a>
+            <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Description</a>
             <!-- <a class='pill pill-lightseagreen' href='<%= cfg.JBROWSE_URL %>/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome ViewerO</a> -->
           <!-- <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse_in_new_window('<%= ginfo[n].gid %>|<%= ginfo[n].gc %>')">Genome Viewer</a> -->
-        <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Genome Viewer</a>
+        <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Viewer</a>
         <a class='pill pill-midnightblue' href='#' onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>","_self")'>BLAST</a> 
           
        

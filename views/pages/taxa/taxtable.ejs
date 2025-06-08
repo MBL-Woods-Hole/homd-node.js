@@ -66,7 +66,7 @@ thead th { position: sticky; top: 0; }
         <th class="col9 sorttable_nosort" nowrap></th>
         <th class="col10 sorttable_nosort" nowrap></th>
  -->
-        <th class="col8head sorttable_nosort" >Links</th>
+        <th class="col8head sorttable_nosort" >More Information</th>
         
         <th class="col11 sorttable_nosort">Genome Size</th>
       </tr>
@@ -88,28 +88,30 @@ thead th { position: sticky; top: 0; }
        
      <!--   <td><%= list[n].sites  %></td> -->
       <td class="col8head" nowrap>
+       <center>
        <% if(list[n].ecology === 1){ %>
              <a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>&otid=<%= otid %>" class="pill pill-green" >Ecology</a>
        <% }else{ %>
              <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
-             <a href="#" style='visibility:hidden;' class="pill pill-green" >Ecology</a>  <!-- visibility:hidden will maintain space -->
+             <a href="#" class="pill pill-grayed" >Ecology</a>  <!-- visibility:hidden will maintain space -->
        <% } %>
-       &nbsp;&nbsp;<a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Taxon Description</a>
+       &nbsp;&nbsp;<a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Description</a>
        
        <% num_genomes = list[n].genomes.length %>
        
        <% if(num_genomes === 0){ %>
-              <a href="#" style='visibility:hidden;' class="pill pill-aqua" >1 Genome</a>
-       <% }else if(num_genomes === 1){ %> 
-              &nbsp;&nbsp;<a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-aqua" >1 Genome</a>
+              &nbsp;&nbsp;<a href="#" class="pill pill-grayed" >Genomes</a>
+              &nbsp;&nbsp;&nbsp;&nbsp;
        <% }else{ %>
-              &nbsp;&nbsp;<a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-aqua" ><%= num_genomes %> Genomes</a>
+              &nbsp;&nbsp;<a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-aqua" >Genomes</a>
+              <%= num_genomes %>
        <% } %>
-       </td>
        
+       </center>
        
-       
-       <td class="col11" title='<%= list[n].tlength_str  %>' nowrap><%= list[n].tlength_str  %>
+      </td>
+
+      <td class="col11" title='<%= list[n].tlength_str  %>' nowrap><%= list[n].tlength_str  %></td>
        </tr>
      <% } %>
      </tbody>
