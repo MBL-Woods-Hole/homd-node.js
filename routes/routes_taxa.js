@@ -412,7 +412,7 @@ function get_taxon_pangenomes(q) {
     })
 }
 //router.get('/tax_description', function tax_description(req, res){
-router.get('/tax_description', async (req, res) => {
+router.get('/tax_description', async function tax_description(req, res) {
   // let myurl = url.parse(req.url, true);
   //helpers.print(['pre data1',C.taxon_lookup[389]])
   let otid = req.query.otid.replace(/^0+/,'')   // remove leading zeros
@@ -545,7 +545,7 @@ router.get('/tax_description', async (req, res) => {
   // TODO use query here instead of data1,data2....
   // 
   lookup_data = C.taxon_lookup[otid]
-  //helpers.print(['lookup_data',lookup_data])
+  helpers.print(['lookup_data',lookup_data])
   if(otid in C.link_exceptions){
 	links = C.link_exceptions[otid]
   }else{
@@ -1602,6 +1602,25 @@ router.get('/tree_d3', function tree_d3(req, res) {
           
         })
       }
+    })
+})
+router.get('/pangenome_pdf', function tree_d3(req, res) {
+    let otid = req.query.otid
+    let q = "SELECT filename from pangenome_files WHERE otid='"+otid+"'"
+    console.log(q)
+    //console.log(q)
+    TDBConn.query(q, (err, rows) => {
+       if (err) {
+          console.log(err)
+          return
+        }
+        console.log(rows)
+        if(rows.length == 0){
+           res.send('File not found');
+        }else{
+          let filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdfs/HMT_"+otid+"/"+rows[0].filename
+          res.sendFile(filepath);
+        }
     })
 })
 ////////////////////////////////////////////////////////////////////////////////////

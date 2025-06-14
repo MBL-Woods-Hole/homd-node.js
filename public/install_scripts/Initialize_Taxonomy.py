@@ -74,6 +74,7 @@ def create_taxon(otid):
     taxon['synonyms'] = []
     taxon['sites'] = []
     taxon['pangenomes'] = []
+    taxon['pangenome_file'] = 0
     return taxon
 
 
@@ -311,13 +312,16 @@ def run_pangenomes(args):
     global master_lookup
     # query for taxon description page
     #q =  "SELECT otid, name as pangenome from pangenome"
-    q = "SELECT otid, pangenome_name as pangenome from pangenome_genome"
+    q = "SELECT otid, pangenome_name as pangenome,filename from pangenome_genome"
     q += " JOIN `"+genome_tbl+"` using(genome_id)"
-
+    q += " RIGHT JOIN pangenome_files using(otid)"
+    print(q)
     result = myconn.execute_fetch_select_dict(q)
     for obj in result:
         otid = str(obj['otid'])
         if otid in master_lookup:
+            
+            master_lookup[otid]['pangenome_file'] = obj['filename']
             
             if obj['pangenome'] not in master_lookup[otid]['pangenomes']:
                 master_lookup[otid]['pangenomes'].append(obj['pangenome'])
@@ -736,7 +740,7 @@ if __name__ == "__main__":
     run_ref_strain(args)   # in master_lookup
 
     run_rrna_sequences(args)  # in master_lookup
-    #run_pangenomes(args)   # in master_lookup
+    run_pangenomes(args)   # in master_lookup
 
     print_master_lookup(args)
 

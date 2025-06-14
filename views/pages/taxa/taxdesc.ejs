@@ -521,15 +521,19 @@
     </td>
   </tr>
   <tr>
-    <td class='taxon-bold tbl-title'><a href='/genome/anvio-server'>Pangenome(s)</a>:</td>
+    <td class='taxon-bold tbl-title'>Pangenome(s):</td>
     <td class='taxon-data'>
-    <% if(data_lookup.pangenomes.length > 0){ %>
+    <% if(data_lookup.pangenomes.length > 0 && data_lookup.pangenomes[0]){ %>
     <%   for(n in data_lookup.pangenomes){ %>
            <a href='<%= links.anviserver_link %><%= data_lookup.pangenomes[n] %>' target='_blank'>(Genomes V10.1)
            <%= data_lookup.pangenomes[n] %></a>
     <%   } %>
     <% }else{ %>
-       No Pangenome Assembly Available yet.
+       No Anvi`o Pangenome Assembly Available yet.
+    <% } %>
+    <% if(data_lookup.pangenome_file){ %>
+        <br>
+        <a href='pangenome_pdf?otid=<%= otid %>'>Open PDF</a>
     <% } %>
     </td>
   </tr>
