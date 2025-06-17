@@ -1604,24 +1604,37 @@ router.get('/tree_d3', function tree_d3(req, res) {
       }
     })
 })
-router.get('/pangenome_pdf', function tree_d3(req, res) {
-    let otid = req.query.otid
-    let q = "SELECT filename from pangenome_files WHERE otid='"+otid+"'"
-    console.log(q)
-    //console.log(q)
-    TDBConn.query(q, (err, rows) => {
-       if (err) {
-          console.log(err)
-          return
-        }
-        console.log(rows)
-        if(rows.length == 0){
-           res.send('File not found');
-        }else{
-          let filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdfs/HMT_"+otid+"/"+rows[0].filename
-          res.sendFile(filepath);
-        }
-    })
+router.get('/pangenome_image', function tree_d3(req, res) {
+    console.log(req.query)
+    let otid,pg,ext,filepath
+    // if otid is present get filename from db
+    if(req.query.otid){
+        //otid = req.query.otid
+		// else pg and extension must be present
+		let q = "SELECT filename from pangenome_files WHERE otid='"+req.query.otid+"'"
+		console.log(q)
+		//console.log(q)
+		TDBConn.query(q, (err, rows) => {
+		   if (err) {
+			  console.log(err)
+			  return
+			}
+			console.log(rows)
+			if(rows.length == 0){
+			   res.send('File not found');
+			}else{
+			  filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdf/HMT_"+req.query.otid+"/"+rows[0].filename
+			  res.sendFile(filepath);
+			}
+		})
+	}else{
+	   // get directly from files system using ext and pg name
+	   ext = req.query.ext
+	   pg = req.query.pg
+	   filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/"+ext+'/'+req.query.pg+'.'+ext
+	   console.log('fpath',filepath)
+	   res.sendFile(filepath)
+	}
 })
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////

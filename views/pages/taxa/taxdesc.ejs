@@ -529,11 +529,11 @@
            <%= data_lookup.pangenomes[n] %></a>
     <%   } %>
     <% }else{ %>
-       No Anvi`o Pangenome Assembly Available yet.
+       <small>No Interactive Anvi`o Pangenome Available.</small>
     <% } %>
     <% if(data_lookup.pangenome_file){ %>
         <br>
-        <a href='pangenome_pdf?otid=<%= otid %>'>Open PDF</a>
+        <a href='pangenome_image?otid=<%= otid %>&ext=pdf'>Open Anvi`o Pangenome PDF</a>
     <% } %>
     </td>
   </tr>
