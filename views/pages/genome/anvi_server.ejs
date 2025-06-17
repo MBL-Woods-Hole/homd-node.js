@@ -1,0 +1,34 @@
+<% var cfg = JSON.parse(config) %> 
+<style>
+
+</style>
+<% cfg = JSON.parse(config) %>
+
+
+
+<body>
+    
+   
+        
+        <center><div id='loader-div'></div></center>
+        
+
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  var pg = '<%- pangenome %>'
+  var config = JSON.parse('<%- config %>')
+  //console.log('pg',pg)
+  mainmenu()
+ document.getElementById('loader-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Finding '+pg+'...</div>'
+  url = config.ANVIO_URL+"/"+pg
+  console.log('url',url)
+  window.open(url,'_self')
+</script>
+
+

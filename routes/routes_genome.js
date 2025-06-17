@@ -1943,8 +1943,8 @@ router.get('/anvio_iframe', (req, res) => {
 //     }else{
 //         url = "https://anvio.homd.org/anvio?pg="+pg
 //     }
-
-    res.render('pages/genome/anvi_server_iframe', {
+    res.render('pages/genome/anvi_server', {
+    //res.render('pages/genome/anvi_server_iframe', {
         title: 'HOMD :: Anvio', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
