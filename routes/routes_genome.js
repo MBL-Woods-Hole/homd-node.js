@@ -1858,7 +1858,7 @@ function get_blast_db_info(gid){
     })
 }
 //
-router.get('/anvio-server', function anvio_server(req, res){
+router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
    let q = queries.get_all_pangenomes_query()
    TDBConn.query(q, (err, rows) => {
        //console.log('pangenome rows[0]',rows[0])
@@ -1894,35 +1894,9 @@ router.get('/anvio-server', function anvio_server(req, res){
 //
 
 
-// router.post('/anvio_post', (req, res) => {
-//     console.log('In anvio_post',req.body)
-//     
-//     helpers.accesslog(req, res)
-//     let url
-//     let pg = req.body.pg
-//     
-//     // pg needs to be exactly as is is on 1.233::/mnt/efs/homd_v4/pangenomes_homd
-//     console.log('Selected Pangenome:',pg)
-//     //let port = anvio_ports()
-//     //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
-//     //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
-//     
-//     url = CFG.ANVIO_URL + '/' + pg
-//     
-//     
-//     console.log('Opening ',url)
-//     // localhost:::   http://localhost:3010
-//     // Dev      :::   https://anvio.homd.org/anvio
-//     //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
-//     // if(CFG.DBHOST == 'localhost'){
-// //         url = "http://localhost:3010?pg="+pg
-// //     }else{
-// //         url = "https://anvio.homd.org/anvio?pg="+pg
-// //     }
-//     return res.send(url)
-// });
-router.get('/anvio_iframe', (req, res) => {
-    console.log('In anvio_iframe')
+
+router.get('/anvio', (req, res) => {
+    console.log('In anvio')
     
     //helpers.accesslog(req, res)
     
