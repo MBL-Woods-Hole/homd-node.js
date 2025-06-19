@@ -108,9 +108,7 @@ module.exports.get_all_pangenomes_query = () => {
     return q
 }
 module.exports.get_pangenomes_query = (otid) => {
-    
-    let q = "SELECT pangenome_name from pangenome_genome"
-    q += " JOIN `"+C.genomes_table_name+"` using(genome_id)"
+    let q = "SELECT distinct pangenome_name from pangenome_genome"
     q += " WHERE otid='"+otid+"'"
     return q
 }

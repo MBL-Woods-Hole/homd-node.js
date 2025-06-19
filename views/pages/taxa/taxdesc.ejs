@@ -525,16 +525,19 @@
     <td class='taxon-data'>
     <% if(data_lookup.pangenomes.length > 0 && data_lookup.pangenomes[0]){ %>
     <%   for(n in data_lookup.pangenomes){ %>
-           <a href='<%= links.anviserver_link %><%= data_lookup.pangenomes[n] %>' target='_blank'>(Genomes V10.1)
-           <%= data_lookup.pangenomes[n] %></a>
+           <a href='/genome/anvio?pg=<%= data_lookup.pangenomes[n] %>' target='_blank'>
+             View in Anvi`o: <%= data_lookup.pangenomes[n] %> (<small>Interactive</small>)
+           </a>
+           <br>
+           <a href='/taxa/pangenome_image?pg=<%= data_lookup.pangenomes[n] %>&ext=svg' target='_blank'>
+             View Static SVG Image
+           </a>
     <%   } %>
+    
     <% }else{ %>
-       <small>No Interactive Anvi`o Pangenome Available.</small>
+       <small>No Pangenomes Available.</small>
     <% } %>
-    <% if(data_lookup.pangenome_file){ %>
-        <br>
-        <a href='pangenome_image?otid=<%= otid %>&ext=pdf'>Open Anvi`o Pangenome PDF</a>
-    <% } %>
+    
     </td>
   </tr>
   <tr>

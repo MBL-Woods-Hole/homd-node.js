@@ -56,11 +56,11 @@ table{
       </td>
    <% }else{ %>
       <td nowrap >
-        <small><a href='anvio?pg=<%= pgs[i].pangenome_name %>' class='pg'>Open Anvi'o</a></small>
+        <small><a href='anvio?pg=<%= pgs[i].pangenome_name %>' target='_blank' class='pg'>Open Anvi'o</a></small>
       </td>
     <% } %>
     <td nowrap >
-       <small><a href='/taxa/pangenome_image?pg=<%= pgs[i].pangenome_name %>&ext=svg'>Open SVG</a></small>
+       <small><a href='/taxa/pangenome_image?pg=<%= pgs[i].pangenome_name %>&ext=svg' target='_blank'>Open SVG</a></small>
     </td>
     
     <td><%- pgs[i].description %></td>

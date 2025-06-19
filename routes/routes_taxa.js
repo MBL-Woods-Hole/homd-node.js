@@ -553,7 +553,7 @@ router.get('/tax_description', async function tax_description(req, res) {
 	links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage)
   }
   //links.anviserver_link       = CFG.ANVIO_URL  //https://anvio.homd.org/anvio?pg=Mitis_Group
-  links.anviserver_link = CFG.ANVIO_URL_VAMPS //https://vamps.mbl.edu/anviserver/pangenomes/Mitis_Group
+  links.anviserver_link = CFG.ANVIO_URL //https://vamps.mbl.edu/anviserver/pangenomes/Mitis_Group
   let otid_has_abundance = false  
   if(C.otids_w_abundance.indexOf(otid) != -1){
         otid_has_abundance = true
@@ -575,10 +575,11 @@ router.get('/tax_description', async function tax_description(req, res) {
     let q_pangenome = queries.get_pangenomes_query(otid)
     //console.log(q_refseq_metadata)
     //console.log(q_info)
-    //console.log(q_pangenome)
+    console.log(q_pangenome)
     refseq     = await get_taxon_refseq(q_refseq_metadata)
     const info       = await get_taxon_info(q_info)
     const pangenomes = await get_taxon_pangenomes(q_pangenome)
+    console.log('pangenomes',pangenomes)
     //https://medium.com/@amymurphy_40966/node-mysql-chained-promises-vs-async-await-9d0c8e8f5ee1
     Promise.all([refseq,info,pangenomes]).then((results) => {
 		if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
@@ -1604,7 +1605,7 @@ router.get('/tree_d3', function tree_d3(req, res) {
       }
     })
 })
-router.get('/pangenome_image', function tree_d3(req, res) {
+router.get('/pangenome_image', function pangenome_image(req, res) {
     console.log(req.query)
     let otid,pg,ext,filepath
     // if otid is present get filename from db
