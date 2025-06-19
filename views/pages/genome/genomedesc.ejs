@@ -221,7 +221,22 @@
            </span></td>
        <% } %>
     </tr>
-    <tr class=""><td valign="center" class='field'>Pangenomes (Beta)</td><td class='value'><span class='inner-value'><small>No Available Data</small></span></td></tr>
+    <tr class="">
+      <td valign="center" class='field'>Pangenomes (Beta)</td>
+      <td class='value'>
+      <% if(ginfo.pangenome && ginfo.pangenome != ""){ %>
+        
+          <span class='inner-value'>
+            <a href='anvio?pg=<%= ginfo.pangenome %>' target='_blank' class='pg'><%= ginfo.pangenome %></a>
+            <br>
+            <a href='pangenome_image?pg=<%= ginfo.pangenome %>&ext=svg' target='_blank'>Open SVG</a>
+          </span>
+        
+      <% }else{ %>
+          <small>No Pangenomes Available</small>
+      <% } %>
+      </td>
+    </tr>
     
 </table>
 </td>  </tr><tr>  <td>

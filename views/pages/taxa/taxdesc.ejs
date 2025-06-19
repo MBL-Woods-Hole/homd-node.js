@@ -525,12 +525,12 @@
     <td class='taxon-data'>
     <% if(data_lookup.pangenomes.length > 0 && data_lookup.pangenomes[0]){ %>
     <%   for(n in data_lookup.pangenomes){ %>
-           <a href='/genome/anvio?pg=<%= data_lookup.pangenomes[n] %>' target='_blank'>
-             View in Anvi`o: <%= data_lookup.pangenomes[n] %> (<small>Interactive</small>)
+           View: <a href='/genome/anvio?pg=<%= data_lookup.pangenomes[n] %>' target='_blank'>
+             in Anvi`o: <%= data_lookup.pangenomes[n] %> (<small>Interactive</small>)
            </a>
            <br>
-           <a href='/taxa/pangenome_image?pg=<%= data_lookup.pangenomes[n] %>&ext=svg' target='_blank'>
-             View Static SVG Image
+           View: <a href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[n] %>&ext=svg' target='_blank'>
+             Static SVG Image
            </a>
     <%   } %>
     
