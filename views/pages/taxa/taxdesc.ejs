@@ -4,6 +4,7 @@
 .taxon-data{
    /* font-family: "Lucida Console", "Courier New", monospace; */
    font-weight:normal;
+   
 }
 .taxon-data a{
    /* font-family: "Lucida Console", "Courier New", monospace; */
@@ -203,7 +204,12 @@
 #refseq-table-no-scroll{
     border:1px solid darkgrey;
 }
-
+.link{
+   text-decoration: underline;
+   background:#EDEADE;
+   padding:1px;
+   margin:1px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -415,7 +421,7 @@
     
       <% if(data_lookup.naming_status != "Dropped"){ %>
         <strong>RefSeq-ID(s)</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <small>[<a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>View Taxon in RefSeq Tree</a>]</small>
+        <small class='link'>[<a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>View Taxon in RefSeq Tree</a>]</small>
 
         <!-- OLD: >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
         <!-- NEW: >81531021 | Methanobrevibacter oralis | HMT-815 | Strain: DSM 7256 | PROKKA: SEQF3102_01675 | Status: Named | Genomes: 5 -->
@@ -446,7 +452,7 @@
     <% } %>
     
     
-    <a href='/download/#refseq'>Download latest 16S rRNA reference gene sequences.</a>
+    <a class='link' href='/download/#refseq'>Download latest 16S rRNA reference gene sequences.</a>
     
     
     </td>
@@ -525,11 +531,10 @@
     <td class='taxon-data'>
     <% if(data_lookup.pangenomes.length > 0 && data_lookup.pangenomes[0]){ %>
     <%   for(n in data_lookup.pangenomes){ %>
-           View: <a href='/genome/anvio?pg=<%= data_lookup.pangenomes[n] %>' target='_blank'>
-             in Anvi`o: <%= data_lookup.pangenomes[n] %> (<small>Interactive</small>)
-           </a>
+           View in Anvi`o: <a class='link' href='/genome/anvio?pg=<%= data_lookup.pangenomes[n] %>' target='_blank'>
+              <%= data_lookup.pangenomes[n] %></a> (<small>Interactive</small>)
            <br>
-           View: <a href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[n] %>&ext=svg' target='_blank'>
+           View: <a class='link' href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[n] %>&ext=svg' target='_blank'>
              Static SVG Image
            </a>
     <%   } %>
@@ -541,7 +546,7 @@
     </td>
   </tr>
   <tr>
-    <td class='taxon-bold tbl-title'>Microbial Ecology<br><small>(Abundance/Prevalence)</small>:</td>
+    <td class='taxon-bold tbl-title'>Microbial Ecology</td>
     <% if(otid_has_abundance){ %>
        <% if(data_lineage.subspecies){ %>
          <% ss = encodeURIComponent(data_lineage.subspecies) %>
@@ -551,8 +556,8 @@
          <% rankname = "species" %>
        <% } %>
     
-       <td class='taxon-data'><a href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance/Prevalence Page for:<br> 
-         &nbsp;&nbsp;&nbsp;<i><%= data_lineage.species %> <%= data_lineage.subspecies %></i></a>
+       <td class='taxon-data'><a class='link' href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Abundance/Prevalence<br> 
+         </a>
        </td>
     <% }else{ %>
          <td class='taxon-data'>No Abundance Data</td>
@@ -572,7 +577,7 @@
     <% }else{ %>
       
         <%= data_lookup.ncbi_taxid %> 
-        <span>
+        <span class='link'>
         [<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data_lookup.ncbi_taxid %>' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]
         </span>
       
@@ -587,7 +592,7 @@
       <% show = data_lineage.species %>
       
         <span>
-        <a href='<%- link %>' target='_blank' rel="noopener noreferrer"><em><%- link %></em></a>
+        <a class='link' href='<%- link %>' target='_blank' rel="noopener noreferrer"><em><%- link %></em></a>
         </span>
       
       </td>
@@ -602,11 +607,11 @@
          
        <table class='' border='0'>
          
-            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td style='padding:0 1px;border:none;'>[<a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link</a>]</td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'>[<a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link</a>]</td></tr>
             <!-- nuccore/?term="genus+species"   -->
             <!-- nucleotide?cmd=search&term="data_lookup.genus data_lookup.species" -->
-            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link</a>]</td></tr>
-            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link</a>]</td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link</a>]</td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link</a>]</td></tr>
          
        </table>
       <% }else{ %>
@@ -621,9 +626,9 @@
     <td class='taxon-data'>
     <% if(g_length > 0){ %>
       <table class='' border='0'>
-          <tr><td style='border:none;padding:0 1px;'><a href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>View in genome tree</a></td></tr>
-          <tr><td style='border:none;padding:0 1px;'><a href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>View in ribosome protein tree</a></td></tr>
-          <tr><td style='border:none;padding:0 1px;'><a href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>View in 16S rRNA gene tree</a></td></tr>
+          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>View in genome tree</a></td></tr>
+          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>View in ribosome protein tree</a></td></tr>
+          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>View in 16S rRNA gene tree</a></td></tr>
       </table>
     <% }else{ %>
       <table class='' border='0'>
