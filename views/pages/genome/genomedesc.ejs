@@ -158,7 +158,7 @@
           <table class='contig-table' border='0'><tr>
           <td>
             One Contig Found<br>
-            <span class='contig-span' id='select-contig'><%= contigs[0].contig %></span>
+            <span class='contig-span link' id='select-contig'><%= contigs[0].contig %></span>
           </td>
           <td>
             <small>
@@ -173,7 +173,7 @@
           <table class='contig-table' border='0'><tr>
           <td>
             <small>Number of Contigs: <%= ginfo.contigs %></small><br>
-            <select  class='contig-span' id='select-contig' >
+            <select  class='contig-span link' id='select-contig' >
               <% for(n in contigs){ %>
                <option value='<%= contigs[n].contig %>|<%= contigs[n].gc %>'><%= contigs[n].contig %></option>
               <% } %>
