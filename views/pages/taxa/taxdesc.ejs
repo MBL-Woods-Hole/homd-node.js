@@ -457,13 +457,11 @@
     
     </td>
   </tr>
-  
-  
-  
-  
   </table>
 <!-- End Left table -->
+
 </td><td style="width: 500px; vertical-align:top">
+
 <!-- Start Right table -->
   <table id='right-tbl'>
   <tr><td colspan='2'>
@@ -529,14 +527,22 @@
   <tr>
     <td class='taxon-bold tbl-title'>Pangenome(s):</td>
     <td class='taxon-data'>
-    <% if(data_lookup.pangenomes.length > 0 && data_lookup.pangenomes[0]){ %>
-    <%   for(n in data_lookup.pangenomes){ %>
-           View in Anvi`o: <a class='link' href='/genome/anvio?pg=<%= data_lookup.pangenomes[n] %>' target='_blank'>
-              <%= data_lookup.pangenomes[n] %></a> (<small>Interactive</small>)
+    
+    <% if(data_lookup.pangenomes.length == 1 && data_lookup.pangenomes[0]){ %>
+           View in Anvi`o: <a class='link' href='/genome/anvio?pg=<%= data_lookup.pangenomes[0] %>' target='_blank'>
+              <%= data_lookup.pangenomes[0] %></a> (<small>Interactive</small>)
            <br>
-           View: <a class='link' href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[n] %>&ext=svg' target='_blank'>
-             Static SVG Image
-           </a>
+           View: <a class='link' href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[0] %>&ext=svg' target='_blank'>
+             Static SVG Image</a>
+    
+    <% }else if(data_lookup.pangenomes.length > 1 && data_lookup.pangenomes[0]){ %>
+    
+    <%   for(n in data_lookup.pangenomes){ %>
+           <%= parseInt(n)+1 %>) Anvio: <a class='link' href='/genome/anvio?pg=<%= data_lookup.pangenomes[n] %>' target='_blank'>
+              <%= data_lookup.pangenomes[n] %></a>
+           Image: <a class='link' href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[n] %>&ext=svg' target='_blank'>
+             svg</a>
+             <br>
     <%   } %>
     
     <% }else{ %>

@@ -398,6 +398,7 @@ function get_taxon_info(q) {
     })
 }
 function get_taxon_pangenomes(q) {
+    let pangenomes = []
     return new Promise((resolve,reject) => {
         TDBConn.query(q, (err, pangenome_rows) => {
             if(err){
@@ -405,7 +406,10 @@ function get_taxon_pangenomes(q) {
                 reject(err)
             }else{
                 //console.log('pangenome_rows',pangenome_rows)
-                resolve(pangenome_rows)
+                for(let n in pangenome_rows){
+                    pangenomes.push(pangenome_rows[n].pangenome)
+                }
+                resolve(pangenomes)
             }
         
         })
@@ -545,7 +549,7 @@ router.get('/tax_description', async function tax_description(req, res) {
   // TODO use query here instead of data1,data2....
   // 
   lookup_data = C.taxon_lookup[otid]
-  helpers.print(['lookup_data',lookup_data])
+  
   if(otid in C.link_exceptions){
 	links = C.link_exceptions[otid]
   }else{
@@ -579,7 +583,7 @@ router.get('/tax_description', async function tax_description(req, res) {
     refseq     = await get_taxon_refseq(q_refseq_metadata)
     const info       = await get_taxon_info(q_info)
     const pangenomes = await get_taxon_pangenomes(q_pangenome)
-    console.log('pangenomes',pangenomes)
+    console.log('pg',pangenomes)
     //https://medium.com/@amymurphy_40966/node-mysql-chained-promises-vs-async-await-9d0c8e8f5ee1
     Promise.all([refseq,info,pangenomes]).then((results) => {
 		if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
@@ -603,6 +607,11 @@ router.get('/tax_description', async function tax_description(req, res) {
 		let args = {otid:otid}
 		args.image_array = image_array
 		args.data1 = lookup_data
+		// add pangenomes
+		
+		args.data1.pangenomes = pangenomes
+		helpers.print(pangenomes)
+		helpers.print(['lookup_data',args.data1])
 		args.msg = lookup_data.notes
 		args.text_file = text_file[0]
 		args.tinfo = info
@@ -621,72 +630,72 @@ router.get('/tax_description', async function tax_description(req, res) {
     
     });
     return
-    TDBConn.query(q_refseq_metadata, (err, refseq_rows) => {
-        //console.log('refseq',refseq_rows)
-        refseq = refseq_rows
-        
-        TDBConn.query(q_info, (err, taxon_info_rows) => {  // picks-up notes and general,prev,cult
-            taxon_info = taxon_info_rows[0]
-            if(taxon_info_rows.length == 0){
-               taxon_info = []
-            }
-            
-            //console.log('info rows',taxon_info)
-            
-            
-  
-
-            
-            
-            //pangenomes
-            //links.anviserver_link = C.anviserver_link
-            
-            // console.log('sites',C.site_lookup[otid])
-            
-            
-          
-			let args = {otid:otid}
-			args.image_array = image_array
-			args.data1 = lookup_data
-			args.msg = lookup_data.notes
-			args.text_file = text_file[0]
-			args.tinfo = taxon_info
-			
-			args.data4 = data4
-			args.refseq_info = refseq
-			args.links = links
-			args.sites = sites
-			args.otid_has_abundance = otid_has_abundance
-			
-			//args.lineage = lineage_string
-			args.lin = lineage
-         
-         
-         
-         renderTaxonDescription(req, res, args)
-         return
-         //  res.render('pages/taxa/taxdesc', {
-//             title: 'HOMD :: Taxon Info', 
-//             pgname: 'taxon/description', // for AbountThisPage
-//             config: JSON.stringify(CFG),
-//             otid: otid,
-//             //pids: pid_list,
-//             image_array:JSON.stringify(image_array),
-//             data1: JSON.stringify(lookup_data),
-//             msg: lookup_data.notes,
-//             text_file: text_file[0],   // only 666 so far
-//             tinfo: JSON.stringify(taxon_info),
-//             lin: JSON.stringify(lineage),
-//             data4: JSON.stringify(data4),
-//             refseq_info: JSON.stringify(refseq),
-//             links: JSON.stringify(links),
-//             sites: JSON.stringify(sites),
-//             otid_has_abundance:otid_has_abundance,
-//             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//             user: JSON.stringify(req.user || {}),
-//           })
-      })  // end refseq query
-  })  // end info query
+//     TDBConn.query(q_refseq_metadata, (err, refseq_rows) => {
+//         //console.log('refseq',refseq_rows)
+//         refseq = refseq_rows
+//         
+//         TDBConn.query(q_info, (err, taxon_info_rows) => {  // picks-up notes and general,prev,cult
+//             taxon_info = taxon_info_rows[0]
+//             if(taxon_info_rows.length == 0){
+//                taxon_info = []
+//             }
+//             
+//             //console.log('info rows',taxon_info)
+//             
+//             
+//   
+// 
+//             
+//             
+//             //pangenomes
+//             //links.anviserver_link = C.anviserver_link
+//             
+//             // console.log('sites',C.site_lookup[otid])
+//             
+//             
+//           
+// 			let args = {otid:otid}
+// 			args.image_array = image_array
+// 			args.data1 = lookup_data
+// 			args.msg = lookup_data.notes
+// 			args.text_file = text_file[0]
+// 			args.tinfo = taxon_info
+// 			
+// 			args.data4 = data4
+// 			args.refseq_info = refseq
+// 			args.links = links
+// 			args.sites = sites
+// 			args.otid_has_abundance = otid_has_abundance
+// 			
+// 			//args.lineage = lineage_string
+// 			args.lin = lineage
+//          
+//          
+//          
+//          renderTaxonDescription(req, res, args)
+//          return
+//          //  res.render('pages/taxa/taxdesc', {
+// //             title: 'HOMD :: Taxon Info', 
+// //             pgname: 'taxon/description', // for AbountThisPage
+// //             config: JSON.stringify(CFG),
+// //             otid: otid,
+// //             //pids: pid_list,
+// //             image_array:JSON.stringify(image_array),
+// //             data1: JSON.stringify(lookup_data),
+// //             msg: lookup_data.notes,
+// //             text_file: text_file[0],   // only 666 so far
+// //             tinfo: JSON.stringify(taxon_info),
+// //             lin: JSON.stringify(lineage),
+// //             data4: JSON.stringify(data4),
+// //             refseq_info: JSON.stringify(refseq),
+// //             links: JSON.stringify(links),
+// //             sites: JSON.stringify(sites),
+// //             otid_has_abundance:otid_has_abundance,
+// //             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+// //             user: JSON.stringify(req.user || {}),
+// //           })
+//       })  // end refseq query
+//   })  // end info query
 })
 
 

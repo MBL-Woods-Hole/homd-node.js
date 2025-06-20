@@ -73,7 +73,7 @@ def create_taxon(otid):
     taxon['rrna_sequences'] = []
     taxon['synonyms'] = []
     taxon['sites'] = []
-    taxon['pangenomes'] = []
+    #taxon['pangenomes'] = []
     
     return taxon
 
@@ -312,7 +312,10 @@ def run_pangenomes(args):
     global master_lookup
     # query for taxon description page
     #q =  "SELECT otid, name as pangenome from pangenome"
-    q = "SELECT DISTINCT otid, pangenome_name as pangenome from pangenome_genome"
+    #q = "SELECT DISTINCT otid, pangenome_name as pangenome from pangenome_genome"
+    q = "SELECT DISTINCT otid, pangenome_v4.pangenome_name as pangenome"
+    q += " FROM pangenome_genome"
+    q += " JOIN pangenome_v4 using(pangenome_id)"
     #q += " JOIN `"+genome_tbl+"` using(genome_id)"
     #q += " RIGHT JOIN pangenome_files using(otid)"
     print(q)
@@ -739,7 +742,7 @@ if __name__ == "__main__":
     run_ref_strain(args)   # in master_lookup
 
     run_rrna_sequences(args)  # in master_lookup
-    run_pangenomes(args)   # in master_lookup
+    #run_pangenomes(args)   # NONO:: Use query in taxon description and genome description
 
     print_master_lookup(args)
 

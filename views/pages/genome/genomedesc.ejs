@@ -234,17 +234,23 @@
     <tr class="">
       <td valign="center" class='field'>Pangenomes (Beta)</td>
       <td class='value'>
-      <% if(ginfo.pangenome && ginfo.pangenome != ""){ %>
-        
+      <% if(ginfo.pangenomes.length == 1 && ginfo.pangenomes[0]){ %>
           <span class='inner-value'>
-            View in Anvi`o: <a class='link' href='anvio?pg=<%= ginfo.pangenome %>' target='_blank' class='pg'><%= ginfo.pangenome %></a> 
+            View in Anvi`o: <a class='link' href='anvio?pg=<%= ginfo.pangenomes[0] %>' target='_blank' class='pg'><%= ginfo.pangenomes[0] %></a> 
             <small>(Interactive)</small>
             <br>
-            View <a class='link' href='pangenome_image?pg=<%= ginfo.pangenome %>&ext=svg' target='_blank'>SVG Image</a>
+            View <a class='link' href='pangenome_image?pg=<%= ginfo.pangenomes[0] %>&ext=svg' target='_blank'>SVG Image</a>
           </span>
-        
+      <% }else if(ginfo.pangenomes.length > 1 && ginfo.pangenomes[0]){ %>
+         <%   for(n in ginfo.pangenomes){ %>
+           <%= parseInt(n)+1 %>) Anvio: <a class='link' href='/genome/anvio?pg=<%= ginfo.pangenomes[n] %>' target='_blank'>
+              <%= ginfo.pangenomes[n] %></a>
+           Image: <a class='link' href='/genome/pangenome_image?pg=<%= ginfo.pangenomes[n] %>&ext=svg' target='_blank'>
+             svg</a>
+             <br>
+        <% } %>
       <% }else{ %>
-          <small>No Pangenomes Available</small>
+          <small>No Pangenomes Available.</small>
       <% } %>
       </td>
     </tr>

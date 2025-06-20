@@ -443,7 +443,7 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
   res.send('Okay')
 })
 //
-router.get('/genome_description', function genomeDescription (req, res) {
+router.get('/genome_description', function Description (req, res) {
   //console.log('in genomedescription -get')
   
   //let myurl = url.parse(req.url, true);
@@ -467,7 +467,18 @@ router.get('/genome_description', function genomeDescription (req, res) {
          if(rows.length ==0){
              return
          }
+         //kludge for pangenomes
+         let pangenomes = []
+         if(rows.length >1){  // means there are more than one pangenome
+             for(let n in rows){
+                pangenomes.push(rows[n].pangenome) 
+             }
+         }else{
+             pangenomes.push(rows[0].pangenome)
+         }
          data = rows[0]
+         delete data.pangenome
+         data.pangenomes = pangenomes
          helpers.print(data)
          data.gid = gid
          data.otid = C.genome_lookup[gid].otid
@@ -512,7 +523,6 @@ router.get('/genome_description', function genomeDescription (req, res) {
                // taxonid: otid,
                data1: JSON.stringify(data),
                gid: gid,
-               anviserver_link: C.anviserver_link,
                contigs: JSON.stringify(contigs.sort()),
                crispr: crispr,
                // data2: JSON.stringify(data2),
