@@ -22,21 +22,23 @@ table{
     
     <div class='page-content' >
 
-    <div class='title'>HOMD Available Pangenomes</div>
+    <div class='title'>HOMD Pangenomes</div>
     <br>
     <center>
-         Anvi`o (<a href='https://anvio.org/' target='_blank'>https://anvio.org</a>) is used to display pangenomes. Anvi`o is a visualization platform for microbial 'omics.
+         
+    Anvi`o (<a href='https://anvio.org/' target='_blank'>https://anvio.org</a>) is a visualization platform for microbial 'omics and is used here to display pangenomes.
     </center>
 <!-- iFrame or New_Window? -->
 <% mode = "iframe"  // 'new_window'  'iframe' %>
 
 <div id='pgtable'>
+Pangenome Count: <%- pgs.length %>
 <center>
 <table class='sortable' border='1'>
 <tr>
-  <td nowrap><b>Pangenome Name</b><br><small>(Link opens pangenome in Anvi`o)<br>Click to Sort</small></td>
+  <td nowrap><b>Pangenome Name</b><br><small>(Link opens pangenome in Anvi`o)<br>Click to Sort Alphabetically</small></td>
   
-  <th class="sorttable_nosort">HOMD Genome Version</th>
+  <th class="">HOMD Genome Version</th>
   <th class="sorttable_nosort">Interactive</th>
   <th class="sorttable_nosort">Image</th>
   <th class="sorttable_nosort">Description</th>

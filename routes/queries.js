@@ -12,6 +12,13 @@ module.exports.get_refseq_query = (refid) => {
 
   return qSelectRefseq
 }
+module.exports.get_gtdb_tax = (genomes) => {
+  let g = genomes.join("','")
+  let qSelectGTDBTaxonomy = 'SELECT genome_id, GTDB_taxonomy  from `'+C.genomes_table_name+'`'
+  qSelectGTDBTaxonomy += " WHERE genome_id in ('" + g + "')"
+  //console.log(qSelectGTDBTaxonomy)
+  return qSelectGTDBTaxonomy
+}
 module.exports.get_refseq_metadata_query = (otid) => {
   // let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
 //   qSelectRefseqInfo += " WHERE otid='" + otid + "'"

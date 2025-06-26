@@ -210,6 +210,12 @@
    padding:1px;
    margin:1px;
 }
+#gtdb-tax-div{
+   
+   height: 150px;
+   overflow:auto;
+   
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -220,7 +226,7 @@
 <% data_refseq = JSON.parse(refseq_info) %>
 <% links = JSON.parse(links) //refseq  %>
 <% sites = JSON.parse(sites) %>
-
+<% gtdbtax = JSON.parse(gtdb) %>
 <% taxidfullname = ("000" + otid).slice(-3); %>
 <% taxidfullnameplus = 'HMT-'+taxidfullname; %>
 <% images = JSON.parse(image_array)  %>
@@ -439,7 +445,7 @@
                <td class='' style='border:none;padding:0 1px;'>
                  <span class='rs-span-1 taxon-data'><%= refseqid %></span>
                </td><td>
-                  <a href='#' class='button' onclick="get_refseqV16('<%= taxidfullnameplus %>','<%= refseqid %>','<%= species %>')">
+                  <a href='#' class='td-button' onclick="get_refseqV16('<%= taxidfullnameplus %>','<%= refseqid %>','<%= species %>')">
                     Show Sequence
                   </a>
                </td>
@@ -519,11 +525,27 @@
       <% if(g_length === 0){ %>
        No Genomes
       <% }else{ %>
-       <%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> See List </a>
+       <%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> Open Genomes in Table</a>
       <% } %>
       
     </td>
   </tr>
+  
+  <tr>
+    <td class='taxon-bold tbl-title'>Genomes and<br>GTDB Taxonomy:</td>
+    <td>
+        <div id='gtdb-tax-div'>
+        <table>
+        <% for(gid in gtdbtax){ %>
+        <tr>
+          <td nowrap><small><strong><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></strong><br><%= gtdbtax[gid] %></small></td>
+        <tr>
+        <% } %>
+        </table>
+        </div>
+    </td>
+  </tr>
+  
   <tr>
     <td class='taxon-bold tbl-title'>Pangenome(s):</td>
     <td class='taxon-data'>
@@ -532,8 +554,8 @@
            View in Anvi`o: <a class='link' href='/genome/anvio?pg=<%= data_lookup.pangenomes[0] %>' target='_blank'>
               <%= data_lookup.pangenomes[0] %></a> (<small>Interactive</small>)
            <br>
-           View: <a class='link' href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[0] %>&ext=svg' target='_blank'>
-             Static SVG Image</a>
+           View <a class='link' href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[0] %>&ext=svg' target='_blank'>
+             SVG Image</a>
     
     <% }else if(data_lookup.pangenomes.length > 1 && data_lookup.pangenomes[0]){ %>
     
@@ -552,7 +574,7 @@
     </td>
   </tr>
   <tr>
-    <td class='taxon-bold tbl-title'>Microbial Ecology</td>
+    <td class='taxon-bold tbl-title'>Microbial Ecology:</td>
     <% if(otid_has_abundance){ %>
        <% if(data_lineage.subspecies){ %>
          <% ss = encodeURIComponent(data_lineage.subspecies) %>
@@ -613,11 +635,11 @@
          
        <table class='' border='0'>
          
-            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'>[<a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link</a>]</td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'><a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link</a></td></tr>
             <!-- nuccore/?term="genus+species"   -->
             <!-- nucleotide?cmd=search&term="data_lookup.genus data_lookup.species" -->
-            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link</a>]</td></tr>
-            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'>[<a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link</a>]</td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'><a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link</a></td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'><a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link</a></td></tr>
          
        </table>
       <% }else{ %>
@@ -632,9 +654,9 @@
     <td class='taxon-data'>
     <% if(g_length > 0){ %>
       <table class='' border='0'>
-          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>View in genome tree</a></td></tr>
-          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>View in ribosome protein tree</a></td></tr>
-          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>View in 16S rRNA gene tree</a></td></tr>
+          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>Genome Tree</a></td></tr>
+          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>Ribosome Protein Tree</a></td></tr>
+          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>16S rRNA Gene Tree</a></td></tr>
       </table>
     <% }else{ %>
       <table class='' border='0'>

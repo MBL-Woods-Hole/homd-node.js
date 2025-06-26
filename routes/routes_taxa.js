@@ -360,6 +360,7 @@ function renderTaxonDescription(req, res, args) {
             refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
             links: JSON.stringify(args.links),
             sites: JSON.stringify(args.sites),
+            gtdb: JSON.stringify(args.gtdbtax),
             otid_has_abundance:args.otid_has_abundance,
             //lineage: args.lineage_string,
             
@@ -410,6 +411,24 @@ function get_taxon_pangenomes(q) {
                     pangenomes.push(pangenome_rows[n].pangenome)
                 }
                 resolve(pangenomes)
+            }
+        
+        })
+    })
+}
+function get_gtdb_taxonomy(q) {
+    let gtdbtax = {}
+    return new Promise((resolve,reject) => {
+        TDBConn.query(q, (err, rows) => {
+            if(err){
+                console.log(err)
+                reject(err)
+            }else{
+                //console.log('pangenome_rows',pangenome_rows)
+                for(let n in rows){
+                    gtdbtax[rows[n].genome_id] = rows[n].GTDB_taxonomy
+                }
+                resolve(gtdbtax)
             }
         
         })
@@ -504,6 +523,7 @@ router.get('/tax_description', async function tax_description(req, res) {
          args.msg = message
          args.text_file = text_file[0]
          args.tinfo = {}
+         args.gtdbtax = {}
          args.lin = lineage
          args.data4 = {}
          args.refseq_info = {}
@@ -513,29 +533,7 @@ router.get('/tax_description', async function tax_description(req, res) {
          //args.lineage = lineage_string
          renderTaxonDescription(req, res, args)
          return
-         // res.render('pages/taxa/taxdesc', {
-//             title: 'HOMD :: Taxon Info', 
-//             pgname: 'taxon/description', // for AbountThisPage
-//             config: JSON.stringify(CFG),
-//             
-//             otid: otid,
-//             //pids: pid_list,
-//             image_array:JSON.stringify([]),
-//             data1: JSON.stringify(lookup_data),
-//             msg: message,
-//             text_file: text_file[0],   // only 666 so far
-//             tinfo: JSON.stringify({}),  // description 
-//             lin: JSON.stringify(data3),  // lineage domain=>subspecies
-//             data4: JSON.stringify({}),  // publications
-//             refseq_info: JSON.stringify({}), // refseq, seqname, strain , genbank
-//             links: JSON.stringify(links),
-//             sites: JSON.stringify(sites),
-//             otid_has_abundance:false,
-//             lineage: lineage_string,
-//             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//             user: JSON.stringify(req.user || {}),
-//           })
-//           return
+
     })
     return
   }
@@ -577,13 +575,16 @@ router.get('/tax_description', async function tax_description(req, res) {
     let q_refseq_metadata = queries.get_refseq_metadata_query(otid)    // dont need query 
     let q_info = queries.get_taxon_info_query(otid)
     let q_pangenome = queries.get_pangenomes_query(otid)
+    let q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes)
     //console.log(q_refseq_metadata)
     //console.log(q_info)
-    console.log(q_pangenome)
+    //console.log(q_pangenome)
     refseq     = await get_taxon_refseq(q_refseq_metadata)
     const info       = await get_taxon_info(q_info)
     const pangenomes = await get_taxon_pangenomes(q_pangenome)
-    console.log('pg',pangenomes)
+    const gtdbtax    = await get_gtdb_taxonomy(q_gtdb_tax)
+    //console.log('pg',pangenomes)
+    //console.log('gtdb',gtdbtax)
     //https://medium.com/@amymurphy_40966/node-mysql-chained-promises-vs-async-await-9d0c8e8f5ee1
     Promise.all([refseq,info,pangenomes]).then((results) => {
 		if(otid in C.site_lookup && 's1' in C.site_lookup[otid]){
@@ -615,7 +616,7 @@ router.get('/tax_description', async function tax_description(req, res) {
 		args.msg = lookup_data.notes
 		args.text_file = text_file[0]
 		args.tinfo = info
-		
+		args.gtdbtax = gtdbtax
 		args.data4 = data4
 		args.refseq_info = refseq
 		args.links = links
