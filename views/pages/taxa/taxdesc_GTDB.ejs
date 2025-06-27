@@ -531,7 +531,20 @@
     </td>
   </tr>
   
-  
+  <tr>
+    <td class='taxon-bold tbl-title'>Genomes and<br>GTDB Taxonomy:</td>
+    <td>
+        <div id='gtdb-tax-div'>
+        <table>
+        <% for(gid in gtdbtax){ %>
+        <tr>
+          <td nowrap><small><strong><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></strong><br><%= gtdbtax[gid] %></small></td>
+        <tr>
+        <% } %>
+        </table>
+        </div>
+    </td>
+  </tr>
   
   <tr>
     <td class='taxon-bold tbl-title'>Pangenome(s):</td>
