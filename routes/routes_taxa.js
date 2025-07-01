@@ -578,12 +578,12 @@ router.get('/tax_description', async function tax_description(req, res) {
     let q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes)
     //console.log(q_refseq_metadata)
     //console.log(q_info)
-    //console.log(q_pangenome)
+    console.log(q_pangenome)
     refseq     = await get_taxon_refseq(q_refseq_metadata)
     const info       = await get_taxon_info(q_info)
     const pangenomes = await get_taxon_pangenomes(q_pangenome)
     const gtdbtax    = await get_gtdb_taxonomy(q_gtdb_tax)
-    //console.log('pg',pangenomes)
+    console.log('pg',pangenomes)
     //console.log('gtdb',gtdbtax)
     //https://medium.com/@amymurphy_40966/node-mysql-chained-promises-vs-async-await-9d0c8e8f5ee1
     Promise.all([refseq,info,pangenomes]).then((results) => {

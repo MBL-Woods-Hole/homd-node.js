@@ -114,6 +114,7 @@ module.exports.get_all_pangenomes_query = () => {
     q += " WHERE active='1' ORDER by pangenome_name"
     return q
 }
+
 module.exports.get_pangenomes_query = (otid) => {
     //let q = "SELECT distinct pangenome_name from pangenome_genome"
     let q = "SELECT DISTINCT pangenome_v4.pangenome_name as pangenome" 

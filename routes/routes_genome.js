@@ -1902,7 +1902,48 @@ router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
     })
 })
 //
+router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
+    console.log('in POST anvio selection')
+    let search_term = req.body.val
+    let q = queries.get_all_pangenomes_query()
+    //let send_rows = []
+    let html = ""
+    let html_rows = ""
+    let html_head = "<table border='1'>"
+    let counter = 0
+    html_head += "<tr>"
+    html_head += "<td nowrap><b>Pangenome Name</b><br><small>(Link opens pangenome in Anvi`o)</small></td>"
+    html_head += "<th>HOMD Genome Version</th>"
+    html_head += "<th>Interactive</th>"
+    html_head += "<th>Image</th>"
+    html_head += "<th>Description</th>"
+    html_head += "</tr>"
+    TDBConn.query(q, (err, rows) => {
+        for(let i in rows){
+            //console.log(rows[i])
+            if(rows[i].pangenome_name.includes(search_term)){
+                //send_rows.push(rows[i])
+                html_rows += "<tr><td nowrap>"+rows[i].pangenome_name+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].homd_genome_version+"</td>"
+                html_rows += "<td nowrap><small><a href='anvio?pg="+rows[i].pangenome_name+"' target='_blank' class='pg'>Open Anvi'o</a></small></td>"
+                html_rows += "<td nowrap><small><a href='pangenome_image?pg="+ rows[i].pangenome_name+"&ext=svg' target='_blank'>Open SVG</a></small></td>"
+                html_rows += "<td>"+rows[i].description+"</td>"
+                html_rows += "</tr>"
+                counter += 1
+            }
+            
+        }
+        html += "Pangenome Count: <b>"+counter.toString() +"</b> (filtered)"
+        html += html_head
+        html += html_rows
+        html += "</table>"
+        res.send(html)
+        //console.log(send_rows,send_rows.length)
+        
 
+    
+    })
+})
 
 
 router.get('/anvio', (req, res) => {

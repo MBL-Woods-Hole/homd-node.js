@@ -30,10 +30,16 @@ table{
     </center>
 <!-- iFrame or New_Window? -->
 <% mode = "iframe"  // 'new_window'  'iframe' %>
-
+<center>Search Names:
+<input id='pg_search_input' style='border:1px solid gray;padding:5px;' type='text' \>
+<a href='anvio_pangenomes'>Reload Page</a>
+</center>
 <div id='pgtable'>
-Pangenome Count: <%- pgs.length %>
+Pangenome Count: <b><%- pgs.length %></b>
+
 <center>
+
+
 <table class='sortable' border='1'>
 <tr>
   <td nowrap><b>Pangenome Name</b><br><small>(Link opens pangenome in Anvi`o)<br>Click to Sort Alphabetically</small></td>
@@ -45,34 +51,35 @@ Pangenome Count: <%- pgs.length %>
   
 </tr>
 
-<% for(i in pgs){ %>
-
-   <tr>
-    <td nowrap><%- pgs[i].pangenome_name %></td>
-    <td nowrap  class='center'><%- pgs[i].homd_genome_version %></td>
-    
-    
-    <% if(mode == "new_window"){ %>
-      <td nowrap >
-        <small><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].pangenome_name %>','homd')">Open Anvi'o</a></small>
-      </td>
-   <% }else{ %>
-      <td nowrap >
-        <small><a href='anvio?pg=<%= pgs[i].pangenome_name %>' target='_blank' class='pg'>Open Anvi'o</a></small>
-      </td>
-    <% } %>
-    <td nowrap >
-       <small><a href='pangenome_image?pg=<%= pgs[i].pangenome_name %>&ext=svg' target='_blank'>Open SVG</a></small>
-    </td>
-    
-    <td><%- pgs[i].description %></td>
- 
-  
- </tr>
-
-<% } %>
+	<% for(i in pgs){ %>
+	
+	   <tr>
+		<td nowrap><%- pgs[i].pangenome_name %></td>
+		<td nowrap  class='center'><%- pgs[i].homd_genome_version %></td>
+		
+		
+		<% if(mode == "new_window"){ %>
+		  <td nowrap >
+			<small><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].pangenome_name %>','homd')">Open Anvi'o</a></small>
+		  </td>
+	   <% }else{ %>
+		  <td nowrap >
+			<small><a href='anvio?pg=<%= pgs[i].pangenome_name %>' target='_blank' class='pg'>Open Anvi'o</a></small>
+		  </td>
+		<% } %>
+		<td nowrap >
+		   <small><a href='pangenome_image?pg=<%= pgs[i].pangenome_name %>&ext=svg' target='_blank'>Open SVG</a></small>
+		</td>
+		
+		<td><%- pgs[i].description %></td>
+	 
+	  
+	 </tr>
+	
+	<% } %>
 
 </table>
+
 </center>
 </div>
 
@@ -95,7 +102,26 @@ Pangenome Count: <%- pgs.length %>
   mainmenu()
   
   anvio_path = '<%- cfg.ANVIO_URL %>'
-function find_anvio(pg,source){
+  var input = document.getElementById("pg_search_input");
+  var main_table_body = document.getElementById("pgtable");
+  input.addEventListener("input", ()=>{
+    var args = {}
+    args.val = input.value
+    //console.log(input.value)
+    var xmlhttp = new XMLHttpRequest();
+    
+    xmlhttp.open("POST", 'anvio_pangenomes', false);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 ) {
+            var response = xmlhttp.responseText;
+            main_table_body.innerHTML = response
+        }
+    }
+    xmlhttp.send(JSON.stringify(args));
+    
+  });
+  function find_anvio(pg,source){
     // called on click of pg link
     //loader.showLoader();
     var xmlhttp = new XMLHttpRequest();
@@ -105,7 +131,7 @@ function find_anvio(pg,source){
     //target = 'anvio_iframe'
     args = {}
     args.pg = pg;
-    console.log('anvio_path',anvio_path)
+    //console.log('anvio_path',anvio_path)
     window.open(anvio_path + '/' + pg,'_blank')
     return
     
