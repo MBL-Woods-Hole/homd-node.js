@@ -1,6 +1,6 @@
 'use strict'
 const express  = require('express');
-var router   = express.Router();
+let router   = express.Router();
 const CFG   = require(app_root + '/config/config');
 const fs       = require('fs-extra');
 // const url = require('url');
@@ -14,12 +14,12 @@ const queries = require(app_root + '/routes/queries')
 
 router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
 //router.get('/dld_table_all/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
-    var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
     let type = req.params.type
     let file_filter_txt = "HOMD.org Taxon Data::No Filter Applied"+ " Date: "+today 
@@ -29,7 +29,7 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
     
     console.log('ALL::Count of OTIDs:',list_of_otids.length)
     
-    var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
+    let table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
     
     if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
@@ -47,12 +47,12 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
 //
 router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
 //router.get('/dld_table/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
-    var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
     let letter='all',statusfilter='on',search_txt='',search_field=''
     let send_list = []
     let type = req.params.type
@@ -64,7 +64,7 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
     let list_of_otids = send_list.map(item => item.otid)
     //console.log('Table::Count of OTIDs:',list_of_otids)
     // type = browser, text or excel
-    var table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
+    let table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
     if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
     }else if(type === 'text'){
@@ -79,12 +79,12 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
     res.end()
 })
 router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
-    var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
     let type = req.params.type   // browser, text or excel
     let fxn = req.params.fxn     // hierarchy or level
@@ -123,12 +123,12 @@ router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
 
 router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
     //console.log('in dld abund - taxon')
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
-    var currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
 
     let type = req.params.type
     let source = req.params.source
@@ -274,12 +274,12 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 router.get('/dld_genome_table_all/:type', function dld_genome_table_all (req, res) {
-    var today = new Date()
-    var dd = String(today.getDate()).padStart(2, '0')
-    var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
-    var yyyy = today.getFullYear()
+    let today = new Date()
+    let dd = String(today.getDate()).padStart(2, '0')
+    let mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
+    let yyyy = today.getFullYear()
     today = yyyy + '-' + mm + '-' + dd
-    var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
+    let currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
     const type = req.params.type
     let fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
     const sendList = Object.values(C.genome_lookup)
@@ -316,12 +316,12 @@ router.get('/dld_genome_table_all/:type', function dld_genome_table_all (req, re
 router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   
   console.log('in download table partial-genome:')
-  var today = new Date()
-  var dd = String(today.getDate()).padStart(2, '0')
-  var mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
-  var yyyy = today.getFullYear()
+  let today = new Date()
+  let dd = String(today.getDate()).padStart(2, '0')
+  let mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
+  let yyyy = today.getFullYear()
   today = yyyy + '-' + mm + '-' + dd
-  var currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
+  let currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
   const type = req.params.type
   
   let letter = '0'
@@ -465,17 +465,17 @@ function create_taxon_table(otids, source, type, head_txt) {
                    ]
         
         txt +=  headers.join('\t')
-        var o1,o2 //,o3,o4
-        for(var n in otids){
+        let o1,o2 //,o3,o4
+        for(let n in otids){
             
             let otid = otids[n].toString()
             if(C.dropped_taxids.indexOf(otid) != -1){
                 let data1 = C.taxon_lookup[otid]
                 //console.log('data1',data1)
-                // var r = [("000" + otid).slice(-3),,
+                // let r = [("000" + otid).slice(-3),,
 //                         
 //                         ]
-                var row = 'HMT-'+('000' + otid).slice(-3) +  '\tDROPPED Taxon\t\t\t\t\t' + data1.genus+'\t'+data1.species  //r.join('\t')
+                let row = 'HMT-'+('000' + otid).slice(-3) +  '\tDROPPED Taxon\t\t\t\t\t' + data1.genus+'\t'+data1.species  //r.join('\t')
                 txt += '\n'+row
                 
             }else{
@@ -519,7 +519,7 @@ function create_taxon_table(otids, source, type, head_txt) {
                    
                    otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
                    let species = o2.species.replace(o2.genus,'').trim()  // removing gens from species name
-                   var r = [otid_pretty,o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,
+                   let r = [otid_pretty,o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,
                             o1.naming_status,o1.cultivation_status,sites,tstrains,rnaseq,syn,o1.ncbi_taxid
                             //,o4.NCBI_pubmed_search_count,o4.NCBI_nucleotide_search_count,o4.NCBI_protein_search_count
                             ,gn,o1.tlength_str
@@ -527,7 +527,7 @@ function create_taxon_table(otids, source, type, head_txt) {
                             
                             ]
                             
-                   var row = r.join('\t')
+                   let row = r.join('\t')
                    txt += '\n'+row
                 }
             }
@@ -535,7 +535,7 @@ function create_taxon_table(otids, source, type, head_txt) {
     }else if(source === 'lineage'){
        headers = ['HMT-ID','Domain','Phylum','Class','Order','Family','Genus','Species','Subspecies']
        txt +=  headers.join('\t')+'\n'
-       for(var n in otids){
+       for(let n in otids){
             otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
             //console.log('hmt',otids[n])
             //console.log(C.taxon_lineage_lookup[otids[n]])
@@ -557,12 +557,12 @@ function create_taxon_table(otids, source, type, head_txt) {
                    ]
         txt +=  headers.join('\t')+'\n'
         
-        for(var n in otids){
+        for(let n in otids){
             otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
             //console.log(C.taxon_lineage_lookup[otids[n]])
             old_lineage = ''
             if(otids[n] in C.taxon_lineage_lookup){
-                for( var m in C.ranks){
+                for( let m in C.ranks){
                     rank = C.ranks[m]
                 
                     lineage = old_lineage + C.taxon_lineage_lookup[otids[n]][rank]
@@ -597,17 +597,17 @@ function create_taxon_table(otids, source, type, head_txt) {
                    'Subspecies_Taxon_Count','Subspecies_Seq_Count','Subspecies_Clone_Count'
                    ]
         txt +=  headers.join('\t')+'\n'
-        for(var n in otids){
+        for(let n in otids){
             otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
             old_lineage = ''
             if(otids[n] in C.taxon_lineage_lookup){
-                for( var m in C.ranks){
+                for( let m in C.ranks){
                     rank = C.ranks[m]
                     txt += C.taxon_lineage_lookup[otids[n]][rank] +'\t'
                 }
                 txt += otid_pretty+'\t'
                 // tax_counts
-                for( var m in C.ranks){
+                for( let m in C.ranks){
                     rank = C.ranks[m]
                     lineage = old_lineage + C.taxon_lineage_lookup[otids[n]][rank]
                     cnts = C.taxon_counts_lookup[lineage]

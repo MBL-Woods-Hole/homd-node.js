@@ -5,7 +5,7 @@ const CFG  = require(app_root + '/config/config');
 const express     = require('express');
 const fs          = require('fs-extra');
 const readline = require('readline');
-var accesslog = require('access-log');
+let accesslog = require('access-log');
 const async = require('async')
 const util        = require('util');
 const path        = require('path');
@@ -15,8 +15,8 @@ const helpers_taxa = require(app_root + '/routes/helpers/helpers_taxa');
 //let hmt = 'HMT-'+("000" + otid).slice(-3)
 
 module.exports.get_all_phyla = function get_all_phyla(){
-    var phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
-    var phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
+    let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
+    let phyla = phyla_obj.map(function mapPhylaObj2 (el) { return el.taxon; })
     return phyla
 }
 module.exports.clean_rank_name_for_show = (rank) =>{
@@ -127,7 +127,7 @@ module.exports.get_text_filtered_taxon_list = function getTextFilteredTaxonList(
       send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
   }else if(search_field == 'synonym'){
       send_list = big_tax_list.filter( function(e) {
-         for(var n in e.synonyms){
+         for(let n in e.synonyms){
             if(e.synonyms[n].toLowerCase().includes(search_txt)){
                return e
             }
@@ -136,7 +136,7 @@ module.exports.get_text_filtered_taxon_list = function getTextFilteredTaxonList(
       
   }else if(search_field == 'type_strain'){
       send_list = big_tax_list.filter( function filterBigList1(e) {
-         for(var n in e.type_strains){
+         for(let n in e.type_strains){
             if(e.type_strains[n].toLowerCase().includes(search_txt)){
                return e
             }
@@ -149,10 +149,10 @@ module.exports.get_text_filtered_taxon_list = function getTextFilteredTaxonList(
       let temp_obj = {}
       
       //OTID
-      var tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
-      //var tmp_send_list = big_tax_list.filter(screen_tax_list)
+      let tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt))
+      //let tmp_send_list = big_tax_list.filter(screen_tax_list)
       // for uniqueness convert to object
-      for(var n in tmp_send_list){
+      for(let n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
@@ -162,7 +162,7 @@ module.exports.get_text_filtered_taxon_list = function getTextFilteredTaxonList(
       //console.log('big_tax_list2.length',big_tax_list.length)
       tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt))
       //console.log('tmp_send_list1',tmp_send_list)
-      for(var n in tmp_send_list){
+      for(let n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
@@ -170,33 +170,33 @@ module.exports.get_text_filtered_taxon_list = function getTextFilteredTaxonList(
       // Species
       //console.log('tmp_send_list2',tmp_send_list)
       tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt))
-      for(var n in tmp_send_list){
+      for(let n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
       
       //Synonyms
       tmp_send_list = big_tax_list.filter( function filterBigList2(e) {
-         for(var n in e.synonyms){
+         for(let n in e.synonyms){
             if(e.synonyms[n].toLowerCase().includes(search_txt)){
                return e
             }
          }
       })    
-      for(var n in tmp_send_list){
+      for(let n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
       
       //type_strains
       tmp_send_list = big_tax_list.filter( function filterBigList3(e) {
-         for(var n in e.type_strains){
+         for(let n in e.type_strains){
             if(e.type_strains[n].toLowerCase().includes(search_txt)){
                return e
             }
          }
       })
-      for(var n in tmp_send_list){
+      for(let n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
@@ -212,7 +212,7 @@ module.exports.get_text_filtered_taxon_list = function getTextFilteredTaxonList(
              }
           }
       })
-      for(var n in tmp_send_list){
+      for(let n in tmp_send_list){
          temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
       }
       
@@ -225,7 +225,7 @@ module.exports.get_text_filtered_taxon_list = function getTextFilteredTaxonList(
                    return e
                 }
           })    
-          for(var n in tmp_send_list){
+          for(let n in tmp_send_list){
              temp_obj[tmp_send_list[n].otid] = tmp_send_list[n]
           }
       //}
@@ -605,9 +605,9 @@ module.exports.apply_ttable_filter = function apply_ttable_filter(req, filter) {
         
         if(el.status.toLowerCase() != 'dropped'){
               el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || ''
-              var node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
+              let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus+' '+el.species+'_species']
               //console.log(el)
-              var lineage_list = helpers_taxa.make_lineage(node)
+              let lineage_list = helpers_taxa.make_lineage(node)
 
               if( C.taxon_counts_lookup.hasOwnProperty(lineage_list[0]) && C.taxon_counts_lookup[lineage_list[0]].ecology == '1'){
                 el.ecology = 1

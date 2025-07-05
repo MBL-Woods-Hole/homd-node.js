@@ -5,7 +5,7 @@ const CFG  = require(app_root + '/config/config');
 const express     = require('express');
 const fs          = require('fs-extra');
 const readline = require('readline');
-var accesslog = require('access-log');
+let accesslog = require('access-log');
 const async = require('async')
 const util        = require('util');
 const path        = require('path');
@@ -647,7 +647,7 @@ function parse_blast_db_info(hit_data,ext,path){
 // // 1>/dev/null 2>>/mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/error2; \
 // // mv /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/tmp/389_0541_Abiotrophia_defectiva_HMT \
 // // /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/blast_results/389_0541_Abiotrophia_defectiva_HMT;\
-// // /mnt/myBROP/var/www/html/homd_modules/RNAblast/parse_blast_single.pl \
+// // /mnt/myBROP/let/www/html/homd_modules/RNAblast/parse_blast_single.pl \
 // // feu9hoakrcsg3r9cukjp5r36k7 389_0541_Abiotrophia_defectiva_HMT S ;\
 // // #rm /mnt/LV1/oral16S6_tmp/feu9hoakrcsg3r9cukjp5r36k7/submit_command0
 //     //console.log(opts)
@@ -777,7 +777,7 @@ function parse_blast_db_info(hit_data,ext,path){
 //   //script_text += "source /groups/vampsweb/" + req.CONFIG.site + "/seqinfobin/vamps_environment.sh;\n\n"
 // //     script_text += "source /groups/vampsweb/"+site+"/seqinfobin/vamps_environment.sh\n\n";
 // 
-//   for (var i in cmd_list) {
+//   for (let i in cmd_list) {
 //     script_text += cmd_list[i] + "\n";
 //     script_text += "echo \"DONE-"+i.toString()+"\" >> " + scriptlog + "\n\n"
 //   }
@@ -911,9 +911,9 @@ function parse_blast_db_info(hit_data,ext,path){
 //   
 //     // the -sync y tag means that the following install scripts will run AFTER the cluster gast scripts finish
 //     // this is important to have -sync y
-//     //var sync_tag = '-sync y' // forces qsub to wait until all jobs finish before exiting and then running install
-//     //var parallel_env_tag = '-pe smp 8'  // req to work on vamps cluster 2019-01
-//     //var parallel_env_tag = '-pe allslots 12'
+//     //let sync_tag = '-sync y' // forces qsub to wait until all jobs finish before exiting and then running install
+//     //let parallel_env_tag = '-pe smp 8'  // req to work on vamps cluster 2019-01
+//     //let parallel_env_tag = '-pe allslots 12'
 //     //make_blast_script_txt += "qsub "+parallel_env_tag+" "+sync_tag+" " + data_dir + "/clust_blast.sh\n";
 //   
 //   

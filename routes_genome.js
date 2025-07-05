@@ -11,7 +11,7 @@ const helpers_taxa   = require(app_root + '/routes/helpers/helpers_taxa')
 const helpers_genomes   = require(app_root + '/routes/helpers/helpers_genomes')
 const queries = require(app_root + '/routes/queries')
 // const open = require('open')
-const createIframe = require("node-iframe")
+//const createIframe = require("node-iframe")
 const https = require('https'); 
 
 router.get('/overview', function overview(req, res) {
@@ -58,7 +58,7 @@ function renderGenomeTable(req, res, args) {
     })
 }
 function get_default_annot_filter(){
-    let defaultfilter = {
+    return {
         text:{
             txt_srch: '',
             field: 'all',
@@ -66,14 +66,12 @@ function get_default_annot_filter(){
         sort_col: 'molecule',
         sort_rev: 'off'
     }
-    return defaultfilter
 }
 
 
 function get_taxa_wgenomes(){
     let alltax_list = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped'))
-    let taxa_wgenomes = alltax_list.filter(item => item.genomes.length >0)
-    return taxa_wgenomes
+    return alltax_list.filter(item => item.genomes.length >0)
 }
 function init_page_data(){
    let page_data = {}
@@ -95,28 +93,28 @@ function set_gtable_session(req) {
     req.session.gtable_filter.letter = letter
 
     for( let item in req.body){
-       if(item == 'letter'){
+       if(item === 'letter'){
          req.session.gtable_filter.letter = req.body.letter
        }
-       if(item == 'sort_col'){
+       if(item === 'sort_col'){
          req.session.gtable_filter.sort_col = req.body.sort_col
        }
-       if(item == 'sort_rev'){
+       if(item === 'sort_rev'){
          req.session.gtable_filter.sort_rev = 'on'
        }
-       if(item == 'phylum'){
+       if(item === 'phylum'){
          req.session.gtable_filter.phylum = req.body.phylum
        }
-       if(item == 'txt_srch'){
+       if(item === 'txt_srch'){
          req.session.gtable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
        }
-       if(item == 'field'){
+       if(item === 'field'){
          req.session.gtable_filter.text.field = req.body.field
        }
-       if(item == 'paging'){
+       if(item === 'paging'){
          req.session.gtable_filter.paging = req.body.paging
        }
-       if(item == 'mags'){
+       if(item === 'mags'){
          req.session.gtable_filter.mags = req.body.mags
        }
 
@@ -156,8 +154,8 @@ function set_gtable_session(req) {
 
 function get_filter_on(f, type){
     // for comparison stringify
-    let d,fxn
-    if(type == 'annot'){
+    let d
+    if(type === 'annot'){
        d = get_default_annot_filter()
     }else{
        d = helpers_genomes.get_default_gtable_filter()
@@ -170,7 +168,26 @@ function get_filter_on(f, type){
       return 'on'
     }
 }
+function apply_species(lst){
+   let otid
+   //let subspecies = ''
+   
+   for(let i in lst){
+      otid = lst[i].otid
+      //sp = lst[i].species
+      //console.log('otid',otid)
+      lst[i].genus = C.taxon_lineage_lookup[otid].genus
+      lst[i].species = C.taxon_lineage_lookup[otid].species
+      lst[i].subspecies = ''
+      if(C.taxon_lineage_lookup.hasOwnProperty(otid) && C.taxon_lineage_lookup[otid].subspecies){
+        //subspecies = ' <small>['+C.taxon_lineage_lookup[otid].subspecies+']</small>'
+        //lst[i].species = sp + subspecies
+        lst[i].subspecies = C.taxon_lineage_lookup[otid].subspecies
+      }
+   }
+   return lst
 
+}
 router.get('/reset_gtable', function gen_table_reset(req, res) {
    //console.log('in RESET-session')
    req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
@@ -180,7 +197,7 @@ router.get('/genome_table', function genome_table(req, res) {
     
     // https://www.ncbi.nlm.nih.gov/assembly/GCF_000160075.2/?shouldredirect=false
     helpers.print('In GET Genome Table')
-    let filter={}, send_list, showing,ret_obj,count_before_paging,args,count_txt
+    let filter, send_list, ret,count_before_paging,args,count_txt
     let page_data = init_page_data()
     //console.log('page data',page_data)
     //console.log('req.query',req.query)
@@ -202,10 +219,10 @@ router.get('/genome_table', function genome_table(req, res) {
     //filter = helpers.get_default_gtable_filter()
     req.session.gtable_filter = filter
     
-    let filter_on = 'off'
+    let filter_on,ret_obj
     if(req.query.otid){ 
        
-    //console.log('GT GOT otid',otid)
+        //console.log('GT GOT otid',otid)
        // reset gtable_filter here because we are coming from tax_table button
        // and expect to see the few genomes for this one taxon
        filter = helpers_genomes.get_default_gtable_filter()
@@ -227,45 +244,53 @@ router.get('/genome_table', function genome_table(req, res) {
        send_list = helpers_genomes.apply_gtable_filter(req, filter)
     }
     
-    //console.log('send_list[0]',send_list[0])
-    count_before_paging = send_list.length
+    console.log('filter',filter)
+
     // Initial page = 1 for fast load
     // no paging in POST side
-    let pager_txt = ''
-    let space = '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'
+    count_before_paging = send_list.length
+    let pager_txt,space = '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'
     if(filter.paging === 'on'){
-      ret_obj = helpers_genomes.apply_pages(send_list, filter, page_data)
-      send_list = ret_obj.glist
-      page_data = ret_obj.pd
+      console.log('fpaging = on')
+      // ret = apply_pages(send_list, filter, page_data)
+      // send_list = ret.glist
+      // page_data = ret.pd
       //console.log('get init pd',page_data)
       //console.log(page_data)
-      
-      if(count_before_paging > send_list.length){
-         //console.log('must add pager txt')
-         pager_txt = "page: <span class='gray'>"+page_data.page + " (of "+page_data.number_of_pages+"p)</span>"+space
-         let next = (page_data.page + 1).toString()
-         let prev = (page_data.page - 1).toString()
-         pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
-         pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
-         pager_txt += space+"Jump to Page: <select class='gray' onchange=\"document.location.href='genome_table?page='+this.value\" >"
-         for(let i=1;i<=page_data.number_of_pages;i++){
-            if(i == parseInt(page_data.page)){
-              pager_txt +='<option selected value="'+i+'">pg: '+i+'</option>'
-            }else{
-              pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
-            }
-         }
-         pager_txt += "</select>"+space+"(<a href='genome_table?page=1'>Return to Page1</a>)"
-      }
+        ret_obj = helpers_genomes.get_paging_text(send_list, filter, page_data)
+
+        console.log(ret_obj.pager_txt)
+    //   if(count_before_paging > send_list.length){
+    //      //console.log('must add pager txt')
+    //      pager_txt = "page: <span class='gray'>"+page_data.page + " (of "+page_data.number_of_pages+"p)</span>"+space
+    //      let next = (page_data.page + 1).toString()
+    //      let prev = (page_data.page - 1).toString()
+    //      pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
+    //      pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
+    //      pager_txt += space+"Jump to Page: <select class='gray' onchange=\"document.location.href='genome_table?page='+this.value\" >"
+    //      for(let i=1;i<=page_data.number_of_pages;i++){
+    //         if(i === parseInt(page_data.page)){
+    //           pager_txt +='<option selected value="'+i+'">pg: '+i+'</option>'
+    //         }else{
+    //           pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
+    //         }
+    //      }
+    //      pager_txt += "</select>"+space+"(<a href='genome_table?page=1'>Return to Page1</a>)"
+    //   }
+    }else{
+       console.log('EVER TRUE??')
+
     }
-    page_data.count_before_paging = count_before_paging
-    //console.log('pagedata',page_data)
-    if(pager_txt != ''){
-        pager_txt = space+pager_txt
+
+    console.log('pagedata',page_data)
+    if(pager_txt !== ''){
+        pager_txt = space+ret_obj.pager_txt
+    }else{
+        pager_txt = ret_obj.pager_txt
     }
-    count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+ pager_txt
+
     // apply sub-species to species
-    send_list = helpers_genomes.apply_species(send_list)
+    send_list = apply_species(ret_obj.send_list)
     send_list.map(function mapGidObjList (el) {
         if (el.combined_size) { 
             el.combined_size = helpers.format_long_numbers(el.combined_size); 
@@ -277,7 +302,7 @@ router.get('/genome_table', function genome_table(req, res) {
     }else{
        filter_on = get_filter_on(filter,'genome')
     }
-    args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: filter_on}
+    args = {filter: filter, send_list: send_list, count_txt: pager_txt, pd:page_data, filter_on: filter_on}
     //console.log('list[0]',send_list[0])
     renderGenomeTable(req, res, args)
 
@@ -313,7 +338,7 @@ router.post('/genome_table', function genome_table_post(req, res) {
          pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
          pager_txt += space+"Jump to Page: <select class='gray' onchange=\"document.location.href='genome_table?page='+this.value\" >"
          for(let i=1;i<=page_data.number_of_pages;i++){
-            if(i == parseInt(page_data.page)){
+            if(i === parseInt(page_data.page)){
               pager_txt +='<option selected value="'+i+'">pg: '+i+'</option>'
             }else{
               pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
@@ -326,7 +351,7 @@ router.post('/genome_table', function genome_table_post(req, res) {
     page_data.count_before_paging = count_before_paging
     count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+  pager_txt
     //console.log('pd2',page_data)
-    send_list = helpers_genomes.apply_species(send_list)
+    send_list = apply_species(send_list)
     send_list.map(function mapGidObjList (el) {
         if (el.combined_size) { 
             el.combined_size = helpers.format_long_numbers(el.combined_size); 
@@ -408,7 +433,7 @@ router.get('/genome_description', function Description (req, res) {
      if (err) {
          console.log(err)
      }else{
-         if(rows.length ==0){
+         if(rows.length === 0){
              return
          }
          //kludge for pangenomes
@@ -482,7 +507,7 @@ router.get('/genome_description', function Description (req, res) {
 router.post('/get_contig_seq', function get_contig_seq (req, res) {
     helpers.print(req.body)
     const gid = req.body.gid
-    const mid = req.body.mid
+    //const mid = req.body.mid
     const contig = req.body.contig
     let q = queries.get_contig(gid,contig)
     //console.log('contig query',q)
@@ -522,15 +547,15 @@ router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
   
   let db
   let gid = req.body.gid
-  if(req.body.type == 'aa'){   // NCBI
-      if(db_pts[0] == 'NCBI' || db_pts[0] == 'ncbi'){
+  if(req.body.type === 'aa'){   // NCBI
+      if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
           db = "`NCBI_faa`.`protein_seq`"
        }else{
           db = "`PROKKA_faa`.`protein_seq`"
        }
      
   }else{   //req.body.type == 'na':   // NCBI  na
-      if(db_pts[0] == 'NCBI' || db_pts[0] == 'ncbi'){
+      if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
           db = "`NCBI_ffn`.`ffn_seq`"
        }else{
           db = "`PROKKA_ffn`.`ffn_seq`"
@@ -640,7 +665,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
               
               let row = data_rows[i].split('|')
               //console.log('row',row)
-              if(!row || row.length == 0 || row[0]==''){
+              if(!row || row.length === 0 || row[0] === ''){
                  continue
               }
               //console.log('data_rows[i]',data_rows[i])
@@ -746,7 +771,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
 router.post('/orf_search_sql', function orf_search_full (req, res) {
     console.log('in POST:orf_search_sql')
     //console.log(req.body)
-    let site_search_result={},tmpgid,ssp,data_keys,obj
+    let site_search_result={},tmpgid,obj
     let anno = req.body.anno
     let search_text = req.body.search_text
     let dirname = req.body.dirname
@@ -754,7 +779,7 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
     
     
     let org_list = {}
-    let gid='',otid = '',organism=''
+    let gid=''
     //let bigdata = req.session.anno_search_full //JSON.parse(decodeURI(req.body.dataobj))
     //console.log('req.session',req.session)
     //console.log('Parsed Data1',bigdata)
@@ -801,8 +826,7 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
                     tmpgid = tmp_data_keys[k]
                     org_list[tmpgid] = ''
                     if(C.genome_lookup.hasOwnProperty(tmpgid)){
-                       let organism = C.genome_lookup[tmpgid].organism+' '+C.genome_lookup[tmpgid].strain
-                       org_list[tmpgid] = organism
+                        org_list[tmpgid] = C.genome_lookup[tmpgid].organism+' '+C.genome_lookup[tmpgid].strain
                     }
             }
             
@@ -841,7 +865,7 @@ router.post('/orf_search', function orf_search (req, res) {
     let anno = req.body.anno
     let search_text = req.body.search_text
     let org_list = {}
-    let gid='',otid = '',organism=''
+    let gid=''
     if(!req.session.anno_search_dirname){
        res.send('Session Expired')
        return
@@ -891,8 +915,7 @@ router.post('/orf_search', function orf_search (req, res) {
                    if(C.genome_lookup[tmpgid].subspecies){
                       ssp = C.genome_lookup[tmpgid].subspecies+' '
                    }
-                   let organism = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].strain
-                   org_list[tmpgid] = organism
+                    org_list[tmpgid] = C.genome_lookup[tmpgid].genus +' '+C.genome_lookup[tmpgid].species+' '+ssp+C.genome_lookup[tmpgid].strain
                 }
             }
             let data_keys = Object.keys(org_list).sort(function (a, b) {
@@ -924,10 +947,10 @@ router.post('/orf_search', function orf_search (req, res) {
 
 function get_annot_table_filter(body){
    let rev = 'off'
-    if (body.sort_rev && body.sort_rev == 'on'){
+    if (body.sort_rev && body.sort_rev === 'on'){
       rev = 'on'
     }
-    let filter = {
+    return {
           text:{
             txt_srch: body.txt_srch.toLowerCase(),
             field: body.field,
@@ -935,7 +958,7 @@ function get_annot_table_filter(body){
           sort_col: body.sort_col,
           sort_rev: rev
     }
-    return filter
+
 }
 function apply_annot_table_filter(rows, filter){
     //console.log(filter)
@@ -1005,14 +1028,14 @@ function apply_annot_table_filter(rows, filter){
 }
 function get_text_filtered_annot(annot_list, search_txt, search_field){
 
-  let send_list = []
-  if(search_field == 'pid'){
+  let send_list
+  if(search_field === 'pid'){
       send_list = annot_list.filter(item => item.protein_id.toLowerCase().includes(search_txt))
-  }else if(search_field == 'product'){
+  }else if(search_field === 'product'){
       send_list = annot_list.filter(item => item.product.toLowerCase().includes(search_txt))
-  }else if(search_field == 'gene'){
+  }else if(search_field === 'gene'){
       send_list = annot_list.filter(item => item.gene.toLowerCase().includes(search_txt))
-  }else if(search_field == 'molecule'){
+  }else if(search_field === 'molecule'){
       send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
   }else {
       // search all
@@ -1086,12 +1109,12 @@ router.post('/explorer', function explorer_post (req, res) {
     }
     let atable_filter = get_annot_table_filter(req.body)
     req.session.atable_filter = atable_filter
-    const q = queries.get_annotation_query(gid, req.body.anno)
+    let q = queries.get_annotation_query(gid, req.body.anno)
     console.log('get_annotation_query-post',q)
     TDBConn.query(q, (err, rows) => {
     if (err) {
       req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
-      args = {fltr:{},filter_on: 'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
+      let args = {fltr:{},filter_on: 'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
       render_explorer(req, res, args)
       return
     } else {
@@ -1257,7 +1280,7 @@ router.get('/explorer', function explorer_get (req, res) {
       if (rows.length === 0) {
         console.log('no rows found')
       }
-      let filtered_rows = apply_annot_table_filter(rows, atable_filter)
+      //let filtered_rows = apply_annot_table_filter(rows, atable_filter)
       pageData.trecords = rows.length
       if (pageData.page) {
         const trows = rows.length
@@ -1361,8 +1384,8 @@ router.get('/blast_sserver', function blast_sserver(req, res){
    //console.log(req.query)
    //helpers.accesslog(req, res)
    let db_type = req.query.type
-   let page_title = ''
-   if(db_type == 'refseq'){
+   let page_title
+   if(db_type === 'refseq'){
      page_title = 'BLAST: RefSeq Databases'
    }else{
      page_title = 'Genomic BLAST: All-Genomes Databases'
@@ -1407,10 +1430,10 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
         req.session.gtable_filter.gid = gid
     } 
     
-  let page_title = 'Genomic BLAST: '+organism +' ('+gid+')'
-  if(req.body.annotation){
-     page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
-  }
+  //let page_title = 'Genomic BLAST: '+organism +' ('+gid+')'
+  //if(req.body.annotation){
+  //   page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
+  //}
   
   //console.log('BLAST SequenceServer','Type:SingleGenome',gid,'IP:',req.ip)
   //console.log('SingleBLASTURL: '+CFG.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+gid)
@@ -1428,8 +1451,8 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
 //     no_ncbi_blast: JSON.stringify(C.no_ncbi_blast_dbs)
 //   })
   
-  let url = ''
-  if(req.body.annotation == 'ncbi'){
+  let url
+  if(req.body.annotation === 'ncbi'){
       url = CFG.BLAST_URL_BASE+'/genome_blast_single_ncbi/?gid='+req.body.gid
   }else{
       url = CFG.BLAST_URL_BASE+'/genome_blast_single_prokka/?gid='+req.body.gid
@@ -1465,11 +1488,11 @@ router.post('/blast_single_test', function(req, res){
 router.post('/blast_single', function blast_single(req, res) {
     //console.log(req.body)
     // 'prokka|fna|SEQF1595.2|/Users/avoorhis/programming/blast-db-alt/fna/SEQF1595.2.fna'
-    let blast_db_parts = req.body.blastdb.split('|')
-    let anno    = blast_db_parts[0]
-    let ext     = blast_db_parts[1]
-    let gid     = blast_db_parts[2]
-    let db_path = blast_db_parts[3]
+    //let blast_db_parts = req.body.blastdb.split('|')
+    //let anno    = blast_db_parts[0]
+    // ext     = blast_db_parts[1]
+    //let gid     = blast_db_parts[2]
+    //let db_path = blast_db_parts[3]
     
     // localhost:4567  or 0.0.0.
     // production:  192.168.1.60:4569  for the SS-single
@@ -1487,7 +1510,7 @@ router.post('/blast_single', function blast_single(req, res) {
 router.get('/blast_server_one', function blast_test(req, res) {
   console.log('blast_test')
   let gid = req.query.gid
-  const { spawn } = require("child_process");
+  //const { spawn } = require("child_process");
   let info = {}, filepath
   info[gid] = []
     let dataPromises = []
@@ -1543,8 +1566,8 @@ router.get('/genome_blast_no_iframe', function genome_blast_no_iframe(req, res) 
    //helpers.accesslog(req, res)
    let url = CFG.BLAST_URL_BASE+'/genome_blast/'
    let db_type = req.query.type
-   let page_title = ''
-   if(db_type == 'refseq'){
+   let page_title
+   if(db_type === 'refseq'){
      page_title = 'BLAST: RefSeq Databases'
    }else{
      page_title = 'Genomic BLAST: All-Genomes Databases'
@@ -1580,7 +1603,7 @@ router.get('/blast', function blast_get(req, res) {
       return helpers.compareStrings_alpha(a.org, b.org)
    })
    //let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
-    if(! chosen_gid || chosen_gid == 0|| chosen_gid ==='all' || !C.annotation_lookup.hasOwnProperty(chosen_gid)){
+    if(! chosen_gid || chosen_gid === 0 || chosen_gid === 'all' || !C.annotation_lookup.hasOwnProperty(chosen_gid)){
       
       organism   = allAnnosObj[0].org
       chosen_gid = allAnnosObj[0].gid
@@ -1786,31 +1809,31 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 
 //
 
-function get_blast_db_info(gid){
-    console.log('in get_blast_db_info')
-    let info = {},run,filepath,hit
-    const { spawn } = require("child_process");
-    // get & check paths to six genome databases: 
-    //gid = 'SEQF1595'
-    info[gid] = []
-    let promises = []
-    let exts = ['faa', 'ffn', 'fna']
-    let paths = [CFG.BLAST_DB_PATH_GENOME_NCBI, CFG.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
-    for(let p in paths){
-       for(let e in exts){
-           filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
-           //console.log(filepath)
-           let full_data = ''
-           promises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
-
-       }
-    }
-    const responses = Promise.all(promises)
-      .then(results => {
-      
-      return results
-    })
-}
+// function get_blast_db_info(gid){
+//     console.log('in get_blast_db_info')
+//     let info = {},run,filepath,hit
+//     const { spawn } = require("child_process");
+//     // get & check paths to six genome databases:
+//     //gid = 'SEQF1595'
+//     info[gid] = []
+//     let promises = []
+//     let exts = ['faa', 'ffn', 'fna']
+//     let paths = [CFG.BLAST_DB_PATH_GENOME_NCBI, CFG.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
+//     for(let p in paths){
+//        for(let e in exts){
+//            filepath = path.join(paths[p], exts[e], gid+'.'+exts[e])
+//            //console.log(filepath)
+//            let full_data = ''
+//            promises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
+//
+//        }
+//     }
+//     const responses = Promise.all(promises)
+//       .then(results => {
+//
+//       return results
+//     })
+// }
 //
 router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
    let q = queries.get_all_pangenomes_query()
@@ -1925,7 +1948,7 @@ router.get('/anvio', (req, res) => {
 });
 router.get('/pangenome_image', function pangenome_image(req, res) {
     console.log(req.query)
-    let otid,pg,ext,filepath
+    let ext,filepath
     // if otid is present get filename from db
     if(req.query.otid){
         //otid = req.query.otid
@@ -1939,7 +1962,7 @@ router.get('/pangenome_image', function pangenome_image(req, res) {
 			  return
 			}
 			console.log(rows)
-			if(rows.length == 0){
+			if(rows.length === 0){
 			   res.send('File not found');
 			}else{
 			  filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdf/HMT_"+req.query.otid+"/"+rows[0].filename
@@ -1949,7 +1972,7 @@ router.get('/pangenome_image', function pangenome_image(req, res) {
 	}else{
 	   // get directly from files system using ext and pg name
 	   ext = req.query.ext
-	   pg = req.query.pg
+
 	   filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/"+ext+'/'+req.query.pg+'.'+ext
 	   console.log('fpath',filepath)
 	   res.sendFile(filepath)
@@ -1970,7 +1993,7 @@ router.get('/oralgen', function oralgen(req, res) {
 router.get('/peptide_table', function peptide_table_get(req, res) {
     
     const q = queries.get_peptide()
-    let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
+    let pid,gid,prod,temp,pep,otid,org,mol,pepid,jb_link,study_id
     //console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2019,10 +2042,10 @@ router.get('/peptide_table', function peptide_table_get(req, res) {
 router.post('/peptide_table', function peptide_table_post(req, res) {
     console.log('req.body',req.body)
     let search_text = req.body.txt_srch.toLowerCase()
-    let big_p_list //= Object.values(C.genome_lookup);
+    //let big_p_list //= Object.values(C.genome_lookup);
     const q = queries.get_peptide()
     
-    let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
+    let pid,gid,prod,temp,pep,otid,hmt,org,mol,pepid,jb_link,study_id
     console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2046,14 +2069,13 @@ router.post('/peptide_table', function peptide_table_post(req, res) {
            //console.log('jblink',jb_link)
 
            //if(C.genome_lookup.hasOwnProperty(gid)){
-        //genome = C.genome_lookup[gid]
+            //genome = C.genome_lookup[gid]
              //console.log('genome',genome) 
 
         //temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
           //temp = {pid:pid,study_id:study_id,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,peptide_id:pepid,jb_link:jb_link}
            temp = {study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,peptide_id:pepid,peptide:pep,jb_link:jb_link}
-             
-             full_send_list.push(temp)
+           full_send_list.push(temp)
            //}
        }
        // will search all == PID,HMT,Organism,Peptide,Product
@@ -2096,7 +2118,7 @@ router.get('/peptide_table2', function peptide_table2_get(req, res) {
     
     const q = queries.get_peptide2()
 
-    let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
+    let gid,temp,studies,study_id,study_collector,row,row_collector
     console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2105,7 +2127,7 @@ router.get('/peptide_table2', function peptide_table2_get(req, res) {
        }
        //console.log('1')
        let full_send_list = []
-       let org_list = []
+       //let org_list = []
        study_collector = {}
        row_collector= {}
        for(let r in rows){
@@ -2159,7 +2181,7 @@ router.post('/peptide_table2', function peptide_table2_post(req, res) {
     const q = queries.get_peptide2()
 
     let search_text = req.body.txt_srch.toLowerCase()
-    let gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
+    let gid,hmt,temp,studies,study_id,study_collector,row,row_collector
     console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {
@@ -2168,7 +2190,7 @@ router.post('/peptide_table2', function peptide_table2_post(req, res) {
        }
        //console.log('1')
        let full_send_list = []
-       let org_list = []
+       //let org_list = []
        study_collector = {}
        row_collector= {}
        for(let r in rows){
@@ -2231,8 +2253,8 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
     let gid = req.query.gid
     
     const q = queries.get_peptide3(gid)
-    let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study,peptide_id,jb_link
-    let locstart,locstop,size,seqacc,loc,highlight
+    let temp,pid,otid,org,prod,pep,mol,study_name,study,peptide_id,jb_link
+    //let locstart,locstop,size,seqacc,loc,highlight
     console.log(q)
     TDBConn.query(q, (err, rows) => {
        if (err) {

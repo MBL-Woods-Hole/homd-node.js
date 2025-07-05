@@ -14,66 +14,6 @@ const helpers = require(app_root + '/routes/helpers/helpers');
 const helpers_genomes = require(app_root + '/routes/helpers/helpers_genomes');
 //let hmt = 'HMT-'+("000" + otid).slice(-3)
 
-module.exports.apply_species = function apply_species(lst){
-   let otid,sp=''
-   let subspecies = ''
-   
-   for(let i in lst){
-      otid = lst[i].otid
-      //sp = lst[i].species
-      //console.log('otid',otid)
-      lst[i].genus = C.taxon_lineage_lookup[otid].genus
-      lst[i].species = C.taxon_lineage_lookup[otid].species
-      lst[i].subspecies = ''
-      if(C.taxon_lineage_lookup.hasOwnProperty(otid) && C.taxon_lineage_lookup[otid].subspecies){
-        //subspecies = ' <small>['+C.taxon_lineage_lookup[otid].subspecies+']</small>'
-        //lst[i].species = sp + subspecies
-        lst[i].subspecies = C.taxon_lineage_lookup[otid].subspecies
-      }
-   }
-   return lst
-
-}
-
-module.exports.apply_pages = function apply_pages(glist,fltr, pd){
-  let genomeList
-  pd.trecords = glist.length
-  //console.log('fltr',fltr,pd)
-  
-  const trows = pd.trecords
-  if(trows > pd.rows_per_page){
-    
-    //console.log('IN PD trows',trows)
-    
-    pd.number_of_pages = Math.ceil(trows / pd.rows_per_page)
-    if (pd.page > pd.number_of_pages) { pd.page = 1 }
-    if (pd.page < 1) { pd.page = pd.number_of_pages }
-    helpers.print(['page_data.number_of_pages', pd.number_of_pages])
-    pd.show_page = pd.page
-    if (pd.show_page === 1) {
-      
-      genomeList = glist.slice(0, pd.rows_per_page) // first 500
-      
-      pd.start_count = 1
-    } else {
-    //let obj1a = glist.filter(o => o.species === 'coli');
-    //console.log('coli1a',obj1a.length)
-    //console.log(pd.rows_per_page * (pd.show_page - 1), pd.rows_per_page * pd.show_page)
-      genomeList = glist.slice(pd.rows_per_page * (pd.show_page - 1), pd.rows_per_page * pd.show_page) // second 200
-    //let obj1b = genomeList.filter(o => o.species === 'coli');
-    //console.log('coli1b',obj1b.length)
-      //genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page)
-      pd.start_count = pd.rows_per_page * (pd.show_page - 1) + 1
-    }
-    //console.log('start count', pageData.start_count)
-  }else{
-    
-    genomeList = glist
-    
-  }
-  return {glist: genomeList, pd: pd}
-}
-
 module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
     let big_g_list = Object.values(C.genome_lookup);
     //console.log('big_g_list-0',big_g_list[0])
@@ -448,13 +388,84 @@ module.exports.get_null_gtable_filter = function get_null_gtable_filter(){
     }
     return defaultfilter
 }
+module.exports.apply_pages = function apply_pages(glist,fltr, pd){
+    let genomeList
+    pd.trecords = glist.length
+    //console.log('fltr',fltr,pd)
+
+    const trows = pd.trecords
+    if(trows > pd.rows_per_page){
+
+        //console.log('IN PD trows',trows)
+
+        pd.number_of_pages = Math.ceil(trows / pd.rows_per_page)
+        if (pd.page > pd.number_of_pages) { pd.page = 1 }
+        if (pd.page < 1) { pd.page = pd.number_of_pages }
+        helpers.print(['page_data.number_of_pages', pd.number_of_pages])
+        pd.show_page = pd.page
+        if (pd.show_page === 1) {
+
+            genomeList = glist.slice(0, pd.rows_per_page) // first 500
+
+            pd.start_count = 1
+        } else {
+            //let obj1a = glist.filter(o => o.species === 'coli');
+            //console.log('coli1a',obj1a.length)
+            //console.log(pd.rows_per_page * (pd.show_page - 1), pd.rows_per_page * pd.show_page)
+            genomeList = glist.slice(pd.rows_per_page * (pd.show_page - 1), pd.rows_per_page * pd.show_page) // second 200
+            //let obj1b = genomeList.filter(o => o.species === 'coli');
+            //console.log('coli1b',obj1b.length)
+            //genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page)
+            pd.start_count = pd.rows_per_page * (pd.show_page - 1) + 1
+        }
+        //console.log('start count', pageData.start_count)
+    }else{
+
+        genomeList = glist
+
+    }
+    return {glist: genomeList, pd: pd}
+}
+module.exports.get_paging_text = function get_paging_text(send_list, filter, page_data){
+
+    let pager_txt
+    let space = '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'
+    let cbp = send_list.length
+    let ret_obj = helpers_genomes.apply_pages(send_list, filter, page_data)
+    send_list = ret_obj.glist
+    console.log('new length',send_list.length)
+    page_data = ret_obj.pd
+    if(cbp > send_list.length){
+        //console.log('must add pager txt')
+        pager_txt = "page: <span class='gray'>"+page_data.page + " (of "+page_data.number_of_pages+"p)</span>"+space
+        let next = (page_data.page + 1).toString()
+        let prev = (page_data.page - 1).toString()
+        pager_txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
+        pager_txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
+        pager_txt += space+"Jump to Page: <select class='gray' onchange=\"document.location.href='genome_table?page='+this.value\" >"
+        for(let i=1;i<=page_data.number_of_pages;i++){
+            if(i === parseInt(page_data.page)){
+                pager_txt +='<option selected value="'+i+'">pg: '+i+'</option>'
+            }else{
+                pager_txt +='<option value="'+i+'">pg: '+i+'</option>'
+            }
+        }
+        pager_txt += "</select>"+space+"(<a href='genome_table?page=1'>Return to Page1</a>)"
+        page_data.count_before_paging = cbp
+        let count_txt = 'Number of Records Found: '+page_data.count_before_paging.toString()+ space+'Showing: '+send_list.length.toString()+' rows'+ pager_txt
+        return { pager_text:count_txt, send_list:send_list }
+    }else {
+        return {pager_text:'no text', send_list:send_list}
+    }
+
+}
 // module.exports.gtfilter_for_phylum = function gtfilter_for_phylum(glist, phy){
 //     
 //     //console.log('glist[0]',glist[0])
-//     //let lineage_list = Object.values(C.taxon_lineage_lookup)
-//     //let obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
+//     //var lineage_list = Object.values(C.taxon_lineage_lookup)
+//     //var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
 //     //console.log('obj_lst',obj_lst)
-//     //let otid_list = glist.map( (el) =>{  // get list of otids with this phylum
+//     //var otid_list = glist.map( (el) =>{  // get list of otids with this phylum
 //     //    return el.otid
 //     //})
 //     //let otid_grabber = {}

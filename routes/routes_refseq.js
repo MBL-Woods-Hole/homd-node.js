@@ -1,6 +1,6 @@
 'use strict'
 const express   = require('express');
-var router    = express.Router();
+let router    = express.Router();
 const CFG     = require(app_root + '/config/config');
 const fs        = require('fs-extra')
 const fsp = require('fs').promises

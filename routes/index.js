@@ -12,8 +12,8 @@ const C = require(app_root + '/public/constants')
 const { exec, spawn } = require('child_process');
 const queries = require(app_root + '/routes/queries')
 // let timestamp = new Date() // getting current timestamp
-// var rs_ds = ds.get_datasets( () => {
-var browseDir = require("browse-directory");
+// let rs_ds = ds.get_datasets( () => {
+let browseDir = require("browse-directory");
 const { v4: uuidv4 } = require('uuid'); // I chose v4 ‒ you can select othersc
 //const Stream = require( 'stream-json/streamers/StreamArray');
 /* GET home page. */
@@ -40,7 +40,7 @@ router.get('/', function index(req, res) {
 // router.get('/taxon=(\\d+)', function taxon(req, res) {
 //   // sequence server
 //   //console.log('taxon=/.d/')
-//   var url = req.url;
+//   let url = req.url;
 //   //console.log(url)
 //   let otid = url.split('=')[1]
 //   res.redirect('/taxa/tax_description?otid='+otid)
@@ -49,7 +49,7 @@ router.get('/', function index(req, res) {
 // router.get('/idn=SEQF(\\d+.\\d)', function idn(req, res) {
 //   // sequence server
 //   //console.log('idn=SEQF')
-//   var url = req.url;
+//   let url = req.url;
 //   //console.log(url)
 //   let gid = url.split('=')[1]
 //   res.redirect('/genome/genome_description?gid='+gid)
@@ -60,7 +60,7 @@ router.get('/', function index(req, res) {
 //   //console.log('get_seq=')
 //    // https://www.homd.org/get_seq=xxxxxx&type=yy
 //    // https://www.homd.org/get_seq=KDE71052.1&type=aa
-//   var url = req.url;
+//   let url = req.url;
 //   //console.log(url)
 //   // /get_seq=KDE71052.1&type=aa
 //   let type,pid,sp,db,anno
@@ -170,7 +170,7 @@ router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, re
 })
 // router.post('/advanced_site_search', function advanced_site_searchPOST(req, res) {
 //   console.log('advanced_site_searchPOST req.body',req.body)
-//   var searchTextLower = req.body.adv_search_text.toLowerCase()
+//   let searchTextLower = req.body.adv_search_text.toLowerCase()
 //   let taxonOtidObj = {},otidLst = [],gidLst=[],ret_obj={}
 //   let form_type = []
 //   if(req.body.taxonomy && req.body.taxonomy == 'on'){
@@ -370,8 +370,8 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //     }
     try{
         let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
-        //var filename = uuidv4();  //CFG.PATH_TO_TMP
-        //var filepath = path.join(CFG.PATH_TO_TMP, filename)
+        //let filename = uuidv4();  //CFG.PATH_TO_TMP
+        //let filepath = path.join(CFG.PATH_TO_TMP, filename)
         let max_rows = 50000
         let split_length = 6
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
@@ -505,7 +505,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //     console.log("After SQL2")
 //     return
 //     
-//     var dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
+//     let dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
 //     dirname = dirname+'_sql'
 //     
 //     console.log('POST::get_annotations_counts_sql')
@@ -550,7 +550,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //       console.log('q_prokka',q_prokka)
 //       
 //       let pfile_name = path.join(anno_path,'prokka_data')
-//       var pstream = fs.createWriteStream(pfile_name, {flags:'a'});
+//       let pstream = fs.createWriteStream(pfile_name, {flags:'a'});
 //       
 //       TDBConn.query(q_prokka, (err, prows) => {
 //         if (err) {
@@ -581,7 +581,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //         console.log('q_ncbi',q_ncbi)
 //         let nfile_name = path.join(anno_path,'ncbi_data')
 //     
-//         var nstream = fs.createWriteStream(nfile_name, {flags:'a'});
+//         let nstream = fs.createWriteStream(nfile_name, {flags:'a'});
 //     
 //         
 //         TDBConn.query(q_ncbi, (err, nrows) => {
@@ -653,7 +653,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 
 // router.post('/advanced_site_search_sql', function get_annotations_counts_sql(req, res) {
 //     
-//     //var dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
+//     //let dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
 //     //dirname = dirname+'_sql'
 //     
 //     console.log('POST::advanced_site_search_sql',req.body)
@@ -708,7 +708,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //     //console.log(req.body)
 //     
 // 
-//     var dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
+//     let dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
 //     dirname = dirname+'_grep'
 //     //req.setTimeout(240000);
 //     //const searchText = req.body.intext
@@ -736,8 +736,8 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //         fs.mkdirSync(nanno_path)
 //         let pfile_name = path.join(panno_path,'data')
 //         let nfile_name = path.join(nanno_path,'data')
-//         var pstream = fs.createWriteStream(pfile_name, {flags:'a'});
-//         var nstream = fs.createWriteStream(nfile_name, {flags:'a'});
+//         let pstream = fs.createWriteStream(pfile_name, {flags:'a'});
+//         let nstream = fs.createWriteStream(nfile_name, {flags:'a'});
 //         
 //         let child = spawn("/bin/sh", ['-c',grep_cmd], { 
 //             //, (err, stdout, stderr) => {

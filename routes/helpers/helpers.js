@@ -5,7 +5,7 @@ const CFG  = require(app_root + '/config/config');
 const express     = require('express');
 const fs          = require('fs-extra');
 const readline = require('readline');
-var accesslog = require('access-log');
+let accesslog = require('access-log');
 const async = require('async')
 const util        = require('util');
 const path        = require('path');
@@ -18,21 +18,21 @@ module.exports.getKeyByValue = (object, value) => {
   return Object.keys(object).find(key => object[key] === value);
 }
 module.exports.timestamp = (dateonly) => {
-    //var today = new Date().toUTCString();
+    //let today = new Date().toUTCString();
     if(dateonly){
-      var today = new Date().toISOString().substring(0,10)
+      let today = new Date().toISOString().substring(0,10)
     }else{
-      var today = new Date().toISOString()
+      let today = new Date().toISOString()
     }
     return today
-//     var dd = String(today.getDate()).padStart(2, '0');
-//     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-//     var yyyy = today.getFullYear();
-//     var hours = today.getHours()
-//     var mins = today.getMinutes()
-//     var secs = today.getSeconds()
-//     var date_string = yyyy + '-' + mm + '-' + dd;
-//     var time_string = '('+String(hours)+'-'+String(mins)+'-'+String(secs)+')'
+//     let dd = String(today.getDate()).padStart(2, '0');
+//     let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+//     let yyyy = today.getFullYear();
+//     let hours = today.getHours()
+//     let mins = today.getMinutes()
+//     let secs = today.getSeconds()
+//     let date_string = yyyy + '-' + mm + '-' + dd;
+//     let time_string = '('+String(hours)+'-'+String(mins)+'-'+String(secs)+')'
 //     return date_string + ' '+time_string
 }
 module.exports.isLoggedIn = (req, res, next) => {
@@ -144,7 +144,7 @@ module.exports.show_session = (req) =>{
 };
 module.exports.accesslog = (req, res) =>{
     accesslog(req, res, 'RemoteIP:'+req.ip+':'+ C.access_log_format, function(s) {
-       var testout = 'Request from:'+req.ip+ s+'\n'
+       let testout = 'Request from:'+req.ip+ s+'\n'
        console.log(testout);
         fs.appendFile(C.access_logfile, s+'\n', err => {
              if (err) {
@@ -234,7 +234,7 @@ module.exports.getAllDirFiles = function getAllDirFiles(dirPath, arrayOfFiles) {
  
       files.forEach(function getFilesArray(file) {
         let stats = fs.statSync(dirPath + "/" + file)
-        var unixFilePermissions = '0' + (stats.mode & parseInt('777', 8)).toString(8);
+        let unixFilePermissions = '0' + (stats.mode & parseInt('777', 8)).toString(8);
         //console.log(file,unixFilePermissions,stats)
         if (stats.mode & (fs.constants.S_IRUSR | fs.constants.S_IRGRP | fs.constants.S_IROTH)) {
             
@@ -275,10 +275,10 @@ module.exports.getAllDirFiles = function getAllDirFiles(dirPath, arrayOfFiles) {
 module.exports.makeid = function makeid(length) {
     // Used for blast.id and spamguard
     // REMOVE 1/I and 0/o confusing
-    var result           = '';
-    var characters       = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz23456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
+    let result           = '';
+    let characters       = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz23456789';
+    let charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
@@ -314,7 +314,7 @@ module.exports.execute = function execute(command, callback){
 };
 
 module.exports.getCallerIP = function getCallerIP(request) {
-    var ip = request.headers['x-forwarded-for'] ||
+    let ip = request.headers['x-forwarded-for'] ||
         request.connection.remoteAddress ||
         request.socket.remoteAddress ||
         request.connection.socket.remoteAddress;
@@ -382,28 +382,28 @@ module.exports.execShellCommand = function execShellCommand(cmd) {
 
 module.exports.rtrim = function rtrim(x, characters) {
   //console.log('x,characters',x,characters)
-  var start = 0;
-  var end = x.length - 1;
+  let start = 0;
+  let end = x.length - 1;
   while (characters.indexOf(x[end]) >= 0) {
     end -= 1;
   }
   return x.substr(0, end + 1);
 }
 module.exports.ltrim = function ltrim(x, characters) {
-  var start = 0;
+  let start = 0;
   while (characters.indexOf(x[start]) >= 0) {
     start += 1;
   }
-  var end = x.length - 1;
+  let end = x.length - 1;
   return x.substr(start);
 }
 
 // module.exports.filter_for_phylumXX = function filter_for_phylum(list, phy){
 //     //console.log('list[0]',list[0])
-//     var lineage_list = Object.values(C.taxon_lineage_lookup)
-//     var obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
+//     let lineage_list = Object.values(C.taxon_lineage_lookup)
+//     let obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
 //     //console.log('obj_lst[0]',obj_lst[0])
-//     var otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
+//     let otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
 //         return el.otid
 //     })
 //     //console.log('otid_list.length',otid_list.length)

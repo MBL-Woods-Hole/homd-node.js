@@ -523,7 +523,7 @@
       
       <% g_length = data_lookup.genomes.length %>
       <% if(g_length === 0){ %>
-       No Genomes
+        <small>No Genomes</small>
       <% }else{ %>
        <%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> Open Genomes in Table</a>
       <% } %>
@@ -575,7 +575,7 @@
          </a>
        </td>
     <% }else{ %>
-         <td class='taxon-data'>No Abundance Data</td>
+         <td><small>No Abundance Data</small></td>
     <% } %>
   </tr>
   
@@ -588,7 +588,7 @@
     <td class='taxon-bold tbl-title'>NCBI Taxon ID:</td>
     <td class='taxon-data'>
     <% if(data_lookup.ncbi_taxid === "0"){ %>
-      Not Available
+        <small>Not Available</small>
     <% }else{ %>
       
         <%= data_lookup.ncbi_taxid %> 
