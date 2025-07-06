@@ -5,7 +5,7 @@ const CFG  = require(app_root + '/config/config');
 const express     = require('express');
 const fs          = require('fs-extra');
 const readline = require('readline');
-var accesslog = require('access-log');
+let accesslog = require('access-log');
 const async = require('async')
 const util        = require('util');
 const path        = require('path');
@@ -13,6 +13,105 @@ const {exec, spawn} = require('child_process');
 const helpers = require(app_root + '/routes/helpers/helpers');
 const helpers_genomes = require(app_root + '/routes/helpers/helpers_genomes');
 //let hmt = 'HMT-'+("000" + otid).slice(-3)
+
+module.exports.get_default_annot_filter = function get_default_annot_filter(){
+    let defaultfilter = {
+        text:{
+            txt_srch: '',
+            field: 'all',
+        },
+        sort_col: 'molecule',
+        sort_rev: 'off'
+    }
+    return defaultfilter
+}
+
+
+module.exports.get_taxa_wgenomes = function get_taxa_wgenomes(){
+    let alltax_list = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped'))
+    let taxa_wgenomes = alltax_list.filter(item => item.genomes.length >0)
+    return taxa_wgenomes
+}
+
+
+module.exports.set_gtable_session = function set_gtable_session(req) {
+    
+    //console.log('set sess body',req.body)
+    //console.log('xsession',req.session)
+    let letter = '0'
+    if(req.session.gtable_filter && req.session.gtable_filter.letter){
+       letter = req.session.gtable_filter.letter
+    }
+    //req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
+    req.session.gtable_filter = helpers_genomes.get_null_gtable_filter()
+    req.session.gtable_filter.letter = letter
+
+    for( let item in req.body){
+       if(item === 'letter'){
+         req.session.gtable_filter.letter = req.body.letter
+       }
+       if(item === 'sort_col'){
+         req.session.gtable_filter.sort_col = req.body.sort_col
+       }
+       if(item === 'sort_rev'){
+         req.session.gtable_filter.sort_rev = 'on'
+       }
+       if(item === 'phylum'){
+         req.session.gtable_filter.phylum = req.body.phylum
+       }
+       if(item === 'txt_srch'){
+         req.session.gtable_filter.text.txt_srch = req.body.txt_srch.toLowerCase()
+       }
+       if(item === 'field'){
+         req.session.gtable_filter.text.field = req.body.field
+       }
+       if(item === 'paging'){
+         req.session.gtable_filter.paging = req.body.paging
+       }
+       if(item === 'mags'){
+         req.session.gtable_filter.mags = req.body.mags
+       }
+
+       // Genome Level
+       let cat_array = ['complete_genome','scaffold','contig','chromosome']
+       for(let item in cat_array){
+           if(Object.prototype.hasOwnProperty.call(req.body,cat_array[item])){
+               req.session.gtable_filter.level[cat_array[item]] = req.body[cat_array[item]]
+           }
+       }
+       // Tax Status
+       let status_array = ['named_cultivated','named_uncultivated','unnamed_cultivated','phylotype','dropped']
+       for(let item in status_array){
+           if(Object.prototype.hasOwnProperty.call(req.body,status_array[item])){
+           req.session.gtable_filter.status[status_array[item]] = req.body[status_array[item]]
+           }
+       }
+       // Tax Site
+       let site_array = ['oral','nasal','skin','gut','vaginal','unassigned','enviro','ref','pathogen']
+       for(let item in site_array){
+           if(Object.prototype.hasOwnProperty.call(req.body,site_array[item])){
+           req.session.gtable_filter.site[site_array[item]] = req.body[site_array[item]]
+           }
+       }
+       // Tax Abundance
+       let abund_array = ['high_abund','medium_abund','low_abund','scarce_abund']
+       for(let item in abund_array){
+           if(Object.prototype.hasOwnProperty.call(req.body,abund_array[item])){
+           req.session.gtable_filter.abund[abund_array[item]] = req.body[abund_array[item]]
+           }
+
+       }
+    }
+    
+}
+
+
+module.exports.init_page_data = function init_page_data(){
+   let page_data = {}
+   page_data.rows_per_page = C.PAGER_ROWS
+   
+   return page_data
+}
 
 module.exports.apply_species = function apply_species(lst){
    let otid,sp=''
@@ -34,21 +133,47 @@ module.exports.apply_species = function apply_species(lst){
    return lst
 
 }
-
+module.exports.on_paging = function on_paging(glist, fltr, pd){
+      let txt = ''
+      let cbp = glist.length
+      let ret_obj = helpers_genomes.apply_pages(glist, fltr, pd)
+      let sendList = ret_obj.send_list
+      let pageData = ret_obj.page_data
+      let space = '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'
+      //console.log('get init pd',page_data)
+      //console.log(page_data)
+      
+      if(cbp > sendList.length){
+         //console.log('must add pager txt')
+         txt = "page: <span class='gray'>"+pageData.page + " (of "+pageData.number_of_pages+"p)</span>"+space
+         let next = (pageData.page + 1).toString()
+         let prev = (pageData.page - 1).toString()
+         txt += "<a href='genome_table?page="+prev+"'> Previous Page</a>"
+         txt += "<==><a href='genome_table?page="+next+"'>Next Page</a>"
+         txt += space+"Jump to Page: <select class='gray' onchange=\"document.location.href='genome_table?page='+this.value\" >"
+         for(let i=1; i<= pageData.number_of_pages; i++){
+            if(i === parseInt(pageData.page)){
+              txt +='<option selected value="'+i+'">pg: '+i+'</option>'
+            }else{
+              txt +='<option value="'+i+'">pg: '+i+'</option>'
+            }
+         }
+         txt += "</select>"+space+"(<a href='genome_table?page=1'>Return to Page1</a>)"
+      }
+      
+      return {send_list: sendList, page_data: pageData, pager_txt: txt}
+}
 module.exports.apply_pages = function apply_pages(glist,fltr, pd){
   let genomeList
-  pd.trecords = glist.length
-  //console.log('fltr',fltr,pd)
-  
-  const trows = pd.trecords
+  const trows = glist.length
+  pd.trecords = trows
   if(trows > pd.rows_per_page){
-    
-    //console.log('IN PD trows',trows)
+
     
     pd.number_of_pages = Math.ceil(trows / pd.rows_per_page)
     if (pd.page > pd.number_of_pages) { pd.page = 1 }
     if (pd.page < 1) { pd.page = pd.number_of_pages }
-    helpers.print(['page_data.number_of_pages', pd.number_of_pages])
+    //helpers.print(['page_data.number_of_pages', pd.number_of_pages])
     pd.show_page = pd.page
     if (pd.show_page === 1) {
       
@@ -56,13 +181,7 @@ module.exports.apply_pages = function apply_pages(glist,fltr, pd){
       
       pd.start_count = 1
     } else {
-    //let obj1a = glist.filter(o => o.species === 'coli');
-    //console.log('coli1a',obj1a.length)
-    //console.log(pd.rows_per_page * (pd.show_page - 1), pd.rows_per_page * pd.show_page)
       genomeList = glist.slice(pd.rows_per_page * (pd.show_page - 1), pd.rows_per_page * pd.show_page) // second 200
-    //let obj1b = genomeList.filter(o => o.species === 'coli');
-    //console.log('coli1b',obj1b.length)
-      //genomeList = send_list.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page)
       pd.start_count = pd.rows_per_page * (pd.show_page - 1) + 1
     }
     //console.log('start count', pageData.start_count)
@@ -71,7 +190,7 @@ module.exports.apply_pages = function apply_pages(glist,fltr, pd){
     genomeList = glist
     
   }
-  return {glist: genomeList, pd: pd}
+  return {send_list: genomeList, page_data: pd}
 }
 
 module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
@@ -200,7 +319,7 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
         }
     }
     // Assembly Level
-    let level_on = Object.keys(vals.level).filter(item => vals.level[item] == 'on')
+    let level_on = Object.keys(vals.level).filter(item => vals.level[item] === 'on')
     //console.log('vals',vals)
 
     //console.log('level_on',level_on)
@@ -211,12 +330,12 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
     })
        
     // ADV::Tax Status ////////////////////////////////////////////////
-    let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on')
+    let status_on = Object.keys(vals.status).filter(item => vals.status[item] === 'on')
     //console.log('status_on',status_on)
     //console.log('big_g_list[0]',big_g_list[0])
     let default_length_of_status = 5
     big_g_list = big_g_list.filter( function(item) {
-         if(status_on.length == default_length_of_status){
+         if(status_on.length === default_length_of_status){
             return item
          }else{
 
@@ -231,12 +350,12 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
          
     })
     // ADV::Tax Sites ////////////////////////////////////////////////
-    let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on')
+    let site_on = Object.keys(vals.site).filter(item => vals.site[item] === 'on')
     let default_length_of_site = 9
     //console.log('site_on',site_on)
     //console.log('big_g_list[]',big_g_list[0])
     big_g_list = big_g_list.filter( function(item) {
-         if(site_on.length == default_length_of_site){
+         if(site_on.length === default_length_of_site){
             return item
          }else{
            //console.log('Sites:',C.site_lookup[item.otid].s1)
@@ -251,12 +370,12 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
     })
     // ADV::Tax Abundance ////////////////////////////////////////////////
     //console.log('vals',vals)
-    let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on')
+    let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] === 'on')
     let default_length_of_abund = 4
     //console.log('abundOn',abund_on)
     big_g_list = big_g_list.filter( function filterAbundance(item) {
         //console.log('item',C.site_lookup[item.otid])
-        if(abund_on.length == default_length_of_abund){
+        if(abund_on.length === default_length_of_abund){
             return item
         }else{
           if(C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1){
@@ -278,12 +397,12 @@ module.exports.apply_gtable_filter = function apply_gtable_filter(req, filter) {
     //console.log('vals',vals)
     big_g_list = big_g_list.filter( function filterMAGs(item) {
        //console.log('item',item)
-       if(vals.mags == 'no_mags'){
-           if(item.mag == ''){
+       if(vals.mags === 'no_mags'){
+           if(item.mag === ''){
               return item
            }
-       }else if(vals.mags == 'only_mags'){
-           if(item.mag == 'yes'){
+       }else if(vals.mags === 'only_mags'){
+           if(item.mag === 'yes'){
               return item
            }
        }else{
@@ -448,24 +567,3 @@ module.exports.get_null_gtable_filter = function get_null_gtable_filter(){
     }
     return defaultfilter
 }
-// module.exports.gtfilter_for_phylum = function gtfilter_for_phylum(glist, phy){
-//     
-//     //console.log('glist[0]',glist[0])
-//     //let lineage_list = Object.values(C.taxon_lineage_lookup)
-//     //let obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
-//     //console.log('obj_lst',obj_lst)
-//     //let otid_list = glist.map( (el) =>{  // get list of otids with this phylum
-//     //    return el.otid
-//     //})
-//     //let otid_grabber = {}
-//     let gid_obj_list = glist.filter(item => {   // filter genome obj list for inclusion in otid list
-//         if(C.taxon_lineage_lookup.hasOwnProperty(item.otid) && C.taxon_lineage_lookup[item.otid].phylum == phy){
-//             return true
-//         }
-//     })
-//     //console.log('otid_grabber',otid_grabber)
-//     //console.log('gid_obj_list',gid_obj_list)
-//     // now get just the otids from the selected gids
-//     //gid_obj_list.map( (el) =>{ return el.otid })
-//     return gid_obj_list
-// }
