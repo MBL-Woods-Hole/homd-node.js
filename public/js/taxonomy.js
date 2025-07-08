@@ -199,10 +199,12 @@ function change_level(rank) {
             //console.log('stuff[0]',stuff[0])
             static_data = stuff[1]
             //console.log(static_data)
+      //var html = 'Distinct <strong>'+fix_rank(rank)+'</strong> Count: '+static_data.length.toString()
+      var rank_count = 'Distinct <strong>'+fix_rank(rank)+'</strong> Count: '+static_data.length.toString()
       var html = ''
       html += "<table id='level-table' class='table table-hover' border='0'>"
       html += '<thead>'
-      html += '<tr>'
+      html += "<tr class='header'>"
       if(rank != 'domain'){
         html += '<th scope="col">Parent Level</th>'
       }
@@ -264,7 +266,7 @@ function change_level(rank) {
       
       html += '</tbody></table>'
       document.getElementById('taxlevel_div').innerHTML = html
-      
+      document.getElementById('rank_count').innerHTML = rank_count
       document.getElementById(rank).style ='font-weight:bold;font-size:18px;color:#cf1020;'
 
     }
