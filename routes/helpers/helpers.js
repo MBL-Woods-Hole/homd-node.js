@@ -19,10 +19,11 @@ module.exports.getKeyByValue = (object, value) => {
 }
 module.exports.timestamp = (dateonly) => {
     //let today = new Date().toUTCString();
+    let today
     if(dateonly){
-      let today = new Date().toISOString().substring(0,10)
+      today = new Date().toISOString().substring(0,10)
     }else{
-      let today = new Date().toISOString()
+      today = new Date().toISOString()
     }
     return today
 //     let dd = String(today.getDate()).padStart(2, '0');
