@@ -19,22 +19,13 @@ module.exports.getKeyByValue = (object, value) => {
 }
 module.exports.timestamp = (dateonly) => {
     //let today = new Date().toUTCString();
-    let today
-    if(dateonly){
-      today = new Date().toISOString().substring(0,10)
-    }else{
-      today = new Date().toISOString()
-    }
-    return today
-//     let dd = String(today.getDate()).padStart(2, '0');
-//     let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-//     let yyyy = today.getFullYear();
-//     let hours = today.getHours()
-//     let mins = today.getMinutes()
-//     let secs = today.getSeconds()
-//     let date_string = yyyy + '-' + mm + '-' + dd;
-//     let time_string = '('+String(hours)+'-'+String(mins)+'-'+String(secs)+')'
-//     return date_string + ' '+time_string
+  if(dateonly){
+      return new Date().toISOString().substring(0,10)
+  }else{
+      return new Date().toISOString()
+  }
+    
+
 }
 module.exports.isLoggedIn = (req, res, next) => {
   // if user is authenticated in the session, carry on
@@ -83,24 +74,6 @@ module.exports.check_if_rank = (field_name) => {
   return ranks.includes(field_name);
 };
 
-// module.exports.sortDataBy = (obj, key, type) => {
-//   // https://dev.to/madanlal/how-to-sort-array-of-object-using-object-keys-in-javascript-58f1
-//   let sortedData;
-//   if(type == 'alpha'){
-//     sortedData = obj.sort(function(a,b){
-//       let x = a[key].toLowerCase();
-//       let y = b[key].toLowerCase();
-//       if(x>y){return 1;}
-//       if(x<y){return -1;}
-//       return 0;
-//     });
-//   }else{
-//     sortedData = obj.sort(function(a,b){
-//       return a[key] - b[key];
-//     })
-//   }
-//   return sortedData;
-// }
 
 module.exports.compareStrings_alpha = (a, b) => {
   // Assuming you want case-insensitive comparison
