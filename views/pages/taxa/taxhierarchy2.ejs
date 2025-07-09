@@ -1,0 +1,116 @@
+<style>
+  #masthead {
+  /* width:1350px; */
+  width: 100%;
+  background: #004080;   /* #013366; */
+  
+}
+
+</style>
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    
+
+
+<body>
+    <%- include('../../partials/header_img'); %>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Taxonomy
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Taxon Table</a></li>
+            <li><a class="dropdown-item" href="#">Life</a></li>
+            <li><a class="dropdown-item" href="#">Ecology</a></li>
+            <li><a class="dropdown-item" href="#">Tree</a></li>
+            <li><a class="dropdown-item" href="#">Rank Level</a></li>
+            <li><a class="dropdown-item" href="#">Download</a></li>
+            <li><a class="dropdown-item" href="#">Body Sites</a></li>
+            <li><a class="dropdown-item" href="#">Dropped Taxa</a></li>
+            <li><a class="dropdown-item" href="#">Version History</a></li>
+          </ul>
+          
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Genomes
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Genome Table</a></li>
+            <li><a class="dropdown-item" href="#">JBrowse Viewer Tool</a></li>
+            <li><a class="dropdown-item" href="#">Trees</a></li>
+            <li><a class="dropdown-item" href="#">Explorer</a></li>
+            <li><a class="dropdown-item" href="#">BLAST</a></li>
+            <li><a class="dropdown-item" href="#">Pangenomes</a></li>
+            <li><a class="dropdown-item" href="#">Download</a></li>
+            <li><a class="dropdown-item" href="#">Version History</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown link
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+    
+   
+    <div class='page-content' >
+       <center><h3 class='mt-5'>Human Oral Microbiome Taxonomic Hierarchy</h3></center>
+
+
+   <div class='container-sm'>
+     <div class=''>
+       <button type="button" class="btn btn-primary btn-sm">Archaea</button>
+    </div>
+    <div class=''>
+       <button type="button" class="btn btn-primary btn-sm">Bacteria</button>
+    </div>
+   </div>
+
+
+    </div> <!-- end: page-content -->
+    
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script type="text/javascript" src="/js/dhtmlxtree.js" ></script>
+<!-- <script type="text/javascript" src="/js/tree.js" ></script> -->
+<script type="text/javascript" src="/js/taxonomy.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+<script>
+  mainmenu()
+  $(document).ready(function(){                    
+    //load_dhtmlx(<%- data %>)
+    //load_dhtmlx()
+});
+
+</script>
+

@@ -127,16 +127,28 @@ router.get('/tax_hierarchy', (req, res) => {
       user: JSON.stringify(req.user || {}),
   })
 })
-router.get('/tax_level2', function tax_level_get(req, res) {
-  
-  res.render('pages/taxa/taxlevel2', {
-    title: 'HOMD :: Taxon Level', 
-    pgname: '', // for AbountThisPage
-    config: JSON.stringify(CFG),
-    level: 'domain',
-    //oral: oral,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+router.get('/tax_hierarchy2', (req, res) => {
+  console.log('GET Hierarchy2')
+  res.render('pages/taxa/taxhierarchy2', {
+      title: 'HOMD :: Taxon Hierarchy',
+      pgname: 'taxon/hierarchy', // for AbountThisPage
+      config: JSON.stringify(CFG),
+      data: {},
+      //dhtmlx: JSON.stringify(C.dhtmlxTreeData),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+      user: JSON.stringify(req.user || {}),
+  })
+})
+router.post('/tax_hierarchy2', (req, res) => {
+  console.log('POST Hierarchy2')
+  res.render('pages/taxa/taxhierarchy2', {
+      title: 'HOMD :: Taxon Hierarchy',
+      pgname: 'taxon/hierarchy', // for AbountThisPage
+      config: JSON.stringify(CFG),
+      data: {},
+      //dhtmlx: JSON.stringify(C.dhtmlxTreeData),
+      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+      user: JSON.stringify(req.user || {}),
   })
 })
 router.get('/tax_level', function tax_level_get(req, res) {
