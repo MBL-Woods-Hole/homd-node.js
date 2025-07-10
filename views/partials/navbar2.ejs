@@ -1,0 +1,127 @@
+<% var version_info = JSON.parse(ver_info) %> 
+<% var cfg = JSON.parse(config) %> 
+<% if(user) { %>
+<%     var user = JSON.parse(user) %> 
+<% } %>
+<style>
+
+</style>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Taxonomy
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Taxon Table</a></li>
+            <li><a class="dropdown-item" href="#">Life</a></li>
+            <li><a class="dropdown-item" href="#">Ecology</a></li>
+            <li><a class="dropdown-item" href="#">Tree</a></li>
+            <li><a class="dropdown-item" href="#">Rank Level</a></li>
+            <li><a class="dropdown-item" href="#">Download</a></li>
+            <li><a class="dropdown-item" href="#">Body Sites</a></li>
+            <li><a class="dropdown-item" href="#">Dropped Taxa</a></li>
+            <li><a class="dropdown-item" href="#">Version History</a></li>
+          </ul>
+          
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Genomes
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/genome/genome_table">Genome Table</a></li>
+            <li><a class="dropdown-item" href="/genome/jbrowse">JBrowse Viewer Tool</a></li>
+            <li  class="nav-item dropdown"><a class="dropdown-item" href="#">Trees</a>
+            <ul>
+                <li><a class="dropdown-item" href="#">tree1</a>
+                <li><a class="dropdown-item" href="#">tree2</a>
+                <li><a class="dropdown-item" href="#">tree3</a>
+             </ul>
+            </li>
+            <li><a class="dropdown-item" href="#">Explorer</a></li>
+            <li><a class="dropdown-item" href="#">BLAST</a></li>
+            <li><a class="dropdown-item" href="#">Pangenomes</a></li>
+            <li><a class="dropdown-item" href="#">Download</a></li>
+            <li><a class="dropdown-item" href="#">Version History</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Proteomes
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            16S rRNA
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Animal Microbiomes
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Downloads
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Tools
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            About Us
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <form class="container-fluid justify-content-end">
+    <a class="btn btn-outline-success me-2" type="button" href='/advanced_site_search'>Search</a>
+  </form>
+</nav>
+
