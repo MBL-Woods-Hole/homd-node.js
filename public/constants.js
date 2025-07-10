@@ -5,7 +5,7 @@ constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVer
 constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // JBROWSE if you want a non-relative url use: config.js
 
 // These should be moved to config
-constants.rRNA_refseq_version    = '16.01'
+constants.rRNA_refseq_version    = '16.02'
 constants.genomic_refseq_version = '11.01'
 constants.homd_taxonomy_version = '4.0'  // Used on title page
 
