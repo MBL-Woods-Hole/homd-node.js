@@ -162,7 +162,9 @@ if __name__ == "__main__":
     elif args.dbhost == 'homd_v3':
         args.DATABASE  = 'homd'
         dbhost = '192.168.1.42'
-
+    elif args.dbhost == 'homd_dev':
+        args.DATABASE  = 'homd'
+        dbhost = '192.168.1.58'
     elif args.dbhost == 'localhost':  #default
         args.DATABASE = 'homd'
         dbhost = 'localhost'
@@ -171,7 +173,7 @@ if __name__ == "__main__":
     args.indent = None
     if args.prettyprint:
         args.indent = 4
-    print()
+    print('Using',args.dbhost,dbhost)
     myconn = MyConnection(host=dbhost, db=args.DATABASE,  read_default_file = "~/.my.cnf_node")
 
     print(args)

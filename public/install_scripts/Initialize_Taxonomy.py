@@ -707,16 +707,15 @@ if __name__ == "__main__":
         print("\nThe out put directory doesn't exist:: using the current dir instead\n")
         args.outdir = './'
     if args.dbhost == 'homd_v4':
-        #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
         args.DATABASE  = 'homd'
         dbhost = '192.168.1.46'
     elif args.dbhost == 'homd_v3':
-        #args.json_file_path = '/groups/vampsweb/vamps/nodejs/json'
         args.DATABASE  = 'homd'
         dbhost = '192.168.1.42'
-
+    elif args.dbhost == 'homd_dev':
+        args.DATABASE  = 'homd'
+        dbhost = '192.168.1.58'
     elif args.dbhost == 'localhost':
-        #args.json_file_path = '/Users/avoorhis/programming/homd-data/json'
         args.DATABASE  = 'homd'
         dbhost='localhost'
 
@@ -725,6 +724,8 @@ if __name__ == "__main__":
     args.indent = None
     if args.prettyprint:
         args.indent = 4
+    
+    print('Using',args.dbhost,dbhost)
     myconn = MyConnection(host=dbhost, db=args.DATABASE,   read_default_file = "~/.my.cnf_node")
 
 
