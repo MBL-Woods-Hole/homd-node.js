@@ -33,17 +33,11 @@ pagedata {
 <body>
  <div id="loader" class="center-loader" style='z-index:1'></div>
 
-  <div id='wrapper'>    
-       
-  <div id='header'>
-       <%- include('../../partials/header_img'); %>
-    </div>
-  
-  <%- include('../../partials/navbar'); %>
-  
-  
+  <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar2'); %>
   <div  class='page-content' >
-<div class='title'><%= pgtitle %></div>
+  <div class='title'><%= pgtitle %></div>
 
 <span><small>There are <%= gcount %> genomes representing <%= tcount %> taxa (Including 'Reference' and 'Dropped' Taxa).</small></span>
 
@@ -166,6 +160,8 @@ pagedata {
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
 <script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>

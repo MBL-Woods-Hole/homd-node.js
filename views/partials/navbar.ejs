@@ -212,10 +212,10 @@
       <li><a href="/download#taxon">Download Taxonomy Data</a></li>
       <li><a href='/taxa/dropped'>Dropped Taxa</a></li>
       <li><a href="/help/help-page?pagecode=taxon/taxon_version">Taxonomy Version History</a></li>
-      <% if(cfg.DBHOST === "localhost"){ %>
+      <% if(cfg.ENV === "localhost" || cfg.ENV === "development"){ %>
         <li><a href="/taxa/tree_d3" target='_blank'>LocalHost::D3 Tree Testing</a></li>
       <% } %>
-      <% if(cfg.DBHOST === "localhost"){ %>
+      <% if(cfg.ENV === "localhost" || cfg.ENV === "development"){ %>
         <li><a href="/taxa/tax_hierarchy2">LocalHost::Tree Testing</a></li>
       <% } %>
     </ul>
