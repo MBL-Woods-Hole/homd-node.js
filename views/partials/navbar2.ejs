@@ -2,7 +2,23 @@
 <% var cfg = JSON.parse(config) %> 
 
 <style>
-
+/* versioning */
+#version-info{
+  position:relative;
+  float:right;
+  top:-80px;
+  font-size:16px;
+  padding:3px 5px;
+  color:white;
+}
+#version-info a{
+  padding:0px;
+  margin:0px;
+  color: lightgrey;
+}
+.yellow{
+   color:gold;
+}
 </style>
 
   <% var out ='' %>
@@ -182,3 +198,8 @@
   </form>
 </nav>
 
+<div id='version-info' >
+      Taxonomy: <a href="/help/help-page?pagecode=taxon/taxon_version"><span class='yellow'>V<%= version_info.tax_ver %></span></a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;16S rRNA RefSeq: <a href="/help/help-page?pagecode=refseq/refseq_version"><span class='yellow'>V<%= version_info.rna_ver %></span></a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;Genomic RefSeq: <a href="/help/help-page?pagecode=genome/genome_version"><span class='yellow'>V<%= version_info.gen_ver %></span></a>
+</div>
