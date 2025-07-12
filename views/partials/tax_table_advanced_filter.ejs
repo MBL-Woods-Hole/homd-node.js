@@ -36,7 +36,7 @@
     font-size:18px;
     background: var(--div-bg016);
 }
-#txt_srch{
+#adv-txt_srch{
    font-size:18px;
    
    background: var(--div-bg016);
@@ -70,7 +70,7 @@ position: relative;
 
 /* Add styles to the form container */
 .form-container {
-    
+    padding:10px;
   /* 
 width: 1500px;
   padding: 10px;
@@ -94,6 +94,7 @@ width: 1500px;
 }
 
 /* Set a style for the submit/login button */
+/* 
 .form-container .btn {
   background-color: var(--btn1);
   color: var(--btn-text);
@@ -104,6 +105,7 @@ width: 1500px;
   margin-bottom:10px;
   
 }
+ */
 
 /* Add a red background color to the cancel button */
 .form-container .cancel{
@@ -126,7 +128,7 @@ width: 1500px;
 }
 #adv_filter_table td{
    
-   padding:2px 0px 8px 20px;
+   padding:8px 20px;
    vertical-align: middle;
    /* border: 1px solid grey; */
    
@@ -355,8 +357,8 @@ width: 1500px;
     
     <span class='adv-filter-title'>Search This Table</span>:&nbsp;&nbsp;
     
-    <span class="">
-      <select class='dropdown' id='field_select' class="" name='field' onclick='adv_update_sb()'>
+    <div class="">
+      <select class='dropdown-homd' id='field_select' class="" name='field' onclick='adv_update_sb()'>
         <option value="all">All Fields</option>
         <option value="taxid">Taxon-ID</option>
         <option value="genus">Genus</option>
@@ -365,9 +367,25 @@ width: 1500px;
         <option value="type_strain">Type Strains</option>
         <!-- <option value="rrna">16S rRNA ID</option> -->
       </select>
-      <span class='btn' onclick='adv_clear_search_txt()'>Clear</span>
-      <input id='txt_srch' type='text' name='txt_srch' placeholder="Search.." value='<%= statusfltr.text.txt_srch %>' class='dropdown'  maxlength='100' size='20'  onclick='adv_update_sb()'>
-    </span>
+      
+      <span 
+          class='btn btn-secondary' 
+          style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+          onclick='adv_clear_search_txt()'>
+          Clear
+      </span>
+      <br>
+      <input
+          id='adv-txt_srch' 
+          type='text' 
+          name='txt_srch' 
+          placeholder="Search.." 
+          value='<%= statusfltr.text.txt_srch %>'  
+          maxlength='100' 
+          size='20'  
+          onclick='adv_update_sb()'
+        >
+    </div>
            
  </td></tr>
  <tr><td class='spacer'></td></tr>
@@ -425,8 +443,8 @@ width: 1500px;
  <tr><td class='spacer'></td></tr>
  <tr>
  <td><center>
- <button id='adv_form_btn' type='submit' class='btn apply' value='Submit'>Apply</button>
- <button type="button" class="btn cancel" onclick="closeAdvancedForm()">Close</button>
+ <button id='adv_form_btn' type='submit' class='btn btn-primary' value='Submit'>Apply to Table</button>
+ <button type="button" class="btn btn-warning" onclick="closeAdvancedForm()">Close Without Saving</button>
  </center></td>
  </tr>
 </table>

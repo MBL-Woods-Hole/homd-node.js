@@ -22,7 +22,7 @@ thead th { position: sticky; top: 0; }
     
     <div class='page-content' >
     
-     <div class='title'><%= pgtitle %></div>
+     <p class='title h3'><%= pgtitle %></p>
      <small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
      <div id='download_browser_text_excel'>
      
@@ -160,9 +160,12 @@ $(document).ready(function(){
       document.getElementById(letter).style.color = 'red'
     }
     if(filter_on === 'on'){
-       document.getElementById('reset').style.color = 'orange'
-       document.getElementById('reset').style.background = 'black'
+       document.getElementById('reset').style.color = 'black'
+       document.getElementById('reset').style.background = 'orange'
        document.getElementById('reset').style.cursor = 'pointer'
+       document.getElementById('reset').style.display = 'block'
+       document.getElementById("reset").disabled = false;
+       
     }
     //scrollto
     table = $('tax-table')

@@ -109,8 +109,9 @@
 <span class='back_btn' ><a href='/genome/genome_table'>Back To Genome Table</a></span>     
 <center>    
         
-        <div class='title'>Genome Meta Information: 
-        <i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.strain %> (<%= ginfo.gid %>)</div>
+    <p class='title h3'>Genome Meta Information: 
+        <i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.strain %> (<%= ginfo.gid %>)
+    </p>
 
 <% if(Object.keys(ginfo).length ==0 ) { %>
     <br><br>No Data Found for Genome: <%= gid %>        

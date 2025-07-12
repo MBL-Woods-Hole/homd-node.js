@@ -825,7 +825,12 @@ router.get('/life', function life(req, res) {
           cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString()
         
           title = rank_display+': '+lineage_list[1][show_ranks[i]]
-          html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
+          console.log('show_ranks[i]',show_ranks[i])
+          if(rank === show_ranks[i]){
+              html += "<tr><td class='life-taxa-name selected'>"+space+rank_display+"</td><td class='life-taxa'>"
+          }else{
+              html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa'>"
+          }
           if(show_ranks[i] === 'species'){
             html += "<a title='"+title+"' href='life?rank="+show_ranks[i]+"&name=\""+lineage_list[1][show_ranks[i]]+"\"'><em>"+lineage_list[1][show_ranks[i]]+'</em></a> ('+cts+')'
           }else {

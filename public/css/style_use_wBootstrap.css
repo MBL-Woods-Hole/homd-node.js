@@ -90,13 +90,13 @@ p {
 
 
 .title{
-   padding: 14px 0 10px 0px;  
-   
-   background: var(--title-bg);
+   padding: 14px 0;  
+   background: #e8ebec ; /* var(--title-bg); */
    font-size: 20px;
    text-align: center;
    color: white;
    border:1px solid black;
+   border-radius: 10px;
 }
 
 

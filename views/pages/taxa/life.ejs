@@ -54,10 +54,7 @@
    font-weight:normal;
    
 }
-#headline1{
-  font-size:20px;
-  font-weight:bold;
-}
+
 #life-table{
    border-collapse:collapse;
    margin:10px;
@@ -90,10 +87,16 @@
   
   
 }
+.orange_text{
+   color:orange;
+}
 #life-table li {
    padding:10px 0;
    /* height:50px; */
    border-bottom:1px solid black;
+}
+.selected{
+   background:lightblue;
 }
 </style>
 <% images = JSON.parse(image_array)  %>
@@ -104,21 +107,20 @@
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar2'); %>
     <div class='page-content' >   
-    <div class='title'>
-    <% if(!rank) { %>
-       <span id='headline1'>Life:</span> <span class='yellow' id='headline2'>Cellular Organisms</span>
-    <% }else if (rank === 'klass'){ %>
-       <span id='headline1'>Class:</span> <span class='yellow' id='headline2'><%= tax_name %></span>
-    <% }else if(rank=='species') { %>
-       
-       <span id='headline1'>Species:</span> <span class='yellow' id='headline2'><em><%= tax_name %></em></span>
-    
-    <% }else{ %>
-       <% headline1 = rank.charAt(0).toUpperCase() + rank.slice(1) + ': '%>
-       <span id='headline1'><%= headline1 %></span> <span class='yellow' id='headline2'><%= tax_name %></span>
-    <% } %>
-    
-    </div>
+    <p class='title h3'>
+        <% if(!rank) { %>
+           <span>Life:</span> <span class='orange_text'>Cellular Organisms</span>
+        <% }else if (rank === 'klass'){ %>
+           <span>Class:</span> <span class='orange_text'><%= tax_name %></span>
+        <% }else if(rank=='species') { %>
+           
+           <span>Species:</span> <span class='orange_text'><em><%= tax_name %></em></span>
+        
+        <% }else{ %>
+           <% headerline = rank.charAt(0).toUpperCase() + rank.slice(1) + ': '%>
+           <span><%= headerline %></span> <span class='orange_text'><%= tax_name %></span>
+        <% } %>
+    </p>
     
     
     <% if(lineage){ %>
@@ -199,8 +201,12 @@
      <tr><th></th><th><i>e</i>HOMD Taxonomy</th><tr>
     </thead>
     <tbody>
-     <tr><td class='life-taxa-name'>Life</td><td class='life-taxa'><a href='life'>Cellular Organisms</a></td>
-     
+     <tr>
+     <% if(!rank){ %>
+       <td class='life-taxa-name selected'>Life</td><td class='life-taxa'><a href='life'>Cellular Organisms</a></td>
+     <% }else{ %>
+       <td class='life-taxa-name'>Life</td><td class='life-taxa'><a href='life'>Cellular Organisms</a></td>
+     <% }%>
      </tr>
      <%- html %>
     

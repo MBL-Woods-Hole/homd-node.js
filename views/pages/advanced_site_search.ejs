@@ -7,7 +7,7 @@
   padding:10px;
   border:1px solid red;
 }
-form{
+.search-form{
    padding:30px;
    margin-top:20px;
 }
@@ -44,15 +44,13 @@ form{
 <body>
     <div id='wrapper'>
     <%- include('../partials/header_img'); %>
-    <%- include('../partials/navbar'); %>
-    
+    <%- include('../partials/navbar2'); %>
     
     <div class='page-content' >
-              
-       <div class='title'>Full Site Search</div>
-  <center>
+       <p class='title h3'>Full Site Search</p>
+
   <div id='adv-search-form-div'>
-  <form id='adv-search-form' class='' method='POST' action='basic_site_search'>
+  <form id='adv-search-form' class='search-form' method='POST' action='basic_site_search'>
       <br><span class='mid-title'>Search the Taxonomy and/or Genome Databases</span>
       <table class='table'>
       <tr><td>
@@ -77,12 +75,11 @@ form{
   
   
   
-  <form id='adv-search-form-annotations_grep' class='' method='POST' action='advanced_site_search_grep'>  <!-- advanced_site_search_annotations -->
+  <form id='adv-search-form-annotations_grep'  class='search-form' method='POST' action='advanced_site_search_grep'>  <!-- advanced_site_search_annotations -->
       <br><span class='mid-title'>Search the Annotations Database</span>
       <table class='table'>
-      <tr><td><center>
+      <tr><td>
         Searches: Genome-ID, Accession (Molecule-ID), Protein-ID, Gene and Gene Product
-        </center>
         </td>
       </tr>
       <tr><td>Choose:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -106,18 +103,19 @@ form{
   </form>
   </div>
   
-  </center>
+  
     </div> <!-- end: page-content -->
     
     <div id='footer'>
          <%- include('../partials/footer'); %>
     </div>
-       
+</div> <!-- end: wrapper -->
 </body>
 
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()

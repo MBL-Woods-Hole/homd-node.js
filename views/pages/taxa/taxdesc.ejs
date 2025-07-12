@@ -237,12 +237,14 @@
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar2'); %>
     <div class='page-content' >
-    
-  <span class='back_btn' ><a href='/taxa/tax_table'>Back To Tax Table</a></span>   
+    <span class='back_btnx' ><a href='/taxa/tax_table'>Back To Tax Table</a></span>   
   
-  <div class='title'><i><%= data_lineage.species %> <%= data_lineage.subspecies %></i>
-   (<%= taxidfullnameplus %>)
-  </div>  
+  
+  <p class='h3 title'>
+    <i><%= data_lineage.species %> <%= data_lineage.subspecies %></i>
+    (<%= taxidfullnameplus %>)
+  </p>
+  
 
 
 <center><span id='lineage'><%= data_lineage.domain %>;<%= data_lineage.phylum %>;<%= data_lineage.klass %>;<%= data_lineage.order %>;<%= data_lineage.family %>;<%= data_lineage.species %>

@@ -23,7 +23,7 @@ thead th { position: sticky; top: 0; }
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar2'); %>
   <div  class='page-content' >
-  <div class='title'><%= pgtitle %></div>
+  <p class='h3 title'><%= pgtitle %></p>
 
 <span><small>There are <%= gcount %> genomes representing <%= tcount %> taxa (Including 'Reference' and 'Dropped' Taxa).</small></span>
 
@@ -164,9 +164,11 @@ thead th { position: sticky; top: 0; }
       document.getElementById(letter).style.textDecoration = 'underline'
     }
     if(filter_on === 'on'){
-       document.getElementById('reset').style.color = 'orange'
-       document.getElementById('reset').style.background = 'black'
+       document.getElementById('reset').style.color = 'black'
+       document.getElementById('reset').style.background = 'orange'
        document.getElementById('reset').style.cursor = 'pointer'
+       document.getElementById('reset').style.display = 'block'
+       document.getElementById("reset").disabled = false;
     }
     //scrollto
     table = $('gnom-table')

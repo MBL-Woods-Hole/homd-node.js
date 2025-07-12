@@ -1,4 +1,5 @@
 <style>
+
 </style>
 <% var cfg = JSON.parse(config) %> 
 
@@ -11,10 +12,10 @@
     <%- include("../../partials/navbar2"); %>
     
 <div class='page-content' >
-    <div class='title'><%= pagetitle %></div>
+    <p class='title h3'><%= pagetitle %></p>
     <span class='help-menu-return'>Back To: <a href='/help/index'>Main-Help-Menu</a></span>
     
-    
+    <br>
     <div class='help-div'> 
         <%- include("../../partials/help/"+pagecode); %>
     </div>  

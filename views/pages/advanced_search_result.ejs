@@ -113,7 +113,7 @@ table td{
     <%- include('../partials/navbar2'); %>
     <div class='page-content' > 
        <% if(search_type.length == 1){ %>
-         <div class='title'><%= search_type[0][0].toUpperCase() + search_type[0].slice(1).toLowerCase(); %> Search Result  </div>
+         <p class='title h3'><%= search_type[0][0].toUpperCase() + search_type[0].slice(1).toLowerCase(); %> Search Result  </p>
        <% }else{ %>
          <% 
            show = ''
