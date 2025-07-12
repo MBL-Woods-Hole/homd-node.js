@@ -27,38 +27,7 @@ module.exports.timestamp = (dateonly) => {
     
 
 }
-module.exports.isLoggedIn = (req, res, next) => {
-  // if user is authenticated in the session, carry on
 
-  if (req.isAuthenticated()) {
-    console.log(module.exports.log_timestamp());
-    console.log("Hurray! isLoggedIn.req.isAuthenticated:", req.user.username);
-    return next();
-  }
-  // if they aren't redirect them to the home page
-  console.log("Oops! NOT isLoggedIn.req.isAuthenticated");
-  // save the url in the session
-  req.session.returnTo = req.originalUrl;
-  req.flash('fail', 'Please <a href="/admin/login">login</a> or <a href="/admin/signup">register</a> before continuing.');
-  res.redirect('/admin/login');
-  // return;
-};
-//
-module.exports.isAdmin = (req, res, next) => {
-  if (req.user.security_level === 1) {
-    console.log("Hurray! USER is an Admin:", req.user.username);
-    return next();
-  }
-  // if they aren't redirect them to the home page
-  console.log("Whoa! NOT an Admin: ", req.user.username);
-  // save the url in the session
-  req.session.returnTo = req.path;
-  //console.log('URL Requested: '+JSON.stringify(req));
-  //console.log(util.inspect(req, {showHidden: false, depth: null}));
-  req.flash('fail', 'The page you are trying to access is for VAMPS admins only.');
-  res.redirect('/');
-  // return;
-};
 module.exports.log_timestamp = () => {
   let date = new Date();
   let day  = date.toLocaleDateString();

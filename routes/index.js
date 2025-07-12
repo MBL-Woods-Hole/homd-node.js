@@ -31,7 +31,7 @@ router.get('/', function index(req, res) {
     pgname: 'home', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {})
+    
     
 
   })
@@ -141,7 +141,7 @@ router.get('/download', function download(req, res) {
     pgname: 'download', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {})
+    
 
   })
 })
@@ -152,7 +152,7 @@ router.get('/poster', function poster(req, res) {
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {})
+    
 
   })
 })
@@ -164,7 +164,7 @@ router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, re
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {})
+    
 
   })
 })
@@ -189,7 +189,7 @@ router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, re
 //         pgname: '', // for AboutThisPage 
 //         config: JSON.stringify(CFG),
 //         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//         user: JSON.stringify(req.user || {}),
+//         
 //         anno: '',
 //         search_text: req.body.adv_search_text,
 //         otid_list: JSON.stringify(otidLst),
@@ -315,7 +315,7 @@ function execPromise(cmd, args, max) {
 //             pgname: '', // for AboutThisPage 
 //             config: JSON.stringify(CFG),
 //             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//             user: JSON.stringify(req.user || {}),
+//             
 //             anno: req.body.adv_anno_radio,
 //             search_text: req.body.search_text_anno,
 //             otid_list: JSON.stringify([]),
@@ -441,7 +441,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
             pgname: '', // for AboutThisPage 
             config: JSON.stringify(CFG),
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-            user: JSON.stringify(req.user || {}),
+            
             anno: req.body.adv_anno_radio_grep,
             search_text: req.body.search_text_anno_grep,
             otid_list: JSON.stringify([]),
@@ -483,7 +483,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                     pgname: '', // for AboutThisPage 
 //                     config: JSON.stringify(CFG),
 //                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//                     user: JSON.stringify(req.user || {}),
+//                     
 //                     anno: req.body.adv_anno_radio,
 //                     search_text: req.body.search_text_anno,
 //                     otid_list: JSON.stringify([]),
@@ -529,7 +529,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                     pgname: '', // for AboutThisPage 
 //                     config: JSON.stringify(CFG),
 //                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//                     user: JSON.stringify(req.user || {}),
+//                     
 //                    
 //                     search_text: req.body.search_text_anno,
 //                     otid_list: JSON.stringify([]),
@@ -625,7 +625,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //         pgname: '', // for AboutThisPage 
 //         config: JSON.stringify(CFG),
 //         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//         user: JSON.stringify(req.user || {}),
+//         
 //        
 //         search_text: req.body.search_text_anno,
 //         otid_list: JSON.stringify([]),
@@ -686,7 +686,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                     pgname: '', // for AboutThisPage 
 //                     config: JSON.stringify(CFG),
 //                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//                     user: JSON.stringify(req.user || {}),
+//                     
 //                     anno: req.body.adv_anno_radio_sql,
 //                     search_text: req.body.search_text_anno_sql,
 //                     otid_list: JSON.stringify([]),
@@ -920,7 +920,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
         pgname: '', // for AbountThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-        user: JSON.stringify(req.user || {}),
+        
         search_text: searchText,
         otid_list: JSON.stringify(otidLst),
         gid_list: JSON.stringify(gidLst),

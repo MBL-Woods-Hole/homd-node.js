@@ -114,12 +114,10 @@ app.use('/tree', express.static(CFG.PATH_TO_SS_DIRS));
 
 // ROUTES:
 app.use('/', home);
-//app.use('/admin', admin);
 app.use('/taxa', taxa);
 app.use('/refseq', refseq);
 app.use('/genome', genome);
 app.use('/phage', phage);
-//app.use('/blast', blast);
 app.use('/help', help);
 app.use('/download', download);
 

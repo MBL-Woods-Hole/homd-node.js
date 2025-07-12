@@ -1,4 +1,3 @@
-<link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
@@ -73,6 +72,8 @@ thead th { position: sticky; top: 0; }
      
 <div id='dropped-box' >
      <small>row count: <%= row_count %></small>
+     
+     
      <table id='dropped-table' class='table table-hover table-condensed sortable' style='background: lightgrey;'>
      <thead>
       <tr>
@@ -80,14 +81,10 @@ thead th { position: sticky; top: 0; }
         <th class="col2" nowrap>Taxon-ID</th>
         <th scope="colx" nowrap>Genus-Species</th>
         <th nowrap>Reason for Being Dropped</th>
-        
-       
       </tr>
      </thead>
      <tbody>
      <% for(n in list){ %>
-     
-      
      <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
        <tr>
        
@@ -99,6 +96,9 @@ thead th { position: sticky; top: 0; }
      <% } %>
      </tbody>
      </table>
+     
+     
+     
      
 </div>  <!-- end: table-box -->
    

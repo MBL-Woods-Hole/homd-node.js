@@ -1,14 +1,12 @@
 <% var version_info = JSON.parse(ver_info) %> 
 <% var cfg = JSON.parse(config) %> 
-<% if(user) { %>
-<%     var user = JSON.parse(user) %> 
-<% } %>
+
 <style>
 
 </style>
 
-
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <% var out ='' %>
+  <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
   <div class="container-fluid">
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,7 +17,7 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
-        <li class="nav-item dropdown btn btn-outline-primary">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Taxonomy
           </a>
@@ -34,93 +32,146 @@
             <li><a class="dropdown-item" href="/taxa/dropped">Dropped Taxa</a></li>
             <li><a class="dropdown-item" href="/help/help-page?pagecode=taxon/taxon_version">Version History</a></li>
             <% if(cfg.ENV === "localhost" || cfg.ENV === "development"){ %>
+              <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/taxa/tree_d3" target='_blank'>LocalHost::D3 Tree Testing</a></li>
             <% } %>
             <% if(cfg.ENV === "localhost" || cfg.ENV === "development"){ %>
+              <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/taxa/tax_hierarchy2">LocalHost::Tree Testing</a></li>
             <% } %>
           </ul>
           
         </li>
-        <li class="nav-item dropdown btn btn-outline-primary">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Genomes
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/genome/genome_table">Genome Table</a></li>
             <li><a class="dropdown-item" href="/genome/jbrowse">JBrowse Viewer Tool</a></li>
-            <li  class="nav-item dropdown"><a class="dropdown-item" href="#">Trees</a>
-            <ul>
-                <li><a class="dropdown-item" href="#">tree1</a>
-                <li><a class="dropdown-item" href="#">tree2</a>
-                <li><a class="dropdown-item" href="#">tree3</a>
-             </ul>
-            </li>
+            
+            
+            
             <li><a class="dropdown-item" href="/genome/explorer?gid=&anno=prokka">Explorer</a></li>
             <li><a class="dropdown-item" href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast/","_self")'>BLAST</a></li>
             <li><a class="dropdown-item" href="/genome/anvio_pangenomes">Pangenomes</a></li>
             <li><a class="dropdown-item" href="/download#genome">Download</a></li>
             <li><a class="dropdown-item" href="/help/help-page?pagecode=genome/genome_version">Version History</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="icon-link dropdown-item"  href="<%= cfg.HOMD_URL_BASE %><%= cfg.CP_TREE_PATH %>">Conserved Protein Tree
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>
+            <li><a class="icon-link dropdown-item"  href="<%= cfg.HOMD_URL_BASE %><%= cfg.RP_TREE_PATH %>">Ribosomal Protein Tree
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>
+            <li><a class="icon-link dropdown-item"  href="<%= cfg.HOMD_URL_BASE %><%= cfg.GENE_TREE_PATH %>">16S rRNA Gene Tree
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>
+            
           </ul>
         </li>
-        <li class="nav-item dropdown btn btn-outline-primary">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Proteomes
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg">View Genomic Tree based on Conserved Proteins
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>
+            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/PROKKA/V11.0/" target='_blank'>All Protein Sequences Annotated from Genomes
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>
+            <li><a class="icon-link dropdown-item" href="https://v31.homd.org/genome/peptide_table"  target='_blank'   >Proteins Detected in Human Saliva
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>  
+            <li><a class="icon-link dropdown-item" href="https://v31.homd.org/genome/peptide_table2" target='_blank'    >Genomes with Proteins Detected in Human Saliva
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>  
           </ul>
         </li>
-        <li class="nav-item dropdown btn btn-outline-primary">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             16S rRNA
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/refseq_blast/","_self")' >RefSeq BLAST Server</a></li> 
+            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %><%= cfg.REFSEQ_TREE_PATH %>">View 16S rRNA RefSeq Phylogenetic Tree
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>
+            <li><a class="dropdown-item" href="/download#refseq">Download RefSeq Data</a></li>
+            <li><a class="dropdown-item" href="/help/help-page?pagecode=refseq/refseq_version">Version History</a></li>
           </ul>
         </li>
-        <li class="nav-item dropdown btn btn-outline-primary">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Animal Microbiomes
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="icon-link dropdown-item" href="https://momd.org/">Mouse (MOMD)
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>
           </ul>
         </li>
-        <li class="nav-item dropdown btn btn-outline-primary">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Downloads
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="/download">Download Batch HOMD Data</a></li>
+            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %>/ftp/" target='_blank'>HOMD FTP Site
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>
           </ul>
         </li>
-        <li class="nav-item dropdown btn btn-outline-primary">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Tools
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="icon-link dropdown-item" href='http://v31.homd.org/' target='_blank'>HOMD-V3.1 Site
+            <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
+               <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+            </svg>
+            </a></li>
+            <li><a class="dropdown-item" href="/poster">Posters</a></li>
+            <li><a class="dropdown-item" href='/help/help-page?pagecode=publications'>Publications</a></li>
+            <li><a class="dropdown-item" href="/genome/oralgen">Oralgen Genome Info</a></li>
           </ul>
         </li>
-        <li class="nav-item dropdown btn btn-outline-primary">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             About Us
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="/help/index" >HOMD Help Content</a></li>
+            <li><a class="dropdown-item" href='/help/help-page?pagecode=cite'>How to Cite HOMD</a></li>
+            <li><a class="dropdown-item" href='/help/help-page?pagecode=description'>Project Description</a></li>
+            <li><a class="dropdown-item" href='/help/help-page?pagecode=strains'>Strains and DNA Availability</a></li>
+          
+            <li><a class="dropdown-item" href='/help/help-page?pagecode=team'>People</a></li>
+            <li><a class="dropdown-item" href='/help/help-page?pagecode=publications'>Publications</a></li>
+            <li><a class="dropdown-item" href='/help/help-page?pagecode=contact'>Contact Us</a></li>
+            <li><a class="dropdown-item" href='/help/help-page?pagecode=announcement'>Announcements</a></li>
           </ul>
         </li>
       </ul>

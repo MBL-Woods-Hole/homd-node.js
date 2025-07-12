@@ -1,8 +1,6 @@
 <% var version_info = JSON.parse(ver_info) %> 
 <% var cfg = JSON.parse(config) %> 
-<% if(user) { %>
-<%     var user = JSON.parse(user) %> 
-<% } %>
+
 <style>
  /* Navbar container */
 /* The navigation menu */
@@ -330,8 +328,6 @@
       <li><a href="">Oralgen <font color="blue">&#187;</font></a>
          <ul> 
 
-        <!--  <li><a href="http://www.oralgen.org/" target='_blank'>www.oralgen.org Archive</a></li> -->
-
          <li><a href="/genome/oralgen">Oralgen Genome Info</a></li>
          </ul>
       </li>
@@ -339,23 +335,15 @@
         
       <li><a href='/advanced_site_search'>Site Search</a></li>
       
-      <!-- <li><a href='/help/index'>Search Help</a></li> -->
       
       
     </ul>
    </li>
-  
-  
-  
-  
-   
-    
+
     <!-- HELP -->
     <li><span class='main-topic' >About Us</span>
           <ul>
           <li><a href="/help/index" >HOMD Help Content</a></li>
-         <!--  <li><a href="https://wiki.homd.info" target='_blank' rel="noopener noreferrer">HOMD Wiki Home-obsolete</a></li> -->
-          <!-- <li><a href="https://wiki.homd.info/help/user_guide" target='_blank'>User's Guide (in a new window)</a></li> -->
           <li><a href='/help/help-page?pagecode=cite'>How to Cite HOMD</a></li>
           <li><a href='/help/help-page?pagecode=description'>Project Description</a></li>
           <li><a href='/help/help-page?pagecode=strains'>Strains and DNA Availability</a></li>
@@ -363,8 +351,6 @@
           <li><a href='/help/help-page?pagecode=team'>People</a></li>
           <li><a href='/help/help-page?pagecode=publications'>Publications</a></li>
           <li><a href='/help/help-page?pagecode=contact'>Contact Us</a></li>
-          <!-- <li><a href='/help/mailing'>Mailing List</a></li> -->
-          <!-- <li><a href="/forum" target='_blank' rel="noopener noreferrer">Forum</a></li> -->
           <li><a href='/help/help-page?pagecode=announcement'>Announcements</a></li>
           </ul>
     </li>
@@ -372,26 +358,12 @@
 
    
     <a id='homd-menu-right' href='/advanced_site_search'>Site Search</a> 
-  
 
-   
-    <!--  <img src="/images/search2.png" height='20' alt="LookingGlass" /> -->
 </ul>
 
 
 </div>
-<span id='login-text'>
-<%   if(user && user.username){ %>
-        <% if(user.security_level === 1){ %>
-            <a href='/admin/profile'><font color='green'>Logged in as <%= user.username %> (security-level: Administrator)</font></a>
-        <% }else{ %>
-            <a href='/admin/profile'><font color='green'>Logged in as <%= user.username %> (security-level: <%= user.security_level %>)</font></a>
-        <% } %>
-        
-<%   }else{ %>
-        <!-- <a href='/admin/login'><font color='red'>Not Logged In</font></a> -->
-<%   } %>
-</span>
+
 
 
 <div id='version-info' >

@@ -32,7 +32,7 @@
   table-layout:fixed;
   /* table-layout:auto */
   width:100%;
-  background:lightgrey;
+  /* background:lightgrey; */
 }
 #tax-table th
 {
@@ -56,7 +56,7 @@
   white-space: nowrap;
 }
 #tax-table tr:nth-child(even) { 
-    background-color: var(--table-row-even1);
+    /* background-color: var(--table-row-even1); */
  } 
  
  #tax-table tr:hover { 
@@ -125,13 +125,13 @@
     counter-reset: sortabletablescope;
 }
 #tax-table.sortable thead tr::before {
-    content: "row#";
+    content: "";
     display: table-cell;
     width:30px;
     /* padding-left:1px; */
     vertical-align: middle;
     color:white;
-    background:  var(--table-header-bg);
+    /* background:  var(--table-header-bg); */
     padding:5px;
     font-size:13px;
     text-align: center;

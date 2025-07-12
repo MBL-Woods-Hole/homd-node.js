@@ -1,15 +1,10 @@
 <style>
-.form-inline {
-  display: inline;
-}
-.span_lnk {
-  color:blue;
-  cursor: pointer;
-}
+
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
+<link rel="stylesheet" type="text/css" href="/css/genome_pages2.css" >
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data) %>
 <% fltr = JSON.parse(filter) %>
@@ -18,16 +13,7 @@ thead th { position: sticky; top: 0; }
 <% filtergid = fltr.gid %>
 <% var cfg = JSON.parse(config) %> 
 <% no_ncbi_annotation = JSON.parse(no_ncbi_annot) %>
-<!-- 
-pagedata {
-  rows_per_page: 500,
-  page: 2,
-  trecords: 8622,
-  number_of_pages: 18,
-  show_page: 2,
-  start_count: 501
-}
- -->
+
 
 
 <body>
