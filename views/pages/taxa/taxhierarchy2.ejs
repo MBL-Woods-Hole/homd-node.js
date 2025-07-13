@@ -1,11 +1,49 @@
 <style>
-  #masthead {
-  /* width:1350px; */
-  width: 100%;
-  background: #004080;   /* #013366; */
-  
+.arrow {
+  border: solid grey;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
 }
 
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+.tax-item{
+   margin: 10px;
+
+}
+.box{
+   background:lightgrey;
+   padding:40px 0;
+   border:2px solid grey;
+}
+.otid-link{
+   color:gold;
+   background:purple;
+   padding:5px;
+   border:1px solid black;
+}
+.otid-link a{
+   color:ivory;
+   
+}
 </style>
 
 
@@ -18,16 +56,37 @@
     <%- include('../../partials/navbar2'); %>
 
     <div class='page-content' >
-       <p class='h3 title'>Human Oral Microbiome Taxonomic Hierarchy</p>
+       <p class='h3 title'>Dynamic Taxonomic Hierarchy</p>
 
-
-   <div class='container-sm'>
-     <div class=''>
-       <button type="button" class="btn btn-primary btn-sm">Archaea</button>
-    </div>
-    <div class=''>
-       <button type="button" class="btn btn-primary btn-sm">Bacteria</button>
-    </div>
+  
+   <div class='container-sm box'>
+    <a href='tax_hierarchy2' role='button' class='btn btn-success' style='float:right;'>Reset Tree</a>
+     <ul>
+     <li class='tax-item'>
+       <a 
+         onclick=get_leaf('Archaea','domain') 
+         role='button' 
+         type="button" 
+         style='background:#78AE99;'
+         class="btn btn-sm"
+        >
+          <small>Domain:</small> Archaea <i class="arrow right"></i>
+       </a>
+       <div id='Archaea_domain'></div>
+     </li>
+     <li class='tax-item'>
+       <a 
+         onclick=get_leaf('Bacteria','domain') 
+         role='button' 
+         type="button"
+         style='background:#78AE99;'
+         class="btn btn-sm"
+        >
+          <small>Domain:</small> Bacteria <i class="arrow right"></i>
+       </a>
+       <div id='Bacteria_domain'></div>
+     </li>
+     </ul>
    </div>
 
 
@@ -47,10 +106,35 @@
 
 <script>
   mainmenu()
-  $(document).ready(function(){                    
-    //load_dhtmlx(<%- data %>)
-    //load_dhtmlx()
-});
+  
+  function get_leaf(name,rank){
+    //console.log('in getleaf',name,rank)
+    
+    var args = {}
+    args.name = decodeURIComponent(name)
+    //console.log('decoded name',args.name)
+    args.rank = rank
+    target_div = document.getElementById(args.name+'_'+rank)
+    if(target_div.innerHTML !== ''){
+       // close
+       target_div.innerHTML = ''
+    }else{
+    
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "/taxa/tax_hierarchy2", true);
+        xmlhttp.setRequestHeader("Content-type","application/json");
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var resp = xmlhttp.responseText;
+            
+            //console.log('gitit',resp)
+            target_div.innerHTML = resp
+            
+          }
+        }
+        xmlhttp.send(JSON.stringify(args));
+    }
+  }
 
 </script>
 

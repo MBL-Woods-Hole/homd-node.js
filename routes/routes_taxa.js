@@ -141,15 +141,74 @@ router.get('/tax_hierarchy2', (req, res) => {
 })
 router.post('/tax_hierarchy2', (req, res) => {
   console.log('POST Hierarchy2')
-  res.render('pages/taxa/taxhierarchy2', {
-      title: 'HOMD :: Taxon Hierarchy',
-      pgname: 'taxon/hierarchy', // for AbountThisPage
-      config: JSON.stringify(CFG),
-      data: {},
-      //dhtmlx: JSON.stringify(C.dhtmlxTreeData),
-      ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-      
-  })
+  console.log('req.body',req.body)
+  let tax_name = req.body.name
+  let rank = req.body.rank;
+  let html = '',node,child_name,child_rank,id,display_rank,encoded_child_name
+  let ospace = '&nbsp;',space
+  let num = C.ranks.indexOf(rank)+1
+  space = ospace.repeat(num*2)
+  //let green_colors = ['#316764','#497F76','#609687','#78AE99','#8FC5AA','#A7DDBC']
+  let green_colors = ['#9FD4A3','#AEDCAE','#BEE3BA','#CDEBC5','#DDF2D1','#ECFADC']
+  let pnode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+  //console.log('parent-node',pnode)
+  let children_ids = pnode.children_ids
+  
+    for(let n in children_ids){
+          node = C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]]
+          child_name = node.taxon
+          encoded_child_name = encodeURIComponent(node.taxon)
+          //console.log('encoded name',encoded_child_name)
+          child_rank = node.rank
+          if(child_rank === 'klass'){
+               display_rank = 'Class'
+          }else{
+             display_rank = helpers.capitalizeFirst(child_rank)
+          }
+          if(node.children_ids.length === 0){
+              //otid = node.otid
+              let lineage = helpers_taxa.make_lineage(node) 
+              //console.log('lin',lineage[0])
+              
+              html += '<ul>'
+              html += "<li class='tax-item'>"
+              let hmt = helpers.make_otid_display_name(node.otid)
+              let hmt_lnk = "<a href='tax_description?otid="+node.otid+"'>"+hmt+"</a>"
+              if(child_rank === 'species'){
+                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+child_name+"</i> ("+hmt_lnk+")</span>"
+              }else{
+                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> "+child_name+" ("+hmt_lnk+")</span>"
+              }
+              
+              html += '</li>'
+              html += '</ul>'
+            }else{
+              
+              
+              //console.log('sent node',node)
+              
+              id = child_name+'_'+child_rank
+              
+              html += '<ul>'
+              html += "<li class='tax-item'>"
+              html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
+              html += "    role='button'"
+              html += "    type='button'"
+              html += "    style='background:"+green_colors[C.ranks.indexOf(rank)]+";'"
+              html += "    class='btn btn-sm'>"
+              if(child_rank === 'species' || child_rank ==='subspecies'){
+                  html += "    <small>"+display_rank+':</small> <i>'+child_name+"</i></a>"
+              }else{
+                  html += "    <small>"+display_rank+':</small> '+child_name+"</a>"
+              }
+              
+              html += "<div id='"+id+"'></div>"
+              html += '</li>'
+              html += '</ul>'
+              //console.log('myhtlml',html)
+            }
+  }
+  res.send(html)
 })
 router.get('/tax_level', function tax_level_get(req, res) {
   

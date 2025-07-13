@@ -349,7 +349,9 @@ Promise.all(promises)
     console.log('Reference Taxa:',C.reference_taxids,C.reference_taxids.length)
     console.log('C.taxa_with_subspecies',C.taxa_with_subspecies,C.taxa_with_subspecies.length)
     
-
+     //console.log(JSON.stringify(C.homd_taxonomy, null, '\t'))
+     
+     
     //session.site_search_result = {}
     // let num_zeros = 0
 //     for(n in C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']){
