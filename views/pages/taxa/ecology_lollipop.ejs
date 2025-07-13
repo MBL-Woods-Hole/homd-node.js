@@ -33,20 +33,23 @@
     width:100%;
     
   }
- .legend_item{
+.legend_item{
   padding:1px;
   border:1px solid black;
   }
-  #legend-table{
+#legend-table{
    /* width:100%; */
    font-size:15px;
   }
-  #legend-table td{
+#legend-table td{
    font-size: 15px;
    text-align: left;
    padding-left:2px;
    
   }
+.brown{
+   color:brown;
+}
 </style>
 
 <% dewhirst_data = JSON.parse(dewhirst) %>
@@ -79,7 +82,7 @@
     
     <p class='title h3'>
       <b><%= rank_show %>:</b> 
-      <span class='yellow'>
+      <span class='brown'>
       <% if(rank=='species') { %>           
          <em><%= tax_name %></em>
       <% }else{ %>
