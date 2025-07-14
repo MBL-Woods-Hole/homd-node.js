@@ -64,30 +64,12 @@ function load_dhtmlx(data) {
         expand_tree_dhtmlx(id)
     });
 
-    customOldTree.setXMLAutoLoading("tax_autoload?ct="+count_type);
+    customOldTree.setXMLAutoLoading("taxhierarchy_autoload?ct="+count_type);
     customOldTree.setDataMode("json");
     ////load first level of tree
-    customOldTree.load("tax_autoload?id=0&ct="+count_type,"json");
+    customOldTree.load("taxhierarchy_autoload?id=0&ct="+count_type,"json");
     
-    
-    
-    // taxTree = new dhx.Tree("tree", {
-//         autoload: "tax_autoload?ct="+count_type
-//     });
-//     ////load first level of tree
-//     taxTree.data.load("tax_autoload?id=tree&ct="+count_type);
-    
-    // // dhtmlx version:7(free) dynamic loading is in pro version
-    // customTree = new dhx.Tree("tree", {
-  //      icon: false
-  //  });
-  //  customTree.data.parse(data);
-  //     
-  // 
-  //     customTree.events.on("itemClick", function(id, e){
-  //      console.log("The item with the id "+ id +" was clicked.");
-  //      customTree.toggle(id);
-  //  });
+
 }
 ///////////////////////////////////////////////////////////////
 function expand_tree_dhtmlx(id){

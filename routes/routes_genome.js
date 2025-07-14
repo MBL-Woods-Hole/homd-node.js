@@ -231,7 +231,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
   }
   const glist = Object.values(C.genome_lookup)
   
-  glist.sort(function sortGList (a, b) {
+  glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
@@ -682,7 +682,7 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
                     }
             }
             
-            let data_keys = Object.keys(org_list).sort(function (a, b) {
+            let data_keys = Object.keys(org_list).sort((a, b) =>{
                 return helpers.compareStrings_alpha(org_list[a], org_list[b]);
             })
             
@@ -771,7 +771,7 @@ router.post('/orf_search', function orf_search (req, res) {
                    org_list[tmpgid] = organism
                 }
             }
-            let data_keys = Object.keys(org_list).sort(function (a, b) {
+            let data_keys = Object.keys(org_list).sort((a, b) =>{
                 return helpers.compareStrings_alpha(org_list[a], org_list[b]);
              })
             
@@ -824,53 +824,53 @@ function apply_annot_table_filter(rows, filter){
     }
     if(filter.sort_rev === 'on'){
         if(filter.sort_col === 'pid'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) =>{
                 return helpers.compareStrings_alpha(a.protein_id, b.protein_id);
               })
         }else if(filter.sort_col === 'molecule'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) => {
                 return helpers.compareStrings_alpha(a.accession, b.accession);
               })
         }else if(filter.sort_col === 'gene'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) => {
                 return helpers.compareStrings_alpha(a.gene, b.gene);
               })
         }else if(filter.sort_col === 'product'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) =>  {
                 return helpers.compareStrings_alpha(a.product, b.product);
               })
         }else if(filter.sort_col === 'na'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) => {
                 return helpers.compareStrings_int(a.length_na, b.length_na);
               })
         }else if(filter.sort_col === 'aa'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) => {
                 return helpers.compareStrings_int(a.length_aa, b.length_aa);
               })
         }
     }else{
         if(filter.sort_col === 'pid'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_alpha(a.protein_id, b.protein_id);
               })
         }else if(filter.sort_col === 'molecule'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_alpha(a.accession, b.accession);
               })
         }else if(filter.sort_col === 'gene'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_alpha(a.gene, b.gene);
               })
         }else if(filter.sort_col === 'product'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_alpha(a.product, b.product);
               })
         }else if(filter.sort_col === 'na'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_int(a.length_na, b.length_na);
               })
         }else if(filter.sort_col === 'aa'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_int(a.length_aa, b.length_aa);
               })
         }
@@ -946,7 +946,7 @@ router.post('/explorer', function explorer_post (req, res) {
     let annoInfoObj = C.annotation_lookup[gid][anno]
     annoInfoObj.bases = C.genome_lookup[gid].combined_size
     const glist = Object.values(C.genome_lookup)
-    glist.sort(function sortGList (a, b) {
+    glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.genus, b.genus)
     })
     // filter out empties then map to create list of sorted strings
@@ -1052,7 +1052,7 @@ router.get('/explorer', function explorer_get (req, res) {
   
   const glist = Object.values(C.genome_lookup)
   
-  glist.sort(function sortGList (a, b) {
+  glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
@@ -1209,7 +1209,7 @@ router.get('/blast_select_genome', function blast_select_genome(req, res) {
   }
   const glist = Object.values(C.genome_lookup)
   
-  glist.sort(function sortGList (a, b) {
+  glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
@@ -1452,7 +1452,7 @@ router.get('/blast', function blast_get(req, res) {
     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
    })
    
-   allAnnosObj.sort(function sortAnnos (a, b) {
+   allAnnosObj.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.org, b.org)
    })
    //let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
@@ -2206,12 +2206,10 @@ router.get('/crispr', function crispr(req, res) {
 //             el.combined_size = helpers.format_long_numbers(el.combined_size); 
 //         }
 //     })
-     send_list.sort(function (a, b) {
+     send_list.sort((a, b) => {
             return helpers.compareStrings_alpha(a.organism, b.organism);
       })
-      // send_list.sort(function (a, b) {
-//             return helpers.compareByTwoStrings_alpha(a, b, 'organism','organism');
-//       })
+     
       //send_list = apply_species(send_list)
       res.render('pages/genome/crispr_cas', {
         title: 'HOMD :: CRISPR-Cas', 

@@ -102,7 +102,7 @@ router.post('/tax_table', function tax_table_post(req, res) {
 })
 router.get('/advanced_taxtable_search', function advanced_taxtable_search(req, res) {
    res.render('pages/taxa/tax_table_filter_advanced', {
-      title: 'HOMD :: Taxon Hierarchy',
+      title: 'HOMD :: Taxon Search',
       pgname: '', // for AbountThisPage
       config: JSON.stringify(CFG),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
@@ -112,7 +112,7 @@ router.get('/advanced_taxtable_search', function advanced_taxtable_search(req, r
 })
 //
 //
-router.get('/tax_hierarchy', (req, res) => {
+router.get('/tax_hierarchy', function tax_hierarchy(req, res) {
   //the json file was created from a csv of vamps taxonomy
   // using the script: taxonomy_csv2json.py in ../homd_data
   
@@ -127,7 +127,60 @@ router.get('/tax_hierarchy', (req, res) => {
       
   })
 })
-router.get('/tax_hierarchy2', (req, res) => {
+// test: choose custom taxonomy, show tree
+router.get('/taxhierarchy_autoload', function taxhierarchy_autoload(req, res) {
+  //console.log('IN tax_autoload')
+  //console.log('req.query',req.query)
+  let cts, lineage, options_obj
+  //let myurl = url.parse(req.url, true);
+  let id = req.query.id;
+  let count_type = req.query.ct
+  //console.log('id',id)
+  //console.log('count_type',count_type)
+  let json = {};
+  json.id = id;
+  json.item = [];
+
+  if (parseInt(id) === 0){
+        C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
+            //console.log('node1',node)
+            lineage = helpers_taxa.make_lineage(node)  // [str obj]
+            cts = get_counts(lineage[0],count_type)
+            //console.log(node)
+            options_obj = get_options_by_node(node);
+            options_obj.text = options_obj.text + ' '+cts
+            options_obj.checked = true;
+            //console.log(options_obj)
+            json.item.push(options_obj);
+          }
+        );
+  }else {
+        if(id >1000){
+           //return
+        }
+        const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
+        objects_w_this_parent_id.map(node => {
+          //console.log('node2',node)
+          lineage = helpers_taxa.make_lineage(node)  // [str obj]
+          //console.log('lineage:',lineage)
+          cts = get_counts(lineage[0],count_type)
+          options_obj = get_options_by_node(node);
+          options_obj.text = options_obj.text + ' '+cts
+          options_obj.checked = false;
+          json.item.push(options_obj);
+        })
+  }
+  //console.log(json)
+  //console.log('returning',json.item)
+  json.item.sort((a, b) =>{
+    return helpers.compareStrings_alpha(a.text, b.text);
+  })
+
+  //console.timeEnd("TIME: tax_custom_dhtmlx");
+
+  res.send(json);
+})
+router.get('/tax_hierarchy2', function tax_hierarchy2_GET(req, res) {
   console.log('GET Hierarchy2')
   res.render('pages/taxa/taxhierarchy2', {
       title: 'HOMD :: Taxon Hierarchy',
@@ -139,76 +192,82 @@ router.get('/tax_hierarchy2', (req, res) => {
       
   })
 })
-router.post('/tax_hierarchy2', (req, res) => {
-  console.log('POST Hierarchy2')
-  console.log('req.body',req.body)
-  let tax_name = req.body.name
-  let rank = req.body.rank;
-  let html = '',node,child_name,child_rank,id,display_rank,encoded_child_name
-  let ospace = '&nbsp;',space
-  let num = C.ranks.indexOf(rank)+1
-  space = ospace.repeat(num*2)
-  //let green_colors = ['#316764','#497F76','#609687','#78AE99','#8FC5AA','#A7DDBC']
-  let green_colors = ['#9FD4A3','#AEDCAE','#BEE3BA','#CDEBC5','#DDF2D1','#ECFADC']
-  let pnode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
-  //console.log('parent-node',pnode)
-  let children_ids = pnode.children_ids
+router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
+    //console.log('POST Hierarchy2')
+    //console.log('req.body',req.body)
+    let tax_name = req.body.name
+    let rank = req.body.rank;
+    let html = '',node,child_name,child_rank,id,display_rank,encoded_child_name
+    let ospace = '&nbsp;',space
+    let num = C.ranks.indexOf(rank)+1
+    space = ospace.repeat(num*2)
+    //let green_colors = ['#316764','#497F76','#609687','#78AE99','#8FC5AA','#A7DDBC']
+    let green_colors = ['#9FD4A3','#AEDCAE','#BEE3BA','#CDEBC5','#DDF2D1','#ECFADC']
+    let pnode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
+    //console.log('parent-node',pnode)
+    let children_ids = pnode.children_ids
   
+    // sort ids by node.taxon??
+    children_ids.sort((a, b) => {
+        let anode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a]
+        let bnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b]
+        return helpers.compareStrings_alpha(anode.taxon, bnode.taxon);
+    })
     for(let n in children_ids){
-          node = C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]]
-          child_name = node.taxon
-          encoded_child_name = encodeURIComponent(node.taxon)
-          //console.log('encoded name',encoded_child_name)
-          child_rank = node.rank
-          if(child_rank === 'klass'){
-               display_rank = 'Class'
-          }else{
-             display_rank = helpers.capitalizeFirst(child_rank)
-          }
-          if(node.children_ids.length === 0){
-              //otid = node.otid
-              let lineage = helpers_taxa.make_lineage(node) 
-              //console.log('lin',lineage[0])
+        node = C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]]
+        child_name = node.taxon
+        encoded_child_name = encodeURIComponent(node.taxon)
+        //console.log('encoded name',encoded_child_name)
+        child_rank = node.rank
+        if(child_rank === 'klass'){
+            display_rank = 'Class'
+        }else{
+            display_rank = helpers.capitalizeFirst(child_rank)
+        }
+        if(node.children_ids.length === 0){
+            //otid = node.otid
+            let lineage = helpers_taxa.make_lineage(node) 
+            //console.log('lin',lineage[0])
               
-              html += '<ul>'
-              html += "<li class='tax-item'>"
-              let hmt = helpers.make_otid_display_name(node.otid)
-              let hmt_lnk = "<a href='tax_description?otid="+node.otid+"'>"+hmt+"</a>"
-              if(child_rank === 'species'){
+            html += '<ul>'
+            html += "<li class='tax-item'>"
+            let hmt = helpers.make_otid_display_name(node.otid)
+            let hmt_lnk = "<a href='tax_description?otid="+node.otid+"'>"+hmt+"</a>"
+            if(child_rank === 'species'){
                   html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+child_name+"</i> ("+hmt_lnk+")</span>"
-              }else{
-                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> "+child_name+" ("+hmt_lnk+")</span>"
-              }
-              
-              html += '</li>'
-              html += '</ul>'
             }else{
-              
-              
-              //console.log('sent node',node)
-              
-              id = child_name+'_'+child_rank
-              
-              html += '<ul>'
-              html += "<li class='tax-item'>"
-              html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
-              html += "    role='button'"
-              html += "    type='button'"
-              html += "    style='background:"+green_colors[C.ranks.indexOf(rank)]+";'"
-              html += "    class='btn btn-sm'>"
-              if(child_rank === 'species' || child_rank ==='subspecies'){
-                  html += "    <small>"+display_rank+':</small> <i>'+child_name+"</i></a>"
-              }else{
-                  html += "    <small>"+display_rank+':</small> '+child_name+"</a>"
-              }
-              
-              html += "<div id='"+id+"'></div>"
-              html += '</li>'
-              html += '</ul>'
-              //console.log('myhtlml',html)
+                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> "+child_name+" ("+hmt_lnk+")</span>"
             }
-  }
-  res.send(html)
+              
+            html += '</li>'
+            html += '</ul>'
+        }else{
+              
+              
+            //console.log('sent node',node)
+              
+            id = child_name+'_'+child_rank
+              
+            html += '<ul>'
+            html += "<li class='tax-item'>"
+            html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
+            html += "    role='button'"
+            html += "    type='button'"
+            html += "    style='background:"+green_colors[C.ranks.indexOf(rank)]+";'"
+            html += "    class='btn btn-sm'>"
+            if(child_rank === 'species'){
+              html += "    <small>"+display_rank+':</small> <i>'+child_name+"</i></a>"
+            }else{
+              html += "    <small>"+display_rank+':</small> '+child_name+"</a>"
+            }
+            
+            html += "<div id='"+id+"'></div>"
+            html += '</li>'
+            html += '</ul>'
+            //console.log('myhtlml',html)
+        }
+    }
+    res.send(html)
 })
 router.get('/tax_level', function tax_level_get(req, res) {
   
@@ -311,12 +370,12 @@ router.post('/tax_level', function tax_level_post(req, res) {
       })
       if(rank === 'domain'){
          //sort by domain only
-         tax_resp.sort(function sortByTaxa(a, b) {
+         tax_resp.sort((a, b) =>{
                 return helpers.compareStrings_alpha(a.item_taxon, b.item_taxon);
          })
       }else{
          // sort by parent then item
-         tax_resp.sort(function two_strings(a, b,) {
+         tax_resp.sort((a, b,) =>{
                 return helpers.compareByTwoStrings_alpha(a,b,'parent_taxon', 'item_taxon');
          })
      }
@@ -337,74 +396,7 @@ router.post('/oral_counts_toggle', function oral_counts_toggle(req, res) {
   res.send({ok:'ok'})
 
 })
-// test: choose custom taxonomy, show tree
-router.get('/tax_autoload', function tax_autoload(req, res) {
-  //console.log('IN tax_autoload')
-  //console.log('req.query',req.query)
-  let cts, lineage, options_obj
-  //let myurl = url.parse(req.url, true);
-  let id = req.query.id;
-  let count_type = req.query.ct
-  //console.log('id',id)
-  //console.log('count_type',count_type)
-  let json = {};
-  json.id = id;
-  json.item = [];
 
-  if (parseInt(id) === 0){
-    
-   
-//console.log('in parseint 0')
-//console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'])
-//console.log(C.homd_taxonomy)
-//     
-   //  console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_rank["domain"])
-//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["954"])
-//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["955"])
-//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["956"])
-//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["957"])
-//     console.log(C.nonoral_homd_taxonomy.taxa_tree_dict_map_by_id["958"])
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_id["7"])
-    
-        C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
-            //console.log('node1',node)
-            lineage = helpers_taxa.make_lineage(node)  // [str obj]
-            cts = get_counts(lineage[0],count_type)
-            //console.log(node)
-            options_obj = get_options_by_node(node);
-            options_obj.text = options_obj.text + ' '+cts
-            options_obj.checked = true;
-            //console.log(options_obj)
-            json.item.push(options_obj);
-          }
-        );
-  }else {
-        if(id >1000){
-           //return
-        }
-        const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
-        objects_w_this_parent_id.map(node => {
-          //console.log('node2',node)
-          lineage = helpers_taxa.make_lineage(node)  // [str obj]
-          //console.log('lineage:',lineage)
-          cts = get_counts(lineage[0],count_type)
-          options_obj = get_options_by_node(node);
-          options_obj.text = options_obj.text + ' '+cts
-          options_obj.checked = false;
-          json.item.push(options_obj);
-        })
-  }
-  //console.log(json)
-  //console.log('returning',json.item)
-  json.item.sort(function sortByAlpha(a, b) {
-    
-    return helpers.compareStrings_alpha(a.text, b.text);
-  })
-
-  //console.timeEnd("TIME: tax_custom_dhtmlx");
-
-  res.send(json);
-})
 /////////////////////////////////
 function renderTaxonDescription(req, res, args) {
     //console.log('args',args)
@@ -916,7 +908,7 @@ router.get('/life', function life(req, res) {
        //console.log('rank_displayx',rank_display)
        
        html += "<tr><td class='life-taxa-name'>"+space+rank_display+"</td><td class='life-taxa blue'>"
-       taxa_list.sort(function (a, b) {
+       taxa_list.sort((a, b) => {
             return helpers.compareStrings_alpha(a, b);
          })
        for(let n in taxa_list){
@@ -1274,7 +1266,7 @@ router.get('/body_sites', function body_sites(req, res) {
        send_list.push(obj)
     }
     //console.log(send_list )
-    send_list.sort(function (b, a) {
+    send_list.sort((b, a) =>{
         return helpers.compareStrings_alpha(b.gsp, a.gsp);
     })
     
@@ -1335,7 +1327,7 @@ router.get('/ecology', function ecology(req, res) {
     }
     let genera = get_major_genera(rank, node)
     // sort genera list 
-    genera.sort(function sortByTaxa(a, b) {
+    genera.sort((a, b) =>{
         return helpers.compareStrings_alpha(a.taxon, b.taxon);
     })
     //console.log(tax_name,rank,node)
@@ -1397,10 +1389,7 @@ router.get('/ecology', function ecology(req, res) {
          if('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5']).length !== 0){
              erenv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
              erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
-             // order by constants.eren_abundance_order 
-             // erenv3v5_data.sort(function (b, a) {
-//                 return helpers.compareStrings_alpha(a.site, b.site);
-//              })
+             
              erenv3v5_data = sort_obj_by_abundance_order(erenv3v5_data,C.eren_abundance_order)
              //console.log('eren3v5-sorted',erenv3v5_data)
              let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
@@ -1413,10 +1402,7 @@ router.get('/ecology', function ecology(req, res) {
          if('hmp_metaphlan' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['hmp_metaphlan']).length !== 0){
              hmp_metaphlan_max = C.taxon_counts_lookup[lineage_list[0]]['max_hmp_metaphlan']
              hmp_metaphlan_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['hmp_metaphlan'])
-             // order by constants.eren_abundance_order 
-             // erenv3v5_data.sort(function (b, a) {
-//                 return helpers.compareStrings_alpha(a.site, b.site);
-//              })
+             
              hmp_metaphlan_data = sort_obj_by_abundance_order(hmp_metaphlan_data,C.hmp_metaphlan_abundance_order)
              //console.log('eren3v5-sorted',erenv3v5_data)
              let clone_hmp_metaphlan_data = JSON.parse(JSON.stringify(hmp_metaphlan_data)) // clone to avoid difficult errors
@@ -1751,7 +1737,7 @@ function get_sorted_abund_names(collector, site, rank, num_to_return){
 }
 
 function sortByKeyDEC(array, key) {
-  return array.sort(function(a,b) { return b[key] - a[key];});
+  return array.sort((a,b) => { return b[key] - a[key];});
 }
 //
 function get_site_avgs(obj,rank){
