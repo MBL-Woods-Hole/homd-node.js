@@ -1,30 +1,5 @@
 <style>
-.arrow {
-  border: solid grey;
-  border-width: 0 3px 3px 0;
-  display: inline-block;
-  padding: 3px;
-}
 
-.right {
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-}
-
-.left {
-  transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
-}
-
-.up {
-  transform: rotate(-135deg);
-  -webkit-transform: rotate(-135deg);
-}
-
-.down {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-}
 .tax-item{
    margin: 10px;
 
@@ -41,12 +16,15 @@
    padding:5px;
    border:1px solid black;
 }
+
 .otid-link a{
    color:ivory;
    
 }
 </style>
 
+<% bac_counts = JSON.parse(bcounts) %>
+<% arc_counts = JSON.parse(acounts) %>
 
  <%- include('../../partials/header_html'); %>   
 
@@ -60,36 +38,58 @@
        <p class='h3 title'>Dynamic Taxonomic Hierarchy</p>
 
   
-   <div class='container-sm box'>
-    <a href='tax_hierarchy2' role='button' class='btn btn-success' style='float:right;'>Reset Tree</a>
-     <ul>
-     <li class='tax-item'>
-       <a 
-         onclick=get_leaf('Archaea','domain') 
-         role='button' 
-         type="button" 
-         style='background:#78AE99;'
-         class="btn btn-sm"
-        >
-          <small>Domain:</small> Archaea <i class="arrow right"></i>
-       </a>
-       <div id='Archaea_domain'></div>
-     </li>
-     <li class='tax-item'>
-       <a 
-         onclick=get_leaf('Bacteria','domain') 
-         role='button' 
-         type="button"
-         style='background:#78AE99;'
-         class="btn btn-sm"
-        >
-          <small>Domain:</small> Bacteria <i class="arrow right"></i>
-       </a>
-       <div id='Bacteria_domain'></div>
-     </li>
-     </ul>
-   </div>
-
+  <div class='container box'>
+    <div class="row">
+      <div class="col">
+            
+            <ul>
+            <li class='tax-item'>
+              
+              <a 
+                onclick=get_leaf('Archaea','domain') 
+                role='button' 
+                type="button" 
+                style='background:#78AE99;'
+                class="btn btn-sm"
+                >
+                  <small>Domain:</small> Archaea
+                <span class='pill pill-indigo'><%= arc_counts.tax_counts %></span>
+                <span class='pill pill-orange'><%= arc_counts.genome_counts %></span>
+                <span class='pill pill-khaki'><%= arc_counts.refseq_counts %></span>
+              </a>
+              <span id='Archaea_domain_span' class='fa_widget'><i class="fa-solid fa-angle-right"></i></span>
+              <div id='Archaea_domain_div'></div>
+            </li>
+            <li class='tax-item'>
+              <a 
+                onclick=get_leaf('Bacteria','domain') 
+                role='button' 
+                type="button"
+                style='background:#78AE99;'
+                class="btn btn-sm"
+                >
+                <small>Domain:</small> Bacteria
+                <span class='pill pill-indigo'><%= bac_counts.tax_counts %></span>
+                <span class='pill pill-orange'><%= bac_counts.genome_counts %></span>
+                <span class='pill pill-khaki'><%= bac_counts.refseq_counts %></span>
+              </a>
+                <span id='Bacteria_domain_span' class='fa_widget'><i class="fa-solid fa-angle-right"></i></span>
+              <div id='Bacteria_domain_div'></div>
+            </li>
+            </ul>
+      </div>
+      <div class="col-2">
+      <a href='tax_hierarchy2' role='button' class='btn btn-success' style='border:1px solid red'>Reset Tree</a>
+      <div style="margin-top:20px;padding:5px;border:1px solid black;">
+        <li><span class="pill pill-indigo">&nbsp;&nbsp;</span> Tax Counts</li>
+        <li><span class="pill pill-orange">&nbsp;&nbsp;</span> Genome Counts</li>
+        <li><span class="pill pill-khaki">&nbsp;&nbsp;</span> RefSeq Counts</li>
+      </div>
+    </div>
+      
+    </div>
+  </div>
+    
 
     </div> <!-- end: page-content -->
 </div>  <!-- end wrapper -->
@@ -115,12 +115,15 @@
     args.name = decodeURIComponent(name)
     //console.log('decoded name',args.name)
     args.rank = rank
-    target_div = document.getElementById(args.name+'_'+rank)
+    target_div = document.getElementById(args.name+'_'+rank+'_div')
+    target_span = document.getElementById(args.name+'_'+rank+'_span')
+    
     if(target_div.innerHTML !== ''){
        // close
        target_div.innerHTML = ''
+       target_span.innerHTML = '<i class="fa-solid fa-angle-right"></i>'
     }else{
-    
+        target_span.innerHTML = '<i class="fa-solid fa-angle-down"></i>'
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("POST", "/taxa/tax_hierarchy2", true);
         xmlhttp.setRequestHeader("Content-type","application/json");

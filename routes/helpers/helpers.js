@@ -123,23 +123,23 @@ module.exports.format_MB = (x) =>{ // mega bytes
     // change 456734 => 456,734
     return (parseFloat(x) /1000000).toFixed(3).toString() +' MB'
 }
-module.exports.get_min = function get_min(ary){
-   let ret = ary[0]
-   for(let i=0;i<ary.length;i++){
-      if(ary[i] < ret){
-         ret = ary[i]
-      }
-   }
-   return ret
+module.exports.get_min = (ary) => {
+  let ret = ary[0];
+  for (let i = 0; i < ary.length; i++) {
+    if (ary[i] < ret) {
+      ret = ary[i];
+    }
+  }
+  return ret;
 }
-module.exports.get_max = function get_max(ary){
-   let ret = 0
-   for(let i=0;i<ary.length;i++){
-      if(ary[i] > ret){
-         ret = ary[i]
-      }
-   }
-   return ret
+module.exports.get_max = (ary) => {
+  let ret = 0;
+  for (let i = 0; i < ary.length; i++) {
+    if (ary[i] > ret) {
+      ret = ary[i];
+    }
+  }
+  return ret;
 }
 //
 module.exports.onlyUnique = (value, index, self) =>{
@@ -158,44 +158,40 @@ module.exports.make_otid_display_name = (otid) =>{
 
 
 
-module.exports.addslashes = function addslashes( str ) {
-    return (str + '').replace(/[\]\[\\"']/g, '\\$&')
-}
+module.exports.addslashes = (str) => (str + '').replace(/[\]\[\\"']/g, '\\$&')
 
 
-module.exports.sleep = function sleep(time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
-}
+module.exports.sleep = (time) => new Promise((resolve) => setTimeout(resolve, time))
 
-module.exports.getAllDirFiles = function getAllDirFiles(dirPath, arrayOfFiles) {
-  arrayOfFiles = {}
-  arrayOfFiles.files =[]
-  arrayOfFiles.dirs =[]
-  let excludeddirs =['users']
-  try{
-      const files = fs.readdirSync(dirPath)
- 
-      files.forEach(function getFilesArray(file) {
-        let stats = fs.statSync(dirPath + "/" + file)
-        let unixFilePermissions = '0' + (stats.mode & parseInt('777', 8)).toString(8);
-        //console.log(file,unixFilePermissions,stats)
-        if (stats.mode & (fs.constants.S_IRUSR | fs.constants.S_IRGRP | fs.constants.S_IROTH)) {
-            
-            if (stats.isDirectory()) {
-              if(excludeddirs.indexOf(file) === -1){
-                //arrayOfFiles = getAllDirFiles(dirPath + "/" + file, arrayOfFiles)
-                arrayOfFiles.dirs.push({name:file,src:dirPath + "/" + file,type:'dir'})
-              }
-            } else {
-              arrayOfFiles.files.push({name:file,src:dirPath + "/" + file,type:'file'})
-            }
+module.exports.getAllDirFiles = (dirPath, arrayOfFiles) => {
+  arrayOfFiles = {};
+  arrayOfFiles.files = [];
+  arrayOfFiles.dirs = [];
+  let excludeddirs = ['users'];
+  try {
+    const files = fs.readdirSync(dirPath);
+
+    files.forEach(function getFilesArray(file) {
+      let stats = fs.statSync(dirPath + "/" + file);
+      let unixFilePermissions = '0' + (stats.mode & parseInt('777', 8)).toString(8);
+      //console.log(file,unixFilePermissions,stats)
+      if (stats.mode & (fs.constants.S_IRUSR | fs.constants.S_IRGRP | fs.constants.S_IROTH)) {
+
+        if (stats.isDirectory()) {
+          if (excludeddirs.indexOf(file) === -1) {
+            //arrayOfFiles = getAllDirFiles(dirPath + "/" + file, arrayOfFiles)
+            arrayOfFiles.dirs.push({ name: file, src: dirPath + "/" + file, type: 'dir' });
+          }
+        } else {
+          arrayOfFiles.files.push({ name: file, src: dirPath + "/" + file, type: 'file' });
         }
-      })
-      return arrayOfFiles
-  }catch(e){
-        return 0
+      }
+    });
+    return arrayOfFiles;
+  } catch (e) {
+    return 0;
   }
-  
+
 }
 // module.exports.readAsync = async function readAsync(file, callback) {
 //     if(CFG.ENV === 'development'){
@@ -215,32 +211,25 @@ module.exports.getAllDirFiles = function getAllDirFiles(dirPath, arrayOfFiles) {
 // }
 
 //
-module.exports.makeid = function makeid(length) {
-    // Used for blast.id and spamguard
-    // REMOVE 1/I and 0/o confusing
-    let result           = '';
-    let characters       = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz23456789';
-    let charactersLength = characters.length;
-    for ( let i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
+module.exports.makeid = (length) => {
+  // Used for blast.id and spamguard
+  // REMOVE 1/I and 0/o confusing
+  let result = '';
+  let characters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz23456789';
+  let charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
 //
 
 //
-module.exports.checkFileSize = function checkFileSize(file_path){
-   let statsObj = fs.statSync(file_path);
-   //console.log('size',statsObj.size);  // bytes
-   return statsObj.size
-   // fs.statSync(file_path, (err, stats) => {
-//     if (err) {
-//         console.log(`File doesn't exist.`);
-//     } else {
-//         console.log('size',stats.size);  // bytes
-//         return stats.size
-//     }
-//});
+module.exports.checkFileSize = (file_path) => {
+  let statsObj = fs.statSync(file_path);
+  //console.log('size',statsObj.size);  // bytes
+  return statsObj.size;
+  
 }
 module.exports.print = function print(thing) {
     // console.log only if development
@@ -252,57 +241,53 @@ module.exports.print = function print(thing) {
     
 }
 
-module.exports.execute = function execute(command, callback){
-    exec(command, function(error, stdout, stderr){ callback(stdout); });
+module.exports.execute = (command, callback) => {
+  exec(command, function (error, stdout, stderr) { callback(stdout); });
 };
 
-module.exports.getCallerIP = function getCallerIP(request) {
-    let ip = request.headers['x-forwarded-for'] ||
-        request.connection.remoteAddress ||
-        request.socket.remoteAddress ||
-        request.connection.socket.remoteAddress;
-    ip = ip.split(',')[0];
-    ip = ip.split(':').slice(-1); //in case the ip returned in a format: "::ffff:146.xxx.xxx.xxx"
-    return ip;
+module.exports.getCallerIP = (request) => {
+  let ip = request.headers['x-forwarded-for'] ||
+    request.connection.remoteAddress ||
+    request.socket.remoteAddress ||
+    request.connection.socket.remoteAddress;
+  ip = ip.split(',')[0];
+  ip = ip.split(':').slice(-1); //in case the ip returned in a format: "::ffff:146.xxx.xxx.xxx"
+  return ip;
 };
 
-module.exports.get_gc_for_gccontent = function get_gc_for_gccontent(gc){
-    return (parseFloat(gc)/100).toFixed(2)
-};
+module.exports.get_gc_for_gccontent = (gc) => (parseFloat(gc) / 100).toFixed(2);
 
-module.exports.readFromFile = function readFromFile(file, ext) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(file, (err, data) => {
-            if (err) {
-                console.log(err);
-                reject(err);
-            }
-            else {
-                if(ext == 'json'){
-                   resolve(JSON.parse(data));
-                }else if(ext == 'csv'){
-                   let gids = []
-                   //console.log(data.toString())
-                   let pts = data.toString().split('\n')
-                   for( let i in pts){
-                     //#re.findall(r'\S+', s)
-                      gids.push(pts[i].split(/(\s+)/)[0])
-                   }
-                   
-                  // const allFileContents = fs.readFileSync('broadband.sql', 'utf-8');
-// allFileContents.split(/\r?\n/).forEach(line =>  {
-//   console.log(`Line from file: ${line}`);
-// });
-                    resolve(gids);
-                
-                }else{
-                   //console.log(data)
-                   resolve(data);
-                }
-            }
-        });
-    });
-}
+module.exports.readFromFile = (file, ext) => new Promise((resolve, reject) => {
+  fs.readFile(file, (err, data) => {
+    if (err) {
+      console.log(err);
+      reject(err);
+    }
+    else {
+      if (ext == 'json') {
+        resolve(JSON.parse(data));
+      } else if (ext == 'csv') {
+        let gids = [];
+        //console.log(data.toString())
+        let pts = data.toString().split('\n');
+        for (let i in pts) {
+          //#re.findall(r'\S+', s)
+          gids.push(pts[i].split(/(\s+)/)[0]);
+        }
+
+        // const allFileContents = fs.readFileSync('broadband.sql', 'utf-8');
+        // allFileContents.split(/\r?\n/).forEach(line =>  {
+        //   console.log(`Line from file: ${line}`);
+        // });
+        resolve(gids);
+
+      } else {
+        //console.log(data)
+        resolve(data);
+      }
+    }
+  });
+})
 
 
 //
@@ -311,19 +296,19 @@ module.exports.readFromFile = function readFromFile(file, ext) {
  * @param cmd {string}
  * @return {Promise<string>}
  */
-module.exports.execShellCommand = function execShellCommand(cmd) {
- const exec = require('child_process').exec;
- return new Promise((resolve, reject) => {
-  exec(cmd, (error, stdout, stderr) => {
-   if (error) {
-    console.warn('error',error);
-   }
-   resolve(stdout? stdout : stderr);
+module.exports.execShellCommand = (cmd) => {
+  const exec = require('child_process').exec;
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.warn('error', error);
+      }
+      resolve(stdout ? stdout : stderr);
+    });
   });
- });
 }
 
-module.exports.rtrim = function rtrim(x, characters) {
+module.exports.rtrim = (x, characters) => {
   //console.log('x,characters',x,characters)
   let start = 0;
   let end = x.length - 1;
@@ -332,7 +317,7 @@ module.exports.rtrim = function rtrim(x, characters) {
   }
   return x.substr(0, end + 1);
 }
-module.exports.ltrim = function ltrim(x, characters) {
+module.exports.ltrim = (x, characters) => {
   let start = 0;
   while (characters.indexOf(x[start]) >= 0) {
     start += 1;
@@ -365,18 +350,18 @@ module.exports.ltrim = function ltrim(x, characters) {
 //     return gid_obj_list
 // }
 
-module.exports.filter_for_phylum = function filter_for_phylum(obj_list, phylum){
-    //console.log('tlist[0]',tlist[0])
-    //console.log('C.taxon_lineage_lookup',C.taxon_lineage_lookup['1'])
-    let new_obj_list = obj_list.filter(item => {   // filter genome obj list for inclusion in otid list
-        if(C.taxon_lineage_lookup.hasOwnProperty(item.otid) && C.taxon_lineage_lookup[item.otid].phylum == phylum){
-            return true
-        }
-    })
-    return new_obj_list
+module.exports.filter_for_phylum = (obj_list, phylum) => {
+  //console.log('tlist[0]',tlist[0])
+  //console.log('C.taxon_lineage_lookup',C.taxon_lineage_lookup['1'])
+  let new_obj_list = obj_list.filter(item => {
+    if (C.taxon_lineage_lookup.hasOwnProperty(item.otid) && C.taxon_lineage_lookup[item.otid].phylum == phylum) {
+      return true;
+    }
+  });
+  return new_obj_list;
 }
 
-module.exports.walk = function walk(dir){
+module.exports.walk = (dir) => {
 // a simple walk method
 
  
