@@ -246,71 +246,70 @@ function get_html(node,requested_rank) {
             let hmt = helpers.make_otid_display_name(node.otid)
             let hmt_lnk = "<a href='tax_description?otid="+node.otid+"'>"+hmt+"</a>"
             if(child_rank === 'species'){
-                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+child_name+"</i> ("+hmt_lnk+")</span>"
-            }else{
-                  // child name needs to be species + subspecies
-                  //console.log('mynode',node)
-                  let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id].taxon
-                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+parent_taxon+'</i> '+child_name+" ("+hmt_lnk+")</span>"
+                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+child_name+"</i> ("+hmt_lnk+")"
+                  html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
+                  html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
+                  html += " </span>"
+            }else{  //subspecies
+                 //console.log('Not Used')
             }
         }else{
             node.children_ids.sort((a, b) => {
-        		let xnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a]
-        		let ynode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b]
-        		return helpers.compareStrings_alpha(xnode.taxon, ynode.taxon);
-    		})
+                let xnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a]
+                let ynode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b]
+                return helpers.compareStrings_alpha(xnode.taxon, ynode.taxon);
+            })
             if(node.rank === requested_rank){
-				html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
-				html += "    role='button'"
-				html += "    type='button'"
-				html += "    style='background:"+green_colors[C.ranks.indexOf(node.rank)-1]+";'"
-				html += "    class='btn btn-sm'>"
-				
-				if(child_rank === 'species'){
-				    //console.log('node.rank',node.rank,C.ranks.indexOf(node.rank),green_colors[C.ranks.indexOf(node.rank)-1])
-					html += "    <small>"+display_rank+':</small> <i>'+child_name+"</i>"
-				}else{
-					html += "    <small>"+display_rank+':</small> '+child_name
-				}
-				
-				html += " <span class='pill pill-indigo'>"+cts.tax_counts+"</span>"
-				html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
-				html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
-				html += '</a>'
+                html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
+                html += "    role='button'"
+                html += "    type='button'"
+                html += "    style='background:"+green_colors[C.ranks.indexOf(node.rank)-1]+";'"
+                html += "    class='btn btn-sm'>"
+                
+                if(child_rank === 'species'){
+                    //console.log('node.rank',node.rank,C.ranks.indexOf(node.rank),green_colors[C.ranks.indexOf(node.rank)-1])
+                    html += "    <small>"+display_rank+':</small> <i>'+child_name+"</i>"
+                }else{
+                    html += "    <small>"+display_rank+':</small> '+child_name
+                }
+                
+                html += " <span class='pill pill-indigo'>"+cts.tax_counts+"</span>"
+                html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
+                html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
+                html += '</a>'
 
-			   html += " <span id='"+id+"_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>"
-			   html += "<div id='"+id+"_div'></div>"
-			   
-			   
-			}else{
-				html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
-				html += "    role='button'"
-				html += "    type='button'"
-				html += "    style='background:"+green_colors[C.ranks.indexOf(child_rank)-1]+";'"
-				html += "    class='btn btn-sm'>"
-				
-				if(child_rank === 'species'){
-					
-					html += "    <small>xx"+display_rank+':</small> <i>'+child_name+"</i>"
-				}else{
-					html += "    <small>"+display_rank+':</small> '+child_name
-				}
-				
-				html += " <span class='pill pill-indigo'>"+cts.tax_counts+"</span>"
-				html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
-				html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
-				html += '</a>'
-				html += " <span id='"+id+"_span' class='fa_widget'><i class='fa-solid fa-angle-down'></i></span>"
-				
-				
-				html += "<div id='"+id+"_div'>"
-				for(let n in node.children_ids){
-					cnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]
-					html += get_html(cnode,requested_rank)
-					//console.log(requested_rank,node.rank)
-				}
-				html += "</div>"
-			}
+               html += " <span id='"+id+"_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>"
+               html += "<div id='"+id+"_div'></div>"
+               
+               
+            }else{
+                html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
+                html += "    role='button'"
+                html += "    type='button'"
+                html += "    style='background:"+green_colors[C.ranks.indexOf(child_rank)-1]+";'"
+                html += "    class='btn btn-sm'>"
+                
+                if(child_rank === 'species'){
+                    html += "    <small>"+display_rank+':</small> <i>'+child_name+"</i>"
+                }else{
+                    html += "    <small>"+display_rank+':</small> '+child_name
+                }
+                
+                html += " <span class='pill pill-indigo'>"+cts.tax_counts+"</span>"
+                html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
+                html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
+                html += '</a>'
+                html += " <span id='"+id+"_span' class='fa_widget'><i class='fa-solid fa-angle-down'></i></span>"
+                
+                
+                html += "<div id='"+id+"_div'>"
+                for(let n in node.children_ids){
+                    cnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]
+                    html += get_html(cnode,requested_rank)
+                    //console.log(requested_rank,node.rank)
+                }
+                html += "</div>"
+            }
         }
         html += '</li>'
         html += '</ul>'
@@ -352,6 +351,8 @@ router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
         }else{
             display_rank = helpers.capitalizeFirst(child_rank)
         }
+        lineage = helpers_taxa.make_lineage(node)  // [str obj]
+        cts = helpers_taxa.get_counts(lineage[0],'').lst
         if(node.children_ids.length === 0){
             //otid = node.otid
             //let lineage = helpers_taxa.make_lineage(node) 
@@ -362,20 +363,25 @@ router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
             let hmt = helpers.make_otid_display_name(node.otid)
             let hmt_lnk = "<a href='tax_description?otid="+node.otid+"'>"+hmt+"</a>"
             if(child_rank === 'species'){
-                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+child_name+"</i> ("+hmt_lnk+")</span>"
+                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+child_name+"</i> ("+hmt_lnk+")"
+                  html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
+                  html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
+                  html += "</span>"
             }else{
                   // child name needs to be species + subspecies
                   //console.log('mynode',node)
                   let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id].taxon
-                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+parent_taxon+'</i> '+child_name+" ("+hmt_lnk+")</span>"
+                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+parent_taxon+'</i> '+child_name+" ("+hmt_lnk+")"
+                  html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
+                  html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
+                  html += "</span>"
             }
               
             html += '</li>'
             html += '</ul>'
         }else{
               
-            lineage = helpers_taxa.make_lineage(node)  // [str obj]
-            cts = helpers_taxa.get_counts(lineage[0],'').lst
+            
             //console.log('node',node,'cts',cts)
             //console.log('sent node',node)
               
