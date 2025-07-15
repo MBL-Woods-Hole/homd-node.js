@@ -254,6 +254,11 @@ function get_html(node,requested_rank) {
                   html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+parent_taxon+'</i> '+child_name+" ("+hmt_lnk+")</span>"
             }
         }else{
+            node.children_ids.sort((a, b) => {
+        		let xnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a]
+        		let ynode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b]
+        		return helpers.compareStrings_alpha(xnode.taxon, ynode.taxon);
+    		})
             if(node.rank === requested_rank){
 				html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
 				html += "    role='button'"
@@ -331,9 +336,9 @@ router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
   
     // sort ids by node.taxon??
     children_ids.sort((a, b) => {
-        let anode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a]
-        let bnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b]
-        return helpers.compareStrings_alpha(anode.taxon, bnode.taxon);
+        let xnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a]
+        let ynode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b]
+        return helpers.compareStrings_alpha(xnode.taxon, ynode.taxon);
     })
     for(let n in children_ids){
         node = C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]]
