@@ -190,6 +190,130 @@ router.get('/tax_hierarchy2', function tax_hierarchy2_GET(req, res) {
       
   })
 })
+router.post('/tax_hierarchy_level', (req, res) => {
+    let requested_rank = req.body.rank;
+    let html_obj = {ahtml:'',bhtml:''}
+    let node,anode,bnode
+    
+    let done = false
+    //console.log('anode',anode)
+    //Archaea node
+    anode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Archaea_domain']
+    for(let n in anode.children_ids){
+        node = C.homd_taxonomy.taxa_tree_dict_map_by_id[anode.children_ids[n]]
+        html_obj.ahtml += get_html(node,requested_rank)
+    }
+    //Bacteria node
+    bnode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Bacteria_domain']
+    for(let n in bnode.children_ids){
+        node = C.homd_taxonomy.taxa_tree_dict_map_by_id[bnode.children_ids[n]]
+        //console.log('mynode1',node)
+        html_obj.bhtml += get_html(node,requested_rank)
+    }
+     
+    //console.log(html_obj.bhtml)
+
+    res.send(JSON.stringify(html_obj));
+})
+
+function get_html(node,requested_rank) {
+        //console.log('mynode2',node)
+        if(C.ranks.indexOf(node.rank) > C.ranks.indexOf(requested_rank)){
+           return ""
+        }
+        let done = false
+        let html = '',child_name,child_rank,id,display_rank,encoded_child_name,cts,cnode
+        let green_colors = ['#9FD4A3','#AEDCAE','#BEE3BA','#CDEBC5','#DDF2D1','#ECFADC']
+        child_name = node.taxon
+        let lineage = helpers_taxa.make_lineage(node)  // [str obj]
+        cts = helpers_taxa.get_counts(lineage[0],'').lst
+        encoded_child_name = encodeURIComponent(node.taxon)
+        //console.log('encoded name',encoded_child_name)
+        child_rank = node.rank
+        let ospace = '&nbsp;',space
+        let num = C.ranks.indexOf(child_rank)+1
+        space = ospace.repeat(num*2)
+        if(child_rank === 'klass'){
+            display_rank = 'Class'
+        }else{
+            display_rank = helpers.capitalizeFirst(child_rank)
+        }
+        id = child_name+'_'+child_rank
+        html += '<ul>'
+        html += "<li class='tax-item'>"
+        if(node.children_ids.length === 0){
+            
+            let hmt = helpers.make_otid_display_name(node.otid)
+            let hmt_lnk = "<a href='tax_description?otid="+node.otid+"'>"+hmt+"</a>"
+            if(child_rank === 'species'){
+                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+child_name+"</i> ("+hmt_lnk+")</span>"
+            }else{
+                  // child name needs to be species + subspecies
+                  //console.log('mynode',node)
+                  let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id].taxon
+                  html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+parent_taxon+'</i> '+child_name+" ("+hmt_lnk+")</span>"
+            }
+        }else{
+            if(node.rank === requested_rank){
+				html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
+				html += "    role='button'"
+				html += "    type='button'"
+				html += "    style='background:"+green_colors[C.ranks.indexOf(node.rank)-1]+";'"
+				html += "    class='btn btn-sm'>"
+				
+				if(child_rank === 'species'){
+				    //console.log('node.rank',node.rank,C.ranks.indexOf(node.rank),green_colors[C.ranks.indexOf(node.rank)-1])
+					html += "    <small>"+display_rank+':</small> <i>'+child_name+"</i>"
+				}else{
+					html += "    <small>"+display_rank+':</small> '+child_name
+				}
+				
+				html += " <span class='pill pill-indigo'>"+cts.tax_counts+"</span>"
+				html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
+				html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
+				html += '</a>'
+
+			   html += " <span id='"+id+"_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>"
+			   html += "<div id='"+id+"_div'></div>"
+			   
+			   
+			}else{
+				html += space+"<a onclick=get_leaf('"+encoded_child_name+"','"+child_rank+"')" 
+				html += "    role='button'"
+				html += "    type='button'"
+				html += "    style='background:"+green_colors[C.ranks.indexOf(child_rank)-1]+";'"
+				html += "    class='btn btn-sm'>"
+				
+				if(child_rank === 'species'){
+					
+					html += "    <small>xx"+display_rank+':</small> <i>'+child_name+"</i>"
+				}else{
+					html += "    <small>"+display_rank+':</small> '+child_name
+				}
+				
+				html += " <span class='pill pill-indigo'>"+cts.tax_counts+"</span>"
+				html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
+				html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
+				html += '</a>'
+				html += " <span id='"+id+"_span' class='fa_widget'><i class='fa-solid fa-angle-down'></i></span>"
+				
+				
+				html += "<div id='"+id+"_div'>"
+				for(let n in node.children_ids){
+					cnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]
+					html += get_html(cnode,requested_rank)
+					//console.log(requested_rank,node.rank)
+				}
+				html += "</div>"
+			}
+        }
+        html += '</li>'
+        html += '</ul>'
+
+        return html
+
+}
+
 router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
     //console.log('POST Hierarchy2')
     //console.log('req.body',req.body)
@@ -236,7 +360,7 @@ router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
                   html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+child_name+"</i> ("+hmt_lnk+")</span>"
             }else{
                   // child name needs to be species + subspecies
-                  console.log('mynode',node)
+                  //console.log('mynode',node)
                   let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id].taxon
                   html += space+"<span class='otid-link' nowrap><small>"+display_rank+":</small> <i>"+parent_taxon+'</i> '+child_name+" ("+hmt_lnk+")</span>"
             }
@@ -264,11 +388,10 @@ router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
             }else{
               html += "    <small>"+display_rank+':</small> '+child_name
             }
-
             html += " <span class='pill pill-indigo'>"+cts.tax_counts+"</span>"
             html += " <span class='pill pill-orange'>"+cts.genome_counts+"</span>"
             html += " <span class='pill pill-khaki'>"+cts.refseq_counts+"</span>"
-        html += '</a>'
+            html += '</a>'
             html += " <span id='"+id+"_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>"
             html += "<div  id='"+id+"_div'></div>"
             html += '</li>'
