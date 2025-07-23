@@ -41,9 +41,10 @@
             <li><a class="dropdown-item" href="/taxa/tax_table">Taxon Table</a></li>
             <li><a class="dropdown-item" href="/taxa/life">Life</a></li>
             <li><a class="dropdown-item" href="/taxa/ecology_home">Ecology</a></li>
-            <li><a class="dropdown-item" href="/taxa/tax_hierarchy">Tree</a></li>
+            
+            <li><a class="dropdown-item" href="/taxa/tax_hierarchy2">Taxonomy Tree</a></li>
             <li><a class="dropdown-item" href="/taxa/tax_level">Rank Level</a></li>
-            <li><a class="dropdown-item" href="/download#taxon">Download</a></li>
+            <li><a class="dropdown-item" href="/download#taxon">Downloads</a></li>
             <li><a class="dropdown-item" href="/taxa/body_sites">Body Sites</a></li>
             <li><a class="dropdown-item" href="/taxa/dropped">Dropped Taxa</a></li>
             <li><a class="dropdown-item" href="/help/help-page?pagecode=taxon/taxon_version">Version History</a></li>
@@ -53,7 +54,7 @@
             <% } %>
             <% if(cfg.ENV === "localhost" || cfg.ENV === "development"){ %>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="/taxa/tax_hierarchy2">LocalHost::Tree Testing</a></li>
+              <li><a class="dropdown-item" href="/taxa/tax_hierarchy">Old dhtmlx tree</a></li>
             <% } %>
           </ul>
           
@@ -68,23 +69,26 @@
             
             
             
-            <li><a class="dropdown-item" href="/genome/explorer?gid=&anno=prokka">Explorer</a></li>
-            <li><a class="dropdown-item" href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast/","_self")'>BLAST</a></li>
+            <li><a class="dropdown-item" href="/genome/explorer?gid=&anno=prokka">Genome Explorer</a></li>
+            <li><a class="dropdown-item" href="<%= cfg.BLAST_URL_BASE %>/genome_blast"  target="_self">BLAST (All Genomes)</a></li>
+            <li><a class="dropdown-item" href="/genome/blast_select_genome" )'>BLAST (Select a Genome)</a></li>
+            
             <li><a class="dropdown-item" href="/genome/anvio_pangenomes">Pangenomes</a></li>
-            <li><a class="dropdown-item" href="/download#genome">Download</a></li>
+            <li><a class="dropdown-item" href="/download#genome">Downloads</a></li>
             <li><a class="dropdown-item" href="/help/help-page?pagecode=genome/genome_version">Version History</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="icon-link dropdown-item"  href="<%= cfg.HOMD_URL_BASE %><%= cfg.CP_TREE_PATH %>">Conserved Protein Tree
+            <li>&nbsp;Genomic Trees:</li>
+            <li><a class="icon-link dropdown-item"  href="<%= cfg.HOMD_URL_BASE %><%= cfg.CP_TREE_PATH %>" target='_blank'>Conserved Protein
             <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
             </svg>
             </a></li>
-            <li><a class="icon-link dropdown-item"  href="<%= cfg.HOMD_URL_BASE %><%= cfg.RP_TREE_PATH %>">Ribosomal Protein Tree
+            <li><a class="icon-link dropdown-item"  href="<%= cfg.HOMD_URL_BASE %><%= cfg.RP_TREE_PATH %>" target='_blank'>Ribosomal Protein
             <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
             </svg>
             </a></li>
-            <li><a class="icon-link dropdown-item"  href="<%= cfg.HOMD_URL_BASE %><%= cfg.GENE_TREE_PATH %>">16S rRNA Gene Tree
+            <li><a class="icon-link dropdown-item"  href="<%= cfg.HOMD_URL_BASE %><%= cfg.GENE_TREE_PATH %>" target='_blank'>16S rRNA Gene
             <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
             </svg>
@@ -92,27 +96,28 @@
             
           </ul>
         </li>
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Proteomes
           </a>
           <ul class="dropdown-menu">
-            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg">View Genomic Tree based on Conserved Proteins
+            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %><%= cfg.CP_TREE_PATH %>"  target='_blank'>View Genomic Tree based on Conserved Proteins
             <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
             </svg>
             </a></li>
-            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/PROKKA/V11.0/" target='_blank'>All Protein Sequences Annotated from Genomes
+            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/PROKKA/current" target='_blank'>All Protein Sequences Annotated from Genomes
             <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
             </svg>
             </a></li>
-            <li><a class="icon-link dropdown-item" href="https://v31.homd.org/genome/peptide_table"  target='_blank'   >Proteins Detected in Human Saliva
+            <li><a class="icon-link dropdown-item" href="https://v31.homd.org/genome/peptide_table"  target='_blank'   >Proteins Detected in Human Saliva (V3.1)
             <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
             </svg>
             </a></li>  
-            <li><a class="icon-link dropdown-item" href="https://v31.homd.org/genome/peptide_table2" target='_blank'    >Genomes with Proteins Detected in Human Saliva
+            <li><a class="icon-link dropdown-item" href="https://v31.homd.org/genome/peptide_table2" target='_blank'>Genomes with Proteins Detected in Human Saliva (V3.1)
             <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
             </svg>
@@ -124,13 +129,13 @@
             16S rRNA
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/refseq_blast/","_self")' >RefSeq BLAST Server</a></li> 
-            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %><%= cfg.REFSEQ_TREE_PATH %>">View 16S rRNA RefSeq Phylogenetic Tree
+            <li><a class="dropdown-item" href="<%= cfg.BLAST_URL_BASE %>/refseq_blast" target="_self" >RefSeq BLAST Server</a></li> 
+            <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %><%= cfg.REFSEQ_TREE_PATH %>" target='_blank'>16S rRNA RefSeq Phylogenetic Tree
             <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
             </svg>
             </a></li>
-            <li><a class="dropdown-item" href="/download#refseq">Download RefSeq Data</a></li>
+            <li><a class="dropdown-item" href="/download#refseq">Downloads</a></li>
             <li><a class="dropdown-item" href="/help/help-page?pagecode=refseq/refseq_version">Version History</a></li>
           </ul>
         </li>
@@ -151,7 +156,7 @@
             Downloads
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/download">Download Batch HOMD Data</a></li>
+            <li><a class="dropdown-item" href="/download">Batch HOMD Data</a></li>
             <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %>/ftp/" target='_blank'>HOMD FTP Site
             <svg xmlns="http://www.w3.org/2000/svg" class="bi" viewBox="0 0 16 16" aria-hidden="true">
                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -161,7 +166,7 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Tools
+            Resources
           </a>
           <ul class="dropdown-menu">
             <li><a class="icon-link dropdown-item" href='http://v31.homd.org/' target='_blank'>HOMD-V3.1 Site
