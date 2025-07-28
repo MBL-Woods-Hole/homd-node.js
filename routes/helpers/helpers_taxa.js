@@ -518,7 +518,8 @@ module.exports.apply_ttable_filter = (req, filter) => {
   // console.log('testing::')
 //   big_tax_list.filter(function testForPresences(item) {
 //       if (item.otid == 470) {
-//           console.log('testForPresence-Found 470',item.otid)
+//           console.log('1testForPresence-Found 470',item.otid)
+//           console.log(item)
 //       }
 //    })
   //console.log('status_on',status_on)
@@ -560,7 +561,7 @@ module.exports.apply_ttable_filter = (req, filter) => {
   //console.log('olength-1',big_tax_list.length)
   //console.log('site_on',site_on)
   //console.log('filter.site',filter.site)
-  //console.log('C.site_lookup[988] ',Object.values(C.site_lookup[988]) )
+  
   if (filter && filter.site.p_or_pst == 'primary_site') {
     big_tax_list = big_tax_list.filter(function (item) {
       // if (item.otid == 470) {
@@ -604,6 +605,11 @@ module.exports.apply_ttable_filter = (req, filter) => {
       }
     });
   }
+  big_tax_list.filter(function testForPresences(item) {
+      // if (item.otid == 470) {
+//           console.log('2testForPresence-Found 470',item.otid)
+//       }
+   })
   //console.log('big_tax_list.length-3',big_tax_list.length)
   //phylum
   if (vals.phylum != '0') {
