@@ -501,6 +501,10 @@ module.exports.apply_ttable_filter = (req, filter) => {
     } else {
       check = first_part + '_' + second_part;
     }
+    // if by mistake: Unnamed and Uncultivated
+    if(item.naming_status.toLowerCase() == 'unnamed' && item.cultivation_status.substring(0, 12).toLowerCase() == 'uncultivated'){
+        check = 'phylotype';
+    }
     if (item.otid == 470) {
         console.log('470 check:',check)
     }
