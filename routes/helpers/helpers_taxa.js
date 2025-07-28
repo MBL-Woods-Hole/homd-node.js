@@ -516,6 +516,9 @@ module.exports.apply_ttable_filter = (req, filter) => {
   //console.log('abundOn',abund_on)
   big_tax_list = big_tax_list.filter(function filterAbundance(item) {
     //console.log('item',C.site_lookup[item.otid])
+    if (item.otid == 470) {
+          console.log('abund-Found 470',item.otid)
+      }
     if (abund_on.length == C.tax_abund_all.length) {
       return item;
     } else {
@@ -542,7 +545,8 @@ module.exports.apply_ttable_filter = (req, filter) => {
   // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
   // taxon will be excluded here from the taxon table
   //console.log('olength-1',big_tax_list.length)
-  //console.log('site_on',site_on)
+  console.log('site_on',site_on)
+  console.log('filter.site',filter.site)
   //console.log('C.site_lookup[988] ',Object.values(C.site_lookup[988]) )
   if (filter && filter.site.p_or_pst == 'primary_site') {
     big_tax_list = big_tax_list.filter(function (item) {
