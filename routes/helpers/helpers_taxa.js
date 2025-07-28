@@ -474,7 +474,7 @@ module.exports.apply_ttable_filter = (req, filter) => {
   //console.log('vals',vals)
   ///// SEARCH status /////
   let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on');
-  //console.log('status_on',status_on)
+  console.log('status_on',status_on)
   let check, combo = '', first_part = '', second_part = '';
   big_tax_list = big_tax_list.filter(function filterStatus(item) {
     // console.log('item',item)
@@ -508,12 +508,17 @@ module.exports.apply_ttable_filter = (req, filter) => {
     }
 
   });
+  big_tax_list.filter(function testForPresences(item) {
+      if (item.otid == 470) {
+          console.log('testForPresence-Found 470',item.otid)
+      }
+   })
   //console.log('status_on',status_on)
   //console.log('big_tax_list.length-1',big_tax_list.length)
   //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
   //SEARCH Abundance
   let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on');
-  //console.log('abundOn',abund_on)
+  console.log('abundOn',abund_on)
   big_tax_list = big_tax_list.filter(function filterAbundance(item) {
     //console.log('item',C.site_lookup[item.otid])
     if (item.otid == 470) {
