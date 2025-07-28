@@ -501,6 +501,9 @@ module.exports.apply_ttable_filter = (req, filter) => {
     } else {
       check = first_part + '_' + second_part;
     }
+    if (item.otid == 470) {
+        console.log('470 check:',check)
+    }
     for (let i in status_on) {
       if (status_on[i] == check) {
         return item;
@@ -508,6 +511,7 @@ module.exports.apply_ttable_filter = (req, filter) => {
     }
 
   });
+  console.log('testing::')
   big_tax_list.filter(function testForPresences(item) {
       if (item.otid == 470) {
           console.log('testForPresence-Found 470',item.otid)
@@ -518,12 +522,12 @@ module.exports.apply_ttable_filter = (req, filter) => {
   //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
   //SEARCH Abundance
   let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on');
-  console.log('abundOn',abund_on)
+  //console.log('abundOn',abund_on)
   big_tax_list = big_tax_list.filter(function filterAbundance(item) {
     //console.log('item',C.site_lookup[item.otid])
-    if (item.otid == 470) {
-          console.log('abund-Found 470',item.otid)
-      }
+    // if (item.otid == 470) {
+//           console.log('abund-Found 470',item.otid)
+//       }
     if (abund_on.length == C.tax_abund_all.length) {
       return item;
     } else {
@@ -550,14 +554,14 @@ module.exports.apply_ttable_filter = (req, filter) => {
   // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
   // taxon will be excluded here from the taxon table
   //console.log('olength-1',big_tax_list.length)
-  console.log('site_on',site_on)
-  console.log('filter.site',filter.site)
+  //console.log('site_on',site_on)
+  //console.log('filter.site',filter.site)
   //console.log('C.site_lookup[988] ',Object.values(C.site_lookup[988]) )
   if (filter && filter.site.p_or_pst == 'primary_site') {
     big_tax_list = big_tax_list.filter(function (item) {
-      if (item.otid == 470) {
-          console.log('2-Found 470',item.otid)
-      }
+      // if (item.otid == 470) {
+//           console.log('2-Found 470',item.otid)
+//       }
       for (let n in item.sites) {
         //console.log('n',n,'site',item.sites[n])
         //console.log('item.sites',item.sites)
@@ -577,9 +581,9 @@ module.exports.apply_ttable_filter = (req, filter) => {
   } else {
     //C.site_lookup[1]
     big_tax_list = big_tax_list.filter(function (item) {
-      if (item.otid == 470) {
-          console.log('3-Found 470',item.otid)
-      }
+      // if (item.otid == 470) {
+//           console.log('3-Found 470',item.otid)
+//       }
       //console.log('otid',item)
       if (item.otid in C.site_lookup) {
         //console.log('looking1')
