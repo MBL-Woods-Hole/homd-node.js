@@ -372,7 +372,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
         let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
         //let filename = uuidv4();  //CFG.PATH_TO_TMP
         //let filepath = path.join(CFG.PATH_TO_TMP, filename)
-        let max_rows = 50000
+        let max_rows = C.grep_search_max_rows
         let split_length = 6
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
         let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
@@ -401,11 +401,11 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                     if(pts.length == split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
                       gid = pts[1].toUpperCase()
-                      
-                      otid = C.genome_lookup[gid]['otid']
-                      strain = C.genome_lookup[gid]['strain']
-                      species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
-                      let tmp_obj = {
+                      if(gid && C.genome_lookup.hasOwnProperty(gid)){
+                        otid = C.genome_lookup[gid]['otid']
+                        strain = C.genome_lookup[gid]['strain']
+                        species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+                        let tmp_obj = {
                           gid:gid,
                           species:species,
                           strain:strain,
@@ -417,15 +417,15 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                           length_aa:pts[7],
 //                           start:pts[8],
 //                           stop:pts[9]
-                      }
-                      //console.log('tmp_obj',tmp_obj)
-                      if(obj2.hasOwnProperty(gid)){
+                        }
+                        //console.log('tmp_obj',tmp_obj)
+                        if(obj2.hasOwnProperty(gid)){
                           obj2[gid].push(tmp_obj)
-                      }else{
+                        }else{
                           sort_lst.push({gid:gid,species:species,strain:strain})
                           obj2[gid] = [tmp_obj]
+                        }
                       }
-                      
 
                     }
                 }
