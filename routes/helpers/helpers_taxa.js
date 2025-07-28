@@ -568,7 +568,9 @@ module.exports.apply_ttable_filter = (req, filter) => {
   } else {
     //C.site_lookup[1]
     big_tax_list = big_tax_list.filter(function (item) {
-      //let otid = item.otid
+      if (item.otid == 470) {
+          console.log('3-Found 470',item.otid)
+      }
       //console.log('otid',item)
       if (item.otid in C.site_lookup) {
         //console.log('looking1')
