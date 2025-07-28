@@ -474,13 +474,13 @@ module.exports.apply_ttable_filter = (req, filter) => {
   //console.log('vals',vals)
   ///// SEARCH status /////
   let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on');
-  console.log('status_on',status_on)
+  //console.log('status_on',status_on)
   let check, combo = '', first_part = '', second_part = '';
   big_tax_list = big_tax_list.filter(function filterStatus(item) {
     // console.log('item',item)
-    if (item.otid == 470) {
-          console.log('1-Found 470',item.otid)
-    }
+    // if (item.otid == 470) {
+//           console.log('1-Found 470',item.otid)
+//     }
     // choices: dropped,phylotype, named_cultivated,named_uncultivated,unnamed_cultivated
     if (item.naming_status.substring(0, 5).toLowerCase() == 'named') {
       first_part = 'named';
@@ -505,9 +505,9 @@ module.exports.apply_ttable_filter = (req, filter) => {
     if(item.naming_status.toLowerCase() == 'unnamed' && item.cultivation_status.substring(0, 12).toLowerCase() == 'uncultivated'){
         check = 'phylotype';
     }
-    if (item.otid == 470) {
-        console.log('470 check:',check)
-    }
+    // if (item.otid == 470) {
+//         console.log('470 check:',check)
+//     }
     for (let i in status_on) {
       if (status_on[i] == check) {
         return item;
@@ -515,12 +515,12 @@ module.exports.apply_ttable_filter = (req, filter) => {
     }
 
   });
-  console.log('testing::')
-  big_tax_list.filter(function testForPresences(item) {
-      if (item.otid == 470) {
-          console.log('testForPresence-Found 470',item.otid)
-      }
-   })
+  // console.log('testing::')
+//   big_tax_list.filter(function testForPresences(item) {
+//       if (item.otid == 470) {
+//           console.log('testForPresence-Found 470',item.otid)
+//       }
+//    })
   //console.log('status_on',status_on)
   //console.log('big_tax_list.length-1',big_tax_list.length)
   //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
