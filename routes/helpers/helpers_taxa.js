@@ -478,6 +478,9 @@ module.exports.apply_ttable_filter = (req, filter) => {
   let check, combo = '', first_part = '', second_part = '';
   big_tax_list = big_tax_list.filter(function filterStatus(item) {
     // console.log('item',item)
+    if (item.otid == 470) {
+          console.log('1-Found 470',item.otid)
+    }
     // choices: dropped,phylotype, named_cultivated,named_uncultivated,unnamed_cultivated
     if (item.naming_status.substring(0, 5).toLowerCase() == 'named') {
       first_part = 'named';
@@ -518,9 +521,7 @@ module.exports.apply_ttable_filter = (req, filter) => {
     } else {
       if (C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1) {
         let site_item_primary = C.site_lookup[item.otid].s1.toLowerCase().replace(/\s/g, '');
-        if (item.otid == 400) {
-          //console.log('400site_item_primary',item.otid,site_item_primary)
-        }
+        
         //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund','nodata_abund' ]
         for (let n in abund_on) {
           let test = abund_on[n].slice(0, -6).toLowerCase(); // 
@@ -545,9 +546,9 @@ module.exports.apply_ttable_filter = (req, filter) => {
   //console.log('C.site_lookup[988] ',Object.values(C.site_lookup[988]) )
   if (filter && filter.site.p_or_pst == 'primary_site') {
     big_tax_list = big_tax_list.filter(function (item) {
-      // if(item.otid =='999'){
-      //            console.log('item.sites999',item)
-      //          }
+      if (item.otid == 470) {
+          console.log('2-Found 470',item.otid)
+      }
       for (let n in item.sites) {
         //console.log('n',n,'site',item.sites[n])
         //console.log('item.sites',item.sites)
