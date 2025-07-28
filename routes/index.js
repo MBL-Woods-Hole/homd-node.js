@@ -372,7 +372,8 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
         let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
         //let filename = uuidv4();  //CFG.PATH_TO_TMP
         //let filepath = path.join(CFG.PATH_TO_TMP, filename)
-        let max_rows = 50000
+        let max_rows = C.grep_search_max_rows //50000
+        
         let split_length = 6
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
         let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
