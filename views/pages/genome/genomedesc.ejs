@@ -209,6 +209,19 @@
     <tr class=""><td valign="center" class='field'>tRNA</td><td class='value'><span class='inner-value'><%= ginfo.prokka_tRNA %></span></td></tr>
     <tr class=""><td valign="center" class='field'>tmRNA</td><td class='value'><span class='inner-value'><%= ginfo.prokka_tmRNA %></span></td></tr>
     
+    <tr class=""><td valign="center" class='field'>ANI (Average Nucluotide Identity)</td><td class='value'><span class='inner-value'><%= ginfo.ANI %> %</span></td></tr>
+    <tr class=""><td valign="center" class='field'>CheckM Completeness</td><td class='value'><span class='inner-value'><%= ginfo.checkM_completeness %> %</span></td></tr>
+    <tr class=""><td valign="center" class='field'>CheckM Contamination</td><td class='value'><span class='inner-value'><%= ginfo.checkM_contamination %> %</span></td></tr>
+    <tr class=""><td valign="center" class='field'>CheckM2 Completeness</td><td class='value'><span class='inner-value'><%= ginfo.checkM2_completeness %> %</span></td></tr>
+    <tr class=""><td valign="center" class='field'>CheckM2 Contamination</td><td class='value'><span class='inner-value'><%= ginfo.checkM2_contamination %> %</span></td></tr>
+    <% if(checkm >= 20){ %>
+      <tr class="">
+        <td valign="center" class='field' style='color:red;'>Difference between<br>CheckM and CheckM2<br>Completeness</td>
+        <td class='value'><span class='inner-value' style='color:red;'><%= checkm.toFixed(1) %> %</span></td>
+      </tr>
+    <% } %>
+    
+    
     <tr class="">
       <td valign="center" class='field'>CRISPR-cas</td>
        <% if(crispr === 0){ %>
@@ -310,11 +323,7 @@
     
     <tr class=""><td valign="center" class='field'>Geo Location</td><td class='value'><span class='inner-value'><%= ginfo.geo_loc_name %></span></td></tr>
     
-    <tr class=""><td valign="center" class='field'>ANI (Average Nucluotide Identity)</td><td class='value'><span class='inner-value'><%= ginfo.ANI %> %</span></td></tr>
-    <tr class=""><td valign="center" class='field'>CheckM Completeness</td><td class='value'><span class='inner-value'><%= ginfo.checkM_completeness %> %</span></td></tr>
-    <tr class=""><td valign="center" class='field'>CheckM Percentile</td><td class='value'><span class='inner-value'><%= ginfo.checkM_percentile %> %</span></td></tr>
-    <tr class=""><td valign="center" class='field'>CheckM Contamination</td><td class='value'><span class='inner-value'><%= ginfo.checkM_contamination %> %</span></td></tr>
-     
+    
 </table>
 </td></tr>
 </table>  <!-- Outer table -->

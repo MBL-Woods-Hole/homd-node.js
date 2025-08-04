@@ -336,12 +336,15 @@ router.get('/genome_description', function Description (req, res) {
             let n = data.GTDB_taxonomy.lastIndexOf(';')
             data.GTDB_taxonomy = data.GTDB_taxonomy.substring(0, n+1) + "<br>" + data.GTDB_taxonomy.substring(n+1) 
             console.log('GTDB_taxonomy',data.GTDB_taxonomy)
+            let checkm_status = helpers_genomes.get_checkm_status(data)
+            console.log('checkM status',checkm_status)
             res.render('pages/genome/genomedesc', {
                title: 'HOMD :: Genome Info',
                pgname: 'genome/description', // for AboutThisPage 
                config: JSON.stringify(CFG),
                // taxonid: otid,
                data1: JSON.stringify(data),
+               checkm: checkm_status,
                gid: gid,
                contigs: JSON.stringify(contigs.sort()),
                crispr: crispr,

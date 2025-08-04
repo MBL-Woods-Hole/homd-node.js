@@ -558,3 +558,18 @@ module.exports.get_null_gtable_filter = () => {
   };
   return defaultfilter;
 }
+module.exports.get_checkm_status = (ginfo) => {
+    console.log('in checkM')
+    //console.log(ginfo)
+    
+    var dif = Math.abs(parseFloat(ginfo.checkM_completeness) - parseFloat(ginfo.checkM2_completeness))
+    var avg = (parseFloat(ginfo.checkM_completeness) + parseFloat(ginfo.checkM2_completeness))/2
+    var pct_dif = (dif / avg )*100
+    
+    if(pct_dif){
+        return pct_dif
+    }else{
+        return 0
+    }
+
+}

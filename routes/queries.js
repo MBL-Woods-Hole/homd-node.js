@@ -167,7 +167,24 @@ module.exports.get_NN_NA = (db, gid, pid) => {
 }
 
 module.exports.get_all_genomes = () => {
-    return "SELECT * from `"+C.genomes_table_name+"`"
+    //return "SELECT * from `"+C.genomes_table_name+"`"
+  let tbl = C.genomes_table_name
+  let ntbl = C.genomes_ncbi_table_name
+  let ptbl = C.genomes_prokka_table_name
+  let qSelectGenome = "SELECT `"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
+        qSelectGenome +=" bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,"
+        qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,checkM2_contamination,refseq_assembly,WGS,"
+        qSelectGenome +=" `"+ptbl+"`.contigs as prokka_contigs,`"+ptbl+"`.CDS as prokka_CDS,`"+ptbl+"`.gene as prokka_gene,`"+ptbl+"`.mRNA as prokka_mRNA,`"+ptbl+"`.misc_RNA as prokka_misc_RNA,`"+ptbl+"`.rRNA as prokka_rRNA,`"+ptbl+"`.tRNA as prokka_tRNA,`"+ptbl+"`.tmRNA as prokka_tmRNA,"
+        
+        qSelectGenome +=" pangenome_v4.pangenome_name as pangenome"  // works as long as only one pg per genome
+
+        qSelectGenome +=" FROM `"+tbl+"`"
+        qSelectGenome +=" LEFT JOIN `"+ptbl+"` using(genome_id)"
+        qSelectGenome +=" LEFT JOIN `"+ntbl+"` using(genome_id)"
+        
+        qSelectGenome +=" LEFT JOIN `pangenome_genome` using(genome_id)"
+        qSelectGenome +=" LEFT JOIN `pangenome_v4` using(pangenome_id)"
+    return qSelectGenome
 }
 module.exports.get_genome = (gid) => {   // always NCBI for taxon description
   // data for genome description
@@ -178,7 +195,7 @@ module.exports.get_genome = (gid) => {   // always NCBI for taxon description
   let ptbl = C.genomes_prokka_table_name
   let qSelectGenome = "SELECT `"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
         qSelectGenome +=" bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,"
-        qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_percentile,checkM_contamination,refseq_assembly,WGS,"
+        qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,checkM2_contamination,refseq_assembly,WGS,"
         qSelectGenome +=" `"+ptbl+"`.contigs as prokka_contigs,`"+ptbl+"`.CDS as prokka_CDS,`"+ptbl+"`.gene as prokka_gene,`"+ptbl+"`.mRNA as prokka_mRNA,`"+ptbl+"`.misc_RNA as prokka_misc_RNA,`"+ptbl+"`.rRNA as prokka_rRNA,`"+ptbl+"`.tRNA as prokka_tRNA,`"+ptbl+"`.tmRNA as prokka_tmRNA,"
         
         qSelectGenome +=" pangenome_v4.pangenome_name as pangenome"  // works as long as only one pg per genome
