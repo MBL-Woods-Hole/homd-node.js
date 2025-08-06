@@ -95,6 +95,7 @@
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data1) %>
 <% contigs = JSON.parse(contigs) %>
+<% checkm_obj = JSON.parse(checkm) %>
 <link rel="stylesheet" href="/css/genome_pages.css" >
 <link href="/css/select2.min.css" rel="stylesheet" /> 
 <% taxidfullname = ("000" + ginfo.otid).slice(-3); %>
@@ -214,10 +215,10 @@
     <tr class=""><td valign="center" class='field'>CheckM Contamination</td><td class='value'><span class='inner-value'><%= ginfo.checkM_contamination %> %</span></td></tr>
     <tr class=""><td valign="center" class='field'>CheckM2 Completeness</td><td class='value'><span class='inner-value'><%= ginfo.checkM2_completeness %> %</span></td></tr>
     <tr class=""><td valign="center" class='field'>CheckM2 Contamination</td><td class='value'><span class='inner-value'><%= ginfo.checkM2_contamination %> %</span></td></tr>
-    <% if(checkm >= 20){ %>
+    <% if(checkm_obj.comp_dif >= 20){ %>
       <tr class="">
         <td valign="center" class='field' style='color:red;'>Difference between<br>CheckM and CheckM2<br>Completeness</td>
-        <td class='value'><span class='inner-value' style='color:red;'><%= checkm.toFixed(1) %> %</span></td>
+        <td class='value'><span class='inner-value' style='color:red;'><%= checkm_obj.comp_dif.toFixed(1) %> %</span></td>
       </tr>
     <% } %>
     

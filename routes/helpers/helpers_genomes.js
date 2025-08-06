@@ -560,16 +560,33 @@ module.exports.get_null_gtable_filter = () => {
 }
 module.exports.get_checkm_status = (ginfo) => {
     console.log('in checkM')
-    //console.log(ginfo)
-    
-    var dif = Math.abs(parseFloat(ginfo.checkM_completeness) - parseFloat(ginfo.checkM2_completeness))
-    var avg = (parseFloat(ginfo.checkM_completeness) + parseFloat(ginfo.checkM2_completeness))/2
-    var pct_dif = (dif / avg )*100
-    
-    if(pct_dif){
-        return pct_dif
+    console.log('1',ginfo.checkM_completeness,ginfo.checkM_contamination)
+    console.log('2',ginfo.checkM2_completeness,ginfo.checkM2_contamination)
+    let pct_dif_comp,pct_dif_cont
+    if(!ginfo.checkM_completeness){ginfo.checkM_completeness = 0}
+    if(!ginfo.checkM2_completeness){ginfo.checkM2_completeness = 0}
+    if(ginfo.checkM_completeness==0 && ginfo.checkM2_completeness==0){
+        pct_dif_cont = 0
     }else{
-        return 0
+        let dif1 = Math.abs(parseFloat(ginfo.checkM_completeness) - parseFloat(ginfo.checkM2_completeness))
+        let avg1 = (parseFloat(ginfo.checkM_completeness) + parseFloat(ginfo.checkM2_completeness))/2
+        pct_dif_comp = (dif1 / avg1 )*100
     }
+    if(!pct_dif_comp){
+         pct_dif_comp = 0
+    }
+    if(!ginfo.checkM_contamination){ginfo.checkM_contamination = 0}
+    if(!ginfo.checkM2_contamination){ginfo.checkM2_contamination = 0}
+    if(ginfo.checkM_contamination==0 && ginfo.checkM2_contamination==0){
+        pct_dif_cont = 0
+    }else{
+        let dif2 = Math.abs(parseFloat(ginfo.checkM_contamination) - parseFloat(ginfo.checkM2_contamination))
+        let avg2 = (parseFloat(ginfo.checkM_contamination) + parseFloat(ginfo.checkM2_contamination))/2
+        pct_dif_cont = (dif2 / avg2 )*100
+    }
+    if(!pct_dif_cont){
+         pct_dif_cont = 0
+    }
+    return {cont_dif:pct_dif_cont, comp_dif:pct_dif_comp}
 
 }
