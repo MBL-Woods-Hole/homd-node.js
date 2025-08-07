@@ -40,7 +40,7 @@ button{
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
         
-        <div class='title'style='background:lightgrey;color:black;'>Pangenome: <%= pangenome %></div>
+        <p class='title h3'>Pangenome: <%= pangenome %></p>
         <center><div id='loader-div'></div></center>
         <% url = cfg.ANVIO_URL+"/"+pangenome  %>
         <iframe id='iframe_id' src="<%= url %>" title="HOMD AnviServer Server"></iframe>

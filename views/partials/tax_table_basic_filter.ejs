@@ -37,7 +37,7 @@
         
         <small><span class='filter-title'>Phylum:</span>
         <br>
-        <select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onchange="phylum_submit(this.value)">
+        <select id='phylum_select' placeholder="Select a Phylum" class='dropdown-homd' name='phylum' onchange="phylum_submit(this.value)">
         <optgroup>
           <option value='0'>Select a Phylum</option>
           <% for(n in phyla) { %>
@@ -53,9 +53,24 @@
 </div>
 </td><td valign='top'>  
 
+<!-- 
 <div id='reset_div'>
   <a class='button' id='reset' href='reset_ttable'>Reset Filters</a> 
 </div> 
+ -->
+
+<a 
+  role='button' 
+  style='display:none;' 
+  id='reset' 
+  href='reset_ttable' 
+  type="button" 
+  class="btn btn-secondary btn-sm" 
+  disabled
+  >
+  Reset Filters
+</a>
+
 
 </td><td>
         

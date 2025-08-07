@@ -54,11 +54,11 @@
 <!-- <link rel="stylesheet" href="/css/tree.min.css"> -->
 
 <body>
-  	<div id='wrapper'>
+    <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
-    <%- include('../../partials/navbar'); %>
+    <%- include('../../partials/navbar2'); %>
     <div class='page-content' >
-       <h4 class='title text-info'>Human Oral Microbiome Taxonomic Hierarchy</h4>
+       <p class='title h3'>Taxonomic Hierarchy Tree</p>
 
         <div id='change_base_counts'>
        Default Counts Exclude Dropped Taxa
@@ -71,19 +71,19 @@
        <a id='download_browser_text_excel'  href='/download#taxon' >Download Options</a>
 
 
-	   <center> 
+       <center> 
             <br><br><br>
             <input type='button' class='pill pill-brown' name='' value='Reset Tree' onclick='reset_tree_dhtmlx()'> ||
              <input type='button' class='pill pill-brown' name='' value='Open Next Level' onclick='open_tree_dhtmlx()'>
             <br><small>(double-click taxon names to expand deeper levels.)</small>
-		 
-		   <br><br>
-		   <span id='count_info'>Numbers indicated in brackets at each level: 
+         
+           <br><br>
+           <span id='count_info'>Numbers indicated in brackets at each level: 
             <br>[ <span class='red-text'>Number of Taxa</span>, <span class='green-text'>Number of Genomes</span>, <span class='blue-text'>Number of 16S rRNA RefSeqs</span> ]</span>
            </span> 
-		 
-		  
-		    <table id='custom_tax_div' class="text-center" >
+         
+          
+            <table id='custom_tax_div' class="text-center" >
              <tr><td>
               <div id="tree" class="text-center" style='padding:10px;background:#fdffca;'></div>
              </td></tr>
@@ -104,6 +104,7 @@
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="/js/dhtmlxtree.js" ></script>
 <!-- <script type="text/javascript" src="/js/tree.js" ></script> -->

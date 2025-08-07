@@ -11,51 +11,56 @@
     text-decoration: underline;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="/css/home.css" >
+<link rel="stylesheet" type="text/css" href="/css/home_use_w_Bootstrap.css" >
 <% var version_info = JSON.parse(ver_info) %> 
 <%- include('../partials/header_html'); %>
-<%- include('../partials/flash'); %>
-<% t_count = "834" %>
-<% oral_t_count = "523" %>
-<% nasal_t_count = "22" %>
-    <title>HOMD Home Page</title>
-    
-    <body>
-        <div class='body-div' align="center">
-        <table width="1250px" cellspacing="5" >
-            <tr><td width="100%" style="background-color:#004080">
-            <img src="/images/homd_banner_devel.png"></td></tr>
-            <tr><td align="left">
-                
-                <%- include('../partials/navbar'); %>
 
-            </td></tr>
-            <tr><td align="center">
+
+<% t_count = "836" %>
+<% oral_t_count = "525" %>
+<% nasal_t_count = "22" %>
+<title>HOMD Home Page</title>
+    
+<body style='background:#e6f1ff;'>
+  <div class='body-div' align="center" >
+    <table style='width:1250px;'>
+      <tr><td width="100%" style="background-color:#004080">
+        <img src="/images/homd_banner_devel.png"></td></tr>
+      <tr><td align="left">
+        <%- include('../partials/navbar2'); %></td></tr>
+      <tr><td align="center" style='padding:10px;'>
                 
-                <table class="introduction" width="1100px" cellpadding="20px">
-                    <tr><td class="round bggray">
-                    
+<div class="shadow introduction bggray rounded"  style='width:85%;text-align:left;padding:15px;'>
+
 <tspan style="font-size:1.5em;font-weight:normal;color:rgb(150, 35, 44);font-style:italic">
-    e</tspan><tspan style="font-size:2em;font-weight:bold;color:steelblue">H</tspan>OMD has been updated to version 4. With this update, we are transforming the database to a taxonomy based on whole-genome sequence information, while still including 16S rRNA gene-based taxonomy to retain oral taxa known only from their rRNA genes. In this major update, we are adding 44 human oral taxa as well as deleting taxa that whole-genome sequences reveal to be redundant. We present expanded information to indicate which organisms in 
-    eHOMD are primarily oral or nasal and which can be found in the mouth but primarily reside at a different body site or in the environment. 
+    e</tspan><tspan style="font-size:2em;font-weight:bold;color:steelblue">H</tspan>OMD has been updated to version 4. 
+    With this update, we are transforming the database to a taxonomy based on whole-genome sequence information, 
+    while still including 16S rRNA gene-based taxonomy to retain oral taxa known only from their rRNA genes. 
+    In this major update, we are adding 44 human oral taxa as well as deleting taxa that whole-genome 
+    sequences reveal to be redundant. We present expanded information to indicate which organisms in 
+    eHOMD are primarily oral or nasal and which can be found in the mouth but primarily reside at a different body 
+    site or in the environment. 
 <br><br>
     
     eHOMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract. 
-    Of the <span class='underline'><a href='#' onclick="show_specific_ttable('no_dropped')"><%= t_count %> taxa</a></span> in the database, 
-    <span class='underline'><a href='#' onclick="show_specific_ttable('oral_only')"><%= oral_t_count %></a></span> are primarily oral and 
-    <span class='underline'><a href='#' onclick="show_specific_ttable('nasal_only')"><%= nasal_t_count %></a></span> primarily nasal. Of the oral taxa, 49% are named, 21% unnamed but cultivated and 29% are known only as uncultivated phylotypes. 
+    Of the <span class='underline'><a href='#' onclick="show_specific_ttable('no_dropped')"><%= t_count %> taxa</a></span> 
+    in the database, 
+    <span class='underline'><a href='#' onclick="show_specific_ttable('oral_only')"><%= oral_t_count %></a></span> 
+    are primarily oral and 
+    <span class='underline'><a href='#' onclick="show_specific_ttable('nasal_only')"><%= nasal_t_count %></a></span> 
+    primarily nasal. Of the oral taxa, 49% are named, 21% unnamed but cultivated and 29% are known only as 
+    uncultivated phylotypes. 
     
-    eHOMD taxonomy provides a provisional naming scheme for the currently unnamed taxa, based on both genomic and 16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can be directly linked to a stably named reference scheme.
-<br>
+    eHOMD taxonomy provides a provisional naming scheme for the currently unnamed taxa, based on both genomic 
+    and 16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can be directly 
+    linked to a stably named reference scheme.
+</div>
 
-    </td></tr>
-
-    </table>
     </td></tr>
     <tr><td align="center">
     
     
-    <table class="maintab hide-for-mobile" width="1080px" cellspacing="10px">
+    <table class="maintab hide-for-mobile"  cellspacing="10px" style='width:100%;'>
             <tr><td colspan="3" style="font-weight: normal;color:rgb(58, 58, 58)">Click on the menu items above or the tabs below for more resources:</td></tr>                 
             <tr>
                 <td width="360px" align="center">
@@ -64,7 +69,7 @@
                         <tr><td>
                             <table class="tabeffect bgnavy">
                                 <tr><td><a href='taxa/tax_table'>Taxon Table</a></td></tr>
-                                <tr><td><a href='taxa/tax_table'><img src="/images/image-TaxonTable50pct.png" width="320"></a></td></tr>
+                                <tr><td><a href='taxa/tax_table'><img src="/images/TaxonTable.png" width="320"></a></td></tr>
                             </table>
                         </td></tr>
                         <tr><td>
@@ -82,7 +87,7 @@
                         <tr><td>
                             <table class="tabeffect bgnavy">
                                 <tr><td><a href='taxa/tax_hierarchy'>Dynamic Taxon Hierarchy</a></td></tr>
-                                <tr><td><a href='taxa/tax_hierarchy'><img src="/images/image-Dynamic50pct.png" width="320"></a></td></tr>
+                                <tr><td><a href='taxa/tax_hierarchy'><img src="/images/DynamicTree.png" width="320"></a></td></tr>
                             </table>
                         </td></tr>
                     </table>
@@ -95,7 +100,7 @@
                         <tr><td>
                             <table class="tabeffect bgpink">
                                 <tr><td><a href='genome/genome_table'>Genome Table</a></td></tr>
-                                <tr><td><a href='genome/genome_table'><img src="/images/image-GenomeTable50pct.png" width="320"></a></td></tr>
+                                <tr><td><a href='genome/genome_table'><img src="/images/GenomeTable.png" width="320"></a></td></tr>
                             </table>
                         </td></tr>
                         <tr><td>
@@ -114,11 +119,11 @@
                             <table class="tabeffect bgpink">
                                 <tr>
                                   <!-- <td><a href='/genome/blast_sserver?type=genome'>Genomic BLAST</a></td> -->
-                                  <td><a href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast/","_self")' >Genomic BLAST</a></td>
+                                  <td><a href="<%= cfg.BLAST_URL_BASE %>/genome_blast/" target="_self" >Genomic BLAST</a></td>
                                 </tr>
                                 <tr>
                                   <!-- <td><a href='/genome/blast_sserver?type=genome'><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td> -->
-                                  <td><a href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast/","_self")' ><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td>
+                                  <td><a href="<%= cfg.BLAST_URL_BASE %>/genome_blast/" target="_self" ><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td>
                                 </tr>
                             </table>
                         </td></tr>
@@ -133,11 +138,11 @@
                             <table class="tabeffect bggreen">
                                 <!-- <tr><td><a href='/genome/blast_sserver?type=refseq'>BLAST</a></td></tr> -->
                                 <tr>
-                                  <td><a href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/refseq_blast/","_self")'>BLAST</a></td>
+                                  <td><a href="<%= cfg.BLAST_URL_BASE %>/refseq_blast/" target="_self" >BLAST</a></td>
                                 </tr>
                                 <tr>
                                   <!-- <td><a href='/genome/blast_sserver?type=refseq'><img src="/images/image-BLAST-refseq50pct.png" width="320"></a></td> -->
-                                  <td><a href="#" onclick='window.open("<%= cfg.BLAST_URL_BASE %>/refseq_blast/","_self")' ><img src="/images/image-BLAST-refseq50pct.png" width="320"></a></td>
+                                  <td><a href="<%= cfg.BLAST_URL_BASE %>/refseq_blast/" target="_self" ><img src="/images/image-BLAST-refseq50pct.png" width="320"></a></td>
                                 </tr>
                             </table>
                         </td></tr>

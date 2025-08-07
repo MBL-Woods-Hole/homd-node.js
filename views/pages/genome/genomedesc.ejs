@@ -95,6 +95,7 @@
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data1) %>
 <% contigs = JSON.parse(contigs) %>
+<% checkm_obj = JSON.parse(checkm) %>
 <link rel="stylesheet" href="/css/genome_pages.css" >
 <link href="/css/select2.min.css" rel="stylesheet" /> 
 <% taxidfullname = ("000" + ginfo.otid).slice(-3); %>
@@ -104,13 +105,14 @@
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
-    <%- include('../../partials/navbar'); %>
+    <%- include('../../partials/navbar2'); %>
     <div class='page-content' >
 <span class='back_btn' ><a href='/genome/genome_table'>Back To Genome Table</a></span>     
 <center>    
         
-        <div class='title'>Genome Meta Information: 
-        <i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.strain %> (<%= ginfo.gid %>)</div>
+    <p class='title h3'>Genome Meta Information: 
+        <i><%= ginfo.genus %> <%= ginfo.species %></i> <%= ginfo.strain %> (<%= ginfo.gid %>)
+    </p>
 
 <% if(Object.keys(ginfo).length ==0 ) { %>
     <br><br>No Data Found for Genome: <%= gid %>        
@@ -207,6 +209,19 @@
     <tr class=""><td valign="center" class='field'>rRNA</td><td class='value'><span class='inner-value'><%= ginfo.prokka_rRNA %></span></td></tr>
     <tr class=""><td valign="center" class='field'>tRNA</td><td class='value'><span class='inner-value'><%= ginfo.prokka_tRNA %></span></td></tr>
     <tr class=""><td valign="center" class='field'>tmRNA</td><td class='value'><span class='inner-value'><%= ginfo.prokka_tmRNA %></span></td></tr>
+    
+    <tr class=""><td valign="center" class='field'>ANI (Average Nucluotide Identity)</td><td class='value'><span class='inner-value'><%= ginfo.ANI %> %</span></td></tr>
+    <tr class=""><td valign="center" class='field'>CheckM Completeness</td><td class='value'><span class='inner-value'><%= ginfo.checkM_completeness %> %</span></td></tr>
+    <tr class=""><td valign="center" class='field'>CheckM Contamination</td><td class='value'><span class='inner-value'><%= ginfo.checkM_contamination %> %</span></td></tr>
+    <tr class=""><td valign="center" class='field'>CheckM2 Completeness</td><td class='value'><span class='inner-value'><%= ginfo.checkM2_completeness %> %</span></td></tr>
+    <tr class=""><td valign="center" class='field'>CheckM2 Contamination</td><td class='value'><span class='inner-value'><%= ginfo.checkM2_contamination %> %</span></td></tr>
+    <% if(checkm_obj.comp_dif >= 20){ %>
+      <tr class="">
+        <td valign="center" class='field' style='color:red;'>Difference between<br>CheckM and CheckM2<br>Completeness</td>
+        <td class='value'><span class='inner-value' style='color:red;'><%= checkm_obj.comp_dif.toFixed(1) %> %</span></td>
+      </tr>
+    <% } %>
+    
     
     <tr class="">
       <td valign="center" class='field'>CRISPR-cas</td>
@@ -309,11 +324,7 @@
     
     <tr class=""><td valign="center" class='field'>Geo Location</td><td class='value'><span class='inner-value'><%= ginfo.geo_loc_name %></span></td></tr>
     
-    <tr class=""><td valign="center" class='field'>ANI (Average Nucluotide Identity)</td><td class='value'><span class='inner-value'><%= ginfo.ANI %> %</span></td></tr>
-    <tr class=""><td valign="center" class='field'>CheckM Completeness</td><td class='value'><span class='inner-value'><%= ginfo.checkM_completeness %> %</span></td></tr>
-    <tr class=""><td valign="center" class='field'>CheckM Percentile</td><td class='value'><span class='inner-value'><%= ginfo.checkM_percentile %> %</span></td></tr>
-    <tr class=""><td valign="center" class='field'>CheckM Contamination</td><td class='value'><span class='inner-value'><%= ginfo.checkM_contamination %> %</span></td></tr>
-     
+    
 </table>
 </td></tr>
 </table>  <!-- Outer table -->
@@ -334,7 +345,9 @@
 
 </html>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
 <script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script type="text/javascript" src="/js/select2.min.js"></script>

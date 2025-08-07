@@ -165,20 +165,13 @@ module.exports.get_NN_NA = (db, gid, pid) => {
     
     return q
 }
-
-module.exports.get_all_genomes = () => {
-    return "SELECT * from `"+C.genomes_table_name+"`"
-}
-module.exports.get_genome = (gid) => {   // always NCBI for taxon description
-  // data for genome description
-  // NCBI Fields
-  // fields = ['organism','assembly_level', 'assembly_method', 'bioproject', 'biosample', 'submission_date', 'geo_loc_name', 'isolation_source', 'status', 'seqtech', 'submitter', 'GC',  'coverage', 'contigs', 'combined_size', 'ANI', 'checkM_completeness', 'checkM_percentile', 'checkM_contamination', 'taxid', 'refseq_assembly', 'WGS']
-  let tbl = C.genomes_table_name
-  let ntbl = C.genomes_ncbi_table_name
-  let ptbl = C.genomes_prokka_table_name
-  let qSelectGenome = "SELECT `"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
+function genome_query() {
+    let tbl = C.genomes_table_name
+    let ntbl = C.genomes_ncbi_table_name
+    let ptbl = C.genomes_prokka_table_name
+    let qSelectGenome = "SELECT `"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
         qSelectGenome +=" bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,"
-        qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_percentile,checkM_contamination,refseq_assembly,WGS,"
+        qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,checkM2_contamination,refseq_assembly,WGS,"
         qSelectGenome +=" `"+ptbl+"`.contigs as prokka_contigs,`"+ptbl+"`.CDS as prokka_CDS,`"+ptbl+"`.gene as prokka_gene,`"+ptbl+"`.mRNA as prokka_mRNA,`"+ptbl+"`.misc_RNA as prokka_misc_RNA,`"+ptbl+"`.rRNA as prokka_rRNA,`"+ptbl+"`.tRNA as prokka_tRNA,`"+ptbl+"`.tmRNA as prokka_tmRNA,"
         
         qSelectGenome +=" pangenome_v4.pangenome_name as pangenome"  // works as long as only one pg per genome
@@ -189,11 +182,18 @@ module.exports.get_genome = (gid) => {   // always NCBI for taxon description
         
         qSelectGenome +=" LEFT JOIN `pangenome_genome` using(genome_id)"
         qSelectGenome +=" LEFT JOIN `pangenome_v4` using(pangenome_id)"
-        
-        qSelectGenome +=" WHERE genome_id = '"+gid+"'"
-  
-
     return qSelectGenome
+}
+module.exports.get_all_genomes = () => {  // for downld all
+    let q = genome_query()
+
+    return q
+}
+module.exports.get_genome = (gid) => {   // always NCBI for taxon description
+    let q = genome_query()
+    q +=" WHERE genome_id = '"+gid+"'"
+  
+    return q 
 }
 module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid

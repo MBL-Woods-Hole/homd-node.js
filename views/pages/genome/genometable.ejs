@@ -1,15 +1,10 @@
 <style>
-.form-inline {
-  display: inline;
-}
-.span_lnk {
-  color:blue;
-  cursor: pointer;
-}
+
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
+<link rel="stylesheet" type="text/css" href="/css/genome_pages2.css" >
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data) %>
 <% fltr = JSON.parse(filter) %>
@@ -18,16 +13,7 @@ thead th { position: sticky; top: 0; }
 <% filtergid = fltr.gid %>
 <% var cfg = JSON.parse(config) %> 
 <% no_ncbi_annotation = JSON.parse(no_ncbi_annot) %>
-<!-- 
-pagedata {
-  rows_per_page: 500,
-  page: 2,
-  trecords: 8622,
-  number_of_pages: 18,
-  show_page: 2,
-  start_count: 501
-}
- -->
+
 
 
 <body>
@@ -37,7 +23,7 @@ pagedata {
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
   <div  class='page-content' >
-  <div class='title'><%= pgtitle %></div>
+  <p class='h3 title'><%= pgtitle %></p>
 
 <span><small>There are <%= gcount %> genomes representing <%= tcount %> taxa (Including 'Reference' and 'Dropped' Taxa).</small></span>
 
@@ -115,7 +101,7 @@ pagedata {
             <!-- <a class='pill pill-lightseagreen' href='<%= cfg.JBROWSE_URL %>/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome ViewerO</a> -->
           <!-- <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse_in_new_window('<%= ginfo[n].gid %>|<%= ginfo[n].gc %>')">Genome Viewer</a> -->
         <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Viewer</a>
-        <a class='pill pill-midnightblue' href='#' onclick='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>","_self")'>BLAST</a> 
+        <a class='pill pill-midnightblue' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a> 
           
        
           <!--  <a class='pill pill-midnightblue' href='/genome_blast_single?gid=<%= ginfo[n].gid %>' target='_blank'>BLAST</a> -->
@@ -177,9 +163,11 @@ pagedata {
       document.getElementById(letter).style.textDecoration = 'underline'
     }
     if(filter_on === 'on'){
-       document.getElementById('reset').style.color = 'orange'
-       document.getElementById('reset').style.background = 'black'
+       document.getElementById('reset').style.color = 'black'
+       document.getElementById('reset').style.background = 'orange'
        document.getElementById('reset').style.cursor = 'pointer'
+       document.getElementById('reset').style.display = 'block'
+       document.getElementById("reset").disabled = false;
     }
     //scrollto
     table = $('gnom-table')

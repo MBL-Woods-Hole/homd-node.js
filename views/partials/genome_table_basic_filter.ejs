@@ -1,88 +1,5 @@
 <style>
-.letter{
-  cursor:pointer;
-  color:blue;
-}
-.noletter{
-  cursor:pointer;
-  color:blue;
-}
-.alpha-list{
-   font-family: monospace;
-}
-#filter_form_div{
-   border:1px solid black;
-   padding:2px;
-   width:100%;
-}
-#form_btn{
-  width:100%;
-  color:grey;
-}
-#main_table{
-   width:100%;
-   /* border:1px solid red; */
-   
-}
-#main_table td{
-   padding:0px 5px;
-   
-   
-}
-#filter_table{
-   /* border:1px solid green; */
-   width:100%;
-   border-collapse: collapse;
-}
-#filter_table td{
-   border:1px solid brown;
-   
-   padding: 3px 2px;
-}
-
-#reset_div a{
-   font-size: 14px;
-   white-space: nowrap;
-}
-#sort_rev{
-   
-   border: 1px solid brown;
-   padding:2px 1px 1px 1px;
-   margin:1px;
-}
-.button{
-   cursor:pointer;
-   color:blue;
-   background:lightgrey;
-}
-#reset{
-   cursor:default;
-   color:grey;
-   background:lightgrey;
-}
-.gray{
-   padding:1px 4px;
-   border:1px solid darkgray;
-}
-.advanced-filter-btn{
-   
-   padding: 3px 4px 2px 4px;
-   text-align: center;
-   text-decoration: none;
-   display: inline-block;
-   margin: 0px 0px;
-   
-   cursor: pointer;
-   font-size: 14px;
-   border-radius: 16px;
-   background-color: brown;
-   border: 1px solid black;
-   color: white;
-}
-.dropdown{
-   font-size:18px;
-   height:25px;
-}
+/* put styles in genome_pages2.css */
 </style>
 
 <div id='filter_form_div'>
@@ -108,7 +25,7 @@
         <small>
         <span class='filter-title'>Genomes by Phylum:</span>
         <br>
-        <select id='phylum_select' placeholder="Select a Phylum" class='dropdown' name='phylum' onchange='phylum_submit(this.value)'>
+        <select id='phylum_select' placeholder="Select a Phylum" class='dropdown-homd' name='phylum' onchange='phylum_submit(this.value)'>
         <optgroup>
           <option value=''>Select a Phylum</option>
           <% for(n in phyla) { %>
@@ -124,9 +41,17 @@
     </div>
 </td><td valign='top'> 
    
-    <div id='reset_div' >
-      <a class='button' id='reset' href='reset_gtable'>Reset Filters</a> 
-    </div> 
+<a 
+  role='button' 
+  style='display:none;' 
+  id='reset' 
+  href='reset_gtable' 
+  type="button" 
+  class="btn btn-secondary btn-sm" 
+  disabled
+  >
+  Reset Filters
+</a>
 </td><td> 
           
 <table id='filter_table'>
@@ -137,7 +62,7 @@
         <small>
         <span class='filter-title'>Text Search:</span>
         
-        <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='dropdown' name='txt_srch' maxlength='100' size='50' onclick='update_sb()'>
+        <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='dropdown-homd' name='txt_srch' maxlength='100' size='50' onclick='update_sb()'>
        </small>
     </td>
     <td class=''>

@@ -39,7 +39,7 @@ padding:5px;
     <div class='page-content' >
 
   <div class='title'><%= blastParams.program.toUpperCase() %> Results (<%= blastParams.blastFxn %>)</div>
-    <%- include('../../partials/flash'); %>
+    
      <% if(blastParams.outfmt === "custom"){ %>
      <%-     include('../../partials/under_construction'); %>
      <% } %>

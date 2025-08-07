@@ -1,13 +1,34 @@
 <style>
-  #masthead {
-  /* width:1350px; */
-  width: 100%;
-  background: #004080;   /* #013366; */
-  
+
+.tax-item{
+   margin: 10px;
+
+}
+.box{
+   background:lightgrey;
+   padding:40px 0;
+   margin-top:20px;
+   border:2px solid grey;
+}
+.otid-link{
+   color:gold;
+   background:purple;
+   padding:5px;
+   border:1px solid black;
 }
 
+.otid-link a{
+   color:ivory;
+   
+}
+#rank-choice-radios{
+    width:50%;
+    
+}
 </style>
 
+<% bac_counts = JSON.parse(bcounts) %>
+<% arc_counts = JSON.parse(acounts) %>
 
  <%- include('../../partials/header_html'); %>   
 
@@ -18,18 +39,68 @@
     <%- include('../../partials/navbar2'); %>
 
     <div class='page-content' >
-       <center><h3 class='mt-5'>Human Oral Microbiome Taxonomic Hierarchy</h3></center>
-
-
-   <div class='container-sm'>
-     <div class=''>
-       <button type="button" class="btn btn-primary btn-sm">Archaea</button>
+       <p class='h3 title'>Dynamic Taxonomic Hierarchy</p>
+  <center><div id='rank-choice-radios'>
+        <h6>Open Tree to a Specific Rank:</h6>&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="phylum"  onclick="open_full_rank(this.value)"> Phylum&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="klass"  onclick="open_full_rank(this.value)"> Class&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="order"  onclick="open_full_rank(this.value)"> Order&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="family"  onclick="open_full_rank(this.value)"> Family&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="genus"  onclick="open_full_rank(this.value)"> Genus&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="species"  onclick="open_full_rank(this.value)"> Species
+  </div></center>
+  <div class='container box'>
+    <div class="row">
+      <div class="col">
+            
+            <ul>
+            <li class='tax-item'>
+              
+              <a 
+                onclick=get_leaf('Archaea','domain') 
+                role='button' 
+                type="button" 
+                style='background:#78AE99;'
+                class="btn btn-sm"
+                >
+                  <small>Domain:</small> Archaea
+                <span class='pill pill-indigo'><%= arc_counts.tax_counts %></span>
+                <span class='pill pill-orange'><%= arc_counts.genome_counts %></span>
+                <span class='pill pill-khaki'><%= arc_counts.refseq_counts %></span>
+              </a>
+              <span id='Archaea_domain_span' class='fa_widget'><i class="fa-solid fa-angle-right"></i></span>
+              <div id='Archaea_domain_div'></div>
+            </li>
+            <li class='tax-item'>
+              <a 
+                onclick=get_leaf('Bacteria','domain') 
+                role='button' 
+                type="button"
+                style='background:#78AE99;'
+                class="btn btn-sm"
+                >
+                <small>Domain:</small> Bacteria
+                <span class='pill pill-indigo'><%= bac_counts.tax_counts %></span>
+                <span class='pill pill-orange'><%= bac_counts.genome_counts %></span>
+                <span class='pill pill-khaki'><%= bac_counts.refseq_counts %></span>
+              </a>
+                <span id='Bacteria_domain_span' class='fa_widget'><i class="fa-solid fa-angle-right"></i></span>
+              <div id='Bacteria_domain_div'></div>
+            </li>
+            </ul>
+      </div>
+      <div class="col-2">
+      <a href='tax_hierarchy2' role='button' class='btn btn-success' style='border:1px solid red'>Reset Tree</a>
+      <div style="margin-top:20px;padding:5px;border:1px solid black;">
+        <li><span class="pill pill-indigo">&nbsp;&nbsp;</span> Tax Counts</li>
+        <li><span class="pill pill-orange">&nbsp;&nbsp;</span> Genome Counts</li>
+        <li><span class="pill pill-khaki">&nbsp;&nbsp;</span> RefSeq Counts</li>
+      </div>
     </div>
-    <div class=''>
-       <button type="button" class="btn btn-primary btn-sm">Bacteria</button>
+      
     </div>
-   </div>
-
+  </div>
+    
 
     </div> <!-- end: page-content -->
 </div>  <!-- end wrapper -->
@@ -47,10 +118,64 @@
 
 <script>
   mainmenu()
-  $(document).ready(function(){                    
-    //load_dhtmlx(<%- data %>)
-    //load_dhtmlx()
-});
-
+  
+  function get_leaf(name,rank){
+    //console.log('in getleaf',name,rank)
+    
+    var args = {}
+    args.name = decodeURIComponent(name)
+    //console.log('decoded name',args.name)
+    args.rank = rank
+    target_div = document.getElementById(args.name+'_'+rank+'_div')
+    target_span = document.getElementById(args.name+'_'+rank+'_span')
+    
+    if(target_div.innerHTML !== ''){
+       // close
+       target_div.innerHTML = ''
+       target_span.innerHTML = '<i class="fa-solid fa-angle-right"></i>'
+    }else{
+        target_span.innerHTML = '<i class="fa-solid fa-angle-down"></i>'
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "/taxa/tax_hierarchy2", true);
+        xmlhttp.setRequestHeader("Content-type","application/json");
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var resp = xmlhttp.responseText;
+            
+            //console.log('gitit',resp)
+            target_div.innerHTML = resp
+            
+          }
+        }
+        xmlhttp.send(JSON.stringify(args));
+    }
+  }
+  function open_full_rank(rank){
+    //console.log('in open_rank',rank)
+    var target_bdiv = document.getElementById('Bacteria_domain_div')
+    var target_adiv = document.getElementById('Archaea_domain_div')
+    document.getElementById('Bacteria_domain_span').innerHTML = '<i class="fa-solid fa-angle-down"></i>'
+    document.getElementById('Archaea_domain_span').innerHTML = '<i class="fa-solid fa-angle-down"></i>'
+    args = {}
+    args.rank = rank
+    //console.log('rank',rank)
+    
+    //target_span.innerHTML = '<i class="fa-solid fa-angle-down"></i>'
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "/taxa/tax_hierarchy_level", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = JSON.parse(xmlhttp.responseText);
+        
+        //console.log('gitit',resp)
+        target_adiv.innerHTML = resp.ahtml
+        target_bdiv.innerHTML = resp.bhtml
+        
+      }
+    }
+    xmlhttp.send(JSON.stringify(args));
+    }
+  
 </script>
 

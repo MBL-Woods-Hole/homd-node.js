@@ -5,10 +5,10 @@ constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVer
 constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // JBROWSE if you want a non-relative url use: config.js
 
 // These should be moved to config
-constants.rRNA_refseq_version    = '16.02'
-constants.genomic_refseq_version = '11.01'
-constants.homd_taxonomy_version = '4.0'  // Used on title page
-
+constants.rRNA_refseq_version    = '16.02' // Used on title page header
+constants.genomic_refseq_version = '11.02' // Used on title page header
+constants.homd_taxonomy_version = '4.0'    // Used on title page header
+constants.grep_search_max_rows = 100000  //100000 // up from 50000 on 2025-07-28
 constants.genomes_table_name = 'genomesV11.0'
 constants.genomes_prokka_table_name = 'genomes_prokkaV11.0'
 constants.genomes_ncbi_table_name = 'genomes_ncbiV11.0'

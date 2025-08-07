@@ -17,7 +17,7 @@ router.get('/blast_server', function refseq_blast_server(req, res) {
         pgname: '', // for AbountThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-        user: JSON.stringify(req.user || {}),
+        
         blast_type: 'refseq'
       })
 })
@@ -31,7 +31,7 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
     config: JSON.stringify(CFG),
     hostname: CFG.hostname,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+    
     db_choices: JSON.stringify(C.refseq_blastn_db_choices),
     blast_prg: JSON.stringify(['blastn']),
     blastFxn: 'refseq',
@@ -73,7 +73,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
             pgname: 'refseq/tree', // for AbountThisPage, 
             config: JSON.stringify(CFG),
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-            user: JSON.stringify(req.user || {}),
+            
             svg_data: JSON.stringify(data),
             //path: 'public/trees/'+fname,
             otid: fullname,
@@ -94,7 +94,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
 //             pgname: 'refseq/tree', // for AbountThisPage, 
 //             config: JSON.stringify(CFG),
 //             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//             user: JSON.stringify(req.user || {}),
+//             
 //             svg_data: JSON.stringify(data),
 //             path: 'public/trees/'+fname,
 //             otid: fullname,
@@ -120,7 +120,7 @@ router.get('/download', function download(req, res) {
     config: JSON.stringify(CFG),
     hostname: CFG.HOSTNAME,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+    
   })
 })
 

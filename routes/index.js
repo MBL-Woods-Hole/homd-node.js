@@ -31,7 +31,7 @@ router.get('/', function index(req, res) {
     pgname: 'home', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {})
+    
     
 
   })
@@ -141,7 +141,7 @@ router.get('/download', function download(req, res) {
     pgname: 'download', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {})
+    
 
   })
 })
@@ -152,7 +152,7 @@ router.get('/poster', function poster(req, res) {
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {})
+    
 
   })
 })
@@ -164,7 +164,7 @@ router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, re
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {})
+    
 
   })
 })
@@ -189,7 +189,7 @@ router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, re
 //         pgname: '', // for AboutThisPage 
 //         config: JSON.stringify(CFG),
 //         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//         user: JSON.stringify(req.user || {}),
+//         
 //         anno: '',
 //         search_text: req.body.adv_search_text,
 //         otid_list: JSON.stringify(otidLst),
@@ -315,7 +315,7 @@ function execPromise(cmd, args, max) {
 //             pgname: '', // for AboutThisPage 
 //             config: JSON.stringify(CFG),
 //             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//             user: JSON.stringify(req.user || {}),
+//             
 //             anno: req.body.adv_anno_radio,
 //             search_text: req.body.search_text_anno,
 //             otid_list: JSON.stringify([]),
@@ -372,7 +372,8 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
         let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
         //let filename = uuidv4();  //CFG.PATH_TO_TMP
         //let filepath = path.join(CFG.PATH_TO_TMP, filename)
-        let max_rows = 50000
+        let max_rows = C.grep_search_max_rows //50000
+        
         let split_length = 6
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
         let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
@@ -401,10 +402,10 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                     if(pts.length == split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
                       gid = pts[1].toUpperCase()
-                      
-                      otid = C.genome_lookup[gid]['otid']
-                      strain = C.genome_lookup[gid]['strain']
-                      species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+                      if(gid && C.genome_lookup.hasOwnProperty(gid)){
+                        otid = C.genome_lookup[gid]['otid']
+                        strain = C.genome_lookup[gid]['strain']
+                        species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
                       let tmp_obj = {
                           gid:gid,
                           species:species,
@@ -417,14 +418,15 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                           length_aa:pts[7],
 //                           start:pts[8],
 //                           stop:pts[9]
-                      }
-                      //console.log('tmp_obj',tmp_obj)
-                      if(obj2.hasOwnProperty(gid)){
+                        }
+                        //console.log('tmp_obj',tmp_obj)
+                        if(obj2.hasOwnProperty(gid)){
                           obj2[gid].push(tmp_obj)
-                      }else{
+                        }else{
                           sort_lst.push({gid:gid,species:species,strain:strain})
                           obj2[gid] = [tmp_obj]
-                      }
+                        }
+                    }
                       
 
                     }
@@ -441,7 +443,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
             pgname: '', // for AboutThisPage 
             config: JSON.stringify(CFG),
             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-            user: JSON.stringify(req.user || {}),
+            
             anno: req.body.adv_anno_radio_grep,
             search_text: req.body.search_text_anno_grep,
             otid_list: JSON.stringify([]),
@@ -483,7 +485,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                     pgname: '', // for AboutThisPage 
 //                     config: JSON.stringify(CFG),
 //                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//                     user: JSON.stringify(req.user || {}),
+//                     
 //                     anno: req.body.adv_anno_radio,
 //                     search_text: req.body.search_text_anno,
 //                     otid_list: JSON.stringify([]),
@@ -529,7 +531,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                     pgname: '', // for AboutThisPage 
 //                     config: JSON.stringify(CFG),
 //                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//                     user: JSON.stringify(req.user || {}),
+//                     
 //                    
 //                     search_text: req.body.search_text_anno,
 //                     otid_list: JSON.stringify([]),
@@ -625,7 +627,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //         pgname: '', // for AboutThisPage 
 //         config: JSON.stringify(CFG),
 //         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//         user: JSON.stringify(req.user || {}),
+//         
 //        
 //         search_text: req.body.search_text_anno,
 //         otid_list: JSON.stringify([]),
@@ -686,7 +688,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                     pgname: '', // for AboutThisPage 
 //                     config: JSON.stringify(CFG),
 //                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//                     user: JSON.stringify(req.user || {}),
+//                     
 //                     anno: req.body.adv_anno_radio_sql,
 //                     search_text: req.body.search_text_anno_sql,
 //                     otid_list: JSON.stringify([]),
@@ -920,7 +922,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
         pgname: '', // for AbountThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-        user: JSON.stringify(req.user || {}),
+        
         search_text: searchText,
         otid_list: JSON.stringify(otidLst),
         gid_list: JSON.stringify(gidLst),

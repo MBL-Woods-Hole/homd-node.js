@@ -64,30 +64,12 @@ function load_dhtmlx(data) {
         expand_tree_dhtmlx(id)
     });
 
-    customOldTree.setXMLAutoLoading("tax_autoload?ct="+count_type);
+    customOldTree.setXMLAutoLoading("taxhierarchy_autoload?ct="+count_type);
     customOldTree.setDataMode("json");
     ////load first level of tree
-    customOldTree.load("tax_autoload?id=0&ct="+count_type,"json");
+    customOldTree.load("taxhierarchy_autoload?id=0&ct="+count_type,"json");
     
-    
-    
-    // taxTree = new dhx.Tree("tree", {
-//         autoload: "tax_autoload?ct="+count_type
-//     });
-//     ////load first level of tree
-//     taxTree.data.load("tax_autoload?id=tree&ct="+count_type);
-    
-    // // dhtmlx version:7(free) dynamic loading is in pro version
-    // customTree = new dhx.Tree("tree", {
-  //      icon: false
-  //  });
-  //  customTree.data.parse(data);
-  //     
-  // 
-  //     customTree.events.on("itemClick", function(id, e){
-  //      console.log("The item with the id "+ id +" was clicked.");
-  //      customTree.toggle(id);
-  //  });
+
 }
 ///////////////////////////////////////////////////////////////
 function expand_tree_dhtmlx(id){
@@ -518,31 +500,31 @@ function phylum_submit(phylum){
 function update_sb(){
     //var form = document.getElementById("tax_filter_form");
     
-    btn = document.getElementById("form_btn");
-    btn.style.color = 'orange'
-    btn.style.background = 'black'
-    btn.style.cursor = 'pointer'
-    btn.style.fontSize ='14px';
-    btn.innerHTML = '** Apply Updated Filter to Table. **'
+    var update_btn = document.getElementById("form_btn");
+    update_btn.style.color = 'orange'
+    update_btn.style.background = 'black'
+    update_btn.style.cursor = 'pointer'
+    update_btn.style.fontSize ='14px';
+    update_btn.innerHTML = '** Apply Updated Filter to Table. **'
     
 }
 function adv_update_sb(){
     //var form = document.getElementById("tax_filter_form");
     
-    btn = document.getElementById("adv_form_btn");
-    btn.style.color = 'orange'
-    btn.style.background = 'black'
-    btn.style.cursor = 'pointer'
-    btn.style.fontSize ='14px';
-    btn.innerHTML = '** Apply Updated Filter to Table. **'
+    var update_btn = document.getElementById("adv_form_btn");
+    update_btn.style.color = 'orange'
+    update_btn.style.background = 'black'
+    update_btn.style.cursor = 'pointer'
+    update_btn.style.fontSize ='14px';
+    update_btn.innerHTML = '** Apply Updated Filter to Table. **'
     
 }
+
 function adv_clear_search_txt(){
-   txt = document.getElementById("txt_srch");
-   dd = document.getElementById("field_select");
-   txt.value = ''
-   dd.value = 'all'
+   document.getElementById("adv-txt_srch").value = ''
+   document.getElementById("field_select").value = 'all'
 }
+
 $('#tax-box').on('scroll', function() {
     //console.log($("#tax-table").offset());
     var rows = document.getElementById('tax-table').rows;
@@ -572,9 +554,9 @@ function adv_toggle_site_filter(filter_to_show) {
     adv_update_sb()
     document.getElementById('pst_filter_span').innerHTML = link_html
     document.getElementById('adv_body_site_title').innerHTML = title
-    document.getElementById('reset').style.color = 'orange'
-    document.getElementById('reset').style.background = 'black'
-    document.getElementById('reset').style.cursor = 'pointer'
+    // document.getElementById('reset').style.color = 'orange'
+//     document.getElementById('reset').style.background = 'black'
+//     document.getElementById('reset').style.cursor = 'pointer'
 
 }
 function toggle_cb_sites(x){

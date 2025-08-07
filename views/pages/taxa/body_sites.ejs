@@ -1,41 +1,74 @@
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
-table.sortable tbody {
+
+
+
+#main-table {
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
+  width:100%;
+}
+#main-table th{
+  color:white;
+  background: var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+  
+}
+#main-table td{
+  padding:3px 2px;
+  font-size:small;
+  color: #303030;
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+  white-space: nowrap;
+}
+#main-box{
+   height:700px;
+   overflow:auto;
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
+   margin-top:5px;
+}
+#main-table .badge{
+  
+  font-size:0.8em;
+  
+}
+
+
+ #main-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
+.col1{
+   width: 20px;
+}
+.col2{
+   width: 100px;
+}
+#main-table.sortable tbody {
     counter-reset: sortabletablescope;
 }
-table.sortable thead tr::before {
-    content: "Row#";
+#main-table.sortable thead tr::before {
+    content: "";
     display: table-cell;
-    background:#C1E1C1;
-    border:1px solid black;
+    width:30px;
+    /* padding-left:1px; */
+    vertical-align: middle;
+    color:white;
+    padding:5px;
+    font-size:10px;
+    text-align: center;
 }
-table.sortable tbody tr::before {
+#main-table.sortable tbody tr::before {
     content: counter(sortabletablescope);
     counter-increment: sortabletablescope;
     display: table-cell;
-    text-align:right;
-    padding:0 2px;
-}
-table th{
-   background:#C1E1C1;
-   border:1px solid black;
-}
-table td{
-   padding: 2px 5px;
-   border:1px solid black;
-}
-
-#body-sites-div{
-   padding:20px 0;
-   height:800px;
-   overflow:auto;
-}
-table {
-   border-collapse:collapse;
-}
-.selected{
-   background:#FF7F50;
+    text-align:center;
+    font-size:small;
 }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
@@ -50,14 +83,28 @@ table {
     
     <div class='page-content' >
        
-       <div class='title'>HOMD Taxa Preferred Body Sites <small>(in Beta)</small></div>
+       <p class='title h3'>HOMD Taxa Preferred Body Sites <small>(in Beta)</small></p>
        
        <span class=''>[<a href="javascript:window.history.back();"><-- Back</a>]&nbsp;&nbsp;&nbsp;&nbsp;[<a href='body_sites'>Reload Page</a>]</span>
        <div id='body-sites-div'>
        
+
+       
+       
        <table id='main-table' class='table table-hover table-condensed sortable'>
-       <tr><th>HMT-ID</th><th>Genus Species</th><th>Naming Status</th><th>Cultivation Status</th><th>Primary Body Site</th><th>Other Body Sites</th><th>Notes</th></tr>
-       <% for(n in data){ %>
+       <thead>
+       
+        
+		<th class="col2" nowrap>Taxon-ID</th>
+		<th nowrap>Genus-Species</th>
+		<th nowrap>Naming Status</th>
+		<th>Cultivation Status</th>
+		<th>Primary Body Site</th>
+		<th>Other Body Sites</th>
+		<th>Notes</th>
+		</tr>
+		</thead>
+        <% for(n in data){ %>
            <% otid = data[n].otid %>
            <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
            <% if(selected == otid){ %>
@@ -76,6 +123,8 @@ table {
            
        <% } %>
        </table>
+       
+       
        </div>
         </div> <!-- end: page-content -->
     

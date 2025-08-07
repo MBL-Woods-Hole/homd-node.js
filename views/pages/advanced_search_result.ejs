@@ -110,10 +110,10 @@ table td{
    <!-- <div id="loader" class="center-loader" style='z-index:1'></div> -->
     <div id='wrapper'>
     <%- include('../partials/header_img'); %>
-    <%- include('../partials/navbar'); %>
+    <%- include('../partials/navbar2'); %>
     <div class='page-content' > 
        <% if(search_type.length == 1){ %>
-         <div class='title'><%= search_type[0][0].toUpperCase() + search_type[0].slice(1).toLowerCase(); %> Search Result  </div>
+         <p class='title h3'><%= search_type[0][0].toUpperCase() + search_type[0].slice(1).toLowerCase(); %> Search Result  </p>
        <% }else{ %>
          <% 
            show = ''
@@ -271,6 +271,7 @@ table td{
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script type="text/javascript" src="/js/search.js"></script>
 <script type="text/javascript" src="/js/genomes.js"></script>

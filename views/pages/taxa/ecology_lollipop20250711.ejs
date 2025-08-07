@@ -1,13 +1,17 @@
 <style>
-.page-content {
- 
-  /* background: white; */
-  min-height: 500px;
-  
+ul li{
+ padding: 5px;
 }
-.plot-td{
-   border:2px solid lightgray;
-   padding:15px;
+#taxon-page-div {
+   
+   padding:10px;
+   border:1px solid green;
+   
+}
+
+.data{
+   
+   /* padding:0 20px 0px 20px */
 }
 .abundance-table {
    border-collapse:collapse;
@@ -19,6 +23,24 @@
    padding:1px;
    
   }
+
+
+.column {
+  float: left;
+  
+}
+
+
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+
+
 .plot-title{
    background:lightblue;
    padding:5px 3px;
@@ -26,30 +48,160 @@
    font-size:x-large;
    
 }
-#legend-content{
-    font-size:12px;
-    padding:3px 5px;
-    border:1px solid brown;
-    width:100%;
-    
-  }
-.legend_item{
-  padding:1px;
-  border:1px solid black;
-  }
-#legend-table{
-   /* width:100%; */
-   font-size:15px;
-  }
-#legend-table td{
-   font-size: 15px;
-   text-align: left;
-   padding-left:2px;
+#plot_table_master td{
    
-  }
-.brown{
-   color:brown;
 }
+
+.spacer{
+   padding:10px 0;
+   background:grey;
+}
+.notes-td{
+   vertical-align:top;
+   padding:10px;
+}
+
+.nonote{
+   font-size:11px;
+   /* padding:10px 4px; */
+   /* margin-left:250px; */
+   text-align: center;
+}
+.hover{
+   font-size:15px;
+   /* padding:10px 4px; */
+   /* margin-left:250px; */
+   
+}
+.note{
+  font-size:13px;
+  padding:10px;
+  width:940px;
+  border:1px solid brown;
+  
+  position: absolute;
+  background:black;
+  color:white;
+  /* visibility:hidden; */
+  display:none;
+}
+a:hover + .note {
+    /* visibility:visible; */
+    display:block;
+    
+}
+/* Lineage search stuff */
+#fixed-text-box{
+    background-color:#ddd;
+    position: absolute;
+    padding: 1.1em;
+    right: 100px;
+    width:500px;
+    height:250px;
+    overflow:auto;
+    top: 200px;
+    border:1px solid brown;
+    /* transform: translateX(-50%); */
+    font-size:11px;
+  
+}
+#text{
+   border:1px solid brown;
+   font-size:12px;
+   line-height:150%;
+   margin:0 5px;
+   padding:10px;
+
+}
+
+#child-table td{
+    padding: 0 5px;
+    font-size: small;
+}
+.y {
+   font-weight: normal;
+   font-size: small;
+}
+td {
+  text-align: center;
+  
+}
+.lineage a{
+   text-decoration:underline;
+   color:blue;
+}
+/* SMALL ----------- */
+@media only screen and (min-width : 1100px) {
+	/* Styles */
+	.row{
+	   
+	}
+	.plot{
+	/* padding:0 10px; */
+	
+	}
+	
+	
+	.plot-td{
+	
+	}
+	.plot_table{
+	border:1px solid green;
+	padding:10px
+	}
+	.column{
+	
+	}
+	.left {
+	width: 15%;
+	font-size:12px;
+	height: 200px; /* only to hold column open */
+	}
+	.middle {
+	/* width: 54%; */
+	/* border:2px dashed red; */
+	padding:10px;
+	/* border:1px solid red; */
+	border:1px solid red;
+	}
+	.right {
+	
+	
+	}
+
+}  /* End SMALL SCREEN MEDIA */
+
+/* Large screens ----------- */
+@media only screen and (min-width : 1624px) {
+	/* Styles */
+	.plot_table{
+	 border:1px solid green;
+	 padding:0 10px;
+	}
+	.plot{
+	/* padding:0 10px; */
+	
+	}
+	
+	
+	.plot-td{
+	
+	}
+	.left {
+	
+	}
+	.middle {
+	 
+	}
+	.right {
+	
+	
+	}
+ 
+
+}  /* End LARGE SCREEN MEDIA */
+
+
 </style>
 
 <% dewhirst_data = JSON.parse(dewhirst) %>
@@ -69,31 +221,28 @@
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
-    <%- include('../../partials/navbar'); %>
+    <%- include('../../partials/navbar2'); %>
     
    
-    <div class='page-content'>
+    <div class='page-content' >
     <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
      <% if(rank == 'klass' || rank == 'Klass'){  %>
         <% rank_show = 'Class' %>
     <% }else{ %> 
        <% rank_show = rank.charAt(0).toUpperCase() + rank.slice(1) %>
     <% } %>
-    
-    <p class='title h3'>
-      <b><%= rank_show %>:</b> 
-      <span class='brown'>
-      <% if(rank=='species') { %>           
+    <div class='title'><b><%= rank_show %>:</b> <span class='yellow'>
+    <% if(rank=='species') { %>           
          <em><%= tax_name %></em>
-      <% }else{ %>
+    <% }else{ %>
          <%= tax_name %>
-      <% } %>
-      </span>
-      <% if(otid != 0){ %>
-       <small>(<%= taxidfullname %>)</small>
-      <% } %>
-    </p>
+    <% } %>
     
+    </span>
+    <% if(otid != 0){ %>
+       <small>(<%= taxidfullname %>)</small>
+    <% } %>
+    </div>
     <a id='download_browser_text_excel'  href='/download#abundance' >Download Options</a>   
     <div id='taxon-page-div'>
         <small>Each rank name is a link to abundance plots at that rank:</small><br>
@@ -141,249 +290,269 @@
         
     </div>  <!-- end taxon-page-div -->
 
-<center>
-<div class='links'>
-     LINKS: <a href='/taxa/ecology_home'>Ecology Home</a>
-     <% if(otid != 0){ %>
-        <span style=''>
-          |&nbsp;<a href='body_sites?otid=<%= otid %>'><%= taxidfullname %>: Body Sites Data</a>
-          |&nbsp;<a href='tax_description?otid=<%= otid %>'><%= taxidfullname %>: Taxon Description</a>
-        </span>
-     <% } %>
-     |&nbsp;<a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page: <%- tax_name %></a>
-</div>
-</center> 
-
-
-
-<div  class="container-fluid"  > 
-  <div class="row justify-content-around">
-    <div class="col align-self-start">
-      <%- include('./ecology_lollipop_legend'); %>
-    </div>
+<div class='row'> 
+     
+    <%- include('./ecology_lollipop_legend'); %>
   
-    <div  class="col" >
+  
+<div class='middle'>
+
 
     <center>
-    <table class='plot_table' border='1' >
-        
+  <table class='plot_table' border='1'>
     <tr>
-        <td class='plot-td'>
-          <div class='plot-title'>
-            <small>
-            HMP 16S RefSeq (V1-V3) <small>(not published)</small>
-            </small>
-            
-          </div>
-          <% if(notes.hmp_refseqv1v3 == ''){ %>
-            <div class='nonote'>No Notes</div>
-          <% }else{ %>
-            <% parts = notes.hmp_refseqv1v3.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
-            <div class='note'>
-            <b>Notes:</b><br>
-            <% for(n in parts){ %>
-             <%- parts[n] %><br><br>
-            <% } %>
-            </div>
-          <% } %>
+    <td class='plot-td'>
+      <div class='plot-title'>
+        <small>
+        HMP 16S RefSeq (V1-V3) <small>(not published)</small>
+        </small>
         
-          <div class='plot' >
-            <div id="plot_log_hmp_refseqv1v3_here"></div> 
-          </div>
-        
-        <br>
-        <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
-          <div class='abund-table-div'>
-            <center><%- hmp_refseqv1v3_table %></center>
-          </div>  
-        <% } %>  
-        </td>
-    </tr>
-      
-    <!-- END HMP RefSeq V1V3 -->
-    <tr>
-        <td class='plot-td'>
-          <div class='plot-title'>
-            <small>
-            HMP 16S RefSeq (V3-V5) <small>(not published)</small>
-            </small>
-            
-          </div>
-          <% if(notes.hmp_refseqv3v5 == ''){ %>
-            <div class='nonote'>No Notes</div>
-          <% }else{ %>
-            <% parts = notes.hmp_refseqv3v5.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
-            <div class='note'>
-            <b>Notes:</b><br>
-            <% for(n in parts){ %>
-             <%- parts[n] %><br><br>
-            <% } %>
-            </div>
-          <% } %>
-        
-          <div class='plot' >
-            <div id="plot_log_hmp_refseqv3v5_here"></div> 
-          </div>
-        <br>
-        <% if(Object.keys(hmp_refseqv3v5_data).length !== 0){ %>
-          <div class='abund-table-div'>
-            <center><%- hmp_refseqv3v5_table %></center>
-          </div>  
-        <% } %>  
-        </td>
-    </tr>
-     
+      </div>
+      <% if(notes.hmp_refseqv1v3 == ''){ %>
+        <div class='nonote'>No Notes</div>
+      <% }else{ %>
+        <% parts = notes.hmp_refseqv1v3.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
+        <div class='note'>
+        <b>Notes:</b><br>
+        <% for(n in parts){ %>
+         <%- parts[n] %><br><br>
+        <% } %>
+        </div>
+      <% } %>
     
-    <!-- END HMP RefSeq V3V5 -->
+      <div class='plot' >
+        <div id="plot_log_hmp_refseqv1v3_here"></div> 
+      </div>
     
-    <tr>
-        <td class='plot-td'>
-          <div class='plot-title'>
-            <small>
-            Dewhirst (35x9) <small>(not published)</small>
-            </small>
-            
-          </div>
-          <% if(notes.dewhirst == ''){ %>
-            <div class='nonote'>No Notes</div>
-          <% }else{ %>
-            <% parts = notes.dewhirst.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
-            <div class='note'>
-            <b>Notes:</b><br>
-            <% for(n in parts){ %>
-             <%- parts[n] %><br><br>
-            <% } %>
-            </div>
-          <% } %>
+    </td>
+  
+  </tr>
+  <tr>
+    <td class='data' >
+    <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
+      <div class='abund-table-div'>
+        <center><%- hmp_refseqv1v3_table %></center>
+      </div>  
+    <% } %>  
+    </td>
+  </tr>
+  
+<!-- END HMP RefSeq V1V3 -->
+<tr>
+    <td class='plot-td'><hr>
+      <div class='plot-title'>
+        <small>
+        HMP 16S RefSeq (V3-V5) <small>(not published)</small>
+        </small>
         
-          <div class='plot' >
-            <div id="plot_log_dewhirst_here"></div> 
-          </div>
-        <br>
-        <% if(Object.keys(dewhirst_data).length !== 0){ %>
-          <div class='abund-table-div'>
-            <center><%- dewhirst_table %></center>
-          </div>  
-        <% } %>  
-        </td>
-      </tr>
-      
-    <!-- END Dewhirst -->
+      </div>
+      <% if(notes.hmp_refseqv3v5 == ''){ %>
+        <div class='nonote'>No Notes</div>
+      <% }else{ %>
+        <% parts = notes.hmp_refseqv3v5.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
+        <div class='note'>
+        <b>Notes:</b><br>
+        <% for(n in parts){ %>
+         <%- parts[n] %><br><br>
+        <% } %>
+        </div>
+      <% } %>
     
-    <tr>
-        <td class='plot-td'>
-          <div class='plot-title'>
-            <small>
-            HMP Metaphlan <small>(not published)</small>
-            </small>
-            
-          </div>
-          <% if(notes.hmp_metaphlan == ''){ %>
-            <div class='nonote'>No Notes</div>
-          <% }else{ %>
-            <% parts = notes.hmp_metaphlan.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
-            <div class='note'>
-            <b>Notes:</b><br>
-            <% for(n in parts){ %>
-             <%- parts[n] %><br><br>
-            <% } %>
-            </div>
-          <% } %>
-        
-          <div class='plot' >
-            <div id="plot_log_hmp_metaphlan_here"></div> 
-          </div>
-        
-        <br>
-        <% if(Object.keys(hmp_metaphlan_data).length !== 0){ %>
-          <div class='abund-table-div'>
-            <center><%- hmp_metaphlan_table %></center>
-          </div>  
-        <% } %>  
-        </td>
-    </tr>
+      <div class='plot' >
+        <div id="plot_log_hmp_refseqv3v5_here"></div> 
+      </div>
     
-    <!-- END Metaphlan -->
-    
-    <tr>
-        <td class='plot-td'>
-          <div class='plot-title'>
-            <small>
-            Eren V1-V3 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
-            </small>
-            
-          </div>
-          <% if(notes.erenv1v3 == ''){ %>
-            <div class='nonote'>No Notes</div>
-          <% }else{ %>
-            <% parts = notes.erenv1v3.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
-            <div class='note'>
-            <b>Notes:</b><br>
-            <% for(n in parts){ %>
-             <%- parts[n] %><br><br>
-            <% } %>
-            </div>
-          <% } %>
-        
-          <div class='plot' >
-            <div id="plot_log_erenv1v3_here"></div> 
-          </div>
-        
-        <br>
-        <% if(Object.keys(erenv1v3_data).length !== 0){ %>
-          <div class='abund-table-div'>
-            <center><%- erenv1v3_table %></center>
-          </div>  
-        <% } %>  
-        </td>
-    </tr>
-    
-    <!-- END Eren v1v3 -->
-    <tr>
-        <td class='plot-td'>
-          <div class='plot-title'>
-            <small>
-            Eren V3-V5 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
-            </small>
-            
-          </div>
-          <% if(notes.erenv3v5 == ''){ %>
-            <div class='nonote'>No Notes</div>
-          <% }else{ %>
-            <% parts = notes.erenv3v5.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
-            <div class='note'>
-            <b>Notes:</b><br>
-            <% for(n in parts){ %>
-             <%- parts[n] %><br><br>
-            <% } %>
-            </div>
-          <% } %>
-        
-          <div class='plot' >
-            <div id="plot_log_erenv3v5_here"></div> 
-          </div>
-        <br>
-        <% if(Object.keys(erenv3v5_data).length !== 0){ %>
-          <div class='abund-table-div'>
-            <center><%- erenv3v5_table %></center>
-          </div>  
-        <% } %>  
-        </td>
-      </tr>
-    <!-- END Eren v3v5 -->
-    
-    </table>
-    </center>
-</div>  <!-- column middle -->
+    </td>
+  
+  </tr>
+  <tr>
+    <td class='data' >
+    <% if(Object.keys(hmp_refseqv3v5_data).length !== 0){ %>
+      <div class='abund-table-div'>
+        <center><%- hmp_refseqv3v5_table %></center>
+      </div>  
+    <% } %>  
+    </td>
+  </tr>
+ 
 
+<!-- END HMP RefSeq V3V5 -->
+
+<tr>
+    <td class='plot-td'><hr>
+      <div class='plot-title'>
+        <small>
+        Dewhirst (35x9) <small>(not published)</small>
+        </small>
+        
+      </div>
+      <% if(notes.dewhirst == ''){ %>
+        <div class='nonote'>No Notes</div>
+      <% }else{ %>
+        <% parts = notes.dewhirst.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
+        <div class='note'>
+        <b>Notes:</b><br>
+        <% for(n in parts){ %>
+         <%- parts[n] %><br><br>
+        <% } %>
+        </div>
+      <% } %>
+    
+      <div class='plot' >
+        <div id="plot_log_dewhirst_here"></div> 
+      </div>
+    
+    </td>
+  
+  </tr>
+  <tr>
+    <td class='data' >
+    <% if(Object.keys(dewhirst_data).length !== 0){ %>
+      <div class='abund-table-div'>
+        <center><%- dewhirst_table %></center>
+      </div>  
+    <% } %>  
+    </td>
+  </tr>
+  
+<!-- END Dewhirst -->
+
+<tr>
+    <td class='plot-td'><hr>
+      <div class='plot-title'>
+        <small>
+        HMP Metaphlan <small>(not published)</small>
+        </small>
+        
+      </div>
+      <% if(notes.hmp_metaphlan == ''){ %>
+        <div class='nonote'>No Notes</div>
+      <% }else{ %>
+        <% parts = notes.hmp_metaphlan.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
+        <div class='note'>
+        <b>Notes:</b><br>
+        <% for(n in parts){ %>
+         <%- parts[n] %><br><br>
+        <% } %>
+        </div>
+      <% } %>
+    
+      <div class='plot' >
+        <div id="plot_log_hmp_metaphlan_here"></div> 
+      </div>
+    
+    </td>
+  
+  </tr>
+  <tr>
+    <td class='data' >
+    <% if(Object.keys(hmp_metaphlan_data).length !== 0){ %>
+      <div class='abund-table-div'>
+        <center><%- hmp_metaphlan_table %></center>
+      </div>  
+    <% } %>  
+    </td>
+  </tr>
+
+<!-- END Metaphlan -->
+
+<tr>
+    <td class='plot-td'><hr>
+      <div class='plot-title'>
+        <small>
+        Eren V1-V3 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
+        </small>
+        
+      </div>
+      <% if(notes.erenv1v3 == ''){ %>
+        <div class='nonote'>No Notes</div>
+      <% }else{ %>
+        <% parts = notes.erenv1v3.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
+        <div class='note'>
+        <b>Notes:</b><br>
+        <% for(n in parts){ %>
+         <%- parts[n] %><br><br>
+        <% } %>
+        </div>
+      <% } %>
+    
+      <div class='plot' >
+        <div id="plot_log_erenv1v3_here"></div> 
+      </div>
+    
+    </td>
+  
+  </tr>
+  <tr>
+    <td class='data' >
+    <% if(Object.keys(erenv1v3_data).length !== 0){ %>
+      <div class='abund-table-div'>
+        <center><%- erenv1v3_table %></center>
+      </div>  
+    <% } %>  
+    </td>
+  </tr>
+
+<!-- END Eren v1v3 -->
+<tr>
+    <td class='plot-td'><hr>
+      <div class='plot-title'>
+        <small>
+        Eren V3-V5 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
+        </small>
+        
+      </div>
+      <% if(notes.erenv3v5 == ''){ %>
+        <div class='nonote'>No Notes</div>
+      <% }else{ %>
+        <% parts = notes.erenv3v5.split(';') %>
+        <a class='hover red-text'>** View Notes (mouse over) **</a>
+        <div class='note'>
+        <b>Notes:</b><br>
+        <% for(n in parts){ %>
+         <%- parts[n] %><br><br>
+        <% } %>
+        </div>
+      <% } %>
+    
+      <div class='plot' >
+        <div id="plot_log_erenv3v5_here"></div> 
+      </div>
+    
+    </td>
+  
+  </tr>
+  <tr>
+    <td class='data' >
+    <% if(Object.keys(erenv3v5_data).length !== 0){ %>
+      <div class='abund-table-div'>
+        <center><%- erenv3v5_table %></center>
+      </div>  
+    <% } %>  
+    </td>
+  </tr>
+<!-- END Eren v3v5 -->
+
+</table>
+</center>
+</div>  <!-- column middle -->
+ <!-- 
+<div id='fixed-text-box'>
+   <% if(text_file){ %>
+     <div id='textX'><%- include('../../partials/static/'+text_file); %></div>
+   <% }else if(text_format){ %>
+    <div id='textX'><%- text_format %></div>
+   <%} %>
+</div>
+-->
+    
 </div>  <!-- end row -->
-</div>  <!-- end row -->
+
 
 
     </div> <!-- end: page-content -->
@@ -519,6 +688,7 @@ function change_view(v,r,t){
 
 </script>
 <script type="text/javascript" src="/js/ecology_lollipop.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 
 <!-- 
 <script type="text/javascript" src="/js/ecology_lollipop_hmprefseqv1v3.js"></script>

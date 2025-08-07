@@ -231,7 +231,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
   }
   const glist = Object.values(C.genome_lookup)
   
-  glist.sort(function sortGList (a, b) {
+  glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
@@ -249,7 +249,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
     genomes: JSON.stringify(genomeList),
     tgenomes: genomeList.length,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+    
   })
 })
 //
@@ -336,12 +336,16 @@ router.get('/genome_description', function Description (req, res) {
             let n = data.GTDB_taxonomy.lastIndexOf(';')
             data.GTDB_taxonomy = data.GTDB_taxonomy.substring(0, n+1) + "<br>" + data.GTDB_taxonomy.substring(n+1) 
             console.log('GTDB_taxonomy',data.GTDB_taxonomy)
+            let checkm_status_obj = helpers_genomes.get_checkm_status(data)
+            
+            console.log('checkM status',checkm_status_obj)
             res.render('pages/genome/genomedesc', {
                title: 'HOMD :: Genome Info',
                pgname: 'genome/description', // for AboutThisPage 
                config: JSON.stringify(CFG),
                // taxonid: otid,
                data1: JSON.stringify(data),
+               checkm: JSON.stringify(checkm_status_obj),
                gid: gid,
                contigs: JSON.stringify(contigs.sort()),
                crispr: crispr,
@@ -349,7 +353,7 @@ router.get('/genome_description', function Description (req, res) {
                // data3: JSON.stringify(data3),
                // data4: JSON.stringify(data4),
                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-               user: JSON.stringify(req.user || {}),
+               
             })
        })  // end TDBConn.query(q_contig
      } // end else
@@ -450,7 +454,7 @@ function render_explorer(req, res, args){
         pgname: 'genome/explorer', // for AboutThisPage 
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-        user: JSON.stringify(req.user || {}),
+        
         gid: args.gid,
         otid: args.otid,
         all_annos: JSON.stringify(args.allAnnosObj),
@@ -682,7 +686,7 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
                     }
             }
             
-            let data_keys = Object.keys(org_list).sort(function (a, b) {
+            let data_keys = Object.keys(org_list).sort((a, b) =>{
                 return helpers.compareStrings_alpha(org_list[a], org_list[b]);
             })
             
@@ -771,7 +775,7 @@ router.post('/orf_search', function orf_search (req, res) {
                    org_list[tmpgid] = organism
                 }
             }
-            let data_keys = Object.keys(org_list).sort(function (a, b) {
+            let data_keys = Object.keys(org_list).sort((a, b) =>{
                 return helpers.compareStrings_alpha(org_list[a], org_list[b]);
              })
             
@@ -824,53 +828,53 @@ function apply_annot_table_filter(rows, filter){
     }
     if(filter.sort_rev === 'on'){
         if(filter.sort_col === 'pid'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) =>{
                 return helpers.compareStrings_alpha(a.protein_id, b.protein_id);
               })
         }else if(filter.sort_col === 'molecule'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) => {
                 return helpers.compareStrings_alpha(a.accession, b.accession);
               })
         }else if(filter.sort_col === 'gene'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) => {
                 return helpers.compareStrings_alpha(a.gene, b.gene);
               })
         }else if(filter.sort_col === 'product'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) =>  {
                 return helpers.compareStrings_alpha(a.product, b.product);
               })
         }else if(filter.sort_col === 'na'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) => {
                 return helpers.compareStrings_int(a.length_na, b.length_na);
               })
         }else if(filter.sort_col === 'aa'){
-              new_rows.sort(function (b, a) {
+              new_rows.sort((b, a) => {
                 return helpers.compareStrings_int(a.length_aa, b.length_aa);
               })
         }
     }else{
         if(filter.sort_col === 'pid'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_alpha(a.protein_id, b.protein_id);
               })
         }else if(filter.sort_col === 'molecule'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_alpha(a.accession, b.accession);
               })
         }else if(filter.sort_col === 'gene'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_alpha(a.gene, b.gene);
               })
         }else if(filter.sort_col === 'product'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_alpha(a.product, b.product);
               })
         }else if(filter.sort_col === 'na'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_int(a.length_na, b.length_na);
               })
         }else if(filter.sort_col === 'aa'){
-              new_rows.sort(function (a, b) {
+              new_rows.sort((a, b) => {
                 return helpers.compareStrings_int(a.length_aa, b.length_aa);
               })
         }
@@ -946,7 +950,7 @@ router.post('/explorer', function explorer_post (req, res) {
     let annoInfoObj = C.annotation_lookup[gid][anno]
     annoInfoObj.bases = C.genome_lookup[gid].combined_size
     const glist = Object.values(C.genome_lookup)
-    glist.sort(function sortGList (a, b) {
+    glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.genus, b.genus)
     })
     // filter out empties then map to create list of sorted strings
@@ -966,7 +970,7 @@ router.post('/explorer', function explorer_post (req, res) {
     console.log('get_annotation_query-post',q)
     TDBConn.query(q, (err, rows) => {
     if (err) {
-      req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
+      
       args = {fltr:{},filter_on: 'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
       render_explorer(req, res, args)
       return
@@ -1052,7 +1056,7 @@ router.get('/explorer', function explorer_get (req, res) {
   
   const glist = Object.values(C.genome_lookup)
   
-  glist.sort(function sortGList (a, b) {
+  glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
@@ -1073,7 +1077,7 @@ router.get('/explorer', function explorer_get (req, res) {
         //organism = C.annotation_lookup[gid].prokka.organism
         organism = C.genome_lookup[gid].organism
       }else{
-        req.flash('fail', 'Genome not found: "'+gid+'"')
+        
         //console.log('no anno1')
         args = {fltr:{},filter_on:'off',gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
         render_explorer(req, res, args)
@@ -1102,7 +1106,7 @@ router.get('/explorer', function explorer_get (req, res) {
     annoInfoObj = C.annotation_lookup[gid][anno]
     annoInfoObj.bases = C.genome_lookup[gid].combined_size
   } else {
-    req.flash('fail', 'Could not find: "'+anno+'" annotation for '+gid)
+    
 
     args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
     render_explorer(req, res, args)
@@ -1124,7 +1128,7 @@ router.get('/explorer', function explorer_get (req, res) {
   // local host:  explorer?gid=SEQF4098.1&anno=ncbi
   TDBConn.query(q, (err, rows) => {
     if (err) {
-      req.flash('fail', 'Query Error: "'+anno+'" annotation for '+gid)
+      
 
       args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
       render_explorer(req, res, args)
@@ -1192,7 +1196,7 @@ router.get('/blast_server', function genome_blast_server(req, res) {
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-        user: JSON.stringify(req.user || {}),
+        
         blast_type: 'genome'
       })
 })
@@ -1209,7 +1213,7 @@ router.get('/blast_select_genome', function blast_select_genome(req, res) {
   }
   const glist = Object.values(C.genome_lookup)
   
-  glist.sort(function sortGList (a, b) {
+  glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
@@ -1229,7 +1233,7 @@ router.get('/blast_select_genome', function blast_select_genome(req, res) {
     genomes: JSON.stringify(genomeList),
     tgenomes: genomeList.length,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+    
   })
 })
 
@@ -1249,7 +1253,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
 //     pgname: 'blast/pagehelp', // for AboutThisPage
 //     config: JSON.stringify(CFG),
 //     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//     user: JSON.stringify(req.user || {}),
+//     
 //     gid: '',
 //     annotation: '',
 //     organism: '',
@@ -1262,7 +1266,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
     pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+    
     gid: '',
     annotation: '',
     organism: '',
@@ -1295,7 +1299,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
 //     pgname: 'blast/pagehelp', // for AboutThisPage
 //     config: JSON.stringify(CFG),
 //     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//     user: JSON.stringify(req.user || {}),
+//     
 //     gid: req.body.gid,
 //     annotation: req.body.annotation,
 //     organism: organism,
@@ -1316,7 +1320,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
     pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+    
     gid: req.body.gid,
     annotation: req.body.annotation,
     url:url,
@@ -1335,7 +1339,7 @@ router.post('/blast_single_test', function(req, res){
     pgname: 'genome/BLAST', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+    
   })
 })
 router.post('/blast_single', function blast_single(req, res) {
@@ -1399,7 +1403,7 @@ router.get('/blast_server_one', function blast_test(req, res) {
     gid: gid,  // default
     org: C.genome_lookup[gid].organism,
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+    
     data: JSON.stringify(data)
     }) 
   
@@ -1432,7 +1436,7 @@ router.get('/genome_blast_no_iframe', function genome_blast_no_iframe(req, res) 
     pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {}),
+    
     gid: '',
     annotation: '',
     url:url,
@@ -1452,7 +1456,7 @@ router.get('/blast', function blast_get(req, res) {
     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
    })
    
-   allAnnosObj.sort(function sortAnnos (a, b) {
+   allAnnosObj.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.org, b.org)
    })
    //let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
@@ -1483,7 +1487,7 @@ router.get('/blast', function blast_get(req, res) {
         pgname: 'blast/blast', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-        user: JSON.stringify(req.user || {}),
+        
         blastFxn: 'genome',
         organism: organism,
         gid: chosen_gid,
@@ -1528,7 +1532,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
            pgname: 'genome/tree', // for AboutThisPage
            config: JSON.stringify(CFG),
            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-           user: JSON.stringify(req.user || {}),
+           
            svg_data: JSON.stringify(data),
            otid: fullname
          }); 
@@ -1547,7 +1551,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
 //         pgname: 'genome/tree', // for AboutThisPage
 //         config: JSON.stringify(CFG),
 //         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//         user: JSON.stringify(req.user || {}),
+//         
 //         svg_data: JSON.stringify(data),
 //         otid: fullname
 //       })
@@ -1580,7 +1584,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
            pgname: 'genome/tree', // for AboutThisPage
            config: JSON.stringify(CFG),
            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-           user: JSON.stringify(req.user || {}),
+           
            svg_data: JSON.stringify(data),
            otid: otid
          }); 
@@ -1602,7 +1606,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
 //         pgname: 'genome/tree', // for AboutThisPage
 //         config: JSON.stringify(CFG),
 //         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//         user: JSON.stringify(req.user || {}),
+//         
 //         svg_data: JSON.stringify(data),
 //         otid: otid
 //       })
@@ -1633,7 +1637,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
            pgname: 'genome/tree', // for AboutThisPage
            config: JSON.stringify(CFG),
            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-           user: JSON.stringify(req.user || {}),
+           
            svg_data: JSON.stringify(data),
            otid: otid
          })
@@ -1652,7 +1656,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //       pgname: 'genome/tree', // for AboutThisPage
 //       config: JSON.stringify(CFG),
 //       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//       user: JSON.stringify(req.user || {}),
+//       
 //       svg_data: JSON.stringify(data),
 //       otid: otid
 //     })
@@ -1713,7 +1717,7 @@ router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-        user: JSON.stringify(req.user || {}),
+        
         //pangenomes: JSON.stringify(C.pangenomes)
         pangenomes: JSON.stringify(rows),
         files:[]
@@ -1732,11 +1736,11 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
     let html_head = "<table border='1'>"
     let counter = 0
     html_head += "<tr>"
-    html_head += "<td nowrap><b>Pangenome Name</b><br><small>(Link opens pangenome in Anvi`o)</small></td>"
-    html_head += "<th>HOMD Genome Version</th>"
-    html_head += "<th>Interactive</th>"
-    html_head += "<th>Image</th>"
-    html_head += "<th>Description</th>"
+    html_head += "<td nowrap><strong>Pangenome Name</strong><br><small>(Link opens pangenome in Anvi`o)</small></td>"
+    html_head += "<td><strong>HOMD Genome Version</strong></td>"
+    html_head += "<td><strong>Interactive</strong></td>"
+    html_head += "<td><strong>Image</strong></td>"
+    html_head += "<td><strong>Description</strong></td>"
     html_head += "</tr>"
     TDBConn.query(q, (err, rows) => {
         for(let i in rows){
@@ -1794,7 +1798,7 @@ router.get('/anvio', (req, res) => {
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-        user: JSON.stringify(req.user || {}),
+        
         pangenome: pg,
         
         })
@@ -1838,7 +1842,6 @@ router.get('/oralgen', function oralgen(req, res) {
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    user: JSON.stringify(req.user || {})
 
   })
 })
@@ -1885,7 +1888,7 @@ router.get('/peptide_table', function peptide_table_get(req, res) {
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-          user: JSON.stringify(req.user || {}),
+          
           data: JSON.stringify(send_list),
           row_count:send_list.length,
           search_text:''
@@ -1956,7 +1959,7 @@ router.post('/peptide_table', function peptide_table_post(req, res) {
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-          user: JSON.stringify(req.user || {}),
+          
           data: JSON.stringify(send_list),
           row_count:send_list.length,
           search_text:req.body.txt_srch
@@ -2023,7 +2026,7 @@ router.get('/peptide_table2', function peptide_table2_get(req, res) {
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-          user: JSON.stringify(req.user || {}),
+          
           data: JSON.stringify(send_list),
           row_count:send_list.length,
           search_text:''
@@ -2094,7 +2097,7 @@ router.post('/peptide_table2', function peptide_table2_post(req, res) {
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-          user: JSON.stringify(req.user || {}),
+          
           data: JSON.stringify(send_list),
           row_count:send_list.length,
           search_text:req.body.txt_srch
@@ -2153,7 +2156,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-          user: JSON.stringify(req.user || {}),
+          
           data: JSON.stringify(send_list),
           row_count:send_list.length,
           //stud:JSON.stringify(studies_ary),
@@ -2207,12 +2210,10 @@ router.get('/crispr', function crispr(req, res) {
 //             el.combined_size = helpers.format_long_numbers(el.combined_size); 
 //         }
 //     })
-     send_list.sort(function (a, b) {
+     send_list.sort((a, b) => {
             return helpers.compareStrings_alpha(a.organism, b.organism);
       })
-      // send_list.sort(function (a, b) {
-//             return helpers.compareByTwoStrings_alpha(a, b, 'organism','organism');
-//       })
+     
       //send_list = apply_species(send_list)
       res.render('pages/genome/crispr_cas', {
         title: 'HOMD :: CRISPR-Cas', 

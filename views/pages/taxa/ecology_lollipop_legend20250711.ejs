@@ -1,14 +1,14 @@
 <style>
 
-
-  
-  
-.column {
-  width: 50%;
-  font-size:12px;
-  height: 200px; /* only to hold column open */
-  
+/* PHONEs get No legend */
+@media only screen and (min-width : 100px) {
+  #top-legend{
+    display:none;
   }
+  #side-legend{
+     display:none;
+  }
+}
 /* SMALL ----------- */
 @media only screen and (min-width : 1100px) {
   #top-legend{
@@ -23,6 +23,56 @@
      display:none;
      /* visibility:hidden; */
   }
+ 
+  .left {
+  width: 15%;
+  font-size:12px;
+  height: 200px; /* only to hold column open */
+  }
+  .middle {
+    padding-top:10px;
+  
+  }
+  .right {
+  
+  
+  }
+  #small-legend-table{
+    border:1px solid brown;
+    
+    border-collapse:collapse;
+  }
+  #small-legend-table td{
+    border:1px solid brown;
+    font-size:12px;
+    text-align:left;
+    background:ivory;
+  }
+  .menu-title{
+   
+   font-size:9px;
+   text-align:center;
+   background:ivory;
+   border:1px solid brown;
+   width:100%;
+
+  }
+  
+  .legend_item{
+  padding:1px 2px;
+  font-size:11px;
+  }
+  #legend-table{
+    border:1px solid brown;
+  }
+  #legend-table td{
+   font-size: 10px;
+   text-align: left;
+   padding-left:2px;
+  }
+
+}
+
 /* Large screens ----------- */
 @media only screen and (min-width : 1624px) {
   /* Styles */
@@ -32,9 +82,80 @@
   #side-legend{
      display:block;
   }
+  
+  .left {
+  width: 20%;
+  font-size:12px;
+  height: 200px; /* only to hold column open */
+  }
+  .middle {
+    padding-top:10px;
+  
+  }
+  .right {
+  
+  
+  }
+  .legend{
+  
+  }
+  .menu-title{
+   
+   font-size:15px;
+   text-align:left;
+   /* background:ivory; */
+   /* border:1px solid brown; */
+   /* width:100%; */
+
+  }
+  
+
+  #legend{
+  position:relative;
+  
+  }
+  #legend-content{
+    font-size:12px;
+    padding:3px 5px;
+    border:1px solid brown;
+    width:100%;
+  }
+ .legend_item{
+  padding:1px;
+  }
+  #legend-table{
+   /* width:100%; */
+   font-size:15px;
+  }
+  #legend-table td{
+   font-size: 15px;
+   text-align: left;
+   padding-left:2px;
+  }
+
+}
+.links{
+   padding:5px 5px;
+   /* background:lightseagreen; */
+}
+.links a{
+   text-decoration:underline;
+   color:blue;
+}
 </style>
 
-
+<center>
+<div class='links'>
+     LINKS: <a href='/taxa/ecology_home'>Ecology Home</a>
+     <% if(otid != 0){ %>
+        <span style=''>
+          |&nbsp;<a href='body_sites?otid=<%= otid %>'><%= taxidfullname %>: Body Sites Data</a>
+          |&nbsp;<a href='tax_description?otid=<%= otid %>'><%= taxidfullname %>: Taxon Description</a>
+        </span>
+     <% } %>
+     |&nbsp;<a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page: <%- tax_name %></a>
+</div>
+</center> 
 <!-- TOP LEGEND Smaller Screen  -->
 <div id='top-legend'>
 
@@ -82,18 +203,17 @@
 
 <!-- SIDE LEGEND Larger Screen -->
 
-<div id='side-legend' class='column left' style='padding:0 50px;width:100%'>
-   
+<div id='side-legend' class='column left'>
+    <center>
     
     
     <div id='legend'>
         <div class='menu-title'>Body Site Legend:</div>
             <div id='legend-content'>
-            <center>
             <table id='legend-table'>
               <tr><td><center><b>Oral:</b></center></td></tr>
               <tr><td class='legend_item' style="background:<%= site_colors_html['SUBP'] %>">SUBP-- Subgingival Plaque</td></tr>
-                <tr><td class='legend_item' style="background:<%= site_colors_html['SUPP'] %>">SUPP -- Supragingival Plaque</td></tr>
+                <tr><td  class='legend_item' style="background:<%= site_colors_html['SUPP'] %>">SUPP -- Supragingival Plaque</td></tr>
                 <tr><td class='legend_item' style="background:<%= site_colors_html['PERIO'] %>">PERIO -- Periodontal</td></tr>
                 <tr><td class='legend_item' style="background:<%= site_colors_html['AKE'] %>">AKE -- Attached Keratinized Gingiva</td></tr>
                 <tr><td class='legend_item' style="background:<%= site_colors_html['BMU'] %>">BMU -- Buccal Mucosa</td></tr>
@@ -116,12 +236,12 @@
               <tr><td><center><b>Gut:</b></td></center></tr>
                 <tr><td class='legend_item' style="background:<%= site_colors_html['STO'] %>">STO -- Stool</td></tr>
               </table>
+              
               <hr>
               Prev - Prevalence
               <br>10<sup>th</sup>p - 10<sup>th</sup> percentile
               <br>90<sup>th</sup>p - 90<sup>th</sup> percentile
               <br>ND - less than 0.001%
-              </center>
             </ol>  
         </div>
     </div>

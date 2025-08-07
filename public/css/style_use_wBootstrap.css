@@ -85,36 +85,21 @@ p {
   min-height: 500px;
   
 }
-.intro-content{
-   padding: 30px 80px;
-   word-spacing: 4px;
-   line-height: 140%;
-   font-size: 18px;
-}
 
-input[type="radio"] {
-  -ms-transform: scale(1.2); /* IE 9 */
-  -webkit-transform: scale(1.2); /* Chrome, Safari, Opera */
-  transform: scale(1.2);
-}
+
+
 
 .title{
-   padding: 14px 0 10px 0px;  
-   
-   background: var(--title-bg);
+   padding: 14px 0;  
+   background: #e8ebec ; /* var(--title-bg); */
    font-size: 20px;
    text-align: center;
    color: white;
    border:1px solid black;
+   border-radius: 10px;
 }
 
-/* 
-.title{
-   background:tan;
-   width:100%;
-   text-align: center;
-}
- */
+
 /* header images masthead */
 #masthead {
   /* width:1350px; */
@@ -135,70 +120,6 @@ input[type="radio"] {
   display: table;
 
 }
-hr{
-   display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
-}
-
- /* Three image containers (use 25% for four, and 50% for two, etc) */
-.columnXX {
-  float: left;
-  width: 50%;
-  padding: 0px;
-}
-#header-image-col1 {
-  float: left;
-  width: 75%;
-  padding: 0;
-  /* overflow:auto; */
-}
-
-#header-image-col2 {
-  float:right;
-  margin:5px 10px;
-  height: 20px;
-}
-
-#header-image-col2 a img{
-    width: auto;
-    height: 100%; 
-}
-.float-right{
-   float: right;
-}
-.float-left{
-   float: left;
-}
-.right-justify{
-   text-align: right;
-}
-.left-justify{
-   text-align: left;
-}
-/*    End of header images CSS */
- .back_btn{
-   position:absolute;
-   font-size:13px;
-   padding:3px 5px;
- }
- .back_btn a{
-   color:orange;
- }  
- #download_browser_text_excel {
-  float: right;
-  top: 2px;
-  font-size: 12px;
-}  
-#footer {
-   border: 1px solid black;
-   padding: 10px 30px;
-   margin: 5px;
-} 
-
 
 /* Pill BUTTONS */
 .button{
@@ -208,6 +129,7 @@ hr{
   font-size: 10px;
   color: white;
 }
+
 .pill {
   padding: 0px 4px;
   text-align: center;
@@ -288,147 +210,24 @@ hr{
   color: grey;
   cursor:default;
 }
-/* For genome table AND Taxon Table alphabet srch */
-#row1 {
-  display: flex;                  /* establish flex container */
-  flex-direction: row;            /* default value; can be omitted */
-  flex-wrap: nowrap;              /* default value; can be omitted */
-  justify-content: space-between; /* switched from default (flex-start, see below) */
-  padding:20px 0;
-  width:100%;
-  
-}
-#column_left1{
-   padding:10px;
-   width:auto;
-}
-#column_middle1{
-   padding:0 5px;
-   width:32%;
-}
-#column_right1 {
-  padding:10px 30px;
-}
-/*row2 and col2 is just  For Taxon Table inner srch */
-#row2 {
-  display: flex;                  /* establish flex container */
-  flex-direction: row;            /* default value; can be omitted */
-  flex-wrap: nowrap;              /* default value; can be omitted */
-  justify-content: space-between; /* switched from default (flex-start, see below) */
-  
-}
-#column_left2 {
-  margin:10px 0 0 0;
-}
-/* Clear floats after the columns */
-#column_right2 {
-  /* float: right; */
-}
-
-
-.red-text{
-  color:red;
-}
-.orange-text{
-  color:orange;
-}
-.red{
-  background:red;
-}
-.yellow{
-   color:yellow;
-}
-.gold{
-   color:gold;
-}
-.blue-text{
-  color:blue;
-}
-.blue{
-  background:lightblue;
-  width:100%;
-}
-.blue a{
-  
-  width:100%;
-}
-.green-text{
-  color:green;
-}
-.gray{
-  background:lightgray;
-}
-.dropdown{
-  border:1px solid brown;
-  padding:1px;
-  border-radius: 3px;
-}
-
-/* Loader for tables:taxon, genome, phage */
-#loader {
-  border: 12px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 12px solid #444444;
-  width: 70px;
-  height: 70px;
-  margin-top:180px;
-  animation: spin 1s linear infinite;
-}
-  
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-  
-.center-loader {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-/* End Loader */
-
-.filter-title{
-  font-weight:bold;
-}
+ #download_browser_text_excel {
+  float: right;
+  top: 2px;
+  font-size: 12px;
+}  
+#footer {
+   border: 1px solid black;
+   padding: 10px 30px;
+   margin: 5px;
+} 
 .alpha-list {
   letter-spacing: 2px;
 }
 .alpha-select{
    
 }
-
-
-
-
-.greyed{
-   background:lightgrey;
-   color:darkgrey;
-}
-.error{
-   font-size: 15px;
-   width:50%;
-   height: 100px;
-   border:3px solid orange;
-   background:lightgrey;
-   color: black;
-   padding: 30px;
-   position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    
-    margin: auto;
-   
-}
-.link{
-   color:blue;
-   cursor:pointer;
-}
-.small-link{
-   font-size:12px;
+.dropdown-homd{
+   font-size:15px;
+   height:25px;
+   border:1px solid brown;
 }

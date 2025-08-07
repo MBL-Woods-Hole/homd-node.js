@@ -7,7 +7,7 @@ table{
    
    padding:0 20px;
 }
-#pgtable td,th{
+#pgtable td{
    padding: 5px 10px;
    border:1px solid black;
 }
@@ -22,7 +22,7 @@ table{
     
     <div class='page-content' >
 
-    <div class='title'>HOMD Pangenomes</div>
+    <p class='title h3'>HOMD Pangenomes</p>
     <br>
     <center>
          
@@ -42,13 +42,11 @@ Pangenome Count: <b><%- pgs.length %></b>
 
 <table class='sortable' border='1'>
 <tr>
-  <td nowrap><b>Pangenome Name</b><br><small>(Link opens pangenome in Anvi`o)<br>Click to Sort Alphabetically</small></td>
-  
-  <th class="">HOMD Genome Version</th>
-  <th class="sorttable_nosort">Interactive</th>
-  <th class="sorttable_nosort">Image</th>
-  <th class="sorttable_nosort">Description</th>
-  
+  <td nowrap><strong>Pangenome Name</strong><br><small>(Link opens pangenome in Anvi`o)<br>Click to Sort Alphabetically</small></td>
+  <td class=""><strong>HOMD Genome Version</strong></td>
+  <td class="sorttable_nosort"><strong>Interactive</strong></td>
+  <td class="sorttable_nosort"><strong>Image</strong></td>
+  <td class="sorttable_nosort"><strong>Description</strong></td>
 </tr>
 
 	<% for(i in pgs){ %>

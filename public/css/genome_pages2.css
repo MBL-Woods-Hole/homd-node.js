@@ -1,0 +1,80 @@
+.letter{
+  cursor:pointer;
+  color:blue;
+}
+.noletter{
+  cursor:pointer;
+  color:blue;
+}
+.alpha-list{
+   font-family: monospace;
+}
+#filter_form_div{
+   border:1px solid black;
+   padding:2px;
+   width:100%;
+}
+#form_btn{
+  width:100%;
+  color:grey;
+}
+#main_table{
+   width:100%;
+   /* border:1px solid red; */
+   
+}
+#main_table td{
+   padding:0px 5px;
+   
+   
+}
+#filter_table{
+   /* border:1px solid green; */
+   width:100%;
+   border-collapse: collapse;
+}
+#filter_table td{
+   border:1px solid brown;
+   
+   padding: 3px 2px;
+}
+
+#reset_div a{
+   font-size: 14px;
+   white-space: nowrap;
+}
+#sort_rev{
+   
+   border: 1px solid brown;
+   padding:2px 1px 1px 1px;
+   margin:1px;
+}
+.button{
+   cursor:pointer;
+   color:blue;
+   background:lightgrey;
+}
+#reset{
+   cursor:default;
+   color:grey;
+   background:lightgrey;
+}
+.gray{
+   padding:1px 4px;
+   border:1px solid darkgray;
+}
+.advanced-filter-btn{
+   
+   padding: 3px 4px 2px 4px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   margin: 0px 0px;
+   
+   cursor: pointer;
+   font-size: 14px;
+   border-radius: 16px;
+   background-color: brown;
+   border: 1px solid black;
+   color: white;
+}
