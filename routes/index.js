@@ -398,10 +398,12 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                     //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
                     //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
-                    console.log('pts',pts)
+                    //console.log('pts',pts)
                     if(pts.length == split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
                       gid = pts[1].toUpperCase()
+                      console.log('GID',gid)
+                      console.log('LOOKup',C.genome_lookup[gid])
                       if(gid && C.genome_lookup.hasOwnProperty(gid)){
                         otid = C.genome_lookup[gid]['otid']
                         strain = C.genome_lookup[gid]['strain']
