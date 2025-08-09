@@ -399,7 +399,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
                     //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
                     console.log('pts',pts)
-                    if(pts.length == split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
+                    if(pts.length >= split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
                       gid = pts[1].toUpperCase()
                       console.log('GID',gid)
