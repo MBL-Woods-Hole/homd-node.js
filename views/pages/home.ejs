@@ -10,195 +10,207 @@
 .underline a{
     text-decoration: underline;
 }
+.table-logo {
+    display: flex;
+    width:1250px;
+}
 
+.column-logo {
+    margin-bottom: 1em;
+    width: 100%;
+}
+
+.row-logo {
+    border: 1px black solid;
+    padding:10px;
+    width:100%;
+    
+}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/home.css" >
 <% var version_info = JSON.parse(ver_info) %> 
 <%- include('../partials/header_html'); %>
+
 <% t_count = "836" %>
 <% oral_t_count = "525" %>
 <% nasal_t_count = "22" %>
 <title>HOMD Home Page</title>
     
-<body style='background:#e6f1ff;'>
-  <div class='body-div' align="center" >
-    <table style='width:1250px;'>
-      <tr><td width="100%" style="background-color:#004080">
-        <img src="/images/homd_banner_devel.png"></td></tr>
-      <tr><td align="left">
-        <%- include('../partials/navbar2'); %></td></tr>
-      <tr><td align="center" style='padding:10px;'>
-                
-<div class="shadow introduction bggray rounded"  style='width:85%;text-align:left;padding:15px;'>
-<!-- shadow introduction bggray rounded  width:85%;text-align:left;padding:15px; -->
-<tspan style="font-size:1.5em;font-weight:normal;color:rgb(150, 35, 44);font-style:italic">
-    e</tspan><tspan style="font-size:2em;font-weight:bold;color:steelblue">H</tspan>OMD has been updated to version 4. 
-    With this update, we are transforming the database to a taxonomy based on whole-genome sequence information, 
-    while still including 16S rRNA gene-based taxonomy to retain oral taxa known only from their rRNA genes. 
-    In this major update, we are adding 44 human oral taxa as well as deleting taxa that whole-genome 
-    sequences reveal to be redundant. We present expanded information to indicate which organisms in 
-    eHOMD are primarily oral or nasal and which can be found in the mouth but primarily reside at a different body 
-    site or in the environment. 
-<br><br>
-    
-    eHOMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract. 
-    Of the <span class='underline'><a href='#' onclick="show_specific_ttable('no_dropped')"><%= t_count %> taxa</a></span> 
-    in the database, 
-    <span class='underline'><a href='#' onclick="show_specific_ttable('oral_only')"><%= oral_t_count %></a></span> 
-    are primarily oral and 
-    <span class='underline'><a href='#' onclick="show_specific_ttable('nasal_only')"><%= nasal_t_count %></a></span> 
-    primarily nasal. Of the oral taxa, 49% are named, 21% unnamed but cultivated and 29% are known only as 
-    uncultivated phylotypes. 
-    
-    eHOMD taxonomy provides a provisional naming scheme for the currently unnamed taxa, based on both genomic 
-    and 16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can be directly 
-    linked to a stably named reference scheme.
-</div>
+<body style='background:#e6f1ff;text-align:center;'>
+  <center>
+  <div class='body-div' style='background:white;width:1250px;'>
+    <div style='text-align:left;background-color:#004080;'>
+       <img src="/images/homd_banner_devel.png">
+       <%- include("../partials/navbar2"); %>
+    </div>
+    <div class="shadow introduction bggray rounded"  style='width:85%;text-align:left;padding:15px;margin:20px 0;'>
 
-    </td></tr>
-    <tr><td align="center">
+        <tspan style="font-size:1.5em;font-weight:normal;color:rgb(150, 35, 44);font-style:italic">
+            e</tspan><tspan style="font-size:2em;font-weight:bold;color:steelblue">H</tspan>OMD has been updated to version 4. 
+            With this update, we are transforming the database to a taxonomy based on whole-genome sequence information, 
+            while still including 16S rRNA gene-based taxonomy to retain oral taxa known only from their rRNA genes. 
+            In this major update, we are adding 44 human oral taxa as well as deleting taxa that whole-genome 
+            sequences reveal to be redundant. We present expanded information to indicate which organisms in 
+            eHOMD are primarily oral or nasal and which can be found in the mouth but primarily reside at a different body 
+            site or in the environment. 
+        <br><br>
+            
+            eHOMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract. 
+            Of the <span class='underline'><a href='#' onclick="show_specific_ttable('no_dropped')"><%= t_count %> taxa</a></span> 
+            in the database, 
+            <span class='underline'><a href='#' onclick="show_specific_ttable('oral_only')"><%= oral_t_count %></a></span> 
+            are primarily oral and 
+            <span class='underline'><a href='#' onclick="show_specific_ttable('nasal_only')"><%= nasal_t_count %></a></span> 
+            primarily nasal. Of the oral taxa, 49% are named, 21% unnamed but cultivated and 29% are known only as 
+            uncultivated phylotypes. 
+            
+            eHOMD taxonomy provides a provisional naming scheme for the currently unnamed taxa, based on both genomic 
+            and 16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can be directly 
+            linked to a stably named reference scheme.
+    </div>
     
     
     <table class="maintab hide-for-mobile"  cellspacing="10px" style='width:100%;'>
-            <tr><td colspan="3" style="font-weight: normal;color:rgb(58, 58, 58)">Click on the menu items above or the tabs below for more resources:</td></tr>                 
-            <tr>
-                <td width="360px" align="center">
-                    <table class="taxonomy round">
-                        <tr><td>Taxonomy</td></tr>
-                        <tr><td>
-                            <table class="tabeffect bgnavy">
-                                <tr><td><a href='taxa/tax_table'>Taxon Table</a></td></tr>
-                                <tr><td><a href='taxa/tax_table'><img src="/images/TaxonTable.png" width="320"></a></td></tr>
-                            </table>
-                        </td></tr>
-                        <tr><td>
-                            <table class="tabeffect bgnavy">
-                                <tr><td><a href='taxa/tax_description?otid=666'>Taxon Description</a></td></tr>
-                                <tr><td><a href='taxa/tax_description?otid=666'><img src="/images/image-TaxonDesc50pct.png" width="320"></a></td></tr>
-                            </table>
-                        </td></tr>
-                        <tr><td>
-                            <table class="tabeffect bgnavy">
-                                <tr><td><a href='taxa/ecology_home'>Ecology</a></td></tr>
-                                <tr><td><a href='taxa/ecology_home'><img src="/images/image-Ecology50pct.png" width="320"></a></td></tr>
-                            </table>
-                        </td></tr>
-                        <tr><td>
-                            <table class="tabeffect bgnavy">
-                                <tr><td><a href='taxa/tax_hierarchy'>Dynamic Taxon Hierarchy</a></td></tr>
-                                <tr><td><a href='taxa/tax_hierarchy'><img src="/images/DynamicTree.png" width="320"></a></td></tr>
-                            </table>
-                        </td></tr>
-                    </table>
-                </td>
-
-
-                <td width="360px" align="center">
-                    <table class="genomic round">
-                        <tr><td>Genomic</td></tr>
-                        <tr><td>
-                            <table class="tabeffect bgpink">
-                                <tr><td><a href='genome/genome_table'>Genome Table</a></td></tr>
-                                <tr><td><a href='genome/genome_table'><img src="/images/GenomeTable.png" width="320"></a></td></tr>
-                            </table>
-                        </td></tr>
-                        <tr><td>
-                            <table class="tabeffect bgpink">
-                                <tr><td><a href='genome/jbrowse'>JBrowse Genome Viewer</a></td></tr>
-                                <tr><td><a href='genome/jbrowse'><img src="/images/image-JBrowse50pct.png" width="320"></a></td></tr>
-                            </table>
-                        </td></tr>
-                        <tr><td>
-                            <table class="tabeffect bgpink">
-                                <tr><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg' target='_blank'>Genomic Trees</a></td></tr>
-                                <tr><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg' target='_blank'><img src="/images/PhyloPhlanTreeV11.png" width="320"></a></td></tr>
-                            </table>
-                        </td></tr>
-                        <tr><td>
-                            <table class="tabeffect bgpink">
-                                <tr>
-                                  <!-- <td><a href='/genome/blast_sserver?type=genome'>Genomic BLAST</a></td> -->
-                                  <td><a href="<%= cfg.BLAST_URL_BASE %>/genome_blast/" target="_self" >Genomic BLAST</a></td>
-                                </tr>
-                                <tr>
-                                  <!-- <td><a href='/genome/blast_sserver?type=genome'><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td> -->
-                                  <td><a href="<%= cfg.BLAST_URL_BASE %>/genome_blast/" target="_self" ><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td>
-                                </tr>
-                            </table>
-                        </td></tr>
-                    </table>
-                </td>
-
-
-                <td width="360px" align="center">
-                    <table class="refseq round">
-                        <tr><td>16S rRNA RefSeq</td></tr>
-                        <tr><td>
-                            <table class="tabeffect bggreen">
-                                <!-- <tr><td><a href='/genome/blast_sserver?type=refseq'>BLAST</a></td></tr> -->
-                                <tr>
-                                  <td><a href="<%= cfg.BLAST_URL_BASE %>/refseq_blast/" target="_self" >BLAST</a></td>
-                                </tr>
-                                <tr>
-                                  <!-- <td><a href='/genome/blast_sserver?type=refseq'><img src="/images/image-BLAST-refseq50pct.png" width="320"></a></td> -->
-                                  <td><a href="<%= cfg.BLAST_URL_BASE %>/refseq_blast/" target="_self" ><img src="/images/image-BLAST-refseq50pct.png" width="320"></a></td>
-                                </tr>
-                            </table>
-                        </td></tr>
-                        <tr><td>
-                            <table class="tabeffect bggreen">
-                                <tr><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg' target='_blank'>16S rRNA RefSeq Tree</a></td></tr>
-                                <tr><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg' target='_blank'><img src="/images/RefSeqTreeV16.0.png" width="320"></a></td></tr>
-                            </table>
-                        </td></tr>
-                        <tr><td>
-                            <table class="tabeffect bggreen">
-                                <tr><td><a href='download#refseq'>Download 16S rRNA RefSeq</a></td></tr>
-                                <tr><td><a href='download#refseq'><img src="/images/image-Download-refseq50pct.png" width="320"></a></td></tr>
-                            </table>
-                        </td></tr>
-                    </table>
-                </td>
-
-
-            </tr>
+        <tr><td colspan="3" style="font-weight: normal;color:rgb(58, 58, 58)">Click on the menu items above or the tabs below for more resources:</td></tr>                 
+        <tr>
+            <td width="360px" align="center">
+                <table class="taxonomy round">
+                    <tr><td>Taxonomy</td></tr>
+                    <tr><td>
+                        <table class="tabeffect bgnavy">
+                            <tr><td><a href='taxa/tax_table'>Taxon Table</a></td></tr>
+                            <tr><td><a href='taxa/tax_table'><img src="/images/TaxonTable.png" width="320"></a></td></tr>
+                        </table>
+                    </td></tr>
+                    <tr><td>
+                        <table class="tabeffect bgnavy">
+                            <tr><td><a href='taxa/tax_description?otid=666'>Taxon Description</a></td></tr>
+                            <tr><td><a href='taxa/tax_description?otid=666'><img src="/images/image-TaxonDesc50pct.png" width="320"></a></td></tr>
+                        </table>
+                    </td></tr>
+                    <tr><td>
+                        <table class="tabeffect bgnavy">
+                            <tr><td><a href='taxa/ecology_home'>Ecology</a></td></tr>
+                            <tr><td><a href='taxa/ecology_home'><img src="/images/image-Ecology50pct.png" width="320"></a></td></tr>
+                        </table>
+                    </td></tr>
+                    <tr><td>
+                        <table class="tabeffect bgnavy">
+                            <tr><td><a href='taxa/tax_hierarchy2'>Dynamic Taxon Hierarchy</a></td></tr>
+                            <tr><td><a href='taxa/tax_hierarchy2'><img src="/images/DynamicTree.png" width="320"></a></td></tr>
+                        </table>
+                    </td></tr>
+                </table>
+            </td>
+            <td width="360px" align="center">
+                <table class="genomic round">
+                    <tr><td>Genomic</td></tr>
+                    <tr><td>
+                        <table class="tabeffect bgpink">
+                            <tr><td><a href='genome/genome_table'>Genome Table</a></td></tr>
+                            <tr><td><a href='genome/genome_table'><img src="/images/GenomeTable.png" width="320"></a></td></tr>
+                        </table>
+                    </td></tr>
+                    <tr><td>
+                        <table class="tabeffect bgpink">
+                            <tr><td><a href='genome/jbrowse'>JBrowse Genome Viewer</a></td></tr>
+                            <tr><td><a href='genome/jbrowse'><img src="/images/image-JBrowse50pct.png" width="320"></a></td></tr>
+                        </table>
+                    </td></tr>
+                    <tr><td>
+                        <table class="tabeffect bgpink">
+                            <tr><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg' target='_blank'>Genomic Trees</a></td></tr>
+                            <tr><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg' target='_blank'><img src="/images/PhyloPhlanTreeV11.png" width="320"></a></td></tr>
+                        </table>
+                    </td></tr>
+                    <tr><td>
+                        <table class="tabeffect bgpink">
+                            <tr>
+                              <!-- <td><a href='/genome/blast_sserver?type=genome'>Genomic BLAST</a></td> -->
+                              <td><a href="<%= cfg.BLAST_URL_BASE %>/genome_blast/" target="_self" >Genomic BLAST</a></td>
+                            </tr>
+                            <tr>
+                              <!-- <td><a href='/genome/blast_sserver?type=genome'><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td> -->
+                              <td><a href="<%= cfg.BLAST_URL_BASE %>/genome_blast/" target="_self" ><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td>
+                            </tr>
+                        </table>
+                    </td></tr>
+                </table>
+            </td>
+            <td width="360px" align="center">
+                <table class="refseq round">
+                    <tr><td>16S rRNA RefSeq</td></tr>
+                    <tr><td>
+                        <table class="tabeffect bggreen">
+                            <!-- <tr><td><a href='/genome/blast_sserver?type=refseq'>BLAST</a></td></tr> -->
+                            <tr>
+                              <td><a href="<%= cfg.BLAST_URL_BASE %>/refseq_blast/" target="_self" >BLAST</a></td>
+                            </tr>
+                            <tr>
+                              <!-- <td><a href='/genome/blast_sserver?type=refseq'><img src="/images/image-BLAST-refseq50pct.png" width="320"></a></td> -->
+                              <td><a href="<%= cfg.BLAST_URL_BASE %>/refseq_blast/" target="_self" ><img src="/images/image-BLAST-refseq50pct.png" width="320"></a></td>
+                            </tr>
+                        </table>
+                    </td></tr>
+                    <tr><td>
+                        <table class="tabeffect bggreen">
+                            <tr><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg' target='_blank'>16S rRNA RefSeq Tree</a></td></tr>
+                            <tr><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg' target='_blank'><img src="/images/RefSeqTreeV16.0.png" width="320"></a></td></tr>
+                        </table>
+                    </td></tr>
+                    <tr><td>
+                        <table class="tabeffect bggreen">
+                            <tr><td><a href='download#refseq'>Download 16S rRNA RefSeq</a></td></tr>
+                            <tr><td><a href='download#refseq'><img src="/images/image-Download-refseq50pct.png" width="320"></a></td></tr>
+                        </table>
+                    </td></tr>
+                </table>
+            </td>
+        </tr>
     </table>
-    </td></tr>
 
+    <hr>
+    <%- include('../partials/contributors'); %>
 
-    <tr><td align="center">
-        <br>
-        <hr>
-        <%- include('../partials/contributors'); %>
-        <br>
-        <%- include('../partials/supportedby'); %>
-    </td></tr>  
-
-
-    <tr><td>
-        <hr>
-    </td></tr>
-
-    <tr><td align="center">
-        <table cellspacing="10px" cellpadding="0px">
-            <tr class='home-footer-image'>
-                <td style='padding:5px;'><a href="https://www.nidcr.nih.gov" target="_blank" ><img src="images/nidcr.png" height="50px"></a></td>
-                <td style='padding:5px;'><a href="https://forsyth.org" target="_blank" ><img src="images/ada_forsyth_logo_purple_2309x360.fw.png" height="50px"></a></td>
-                <td style='padding:5px;'><a href="https://mbl.edu" target="_blank" ><img src="images/mbl.png" height="50px"></a></td>
-                <td style='padding:5px;'><a href="https://dental.buffalo.edu" target="_blank" ><img src="images/ub.png" height="50px"></a></td>
-                <td style='padding:5px;'><a href="https://cloud.nih.gov" target="_blank" ><img src="images/strides.png" height="50px"></a></td>
-            </tr>
-        </table>
-    </td></tr>          
-
-    <tr><td align="center">
-        <%- include('../partials/footer'); %>
-    </td></tr>
-
-
-            
-    </table>
+    
+    <div class="table-logo">
+      <div class="column-logo">
+        <div class="row-logo">
+          <a href="https://www.nidcr.nih.gov" target="_blank" ><img src="images/nidcr.png" height="45px"></a>
+        </div>
+      </div>
+      <div class="column-logo">
+        <div class="row-logo">
+          <a href="https://forsyth.org" target="_blank" ><img src="images/ada_forsyth_logo_purple_2309x360.fw.png" height="45px"></a>
+        </div>
+      </div>
+      <div class="column-logo">
+        <div class="row-logo">
+          <a href="https://mbl.edu" target="_blank" ><img src="images/mbl.png" height="45px"></a>
+        </div>
+      </div>
+      <div class="column-logo">
+        <div class="row-logo">
+          <a href="https://dental.buffalo.edu" target="_blank" ><img src="images/ub.png" height="45px"></a>
+        </div>
+      </div>
+      <div class="column-logo">
+        <div class="row-logo">
+          <a href="https://cloud.nih.gov" target="_blank" ><img src="images/strides.png" height="45px"></a>
+        </div>
+      </div>
+    </div>
+        
+   
+        
+        
+        
+ 
 </div>
+</center>
+
+
+
 </body>
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
