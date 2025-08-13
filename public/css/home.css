@@ -1,4 +1,4 @@
-
+/* @import "tailwindcss"; */
 /* 
 @media only screen and (max-width: 600px) {
   body {
@@ -26,145 +26,145 @@
  */
 
 :root {
-		--navy: #1e90ff;
-		--pink: #ff8a8a;
-		--green: #327a32;
-		--orange: rgb(214, 86, 26);
-		--gray: rgb(238, 238, 238);
+        --navy: #1e90ff;
+        --pink: #ff8a8a;
+        --green: #327a32;
+        --orange: rgb(214, 86, 26);
+        --gray: rgb(238, 238, 238);
 }
 body {
-	background-color:#d8e1fc;
+    background-color:#d8e1fc;
 }
 table{
   background-color: white;
 }
 .size08{
-	font-size: 0.8em;
-	padding:0 5px;
-}	
+    font-size: 0.8em;
+    padding:0 5px;
+}   
 .size07{
-	font-size: 0.7em;
+    font-size: 0.7em;
 }
 
 .search{
-	color:#4d7aa7;
+    color:#4d7aa7;
 }
 .search input[type=text]{
-	width:150px;
+    width:150px;
   font-size:15px;
   border:1px solid grey;
   border-radius:3px;
 }
 .search:hover{
-	color:#195897;
-	content: "Type here";
+    color:#195897;
+    content: "Type here";
 }
 .white{
-	color:white;
+    color:white;
 }
 
 .topmenu {
-	font-size:0.8em";
+    font-size:0.8em";
 }
 .topmenu td {
-	color:#ecf3fa;		
-	padding-left:10px;
-	padding-right:10px;
+    color:#ecf3fa;      
+    padding-left:10px;
+    padding-right:10px;
 }
 .topmenu td:hover {
-	background-color: rgb(54, 104, 196);
+    background-color: rgb(54, 104, 196);
 }
 .introduction {
-	font-size:1.2em;
-	border-spacing: 20px 20px;
-	color:rgb(68, 68, 68);
-	line-height: 35px;
-	
+    font-size:1.2em;
+    border-spacing: 20px 20px;
+    color:rgb(68, 68, 68);
+    line-height: 35px;
+    
 }
 .introduction td{
-	padding:20px;
-	
+    padding:20px;
+    
 }
 .introduction td tspan{
-	
+    
 }
 .maintab {
-	padding: 10px;
-	font-size:1.2em;
-	text-align: center;
+    padding: 10px;
+    font-size:1.2em;
+    text-align: center;
 }
 .maintab td{
-	border-spacing: 10px 10px;
-	padding: 5px;
-	font-weight: bold;
-	vertical-align: top;
+    border-spacing: 10px 10px;
+    padding: 5px;
+    font-weight: bold;
+    vertical-align: top;
 }
 .round{
-border-radius: 5px;
+    border-radius: 5px;
 }
 .taxonomy{
-	font-size:1.05em;
-	background-color: #eaf5ff;
-	color: rgb(64, 64, 138);
-	border: 2px solid rgb(108, 108, 197);
-	text-align: center;
+    font-size:1.05em;
+    background-color: #eaf5ff;
+    color: rgb(64, 64, 138);
+    border: 2px solid rgb(108, 108, 197);
+    text-align: center;
 }
 .taxonomy:hover{
-	border: 2px solid rgb(4, 4, 190);	
-	color: rgb(9, 9, 187);		
+    border: 2px solid rgb(4, 4, 190);   
+    color: rgb(9, 9, 187);      
 }
 .genomic{
-	color: rgb(173, 110, 27);
-	border: 2px solid rgb(255, 187, 132);
-	font-size:1.05em;
-	background-color: rgb(250, 222, 200);
-	text-align: center;			
-}	
+    color: rgb(173, 110, 27);
+    border: 2px solid rgb(255, 187, 132);
+    font-size:1.05em;
+    background-color: rgb(250, 222, 200);
+    text-align: center;         
+}   
 .genomic:hover{
-	border: 2px solid rgb(212, 68, 1);		
-	color: rgb(200, 82, 4);	
+    border: 2px solid rgb(212, 68, 1);      
+    color: rgb(200, 82, 4); 
 }
 .refseq{
-	color: rgb(58, 104, 64);
-	border: 2px solid rgb(133, 167, 138);
-	font-size:1.05em;
-	background-color: rgb(229, 252, 235);
-	text-align: center;				
+    color: rgb(58, 104, 64);
+    border: 2px solid rgb(133, 167, 138);
+    font-size:1.05em;
+    background-color: rgb(229, 252, 235);
+    text-align: center;             
 }
 .refseq:hover{
-	border: 2px solid rgb(38, 131, 52);
-	color: rgb(32, 80, 38);
-}	
+    border: 2px solid rgb(38, 131, 52);
+    color: rgb(32, 80, 38);
+}   
 
 .center{
-	text-align: center;
+    text-align: center;
 }
 .tabeffect{
-	opacity:1;
+    opacity:1;
 }
 .tabeffect a{
-	color:black;
+    color:black;
 }
 .tabeffect:hover{
-	opacity: 1;
-	transform:scale(1.2);
-	transition:0.25s;
-	transform-origin:center;
+    opacity: 1;
+    transform:scale(1.2);
+    transition:0.25s;
+    transform-origin:center;
 }
 .tabeffect:hover a{
    color:white;
 }
 .bgnavy{
-	background-color: var(--navy);
+    background-color: var(--navy);
 }
 .bgpink{
-	background-color: var(--orange);
+    background-color: var(--orange);
 }
 .bggreen{
-	background-color: var(--green);
-}		
+    background-color: var(--green);
+}       
 .bggray{
-	background-color: var(--gray);
+    background-color: var(--gray);
 }
 #contributors{
   width:70%;
@@ -182,4 +182,4 @@ border-radius: 5px;
   border:1px solid gray;
   cursor: pointer;
 }
-		
+        
