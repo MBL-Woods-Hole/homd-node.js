@@ -55,13 +55,7 @@ table{
    color:brown;
    
 }
-.container {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-  column-gap: 50px;
-  row-gap: 50px;
-  padding:20px 0;
-}
+
 </style>
 <% sitedata = JSON.parse(data) %>
 <% sitenames = JSON.parse(site_names) %>
@@ -106,41 +100,47 @@ table{
       studies:<br>
       <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>Eren (2014) V1-V3 and V3-V5</a>
       HMP RefSeq (V1-V3 and V3-V5) Data and Dewhirst (unpublished)
-      </small>
-      </center>  
-
-<div class="container">
+    </small>
+    
+<table id='master'><tr>
 
     <% for(s in plot_order){ %>
         <% site = plot_order[s] %>
         <% abunddata = sitedata[site] %>
-
-        <div>
-            <table class='site-table'>
-              <tr class='header'><th colspan='2'><%= sitenames[site] %><span class='all-link'><a href='#' onclick="get_abund_sorted('<%= site %>','<%= rank %>')">(all)</a></span></th></tr>
-              <tr><td><center><%= showrank %></center></td><td class='right-justify'>% Abund</td></tr>
-              <% sum = 0 %>
-              <% for(n in abunddata) { %>
-              
-                <% if(rank === "species" && abunddata[n]["otid"]){ %>
-                   <% link = "/taxa/tax_description?otid=" + abunddata[n]["otid"] %>
-                   <% taxname = "<i>"+abunddata[n]["name"] +"</i>" %>
-                <% }else{ %>
-                    <% link = "/taxa/life?rank=" + rank + "&name=" + abunddata[n]["name"] %>
-                    <% taxname = abunddata[n]["name"] %>
-                <% } %>
-                <tr><td><a href='<%= link %>'><%- taxname %></a></td><td class='right-justify'><%= abunddata[n]['value'] %></td></tr>
-                <% sum += parseFloat(abunddata[n]["value"]) %>
-              <% } %>
-              <tr><td align='right'>Sum:</td><td class='right-justify'><%= sum.toFixed(3) %></td></tr>
-            </table>
-        </div>
-
+        <% cols = 4 %>
+    <% if(s % cols == 0){  %><!-- // modulus/modulo-->
+            </tr><tr>
     <% } %>
-</div>  <!-- end container -->
 
-    
 
+
+  <td align='center'>
+    <table class='site-table'>
+      <tr class='header'><th colspan='2'><%= sitenames[site] %><span class='all-link'><a href='#' onclick="get_abund_sorted('<%= site %>','<%= rank %>')">(all)</a></span></th></tr>
+      <tr><td><center><%= showrank %></center></td><td class='right-justify'>% Abund</td></tr>
+      <% sum = 0 %>
+      <% for(n in abunddata) { %>
+      
+        <% if(rank === "species" && abunddata[n]["otid"]){ %>
+           <% link = "/taxa/tax_description?otid=" + abunddata[n]["otid"] %>
+           <% taxname = "<i>"+abunddata[n]["name"] +"</i>" %>
+        <% }else{ %>
+            <% link = "/taxa/life?rank=" + rank + "&name=" + abunddata[n]["name"] %>
+            <% taxname = abunddata[n]["name"] %>
+        <% } %>
+        <tr><td><a href='<%= link %>'><%- taxname %></a></td><td class='right-justify'><%= abunddata[n]['value'] %></td></tr>
+        <% sum += parseFloat(abunddata[n]["value"]) %>
+      <% } %>
+      <tr><td align='right'>Sum:</td><td class='right-justify'><%= sum.toFixed(3) %></td></tr>
+    </table>
+  </td>
+
+
+<% } %>
+
+
+</table>      
+</center>  
 
   
     </div> <!-- end: page-content -->

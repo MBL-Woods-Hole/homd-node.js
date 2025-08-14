@@ -948,12 +948,12 @@ router.get('/life', function life(req, res) {
   if(tax_name){
     //tax_name = req.query.name.replace(/"/g,'')
   }
-  let image_array =[]
+  let image_array =[],text=''
   if(rank){
      image_array = find_life_images(rank, tax_name)
+     text = get_rank_text(rank,tax_name)
   }
-  
-  let text = get_rank_text(rank,tax_name)
+ 
   //console.log('TEXT',text)
   let taxa_list =[]
   let next_rank,title,show_ranks,rank_id,last_rank,space,childern_ids,html,taxon,rank_display
@@ -983,7 +983,7 @@ router.get('/life', function life(req, res) {
      html += "<a href='ecology?rank=domain&name=Bacteria'>HOMD Abundance</a></span><br>"
 
      html += '</td></tr>'
-     image_array =[{'name':'cellular_organisms.png','text':''}]
+     image_array =[{name:'cellular_organisms.png',text:''}]
   }else {
     console.log('tax_name2',tax_name+'_'+rank)
     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_'+rank]
@@ -1113,6 +1113,7 @@ router.get('/life', function life(req, res) {
       page_title = helpers.capitalizeFirst(rank)
   
   lineage_string = lineage_list[0]
+  
   res.render('pages/taxa/life', {
       title: 'HOMD :: '+page_title, 
       pgname: 'taxon/life', // for AbountThisPage
@@ -1802,7 +1803,7 @@ router.get('/tree_d3', function tree_d3(req, res) {
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 function get_rank_text(rank, tax_name, otid){
-    console.log(rank,tax_name,otid)
+    //console.log('xx',rank,tax_name,otid)
     let text = [false,false]
     if(rank === "genus"){
       if(C.names_w_text.genera.indexOf(tax_name) !== -1){
