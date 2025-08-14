@@ -216,21 +216,6 @@
    overflow:auto;
    
 }
-.table-div {
-    /* https://dev.to/flippedcoding/how-to-make-a-table-without-using-the-html-table-elements-5e11 */
-    display: flex;
-}
-
-.column-div {
-    margin-bottom: 1em;
-    width: 100%;
-}
-
-.row-div {
-    margin: auto;
-    width: 100%;
-    padding:10px;
-}
 </style>
 <%- include('../../partials/header_html'); %>
 <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -270,16 +255,8 @@
 
 <div id='tables'>
 <br><!-- <div id='status'>Preferred Body Site(s): [<%= data_lookup.sites %>]</div> -->
-
-
-<div class="table-div">  <!-- https://dev.to/flippedcoding/how-to-make-a-table-without-using-the-html-table-elements-5e11 -->
-    <div class="column-div">
-         <div class="row-div">
-
-
-
-
-
+<table id='description_tbl' border='1'>
+<tr><td style="width: 500px; vertical-align:top">
   <table id='left-tbl'>
   <tr><td colspan='2'>
         
@@ -491,15 +468,6 @@
   </table>
 <!-- End Left table -->
 
-
-
-</div>  <!-- end row -->
-</div>  <!-- end col -->
-<div class="column-div">
-  <div class="row-div">
-
-
-
 </td><td style="width: 500px; vertical-align:top">
 
 <!-- Start Right table -->
@@ -692,16 +660,9 @@
   
   </table>
 
-
-</div>   <!-- end row-div -->
-</div>  <!-- end column-div -->
-</div>  <!-- end table-div -->
-
-
-
+</td></tr>
+</table>
 </div>
-
-
 
 <center>
 <div id='info-table-div'>

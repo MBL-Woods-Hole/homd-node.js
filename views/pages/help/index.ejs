@@ -34,6 +34,19 @@
 
    
 }
+.container{
+   display: grid;
+   grid-template-columns: auto auto auto;
+   column-gap: 50px;
+   padding:20px 0;
+}
+.container > div {
+  background-color: #f1f1f1;
+  border: 1px solid black;
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
+}
 </style>
 <link rel="stylesheet" href="/css/help.css">
 <%- include('../../partials/header_html'); %>
@@ -43,24 +56,27 @@
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar2'); %>
     
-    <div class='page-content' >
+<div class='page-content' >
               
        <p class='title h3'>HELP CONTENT</p>
       
-<center>
-<div id='search-help'> 
     <center>
-    <form name='search-help-form' method='POST' action='help_search_result'>Search Help Pages:
-         <input type='text' name='input_string' size='30' maxlength='150'>
-         <input type='submit' class='button' value='Go'>
-    </form>
+    <div id='search-help'> 
+        <center>
+        <form name='search-help-form' method='POST' action='help_search_result'>Search Help Pages:
+             <input type='text' name='input_string' size='30' maxlength='150'>
+             <input type='submit' class='button' value='Go'>
+        </form>
+        </center>
+    </div>
     </center>
-</div>
-</center>
-The nature of help pages is that they never seem to be caught up to the latest code that is presented in the website. 
-If you find something that is not helpful or doesn't make sense please <a href='help-page?pagecode=contact'>let us know.</a> 
-<table id='over-table'> 
-  <tr><td valign='top'> 
+    The nature of help pages is that they never seem to be caught up to the latest code that is presented in the website. 
+    If you find something that is not helpful or doesn't make sense please <a href='help-page?pagecode=contact'>let us know.</a> 
+
+
+<div class="container">
+
+  <div>
     <table class='help-table' id='help-left-table'>
         <tr><th>General</th></tr>
         <tr><td><a href='help-page?pagecode=cite'>How to Cite HOMD</a></td></tr>
@@ -73,11 +89,9 @@ If you find something that is not helpful or doesn't make sense please <a href='
         <tr><td><a href='help-page?pagecode=download'>Downloads</a></td></tr>
         <tr><td><a href='help-page?pagecode=announcement'>Announcements</a></td></tr>
         <tr><td><a href='help-page?pagecode=blast/blast'>Blast</a></td></tr>
-        
     </table>
-    
-  </td><td valign='top'> 
-    
+  </div> 
+  <div>
     <table class='help-table' id='help-middle-table'>
         <tr><th colspan='2'>Specific Page Help</th></tr>
         <tr><td rowspan='6'>Taxonomy:</td>
@@ -99,12 +113,9 @@ If you find something that is not helpful or doesn't make sense please <a href='
         <tr><td><a href='help-page?pagecode=genome/description'>Genome Description</a></td></tr>
         <tr><td><a href='help-page?pagecode=genome/jbrowse'>JBrowse</a></td></tr>
         <tr><td><a href='help-page?pagecode=genome/explorer'>Genome Explorer and Annotations</a></td></tr>
-        
-        
     </table>
-    
-  </td><td valign='top'> 
-   
+  </div> 
+  <div>
     <table class='help-table' id='help-right-table'>
         <tr><th>Versioning History</th></tr>
         <tr><td><a href='help-page?pagecode=taxon/taxon_version'>Taxonomy Version History</a></td></tr>
@@ -112,9 +123,8 @@ If you find something that is not helpful or doesn't make sense please <a href='
         <tr><td><a href='help-page?pagecode=genome/genome_version'>Reference Genome Version History</a></td></tr>
         <!-- <tr><td><a href='help-page?pagecode=database_update'>Database Updates</a></td></tr> -->
     </table>
-    
-  </td></tr>  
-    </table>
+  </div> 
+</div>  <!-- end container -->
     
     
     

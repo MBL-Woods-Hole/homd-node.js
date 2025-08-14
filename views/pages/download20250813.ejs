@@ -119,21 +119,30 @@ width:180px;
   <p class='title h3'>Download HOMD Data</p>
     
 <center>
-<a name='taxon'></a>
+
+
+<a name='taxon'>
 <div id='taxon' class='dnld-block'>
-  
   <center>
-  <div class='subtitle'>
-    Taxonomic Data::Batch Downloads
-  </div>
-  
+  <div class='subtitle'>Taxonomic Data::Batch Downloads</div>
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
     <tr><td>Taxon Table <a href='/taxa/tax_table'>[page]</a></td>
+      
       <td><a href='/download/dld_taxtable_all/browser'>Tab Delimited Text<br>(View in browser)</a></td>
       <td><a href='/download/dld_taxtable_all/text'>Tab Delimited Text<br>(Save to file)</a></td>
       <td><a href='/download/dld_taxtable_all/excel'>MS Excel Format<br>(Save to file)</a></td>
+      
     </tr>
+ <!-- 
+   
+    <tr><td>Taxon Table for Legacy Comparison</td>
+      <td><a href='/download/dld_table_for_legacy_comparison'>Tab Delimited Text<br>(View in browser)</a></td>
+      <td><a href='/download/dld_table_for_legacy_comparison'>Tab Delimited Text<br>(Save to file)</a></td>
+      <td><a href='/download/dld_table_for_legacy_comparison'>MS Excel Format<br>(Save to file)</a></td>
+    </tr>
+  
+ -->  
     <tr>
       <td>Taxonomic Hierarchy <a href='/taxa/tax_hierarchy'>[page]</a></td>
       <td><a href='/download/dld_tax/browser/hierarchy'>Tab Delimited Text<br>(View in browser)</a></td>
@@ -155,15 +164,12 @@ width:180px;
   </table>
   </center>
 </div>
-
+</a>
 <hr>
-<a name='abundance'></a>
-
+<a name='abundance'>
 <div id='abundance' class='dnld-block'>
   <center>
-  <div class='subtitle'>
-    Abundance Data::Batch Downloads <a href='/taxa/ecology_home'>[Abundance Page]</a>
-  </div>
+  <div class='subtitle'>Abundance Data::Batch Downloads <a href='/taxa/ecology_home'>[Abundance Page]</a></div>
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th><th></th></tr>
     <tr><td>Eren (v1v3)</td><td><a href='/download/dld_taxabund/browser/erenv1v3'>Tab Delimited Text<br>(View in browser)</a></td>
@@ -193,18 +199,16 @@ width:180px;
       <td><a href='/download/dld_taxabund/excel/hmprefseqv3v5'>MS Excel Format<br>(Save to file)</a></td>
       <td><a href='/download/dld_taxabund/samples_file/hmprefseqv3v5'>Taxonomy Samples Matrix Files<br>(Tab Delimited Text: *.tar.gz)</a></td>
     </tr>
+   
   </table>
   </center>
 </div>
-
+</a>
 <hr>
-<a name='genome'></a>
-
+<a name='genome'>
 <div id='genome' class='dnld-block'>
   <center>
-  <div class='subtitle'>
-    Genomic Meta Information::Batch Downloads
-  </div>
+  <div class='subtitle'>Genomic Meta Information::Batch Downloads</div>
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
     <tr><td>All Genomic Metadata</td>
@@ -212,6 +216,9 @@ width:180px;
     <td><a href='/download/dld_genome_table_all/text'>Tab Delimited Text<br>(Save to file)</a></td>
     <td><a href='/download/dld_genome_table_all/excel'>MS Excel Format<br>(Save to file)</a></td>
     </tr>
+    
+    
+    
   </table>
   <table class='download-table'>
    <tr><td>GCA GTDB Taxonomy (V11.02) (csv)</td><td><a href='/download/dld_static_file/GTDB_taxonomy20250406.csv'>[download]</a></td>
@@ -219,18 +226,16 @@ width:180px;
    <tr><td>NCBI Genome Annotations</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/genomes/NCBI/current'>[FTP Site for download]</a></td></tr>
    <tr><td>PROKKA Genome Annotations</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/genomes/PROKKA/current'>[FTP Site for download]</a></td></tr>
    <tr><td>Genomic Trees: <br>Conserved Protein, Ribosomal Protein and 16S rRNA</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/'>[FTP Site for download]</a></td></tr>
+   
   </table>
   </center>
 </div>
-
+</a>
 <hr>
-<a name='phylo'></a>
-
+<a name='phylo'>
 <div id='phylo' class='dnld-block'>
   <center>
-  <div class='subtitle'>
-    Phylogenetics
-  </div>
+  <div class='subtitle'>Phylogenetics</div>
   <table class='download-table' >
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
     <tr><td>Go To Current &nbsp;&nbsp;&nbsp;[<a href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/refseq/current">RefSeq</a>] 
@@ -259,31 +264,34 @@ width:180px;
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.tre'>newick</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table</a></td>
     </tr>
+  
   </table>
   </center>
 </div>
+</a>
+
 
 <hr>
-<a name='peptide'></a>
-
+<a name='peptide'>
 <div id='peptide' class='dnld-block'>
   <center>
-  <div class='subtitle'>
-    Protein/Peptide
-  </div>
+  <div class='subtitle'>Protein/Peptide</div>
   <table class='download-table' >
     <tr><th class='header'>Study-ID</th><th class='header'>Study Name</th><th class='header' colspan='3'>Formats</th></tr>
     <tr><td>7</td><td>Persistent Immune and Clotting Dysfunction Detected in Saliva and Blood Plasma after COVID-19</td>
     <td><a href='/download/dld_peptide_table_all/7'> Download CSV File</a></td>
+     
     </tr>
+    
+  
   </table>
   </center>
 </div>
-
+</a>
 <!-- 
 
 <hr>
-<a name='phage'></a>
+<a name='phage'>
 <div id='phage' class='dnld-block'>
   <center>
   <div class='subtitle'>Phage Data::Batch Downloads</div>
@@ -298,17 +306,15 @@ width:180px;
   </table>
   </center>
 </div>
-
+</a>
  -->
 
 <hr>
-<a name='refseq'></a>
-
+<a name='refseq'>
 <div id='refseq' class='dnld-block'>
-  <div class='subtitle'>
-    Download HOMD 16S rRNA Gene Sequences
-  </div>
-  <div class='refseq-text'>
+
+  <div class='subtitle'>Download HOMD 16S rRNA Gene Sequences</div>
+  <div class='refseq-text'>    
   HOMD provides two different sets of 16S rRNA Gene Reference Sequence (RefSeq) for download and BLAST search:
   <br><br>
   <pre>
@@ -324,24 +330,31 @@ width:180px;
   In addition, the entire collection of all cloned sequences (clonal collection) upon which the Refseq was derived from, is also provided for download on this page and on the <a href='<%= cfg.HOMD_URL_BASE %>/ftp/'>HOMD FTP site</a>.
   </div>
 
-  <div id='download-refseq-table-div'>
+<div id='download-refseq-table-div'>
     <small>[<a href='/help/help-page?pagecode=refseq/refseq_version'>View Version History</a>]</small>
+    
     
     <table id='download-refseq-table' class='download-table' border='1'>
     <tr><th>Date</th>  <th>Version Name</th>  <th></th> </tr>
+    
     <tr class='download-refseq-title' ><td class='download-refseq-title' colspan='2'></a>HOMD 16S rRNA RefSeq *</td><td><span class='rtclk'>Right-click to download<br>or click to open</span></td> </tr>
+    
     <tr><td>2025-07-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.02/HOMD_16S_rRNA_RefSeq_V16.02_full.fasta' >eHOMD 16S rRNA RefSeq Version 16.02</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.02/HOMD_16S_rRNA_RefSeq_V16.02_full.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
     </tr>
     <tr><td>2025-04-25</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0_full.fasta' >eHOMD 16S rRNA RefSeq Version 16.0</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0_full.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
     </tr>
+    
+    
     <tr><td>2023-04-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.fasta' >eHOMD 16S rRNA RefSeq Version 15.23 (Starts from position 28)</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
     </tr>
     <tr><td>2023-04-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.p9.fasta' >eHOMD 16S rRNA RefSeq Version 15.23 (Starts from position 9)</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.p9.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
     </tr>
+    
+    
     <tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.fasta' >eHOMD 16S rRNA RefSeq Version 15.22 (Starts from position 28)</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.22/HOMD_16S_rRNA_RefSeq_V15.22.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td>
     </tr>
@@ -400,10 +413,14 @@ width:180px;
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.02/HOMD_16S_rRNA_RefSeq_V16.02.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
     <tr><td>2025-07-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.02/HOMD_16S_rRNA_RefSeq_V16.02.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.02 Taxonomy File for QIIME</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.02/HOMD_16S_rRNA_RefSeq_V16.01.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+    
+    
     <tr><td>2025-03-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.0 Taxonomy File for MOTHUR</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
     <tr><td>2025-03-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.0 Taxonomy File for QIIME</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+    
+    
     <tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.aligned.fasta'>eHOMD 16S rRNA RefSeq Version 15.23 Aligned FASTA File</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.aligned.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
     <tr><td>2021-02-09</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V15.23/HOMD_16S_rRNA_RefSeq_V15.23.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version 15.23 Taxonomy File for MOTHUR</a></td>
@@ -444,24 +461,26 @@ width:180px;
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.fasta' ><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
     <tr><td>2014-09-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'>HOMD 16S rRNA RefSeq Version 13.2 Taxonomy File for mothur</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+    
     </table>
       
+      
     <div id='table-note'> 
-      * These sequences are corrected consensus sequences. Many have been corrected and extended based on alignment with other sequences for that taxon and Ns and indels removed. Therefore, for many sequences, there will be differences between the Reference Sequence and the GenBank sequence listed in the header information. 
-      We have not yet updated our own GenBank sequences, and can not update those from other depositors. We believe these are currently the best reference sequences available, and for the purposes of BLAST analysis, have the advantage of being of a uniform length.  
+    * These sequences are corrected consensus sequences. Many have been corrected and extended based on alignment with other sequences for that taxon and Ns and indels removed. Therefore, for many sequences, there will be differences between the Reference Sequence and the GenBank sequence listed in the header information. 
+    We have not yet updated our own GenBank sequences, and can not update those from other depositors. We believe these are currently the best reference sequences available, and for the purposes of BLAST analysis, have the advantage of being of a uniform length.  
     </div>
 </div>
 </div>
+</a>
+
 
 <hr>
-<a name='schema'></a>
-
+<a name='schema'>
 <div id='schema' class='dnld-block'>
   <center>
-  <div class='subtitle'>
-    HOMD Database Schema (updated 2022-06-01)
-  </div>
+  <div class='subtitle'>HOMD Database Schema (updated 2022-06-01)</div>
   <table class='download-table'>
+    
     <tr>
       <td>
          <a href='images/HOMD_SQL_Schema.pdf' target='_blank'>Open Schema Diagram (pdf)</a>
@@ -469,17 +488,20 @@ width:180px;
     </tr><tr>
       <td>
       <a href='homd-schema.sql' target='_blank'>Download Schema</a> (mysqldump --no-data)
+
       </td>
      </tr> 
   </table>
-  </center>
-</div>
+  
 
-</div> <!-- end: page-content -->
+  </center>
+</div
+</a>
+    </div> <!-- end: page-content -->
     
-<div id='footer'>
-    <%- include('../partials/footer'); %>
-</div>
+    <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
        
 </body>
 

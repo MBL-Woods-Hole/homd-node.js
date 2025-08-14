@@ -91,22 +91,6 @@
    padding:1px;
    margin:1px;
 }
-.table-div {
-    display: flex;
-}
-
-.column-div {
-    margin-bottom: 1em;
-    width: 100%;
-}
-
-.row-div {
-    border: 1px black solid;
-    
-    margin: auto;
-    width: 70%;
-}
-
 </style>
 <%- include('../../partials/header_html'); %>
 <% ginfo = JSON.parse(data1) %>
@@ -149,16 +133,13 @@
      <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA Annotation</a>
      <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI Annotation</a>
     </div>
-<div id='table_div' style='height:1800px;'>
+    <div id='table_div' >                       
 
-
-<div class="table-div">  <!-- https://dev.to/flippedcoding/how-to-make-a-table-without-using-the-html-table-elements-5e11 -->
-    <div class="column-div">
-         <div class="row-div">
-
+<table id='outer_genome_table' >
+<tr><td>
 <table id='gnomdesc-table-chars' class="table gnomdesc-table" border='0' >
-    <tr class="header" ><th style='background:#9fbfb3;' colspan='2'>Genome Characteristics</th></tr>
-    <tr class="header" ><th class="gt-header">Fields</th><th>Values</th></tr>
+    <tr class="header" ><th colspan='2'>Genome Characteristics</th></tr>
+    <tr class="header" ><th>Fields</th><th>Values</th></tr>
     <tr class=""><td valign="center" class='field'>HOMD Genome-ID</td><td class='value'><span class='inner-value'><%= ginfo.gid %></span></td></tr>
     <tr class=""><td valign="center" class='field'>HOMD Taxon-ID</td><td class='value'><span class='inner-value'>
         <a class='link' href='/taxa/tax_description?otid=<%= ginfo.otid %>'><%= taxidfullnameplus %></a>
@@ -290,14 +271,10 @@
     </tr>
     
 </table>
-
-</div>
-<div class="row-div">
-
-
+</td>  </tr><tr>  <td>
 <table id='gnomdesc-table-ncbi' class="table gnomdesc-table" border='0' >
 
-    <tr class="header" ><th style='background:#9fbfb3;' colspan='2'>NCBI Genome Metadata</th class='value'></tr>
+    <tr class="header" ><th colspan='2'>NCBI Genome Metadata</th class='value'></tr>
     <tr class="header" ><th>Fields</th><th>Values</th></tr>
     <tr class=""><td valign="center" class='field'>Genome Assembly Name</td><td class='value'><span class='inner-value'><%= ginfo.assembly_name %></span></td></tr>
     <tr class=""><td valign="center" class='field'>GenBank Assembly Accession</td>
@@ -349,11 +326,8 @@
     
     
 </table>
-
-
-</div>  <!-- End Row -->
-</div>  <!-- End Column -->
-</div>  <!-- Outer table-div -->
+</td></tr>
+</table>  <!-- Outer table -->
 
 <% } %>
 </div>
