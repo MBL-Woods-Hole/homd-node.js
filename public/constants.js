@@ -345,7 +345,7 @@ constants.site_lookup_fn      = 'homdData-TaxonSiteLookup.json'
 constants.image_location_locfn     = 'ImageLocation_loc.js'
 constants.image_location_taxfn     = 'ImageLocation_tax.js'
 //constants.abundance_lookup_fn      = 'homdData-Abundance.json'
-constants.jmw_image_credit = "Jessica Mark Welch, ADA Forsyth Institute, www.homd.org"
+
 constants.hires_images = {
    "Capno_256x256.png": "Capnocytophaga_HighRes.png",
    "Coryne_matruch_256x256.png": "Coryne_matruch_HighRes.png",

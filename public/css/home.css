@@ -108,6 +108,7 @@ table{
     color: rgb(64, 64, 138);
     border: 2px solid rgb(108, 108, 197);
     text-align: center;
+    padding:20px;
 }
 .taxonomy:hover{
     border: 2px solid rgb(4, 4, 190);   
