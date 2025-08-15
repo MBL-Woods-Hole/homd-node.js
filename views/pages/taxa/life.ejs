@@ -139,8 +139,8 @@
    <br>
    
     <table id='image-table'>
-        <tr><td valign='top'><img id='img' src='/images/life-images/<%= images[0].name %>' width='250'  alt='<%= tax_name %> Image'  \><br>
-        </td><td valign='top'><small><%- images[0].text %></small>
+        <tr><td valign='top'><img title='<%= images[0].title %>' id='img' src='/images/life-images/<%= images[0].name %>' width='250'  alt='<%= tax_name %> Image'  \><br>
+        <small><%- images[0].text %></small>
         </td></tr>
     </table>
    </div>
@@ -160,8 +160,8 @@
     <% if(images.length === 1 ) { %>
       <div style=''>
         <table id='image-table'>
-        <tr><td valign='top'><img id='img' src='/images/life-images/<%= images[0].name %>' width='250'  alt='<%= tax_name %> Image'  \><br>
-        </td><td valign='top'><small><%- images[0].text %></small>
+        <tr><td valign='top'><img title='<%= images[0].title %>' id='img' src='/images/life-images/<%= images[0].name %>' width='250'  alt='<%= tax_name %> Image'  \><br>
+        <small><%- images[0].text %></small>
         </td></tr>
         </table>
       </div>
@@ -175,7 +175,7 @@
           <td>
           <% } %>
           <div>
-          <img id='img' src='/images/life-images/<%= images[n].name %>' width='250'  alt=''  \><br>
+          <img title='<%= images[n].title %>' id='img' src='/images/life-images/<%= images[n].name %>' width='250'  alt=''  \><br>
           <small><%- images[n].text %></small>
           </div>
           <% if(n==0 || n===2){ %>

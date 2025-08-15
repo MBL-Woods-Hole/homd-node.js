@@ -5,6 +5,7 @@ const CFG   = require(app_root + '/config/config');
 const fs       = require('fs-extra');
 // const url = require('url');
 const path     = require('path');
+const { title } = require('process');
 const C     = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
 const helpers_taxa = require(app_root + '/routes/helpers/helpers_taxa');
@@ -951,7 +952,7 @@ router.get('/life', function life(req, res) {
   let image_array =[],text=''
   if(rank){
      image_array = find_life_images(rank, tax_name)
-     text = get_rank_text(rank,tax_name)
+     text = get_rank_text(rank, tax_name)
   }
  
   //console.log('TEXT',text)
@@ -2142,6 +2143,7 @@ function find_otid_images(rank, otid) {
           image_list.push({
               name: path.join(rank, eval(img_obj.filename1)),
               text: eval(img_obj.text1),
+              title: eval(img_obj.title1),
               hires: hr
               })
       }
@@ -2154,6 +2156,7 @@ function find_otid_images(rank, otid) {
           image_list.push({
               name: path.join(rank, eval(C.images_tax.species[otid].filename2)),
               text: eval(C.images_tax.species[otid].text2),
+              title: eval(C.images_tax.species[otid].title2),
               hires: hr
               })
       }
@@ -2166,6 +2169,7 @@ function find_otid_images(rank, otid) {
           image_list.push({
               name: path.join(rank, eval(C.images_tax.species[otid].filename3)),
               text: eval(C.images_tax.species[otid].text3),
+              title: eval(C.images_tax.species[otid].title3),
               hires: hr
               })
       }
@@ -2178,6 +2182,7 @@ function find_otid_images(rank, otid) {
           image_list.push({
               name: path.join(rank, eval(C.images_tax.species[otid].filename4)),
               text: eval(C.images_tax.species[otid].text4),
+              title: eval(C.images_tax.species[otid].title4),
               hires: hr
               })
       }
@@ -2195,19 +2200,35 @@ function find_life_images(rank, tax_name) {
   //console.log(rank, tax_name)
   if(C.images_tax[rank].hasOwnProperty(tax_name)){
       if(C.images_tax[rank][tax_name].hasOwnProperty('filename1')){
-         image_list.push( {name: path.join(rank, eval(C.images_tax[rank][tax_name].filename1)), text: eval( C.images_tax[rank][tax_name].text1 )})
+         image_list.push( {
+          name: path.join(rank, eval(C.images_tax[rank][tax_name].filename1)), 
+          text: eval( C.images_tax[rank][tax_name].text1 ),
+          title: eval( C.images_tax[rank][tax_name].title1 )
+        })
      }
      if(C.images_tax[rank][tax_name].hasOwnProperty('filename2')){
-         image_list.push({name: path.join(rank,eval(C.images_tax[rank][tax_name].filename2)),text:eval(C.images_tax[rank][tax_name].text2)})
+         image_list.push({
+          name: path.join(rank,eval(C.images_tax[rank][tax_name].filename2)),
+          text:eval(C.images_tax[rank][tax_name].text2),
+          title: eval( C.images_tax[rank][tax_name].title2 )
+        })
      }
      if(C.images_tax[rank][tax_name].hasOwnProperty('filename3')){
-          image_list.push({name: path.join(rank,eval(C.images_tax[rank][tax_name].filename3)),text:eval(C.images_tax[rank][tax_name].text3)})
+          image_list.push({
+            name: path.join(rank,eval(C.images_tax[rank][tax_name].filename3)),
+            text:eval(C.images_tax[rank][tax_name].text3),
+            title: eval( C.images_tax[rank][tax_name].title3 )
+          })
       }
       if(C.images_tax[rank][tax_name].hasOwnProperty('filename4')){
-          image_list.push({name: path.join(rank,eval(C.images_tax[rank][tax_name].filename4)),text:eval(C.images_tax[rank][tax_name].text4)})
+          image_list.push({
+            name: path.join(rank,eval(C.images_tax[rank][tax_name].filename4)),
+            text:eval(C.images_tax[rank][tax_name].text4),
+            title: eval( C.images_tax[rank][tax_name].title4 )
+          })
       }
   }
-  
+  console.log('ImList',image_list)
   return image_list
 }       
 

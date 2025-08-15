@@ -68,12 +68,21 @@
             and 16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can be directly 
             linked to a stably named reference scheme.
     </div>
+    <style>
+    .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+    }
+    .container div{
+        padding:20px;
+    }
+    </style>
     
-    
-    <table class="maintab hide-for-mobile"  cellspacing="10px" style='width:100%;'>
-        <tr><td colspan="3" style="font-weight: normal;color:rgb(58, 58, 58)">Click on the menu items above or the tabs below for more resources:</td></tr>                 
-        <tr>
-            <td width="360px" align="center">
+    <div class="container">
+        <div class="column">
+           
+
                 <table class="taxonomy round">
                     <tr><td>Taxonomy</td></tr>
                     <tr><td>
@@ -96,16 +105,13 @@
                     </td></tr>
                     <tr><td>
                         <table class="tabeffect bgnavy">
-
                             <tr><td><a href='taxa/tax_hierarchy2'>Dynamic Taxon Hierarchy</a></td></tr>
                             <tr><td><a href='taxa/tax_hierarchy2'><img src="/images/DynamicTree.png" width="320"></a></td></tr>
-
                         </table>
                     </td></tr>
-                </table>
-            </td>
-
-            <td width="360px" align="center">
+                </table>  
+        </div>
+        <div class="column">
                 <table class="genomic round">
                     <tr><td>Genomic</td></tr>
                     <tr><td>
@@ -139,9 +145,10 @@
                         </table>
                     </td></tr>
                 </table>
-            </td>
 
-            <td width="360px" align="center">
+        </div>
+        <div class="column">
+
                 <table class="refseq round">
                     <tr><td>16S rRNA RefSeq</td></tr>
                     <tr><td>
@@ -169,9 +176,9 @@
                         </table>
                     </td></tr>
                 </table>
-            </td>
-        </tr>
-    </table>
+
+        </div>
+    </div>
 
     <hr>
     <%- include('../partials/contributors'); %>
