@@ -106,10 +106,10 @@
 
   .row-div {
     border: 1px black solid;
+
     margin: auto;
     width: 70%;
   }
-
 </style>
 <%- include('../../partials/header_html'); %>
   <% ginfo=JSON.parse(data1) %>
@@ -170,7 +170,7 @@
                                     <div class="column-div">
                                       <div class="row-div">
 
-                                        <table id='gnomdesc-table-chars' class="table gnomdesc-table">
+                                        <table id='gnomdesc-table-chars' class="table gnomdesc-table" border='0'>
                                           <tr class="header">
                                             <th style='background:#9fbfb3;' colspan='2'>Genome Characteristics</th>
                                           </tr>
@@ -178,13 +178,13 @@
                                             <th class="gt-header">Fields</th>
                                             <th>Values</th>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>HOMD Genome-ID</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.gid %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>HOMD Taxon-ID</td>
                                             <td class='value'><span class='inner-value'>
                                                 <a class='link' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>
@@ -194,7 +194,7 @@
                                             </td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Species Name (in use by HOMD)</td>
                                             <td class='value'><span class='inner-value'><i>
                                                   <%= ginfo.genus %>
@@ -202,46 +202,43 @@
                                                 </i></span>
                                             </td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Organism Name (as deposited)</td>
                                             <td class='value'><span class='inner-value'><i>
                                                   <%= ginfo.organism %>
                                                 </i></span>
                                             </td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Strain or Isolate</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.strain %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>GTDB Taxonomy</td>
                                             <td class='value'><span class='inner-value'><%- ginfo.GTDB_taxonomy
                                                   %></span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Sequencing Technology</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.seqtech %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Genome Coverage</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.coverage %>
                                               </span></td>
                                           </tr>
-                                          
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Contigs</td>
                                             <td class='value'><span class='inner-value'>
                                                 <% if(contigs.length==0){ %>
                                                   <%= ginfo.contigs %> No Contigs Found
                                                     (localhost?)<!-- localhost only -->
                                                     <% } else if(contigs.length==1){ %>
-                                                      
-                                                      
                                                       <table class='contig-table' border='0'>
                                                         <tr>
                                                           <td>
@@ -254,20 +251,17 @@
                                                             <small>
                                                               <li><span class='link'>[<a href='#'
                                                                     onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc_single')">Open
-                                                                    in Genome Viewer</a>]</span></li>
+                                                                    in Genome Viewer</a>]<span></li>
                                                               <li><span class='link'>[<a href='#'
                                                                     onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[0].contig %>','single')">Show
-                                                                    Sequence</a>]</span></li>
+                                                                    Sequence</a>]<span></li>
                                                               <li><span class='link'>[<a href='#'
                                                                     onclick="open_ncbi('single')">Linkout to
-                                                                    NCBI</a>]</span></li>
+                                                                    NCBI</a>]<span></li>
                                                             </small>
                                                           </td>
                                                         </tr>
                                                       </table>
-                                                      
-                                                      
-                                                      
                                                       <% }else{ %>
 
                                                         <table class='contig-table' border='0'>
@@ -288,42 +282,41 @@
                                                               <small>
                                                                 <li><span class='link'>[<a href='#'
                                                                       onclick="open_jbrowse('<%= ginfo.gid %>','genome_desc')">Open
-                                                                      in Genome Viewer</a>]</span></li>
+                                                                      in Genome Viewer</a>]<span></li>
                                                                 <li><span class='link'>[<a href='#'
                                                                       onclick="get_contig_seq('<%= ginfo.gid %>','<%= contigs[0].contig %>','select')">Show
-                                                                      Sequence</a>]</span></li>
+                                                                      Sequence</a>]<span></li>
                                                                 <li><span class='link'>[<a href='#'
                                                                       onclick="open_ncbi('select')">Linkout to
-                                                                      NCBI</a>]</span></li>
+                                                                      NCBI</a>]<span></li>
                                                               </small>
                                                             </td>
                                                           </tr>
                                                         </table>
 
                                                         <% } %>
-                                              </span>
-                                              </td>
+                                              </span></td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Total Sequence Length</td>
                                             <td class='value'><span class='inner-value'>
-                                                <%= ginfo.combined_size %> (bp)</span></td>
+                                                <%= ginfo.combined_size %> (bp)</td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>GC Percentage</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.GC %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>MAG</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.MAG %>
                                               </span></td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <% url_sub=ginfo.url.replace('ftp','https') %>
                                               <td class='field'>NCBI FTP URL</td>
                                               <td class='value'><span class='inner-value'>
@@ -333,81 +326,81 @@
                                               </td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>CDS</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.prokka_CDS %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Genes</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.prokka_gene %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>mRNA</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.prokka_mRNA %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>misc RNA</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.prokka_misc_RNA %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>rRNA</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.prokka_rRNA %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>tRNA</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.prokka_tRNA %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>tmRNA</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.prokka_tmRNA %>
                                               </span></td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>ANI (Average Nucluotide Identity)</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.ANI %> %
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>CheckM Completeness</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.checkM_completeness %> %
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>CheckM Contamination</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.checkM_contamination %> %
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>CheckM2 Completeness</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.checkM2_completeness %> %
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>CheckM2 Contamination</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.checkM2_contamination %> %
                                               </span></td>
                                           </tr>
                                           <% if(checkm_obj.comp_dif>= 20){ %>
-                                            <tr>
+                                            <tr class="">
                                               <td valign="center" class='field' style='color:red;'>Difference
                                                 between<br>CheckM and CheckM2<br>Completeness</td>
                                               <td class='value'><span class='inner-value' style='color:red;'>
@@ -417,7 +410,7 @@
                                             <% } %>
 
 
-                                              <tr>
+                                              <tr class="">
                                                 <td valign="center" class='field'>CRISPR-cas</td>
                                                 <% if(crispr===0){ %>
                                                   <td class='value'><span class='inner-value'><small>No Available
@@ -444,7 +437,7 @@
                                                       </span></td>
                                                     <% } %>
                                               </tr>
-                                              <tr>
+                                              <tr class="">
                                                 <td valign="center" class='field'>Pangenomes (Beta)</td>
                                                 <td class='value'>
                                                   <% if(ginfo.pangenomes.length==1 && ginfo.pangenomes[0]){ %>
@@ -488,19 +481,20 @@
                                         <table id='gnomdesc-table-ncbi' class="table gnomdesc-table" border='0'>
 
                                           <tr class="header">
-                                            <th style='background:#9fbfb3;' colspan='2'>NCBI Genome Metadata</th>
+                                            <th style='background:#9fbfb3;' colspan='2'>NCBI Genome Metadata</th
+                                              class='value'>
                                           </tr>
                                           <tr class="header">
                                             <th>Fields</th>
                                             <th>Values</th>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Genome Assembly Name</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.assembly_name %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>GenBank Assembly Accession</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.gid %>
@@ -514,7 +508,7 @@
                                               </span></td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>RefSeq Assembly Accession</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.refseq_assembly %>
@@ -524,7 +518,7 @@
                                                       target='_blank' rel="noopener noreferrer">NCBI</a>]</span>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>BioSample</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.biosample %>
@@ -533,7 +527,7 @@
                                                       target='_blank' rel="noopener noreferrer">NCBI</a>]</span>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>BioProject</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.bioproject %>
@@ -542,51 +536,49 @@
                                                       target='_blank' rel="noopener noreferrer">NCBI</a>]</span>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Submitter</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.submitter %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Submission Date</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.submission_date %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Assembly Method</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.method %>
                                               </span></td>
                                           </tr>
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Assembly Level</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.assembly_level %>
                                               </span></td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Sequencing Status</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.status %>
                                               </span></td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field' title='Whole Genome Sequence'>WGS
                                               Project</td>
                                             <td class='value'><span class='inner-value'>
                                                 <a class='link'
                                                   href='https://www.ncbi.nlm.nih.gov/Traces/wgs/<%= ginfo.wgs %>'
                                                   target='_blank' rel="noopener noreferrer">
-                                                  <%= ginfo.WGS %></a></span>
+                                                  <%= ginfo.WGS %></span></a>
                                             </td>
                                           </tr>
-                                          
-                                          
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>NCBI TaxID</td>
                                             <td class='value'>
                                               <% if(ginfo.taxid){ %>
@@ -602,14 +594,14 @@
                                             </td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Isolation Source</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.isolation_source %>
                                               </span></td>
                                           </tr>
 
-                                          <tr>
+                                          <tr class="">
                                             <td valign="center" class='field'>Geo Location</td>
                                             <td class='value'><span class='inner-value'>
                                                 <%= ginfo.geo_loc_name %>
@@ -657,5 +649,4 @@
                     $("#selContig").select2();
 
                   });
-                   // $("tr:odd").css({ "background-color":"red", "color":"#fff"});
                 </script>
