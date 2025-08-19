@@ -186,7 +186,7 @@ function get_contig_seq(gid, mid, type) {
     args.gid = gid.trim()
     args.mid = mid.trim()
     args.contig = contig.trim()
-    defline = '>'+gid+' | '+contig
+    defline = '>'+args.gid+' | '+args.contig
     var win = window.open("Contig Sequence", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=yes");
     var doc = win.document;
     doc.open("text/html");
