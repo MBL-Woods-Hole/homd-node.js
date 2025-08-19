@@ -174,13 +174,13 @@ function get_contig_seq(gid, mid, type) {
     //}else{
     
     if(type === 'single'){
-        contig = document.getElementById("select-contig").innerHTML.split('|')[0]
+        contig = document.getElementById("select-contig").innerHTML
     }else{
        contig = document.getElementById("select-contig").value.split('|')[0]
     }
     console.log('value',document.getElementById("select-contig").innerHTML)
     //}
-    console.log('contig',contig)
+    //console.log('contig',contig)
     args={}
     args.gid = gid
     args.mid = mid
