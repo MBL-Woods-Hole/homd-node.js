@@ -335,6 +335,7 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
     //console.log('filter',filter)
     
   }
+  //console.log('YYYfilter',filter)
   let sendList = helpers_genomes.apply_gtable_filter(req, filter)
  //  if(req.session.hasOwnProperty('gtable_filter')){
 //      console.log('req.session.gtable_filter',req.session.gtable_filter)

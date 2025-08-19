@@ -110,10 +110,12 @@ router.get('/genome_table', function genome_table(req, res) {
     let filter_on = 'off'
     if(req.query.otid){ 
        
-    //console.log('GT GOT otid',otid)
+       //console.log('GT GOT otid',otid)
        // reset gtable_filter here because we are coming from tax_table button
        // and expect to see the few genomes for this one taxon
        filter = helpers_genomes.get_default_gtable_filter()
+       filter.otid = req.query.otid
+       //console.log('XXXfilter',filter)
        req.session.gtable_filter = filter
        if(req.session.ttable_filter){
            req.session.ttable_filter.otid = req.query.otid
@@ -171,7 +173,7 @@ router.get('/genome_table', function genome_table(req, res) {
 
 });
 router.post('/genome_table', function genome_table_post(req, res) {
-    console.log('in POST gt filter')
+    console.log('in POST genome_table')
     console.log('req.body',req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret_obj,args,count_txt
     helpers_genomes.set_gtable_session(req)
@@ -365,7 +367,8 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
     const mid = req.body.mid
     const contig = req.body.contig
     let q = queries.get_contig(gid,contig)
-    //console.log('contig query',q)
+    // test genome:one contig only::GCA_000019425.1 
+    console.log('contig query',q)
     let html='',length = 0
     TDBConn.query(q, (err, rows) => {
         if (err) {

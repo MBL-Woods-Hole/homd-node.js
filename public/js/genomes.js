@@ -174,6 +174,7 @@ function get_contig_seq(gid, mid, type) {
     //}else{
        contig = document.getElementById("select-contig").value.split('|')[0]
     //}
+    console.log('contig',contig)
     args={}
     args.gid = gid
     args.mid = mid

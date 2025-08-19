@@ -202,7 +202,7 @@ module.exports.apply_gtable_filter = (req, filter) => {
   } else {
     vals = helpers.get_default_gtable_filter();
   }
-
+  ///console.log('ZZZ Vals',vals)
   big_g_list = helpers_genomes.get_filtered_genome_list(big_g_list, vals.text.txt_srch, vals.text.field);
 
   //letter
@@ -406,6 +406,22 @@ module.exports.apply_gtable_filter = (req, filter) => {
     }
 
   });
+  
+  
+  /// OTID ///
+  big_g_list = big_g_list.filter(function filterOTIDs(item) {
+    //console.log('item',item)
+    //console.log('vals',vals)
+    if (vals.otid === ''){ 
+        return item;
+    }else{
+      if( parseInt(vals.otid) === parseInt(item.otid) ){
+        return item;
+      }
+    }
+
+  });
+  
   return big_g_list;
 }
 module.exports.get_filtered_genome_list =(gidObjList, searchText, searchField) => {
