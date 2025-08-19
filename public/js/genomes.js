@@ -112,9 +112,9 @@ function open_ncbi(type){
     //console.log('type',type)
     if(type == 'single'){
        contig = document.getElementById("select-contig").innerHTML
-       url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig
+       url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig.trim()
     }else{
-       contig = document.getElementById("select-contig").value
+       contig = document.getElementById("select-contig").value.trim()
        url = 'https://www.ncbi.nlm.nih.gov/nuccore/'+contig.split('|')[0]
     }
     
@@ -182,9 +182,9 @@ function get_contig_seq(gid, mid, type) {
     //}
     //console.log('contig',contig)
     args={}
-    args.gid = gid
-    args.mid = mid
-    args.contig = contig
+    args.gid = gid.trim()
+    args.mid = mid.trim()
+    args.contig = contig.trim()
     defline = '>'+gid+' | '+contig
     var win = window.open("Contig Sequence", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=yes");
     var doc = win.document;
