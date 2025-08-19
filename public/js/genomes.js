@@ -172,8 +172,13 @@ function get_contig_seq(gid, mid, type) {
     //if(type == 'single'){
        //contig = document.getElementById("select-contig").innerHTML
     //}else{
-    console.log('value',document.getElementById("select-contig"))
-    contig = document.getElementById("select-contig").value.split('|')[0]
+    
+    if(type === 'single'){
+        contig = document.getElementById("select-contig").innerHTML.split('|')[0]
+    }else{
+       contig = document.getElementById("select-contig").value.split('|')[0]
+    }
+    console.log('value',document.getElementById("select-contig").innerHTML)
     //}
     console.log('contig',contig)
     args={}
