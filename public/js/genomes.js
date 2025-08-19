@@ -35,6 +35,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   gc may or may not be used
   
   */
+  
   var url
   var tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
   if(page == 'genome_desc_single'){ 
@@ -44,16 +45,16 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       pts = contigplusgc.split('|')
       contig = pts[0]
       gc = pts[1]
-      url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew&loc="+gid+"|"+contig
+      url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew&loc="+gid+"|"+contig.trim()
      
   }else if(page == 'genome_desc'){ 
       gid = value
-      contigplusgc = document.getElementById("select-contig").value
+      contigplusgc = document.getElementById("select-contig").value.trim()
       //console.log('xxcontigplusgc',contigplusgc)
       pts = contigplusgc.split('|')
       contig = pts[0]
       gc = pts[1]
-      url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew&loc="+gid+"|"+contig
+      url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew&loc="+gid+"|"+contig.trim()
      
   }else if(page == 'genome_table'){
        gid = value
