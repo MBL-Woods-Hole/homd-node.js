@@ -365,7 +365,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
     helpers.print(req.body)
     const gid = req.body.gid.trim()
     const mid = req.body.mid.trim()
-    const contig = req.body.contig
+    const contig = req.body.contig.trim()
     let q = queries.get_contig(gid,contig)
     // test genome:one contig only::GCA_000019425.1 
     console.log('CONTIG query',q)
