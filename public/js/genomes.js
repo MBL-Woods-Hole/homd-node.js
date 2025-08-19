@@ -172,6 +172,7 @@ function get_contig_seq(gid, mid, type) {
     //if(type == 'single'){
        //contig = document.getElementById("select-contig").innerHTML
     //}else{
+    console.log('value',document.getElementById("select-contig"))
        contig = document.getElementById("select-contig").value.split('|')[0]
     //}
     console.log('contig',contig)
