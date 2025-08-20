@@ -975,13 +975,13 @@ router.get('/life', function life(req, res) {
     html += "<a title='" + title + "' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>(" + cts + ")</small>"
     html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/domain/Archaea' target='_blank'>LPSN.dsmz.de</a>]"
 
-    html += "<a href='ecology?rank=domain&name=Archaea'>HOMD Abundance</a></span><br>"
+    html += "<a href='ecology?rank=domain&name=Archaea'>abundance</a></span><br>"
     title = 'Domain: Bacteria'
     cts = C.taxon_counts_lookup['Bacteria'].taxcnt.toString()
     html += "<a title='" + title + "' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>(" + cts + ")</small>"
     html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/domain/Bacteria' target='_blank'>LPSN.dsmz.de</a>]"
 
-    html += "<a href='ecology?rank=domain&name=Bacteria'>HOMD Abundance</a></span><br>"
+    html += "<a href='ecology?rank=domain&name=Bacteria'>abundance</a></span><br>"
 
     html += '</td></tr>'
     image_array = [{ name: 'cellular_organisms.png', text: '' }]
@@ -1025,7 +1025,7 @@ router.get('/life', function life(req, res) {
         }
 
         html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-        html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + lineage_list[1][show_ranks[i]] + "'>HOMD Abundance</a></span>"
+        html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + lineage_list[1][show_ranks[i]] + "'>abundance</a></span>"
         html += '</td></tr>'
       } else {  // Gather rows before the last row
 
@@ -1066,7 +1066,7 @@ router.get('/life', function life(req, res) {
               html += "</span>"
 
               html += " <span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-              html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + taxa_list[n] + "'>HOMD Abundance</a></span><br>"
+              html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + taxa_list[n] + "'>abundance</a></span><br>"
             }
 
           } else {
@@ -1094,7 +1094,7 @@ router.get('/life', function life(req, res) {
               //let lpsn_link = 'zz'
               //console.log('zz link ',lpsn_link)
               html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-              html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + taxa_list[n] + "'>HOMD Abundance</a></span><br>"
+              html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + taxa_list[n] + "'>abundance</a></span><br>"
             }
           }
           html += "</li>"
