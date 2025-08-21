@@ -166,22 +166,44 @@ module.exports.get_NN_NA = (db, gid, pid) => {
     return q
 }
 function genome_query() {
-    let tbl = C.genomes_table_name
+    let tbl  = C.genomes_table_name
     let ntbl = C.genomes_ncbi_table_name
     let ptbl = C.genomes_prokka_table_name
-    let qSelectGenome = "SELECT `"+tbl+"`.genome_id,`"+tbl+"`.otid,`"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
-        qSelectGenome +=" bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,"
-        qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,checkM2_contamination,refseq_assembly,WGS,"
-        qSelectGenome +=" `"+ptbl+"`.contigs as prokka_contigs,`"+ptbl+"`.CDS as prokka_CDS,`"+ptbl+"`.gene as prokka_gene,`"+ptbl+"`.mRNA as prokka_mRNA,`"+ptbl+"`.misc_RNA as prokka_misc_RNA,`"+ptbl+"`.rRNA as prokka_rRNA,`"+ptbl+"`.tRNA as prokka_tRNA,`"+ptbl+"`.tmRNA as prokka_tmRNA,"
-        
-        qSelectGenome +=" pangenome_v4.pangenome_name as pangenome"  // works as long as only one pg per genome
-
-        qSelectGenome +=" FROM `"+tbl+"`"
-        qSelectGenome +=" LEFT JOIN `"+ptbl+"` using(genome_id)"
-        qSelectGenome +=" LEFT JOIN `"+ntbl+"` using(genome_id)"
-        
-        qSelectGenome +=" LEFT JOIN `pangenome_genome` using(genome_id)"
-        qSelectGenome +=" LEFT JOIN `pangenome_v4` using(pangenome_id)"
+    let qSelectGenome = `SELECT \`${tbl}\`.genome_id as GENOME_ID,concat("HMT-",LPAD(\`${tbl}\`.otid,3,"0")) as HMT_ID,`
+        qSelectGenome +=` \`${tbl}\`.strain,naming_status as hmt_naming_status, cultivation_status as hmt_cultivation_status,`
+        qSelectGenome +=` site as hmt_primary_body_site_w_abundance,\`${ptbl}\`.organism,\`${tbl}\`.contigs,\`${tbl}\`.combined_size,`
+        qSelectGenome +=` \`${tbl}\`.MAG,\`${tbl}\`.GC,\`${tbl}\`.url,\`${tbl}\`.GTDB_taxonomy,  bioproject,taxid,biosample,`
+        qSelectGenome +=` assembly_name,assembly_level,assembly_method, submission_date,geo_loc_name,isolation_source,`
+        qSelectGenome +=` seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,`
+        qSelectGenome +=` checkM2_contamination,refseq_assembly,WGS, \`${ptbl}\`.contigs as prokka_contigs,`
+        qSelectGenome +=` \`${ptbl}\`.CDS as prokka_CDS,\`${ptbl}\`.gene as prokka_gene,\`${ptbl}\`.mRNA as prokka_mRNA,`
+        qSelectGenome +=` \`${ptbl}\`.misc_RNA as prokka_misc_RNA,\`genomes_prokkaV11.0\`.rRNA as prokka_rRNA,`
+        qSelectGenome +=` \`${ptbl}\`.tRNA as prokka_tRNA,\`${ptbl}\`.tmRNA as prokka_tmRNA,`
+        qSelectGenome +=` pangenome_v4.pangenome_name as pangenome`
+        qSelectGenome +=` FROM \`${tbl}\``
+        qSelectGenome +=` JOIN status using(otid)`
+        qSelectGenome +=` JOIN sites on primary_body_site_id = site_id`
+        qSelectGenome +=` LEFT JOIN \`${ptbl}\` using(genome_id)`
+        qSelectGenome +=` LEFT JOIN \`${ntbl}\` using(genome_id)`
+        qSelectGenome +=` LEFT JOIN pangenome_genome using(genome_id)`
+        qSelectGenome +=` LEFT JOIN pangenome_v4 using(pangenome_id)`
+    
+    
+    
+    
+   //  let qSelectGenome = "SELECT `"+tbl+"`.genome_id,`"+tbl+"`.otid,`"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
+//         qSelectGenome +=" bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,"
+//         qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,checkM2_contamination,refseq_assembly,WGS,"
+//         qSelectGenome +=" `"+ptbl+"`.contigs as prokka_contigs,`"+ptbl+"`.CDS as prokka_CDS,`"+ptbl+"`.gene as prokka_gene,`"+ptbl+"`.mRNA as prokka_mRNA,`"+ptbl+"`.misc_RNA as prokka_misc_RNA,`"+ptbl+"`.rRNA as prokka_rRNA,`"+ptbl+"`.tRNA as prokka_tRNA,`"+ptbl+"`.tmRNA as prokka_tmRNA,"
+//         
+//         qSelectGenome +=" pangenome_v4.pangenome_name as pangenome"  // works as long as only one pg per genome
+// 
+//         qSelectGenome +=" FROM `"+tbl+"`"
+//         qSelectGenome +=" LEFT JOIN `"+ptbl+"` using(genome_id)"
+//         qSelectGenome +=" LEFT JOIN `"+ntbl+"` using(genome_id)"
+//         
+//         qSelectGenome +=" LEFT JOIN `pangenome_genome` using(genome_id)"
+//         qSelectGenome +=" LEFT JOIN `pangenome_v4` using(pangenome_id)"
     console.log(qSelectGenome)
     return qSelectGenome
 }
