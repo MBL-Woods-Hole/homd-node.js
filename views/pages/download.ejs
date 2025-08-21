@@ -1,4 +1,5 @@
-<% var cfg = JSON.parse(config) %> 
+<% var cfg = JSON.parse(config) %>
+<% var version_info=JSON.parse(ver_info) %>
 <style>
 </style>
 <%- include('../partials/header_html'); %>
@@ -211,14 +212,20 @@ width:180px;
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
     <tr><td>All Genomic Metadata</td>
-    <td><a href='/download/dld_genome_table_all/browser'>Tab Delimited Text<br>(View in browser)</a></td>
-    <td><a href='/download/dld_genome_table_all/text'>Tab Delimited Text<br>(Save to file)</a></td>
-    <td><a href='/download/dld_genome_table_all/excel'>MS Excel Format<br>(Save to file)</a></td>
+    <td><a href='/download/dld_genome_table_all/browser/all'>Tab Delimited Text<br>(View in browser)</a></td>
+    <td><a href='/download/dld_genome_table_all/text/all'>Tab Delimited Text<br>(Save to file)</a></td>
+    <td><a href='/download/dld_genome_table_all/excel/all'>MS Excel Format<br>(Save to file)</a></td>
     </tr>
+    
+    <tr><td>GTDB <small>(V<%= version_info.gtdb_ver %>)</small> Taxonomy<br></td>
+    <td><a href='/download/dld_genome_table_all/browser/gtdb'>Tab Delimited Text<br>(View in browser)</a></td>
+    <td><a href='/download/dld_genome_table_all/text/gtdb'>Tab Delimited Text<br>(Save to file)</a></td>
+    <td><a href='/download/dld_genome_table_all/excel/gtdb'>MS Excel Format<br>(Save to file)</a></td>
+    </tr>
+    
   </table>
   <table class='download-table'>
-   <tr><td>GCA GTDB Taxonomy (V11.02) (csv)</td><td><a href='/download/dld_static_file/GTDB_taxonomy20250406.csv'>[download]</a></td>
-   <tr><td>GCA GTDB Metadata (V11.02) (xlsx)</td><td><a href='/download/dld_static_file/HOMD_Genomes_V11.02_GTDB_Meta.xlsx'>[download]</a></td>
+   
    <tr><td>NCBI Genome Annotations</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/genomes/NCBI/current'>[FTP Site for download]</a></td></tr>
    <tr><td>PROKKA Genome Annotations</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/genomes/PROKKA/current'>[FTP Site for download]</a></td></tr>
    <tr><td>Genomic Trees: <br>Conserved Protein, Ribosomal Protein and 16S rRNA</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/'>[FTP Site for download]</a></td></tr>

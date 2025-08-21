@@ -204,12 +204,7 @@
    padding:1px;
    margin:1px;
 }
-#gtdb-tax-div{
-   
-   height: 150px;
-   overflow:auto;
-   
-}
+
 .table-div {
     /* https://dev.to/flippedcoding/how-to-make-a-table-without-using-the-html-table-elements-5e11 */
     display: flex;
@@ -235,7 +230,7 @@
 <% data_refseq = JSON.parse(refseq_info) %>
 <% links = JSON.parse(links) //refseq  %>
 <% sites = JSON.parse(sites) %>
-<% gtdbtax = JSON.parse(gtdb) %>
+
 <% taxidfullname = ("000" + otid).slice(-3); %>
 <% taxidfullnameplus = 'HMT-'+taxidfullname; %>
 <% images = JSON.parse(image_array)  %>

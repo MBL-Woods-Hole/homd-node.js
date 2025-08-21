@@ -125,26 +125,10 @@ router.get('/', function index(req, res) {
 //     res.end(show)
 //   })
 // })
-router.get('/download_file', function search(req, res) {
-  //let page = req.params.pagecode
-  let fullpath = req.query.filename
-  helpers.print('file path: '+fullpath)
-  res.download(fullpath)
-  //res.end()
-})
 
 
-router.get('/download', function download(req, res) {
-  // renders the overall downlads page
-  res.render('pages/download', {
-    title: 'HOMD :: Human Oral Microbiome Database',
-    pgname: 'download', // for AbountThisPage
-    config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-    
 
-  })
-})
+
 //
 router.get('/poster', function poster(req, res) {
   res.render('pages/poster', {

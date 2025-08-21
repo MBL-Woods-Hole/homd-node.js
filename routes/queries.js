@@ -169,7 +169,7 @@ function genome_query() {
     let tbl = C.genomes_table_name
     let ntbl = C.genomes_ncbi_table_name
     let ptbl = C.genomes_prokka_table_name
-    let qSelectGenome = "SELECT `"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
+    let qSelectGenome = "SELECT `"+tbl+"`.genome_id,`"+tbl+"`.otid,`"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
         qSelectGenome +=" bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,"
         qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,checkM2_contamination,refseq_assembly,WGS,"
         qSelectGenome +=" `"+ptbl+"`.contigs as prokka_contigs,`"+ptbl+"`.CDS as prokka_CDS,`"+ptbl+"`.gene as prokka_gene,`"+ptbl+"`.mRNA as prokka_mRNA,`"+ptbl+"`.misc_RNA as prokka_misc_RNA,`"+ptbl+"`.rRNA as prokka_rRNA,`"+ptbl+"`.tRNA as prokka_tRNA,`"+ptbl+"`.tmRNA as prokka_tmRNA,"
@@ -182,6 +182,7 @@ function genome_query() {
         
         qSelectGenome +=" LEFT JOIN `pangenome_genome` using(genome_id)"
         qSelectGenome +=" LEFT JOIN `pangenome_v4` using(pangenome_id)"
+    console.log(qSelectGenome)
     return qSelectGenome
 }
 module.exports.get_all_genomes = () => {  // for downld all

@@ -354,7 +354,7 @@ router.get('/genome_description', function Description (req, res) {
                // data2: JSON.stringify(data2),
                // data3: JSON.stringify(data3),
                // data4: JSON.stringify(data4),
-               ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+               ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version, gtdb_ver:C.GTDB_version }),
                
             })
        })  // end TDBConn.query(q_contig

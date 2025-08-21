@@ -12,6 +12,26 @@ const helpers_genomes = require(app_root + '/routes/helpers/helpers_genomes');
 const queries = require(app_root + '/routes/queries')
 
 
+router.get('/download', function download(req, res) {
+  // renders the overall downlads page
+  res.render('pages/download', {
+    title: 'HOMD :: Human Oral Microbiome Database',
+    pgname: 'download', // for AbountThisPage
+    config: JSON.stringify(CFG),
+    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version, gtdb_ver:C.GTDB_version }),
+    
+
+  })
+})
+
+router.get('/download_file', function search(req, res) {
+  //let page = req.params.pagecode
+  let fullpath = req.query.filename
+  helpers.print('file path: '+fullpath)
+  res.download(fullpath)
+  //res.end()
+})
+
 router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
 //router.get('/dld_table_all/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
     let today = new Date();
@@ -273,7 +293,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
 }) 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-router.get('/dld_genome_table_all/:type', function dld_genome_table_all (req, res) {
+router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all (req, res) {
     let today = new Date()
     let dd = String(today.getDate()).padStart(2, '0')
     let mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
@@ -281,10 +301,11 @@ router.get('/dld_genome_table_all/:type', function dld_genome_table_all (req, re
     today = yyyy + '-' + mm + '-' + dd
     let currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
     const type = req.params.type
-    let fileFilterText = 'HOMD.org Genome Data:: All Genome Data'
+    const filter = req.params.filter
+    
+    let fileFilterText,tableTsv
     const sendList = Object.values(C.genome_lookup)
     const listOfGids = sendList.map(item => item.gid)
-    fileFilterText = fileFilterText + ' Date: ' + today
     
     
     const q = queries.get_all_genomes()
@@ -296,8 +317,13 @@ router.get('/dld_genome_table_all/:type', function dld_genome_table_all (req, re
         }
         //console.log(mysqlrows)
         //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
-        const tableTsv = create_full_genome_table(mysqlrows, fileFilterText)
-    
+        if(filter === 'gtdb'){
+            fileFilterText = 'HOMD.org Genome Data:: GTDB Taxonomy' + ' Date: ' + today
+            tableTsv = create_full_genome_table_gtdb(mysqlrows, fileFilterText)
+        }else{
+            fileFilterText = 'HOMD.org Genome Data:: All Genome Data' + ' Date: ' + today
+            tableTsv = create_full_genome_table(mysqlrows, fileFilterText)
+        }
         if (type === 'browser') {
           res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
         } else if (type === 'text') {
@@ -657,6 +683,34 @@ function create_full_genome_table (sqlrows, startText) {
           tmp.push(data)
           //console.log('hd',sqlrows[n][headersRow[i]])
         }
+        txt += tmp.join('\t')
+        txt += '\n'
+    }
+    return txt
+}
+function create_full_genome_table_gtdb (sqlrows, startText) {
+    let txt = startText + '\n'
+    let tmp,data,i,n,hmt
+    const headersRow = ['Genome-ID','HMT-ID','GTDB Taxonomy']
+    txt += headersRow.join('\t')+'\n'
+    //console.log('sqlrows',headersRow)
+    for(n in sqlrows){
+        //console.log(sqlrows[n])
+        hmt = helpers.make_otid_display_name(sqlrows[n].otid)
+        tmp = [sqlrows[n].genome_id, hmt, sqlrows[n].GTDB_taxonomy]
+        
+        // for(i in headersRow){
+//            
+//           data = []
+//           if(headersRow[i] == 'otid'){
+//               hmt = helpers.make_otid_display_name(sqlrows[n][headersRow[i]])
+//               data.push(hmt)
+//           }else{
+//               data.push(sqlrows[n][headersRow[i]])
+//           }
+//           tmp.push(data)
+//           //console.log('hd',sqlrows[n][headersRow[i]])
+//         }
         txt += tmp.join('\t')
         txt += '\n'
     }
