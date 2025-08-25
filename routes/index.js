@@ -816,12 +816,13 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
   console.log(req.body)
   const searchText = req.body.adv_search_text
   const searchTextLower = req.body.adv_search_text.toLowerCase()
-  let taxonOtidObj = {},otidLst = [],gidLst=[],ret_obj={}
+  let taxonOtidObj = {},otidLst = [],refseqObj={},gidLst=[],ret_obj={}
   let form_type = []
   if(req.body.taxonomy && req.body.taxonomy == 'on'){
       ret_obj = search_taxonomy(searchTextLower)
       taxonOtidObj = ret_obj.taxonOtidObj
       otidLst      = ret_obj.otidLst
+      refseqObj    = ret_obj.refseqObj
       form_type.push('taxonomy') 
   }
   if(req.body.genomes && req.body.genomes == 'on'){
@@ -911,6 +912,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
         
         search_text: searchText,
         otid_list: JSON.stringify(otidLst),
+        refseq_obj: JSON.stringify(refseqObj),
         gid_list: JSON.stringify(gidLst),
         
         //let prokka_genome_count_lookup={},prokka_gene_count=0,ncbi_genome_count_lookup={},ncbi_gene_count=0
@@ -951,6 +953,7 @@ function search_taxonomy(text_string){
         }
         //
       })
+      
       //  Now get the otids
       let pototid,taxonOtidObj = {}
       // must find: HMT-389, HMT_389, HMT389 as well as 389
@@ -993,7 +996,8 @@ function search_taxonomy(text_string){
       }
       
       
-    
+
+
       // OTID Metadata
       const allOtidObjList = Object.values(C.taxon_lookup)
       const otidKeyList = Object.keys(allOtidObjList[0])
@@ -1001,6 +1005,7 @@ function search_taxonomy(text_string){
       let otidObjList = allOtidObjList.filter(function (el) {
         for (let n in otidKeyList) {
           //console.log( 'el[otidKeyList[n]]',el[otidKeyList[n]] )
+          //console.log( 'el',el )
           if (Array.isArray(el[otidKeyList[n]]) && el[otidKeyList[n]].length > 0) {
             // we're catching any arrays: rrna_sequences, synonyms, sites, pangenomes, type_strains, ref_strains
               //console.log('el',el)
@@ -1020,15 +1025,50 @@ function search_taxonomy(text_string){
            
           }
         }
+        
+        
       })
       
-      const otidLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
-      //console.log('otidLst',otidLst[0])
-      otidLst.sort(function (a, b) {
+      
+      
+      const otidMetaLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
+      
+      //console.log('otidMetaLst',otidMetaLst[0])
+      otidMetaLst.sort(function (a, b) {
            return helpers.compareStrings_alpha(a.species, b.species);
       })
       
-    return {'taxonOtidObj':taxonOtidObj,'otidLst':otidLst}
+
+      // RefSeq
+      // add to OTID Metadata
+      //console.log(C.refseq_lookup)
+      const allRefSeqObjList = Object.values(C.refseq_lookup)
+      
+    // '998': [
+//         { refseq_id: 'HMT-998_16S005908', species: 'Victivallis lenta' },
+//         { refseq_id: 'HMT-998_16S005921', species: 'Victivallis lenta' },
+//         { refseq_id: 'HMT-998_16S005935', species: 'Victivallis lenta' }
+//       ]
+
+      let refseqObj = {}
+      allRefSeqObjList.filter((el) => {
+         //console.log('el',el)
+         for(let n in el){
+             if(el[n].refseq_id.toLowerCase().includes(text_string)){
+                 //console.log('el',el[n].refseq_id.toLowerCase())
+                 let hmt = el[n].refseq_id.split('_')[0]
+                 let otid = hmt.split('-')[1]
+                 if(!refseqObj.hasOwnProperty(hmt)){
+                    refseqObj[hmt] = { otid:otid,hmt:hmt,species:el[n].species, refseq_id:el[n].refseq_id }
+                 }
+                 
+             }
+         }
+      })
+      
+      //console.log('in refseq search',refseqObj)
+      
+    return {'taxonOtidObj':taxonOtidObj,'otidLst':otidMetaLst,'refseqObj':refseqObj}
 }
 function search_genomes(text_string){
   //let add_genome_to_otid = {}

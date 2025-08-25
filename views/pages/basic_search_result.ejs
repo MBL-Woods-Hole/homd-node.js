@@ -53,6 +53,7 @@ table td{
 </style>
 <%- include('../partials/header_html'); %>
 <% var otids = JSON.parse(otid_list) %>
+<% var refseqs = JSON.parse(refseq_obj) %>
 <% var gids = JSON.parse(gid_list) %>
 <% var lineageids = JSON.parse(taxon_otid_obj) %>
 <% //var phage_id_list = JSON.parse(phage_id_list) %>
@@ -93,26 +94,49 @@ table td{
   
   
     <hr> 
-    
-    
     Matches from <strong>Taxon-ID Metadata</strong>: (<%= otids.length %> hits) <span class='float-right small'>Your Search String: "<%= search_text %>"</span> 
     <% if( otids.length > 0 ){ %>
-    <div class='search-box'>
-    <center><table class='sortable'>
-    <tr><th nowrap>HMT-ID</th><th>Taxonomy (click to sort)</th></tr>
-    <% for(n in otids){ %>
-     <% otid = otids[n].otid %>
-     <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
-     <tr>
-     
-     <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td>
-     <td><a href='/taxa/tax_description?otid=<%= otid %>'><%- otids[n].species %></a></td>
-     </tr>
-  <% } %>
-    </table>
-    </center>
-  </div>
-  <% } %>
+        <div class='search-box'>
+        <center>
+        <table class='sortable'>
+        <tr><th nowrap>HMT-ID</th><th>Taxonomy (click to sort)</th></tr>
+        <% for(n in otids){ %>
+            <% otid = otids[n].otid %>
+            <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+            <tr>
+            <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td>
+            <td><a href='/taxa/tax_description?otid=<%= otid %>'><%- otids[n].species %></a></td>
+            </tr>
+        <% } %>
+        </table>
+        </center>
+        </div>
+    <% } %>
+    
+    <!-- RefSeq -->
+    <hr> 
+    <% var l = Object.keys(refseqs) %>
+    Matches from <strong>16S Refseq</strong>: (<%= l.length %> hits) <span class='float-right small'>Your Search String: "<%= search_text %>"</span> 
+    <% if( l.length > 0 ){ %>
+        <div class='search-box'>
+        <center>
+        <table class='sortable'>
+        <tr><th nowrap>HMT-ID</th><th>Species (click to sort)</th><th>RefSeq-ID</th></tr>
+        <% for(n in l){ %>
+            <% hmt = l[n] %>
+            <% otid = hmt.split('-')[1] %>
+            <tr>
+            <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= hmt %></a></td>
+            <td><a href='/taxa/tax_description?otid=<%= otid %>'><%- refseqs[hmt].species %></a></td>
+            <td><%- refseqs[hmt].refseq_id %> <a href='#' class='td-button' onclick="get_refseqV16('<%= hmt %>','<%= refseqs[hmt].refseq_id %>','<%= refseqs[hmt].species %>')">
+               Show Sequence</a></td>
+            </tr>
+        <% } %>
+        </table>
+        </center>
+        </div>
+    <% } %>
+    
     <!-- Genomes -->
     <hr>  
     Matches from <strong>Genome Metadata</strong>: (<%= gids.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
@@ -188,6 +212,7 @@ table td{
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script type="text/javascript" src="/js/search.js"></script>
+<script type="text/javascript" src="/js/taxonomy.js"></script>
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 
 <script>
