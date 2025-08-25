@@ -93,7 +93,7 @@ def run(args):
 if __name__ == "__main__":
 
     usage = """
-    USAGE:
+    USAGE:   OBSOLETE
         Initialize_Search.py
          --reads data from the ORIGINAL PROKKA and NCBI annotation DBs
          ie:  PROKKA_SEQF3654 and NCBI_SEQF3654
