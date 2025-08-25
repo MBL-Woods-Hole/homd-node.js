@@ -952,13 +952,19 @@ function search_taxonomy(text_string){
         //
       })
       //  Now get the otids
-      const taxonOtidObj = {}
-      let pototid = parseInt(text_string)
+      let pototid,taxonOtidObj = {}
+      // must find: HMT-389, HMT_389, HMT389 as well as 389
+      if(text_string.slice(0, 3) === 'hmt'){       // check first 3 chars
+         pototid = text_string.slice(3).replace('-','').replace('_','')  // Starts the slice at index 3
+         //pototid = parseInt(text_string.slice(-3))  // get last 3 chars
+      }else{
+         pototid = parseInt(text_string)
+      }
       if(pototid && pototid in C.taxon_lookup){
          if(C.dropped_taxids.indexOf(pototid.toString()) != -1){
             taxonOtidObj[pototid] = 'This taxon has been dropped from HOMD.'
          }else{
-            //console.log('got OTID int')
+            //console.log('got OTID int',text_string)
             taxonOtidObj[pototid] = C.taxon_lineage_lookup[pototid].domain
             taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].phylum
             taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].klass
