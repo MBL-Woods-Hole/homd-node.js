@@ -444,7 +444,25 @@ module.exports.get_filtered_genome_list =(gidObjList, searchText, searchField) =
       tempObj[tmpSendList[n].gid] = tmpSendList[n];
     }
     //otid
-    tmpSendList = gidObjList.filter(item => item.otid.toString().includes(searchText));
+    
+    //tmpSendList = gidObjList.filter(item => item.otid.toString().includes(searchText));
+    
+    if(searchText.slice(0, 3) === 'hmt'){ 
+        let pototid = parseInt(searchText.slice(3).replace('-','').replace('_',''))
+        tmpSendList = gidObjList.filter(item => {
+            //console.log('pototid',pototid)
+            if(pototid && item.otid == pototid){
+                //console.log('item',item)
+                return item
+            }
+        });
+        
+    }else{
+        tmpSendList = gidObjList.filter(item => item.otid.toString().toLowerCase().includes(searchText));
+    }
+    
+    
+    
     // for uniqueness convert to object::otid THIS is WRONG: Must be gid
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n];

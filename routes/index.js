@@ -959,7 +959,6 @@ function search_taxonomy(text_string){
       // must find: HMT-389, HMT_389, HMT389 as well as 389
       if(text_string.slice(0, 3) === 'hmt'){       // check first 3 chars
          pototid = parseInt(text_string.slice(3).replace('-','').replace('_',''))  // Starts the slice at index 3
-         
          //pototid = parseInt(text_string.slice(-3))  // get last 3 chars
       }else{
          pototid = parseInt(text_string)

@@ -134,7 +134,18 @@ module.exports.get_text_filtered_taxon_list = (big_tax_list, search_txt, search_
   let send_list = [];
   //console.log('txt srch',search_txt,search_field)
   if (search_field == 'taxid') {
-    send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt));
+    if(search_txt.slice(0, 3) === 'hmt'){ 
+        let pototid = parseInt(search_txt.slice(3).replace('-','').replace('_',''))
+        send_list = big_tax_list.filter(item => {
+            if(pototid && item.otid == pototid){
+                //console.log('item',item)
+                return item
+            }
+        });
+        
+    }else{
+        send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt));
+    }
   } else if (search_field == 'genus') {
     send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt));
   } else if (search_field == 'species') {
@@ -162,7 +173,23 @@ module.exports.get_text_filtered_taxon_list = (big_tax_list, search_txt, search_
     let temp_obj = {};
 
     //OTID
-    let tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt));
+    let tmp_send_list
+    if(search_txt.slice(0, 3) === 'hmt'){ 
+        let pototid = parseInt(search_txt.slice(3).replace('-','').replace('_',''))
+        tmp_send_list = big_tax_list.filter(item => {
+            //console.log('pototid',pototid)
+            if(pototid && item.otid == pototid){
+                //console.log('item',item)
+                return item
+            }
+        });
+        
+    }else{
+        tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt));
+    }
+    //let tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt));
+    
+    
     //let tmp_send_list = big_tax_list.filter(screen_tax_list)
     // for uniqueness convert to object
     for (let n in tmp_send_list) {
