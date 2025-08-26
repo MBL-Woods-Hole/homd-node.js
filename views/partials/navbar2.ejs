@@ -54,6 +54,7 @@
                   <li><a class="dropdown-item" href="/download/download#taxon">Downloads</a></li>
                   <li><a class="dropdown-item" href="/help/help-page?pagecode=taxon/taxon_version">Version History</a>
                   </li>
+                  
                   <% if(cfg.ENV==="localhost"){ %>
                     <li>
                       <hr class="dropdown-divider">
@@ -160,6 +161,9 @@
                   16S rRNA
                 </a>
                 <ul class="dropdown-menu">
+                  <% if(cfg.ENV==="localhost" ){ %>
+                      <li><a class="dropdown-item" href="/refseq/refseq_table">RefSeq Table</a></li>
+                  <% } %>
                   <li><a class="dropdown-item" href="<%= cfg.BLAST_URL_BASE %>/refseq_blast" target="_self">RefSeq BLAST
                       Server</a></li>
                   <li><a class="icon-link dropdown-item" href="<%= cfg.HOMD_URL_BASE %><%= cfg.REFSEQ_TREE_PATH %>"

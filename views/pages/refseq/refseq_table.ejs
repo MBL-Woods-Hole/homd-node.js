@@ -1,0 +1,52 @@
+<style>
+</style>
+<% rs = JSON.parse(refseq) %>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar2'); %>
+    
+    
+    <div class='page-content' >
+              
+       <p class='h3 title'>16S Refseq Table</p>
+    
+    <table>
+    <tr><th>HMT-ID</th><th>RefSeq-ID</th><th>Species</th></tr>
+    <% for(otid in rs){ %>
+        <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+        <tr>
+            <% for(n in rs[otid]){ %>
+            <% taxidfullname2 = 'HMT-'+("000" + otid).slice(-3); %>
+            <td><%= taxidfullname %></td>
+          
+            <td><%= rs[otid][0].refseq_id %></td>
+          <% } %>
+        </tr>
+        
+        
+        
+    <% } %>
+    </table>
+    
+  
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

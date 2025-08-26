@@ -11,6 +11,18 @@ const helpers   = require(app_root + '/routes/helpers/helpers');
 //const open = require('open');
 const https = require('https'); 
 
+router.get('/refseq_table', function refseq_table(req, res) {
+    res.render('pages/refseq/refseq_table', {
+        title: 'HOMD :: HOMD refseq_table',
+        pgname: '', // for AbountThisPage
+        refseq: JSON.stringify(C.refseq_lookup),
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        
+        
+      })
+})
+
 router.get('/blast_server', function refseq_blast_server(req, res) {
     res.render('pages/blast/blast_server', {
         title: 'HOMD :: HOMD Blast Server',
