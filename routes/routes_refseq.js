@@ -12,10 +12,26 @@ const helpers   = require(app_root + '/routes/helpers/helpers');
 const https = require('https'); 
 
 router.get('/refseq_table', function refseq_table(req, res) {
+    let refseq_array = []
+    let otid,hmt,vals
+    let keys = Object.keys(C.refseq_lookup)
+    for(let n in keys){
+         otid = keys[n]
+         //hmt = helpers.make_otid_display_name(otid)
+         vals = C.refseq_lookup[otid]
+         for(let m  in vals){
+            //console.log('val',vals[m])
+            refseq_array.push({otid:otid,species:vals[m].species,refseq_id:vals[m].refseq_id})
+         }
+    
+    }
+    refseq_array.sort((a, b) => {
+        return helpers.compareStrings_alpha(a.species, b.species);
+    })
     res.render('pages/refseq/refseq_table', {
         title: 'HOMD :: HOMD refseq_table',
         pgname: '', // for AbountThisPage
-        refseq: JSON.stringify(C.refseq_lookup),
+        refseq: JSON.stringify(refseq_array),
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
         

@@ -1,4 +1,46 @@
 <style>
+thead th { position: sticky; top: 0; }
+#refseq-box {
+   height:700px;
+   overflow:auto;
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
+   margin-top:5px;
+ }
+ 
+ #refseq-table
+{
+  padding:5px;
+ /*  width:1200px; */
+  /* table-layout:fixed; */
+  /* table-layout:auto */
+  width:100%;
+  /* background:lightgrey; */
+}
+#refseq-table th
+{
+  color:white;
+  background:  var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+}
+#refseq-table td
+{
+  padding:3px 2px 2px 5px;
+  
+  font-size:small;
+  font-weight:bold;
+  color: #303030;
+  text-align:center;
+}
+#refseq-table tr:nth-child(even) { 
+    background-color: lightgrey;
+ } 
+ 
+#refseq-table tr:hover { 
+    background-color: #dce7f5; 
+} 
 </style>
 <% rs = JSON.parse(refseq) %>
 <%- include('../../partials/header_html'); %>
@@ -11,26 +53,24 @@
     
     <div class='page-content' >
               
-       <p class='h3 title'>16S Refseq Table</p>
+    <p class='h3 title'>16S Refseq Table</p>
     
-    <table>
-    <tr><th>HMT-ID</th><th>RefSeq-ID</th><th>Species</th></tr>
-    <% for(otid in rs){ %>
-        <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+    <div id='refseq-box' >
+    <table id='refseq-table' class='sortable'>
+    <tr><th>HMT-ID</th><th>RefSeq-ID</th><th>Species</th><th class='sorttable_nosort'></th></tr>
+    <% for(let n in rs){ %>
+        <% taxidfullname = 'HMT-'+("000" + rs[n].otid).slice(-3); %>
         <tr>
-            <% for(n in rs[otid]){ %>
-            <% taxidfullname2 = 'HMT-'+("000" + otid).slice(-3); %>
-            <td><%= taxidfullname %></td>
-          
-            <td><%= rs[otid][0].refseq_id %></td>
-          <% } %>
+            <td><a href='/taxa/tax_description?otid=<%= rs[n].otid %>'><%= taxidfullname %></a></td>
+            <td><%= rs[n].refseq_id %></td>
+            <td><%= rs[n].species %></td>
+            <td><a href='#' class='td-button' onclick="get_refseqV16('<%= taxidfullname %>','<%= rs[n].refseq_id %>','<%= rs[n].species %>')">
+                Show Sequence
+            </td>
         </tr>
-        
-        
-        
     <% } %>
     </table>
-    
+    </div>
   
     </div> <!-- end: page-content -->
     
@@ -45,6 +85,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/taxonomy.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+
 <script>
   mainmenu()
 </script>
