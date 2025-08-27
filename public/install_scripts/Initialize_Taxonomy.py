@@ -333,8 +333,8 @@ def run_pangenomes(args):
 
 def run_refseq(args):
     global refseq_lookup
-    #query_refseqid = "SELECT otid, refseq_id, seqname, strain, genbank FROM taxon_refseqid"
-    query_refseqid = "SELECT otid, seq_id, species FROM 16S_refseq"
+    #query_refseqid = "SELECT otid, seq_id, species FROM 16S_refseq"
+    query_refseqid = "SELECT otid, refseq_id,seq_length,seqid_count,seqids, species FROM 16S_refseq"
     result = myconn.execute_fetch_select_dict(query_refseqid)
     refseq_lookup = {}
     for obj in result:
@@ -345,8 +345,11 @@ def run_refseq(args):
             refseq_lookup[otid] = []
              #'refseqid': '956_1687', 'seqname': 'cinerea', 'strain': 'Strain: ATCC 14685', 'genbank': 'GB: NR_121687'}
         newobj = {}
-        newobj['refseq_id'] =  obj['seq_id']
+        newobj['refseq_id'] =  obj['refseq_id']
         newobj['species']  =  obj['species']
+        newobj['seq_length']  =  obj['seq_length']
+        newobj['seqid_count']  =  obj['seqid_count']
+        newobj['seqids']  =  obj['seqids'].strip()
         
         refseq_lookup[otid].append(newobj)
    

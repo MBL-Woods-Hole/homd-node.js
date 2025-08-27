@@ -8,7 +8,7 @@ const C = require(app_root + '/public/constants')
 
 module.exports.get_refseq_query = (refid) => {
   let qSelectRefseq = 'SELECT UNCOMPRESS(seq_compressed) as seq from 16S_refseq '
-  qSelectRefseq += " WHERE seq_id='" + refid + "'"
+  qSelectRefseq += " WHERE refseq_id='" + refid + "'"
 
   return qSelectRefseq
 }
@@ -22,7 +22,7 @@ module.exports.get_gtdb_tax = (genomes) => {
 module.exports.get_refseq_metadata_query = (otid) => {
   // let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
 //   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
-  let qSelectRefseqInfo = 'SELECT seq_id,species from 16S_refseq '
+  let qSelectRefseqInfo = 'SELECT refseq_id,species from 16S_refseq '
   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
 
   return qSelectRefseqInfo

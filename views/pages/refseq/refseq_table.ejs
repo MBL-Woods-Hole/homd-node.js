@@ -6,6 +6,8 @@ thead th { position: sticky; top: 0; }
    padding:10px 10px 20px 10px;
    border:1px solid gray;
    margin-top:5px;
+   width:80%;
+   margin: 0 auto;
  }
  
  #refseq-table
@@ -23,7 +25,7 @@ thead th { position: sticky; top: 0; }
   background:  var(--table-header-bg);
   padding:5px;
   font-size:13px;
-  text-align: center;
+  
 }
 #refseq-table td
 {
@@ -32,7 +34,11 @@ thead th { position: sticky; top: 0; }
   font-size:small;
   font-weight:bold;
   color: #303030;
-  text-align:center;
+  text-align:left;
+  max-width: 200px;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
 }
 #refseq-table tr:nth-child(even) { 
     background-color: lightgrey;
@@ -57,14 +63,16 @@ thead th { position: sticky; top: 0; }
     
     <div id='refseq-box' >
     <table id='refseq-table' class='sortable'>
-    <tr><th>HMT-ID</th><th>RefSeq-ID</th><th>Species</th><th class='sorttable_nosort'></th></tr>
+    <tr><th>HMT-ID</th><th>RefSeq-ID</th><th>Species</th><th>Seq ID Count</th><th>Seq-IDs</th><th>(length) Sequence</th></tr>
     <% for(let n in rs){ %>
         <% taxidfullname = 'HMT-'+("000" + rs[n].otid).slice(-3); %>
         <tr>
             <td><a href='/taxa/tax_description?otid=<%= rs[n].otid %>'><%= taxidfullname %></a></td>
             <td><%= rs[n].refseq_id %></td>
             <td><%= rs[n].species %></td>
-            <td><a href='#' class='td-button' onclick="get_refseqV16('<%= taxidfullname %>','<%= rs[n].refseq_id %>','<%= rs[n].species %>')">
+            <td><%= rs[n].seqid_count %></td>
+            <td title='<%= rs[n].seqids %>'><%= rs[n].seqids %></td>
+            <td>(<%= rs[n].length %>) <a href='#' class='td-button' onclick="get_refseqV16('<%= taxidfullname %>','<%= rs[n].refseq_id %>','<%= rs[n].species %>')">
                 Show Sequence
             </td>
         </tr>

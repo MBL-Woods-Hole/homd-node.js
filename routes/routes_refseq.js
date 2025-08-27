@@ -21,7 +21,14 @@ router.get('/refseq_table', function refseq_table(req, res) {
          vals = C.refseq_lookup[otid]
          for(let m  in vals){
             //console.log('val',vals[m])
-            refseq_array.push({otid:otid,species:vals[m].species,refseq_id:vals[m].refseq_id})
+            refseq_array.push({
+                otid:        otid,
+                species:     vals[m].species,
+                refseq_id:   vals[m].refseq_id,
+                length:      vals[m].seq_length,
+                seqid_count: vals[m].seqid_count,
+                seqids:      vals[m].seqids,
+            })
          }
     
     }

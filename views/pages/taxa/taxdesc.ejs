@@ -453,8 +453,9 @@
         <% } %>
         <table class='' border='0'>
         <% for(n in data_refseq){ %>
-            <% refseqid   = data_refseq[n].seq_id %>
+            <% refseqid   = data_refseq[n].refseq_id %>
             <% species    = data_refseq[n].species %>
+            <!-- We also have seqids,seqid_count,seq_length -->
             <tr>
                <td class='' style='border:none;padding:0 1px;'>
                  <span class='rs-span-1 taxon-data'><%= refseqid %></span>
