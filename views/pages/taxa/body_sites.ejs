@@ -27,7 +27,7 @@ thead th { position: sticky; top: 0; }
   white-space: nowrap;
 }
 #main-box{
-   height:700px;
+   height:800px;
    overflow:auto;
    padding:10px 10px 20px 10px;
    border:1px solid gray;
@@ -93,7 +93,7 @@ tr.selected td{
        <p class='title h3'>HOMD Taxa Preferred Body Sites <small>(in Beta)</small></p>
        
        <span class=''>[<a href="javascript:window.history.back();"><-- Back</a>]&nbsp;&nbsp;&nbsp;&nbsp;[<a href='body_sites'>Reload Page</a>]</span>
-       <div id='body-sites-div'>
+       <div id='main-box'>
        
 
        
@@ -102,15 +102,15 @@ tr.selected td{
        <thead>
        
         
-		<th class="col2" nowrap>Taxon-ID</th>
-		<th nowrap>Genus-Species</th>
-		<th nowrap>Naming Status</th>
-		<th>Cultivation Status</th>
-		<th>Primary Body Site</th>
-		<th>Other Body Sites</th>
-		<th>Notes</th>
-		</tr>
-		</thead>
+        <th class="col2" nowrap>Taxon-ID</th>
+        <th nowrap>Genus-Species</th>
+        <th nowrap>Naming Status</th>
+        <th>Cultivation Status</th>
+        <th>Primary Body Site</th>
+        <th>Other Body Sites</th>
+        <th>Notes</th>
+        </tr>
+        </thead>
         <% for(n in data){ %>
            <% otid = data[n].otid %>
            <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -132,7 +132,7 @@ tr.selected td{
        </table>
        
        
-       </div>
+       </div>  <!-- End main box -->
         </div> <!-- end: page-content -->
     
     <div id='footer'>
