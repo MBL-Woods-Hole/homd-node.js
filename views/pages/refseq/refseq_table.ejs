@@ -5,14 +5,16 @@ thead th { position: sticky; top: 0; }
    overflow:auto;
    padding:10px 10px 20px 10px;
    border:1px solid gray;
-   margin-top:5px;
+   
    width:80%;
-   margin: 0 auto;
+   /* margin: 15px auto; */
+   margin: 15px auto;
  }
  
  #refseq-table
 {
   padding:5px;
+  
  /*  width:1200px; */
   /* table-layout:fixed; */
   /* table-layout:auto */
@@ -60,8 +62,15 @@ thead th { position: sticky; top: 0; }
     <div class='page-content' >
               
     <p class='h3 title'>16S Refseq Table</p>
-    
+    <div class='download_browser_text_excel'>
+       <b>Download This Table Data (no sequences)</b>: 
+       <a href='/download/dld_refseqtable_all/browser %>' >[Browser]</a>
+       <a href='/download/dld_refseqtable_all/text %>' >[Text]</a>
+       <a href='/download/dld_refseqtable_all/excel %>' >[Excel]</a>
+       <b>; For sequences: </b> <a href='/download/download#refseq'>Batch RefSeq Data</a>
+     </div>
     <div id='refseq-box' >
+    
     <table id='refseq-table' class='sortable'>
     <tr><th>HMT-ID</th><th>RefSeq-ID</th><th>Species</th><th>Seq ID Count</th><th>Seq-IDs</th><th>(length) Sequence</th></tr>
     <% for(let n in rs){ %>

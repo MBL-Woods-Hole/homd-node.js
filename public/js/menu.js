@@ -89,10 +89,18 @@ function shift_page_view(item){
           group.style.background = 'lightgrey';
           document.getElementById(all_groups[g]).style.background = 'white'
         }
+        
+        
       }else{
           //groupx = document.getElementById('topx')
           //groupx.style.background = 'lightgrey';
           //document.getElementById(all_groups[g]).style.background = 'white'
       }
     }
+    
+    const targetRow = document.getElementById(item);
+      targetRow.scrollIntoView({ 
+        behavior: 'smooth', // Optional: for smooth scrolling animation
+        block: 'center'    // Optional: aligns the row to the center of the viewport
+      });
 }

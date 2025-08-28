@@ -65,6 +65,60 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
     res.end()
 })
 //
+router.get('/dld_refseqtable_all/:type', function dld_refseqtable(req, res) {
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let otid,tmp_ary,vals,hmt,refseq_array=[]
+    let type = req.params.type
+    let tableTsv = "HOMD.org RefSeq Data;"+ " Date: "+today + '\n'
+    let headers = ["HMT-ID","RefSeq-ID","Species","Sequence Length","SeqID Count","Seq-IDs"]
+    tableTsv +=  headers.join('\t') + '\n'
+    let keys = Object.keys(C.refseq_lookup)
+    for(let n in keys){
+         otid = keys[n]
+         hmt = helpers.make_otid_display_name(otid)
+         vals = C.refseq_lookup[otid]
+         for(let m  in vals){
+            refseq_array.push({
+                otid:        otid,
+                species:     vals[m].species,
+                refseq_id:   vals[m].refseq_id,
+                length:      vals[m].seq_length,
+                seqid_count: vals[m].seqid_count,
+                seqids:      vals[m].seqids,
+            })
+         }
+    
+    }
+    refseq_array.sort((a, b) => {
+        return helpers.compareStrings_alpha(a.species, b.species);
+    })
+    for(let n in refseq_array){
+        hmt = helpers.make_otid_display_name(refseq_array[n].otid)
+        tableTsv += hmt+'\t'+refseq_array[n].refseq_id+'\t'+refseq_array[n].species+'\t'+refseq_array[n].length+'\t'+refseq_array[n].seqid_count+'\t'+refseq_array[n].seqids+'\n'
+    }
+    
+    if (type === 'browser') {
+        res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+    } else if (type === 'text') {
+        let fname = 'HOMD_refseq_table' + today + '_' + currentTimeInSeconds + '.txt'
+        res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+    } else if (type === 'excel') {
+        let fname = 'HOMD_refseq_table' + today + '_' + currentTimeInSeconds + '.xls'
+        res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+    } else {
+        // error
+        console.log('Download table format ERROR')
+    }
+    res.send(tableTsv)
+    res.end()
+    
+
+})
 router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
 //router.get('/dld_table/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
     let today = new Date();
@@ -472,6 +526,9 @@ router.get('/dnld_pangenome',(req, res) => {
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function create_refseq_table(source, type, head_txt) {
+
+}
 function create_taxon_table(otids, source, type, head_txt) {
     // source == table, hirearchy or level
     let txt = head_txt+'\n'

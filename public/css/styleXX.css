@@ -187,7 +187,7 @@ hr{
  .back_btn a{
    color:orange;
  }  
- #download_browser_text_excel {
+ .download_browser_text_excel {
   float: right;
   top: 2px;
   font-size: 12px;

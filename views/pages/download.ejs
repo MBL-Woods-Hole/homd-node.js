@@ -11,10 +11,19 @@ a{
   
   margin:30px 0;
   border:1px solid black;
-  width:70%;
+  width:100%;
   
 }
-
+.main-div{
+    height:800px;
+   overflow:auto;
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
+   
+   width:80%;
+   /* margin: 15px auto; */
+   margin: 15px auto;
+}
 .subtitle{
   background:lightgrey;
   padding:5px 10px;
@@ -39,6 +48,7 @@ a{
   border:1px solid grey;
   padding:8px;
   margin-top:10px;
+  
 }
 #download-refseq-table{
    border-collapse:collapse;
@@ -108,21 +118,22 @@ width:180px;
     <div  class="" >
      <div  id="downloadMenu" >
       <div class="list-group">
-        <li><a href='#topx'       onclick="shift_page_view('topx')">[top]</a></li>
-        <li><a href='#taxon'     onclick="shift_page_view('taxon')">Taxonomy Data</a></li>
-        <li><a href='#abundance' onclick="shift_page_view('abundance')">Abundance Data</a></li>
-        <li><a href='#genome'    onclick="shift_page_view('genome')">Genomic Data</a></li>
-        <li><a href='#phylo'     onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
-        <li><a href='#peptide'   onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
-       <!--  <li><a href='#phage' onclick="shift_page_view('phage')">Phage data</a></li> -->
-        <li><a href='#refseq'    onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
-        <li><a href='#schema'    onclick="shift_page_view('schema')">Database Schema</a></li>
+        <li><a href='/download/download'>[top]</a></li>
+        <li><a href='#'     onclick="shift_page_view('taxon')">Taxonomy Data</a></li>
+        <li><a href='#' onclick="shift_page_view('abundance')">Abundance Data</a></li>
+        <li><a href='#'    onclick="shift_page_view('genome')">Genomic Data</a></li>
+        <li><a href='#'     onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
+        <li><a href='#'   onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
+       <!--  <li><a href='#' onclick="shift_page_view('phage')">Phage data</a></li> -->
+        <li><a href='#'    onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
+        <li><a href='#'    onclick="shift_page_view('schema')">Database Schema</a></li>
       </div>
      </div>
 </div>           
   <p class='title h3'>Download HOMD Data</p>
     
-<center>
+
+<div class="main-div">
 <a name='taxon'></a>
 <div id='taxon' class='dnld-block'>
   
@@ -333,7 +344,7 @@ width:180px;
     <br><br>
   In addition, the entire collection of all cloned sequences (clonal collection) upon which the Refseq was derived from, is also provided for download on this page and on the <a href='<%= cfg.HOMD_URL_BASE %>/ftp/'>HOMD FTP site</a>.
   </div>
-
+  <center>
   <div id='download-refseq-table-div'>
     <small>[<a href='/help/help-page?pagecode=refseq/refseq_version'>View Version History</a>]</small>
     
@@ -461,12 +472,12 @@ width:180px;
     <tr><td>2014-09-11</td><td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'>HOMD 16S rRNA RefSeq Version 13.2 Taxonomy File for mothur</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/HOMD_16S_rRNA_RefSeq_V13.2.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
     </table>
-      
+    </center>
     <div id='table-note'> 
       * These sequences are corrected consensus sequences. Many have been corrected and extended based on alignment with other sequences for that taxon and Ns and indels removed. Therefore, for many sequences, there will be differences between the Reference Sequence and the GenBank sequence listed in the header information. 
       We have not yet updated our own GenBank sequences, and can not update those from other depositors. We believe these are currently the best reference sequences available, and for the purposes of BLAST analysis, have the advantage of being of a uniform length.  
     </div>
-</div>
+
 </div>
 
 <hr>
@@ -490,7 +501,7 @@ width:180px;
   </table>
   </center>
 </div>
-
+</div>  <!-- End main-div -->
 </div> <!-- end: page-content -->
     
 <div id='footer'>

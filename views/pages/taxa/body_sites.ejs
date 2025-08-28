@@ -39,6 +39,13 @@ thead th { position: sticky; top: 0; }
   
 }
 
+tr td{
+   background:none;
+}
+
+tr.selected td{
+   background:lightgreen;
+}
 
  #main-table tr:hover { 
     background-color: #dce7f5; 
@@ -95,15 +102,15 @@ thead th { position: sticky; top: 0; }
        <thead>
        
         
-		<th class="col2" nowrap>Taxon-ID</th>
-		<th nowrap>Genus-Species</th>
-		<th nowrap>Naming Status</th>
-		<th>Cultivation Status</th>
-		<th>Primary Body Site</th>
-		<th>Other Body Sites</th>
-		<th>Notes</th>
-		</tr>
-		</thead>
+        <th class="col2" nowrap>Taxon-ID</th>
+        <th nowrap>Genus-Species</th>
+        <th nowrap>Naming Status</th>
+        <th>Cultivation Status</th>
+        <th>Primary Body Site</th>
+        <th>Other Body Sites</th>
+        <th>Notes</th>
+        </tr>
+        </thead>
         <% for(n in data){ %>
            <% otid = data[n].otid %>
            <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -143,21 +150,15 @@ thead th { position: sticky; top: 0; }
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-  var div = document.getElementById("body-sites-div")
-  var otid = '<%= selected %>'
-  //table.scrollToRow({index: 100})
-  var $container = $(div),
-  
-  $scrollTo = $('#'+otid);
+   
+      
+  const targetRow = document.getElementById(otid);
+  targetRow.scrollIntoView({ 
+    behavior: 'smooth', // Optional: for smooth scrolling animation
+    block: 'center'    // Optional: aligns the row to the center of the viewport
+  });
 
-  $container.scrollTop(
-    $scrollTo.offset().top - $container.offset().top + $container.scrollTop() -100
-  );
-
-  // Or you can animate the scrolling:
-  //$container.animate({
-      //scrollTop: $scrollTo.offset().top - $container.offset().top + $container.scrollTop()
-  //});​
+ 
 </script>
 
 

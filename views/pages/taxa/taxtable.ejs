@@ -26,14 +26,13 @@ thead th { position: sticky; top: 0; }
     
      <p class='title h3'><%= pgtitle %></p>
      <small>(HMT = <u>H</u>uman <u>M</u>icrobial <u>T</u>axon)</small>
-     <div id='download_browser_text_excel'>
-     
-     <b>Download This Table Data</b>: 
-       <a href='/download/download/dld_taxtable/browser %>' >[Browser]</a>
-       <a href='/download/download/dld_taxtable/text %>' >[Text]</a>
-       <a href='/download/download/dld_taxtable/excel %>' >[Excel]</a>
+     <div class='download_browser_text_excel'>
+       <b>Download This Table Data</b>: 
+       <a href='/download/dld_taxtable/browser %>' >[Browser]</a>
+       <a href='/download/dld_taxtable/text %>' >[Text]</a>
+       <a href='/download/dld_taxtable/excel %>' >[Excel]</a>
        <b>OR</b> <a href='/download/download#taxon'>Batch Taxonomy Data</a>
-     </div>  
+     </div>
 
    
     <%- include("../../partials/tax_table_basic_filter.ejs") %>
