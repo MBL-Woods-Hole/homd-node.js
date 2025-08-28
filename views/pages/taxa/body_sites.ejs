@@ -102,15 +102,15 @@ tr.selected td{
        <thead>
        
         
-        <th class="col2" nowrap>Taxon-ID</th>
-        <th nowrap>Genus-Species</th>
-        <th nowrap>Naming Status</th>
-        <th>Cultivation Status</th>
-        <th>Primary Body Site</th>
-        <th>Other Body Sites</th>
-        <th>Notes</th>
-        </tr>
-        </thead>
+		<th class="col2" nowrap>Taxon-ID</th>
+		<th nowrap>Genus-Species</th>
+		<th nowrap>Naming Status</th>
+		<th>Cultivation Status</th>
+		<th>Primary Body Site</th>
+		<th>Other Body Sites</th>
+		<th>Notes</th>
+		</tr>
+		</thead>
         <% for(n in data){ %>
            <% otid = data[n].otid %>
            <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
@@ -150,15 +150,12 @@ tr.selected td{
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   mainmenu()
-   
-      
+  var otid = '<%= selected %>'
   const targetRow = document.getElementById(otid);
   targetRow.scrollIntoView({ 
     behavior: 'smooth', // Optional: for smooth scrolling animation
     block: 'center'    // Optional: aligns the row to the center of the viewport
   });
-
- 
 </script>
 
 
