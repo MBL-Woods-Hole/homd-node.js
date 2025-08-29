@@ -22,7 +22,8 @@
     position:fixed;
     left:10px;
     font-size:12px;
-   display:none;
+    display:none;
+    color: white;
 }
 .legend_item{
    border:1px solid black;
@@ -43,6 +44,9 @@
    border:1px solid grey;
    font-size:x-large;
    
+}
+.pill a{
+   color:white
 }
 </style>
 
@@ -156,7 +160,7 @@
 <div id="legend" class="legend">
   <%- include('./ecology_lollipop_legend'); %>
 </div>
-<div id="legend-return" class='pill pill-aqua'>
+<div id="legend-return" class='pill pill-brown'>
   <a href='#' onclick='show_legend()'>Show Legend</a>
 </div>
 <div  class="grid-container"  >
