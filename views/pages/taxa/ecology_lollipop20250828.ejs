@@ -1,31 +1,14 @@
 <style>
-.grid-container {
-  display: flex;
-  flex-direction: column;
-}
-.grid-container > div {
-  border:1px solid grey;
-  padding:10px 10px 10px 10px;
+
+.page-content {
+ 
+  /* background: white; */
+  min-height: 500px;
   
 }
-.legend{
-   width:300px;
-   font-size:12px;
-   position:fixed;
-   background:lightyellow;
-   border:1px solid grey;
-   padding:2px;
-   left:20px;
-   display:block;
-}
-#legend-return{
-    position:fixed;
-    left:10px;
-    font-size:12px;
-   display:none;
-}
-.legend_item{
-   border:1px solid black;
+.plot-td{
+   border:2px solid lightgray;
+   padding:15px;
 }
 .abundance-table {
    border-collapse:collapse;
@@ -42,6 +25,40 @@
    padding:5px 3px;
    border:1px solid grey;
    font-size:x-large;
+   
+}
+#legend-content{
+    font-size:12px;
+    padding:3px 5px;
+    border:1px solid brown;
+    width:100%;
+    
+  }
+.legend_item{
+  padding:1px;
+  border:1px solid black;
+  }
+#legend-table{
+   /* width:100%; */
+   font-size:15px;
+  }
+#legend-table td{
+   font-size: 15px;
+   text-align: left;
+   padding-left:2px;
+   
+  }
+.brown{
+   color:brown;
+}
+#main-box{
+   height:720px;
+   overflow:auto;
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
+   margin-top:5px;
+}
+.fixed{
    
 }
 </style>
@@ -151,24 +168,25 @@
 
 
 
-
+<div  id="main-box"  > 
+  <div class="row justify-content-around">
+    <div class="col align-self-start fixed">
+      <%- include('./ecology_lollipop_legend'); %>
+    </div>
   
-<div id="legend" class="legend">
-  <%- include('./ecology_lollipop_legend'); %>
-</div>
-<div id="legend-return" class='pill pill-aqua'>
-  <a href='#' onclick='show_legend()'>Show Legend</a>
-</div>
-<div  class="grid-container"  >
-<div  class="" >
+    <div  class="col" >
 
-          <center>
+    <center>
+    <table class='plot_table' border='1' >
+        
+    <tr>
+        <td class='plot-td'>
           <div class='plot-title'>
             <small>
             HMP 16S RefSeq (V1-V3) <small>(not published)</small>
             </small>
+            
           </div>
-          
           <% if(notes.hmp_refseqv1v3 == ''){ %>
             <div class='nonote'>No Notes</div>
           <% }else{ %>
@@ -189,15 +207,15 @@
         <br>
         <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
           <div class='abund-table-div'>
-            <%- hmp_refseqv1v3_table %>
+            <center><%- hmp_refseqv1v3_table %></center>
           </div>  
         <% } %>  
-        </center>
-</div>
+        </td>
+    </tr>
       
     <!-- END HMP RefSeq V1V3 -->
-<div  class="" >
-          <center>
+    <tr>
+        <td class='plot-td'>
           <div class='plot-title'>
             <small>
             HMP 16S RefSeq (V3-V5) <small>(not published)</small>
@@ -223,17 +241,17 @@
         <br>
         <% if(Object.keys(hmp_refseqv3v5_data).length !== 0){ %>
           <div class='abund-table-div'>
-            <%- hmp_refseqv3v5_table %>
+            <center><%- hmp_refseqv3v5_table %></center>
           </div>  
-        <% } %> 
-        </center>
-        
-</div>
+        <% } %>  
+        </td>
+    </tr>
+     
     
     <!-- END HMP RefSeq V3V5 -->
     
-<div  class="" >
-<center>
+    <tr>
+        <td class='plot-td'>
           <div class='plot-title'>
             <small>
             Dewhirst (35x9) <small>(not published)</small>
@@ -259,15 +277,16 @@
         <br>
         <% if(Object.keys(dewhirst_data).length !== 0){ %>
           <div class='abund-table-div'>
-            <%- dewhirst_table %>
+            <center><%- dewhirst_table %></center>
           </div>  
-        <% } %>
-        </center>
-</div>
+        <% } %>  
+        </td>
+      </tr>
+      
     <!-- END Dewhirst -->
     
-<div  class="" >
-          <center>
+    <tr>
+        <td class='plot-td'>
           <div class='plot-title'>
             <small>
             HMP Metaphlan <small>(not published)</small>
@@ -294,16 +313,16 @@
         <br>
         <% if(Object.keys(hmp_metaphlan_data).length !== 0){ %>
           <div class='abund-table-div'>
-            <%- hmp_metaphlan_table %>
+            <center><%- hmp_metaphlan_table %></center>
           </div>  
-        <% } %>
-        </center>
-       
-</div>
+        <% } %>  
+        </td>
+    </tr>
+    
     <!-- END Metaphlan -->
     
-<div  class="" >
-<center>
+    <tr>
+        <td class='plot-td'>
           <div class='plot-title'>
             <small>
             Eren V1-V3 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
@@ -330,15 +349,15 @@
         <br>
         <% if(Object.keys(erenv1v3_data).length !== 0){ %>
           <div class='abund-table-div'>
-            <%- erenv1v3_table %>
+            <center><%- erenv1v3_table %></center>
           </div>  
-        <% } %>
-        </center>
-       
-</div>
+        <% } %>  
+        </td>
+    </tr>
+    
     <!-- END Eren v1v3 -->
-<div  class="" >
-          <center>
+    <tr>
+        <td class='plot-td'>
           <div class='plot-title'>
             <small>
             Eren V3-V5 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
@@ -364,16 +383,18 @@
         <br>
         <% if(Object.keys(erenv3v5_data).length !== 0){ %>
           <div class='abund-table-div'>
-            <%- erenv3v5_table %>
+            <center><%- erenv3v5_table %></center>
           </div>  
         <% } %>  
-        </center>
+        </td>
+      </tr>
     <!-- END Eren v3v5 -->
     
-    
-</div>  <!-- eren35 -->
+    </table>
+    </center>
+</div>  <!-- column middle -->
 
-
+</div>  <!-- end row -->
 </div>  <!-- main-box -->
 
 
@@ -503,14 +524,11 @@
     tooltips.erenv3v5_notes = d3.select("#show_erenv3v5_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
 
 
-function hide_legend(){
-    document.getElementById('legend').style.display = 'none';
-    document.getElementById('legend-return').style.display = 'block';
+function change_view(v,r,t){
+    console.log(v,r,t)
+    window.open('ecology?rank='+r+'&name='+t+'&page='+v,'_self')
 }
-function show_legend(){
-    document.getElementById('legend').style.display = 'block';
-    document.getElementById('legend-return').style.display = 'none';
-}
+
 </script>
 <script type="text/javascript" src="/js/ecology_lollipop.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
