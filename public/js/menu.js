@@ -89,8 +89,6 @@ function shift_page_view(item){
           group.style.background = 'lightgrey';
           document.getElementById(all_groups[g]).style.background = 'white'
         }
-        
-        
       }else{
           //groupx = document.getElementById('topx')
           //groupx.style.background = 'lightgrey';

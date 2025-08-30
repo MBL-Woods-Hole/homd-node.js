@@ -12,18 +12,23 @@ const helpers_genomes = require(app_root + '/routes/helpers/helpers_genomes');
 const queries = require(app_root + '/routes/queries')
 
 
-router.get('/download', function download(req, res) {
+router.get('/download/:q', function download(req, res) {
   // renders the overall downlads page
+  //console.log('q',req.params)
+  let q = req.params.q
   res.render('pages/download', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'download', // for AbountThisPage
+    section: q,
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version, gtdb_ver:C.GTDB_version }),
     
 
   })
 })
-
+router.get('/download', function download(req, res) {
+   res.redirect('download/all');
+})
 router.get('/download_file', function search(req, res) {
   //let page = req.params.pagecode
   let fullpath = req.query.filename

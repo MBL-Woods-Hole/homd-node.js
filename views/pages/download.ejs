@@ -118,15 +118,15 @@ width:180px;
     <div  class="" >
      <div  id="downloadMenu" >
       <div class="list-group">
-        <li><a href='/download/download'>[top]</a></li>
+        <li><a href='/download/download/all'>[top]</a></li>
         <li><a href='#'     onclick="shift_page_view('taxon')">Taxonomy Data</a></li>
-        <li><a href='#' onclick="shift_page_view('abundance')">Abundance Data</a></li>
-        <li><a href='#'    onclick="shift_page_view('genome')">Genomic Data</a></li>
+        <li><a href='#'     onclick="shift_page_view('abundance')">Abundance Data</a></li>
+        <li><a href='#'     onclick="shift_page_view('genome')">Genomic Data</a></li>
         <li><a href='#'     onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
-        <li><a href='#'   onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
+        <li><a href='#'     onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
        <!--  <li><a href='#' onclick="shift_page_view('phage')">Phage data</a></li> -->
-        <li><a href='#'    onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
-        <li><a href='#'    onclick="shift_page_view('schema')">Database Schema</a></li>
+        <li><a href='#'     onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
+        <li><a href='#'     onclick="shift_page_view('schema')">Database Schema</a></li>
       </div>
      </div>
 </div>           
@@ -519,7 +519,10 @@ width:180px;
 <script>
 
   mainmenu()
-  
+  let query = '<%= section %>'
+  if(query !== 'all'){
+    shift_page_view(query)
+  }
 </script>
 
 
