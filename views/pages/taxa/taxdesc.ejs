@@ -314,7 +314,7 @@
       <td class='taxon-data'>
         <a href='life?rank=genus&name=<%= data_lineage.genus %>'><%= data_lookup.genus %></a>
         <% if(data_lineage.genus.includes("[")){ %>
-          <span class="tooltip" data-tooltip-content="#tooltip_content">
+          <span class="tooltip-tipster" data-tooltip-content="#tooltip_content">
           <img src="/images/question.png" width='20'>
           </span>
         <% } %>
@@ -789,7 +789,7 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   //$(document).ready(function() {
-    $('.tooltip').tooltipster({
+    $('.tooltip-tipster').tooltipster({
        contentCloning: true, theme: 'tooltipster-noir'
     });
   //}

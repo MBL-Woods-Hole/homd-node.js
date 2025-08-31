@@ -27,6 +27,8 @@ thead th { position: sticky; top: 0; }
   background:  var(--table-header-bg);
   padding:5px;
   font-size:13px;
+  cursor: pointer;
+  border-right:1px solid ivory;
   
 }
 #refseq-table td
@@ -61,7 +63,7 @@ thead th { position: sticky; top: 0; }
     
     <div class='page-content' >
               
-    <p class='h3 title'>16S Refseq Table</p>
+    <p class='h3 title'>16S rRNA Refseq Table</p>
     <div class='download_browser_text_excel'>
        <b>Download This Table Data (no sequences)</b>: 
        <a href='/download/dld_refseqtable_all/browser %>' >[Browser]</a>
@@ -70,7 +72,7 @@ thead th { position: sticky; top: 0; }
        <b>; For sequences: </b> <a href='/download/download/refseq'>Batch RefSeq Data</a>
      </div>
     <div id='refseq-box' >
-    
+    <small>[Click Column Header to Sort]</small>
     <table id='refseq-table' class='sortable'>
     <tr><th>HMT-ID</th><th>RefSeq-ID</th><th>Species</th><th>Seq ID Count</th><th>Seq-IDs</th><th>(length) Sequence</th></tr>
     <% for(let n in rs){ %>
