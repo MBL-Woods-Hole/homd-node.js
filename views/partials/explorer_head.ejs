@@ -24,11 +24,11 @@
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
                     <a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= gid %>' target="_self">PROKKA BLAST</a> 
                     <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
-                  <% } else if(anno_type == 'ncbi'){ %>
+                  <% }else if(anno_type == 'ncbi'){ %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <span class='an-button active' href=''>NCBI</span>
                     <a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_ncbi/?gid=<%= gid %>' target="_self">NCBI BLAST</a> 
-                  <% } else { %>
+                  <% }else { %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
                     <a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_<%= anno_type %>/?gid=<%= gid %>' target="_self">BLAST</a> 
