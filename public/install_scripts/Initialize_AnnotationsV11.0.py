@@ -207,6 +207,8 @@ if __name__ == "__main__":
         dbhost = '192.168.1.42'
     elif args.dbhost == 'homd_v41':
         dbhost = '192.168.1.58'
+    elif args.dbhost == 'homd_dev':
+        dbhost= '192.168.1.69'
     elif args.dbhost == 'localhost':  #default
         dbhost = 'localhost'
         
