@@ -1,23 +1,23 @@
   // Prep the tooltip bits, initial display is hidden
 var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
+    .attr("class", "bar_tooltip")
     .style("opacity", 0);
             
 function handleMouseOver (event, d) {
        d3.select(this).attr("fill", "orange");
-       tooltip.style("visibility", "visible");
+       bar_tooltip.style("visibility", "visible");
 };
   
 function handleMouseMove (event, d) {
       var xPosition = d3.mouse(this)[0] - 5;
       var yPosition = d3.mouse(this)[1] - 5;
       //console.log(xPosition,yPosition)
-      tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-      tooltip.select("text").text('Species: '+species[d]);
+      bar_tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+      bar_tooltip.select("text").text('Species: '+species[d]);
 };
 function handleMouseOut (event, d) {
        d3.select(this).attr("fill", "blue");
-       tooltip.style("visibility", "hidden");
+       bar_tooltip.style("visibility", "hidden");
 };
   // https://gist.github.com/gawain91/9fedf9a94d615a4f540fc2ff5792c952
 var initStackedBarChart = {
@@ -120,8 +120,8 @@ var initStackedBarChart = {
                     }
                 })
 
-                .on("mouseover", function() { tooltip.style("display", null); })
-                .on("mouseout", function() { tooltip.style("display", "none"); })
+                .on("mouseover", function() { bar_tooltip.style("display", null); })
+                .on("mouseout", function() { bar_tooltip.style("display", "none"); })
                 //.on("mousemove", function(d,i) {
                 .on("mousemove", function(event,d) {
                   //var xPosition = d3.mouse(this)[0] - 5;
@@ -152,7 +152,7 @@ var initStackedBarChart = {
                   //var matrix = this.getScreenCTM().translate(+ this.getAttribute("cx"), + this.getAttribute("cy"));
                   //var pos = d3.select(this).node().getBoundingClientRect();
                   //console.log(matrix.e, matrix.f)
-                  tooltip
+                  bar_tooltip
                          //d3.mouse(container)::
                          //Returns the x and y coordinates of the current event relative to the specified container.     
                           //What you want is d3.event.pageX which gives you:
@@ -179,7 +179,7 @@ var initStackedBarChart = {
                         .html(html);
                 });
               
-        var tooltip = d3.select("body").append("div").attr("class", "toolTip").style("display","none");             
+        var bar_tooltip = d3.select("body").append("div").attr("class", "bar_tooltip").style("display","none");             
 
         svg.append("g")
         .attr("class", "axis axis--x")
