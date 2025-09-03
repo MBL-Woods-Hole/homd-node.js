@@ -500,6 +500,7 @@ router.get('/dld_static_file/:fname', function dld_static_file (req, res) {
     const fname = req.params.fname
     
     let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,fname)
+    console.log('downloading',fullpath)
     res.download(fullpath)
     return 
 })
