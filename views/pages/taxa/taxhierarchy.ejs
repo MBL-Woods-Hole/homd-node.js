@@ -25,6 +25,9 @@
     width:50%;
     
 }
+.pill{
+   color:black;
+}
 </style>
 
 <% bac_counts = JSON.parse(bcounts) %>
@@ -36,7 +39,7 @@
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
-    <%- include('../../partials/navbar2'); %>
+    <%- include('../../partials/navbar'); %>
 
     <div class='page-content' >
        <p class='h3 title'>Dynamic Taxonomic Hierarchy</p>
@@ -64,9 +67,9 @@
                 class="btn btn-sm"
                 >
                   <small>Domain:</small> Archaea
-                <span class='pill pill-indigo'><%= arc_counts.tax_counts %></span>
-                <span class='pill pill-orange'><%= arc_counts.genome_counts %></span>
-                <span class='pill pill-khaki'><%= arc_counts.refseq_counts %></span>
+                <span title='Taxon Count' class='pill pill-indigo'><%= arc_counts.tax_counts %></span>
+                <span title='Genome Count' class='pill pill-orange'><%= arc_counts.genome_counts %></span>
+                <span title='RefSeq Count' class='pill pill-khaki'><%= arc_counts.refseq_counts %></span>
               </a>
               <span id='Archaea_domain_span' class='fa_widget'><i class="fa-solid fa-angle-right"></i></span>
               <div id='Archaea_domain_div'></div>
@@ -80,9 +83,9 @@
                 class="btn btn-sm"
                 >
                 <small>Domain:</small> Bacteria
-                <span class='pill pill-indigo'><%= bac_counts.tax_counts %></span>
-                <span class='pill pill-orange'><%= bac_counts.genome_counts %></span>
-                <span class='pill pill-khaki'><%= bac_counts.refseq_counts %></span>
+                <span title='Taxon Count' class='pill pill-indigo'><%= bac_counts.tax_counts %></span>
+                <span title='Genome Count' class='pill pill-orange'><%= bac_counts.genome_counts %></span>
+                <span title='RefSeq Count' class='pill pill-khaki'><%= bac_counts.refseq_counts %></span>
               </a>
                 <span id='Bacteria_domain_span' class='fa_widget'><i class="fa-solid fa-angle-right"></i></span>
               <div id='Bacteria_domain_div'></div>
@@ -90,7 +93,7 @@
             </ul>
       </div>
       <div class="col-2">
-      <a href='tax_hierarchy2' role='button' class='btn btn-success' style='border:1px solid red'>Reset Tree</a>
+      <a href='tax_hierarchy' role='button' class='btn btn-success' style='border:1px solid red'>Reset Tree</a>
       <div style="margin-top:20px;padding:5px;border:1px solid black;">
         <li><span class="pill pill-indigo">&nbsp;&nbsp;</span> Tax Counts</li>
         <li><span class="pill pill-orange">&nbsp;&nbsp;</span> Genome Counts</li>
@@ -136,7 +139,7 @@
     }else{
         target_span.innerHTML = '<i class="fa-solid fa-angle-down"></i>'
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", "/taxa/tax_hierarchy2", true);
+        xmlhttp.open("POST", "/taxa/tax_hierarchy", true);
         xmlhttp.setRequestHeader("Content-type","application/json");
         xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {

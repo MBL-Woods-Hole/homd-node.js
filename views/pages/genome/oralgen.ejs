@@ -56,16 +56,16 @@
 </style>
 <% var cfg = JSON.parse(config) %> 
 <body>
-  	<div id='wrapper'>
-  	<%- include('../../partials/header_html'); %>
+    <div id='wrapper'>
+    <%- include('../../partials/header_html'); %>
     <%- include('../../partials/header_img'); %>
-    <%- include('../../partials/navbar2'); %>
+    <%- include('../../partials/navbar'); %>
     
     
     <div class='page-content' >
-		 					
-			 <p class='title h3'>
-			 Comparison between HOMD and LANL ORALGEN (<a href='http://www.oralgen.org'>http://www.oralgen.org</a>) Annotated Genomes</p>
+                            
+             <p class='title h3'>
+             Comparison between HOMD and LANL ORALGEN (<a href='http://www.oralgen.org'>http://www.oralgen.org</a>) Annotated Genomes</p>
 
 <table id="oralgen" cellspacing="2px" cellpadding="4px">
 <tr><th class='col1' rowspan="2">Genome Name</th>
@@ -255,7 +255,7 @@
 </td>
 </tr>
 <tr>
-<td><b>Fusobacterium	nucleatum subsp. polymorphum ATCC 10953</b>
+<td><b>Fusobacterium    nucleatum subsp. polymorphum ATCC 10953</b>
 <br>(Fusobacterium nucleatum polymorphum)</td>
 <td class='redfg center'>14</td>
 <td class='redfg center'>2,428,298</td>
@@ -310,11 +310,11 @@
 </td></tr>
 
 <tr><td>
-	<table  id='notes_table' border='0' width="800px" ><tr>
-	<td valign="top" width="40%" align="left">
-		<table id='inner_notes_table'  border='0'><tr>
-		<td valign="top"><span class='redfg large bold'>*</span></td>
-		<td>The Porphyromonas gingivalis W83 genomic sequence
+    <table  id='notes_table' border='0' width="800px" ><tr>
+    <td valign="top" width="40%" align="left">
+        <table id='inner_notes_table'  border='0'><tr>
+        <td valign="top"><span class='redfg large bold'>*</span></td>
+        <td>The Porphyromonas gingivalis W83 genomic sequence
 annotated by ORALGEN has the following 3 additional 
 nucleotides. Although for convenience, we still provide 
 an ORALGEN panel in the HOMD JBrowse (above) for this genome, 
@@ -334,42 +334,42 @@ Oralgen: K<span class='redfg'>Y</span>YTT
 NCBI:    A-AATT
 Oralgen: A<span class='redfg'>NAATT</span>
 </pre>
-		</td></tr>
-		</table>
-	</td><td valign="top"  width="30%"  align="left">
-		<table>
-		<tr>
-		<td valign="top"><span class='redfg large bold'>**</span></td>
-		<td>ORALGEN recorded 3 plasmids (pFN1,pKH9,pPA52) which NCBI does not have.		</td></tr>	
-		<tr>
-		<td valign="top"><span class='redfg large bold'>#</span></td>
-		<td>In addition to the two chromosomes, ORALGEN has an additional sequence for plasmid pYHBi1.		</td></tr>	
-		<tr>
-		<td valign="top"><span class='redfg large bold'>##</span></td>
-		<td>ORALGEN recorded a plasmid pTS1 which NCBI does not have.		</td></tr>			
-		<tr>
-		<td valign="top"><span class='greenfg large bold'>*</span></td>
-		<td>This FTP folder contains all the original ORALGEN data exported to Excel spread sheets		</td></tr>	
-		</table>
-	</td><td  valign="top"  width="30%"  align="left">
-		<table><tr>
-		<td valign="top"><span class='bluefg large bold'>*</span></td>
-		<td>Since the genomic sequences annotated by ORALGEN is different from the 
+        </td></tr>
+        </table>
+    </td><td valign="top"  width="30%"  align="left">
+        <table>
+        <tr>
+        <td valign="top"><span class='redfg large bold'>**</span></td>
+        <td>ORALGEN recorded 3 plasmids (pFN1,pKH9,pPA52) which NCBI does not have.     </td></tr>  
+        <tr>
+        <td valign="top"><span class='redfg large bold'>#</span></td>
+        <td>In addition to the two chromosomes, ORALGEN has an additional sequence for plasmid pYHBi1.      </td></tr>  
+        <tr>
+        <td valign="top"><span class='redfg large bold'>##</span></td>
+        <td>ORALGEN recorded a plasmid pTS1 which NCBI does not have.       </td></tr>          
+        <tr>
+        <td valign="top"><span class='greenfg large bold'>*</span></td>
+        <td>This FTP folder contains all the original ORALGEN data exported to Excel spread sheets      </td></tr>  
+        </table>
+    </td><td  valign="top"  width="30%"  align="left">
+        <table><tr>
+        <td valign="top"><span class='bluefg large bold'>*</span></td>
+        <td>Since the genomic sequences annotated by ORALGEN is different from the 
 current updated genomic sequences annotated by HOMD, 
 we provide a Oralgen gene ID => HOMD/NCBI gene ID mapping table
 based on the BLAST Search Result. In the provided FTP folder, please look for 
-a file named either: <br><br><b>lanl_gene_id_2_ncbi_blastp.csv</b> <br>or<br> <b>lanl_gene_id_2_homd_blastp.csv</b>		</td></tr>	
-		</table>
-	</td>
-	</tr></table>
+a file named either: <br><br><b>lanl_gene_id_2_ncbi_blastp.csv</b> <br>or<br> <b>lanl_gene_id_2_homd_blastp.csv</b>     </td></tr>  
+        </table>
+    </td>
+    </tr></table>
 </td></tr>
 
 <tr><td>&nbsp;&nbsp; <i>~ Contact George Chen (electronic mail: tchen at forsyth.org) if there's any question ~</i></td></tr>
 
 </table>
 
-		
-	
+        
+    
     </div> <!-- end: page-content -->
     
     <div id='footer'>
