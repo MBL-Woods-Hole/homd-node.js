@@ -248,8 +248,8 @@ function get_hierarchy_html(node, requested_rank) {
     let hmt_lnk = "<a href='tax_description?otid=" + node.otid + "'>" + hmt + "</a>"
     if (child_rank === 'species') {
       html += space + "<span class='otid-link' nowrap><small>" + display_rank + ":</small> <i>" + child_name + "</i> (" + hmt_lnk + ")"
-      html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>" + cts.genome_counts + "</a>"
-      html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>" + cts.refseq_counts + "</a>"
+      html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.genome_counts + "&nbsp;</a>"
+      html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
       html += " </span>"
     } else {  //subspecies
       //console.log('Not Used')
@@ -365,16 +365,16 @@ router.post('/tax_hierarchy', function tax_hierarchy_POST(req, res) {
       let hmt_lnk = "<a href='tax_description?otid=" + node.otid + "'>" + hmt + "</a>"
       if (child_rank === 'species') {
         html += space + "<span class='otid-link' nowrap><small>" + display_rank + ":</small> <i>" + child_name + "</i> (" + hmt_lnk + ")"
-        html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>" + cts.genome_counts + "</a>"
-        html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>" + cts.refseq_counts + "</a>"
+        html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>[&nbsp;" + cts.genome_counts + "&nbsp;]</a>"
+        html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
         html += "</span>"
       } else {
         // child name needs to be species + subspecies
         //console.log('mynode',node)
         let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id].taxon
         html += space + "<span class='otid-link' nowrap><small>" + display_rank + ":</small> <i>" + parent_taxon + '</i> ' + child_name + " (" + hmt_lnk + ")"
-        html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>" + cts.genome_counts + "</a>"
-        html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>" + cts.refseq_counts + "</a>"
+        html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>[&nbsp;" + cts.genome_counts + "&nbsp;]</a>"
+        html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
         html += "</span>"
       }
 
