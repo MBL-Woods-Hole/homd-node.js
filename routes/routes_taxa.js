@@ -248,8 +248,8 @@ function get_html(node, requested_rank) {
     let hmt_lnk = "<a href='tax_description?otid=" + node.otid + "'>" + hmt + "</a>"
     if (child_rank === 'species') {
       html += space + "<span class='otid-link' nowrap><small>" + display_rank + ":</small> <i>" + child_name + "</i> (" + hmt_lnk + ")"
-      html += " <span class='pill pill-orange'>" + cts.genome_counts + "</span>"
-      html += " <span class='pill pill-khaki'>" + cts.refseq_counts + "</span>"
+      html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.genome_counts + "&nbsp;</a>"
+      html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
       html += " </span>"
     } else {  //subspecies
       //console.log('Not Used')
@@ -274,9 +274,9 @@ function get_html(node, requested_rank) {
         html += "    <small>" + display_rank + ':</small> ' + child_name
       }
 
-      html += " <span class='pill pill-indigo'>" + cts.tax_counts + "</span>"
-      html += " <span class='pill pill-orange'>" + cts.genome_counts + "</span>"
-      html += " <span class='pill pill-khaki'>" + cts.refseq_counts + "</span>"
+      html += " <span title='Taxon Count' class='pill pill-indigo'>" + cts.tax_counts + "</span>"
+      html += " <span title='Genome Count' class='pill pill-orange'>" + cts.genome_counts + "</span>"
+      html += " <span title='RefSeq Count' class='pill pill-khaki'>" + cts.refseq_counts + "</span>"
       html += '</a>'
 
       html += " <span id='" + id + "_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>"
@@ -296,9 +296,9 @@ function get_html(node, requested_rank) {
         html += "    <small>" + display_rank + ':</small> ' + child_name
       }
 
-      html += " <span class='pill pill-indigo'>" + cts.tax_counts + "</span>"
-      html += " <span class='pill pill-orange'>" + cts.genome_counts + "</span>"
-      html += " <span class='pill pill-khaki'>" + cts.refseq_counts + "</span>"
+      html += " <span title='Taxon Count'  class='pill pill-indigo'>" + cts.tax_counts + "</span>"
+      html += " <span title='Genome Count' class='pill pill-orange'>" + cts.genome_counts + "</span>"
+      html += " <span title='RefSeq Count' class='pill pill-khaki'>" + cts.refseq_counts + "</span>"
       html += '</a>'
       html += " <span id='" + id + "_span' class='fa_widget'><i class='fa-solid fa-angle-down'></i></span>"
 
@@ -365,16 +365,16 @@ router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
       let hmt_lnk = "<a href='tax_description?otid=" + node.otid + "'>" + hmt + "</a>"
       if (child_rank === 'species') {
         html += space + "<span class='otid-link' nowrap><small>" + display_rank + ":</small> <i>" + child_name + "</i> (" + hmt_lnk + ")"
-        html += " <span class='pill pill-orange'>" + cts.genome_counts + "</span>"
-        html += " <span class='pill pill-khaki'>" + cts.refseq_counts + "</span>"
+        html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.genome_counts + "&nbsp;</a>"
+        html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
         html += "</span>"
       } else {
         // child name needs to be species + subspecies
         //console.log('mynode',node)
         let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id].taxon
         html += space + "<span class='otid-link' nowrap><small>" + display_rank + ":</small> <i>" + parent_taxon + '</i> ' + child_name + " (" + hmt_lnk + ")"
-        html += " <span class='pill pill-orange'>" + cts.genome_counts + "</span>"
-        html += " <span class='pill pill-khaki'>" + cts.refseq_counts + "</span>"
+        html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.genome_counts + "&nbsp;</a>"
+        html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
         html += "</span>"
       }
 
@@ -400,9 +400,9 @@ router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
       } else {
         html += "    <small>" + display_rank + ':</small> ' + child_name
       }
-      html += " <span class='pill pill-indigo'>" + cts.tax_counts + "</span>"
-      html += " <span class='pill pill-orange'>" + cts.genome_counts + "</span>"
-      html += " <span class='pill pill-khaki'>" + cts.refseq_counts + "</span>"
+      html += " <span title='Taxon Count' class='pill pill-indigo'>" + cts.tax_counts + "</span>"
+      html += " <span title='Genome Count' class='pill pill-orange'>" + cts.genome_counts + "</span>"
+      html += " <span title='RefSeq Count' class='pill pill-khaki'>" + cts.refseq_counts + "</span>"
       html += '</a>'
       html += " <span id='" + id + "_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>"
       html += "<div  id='" + id + "_div'></div>"
