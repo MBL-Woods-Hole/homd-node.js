@@ -9,6 +9,8 @@
    padding:40px 0;
    margin-top:20px;
    border:2px solid grey;
+   height:800px;
+   overflow:auto;
 }
 .otid-link-sp{
    color:gold;
@@ -36,6 +38,15 @@
 }
 .pill{
    color:black;
+}
+.fixed{
+    position: fixed;
+  top: 350px;
+  right:15%;
+  /* Optional: Add width, background-color, etc. */
+  width: 100px;
+  background-color: lightblue;
+  padding:5px;
 }
 </style>
 
@@ -101,23 +112,23 @@
             </li>
             </ul>
       </div>
-      <div class="col-2">
-      <a href='tax_hierarchy' role='button' class='btn btn-success' style='border:1px solid red;margin-bottom:1px;'>Reset Tree</a>
-      <a href='#' role='button' class='btn btn-success' style='border:1px solid red;margin-top:1px;' onclick="open_full_rank('subspecies')">Expand All</a>
-      <div style="margin-top:20px;padding:5px;border:1px solid black;">
-        <li><span class="pill pill-indigo">&nbsp;&nbsp;</span> Taxa Counts</li>
-        <li><span class="pill pill-orange">&nbsp;&nbsp;</span> Genome Counts</li>
-        <li><span class="pill pill-khaki">&nbsp;&nbsp;</span> 16S RefSeq Counts</li>
-        <li><hr></li>
-        <li><small> &nbsp;&nbsp;To expand the tree to a specific rank: choose a rank name from the
+      <div class="fixed col-3">
+        <a href='tax_hierarchy' role='button' class='btn btn-success' style='border:1px solid red;margin-bottom:1px;'>Reset Tree</a>
+        <a href='#' role='button' class='btn btn-success' style='border:1px solid red;margin-top:1px;' onclick="open_full_rank('subspecies')">Expand All</a>
+        <div style="margin-top:20px;padding:5px;border:1px solid black;">
+          <li><span class="pill pill-indigo">&nbsp;&nbsp;</span> Taxa Counts</li>
+          <li><span class="pill pill-orange">&nbsp;&nbsp;</span> Genome Counts</li>
+          <li><span class="pill pill-khaki">&nbsp;&nbsp;</span> 16S RefSeq Counts</li>
+          <li><hr></li>
+          <li><small> &nbsp;&nbsp;To expand the tree to a specific rank: choose a rank name from the
              choices at the top of the page.</small>
-        </li>
-        <li><hr></li>
-        <li><small>&nbsp;&nbsp;At the Species and Suspecies levels the Genome and RefSeq Counts buttons become 
+          </li>
+          <li><hr></li>
+          <li><small>&nbsp;&nbsp;At the Species and Suspecies levels the Genome and RefSeq Counts buttons become 
              links to the Genome Table and RefSeq Tree respectively.</small>
-        </li>
+          </li>
+        </div>
       </div>
-    </div>
       
     </div>
   </div>
