@@ -10,20 +10,32 @@
    margin-top:20px;
    border:2px solid grey;
 }
-.otid-link{
+.otid-link-sp{
    color:gold;
    background:purple;
    padding:5px;
    border:1px solid black;
 }
 
-.otid-link a{
+.otid-link-sp a{
    color:ivory;
-   
+}
+.otid-link-ssp{
+   color:black;
+   background:#CF9FFF;
+   padding:5px;
+   border:1px solid black;
+}
+
+.otid-link-ssp a{
+   color:black;
 }
 #rank-choice-radios{
     width:50%;
     
+}
+.pill{
+   color:black;
 }
 </style>
 
@@ -41,7 +53,7 @@
     <div class='page-content' >
        <p class='h3 title'>Dynamic Taxonomic Hierarchy</p>
   <center><div id='rank-choice-radios'>
-        <h6>Open Tree to a Specific Rank:</h6>&nbsp;&nbsp;
+        <h5>Open Tree to a Specific Rank:</h5>&nbsp;&nbsp;
         <input type="radio"  name = 'tax_radio' value="phylum"  onclick="open_full_rank(this.value)"> Phylum&nbsp;&nbsp;
         <input type="radio"  name = 'tax_radio' value="klass"  onclick="open_full_rank(this.value)"> Class&nbsp;&nbsp;
         <input type="radio"  name = 'tax_radio' value="order"  onclick="open_full_rank(this.value)"> Order&nbsp;&nbsp;
@@ -64,9 +76,9 @@
                 class="btn btn-sm"
                 >
                   <small>Domain:</small> Archaea
-                <span title='Taxon Counts' class='pill pill-indigo'><%= arc_counts.tax_counts %></span>
-                <span title='Genome Counts' class='pill pill-orange'><%= arc_counts.genome_counts %></span>
-                <span title='RefSeq Counts' class='pill pill-khaki'><%= arc_counts.refseq_counts %></span>
+                <span title='Taxon Count' class='pill pill-indigo'><%= arc_counts.tax_counts %></span>
+                <span title='Genome Count' class='pill pill-orange'><%= arc_counts.genome_counts %></span>
+                <span title='RefSeq Count' class='pill pill-khaki'><%= arc_counts.refseq_counts %></span>
               </a>
               <span id='Archaea_domain_span' class='fa_widget'><i class="fa-solid fa-angle-right"></i></span>
               <div id='Archaea_domain_div'></div>
@@ -80,9 +92,9 @@
                 class="btn btn-sm"
                 >
                 <small>Domain:</small> Bacteria
-                <span title='Taxon Counts' class='pill pill-indigo'><%= bac_counts.tax_counts %></span>
-                <span title='Genome Counts' class='pill pill-orange'><%= bac_counts.genome_counts %></span>
-                <span title='RefSeq Counts' class='pill pill-khaki'><%= bac_counts.refseq_counts %></span>
+                <span title='Taxon Count' class='pill pill-indigo'><%= bac_counts.tax_counts %></span>
+                <span title='Genome Count' class='pill pill-orange'><%= bac_counts.genome_counts %></span>
+                <span title='RefSeq Count' class='pill pill-khaki'><%= bac_counts.refseq_counts %></span>
               </a>
                 <span id='Bacteria_domain_span' class='fa_widget'><i class="fa-solid fa-angle-right"></i></span>
               <div id='Bacteria_domain_div'></div>
@@ -90,11 +102,20 @@
             </ul>
       </div>
       <div class="col-2">
-      <a href='tax_hierarchy2' role='button' class='btn btn-success' style='border:1px solid red'>Reset Tree</a>
+      <a href='tax_hierarchy' role='button' class='btn btn-success' style='border:1px solid red;margin-bottom:1px;'>Reset Tree</a>
+      <a href='#' role='button' class='btn btn-success' style='border:1px solid red;margin-top:1px;' onclick="open_full_rank('subspecies')">Expand All</a>
       <div style="margin-top:20px;padding:5px;border:1px solid black;">
-        <li><span class="pill pill-indigo">&nbsp;&nbsp;</span> Tax Counts</li>
+        <li><span class="pill pill-indigo">&nbsp;&nbsp;</span> Taxa Counts</li>
         <li><span class="pill pill-orange">&nbsp;&nbsp;</span> Genome Counts</li>
-        <li><span class="pill pill-khaki">&nbsp;&nbsp;</span> RefSeq Counts</li>
+        <li><span class="pill pill-khaki">&nbsp;&nbsp;</span> 16S RefSeq Counts</li>
+        <li><hr></li>
+        <li><small> &nbsp;&nbsp;To expand the tree to a specific rank: choose a rank name from the
+             choices at the top of the page.</small>
+        </li>
+        <li><hr></li>
+        <li><small>&nbsp;&nbsp;At the Species and Suspecies levels the Genome and RefSeq Counts buttons become 
+             links to the Genome Table and RefSeq Tree respectively.</small>
+        </li>
       </div>
     </div>
       
@@ -136,7 +157,7 @@
     }else{
         target_span.innerHTML = '<i class="fa-solid fa-angle-down"></i>'
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", "/taxa/tax_hierarchy2", true);
+        xmlhttp.open("POST", "/taxa/tax_hierarchy", true);
         xmlhttp.setRequestHeader("Content-type","application/json");
         xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {

@@ -101,76 +101,76 @@ router.get('/advanced_taxtable_search', function advanced_taxtable_search(req, r
 })
 //
 //
-router.get('/tax_hierarchy', function tax_hierarchy(req, res) {
-  //the json file was created from a csv of vamps taxonomy
-  // using the script: taxonomy_csv2json.py in ../homd_data
-
-
-  res.render('pages/taxa/taxhierarchy', {
-    title: 'HOMD :: Taxon Hierarchy',
-    pgname: 'taxon/hierarchy', // for AbountThisPage
-    config: JSON.stringify(CFG),
-    data: {},
-    //dhtmlx: JSON.stringify(C.dhtmlxTreeData),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-
-  })
-})
-// test: choose custom taxonomy, show tree
-router.get('/taxhierarchy_autoload', function taxhierarchy_autoload(req, res) {
-  //console.log('IN tax_autoload')
-  //console.log('req.query',req.query)
-  let cts, lineage, options_obj
-  //let myurl = url.parse(req.url, true);
-  let id = req.query.id;
-  let count_type = req.query.ct
-  //console.log('id',id)
-  //console.log('count_type',count_type)
-  let json = {};
-  json.id = id;
-  json.item = [];
-
-  if (parseInt(id) === 0) {
-    C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
-      //console.log('node1',node)
-      lineage = helpers_taxa.make_lineage(node)  // [str obj]
-      cts = helpers_taxa.get_counts(lineage[0], count_type).txt
-      //console.log(node)
-      options_obj = get_options_by_node(node);
-      options_obj.text = options_obj.text + ' ' + cts
-      options_obj.checked = true;
-      //console.log(options_obj)
-      json.item.push(options_obj);
-    }
-    );
-  } else {
-    if (id > 1000) {
-      //return
-    }
-    const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
-    objects_w_this_parent_id.map(node => {
-      //console.log('node2',node)
-      lineage = helpers_taxa.make_lineage(node)  // [str obj]
-      //console.log('lineage:',lineage)
-      cts = helpers_taxa.get_counts(lineage[0], count_type).txt
-      options_obj = get_options_by_node(node);
-      options_obj.text = options_obj.text + ' ' + cts
-      options_obj.checked = false;
-      json.item.push(options_obj);
-    })
-  }
-  //console.log(json)
-  //console.log('returning',json.item)
-  json.item.sort((a, b) => {
-    return helpers.compareStrings_alpha(a.text, b.text);
-  })
-
-  //console.timeEnd("TIME: tax_custom_dhtmlx");
-
-  res.send(json);
-})
-router.get('/tax_hierarchy2', function tax_hierarchy2_GET(req, res) {
-  console.log('GET Hierarchy2')
+// router.get('/tax_hierarchy', function tax_hierarchy(req, res) {
+//   //the json file was created from a csv of vamps taxonomy
+//   // using the script: taxonomy_csv2json.py in ../homd_data
+// 
+// 
+//   res.render('pages/taxa/taxhierarchy', {
+//     title: 'HOMD :: Taxon Hierarchy',
+//     pgname: 'taxon/hierarchy', // for AbountThisPage
+//     config: JSON.stringify(CFG),
+//     data: {},
+//     //dhtmlx: JSON.stringify(C.dhtmlxTreeData),
+//     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+// 
+//   })
+// })
+// // test: choose custom taxonomy, show tree
+// router.get('/taxhierarchy_autoload', function taxhierarchy_autoload(req, res) {
+//   //console.log('IN tax_autoload')
+//   //console.log('req.query',req.query)
+//   let cts, lineage, options_obj
+//   //let myurl = url.parse(req.url, true);
+//   let id = req.query.id;
+//   let count_type = req.query.ct
+//   //console.log('id',id)
+//   //console.log('count_type',count_type)
+//   let json = {};
+//   json.id = id;
+//   json.item = [];
+// 
+//   if (parseInt(id) === 0) {
+//     C.homd_taxonomy.taxa_tree_dict_map_by_rank["domain"].map(node => {
+//       //console.log('node1',node)
+//       lineage = helpers_taxa.make_lineage(node)  // [str obj]
+//       cts = helpers_taxa.get_counts(lineage[0], count_type).txt
+//       //console.log(node)
+//       options_obj = get_options_by_node(node);
+//       options_obj.text = options_obj.text + ' ' + cts
+//       options_obj.checked = true;
+//       //console.log(options_obj)
+//       json.item.push(options_obj);
+//     }
+//     );
+//   } else {
+//     if (id > 1000) {
+//       //return
+//     }
+//     const objects_w_this_parent_id = C.homd_taxonomy.taxa_tree_dict_map_by_id[id].children_ids.map(n_id => C.homd_taxonomy.taxa_tree_dict_map_by_id[n_id]);
+//     objects_w_this_parent_id.map(node => {
+//       //console.log('node2',node)
+//       lineage = helpers_taxa.make_lineage(node)  // [str obj]
+//       //console.log('lineage:',lineage)
+//       cts = helpers_taxa.get_counts(lineage[0], count_type).txt
+//       options_obj = get_options_by_node(node);
+//       options_obj.text = options_obj.text + ' ' + cts
+//       options_obj.checked = false;
+//       json.item.push(options_obj);
+//     })
+//   }
+//   //console.log(json)
+//   //console.log('returning',json.item)
+//   json.item.sort((a, b) => {
+//     return helpers.compareStrings_alpha(a.text, b.text);
+//   })
+// 
+//   //console.timeEnd("TIME: tax_custom_dhtmlx");
+// 
+//   res.send(json);
+// })
+router.get('/tax_hierarchy', function tax_hierarchy_GET(req, res) {
+  console.log('GET Hierarchy')
   let lineage
   let bnode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Bacteria_domain']
   lineage = helpers_taxa.make_lineage(bnode)  // [str obj]
@@ -179,7 +179,7 @@ router.get('/tax_hierarchy2', function tax_hierarchy2_GET(req, res) {
   lineage = helpers_taxa.make_lineage(anode)  // [str obj]
   let acts = helpers_taxa.get_counts(lineage[0], '').lst
   let base_counts = helpers_taxa.get_counts('Bacteria', 'both')
-  res.render('pages/taxa/taxhierarchy2', {
+  res.render('pages/taxa/tax_hierarchy', {
     title: 'HOMD :: Taxon Hierarchy',
     pgname: 'taxon/hierarchy', // for AbountThisPage
     config: JSON.stringify(CFG),
@@ -319,8 +319,8 @@ function get_html(node, requested_rank) {
 
 }
 
-router.post('/tax_hierarchy2', function tax_hierarchy2_POST(req, res) {
-  //console.log('POST Hierarchy2')
+router.post('/tax_hierarchy', function tax_hierarchy_POST(req, res) {
+  //console.log('POST Hierarchy')
   //console.log('req.body',req.body)
   let tax_name = req.body.name
   let rank = req.body.rank;
