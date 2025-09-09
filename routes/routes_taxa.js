@@ -179,7 +179,7 @@ router.get('/tax_hierarchy', function tax_hierarchy_GET(req, res) {
   lineage = helpers_taxa.make_lineage(anode)  // [str obj]
   let acts = helpers_taxa.get_counts(lineage[0], '').lst
   let base_counts = helpers_taxa.get_counts('Bacteria', 'both')
-  res.render('pages/taxa/tax_hierarchy', {
+  res.render('pages/taxa/taxhierarchy', {
     title: 'HOMD :: Taxon Hierarchy',
     pgname: 'taxon/hierarchy', // for AbountThisPage
     config: JSON.stringify(CFG),
@@ -202,14 +202,14 @@ router.post('/tax_hierarchy_level', (req, res) => {
   anode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Archaea_domain']
   for (let n in anode.children_ids) {
     node = C.homd_taxonomy.taxa_tree_dict_map_by_id[anode.children_ids[n]]
-    html_obj.ahtml += get_html(node, requested_rank)
+    html_obj.ahtml += get_hierarchy_html(node, requested_rank)
   }
   //Bacteria node
   bnode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Bacteria_domain']
   for (let n in bnode.children_ids) {
     node = C.homd_taxonomy.taxa_tree_dict_map_by_id[bnode.children_ids[n]]
     //console.log('mynode1',node)
-    html_obj.bhtml += get_html(node, requested_rank)
+    html_obj.bhtml += get_hierarchy_html(node, requested_rank)
   }
 
   //console.log(html_obj.bhtml)
@@ -217,7 +217,7 @@ router.post('/tax_hierarchy_level', (req, res) => {
   res.send(JSON.stringify(html_obj));
 })
 
-function get_html(node, requested_rank) {
+function get_hierarchy_html(node, requested_rank) {
   //console.log('mynode2',node)
   if (C.ranks.indexOf(node.rank) > C.ranks.indexOf(requested_rank)) {
     return ""
@@ -247,12 +247,16 @@ function get_html(node, requested_rank) {
     let hmt = helpers.make_otid_display_name(node.otid)
     let hmt_lnk = "<a href='tax_description?otid=" + node.otid + "'>" + hmt + "</a>"
     if (child_rank === 'species') {
-      html += space + "<span class='otid-link' nowrap><small>" + display_rank + ":</small> <i>" + child_name + "</i> (" + hmt_lnk + ")"
+      html += space + "<span class='otid-link-sp' nowrap><small>" + display_rank + ":</small> <i>" + child_name + "</i> (" + hmt_lnk + ")"
       html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.genome_counts + "&nbsp;</a>"
       html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
       html += " </span>"
-    } else {  //subspecies
-      //console.log('Not Used')
+    } else {  //subspecies SAME html (could be combined)
+      //console.log('Not Used::SSpecies')
+      html += space + "<span class='otid-link-ssp' nowrap><small>" + display_rank + ":</small> <i>" + child_name + "</i> (" + hmt_lnk + ")"
+      html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.genome_counts + "&nbsp;</a>"
+      html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
+      html += " </span>"
     }
   } else {
     node.children_ids.sort((a, b) => {
@@ -306,7 +310,7 @@ function get_html(node, requested_rank) {
       html += "<div id='" + id + "_div'>"
       for (let n in node.children_ids) {
         cnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]
-        html += get_html(cnode, requested_rank)
+        html += get_hierarchy_html(cnode, requested_rank)
         //console.log(requested_rank,node.rank)
       }
       html += "</div>"
@@ -364,7 +368,7 @@ router.post('/tax_hierarchy', function tax_hierarchy_POST(req, res) {
       let hmt = helpers.make_otid_display_name(node.otid)
       let hmt_lnk = "<a href='tax_description?otid=" + node.otid + "'>" + hmt + "</a>"
       if (child_rank === 'species') {
-        html += space + "<span class='otid-link' nowrap><small>" + display_rank + ":</small> <i>" + child_name + "</i> (" + hmt_lnk + ")"
+        html += space + "<span class='otid-link-sp' nowrap><small>" + display_rank + ":</small> <i>" + child_name + "</i> (" + hmt_lnk + ")"
         html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.genome_counts + "&nbsp;</a>"
         html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
         html += "</span>"
@@ -372,7 +376,7 @@ router.post('/tax_hierarchy', function tax_hierarchy_POST(req, res) {
         // child name needs to be species + subspecies
         //console.log('mynode',node)
         let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id].taxon
-        html += space + "<span class='otid-link' nowrap><small>" + display_rank + ":</small> <i>" + parent_taxon + '</i> ' + child_name + " (" + hmt_lnk + ")"
+        html += space + "<span class='otid-link-ssp' nowrap><small>" + display_rank + ":</small> <i>" + parent_taxon + '</i> ' + child_name + " (" + hmt_lnk + ")"
         html += " <a title='Genome Count' href='/genome/genome_table?otid="+node.otid+"' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.genome_counts + "&nbsp;</a>"
         html += " <a title='RefSeq Count' href='/refseq/refseq_tree?otid="+node.otid+"' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" + cts.refseq_counts + "&nbsp;</a>"
         html += "</span>"
