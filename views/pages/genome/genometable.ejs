@@ -8,6 +8,47 @@ thead th { position: sticky; top: 0; }
 #gnom-table th{
    border-right:1px solid ivory;
 }
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dd-menu {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background:lightblue;
+  padding:10px;
+  border:1px solid black;
+left:-180px;
+top:-50px;
+  z-index: 1000;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  font-size:13px;
+  margin: 10px;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dd-menu:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dd-menu:hover .dropbtn {background-color: #3e8e41;}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <link rel="stylesheet" type="text/css" href="/css/genome_pages2.css" >
@@ -66,8 +107,8 @@ thead th { position: sticky; top: 0; }
     <th class='col7' scope='col' ><small>Contigs</small></th>
     <th class='col8' scope='col' >Combined<br>Length</th>
     <th class='col9' scope='col' >GC(%)</th>
-    <th class="col10 sorttable_nosort" scope='col' >More Information and Tools</th>
-    <th class="col11 sorttable_nosort" scope='col' >Annotations</th>
+    <th class="col10 sorttable_nosort" scope='col' >More Information, Tools<br> and Annotations</th>
+    
     </tr>
     </thead>
     
@@ -91,38 +132,43 @@ thead th { position: sticky; top: 0; }
         <% genus = ginfo[n].organism.split(" ")[0] %>
         <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
         <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-        <td class='tax_name' title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].species %> <%= ginfo[n].subspecies %></em></a></td>
+        <td class='tax_name ellipsis' title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].species %> <%= ginfo[n].subspecies %></em></a></td>
         
        
         
-        <td class='tax_name' title='<%= ginfo[n].strain %>'><em><%= ginfo[n].strain %></em></td>
+        <td class='tax_name ellipsis' title='<%= ginfo[n].strain %>'><em><%= ginfo[n].strain %></em></td>
         <td class='center'><%= ginfo[n].mag %></td>
-        <td class=''><%= ginfo[n].level %></td>
+        <td class='ellipsis'><%= ginfo[n].level %></td>
         <td class='center'><%= ginfo[n].contigs %></td>
         <td class='center' title='Size: <%= ginfo[n].combined_size %>bp'><%= ginfo[n].combined_size %></td>
     
         <td class='center'><%= ginfo[n].gc %></td>
         <% gc2 = (parseFloat(ginfo[n].gc)/100).toFixed(2) %>
-        <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon</a>
-          <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Info</a>
-          <!-- <a class='pill pill-lightseagreen' href='<%= cfg.JBROWSE_URL %>/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome ViewerO</a> -->
-          <!-- <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse_in_new_window('<%= ginfo[n].gid %>|<%= ginfo[n].gc %>')">Genome Viewer</a> -->
-          <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Viewer</a>
-          <a class='pill pill-midnightblue' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a> 
-          <!--  <a class='pill pill-midnightblue' href='/genome_blast_single?gid=<%= ginfo[n].gid %>' target='_blank'>BLAST</a> -->
-       <a class='pill pill-orange' href='' target="_self">Phage</a>
-        </td>
-        
-        <td class='center'>
-            <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
-            <% if(no_ncbi_annotation.indexOf(ginfo[n].gid) == -1 ){ %>
+        <td class='center' nowrap>
+            
+            <span class="dd-menu">
+                <button class="dropbtn pill pill-indigo">Hover Menu</button>
+                <div class="dropdown-content">
+                <li><%= ginfo[n].gid %></li>
+                
+                <li><a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Genome Description</a></li>
+                <li><a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Genome Viewer</a></li>
+                <li><a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info: <%= taxidfullname %></a></li>
+                <li><a class='pill pill-midnightblue' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a></li> 
+                <li><a class='pill pill-orange' href='' target="_self">Phage</a></li>
+                <li><hr></li>
+                <li>Annotations:</li>
+                <a class='pill pill-mediumorchid' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
+                <% if(no_ncbi_annotation.indexOf(ginfo[n].gid) == -1 ){ %>
                 <a class='pill pill-slateblue' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a>
             <% }else{ %>
-                <span class='pill pill-grayed' title='NCBI Annotation Not Available' href=''>NCBI</span>
+                <span class='pill pill-grayed' title='NCBI Annotation Not Available' href=''>NCBI (not available)</span>
             <% } %>
-        
-            <!-- <span class="badge badge-light">HOMD</span> -->
+                </div>
+            </span>
         </td>
+        
+        
       </tr>
       <% rowcount = rowcount + 1 %>
     <% } %>
@@ -159,6 +205,8 @@ thead th { position: sticky; top: 0; }
 
 <script>
     mainmenu()  // function in public/js/menu.js
+    
+    
     var letter = '<%- fltr.letter %>'
     var gid = '<%- filtergid %>'
     var filter_on = '<%- filter_on %>'
