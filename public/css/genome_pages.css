@@ -10,6 +10,7 @@
   padding:5px;
   font-size:13px;
   text-align: center;
+  z-index: 1;
   
 }
 #gnom-table td{
@@ -49,8 +50,6 @@ overflow: hidden;
  #gnom-table tr:hover { 
     background-color: #dce7f5; 
  } 
-
-
 
 
 
