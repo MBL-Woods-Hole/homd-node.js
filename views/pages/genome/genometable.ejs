@@ -59,11 +59,11 @@ thead th { position: sticky; top: 0; }
     <tr><th class='col0' >row #</th>
     <th class='col1' scope='col' >Genome-ID</th>
     <th class='col2' scope='col' nowrap>Taxon-ID</th>
-    <th class='col3' scope='col' >Species Name</th>
+    <th class='col3' scope='col' >Species</th>
     <th class='col4' scope='col' >Strain</th>
     <th class='col5' scope='col' >MAG</th>
-    <th class='col6' title='Assembly Level' scope='col' >Assembly Level</th>
-    <th class='col7' scope='col' >Contigs</th>
+    <th class='col6' title='Assembly Level' scope='col' >Assembly<br>Level</th>
+    <th class='col7' scope='col' ><small>Contigs</small></th>
     <th class='col8' scope='col' >Combined<br>Length</th>
     <th class='col9' scope='col' >GC(%)</th>
     <th class="col10 sorttable_nosort" scope='col' >More Information and Tools</th>
@@ -99,18 +99,18 @@ thead th { position: sticky; top: 0; }
         <td class='center'><%= ginfo[n].mag %></td>
         <td class=''><%= ginfo[n].level %></td>
         <td class='center'><%= ginfo[n].contigs %></td>
-        <td class='center'><%= ginfo[n].combined_size %></td>
+        <td class='center' title='Size: <%= ginfo[n].combined_size %>bp'><%= ginfo[n].combined_size %></td>
     
         <td class='center'><%= ginfo[n].gc %></td>
         <% gc2 = (parseFloat(ginfo[n].gc)/100).toFixed(2) %>
-        <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info</a>
-          <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Description</a>
+        <td class='center' nowrap><a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon</a>
+          <a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Info</a>
           <!-- <a class='pill pill-lightseagreen' href='<%= cfg.JBROWSE_URL %>/<%= ginfo[n].gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,homd,GCContent,GCSkew' target='_blank' rel="noopener noreferrer">Genome ViewerO</a> -->
           <!-- <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse_in_new_window('<%= ginfo[n].gid %>|<%= ginfo[n].gc %>')">Genome Viewer</a> -->
           <a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Viewer</a>
           <a class='pill pill-midnightblue' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a> 
           <!--  <a class='pill pill-midnightblue' href='/genome_blast_single?gid=<%= ginfo[n].gid %>' target='_blank'>BLAST</a> -->
-       
+       <a class='pill pill-orange' href='' target="_self">Phage</a>
         </td>
         
         <td class='center'>

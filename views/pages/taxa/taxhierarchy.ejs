@@ -33,20 +33,21 @@
    color:black;
 }
 #rank-choice-radios{
-    width:50%;
+    /* width:50%; */
     
 }
 .pill{
    color:black;
 }
 .fixed{
-    position: fixed;
-  top: 350px;
+  /* float:right; */
+  position:fixed;
   right:15%;
-  /* Optional: Add width, background-color, etc. */
-  width: 100px;
-  background-color: lightblue;
-  padding:5px;
+  background-color: rgba(173, 216, 230, 0.5); /* Light blue with 50% opacity */
+  padding: 5px;
+  border:1px solid grey;
+  height:420px;
+  width:230px;
 }
 </style>
 
@@ -63,17 +64,41 @@
 
     <div class='page-content' >
        <p class='h3 title'>Dynamic Taxonomic Hierarchy</p>
-  <center><div id='rank-choice-radios'>
+  <center>
+    <div id='rank-choice-radios'>
         <h5>Open Tree to a Specific Rank:</h5>&nbsp;&nbsp;
+        <span nowrap>
         <input type="radio"  name = 'tax_radio' value="phylum"  onclick="open_full_rank(this.value)"> Phylum&nbsp;&nbsp;
         <input type="radio"  name = 'tax_radio' value="klass"  onclick="open_full_rank(this.value)"> Class&nbsp;&nbsp;
         <input type="radio"  name = 'tax_radio' value="order"  onclick="open_full_rank(this.value)"> Order&nbsp;&nbsp;
         <input type="radio"  name = 'tax_radio' value="family"  onclick="open_full_rank(this.value)"> Family&nbsp;&nbsp;
         <input type="radio"  name = 'tax_radio' value="genus"  onclick="open_full_rank(this.value)"> Genus&nbsp;&nbsp;
         <input type="radio"  name = 'tax_radio' value="species"  onclick="open_full_rank(this.value)"> Species
-  </div></center>
+        </span>
+    </div>
+  </center>
   <div class='container box'>
+       <div class="fixed">
+        <a href='#' role='button' class='btn btn-success' style='border:1px solid red;margin-top:1px;' onclick="open_full_rank('subspecies')">Expand All</a>
+        <a href='tax_hierarchy' role='button' class='btn btn-success' style='border:1px solid red;margin-bottom:1px;'>Reset Tree</a>
+        <div style="margin-top:20px;padding:5px;border:1px solid black;">
+          <li><span class="pill pill-indigo">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Taxa Counts</li>
+          <li><span class="pill pill-orange">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Genome Counts</li>
+          <li><span class="pill pill-khaki">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 16S RefSeq Counts</li>
+          <li><hr></li>
+          <li><small> &nbsp;&nbsp;To expand the tree to a specific rank: choose a rank name from the
+             choices at the top of the page.</small>
+          </li>
+          <li><hr></li>
+          <li><small>&nbsp;&nbsp;At the Species and Suspecies levels the Genome and RefSeq Counts buttons become 
+             links to the Genome Table and RefSeq Tree respectively.</small>
+          </li>
+        </div>
+      </div>
     <div class="row">
+       
+    
+    
       <div class="col">
             
             <ul>
@@ -112,26 +137,12 @@
             </li>
             </ul>
       </div>
-      <div class="fixed col-3">
-        <a href='tax_hierarchy' role='button' class='btn btn-success' style='border:1px solid red;margin-bottom:1px;'>Reset Tree</a>
-        <a href='#' role='button' class='btn btn-success' style='border:1px solid red;margin-top:1px;' onclick="open_full_rank('subspecies')">Expand All</a>
-        <div style="margin-top:20px;padding:5px;border:1px solid black;">
-          <li><span class="pill pill-indigo">&nbsp;&nbsp;</span> Taxa Counts</li>
-          <li><span class="pill pill-orange">&nbsp;&nbsp;</span> Genome Counts</li>
-          <li><span class="pill pill-khaki">&nbsp;&nbsp;</span> 16S RefSeq Counts</li>
-          <li><hr></li>
-          <li><small> &nbsp;&nbsp;To expand the tree to a specific rank: choose a rank name from the
-             choices at the top of the page.</small>
-          </li>
-          <li><hr></li>
-          <li><small>&nbsp;&nbsp;At the Species and Suspecies levels the Genome and RefSeq Counts buttons become 
-             links to the Genome Table and RefSeq Tree respectively.</small>
-          </li>
-        </div>
+      </div>
       </div>
       
-    </div>
-  </div>
+      
+    
+  
     
 
     </div> <!-- end: page-content -->

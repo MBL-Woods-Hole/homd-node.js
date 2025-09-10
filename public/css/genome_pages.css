@@ -50,7 +50,7 @@
 
 
 .red {
-	color: #cc0000;
+    color: #cc0000;
 }
 .red1_btn {
   border: 1px solid red;
@@ -90,13 +90,13 @@
 }
 
 #gnom-table .col0{
-   width: 40px;
+   width: 35px;
 }
 #gnom-table .col1{
    width: 120px;
 }
 #gnom-table .col2 {
-    width: 70px;
+    width: 65px;
 }
 #gnom-table .col3 {
     /*  Organism  */
@@ -107,7 +107,7 @@
     width:240px;
 }
 #gnom-table .col5 {
-    width: 50px;
+    width: 40px;
 }
 #gnom-table .col6 {
     width: 120px;
@@ -122,10 +122,10 @@
    width: 50px;
 }
 #gnom-table .col10{
-   width: 230px;
+   width: 240px;
 }
 #gnom-table .col11 {
-    width: 130px;
+    width: 120px;
 }
 
 .tax_name{
