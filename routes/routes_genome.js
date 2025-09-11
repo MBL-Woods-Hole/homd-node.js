@@ -1510,11 +1510,18 @@ router.get('/blast', function blast_get(req, res) {
 // These functions are used to open trees with a search for odid or genomeID
 // The main menu goues through routes_homd::open_tree
 router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
-  //console.log('in conserved_protein_tree')
+  console.log('in conserved_protein_tree (Genomic Tree)')
   // let myurl = url.URL(req.url, true);
-  const otid = req.query.otid
-  const fullname = helpers.make_otid_display_name(otid)
-  helpers.print(fullname)
+  let otid,findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
+  if(req.query.otid){
+    otid = req.query.otid
+    findme = helpers.make_otid_display_name(otid)
+  }else if(req.query.gid){
+    findme = req.query.gid
+  }
+  
+  //const fullname = helpers.make_otid_display_name(otid)
+  
   // Actual: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg
   // Copied to puplic/trees/eHOMD_Genomic_PhyloPhlAn_Tree.svg
   
@@ -1537,7 +1544,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
            
            svg_data: JSON.stringify(data),
-           otid: fullname
+           target: findme
          }); 
      });
   }).on('error', (error) => { 
@@ -1545,27 +1552,19 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   }); 
   
   
-//   fs.readFile(filepath, 'utf8', function readSVGFile1 (err, data) {
-//     if (err) {
-//       console.log(err)
-//     } else {
-//       res.render('pages/genome/conserved_protein_tree', {
-//         title: 'HOMD :: Conserved Protein Tree',
-//         pgname: 'genome/tree', // for AboutThisPage
-//         config: JSON.stringify(CFG),
-//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//         
-//         svg_data: JSON.stringify(data),
-//         otid: fullname
-//       })
-//     }
-//   })
+
 })
 router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   
   //console.log('in ribosomal_protein_tree')
 
-  const otid = req.query.otid
+  let otid,findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
+  if(req.query.otid){
+    otid = req.query.otid
+    findme = helpers.make_otid_display_name(otid)
+  }else if(req.query.gid){
+    findme = req.query.gid
+  }
   // Actual:: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg
   // Copied to public/trees/eHOMD_Ribosomal_Protein_Tree.svg
   //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Ribosomal_Protein_Tree.svg'
@@ -1589,7 +1588,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
            
            svg_data: JSON.stringify(data),
-           otid: otid
+           target: findme
          }); 
      });
   }).on('error', (error) => { 
@@ -1597,32 +1596,19 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   }); 
   
   
-  
-  
-  
-//   fs.readFile(filepath, 'utf8', function readSVGFile2 (err, data) {
-//     if (err) {
-//       console.log(err)
-//     } else {
-//       res.render('pages/genome/ribosomal_protein_tree', {
-//         title: 'HOMD :: Ribosomal Protein Tree',
-//         pgname: 'genome/tree', // for AboutThisPage
-//         config: JSON.stringify(CFG),
-//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-//         
-//         svg_data: JSON.stringify(data),
-//         otid: otid
-//       })
-//     }
-//   })
 })
 router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   
   //console.log('in rRNA_gene_tree')
   // const myurl = url.URL(req.url, true)
   // const myurl = new url.URL(req.url)
-  const otid = req.query.otid
-  helpers.print(['otid', otid])
+  let otid,findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
+  if(req.query.otid){
+    otid = req.query.otid
+    findme = helpers.make_otid_display_name(otid)
+  }else if(req.query.gid){
+    findme = req.query.gid
+  }
   
   let filepath = CFG.HOMD_URL_BASE+CFG.GENE_TREE_PATH   //"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
   https.get(filepath, (response) => { 
@@ -1642,7 +1628,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
            
            svg_data: JSON.stringify(data),
-           otid: otid
+           target: findme
          })
      });
   }).on('error', (error) => { 

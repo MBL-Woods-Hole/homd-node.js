@@ -29,21 +29,22 @@ thead th { position: sticky; top: 0; }
   position: absolute;
   background:lightblue;
   padding:10px;
+  margin:30px;
   border:1px solid black;
-left:-180px;
-top:-50px;
+  left:-180px;
+  top:-50px;
   z-index: 1;
 }
 
 /* Links inside the dropdown */
 .dropdown-content a {
   font-size:13px;
-  margin: 10px;
+  margin:5px 0;
   display: block;
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
+.dropdown-content a:hover {background-color: #ddd; color:black;}
 
 /* Show the dropdown menu on hover */
 .dd-menu:hover .dropdown-content {display: block;}
@@ -154,7 +155,11 @@ top:-50px;
                 
                 <li><a class='pill pill-khaki' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Genome Description</a></li>
                 <li><a class='pill pill-lightseagreen' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Genome Viewer</a></li>
+                <li><a class='pill pill-green' href='conserved_protein_tree?gid=<%= ginfo[n].gid %>' target='_blank'>Genome Tree</a></li>
+                
                 <li><a class='pill pill-indigo' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info: <%= taxidfullname %></a></li>
+                <li><a class='pill pill-mediumorchid' href='/taxa/tax_hierarchy?otid=<%= ginfo[n].otid %>'>Taxon Tree: <%= taxidfullname %></a></li>
+                
                 <li><a class='pill pill-midnightblue' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a></li> 
                 <li><a class='pill pill-orange' href='' target="_self">Phage</a></li>
                 <li><hr></li>

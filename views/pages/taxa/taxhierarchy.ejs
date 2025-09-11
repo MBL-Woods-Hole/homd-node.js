@@ -68,18 +68,18 @@
     <div id='rank-choice-radios'>
         <h5>Open Tree to a Specific Rank:</h5>&nbsp;&nbsp;
         <span nowrap>
-        <input type="radio"  name = 'tax_radio' value="phylum"  onclick="open_full_rank(this.value)"> Phylum&nbsp;&nbsp;
-        <input type="radio"  name = 'tax_radio' value="klass"  onclick="open_full_rank(this.value)"> Class&nbsp;&nbsp;
-        <input type="radio"  name = 'tax_radio' value="order"  onclick="open_full_rank(this.value)"> Order&nbsp;&nbsp;
-        <input type="radio"  name = 'tax_radio' value="family"  onclick="open_full_rank(this.value)"> Family&nbsp;&nbsp;
-        <input type="radio"  name = 'tax_radio' value="genus"  onclick="open_full_rank(this.value)"> Genus&nbsp;&nbsp;
-        <input type="radio"  name = 'tax_radio' value="species"  onclick="open_full_rank(this.value)"> Species
+        <input type="radio"  name = 'tax_radio' value="phylum"  onclick="open_full_rank(this.value,'')"> Phylum&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="klass"  onclick="open_full_rank(this.value,'')"> Class&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="order"  onclick="open_full_rank(this.value,'')"> Order&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="family"  onclick="open_full_rank(this.value,'')"> Family&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="genus"  onclick="open_full_rank(this.value,'')"> Genus&nbsp;&nbsp;
+        <input type="radio"  name = 'tax_radio' value="species"  onclick="open_full_rank(this.value,'')"> Species
         </span>
     </div>
   </center>
   <div class='container box'>
        <div class="fixed">
-        <a href='#' role='button' class='btn btn-success' style='border:1px solid red;margin-top:1px;' onclick="open_full_rank('subspecies')">Expand All</a>
+        <a href='#' role='button' class='btn btn-success' style='border:1px solid red;margin-top:1px;' onclick="open_full_rank('subspecies','')">Expand All</a>
         <a href='tax_hierarchy' role='button' class='btn btn-success' style='border:1px solid red;margin-bottom:1px;'>Reset Tree</a>
         <div style="margin-top:20px;padding:5px;border:1px solid black;">
           <li><span class="pill pill-indigo">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Taxa Counts</li>
@@ -100,7 +100,7 @@
     
     
       <div class="col">
-            
+            <div id='tree'>
             <ul>
             <li class='tax-item'>
               
@@ -136,6 +136,7 @@
               <div id='Bacteria_domain_div'></div>
             </li>
             </ul>
+            </div>
       </div>
       </div>
       </div>
@@ -161,7 +162,10 @@
 
 <script>
   mainmenu()
-  
+  sp = '<%= species %>'
+  if(sp){
+     open_full_rank('subspecies',sp)
+  }
   function get_leaf(name,rank){
     //console.log('in getleaf',name,rank)
     
@@ -193,7 +197,7 @@
         xmlhttp.send(JSON.stringify(args));
     }
   }
-  function open_full_rank(rank){
+  function open_full_rank(rank, findme){
     //console.log('in open_rank',rank)
     var target_bdiv = document.getElementById('Bacteria_domain_div')
     var target_adiv = document.getElementById('Archaea_domain_div')
@@ -201,11 +205,9 @@
     document.getElementById('Archaea_domain_span').innerHTML = '<i class="fa-solid fa-angle-down"></i>'
     args = {}
     args.rank = rank
-    //console.log('rank',rank)
     
-    //target_span.innerHTML = '<i class="fa-solid fa-angle-down"></i>'
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "/taxa/tax_hierarchy_level", true);
+    xmlhttp.open("POST", "/taxa/tax_hierarchy_bylevel", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -214,11 +216,32 @@
         //console.log('gitit',resp)
         target_adiv.innerHTML = resp.ahtml
         target_bdiv.innerHTML = resp.bhtml
-        
+        if(findme){
+            // NOTE only looking in BACT here and only looking for species
+            const lis = target_bdiv.querySelectorAll('.species');
+            let targetDiv = null;
+            for (const li of lis) {
+                  if (li.textContent.includes(findme)) {
+                    targetDiv = li;
+                    break; // Found the first matching div, exit loop
+                  }
+            }
+            if (targetDiv) {
+              console.log('Found the div:', targetDiv);
+              targetDiv.scrollIntoView({
+                behavior: 'smooth', // Optional: for smooth scrolling
+                block: 'start'    // Optional: align the top of the element with the top of the div
+              });
+              targetDiv.style.backgroundColor = 'red';
+              targetDiv.style.color = 'yellow';
+            } else {
+              console.log('No div found ');
+            }
+        }
       }
     }
     xmlhttp.send(JSON.stringify(args));
     }
-  
+
 </script>
 

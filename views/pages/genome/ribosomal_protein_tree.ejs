@@ -7,18 +7,18 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-var otid = "<%= otid %>"
-taxidfullname = 'HMT-'+("000" + otid).slice(-3);
+var findme = "<%= target %>"
+
 //console.log(taxidfullname)
 //$("text:contains('"+taxidfullname+"')").css({"fill": "red"}, {"background-color": "#FFFF00" })
-window.scrollTo(0, $("text:contains('"+taxidfullname+"')").offset().top-50)
+window.scrollTo(0, $("text:contains('"+findme+"')").offset().top-50)
 
 
-let target = $("text:contains('"+taxidfullname+"')")
-//window.scrollTo(0,1200)
-$(target).css({"fill": "magenta","font-size":"120%","background-color":"gray" });
-$(target).children("tspan").css({"fill": "magenta","font-size":"120%","background-color":"gray" });
-//console.log($(target))
+let target = $("text:contains('"+findme+"')")
+$(target).css({"fill": "fuchsia","font-size":"120%","background-color":"gray" });
+$(target).children("tspan").css({"fill": "fuchsia","font-size":"120%" });
+$(target).children("text").css({"fill": "fuchsia","font-size":"120%" });
+$(target).children("a").css({"fill": "fuchsia","font-size":"120%" });
 </script>
 
 </body>
