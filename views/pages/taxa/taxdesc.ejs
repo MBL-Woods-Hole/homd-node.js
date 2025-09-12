@@ -441,7 +441,11 @@
     
       <% if(data_lookup.naming_status != "Dropped"){ %>
         <strong>RefSeq-ID(s)</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <small class='link'>[<a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>View Taxon in RefSeq Tree</a>]</small>
+        <small class='link'>[<a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>View Taxon in RefSeq Tree
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+            </svg>
+        </a>]</small>
 
         <!-- OLD: >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
         <!-- NEW: >81531021 | Methanobrevibacter oralis | HMT-815 | Strain: DSM 7256 | PROKKA: SEQF3102_01675 | Status: Named | Genomes: 5 -->
@@ -562,11 +566,19 @@
     <td class='taxon-data'>
     
     <% if(data_lookup.pangenomes.length == 1 && data_lookup.pangenomes[0]){ %>
-           View in Anvi`o: <a class='link' href='/genome/anvio?pg=<%= data_lookup.pangenomes[0] %>' target='_blank'>
-              <%= data_lookup.pangenomes[0] %></a> (<small>Interactive</small>)
+           Open Interactive Anvi`o:<br><a class='link' href='/genome/anvio?pg=<%= data_lookup.pangenomes[0] %>' target='_blank'>
+              <%= data_lookup.pangenomes[0] %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+                </svg>
+              </a>
            <br>
-           View <a class='link' href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[0] %>&ext=svg' target='_blank'>
-             SVG Image</a>
+           or View <a class='link' href='/genome/pangenome_image?pg=<%= data_lookup.pangenomes[0] %>&ext=svg' target='_blank'>
+             SVG Image
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+                </svg>
+            </a>
     
     <% }else if(data_lookup.pangenomes.length > 1 && data_lookup.pangenomes[0]){ %>
     
@@ -631,7 +643,11 @@
       <% show = data_lineage.species %>
       
         <span>
-        <a class='link' href='<%- link %>' target='_blank' rel="noopener noreferrer"><em><%- link %></em></a>
+        <a class='link' href='<%- link %>' target='_blank' rel="noopener noreferrer"><em><%- link %></em>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+                      </svg>
+                      </a>
         </span>
       
       </td>
@@ -646,11 +662,23 @@
          
        <table class='' border='0'>
          
-            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'><a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link</a></td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'><a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+                      </svg>
+            </a></td></tr>
             <!-- nuccore/?term="genus+species"   -->
             <!-- nucleotide?cmd=search&term="data_lookup.genus data_lookup.species" -->
-            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'><a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link</a></td></tr>
-            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'><a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link</a></td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'><a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+                      </svg>
+                      </a></td></tr>
+            <tr><td style='text-align:right;border:none;padding:0 1px;'></td><td class='link' style='padding:0 1px;border:none;'><a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+                      </svg>
+            </a></td></tr>
          
        </table>
       <% }else{ %>
@@ -665,9 +693,24 @@
     <td class='taxon-data'>
     <% if(g_length > 0){ %>
       <table class='' border='0'>
-          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>Genome Tree</a></td></tr>
-          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>Ribosome Protein Tree</a></td></tr>
-          <tr><td style='border:none;padding:0 1px;'><a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>16S rRNA Gene Tree</a></td></tr>
+          <tr><td style='border:none;padding:0 1px;'>
+           <a class='link' href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>Genome Tree
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+             </svg>
+            </a></td></tr>
+          <tr><td style='border:none;padding:0 1px;'>
+          <a class='link' href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>Ribosomal Protein Tree
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+            </svg>
+          </a></td></tr>
+          <tr><td style='border:none;padding:0 1px;'>
+          <a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>16S rRNA Gene Tree
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+            </svg>
+          </a></td></tr>
       </table>
     <% }else{ %>
       <table class='' border='0'>

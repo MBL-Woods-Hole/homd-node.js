@@ -41,6 +41,7 @@
   padding:5px;
   font-size:13px;
   text-align: center;
+  z-index: 1;
 }
 #tax-table td
 {
@@ -49,11 +50,12 @@
   font-size:small;
   font-weight:bold;
   color: #303030;
-  overflow: hidden;
-
-  text-overflow: ellipsis;
 
   white-space: nowrap;
+}
+#tax-table .ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #tax-table tr:nth-child(even) { 
     /* background-color: var(--table-row-even1); */
