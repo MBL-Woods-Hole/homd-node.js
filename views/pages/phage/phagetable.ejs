@@ -20,33 +20,17 @@ thead th { position: sticky; top: 0; }
 		 <div class='title'>Human Oral Phage of Microbial Taxa</div>
 
          <%- include('../../partials/under_construction'); %> 
-		 
-		 <div class='download_browser_text_excel'><b>Download this Phage Data (all columns)</b>: 
-		   <a href='dld_table/browser/<%= letter %>/<%= rank %>/<%= search_txt %>/<%= search_field %>' >[Browser]</a>
-		   <a href='dld_table/text/<%= letter %>/<%= rank %>/<%= search_txt %>/<%= search_field %>' >[Text]</a>
-		   <a href='dld_table/excel/<%= letter %>/<%= rank %>/<%= search_txt %>/<%= search_field %>' >[Excel]</a>
-		 </div>		 
-			 
+
 	 
-<small>(HPT = <u>H</u>uman <u>P</u>hage <u>T</u>axon)</small>
-<%- include('../../partials/phage_table_filter.ejs') %>
+
+phage predictions
 <div id='phage-box' >
 
 	
 		 <table id='phage-table' class='table table-hover table-condensed sortable' style=''>
 		 <thead>
 		  <tr>
-		    <% for(n in cols_to_show) { %>
-		    <th scope="col" class='<%= cols_to_show[n].width %>'><%= cols_to_show[n].view %></th>
-		    <!-- 
-<th scope="col" class='col1'>Phage-ID</th>
-		    <th scope="col" class='col3'>Family</th>
-		    <th scope="col" class='col3'>Genus</th>
-		    <th scope="col" class='col3'>Species</th>
-		    <th scope="col" class='col1'>Host Taxon-ID</th>
-		    <th scope="col" class=''>Host Species</th>
- -->
-		    <% } %>
+		   
 		  </tr>
 		 </thead>
 		 <tbody>
@@ -76,22 +60,7 @@ thead th { position: sticky; top: 0; }
 			     <% } %>
 			   <% } %>
 			   
-<!--			   
-			   <% pid = list[n].pid %>
-			   <td nowrap><%= pid %></td>
-		   
-			   <td nowrap class=''><b><%= list[n].family_ncbi  %></b></td>
-			   <td nowrap class=''><i><b><%= list[n].genus_ncbi  %></b></i></td>
-			   <td nowrap class=''><a href='phagedesc?pid=<%= pid %>'><i><b><%= list[n].species_ncbi  %></b></i></a></td>
-			   <% html="" %>
-			   <% if(list[n].host_otid != ''){ %>
-				   <% taxidfullname = 'HMT-'+("000" + list[n].host_otid).slice(-3); %>
-				   <% html="<a href='/taxa/tax_description?otid="+list[n].host_otid+"'>"+taxidfullname+"</a>" %>
-			   <% } %>
-			   <td nowrap class=''><%- html %></td>
-			   <td nowrap class=''><i><b><%= list[n].host_ncbi  %> </b></i></td>
--->		   
-			   
+
 		   <% } %>
 		 <% } %>
 		 </tbody>
@@ -116,37 +85,6 @@ thead th { position: sticky; top: 0; }
 <script type="text/javascript" src="/js/phage.js"></script>
 <script>
   mainmenu()
-  $(document).ready(function(){ 
-     var cols_showing = <%- cols %>
-     
-     create_column_choices_dialog(cols_showing) 
-     
-     var letter = '<%- letter %>'
-	if(letter && letter !== 'all'){
-		document.getElementById(letter.toUpperCase()).style.color = 'red'
-		document.getElementById(letter.toUpperCase()).style.fontSize = 'medium'
-	}                  
- 
-  });    
-  $(document).mouseup(function (e) {
-		if ($(e.target).closest("#phage-column-choices").length === 0) {
-			$("#phage-column-choices").hide();
-		}
-  });
-   
-  document.onreadystatechange = function() {
-            if (document.readyState !== "complete") {
-                document.querySelector(
-                  '#phage-box').style.visibility = "hidden";
-                document.querySelector(
-                  "#loader").style.visibility = "visible";
-            } else {
-                document.querySelector(
-                  "#loader").style.display = "none";
-                document.querySelector(
-                  '#phage-box').style.visibility = "visible";
-            }
-        };
 
 </script>
 

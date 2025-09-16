@@ -342,7 +342,7 @@ router.get('/genome_description', function Description (req, res) {
             
             console.log('checkM status',checkm_status_obj)
             res.render('pages/genome/genomedesc', {
-               title: 'HOMD :: Genome Info',
+               title: 'HOMD :: Genome',
                pgname: 'genome/description', // for AboutThisPage 
                config: JSON.stringify(CFG),
                // taxonid: otid,
@@ -453,7 +453,7 @@ router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
 function render_explorer(req, res, args){
     res.render('pages/genome/explorer', {
         
-        title: 'HOMD :: ' + args.gid,
+        title: 'HOMD :: Genome Explorer',
         pgname: 'genome/explorer', // for AboutThisPage 
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
@@ -697,7 +697,7 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
             //console.log('site_search_result[data_keys[0]]',site_search_result[data_keys[0]])
             res.render('pages/genome/annotation_keyword', {
 
-                title: 'HOMD :: text search',
+                title: 'HOMD :: Search',
                 pgname: 'genome/explorer', // for AboutThisPage 
                 config: JSON.stringify(CFG),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
@@ -785,7 +785,7 @@ router.post('/orf_search', function orf_search (req, res) {
             //console.log('data',site_search_result)
             res.render('pages/genome/annotation_keyword', {
 
-                title: 'HOMD :: text search',
+                title: 'HOMD :: Search',
                 pgname: 'genome/explorer', // for AboutThisPage 
                 config: JSON.stringify(CFG),
                 ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
@@ -1195,7 +1195,7 @@ router.get('/explorer', function explorer_get (req, res) {
 //
 router.get('/blast_server', function genome_blast_server(req, res) {
     res.render('pages/blast/blast_server', {
-        title: 'HOMD :: HOMD Blast Server',
+        title: 'HOMD :: Blast Server',
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
@@ -1692,17 +1692,17 @@ router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
 //            let pname = rows[n].pangenome_name+rows[n].homd_genome_version.replace('.','_')
 //           // let dir = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'pangenome_files',pname)
 //           // walk(dir)
-// 			//            if (fs.existsSync(path.join(CFG.PATH_TO_STATIC_DOWNLOADS"/tmp/myfile")) {
-// 			//   console.log("/tmp/myfile exists!");
-// 			// } else {
-// 			//   console.log("/tmp/myfile does not exist!");
-// 			// }
-// 			// 
-// 			//            if(CFG.PATH_TO_STATIC_DOWNLOADS
+//          //            if (fs.existsSync(path.join(CFG.PATH_TO_STATIC_DOWNLOADS"/tmp/myfile")) {
+//          //   console.log("/tmp/myfile exists!");
+//          // } else {
+//          //   console.log("/tmp/myfile does not exist!");
+//          // }
+//          // 
+//          //            if(CFG.PATH_TO_STATIC_DOWNLOADS
 //        }
        //console.log('rows',rows)
        res.render('pages/genome/anvio_selection', {
-        title: 'HOMD :: Anvio', 
+        title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
@@ -1783,7 +1783,7 @@ router.get('/anvio', (req, res) => {
 //     }
     res.render('pages/genome/anvi_server', {
     //res.render('pages/genome/anvi_server_iframe', {
-        title: 'HOMD :: Anvio', 
+        title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
@@ -1798,36 +1798,36 @@ router.get('/pangenome_image', function pangenome_image(req, res) {
     // if otid is present get filename from db
     if(req.query.otid){
         //otid = req.query.otid
-		// else pg and extension must be present
-		let q = "SELECT filename from pangenome_files WHERE otid='"+req.query.otid+"'"
-		console.log(q)
-		//console.log(q)
-		TDBConn.query(q, (err, rows) => {
-		   if (err) {
-			  console.log(err)
-			  return
-			}
-			console.log(rows)
-			if(rows.length === 0){
-			   res.send('File not found');
-			}else{
-			  filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdf/HMT_"+req.query.otid+"/"+rows[0].filename
-			  res.sendFile(filepath);
-			}
-		})
-	}else{
-	   // get directly from files system using ext and pg name
-	   ext = req.query.ext
-	   pg = req.query.pg
-	   filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/"+ext+'/'+req.query.pg+'.'+ext
-	   console.log('fpath',filepath)
-	   res.sendFile(filepath)
-	}
+        // else pg and extension must be present
+        let q = "SELECT filename from pangenome_files WHERE otid='"+req.query.otid+"'"
+        console.log(q)
+        //console.log(q)
+        TDBConn.query(q, (err, rows) => {
+           if (err) {
+              console.log(err)
+              return
+            }
+            console.log(rows)
+            if(rows.length === 0){
+               res.send('File not found');
+            }else{
+              filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdf/HMT_"+req.query.otid+"/"+rows[0].filename
+              res.sendFile(filepath);
+            }
+        })
+    }else{
+       // get directly from files system using ext and pg name
+       ext = req.query.ext
+       pg = req.query.pg
+       filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/"+ext+'/'+req.query.pg+'.'+ext
+       console.log('fpath',filepath)
+       res.sendFile(filepath)
+    }
 })
 //
 router.get('/oralgen', function oralgen(req, res) {
   res.render('pages/genome/oralgen', {
-    title: 'HOMD :: Human Oral Microbiome Database',
+    title: 'HOMD :: ORALGEN',
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),

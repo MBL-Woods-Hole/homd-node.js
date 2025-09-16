@@ -17,7 +17,7 @@ router.get('/download/:q', function download(req, res) {
   //console.log('q',req.params)
   let q = req.params.q
   res.render('pages/download', {
-    title: 'HOMD :: Human Oral Microbiome Database',
+    title: 'HOMD :: Downloads',
     pgname: 'download', // for AbountThisPage
     section: q,
     config: JSON.stringify(CFG),

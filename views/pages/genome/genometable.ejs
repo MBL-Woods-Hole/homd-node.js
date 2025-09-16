@@ -101,6 +101,8 @@ thead th { position: sticky; top: 0; }
 <% if(cfg.DBHOST == "localhost"){ %>
 <br><span style=''><small><b>Localhost</b>
   Available V11.0-PROKKA Annos: GCA_000174175.1, GCA_016648925.1, GCA_030450175.1, GCA_900105505.1, GCA_938028245.1
+  <br>Phage: GCA_000008065.1, GCA_000007645.1, GCA_000008345.1
+
 </small></span>
 <% } %>
 
@@ -161,32 +163,32 @@ thead th { position: sticky; top: 0; }
                 <button class="dropbtn pill pill-indigo">Hover Menu</button>
                 <div class="dropdown-content">
                 <li><%= ginfo[n].gid %></li>
-                <li><a class='pill pill-colorkit1' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Genome Description</a></li>
-                <li><a class='pill pill-colorkit2' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Genome Viewer
+                <li><a class='pill pill-colorkit21' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Genome Description</a></li>
+                <li><a class='pill pill-colorkit22' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Genome Viewer
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
                       </svg>
                 </a></li>
-                <li><a class='pill pill-colorkit3 icon-link' href='conserved_protein_tree?gid=<%= ginfo[n].gid %>' target='_blank'>Genome Tree
+                <li><a class='pill pill-colorkit23 icon-link' href='conserved_protein_tree?gid=<%= ginfo[n].gid %>' target='_blank'>Genome Tree
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
                       </svg>
                     </a>
                 </li>
                 
-                <li><a class='pill pill-colorkit4' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info: <%= taxidfullname %></a></li>
-                <li><a class='pill pill-colorkit5' href='/taxa/tax_hierarchy?otid=<%= ginfo[n].otid %>'>Taxon Tree: <%= taxidfullname %></a></li>
+                <li><a class='pill pill-colorkit24' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info: <%= taxidfullname %></a></li>
+                <li><a class='pill pill-colorkit25' href='/taxa/tax_hierarchy?otid=<%= ginfo[n].otid %>'>Taxon Tree: <%= taxidfullname %></a></li>
                 
-                <li><a class='pill pill-colorkit6' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a></li> 
+                <li><a class='pill pill-colorkit26' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a></li> 
                 <% if(ginfo[n].phage == 'yes' ){ %>
-                    <li><a class='pill pill-colorkit7' href='' target="_self">Phage</a></li>
+                    <li><a class='pill pill-colorkit27' href='/phage/phage_table?gid=<%= ginfo[n].gid %>' target="_self">Phage</a></li>
                 <% }else{ %>
                     <li><span class='pill pill-grayed' title='Phage Not Available'>Phage (not available)</span></li>
                 <% } %>
                 <li>Annotations:</li>
-                <a class='pill pill-colorkit8' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
+                <a class='pill pill-colorkit28' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
                 <% if(no_ncbi_annotation.indexOf(ginfo[n].gid) == -1 ){ %>
-                    <li><a class='pill pill-colorkit9' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a></li>
+                    <li><a class='pill pill-colorkit29' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a></li>
                 <% }else{ %>
                     <li><span class='pill pill-grayed' title='NCBI Annotation Not Available' >NCBI (not available)</span></li>
                 <% } %>

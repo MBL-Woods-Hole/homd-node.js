@@ -19,10 +19,10 @@ const queries = require(app_root + '/routes/queries')
 
 function renderTaxonTable(req, res, args) {
 
-  res.render('pages/taxa/taxtable', {
+  res.render('pages/taxa/taxontable', {
     title: 'HOMD :: Taxon Table',
     pgtitle: 'Human Oral/Nasal Microbial Taxa',
-    pgname: 'taxon/tax_table',  //for AbountThisPage
+    pgname: 'taxon/taxon_table',  //for AbountThisPage
     config: JSON.stringify(CFG),
     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
 
@@ -41,7 +41,7 @@ router.get('/reset_ttable', function tax_table_reset(req, res) {
   req.session.ttable_filter = helpers_taxa.get_default_tax_filter()
   res.redirect('back');
 })
-router.get('/tax_table', function tax_table_get(req, res) {
+router.get('/taxon_table', function tax_table_get(req, res) {
   console.log('in TT get')
   let filter, send_list
 
@@ -72,7 +72,7 @@ router.get('/tax_table', function tax_table_get(req, res) {
 
 })
 
-router.post('/tax_table', function tax_table_post(req, res) {
+router.post('/taxon_table', function tax_table_post(req, res) {
   console.log('in TT post')
   //console.log(req.body)
   let send_list
@@ -1130,9 +1130,9 @@ router.get('/life', function life(req, res) {
   //console.log('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
   //console.log('regex2',lineage_list[0].split(';').pop())
   //console.log('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
-  let page_title = 'Life'
+  let page_title = 'Life Pages'
   if (rank)
-    page_title = helpers.capitalizeFirst(rank)
+    page_title = 'Life:'+helpers.capitalizeFirst(rank)
 
   lineage_string = lineage_list[0]
 
@@ -1601,15 +1601,14 @@ router.get('/ecology', function ecology(req, res) {
   //console.log('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
   //console.log('lineage_list',lineage_list)
   let lineage_string = helpers_taxa.make_lineage_string_with_links(lineage_list, 'ecology', page)
-  //console.log('lineage_string',lineage_string)
-  //console.log('data=>',erenv1v3_data,'<=data')
-  //     console.log('dewhirst_notes',dewhirst_notes)
-  //     console.log('erenv1v3_notes',erenv1v3_notes)
-  //     console.log('erenv3v5_notes',erenv3v5_notes)
-  //ecology?rank=genus&name=Fusobacterium
-  //res.render('pages/taxa/ecology', {
+  let rank_show
+  if(rank == 'klass' || rank == 'Klass'){ 
+    rank_show = 'Class'
+  }else{ 
+    rank_show = rank.charAt(0).toUpperCase() + rank.slice(1)
+  }
   res.render('pages/taxa/ecology_lollipop', {
-    title: 'HOMD ::' + rank + '::' + tax_name,
+    title: 'HOMD ::' + rank_show + ':' + tax_name,
     pgname: 'taxon/ecology', // for AbountThisPage 
     config: JSON.stringify(CFG),
     tax_name: tax_name,
@@ -1752,7 +1751,7 @@ router.get('/dropped', function dropped(req, res) {
       return
     }
     res.render('pages/taxa/dropped', {
-      title: 'HOMD :: Human Oral Microbiome Database',
+      title: 'HOMD :: Dropped Taxa',
       pgname: '', // for AbountThisPage
       pgtitle: 'Dropped Taxa Table',
       config: JSON.stringify(CFG),

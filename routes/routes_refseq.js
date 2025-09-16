@@ -36,7 +36,7 @@ router.get('/refseq_table', function refseq_table(req, res) {
         return helpers.compareStrings_alpha(a.species, b.species);
     })
     res.render('pages/refseq/refseq_table', {
-        title: 'HOMD :: HOMD refseq_table',
+        title: 'HOMD :: 16S RefSeq Table',
         pgname: '', // for AbountThisPage
         refseq: JSON.stringify(refseq_array),
         config: JSON.stringify(CFG),
@@ -48,7 +48,7 @@ router.get('/refseq_table', function refseq_table(req, res) {
 
 router.get('/blast_server', function refseq_blast_server(req, res) {
     res.render('pages/blast/blast_server', {
-        title: 'HOMD :: HOMD Blast Server',
+        title: 'HOMD :: Blast Server',
         pgname: '', // for AbountThisPage
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
@@ -61,7 +61,7 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
     //helpers.accesslog(req, res)
   
   res.render('pages/refseq/blastn', {
-    title: 'HOMD :: RefSeq Blast', 
+    title: 'HOMD :: 16S RefSeq Blast', 
     pgname: 'blast/blast',
     config: JSON.stringify(CFG),
     hostname: CFG.hostname,
