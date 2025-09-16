@@ -2274,4 +2274,28 @@ router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
     
     })
 })
+router.get('/phage', function phage(req, res) {
+    //console.log('in phage',req.query.gid)
+    let gid = req.query.gid
+    
+    const q = queries.get_phage(gid)
+    console.log('phage q',q)
+    TDBConn.query(q, (err, rows) => {
+        if(err){
+           console.log(err)
+           return
+        }
+        
+        res.render('pages/genome/phage', {
+                title: 'HOMD :: Phage', 
+                pgname: '', // for AboutThisPage
+                config: JSON.stringify(CFG),
+                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+                pgtitle: 'Phage',
+                data: JSON.stringify(rows),
+                gid: gid
+        })
+    })
+
+})
 module.exports = router

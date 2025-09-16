@@ -1,0 +1,50 @@
+<style>
+</style>
+<% var datarows = JSON.parse(data) %>
+
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+    <p class='h3 title'>Phage for <%= gid %></p>
+    
+    <table class='table'>
+     <tr><th>Type</th><th>Phage-ID</th><th>Contig</th><th>Start</th><th>End</th><th>Genome Viewer</th></tr>
+     <% for(n in datarows){ %>
+        <tr>
+            <td><%= datarows[n].type %></td>
+            <td><%= datarows[n].phage_id %></td>
+            
+            <td><%= datarows[n].contig %></td>
+            <td><%= datarows[n].start %></td>
+            <td><%= datarows[n].end %></td>
+            <td><a href='<%= datarows[n].jbrowse_link %>' target='_blank'>link</a></td>
+        </tr>
+         
+     <% } %>
+    </table>
+  
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

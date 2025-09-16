@@ -236,3 +236,7 @@ module.exports.get_contig = (gid, mid) => {   // always NCBI for taxon descripti
   //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
   return qSelectContigs
 }
+module.exports.get_phage = (gid) => {   // always NCBI for taxon description
+  let qSelectPhage = "SELECT phage_id,type,contig,start,end,jbrowse_link FROM phage_data where genome_id='"+gid+"'"
+  return qSelectPhage
+}

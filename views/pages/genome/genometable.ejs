@@ -181,7 +181,7 @@ thead th { position: sticky; top: 0; }
                 
                 <li><a class='pill pill-colorkit26' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a></li> 
                 <% if(ginfo[n].phage == 'yes' ){ %>
-                    <li><a class='pill pill-colorkit27' href='/phage/phage_table?gid=<%= ginfo[n].gid %>' target="_self">Phage</a></li>
+                    <li><a class='pill pill-colorkit27' href='/genome/phage?gid=<%= ginfo[n].gid %>' target="_self">Phage</a></li>
                 <% }else{ %>
                     <li><span class='pill pill-grayed' title='Phage Not Available'>Phage (not available)</span></li>
                 <% } %>
