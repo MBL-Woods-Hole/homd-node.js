@@ -3,6 +3,7 @@
 thead th { position: sticky; top: 0; }
 
 </style>
+<% var datarows = JSON.parse(data) %>
 <link rel="stylesheet" type="text/css" href="/css/phage_pages.css" >
 <%- include('../../partials/header_html'); %>
 
@@ -25,11 +26,24 @@ thead th { position: sticky; top: 0; }
          <table id='phage-table' class='table table-hover table-condensed sortable' style=''>
          <thead>
           <tr>
-           <th>Genome-ID</th><th>Contigs</th><th>HMT-ID</th><th>Site</th><th>Species</th><th>Strain</th><th>Cenote-Taker3</th><th>geNomad</th><th>Average</th>
+           <th>Genome-ID</th><th>Contigs</th><th>HMT-ID</th><th>Site</th><th>Species</th><th>Strain</th><th>Cenote-Taker3</th><th>geNomad</th>
           </tr>
          </thead>
          <tbody>
-         
+         <% for (n in datarows){ %>
+             <% taxidfullname = "HMT-"+("000" + datarows[n].otid).slice(-3); %>
+             <tr>
+             <td><a href='/genome/genome_description?gid=<%= datarows[n].gid %>'><%= datarows[n].gid %></a></td>
+             <td><%= datarows[n].contigs %></td>
+             <td><a href='/taxa/tax_description?gid=<%= datarows[n].gid %>&otid=<%= datarows[n].otid %>'><%= taxidfullname %></a></td>
+             <td><%= datarows[n].site %></td>
+             <td title='<%= datarows[n].genus %> <%= datarows[n].species %>'><%= datarows[n].genus %> <%= datarows[n].species %></td>
+             <td><%= datarows[n].strain %></td>
+             <td><%= datarows[n].cenote %></td>
+             <td><%= datarows[n].genomad %></td>
+             
+             </tr>
+         <% } %>
          </tbody>
          </table>
          
