@@ -6,8 +6,7 @@ thead th { position: sticky; top: 0; }
 <link rel="stylesheet" type="text/css" href="/css/phage_pages.css" >
 <%- include('../../partials/header_html'); %>
 
-<% list = JSON.parse(pdata) %>
-<% cols_to_show = JSON.parse(cols) %>
+
 
 
 <body>
@@ -17,57 +16,25 @@ thead th { position: sticky; top: 0; }
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
       
-		 <div class='title'>Human Oral Phage of Microbial Taxa</div>
+         <p class='h3 title'>Genomes with Phage Predictions</p>
 
-         <%- include('../../partials/under_construction'); %> 
 
-	 
-
-phage predictions
 <div id='phage-box' >
 
-	
-		 <table id='phage-table' class='table table-hover table-condensed sortable' style=''>
-		 <thead>
-		  <tr>
-		   
-		  </tr>
-		 </thead>
-		 <tbody>
-		 <% if(list.length == 0) { %>
-		    
-		    <tr>
-		    <% if(rank == 'family') { %>
-		      <td></td><td>Nothing to show for this search.</td>
-		    <% }else{ %>
-		      <td></td><td></td><td>Nothing to show for this search.</td>
-		    <% } %>
-		    </tr>
-		 
-		 <% }else{ %>
-		   <% for(n in list){ %>
-			   <tr>
-			   <% for(x in cols_to_show){ %>
-			     
-			     <!-- need links and flesh out otid -->
-			     <% if(cols_to_show[x].name == 'pid'){ %>
-			        <td nowrap><a href='phagedesc?pid=<%= list[n][cols_to_show[x].name] %>'><%= list[n][cols_to_show[x].name] %></a></td>
-			     <% }else if(cols_to_show[x].name == 'host_otid'){ %>
-			        <% taxidfullname = 'HMT-'+("000" + list[n][cols_to_show[x].name]).slice(-3); %>
-			        <td nowrap><a href='/taxa/tax_description?otid=<%= list[n][cols_to_show[x].name] %>'><%= taxidfullname %></a></td>
-			     <% }else{ %>
-			        <td nowrap><%= list[n][cols_to_show[x].name] %></td>
-			     <% } %>
-			   <% } %>
-			   
-
-		   <% } %>
-		 <% } %>
-		 </tbody>
-		 </table>
-		 
+    
+         <table id='phage-table' class='table table-hover table-condensed sortable' style=''>
+         <thead>
+          <tr>
+           <th>Genome-ID</th><th>Contigs</th><th>HMT-ID</th><th>Site</th><th>Species</th><th>Strain</th><th>Cenote-Taker3</th><th>geNomad</th><th>Average</th>
+          </tr>
+         </thead>
+         <tbody>
+         
+         </tbody>
+         </table>
+         
 </div>  <!-- end: tax-box -->
-	  
+      
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
@@ -79,6 +46,7 @@ phage predictions
 
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>

@@ -22,7 +22,8 @@ router.get('/overview', function overview(req, res) {
         title: 'HOMD :: Genome Overview', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        //ver_info: JSON.stringify(C.version_information),
+        ver_info: JSON.stringify(C.version_information),
         pgtitle: 'Genome Overview',
         crispr_size: Object.keys(crispr_data).length,
         
@@ -43,7 +44,7 @@ function renderGenomeTable(req, res, args) {
         title: 'HOMD :: Genome Table', 
         pgname: 'genome/genome_table', // for AboutThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         pgtitle: 'Genome Table',
         data: JSON.stringify(args.send_list),
         filter: JSON.stringify(args.filter),
@@ -250,7 +251,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
     page_type: 'JBrowse',
     genomes: JSON.stringify(genomeList),
     tgenomes: genomeList.length,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
   })
 })
@@ -354,8 +355,7 @@ router.get('/genome_description', function Description (req, res) {
                // data2: JSON.stringify(data2),
                // data3: JSON.stringify(data3),
                // data4: JSON.stringify(data4),
-               ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version, gtdb_ver:C.GTDB_version }),
-               
+               ver_info: JSON.stringify(C.version_information),
             })
        })  // end TDBConn.query(q_contig
      } // end else
@@ -456,7 +456,7 @@ function render_explorer(req, res, args){
         title: 'HOMD :: Genome Explorer',
         pgname: 'genome/explorer', // for AboutThisPage 
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         
         gid: args.gid,
         otid: args.otid,
@@ -700,7 +700,7 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
                 title: 'HOMD :: Search',
                 pgname: 'genome/explorer', // for AboutThisPage 
                 config: JSON.stringify(CFG),
-                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+                ver_info: JSON.stringify(C.version_information),
                 dirname: dirname,
                 anno: anno,
                 search_text: search_text,
@@ -788,7 +788,7 @@ router.post('/orf_search', function orf_search (req, res) {
                 title: 'HOMD :: Search',
                 pgname: 'genome/explorer', // for AboutThisPage 
                 config: JSON.stringify(CFG),
-                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+                ver_info: JSON.stringify(C.version_information),
 
                 anno: anno,
                 search_text: search_text,
@@ -1198,7 +1198,7 @@ router.get('/blast_server', function genome_blast_server(req, res) {
         title: 'HOMD :: Blast Server',
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         
         blast_type: 'genome'
       })
@@ -1235,7 +1235,7 @@ router.get('/blast_select_genome', function blast_select_genome(req, res) {
     page_type: 'BLAST',
     genomes: JSON.stringify(genomeList),
     tgenomes: genomeList.length,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
   })
 })
@@ -1255,7 +1255,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
 //     title: 'HOMD :: BLAST', 
 //     pgname: 'blast/pagehelp', // for AboutThisPage
 //     config: JSON.stringify(CFG),
-//     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//     ver_info: JSON.stringify(C.version_information),
 //     
 //     gid: '',
 //     annotation: '',
@@ -1268,7 +1268,7 @@ router.get('/blast_sserver', function blast_sserver(req, res){
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
     gid: '',
     annotation: '',
@@ -1301,7 +1301,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
 //     title: 'HOMD :: BLAST', 
 //     pgname: 'blast/pagehelp', // for AboutThisPage
 //     config: JSON.stringify(CFG),
-//     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//     ver_info: JSON.stringify(C.version_information),
 //     
 //     gid: req.body.gid,
 //     annotation: req.body.annotation,
@@ -1322,7 +1322,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
     gid: req.body.gid,
     annotation: req.body.annotation,
@@ -1341,7 +1341,7 @@ router.post('/blast_single_test', function(req, res){
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
   })
 })
@@ -1405,7 +1405,7 @@ router.get('/blast_server_one', function blast_test(req, res) {
     config: JSON.stringify(CFG),
     gid: gid,  // default
     org: C.genome_lookup[gid].organism,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
     data: JSON.stringify(data)
     }) 
@@ -1438,7 +1438,7 @@ router.get('/genome_blast_no_iframe', function genome_blast_no_iframe(req, res) 
     title: 'HOMD :: BLAST', 
     pgname: 'blast/pagehelp', // for AboutThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
     gid: '',
     annotation: '',
@@ -1489,7 +1489,7 @@ router.get('/blast', function blast_get(req, res) {
         title: 'HOMD :: BLAST',
         pgname: 'blast/blast', // for AboutThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         
         blastFxn: 'genome',
         organism: organism,
@@ -1541,7 +1541,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
            title: 'HOMD :: Conserved Protein Tree',
            pgname: 'genome/tree', // for AboutThisPage
            config: JSON.stringify(CFG),
-           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+           ver_info: JSON.stringify(C.version_information),
            
            svg_data: JSON.stringify(data),
            target: findme
@@ -1585,7 +1585,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
            title: 'HOMD :: Ribosomal Protein Tree',
            pgname: 'genome/tree', // for AboutThisPage
            config: JSON.stringify(CFG),
-           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+           ver_info: JSON.stringify(C.version_information),
            
            svg_data: JSON.stringify(data),
            target: findme
@@ -1625,7 +1625,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
            title: 'HOMD :: rRNA Gene Tree',
            pgname: 'genome/tree', // for AboutThisPage
            config: JSON.stringify(CFG),
-           ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+           ver_info: JSON.stringify(C.version_information),
            
            svg_data: JSON.stringify(data),
            target: findme
@@ -1644,7 +1644,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //       title: 'HOMD :: rRNA Gene Tree',
 //       pgname: 'genome/tree', // for AboutThisPage
 //       config: JSON.stringify(CFG),
-//       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//       ver_info: JSON.stringify(C.version_information),
 //       
 //       svg_data: JSON.stringify(data),
 //       otid: otid
@@ -1705,7 +1705,7 @@ router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
         title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         
         //pangenomes: JSON.stringify(C.pangenomes)
         pangenomes: JSON.stringify(rows),
@@ -1786,7 +1786,7 @@ router.get('/anvio', (req, res) => {
         title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         
         pangenome: pg,
         
@@ -1830,7 +1830,7 @@ router.get('/oralgen', function oralgen(req, res) {
     title: 'HOMD :: ORALGEN',
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
 
   })
 })
@@ -1876,7 +1876,7 @@ router.get('/peptide_table', function peptide_table_get(req, res) {
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+          ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
           row_count:send_list.length,
@@ -1947,7 +1947,7 @@ router.post('/peptide_table', function peptide_table_post(req, res) {
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+          ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
           row_count:send_list.length,
@@ -2014,7 +2014,7 @@ router.get('/peptide_table2', function peptide_table2_get(req, res) {
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+          ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
           row_count:send_list.length,
@@ -2085,7 +2085,7 @@ router.post('/peptide_table2', function peptide_table2_post(req, res) {
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+          ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
           row_count:send_list.length,
@@ -2144,7 +2144,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
           config: JSON.stringify(CFG),
-          ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+          ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
           row_count:send_list.length,
@@ -2208,7 +2208,7 @@ router.get('/crispr', function crispr(req, res) {
         title: 'HOMD :: CRISPR-Cas', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         pgtitle: 'CRISPR-Cas',
         crispr_data: JSON.stringify(crispr_data),
         gid_list: JSON.stringify(send_list),
@@ -2264,7 +2264,7 @@ router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
             title: 'HOMD :: CRISPR-Cas', 
             pgname: '', // for AboutThisPage
             config: JSON.stringify(CFG),
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+            ver_info: JSON.stringify(C.version_information),
             pgtitle: 'CRISPR-Cas',
             gid: gid,
             crispr_data: JSON.stringify(data),
@@ -2290,7 +2290,7 @@ router.get('/phage', function phage(req, res) {
                 title: 'HOMD :: Phage', 
                 pgname: '', // for AboutThisPage
                 config: JSON.stringify(CFG),
-                ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+                ver_info: JSON.stringify(C.version_information),
                 pgtitle: 'Phage',
                 data: JSON.stringify(rows),
                 gid: gid

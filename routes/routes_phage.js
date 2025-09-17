@@ -17,12 +17,11 @@ router.get('/phage_table', function phage_explorer(req, res) {
     
     
     res.render('pages/phage/phagetable', {
-        title: 'HOMD :: Taxon Table',
+        title: 'HOMD :: Phage Table',
         pgtitle: 'Human Oral/Nasal Microbial Taxa',
         pgname: 'taxon/phage_table',  //for AbountThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
-
+        ver_info: JSON.stringify(C.version_information),
   })
   
 })

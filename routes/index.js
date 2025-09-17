@@ -30,7 +30,7 @@ router.get('/', function index(req, res) {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'home', // for AbountThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
     
 
@@ -135,7 +135,7 @@ router.get('/poster', function poster(req, res) {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
 
   })
@@ -147,7 +147,7 @@ router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, re
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
 
   })
@@ -172,7 +172,7 @@ router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, re
 //         title: 'HOMD :: Search Results',
 //         pgname: '', // for AboutThisPage 
 //         config: JSON.stringify(CFG),
-//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//         ver_info: JSON.stringify(C.version_information),
 //         
 //         anno: '',
 //         search_text: req.body.adv_search_text,
@@ -298,7 +298,7 @@ function execPromise(cmd, args, max) {
 //             title: 'HOMD :: Search Results',
 //             pgname: '', // for AboutThisPage 
 //             config: JSON.stringify(CFG),
-//             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//             ver_info: JSON.stringify(C.version_information),
 //             
 //             anno: req.body.adv_anno_radio,
 //             search_text: req.body.search_text_anno,
@@ -428,7 +428,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
             config: JSON.stringify(CFG),
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+            ver_info: JSON.stringify(C.version_information),
             
             anno: req.body.adv_anno_radio_grep,
             search_text: req.body.search_text_anno_grep,
@@ -470,7 +470,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                     title: 'HOMD :: Search Results',
 //                     pgname: '', // for AboutThisPage 
 //                     config: JSON.stringify(CFG),
-//                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//                     ver_info: JSON.stringify(C.version_information),
 //                     
 //                     anno: req.body.adv_anno_radio,
 //                     search_text: req.body.search_text_anno,
@@ -516,7 +516,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                     title: 'HOMD :: Search Results',
 //                     pgname: '', // for AboutThisPage 
 //                     config: JSON.stringify(CFG),
-//                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//                     ver_info: JSON.stringify(C.version_information),
 //                     
 //                    
 //                     search_text: req.body.search_text_anno,
@@ -612,7 +612,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //         title: 'HOMD :: Search Results',
 //         pgname: '', // for AboutThisPage 
 //         config: JSON.stringify(CFG),
-//         ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//         ver_info: JSON.stringify(C.version_information),
 //         
 //        
 //         search_text: req.body.search_text_anno,
@@ -673,7 +673,7 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
 //                     title: 'HOMD :: Search Results',
 //                     pgname: '', // for AboutThisPage 
 //                     config: JSON.stringify(CFG),
-//                     ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//                     ver_info: JSON.stringify(C.version_information),
 //                     
 //                     anno: req.body.adv_anno_radio_sql,
 //                     search_text: req.body.search_text_anno_sql,
@@ -908,7 +908,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         
         search_text: searchText,
         otid_list: JSON.stringify(otidLst),

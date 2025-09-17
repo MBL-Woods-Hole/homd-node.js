@@ -12,15 +12,14 @@
     
     <div class='page-content' >
               
-    <p class='h3 title'>Phage for <%= gid %></p>
+    <p class='h3 title'>Phage hits for <%= gid %></p>
     
-    <table class='table'>
-     <tr><th>Type</th><th>Phage-ID</th><th>Contig</th><th>Start</th><th>End</th><th>Genome Viewer</th></tr>
+    <table class='table table-hover table-condensed'>
+     <tr><th>Prediction<br>Tool</th><th>Phage-ID</th><th>Contig</th><th>Start</th><th>End</th><th>Genome Viewer</th></tr>
      <% for(n in datarows){ %>
         <tr>
             <td><%= datarows[n].type %></td>
             <td><%= datarows[n].phage_id %></td>
-            
             <td><%= datarows[n].contig %></td>
             <td><%= datarows[n].start %></td>
             <td><%= datarows[n].end %></td>

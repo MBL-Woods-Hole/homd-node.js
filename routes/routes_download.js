@@ -21,8 +21,7 @@ router.get('/download/:q', function download(req, res) {
     pgname: 'download', // for AbountThisPage
     section: q,
     config: JSON.stringify(CFG),
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version, gtdb_ver:C.GTDB_version }),
-    
+    ver_info: JSON.stringify(C.version_information)
 
   })
 })

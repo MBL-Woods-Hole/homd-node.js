@@ -128,7 +128,9 @@ p {
   font-size: 10px;
   color: white;
 }
-
+.red-text{
+   color:red;
+}
 .pill {
   padding: 0px 4px;
   text-align: center;

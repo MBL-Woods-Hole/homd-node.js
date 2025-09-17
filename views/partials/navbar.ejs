@@ -10,6 +10,7 @@
         font-size: 16px;
         padding: 3px 5px;
         color: white;
+        
       }
 
       #version-info a {
@@ -178,6 +179,18 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false">
+                  Viruses
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="icon-link dropdown-item" href="/phage/phage_table">Genomes with Phages
+                      
+                    </a></li>
+                </ul>
+              </li>
+              
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
                   Downloads
                 </a>
                 <ul class="dropdown-menu">
@@ -239,4 +252,6 @@
             class='gold'>V<%= version_info.rna_ver %></span></a>
         &nbsp;&nbsp;|&nbsp;&nbsp;Genomic RefSeq: <a href="/help/help-page?pagecode=genome/genome_version"><span
             class='gold'>V<%= version_info.gen_ver %></span></a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;Viruses: <a href="/phage/phage_table"><span
+            class='gold'>V<%= version_info.vir_ver %></span></a>
       </div>

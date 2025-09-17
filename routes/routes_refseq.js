@@ -40,7 +40,7 @@ router.get('/refseq_table', function refseq_table(req, res) {
         pgname: '', // for AbountThisPage
         refseq: JSON.stringify(refseq_array),
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         
         
       })
@@ -51,7 +51,7 @@ router.get('/blast_server', function refseq_blast_server(req, res) {
         title: 'HOMD :: Blast Server',
         pgname: '', // for AbountThisPage
         config: JSON.stringify(CFG),
-        ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+        ver_info: JSON.stringify(C.version_information),
         
         blast_type: 'refseq'
       })
@@ -65,7 +65,7 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
     pgname: 'blast/blast',
     config: JSON.stringify(CFG),
     hostname: CFG.hostname,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
     db_choices: JSON.stringify(C.refseq_blastn_db_choices),
     blast_prg: JSON.stringify(['blastn']),
@@ -107,7 +107,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
             title: 'HOMD :: Conserved Protein Tree',
             pgname: 'refseq/tree', // for AbountThisPage, 
             config: JSON.stringify(CFG),
-            ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+            ver_info: JSON.stringify(C.version_information),
             
             svg_data: JSON.stringify(data),
             //path: 'public/trees/'+fname,
@@ -128,7 +128,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
 //             title: 'HOMD :: Conserved Protein Tree',
 //             pgname: 'refseq/tree', // for AbountThisPage, 
 //             config: JSON.stringify(CFG),
-//             ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//             ver_info: JSON.stringify(C.version_information),
 //             
 //             svg_data: JSON.stringify(data),
 //             path: 'public/trees/'+fname,
@@ -140,7 +140,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
 //    title: 'HOMD :: Phylo Tree', 
 //    config: JSON.stringify(CFG),
 //    hostname: CFG.HOSTNAME,
-//    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+//    ver_info: JSON.stringify(C.version_information),
 //    otid:otid
 //  })
 })
@@ -154,7 +154,7 @@ router.get('/download', function download(req, res) {
     pgname: 'download', // for AbountThisPage
     config: JSON.stringify(CFG),
     hostname: CFG.HOSTNAME,
-    ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
+    ver_info: JSON.stringify(C.version_information),
     
   })
 })

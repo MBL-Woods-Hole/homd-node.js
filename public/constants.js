@@ -4,10 +4,17 @@ const constants = {};
 constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'
 constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // JBROWSE if you want a non-relative url use: config.js
 
-// These should be moved to config
+
 constants.rRNA_refseq_version    = '16.03' // Used on title page header
 constants.genomic_refseq_version = '11.02' // Used on title page header
 constants.homd_taxonomy_version = '4.1'    // Used on title page header
+constants.virome_version    = '1.1'
+constants.version_information = {
+    rna_ver: constants.rRNA_refseq_version, 
+    gen_ver: constants.genomic_refseq_version, 
+    tax_ver: constants.homd_taxonomy_version,
+    vir_ver: constants.virome_version
+}
 constants.GTDB_version = '226'            // used on taxon description page
 constants.grep_search_max_rows = 500000  //100000 // up from 50000 on 2025-07-28
 constants.genomes_table_name = 'genomesV11.0'
