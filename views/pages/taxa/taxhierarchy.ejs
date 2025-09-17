@@ -183,7 +183,7 @@
     
     //target_span.innerHTML = '<i class="fa-solid fa-angle-down"></i>'
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "/taxa/tax_hierarchy_level", true);
+    xmlhttp.open("POST", "/taxa/tax_hierarchy_bylevel", true);
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {

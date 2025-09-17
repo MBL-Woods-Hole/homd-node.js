@@ -7,6 +7,56 @@ thead th { position: sticky; top: 0; }
 #tax-table th{
    border-right:1px solid ivory;
 }
+/* Tools Menu  */
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  z-index: -1;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dd-menu {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background:lightblue;
+  width:175px;  /* This sets the box width to allow cursor contact */
+  padding:10px;
+  margin:0px;
+  border:1px solid black;
+  left:-160px;
+  top:-50px;
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  font-size:13px;
+  margin:5px 0;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: white;
+    border:1px solid tomato;
+    color:black;
+    
+}
+
+/* Show the dropdown menu on hover */
+.dd-menu:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dd-menu:hover .dropbtn {background-color: #3e8e41;}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <%- include('../../partials/header_html'); %>
@@ -61,17 +111,10 @@ thead th { position: sticky; top: 0; }
         <th class="col4"><span onclick="change_sortby_notice()">Subspecies</span></th>
         <th class="col5"><span onclick="change_sortby_notice()">Naming<br>Status</span></th>
         <th class="col6"><span onclick="change_sortby_notice()">Cultivation<br>Status</span></th>
-        
-        <th class="col7"><span id='' onclick="change_sortby_notice()">Primary Body Site <small>(in Beta)</small></span></th>
-        
-        <!-- 
-<th class="col8 sorttable_nosort"></th>
-        <th class="col9 sorttable_nosort" nowrap></th>
-        <th class="col10 sorttable_nosort" nowrap></th>
- -->
-        <th class="col8head sorttable_nosort" >More Information</th>
-        
+        <th class="col7"><span id='' onclick="change_sortby_notice()">Primary Body Site <small>(<span class='red-text'>in Beta</span>)</small></span></th>
         <th class="col11 sorttable_nosort">Genome Size</th>
+        <th class="col1">Genome<br>Count</th>
+        <th class="col1 sorttable_nosort" >More<br>Information</th>
       </tr>
      </thead>
      <tbody>
@@ -80,41 +123,51 @@ thead th { position: sticky; top: 0; }
        <tr id='<%= otid %>'>
        <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
        <td class="col1" nowrap ><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname  %></a></td>
-       <td class="col2" nowrap title='<%= list[n].genus  %>'><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
-       <td class="col3" nowrap title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
-       <td class="col4" nowrap title='<%= list[n].subsp  %>'><%= list[n].subsp  %></td>
+       <td class="col2 ellipsis" nowrap title='<%= list[n].genus  %>'><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
+       <td class="col3 ellipsis" nowrap title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>
+       <td class="col4 ellipsis" nowrap title='<%= list[n].subsp  %>'><%= list[n].subsp  %></td>
        
-       <td class="col5" title='<%= list[n].naming_status  %>'><%= list[n].naming_status  %></td>
-       <td class="col6" title='<%= list[n].cultivation_status  %>'><%= list[n].cultivation_status  %></td>
+       <td class="col5 ellipsis" title='<%= list[n].naming_status  %>'><%= list[n].naming_status  %></td>
+       <td class="col6 ellipsis" title='<%= list[n].cultivation_status  %>'><%= list[n].cultivation_status  %></td>
            
-       <td class="col7" title='Body Site: <%= list[n].site  %>'><a href='body_sites?otid=<%= otid %>'><%= list[n].site  %></a></small></span></td>
+       <td class="col7 ellipsis" title='Body Site: <%= list[n].site  %>'><a href='body_sites?otid=<%= otid %>'><%= list[n].site  %></a></small></span></td>
+       <td class="col11" title='<%= list[n].tlength_str  %>' nowrap><%= list[n].tlength_str  %>
        
-     <!--   <td><%= list[n].sites  %></td> -->
-      <td class="col8head" nowrap>
-       <center>
-       <% if(list[n].ecology === 1){ %>
-             <a href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>&otid=<%= otid %>" class="pill pill-green" >Ecology</a>
-       <% }else{ %>
-             <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
-             <a href="#" class="pill pill-grayed" >Ecology</a>  <!-- visibility:hidden will maintain space -->
-       <% } %>
-       &nbsp;&nbsp;<a href="tax_description?otid=<%= otid %>" class="pill pill-orange" >Description</a>
+       <td class="col1" title=''><%= list[n].genomes.length %></td>
        
-       <% num_genomes = list[n].genomes.length %>
+       <td class="col1 center">
        
-       <% if(num_genomes === 0){ %>
-              &nbsp;&nbsp;<a href="#" class="pill pill-grayed" >Genomes</a>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-       <% }else{ %>
-              &nbsp;&nbsp;<a href="/genome/genome_table?otid=<%= otid %>" class="pill pill-aqua" >Genomes</a>
-              <%= num_genomes %>
-       <% } %>
-       
-       </center>
-       
+           <span class="dd-menu">
+                <button class="dropbtn pill pill-aqua">Hover Menu</button>
+                <div class="dropdown-content">
+                    <li><%= taxidfullname %></li>
+                    <li><a class="pill pill-colorkit10" href="tax_description?otid=<%= otid %>" >Taxon Description</a></li>
+                    <% if(list[n].ecology === 1){ %>
+                       <li><a class="pill pill-colorkit11" href="ecology?rank=species&name=<%= list[n].genus %>%20<%= list[n].species %>&otid=<%= otid %>"  >Ecology</a></li>
+                    <% }else{ %>
+                       <li><span class="pill pill-grayed" >Ecology (not available)</span></li>
+                    <% } %>
+                    
+                    <% if(list[n].genomes.length === 0){ %>
+                       <li><span class="pill pill-grayed" >no genomes</span></li>
+                    <% }else{ %>
+                      <li><a class="pill pill-colorkit12" href="/genome/genome_table?otid=<%= otid %>"  >Genome Table (<%= list[n].genomes.length %>)</a></li>
+                    <% } %>
+                    
+                    
+                    
+                    <li><a class="pill pill-colorkit14 icon-link" href="/genome/conserved_protein_tree?otid=<%= otid %>" target='_blank'>Genome Tree
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                     <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+                    </svg></a>
+                    </li>
+                   
+                </div>
+           </span>
+
       </td>
 
-      <td class="col11" title='<%= list[n].tlength_str  %>' nowrap><%= list[n].tlength_str  %></td>
+      
        </tr>
      <% } %>
      </tbody>

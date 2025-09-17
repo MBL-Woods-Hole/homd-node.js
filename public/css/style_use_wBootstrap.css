@@ -128,7 +128,9 @@ p {
   font-size: 10px;
   color: white;
 }
-
+.red-text{
+   color:red;
+}
 .pill {
   padding: 0px 4px;
   text-align: center;
@@ -148,6 +150,154 @@ p {
    padding: 2px 6px;
    min-width:100px;
 }
+/* Fall Colors https://colorkit.co/palette/00202e-2c4875-8a508f-bc5090-ff6361-ff8531-ffa600-80d353-609f3f-406a2a/ */
+ /* #00202e,  #2c4875,  #8a508f,  #bc5090,  #ff6361,  #ff8531,  #ffa600,  #80d353,  #609f3f */
+  /* #9e3a14,  #aa4f30,  #b56348,  #bf765e,  #ca8974,  #d39d8b,  #ddb0a1,  #e6c4b8,  #efd7cf and  #f7ebe7. */
+/*  https://colorkit.co/palettes/10-colors/ */
+.pill-colorkit1 {
+  background-color: #00202e;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit2 {
+  background-color: #2c4875;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit3 {
+  background-color: #8a508f;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit4 {
+  background-color: #bc5090;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit5 {
+  background-color: #ff6361;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit6 {
+  background-color: #ff8531;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit7 {
+  background-color: #ffa600;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit8 {
+  background-color: #80d353;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit9 {
+  background-color: #609f3f;
+  border: 1px solid grey;
+  color: white;
+}
+/*  #0a2d2e,  #1c4e4f,  #436e6f,  #6a8e8f,  #879693,  #a49e97,  #deae9f,  #efd7cf,  #f7ebe7 */
+.pill-colorkit10 {
+  background-color: #0a2d2e;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit11 {
+  background-color: #1c4e4f;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit12 {
+  background-color: #436e6f;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit13 {
+  background-color: #6a8e8f;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit14 {
+  background-color: #879693;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit15 {
+  background-color: #a49e97;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit16 {
+  background-color: #deae9f;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit17 {
+  background-color: #efd7cf;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit18 {
+  background-color: #f7ebe7;
+  border: 1px solid grey;
+  color: white;
+}
+ /* Muted Reds #9e3a14,  #aa4f30,  #b56348,  #bf765e,  #ca8974,  #d39d8b,  #ddb0a1,  #e6c4b8,  #efd7cf and  #f7ebe7. */
+ .pill-colorkit20 {
+  background-color: #9e3a14;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit21 {
+  background-color: #aa4f30;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit22 {
+  background-color: #b56348;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit23 {
+  background-color: #bf765e;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit24 {
+  background-color: #ca8974;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit25 {
+  background-color: #d39d8b;
+  border: 1px solid grey;
+  color: white;
+}
+.pill-colorkit26 {
+  background-color: #ddb0a1;
+  border: 1px solid grey;
+  color: #405D5D;
+}
+.pill-colorkit27 {
+  background-color: #e6c4b8;
+  border: 1px solid grey;
+  color: #405D5D;
+}
+.pill-colorkit28 {
+  background-color: #efd7cf;
+  border: 1px solid grey;
+  color: #405D5D;
+}
+.pill-colorkit29 {
+  background-color: #f7ebe7;
+  border: 1px solid grey;
+  color: #405D5D;
+}
+
+/* END https://colorkit.co */
 .pill-brown {
   background-color: brown;
   border: 1px solid black;
@@ -196,6 +346,11 @@ p {
 .pill-orange {
   background-color: orange;
   border: 1px solid black;
+  color: black;
+}
+.pill-tomato {
+  background-color: tomato;
+  border: 1px solid grey;
   color: black;
 }
 .pill-green {

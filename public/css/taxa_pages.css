@@ -49,9 +49,7 @@
   font-size:small;
   font-weight:bold;
   color: #303030;
-  overflow: hidden;
-
-  text-overflow: ellipsis;
+  
 
   white-space: nowrap;
 }
