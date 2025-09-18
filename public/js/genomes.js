@@ -58,6 +58,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
      
   }else if(page == 'genome_table'){
        gid = value
+       tracks = ''
        url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
   
       
