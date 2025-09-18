@@ -954,12 +954,12 @@ router.post('/explorer', function explorer_post (req, res) {
     annoInfoObj.bases = C.genome_lookup[gid].combined_size
     const glist = Object.values(C.genome_lookup)
     glist.sort((a, b) =>{
-      return helpers.compareStrings_alpha(a.genus, b.genus)
+      return helpers.compareStrings_alpha(a.organism, b.organism)
     })
     // filter out empties then map to create list of sorted strings
-    const allAnnosObj = glist.filter(item => item.genus !== '')
+    const allAnnosObj = glist.filter(item => item.organism !== '')
       .map((el) => {
-      return { gid: el.gid, org: el.genus+' '+el.species+' '+el.strain }
+      return { gid: el.gid, org: el.organism+' '+el.strain }
     })
     
     let pageData = {}
