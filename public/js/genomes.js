@@ -90,6 +90,12 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   }else if(page == 'oralgen'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks
+  }else if(page == 'phage_table'){
+      gid = value
+      
+      //https://www.homd.org/jbrowse/?data=homd_V11.02_phage_1.1/GCA_000008185.1&loc=GCA_000008185.1|AE017226.1:1165152..1202411&
+      tracks="DNA,panggolin,genomad,cenote"
+      url = jb_path+'/'+gid+"&tracks="+tracks
   }else{
       console.log('error')
       

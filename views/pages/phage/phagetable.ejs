@@ -1,16 +1,20 @@
+<% var cfg = JSON.parse(config) %> 
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
-.w1{
+#phage-box{
+    width:100%;
+}
+.w-med{
     width:170px;
     text-align:center;
 }
-.w2{
-    width:50px;
+.w-sm{
+    width:100px;
     text-align:center;
 }
-.w5{
-    width:420px;
+.w-exp{
+    
     text-align:left;
 }
 </style>
@@ -34,33 +38,44 @@ thead th { position: sticky; top: 0; }
 <div id='phage-box' >
 
     
-         <table id='phage-table' class='table table-hover table-condensed sortable' >
+         <table id='phage-table' class='table table-hover  sortable' >
          <thead>
           <tr>
-           <th class='w1'>Genome-ID</th><th class='w1'>Contigs</th><th>HMT-ID</th>
-           <th>Body Site</th><th class='w5'>Species</th><th class='w5'>Strain</th>
-           <th class='w2'>Cenote-Taker3</th><th class='w2'>geNomad</th>
+           <th class='w-med'>Genome-ID</th><th class='w-sm'>Contigs</th><th class='w-sm'>HMT-ID</th>
+           <th class='w-sm'>Body Site</th><th class='w-exp'>Species</th><th class='w-exp'>Strain</th>
+           <th class='w-sm'>Cenote-Taker3</th><th class='w-sm'>geNomad</th>
+           <th class='w-sm sorttable_nosort'>Genome Viewer</th><th class='w-sm sorttable_nosort'>FTP</th>
           </tr>
          </thead>
          <tbody>
          <% for (n in datarows){ %>
              <% taxidfullname = "HMT-"+("000" + datarows[n].otid).slice(-3); %>
              <tr>
-             <td class='w1'><a href='/genome/genome_description?gid=<%= datarows[n].gid %>'><%= datarows[n].gid %></a></td>
-             <td class='w2'><%= datarows[n].contigs %></td>
-             <td class='w1'><a href='/taxa/tax_description?gid=<%= datarows[n].gid %>&otid=<%= datarows[n].otid %>'><%= taxidfullname %></a></td>
-             <td class='w1'><%= datarows[n].site %></td>
-             <td class='w5' title='<%= datarows[n].genus %> <%= datarows[n].species %>'><%= datarows[n].genus %> <%= datarows[n].species %></td>
-             <td class='w5'><%= datarows[n].strain %></td>
-             <td class='w2'><%= datarows[n].cenote %></td>
-             <td class='w2'><%= datarows[n].genomad %></td>
+             <td class='w-med'><a href='/genome/genome_description?gid=<%= datarows[n].gid %>'><%= datarows[n].gid %></a></td>
+             <td class='w-sm'><%= datarows[n].contigs %></td>
+             <td class='w-sm'><a href='/taxa/tax_description?gid=<%= datarows[n].gid %>&otid=<%= datarows[n].otid %>'><%= taxidfullname %></a></td>
+             <td class='w-sm'><%= datarows[n].site %></td>
+             <td class='w-exp' title='<%= datarows[n].genus %> <%= datarows[n].species %>'><%= datarows[n].genus %> <%= datarows[n].species %></td>
+             <td class='w-exp'><%= datarows[n].strain %></td>
+             <td class='w-sm'><%= datarows[n].cenote %></td>
+             <td class='w-sm'><%= datarows[n].genomad %></td>
+             <td class='w-sm'><a href='#' onclick="open_jbrowse('<%= datarows[n].gid %>','phage_table')">link
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+            </svg>
+            </a></td>
+            <td class='w-sm'><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phages/V1.1/genomes_individual/<%= datarows[n].gid %>/' target='_blank'>link
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+            </svg>
+            </a></td>
              
              </tr>
          <% } %>
          </tbody>
          </table>
          
-</div>  <!-- end: tax-box -->
+</div>  <!-- end: phage-box -->
       
     </div> <!-- end: page-content -->
     <div id='footer'>
@@ -74,13 +89,13 @@ thead th { position: sticky; top: 0; }
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-
+<script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
 <script type="text/javascript" src="/js/phage.js"></script>
 <script>
   mainmenu()
-
+  var jb_path = '<%- cfg.JBROWSE_URL %>'
 </script>
 
 
