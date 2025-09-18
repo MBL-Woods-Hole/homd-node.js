@@ -5,6 +5,9 @@ thead th { position: sticky; top: 0; }
 #phage-box{
     width:100%;
 }
+#phage-table th{
+   border-right:1px solid ivory;
+}
 .w-med{
     width:170px;
     text-align:center;
@@ -44,7 +47,13 @@ thead th { position: sticky; top: 0; }
            <th class='w-med'>Genome-ID</th><th class='w-sm'>Contigs</th><th class='w-sm'>HMT-ID</th>
            <th class='w-sm'>Body Site</th><th class='w-exp'>Species</th><th class='w-exp'>Strain</th>
            
-           <th class='w-sm'>Cenote-Taker3</th><th class='w-sm'>geNomad</th>
+           <th class='w-sm'>Cenote-Taker3<br>Counts</th>
+           <th class='w-sm'>Cenote Coverage bps</th>
+           <th class='w-sm'>Cenote Coverage Percent</th>
+           
+           <th class='w-sm'>geNomad<br>Counts</th>
+           <th class='w-sm'>geNomad Coverage bps</th>
+           <th class='w-sm'>geNomad Coverage Percent</th>
            <th class='w-sm sorttable_nosort'>Predictions Table</th>
            <th class='w-sm sorttable_nosort'>Genome Viewer</th><th class='w-sm sorttable_nosort'>FTP</th>
           </tr>
@@ -61,7 +70,25 @@ thead th { position: sticky; top: 0; }
              <td class='w-exp'><%= datarows[n].strain %></td>
              
              <td class='w-sm'><%= datarows[n].cenote %></td>
+             
+             <% if(datarows[n].cenote == 0) { %>
+                <td class='w-sm'></td>
+                <td class='w-sm'></td>
+             <% }else{ %>
+                <td class='w-sm'><%= datarows[n].cenote_coverage_bps %></td>
+                <td class='w-sm'><%= datarows[n].cpct %>%</td>
+             <% } %>
+             
              <td class='w-sm'><%= datarows[n].genomad %></td>
+             <% if(datarows[n].genomad == 0) { %>
+                <td class='w-sm'></td>
+                <td class='w-sm'></td>
+             <% }else{ %>
+                <td class='w-sm'><%= datarows[n].genomad_coverage_bps %></td>
+                <td class='w-sm'><%= datarows[n].gpct %>%</td>
+             <% } %>
+             
+             
              <td class='w-sm'><a href='/phage/phage?gid=<%= datarows[n].gid %>'>hits</a></td>
              <td class='w-sm'><a href='#' onclick="open_jbrowse('<%= datarows[n].gid %>','phage_table')">link
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">

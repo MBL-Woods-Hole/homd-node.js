@@ -37,7 +37,10 @@ router.get('/phage', function phage(req, res) {
 router.get('/phage_table', function phage_explorer(req, res) {
     console.log('in phage hello')
     //let q = "SELECT genome_id as gid, site, cenote_taker3 as cenote,genomad from phage_counts"
-    let q = "SELECT genome_id as gid,otid,genus,species,strain,contigs,site,cenote_taker3 as cenote,genomad from phage_counts"
+    let q = "SELECT genome_id as gid,otid,genus,species,strain,contigs,site,"
+    q += " cenote_taker3 as cenote,cenote_coverage_bps,cenote_coverage_pct,"
+    q += " genomad,genomad_coverage_bps,genomad_coverage_pct"
+    q += " FROM phage_stats"
     q += " JOIN `genomesV11.0` using(genome_id)"
     q += " JOIN otid_prime using(otid)"
     q += " JOIN taxonomy using(taxonomy_id)"
@@ -45,13 +48,20 @@ router.get('/phage_table', function phage_explorer(req, res) {
     q += " JOIN species using (species_id)"
     q += " WHERE !(cenote_taker3=0 and genomad=0)"
     q += " Order by genus,species"
+    //console.log(q)
     // need contigs,HMT,species,strain,average
     TDBConn.query(q, (err, rows) => {
         if(err){
            console.log(err)
            return
         }
-    
+        let data = []
+        for(let n in rows){
+           
+           rows[n].cpct = (rows[n].cenote_coverage_pct * 100).toFixed(2)
+           rows[n].gpct = (rows[n].genomad_coverage_pct * 100).toFixed(2)
+           //console.log('n',rows[n])
+        }
         res.render('pages/phage/phagetable', {
             title: 'HOMD :: Phage Table',
             pgtitle: 'Human Oral/Nasal Microbial Taxa',
