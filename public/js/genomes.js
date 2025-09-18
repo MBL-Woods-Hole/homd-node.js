@@ -23,7 +23,7 @@ function open_blast_in_new_window(gid){
   window.open(url)
 }
 
-function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
+function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0',tracks=''){
   console.log('open_jbrowse', value, page)
   /*
   value: may be gid or gid|gc or gid|contig
@@ -37,7 +37,10 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   */
   
   var url
-  var tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
+  if(!tracks || tracks === ''){
+    tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
+  }
+  //console.log('tracks1',tracks)
   if(page == 'genome_desc_single'){ 
       gid = value
       contigplusgc = document.getElementById("select-contig").innerHTML
@@ -57,9 +60,8 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew&loc="+gid+"|"+contig.trim()
      
   }else if(page == 'genome_table'){
-       gid = value
-       tracks = ''
-       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
+        gid = value
+        url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
   
       
   }else if(page == 'main_menu'){
@@ -91,12 +93,13 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   }else if(page == 'oralgen'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks
-  }else if(page == 'phage_table'){
+  }else if(page == 'phage'){
       gid = value
       
       //https://www.homd.org/jbrowse/?data=homd_V11.02_phage_1.1/GCA_000008185.1&loc=GCA_000008185.1|AE017226.1:1165152..1202411&
-      tracks="DNA,panggolin,genomad,cenote"
-      url = jb_path+'/'+gid+"&tracks="+tracks
+      //tracks=  From Fxn vars
+      url = jb_path+'/'+gid+"&loc="+loc+"&tracks="+tracks
+      
   }else{
       console.log('error')
       
