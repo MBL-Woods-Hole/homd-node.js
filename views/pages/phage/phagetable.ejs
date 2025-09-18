@@ -1,7 +1,18 @@
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
-
+.w1{
+    width:170px;
+    text-align:center;
+}
+.w2{
+    width:50px;
+    text-align:center;
+}
+.w5{
+    width:420px;
+    text-align:left;
+}
 </style>
 <% var datarows = JSON.parse(data) %>
 <link rel="stylesheet" type="text/css" href="/css/phage_pages.css" >
@@ -23,24 +34,26 @@ thead th { position: sticky; top: 0; }
 <div id='phage-box' >
 
     
-         <table id='phage-table' class='table table-hover table-condensed sortable' style=''>
+         <table id='phage-table' class='table table-hover table-condensed sortable' >
          <thead>
           <tr>
-           <th>Genome-ID</th><th>Contigs</th><th>HMT-ID</th><th>Site</th><th>Species</th><th>Strain</th><th>Cenote-Taker3</th><th>geNomad</th>
+           <th class='w1'>Genome-ID</th><th class='w1'>Contigs</th><th>HMT-ID</th>
+           <th>Body Site</th><th class='w5'>Species</th><th class='w5'>Strain</th>
+           <th class='w2'>Cenote-Taker3</th><th class='w2'>geNomad</th>
           </tr>
          </thead>
          <tbody>
          <% for (n in datarows){ %>
              <% taxidfullname = "HMT-"+("000" + datarows[n].otid).slice(-3); %>
              <tr>
-             <td><a href='/genome/genome_description?gid=<%= datarows[n].gid %>'><%= datarows[n].gid %></a></td>
-             <td><%= datarows[n].contigs %></td>
-             <td><a href='/taxa/tax_description?gid=<%= datarows[n].gid %>&otid=<%= datarows[n].otid %>'><%= taxidfullname %></a></td>
-             <td><%= datarows[n].site %></td>
-             <td title='<%= datarows[n].genus %> <%= datarows[n].species %>'><%= datarows[n].genus %> <%= datarows[n].species %></td>
-             <td><%= datarows[n].strain %></td>
-             <td><%= datarows[n].cenote %></td>
-             <td><%= datarows[n].genomad %></td>
+             <td class='w1'><a href='/genome/genome_description?gid=<%= datarows[n].gid %>'><%= datarows[n].gid %></a></td>
+             <td class='w2'><%= datarows[n].contigs %></td>
+             <td class='w1'><a href='/taxa/tax_description?gid=<%= datarows[n].gid %>&otid=<%= datarows[n].otid %>'><%= taxidfullname %></a></td>
+             <td class='w1'><%= datarows[n].site %></td>
+             <td class='w5' title='<%= datarows[n].genus %> <%= datarows[n].species %>'><%= datarows[n].genus %> <%= datarows[n].species %></td>
+             <td class='w5'><%= datarows[n].strain %></td>
+             <td class='w2'><%= datarows[n].cenote %></td>
+             <td class='w2'><%= datarows[n].genomad %></td>
              
              </tr>
          <% } %>
