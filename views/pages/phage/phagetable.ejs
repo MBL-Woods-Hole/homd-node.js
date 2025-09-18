@@ -13,7 +13,7 @@ thead th { position: sticky; top: 0; }
     text-align:center;
 }
 .w-sm{
-    width:100px;
+    width:90px;
     text-align:center;
 }
 .w-exp{
@@ -44,9 +44,11 @@ thead th { position: sticky; top: 0; }
          <table id='phage-table' class='table table-hover  sortable' >
          <thead>
           <tr>
-           <th class='w-med'>Genome-ID</th><th class='w-sm'>Contigs</th><th class='w-sm'>HMT-ID</th>
-           <th class='w-sm'>Body Site</th><th class='w-exp'>Species</th><th class='w-exp'>Strain</th>
-           
+           <th class='w-med'>Genome-ID</th><th class='w-sm'>HMT-ID</th>
+           <th class='w-sm'>Body<br>Site</th><th class='w-exp'>Species</th>
+           <th class='w-exp'>Strain</th>
+           <th class='w-sm'>Contigs</th>
+           <th class='w-sm'>Genome<br>Size</th>
            <th class='w-sm'>Cenote-Taker3<br>Counts</th>
            <th class='w-sm'>Cenote Coverage bps</th>
            <th class='w-sm'>Cenote Coverage Percent</th>
@@ -63,12 +65,13 @@ thead th { position: sticky; top: 0; }
              <% taxidfullname = "HMT-"+("000" + datarows[n].otid).slice(-3); %>
              <tr>
              <td class='w-med'><a href='/genome/genome_description?gid=<%= datarows[n].gid %>'><%= datarows[n].gid %></a></td>
-             <td class='w-sm'><%= datarows[n].contigs %></td>
+             
              <td class='w-sm'><a href='/taxa/tax_description?gid=<%= datarows[n].gid %>&otid=<%= datarows[n].otid %>'><%= taxidfullname %></a></td>
              <td class='w-sm'><%= datarows[n].site %></td>
              <td class='w-exp' title='<%= datarows[n].genus %> <%= datarows[n].species %>'><%= datarows[n].genus %> <%= datarows[n].species %></td>
-             <td class='w-exp'><%= datarows[n].strain %></td>
-             
+             <td class='w-exp' title='<%= datarows[n].strain %>'><%= datarows[n].strain %></td>
+             <td class='w-sm'><%= datarows[n].contigs %></td>
+             <td class='w-sm'><%= datarows[n].size %></td>
              <td class='w-sm'><%= datarows[n].cenote %></td>
              
              <% if(datarows[n].cenote == 0) { %>

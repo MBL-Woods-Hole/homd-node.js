@@ -35,9 +35,9 @@ router.get('/phage', function phage(req, res) {
 })
 
 router.get('/phage_table', function phage_explorer(req, res) {
-    console.log('in phage hello')
+    //console.log('in phage hello')
     //let q = "SELECT genome_id as gid, site, cenote_taker3 as cenote,genomad from phage_counts"
-    let q = "SELECT genome_id as gid,otid,genus,species,strain,contigs,site,"
+    let q = "SELECT genome_id as gid,combined_size,otid,genus,species,strain,contigs,site,"
     q += " cenote_taker3 as cenote,cenote_coverage_bps,cenote_coverage_pct,"
     q += " genomad,genomad_coverage_bps,genomad_coverage_pct"
     q += " FROM phage_stats"
@@ -60,6 +60,7 @@ router.get('/phage_table', function phage_explorer(req, res) {
            
            rows[n].cpct = (rows[n].cenote_coverage_pct * 100).toFixed(2)
            rows[n].gpct = (rows[n].genomad_coverage_pct * 100).toFixed(2)
+           rows[n].size = helpers.format_long_numbers(rows[n].combined_size)
            //console.log('n',rows[n])
         }
         res.render('pages/phage/phagetable', {
