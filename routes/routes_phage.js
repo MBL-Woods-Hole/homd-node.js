@@ -58,9 +58,16 @@ router.get('/phage_table', function phage_explorer(req, res) {
         let data = []
         for(let n in rows){
            
-           rows[n].cpct = (rows[n].cenote_coverage_pct * 100).toFixed(2)
-           rows[n].gpct = (rows[n].genomad_coverage_pct * 100).toFixed(2)
-           rows[n].size = helpers.format_long_numbers(rows[n].combined_size)
+            if(rows[n].cenote_coverage_pct >= 1){
+               rows[n].cpct = '100'
+            }else{
+                rows[n].cpct = (rows[n].cenote_coverage_pct * 100).toFixed(2)
+            }
+            if(rows[n].genomad_coverage_pct >= 1){
+            }else{
+                rows[n].gpct = (rows[n].genomad_coverage_pct * 100).toFixed(2)
+            }
+            rows[n].size = helpers.format_long_numbers(rows[n].combined_size)
            //console.log('n',rows[n])
         }
         res.render('pages/phage/phagetable', {
