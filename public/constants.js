@@ -7,7 +7,7 @@ constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // JBROWSE if you wan
 
 constants.rRNA_refseq_version    = '16.03' // Used on title page header
 constants.genomic_refseq_version = '11.02' // Used on title page header
-constants.homd_taxonomy_version = '4.1'+ '&Phi;'    // Used on title page header
+constants.homd_taxonomy_version = '4.1'    // Used on title page header
 constants.virome_version    = '1.1'
 constants.version_information = {
     rna_ver: constants.rRNA_refseq_version, 
