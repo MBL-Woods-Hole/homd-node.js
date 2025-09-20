@@ -123,8 +123,19 @@ table{
     border: 2px solid rgb(212, 68, 1);      
     color: rgb(200, 82, 4); 
 }
-.refseq{
+.phage{
     color: rgb(58, 104, 64);
+    border: 2px solid #D0C3F1;
+    font-size:1.05em;
+    background-color: lavender;
+    text-align: center;             
+}
+.phage:hover{
+    border: 2px solid violet;
+    color: rgb(32, 80, 38);
+}   
+.refseq{
+    color: rgb(58, 104, 10);
     border: 2px solid rgb(133, 167, 138);
     font-size:1.05em;
     background-color: rgb(229, 252, 235);
@@ -161,7 +172,10 @@ table{
 }
 .bggreen{
     background-color: var(--green);
-}       
+}
+.bgyellow{
+    background-color: #AD5CFF;
+}   
 .bggray{
     background-color: var(--gray);
 }
