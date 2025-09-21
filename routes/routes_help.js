@@ -231,7 +231,7 @@ function getPageTitle(page){
        return 'Page Help:: Refseq Phylogenetic Trees'
     }
     // TAXON
-    if(page === 'taxon/tax_table'){
+    if(page === 'taxon/taxon_table'){
        return 'Page Help::Taxon Table'
     }
     if(page === 'taxon/description'){
