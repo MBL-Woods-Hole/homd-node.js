@@ -58,8 +58,8 @@
                     <tr><th>Taxonomy</th></tr>
                     <tr><td>
                         <table class="tabeffect bgnavy">
-                            <tr><td><a href='taxa/tax_table'>Taxon Table</a></td></tr>
-                            <tr><td><a href='taxa/tax_table'><img src="/images/TaxonTable.png" width="320"></a></td></tr>
+                            <tr><td><a href='taxa/taxon_table'>Taxon Table</a></td></tr>
+                            <tr><td><a href='taxa/taxon_table'><img src="/images/TaxonTable.png" width="320"></a></td></tr>
                         </table>
                     </td></tr>
                     <tr><td>
@@ -250,7 +250,7 @@ function show_specific_ttable(f){
   let form = document.createElement("form");
     document.getElementsByTagName("body")[0].appendChild(form);
     form.setAttribute("method", "POST");
-    form.setAttribute("action" , '/taxa/tax_table');
+    form.setAttribute("action" , '/taxa/taxon_table');
     
     for(item in body_items){
       //console.log('item',item,body_items.item)
