@@ -455,7 +455,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                //console.log('obj2[gid][predictor]',obj2[gid][predictor])
                for(let n in obj2[gid][predictor]){
                  //sendlist.push(gid,predictor,obj2[gid][predictor].species,obj2[gid][predictor].strain)
-                 sendlist.push({gid:gid,predictor:predictor,species:obj2[gid][predictor][n].species,strain:obj2[gid][predictor][n].strain})
+                 sendlist.push({gid:gid,predictor:predictor,species:obj2[gid][predictor][n].species,strain:obj2[gid][predictor][n].strain,acc:obj2[gid][predictor][n].acc})
                }
             }
         }
