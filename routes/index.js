@@ -14,7 +14,7 @@ const queries = require(app_root + '/routes/queries')
 // let timestamp = new Date() // getting current timestamp
 // let rs_ds = ds.get_datasets( () => {
 let browseDir = require("browse-directory");
-const { v4: uuidv4 } = require('uuid'); // I chose v4 ‒ you can select othersc
+const { v4: uuidv4 } = require('uuid'); // I chose v4you can select othersc
 //const Stream = require( 'stream-json/streamers/StreamArray');
 /* GET home page. */
 
@@ -335,8 +335,172 @@ router.post('/advanced_anno_orf_search', function advanced_anno_orf_searchPOST(r
     
     //res.send('OKAY')
 })
+router.post('/advanced_site_search_phage_grep', async function advanced_site_search_phagePOST(req, res) {
+    console.log('in advanced_site_search_phage_grep')
+    console.log(req.body)
+    const searchText = req.body.search_text_phage_grep.toLowerCase()
+    //let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
+    //let grep_fields = ['predictor','genome_id','accession']  // MUST BE order from file
+    
+    let rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,fields,acc,predictor
+    // if(req.body.adv_anno_radio == 'prokka'){
+//         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
+//     }else if(req.body.adv_anno_radio == 'ncbi'){
+//         q = "SELECT "+sql_fields.join(",")+" from NCBI_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
+//     }else{
+//         console.log('ERROR')
+//         return
+//     }
+    try{
+        let datapath = path.join(CFG.PATH_TO_DATA,"homd_PHAGE_GREP.tsv")
+        //let filename = uuidv4();  //CFG.PATH_TO_TMP
+        //let filepath = path.join(CFG.PATH_TO_TMP, filename)
+        let max_rows = C.grep_search_max_rows //50000
+        
+        let split_length = 6
+        //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
+        let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
+        //let args = ['-h','"'+searchText+'"',datapath]
+        let grep_cmd = CFG.GREP_CMD + ' ' + args.join(' ')
+        console.log(grep_cmd)
+        //const rows = await get_grep_rows(grep_cmd);
+        const row_array = await execPromise(CFG.GREP_CMD, args, max_rows);
+        console.log('rows_lst length',row_array.length)
+        
+        let total_length = row_array.length - 1
+        console.log('total_length',total_length)
+        //rows = rows_lst.join('')
+        if(total_length == 0){
+        
+        }
+        if(row_array[0] == 'too_long'){
+            obj2 = {'too_long':'too_long'}
+        }else{
+            //console.log('row_array[0]',row_array[0])
+            //row_array = rows.split('\n')
+            for(let n in row_array){
+                if(row_array[n] != ''){
+                    
+                    //ncbi|gca_045159995.1|cp077160.1|kst12_00050|wyk98014.1|hypothetical protein|942|313|6825|7766
+                    //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
+                    //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
+                    let pts = row_array[n].split('|')
+                    //console.log('pts',pts)
+                    if(['batka','genomad','cenote'].indexOf(pts[0]) != -1 ){
+                      //console.log('pts',pts)
+                      gid = pts[1].toUpperCase()
+                      if(gid && C.genome_lookup.hasOwnProperty(gid)){
+                        otid = C.genome_lookup[gid]['otid']
+                        strain = C.genome_lookup[gid]['strain']
+                        species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+                      }
+                      acc = pts[2].toUpperCase()
+                      
+                      //console.log('xxx',pts)
+                      if(pts[0] === 'batka'){
+                        fields=['core_product','core_note','bakta_EC','bakta_GO','bakta_COG']// after type,gid,acc
+                        if(obj2.hasOwnProperty(gid)){
+                          if(obj2[gid].hasOwnProperty('bakta')){
+                            obj2[gid]['bakta'].push({species:species,strain:strain,otid,otid,acc:acc,core_product:pts[3],core_note:pts[4],'bakta_EC':pts[5],'bakta_GO':pts[6],'bakta_COG':pts[7]})
+                          }else{
+                            obj2[gid]['bakta'] = [{species:species,strain:strain,otid,otid,acc:acc,'core_product':pts[3],'core_note':pts[4],'bakta_EC':pts[5],'bakta_GO':pts[6],'bakta_COG':pts[7]}]
+                          }
+                        }else{
+                          obj2[gid] = {}
+                          obj2[gid]['bakta'] = [{species:species,strain:strain,otid,otid,acc:acc,'core_product':pts[3],'core_note':pts[4],'bakta_EC':pts[5],'bakta_GO':pts[6],'bakta_COG':pts[7]}]
+                        }
+                        //console.log(obj2)
+                      }else if(pts[0] === 'genomad'){
+                        fields = ['genomad_annotation_accessions','genomad_annotation_description']// after type,gid,acc
+                        if(obj2.hasOwnProperty(gid)){
+                          if(obj2[gid].hasOwnProperty('genomad')){
+                            obj2[gid]['genomad'].push({species:species,strain:strain,otid,otid,acc:acc,'genomad_annotation_accessions':pts[3],'genomad_annotation_description':pts[4]})
+                          }else{
+                            obj2[gid]['genomad'] = [{species:species,strain:strain,otid,otid,acc:acc,'genomad_annotation_accessions':pts[3],'genomad_annotation_description':pts[4]}]
+                          }
+                        }else{
+                          obj2[gid] = {}
+                          obj2[gid]['genomad'] = [{species:species,strain:strain,otid,otid,acc:acc,'genomad_annotation_accessions':pts[3],'genomad_annotation_description':pts[4]}]
+                        }
+                        //console.log(obj2)
+                      }else if(pts[0] === 'cenote'){
+                        fields = ['cenote_evidence_accession','cenote_evidence_description']  // after type,gid,acc
+                        if(obj2.hasOwnProperty(gid)){
+                          if(obj2[gid].hasOwnProperty('cenote')){
+                            obj2[gid]['cenote'].push({species:species,strain:strain,otid,otid,acc:acc,'cenote_evidence_accession':pts[3],'cenote_evidence_description':pts[4]})
+                          }else{
+                            obj2[gid]['cenote'] = [{species:species,strain:strain,otid,otid,acc:acc,'cenote_evidence_accession':pts[3],'cenote_evidence_description':pts[4]}]
+                          }
+                        }else{
+                          obj2[gid] = {}
+                          obj2[gid]['cenote'] = [{species:species,strain:strain,otid,otid,acc:acc,'core_product':pts[3],'core_note':pts[4]}]
+                        }
+                        //console.log(obj2)
+                      }else{
+                         //error
+                      }
 
-router.post('/advanced_site_search_grep', async function advanced_site_search_annoPOST(req, res) {
+                    
+                      
+
+                    }
+                }
+            }
+        }
+        //console.log(obj2)
+        let sendlist = []
+        for(gid in obj2){
+            //console.log(gid)
+            for(predictor in obj2[gid]){
+               //console.log('obj2[gid][predictor]',obj2[gid][predictor])
+               for(let n in obj2[gid][predictor]){
+                 //sendlist.push(gid,predictor,obj2[gid][predictor].species,obj2[gid][predictor].strain)
+                 sendlist.push({gid:gid,predictor:predictor,species:obj2[gid][predictor][n].species,strain:obj2[gid][predictor][n].strain})
+               }
+            }
+        }
+        //console.log('sendlist',sendlist)
+        sendlist.sort(function (a, b) {
+           //console.log('a',a)
+           return helpers.compareStrings_alpha(a.species, b.species);
+        })
+       // console.log('sort_lst2',sendlist)
+        res.render('pages/advanced_search_result', {
+            title: 'HOMD :: Search Results',
+            pgname: '', // for AboutThisPage 
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify(C.version_information),
+            
+            anno: '',
+            search_text: req.body.search_text_phage_grep,
+            otid_list: JSON.stringify([]),
+            gid_list: JSON.stringify([]),
+            taxon_otid_obj: JSON.stringify({}),
+            //annotationList: JSON.stringify(obj_array),
+            annotationList2: JSON.stringify({}),
+            anno_sort_list: JSON.stringify([]),
+            
+            phageList: JSON.stringify(obj2),
+            phage_sort_list: JSON.stringify(sendlist),
+            
+            total_hits: total_length,
+            max:max_rows,
+            form_type: JSON.stringify(['phage']),
+            no_ncbi_annot: JSON.stringify(C.no_ncbi_annotation)
+                    
+        })
+    }
+    catch(e){
+          console.log("error",e);
+      }
+      
+    return
+
+
+
+
+})
+router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     console.log('in advanced_site_search_grep')
     console.log(req.body)
     const searchText = req.body.search_text_anno_grep.toLowerCase()
@@ -438,6 +602,8 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
             //annotationList: JSON.stringify(obj_array),
             annotationList2: JSON.stringify(obj2),
             anno_sort_list: JSON.stringify(sort_lst),
+            phageList: JSON.stringify({}),
+            phage_sort_list: JSON.stringify([]),
             total_hits: total_length,
             max:max_rows,
             form_type: JSON.stringify(['annotations']),
@@ -450,179 +616,10 @@ router.post('/advanced_site_search_grep', async function advanced_site_search_an
       }
       
     return
-    //console.log(q)
-    //const query = util.promisify(TDBConn.query).bind(TDBConn);
-//     let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_Search-"+req.body.adv_anno_radio.toUpperCase()+"*")
-//     let grep_cmd = CFG.GREP_CMD + ' -ih "'+searchText+'" '+ datapath
-//     console.log(grep_cmd)
-//     //const rows = await runCommand(grep_cmd);
-//     const rows = await get_grep_rows(grep_cmd);
-//     console.log('rows',rows)
-//     //main(req, res, grep_cmd)
-//     //return
-//     // (async () => {
-// //       try {
-// //         //const rows = await query(q);
-// //         //const rows = await get_grep_rows(grep_cmd)
-// //         const rows = await runCommand(grep_cmd);
-// //         console.log('rows',rows);
-//         res.render('pages/advanced_search_result', {
-//                     title: 'HOMD :: Search Results',
-//                     pgname: '', // for AboutThisPage 
-//                     config: JSON.stringify(CFG),
-//                     ver_info: JSON.stringify(C.version_information),
-//                     
-//                     anno: req.body.adv_anno_radio,
-//                     search_text: req.body.search_text_anno,
-//                     otid_list: JSON.stringify([]),
-//                     gid_list: JSON.stringify([]),
-//                     taxon_otid_obj: JSON.stringify({}),
-//                     annotationList: JSON.stringify(rows),
-//                     form_type: JSON.stringify(['annotations'])
-//                     
-//         })
-// //       } finally {
-// //         //TDBConn.end();
-// //         
-// //       }
-// //    })()
-//    return
 
 
-//     get_smooth_sql(searchText,fields)
-//     console.log("After SQL2")
-//     return
-//     
-//     let dirname = uuidv4(); // '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
-//     dirname = dirname+'_sql'
-//     
-//     console.log('POST::get_annotations_counts_sql')
-//     //console.log(req.body)
-//     
-//     let line,phits=[], nhits=[], pdata={},ndata={},gid,ssp,organism
-//     
-//     let anno_path = path.join(CFG.PATH_TO_TMP, dirname)
-//     fs.mkdirSync(anno_path)
-//     fs.watch(anno_path, (eventType, filename) => { 
-//       console.log("\nThe file", filename, "was modified!"); 
-//       console.log("The type of change was:", eventType); 
-//       if(filename=='prokka_data' && eventType=='rename'){
-//           // read file
-//           Promise.all([helpers.readFromFile(path.join(anno_path,'prokka_data'),'csv')])
-//              .then(results => {
-//                 console.log(results[0])
-//                 
-//                 res.render('pages/adv_search_result', {
-//                     title: 'HOMD :: Search Results',
-//                     pgname: '', // for AboutThisPage 
-//                     config: JSON.stringify(CFG),
-//                     ver_info: JSON.stringify(C.version_information),
-//                     
-//                    
-//                     search_text: req.body.search_text_anno,
-//                     otid_list: JSON.stringify([]),
-//                     gid_list: JSON.stringify([]),
-//                     taxon_otid_obj: JSON.stringify({}),
-//                     annotationList: JSON.stringify(results[0]),
-//                     form_type: JSON.stringify(['annotations'])
-//                     
-//                 })
-//                 return
-//     
-//     
-//          })
-//       }
-//     }); 
-//     if(req.body.prokka_cb && req.body.prokka_cb == 'on'){
-//       let q_prokka = "SELECT "+fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
-//       console.log('q_prokka',q_prokka)
-//       
-//       let pfile_name = path.join(anno_path,'prokka_data')
-//       let pstream = fs.createWriteStream(pfile_name, {flags:'a'});
-//       
-//       TDBConn.query(q_prokka, (err, prows) => {
-//         if (err) {
-//           console.log("prokka select error",err)
-//           return
-//         }
-//         if(prows.length >0){
-//             //[pgid_count, ppid_count,ngid_count, npid_count]
-//             phits = prows
-//             for(let n in prows){
-//                 gid = prows[n].genome_id  // genomeid SEQF
-//  
-//                 line = 'prokka'
-//                 for(let i in fields){
-//                     line = line+'|'+prows[n][fields[i]]
-//                 }
-//                 //console.log('SQL-prows-lin')
-//                 pstream.write(line + "\n");
-//                 
-//             }
-//         }
-//       })
-//       
-//     }
-//     if(req.body.ncbi_cb && req.body.ncbi_cb == 'on'){
-//         let q_ncbi = "SELECT "+fields.join(",")+" from NCBI_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
-//     
-//         console.log('q_ncbi',q_ncbi)
-//         let nfile_name = path.join(anno_path,'ncbi_data')
-//     
-//         let nstream = fs.createWriteStream(nfile_name, {flags:'a'});
-//     
-//         
-//         TDBConn.query(q_ncbi, (err, nrows) => {
-//            if (err) {
-//              console.log("ncbi select error",err)
-//              return
-//            }
-//            if(nrows.length >0){
-//              console.log('ncbi zero length')
-//              //[pgid_count, ppid_count,ngid_count, npid_count]
-//              nhits = nrows
-//              for(let n in nrows){
-//                 gid = nrows[n].genome_id
-//                 
-//                 
-//                 line = 'ncbi'
-//                 for(let i in fields){
-//                     line = line+'|'+nrows[n][fields[i]]
-//                 }
-//                 
-//                 
-//                 nstream.write(line + "\n");
-//              }
-//            }
-//         })
-//      //       let obj = {phits:phits,nhits:nhits,pdata:pdata,ndata:ndata}
-// //            
-// //            let sendobj = {phits:phits,nhits:nhits,dirname:dirname}
-// //            //req.session.anno_search_dirname_sql = dirname
-// //            
-//             
-// //         })
-// //            
-// //     })
-//     }
-    // have web page wait for sql results
-    //https://medium.com/fullstackwebdev/a-guide-to-mysql-with-node-js-fc4f6abce33b
-    //res.send('OKAY')
-    // res.render('pages/adv_search_result', {
-//         title: 'HOMD :: Search Results',
-//         pgname: '', // for AboutThisPage 
-//         config: JSON.stringify(CFG),
-//         ver_info: JSON.stringify(C.version_information),
-//         
-//        
-//         search_text: req.body.search_text_anno,
-//         otid_list: JSON.stringify([]),
-//         gid_list: JSON.stringify([]),
-//         taxon_otid_obj: JSON.stringify({}),
-//         annotationList: JSON.stringify([]),
-//         form_type: JSON.stringify(['annotations'])
-//         
-//     })
+
+
 })
 // router.post('/anno_protein_search', function anno_protein_search(req, res) {
 //     console.log('in POST::anno_protein_search')

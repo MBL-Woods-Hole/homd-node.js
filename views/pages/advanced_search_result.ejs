@@ -35,7 +35,7 @@ html, body { min-height: 100%; }
    background:lightgreen;
    border:1px solid black;
 }
-.search-box-anno{
+.search-box{
    height:600px;
    width:100%;
    overflow:auto;
@@ -104,8 +104,13 @@ table td{
 <% anno_sort_lst = JSON.parse(anno_sort_list)  %>
 <% no_ncbi_annotation = JSON.parse(no_ncbi_annot) %>
 <% anno_list2 = JSON.parse(annotationList2)  %>
+
+<% phage_sort_lst = JSON.parse(phage_sort_list)  %>
+<% phage_list = JSON.parse(phageList)  %>
+
+
 <% var cfg = JSON.parse(config) %> 
-<% var search_type  = JSON.parse(form_type) %>  <!-- array of taxonomy, genomes or annotation -->
+<% var search_type  = JSON.parse(form_type) %>  <!-- array of taxonomy, genomes or annotation and phage -->
 
 <body>
    <!-- <div id="loader" class="center-loader" style='z-index:1'></div> -->
@@ -205,6 +210,35 @@ table td{
     <hr> 
 <% } %>
 
+<% if(search_type.indexOf("phage") != -1){ %> 
+    <% if(phage_list.hasOwnProperty("too_long")){  %>
+               <center><div class='outlier-max'>Too Many Hits (><%= max %>). Try to refine your search. (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
+    <% }else if(total_hits == 0){ %>
+               <center><div class='outlier-zero'>Zero Hits</div></center>
+    <% }else{ %>
+        <br>
+        <div id='anno-div' class='search-box'>
+           
+                 
+            <table id='phage-table' class='result-table2 sortable'>
+            <tr>
+                     <th>Genome-ID</th><th>Predictor</th><th>Species (strain)</th>
+                     
+                     <th class='sorttable_nosort'>Accession</th>
+                     
+            </tr>
+            <% for(i in phage_sort_lst){ %>
+                <% gid = phage_sort_lst[i].gid %>
+                <% predictor = phage_sort_lst[i].predictor %>
+                
+                <tr><td><%= phage_sort_lst[i].gid %></td><td><%= predictor %></td><td><%= phage_sort_lst[i].species %></td><td><%= phage_sort_lst[i].strain %></td></tr>
+            <% } %>
+                   </table>
+    
+        </div>
+    <% } %>
+<% } %>
+
 <% if(search_type.indexOf("annotations") != -1){ %> 
     
     
@@ -222,7 +256,7 @@ table td{
          <% }else if(total_hits == 0){ %>
                <center><div class='outlier-zero'>Zero Hits (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
          <% }else{ %>
-             <div id='anno-div' class='search-box-anno'>
+             <div id='anno-div' class='search-box'>
              <span class='search-text-div'>Selected Annotation: <%= anno.toUpperCase() %></span>
              
                

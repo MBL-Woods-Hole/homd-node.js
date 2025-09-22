@@ -16,7 +16,7 @@
     height:35px;
     font-size:18px;
 }
-.search_text_anno{
+.search_text{
     border:2px solid black;
     height:35px;
     font-size:18px;
@@ -29,6 +29,10 @@
 }
 #submit-button-anno{
     background:orange;
+}
+#submit-button-phage{
+    background:purple;
+    color:ivory;
 }
 .loader-gif{
     margin-top:200px;
@@ -63,7 +67,7 @@
       <tr>
         <td>
           Enter Search Text: 
-          <input type="text" placeholder="Search Site.." name='adv_search_text' id='adv_search_text' value='' maxlength='80' size='50' /> 
+          <input type="text" class='search_text' placeholder="Search Site.." name='adv_search_text' id='adv_search_text' value='' maxlength='80' size='50' /> 
         </td>
       </tr>
       
@@ -75,7 +79,7 @@
   
   
   
-  <form id='adv-search-form-annotations_grep'  class='search-form' method='POST' action='advanced_site_search_grep'>  <!-- advanced_site_search_annotations -->
+  <form id='adv-search-form-annotations_grep'  class='search-form' method='POST' action='advanced_site_search_anno_grep'>  <!-- advanced_site_search_annotations -->
       <br><span class='mid-title'>Search the Annotations Database</span>
       <table class='table'>
       <tr><td>
@@ -92,7 +96,7 @@
       <tr>
         <td>
           Enter Search Text: 
-          <input type="text" class='search_text_anno' placeholder="Search Site.." name='search_text_anno_grep' id='search_text_anno_grep' value='' maxlength='80' size='50' /> 
+          <input type="text" class='search_text' placeholder="Search Site.." name='search_text_anno_grep' id='search_text_anno_grep' value='' maxlength='80' size='50' /> 
         </td>
       </tr>
       
@@ -101,6 +105,29 @@
       <input type='button' class='submit-button' id='submit-button-anno' name='submit-button' value='Submit' onclick="validate_search_form('anno_grep')" \>
       <input type="hidden" id="refreshed" value="no">
   </form>
+  
+  <form id='adv-search-form-phage_grep'  class='search-form' method='POST' action='advanced_site_search_phage_grep'>  <!-- advanced_site_search_annotations -->
+      <br><span class='mid-title'>Search the Phage Database</span>
+      <table class='table'>
+      <tr><td>
+        Searches: Batka, geNomad and Cenote
+        </td>
+      </tr>
+      <tr>
+      </tr>
+      <tr>
+        <td>
+          Enter Search Text: 
+          <input type="text" class='search_text' placeholder="Search Site.." name='search_text_phage_grep' id='search_text_phage_grep' value='' maxlength='80' size='50' /> 
+        </td>
+      </tr>
+      
+      </table>
+     
+      <input type='button' class='submit-button' id='submit-button-phage' name='submit-button' value='Submit' onclick="validate_search_form('phage_grep')" \>
+      <input type="hidden" id="refreshed" value="no">
+  </form>
+  
   </div>
   
   
@@ -148,7 +175,16 @@
              return
          }
            var f = document.getElementById('adv-search-form');
-     
+           
+     }else if(form_type == 'phage_grep'){
+        var ss = document.getElementById('search_text_phage_grep').value
+        console.log('phage search',ss)
+         //var ss = document.querySelector('#search_textx').value;
+         if(ss.length <=2){
+             alert('Search string is too short (must be at least 3 characters)!')
+             return
+         }
+        var f = document.getElementById('adv-search-form-phage_grep');
      }else{
          
          //document.getElementById('adv-search-form-annotations-div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
