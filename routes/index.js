@@ -343,6 +343,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
     //let grep_fields = ['predictor','genome_id','accession']  // MUST BE order from file
     
     let rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,fields,acc,predictor
+    let lookup={},gid_collector={}
     // if(req.body.adv_anno_radio == 'prokka'){
 //         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
 //     }else if(req.body.adv_anno_radio == 'ncbi'){
@@ -381,84 +382,59 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
             for(let n in row_array){
                 if(row_array[n] != ''){
                     
-                    //ncbi|gca_045159995.1|cp077160.1|kst12_00050|wyk98014.1|hypothetical protein|942|313|6825|7766
-                    //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
-                    //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
                     //console.log('pts',pts)
                     if(['batka','genomad','cenote'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
+                      predictor = pts[0]
                       gid = pts[1].toUpperCase()
+                      acc = pts[2].toUpperCase()
                       if(gid && C.genome_lookup.hasOwnProperty(gid)){
                         otid = C.genome_lookup[gid]['otid']
                         strain = C.genome_lookup[gid]['strain']
                         species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
                       }
-                      acc = pts[2].toUpperCase()
-                      
-                      //console.log('xxx',pts)
-                      if(pts[0] === 'batka'){
-                        fields=['core_product','core_note','bakta_EC','bakta_GO','bakta_COG']// after type,gid,acc
-                        if(obj2.hasOwnProperty(gid)){
-                          if(obj2[gid].hasOwnProperty('bakta')){
-                            obj2[gid]['bakta'].push({species:species,strain:strain,otid,otid,acc:acc,core_product:pts[3],core_note:pts[4],'bakta_EC':pts[5],'bakta_GO':pts[6],'bakta_COG':pts[7]})
-                          }else{
-                            obj2[gid]['bakta'] = [{species:species,strain:strain,otid,otid,acc:acc,'core_product':pts[3],'core_note':pts[4],'bakta_EC':pts[5],'bakta_GO':pts[6],'bakta_COG':pts[7]}]
-                          }
-                        }else{
-                          obj2[gid] = {}
-                          obj2[gid]['bakta'] = [{species:species,strain:strain,otid,otid,acc:acc,'core_product':pts[3],'core_note':pts[4],'bakta_EC':pts[5],'bakta_GO':pts[6],'bakta_COG':pts[7]}]
-                        }
-                        //console.log(obj2)
-                      }else if(pts[0] === 'genomad'){
-                        fields = ['genomad_annotation_accessions','genomad_annotation_description']// after type,gid,acc
-                        if(obj2.hasOwnProperty(gid)){
-                          if(obj2[gid].hasOwnProperty('genomad')){
-                            obj2[gid]['genomad'].push({species:species,strain:strain,otid,otid,acc:acc,'genomad_annotation_accessions':pts[3],'genomad_annotation_description':pts[4]})
-                          }else{
-                            obj2[gid]['genomad'] = [{species:species,strain:strain,otid,otid,acc:acc,'genomad_annotation_accessions':pts[3],'genomad_annotation_description':pts[4]}]
-                          }
-                        }else{
-                          obj2[gid] = {}
-                          obj2[gid]['genomad'] = [{species:species,strain:strain,otid,otid,acc:acc,'genomad_annotation_accessions':pts[3],'genomad_annotation_description':pts[4]}]
-                        }
-                        //console.log(obj2)
-                      }else if(pts[0] === 'cenote'){
-                        fields = ['cenote_evidence_accession','cenote_evidence_description']  // after type,gid,acc
-                        if(obj2.hasOwnProperty(gid)){
-                          if(obj2[gid].hasOwnProperty('cenote')){
-                            obj2[gid]['cenote'].push({species:species,strain:strain,otid,otid,acc:acc,'cenote_evidence_accession':pts[3],'cenote_evidence_description':pts[4]})
-                          }else{
-                            obj2[gid]['cenote'] = [{species:species,strain:strain,otid,otid,acc:acc,'cenote_evidence_accession':pts[3],'cenote_evidence_description':pts[4]}]
-                          }
-                        }else{
-                          obj2[gid] = {}
-                          obj2[gid]['cenote'] = [{species:species,strain:strain,otid,otid,acc:acc,'core_product':pts[3],'core_note':pts[4]}]
-                        }
-                        //console.log(obj2)
-                      }else{
-                         //error
+                      if(!gid_collector.hasOwnProperty(gid)){
+                        gid_collector[gid] = {species:species,strain:strain,otid:otid}
                       }
-
-                    
                       
-
+                      if(gid in lookup){
+                          if(acc in lookup[gid]){
+                            if(predictor in lookup[gid][acc]){
+                            
+                            }else{
+                               lookup[gid][acc][predictor] = 1
+                            }
+                          }else{
+                             lookup[gid][acc] = {}
+                             lookup[gid][acc][predictor] = 1
+                          }
+                          
+                      }else{
+                        lookup[gid] = {}
+                        lookup[gid][acc] = {}
+                        lookup[gid][acc][predictor] = 1
+                        
+                      }
+                      
+                      
+ 
                     }
                 }
             }
         }
-        //console.log(obj2)
-        let sendlist = []
-        for(gid in obj2){
-            //console.log(gid)
-            for(predictor in obj2[gid]){
-               //console.log('obj2[gid][predictor]',obj2[gid][predictor])
-               for(let n in obj2[gid][predictor]){
-                 //sendlist.push(gid,predictor,obj2[gid][predictor].species,obj2[gid][predictor].strain)
-                 sendlist.push({gid:gid,predictor:predictor,species:obj2[gid][predictor][n].species,strain:obj2[gid][predictor][n].strain,acc:obj2[gid][predictor][n].acc})
-               }
+        //console.log('lookup',lookup)
+        //console.log(gid_collector)
+        let sendlist=[]
+        for(gid in lookup){
+            for(acc in lookup[gid]){
+                for(predictor in lookup[gid][acc]){
+                    sendlist.push({gid:gid,acc:acc,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
+                }
             }
         }
+        
+
         //console.log('sendlist',sendlist)
         sendlist.sort(function (a, b) {
            //console.log('a',a)
@@ -480,7 +456,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
             annotationList2: JSON.stringify({}),
             anno_sort_list: JSON.stringify([]),
             
-            phageList: JSON.stringify(obj2),
+            phageList: JSON.stringify(obj2),  // only if too long
             phage_sort_list: JSON.stringify(sendlist),
             
             total_hits: total_length,

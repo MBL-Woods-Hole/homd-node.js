@@ -220,19 +220,19 @@ table td{
         <div id='anno-div' class='search-box'>
            
                  
-            <table id='phage-table' class='result-table2 sortable'>
+            <table id='phage-table' class='table result-table2 sortable'>
             <tr>
-                     <th>Genome-ID</th><th>Predictor</th><th>Species (strain)</th>
+                     <th>Genome-ID</th><th>Accession</th><th>Predictor</th><th>Species (strain)</th>
                      
-                     <th class='sorttable_nosort'>Accession</th><th class='sorttable_nosort'>Hits</th>
+                     <th class='sorttable_nosort'>Hits</th>
                      
             </tr>
             <% for(i in phage_sort_lst){ %>
                 <% gid = phage_sort_lst[i].gid %>
                 <% predictor = phage_sort_lst[i].predictor %>
                 
-                <tr><td><%= phage_sort_lst[i].gid %></td><td><%= predictor %></td><td><%= phage_sort_lst[i].species %> (<%= phage_sort_lst[i].strain %>)</td>
-                <td><%= phage_sort_lst[i].acc %></td><td><a href='/phage/phage?gid=<%= phage_sort_lst[i].gid %>'>link</a></td>
+                <tr><td><%= phage_sort_lst[i].gid %></td><td><%= phage_sort_lst[i].acc %></td><td><%= predictor %></td><td><%= phage_sort_lst[i].species %> (<%= phage_sort_lst[i].strain %>)</td>
+                <td><a href='/phage/phage?gid=<%= phage_sort_lst[i].gid %>'>link</a></td>
                 </tr>
             <% } %>
                    </table>
