@@ -343,7 +343,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
     //let grep_fields = ['predictor','genome_id','accession']  // MUST BE order from file
     
     let rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,fields,acc,predictor
-    let lookup={},gid_collector={}
+    let search_id,lookup={},gid_collector={},gid_count = {}
     // if(req.body.adv_anno_radio == 'prokka'){
 //         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
 //     }else if(req.body.adv_anno_radio == 'ncbi'){
@@ -353,7 +353,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
 //         return
 //     }
     try{
-        let datapath = path.join(CFG.PATH_TO_DATA,"homd_PHAGE_GREP.tsv")
+        let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_PHAGE*")
         //let filename = uuidv4();  //CFG.PATH_TO_TMP
         //let filepath = path.join(CFG.PATH_TO_TMP, filename)
         let max_rows = C.grep_search_max_rows //50000
@@ -383,12 +383,22 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                 if(row_array[n] != ''){
                     
                     let pts = row_array[n].split('|')
+                    console.log('pts',pts)
+                    let pts_clean = []
+                    for(let n in pts){
+                        //pts_clean.push(decodeURIComponent(pts[n].replace("5'", "5").replace("3'", "3").replace(",", ";").replace("2'", "2").replace("n'", "n")))
+                        pts_clean.push(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";")))
+                        
+                        //console.log(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";")))
+                    }
                     //console.log('pts',pts)
-                    if(['batka','genomad','cenote'].indexOf(pts[0]) != -1 ){
+                    if(['bakta','genomad','cenote'].indexOf(pts[1]) != -1 ){
                       //console.log('pts',pts)
-                      predictor = pts[0]
-                      gid = pts[1].toUpperCase()
-                      acc = pts[2].toUpperCase()
+                      search_id = pts[0]
+                      predictor = pts[1]
+                      gid = pts[2].toUpperCase()
+                      gid_count[gid] = 1
+                      acc = pts[3].toUpperCase()
                       if(gid && C.genome_lookup.hasOwnProperty(gid)){
                         otid = C.genome_lookup[gid]['otid']
                         strain = C.genome_lookup[gid]['strain']
@@ -401,19 +411,21 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                       if(gid in lookup){
                           if(acc in lookup[gid]){
                             if(predictor in lookup[gid][acc]){
-                            
+                               lookup[gid][acc][predictor].push(pts_clean)
                             }else{
-                               lookup[gid][acc][predictor] = 1
+                               lookup[gid][acc][predictor] = []
+                               lookup[gid][acc][predictor].push(pts_clean)
                             }
                           }else{
                              lookup[gid][acc] = {}
-                             lookup[gid][acc][predictor] = 1
+                             lookup[gid][acc][predictor] = []
+                             lookup[gid][acc][predictor].push(pts_clean)
                           }
-                          
                       }else{
                         lookup[gid] = {}
                         lookup[gid][acc] = {}
-                        lookup[gid][acc][predictor] = 1
+                        lookup[gid][acc][predictor] = []
+                        lookup[gid][acc][predictor].push(pts_clean)
                         
                       }
                       
@@ -423,13 +435,14 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                 }
             }
         }
-        //console.log('lookup',lookup)
+        //console.log('lookup',lookup['GCA_000008065.1']['AE017198.1'].bakta)
         //console.log(gid_collector)
         let sendlist=[]
         for(gid in lookup){
             for(acc in lookup[gid]){
                 for(predictor in lookup[gid][acc]){
-                    sendlist.push({gid:gid,acc:acc,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
+                    
+                    sendlist.push({hitlist:lookup[gid][acc][predictor],gid:gid,acc:acc,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
                 }
             }
         }
@@ -458,7 +471,9 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
             
             phageList: JSON.stringify(obj2),  // only if too long
             phage_sort_list: JSON.stringify(sendlist),
+            phage_lookup: JSON.stringify(lookup),
             
+            gid_count: Object.keys(gid_count).length,
             total_hits: total_length,
             max:max_rows,
             form_type: JSON.stringify(['phage']),
@@ -475,6 +490,22 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
 
 
 
+})
+router.post('/submit_phage_data', function submit_phage_data(req, res) {
+   console.log('in submit_phage_data')
+   console.log(req.body)
+   let q = "SELECT * from phage_search WHERE search_id = '"+req.body.search_id+"'"
+    console.log(q)
+    TDBConn.query(q, (err, rows) => {
+        if (err) {
+            console.log(err)
+            res.send(err)
+            return
+        }
+        //console.log('rows',rows)
+        res.send(JSON.stringify(rows))
+        return
+    })
 })
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     console.log('in advanced_site_search_grep')
