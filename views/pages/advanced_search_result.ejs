@@ -102,8 +102,18 @@ table td{
    border:1px solid grey;
    
 }
+#phage-table2{
+    table-layout: fixed;
+    width:100%;
+}
 #phage-table2 th{
    background:#eee;
+}
+#phage-table2 td {
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 #phage-hit-results-div{
     height:720px;
@@ -115,7 +125,7 @@ table td{
    padding:5px;
    border:1px solid grey;
    text-decoration:underline;
-   letter-spacing: 2px; 
+   letter-spacing: 1px; 
 }
 #anno-result{
    display:none;
@@ -132,6 +142,7 @@ table td{
    max-width:50px;
     text-align:center;
 }
+
 /* Sortable tables */
 table.sortable thead {
     background-color:#eee;
@@ -255,52 +266,6 @@ table.sortable thead {
     <hr> 
 <% } %>
 
-<% if(search_type.indexOf("phage") != -1){ %> 
-    <small>Searches only these fields
-             <li><strong>Bakta</strong>: contig, core_product, core_note, bakta_EC, bakta_GO, bakta_COG</li>
-             <li><strong>Cenote</strong>: contig, cenote_evidence_accession, cenote_evidence_description</li>
-             <li><strong>Genomad</strong>: contig, genomad_annotation_accessions, genomad_annotation_description</li>
-    
-    </small>
-     <% if(phage_list.hasOwnProperty("too_long")){  %>
-        <br>Hits: ><%= max %>
-    <% }else{ %>
-        <br>Total Hits: <%= total_hits %>
-        <br>Total Genomes: <%= gid_count %>
-    <% } %>
-    <br>
-    <% if(phage_list.hasOwnProperty("too_long")){  %>
-               <center><div class='outlier-max'>Too Many Hits (><%= max %>). Try to refine your search. (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
-    <% }else if(total_hits == 0){ %>
-               <center><div class='outlier-zero'>Zero Hits</div></center>
-    <% }else{ %>
-        <br>
-        <div id='anno-div' class='search-box'>
-           
-                 
-            <table id='phage-table' class='table result-table2 sortable'>
-            <tr>
-                     <th>Genome-ID</th><th>Accession (contig)</th><th>Predictor</th><th>Species (strain)</th>
-                     <th class='sorttable_nosort'>Hits</th>
-                     
-                     
-            </tr>
-            <% for(i in phage_sort_lst){ %>
-                <% gid = phage_sort_lst[i].gid %>
-                <% search_id = phage_sort_lst[i].search_id %>
-                <% acc = phage_sort_lst[i].acc %>
-                <% predictor = phage_sort_lst[i].predictor %>
-                <tr><td><%= gid %></td><td><%= acc %></td><td><%= predictor %></td><td><%= phage_sort_lst[i].species %> (<%= phage_sort_lst[i].strain %>)</td>
-                <td><a href='#' onclick="see_phage_hits('<%= gid %>','<%= phage_sort_lst[i].species %>','<%= predictor %>','<%= JSON.stringify(phage_sort_lst[i].hitlist) %>')">see <%= phage_sort_lst[i].hitlist.length %> hits</a></td>
-                
-                </tr>
-            <% } %>
-                   </table>
-    
-        </div>
-        <div id='phage-result' style=''>hidden</div>
-    <% } %>
-<% } %>
 
 <% if(search_type.indexOf("annotations") != -1){ %> 
     
@@ -360,6 +325,52 @@ table.sortable thead {
      
 <% } %>
     
+<% if(search_type.indexOf("phage") != -1){ %> 
+    <small>Searches only these fields
+             <li><strong>Bakta</strong>: contig, core_product, core_note, bakta_EC, bakta_GO, bakta_COG</li>
+             <li><strong>Cenote</strong>: contig, cenote_evidence_accession, cenote_evidence_description</li>
+             <li><strong>Genomad</strong>: contig, genomad_annotation_accessions, genomad_annotation_description</li>
+    
+    </small>
+     <% if(phage_list.hasOwnProperty("too_long")){  %>
+        <br>Hits: ><%= max %>
+    <% }else{ %>
+        <br>Total Hits: <%= total_hits %>
+        <br>Total Genomes: <%= gid_count %>
+    <% } %>
+    <br>
+    <% if(phage_list.hasOwnProperty("too_long")){  %>
+               <center><div class='outlier-max'>Too Many Hits (><%= max %>). Try to refine your search.</div></center>
+    <% }else if(total_hits == 0){ %>
+               <center><div class='outlier-zero'>Zero Hits</div></center>
+    <% }else{ %>
+        <br>
+        <div id='anno-div' class='search-box'>
+           
+                 
+            <table id='phage-table' class='table result-table2 sortable'>
+            <tr>
+                     <th>Genome-ID</th><th>Accession (contig)</th><th>Predictor</th><th>Species (strain)</th>
+                     <th class='sorttable_nosort'>Hits</th>
+                     
+                     
+            </tr>
+            <% for(i in phage_sort_lst){ %>
+                <% gid = phage_sort_lst[i].gid %>
+                <% search_id = phage_sort_lst[i].search_id %>
+                <% contig = phage_sort_lst[i].contig %>
+                <% predictor = phage_sort_lst[i].predictor %>
+                <tr><td><%= gid %></td><td><%= contig %></td><td><%= predictor %></td><td><%= phage_sort_lst[i].species %> (<%= phage_sort_lst[i].strain %>)</td>
+                <td><a href='#' onclick="see_phage_hits('<%= gid %>','<%= contig %>','<%= phage_sort_lst[i].species %>','<%= predictor %>','<%= JSON.stringify(phage_sort_lst[i].hitlist) %>')">see <%= phage_sort_lst[i].hitlist.length %> hits</a></td>
+                
+                </tr>
+            <% } %>
+                   </table>
+    
+        </div>
+        <div id='phage-result' style=''>hidden</div>
+    <% } %>
+<% } %>
 
     
     </div> <!-- end: page-content -->
@@ -395,14 +406,14 @@ table.sortable thead {
   });
    
    
-  function see_phage_hits(gid,species,predictor, h){
+  function see_phage_hits(gid,contig,species,predictor, h){
      hits = JSON.parse(h)
      console.log(predictor)
      //console.log('length',hits)
      //hit_pts = hits.split(',')
      //console.log('hits',h)
      predictor_show = predictor.charAt(0).toUpperCase() + predictor.slice(1);
-     html ='<div><span style="float:left">('+hits.length+' Hits)&nbsp;&nbsp;&nbsp;&nbsp;'+predictor_show+': '+gid+' <i>'+species+'</i></span><a id="close_btn"  href="#" onclick="close_info()">Close</a></div>'
+     html ='<div><span style="float:left">('+hits.length+' Hits)&nbsp;&nbsp;&nbsp;&nbsp;'+predictor_show+': '+gid+':'+contig+' <i>'+species+'</i></span><a id="close_btn"  href="#" onclick="close_info()">Close</a></div>'
      html += "<div id='phage-hit-results-div'>"
      html +="<table class='sortable' id='phage-table2' >"
      html +="<thead>"
@@ -415,7 +426,11 @@ table.sortable thead {
      if(predictor === 'bakta'){
          
          //core_product, core_note, bakta_EC, bakta_GO, bakta_COG
-        html += '<th>core_product</th><th>core_note</th><th>bakta_EC</th><th>bakta_GO</th><th>bakta_COG</th>'
+        html += "<th class='col4'>core_product</th>"
+        html += "<th class='col5'>core_note</th>"
+        html += "<th class='col6'>bakta_EC</th>"
+        html += "<th class='col7'>bakta_GO</th>"
+        html += "<th class='col8'>bakta_COG</th>"
          
         html += '</tr>'
         html += "</thead>"
@@ -424,7 +439,14 @@ table.sortable thead {
        for(n in hits){
         html += "<tr>"
         html += "<td><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
-        html += "<td>"+hits[n][2].toUpperCase()+'</td><td>'+hits[n][3].toUpperCase()+'</td><td>'+hits[n][1]+'</td><td>'+hits[n][4]+'</td><td>'+hits[n][5]+'</td><td>'+hits[n][6]+'</td><td>'+hits[n][7]+'</td><td>'+hits[n][8]+'</td>'
+        html += "<td title='"+hits[n][2]+"'>"+hits[n][2].toUpperCase()+'</td>'
+        html += "<td title='"+hits[n][3]+"'>"+hits[n][3].toUpperCase()+'</td>'
+        html += "<td title='"+hits[n][1]+"'>"+hits[n][1]+'</td>'
+        html += "<td title='"+hits[n][4]+"'>"+hits[n][4]+'</td>'
+        html += "<td title='"+hits[n][5]+"'>"+hits[n][5]+'</td>'
+        html += "<td title='"+hits[n][6]+"'>"+hits[n][6]+'</td>'
+        html += "<td title='"+hits[n][7]+"'>"+hits[n][7]+'</td>'
+        html += "<td title='"+hits[n][8]+"'>"+hits[n][8]+'</td>'
         
         html += '</tr>'
        
@@ -491,10 +513,10 @@ table.sortable thead {
             //https://www.homd.org/jbrowse/?data=homd_V11.02_phage_1.1/GCA_000008805.1&loc=GCA_000008805.1|AE002098.2:1099110..1136674&tracks=DNA,panggolin,genomad
             gid = resp[0].genome_id.toUpperCase()
             predictor = resp[0].predictor
-            acc = resp[0].contig.toUpperCase()
+            contig = resp[0].contig.toUpperCase()
             start = resp[0].start
             end = resp[0].end
-            var jb = jb_path+'/'+gid+'&loc='+gid+'|'+acc+':'+start+'..'+end+'&tracks=DNA,panggolin,cenote,genomad'
+            var jb = jb_path+'/'+gid+'&loc='+gid+'|'+contig+':'+start+'..'+end+'&tracks=DNA,panggolin,cenote,genomad'
             console.log(jb)
             window.open(jb, '_blank')
         }

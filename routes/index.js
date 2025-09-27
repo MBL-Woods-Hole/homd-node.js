@@ -342,7 +342,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
     //let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     //let grep_fields = ['predictor','genome_id','accession']  // MUST BE order from file
     
-    let rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,fields,acc,predictor
+    let rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,fields,contig,predictor
     let search_id,lookup={},gid_collector={},gid_count = {}
     
     try{
@@ -376,7 +376,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                 if(row_array[n] != ''){
                     
                     let pts = row_array[n].split('|')
-                    console.log('pts',pts)
+                    //console.log('pts',pts)
                     let pts_clean = []
                     for(let n in pts){
                         //pts_clean.push(decodeURIComponent(pts[n].replace("5'", "5").replace("3'", "3").replace(",", ";").replace("2'", "2").replace("n'", "n")))
@@ -391,7 +391,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                       predictor = pts[1]
                       gid = pts[2].toUpperCase()
                       gid_count[gid] = 1
-                      acc = pts[3].toUpperCase()
+                      contig = pts[3].toUpperCase()
                       if(gid && C.genome_lookup.hasOwnProperty(gid)){
                         otid = C.genome_lookup[gid]['otid']
                         strain = C.genome_lookup[gid]['strain']
@@ -402,23 +402,23 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                       }
                       
                       if(gid in lookup){
-                          if(acc in lookup[gid]){
-                            if(predictor in lookup[gid][acc]){
-                               lookup[gid][acc][predictor].push(pts_clean)
+                          if(contig in lookup[gid]){
+                            if(predictor in lookup[gid][contig]){
+                               lookup[gid][contig][predictor].push(pts_clean)
                             }else{
-                               lookup[gid][acc][predictor] = []
-                               lookup[gid][acc][predictor].push(pts_clean)
+                               lookup[gid][contig][predictor] = []
+                               lookup[gid][contig][predictor].push(pts_clean)
                             }
                           }else{
-                             lookup[gid][acc] = {}
-                             lookup[gid][acc][predictor] = []
-                             lookup[gid][acc][predictor].push(pts_clean)
+                             lookup[gid][contig] = {}
+                             lookup[gid][contig][predictor] = []
+                             lookup[gid][contig][predictor].push(pts_clean)
                           }
                       }else{
                         lookup[gid] = {}
-                        lookup[gid][acc] = {}
-                        lookup[gid][acc][predictor] = []
-                        lookup[gid][acc][predictor].push(pts_clean)
+                        lookup[gid][contig] = {}
+                        lookup[gid][contig][predictor] = []
+                        lookup[gid][contig][predictor].push(pts_clean)
                         
                       }
                       
@@ -432,10 +432,10 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         //console.log(gid_collector)
         let sendlist=[]
         for(gid in lookup){
-            for(acc in lookup[gid]){
-                for(predictor in lookup[gid][acc]){
+            for(contig in lookup[gid]){
+                for(predictor in lookup[gid][contig]){
                     
-                    sendlist.push({hitlist:lookup[gid][acc][predictor],gid:gid,acc:acc,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
+                    sendlist.push({hitlist:lookup[gid][contig][predictor],gid:gid,contig:contig,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
                 }
             }
         }
