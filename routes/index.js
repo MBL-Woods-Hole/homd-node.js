@@ -344,14 +344,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
     
     let rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,fields,acc,predictor
     let search_id,lookup={},gid_collector={},gid_count = {}
-    // if(req.body.adv_anno_radio == 'prokka'){
-//         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
-//     }else if(req.body.adv_anno_radio == 'ncbi'){
-//         q = "SELECT "+sql_fields.join(",")+" from NCBI_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
-//     }else{
-//         console.log('ERROR')
-//         return
-//     }
+    
     try{
         let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_PHAGE*")
         //let filename = uuidv4();  //CFG.PATH_TO_TMP
@@ -475,7 +468,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
             
             gid_count: Object.keys(gid_count).length,
             total_hits: total_length,
-            max:max_rows,
+            max: helpers.format_long_numbers(max_rows),
             form_type: JSON.stringify(['phage']),
             no_ncbi_annot: JSON.stringify(C.no_ncbi_annotation)
                     
@@ -514,7 +507,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
     
-    let q,rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain
+    let q,rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,gid_count = {}
     // if(req.body.adv_anno_radio == 'prokka'){
 //         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
 //     }else if(req.body.adv_anno_radio == 'ncbi'){
@@ -557,6 +550,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                     if(pts.length >= split_length && ['prokka','ncbi'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
                       gid = pts[1].toUpperCase()
+                      gid_count[gid] = 1
                       //console.log('GID',gid)
                       //console.log('LOOKup',C.genome_lookup[gid])
                       if(gid && C.genome_lookup.hasOwnProperty(gid)){
@@ -609,10 +603,14 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
             //annotationList: JSON.stringify(obj_array),
             annotationList2: JSON.stringify(obj2),
             anno_sort_list: JSON.stringify(sort_lst),
+            
             phageList: JSON.stringify({}),
             phage_sort_list: JSON.stringify([]),
+            phage_lookup: JSON.stringify({}),
+            
+            gid_count: Object.keys(gid_count).length,
             total_hits: total_length,
-            max:max_rows,
+            max: helpers.format_long_numbers(max_rows),
             form_type: JSON.stringify(['annotations']),
             no_ncbi_annot: JSON.stringify(C.no_ncbi_annotation)
                     
