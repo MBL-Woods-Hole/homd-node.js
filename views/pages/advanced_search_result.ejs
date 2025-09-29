@@ -135,11 +135,11 @@ table td{
    text-align:center;
 }
 .c1{
-   width:90px;
+    width:90px;
     text-align:center;
 }
 .c2x{
-   max-width:50px;
+    max-width:50px;
     text-align:center;
 }
 
@@ -163,6 +163,7 @@ table.sortable thead {
 <% phage_sort_lst = JSON.parse(phage_sort_list)  %>
 <% phage_list = JSON.parse(phageList)  %>
 <% plookup = JSON.parse(phage_lookup)  %>
+<% phageid_list = JSON.parse(phage_id_list) %>
 
 <% var cfg = JSON.parse(config) %> 
 <% var search_type  = JSON.parse(form_type) %>  <!-- array of taxonomy, genomes or annotation and phage -->
@@ -345,6 +346,22 @@ table.sortable thead {
                <center><div class='outlier-zero'>Zero Hits</div></center>
     <% }else{ %>
         <br>
+        <div style='float:right;font-size:12px;'>
+          <form name='' method='POST' action='/download/phage_search_data'>
+          <input type="hidden" id="ids" name="ids" value='<%= phageid_list %>'>
+          
+          
+          <input type="radio" checked name="format" value='csv'> [Table]&nbsp;&nbsp;
+          <input type="radio"         name="format" value='fasta'> [Fasta]&nbsp;&nbsp;
+          <input class='pill pill-brown' type="submit" id="submit" name="submit" value='Download' >&nbsp;&nbsp;
+          <input type="radio" checked name="type" value='browser'> [Browser]&nbsp;&nbsp;
+          <input type="radio"         name="type" value='text'> [Text]&nbsp;&nbsp;
+          <input type="radio"         name="type" value='excel'> [Excel]&nbsp;&nbsp;
+          
+          </form>
+        </div>
+        
+        
         <div id='anno-div' class='search-box'>
            
                  
@@ -357,7 +374,7 @@ table.sortable thead {
             </tr>
             <% for(i in phage_sort_lst){ %>
                 <% gid = phage_sort_lst[i].gid %>
-                <% search_id = phage_sort_lst[i].search_id %>
+                
                 <% contig = phage_sort_lst[i].contig %>
                 <% predictor = phage_sort_lst[i].predictor %>
                 <tr><td><%= gid %></td><td><%= contig %></td><td><%= predictor %></td><td><%= phage_sort_lst[i].species %> (<%= phage_sort_lst[i].strain %>)</td>
@@ -417,7 +434,7 @@ table.sortable thead {
      html += "<div id='phage-hit-results-div'>"
      html +="<table class='sortable' id='phage-table2' >"
      html +="<thead>"
-     html +="<tr><th class='c1 sorttable_nosort'>Genome Viewer</th><th class='c2 sorttable_nosort'>Genome-ID</th><th class='c2 sorttable_nosort'>Contig</th><th class='c1 sorttable_nosort'>Predictor</th>"
+     html +="<tr><th class='c1 sorttable_nosort'>Genome Viewer</th><th class='c1 sorttable_nosort'>View Sequence</th><th class='c2 sorttable_nosort'>Genome-ID</th><th class='c2 sorttable_nosort'>Contig</th><th class='c1 sorttable_nosort'>Predictor</th>"
      el = document.getElementById('phage-result')
      el.style.display = 'none'
      for(n in hits){
@@ -438,10 +455,11 @@ table.sortable thead {
        //['6371', 'bakta', 'gca_000006605.1', 'cr931997.1', 'putative membrane protein', '', '', '', 'cog0586;m']
        for(n in hits){
         html += "<tr>"
-        html += "<td><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
-        html += "<td title='"+hits[n][2]+"'>"+hits[n][2].toUpperCase()+'</td>'
-        html += "<td title='"+hits[n][3]+"'>"+hits[n][3].toUpperCase()+'</td>'
-        html += "<td title='"+hits[n][1]+"'>"+hits[n][1]+'</td>'
+        html += "<td class='center'><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
+        html += "<td class='center'><a href='#' onclick=\"open_phage_sequence('"+hits[n][0]+"')\">open</a></td>"
+        html += "<td class='center' title='"+hits[n][2]+"'>"+hits[n][2].toUpperCase()+'</td>'
+        html += "<td class='center' title='"+hits[n][3]+"'>"+hits[n][3].toUpperCase()+'</td>'
+        html += "<td class='center' title='"+hits[n][1]+"'>"+hits[n][1]+'</td>'
         html += "<td title='"+hits[n][4]+"'>"+hits[n][4]+'</td>'
         html += "<td title='"+hits[n][5]+"'>"+hits[n][5]+'</td>'
         html += "<td title='"+hits[n][6]+"'>"+hits[n][6]+'</td>'
@@ -461,8 +479,9 @@ table.sortable thead {
         html += "<tbody>"
        for(n in hits){
         html += '<tr>'
-        html += "<td><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
-        html += "<td>"+hits[n][2].toUpperCase()+'</td><td>'+hits[n][3].toUpperCase()+'</td><td>'+hits[n][1]+'</td><td>'+hits[n][4]+'</td><td>'+hits[n][5]+'</td>'
+        html += "<td class='center'><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
+        html += "<td class='center'><a href='#' onclick=\"open_phage_sequence('"+hits[n][0]+"')\">open</a></td>"
+        html += "<td class='center'>"+hits[n][2].toUpperCase()+"</td><td class='center'>"+hits[n][3].toUpperCase()+"</td><td class='center'>"+hits[n][1]+'</td><td>'+hits[n][4]+'</td><td>'+hits[n][5]+'</td>'
         
         html += '</tr>'
        }
@@ -477,8 +496,9 @@ table.sortable thead {
         html += "<tbody>"
        for(n in hits){
         html += '<tr>'
-        html += "<td><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
-        html += "<td>"+hits[n][2].toUpperCase()+'</td><td>'+hits[n][3].toUpperCase()+'</td><td>'+hits[n][1]+'</td><td>'+hits[n][4]+'</td><td>'+hits[n][5]+'</td>'
+        html += "<td class='center'><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
+        html += "<td class='center'><a href='#' onclick=\"open_phage_sequence('"+hits[n][0]+"')\">open</a></td>"
+        html += "<td class='center'>"+hits[n][2].toUpperCase()+"</td><td class='center'>"+hits[n][3].toUpperCase()+"</td><td class='center'>"+hits[n][1]+'</td><td>'+hits[n][4]+'</td><td>'+hits[n][5]+'</td>'
         
         html += '</tr>'
        }
@@ -522,17 +542,33 @@ table.sortable thead {
         }
     }
     xmlhttp.send(JSON.stringify(args));
-    // const form = document.createElement('form');
-//     form.setAttribute('action', 'submit_phage_data'); // Where the form data will be sent
-//     form.setAttribute('method', 'post'); // HTTP method for submission
-//     form.setAttribute('id', 'myDynamicForm'); // Assign an ID for easier selection
-//     const input = document.createElement('input');
-//     input.type = 'text';
-//     input.name = 'search_id';
-//     input.value = search_id
-//     form.appendChild(input);
-//     document.body.appendChild(form);
-//     form.submit()
+    
+  }
+  function open_phage_sequence(search_id){
+    var args = {}
+    args.search_id = search_id
+    var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=900,height=300,scrollbars=yes");
+    var doc = win.document;
+    doc.open("text/html");
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "open_phage_sequence", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var response = xmlhttp.responseText;
+            resp = JSON.parse(response)
+            console.log('resp',resp)
+            text = '<pre>'
+            text += '>' + resp.gid +' | Contig: ' + resp.contig +' | ' + resp.predictor + ' | ' + resp.org + ' | Seq Length:'+resp.length + 'bp\n'
+            text += resp.html
+            text += '</pre>'
+            
+            doc.write("<title>Phage Amino Acid Sequence</title><body><div style='overflow:auto; height:100%;'>"+text+"</div></body>");
+            doc.close();
+            
+        }
+    }
+    xmlhttp.send(JSON.stringify(args));
     
   }
 </script>

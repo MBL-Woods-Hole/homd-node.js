@@ -343,7 +343,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
     //let grep_fields = ['predictor','genome_id','accession']  // MUST BE order from file
     
     let rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,fields,contig,predictor
-    let search_id,lookup={},gid_collector={},gid_count = {}
+    let search_id,lookup={},gid_collector={},gid_count = {},all_phage_search_ids_lookup = []
     
     try{
         let datapath = path.join(CFG.PATH_TO_DATA,"homd_GREP_PHAGE*")
@@ -388,6 +388,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                     if(['bakta','genomad','cenote'].indexOf(pts[1]) != -1 ){
                       //console.log('pts',pts)
                       search_id = pts[0]
+                      all_phage_search_ids_lookup[search_id] = 1  // for downloads
                       predictor = pts[1]
                       gid = pts[2].toUpperCase()
                       gid_count[gid] = 1
@@ -434,7 +435,6 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         for(gid in lookup){
             for(contig in lookup[gid]){
                 for(predictor in lookup[gid][contig]){
-                    
                     sendlist.push({hitlist:lookup[gid][contig][predictor],gid:gid,contig:contig,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
                 }
             }
@@ -446,7 +446,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
            //console.log('a',a)
            return helpers.compareStrings_alpha(a.species, b.species);
         })
-       // console.log('sort_lst2',sendlist)
+       //console.log('sort_lst2',Object.keys(all_phage_search_ids_lookup))
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
@@ -465,6 +465,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
             phageList: JSON.stringify(obj2),  // only if too long
             phage_sort_list: JSON.stringify(sendlist),
             phage_lookup: JSON.stringify(lookup),
+            phage_id_list: JSON.stringify(Object.keys(all_phage_search_ids_lookup)),
             
             gid_count: Object.keys(gid_count).length,
             total_hits: total_length,
@@ -483,6 +484,39 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
 
 
 
+})
+router.post('/open_phage_sequence', function submit_phage_data(req, res) {
+   console.log('in open_phage_sequence')
+   console.log(req.body)
+   let html = '',contig,length,gid,predictor,species='',strain='',otid
+   let q = "SELECT genome_id,contig,predictor,seq_length,UNCOMPRESS(seq_compressed) as seq from phage_search WHERE search_id = '"+req.body.search_id+"'"
+    console.log(q)
+    TDBConn.query(q, (err, rows) => {
+        if (err) {
+            console.log(err)
+            res.send(err)
+            return
+        }
+        //console.log('rows',rows)
+        if(rows.length === 0){
+            html += "No sequence found in database"
+        }else{
+            predictor = rows[0].predictor
+            gid = rows[0].genome_id
+            if(gid && C.genome_lookup.hasOwnProperty(gid)){
+                otid = C.genome_lookup[gid]['otid']
+                strain = C.genome_lookup[gid]['strain']
+                species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+              }
+            contig = rows[0].contig
+            length = rows[0].seq_length
+            const seqstr = (rows[0].seq).toString()
+            const arr = helpers.chunkSubstr(seqstr, 100)
+            html += arr.join('<br>')
+        }
+        res.send(JSON.stringify({html:html,length:length,gid:gid,contig:contig,org:species+' ('+strain+')',predictor:predictor}))
+        return
+    })
 })
 router.post('/submit_phage_data', function submit_phage_data(req, res) {
    console.log('in submit_phage_data')
@@ -607,6 +641,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
             phageList: JSON.stringify({}),
             phage_sort_list: JSON.stringify([]),
             phage_lookup: JSON.stringify({}),
+            phage_id_list: JSON.stringify([]),
             
             gid_count: Object.keys(gid_count).length,
             total_hits: total_length,

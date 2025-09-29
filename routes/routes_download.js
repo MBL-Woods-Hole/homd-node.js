@@ -529,10 +529,111 @@ router.get('/dnld_pangenome',(req, res) => {
     res.download(fullpath)
 
 });
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function create_refseq_table(source, type, head_txt) {
 
+router.post('/phage_search_data',(req, res) => {
+    console.log('req query',req.body)
+    let type = req.body.type  // browser, text or excel
+    let format = req.body.format  // csv or fasta
+    let id_list = req.body.ids
+    let fname,result_text,ext
+    let today = new Date()
+    let dd = String(today.getDate()).padStart(2, '0')
+    let mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
+    let yyyy = today.getFullYear()
+    today = yyyy + '-' + mm + '-' + dd
+    let currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
+    let head_text_array = ['Fasta_ID','Genome_ID','Contig','Predictor','seq_length', 'bakta_core_product','bakta_core_note','bakta_EC','bakta_GO','bakta_COG',
+            'cenote_evidence_accession','cenote_evidence_description','genomad_annotation_accessions','genomad_annotation_description']
+    
+    let q = "SELECT search_id,genome_id,contig,predictor,start,end,bakta_core_product,"
+    q += "IFNULL(bakta_core_note,'') as bcnote,"
+    q += "bakta_EC,"
+    q += "IFNULL(bakta_GO,'') as bakta_GO,"
+    q += "bakta_COG,"
+    q += "cenote_evidence_accession,"
+    q += "IFNULL(cenote_evidence_description,'') as cenote_desc,"
+    q += "genomad_annotation_accessions,"
+    q += "IFNULL(genomad_annotation_description,'') as genomad_desc,"
+    q += "seq_length,UNCOMPRESS(seq_compressed) as seq"
+    
+    q += " from phage_search where search_id in ("+id_list+')'
+  
+    TDBConn.query(q, (err, rows) => {
+  
+        if (err) {
+            console.log(err)
+            return
+        }
+        for(let n in rows){
+            //console.log(rows[n].genome_id)
+        }
+        if(format == 'fasta'){
+            fname=''
+            if(type == 'excel'){
+                type = 'text'  //change type if fasta::excel selected
+            }
+            ext = '.fasta'
+            result_text = create_phage_fasta(rows)
+            //console.log(result_text)
+        }else{
+            fname = ''
+            ext = '.txt'
+            result_text = create_phage_table(rows, head_text_array)
+        }
+        if (type === 'browser') {
+            res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        } else if (type === 'text') {
+            
+            let fname = 'HOMD_phage_search' + today + '_' + currentTimeInSeconds + ext
+            res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+        } else if (type === 'excel') {
+            let fname = 'HOMD_phage_search' + today + '_' + currentTimeInSeconds + '.xls'
+            res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+          
+        } else {
+            // error
+            console.log('Download table format ERROR')
+        }
+        res.send(result_text)
+        res.end()
+    })
+
+});
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function create_phage_table(sql_rows,header_array) {
+    let text =''
+    text += header_array.join('\t') + '\n'
+    for(let n in sql_rows){
+        //console.log('sql_rows[n]',sql_rows[n])
+        //['Fasta_ID','Genome_ID','Contig','Predictor','seq_length', 'bakta_core_product','bakta_core_note','bakta_EC','bakta_GO','bakta_COG',
+        //  'cenote_evidence_accession','cenote_evidence_description','genomad_annotation_accessions','genomad_annotation_description']
+        if(sql_rows[n].seq){
+           text += sql_rows[n].search_id +'\t'+sql_rows[n].genome_id+'\t'+sql_rows[n].contig
+           text += '\t'+sql_rows[n].predictor+'\t'+sql_rows[n].seq_length+'\t'+sql_rows[n].bakta_core_product+'\t'+sql_rows[n].bcnote
+           text += '\t'+sql_rows[n].bakta_EC+'\t'+sql_rows[n].bakta_GO+'\t'+sql_rows[n].bakta_COG
+           text += '\t'+sql_rows[n].cenote_evidence_accession+'\t'+sql_rows[n].cenote_desc
+           text += '\t'+sql_rows[n].genomad_annotation_accessions+'\t'+sql_rows[n].genomad_desc
+           text += '\n'
+        }
+    }
+    return text
+}
+function create_phage_fasta(sql_rows) {
+    let text =''
+    let seqarray,seqstr
+    for(let n in sql_rows){
+        //console.log('sql_rows[n]',sql_rows[n])
+        if(sql_rows[n].seq){
+           text += '>'+sql_rows[n].search_id +'|'+sql_rows[n].genome_id+'|'+sql_rows[n].predictor
+           text += '|'+sql_rows[n].contig+'|'+sql_rows[n].start+'..'+sql_rows[n].end+'|length:'+sql_rows[n].seq_length+'bp\n'
+           seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
+           seqarray = helpers.chunkSubstr(seqstr, 80)
+           text += seqarray.join('\n')+'\n'
+           //text += sql_rows[n].seq.toString().replace(/\*+$/, '')+'\n'
+        }
+    }
+    return text
 }
 function create_taxon_table(otids, source, type, head_txt) {
     // source == table, hirearchy or level

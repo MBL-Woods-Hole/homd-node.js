@@ -423,7 +423,7 @@ router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
   const q = queries.get_NN_NA(db, gid, pid)
   helpers.print(q)
   TDBConn.query(q, (err, rows) => {
-  //ADBConn.query(q, (err, rows) => {
+ 
     if (err) {
         console.log(err)
         return
