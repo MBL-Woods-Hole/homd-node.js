@@ -240,3 +240,18 @@ module.exports.get_phage = (gid) => {   // always NCBI for taxon description
   let qSelectPhage = "SELECT phage_id,type,contig,start,end,jbrowse_link FROM phage_data where genome_id='"+gid+"'"
   return qSelectPhage
 }
+module.exports.get_phage_from_ids = (search_id_list) => {   // always NCBI for taxon description
+  let q = "SELECT search_id,genome_id,contig,predictor,start,end,bakta_core_product,"
+    q += "IFNULL(bakta_core_note,'') as bcnote,"
+    q += "bakta_EC,"
+    q += "IFNULL(bakta_GO,'') as bakta_GO,"
+    q += "bakta_COG,"
+    q += "cenote_evidence_accession,"
+    q += "IFNULL(cenote_evidence_description,'') as cenote_desc,"
+    q += "genomad_annotation_accessions,"
+    q += "IFNULL(genomad_annotation_description,'') as genomad_desc,"
+    q += "seq_length,UNCOMPRESS(seq_compressed) as seq"
+    
+    q += " from phage_search where search_id in ("+search_id_list+')'
+  return q
+}

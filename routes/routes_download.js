@@ -38,15 +38,10 @@ router.get('/download_file', function search(req, res) {
 
 router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
 //router.get('/dld_table_all/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let dt = helpers.get_today_obj()
 
     let type = req.params.type
-    let file_filter_txt = "HOMD.org Taxon Data::No Filter Applied"+ " Date: "+today 
+    let file_filter_txt = "HOMD.org Taxon Data::No Filter Applied"+ " Date: "+dt.today 
     let send_list = Object.values(C.taxon_lookup);
     
     let list_of_otids = send_list.map(item => item.otid)
@@ -58,9 +53,9 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
     if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
     }else if(type === 'text'){
-      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""})
+      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+dt.today+'_'+dt.seconds+".txt\""})
     }else if(type === 'excel'){
-      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""})
+      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+dt.today+'_'+dt.seconds+".xls\""})
     }else {
       // error
       console.log('Download table format ERROR')
@@ -70,15 +65,10 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
 })
 //
 router.get('/dld_refseqtable_all/:type', function dld_refseqtable(req, res) {
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let dt = helpers.get_today_obj()
     let otid,tmp_ary,vals,hmt,refseq_array=[]
     let type = req.params.type
-    let tableTsv = "HOMD.org RefSeq Data;"+ " Date: "+today + '\n'
+    let tableTsv = "HOMD.org RefSeq Data;"+ " Date: "+dt.today + '\n'
     let headers = ["HMT-ID","RefSeq-ID","Species","Sequence Length","SeqID Count","Seq-IDs"]
     tableTsv +=  headers.join('\t') + '\n'
     let keys = Object.keys(C.refseq_lookup)
@@ -109,10 +99,10 @@ router.get('/dld_refseqtable_all/:type', function dld_refseqtable(req, res) {
     if (type === 'browser') {
         res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
     } else if (type === 'text') {
-        let fname = 'HOMD_refseq_table' + today + '_' + currentTimeInSeconds + '.txt'
+        let fname = 'HOMD_refseq_table' + dt.today + '_' + dt.seconds + '.txt'
         res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
     } else if (type === 'excel') {
-        let fname = 'HOMD_refseq_table' + today + '_' + currentTimeInSeconds + '.xls'
+        let fname = 'HOMD_refseq_table' + dt.today + '_' + dt.seconds + '.xls'
         res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
     } else {
         // error
@@ -125,19 +115,14 @@ router.get('/dld_refseqtable_all/:type', function dld_refseqtable(req, res) {
 })
 router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
 //router.get('/dld_table/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let dt = helpers.get_today_obj()
     let letter='all',statusfilter='on',search_txt='',search_field=''
     let send_list = []
     let type = req.params.type
 
     
     send_list = helpers_taxa.apply_ttable_filter(req, req.session.ttable_filter)
-    let file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+today 
+    let file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+dt.today 
 
     let list_of_otids = send_list.map(item => item.otid)
     //console.log('Table::Count of OTIDs:',list_of_otids)
@@ -146,9 +131,9 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
     if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
     }else if(type === 'text'){
-      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""})
+      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+dt.today+'_'+dt.seconds+".txt\""})
     }else if(type === 'excel'){
-      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""})
+      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+dt.today+'_'+dt.seconds+".xls\""})
     }else {
       // error
       console.log('Download table format ERROR')
@@ -157,12 +142,7 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
     res.end()
 })
 router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let dt = helpers.get_today_obj()
 
     let type = req.params.type   // browser, text or excel
     let fxn = req.params.fxn     // hierarchy or level
@@ -187,9 +167,9 @@ router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
     if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
   }else if(type === 'text'){
-      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".txt\""})
+      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+dt.today+'_'+dt.seconds+".txt\""})
   }else if(type === 'excel'){
-      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+today+'_'+currentTimeInSeconds+".xls\""})
+      res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+dt.today+'_'+dt.seconds+".xls\""})
   }else {
       // error
       console.log('Download table format ERROR')
@@ -201,12 +181,7 @@ router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
 
 router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
     //console.log('in dld abund - taxon')
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+    let dt = helpers.get_today_obj()
 
     let type = req.params.type
     let source = req.params.source
@@ -339,9 +314,9 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
     if(type === 'browser'){
       res.set('Content-Type', 'text/plain');  // <= important - allows tabs to display
     }else if(type === 'text'){
-      res.set({"Content-Disposition":"attachment; filename=\""+filename+today+'_'+currentTimeInSeconds+".txt\""})
+      res.set({"Content-Disposition":"attachment; filename=\""+filename+dt.today+'_'+dt.seconds+".txt\""})
     }else if(type === 'excel'){
-      res.set({"Content-Disposition":"attachment; filename=\""+filename+today+'_'+currentTimeInSeconds+".xls\""})
+      res.set({"Content-Disposition":"attachment; filename=\""+filename+dt.today+'_'+dt.seconds+".xls\""})
     }else {
       // error
       console.log('Download table format ERROR')
@@ -352,12 +327,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all (req, res) {
-    let today = new Date()
-    let dd = String(today.getDate()).padStart(2, '0')
-    let mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
-    let yyyy = today.getFullYear()
-    today = yyyy + '-' + mm + '-' + dd
-    let currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
+    let dt = helpers.get_today_obj()
     const type = req.params.type
     const filter = req.params.filter
     
@@ -376,18 +346,18 @@ router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all 
         //console.log(mysqlrows)
         //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
         if(filter === 'gtdb'){
-            fileFilterText = 'HOMD.org Genome Data:: GTDB Taxonomy' + ' Date: ' + today
+            fileFilterText = 'HOMD.org Genome Data:: GTDB Taxonomy' + ' Date: ' + dt.today
             tableTsv = create_full_genome_table_gtdb(mysqlrows, fileFilterText)
         }else{
-            fileFilterText = 'HOMD.org Genome Data:: All Genome Data' + ' Date: ' + today
+            fileFilterText = 'HOMD.org Genome Data:: All Genome Data' + ' Date: ' + dt.today
             tableTsv = create_full_genome_table(mysqlrows, fileFilterText)
         }
         if (type === 'browser') {
           res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
         } else if (type === 'text') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.txt"' })
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + dt.today + '_' + dt.seconds + '.txt"' })
         } else if (type === 'excel') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.xls"' })
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + dt.today + '_' + dt.seconds + '.xls"' })
         } else {
           // error
           console.log('Download table format ERROR')
@@ -400,12 +370,7 @@ router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all 
 router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   
   console.log('in download table partial-genome:')
-  let today = new Date()
-  let dd = String(today.getDate()).padStart(2, '0')
-  let mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
-  let yyyy = today.getFullYear()
-  today = yyyy + '-' + mm + '-' + dd
-  let currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
+  let dt = helpers.get_today_obj()
   const type = req.params.type
   
   let letter = '0'
@@ -473,7 +438,7 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
      let fileFilterText = 'HOMD.org Genome Data:: Filtered Genome Data'
 //   }
   const listOfGids = sendList.map(item => item.gid)
-  fileFilterText = fileFilterText + ' Date: ' + today
+  fileFilterText = fileFilterText + ' Date: ' + dt.today
 
   //helpers.print(['listOfGids', listOfGids])
   // type = browser, text or excel
@@ -482,10 +447,10 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   if (type === 'browser') {
     res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
   } else if (type === 'text') {
-    let fname = 'HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.txt'
+    let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds + '.txt'
     res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
   } else if (type === 'excel') {
-    let fname = 'HOMD_genome_table' + today + '_' + currentTimeInSeconds + '.xls'
+    let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds + '.xls'
     res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
   } else {
     // error
@@ -529,19 +494,38 @@ router.get('/dnld_pangenome',(req, res) => {
     res.download(fullpath)
 
 });
-
+router.post('/phage_sequences',(req, res) => {
+    console.log(req.body)
+    let q = queries.get_phage_from_ids(req.body.search_ids)
+    let dt = helpers.get_today_obj()
+    TDBConn.query(q, (err, rows) => {
+  
+        if (err) {
+            console.log(err)
+            return
+        }
+        //for(let n in rows){
+            console.log(rows)
+        //}
+        let result_text = create_phage_fasta(rows)
+        console.log(result_text)
+        let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.fasta'
+        console.log(fname)
+        //res.set('Content-Type', 'text/plain')
+        res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+        res.send(result_text)
+        res.end()
+    })
+    
+})
 router.post('/phage_search_data',(req, res) => {
     console.log('req query',req.body)
     let type = req.body.type  // browser, text or excel
     let format = req.body.format  // csv or fasta
     let id_list = req.body.ids
     let fname,result_text,ext
-    let today = new Date()
-    let dd = String(today.getDate()).padStart(2, '0')
-    let mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
-    let yyyy = today.getFullYear()
-    today = yyyy + '-' + mm + '-' + dd
-    let currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
+    
+    let dt = helpers.get_today_obj()
     let head_text_array = ['Fasta_ID','Genome_ID','Contig','Predictor','seq_length', 'bakta_core_product','bakta_core_note','bakta_EC','bakta_GO','bakta_COG',
             'cenote_evidence_accession','cenote_evidence_description','genomad_annotation_accessions','genomad_annotation_description']
     
@@ -580,14 +564,15 @@ router.post('/phage_search_data',(req, res) => {
             ext = '.txt'
             result_text = create_phage_table(rows, head_text_array)
         }
+        
         if (type === 'browser') {
             res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
         } else if (type === 'text') {
             
-            let fname = 'HOMD_phage_search' + today + '_' + currentTimeInSeconds + ext
+            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
             res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
         } else if (type === 'excel') {
-            let fname = 'HOMD_phage_search' + today + '_' + currentTimeInSeconds + '.xls'
+            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
             res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
           
         } else {

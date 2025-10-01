@@ -62,7 +62,7 @@ function show_table(obj, anno, gid){
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var resp_data = JSON.parse(xmlhttp.responseText);
-            //console.log('advanced_anno_orf_search SQL resp', resp_data)
+            console.log('advanced_anno_orf_search SQL resp', resp_data)
             if(resp_data.length == 0){
                 newbox.innerHTML = 'no data found'
                 return
@@ -102,24 +102,24 @@ function show_table(obj, anno, gid){
                     locstart = 1 
                 } 
                 let db = anno+'_'+gid // line_gi
-                seqacc = resp_data[n].accession
+                seqacc = resp_data[n].acc
                 //seqacc = data[n].acc.replace('_','|')
                 let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
                 let highlight = seqacc+":"+start.toString()+".."+stop.toString()
                 
                 html += "<tr>"
-                html += "<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+resp_data[n].accession+"' target='_blank'>"+resp_data[n].accession+"</a></td>"
-                html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].protein_id+"' target='_blank'>"+resp_data[n].protein_id+"</td>"
+                html += "<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+resp_data[n].acc+"' target='_blank'>"+resp_data[n].acc+"</a></td>"
+                html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].pid+"' target='_blank'>"+resp_data[n].pid+"</td>"
                 html += "<td class='center'>" 
                 //in genomes.js open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
                 html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
                 html += "</td>" //  JB)
                 
-                html += "<td nowrap class='center'>"+resp_data[n].length_na
-                html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+resp_data[n].protein_id+"','"+db+"','"+resp_data[n].accession+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>NA</b></a>]"
+                html += "<td nowrap class='center'>"+resp_data[n].lna
+                html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+resp_data[n].pid+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>NA</b></a>]"
                 html += "</td>"   // NA length
-                html += "<td nowrap class='center'>"+resp_data[n].length_aa
-                html += " [<a title='Amino Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+resp_data[n].protein_id+"','"+db+"','"+resp_data[n].accession+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>AA</b></a>]"
+                html += "<td nowrap class='center'>"+resp_data[n].laa
+                html += " [<a title='Amino Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+resp_data[n].pid+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>AA</b></a>]"
                 html += "</td>"   // AA length
                 
         

@@ -150,6 +150,9 @@ table.sortable thead {
     font-weight: bold;
     cursor: default;
 }
+#show-all-form{
+   display:inline;
+}
 </style>
 <%- include('../partials/header_html'); %>
 <% var otids = JSON.parse(otid_list) %>
@@ -336,7 +339,13 @@ table.sortable thead {
      <% if(phage_list.hasOwnProperty("too_long")){  %>
         <br>Hits: ><%= max %>
     <% }else{ %>
-        <br>Total Hits: <%= total_hits %>
+        <br>Total Hits: <%= total_hits %>&nbsp;&nbsp;&nbsp;
+        <form id='show-all-form' method='POST' action='show_all_phage_hits'>
+        <input type="hidden" id="ids" name="big_list" value='<%= phage_sort_list %>' \>
+        <input type='hidden' name='search_text' value='<%= search_text %>' \>
+        <input type='hidden' name='total_hits' value='<%= total_hits %>' \>
+        <input type='submit' value='View All Hits in one Table' style='background:tan;text-decoration:underline;padding:0 5px;' \>
+        </form>
         <br>Total Genomes: <%= gid_count %>
     <% } %>
     <br>
@@ -353,7 +362,7 @@ table.sortable thead {
           
           <input type="radio" checked name="format" value='csv'> [Table]&nbsp;&nbsp;
           <input type="radio"         name="format" value='fasta'> [Fasta]&nbsp;&nbsp;
-          <input class='pill pill-brown' type="submit" id="submit" name="submit" value='Download' >&nbsp;&nbsp;
+          <input class='pill pill-brown' type="submit" id="submit" name="submit" value='Download all Hits' >&nbsp;&nbsp;
           <input type="radio" checked name="type" value='browser'> [Browser]&nbsp;&nbsp;
           <input type="radio"         name="type" value='text'> [Text]&nbsp;&nbsp;
           <input type="radio"         name="type" value='excel'> [Excel]&nbsp;&nbsp;

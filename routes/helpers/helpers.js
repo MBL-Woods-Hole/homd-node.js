@@ -27,6 +27,15 @@ module.exports.timestamp = (dateonly) => {
     
 
 }
+module.exports.get_today_obj = () => {
+  let today = new Date()
+    let dd = String(today.getDate()).padStart(2, '0')
+    let mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
+    let yyyy = today.getFullYear()
+    today = yyyy + '-' + mm + '-' + dd
+    let currentTimeInSeconds=Math.floor(Date.now()/1000) // unix timestamp in seconds
+    return {today:today,seconds:currentTimeInSeconds,day:dd,month:mm,year:yyyy}
+};
 
 module.exports.log_timestamp = () => {
   let date = new Date();

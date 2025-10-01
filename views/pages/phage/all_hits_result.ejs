@@ -1,0 +1,145 @@
+<style>
+#phage-allhits-div{
+    height:700px;
+    overflow:auto;
+    border:1px solid red;
+}
+.table{
+    table-layout: fixed;:
+    width:200px;
+}
+.row0{
+   width:30px;
+}
+.row123{
+   width:140px;
+}
+.row_data{
+   
+}
+</style>
+<% var hlist = JSON.parse(sqldata) %>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <p class='h3 title'>Phage Search Result -- Search Term: "<%- searchtxt %>"</p>
+    <input type='radio' id='cbon' name='check-all' value='checkall' onclick="check(true)"> Check All&nbsp;&nbsp;&nbsp;
+    <input type='radio' id='cboff' name='uncheck-all' value='uncheckall' onclick="check(false)"> Un-Check All&nbsp;&nbsp;&nbsp;
+    <a href='#' onclick='download_seqs()' style='text-decoration:underline;'>Download sequences of checked hits</a>
+  
+  <div id='phage-allhits-div'>
+  
+  <table class='table table-hover table-condensed'>
+  <tr><th class='row0'></th><th class='row123'>GID</th><th class='row123'>Contig</th><th class='row123'>Predictor</th><th class='row_data'>Data</th></tr>
+<!-- 
+{
+    search_id: 202,
+    genome_id: 'GCA_000008065.1',
+    contig: 'AE017198.1',
+    predictor: 'genomad',
+    start: '349497',
+    end: '350546',
+    bakta_core_product: '',
+    bcnote: '',
+    bakta_EC: '',
+    bakta_GO: '',
+    bakta_COG: '',
+    cenote_evidence_accession: '',
+    cenote_desc: '',
+    genomad_annotation_accessions: 'PF03864',
+    genomad_desc: 'Phage major capsid protein E',
+    seq_length: '349',
+    seq: <Buffer 4d 4b 4e 51 4b 4c 51 4c 44 4c 51 52 46 41 54 50 49 4c 44 4d 46 53 51 4e 54 56 4c 44 59 54 52 4e 52 51 59 50 45 4d 4c 47 44 54 4c 46 50 41 56 4b 56 50 ... 299 more bytes>
+  }
+ -->
+
+  <% for(var x in hlist){ %>
+        <% gid = hlist[x].genome_id %>
+        <% contig = hlist[x].contig %>
+        <% predictor= hlist[x].predictor %>
+        <% search_id = hlist[x].search_id %>
+        <% if(predictor=='cenote'){ %>
+            <% data = hlist[x].cenote_evidence_accession+" | "+hlist[x].cenote_desc %>
+        <% }else if(predictor=='genomad'){ %>
+            <% data = hlist[x].genomad_annotation_accessions+" | "+hlist[x].genomad_desc %>
+        <% }else{ %>
+            <% data = hlist[x].bakta_core_product+" | "+hlist[x].bcnote+" | "+hlist[x].bakta_EC+" | "+hlist[x].bakta_GO+" | "+hlist[x].bakta_COG %>
+        <% } %>
+            <tr>
+            <td><input type='checkbox' id='<%= search_id %>' name='download' value='<%= search_id %>'></td>
+            <td><%= gid %></td>
+            <td><%= contig %></td>
+            <td><%= predictor %></td>
+            <td class='row_data'><%= data %></td>
+            </tr>
+  
+  <% } %>
+  </table>
+  </div>
+  
+
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+  function check(t){
+    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+    document.getElementById('cbon').checked = false
+    document.getElementById('cboff').checked = false
+    for(let n in allCheckboxes){
+        if(t){
+          allCheckboxes[n].checked = true
+        }else{
+          allCheckboxes[n].checked = false
+        }
+    }
+  }
+  function download_seqs(){
+        console.log('dnld')
+        const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const searchids = Array.from(checkedCheckboxes).map(checkbox => checkbox.value);
+        //console.log(searchids)
+        if(searchids.length == 0){
+            alert('Check some items')
+            return
+        }
+        //var args = {}
+        //args.search_ids = searchids
+        const form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', '/download/phage_sequences');
+        form.setAttribute('id', 'myDynamicForm');
+        
+        // Create input for name
+        const inputIDs = document.createElement('input');
+        inputIDs.setAttribute('type', 'hidden');
+        inputIDs.setAttribute('name', 'search_ids');
+        inputIDs.setAttribute('value', searchids);
+        form.appendChild(inputIDs);
+        document.body.appendChild(form);
+        form.submit()
+
+      
+  }
+  
+</script>
+
+
