@@ -334,7 +334,7 @@ router.post('/show_all_phage_hits', function show_all_phage_hits(req, res) {
        }
    }
    //console.log(hit_ids)
-   let q = queries.get_phage_from_ids(hit_ids)
+   let q = queries.get_phage_from_ids_noseqs(hit_ids)
    //console.log(q)
    TDBConn.query(q, (err, rows) => {
         if (err) {
