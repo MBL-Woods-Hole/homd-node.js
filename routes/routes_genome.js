@@ -395,32 +395,39 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
 })
 
 
-router.post('/get_NN_NA_seq', function get_NN_NA_SeqPost (req, res) {
-  console.log('in get_NN_NA_seq -post')
+router.post('/get_AA_NA_seq', function get_AA_NA_SeqPost (req, res) {
+  console.log('in get_AA_NA_seq -post')
   console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
   const db_pts = req.body.db.split('_')
   
-  let db
+  let db,q
   let gid = req.body.gid
   if(req.body.type === 'aa'){   // NCBI
       if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
           db = "`NCBI_faa`.`protein_seq`"
+          q = queries.get_AA_NA(db, gid, pid)
+       }else if(db_pts[0] === 'bakta'){
+          db = "`BAKTA_meta`.`protein_seq`"
+          q = queries.get_bakta_AA(db, gid, pid)
        }else{
           db = "`PROKKA_faa`.`protein_seq`"
+          q = queries.get_AA_NA(db, gid, pid)
        }
      
   }else{   //req.body.type === 'na':   // NCBI  na
       if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
           db = "`NCBI_ffn`.`ffn_seq`"
+          q = queries.get_AA_NA(db, gid, pid)
        }else{
           db = "`PROKKA_ffn`.`ffn_seq`"
+          q = queries.get_AA_NA(db, gid, pid)
        }
   }
   
-  const q = queries.get_NN_NA(db, gid, pid)
+  
   helpers.print(q)
   TDBConn.query(q, (err, rows) => {
  
@@ -597,10 +604,10 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             
             
             html += "<td class='center' nowrap>"+rowobj.length_na
-            html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('na','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid+"')\"><b>NA</b></a>]"
+            html += " [<a title='Nucleic Acid' href='#' onclick=\"get_AA_NA_seq('na','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid+"')\"><b>NA</b></a>]"
             html += "</td>"   // NA length
             html += "<td class='center' nowrap>"+rowobj.length_aa
-            html += " [<a title='Nucleic Acid' href='#' onclick=\"get_NN_NA_seq('aa','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid+"')\"><b>AA</b></a>]"
+            html += " [<a title='Nucleic Acid' href='#' onclick=\"get_AA_NA_seq('aa','"+rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid+"')\"><b>AA</b></a>]"
             html += "</td>"   // AA length
             html += "<td  class='center' nowrap>"+start+'-'+stop+"</td>"   // Range
             

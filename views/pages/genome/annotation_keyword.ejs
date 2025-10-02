@@ -189,10 +189,10 @@ button {
             <td><a title="JBrowse/Genome Viewer" href="#" onclick="open_jbrowse('<%= gid %>','anno_table','','','<%= anno %>','<%= loc %>','<%= highlight %>')">open</a></td>
             <!-- <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')">open</a> -->
             <td><%= data[gid][n].length_na %>
-            [<a title="Nucleic Acid" href="#" onclick="get_NN_NA_seq('na','<%= data[gid][n].protein_id %>','<%= db %>','<% data[gid][n].accession %>','<%= orgs[gid] %>','<%= data[gid][n].product %>','<% gid %>')"><b>NA</b></a>]
+            [<a title="Nucleic Acid" href="#" onclick="get_AA_NA_seq('na','<%= data[gid][n].protein_id %>','<%= db %>','<% data[gid][n].accession %>','<%= orgs[gid] %>','<%= data[gid][n].product %>','<% gid %>')"><b>NA</b></a>]
             </td>
             <td><%= data[gid][n].length_aa %>
-            [<a title="Amino Acid" href="#" onclick="get_NN_NA_seq('aa','<%= data[gid][n].protein_id %>','<%= db %>','<% data[gid][n].accession %>','<%= orgs[gid] %>','<%= data[gid][n].product %>','<% gid %>')"><b>AA</b></a>]
+            [<a title="Amino Acid" href="#" onclick="get_AA_NA_seq('aa','<%= data[gid][n].protein_id %>','<%= db %>','<% data[gid][n].accession %>','<%= orgs[gid] %>','<%= data[gid][n].product %>','<% gid %>')"><b>AA</b></a>]
             </td>
             <td><%= data[gid][n].start %>-<%= data[gid][n].stop %></td>
             <td><%= data[gid][n].gene %></td>

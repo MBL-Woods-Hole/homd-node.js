@@ -89,6 +89,19 @@ table td{
     font-size:18px;
     
 }
+#anno-result{
+   display:none;
+   margin-top:10px;
+   padding:20px;
+   text-align:center;
+   position:absolute;
+   top:280px;
+   width:84%;
+   
+   background:gold;
+   border:1px solid grey;
+   
+}
 #phage-result{
    display:none;
    margin-top:10px;
@@ -179,7 +192,7 @@ table.sortable thead {
     <%- include('../partials/navbar'); %>
     <div class='page-content' > 
        <% if(search_type.length == 1){ %>
-         <p class='title h3'><%= search_type[0][0].toUpperCase() + search_type[0].slice(1).toLowerCase(); %> Search Result  </p>
+         <p class='title h3'><%= anno.toUpperCase() %> <%= search_type[0][0].toUpperCase() + search_type[0].slice(1).toLowerCase(); %> Search Result  </p>
        <% }else{ %>
          <% 
            show = ''
@@ -188,7 +201,7 @@ table.sortable thead {
            }
            show = show.slice(0,-2)
          %>
-         <div class='title'><%= show %> Search Result  </div>
+         <div class='title'> <%= show %> Search Result  </div>
        <% } %>
 <!-- 'HMT-'+("000" + otid).slice(-3);  -->
      <span style='float:right;'><a href='advanced_site_search'>Search Again</a></span> 
@@ -270,11 +283,14 @@ table.sortable thead {
     <hr> 
 <% } %>
 
-
+    <!-- ANNOTATIONS ANNOTATIONS ANNOTATIONS ANNOTATIONS -->
 <% if(search_type.indexOf("annotations") != -1){ %> 
-    
-    
-     <%= anno.toUpperCase() %> Annotations <small>(Searches only Genome-IDs, Accessions(Molecule), Protein-IDs, Gene and Gene Product (~20M records)):<span class='small'></span></small>
+    <%= anno.toUpperCase() %> Annotations 
+    <% if(anno.toUpperCase() == 'BAKTA'){ %>
+        <small>(Searches only Genome-IDs, Accessions(Contigs), Gene, Gene Product, bakta_EC, bakta_GO and bakta_COG):</small>
+    <% }else{ %>
+       <small>(Searches only Genome-IDs, Accessions(Molecule), Protein-IDs, Gene and Gene Product):</small>
+    <% } %>
      <% if(anno_list2.hasOwnProperty("too_long")){  %>
         <br>Hits: ><%= max %>
     <% }else{ %>
@@ -308,7 +324,7 @@ table.sortable thead {
                 <td nowrap class='center'>
                        <%= anno_list2[gid].length %>
                        <% data = JSON.stringify(anno_list2[gid]) %>
-                       <small>(<a href='#' onclick="show_table('<%= data %>','<%= anno %>','<%= gid %>')">view hits</a>)</small>
+                       <small>(<a href='#' onclick="show_anno_hits('<%= data %>','<%= anno %>','<%= gid %>')">view hits</a>)</small>
                 </td>
                 
                 <td nowrap class='center'>
@@ -328,7 +344,7 @@ table.sortable thead {
          <% } %>
      
 <% } %>
-    
+   <!--  PHAGE  PHAGE    PHAGE  PHAGE    PHAGE  PHAGE -->
 <% if(search_type.indexOf("phage") != -1){ %> 
     <small>Searches only these fields
              <li><strong>Bakta</strong>: contig, core_product, core_note, bakta_EC, bakta_GO, bakta_COG</li>
@@ -344,7 +360,9 @@ table.sortable thead {
         <input type="hidden" id="ids" name="big_list" value='<%= phage_sort_list %>' \>
         <input type='hidden' name='search_text' value='<%= search_text %>' \>
         <input type='hidden' name='total_hits' value='<%= total_hits %>' \>
-        <input type='submit' value='View All Hits in one Table' style='background:tan;text-decoration:underline;padding:0 5px;' \>
+        <% if(total_hits < 5000){ %>
+           <input type='submit' value='View All Hits in one Table' style='background:tan;text-decoration:underline;padding:0 5px;' \>
+        <% } %>
         </form>
         <br>Total Genomes: <%= gid_count %>
     <% } %>
@@ -387,14 +405,14 @@ table.sortable thead {
                 <% contig = phage_sort_lst[i].contig %>
                 <% predictor = phage_sort_lst[i].predictor %>
                 <tr><td><%= gid %></td><td><%= contig %></td><td><%= predictor %></td><td><%= phage_sort_lst[i].species %> (<%= phage_sort_lst[i].strain %>)</td>
-                <td><a href='#' onclick="see_phage_hits('<%= gid %>','<%= contig %>','<%= phage_sort_lst[i].species %>','<%= predictor %>','<%= JSON.stringify(phage_sort_lst[i].hitlist) %>')">see <%= phage_sort_lst[i].hitlist.length %> hits</a></td>
+                <td><a href='#' onclick="show_phage_hits('<%= gid %>','<%= contig %>','<%= phage_sort_lst[i].species %>','<%= predictor %>','<%= JSON.stringify(phage_sort_lst[i].hitlist) %>')">see <%= phage_sort_lst[i].hitlist.length %> hits</a></td>
                 
                 </tr>
             <% } %>
                    </table>
     
         </div>
-        <div id='phage-result' style=''>hidden</div>
+        <div id='phage-result' >hidden</div>
     <% } %>
 <% } %>
 
@@ -432,98 +450,13 @@ table.sortable thead {
   });
    
    
-  function see_phage_hits(gid,contig,species,predictor, h){
-     hits = JSON.parse(h)
-     console.log(predictor)
-     //console.log('length',hits)
-     //hit_pts = hits.split(',')
-     //console.log('hits',h)
-     predictor_show = predictor.charAt(0).toUpperCase() + predictor.slice(1);
-     html ='<div><span style="float:left">('+hits.length+' Hits)&nbsp;&nbsp;&nbsp;&nbsp;'+predictor_show+': '+gid+':'+contig+' <i>'+species+'</i></span><a id="close_btn"  href="#" onclick="close_info()">Close</a></div>'
-     html += "<div id='phage-hit-results-div'>"
-     html +="<table class='sortable' id='phage-table2' >"
-     html +="<thead>"
-     html +="<tr><th class='c1 sorttable_nosort'>Genome Viewer</th><th class='c1 sorttable_nosort'>View Sequence</th><th class='c2 sorttable_nosort'>Genome-ID</th><th class='c2 sorttable_nosort'>Contig</th><th class='c1 sorttable_nosort'>Predictor</th>"
-     el = document.getElementById('phage-result')
-     el.style.display = 'none'
-     for(n in hits){
-         //console.log('hxxx',hits[n])
-     }
-     if(predictor === 'bakta'){
-         
-         //core_product, core_note, bakta_EC, bakta_GO, bakta_COG
-        html += "<th class='col4'>core_product</th>"
-        html += "<th class='col5'>core_note</th>"
-        html += "<th class='col6'>bakta_EC</th>"
-        html += "<th class='col7'>bakta_GO</th>"
-        html += "<th class='col8'>bakta_COG</th>"
-         
-        html += '</tr>'
-        html += "</thead>"
-        html += "<tbody>"
-       //['6371', 'bakta', 'gca_000006605.1', 'cr931997.1', 'putative membrane protein', '', '', '', 'cog0586;m']
-       for(n in hits){
-        html += "<tr>"
-        html += "<td class='center'><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
-        html += "<td class='center'><a href='#' onclick=\"open_phage_sequence('"+hits[n][0]+"')\">open</a></td>"
-        html += "<td class='center' title='"+hits[n][2]+"'>"+hits[n][2].toUpperCase()+'</td>'
-        html += "<td class='center' title='"+hits[n][3]+"'>"+hits[n][3].toUpperCase()+'</td>'
-        html += "<td class='center' title='"+hits[n][1]+"'>"+hits[n][1]+'</td>'
-        html += "<td title='"+hits[n][4]+"'>"+hits[n][4]+'</td>'
-        html += "<td title='"+hits[n][5]+"'>"+hits[n][5]+'</td>'
-        html += "<td title='"+hits[n][6]+"'>"+hits[n][6]+'</td>'
-        html += "<td title='"+hits[n][7]+"'>"+hits[n][7]+'</td>'
-        html += "<td title='"+hits[n][8]+"'>"+hits[n][8]+'</td>'
-        
-        html += '</tr>'
-       
-       }
-       
-       
-    }else if(predictor === 'cenote'){
-        html += '<th>cenote_evidence_accession</th><th>cenote_evidence_description</th>'
-       
-        html += '</tr>'
-        html +="</thead>"
-        html += "<tbody>"
-       for(n in hits){
-        html += '<tr>'
-        html += "<td class='center'><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
-        html += "<td class='center'><a href='#' onclick=\"open_phage_sequence('"+hits[n][0]+"')\">open</a></td>"
-        html += "<td class='center'>"+hits[n][2].toUpperCase()+"</td><td class='center'>"+hits[n][3].toUpperCase()+"</td><td class='center'>"+hits[n][1]+'</td><td>'+hits[n][4]+'</td><td>'+hits[n][5]+'</td>'
-        
-        html += '</tr>'
-       }
-       
-       
-    }else if(predictor === 'genomad'){
-        //genomad_annotation_accessions, genomad_annotation_description
-        html += '<th>genomad_annotation_accessions</th><th>genomad_annotation_description</th>'
-        
-        html += '</tr>'
-        html +="</thead>"
-        html += "<tbody>"
-       for(n in hits){
-        html += '<tr>'
-        html += "<td class='center'><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
-        html += "<td class='center'><a href='#' onclick=\"open_phage_sequence('"+hits[n][0]+"')\">open</a></td>"
-        html += "<td class='center'>"+hits[n][2].toUpperCase()+"</td><td class='center'>"+hits[n][3].toUpperCase()+"</td><td class='center'>"+hits[n][1]+'</td><td>'+hits[n][4]+'</td><td>'+hits[n][5]+'</td>'
-        
-        html += '</tr>'
-       }
-       
-       
-    }else{
-       //error
-    }
-    html += "</tbody>"
-    html += '</table>'
-    html += '</div>'
-    el.innerHTML = html
-    el.style.display = 'block'
-    sorttable.makeSortable(document.getElementById('phage-table2'));
-  }
-  function close_info(){
+
+  
+  function close_anno_info(){
+     
+      document.getElementById('anno-result').style.display = 'none'
+  };
+  function close_phage_info(){
       
       document.getElementById('phage-result').style.display = 'none'
   }

@@ -159,9 +159,15 @@ module.exports.get_crispr_cas_data = (gid) => {
     
     return qSelectCrisprCas
 }
-module.exports.get_NN_NA = (db, gid, pid) => {
+module.exports.get_AA_NA = (db, gid, pid) => {
     let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
     q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
+    
+    return q
+}
+module.exports.get_bakta_AA = (db, gid, pid) => {
+    let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
+    q += " WHERE genome_id ='"+gid+"' and core_ID='" + pid + "'"
     
     return q
 }
