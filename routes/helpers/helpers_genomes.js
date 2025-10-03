@@ -328,7 +328,7 @@ module.exports.apply_gtable_filter = (req, filter) => {
 
   // ADV::Tax Status ////////////////////////////////////////////////
   let status_on = Object.keys(vals.status).filter(item => vals.status[item] === 'on');
-  //console.log('status_on',status_on)
+  console.log('status_on',status_on)
   //console.log('big_g_list[0]',big_g_list[0])
   let default_length_of_status = 5;
   big_g_list = big_g_list.filter(function (item) {
@@ -336,9 +336,19 @@ module.exports.apply_gtable_filter = (req, filter) => {
       return item;
     } else {
 
-
-      //console.log('Status',C.site_lookup[item.otid].s1)
-      let status = (C.taxon_lookup[item.otid].naming_status + '_' + C.taxon_lookup[item.otid].cultivation_status).toLowerCase();
+      let status
+      //console.log('C.taxon_lookup[item.otid].naming_status',C.taxon_lookup[item.otid].naming_status)
+      //first_part=['named','unnamed','phylotype']
+      //second_part=['cultivated','uncultivated']
+      let nstatus = C.taxon_lookup[item.otid].naming_status.toLowerCase()
+      let cstatus = C.taxon_lookup[item.otid].cultivation_status.toLowerCase()
+      if(nstatus == 'phylotype'){
+        status='phylotype'
+      }else if(nstatus.slice(0,5) === 'named'){  // this catches named** and name NVP
+        status='named_'+cstatus
+      }else if(nstatus.slice(0,7) === 'unnamed'){
+        status='unnamed_'+cstatus
+      }
       //console.log('status',status)
       if (status_on.includes(status)) {
         return item;
