@@ -87,9 +87,11 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
        url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
        
   }else if(page == 'crispr'){
-      tracks = 'crispr'
+  
+      //tracks = 'crispr'
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
+      
   }else if(page == 'oralgen'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks

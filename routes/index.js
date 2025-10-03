@@ -335,7 +335,7 @@ router.post('/show_all_phage_hits', function show_all_phage_hits(req, res) {
    }
    //console.log(hit_ids)
    let q = queries.get_phage_from_ids_noseqs(hit_ids)
-   //console.log(q)
+   console.log(q)
    TDBConn.query(q, (err, rows) => {
         if (err) {
             console.log(err)
@@ -343,7 +343,7 @@ router.post('/show_all_phage_hits', function show_all_phage_hits(req, res) {
             return
         }
         //console.log('rows',rows)
-    
+        
         res.render('pages/phage/all_hits_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 

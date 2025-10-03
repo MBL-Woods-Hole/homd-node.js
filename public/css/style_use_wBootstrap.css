@@ -55,6 +55,8 @@ p {
 .center {
     text-align:center;
 }
+.alignright { text-align: right; }
+.alignleft { text-align: left; }
 .small {
     font-size: small;
 }

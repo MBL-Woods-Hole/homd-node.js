@@ -32,12 +32,14 @@
        <p class='h3 title'>Phage Search Result -- Search Term: "<%- searchtxt %>"</p>
     <input type='radio' id='cbon' name='check-all' value='checkall' onclick="check(true)"> Check All&nbsp;&nbsp;&nbsp;
     <input type='radio' id='cboff' name='uncheck-all' value='uncheckall' onclick="check(false)"> Un-Check All&nbsp;&nbsp;&nbsp;
+    Table Length: <%= hlist.length %> rows&nbsp;&nbsp;&nbsp;
     <a href='#' onclick='download_seqs()' style='text-decoration:underline;'>Download sequences of checked hits</a>
   
   <div id='phage-allhits-div'>
   
   <table class='table table-hover table-condensed'>
-  <tr><th class='row0'></th><th class='row123'>GID</th><th class='row123'>Contig</th><th class='row123'>Predictor</th><th class='row_data'>Data</th></tr>
+  <tr><th class='row0'></th><th class='row123'>GID</th><th class='row123'>Contig</th><th class='row123'>Predictor</th>
+  <th class='row_data'>Data</th></tr>
 <!-- 
 {
     search_id: 202,
