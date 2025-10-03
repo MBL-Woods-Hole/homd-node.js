@@ -14,21 +14,21 @@ const queries = require(app_root + '/routes/queries')
 const createIframe = require("node-iframe")
 const https = require('https'); 
 
-router.get('/overview', function overview(req, res) {
-    //console.log('in RESET-session')
-    let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
-    //console.log('crispr_data:',Object.keys(crispr_data).length)
-    res.render('pages/genome/overview', {
-        title: 'HOMD :: Genome Overview', 
-        pgname: '', // for AboutThisPage
-        config: JSON.stringify(CFG),
-        //ver_info: JSON.stringify(C.version_information),
-        ver_info: JSON.stringify(C.version_information),
-        pgtitle: 'Genome Overview',
-        crispr_size: Object.keys(crispr_data).length,
-        
-    })
-});
+// router.get('/overview', function overview(req, res) {
+//     //console.log('in RESET-session')
+//     let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
+//     //console.log('crispr_data:',Object.keys(crispr_data).length)
+//     res.render('pages/genome/overview', {
+//         title: 'HOMD :: Genome Overview', 
+//         pgname: '', // for AboutThisPage
+//         config: JSON.stringify(CFG),
+//         //ver_info: JSON.stringify(C.version_information),
+//         ver_info: JSON.stringify(C.version_information),
+//         pgtitle: 'Genome Overview',
+//         crispr_size: Object.keys(crispr_data).length,
+//         
+//     })
+// });
 
 function renderGenomeTable(req, res, args) {
     //console.log('render NEW filter') 
@@ -2186,7 +2186,7 @@ router.get('/crispr', function crispr(req, res) {
     
     
     //console.log('crispr-cas',seqid_list)
-    let q = "SELECT genome_id as gid,combined_size as length,otid,organism,contigs FROM `genomesV11.0` WHERE genome_id in ("
+    let q = "SELECT genome_id as gid,combined_size as length,otid,organism,strain,contigs FROM `genomesV11.0` WHERE genome_id in ("
     for(let k in seqid_list){
         q = q + "'"+seqid_list[k] + "',"
     }

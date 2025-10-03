@@ -114,9 +114,10 @@ table.sortable tbody tr::before {
        <tr><th class='center col1'>Genome-ID</th>
             <th class='center col1'>Taxon-ID</th>
             <th>Species</th>
+            <th>Strain</th>
             <th class='center col1'>Contigs</th>
             <th class='center'>Length (bp)</th>
-            <th class='left' nowrap>CRISPR-Cas Count<br>('A'=Ambiguous)</th></tr>
+            <th class='left' nowrap>CRISPR-Cas Count</th></tr>
        </thead>
        <tbody>
        <% for(i in genomelist){ %>
@@ -127,14 +128,14 @@ table.sortable tbody tr::before {
        <td class='center'><a href='genome_description?gid=<%= g.gid %>'><%= g.gid %></a></td>
        <td class='center' nowrap><a href='/taxa/tax_description?otid=<%= g.otid %>'><%= taxidfullname %></a></td>
        <td><i><%= g.organism %></i></td>
-       
+       <td><%= g.strain %></td>
        <td class='alignright'><%= g.contigs %></td>
        <td class='center'><%= g.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); %></td>
        
        
        <% if(cdata[g.gid] === "A"){ %>
              <td class='left-justify' title='Ambiguous'>
-              <%= cdata[g.gid] %>
+              Ambiguous
              [<a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= g.gid %>/" target='_blank'>ftp</a>]
            </td>
        <% }else{ %>
