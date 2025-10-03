@@ -302,16 +302,21 @@ width: 1500px;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='adv_named_uncultivated' name='named_uncultivated' onclick='adv_update_sb()' \> Named / Uncultivated&nbsp;&nbsp;&nbsp;
             <% } %>
+            
             <% if(statusfltr.status.unnamed_cultivated === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='adv_unnamed_cultivated' name='unnamed_cultivated' onclick='adv_update_sb()' \> Unnamed / Cultivated&nbsp;&nbsp;&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='adv_unnamed_cultivated' name='unnamed_cultivated' onclick='adv_update_sb()' \> Unnamed / Cultivated&nbsp;&nbsp;&nbsp;
             <% } %>
+            
+            
             <% if(statusfltr.status.phylotype === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='adv_phylotype' name='phylotype' onclick='adv_update_sb()' \> Phylotype&nbsp;&nbsp;&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='adv_phylotype' name='phylotype' onclick='adv_update_sb()' \> Phylotype&nbsp;&nbsp;&nbsp;
             <% } %>
+            
+            
             <% if(statusfltr.status.dropped === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='adv_dropped' name='dropped' onclick='adv_update_sb()' \> Dropped&nbsp;&nbsp;
             <% }else{ %>
@@ -452,3 +457,4 @@ width: 1500px;
 
 </form> 
 <!-- </div> -->
+<script type="text/javascript" src="/js/genomes.js"></script>
