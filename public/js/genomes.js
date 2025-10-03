@@ -410,18 +410,12 @@ function adv_toggle_cb_abund(x){
 }
 function adv_toggle_cb_status(x){
     console.log('status x',x)
-    var dr = document.getElementById('adv_dropped')
-    console.log(dr)
-    var phylo = document.getElementById('adv_phylotype')
-    console.log(phylo)
+    
     if(x == 'off'){
         document.getElementById('adv_phylotype').checked = false;
         document.getElementById("adv_named_cultivated").checked = false;
         document.getElementById("adv_named_uncultivated").checked = false;
         document.getElementById("adv_unnamed_cultivated").checked = false;
-        
-        document.getElementById("adv_dropped").checked = false;
-        
         
         var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('on')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_status_span').innerHTML = link_html
@@ -430,7 +424,6 @@ function adv_toggle_cb_status(x){
         document.getElementById("adv_named_uncultivated").checked = true;
         document.getElementById("adv_unnamed_cultivated").checked = true;
         document.getElementById("adv_phylotype").checked = true;
-        document.getElementById("adv_dropped").checked = true;
        
         
         var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('off')\">Toggle CheckBoxes On/Off</a>"
