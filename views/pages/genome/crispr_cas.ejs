@@ -129,17 +129,17 @@ table.sortable tbody tr::before {
        <td class='center' nowrap><a href='/taxa/tax_description?otid=<%= g.otid %>'><%= taxidfullname %></a></td>
        <td><i><%= g.organism %></i></td>
        <td><%= g.strain %></td>
-       <td class='alignright'><%= g.contigs %></td>
+       <td class='center'><%= g.contigs %></td>
        <td class='center'><%= g.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); %></td>
        
        
        <% if(cdata[g.gid] === "A"){ %>
-             <td class='left-justify' title='Ambiguous'>
+             <td class='center' title='Ambiguous'>
               Ambiguous
              [<a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= g.gid %>/" target='_blank'>ftp</a>]
            </td>
        <% }else{ %>
-           <td class='left-justify'>
+           <td class='center'>
               <%= cdata[g.gid] %>
              [<a href='crispr_cas_data?gid=<%= g.gid %>'>view</a>]
              [<a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= g.gid %>/" target='_blank'>ftp</a>]
