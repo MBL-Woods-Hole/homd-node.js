@@ -94,7 +94,7 @@
   
 function show_anno_hits(obj, anno, gid){
     var data = JSON.parse(obj)
-    console.log('obj',data)
+    //console.log('obj',data)
     //console.log('data[gid]',data[0])
     org = data[0].species
     
@@ -108,22 +108,11 @@ function show_anno_hits(obj, anno, gid){
     annobox = document.getElementById('anno-div')
     selected_row = document.getElementById(gid)
     
-    
-    // var xmlhttp = new XMLHttpRequest();
-//  var args = {intext:intext}
-//  document.getElementById('prokka_count_div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
-//  xmlhttp.open("POST", "/get_annotations_counts_sql", true);
-//  
-//  xmlhttp.setRequestHeader("Content-type","application/json");
-//  xmlhttp.onreadystatechange = function() {
-
-//      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-     //console.log('selectedrow',selected_row)
     allrows = document.getElementsByClassName('anno-row')
     tblrows = document.getElementById("anno-table").rows
      //console.log('rowcount-tblrows',tblrows.length)
      //console.log('rowcount-allrows',allrows.length)
-     //for(let i = 0; i < total_hits-1; i++){
+   
     for(n in allrows){
          //console.log('allrows[n]',n,allrows[n])
         if(n <= allrows.length){
@@ -132,16 +121,10 @@ function show_anno_hits(obj, anno, gid){
     }
      
     selected_row.style.background = "white";
-     
-     
     annobox.style.padding = "10px";
     annobox.style.height = "400px"
      
-     //newbox = document.getElementById(gid+'-result')
-    // newbox = document.getElementById('anno-result')
-//     newbox.style.display = 'block'
-//     newbox.style.background = "lightblue";
-//     newbox.style.padding = "10px";
+ 
     pid_list = []
     for(n in data){
         pid_list.push("'"+data[n].pid+"'")
@@ -149,12 +132,12 @@ function show_anno_hits(obj, anno, gid){
     //console.log('pid_list',pid_list)
     var args = {pid_list:pid_list,anno:anno}
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "/advanced_anno_orf_search", true);
+    xmlhttp.open("POST", "/advanced_anno_orf_search", true);  // in index.js
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var resp_data = JSON.parse(xmlhttp.responseText);
-            console.log('XXXadvanced_anno_orf_search', resp_data)
+            //console.log('XXXadvanced_anno_orf_search', resp_data)
             if(resp_data.length == 0){
                 html = "<span style='float:right;'><a href='#' onclick=\"close_anno_info()\">close</a></span>"
                 el.innerHTML = html+ '<br>no data found'

@@ -304,6 +304,24 @@ table.sortable thead {
          <% }else if(total_hits == 0){ %>
                <center><div class='outlier-zero'>Zero Hits (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
          <% }else{ %>
+            <div style='float:right;font-size:12px;'>
+                  <form name='' method='POST' action='/download/anno_search_data'>
+                  <input type="hidden" id="anno_ids" name="anno_ids" value='<%= annotationList2 %>'>
+                  <input type="hidden" id="anno" name="anno" value='<%= anno %>'>
+                  <input type='hidden' name='search_text' value='<%= search_text %>' \>
+                  
+                  <input type="radio" checked name="format" value='csv'> [Table]&nbsp;&nbsp;
+                  <% if(anno != 'bakta'){ %>
+                    <input type="radio"         name="format" value='fasta_na'> [NA Fasta]&nbsp;&nbsp;
+                  <% } %>
+                  <input type="radio"         name="format" value='fasta_aa'> [AA Fasta]&nbsp;&nbsp;
+                  <input class='pill pill-brown' type="submit" id="submit" name="submit" value='Download all Hits' >&nbsp;&nbsp;
+                  <input type="radio" checked name="type" value='browser'> [Browser]&nbsp;&nbsp;
+                  <input type="radio"         name="type" value='text'> [Text]&nbsp;&nbsp;
+                  <input type="radio"         name="type" value='excel'> [Excel]&nbsp;&nbsp;
+                  
+                  </form>
+            </div>
              <div id='anno-div' class='search-box'>
              <span class='search-text-div'>Selected Annotation: <%= anno.toUpperCase() %></span>
              
@@ -324,6 +342,7 @@ table.sortable thead {
                 <td nowrap class='center'>
                        <%= anno_list2[gid].length %>
                        <% data = JSON.stringify(anno_list2[gid]) %>
+                       <!-- in search.js -->
                        <small>(<a href='#' onclick="show_anno_hits('<%= data %>','<%= anno %>','<%= gid %>')">view hits</a>)</small>
                 </td>
                 
@@ -375,6 +394,7 @@ table.sortable thead {
         <div style='float:right;font-size:12px;'>
           <form name='' method='POST' action='/download/phage_search_data'>
           <input type="hidden" id="ids" name="ids" value='<%= phageid_list %>'>
+          <input type='hidden' name='search_text' value='<%= search_text %>' \>
           
           
           <input type="radio" checked name="format" value='csv'> [Table]&nbsp;&nbsp;

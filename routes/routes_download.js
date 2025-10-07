@@ -518,22 +518,139 @@ router.post('/phage_sequences',(req, res) => {
     })
     
 })
+router.post('/anno_search_data',(req, res) => {
+   // Download all Annotation Hits/ table and fasta
+   //console.log('anno_search_data req body',req.body)
+   let type = req.body.type  // browser, text or excel
+   let anno = req.body.anno
+   let search_text = req.body.search_text
+    let format = req.body.format  // csv or fasta
+    let id_list = JSON.parse(req.body.anno_ids)
+    console.log('id_list length',id_list.length)
+    console.log('anno',anno)
+    console.log('type',type)
+    console.log('format',format)
+    let fname,result_text,ext,q
+    let dt = helpers.get_today_obj()
+    //if anno is prokka or ncbi us .map to get all the pids from idlist
+    // if anno == bakta ??
+    let selected_gids = Object.keys(id_list)
+    let pid_list=[],unique_pidlst,lst,head_text_array
+    for(let n in selected_gids){
+       lst = id_list[selected_gids[n]].map(el => "'"+el.pid+"'")
+       
+       pid_list = pid_list.concat(lst)
+    }
+    unique_pidlst = [...new Set(pid_list)];
+    //console.log('unique_lst',unique_pidlst)
+    if(anno.toUpperCase() === 'BAKTA'){
+        if(format === 'fasta_aa'){
+            q = "SELECT 'Bakta' as anno,BAKTA_meta.orf.core_contig_acc as contig,BAKTA_meta.orf.genome_id as gid,"
+            q += " core_ID as pid,core_start as start,core_end as stop,bakta_Length as length,UNCOMPRESS(seq_compressed) as seq"
+            q += " from BAKTA_meta.orf"
+            q += " JOIN BAKTA_meta.protein_seq using(core_ID)"
+            q += " WHERE core_ID in ("+unique_pidlst+")"
+            //head_text_array = ['core_ID','Genome_ID','Contig','BAKTA','seq_length']
+                
+            
+        }else if(format === 'fasta_na'){
+            // error  there is no bakta na seqs
+            res.send("Error::BAKTA doesn't have nucleotide (na) sequences.")
+            res.end()
+            return
+        }else{
+            // bakta table (everthing except seqs)
+            q = "SELECT genome_id as gid,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
+            q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef"
+            q += " from `BAKTA_meta`.orf WHERE core_ID in ("+unique_pidlst+")"
+            head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
+                
+            
+        }
+    }else{
+        // PROKKA and NCBI
+        let anno_cap = anno.toUpperCase()
+        if(format === 'fasta_aa'){
+            
+            q = "SELECT '"+anno_cap+"' as anno,accession as contig,`"+anno_cap+"_meta`.orf.genome_id as gid,"
+            q += " protein_id as pid,start,stop,length_aa as length, UNCOMPRESS(seq_compressed) as seq"
+            q += " from `"+anno_cap+"_meta`.orf"
+            q += " JOIN `"+anno_cap+"_faa`.protein_seq using(protein_id)"
+            q += " WHERE protein_id in ("+unique_pidlst+")"
+        }else if(format === 'fasta_na'){
+            q = "SELECT '"+anno_cap+"' as anno,accession as contig,`"+anno_cap+"_meta`.orf.genome_id as gid,"
+            q += " protein_id as pid,start,stop,length_na as length, UNCOMPRESS(seq_compressed) as seq"
+            q += " from `"+anno_cap+"_meta`.orf"
+            q += " JOIN `"+anno_cap+"_ffn`.ffn_seq using(protein_id)"
+            q += " WHERE protein_id in ("+unique_pidlst+")"
+        }else{
+            // table  PROKKA and NCBI
+            q = "SELECT genome_id as gid,accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
+            q += "length_na as lna from `"+anno_cap+"_meta`.orf WHERE protein_id in ("+unique_pidlst+")"
+            head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
+             
+        }
+        
+    }
+    
+    //console.log(q)
+    TDBConn.query(q, (err, rows) => {
+  
+        if (err) {
+            console.log(err)
+            return
+        }
+        for(let n in rows){
+            //console.log(rows[n].genome_id)
+        }
+        if(format == 'fasta_na' || format == 'fasta_aa'){
+            fname=''
+            if(type == 'excel'){
+                type = 'text'  //change type if fasta::excel selected
+            }
+            ext = '.fasta'
+            result_text = create_anno_fasta(rows)
+            //console.log(result_text)
+        }else{
+            fname = ''
+            ext = '.txt'
+            result_text = create_anno_table(rows, anno, head_text_array, search_text)
+        }
+        
+        if (type === 'browser') {
+            res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        } else if (type === 'text') {
+            
+            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
+            res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+        } else if (type === 'excel') {
+            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
+            res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+          
+        } else {
+            // error
+            console.log('Download table format ERROR')
+        }
+        res.send(result_text)
+        res.end()
+    })
+    
+})
 router.post('/phage_search_data',(req, res) => {
-    console.log('req query',req.body)
+    // Download all Phage Hits
+    //console.log('req body',req.body)
     let type = req.body.type  // browser, text or excel
     let format = req.body.format  // csv or fasta
+    let search_text = req.body.search_text
     let id_list = req.body.ids
     let fname,result_text,ext
     
     let dt = helpers.get_today_obj()
-    let head_text_array = ['Fasta_ID','Genome_ID','Contig','Predictor','seq_length', 'bakta_core_product','bakta_core_note','bakta_EC','bakta_GO','bakta_COG',
+    let head_text_array = ['Fasta_ID','Genome_ID','Contig','Predictor','seq_length',
             'cenote_evidence_accession','cenote_evidence_description','genomad_annotation_accessions','genomad_annotation_description']
     
-    let q = "SELECT search_id,genome_id,contig,predictor,start,end,bakta_core_product,"
-    q += "IFNULL(bakta_core_note,'') as bcnote,"
-    q += "bakta_EC,"
-    q += "IFNULL(bakta_GO,'') as bakta_GO,"
-    q += "bakta_COG,"
+    let q = "SELECT search_id,genome_id,contig,predictor,start,end,"
+    
     q += "cenote_evidence_accession,"
     q += "IFNULL(cenote_evidence_description,'') as cenote_desc,"
     q += "genomad_annotation_accessions,"
@@ -562,7 +679,7 @@ router.post('/phage_search_data',(req, res) => {
         }else{
             fname = ''
             ext = '.txt'
-            result_text = create_phage_table(rows, head_text_array)
+            result_text = create_phage_table(rows, head_text_array, search_text)
         }
         
         if (type === 'browser') {
@@ -586,8 +703,8 @@ router.post('/phage_search_data',(req, res) => {
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function create_phage_table(sql_rows,header_array) {
-    let text =''
+function create_phage_table(sql_rows,header_array,search_term) {
+    let text ='::Search String: "'+search_term+'"\n'
     text += header_array.join('\t') + '\n'
     for(let n in sql_rows){
         //console.log('sql_rows[n]',sql_rows[n])
@@ -595,8 +712,7 @@ function create_phage_table(sql_rows,header_array) {
         //  'cenote_evidence_accession','cenote_evidence_description','genomad_annotation_accessions','genomad_annotation_description']
         if(sql_rows[n].seq){
            text += sql_rows[n].search_id +'\t'+sql_rows[n].genome_id+'\t'+sql_rows[n].contig
-           text += '\t'+sql_rows[n].predictor+'\t'+sql_rows[n].seq_length+'\t'+sql_rows[n].bakta_core_product+'\t'+sql_rows[n].bcnote
-           text += '\t'+sql_rows[n].bakta_EC+'\t'+sql_rows[n].bakta_GO+'\t'+sql_rows[n].bakta_COG
+           text += '\t'+sql_rows[n].predictor+'\t'+sql_rows[n].seq_length
            text += '\t'+sql_rows[n].cenote_evidence_accession+'\t'+sql_rows[n].cenote_desc
            text += '\t'+sql_rows[n].genomad_annotation_accessions+'\t'+sql_rows[n].genomad_desc
            text += '\n'
@@ -618,6 +734,56 @@ function create_phage_fasta(sql_rows) {
            //text += sql_rows[n].seq.toString().replace(/\*+$/, '')+'\n'
         }
     }
+    return text
+}
+function create_anno_fasta(sql_rows) {
+    let text =''
+    let seqarray,seqstr
+    for(let n in sql_rows){
+        //console.log('sql_rows[n]',sql_rows[n])
+        if(sql_rows[n].seq.length != 0){
+          
+           text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
+           text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
+           seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
+           seqarray = helpers.chunkSubstr(seqstr, 80)
+           text += seqarray.join('\n')+'\n'
+           //text += sql_rows[n].seq.toString().replace(/\*+$/, '')+'\n'
+        }
+    }
+    return text
+}
+function create_anno_table(sql_rows,anno,headers,search_term) {
+    let text = anno.toUpperCase()+' ::Search String: "'+search_term+'"\n'
+    text += headers.join("\t")+'\n'
+    
+    if(anno === 'bakta'){
+        //'Bakta' as anno,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
+        //        q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef
+        // ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
+                
+        for(let n in sql_rows){
+            text += sql_rows[n].gid+'\t'+sql_rows[n].contig+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].length
+            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
+            text += '\t'+sql_rows[n].bakta_EC+'\t'+sql_rows[n].bakta_GO+'\t'+sql_rows[n].bakta_COG
+            text += '\t'+sql_rows[n].bakta_RefSeq+'\t'+sql_rows[n].bakta_UniParc+'\t'+sql_rows[n].bakta_UniRef
+            text += '\n'
+        }
+    }else{
+        //text='anno table: '+anno
+        // q = "SELECT accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
+//         q += "length_na as lna from `"+anno_cap+"_meta`.orf WHERE protein_id in ("+unique_pidlst+")"
+//         head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
+        for(let n in sql_rows){
+            text += sql_rows[n].gid+'\t'+sql_rows[n].acc+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].lna
+            text += '\t'+sql_rows[n].laa
+            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
+            
+            text += '\n'
+        }
+             
+    }
+    
     return text
 }
 function create_taxon_table(otids, source, type, head_txt) {

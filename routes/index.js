@@ -384,6 +384,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
     
     let q,rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,gid_count = {},pid,prod
+    let tmp_obj = {}
     // if(req.body.adv_anno_radio == 'prokka'){
 //         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
 //     }else if(req.body.adv_anno_radio == 'ncbi'){
@@ -422,7 +423,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                     //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
                     //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
-                    console.log('pts',pts)
+                    //console.log('pts',pts)
                     if(pts.length >= split_length && ['prokka','ncbi','bakta'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
                       if(pts[0] == 'bakta'){
@@ -436,25 +437,26 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                         prod = pts[5]
                       }
                       gid_count[gid] = 1
-                      //console.log('GID',gid)
                       //console.log('LOOKup',C.genome_lookup[gid])
-                      if(gid && C.genome_lookup.hasOwnProperty(gid)){
-                        otid = C.genome_lookup[gid]['otid']
-                        strain = C.genome_lookup[gid]['strain']
-                        species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
-                      let tmp_obj = {
+                      
+                    tmp_obj = {
                           gid:gid,
-                          species:species,
-                          strain:strain,
+                          species:'=>Genome Not Found in db<=',
+                          strain:'',
                           acc:pts[2].toUpperCase(),
                           gene:pts[3].toUpperCase(),
                           pid:pid,
                           prod:prod
-                          // length_na:pts[6],
-//                           length_aa:pts[7],
-//                           start:pts[8],
-//                           stop:pts[9]
-                        }
+                        
+                    }
+                    if(gid && C.genome_lookup.hasOwnProperty(gid)){
+                      //if(gid){
+                        otid = C.genome_lookup[gid]['otid']
+                        strain = C.genome_lookup[gid]['strain']
+                        species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+                        tmp_obj.species = species
+                        tmp_obj.strain = strain
+                    }
                         //console.log('tmp_obj',tmp_obj)
                         if(obj2.hasOwnProperty(gid)){
                           obj2[gid].push(tmp_obj)
@@ -462,9 +464,6 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                           sort_lst.push({gid:gid,species:species,strain:strain})
                           obj2[gid] = [tmp_obj]
                         }
-                    }
-                      
-
                     }
                 }
             }
