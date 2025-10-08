@@ -88,7 +88,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
        
   }else if(page == 'crispr'){
   
-      //tracks = 'crispr'
+      tracks = tracks+',crispr'
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
       
@@ -134,40 +134,7 @@ function open_ncbi(type){
     //console.log(url)
     window.open(url)
 }
-// function offer_jbrowse(gid, contigplusgc){
-//    console.log('offer_jbrowse',contigplusgc)
-//    pts = contigplusgc.split('|')
-//    contig = pts[0]
-//    gc = (parseFloat(pts[1])/100).toFixed(2)
-//    if(!contig){
-//       return
-//    }
-//    //let url = "/jbrowse/index.html?data=homd_V10.1/"+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
-//    let url = jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at "+gc+"),GC Skew"
-//    url += "&loc="+gid+'|'+contig
-//    console.log(url)
-//    document.getElementById("jbrowse_offer_span").innerHTML = "<a href='"+url+"' target='_blank'>Open in Genome Viewer</a>"
-// }
-// function change_genome_4_jbrowse(gid){
-//   //console.log(gid)
-//   if(gid=='none'){
-//      document.getElementById("genome_iframe").src = "";
-// 	 document.getElementById("genome_iframe").width = '100%'
-// 	 document.getElementById("genome_iframe").height = '0'
-//      return
-//   }
-//   // reload page form or ajax?
-//   
-//   let url ="jb_path+'/'+gid+"&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content,GC Skew"
-//   console.log(url)
-//   document.getElementById("genome_iframe").width = '100%'
-//   document.getElementById("genome_iframe").height = '800px'
-//   document.getElementById("genome_iframe").src = url;
-//   new_window_txt ="[<a href='"+url+"' target='_blank'>Open in a new window</a>]"
-//   document.getElementById("open_new_window").innerHTML = new_window_txt;
-//   document.getElementById("gid-label").innerHTML = ': '+gid
-//   
-// }
+
 
 function toggle_options(){
 	var el = document.getElementById("gen_options")
