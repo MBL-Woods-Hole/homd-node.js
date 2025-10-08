@@ -1485,7 +1485,7 @@ router.get('/ecology', function ecology(req, res) {
   })
   //console.log(tax_name,rank,node)
   if (rank === 'species') {
-    if (node.hasOwnProperty('otid')) {
+    if (node && node.hasOwnProperty('otid')) {
       otid = node.otid
     }
   } else if (rank === 'subspecies') {
