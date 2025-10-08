@@ -660,7 +660,7 @@ function get_gtdb_taxonomy(q) {
 router.get('/tax_description', async function tax_description(req, res) {
   // let myurl = url.parse(req.url, true);
   //helpers.print(['pre data1',C.taxon_lookup[389]])
-  let otid = req.query.otid.replace(/^0+/, '')   // remove leading zeros
+  let otid = req.query.otid  //.replace(/^0+/, '')   // remove leading zeros
   let lookup_data = {}, data4, refseq = [], links = {}, sites = ''
   if (otid && req.session.ttable_filter) {
     req.session.ttable_filter.otid = otid
