@@ -71,6 +71,9 @@ if(CFG.ENV === 'production'){
     const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
     const restart_logger = new console.Console(output)
     restart_logger.log('Restart on '+helpers.timestamp(false))
+    
+    // turn off all console.logging
+    console.log = function() {}
 }
 
 
