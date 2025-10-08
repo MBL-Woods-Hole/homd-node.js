@@ -155,7 +155,7 @@ module.exports.get_peptide3 = (gid) => {
 }
 module.exports.get_crispr_cas_data = (gid) => {
     let qSelectCrisprCas = "SELECT contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
-    qSelectCrisprCas += " FROM crispr_cas where seq_id='"+gid+"'"
+    qSelectCrisprCas += " FROM crispr_cas where genome_id='"+gid+"'"
     
     return qSelectCrisprCas
 }

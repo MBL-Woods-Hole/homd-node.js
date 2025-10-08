@@ -2178,8 +2178,8 @@ router.get('/crispr', function crispr(req, res) {
     let send_list = []
     
     
-    console.log('crispr-cas',seqid_list)
-    let q = "SELECT seq_id as gid,tlength,otid,organism,ncontigs FROM genomes WHERE seq_id in ("
+    //console.log('crispr-cas',seqid_list)
+    let q = "SELECT genome_id as gid,combined_size as length,otid,organism,strain,contigs FROM `genomesV11.0` WHERE genome_id in ("
     for(let k in seqid_list){
         q = q + "'"+seqid_list[k] + "',"
     }
@@ -2191,7 +2191,7 @@ router.get('/crispr', function crispr(req, res) {
           return
        }
        for(let p in rows){
-           console.log('row',rows[p])
+           //console.log('row',rows[p])
            send_list.push(rows[p])
        }
     
@@ -2230,7 +2230,7 @@ router.get('/crispr_cas_data', function crispr_cas_data(req, res) {
     let data = []
     console.log('crispr_cas_data',gid)
     const q = queries.get_crispr_cas_data(gid)
-    
+    console.log(q)
     TDBConn.query(q, (err, rows) => {
         if(err){
            console.log(err)

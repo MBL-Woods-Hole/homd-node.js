@@ -2,21 +2,47 @@
 thead th { position: sticky; top: 0; }
 #crispr-table-div{
    padding:20px;
+   height:600px;
+   overflow:auto;
 }
-#crispr-table{
-   padding:20px;
-   border-collapse:collapse;
+
+#crispr-table {
+  padding:5px;
+ 
+  table-layout:fixed;
+  width:100%;
 }
-th, td {
-  border: 1px solid black;
-  padding:1px 3px;
+#crispr-table th{
+  color:white;
+  background: var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+  z-index: 1;
+  
 }
-#crispr-table tr:nth-child(even) { 
-    background-color: #c6ffc4; 
-} 
+#crispr-table td{
+  padding:3px 5px;
+  font-size:14px;
+  font-weight:bold;
+  color: #303030;
+  /* 
+overflow: hidden;
+  text-overflow: ellipsis;
+ */
+  white-space: nowrap;
+}
+
 #crispr-table tr:hover { 
     background-color: #dce7f5; 
- } 
+ }
+ 
+#crispr-table .col1{
+   width: 150px;
+}
+#crispr-table .col2 {
+    width: 65px;
+}
 /* code to add un-sortable numbers to left side */
 table.sortable tbody {
     counter-reset: sortabletablescope;
@@ -24,17 +50,15 @@ table.sortable tbody {
 table.sortable thead tr::before {
     content: "";
     display: table-cell;
+    width: 35px;
 }
 table.sortable tbody tr::before {
     content: counter(sortabletablescope);
     counter-increment: sortabletablescope;
     display: table-cell;
 }
-#alert{
-   padding: 15px;
-   background: gold;
-   
-}
+
+
 </style>
 <% var cfg = JSON.parse(config) %> 
 <% var genomelist = JSON.parse(gid_list) %>
@@ -51,9 +75,8 @@ table.sortable tbody tr::before {
               
        <p class='title h3'>CRISPR-Cas systems detected in <%= full_count %> HOMD genomes</p>
        
-       <div id='crispr-table-div'>
-       <center><div id='alert'>This data is for HOMD genomes version 10.1 and will be updated to version 11.0 soon.
-       </div></center>
+       
+       
        <span class=''>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Show:
             <% if(show === "a"){ %>
@@ -83,9 +106,18 @@ table.sortable tbody tr::before {
             <% } %>
             &nbsp;&nbsp;&nbsp;&nbsp;<b>[Showing: <%= genomelist.length %>]</b>
        </span>
-       <table id='crispr-table' class='table sortable'>
+       
+       
+       <div id='crispr-table-div'>
+       <table id='crispr-table' class='table table-hover table-condensed sortable'>
        <thead>
-       <tr><th>SEQ-ID</th><th>TaxID</th><th>Organism</th><th>Contigs</th><th>Combined Length</th><th nowrap>CRISPR-Cas</th></tr>
+       <tr><th class='center col1'>Genome-ID</th>
+            <th class='center col1'>Taxon-ID</th>
+            <th>Species</th>
+            <th>Strain</th>
+            <th class='center col1'>Contigs</th>
+            <th class='center'>Length (bp)</th>
+            <th class='left' nowrap>CRISPR-Cas Count</th></tr>
        </thead>
        <tbody>
        <% for(i in genomelist){ %>
@@ -93,24 +125,24 @@ table.sortable tbody tr::before {
        <% taxidfullname = 'HMT-'+("000" + g.otid).slice(-3); %>
        
        <tr>
-       <td><a href='genome_description?gid=<%= g.gid %>'><%= g.gid %></a></td>
-       <td nowrap><a href='/taxa/tax_description?otid=<%= g.otid %>'><%= taxidfullname %></a></td>
-       <td><%= g.organism %></td>
-       
-       <td class='right-justify'><%= g.ncontigs %></td>
-       <td class='center'><%= g.tlength %></td>
+       <td class='center'><a href='genome_description?gid=<%= g.gid %>'><%= g.gid %></a></td>
+       <td class='center' nowrap><a href='/taxa/tax_description?otid=<%= g.otid %>'><%= taxidfullname %></a></td>
+       <td><i><%= g.organism %></i></td>
+       <td><%= g.strain %></td>
+       <td class='center'><%= g.contigs %></td>
+       <td class='center'><%= g.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); %></td>
        
        
        <% if(cdata[g.gid] === "A"){ %>
-             <td class='center left-justify' title='Ambiguous'>
-              <%= cdata[g.gid] %>
-             [<a href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
+             <td class='center' title='Ambiguous'>
+              Ambiguous
+             [<a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= g.gid %>/" target='_blank'>ftp</a>]
            </td>
        <% }else{ %>
-           <td class='center left-justify'>
+           <td class='center'>
               <%= cdata[g.gid] %>
              [<a href='crispr_cas_data?gid=<%= g.gid %>'>view</a>]
-             [<a href="<%= cfg.HOMD_URL_BASE %>/ftp/genomes/CRISPR_Cas/CCTyper/<%= g.gid %>" target='_blank'>ftp</a>]
+             [<a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= g.gid %>/" target='_blank'>ftp</a>]
            </td>
        
        <% } %>
@@ -140,5 +172,4 @@ table.sortable tbody tr::before {
 <script>
   mainmenu()
 </script>
-
 
