@@ -72,8 +72,8 @@ if(CFG.ENV === 'production'){
     const restart_logger = new console.Console(output)
     restart_logger.log('Restart on '+helpers.timestamp(false))
     
-    // turn off all console.logging
-    console.log = function() {}
+    // turn off all console.logging for Production
+    //console.log = function() {}
 }
 
 
