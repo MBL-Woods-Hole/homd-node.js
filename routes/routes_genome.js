@@ -2164,9 +2164,61 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
        })
     })
 })
+router.get('/crispr_alt', function crispr_alt(req, res) {
+    // grab HMT,species,strain,contigs,length for each gid
+    let q = "SELECT genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
+    q += " FROM crispr_cas"
+    let genome_lookup = {}
+    let gid,organism,operon_pos,crisprs,prediction_crisprs,distances
+    TDBConn.query(q, (err, rows) => {
+       if (err) {
+          console.log("Crispr-cas V10 Genomes-GET",err)
+          return
+       }
+       for(let p in rows){
+           //console.log('row',rows[p])
+           //send_list.push(rows[p])
+           gid = rows[p].genome_id
+           //console.log('C.genome_lookup[gid]',C.genome_lookup[gid])
+           organism = C.genome_lookup[gid].organism+' '+C.genome_lookup[gid].strain
+           operon_pos = JSON.parse(rows[p].operon_pos)
+           //console.log(rows[p].crisprs)
+           
+            crisprs = JSON.parse(rows[p].crisprs.replace(/'/g, '"'))
+            
+           prediction_crisprs = JSON.parse(rows[p].prediction_crisprs.replace(/'/g, '"'))
+           distances = JSON.parse(rows[p].distances)
+           let obj = {contig:rows[p].contig,operon:rows[p].operon,operon_pos:operon_pos,prediction:rows[p].prediction,crisprs:crisprs,distances:distances,prediction_cas:rows[p].prediction_cas,prediction_crisprs:prediction_crisprs}
+           //console.log('op_position',op_position)
+           //console.log('op_position2',JSON.parse(op_position))
+           if(gid in genome_lookup){
+                genome_lookup[gid].crispr.push(obj)
+           }else{
+                genome_lookup[gid] = {crispr:[],organism:organism,otid:C.genome_lookup[gid].otid,contigs:C.genome_lookup[gid].contigs,length:C.genome_lookup[gid].combined_size}
+                
+                genome_lookup[gid].crispr.push(obj)
+           }
+       }
+       
+       console.log(genome_lookup['GCA_027474905.1'].crispr)
+       res.render('pages/genome/crispr_cas2', {
+        title: 'HOMD :: CRISPR-Cas', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify(C.version_information),
+        pgtitle: 'CRISPR-Cas',
+        crispr_data: JSON.stringify(genome_lookup),
+        
+        
+      })
+    })
+    
+})
+//
+//
 router.get('/crispr', function crispr(req, res) {
     // page-1
-    //console.log('in crispr')
+    console.log('in crispr')
     //console.log('req.query',req.query)
     let show =''
     if(req.query.show){
