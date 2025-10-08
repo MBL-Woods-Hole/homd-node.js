@@ -830,7 +830,7 @@ router.get('/tax_description', async function tax_description(req, res) {
     args.image_array = image_array
     args.data1 = lookup_data
     // add pangenomes
-   console.log('refseq',refseq)
+   //console.log('refseq',refseq)
     args.data1.pangenomes = pangenomes
     helpers.print(pangenomes)
     helpers.print(['lookup_data', args.data1])
