@@ -1,0 +1,176 @@
+<style>
+thead th { position: sticky; top: 0; }
+#crispr-table-div{
+   padding:20px;
+   height:600px;
+   overflow:auto;
+}
+
+#crispr-table {
+  padding:5px;
+ 
+  table-layout:fixed;
+  width:100%;
+}
+#crispr-table th{
+  color:white;
+  background: var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+  z-index: 1;
+  
+}
+#crispr-table td{
+  padding:3px 5px;
+  font-size:14px;
+  font-weight:bold;
+  color: #303030;
+  /* 
+overflow: hidden;
+  text-overflow: ellipsis;
+ */
+  white-space: nowrap;
+}
+
+#crispr-table tr:hover { 
+    background-color: #dce7f5; 
+ }
+ 
+#crispr-table .col1{
+   width: 150px;
+}
+#crispr-table .col2 {
+    width: 65px;
+}
+/* code to add un-sortable numbers to left side */
+table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+table.sortable thead tr::before {
+    content: "";
+    display: table-cell;
+    width: 35px;
+}
+table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+}
+
+
+</style>
+<% var cfg = JSON.parse(config) %> 
+<% var genomelist = JSON.parse(gid_list) %>
+<% var cdata = JSON.parse(crispr_data) %>
+<%- include('../../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <p class='title h3'>CRISPR-Cas systems detected in <%= full_count %> HOMD genomes</p>
+       
+       
+       
+       <span class=''>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Show:
+            <% if(show === "a"){ %>
+            <input id='all_cb' type='radio' name='show' value='all' onclick="show_hide_cc('all')">
+            All&nbsp;&nbsp;
+            <input  id='nambi_rb' type='radio' name='show' value='na' onclick="show_hide_cc('na')">
+            Non-Ambiguous only&nbsp;&nbsp;
+            <input checked id='ambi_rb' type='radio' name='show' value='a' onclick="show_hide_cc('a')">
+            Ambiguous only
+            
+            <% }else if(show === "na"){ %>
+            <input id='all_cb' type='radio' name='show' value='all' onclick="show_hide_cc('all')">
+            All&nbsp;&nbsp;
+            <input checked id='nambi_rb' type='radio' name='show' value='na' onclick="show_hide_cc('na')">
+            Non-Ambiguous only&nbsp;&nbsp;
+            <input  id='ambi_rb' type='radio' name='show' value='a' onclick="show_hide_cc('a')">
+            Ambiguous only
+            
+            <% }else{ %>
+            <input checked id='all_cb' type='radio' name='show' value='all' onclick="show_hide_cc('all')">
+            All&nbsp;&nbsp;
+            <input  id='nambi_rb' type='radio' name='show' value='na' onclick="show_hide_cc('na')">
+            Non-Ambiguous only&nbsp;&nbsp;
+            <input  id='ambi_rb' type='radio' name='show' value='a' onclick="show_hide_cc('a')">
+            Ambiguous only
+            
+            <% } %>
+            &nbsp;&nbsp;&nbsp;&nbsp;<b>[Showing: <%= genomelist.length %>]</b>
+       </span>
+       
+       
+       <div id='crispr-table-div'>
+       <table id='crispr-table' class='table table-hover table-condensed sortable'>
+       <thead>
+       <tr><th class='center col1'>Genome-ID</th>
+            <th class='center col1'>Taxon-ID</th>
+            <th>Species</th>
+            <th>Strain</th>
+            <th class='center col1'>Contigs</th>
+            <th class='center'>Length (bp)</th>
+            <th class='left' nowrap>CRISPR-Cas Count</th></tr>
+       </thead>
+       <tbody>
+       <% for(i in genomelist){ %>
+       <% g = genomelist[i] %>
+       <% taxidfullname = 'HMT-'+("000" + g.otid).slice(-3); %>
+       
+       <tr>
+       <td class='center'><a href='genome_description?gid=<%= g.gid %>'><%= g.gid %></a></td>
+       <td class='center' nowrap><a href='/taxa/tax_description?otid=<%= g.otid %>'><%= taxidfullname %></a></td>
+       <td><i><%= g.organism %></i></td>
+       <td><%= g.strain %></td>
+       <td class='center'><%= g.contigs %></td>
+       <td class='center'><%= g.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); %></td>
+       
+       
+       <% if(cdata[g.gid] === "A"){ %>
+             <td class='center' title='Ambiguous'>
+              Ambiguous
+             [<a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= g.gid %>/" target='_blank'>ftp</a>]
+           </td>
+       <% }else{ %>
+           <td class='center'>
+              <%= cdata[g.gid] %>
+             [<a href='crispr_cas_data?gid=<%= g.gid %>'>view</a>]
+             [<a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= g.gid %>/" target='_blank'>ftp</a>]
+           </td>
+       
+       <% } %>
+       </tr>
+       <% } %>
+       </tbody>
+       </table>
+       
+       </div>
+    
+  
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script type="text/javascript" src="/js/genomes.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script>
+  mainmenu()
+</script>
+
+
