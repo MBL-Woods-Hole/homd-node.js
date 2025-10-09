@@ -219,11 +219,13 @@ const promises = [
   helpers.readFromFile(path.join('public','data', C.image_location_taxfn),'json'),  // match image w/ otid or tax rank
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn),'json'),
   
-  //2024-Sept
+  //2024-Sept  // #10,11,12
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.site_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv')
-   //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv'),
+  
+  //Oct 2025  // #13
+   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.crispr_lookup_fn),'json'),
   
     // ETC ...
 ];
@@ -263,6 +265,7 @@ Promise.all(promises)
     C.no_ncbi_annotation    = results[11];
     C.no_ncbi_blast_dbs     = results[12];
     //C.phage_lookup              = results[12];
+    C.crispr_lookup     = results[13];
     
     /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)

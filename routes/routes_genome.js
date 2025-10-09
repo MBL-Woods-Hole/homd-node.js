@@ -2166,67 +2166,64 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
 })
 router.get('/crispr', function crispr_alt(req, res) {
     // grab HMT,species,strain,contigs,length for each gid
-    let q = "SELECT genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
-    q += " FROM crispr_cas"
+    //let q = "SELECT genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
+    //q += " FROM crispr_cas"
     let genome_lookup = {}
     let show =''
     if(req.query.show){
         show = req.query.show  // a, na or all
     }
-    let gid,organism,strain,operon_pos,crisprs,prediction_crisprs,distances
+    let gid,organism,strain,otid,contigs,length
+    let contig,operon,operon_pos,crisprs,prediction,prediction_crisprs,distances,prediction_cas,prediction_cripsrs
     let sort_list=[]
-    TDBConn.query(q, (err, rows) => {
-       if (err) {
-          console.log("Crispr-cas V10 Genomes-GET",err)
-          return
-       }
-       for(let p in rows){
-           //console.log('row',rows[p])
-           //send_list.push(rows[p])
-           gid = rows[p].genome_id
-           //console.log('C.genome_lookup[gid]',C.genome_lookup[gid])
-           organism = C.genome_lookup[gid].organism
-           strain = C.genome_lookup[gid].strain
-           operon_pos = JSON.parse(rows[p].operon_pos)
-           //let op_pos1 = operon_pos[0] //.substring(1,pos[0].length)
-           //let op_pos2 = operon_pos[1]  //.substring(0,pos[1].length-1)
-           //console.log('operon_pos',operon_pos)
-           
-            crisprs = JSON.parse(rows[p].crisprs.replace(/'/g, '"'))
+   
+    for(let gid in C.crispr_lookup){
+        organism = C.genome_lookup[gid].organism
+        strain = C.genome_lookup[gid].strain
+        otid = C.genome_lookup[gid].otid
+        contigs = C.genome_lookup[gid].contigs
+        length = C.genome_lookup[gid].combined_size
             
-           prediction_crisprs = JSON.parse(rows[p].prediction_crisprs.replace(/'/g, '"'))
-           distances = JSON.parse(rows[p].distances)
-           let obj = {contig:rows[p].contig,operon:rows[p].operon,operon_pos:operon_pos,prediction:rows[p].prediction,crisprs:crisprs,distances:distances,prediction_cas:rows[p].prediction_cas,prediction_crisprs:prediction_crisprs}
-           //console.log('op_position',op_position)
-           //console.log('op_position2',JSON.parse(op_position))
-           if(gid in genome_lookup){
-                genome_lookup[gid].crispr.push(obj)
-           }else{
-                genome_lookup[gid] = {crispr:[],organism:organism,strain:strain,otid:C.genome_lookup[gid].otid,contigs:C.genome_lookup[gid].contigs,length:C.genome_lookup[gid].combined_size}
+        for(let n in C.crispr_lookup[gid]){
+                contig = C.crispr_lookup[gid][n].contig
+                operon = C.crispr_lookup[gid][n].operon
+                operon_pos = C.crispr_lookup[gid][n].operon_pos
+                prediction = C.crispr_lookup[gid][n].prediction
+                crisprs = C.crispr_lookup[gid][n].crisprs
+                prediction_cas = C.crispr_lookup[gid][n].prediction_cas
+                prediction_crisprs = C.crispr_lookup[gid][n].prediction_crisprs
+                distances = C.crispr_lookup[gid][n].distances
                 
-                genome_lookup[gid].crispr.push(obj)
-                
-           }
-           sort_list.push({gid:gid, org:organism})
-       }
-       let full_count = Object.keys(genome_lookup).length
-       //console.log(genome_lookup['GCA_027474905.1'].crispr)
+                let obj = {contig:contig,operon:operon,operon_pos:operon_pos,prediction:prediction,crisprs:crisprs,distances:distances,prediction_cas:prediction_cas,prediction_crisprs:prediction_crisprs}
+                //console.log('op_position',op_position)
+                //console.log('op_position2',JSON.parse(op_position))
+                if(gid in genome_lookup){
+                    genome_lookup[gid].crispr.push(obj)
+                }else{
+                    genome_lookup[gid] = {crispr:[],organism:organism,strain:strain,otid:C.genome_lookup[gid].otid,contigs:C.genome_lookup[gid].contigs,length:C.genome_lookup[gid].combined_size}
+                    genome_lookup[gid].crispr.push(obj)
+                }
+        }
+        sort_list.push({gid:gid, org:organism})
+    }
+    let full_count = Object.keys(genome_lookup).length
+       console.log(genome_lookup['GCA_027474905.1'].crispr)
        
-        sort_list.sort((a, b) => {
-            return helpers.compareStrings_alpha(a.org, b.org);
-        })
-        res.render('pages/genome/crispr_cas', {
-            title: 'HOMD :: CRISPR-Cas', 
-            pgname: '', // for AboutThisPage
-            config: JSON.stringify(CFG),
-            ver_info: JSON.stringify(C.version_information),
-            pgtitle: 'CRISPR-Cas',
-            crispr_data: JSON.stringify(genome_lookup),
-            full_count: full_count,
-            show: show,
-            gid_list: JSON.stringify(sort_list),
-        })
+    sort_list.sort((a, b) => {
+        return helpers.compareStrings_alpha(a.org, b.org);
     })
+    res.render('pages/genome/crispr_cas', {
+        title: 'HOMD :: CRISPR-Cas', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(CFG),
+        ver_info: JSON.stringify(C.version_information),
+        pgtitle: 'CRISPR-Cas',
+        crispr_data: JSON.stringify(genome_lookup),
+        full_count: full_count,
+        show: show,
+        gid_list: JSON.stringify(sort_list),
+    })
+    
     
 })
 //
