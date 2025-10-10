@@ -2207,7 +2207,7 @@ router.get('/crispr', function crispr_alt(req, res) {
         sort_list.push({gid:gid, org:organism})
     }
     let full_count = Object.keys(genome_lookup).length
-       console.log(genome_lookup['GCA_027474905.1'].crispr)
+    //console.log(genome_lookup['GCA_027474905.1'].crispr)
        
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);

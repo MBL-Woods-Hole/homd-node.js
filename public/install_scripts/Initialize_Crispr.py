@@ -46,7 +46,7 @@ def run(args):
     for row in result:
         gid = row['genome_id']
         tmp = {
-            "contig": row['genome_id'],  #"GCA_026427495.1|CP084440.1",
+            "contig": row['contig'],  #"GCA_026427495.1|CP084440.1",
             "operon": row['operon'],  #"GCA_026427495.1|CP084440.1@22",
             "operon_pos": json.loads(row['operon_pos']),  #"[808466, 818400]",
             "prediction": row['prediction'],  #"III-A",
