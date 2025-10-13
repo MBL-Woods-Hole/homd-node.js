@@ -1551,7 +1551,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
           }
           console.log('File content:', data);
           if(CFG.ENV === "localhost"){
-             data = '<H1>LOCALHOST</H1>'+data
+             data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
           //console.log('data',data); 
          res.render('pages/genome/conserved_protein_tree', {
@@ -1622,7 +1622,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
           }
           console.log('File content:', data);
           if(CFG.ENV === "localhost"){
-             data = '<H1>LOCALHOST</H1>'+data
+             data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
           res.render('pages/genome/ribosomal_protein_tree', {
            title: 'HOMD :: Ribosomal Protein Tree',
@@ -1688,7 +1688,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
           }
           console.log('File content:', data);
           if(CFG.ENV === "localhost"){
-             data = '<H1>LOCALHOST</H1>'+data
+             data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
         res.render('pages/genome/rRNA_gene_tree', {
            title: 'HOMD :: rRNA Gene Tree',
