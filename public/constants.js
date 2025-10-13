@@ -335,20 +335,21 @@ constants.genome_level_all = {
 
 
 // tax filenames (fn)
-constants.genome_lookup_fn    = 'homdData-GenomeLookup.json'
-constants.info_lookup_fn      = 'homdData-TaxonInfoLookup.json'
+constants.genome_lookup_fn      = 'homdData-GenomeLookup.json'
+constants.info_lookup_fn        = 'homdData-TaxonInfoLookup.json'
 constants.references_lookup_fn  = 'homdData-TaxonReferencesLookup.json'
 constants.taxcounts_fn          = 'homdData-TaxonCounts.json'
-constants.taxon_lookup_fn     = 'homdData-TaxonLookup.json'
-constants.lineage_lookup_fn   = 'homdData-TaxonLineagelookup.json' // supplied to create dict
-constants.tax_hierarchy_fn    = 'homdData-TaxonHierarchy.json'
-constants.refseq_lookup_fn    = 'homdData-TaxonRefSeqLookup.json'
+constants.taxon_lookup_fn       = 'homdData-TaxonLookup.json'
+constants.lineage_lookup_fn     = 'homdData-TaxonLineagelookup.json' // supplied to create dict
+constants.tax_hierarchy_fn      = 'homdData-TaxonHierarchy.json'
+constants.refseq_lookup_fn      = 'homdData-TaxonRefSeqLookup.json'
 constants.phage_list_fn         = 'homdData-PhageList.json'
 constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
 constants.annotation_lookup_fn  = 'homdData-AnnotationLookup.json'
 constants.contig_lookup_fn      = 'homdData-ContigsLookup.json'
-constants.site_lookup_fn      = 'homdData-TaxonSiteLookup.json'
+constants.site_lookup_fn        = 'homdData-TaxonSiteLookup.json'
 constants.crispr_lookup_fn      = 'homdData-CrisprLookup.json'
+constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
 //constants.image_location_fn     = 'ImageLocation.js'
 
 constants.image_location_locfn     = 'ImageLocation_loc.js'

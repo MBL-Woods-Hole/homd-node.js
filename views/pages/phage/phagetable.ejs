@@ -83,6 +83,7 @@ thead th { position: sticky; top: 0; }
 .dd-menu:hover .dropbtn {background-color: #3e8e41;}
 </style>
 <% var datarows = JSON.parse(data) %>
+<% var genomelist = JSON.parse(gid_list) %>
 <link rel="stylesheet" type="text/css" href="/css/phage_pages.css" >
 <%- include('../../partials/header_html'); %>
 
@@ -122,46 +123,48 @@ thead th { position: sticky; top: 0; }
            <th class='w-sm'>geNomad<br>Counts</th>
            <th class='w-sm'>geNomad Coverage bps</th>
            <th class='w-sm'>geNomad Coverage Percent</th>
-           <th class='w-sm sorttable_nosort'>Predictions Table</th>
+           <th class='w-sm' class=''>Predictions Table</th>
            
            <th class='w-vsm sorttable_nosort'>FTP</th>
           </tr>
          </thead>
          <tbody>
-         <% for (n in datarows){ %>
-             <% taxidfullname = "HMT-"+("000" + datarows[n].otid).slice(-3); %>
+         <% for (n in genomelist){ %>
+             <% gid = genomelist[n].gid %>
+             
+             <% taxidfullname = "HMT-"+("000" + datarows[gid].otid).slice(-3); %>
              <tr>
-             <td class='w-med'><a href='/genome/genome_description?gid=<%= datarows[n].gid %>'><%= datarows[n].gid %></a></td>
+             <td class='w-med'><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
              
-             <td class='w-sm'><a href='/taxa/tax_description?gid=<%= datarows[n].gid %>&otid=<%= datarows[n].otid %>'><%= taxidfullname %></a></td>
-             <td class='w-vsm'><%= datarows[n].site %></td>
-             <td class='w-exp' title='<%= datarows[n].genus %> <%= datarows[n].species %>'><%= datarows[n].genus %> <%= datarows[n].species %></td>
-             <td class='w-exp' title='<%= datarows[n].strain %>'><%= datarows[n].strain %></td>
-             <td class='w-vsm'><%= datarows[n].contigs %></td>
-             <td class='w-sm'><%= datarows[n].size %></td>
-             <td class='w-sm'><%= datarows[n].cenote %></td>
+             <td class='w-sm'><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= datarows[gid].otid %>'><%= taxidfullname %></a></td>
+             <td class='w-vsm'><%= datarows[gid].site %></td>
+             <td class='w-exp' title='<%= datarows[gid].organism %>'><i><%= datarows[gid].organism %></i></td>
+             <td class='w-exp' title='<%= datarows[gid].strain %>'><%= datarows[gid].strain %></td>
+             <td class='w-vsm'><%= datarows[gid].contigs %></td>
+             <td class='w-sm'><%= datarows[gid].length %></td>
+             <td class='w-sm'><%= datarows[gid].cenote_count %></td>
              
-             <% if(datarows[n].cenote == 0) { %>
+             <% if(datarows[gid].cenote_count == 0) { %>
                 <td class='w-sm'>0</td>
                 <td class='w-sm'>0</td>
              <% }else{ %>
-                <td class='w-sm'><%= datarows[n].cenote_coverage_bps %></td>
-                <td class='w-sm'><%= datarows[n].cpct %>%</td>
+                <td class='w-sm'><%= datarows[gid].cenote_coverage_bps %></td>
+                <td class='w-sm'><%= datarows[gid].cenote_coverage_pct %>%</td>
              <% } %>
              
-             <td class='w-sm'><%= datarows[n].genomad %></td>
-             <% if(datarows[n].genomad == 0) { %>
+             <td class='w-sm'><%= datarows[gid].genomad_count %></td>
+             <% if(datarows[gid].genomad_count == 0) { %>
                 <td class='w-sm'>0</td>
                 <td class='w-sm'>0</td>
              <% }else{ %>
-                <td class='w-sm'><%= datarows[n].genomad_coverage_bps %></td>
-                <td class='w-sm'><%= datarows[n].gpct %>%</td>
+                <td class='w-sm'><%= datarows[gid].genomad_coverage_bps %></td>
+                <td class='w-sm'><%= datarows[gid].genomad_coverage_pct %>%</td>
              <% } %>
              
-             
-             <td class='w-sm'><a href='/phage/phage?gid=<%= datarows[n].gid %>'>hits</a></td>
-             
-            <td class='w-vsm'><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phages/V1.1/genomes_individual/<%= datarows[n].gid %>/' target='_blank'>link
+             <% c = parseInt(datarows[gid].cenote_count) + parseInt(datarows[gid].genomad_count) %>
+             <td class='w-sm' sorttable_customkey="<%= c %>"><a href='/phage/phage?gid=<%= gid %>'><%= c %> hits</a>
+             <a href='#' onclick='get_axax(<%= gid %>)'>AJAX</a></td>
+            <td class='w-vsm'><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phages/V1.1/genomes_individual/<%= gid %>/' target='_blank'>link
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
             </svg>
@@ -196,6 +199,22 @@ thead th { position: sticky; top: 0; }
 <script>
   mainmenu()
   var jb_path = '<%- cfg.JBROWSE_URL %>'
+  
+  function get_ajax(gid){
+      let args = {}
+      args.gid = gid
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("POST", "/phage/phage_ajax", true);
+      xmlhttp.setRequestHeader("Content-type","application/json");
+      xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var resp = xmlhttp.responseText;
+            console.log(resp)
+            //window.open(url)
+          }
+      }
+      xmlhttp.send();
+  }
 </script>
 
 

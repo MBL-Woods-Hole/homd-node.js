@@ -225,8 +225,8 @@ const promises = [
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv'),
   
   //Oct 2025  // #13
-   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.crispr_lookup_fn),'json'),
-  
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.crispr_lookup_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
     // ETC ...
 ];
 Promise.all(promises)
@@ -255,17 +255,18 @@ Promise.all(promises)
     //console.log('parsing6')
     //C.taxon_info_lookup         = results[5];  // lookup by otid TaxonInfoLookup
     //console.log('parsing7')
-    C.taxon_counts_lookup       = results[5];   // lookup by lineage TaxonCounts
-    C.annotation_lookup         = results[6];  // AnnotationLookup
+    C.taxon_counts_lookup   = results[5];   // lookup by lineage TaxonCounts
+    C.annotation_lookup     = results[6];  // AnnotationLookup
     
-    C.images_loc              = results[7];   // image name and text
-    C.images_tax              = results[8];   // match image w/ otid or tax rank
-    C.contig_lookup           = results[9];
+    C.images_loc            = results[7];   // image name and text
+    C.images_tax            = results[8];   // match image w/ otid or tax rank
+    C.contig_lookup         = results[9];
     C.site_lookup           = results[10];
     C.no_ncbi_annotation    = results[11];
     C.no_ncbi_blast_dbs     = results[12];
-    //C.phage_lookup              = results[12];
-    C.crispr_lookup     = results[13];
+    
+    C.crispr_lookup         = results[13];
+    C.phage_lookup          = results[14];
     
     /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)

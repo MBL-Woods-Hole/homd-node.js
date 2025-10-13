@@ -85,7 +85,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
   // here from taxdescription page  public/trees/
   
   //let filepath = CFG.FTP_TREE_URL +'/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg'
-  let filepath = CFG.HOMD_URL_BASE+CFG.REFSEQ_TREE_PATH//"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
+  let filepath = CFG.HOMD_URL_BASE+'/ftp/'+CFG.REFSEQ_TREE_PATH//"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
   
   //let myurl = url.parse(req.url, true);
   let otid = req.query.otid
