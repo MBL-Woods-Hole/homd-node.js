@@ -85,25 +85,27 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
   // here from taxdescription page  public/trees/
   
   //let filepath = CFG.FTP_TREE_URL +'/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg'
-  let filepath = CFG.HOMD_URL_BASE+CFG.REFSEQ_TREE_PATH//"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
-  
+  let filepath
+  if(CFG.ENV === "localhost"){
+      filepath = '/Users/avoorhis/programming/homd-node.js/public/trees/eHOMD_16S_rRNA_RefSeq.svg'
+  }else{
+      filepath = CFG.FILEPATH_TO_FTP + CFG.REFSEQ_TREE_PATH
+  }
   //let myurl = url.parse(req.url, true);
   let otid = req.query.otid
   //console.log('otid',otid)
   let fullname = helpers.make_otid_display_name(otid)
   //console.log(fullname)
-  
-  https.get(filepath, (response) => { 
-     let data = ''; 
- 
-     response.on('data', (chunk) => { 
-        data += chunk; 
-     }); 
- 
-     response.on('end', () => { 
-        
-        //console.log('data',data); 
-         res.render('pages/refseq/refseq_tree', {
+  fs.readFile(filepath, 'utf8', (err, data) => {
+          if (err) {
+            console.error('Error reading file:', err);
+            return;
+          }
+          console.log('File content:', data);
+          if(CFG.ENV === "localhost"){
+             data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
+          }
+        res.render('pages/refseq/refseq_tree', {
             title: 'HOMD :: Conserved Protein Tree',
             pgname: 'refseq/tree', // for AbountThisPage, 
             config: JSON.stringify(CFG),
@@ -113,10 +115,32 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
             //path: 'public/trees/'+fname,
             otid: fullname,
           })
-     }); 
-  }).on('error', (error) => { 
-    console.error(`Error fetching data: ${error.message}`); 
-  }); 
+    })
+  
+  // https.get(filepath, (response) => { 
+//      let data = ''; 
+//  
+//      response.on('data', (chunk) => { 
+//         data += chunk; 
+//      }); 
+//  
+//      response.on('end', () => { 
+//         
+//         //console.log('data',data); 
+//          res.render('pages/refseq/refseq_tree', {
+//             title: 'HOMD :: Conserved Protein Tree',
+//             pgname: 'refseq/tree', // for AbountThisPage, 
+//             config: JSON.stringify(CFG),
+//             ver_info: JSON.stringify(C.version_information),
+//             
+//             svg_data: JSON.stringify(data),
+//             //path: 'public/trees/'+fname,
+//             otid: fullname,
+//           })
+//      }); 
+//   }).on('error', (error) => { 
+//     console.error(`Error fetching data: ${error.message}`); 
+//   }); 
   
 //   fs.readFile(filepath,'utf8', (err, data) => {
 //     
