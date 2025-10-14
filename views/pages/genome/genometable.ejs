@@ -59,7 +59,15 @@ thead th { position: sticky; top: 0; }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dd-menu:hover .dropbtn {background-color: #3e8e41;}
-
+#loader {
+    background: url('/images/loading.gif') no-repeat center center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
+}
 </style>
 <link rel="stylesheet" type="text/css" href="/css/genome_pages.css" >
 <link rel="stylesheet" type="text/css" href="/css/genome_pages2.css" >
@@ -268,6 +276,7 @@ thead th { position: sticky; top: 0; }
 
 //console.log('gid',gid)
 document.onreadystatechange = function() {
+        // just three els to loader: this(js);css;html
         if (document.readyState !== "complete") {
             document.querySelector(
                 '#genome-box').style.visibility = "hidden";

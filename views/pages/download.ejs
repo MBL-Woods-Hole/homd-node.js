@@ -28,6 +28,7 @@ a{
   background:lightgrey;
   padding:5px 10px;
   text-align:left;
+  font-weight:bold;
 }
 .download-table{
   width:auto;
@@ -84,23 +85,24 @@ a{
     font-size:x-small;
 }
 #download-refseq-table td:nth-child(3){
-   
    text-align: center;
 }
 #downloadMenu{
-width:180px;
-    height:auto;
-    background:tan;
-    color:#FFF;
-    padding:5px 2px;
-    text-align:center;
-    border:1px solid grey;
-    top:180px;
-    position:fixed;
-    float:right;
+    width: 180px;
+    height: auto;
+    background: lightblue;
+    color: black;
+    padding: 5px 2px;
+    text-align: center;
+    border: 1px solid grey;
+    top: 180px;
+    position: fixed;
+    /* float: right; */
 }
 #downloadMenu li{
     padding:5px 2px;
+    text-decoration:underline;
+    
 }
 </style>
 <a name='topx' id='topx'></a>
@@ -119,14 +121,15 @@ width:180px;
      <div  id="downloadMenu" >
       <div class="list-group">
         <li><a href='/download/download/all'>[top]</a></li>
-        <li><a href='#'     onclick="shift_page_view('taxon')">Taxonomy Data</a></li>
-        <li><a href='#'     onclick="shift_page_view('abundance')">Abundance Data</a></li>
-        <li><a href='#'     onclick="shift_page_view('genome')">Genomic Data</a></li>
-        <li><a href='#'     onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
-        <li><a href='#'     onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
-       <!--  <li><a href='#' onclick="shift_page_view('phage')">Phage data</a></li> -->
-        <li><a href='#'     onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
-        <li><a href='#'     onclick="shift_page_view('schema')">Database Schema</a></li>
+        <li><a href='#' onclick="shift_page_view('taxon')">Taxonomy Data</a></li>
+        <li><a href='#' onclick="shift_page_view('abundance')">Abundance Data</a></li>
+        <li><a href='#' onclick="shift_page_view('genome')">Genomic Data</a></li>
+        <li><a href='#' onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
+        <li><a href='#' onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
+        <li><a href='#' onclick="shift_page_view('phage')">Phage Data</a></li>
+        <li><a href='#' onclick="shift_page_view('crispr')">Crispr-Cas Data</a></li>
+        <li><a href='#' onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
+        <li><a href='#' onclick="shift_page_view('schema')">Database Schema</a></li>
       </div>
      </div>
 </div>           
@@ -177,7 +180,7 @@ width:180px;
 <div id='abundance' class='dnld-block'>
   <center>
   <div class='subtitle'>
-    Abundance Data::Batch Downloads <a href='/taxa/ecology_home'>[Abundance Page]</a>
+    Abundance Data::Batch Downloads <small>[<a href='/taxa/ecology_home'>Visit Abundance Page</a>]</small>
   </div>
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th><th></th></tr>
@@ -301,26 +304,43 @@ width:180px;
   </center>
 </div>
 
-<!-- 
 
 <hr>
 <a name='phage'></a>
+
 <div id='phage' class='dnld-block'>
   <center>
-  <div class='subtitle'>Phage Data::Batch Downloads</div>
+  <div class='subtitle'>Phage Data::Batch Downloads <small>[<a href='/phage/phage_table'>Visit Phage Table</a>]</small></div>
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
     <tr>
-      <td>Phage Table <a href='/phage/phage_table'>[page]</a></td>
-      <td><a href='/phage/dld_table/browser/all/family/0/0'>Tab Delimited Text<br>(View in browser)</a></td>
-      <td><a href='/phage/dld_table/text/all/family/0/0'>Tab Delimited Text<br>(Save to file)</a></td>
-      <td><a href='/phage/dld_table/excel/all/family/0/0'>MS Excel Format<br>(Save to file)</a></td></tr>
+      <td>Phage Table</td>
+      <td><a href='/download/dld_phage_table/browser'>Tab Delimited Text<br>(View in browser)</a></td>
+      <td><a href='/download/dld_phage_table/text'>Tab Delimited Text<br>(Save to file)</a></td>
+      <td><a href='/download/dld_phage_table/excel'>MS Excel Format<br>(Save to file)</a></td></tr>
     
   </table>
   </center>
 </div>
 
- -->
+<hr>
+<a name='crispr'></a>
+
+<div id='crispr' class='dnld-block'>
+  <center>
+  <div class='subtitle'>Crispr-Cas Data::Batch Downloads <small>[<a href='/genome/crispr'>Visit Crispr-Cas Table</a>]</small></div>
+  <table class='download-table'>
+    <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+    <tr>
+      <td>Crispr Table</td>
+      <td><a href='/download/dld_crispr_table/browser'>Tab Delimited Text<br>(View in browser)</a></td>
+      <td><a href='/download/dld_crispr_table/text'>Tab Delimited Text<br>(Save to file)</a></td>
+      <td><a href='/download/dld_crispr_table/excel'>MS Excel Format<br>(Save to file)</a></td></tr>
+    
+  </table>
+  </center>
+</div>
+
 
 <hr>
 <a name='refseq'></a>

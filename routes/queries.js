@@ -242,16 +242,27 @@ module.exports.get_contig = (gid, mid) => {   // always NCBI for taxon descripti
   //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
   return qSelectContigs
 }
+module.exports.get_all_phage_for_download = () => {
+    let q = "SELECT genome_id,site,cenote_taker3 as cenote_count,cenote_coverage_bps,cenote_coverage_pct,"
+    q += "genomad as genomad_count,genomad_coverage_bps,genomad_coverage_pct,"
+    q += "phage_id,type,contig,start,end,jbrowse_link"
+    q += " FROM phage_stats"
+    q += " JOIN phage_data using (genome_id)"
+    
+    console.log(q)
+    return q
+}
 module.exports.get_phage = (gid) => {   // always NCBI for taxon description
   let qSelectPhage = "SELECT phage_id,type,contig,start,end,jbrowse_link FROM phage_data where genome_id='"+gid+"'"
   return qSelectPhage
 }
 module.exports.get_phage_from_ids = (search_id_list) => {   // always NCBI for taxon description
-  let q = "SELECT search_id,genome_id,contig,predictor,start,end,bakta_core_product,"
-    q += "IFNULL(bakta_core_note,'') as bcnote,"
-    q += "bakta_EC,"
-    q += "IFNULL(bakta_GO,'') as bakta_GO,"
-    q += "bakta_COG,"
+  let q = "SELECT search_id,genome_id,contig,predictor,start,end,"
+ //  bakta_core_product,"
+//     q += "IFNULL(bakta_core_note,'') as bcnote,"
+//     q += "bakta_EC,"
+//     q += "IFNULL(bakta_GO,'') as bakta_GO,"
+//     q += "bakta_COG,"
     q += "cenote_evidence_accession,"
     q += "IFNULL(cenote_evidence_description,'') as cenote_desc,"
     q += "genomad_annotation_accessions,"
@@ -262,11 +273,12 @@ module.exports.get_phage_from_ids = (search_id_list) => {   // always NCBI for t
   return q
 }
 module.exports.get_phage_from_ids_noseqs = (search_id_list) => {   // always NCBI for taxon description
-  let q = "SELECT search_id,genome_id,contig,predictor,start,end,bakta_core_product,"
-    q += "IFNULL(bakta_core_note,'') as bcnote,"
-    q += "bakta_EC,"
-    q += "IFNULL(bakta_GO,'') as bakta_GO,"
-    q += "bakta_COG,"
+  let q = "SELECT search_id,genome_id,contig,predictor,start,end,"
+  // bakta_core_product,"
+//     q += "IFNULL(bakta_core_note,'') as bcnote,"
+//     q += "bakta_EC,"
+//     q += "IFNULL(bakta_GO,'') as bakta_GO,"
+//     q += "bakta_COG,"
     q += "cenote_evidence_accession,"
     q += "IFNULL(cenote_evidence_description,'') as cenote_desc,"
     q += "genomad_annotation_accessions,"

@@ -110,6 +110,15 @@
 .hovercol9{
    width:60px;
 }
+#loader {
+    background: url('/images/loading.gif') no-repeat center center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
+}
 </style>
 <% var cfg = JSON.parse(config) %> 
 <% var genomelist = JSON.parse(gid_list) %>
@@ -117,6 +126,7 @@
 <%- include('../../partials/header_html'); %>
 
 <body>
+    <div id="loader" class="center-loader" style='z-index:1'></div>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
@@ -254,6 +264,21 @@
 <script>
   mainmenu()
   var jb_path = '<%- cfg.JBROWSE_URL %>'
+  
+  document.onreadystatechange = function() {
+        // just three els to loader: this(js);css;html
+        if (document.readyState !== "complete") {
+            document.querySelector(
+                '#phage-box').style.visibility = "hidden";
+            document.querySelector(
+                "#loader").style.visibility = "visible";
+        } else {
+            document.querySelector(
+                "#loader").style.display = "none";
+            document.querySelector(
+                '#phage-box').style.visibility = "visible";
+        }
+  };
 </script>
 
 

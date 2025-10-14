@@ -14,7 +14,7 @@ router.get('/phage', function phage(req, res) {
     let gid = req.query.gid
     
     const q = queries.get_phage(gid)
-    console.log('phage q',q)
+    //console.log('phage q',q)
     TDBConn.query(q, (err, rows) => {
         if(err){
            console.log(err)
@@ -68,7 +68,7 @@ router.get('/phage_table', function phage_explorer(req, res) {
         sort_list.push({gid:gid, org:organism})
     }
     let full_count = Object.keys(genome_lookup).length
-    console.log(genome_lookup['GCA_000009645.1'])
+    //console.log(genome_lookup['GCA_000009645.1'])
        
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);
@@ -85,7 +85,54 @@ router.get('/phage_table', function phage_explorer(req, res) {
     })
   
 })
+//
+router.post('/phage_ajax', function phage_ajax(req, res){
+    console.log('in POST phage_ajax')
+    let gid = req.body.gid
+    let q = 'SELECT phage_id,type,contig,start,end,jbrowse_link FROM phage_data'
+    q += " WHERE genome_id='"+gid+"'"
+    let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
+    let org = C.genome_lookup[gid].organism
+    let strain = C.genome_lookup[gid].strain
+    let html_rows = "<div id='phage-sub-table-div'>"+gid+'; '+hmt+'; '+org+' ('+strain+')'
+    html_rows += "<a href='#' onclick=close_sub_table() style='float:right;'>Close</a>"
+    html_rows += "<table id='phage-sub-table' class='table table-condensed'>"
+    html_rows += "<tr><th>Prediction<br>Tool</th><th class=''>Phage-ID</th><th>Contig</th><th>Start</th><th>End</th><th>Genome<br>Viewer</th></tr>"
+    //console.log(q)
+    TDBConn.query(q, (err, rows) => {
+        for(let i in rows){
+            //console.log(rows[i])
+            
+                //send_rows.push(rows[i])
+                html_rows += "<tr><td nowrap>"+rows[i].type+"</td>"
+                html_rows += "<td nowrap class=''>"+rows[i].phage_id+"</td>"
+                html_rows += "<td nowrap class=''>"+rows[i].contig+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].start+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].end+"</td>"
+                html_rows += "<td><a href='"+rows[i].jbrowse_link+"'>open"
+                html_rows += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
+                html_rows += '  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
+                html_rows += "</svg>"
+                html_rows += "</a>"
+                
+                html_rows += "</td>"
+                html_rows += "</tr>"
+                //counter += 1
+        }
+            
+        
+        
+        html_rows += "</table>"
+        res.send(html_rows)
+        //console.log(send_rows,send_rows.length)
+        
 
+    
+    })
+    
+})
+    
+    
 
         
 module.exports = router;

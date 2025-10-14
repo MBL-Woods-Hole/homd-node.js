@@ -45,7 +45,7 @@ router.get('/refseq_table', function refseq_table(req, res) {
         
       })
 })
-
+//
 router.get('/blast_server', function refseq_blast_server(req, res) {
     res.render('pages/blast/blast_server', {
         title: 'HOMD :: Blast Server',
@@ -56,6 +56,7 @@ router.get('/blast_server', function refseq_blast_server(req, res) {
         blast_type: 'refseq'
       })
 })
+//
 router.get('/refseq_blastn', function refseq_blastn(req, res) {
     console.log('MADEIT TO blastn-get')
     //helpers.accesslog(req, res)
@@ -119,56 +120,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
           })
     })
   
-  // https.get(filepath, (response) => { 
-//      let data = ''; 
-//  
-//      response.on('data', (chunk) => { 
-//         data += chunk; 
-//      }); 
-//  
-//      response.on('end', () => { 
-//         
-//         //console.log('data',data); 
-//          res.render('pages/refseq/refseq_tree', {
-//             title: 'HOMD :: Conserved Protein Tree',
-//             pgname: 'refseq/tree', // for AbountThisPage, 
-//             config: JSON.stringify(CFG),
-//             ver_info: JSON.stringify(C.version_information),
-//             
-//             svg_data: JSON.stringify(data),
-//             //path: 'public/trees/'+fname,
-//             otid: fullname,
-//           })
-//      }); 
-//   }).on('error', (error) => { 
-//     console.error(`Error fetching data: ${error.message}`); 
-//   }); 
-  
-//   fs.readFile(filepath,'utf8', (err, data) => {
-//     
-//       if(err){
-//          console.log(err)
-//       }
-//       
-//           res.render('pages/refseq/refseq_tree', {
-//             title: 'HOMD :: Conserved Protein Tree',
-//             pgname: 'refseq/tree', // for AbountThisPage, 
-//             config: JSON.stringify(CFG),
-//             ver_info: JSON.stringify(C.version_information),
-//             
-//             svg_data: JSON.stringify(data),
-//             path: 'public/trees/'+fname,
-//             otid: fullname,
-//           })
-//     })
-  
-  // res.render('pages/refseq/refseq_tree', {
-//    title: 'HOMD :: Phylo Tree', 
-//    config: JSON.stringify(CFG),
-//    hostname: CFG.HOSTNAME,
-//    ver_info: JSON.stringify(C.version_information),
-//    otid:otid
-//  })
+
 })
 //
 router.get('/download', function download(req, res) {

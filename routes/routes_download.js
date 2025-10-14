@@ -350,7 +350,7 @@ router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all 
             tableTsv = create_full_genome_table_gtdb(mysqlrows, fileFilterText)
         }else{
             fileFilterText = 'HOMD.org Genome Data:: All Genome Data' + ' Date: ' + dt.today
-            tableTsv = create_full_genome_table(mysqlrows, fileFilterText)
+            tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
         }
         if (type === 'browser') {
           res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
@@ -386,55 +386,7 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   }
   //console.log('YYYfilter',filter)
   let sendList = helpers_genomes.apply_gtable_filter(req, filter)
- //  if(req.session.hasOwnProperty('gtable_filter')){
-//      console.log('req.session.gtable_filter',req.session.gtable_filter)
-//      letter = req.session.gtable_filter.letter
-//      phylum = req.session.gtable_filter.phylum
-//      otid = req.session.gtable_filter.otid
-//      searchText = req.session.gtable_filter.text.txt_srch
-//      searchField = req.session.gtable_filter.text.field
-//   }
-//   //helpers.print(['type', type,'letter', letter,'phylum', phylum,'otid', otid])
-//   // Apply filters
-//   const tempList = Object.values(C.genome_lookup)
-//   let sendList = []
-//   let fileFilterText = ''
-//   if (letter && letter.match(/[A-Z]{1}/)) { // always caps
-//     //console.log('in letter dnld')
-//     helpers.print(['MATCH Letter: ', letter])
-//     sendList = tempList.filter(item => item.organism.charAt(0) === letter)
-//     //helpers.print(sendList)
-//     fileFilterText = "HOMD.org Genome Data::Letter Filter Applied (genus with first letter of '" + letter + "')"
-//   } else if (otid !== '') {
-//     //console.log('in otid dnld')
-//     const gidList = C.taxon_lookup[otid].genomes
-//     // console.log('sil',seqid_list)
-//     for (let n in gidList) {
-//       sendList.push(C.genome_lookup[gidList[n]])
-//     }
-//     fileFilterText = 'HOMD.org Genome Data::Oral TaxonID: HMT-' + ('000' + otid).slice(-3)
-//   } else if (phylum !== '') {
-//     //console.log('in phylum dnld')
-//     const lineageList = Object.values(C.taxon_lineage_lookup)
-//     const objList = lineageList.filter(item => item.phylum === phylum) // filter for phylum
-//     
-//     const otidList = objList.map((el) => { // get list of otids with this phylum
-//       return el.otid
-//     })
-//     //helpers.print(['otid_list', otidList])
-//     sendList = tempList.filter(item => { // filter genome obj list for inclusion in otid list
-//       return otidList.indexOf(item.otid) !== -1
-//     })
-//     //helpers.print(['cksend_list', sendList])
-//     fileFilterText = 'HOMD.org Genome Data::Phylum: ' + phylum
-//   } else if (searchText !== '') {
-//     const bigGeneList = Object.values(C.genome_lookup)
-//     sendList = helpers.get_filtered_genome_list(bigGeneList, searchText, searchField)
-//     fileFilterText = 'HOMD.org Genome Data::Search Text: ' + searchText
-//   } else {
-//     // whole list as last resort
-//     //console.log('in all dnld')
-//     sendList = tempList
+
      let fileFilterText = 'HOMD.org Genome Data:: Filtered Genome Data'
 //   }
   const listOfGids = sendList.map(item => item.gid)
@@ -701,8 +653,97 @@ router.post('/phage_search_data',(req, res) => {
     })
 
 });
+router.get('/dld_phage_table/:type', function dld_phage_table (req, res) {
+    let dt = helpers.get_today_obj()
+    const type = req.params.type
+    
+    
+    let fileFilterText,tableTsv
+    //const sendList = Object.values(C.genome_lookup)
+    //const listOfGids = sendList.map(item => item.gid)
+    
+    
+    const q = queries.get_all_phage_for_download()
+
+    TDBConn.query(q, (err, mysqlrows) => {
+        if(err){
+           console.log(err)
+           return
+        }
+        //console.log(mysqlrows)
+        //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
+        
+        fileFilterText = 'HOMD.org Phage Data:: All HOMD Data;' + ' Date: ' + dt.today
+        tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
+        
+        if (type === 'browser') {
+          res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        } else if (type === 'text') {
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_phage_table' + dt.today + '_' + dt.seconds + '.txt"' })
+        } else if (type === 'excel') {
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_phage_table' + dt.today + '_' + dt.seconds + '.xls"' })
+        } else {
+          // error
+          console.log('Download table format ERROR')
+        }
+        res.send(tableTsv)
+        res.end()
+    })
+})
+router.get('/dld_crispr_table/:type', function dld_crispr_table (req, res) {
+    let dt = helpers.get_today_obj()
+    const type = req.params.type
+        
+    let fileFilterText,tableTsv
+    
+    
+    // get all crispr data from C.crispr_lookup
+    
+    console.log('hello')
+        //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
+        
+    fileFilterText = 'HOMD.org Crispr-Cas Data:: All HOMD Data;' + ' Date: ' + dt.today
+    tableTsv = create_full_crispr_table(C.crispr_lookup, fileFilterText)
+        
+    if (type === 'browser') {
+      res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+    } else if (type === 'text') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.txt"' })
+    } else if (type === 'excel') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.xls"' })
+    } else {
+      // error
+      console.log('Download table format ERROR')
+    }
+    res.send(tableTsv)
+    res.end()
+    
+})
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function create_full_crispr_table(lookup_obj,header_txt) {
+    let text = header_txt+'\n'
+    let header_array = ['Genome-ID','Contig','Operon','Operon Pos','Prediction','Crisprs','Distances','Predicion_cas','Prediction_crisprs']
+    text += header_array.join('\t')+'\n'
+    //console.log(lookup_obj)
+    for(let gid in lookup_obj){
+       
+       
+       for(let n in lookup_obj[gid]){
+           text += gid+'\t'+lookup_obj[gid][n].contig
+           text += '\t'+lookup_obj[gid][n].operon
+           text += '\t'+lookup_obj[gid][n].operon_pos
+           text += '\t'+lookup_obj[gid][n].prediction
+           text += '\t'+lookup_obj[gid][n].crisprs
+           text += '\t'+lookup_obj[gid][n].distances
+           text += '\t'+lookup_obj[gid][n].prediction_cas
+           text += '\t'+lookup_obj[gid][n].prediction_crisprs
+           
+           text += '\n'
+       }
+    }
+    return text
+}
 function create_phage_table(sql_rows,header_array,search_term) {
     let text ='::Search String: "'+search_term+'"\n'
     text += header_array.join('\t') + '\n'
@@ -978,7 +1019,7 @@ function create_taxon_table(otids, source, type, head_txt) {
     return txt
 }        
 //
-function create_full_genome_table (sqlrows, startText) {
+function create_table_from_sql_query (sqlrows, startText) {
     let txt = startText + '\n'
     let tmp,data,i,n,hmt
     const headersRow = Object.keys(sqlrows[0])

@@ -31,56 +31,33 @@ thead th { position: sticky; top: 0; }
     min-width:150px;
     text-align:left;
 }
-/* Tools Menu  */
-.dropbtn {
-  background-color: #04AA6D;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  z-index: -1;
+#phage-sub-table-div{
+    height:500px;
+    overflow:auto;
 }
 
-/* The container <div> - needed to position the dropdown content */
-.dd-menu {
-  position: relative;
-  display: inline-block;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
+#sub-table{
+   display: none;
   position: absolute;
   background:lightblue;
-  width:165px;  /* This sets the box width to allow cursor contact */
+  width:1200px;  /* This sets the box width to allow cursor contact */
   padding:8px;
   margin:0px;
   border:1px solid black;
-  left:-160px;
-  top:-50px;
-  z-index: 1;
+  right:350px;
+  /* left:-160px; */
+  top:350px;
 }
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  font-size:13px;
-  margin:5px 0;
-  display: block;
+#loader {
+    background: url('/images/loading.gif') no-repeat center center;
+    position: absolute;
+    border:1px solid black;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
 }
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-    background-color: white;
-    border:1px solid tomato;
-    color:black;
-    
-}
-
-/* Show the dropdown menu on hover */
-.dd-menu:hover .dropdown-content {display: block;}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dd-menu:hover .dropbtn {background-color: #3e8e41;}
 </style>
 <% var datarows = JSON.parse(data) %>
 <% var genomelist = JSON.parse(gid_list) %>
@@ -91,7 +68,7 @@ thead th { position: sticky; top: 0; }
 
 
 <body>
-  <div id="loader" class="center-loader"></div>
+  <div id="loader" class="center-loader" style='z-index:1'></div>
   <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
@@ -162,8 +139,9 @@ thead th { position: sticky; top: 0; }
              <% } %>
              
              <% c = parseInt(datarows[gid].cenote_count) + parseInt(datarows[gid].genomad_count) %>
-             <td class='w-sm' sorttable_customkey="<%= c %>"><a href='/phage/phage?gid=<%= gid %>'><%= c %> hits</a>
-             <a href='#' onclick='get_axax(<%= gid %>)'>AJAX</a></td>
+             <td class='w-sm' sorttable_customkey="<%= c %>">
+               <a href='#' onclick="get_ajax('<%= gid %>')"><%= c %> hits</a>
+             </td>
             <td class='w-vsm'><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phages/V1.1/genomes_individual/<%= gid %>/' target='_blank'>link
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
@@ -179,7 +157,7 @@ thead th { position: sticky; top: 0; }
          </table>
          
 </div>  <!-- end: phage-box -->
-      
+      <div id='sub-table'>XXXX</div>
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
@@ -209,12 +187,34 @@ thead th { position: sticky; top: 0; }
       xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var resp = xmlhttp.responseText;
-            console.log(resp)
+            //console.log(resp)
             //window.open(url)
+            disp = document.getElementById('sub-table')
+            disp.innerHTML = resp
+            disp.style.display = 'block'
+            
           }
       }
-      xmlhttp.send();
+      xmlhttp.send(JSON.stringify(args));
   }
+  function close_sub_table(){
+        disp = document.getElementById('sub-table')
+        disp.style.display = 'none'
+  }
+  document.onreadystatechange = function() {
+        // just three els to loader: this(js);css;html
+        if (document.readyState !== "complete") {
+            document.querySelector(
+                '#phage-box').style.visibility = "hidden";
+            document.querySelector(
+                "#loader").style.visibility = "visible";
+        } else {
+            document.querySelector(
+                "#loader").style.display = "none";
+            document.querySelector(
+                '#phage-box').style.visibility = "visible";
+        }
+  };
 </script>
 
 
