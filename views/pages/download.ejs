@@ -264,24 +264,24 @@ a{
         <td></td>
     </tr>
     <tr><td>Phylogenetic tree of HOMD 16S rRNA Reference Sequences</td>
-        <td><a href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg">svg</a></td>
-        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.tre'>newick</a></td>
-        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/refseq/current/seqid_info.txt'>Sequence ID table</a></td>
+        <td><a href="<%= cfg.HOMD_URL_BASE %>/ftp/<%= cfg.REFSEQ_TREE_PATH %>">svg</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/<%= cfg.REFSEQ_NEWICK_TREE_PATH %>'>newick</a></td>
+        
     </tr>
     <tr><td>Phylogenetic tree of 16S rRNA gene sequences identified in HOMD genomes</td>
-        <td><a href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.svg">svg</a></td>
-        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/eHOMD_16S_rRNA_Tree.tre'>newick</a></td>
-        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/SEQID_info_16S.txt'>Sequence ID table</a></td>
+        <td><a href="<%= cfg.HOMD_URL_BASE %>/ftp/<%= cfg.GENE_TREE_PATH %>">svg</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/<%= cfg.GENE_NEWICK_TREE_PATH %>'>newick</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/gca_info.txt'>Sequence ID table</a></td>
     </tr>
     <tr><td>Phylogenomic tree based on conserved proteins identified from HOMD genomes</td>
-        <td><a href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.svg">svg</a></td>
-        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/eHOMD_Genomic_PhyloPhlAn_Tree.tre'>newick</a></td>
-        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table</a></td>
+        <td><a href="<%= cfg.HOMD_URL_BASE %>/ftp/<%= cfg.CP_TREE_PATH %>">svg</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/<%= cfg.CP_NEWICK_TREE_PATH %>'>newick</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/gca_info.txt'>Sequence ID table</a></td>
     </tr>
     <tr><td>Phylogenetic tree of ribosomal proteins identified from HOMD genomes</td>
-        <td><a href="<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg">svg</a></td>
-        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.tre'>newick</a></td>
-        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/SEQID_info.txt'>Sequence ID table</a></td>
+        <td><a href="<%= cfg.HOMD_URL_BASE %>/ftp/<%= cfg.RP_TREE_PATH %>">svg</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/<%= cfg.RP_NEWICK_TREE_PATH %>'>newick</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>/ftp/phylogenetic_trees/genome/current/gca_info.txt'>Sequence ID table</a></td>
     </tr>
   </table>
   </center>
@@ -542,8 +542,35 @@ a{
   mainmenu()
   let query = '<%= section %>'
   if(query !== 'all'){
+    
     shift_page_view(query)
   }
+  function shift_page_view(item){
+    //all_groups = ['top','taxon','abundance','genome','phylo','phage','refseq','schema']
+    all_groups = ['topx','taxon','abundance','genome','phylo','peptide','phage','crispr','refseq','schema']
+    for(g in all_groups){
+      if(all_groups[g] != 'topx'){
+        group = document.getElementById(all_groups[g]).getElementsByClassName("subtitle")[0]
+        if(all_groups[g] == item){
+          group.style.background = 'orange';
+          document.getElementById(all_groups[g]).style.background = 'LemonChiffon'
+        }else{
+          group.style.background = 'lightgrey';
+          document.getElementById(all_groups[g]).style.background = 'white'
+        }
+      }else{
+          //groupx = document.getElementById('topx')
+          //groupx.style.background = 'lightgrey';
+          //document.getElementById(all_groups[g]).style.background = 'white'
+      }
+    }
+    
+    const targetRow = document.getElementById(item);
+      targetRow.scrollIntoView({ 
+        behavior: 'smooth', // Optional: for smooth scrolling animation
+        block: 'center'    // Optional: aligns the row to the center of the viewport
+      });
+}
 </script>
 
 
