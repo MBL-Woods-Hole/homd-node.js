@@ -152,6 +152,7 @@
             <th class='center col1'>Contigs</th>
             <th class='center'>Length (bp)</th>
             <th class='left' nowrap>CRISPR-Cas Count</th>
+            <th class='center col1 sorttable_nosort'>FTP</th>
         </tr>
        </thead>
        <tbody>
@@ -194,8 +195,6 @@
                     <th class='hovercol9'>Distances</th>
                     <th class='hovercol6'>Prediction<br>Cas</th>
                     <th class='hovercol9'>Prediction<br>CRISPRs</th>
-                    <th class='hovercol9'>FTP<br>Link</th>
-                    
                     <th class='hovercol9'>Genome<br>Viewer</th>
              
                     </tr>
@@ -212,11 +211,7 @@
                     <td class='center' title='<%= cdata[gid].crispr[i].distances %>'><%= cdata[gid].crispr[i].distances %></td>
                     <td class='center' title='<%= cdata[gid].crispr[i].prediction_cas %>'><%= cdata[gid].crispr[i].prediction_cas %></td>
                     <td class='center' title='<%= cdata[gid].crispr[i].prediction_crisprs %>'><%= cdata[gid].crispr[i].prediction_crisprs %></td>
-                    <td class='center'><a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= gid %>/" target='_blank'>ftp
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
-                      </svg>
-                    </a></td>
+                    
                     <% if(cdata[gid].crispr[i].prediction_cas == "Ambiguous"){ %>
                       <td></td>
                     <% }else{ %>
@@ -235,6 +230,13 @@
            </div>
            </span>
            </td>
+           <td class='center'>
+             <a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= gid %>/" target='_blank'>ftp
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+              </svg>
+            </a>
+          </td>
        </tr>
            
        <% } %>
