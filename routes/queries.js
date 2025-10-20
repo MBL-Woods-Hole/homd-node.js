@@ -181,7 +181,7 @@ function genome_query() {
         qSelectGenome +=` \`${tbl}\`.MAG,\`${tbl}\`.GC,\`${tbl}\`.url,\`${tbl}\`.GTDB_taxonomy,  bioproject,taxid,biosample,`
         qSelectGenome +=` assembly_name,assembly_level,assembly_method, submission_date,geo_loc_name,isolation_source,`
         qSelectGenome +=` seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,`
-        qSelectGenome +=` checkM2_contamination,refseq_assembly,WGS, \`${ptbl}\`.contigs as prokka_contigs,`
+        qSelectGenome +=` checkM2_contamination,refseq_assembly,WGS,`
         qSelectGenome +=` \`${ptbl}\`.CDS as prokka_CDS,\`${ptbl}\`.gene as prokka_gene,\`${ptbl}\`.mRNA as prokka_mRNA,`
         qSelectGenome +=` \`${ptbl}\`.misc_RNA as prokka_misc_RNA,\`genomes_prokkaV11.0\`.rRNA as prokka_rRNA,`
         qSelectGenome +=` \`${ptbl}\`.tRNA as prokka_tRNA,\`${ptbl}\`.tmRNA as prokka_tmRNA,`

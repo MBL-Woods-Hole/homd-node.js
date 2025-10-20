@@ -1116,6 +1116,7 @@ router.get('/explorer', function explorer_get (req, res) {
   if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
     annoInfoObj = C.annotation_lookup[gid][anno]
     annoInfoObj.bases = C.genome_lookup[gid].combined_size
+    annoInfoObj.contigs = C.genome_lookup[gid].contigs
   } else {
     
 

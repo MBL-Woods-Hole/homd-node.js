@@ -91,6 +91,10 @@
 }
 .col3{
     width:120px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 280px;
 }
 .col2{
     width:80px;
@@ -150,9 +154,10 @@
             <th class='col3'>Species</th>
             <th class='col3'>Strain</th>
             <th class='center col1'>Contigs</th>
-            <th class='center'>Length (bp)</th>
-            <th class='left' nowrap>CRISPR-Cas Count</th>
-            <th class='center col1 sorttable_nosort'>FTP</th>
+            <th class='center'>Length<br>(bp)</th>
+            <th class='center'>CRISPR-Cas<br>Count</th>
+            <th class='center col1 sorttable_nosort'>FTP<br>Directory</th>
+            
         </tr>
        </thead>
        <tbody>
@@ -163,8 +168,8 @@
        <tr>
             <td class='center'><a href='genome_description?gid=<%= gid %>'><%= gid %></a></td>
             <td class='center' nowrap><a href='/taxa/tax_description?otid=<%= cdata[gid].otid %>'><%= taxidfullname %></a></td>
-            <td class='col3'><i><%= cdata[gid].organism %></i></td>
-            <td class='col3'><%= cdata[gid].strain %></td>
+            <td class='col3' title='<%= cdata[gid].organism %>'><i><%= cdata[gid].organism %></i></td>
+            <td class='col3' title='<%= cdata[gid].strain %>'><%= cdata[gid].strain %></td>
             <td class='center'><%= cdata[gid].contigs %></td>
             <td class='center'><%= cdata[gid].length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); %></td>
             
@@ -196,9 +201,11 @@
                     <th class='hovercol6'>Prediction<br>Cas</th>
                     <th class='hovercol9'>Prediction<br>CRISPRs</th>
                     <th class='hovercol9'>Genome<br>Viewer</th>
+                    
              
                     </tr>
-                    <% for(let i = 0; i < cdata[gid].crispr.length; i++){ %>
+                    
+                <% for(let i = 0; i < cdata[gid].crispr.length; i++){ %>
                     <tr>
                     <% contig = cdata[gid].crispr[i].contig %>
                     <% p1 = cdata[gid].crispr[i].operon_pos[0] %>
@@ -207,7 +214,7 @@
                     <td class='center' title='<%= cdata[gid].crispr[i].operon %>'><%= cdata[gid].crispr[i].operon %></td>
                     <td class='center' title='<%= cdata[gid].crispr[i].operon_pos %>'><%= cdata[gid].crispr[i].operon_pos %></td>
                     <td class='center' title='<%= cdata[gid].crispr[i].prediction %>'><%= cdata[gid].crispr[i].prediction %></td>
-                    <td title='<%= cdata[gid].crispr[i].crisprs %>'><%= cdata[gid].crispr[i].crisprs %></td>
+                    <td title='<%= cdata[gid].crispr[i].crisprs %>'>XX <%= cdata[gid].crispr[i].crisprs %></td>
                     <td class='center' title='<%= cdata[gid].crispr[i].distances %>'><%= cdata[gid].crispr[i].distances %></td>
                     <td class='center' title='<%= cdata[gid].crispr[i].prediction_cas %>'><%= cdata[gid].crispr[i].prediction_cas %></td>
                     <td class='center' title='<%= cdata[gid].crispr[i].prediction_crisprs %>'><%= cdata[gid].crispr[i].prediction_crisprs %></td>
@@ -223,8 +230,10 @@
                         </svg>
                       </a> </td>
                     <% } %>
+                    
                     </tr>
-                    <% } %>
+                <% } %>
+                    
                     </table>
              
            </div>
@@ -271,16 +280,18 @@
         // just three els to loader: this(js);css;html
         if (document.readyState !== "complete") {
             document.querySelector(
-                '#phage-box').style.visibility = "hidden";
+                '#crispr-table-div').style.visibility = "hidden";
             document.querySelector(
                 "#loader").style.visibility = "visible";
         } else {
             document.querySelector(
                 "#loader").style.display = "none";
             document.querySelector(
-                '#phage-box').style.visibility = "visible";
+                '#crispr-table-div').style.visibility = "visible";
         }
   };
+  
+    
 </script>
 
 
