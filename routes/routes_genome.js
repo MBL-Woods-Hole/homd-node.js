@@ -952,6 +952,7 @@ router.post('/explorer', function explorer_post (req, res) {
     }
     let annoInfoObj = C.annotation_lookup[gid][anno]
     annoInfoObj.bases = C.genome_lookup[gid].combined_size
+    annoInfoObj.contigs = C.genome_lookup[gid].contigs
     const glist = Object.values(C.genome_lookup)
     //console.log(glist)
     glist.sort((a, b) =>{

@@ -47,7 +47,6 @@ def make_anno_object():
 
     new_obj={}
     new_obj['organism'] = ''
-    new_obj['contigs'] = ''
     new_obj['bases'] = ''
     new_obj['CDS'] = ''
     new_obj['rRNA'] = ''
@@ -100,9 +99,9 @@ def run(args):
     
     #q_prokka_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `PROKKA_meta`.`prokka_info` WHERE genome_id='%s'"
     #q_ncbi_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `NCBI_meta`.`ncbi_info` WHERE genome_id='%s'"
-    q_prokka_base = "SELECT organism,contigs, gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_prokkaV11.0` WHERE genome_id='%s'"
-    q_ncbi_base   = "SELECT organism,contigs, gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_ncbiV11.0`   WHERE genome_id='%s'"
-    fields = ['organism','contigs','gene','CDS','rRNA','tRNA','tmRNA','mRNA']
+    q_prokka_base = "SELECT organism,gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_prokkaV11.0` WHERE genome_id='%s'"
+    q_ncbi_base   = "SELECT organism,gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_ncbiV11.0`   WHERE genome_id='%s'"
+    fields = ['organism','gene','CDS','rRNA','tRNA','tmRNA','mRNA']
     
     for gid in args.seqids_from_db:
         #print(gid)
@@ -121,13 +120,12 @@ def run(args):
         if myconn.cursor.rowcount > 0:
             
             master_lookup[gid][anno]['organism'] = row[0][0]
-            master_lookup[gid][anno]['contigs']  = row[0][1]
-            master_lookup[gid][anno]['gene']    = row[0][2]
-            master_lookup[gid][anno]['CDS']      = row[0][3]
-            master_lookup[gid][anno]['rRNA']     = row[0][4]
-            master_lookup[gid][anno]['tRNA']     = row[0][5]
-            master_lookup[gid][anno]['tmRNA']    = row[0][6]
-            master_lookup[gid][anno]['mRNA']    = row[0][7]
+            master_lookup[gid][anno]['gene']     = row[0][1]
+            master_lookup[gid][anno]['CDS']      = row[0][2]
+            master_lookup[gid][anno]['rRNA']     = row[0][3]
+            master_lookup[gid][anno]['tRNA']     = row[0][4]
+            master_lookup[gid][anno]['tmRNA']    = row[0][5]
+            master_lookup[gid][anno]['mRNA']     = row[0][6]
     
    
         anno = 'ncbi'
@@ -139,13 +137,12 @@ def run(args):
         if myconn.cursor.rowcount > 0:
             
             master_lookup[gid][anno]['organism'] = row[0][0]
-            master_lookup[gid][anno]['contigs']  = row[0][1]
-            master_lookup[gid][anno]['gene']    = row[0][2]
-            master_lookup[gid][anno]['CDS']      = row[0][3]
-            master_lookup[gid][anno]['rRNA']     = row[0][4]
-            master_lookup[gid][anno]['tRNA']     = row[0][5]
-            master_lookup[gid][anno]['tmRNA']    = row[0][6]
-            master_lookup[gid][anno]['mRNA']    = row[0][7]
+            master_lookup[gid][anno]['gene']     = row[0][1]
+            master_lookup[gid][anno]['CDS']      = row[0][2]
+            master_lookup[gid][anno]['rRNA']     = row[0][3]
+            master_lookup[gid][anno]['tRNA']     = row[0][4]
+            master_lookup[gid][anno]['tmRNA']    = row[0][5]
+            master_lookup[gid][anno]['mRNA']     = row[0][6]
 
     file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
     print_dict(file, master_lookup)
