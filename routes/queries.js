@@ -218,7 +218,7 @@ module.exports.get_all_genomes = () => {  // for downld all
 
     return q
 }
-module.exports.get_genome = (gid) => {   // always NCBI for taxon description
+module.exports.get_genome = (gid) => {   // always NCBI for genome description
     let q = genome_query()
     q +=" WHERE genome_id = '"+gid+"'"
   
