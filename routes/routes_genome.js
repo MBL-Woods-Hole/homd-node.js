@@ -954,7 +954,7 @@ router.post('/explorer', function explorer_post (req, res) {
     annoInfoObj.bases = C.genome_lookup[gid].combined_size
     annoInfoObj.contigs = C.genome_lookup[gid].contigs
     const glist = Object.values(C.genome_lookup)
-    //console.log(glist)
+    //console.log('C.genome_lookup[gid]',C.genome_lookup[gid])
     glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.organism, b.organism)
     })
@@ -1110,6 +1110,7 @@ router.get('/explorer', function explorer_get (req, res) {
   if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
     annoInfoObj = C.annotation_lookup[gid][anno]
     annoInfoObj.bases = C.genome_lookup[gid].combined_size
+    annoInfoObj.contigs = C.genome_lookup[gid].contigs
   } else {
     
 
