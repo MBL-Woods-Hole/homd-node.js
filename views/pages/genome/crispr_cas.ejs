@@ -1,5 +1,8 @@
 <style>
-/* thead th { position: sticky; top: 0; } */
+thead th { position: sticky; top: 0; }
+.table-condensed{
+  font-size: 13px;
+}
 #crispr-box{
    height:700px;
     overflow:auto;
@@ -9,39 +12,33 @@
   
 }
 
+#crispr-table{
+
+  border: 1px solid black;
+  /* table-layout: fixed; */
+  
+
+}
+#crispr-table th{
+   border-right:1px solid ivory;
+}
 
 
-
-.col1{
-    width:220px;
+.w-med{
+    width:140px;
+    text-align:center;
 }
-.col1a{
-    width:220px;
+.w-vsm{
+    width:60px;
+    text-align:center;
 }
-.col3{
-    width:120px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    max-width: 280px;
+.w-sm{
+    width:90px;
+    text-align:center;
 }
-.col2{
-    width:80px;
-}
-.col9{
-    width:40px;
-}
-.hovercol1{
-   width:250px;
-}
-.hovercol5{
-   width:100px;
-}
-.hovercol6{
-   width:80px;
-}
-.hovercol9{
-   width:60px;
+.w-exp{
+    min-width:150px;
+    text-align:left;
 }
 #crispr-sub-table-div{
     height:500px;
@@ -50,8 +47,8 @@
 }
 
 #sub-table-div{
-   display: none;
-  position: absolute;
+  display: none;
+  position: fixed;
   background:lightgreen;
   width:1200px;  /* This sets the box width to allow cursor contact */
   padding:8px;
@@ -89,12 +86,8 @@
        <p class='title h3'>CRISPR-Cas systems detected in <%= full_count %> HOMD genomes</p>
        
        
-       
-       
-       
-       
        <div id='crispr-box'>
-       <table id='crispr-table' class='table table-hover table-condensed sortable'>
+       <table id='crispr-table' class='table table-condensed sortable'>
        <thead>
         <tr>
             <th class='center col1'>Genome-ID</th>
@@ -114,18 +107,17 @@
        <% taxidfullname = 'HMT-'+("000" + cdata[gid].otid).slice(-3); %>
        
        <tr>
-            <td class='center'><a href='genome_description?gid=<%= gid %>'><%= gid %></a></td>
-            <td class='center' nowrap><a href='/taxa/tax_description?otid=<%= cdata[gid].otid %>'><%= taxidfullname %></a></td>
-            <td class='col3' title='<%= cdata[gid].organism %>'><i><%= cdata[gid].organism %></i></td>
-            <td class='col3' title='<%= cdata[gid].strain %>'><%= cdata[gid].strain %></td>
-            <td class='center'><%= cdata[gid].contigs %></td>
-            <td class='center'><%= cdata[gid].length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); %></td>
+            <td class='w-med'><a href='genome_description?gid=<%= gid %>'><%= gid %></a></td>
+            <td class='w-sm' nowrap><a href='/taxa/tax_description?otid=<%= cdata[gid].otid %>'><%= taxidfullname %></a></td>
+            <td class='w-exp' title='<%= cdata[gid].organism %>'><i><%= cdata[gid].organism %></i></td>
+            <td class='w-exp' title='<%= cdata[gid].strain %>'><%= cdata[gid].strain %></td>
+            <td class='w-vsm'><%= cdata[gid].contigs %></td>
+            <td class='w-sm'><%= cdata[gid].length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); %></td>
             
             <td class='w-sm' sorttable_customkey="<%= cdata[gid].hit_count %>">
                <a href='#' onclick="get_ajax('<%= gid %>')"><%= cdata[gid].hit_count %> rows</a>
              </td>
              
-
             
            <td class='center'>
              <a href="<%= cfg.HOMD_URL_BASE %><%= cfg.CRISPR_PATH %><%= gid %>/" target='_blank'>ftp
@@ -144,7 +136,7 @@
     
 
 
- <div id='sub-table-div'>XXXX</div>
+    <div id='sub-table-div'>XXXX</div>
     </div> <!-- end: page-content -->
     
     <div id='footer'>
@@ -191,14 +183,15 @@
         // just three els to loader: this(js);css;html
         if (document.readyState !== "complete") {
             document.querySelector(
-                '#crispr-box').style.visibility = "hidden";
+                '#crispr-box').style.display = "none";
             document.querySelector(
                 "#loader").style.visibility = "visible";
         } else {
             document.querySelector(
-                "#loader").style.display = "none";
+                '#crispr-box').style.display = "flex";
             document.querySelector(
-                '#crispr-box').style.visibility = "visible";
+                "#loader").style.visibility = "hidden";
+            
         }
   };
   

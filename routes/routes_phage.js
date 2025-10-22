@@ -68,7 +68,7 @@ router.get('/phage_table', function phage_explorer(req, res) {
         sort_list.push({gid:gid, org:organism})
     }
     let full_count = Object.keys(genome_lookup).length
-    //console.log(genome_lookup['GCA_000009645.1'])
+    console.log(genome_lookup['GCA_000009645.1'])
        
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);

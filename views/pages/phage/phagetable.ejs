@@ -2,19 +2,9 @@
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
-#phage-box{
-    width:100%;
-}
-#phage-table{
 
-  border: 1px solid black;
-  /* table-layout: fixed; */
-  
 
-}
-#phage-table th{
-   border-right:1px solid ivory;
-}
+
 .w-med{
     width:140px;
     text-align:center;
@@ -36,9 +26,9 @@ thead th { position: sticky; top: 0; }
     overflow:auto;
 }
 
-#sub-table{
-    display: none;
-  position: absolute;
+#sub-table-div{
+  display: none;
+  position: fixed;
   background:lightblue;
   width:1200px;  /* This sets the box width to allow cursor contact */
   padding:8px;
@@ -81,8 +71,6 @@ thead th { position: sticky; top: 0; }
     <a href="https://github.com/apcamargo/genomad/" target='_blank'>geNomad</a>, and have not been manually curated. Please use caution when interpreting the results.
 </div>
 <div id='phage-box' >
-
-    
          <table id='phage-table' class='table table-hover table-condensed sortable' >
          <thead>
           <tr>
@@ -157,7 +145,7 @@ thead th { position: sticky; top: 0; }
          </table>
          
 </div>  <!-- end: phage-box -->
-      <div id='sub-table'>XXXX</div>
+      <div id='sub-table-div'>XXXX</div>
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
@@ -189,7 +177,7 @@ thead th { position: sticky; top: 0; }
             var resp = xmlhttp.responseText;
             //console.log(resp)
             //window.open(url)
-            disp = document.getElementById('sub-table')
+            disp = document.getElementById('sub-table-div')
             disp.innerHTML = resp
             disp.style.display = 'block'
             
@@ -198,21 +186,24 @@ thead th { position: sticky; top: 0; }
       xmlhttp.send(JSON.stringify(args));
   }
   function close_sub_table(){
-        disp = document.getElementById('sub-table')
+        disp = document.getElementById('sub-table-div')
         disp.style.display = 'none'
   }
   document.onreadystatechange = function() {
         // just three els to loader: this(js);css;html
         if (document.readyState !== "complete") {
+            
             document.querySelector(
-                '#phage-box').style.visibility = "hidden";
+                '#phage-box').style.display = "none";
             document.querySelector(
                 "#loader").style.visibility = "visible";
         } else {
+            
             document.querySelector(
-                "#loader").style.display = "none";
+                '#phage-box').style.display = "flex";
             document.querySelector(
-                '#phage-box').style.visibility = "visible";
+                "#loader").style.visibility = "hidden";
+            
         }
   };
 </script>

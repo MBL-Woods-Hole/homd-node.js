@@ -7,11 +7,13 @@
   padding:10px 10px 20px 10px;
    border:1px solid gray;
    margin-top:5px;
+   width:100%;
 }
 #phage-table
 {
   padding:5px;
   background:lightgrey;
+  border: 1px solid black;
  /*  width:1200px; */
   table-layout:fixed;
   width:100%;
@@ -23,6 +25,7 @@
   padding:5px;
   font-size:13px;
   text-align: center;
+  border-right:1px solid ivory;
 }
 #phage-table td
 {

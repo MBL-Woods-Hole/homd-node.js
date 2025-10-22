@@ -2337,17 +2337,13 @@ router.post('/amr_ajax', function phage_ajax(req, res){
                 html_rows += "<td nowrap class='center'>"+rows[i].hmm_acc+"</td>"
                 html_rows += "<td nowrap class=''>"+rows[i].hmm_description+"</td>"
                 
-
-                
-                
-                
                 html_rows += "</tr>"
                 //counter += 1
         }
             
         
         
-        html_rows += "</table>"
+        html_rows += "</table></div>"
         res.send(html_rows)
         //console.log(send_rows,send_rows.length)
         
@@ -2402,70 +2398,7 @@ router.get('/crispr_table', function crispr(req, res) {
     
     
 })
-//
-//
-// router.get('/crisprXXX', function crisprXXX(req, res) {
-//     // page-1
-//     console.log('in crispr')
-//     //console.log('req.query',req.query)
-//     let show =''
-//     if(req.query.show){
-//         show = req.query.show  // a, na or all
-//     }
-//     let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
-//     let seqid_list = Object.keys(crispr_data)
-//     let full_count = seqid_list.length
-//     // filter ambiguous vs non-ambiguous
-//     if(show && show === 'a'){
-//         seqid_list = seqid_list.filter(item => crispr_data[item] === 'A')
-//     }else if(show && show === 'na'){
-//         seqid_list = seqid_list.filter(item => crispr_data[item] !== 'A')
-//     }
-//     
-//     let send_list = []
-//     
-//     
-//     //console.log('crispr-cas',seqid_list)
-//     let q = "SELECT genome_id as gid,combined_size as length,otid,organism,strain,contigs FROM `genomesV11.0` WHERE genome_id in ("
-//     for(let k in seqid_list){
-//         q = q + "'"+seqid_list[k] + "',"
-//     }
-//     q = q.slice(0, -1) +')'
-//     
-//     TDBConn.query(q, (err, rows) => {
-//        if (err) {
-//           console.log("Crispr-cas V10 Genomes-GET",err)
-//           return
-//        }
-//        for(let p in rows){
-//            //console.log('row',rows[p])
-//            send_list.push(rows[p])
-//        }
-//     
-//     // send_list.map(function mapGidObjList (el) {
-// //         if (el.combined_size) { 
-// //             el.combined_size = helpers.format_long_numbers(el.combined_size); 
-// //         }
-// //     })
-//      send_list.sort((a, b) => {
-//             return helpers.compareStrings_alpha(a.organism, b.organism);
-//       })
-//      
-//       //send_list = apply_species(send_list)
-//       res.render('pages/genome/crispr_cas', {
-//         title: 'HOMD :: CRISPR-Cas', 
-//         pgname: '', // for AboutThisPage
-//         config: JSON.stringify(CFG),
-//         ver_info: JSON.stringify(C.version_information),
-//         pgtitle: 'CRISPR-Cas',
-//         crispr_data: JSON.stringify(crispr_data),
-//         gid_list: JSON.stringify(send_list),
-//         full_count: full_count,
-//         show: show
-//         
-//       })
-//       })
-// });
+
 function list_clean(item){
     //JSON.parse(item.replace('[','').replace(']','') 
     return JSON.parse(item.replace(/'/g, '"'))
@@ -2475,7 +2408,7 @@ router.post('/crispr_ajax', function crispr_ajax(req, res) {
     //console.log(req.query)
     let gid = req.body.gid
     let p1,p2,loc,highlight,opos
-    console.log('crispr_ajax',gid)
+    //console.log('crispr_ajax',gid)
     const q = queries.get_crispr_cas_data(gid)
     console.log(q)
     TDBConn.query(q, (err, rows) => {
@@ -2483,7 +2416,7 @@ router.post('/crispr_ajax', function crispr_ajax(req, res) {
            console.log(err)
            return
         }
-        console.log('rows',rows)
+        //console.log('rows',rows)
         let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
         let org = C.genome_lookup[gid].organism
         let strain = C.genome_lookup[gid].strain
@@ -2512,12 +2445,12 @@ router.post('/crispr_ajax', function crispr_ajax(req, res) {
                 opos = list_clean(rows[r].operon_pos)
                 p1 = opos[0] //.substring(1,pos[0].length)
                 p2 = opos[1]  //.substring(0,pos[1].length-1)
-                console.log('rows[r].operon_pos',opos)
-                console.log('p1p2',p1,p2)
+                //console.log('rows[r].operon_pos',opos)
+                //console.log('p1p2',p1,p2)
                 loc = rows[r].contig+":"+(parseInt(p1)-500).toString()+".."+(parseInt(p2)+500).toString()
                 highlight = rows[r].contig+":"+p1+".."+p2
-                console.log('loc',loc)
-                console.log('hl',highlight)
+                //console.log('loc',loc)
+                //console.log('hl',highlight)
                 html_rows += "<td class='center'><a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+gid+"','crispr','','','','"+loc+"','"+highlight+"')\">open"
                 html_rows += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
                 html_rows += '<path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
@@ -2527,18 +2460,13 @@ router.post('/crispr_ajax', function crispr_ajax(req, res) {
                     
             html_rows += "<td nowrap>"+rows[r].operon+"</td>"
            //console.log('operon',obj.operon)
-           //let pos = rows[r].operon_pos.split(', ')   //'[17903, 26228]',
             html_rows += "<td nowrap>"+ opos +"</td>"
-           console.log('pos',rows[r].operon_pos)
+           //console.log('pos',rows[r].operon_pos)
            
            html_rows += "<td nowrap>"+rows[r].prediction+"</td>"
-           //obj.crisprs = rows[r].crisprs
-           //console.log('crisprs',rows[r].crisprs, typeof rows[r].crisprs)
            html_rows += "<td nowrap>"+list_clean(rows[r].crisprs)+"</td>"
-           //obj.distances = rows[r].distances
            html_rows += "<td nowrap>"+list_clean(rows[r].distances)+"</td>"
            html_rows += "<td nowrap>"+rows[r].prediction_cas+"</td>"
-           //obj.prediction_crisprs = rows[r].prediction_crisprs
            html_rows += "<td nowrap>"+list_clean(rows[r].prediction_crisprs)+"</td>"
            
            
@@ -2546,17 +2474,7 @@ router.post('/crispr_ajax', function crispr_ajax(req, res) {
         }
         html_rows += "</table></div>"
         res.send(html_rows)
-        // res.render('pages/genome/crispr_cas_data', {
-//             title: 'HOMD :: CRISPR-Cas', 
-//             pgname: '', // for AboutThisPage
-//             config: JSON.stringify(CFG),
-//             ver_info: JSON.stringify(C.version_information),
-//             pgtitle: 'CRISPR-Cas',
-//             gid: gid,
-//             crispr_data: JSON.stringify(data),
-//             
-//         
-//         })
+        
     
     })
 })

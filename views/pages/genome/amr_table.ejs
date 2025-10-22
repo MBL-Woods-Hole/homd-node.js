@@ -2,6 +2,9 @@
 <style>
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
+.table-condensed{
+  font-size: 13px;
+}
 #amr-box{
     height:700px;
     overflow:auto;
@@ -38,14 +41,13 @@ thead th { position: sticky; top: 0; }
 #amr-sub-table-div{
     height:500px;
     overflow:auto;
-    
 }
 
 #sub-table-div{
    display: none;
-  position: absolute;
+  position: fixed;
   background:lightyellow;
-  width:1200px;  /* This sets the box width to allow cursor contact */
+  width:1200px;
   padding:8px;
   margin:0px;
   border:2px solid black;
@@ -66,7 +68,7 @@ thead th { position: sticky; top: 0; }
 </style>
 <% var datarows = JSON.parse(data) %>
 <% var genomelist = JSON.parse(gid_list) %>
-<link rel="stylesheet" type="text/css" href="/css/phage_pages.css" >
+
 <%- include('../../partials/header_html'); %>
 
 
@@ -85,7 +87,7 @@ thead th { position: sticky; top: 0; }
 <div id='amr-box' >
 
     
-         <table id='amr-table' class='table table-hover table-condensed sortable' >
+         <table id='amr-table' class='table table-condensed sortable' >
          <thead>
           <tr>
            <th class='center col1'>Genome-ID</th>
@@ -131,7 +133,7 @@ thead th { position: sticky; top: 0; }
          </table>
          
 </div>  <!-- end: amr-box -->
-      <center><div id='sub-table-div'>XXXX</div></center>
+      <div id='sub-table-div'>XXXX</div>
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
@@ -147,7 +149,7 @@ thead th { position: sticky; top: 0; }
 <script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
-<script type="text/javascript" src="/js/phage.js"></script>
+
 <script>
   mainmenu()
   var jb_path = '<%- cfg.JBROWSE_URL %>'
@@ -179,15 +181,16 @@ thead th { position: sticky; top: 0; }
         // just three els to loader: this(js);css;html
         if (document.readyState !== "complete") {
             document.querySelector(
-                '#amr-box').style.visibility = "hidden";
+                '#amr-box').style.display = "none";
             document.querySelector(
                 "#loader").style.visibility = "visible";
             
         } else {
             document.querySelector(
-                "#loader").style.display = "none";
+                '#amr-box').style.display = "flex";
             document.querySelector(
-                '#amr-box').style.visibility = "visible";
+                "#loader").style.visibility = "hidden";
+            
                 
         }
   };
