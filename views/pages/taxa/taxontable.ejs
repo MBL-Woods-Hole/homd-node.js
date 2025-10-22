@@ -69,7 +69,6 @@ thead th { position: sticky; top: 0; }
 
 
 <body>
-    <div id="loader" class="center-loader" style='z-index:1'></div>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
@@ -238,42 +237,11 @@ $(document).ready(function(){
          tableContainer.scrollTop(row.offset().top - (tableContainer.height()/2) - extra)
        }
     }
-// $('#tax-table td').mouseover(function() {
-//     let titleText = $(this).attr('title');
-//     if (titleText) {
-//       $('<div class="tooltip"></div>')
-//         .text(titleText)
-//         .appendTo('body')
-//         .css({
-//           position: 'absolute',
-//           left: $(this).offset().left,
-//           top: $(this).offset().top - $(this).outerHeight() -10,
-//           'background-color': 'lightyellow',
-//           'border': '1px solid black',
-//           'padding': '5px',
-//           'z-index': '1000'
-//         });
-//     }
-//   }).delay().mouseout(function() {
-//     $('.tooltip').remove();
-//   });
 
   
 });
 
-document.onreadystatechange = function() {
-        if (document.readyState !== "complete") {
-            document.querySelector(
-                '#tax-box').style.visibility = "hidden";
-            document.querySelector(
-                "#loader").style.visibility = "visible";
-        } else {
-            document.querySelector(
-                "#loader").style.display = "none";
-            document.querySelector(
-                '#tax-box').style.visibility = "visible";
-        }
-};
+
 function openAdvancedForm() {
     var form = document.getElementById("myAdvancedForm") //.style.display// = "block";
     $(form).fadeIn();

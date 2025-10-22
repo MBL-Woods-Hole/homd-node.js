@@ -72,6 +72,10 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   }else if(page == 'explorer'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
+  }else if(page == 'amr'){
+      gid = value
+      tracks = tracks+',amr'
+      url = jb_path+'/'+gid+"&tracks="+tracks
   }else if(page == 'anno_table'){
       //console.log('value',value)
       //console.log('loc',loc)

@@ -37,32 +37,31 @@ def run(args):
     # using .gz files JUST NEED CONTIGS
     count = 0
     ## NCBI ONLY
-    q = "SELECT  genome_id,count(genome_id) as count from homd.crispr_cas"
+    # 'genome_id','protein_id','element_symbol','element_name','scope','type','subtype','class',
+#     'subclass','method','target_length','ref_seq_length','pct_cov_of_ref','pct_ident_to_ref','align_length','closest_ref_acc',
+#     'closest_ref_name','hmm_acc','hmm_description'
+    q = "SELECT  genome_id,count(genome_id) as count from homd.amr"
     q += " GROUP BY genome_id"
-    # q = "SELECT genome_id,contig,operon,operon_pos,prediction,crisprs,"
-#     q += " distances,prediction_cas,prediction_crisprs"
-#     q += " from `homd`.`crispr_cas`"
+    
+    #'protein_id,element_symbol,element_name,scope,type,subtype,class,"
+    
+    #q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc', "
+    #q += "closest_ref_name,hmm_acc,hmm_description"
+    #q += " from `homd`.`amr`"
     print(q)
     result = myconn.execute_fetch_select_dict(q)
     for row in result:
         gid = row['genome_id']
+        gid_count = row['count']
         
-        # tmp = {
-#             "contig": row['contig'],  #"GCA_026427495.1|CP084440.1",
-#             "operon": row['operon'],  #"GCA_026427495.1|CP084440.1@22",
-#             "operon_pos": json.loads(row['operon_pos']),  #"[808466, 818400]",
-#             "prediction": row['prediction'],  #"III-A",
-#             "crisprs": json.loads(row['crisprs'].replace("'", '"')),  #"['GCA_026427495.1|CP084440.1_1']",
-#             "distances": json.loads(row['distances']),  #"[187]",
-#             "prediction_cas": row['prediction_cas'], #"III-A",
-#             "prediction_crisprs": json.loads(row['prediction_crisprs'].replace("'", '"')),  #"['III-A']"
-#         }
+        
+        master_lookup[gid] = gid_count
+        
+            
+        
+ 
+ 
 
-        for row in result:
-            gid = row['genome_id']
-            gid_count = row['count']
-            master_lookup[gid] = gid_count
-      
 
     file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
     print_dict(file, master_lookup)
@@ -77,7 +76,6 @@ if __name__ == "__main__":
     usage = """
     USAGE:
         
-
         will print out the needed initialization files for homd
         Needs MySQL: tries to read your ~/.my.cnf_node
 
@@ -95,7 +93,7 @@ if __name__ == "__main__":
 
     #parser.add_argument("-i", "--infile",   required=False,  action="store",   dest = "infile", default='none',
     #                                                help=" ")
-    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-Crispr',
+    parser.add_argument("-o", "--outfileprefix",   required=False,  action="store",   dest = "outfileprefix", default='homdData-AMR',
                                                     help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")

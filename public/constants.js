@@ -350,6 +350,7 @@ constants.contig_lookup_fn      = 'homdData-ContigsLookup.json'
 constants.site_lookup_fn        = 'homdData-TaxonSiteLookup.json'
 constants.crispr_lookup_fn      = 'homdData-CrisprLookup.json'
 constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
+constants.amr_lookup_fn          = 'homdData-AMRLookup.json'
 //constants.image_location_fn     = 'ImageLocation.js'
 
 constants.image_location_locfn     = 'ImageLocation_loc.js'

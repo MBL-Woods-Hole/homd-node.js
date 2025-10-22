@@ -227,6 +227,7 @@ const promises = [
   //Oct 2025  // #13
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.crispr_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.amr_lookup_fn),'json'),
     // ETC ...
 ];
 Promise.all(promises)
@@ -267,7 +268,7 @@ Promise.all(promises)
     
     C.crispr_lookup         = results[13];
     C.phage_lookup          = results[14];
-    
+    C.amr_lookup             = results[15];
     /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)
     C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference')).map(x => x.otid)
