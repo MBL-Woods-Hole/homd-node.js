@@ -35,21 +35,7 @@ router.get('/phage', function phage(req, res) {
 })
 
 router.get('/phage_table', function phage_explorer(req, res) {
-    //console.log('in phage hello')
-    //let q = "SELECT genome_id as gid, site, cenote_taker3 as cenote,genomad from phage_counts"
-    // let q = "SELECT genome_id as gid,combined_size,otid,genus,species,strain,contigs,site,"
-//     //q += " (SELECT COUNT(*) from phage_data where phage_data.genome_id = phage_stats.genome_id) as hit_count,"
-//     q += " cenote_taker3 as cenote_count,cenote_coverage_bps,cenote_coverage_pct,"
-//     q += " genomad as genomad_count,genomad_coverage_bps,genomad_coverage_pct"
-//     q += " FROM phage_stats"
-//     q += " JOIN `genomesV11.0` using(genome_id)"
-//     q += " JOIN otid_prime using(otid)"
-//     q += " JOIN taxonomy using(taxonomy_id)"
-//     q += " JOIN genus using(genus_id)"
-//     q += " JOIN species using (species_id)"
-//     q += " WHERE !(cenote_taker3=0 and genomad=0)"
-//     q += " Order by genus,species"
-//     console.log(q)
+    
     // need contigs,HMT,species,strain,average
     let organism,strain,otid,contigs,length,tmp
     let genome_lookup = {}
@@ -68,7 +54,7 @@ router.get('/phage_table', function phage_explorer(req, res) {
         sort_list.push({gid:gid, org:organism})
     }
     let full_count = Object.keys(genome_lookup).length
-    console.log(genome_lookup['GCA_000009645.1'])
+    //console.log(genome_lookup['GCA_000009645.1'])
        
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);

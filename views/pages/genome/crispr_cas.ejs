@@ -22,6 +22,12 @@ thead th { position: sticky; top: 0; }
 #crispr-table th{
    border-right:1px solid ivory;
 }
+#crispr-table tr:nth-child(even) {
+    background-color: var(--table-row-even3);
+}
+#crispr-table tr:hover {
+    background-color: #FBF9EA;
+}
 
 
 .w-med{
@@ -87,7 +93,7 @@ thead th { position: sticky; top: 0; }
        
        
        <div id='crispr-box'>
-       <table id='crispr-table' class='table table-condensed sortable'>
+       <table id='crispr-table' class='table table-hover table-condensed sortable'>
        <thead>
         <tr>
             <th class='center col1'>Genome-ID</th>
