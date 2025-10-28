@@ -6,7 +6,7 @@ var db_config_file = './config/db-connection.js';
 eval(fs.readFileSync(db_config_file).toString());
 
 exports.taxon_pool      =    mysql.createPool({
-    connectionLimit : 100, //important
+    connectionLimit : 300, //important
     host     : db_config.host,
     user     : db_config.user,
     password : db_config.password,
