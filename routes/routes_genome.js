@@ -2293,6 +2293,7 @@ router.post('/amr_ajax', function phage_ajax(req, res){
     q += "closest_ref_name,hmm_acc,hmm_description"
     q += " FROM amr"
     q += " WHERE genome_id='"+gid+"'"
+    console.log(q)
     let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
     let org = C.genome_lookup[gid].organism
     let strain = C.genome_lookup[gid].strain
@@ -2300,23 +2301,25 @@ router.post('/amr_ajax', function phage_ajax(req, res){
     html_rows += "<a href='#' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</a>"
     html_rows += "<table id='amr-sub-table' class='table table-condensed'>"
     html_rows += "<tr>"
-        html_rows += "<th>Protein-ID</th><th>Genome Viewer</th><th>Element Symbol</th><th>Element Name</th><th>Scope</th><th>Type</th><th>Subtype</th><th>Class</th>"
-        html_rows += "<th>Subclass</th><th>Method</th><th>Target Length</th><th>Ref Seq Length</th><th>Ref Coverage %</th><th>Ref Identity %</th>"
-        html_rows += "<th>Alignment Length</th><th>Closest Ref Acc</th><th>Closest Ref name</th><th>HMM Acc</th><th>HMM Description</th>"
-        html_rows += "</tr>"
+    html_rows += " <th>Protein-ID</th><th>Genome Viewer</th><th>Element Symbol</th><th>Element Name</th><th>Scope</th><th>Type</th><th>Subtype</th><th>Class</th>"
+    html_rows += " <th>Subclass</th><th>Method</th><th>Target Length</th><th>Ref Seq Length</th><th>Ref Coverage %</th><th>Ref Identity %</th>"
+    html_rows += " <th>Alignment Length</th><th>Closest Ref Acc</th><th>Closest Ref name</th><th>HMM Acc</th><th>HMM Description</th>"
+    html_rows += "</tr>"
+    
     console.log(q)
     TDBConn.query(q, (err, rows) => {
         for(let i in rows){
             //console.log(rows[i])
             
                 //send_rows.push(rows[i])
-                html_rows += "<tr><td nowrap>"+rows[i].protein_id+"</td>"
+                html_rows += "<tr>"
+                html_rows += "<td nowrap>"+rows[i].protein_id+"</td>"
                 
                 html_rows += "<td><a href='#' onclick=\"open_jbrowse('"+gid+"','amr')\">open"
-                html_rows += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
+                html_rows += ' <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
                 html_rows += '  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
-                html_rows += "</svg>"
-                html_rows += "</a>"
+                html_rows += " </svg>"
+                html_rows += " </a>"
                 html_rows += "</td>"
                 
                 html_rows += "<td nowrap class=''>"+rows[i].element_symbol+"</td>"

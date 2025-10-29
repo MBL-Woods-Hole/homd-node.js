@@ -43,11 +43,6 @@ def run(args):
     q = "SELECT  genome_id,count(genome_id) as count from homd.amr"
     q += " GROUP BY genome_id"
     
-    #'protein_id,element_symbol,element_name,scope,type,subtype,class,"
-    
-    #q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc', "
-    #q += "closest_ref_name,hmm_acc,hmm_description"
-    #q += " from `homd`.`amr`"
     print(q)
     result = myconn.execute_fetch_select_dict(q)
     for row in result:
@@ -57,12 +52,6 @@ def run(args):
         
         master_lookup[gid] = gid_count
         
-            
-        
- 
- 
-
-
     file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
     print_dict(file, master_lookup)
 
