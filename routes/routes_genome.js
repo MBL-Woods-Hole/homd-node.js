@@ -2281,7 +2281,7 @@ router.post('/amr_ajax', function phage_ajax(req, res){
     q += " FROM homd.amr"
     q += " JOIN PROKKA_meta.orf using(protein_id)"
     q += " WHERE homd.amr.genome_id='"+gid+"'"
-    console.log(q)
+    //console.log(q)
     let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
     let org = C.genome_lookup[gid].organism
     let strain = C.genome_lookup[gid].strain
@@ -2298,7 +2298,7 @@ router.post('/amr_ajax', function phage_ajax(req, res){
 
     TDBConn.query(q, (err, rows) => {
         for(let i in rows){
-            console.log(rows[i])
+            //console.log(rows[i])
             
                 //send_rows.push(rows[i])
                 html_rows += "<tr>"

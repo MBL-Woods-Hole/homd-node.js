@@ -90,6 +90,13 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       tracks = tracks+',crispr'
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
+  }else if(page == 'amr'){
+      gid = value
+      tracks = tracks+',amr'
+      
+      //url = jb_path+'/'+gid+"&tracks="+tracks
+      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+gid+'|'+loc+"&highlight="+gid+'|'+hilit
+      
   }else if(page == 'oralgen'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks
