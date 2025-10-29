@@ -63,19 +63,23 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
         gid = value
         url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
   
-      
   }else if(page == 'main_menu'){
       pts = value.split('|')
       gid = pts[0]
       gc = pts[1]
       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
+
   }else if(page == 'explorer'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks+",GC Content (pivot at "+gc+"),GC Skew"
+
   }else if(page == 'amr'){
       gid = value
       tracks = tracks+',amr'
-      url = jb_path+'/'+gid+"&tracks="+tracks
+      
+      //url = jb_path+'/'+gid+"&tracks="+tracks
+      url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+gid+'|'+loc+"&highlight="+gid+'|'+hilit
+      
   }else if(page == 'anno_table'){
       //console.log('value',value)
       //console.log('loc',loc)
@@ -86,6 +90,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       //https://www.homd.org//jbrowse/?data=homd_V11.0/GCA_030450175.1&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=GCA_030450175.1|GCA_030450175.1|CP073095.1:1..2445683&highlight=GCA_030450175.1|GCA_030450175.1|CP073095.1:455..2445183
       url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+gid+'|'+loc+"&highlight="+gid+'|'+hilit
       //console.log('myurl',url)
+  
   }else if(page == 'protein_peptide'){
        gid = value
        url = jb_path+'/'+gid+"&tracks="+tracks+"&loc="+loc+"&highlight="+gid+'|'+hilit
@@ -99,6 +104,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   }else if(page == 'oralgen'){
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks
+  
   }else if(page == 'phage'){
       gid = value
       
