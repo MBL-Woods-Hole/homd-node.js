@@ -2310,6 +2310,10 @@ router.post('/amr_ajax', function phage_ajax(req, res){
     
 
     TDBConn.query(q, (err, rows) => {
+        if(rows.length ===0){
+          res.send("No Data Found: localhost.")
+          return
+        }
         for(let i in rows){
             console.log(rows[i])
             
