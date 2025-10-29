@@ -1,0 +1,208 @@
+<% var cfg = JSON.parse(config) %> 
+<style>
+/* Fix the tax table header */
+thead th { position: sticky; top: 0; }
+.table-condensed{
+  font-size: 13px;
+}
+#amr-box{
+    height:700px;
+    overflow:auto;
+    padding:10px 10px 20px 10px;
+    border:1px solid gray;
+    margin-top:5px;
+}
+#amr-table{
+
+  border: 1px solid black;
+  /* table-layout: fixed; */
+  
+
+}
+#amr-table th{
+   border-right:1px solid ivory;
+}
+#amr-table tr:nth-child(even) { 
+    background-color: lightgrey;
+    /* var(--table-row-even3); */
+} 
+#amr-table tr:hover { 
+    background-color: #FBF9EA; 
+} 
+
+.w-med{
+    width:140px;
+    text-align:center;
+}
+.w-vsm{
+    width:60px;
+    text-align:center;
+}
+.w-sm{
+    width:90px;
+    text-align:center;
+}
+.w-exp{
+    min-width:150px;
+    text-align:left;
+}
+#amr-sub-table-div{
+    height:500px;
+    overflow:auto;
+}
+
+#sub-table-div{
+   display: none;
+  position: fixed;
+  background:lightyellow;
+  width:1200px;
+  padding:8px;
+  margin:0px;
+  border:2px solid black;
+  
+  /* left:-160px; */
+  top:350px;
+}
+#loader {
+    background: url('/images/loading.gif') no-repeat center center;
+    position: absolute;
+    background-size: 100px 100px;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
+}
+</style>
+<% var datarows = JSON.parse(data) %>
+<% var genomelist = JSON.parse(gid_list) %>
+
+<%- include('../../partials/header_html'); %>
+
+
+
+
+<body>
+  <div id="loader" class="center-loader" style='z-index:1'></div>
+  <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    <div class='page-content' >
+      
+         <p class='title h3'>Anti-Microbial Resistance (AMR) detected in <%= full_count %> HOMD genomes</p>
+
+
+<div id='amr-box' >
+
+    
+         <table id='amr-table' class='table table-hover table-condensed sortable' >
+         <thead>
+          <tr>
+           <th class='center col1'>Genome-ID</th>
+            <th class='center col1'>Taxon-ID</th>
+            <th class='col3'>Species</th>
+            <th class='col3'>Strain</th>
+            <th class='center col1'>Contigs</th>
+            <th class='center'>Length<br>(bp)</th>
+            <th class='center'>Hit<br>Count</th>
+            <th class='center col1 sorttable_nosort'>FTP<br>Download</th>
+          </tr>
+         </thead>
+         <tbody>
+         <% for (n in genomelist){ %>
+             <% gid = genomelist[n].gid %>
+             
+             <% taxidfullname = "HMT-"+("000" + datarows[gid].otid).slice(-3); %>
+             <tr>
+             <td class='w-med'><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
+             
+             <td class='w-sm'><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= datarows[gid].otid %>'><%= taxidfullname %></a></td>
+             
+             <td class='w-exp' title='<%= datarows[gid].organism %>'><i><%= datarows[gid].organism %></i></td>
+             <td class='w-exp' title='<%= datarows[gid].strain %>'><%= datarows[gid].strain %></td>
+             <td class='w-vsm'><%= datarows[gid].contigs %></td>
+             <td class='w-sm'><%= datarows[gid].length %></td>
+             
+             
+             <td class='w-sm' sorttable_customkey="<%= datarows[gid].hit_count %>">
+               <a href='#' onclick="get_ajax('<%= gid %>')"><%= datarows[gid].hit_count %> rows</a>
+             </td>
+             <td class='center'>
+             <a href="<%= cfg.HOMD_URL_BASE %><%= cfg.AMR_PATH %><%= gid %>.amrfinder" target='_blank'>ftp
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+              </svg>
+             </a>
+             </td>
+            
+             </tr>
+         <% } %>
+         </tbody>
+         </table>
+         
+</div>  <!-- end: amr-box -->
+      <div id='sub-table-div'>XXXX</div>
+    </div> <!-- end: page-content -->
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+   
+  </div> <!-- end wrapper -->
+</body>
+
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/genomes.js"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/menu.js"></script>
+
+<script>
+  mainmenu()
+  var jb_path = '<%- cfg.JBROWSE_URL %>'
+  
+  function get_ajax(gid){
+      let args = {}
+      args.gid = gid
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("POST", "/genome/amr_ajax", true);
+      xmlhttp.setRequestHeader("Content-type","application/json");
+      xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var resp = xmlhttp.responseText;
+            //console.log(resp)
+            //window.open(url)
+            disp = document.getElementById('sub-table-div')
+            disp.innerHTML = resp
+            disp.style.display = 'block'
+            
+          }
+      }
+      xmlhttp.send(JSON.stringify(args));
+  }
+  function close_sub_table(){
+        disp = document.getElementById('sub-table-div')
+        disp.style.display = 'none'
+  }
+  document.onreadystatechange = function() {
+        // just three els to loader: this(js);css;html
+        if (document.readyState !== "complete") {
+            document.querySelector(
+                '#amr-box').style.display = "none";
+            document.querySelector(
+                "#loader").style.visibility = "visible";
+            
+        } else {
+            document.querySelector(
+                '#amr-box').style.display = "flex";
+            document.querySelector(
+                "#loader").style.visibility = "hidden";
+            
+                
+        }
+  };
+</script>
+
+
+

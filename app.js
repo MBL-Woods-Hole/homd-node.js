@@ -225,7 +225,9 @@ const promises = [
   //2024-Sept
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.site_lookup_fn),'json'),
   helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv')
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv'),
+  
+  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.amr_lookup_fn),'json'),
    //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
   
     // ETC ...
@@ -265,6 +267,7 @@ Promise.all(promises)
     C.site_lookup           = results[10];
     C.no_ncbi_annotation    = results[11];
     C.no_ncbi_blast_dbs     = results[12];
+    C.amr_lookup             = results[13];
     //C.phage_lookup              = results[12];
     
     /// END of results files

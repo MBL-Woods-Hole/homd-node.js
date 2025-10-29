@@ -2233,6 +2233,144 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
        })
     })
 })
+//
+//
+router.get('/amr_table', function amr(req, res) {
+    console.log('amr table')
+    let gid
+    let organism,strain,otid,contigs,length,tmp={}
+    let genome_lookup = {}
+    let sort_list=[]
+    for(let gid in C.amr_lookup){
+        organism = C.genome_lookup[gid].organism
+        strain = C.genome_lookup[gid].strain
+        otid = C.genome_lookup[gid].otid
+        contigs = C.genome_lookup[gid].contigs
+        length = C.genome_lookup[gid].combined_size
+        tmp = {organism:organism,strain:strain,otid:otid,contigs:contigs,length:length,hit_count:C.amr_lookup[gid]}
+        //merge objects:
+        genome_lookup[gid] = tmp;
+        sort_list.push({gid:gid, org:organism})
+    }
+    //console.log(genome_lookup)
+    let full_count = Object.keys(genome_lookup).length
+    console.log(genome_lookup['GCA_000009645.1'])
+       
+    sort_list.sort((a, b) => {
+        return helpers.compareStrings_alpha(a.org, b.org);
+    })
+    res.render('pages/genome/amr_table', {
+            title: 'HOMD :: AMR Table',
+            pgtitle: 'AMR Genomes',
+            pgname: '',  //for AbountThisPage
+            config: JSON.stringify(CFG),
+            ver_info: JSON.stringify(C.version_information),
+            data: JSON.stringify(genome_lookup),
+            full_count: full_count,
+            gid_list: JSON.stringify(sort_list),
+    })
+})
+//
+//
+router.post('/amr_ajax', function phage_ajax(req, res){
+    console.log('in POST amr_ajax')
+    let gid = req.body.gid
+    let q = 'SELECT homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
+    q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc, "
+    q += "closest_ref_name,hmm_acc,hmm_description,accession,start,stop"
+    q += " FROM homd.amr"
+    q += " JOIN PROKKA_meta.orf using(protein_id)"
+    q += " WHERE homd.amr.genome_id='"+gid+"'"
+    console.log(q)
+    let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
+    let org = C.genome_lookup[gid].organism
+    let strain = C.genome_lookup[gid].strain
+    let start,stop,tmp,locstart,locstop,seqacc,loc,highlight
+    let html_rows = "<div id='amr-sub-table-div'>"+gid+'; '+hmt+'; '+org+' ('+strain+')'
+    html_rows += "<a href='#' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</a>"
+    html_rows += "<table id='amr-sub-table' class='table table-condensed'>"
+    html_rows += "<tr>"
+    html_rows += " <th>Protein-ID</th><th>Genome Viewer</th><th>Element Symbol</th><th>Element Name</th><th>Scope</th><th>Type</th><th>Subtype</th><th>Class</th>"
+    html_rows += " <th>Subclass</th><th>Method</th><th>Target Length</th><th>Ref Seq Length</th><th>Ref Coverage %</th><th>Ref Identity %</th>"
+    html_rows += " <th>Alignment Length</th><th>Closest Ref Acc</th><th>Closest Ref name</th><th>HMM Acc</th><th>HMM Description</th>"
+    html_rows += "</tr>"
+    
+
+    TDBConn.query(q, (err, rows) => {
+        for(let i in rows){
+            console.log(rows[i])
+            
+                //send_rows.push(rows[i])
+                html_rows += "<tr>"
+                html_rows += "<td nowrap>"+rows[i].protein_id+"</td>"
+                start = rows[i].start
+                stop  = rows[i].stop
+                if(start[0] === "<" ){
+                    start = parseInt(start.substring(1))
+                }else{ 
+                    start = parseInt(start) 
+                } 
+                if(stop[0] === ">" ){ 
+                    stop = parseInt(stop.substring(1))
+                }else{ 
+                    stop = parseInt(stop)
+                } 
+                if(start > stop){ 
+                    tmp = stop 
+                    stop = start 
+                    start = tmp 
+                }
+                locstart = start - 500 
+                locstop = stop + 500 
+                //size = stop - start 
+     
+                if(locstart < 1){ 
+                    locstart = 1 
+                }
+                seqacc = rows[i].accession.replace('_','|')
+                loc = seqacc+":"+locstart.toString()+".."+locstop.toString() 
+                highlight = seqacc+":"+start.toString()+".."+stop.toString() 
+                
+                html_rows += "<td><a href='#' onclick=\"open_jbrowse('"+gid+"','amr','','','','"+loc+"','"+highlight+"')\">open"
+                html_rows += ' <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
+                html_rows += '  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
+                html_rows += " </svg>"
+                html_rows += " </a>"
+                html_rows += "</td>"
+
+                html_rows += "<td nowrap class=''>"+rows[i].element_symbol+"</td>"
+                html_rows += "<td nowrap class=''>"+rows[i].element_name+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].scope+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].type+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].subtype+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].class+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].subclass+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].method+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].target_length+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].ref_seq_length+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].pct_cov_of_ref+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].pct_ident_to_ref+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].align_length+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].closest_ref_acc+"</td>"
+                html_rows += "<td nowrap class=''>"+rows[i].closest_ref_name+"</td>"
+                html_rows += "<td nowrap class='center'>"+rows[i].hmm_acc+"</td>"
+                html_rows += "<td nowrap class=''>"+rows[i].hmm_description+"</td>"
+                
+                html_rows += "</tr>"
+                //counter += 1
+        }
+            
+        
+        
+        html_rows += "</table></div>"
+        res.send(html_rows)
+        //console.log(send_rows,send_rows.length)
+        
+
+    
+    })
+    
+})
 router.get('/crispr', function crispr(req, res) {
     // page-1
     //console.log('in crispr')
