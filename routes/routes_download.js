@@ -599,16 +599,11 @@ router.post('/phage_search_data',(req, res) => {
     
     let dt = helpers.get_today_obj()
     let head_text_array = ['Fasta_ID','Genome_ID','Contig','Predictor','seq_length',
-            'cenote_evidence_accession','cenote_evidence_description','genomad_annotation_accessions','genomad_annotation_description']
+            'accession','description']
     
     let q = "SELECT search_id,genome_id,contig,predictor,start,end,"
-    
-    q += "cenote_evidence_accession,"
-    q += "IFNULL(cenote_evidence_description,'') as cenote_desc,"
-    q += "genomad_annotation_accessions,"
-    q += "IFNULL(genomad_annotation_description,'') as genomad_desc,"
+    q += "accession,description,"
     q += "seq_length,UNCOMPRESS(seq_compressed) as seq"
-    
     q += " from phage_search where search_id in ("+id_list+')'
   
     TDBConn.query(q, (err, rows) => {
@@ -750,12 +745,12 @@ function create_phage_table(sql_rows,header_array,search_term) {
     for(let n in sql_rows){
         //console.log('sql_rows[n]',sql_rows[n])
         //['Fasta_ID','Genome_ID','Contig','Predictor','seq_length', 'bakta_core_product','bakta_core_note','bakta_EC','bakta_GO','bakta_COG',
-        //  'cenote_evidence_accession','cenote_evidence_description','genomad_annotation_accessions','genomad_annotation_description']
+        //  'accession','description']
         if(sql_rows[n].seq){
            text += sql_rows[n].search_id +'\t'+sql_rows[n].genome_id+'\t'+sql_rows[n].contig
            text += '\t'+sql_rows[n].predictor+'\t'+sql_rows[n].seq_length
-           text += '\t'+sql_rows[n].cenote_evidence_accession+'\t'+sql_rows[n].cenote_desc
-           text += '\t'+sql_rows[n].genomad_annotation_accessions+'\t'+sql_rows[n].genomad_desc
+           text += '\t'+sql_rows[n].accession
+           text += '\t'+sql_rows[n].description
            text += '\n'
         }
     }

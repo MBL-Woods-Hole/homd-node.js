@@ -67,10 +67,8 @@
         <% contig = hlist[x].contig %>
         <% predictor= hlist[x].predictor %>
         <% search_id = hlist[x].search_id %>
-        <% if(predictor=='cenote'){ %>
-            <% data = hlist[x].cenote_evidence_accession+" | "+hlist[x].cenote_desc %>
-        <% }else if(predictor=='genomad'){ %>
-            <% data = hlist[x].genomad_annotation_accessions+" | "+hlist[x].genomad_desc %>
+        <% if(predictor=='cenote' || predictor=='genomad'){ %>
+            <% data = hlist[x].accession+" | "+hlist[x].description %>
         <% }else{ %>
             <% data = hlist[x].bakta_core_product+" | "+hlist[x].bcnote+" | "+hlist[x].bakta_EC+" | "+hlist[x].bakta_GO+" | "+hlist[x].bakta_COG %>
         <% } %>

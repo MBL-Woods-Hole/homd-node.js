@@ -263,10 +263,8 @@ module.exports.get_phage_from_ids = (search_id_list) => {   // always NCBI for t
 //     q += "bakta_EC,"
 //     q += "IFNULL(bakta_GO,'') as bakta_GO,"
 //     q += "bakta_COG,"
-    q += "cenote_evidence_accession,"
-    q += "IFNULL(cenote_evidence_description,'') as cenote_desc,"
-    q += "genomad_annotation_accessions,"
-    q += "IFNULL(genomad_annotation_description,'') as genomad_desc,"
+    q += "accession,"
+    q += "description"
     q += "seq_length,UNCOMPRESS(seq_compressed) as seq"
     
     q += " from phage_search where search_id in ("+search_id_list+')'
@@ -279,10 +277,8 @@ module.exports.get_phage_from_ids_noseqs = (search_id_list) => {   // always NCB
 //     q += "bakta_EC,"
 //     q += "IFNULL(bakta_GO,'') as bakta_GO,"
 //     q += "bakta_COG,"
-    q += "cenote_evidence_accession,"
-    q += "IFNULL(cenote_evidence_description,'') as cenote_desc,"
-    q += "genomad_annotation_accessions,"
-    q += "IFNULL(genomad_annotation_description,'') as genomad_desc"
+    q += "accession,"
+    q += "description"
     
     q += " from phage_search where search_id in ("+search_id_list+')'
   return q

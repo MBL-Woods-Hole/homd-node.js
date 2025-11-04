@@ -185,7 +185,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                     let pts_clean = []
                     for(let n in pts){
                         //pts_clean.push(decodeURIComponent(pts[n].replace("5'", "5").replace("3'", "3").replace(",", ";").replace("2'", "2").replace("n'", "n")))
-                        console.log('pts[n]',pts[n])
+                        //console.log('pts[n]',pts[n])
                         //pts_clean.push(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";").replace("%", "pct")))
                         pts_clean.push(decodeURIComponent(encodeURIComponent(pts[n])))
                         //console.log(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";")))
