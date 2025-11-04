@@ -86,7 +86,7 @@ function execPromise(cmd, args, max) {
             chunk_rows = data.toString().split('\n')
             line_count += chunk_rows.length
             //data_array.push(data.toString())
-            if(line_count > max / 5){
+            if(line_count > max){
                 bufferArray = []
                 resolve(['too_long']);
             }
@@ -139,6 +139,7 @@ router.post('/advanced_anno_orf_search', function advanced_anno_orf_searchPOST(r
     
     //res.send('OKAY')
 })
+//
 router.post('/advanced_site_search_phage_grep', async function advanced_site_search_phagePOST(req, res) {
     console.log('in advanced_site_search_phage_grep')
     console.log(req.body)
@@ -157,7 +158,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         
         let split_length = 6
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
-        let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
+        let args = ['-h','-m '+(max_rows).toString(),'"'+searchText+'"',datapath]
         //let args = ['-h','"'+searchText+'"',datapath]
         let grep_cmd = CFG.GREP_CMD + ' ' + args.join(' ')
         console.log(grep_cmd)
@@ -184,12 +185,13 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                     let pts_clean = []
                     for(let n in pts){
                         //pts_clean.push(decodeURIComponent(pts[n].replace("5'", "5").replace("3'", "3").replace(",", ";").replace("2'", "2").replace("n'", "n")))
-                        pts_clean.push(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";")))
-                        
+                        console.log('pts[n]',pts[n])
+                        //pts_clean.push(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";").replace("%", "pct")))
+                        pts_clean.push(decodeURIComponent(encodeURIComponent(pts[n])))
                         //console.log(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";")))
                     }
                     //console.log('pts',pts)
-                    if(['bakta','genomad','cenote'].indexOf(pts[1]) != -1 ){
+                    if(['genomad','cenote'].indexOf(pts[1]) != -1 ){
                       //console.log('pts',pts)
                       search_id = pts[0]
                       all_phage_search_ids_lookup[search_id] = 1  // for downloads
