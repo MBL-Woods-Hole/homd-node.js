@@ -26,8 +26,8 @@ def run(args):
     count = 0
     
     q = "SELECT genome_id,site,"
-    q += " cenote_taker3 as cenote_count,cenote_coverage_bps,cenote_coverage_pct,"
-    q += " genomad as genomad_count,genomad_coverage_bps,genomad_coverage_pct"
+    q += " cenote_count,cenote_coverage_bps,cenote_coverage_pct,"
+    q += " genomad_count,genomad_coverage_bps,genomad_coverage_pct"
     q += " FROM phage_stats"
     print(q)
     result = myconn.execute_fetch_select_dict(q)

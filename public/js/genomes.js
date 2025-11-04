@@ -107,7 +107,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   
   }else if(page == 'phage'){
       gid = value
-      
+      tracks = tracks+',cenote,genomad'
       //https://www.homd.org/jbrowse/?data=homd_V11.02_phage_1.1/GCA_000008185.1&loc=GCA_000008185.1|AE017226.1:1165152..1202411&
       //tracks=  From Fxn vars
       url = jb_path+'/'+gid+"&loc="+loc+"&tracks="+tracks
