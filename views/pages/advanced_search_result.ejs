@@ -27,17 +27,9 @@ html, body { min-height: 100%; }
     text-align:right;
     font-size:small;
 }
+
 .search-box{
-   height:250px;
-   width:100%;
-   overflow:auto;
-   margin:0px 0px;
-   padding:0px 10px;
-   background:lightgreen;
-   border:1px solid black;
-}
-.search-box{
-   height:600px;
+   height:900px;
    width:100%;
    overflow:auto;
    margin:0px 0px;
@@ -48,18 +40,17 @@ html, body { min-height: 100%; }
 }
 .outlier-max{
     padding:20px;
+    width:450px;
     background:brown;
     color:ivory;
 }
 .outlier-zero{
     padding:20px;
-    background:lightgreen;
-    color:brown;
+    width:450px;
+    background:orange;
+    color:black;
 }
-.loader-gif{
-  height:20px;
-  width:90px;
-}
+
 #srch_txt{
    color:purple;
 }
@@ -166,6 +157,16 @@ table.sortable thead {
 #show-all-form{
    display:inline;
 }
+#loader {
+    background: url('/images/loading.gif') no-repeat center center;
+    position: absolute;
+    background-size: 100px 100px;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
+}
 </style>
 <%- include('../partials/header_html'); %>
 <% var otids = JSON.parse(otid_list) %>
@@ -186,7 +187,7 @@ table.sortable thead {
 
 <body>
 
-   <!-- <div id="loader" class="center-loader" style='z-index:1'></div> -->
+   <div id="loader" class="center-loader" style='z-index:1'></div>
     <div id='wrapper'>
     <%- include('../partials/header_img'); %>
     <%- include('../partials/navbar'); %>
@@ -285,6 +286,7 @@ table.sortable thead {
 
     <!-- ANNOTATIONS ANNOTATIONS ANNOTATIONS ANNOTATIONS -->
 <% if(search_type.indexOf("annotations") != -1){ %> 
+    <div class='search-box-loading'>
     <%= anno.toUpperCase() %> Annotations 
     <% if(anno.toUpperCase() == 'BAKTA'){ %>
         <small>(Searches only Genome-IDs, Accessions(Contigs), Gene, Gene Product, bakta_EC, bakta_GO and bakta_COG):</small>
@@ -361,15 +363,17 @@ table.sortable thead {
              </div>
              <div id='anno-result'>hidden</div>
          <% } %>
-     
+     </div>
 <% } %>
+
+
    <!--  PHAGE  PHAGE    PHAGE  PHAGE    PHAGE  PHAGE -->
 <% if(search_type.indexOf("phage") != -1){ %> 
-    <small>Searches only these fields
-             <li><strong>Cenote-Taker3</strong>: contig, accession, description</li>
-             <li><strong>geNomad</strong>: contig, accessions, description</li>
-    
+    <div class='search-box-loading'>
+    <small>Searches only these fields:
+             <li>contig, accession, description</li>
     </small>
+    
      <% if(phage_list.hasOwnProperty("too_long")){  %>
         <br>Hits: ><%= max %>
     <% }else{ %>
@@ -378,7 +382,7 @@ table.sortable thead {
         <input type="hidden" id="ids" name="big_list" value='<%= phage_sort_list %>' \>
         <input type='hidden' name='search_text' value='<%= search_text %>' \>
         <input type='hidden' name='total_hits' value='<%= total_hits %>' \>
-        <% if(total_hits < 5000){ %>
+        <% if(total_hits > 0 && total_hits < 5000 ){ %>
            <input type='submit' value='View All Hits in one Table' style='background:tan;text-decoration:underline;padding:0 5px;' \>
         <% } %>
         </form>
@@ -433,6 +437,7 @@ table.sortable thead {
         </div>
         <div id='phage-result' >hidden</div>
     <% } %>
+    </div>
 <% } %>
 
     
@@ -468,7 +473,21 @@ table.sortable thead {
       }
   });
    
-   
+   document.onreadystatechange = function() {
+        // just three els to loader: this(js);css;html
+        if (document.readyState !== "complete") {
+            document.querySelector(
+                '.search-box-loading').style.display = "none";
+            document.querySelector(
+                "#loader").style.visibility = "visible";
+        } else {
+            document.querySelector(
+                '.search-box-loading').style.display = "block";
+            document.querySelector(
+                "#loader").style.visibility = "hidden";
+            
+        }
+  };
 
   
   function close_anno_info(){

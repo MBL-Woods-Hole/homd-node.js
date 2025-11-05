@@ -48,33 +48,16 @@
        }
        
        
-    }else if(predictor === 'cenote'){
-        html += '<th>cenote_evidence_accession</th><th>cenote_evidence_description</th>'
+    }else if(predictor === 'cenote' || predictor === 'genomad'){
+        html += '<th>accession</th><th>description</th>'
        
         html += '</tr>'
         html +="</thead>"
         html += "<tbody>"
        for(n in hits){
         html += '<tr>'
-        html += "<td class='center'><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
-        html += "<td class='center'><a href='#' onclick=\"open_phage_sequence('"+hits[n][0]+"')\">open</a></td>"
-        html += "<td class='center'>"+hits[n][2].toUpperCase()+"</td><td class='center'>"+hits[n][3].toUpperCase()+"</td><td class='center'>"+hits[n][1]+'</td><td>'+hits[n][4]+'</td><td>'+hits[n][5]+'</td>'
-        
-        html += '</tr>'
-       }
-       
-       
-    }else if(predictor === 'genomad'){
-        //genomad_annotation_accessions, genomad_annotation_description
-        html += '<th>genomad_annotation_accessions</th><th>genomad_annotation_description</th>'
-        
-        html += '</tr>'
-        html +="</thead>"
-        html += "<tbody>"
-       for(n in hits){
-        html += '<tr>'
-        html += "<td class='center'><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">link</a></td>"
-        html += "<td class='center'><a href='#' onclick=\"open_phage_sequence('"+hits[n][0]+"')\">open</a></td>"
+        html += "<td class='center'><a href='#' onclick=\"open_genome_viewer('"+hits[n][0]+"')\">open</a></td>"
+        html += "<td class='center'><a href='#' onclick=\"open_phage_sequence('"+hits[n][0]+"')\">show</a></td>"
         html += "<td class='center'>"+hits[n][2].toUpperCase()+"</td><td class='center'>"+hits[n][3].toUpperCase()+"</td><td class='center'>"+hits[n][1]+'</td><td>'+hits[n][4]+'</td><td>'+hits[n][5]+'</td>'
         
         html += '</tr>'
