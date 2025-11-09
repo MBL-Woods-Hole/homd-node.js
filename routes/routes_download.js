@@ -1046,21 +1046,9 @@ function create_full_genome_table_gtdb (sqlrows, startText) {
     //console.log('sqlrows',headersRow)
     for(n in sqlrows){
         //console.log(sqlrows[n])
-        hmt = helpers.make_otid_display_name(sqlrows[n].otid)
-        tmp = [sqlrows[n].genome_id, hmt, sqlrows[n].GTDB_taxonomy]
+        hmt = sqlrows[n].HMT_ID
+        tmp = [sqlrows[n].GENOME_ID, hmt, sqlrows[n].GTDB_taxonomy]
         
-        // for(i in headersRow){
-//            
-//           data = []
-//           if(headersRow[i] == 'otid'){
-//               hmt = helpers.make_otid_display_name(sqlrows[n][headersRow[i]])
-//               data.push(hmt)
-//           }else{
-//               data.push(sqlrows[n][headersRow[i]])
-//           }
-//           tmp.push(data)
-//           //console.log('hd',sqlrows[n][headersRow[i]])
-//         }
         txt += tmp.join('\t')
         txt += '\n'
     }
