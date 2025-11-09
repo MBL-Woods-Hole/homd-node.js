@@ -352,6 +352,7 @@ router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all 
             fileFilterText = 'HOMD.org Genome Data:: All Genome Data' + ' Date: ' + dt.today
             tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
         }
+        console.log('filter',filter)
         if (type === 'browser') {
           res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
         } else if (type === 'text') {
@@ -1019,7 +1020,7 @@ function create_table_from_sql_query (sqlrows, startText) {
     let tmp,data,i,n,hmt
     const headersRow = Object.keys(sqlrows[0])
     txt += headersRow.join('\t')+'\n'
-    //console.log('sqlrows',headersRow)
+    console.log('headersRow',headersRow)
     for(n in sqlrows){
         tmp = []
         for(i in headersRow){
@@ -1031,7 +1032,7 @@ function create_table_from_sql_query (sqlrows, startText) {
               data.push(sqlrows[n][headersRow[i]])
           }
           tmp.push(data)
-          //console.log('hd',sqlrows[n][headersRow[i]])
+          console.log('hd',sqlrows[n][headersRow[i]])
         }
         txt += tmp.join('\t')
         txt += '\n'
