@@ -277,7 +277,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
             total_hits: total_length,
             max: helpers.format_long_numbers(max_rows),
             form_type: JSON.stringify(['phage']),
-            no_ncbi_annot: JSON.stringify(C.no_ncbi_annotation)
+            no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
                     
         })
     }
@@ -500,7 +500,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
             total_hits: total_length,
             max: helpers.format_long_numbers(max_rows),
             form_type: JSON.stringify(['annotations']),
-            no_ncbi_annot: JSON.stringify(C.no_ncbi_annotation)
+            no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
                     
         })
     }

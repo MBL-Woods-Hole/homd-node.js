@@ -73,7 +73,23 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .col5{
    width:150px;
 }
-
+#anno-box{
+    
+    
+    padding:10px 10px 20px 10px;
+    border:1px solid gray;
+    margin-top:5px;
+}
+#loader {
+    background: url('/images/loading.gif') no-repeat center center;
+    position: absolute;
+    background-size: 100px 100px;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% info_data = JSON.parse(info_data) %>
@@ -82,34 +98,36 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 <% mole = JSON.parse(pid_list) %>
 <% db = anno_type+'_'+gid %>
 <% cfg = JSON.parse(config) %> 
+<% no_ncbi_annotation = JSON.parse(no_ncbi_annot) %>
 <body>
+    <div id="loader" class="center-loader" style='z-index:1'></div>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
     
     
- 
-<center>
-    <div id='genome-explorer'>
-      <% if(!gid || gid.toString() === "0"){ %>
-         <% title ="Genome Explorer" %>
-      <% }else{ %>
-         <% title ="Genome Explorer: "+organism+" ("+gid+")" %>
-      <% } %>
-      <%- include("../../partials/explorer_head"); %>
-    </div>
- </center> 
- 
-<% if(!gid || gid.toString() === '0'){ %>
-         <!-- do nothing here  -->
-<% }else if(anno_type === "prokka" || anno_type === "ncbi" ) { %>
-             <%- include("../../partials/annotation"); %>
-<% }else{ %>
-             Page Errror
-<% } %>
+<div id='anno-box'>
+    <center>
+        <div id='genome-explorer'>
+          <% if(!gid || gid.toString() === "0"){ %>
+             <% title ="Genome Explorer" %>
+          <% }else{ %>
+             <% title ="Genome Explorer: "+organism+" ("+gid+")" %>
+          <% } %>
+          <%- include("../../partials/explorer_head"); %>
+        </div>
+    </center> 
+     
+    <% if(!gid || gid.toString() === '0'){ %>
+             <!-- do nothing here  -->
+    <% }else if(anno_type === "prokka" || anno_type === "ncbi" ) { %>
+                 <%- include("../../partials/annotation"); %>
+    <% }else{ %>
+                 Page Errror
+    <% } %>
       
-
+</div>  <!-- end anno-box -->
     
     
     <!-- https://vicbioinformatics.com/software.prokka.shtml -->
@@ -146,5 +164,22 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
        document.getElementById('reset').style.background = 'black'
        document.getElementById('reset').style.cursor = 'pointer'
     }
+    document.onreadystatechange = function() {
+        // just three els to loader: this(js);css;html
+        if (document.readyState !== "complete") {
+            document.querySelector(
+                '#anno-box').style.display = "none";
+            document.querySelector(
+                "#loader").style.visibility = "visible";
+            
+        } else {
+            document.querySelector(
+                '#anno-box').style.display = "block";
+            document.querySelector(
+                "#loader").style.visibility = "hidden";
+            
+                
+        }
+  };
 </script>
 

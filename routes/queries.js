@@ -65,11 +65,20 @@ module.exports.get_db_updates_query = () => {
 // }
 // GENOMES
 module.exports.get_annotation_query = (gid, anno) => {
-  
-  let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`, gene'
-  qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+  let qSelectAnno 
+  if(anno === 'prokka'){
+    qSelectAnno = 'SELECT accession,  gc, protein_id, length_na,length_aa, `start`, `stop`,'
+    qSelectAnno += 'PROKKA_meta.orf.product as product,'
+    qSelectAnno += 'PROKKA_meta.orf.gene as gene,'
+    qSelectAnno += 'BAKTA_meta.orf.Bakta_product as bakta_product,'
+    qSelectAnno += 'BAKTA_meta.orf.Bakta_gene as bakta_gene'
+    qSelectAnno += ' FROM `PROKKA_meta`.`orf`'
+    qSelectAnno += ' LEFT JOIN `BAKTA_meta`.`orf` using(genome_id)'
+  }else{
+    qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`, gene'
+    qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
+  }
   qSelectAnno += " WHERE genome_id = '"+gid+"'"
-  
   // const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
 //   let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
 //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'

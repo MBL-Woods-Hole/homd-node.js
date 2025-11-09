@@ -500,7 +500,7 @@ router.post('/anno_search_data',(req, res) => {
             q = "SELECT 'Bakta' as anno,BAKTA_meta.orf.core_contig_acc as contig,BAKTA_meta.orf.genome_id as gid,"
             q += " core_ID as pid,core_start as start,core_end as stop,bakta_Length as length,UNCOMPRESS(seq_compressed) as seq"
             q += " from BAKTA_meta.orf"
-            q += " JOIN BAKTA_meta.protein_seq using(core_ID)"
+            q += " JOIN BAKTA_faa.protein_seq using(core_ID)"
             q += " WHERE core_ID in ("+unique_pidlst+")"
             //head_text_array = ['core_ID','Genome_ID','Contig','BAKTA','seq_length']
                 
