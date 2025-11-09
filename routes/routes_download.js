@@ -327,10 +327,11 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all (req, res) {
+    
     let dt = helpers.get_today_obj()
     const type = req.params.type
     const filter = req.params.filter
-    
+    console.log('in dld_genome_table_all/:type/:filter',type,filter)
     let fileFilterText,tableTsv
     const sendList = Object.values(C.genome_lookup)
     const listOfGids = sendList.map(item => item.gid)
@@ -1016,6 +1017,7 @@ function create_taxon_table(otids, source, type, head_txt) {
 }        
 //
 function create_table_from_sql_query (sqlrows, startText) {
+    console.log('in create_table_from_sql_query')
     let txt = startText + '\n'
     let tmp,data,i,n,hmt
     const headersRow = Object.keys(sqlrows[0])
