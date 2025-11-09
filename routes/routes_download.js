@@ -331,7 +331,7 @@ router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all 
     let dt = helpers.get_today_obj()
     const type = req.params.type
     const filter = req.params.filter
-    console.log('in dld_genome_table_all/:type/:filter',type,filter)
+    //console.log('in dld_genome_table_all/:type/:filter',type,filter)
     let fileFilterText,tableTsv
     const sendList = Object.values(C.genome_lookup)
     const listOfGids = sendList.map(item => item.gid)
@@ -353,7 +353,7 @@ router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all 
             fileFilterText = 'HOMD.org Genome Data:: All Genome Data' + ' Date: ' + dt.today
             tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
         }
-        console.log('filter',filter)
+        //console.log('filter',filter)
         if (type === 'browser') {
           res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
         } else if (type === 'text') {
@@ -1017,12 +1017,12 @@ function create_taxon_table(otids, source, type, head_txt) {
 }        
 //
 function create_table_from_sql_query (sqlrows, startText) {
-    console.log('in create_table_from_sql_query')
+    //console.log('in create_table_from_sql_query')
     let txt = startText + '\n'
     let tmp,data,i,n,hmt
     const headersRow = Object.keys(sqlrows[0])
     txt += headersRow.join('\t')+'\n'
-    console.log('headersRow',headersRow)
+    //console.log('headersRow',headersRow)
     for(n in sqlrows){
         tmp = []
         for(i in headersRow){
@@ -1034,7 +1034,7 @@ function create_table_from_sql_query (sqlrows, startText) {
               data.push(sqlrows[n][headersRow[i]])
           }
           tmp.push(data)
-          console.log('hd',sqlrows[n][headersRow[i]])
+          //console.log('hd',sqlrows[n][headersRow[i]])
         }
         txt += tmp.join('\t')
         txt += '\n'
@@ -1044,12 +1044,12 @@ function create_table_from_sql_query (sqlrows, startText) {
 function create_full_genome_table_gtdb (sqlrows, startText) {
     let txt = startText + '\n'
     let tmp,data,i,n,hmt
-    console.log('in create_full_genome_table_gtdb',txt)
+    //console.log('in create_full_genome_table_gtdb',txt)
     const headersRow = ['Genome-ID','HMT-ID','GTDB Taxonomy']
     txt += headersRow.join('\t')+'\n'
     //console.log('sqlrows',headersRow)
     for(n in sqlrows){
-        console.log('sqlrows[n]',sqlrows[n])
+        //console.log('sqlrows[n]',sqlrows[n])
         //hmt = helpers.make_otid_display_name(sqlrows[n].HMT_ID)
         hmt = sqlrows[n].HMT_ID
         tmp = [sqlrows[n].GENOME_ID, hmt, sqlrows[n].GTDB_taxonomy]
