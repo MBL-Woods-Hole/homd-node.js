@@ -1044,11 +1044,12 @@ function create_table_from_sql_query (sqlrows, startText) {
 function create_full_genome_table_gtdb (sqlrows, startText) {
     let txt = startText + '\n'
     let tmp,data,i,n,hmt
+    console.log('in create_full_genome_table_gtdb',txt)
     const headersRow = ['Genome-ID','HMT-ID','GTDB Taxonomy']
     txt += headersRow.join('\t')+'\n'
     //console.log('sqlrows',headersRow)
     for(n in sqlrows){
-        //console.log(sqlrows[n])
+        console.log('sqlrows[n]',sqlrows[n])
         hmt = helpers.make_otid_display_name(sqlrows[n].otid)
         tmp = [sqlrows[n].genome_id, hmt, sqlrows[n].GTDB_taxonomy]
         
