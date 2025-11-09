@@ -1050,8 +1050,9 @@ function create_full_genome_table_gtdb (sqlrows, startText) {
     //console.log('sqlrows',headersRow)
     for(n in sqlrows){
         console.log('sqlrows[n]',sqlrows[n])
-        hmt = helpers.make_otid_display_name(sqlrows[n].otid)
-        tmp = [sqlrows[n].genome_id, hmt, sqlrows[n].GTDB_taxonomy]
+        //hmt = helpers.make_otid_display_name(sqlrows[n].HMT_ID)
+        hmt = sqlrows[n].HMT_ID
+        tmp = [sqlrows[n].GENOME_ID, hmt, sqlrows[n].GTDB_taxonomy]
         
         // for(i in headersRow){
 //            
