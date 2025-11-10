@@ -405,6 +405,7 @@ router.post('/get_AA_NA_seq', function get_AA_NA_SeqPost (req, res) {
   
   let db,q
   let gid = req.body.gid
+  
   if(req.body.type === 'aa'){   // NCBI
       if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
           db = "`NCBI_faa`.`protein_seq`"
