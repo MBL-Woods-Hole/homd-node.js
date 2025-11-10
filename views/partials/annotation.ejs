@@ -120,14 +120,10 @@ thead th { position: sticky; top: 0; }
        
        
        <th class='col6x'><small><%= anno_type.toUpperCase() %></small><br>Gene</th>
+       <th class='col7x'><small><%= anno_type.toUpperCase() %></small><br>GeneProduct</th>
        
        <% if(anno_type == "prokka"){ %><!-- Only show BAKTA if anno == PROKKA -->
          <th class='col6x'><small>BAKTA</small><br>Gene</th>
-       <% } %>
-       
-       <th class='col7x'><small><%= anno_type.toUpperCase() %></small><br>GeneProduct</th>
-       
-       <% if(anno_type == "prokka"){ %>  <!-- Only show BAKTA if anno == PROKKA -->
          <th class='col7x'><small>BAKTA</small><br>GeneProduct</th>
        <% } %>
        
@@ -210,9 +206,7 @@ thead th { position: sticky; top: 0; }
          <td><%- mole[n].gene %></td>
       <% } %>
        
-       <% if(anno_type == "prokka"){ %>
-          <td><%- mole[n].bakta_gene %></td>
-       <% } %>
+      
        
        <% idx = mole[n].product.toLowerCase().indexOf(src_txt) %>
        <% if(idx != -1){ %>
@@ -222,7 +216,8 @@ thead th { position: sticky; top: 0; }
          <td><%- mole[n].product %></td>
       <% } %>
       
-      <% if(anno_type == "prokka"){ %>
+       <% if(anno_type == "prokka"){ %>
+          <td><%- mole[n].bakta_gene %></td>
           <td><%- mole[n].bakta_product %></td>
        <% } %>
        
