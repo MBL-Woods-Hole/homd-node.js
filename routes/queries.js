@@ -53,23 +53,25 @@ module.exports.get_dropped_taxa = () => {
 module.exports.get_db_updates_query = () => {
   return "SELECT otid, description, reason, date FROM updates WHERE `show`='1'"
 }
-// module.exports.get_annotation_query = (gid, anno) => {
-//   let qSelectAnno = 'SELECT accession, PID, product FROM annotation.orf_sequence'
-//   qSelectAnno += ' JOIN annotation.molecule ON orf_sequence.gid=molecule.gid'
-//   qSelectAnno += ' AND orf_sequence.annotation=molecule.annotation'
-//   qSelectAnno += ' AND orf_sequence.mol_id=molecule.mol_id'
-//   qSelectAnno += " WHERE orf_sequence.gid='" + gid + "'"
-//   qSelectAnno += " AND orf_sequence.annotation='" + anno + "'"
-// 
-//   return qSelectAnno
-// }
+
 // GENOMES
 module.exports.get_annotation_query = (gid, anno) => {
-  
-  let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`, gene'
-  qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-  qSelectAnno += " WHERE genome_id = '"+gid+"'"
-  
+  let qSelectAnno 
+  if(anno === 'prokka'){
+    qSelectAnno = 'SELECT accession,  gc, protein_id, length_na,length_aa, `start`, `stop`,'
+    
+    qSelectAnno += 'PROKKA_meta.orf.product as product,'
+    qSelectAnno += 'PROKKA_meta.orf.gene as gene,'
+    qSelectAnno += 'BAKTA_meta.orf.Bakta_product as bakta_product,'
+    qSelectAnno += 'BAKTA_meta.orf.Bakta_gene as bakta_gene,'
+    qSelectAnno += 'BAKTA_meta.orf.bakta_Length'
+    qSelectAnno += ' FROM PROKKA_meta.orf'
+    qSelectAnno += ' LEFT JOIN BAKTA_meta.orf on(protein_id=core_ID)'
+  }else{
+    qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`, gene'
+    qSelectAnno += ' FROM '+anno.toUpperCase()+'_meta.orf'
+  }
+  qSelectAnno += " WHERE "+anno.toUpperCase()+"_meta.orf.genome_id = '"+gid+"'"
   // const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
 //   let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
 //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'

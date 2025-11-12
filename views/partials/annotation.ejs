@@ -99,7 +99,10 @@ thead th { position: sticky; top: 0; }
         
         
     <br><hr>
-    <span><small><b>Note:</b> Column headers only sort the current page. Select [NA] or [AA] links to show sequences.</small></span>
+    <span><small><b>Notes:</b> 1- Column headers only sort the current page. Select [NA] or [AA] links to show sequences.
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2- BAKTA columns are <a href='https://github.com/oschwengers/bakta' target='_blank'>
+         BAKTA</a> annotations of PROKKA gene calls.
+    </small></span>
      
      
      <div id='table-container'>
@@ -112,11 +115,19 @@ thead th { position: sticky; top: 0; }
        <th class='col1'>Molecule-ID</th>
        <th title='Protein ID' class='col2'>Protein-ID</th>
        <th class='col2a sorttable_nosort'>Genome<br>Viewer</th>
-       <th title='Nucleic Acid Length (bp)' class='col3 center sorttable_numeric' nowrap>NA<br><small>(Length)[Seq]</small><br></th>
-       <th title='Amino Acid Length (bp)' class='col4 center sorttable_numeric' nowrap>AA<br><small>(Length)[Seq]</small><br></th>
        <th class='col5 sorttable_nosort'>Range<br><small>(bp)</small></th>
-       <th class='col6'>Gene</th>
-       <th class='col7'>Gene<br>Product</th>
+       <th title='Nucleic Acid Length (bp)' class='col3 center sorttable_numeric' nowrap>Show Sequences<br><small>(length) NA / AA</small></th>
+      
+       
+       
+       <th class='col6x'><small><%= anno_type.toUpperCase() %></small><br>Gene</th>
+       <th class='col7x'><small><%= anno_type.toUpperCase() %></small><br>GeneProduct</th>
+       
+       <% if(anno_type == "prokka"){ %><!-- Only show BAKTA if anno == PROKKA -->
+         <th class='col6x'><small>BAKTA</small><br>Gene</th>
+         <th class='col7x'><small>BAKTA</small><br>GeneProduct</th>
+       <% } %>
+       
       </tr>
      </thead>
      <tbody>
@@ -174,19 +185,19 @@ thead th { position: sticky; top: 0; }
          <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('<%= gid %>','anno_table','','','<%= anno_type %>','<%= loc %>','<%= highlight %>')">open</a>
        </td>
        
-       <td class='center' nowrap>
-       <%= mole[n].length_na %>
-           [<a title='Nucleic Acid' href='#' onclick="get_AA_NA_seq('na','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')"><b>NA</b></a>] 
-           
-        </td>
-        <td class='center' nowrap>
-           <%= mole[n].length_aa %>
-           [<a title='Amino Acid'   href='#' onclick="get_AA_NA_seq('aa','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')"><b>AA</b></a>]
-           
-        </td>
-       
-       
        <td class='center'><%= mole[n].start %>-<%= mole[n].stop %></td>
+       
+       
+       <td class='center' nowrap>
+           <a title='Nucleic Acid' href='#' onclick="get_AA_NA_seq('na','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')">
+           <%= mole[n].length_na %>_na</a>
+           &nbsp;&nbsp;&nbsp;
+           <a title='Amino Acid'   href='#' onclick="get_AA_NA_seq('aa','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')">
+           <%= mole[n].length_aa %>_aa</a>
+           
+       </td>
+       
+       
        
        <% idx = mole[n].gene.toLowerCase().indexOf(src_txt) %>
        <% if(idx != -1){ %>
@@ -196,6 +207,8 @@ thead th { position: sticky; top: 0; }
          <td><%- mole[n].gene %></td>
       <% } %>
        
+      
+       
        <% idx = mole[n].product.toLowerCase().indexOf(src_txt) %>
        <% if(idx != -1){ %>
          <% html = mole[n].product.slice(0,idx)+ "<font color='red'>"+src_txt.toUpperCase() +"</font>"+mole[n].product.slice(idx+src_txt.length) %>
@@ -203,6 +216,11 @@ thead th { position: sticky; top: 0; }
        <% }else{ %>
          <td><%- mole[n].product %></td>
       <% } %>
+      
+       <% if(anno_type == "prokka"){ %>
+          <td><%- mole[n].bakta_gene %></td>
+          <td><%- mole[n].bakta_product %></td>
+       <% } %>
        
      </tr>
      <% cnt += 1 %>

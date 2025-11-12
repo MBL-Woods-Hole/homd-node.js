@@ -21,16 +21,29 @@
                   
                   <% if(anno_type == 'prokka'){ %>
                     <span class='an-button active' href=''>PROKKA</span>
-                    <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+                    <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
+                        <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+                    <% }else{ %>
+                        <a href='#' class='pill pill-grayed'>NCBI</a>
+                    <% } %>
                     <a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= gid %>' target="_self">PROKKA BLAST</a> 
                     <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
                   <% }else if(anno_type == 'ncbi'){ %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
-                    <span class='an-button active' href=''>NCBI</span>
+                    
+                    <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
+                        <span class='an-button active' href=''>NCBI</span>
+                    <% }else{ %>
+                        <a href='#' class='pill pill-grayed'>NCBI</a>
+                    <% } %>
                     <a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_ncbi/?gid=<%= gid %>' target="_self">NCBI BLAST</a> 
                   <% }else { %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
-                    <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+                    <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
+                        <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+                    <% }else{ %>
+                        <a href='#' class='pill pill-grayed'>NCBI</a>
+                    <% } %>
                     <a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_<%= anno_type %>/?gid=<%= gid %>' target="_self">BLAST</a> 
                   <% } %>
                   |

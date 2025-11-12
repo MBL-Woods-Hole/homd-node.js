@@ -55,7 +55,7 @@ function renderGenomeTable(req, res, args) {
         count_txt: args.count_txt,
         taxa_wgenomes: helpers_genomes.get_taxa_wgenomes().length,
         filter_on: args.filter_on,
-        no_ncbi_annot: JSON.stringify(C.no_ncbi_annotation)
+        no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
     })
 }
 
@@ -397,7 +397,7 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
 
 router.post('/get_AA_NA_seq', function get_AA_NA_SeqPost (req, res) {
   console.log('in get_AA_NA_seq -post')
-  console.log(req.body)
+  //console.log(req.body)
   //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
   const pid = req.body.pid
   //const db = req.body.db.toUpperCase()
@@ -405,12 +405,13 @@ router.post('/get_AA_NA_seq', function get_AA_NA_SeqPost (req, res) {
   
   let db,q
   let gid = req.body.gid
+  
   if(req.body.type === 'aa'){   // NCBI
       if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
           db = "`NCBI_faa`.`protein_seq`"
           q = queries.get_AA_NA(db, gid, pid)
        }else if(db_pts[0] === 'bakta'){
-          db = "`BAKTA_meta`.`protein_seq`"
+          db = "`BAKTA_faa`.`protein_seq`"
           q = queries.get_bakta_AA(db, gid, pid)
        }else{
           db = "`PROKKA_faa`.`protein_seq`"
@@ -477,7 +478,8 @@ function render_explorer(req, res, args){
         src_txt:'',
         returnTo: '/genome/explorer?gid='+args.gid,
         fltr: JSON.stringify(args.fltr),
-        filter_on: args.filter_on
+        filter_on: args.filter_on,
+        no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
      })
 
 }

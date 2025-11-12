@@ -17,7 +17,7 @@ sys.path.append('../../config/')
 from connect import MyConnection
 usable_annotations = ['ncbi','prokka']
 # obj = {seqid:[]}
-
+genome_collector = {}
 # def get_seqid_ver_gcaid(file):
 #     gid_list = {}
 #     with open(file, 'r') as handle:
@@ -84,13 +84,22 @@ def make_anno_object():
 # "rRNA": "",
 # "tRNA": "",
 # "tmRNA": ""
-def get_seqids(args):
-    lst = []
-    q1 = "SELECT genome_id from `homd`.`genomesV11.0`"
-    rows = myconn.execute_fetch_select(q1)
+def get_genomes(args):
+    q = "SELECT genome_id as gid from `homd`.`genomesV11.0`"
+    #q = "SELECT genome_id as gid, otid from `"+table+'` limit 10'
+    
+    rows = myconn.execute_fetch_select_dict(q)
     for row in rows:
-        lst.append(row[0])
-    return lst
+        #print(row)
+        genome_collector[row['gid']] = 1
+
+# def get_seqids(args):
+#     lst = []
+#     q1 = "SELECT genome_id from `homd`.`genomesV11.0`"
+#     rows = myconn.execute_fetch_select(q1)
+#     for row in rows:
+#         lst.append(row[0])
+#     return lst
 def run(args):
     #global master_lookup
     master_lookup = {}
@@ -104,7 +113,7 @@ def run(args):
     q_ncbi_base   = "SELECT organism, gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_ncbiV11.0`   WHERE genome_id='%s'"
     fields = ['organism','gene','CDS','rRNA','tRNA','tmRNA','mRNA']
     
-    for gid in args.seqids_from_db:
+    for gid in genome_collector:
         #print(gid)
         anno = 'prokka'
         
@@ -223,6 +232,6 @@ if __name__ == "__main__":
     #seqid_file = 'new_gca_selected_8148_seqID.csv'
     #args.seqids_from_file = get_seqids_from_new_genomes_file(seqid_file)
     #args.seqid_ver_gcaid = get_seqid_ver_gcaid('seqid_ver_gcaid.txt')
-    args.seqids_from_db = get_seqids(args)
+    get_genomes(args)
 
     run(args)
