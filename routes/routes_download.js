@@ -499,10 +499,10 @@ router.post('/anno_search_data',(req, res) => {
     //console.log('unique_lst',unique_pidlst)
     if(anno.toUpperCase() === 'BAKTA'){
         if(format === 'fasta_aa'){
-            q = "SELECT 'Bakta' as anno,BAKTA_meta.orf.core_contig_acc as contig,BAKTA_meta.orf.genome_id as gid,"
+            q = "SELECT 'Bakta' as anno,BAKTA.orf.core_contig_acc as contig,BAKTA.orf.genome_id as gid,"
             q += " core_ID as pid,core_start as start,core_end as stop,bakta_Length as length,UNCOMPRESS(seq_compressed) as seq"
-            q += " from BAKTA_meta.orf"
-            q += " JOIN BAKTA_faa.protein_seq using(core_ID)"
+            q += " from BAKTA.orf"
+            q += " JOIN BAKTA.faa using(core_ID)"
             q += " WHERE core_ID in ("+unique_pidlst+")"
             //head_text_array = ['core_ID','Genome_ID','Contig','BAKTA','seq_length']
                 
@@ -516,7 +516,7 @@ router.post('/anno_search_data',(req, res) => {
             // bakta table (everthing except seqs)
             q = "SELECT genome_id as gid,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
             q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef"
-            q += " from `BAKTA_meta`.orf WHERE core_ID in ("+unique_pidlst+")"
+            q += " from `BAKTA`.orf WHERE core_ID in ("+unique_pidlst+")"
             head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
                 
             
@@ -526,21 +526,21 @@ router.post('/anno_search_data',(req, res) => {
         let anno_cap = anno.toUpperCase()
         if(format === 'fasta_aa'){
             
-            q = "SELECT '"+anno_cap+"' as anno,accession as contig,`"+anno_cap+"_meta`.orf.genome_id as gid,"
+            q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
             q += " protein_id as pid,start,stop,length_aa as length, UNCOMPRESS(seq_compressed) as seq"
-            q += " from `"+anno_cap+"_meta`.orf"
-            q += " JOIN `"+anno_cap+"_faa`.protein_seq using(protein_id)"
+            q += " from "+anno_cap+".orf"
+            q += " JOIN "+anno_cap+".faa using(protein_id)"
             q += " WHERE protein_id in ("+unique_pidlst+")"
         }else if(format === 'fasta_na'){
-            q = "SELECT '"+anno_cap+"' as anno,accession as contig,`"+anno_cap+"_meta`.orf.genome_id as gid,"
+            q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
             q += " protein_id as pid,start,stop,length_na as length, UNCOMPRESS(seq_compressed) as seq"
-            q += " from `"+anno_cap+"_meta`.orf"
-            q += " JOIN `"+anno_cap+"_ffn`.ffn_seq using(protein_id)"
+            q += " from "+anno_cap+".orf"
+            q += " JOIN "+anno_cap+".ffn using(protein_id)"
             q += " WHERE protein_id in ("+unique_pidlst+")"
         }else{
             // table  PROKKA and NCBI
             q = "SELECT genome_id as gid,accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
-            q += "length_na as lna from `"+anno_cap+"_meta`.orf WHERE protein_id in ("+unique_pidlst+")"
+            q += "length_na as lna from "+anno_cap+".orf WHERE protein_id in ("+unique_pidlst+")"
             head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
              
         }
@@ -809,9 +809,7 @@ function create_anno_table(sql_rows,anno,headers,search_term) {
         }
     }else{
         //text='anno table: '+anno
-        // q = "SELECT accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
-//         q += "length_na as lna from `"+anno_cap+"_meta`.orf WHERE protein_id in ("+unique_pidlst+")"
-//         head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
+       
         for(let n in sql_rows){
             text += sql_rows[n].gid+'\t'+sql_rows[n].acc+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].lna
             text += '\t'+sql_rows[n].laa

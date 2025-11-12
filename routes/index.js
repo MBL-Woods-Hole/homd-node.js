@@ -121,9 +121,9 @@ router.post('/advanced_anno_orf_search', function advanced_anno_orf_searchPOST(r
     let anno = req.body.anno.toUpperCase()
     let q
     if(anno =='BAKTA'){
-        q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `"+anno+"_meta`.orf WHERE core_ID in ("+req.body.pid_list+")"
+        q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA`.orf WHERE core_ID in ("+req.body.pid_list+")"
     }else{
-        q = "SELECT accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,length_na as lna from `"+anno+"_meta`.orf WHERE protein_id in ("+req.body.pid_list+")"
+        q = "SELECT accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf WHERE protein_id in ("+req.body.pid_list+")"
     }
     console.log(q)
     TDBConn.query(q, (err, rows) => {

@@ -77,7 +77,7 @@
   
 function show_anno_hits(obj, anno, gid){
     var data = JSON.parse(obj)
-    //console.log('obj',data)
+    console.log('obj',data)
     //console.log('data[gid]',data[0])
     org = data[0].species
     
@@ -141,6 +141,7 @@ function show_anno_hits(obj, anno, gid){
 //     stop: '2149687'
 //   }
             for(n in resp_data){
+                console.log('rdata[n]',n,resp_data[n])
                 if(resp_data[n].start[0] === "<" ){
                     start = parseInt(resp_data[n].start.substring(1))
                 }else{
