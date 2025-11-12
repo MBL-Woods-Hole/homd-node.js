@@ -28,7 +28,7 @@ def get_all_genomes():
         all_genome_collector[row['gid']] = 1
 
 def get_ncbi_genomes():
-    q = "SELECT DISTINCT genome_id as gid from NCBI_meta.ncbi_info"
+    q = "SELECT DISTINCT genome_id as gid from NCBI.info"
     #q = "SELECT genome_id as gid, otid from `"+table+'` limit 10'
     
     rows = myconn.execute_fetch_select_dict(q)
@@ -36,13 +36,7 @@ def get_ncbi_genomes():
         #print(row)
         ncbi_genome_collector[row['gid']] = 1
         
-# def get_bakta_genomes():
-#     q = "SELECT DISTINCT genome_id as gid from BAKTA_meta.orf"
-#    
-#     rows = myconn.execute_fetch_select_dict(q)
-#     for row in rows:
-#         #print(row)
-#         bakta_genome_collector[row['gid']] = 1
+
     
 def run(args):
     

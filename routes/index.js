@@ -387,14 +387,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     
     let q,rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,gid_count = {},pid,prod
     let tmp_obj = {}
-    // if(req.body.adv_anno_radio == 'prokka'){
-//         q = "SELECT "+sql_fields.join(",")+" from PROKKA_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
-//     }else if(req.body.adv_anno_radio == 'ncbi'){
-//         q = "SELECT "+sql_fields.join(",")+" from NCBI_meta.orf WHERE CONCAT(protein_id, accession, gene, product) LIKE '%"+searchText+"%'"
-//     }else{
-//         console.log('ERROR')
-//         return
-//     }
+    
     try{
         let datapath = path.join(CFG.PATH_TO_SEARCH,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
         //let filename = uuidv4();  //CFG.PATH_TO_TMP

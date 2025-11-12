@@ -60,18 +60,18 @@ module.exports.get_annotation_query = (gid, anno) => {
   if(anno === 'prokka'){
     qSelectAnno = 'SELECT accession,  gc, protein_id, length_na,length_aa, `start`, `stop`,'
     
-    qSelectAnno += 'PROKKA_meta.orf.product as product,'
-    qSelectAnno += 'PROKKA_meta.orf.gene as gene,'
+    qSelectAnno += 'PROKKA.orf.product as product,'
+    qSelectAnno += 'PROKKA.orf.gene as gene,'
     qSelectAnno += 'BAKTA_meta.orf.Bakta_product as bakta_product,'
     qSelectAnno += 'BAKTA_meta.orf.Bakta_gene as bakta_gene,'
     qSelectAnno += 'BAKTA_meta.orf.bakta_Length'
-    qSelectAnno += ' FROM PROKKA_meta.orf'
+    qSelectAnno += ' FROM PROKKA.orf'
     qSelectAnno += ' LEFT JOIN BAKTA_meta.orf on(protein_id=core_ID)'
   }else{
     qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`, gene'
-    qSelectAnno += ' FROM '+anno.toUpperCase()+'_meta.orf'
+    qSelectAnno += ' FROM '+anno.toUpperCase()+'.orf'
   }
-  qSelectAnno += " WHERE "+anno.toUpperCase()+"_meta.orf.genome_id = '"+gid+"'"
+  qSelectAnno += " WHERE "+anno.toUpperCase()+".orf.genome_id = '"+gid+"'"
   // const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
 //   let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
 //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
@@ -91,26 +91,7 @@ module.exports.get_lineage_query = (otid) => {
     qSelectTaxnames += " WHERE otid='"+otid+"'"
     return qSelectTaxnames
 }
-// module.exports.get_annotation_query2 = (gid, anno, pid_list) => {
-//   
-//   let qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`'
-//       qSelectAnno += ' FROM `'+anno.toUpperCase()+'_meta`.`orf`'
-//       //qSelectAnno += " WHERE seq_id = '"+gid+"' and protein_id in ('"+pid_list.join("','")+"')"
-//       qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
-//   //const db = anno.toUpperCase() + '_' + gid
-//   // let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
-// //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
-// //   qSelectAnno += " WHERE protein_id in ('"+pid_list.join("','")+"')"
-//   return qSelectAnno
-// }
-// module.exports.get_annotation_query3 = (search_text) => {
-//   // this query takes too long
-//   let qSelectAnno = "SELECT 'ncbi' as anno, seq_id as gid, protein_id, product from `NCBI_meta`.orf WHERE product like '%"+search_text+"%'"
-//     qSelectAnno += ' UNION ALL'  // UNION vs UNION ALL
-//     qSelectAnno += "SELECT 'prokka' as anno, seq_id as gid, protein_id, product from `PROKKA_meta`.orf WHERE product like '%"+search_text+"%'"
-//     
-//   return qSelectAnno
-// }
+
 module.exports.get_all_pangenomes_query = () => {
     let q = "SELECT pangenome_name,homd_genome_version,description FROM pangenome_v4"
     q += " WHERE active='1' ORDER by pangenome_name"
@@ -199,19 +180,7 @@ function genome_query() {
     
     
     
-   //  let qSelectGenome = "SELECT `"+tbl+"`.genome_id,`"+tbl+"`.otid,`"+tbl+"`.strain,`"+ptbl+"`.organism,`"+tbl+"`.contigs,`"+tbl+"`.combined_size,`"+tbl+"`.MAG,`"+tbl+"`.GC,`"+tbl+"`.url,`"+tbl+"`.GTDB_taxonomy, "
-//         qSelectGenome +=" bioproject,taxid,biosample,assembly_name,assembly_level,assembly_method,"
-//         qSelectGenome +=" submission_date,geo_loc_name,isolation_source,status,seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,checkM2_contamination,refseq_assembly,WGS,"
-//         qSelectGenome +=" `"+ptbl+"`.contigs as prokka_contigs,`"+ptbl+"`.CDS as prokka_CDS,`"+ptbl+"`.gene as prokka_gene,`"+ptbl+"`.mRNA as prokka_mRNA,`"+ptbl+"`.misc_RNA as prokka_misc_RNA,`"+ptbl+"`.rRNA as prokka_rRNA,`"+ptbl+"`.tRNA as prokka_tRNA,`"+ptbl+"`.tmRNA as prokka_tmRNA,"
-//         
-//         qSelectGenome +=" pangenome_v4.pangenome_name as pangenome"  // works as long as only one pg per genome
-// 
-//         qSelectGenome +=" FROM `"+tbl+"`"
-//         qSelectGenome +=" LEFT JOIN `"+ptbl+"` using(genome_id)"
-//         qSelectGenome +=" LEFT JOIN `"+ntbl+"` using(genome_id)"
-//         
-//         qSelectGenome +=" LEFT JOIN `pangenome_genome` using(genome_id)"
-//         qSelectGenome +=" LEFT JOIN `pangenome_v4` using(pangenome_id)"
+
     console.log(qSelectGenome)
     return qSelectGenome
 }
@@ -228,7 +197,7 @@ module.exports.get_genome = (gid) => {   // always NCBI for genome description
 }
 module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
-  let qSelectContigs = "SELECT accession, GC from `NCBI_meta`.`molecules` WHERE genome_id = '"+gid+"'"
+  let qSelectContigs = "SELECT accession, GC from `NCBI`.`molecule` WHERE genome_id = '"+gid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj
@@ -237,7 +206,7 @@ module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
 }
 module.exports.get_contig = (gid, mid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
-  let qSelectContigs = "SELECT UNCOMPRESS(seq_compressed) as seq from `NCBI_contig`.`contig_seq` WHERE genome_id = '"+gid+"' and mol_id='"+mid+"'"
+  let qSelectContigs = "SELECT UNCOMPRESS(seq_compressed) as seq from `NCBI`.`contig` WHERE genome_id = '"+gid+"' and mol_id='"+mid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj

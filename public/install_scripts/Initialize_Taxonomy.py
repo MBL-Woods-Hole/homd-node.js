@@ -362,7 +362,7 @@ def run_refseq(args):
 
 def run_info(args):  ## prev general,  On its own lookup
     global master_lookup
-    q = "SELECT otid, general, prevalence, cultivability, disease_associations, phenotypic_characteristics FROM taxon_info"
+    q = "SELECT otid, IFNULL(general,'') as general, IFNULL(prevalence,'') as prev, IFNULL(cultivability,'') as culta, IFNULL(disease_associations,'') as disease, IFNULL(phenotypic_characteristics,'') as pheno FROM taxon_info"
     result = myconn.execute_fetch_select_dict(q)
 
     lookup = {}
@@ -375,11 +375,11 @@ def run_info(args):  ## prev general,  On its own lookup
         # remove any double quotes but single quotes are ok (to preserve links)
         lookup[otid] = {}
         lookup[otid]['otid']    = otid
-        lookup[otid]['culta']   = obj['cultivability'].strip()
-        lookup[otid]['disease'] = obj['disease_associations'].strip()
+        lookup[otid]['culta']   = obj['culta'].strip()
+        lookup[otid]['disease'] = obj['disease'].strip()
         lookup[otid]['general'] = obj['general'].strip()
-        lookup[otid]['pheno']   = obj['phenotypic_characteristics'].strip()
-        lookup[otid]['prev']    = obj['prevalence'].strip()
+        lookup[otid]['pheno']   = obj['pheno'].strip()
+        lookup[otid]['prev']    = obj['prev'].strip()
 
     file = os.path.join(args.outdir,args.outfileprefix+'InfoLookup.json')
     print_dict(file, lookup)
@@ -545,7 +545,7 @@ JOIN subspecies  using(subspecies_id)
             # send all otids including dropped and nonOralRef
         run_counts2(otid, tax_list, num_genomes, num_refseqs)
 
-    file1 = os.path.join(args.outdir,args.outfileprefix+'Lineagelookup.json')
+    file1 = os.path.join(args.outdir,args.outfileprefix+'LineageLookup.json')
     file2 = os.path.join(args.outdir,args.outfileprefix+'Hierarchy.json')
     
     # only send otid that are not dropped
@@ -754,7 +754,7 @@ if __name__ == "__main__":
     print_master_lookup(args)
 
     run_refseq(args)
-    #run_info(args) # this only on taxon_description page AND used for downloads ->query
+    run_info(args) # this only on taxon_description page AND used for downloads ->query
     run_references(args)
 
 

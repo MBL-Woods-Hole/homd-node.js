@@ -60,8 +60,8 @@ def run(args):
     # using .gz files JUST NEED CONTIGS
     count = 0
     ## NCBI ONLY
-    db = 'PROKKA_contig'
-    table = 'contig_seq'
+    db = 'PROKKA'
+    table = 'contig'
     q = "SELECT genome_id, mol_id from `"+db+"`.`"+table+"`"
     print(q)
     result = myconn.execute_fetch_select(q)

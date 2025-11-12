@@ -18,30 +18,6 @@ from connect import MyConnection
 usable_annotations = ['ncbi','prokka']
 # obj = {seqid:[]}
 genome_collector = {}
-# def get_seqid_ver_gcaid(file):
-#     gid_list = {}
-#     with open(file, 'r') as handle:
-#         for line in handle:
-#             line = line.strip().split('\t')
-#             gid_list[line[0]] = {}
-#             gid_list[line[0]]['n'] = line[1]
-#             gid_list[line[0]]['gca'] = line[2]
-#     return gid_list
-# def get_seqids_from_new_genomes_file(file):
-#     file_list = []
-#     with open(file, 'r') as handle:
-#         first_line = handle.readline()
-#         for line in handle:
-#             
-#             line = line.strip().split('\t')
-#             if line[1].startswith('SEQF'):
-#                 if '.' in line[1]:
-#                     file_list.append(line[1].split('.')[0])
-#                 else:
-#                     file_list.append(line[1])
-#     
-#     #print(file_list,len(file_list))
-#     return file_list
 
 def make_anno_object():
 
@@ -106,9 +82,6 @@ def run(args):
     
     
     # prokka first
-    
-    #q_prokka_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `PROKKA_meta`.`prokka_info` WHERE genome_id='%s'"
-    #q_ncbi_base = "SELECT organism,contigs,bases,CDS,rRNA,tRNA,tmRNA FROM `NCBI_meta`.`ncbi_info` WHERE genome_id='%s'"
     q_prokka_base = "SELECT organism, gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_prokkaV11.0` WHERE genome_id='%s'"
     q_ncbi_base   = "SELECT organism, gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_ncbiV11.0`   WHERE genome_id='%s'"
     fields = ['organism','gene','CDS','rRNA','tRNA','tmRNA','mRNA']

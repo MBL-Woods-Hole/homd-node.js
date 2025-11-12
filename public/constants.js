@@ -336,11 +336,11 @@ constants.genome_level_all = {
 
 // tax filenames (fn)
 constants.genome_lookup_fn      = 'homdData-GenomeLookup.json'
-constants.info_lookup_fn        = 'homdData-TaxonInfoLookup.json'
+constants.info_lookup_fn        = 'homdData-TaxonInfoLookup.json'   //??
 constants.references_lookup_fn  = 'homdData-TaxonReferencesLookup.json'
 constants.taxcounts_fn          = 'homdData-TaxonCounts.json'
 constants.taxon_lookup_fn       = 'homdData-TaxonLookup.json'
-constants.lineage_lookup_fn     = 'homdData-TaxonLineagelookup.json' // supplied to create dict
+constants.lineage_lookup_fn     = 'homdData-TaxonLineageLookup.json' // supplied to create dict
 constants.tax_hierarchy_fn      = 'homdData-TaxonHierarchy.json'
 constants.refseq_lookup_fn      = 'homdData-TaxonRefSeqLookup.json'
 constants.phage_list_fn         = 'homdData-PhageList.json'

@@ -408,22 +408,22 @@ router.post('/get_AA_NA_seq', function get_AA_NA_SeqPost (req, res) {
   
   if(req.body.type === 'aa'){   // NCBI
       if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
-          db = "`NCBI_faa`.`protein_seq`"
+          db = "`NCBI`.`faa`"
           q = queries.get_AA_NA(db, gid, pid)
        }else if(db_pts[0] === 'bakta'){
           db = "`BAKTA_faa`.`protein_seq`"
           q = queries.get_bakta_AA(db, gid, pid)
        }else{
-          db = "`PROKKA_faa`.`protein_seq`"
+          db = "`PROKKA`.`faa`"
           q = queries.get_AA_NA(db, gid, pid)
        }
      
   }else{   //req.body.type === 'na':   // NCBI  na
       if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
-          db = "`NCBI_ffn`.`ffn_seq`"
+          db = "`NCBI`.`ffn`"
           q = queries.get_AA_NA(db, gid, pid)
        }else{
-          db = "`PROKKA_ffn`.`ffn_seq`"
+          db = "`PROKKA`.`ffn`"
           q = queries.get_AA_NA(db, gid, pid)
        }
   }
@@ -2294,7 +2294,7 @@ router.post('/amr_ajax', function phage_ajax(req, res){
     q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc, "
     q += "closest_ref_name,hmm_acc,hmm_description,accession,start,stop"
     q += " FROM homd.amr"
-    q += " JOIN PROKKA_meta.orf using(protein_id)"
+    q += " JOIN PROKKA.orf using(protein_id)"
     q += " WHERE homd.amr.genome_id='"+gid+"'"
     console.log(q)
     let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
