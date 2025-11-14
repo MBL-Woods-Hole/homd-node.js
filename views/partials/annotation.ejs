@@ -161,6 +161,7 @@ thead th { position: sticky; top: 0; }
      <%   } %>
      <%   //contig_gc = (parseFloat(mole[n].gc)/100).toFixed(2) %>
      <tr>
+       <% if(mole[n].length_na) { %>
        <td><%= cnt %></td>
        <td><%= mole[n].accession %></td>
        
@@ -219,7 +220,7 @@ thead th { position: sticky; top: 0; }
           <td><%- mole[n].bakta_gene %></td>
           <td><%- mole[n].bakta_product %></td>
        <% } %>
-       
+       <% } %>
      </tr>
      <% cnt += 1 %>
      <% } %>
