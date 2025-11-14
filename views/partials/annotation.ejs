@@ -23,10 +23,7 @@ thead th { position: sticky; top: 0; }
    height:800px;
    overflow:auto;
 }
-.col0{
-   width: 20px;
-   padding:0;
-}
+
 </style>
         
 <center>
@@ -99,8 +96,9 @@ thead th { position: sticky; top: 0; }
         
         
     <br><hr>
-    <span><small><b>Notes:</b> 1- Column headers only sort the current page. Select [NA] or [AA] links to show sequences.
-    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2- BAKTA columns are <a href='https://github.com/oschwengers/bakta' target='_blank'>
+    <span><strong>Notes:</strong>
+    <small>&nbsp;&nbsp;<strong>1-</strong> Column headers only sort the current page. <strong>2-</strong> Select [NA] or [AA] links to show sequences.
+    <strong>3-</strong> BAKTA columns are <a href='https://github.com/oschwengers/bakta' target='_blank'>
          BAKTA</a> annotations of PROKKA gene calls.
     </small></span>
      
@@ -113,19 +111,19 @@ thead th { position: sticky; top: 0; }
       <tr>
        <th class='col0 sorttable_nosort'></th>
        <th class='col1'>Molecule-ID</th>
-       <th title='Protein ID' class='col2'>Protein-ID</th>
-       <th class='col2a sorttable_nosort'>Genome<br>Viewer</th>
+       <th class='' title='Protein ID' class='col2'>Protein-ID</th>
+       <th class='col2 sorttable_nosort'>Genome<br>Viewer</th>
        <th class='col5 sorttable_nosort'>Range<br><small>(bp)</small></th>
        <th title='Nucleic Acid Length (bp)' class='col3 center sorttable_numeric' nowrap>Show Sequences<br><small>(length) NA / AA</small></th>
       
        
        
-       <th class='col6x'><small><%= anno_type.toUpperCase() %></small><br>Gene</th>
-       <th class='col7x'><small><%= anno_type.toUpperCase() %></small><br>GeneProduct</th>
+       <th class='col6'><small><%= anno_type.toUpperCase() %></small><br>Gene</th>
+       <th class='col7'><small><%= anno_type.toUpperCase() %></small><br>GeneProduct</th>
        
        <% if(anno_type == "prokka"){ %><!-- Only show BAKTA if anno == PROKKA -->
-         <th class='col6x'><small>BAKTA</small><br>Gene</th>
-         <th class='col7x'><small>BAKTA</small><br>GeneProduct</th>
+         <th class='col6'><small>BAKTA</small><br>Gene</th>
+         <th class='col7'><small>BAKTA</small><br>GeneProduct</th>
        <% } %>
        
       </tr>
