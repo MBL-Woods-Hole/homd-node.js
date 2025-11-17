@@ -1,10 +1,12 @@
 'use strict'
-const express  = require('express');
+import express from 'express';
 let router   = express.Router();
 const CFG   = require(app_root + '/config/config');
-const fs       = require('fs-extra');
+import fs from 'fs-extra';
+
 // const url = require('url');
-const path     = require('path');
+import path from 'path';
+
 const C     = require(app_root + '/public/constants');
 const helpers = require(app_root + '/routes/helpers/helpers');
 const queries = require(app_root + '/routes/queries')
@@ -209,10 +211,10 @@ router.post('/search_phagetable', function search_phagetable(req, res) {
     search_field: searchField,
   })
   
-}) 
-  
+})
 
-  // here we pare down the sendList to contain only data from the pertinent cols
+
+// here we pare down the sendList to contain only data from the pertinent cols
 
 router.get('/phagedesc', function phagedesc(req, res) {
   console.log('in phage desc')
@@ -315,7 +317,7 @@ function create_table(list, source, type) {
     }   
     //console.log(txt)
     return txt
-}  
+}
 //
 function get_filtered_phage_list(bigPhageList, searchText, searchField){
   let sendList0 
@@ -460,8 +462,8 @@ function get_filtered_phage_list(bigPhageList, searchText, searchField){
       sendList0 = Object.values(temp_obj);
   }
     return sendList0
-} 
+}
 
-      
-        
-module.exports = router;
+
+
+export default router;

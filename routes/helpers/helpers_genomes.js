@@ -1,20 +1,22 @@
 'use strict'
-const C       = require(app_root + '/public/constants');
+let router = express.Router();
+import C from '../../public/constants.js';
 //const queries = require(app_root + '/routes/queries');
-const CFG  = require(app_root + '/config/config');
-const express     = require('express');
-const fs          = require('fs-extra');
-const readline = require('readline');
-let accesslog = require('access-log');
-const async = require('async')
-const util        = require('util');
-const path        = require('path');
-const {exec, spawn} = require('child_process');
-const helpers = require(app_root + '/routes/helpers/helpers');
-const helpers_genomes = require(app_root + '/routes/helpers/helpers_genomes');
+import CFG from '../../config/config.js';
+import express from 'express';
+import fs from 'fs-extra';
+import readline from 'readline';
+import accesslog from 'access-log';
+import async from 'async';
+import util from 'util';
+import path from 'path';
+import { exec, spawn } from 'child_process';
+import * as helpers from './helpers.js';
+import * as helpers_genomes from './helpers_genomes.js';
+
 //let hmt = 'HMT-'+("000" + otid).slice(-3)
 
-module.exports.get_default_annot_filter = () => {
+export const get_default_annot_filter = () => {
   let defaultfilter = {
     text: {
       txt_srch: '',
@@ -24,17 +26,15 @@ module.exports.get_default_annot_filter = () => {
     sort_rev: 'off'
   };
   return defaultfilter;
-}
+};
 
-
-module.exports.get_taxa_wgenomes = () => {
+export const get_taxa_wgenomes = () => {
   let alltax_list = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped'));
   let taxa_wgenomes = alltax_list.filter(item => item.genomes.length > 0);
   return taxa_wgenomes;
-}
+};
 
-
-module.exports.set_gtable_session = (req) => {
+export const set_gtable_session = (req) => {
 
   //console.log('set sess body',req.body)
   //console.log('xsession',req.session)
@@ -103,17 +103,16 @@ module.exports.set_gtable_session = (req) => {
     }
   }
 
-}
+};
 
-
-module.exports.init_page_data = () => {
+export const init_page_data = () => {
   let page_data = {};
   page_data.rows_per_page = C.PAGER_ROWS;
 
   return page_data;
-}
+};
 
-module.exports.apply_species = (lst) => {
+export const apply_species = (lst) => {
   let otid, sp = '';
   let subspecies = '';
 
@@ -132,8 +131,9 @@ module.exports.apply_species = (lst) => {
   }
   return lst;
 
-}
-module.exports.on_paging = (glist, fltr, pd) => {
+};
+
+export const on_paging = (glist, fltr, pd) => {
   let txt = '';
   let cbp = glist.length;
   let ret_obj = helpers_genomes.apply_pages(glist, fltr, pd);
@@ -161,9 +161,9 @@ module.exports.on_paging = (glist, fltr, pd) => {
   }
 
   return { send_list: sendList, page_data: pageData, pager_txt: txt };
-}
+};
 
-module.exports.apply_pages = (glist, fltr, pd) => {
+export const apply_pages = (glist, fltr, pd) => {
   let genomeList;
   const trows = glist.length;
   pd.trecords = trows;
@@ -191,9 +191,9 @@ module.exports.apply_pages = (glist, fltr, pd) => {
 
   }
   return { send_list: genomeList, page_data: pd };
-}
+};
 
-module.exports.apply_gtable_filter = (req, filter) => {
+export const apply_gtable_filter = (req, filter) => {
   let big_g_list = Object.values(C.genome_lookup);
   //console.log('big_g_list-0',big_g_list[0])
   let vals;
@@ -437,8 +437,9 @@ module.exports.apply_gtable_filter = (req, filter) => {
   });
   
   return big_g_list;
-}
-module.exports.get_filtered_genome_list =(gidObjList, searchText, searchField) => {
+};
+
+export const get_filtered_genome_list = (gidObjList, searchText, searchField) => {
   let sendList, tmpSendList;
   const tempObj = {};
 
@@ -501,9 +502,9 @@ module.exports.get_filtered_genome_list =(gidObjList, searchText, searchField) =
     sendList = Object.values(tempObj);
   }
   return sendList;
-}
+};
 
-module.exports.get_default_gtable_filter = () => {
+export const get_default_gtable_filter = () => {
   let defaultfilter = {
     gid: '',
     otid: '',
@@ -553,9 +554,9 @@ module.exports.get_default_gtable_filter = () => {
     },
   };
   return defaultfilter;
-}
+};
 
-module.exports.get_null_gtable_filter = () => {
+export const get_null_gtable_filter = () => {
   let defaultfilter = {
     gid: '',
     otid: '',
@@ -605,8 +606,9 @@ module.exports.get_null_gtable_filter = () => {
     },
   };
   return defaultfilter;
-}
-module.exports.get_checkm_status = (ginfo) => {
+};
+
+export const get_checkm_status = (ginfo) => {
     console.log('in checkM')
     console.log('1',ginfo.checkM_completeness,ginfo.checkM_contamination)
     console.log('2',ginfo.checkM2_completeness,ginfo.checkM2_contamination)
@@ -637,4 +639,6 @@ module.exports.get_checkm_status = (ginfo) => {
     }
     return {cont_dif:pct_dif_cont, comp_dif:pct_dif_comp}
 
-}
+};
+
+export default router;

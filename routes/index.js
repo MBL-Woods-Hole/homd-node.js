@@ -1,25 +1,31 @@
 'use strict'
-const express = require('express')
+import express from 'express';
 const router = express.Router()
-const fs        = require('fs-extra')
+import fs from 'fs-extra';
+
 // const fs   = require('fs-extra')
-const path  = require('path')
-const helpers = require('./helpers/helpers')
+import path from 'path';
+
+import * as helpers from './helpers/helpers.js';
 // const url = require('url')
 // const ds = require('./load_all_datasets')
-const CFG = require(app_root + '/config/config')
-const C = require(app_root + '/public/constants')
-const { exec, spawn } = require('child_process');
-const queries = require(app_root + '/routes/queries')
+import CFG from '../config/config.js';
+import C from '../public/constants.js';
+import { exec, spawn } from 'child_process';
+import * as queries from './queries.js';
+
 // let timestamp = new Date() // getting current timestamp
 // let rs_ds = ds.get_datasets( () => {
-let browseDir = require("browse-directory");
-const { v4: uuidv4 } = require('uuid'); // I chose v4you can select othersc
+import browseDir from 'browse-directory';
+
+import { v4 as uuidv4 } from 'uuid'; // I chose v4you can select othersc
+
 //const Stream = require( 'stream-json/streamers/StreamArray');
 /* GET home page. */
 
-const mysql = require('mysql'); // or use import if you use TS
-const util = require('util');
+import mysql from 'mysql'; // or use import if you use TS
+
+import util from 'util';
 
 
 router.get('/', function index(req, res) {
@@ -822,7 +828,8 @@ function search_contigs(text_string){
   }
   return contigObj_list
 }
+
 // }); // end pipeline
 // })  // end anno query
-module.exports = router
+export default router;
 

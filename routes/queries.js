@@ -1,40 +1,44 @@
-// const express = require('express')
-// const router = express.Router()
+import express from 'express';
+const router = express.Router()
 // const CFG = require(app_root + '/config/config')
 // const fs = require('fs-extra')
 // const path = require('path')
-const C = require(app_root + '/public/constants')
+import C from '../public/constants.js';
+
 // const helpers = require(app_root + '/routes/helpers/helpers')
 
-module.exports.get_refseq_query = (refid) => {
+export const get_refseq_query = (refid) => {
   let qSelectRefseq = 'SELECT UNCOMPRESS(seq_compressed) as seq from 16S_refseq '
   qSelectRefseq += " WHERE refseq_id='" + refid + "'"
 
   return qSelectRefseq
-}
-module.exports.get_gtdb_tax = (genomes) => {
+};
+
+export const get_gtdb_tax = (genomes) => {
   let g = genomes.join("','")
   let qSelectGTDBTaxonomy = 'SELECT genome_id, GTDB_taxonomy  from `'+C.genomes_table_name+'`'
   qSelectGTDBTaxonomy += " WHERE genome_id in ('" + g + "')"
   //console.log(qSelectGTDBTaxonomy)
   return qSelectGTDBTaxonomy
-}
-module.exports.get_refseq_metadata_query = (otid) => {
+};
+
+export const get_refseq_metadata_query = (otid) => {
   // let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
 //   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
   let qSelectRefseqInfo = 'SELECT refseq_id,species from 16S_refseq '
   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
 
   return qSelectRefseqInfo
-}
-module.exports.get_taxon_info_query = (otid) => {
+};
+
+export const get_taxon_info_query = (otid) => {
   let q = "SELECT  notes,`general`,prevalence as prev,cultivability as culta,disease_associations as disease,phenotypic_characteristics as pheno"
   q += " from taxon_info"
   q += " WHERE otid='"+otid+"'"
   return q
-}
+};
 
-module.exports.get_dropped_taxa = () => {
+export const get_dropped_taxa = () => {
   
   let q = "SELECT otid, naming_status, cultivation_status, notes, genus, species from otid_prime"
     q += " JOIN taxonomy using(taxonomy_id)"
@@ -43,19 +47,20 @@ module.exports.get_dropped_taxa = () => {
     q += " JOIN species using (species_id)"
     q += " WHERE status='Dropped'   Order By genus,species"
   return q
-}
+};
+
 // module.exports.get_16s_rRNA_sequence_query = (gid) => {
 //   let qSelect16Sseq = 'SELECT 16s_rRNA from genomes '
 //   qSelect16Sseq += "WHERE genome_id='" + gid + "'"
 // 
 //   return qSelect16Sseq
 // }
-module.exports.get_db_updates_query = () => {
+export const get_db_updates_query = () => {
   return "SELECT otid, description, reason, date FROM updates WHERE `show`='1'"
-}
+};
 
 // GENOMES
-module.exports.get_annotation_query = (gid, anno) => {
+export const get_annotation_query = (gid, anno) => {
   let qSelectAnno 
   if(anno === 'prokka'){
     qSelectAnno = 'SELECT accession,  gc, protein_id, length_na,length_aa, `start`, `stop`,'
@@ -76,8 +81,9 @@ module.exports.get_annotation_query = (gid, anno) => {
 //   let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
 //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
   return qSelectAnno
-}
-module.exports.get_lineage_query = (otid) => {
+};
+
+export const get_lineage_query = (otid) => {
    let qSelectTaxnames = 'SELECT domain,phylum,klass,`order`,family,genus,species,subspecies from otid_prime'
     qSelectTaxnames += ' join taxonomy using(taxonomy_id)'
     qSelectTaxnames += ' join domain using(domain_id)'
@@ -90,38 +96,41 @@ module.exports.get_lineage_query = (otid) => {
     qSelectTaxnames += ' join subspecies using(subspecies_id)'
     qSelectTaxnames += " WHERE otid='"+otid+"'"
     return qSelectTaxnames
-}
+};
 
-module.exports.get_all_pangenomes_query = () => {
+export const get_all_pangenomes_query = () => {
     let q = "SELECT pangenome_name,homd_genome_version,description FROM pangenome_v4"
     q += " WHERE active='1' ORDER by pangenome_name"
     return q
-}
+};
 
-module.exports.get_pangenomes_query = (otid) => {
+export const get_pangenomes_query = (otid) => {
     //let q = "SELECT distinct pangenome_name from pangenome_genome"
     let q = "SELECT DISTINCT pangenome_v4.pangenome_name as pangenome" 
     q += " FROM pangenome_genome"
     q += " JOIN pangenome_v4 using(pangenome_id)"
     q += " WHERE otid='"+otid+"'"
     return q
-}
-module.exports.get_peptide = () => {
+};
+
+export const get_peptide = () => {
 /// USING Ver 3.1
     let qSelectPeptide = "SELECT `genomes`.otid, study_id, seq_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
     qSelectPeptide += " JOIN `genomes` using (seq_id)"
     
     return qSelectPeptide
-}
-module.exports.get_peptide2 = () => {
+};
+
+export const get_peptide2 = () => {
 /// USING Ver 3.1
     let q = "SELECT seq_id, `genomes`.otid, organism, protein_count, peptide_count,study_id from protein_peptide_counts "
     q += " JOIN `genomes` using (seq_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies using (study_id)"
     return q
-}
-module.exports.get_peptide3 = (gid) => {
+};
+
+export const get_peptide3 = (gid) => {
     /// USING Ver 3.1
     let q = "SELECT organism as org,protein_accession as pid,peptide_id,molecule as mol,`genomes`.otid,product,peptide,jb_link,protein_peptide.study_id,study_name"
     q += " FROM protein_peptide"
@@ -135,25 +144,29 @@ module.exports.get_peptide3 = (gid) => {
     q += " where seq_id='"+gid+"'"
     
     return q
-}
-module.exports.get_crispr_cas_data = (gid) => {
+};
+
+export const get_crispr_cas_data = (gid) => {
     let qSelectCrisprCas = "SELECT contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
     qSelectCrisprCas += " FROM crispr_cas where genome_id='"+gid+"'"
     
     return qSelectCrisprCas
-}
-module.exports.get_AA_NA = (db, gid, pid) => {
+};
+
+export const get_AA_NA = (db, gid, pid) => {
     let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
     q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
     
     return q
-}
-module.exports.get_bakta_AA = (db, gid, pid) => {
+};
+
+export const get_bakta_AA = (db, gid, pid) => {
     let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
     q += " WHERE genome_id ='"+gid+"' and core_ID='" + pid + "'"
     
     return q
-}
+};
+
 function genome_query() {
     let tbl  = C.genomes_table_name
     let ntbl = C.genomes_ncbi_table_name
@@ -184,18 +197,21 @@ function genome_query() {
     console.log(qSelectGenome)
     return qSelectGenome
 }
-module.exports.get_all_genomes = () => {  // for downld all
+
+export const get_all_genomes = () => {  // for downld all
     let q = genome_query()
 
     return q
-}
-module.exports.get_genome = (gid) => {   // always NCBI for genome description
+};
+
+export const get_genome = (gid) => {   // always NCBI for genome description
     let q = genome_query()
     q +=" WHERE genome_id = '"+gid+"'"
   
     return q 
-}
-module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
+};
+
+export const get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
   let qSelectContigs = "SELECT accession, GC from `NCBI`.`molecule` WHERE genome_id = '"+gid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
@@ -203,8 +219,9 @@ module.exports.get_contigs = (gid) => {   // always NCBI for taxon description
   // asm_name amd gb_asm are both from genomes_obj
   //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
   return qSelectContigs
-}
-module.exports.get_contig = (gid, mid) => {   // always NCBI for taxon description
+};
+
+export const get_contig = (gid, mid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
   let qSelectContigs = "SELECT UNCOMPRESS(seq_compressed) as seq from `NCBI`.`contig` WHERE genome_id = '"+gid+"' and mol_id='"+mid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
@@ -212,8 +229,9 @@ module.exports.get_contig = (gid, mid) => {   // always NCBI for taxon descripti
   // asm_name amd gb_asm are both from genomes_obj
   //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
   return qSelectContigs
-}
-module.exports.get_all_phage_for_download = () => {
+};
+
+export const get_all_phage_for_download = () => {
     let q = "SELECT genome_id,site,cenote_taker3 as cenote_count,cenote_coverage_bps,cenote_coverage_pct,"
     q += "genomad as genomad_count,genomad_coverage_bps,genomad_coverage_pct,"
     q += "phage_id,type,contig,start,end,jbrowse_link"
@@ -222,12 +240,14 @@ module.exports.get_all_phage_for_download = () => {
     
     console.log(q)
     return q
-}
-module.exports.get_phage = (gid) => {   // always NCBI for taxon description
+};
+
+export const get_phage = (gid) => {   // always NCBI for taxon description
   let qSelectPhage = "SELECT phage_id,type,contig,start,end,jbrowse_link FROM phage_data where genome_id='"+gid+"'"
   return qSelectPhage
-}
-module.exports.get_phage_from_ids = (search_id_list) => {   // always NCBI for taxon description
+};
+
+export const get_phage_from_ids = (search_id_list) => {   // always NCBI for taxon description
   let q = "SELECT search_id,genome_id,contig,predictor,start,end,"
  //  bakta_core_product,"
 //     q += "IFNULL(bakta_core_note,'') as bcnote,"
@@ -240,8 +260,9 @@ module.exports.get_phage_from_ids = (search_id_list) => {   // always NCBI for t
     
     q += " from phage_search where search_id in ("+search_id_list+')'
   return q
-}
-module.exports.get_phage_from_ids_noseqs = (search_id_list) => {   // always NCBI for taxon description
+};
+
+export const get_phage_from_ids_noseqs = (search_id_list) => {   // always NCBI for taxon description
   let q = "SELECT search_id,genome_id,contig,predictor,start,end,"
   // bakta_core_product,"
 //     q += "IFNULL(bakta_core_note,'') as bcnote,"
@@ -253,4 +274,6 @@ module.exports.get_phage_from_ids_noseqs = (search_id_list) => {   // always NCB
     
     q += " from phage_search where search_id in ("+search_id_list+')'
   return q
-}
+};
+
+export default router;

@@ -1,30 +1,42 @@
 "use strict"
+
 // for newrelic: start in config.js
 //const winston = require('winston');
-const CFG = require('./config/config');
-const taxdbconn = require('./config/database').taxon_pool;
+import CFG from './config/config.js';
+
+import { taxon_pool as taxdbconn } from './config/database.js';
+
 //const annodbconn = require('./config/database').taxon_pool2;
 //const gendbconn = require('./config/database').genome_pool;
-const path = require('path');
+import path from 'path';
+const dirname = import.meta.dirname
 // explicitly makes conn global
 global.TDBConn = taxdbconn;   // database:  homd
-global.app_root = path.resolve(__dirname);
-const C = require('./public/constants');
-const helpers   = require(app_root + '/routes/helpers/helpers')
-const fs = require('fs-extra');
+global.app_root = path.resolve(dirname);
+import C from './public/constants.js';
+import  * as helpers from './routes/helpers/helpers.js'
+ 
+import fs from 'fs-extra';
+//console.log('helpers',helpers)
 //require('dotenv').config({path: __dirname + '/.env'})
 //const createIframe = require("node-iframe");
-const express = require('express');
-const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
-const node_log = require('simple-node-logger').createSimpleFileLogger(logFilePath);
-
+import express from 'express';
 const router = express.Router();
-const session = require('express-session');
+// console.log('dirname',dirname)
+// console.log('CFG.LOG_DIR',CFG.LOG_DIR)
+// console.log('CFG.PRODUCTION_LOG',CFG.PRODUCTION_LOG)
+const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
+//import node_log from 'simple-node-logger').createSimpleFileLogger(logFilePath);
+
+
+import session from 'express-session';
+
 //const passport = require('passport');
 //const passportConfig = require('./config/passportConfig');
 //const passportConfig = require('./config/passport'); // pass passport for configuration
 
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
+
 const app = express();
 app.use(bodyParser.urlencoded({
     extended: false,         // allows for richer json like experience https://www.npmjs.com/package/qs#readme
@@ -48,22 +60,26 @@ app.use(session({
   
 }));
 
-const flash = require('express-flash');
+import flash from 'express-flash';
+
 //const favicon = require('serve-favicon');
-const async = require('async')
+import async from 'async';
+
 //const zlib = require('zlib');
 //const sizeof = require('object-sizeof');
 
 
-const home     = require('./routes/index');
+import home from './routes/index.js';
 
-const taxa     = require('./routes/routes_taxa');
-const refseq   = require('./routes/routes_refseq');
-const genome   = require('./routes/routes_genome');
-const phage    = require('./routes/routes_phage');
+import taxa from './routes/routes_taxa.js';
+import refseq from './routes/routes_refseq.js';
+import genome from './routes/routes_genome.js';
+import phage from './routes/routes_phage.js';
+
 //const blast    = require('./routes/routes_blast');
-const help     = require('./routes/routes_help');
-const download = require('./routes/routes_download');
+import help from './routes/routes_help.js';
+
+import download from './routes/routes_download.js';
 
 
 // PRODUCTION: log every restart
@@ -81,7 +97,7 @@ if(CFG.ENV === 'production'){
 app.use(flash());
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(dirname, 'views'));
 app.set('view engine', 'ejs');
 //app.engine('html', require('ejs').renderFile);
 //
@@ -192,10 +208,11 @@ app.use(function(req, res, next){
   // default to plain-text. send()
   res.type('txt').send('Not found');
 });
+
 /*
  * Create global objects once upon server startup
  */
-const CustomTaxa  = require('./routes/helpers/taxa_class');
+import CustomTaxa from './routes/helpers/taxa_class.js';
 
 
 
@@ -375,7 +392,7 @@ Promise.all(promises)
 
 console.log('start here in app.js')
 
-module.exports = app;
+export default app;
 
 
 

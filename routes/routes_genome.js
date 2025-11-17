@@ -1,18 +1,22 @@
 'use strict'
-const express   = require('express')
+import express from 'express';
 let router    = express.Router()
-const CFG     = require(app_root + '/config/config')
-const fs        = require('fs-extra')
+import CFG from '../config/config.js';
+import fs from 'fs-extra';
+
 //const url     = require('url')
-const path      = require('path')
-const C       = require(app_root + '/public/constants')
-const helpers   = require(app_root + '/routes/helpers/helpers')
-const helpers_taxa   = require(app_root + '/routes/helpers/helpers_taxa')
-const helpers_genomes   = require(app_root + '/routes/helpers/helpers_genomes')
-const queries = require(app_root + '/routes/queries')
+import path from 'path';
+
+import C from '../public/constants.js';
+import * as helpers from './helpers/helpers.js';
+import * as helpers_taxa from './helpers/helpers_taxa.js';
+import * as helpers_genomes from './helpers/helpers_genomes.js';
+import * as queries from './queries.js';
+
 // const open = require('open')
-const createIframe = require("node-iframe")
-const https = require('https'); 
+import createIframe from 'node-iframe';
+
+import https from 'https';
 
 // router.get('/overview', function overview(req, res) {
 //     //console.log('in RESET-session')
@@ -937,7 +941,7 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
       
   }
   return send_list
-} 
+}
 
 router.get('/reset_atable', function annot_table_reset(req, res) {
    //console.log('in RESET-session')
@@ -2517,4 +2521,4 @@ router.post('/crispr_ajax', function crispr_ajax(req, res) {
     })
 })
 
-module.exports = router
+export default router;

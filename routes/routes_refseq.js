@@ -1,15 +1,17 @@
 'use strict'
-const express   = require('express');
+import express from 'express';
 let router    = express.Router();
-const CFG     = require(app_root + '/config/config');
-const fs        = require('fs-extra')
-const fsp = require('fs').promises
-// const url     = require('url');
-const path      = require('path');
-const C       = require(app_root + '/public/constants');
-const helpers   = require(app_root + '/routes/helpers/helpers');
+import CFG from '../config/config.js';
+import fs from 'fs-extra';
+import { promises as fsp } from 'fs';
+
+import path from 'path';
+
+import C from '../public/constants.js';
+import * as helpers from './helpers/helpers.js';
+
 //const open = require('open');
-const https = require('https'); 
+import https from 'https';
 
 router.get('/refseq_table', function refseq_table(req, res) {
     let refseq_array = []
@@ -137,4 +139,4 @@ router.get('/download', function download(req, res) {
   })
 })
 
-module.exports = router;
+export default router;

@@ -1,34 +1,37 @@
 'use strict'
-const C       = require(app_root + '/public/constants');
+//import express from 'express';
+let router = express.Router();
+import C from '../../public/constants.js';
 //const queries = require(app_root + '/routes/queries');
-const CFG  = require(app_root + '/config/config');
-const express     = require('express');
-const fs          = require('fs-extra');
-const readline = require('readline');
-let accesslog = require('access-log');
-const async = require('async')
-const util        = require('util');
-const path        = require('path');
-const {exec, spawn} = require('child_process');
-const helpers = require(app_root + '/routes/helpers/helpers');
-const helpers_taxa = require(app_root + '/routes/helpers/helpers_taxa');
+import CFG from '../../config/config.js';
+import express from 'express';
+import fs from 'fs-extra';
+import readline from 'readline';
+import accesslog from 'access-log';
+import async from 'async';
+import util from 'util';
+import path from 'path';
+import { exec, spawn } from 'child_process';
+import * as helpers from './helpers.js';
+import * as helpers_taxa from './helpers_taxa.js';
+
 //let hmt = 'HMT-'+("000" + otid).slice(-3)
 
-module.exports.get_all_phyla = () => {
+export const get_all_phyla = () => {
   let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'];
   let phyla = phyla_obj.map(function mapPhylaObj2(el) { return el.taxon; });
   return phyla;
-}
+};
 
-module.exports.clean_rank_name_for_show = (rank) =>{
+export const clean_rank_name_for_show = (rank) =>{
     // capitalise and fix klass => Class
     if(rank == 'klass' || rank == 'Klass'){
        rank = 'Class'
     }
     return rank.charAt(0).toUpperCase() + rank.slice(1)
-}
+};
 
-module.exports.get_filter_on = (f) => {
+export const get_filter_on = (f) => {
   // for comparison stringify
   //console.log('get_filter_on')
   let obj1 = JSON.stringify(helpers_taxa.get_default_tax_filter());
@@ -40,8 +43,9 @@ module.exports.get_filter_on = (f) => {
     //console.log('on')
     return 'on';
   }
-}
-module.exports.get_default_tax_filter = () => {
+};
+
+export const get_default_tax_filter = () => {
 
   let defaultfilter = { otid: '', status: {}, site: {}, abund: {} };
 
@@ -85,9 +89,9 @@ module.exports.get_default_tax_filter = () => {
   defaultfilter.sort_rev = 'off';
 
   return defaultfilter;
-}
+};
 
-module.exports.get_null_tax_filter = () => {
+export const get_null_tax_filter = () => {
   let nullfilter = {
     otid: '',
     status: {
@@ -127,9 +131,9 @@ module.exports.get_null_tax_filter = () => {
     sort_rev: 'off'
   };
   return nullfilter;
-}
+};
 
-module.exports.get_text_filtered_taxon_list = (big_tax_list, search_txt, search_field) => {
+export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_field) => {
 
   let send_list = [];
   //console.log('txt srch',search_txt,search_field)
@@ -276,8 +280,9 @@ module.exports.get_text_filtered_taxon_list = (big_tax_list, search_txt, search_
 
   }
   return send_list;
-}
-module.exports.make_lineage = (node) => {
+};
+
+export const make_lineage = (node) => {
   //console.log('in lineage-node',node)
   if (!node) {
     return ['', {}];
@@ -376,12 +381,13 @@ module.exports.make_lineage = (node) => {
   }
   //console.log('line',lineage)
   return [lineage, lineage_obj];
-}
+};
+
 //
 // TT filter //
 //
 
-module.exports.set_ttable_session = (req) => {
+export const set_ttable_session = (req) => {
   // set req.session.ttable_filter.otid 5 places
   // 1taxa/life
   // 2taxa/tax_description
@@ -474,9 +480,9 @@ module.exports.set_ttable_session = (req) => {
 
   }
 
-}
+};
 
-module.exports.apply_ttable_filter = (req, filter) => {
+export const apply_ttable_filter = (req, filter) => {
 
   let big_tax_list = Object.values(C.taxon_lookup);
   //console.log('olength-0',big_tax_list)
@@ -738,11 +744,12 @@ module.exports.apply_ttable_filter = (req, filter) => {
   //console.log('big_tax_list.length-5',big_tax_list.length)
   return big_tax_list;
 
-}
+};
+
 //
 
 //
-module.exports.get_lpsn_outlink1 = (obj1, lineage) => {
+export const get_lpsn_outlink1 = (obj1, lineage) => {
   //console.log('obj',obj1,lineage)
   if (lineage['genus'].includes('[')) {
     let gpts = lineage['genus'].split(/\s/);
@@ -773,9 +780,9 @@ module.exports.get_lpsn_outlink1 = (obj1, lineage) => {
   } else {
     return 'species/' + obj1['genus'] + '-' + obj1['species'];
   }
-}
+};
 
-module.exports.get_lpsn_outlink2 = (rank, lineage, nexttaxname) => {
+export const get_lpsn_outlink2 = (rank, lineage, nexttaxname) => {
   //console.log('obj',rank,lineage,nexttaxname)
   let lpsnrank, linkrank, l, pts, ppts = [];
   if (lineage.hasOwnProperty('phylum')) {
@@ -851,10 +858,11 @@ module.exports.get_lpsn_outlink2 = (rank, lineage, nexttaxname) => {
     return lpsnrank + '/' + lineage[rank];
   }
 
-}
+};
+
 //
 ////////////
-module.exports.make_lineage_string_with_links = (lineage_list, link, page) => {
+export const make_lineage_string_with_links = (lineage_list, link, page) => {
   let tmp = "<span class='lineage'>";
   let i = 0;
   for (let n in lineage_list[1]) {
@@ -872,9 +880,9 @@ module.exports.make_lineage_string_with_links = (lineage_list, link, page) => {
   tmp += '</span>';
   //console.log(tmp)
   return tmp;
-}
+};
 
-module.exports.get_counts = (lineage, ctype) => {
+export const get_counts = (lineage, ctype) => {
   let txt,lst;
   let cts = C.taxon_counts_lookup[lineage];
   // if(ctype === 'wdropped'){
@@ -894,4 +902,6 @@ module.exports.get_counts = (lineage, ctype) => {
   }
 
   return {txt:txt,lst:lst}
-}
+};
+
+export default router;

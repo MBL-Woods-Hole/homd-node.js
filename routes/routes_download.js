@@ -1,15 +1,17 @@
 'use strict'
-const express  = require('express');
+import express from 'express';
 let router   = express.Router();
-const CFG   = require(app_root + '/config/config');
-const fs       = require('fs-extra');
+import CFG from '../config/config.js';
+import fs from 'fs-extra';
+
 // const url = require('url');
-const path     = require('path');
-const C     = require(app_root + '/public/constants');
-const helpers         = require(app_root + '/routes/helpers/helpers');
-const helpers_taxa    = require(app_root + '/routes/helpers/helpers_taxa');
-const helpers_genomes = require(app_root + '/routes/helpers/helpers_genomes');
-const queries = require(app_root + '/routes/queries')
+import path from 'path';
+
+import C from '../public/constants.js';
+import * as helpers from './helpers/helpers.js';
+import * as helpers_taxa from './helpers/helpers_taxa.js';
+import * as helpers_genomes from './helpers/helpers_genomes.js';
+import * as queries from './queries.js';
 
 
 router.get('/download/:q', function download(req, res) {
@@ -323,7 +325,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
     }
     res.send(table_tsv)
     res.end()
-}) 
+})
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all (req, res) {
@@ -1012,7 +1014,7 @@ function create_taxon_table(otids, source, type, head_txt) {
     }
    
     return txt
-}        
+}
 //
 function create_table_from_sql_query (sqlrows, startText) {
     //console.log('in create_table_from_sql_query')
@@ -1083,4 +1085,4 @@ function create_genome_table (gids, source, type, startText) {
   // console.log(txt)
   return txt
 }
-module.exports = router;
+export default router;

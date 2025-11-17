@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Human Oral Microbiome Database",
   "main": "app.js",
+  "type": "module",
   "bin": {
     "homd-node": "a_util.js"
   },
@@ -14,6 +15,7 @@
     "async": "^3.2.3",
     "body-parser": "^1.20.0",
     "browse-directory": "^0.0.3",
+    "cjs-to-es6": "^2.0.1",
     "cookie-parser": "^1.4.6",
     "debug": "^4.3.4",
     "dotenv": "^16.0.3",

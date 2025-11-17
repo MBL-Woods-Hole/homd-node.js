@@ -1,13 +1,13 @@
 'use strict'
-const express  = require('express');
+import express from 'express';
 var router   = express.Router();
-const fs       = require('fs-extra');
-const CFG   = require(app_root + '/config/config');
-const C     = require(app_root + '/public/constants');
-const path  = require('path')
-const helpers = require('./helpers/helpers')
-const queries = require(app_root + '/routes/queries')
-const { exec, spawn } = require('child_process');
+import fs from 'fs-extra';
+import CFG from '../config/config.js';
+import C from '../public/constants.js';
+import path from 'path';
+import * as helpers from './helpers/helpers.js';
+import * as queries from './queries.js';
+import { exec, spawn } from 'child_process';
 
 
 router.get('/index', function index(req, res) {
@@ -294,4 +294,4 @@ function getPageTitle(page){
 
 
 
-module.exports = router;
+export default router;

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-const app = require('../app');
 
-//const debug = require('debug')('homd-node.js');
-const CFG = require(app_root + '/config/config');
-const fs = require('fs-extra');
+import app from '../app.js'
+
+import CFG from '../config/config.js';
+import fs from 'fs-extra';
 
 // CL example: nodemon bin/www testing
 
-available_environments = ['testing','development','production'];
+const available_environments = ['testing','development','production'];
 
 console.log('CFG.HOSTNAME: ',CFG.HOSTNAME)
 if(available_environments.indexOf(process.argv[2]) !== -1){
@@ -30,15 +30,23 @@ if(available_environments.indexOf(process.argv[2]) !== -1){
 console.log("Setting Environment to: ",process.env.NODE_ENV);
 console.log("Node Options: ",process.env.NODE_OPTIONS);
 const options = {}
-let http;
-if(CFG.SERVER_PORT == '443'){
-   
+let http,https;
+if(CFG.SERVER_PORT === '443'){
+   try {
+      https = await import('node:https');
+    } catch (err) {
+      console.error('https support is disabled!');
+    } 
    options.key = fs.readFileSync(CFG.KEY_FILE),
    options.cert= fs.readFileSync(CFG.CERT_FILE)
-   http = require('https');
+   
    console.log('Reading https cert files',CFG.KEY_FILE,CFG.CERT_FILE)
 }else{
-   http = require('http');
+   try {
+      http = await import('node:http');
+    } catch (err) {
+      console.error('http support is disabled!');
+    } 
 };
 
 app.set('env', process.env.NODE_ENV);
@@ -46,7 +54,7 @@ process.env.PORT = CFG.SERVER_PORT || '3001'
 console.log(process.env.PORT)
 app.set('port', process.env.PORT);
 
-console.log('DATABASE: =>'+NODE_BACTERIAL_DATABASE+'<= (Databases set in config/db-connection.js)');
+console.log('DATABASE: => (Databases set in config/db-connection.js)');
 
 
 console.log('ENV:',app.get('env'),'(Environment set in bin/homd-node-start)');

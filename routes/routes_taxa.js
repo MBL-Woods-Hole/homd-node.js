@@ -1,15 +1,17 @@
 'use strict'
-const express = require('express');
+import express from 'express';
 let router = express.Router();
-const CFG = require(app_root + '/config/config');
-const fs = require('fs-extra');
+import CFG from '../config/config.js';
+import fs from 'fs-extra';
+
 // const url = require('url');
-const path = require('path');
-const { title } = require('process');
-const C = require(app_root + '/public/constants');
-const helpers = require(app_root + '/routes/helpers/helpers');
-const helpers_taxa = require(app_root + '/routes/helpers/helpers_taxa');
-const queries = require(app_root + '/routes/queries')
+import path from 'path';
+
+import { title } from 'process';
+import C from '../public/constants.js';
+import * as helpers from './helpers/helpers.js';
+import * as helpers_taxa from './helpers/helpers_taxa.js';
+import * as queries from './queries.js';
 // let today = new Date();
 // let dd = String(today.getDate()).padStart(2, '0');
 // let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -2365,7 +2367,7 @@ function get_major_genera(rank, node) {
 }
 
 
-module.exports = router;
+export default router;
 
 
 

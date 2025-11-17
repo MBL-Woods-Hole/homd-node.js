@@ -1,6 +1,7 @@
 // This is an example! *** Change all paths to match your system *** 
-var path = require('path');
-var os = require('os');
+import path from 'path';
+
+import os from 'os';
 
 var config = {};
 //var NODE_DATABASE = 'HOMD_taxonomy'
@@ -10,7 +11,7 @@ var config = {};
 config.PROCESS_DIR = '';
 config.DATA = '';
 config.ENV = ''
-config.SITE = ''; 
+config.SITE = '';
 config.DBHOST = '';
 
 config.HOSTNAME = os.hostname();
@@ -50,4 +51,4 @@ config.PRODUCTION_LOG = ''
 
 
 
-module.exports = config;
+export default config;
