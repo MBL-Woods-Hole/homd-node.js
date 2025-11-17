@@ -216,7 +216,7 @@ module.exports.get_contig = (gid, mid) => {   // always NCBI for taxon descripti
 module.exports.get_all_phage_for_download = () => {
     let q = "SELECT genome_id,site,cenote_taker3 as cenote_count,cenote_coverage_bps,cenote_coverage_pct,"
     q += "genomad as genomad_count,genomad_coverage_bps,genomad_coverage_pct,"
-    q += "phage_id,type,contig,start,end,jbrowse_link"
+    q += "phage_id,type,contig,start,end"
     q += " FROM phage_stats"
     q += " JOIN phage_data using (genome_id)"
     
@@ -224,7 +224,7 @@ module.exports.get_all_phage_for_download = () => {
     return q
 }
 module.exports.get_phage = (gid) => {   // always NCBI for taxon description
-  let qSelectPhage = "SELECT phage_id,type,contig,start,end,jbrowse_link FROM phage_data where genome_id='"+gid+"'"
+  let qSelectPhage = "SELECT phage_id,type,contig,start,end FROM phage_data where genome_id='"+gid+"'"
   return qSelectPhage
 }
 module.exports.get_phage_from_ids = (search_id_list) => {   // always NCBI for taxon description

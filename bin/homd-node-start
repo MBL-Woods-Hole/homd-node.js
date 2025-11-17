@@ -46,7 +46,7 @@ process.env.PORT = CFG.SERVER_PORT || '3001'
 console.log(process.env.PORT)
 app.set('port', process.env.PORT);
 
-console.log('DATABASE: =>'+NODE_BACTERIAL_DATABASE+'<= (Databases set in config/db-connection.js)');
+console.log('DATABASE: => (Databases set in config/db-connection.js)');
 
 
 console.log('ENV:',app.get('env'),'(Environment set in bin/homd-node-start)');

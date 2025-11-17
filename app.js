@@ -14,6 +14,7 @@ const helpers   = require(app_root + '/routes/helpers/helpers')
 const fs = require('fs-extra');
 //require('dotenv').config({path: __dirname + '/.env'})
 //const createIframe = require("node-iframe");
+//console.log('cfg',CFG)
 const express = require('express');
 const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
 const node_log = require('simple-node-logger').createSimpleFileLogger(logFilePath);
