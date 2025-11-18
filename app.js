@@ -1,5 +1,8 @@
 "use strict"
+import dotenv from 'dotenv';
+dotenv.config();
 
+//import dotenv from 'dotenv';
 // for newrelic: start in config.js
 //const winston = require('winston');
 //import process.env from './config/config.js';
@@ -18,6 +21,8 @@ const dirname = import.meta.dirname
 global.TDBConn = pool;   // database:  homd
 
 global.app_root = path.resolve(dirname);
+
+
 import C from './public/constants.js';
 import  * as helpers from './routes/helpers/helpers.js'
  

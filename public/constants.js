@@ -2,13 +2,13 @@
 const constants = {};
 
 constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'
-constants.access_logfile = ENV.LOG_DIR+'/homd-access.log'  // JBROWSE if you want a non-relative url use: config.js
+constants.access_logfile = process.env.LOG_DIR+'/homd-access.log'  // JBROWSE if you want a non-relative url use: config.js
 
 
 constants.rRNA_refseq_version    = '16.03' // Used on title page header
 constants.genomic_refseq_version = '11.02' // Used on title page header
 constants.homd_taxonomy_version = '4.1'    // Used on title page header
-constants.virome_version    = '1.1'
+constants.virome_version    = '1.2'
 constants.version_information = {
     rna_ver: constants.rRNA_refseq_version, 
     gen_ver: constants.genomic_refseq_version, 
