@@ -25,14 +25,14 @@ export const get_gtdb_tax = (genomes) => {
 export const get_refseq_metadata_query = (otid) => {
   // let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
 //   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
-  let qSelectRefseqInfo = 'SELECT refseq_id,species from 16S_refseq '
+  let qSelectRefseqInfo = 'SELECT refseq_id,species from homd.16S_refseq '
   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
 
   return qSelectRefseqInfo
 };
 
 export const get_taxon_info_query = (otid) => {
-  let q = "SELECT  notes,`general`,prevalence as prev,cultivability as culta,disease_associations as disease,phenotypic_characteristics as pheno"
+  let q = "SELECT notes,`general`,prevalence as prev,cultivability as culta,disease_associations as disease,phenotypic_characteristics as pheno"
   q += " from taxon_info"
   q += " WHERE otid='"+otid+"'"
   return q

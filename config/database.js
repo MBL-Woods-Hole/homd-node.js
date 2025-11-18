@@ -1,6 +1,6 @@
 // db.js
 import mysql from 'mysql2';
-//import './config'; // Load environment variables
+import 'dotenv/config';
 
 // Create the connection pool
 const pool = mysql.createPool({

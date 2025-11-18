@@ -16,6 +16,7 @@ import path from 'path';
 const dirname = import.meta.dirname
 // explicitly makes conn global
 global.TDBConn = pool;   // database:  homd
+
 global.app_root = path.resolve(dirname);
 import C from './public/constants.js';
 import  * as helpers from './routes/helpers/helpers.js'

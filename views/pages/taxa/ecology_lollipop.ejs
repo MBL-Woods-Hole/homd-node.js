@@ -49,6 +49,13 @@
 .pill a{
    color:white
 }
+.note{
+  font-size:11px;
+  padding:5px;
+  background:ivory;
+  border:1px solid tan;
+  width:50%;
+}
 </style>
 
 <% dewhirst_data = JSON.parse(dewhirst) %>
@@ -178,12 +185,12 @@
             <div class='nonote'>No Notes</div>
           <% }else{ %>
             <% parts = notes.hmp_refseqv1v3.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
+            
             <div class='note'>
-            <b>Notes:</b><br>
-            <% for(n in parts){ %>
-             <%- parts[n] %><br><br>
-            <% } %>
+                <b>Notes:</b><br>
+                <% for(n in parts){ %>
+                 <%- parts[n] %><br><br>
+                <% } %>
             </div>
           <% } %>
         
@@ -213,7 +220,7 @@
             <div class='nonote'>No Notes</div>
           <% }else{ %>
             <% parts = notes.hmp_refseqv3v5.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
+            
             <div class='note'>
             <b>Notes:</b><br>
             <% for(n in parts){ %>
@@ -249,7 +256,7 @@
             <div class='nonote'>No Notes</div>
           <% }else{ %>
             <% parts = notes.dewhirst.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
+            
             <div class='note'>
             <b>Notes:</b><br>
             <% for(n in parts){ %>
@@ -283,7 +290,7 @@
             <div class='nonote'>No Notes</div>
           <% }else{ %>
             <% parts = notes.hmp_metaphlan.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
+            
             <div class='note'>
             <b>Notes:</b><br>
             <% for(n in parts){ %>
@@ -319,7 +326,7 @@
             <div class='nonote'>No Notes</div>
           <% }else{ %>
             <% parts = notes.erenv1v3.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
+            
             <div class='note'>
             <b>Notes:</b><br>
             <% for(n in parts){ %>
@@ -354,7 +361,7 @@
             <div class='nonote'>No Notes</div>
           <% }else{ %>
             <% parts = notes.erenv3v5.split(';') %>
-            <a class='hover red-text'>** View Notes (mouse over) **</a>
+            
             <div class='note'>
             <b>Notes:</b><br>
             <% for(n in parts){ %>
@@ -500,12 +507,12 @@
     tooltips.hmpmetaphlan_log = d3.select("#plot_log_hmp_metaphlan_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
     
     // Hover Notes
-    tooltips.hmprefseqv1v3_notes = d3.select("#show_hmp_refseqv1v3_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
-    tooltips.hmprefseqv3v5_notes = d3.select("#show_hmp_refseqv3v5_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
-    tooltips.dewhirst_notes = d3.select("#show_dewhirst_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
-    tooltips.hmpmetaphlan_notes = d3.select("#show_hmp_metaphlan_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
-    tooltips.erenv1v3_notes = d3.select("#show_erenv1v3_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
-    tooltips.erenv3v5_notes = d3.select("#show_erenv3v5_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+ //    tooltips.hmprefseqv1v3_notes = d3.select("#show_hmp_refseqv1v3_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+//     tooltips.hmprefseqv3v5_notes = d3.select("#show_hmp_refseqv3v5_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+//     tooltips.dewhirst_notes = d3.select("#show_dewhirst_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+//     tooltips.hmpmetaphlan_notes = d3.select("#show_hmp_metaphlan_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+//     tooltips.erenv1v3_notes = d3.select("#show_erenv1v3_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
+//     tooltips.erenv3v5_notes = d3.select("#show_erenv3v5_notes_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
 
 
 function hide_legend(){
