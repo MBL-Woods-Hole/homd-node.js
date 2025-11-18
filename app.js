@@ -9,7 +9,7 @@
 //import { * } from './config/config.js';
 //console.log(`Your DB_HOST is ${DB_HOST}`); // 8626
 global.ENV = process.env;
-//console.log('xx',ENV.DB_HOST)
+console.log('xx',ENV.DB_HOST)
 import pool from './config/database.js';
 //const gendbconn = require('./config/database').genome_pool;
 import path from 'path';
