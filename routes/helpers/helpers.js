@@ -103,20 +103,32 @@ export const show_session = (req) =>{
     console.log('req.session.id',req.session.id)
 };
 
-export const accesslog = (req, res) =>{
-    accesslog(req, res, 'RemoteIP:'+req.ip+':'+ C.access_log_format, function(s) {
-       let testout = 'Request from:'+req.ip+ s+'\n'
-       console.log(testout);
-        fs.appendFile(C.access_logfile, s+'\n', err => {
+// export const accesslog = (req, res) =>{
+//     console.log('ip',req.ip)
+//     accesslogx(req, res, 'RemoteIP:'+req.ip+':'+ C.access_log_format, function(s) {
+//        let testout = 'Request from:'+req.ip+ s+'\n'
+//        console.log(testout);
+//         fs.appendFile(C.access_logfile, s+'\n', err => {
+//              if (err) {
+//                  console.error(err)
+//                  return
+//              }
+//              //file written successfully
+//          })
+//     });
+// };
+export const accesslog = (req, res) => {
+       let testout = 'Request from:'+req.ip+'\n'
+       
+       console.log(C.access_logfile);
+        fs.appendFile(C.access_logfile, testout+'\n', err => {
              if (err) {
                  console.error(err)
                  return
              }
              //file written successfully
          })
-    });
 };
-
 export const chunkSubstr = (str, size) =>{
   //https://stackoverflow.com/questions/7033639/split-large-string-in-n-size-chunks-in-javascript
   const numChunks = Math.ceil(str.length / size)

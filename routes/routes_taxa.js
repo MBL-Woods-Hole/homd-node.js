@@ -1192,25 +1192,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
     }
     species_for_plot.push(sp)
 
-    //console.log('otids_for_plot[n]',n,otids_for_plot[n])
 
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otids_for_plot[n]+'_species'])
-    // let obj = C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank
-    //          
-    //          if(obj.hasOwnProperty(otids_for_plot[n]+'_subspecies')){
-    //              
-    //              let parent_id = obj[otids_for_plot[n]+'_subspecies'].parent_id
-    //              let ssp_taxon = obj[otids_for_plot[n]+'_subspecies'].taxon
-    //              let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id].taxon
-    //              //console.log('SSP TAXON',parent_taxon +'-'+ssp_taxon)
-    //              species_for_plot.push(parent_taxon +' '+ssp_taxon)
-    //              
-    //          }else{
-    //              if(obj.hasOwnProperty(otids_for_plot[n]+'_species')){
-    //                 species_for_plot.push(obj[otids_for_plot[n]+'_species'].taxon)
-    //              }
-    //          }
-    //tmp_sp.push(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otids_for_plot[n]+'_species'].taxon)
   }
 
   species_for_plot.push('other')
@@ -1234,7 +1216,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
   }
   //console.log(site_sums)
   for (let i in species_for_plot) {
-    //console.log('species_for_plot[i]',species_for_plot[i])
+    console.log('species_for_plot[i]',species_for_plot[i])
     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[species_for_plot[i] + '_species']
     let lineage_list = helpers_taxa.make_lineage(node)
     if (!lineage_list[0]) {
@@ -1247,7 +1229,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
     //console.log('lineage_list[0]',lineage_list)
     if (lineage_list[0]) {
       abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]], 'species')
-      //console.log('abund_obj',species_for_plot[i],abund_obj)
+      console.log('abund_obj',species_for_plot[i],abund_obj)
       for (let site in abund_obj) {
         //console.log('n',sp,site,abund_obj[site])
         site_sums[site] += parseFloat(abund_obj[site])
@@ -1311,7 +1293,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
 
   }
 
-  //console.log('bar_graph_data',bar_graph_data.length)
+  //console.log('bar_graph_data',bar_graph_data)
 
 
   let bac_phyla_only = phyla_obj.filter((x) => {
@@ -1895,7 +1877,7 @@ function sortByKeyDEC(array, key) {
 }
 //
 function get_site_avgs(obj, rank) {
-  //console.log('\nin obj',obj)
+  console.log('\nin obj',obj)
   let return_obj = {}
   if (!obj) {
     return return_obj

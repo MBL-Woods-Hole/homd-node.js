@@ -1,0 +1,100 @@
+// This is an example! *** Change all paths to match your system *** 
+// All PATH vars should end in forward slash/
+var path = require('path');
+var os = require('os');
+
+var config = {};
+//var NODE_DATABASE = 'HOMD_taxonomy'
+//// PATHS ////
+//
+config.CURRENT_GENOME_TABLE = "genomesV11.0"
+//// LOCAL Config ////
+config.PROCESS_DIR = '/Users/avoorhis/programming/homd-node.js/';
+//config.DATA = '/Users/avoorhis/programming/homd_data/';
+config.PATH_TO_STATIC_DOWNLOADS = '/Users/avoorhis/programming/homd-data/homd-static-downloads/'
+config.PATH_TO_DATA = '/Users/avoorhis/programming/homd-data/'
+config.PATH_TO_SEARCH = '/Users/avoorhis/programming/homd-data/search/'
+config.ENV = 'localhost'
+config.SITE = 'localhome'; 
+config.DBHOST = 'localhost';
+
+config.GENOME_DBHOST = 'localhost'
+config.HOSTNAME = os.hostname();
+config.PATH_TO_PANGENOMES = '/Users/avoorhis/programming/github/pangenomes/';
+
+// https://levelup.gitconnected.com/tws-004-how-to-configure-nodejs-to-use-port-443-86f1ca801c5f
+config.HOMD_URL_BASE = 'https://homd.org/'
+config.SERVER_PORT = '3001'  // 1-1023 are reserved ports
+config.URL = 'http://localhost:'+config.SERVER_PORT
+config.CRISPR_PATH = '/ftp/crispr/V2.0/cctyper/'
+config.AMR_PATH = '/ftp/amr/amr_V1.0/individual_genomes/'
+///// conserved_protein_tree ==>
+config.CP_TREE_PATH   = '/phylogenetic_trees/genome/V11.02/HOMD_Genomic_PhyloPhlAn_Tree_V11.02.svg'
+config.CP_NEWICK_TREE_PATH   = '/phylogenetic_trees/genome/V11.02/HOMD_Genomic_PhyloPhlAn_Tree_V11.02.tre'
+///// ribosomal_protein_tree
+config.RP_TREE_PATH   = '/phylogenetic_trees/ribosomal_protein_tree/V11.02/HOMD_Ribosomal_Protein_Tree_V11.02.svg'
+config.RP_NEWICK_TREE_PATH   = '/phylogenetic_trees/ribosomal_protein_tree/V11.02/HOMD_Ribosomal_Protein_Tree_V11.02.tre'
+
+////// rRNA_gene_tree
+config.GENE_TREE_PATH = '/phylogenetic_trees/genomic_16S_rRNA/V11.02/HOMD_16S_rRNA_Tree_V11.02.svg'
+config.GENE_NEWICK_TREE_PATH = '/phylogenetic_trees/genomic_16S_rRNA/V11.02/HOMD_16S_rRNA_Tree_V11.02.tre'
+///// refseq
+config.REFSEQ_TREE_PATH = '/phylogenetic_trees/refseq/V16.03/HOMD_16S_rRNA_RefSeq_Tree_V16.03.svg'
+config.REFSEQ_NEWICK_TREE_PATH = '/phylogenetic_trees/refseq/V16.03/HOMD_16S_rRNA_RefSeq_Tree_V16.03.tre'
+
+config.CONTACT_EMAIL = 'your_email'
+config.CLUSTER_AVAILIBLE = false;
+config.UPLOAD_DIR = '/tmp/'  // needs to be read/write
+// see open_jbrowse in genomes.js
+// 2025-11-04 change to homd_V11.02_phage_1.2
+config.JBROWSE_URL = config.HOMD_URL_BASE + '/jbrowse/?data=homd_V11.02_phage_1.2/'
+//homd_V11.02_phage_1.1/GCA_000160075.2
+config.PATH_TO_IMAGES = '/Users/avoorhis/programming/homd-images/'
+config.PYTHON_EXE = '/Users/avoorhis/anaconda3/bin/python3'
+config.MUSCLE_EXE = '/Users/avoorhis/anaconda3/bin/muscle'
+config.FASTTREE_EXE = '/Users/avoorhis/anaconda3/bin/fasttree'
+config.MAFFT_EXE = '/Users/avoorhis/anaconda3/bin/mafft'
+config.CONDABIN = '/Users/avoorhis/anaconda3/bin/'
+// /mnt/efs/blast_tmp
+config.PATH_TO_BLAST_FILES = '/Users/avoorhis/programming/blast_upload/'
+config.PATH_TO_SS_DIRS = '/Users/avoorhis/programming/blast_upload/'
+config.PATH_TO_BLAST_PROG = '/usr/local/ncbi/blast/bin/'
+config.FILEPATH_TO_FTP = '/mnt/efs/lv1_dev/homd_ftp/'
+config.PATH_TO_TMP = '/Users/avoorhis/programming/tmp/'
+config.GREP_CMD = '/usr/bin/grep'
+config.BLAST_DB_PATH_GENOME = '/Users/avoorhis/programming/blast_db/' //'/mnt/efs/lv1_dev/blastdb/current/blastdb/'
+config.BLAST_DB_PATH_REFSEQ = '/Users/avoorhis/programming/blast_db/' //'/mnt/efs/lv1_dev/blastdb/blast_db/oral16S'
+config.BLAST_VERSION = '2.12.0+'   // blastn -version
+config.BLAST_URL_BASE = 'https://blast.homd.org/'
+config.PATH_TO_PROKKA ='/Users/avoorhis/programming/homd-work/new_genomesV10.1/prokka_V10.1_all/'
+config.PATH_TO_NCBI   = '/Users/avoorhis/programming/homd-work/new_genomesV10.1/GCA_V10.1_all/'
+
+config.PATH_TO_PHAGE = 'ftp/phages/V1.2/individual_genomes/'
+config.PATH_TO_SCRIPTS = '/Users/avoorhis/programming/homd-node.js/public/scripts/'
+
+// anviserver
+//config.ANVIO_URL = 'http://localhost:3010';
+config.ANVIO_URL = 'https://anvio.homd.org/guest/'
+
+config.PANGENOME_DOWNLOAD_FILES = {
+    'Mitis_GroupV9_15'         : {dnld_v8:'HOMD_Mitis_Group-V8.tar.gz'},
+    'Veillonella_RogosaeV9_15' : {
+          dnld_v7:'Veillonella_rogosae_pangenome-V7.tar.gz',
+          dnld_v8:'Veillonella_rogosae_pangenome-V8.tar.gz'
+    }
+}
+// VAMPS Link works and is faster but not easily editable without Docker environment
+//config.anviserver_link = "https://vamps.mbl.edu/anviserver/pangenomes/" <= STILL WORKS 2025/05/13
+//config.PATH_TO_ANVISERVER = '/Users/avoorhis/programming/github/';
+//config.ANVISERVER_URL = 'http://localhost:8001'  // on homd: https://anviserver.homd.info set in nginx
+
+config.PYTHONPATH = '/Users/avoorhis/programming/github/anvio/:/Users/avoorhis/programming/github/anviserver-HOMD/'
+config.PATH = '/Users/avoorhis/programming/github/anvio/bin:/Users/avoorhis/anaconda3/condabin:/Users/avoorhis/anaconda3/bin:$PATH'
+config.CERT_FILE = ''
+config.KEY_FILE = ''
+config.LOG_DIR = '/Users/avoorhis/programming/'
+config.PRODUCTION_LOG = 'homd.log'
+//config.jbrowse_data = '/Users/avoorhis/programming/homd'
+//config.USER_FILES_BASE = '/Users/avoorhis/programming/homd-userfiles'
+//export default config;
+module.exports = config;

@@ -27,7 +27,9 @@ const router = express.Router();
 // console.log('CFG.PRODUCTION_LOG',CFG.PRODUCTION_LOG)
 const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
 //import node_log from 'simple-node-logger').createSimpleFileLogger(logFilePath);
-
+import pkg from 'simple-node-logger';
+const { createSimpleFileLogger } = pkg;
+var node_log = createSimpleFileLogger(logFilePath)
 
 import session from 'express-session';
 
