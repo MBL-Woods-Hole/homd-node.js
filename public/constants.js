@@ -1,4 +1,4 @@
-import CFG from '../config/config.js';
+
 const constants = {};
 
 constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'
