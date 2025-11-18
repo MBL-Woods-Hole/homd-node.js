@@ -1,4 +1,5 @@
 .sql
+.env
 *.fa
 *.fna
 *.fasta
