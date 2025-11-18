@@ -9,7 +9,7 @@ import path from 'path';
 import * as helpers from './helpers/helpers.js';
 // const url = require('url')
 // const ds = require('./load_all_datasets')
-import CFG from '../config/config.js';
+
 import C from '../public/constants.js';
 import { exec, spawn } from 'child_process';
 import * as queries from './queries.js';
@@ -35,7 +35,7 @@ router.get('/', function index(req, res) {
   res.render('pages/home', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'home', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
     
     
@@ -51,7 +51,7 @@ router.get('/poster', function poster(req, res) {
   res.render('pages/poster', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
     
 
@@ -63,7 +63,7 @@ router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, re
   res.render('pages/advanced_site_search', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
     
 
@@ -262,7 +262,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             
             anno: '',
@@ -355,7 +355,7 @@ router.post('/show_all_phage_hits', function show_all_phage_hits(req, res) {
         res.render('pages/phage/all_hits_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             //hits_list: req.body.big_list,
             searchtxt: req.body.search_text,
@@ -477,7 +477,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             
             anno: req.body.adv_anno_radio_grep,
@@ -618,7 +618,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
       res.render('pages/basic_search_result', {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
         search_text: searchText,

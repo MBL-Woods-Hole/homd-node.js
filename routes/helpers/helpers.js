@@ -3,7 +3,7 @@
 const router = express.Router()
 import C from '../../public/constants.js';
 //const queries = require(app_root + '/routes/queries');
-import CFG from '../../config/config.js';
+
 import express from 'express';
 import fs from 'fs-extra';
 import readline from 'readline';
@@ -119,9 +119,8 @@ export const show_session = (req) =>{
 // };
 export const accesslog = (req, res) => {
        let testout = 'Request from:'+req.ip+'\n'
-       
-       console.log(C.access_logfile);
-        fs.appendFile(C.access_logfile, testout+'\n', err => {
+       //console.log(C.access_logfile);
+        fs.appendFile(C.access_logfile, testout, err => {
              if (err) {
                  console.error(err)
                  return
@@ -230,7 +229,7 @@ export const getAllDirFiles = (dirPath, arrayOfFiles) => {
 };
 
 // module.exports.readAsync = async function readAsync(file, callback) {
-//     if(CFG.ENV === 'development'){
+//     if(ENV.ENV === 'development'){
 //         console.log('Reading File:',file)
 //     }
 //     module.exports.print(['Reading File:',file])
@@ -273,7 +272,7 @@ export const print = function print(thing) {
     // console.log only if development
     // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
     let date = new Date().toISOString()
-    if(CFG.ENV == 'localhost' ) {
+    if(ENV.ENV == 'localhost' ) {
         console.log('\x1b[31m%s\x1b[0m',date, thing)  
     }
     

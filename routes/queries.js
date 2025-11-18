@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router()
-// const CFG = require(app_root + '/config/config')
+
 // const fs = require('fs-extra')
 // const path = require('path')
 import C from '../public/constants.js';

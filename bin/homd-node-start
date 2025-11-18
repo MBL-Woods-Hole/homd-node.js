@@ -3,44 +3,44 @@
 
 import app from '../app.js'
 
-import CFG from '../config/config.js';
+
 import fs from 'fs-extra';
 
 // CL example: nodemon bin/www testing
 
 const available_environments = ['testing','development','production'];
 
-console.log('CFG.HOSTNAME: ',CFG.HOSTNAME)
+console.log('ENV.HOSTNAME: ',ENV.HOSTNAME)
 if(available_environments.indexOf(process.argv[2]) !== -1){
-  process.env.NODE_ENV = process.argv[2];
+  ENV.NODE_ENV = process.argv[2];
 }else{
   console.log('Available Environments:', available_environments);
   
-  if(CFG.HOSTNAME === 'homd.org') {  // put production host here
-      process.env.NODE_ENV = 'production';  // homd
-      process.env.NODE_OPTIONS = '--max-old-space-size=4096'
-  }else if(CFG.HOSTNAME === 'localhost'){
-      process.env.NODE_ENV = 'development';  // homddev
+  if(ENV.HOSTNAME === 'homd.org') {  // put production host here
+      ENV.NODE_ENV = 'production';  // homd
+      ENV.NODE_OPTIONS = '--max-old-space-size=4096'
+  }else if(ENV.HOSTNAME === 'localhost'){
+      ENV.NODE_ENV = 'development';  // homddev
   }else{
-      process.env.NODE_ENV = 'development';
+      ENV.NODE_ENV = 'development';
       // this isn't used (use "node ----max-old-space-size=4096 app" instead) '
-      process.env.NODE_OPTIONS = '--max-old-space-size=8192'
+      ENV.NODE_OPTIONS = '--max-old-space-size=8192'
   }
 }
-console.log("Setting Environment to: ",process.env.NODE_ENV);
-console.log("Node Options: ",process.env.NODE_OPTIONS);
+console.log("Setting Environment to: ",ENV.NODE_ENV);
+console.log("Node Options: ",ENV.NODE_OPTIONS);
 const options = {}
 let http,https;
-if(CFG.SERVER_PORT === '443'){
+if(ENV.SERVER_PORT === '443'){
    try {
-      https = await import('node:https');
+      http = await import('node:https');
     } catch (err) {
       console.error('https support is disabled!');
     } 
-   options.key = fs.readFileSync(CFG.KEY_FILE),
-   options.cert= fs.readFileSync(CFG.CERT_FILE)
+   options.key = fs.readFileSync(ENV.KEY_FILE),
+   options.cert= fs.readFileSync(ENV.CERT_FILE)
    
-   console.log('Reading https cert files',CFG.KEY_FILE,CFG.CERT_FILE)
+   console.log('Reading https cert files',ENV.KEY_FILE,ENV.CERT_FILE)
 }else{
    try {
       http = await import('node:http');
@@ -49,19 +49,19 @@ if(CFG.SERVER_PORT === '443'){
     } 
 };
 
-app.set('env', process.env.NODE_ENV);
-process.env.PORT = CFG.SERVER_PORT || '3001'
-console.log(process.env.PORT)
-app.set('port', process.env.PORT);
+app.set('env', ENV.NODE_ENV);
+ENV.PORT = ENV.SERVER_PORT || '3001'
+console.log('PORT',ENV.PORT)
+app.set('port', ENV.PORT);
 
-console.log('DATABASE: => (Databases set in config/db-connection.js)');
+console.log('DATABASE: => (Databases set in config/database.js)');
 
 
-console.log('ENV:',app.get('env'),'(Environment set in bin/homd-node-start)');
+console.log('ENV:',ENV.ENV,'(Environment set in bin/homd-node-start)');
 
 const server = http.createServer(options, app).listen(app.get('port'), function(){
     //debug('Express server listening on port ' + server.address().port);
-    console.log(`HOMD-Node.js server is listening on ${CFG.HOSTNAME}:${process.env.PORT}`)
+    console.log(`HOMD-Node.js server is listening on ${ENV.HOSTNAME}:${process.env.PORT}`)
 });
 server.timeout = 100 * 1000
 

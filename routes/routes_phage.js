@@ -1,7 +1,7 @@
 'use strict'
 import express from 'express';
 let router   = express.Router();
-import CFG from '../config/config.js';
+
 import fs from 'fs-extra';
 
 // const url = require('url');
@@ -26,7 +26,7 @@ router.get('/phage', function phage(req, res) {
         res.render('pages/phage/phage', {
                 title: 'HOMD :: Phage', 
                 pgname: '', // for AboutThisPage
-                config: JSON.stringify(CFG),
+                config: JSON.stringify(ENV),
                 ver_info: JSON.stringify(C.version_information),
                 pgtitle: 'Phage',
                 data: JSON.stringify(rows),
@@ -65,7 +65,7 @@ router.get('/phage_table', function phage_explorer(req, res) {
             title: 'HOMD :: Phage Table',
             pgtitle: 'Human Oral/Nasal Phage',
             pgname: 'taxon/phage_table',  //for AbountThisPage
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             data: JSON.stringify(genome_lookup),
             full_count: full_count,

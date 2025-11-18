@@ -2,6 +2,7 @@
 *.fa
 *.fna
 *.fasta
+*.env
 
 package-lock.json
 .vagrant
@@ -24,10 +25,7 @@ newrelic.js
 *newrelic.js
 bin/versions.sh
 version.log
-config/db-connection.js
-config/config.js
-config/db_vamps_node.sql.gz
-config/old/*
+config/
 !public/constants.js
 vamps-launcher.sh
 

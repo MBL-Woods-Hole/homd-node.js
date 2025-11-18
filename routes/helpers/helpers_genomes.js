@@ -2,7 +2,7 @@
 let router = express.Router();
 import C from '../../public/constants.js';
 //const queries = require(app_root + '/routes/queries');
-import CFG from '../../config/config.js';
+
 import express from 'express';
 import fs from 'fs-extra';
 import readline from 'readline';

@@ -2,16 +2,20 @@
 
 // for newrelic: start in config.js
 //const winston = require('winston');
-import CFG from './config/config.js';
+//import process.env from './config/config.js';
 
-import { taxon_pool as taxdbconn } from './config/database.js';
-
-//const annodbconn = require('./config/database').taxon_pool2;
+//import { pool } from './config/database.js';
+//console.log('xx',envs)
+//import { * } from './config/config.js';
+//console.log(`Your DB_HOST is ${DB_HOST}`); // 8626
+global.ENV = process.env;
+//console.log('xx',ENV.DB_HOST)
+import pool from './config/database.js';
 //const gendbconn = require('./config/database').genome_pool;
 import path from 'path';
 const dirname = import.meta.dirname
 // explicitly makes conn global
-global.TDBConn = taxdbconn;   // database:  homd
+global.TDBConn = pool;   // database:  homd
 global.app_root = path.resolve(dirname);
 import C from './public/constants.js';
 import  * as helpers from './routes/helpers/helpers.js'
@@ -23,9 +27,9 @@ import fs from 'fs-extra';
 import express from 'express';
 const router = express.Router();
 // console.log('dirname',dirname)
-// console.log('CFG.LOG_DIR',CFG.LOG_DIR)
-// console.log('CFG.PRODUCTION_LOG',CFG.PRODUCTION_LOG)
-const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
+// console.log('process.env.LOG_DIR',process.env.LOG_DIR)
+// console.log('process.env.PRODUCTION_LOG',process.env.PRODUCTION_LOG)
+const logFilePath = path.join(process.env.LOG_DIR, process.env.PRODUCTION_LOG)
 //import node_log from 'simple-node-logger').createSimpleFileLogger(logFilePath);
 import pkg from 'simple-node-logger';
 const { createSimpleFileLogger } = pkg;
@@ -85,7 +89,7 @@ import download from './routes/routes_download.js';
 
 
 // PRODUCTION: log every restart
-if(CFG.ENV === 'production'){
+if(process.env.ENV === 'production'){
     const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
     const restart_logger = new console.Console(output)
     restart_logger.log('Restart on '+helpers.timestamp(false))
@@ -128,7 +132,7 @@ app.use(express.static('tmp'));
 
 //app.use(express.static('jbrowse2/static/js'));
 //path.join(__dirname, 'public', 'javascripts')
-app.use('/tree', express.static(CFG.PATH_TO_SS_DIRS));
+app.use('/tree', express.static(process.env.PATH_TO_SS_DIRS));
 
 // ROUTES:
 app.use('/', home);
@@ -163,8 +167,8 @@ app.get('/*', function(req, res, next){
 app.use((error, req, res, next) => {
   console.error(error);
   //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
-  //if(CFG.ENV === 'development'){
-  //if(CFG.ENV === 'production'){
+  //if(process.env.ENV === 'development'){
+  //if(process.env.ENV === 'production'){
   node_log.debug(error.toString())
   //}
   
@@ -173,7 +177,7 @@ app.use((error, req, res, next) => {
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
-      config: JSON.stringify(CFG),
+      config: JSON.stringify(process.env),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
       user: JSON.stringify(req.user || {}),
       msg: 'We\'re Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:',
@@ -192,7 +196,7 @@ app.use(function(req, res, next){
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
-      config: JSON.stringify(CFG),
+      config: JSON.stringify(process.env),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
       user:     JSON.stringify(u),
       msg: 'Sorry -- We can\'t find the page you requested.',
@@ -224,30 +228,30 @@ import CustomTaxa from './routes/helpers/taxa_class.js';
 // passing the array of results in the same order.
 const promises = [
     
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.taxon_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.lineage_lookup_fn),'json') ,
-  //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.genome_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.refseq_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.references_lookup_fn),'json'),
-  //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.info_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.taxon_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.lineage_lookup_fn),'json') ,
+  //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.genome_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.refseq_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.references_lookup_fn),'json'),
+  //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.info_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.taxcounts_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.annotation_lookup_fn),'json'),
  
   helpers.readFromFile(path.join('public','data', C.image_location_locfn),'json'),  // image name and text
   helpers.readFromFile(path.join('public','data', C.image_location_taxfn),'json'),  // match image w/ otid or tax rank
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.contig_lookup_fn),'json'),
   
   //2024-Sept  // #10,11,12
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.site_lookup_fn),'json'),
-  //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.missing_ncbi_genomes_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.site_lookup_fn),'json'),
+  //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.missing_ncbi_genomes_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv'),
   
   //Oct 2025  // #13
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.crispr_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.amr_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.crispr_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.phage_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.amr_lookup_fn),'json'),
     // ETC ...
 ];
 Promise.all(promises)

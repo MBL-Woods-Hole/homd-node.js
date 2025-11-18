@@ -213,7 +213,7 @@ table td a{
   var sp_and_site = JSON.parse('<%- bar_data2 %>')
   //console.log('sp_and_site ',sp_and_site)
   var ab_names = JSON.parse('<%- ab_names %>')
-  console.log('sp_and_site.length',sp_and_site)
+  //console.log('sp_and_site.length',sp_and_site)
   //console.log('sp_per_site.length',sp_per_site.length)
   // site_species == {'site': site,'species': sp, 'abundance': val}
   //
@@ -228,12 +228,12 @@ table td a{
   // Prep the tooltip bits, initial display is hidden
 
 initStackedBarChart.draw({
-	data:     sp_and_site,
-	species:  species_order,
-	sites:    site_order,
-	element: 'bar-chart',
-	colors:   color_order,
-	ab_names: ab_names
+    data:     sp_and_site,
+    species:  species_order,
+    sites:    site_order,
+    element: 'bar-chart',
+    colors:   color_order,
+    ab_names: ab_names
 });
 
 

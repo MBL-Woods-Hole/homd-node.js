@@ -1,7 +1,7 @@
 'use strict'
 import express from 'express';
 let router    = express.Router();
-import CFG from '../config/config.js';
+
 import fs from 'fs-extra';
 import { promises as fsp } from 'fs';
 
@@ -41,7 +41,7 @@ router.get('/refseq_table', function refseq_table(req, res) {
         title: 'HOMD :: 16S RefSeq Table',
         pgname: '', // for AbountThisPage
         refseq: JSON.stringify(refseq_array),
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
         
@@ -52,7 +52,7 @@ router.get('/blast_server', function refseq_blast_server(req, res) {
     res.render('pages/blast/blast_server', {
         title: 'HOMD :: Blast Server',
         pgname: '', // for AbountThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
         blast_type: 'refseq'
@@ -66,8 +66,8 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
   res.render('pages/refseq/blastn', {
     title: 'HOMD :: 16S RefSeq Blast', 
     pgname: 'blast/blast',
-    config: JSON.stringify(CFG),
-    hostname: CFG.hostname,
+    config: JSON.stringify(ENV),
+    hostname: ENV.hostname,
     ver_info: JSON.stringify(C.version_information),
     
     db_choices: JSON.stringify(C.refseq_blastn_db_choices),
@@ -76,7 +76,7 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
     spamguard: helpers.makeid(3).toUpperCase(),
     returnTo: '/refseq/refseq_blastn',
     blastmax: JSON.stringify(C.blast_max_file),
-    blast_version: CFG.BLAST_VERSION,
+    blast_version: ENV.BLAST_VERSION,
   })
 })
 
@@ -87,8 +87,8 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
   // https://www.homd.org/ftp//phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg
   // here from taxdescription page  public/trees/
   
-  //let filepath = CFG.FTP_TREE_URL +'/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg'
-  //let filepath = CFG.HOMD_URL_BASE+'/ftp/'+CFG.REFSEQ_TREE_PATH//"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
+  //let filepath = ENV.FTP_TREE_URL +'/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg'
+  //let filepath = ENV.HOMD_URL_BASE+'/ftp/'+ENV.REFSEQ_TREE_PATH//"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
   
   //let myurl = url.parse(req.url, true);
   let otid = req.query.otid
@@ -96,10 +96,10 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
   let fullname = helpers.make_otid_display_name(otid)
   //console.log(fullname)
   let filepath
-  if(CFG.ENV === "localhost"){
+  if(ENV.ENV === "localhost"){
       filepath = '/Users/avoorhis/programming/homd-node.js/public/trees/eHOMD_16S_rRNA_RefSeq.svg'
   }else{
-      filepath = CFG.FILEPATH_TO_FTP + CFG.REFSEQ_TREE_PATH
+      filepath = ENV.FILEPATH_TO_FTP + ENV.REFSEQ_TREE_PATH
   }
   fs.readFile(filepath, 'utf8', (err, data) => {
           if (err) {
@@ -107,13 +107,13 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
             return;
           }
           console.log('File content:', data);
-          if(CFG.ENV === "localhost"){
+          if(ENV.ENV === "localhost"){
              data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
         res.render('pages/refseq/refseq_tree', {
             title: 'HOMD :: Conserved Protein Tree',
             pgname: 'refseq/tree', // for AbountThisPage, 
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             
             svg_data: JSON.stringify(data),
@@ -132,8 +132,8 @@ router.get('/download', function download(req, res) {
   res.render('pages/refseq/download', {
     title: 'HOMD :: Phylo Tree', 
     pgname: 'download', // for AbountThisPage
-    config: JSON.stringify(CFG),
-    hostname: CFG.HOSTNAME,
+    config: JSON.stringify(ENV),
+    hostname: ENV.HOSTNAME,
     ver_info: JSON.stringify(C.version_information),
     
   })
