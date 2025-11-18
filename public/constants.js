@@ -2,7 +2,7 @@
 const constants = {};
 
 constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":userAgent"'
-constants.access_logfile = CFG.LOG_DIR+'/homd-access.log'  // JBROWSE if you want a non-relative url use: config.js
+constants.access_logfile = ENV.LOG_DIR+'/homd-access.log'  // JBROWSE if you want a non-relative url use: config.js
 
 
 constants.rRNA_refseq_version    = '16.03' // Used on title page header
