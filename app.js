@@ -1,6 +1,6 @@
 "use strict"
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+// dotenv.config();
 
 //import dotenv from 'dotenv';
 // for newrelic: start in config.js

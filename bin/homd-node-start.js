@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-
 import app from '../app.js'
-
 
 import fs from 'fs-extra';
 
@@ -19,16 +17,18 @@ if(available_environments.indexOf(process.argv[2]) !== -1){
   if(ENV.HOSTNAME === 'homd.org') {  // put production host here
       ENV.NODE_ENV = 'production';  // homd
       ENV.NODE_OPTIONS = '--max-old-space-size=4096'
-  }else if(ENV.HOSTNAME === 'localhost'){
+  }else if(ENV.HOSTNAME === 'devel.homd.org'){
       ENV.NODE_ENV = 'development';  // homddev
-  }else{
-      ENV.NODE_ENV = 'development';
+  }else{ // localhost
+      ENV.NODE_ENV = 'testing';
       // this isn't used (use "node ----max-old-space-size=4096 app" instead) '
       ENV.NODE_OPTIONS = '--max-old-space-size=8192'
   }
 }
 console.log("Setting Environment to: ",ENV.NODE_ENV);
 console.log("Node Options: ",ENV.NODE_OPTIONS);
+console.log('For Production Use: "node --max-old-space-size=4096 bin/homd-node-start" (in systemd command)')
+
 const options = {}
 let http,https;
 if(ENV.SERVER_PORT === '443'){
@@ -54,10 +54,10 @@ ENV.PORT = ENV.SERVER_PORT || '3001'
 console.log('PORT',ENV.PORT)
 app.set('port', ENV.PORT);
 
-console.log('DATABASE: => (Databases set in config/database.js)');
+console.log('SQL DATABASE: => (Databases set in config/database.js)');
 
 
-console.log('ENV:',ENV.ENV,'(Environment set in bin/homd-node-start)');
+console.log('ENV:',ENV.ENV,'(Environment set in ~/.env)');
 
 const server = http.createServer(options, app).listen(app.get('port'), function(){
     //debug('Express server listening on port ' + server.address().port);

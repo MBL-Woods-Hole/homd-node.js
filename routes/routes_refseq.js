@@ -3,15 +3,13 @@ import express from 'express';
 let router    = express.Router();
 
 import fs from 'fs-extra';
-import { promises as fsp } from 'fs';
 
 import path from 'path';
 
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 
-//const open = require('open');
-import https from 'https';
+
 
 router.get('/refseq_table', function refseq_table(req, res) {
     let refseq_array = []

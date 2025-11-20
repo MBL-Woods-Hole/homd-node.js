@@ -7,17 +7,12 @@ import fs from 'fs-extra';
 // const url = require('url');
 import path from 'path';
 
-import { title } from 'process';
+//import { title } from 'process';
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
 import * as queries from './queries.js';
-// let today = new Date();
-// let dd = String(today.getDate()).padStart(2, '0');
-// let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-// let yyyy = today.getFullYear();
-// today = yyyy + '-' + mm + '-' + dd;
-// let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+
 
 function renderTaxonTable(req, res, args) {
 

@@ -4,7 +4,6 @@ let router   = express.Router();
 
 import fs from 'fs-extra';
 
-// const url = require('url');
 import path from 'path';
 
 import C from '../public/constants.js';

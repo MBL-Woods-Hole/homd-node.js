@@ -1,11 +1,7 @@
 import express from 'express';
 const router = express.Router()
 
-// const fs = require('fs-extra')
-// const path = require('path')
 import C from '../public/constants.js';
-
-// const helpers = require(app_root + '/routes/helpers/helpers')
 
 export const get_refseq_query = (refid) => {
   let qSelectRefseq = 'SELECT UNCOMPRESS(seq_compressed) as seq from 16S_refseq '
