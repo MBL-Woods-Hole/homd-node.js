@@ -501,7 +501,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
         let lineage_str = lineage.join(';')
         //console.log(lineage_str)
         if (taxdata.hasOwnProperty(lineage_str)) {
-          // console.log(lineage_str)
+          //console.log(lineage_str)
           //                 console.log(taxdata[lineage_str].taxcnt)
           //                 console.log(taxdata[lineage_str].gcnt)
           //                 console.log(taxdata[lineage_str].refcnt)
@@ -514,6 +514,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
             return_obj.gne_count = taxdata[lineage_str].gcnt
             return_obj.rrna_count = taxdata[lineage_str].refcnt
           }
+          //console.log('return_obj',return_obj)
         } else {
           return_obj.tax_count = 0
           return_obj.gne_count = 0

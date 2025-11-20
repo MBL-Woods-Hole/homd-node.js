@@ -104,7 +104,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
             console.error('Error reading file:', err);
             return;
           }
-          console.log('File content:', data);
+          //console.log('File content:', data);
           if(ENV.ENV === "localhost"){
              data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
@@ -125,7 +125,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
 //
 router.get('/download', function download(req, res) {
     console.log('download')
-  console.log(req.body)
+  //console.log(req.body)
   //helpers.accesslog(req, res)
   res.render('pages/refseq/download', {
     title: 'HOMD :: Phylo Tree', 
