@@ -2,12 +2,54 @@
 
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
-#gnom-table td a{
-   text-decoration: none;
+
+
+#genome-box{
+   display:none;
+   height:700px;
+   width:100%;
+   overflow:auto;
+   padding:10px 10px 20px 10px;
+   border:1px solid gray;
+   margin-top:5px;
+}
+#gnom-table {
+  padding:5px;
+  
+  width:100%;
 }
 #gnom-table th{
-   border-right:1px solid ivory;
+  color:white;
+  background: var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+  z-index: 1;
+  
 }
+#gnom-table td{
+  padding:3px 2px;
+  
+  font-size:small;
+  font-weight:bold;
+  color: #303030;
+ 
+  
+}
+#gnom-table .ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#gnom-table .badge{
+  
+  font-size:0.8em;
+  
+}
+ #gnom-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
+
 
 /* Tools Menu  */
 .dropbtn {
@@ -117,7 +159,7 @@ thead th { position: sticky; top: 0; }
 
   
 <div id='genome-box'>
-    <table id='gnom-table' class='table table-hover table-condensed' style='background: lightgrey;'>
+    <table id='gnom-table' class='table table-hover table-condensed' >
     <thead>
     <tr><th class='col0' >row #</th>
     <th class='col1' scope='col' >Genome-ID</th>
@@ -133,12 +175,12 @@ thead th { position: sticky; top: 0; }
     
     </tr>
     </thead>
-    
+    <tbody>
     <% if(ginfo.length === 0){ %>
-       <tr><td>None Found</td></tr>
+       <tr><td></td><td>None Found</td></tr>
     <% }else{ %>
     
-    <tbody>
+    
     <% rowcount = pgdata.start_count %>
     
     <% for(n in ginfo){ %>
@@ -290,7 +332,7 @@ document.onreadystatechange = function() {
                 "#loader").style.display = "none";
             document.querySelector(
                 //'#genome-box').style.visibility = "visible";
-                '#genome-box').style.display = "flex";
+                '#genome-box').style.display = "block";
         }
 };
 function openAdvancedForm() {

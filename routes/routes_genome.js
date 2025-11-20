@@ -42,7 +42,7 @@ function renderGenomeTable(req, res, args) {
        gcount +=  alltax_list[n].genomes.length
     }
     
-    //console.log('args.filter_on',args.filter_on)
+    //console.log('args.send_list',args.send_list)
     res.render('pages/genome/genometable', {
         title: 'HOMD :: Genome Table', 
         pgname: 'genome/genome_table', // for AboutThisPage

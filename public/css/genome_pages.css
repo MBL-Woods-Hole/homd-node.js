@@ -1,56 +1,9 @@
-#gnom-table {
-  padding:5px;
- 
-  table-layout:fixed;
-  width:100%;
-}
-#gnom-table th{
-  color:white;
-  background: var(--table-header-bg);
-  padding:5px;
-  font-size:13px;
-  text-align: center;
-  z-index: 1;
-  
-}
-#gnom-table td{
-  padding:3px 2px;
-  font-size:small;
-  font-weight:bold;
-  color: #303030;
-  /* 
-overflow: hidden;
-  text-overflow: ellipsis;
- */
-  white-space: nowrap;
-}
-#gnom-table .ellipsis{
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-#genome-box{
-   height:700px;
-   display:none;
-   overflow:auto;
-   padding:10px 10px 20px 10px;
-   border:1px solid gray;
-   margin-top:5px;
-}
-#gnom-table .badge{
-  
-  font-size:0.8em;
-  
-}
+
 .linkout a
 {
  color: blue;
 }
-#gnom-table tr:nth-child(even) { 
-    background-color: var(--table-row-even2); 
- } 
- #gnom-table tr:hover { 
-    background-color: #dce7f5; 
- } 
+
 
 
 
