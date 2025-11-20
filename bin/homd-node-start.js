@@ -16,9 +16,10 @@ if(available_environments.indexOf(process.argv[2]) !== -1){
   
   if(ENV.HOSTNAME === 'homd.org') {  // put production host here
       ENV.NODE_ENV = 'production';  // homd
-      ENV.NODE_OPTIONS = '--max-old-space-size=4096'
+      ENV.NODE_OPTIONS = '--max-old-space-size=8192'
   }else if(ENV.HOSTNAME === 'devel.homd.org'){
       ENV.NODE_ENV = 'development';  // homddev
+      ENV.NODE_OPTIONS = '--max-old-space-size=8192'
   }else{ // localhost
       ENV.NODE_ENV = 'testing';
       // this isn't used (use "node ----max-old-space-size=4096 app" instead) '
