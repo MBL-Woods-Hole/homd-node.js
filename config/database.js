@@ -1,26 +1,20 @@
-var mysql = require('mysql2');
-var fs    = require('fs-extra');
-//var path  = require('path');
+// db.js
+import mysql from 'mysql2';
+import 'dotenv/config';
 
-var db_config_file = './config/db-connection.js';
-eval(fs.readFileSync(db_config_file).toString());
-
-exports.taxon_pool      =    mysql.createPool({
-    connectionLimit : 100, //important
-    host     : db_config.host,
-    user     : db_config.user,
-    password : db_config.password,
-    socketPath : db_config.socketPath,
-    database : db_config.database,
-    debug    :  false
+// Create the connection pool
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10, // Adjust based on your needs/server limits
+  queueLimit: 0,
 });
 
-// exports.taxon_pool2      =    mysql.createPool({
-//     connectionLimit : 100, //important
-//     host     : db_config2.host,
-//     user     : db_config2.user,
-//     password : db_config2.password,
-//     socketPath : db_config2.socketPath,
-//    // database : db_config.database,
-//     debug    :  false
-// });
+// Get the Promise-wrapped pool for async/await usage
+const promisePool = pool.promise();
+
+// Export the pool instance to be used everywhere
+export default pool;

@@ -1,13 +1,13 @@
 'use strict'
-const express  = require('express');
+import express from 'express';
 var router   = express.Router();
-const fs       = require('fs-extra');
-const CFG   = require(app_root + '/config/config');
-const C     = require(app_root + '/public/constants');
-const path  = require('path')
-const helpers = require('./helpers/helpers')
-const queries = require(app_root + '/routes/queries')
-const { exec, spawn } = require('child_process');
+import fs from 'fs-extra';
+
+import C from '../public/constants.js';
+import path from 'path';
+import * as helpers from './helpers/helpers.js';
+import * as queries from './queries.js';
+import { exec, spawn } from 'child_process';
 
 
 router.get('/index', function index(req, res) {
@@ -15,7 +15,7 @@ router.get('/index', function index(req, res) {
     res.render('pages/help/index', {
         title: 'HOMD :: Help Pages',
         pgname: '', // for AboutThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
 
@@ -35,7 +35,7 @@ router.get('/help-page', function help_page(req, res) {
           pagetitle: type,
           data: JSON.stringify(data),
           //date_sort: date_sort,
-          config: JSON.stringify(CFG),
+          config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
           
       })
@@ -49,14 +49,14 @@ router.get('/help-page', function help_page(req, res) {
           pagetitle: getPageTitle(page),
           db_updates: JSON.stringify(updates),
           date_sort: date_sort,
-          config: JSON.stringify(CFG),
+          config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
           
       })
   }
   if(page == 'genome/genome_version'){
-      // read file path.join(CFG.PATH_TO_DATA,'genomic_version_history.txt)
-      fs.readFile(path.join(CFG.PATH_TO_DATA,'genomic_version_history.txt'), 'utf8', (err, data) => {
+      // read file path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt)
+      fs.readFile(path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt'), 'utf8', (err, data) => {
         if (err) {
            console.error(err);
            return;
@@ -66,8 +66,8 @@ router.get('/help-page', function help_page(req, res) {
         return;
       })
   }else if(page == 'taxon/taxon_version'){
-      // read file path.join(CFG.PATH_TO_DATA,'genomic_version_history.txt)
-      fs.readFile(path.join(CFG.PATH_TO_DATA,'taxonomy_version_history.txt'), 'utf8', (err, data) => {
+      // read file path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt)
+      fs.readFile(path.join(ENV.PATH_TO_DATA,'taxonomy_version_history.txt'), 'utf8', (err, data) => {
         if (err) {
            console.error(err);
            return;
@@ -77,8 +77,8 @@ router.get('/help-page', function help_page(req, res) {
         return;
       })
   }else if(page == 'refseq/refseq_version'){
-      // read file path.join(CFG.PATH_TO_DATA,'refseq_version_history.txt)
-      fs.readFile(path.join(CFG.PATH_TO_DATA,'refseq_version_history.txt'), 'utf8', (err, data) => {
+      // read file path.join(ENV.PATH_TO_DATA,'refseq_version_history.txt)
+      fs.readFile(path.join(ENV.PATH_TO_DATA,'refseq_version_history.txt'), 'utf8', (err, data) => {
         if (err) {
            console.error(err);
            return;
@@ -125,7 +125,7 @@ router.get('/search', function search(req, res) {
   res.render('pages/help/search', {
         title: 'HOMD :: Help Search',
         pgname: '', // for AboutThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
     })
@@ -136,7 +136,7 @@ router.post('/help_search_result', function help_search_result(req, res) {
   let searchText = req.body.input_string
   // help pages uses grep
   let helpLst = []
-  let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
+  let help_trunk = path.join(ENV.PROCESS_DIR,'views','partials','help')
   const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
   //console.log('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
@@ -160,7 +160,7 @@ router.post('/help_search_result', function help_search_result(req, res) {
       res.render('pages/help/search_result', {
         title: 'HOMD :: Help Search',
         pgname: '', // for AbountThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
         search_text: searchText,
@@ -294,4 +294,4 @@ function getPageTitle(page){
 
 
 
-module.exports = router;
+export default router;

@@ -5,16 +5,16 @@
 
 /*jshint multistr: true */
 
-const CONSTS = require(app_root + '/public/constants');
-const helpers = require(app_root + '/routes/helpers/helpers');
+import C from '../../public/constants.js';
+import * as helpers from './helpers.js';
 
 // Private
 let taxon_name_id = 1;
-const ranks = CONSTS.ranks;
+const ranks = C.ranks;
 
 function make_dictMap_by_rank(tags) {
   const dictMap_by_rank = {};
-  // let ranks = CONSTS.ranks;
+  // let ranks = C.ranks;
   ranks.forEach( rank => {
     dictMap_by_rank[rank] = [];
   });
@@ -171,7 +171,7 @@ function make_taxa_tree_dict(taxonomy_obj)
 }
 
 // Public
-module.exports = TaxonomyTree;
+export default TaxonomyTree;
 
 function TaxonomyTree(rows) {
   this.taxa_tree_dict = [];

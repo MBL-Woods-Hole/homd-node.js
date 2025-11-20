@@ -1,15 +1,16 @@
 'use strict'
-const express  = require('express');
+import express from 'express';
 let router   = express.Router();
-const CFG   = require(app_root + '/config/config');
-const fs       = require('fs-extra');
-// const url = require('url');
-const path     = require('path');
-const C     = require(app_root + '/public/constants');
-const helpers         = require(app_root + '/routes/helpers/helpers');
-const helpers_taxa    = require(app_root + '/routes/helpers/helpers_taxa');
-const helpers_genomes = require(app_root + '/routes/helpers/helpers_genomes');
-const queries = require(app_root + '/routes/queries')
+
+import fs from 'fs-extra';
+
+import path from 'path';
+
+import C from '../public/constants.js';
+import * as helpers from './helpers/helpers.js';
+import * as helpers_taxa from './helpers/helpers_taxa.js';
+import * as helpers_genomes from './helpers/helpers_genomes.js';
+import * as queries from './queries.js';
 
 
 router.get('/download/:q', function download(req, res) {
@@ -20,7 +21,7 @@ router.get('/download/:q', function download(req, res) {
     title: 'HOMD :: Downloads',
     pgname: 'download', // for AbountThisPage
     section: q,
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information)
 
   })
@@ -195,7 +196,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
         abundance_order = C.dewhirst_abundance_order
     }else if(source === 'erenv1v3'){
         if(type === 'samples_file'){
-            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'eren2014_v1v3_rank_abundance_sums_homd.csv.gz')
+            let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'eren2014_v1v3_rank_abundance_sums_homd.csv.gz')
             res.download(fullpath)
             return 
         }
@@ -203,7 +204,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
         abundance_order = C.eren_abundance_order
     }else if(source === 'erenv3v5'){
         if(type === 'samples_file'){
-            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'eren2014_v3v5_rank_abundance_sums_homd.csv.gz')
+            let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'eren2014_v3v5_rank_abundance_sums_homd.csv.gz')
             res.download(fullpath)
             return
         }
@@ -214,7 +215,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
         abundance_order = C.hmp_metaphlan_abundance_order
     }else if(source === 'hmprefseqv1v3'){
         if(type === 'samples_file'){
-            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'HMP_16SRefseq_Ranked_Abundance_v1v3_homd.tar.gz')
+            let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'HMP_16SRefseq_Ranked_Abundance_v1v3_homd.tar.gz')
             res.download(fullpath)
             return 
         }
@@ -222,7 +223,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
         abundance_order = C.hmp_refseq_abundance_order
     }else if(source === 'hmprefseqv3v5'){
         if(type === 'samples_file'){
-            let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'HMP_16SRefseq_Ranked_Abundance_v3v5_homd.tar.gz')
+            let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'HMP_16SRefseq_Ranked_Abundance_v3v5_homd.tar.gz')
             res.download(fullpath)
             return 
         }
@@ -323,7 +324,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
     }
     res.send(table_tsv)
     res.end()
-}) 
+})
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all (req, res) {
@@ -417,7 +418,7 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
 router.get('/dld_static_file/:fname', function dld_static_file (req, res) {
     const fname = req.params.fname
     
-    let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,fname)
+    let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,fname)
     console.log('downloading',fullpath)
     res.download(fullpath)
     return 
@@ -425,7 +426,7 @@ router.get('/dld_static_file/:fname', function dld_static_file (req, res) {
 // /////////////////////////////
 router.get('/dld_peptide_table_all/:study', function dld_peptide_table_all (req, res) {
     const study = req.params.study
-    let fullpath = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'homd_protein-peptides_study'+study+'.csv')
+    let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'homd_protein-peptides_study'+study+'.csv')
     res.download(fullpath)
     return 
 })
@@ -442,7 +443,7 @@ router.get('/dnld_pangenome',(req, res) => {
        fn = obj.dnld_v8
     }
     
-    let fullpath = path.join(CFG.PATH_TO_PANGENOMES, req.query.pg, fn)
+    let fullpath = path.join(ENV.PATH_TO_PANGENOMES, req.query.pg, fn)
     
     helpers.print('file path: '+fullpath)
     res.download(fullpath)
@@ -1012,7 +1013,7 @@ function create_taxon_table(otids, source, type, head_txt) {
     }
    
     return txt
-}        
+}
 //
 function create_table_from_sql_query (sqlrows, startText) {
     //console.log('in create_table_from_sql_query')
@@ -1083,4 +1084,4 @@ function create_genome_table (gids, source, type, startText) {
   // console.log(txt)
   return txt
 }
-module.exports = router;
+export default router;

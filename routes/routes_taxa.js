@@ -1,21 +1,18 @@
 'use strict'
-const express = require('express');
+import express from 'express';
 let router = express.Router();
-const CFG = require(app_root + '/config/config');
-const fs = require('fs-extra');
+
+import fs from 'fs-extra';
+
 // const url = require('url');
-const path = require('path');
-const { title } = require('process');
-const C = require(app_root + '/public/constants');
-const helpers = require(app_root + '/routes/helpers/helpers');
-const helpers_taxa = require(app_root + '/routes/helpers/helpers_taxa');
-const queries = require(app_root + '/routes/queries')
-// let today = new Date();
-// let dd = String(today.getDate()).padStart(2, '0');
-// let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-// let yyyy = today.getFullYear();
-// today = yyyy + '-' + mm + '-' + dd;
-// let currentTimeInSeconds=Math.floor(Date.now()/1000); //unix timestamp in seconds
+import path from 'path';
+
+//import { title } from 'process';
+import C from '../public/constants.js';
+import * as helpers from './helpers/helpers.js';
+import * as helpers_taxa from './helpers/helpers_taxa.js';
+import * as queries from './queries.js';
+
 
 function renderTaxonTable(req, res, args) {
 
@@ -23,7 +20,7 @@ function renderTaxonTable(req, res, args) {
     title: 'HOMD :: Taxon Table',
     pgtitle: 'Human Oral/Nasal Microbial Taxa',
     pgname: 'taxon/taxon_table',  //for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
 
     data: JSON.stringify(args.send_list),
@@ -93,7 +90,7 @@ router.get('/advanced_taxtable_search', function advanced_taxtable_search(req, r
   res.render('pages/taxa/tax_table_filter_advanced', {
     title: 'HOMD :: Taxon Search',
     pgname: '', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
 
   })
@@ -109,7 +106,7 @@ router.get('/advanced_taxtable_search', function advanced_taxtable_search(req, r
 //   res.render('pages/taxa/taxhierarchy', {
 //     title: 'HOMD :: Taxon Hierarchy',
 //     pgname: 'taxon/hierarchy', // for AbountThisPage
-//     config: JSON.stringify(CFG),
+//     config: JSON.stringify(ENV),
 //     data: {},
 //     //dhtmlx: JSON.stringify(C.dhtmlxTreeData),
 //     ver_info: JSON.stringify(C.version_information),
@@ -188,7 +185,7 @@ router.get('/tax_hierarchy', function tax_hierarchy_GET(req, res) {
   res.render('pages/taxa/taxhierarchy', {
     title: 'HOMD :: Taxon Hierarchy',
     pgname: 'taxon/hierarchy', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     data: {},
     species: species,
     bcounts: JSON.stringify(bcts),
@@ -439,7 +436,7 @@ router.get('/tax_level', function tax_level_get(req, res) {
   res.render('pages/taxa/taxlevel', {
     title: 'HOMD :: Taxon Level',
     pgname: 'taxon/level', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     level: 'domain',
     //oral: oral,
     ver_info: JSON.stringify(C.version_information),
@@ -457,7 +454,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
   //let count_type = 'both'
 
   const tax_resp = []
-  fs.readFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn), 'utf8', function readTaxCountsFile(err, data) {
+  fs.readFile(path.join(ENV.PATH_TO_DATA, C.taxcounts_fn), 'utf8', function readTaxCountsFile(err, data) {
     if (err) {
       console.log(err)
       return
@@ -504,7 +501,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
         let lineage_str = lineage.join(';')
         //console.log(lineage_str)
         if (taxdata.hasOwnProperty(lineage_str)) {
-          // console.log(lineage_str)
+          //console.log(lineage_str)
           //                 console.log(taxdata[lineage_str].taxcnt)
           //                 console.log(taxdata[lineage_str].gcnt)
           //                 console.log(taxdata[lineage_str].refcnt)
@@ -517,6 +514,7 @@ router.post('/tax_level', function tax_level_post(req, res) {
             return_obj.gne_count = taxdata[lineage_str].gcnt
             return_obj.rrna_count = taxdata[lineage_str].refcnt
           }
+          //console.log('return_obj',return_obj)
         } else {
           return_obj.tax_count = 0
           return_obj.gne_count = 0
@@ -568,7 +566,7 @@ function renderTaxonDescription(req, res, args) {
   res.render('pages/taxa/taxdesc', {
     title: 'HOMD :: Taxon Info',
     pgname: 'taxon/description', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
 
 
@@ -775,8 +773,8 @@ router.get('/tax_description', async function tax_description(req, res) {
     links = { 'ncbilink': lookup_data.genus + '-' + lookup_data.species, 'gcmlink': lookup_data.genus + '%20' + lookup_data.species }
     links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage)
   }
-  //links.anviserver_link       = CFG.ANVIO_URL  //https://anvio.homd.org/anvio?pg=Mitis_Group
-  links.anviserver_link = CFG.ANVIO_URL //https://vamps.mbl.edu/anviserver/pangenomes/Mitis_Group
+  //links.anviserver_link       = ENV.ANVIO_URL  //https://anvio.homd.org/anvio?pg=Mitis_Group
+  links.anviserver_link = ENV.ANVIO_URL //https://vamps.mbl.edu/anviserver/pangenomes/Mitis_Group
   let otid_has_abundance = false
   if (C.otids_w_abundance.indexOf(otid) !== -1) {
     otid_has_abundance = true
@@ -898,7 +896,7 @@ router.get('/tax_description', async function tax_description(req, res) {
   //          //  res.render('pages/taxa/taxdesc', {
   // //             title: 'HOMD :: Taxon Info', 
   // //             pgname: 'taxon/description', // for AbountThisPage
-  // //             config: JSON.stringify(CFG),
+  // //             config: JSON.stringify(ENV),
   // //             otid: otid,
   // //             //pids: pid_list,
   // //             image_array:JSON.stringify(image_array),
@@ -1139,7 +1137,7 @@ router.get('/life', function life(req, res) {
   res.render('pages/taxa/life', {
     title: 'HOMD :: ' + page_title,
     pgname: 'taxon/life', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     data: {},
     tax_name: tax_name,
     //headline: 'Life: Cellular Organisms',
@@ -1190,25 +1188,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
     }
     species_for_plot.push(sp)
 
-    //console.log('otids_for_plot[n]',n,otids_for_plot[n])
 
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otids_for_plot[n]+'_species'])
-    // let obj = C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank
-    //          
-    //          if(obj.hasOwnProperty(otids_for_plot[n]+'_subspecies')){
-    //              
-    //              let parent_id = obj[otids_for_plot[n]+'_subspecies'].parent_id
-    //              let ssp_taxon = obj[otids_for_plot[n]+'_subspecies'].taxon
-    //              let parent_taxon = C.homd_taxonomy.taxa_tree_dict_map_by_id[parent_id].taxon
-    //              //console.log('SSP TAXON',parent_taxon +'-'+ssp_taxon)
-    //              species_for_plot.push(parent_taxon +' '+ssp_taxon)
-    //              
-    //          }else{
-    //              if(obj.hasOwnProperty(otids_for_plot[n]+'_species')){
-    //                 species_for_plot.push(obj[otids_for_plot[n]+'_species'].taxon)
-    //              }
-    //          }
-    //tmp_sp.push(C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otids_for_plot[n]+'_species'].taxon)
   }
 
   species_for_plot.push('other')
@@ -1309,7 +1289,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
 
   }
 
-  //console.log('bar_graph_data',bar_graph_data.length)
+  //console.log('bar_graph_data',bar_graph_data)
 
 
   let bac_phyla_only = phyla_obj.filter((x) => {
@@ -1352,7 +1332,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
   res.render('pages/taxa/ecology_home', {
     title: 'HOMD :: Ecology',
     pgname: 'taxon/ecology', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
 
     sole_arch: JSON.stringify(sole_arch),
@@ -1426,7 +1406,7 @@ router.get('/body_sites', function body_sites(req, res) {
   res.render('pages/taxa/body_sites', {
     title: 'HOMD :: Body Sites',
     pgname: '', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
 
     sites: JSON.stringify(send_list),
@@ -1610,7 +1590,7 @@ router.get('/ecology', function ecology(req, res) {
   res.render('pages/taxa/ecology_lollipop', {
     title: 'HOMD ::' + rank_show + ':' + tax_name,
     pgname: 'taxon/ecology', // for AbountThisPage 
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     tax_name: tax_name,
     //headline: 'Life: Cellular Organisms',
     lineage: lineage_string,
@@ -1692,7 +1672,7 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
   res.render('pages/taxa/abundance_by_site', {
     title: 'HOMD ::Abundance by oral site',
     pgname: '', // for AbountThisPage 
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
 
     data: JSON.stringify(top_ten),
@@ -1754,7 +1734,7 @@ router.get('/dropped', function dropped(req, res) {
       title: 'HOMD :: Dropped Taxa',
       pgname: '', // for AbountThisPage
       pgtitle: 'Dropped Taxa Table',
-      config: JSON.stringify(CFG),
+      config: JSON.stringify(ENV),
       ver_info: JSON.stringify(C.version_information),
 
       data: JSON.stringify(rows),
@@ -1809,7 +1789,7 @@ router.get('/tree_d3', function tree_d3(req, res) {
         title: 'HOMD :: tree',
         pgname: '', // for AbountThisPage
         pgtitle: 'D3 Tree',
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
 
         mdata: JSON.stringify(refseq_tree_lookup),
@@ -2365,7 +2345,7 @@ function get_major_genera(rank, node) {
 }
 
 
-module.exports = router;
+export default router;
 
 
 

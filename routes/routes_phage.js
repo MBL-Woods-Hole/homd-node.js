@@ -1,13 +1,15 @@
 'use strict'
-const express  = require('express');
+import express from 'express';
 let router   = express.Router();
-const CFG   = require(app_root + '/config/config');
-const fs       = require('fs-extra');
+
+import fs from 'fs-extra';
+
 // const url = require('url');
-const path     = require('path');
-const C     = require(app_root + '/public/constants');
-const helpers = require(app_root + '/routes/helpers/helpers');
-const queries = require(app_root + '/routes/queries')
+import path from 'path';
+
+import C from '../public/constants.js';
+import * as helpers from './helpers/helpers.js';
+import * as queries from './queries.js';
 
 router.get('/phage', function phage(req, res) {
     //console.log('in phage',req.query.gid)
@@ -24,7 +26,7 @@ router.get('/phage', function phage(req, res) {
         res.render('pages/phage/phage', {
                 title: 'HOMD :: Phage', 
                 pgname: '', // for AboutThisPage
-                config: JSON.stringify(CFG),
+                config: JSON.stringify(ENV),
                 ver_info: JSON.stringify(C.version_information),
                 pgtitle: 'Phage',
                 data: JSON.stringify(rows),
@@ -63,7 +65,7 @@ router.get('/phage_table', function phage_explorer(req, res) {
             title: 'HOMD :: Phage Table',
             pgtitle: 'Human Oral/Nasal Phage',
             pgname: 'taxon/phage_table',  //for AbountThisPage
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             data: JSON.stringify(genome_lookup),
             full_count: full_count,
@@ -151,8 +153,8 @@ router.post('/phage_ajax', function phage_ajax(req, res){
     })
     
 })
-    
-    
 
-        
-module.exports = router;
+
+
+
+export default router;

@@ -1,35 +1,25 @@
 'use strict'
-const express = require('express')
+import express from 'express';
 const router = express.Router()
-const fs        = require('fs-extra')
-// const fs   = require('fs-extra')
-const path  = require('path')
-const helpers = require('./helpers/helpers')
-// const url = require('url')
-// const ds = require('./load_all_datasets')
-const CFG = require(app_root + '/config/config')
-const C = require(app_root + '/public/constants')
-const { exec, spawn } = require('child_process');
-const queries = require(app_root + '/routes/queries')
-// let timestamp = new Date() // getting current timestamp
-// let rs_ds = ds.get_datasets( () => {
-let browseDir = require("browse-directory");
-const { v4: uuidv4 } = require('uuid'); // I chose v4you can select othersc
-//const Stream = require( 'stream-json/streamers/StreamArray');
-/* GET home page. */
+import fs from 'fs-extra';
 
-const mysql = require('mysql'); // or use import if you use TS
-const util = require('util');
+// const fs   = require('fs-extra')
+import path from 'path';
+
+import * as helpers from './helpers/helpers.js';
+
+
+import C from '../public/constants.js';
+import { exec, spawn } from 'child_process';
+import * as queries from './queries.js';
 
 
 router.get('/', function index(req, res) {
   
-  //console.log('Session ID:',req.session.id)
-  //console.log('CFG.ENV :',CFG.ENV )
   res.render('pages/home', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: 'home', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
     
     
@@ -45,7 +35,7 @@ router.get('/poster', function poster(req, res) {
   res.render('pages/poster', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
     
 
@@ -57,7 +47,7 @@ router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, re
   res.render('pages/advanced_site_search', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
     
 
@@ -151,19 +141,18 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
     let search_id,lookup={},gid_collector={},gid_count = {},all_phage_search_ids_lookup = []
     
     try{
-        let datapath = path.join(CFG.PATH_TO_SEARCH,"homd_GREP_PHAGE*")
-        //let filename = uuidv4();  //CFG.PATH_TO_TMP
-        //let filepath = path.join(CFG.PATH_TO_TMP, filename)
+        let datapath = path.join(ENV.PATH_TO_SEARCH,"homd_GREP_PHAGE*")
+       
         let max_rows = C.grep_search_max_rows //50000
         
         let split_length = 6
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
         let args = ['-h','-m '+(max_rows).toString(),'"'+searchText+'"',datapath]
         //let args = ['-h','"'+searchText+'"',datapath]
-        let grep_cmd = CFG.GREP_CMD + ' ' + args.join(' ')
+        let grep_cmd = ENV.GREP_CMD + ' ' + args.join(' ')
         console.log(grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
-        const row_array = await execPromise(CFG.GREP_CMD, args, max_rows);
+        const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
         console.log('rows_lst length',row_array.length)
         
         let total_length = row_array.length - 1
@@ -256,7 +245,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             
             anno: '',
@@ -349,7 +338,7 @@ router.post('/show_all_phage_hits', function show_all_phage_hits(req, res) {
         res.render('pages/phage/all_hits_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             //hits_list: req.body.big_list,
             searchtxt: req.body.search_text,
@@ -389,19 +378,19 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     let tmp_obj = {}
     
     try{
-        let datapath = path.join(CFG.PATH_TO_SEARCH,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
-        //let filename = uuidv4();  //CFG.PATH_TO_TMP
-        //let filepath = path.join(CFG.PATH_TO_TMP, filename)
+        let datapath = path.join(ENV.PATH_TO_SEARCH,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
+        //let filename = uuidv4();  //ENV.PATH_TO_TMP
+        //let filepath = path.join(ENV.PATH_TO_TMP, filename)
         let max_rows = C.grep_search_max_rows //see constants.js 50000
         
         let split_length = 6
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
         let args = ['-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
         //let args = ['-h','"'+searchText+'"',datapath]
-        let grep_cmd = CFG.GREP_CMD + ' ' + args.join(' ')
+        let grep_cmd = ENV.GREP_CMD + ' ' + args.join(' ')
         console.log(grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
-        const row_array = await execPromise(CFG.GREP_CMD, args, max_rows);
+        const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
         //console.log('rows_lst length',row_array.length)
         
         let total_length = row_array.length - 1
@@ -471,7 +460,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             
             anno: req.body.adv_anno_radio_grep,
@@ -580,8 +569,8 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
 //////////// HELP PAGES //////////////////////////////////////////////////////////////////////////////  
   // help pages uses grep
   let helpLst = []
-  let help_trunk = path.join(CFG.PROCESS_DIR,'views','partials','help')
-  const grep_cmd = CFG.GREP_CMD + " -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
+  let help_trunk = path.join(ENV.PROCESS_DIR,'views','partials','help')
+  const grep_cmd = ENV.GREP_CMD + " -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
 
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
@@ -600,7 +589,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
           helpLst.push(cleanfinal)
         }
       }
-      //if(CFG.ENV == 'productionX'){
+      //if(ENV.ENV == 'productionX'){
       let prokka_genome_count=0
       let prokka_gene_count=0
       let ncbi_genome_count=0
@@ -612,7 +601,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
       res.render('pages/basic_search_result', {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
         search_text: searchText,
@@ -822,7 +811,8 @@ function search_contigs(text_string){
   }
   return contigObj_list
 }
+
 // }); // end pipeline
 // })  // end anno query
-module.exports = router
+export default router;
 

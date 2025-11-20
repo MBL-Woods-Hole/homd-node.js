@@ -1,31 +1,56 @@
 "use strict"
+// import dotenv from 'dotenv';
+// dotenv.config();
+
+//import dotenv from 'dotenv';
 // for newrelic: start in config.js
 //const winston = require('winston');
-const CFG = require('./config/config');
-const taxdbconn = require('./config/database').taxon_pool;
-//const annodbconn = require('./config/database').taxon_pool2;
+//import process.env from './config/config.js';
+
+//import { pool } from './config/database.js';
+//console.log('xx',envs)
+//import { * } from './config/config.js';
+//console.log(`Your DB_HOST is ${DB_HOST}`); // 8626
+global.ENV = process.env;
+console.log('xx',ENV.DB_HOST)
+import pool from './config/database.js';
 //const gendbconn = require('./config/database').genome_pool;
-const path = require('path');
+import path from 'path';
+const dirname = import.meta.dirname
 // explicitly makes conn global
-global.TDBConn = taxdbconn;   // database:  homd
-global.app_root = path.resolve(__dirname);
-const C = require('./public/constants');
-const helpers   = require(app_root + '/routes/helpers/helpers')
-const fs = require('fs-extra');
+global.TDBConn = pool;   // database:  homd
+
+global.app_root = path.resolve(dirname);
+
+
+import C from './public/constants.js';
+import  * as helpers from './routes/helpers/helpers.js'
+ 
+import fs from 'fs-extra';
+//console.log('helpers',helpers)
 //require('dotenv').config({path: __dirname + '/.env'})
 //const createIframe = require("node-iframe");
-//console.log('cfg',CFG)
-const express = require('express');
-const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
-const node_log = require('simple-node-logger').createSimpleFileLogger(logFilePath);
+
+import express from 'express';
 
 const router = express.Router();
-const session = require('express-session');
+// console.log('dirname',dirname)
+// console.log('process.env.LOG_DIR',process.env.LOG_DIR)
+// console.log('process.env.PRODUCTION_LOG',process.env.PRODUCTION_LOG)
+const logFilePath = path.join(process.env.LOG_DIR, process.env.PRODUCTION_LOG)
+//import node_log from 'simple-node-logger').createSimpleFileLogger(logFilePath);
+import pkg from 'simple-node-logger';
+const { createSimpleFileLogger } = pkg;
+var node_log = createSimpleFileLogger(logFilePath)
+
+import session from 'express-session';
+
 //const passport = require('passport');
 //const passportConfig = require('./config/passportConfig');
 //const passportConfig = require('./config/passport'); // pass passport for configuration
 
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
+
 const app = express();
 app.use(bodyParser.urlencoded({
     extended: false,         // allows for richer json like experience https://www.npmjs.com/package/qs#readme
@@ -49,26 +74,30 @@ app.use(session({
   
 }));
 
-const flash = require('express-flash');
+import flash from 'express-flash';
+
 //const favicon = require('serve-favicon');
-const async = require('async')
+import async from 'async';
+
 //const zlib = require('zlib');
 //const sizeof = require('object-sizeof');
 
 
-const home     = require('./routes/index');
+import home from './routes/index.js';
 
-const taxa     = require('./routes/routes_taxa');
-const refseq   = require('./routes/routes_refseq');
-const genome   = require('./routes/routes_genome');
-const phage    = require('./routes/routes_phage');
+import taxa from './routes/routes_taxa.js';
+import refseq from './routes/routes_refseq.js';
+import genome from './routes/routes_genome.js';
+import phage from './routes/routes_phage.js';
+
 //const blast    = require('./routes/routes_blast');
-const help     = require('./routes/routes_help');
-const download = require('./routes/routes_download');
+import help from './routes/routes_help.js';
+
+import download from './routes/routes_download.js';
 
 
 // PRODUCTION: log every restart
-if(CFG.ENV === 'production'){
+if(process.env.ENV === 'production'){
     const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
     const restart_logger = new console.Console(output)
     restart_logger.log('Restart on '+helpers.timestamp(false))
@@ -82,7 +111,7 @@ if(CFG.ENV === 'production'){
 app.use(flash());
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(dirname, 'views'));
 app.set('view engine', 'ejs');
 //app.engine('html', require('ejs').renderFile);
 //
@@ -111,7 +140,7 @@ app.use(express.static('tmp'));
 
 //app.use(express.static('jbrowse2/static/js'));
 //path.join(__dirname, 'public', 'javascripts')
-app.use('/tree', express.static(CFG.PATH_TO_SS_DIRS));
+app.use('/tree', express.static(process.env.PATH_TO_SS_DIRS));
 
 // ROUTES:
 app.use('/', home);
@@ -146,8 +175,8 @@ app.get('/*', function(req, res, next){
 app.use((error, req, res, next) => {
   console.error(error);
   //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
-  //if(CFG.ENV === 'development'){
-  //if(CFG.ENV === 'production'){
+  //if(process.env.ENV === 'development'){
+  //if(process.env.ENV === 'production'){
   node_log.debug(error.toString())
   //}
   
@@ -156,7 +185,7 @@ app.use((error, req, res, next) => {
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
-      config: JSON.stringify(CFG),
+      config: JSON.stringify(process.env),
       ver_info: JSON.stringify({ rna_ver: C.rRNA_refseq_version, gen_ver: C.genomic_refseq_version, tax_ver: C.homd_taxonomy_version }),
       user: JSON.stringify(req.user || {}),
       msg: 'We\'re Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:',
@@ -175,7 +204,7 @@ app.use(function(req, res, next){
       url: req.url,
       pgname: 'lost',
       title:'HOMD Lost',
-      config: JSON.stringify(CFG),
+      config: JSON.stringify(process.env),
       ver_info: JSON.stringify({rna_ver:C.rRNA_refseq_version, gen_ver:C.genomic_refseq_version}),
       user:     JSON.stringify(u),
       msg: 'Sorry -- We can\'t find the page you requested.',
@@ -193,10 +222,11 @@ app.use(function(req, res, next){
   // default to plain-text. send()
   res.type('txt').send('Not found');
 });
+
 /*
  * Create global objects once upon server startup
  */
-const CustomTaxa  = require('./routes/helpers/taxa_class');
+import CustomTaxa from './routes/helpers/taxa_class.js';
 
 
 
@@ -206,30 +236,30 @@ const CustomTaxa  = require('./routes/helpers/taxa_class');
 // passing the array of results in the same order.
 const promises = [
     
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.taxon_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.lineage_lookup_fn),'json') ,
-  //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.genome_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.refseq_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.references_lookup_fn),'json'),
-  //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.info_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.taxcounts_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.annotation_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.taxon_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.lineage_lookup_fn),'json') ,
+  //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.genome_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.refseq_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.references_lookup_fn),'json'),
+  //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.info_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.taxcounts_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.annotation_lookup_fn),'json'),
  
   helpers.readFromFile(path.join('public','data', C.image_location_locfn),'json'),  // image name and text
   helpers.readFromFile(path.join('public','data', C.image_location_taxfn),'json'),  // match image w/ otid or tax rank
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.contig_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.contig_lookup_fn),'json'),
   
   //2024-Sept  // #10,11,12
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.site_lookup_fn),'json'),
-  //helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.missing_ncbi_genomes_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.site_lookup_fn),'json'),
+  //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.missing_ncbi_genomes_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv'),
   
   //Oct 2025  // #13
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.crispr_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.phage_lookup_fn),'json'),
-  helpers.readFromFile(path.join(CFG.PATH_TO_DATA, C.amr_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.crispr_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.phage_lookup_fn),'json'),
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.amr_lookup_fn),'json'),
     // ETC ...
 ];
 Promise.all(promises)
@@ -376,7 +406,7 @@ Promise.all(promises)
 
 console.log('start here in app.js')
 
-module.exports = app;
+export default app;
 
 
 

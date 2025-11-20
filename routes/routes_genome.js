@@ -1,27 +1,30 @@
 'use strict'
-const express   = require('express')
+import express from 'express';
 let router    = express.Router()
-const CFG     = require(app_root + '/config/config')
-const fs        = require('fs-extra')
-//const url     = require('url')
-const path      = require('path')
-const C       = require(app_root + '/public/constants')
-const helpers   = require(app_root + '/routes/helpers/helpers')
-const helpers_taxa   = require(app_root + '/routes/helpers/helpers_taxa')
-const helpers_genomes   = require(app_root + '/routes/helpers/helpers_genomes')
-const queries = require(app_root + '/routes/queries')
-// const open = require('open')
-const createIframe = require("node-iframe")
-const https = require('https'); 
+
+import fs from 'fs-extra';
+
+
+import path from 'path';
+
+import C from '../public/constants.js';
+import * as helpers from './helpers/helpers.js';
+import * as helpers_taxa from './helpers/helpers_taxa.js';
+import * as helpers_genomes from './helpers/helpers_genomes.js';
+import * as queries from './queries.js';
+
+
+
+import https from 'https';
 
 // router.get('/overview', function overview(req, res) {
 //     //console.log('in RESET-session')
-//     let crispr_data = JSON.parse(fs.readFileSync(path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')))
+//     let crispr_data = JSON.parse(fs.readFileSync(path.join(ENV.PATH_TO_DATA,'homdData-Crispr.json')))
 //     //console.log('crispr_data:',Object.keys(crispr_data).length)
 //     res.render('pages/genome/overview', {
 //         title: 'HOMD :: Genome Overview', 
 //         pgname: '', // for AboutThisPage
-//         config: JSON.stringify(CFG),
+//         config: JSON.stringify(ENV),
 //         //ver_info: JSON.stringify(C.version_information),
 //         ver_info: JSON.stringify(C.version_information),
 //         pgtitle: 'Genome Overview',
@@ -43,7 +46,7 @@ function renderGenomeTable(req, res, args) {
     res.render('pages/genome/genometable', {
         title: 'HOMD :: Genome Table', 
         pgname: 'genome/genome_table', // for AboutThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         pgtitle: 'Genome Table',
         data: JSON.stringify(args.send_list),
@@ -175,7 +178,7 @@ router.get('/genome_table', function genome_table(req, res) {
 });
 router.post('/genome_table', function genome_table_post(req, res) {
     console.log('in POST genome_table')
-    console.log('req.body',req.body)
+    //console.log('req.body',req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret_obj,args,count_txt
     helpers_genomes.set_gtable_session(req)
     //console.log('gtable_session',req.session.gtable_filter)
@@ -245,7 +248,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
   res.render('pages/genome/genome_select', {
     title: 'HOMD :: JBrowse', 
     pgname: 'genome/jbrowse', // for AboutThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     gid: gid,  // default
     gc:gc,
     page_type: 'JBrowse',
@@ -260,6 +263,7 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
   console.log('AJAX JBrowse')
   
   // for logging
+  //console.log('req.ip',req.ip)
   helpers.accesslog(req, res)
   //open(jburl)
   
@@ -329,7 +333,7 @@ router.get('/genome_description', function Description (req, res) {
             // Crisper-cas
             // need to determine is CC data available for this genome(gid)
             // if dir exists  homdData-Crisper.json
-            let fpath = path.join(CFG.PATH_TO_DATA,'homdData-Crispr.json')
+            let fpath = path.join(ENV.PATH_TO_DATA,'homdData-Crispr.json')
             //console.log(fpath)
             let crispr = 0
             let crispr_data = JSON.parse(fs.readFileSync(fpath))
@@ -338,14 +342,14 @@ router.get('/genome_description', function Description (req, res) {
             }
             let n = data.GTDB_taxonomy.lastIndexOf(';')
             data.GTDB_taxonomy = data.GTDB_taxonomy.substring(0, n+1) + "<br>" + data.GTDB_taxonomy.substring(n+1) 
-            console.log('GTDB_taxonomy',data.GTDB_taxonomy)
+            //console.log('GTDB_taxonomy',data.GTDB_taxonomy)
             let checkm_status_obj = helpers_genomes.get_checkm_status(data)
             
-            console.log('checkM status',checkm_status_obj)
+            //console.log('checkM status',checkm_status_obj)
             res.render('pages/genome/genomedesc', {
                title: 'HOMD :: Genome',
                pgname: 'genome/description', // for AboutThisPage 
-               config: JSON.stringify(CFG),
+               config: JSON.stringify(ENV),
                // taxonid: otid,
                data1: JSON.stringify(data),
                checkm: JSON.stringify(checkm_status_obj),
@@ -463,7 +467,7 @@ function render_explorer(req, res, args){
         
         title: 'HOMD :: Genome Explorer',
         pgname: 'genome/explorer', // for AboutThisPage 
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
         gid: args.gid,
@@ -487,7 +491,7 @@ function render_explorer(req, res, args){
 router.post('/make_anno_search_table', function make_anno_search_table (req, res) {
     console.log('in POST:make_anno_search_table')
     //console.log(req.body)
-    let anno_path = path.join(CFG.PATH_TO_TMP,req.body.dirname)
+    let anno_path = path.join(ENV.PATH_TO_TMP,req.body.dirname)
     
     let anno = req.body.anno
     let search_text = req.body.search_text.toLowerCase()
@@ -595,7 +599,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
             let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
             let highlight = seqacc+":"+start.toString()+".."+stop.toString()
             //console.log('XXX',rowobj.pid+"','"+db+"','"+rowobj.acc+"','"+organism+"','"+rowobj.product+"','"+selected_gid)
-            //html += " <a title='JBrowse/Genome Viewer' href='"+cfg.JBROWSE_URL+"/"+selected_gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
+            //html += " <a title='JBrowse/Genome Viewer' href='"+ENV.JBROWSE_URL+"/"+selected_gid+"&loc="+loc+"&highlight="+highlight+"&tracks="+jbtracks+"' target='_blank' rel='noopener noreferrer'>JB</a>"
             //html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+selected_gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >JB</a>"
             //console.log('JB',rowobj.line_gid,'loc',loc,'hl',highlight)
             html += "</td>"   // pid
@@ -642,7 +646,7 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
     let anno = req.body.anno
     let search_text = req.body.search_text
     let dirname = req.body.dirname
-    let anno_path = path.join(CFG.PATH_TO_TMP,dirname)
+    let anno_path = path.join(ENV.PATH_TO_TMP,dirname)
     
     
     let org_list = {}
@@ -708,7 +712,7 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
 
                 title: 'HOMD :: Search',
                 pgname: 'genome/explorer', // for AboutThisPage 
-                config: JSON.stringify(CFG),
+                config: JSON.stringify(ENV),
                 ver_info: JSON.stringify(C.version_information),
                 dirname: dirname,
                 anno: anno,
@@ -738,7 +742,7 @@ router.post('/orf_search', function orf_search (req, res) {
        res.send('Session Expired')
        return
     }
-    let anno_path = path.join(CFG.PATH_TO_TMP,req.session.anno_search_dirname)
+    let anno_path = path.join(ENV.PATH_TO_TMP,req.session.anno_search_dirname)
     let site_search_result = {}
     let tmpgid,ssp=''
     fs.access(anno_path, function(error) {
@@ -796,7 +800,7 @@ router.post('/orf_search', function orf_search (req, res) {
 
                 title: 'HOMD :: Search',
                 pgname: 'genome/explorer', // for AboutThisPage 
-                config: JSON.stringify(CFG),
+                config: JSON.stringify(ENV),
                 ver_info: JSON.stringify(C.version_information),
 
                 anno: anno,
@@ -937,7 +941,7 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
       
   }
   return send_list
-} 
+}
 
 router.get('/reset_atable', function annot_table_reset(req, res) {
    //console.log('in RESET-session')
@@ -1205,16 +1209,16 @@ router.get('/explorer', function explorer_get (req, res) {
 
 //
 //
-router.get('/blast_server', function genome_blast_server(req, res) {
-    res.render('pages/blast/blast_server', {
-        title: 'HOMD :: Blast Server',
-        pgname: '', // for AboutThisPage
-        config: JSON.stringify(CFG),
-        ver_info: JSON.stringify(C.version_information),
-        
-        blast_type: 'genome'
-      })
-})
+// router.get('/blast_server', function genome_blast_server(req, res) {
+//     res.render('pages/blast/blast_server', {
+//         title: 'HOMD :: Blast Server',
+//         pgname: '', // for AboutThisPage
+//         config: JSON.stringify(ENV),
+//         ver_info: JSON.stringify(C.version_information),
+//         
+//         blast_type: 'genome'
+//       })
+// })
 router.get('/blast_select_genome', function blast_select_genome(req, res) {
    //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
   //helpers.accesslog(req, res)
@@ -1241,7 +1245,7 @@ router.get('/blast_select_genome', function blast_select_genome(req, res) {
   res.render('pages/genome/genome_select', {
     title: 'HOMD :: BLAST', 
     pgname: 'genome/BLAST', // for AboutThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     gid: gid,  // default
     gc: gc,
     page_type: 'BLAST',
@@ -1252,21 +1256,34 @@ router.get('/blast_select_genome', function blast_select_genome(req, res) {
   })
 })
 
-router.get('/blast_sserver', function blast_sserver(req, res){
-   //console.log(req.query)
-   //helpers.accesslog(req, res)
-   let db_type = req.query.type
-   let page_title = ''
-   if(db_type === 'refseq'){
-     page_title = 'BLAST: RefSeq Databases'
-   }else{
-     page_title = 'Genomic BLAST: All-Genomes Databases'
-   }
-   console.log('BLAST SequenceServer','Type:',db_type,'IP:',req.ip)
-   // res.render('pages/genome/blast_server_no_iframe', {
+// router.get('/blast_sserver', function blast_sserver(req, res){
+//    //console.log(req.query)
+//    //helpers.accesslog(req, res)
+//    let db_type = req.query.type
+//    let page_title = ''
+//    if(db_type === 'refseq'){
+//      page_title = 'BLAST: RefSeq Databases'
+//    }else{
+//      page_title = 'Genomic BLAST: All-Genomes Databases'
+//    }
+//    console.log('BLAST SequenceServer','Type:',db_type,'IP:',req.ip)
+//    // res.render('pages/genome/blast_server_no_iframe', {
+// //     title: 'HOMD :: BLAST', 
+// //     pgname: 'blast/pagehelp', // for AboutThisPage
+// //     config: JSON.stringify(ENV),
+// //     ver_info: JSON.stringify(C.version_information),
+// //     
+// //     gid: '',
+// //     annotation: '',
+// //     organism: '',
+// //     db_type: db_type,
+// //     ptitle: page_title,
+// //   })
+//   
+//    res.render('pages/genome/blast_server_iframe', {
 //     title: 'HOMD :: BLAST', 
 //     pgname: 'blast/pagehelp', // for AboutThisPage
-//     config: JSON.stringify(CFG),
+//     config: JSON.stringify(ENV),
 //     ver_info: JSON.stringify(C.version_information),
 //     
 //     gid: '',
@@ -1274,28 +1291,15 @@ router.get('/blast_sserver', function blast_sserver(req, res){
 //     organism: '',
 //     db_type: db_type,
 //     ptitle: page_title,
+//     no_ncbi_blast: JSON.stringify([])
 //   })
-  
-   res.render('pages/genome/blast_server_iframe', {
-    title: 'HOMD :: BLAST', 
-    pgname: 'blast/pagehelp', // for AboutThisPage
-    config: JSON.stringify(CFG),
-    ver_info: JSON.stringify(C.version_information),
-    
-    gid: '',
-    annotation: '',
-    organism: '',
-    db_type: db_type,
-    ptitle: page_title,
-    no_ncbi_blast: JSON.stringify([])
-  })
-})
+// })
 
 router.post('/blast_ss_single', function blast_ss_single(req, res){
   console.log('IN POST blast_ss_single')
   //console.log(req.body)
   let gid = req.body.gid
-  //console.log(CFG.BLAST_URL_BASE)
+  //console.log(ENV.BLAST_URL_BASE)
   let organism = C.genome_lookup[gid].organism +' '+C.genome_lookup[gid].strain 
   //console.log(C.genome_lookup[req.body.gid])
   if(req.session.gtable_filter){
@@ -1308,11 +1312,11 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   }
   
   //console.log('BLAST SequenceServer','Type:SingleGenome',gid,'IP:',req.ip)
-  //console.log('SingleBLASTURL: '+CFG.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+gid)
+  //console.log('SingleBLASTURL: '+ENV.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+gid)
  //  res.render('pages/genome/blast_server_iframe', {
 //     title: 'HOMD :: BLAST', 
 //     pgname: 'blast/pagehelp', // for AboutThisPage
-//     config: JSON.stringify(CFG),
+//     config: JSON.stringify(ENV),
 //     ver_info: JSON.stringify(C.version_information),
 //     
 //     gid: req.body.gid,
@@ -1325,197 +1329,173 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
   
   let url = ''
   if(req.body.annotation === 'ncbi'){
-      url = CFG.BLAST_URL_BASE+'/genome_blast_single_ncbi/?gid='+req.body.gid
+      url = ENV.BLAST_URL_BASE+'/genome_blast_single_ncbi/?gid='+req.body.gid
   }else{
-      url = CFG.BLAST_URL_BASE+'/genome_blast_single_prokka/?gid='+req.body.gid
+      url = ENV.BLAST_URL_BASE+'/genome_blast_single_prokka/?gid='+req.body.gid
   }
-  
-  res.render('pages/genome/blast_server_no_iframe', {
-    title: 'HOMD :: BLAST', 
-    pgname: 'blast/pagehelp', // for AboutThisPage
-    config: JSON.stringify(CFG),
-    ver_info: JSON.stringify(C.version_information),
-    
-    gid: req.body.gid,
-    annotation: req.body.annotation,
-    url:url,
-    organism: organism,
-    db_type: '',
-    no_ncbi_blast: JSON.stringify(C.no_ncbi_blast_dbs)
-  })
+  res.redirect(url)
+
   
    
 })
-router.post('/blast_single_test', function(req, res){
-  //console.log('IN POST blast_single_test')
-  //console.log(req.body)
-   res.render('pages/genome/test_blast_single', {
-    title: 'HOMD :: BLAST', 
-    pgname: 'genome/BLAST', // for AboutThisPage
-    config: JSON.stringify(CFG),
-    ver_info: JSON.stringify(C.version_information),
-    
-  })
-})
-router.post('/blast_single', function blast_single(req, res) {
-    //console.log(req.body)
-    // 'prokka|fna|SEQF1595.2|/Users/avoorhis/programming/blast-db-alt/fna/SEQF1595.2.fna'
-    let blast_db_parts = req.body.blastdb.split('|')
-    let anno    = blast_db_parts[0]
-    let ext     = blast_db_parts[1]
-    let gid     = blast_db_parts[2]
-    let db_path = blast_db_parts[3]
-    
-    // localhost:4567  or 0.0.0.
-    // production:  192.168.1.60:4569  for the SS-single
-    // How to fire submit on form from another host.server
-    let connect = require('connect');
-    //let http = require('http');
-
-    let app2 = connect();
-    app2.listen(4567, '0.0.0.0', function() {
-       console.log('Listening to port:  ' + 4567);
-    });
 
 
-})
-router.get('/blast_server_one', function blast_test(req, res) {
-  console.log('blast_test')
-  let gid = req.query.gid
-  const { spawn } = require("child_process");
-  let info = {}, filepath
-  info[gid] = []
-    let dataPromises = []
-    let exts = ['faa', 'ffn', 'fna']
-    let paths = [CFG.BLAST_DB_PATH_GENOME_NCBI, CFG.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
-    for(let p in paths){
-       for(let e in exts){
-           filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
-           console.log(filepath)
-           
-           dataPromises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
-      }
-  }
-  Promise.all(dataPromises).then(result => {
-    //this code will be called in future after all readCSV Promises call resolve(..)
-    //console.log('info-results',result)
-    let data = []
-    for(let n in result){
-       if(typeof result[n] !== 'string'){
-          if(result[n].path.includes('ncbi')){
-             result[n].anno = 'ncbi'
-          }else{
-             result[n].anno = 'prokka'
-          }
-          data.push(result[n])
-       }
-    }
-    //console.log('data-results',data)
-    res.render('pages/genome/blast_one_genome', {
-    title: 'HOMD :: BLAST', 
-    pgname: '', // for AboutThisPage
-    config: JSON.stringify(CFG),
-    gid: gid,  // default
-    org: C.genome_lookup[gid].organism,
-    ver_info: JSON.stringify(C.version_information),
-    
-    data: JSON.stringify(data)
-    }) 
+
+// router.post('/blast_single', function blast_single(req, res) {
+//     //console.log(req.body)
+//     // 'prokka|fna|SEQF1595.2|/Users/avoorhis/programming/blast-db-alt/fna/SEQF1595.2.fna'
+//     let blast_db_parts = req.body.blastdb.split('|')
+//     let anno    = blast_db_parts[0]
+//     let ext     = blast_db_parts[1]
+//     let gid     = blast_db_parts[2]
+//     let db_path = blast_db_parts[3]
+//     
+//     // localhost:4567  or 0.0.0.
+//     // production:  192.168.1.60:4569  for the SS-single
+//     // How to fire submit on form from another host.server
+//     let connect = require('connect');
+//     //let http = require('http');
+// 
+//     let app2 = connect();
+//     app2.listen(4567, '0.0.0.0', function() {
+//        console.log('Listening to port:  ' + 4567);
+//     });
+// 
+// 
+// })
+// router.get('/blast_server_one', function blast_test(req, res) {
+//   console.log('blast_test')
+//   let gid = req.query.gid
+//   const { spawn } = require("child_process");
+//   let info = {}, filepath
+//   info[gid] = []
+//     let dataPromises = []
+//     let exts = ['faa', 'ffn', 'fna']
+//     let paths = [ENV.BLAST_DB_PATH_GENOME_NCBI, ENV.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
+//     for(let p in paths){
+//        for(let e in exts){
+//            filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
+//            console.log(filepath)
+//            
+//            dataPromises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
+//       }
+//   }
+//   Promise.all(dataPromises).then(result => {
+//     //this code will be called in future after all readCSV Promises call resolve(..)
+//     //console.log('info-results',result)
+//     let data = []
+//     for(let n in result){
+//        if(typeof result[n] !== 'string'){
+//           if(result[n].path.includes('ncbi')){
+//              result[n].anno = 'ncbi'
+//           }else{
+//              result[n].anno = 'prokka'
+//           }
+//           data.push(result[n])
+//        }
+//     }
+//     //console.log('data-results',data)
+//     res.render('pages/genome/blast_one_genome', {
+//     title: 'HOMD :: BLAST', 
+//     pgname: '', // for AboutThisPage
+//     config: JSON.stringify(ENV),
+//     gid: gid,  // default
+//     org: C.genome_lookup[gid].organism,
+//     ver_info: JSON.stringify(C.version_information),
+//     
+//     data: JSON.stringify(data)
+//     }) 
+//   
+//   })
+//   
+//   
   
-  })
-  
-  
-  
-  
-  
-  
-  
-})
-router.get('/genome_blast_no_iframe', function genome_blast_no_iframe(req, res) {
-  console.log('in genome_blast_no_iframe')
-  console.log(req.query)
-     //console.log(req.query)
-   //helpers.accesslog(req, res)
-   let url = CFG.BLAST_URL_BASE+'/genome_blast/'
-   let db_type = req.query.type
-   let page_title = ''
-   if(db_type === 'refseq'){
-     page_title = 'BLAST: RefSeq Databases'
-   }else{
-     page_title = 'Genomic BLAST: All-Genomes Databases'
-   }
-   console.log('BLAST SequenceServer','Type:',db_type,'IP:',req.ip)
-   
-   res.render('pages/genome/blast_server_no_iframe', {
-    title: 'HOMD :: BLAST', 
-    pgname: 'blast/pagehelp', // for AboutThisPage
-    config: JSON.stringify(CFG),
-    ver_info: JSON.stringify(C.version_information),
-    
-    gid: '',
-    annotation: '',
-    url:url,
-    organism: '',
-    db_type: db_type,
-    ptitle: page_title,
-  })
-})
-router.get('/blast', function blast_get(req, res) {
-   //console.log('in genome blast-GET')
-   let chosen_gid = req.query.gid
-   if(!chosen_gid){chosen_gid='all'}
-   //console.log('chosen gid=',chosen_gid)
-   let sg = helpers.makeid(3).toUpperCase()
-   let organism,dbChoices
-   const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
-    return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
-   })
-   
-   allAnnosObj.sort((a, b) =>{
-      return helpers.compareStrings_alpha(a.org, b.org)
-   })
-   //let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
-    if(! chosen_gid || chosen_gid === 0|| chosen_gid ==='all' || !C.annotation_lookup.hasOwnProperty(chosen_gid)){
-      
-      organism   = allAnnosObj[0].org
-      chosen_gid = allAnnosObj[0].gid
-          dbChoices = [
-          {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
-                   filename:'fna/'+chosen_gid+'.fna'},
-          {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
-                   filename:'ffn/'+chosen_gid+'.ffn'}
-          ]
-    }else{
-      
-        organism = C.annotation_lookup[chosen_gid].prokka.organism
-        dbChoices = [
-          {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
-                   filename:'fna/'+chosen_gid+'.fna'},
-          {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
-                   filename:'ffn/'+chosen_gid+'.ffn'}
-          ]
-        
-    }
-    
-    res.render('pages/genome/blast', {
-        title: 'HOMD :: BLAST',
-        pgname: 'blast/blast', // for AboutThisPage
-        config: JSON.stringify(CFG),
-        ver_info: JSON.stringify(C.version_information),
-        
-        blastFxn: 'genome',
-        organism: organism,
-        gid: chosen_gid,
-        spamguard: sg,
-        all_annos: JSON.stringify(allAnnosObj),
-        blast_prg: JSON.stringify(C.blastPrograms),
-        db_choices: JSON.stringify(dbChoices),
-        returnTo: '/genome/blast',
-        blastmax: JSON.stringify(C.blast_max_file),
-        blast_version: CFG.BLAST_VERSION,
-      })
-   
-})
+//})
+// router.get('/genome_blast_no_iframe', function genome_blast_no_iframe(req, res) {
+//   console.log('in genome_blast_no_iframe')
+//   console.log(req.query)
+//      //console.log(req.query)
+//    //helpers.accesslog(req, res)
+//    let url = ENV.BLAST_URL_BASE+'/genome_blast/'
+//    let db_type = req.query.type
+//    let page_title = ''
+//    if(db_type === 'refseq'){
+//      page_title = 'BLAST: RefSeq Databases'
+//    }else{
+//      page_title = 'Genomic BLAST: All-Genomes Databases'
+//    }
+//    console.log('BLAST SequenceServer','Type:',db_type,'IP:',req.ip)
+//    
+//    res.render('pages/genome/blast_server_no_iframe', {
+//     title: 'HOMD :: BLAST', 
+//     pgname: 'blast/pagehelp', // for AboutThisPage
+//     config: JSON.stringify(ENV),
+//     ver_info: JSON.stringify(C.version_information),
+//     
+//     gid: '',
+//     annotation: '',
+//     url:url,
+//     organism: '',
+//     db_type: db_type,
+//     ptitle: page_title,
+//   })
+// })
+// router.get('/blast', function blast_get(req, res) {
+//    //console.log('in genome blast-GET')
+//    let chosen_gid = req.query.gid
+//    if(!chosen_gid){chosen_gid='all'}
+//    //console.log('chosen gid=',chosen_gid)
+//    let sg = helpers.makeid(3).toUpperCase()
+//    let organism,dbChoices
+//    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
+//     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
+//    })
+//    
+//    allAnnosObj.sort((a, b) =>{
+//       return helpers.compareStrings_alpha(a.org, b.org)
+//    })
+//    //let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
+//     if(! chosen_gid || chosen_gid === 0|| chosen_gid ==='all' || !C.annotation_lookup.hasOwnProperty(chosen_gid)){
+//       
+//       organism   = allAnnosObj[0].org
+//       chosen_gid = allAnnosObj[0].gid
+//           dbChoices = [
+//           {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
+//                    filename:'fna/'+chosen_gid+'.fna'},
+//           {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
+//                    filename:'ffn/'+chosen_gid+'.ffn'}
+//           ]
+//     }else{
+//       
+//         organism = C.annotation_lookup[chosen_gid].prokka.organism
+//         dbChoices = [
+//           {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
+//                    filename:'fna/'+chosen_gid+'.fna'},
+//           {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
+//                    filename:'ffn/'+chosen_gid+'.ffn'}
+//           ]
+//         
+//     }
+//     
+//     res.render('pages/genome/blast', {
+//         title: 'HOMD :: BLAST',
+//         pgname: 'blast/blast', // for AboutThisPage
+//         config: JSON.stringify(ENV),
+//         ver_info: JSON.stringify(C.version_information),
+//         
+//         blastFxn: 'genome',
+//         organism: organism,
+//         gid: chosen_gid,
+//         spamguard: sg,
+//         all_annos: JSON.stringify(allAnnosObj),
+//         blast_prg: JSON.stringify(C.blastPrograms),
+//         db_choices: JSON.stringify(dbChoices),
+//         returnTo: '/genome/blast',
+//         blastmax: JSON.stringify(C.blast_max_file),
+//         blast_version: ENV.BLAST_VERSION,
+//       })
+//    
+// })
 
 // 2021-06-15  opening trees in new tab because thet take too long to open in an iframe
 // which makes the main menu non functional
@@ -1539,12 +1519,12 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   //https://homd.org/ftp/phylogenetic_trees/genome/V11.02/HOMD_Genomic_PhyloPhlAn_Tree_V11.02.svg
   // Copied to puplic/trees/eHOMD_Genomic_PhyloPhlAn_Tree.svg
   
-  //let url = 'https://homd.org'+CFG.CP_TREE_PATH//'/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg'
+  //let url = 'https://homd.org'+ENV.CP_TREE_PATH//'/ftp/phylogenetic_trees/genome/V11.0/HOMD_Genomic_PhyloPhlAn_Tree_V11.0.svg'
   let filepath
-  if(CFG.ENV ==="localhost"){
+  if(ENV.ENV ==="localhost"){
       filepath = '/Users/avoorhis/programming/homd-node.js/public/trees/eHOMD_Genomic_PhyloPhlAn_Tree.svg'
   }else{
-      filepath = CFG.FILEPATH_TO_FTP + CFG.CP_TREE_PATH
+      filepath = ENV.FILEPATH_TO_FTP + ENV.CP_TREE_PATH
   }
   console.log(filepath,findme)
   
@@ -1553,15 +1533,15 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
             console.error('Error reading file:', err);
             return;
           }
-          console.log('File content:', data);
-          if(CFG.ENV === "localhost"){
+          //console.log('File content:', data);
+          if(ENV.ENV === "localhost"){
              data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
           //console.log('data',data); 
          res.render('pages/genome/conserved_protein_tree', {
            title: 'HOMD :: Conserved Protein Tree',
            pgname: 'genome/tree', // for AboutThisPage
-           config: JSON.stringify(CFG),
+           config: JSON.stringify(ENV),
            ver_info: JSON.stringify(C.version_information),
            svg_data: JSON.stringify(data),
            target: findme
@@ -1582,7 +1562,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
 //          res.render('pages/genome/conserved_protein_tree', {
 //            title: 'HOMD :: Conserved Protein Tree',
 //            pgname: 'genome/tree', // for AboutThisPage
-//            config: JSON.stringify(CFG),
+//            config: JSON.stringify(ENV),
 //            ver_info: JSON.stringify(C.version_information),
 //            
 //            svg_data: JSON.stringify(data),
@@ -1609,29 +1589,29 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   }
   // Actual:: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg
   // Copied to public/trees/eHOMD_Ribosomal_Protein_Tree.svg
-  //let filepath = CFG.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Ribosomal_Protein_Tree.svg'
-  //let filepath = CFG.FTP_TREE_URL +'/genome/current/'+'eHOMD_Ribosomal_Protein_Tree.svg'
-  //let filepath = CFG.FTP_TREE_URL +'/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
-  //let filepath = CFG.HOMD_URL_BASE+CFG.RP_TREE_PATH  //'/ftp/phylogenetic_trees/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
+  //let filepath = ENV.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Ribosomal_Protein_Tree.svg'
+  //let filepath = ENV.FTP_TREE_URL +'/genome/current/'+'eHOMD_Ribosomal_Protein_Tree.svg'
+  //let filepath = ENV.FTP_TREE_URL +'/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
+  //let filepath = ENV.HOMD_URL_BASE+ENV.RP_TREE_PATH  //'/ftp/phylogenetic_trees/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
   let filepath
-  if(CFG.ENV ==="localhost"){
+  if(ENV.ENV ==="localhost"){
       filepath = '/Users/avoorhis/programming/homd-node.js/public/trees/eHOMD_Ribosomal_Protein_Tree.svg'
   }else{
-      filepath = CFG.FILEPATH_TO_FTP + CFG.RP_TREE_PATH
+      filepath = ENV.FILEPATH_TO_FTP + ENV.RP_TREE_PATH
   }
   fs.readFile(filepath, 'utf8', (err, data) => {
           if (err) {
             console.error('Error reading file:', err);
             return;
           }
-          console.log('File content:', data);
-          if(CFG.ENV === "localhost"){
+          //console.log('File content:', data);
+          if(ENV.ENV === "localhost"){
              data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
           res.render('pages/genome/ribosomal_protein_tree', {
            title: 'HOMD :: Ribosomal Protein Tree',
            pgname: 'genome/tree', // for AboutThisPage
-           config: JSON.stringify(CFG),
+           config: JSON.stringify(ENV),
            ver_info: JSON.stringify(C.version_information),
            
            svg_data: JSON.stringify(data),
@@ -1652,7 +1632,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
 //          res.render('pages/genome/ribosomal_protein_tree', {
 //            title: 'HOMD :: Ribosomal Protein Tree',
 //            pgname: 'genome/tree', // for AboutThisPage
-//            config: JSON.stringify(CFG),
+//            config: JSON.stringify(ENV),
 //            ver_info: JSON.stringify(C.version_information),
 //            
 //            svg_data: JSON.stringify(data),
@@ -1678,11 +1658,11 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
     findme = req.query.gid
   }
   let filepath
-  //let filepath = CFG.HOMD_URL_BASE+CFG.GENE_TREE_PATH   //"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
-  if(CFG.ENV ==="localhost"){
+  //let filepath = ENV.HOMD_URL_BASE+ENV.GENE_TREE_PATH   //"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
+  if(ENV.ENV ==="localhost"){
       filepath = '/Users/avoorhis/programming/homd-node.js/public/trees/eHOMD_16S_rRNA_Tree.svg'
   }else{
-      filepath = CFG.FILEPATH_TO_FTP + CFG.GENE_TREE_PATH
+      filepath = ENV.FILEPATH_TO_FTP + ENV.GENE_TREE_PATH
   }
   
   fs.readFile(filepath, 'utf8', (err, data) => {
@@ -1690,14 +1670,14 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
             console.error('Error reading file:', err);
             return;
           }
-          console.log('File content:', data);
-          if(CFG.ENV === "localhost"){
+          //console.log('File content:', data);
+          if(ENV.ENV === "localhost"){
              data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
         res.render('pages/genome/rRNA_gene_tree', {
            title: 'HOMD :: rRNA Gene Tree',
            pgname: 'genome/tree', // for AboutThisPage
-           config: JSON.stringify(CFG),
+           config: JSON.stringify(ENV),
            ver_info: JSON.stringify(C.version_information),
            
            svg_data: JSON.stringify(data),
@@ -1719,7 +1699,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //          res.render('pages/genome/rRNA_gene_tree', {
 //            title: 'HOMD :: rRNA Gene Tree',
 //            pgname: 'genome/tree', // for AboutThisPage
-//            config: JSON.stringify(CFG),
+//            config: JSON.stringify(ENV),
 //            ver_info: JSON.stringify(C.version_information),
 //            
 //            svg_data: JSON.stringify(data),
@@ -1738,7 +1718,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //     res.render('pages/genome/rRNA_gene_tree', {
 //       title: 'HOMD :: rRNA Gene Tree',
 //       pgname: 'genome/tree', // for AboutThisPage
-//       config: JSON.stringify(CFG),
+//       config: JSON.stringify(ENV),
 //       ver_info: JSON.stringify(C.version_information),
 //       
 //       svg_data: JSON.stringify(data),
@@ -1759,7 +1739,7 @@ function get_blast_db_info(gid){
     info[gid] = []
     let promises = []
     let exts = ['faa', 'ffn', 'fna']
-    let paths = [CFG.BLAST_DB_PATH_GENOME_NCBI, CFG.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
+    let paths = [ENV.BLAST_DB_PATH_GENOME_NCBI, ENV.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
     for(let p in paths){
        for(let e in exts){
            filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
@@ -1778,28 +1758,16 @@ function get_blast_db_info(gid){
 //
 router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
    let q = queries.get_all_pangenomes_query()
+   console.log(q)
    TDBConn.query(q, (err, rows) => {
-       //console.log('pangenome rows[0]',rows[0])
-//        let dir = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'pangenome_files')
-//         walk(dir)
-//        for(let n in rows){
-//            //console.log(rows[n].pangenome_name)
-//            let pname = rows[n].pangenome_name+rows[n].homd_genome_version.replace('.','_')
-//           // let dir = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'pangenome_files',pname)
-//           // walk(dir)
-//          //            if (fs.existsSync(path.join(CFG.PATH_TO_STATIC_DOWNLOADS"/tmp/myfile")) {
-//          //   console.log("/tmp/myfile exists!");
-//          // } else {
-//          //   console.log("/tmp/myfile does not exist!");
-//          // }
-//          // 
-//          //            if(CFG.PATH_TO_STATIC_DOWNLOADS
-//        }
-       //console.log('rows',rows)
+       if(!rows){
+          rows = []
+       }
+       
        res.render('pages/genome/anvio_selection', {
         title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
         //pangenomes: JSON.stringify(C.pangenomes)
@@ -1866,12 +1834,12 @@ router.get('/anvio', (req, res) => {
     //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
     //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
     // https://anvio.homd.org/anvio
-    //let url = CFG.ANVIO_URL + '?pg=' + pg
+    //let url = ENV.ANVIO_URL + '?pg=' + pg
     
     // localhost:::   http://localhost:3010
     // Dev      :::   https://anvio.homd.org/anvio
     //let url = "http://localhost:3010/anvio?port="+port.toString()+'&pg='+pg
-    // if(CFG.DBHOST === 'localhost'){
+    // if(ENV.DBHOST === 'localhost'){
 //         url = "http://localhost:3010?pg="+pg
 //     }else{
 //         url = "https://anvio.homd.org/anvio?pg="+pg
@@ -1880,7 +1848,7 @@ router.get('/anvio', (req, res) => {
     //res.render('pages/genome/anvi_server_iframe', {
         title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
         pangenome: pg,
@@ -1902,11 +1870,11 @@ router.get('/pangenome_image', function pangenome_image(req, res) {
               console.log(err)
               return
             }
-            console.log(rows)
+            //console.log(rows)
             if(rows.length === 0){
                res.send('File not found');
             }else{
-              filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdf/HMT_"+req.query.otid+"/"+rows[0].filename
+              filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdf/HMT_"+req.query.otid+"/"+rows[0].filename
               res.sendFile(filepath);
             }
         })
@@ -1914,7 +1882,7 @@ router.get('/pangenome_image', function pangenome_image(req, res) {
        // get directly from files system using ext and pg name
        ext = req.query.ext
        pg = req.query.pg
-       filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/"+ext+'/'+req.query.pg+'.'+ext
+       filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/"+ext+'/'+req.query.pg+'.'+ext
        console.log('fpath',filepath)
        res.sendFile(filepath)
     }
@@ -1924,7 +1892,7 @@ router.get('/oralgen', function oralgen(req, res) {
   res.render('pages/genome/oralgen', {
     title: 'HOMD :: ORALGEN',
     pgname: '', // for AbountThisPage
-    config: JSON.stringify(CFG),
+    config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
 
   })
@@ -1970,7 +1938,7 @@ router.get('/peptide_table', function peptide_table_get(req, res) {
           title: 'HOMD :: Human Oral Microbiome Database',
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(CFG),
+          config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
@@ -2041,7 +2009,7 @@ router.post('/peptide_table', function peptide_table_post(req, res) {
           title: 'HOMD :: Human Oral Microbiome Database',
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(CFG),
+          config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
@@ -2108,7 +2076,7 @@ router.get('/peptide_table2', function peptide_table2_get(req, res) {
           title: 'HOMD :: Human Oral Microbiome Database',
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(CFG),
+          config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
@@ -2179,7 +2147,7 @@ router.post('/peptide_table2', function peptide_table2_post(req, res) {
           title: 'HOMD :: Human Oral Microbiome Database',
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(CFG),
+          config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
@@ -2238,7 +2206,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
           title: 'HOMD :: Human Oral Microbiome Database',
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(CFG),
+          config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
           
           data: JSON.stringify(send_list),
@@ -2278,7 +2246,7 @@ router.get('/amr_table', function amr(req, res) {
             title: 'HOMD :: AMR Table',
             pgtitle: 'AMR Genomes',
             pgname: '',  //for AbountThisPage
-            config: JSON.stringify(CFG),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             data: JSON.stringify(genome_lookup),
             full_count: full_count,
@@ -2317,7 +2285,7 @@ router.post('/amr_ajax', function phage_ajax(req, res){
           return
         }
         for(let i in rows){
-            console.log(rows[i])
+            //console.log(rows[i])
             
                 //send_rows.push(rows[i])
                 html_rows += "<tr>"
@@ -2425,7 +2393,7 @@ router.get('/crispr_table', function crispr(req, res) {
     res.render('pages/genome/crispr_cas', {
         title: 'HOMD :: CRISPR-Cas', 
         pgname: '', // for AboutThisPage
-        config: JSON.stringify(CFG),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         pgtitle: 'CRISPR-Cas',
         crispr_data: JSON.stringify(genome_lookup),
@@ -2517,4 +2485,4 @@ router.post('/crispr_ajax', function crispr_ajax(req, res) {
     })
 })
 
-module.exports = router
+export default router;

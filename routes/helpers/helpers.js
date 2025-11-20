@@ -1,23 +1,26 @@
 'use strict'
-const C       = require(app_root + '/public/constants');
+
+const router = express.Router()
+import C from '../../public/constants.js';
 //const queries = require(app_root + '/routes/queries');
-const CFG  = require(app_root + '/config/config');
-const express     = require('express');
-const fs          = require('fs-extra');
-const readline = require('readline');
-let accesslog = require('access-log');
-const async = require('async')
-const util        = require('util');
-const path        = require('path');
-const {exec, spawn} = require('child_process');
-const helpers = require(app_root + '/routes/helpers/helpers');
+
+import express from 'express';
+import fs from 'fs-extra';
+import readline from 'readline';
+//import accesslog from 'access-log';
+import async from 'async';
+import util from 'util';
+import path from 'path';
+import { exec, spawn } from 'child_process';
+//import helpers from './helpers.js';
 
 //let hmt = 'HMT-'+("000" + otid).slice(-3)
 
-module.exports.getKeyByValue = (object, value) => {
+export const getKeyByValue = (object, value) => {
   return Object.keys(object).find(key => object[key] === value);
-}
-module.exports.timestamp = (dateonly) => {
+};
+
+export const timestamp = (dateonly) => {
     //let today = new Date().toUTCString();
   if(dateonly){
       return new Date().toISOString().substring(0,10)
@@ -26,8 +29,9 @@ module.exports.timestamp = (dateonly) => {
   }
     
 
-}
-module.exports.get_today_obj = () => {
+};
+
+export const get_today_obj = () => {
   let today = new Date()
     let dd = String(today.getDate()).padStart(2, '0')
     let mm = String(today.getMonth() + 1).padStart(2, '0') // January is 0!
@@ -37,14 +41,15 @@ module.exports.get_today_obj = () => {
     return {today:today,seconds:currentTimeInSeconds,day:dd,month:mm,year:yyyy}
 };
 
-module.exports.log_timestamp = () => {
+export const log_timestamp = () => {
   let date = new Date();
   let day  = date.toLocaleDateString();
   let time = date.toLocaleTimeString();
   return day + " " + time;
 };
+
 // todo: use in file instead of those in the class
-module.exports.check_if_rank = (field_name) => {
+export const check_if_rank = (field_name) => {
 
   let ranks = C.ranks;
 
@@ -52,15 +57,15 @@ module.exports.check_if_rank = (field_name) => {
   return ranks.includes(field_name);
 };
 
-
-module.exports.compareStrings_alpha = (a, b) => {
+export const compareStrings_alpha = (a, b) => {
   // Assuming you want case-insensitive comparison
   a = a.toLowerCase();
   b = b.toLowerCase();
   return (a < b) ? -1 : (a > b) ? 1 : 0;
   
 };
-module.exports.compareByTwoStrings_alpha = (a, b, colA, colB) => {
+
+export const compareByTwoStrings_alpha = (a, b, colA, colB) => {
   // Assuming you want case-insensitive comparison
   // eg: 
   //a = a.toLowerCase();
@@ -72,8 +77,9 @@ module.exports.compareByTwoStrings_alpha = (a, b, colA, colB) => {
   }
   
 };
+
 // Sort list of json objects numerically
-module.exports.compareStrings_int   = (a, b) => {
+export const compareStrings_int = (a, b) => {
   
   let numa = parseInt(a.toString().replaceAll(',',''))
   let numb = parseInt(b.toString().replaceAll(',',''))
@@ -81,34 +87,48 @@ module.exports.compareStrings_int   = (a, b) => {
   
   return (numa < numb) ? -1 : (numa > numb) ? 1 : 0;
 };
-module.exports.compareStrings_float   = (a, b) => {
+
+export const compareStrings_float = (a, b) => {
   if(!a){a=0}
   if(!b){b=0}
   a = parseFloat(a);
   b = parseFloat(b);
   return (a < b) ? -1 : (a > b) ? 1 : 0;
 };
-module.exports.show_session = (req) =>{
+
+export const show_session = (req) =>{
   console.log('(Availible for when sessions are needed) req.session: ')
     //console.log('req.session',req.session)
     //console.log('req.sessionID',req.sessionID)
     console.log('req.session.id',req.session.id)
 };
-module.exports.accesslog = (req, res) =>{
-    accesslog(req, res, 'RemoteIP:'+req.ip+':'+ C.access_log_format, function(s) {
-       let testout = 'Request from:'+req.ip+ s+'\n'
-       console.log(testout);
-        fs.appendFile(C.access_logfile, s+'\n', err => {
+
+// export const accesslog = (req, res) =>{
+//     console.log('ip',req.ip)
+//     accesslogx(req, res, 'RemoteIP:'+req.ip+':'+ C.access_log_format, function(s) {
+//        let testout = 'Request from:'+req.ip+ s+'\n'
+//        console.log(testout);
+//         fs.appendFile(C.access_logfile, s+'\n', err => {
+//              if (err) {
+//                  console.error(err)
+//                  return
+//              }
+//              //file written successfully
+//          })
+//     });
+// };
+export const accesslog = (req, res) => {
+       let testout = 'Request from:'+req.ip+'\n'
+       //console.log(C.access_logfile);
+        fs.appendFile(C.access_logfile, testout, err => {
              if (err) {
                  console.error(err)
                  return
              }
              //file written successfully
          })
-    });
-}
-
-module.exports.chunkSubstr = (str, size) =>{
+};
+export const chunkSubstr = (str, size) =>{
   //https://stackoverflow.com/questions/7033639/split-large-string-in-n-size-chunks-in-javascript
   const numChunks = Math.ceil(str.length / size)
   const chunks = new Array(numChunks)
@@ -118,21 +138,25 @@ module.exports.chunkSubstr = (str, size) =>{
   }
 
   return chunks
-}
+};
+
 //
-module.exports.format_long_numbers = (x) =>{
+export const format_long_numbers = (x) =>{
     // change 456734 => 456,734
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-module.exports.format_Mbps = (x) =>{ // mega base pairs
+};
+
+export const format_Mbps = (x) =>{ // mega base pairs
     // change 456734 => 456,734
     return (parseFloat(x) /1000000).toFixed(2).toString() +' Mbps'
-}
-module.exports.format_MB = (x) =>{ // mega bytes
+};
+
+export const format_MB = (x) =>{ // mega bytes
     // change 456734 => 456,734
     return (parseFloat(x) /1000000).toFixed(3).toString() +' MB'
-}
-module.exports.get_min = (ary) => {
+};
+
+export const get_min = (ary) => {
   let ret = ary[0];
   for (let i = 0; i < ary.length; i++) {
     if (ary[i] < ret) {
@@ -140,8 +164,9 @@ module.exports.get_min = (ary) => {
     }
   }
   return ret;
-}
-module.exports.get_max = (ary) => {
+};
+
+export const get_max = (ary) => {
   let ret = 0;
   for (let i = 0; i < ary.length; i++) {
     if (ary[i] > ret) {
@@ -149,30 +174,30 @@ module.exports.get_max = (ary) => {
     }
   }
   return ret;
-}
+};
+
 //
-module.exports.onlyUnique = (value, index, self) =>{
+export const onlyUnique = (value, index, self) =>{
   return self.indexOf(value) === index;
-}
-module.exports.capitalizeFirst = (value, index, self) =>{
+};
+
+export const capitalizeFirst = (value, index, self) =>{
   return value.charAt(0).toUpperCase() + value.slice(1)
-}
-module.exports.print_size = (obj, index, self) =>{
+};
+
+export const print_size = (obj, index, self) =>{
   let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
     //console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
-}
-module.exports.make_otid_display_name = (otid) =>{
+};
+
+export const make_otid_display_name = (otid) =>{
     return 'HMT-'+("000" + otid.toString()).slice(-3);
-} 
+};
 
+export const addslashes = (str) => (str + '').replace(/[\]\[\\"']/g, '\\$&');
+export const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
-
-module.exports.addslashes = (str) => (str + '').replace(/[\]\[\\"']/g, '\\$&')
-
-
-module.exports.sleep = (time) => new Promise((resolve) => setTimeout(resolve, time))
-
-module.exports.getAllDirFiles = (dirPath, arrayOfFiles) => {
+export const getAllDirFiles = (dirPath, arrayOfFiles) => {
   arrayOfFiles = {};
   arrayOfFiles.files = [];
   arrayOfFiles.dirs = [];
@@ -201,9 +226,10 @@ module.exports.getAllDirFiles = (dirPath, arrayOfFiles) => {
     return 0;
   }
 
-}
+};
+
 // module.exports.readAsync = async function readAsync(file, callback) {
-//     if(CFG.ENV === 'development'){
+//     if(ENV.ENV === 'development'){
 //         console.log('Reading File:',file)
 //     }
 //     module.exports.print(['Reading File:',file])
@@ -220,7 +246,7 @@ module.exports.getAllDirFiles = (dirPath, arrayOfFiles) => {
 // }
 
 //
-module.exports.makeid = (length) => {
+export const makeid = (length) => {
   // Used for blast.id and spamguard
   // REMOVE 1/I and 0/o confusing
   let result = '';
@@ -230,31 +256,33 @@ module.exports.makeid = (length) => {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-}
+};
+
 //
 
 //
-module.exports.checkFileSize = (file_path) => {
+export const checkFileSize = (file_path) => {
   let statsObj = fs.statSync(file_path);
   //console.log('size',statsObj.size);  // bytes
   return statsObj.size;
   
-}
-module.exports.print = function print(thing) {
+};
+
+export const print = function print(thing) {
     // console.log only if development
     // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
     let date = new Date().toISOString()
-    if(CFG.ENV == 'localhost' ) {
+    if(ENV.ENV == 'localhost' ) {
         console.log('\x1b[31m%s\x1b[0m',date, thing)  
     }
     
-}
+};
 
-module.exports.execute = (command, callback) => {
+export const execute = (command, callback) => {
   exec(command, function (error, stdout, stderr) { callback(stdout); });
 };
 
-module.exports.getCallerIP = (request) => {
+export const getCallerIP = (request) => {
   let ip = request.headers['x-forwarded-for'] ||
     request.connection.remoteAddress ||
     request.socket.remoteAddress ||
@@ -264,9 +292,9 @@ module.exports.getCallerIP = (request) => {
   return ip;
 };
 
-module.exports.get_gc_for_gccontent = (gc) => (parseFloat(gc) / 100).toFixed(2);
+export const get_gc_for_gccontent = (gc) => (parseFloat(gc) / 100).toFixed(2);
 
-module.exports.readFromFile = (file, ext) => new Promise((resolve, reject) => {
+export const readFromFile = (file, ext) => new Promise((resolve, reject) => {
   fs.readFile(file, (err, data) => {
     if (err) {
       console.log(err);
@@ -296,8 +324,7 @@ module.exports.readFromFile = (file, ext) => new Promise((resolve, reject) => {
       }
     }
   });
-})
-
+});
 
 //
 /**
@@ -305,7 +332,7 @@ module.exports.readFromFile = (file, ext) => new Promise((resolve, reject) => {
  * @param cmd {string}
  * @return {Promise<string>}
  */
-module.exports.execShellCommand = (cmd) => {
+export const execShellCommand = (cmd) => {
   const exec = require('child_process').exec;
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
@@ -315,9 +342,9 @@ module.exports.execShellCommand = (cmd) => {
       resolve(stdout ? stdout : stderr);
     });
   });
-}
+};
 
-module.exports.rtrim = (x, characters) => {
+export const rtrim = (x, characters) => {
   //console.log('x,characters',x,characters)
   let start = 0;
   let end = x.length - 1;
@@ -325,15 +352,16 @@ module.exports.rtrim = (x, characters) => {
     end -= 1;
   }
   return x.substr(0, end + 1);
-}
-module.exports.ltrim = (x, characters) => {
+};
+
+export const ltrim = (x, characters) => {
   let start = 0;
   while (characters.indexOf(x[start]) >= 0) {
     start += 1;
   }
   let end = x.length - 1;
   return x.substr(start);
-}
+};
 
 // module.exports.filter_for_phylumXX = function filter_for_phylum(list, phy){
 //     //console.log('list[0]',list[0])
@@ -359,7 +387,7 @@ module.exports.ltrim = (x, characters) => {
 //     return gid_obj_list
 // }
 
-module.exports.filter_for_phylum = (obj_list, phylum) => {
+export const filter_for_phylum = (obj_list, phylum) => {
   //console.log('tlist[0]',tlist[0])
   //console.log('C.taxon_lineage_lookup',C.taxon_lineage_lookup['1'])
   let new_obj_list = obj_list.filter(item => {
@@ -368,9 +396,9 @@ module.exports.filter_for_phylum = (obj_list, phylum) => {
     }
   });
   return new_obj_list;
-}
+};
 
-module.exports.walk = (dir) => {
+export const walk = (dir) => {
 // a simple walk method
 
  
@@ -414,3 +442,4 @@ module.exports.walk = (dir) => {
     });
  
 };
+export default router;
