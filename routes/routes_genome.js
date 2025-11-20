@@ -178,7 +178,7 @@ router.get('/genome_table', function genome_table(req, res) {
 });
 router.post('/genome_table', function genome_table_post(req, res) {
     console.log('in POST genome_table')
-    console.log('req.body',req.body)
+    //console.log('req.body',req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret_obj,args,count_txt
     helpers_genomes.set_gtable_session(req)
     //console.log('gtable_session',req.session.gtable_filter)
@@ -263,7 +263,7 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
   console.log('AJAX JBrowse')
   
   // for logging
-  console.log('req.ip',req.ip)
+  //console.log('req.ip',req.ip)
   helpers.accesslog(req, res)
   //open(jburl)
   
@@ -342,10 +342,10 @@ router.get('/genome_description', function Description (req, res) {
             }
             let n = data.GTDB_taxonomy.lastIndexOf(';')
             data.GTDB_taxonomy = data.GTDB_taxonomy.substring(0, n+1) + "<br>" + data.GTDB_taxonomy.substring(n+1) 
-            console.log('GTDB_taxonomy',data.GTDB_taxonomy)
+            //console.log('GTDB_taxonomy',data.GTDB_taxonomy)
             let checkm_status_obj = helpers_genomes.get_checkm_status(data)
             
-            console.log('checkM status',checkm_status_obj)
+            //console.log('checkM status',checkm_status_obj)
             res.render('pages/genome/genomedesc', {
                title: 'HOMD :: Genome',
                pgname: 'genome/description', // for AboutThisPage 
@@ -1557,7 +1557,7 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
             console.error('Error reading file:', err);
             return;
           }
-          console.log('File content:', data);
+          //console.log('File content:', data);
           if(ENV.ENV === "localhost"){
              data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
@@ -1628,7 +1628,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
             console.error('Error reading file:', err);
             return;
           }
-          console.log('File content:', data);
+          //console.log('File content:', data);
           if(ENV.ENV === "localhost"){
              data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
@@ -1694,7 +1694,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
             console.error('Error reading file:', err);
             return;
           }
-          console.log('File content:', data);
+          //console.log('File content:', data);
           if(ENV.ENV === "localhost"){
              data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
@@ -1894,7 +1894,7 @@ router.get('/pangenome_image', function pangenome_image(req, res) {
               console.log(err)
               return
             }
-            console.log(rows)
+            //console.log(rows)
             if(rows.length === 0){
                res.send('File not found');
             }else{
@@ -2309,7 +2309,7 @@ router.post('/amr_ajax', function phage_ajax(req, res){
           return
         }
         for(let i in rows){
-            console.log(rows[i])
+            //console.log(rows[i])
             
                 //send_rows.push(rows[i])
                 html_rows += "<tr>"
