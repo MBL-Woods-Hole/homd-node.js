@@ -15,8 +15,8 @@ thead th { position: sticky; top: 0; }
 }
 #gnom-table {
   padding:5px;
-  
-  width:100%;
+  width: 100%; /* The table needs a defined width to trigger the overflow correctly */
+  table-layout: fixed; /* Ensures columns respect the set widths */
 }
 #gnom-table th{
   color:white;
@@ -36,16 +36,13 @@ thead th { position: sticky; top: 0; }
  
   
 }
-#gnom-table .ellipsis{
+.ellipsis{
+  max-width:100px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-#gnom-table .badge{
-  
-  font-size:0.8em;
-  
-}
+
  #gnom-table tr:hover { 
     background-color: #dce7f5; 
  } 
@@ -164,8 +161,8 @@ thead th { position: sticky; top: 0; }
     <tr><th class='col0' >row #</th>
     <th class='col1' scope='col' >Genome-ID</th>
     <th class='col2' scope='col' nowrap>Taxon-ID</th>
-    <th class='col3' scope='col' >Species</th>
-    <th class='col4' scope='col' >Strain</th>
+    <th class='col3'  >Species</th>
+    <th class='col4'  >Strain</th>
     <th class='col5' scope='col' >MAG</th>
     <th class='col6' title='Assembly Level' scope='col' >Assembly<br>Level</th>
     <th class='col7' scope='col' ><small>Contigs</small></th>
@@ -197,8 +194,6 @@ thead th { position: sticky; top: 0; }
         <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
         <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
         <td class='tax_name ellipsis' title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].species %> <%= ginfo[n].subspecies %></em></a></td>
-        
-       
         
         <td class='tax_name ellipsis' title='<%= ginfo[n].strain %>'><em><%= ginfo[n].strain %></em></td>
         <td class='center'><%= ginfo[n].mag %></td>

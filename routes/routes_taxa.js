@@ -1157,6 +1157,9 @@ router.get('/life', function life(req, res) {
 router.get('/ecology_home', function ecology_home(req, res) {
   //console.log('in ecology index')
   let bar_graph_data = []
+  let lineage_list
+  
+  
   let site_species = {}, sp_per_site = {}// {site,sp,abund} ordered by sp
   // let graph_site_order = C.base_abundance_order
   //     graph_site_order.push('NS')
@@ -1214,7 +1217,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
   for (let i in species_for_plot) {
     //console.log('species_for_plot[i]',species_for_plot[i])
     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[species_for_plot[i] + '_species']
-    let lineage_list = helpers_taxa.make_lineage(node)
+    lineage_list = helpers_taxa.make_lineage(node)
     if (!lineage_list[0]) {
       // must be ssp
       let pts = species_for_plot[i].split(/\s/)
@@ -1225,6 +1228,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
     //console.log('lineage_list[0]',lineage_list)
     if (lineage_list[0]) {
       abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]], 'species')
+      
       //console.log('abund_obj',species_for_plot[i],abund_obj)
       for (let site in abund_obj) {
         //console.log('n',sp,site,abund_obj[site])
@@ -1237,7 +1241,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
     }
 
   }
-
+  
   group_collector['other'] = {}
   for (let y in abundance_graph_order) {
     //console.log(graph_site_order[y],site_sums)
@@ -1291,7 +1295,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
 
   //console.log('bar_graph_data',bar_graph_data)
 
-
+  //LINKS
   let bac_phyla_only = phyla_obj.filter((x) => {
     if (C.homd_taxonomy.taxa_tree_dict_map_by_id[x.parent_id].taxon === 'Bacteria') {
       return x
@@ -1322,32 +1326,33 @@ router.get('/ecology_home', function ecology_home(req, res) {
   let orders = bac_orders_only.map(x => x.taxon)
   let families = bac_families_only.map(x => x.taxon)
   let genera = bac_genera_only.map(x => x.taxon)
-
+  
   phyla.sort()
   klasses.sort()
   orders.sort()
   families.sort()
   genera.sort()
-  //console.log('bar_graph_data',bar_graph_data)
+  //'Bacteria;Pseudomonadota;Gammaproteobacteria;Enterobacterales;Yersiniaceae;Yersinia;Yersinia pestis'
+  //console.log('has_abundance_data',C.has_abundance_data)
   res.render('pages/taxa/ecology_home', {
     title: 'HOMD :: Ecology',
     pgname: 'taxon/ecology', // for AbountThisPage
     config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
-
+    
+    // LINK Data
     sole_arch: JSON.stringify(sole_arch),
     phyla: JSON.stringify(phyla),
     klasses: JSON.stringify(klasses),
     orders: JSON.stringify(orders),
     families: JSON.stringify(families),
     genera: JSON.stringify(genera),
+    has_data: JSON.stringify(C.has_abundance_data),
 
+    // GRAPH DATA
     colors_ordered_list: JSON.stringify(colors_for_plot),
     species_ordered_list: JSON.stringify(species_for_plot),
-
-    //bar_data1: JSON.stringify(sp_per_site),
     bar_data2: JSON.stringify(bar_graph_data),
-    //site_species: JSON.stringify(site_species),
     site_order: JSON.stringify(abundance_graph_order),
     ab_names: JSON.stringify(C.abundance_names)
 

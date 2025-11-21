@@ -20,52 +20,52 @@
                  <div id='header_buttons' >
                   
                   <% if(anno_type == 'prokka'){ %>
-                    <span class='an-button active' href=''>PROKKA</span>
+                    &nbsp;<span class='an-button active' href=''>PROKKA</span>
                     <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
-                        <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+                        &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
                     <% }else{ %>
-                        <a href='#' class='pill pill-grayed'>NCBI</a>
+                        &nbsp;<a href='#' class='pill pill-grayed'>NCBI</a>
                     <% } %>
-                    <a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= gid %>' target="_self">PROKKA BLAST</a> 
+                    &nbsp;<a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= gid %>' target="_self">PROKKA BLAST</a> 
                     <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
                   <% }else if(anno_type == 'ncbi'){ %>
-                    <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
+                    &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     
                     <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
-                        <span class='an-button active' href=''>NCBI</span>
+                        &nbsp;<span class='an-button active' href=''>NCBI</span>
                     <% }else{ %>
-                        <a href='#' class='pill pill-grayed'>NCBI</a>
+                        &nbsp;<a href='#' class='pill pill-grayed'>NCBI</a>
                     <% } %>
-                    <a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_ncbi/?gid=<%= gid %>' target="_self">NCBI BLAST</a> 
+                    &nbsp;<a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_ncbi/?gid=<%= gid %>' target="_self">NCBI BLAST</a> 
                   <% }else { %>
                     <a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
-                        <a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
+                        &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
                     <% }else{ %>
-                        <a href='#' class='pill pill-grayed'>NCBI</a>
+                        &nbsp;<a href='#' class='pill pill-grayed'>NCBI</a>
                     <% } %>
                     <a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_<%= anno_type %>/?gid=<%= gid %>' target="_self">BLAST</a> 
                   <% } %>
-                  |
+                  &nbsp;
                   <!-- <a class='an-button' href='<%= cfg.JBROWSE_URL %>/<%= gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc %>),GC Skew' target='_blank' rel="noopener noreferrer">Genome Viewer</a> -->
                   <a class='an-button' href='#' onclick="open_jbrowse('<%= gid %>','explorer','<%= gc %>','','<%= anno_type %>')">Genome Viewer
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
                      <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
                     </svg>
                   </a>
-                  
+                  &nbsp;
                   <a class='an-button' href='/genome/genome_description?gid=<%= gid %>'>Genome Information</a>
-                  <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Information</a>
+                 &nbsp; <a class='an-button' href='/taxa/tax_description?otid=<%= otid %>'>Taxon Information</a>
                  </div>
          <% }else{ %>
              <div id='header_buttons' >
-                    <span class='an-button greyed' style='background:grey;'>PROKKA</span>
-                    <span class='an-button greyed' style='background:grey;'>NCBI</span>
-                    <span class='an-button greyed' style='background:grey;'>BLAST</span>
-                    |
-                    <span class='an-button greyed' style='background:grey;'>Genome Viewer</span>
-                    <span class='an-button greyed' style='background:grey;'>Genome Information</span>
-                    <span class='an-button greyed' style='background:grey;'>Taxon Information</span>
+                    &nbsp;<span class='an-button greyed' style='background:grey;'>PROKKA</span>
+                    &nbsp;<span class='an-button greyed' style='background:grey;'>NCBI</span>
+                    &nbsp;<span class='an-button greyed' style='background:grey;'>BLAST</span>
+                    
+                    &nbsp;<span class='an-button greyed' style='background:grey;'>Genome Viewer</span>
+                    &nbsp;<span class='an-button greyed' style='background:grey;'>Genome Information</span>
+                    &nbsp;<span class='an-button greyed' style='background:grey;'>Taxon Information</span>
               </div>
          <% } %>
        

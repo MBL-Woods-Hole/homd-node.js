@@ -25,7 +25,8 @@ global.app_root = path.resolve(dirname);
 
 import C from './public/constants.js';
 import  * as helpers from './routes/helpers/helpers.js'
- 
+
+
 import fs from 'fs-extra';
 //console.log('helpers',helpers)
 //require('dotenv').config({path: __dirname + '/.env'})
@@ -313,6 +314,7 @@ Promise.all(promises)
         }
     }).map(x => (parseInt(x.otid)).toString())  // turns '010' to '10'
     
+    C.has_abundance_data = helpers.get_has_abundance()
     //console.log('C.otids_w_abundance',C.otids_w_abundance)
     //console.log('')
     

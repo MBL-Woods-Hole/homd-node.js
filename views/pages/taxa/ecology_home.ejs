@@ -81,12 +81,12 @@ table td a{
 }
 </style>
 <% sole_arch = JSON.parse(sole_arch) %>
-<% phla = JSON.parse(phyla) %>
+<% phyla = JSON.parse(phyla) %>
 <% klasses = JSON.parse(klasses) %>
 <% orders = JSON.parse(orders) %>
 <% families = JSON.parse(families) %>
 <% genera = JSON.parse(genera) %>
-
+<% has_abund_data =JSON.parse(has_data) %>
 
 <%- include('../../partials/header_html'); %>
 
@@ -134,40 +134,63 @@ table td a{
             <tr>
               <td valign="top"><a href='ecology?rank=domain&name=Bacteria'>Bacteria</a></td>
               <td>
-                <% no_data_list = ['Chlamydiae','Chlorobi','Gracilibacteria (GN02)','WPS-2'] %>
+                
                 <div class='rank_div'>
-                <% for(n in phla){ %>
-                    
-                       <a href='ecology?rank=phylum&name=<%= phla[n] %>'><%= phla[n] %></a><br>
-                    
+                <% for(n in phyla){ %>
+                    <% if(has_abund_data.phylum[phyla[n]]){ %>
+                       <a href='ecology?rank=phylum&name=<%= phyla[n] %>'><%= phyla[n] %></a>
+                    <% }else{ %>
+                      <%= phyla[n] %>
+                    <% } %>
+                    <br>
                 <% } %>
                 </div>
               </td>
               <td>
                 <div class='rank_div'>
                 <% for(n in klasses){ %>
-                    <a href='ecology?rank=klass&name=<%= klasses[n] %>'><%= klasses[n] %></a><br>
+                    <% if(has_abund_data.klass[klasses[n]]){ %>
+                    <a href='ecology?rank=klass&name=<%= klasses[n] %>'><%= klasses[n] %></a>
+                    <% }else{ %>
+                      <%= klasses[n] %>
+                    <% } %>
+                    <br>
                 <% } %>
                 </div>
               </td>
               <td>
                 <div class='rank_div'>
                 <% for(n in orders){ %>
-                    <a href='ecology?rank=order&name=<%= orders[n] %>'><%= orders[n] %></a><br>
+                    <% if(has_abund_data.order[orders[n]]){ %>
+                    <a href='ecology?rank=order&name=<%= orders[n] %>'><%= orders[n] %></a>
+                    <% }else{ %>
+                      <%= orders[n] %>
+                    <% } %>
+                    <br>
                 <% } %>
                 </div>
               </td>
               <td>
                 <div class='rank_div'>
                 <% for(n in families){ %>
-                    <a href='ecology?rank=family&name=<%= families[n] %>'><%= families[n] %></a><br>
+                    <% if(has_abund_data.family[families[n]]){ %>
+                    <a href='ecology?rank=family&name=<%= families[n] %>'><%= families[n] %></a>
+                    <% }else{ %>
+                      <%= families[n] %>
+                    <% } %>
+                    <br>
                 <% } %>
                 </div>
               </td>
               <td>
                 <div class='rank_div'>
                 <% for(n in genera){ %>
-                    <a href='ecology?rank=genus&name=<%= genera[n] %>'><%= genera[n] %></a><br>
+                    <% if(has_abund_data.genus[genera[n]]){ %>
+                    <a href='ecology?rank=genus&name=<%= genera[n] %>'><%= genera[n] %></a>
+                    <% }else{ %>
+                      <%= genera[n] %>
+                    <% } %>
+                    <br>
                 <% } %>
                 </div>
               </td>

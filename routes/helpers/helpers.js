@@ -13,7 +13,7 @@ import util from 'util';
 import path from 'path';
 import { exec, spawn } from 'child_process';
 //import helpers from './helpers.js';
-
+import  * as helpers_taxa from './helpers_taxa.js'
 //let hmt = 'HMT-'+("000" + otid).slice(-3)
 
 export const getKeyByValue = (object, value) => {
@@ -442,4 +442,45 @@ export const walk = (dir) => {
     });
  
 };
+export const get_has_abundance = () => {
+   console.log('getting abund +-')
+   /// Relies on the C.taxon_counts_lookup to have acurate data
+   /// see Initialize_Abundance.py
+   /// used on ecology_home page
+    let data ={phylum:{},klass:{},order:{},family:{},genus:{}}
+    let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
+    let class_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['klass']
+    let order_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['order']
+    let family_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['family']
+    let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']
+    let lineage_list,tc
+    //console.log(phyla_obj)
+    for(let n in phyla_obj){
+        lineage_list = helpers_taxa.make_lineage(phyla_obj[n])
+        tc = C.taxon_counts_lookup[lineage_list[0]]
+        data.phylum[phyla_obj[n].taxon] = tc.ecology
+    }
+    for(let n in class_obj){
+        lineage_list = helpers_taxa.make_lineage(class_obj[n])
+        tc = C.taxon_counts_lookup[lineage_list[0]]
+        data.klass[class_obj[n].taxon] = tc.ecology
+    }
+    for(let n in order_obj){
+        lineage_list = helpers_taxa.make_lineage(order_obj[n])
+        tc = C.taxon_counts_lookup[lineage_list[0]]
+        data.order[order_obj[n].taxon] = tc.ecology
+    }
+    for(let n in family_obj){
+        lineage_list = helpers_taxa.make_lineage(family_obj[n])
+        tc = C.taxon_counts_lookup[lineage_list[0]]
+        data.family[family_obj[n].taxon] = tc.ecology
+    }
+    for(let n in genus_obj){
+        lineage_list = helpers_taxa.make_lineage(genus_obj[n])
+        tc = C.taxon_counts_lookup[lineage_list[0]]
+        data.genus[genus_obj[n].taxon] = tc.ecology
+    }
+    //console.log('abund data',data)
+    return data
+}
 export default router;
