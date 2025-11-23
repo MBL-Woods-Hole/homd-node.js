@@ -173,7 +173,7 @@ function show_anno_hits(obj, anno, gid){
                 html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].pid+"' target='_blank'>"+resp_data[n].pid+"</td>"
                 html += "<td class='center'>" 
                 //in genomes.js open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
-                html += " <a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
+                html += " <a title='JBrowse/Genome Viewer:"+gid+"' href='#' onclick=\"open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
                 html += "</td>" //  JB)
                 
                 html += "<td nowrap class='center'>"+resp_data[n].lna

@@ -447,14 +447,22 @@ export const get_has_abundance = () => {
    /// Relies on the C.taxon_counts_lookup to have acurate data
    /// see Initialize_Abundance.py
    /// used on ecology_home page
-    let data ={phylum:{},klass:{},order:{},family:{},genus:{}}
+    
+    let data ={domain:{},phylum:{},klass:{},order:{},family:{},genus:{},species:{}}
+    let domain_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain']
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
     let class_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['klass']
     let order_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['order']
     let family_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['family']
     let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']
+    let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
     let lineage_list,tc
     //console.log(phyla_obj)
+    for(let n in domain_obj){
+        lineage_list = helpers_taxa.make_lineage(domain_obj[n])
+        tc = C.taxon_counts_lookup[lineage_list[0]]
+        data.domain[domain_obj[n].taxon] = tc.ecology
+    }
     for(let n in phyla_obj){
         lineage_list = helpers_taxa.make_lineage(phyla_obj[n])
         tc = C.taxon_counts_lookup[lineage_list[0]]
@@ -479,6 +487,11 @@ export const get_has_abundance = () => {
         lineage_list = helpers_taxa.make_lineage(genus_obj[n])
         tc = C.taxon_counts_lookup[lineage_list[0]]
         data.genus[genus_obj[n].taxon] = tc.ecology
+    }
+    for(let n in species_obj){
+        lineage_list = helpers_taxa.make_lineage(species_obj[n])
+        tc = C.taxon_counts_lookup[lineage_list[0]]
+        data.species[species_obj[n].taxon] = tc.ecology
     }
     //console.log('abund data',data)
     return data

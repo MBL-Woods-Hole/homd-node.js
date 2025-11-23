@@ -1044,7 +1044,12 @@ router.get('/life', function life(req, res) {
         }
 
         html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-        html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + lineage_list[1][show_ranks[i]] + "'>abundance</a></span>"
+        console.log('rank',show_ranks[i],'name',lineage_list[1][show_ranks[i]])
+        if(C.has_abundance_data[show_ranks[i]][lineage_list[1][show_ranks[i]]]){
+          html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + lineage_list[1][show_ranks[i]] + "'>abundance</a></span>"
+        }else{
+          html += ""
+        }
         html += '</td></tr>'
       } else {  // Gather rows before the last row
 
@@ -1085,7 +1090,11 @@ router.get('/life', function life(req, res) {
               html += "</span>"
 
               html += " <span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-              html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + taxa_list[n] + "'>abundance</a></span><br>"
+              if(C.has_abundance_data[show_ranks[i]][taxa_list[n]]){
+                html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + taxa_list[n] + "'>abundance</a></span><br>"
+              }else{
+                html += ""
+              }
             }
 
           } else {
@@ -1113,7 +1122,11 @@ router.get('/life', function life(req, res) {
               //let lpsn_link = 'zz'
               //console.log('zz link ',lpsn_link)
               html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-              html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + taxa_list[n] + "'>abundance</a></span><br>"
+              if(C.has_abundance_data[show_ranks[i]][taxa_list[n]]){
+                html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + taxa_list[n] + "'>abundance</a></span><br>"
+              }else{
+                html += ""
+              }
             }
           }
           html += "</li>"

@@ -152,6 +152,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         let grep_cmd = ENV.GREP_CMD + ' ' + args.join(' ')
         console.log(grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
+        // [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
         const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
         console.log('rows_lst length',row_array.length)
         
