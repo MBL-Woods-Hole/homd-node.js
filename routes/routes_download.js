@@ -812,7 +812,7 @@ function create_fasta_Nsend(sql_rows,type,search_type,dt,res) {
         res.set({
                 'Content-Type': 'text/octet-stream',
                 'Content-Disposition': `attachment; filename="${fname}"`,
-                'Transfer-Encoding', 'chunked'
+                'Transfer-Encoding': 'chunked'
             });
 
     } 
