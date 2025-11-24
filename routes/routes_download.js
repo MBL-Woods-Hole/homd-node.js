@@ -462,7 +462,7 @@ router.post('/phage_sequences',(req, res) => {
         //for(let n in rows){
             console.log(rows)
         //}
-        let result_text = create_phage_fasta(rows)
+        let result_text = create_fasta(rows, 'phage')
         console.log(result_text)
         let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.fasta'
         console.log(fname)
@@ -560,11 +560,20 @@ router.post('/anno_search_data',(req, res) => {
         }
         if(format == 'fasta_na' || format == 'fasta_aa'){
             fname=''
-            if(type == 'excel'){
-                type = 'text'  //change type if fasta::excel selected
-            }
+            
             ext = '.fasta'
-            result_text = create_anno_fasta(rows)
+            result_text = create_fasta(rows,'anno') // could be large!!
+            if (type === 'browser') {
+                res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+            } else {
+            
+                let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
+                res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+            } 
+            res.write(result_text);
+            res.end(); 
+            
+            return
             //console.log(result_text)
         }else{
             fname = ''
@@ -578,13 +587,17 @@ router.post('/anno_search_data',(req, res) => {
             
             let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
             res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+        
+        
         } else if (type === 'excel') {
             let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
             res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
           
+        
         } else {
             // error
             console.log('Download table format ERROR')
+        
         }
         res.send(result_text)
         res.end()
@@ -624,7 +637,7 @@ router.post('/phage_search_data',(req, res) => {
                 type = 'text'  //change type if fasta::excel selected
             }
             ext = '.fasta'
-            result_text = create_phage_fasta(rows)
+            result_text = create_fasta(rows,'phage')
             //console.log(result_text)
         }else{
             fname = ''
@@ -759,39 +772,47 @@ function create_phage_table(sql_rows,header_array,search_term) {
     }
     return text
 }
-function create_phage_fasta(sql_rows) {
+function create_fasta(sql_rows,type) {
+    console.log('in create FASTA',type)
     let text =''
     let seqarray,seqstr
     for(let n in sql_rows){
         //console.log('sql_rows[n]',sql_rows[n])
         if(sql_rows[n].seq){
-           text += '>'+sql_rows[n].search_id +'|'+sql_rows[n].genome_id+'|'+sql_rows[n].predictor
-           text += '|'+sql_rows[n].contig+'|'+sql_rows[n].start+'..'+sql_rows[n].end+'|length:'+sql_rows[n].seq_length+'bp\n'
+           if(type === 'phage'){
+               text += '>'+sql_rows[n].search_id +'|'+sql_rows[n].genome_id+'|'+sql_rows[n].predictor
+               text += '|'+sql_rows[n].contig+'|'+sql_rows[n].start+'..'+sql_rows[n].end+'|length:'+sql_rows[n].seq_length+'bp\n'
+               
+           }else if(type === 'anno'){
+               text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
+               text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
+               
+           }
            seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
            seqarray = helpers.chunkSubstr(seqstr, 80)
            text += seqarray.join('\n')+'\n'
-           //text += sql_rows[n].seq.toString().replace(/\*+$/, '')+'\n'
         }
     }
     return text
 }
-function create_anno_fasta(sql_rows) {
-    let text =''
-    let seqarray,seqstr
-    for(let n in sql_rows){
-        //console.log('sql_rows[n]',sql_rows[n])
-        if(sql_rows[n].seq.length != 0){
-          
-           text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
-           text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
-           seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
-           seqarray = helpers.chunkSubstr(seqstr, 80)
-           text += seqarray.join('\n')+'\n'
-           //text += sql_rows[n].seq.toString().replace(/\*+$/, '')+'\n'
-        }
-    }
-    return text
-}
+// function create_anno_fasta(sql_rows) {
+//     let text =''
+//     console.log('in fxn create_anno_fasta')
+//     let seqarray,seqstr
+//     for(let n in sql_rows){
+//         //console.log('sql_rows[n]',sql_rows[n])
+//         if(sql_rows[n].seq.length != 0){
+//           
+//            text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
+//            text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
+//            seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
+//            seqarray = helpers.chunkSubstr(seqstr, 80)
+//            text += seqarray.join('\n')+'\n'
+//            //text += sql_rows[n].seq.toString().replace(/\*+$/, '')+'\n'
+//         }
+//     }
+//     return text
+// }
 function create_anno_table(sql_rows,anno,headers,search_term) {
     let text = anno.toUpperCase()+' ::Search String: "'+search_term+'"\n'
     text += headers.join("\t")+'\n'
@@ -1084,4 +1105,56 @@ function create_genome_table (gids, source, type, startText) {
   // console.log(txt)
   return txt
 }
+
+// --- Example Usage ---
+// const fs = require('fs');
+// const https = require('https');
+// const path = require('path');
+// const fileUrl = 'https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf';
+// const destination = path.join(__dirname, 'downloaded_file.pdf');
+// 
+// downloadFile_stream(fileUrl, destination, (err) => {
+//     if (err) {
+//         console.error('Download failed:', err.message);
+//     } else {
+//         console.log(`Download successful! File saved to ${destination}`);
+//     }
+// });
+const downloadFile_stream = (url, destinationPath, callback) => {
+    // Create a writable stream to the destination file
+    const file = fs.createWriteStream(destinationPath);
+
+    // Make the HTTP request
+    const request = https.get(url, (response) => {
+        // Check if the response status is OK
+        if (response.statusCode !== 200) {
+            fs.unlink(destinationPath, () => { // Delete the partial file
+                callback(new Error(`Failed to download: Status Code ${response.statusCode}`));
+            });
+            return;
+        }
+
+        // Pipe the response stream (readable) to the file stream (writable)
+        response.pipe(file);
+
+        // Handle the 'finish' event to know when the download is complete
+        file.on('finish', () => {
+            file.close(callback); // Close the stream and call the callback
+        });
+    });
+
+    // Handle errors during the request (e.g., network issues)
+    request.on('error', (err) => {
+        // Delete the (partial) file on error
+        fs.unlink(destinationPath, () => callback(err)); 
+    });
+    
+    // Handle errors from the file system (e.g., permissions)
+    file.on('error', (err) => {
+        fs.unlink(destinationPath, () => callback(err)); 
+    });
+};
+
+
+
 export default router;
