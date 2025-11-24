@@ -562,7 +562,10 @@ router.post('/anno_search_data',(req, res) => {
             fname=''
             
             ext = '.fasta'
-            result_text = create_fasta(rows,'anno') // could be large!!
+            create_fasta_Nsend(rows,type,'anno',dt,res) // could be large!!
+            //result_text = create_fasta(rows,'anno') // could be large!!
+            res.end()
+            return
             if (type === 'browser') {
                 res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
             } else {
@@ -791,9 +794,42 @@ function create_fasta(sql_rows,type) {
            seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
            seqarray = helpers.chunkSubstr(seqstr, 80)
            text += seqarray.join('\n')+'\n'
+           
         }
     }
     return text
+}
+function create_fasta_Nsend(sql_rows,type,search_type,dt,res) {
+    console.log('in create FASTA',type)
+    if (type === 'browser') {
+        res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+    } else {
+    
+        let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.fasta'
+        res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+    } 
+    let text
+    let seqarray,seqstr
+    for(let n in sql_rows){
+        //console.log('sql_rows[n]',sql_rows[n])
+        text = ''
+        if(sql_rows[n].seq){
+           if(search_type === 'phage'){
+               text += '>'+sql_rows[n].search_id +'|'+sql_rows[n].genome_id+'|'+sql_rows[n].predictor
+               text += '|'+sql_rows[n].contig+'|'+sql_rows[n].start+'..'+sql_rows[n].end+'|length:'+sql_rows[n].seq_length+'bp\n'
+               
+           }else if(search_type === 'anno'){
+               text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
+               text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
+               
+           }
+           seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
+           seqarray = helpers.chunkSubstr(seqstr, 80)
+           text += seqarray.join('\n')+'\n'
+           res.write(text)
+        }
+    }
+    
 }
 // function create_anno_fasta(sql_rows) {
 //     let text =''
