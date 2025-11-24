@@ -801,16 +801,20 @@ function create_fasta(sql_rows,type) {
 }
 function create_fasta_Nsend(sql_rows,type,search_type,dt,res) {
     console.log('in create FASTA',type)
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.setHeader('Transfer-Encoding', 'chunked'); //
+    
     if (type === 'browser') {
-        //res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-        
+        res.set({
+            'Content-Type': 'text/plain',
+        });
     } else {
     
-        let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.fasta'
-        res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
-        
+        let fname = 'HOMD_'+search_type+'_search' + dt.today + '_' + dt.seconds + '.fasta'
+        res.set({
+                'Content-Type': 'text/octet-stream',
+                'Content-Disposition': `attachment; filename="${fname}"`,
+                'Transfer-Encoding', 'chunked'
+            });
+
     } 
     let text
     let seqarray,seqstr
@@ -835,7 +839,7 @@ function create_fasta_Nsend(sql_rows,type,search_type,dt,res) {
            res.write(text)
         }
     }
-    
+    console.log('fa done - returning')
 }
 // function create_anno_fasta(sql_rows) {
 //     let text =''
