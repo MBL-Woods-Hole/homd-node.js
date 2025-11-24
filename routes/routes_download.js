@@ -823,9 +823,11 @@ function create_fasta_Nsend(sql_rows,type,search_type,dt,res) {
                text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
                
            }
+           console.log('header text',text)
            seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
            seqarray = helpers.chunkSubstr(seqstr, 80)
            text += seqarray.join('\n')+'\n'
+           
            res.write(text)
         }
     }
