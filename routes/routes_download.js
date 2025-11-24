@@ -548,7 +548,7 @@ router.post('/anno_search_data',(req, res) => {
         
     }
     
-    //console.log(q)
+    console.log(q)
     TDBConn.query(q, (err, rows) => {
   
         if (err) {
@@ -801,12 +801,16 @@ function create_fasta(sql_rows,type) {
 }
 function create_fasta_Nsend(sql_rows,type,search_type,dt,res) {
     console.log('in create FASTA',type)
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Transfer-Encoding', 'chunked'); //
     if (type === 'browser') {
-        res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        //res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        
     } else {
     
         let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.fasta'
         res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+        
     } 
     let text
     let seqarray,seqstr
