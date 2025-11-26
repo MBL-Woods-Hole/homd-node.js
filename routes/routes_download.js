@@ -532,12 +532,20 @@ router.post('/anno_search_data',(req, res) => {
             q += " from "+anno_cap+".orf"
             q += " JOIN "+anno_cap+".faa using(protein_id)"
             q += " WHERE protein_id in ("+unique_pidlst+")"
+           //  q = "SELECT"
+//             q += " CONCAT('"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n>', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
+//             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+//             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         }else if(format === 'fasta_na'){
             q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
             q += " protein_id as pid,start,stop,length_na as length, UNCOMPRESS(seq_compressed) as seq"
             q += " from "+anno_cap+".orf"
             q += " JOIN "+anno_cap+".ffn using(protein_id)"
             q += " WHERE protein_id in ("+unique_pidlst+")"
+//             q = "SELECT"
+//             q += " CONCAT('"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n>', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
+//             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+//             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         }else{
             // table  PROKKA and NCBI
             q = "SELECT genome_id as gid,accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
@@ -547,8 +555,28 @@ router.post('/anno_search_data',(req, res) => {
         }
         
     }
-    
     console.log(q)
+//     if(format.slice(0,5) === 'fasta'){
+//         // Set response headers for file download
+//         res.setHeader('Content-Type', 'text/plain');
+//         res.setHeader('Content-Disposition', 'attachment; filename="sequences.fasta"');
+// 
+//         console.log('in slice query')
+//         const query = TDBConn.query(q)
+//         query
+//         .stream() // Get the stream from the query
+//         .pipe(res) // Pipe directly to the HTTP response
+//         .on('finish', () => {
+//           console.log('Download complete.');
+//           TDBConn.end();
+//         })
+//         .on('error', (err) => {
+//           console.error('Streaming error:', err);
+//           res.status(500).send('Error downloading file');
+//           TDBConn.end();
+//         })
+//     }else{
+    
     TDBConn.query(q, (err, rows) => {
   
         if (err) {
@@ -605,6 +633,7 @@ router.post('/anno_search_data',(req, res) => {
         res.send(result_text)
         res.end()
     })
+//    }
     
 })
 router.post('/phage_search_data',(req, res) => {
