@@ -16,18 +16,16 @@ console.log('xx',ENV.DB_HOST)
 import path from 'path';
 const dirname = import.meta.dirname
 
-
+//// SQL Connection ///////////////
 // import pool from './config/database.js';
 // global.TDBConn = pool 
 
 import { getConnection } from './config/database.js';
 global.TDBConn = getConnection;   // database:  homd
 
-
-
+///////////////////////////////////
 
 global.app_root = path.resolve(dirname);
-
 
 import C from './public/constants.js';
 import  * as helpers from './routes/helpers/helpers.js'

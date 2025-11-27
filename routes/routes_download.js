@@ -5,7 +5,7 @@ let router   = express.Router();
 import fs from 'fs-extra';
 
 import path from 'path';
-
+import { pipeline, Transform } from 'stream';
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
@@ -538,20 +538,32 @@ router.post('/anno_search_data', async (req, res) => {
 //             q += " from "+anno_cap+".orf"
 //             q += " JOIN "+anno_cap+".faa using(protein_id)"
 //             q += " WHERE protein_id in ("+unique_pidlst+")"
+            // q = "SELECT"
+//             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
+//             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+//             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
             q = "SELECT"
-            q += " CONCAT('"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n>', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
-            //q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
-            q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
+            q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
+            q += " UNCOMPRESS(seq_compressed) AS fasta_record"
+            q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
+        
         }else if(format === 'fasta_na'){
 //             q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
 //             q += " protein_id as pid,start,stop,length_na as length, UNCOMPRESS(seq_compressed) as seq"
 //             q += " from "+anno_cap+".orf"
 //             q += " JOIN "+anno_cap+".ffn using(protein_id)"
 //             q += " WHERE protein_id in ("+unique_pidlst+")"
-            q = "SELECT"
-            q += " CONCAT('"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n>', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
-            //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
-            q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
+        //     q = "SELECT"
+//             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
+//             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+//             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
+         q = "SELECT"
+            q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
+            q += " UNCOMPRESS(seq_compressed) AS sequence"
+            q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
+        
         }else{
             // table  PROKKA and NCBI
             q = "SELECT genome_id as gid,accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
@@ -562,31 +574,126 @@ router.post('/anno_search_data', async (req, res) => {
         
     }
     console.log(q)
+    let conn
+    
     if(format.slice(0,5) === 'fasta'){
         // Set response headers for file download
-        res.setHeader('Content-Type', 'text/plain');
+        //res.setHeader('Content-Type', 'text/plain');
+        
+        conn = await global.TDBConn();
+        //conn = await global.TDBConn.pool();
+        //const Reader = global.TDBConn.pool.query(q).stream();
+        const queryStream = conn.connection.query(q).stream();
+//         queryStream
+//             //.pipe(transformStream)
+//             .pipe(res); // The response object is a writable stream
+// 
+//         queryStream.on('error', (err) => {
+//             console.error(err);
+//             res.status(500).send("Database error");
+//         });
+//         console.log('done')
+//       return
+        // Pipe the readable query stream directly to the writable response stream
+ //    pipeline(
+//             queryStream,
+//             
+//             res, // The HTTP response is a writable stream
+//             (err) => {
+//                 conn.release(); // Release connection when pipeline finishes or errors
+//                 if (err) {
+//                     console.error('Pipeline failed:', err);
+//                     // If headers were sent, you can't change the response status, just end it
+//                     if (!res.headersSent) {
+//                         res.status(500).send('Error generating file');
+//                     }
+//                 }
+//             }
+//         )
+//   return
+//         queryStream.pipe(res);
+//         console.log('queryStream',queryStream)
+//         queryStream.on('error', (streamErr) => {
+//             console.error('Stream error:', streamErr);
+//             res.status(500).end();
+//             conn.connection.release(); // Release connection on error
+//         });
+// 
+//         // The 'end' event on the query stream signifies all data has been read
+//         // Piping to 'res' automatically calls res.end() when the source stream ends.
+// 
+//         // It's good practice to release the connection once the stream is done
+//         // Note: this may need careful handling depending on how pipe manages connection lifecycle
+//         res.on('finish', () => {
+//             console.log('Response finished, releasing connection');
+//             conn.connection.release();
+//         });
+// 
+//         req.on('abort', () => {
+//             // If the client aborts the request, destroy the database connection
+//             console.log('Client aborted request, destroying connection');
+//             conn.connection.destroy();
+//         })
+const objectToStringStream = new Transform({
+  writableObjectMode: true, // Accepts objects
+  transform(chunk, encoding, callback) {
+    // Convert the object to a string (e.g., JSON string) and push it as a string
+    let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
+    this.push(record.replaceAll(/["]/g, ''));
+     //this.push(JSON.stringify(chunk.defline+'\n'));
+    callback();
+  }
+});
         res.setHeader('Content-Disposition', 'attachment; filename="sequences.fasta"');
-        //let conn = await getConnection();
-        const queryStream = global.TDBConn
-            .query(q)
-            .stream(); 
-        console.log('in slice query')
-        //const query = conn.query(q)
-        queryStream // Get the stream from the query
-        .pipe(res) // Pipe directly to the HTTP response
-        .on('data', (row) => {
-          console.log('running.',row);
-          global.TDBConn.end();
-        })
-        .on('end', () => {
-          console.log('Download complete.');
-          global.TDBConn.end();
-        })
-        .on('error', (err) => {
-          console.error('Streaming error:', err);
-          res.status(500).send('Error downloading file');
-          global.TDBConn.end();
-        })
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Transfer-Encoding', 'chunked');
+        // const Writer = new stream.Writable({
+//           objectMode: true,
+//           write(data, enc, cb) {
+//             console.log(data);
+//             cb();
+//           },
+//         });
+        pipeline(queryStream, objectToStringStream, res, (err) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log('streaming')
+          //conn.end();
+          
+        });
+        return
+        //conn.queryStream(q)
+//         console.log(conn)
+//         //const queryStream = conn.query(q).stream()
+//         const query = conn.stream(q);
+//         console.log('query',query)
+//         //for await (const record of stream) {
+//          //   console.log(record);
+//             // Process each record here
+//         //}
+//         //const [rows] = await conn.execute(q);
+//         //const queryStream = conn.queryStream(q)
+//             
+//             
+//         console.log('in slice query')
+//         //const query = conn.query(q)
+//         //queryStream // Get the stream from the query
+//         //.pipe(res) // Pipe directly to the HTTP response
+//         query.stream({ highWaterMark: 200 })
+//         .on('data', (row) => {
+//           console.log('running.',row);
+//           global.TDBConn.end();
+//         })
+//         .on('end', () => {
+//           console.log('Download complete.');
+//           global.TDBConn.end();
+//         })
+//         .on('error', (err) => {
+//           console.error('Streaming error:', err);
+//           res.status(500).send('Error downloading file');
+//           global.TDBConn.end();
+//         })
     }else{
     
         try {

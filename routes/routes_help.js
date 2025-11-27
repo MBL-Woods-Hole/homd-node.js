@@ -22,7 +22,7 @@ router.get('/index', function index(req, res) {
     })
   
 })
-router.get('/help-page', function help_page(req, res) {
+router.get('/help-page', async function help_page(req, res) {
   //let page = req.params.pagecode
   let page = req.query.pagecode
   console.log('page',page)
@@ -87,13 +87,14 @@ router.get('/help-page', function help_page(req, res) {
       })
   }else if(page == 'database_update'){
       // NOT USED!!!!
-      let q = queries.get_db_updates_query()
+      let con,q = queries.get_db_updates_query()
       let rowarray = []
       let byDate = {}
+      try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
       
-      TDBConn.query(q, (err, rows) => {
-        if(err) console.log(err)
-        //console.log('row',rows)
+        
         for(let n in rows){
            if(rows[n].date in byDate){
              byDate[rows[n].date].push({otid:rows[n].otid, description:rows[n].description, reason:rows[n].reason})
@@ -101,8 +102,7 @@ router.get('/help-page', function help_page(req, res) {
              byDate[rows[n].date] = [{otid:rows[n].otid, description:rows[n].description, reason:rows[n].reason}]
               
            }
-           
-           //rowarray.push({otid:rows[n].otid,description:rows[n].description,reason:rows[n].reason,date:rows[n].date})
+
         }
         //console.log(byDate)
         let date_array = Object.keys(byDate)
@@ -114,7 +114,13 @@ router.get('/help-page', function help_page(req, res) {
         })
         //console.log('date_array2',date_array)
         renderHelpFxn(req, res, page, byDate, date_array)
-      })
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+      } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+      }
+      return
   }else{
     renderHelpFxn(req, res, page, [], [])
   }
