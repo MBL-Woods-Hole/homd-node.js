@@ -234,7 +234,7 @@ export const get_all_phage_for_download = () => {
     q += " FROM phage_stats"
     q += " JOIN phage_data using (genome_id)"
     
-    console.log(q)
+    //console.log(q)
     return q
 
 };
@@ -248,8 +248,8 @@ export const get_phage = (gid) => {   // always NCBI for taxon description
 export const get_phage_fasta = (search_id_list) => {   // 
   let q = "SELECT CONCAT('>',search_id,' | ',genome_id,' | ',contig,' | ',predictor,' | ',start,'..',end,"
     q += "' | ',accession,"
-    q += "' | ',description) AS defline,"
-    q += "seq_length,UNCOMPRESS(seq_compressed) as sequence"
+    q += "' | ',description,' | Length ',seq_length) AS defline,"
+    q += "UNCOMPRESS(seq_compressed) AS sequence"
     q += " from phage_search where search_id in ("+search_id_list+')'
   return q
 };
