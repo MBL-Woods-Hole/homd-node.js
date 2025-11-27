@@ -101,10 +101,10 @@ router.get('/dld_refseqtable_all/:type', function dld_refseqtable(req, res) {
         res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
     } else if (type === 'text') {
         let fname = 'HOMD_refseq_table' + dt.today + '_' + dt.seconds + '.txt'
-        res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+        res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
     } else if (type === 'excel') {
         let fname = 'HOMD_refseq_table' + dt.today + '_' + dt.seconds + '.xls'
-        res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+        res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
     } else {
         // error
         console.log('Download table format ERROR')
@@ -405,10 +405,10 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
     res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
   } else if (type === 'text') {
     let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds + '.txt'
-    res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+    res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
   } else if (type === 'excel') {
     let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds + '.xls'
-    res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+    res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
   } else {
     // error
     console.log('Download table format ERROR')
@@ -451,39 +451,12 @@ router.get('/dnld_pangenome',(req, res) => {
     res.download(fullpath)
 
 });
-router.post('/phage_sequences', async (req, res) => {
-    console.log(req.body)
-    let q = queries.get_phage_from_ids(req.body.search_ids)
-    let dt = helpers.get_today_obj()
-    let conn
-    try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
-        //for(let n in rows){
-        //console.log(rows)
-        //}
-        let result_text = create_fasta(rows, 'phage')
-        console.log(result_text)
-        let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.fasta'
-        console.log(fname)
-        //res.set('Content-Type', 'text/plain')
-        res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
-        res.send(result_text)
-        res.end()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
-    
-})
+
 router.post('/anno_search_data', async (req, res) => {
    // Download all Annotation Hits/ table and fasta
    //console.log('anno_search_data req body',req.body)
    let type = req.body.type  // browser, text or excel
-   let anno = req.body.anno
+   let anno = req.body.anno  // ncbi prokka or bakta
    let search_text = req.body.search_text
     let format = req.body.format  // csv or fasta
     let id_list = JSON.parse(req.body.anno_ids)
@@ -506,14 +479,13 @@ router.post('/anno_search_data', async (req, res) => {
     //console.log('unique_lst',unique_pidlst)
     if(anno.toUpperCase() === 'BAKTA'){
         if(format === 'fasta_aa'){
-            q = "SELECT 'Bakta' as anno,BAKTA.orf.core_contig_acc as contig,BAKTA.orf.genome_id as gid,"
-            q += " core_ID as pid,core_start as start,core_end as stop,bakta_Length as length,UNCOMPRESS(seq_compressed) as seq"
+            q = "SELECT CONCAT('>Bakta | ',BAKTA.orf.core_contig_acc,' | ', BAKTA.orf.genome_id,' | ',"
+            q += " core_ID,' | ',core_start,'..',core_end,' | length:',bakta_Length) AS defline,"
+            q += " UNCOMPRESS(seq_compressed) as sequence"
             q += " from BAKTA.orf"
             q += " JOIN BAKTA.faa using(core_ID)"
             q += " WHERE core_ID in ("+unique_pidlst+")"
             //head_text_array = ['core_ID','Genome_ID','Contig','BAKTA','seq_length']
-                
-            
         }else if(format === 'fasta_na'){
             // error  there is no bakta na seqs
             res.send("Error::BAKTA doesn't have nucleotide (na) sequences.")
@@ -525,8 +497,7 @@ router.post('/anno_search_data', async (req, res) => {
             q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef"
             q += " from `BAKTA`.orf WHERE core_ID in ("+unique_pidlst+")"
             head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
-                
-            
+
         }
     }else{
         // PROKKA and NCBI
@@ -544,7 +515,7 @@ router.post('/anno_search_data', async (req, res) => {
 //             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
             q = "SELECT"
             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
-            q += " UNCOMPRESS(seq_compressed) AS fasta_record"
+            q += " UNCOMPRESS(seq_compressed) AS sequence"
             q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         
@@ -573,127 +544,16 @@ router.post('/anno_search_data', async (req, res) => {
         }
         
     }
-    console.log(q)
+    
+    helpers.print('query: '+q)
     let conn
     
     if(format.slice(0,5) === 'fasta'){
         // Set response headers for file download
         //res.setHeader('Content-Type', 'text/plain');
-        
-        conn = await global.TDBConn();
-        //conn = await global.TDBConn.pool();
-        //const Reader = global.TDBConn.pool.query(q).stream();
-        const queryStream = conn.connection.query(q).stream();
-//         queryStream
-//             //.pipe(transformStream)
-//             .pipe(res); // The response object is a writable stream
-// 
-//         queryStream.on('error', (err) => {
-//             console.error(err);
-//             res.status(500).send("Database error");
-//         });
-//         console.log('done')
-//       return
-        // Pipe the readable query stream directly to the writable response stream
- //    pipeline(
-//             queryStream,
-//             
-//             res, // The HTTP response is a writable stream
-//             (err) => {
-//                 conn.release(); // Release connection when pipeline finishes or errors
-//                 if (err) {
-//                     console.error('Pipeline failed:', err);
-//                     // If headers were sent, you can't change the response status, just end it
-//                     if (!res.headersSent) {
-//                         res.status(500).send('Error generating file');
-//                     }
-//                 }
-//             }
-//         )
-//   return
-//         queryStream.pipe(res);
-//         console.log('queryStream',queryStream)
-//         queryStream.on('error', (streamErr) => {
-//             console.error('Stream error:', streamErr);
-//             res.status(500).end();
-//             conn.connection.release(); // Release connection on error
-//         });
-// 
-//         // The 'end' event on the query stream signifies all data has been read
-//         // Piping to 'res' automatically calls res.end() when the source stream ends.
-// 
-//         // It's good practice to release the connection once the stream is done
-//         // Note: this may need careful handling depending on how pipe manages connection lifecycle
-//         res.on('finish', () => {
-//             console.log('Response finished, releasing connection');
-//             conn.connection.release();
-//         });
-// 
-//         req.on('abort', () => {
-//             // If the client aborts the request, destroy the database connection
-//             console.log('Client aborted request, destroying connection');
-//             conn.connection.destroy();
-//         })
-const objectToStringStream = new Transform({
-  writableObjectMode: true, // Accepts objects
-  transform(chunk, encoding, callback) {
-    // Convert the object to a string (e.g., JSON string) and push it as a string
-    let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
-    this.push(record.replaceAll(/["]/g, ''));
-     //this.push(JSON.stringify(chunk.defline+'\n'));
-    callback();
-  }
-});
-        res.setHeader('Content-Disposition', 'attachment; filename="sequences.fasta"');
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Transfer-Encoding', 'chunked');
-        // const Writer = new stream.Writable({
-//           objectMode: true,
-//           write(data, enc, cb) {
-//             console.log(data);
-//             cb();
-//           },
-//         });
-        pipeline(queryStream, objectToStringStream, res, (err) => {
-          if (err) {
-            console.log(err);
-          }
-          console.log('streaming')
-          //conn.end();
-          
-        });
-        return
-        //conn.queryStream(q)
-//         console.log(conn)
-//         //const queryStream = conn.query(q).stream()
-//         const query = conn.stream(q);
-//         console.log('query',query)
-//         //for await (const record of stream) {
-//          //   console.log(record);
-//             // Process each record here
-//         //}
-//         //const [rows] = await conn.execute(q);
-//         //const queryStream = conn.queryStream(q)
-//             
-//             
-//         console.log('in slice query')
-//         //const query = conn.query(q)
-//         //queryStream // Get the stream from the query
-//         //.pipe(res) // Pipe directly to the HTTP response
-//         query.stream({ highWaterMark: 200 })
-//         .on('data', (row) => {
-//           console.log('running.',row);
-//           global.TDBConn.end();
-//         })
-//         .on('end', () => {
-//           console.log('Download complete.');
-//           global.TDBConn.end();
-//         })
-//         .on('error', (err) => {
-//           console.error('Streaming error:', err);
-//           res.status(500).send('Error downloading file');
-//           global.TDBConn.end();
-//         })
+        let fname = 'HOMD_'+anno+'_search' + dt.today + '_' + dt.seconds + '.fasta'
+        create_fasta_Nsend(q, fname,  res)
+
     }else{
     
         try {
@@ -702,43 +562,23 @@ const objectToStringStream = new Transform({
         for(let n in rows){
             //console.log(rows[n].genome_id)
         }
-        if(format == 'fasta_na' || format == 'fasta_aa'){
-            fname=''
-            
-            ext = '.fasta'
-            create_fasta_Nsend(rows,type,'anno',dt,res) // could be large!!
-            //result_text = create_fasta(rows,'anno') // could be large!!
-            res.end()
-            return
-            if (type === 'browser') {
-                res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-            } else {
-            
-                let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
-                res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
-            } 
-            res.write(result_text);
-            res.end(); 
-            
-            return
-            //console.log(result_text)
-        }else{
-            fname = ''
-            ext = '.txt'
-            result_text = create_anno_table(rows, anno, head_text_array, search_text)
-        }
+        
+        fname = ''
+        ext = '.txt'
+        result_text = create_anno_table(rows, anno, head_text_array, search_text)
+        
         
         if (type === 'browser') {
             res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
         } else if (type === 'text') {
             
             let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
-            res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+            res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
         
         
         } else if (type === 'excel') {
             let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
-            res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
+            res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
           
         
         } else {
@@ -758,6 +598,19 @@ const objectToStringStream = new Transform({
     }
     
 })
+////
+router.post('/phage_sequences', async (req, res) => {
+    console.log(req.body)
+    let q = queries.get_phage_fasta(req.body.search_ids)
+    let dt = helpers.get_today_obj()
+    let fname = 'HOMD_phage_seqs' + dt.today + '_' + dt.seconds + '.fasta'
+    create_fasta_Nsend(q, fname, res)
+    
+
+    return
+    
+})
+////
 router.post('/phage_search_data', async (req, res) => {
     // Download all Phage Hits
     //console.log('req body',req.body)
@@ -775,51 +628,56 @@ router.post('/phage_search_data', async (req, res) => {
     q += "accession,description,"
     q += "seq_length,UNCOMPRESS(seq_compressed) as seq"
     q += " from phage_search where search_id in ("+id_list+')'
-    try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
-    
-        for(let n in rows){
-            //console.log(rows[n].genome_id)
-        }
-        if(format == 'fasta'){
-            fname=''
+    if(format === 'fasta'){
+            
             if(type == 'excel'){
                 type = 'text'  //change type if fasta::excel selected
             }
-            ext = '.fasta'
-            result_text = create_fasta(rows,'phage')
+            
+            let q = queries.get_phage_fasta(id_list)
+            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.fasta'
+            create_fasta_Nsend(q, fname, res)
+            //result_text = create_fasta(rows,'phage')
             //console.log(result_text)
-        }else{
+            return
+    }else{
+        try {
+            conn = await global.TDBConn();
+            const [rows] = await conn.execute(q);
+        
+            for(let n in rows){
+                //console.log(rows[n].genome_id)
+            }
+            
             fname = ''
             ext = '.txt'
             result_text = create_phage_table(rows, head_text_array, search_text)
-        }
-        
-        if (type === 'browser') {
-            res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-        } else if (type === 'text') {
             
-            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
-            res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
-        } else if (type === 'excel') {
-            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
-            res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
-          
-        } else {
-            // error
-            console.log('Download table format ERROR')
+            
+            if (type === 'browser') {
+                res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+            } else if (type === 'text') {
+                
+                let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
+                res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
+            } else if (type === 'excel') {
+                let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
+                res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
+              
+            } else {
+                // error
+                console.log('Download table format ERROR')
+            }
+            res.send(result_text)
+            res.end()
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error fetching data');
+        } finally {
+            if (conn) conn.release(); // Release the connection back to the pool
         }
-        res.send(result_text)
-        res.end()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
-
+        return
+   }
 });
 router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
     let dt = helpers.get_today_obj()
@@ -931,71 +789,78 @@ function create_phage_table(sql_rows,header_array,search_term) {
     }
     return text
 }
-function create_fasta(sql_rows,type) {
-    console.log('in create FASTA',type)
-    let text =''
-    let seqarray,seqstr
-    for(let n in sql_rows){
-        //console.log('sql_rows[n]',sql_rows[n])
-        if(sql_rows[n].seq){
-           if(type === 'phage'){
-               text += '>'+sql_rows[n].search_id +'|'+sql_rows[n].genome_id+'|'+sql_rows[n].predictor
-               text += '|'+sql_rows[n].contig+'|'+sql_rows[n].start+'..'+sql_rows[n].end+'|length:'+sql_rows[n].seq_length+'bp\n'
-               
-           }else if(type === 'anno'){
-               text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
-               text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
-               
-           }
-           seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
-           seqarray = helpers.chunkSubstr(seqstr, 80)
-           text += seqarray.join('\n')+'\n'
-           
-        }
-    }
-    return text
-}
-function create_fasta_Nsend(sql_rows,type,search_type,dt,res) {
-    console.log('in create FASTA',type)
-    
-    if (type === 'browser') {
-        res.set({
-            'Content-Type': 'text/plain',
+// function create_fasta(sql_rows,type) {
+//     console.log('in create FASTA',type)
+//     let text =''
+//     let seqarray,seqstr
+//     for(let n in sql_rows){
+//         //console.log('sql_rows[n]',sql_rows[n])
+//         if(sql_rows[n].seq){
+//            if(type === 'phage'){
+//                text += '>'+sql_rows[n].search_id +'|'+sql_rows[n].genome_id+'|'+sql_rows[n].predictor
+//                text += '|'+sql_rows[n].contig+'|'+sql_rows[n].start+'..'+sql_rows[n].end+'|length:'+sql_rows[n].seq_length+'bp\n'
+//                
+//            }else if(type === 'anno'){
+//                text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
+//                text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
+//                
+//            }
+//            seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
+//            seqarray = helpers.chunkSubstr(seqstr, 80)
+//            text += seqarray.join('\n')+'\n'
+//            
+//         }
+//     }
+//     return text
+// }
+async function create_fasta_Nsend(q, fname, res) {
+    console.log('in create FASTA')
+    // q must have defline ans sequence elements
+    console.log(q)
+    let conn
+    try {
+        conn = await global.TDBConn();
+            //conn = await global.TDBConn.pool();
+            //const Reader = global.TDBConn.pool.query(q).stream();
+        const queryStream = conn.connection.query(q).stream();
+        
+        const objectToStringStream = new Transform({
+          writableObjectMode: true, // Accepts objects
+          transform(chunk, encoding, callback) {
+            // Convert the object to a string (e.g., JSON string) and push it as a string
+            let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
+            this.push(record.replaceAll(/["]/g, ''));
+             //this.push(JSON.stringify(chunk.defline+'\n'));
+            callback();
+          }
         });
-    } else {
-    
-        let fname = 'HOMD_'+search_type+'_search' + dt.today + '_' + dt.seconds + '.fasta'
-        res.set({
-                'Content-Type': 'text/octet-stream',
-                'Content-Disposition': `attachment; filename="${fname}"`,
-                'Transfer-Encoding': 'chunked'
-            });
-
-    } 
-    let text
-    let seqarray,seqstr
-    for(let n in sql_rows){
-        //console.log('sql_rows[n]',sql_rows[n])
-        text = ''
-        if(sql_rows[n].seq){
-           if(search_type === 'phage'){
-               text += '>'+sql_rows[n].search_id +'|'+sql_rows[n].genome_id+'|'+sql_rows[n].predictor
-               text += '|'+sql_rows[n].contig+'|'+sql_rows[n].start+'..'+sql_rows[n].end+'|length:'+sql_rows[n].seq_length+'bp\n'
-               
-           }else if(search_type === 'anno'){
-               text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
-               text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
-               
-           }
-           console.log('header text',text)
-           seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
-           seqarray = helpers.chunkSubstr(seqstr, 80)
-           text += seqarray.join('\n')+'\n'
-           
-           res.write(text)
-        }
+        
+        res.setHeader('Content-Disposition', 'attachment; filename='+fname);
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Transfer-Encoding', 'chunked');
+    // const Writer = new stream.Writable({
+    //           objectMode: true,
+    //           write(data, enc, cb) {
+    //             console.log(data);
+    //             cb();
+    //           },
+    //         });
+        pipeline(queryStream, objectToStringStream, res, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        console.log('streaming to download')
+        //conn.end();
+      
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
     }
-    console.log('fa done - returning')
+    return
+    
 }
 // function create_anno_fasta(sql_rows) {
 //     let text =''

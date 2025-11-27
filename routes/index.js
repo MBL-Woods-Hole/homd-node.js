@@ -109,7 +109,7 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
     console.log(req.body)
     //console.log('pidlist',req.body.pid_list)
     let anno = req.body.anno.toUpperCase()
-    let q
+    let q,conn
     if(anno =='BAKTA'){
         q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA`.orf WHERE core_ID in ("+req.body.pid_list+")"
     }else{
@@ -336,6 +336,7 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
    //console.log(hit_ids)
    let q = queries.get_phage_from_ids_noseqs(hit_ids)
    console.log(q)
+   let conn
    try {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
@@ -368,7 +369,7 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
    
    let q = "SELECT * from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
-    
+    let conn
     try {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);

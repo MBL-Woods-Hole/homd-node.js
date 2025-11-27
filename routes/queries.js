@@ -245,17 +245,11 @@ export const get_phage = (gid) => {   // always NCBI for taxon description
   return qSelectPhage
 };
 
-export const get_phage_from_ids = (search_id_list) => {   // always NCBI for taxon description
-  let q = "SELECT search_id,genome_id,contig,predictor,start,end,"
- //  bakta_core_product,"
-//     q += "IFNULL(bakta_core_note,'') as bcnote,"
-//     q += "bakta_EC,"
-//     q += "IFNULL(bakta_GO,'') as bakta_GO,"
-//     q += "bakta_COG,"
-    q += "accession,"
-    q += "description"
-    q += "seq_length,UNCOMPRESS(seq_compressed) as seq"
-    
+export const get_phage_fasta = (search_id_list) => {   // 
+  let q = "SELECT CONCAT('>',search_id,' | ',genome_id,' | ',contig,' | ',predictor,' | ',start,'..',end,"
+    q += "' | ',accession,"
+    q += "' | ',description) AS defline,"
+    q += "seq_length,UNCOMPRESS(seq_compressed) as sequence"
     q += " from phage_search where search_id in ("+search_id_list+')'
   return q
 };
