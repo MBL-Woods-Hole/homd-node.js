@@ -11,8 +11,8 @@ import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
 import * as helpers_genomes from './helpers/helpers_genomes.js';
 import * as queries from './queries.js';
-
-
+//import { getConnection } from '../config/database.js';
+//import pool from '../config/database.js';
 router.get('/download/:q', function download(req, res) {
   // renders the overall downlads page
   //console.log('q',req.params)
@@ -327,26 +327,22 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
 })
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all (req, res) {
+router.get('/dld_genome_table_all/:type/:filter', async function dld_genome_table_all (req, res) {
     
     let dt = helpers.get_today_obj()
     const type = req.params.type
     const filter = req.params.filter
     //console.log('in dld_genome_table_all/:type/:filter',type,filter)
-    let fileFilterText,tableTsv
+    let conn,fileFilterText,tableTsv
     const sendList = Object.values(C.genome_lookup)
     const listOfGids = sendList.map(item => item.gid)
     
     
     const q = queries.get_all_genomes()
+    try {
+        conn = await global.TDBConn();
+        const [mysqlrows] = await conn.execute(q);
 
-    TDBConn.query(q, (err, mysqlrows) => {
-        if(err){
-           console.log(err)
-           return
-        }
-        //console.log(mysqlrows)
-        //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
         if(filter === 'gtdb'){
             fileFilterText = 'HOMD.org Genome Data:: GTDB Taxonomy' + ' Date: ' + dt.today
             tableTsv = create_full_genome_table_gtdb(mysqlrows, fileFilterText)
@@ -367,7 +363,13 @@ router.get('/dld_genome_table_all/:type/:filter', function dld_genome_table_all 
         }
         res.send(tableTsv)
         res.end()
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 //
 router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
@@ -449,18 +451,16 @@ router.get('/dnld_pangenome',(req, res) => {
     res.download(fullpath)
 
 });
-router.post('/phage_sequences',(req, res) => {
+router.post('/phage_sequences', async (req, res) => {
     console.log(req.body)
     let q = queries.get_phage_from_ids(req.body.search_ids)
     let dt = helpers.get_today_obj()
-    TDBConn.query(q, (err, rows) => {
-  
-        if (err) {
-            console.log(err)
-            return
-        }
+    let conn
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
         //for(let n in rows){
-            console.log(rows)
+        //console.log(rows)
         //}
         let result_text = create_fasta(rows, 'phage')
         console.log(result_text)
@@ -470,10 +470,16 @@ router.post('/phage_sequences',(req, res) => {
         res.set({ 'Content-Disposition': 'attachment; filename="'+fname+'"' })
         res.send(result_text)
         res.end()
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
     
 })
-router.post('/anno_search_data',(req, res) => {
+router.post('/anno_search_data', async (req, res) => {
    // Download all Annotation Hits/ table and fasta
    //console.log('anno_search_data req body',req.body)
    let type = req.body.type  // browser, text or excel
@@ -527,25 +533,25 @@ router.post('/anno_search_data',(req, res) => {
         let anno_cap = anno.toUpperCase()
         if(format === 'fasta_aa'){
             
-            q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
-            q += " protein_id as pid,start,stop,length_aa as length, UNCOMPRESS(seq_compressed) as seq"
-            q += " from "+anno_cap+".orf"
-            q += " JOIN "+anno_cap+".faa using(protein_id)"
-            q += " WHERE protein_id in ("+unique_pidlst+")"
-           //  q = "SELECT"
-//             q += " CONCAT('"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n>', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
-//             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
-//             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
+//             q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
+//             q += " protein_id as pid,start,stop,length_aa as length, UNCOMPRESS(seq_compressed) as seq"
+//             q += " from "+anno_cap+".orf"
+//             q += " JOIN "+anno_cap+".faa using(protein_id)"
+//             q += " WHERE protein_id in ("+unique_pidlst+")"
+            q = "SELECT"
+            q += " CONCAT('"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n>', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
+            //q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         }else if(format === 'fasta_na'){
-            q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
-            q += " protein_id as pid,start,stop,length_na as length, UNCOMPRESS(seq_compressed) as seq"
-            q += " from "+anno_cap+".orf"
-            q += " JOIN "+anno_cap+".ffn using(protein_id)"
-            q += " WHERE protein_id in ("+unique_pidlst+")"
-//             q = "SELECT"
-//             q += " CONCAT('"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n>', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
-//             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
-//             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
+//             q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
+//             q += " protein_id as pid,start,stop,length_na as length, UNCOMPRESS(seq_compressed) as seq"
+//             q += " from "+anno_cap+".orf"
+//             q += " JOIN "+anno_cap+".ffn using(protein_id)"
+//             q += " WHERE protein_id in ("+unique_pidlst+")"
+            q = "SELECT"
+            q += " CONCAT('"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n>', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
+            //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         }else{
             // table  PROKKA and NCBI
             q = "SELECT genome_id as gid,accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
@@ -556,33 +562,36 @@ router.post('/anno_search_data',(req, res) => {
         
     }
     console.log(q)
-//     if(format.slice(0,5) === 'fasta'){
-//         // Set response headers for file download
-//         res.setHeader('Content-Type', 'text/plain');
-//         res.setHeader('Content-Disposition', 'attachment; filename="sequences.fasta"');
-// 
-//         console.log('in slice query')
-//         const query = TDBConn.query(q)
-//         query
-//         .stream() // Get the stream from the query
-//         .pipe(res) // Pipe directly to the HTTP response
-//         .on('finish', () => {
-//           console.log('Download complete.');
-//           TDBConn.end();
-//         })
-//         .on('error', (err) => {
-//           console.error('Streaming error:', err);
-//           res.status(500).send('Error downloading file');
-//           TDBConn.end();
-//         })
-//     }else{
+    if(format.slice(0,5) === 'fasta'){
+        // Set response headers for file download
+        res.setHeader('Content-Type', 'text/plain');
+        res.setHeader('Content-Disposition', 'attachment; filename="sequences.fasta"');
+        //let conn = await getConnection();
+        const queryStream = global.TDBConn
+            .query(q)
+            .stream(); 
+        console.log('in slice query')
+        //const query = conn.query(q)
+        queryStream // Get the stream from the query
+        .pipe(res) // Pipe directly to the HTTP response
+        .on('data', (row) => {
+          console.log('running.',row);
+          global.TDBConn.end();
+        })
+        .on('end', () => {
+          console.log('Download complete.');
+          global.TDBConn.end();
+        })
+        .on('error', (err) => {
+          console.error('Streaming error:', err);
+          res.status(500).send('Error downloading file');
+          global.TDBConn.end();
+        })
+    }else{
     
-    TDBConn.query(q, (err, rows) => {
-  
-        if (err) {
-            console.log(err)
-            return
-        }
+        try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
         for(let n in rows){
             //console.log(rows[n].genome_id)
         }
@@ -632,18 +641,24 @@ router.post('/anno_search_data',(req, res) => {
         }
         res.send(result_text)
         res.end()
-    })
-//    }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error fetching data');
+        } finally {
+            if (conn) conn.release(); // Release the connection back to the pool
+        }
+        return
+    }
     
 })
-router.post('/phage_search_data',(req, res) => {
+router.post('/phage_search_data', async (req, res) => {
     // Download all Phage Hits
     //console.log('req body',req.body)
     let type = req.body.type  // browser, text or excel
     let format = req.body.format  // csv or fasta
     let search_text = req.body.search_text
     let id_list = req.body.ids
-    let fname,result_text,ext
+    let conn,fname,result_text,ext
     
     let dt = helpers.get_today_obj()
     let head_text_array = ['Fasta_ID','Genome_ID','Contig','Predictor','seq_length',
@@ -653,13 +668,10 @@ router.post('/phage_search_data',(req, res) => {
     q += "accession,description,"
     q += "seq_length,UNCOMPRESS(seq_compressed) as seq"
     q += " from phage_search where search_id in ("+id_list+')'
-  
-    TDBConn.query(q, (err, rows) => {
-  
-        if (err) {
-            console.log(err)
-            return
-        }
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+    
         for(let n in rows){
             //console.log(rows[n].genome_id)
         }
@@ -693,28 +705,30 @@ router.post('/phage_search_data',(req, res) => {
         }
         res.send(result_text)
         res.end()
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 
 });
-router.get('/dld_phage_table/:type', function dld_phage_table (req, res) {
+router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
     let dt = helpers.get_today_obj()
     const type = req.params.type
     
     
-    let fileFilterText,tableTsv
+    let conn,fileFilterText,tableTsv
     //const sendList = Object.values(C.genome_lookup)
     //const listOfGids = sendList.map(item => item.gid)
     
     
     const q = queries.get_all_phage_for_download()
+    try {
+        conn = await global.TDBConn();
+        const [mysqlrows] = await conn.execute(q);
 
-    TDBConn.query(q, (err, mysqlrows) => {
-        if(err){
-           console.log(err)
-           return
-        }
-        //console.log(mysqlrows)
-        //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
         
         fileFilterText = 'HOMD.org Phage Data:: All HOMD Data;' + ' Date: ' + dt.today
         tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
@@ -731,7 +745,13 @@ router.get('/dld_phage_table/:type', function dld_phage_table (req, res) {
         }
         res.send(tableTsv)
         res.end()
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 router.get('/dld_crispr_table/:type', function dld_crispr_table (req, res) {
     let dt = helpers.get_today_obj()

@@ -270,102 +270,94 @@ router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
   res.send('Okay')
 })
 //
-router.get('/genome_description', function Description (req, res) {
-  //console.log('in genomedescription -get')
+router.get('/genome_description', async function Description (req, res) {
+    //console.log('in genomedescription -get')
   
-  //let myurl = url.parse(req.url, true);
-  if(req.query.gid && req.session.gtable_filter){
+    //let myurl = url.parse(req.url, true);
+    if(req.query.gid && req.session.gtable_filter){
       req.session.gtable_filter.gid = req.query.gid
-  }
-  const gid = req.query.gid
-  let data
-  // if(Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)){
-//     data = C.genome_lookup[gid]
-//   }else{
-//     data = {}
-//   }
-  //console.log('data',data)
-  const q_genome = queries.get_genome(gid)
-  helpers.print('In Genome_Descriptin1: '+q_genome)
-  TDBConn.query(q_genome, (err, rows) => {
-     if (err) {
-         console.log(err)
-     }else{
-         if(rows.length ==0){
-             return
-         }
-         //kludge for pangenomes
-         let pangenomes = []
-         if(rows.length >1){  // means there are more than one pangenome
-             for(let n in rows){
-                pangenomes.push(rows[n].pangenome) 
-             }
-         }else{
-             pangenomes.push(rows[0].pangenome)
-         }
-         data = rows[0]
-         delete data.pangenome
-         data.pangenomes = pangenomes
-         helpers.print(data)
-         data.gid = gid
-         data.otid = C.genome_lookup[gid].otid
-         
-         data.genus =C.taxon_lookup[data.otid].genus
-         data.species =C.taxon_lookup[data.otid].species
-         data.combined_size = helpers.format_long_numbers(data.combined_size)
-         
-         const q_contig = queries.get_contigs(gid)
-         let contigs = []
-         // try get contigs from file:
-         // ncbi only
-         //console.log('q_contig',q_contig)
-         helpers.print('In Genome_Descriptin2: '+q_contig)
-         TDBConn.query(q_contig, (err, rows) => {
-            if (err) {
-              console.log(err)
-            }else{
-              //console.log('contigs',rows)
-              for(let r in rows){
-                 contigs.push({contig: rows[r].accession, gc: rows[r].GC})
-              }
-            }
+    }
+    const gid = req.query.gid
+    let data,conn
 
-            // Crisper-cas
-            // need to determine is CC data available for this genome(gid)
-            // if dir exists  homdData-Crisper.json
-            let fpath = path.join(ENV.PATH_TO_DATA,'homdData-Crispr.json')
-            //console.log(fpath)
-            let crispr = 0
-            let crispr_data = JSON.parse(fs.readFileSync(fpath))
-            if(gid in crispr_data){
-                 crispr = crispr_data[gid]
-            }
-            let n = data.GTDB_taxonomy.lastIndexOf(';')
-            data.GTDB_taxonomy = data.GTDB_taxonomy.substring(0, n+1) + "<br>" + data.GTDB_taxonomy.substring(n+1) 
-            //console.log('GTDB_taxonomy',data.GTDB_taxonomy)
-            let checkm_status_obj = helpers_genomes.get_checkm_status(data)
-            
-            //console.log('checkM status',checkm_status_obj)
-            res.render('pages/genome/genomedesc', {
-               title: 'HOMD :: Genome',
-               pgname: 'genome/description', // for AboutThisPage 
-               config: JSON.stringify(ENV),
-               // taxonid: otid,
-               data1: JSON.stringify(data),
-               checkm: JSON.stringify(checkm_status_obj),
-               gid: gid,
-               contigs: JSON.stringify(contigs.sort()),
-               crispr: crispr,
-               // data2: JSON.stringify(data2),
-               // data3: JSON.stringify(data3),
-               // data4: JSON.stringify(data4),
-               ver_info: JSON.stringify(C.version_information),
-            })
-       })  // end TDBConn.query(q_contig
-     } // end else
-  })// end TDBConn.query(q_genome)
+    //console.log('data',data)
+    const q_genome = queries.get_genome(gid)
+    const q_contig = queries.get_contigs(gid)
+    helpers.print('In Genome_Descriptin1: '+q_genome)
+    
+    try {
+        conn = await global.TDBConn();
+        const [rows1] = await conn.execute(q_genome);
+        if(rows1.length ==0){
+             return
+        }
+        //kludge for pangenomes
+        let pangenomes = []
+        if(rows1.length >1){  // means there are more than one pangenome
+         for(let n in rows1){
+            pangenomes.push(rows1[n].pangenome) 
+         }
+        }else{
+         pangenomes.push(rows1[0].pangenome)
+        }
+        data = rows1[0]
+        delete data.pangenome
+        data.pangenomes = pangenomes
+        helpers.print(data)
+        data.gid = gid
+        data.otid = C.genome_lookup[gid].otid
+        
+        data.genus =C.taxon_lookup[data.otid].genus
+        data.species =C.taxon_lookup[data.otid].species
+        data.combined_size = helpers.format_long_numbers(data.combined_size)
+        let contigs = []
+        // try get contigs from file:
+        // ncbi only
+        //console.log('q_contig',q_contig)
+        helpers.print('In Genome_Descriptin2: '+q_contig)
+        const [rows2] = await conn.execute(q_contig);
+        for(let r in rows2){
+            contigs.push({contig: rows2[r].accession, gc: rows2[r].GC})
+        }
+        let fpath = path.join(ENV.PATH_TO_DATA,'homdData-Crispr.json')
+        //console.log(fpath)
+        let crispr = 0
+        let crispr_data = JSON.parse(fs.readFileSync(fpath))
+        if(gid in crispr_data){
+             crispr = crispr_data[gid]
+        }
+        let n = data.GTDB_taxonomy.lastIndexOf(';')
+        data.GTDB_taxonomy = data.GTDB_taxonomy.substring(0, n+1) + "<br>" + data.GTDB_taxonomy.substring(n+1) 
+        //console.log('GTDB_taxonomy',data.GTDB_taxonomy)
+        let checkm_status_obj = helpers_genomes.get_checkm_status(data)
+        
+        //console.log('checkM status',checkm_status_obj)
+        res.render('pages/genome/genomedesc', {
+           title: 'HOMD :: Genome',
+           pgname: 'genome/description', // for AboutThisPage 
+           config: JSON.stringify(ENV),
+           // taxonid: otid,
+           data1: JSON.stringify(data),
+           checkm: JSON.stringify(checkm_status_obj),
+           gid: gid,
+           contigs: JSON.stringify(contigs.sort()),
+           crispr: crispr,
+           // data2: JSON.stringify(data2),
+           // data3: JSON.stringify(data3),
+           // data4: JSON.stringify(data4),
+           ver_info: JSON.stringify(C.version_information),
+        })
+        //res.send('okay')
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
+
 })
-router.post('/get_contig_seq', function get_contig_seq (req, res) {
+router.post('/get_contig_seq', async function get_contig_seq (req, res) {
     helpers.print(req.body)
     const gid = req.body.gid.trim()
     const mid = req.body.mid.trim()
@@ -373,13 +365,10 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
     let q = queries.get_contig(gid,contig)
     // test genome:one contig only::GCA_000019425.1 
     console.log('CONTIG query',q)
-    let html='',length = 0
-    TDBConn.query(q, (err, rows) => {
-        if (err) {
-          console.log(err)
-          return
-        }
-        //let seq = rows[0].seq.toString()
+    let html='',length = 0,conn
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
         if(rows.length === 0){
            html += "No sequence found in database"
         }else{
@@ -394,23 +383,28 @@ router.post('/get_contig_seq', function get_contig_seq (req, res) {
         }
         //console.log('html:',html.substring(0,8))
         res.send(JSON.stringify({html:html,length:length}))
-     })
-
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 
 
-router.post('/get_AA_NA_seq', function get_AA_NA_SeqPost (req, res) {
-  console.log('in get_AA_NA_seq -post')
-  //console.log(req.body)
-  //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
-  const pid = req.body.pid
-  //const db = req.body.db.toUpperCase()
-  const db_pts = req.body.db.split('_')
-  
-  let db,q
-  let gid = req.body.gid
-  
-  if(req.body.type === 'aa'){   // NCBI
+router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
+    console.log('in get_AA_NA_seq -post')
+    //console.log(req.body)
+    //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
+    const pid = req.body.pid
+    //const db = req.body.db.toUpperCase()
+    const db_pts = req.body.db.split('_')
+    
+    let db,q,conn
+    let gid = req.body.gid
+    
+    if(req.body.type === 'aa'){   // NCBI
       if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
           db = "`NCBI`.`faa`"
           q = queries.get_AA_NA(db, gid, pid)
@@ -422,7 +416,7 @@ router.post('/get_AA_NA_seq', function get_AA_NA_SeqPost (req, res) {
           q = queries.get_AA_NA(db, gid, pid)
        }
      
-  }else{   //req.body.type === 'na':   // NCBI  na
+    }else{   //req.body.type === 'na':   // NCBI  na
       if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
           db = "`NCBI`.`ffn`"
           q = queries.get_AA_NA(db, gid, pid)
@@ -430,36 +424,35 @@ router.post('/get_AA_NA_seq', function get_AA_NA_SeqPost (req, res) {
           db = "`PROKKA`.`ffn`"
           q = queries.get_AA_NA(db, gid, pid)
        }
-  }
-  
-  
-  helpers.print(q)
-  TDBConn.query(q, (err, rows) => {
- 
-    if (err) {
-        console.log(err)
-        return
     }
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+        //console.log('rows',rows)
+        let html = ''
+        let length = 0
+        if(rows.length === 0){
+            html += "No sequence found in database"
+        }else{
+           length = rows[0].seq.length
+           const seqstr = (rows[0].seq).toString()
+           //console.log('seqstr',seqstr)
+           //console.log(seqstr.length)
+           const arr = helpers.chunkSubstr(seqstr, 100)
+           html += arr.join('<br>')
+           //html = seqstr
+        }
+        
+        res.send(JSON.stringify({html:html,length:length}))
 
-    //console.log('rows',rows)
-    let html = ''
-    let length = 0
-    if(rows.length === 0){
-        html += "No sequence found in database"
-    }else{
-       length = rows[0].seq.length
-       const seqstr = (rows[0].seq).toString()
-       //console.log('seqstr',seqstr)
-       //console.log(seqstr.length)
-       const arr = helpers.chunkSubstr(seqstr, 100)
-       html += arr.join('<br>')
-    //html = seqstr
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
     }
-    
-    res.send(JSON.stringify({html:html,length:length}))
-
-
-  })
+    return
   
 })
 function render_explorer(req, res, args){
@@ -950,7 +943,7 @@ router.get('/reset_atable', function annot_table_reset(req, res) {
    res.redirect('explorer?gid='+req.query.gid+'&anno='+req.query.anno);
 });
 
-router.post('/explorer', function explorer_post (req, res) {
+router.post('/explorer', async function explorer_post (req, res) {
     //console.log('IN explorer_post')
     //console.log(req.body)
     let pidList
@@ -977,7 +970,7 @@ router.post('/explorer', function explorer_post (req, res) {
       return { gid: el.gid, org: el.organism+' '+el.strain }
     })
     
-    let pageData = {}
+    let conn,pageData = {}
     pageData.page = req.query.page
     if (!req.query.page) {
       pageData.page = 1
@@ -986,22 +979,19 @@ router.post('/explorer', function explorer_post (req, res) {
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
     console.log('get_annotation_query-post',q)
-    TDBConn.query(q, (err, rows) => {
-    if (err) {
-      
-      args = {fltr:{},filter_on: 'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
-      render_explorer(req, res, args)
-      return
-    } else {
-      if (rows.length === 0) {
-        console.log('no rows found')
-      }
-      let filtered_rows = apply_annot_table_filter(rows, atable_filter)
-      
-      pageData.trecords = filtered_rows.length
-      if(filtered_rows.length < C.PAGER_ROWS){
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+
+        if (rows.length === 0) {
+            console.log('no rows found')
+        }
+        let filtered_rows = apply_annot_table_filter(rows, atable_filter)
+        
+        pageData.trecords = filtered_rows.length
+        if(filtered_rows.length < C.PAGER_ROWS){
          pidList = filtered_rows
-      }else{
+        }else{
           if (pageData.page) {
             const trows = filtered_rows.length
             // console.log('trows',trows)
@@ -1020,9 +1010,9 @@ router.post('/explorer', function explorer_post (req, res) {
             }
             //console.log('start count', pageData.start_count)
           }
-      }
+        }
       //console.log('pidlist',pidList)
-      const args = {
+        const args = {
             gid: gid,
             gc:             gc,
             otid:           otid,
@@ -1034,63 +1024,68 @@ router.post('/explorer', function explorer_post (req, res) {
             pidList:        pidList,
             fltr:  atable_filter,
             filter_on: get_filter_on(atable_filter,'annot')
-      }
+        }
             
-      render_explorer(req, res, args)
+        render_explorer(req, res, args)
+    
+    } catch (error) {
+        console.error(error);
+        args = {fltr:{},filter_on: 'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
+        render_explorer(req, res, args)
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
     }
-  })
     
 })
-router.get('/explorer', function explorer_get (req, res) {
-  //console.log('in explorerGET')
-  //console.log(C.annotation_lookup)
-  // let myurl = url.parse(req.url, true)
-  helpers.accesslog(req, res)
-
-  const gid = req.query.gid
-  if(gid && req.session.gtable_filter){
+router.get('/explorer', async function explorer_get (req, res) {
+    //console.log('in explorerGET')
+    //console.log(C.annotation_lookup)
+    // let myurl = url.parse(req.url, true)
+    helpers.accesslog(req, res)
+    
+    const gid = req.query.gid
+    if(gid && req.session.gtable_filter){
       //console.log('got otid for ttable')
       req.session.gtable_filter.gid = gid
-  }
-  let otid = 0,gc = 0
-  let anno = req.query.anno || 'ncbi'
+    }
+    let otid = 0,gc = 0
+    let anno = req.query.anno || 'ncbi'
+    
+    
+    helpers.print(['gid:', gid,'anno:',anno])
   
-  
-  helpers.print(['gid:', gid,'anno:',anno])
-  
-  // anno === 
-  let atable_filter
-  let annoInfoObj = {}
-  let pageData = {}
-  pageData.page = req.query.page
-  if (!req.query.page) {
+    // anno === 
+    let atable_filter
+    let annoInfoObj = {}
+    let pageData = {}
+    pageData.page = req.query.page
+    if (!req.query.page) {
     pageData.page = 1
-  }
-  let organism = 'Unknown', pidList
-  //let dbChoices = []
-
- 
-  let args = {}
-  
-  const glist = Object.values(C.genome_lookup)
-  
-  glist.sort((a, b) =>{
+    }
+    let organism = 'Unknown', pidList
+    //let dbChoices = []
+    
+    
+    let conn,args = {}
+    
+    const glist = Object.values(C.genome_lookup)
+    
+    glist.sort((a, b) =>{
       return helpers.compareStrings_alpha(a.organism, b.organism)
     })
   // filter out empties then map to create list of sorted strings
-  const allAnnosObj = glist.filter(item => item.organism !== '')
+    const allAnnosObj = glist.filter(item => item.organism !== '')
     .map((el) => {
-      
-      //return { gid: el.gid, org: el.organism }
-      return { gid: el.gid, org: el.organism+' '+el.strain }
+        //return { gid: el.gid, org: el.organism }
+        return { gid: el.gid, org: el.organism+' '+el.strain }
     })
   
-  if (!gid || gid.toString() === '0' || !C.genome_lookup.hasOwnProperty(gid)) {
-   
+    if (!gid || gid.toString() === '0' || !C.genome_lookup.hasOwnProperty(gid)) {
+    
     args = {fltr:{},filter_on:'off',gid:0,gc:gc,otid:0,organism:'',allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
     render_explorer(req, res, args)
     return
-  }else {
+    }else {
       if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid)) {
         //organism = C.annotation_lookup[gid].prokka.organism
         organism = C.genome_lookup[gid].organism
@@ -1101,64 +1096,59 @@ router.get('/explorer', function explorer_get (req, res) {
         render_explorer(req, res, args)
         return
       }
-  }
+    }
   
   
-  if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
+    if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
         otid = C.genome_lookup[gid].otid
         //gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
         gc = C.genome_lookup[gid].gc
-  }
-  if(gid && !anno) {
+    }
+    if(gid && !anno) {
       //console.log('no anno2')
       args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:0,organism:organism,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
       render_explorer(req, res, args)
       return
-  }
+    }
  
   
-  // NOW ANNOTATIONS
-  //console.log('C.annotation_lookup',C.annotation_lookup)
-  // localhost http://0.0.0.0:3001/genome/explorer?gid=SEQF4098&anno=ncbi
-  if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
+    // NOW ANNOTATIONS
+    //console.log('C.annotation_lookup',C.annotation_lookup)
+    // localhost http://0.0.0.0:3001/genome/explorer?gid=SEQF4098&anno=ncbi
+    if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
     annoInfoObj = C.annotation_lookup[gid][anno]
     annoInfoObj.bases = C.genome_lookup[gid].combined_size
     annoInfoObj.contigs = C.genome_lookup[gid].contigs
-  } else {
+    } else {
     
-
+    
     args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:{},pidList:[]}
     render_explorer(req, res, args)
     return
-  }
+    }
 
-  //OLD DB
-  const q = queries.get_annotation_query(gid, anno)
-  console.log('get_annotation_query-GET',q)
-  //NEW DB
+    //OLD DB
+    const q = queries.get_annotation_query(gid, anno)
+    console.log('get_annotation_query-GET',q)
+    //NEW DB
   
-  if(req.session.atable_filter){
+    if(req.session.atable_filter){
         atable_filter = req.session.atable_filter
     }else{
         atable_filter = helpers_genomes.get_default_annot_filter()
         req.session.atable_filter = atable_filter
     }
-  helpers.print('explorer::anno query: '+q)
-  // local host:  explorer?gid=SEQF4098.1&anno=ncbi
-  TDBConn.query(q, (err, rows) => {
-    if (err) {
-      
-
-      args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
-      render_explorer(req, res, args)
-      return
-    }
-      if (rows.length === 0) {
+    helpers.print('explorer::anno query: '+q)
+    // local host:  explorer?gid=SEQF4098.1&anno=ncbi
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+        if (rows.length === 0) {
         console.log('no rows found')
-      }
-      let filtered_rows = apply_annot_table_filter(rows, atable_filter)
-      pageData.trecords = rows.length
-      if (pageData.page) {
+        }
+        let filtered_rows = apply_annot_table_filter(rows, atable_filter)
+        pageData.trecords = rows.length
+        if (pageData.page) {
         const trows = rows.length
         // console.log('trows',trows)
         pageData.row_per_page = C.PAGER_ROWS
@@ -1175,19 +1165,19 @@ router.get('/explorer', function explorer_get (req, res) {
           pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
         }
         //console.log('start count', pageData.start_count)
-      }
-      if(req.session.atable_filter){
+        }
+        if(req.session.atable_filter){
         //console.log('filetr session')
         atable_filter = req.session.atable_filter
-      }else{
+        }else{
         //console.log('filetr from default')
         atable_filter = helpers_genomes.get_default_annot_filter()
         req.session.atable_filter = atable_filter
-      }
-      //console.log('atable_filter',atable_filter)
-      //console.log('default',helpers_genomes.get_default_annot_filter())
-      //console.log('annoInfoObj',annoInfoObj)
-      args = {
+        }
+        //console.log('atable_filter',atable_filter)
+        //console.log('default',helpers_genomes.get_default_annot_filter())
+        //console.log('annoInfoObj',annoInfoObj)
+        args = {
             gid: gid,
             
             gc:             gc,
@@ -1202,9 +1192,16 @@ router.get('/explorer', function explorer_get (req, res) {
             filter_on: get_filter_on(atable_filter,'annot')
             }
             
-      render_explorer(req, res, args)
+        render_explorer(req, res, args)
 
-  })
+    } catch (error) {
+        console.error(error);
+        args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
+        render_explorer(req, res, args)
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 
 //
@@ -1756,15 +1753,19 @@ function get_blast_db_info(gid){
     })
 }
 //
-router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
-   let q = queries.get_all_pangenomes_query()
-   console.log(q)
-   TDBConn.query(q, (err, rows) => {
-       if(!rows){
+router.get('/anvio_pangenomes', async function anvio_pangenomes(req, res){
+    let q = queries.get_all_pangenomes_query()
+    
+    let conn
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+   
+        if(!rows){
           rows = []
-       }
-       
-       res.render('pages/genome/anvio_selection', {
+        }
+        
+        res.render('pages/genome/anvio_selection', {
         title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(ENV),
@@ -1775,15 +1776,21 @@ router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
         files:[]
         
         })
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 //
-router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
+router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
     console.log('in POST anvio selection')
     let search_term = req.body.val
     let q = queries.get_all_pangenomes_query()
     //let send_rows = []
-    let html = ""
+    let conn,html = ""
     let html_rows = ""
     let html_head = "<table border='1'>"
     let counter = 0
@@ -1794,7 +1801,9 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
     html_head += "<td><strong>Image</strong></td>"
     html_head += "<td><strong>Description</strong></td>"
     html_head += "</tr>"
-    TDBConn.query(q, (err, rows) => {
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
         for(let i in rows){
             //console.log(rows[i])
             if(rows[i].pangenome_name.includes(search_term)){
@@ -1818,7 +1827,13 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
         
 
     
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 
 
@@ -1855,9 +1870,9 @@ router.get('/anvio', (req, res) => {
         
         })
 });
-router.get('/pangenome_image', function pangenome_image(req, res) {
+router.get('/pangenome_image', async function pangenome_image(req, res) {
     console.log(req.query)
-    let otid,pg,ext,filepath
+    let conn,otid,pg,ext,filepath
     // if otid is present get filename from db
     if(req.query.otid){
         //otid = req.query.otid
@@ -1865,11 +1880,11 @@ router.get('/pangenome_image', function pangenome_image(req, res) {
         let q = "SELECT filename from pangenome_files WHERE otid='"+req.query.otid+"'"
         console.log(q)
         //console.log(q)
-        TDBConn.query(q, (err, rows) => {
-           if (err) {
-              console.log(err)
-              return
-            }
+        try {
+            conn = await global.TDBConn();
+            const [rows] = await conn.execute(q);
+       
+           
             //console.log(rows)
             if(rows.length === 0){
                res.send('File not found');
@@ -1877,7 +1892,13 @@ router.get('/pangenome_image', function pangenome_image(req, res) {
               filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdf/HMT_"+req.query.otid+"/"+rows[0].filename
               res.sendFile(filepath);
             }
-        })
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error fetching data');
+        } finally {
+            if (conn) conn.release(); // Release the connection back to the pool
+        }
+    return
     }else{
        // get directly from files system using ext and pg name
        ext = req.query.ext
@@ -1898,19 +1919,16 @@ router.get('/oralgen', function oralgen(req, res) {
   })
 })
 //////////////////
-router.get('/peptide_table', function peptide_table_get(req, res) {
+router.get('/peptide_table', async function peptide_table_get(req, res) {
     
     const q = queries.get_peptide()
-    let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
-    //console.log(q)
-    TDBConn.query(q, (err, rows) => {
-       if (err) {
-          console.log("protein_peptide select error-GET",err)
-          return
-       }
-       //console.log('1')
-       let send_list = []
-       for(let r in rows){
+    let conn,pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+    
+        let send_list = []
+        for(let r in rows){
            pid = rows[r].protein_accession
            prod = rows[r].product
            pep = rows[r].peptide
@@ -1921,7 +1939,7 @@ router.get('/peptide_table', function peptide_table_get(req, res) {
            mol = rows[r].molecule
            jb_link = rows[r].jb_link
            study_id = rows[r].study_id
-
+        
          
            //if(C.genome_lookup.hasOwnProperty(gid)){
              //genome = C.genome_lookup[gid]
@@ -1932,9 +1950,9 @@ router.get('/peptide_table', function peptide_table_get(req, res) {
              //console.log(C.genome_lookup[gid])
              send_list.push(temp)
            //}
-       }
-       //console.log(send_list[0])
-       res.render('pages/genome/protein_peptide', {
+        }
+        //console.log(send_list[0])
+        res.render('pages/genome/protein_peptide', {
           title: 'HOMD :: Human Oral Microbiome Database',
           pgname: '', // for AbountThisPage
           pgtitle: 'Protein Peptide Table',
@@ -1944,24 +1962,30 @@ router.get('/peptide_table', function peptide_table_get(req, res) {
           data: JSON.stringify(send_list),
           row_count:send_list.length,
           search_text:''
-       })
-    })
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
+
 })
-router.post('/peptide_table', function peptide_table_post(req, res) {
+router.post('/peptide_table', async function peptide_table_post(req, res) {
     console.log('req.body',req.body)
     let search_text = req.body.txt_srch.toLowerCase()
     let big_p_list //= Object.values(C.genome_lookup);
     const q = queries.get_peptide()
     
-    let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
+    let conn,pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
     console.log(q)
-    TDBConn.query(q, (err, rows) => {
-       if (err) {
-          console.log("protein_peptide select error-POST",err)
-          return
-       }
-       let full_send_list = []
-       for(let r in rows){
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+    
+        let full_send_list = []
+        for(let r in rows){
            pid = rows[r].protein_accession
            prod = rows[r].product
            pep = rows[r].peptide
@@ -1974,19 +1998,11 @@ router.post('/peptide_table', function peptide_table_post(req, res) {
            mol = rows[r].molecule
            jb_link = rows[r].jb_link
            study_id = rows[r].study_id
-           //console.log('jblink',jb_link)
-
-           //if(C.genome_lookup.hasOwnProperty(gid)){
-        //genome = C.genome_lookup[gid]
-             //console.log('genome',genome) 
-
-        //temp = {pid:pid,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end,loc:loc,hlite:highlight}
-          //temp = {pid:pid,study_id:study_id,product:prod,mol:mol,gid:gid,organism:org,otid:otid,hmt:hmt,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,peptide_id:pepid,jb_link:jb_link}
-           temp = {study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,peptide_id:pepid,peptide:pep,jb_link:jb_link}
+            temp = {study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,peptide_id:pepid,peptide:pep,jb_link:jb_link}
              
              full_send_list.push(temp)
            //}
-       }
+        }
        // will search all === PID,HMT,Organism,Peptide,Product
        let send_list = full_send_list
        if(search_text){
@@ -1999,12 +2015,6 @@ router.post('/peptide_table', function peptide_table_post(req, res) {
                   item.hmt.toLowerCase().includes(search_text)
            })
        }
-       // let send_list = full_send_list.filter(
-//            item => item.organism.toLowerCase().includes(search_text) ||
-//            item => item.product.toLowerCase().includes(search_text) ||
-//            item => item.peptide.toLowerCase().includes(search_text)
-//        )
-       
        res.render('pages/genome/protein_peptide', {
           title: 'HOMD :: Human Oral Microbiome Database',
           pgname: '', // for AbountThisPage
@@ -2016,30 +2026,33 @@ router.post('/peptide_table', function peptide_table_post(req, res) {
           row_count:send_list.length,
           search_text:req.body.txt_srch
        })
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
     
     
 })
 //
 //
-router.get('/peptide_table2', function peptide_table2_get(req, res) {
+router.get('/peptide_table2', async function peptide_table2_get(req, res) {
  
     
     const q = queries.get_peptide2()
 
-    let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
+    let conn,gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
-    TDBConn.query(q, (err, rows) => {
-       if (err) {
-          console.log("protein_peptide select error-GET",err)
-          return
-       }
-       //console.log('1')
-       let full_send_list = []
-       let org_list = []
-       study_collector = {}
-       row_collector= {}
-       for(let r in rows){
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+
+        let full_send_list = []
+        let org_list = []
+        study_collector = {}
+        row_collector= {}
+        for(let r in rows){
            
            gid = rows[r].seq_id
            
@@ -2061,14 +2074,7 @@ router.get('/peptide_table2', function peptide_table2_get(req, res) {
            temp = {gid:gid, otid:row.otid, org:row.organism, prot_count:row.protein_count,pep_count:row.peptide_count,studies:studies}
            
            full_send_list.push(temp)
-           // if(C.genome_lookup.hasOwnProperty(gid)){
-//              genome = C.genome_lookup[gid]
-//              console.log('genome',genome)
-//              temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end}
-//              console.log('temp',temp)
-//              //console.log(C.genome_lookup[gid])
-//              send_list.push(temp)
-//            }
+           
        }
        let send_list = full_send_list
        
@@ -2084,19 +2090,24 @@ router.get('/peptide_table2', function peptide_table2_get(req, res) {
           search_text:''
           
        })
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
-router.post('/peptide_table2', function peptide_table2_post(req, res) {
+router.post('/peptide_table2', async function peptide_table2_post(req, res) {
     const q = queries.get_peptide2()
 
     let search_text = req.body.txt_srch.toLowerCase()
-    let gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
+    let conn,gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
-    TDBConn.query(q, (err, rows) => {
-       if (err) {
-          console.log("protein_peptide select error-GET",err)
-          return
-       }
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+    
        //console.log('1')
        let full_send_list = []
        let org_list = []
@@ -2155,9 +2166,15 @@ router.post('/peptide_table2', function peptide_table2_post(req, res) {
           search_text:req.body.txt_srch
           
        })
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
-router.get('/peptide_table3', function protein_peptide(req, res) {
+router.get('/peptide_table3', async function protein_peptide(req, res) {
     console.log(req.query)
     let gid = req.query.gid
     
@@ -2165,15 +2182,13 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
     let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study,peptide_id,jb_link
     let locstart,locstop,size,seqacc,loc,highlight
     console.log(q)
-    TDBConn.query(q, (err, rows) => {
-       if (err) {
-          console.log("protein_peptide select error-GET",err)
-          return
-       }
-       //console.log('1')
-       let send_list = []
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+    
+        let send_list = []
        
-       for(let r in rows){
+        for(let r in rows){
            temp = {}
            study = rows[r].study_id
            study_name = rows[r].study_name
@@ -2191,10 +2206,7 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
            /////////////////////////////////////////
            
          //temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop,loc:loc,hlite:highlight}
-         temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, jb_link:jb_link,peptide_id:peptide_id}
-//       
-//                
-//            }
+        temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, jb_link:jb_link,peptide_id:peptide_id}
            
         send_list.push(temp)
            
@@ -2217,7 +2229,13 @@ router.get('/peptide_table3', function protein_peptide(req, res) {
           otid:otid
           
        })
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 router.get('/amr_table', function amr(req, res) {
     let gid
@@ -2255,7 +2273,7 @@ router.get('/amr_table', function amr(req, res) {
 })
 //
 //
-router.post('/amr_ajax', function phage_ajax(req, res){
+router.post('/amr_ajax', async function phage_ajax(req, res){
     console.log('in POST amr_ajax')
     let gid = req.body.gid
     let q = 'SELECT homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
@@ -2277,13 +2295,11 @@ router.post('/amr_ajax', function phage_ajax(req, res){
     html_rows += " <th>Subclass</th><th>Method</th><th>Target Length</th><th>Ref Seq Length</th><th>Ref Coverage %</th><th>Ref Identity %</th>"
     html_rows += " <th>Alignment Length</th><th>Closest Ref Acc</th><th>Closest Ref name</th><th>HMM Acc</th><th>HMM Description</th>"
     html_rows += "</tr>"
-    
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
 
-    TDBConn.query(q, (err, rows) => {
-        if(rows.length ===0){
-          res.send("No Data Found: localhost.")
-          return
-        }
+
         for(let i in rows){
             //console.log(rows[i])
             
@@ -2346,16 +2362,17 @@ router.post('/amr_ajax', function phage_ajax(req, res){
                 html_rows += "</tr>"
                 //counter += 1
         }
-            
-        
         
         html_rows += "</table></div>"
         res.send(html_rows)
         //console.log(send_rows,send_rows.length)
-        
-
-    
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
     
 })
 router.get('/crispr_table', function crispr(req, res) {
@@ -2409,7 +2426,7 @@ function list_clean(item){
     //JSON.parse(item.replace('[','').replace(']','') 
     return JSON.parse(item.replace(/'/g, '"'))
 }
-router.post('/crispr_ajax', function crispr_ajax(req, res) {
+router.post('/crispr_ajax', async function crispr_ajax(req, res) {
     // page -2
     //console.log(req.query)
     let gid = req.body.gid
@@ -2417,11 +2434,10 @@ router.post('/crispr_ajax', function crispr_ajax(req, res) {
     //console.log('crispr_ajax',gid)
     const q = queries.get_crispr_cas_data(gid)
     console.log(q)
-    TDBConn.query(q, (err, rows) => {
-        if(err){
-           console.log(err)
-           return
-        }
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+
         //console.log('rows',rows)
         let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
         let org = C.genome_lookup[gid].organism
@@ -2480,9 +2496,14 @@ router.post('/crispr_ajax', function crispr_ajax(req, res) {
         }
         html_rows += "</table></div>"
         res.send(html_rows)
-        
-    
-    })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 
 export default router;

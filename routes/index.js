@@ -104,7 +104,7 @@ function execPromise(cmd, args, max) {
     });
 }
 
-router.post('/advanced_anno_orf_search', function advanced_anno_orf_searchPOST(req, res) {
+router.post('/advanced_anno_orf_search', async function advanced_anno_orf_searchPOST(req, res) {
     console.log('in advanced_anno_orf_search RESULTS')
     console.log(req.body)
     //console.log('pidlist',req.body.pid_list)
@@ -116,16 +116,19 @@ router.post('/advanced_anno_orf_search', function advanced_anno_orf_searchPOST(r
         q = "SELECT accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf WHERE protein_id in ("+req.body.pid_list+")"
     }
     console.log(q)
-    TDBConn.query(q, (err, rows) => {
-        if (err) {
-            console.log(err)
-            res.send(err)
-            return
-        }
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
         //console.log('rows',rows)
         res.send(JSON.stringify(rows))
         return
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
     
     //res.send('OKAY')
 })
@@ -281,18 +284,17 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
 
 
 })
-router.post('/open_phage_sequence', function submit_phage_data(req, res) {
+router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
    console.log('in open_phage_sequence')
    console.log(req.body)
+   let conn
    let html = '',contig,length,gid,predictor,species='',strain='',otid
    let q = "SELECT genome_id,contig,predictor,seq_length,UNCOMPRESS(seq_compressed) as seq from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
-    TDBConn.query(q, (err, rows) => {
-        if (err) {
-            console.log(err)
-            res.send(err)
-            return
-        }
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+    
         //console.log('rows',rows)
         if(rows.length === 0){
             html += "No sequence found in database"
@@ -312,10 +314,16 @@ router.post('/open_phage_sequence', function submit_phage_data(req, res) {
         }
         res.send(JSON.stringify({html:html,length:length,gid:gid,contig:contig,org:species+' ('+strain+')',predictor:predictor}))
         return
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 //
-router.post('/show_all_phage_hits', function show_all_phage_hits(req, res) {
+router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res) {
    console.log('in show_all_phage_hits')
    let all = JSON.parse(req.body.big_list)
    let hit_ids = [],hl
@@ -328,12 +336,10 @@ router.post('/show_all_phage_hits', function show_all_phage_hits(req, res) {
    //console.log(hit_ids)
    let q = queries.get_phage_from_ids_noseqs(hit_ids)
    console.log(q)
-   TDBConn.query(q, (err, rows) => {
-        if (err) {
-            console.log(err)
-            res.send(err)
-            return
-        }
+   try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+   
         //console.log('rows',rows)
         
         res.render('pages/phage/all_hits_result', {
@@ -347,25 +353,35 @@ router.post('/show_all_phage_hits', function show_all_phage_hits(req, res) {
             sqldata: JSON.stringify(rows)
             
         })
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
    
 })
-router.post('/submit_phage_data', function submit_phage_data(req, res) {
+router.post('/submit_phage_data', async function submit_phage_data(req, res) {
    console.log('in submit_phage_data')
    console.log(req.body)
    
    let q = "SELECT * from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
-    TDBConn.query(q, (err, rows) => {
-        if (err) {
-            console.log(err)
-            res.send(err)
-            return
-        }
+    
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
         //console.log('rows',rows)
         res.send(JSON.stringify(rows))
         return
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     console.log('in advanced_site_search_grep')

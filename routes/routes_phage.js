@@ -11,17 +11,15 @@ import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
 
-router.get('/phage', function phage(req, res) {
+router.get('/phage', async function phage(req, res) {
     //console.log('in phage',req.query.gid)
     let gid = req.query.gid
-    
+    let conn
     const q = queries.get_phage(gid)
     //console.log('phage q',q)
-    TDBConn.query(q, (err, rows) => {
-        if(err){
-           console.log(err)
-           return
-        }
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
         
         res.render('pages/phage/phage', {
                 title: 'HOMD :: Phage', 
@@ -32,7 +30,13 @@ router.get('/phage', function phage(req, res) {
                 data: JSON.stringify(rows),
                 gid: gid
         })
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 
 })
 
@@ -74,7 +78,7 @@ router.get('/phage_table', function phage_explorer(req, res) {
   
 })
 //
-router.post('/phage_ajax', function phage_ajax(req, res){
+router.post('/phage_ajax', async function phage_ajax(req, res){
     console.log('in POST phage_ajax')
     let gid = req.body.gid
     let q = 'SELECT phage_id,type,contig,start,end FROM phage_data'
@@ -89,8 +93,10 @@ router.post('/phage_ajax', function phage_ajax(req, res){
     html_rows += "<th>Prediction<br>Tool</th><th>Genome<br>Viewer</th><th class=''>Phage-ID</th><th>Contig</th><th>Start</th><th>End</th>"
     html_rows += "</tr>"
     console.log(q)
-    let stop,start,tmp,seqacc,loc,locstart,locstop
-    TDBConn.query(q, (err, rows) => {
+    let conn,stop,start,tmp,seqacc,loc,locstart,locstop
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
         for(let i in rows){
             //console.log(rows[i])
             
@@ -147,10 +153,14 @@ router.post('/phage_ajax', function phage_ajax(req, res){
         html_rows += "</table>"
         res.send(html_rows)
         //console.log(send_rows,send_rows.length)
-        
 
-    
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
     
 })
 

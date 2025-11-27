@@ -587,74 +587,7 @@ function renderTaxonDescription(req, res, args) {
 
   })
 }
-function get_taxon_refseq(q) {
-  return new Promise((resolve, reject) => {
-    TDBConn.query(q, (err, refseq_rows) => {
-      if (err) {
-        console.log(err)
-        reject(err)
-      } else {
-        //console.log('refseq',refseq_rows)
-        resolve(refseq_rows)
-      }
-
-    })
-  })
-}
-function get_taxon_info(q) {
-  return new Promise((resolve, reject) => {
-    TDBConn.query(q, (err, taxon_info_rows) => {
-      if (err) {
-        console.log(err)
-        reject(err)
-      } else {
-        //console.log('taxon_info',taxon_info)
-        let taxon_info = taxon_info_rows[0]
-        if (taxon_info_rows.length === 0) {
-          taxon_info = []
-        }
-        resolve(taxon_info)
-      }
-    })
-  })
-}
-function get_taxon_pangenomes(q) {
-  let pangenomes = []
-  return new Promise((resolve, reject) => {
-    TDBConn.query(q, (err, pangenome_rows) => {
-      if (err) {
-        console.log(err)
-        reject(err)
-      } else {
-        //console.log('pangenome_rows',pangenome_rows)
-        for (let n in pangenome_rows) {
-          pangenomes.push(pangenome_rows[n].pangenome)
-        }
-        resolve(pangenomes)
-      }
-
-    })
-  })
-}
-function get_gtdb_taxonomy(q) {
-  let gtdbtax = {}
-  return new Promise((resolve, reject) => {
-    TDBConn.query(q, (err, rows) => {
-      if (err) {
-        console.log(err)
-        reject(err)
-      } else {
-        //console.log('pangenome_rows',pangenome_rows)
-        for (let n in rows) {
-          gtdbtax[rows[n].genome_id] = rows[n].GTDB_taxonomy
-        }
-        resolve(gtdbtax)
-      }
-
-    })
-  })
-}
-//router.get('/tax_description', function tax_description(req, res){
+///
 router.get('/tax_description', async function tax_description(req, res) {
   // let myurl = url.parse(req.url, true);
   //helpers.print(['pre data1',C.taxon_lookup[389]])
@@ -666,6 +599,7 @@ router.get('/tax_description', async function tax_description(req, res) {
   if (req.query.gid && req.session.gtable_filter) {
     req.session.gtable_filter.gid = req.query.gid
   }
+  let conn
   /*
   This busy page needs:
   1  otid     type:string
@@ -712,9 +646,10 @@ router.get('/tax_description', async function tax_description(req, res) {
     let q = queries.get_lineage_query(otid)  // dont need query 
     console.log('lineage', q)
     console.log('C.taxon_lineage_lookup', C.taxon_lineage_lookup[otid])
-    TDBConn.query(q, (err, rows) => {
-      if (err) { console.log(err); return }
-      //console.log('data1',data1)
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+    
 
       //console.log('rows',rows)
       let lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
@@ -753,8 +688,14 @@ router.get('/tax_description', async function tax_description(req, res) {
       args.otid_has_abundance = false
       //args.lineage = lineage_string
       renderTaxonDescription(req, res, args)
-    })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
     return
+
   }
 
   if (C.taxon_lookup[otid] === undefined) {
@@ -787,25 +728,24 @@ router.get('/tax_description', async function tax_description(req, res) {
     console.warn('No taxon_references for HMT:', otid, 'in C.taxon_references_lookup')
     data4 = {}
   }
-  let image_array = find_otid_images('species', otid)
+    let image_array = find_otid_images('species', otid)
   //refseq = {}
   //info = {'general':'','cultavability':'','prevalence':'','disease_associations':'','phenotypic':''}  // unique per otid
   //counts = 
-  let q_refseq_metadata = queries.get_refseq_metadata_query(otid)    // dont need query 
-  let q_info = queries.get_taxon_info_query(otid)
-  let q_pangenome = queries.get_pangenomes_query(otid)
-  let q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes)
-  //console.log(q_refseq_metadata)
-  //console.log(q_info)
-  console.log(q_pangenome)
-  refseq = await get_taxon_refseq(q_refseq_metadata)
-  const info = await get_taxon_info(q_info)
-  const pangenomes = await get_taxon_pangenomes(q_pangenome)
-  const gtdbtax = await get_gtdb_taxonomy(q_gtdb_tax)
-  console.log('pg', pangenomes)
-  //console.log('gtdb',gtdbtax)
-  //https://medium.com/@amymurphy_40966/node-mysql-chained-promises-vs-async-await-9d0c8e8f5ee1
-  Promise.all([refseq, info, pangenomes]).then((results) => {
+    let q_refseq_metadata = queries.get_refseq_metadata_query(otid)    // dont need query 
+    let q_info = queries.get_taxon_info_query(otid)
+    let q_pangenome = queries.get_pangenomes_query(otid)
+    let q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes)
+    
+    try {
+        conn = await global.TDBConn();
+        const [refseq] = await conn.execute(q_refseq_metadata);
+        const [info]   = await conn.execute(q_info);
+        const [pangenomes] = await conn.execute(q_pangenome);
+        const [gtdbtax] = await conn.execute(q_gtdb_tax);
+  
+  
+  
     if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
       sites = 'Primary: ' + C.site_lookup[otid]['s1']
       // = Object.values(C.site_lookup[otid]).join('<br>')
@@ -828,7 +768,7 @@ router.get('/tax_description', async function tax_description(req, res) {
     args.image_array = image_array
     args.data1 = lookup_data
     // add pangenomes
-   console.log('refseq',refseq)
+    console.log('refseq',refseq)
     args.data1.pangenomes = pangenomes
     helpers.print(pangenomes)
     helpers.print(['lookup_data', args.data1])
@@ -847,96 +787,43 @@ router.get('/tax_description', async function tax_description(req, res) {
     renderTaxonDescription(req, res, args)
 
 
-  });
-  return
-  //     TDBConn.query(q_refseq_metadata, (err, refseq_rows) => {
-  //         //console.log('refseq',refseq_rows)
-  //         refseq = refseq_rows
-  //         
-  //         TDBConn.query(q_info, (err, taxon_info_rows) => {  // picks-up notes and general,prev,cult
-  //             taxon_info = taxon_info_rows[0]
-  //             if(taxon_info_rows.length == 0){
-  //                taxon_info = []
-  //             }
-  //             
-  //             //console.log('info rows',taxon_info)
-  //             
-  //             
-  //   
-  // 
-  //             
-  //             
-  //             //pangenomes
-  //             //links.anviserver_link = C.anviserver_link
-  //             
-  //             // console.log('sites',C.site_lookup[otid])
-  //             
-  //             
-  //           
-  //          let args = {otid:otid}
-  //          args.image_array = image_array
-  //          args.data1 = lookup_data
-  //          args.msg = lookup_data.notes
-  //          args.text_file = text_file[0]
-  //          args.tinfo = taxon_info
-  //          
-  //          args.data4 = data4
-  //          args.refseq_info = refseq
-  //          args.links = links
-  //          args.sites = sites
-  //          args.otid_has_abundance = otid_has_abundance
-  //          
-  //          //args.lineage = lineage_string
-  //          args.lin = lineage
-  //          
-  //          
-  //          
-  //          renderTaxonDescription(req, res, args)
-  //          return
-  //          //  res.render('pages/taxa/taxdesc', {
-  // //             title: 'HOMD :: Taxon Info', 
-  // //             pgname: 'taxon/description', // for AbountThisPage
-  // //             config: JSON.stringify(ENV),
-  // //             otid: otid,
-  // //             //pids: pid_list,
-  // //             image_array:JSON.stringify(image_array),
-  // //             data1: JSON.stringify(lookup_data),
-  // //             msg: lookup_data.notes,
-  // //             text_file: text_file[0],   // only 666 so far
-  // //             tinfo: JSON.stringify(taxon_info),
-  // //             lin: JSON.stringify(lineage),
-  // //             data4: JSON.stringify(data4),
-  // //             refseq_info: JSON.stringify(refseq),
-  // //             links: JSON.stringify(links),
-  // //             sites: JSON.stringify(sites),
-  // //             otid_has_abundance:otid_has_abundance,
-  // //             ver_info: JSON.stringify(C.version_information),
-  // //             
-  // //           })
-  //       })  // end refseq query
-  //   })  // end info query
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
+ 
 })
 
 
-router.post('/get_refseq', function get_refseq(req, res) {
+router.post('/get_refseq', async function get_refseq(req, res) {
   helpers.print(req.body)
   let refseq_id = req.body.refseqid;
-  let html
+  let html,conn
 
   //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
   let q = queries.get_refseq_query(refseq_id)
   helpers.print(q)
-  TDBConn.query(q, (err, rows) => {
-    //console.log(rows)
-    if (!rows || rows.length === 0) {
-      html = 'No Seq Found'
-    } else {
-      let seqstr = rows[0].seq.toString()
-      let arr = helpers.chunkSubstr(seqstr, 80)
-      html = arr.join('<br>')
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+		if (!rows || rows.length === 0) {
+		  html = 'No Seq Found'
+		} else {
+		  let seqstr = rows[0].seq.toString()
+		  let arr = helpers.chunkSubstr(seqstr, 80)
+		  html = arr.join('<br>')
+		}
+		res.send(html)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
     }
-    res.send(html)
-  })
+    return
 })
 
 
@@ -1739,15 +1626,15 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
 
 })
 //
-router.get('/dropped', function dropped(req, res) {
+router.get('/dropped', async function dropped(req, res) {
 
-  let q = queries.get_dropped_taxa()
-  //console.log(q)
-  TDBConn.query(q, (err, rows) => {
-    if (err) {
-      console.log("dropped select error-GET", err)
-      return
-    }
+    let q = queries.get_dropped_taxa()
+   //console.log(q)
+    let conn
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+  
     res.render('pages/taxa/dropped', {
       title: 'HOMD :: Dropped Taxa',
       pgname: '', // for AbountThisPage
@@ -1759,7 +1646,13 @@ router.get('/dropped', function dropped(req, res) {
       row_count: rows.length,
 
     })
-  })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
 })
 router.get('/tree_d3', function tree_d3(req, res) {
 

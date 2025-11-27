@@ -13,12 +13,18 @@
 //console.log(`Your DB_HOST is ${DB_HOST}`); // 8626
 global.ENV = process.env;
 console.log('xx',ENV.DB_HOST)
-import pool from './config/database.js';
-//const gendbconn = require('./config/database').genome_pool;
 import path from 'path';
 const dirname = import.meta.dirname
-// explicitly makes conn global
-global.TDBConn = pool;   // database:  homd
+
+
+// import pool from './config/database.js';
+// global.TDBConn = pool 
+
+import { getConnection } from './config/database.js';
+global.TDBConn = getConnection;   // database:  homd
+
+
+
 
 global.app_root = path.resolve(dirname);
 
