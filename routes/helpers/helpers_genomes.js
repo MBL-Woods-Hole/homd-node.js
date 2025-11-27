@@ -200,7 +200,7 @@ export const apply_gtable_filter = (req, filter) => {
   if (req.session.gtable_filter) {
     vals = req.session.gtable_filter;
   } else {
-    vals = helpers.get_default_gtable_filter();
+    vals = helpers_genomes.get_default_gtable_filter();
   }
   ///console.log('ZZZ Vals',vals)
   big_g_list = helpers_genomes.get_filtered_genome_list(big_g_list, vals.text.txt_srch, vals.text.field);

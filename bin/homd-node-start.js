@@ -1,34 +1,37 @@
 #!/usr/bin/env node
-
+import dotenv from 'dotenv';
 import app from '../app.js'
 
 import fs from 'fs-extra';
-
+global.ENV = process.env;
 // CL example: nodemon bin/www testing
+console.log('process.argv[0]',process.argv[0]); 
+console.log('process.argv[1]',process.argv[1]); 
+console.log('process.argv[2]',process.argv[2]); 
 
 const available_environments = ['testing','development','production'];
 
 console.log('ENV.HOSTNAME: ',ENV.HOSTNAME)
 if(available_environments.indexOf(process.argv[2]) !== -1){
-  ENV.NODE_ENV = process.argv[2];
+  process.env.NODE_ENV = process.argv[2];
 }else{
   console.log('Available Environments:', available_environments);
   
   if(ENV.HOSTNAME === 'homd.org') {  // put production host here
-      ENV.NODE_ENV = 'production';  // homd
+      global.ENV.NODE_ENV = 'production';  // homd
       ENV.NODE_OPTIONS = '--max-old-space-size=8192'
   }else if(ENV.HOSTNAME === 'devel.homd.org'){
-      ENV.NODE_ENV = 'development';  // homddev
+      global.ENV.NODE_ENV = 'development';  // homddev
       ENV.NODE_OPTIONS = '--max-old-space-size=8192'
   }else{ // localhost
-      ENV.NODE_ENV = 'testing';
+      global.ENV.NODE_ENV = 'testing';
       // this isn't used (use "node ----max-old-space-size=4096 app" instead) '
       ENV.NODE_OPTIONS = '--max-old-space-size=8192'
   }
 }
 console.log("Setting Environment to: ",ENV.NODE_ENV);
 console.log("Node Options: ",ENV.NODE_OPTIONS);
-console.log('For Production Use: "node --max-old-space-size=4096 bin/homd-node-start" (in systemd command)')
+console.log('For Production: Use "node --max-old-space-size=4096 bin/homd-node-start" (in systemd command)')
 
 const options = {}
 let http,https;
@@ -62,6 +65,7 @@ console.log('ENV:',ENV.ENV,'(Environment set in ~/.env)');
 
 const server = http.createServer(options, app).listen(app.get('port'), function(){
     //debug('Express server listening on port ' + server.address().port);
+    global.ENV = process.env
     console.log(`HOMD-Node.js server is listening on ${ENV.HOSTNAME}:${process.env.PORT}`)
 });
 server.timeout = 100 * 1000

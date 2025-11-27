@@ -815,7 +815,7 @@ function create_phage_table(sql_rows,header_array,search_term) {
 // }
 async function create_fasta_Nsend(q, fname, res) {
     console.log('in create FASTA')
-    // q must have defline ans sequence elements
+    // IMPORTANT: q must have defline and sequence elements
     
     let conn
     try {
