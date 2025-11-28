@@ -16,6 +16,7 @@
     "express": "^4.17.3",
     "express-flash": "^0.0.2",
     "express-session": "^1.17.2",
+    "fast-csv": "^5.0.5",
     "fs-extra": "^10.0.1",
     "jquery": "^3.7.1",
     "mysql2": "^3.15.3",

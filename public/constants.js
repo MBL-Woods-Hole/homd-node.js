@@ -27,7 +27,53 @@ constants.user_security_levels = {
 }
 //constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
 constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
-
+constants.taxon_table_headers = ["HMT-ID",
+                   "Domain","Phylum","Class","Order","Family","Genus","Species","Subspecies",
+                   "Naming Status","Cultivation Status","Body Site(s)","Type Strain","16S_rRNA",
+                   "Synonyms","NCBI Taxon ID","Genome IDs","Genome Size Range"
+                   ]
+constants.genome_table_headers = [
+  'GENOME_ID',
+  'HMT_ID',
+  'strain',
+  'hmt_naming_status',
+  'hmt_cultivation_status',
+  'hmt_primary_body_site_w_abundance',
+  'organism',
+  'contigs',
+  'combined_size',
+  'MAG',
+  'GC',
+  'url',
+  'GTDB_taxonomy',
+  'bioproject',
+  'taxid',
+  'biosample',
+  'assembly_name',
+  'assembly_level',
+  'assembly_method',
+  'submission_date',
+  'geo_loc_name',
+  'isolation_source',
+  'seqtech',
+  'submitter',
+  'coverage',
+  'ANI',
+  'checkM_completeness',
+  'checkM_contamination',
+  'checkM2_completeness',
+  'checkM2_contamination',
+  'refseq_assembly',
+  'WGS',
+  'prokka_CDS',
+  'prokka_gene',
+  'prokka_mRNA',
+  'prokka_misc_RNA',
+  'prokka_rRNA',
+  'prokka_tRNA',
+  'prokka_tmRNA',
+  'pangenome'
+]
   
 constants.names_w_text = {
   // these genera have ejs files in partials/taxa/

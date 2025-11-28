@@ -6,6 +6,7 @@ import fs from 'fs-extra';
 
 import path from 'path';
 import { pipeline, Transform } from 'stream';
+import csv from 'fast-csv';
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
@@ -339,37 +340,15 @@ router.get('/dld_genome_table_all/:type/:filter', async function dld_genome_tabl
     
     
     const q = queries.get_all_genomes()
-    try {
-        conn = await global.TDBConn();
-        const [mysqlrows] = await conn.execute(q);
-
-        if(filter === 'gtdb'){
-            fileFilterText = 'HOMD.org Genome Data:: GTDB Taxonomy' + ' Date: ' + dt.today
-            tableTsv = create_full_genome_table_gtdb(mysqlrows, fileFilterText)
-        }else{
-            fileFilterText = 'HOMD.org Genome Data:: All Genome Data' + ' Date: ' + dt.today
-            tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
-        }
-        //console.log('filter',filter)
-        if (type === 'browser') {
-          res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-        } else if (type === 'text') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + dt.today + '_' + dt.seconds + '.txt"' })
-        } else if (type === 'excel') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_genome_table' + dt.today + '_' + dt.seconds + '.xls"' })
-        } else {
-          // error
-          console.log('Download table format ERROR')
-        }
-        res.send(tableTsv)
-        res.end()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
+    
+    //////////
+    let ext = '.csv'
+    let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds
+    
+    //let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds + ext
+    stream_sqlquery_download(q, fname, res, 'table', type)
     return
+
 })
 //
 router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
@@ -503,16 +482,6 @@ router.post('/anno_search_data', async (req, res) => {
         // PROKKA and NCBI
         let anno_cap = anno.toUpperCase()
         if(format === 'fasta_aa'){
-            
-//             q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
-//             q += " protein_id as pid,start,stop,length_aa as length, UNCOMPRESS(seq_compressed) as seq"
-//             q += " from "+anno_cap+".orf"
-//             q += " JOIN "+anno_cap+".faa using(protein_id)"
-//             q += " WHERE protein_id in ("+unique_pidlst+")"
-            // q = "SELECT"
-//             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
-//             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
-//             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
             q = "SELECT"
             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
             q += " UNCOMPRESS(seq_compressed) AS sequence"
@@ -520,16 +489,7 @@ router.post('/anno_search_data', async (req, res) => {
             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         
         }else if(format === 'fasta_na'){
-//             q = "SELECT '"+anno_cap+"' as anno,accession as contig, "+anno_cap+".orf.genome_id as gid,"
-//             q += " protein_id as pid,start,stop,length_na as length, UNCOMPRESS(seq_compressed) as seq"
-//             q += " from "+anno_cap+".orf"
-//             q += " JOIN "+anno_cap+".ffn using(protein_id)"
-//             q += " WHERE protein_id in ("+unique_pidlst+")"
-        //     q = "SELECT"
-//             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id, '\\n', UNCOMPRESS(seq_compressed), '\\n') AS fasta_record"
-//             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
-//             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
-         q = "SELECT"
+            q = "SELECT"
             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
             q += " UNCOMPRESS(seq_compressed) AS sequence"
             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
@@ -551,8 +511,8 @@ router.post('/anno_search_data', async (req, res) => {
     if(format.slice(0,5) === 'fasta'){
         // Set response headers for file download
         //res.setHeader('Content-Type', 'text/plain');
-        let fname = 'HOMD_'+anno+'_search' + dt.today + '_' + dt.seconds + '.fasta'
-        create_fasta_Nsend(q, fname,  res)
+        let fname = 'HOMD_'+anno+'_search' + dt.today + '_' + dt.seconds
+        stream_sqlquery_download(q, fname,  res, 'fasta', type)
 
     }else{
     
@@ -603,8 +563,8 @@ router.post('/phage_sequences', async (req, res) => {
     console.log(req.body)
     let q = queries.get_phage_fasta(req.body.search_ids)
     let dt = helpers.get_today_obj()
-    let fname = 'HOMD_phage_seqs' + dt.today + '_' + dt.seconds + '.fasta'
-    create_fasta_Nsend(q, fname, res)
+    let fname = 'HOMD_phage_seqs' + dt.today + '_' + dt.seconds
+    stream_sqlquery_download(q, fname, res, 'fasta', 'text')
     
 
     return
@@ -635,8 +595,8 @@ router.post('/phage_search_data', async (req, res) => {
             }
             
             let q = queries.get_phage_fasta(id_list)
-            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.fasta'
-            create_fasta_Nsend(q, fname, res)
+            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds
+            stream_sqlquery_download(q, fname, res, 'fasta', type)
             //result_text = create_fasta(rows,'phage')
             //console.log(result_text)
             return
@@ -789,70 +749,113 @@ function create_phage_table(sql_rows,header_array,search_term) {
     }
     return text
 }
-// function create_fasta(sql_rows,type) {
-//     console.log('in create FASTA',type)
-//     let text =''
-//     let seqarray,seqstr
-//     for(let n in sql_rows){
-//         //console.log('sql_rows[n]',sql_rows[n])
-//         if(sql_rows[n].seq){
-//            if(type === 'phage'){
-//                text += '>'+sql_rows[n].search_id +'|'+sql_rows[n].genome_id+'|'+sql_rows[n].predictor
-//                text += '|'+sql_rows[n].contig+'|'+sql_rows[n].start+'..'+sql_rows[n].end+'|length:'+sql_rows[n].seq_length+'bp\n'
-//                
-//            }else if(type === 'anno'){
-//                text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
-//                text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
-//                
-//            }
-//            seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
-//            seqarray = helpers.chunkSubstr(seqstr, 80)
-//            text += seqarray.join('\n')+'\n'
-//            
-//         }
-//     }
-//     return text
-// }
-async function create_fasta_Nsend(q, fname, res) {
-    console.log('in create FASTA')
+
+////
+async function stream_sqlquery_download(q, fname, res, format, type) {
+    console.log('in stream_sqlquery_download',format,type)
     // IMPORTANT: q must have defline and sequence elements
-    
-    let conn
-    try {
-        conn = await global.TDBConn();
-            //conn = await global.TDBConn.pool();
-            //const Reader = global.TDBConn.pool.query(q).stream();
-        const queryStream = conn.connection.query(q).stream();
-        
-        const objectToStringStream = new Transform({
-          writableObjectMode: true, // Accepts objects
-          transform(chunk, encoding, callback) {
-            // Convert the object to a string (e.g., JSON string) and push it as a string
-            let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
-            this.push(record.replaceAll(/["]/g, ''));
-             //this.push(JSON.stringify(chunk.defline+'\n'));
-            callback();
-          }
-        });
-        
-        res.setHeader('Content-Disposition', 'attachment; filename='+fname);
+    // format is fasta or table
+    if(format === 'fasta' && type === 'excel'){
+        type = 'text'
+    }
+    let conn,transformerStream
+    if (type === 'browser') {
+          res.set('Content-Type', 'text/plain') // <= important:plain - allows tabs to display
+    } else if (type === 'text') {
+        if(format==='fasta'){
+            fname = fname + '.fasta'
+        }else{
+            fname = fname + '.csv'
+        }
+        res.setHeader('Content-Disposition', 'attachment; filename='+fname )
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Transfer-Encoding', 'chunked');
-    // const Writer = new stream.Writable({
-    //           objectMode: true,
-    //           write(data, enc, cb) {
-    //             console.log(data);
-    //             cb();
-    //           },
-    //         });
-        pipeline(queryStream, objectToStringStream, res, (err) => {
-          if (err) {
-            console.log(err);
-          }
-        console.log('streaming to download')
-        //conn.end();
-      
-        });
+    } else if (type === 'excel') {
+        fname = fname + '.xls'
+        res.setHeader('Content-Disposition', 'attachment; filename='+fname )
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Transfer-Encoding', 'chunked');
+    }
+    const fastaObjectToStringStream = new Transform({
+      writableObjectMode: true, // Accepts objects
+      transform(chunk, encoding, callback) {
+        // Convert the object to a string (e.g., JSON string) and push it as a string
+        let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
+        this.push(record.replaceAll(/["]/g, ''));
+         //this.push(JSON.stringify(chunk.defline+'\n'));
+        callback();
+      }
+    });
+    // const tableObjectToStringStream = new Transform({
+//           writableObjectMode: true, // Accepts objects
+//           transform(chunk, encoding, callback) {
+//             // Convert the object to a string (e.g., JSON string) and push it as a string
+//             console.log('chunk',chunk)
+//             let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
+//             this.push(record.replaceAll(/["]/g, ''));
+//              //this.push(JSON.stringify(chunk.defline+'\n'));
+//             callback();
+//           }
+//         });
+
+    try {
+        conn = await global.TDBConn();
+        const queryStream = conn.connection.query(q).stream();
+        
+        
+        
+        // const Writer = new stream.Writable({
+        //           objectMode: true,
+        //           write(data, enc, cb) {
+        //             console.log(data);
+        //             cb();
+        //           },
+        //         });
+        ///////
+        // Assume getDatabaseStream() is a function that returns a Readable stream from your DB driver
+        // Assume createCsvTransformer() is a Transform stream (e.g., using 'fast-csv' or similar)
+        // const databaseStream = getDatabaseStream();
+//         const csvTransformer = createCsvTransformer();
+//         const writeStream
+        // pipeline(
+//           databaseStream,
+//           csvTransformer,
+//           writeStream,
+//           (err) => {
+//             if (err) {
+//               console.error('Pipeline failed:', err);
+//             } else {
+//               console.log('Pipeline succeeded, file written to output.csv');
+//             }
+//           }
+//         );
+        // Here res IS the output stream:
+        
+        if(format === 'table'){
+            //transformerStream = tableObjectToStringStream
+            const passThroughStream = new Transform.PassThrough();
+            let delimiter = '\t'
+            passThroughStream.write(C.genome_table_headers.join(delimiter) + '\n');
+            const csvStream = csv.format({ headers: false, delimiter: delimiter,writeHeaders: false }); 
+            
+            pipeline(queryStream, csvStream, passThroughStream, res, (err) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log('streaming to download')
+            });
+            
+            return
+        }else if(format === 'fasta'){
+            
+            transformerStream = fastaObjectToStringStream
+            pipeline(queryStream, transformerStream, res, (err) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log('streaming to download')
+            });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
@@ -862,24 +865,7 @@ async function create_fasta_Nsend(q, fname, res) {
     return
     
 }
-// function create_anno_fasta(sql_rows) {
-//     let text =''
-//     console.log('in fxn create_anno_fasta')
-//     let seqarray,seqstr
-//     for(let n in sql_rows){
-//         //console.log('sql_rows[n]',sql_rows[n])
-//         if(sql_rows[n].seq.length != 0){
-//           
-//            text += '>'+sql_rows[n].pid +'|'+sql_rows[n].contig+'|'+sql_rows[n].anno
-//            text += '|'+sql_rows[n].start+'..'+sql_rows[n].stop+'|length:'+sql_rows[n].length+'bp\n'
-//            seqstr = sql_rows[n].seq.toString().replace(/\*+$/, '')
-//            seqarray = helpers.chunkSubstr(seqstr, 80)
-//            text += seqarray.join('\n')+'\n'
-//            //text += sql_rows[n].seq.toString().replace(/\*+$/, '')+'\n'
-//         }
-//     }
-//     return text
-// }
+
 function create_anno_table(sql_rows,anno,headers,search_term) {
     let text = anno.toUpperCase()+' ::Search String: "'+search_term+'"\n'
     text += headers.join("\t")+'\n'
@@ -924,13 +910,7 @@ function create_taxon_table(otids, source, type, head_txt) {
         //console.log('in create_taxon_table: '+source)
         //console.log('otids',otids)
         
-        headers = ["HMT-ID",
-                   "Domain","Phylum","Class","Order","Family","Genus","Species","Subspecies",
-                   "Naming Status","Cultivation Status","Body Site(s)","Type Strain","16S_rRNA",
-                   "Synonyms","NCBI Taxon ID","Genome IDs","Genome Size Range"
-                   ]
-        
-        txt +=  headers.join('\t')
+        txt +=  C.taxon_table_headers.join('\t')
         let o1,o2 //,o3,o4
         for(let n in otids){
             

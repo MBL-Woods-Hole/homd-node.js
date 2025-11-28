@@ -14,7 +14,7 @@
 global.ENV = process.env;
 
 
-console.log('xx',ENV.NODE_ENV)
+console.log('NODE_ENV:',ENV.NODE_ENV)
 import path from 'path';
 const dirname = import.meta.dirname
 

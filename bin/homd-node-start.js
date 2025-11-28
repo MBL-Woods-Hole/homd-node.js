@@ -3,35 +3,19 @@ import dotenv from 'dotenv';
 import app from '../app.js'
 
 import fs from 'fs-extra';
-global.ENV = process.env;
+
 // CL example: nodemon bin/www testing
 console.log('process.argv[0]',process.argv[0]); 
 console.log('process.argv[1]',process.argv[1]); 
 console.log('process.argv[2]',process.argv[2]); 
 
 const available_environments = ['testing','development','production'];
-
+console.log( 'Set Environment in .env file as NODE_ENV');
 console.log('ENV.HOSTNAME: ',ENV.HOSTNAME)
-if(available_environments.indexOf(process.argv[2]) !== -1){
-  process.env.NODE_ENV = process.argv[2];
-}else{
-  console.log('Available Environments:', available_environments);
-  
-  if(ENV.HOSTNAME === 'homd.org') {  // put production host here
-      global.ENV.NODE_ENV = 'production';  // homd
-      ENV.NODE_OPTIONS = '--max-old-space-size=8192'
-  }else if(ENV.HOSTNAME === 'devel.homd.org'){
-      global.ENV.NODE_ENV = 'development';  // homddev
-      ENV.NODE_OPTIONS = '--max-old-space-size=8192'
-  }else{ // localhost
-      global.ENV.NODE_ENV = 'testing';
-      // this isn't used (use "node ----max-old-space-size=4096 app" instead) '
-      ENV.NODE_OPTIONS = '--max-old-space-size=8192'
-  }
-}
+
 console.log("Setting Environment to: ",ENV.NODE_ENV);
 console.log("Node Options: ",ENV.NODE_OPTIONS);
-console.log('For Production: Use "node --max-old-space-size=4096 bin/homd-node-start" (in systemd command)')
+console.log('For Production: Use "node --max-old-space-size=8096 bin/homd-node-start" (in systemd command)')
 
 const options = {}
 let http,https;

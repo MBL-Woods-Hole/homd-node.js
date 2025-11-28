@@ -187,9 +187,6 @@ function genome_query() {
         qSelectGenome +=` LEFT JOIN pangenome_v4 using(pangenome_id)`
     
     
-    
-    
-
     console.log(qSelectGenome)
     return qSelectGenome
 }
