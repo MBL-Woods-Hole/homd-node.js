@@ -269,10 +269,13 @@ const promises = [
   helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.missing_ncbi_genomes_fn),'json'),
   helpers.readFromFile(path.join(process.env.PATH_TO_DATA, 'GCA_NO_NCBI_DB.csv'),'csv'),
   
-  //Oct 2025  // #13
+  //Oct 2025  // #13,14,15
   helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.crispr_lookup_fn),'json'),
   helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.phage_lookup_fn),'json'),
   helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.amr_lookup_fn),'json'),
+  
+  //DEC 2025  // #16
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.abundance_fn),'json'),
     // ETC ...
 ];
 Promise.all(promises)
@@ -316,11 +319,12 @@ Promise.all(promises)
     C.crispr_lookup         = results[13];
     C.phage_lookup          = results[14];
     C.amr_lookup             = results[15];
+    C.abundance_lookup       = results[16];  // should have same taxa keys as C.taxon_counts_lookup
     /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)
     C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference')).map(x => x.otid)
    
-    C.otids_w_abundance = Object.values(C.taxon_counts_lookup).filter(item => {
+    C.otids_w_abundance = Object.values(C.abundance_lookup).filter(item => {
         if(item.otid != ''){
             return item.otid
         }

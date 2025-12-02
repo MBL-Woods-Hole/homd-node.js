@@ -1127,7 +1127,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
     }
     //console.log('lineage_list[0]',lineage_list)
     if (lineage_list[0]) {
-      abund_obj = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]], 'species')
+      abund_obj = get_site_avgs(C.abundance_lookup[lineage_list[0]], 'species')
       
       //console.log('abund_obj',species_for_plot[i],abund_obj)
       for (let site in abund_obj) {
@@ -1393,85 +1393,85 @@ router.get('/ecology', function ecology(req, res) {
   }
   //console.log('node',node)
   let lineage_list = helpers_taxa.make_lineage(node)
-  //console.log(C.taxon_counts_lookup)
+  
   if (!lineage_list[0]) {
     lineage_list[0] = ''
     console.log('ERROR Lineage')
   } else {
-    if (lineage_list[0] in C.taxon_counts_lookup) {
+    if (lineage_list[0] in C.abundance_lookup) {
 
-      if ('dewhirst' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['dewhirst']).length !== 0) {
-        dewhirst_max = C.taxon_counts_lookup[lineage_list[0]]['max_dewhirst']
+      if ('dewhirst' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['dewhirst']).length !== 0) {
+        dewhirst_max = C.abundance_lookup[lineage_list[0]]['max_dewhirst']
         //console.log('in Dewhirst')
-        dewhirst_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['dewhirst'])
+        dewhirst_data = Object.values(C.abundance_lookup[lineage_list[0]]['dewhirst'])
         dewhirst_data = sort_obj_by_abundance_order(dewhirst_data, C.dewhirst_abundance_order)
         // order by constants.dewhirst_abundance_order
         let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
         dewhirst_table = build_abundance_table('dewhirst', clone_dewhirst_data, C.dewhirst_abundance_order)
-        if ('dewhirst' in C.taxon_counts_lookup[lineage_list[0]]['notes']) {
-          dewhirst_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['dewhirst']
+        if ('dewhirst' in C.abundance_lookup[lineage_list[0]]['notes']) {
+          dewhirst_notes = C.abundance_lookup[lineage_list[0]]['notes']['dewhirst']
         }
       }
-      if ('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3']).length !== 0) {
-        erenv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv1v3']
-        erenv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v1v3'])
+      if ('eren_v1v3' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['eren_v1v3']).length !== 0) {
+        erenv1v3_max = C.abundance_lookup[lineage_list[0]]['max_erenv1v3']
+        erenv1v3_data = Object.values(C.abundance_lookup[lineage_list[0]]['eren_v1v3'])
         erenv1v3_data = sort_obj_by_abundance_order(erenv1v3_data, C.eren_abundance_order)
         // order by constants.eren_abundance_order
         let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)) // clone to avoid difficult errors
-        //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+        //helpers.print(C.abundance_lookup[lineage_list[0]])
         erenv1v3_table = build_abundance_table('eren_v1v3', clone_eren_data, C.eren_abundance_order)
-        if ('eren_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']) {
-          erenv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v1v3']
+        if ('eren_v1v3' in C.abundance_lookup[lineage_list[0]]['notes']) {
+          erenv1v3_notes = C.abundance_lookup[lineage_list[0]]['notes']['eren_v1v3']
         }
       }
-      if ('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5']).length !== 0) {
-        erenv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_erenv3v5']
-        erenv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['eren_v3v5'])
+      if ('eren_v3v5' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['eren_v3v5']).length !== 0) {
+        erenv3v5_max = C.abundance_lookup[lineage_list[0]]['max_erenv3v5']
+        erenv3v5_data = Object.values(C.abundance_lookup[lineage_list[0]]['eren_v3v5'])
 
         erenv3v5_data = sort_obj_by_abundance_order(erenv3v5_data, C.eren_abundance_order)
         //console.log('eren3v5-sorted',erenv3v5_data)
         let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
-        //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+        //helpers.print(C.abundance_lookup[lineage_list[0]])
         erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.eren_abundance_order)
-        if ('eren_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']) {
-          erenv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['eren_v3v5']
+        if ('eren_v3v5' in C.abundance_lookup[lineage_list[0]]['notes']) {
+          erenv3v5_notes = C.abundance_lookup[lineage_list[0]]['notes']['eren_v3v5']
         }
       }
-      if ('hmp_metaphlan' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['hmp_metaphlan']).length !== 0) {
-        hmp_metaphlan_max = C.taxon_counts_lookup[lineage_list[0]]['max_hmp_metaphlan']
-        hmp_metaphlan_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['hmp_metaphlan'])
+      if ('hmp_metaphlan' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_metaphlan']).length !== 0) {
+        hmp_metaphlan_max = C.abundance_lookup[lineage_list[0]]['max_hmp_metaphlan']
+        hmp_metaphlan_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_metaphlan'])
 
         hmp_metaphlan_data = sort_obj_by_abundance_order(hmp_metaphlan_data, C.hmp_metaphlan_abundance_order)
         //console.log('eren3v5-sorted',erenv3v5_data)
         let clone_hmp_metaphlan_data = JSON.parse(JSON.stringify(hmp_metaphlan_data)) // clone to avoid difficult errors
-        //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+        //helpers.print(C.abundance_lookup[lineage_list[0]])
         hmp_metaphlan_table = build_abundance_table('hmp_metaphlan', clone_hmp_metaphlan_data, C.hmp_metaphlan_abundance_order)
-        if ('hmp_metaphlan' in C.taxon_counts_lookup[lineage_list[0]]['notes']) {
-          hmp_metaphlan_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['hmp_metaphlan']
+        if ('hmp_metaphlan' in C.abundance_lookup[lineage_list[0]]['notes']) {
+          hmp_metaphlan_notes = C.abundance_lookup[lineage_list[0]]['notes']['hmp_metaphlan']
         }
       }
-      if ('hmp_refseq_v1v3' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['hmp_refseq_v1v3']).length !== 0) {
-        hmp_refseqv1v3_max = C.taxon_counts_lookup[lineage_list[0]]['max_hmp_refseq_v1v3']
-        hmp_refseqv1v3_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['hmp_refseq_v1v3'])
+      if ('hmp_refseq_v1v3' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v1v3']).length !== 0) {
+        hmp_refseqv1v3_max = C.abundance_lookup[lineage_list[0]]['max_hmp_refseq_v1v3']
+        hmp_refseqv1v3_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v1v3'])
         hmp_refseqv1v3_data = sort_obj_by_abundance_order(hmp_refseqv1v3_data, C.hmp_refseq_abundance_order)
         //console.log('eren3v5-sorted',erenv3v5_data)
         let clone_hmp_refseqv1v3_data = JSON.parse(JSON.stringify(hmp_refseqv1v3_data)) // clone to avoid difficult errors
-        //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+        //helpers.print(C.abundance_lookup[lineage_list[0]])
         hmp_refseqv1v3_table = build_abundance_table('hmp_refseqv1v3', clone_hmp_refseqv1v3_data, C.hmp_refseq_abundance_order)
-        if ('hmp_refseq_v1v3' in C.taxon_counts_lookup[lineage_list[0]]['notes']) {
-          hmp_refseqv1v3_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['hmp_refseq_v1v3']
+        if ('hmp_refseq_v1v3' in C.abundance_lookup[lineage_list[0]]['notes']) {
+          hmp_refseqv1v3_notes = C.abundance_lookup[lineage_list[0]]['notes']['hmp_refseq_v1v3']
         }
       }
-      if ('hmp_refseq_v3v5' in C.taxon_counts_lookup[lineage_list[0]] && Object.keys(C.taxon_counts_lookup[lineage_list[0]]['hmp_refseq_v3v5']).length !== 0) {
-        hmp_refseqv3v5_max = C.taxon_counts_lookup[lineage_list[0]]['max_hmp_refseq_v3v5']
-        hmp_refseqv3v5_data = Object.values(C.taxon_counts_lookup[lineage_list[0]]['hmp_refseq_v3v5'])
+      if ('hmp_refseq_v3v5' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v3v5']).length !== 0) {
+        hmp_refseqv3v5_max = C.abundance_lookup[lineage_list[0]]['max_hmp_refseq_v3v5']
+        hmp_refseqv3v5_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v3v5'])
         hmp_refseqv3v5_data = sort_obj_by_abundance_order(hmp_refseqv3v5_data, C.hmp_refseq_abundance_order)
         //console.log('eren3v5-sorted',erenv3v5_data)
         let clone_hmp_refseqv3v5_data = JSON.parse(JSON.stringify(hmp_refseqv3v5_data)) // clone to avoid difficult errors
-        //helpers.print(C.taxon_counts_lookup[lineage_list[0]])
+        //helpers.print(C.abundance_lookup[lineage_list[0]])
         hmp_refseqv3v5_table = build_abundance_table('hmp_refseqv3v5', clone_hmp_refseqv3v5_data, C.hmp_refseq_abundance_order)
-        if ('hmp_refseq_v3v5' in C.taxon_counts_lookup[lineage_list[0]]['notes']) {
-          hmp_refseqv3v5_notes = C.taxon_counts_lookup[lineage_list[0]]['notes']['hmp_refseq_v3v5']
+        if ('hmp_refseq_v3v5' in C.abundance_lookup[lineage_list[0]]['notes']) {
+          hmp_refseqv3v5_notes = C.abundance_lookup[lineage_list[0]]['notes']['hmp_refseq_v3v5']
         }
       }
 
@@ -1561,9 +1561,9 @@ router.get('/abundance_by_site/:rank', function abundance_by_site(req, res) {
     //console.log('rank',rank)
     //console.log('lineage_list-2',lineage_list)
 
-    //let avg = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]])
-    //console.log('C.taxon_counts_lookup[lineage_list[0]]',C.taxon_counts_lookup[lineage_list[0]])
-    group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]], rank)
+    //let avg = get_site_avgs(C.abundance_lookup[lineage_list[0]])
+    //console.log('C.abundance_lookup[lineage_list[0]]',C.taxon_counts_lookup[lineage_list[0]])
+    group_collector[lineage_list[0]] = get_site_avgs(C.abundance_lookup[lineage_list[0]], rank)
 
   }
   for (let i in abund_sites) {
@@ -1604,7 +1604,7 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
     node = group[i]
     lineage_list = helpers_taxa.make_lineage(node)
     //console.log('lineage_list3',lineage_list[0])
-    group_collector[lineage_list[0]] = get_site_avgs(C.taxon_counts_lookup[lineage_list[0]], rank)
+    group_collector[lineage_list[0]] = get_site_avgs(C.abundance_lookup[lineage_list[0]], rank)
   }
   top_names = get_sorted_abund_names(group_collector, site, rank, 'all')
   //console.log(top_names)

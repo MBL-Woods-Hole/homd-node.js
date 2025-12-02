@@ -189,7 +189,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
     let source = req.params.source
     //helpers.print('type: '+type+' source: '+source)
     let table_tsv='',row,site
-    let temp_list = Object.values(C.taxon_counts_lookup)
+    let temp_list = Object.values(C.abundance_lookup)
     let abundance_order
     let header = 'HOMD (https://homd.org/)::'
     if(source === 'dewhirst'){
@@ -239,46 +239,46 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
          table_tsv += '\t' +site+'_mean'+'\t'+site+'_stdev'+'\t'+site+'_prev'
     }
     table_tsv += '\n'
-    for(let tax_string in C.taxon_counts_lookup){
+    for(let tax_string in C.abundance_lookup){
       if(source === 'dewhirst' 
-                && C.taxon_counts_lookup[tax_string].hasOwnProperty('dewhirst') 
-                && Object.keys(C.taxon_counts_lookup[tax_string]['dewhirst']).length > 0)
+                && C.abundance_lookup[tax_string].hasOwnProperty('dewhirst') 
+                && Object.keys(C.abundance_lookup[tax_string]['dewhirst']).length > 0)
             {
-            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
-            row = C.taxon_counts_lookup[tax_string]['dewhirst']
+            table_tsv += tax_string+'\t'+C.abundance_lookup[tax_string]['otid']
+            row = C.abundance_lookup[tax_string]['dewhirst']
             for(let n in abundance_order){
                 site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
       }else if(source === 'erenv1v3' 
-                && C.taxon_counts_lookup[tax_string].hasOwnProperty('eren_v1v3')
-                && Object.keys(C.taxon_counts_lookup[tax_string]['eren_v1v3']).length > 0)
+                && C.abundance_lookup[tax_string].hasOwnProperty('eren_v1v3')
+                && Object.keys(C.abundance_lookup[tax_string]['eren_v1v3']).length > 0)
             {
-            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
-            row = C.taxon_counts_lookup[tax_string]['eren_v1v3']
+            table_tsv += tax_string+'\t'+C.abundance_lookup[tax_string]['otid']
+            row = C.abundance_lookup[tax_string]['eren_v1v3']
             for(let n in abundance_order){
                 site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
       }else if(source === 'erenv3v5' 
-                && C.taxon_counts_lookup[tax_string].hasOwnProperty('eren_v3v5')
-                &&  Object.keys(C.taxon_counts_lookup[tax_string]['eren_v3v5']).length > 0)
+                && C.abundance_lookup[tax_string].hasOwnProperty('eren_v3v5')
+                &&  Object.keys(C.abundance_lookup[tax_string]['eren_v3v5']).length > 0)
             {
-            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
-            row = C.taxon_counts_lookup[tax_string]['eren_v3v5']
+            table_tsv += tax_string+'\t'+C.abundance_lookup[tax_string]['otid']
+            row = C.abundance_lookup[tax_string]['eren_v3v5']
             for(let n in abundance_order){
                 site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
       }else if(source === 'hmpmeta' 
-                && C.taxon_counts_lookup[tax_string].hasOwnProperty('hmp_metaphlan')
-                &&  Object.keys(C.taxon_counts_lookup[tax_string]['hmp_metaphlan']).length > 0)
+                && C.abundance_lookup[tax_string].hasOwnProperty('hmp_metaphlan')
+                &&  Object.keys(C.abundance_lookup[tax_string]['hmp_metaphlan']).length > 0)
             {
-            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
-            row = C.taxon_counts_lookup[tax_string]['hmp_metaphlan']
+            table_tsv += tax_string+'\t'+C.abundance_lookup[tax_string]['otid']
+            row = C.abundance_lookup[tax_string]['hmp_metaphlan']
             for(let n in abundance_order){
                 site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
@@ -287,22 +287,22 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             
             
       }else if(source === 'hmprefseqv1v3'
-              && C.taxon_counts_lookup[tax_string].hasOwnProperty('hmp_refseq_v1v3')
-                &&  Object.keys(C.taxon_counts_lookup[tax_string]['hmp_refseq_v1v3']).length > 0)
+              && C.abundance_lookup[tax_string].hasOwnProperty('hmp_refseq_v1v3')
+                &&  Object.keys(C.abundance_lookup[tax_string]['hmp_refseq_v1v3']).length > 0)
             {
-            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
-            row = C.taxon_counts_lookup[tax_string]['hmp_refseq_v1v3']
+            table_tsv += tax_string+'\t'+C.abundance_lookup[tax_string]['otid']
+            row = C.abundance_lookup[tax_string]['hmp_refseq_v1v3']
             for(let n in abundance_order){
                 site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
       }else if(source === 'hmprefseqv3v5'
-              && C.taxon_counts_lookup[tax_string].hasOwnProperty('hmp_refseq_v3v5')
-                &&  Object.keys(C.taxon_counts_lookup[tax_string]['hmp_refseq_v3v5']).length > 0)
+              && C.abundance_lookup[tax_string].hasOwnProperty('hmp_refseq_v3v5')
+                &&  Object.keys(C.abundance_lookup[tax_string]['hmp_refseq_v3v5']).length > 0)
             {
-            table_tsv += tax_string+'\t'+C.taxon_counts_lookup[tax_string]['otid']
-            row = C.taxon_counts_lookup[tax_string]['hmp_refseq_v3v5']
+            table_tsv += tax_string+'\t'+C.abundance_lookup[tax_string]['otid']
+            row = C.abundance_lookup[tax_string]['hmp_refseq_v3v5']
             for(let n in abundance_order){
                 site = abundance_order[n]
                 table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']

@@ -208,14 +208,21 @@ def get_dropped():
 
     
 def run_abundance_db(): 
-    TCcollector = {}
+    TCcounts = {}
+    TCtaxa = {}
     filestarter = 'homdData-TaxonCounts.json'
     #json_file = args.outfile
     json_file = filestarter
     if os.path.isfile(json_file):
         f = open(json_file)
-        TCcollector = json.load(f)
+        TCcounts = json.load(f)
+    else:
+        sys.exit('FILE NOT FOUND: '+filestarter)
     sites = []
+    for item in TCcounts.keys():
+        TCtaxa[item] = {}
+    #print('TCtaxa',TCtaxa.keys())
+    #sys.exit()
     for n in headers:
         sites.append(n+'_mean')
         sites.append(n+'_10p')
@@ -298,79 +305,79 @@ def run_abundance_db():
 #                 if tax_parts[6] in subspecies:
 #                     taxon_string =';'.join(tax_parts[:6])+';'+tax_parts[5]+' '+subspecies[tax_parts[6]][0]+';'+subspecies[tax_parts[6]][1]
         
-        if taxon_string not in TCcollector:
+        if taxon_string not in TCtaxa:
             #print()
             #print(row)
             missing_count +=1
-            print(missing_count,'!Missing from TaxonCounts.json -('+row['reference']+')::'+taxon_string)
-            TCcollector[taxon_string] = {}
+            print(missing_count,taxon_string+' !Missing from TaxonCounts.json file -('+row['reference']+')')
+            TCtaxa[taxon_string] = {}
         if row['otid'] not in dropped_taxa:
-            TCcollector[taxon_string]['otid'] = row['otid']
-            TCcollector[taxon_string]['ecology'] = 1
-            #TCcollector[taxon_string]['max_all'] = row['max']
-            if 'notes' not in TCcollector[taxon_string]:
-                TCcollector[taxon_string]['notes'] = {}
+            TCtaxa[taxon_string]['otid'] = row['otid']
+            TCtaxa[taxon_string]['ecology'] = 1
+            #TCtaxa[taxon_string]['max_all'] = row['max']
+            if 'notes' not in TCtaxa[taxon_string]:
+                TCtaxa[taxon_string]['notes'] = {}
             
-            if 'eren_v1v3' not in TCcollector[taxon_string]:
-                TCcollector[taxon_string]['eren_v1v3'] = {}
-            if 'eren_v3v5' not in TCcollector[taxon_string]:
-                TCcollector[taxon_string]['eren_v3v5'] = {}
-            if 'dewhirst' not in TCcollector[taxon_string]:
-                TCcollector[taxon_string]['dewhirst'] = {}
-            if 'hmp_metaphlan' not in TCcollector[taxon_string]:
-                TCcollector[taxon_string]['hmp_metaphlan'] = {}
-            if 'hmp_refseq_v1v3' not in TCcollector[taxon_string]:
-                TCcollector[taxon_string]['hmp_refseq_v1v3'] = {}
-            if 'hmp_refseq_v3v5' not in TCcollector[taxon_string]:
-                TCcollector[taxon_string]['hmp_refseq_v3v5'] = {}
+            if 'eren_v1v3' not in TCtaxa[taxon_string]:
+                TCtaxa[taxon_string]['eren_v1v3'] = {}
+            if 'eren_v3v5' not in TCtaxa[taxon_string]:
+                TCtaxa[taxon_string]['eren_v3v5'] = {}
+            if 'dewhirst' not in TCtaxa[taxon_string]:
+                TCtaxa[taxon_string]['dewhirst'] = {}
+            if 'hmp_metaphlan' not in TCtaxa[taxon_string]:
+                TCtaxa[taxon_string]['hmp_metaphlan'] = {}
+            if 'hmp_refseq_v1v3' not in TCtaxa[taxon_string]:
+                TCtaxa[taxon_string]['hmp_refseq_v1v3'] = {}
+            if 'hmp_refseq_v3v5' not in TCtaxa[taxon_string]:
+                TCtaxa[taxon_string]['hmp_refseq_v3v5'] = {}
                 
             
             if row['reference'].startswith('Eren2014_v1v3'):
                 for p in eren_site_prefixes:
                     max_eren = get_max(row, p, max_eren)
-                    TCcollector[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-                TCcollector[taxon_string]['max_erenv1v3'] = max_eren
-                TCcollector[taxon_string]['notes']['eren_v1v3'] = row['notes']
+                    TCtaxa[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCtaxa[taxon_string]['max_erenv1v3'] = max_eren
+                TCtaxa[taxon_string]['notes']['eren_v1v3'] = row['notes']
             if row['reference'].startswith('Eren2014_v3v5'):
                 for p in eren_site_prefixes:
                     max_eren = get_max(row, p, max_eren)
-                    TCcollector[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-                TCcollector[taxon_string]['max_erenv3v5'] = max_eren
-                TCcollector[taxon_string]['notes']['eren_v3v5'] = row['notes']
+                    TCtaxa[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCtaxa[taxon_string]['max_erenv3v5'] = max_eren
+                TCtaxa[taxon_string]['notes']['eren_v3v5'] = row['notes']
             if row['reference'].startswith('Dewhirst'):
                 for p in dewhirst_site_prefixes:
                     max_dewhirst = get_max(row, p, max_dewhirst)
                     #print('max_dewhirst',max_dewhirst)
-                    TCcollector[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-                TCcollector[taxon_string]['max_dewhirst'] = max_dewhirst
-                TCcollector[taxon_string]['notes']['dewhirst'] = row['notes']
+                    TCtaxa[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCtaxa[taxon_string]['max_dewhirst'] = max_dewhirst
+                TCtaxa[taxon_string]['notes']['dewhirst'] = row['notes']
             if row['reference'].startswith('HMP_MetaPhlan'):
                 for p in hmp_metaphlan_prefixes:
                     max_hmp_metaphlan = get_max(row, p, max_hmp_metaphlan)
                     #print('max_dewhirst',max_dewhirst)
-                    TCcollector[taxon_string]['hmp_metaphlan'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-                TCcollector[taxon_string]['max_hmp_metaphlan'] = max_hmp_metaphlan
-                TCcollector[taxon_string]['notes']['hmp_metaphlan'] = row['notes']
+                    TCtaxa[taxon_string]['hmp_metaphlan'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCtaxa[taxon_string]['max_hmp_metaphlan'] = max_hmp_metaphlan
+                TCtaxa[taxon_string]['notes']['hmp_metaphlan'] = row['notes']
                 
             if row['reference'].startswith('HMP_16S_RefSeq_v1v3'):
                 for p in hmp_refseq_prefixes:
                     max_hmp_refseq = get_max(row, p, max_hmp_refseq)
                     #print('max_dewhirst',max_dewhirst)
-                    TCcollector[taxon_string]['hmp_refseq_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-                TCcollector[taxon_string]['max_hmp_refseq_v1v3'] = max_hmp_refseq
-                TCcollector[taxon_string]['notes']['hmp_refseq_v1v3'] = row['notes']
+                    TCtaxa[taxon_string]['hmp_refseq_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCtaxa[taxon_string]['max_hmp_refseq_v1v3'] = max_hmp_refseq
+                TCtaxa[taxon_string]['notes']['hmp_refseq_v1v3'] = row['notes']
             if row['reference'].startswith('HMP_16S_RefSeq_v3v5'):
                 for p in hmp_refseq_prefixes:
                     max_hmp_refseq = get_max(row, p, max_hmp_refseq)
                     #print('max_dewhirst',max_dewhirst)
-                    TCcollector[taxon_string]['hmp_refseq_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
-                TCcollector[taxon_string]['max_hmp_refseq_v3v5'] = max_hmp_refseq
-                TCcollector[taxon_string]['notes']['hmp_refseq_v3v5'] = row['notes']
-    #print(TCcollector)
-    #for s in TCcollector:
-    #    print('max_eren-s',s,TCcollector[s])
+                    TCtaxa[taxon_string]['hmp_refseq_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCtaxa[taxon_string]['max_hmp_refseq_v3v5'] = max_hmp_refseq
+                TCtaxa[taxon_string]['notes']['hmp_refseq_v3v5'] = row['notes']
+    #print(TCtaxa)
+    #for s in TCtaxa:
+    #    print('max_eren-s',s,TCtaxa[s])
     filename = args.outfile
-    print_dict(filename, TCcollector)
+    print_dict(filename, TCtaxa)
     
 """
 if species: species == genus+species
@@ -489,7 +496,7 @@ if __name__ == "__main__":
 #    parser.add_argument("-s", "--source",   required=True,  action="store",   dest = "source", 
 #                                                    help="ONLY segata dewhirst eren")
     parser.add_argument("-o", "--outfile",   required=False,  action="store",   dest = "outfile", 
-            default='homdData-TaxonCounts.json',  help=" ")
+            default='homdData-SiteAbundances.json',  help=" ")
     parser.add_argument("-outdir", "--out_directory", required = False, action = 'store', dest = "outdir", default = './',
                          help = "Not usually needed if -host is accurate")
     parser.add_argument("-host", "--host",

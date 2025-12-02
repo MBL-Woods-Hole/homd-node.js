@@ -444,7 +444,7 @@ export const walk = (dir) => {
 };
 export const get_has_abundance = () => {
    console.log('getting abund +-')
-   /// Relies on the C.taxon_counts_lookup to have acurate data
+   /// Relies on the C.abundance_lookup to have acurate data
    /// see Initialize_Abundance.py
    /// used on ecology_home page
     
@@ -460,37 +460,37 @@ export const get_has_abundance = () => {
     //console.log(phyla_obj)
     for(let n in domain_obj){
         lineage_list = helpers_taxa.make_lineage(domain_obj[n])
-        tc = C.taxon_counts_lookup[lineage_list[0]]
+        tc = C.abundance_lookup[lineage_list[0]]
         data.domain[domain_obj[n].taxon] = tc.ecology
     }
     for(let n in phyla_obj){
         lineage_list = helpers_taxa.make_lineage(phyla_obj[n])
-        tc = C.taxon_counts_lookup[lineage_list[0]]
+        tc = C.abundance_lookup[lineage_list[0]]
         data.phylum[phyla_obj[n].taxon] = tc.ecology
     }
     for(let n in class_obj){
         lineage_list = helpers_taxa.make_lineage(class_obj[n])
-        tc = C.taxon_counts_lookup[lineage_list[0]]
+        tc = C.abundance_lookup[lineage_list[0]]
         data.klass[class_obj[n].taxon] = tc.ecology
     }
     for(let n in order_obj){
         lineage_list = helpers_taxa.make_lineage(order_obj[n])
-        tc = C.taxon_counts_lookup[lineage_list[0]]
+        tc = C.abundance_lookup[lineage_list[0]]
         data.order[order_obj[n].taxon] = tc.ecology
     }
     for(let n in family_obj){
         lineage_list = helpers_taxa.make_lineage(family_obj[n])
-        tc = C.taxon_counts_lookup[lineage_list[0]]
+        tc = C.abundance_lookup[lineage_list[0]]
         data.family[family_obj[n].taxon] = tc.ecology
     }
     for(let n in genus_obj){
         lineage_list = helpers_taxa.make_lineage(genus_obj[n])
-        tc = C.taxon_counts_lookup[lineage_list[0]]
+        tc = C.abundance_lookup[lineage_list[0]]
         data.genus[genus_obj[n].taxon] = tc.ecology
     }
     for(let n in species_obj){
         lineage_list = helpers_taxa.make_lineage(species_obj[n])
-        tc = C.taxon_counts_lookup[lineage_list[0]]
+        tc = C.abundance_lookup[lineage_list[0]]
         data.species[species_obj[n].taxon] = tc.ecology
     }
     //console.log('abund data',data)

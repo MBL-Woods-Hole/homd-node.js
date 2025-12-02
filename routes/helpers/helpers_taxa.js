@@ -674,7 +674,7 @@ export const apply_ttable_filter = (req, filter) => {
       //console.log(el)
       let lineage_list = helpers_taxa.make_lineage(node);
 
-      if (C.taxon_counts_lookup.hasOwnProperty(lineage_list[0]) && C.taxon_counts_lookup[lineage_list[0]].ecology == '1') {
+      if (C.abundance_lookup.hasOwnProperty(lineage_list[0]) && C.abundance_lookup[lineage_list[0]].ecology == '1') {
         el.ecology = 1;
       } else {
         el.ecology = 0;

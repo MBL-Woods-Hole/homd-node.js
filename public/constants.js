@@ -27,11 +27,12 @@ constants.user_security_levels = {
 }
 //constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
 constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species","subspecies"];
-constants.taxon_table_headers = ["HMT-ID",
-                   "Domain","Phylum","Class","Order","Family","Genus","Species","Subspecies",
-                   "Naming Status","Cultivation Status","Body Site(s)","Type Strain","16S_rRNA",
-                   "Synonyms","NCBI Taxon ID","Genome IDs","Genome Size Range"
-                   ]
+constants.taxon_table_headers = [
+    "HMT-ID",
+    "Domain","Phylum","Class","Order","Family","Genus","Species","Subspecies",
+    "Naming Status","Cultivation Status","Body Site(s)","Type Strain","16S_rRNA",
+    "Synonyms","NCBI Taxon ID","Genome IDs","Genome Size Range"
+]
 constants.genome_table_headers = [
   'GENOME_ID',
   'HMT_ID',
@@ -385,6 +386,7 @@ constants.genome_lookup_fn      = 'homdData-GenomeLookup.json'
 constants.info_lookup_fn        = 'homdData-TaxonInfoLookup.json'   //??
 constants.references_lookup_fn  = 'homdData-TaxonReferencesLookup.json'
 constants.taxcounts_fn          = 'homdData-TaxonCounts.json'
+constants.abundance_fn          = 'homdData-SiteAbundances.json'
 constants.taxon_lookup_fn       = 'homdData-TaxonLookup.json'
 constants.lineage_lookup_fn     = 'homdData-TaxonLineageLookup.json' // supplied to create dict
 constants.tax_hierarchy_fn      = 'homdData-TaxonHierarchy.json'
