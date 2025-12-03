@@ -62,7 +62,7 @@ a{
 #download-refseq-table td{
    border:1px solid black;
    border-collapse:collapse;
-   padding:0 5px;
+   padding:2px 5px;
 }
 #download-refseq-table td:first-child{
    font-size:small;
@@ -120,16 +120,16 @@ a{
     <div  class="" >
      <div  id="downloadMenu" >
       <div class="list-group">
-        <li><a href='/download/download/all'>[top]</a></li>
-        <li><a href='#' onclick="shift_page_view('taxon')">Taxonomy Data</a></li>
-        <li><a href='#' onclick="shift_page_view('abundance')">Abundance Data</a></li>
-        <li><a href='#' onclick="shift_page_view('genome')">Genomic Data</a></li>
-        <li><a href='#' onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
-        <li><a href='#' onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
-        <li><a href='#' onclick="shift_page_view('phage')">Phage Data</a></li>
-        <li><a href='#' onclick="shift_page_view('crispr')">Crispr-Cas Data</a></li>
-        <li><a href='#' onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
-        <li><a href='#' onclick="shift_page_view('schema')">Database Schema</a></li>
+        <li id='menu-top'><a href='/download/download/all'>[top]</a></li>
+        <li id='menu-taxon'><a href='#' onclick="shift_page_view('taxon')">Taxonomy Data</a></li>
+        <li id='menu-abundance'><a href='#' onclick="shift_page_view('abundance')">Abundance Data</a></li>
+        <li id='menu-genome'><a href='#' onclick="shift_page_view('genome')">Genomic Data</a></li>
+        <li id='menu-phylo'><a href='#' onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
+        <li id='menu-peptide'><a href='#' onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
+        <li id='menu-phage'><a href='#' onclick="shift_page_view('phage')">Phage Data</a></li>
+        <li id='menu-crispr'><a href='#' onclick="shift_page_view('crispr')">Crispr-Cas Data</a></li>
+        <li id='menu-refseq'><a href='#' onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
+        <li id='menu-schema'><a href='#' onclick="shift_page_view('schema')">Database Schema</a></li>
       </div>
      </div>
 </div>           
@@ -441,12 +441,22 @@ a{
     <tr><td></td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/publication_data/20190709/'>Other training set related files [link to FTP site]</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/publication_data/20190709/' target='_blank'>[Link Out]</a></td></tr>
     
-    <tr><td class='download-refseq-title' colspan='3'>Other Download Formats</td> </tr>
+    <tr><td class='download-refseq-title' colspan='3'>Other Download Formats (FASTA, MOTHUR, QIIME, ...)</td> </tr>
+    
+    <tr><td>2025-08-25</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.03/HOMD_16S_rRNA_RefSeq_V16.03.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.03 Taxonomy File for MOTHUR</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.03/HOMD_16S_rRNA_RefSeq_V16.03.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
+    <tr><td>2025-08-25</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.03/HOMD_16S_rRNA_RefSeq_V16.03.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.03 Taxonomy File for QIIME</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.03/HOMD_16S_rRNA_RefSeq_V16.03.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+    <tr><td>2025-09-04</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.03/HOMD_16S_rRNA_RefSeq_V16.03_mafft_aligned.fasta'>eHOMD 16S rRNA RefSeq Version 16.03 Aligned FASTA</a></td>
+        <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.03/HOMD_16S_rRNA_RefSeq_V16.03_mafft_aligned.fasta'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+    
+    
     
     <tr><td>2025-07-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.02/HOMD_16S_rRNA_RefSeq_V16.02.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.02 Taxonomy File for MOTHUR</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.02/HOMD_16S_rRNA_RefSeq_V16.02.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
     <tr><td>2025-07-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.02/HOMD_16S_rRNA_RefSeq_V16.02.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.02 Taxonomy File for QIIME</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.02/HOMD_16S_rRNA_RefSeq_V16.01.qiime.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>
+    
     <tr><td>2025-03-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.mothur.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.0 Taxonomy File for MOTHUR</a></td>
         <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.mothur.taxonomy'><i class="fa fa-download" aria-hidden="true"></i></a></td></tr>  
     <tr><td>2025-03-10</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/16S_rRNA_refseq/HOMD_16S_rRNA_RefSeq/V16.0/HOMD_16S_rRNA_RefSeq_V16.0.qiime.taxonomy'>eHOMD 16S rRNA RefSeq Version V16.0 Taxonomy File for QIIME</a></td>
@@ -554,9 +564,11 @@ a{
         if(all_groups[g] == item){
           group.style.background = 'orange';
           document.getElementById(all_groups[g]).style.background = 'LemonChiffon'
+          document.getElementById('menu-'+all_groups[g]).style.background = 'LemonChiffon'
         }else{
           group.style.background = 'lightgrey';
           document.getElementById(all_groups[g]).style.background = 'white'
+          document.getElementById('menu-'+all_groups[g]).style.background = 'lightblue'
         }
       }else{
           //groupx = document.getElementById('topx')

@@ -102,10 +102,10 @@ router.get('/dld_refseqtable_all/:type', function dld_refseqtable(req, res) {
         res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
     } else if (type === 'text') {
         let fname = 'HOMD_refseq_table' + dt.today + '_' + dt.seconds + '.txt'
-        res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
+        res.set({ 'Content-Disposition': 'attachment; filename='+fname })
     } else if (type === 'excel') {
         let fname = 'HOMD_refseq_table' + dt.today + '_' + dt.seconds + '.xls'
-        res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
+        res.set({ 'Content-Disposition': 'attachment; filename='+fname })
     } else {
         // error
         console.log('Download table format ERROR')
@@ -384,10 +384,10 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
     res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
   } else if (type === 'text') {
     let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds + '.txt'
-    res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
+    res.set({ 'Content-Disposition': 'attachment; filename='+fname })
   } else if (type === 'excel') {
     let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds + '.xls'
-    res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
+    res.set({ 'Content-Disposition': 'attachment; filename='+fname })
   } else {
     // error
     console.log('Download table format ERROR')
@@ -513,41 +513,156 @@ router.post('/anno_search_data', async (req, res) => {
         //res.setHeader('Content-Type', 'text/plain');
         let fname = 'HOMD_'+anno+'_search' + dt.today + '_' + dt.seconds
         stream_sqlquery_download(q, fname,  res, 'fasta', type)
-
+        return
     }else{
     
         try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
-        for(let n in rows){
-            //console.log(rows[n].genome_id)
-        }
-        
-        fname = ''
-        ext = '.txt'
-        result_text = create_anno_table(rows, anno, head_text_array, search_text)
-        
-        
-        if (type === 'browser') {
-            res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-        } else if (type === 'text') {
+            conn = await global.TDBConn();
+            const [rows] = await conn.execute(q);
+            for(let n in rows){
+                //console.log(rows[n].genome_id)
+            }
             
-            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
-            res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
-        
-        
-        } else if (type === 'excel') {
-            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
-            res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
-          
-        
-        } else {
-            // error
-            console.log('Download table format ERROR')
-        
+            fname = ''
+            ext = '.txt'
+            result_text = create_anno_search_table(rows, anno, head_text_array, search_text)
+            
+            
+            if (type === 'browser') {
+                res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+            } else if (type === 'text') {
+                
+                let fname = 'HOMD_search'+anno_cap+ dt.today + '_' + dt.seconds + ext
+                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+            
+            
+            } else if (type === 'excel') {
+                let fname = 'HOMD_search'+anno_cap + dt.today + '_' + dt.seconds + '.xls'
+                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+              
+            
+            } else {
+                // error
+                console.log('Download table format ERROR')
+            
+            }
+            res.send(result_text)
+            res.end()
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error fetching data');
+        } finally {
+            if (conn) conn.release(); // Release the connection back to the pool
         }
-        res.send(result_text)
-        res.end()
+        return
+    }
+    
+})
+////
+router.post('/anno_data_by_gid', async (req, res) => {
+    // Download all Annotation Hits By gid/ table and fasta
+    console.log('anno_data_by_gid req body',req.body)
+    let type = req.body.type  // browser, text or excel
+    let anno = req.body.anno  // ncbi prokka or bakta
+    let gid = req.body.gid
+   
+    let format = req.body.format  // csv or fasta
+    //let id_list = JSON.parse(req.body.anno_ids)
+    
+    console.log('anno',anno)
+    console.log('type',type)
+    console.log('format',format)
+    let fname,result_text,ext,q
+    let dt = helpers.get_today_obj()
+    //if anno is prokka or ncbi us .map to get all the pids from idlist
+    // if anno == bakta ??
+    
+    let head_text_array
+    let anno_cap = anno.toUpperCase()
+
+    q = "SELECT"
+    q += " CONCAT('>',protein_id,' | ',genome_id,' | ',mol_id) AS defline,"
+    q += " UNCOMPRESS(seq_compressed) AS sequence"
+    if(format === 'fasta_aa' && anno === 'ncbi'){
+        q += " from NCBI.faa WHERE NCBI.faa.genome_id = '"+gid+"'" 
+        
+    }else if(format === 'fasta_na' && anno === 'ncbi'){
+        q += " from NCBI.ffn WHERE NCBI.ffn.genome_id = '"+gid+"'"
+        
+    }else if(format === 'fasta_aa' && anno === 'prokka'){
+        q += " from PROKKA.faa WHERE PROKKA.faa.genome_id = '"+gid+"'" 
+        
+    //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
+    //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`faa` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
+    }else if(format === 'fasta_na' && anno === 'prokka'){
+        q += " from PROKKA.ffn WHERE PROKKA.ffn.genome_id = '"+gid+"'"
+        
+    //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
+    //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`ffn` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
+    
+    }else if(anno === 'prokka'){
+        q = "SELECT accession as acc,  gc, protein_id as pid, length_na,length_aa, `start`, `stop`,"
+        q+= " PROKKA.orf.product as product,PROKKA.orf.gene as gene,BAKTA.orf.Bakta_product as bakta_product,BAKTA.orf.Bakta_gene as bakta_gene" 
+        q += " FROM PROKKA.orf"
+        q += " LEFT JOIN BAKTA.orf on(protein_id=core_ID)"
+        q += " WHERE PROKKA.orf.genome_id = '"+gid+"'" 
+        head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
+        
+    }else if(anno === 'ncbi'){
+        q = "SELECT accession as acc,  gc, protein_id as pid, product, length_na,length_aa, `start`, `stop`, gene" 
+        q += " FROM NCBI.orf"
+        q += " WHERE NCBI.orf.genome_id = '"+gid+"'" 
+        head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
+        
+    }
+
+       
+    
+    
+    helpers.print('query: '+q)
+    let conn
+    
+    if(format.slice(0,5) === 'fasta'){
+        // Set response headers for file download
+        //res.setHeader('Content-Type', 'text/plain');
+        let fname = 'HOMD_'+anno+'_search' + dt.today + '_' + dt.seconds
+        stream_sqlquery_download(q, fname,  res, 'fasta', type)
+        return
+    }else{
+    
+        try {
+            conn = await global.TDBConn();
+            const [rows] = await conn.execute(q);
+            for(let n in rows){
+                //console.log(rows[n].genome_id)
+            }
+            
+            fname = ''
+            ext = '.txt'
+            // anno is ONLY prokka or ncbi  NOT bakta
+            result_text = create_anno_table(rows, anno,gid)
+            
+            
+            if (type === 'browser') {
+                res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+            } else if (type === 'text') {
+                
+                let fname = 'HOMD_annotations' + anno_cap+ dt.today + '_' + dt.seconds + ext
+                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+            
+            
+            } else if (type === 'excel') {
+                let fname = 'HOMD_annotations' + anno_cap+ dt.today + '_' + dt.seconds + '.xls'
+                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+              
+            
+            } else {
+                // error
+                console.log('Download table format ERROR')
+            
+            }
+            res.send(result_text)
+            res.end()
         } catch (error) {
             console.error(error);
             res.status(500).send('Error fetching data');
@@ -565,8 +680,6 @@ router.post('/phage_sequences', async (req, res) => {
     let dt = helpers.get_today_obj()
     let fname = 'HOMD_phage_seqs' + dt.today + '_' + dt.seconds
     stream_sqlquery_download(q, fname, res, 'fasta', 'text')
-    
-
     return
     
 })
@@ -597,8 +710,6 @@ router.post('/phage_search_data', async (req, res) => {
             let q = queries.get_phage_fasta(id_list)
             let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds
             stream_sqlquery_download(q, fname, res, 'fasta', type)
-            //result_text = create_fasta(rows,'phage')
-            //console.log(result_text)
             return
     }else{
         try {
@@ -619,10 +730,10 @@ router.post('/phage_search_data', async (req, res) => {
             } else if (type === 'text') {
                 
                 let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
-                res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
+                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
             } else if (type === 'excel') {
                 let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
-                res.set({ 'Content-Disposition': 'attachment; filename="${fname}"' })
+                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
               
             } else {
                 // error
@@ -780,23 +891,17 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
       writableObjectMode: true, // Accepts objects
       transform(chunk, encoding, callback) {
         // Convert the object to a string (e.g., JSON string) and push it as a string
-        let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
+        const arr = helpers.chunkSubstr(chunk.sequence.toString(), 100)
+           //console.log('arr[0]',arr[0])
+          // let str += arr.join('\n')
+        //let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
+        let record = JSON.stringify(chunk.defline) + '\n'+arr.join('\n')+ '\n'
         this.push(record.replaceAll(/["]/g, ''));
          //this.push(JSON.stringify(chunk.defline+'\n'));
         callback();
       }
     });
-    // const tableObjectToStringStream = new Transform({
-//           writableObjectMode: true, // Accepts objects
-//           transform(chunk, encoding, callback) {
-//             // Convert the object to a string (e.g., JSON string) and push it as a string
-//             console.log('chunk',chunk)
-//             let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
-//             this.push(record.replaceAll(/["]/g, ''));
-//              //this.push(JSON.stringify(chunk.defline+'\n'));
-//             callback();
-//           }
-//         });
+ 
 
     try {
         conn = await global.TDBConn();
@@ -865,8 +970,40 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
     return
     
 }
-
-function create_anno_table(sql_rows,anno,headers,search_term) {
+////
+function create_anno_table(sql_rows,anno,gid) {
+    let text = 'Annotation Table: '+anno.toUpperCase()+'\n'
+    let headers
+    
+    if(anno === 'prokka'){
+        //'Bakta' as anno,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
+        //        q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef
+        // ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
+        headers = ['Genome_ID','Accession','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene','BAKTA_Product',
+        'BAKTA_Gene']
+        text += headers.join("\t")+'\n'
+        for(let n in sql_rows){
+            text += gid+'\t'+sql_rows[n].acc+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].length_na+'\t'+sql_rows[n].length_aa
+            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
+            text += '\t'+sql_rows[n].bakta_product+'\t'+sql_rows[n].bakta_gene
+            text += '\n'
+        }
+    }else{ // anno === ncbi
+        //text='anno table: '+anno
+        headers = ['Genome_ID','Accession','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
+        text += headers.join("\t")+'\n'
+        for(let n in sql_rows){
+            text += gid+'\t'+sql_rows[n].acc+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].length_na+'\t'+sql_rows[n].length_aa
+            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
+            text += '\n'
+        }
+             
+    }
+    
+    return text
+}
+////
+function create_anno_search_table(sql_rows,anno,headers,search_term) {
     let text = anno.toUpperCase()+' ::Search String: "'+search_term+'"\n'
     text += headers.join("\t")+'\n'
     

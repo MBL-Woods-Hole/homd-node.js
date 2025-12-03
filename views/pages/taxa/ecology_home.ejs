@@ -140,7 +140,7 @@ table td a{
                     <% if(has_abund_data.phylum[phyla[n]]){ %>
                        <a href='ecology?rank=phylum&name=<%= phyla[n] %>'><%= phyla[n] %></a>
                     <% }else{ %>
-                      <%= phyla[n] %>
+                      <span title='No Abundance Data Available'><%= phyla[n] %></span>
                     <% } %>
                     <br>
                 <% } %>
@@ -152,7 +152,7 @@ table td a{
                     <% if(has_abund_data.klass[klasses[n]]){ %>
                     <a href='ecology?rank=klass&name=<%= klasses[n] %>'><%= klasses[n] %></a>
                     <% }else{ %>
-                      <%= klasses[n] %>
+                      <span title='No Abundance Data Available'><%= klasses[n] %></span>
                     <% } %>
                     <br>
                 <% } %>
@@ -164,7 +164,7 @@ table td a{
                     <% if(has_abund_data.order[orders[n]]){ %>
                     <a href='ecology?rank=order&name=<%= orders[n] %>'><%= orders[n] %></a>
                     <% }else{ %>
-                      <%= orders[n] %>
+                      <span title='No Abundance Data Available'><%= orders[n] %></span>
                     <% } %>
                     <br>
                 <% } %>
@@ -176,7 +176,7 @@ table td a{
                     <% if(has_abund_data.family[families[n]]){ %>
                     <a href='ecology?rank=family&name=<%= families[n] %>'><%= families[n] %></a>
                     <% }else{ %>
-                      <%= families[n] %>
+                      <span title='No Abundance Data Available'><%= families[n] %></span>
                     <% } %>
                     <br>
                 <% } %>
@@ -188,7 +188,7 @@ table td a{
                     <% if(has_abund_data.genus[genera[n]]){ %>
                     <a href='ecology?rank=genus&name=<%= genera[n] %>'><%= genera[n] %></a>
                     <% }else{ %>
-                      <%= genera[n] %>
+                      <span title='No Abundance Data Available'><%= genera[n] %></span>
                     <% } %>
                     <br>
                 <% } %>

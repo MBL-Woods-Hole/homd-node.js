@@ -59,7 +59,21 @@ thead th { position: sticky; top: 0; }
     </div>
         
 </td><td>
-
+    <div style='float:right;font-size:12px;border:1px solid brown;padding:2px;'>
+        <form name='' method='POST' action='/download/anno_data_by_gid'>
+        <input type="hidden" id="gid" name="gid" value='<%= gid %>'>
+        <input type="hidden" id="anno" name="anno" value='<%= anno_type %>'>
+        <input type="radio" checked name="format" value='csv'> [Table]&nbsp;&nbsp;
+        <% if(anno_type != 'bakta'){ %>
+        <input type="radio"         name="format" value='fasta_na'> [NA Fasta]&nbsp;&nbsp;
+        <% } %>
+        <input type="radio"         name="format" value='fasta_aa'> [AA Fasta]&nbsp;&nbsp;
+        <input class='pill pill-brown' type="submit" id="submit" name="submit" value='Download all Rows' >&nbsp;&nbsp;
+        <input type="radio" checked name="type" value='browser'> [Browser]&nbsp;&nbsp;
+        <input type="radio"         name="type" value='text'> [Text]&nbsp;&nbsp;
+        <input type="radio"         name="type" value='excel'> [Excel]&nbsp;&nbsp;
+        </form>
+    </div>
     <div id='annotation-filter'>
             <strong>Search & Sort all <%= page_data.trecords %> Records</strong>
             <%- include('annot_table_filter.ejs') %>
@@ -93,9 +107,8 @@ thead th { position: sticky; top: 0; }
              <% } %>]
              
         <% } %>
-        
-        
-    <br><hr>
+            
+    <hr>
     <span><strong>Notes:</strong>
     <small>&nbsp;&nbsp;<strong>1-</strong> Column headers only sort the current page. <strong>2-</strong> Select [NA] or [AA] links to show sequences.
     <strong>3-</strong> BAKTA columns are <a href='https://github.com/oschwengers/bakta' target='_blank'>
