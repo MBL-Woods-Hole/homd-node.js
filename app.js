@@ -322,7 +322,7 @@ Promise.all(promises)
     C.abundance_lookup       = results[16];  // should have same taxa keys as C.taxon_counts_lookup
     /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)
-    C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference')).map(x => x.otid)
+    C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference' && item.status.toLowerCase() !== 'dropped')).map(x => x.otid)
    
     C.otids_w_abundance = Object.values(C.abundance_lookup).filter(item => {
         if(item.otid != ''){
@@ -331,6 +331,7 @@ Promise.all(promises)
     }).map(x => (parseInt(x.otid)).toString())  // turns '010' to '10'
     
     C.has_abundance_data = helpers.get_has_abundance()
+    
     //console.log('C.otids_w_abundance',C.otids_w_abundance)
     //console.log('')
     
@@ -402,6 +403,9 @@ Promise.all(promises)
     //console.log('100_species',C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank['100_species'])
     /////////////////////////////////////////////////////////////////////////////////////
     C.taxa_with_subspecies = Object.values(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies']).map(x => x.otid)
+    
+    C.homd_stats         = helpers.calculate_homd_stats()
+    
     console.log('Dropped Taxa:',C.dropped_taxids,C.dropped_taxids.length)
     console.log('Reference Taxa:',C.reference_taxids,C.reference_taxids.length)
     console.log('C.taxa_with_subspecies',C.taxa_with_subspecies,C.taxa_with_subspecies.length)

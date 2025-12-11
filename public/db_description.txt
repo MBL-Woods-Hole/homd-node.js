@@ -1,0 +1,28 @@
+Dec 2025
+
+HOMD Database Architecture
+
+
+The HOMD frontend code is based on open-source Node.js (a server-side 
+JavaScript runtime environment) 
+and Express.js, a web application framework and runs on top of Node.js.
+
+The HOMD database backend is based on MySQL and uses InnoDB tables for its data.
+Database rules:
+-Focus on trying to mimimize redundancy.
+-Maximize speed of queries.
+-Each table is linked to other tables by either the HMT-ID, or GENOME-ID
+   and the table are indexed which allows faster queries.
+
+One important point related to the database is that certain information
+is queried from the database and placed in JSON format in flat files
+for the Node.js server to read on startup.
+This means the data is available in memory and much faster to access
+than sql queries called during normal page loading.
+
+
+The database is divided into four general sections:
+Taxonomy, Genomes, Phage and Annotation tables
+
+
+

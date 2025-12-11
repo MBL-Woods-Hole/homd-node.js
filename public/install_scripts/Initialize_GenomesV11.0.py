@@ -30,7 +30,8 @@ gprokka_tbl = 'genomes_prokkaV11.0'
 #    FROM `genomesV11.0`
 #    JOIN `genomes_ncbiV11.0` using(genome_id)
 # """
-genomes_query = "SELECT genome_id as gid, MAG as mag,has_phage as phage,otid, strain, `"+gncbi_tbl+"`.assembly_level as level,"
+#genomes_query = "SELECT genome_id as gid, MAG as mag,has_phage as phage,otid, strain, `"+gncbi_tbl+"`.assembly_level as level,"
+genomes_query = "SELECT genome_id as gid, MAG as mag,otid, strain, `"+gncbi_tbl+"`.assembly_level as level,"
 genomes_query += " `"+genome_tbl+"`.organism, `"+genome_tbl+"`.contigs, `"+genome_tbl+"`.combined_size, `"+genome_tbl+"`.GC"
 genomes_query += " FROM `"+genome_tbl+"`"
 genomes_query += " JOIN `"+gncbi_tbl+"` using(genome_id)"
@@ -52,7 +53,7 @@ def create_genome(gid):  # basics - page1 Table: genomes  seqid IS UNIQUE
     genome['gc']        = ''   # table 2
     genome['level']  = ''   # Complete Genome,Scaffold,Contig,Chromosome,MAG
     genome['mag']  = ''
-    genome['has_phage']  = ''
+    #genome['has_phage']  = ''
     return genome
 
 
@@ -78,7 +79,7 @@ def run_first(args):
             taxonObj['gc']          = obj['GC']
             taxonObj['level']    = obj['level']
             taxonObj['mag']    = obj['mag']
-            taxonObj['phage']    = obj['phage']
+            #taxonObj['phage']    = obj['phage']
             taxonObj['otid']        = obj['otid']
         else:
             sys.exit('duplicate gid',obj['gid'])

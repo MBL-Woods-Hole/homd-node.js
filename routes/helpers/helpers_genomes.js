@@ -80,7 +80,7 @@ export const set_gtable_session = (req) => {
       }
     }
     // Tax Status
-    let status_array = ['named_cultivated', 'named_uncultivated', 'unnamed_cultivated', 'phylotype', 'dropped'];
+    let status_array = ['named_cultivated', 'named_uncultivated', 'unnamed_cultivated', 'phylotype'];
     for (let item in status_array) {
       if (Object.prototype.hasOwnProperty.call(req.body, status_array[item])) {
         req.session.gtable_filter.status[status_array[item]] = req.body[status_array[item]];
@@ -203,8 +203,15 @@ export const apply_gtable_filter = (req, filter) => {
     vals = helpers_genomes.get_default_gtable_filter();
   }
   ///console.log('ZZZ Vals',vals)
-  big_g_list = helpers_genomes.get_filtered_genome_list(big_g_list, vals.text.txt_srch, vals.text.field);
-
+  // big_g_list.filter(function (item) {
+//     if (item.gid === 'GCA_013333485.2') {
+//       console.log('GOOOOD-00',item)
+//     }
+//   })
+  if(vals.text.txt_srch){
+    big_g_list = helpers_genomes.get_filtered_genome_list(big_g_list, vals.text.txt_srch, vals.text.field);
+  }
+  //console.log("GCA_013333485.2-0",big_g_list.length)
   //letter
   if (vals.letter && vals.letter.match(/[A-Z]{1}/)) { // always caps
     //helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
@@ -216,7 +223,7 @@ export const apply_gtable_filter = (req, filter) => {
   if (vals.phylum !== '') {
     big_g_list = helpers.filter_for_phylum(big_g_list, vals.phylum);
   }
-
+//console.log("GCA_013333485.2-1",big_g_list.length)
   //sort_col
   if (vals.sort_rev === 'on') {
     //console.log('REV sorting by ',vals.sort_col,' ',big_g_list.length)
@@ -316,6 +323,7 @@ export const apply_gtable_filter = (req, filter) => {
       });
     }
   }
+  //console.log("GCA_013333485.2-2",big_g_list.length)
   // Assembly Level
   let level_on = Object.keys(vals.level).filter(item => vals.level[item] === 'on');
   //console.log('vals',vals)
@@ -325,18 +333,20 @@ export const apply_gtable_filter = (req, filter) => {
       return item;
     }
   });
-
+//console.log("GCA_013333485.2-3",big_g_list.length)
   // ADV::Tax Status ////////////////////////////////////////////////
   let status_on = Object.keys(vals.status).filter(item => vals.status[item] === 'on');
-  console.log('status_on',status_on)
+  //console.log('status_on',status_on)
   //console.log('big_g_list[0]',big_g_list[0])
-  let default_length_of_status = 5;
+  
+  
+  let default_length_of_status = 4;  // default should be 4 exclude dropped
+  
+  
   big_g_list = big_g_list.filter(function (item) {
     if (status_on.length === default_length_of_status) {
       return item;
     } else {
-
-
       //console.log('Status',C.site_lookup[item.otid].s1)
       let status
       //console.log('C.taxon_lookup[item.otid].naming_status',C.taxon_lookup[item.otid].naming_status)
@@ -350,6 +360,8 @@ export const apply_gtable_filter = (req, filter) => {
         status='named_'+cstatus
       }else if(nstatus.slice(0,7) === 'unnamed'){
         status='unnamed_'+cstatus
+      }else{
+         console.log('XXXX WARNING ',nstatus,'',cstatus)
       }
       
       
@@ -360,6 +372,16 @@ export const apply_gtable_filter = (req, filter) => {
     }
 
   });
+
+
+
+  //console.log("GCA_013333485.2-4",big_g_list.length)
+  //  big_g_list.filter(function (item) {
+//     if (item.gid === 'GCA_013333485.2') {
+//       console.log('GOOOOD',item)
+//     }
+//})
+  
   // ADV::Tax Sites ////////////////////////////////////////////////
   let site_on = Object.keys(vals.site).filter(item => vals.site[item] === 'on');
   let default_length_of_site = 9;
@@ -403,6 +425,7 @@ export const apply_gtable_filter = (req, filter) => {
       }
     }
   });
+  //console.log("GCA_013333485.2-5",big_g_list.length)
   // MAGs /////////////////////////////////////////////////
   //console.log('vals',vals)
   big_g_list = big_g_list.filter(function filterMAGs(item) {
@@ -421,7 +444,7 @@ export const apply_gtable_filter = (req, filter) => {
 
   });
   
-  
+  //console.log("GCA_013333485.2-6",big_g_list.length)
   /// OTID ///
   big_g_list = big_g_list.filter(function filterOTIDs(item) {
     //console.log('item',item)
@@ -435,11 +458,12 @@ export const apply_gtable_filter = (req, filter) => {
     }
 
   });
-  
+  console.log('big_g_list length',big_g_list.length)
   return big_g_list;
 };
 
 export const get_filtered_genome_list = (gidObjList, searchText, searchField) => {
+  console.log('in get_filtered_genome_list')
   let sendList, tmpSendList;
   const tempObj = {};
 
@@ -452,6 +476,7 @@ export const get_filtered_genome_list = (gidObjList, searchText, searchField) =>
     //     for (let n in tmpSendList) {
     //       tempObj[tmpSendList[n].gid] = tmpSendList[n]
     //     }
+    
     // gid
     //console.log('searchText',searchText)
     tmpSendList = gidObjList.filter(item => item.gid.toLowerCase().includes(searchText));
@@ -482,11 +507,7 @@ export const get_filtered_genome_list = (gidObjList, searchText, searchField) =>
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n];
     }
-    tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText));
-    // for uniqueness convert to object::gid
-    for (let n in tmpSendList) {
-      tempObj[tmpSendList[n].gid] = tmpSendList[n];
-    }
+    
     // species
     // culture collection
     tmpSendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText));
@@ -531,7 +552,7 @@ export const get_default_gtable_filter = () => {
       named_uncultivated: 'on',
       unnamed_cultivated: 'on',
       phylotype: 'on',
-      dropped: 'on',
+      //dropped: 'on',
       //nonoralref:'off'
     },
     site: {
@@ -583,7 +604,7 @@ export const get_null_gtable_filter = () => {
       named_uncultivated: 'off',
       unnamed_cultivated: 'off',
       phylotype: 'off',
-      dropped: 'off',
+      //dropped: 'off',
       //nonoralref:'off'
     },
     site: {

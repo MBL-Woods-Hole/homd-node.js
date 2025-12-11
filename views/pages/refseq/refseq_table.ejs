@@ -1,5 +1,23 @@
 <style>
 thead th { position: sticky; top: 0; }
+table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+table.sortable thead tr::before {
+    content: "row#";
+    background:  var(--table-header-bg);
+    color:white;
+    font-weight:bold;
+    font-size:12px;
+    padding:5px;
+    display: table-cell;
+}
+table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+}
+
 #refseq-box {
    height:700px;
    overflow:auto;
@@ -71,10 +89,14 @@ thead th { position: sticky; top: 0; }
        <a href='/download/dld_refseqtable_all/excel %>' >[Excel]</a>
        <b>; For sequences: </b> <a href='/download/download/refseq'>Batch RefSeq Data</a>
      </div>
+     
     <div id='refseq-box' >
-    <small>[Click Column Header to Sort]</small>
-    <table id='refseq-table' class='sortable'>
+    Row Count: <%= rs.length %>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>[Click Column Header to Sort]</small>
+    <table id='refseq-table' class='sortable'><thead>
     <tr><th>HMT-ID</th><th>RefSeq-ID</th><th>Species</th><th>Seq ID Count</th><th>Seq-IDs</th><th>(length) Sequence</th></tr>
+    </thead>
+    <tbody>
     <% for(let n in rs){ %>
         <% taxidfullname = 'HMT-'+("000" + rs[n].otid).slice(-3); %>
         <tr>
@@ -88,6 +110,7 @@ thead th { position: sticky; top: 0; }
             </td>
         </tr>
     <% } %>
+    </tbody>
     </table>
     </div>
   

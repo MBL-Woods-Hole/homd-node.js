@@ -5,10 +5,8 @@
 <link rel="stylesheet" type="text/css" href="/css/home.css" >
 <% var version_info = JSON.parse(ver_info) %> 
 <%- include('../partials/header_html'); %>
+<% var s = JSON.parse(stats) %>
 
-<% t_count = "836" %>
-<% oral_t_count = "525" %>
-<% nasal_t_count = "22" %>
 <title>HOMD Home Page</title>
     
 <body style='background:#e6f1ff;text-align:center;'>
@@ -36,13 +34,20 @@
         <br><br>
             
             eHOMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract. 
-            Of the <span class='underline'><a href='#' onclick="show_specific_ttable('no_dropped')"><%= t_count %> taxa</a></span> 
+            
+            Of the <span class='underline'><a href='#' onclick="show_specific_ttable('no_dropped')"><%= s.taxon_count %> taxa</a></span> 
             in the database, 
-            <span class='underline'><a href='#' onclick="show_specific_ttable('oral_only')"><%= oral_t_count %></a></span> 
+            <span class='underline'><a href='#' onclick="show_specific_ttable('oral_only')"><%= s.taxa_site_oral.count %></a></span> 
             are primarily oral and 
-            <span class='underline'><a href='#' onclick="show_specific_ttable('nasal_only')"><%= nasal_t_count %></a></span> 
-            primarily nasal. Of the oral taxa, 49% are named, 21% unnamed but cultivated and 29% are known only as 
-            uncultivated phylotypes. 
+            <span class='underline'><a href='#' onclick="show_specific_ttable('nasal_only')"><%= s.taxa_site_nasal.count %></a></span> 
+            
+            primarily nasal. Of the oral taxa, 
+            <%= parseFloat(s.taxa_status_named_cult.pct_of_taxa) + parseFloat(s.taxa_status_named_uncult.pct_of_taxa) %>% are named, 
+            <%= s.taxa_status_unnamed_cult.pct_of_taxa %>% unnamed but cultivated and 
+            <%= s.taxa_status_phylotype.pct_of_taxa %>% are known only as 
+            uncultivated phylotypes.
+            
+            View the <span class='underline'><a href='statistics'>full statistics here</a></span>.
             
             eHOMD taxonomy provides a provisional naming scheme for the currently unnamed taxa, based on both genomic 
             and 16S rRNA sequence phylogeny, so that strain, clone and probe data from any laboratory can be directly 

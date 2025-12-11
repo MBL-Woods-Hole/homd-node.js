@@ -496,4 +496,150 @@ export const get_has_abundance = () => {
     //console.log('abund data',data)
     return data
 }
+////
+export const calculate_homd_stats = () => {
+    console.log('calc stats')
+    let pct,count,s = {}
+//TAXA////TAXA////TAXA////TAXA////TAXA////TAXA////TAXA//
+    //console.log(C.taxon_lookup['10'])
+    //s.taxa_count = Object.keys(C.taxon_lookup).length
+    let homd_taxa = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped'))
+    // Status
+    s.taxon_count               = homd_taxa.length
+    count = homd_taxa.filter(item => item.naming_status.toLowerCase().slice(0,5) === 'named' 
+                             && item.cultivation_status.toLowerCase().slice(0,4) === 'cult').length
+    pct = count / s.taxon_count * 100
+    s.taxa_status_named_cult   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.naming_status.toLowerCase().slice(0,5) === 'named' 
+                             && item.cultivation_status.toLowerCase().slice(0,6) === 'uncult').length
+    pct = count / s.taxon_count * 100
+    s.taxa_status_named_uncult =  {count:count,pct_of_taxa:pct.toFixed(1)}
+      
+    count = homd_taxa.filter(item => item.naming_status.toLowerCase().slice(0,7) === 'unnamed' 
+                                                  && item.cultivation_status.toLowerCase().slice(0,4) === 'cult').length
+    pct = count / s.taxon_count * 100
+    s.taxa_status_unnamed_cult = {count:count,pct_of_taxa:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.naming_status.toLowerCase().slice(0,9) === 'phylotype').length
+    pct = count / s.taxon_count * 100
+    s.taxa_status_phylotype    = {count:count,pct_of_taxa:pct.toFixed(1)}
+    // Body Sites
+    //console.log(C.site_lookup['10'])
+    count = homd_taxa.filter(item => item.sites[0] === 'Oral').length
+    pct = count / s.taxon_count * 100
+    s.taxa_site_oral    = {count:count,pct_of_taxa:pct.toFixed(1)}
+    count = homd_taxa.filter(item => item.sites[0] === 'Nasal').length
+    pct = count / s.taxon_count * 100
+    s.taxa_site_nasal   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    count = homd_taxa.filter(item => item.sites[0] === 'Skin').length
+    pct = count / s.taxon_count * 100
+    s.taxa_site_skin   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    count = homd_taxa.filter(item => item.sites[0] === 'Gut').length
+    pct = count / s.taxon_count * 100
+    s.taxa_site_gut   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    count = homd_taxa.filter(item => item.sites[0] === 'Vaginal').length
+    pct = count / s.taxon_count * 100
+    s.taxa_site_vaginal   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    count = homd_taxa.filter(item => item.sites[0] === 'Pathogen').length
+    pct = count / s.taxon_count * 100
+    s.taxa_site_path   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    count = homd_taxa.filter(item => item.sites[0] === 'Environmental').length
+    pct = count / s.taxon_count * 100
+    s.taxa_site_env   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.sites[0] === 'Reference').length
+    pct = count / s.taxon_count * 100
+    s.taxa_site_ref   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    count = homd_taxa.filter(item => item.genomes.length !== 0).length
+    pct = count / s.taxon_count * 100
+    s.taxa_with_genomes= {count:count,pct_of_taxa:pct.toFixed(1)}
+    
+    //Phyla
+    //console.log(C.taxon_counts_lookup)
+   
+    // list to sort
+    let sortlist = [],cnt,show
+    C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'].map(taxitem => {
+      //console.log(taxitem)
+      if(!C.taxon_counts_lookup.hasOwnProperty('Bacteria;'+taxitem.taxon)){
+         show = '(Archaea) '+taxitem.taxon
+         cnt = C.taxon_counts_lookup['Archaea;'+taxitem.taxon].taxcnt
+      }else{
+         show = taxitem.taxon
+         cnt = C.taxon_counts_lookup['Bacteria;'+taxitem.taxon].taxcnt
+      }
+      sortlist.push({phyla:show, taxcnt:cnt})
+    })
+    sortlist.sort((a, b) =>{
+      return compareStrings_int(b.taxcnt, a.taxcnt)
+    })
+    //console.log('sort',sortlist)
+    s.taxa_phyla = sortlist
+    
+//RefSeq//RefSeq//RefSeq//RefSeq//RefSeq//RefSeq//RefSeq//RefSeq
+    //console.log(C.refseq_lookup)
+    let refseq_otids = Object.values(C.refseq_lookup)
+    s.refseqs = {}
+    s.refseqs.count = 0
+    
+    refseq_otids.map(item => {
+      //console.log('refseq',item)
+      s.refseqs.count += item.length
+    })
+    count = refseq_otids.length
+    pct = count / s.taxon_count * 100
+    s.refseq_otids = {count:count,pct_of_taxa:pct.toFixed(1)}
+    //s.refseqs.pct_of_taxa = (s.refseqs.count / s.taxon_count * 100).toFixed(1)
+    
+    
+//Genomes// Genomes// Genomes// Genomes// Genomes// Genomes
+    let homd_genomes = Object.values(C.genome_lookup)
+    //console.log("GCA_013333485.2",C.genome_lookup['GCA_013333485.2'])
+    s.genome_count               = homd_genomes.length
+    count   = homd_genomes.filter(item => item.mag === 'yes').length
+    // in how many taxa (see taxa_with_genomes)
+    // # of MAGs
+    pct = count / s.genome_count * 100
+    s.genome_mags   = {count:count, pct_of_genomes:pct.toFixed(1)}
+    
+    // Assembly level
+    //   Complete,Contig,Scaffold,Chromosome
+    count = homd_genomes.filter(item => item.level.slice(0,8)  === 'Complete').length
+    pct = count / s.genome_count * 100
+    s.genome_assembly_complete   = {count:count, pct_of_genomes:pct.toFixed(1)}
+    count = homd_genomes.filter(item => item.level.slice(0,6)  === 'Contig').length
+    pct = count / s.genome_count * 100
+    s.genome_assembly_contig     = {count:count, pct_of_genomes:pct.toFixed(1)}
+    count= homd_genomes.filter(item => item.level.slice(0,8)  === 'Scaffold').length
+    pct = count / s.genome_count * 100
+    s.genome_assembly_scaffold    = {count:count, pct_of_genomes:pct.toFixed(1)}
+    count= homd_genomes.filter(item => item.level.slice(0,10) === 'Chromosome').length
+    pct = count / s.genome_count * 100
+    s.genome_assembly_chromosome = {count:count, pct_of_genomes:pct.toFixed(1)}
+    
+    
+//PHAGE///PHAGE///PHAGE///PHAGE///PHAGE///PHAGE///PHAGE/
+    //console.log("phage",C.phage_lookup)
+   //  'GCA_946997235.1': {
+//     site: 'other',
+//     cenote_count: '1',
+//     cenote_coverage_bps: '7948',
+//     cenote_coverage_pct: 0.62,
+//     genomad_count: '0',
+//     genomad_coverage_bps: '0',
+//     genomad_coverage_pct: 0
+//   }
+
+    // how many genomes have phage? (range 1-40 phage/genome) How many taxa?
+    count = Object.values(C.phage_lookup).length
+    pct = count / s.genome_count * 100
+    s.genome_w_phage = {count:count, pct_of_genomes:pct.toFixed(1)}
+    
+    //MISC//MISC//MISC//MISC//MISC//MISC//MISC//MISC//MISC//MISC
+    s.dropped_taxa_count = C.dropped_taxids.length
+    s.taxa_with_subspecies = C.taxa_with_subspecies.length
+    //console.log(s)
+    return s
+}
 export default router;

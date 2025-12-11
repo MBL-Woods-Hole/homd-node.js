@@ -21,7 +21,7 @@ router.get('/', function index(req, res) {
     pgname: 'home', // for AbountThisPage
     config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
-    
+    stats: JSON.stringify(C.homd_stats),
     
 
   })
@@ -29,8 +29,20 @@ router.get('/', function index(req, res) {
 
 
 
+router.get('/statistics', function poster(req, res) {
 
-//
+  res.render('pages/statistics', {
+    title: 'HOMD :: Human Oral Microbiome Database',
+    pgname: '', // for AbountThisPage
+    config: JSON.stringify(ENV),
+    ver_info: JSON.stringify(C.version_information),
+    stats: JSON.stringify(C.homd_stats),
+    
+
+  })
+})
+
+////
 router.get('/poster', function poster(req, res) {
   res.render('pages/poster', {
     title: 'HOMD :: Human Oral Microbiome Database',
@@ -41,7 +53,7 @@ router.get('/poster', function poster(req, res) {
 
   })
 })
-
+////
 router.get('/advanced_site_search', function advanced_site_searchGETPAGE(req, res) {
   //console.log('advanced_site_searchGET')
   res.render('pages/advanced_site_search', {
@@ -826,6 +838,7 @@ function search_contigs(text_string){
   }
   return contigObj_list
 }
+////
 
 // }); // end pipeline
 // })  // end anno query
