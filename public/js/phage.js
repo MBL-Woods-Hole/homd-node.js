@@ -57,7 +57,7 @@ function create_column_choices_dialog(cols_showing){
    ]
    
    html = "<form name='phage_table_column_select' method='POST' action='phage_table' >"
-   html += '<table><tr>'
+   html += "<table><tr>"
    html += "<td><input type='checkbox' checked disabled  value='Phage-ID' /> Phage-ID"
    html += "<input type='hidden'  name='pid' value='Phage-ID' /></td>"
    

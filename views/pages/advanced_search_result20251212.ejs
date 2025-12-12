@@ -1,20 +1,20 @@
 <style>
-thead th { position: sticky; top: 0; background:ivory;}
+thead th { position: sticky; top: 0; }
 body {
             -webkit-transition: background-color 1s;
             transition: background-color 1s;
 }
 html, body { min-height: 100%; }
-.result-table{
+table{
    border-collapse:collapse;
    margin:5px 0;
    width:90%;
 }
-.result-table th{
+table th{
    border:1px solid black;
    padding:3px 4px;
 }
-.result-table td{
+table td{
    border:1px solid black;
    padding:1px 4px;
 }
@@ -216,9 +216,79 @@ table.sortable thead {
        </div>
      </center>
      
+<% if(search_type.indexOf("taxonomy") != -1){ %>
+        <br>xHits from Bacterial Taxon Names: <%= Object.keys(lineageids).length %> <span class='float-right small'></span>
+        <% if( Object.keys(lineageids).length > 0 ){ %>
+        <div class='search-box'>
+        <% n = 0 %>
+        <center><table class='result-table sortable'>
+        <tr><th nowrap>HMT-ID</th><th>Species (click to sort)</th></tr>
+        <% for(otid in lineageids){ %>
+           <tr>
+           <% n += 1 %>
+           <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+           
+           <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
+           <td><a href='/taxa/tax_description?otid=<%= otid %>'><%= lineageids[otid] %></a></td>
+           </tr>
+        <% } %>
+        </table>
+        </center>
+        </div>
+        <% } %>
+        <hr> 
+    
+    
+        Hits from Oral Taxon-ID Metadata: <%= otids.length %> <span class='float-right small'></span> 
+        <% if( otids.length > 0 ){ %>
+        <div class='search-box'>
+        <center><table class='result-table sortable'>
+        <tr><th nowrap>HMT-ID</th><th>Species (click to sort)</th></tr>
+        <% for(n in otids){ %>
+         <% otid = otids[n].otid %>
+         <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+         <tr>
+         
+         <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td>
+         <td><a href='/taxa/tax_description?otid=<%= otid %>'><%- otids[n].species %></a></td>
+         </tr>
+        <% } %>
+        </table>
+        </center>
+        </div>
+        <% } %>
+        <hr>
+        
+        
+        
+        
+<% } %>
+  
+<!-- Not Used: Uses basic instead -->
+<% if(search_type.indexOf("genomes") != -1){ %> 
+    Hits from Genome Metadata: <%= gids.length %> <span class='float-right small'></span>
+    <% if( gids.length > 0 ){ %>
+    <div class='search-box'>
+    <center><table class='result-table sortable'>
+    <tr><th nowrap>HMT-ID</th><th nowrap>Genome-ID</th><th>Species (click to sort)</th></tr>
+    <% for(n in gids){ %>
+       <% gid  = gids[n].gid %>
+       <% otid = gids[n].otid %>
+       <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+       <tr>
+       <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td>
+       <td><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
+       <td><a href='/genome/genome_description?gid=<%= gid %>'><%- gids[n].species %></a></td>
+       </tr>
+    <% } %>
+    </table>
+    </center>
+    </div>
+    <% } %>
+    <hr> 
+<% } %>
 
-
-<!-- ANNOTATIONS ANNOTATIONS ANNOTATIONS ANNOTATIONS -->
+    <!-- ANNOTATIONS ANNOTATIONS ANNOTATIONS ANNOTATIONS -->
 <% if(search_type.indexOf("annotations") != -1){ %> 
     <div class='search-box-loading'>
     <%= anno.toUpperCase() %> Annotations 
@@ -301,7 +371,7 @@ table.sortable thead {
 <% } %>
 
 
-<!--  PHAGE  PHAGE    PHAGE  PHAGE    PHAGE  PHAGE -->
+   <!--  PHAGE  PHAGE    PHAGE  PHAGE    PHAGE  PHAGE -->
 <% if(search_type.indexOf("phage") != -1){ %> 
     <div class='search-box-loading'>
     <small>Searches only these fields:
@@ -361,13 +431,9 @@ table.sortable thead {
                 
                 <% contig = phage_sort_lst[i].contig %>
                 <% predictor = phage_sort_lst[i].predictor %>
-                <tr>
-                  <td nowrap><%= gid %></td>
-                  <td nowrap><%= contig %></td>
-                  <td nowrap><%= predictor %></td>
-                  <td><%= phage_sort_lst[i].species %> (<%= phage_sort_lst[i].strain %>)</td>
-                  <td nowrap><a href='#' onclick="show_phage_hits('<%= gid %>','<%= contig %>','<%= phage_sort_lst[i].species %>','<%= predictor %>','<%= JSON.stringify(phage_sort_lst[i].hitlist) %>')">
-                      see <%= phage_sort_lst[i].hitlist.length %> hits</a></td>
+                <tr><td><%= gid %></td><td><%= contig %></td><td><%= predictor %></td><td><%= phage_sort_lst[i].species %> (<%= phage_sort_lst[i].strain %>)</td>
+                <td><a href='#' onclick="show_phage_hits('<%= gid %>','<%= contig %>','<%= phage_sort_lst[i].species %>','<%= predictor %>','<%= JSON.stringify(phage_sort_lst[i].hitlist) %>')">see <%= phage_sort_lst[i].hitlist.length %> hits</a></td>
+                
                 </tr>
             <% } %>
                    </table>

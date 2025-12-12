@@ -9,7 +9,7 @@
      predictor_show = predictor.charAt(0).toUpperCase() + predictor.slice(1);
      html ='<div><span style="float:left">('+hits.length+' Hits)&nbsp;&nbsp;&nbsp;&nbsp;'+predictor_show+': '+gid+':'+contig+' <i>'+species+'</i></span><a id="close_btn"  href="#" onclick="close_phage_info()">Close</a></div>'
      html += "<div id='phage-hit-results-div'>"
-     html +="<table class='sortable' id='phage-table2' >"
+     html +="<table class='result-table sortable' id='phage-table2' >"
      html +="<thead>"
      html +="<tr><th class='c1 sorttable_nosort'>Genome Viewer</th><th class='c1 sorttable_nosort'>View Sequence</th><th class='c2 sorttable_nosort'>Genome-ID</th><th class='c2 sorttable_nosort'>Contig</th><th class='c1 sorttable_nosort'>Predictor</th>"
      var el = document.getElementById('phage-result')
@@ -49,7 +49,7 @@
        
        
     }else if(predictor === 'cenote' || predictor === 'genomad'){
-        html += '<th>accession</th><th>description</th>'
+        html += '<th>Accession</th><th>Description</th>'
        
         html += '</tr>'
         html +="</thead>"

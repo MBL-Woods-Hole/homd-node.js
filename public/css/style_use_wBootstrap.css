@@ -6,7 +6,7 @@ https://www.w3schools.com/colors/colors_monochromatic.asp
  */
 
 :root {
-  --title-bg:steelblue;
+  --title-bg: #e8ebec;
   --table-header-bg: #083370;    /* #006699; */
   --div-bg011:#fbb4ae;    /* lite green */
   --div-bg012:#b3cde3;   /* golden yellow */
@@ -92,7 +92,7 @@ p {
 
 .title{
    padding: 14px 0;  
-   background: #e8ebec ; /* var(--title-bg); */
+   background: var(--title-bg) ; /* var(--title-bg); #e8ebec */
    font-size: 20px;
    text-align: center;
    color: white;

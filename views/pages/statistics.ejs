@@ -9,7 +9,7 @@
   
 }
 .box{
-  background-color: Gainsboro;
+  background-color: var(--title-bg);
   padding:20px;
   margin:20px;
   font-size: 20px;
@@ -21,17 +21,17 @@
    
    background-color: DarkSlateGray;
 }
-table{
+.stat-table{
    margin:15px 0;
    font-size:12px;
    width:100%;
 }
-table th{
+.stat-table th{
    padding:10px 5px 1px 5px;
    text-align:center;
    font-size:13px;
 }
-table td{
+.stat-table td{
    padding:1px 15px;
    text-align:center;
    border-bottom:1px solid grey;
@@ -79,7 +79,7 @@ table td{
    
     
        <li> 
-        <table>
+        <table class='stat-table'>
           <tr><th colspan='2'>Naming Status</th></tr>
           <tr><td class='right'>Named and Cultivated</td><td class='left stat'><%= s.taxa_status_named_cult.count %> (<%= s.taxa_status_named_cult.pct_of_taxa %>%) </td></tr>
           <tr><td class='right'>Named and Uncultivated</td><td class='left stat'><%= s.taxa_status_named_uncult.count %> (<%= s.taxa_status_named_uncult.pct_of_taxa %>%) </td></tr>
@@ -118,8 +118,8 @@ table td{
     There are <span class='stat'><%= genome_count %></span> genomes in HOMD 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     representing <span class='stat'><%= s.taxa_with_genomes.count %> (<%= s.taxa_with_genomes.pct_of_taxa %>%)</span> of the HOMD taxa.
-    <table>
-        <tr><th colspan='2'>Genome Assembly</th></tr>
+    <table class='stat-table'>
+        <tr><th colspan='2'>Genome Assembly Level</th></tr>
         <tr><td class='right'>Complete</td><td class='left stat'><%= complete %> (<%= s.genome_assembly_complete.pct_of_genomes %>%) </td></tr>
         <tr><td class='right'>Contig</td><td class='left stat'><%= contig %> (<%= s.genome_assembly_contig.pct_of_genomes %>%) </td></tr>
         <tr><td class='right'>Scaffold</td><td class='left stat'><%= scaffold %> (<%= s.genome_assembly_scaffold.pct_of_genomes %>%) </td></tr>

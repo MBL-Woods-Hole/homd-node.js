@@ -1,6 +1,6 @@
 
 <style>
-table{
+.av-table{
   border-collapse:collapse;
 }
 #pgtable{
@@ -40,7 +40,7 @@ Pangenome Count: <b><%- pgs.length %></b>
 <center>
 
 
-<table class='sortable' border='1'>
+<table class='av-table sortable' border='1'>
 <tr>
   <td nowrap><strong>Pangenome Name</strong><br><small>(Link opens pangenome in Anvi`o)<br>Click to Sort Alphabetically</small></td>
   <td class=""><strong>HOMD Genome Version</strong></td>
@@ -49,32 +49,32 @@ Pangenome Count: <b><%- pgs.length %></b>
   <td class="sorttable_nosort"><strong>Description</strong></td>
 </tr>
 
-	<% for(i in pgs){ %>
-	
-	   <tr>
-		<td nowrap><%- pgs[i].pangenome_name %></td>
-		<td nowrap  class='center'><%- pgs[i].homd_genome_version %></td>
-		
-		
-		<% if(mode == "new_window"){ %>
-		  <td nowrap >
-			<small><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].pangenome_name %>','homd')">Open Anvi'o</a></small>
-		  </td>
-	   <% }else{ %>
-		  <td nowrap >
-			<small><a href='anvio?pg=<%= pgs[i].pangenome_name %>' target='_blank' class='pg'>Open Anvi'o</a></small>
-		  </td>
-		<% } %>
-		<td nowrap >
-		   <small><a href='pangenome_image?pg=<%= pgs[i].pangenome_name %>&ext=svg' target='_blank'>Open SVG</a></small>
-		</td>
-		
-		<td><%- pgs[i].description %></td>
-	 
-	  
-	 </tr>
-	
-	<% } %>
+    <% for(i in pgs){ %>
+    
+       <tr>
+        <td nowrap><%- pgs[i].pangenome_name %></td>
+        <td nowrap  class='center'><%- pgs[i].homd_genome_version %></td>
+        
+        
+        <% if(mode == "new_window"){ %>
+          <td nowrap >
+            <small><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].pangenome_name %>','homd')">Open Anvi'o</a></small>
+          </td>
+       <% }else{ %>
+          <td nowrap >
+            <small><a href='anvio?pg=<%= pgs[i].pangenome_name %>' target='_blank' class='pg'>Open Anvi'o</a></small>
+          </td>
+        <% } %>
+        <td nowrap >
+           <small><a href='pangenome_image?pg=<%= pgs[i].pangenome_name %>&ext=svg' target='_blank'>Open SVG</a></small>
+        </td>
+        
+        <td><%- pgs[i].description %></td>
+     
+      
+     </tr>
+    
+    <% } %>
 
 </table>
 

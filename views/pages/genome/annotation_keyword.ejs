@@ -8,10 +8,10 @@
    
    width: 80%;
 }
-table{
+.key-table{
   font-size:12px;
 }
-table td{
+.key-table td{
    border-top:1px solid grey;
 }
 #anno-pre-table{
@@ -88,7 +88,7 @@ button {
     <div id="srch">
 <% if(!show_table){ %>
     Switch Search Results:
-    <table><tr><td>
+    <table class='key-table'><tr><td>
    <form  method='POST' action='orf_search_sql'>
       <input type='hidden' name='anno' value='prokka'>
       <input type='hidden' name='search_text' value='<%= search_text %>'>
@@ -110,7 +110,7 @@ button {
 
     <div id='orf_table_div'>
     Viewing <span style='background:darkgrey;color:green;padding:3px;'><%= anno.toUpperCase() %></span> Annotations
-    <table id="anno-pre-table">
+    <table class='key-table' id="anno-pre-table">
     <tr>
       <th class='gid_col'>SEQ-ID</th>
       <th class='org_col'>Organism</th>
@@ -142,7 +142,7 @@ button {
     <div id='anno_result_div'>
     <% if(show_table){ %>
       
-      <table id='annotation-table'>
+      <table class='key-table' id='annotation-table'>
         <tr><td>Accession</td>
         <td>Protein_id</td>
         <td>Genome<br>Viewer</td>
@@ -204,7 +204,7 @@ button {
       </table>
     <% }else{ %>
     
-      <table id='annotation-table'>
+      <table class='key-table' id='annotation-table'>
         <tr><td>Molecule</td>
         <td>PID</td>
         <td>Genome<br>Viewer</td>

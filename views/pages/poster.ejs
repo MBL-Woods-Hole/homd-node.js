@@ -1,10 +1,10 @@
 <% var cfg = JSON.parse(config) %>
 <style>
-table{
+.poster-table{
    border-collapse:collapse;
    width:60%;
 }
-table td{
+.poster-table td{
    border:1px solid black;
    padding:8px;
 }
@@ -12,17 +12,15 @@ table td{
 <%- include('../partials/header_html'); %>
 
 <body>
-  	<div id='wrapper'>
+  <div id='wrapper'>
     <%- include('../partials/header_img'); %>
     <%- include('../partials/navbar'); %>
     
-    
-    <div class='page-content' >
-
+<div class='page-content' >
 <p class='title h3'>Posters Related to HOMD Available for Download</p>
 <br>
 <center>
-<table border='1'>
+<table class='poster-table' border='1'>
 <tr><th>Year</th><th>Meeting</th><th>Title</th><th>Author</th></tr>
 <!-- https://www.geeksforgeeks.org/how-to-send-pdf-in-express-route-response-and-force-browser-download/ -->
 <tr><td>2014</td><td>AADR</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/poster/2014-AADR-DEWHIRST.pdf'>Prevalence of Uncultivated Oral Taxa in Distinct Oral Niches</a></td>
@@ -45,8 +43,8 @@ table td{
 </tr>
 
 </table>
-</center>	
-    </div> <!-- end: page-content -->
+</center>
+</div> <!-- end: page-content -->
     
     <div id='footer'>
          <%- include('../partials/footer'); %>

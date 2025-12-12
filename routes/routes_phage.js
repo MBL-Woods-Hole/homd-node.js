@@ -87,8 +87,8 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
     let org = C.genome_lookup[gid].organism
     let strain = C.genome_lookup[gid].strain
     let html_rows = "<div id='phage-sub-table-div'>"+gid+'; '+hmt+'; '+org+' ('+strain+')'
-    html_rows += "<a href='#' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</a>"
-    html_rows += "<table id='phage-sub-table' class='table table-condensed'>"
+    html_rows += "<a href='#' onclick=close_sub_table() style='float:right;margin-right:100px;' border='1'>Close</a>"
+    html_rows += "<table id='XXphage-sub-table' class='table result-table '>"
     html_rows += "<tr>"
     html_rows += "<th>Prediction<br>Tool</th><th>Genome<br>Viewer</th><th class=''>Phage-ID</th><th>Contig</th><th>Start</th><th>End</th>"
     html_rows += "</tr>"

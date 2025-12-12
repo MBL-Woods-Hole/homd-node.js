@@ -29,17 +29,17 @@ html, body { min-height: 100%; }
 #srch_txt{
    color:orange;
 }
-table{
+.result-table{
    /* font-size:small; */
    border-collapse:collapse;
    margin:5px 0;
    width:90%;
 }
-table th{
+.result-table th{
    border:1px solid black;
    padding:3px 4px;
 }
-table td{
+.result-table td{
    border:1px solid black;
    padding:1px 4px;
 }
@@ -76,7 +76,7 @@ table td{
   <% if( Object.keys(lineageids).length > 0 ){ %>
   <div class='search-box'>
     <% n = 0 %>
-    <center><table class='sortable'>
+    <center><table class='result-table sortable'>
     <tr><th nowrap>HMT-ID</th><th>Taxonomy (click to sort)</th></tr>
     <% for(otid in lineageids){ %>
        <tr>
@@ -98,7 +98,7 @@ table td{
     <% if( otids.length > 0 ){ %>
         <div class='search-box'>
         <center>
-        <table class='sortable'>
+        <table class='result-table sortable'>
         <tr><th nowrap>HMT-ID</th><th>Taxonomy (click to sort)</th></tr>
         <% for(n in otids){ %>
             <% otid = otids[n].otid %>
@@ -120,7 +120,7 @@ table td{
     <% if( l.length > 0 ){ %>
         <div class='search-box'>
         <center>
-        <table class='sortable'>
+        <table class='result-table sortable'>
         <tr><th nowrap>HMT-ID</th><th>Species (click to sort)</th><th>RefSeq-ID</th></tr>
         <% for(n in l){ %>
             <% hmt = l[n] %>
@@ -142,7 +142,7 @@ table td{
     Matches from <strong>Genome Metadata</strong>: (<%= gids.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
     <% if( gids.length > 0 ){ %>
     <div class='search-box'>
-    <center><table class='sortable'>
+    <center><table class='result-table sortable'>
     <tr><th nowrap>HMT-ID</th><th nowrap>Genome-ID</th><th>Species (click to sort)</th></tr>
     <% for(n in gids){ %>
        <% gid = gids[n].gid %>
@@ -166,7 +166,7 @@ table td{
     Matches from <strong>Contig Names</strong>: (<%= contig_list.length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
     <% if( contig_list.length > 0 ){ %>
     <div class='search-box'>
-    <center><table class='sortable'>
+    <center><table class='result-table sortable'>
     <tr><th nowrap>Contig</th><th>Genome-ID (click to sort)</th></tr>
     <% for(n in contig_list){ %>
        <tr>

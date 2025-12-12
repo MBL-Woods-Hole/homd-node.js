@@ -10,7 +10,7 @@
    margin-top:5px;
    width:100%;
 }
-#phage-table
+#xphage-table
 {
   padding:5px;
   background:lightgrey;
@@ -19,7 +19,7 @@
   table-layout:fixed;
   width:100%;
 }
-#phage-table th
+#xphage-table th
 {
   color:white;
   background: var(--table-header-bg);  /* #006699; */
@@ -28,7 +28,7 @@
   text-align: center;
   border-right:1px solid ivory;
 }
-#phage-table td
+#xphage-table td
 {
   padding:3px 2px;
   font-size:small;
@@ -37,10 +37,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#phage-table tr:nth-child(even) {
+#xphage-table tr:nth-child(even) {
     background-color: var(--table-row-even3);
 }
-#phage-table tr:hover {
+#xphage-table tr:hover {
     background-color: #FBF9EA;
 }
 
