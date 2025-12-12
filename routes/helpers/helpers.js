@@ -617,7 +617,28 @@ export const calculate_homd_stats = () => {
     count= homd_genomes.filter(item => item.level.slice(0,10) === 'Chromosome').length
     pct = count / s.genome_count * 100
     s.genome_assembly_chromosome = {count:count, pct_of_genomes:pct.toFixed(1)}
-    
+    let min_contigs = 1000,max_contigs = 0,min_length = 10000000,max_length = 0
+    homd_genomes.map(item => {
+      if(parseInt(item.contigs) <= min_contigs){
+          min_contigs = parseInt(item.contigs)
+      }
+      if(parseInt(item.contigs) >= max_contigs){
+          max_contigs = parseInt(item.contigs)
+      }
+      if(parseInt(item.combined_size) <= min_length){
+          min_length = parseInt(item.combined_size)
+      }
+      if(parseInt(item.combined_size) >= max_length){
+          max_length = parseInt(item.combined_size)
+      }
+    })
+    s.genome_min_contigs = min_contigs
+    s.genome_max_contigs = max_contigs
+    s.genome_min_length = min_length
+    s.genome_max_length = max_length
+    //console.log(C.annotation_lookup)
+    // max and min contigs
+    // max and min genome size
     
 //PHAGE///PHAGE///PHAGE///PHAGE///PHAGE///PHAGE///PHAGE/
     //console.log("phage",C.phage_lookup)
@@ -630,9 +651,16 @@ export const calculate_homd_stats = () => {
 //     genomad_coverage_bps: '0',
 //     genomad_coverage_pct: 0
 //   }
-
+    s.phage = {}
+    s.phage.count = 0
+    let homd_phage = Object.values(C.phage_lookup)
+    homd_phage.map(item => {
+      //console.log('phage',item)
+      s.phage.count += parseInt(item.cenote_count) + parseInt(item.genomad_count)
+    })
     // how many genomes have phage? (range 1-40 phage/genome) How many taxa?
-    count = Object.values(C.phage_lookup).length
+    
+    count = homd_phage.length
     pct = count / s.genome_count * 100
     s.genome_w_phage = {count:count, pct_of_genomes:pct.toFixed(1)}
     

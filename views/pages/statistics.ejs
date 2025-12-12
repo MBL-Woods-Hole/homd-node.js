@@ -42,6 +42,9 @@ table td{
 .right{
   text-align:right;
 }
+.link{
+   text-decoration:underline;
+}
 </style>
 <body>
     <div id='wrapper'>
@@ -52,7 +55,26 @@ table td{
        <p class='h3 title'>HOMD Statistics</p>
 <div class='container'>
   <div class='box'>
-    <li class='center'>Taxa</li>
+    <li class='center link'><a href='/refseq/refseq_table'>Reference Sequences</a></li>
+    <% const refseq_count = new Intl.NumberFormat().format(s.refseqs.count) %>
+    There are <span class='stat'><%= refseq_count %></span> HOMD RefSeqs 
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    representing <span class='stat'><%= s.refseq_otids.count %> (<%= s.refseq_otids.pct_of_taxa %>%)</span> of the HOMD taxa.
+    
+  </div>
+  <div class='box'>
+    <li class='center link'><a href='/phage/phage_table'>Phage</a></li>
+    <% const phage_count = new Intl.NumberFormat().format(s.phage.count) %>
+    <% const genome_w_phage_count = new Intl.NumberFormat().format(s.genome_w_phage.count) %>
+    There are <span class='stat'><%= phage_count %></span> phage predictions
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    associated with 
+    <span class='stat'><%= genome_w_phage_count %> (<%= s.genome_w_phage.pct_of_genomes %>%)</span> of the HOMD genomes.
+    
+    
+  </div>
+  <div class='box'>
+    <li class='center link'><a href='/taxa/taxon_table'>Taxa</a></li>
     There are <span class='stat'><%= s.taxon_count %></span> taxa in the HOMD database.
    
     
@@ -84,32 +106,37 @@ table td{
     
   </div>
   <div class='box'>
-    <li class='center'>Genomes</li>
-    There are <span class='stat'><%= s.genome_count %></span> genomes in HOMD 
+    <li class='center link'><a href='/genome/genome_table'>Genomes</a></li>
+    <% const genome_count = new Intl.NumberFormat().format(s.genome_count) %>
+    <% const complete = new Intl.NumberFormat().format(s.genome_assembly_complete.count) %>
+    <% const contig = new Intl.NumberFormat().format(s.genome_assembly_contig.count) %>
+    <% const scaffold = new Intl.NumberFormat().format(s.genome_assembly_scaffold.count) %>
+    <% const mags = new Intl.NumberFormat().format(s.genome_mags.count) %>
+    
+    <% const min_size = new Intl.NumberFormat().format(s.genome_min_length) %>
+    <% const max_size = new Intl.NumberFormat().format(s.genome_max_length) %>
+    There are <span class='stat'><%= genome_count %></span> genomes in HOMD 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     representing <span class='stat'><%= s.taxa_with_genomes.count %> (<%= s.taxa_with_genomes.pct_of_taxa %>%)</span> of the HOMD taxa.
     <table>
         <tr><th colspan='2'>Genome Assembly</th></tr>
-        <tr><td class='right'>Complete</td><td class='left stat'><%= s.genome_assembly_complete.count %> (<%= s.genome_assembly_complete.pct_of_genomes %>%) </td></tr>
-        <tr><td class='right'>Contig</td><td class='left stat'><%= s.genome_assembly_contig.count %> (<%= s.genome_assembly_contig.pct_of_genomes %>%) </td></tr>
-        <tr><td class='right'>Scaffold</td><td class='left stat'><%= s.genome_assembly_scaffold.count %> (<%= s.genome_assembly_scaffold.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>Complete</td><td class='left stat'><%= complete %> (<%= s.genome_assembly_complete.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>Contig</td><td class='left stat'><%= contig %> (<%= s.genome_assembly_contig.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>Scaffold</td><td class='left stat'><%= scaffold %> (<%= s.genome_assembly_scaffold.pct_of_genomes %>%) </td></tr>
+        
+        
         <tr><td class='right'>Chromosome</td><td class='left stat'><%= s.genome_assembly_chromosome.count %> (<%= s.genome_assembly_chromosome.pct_of_genomes %>%) </td></tr>
         <tr><th colspan='2'>MAGs</th></tr>
-        <tr><td class='right'>Mags</td><td class='left stat'><%= s.genome_mags.count %> (<%= s.genome_mags.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>MAGs</td><td class='left stat'><%= mags %> (<%= s.genome_mags.pct_of_genomes %>%) </td></tr>
+        <tr><th colspan='2'>Contigs per Genome</th></tr>
+        <tr><td class='right'>Number of Contigs</td><td class='left stat'>Range: <%= s.genome_min_contigs %> - <%= s.genome_max_contigs %> </td></tr>
+        <tr><th colspan='2'>Genome Size</th></tr>
+        <tr><td class='right'>Genome Size (bp)</td><td class='left stat'>Range: <%= min_size %> - <%= max_size %> </td></tr>
+        
         
     </table>
   </div>
-  <div class='box'>
-    <li class='center'>Reference Sequences</li>
-    There are <span class='stat'><%= s.refseqs.count %></span> HOMD RefSeqs 
-    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    representing <span class='stat'><%= s.refseq_otids.count %> (<%= s.refseq_otids.pct_of_taxa %>%)</span> of the HOMD taxa.
-    
-  </div>
-  <div class='box'>
-    <li class='center'>Phage</li>
-    <span class='stat'><%= s.genome_w_phage.count %> (<%= s.genome_w_phage.pct_of_genomes %>%)</span> genomes have phage associations.
-  </div>
+  
     
 </div>   <!-- End flex container -->
 

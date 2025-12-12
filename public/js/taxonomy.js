@@ -154,15 +154,7 @@ function change_level(rank) {
     }else{
       count_type = 'default'
     }
-  // if(items[0].checked && items[1].checked){
-//       count_type = 'both'
-//   }else if(items[0].checked){
-//      count_type = 'wdropped'
-//   }else if(items[1].checked){
-//      count_type = 'wreference'
-//   }else{
-//       count_type = 'default'
-//   }
+
   
   args.count_type = count_type
   if(args.rank=='class'){args.rank='klass';}// for use in homd_taxonomy.taxa_tree_dict_map_by_rank
