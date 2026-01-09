@@ -466,7 +466,7 @@ export const get_filtered_genome_list = (gidObjList, searchText, searchField) =>
   console.log('in get_filtered_genome_list')
   let sendList, tmpSendList;
   const tempObj = {};
-
+  console.log('objlist[0]',gidObjList[0])
   //console.log('gidObjList',gidObjList)
   if (searchField === 'strain') {
     sendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText));
@@ -483,7 +483,7 @@ export const get_filtered_genome_list = (gidObjList, searchText, searchField) =>
     for (let n in tmpSendList) {
       tempObj[tmpSendList[n].gid] = tmpSendList[n];
     }
-    //otid
+    //Species
     
     //tmpSendList = gidObjList.filter(item => item.otid.toString().includes(searchText));
     
@@ -508,8 +508,9 @@ export const get_filtered_genome_list = (gidObjList, searchText, searchField) =>
       tempObj[tmpSendList[n].gid] = tmpSendList[n];
     }
     
-    // species
-    // culture collection
+    // Species
+    //tmpSendList = gidObjList.filter(item => item.organism.toLowerCase().includes(searchText));
+    
     tmpSendList = gidObjList.filter(item => item.strain.toLowerCase().includes(searchText));
     // for uniqueness convert to object::gid
     for (let n in tmpSendList) {

@@ -357,11 +357,11 @@ function clear_filter_form(){
 //     }
 //     xmlhttp.send(JSON.stringify(args));
 // }
-function get_refseqV16(hmt,refseqid,species) {
+function get_refseqV16(hmt,refseqid,species,seqids) {
     
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
     
-    var defline = '>'+refseqid+' | '+hmt+' | '+species
+    var defline = '>'+refseqid+' | '+hmt+' | '+species+' | seqids:'+seqids
     console.log('xx'+defline)
     var args={}
     args.refseqid = refseqid

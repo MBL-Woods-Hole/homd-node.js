@@ -33,7 +33,7 @@
 }
 .stat-table td{
    padding:1px 15px;
-   text-align:center;
+   
    border-bottom:1px solid grey;
 }
 .left{
@@ -55,7 +55,7 @@
        <p class='h3 title'>HOMD Statistics</p>
 <div class='container'>
   <div class='box'>
-    <li class='center link'><a href='/refseq/refseq_table'>Reference Sequences</a></li>
+    <li class='center link'><a href='/refseq/refseq_table'>16S rRNA Reference Sequences</a></li>
     <% const refseq_count = new Intl.NumberFormat().format(s.refseqs.count) %>
     There are <span class='stat'><%= refseq_count %></span> HOMD RefSeqs 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

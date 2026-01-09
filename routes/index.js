@@ -772,17 +772,26 @@ function search_taxonomy(text_string){
 
     let refseqObj = {}
     allRefSeqObjList.filter((el) => {
-     //console.log('el',el)
+     console.log('refseq-el',el)
      for(let n in el){
-         if(el[n].refseq_id.toLowerCase().includes(text_string)){
+         if(el[n].refseq_id.toLowerCase().includes(text_string) ||
+            el[n].seqids.toLowerCase().includes(text_string)
+         ){
              //console.log('el',el[n].refseq_id.toLowerCase())
              let hmt = el[n].refseq_id.split('_')[0]
              let otid = hmt.split('-')[1]
              if(!refseqObj.hasOwnProperty(hmt)){
-                refseqObj[hmt] = { otid:otid,hmt:hmt,species:el[n].species, refseq_id:el[n].refseq_id }
+                refseqObj[hmt] = { otid: otid,
+                                    hmt: hmt,
+                                    species: el[n].species, 
+                                    refseq_id: el[n].refseq_id,
+                                    seqids: el[n].seqids
+                                }
              }
              
          }
+         
+         
      }
     })
     

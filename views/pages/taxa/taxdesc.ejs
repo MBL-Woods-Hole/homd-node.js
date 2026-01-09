@@ -459,12 +459,13 @@
         <% for(n in data_refseq){ %>
             <% refseqid   = data_refseq[n].refseq_id %>
             <% species    = data_refseq[n].species %>
+            <% seqids    = data_refseq[n].seqids %>
             <!-- We also have seqids,seqid_count,seq_length -->
             <tr>
                <td class='' style='border:none;padding:0 1px;'>
                  <span class='rs-span-1 taxon-data'><%= refseqid %></span>
                </td><td>
-                  <a href='#' class='td-button' onclick="get_refseqV16('<%= taxidfullnameplus %>','<%= refseqid %>','<%= species %>')">
+                  <a href='#' class='td-button' onclick="get_refseqV16('<%= taxidfullnameplus %>','<%= refseqid %>','<%= species %>','<%= seqids %>')">
                     Show Sequence
                   </a>
                </td>

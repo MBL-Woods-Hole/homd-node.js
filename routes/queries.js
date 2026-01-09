@@ -21,7 +21,7 @@ export const get_gtdb_tax = (genomes) => {
 export const get_refseq_metadata_query = (otid) => {
   // let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
 //   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
-  let qSelectRefseqInfo = 'SELECT refseq_id,species from homd.16S_refseq '
+  let qSelectRefseqInfo = 'SELECT refseq_id,species,seqids from homd.16S_refseq '
   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
 
   return qSelectRefseqInfo

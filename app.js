@@ -323,7 +323,7 @@ Promise.all(promises)
     /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)
     C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference' && item.status.toLowerCase() !== 'dropped')).map(x => x.otid)
-   
+    C.no_refseq_otids = Object.values(C.taxon_lookup).filter(item => (!C.refseq_lookup.hasOwnProperty(item.otid) && item.status.toLowerCase() !== 'dropped')).map(x => x.otid)
     C.otids_w_abundance = Object.values(C.abundance_lookup).filter(item => {
         if(item.otid != ''){
             return item.otid
@@ -409,7 +409,7 @@ Promise.all(promises)
     console.log('Dropped Taxa:',C.dropped_taxids,C.dropped_taxids.length)
     console.log('Reference Taxa:',C.reference_taxids,C.reference_taxids.length)
     console.log('C.taxa_with_subspecies',C.taxa_with_subspecies,C.taxa_with_subspecies.length)
-    
+    console.log('C.no_refseq_otids',C.no_refseq_otids,C.no_refseq_otids.length)
      //console.log(JSON.stringify(C.homd_taxonomy, null, '\t'))
      
      

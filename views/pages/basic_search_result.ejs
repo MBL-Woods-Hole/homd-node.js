@@ -121,7 +121,7 @@ html, body { min-height: 100%; }
         <div class='search-box'>
         <center>
         <table class='result-table sortable'>
-        <tr><th nowrap>HMT-ID</th><th>Species (click to sort)</th><th>RefSeq-ID</th></tr>
+        <tr><th nowrap>HMT-ID</th><th>Species (click to sort)</th><th>RefSeq-ID</th><th>Seq-IDs</th></tr>
         <% for(n in l){ %>
             <% hmt = l[n] %>
             <% otid = hmt.split('-')[1] %>
@@ -129,7 +129,8 @@ html, body { min-height: 100%; }
             <td nowrap><a href='/taxa/tax_description?otid=<%= otid %>'><%= hmt %></a></td>
             <td><a href='/taxa/tax_description?otid=<%= otid %>'><%- refseqs[hmt].species %></a></td>
             <td><%- refseqs[hmt].refseq_id %> <a href='#' class='td-button' onclick="get_refseqV16('<%= hmt %>','<%= refseqs[hmt].refseq_id %>','<%= refseqs[hmt].species %>')">
-               Show Sequence</a></td>
+               ShowSequence</a></td>
+            <td nowrap><%= refseqs[hmt].seqids %></td>
             </tr>
         <% } %>
         </table>
