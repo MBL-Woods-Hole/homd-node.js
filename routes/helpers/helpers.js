@@ -639,6 +639,43 @@ export const calculate_homd_stats = () => {
     //console.log(C.annotation_lookup)
     // max and min contigs
     // max and min genome size
+    // Genome Body Site
+    //count = homd_taxa.filter(item => item.sites[0] === 'Oral').length
+    count = homd_taxa.filter(item => item.sites[0] === 'Oral').map(item => item.genomes).flat().length
+    pct = count / s.genome_count * 100
+    s.genome_site_oral   = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.sites[0] === 'Nasal').map(item => item.genomes).flat().length
+    pct = count / s.genome_count * 100
+    s.genome_site_nasal   = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.sites[0] === 'Skin').map(item => item.genomes).flat().length
+    pct = count / s.genome_count * 100
+    s.genome_site_skin   = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.sites[0] === 'Gut').map(item => item.genomes).flat().length
+    pct = count / s.genome_count * 100
+    s.genome_site_gut   = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.sites[0] === 'Vaginal').map(item => item.genomes).flat().length
+    pct = count / s.genome_count * 100
+    s.genome_site_vaginal   = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.sites[0] === 'Pathogen').map(item => item.genomes).flat().length
+    pct = count / s.genome_count * 100
+    s.genome_site_path   = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.sites[0] === 'Environmental').map(item => item.genomes).flat().length
+    pct = count / s.genome_count * 100
+    s.genome_site_env   = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.sites[0] === 'Reference').map(item => item.genomes).flat().length
+    pct = count / s.genome_count * 100
+    s.genome_site_ref   = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    //pct = count / s.taxon_count * 100
+    //console.log('oral',s.genome_site_env)
+    //s.taxa_site_oral    = {count:count,pct_of_taxa:pct.toFixed(1)}// Body Site
     
 //PHAGE///PHAGE///PHAGE///PHAGE///PHAGE///PHAGE///PHAGE/
     //console.log("phage",C.phage_lookup)
@@ -667,6 +704,8 @@ export const calculate_homd_stats = () => {
     //MISC//MISC//MISC//MISC//MISC//MISC//MISC//MISC//MISC//MISC
     s.dropped_taxa_count = C.dropped_taxids.length
     s.taxa_with_subspecies = C.taxa_with_subspecies.length
+    
+    
     //console.log(s)
     return s
 }
