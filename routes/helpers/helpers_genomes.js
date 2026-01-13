@@ -87,7 +87,8 @@ export const set_gtable_session = (req) => {
       }
     }
     // Tax Site
-    let site_array = ['oral', 'nasal', 'skin', 'gut', 'vaginal', 'unassigned', 'enviro', 'ref', 'pathogen'];
+    let site_array = ['oral', 'nasal', 'skin', 'gut', 'vaginal', 'unassigned', 'environmental', 'reference', 'pathogen'];
+    
     for (let item in site_array) {
       if (Object.prototype.hasOwnProperty.call(req.body, site_array[item])) {
         req.session.gtable_filter.site[site_array[item]] = req.body[site_array[item]];
@@ -392,7 +393,7 @@ export const apply_gtable_filter = (req, filter) => {
       return item;
     } else {
       //console.log('Sites:',C.site_lookup[item.otid].s1)
-      console.log('Sites2:', C.taxon_lookup[item.otid].sites[0].toLowerCase());
+      //console.log('Sites2:', C.taxon_lookup[item.otid].sites[0].toLowerCase());
       let site = C.taxon_lookup[item.otid].sites[0].toLowerCase();
       //console.log('site',site)
       if (site_on.includes(site)) {
@@ -563,8 +564,8 @@ export const get_default_gtable_filter = () => {
       gut: 'on',
       vaginal: 'on',
       unassigned: 'on',
-      enviro: 'on',
-      ref: 'on',
+      environmental: 'on',
+      reference: 'on',
       pathogen: 'on'
       //p_or_pst    :'primary_site'
     },
@@ -615,8 +616,8 @@ export const get_null_gtable_filter = () => {
       gut: 'off',
       vaginal: 'off',
       unassigned: 'off',
-      enviro: 'off',
-      ref: 'off',
+      environmental: 'off',
+      reference: 'off',
       pathogen: 'off'
       //p_or_pst    :'primary_site'
     },
@@ -631,9 +632,9 @@ export const get_null_gtable_filter = () => {
 };
 
 export const get_checkm_status = (ginfo) => {
-    console.log('in checkM')
-    console.log('1',ginfo.checkM_completeness,ginfo.checkM_contamination)
-    console.log('2',ginfo.checkM2_completeness,ginfo.checkM2_contamination)
+    //console.log('in checkM')
+    //console.log('1',ginfo.checkM_completeness,ginfo.checkM_contamination)
+    //console.log('2',ginfo.checkM2_completeness,ginfo.checkM2_contamination)
     let pct_dif_comp,pct_dif_cont
     if(!ginfo.checkM_completeness){ginfo.checkM_completeness = 0}
     if(!ginfo.checkM2_completeness){ginfo.checkM2_completeness = 0}

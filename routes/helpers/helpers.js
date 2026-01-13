@@ -551,6 +551,11 @@ export const calculate_homd_stats = () => {
     count = homd_taxa.filter(item => item.sites[0] === 'Reference').length
     pct = count / s.taxon_count * 100
     s.taxa_site_ref   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    
+    count = homd_taxa.filter(item => item.sites[0] === 'Unassigned').length
+    pct = count / s.taxon_count * 100
+    s.taxa_site_unassigned   = {count:count,pct_of_taxa:pct.toFixed(1)}
+    
     count = homd_taxa.filter(item => item.genomes.length !== 0).length
     pct = count / s.taxon_count * 100
     s.taxa_with_genomes= {count:count,pct_of_taxa:pct.toFixed(1)}
@@ -665,6 +670,9 @@ export const calculate_homd_stats = () => {
     pct = count / s.genome_count * 100
     s.genome_site_path   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
+    // ??
+    //let ref_genomes = homd_taxa.filter(item => item.sites[0] === 'Reference').map(item => item.genomes).flat()
+    //console.log('ref_genomes',ref_genomes)
     count = homd_taxa.filter(item => item.sites[0] === 'Environmental').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_env   = {count:count,pct_of_genomes:pct.toFixed(1)}
@@ -673,6 +681,9 @@ export const calculate_homd_stats = () => {
     pct = count / s.genome_count * 100
     s.genome_site_ref   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
+    count = homd_taxa.filter(item => item.sites[0] === 'Unassigned').map(item => item.genomes).flat().length
+    pct = count / s.genome_count * 100
+    s.genome_site_unassigned   = {count:count,pct_of_genomes:pct.toFixed(1)}
     //pct = count / s.taxon_count * 100
     //console.log('oral',s.genome_site_env)
     //s.taxa_site_oral    = {count:count,pct_of_taxa:pct.toFixed(1)}// Body Site

@@ -178,7 +178,7 @@ router.get('/genome_table', function genome_table(req, res) {
 });
 router.post('/genome_table', function genome_table_post(req, res) {
     console.log('in POST genome_table')
-    //console.log('req.body',req.body)
+    console.log('req.body',req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret_obj,args,count_txt
     helpers_genomes.set_gtable_session(req)
     //console.log('gtable_session',req.session.gtable_filter)

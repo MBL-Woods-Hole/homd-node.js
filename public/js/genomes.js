@@ -344,8 +344,8 @@ function adv_toggle_cb_sites(x){
         document.getElementById("adv_gut").checked = false;
         document.getElementById("adv_vaginal").checked = false;
         document.getElementById("adv_pathogen").checked = false;
-        document.getElementById("adv_enviro").checked = false;
-        document.getElementById("adv_ref").checked = false;
+        document.getElementById("adv_environmental").checked = false;
+        document.getElementById("adv_reference").checked = false;
         document.getElementById("adv_unassigned").checked = false;
         var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('on')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html
@@ -356,8 +356,8 @@ function adv_toggle_cb_sites(x){
         document.getElementById("adv_gut").checked = true;
         document.getElementById("adv_vaginal").checked = true;
         document.getElementById("adv_pathogen").checked = true;
-        document.getElementById("adv_enviro").checked = true;
-        document.getElementById("adv_ref").checked = true;
+        document.getElementById("adv_environmental").checked = true;
+        document.getElementById("adv_reference").checked = true;
         document.getElementById("adv_unassigned").checked = true;
         var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('off')\">Toggle CheckBoxes On/Off</a>"
         document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html

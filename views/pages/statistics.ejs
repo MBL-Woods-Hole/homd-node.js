@@ -95,6 +95,7 @@
           <tr><td class='right'>Pathogen</td><td class='left stat'><%= s.taxa_site_path.count %> (<%= s.taxa_site_path.pct_of_taxa %>%) </td></tr>
           <tr><td class='right'>Environmental</td><td class='left stat'><%= s.taxa_site_env.count %> (<%= s.taxa_site_env.pct_of_taxa %>%) </td></tr>
           <tr><td class='right'>Reference</td><td class='left stat'><%= s.taxa_site_ref.count %> (<%= s.taxa_site_ref.pct_of_taxa %>%) </td></tr>
+          <tr><td class='right'>Unassigned</td><td class='left stat'><%= s.taxa_site_unassigned.count %> (<%= s.taxa_site_unassigned.pct_of_taxa %>%) </td></tr>
     
           <tr><th colspan='2'>Phyla Represented</th></tr>
           <% for(var n in s.taxa_phyla){ %>
@@ -112,6 +113,7 @@
     <% const contig = new Intl.NumberFormat().format(s.genome_assembly_contig.count) %>
     <% const scaffold = new Intl.NumberFormat().format(s.genome_assembly_scaffold.count) %>
     <% const mags = new Intl.NumberFormat().format(s.genome_mags.count) %>
+    <% const oral = new Intl.NumberFormat().format(s.genome_site_oral.count) %>
     
     <% const min_size = new Intl.NumberFormat().format(s.genome_min_length) %>
     <% const max_size = new Intl.NumberFormat().format(s.genome_max_length) %>
@@ -134,14 +136,15 @@
         <tr><td class='right'>Genome Size (bp)</td><td class='left stat'>Range: <%= min_size %> - <%= max_size %> </td></tr>
         
         <tr><th colspan='2'>Primary Body Site</th></tr>
-        <tr><td class='right'>Oral taxa</td><td class='left stat'><%= s.genome_site_oral.count %> (<%= s.genome_site_oral.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>from Oral taxa</td><td class='left stat'><%= oral %> (<%= s.genome_site_oral.pct_of_genomes %>%) </td></tr>
         <tr><td class='right'>Nasal taxa</td><td class='left stat'><%= s.genome_site_nasal.count %> (<%= s.genome_site_nasal.pct_of_genomes %>%) </td></tr>
         <tr><td class='right'>Skin taxa</td><td class='left stat'><%= s.genome_site_skin.count %> (<%= s.genome_site_skin.pct_of_genomes %>%) </td></tr>
         <tr><td class='right'>Gut taxa</td><td class='left stat'><%= s.genome_site_gut.count %> (<%= s.genome_site_gut.pct_of_genomes %>%) </td></tr>
         <tr><td class='right'>Vaginal taxa</td><td class='left stat'><%= s.genome_site_vaginal.count %> (<%= s.genome_site_vaginal.pct_of_genomes %>%) </td></tr>
         <tr><td class='right'>Pathogen taxa</td><td class='left stat'><%= s.genome_site_path.count %> (<%= s.genome_site_path.pct_of_genomes %>%) </td></tr>
         <tr><td class='right'>Environmental taxa</td><td class='left stat'><%= s.genome_site_env.count %> (<%= s.genome_site_env.pct_of_genomes %>%) </td></tr>
-          <tr><td class='right'>Reference taxa</td><td class='left stat'><%= s.genome_site_ref.count %> (<%= s.genome_site_ref.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>Reference taxa</td><td class='left stat'><%= s.genome_site_ref.count %> (<%= s.genome_site_ref.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>Unassigned</td><td class='left stat'><%= s.genome_site_unassigned.count %> (<%= s.genome_site_unassigned.pct_of_genomes %>%) </td></tr>
     
         
     </table>

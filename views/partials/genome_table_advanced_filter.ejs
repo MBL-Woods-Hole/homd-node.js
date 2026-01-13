@@ -378,16 +378,16 @@ and (min-width : 1824px) {
             <% }else{ %>
                 <input type='checkbox'         class='filter_ckbx' id='adv_pathogen' name='pathogen' onclick='adv_update_sb()' \> Pathogen&nbsp;&nbsp;&nbsp;
             <% } %>
-            <% if(fltr.site.enviro === 'on'){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='adv_enviro' name='enviro' onclick='adv_update_sb()' \> Environmental&nbsp;&nbsp;&nbsp;
+            <% if(fltr.site.environmental === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_environmental' name='environmental' onclick='adv_update_sb()' \> Environmental&nbsp;&nbsp;&nbsp;
             <% }else{ %>
-                <input type='checkbox'         class='filter_ckbx' id='adv_enviro' name='enviro' onclick='adv_update_sb()' \> Environmental&nbsp;&nbsp;&nbsp;
+                <input type='checkbox'         class='filter_ckbx' id='adv_environmental' name='environmental' onclick='adv_update_sb()' \> Environmental&nbsp;&nbsp;&nbsp;
             <% } %>
             
-            <% if(fltr.site.ref === 'on'){ %>
-                <input title='Was NonOralRef' type='checkbox' checked class='filter_ckbx' id='adv_ref' name='ref' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
+            <% if(fltr.site.reference === 'on'){ %>
+                <input title='Was NonOralRef' type='checkbox' checked class='filter_ckbx' id='adv_reference' name='reference' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
             <% }else{ %>
-                <input title='Was NonOralRef' type='checkbox'         class='filter_ckbx' id='adv_ref' name='ref' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
+                <input title='Was NonOralRef' type='checkbox'         class='filter_ckbx' id='adv_reference' name='reference' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
             <% } %>
             
             <% if(fltr.site.unassigned === 'on'){ %>
