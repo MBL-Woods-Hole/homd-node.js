@@ -3,8 +3,9 @@ import express from 'express';
 let router    = express.Router()
 
 import fs from 'fs-extra';
+import { parse, stringify } from 'svgson';
 
-
+import pretty from 'pretty'
 import path from 'path';
 
 import C from '../public/constants.js';
@@ -1969,6 +1970,101 @@ router.get('/pangenome_image', async function pangenome_image(req, res) {
        res.sendFile(filepath)
 //    }
 })
+router.get('/pangenome_image2', async function pangenome_image(req, res) {
+    console.log(req.query)
+    //const { parse, stringify } = require('svgson')
+    
+    let conn,otid,pg,ext,filepath
+    
+       ext = req.query.ext
+       pg = req.query.pg
+       filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
+       console.log('fpath',filepath)
+       const originalSvg = await fs.readFile(filepath, 'utf8');
+       //const json = await parse(svgString)
+       let updatedSvg = await deleteElementById(originalSvg, 'legend_group')
+       updatedSvg =     await deleteElementById(updatedSvg,  'layer_legend')
+       updatedSvg =    await deleteElementById(updatedSvg,  'bin_legend')
+       updatedSvg =    await changeSvgFontById(updatedSvg,  'title_group')
+        
+       //Want to delete where id='layer_legend' and/or 'layer_labels',  
+       // YES legend_group
+       //YES layer_legend
+       // bin_legend
+       //console.log('UPDATE',updatedSvg,'UPDATE')
+       
+//        parse(originalSvg).then((json) => {
+//       // Enlarge viewport by doubling width/height
+//       //json.attrs.width = "200";
+//       //json.attrs.height = "200";
+//       updatedSvg = deleteElementById(json, 'legend_group')
+//       // Optionally adjust viewBox to keep content scaled or zoom out
+//       // To zoom out (make content smaller), increase the viewBox width/height
+//       updatedSvg.attributes.viewBox = "0 0 1200 1200"; 
+//     
+//       const newSvg = stringify(updatedSvg);
+//       //console.log(newSvg);
+//       res.send(newSvg);
+//       //return stringify(newSvg)
+//       });
+
+
+       //console.log(pretty(updatedSvg))
+       res.send(updatedSvg);
+})
+async function changeSvgFontById(svgString, targetId) {
+    const json = await parse(svgString);
+
+    // Recursive function to find and modify node
+    function updateNode(node) {
+        if (node.attributes && node.attributes.id === targetId) {
+            // Apply font change directly via style
+            //node.attributes.style = `font-size: 530px; ${node.attributes.style || ''}`;
+            node.children[0].attributes.style = `font-size: 300px; ${node.attributes.style || ''}`;
+            node.children[1].attributes.style = `font-size: 150px; ${node.attributes.style || ''}`;
+            node.children[0].attributes.x = '-3900';
+            node.children[0].attributes.y = '-400';
+            node.children[1].attributes.x = '-3900';
+            node.children[1].attributes.y = '-150';
+            //node.attributes.style = `position:relative;top:10px;left:10px;`
+        }
+        if (node.children) {
+            node.children.forEach(updateNode);
+        }
+    }
+
+    updateNode(json);
+    return stringify(json);
+}
+async function deleteElementById(svgString, targetId) {
+  const json = await parse(svgString);
+  json.attributes.viewBox = "-0 -0 1800 1800";
+  //json.attributes.viewBox = "-80 -300 1800 1800";
+  
+  function removeNode(node) {
+    if (node.children) {
+      // Find the index of the child to remove
+      const index = node.children.findIndex(
+        (child) => child.attributes && child.attributes.id === targetId
+      );
+      
+      if (index !== -1) {
+        // Remove the child
+        node.children.splice(index, 1);
+        return true; // Node found and removed
+      }
+
+      // Recursively search children
+      for (const child of node.children) {
+        if (removeNode(child)) return true;
+      }
+    }
+    return false;
+  }
+  
+  removeNode(json);
+  return stringify(json);
+}
 //
 router.get('/oralgen', function oralgen(req, res) {
   res.render('pages/genome/oralgen', {
