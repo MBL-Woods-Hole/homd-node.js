@@ -313,9 +313,11 @@ def run_pangenomes(args):
     # query for taxon description page
     #q =  "SELECT otid, name as pangenome from pangenome"
     #q = "SELECT DISTINCT otid, pangenome_name as pangenome from pangenome_genome"
-    q = "SELECT DISTINCT otid, pangenome_v4.pangenome_name as pangenome"
-    q += " FROM pangenome_genome"
-    q += " JOIN pangenome_v4 using(pangenome_id)"
+    
+    q = "SELECT DISTINCT otid, pangenome_name as pangenome"
+    q += " FROM pangenomes"
+    q += " JOIN pangenome_genome using(pangenome_id)"
+    q += " WHERE homd_genome_version = '11.02'"
     #q += " JOIN `"+genome_tbl+"` using(genome_id)"
     #q += " RIGHT JOIN pangenome_files using(otid)"
     print(q)

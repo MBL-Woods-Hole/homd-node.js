@@ -1756,70 +1756,129 @@ function get_blast_db_info(gid){
 //
 router.get('/anvio_pangenomes', async function anvio_pangenomes(req, res){
     let q = queries.get_all_pangenomes_query()
-    
-    let conn
-    try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
-   
-        if(!rows){
-          rows = []
-        }
-        
-        res.render('pages/genome/anvio_selection', {
+    //console.log(C.pangenome_lookup)
+    let pg_list = Object.keys(C.pangenome_lookup)
+    pg_list.sort()
+    //console.log(pg_list)
+    res.render('pages/genome/anvio_selection', {
         title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
         
-        //pangenomes: JSON.stringify(C.pangenomes)
-        pangenomes: JSON.stringify(rows),
-        files:[]
+        pangenomes: JSON.stringify(C.pangenome_lookup),
+        sorted_pg:  JSON.stringify(pg_list),
+        //files:[]
         
         })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
     return
+    
+   //  let conn
+//     try {
+//         conn = await global.TDBConn();
+//         const [rows] = await conn.execute(q);
+//    
+//         if(!rows){
+//           rows = []
+//         }
+//         
+//         res.render('pages/genome/anvio_selection', {
+//         title: 'HOMD :: Pangenomes', 
+//         pgname: '', // for AboutThisPage
+//         config: JSON.stringify(ENV),
+//         ver_info: JSON.stringify(C.version_information),
+//         
+//         //pangenomes: JSON.stringify(C.pangenomes)
+//         pangenomes: JSON.stringify(rows),
+//         files:[]
+//         
+//         })
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send('Error fetching data');
+//     } finally {
+//         if (conn) conn.release(); // Release the connection back to the pool
+//     }
+//     return
 })
 //
 router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
     console.log('in POST anvio selection')
-    let search_term = req.body.val
-    let q = queries.get_all_pangenomes_query()
+    let search_term = req.body.val.toLowerCase()
+    //let q = queries.get_all_pangenomes_query()
     //let send_rows = []
-    let conn,html = ""
+    let pg,conn,html = ""
     let html_rows = ""
-    let html_head = "<table border='1'>"
+    let html_head = "<table id='pgtable' class='table sortable' border='1'>"
     let counter = 0
-    html_head += "<tr>"
-    html_head += "<td nowrap><strong>Pangenome Name</strong><br><small>(Link opens pangenome in Anvi`o)</small></td>"
-    html_head += "<td><strong>HOMD Genome Version</strong></td>"
-    html_head += "<td><strong>Interactive</strong></td>"
-    html_head += "<td><strong>Image</strong></td>"
-    html_head += "<td><strong>Description</strong></td>"
+    html_head += "<thead><tr>"
+    html_head += "<th nowrap>Pangenome<br><small>&nbsp;&nbsp;&nbsp;Click to Sort</small></th>"
+    html_head += "<th class='sorttable_nosort'>Interactive</th>"
+    html_head += "<th class='sorttable_nosort'>Preview</th>"
+    
+    html_head += "<th class=''>Scope</th>"
+    html_head += "<th class=''>Genome Count</th>"
+    html_head += "<th class='sorttable_nosort'>Notes</th>"
+    html_head += "<th class='sorttable_nosort'></th>"
     html_head += "</tr>"
+    html_head += "</thead><tbody>"
+    let collector = []
+    let pnames = Object.keys(C.pangenome_lookup)
+    for(let i in pnames){
+        if(pnames[i].toLowerCase().includes(search_term)){
+           collector.push(pnames[i])
+        }
+    }
+    collector.sort()
+    for(let n in collector){
+        pg = collector[n]
+        html_rows += "<tr><td nowrap>"+pg+"</td>"
+        html_rows += "<td nowrap class='center'><small><a href='anvio?pg="+pg+"' target='_blank' class='pg'>OpenAnvi'o</a></small></td>"
+        html_rows += "<td nowrap class='center'><small><a href='pangenome_image?pg="+ pg+"&ext=svg' target='_blank'>Preview</a></small></td>"
+        html_rows += "<td nowrap class='center'>"+C.pangenome_lookup[pg].scope+"</td>"
+        html_rows += "<td nowrap  class='center'>"+C.pangenome_lookup[pg].gids.length+"</td>"
+    
+        html_rows += "<td class='center'>"
+        html_rows += "  <span class='dd-menu'>"
+        html_rows += "    <span class='pill pill-aqua'>hover</span>"
+        html_rows += "    <div class='dropdown-content'>"
+        html_rows +=       C.pangenome_lookup[pg].description
+        html_rows += "    </div>"
+        html_rows += "  </span>"
+        html_rows += "</td>"
+        
+        
+        html_rows += "<td class='center'>download <small>(<a href='/download/pg/targz/"+pg+"'>tar.gz</a>)"
+        html_rows += "&nbsp;&nbsp;(<a href='/download/pg/sha256/"+pg+"'>sha256</a>)</small>"
+        html_rows += "</td>"
+        html_rows += "</tr>"
+    }
+    html += "<br><span style=''>Filtered Pangenome Count: <b>"+collector.length.toString() +"</b></span>"
+    html += html_head
+    html += html_rows
+    html += "</tbody></table>"
+    res.send(html)
+    
+    return
+    
     try {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
         for(let i in rows){
             //console.log(rows[i])
-            if(rows[i].pangenome_name.includes(search_term)){
+            if(rows[i].pangenome_name.toLowerCase().includes(search_term)){
                 //send_rows.push(rows[i])
                 html_rows += "<tr><td nowrap>"+rows[i].pangenome_name+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].homd_genome_version+"</td>"
                 html_rows += "<td nowrap><small><a href='anvio?pg="+rows[i].pangenome_name+"' target='_blank' class='pg'>Open Anvi'o</a></small></td>"
                 html_rows += "<td nowrap><small><a href='pangenome_image?pg="+ rows[i].pangenome_name+"&ext=svg' target='_blank'>Open SVG</a></small></td>"
+                
                 html_rows += "<td>"+rows[i].description+"</td>"
                 html_rows += "</tr>"
                 counter += 1
             }
             
         }
-        html += "Pangenome Count: <b>"+counter.toString() +"</b> (filtered)"
+        html += "<br><span style=''>Pangenome Count: <b>"+counter.toString() +"</b> (filtered)</span>"
         html += html_head
         html += html_rows
         html += "</table>"
@@ -1860,6 +1919,7 @@ router.get('/anvio', (req, res) => {
 //     }else{
 //         url = "https://anvio.homd.org/anvio?pg="+pg
 //     }
+    console.log('env',ENV)
     res.render('pages/genome/anvi_server', {
     //res.render('pages/genome/anvi_server_iframe', {
         title: 'HOMD :: Pangenomes', 
@@ -1875,39 +1935,39 @@ router.get('/pangenome_image', async function pangenome_image(req, res) {
     console.log(req.query)
     let conn,otid,pg,ext,filepath
     // if otid is present get filename from db
-    if(req.query.otid){
-        //otid = req.query.otid
-        // else pg and extension must be present
-        let q = "SELECT filename from pangenome_files WHERE otid='"+req.query.otid+"'"
-        console.log(q)
-        //console.log(q)
-        try {
-            conn = await global.TDBConn();
-            const [rows] = await conn.execute(q);
-       
-           
-            //console.log(rows)
-            if(rows.length === 0){
-               res.send('File not found');
-            }else{
-              filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdf/HMT_"+req.query.otid+"/"+rows[0].filename
-              res.sendFile(filepath);
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Error fetching data');
-        } finally {
-            if (conn) conn.release(); // Release the connection back to the pool
-        }
-    return
-    }else{
+    // if(req.query.otid){
+//         //otid = req.query.otid
+//         // else pg and extension must be present
+//         let q = "SELECT filename from pangenome_files WHERE otid='"+req.query.otid+"'"
+//         console.log(q)
+//         //console.log(q)
+//         try {
+//             conn = await global.TDBConn();
+//             const [rows] = await conn.execute(q);
+//        
+//            
+//             //console.log(rows)
+//             if(rows.length === 0){
+//                res.send('File not found');
+//             }else{
+//               filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/pdf/HMT_"+req.query.otid+"/"+rows[0].filename
+//               res.sendFile(filepath);
+//             }
+//         } catch (error) {
+//             console.error(error);
+//             res.status(500).send('Error fetching data');
+//         } finally {
+//             if (conn) conn.release(); // Release the connection back to the pool
+//         }
+//     return
+//     }else{
        // get directly from files system using ext and pg name
        ext = req.query.ext
        pg = req.query.pg
-       filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/"+ext+'/'+req.query.pg+'.'+ext
+       filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
        console.log('fpath',filepath)
        res.sendFile(filepath)
-    }
+//    }
 })
 //
 router.get('/oralgen', function oralgen(req, res) {

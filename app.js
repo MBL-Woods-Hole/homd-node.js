@@ -276,6 +276,8 @@ const promises = [
   
   //DEC 2025  // #16
   helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.abundance_fn),'json'),
+  //JAN 2026  // #17
+  helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.pg_lookup_fn),'json'),
     // ETC ...
 ];
 Promise.all(promises)
@@ -320,6 +322,7 @@ Promise.all(promises)
     C.phage_lookup          = results[14];
     C.amr_lookup             = results[15];
     C.abundance_lookup       = results[16];  // should have same taxa keys as C.taxon_counts_lookup
+    C.pangenome_lookup       = results[17]
     /// END of results files
     C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)
     C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference' && item.status.toLowerCase() !== 'dropped')).map(x => x.otid)

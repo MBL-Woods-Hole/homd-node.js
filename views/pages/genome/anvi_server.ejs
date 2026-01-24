@@ -5,7 +5,7 @@
 }
 </style>
 <% cfg = JSON.parse(config) %>
-
+<% url = cfg.ANVIO_URL %>
 
 
 <body>
@@ -24,11 +24,15 @@
 <script type="text/javascript" src="/js/menu.js"></script>
 <script>
   var pg = '<%- pangenome %>'
-  var config = JSON.parse('<%- config %>')
+  var aurl = '<%= url %>'
   //console.log('pg',pg)
+  //console.log('url',aurl)
+  //var config = JSON.parse('<%- config %>')
+  
+  
   mainmenu()
- document.getElementById('loader-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Finding '+pg+'...</div>'
-  url = config.ANVIO_URL+"/"+pg
+  document.getElementById('loader-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Finding '+pg+'...</div>'
+  url = aurl+pg
   console.log('url',url)
   window.open(url,'_self')
 </script>

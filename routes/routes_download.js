@@ -818,6 +818,23 @@ router.get('/dld_crispr_table/:type', function dld_crispr_table (req, res) {
     res.end()
     
 })
+router.get('/pg/:type/:pg', function dld_pg (req, res) {
+    console.log('in dnld pg')
+    //console.log(req.params)
+    let pg = req.params.pg
+    let dt = helpers.get_today_obj()
+    const type = req.params.type   // sha256 OR targz are only choices
+        
+    let fullpath
+    if(type === 'sha256'){
+        fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'pangenomes/V11.02/targz',pg+'.tar.gz.sha256')
+    }else{
+        fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'pangenomes/V11.02/targz',pg+'.tar.gz')
+    }
+    res.download(fullpath)
+    return 
+    
+})
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function create_full_crispr_table(lookup_obj,header_txt) {

@@ -399,6 +399,7 @@ constants.site_lookup_fn        = 'homdData-TaxonSiteLookup.json'
 constants.crispr_lookup_fn      = 'homdData-CrisprLookup.json'
 constants.phage_lookup_fn       = 'homdData-PhageLookup.json'
 constants.amr_lookup_fn          = 'homdData-AMRLookup.json'
+constants.pg_lookup_fn          = 'homdData-PangenomesLookup.json'
 constants.missing_ncbi_genomes_fn= 'homdData-MissingGenomes.json'
 //constants.image_location_fn     = 'ImageLocation.js'
 

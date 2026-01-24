@@ -95,17 +95,18 @@ export const get_lineage_query = (otid) => {
 };
 
 export const get_all_pangenomes_query = () => {
-    let q = "SELECT pangenome_name,homd_genome_version,description FROM pangenome_v4"
-    q += " WHERE active='1' ORDER by pangenome_name"
+    let q = "SELECT pangenome_name,homd_genome_version,description FROM pangenomes"
+    q += " WHERE active='1' AND homd_genome_version = '"+C.genomic_refseq_version+"'"
+    q += " ORDER by pangenome_name"
     return q
 };
 
 export const get_pangenomes_query = (otid) => {
     //let q = "SELECT distinct pangenome_name from pangenome_genome"
-    let q = "SELECT DISTINCT pangenome_v4.pangenome_name as pangenome" 
+    let q = "SELECT DISTINCT pangenomes.pangenome_name as pangenome" 
     q += " FROM pangenome_genome"
-    q += " JOIN pangenome_v4 using(pangenome_id)"
-    q += " WHERE otid='"+otid+"'"
+    q += " JOIN pangenomes using(pangenome_id)"
+    q += " WHERE otid='"+otid+"' AND homd_genome_version = '"+C.genomic_refseq_version+"'"
     return q
 };
 
@@ -177,14 +178,14 @@ function genome_query() {
         qSelectGenome +=` \`${ptbl}\`.CDS as prokka_CDS,\`${ptbl}\`.gene as prokka_gene,\`${ptbl}\`.mRNA as prokka_mRNA,`
         qSelectGenome +=` \`${ptbl}\`.misc_RNA as prokka_misc_RNA,\`genomes_prokkaV11.0\`.rRNA as prokka_rRNA,`
         qSelectGenome +=` \`${ptbl}\`.tRNA as prokka_tRNA,\`${ptbl}\`.tmRNA as prokka_tmRNA,`
-        qSelectGenome +=` pangenome_v4.pangenome_name as pangenome`
+        qSelectGenome +=` pangenomes.pangenome_name as pangenome`
         qSelectGenome +=` FROM \`${tbl}\``
         qSelectGenome +=` JOIN status using(otid)`
         qSelectGenome +=` JOIN sites on primary_body_site_id = site_id`
         qSelectGenome +=` LEFT JOIN \`${ptbl}\` using(genome_id)`
         qSelectGenome +=` LEFT JOIN \`${ntbl}\` using(genome_id)`
         qSelectGenome +=` LEFT JOIN pangenome_genome using(genome_id)`
-        qSelectGenome +=` LEFT JOIN pangenome_v4 using(pangenome_id)`
+        qSelectGenome +=` LEFT JOIN pangenomes using(pangenome_id)`
     
     
     console.log(qSelectGenome)
@@ -200,6 +201,7 @@ export const get_all_genomes = () => {  // for downld all
 export const get_genome = (gid) => {   // always NCBI for genome description
     let q = genome_query()
     q +=" WHERE genome_id = '"+gid+"'"
+    q += " AND homd_genome_version = '"+C.genomic_refseq_version+"'" // for correct pangenome
   
     return q 
 };
