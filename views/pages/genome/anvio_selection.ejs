@@ -89,6 +89,7 @@ thead th { position: sticky; top: 0; }
 <% pgs = JSON.parse(pangenomes) %>
 <% cfg = JSON.parse(config) %>
 <% sorted = JSON.parse(sorted_pg) %>
+<% var version_info=JSON.parse(ver_info) %>
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -114,7 +115,8 @@ thead th { position: sticky; top: 0; }
 <a href='anvio_pangenomes'>Reload Page</a>
 </center>
 
-<span id=''>Available Pangenomes Count: <b><%- sorted.length %></b></span>
+<span>Available Pangenomes Count: <b><%- sorted.length %></b></span>
+<span class='pull_right'>Created with HOMD Genomic Version `<b><%= version_info.gen_ver %></b>`</span>
 
 
 
@@ -127,11 +129,11 @@ thead th { position: sticky; top: 0; }
 <tr>
   <th nowrap>Pangenome<small><br>&nbsp;&nbsp;&nbsp;Click to Sort</small></th>
   
-  <th class="sorttable_nosort">Interactive</th>
-  <th class="sorttable_nosort">Static Image</th>
-  <th class="">Scope</th>
-  <th class="">Genome Count</th>
-  <th class="sorttable_nosort">Notes</th>
+  <th class="sorttable_nosort center">Interactive</th>
+  <th class="sorttable_nosort center">Preview</th>
+  <th class="center">Scope</th>
+  <th class="center">Genome<br>Count</th>
+  <th class="sorttable_nosort center">Notes</th>
   <th class="sorttable_nosort"></th>
   
 </tr>
@@ -148,7 +150,7 @@ thead th { position: sticky; top: 0; }
         
         <td nowrap class='center'>
            
-           <small><a href='pangenome_image2?pg=<%= pg %>&ext=svg'>Preview</a></small>
+           <small><a href='pangenome_image2?pg=<%= pg %>&ext=svg' target='_blank'>OpenSVG</a></small>
         </td>
         
         <td nowrap  class='center'>

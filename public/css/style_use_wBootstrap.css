@@ -387,3 +387,6 @@ p {
    height:25px;
    border:1px solid brown;
 }
+.pull_right{
+    float:right;
+}

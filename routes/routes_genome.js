@@ -1814,12 +1814,12 @@ router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
     let counter = 0
     html_head += "<thead><tr>"
     html_head += "<th nowrap>Pangenome<br><small>&nbsp;&nbsp;&nbsp;Click to Sort</small></th>"
-    html_head += "<th class='sorttable_nosort'>Interactive</th>"
-    html_head += "<th class='sorttable_nosort'>Preview</th>"
+    html_head += "<th class='sorttable_nosort center'>Interactive</th>"
+    html_head += "<th class='sorttable_nosort center'>Preview</th>"
     
-    html_head += "<th class=''>Scope</th>"
-    html_head += "<th class=''>Genome Count</th>"
-    html_head += "<th class='sorttable_nosort'>Notes</th>"
+    html_head += "<th class='center'>Scope</th>"
+    html_head += "<th class='center'>Genome<br>Count</th>"
+    html_head += "<th class='sorttable_nosort center'>Notes</th>"
     html_head += "<th class='sorttable_nosort'></th>"
     html_head += "</tr>"
     html_head += "</thead><tbody>"
@@ -1835,7 +1835,7 @@ router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
         pg = collector[n]
         html_rows += "<tr><td nowrap>"+pg+"</td>"
         html_rows += "<td nowrap class='center'><small><a href='anvio?pg="+pg+"' target='_blank' class='pg'>OpenAnvi'o</a></small></td>"
-        html_rows += "<td nowrap class='center'><small><a href='pangenome_image2?pg="+ pg+"&ext=svg' target='_blank'>Preview</a></small></td>"
+        html_rows += "<td nowrap class='center'><small><a href='pangenome_image2?pg="+ pg+"&ext=svg' target='_blank'>OpenSVG</a></small></td>"
         html_rows += "<td nowrap class='center'>"+C.pangenome_lookup[pg].scope+"</td>"
         html_rows += "<td nowrap  class='center'>"+C.pangenome_lookup[pg].gids.length+"</td>"
     

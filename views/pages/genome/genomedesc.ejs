@@ -57,7 +57,7 @@
   }
 
   .value {
-    background: #ACA195;
+    /* background: #ACA195; */
     /*  #d0edef;  */
   }
 
@@ -90,7 +90,7 @@
 
   .link {
     text-decoration: underline;
-    background: #F3E5AB;
+    
     border:1px solid lightgrey;
     padding:1px 4px;
     
@@ -446,32 +446,33 @@
                                     <% } %>
                               </tr>
                               <tr>
-                                <td valign="center" class='field'>Pangenomes (Beta)</td>
+                                <td valign="center" class='field'>Pangenomes</td>
                                 <td class='value'>
                                   <% if(ginfo.pangenomes.length==1 && ginfo.pangenomes[0]){ %>
-                                    <span class='inner-value'>
-                                      View in Anvi`o: <a class='link'
+                                    1)
+                                    <span title='PangenomeName:&nbsp;<%= ginfo.pangenomes[0] %>'>
+                                      <a class='link'
                                         href='anvio?pg=<%= ginfo.pangenomes[0] %>' target='_blank'
                                         class='pg'>
-                                        <%= ginfo.pangenomes[0] %>
-                                      </a>
-                                      <small>(Interactive)</small>
-                                      <br>
-                                      View <a class='link'
-                                        href='pangenome_image?pg=<%= ginfo.pangenomes[0] %>&ext=svg'
-                                        target='_blank'>SVG Image</a>
+                                        OpenAnvi`o</a> <small>(Interactive)</small>
+                                      
+                                      <a class='link'
+                                        href='pangenome_image2?pg=<%= ginfo.pangenomes[0] %>&ext=svg'
+                                        target='_blank'>Preview</a> <small>(SVGImage)</small>
                                     </span>
-                                    <% }else if(ginfo.pangenomes.length> 1 && ginfo.pangenomes[0]){ %>
+                                    <% }else if(ginfo.pangenomes.length > 1 && ginfo.pangenomes[0]){ %>
                                       <% for(n in ginfo.pangenomes){ %>
-                                        <%= parseInt(n)+1 %>) Anvio: <a class='link'
-                                            href='/genome/anvio?pg=<%= ginfo.pangenomes[n] %>'
-                                            target='_blank'>
-                                            <%= ginfo.pangenomes[n] %>
-                                          </a>
-                                          Image: <a class='link'
-                                            href='/genome/pangenome_image?pg=<%= ginfo.pangenomes[n] %>&ext=svg'
-                                            target='_blank'>
-                                            svg</a>
+                                        <%= parseInt(n)+1 %>) 
+                                           <span title='PangenomeName: <%= ginfo.pangenomes[n] %>'>
+                                            <a class='link'
+                                               href='/genome/anvio?pg=<%= ginfo.pangenomes[n] %>'
+                                               target='_blank'>
+                                               OpenAnvi`o</a> <small>(Interactive)</small>
+                                            <a class='link'
+                                               href='/genome/pangenome_image2?pg=<%= ginfo.pangenomes[n] %>&ext=svg'
+                                               target='_blank'>
+                                               Preview</a> <small>(SVGImage)</small>
+                                            </span>
                                           <br>
                                           <% } %>
                                             <% }else{ %>

@@ -103,7 +103,7 @@ export const get_all_pangenomes_query = () => {
 
 export const get_pangenomes_query = (otid) => {
     //let q = "SELECT distinct pangenome_name from pangenome_genome"
-    let q = "SELECT DISTINCT pangenomes.pangenome_name as pangenome" 
+    let q = "SELECT DISTINCT pangenomes.pangenome_name as pg" 
     q += " FROM pangenome_genome"
     q += " JOIN pangenomes using(pangenome_id)"
     q += " WHERE otid='"+otid+"' AND homd_genome_version = '"+C.genomic_refseq_version+"'"

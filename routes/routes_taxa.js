@@ -744,8 +744,6 @@ router.get('/tax_description', async function tax_description(req, res) {
         const [pangenomes] = await conn.execute(q_pangenome);
         const [gtdbtax] = await conn.execute(q_gtdb_tax);
   
-  
-  
     if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
       sites = 'Primary: ' + C.site_lookup[otid]['s1']
       // = Object.values(C.site_lookup[otid]).join('<br>')
