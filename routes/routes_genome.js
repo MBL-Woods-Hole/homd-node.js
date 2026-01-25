@@ -1835,7 +1835,7 @@ router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
         pg = collector[n]
         html_rows += "<tr><td nowrap>"+pg+"</td>"
         html_rows += "<td nowrap class='center'><small><a href='anvio?pg="+pg+"' target='_blank' class='pg'>OpenAnvi'o</a></small></td>"
-        html_rows += "<td nowrap class='center'><small><a href='pangenome_image?pg="+ pg+"&ext=svg' target='_blank'>Preview</a></small></td>"
+        html_rows += "<td nowrap class='center'><small><a href='pangenome_image2?pg="+ pg+"&ext=svg' target='_blank'>Preview</a></small></td>"
         html_rows += "<td nowrap class='center'>"+C.pangenome_lookup[pg].scope+"</td>"
         html_rows += "<td nowrap  class='center'>"+C.pangenome_lookup[pg].gids.length+"</td>"
     
@@ -1862,39 +1862,7 @@ router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
     
     return
     
-    try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
-        for(let i in rows){
-            //console.log(rows[i])
-            if(rows[i].pangenome_name.toLowerCase().includes(search_term)){
-                //send_rows.push(rows[i])
-                html_rows += "<tr><td nowrap>"+rows[i].pangenome_name+"</td>"
-                html_rows += "<td nowrap><small><a href='anvio?pg="+rows[i].pangenome_name+"' target='_blank' class='pg'>Open Anvi'o</a></small></td>"
-                html_rows += "<td nowrap><small><a href='pangenome_image?pg="+ rows[i].pangenome_name+"&ext=svg' target='_blank'>Open SVG</a></small></td>"
-                
-                html_rows += "<td>"+rows[i].description+"</td>"
-                html_rows += "</tr>"
-                counter += 1
-            }
-            
-        }
-        html += "<br><span style=''>Pangenome Count: <b>"+counter.toString() +"</b> (filtered)</span>"
-        html += html_head
-        html += html_rows
-        html += "</table>"
-        res.send(html)
-        //console.log(send_rows,send_rows.length)
-        
-
     
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
 })
 
 
