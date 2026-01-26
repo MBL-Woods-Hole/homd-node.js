@@ -454,7 +454,7 @@
     <td class='taxon-data'>
     
       <% if(data_lookup.naming_status != "Dropped"){ %>
-        <strong>RefSeq-ID(s)</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
         
 
         <!-- OLD: >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
@@ -465,6 +465,7 @@
         <% }else{ %>
             <div id='refseq-table-no-scroll'>
         <% } %>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RefSeq-ID(s)
         <table class='' border='0'>
         <% for(n in data_refseq){ %>
             <% refseqid   = data_refseq[n].refseq_id %>
