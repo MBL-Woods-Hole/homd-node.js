@@ -13,12 +13,12 @@ const { exec, spawn } = require('child_process');
 const queries = require(app_root + '/routes/queries')
 // let timestamp = new Date() // getting current timestamp
 // let rs_ds = ds.get_datasets( () => {
-let browseDir = require("browse-directory");
-const { v4: uuidv4 } = require('uuid'); // I chose v4 ‒ you can select othersc
+//let browseDir = require("browse-directory");
+//const { v4: uuidv4 } = require('uuid'); // I chose v4 ‒ you can select othersc
 //const Stream = require( 'stream-json/streamers/StreamArray');
 /* GET home page. */
 
-const mysql = require('mysql'); // or use import if you use TS
+const mysql = require('mysql2'); // or use import if you use TS
 const util = require('util');
 
 

@@ -1,7 +1,7 @@
 "use strict"
 // for newrelic: start in config.js
 //const winston = require('winston');
-const CFG = require('./config/config');
+//const CFG = require('./config/config');
 const taxdbconn = require('./config/database').taxon_pool;
 //const annodbconn = require('./config/database').taxon_pool2;
 //const gendbconn = require('./config/database').genome_pool;
@@ -14,6 +14,7 @@ const helpers   = require(app_root + '/routes/helpers/helpers')
 const fs = require('fs-extra');
 //require('dotenv').config({path: __dirname + '/.env'})
 //const createIframe = require("node-iframe");
+let CFG = process.env
 const express = require('express');
 const logFilePath = path.join(CFG.LOG_DIR, CFG.PRODUCTION_LOG)
 const node_log = require('simple-node-logger').createSimpleFileLogger(logFilePath);
