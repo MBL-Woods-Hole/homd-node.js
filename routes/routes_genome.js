@@ -173,7 +173,7 @@ router.get('/genome_table', function genome_table(req, res) {
        filter_on = get_filter_on(filter,'genome')
     }
     args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: filter_on}
-    //console.log('list[0]',send_list[0])
+    console.log('req.session.gtable_filter',req.session.gtable_filter)
     renderGenomeTable(req, res, args)
 
 });
@@ -181,13 +181,14 @@ router.post('/genome_table', function genome_table_post(req, res) {
     console.log('in POST genome_table')
     console.log('req.body',req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret_obj,args,count_txt
+    console.log('req.session.gtable_filter1',req.session.gtable_filter)
     helpers_genomes.set_gtable_session(req)
     //console.log('gtable_session',req.session.gtable_filter)
     filter = req.session.gtable_filter
     //console.log('filter',filter)
     send_list = helpers_genomes.apply_gtable_filter(req, filter)
     // format big nums
-    
+    console.log('req.session.gtable_filter2',req.session.gtable_filter)
     //let obj1 = send_list.filter(o => o.species === 'coli');
     //console.log('coli1',obj1.length)
     count_before_paging = send_list.length
@@ -1760,7 +1761,7 @@ router.get('/anvio_pangenomes', async function anvio_pangenomes(req, res){
     //console.log(C.pangenome_lookup)
     let pg_list = Object.keys(C.pangenome_lookup)
     pg_list.sort()
-    //console.log(pg_list)
+    console.log(C.pangenome_lookup[pg_list[2]])
     res.render('pages/genome/anvio_selection', {
         title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
@@ -1769,38 +1770,10 @@ router.get('/anvio_pangenomes', async function anvio_pangenomes(req, res){
         
         pangenomes: JSON.stringify(C.pangenome_lookup),
         sorted_pg:  JSON.stringify(pg_list),
-        //files:[]
         
         })
     return
-    
-   //  let conn
-//     try {
-//         conn = await global.TDBConn();
-//         const [rows] = await conn.execute(q);
-//    
-//         if(!rows){
-//           rows = []
-//         }
-//         
-//         res.render('pages/genome/anvio_selection', {
-//         title: 'HOMD :: Pangenomes', 
-//         pgname: '', // for AboutThisPage
-//         config: JSON.stringify(ENV),
-//         ver_info: JSON.stringify(C.version_information),
-//         
-//         //pangenomes: JSON.stringify(C.pangenomes)
-//         pangenomes: JSON.stringify(rows),
-//         files:[]
-//         
-//         })
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('Error fetching data');
-//     } finally {
-//         if (conn) conn.release(); // Release the connection back to the pool
-//     }
-//     return
+
 })
 //
 router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
@@ -1819,7 +1792,7 @@ router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
     
     html_head += "<th class='center'>Scope</th>"
     html_head += "<th class='center'>Genome<br>Count</th>"
-    html_head += "<th class='sorttable_nosort center'>Notes</th>"
+    //html_head += "<th class='sorttable_nosort center'>Notes</th>"
     html_head += "<th class='sorttable_nosort'></th>"
     html_head += "</tr>"
     html_head += "</thead><tbody>"
@@ -1836,17 +1809,21 @@ router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
         html_rows += "<tr><td nowrap>"+pg+"</td>"
         html_rows += "<td nowrap class='center'><small><a href='anvio?pg="+pg+"' target='_blank' class='pg'>OpenAnvi'o</a></small></td>"
         html_rows += "<td nowrap class='center'><small><a href='pangenome_image2?pg="+ pg+"&ext=svg' target='_blank'>OpenSVG</a></small></td>"
-        html_rows += "<td nowrap class='center'>"+C.pangenome_lookup[pg].scope+"</td>"
+        if(C.pangenome_lookup[pg].scope == 'HMT'){
+          html_rows += "<td nowrap class='center'><a href='/taxa/tax_description?otid="+pgs[pg].otids[0]+"'>"+C.pangenome_lookup[pg].scope+"-"+C.pangenome_lookup[pg].otids[0].toString().padStart(3, '0');+"</a></td>"
+        }else{
+          html_rows += "<td nowrap class='center'>"+C.pangenome_lookup[pg].scope+"</td>"
+        }
         html_rows += "<td nowrap  class='center'>"+C.pangenome_lookup[pg].gids.length+"</td>"
     
-        html_rows += "<td class='center'>"
-        html_rows += "  <span class='dd-menu'>"
-        html_rows += "    <span class='pill pill-aqua'>hover</span>"
-        html_rows += "    <div class='dropdown-content'>"
-        html_rows +=       C.pangenome_lookup[pg].description
-        html_rows += "    </div>"
-        html_rows += "  </span>"
-        html_rows += "</td>"
+        // html_rows += "<td class='center'>"
+//         html_rows += "  <span class='dd-menu'>"
+//         html_rows += "    <span class='pill pill-aqua'>hover</span>"
+//         html_rows += "    <div class='dropdown-content'>"
+//         html_rows +=       C.pangenome_lookup[pg].description
+//         html_rows += "    </div>"
+//         html_rows += "  </span>"
+//         html_rows += "</td>"
         
         
         html_rows += "<td class='center'>download <small>(<a href='/download/pg/targz/"+pg+"'>tar.gz</a>)"
@@ -1854,7 +1831,7 @@ router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
         html_rows += "</td>"
         html_rows += "</tr>"
     }
-    html += "<br><span style=''>Filtered Pangenome Count: <b>"+collector.length.toString() +"</b></span>"
+    html += "<br><span style='padding:0 5px;'>Filtered Pangenome Count: <b>"+collector.length.toString() +"</b></span>"
     html += html_head
     html += html_rows
     html += "</tbody></table>"
@@ -1950,11 +1927,13 @@ router.get('/pangenome_image2', async function pangenome_image(req, res) {
        console.log('fpath',filepath)
        const originalSvg = await fs.readFile(filepath, 'utf8');
        //const json = await parse(svgString)
+       
        let updatedSvg = await deleteElementById(originalSvg, 'legend_group')
        updatedSvg =     await deleteElementById(updatedSvg,  'layer_legend')
        updatedSvg =    await deleteElementById(updatedSvg,  'bin_legend')
        updatedSvg =    await changeSvgFontById(updatedSvg,  'title_group')
         
+       // updatedSvg = '\n'+updatedSvg
        //Want to delete where id='layer_legend' and/or 'layer_labels',  
        // YES legend_group
        //YES layer_legend
@@ -2006,8 +1985,8 @@ async function changeSvgFontById(svgString, targetId) {
 }
 async function deleteElementById(svgString, targetId) {
   const json = await parse(svgString);
-  json.attributes.viewBox = "-0 -0 1800 1800";
-  //json.attributes.viewBox = "-80 -300 1800 1800";
+  json.attributes.viewBox = "0 0 1800 1800";
+  //json.attributes.viewBox = "0 0 2400 2400";
   
   function removeNode(node) {
     if (node.children) {

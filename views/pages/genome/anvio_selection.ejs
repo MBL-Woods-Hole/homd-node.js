@@ -41,17 +41,22 @@ thead th { position: sticky; top: 0; }
   display: none;
   position: absolute;
   background:lightblue;
-  font-size:11px;
-  width:400px;  /* This sets the box width to allow cursor contact */
+  font-size:16px;
+  width:200px;  /* This sets the box width to allow cursor contact */
   padding:10px;
   margin:0px;
   border:1px solid black;
-  left:-450px;
-  top:-50px;
+  left:-200px;
+  top:-30px;
   z-index: 2;
+  max-height: 200px;
+  overflow:auto;
   
 }
-
+.link{
+   
+   color:blue;
+}
 /* Links inside the dropdown */
 /* 
 .dropdown-content a {
@@ -81,9 +86,10 @@ thead th { position: sticky; top: 0; }
     border:1px solid black;
     background:lightgrey;
     text-align:left;
-    font-size:12px;
+    font-size:16px;
     padding:5px;
 }
+
 </style>
 <%- include('../../partials/header_html'); %>
 <% pgs = JSON.parse(pangenomes) %>
@@ -104,8 +110,8 @@ thead th { position: sticky; top: 0; }
         <b>Description</b>
         <br>
         Pangenomes summarize gene content diversity across oral microbial taxa. By default, they are defined at the Human Microbial Taxon (HMT) level with genomes as rows and gene clusters as columns; black marks indicate gene cluster presence. Interactive views and downloadable files support comparative genomics, functional exploration, and reuse.
- 
-        <br>Anvi`o (<a href='https://anvio.org/' target='_blank'>https://anvio.org</a>) is a visualization platform for microbial 'omics and is used here to display pangenomes.
+        Pangenomes are built from HOMD V4.1 genomes (Genomes V11.02) using anvio v8.  Rows represent genomes and columns gene clusters; black marks indicate gene cluster presence. Functional annotations include KEGG KOfams, NCBI COGs, and Pfam.  Built: 2025-12-08.
+        Anvi`o (<a href='https://anvio.org/' target='_blank'>https://anvio.org</a>) is a visualization platform for microbial 'omics and is used here to display the HOMD pangenomes.
     </div>
     </center>
 <!-- iFrame or New_Window? -->
@@ -132,8 +138,8 @@ thead th { position: sticky; top: 0; }
   <th class="sorttable_nosort center">Interactive</th>
   <th class="sorttable_nosort center">Preview</th>
   <th class="center">Scope</th>
-  <th class="center">Genome<br>Count</th>
-  <th class="sorttable_nosort center">Notes</th>
+  <th class="center" >Genome<br>Count</th>
+  <!-- <th class="sorttable_nosort center">Notes</th> -->
   <th class="sorttable_nosort"></th>
   
 </tr>
@@ -154,21 +160,63 @@ thead th { position: sticky; top: 0; }
         </td>
         
         <td nowrap  class='center'>
-           <%= pgs[pg].scope %>
-        </td>
-        <td nowrap  class='center'>
-           <%= pgs[pg].gids.length %>
+           <% if(pgs[pg].scope == "HMT"){ %>
+             <a href='/taxa/tax_description?otid=<%= pgs[pg].otids[0] %>'><%= pgs[pg].scope %>-<%= pgs[pg].otids[0].toString().padStart(3, '0'); %></a>
+          <% }else{ %>
+             <span class="dd-menu">
+               <span class='link'><%= pgs[pg].scope %></span>
+               <div class="dropdown-content">
+                 <% for(n in pgs[pg].otids){ %>
+                    <li><a href='/taxa/tax_description?otid=<%= pgs[pg].otids[n] %>'>HMT-<%= pgs[pg].otids[n].toString().padStart(3, '0'); %></a>
+                 <% } %>
+               </div>
+             </span>
+            
+          <% } %>
         </td>
         
-        <td class='center'>
+        
+        <td nowrap  class='center' sorttable_customkey="<%= pgs[pg].gids.length %>">
+           <%= pgs[pg].gids.length %>
+           <% if(pgs[pg].scope == "HMT"){ %>
+             
+             <span class="dd-menu">
+               <a href='/genome/genome_table?otid=<%= pgs[pg].otids[0] %>'>
+                 list</a>
+               
+               <div class="dropdown-content">
+                 <% for(n in pgs[pg].gids){ %>
+                    <li><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= pgs[pg].gids[n] %>'><%= pgs[pg].gids[n] %></a>
+                 <% } %>
+               
+               </div>
+             </span>
+           <% }else{ %>
+           
+             <span class="dd-menu">
+               <span class='link'>list</span>
+               
+               <div class="dropdown-content">
+                 <% for(n in pgs[pg].gids){ %>
+                    <li><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= pgs[pg].gids[n] %>'><%= pgs[pg].gids[n] %></a>
+                 <% } %>
+               
+               </div>
+             </span>
+           <% } %>
+        </td>
+        
+        <!-- 
+<td class='center'>
            <span class="dd-menu">
              <span class='pill pill-aqua'>hover</span>
         
             <div class="dropdown-content">
-              <%- pgs[pg].description %>
+              <%- // pgs[pg].description %>
             </div>
           </span>
         </td>
+ -->
         
         <td class='center'>
           download <small>(<a href='/download/pg/targz/<%= pg %>'>tar.gz</a>)&nbsp;&nbsp;(<a href='/download/pg/sha256/<%= pg %>'>sha256</a>)</small>

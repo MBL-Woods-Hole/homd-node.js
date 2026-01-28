@@ -45,7 +45,7 @@ export const set_gtable_session = (req) => {
   //req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
   req.session.gtable_filter = helpers_genomes.get_null_gtable_filter();
   req.session.gtable_filter.letter = letter;
-
+  
   for (let item in req.body) {
     if (item === 'letter') {
       req.session.gtable_filter.letter = req.body.letter;
