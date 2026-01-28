@@ -1,7 +1,7 @@
 //db.js
 //import mysql from 'mysql2';
 import mysql from 'mysql2/promise'; // Use the promise-based API for modern async/await
-import 'dotenv/config';
+
 // 
 // // Create the connection pool
 // const pool = mysql.createPool({

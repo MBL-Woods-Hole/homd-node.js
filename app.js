@@ -6,7 +6,7 @@
 // for newrelic: start in config.js
 //const winston = require('winston');
 //import process.env from './config/config.js';
-
+import 'dotenv/config';
 //import { pool } from './config/database.js';
 //console.log('xx',envs)
 //import { * } from './config/config.js';
