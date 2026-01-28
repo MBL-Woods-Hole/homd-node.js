@@ -180,9 +180,10 @@ thead th { position: sticky; top: 0; }
            <%= pgs[pg].gids.length %>
            <% if(pgs[pg].scope == "HMT"){ %>
              
-             <span class="dd-menu">
-               <a href='/genome/genome_table?otid=<%= pgs[pg].otids[0] %>'>
-                 list</a>
+             ( <span class="dd-menu link">
+               
+                 id-list
+                
                
                <div class="dropdown-content">
                  <% for(n in pgs[pg].gids){ %>
@@ -190,11 +191,14 @@ thead th { position: sticky; top: 0; }
                  <% } %>
                
                </div>
-             </span>
+             </span> )
+             (<a href='/genome/genome_table?otid=<%= pgs[pg].otids[0] %>'>
+                 table
+                </a>)
            <% }else{ %>
            
              <span class="dd-menu">
-               <span class='link'>list</span>
+               ( <span class='link'>id-list</span> )
                
                <div class="dropdown-content">
                  <% for(n in pgs[pg].gids){ %>

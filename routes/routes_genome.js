@@ -173,7 +173,7 @@ router.get('/genome_table', function genome_table(req, res) {
        filter_on = get_filter_on(filter,'genome')
     }
     args = {filter: filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: filter_on}
-    console.log('req.session.gtable_filter',req.session.gtable_filter)
+    //console.log('req.session.gtable_filter',req.session.gtable_filter)
     renderGenomeTable(req, res, args)
 
 });
@@ -1781,7 +1781,7 @@ router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
     let search_term = req.body.val.toLowerCase()
     //let q = queries.get_all_pangenomes_query()
     //let send_rows = []
-    let pg,conn,html = ""
+    let pg,obj,html = ""
     let html_rows = ""
     let html_head = "<table id='pgtable' class='table sortable' border='1'>"
     let counter = 0
@@ -1806,25 +1806,41 @@ router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
     collector.sort()
     for(let n in collector){
         pg = collector[n]
+        obj = C.pangenome_lookup[pg]
         html_rows += "<tr><td nowrap>"+pg+"</td>"
         html_rows += "<td nowrap class='center'><small><a href='anvio?pg="+pg+"' target='_blank' class='pg'>OpenAnvi'o</a></small></td>"
         html_rows += "<td nowrap class='center'><small><a href='pangenome_image2?pg="+ pg+"&ext=svg' target='_blank'>OpenSVG</a></small></td>"
-        if(C.pangenome_lookup[pg].scope == 'HMT'){
-          html_rows += "<td nowrap class='center'><a href='/taxa/tax_description?otid="+pgs[pg].otids[0]+"'>"+C.pangenome_lookup[pg].scope+"-"+C.pangenome_lookup[pg].otids[0].toString().padStart(3, '0');+"</a></td>"
+        if(obj.scope == 'HMT'){
+          html_rows += "<td nowrap class='center'><a href='/taxa/tax_description?otid="+obj.otids[0]+"'>"+obj.scope+"-"+obj.otids[0].toString().padStart(3, '0');+"</a></td>"
         }else{
-          html_rows += "<td nowrap class='center'>"+C.pangenome_lookup[pg].scope+"</td>"
+          html_rows += "<td nowrap class='center'>"+obj.scope+"</td>"
         }
-        html_rows += "<td nowrap  class='center'>"+C.pangenome_lookup[pg].gids.length+"</td>"
-    
-        // html_rows += "<td class='center'>"
-//         html_rows += "  <span class='dd-menu'>"
-//         html_rows += "    <span class='pill pill-aqua'>hover</span>"
-//         html_rows += "    <div class='dropdown-content'>"
-//         html_rows +=       C.pangenome_lookup[pg].description
-//         html_rows += "    </div>"
-//         html_rows += "  </span>"
-//         html_rows += "</td>"
         
+        html_rows += "<td nowrap  class='center'>"
+        html_rows += obj.gids.length
+        if(obj.scope === "HMT"){
+            html_rows += " ( <span class='dd-menu link'>"
+            html_rows += "    id-list"
+            html_rows += "   <div class='dropdown-content'>"
+                 for(let m in obj.gids){
+                    html_rows += "<li>"+ (parseInt(m)+1).toString() + ") <a href='/genome/genome_description?gid="+obj.gids[m]+"'>"+obj.gids[m]+"</a>"
+                 }
+            html_rows += " </div>"
+            html_rows += " </span> )"
+            html_rows += " (<a href='/genome/genome_table?otid="+obj.otids[0]+"'>"
+            html_rows += "     table"
+            html_rows += "  </a> )"
+        }else{   // scope === 'Species'
+            html_rows += "  <span class='dd-menu'>"
+            html_rows += "       ( <span class='link'>id-list</span> )"
+            html_rows += "       <div class='dropdown-content'>"
+                for(let m in obj.gids){
+                    html_rows += "<li>"+ (parseInt(m)+1).toString() + ") <a href='/genome/genome_description?gid="+obj.gids[m]+"'>"+obj.gids[m]+"</a>"
+                }
+            html_rows += "       </div>"
+            html_rows += "     </span>"
+        }
+        html_rows +=  "</td>"
         
         html_rows += "<td class='center'>download <small>(<a href='/download/pg/targz/"+pg+"'>tar.gz</a>)"
         html_rows += "&nbsp;&nbsp;(<a href='/download/pg/sha256/"+pg+"'>sha256</a>)</small>"
@@ -1957,7 +1973,12 @@ router.get('/pangenome_image2', async function pangenome_image(req, res) {
 
 
        //console.log(pretty(updatedSvg))
-       res.send(updatedSvg);
+        res.writeHead(200, {
+            "Content-Type": "image/svg+xml",
+            "Content-Length": Buffer.byteLength(updatedSvg)
+        });
+        res.end(updatedSvg);
+       
 })
 async function changeSvgFontById(svgString, targetId) {
     const json = await parse(svgString);
