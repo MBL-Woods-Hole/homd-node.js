@@ -1761,7 +1761,7 @@ router.get('/anvio_pangenomes', async function anvio_pangenomes(req, res){
     //console.log(C.pangenome_lookup)
     let pg_list = Object.keys(C.pangenome_lookup)
     pg_list.sort()
-    console.log(C.pangenome_lookup[pg_list[2]])
+    //console.log(C.pangenome_lookup[pg_list[2]])
     res.render('pages/genome/anvio_selection', {
         title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage

@@ -34,7 +34,7 @@ def run(args):
     master_lookup = {}
 
 
-    q = "SELECT pangenome_name as pg,scope,genome_id,otid,description from homd.pangenomes"
+    q = "SELECT pangenome_name as pg,scope,genome_id,otid from homd.pangenomes"
     q += " JOIN homd.pangenome_genome using (pangenome_id)"
     q += " WHERE  homd_genome_version = '11.02'"
 
@@ -46,7 +46,7 @@ def run(args):
         gid = row['genome_id']
         otid = row['otid']
         scope = row['scope']
-        desc = row['description']
+        #desc = row['description']
         
         if pg in master_lookup:
             if otid not in master_lookup[pg]['otids']:
@@ -54,7 +54,7 @@ def run(args):
             master_lookup[pg]['gids'].append(gid)
         else:
             master_lookup[pg] = {}
-            master_lookup[pg]['description'] = desc
+            #master_lookup[pg]['description'] = desc
             master_lookup[pg]['scope'] = scope
             master_lookup[pg]['otids'] = [otid]
             master_lookup[pg]['gids'] = [gid]

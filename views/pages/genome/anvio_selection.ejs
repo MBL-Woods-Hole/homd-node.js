@@ -117,7 +117,7 @@ thead th { position: sticky; top: 0; }
 <!-- iFrame or New_Window? -->
 
 <center>Search Names:
-<input id='pg_search_input' style='border:1px solid gray;padding:5px;' type='text' \>
+<input id='pg_search_input' style='border:1px solid gray;padding:5px;' type='text' placeholder="Enter search term..."\>
 <a href='anvio_pangenomes'>Reload Page</a>
 </center>
 
@@ -167,7 +167,7 @@ thead th { position: sticky; top: 0; }
                <span class='link'><%= pgs[pg].scope %></span>
                <div class="dropdown-content">
                  <% for(n in pgs[pg].otids){ %>
-                    <li><a href='/taxa/tax_description?otid=<%= pgs[pg].otids[n] %>'>HMT-<%= pgs[pg].otids[n].toString().padStart(3, '0'); %></a>
+                    <li><%= parseInt(n)+1 %>) <a href='/taxa/tax_description?otid=<%= pgs[pg].otids[n] %>'>HMT-<%= pgs[pg].otids[n].toString().padStart(3, '0'); %></a>
                  <% } %>
                </div>
              </span>
