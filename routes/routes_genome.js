@@ -179,16 +179,16 @@ router.get('/genome_table', function genome_table(req, res) {
 });
 router.post('/genome_table', function genome_table_post(req, res) {
     console.log('in POST genome_table')
-    console.log('req.body',req.body)
+    //console.log('req.body',req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret_obj,args,count_txt
-    console.log('req.session.gtable_filter1',req.session.gtable_filter)
+    //console.log('req.session.gtable_filter1',req.session.gtable_filter)
     helpers_genomes.set_gtable_session(req)
     //console.log('gtable_session',req.session.gtable_filter)
     filter = req.session.gtable_filter
     //console.log('filter',filter)
     send_list = helpers_genomes.apply_gtable_filter(req, filter)
     // format big nums
-    console.log('req.session.gtable_filter2',req.session.gtable_filter)
+    //console.log('req.session.gtable_filter2',req.session.gtable_filter)
     //let obj1 = send_list.filter(o => o.species === 'coli');
     //console.log('coli1',obj1.length)
     count_before_paging = send_list.length
@@ -428,7 +428,7 @@ router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
        }
     }
     try {
-        console.log(q)
+        //console.log(q)
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
         //console.log('rows',rows)
@@ -652,11 +652,11 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
     //console.log('Parsed Data1',bigdata)
     fs.access(anno_path, function(error) {
        if (error) {
-         console.log("Directory does not exist.")
+         //console.log("Directory does not exist.")
          res.send('Session Expired')
          return
        } else {
-         console.log("Directory exists.")
+         //console.log("Directory exists.")
          let filepath = path.join(anno_path,anno+'_data')
          fs.readFile(filepath, 'utf8', function readSQLOrfSearch (err, data) {
             if (err) {
@@ -1881,7 +1881,7 @@ router.get('/anvio', (req, res) => {
 //     }else{
 //         url = "https://anvio.homd.org/anvio?pg="+pg
 //     }
-    console.log('env',ENV)
+    //console.log('env',ENV)
     res.render('pages/genome/anvi_server', {
     //res.render('pages/genome/anvi_server_iframe', {
         title: 'HOMD :: Pangenomes', 
@@ -1894,7 +1894,7 @@ router.get('/anvio', (req, res) => {
         })
 });
 router.get('/pangenome_image', async function pangenome_image(req, res) {
-    console.log(req.query)
+    //console.log(req.query)
     let conn,otid,pg,ext,filepath
     // if otid is present get filename from db
     // if(req.query.otid){
@@ -1927,7 +1927,7 @@ router.get('/pangenome_image', async function pangenome_image(req, res) {
        ext = req.query.ext
        pg = req.query.pg
        filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
-       console.log('fpath',filepath)
+       //console.log('fpath',filepath)
        res.sendFile(filepath)
 //    }
 })
@@ -1940,7 +1940,7 @@ router.get('/pangenome_image2', async function pangenome_image(req, res) {
        ext = req.query.ext
        pg = req.query.pg
        filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
-       console.log('fpath',filepath)
+       //console.log('fpath',filepath)
        const originalSvg = await fs.readFile(filepath, 'utf8');
        //const json = await parse(svgString)
        
