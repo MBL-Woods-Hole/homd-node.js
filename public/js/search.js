@@ -87,7 +87,7 @@ function show_anno_hits(obj, anno, gid){
     var html = '<center>'+gid+' | <i>'+data[0].species+'</i> | '+data[0].strain+'</center>'
     html += "<span style='float:right;'><a href='#' onclick=\"close_anno_info()\">close</a></span>"
     html += "<br><table class='result-table'>"
-    html += "<tr><th>Accession</th><th>Protein-ID</th> <th>Genome Viewer</th><th>NA<br>length/seq</th><th>AA<br>length/seq</th><th>Gene</th><th>Gene Product</th></tr>"
+    html += "<tr><th>Accession</th>Type<th></th><th>Protein-ID</th> <th>Genome Viewer</th><th>NA<br>length/seq</th><th>AA<br>length/seq</th><th>Gene</th><th>Gene Product</th></tr>"
     annobox = document.getElementById('anno-div')
     selected_row = document.getElementById(gid)
     
@@ -170,6 +170,7 @@ function show_anno_hits(obj, anno, gid){
                 
                 html += "<tr>"
                 html += "<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+resp_data[n].acc+"' target='_blank'>"+resp_data[n].acc+"</a></td>"
+                html += "<td>"+resp_data[n].type+"</td>"
                 html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].pid+"' target='_blank'>"+resp_data[n].pid+"</td>"
                 html += "<td class='center'>" 
                 //in genomes.js open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
