@@ -110,8 +110,15 @@ module.exports.get_lineage_query = (otid) => {
 //   return qSelectAnno
 // }
 module.exports.get_all_pangenomes_query = () => {
-    let q = "SELECT pangenome_name,homd_genome_version,description FROM pangenome_v4"
-    q += " WHERE active='1' ORDER by pangenome_name"
+    // let q = "SELECT pangenome_name,homd_genome_version,description FROM pangenome_v4"
+//     q += " WHERE active='1' ORDER by pangenome_name"
+    
+    let q = "SELECT pangenome_name,scope ,count(*) as genome_count,GROUP_CONCAT(DISTINCT otid) as otids"
+    q += " FROM pangenomes"
+    q += " JOIN pangenome_genome using(pangenome_id)"
+    q += " WHERE homd_genome_version='"+C.genomic_refseq_version+"' and active='1'"
+    q += " GROUP BY (pangenome_id)"
+
     return q
 }
 

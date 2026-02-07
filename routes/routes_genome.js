@@ -1,10 +1,11 @@
 'use strict'
 const express   = require('express')
 let router    = express.Router()
-const CFG     = require(app_root + '/config/config')
+//const CFG     = require(app_root + '/config/config')
 const fs        = require('fs-extra')
 //const url     = require('url')
 const path      = require('path')
+const { parse, stringify } = require('svgson')
 const C       = require(app_root + '/public/constants')
 const helpers   = require(app_root + '/routes/helpers/helpers')
 const helpers_taxa   = require(app_root + '/routes/helpers/helpers_taxa')
@@ -1760,23 +1761,25 @@ function get_blast_db_info(gid){
 //
 router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
    let q = queries.get_all_pangenomes_query()
+   console.log(q)
+   let obj = {}
+   let pg_list = [],otid_list=[],gid_list=[]
    TDBConn.query(q, (err, rows) => {
-       //console.log('pangenome rows[0]',rows[0])
-//        let dir = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'pangenome_files')
-//         walk(dir)
-//        for(let n in rows){
-//            //console.log(rows[n].pangenome_name)
-//            let pname = rows[n].pangenome_name+rows[n].homd_genome_version.replace('.','_')
-//           // let dir = path.join(CFG.PATH_TO_STATIC_DOWNLOADS,'pangenome_files',pname)
-//           // walk(dir)
-//          //            if (fs.existsSync(path.join(CFG.PATH_TO_STATIC_DOWNLOADS"/tmp/myfile")) {
-//          //   console.log("/tmp/myfile exists!");
-//          // } else {
-//          //   console.log("/tmp/myfile does not exist!");
-//          // }
-//          // 
-//          //            if(CFG.PATH_TO_STATIC_DOWNLOADS
-//        }
+       console.log('pangenome rows[0]',rows[0])
+        for(let n in rows){
+           
+           console.log(rows[n])
+           pg_list.push(rows[n].pangenome_name)
+           otid_list = rows[n].otids.split(',')
+           gid_list=[]
+           // get gids
+           for(let i in otid_list){
+               console.log(i,C.taxon_lookup[otid_list[i]])
+               gid_list.push(...C.taxon_lookup[otid_list[i]].genomes)
+           }
+           obj[rows[n].pangenome_name] = {scope:rows[n].scope,otids:otid_list,gids:gid_list}
+        }
+        pg_list.sort()
        //console.log('rows',rows)
        res.render('pages/genome/anvio_selection', {
         title: 'HOMD :: Pangenomes', 
@@ -1784,11 +1787,22 @@ router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
         config: JSON.stringify(CFG),
         ver_info: JSON.stringify(C.version_information),
         
-        //pangenomes: JSON.stringify(C.pangenomes)
-        pangenomes: JSON.stringify(rows),
-        files:[]
+        pangenomes: JSON.stringify(obj),
+        sorted_pg:  JSON.stringify(pg_list),
         
         })
+        
+      //  res.render('pages/genome/anvio_selection', {
+//         title: 'HOMD :: Pangenomes', 
+//         pgname: '', // for AboutThisPage
+//         config: JSON.stringify(CFG),
+//         ver_info: JSON.stringify(C.version_information),
+//         
+//         //pangenomes: JSON.stringify(C.pangenomes)
+//         pangenomes: JSON.stringify(rows),
+//         files:[]
+//         
+//         })
     })
 })
 //
@@ -1858,6 +1872,8 @@ router.get('/anvio', (req, res) => {
 //     }else{
 //         url = "https://anvio.homd.org/anvio?pg="+pg
 //     }
+    console.log('CFG',CFG)
+    console.log('CFG.ANVIO_URL',CFG.ANVIO_URL)
     res.render('pages/genome/anvi_server', {
     //res.render('pages/genome/anvi_server_iframe', {
         title: 'HOMD :: Pangenomes', 
@@ -1901,6 +1917,111 @@ router.get('/pangenome_image', function pangenome_image(req, res) {
        res.sendFile(filepath)
     }
 })
+////
+router.get('/pangenome_image2', async function pangenome_image(req, res) {
+    console.log(req.query)
+    //const { parse, stringify } = require('svgson')
+    
+    let conn,otid,pg,ext,filepath
+    
+       ext = req.query.ext
+       pg = req.query.pg
+       filepath = CFG.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
+       //console.log('fpath',filepath)
+       const originalSvg = await fs.readFile(filepath, 'utf8');
+       //const json = await parse(svgString)
+       
+       let updatedSvg = await deleteElementById(originalSvg, 'legend_group')
+       updatedSvg =     await deleteElementById(updatedSvg,  'layer_legend')
+       updatedSvg =    await deleteElementById(updatedSvg,  'bin_legend')
+       updatedSvg =    await changeSvgFontById(updatedSvg,  'title_group')
+        
+       // updatedSvg = '\n'+updatedSvg
+       //Want to delete where id='layer_legend' and/or 'layer_labels',  
+       // YES legend_group
+       //YES layer_legend
+       // bin_legend
+       //console.log('UPDATE',updatedSvg,'UPDATE')
+       
+//        parse(originalSvg).then((json) => {
+//       // Enlarge viewport by doubling width/height
+//       //json.attrs.width = "200";
+//       //json.attrs.height = "200";
+//       updatedSvg = deleteElementById(json, 'legend_group')
+//       // Optionally adjust viewBox to keep content scaled or zoom out
+//       // To zoom out (make content smaller), increase the viewBox width/height
+//       updatedSvg.attributes.viewBox = "0 0 1200 1200"; 
+//     
+//       const newSvg = stringify(updatedSvg);
+//       //console.log(newSvg);
+//       res.send(newSvg);
+//       //return stringify(newSvg)
+//       });
+
+
+       //console.log(pretty(updatedSvg))
+        res.writeHead(200, {
+            "Content-Type": "image/svg+xml",
+            "Content-Length": Buffer.byteLength(updatedSvg)
+        });
+        res.end(updatedSvg);
+       
+})
+////
+async function changeSvgFontById(svgString, targetId) {
+    const json = await parse(svgString);
+
+    // Recursive function to find and modify node
+    function updateNode(node) {
+        if (node.attributes && node.attributes.id === targetId) {
+            // Apply font change directly via style
+            //node.attributes.style = `font-size: 530px; ${node.attributes.style || ''}`;
+            node.children[0].attributes.style = `font-size: 300px; ${node.attributes.style || ''}`;
+            node.children[1].attributes.style = `font-size: 150px; ${node.attributes.style || ''}`;
+            node.children[0].attributes.x = '-3900';
+            node.children[0].attributes.y = '-400';
+            node.children[1].attributes.x = '-3900';
+            node.children[1].attributes.y = '-150';
+            //node.attributes.style = `position:relative;top:10px;left:10px;`
+        }
+        if (node.children) {
+            node.children.forEach(updateNode);
+        }
+    }
+
+    updateNode(json);
+    return stringify(json);
+}
+async function deleteElementById(svgString, targetId) {
+  const json = await parse(svgString);
+  json.attributes.viewBox = "0 0 1800 1800";
+  //json.attributes.viewBox = "0 0 2400 2400";
+  
+  function removeNode(node) {
+    if (node.children) {
+      // Find the index of the child to remove
+      const index = node.children.findIndex(
+        (child) => child.attributes && child.attributes.id === targetId
+      );
+      
+      if (index !== -1) {
+        // Remove the child
+        node.children.splice(index, 1);
+        return true; // Node found and removed
+      }
+
+      // Recursively search children
+      for (const child of node.children) {
+        if (removeNode(child)) return true;
+      }
+    }
+    return false;
+  }
+  
+  removeNode(json);
+  return stringify(json);
+}
+////
 //
 router.get('/oralgen', function oralgen(req, res) {
   res.render('pages/genome/oralgen', {

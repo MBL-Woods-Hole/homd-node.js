@@ -1,0 +1,176 @@
+
+<style>
+table{
+  border-collapse:collapse;
+}
+#pgtable{
+   
+   padding:0 20px;
+}
+#pgtable td{
+   padding: 5px 10px;
+   border:1px solid black;
+}
+</style>
+<%- include('../../partials/header_html'); %>
+<% pgs = JSON.parse(pangenomes) %>
+<% cfg = JSON.parse(config) %>
+<body>
+    <div id='wrapper'>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
+    
+    <div class='page-content' >
+
+    <p class='title h3'>HOMD Pangenomes</p>
+    <br>
+    <center>
+         
+    Anvi`o (<a href='https://anvio.org/' target='_blank'>https://anvio.org</a>) is a visualization platform for microbial 'omics and is used here to display pangenomes.
+    </center>
+<!-- iFrame or New_Window? -->
+<% mode = "iframe"  // 'new_window'  'iframe' %>
+<center>Search Names:
+<input id='pg_search_input' style='border:1px solid gray;padding:5px;' type='text' \>
+<a href='anvio_pangenomes'>Reload Page</a>
+</center>
+<div id='pgtable'>
+Pangenome Count: <b><%- pgs.length %></b>
+
+<center>
+
+
+<table class='sortable' border='1'>
+<tr>
+  <td nowrap><strong>Pangenome Name</strong><br><small>(Link opens pangenome in Anvi`o)<br>Click to Sort Alphabetically</small></td>
+  <td class=""><strong>HOMD Genome Version</strong></td>
+  <td class="sorttable_nosort"><strong>Interactive</strong></td>
+  <td class="sorttable_nosort"><strong>Image</strong></td>
+  <td class="sorttable_nosort"><strong>Description</strong></td>
+</tr>
+
+	<% for(i in pgs){ %>
+	
+	   <tr>
+		<td nowrap><%- pgs[i].pangenome_name %></td>
+		<td nowrap  class='center'><%- pgs[i].homd_genome_version %></td>
+		
+		
+		<% if(mode == "new_window"){ %>
+		  <td nowrap >
+			<small><a href='#' class='pg' onclick="find_anvio('<%= pgs[i].pangenome_name %>','homd')">Open Anvi'o</a></small>
+		  </td>
+	   <% }else{ %>
+		  <td nowrap >
+			<small><a href='anvio?pg=<%= pgs[i].pangenome_name %>' target='_blank' class='pg'>Open Anvi'o</a></small>
+		  </td>
+		<% } %>
+		<td nowrap >
+		   <small><a href='pangenome_image?pg=<%= pgs[i].pangenome_name %>&ext=svg' target='_blank'>Open SVG</a></small>
+		</td>
+		
+		<td><%- pgs[i].description %></td>
+	 
+	  
+	 </tr>
+	
+	<% } %>
+
+</table>
+
+</center>
+</div>
+
+<br><br><span id='message'></span>
+  
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+  
+  anvio_path = '<%- cfg.ANVIO_URL %>'
+  var input = document.getElementById("pg_search_input");
+  var main_table_body = document.getElementById("pgtable");
+  input.addEventListener("input", ()=>{
+    var args = {}
+    args.val = input.value
+    //console.log(input.value)
+    var xmlhttp = new XMLHttpRequest();
+    
+    xmlhttp.open("POST", 'anvio_pangenomes', false);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 ) {
+            var response = xmlhttp.responseText;
+            main_table_body.innerHTML = response
+        }
+    }
+    xmlhttp.send(JSON.stringify(args));
+    
+  });
+  function find_anvio(pg,source){
+    // called on click of pg link
+    //loader.showLoader();
+    var xmlhttp = new XMLHttpRequest();
+    document.getElementById('message').innerHTML = ''
+    //console.log(pg)
+    target = 'anvio_post'
+    //target = 'anvio_iframe'
+    args = {}
+    args.pg = pg;
+    //console.log('anvio_path',anvio_path)
+    window.open(anvio_path + '/' + pg,'_blank')
+    return
+    
+  }
+// function find_anvio2(pg){
+//     // called on click of pg link
+//     //loader.showLoader();
+//     var xmlhttp = new XMLHttpRequest();
+//     document.getElementById('message').innerHTML = ''
+//     //console.log(pg)
+//     target = 'anvio_post2'
+//     args = {}
+//     args.pg = pg;
+//     let url = 'https://bioinformatics.forsyth.org/anvio' + '?pg=' + pg
+//     console.log('opening',url)
+//     window.open(prelimurl,'_blank')
+    // xmlhttp.open("POST", target, false);
+//     xmlhttp.setRequestHeader("Content-type","application/json");
+//     xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 ) {
+//          var prelimurl = xmlhttp.responseText;
+//          // port will be '0' if no ports left
+//          //var url = parseInt(result)
+//          console.log('Return url',prelimurl)
+//          
+//             //url = 'http://localhost:3010?pg=Prochlorococcus_31'
+//             //url = 'http://anvio.homd.org/anvio?pg=Prochlorococcus_31'
+//             //delay(result)
+//             window.open(prelimurl,'_blank')
+//           
+//          // }else{
+// //             loader.hideLoader();
+// //             text = "No Ports available to open Anvio`"
+// //             document.getElementById('message').innerHTML = result
+// //          }
+//          
+//       }
+//     };
+//     xmlhttp.send(JSON.stringify(args));
+//  }
+</script>
+
