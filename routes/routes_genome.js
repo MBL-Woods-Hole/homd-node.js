@@ -429,7 +429,7 @@ router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
        }
     }
     try {
-        //console.log(q)
+        console.log(q)
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
         //console.log('rows',rows)
