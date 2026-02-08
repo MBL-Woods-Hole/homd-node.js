@@ -181,25 +181,29 @@ function show_anno_hits(obj, anno, gid){
                 
                 html += "<tr>"
                 html += "<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+resp_data[n].acc+"' target='_blank'>"+resp_data[n].acc+"</a></td>"
-                html += "<td>"+resp_data[n].type+"</td>"
+                if(resp_data[n].type){
+                  html += "<td>"+resp_data[n].type+"</td>"
+                }else{
+                  html += "<td></td>"   // AA length
+                }
                 html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].pid+"' target='_blank'>"+resp_data[n].pid+"</td>"
                 html += "<td class='center'>" 
                 //in genomes.js open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
                 html += " <a title='JBrowse/Genome Viewer:"+gid+"' href='#' onclick=\"open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
                 html += "</td>" //  JB)
-                if(resp_data[n].lna){
+                if(!resp_data[n].lna || resp_data[n].lna == '0'){
+                  html += "<td></td>"   // AA length
+                }else{
                   html += "<td nowrap class='center'>"+resp_data[n].lna
                   html += " [<a title='Nucleic Acid' href='#' onclick=\"get_AA_NA_seq('na','"+resp_data[n].orf_id+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>NA</b></a>]"
                   html += "</td>"   // NA length
-                }else{
-                  html += "<td nowrap class='center'></td>"   // AA length
                 }
-                if(resp_data[n].laa){
+                if(!resp_data[n].laa || resp_data[n].laa == '0'){
+                  html += "<td></td>"   // AA length
+                }else{
                   html += "<td nowrap class='center'>"+resp_data[n].laa
                   html += " [<a title='Amino Acid' href='#' onclick=\"get_AA_NA_seq('aa','"+resp_data[n].pid+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>AA</b></a>]"
                   html += "</td>"   // AA length
-                }else{
-                  html += "<td nowrap class='center'></td>"   // AA length
                 }
         
                 html += "<td>"+resp_data[n].gene+"</td>"
