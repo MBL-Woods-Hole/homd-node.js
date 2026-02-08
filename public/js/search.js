@@ -108,16 +108,23 @@ function show_anno_hits(obj, anno, gid){
     annobox.style.height = "400px"
      
  
-    orfid_list = []
+    id_list = []
     for(n in data){
         console.log('1',data[n])
-        console.log('2',"'"+data[n].orf_id+"'")
-        if(data[n].orf_id){
-           orfid_list.push("'"+data[n].orf_id+"'")
+        if(anno === 'bakta'){
+          console.log('2',"'"+data[n].pid+"'")
+          if(data[n].pid){
+           id_list.push("'"+data[n].pid+"'")
+          }
+        }else{  // ncbi and prokka
+          console.log('2',"'"+data[n].orf_id+"'")
+          if(data[n].orf_id){
+           id_list.push("'"+data[n].orf_id+"'")
+          }
         }
     }
     //console.log('pid_list',pid_list)
-    var args = {orfid_list: orfid_list, anno: anno}
+    var args = {id_list: id_list, anno: anno}
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/advanced_anno_orf_search", true);  // in index.js
     xmlhttp.setRequestHeader("Content-type","application/json");

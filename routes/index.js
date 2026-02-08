@@ -122,10 +122,10 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
     let anno = req.body.anno.toUpperCase()
     let q,conn
     if(anno =='BAKTA'){
-        q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA`.orf WHERE core_ID in ("+req.body.pid_list+")"
+        q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA`.orf WHERE core_ID in ("+req.body.id_list+")"
     }else{
         //q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE protein_id in ("+req.body.pid_list+")"
-        q = "SELECT accession as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.orfid_list+")"
+        q = "SELECT accession as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.id_list+")"
     
     }
     console.log(q)
