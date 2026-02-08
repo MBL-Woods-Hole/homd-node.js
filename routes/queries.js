@@ -150,10 +150,16 @@ export const get_crispr_cas_data = (gid) => {
     return qSelectCrisprCas
 };
 
-export const get_AA_NA = (db, gid, pid) => {
-    let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
-    q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
-    
+export const get_AA_NA = (db, gid, pid,type) => {
+    let q = ''
+    if(type === 'prokka-na' || type === 'ncbi-na'){
+        q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
+        q += " WHERE genome_id ='"+gid+"' and orf_id='" + pid + "'"
+    }else{
+        q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
+        q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
+    }
+    console.log(q)
     return q
 };
 

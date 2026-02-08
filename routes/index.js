@@ -117,7 +117,7 @@ function execPromise(cmd, args, max) {
 
 router.post('/advanced_anno_orf_search', async function advanced_anno_orf_searchPOST(req, res) {
     console.log('in advanced_anno_orf_search RESULTS')
-    console.log(req.body)
+    console.log('body',req.body)
     //console.log('pidlist',req.body.pid_list)
     let anno = req.body.anno.toUpperCase()
     let q,conn
@@ -125,14 +125,14 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
         q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA`.orf WHERE core_ID in ("+req.body.pid_list+")"
     }else{
         //q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE protein_id in ("+req.body.pid_list+")"
-        q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.orfid_list+")"
+        q = "SELECT accession as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.orfid_list+")"
     
     }
     console.log(q)
     try {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
-        console.log('rows',rows)
+        //console.log('rows',rows)
         res.send(JSON.stringify(rows))
         return
     } catch (error) {
@@ -400,7 +400,7 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     console.log('in advanced_site_search_grep - index.js')
     // anno now includes prokka, ncbi and bakta
-    console.log(req.body)
+    console.log('body',req.body)
     const searchText = req.body.search_text_anno_grep.toLowerCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
@@ -439,7 +439,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                     //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
                     //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
-                    console.log('grep pts',pts)
+                    //console.log('grep pts',pts)
                     if(pts.length >= split_length && ['prokka','ncbi','bakta'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
                       if(pts[0] == 'bakta'){

@@ -180,14 +180,20 @@ function show_anno_hits(obj, anno, gid){
                 //in genomes.js open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
                 html += " <a title='JBrowse/Genome Viewer:"+gid+"' href='#' onclick=\"open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
                 html += "</td>" //  JB)
-                
-                html += "<td nowrap class='center'>"+resp_data[n].lna
-                html += " [<a title='Nucleic Acid' href='#' onclick=\"get_AA_NA_seq('na','"+resp_data[n].pid+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>NA</b></a>]"
-                html += "</td>"   // NA length
-                html += "<td nowrap class='center'>"+resp_data[n].laa
-                html += " [<a title='Amino Acid' href='#' onclick=\"get_AA_NA_seq('aa','"+resp_data[n].pid+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>AA</b></a>]"
-                html += "</td>"   // AA length
-                
+                if(resp_data[n].lna){
+                  html += "<td nowrap class='center'>"+resp_data[n].lna
+                  html += " [<a title='Nucleic Acid' href='#' onclick=\"get_AA_NA_seq('na','"+resp_data[n].orf_id+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>NA</b></a>]"
+                  html += "</td>"   // NA length
+                }else{
+                  html += "<td nowrap class='center'></td>"   // AA length
+                }
+                if(resp_data[n].laa){
+                  html += "<td nowrap class='center'>"+resp_data[n].laa
+                  html += " [<a title='Amino Acid' href='#' onclick=\"get_AA_NA_seq('aa','"+resp_data[n].pid+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>AA</b></a>]"
+                  html += "</td>"   // AA length
+                }else{
+                  html += "<td nowrap class='center'></td>"   // AA length
+                }
         
                 html += "<td>"+resp_data[n].gene+"</td>"
                 html += "<td>"+resp_data[n].product+"</td>"
