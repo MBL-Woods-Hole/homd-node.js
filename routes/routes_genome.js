@@ -411,7 +411,7 @@ router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
           db = "`NCBI`.`faa`"
           q = queries.get_AA_NA(db, gid, pid,'ncbi-aa')
        }else if(db_pts[0] === 'bakta'){
-          db = "`BAKTA_faa`.`protein_seq`"
+          db = "`BAKTA`.`faa`"
           q = queries.get_bakta_AA(db, gid, pid,'bakta-aa')
        }else{
           db = "`PROKKA`.`faa`"
