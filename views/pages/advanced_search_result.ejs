@@ -277,9 +277,9 @@ table.sortable thead {
                    
                 <td nowrap class='center'>
                        <%= anno_list2[gid].length %>
-                       <% data = JSON.stringify(anno_list2[gid]) %>
+                       <% let giddata = anno_list2[gid] %>
                        <!-- in search.js -->
-                       <small>(<a href='#' onclick="show_anno_hits('<%= data %>','<%= anno %>','<%= gid %>')">view hits</a>)</small>
+                       <small>(<a href='#' onclick="show_anno_hits('<%= JSON.stringify(anno_list2[gid]) %>','<%= anno %>','<%= gid %>')">view hits</a>)</small>
                 </td>
                 
                 <td nowrap class='center'>

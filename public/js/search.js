@@ -77,7 +77,7 @@
   
 function show_anno_hits(obj, anno, gid){
     var data = JSON.parse(obj)
-    console.log('obj',data)
+    console.log('data obj',data)
     //console.log('data[gid]',data[0])
     org = data[0].species
     
@@ -87,7 +87,7 @@ function show_anno_hits(obj, anno, gid){
     var html = '<center>'+gid+' | <i>'+data[0].species+'</i> | '+data[0].strain+'</center>'
     html += "<span style='float:right;'><a href='#' onclick=\"close_anno_info()\">close</a></span>"
     html += "<br><table class='result-table'>"
-    html += "<tr><th>Accession</th>Type<th></th><th>Protein-ID</th> <th>Genome Viewer</th><th>NA<br>length/seq</th><th>AA<br>length/seq</th><th>Gene</th><th>Gene Product</th></tr>"
+    html += "<tr><th>Accession</th><th>Type</th><th>Protein-ID</th> <th>Genome Viewer</th><th>NA<br>length/seq</th><th>AA<br>length/seq</th><th>Gene</th><th>Gene Product</th></tr>"
     annobox = document.getElementById('anno-div')
     selected_row = document.getElementById(gid)
     
@@ -108,12 +108,16 @@ function show_anno_hits(obj, anno, gid){
     annobox.style.height = "400px"
      
  
-    pid_list = []
+    orfid_list = []
     for(n in data){
-        pid_list.push("'"+data[n].pid+"'")
+        console.log('1',data[n])
+        console.log('2',"'"+data[n].orf_id+"'")
+        if(data[n].orf_id){
+           orfid_list.push("'"+data[n].orf_id+"'")
+        }
     }
     //console.log('pid_list',pid_list)
-    var args = {pid_list:pid_list,anno:anno}
+    var args = {orfid_list: orfid_list, anno: anno}
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/advanced_anno_orf_search", true);  // in index.js
     xmlhttp.setRequestHeader("Content-type","application/json");
@@ -147,18 +151,18 @@ function show_anno_hits(obj, anno, gid){
                 }else{
                     start = parseInt(resp_data[n].start)
                 }
-                if(resp_data[n].stop[0] === ">" ){ 
-                    stop = parseInt(resp_data[n].stop.substring(1))
+                if(resp_data[n].end[0] === ">" ){ 
+                    end = parseInt(resp_data[n].end.substring(1))
                 }else{ 
-                    stop = parseInt(resp_data[n].stop)
+                    end = parseInt(resp_data[n].end)
                 }
-                if(start > stop){ 
-                    tmp = stop 
-                    stop = start 
+                if(start > end){ 
+                    tmp = end 
+                    end = start 
                     start = tmp 
                 } 
                 locstart = start - 500 
-                locstop = stop + 500
+                locstop = end + 500
                 if(locstart < 1){ 
                     locstart = 1 
                 } 
@@ -166,7 +170,7 @@ function show_anno_hits(obj, anno, gid){
                 seqacc = resp_data[n].acc
                 //seqacc = data[n].acc.replace('_','|')
                 let loc = seqacc+":"+locstart.toString()+".."+locstop.toString()
-                let highlight = seqacc+":"+start.toString()+".."+stop.toString()
+                let highlight = seqacc+":"+start.toString()+".."+end.toString()
                 
                 html += "<tr>"
                 html += "<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/"+resp_data[n].acc+"' target='_blank'>"+resp_data[n].acc+"</a></td>"

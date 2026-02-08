@@ -23,7 +23,6 @@ router.get('/', function index(req, res) {
     ver_info: JSON.stringify(C.version_information),
     stats: JSON.stringify(C.homd_stats),
     
-
   })
 })
 
@@ -125,13 +124,15 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
     if(anno =='BAKTA'){
         q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA`.orf WHERE core_ID in ("+req.body.pid_list+")"
     }else{
-        q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE protein_id in ("+req.body.pid_list+")"
+        //q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE protein_id in ("+req.body.pid_list+")"
+        q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.orfid_list+")"
+    
     }
     console.log(q)
     try {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
-        //console.log('rows',rows)
+        console.log('rows',rows)
         res.send(JSON.stringify(rows))
         return
     } catch (error) {
@@ -397,14 +398,14 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
     return
 })
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
-    console.log('in advanced_site_search_grep')
+    console.log('in advanced_site_search_grep - index.js')
     // anno now includes prokka, ncbi and bakta
     console.log(req.body)
     const searchText = req.body.search_text_anno_grep.toLowerCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
     
-    let q,rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,gid_count = {},pid,prod,gene,type
+    let q,rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,gid_count = {},pid,orf_id,prod,gene,type
     let tmp_obj = {}
     
     try{
@@ -417,6 +418,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
         let args = ['-F','-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
         //let args = ['-h','"'+searchText+'"',datapath]
+        // prokka|gca_000174175.1|acfu01000087.1|cds|ynba|gca_000174175.1_00001|inner membrane protein ynba|597|198|14|610
         let grep_cmd = 'LC_ALL=C '+ENV.GREP_CMD + ' ' + args.join(' ')
         console.log(grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
@@ -437,9 +439,9 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                     //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
                     //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     let pts = row_array[n].split('|')
-                    //console.log('pts',pts)
+                    console.log('grep pts',pts)
                     if(pts.length >= split_length && ['prokka','ncbi','bakta'].indexOf(pts[0]) != -1 ){
-                      console.log('pts',pts)
+                      //console.log('pts',pts)
                       if(pts[0] == 'bakta'){
                          let id_pts = pts[1].split('_')
                          gid = (id_pts[0]+'_'+id_pts[1]).toUpperCase()
@@ -451,7 +453,16 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                         gid  = pts[1].toUpperCase()
                         type = pts[3]
                         gene = pts[4]
-                        pid  = pts[5]
+                        orf_id  = pts[5].toUpperCase()
+                        pid = ''
+                        if(type === 'cds'){
+                            if(pts[0] === 'prokka'){
+                                pid = orf_id
+                            }else{  // ncbi
+                                pid = orf_id.split('-')[1]
+                            }
+                        }
+                        
                         prod = pts[6]
                         
                         // gene = pts[3]
@@ -469,6 +480,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                           acc:pts[2].toUpperCase(),
                           gene:gene.toUpperCase(),
                           pid:pid,
+                          orf_id:orf_id,
                           prod:prod,
                           type:type
                         
@@ -496,7 +508,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         sort_lst.sort(function (a, b) {
            return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
         })
-        //console.log('sort_lst2',sort_lst)
+        //console.log('obj2',obj2)
         res.render('pages/advanced_search_result', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
