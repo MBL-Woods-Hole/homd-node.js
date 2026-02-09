@@ -458,7 +458,7 @@
                                       
                                       <a class='link'
                                         href='pangenome_image2?pg=<%= ginfo.pangenomes[0] %>&ext=svg'
-                                        target='_blank'>Preview</a> <small>(SVGImage)</small>
+                                        target='_blank'>OpenSVG</a> <small>(Preview)</small>
                                     </span>
                                     <% }else if(ginfo.pangenomes.length > 1 && ginfo.pangenomes[0]){ %>
                                       <% for(n in ginfo.pangenomes){ %>
@@ -471,7 +471,7 @@
                                             <a class='link'
                                                href='/genome/pangenome_image2?pg=<%= ginfo.pangenomes[n] %>&ext=svg'
                                                target='_blank'>
-                                               Preview</a> <small>(SVGImage)</small>
+                                               OpenSVG</a> <small>(Preview)</small>
                                             </span>
                                           <br>
                                           <% } %>
