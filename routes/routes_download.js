@@ -436,6 +436,7 @@ router.post('/anno_search_data', async (req, res) => {
    //console.log('anno_search_data req body',req.body)
    let type = req.body.type  // browser, text or excel
    let anno = req.body.anno  // ncbi prokka or bakta
+   let anno_cap = anno.toUpperCase()
    let search_text = req.body.search_text
     let format = req.body.format  // csv or fasta
     let id_list = JSON.parse(req.body.anno_ids)
@@ -480,7 +481,7 @@ router.post('/anno_search_data', async (req, res) => {
         }
     }else{
         // PROKKA and NCBI
-        let anno_cap = anno.toUpperCase()
+        
         if(format === 'fasta_aa'){
             q = "SELECT"
             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"

@@ -90,6 +90,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
   
   //let myurl = url.parse(req.url, true);
   let otid = req.query.otid.replace(/^0+/, '')
+  
   //console.log('otid',otid)
   let fullname = helpers.make_otid_display_name(otid)
   //console.log(fullname)
