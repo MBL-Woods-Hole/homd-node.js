@@ -113,20 +113,21 @@ router.get('/genome_table', function genome_table(req, res) {
     req.session.gtable_filter = filter
     
     let filter_on = 'off'
-    if(req.query.otid){ 
+    let otid = req.query.otid.replace(/^0+/, '')
+    if(otid){ 
        
        //console.log('GT GOT otid',otid)
        // reset gtable_filter here because we are coming from tax_table button
        // and expect to see the few genomes for this one taxon
        filter = helpers_genomes.get_default_gtable_filter()
-       filter.otid = req.query.otid
+       filter.otid = otid
        //console.log('XXXfilter',filter)
        req.session.gtable_filter = filter
        if(req.session.ttable_filter){
-           req.session.ttable_filter.otid = req.query.otid
+           req.session.ttable_filter.otid = otid
        }
        //console.log('got otid '+req.query.otid)
-       let seqid_list = C.taxon_lookup[req.query.otid].genomes
+       let seqid_list = C.taxon_lookup[otid].genomes
        //seqid_list =[ 'SEQF10000.1', 'SEQF10001.1', 'SEQF10010.1' ]
        //console.log('sil',seqid_list)
        send_list = []
@@ -167,7 +168,7 @@ router.get('/genome_table', function genome_table(req, res) {
         }
     })
     // DONOT SORT HERE === SORT IN FILTER
-    if(req.query.otid){
+    if(otid){
        filter_on = 'on'
     }else{
        filter_on = get_filter_on(filter,'genome')
@@ -1506,9 +1507,10 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   console.log('in conserved_protein_tree (Genomic Tree)')
   // let myurl = url.URL(req.url, true);
   //const http = require('http'); 
-  let otid,findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
-  if(req.query.otid){
-    otid = req.query.otid
+  let findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
+  let otid = req.query.otid.replace(/^0+/, '')
+  if(otid){
+    
     findme = helpers.make_otid_display_name(otid)
   }else if(req.query.gid){
     findme = req.query.gid
@@ -1581,9 +1583,10 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   
   //console.log('in ribosomal_protein_tree')
 
-  let otid,findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
-  if(req.query.otid){
-    otid = req.query.otid
+  let findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
+  let otid = req.query.otid.replace(/^0+/, '')
+  if(otid){
+    
     findme = helpers.make_otid_display_name(otid)
   }else if(req.query.gid){
     findme = req.query.gid
@@ -1651,9 +1654,10 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   //console.log('in rRNA_gene_tree')
   // const myurl = url.URL(req.url, true)
   // const myurl = new url.URL(req.url)
-  let otid,findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
-  if(req.query.otid){
-    otid = req.query.otid
+  let findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
+  let otid = req.query.otid.replace(/^0+/, '')
+  if(otid){
+    
     findme = helpers.make_otid_display_name(otid)
   }else if(req.query.gid){
     findme = req.query.gid

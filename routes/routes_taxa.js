@@ -170,7 +170,7 @@ router.get('/tax_hierarchy', function tax_hierarchy_GET(req, res) {
   console.log('GET Hierarchy')
   let otid = '',species=''
   if(req.query.otid){
-      otid = req.query.otid
+      otid = req.query.otid.replace(/^0+/, '')
       species = C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otid+'_species'].taxon
       console.log(species)
   }
@@ -592,6 +592,7 @@ router.get('/tax_description', async function tax_description(req, res) {
   // let myurl = url.parse(req.url, true);
   //helpers.print(['pre data1',C.taxon_lookup[389]])
   let otid = req.query.otid.replace(/^0+/, '')   // remove leading zeros
+  //console.log('otid',otid)
   let lookup_data = {}, data4, refseq = [], links = {}, sites = ''
   if (otid && req.session.ttable_filter) {
     req.session.ttable_filter.otid = otid
@@ -842,7 +843,7 @@ router.get('/life', function life(req, res) {
   let lin, lineage_string, otid
   if (req.query.otid && req.session.ttable_filter) {
     //console.log('got otid for ttable')
-    req.session.ttable_filter.otid = req.query.otid
+    req.session.ttable_filter.otid = req.query.otid.replace(/^0+/, '')
   }
   if (req.query.gid && req.session.gtable_filter) {
     //console.log('got otid for ttable')
@@ -1262,7 +1263,7 @@ router.get('/body_sites', function body_sites(req, res) {
 
   let send_list = [], obj, selected_otid = ''
   if (req.query && req.query.otid) {
-    selected_otid = req.query.otid
+    selected_otid = req.query.otid.replace(/^0+/, '')
   }
 
   //for(let otid in C.site_lookup){
@@ -1330,7 +1331,7 @@ router.get('/ecology', function ecology(req, res) {
   //console.log('target',target,req.query.page)
   if (req.query.otid && req.session.ttable_filter) {
     //console.log('got otid for ttable')
-    req.session.ttable_filter.otid = req.query.otid
+    req.session.ttable_filter.otid = req.query.otid.replace(/^0+/, '')
   }
   //let tax_name = req.params.name
   //console.log('req.params',req)

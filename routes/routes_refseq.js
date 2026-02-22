@@ -89,7 +89,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
   //let filepath = ENV.HOMD_URL_BASE+'/ftp/'+ENV.REFSEQ_TREE_PATH//"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
   
   //let myurl = url.parse(req.url, true);
-  let otid = req.query.otid
+  let otid = req.query.otid.replace(/^0+/, '')
   //console.log('otid',otid)
   let fullname = helpers.make_otid_display_name(otid)
   //console.log(fullname)
