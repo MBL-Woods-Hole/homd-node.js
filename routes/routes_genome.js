@@ -2656,12 +2656,12 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
 //         }
 //     });
 // })
-router.get('/open_ftp_file/:gid', function open_ftp_file(req, res) {
+router.get('/open_ftp_file/:fname', function open_ftp_file(req, res) {
     console.log('in genomes GET open_ftp_file',req.params)
     //let gid = req.body.gid
-    let gid = req.params.gid
+    let fname = req.params.fname
     let file_ext = 'faa'
-    let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,gid+'.'+file_ext)
+    let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,fname)
     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/'+file_ext+'/GCA_000174175.1.faa'
     //let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/faa/"+gid+".faa"
     console.log(fpath)

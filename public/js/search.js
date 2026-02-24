@@ -191,7 +191,7 @@ function show_anno_hits(obj, anno, gid){
                 
                 }else{
                     //console.log('/genome/open_ftp_file/'+gid)
-                    let line = "<a href='/genome/open_ftp_file/"+gid+"' target='_blank'>"+resp_data[n].pid+"</a>"
+                    let line = "<a href='/genome/open_ftp_file/"+gid+".faa' target='_blank'>"+resp_data[n].pid+"</a>"
                     //console.log(line)
                     html += "<td>"+line+"</td>"
                 
