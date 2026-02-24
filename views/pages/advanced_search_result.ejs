@@ -171,6 +171,9 @@ table.sortable thead {
 .search-box-loading{
     display:none;
 }
+#download-options{
+   
+}
 </style>
 <%- include('../partials/header_html'); %>
 <% var otids = JSON.parse(otid_list) %>
@@ -240,7 +243,7 @@ table.sortable thead {
          <% }else if(total_hits == 0){ %>
                <center><div class='outlier-zero'>Zero Hits (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
          <% }else{ %>
-            <div style='float:right;font-size:12px;'>
+            <div id='download-options' style='float:right;font-size:12px;'>
                   <form name='' method='POST' action='/download/anno_search_data'>
                   <input type="hidden" id="anno_ids" name="anno_ids" value='<%= annotationList2 %>'>
                   <input type="hidden" id="anno" name="anno" value='<%= anno %>'>

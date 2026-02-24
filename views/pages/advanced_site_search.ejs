@@ -22,10 +22,14 @@
     font-size:18px;
 }
 .submit-button{
-   background:green;
    padding:10px;
    cursor:pointer;
-   margin-right:500px;
+   margin-left:30px;
+   border:1px solid grey;
+   border-radius: 15px;
+}
+#submit-button{
+    background:green;
 }
 #submit-button-anno{
     background:orange;
@@ -68,12 +72,13 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='adv_search_text' id='adv_search_text' value='' maxlength='80' size='50' /> 
+          <input type='button' class='submit-button' id='submit-button' name='submit-button' value='Submit' onclick="validate_search_form('taxNgenomes')" \>
         </td>
       </tr>
       
       </table>
      
-      <input type='button' class='submit-button' id='submit-button' name='submit-button' value='Submit' onclick="validate_search_form('taxNgenomes')" \>
+      
   </form>
   
   
@@ -100,12 +105,13 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='search_text_anno_grep' id='search_text_anno_grep' value='' maxlength='80' size='50' /> 
+          <input type='button' class='submit-button' id='submit-button-anno' name='submit-button' value='Submit' onclick="validate_search_form('anno_grep')" \>
         </td>
       </tr>
       
       </table>
      
-      <input type='button' class='submit-button' id='submit-button-anno' name='submit-button' value='Submit' onclick="validate_search_form('anno_grep')" \>
+      
       <input type="hidden" id="refreshed" value="no">
   </form>
   
@@ -123,12 +129,13 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='search_text_phage_grep' id='search_text_phage_grep' value='' maxlength='80' size='50' /> 
+          <input type='button' class='submit-button' id='submit-button-phage' name='submit-button' value='Submit' onclick="validate_search_form('phage_grep')" \>
         </td>
       </tr>
       
       </table>
      
-      <input type='button' class='submit-button' id='submit-button-phage' name='submit-button' value='Submit' onclick="validate_search_form('phage_grep')" \>
+      
       <input type="hidden" id="refreshed" value="no">
   </form>
   

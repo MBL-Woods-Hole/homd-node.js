@@ -2635,5 +2635,22 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
     }
     return
 })
-
+////
+router.post('/open_ftp_file', function open_ftp_file(req, res) {
+    console.log('in genomes open_ftp_file',req.body)
+    let gid = req.body.gid
+    let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02','gff',gid+'.gff')
+    let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/gff/"+gid+".gff"
+    console.log(fpath)
+    fs.readFile(fpath, "utf-8", (err, data) => {
+        if (err) {
+            console.error(err);
+            return
+        } else {
+            // Send the file content as the response
+            res.writeHead(200, { "Content-Type": "text/html" });
+            res.end(data);
+        }
+    });
+})
 export default router;

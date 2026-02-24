@@ -186,7 +186,15 @@ function show_anno_hits(obj, anno, gid){
                 }else{
                   html += "<td></td>"   // AA length
                 }
-                html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].pid+"' target='_blank'>"+resp_data[n].pid+"</td>"
+                if(anno=='ncbi'){
+                    html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].pid+"' target='_blank'>"+resp_data[n].pid+"</td>"
+                
+                }else{
+                    html += "<td><a href='#' onclick=\"open_ftp_file('"+gid+"')\">"+resp_data[n].pid+"</td>"
+                
+                }
+                  
+                
                 html += "<td class='center'>" 
                 //in genomes.js open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
                 html += " <a title='JBrowse/Genome Viewer:"+gid+"' href='#' onclick=\"open_jbrowse('"+gid+"','anno_table','','','"+anno+"','"+loc+"','"+highlight+"')\" >open</a>"
@@ -224,3 +232,16 @@ function show_anno_hits(obj, anno, gid){
      
   }
 
+function open_ftp_file(gid){
+    var args = {'gid':gid}
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "/genome/open_ftp_file", true);  // in index.js
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var resp_data = JSON.parse(xmlhttp.responseText);
+            console.log('resp_data',resp_data)
+        }
+    }
+    xmlhttp.send(JSON.stringify(args));
+}
