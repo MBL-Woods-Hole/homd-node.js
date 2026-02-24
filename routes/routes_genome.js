@@ -2660,9 +2660,10 @@ router.get('/open_ftp_file/:gid', function open_ftp_file(req, res) {
     console.log('in genomes GET open_ftp_file',req.params)
     //let gid = req.body.gid
     let gid = req.params.gid
-    let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02','gff',gid+'.gff')
-    let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/gff/GCA_000174175.1.gff'
-    let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/gff/"+gid+".gff"
+    let file_ext = 'faa'
+    let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,gid+'.'+file_ext)
+    let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/'+file_ext+'/GCA_000174175.1.faa'
+    //let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/faa/"+gid+".faa"
     console.log(fpath)
     if(ENV.ENV === 'localhost'){
       fpath = fpath_local
@@ -2673,10 +2674,10 @@ router.get('/open_ftp_file/:gid', function open_ftp_file(req, res) {
             return
         } else {
             // Send the file content as the response
-            //res.writeHead(200, { "Content-Type": "text/html" });
-            data = data.replace('\n','<br>')
+            res.writeHead(200, { "Content-Type": "text/plain" });
+            //data = data.replace('<','\n<')
             //console.log(data)
-            res.send(data);
+            res.end(data);
             return;
         }
     });
