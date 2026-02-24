@@ -2636,20 +2636,48 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
     return
 })
 ////
-router.post('/open_ftp_file', function open_ftp_file(req, res) {
-    console.log('in genomes open_ftp_file',req.body)
-    let gid = req.body.gid
+// router.post('/open_ftp_file', function open_ftp_file(req, res) {
+//     console.log('in genomes open_ftp_file',req.body)
+//     let gid = req.body.gid
+//     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02','gff',gid+'.gff')
+//     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/gff/GCA_000174175.1.gff'
+//     let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/gff/"+gid+".gff"
+//     console.log(fpath)
+//     fs.readFile(fpath_local, "utf8", (err, data) => {
+//         if (err) {
+//             console.error(err);
+//             return
+//         } else {
+//             // Send the file content as the response
+//             res.writeHead(200, { "Content-Type": "text/html" });
+//             //console.log(data)
+//             res.end(data);
+//             return;
+//         }
+//     });
+// })
+router.get('/open_ftp_file/:gid', function open_ftp_file(req, res) {
+    console.log('in genomes GET open_ftp_file',req.params)
+    //let gid = req.body.gid
+    let gid = req.params.gid
     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02','gff',gid+'.gff')
+    let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/gff/GCA_000174175.1.gff'
     let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/gff/"+gid+".gff"
     console.log(fpath)
-    fs.readFile(fpath, "utf-8", (err, data) => {
+    if(ENV.ENV === 'localhost'){
+      fpath = fpath_local
+    }
+    fs.readFile(fpath, "utf8", (err, data) => {
         if (err) {
             console.error(err);
             return
         } else {
             // Send the file content as the response
-            res.writeHead(200, { "Content-Type": "text/html" });
-            res.end(data);
+            //res.writeHead(200, { "Content-Type": "text/html" });
+            data = data.replace('\n','<br>')
+            //console.log(data)
+            res.send(data);
+            return;
         }
     });
 })

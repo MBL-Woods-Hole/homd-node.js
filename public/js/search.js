@@ -1,4 +1,4 @@
-
+var cfg = '<%= config %>'
 
   function show_phage_hits(gid,contig,species,predictor, h){
      hits = JSON.parse(h)
@@ -186,11 +186,14 @@ function show_anno_hits(obj, anno, gid){
                 }else{
                   html += "<td></td>"   // AA length
                 }
-                if(anno=='ncbi'){
-                    html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].pid+"' target='_blank'>"+resp_data[n].pid+"</td>"
+                if(anno === 'ncbi'){
+                    html += "<td><a href='https://www.ncbi.nlm.nih.gov/protein/"+resp_data[n].pid+"' target='_blank'>"+resp_data[n].pid+"</a></td>"
                 
                 }else{
-                    html += "<td><a href='#' onclick=\"open_ftp_file('"+gid+"')\">"+resp_data[n].pid+"</td>"
+                    //console.log('/genome/open_ftp_file/'+gid)
+                    let line = "<a href='/genome/open_ftp_file/"+gid+"' target='_blank'>"+resp_data[n].pid+"</a>"
+                    //console.log(line)
+                    html += "<td>"+line+"</td>"
                 
                 }
                   
@@ -234,14 +237,18 @@ function show_anno_hits(obj, anno, gid){
 
 function open_ftp_file(gid){
     var args = {'gid':gid}
+    //let fpath = cfg.FILEPATH_TO_FTP+'/genomes/PROKKA/V11.02/gff/'+gid+'.gff'
+    //let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/gff/GCA_000174175.1.gff'
+    //window.open(fpath_local)
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/open_ftp_file", true);  // in index.js
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var resp_data = JSON.parse(xmlhttp.responseText);
-            console.log('resp_data',resp_data)
+            //var resp_data = JSON.parse(xmlhttp.responseText);
+            //console.log('resp_data',xmlhttp.responseText)
+            
         }
     }
-    xmlhttp.send(JSON.stringify(args));
+   xmlhttp.send(JSON.stringify(args));
 }
