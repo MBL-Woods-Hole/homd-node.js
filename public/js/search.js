@@ -77,7 +77,7 @@ var cfg = '<%= config %>'
   
 function show_anno_hits(obj, anno, gid){
     var data = JSON.parse(obj)
-    console.log('data obj',data)
+    //console.log('data obj',data)
     //console.log('data[gid]',data[0])
     org = data[0].species
     
@@ -110,14 +110,14 @@ function show_anno_hits(obj, anno, gid){
  
     id_list = []
     for(n in data){
-        console.log('1',data[n])
+        //console.log('1',data[n])
         if(anno === 'bakta'){
           console.log('2',"'"+data[n].pid+"'")
           if(data[n].pid){
            id_list.push("'"+data[n].pid+"'")
           }
         }else{  // ncbi and prokka
-          console.log('2',"'"+data[n].orf_id+"'")
+          //console.log('2',"'"+data[n].orf_id+"'")
           if(data[n].orf_id){
            id_list.push("'"+data[n].orf_id+"'")
           }
@@ -152,7 +152,7 @@ function show_anno_hits(obj, anno, gid){
 //     stop: '2149687'
 //   }
             for(n in resp_data){
-                console.log('rdata[n]',n,resp_data[n])
+                //console.log('rdata[n]',n,resp_data[n])
                 if(resp_data[n].start[0] === "<" ){
                     start = parseInt(resp_data[n].start.substring(1))
                 }else{
