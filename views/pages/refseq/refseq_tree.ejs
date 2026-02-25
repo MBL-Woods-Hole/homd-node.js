@@ -16,8 +16,13 @@ taxidfullname = 'HMT-'+("000" + otid).slice(-3);
 // let y = $("text:contains('"+taxidfullname+"')").css({"font-size":"120%","fill": "red", "background-color": "green" })
 // let x = $("text:contains('"+taxidfullname+"')").closest("tspan").css({"background-color": "green" })
 // //$("text:contains('"+taxidfullname+"')").css("background-color", "coral");
-window.scrollTo(0, $("text:contains('"+taxidfullname+"')").offset().top-50)
-// console.log(x)
+//window.scrollTo(0, $("text:contains('"+taxidfullname+"')").offset().top-50)
+
+window.scrollTo({
+    top: $("text:contains('"+taxidfullname+"')").offset().top-50,
+    left:0,
+    behavior:'smooth'
+    })
 
 let target = $("text:contains('"+taxidfullname+"')")
 //window.scrollTo(0,1200)

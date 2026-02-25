@@ -191,7 +191,9 @@ function show_anno_hits(obj, anno, gid){
                 
                 }else{
                     //console.log('/genome/open_ftp_file/'+gid)
-                    let line = "<a href='/genome/open_ftp_file/"+gid+".faa' target='_blank'>"+resp_data[n].pid+"</a>"
+                    //let line = "<a href='/genome/open_ftp_file/"+gid+".faa' target='_blank'>"+resp_data[n].pid+"</a>"
+                    let line = "<a href='/genome/open_ftp_file?prokka_pid="+resp_data[n].pid+"' target='_blank'>"+resp_data[n].pid+"</a>"
+                    // <a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>16S rRNA Gene Tree
                     //console.log(line)
                     html += "<td>"+line+"</td>"
                 

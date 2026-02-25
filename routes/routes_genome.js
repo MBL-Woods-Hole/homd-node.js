@@ -1690,46 +1690,6 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
          })
     })
   
-  
-  // https.get(filepath, (response) => { 
-//      let data = ''; 
-//  
-//      response.on('data', (chunk) => { 
-//         data += chunk; 
-//      }); 
-//  
-//      response.on('end', () => { 
-//         
-//         //console.log('data',data); 
-//          res.render('pages/genome/rRNA_gene_tree', {
-//            title: 'HOMD :: rRNA Gene Tree',
-//            pgname: 'genome/tree', // for AboutThisPage
-//            config: JSON.stringify(ENV),
-//            ver_info: JSON.stringify(C.version_information),
-//            
-//            svg_data: JSON.stringify(data),
-//            target: findme
-//          })
-//      });
-//   }).on('error', (error) => { 
-//     console.error(`Error fetching data: ${error.message}`); 
-//   }); 
-  
-  
-//   fs.readFile(filepath, 'utf8', function readSVGFile3 (err, data) {
-//     if (err) {
-//       console.log(err)
-//     }
-//     res.render('pages/genome/rRNA_gene_tree', {
-//       title: 'HOMD :: rRNA Gene Tree',
-//       pgname: 'genome/tree', // for AboutThisPage
-//       config: JSON.stringify(ENV),
-//       ver_info: JSON.stringify(C.version_information),
-//       
-//       svg_data: JSON.stringify(data),
-//       otid: otid
-//     })
-//   })
 })
 //
 
@@ -2656,30 +2616,78 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
 //         }
 //     });
 // })
-router.get('/open_ftp_file/:fname', function open_ftp_file(req, res) {
-    console.log('in genomes GET open_ftp_file',req.params)
-    //let gid = req.body.gid
-    let fname = req.params.fname
+router.get('/open_ftp_file', function open_ftp_file(req, res) {
+    //let findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
+    let pid = req.query.prokka_pid
+    
     let file_ext = 'faa'
+    let fname = pid.split('_')[0]+'.'+file_ext
     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,fname)
     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/'+file_ext+'/GCA_000174175.1.faa'
-    //let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/faa/"+gid+".faa"
     console.log(fpath)
     if(ENV.ENV === 'localhost'){
       fpath = fpath_local
     }
-    fs.readFile(fpath, "utf8", (err, data) => {
+    fs.readFile(fpath, 'utf8', (err, data) => {
         if (err) {
-            console.error(err);
-            return
-        } else {
-            // Send the file content as the response
-            res.writeHead(200, { "Content-Type": "text/plain" });
-            //data = data.replace('<','\n<')
-            //console.log(data)
-            res.end(data);
-            return;
+        console.error('Error reading file:', err);
+        return;
         }
-    });
+        //console.log('File content:', data);
+        if(ENV.ENV === "localhost"){
+         //data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
+        }
+        //data = '<pre>'+data+'</pre>'
+        let data_rows = data.split('\n')
+        //console.log(data_rows) 
+        let new_data = []
+        for(let n in data_rows){
+         if(data_rows[n].includes(pid)){
+            new_data.push('<span style="color:red;">'+data_rows[n]+'</span>')
+         }else{
+            new_data.push('<span>'+data_rows[n]+'</span>')
+         }
+         //new_data.push('<span>'+data_rows[n]+'</span>')
+        }
+        data = '<pre>'+new_data.join('\n')+'</pre>'
+        res.render('pages/genome/fasta_text', {
+           title: '',
+           pgname: '', // for AboutThisPage
+           config: JSON.stringify(ENV),
+           ver_info: JSON.stringify(C.version_information),
+           
+           text_data: JSON.stringify(data),
+           target: pid
+         })
+    })
+    
+    
+    
+    
+    
+    // console.log('in genomes GET open_ftp_file',req.params)
+//     //let gid = req.body.gid
+//     let fname = req.params.fname
+//     let file_ext = 'faa'
+//     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,fname)
+//     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/'+file_ext+'/GCA_000174175.1.faa'
+//     //let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/faa/"+gid+".faa"
+//     console.log(fpath)
+//     if(ENV.ENV === 'localhost'){
+//       fpath = fpath_local
+//     }
+//     fs.readFile(fpath, "utf8", (err, data) => {
+//         if (err) {
+//             console.error(err);
+//             return
+//         } else {
+//             // Send the file content as the response
+//             res.writeHead(200, { "Content-Type": "text/plain" });
+//             //data = data.replace('<','\n<')
+//             //console.log(data)
+//             res.end(data);
+//             return;
+//         }
+//     });
 })
 export default router;

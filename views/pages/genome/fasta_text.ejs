@@ -1,0 +1,53 @@
+<% fasta_text = JSON.parse(text_data) %>
+<html><head><title>FASTA</title>
+<meta charset="UTF-8">
+</head><body>
+
+    <%- fasta_text %>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+var pid = "<%= target %>"
+//pid = 'GCA_000174175.1_00047'
+//console.log(taxidfullname)
+//$("text:contains('"+taxidfullname+"')").css({"fill": "red"}, {"background-color": "#FFFF00" })
+console.log('target',pid)
+
+// window.scrollTo({
+//         top: $("text:contains('"+pid+"')").offset().top-50,
+//         left:0,
+//         behavior:'smooth'
+//         })
+// 
+// let target = $("text:contains('"+pid+"')")
+// $(target).css({"fill": "fuchsia","font-size":"120%","background-color":"gray" });
+// $(target).children("tspan").css({"fill": "fuchsia","font-size":"120%" });
+// $(target).children("text").css({"fill": "fuchsia","font-size":"120%" });
+// $(target).children("a").css({"fill": "fuchsia","font-size":"120%" });
+
+const targetElement = findTextElement(pid);
+
+if (targetElement) {
+    console.log('gotit',targetElement)
+    targetElement.scrollIntoView({
+        behavior: 'smooth', // Optional: adds a smooth scrolling animation
+        block: 'start'      // Optional: aligns the top of the element with the top of the viewport
+    });
+}
+function findTextElement(textToFind) {
+    const allParagraphs = document.querySelectorAll("span"); // Or target a specific container
+    for (const paragraph of allParagraphs) {
+        if (paragraph.textContent.includes(textToFind)) {
+            return paragraph; // Return the element once found
+        }
+    }
+    return null; // Text not found
+}
+</script>
+
+</body>
+</html>
+
+ 
+
+

@@ -10,8 +10,11 @@ var findme = "<%= target %>"
 
 //console.log(taxidfullname)
 //$("text:contains('"+taxidfullname+"')").css({"fill": "red"}, {"background-color": "#FFFF00" })
-window.scrollTo(0, $("text:contains('"+findme+"')").offset().top-50)
-
+window.scrollTo({
+        top: $("text:contains('"+findme+"')").offset().top-50,
+        left:0,
+        behavior:'smooth'
+        })
 let target = $("text:contains('"+findme+"')")
 //window.scrollTo(0,1200)
 //console.log('t1',target[0])
