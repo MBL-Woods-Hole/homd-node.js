@@ -2619,11 +2619,11 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
 router.get('/open_ftp_file', function open_ftp_file(req, res) {
     //let findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
     let pid = req.query.prokka_pid
-    console.log('req.query',req.query)
+    //console.log('req.query',req.query)
     let file_ext = 'faa'
     let pid_pts = pid.split('_')
     let fname = pid_pts[0]+'_'+pid_pts[1]+'.'+file_ext
-    console.log('fname',fname)
+    //console.log('fname',fname)
     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,fname)
     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/'+file_ext+'/GCA_000174175.1.faa'
     console.log(fpath)
@@ -2632,7 +2632,7 @@ router.get('/open_ftp_file', function open_ftp_file(req, res) {
     }
     fs.readFile(fpath, 'utf8', (err, data) => {
         if (err) {
-        console.error('Error reading file:', err);
+          console.error('Error reading file:', err);
         return;
         }
         //console.log('File content:', data);
