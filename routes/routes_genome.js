@@ -2621,7 +2621,8 @@ router.get('/open_ftp_file', function open_ftp_file(req, res) {
     let pid = req.query.prokka_pid
     console.log('req.query',req.query)
     let file_ext = 'faa'
-    let fname = pid.split('_')[0]+'.'+file_ext
+    let pid_pts = pid.split('_')
+    let fname = pid_pts[0]+'_'+pid_pts[1]+'.'+file_ext
     console.log('fname',fname)
     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,fname)
     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/'+file_ext+'/GCA_000174175.1.faa'
