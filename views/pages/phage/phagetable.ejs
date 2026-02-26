@@ -75,7 +75,7 @@ thead th { position: sticky; top: 0; }
          <thead>
           <tr>
            <th class='w-med'>Genome-ID</th>
-           <th class='w-sm'>HMT-ID</th>
+           <th class='w-sm' nowrap>HMT-ID</th>
            <th class='w-vsm'>Body<br>Site</th>
            <th class='w-exp'>Species</th>
            <th class='w-exp'>Strain</th>
@@ -99,9 +99,9 @@ thead th { position: sticky; top: 0; }
              
              <% taxidfullname = "HMT-"+("000" + datarows[gid].otid).slice(-3); %>
              <tr>
-             <td class='w-med'><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
+             <td class='w-med' nowrap><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
              
-             <td class='w-sm'><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= datarows[gid].otid %>'><%= taxidfullname %></a></td>
+             <td class='w-sm' nowrap><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= datarows[gid].otid %>'><%= taxidfullname %></a></td>
              <td class='w-vsm'><%= datarows[gid].site %></td>
              <td class='w-exp' title='<%= datarows[gid].organism %>'><i><%= datarows[gid].organism %></i></td>
              <td class='w-exp' title='<%= datarows[gid].strain %>'><%= datarows[gid].strain %></td>
