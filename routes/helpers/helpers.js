@@ -120,7 +120,7 @@ export const show_session = (req) =>{
 export const accesslog = (req, res) => {
        let testout = 'Request from:'+req.ip+'\n'
        //console.log(C.access_logfile);
-        fs.appendFile(C.access_logfile, testout, err => {
+        fs.appendFile(ENV.access_logfile, testout, err => {
              if (err) {
                  console.error(err)
                  return

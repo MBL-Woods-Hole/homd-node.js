@@ -2,7 +2,7 @@
 *.fa
 *.fna
 *.fasta
-*.env
+*.env*
 
 package-lock.json
 .vagrant

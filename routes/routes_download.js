@@ -411,25 +411,25 @@ router.get('/dld_peptide_table_all/:study', function dld_peptide_table_all (req,
     res.download(fullpath)
     return 
 })
-router.get('/dnld_pangenome',(req, res) => {
-    console.log('req query',req.query)
-    let pg = req.query.pg
-    let ver = req.query.V
-    let fn
-    let obj = C.pangenomes.find(o => o.name === pg);
-    
-    if(ver === '7'){
-       fn = obj.dnld_v7
-    }else{
-       fn = obj.dnld_v8
-    }
-    
-    let fullpath = path.join(ENV.PATH_TO_PANGENOMES, req.query.pg, fn)
-    
-    helpers.print('file path: '+fullpath)
-    res.download(fullpath)
-
-});
+// router.get('/dnld_pangenome',(req, res) => {
+//     console.log('req query',req.query)
+//     let pg = req.query.pg
+//     let ver = req.query.V
+//     let fn
+//     let obj = C.pangenomes.find(o => o.name === pg);
+//     
+//     if(ver === '7'){
+//        fn = obj.dnld_v7
+//     }else{
+//        fn = obj.dnld_v8
+//     }
+//     
+//     let fullpath = path.join(ENV.PATH_TO_PANGENOMES, req.query.pg, fn)
+//     
+//     helpers.print('file path: '+fullpath)
+//     res.download(fullpath)
+// 
+// });
 
 router.post('/anno_search_data', async (req, res) => {
    // Download all Annotation Hits/ table and fasta

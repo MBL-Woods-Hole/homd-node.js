@@ -10,6 +10,8 @@
 .search-form{
    padding:30px;
    margin-top:20px;
+   background:#E0E0E0;
+   border:2px solid gray
 }
 #adv_search_text{
     border:2px solid black;
@@ -21,22 +23,16 @@
     height:35px;
     font-size:18px;
 }
-.submit-button{
-   padding:10px;
-   cursor:pointer;
-   margin-left:30px;
-   border:1px solid grey;
-   border-radius: 15px;
-}
-#submit-button{
-    background:green;
+
+
+#submit-button-tax{
+    
 }
 #submit-button-anno{
-    background:orange;
+    
 }
 #submit-button-phage{
-    background:purple;
-    color:ivory;
+    
 }
 .loader-gif{
     margin-top:200px;
@@ -45,6 +41,41 @@
     font-size: 18px;
     font-weight:bold;
     margin-top:20px;
+}
+.submit-button{
+   padding:10px;
+   cursor:pointer;
+   margin-left:30px;
+   border:1px solid grey;
+   border-radius: 15px;
+   background:lavender;
+}
+
+
+#srch-tax{
+   background:orange;
+   padding:5px;
+}
+#submit-button-tax:hover{
+    background:orange;
+}
+#srch-anno{
+   background:purple;
+   color:ivory;
+   padding:5px;
+}
+#submit-button-anno:hover{
+    background:purple;
+    color:ivory;
+}
+#srch-phage{
+   background:green;
+   color:ivory;
+   padding:5px;
+}
+#submit-button-phage:hover{
+    background:green;
+    color:ivory;
 }
 </style>
 <%- include('../partials/header_html'); %>
@@ -55,16 +86,16 @@
     <%- include('../partials/navbar'); %>
     
     <div class='page-content' >
-       <p class='title h3'>Site Search</p>
+       <p class='title h3'>Search HOMD Databases</p>
 
   <div id='adv-search-form-div'>
   <form id='adv-search-form' class='search-form' method='POST' action='basic_site_search'>
-      <br><span class='mid-title'>Search the Taxonomy and/or Genome Databases</span>
-      <table class='table'>
+      <br><span id='srch-tax' class='mid-title'>Search the Taxonomy and/or Genome Databases</span>
+      <table id='tax-table' class='table'>
       <tr><td>
-        <input type='checkbox' class='tax_cb' checked id='taxonomy' name='taxonomy' value='on'  > Search Taxonomy Database&nbsp;&nbsp;&nbsp;
+        <input type='checkbox' class='tax_cb' checked id='taxonomy' name='taxonomy' value='on'  > Taxonomy Database&nbsp;&nbsp;&nbsp;
         
-        <input type='checkbox' checked class='tax_cb' id='genomes' name='genomes' value='on'  > Search Genomes Database&nbsp;&nbsp;&nbsp;
+        <input type='checkbox' checked class='tax_cb' id='genomes' name='genomes' value='on'  > Genomes Database&nbsp;&nbsp;&nbsp;
 
         </td>
       </tr>
@@ -72,7 +103,7 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='adv_search_text' id='adv_search_text' value='' maxlength='80' size='50' /> 
-          <input type='button' class='submit-button' id='submit-button' name='submit-button' value='Submit' onclick="validate_search_form('taxNgenomes')" \>
+          <input type='button' class='submit-button' id='submit-button-tax' name='submit-button' value='Submit' onclick="validate_search_form('taxNgenomes')" \>
         </td>
       </tr>
       
@@ -85,17 +116,17 @@
   
   
   <form id='adv-search-form-annotations_grep'  class='search-form' method='POST' action='advanced_site_search_anno_grep'>  <!-- advanced_site_search_annotations -->
-      <br><span class='mid-title'>Search the Annotations Database</span>
-      <table class='table'>
+      <br><span id='srch-anno' class='mid-title'>Search the Annotations Database</span>
+      <table id='anno-table' class='table'>
       <tr><td>
         Searches: Genome-ID, Accession (Molecule-ID), Protein-ID, Gene and Gene Product, BAKTA: (EC, GO, COG, RefSeq, UniParc, UniRef)
         </td>
       </tr>
-      <tr><td>Choose:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <tr><td>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <input type='radio' class='anno_cb_grep' checked id='prokka_cb_grep' name='adv_anno_radio_grep' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
-        or&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;
       <input type='radio' class='anno_cb_grep' id='ncbi_cb_grep' name='adv_anno_radio_grep' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
-        or&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;
         <input type='radio' class='anno_cb_grep' id='bakta_cb_grep' name='adv_anno_radio_grep' value='bakta'  > 
         <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
         Annotations
@@ -116,8 +147,8 @@
   </form>
   
   <form id='adv-search-form-phage_grep'  class='search-form' method='POST' action='advanced_site_search_phage_grep'>  <!-- advanced_site_search_annotations -->
-      <br><span class='mid-title'>Search the Phage Database</span>
-      <table class='table'>
+      <br><span id='srch-phage' class='mid-title'>Search the Phage Database</span>
+      <table id='pgage-table' class='table'>
       <tr><td>
         Searches: <a href='https://github.com/apcamargo/genomad' target='_blank'>geNomad</a> 
         and <a href='https://github.com/mtisza1/Cenote-Taker3' target='_blank'>Cenote-Taker3</a> Accessions and Descriptions.

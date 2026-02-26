@@ -1695,31 +1695,31 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 
 //
 
-function get_blast_db_info(gid){
-    console.log('in get_blast_db_info')
-    let info = {},run,filepath,hit
-    const { spawn } = require("child_process");
-    // get & check paths to six genome databases: 
-    //gid = 'SEQF1595'
-    info[gid] = []
-    let promises = []
-    let exts = ['faa', 'ffn', 'fna']
-    let paths = [ENV.BLAST_DB_PATH_GENOME_NCBI, ENV.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
-    for(let p in paths){
-       for(let e in exts){
-           filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
-           //console.log(filepath)
-           let full_data = ''
-           promises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
-
-       }
-    }
-    const responses = Promise.all(promises)
-      .then(results => {
-      
-      return results
-    })
-}
+// function get_blast_db_info(gid){
+//     console.log('in get_blast_db_info')
+//     let info = {},run,filepath,hit
+//     const { spawn } = require("child_process");
+//     // get & check paths to six genome databases: 
+//     //gid = 'SEQF1595'
+//     info[gid] = []
+//     let promises = []
+//     let exts = ['faa', 'ffn', 'fna']
+//     let paths = [ENV.BLAST_DB_PATH_GENOME_NCBI, ENV.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
+//     for(let p in paths){
+//        for(let e in exts){
+//            filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
+//            //console.log(filepath)
+//            let full_data = ''
+//            promises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
+// 
+//        }
+//     }
+//     const responses = Promise.all(promises)
+//       .then(results => {
+//       
+//       return results
+//     })
+// }
 //
 router.get('/anvio_pangenomes', async function anvio_pangenomes(req, res){
     let q = queries.get_all_pangenomes_query()
@@ -2637,7 +2637,7 @@ router.get('/open_ftp_file', function open_ftp_file(req, res) {
         }
         //console.log('File content:', data);
         if(ENV.ENV === "localhost"){
-         //data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
+           data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
         }
         //data = '<pre>'+data+'</pre>'
         let data_rows = data.split('\n')

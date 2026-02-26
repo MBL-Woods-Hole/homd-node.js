@@ -12,10 +12,24 @@ import 'dotenv/config';
 //import { * } from './config/config.js';
 //console.log(`Your DB_HOST is ${DB_HOST}`); // 8626
 global.ENV = process.env;
-
-
-console.log('NODE_ENV:',ENV.NODE_ENV)
 import path from 'path';
+
+//=============================================================
+console.log('ENV:Base Dir',ENV.BASE_DIR)
+ENV.PROCESS_DIR                 = path.join(ENV.BASE_DIR, ENV.PROCESS_DIR_BASENAME)
+ENV.PATH_TO_STATIC_DOWNLOADS    = path.join(ENV.BASE_DIR, ENV.PATH_TO_STATIC_DOWNLOADS_BASENAME)
+ENV.PATH_TO_DATA                = path.join(ENV.BASE_DIR, ENV.PATH_TO_DATA_BASENAME)
+ENV.PATH_TO_SEARCH              = path.join(ENV.BASE_DIR, ENV.PATH_TO_SEARCH_BASENAME)
+ENV.PATH_TO_SCRIPTS             = path.join(ENV.PROCESS_DIR, ENV.PATH_TO_SCRIPTS_BASENAME)
+ENV.LOG_DIR                     = path.join(ENV.BASE_DIR, ENV.LOG_DIR_BASENAME)
+console.log('ENV.PATH_TO_SCRIPTS',ENV.PATH_TO_SCRIPTS)
+ENV.PATH_TO_TMP                 = path.join(ENV.BASE_DIR, ENV.PATH_TO_TMP_BASENAME)
+ENV.PATH_TO_IMAGES              = path.join(ENV.BASE_DIR, ENV.PATH_TO_IMAGES_BASENAME)
+ENV.access_logfile              = path.join(ENV.LOG_DIR,'homd-access.log')
+
+//=============================================================
+console.log('NODE_ENV:',ENV.NODE_ENV)
+
 const dirname = import.meta.dirname
 
 //// SQL Connection ///////////////
@@ -152,7 +166,7 @@ app.use(express.static('tmp'));
 
 //app.use(express.static('jbrowse2/static/js'));
 //path.join(__dirname, 'public', 'javascripts')
-app.use('/tree', express.static(process.env.PATH_TO_SS_DIRS));
+//app.use('/tree', express.static(process.env.PATH_TO_SS_DIRS));
 
 // ROUTES:
 app.use('/', home);
