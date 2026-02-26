@@ -2377,7 +2377,7 @@ router.post('/amr_ajax', async function phage_ajax(req, res){
     let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
     let org = C.genome_lookup[gid].organism
     let strain = C.genome_lookup[gid].strain
-    let start,stop,tmp,locstart,locstop,seqacc,loc,highlight
+    let conn,start,stop,tmp,locstart,locstop,seqacc,loc,highlight
     let html_rows = "<div id='amr-sub-table-div'>"+gid+'; '+hmt+'; '+org+' ('+strain+')'
     html_rows += "<a href='#' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</a>"
     html_rows += "<table id='amr-sub-table' class='table table-condensed'>"
@@ -2521,7 +2521,7 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
     // page -2
     //console.log(req.query)
     let gid = req.body.gid
-    let p1,p2,loc,highlight,opos
+    let p1,p2,loc,highlight,opos,conn
     //console.log('crispr_ajax',gid)
     const q = queries.get_crispr_cas_data(gid)
     console.log(q)

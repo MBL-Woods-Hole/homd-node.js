@@ -116,7 +116,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       console.log('error')
       
   }
-  console.log('URL1',url)
+  //console.log('URL1',url)
   
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.open("POST", "/genome/jbrowse_ajax", true);
@@ -124,7 +124,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         var resp = xmlhttp.responseText;
-        console.log('URL2',url)
+        //console.log('URL2',url)
         window.open(url)
       }
   }
