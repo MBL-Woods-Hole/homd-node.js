@@ -90,6 +90,7 @@ router.get('/genome_table', function genome_table(req, res) {
     
     // https://www.ncbi.nlm.nih.gov/assembly/GCF_000160075.2/?shouldredirect=false
     helpers.print('In GET Genome Table')
+    console.log(req.query)
     let filter={}, send_list, showing,ret_obj,count_before_paging,args,count_txt
     let page_data = helpers_genomes.init_page_data()
     //console.log('page data',page_data)
@@ -113,9 +114,9 @@ router.get('/genome_table', function genome_table(req, res) {
     req.session.gtable_filter = filter
     
     let filter_on = 'off'
-    let otid = req.query.otid.replace(/^0+/, '')
-    if(otid){ 
-       
+    let otid
+    if(req.query.otid){ 
+       otid = req.query.otid.replace(/^0+/, '')
        //console.log('GT GOT otid',otid)
        // reset gtable_filter here because we are coming from tax_table button
        // and expect to see the few genomes for this one taxon
