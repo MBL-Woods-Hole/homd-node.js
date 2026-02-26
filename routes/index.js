@@ -74,7 +74,12 @@ function execPromise(cmd, args, max) {
 //         });
         let data_array = [],chunk_rows=[],line_count = 0
         let bufferArray= []
-        const process = spawn(cmd, args, { shell: true });  // shell:true need expand wildcard '*'
+        //console.log('ARGS',cmd+' '+args.join(' '))
+        let full_cmd_str = cmd+' '+args.join(' ')
+        //const process = spawn(cmd, args, { shell: true });  
+        // shell:true need expand wildcard '*'
+        // shell:true need glob so pass pass cmd in full NOT args
+        const process = spawn(full_cmd_str, { shell: true });  // shell:true need expand wildcard '*'
         process.stdout.on('data', (data) => {
           // Process the data received from stdout
           //console.log(`stdout: ${data}`);
