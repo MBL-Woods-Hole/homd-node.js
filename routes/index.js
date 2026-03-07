@@ -133,7 +133,7 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
         q = "SELECT accession as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.id_list+")"
     
     }
-    console.log(q)
+    //console.log('QQ',q)
     try {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
@@ -158,7 +158,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
     //let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     //let grep_fields = ['predictor','genome_id','accession']  // MUST BE order from file
     
-    let rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,fields,contig,predictor
+    let rows,row_array,sort_lst=[],obj2={},species,gid,otid,hmt,strain,fields,contig,predictor
     let search_id,lookup={},gid_collector={},gid_count = {},all_phage_search_ids_lookup = []
     
     try{
@@ -252,7 +252,8 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         for(gid in lookup){
             for(contig in lookup[gid]){
                 for(predictor in lookup[gid][contig]){
-                    sendlist.push({hitlist:lookup[gid][contig][predictor],gid:gid,contig:contig,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
+                    hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
+                    sendlist.push({hitlist:lookup[gid][contig][predictor],gid:gid,hmt:hmt,contig:contig,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
                 }
             }
         }
@@ -410,7 +411,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
     
-    let q,rows,row_array,sort_lst=[],obj2={},species,gid,otid,strain,gid_count = {},pid,orf_id,prod,gene,type
+    let q,rows,row_array,sort_lst=[],obj2={},species,gid,otid,hmt,strain,gid_count = {},pid,orf_id,prod,gene,type
     let tmp_obj = {}
     
     try{
@@ -480,6 +481,8 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                       
                     tmp_obj = {
                           gid:gid,
+                          otid:'',
+                          hmt:'',
                           species:'=>Genome Not Found in db<=',
                           strain:'',
                           acc:pts[2].toUpperCase(),
@@ -493,10 +496,13 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                     if(gid && C.genome_lookup.hasOwnProperty(gid)){
                       //if(gid){
                         otid = C.genome_lookup[gid]['otid']
+                        hmt = helpers.make_otid_display_name(otid),
                         strain = C.genome_lookup[gid]['strain']
                         species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
                         tmp_obj.species = species
                         tmp_obj.strain = strain
+                        tmp_obj.otid = otid
+                        tmp_obj.hmt = hmt
                     }
                         //console.log('tmp_obj',tmp_obj)
                         if(obj2.hasOwnProperty(gid)){

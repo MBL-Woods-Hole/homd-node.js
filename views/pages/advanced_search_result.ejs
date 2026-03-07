@@ -267,7 +267,7 @@ table.sortable thead {
                
                <table id='anno-table' class='result-table sortable'>
                <tr>
-                 <th>Genome-ID</th><th>Species (strain)</th>
+                 <th>Genome-ID</th><th>HMT-ID</th><th>Species (strain)</th>
                  
                  <th class='sorttable_nosort'># Hits</th>
                  <th class='sorttable_nosort'>Full Annotations</th>
@@ -276,6 +276,7 @@ table.sortable thead {
             <% gid = anno_sort_lst[i].gid %>
             <tr id='<%= gid %>' class='anno-row'>
                 <td nowrap class='center'><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
+                <td nowrap class='center'><a href='/taxa/tax_description?otid=<%= anno_list2[gid][0].otid %>'><%= anno_list2[gid][0].hmt %></a></td>
                 <td><i><%= anno_list2[gid][0].species %></i> <%= anno_list2[gid][0].strain %></td>
                    
                 <td nowrap class='center'>
