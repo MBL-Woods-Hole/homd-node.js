@@ -355,7 +355,7 @@ table.sortable thead {
                  
             <table id='phage-table' class='result-table sortable'>
             <tr>
-                     <th>Genome-ID</th><th>Accession (contig)</th><th>Predictor</th><th>Species (strain)</th>
+                     <th>Genome-ID</th><th>HMT-ID</th><th>Accession (contig)</th><th>Predictor</th><th>Species (strain)</th>
                      <th class='sorttable_nosort'>Hits</th>
                      
                      
@@ -366,7 +366,8 @@ table.sortable thead {
                 <% contig = phage_sort_lst[i].contig %>
                 <% predictor = phage_sort_lst[i].predictor %>
                 <tr>
-                  <td nowrap><%= gid %></td>
+                  <td nowrap><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
+                  <td nowrap><a href='/taxa/tax_description?otid=<%= phage_sort_lst[i].otid %>'><%= phage_sort_lst[i].hmt %></td>
                   <td nowrap><%= contig %></td>
                   <td nowrap><%= predictor %></td>
                   <td><%= phage_sort_lst[i].species %> (<%= phage_sort_lst[i].strain %>)</td>

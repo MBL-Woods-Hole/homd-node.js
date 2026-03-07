@@ -48,7 +48,7 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
     
     let list_of_otids = send_list.map(item => item.otid)
     
-    console.log('ALL::Count of OTIDs:',list_of_otids.length)
+    //console.log('ALL::Count of OTIDs:',list_of_otids.length)
     
     let table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
     
@@ -440,10 +440,10 @@ router.post('/anno_search_data', async (req, res) => {
    let search_text = req.body.search_text
     let format = req.body.format  // csv or fasta
     let id_list = JSON.parse(req.body.anno_ids)
-    console.log('id_list length',id_list.length)
-    console.log('anno',anno)
-    console.log('type',type)
-    console.log('format',format)
+    //console.log('id_list length',id_list.length)
+    //console.log('anno',anno)
+    //console.log('type',type)
+    //console.log('format',format)
     let fname,result_text,ext,q
     let dt = helpers.get_today_obj()
     //if anno is prokka or ncbi us .map to get all the pids from idlist
@@ -596,9 +596,9 @@ router.post('/anno_data_by_gid', async (req, res) => {
     let format = req.body.format  // csv or fasta
     //let id_list = JSON.parse(req.body.anno_ids)
     
-    console.log('anno',anno)
-    console.log('type',type)
-    console.log('format',format)
+    //console.log('anno',anno)
+    //console.log('type',type)
+    //console.log('format',format)
     let fname,result_text,ext,q
     let dt = helpers.get_today_obj()
     //if anno is prokka or ncbi us .map to get all the pids from idlist
@@ -721,7 +721,20 @@ router.post('/phage_search_data', async (req, res) => {
     let conn,fname,result_text,ext
     
     let dt = helpers.get_today_obj()
-    let head_text_array = ['Fasta_ID','Genome_ID','Contig','Predictor','seq_length',
+    let head_text_array = [
+        'Fasta_ID',
+        'Genome_ID',
+        'HMT-ID',
+            'Domain',
+            'Phylum',
+            'Class',
+            'Order',
+            'Family',
+            'Genus',
+            'Species',
+            'Subspecies',
+            'Strain',
+        'Contig','Predictor','seq_length',
             'accession','description']
     
     let q = "SELECT search_id,genome_id,contig,predictor,start,end,"
@@ -749,7 +762,7 @@ router.post('/phage_search_data', async (req, res) => {
             
             fname = ''
             ext = '.txt'
-            result_text = create_phage_table(rows, head_text_array, search_text)
+            result_text = create_phage_search_table(rows, head_text_array, search_text)
             
             
             if (type === 'browser') {
@@ -778,9 +791,10 @@ router.post('/phage_search_data', async (req, res) => {
    }
 });
 router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
+    // from PHAGE TABLE (not PHAGE Search)
     let dt = helpers.get_today_obj()
     const type = req.params.type
-    
+    console.log('in dld phage')
     
     let conn,fileFilterText,tableTsv
     //const sendList = Object.values(C.genome_lookup)
@@ -825,7 +839,7 @@ router.get('/dld_crispr_table/:type', function dld_crispr_table (req, res) {
     
     // get all crispr data from C.crispr_lookup
     
-    console.log('hello')
+    
         //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
         
     fileFilterText = 'HOMD.org Crispr-Cas Data:: All HOMD Data;' + ' Date: ' + dt.today
@@ -887,7 +901,8 @@ function create_full_crispr_table(lookup_obj,header_txt) {
     }
     return text
 }
-function create_phage_table(sql_rows,header_array,search_term) {
+function create_phage_search_table(sql_rows,header_array,search_term) {
+    let gid,otid,hmt,lineage,strain
     let text ='::Search String: "'+search_term+'"\n'
     text += header_array.join('\t') + '\n'
     for(let n in sql_rows){
@@ -895,11 +910,41 @@ function create_phage_table(sql_rows,header_array,search_term) {
         //['Fasta_ID','Genome_ID','Contig','Predictor','seq_length', 'bakta_core_product','bakta_core_note','bakta_EC','bakta_GO','bakta_COG',
         //  'accession','description']
         if(sql_rows[n].seq){
-           text += sql_rows[n].search_id +'\t'+sql_rows[n].genome_id+'\t'+sql_rows[n].contig
+            gid = sql_rows[n].genome_id
+            otid = C.genome_lookup[gid].otid
+            hmt = helpers.make_otid_display_name(otid)
+            strain = C.genome_lookup[gid].strain
+            lineage = C.taxon_lineage_lookup[otid]
+           text += sql_rows[n].search_id +'\t'+sql_rows[n].genome_id
+           
+           
+           text += '\t'+hmt
+           text += '\t'+lineage.domain
+           text += '\t'+lineage.phylum
+           text += '\t'+lineage.klass
+           text += '\t'+lineage.order
+           text += '\t'+lineage.family
+           text += '\t'+lineage.genus
+           text += '\t'+lineage.species
+           text += '\t'+lineage.subspecies
+           text += '\t'+strain
+           
+           
+           text += '\t'+sql_rows[n].contig
            text += '\t'+sql_rows[n].predictor+'\t'+sql_rows[n].seq_length
            text += '\t'+sql_rows[n].accession
            text += '\t'+sql_rows[n].description
            text += '\n'
+           
+           
+           
+           
+           
+           // text += sql_rows[n].search_id +'\t'+sql_rows[n].genome_id+'\t'+sql_rows[n].contig
+//            text += '\t'+sql_rows[n].predictor+'\t'+sql_rows[n].seq_length
+//            text += '\t'+sql_rows[n].accession
+//            text += '\t'+sql_rows[n].description
+//            text += '\n'
         }
     }
     return text
@@ -1080,10 +1125,7 @@ function create_anno_search_table(sql_rows,anno,headers,search_term) {
         }
     }else{
         //text='anno table: '+anno
-         console.log('sql_rows[0]',sql_rows[0])
-         console.log('ge',C.genome_lookup[sql_rows[0].gid])
-         console.log('ge2',C.taxon_lookup[C.genome_lookup[sql_rows[0].gid].otid])
-         console.log('ge3',C.taxon_lineage_lookup[C.genome_lookup[sql_rows[0].gid].otid])
+         
         for(let n in sql_rows){
             hmt = helpers.make_otid_display_name(C.genome_lookup[sql_rows[n].gid].otid)
             strain = C.genome_lookup[sql_rows[n].gid].strain

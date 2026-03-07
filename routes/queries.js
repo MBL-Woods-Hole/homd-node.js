@@ -233,8 +233,8 @@ export const get_contig = (gid, mid) => {   // always NCBI for taxon description
 };
 
 export const get_all_phage_for_download = () => {
-    let q = "SELECT genome_id,site,cenote_taker3 as cenote_count,cenote_coverage_bps,cenote_coverage_pct,"
-    q += "genomad as genomad_count,genomad_coverage_bps,genomad_coverage_pct,"
+    let q = "SELECT genome_id,site,cenote_count,cenote_coverage_bps,cenote_coverage_pct,"
+    q += "genomad_count,genomad_coverage_bps,genomad_coverage_pct,"
     q += "phage_id,type,contig,start,end"
     q += " FROM phage_stats"
     q += " JOIN phage_data using (genome_id)"
