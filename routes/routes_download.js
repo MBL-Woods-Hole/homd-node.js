@@ -476,7 +476,19 @@ router.post('/anno_search_data', async (req, res) => {
             q = "SELECT genome_id as gid,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
             q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef"
             q += " from `BAKTA`.orf WHERE core_ID in ("+unique_pidlst+")"
-            head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
+            head_text_array = [
+                'Genome_ID',
+                'HMT-ID',
+                'Domain',
+                'Phylum',
+                'Class',
+                'Order',
+                'Family',
+                'Genus',
+                'Species',
+                'Subspecies',
+                'Strain',
+                'Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
 
         }
     }else{
@@ -500,7 +512,21 @@ router.post('/anno_search_data', async (req, res) => {
             // table  PROKKA and NCBI
             q = "SELECT genome_id as gid,accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
             q += "length_na as lna from "+anno_cap+".orf WHERE protein_id in ("+unique_pidlst+")"
-            head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
+            //head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
+            // add HMT,taxonomy(inc.subsp),strain
+            head_text_array = [
+                'Genome_ID',
+                'HMT-ID',
+                'Domain',
+                'Phylum',
+                'Class',
+                'Order',
+                'Family',
+                'Genus',
+                'Species',
+                'Subspecies',
+                'Strain',
+                'Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
              
         }
         
@@ -1022,6 +1048,7 @@ function create_anno_table(sql_rows,anno,gid) {
 }
 ////
 function create_anno_search_table(sql_rows,anno,headers,search_term) {
+    let hmt,strain,lineage
     let text = anno.toUpperCase()+' ::Search String: "'+search_term+'"\n'
     text += headers.join("\t")+'\n'
     
@@ -1031,7 +1058,22 @@ function create_anno_search_table(sql_rows,anno,headers,search_term) {
         // ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
                 
         for(let n in sql_rows){
-            text += sql_rows[n].gid+'\t'+sql_rows[n].contig+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].length
+            hmt = helpers.make_otid_display_name(C.genome_lookup[sql_rows[n].gid].otid)
+            strain = C.genome_lookup[sql_rows[n].gid].strain
+            lineage = C.taxon_lineage_lookup[C.genome_lookup[sql_rows[n].gid].otid]
+            
+            text += sql_rows[n].gid
+            text += '\t'+hmt
+            text += '\t'+lineage.domain
+            text += '\t'+lineage.phylum
+            text += '\t'+lineage.klass
+            text += '\t'+lineage.order
+            text += '\t'+lineage.family
+            text += '\t'+lineage.genus
+            text += '\t'+lineage.species
+            text += '\t'+lineage.subspecies
+            text += '\t'+strain
+            text += '\t'+sql_rows[n].contig+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].length
             text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
             text += '\t'+sql_rows[n].bakta_EC+'\t'+sql_rows[n].bakta_GO+'\t'+sql_rows[n].bakta_COG
             text += '\t'+sql_rows[n].bakta_RefSeq+'\t'+sql_rows[n].bakta_UniParc+'\t'+sql_rows[n].bakta_UniRef
@@ -1039,9 +1081,27 @@ function create_anno_search_table(sql_rows,anno,headers,search_term) {
         }
     }else{
         //text='anno table: '+anno
-       
+         console.log('sql_rows[0]',sql_rows[0])
+         console.log('ge',C.genome_lookup[sql_rows[0].gid])
+         console.log('ge2',C.taxon_lookup[C.genome_lookup[sql_rows[0].gid].otid])
+         console.log('ge3',C.taxon_lineage_lookup[C.genome_lookup[sql_rows[0].gid].otid])
         for(let n in sql_rows){
-            text += sql_rows[n].gid+'\t'+sql_rows[n].acc+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].lna
+            hmt = helpers.make_otid_display_name(C.genome_lookup[sql_rows[n].gid].otid)
+            strain = C.genome_lookup[sql_rows[n].gid].strain
+            lineage = C.taxon_lineage_lookup[C.genome_lookup[sql_rows[n].gid].otid]
+            text += sql_rows[n].gid
+            text += '\t'+hmt
+            text += '\t'+lineage.domain
+            text += '\t'+lineage.phylum
+            text += '\t'+lineage.klass
+            text += '\t'+lineage.order
+            text += '\t'+lineage.family
+            text += '\t'+lineage.genus
+            text += '\t'+lineage.species
+            text += '\t'+lineage.subspecies
+            text += '\t'+strain
+            text += '\t'+sql_rows[n].acc+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].lna
+            
             text += '\t'+sql_rows[n].laa
             text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
             
