@@ -175,10 +175,10 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         //const rows = await get_grep_rows(grep_cmd);
         // [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
         const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
-        console.log('rows_lst length',row_array.length)
+        //console.log('rows_lst length',row_array.length)
         
         let total_length = row_array.length - 1
-        console.log('total_length',total_length)
+        //console.log('total_length',total_length)
         //rows = rows_lst.join('')
         if(total_length == 0){
         
@@ -252,8 +252,9 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         for(gid in lookup){
             for(contig in lookup[gid]){
                 for(predictor in lookup[gid][contig]){
-                    hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
-                    sendlist.push({hitlist:lookup[gid][contig][predictor],gid:gid,hmt:hmt,contig:contig,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
+                    otid = C.genome_lookup[gid].otid
+                    hmt = helpers.make_otid_display_name(otid)
+                    sendlist.push({hitlist:lookup[gid][contig][predictor],gid:gid,otid:otid,hmt:hmt,contig:contig,predictor:predictor,species:gid_collector[gid].species,strain:gid_collector[gid].strain})
                 }
             }
         }
@@ -805,7 +806,7 @@ function search_taxonomy(text_string){
 
     let refseqObj = {}
     allRefSeqObjList.filter((el) => {
-     console.log('refseq-el',el)
+     //console.log('refseq-el',el)
      for(let n in el){
          if(el[n].refseq_id.toLowerCase().includes(text_string) ||
             el[n].seqids.toLowerCase().includes(text_string)
