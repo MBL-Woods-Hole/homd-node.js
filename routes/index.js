@@ -762,8 +762,8 @@ function search_taxonomy(text_string){
       //console.log( 'el',el )
       if (Array.isArray(el[otidKeyList[n]]) && el[otidKeyList[n]].length > 0) {
         // we're catching any arrays: rrna_sequences, synonyms, sites, pangenomes, type_strains, ref_strains
-          //console.log('el',el)
-          if(el[otidKeyList[n]][0] && el[otidKeyList[n]].findIndex(element => element.toLowerCase().includes(text_string)) !== -1){
+          console.log('el',el)
+          if(el[otidKeyList[n]][0] && el[otidKeyList[n]].findIndex(element => element.toString().toLowerCase().includes(text_string)) !== -1){
               return el.otid
           }
     
