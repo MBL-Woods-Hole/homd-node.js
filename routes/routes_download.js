@@ -180,7 +180,22 @@ router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
   res.end()
     
 })
+router.get('/dld_tax_table/:version/', function dld_tax_table(req, res) {
+    // these are pre downloaded and reside in STATIC_DOWNLOADS
+    let version = req.params.version
+    if(version === 'V31'){
+        let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'HOMD_taxon_tableV31.xls')
+        res.download(fullpath)
+             
+    }else if(version === 'V42'){
+        let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'HOMD_taxon_tableV42.xls')
+        res.download(fullpath)
+    }else{
+      console.log('ERROR - no version')
+    }
+    return
 
+})
 router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
     //console.log('in dld abund - taxon')
     let dt = helpers.get_today_obj()
