@@ -1388,7 +1388,7 @@ function create_full_genome_table_gtdb (sqlrows, startText) {
 function create_genome_table (gids, source, type, startText) {
   let txt = startText + '\n'
   if (source === 'table') {
-    const headersRow = ['Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species', 'SubSpecies', 'Strain','No. Contigs',  'Total Length',   'Category','GC %']
+    const headersRow = ['Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species', 'SubSpecies', 'Strain','No. Contigs',  'Total Length',  'MAG', 'Assembly Level','GC %']
     txt += headersRow.join('\t')+'\n'
     ///console.log('SEQF5379.1',C.genome_lookup['SEQF5379.1'])
     for (let n in gids) {
@@ -1401,7 +1401,7 @@ function create_genome_table (gids, source, type, startText) {
       let species = C.taxon_lookup[obj.otid].species
       let subspecies = C.taxon_lookup[obj.otid].subspecies
       let hmt = helpers.make_otid_display_name(obj.otid)
-      const r = [ gid, hmt, genus, species, subspecies, obj.strain, obj.contigs, obj.combined_size, obj.category,obj.gc]
+      const r = [ gid, hmt, genus, species, subspecies, obj.strain, obj.contigs, obj.combined_size, obj.mag, obj.level, obj.gc]
       txt += r.join('\t') +'\n'
     }
   }
