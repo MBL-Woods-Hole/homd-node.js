@@ -15,7 +15,6 @@ import { exec, spawn } from 'child_process';
 import * as helpers from './helpers.js';
 import * as helpers_taxa from './helpers_taxa.js';
 
-//let hmt = 'HMT-'+("000" + otid).slice(-3)
 
 export const get_all_phyla = () => {
   let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'];

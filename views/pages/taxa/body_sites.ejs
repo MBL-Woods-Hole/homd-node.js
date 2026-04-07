@@ -117,7 +117,7 @@ tr.selected td{
         </thead>
         <% for(n in data){ %>
            <% otid = data[n].otid %>
-           <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+           <% taxidfullname = 'HMT-'+("0000" + otid).slice(-4); %>
            <% if(selected == otid){ %>
                <tr id='<%= otid %>' class='selected'>
             <% }else{ %>

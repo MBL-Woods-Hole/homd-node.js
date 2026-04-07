@@ -116,7 +116,7 @@ table.sortable tbody tr::before {
      <% for(n in list){ %>
      
       
-     <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
+     <% taxidfullname = 'HMT-'+("0000" + list[n]['otid']).slice(-4); %>
        <tr>
        <td class='center'><%= list[n].study_id %></td>
       

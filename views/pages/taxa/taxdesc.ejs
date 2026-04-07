@@ -221,8 +221,9 @@
     padding:10px;
 }
 </style>
+
 <%- include('../../partials/header_html'); %>
-<% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+
 <% data_lookup = JSON.parse(data1) %>
 <% data_pubs = JSON.parse(data4) %>
 <% data_info = JSON.parse(tinfo) %>
@@ -231,8 +232,9 @@
 <% links = JSON.parse(links) //refseq  %>
 <% sites = JSON.parse(sites) %>
 
-<% taxidfullname = ("000" + otid).slice(-3); %>
-<% taxidfullnameplus = 'HMT-'+taxidfullname; %>
+<% taxidfullnameplus = "HMT-"+("0000" + otid).slice(-4); %>
+
+
 <% images = JSON.parse(image_array)  %>
 <!-- <link rel="stylesheet" type="text/css" href="tooltipster/dist/css/tooltipster.bundle.min.css" /> -->
 <body>
@@ -889,4 +891,5 @@ for(n in closers){
       modal.style.display = "none";
     }
 }
+
 </script>

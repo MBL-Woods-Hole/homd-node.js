@@ -639,7 +639,7 @@ router.get('/tax_description', async function tax_description(req, res) {
     //helpers.print(data1)
     // DROPPED
     lookup_data = C.taxon_lookup[otid]
-    let hmt = 'HMT-' + ("000" + otid).slice(-3)
+    let hmt = helpers.make_otid_display_name(otid)
     let message = "This TaxonID (" + hmt + ") has been Dropped.<br>Reason: " + lookup_data.notes
     //let dropped_notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
     //data1.notes= "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
@@ -1665,7 +1665,7 @@ router.get('/tree_d3', function tree_d3(req, res) {
       //let treedata = JSON.parse(data);
       let refseq_tree_lookup = {}
       for (let otid in C.refseq_lookup) {
-        let hmt = 'HMT-' + ("000" + otid).slice(-3)
+        let hmt = helpers.make_otid_display_name(otid)
         //console.log(otid, C.refseq_lookup[otid], C.taxon_lineage_lookup[otid])
         for (let n in C.refseq_lookup[otid]) {
 

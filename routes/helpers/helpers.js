@@ -14,7 +14,7 @@ import path from 'path';
 import { exec, spawn } from 'child_process';
 //import helpers from './helpers.js';
 import  * as helpers_taxa from './helpers_taxa.js'
-//let hmt = 'HMT-'+("000" + otid).slice(-3)
+
 
 export const getKeyByValue = (object, value) => {
   return Object.keys(object).find(key => object[key] === value);
@@ -191,7 +191,7 @@ export const print_size = (obj, index, self) =>{
 };
 
 export const make_otid_display_name = (otid) =>{
-    return 'HMT-'+("000" + otid.toString()).slice(-3);
+    return 'HMT-'+("0000" + otid.toString()).slice(-4);
 };
 
 export const addslashes = (str) => (str + '').replace(/[\]\[\\"']/g, '\\$&');

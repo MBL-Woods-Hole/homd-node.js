@@ -1188,11 +1188,8 @@ function create_taxon_table(otids, source, type, head_txt) {
             let otid = otids[n].toString()
             if(C.dropped_taxids.indexOf(otid) != -1){
                 let data1 = C.taxon_lookup[otid]
-                //console.log('data1',data1)
-                // let r = [("000" + otid).slice(-3),,
-//                         
-//                         ]
-                let row = 'HMT-'+('000' + otid).slice(-3) +  '\tDROPPED Taxon\t\t\t\t\t' + data1.genus+'\t'+data1.species  //r.join('\t')
+               
+                let row = helpers.make_otid_display_name(otid) +  '\tDROPPED Taxon\t\t\t\t\t' + data1.genus+'\t'+data1.species  //r.join('\t')
                 txt += '\n'+row
                 
             }else{
@@ -1234,7 +1231,7 @@ function create_taxon_table(otids, source, type, head_txt) {
     //                species_pts.shift()
     //                let species = species_pts.join(' ')
                    
-                   otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
+                   otid_pretty = helpers.make_otid_display_name(otids[n])
                    let species = o2.species.replace(o2.genus,'').trim()  // removing gens from species name
                    let r = [otid_pretty,o2.domain,o2.phylum,o2.klass,o2.order,o2.family,o2.genus,species,o2.subspecies,
                             o1.naming_status,o1.cultivation_status,sites,tstrains,rnaseq,syn,o1.ncbi_taxid
@@ -1253,7 +1250,7 @@ function create_taxon_table(otids, source, type, head_txt) {
        headers = ['HMT-ID','Domain','Phylum','Class','Order','Family','Genus','Species','Subspecies']
        txt +=  headers.join('\t')+'\n'
        for(let n in otids){
-            otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
+            otid_pretty = helpers.make_otid_display_name(otids[n])
             //console.log('hmt',otids[n])
             //console.log(C.taxon_lineage_lookup[otids[n]])
             if(otids[n] in C.taxon_lineage_lookup){
@@ -1275,7 +1272,7 @@ function create_taxon_table(otids, source, type, head_txt) {
         txt +=  headers.join('\t')+'\n'
         
         for(let n in otids){
-            otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
+            otid_pretty = helpers.make_otid_display_name(otids[n])
             //console.log(C.taxon_lineage_lookup[otids[n]])
             old_lineage = ''
             if(otids[n] in C.taxon_lineage_lookup){
@@ -1315,7 +1312,7 @@ function create_taxon_table(otids, source, type, head_txt) {
                    ]
         txt +=  headers.join('\t')+'\n'
         for(let n in otids){
-            otid_pretty = 'HMT-'+("000" + otids[n]).slice(-3);
+            otid_pretty = helpers.make_otid_display_name(otids[n])
             old_lineage = ''
             if(otids[n] in C.taxon_lineage_lookup){
                 for( let m in C.ranks){

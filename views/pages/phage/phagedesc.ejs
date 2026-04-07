@@ -42,7 +42,7 @@
     <% } %>
     </tr><tr>
 	  <% if(data.host_otid != ''){ %>
-	    <% taxidfullname = 'HMT-'+("000" + data.host_otid).slice(-3); %>
+	    <% taxidfullname = 'HMT-'+("0000" + data.host_otid).slice(-4); %>
 	    <td nowrap><strong>Host Species (Taxon-ID)</strong>:</td><td><a href='/taxa/tax_description?otid=<%= data.host_otid %>'><i><%= data.host_ncbi %></i> <small>(<%= taxidfullname %>)</small></a></td>
       <% }else{ %>
         <td nowrap><strong>Host Species (Taxon-ID)</strong>:</td><td><i><%= data.host_ncbi %></i> <small>(none found)</small></td>

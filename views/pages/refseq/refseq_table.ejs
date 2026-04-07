@@ -98,7 +98,7 @@ table.sortable tbody tr::before {
     </thead>
     <tbody>
     <% for(let n in rs){ %>
-        <% taxidfullname = 'HMT-'+("000" + rs[n].otid).slice(-3); %>
+        <% taxidfullname = 'HMT-'+("0000" + rs[n].otid).slice(-4); %>
         <tr>
             <td><a href='/taxa/tax_description?otid=<%= rs[n].otid %>'><%= taxidfullname %></a></td>
             <td><%= rs[n].refseq_id %></td>

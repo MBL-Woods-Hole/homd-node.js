@@ -120,7 +120,7 @@ thead th { position: sticky; top: 0; }
      <% for(n in list){ %>
        <% otid = list[n].otid %>
        <tr id='<%= otid %>'>
-       <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+       <% taxidfullname = 'HMT-'+("0000" + otid).slice(-4); %>
        <td class="col1" nowrap ><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname  %></a></td>
        <td class="col2 ellipsis" nowrap title='<%= list[n].genus  %>'><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
        <td class="col3 ellipsis" nowrap title='<%= list[n].species  %>'><i><b><a href='tax_description?otid=<%= otid %>'><%= list[n].species  %></a></b></i></td>

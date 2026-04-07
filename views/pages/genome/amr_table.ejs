@@ -113,7 +113,7 @@ thead th { position: sticky; top: 0; }
          <% for (n in genomelist){ %>
              <% gid = genomelist[n].gid %>
              
-             <% taxidfullname = "HMT-"+("000" + datarows[gid].otid).slice(-3); %>
+             <% taxidfullname = "HMT-"+("0000" + datarows[gid].otid).slice(-4); %>
              <tr>
              <td class='w-med'><a href='/genome/genome_description?gid=<%= gid %>'><%= gid %></a></td>
              

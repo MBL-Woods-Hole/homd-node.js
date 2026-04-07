@@ -14,7 +14,6 @@ import { exec, spawn } from 'child_process';
 import * as helpers from './helpers.js';
 import * as helpers_genomes from './helpers_genomes.js';
 
-//let hmt = 'HMT-'+("000" + otid).slice(-3)
 
 export const get_default_annot_filter = () => {
   let defaultfilter = {

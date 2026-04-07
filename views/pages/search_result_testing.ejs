@@ -52,8 +52,6 @@ body.loading {
     <%- include('../partials/navbar'); %>
     <div class='page-content' > 
        <p class='title h3'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span></small>]</p>
-<!-- 'HMT-'+("000" + otid).slice(-3);  -->
- 
     
     <br>Matches from Bacterial Taxon Names: (<%= Object.keys(lineageids).length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
   <% if( Object.keys(lineageids).length > 0 ){ %>
@@ -61,7 +59,7 @@ body.loading {
     <% n = 0 %>
     <% for(otid in lineageids){ %>
        <% n += 1 %>
-       <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+       <% taxidfullname = 'HMT-'+("0000" + otid).slice(-4); %>
        <br><%= parseInt(n) %>) <a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %></a> 
        <em><%= lineageids[otid] %></em>
   <% } %>
@@ -74,7 +72,7 @@ body.loading {
     <div class='search-box'>
     <% for(n in otids){ %>
      <% otid = otids[n].otid %>
-     <% taxidfullname = 'HMT-'+("000" + otid).slice(-3); %>
+     <% taxidfullname = 'HMT-'+("0000" + otid).slice(-4); %>
      <br><%= parseInt(n)+1 %>) <a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname %>:
      <%- otids[n].species %></a>
   <% } %>

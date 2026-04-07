@@ -182,7 +182,7 @@ thead th { position: sticky; top: 0; }
     
     <% for(n in ginfo){ %>
       
-      <% taxidfullname = "HMT-"+("000" + ginfo[n].otid).slice(-3); %>
+      <% taxidfullname = "HMT-"+("0000" + ginfo[n].otid).slice(-4); %>
       <% rowid =  ginfo[n].gid.split('.')[0]; %>
       <tr id='<%= rowid %>' >
          <% if(filter_on == "off"){  %>

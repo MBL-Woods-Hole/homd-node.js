@@ -85,7 +85,7 @@ thead th { position: sticky; top: 0; }
      </thead>
      <tbody>
      <% for(n in list){ %>
-     <% taxidfullname = 'HMT-'+("000" + list[n]['otid']).slice(-3); %>
+     <% taxidfullname = 'HMT-'+("0000" + list[n]['otid']).slice(-4); %>
        <tr>
        
        <td class='col1'><%= parseInt(n)+1 %></td>

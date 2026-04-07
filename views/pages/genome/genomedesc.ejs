@@ -118,8 +118,8 @@
 <% checkm_obj=JSON.parse(checkm) %>
 <link rel="stylesheet" href="/css/genome_pages.css">
 <link href="/css/select2.min.css" rel="stylesheet" />
-<% taxidfullname=("000" + ginfo.otid).slice(-3); %>
-<% taxidfullnameplus="HMT-" +taxidfullname; %>
+
+<% taxidfullnameplus = "HMT-" +("0000" + ginfo.otid).slice(-4); %>
 <% gc2=(parseFloat(ginfo.gc)/100).toFixed(2) %>
 <% var cfg=JSON.parse(config) %>
 <% var version_info=JSON.parse(ver_info) %>
