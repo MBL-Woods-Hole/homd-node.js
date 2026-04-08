@@ -56,6 +56,9 @@
   border:1px solid tan;
   width:50%;
 }
+.font-size-xsm{
+   font-size:0.6em;
+}
 </style>
 
 <% dewhirst_data = JSON.parse(dewhirst) %>
@@ -161,10 +164,6 @@
 </div>
 </center> 
 
-
-
-
-  
 <div id="legend" class="legend">
   <%- include('./ecology_lollipop_legend'); %>
 </div>
@@ -172,12 +171,90 @@
   <a href='#' onclick='show_legend()'>Show Legend</a>
 </div>
 <div  class="grid-container"  >
-<div  class="" >
 
+
+<div  class="" >
+<center>
+          <div class='plot-title'>
+            <small>
+            Eren V1-V3 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a>
+            </small> <span class='font-size-xsm'>(data from healthy subjects)</span>
+            </small>
+            
+          </div>
+          <% if(notes.erenv1v3 == ''){ %>
+            <div class='nonote'>No Notes</div>
+          <% }else{ %>
+            <% parts = notes.erenv1v3.split(';') %>
+            
+            <div class='note'>
+            <b>Notes:</b><br>
+            <% for(n in parts){ %>
+             <%- parts[n] %><br><br>
+            <% } %>
+            </div>
+          <% } %>
+        
+          <div class='plot' >
+            <div id="plot_log_erenv1v3_here"></div> 
+          </div>
+        
+        <br>
+        <% if(Object.keys(erenv1v3_data).length !== 0){ %>
+          <div class='abund-table-div'>
+            <%- erenv1v3_table %>
+          </div>  
+        <% } %>
+        </center>
+       
+</div>
+    <!-- END Eren v1v3 -->
+<div  class="" >
           <center>
           <div class='plot-title'>
             <small>
-            HMP 16S RefSeq (V1-V3) <small>(not published)</small>
+            Eren V3-V5 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
+             <span class='font-size-xsm'>(data from healthy subjects)</span>
+            </small>
+            
+          </div>
+          <% if(notes.erenv3v5 == ''){ %>
+            <div class='nonote'>No Notes</div>
+          <% }else{ %>
+            <% parts = notes.erenv3v5.split(';') %>
+            
+            <div class='note'>
+            <b>Notes:</b><br>
+            <% for(n in parts){ %>
+             <%- parts[n] %><br><br>
+            <% } %>
+            </div>
+          <% } %>
+        
+          <div class='plot' >
+            <div id="plot_log_erenv3v5_here"></div> 
+          </div>
+        <br>
+        <% if(Object.keys(erenv3v5_data).length !== 0){ %>
+          <div class='abund-table-div'>
+            <%- erenv3v5_table %>
+          </div>  
+        <% } %>  
+        </center>
+    <!-- END Eren v3v5 -->
+    
+    
+</div>  <!-- eren35 -->
+
+
+
+
+<div  class="" >
+          <center>
+          <div class='plot-title'>
+            <small>
+            Human Microbiome Project 16S RefSeq (V1-V3) <small>(not published)</small>
+             <span class='font-size-xsm'>(data from healthy subjects)</span>
             </small>
           </div>
           
@@ -212,7 +289,8 @@
           <center>
           <div class='plot-title'>
             <small>
-            HMP 16S RefSeq (V3-V5) <small>(not published)</small>
+            Human Microbiome Project 16S RefSeq (V3-V5) <small>(not published)</small>
+             <span class='font-size-xsm'>(data from healthy subjects)</span>
             </small>
             
           </div>
@@ -249,6 +327,7 @@
           <div class='plot-title'>
             <small>
             Dewhirst (35x9) <small>(not published)</small>
+             <span class='font-size-xsm'>(data from healthy subjects)</span>
             </small>
             
           </div>
@@ -282,7 +361,8 @@
           <center>
           <div class='plot-title'>
             <small>
-            HMP Metaphlan <small>(not published)</small>
+            Human Microbiome Project Metaphlan <small>(not published)</small>
+             <span class='font-size-xsm'>(data from healthy subjects)</span>
             </small>
             
           </div>
@@ -314,76 +394,7 @@
 </div>
     <!-- END Metaphlan -->
     
-<div  class="" >
-<center>
-          <div class='plot-title'>
-            <small>
-            Eren V1-V3 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
-            </small>
-            
-          </div>
-          <% if(notes.erenv1v3 == ''){ %>
-            <div class='nonote'>No Notes</div>
-          <% }else{ %>
-            <% parts = notes.erenv1v3.split(';') %>
-            
-            <div class='note'>
-            <b>Notes:</b><br>
-            <% for(n in parts){ %>
-             <%- parts[n] %><br><br>
-            <% } %>
-            </div>
-          <% } %>
-        
-          <div class='plot' >
-            <div id="plot_log_erenv1v3_here"></div> 
-          </div>
-        
-        <br>
-        <% if(Object.keys(erenv1v3_data).length !== 0){ %>
-          <div class='abund-table-div'>
-            <%- erenv1v3_table %>
-          </div>  
-        <% } %>
-        </center>
-       
-</div>
-    <!-- END Eren v1v3 -->
-<div  class="" >
-          <center>
-          <div class='plot-title'>
-            <small>
-            Eren V3-V5 <small><a href='https://www.pnas.org/doi/abs/10.1073/pnas.1409644111' target='_blank'>www.pnas.org</a></small>
-            </small>
-            
-          </div>
-          <% if(notes.erenv3v5 == ''){ %>
-            <div class='nonote'>No Notes</div>
-          <% }else{ %>
-            <% parts = notes.erenv3v5.split(';') %>
-            
-            <div class='note'>
-            <b>Notes:</b><br>
-            <% for(n in parts){ %>
-             <%- parts[n] %><br><br>
-            <% } %>
-            </div>
-          <% } %>
-        
-          <div class='plot' >
-            <div id="plot_log_erenv3v5_here"></div> 
-          </div>
-        <br>
-        <% if(Object.keys(erenv3v5_data).length !== 0){ %>
-          <div class='abund-table-div'>
-            <%- erenv3v5_table %>
-          </div>  
-        <% } %>  
-        </center>
-    <!-- END Eren v3v5 -->
-    
-    
-</div>  <!-- eren35 -->
+
 
 
 </div>  <!-- main-box -->
