@@ -360,6 +360,13 @@ p {
   border: 1px solid black;
   color: white;
 }
+.pill-lavender-lg {
+  background-color: lavender;
+  border: 1px solid black;
+  color: black;
+  width:150px;
+  font-size:18px;
+}
 .pill-grayed {
   background-color: lightgrey;
   border: 1px solid grey;
