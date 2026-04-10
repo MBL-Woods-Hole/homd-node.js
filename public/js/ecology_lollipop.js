@@ -1,25 +1,25 @@
 
 
 
-plots = ['hmprefseqv1v3', 'hmprefseqv3v5', 'dewhirst', 'hmpmetaphlan', 'erenv1v3', 'erenv3v5']
+plots = ['hmpv1v3', 'hmpv3v5', 'dewhirst', 'metaphlan', 'erenv1v3', 'erenv3v5']
 metadata ={}
-metadata['hmprefseqv1v3'] = {
-    "data":hmprefseqv1v3,"target":"plot_log_hmp_refseqv1v3_here","plot_name":"HMP 16S RefSeq V1-V3","tt":tooltips.hmprefseqv1v3_log
+metadata['hmpv1v3'] = {
+    "data":hmpv1v3_data,"target":"plot_log_hmpv1v3_here","plot_name":"HMP 16S RefSeq V1-V3","tt":tooltips.hmpv1v3_log
     }
-metadata['hmprefseqv3v5'] = {
-    "data":hmprefseqv3v5,"target":"plot_log_hmp_refseqv3v5_here","plot_name":"HMP 16S RefSeq V3-V5","tt":tooltips.hmprefseqv3v5_log
+metadata['hmpv3v5'] = {
+    "data":hmpv3v5_data,"target":"plot_log_hmpv3v5_here","plot_name":"HMP 16S RefSeq V3-V5","tt":tooltips.hmpv3v5_log
     } 
 metadata['dewhirst'] = {
-    "data":dewhirst,"target":"plot_log_dewhirst_here","plot_name":"Dewhirst (35x9)","tt":tooltips.dewhirst_log
+    "data":dewhirst_data,"target":"plot_log_dewhirst_here","plot_name":"Dewhirst (35x9)","tt":tooltips.dewhirst_log
     } 
-metadata['hmpmetaphlan'] = {
-    "data":hmpmetaphlan,"target":"plot_log_hmp_metaphlan_here","plot_name":"HMP Metaphlan","tt":tooltips.hmpmetaphlan_log
+metadata['metaphlan'] = {
+    "data":metaphlan_data,"target":"plot_log_metaphlan_here","plot_name":"HMP Metaphlan","tt":tooltips.metaphlan_log
     }
 metadata['erenv1v3'] = {
-    "data":erenv1v3,"target":"plot_log_erenv1v3_here","plot_name":"Eren V1-V3","tt":tooltips.erenv1v3_log
+    "data":erenv1v3_data,"target":"plot_log_erenv1v3_here","plot_name":"Eren V1-V3","tt":tooltips.erenv1v3_log
     }
 metadata['erenv3v5'] = {
-    "data":erenv3v5,"target":"plot_log_erenv3v5_here","plot_name":"Eren V3-V5","tt":tooltips.erenv3v5_log
+    "data":erenv3v5_data,"target":"plot_log_erenv3v5_here","plot_name":"Eren V3-V5","tt":tooltips.erenv3v5_log
     }
 for(let i = 0; i < plots.length; i++) {
     //console.log(metadata[plots[i]])
@@ -29,10 +29,10 @@ for(let i = 0; i < plots.length; i++) {
 // dataNDs = data_ary[1]
 // console.log(data_ary[0])
 function create_plot(obj){
-    plot_data = obj['data']
+    plot_data = obj.data
     //console.log(obj['target'])
     if(Object.keys(plot_data).length == 0){
-       document.getElementById(obj['target']).innerHTML = "<span class='nodata'>No Data</span>"
+       document.getElementById(obj.target).innerHTML = "<span class='nodata'>No Data</span>"
     }else{
         // append the svg object to the body of the page
         //console.log('xx',rank)
@@ -41,7 +41,7 @@ function create_plot(obj){
         data_ary = plot_data.filter( (x) => { return x.avg > 0})
         ND_ary   = plot_data.filter( (x) => { return x.avg == 0})
         data = data_ary
-        var svg = d3.select("#"+obj['target'])
+        var svg = d3.select("#"+obj.target)
               .append("svg")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom)
@@ -49,20 +49,20 @@ function create_plot(obj){
               .attr("transform",
                   "translate(" + margin.left + "," + margin.top + ")");
         var mouseover = function(e,d){ 
-        var plotName = obj['plot_name'] //'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
+        var plotName = obj.plot_name //'HMP 16S RefSeq V1-V3';//d3.select(this.parentNode).datum().key;
         var siteName = siteLongNames[d.site]
         var plotValue = d.avg;
         var prev = d.prev;
         obj['tt'].html(plotName+"<br>"+"Lineage: "+lineage+"<br>"+"Body Site: <span style='border:1px solid black;padding:1px 8px;background:"+site_colors_js[d.site]+";'></span>&nbsp;&nbsp;" + siteName + "<br>" + "Abundance: " + plotValue+" % "+ "<br>" + "Prevalence: " + prev+" %")
          //console.log(e.x,e.y)
-            return obj['tt'].style("visibility", "visible");
+            return obj.tt.style("visibility", "visible");
         }
         var mousemove = function(e,d) {
-            return obj['tt'].style("left", (e.pageX+20) + "px")
+            return obj.tt.style("left", (e.pageX+20) + "px")
                     .style("top",  (e.pageY) + "px")
         }
         var mouseleave = function(d) {
-            return obj['tt'].style("visibility", "hidden");
+            return obj.tt.style("visibility", "hidden");
         }
         var abund_scale_x = d3.scaleBand()
             .range([ 0, (width/2)-gap ])

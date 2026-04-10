@@ -1350,7 +1350,7 @@ router.get('/ecology', function ecology(req, res) {
   //let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
   let dewhirst_data = {}, erenv1v3_data = {}, erenv3v5_data = {}, hmp_metaphlan_data = {}, hmp_refseqv1v3_data = {}, hmp_refseqv3v5_data = {};
   //let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
-  let dewhirst_max = 0, erenv1v3_max = 0, erenv3v5_max = 0, hmp_metaphlan_max = 0, hmp_refseqv1v3_max = 0, hmp_refseqv3v5_max = 0;
+  //let dewhirst_max = 0, erenv1v3_max = 0, erenv3v5_max = 0, hmp_metaphlan_max = 0, hmp_refseqv1v3_max = 0, hmp_refseqv3v5_max = 0;
   //let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
   let erenv1v3_table = '', erenv3v5_table = '', dewhirst_table = '', hmp_metaphlan_table = '', hmp_refseqv1v3_table, hmp_refseqv3v5_table;
   //console.log('rank: '+rank+' name: '+tax_name);
@@ -1392,7 +1392,7 @@ router.get('/ecology', function ecology(req, res) {
   }
   //console.log('node',node)
   let lineage_list = helpers_taxa.make_lineage(node)
-  
+  let has_data = {erenv1v3:0,erenv3v5:0,hmpv1v3:0,hmpv3v5:0,metaphlan:0,dewhirst:0}
   if (!lineage_list[0]) {
     lineage_list[0] = ''
     console.log('ERROR Lineage')
@@ -1400,7 +1400,8 @@ router.get('/ecology', function ecology(req, res) {
     if (lineage_list[0] in C.abundance_lookup) {
 
       if ('dewhirst' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['dewhirst']).length !== 0) {
-        dewhirst_max = C.abundance_lookup[lineage_list[0]]['max_dewhirst']
+        has_data.dewhirst = 1
+        //dewhirst_max = C.abundance_lookup[lineage_list[0]]['max_dewhirst']
         //console.log('in Dewhirst')
         dewhirst_data = Object.values(C.abundance_lookup[lineage_list[0]]['dewhirst'])
         dewhirst_data = sort_obj_by_abundance_order(dewhirst_data, C.dewhirst_abundance_order)
@@ -1412,7 +1413,8 @@ router.get('/ecology', function ecology(req, res) {
         }
       }
       if ('eren_v1v3' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['eren_v1v3']).length !== 0) {
-        erenv1v3_max = C.abundance_lookup[lineage_list[0]]['max_erenv1v3']
+        has_data.erenv1v3 = 1
+        //erenv1v3_max = C.abundance_lookup[lineage_list[0]]['max_erenv1v3']
         erenv1v3_data = Object.values(C.abundance_lookup[lineage_list[0]]['eren_v1v3'])
         erenv1v3_data = sort_obj_by_abundance_order(erenv1v3_data, C.eren_abundance_order)
         // order by constants.eren_abundance_order
@@ -1424,7 +1426,8 @@ router.get('/ecology', function ecology(req, res) {
         }
       }
       if ('eren_v3v5' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['eren_v3v5']).length !== 0) {
-        erenv3v5_max = C.abundance_lookup[lineage_list[0]]['max_erenv3v5']
+        has_data.erenv3v5 = 1
+        //erenv3v5_max = C.abundance_lookup[lineage_list[0]]['max_erenv3v5']
         erenv3v5_data = Object.values(C.abundance_lookup[lineage_list[0]]['eren_v3v5'])
 
         erenv3v5_data = sort_obj_by_abundance_order(erenv3v5_data, C.eren_abundance_order)
@@ -1437,7 +1440,8 @@ router.get('/ecology', function ecology(req, res) {
         }
       }
       if ('hmp_metaphlan' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_metaphlan']).length !== 0) {
-        hmp_metaphlan_max = C.abundance_lookup[lineage_list[0]]['max_hmp_metaphlan']
+        has_data.metaphlan = 1
+        //hmp_metaphlan_max = C.abundance_lookup[lineage_list[0]]['max_hmp_metaphlan']
         hmp_metaphlan_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_metaphlan'])
 
         hmp_metaphlan_data = sort_obj_by_abundance_order(hmp_metaphlan_data, C.hmp_metaphlan_abundance_order)
@@ -1450,7 +1454,8 @@ router.get('/ecology', function ecology(req, res) {
         }
       }
       if ('hmp_refseq_v1v3' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v1v3']).length !== 0) {
-        hmp_refseqv1v3_max = C.abundance_lookup[lineage_list[0]]['max_hmp_refseq_v1v3']
+        has_data.hmpv1v3 = 1
+        //hmp_refseqv1v3_max = C.abundance_lookup[lineage_list[0]]['max_hmp_refseq_v1v3']
         hmp_refseqv1v3_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v1v3'])
         hmp_refseqv1v3_data = sort_obj_by_abundance_order(hmp_refseqv1v3_data, C.hmp_refseq_abundance_order)
         //console.log('eren3v5-sorted',erenv3v5_data)
@@ -1462,7 +1467,8 @@ router.get('/ecology', function ecology(req, res) {
         }
       }
       if ('hmp_refseq_v3v5' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v3v5']).length !== 0) {
-        hmp_refseqv3v5_max = C.abundance_lookup[lineage_list[0]]['max_hmp_refseq_v3v5']
+        has_data.hmpv3v5 = 1
+        //hmp_refseqv3v5_max = C.abundance_lookup[lineage_list[0]]['max_hmp_refseq_v3v5']
         hmp_refseqv3v5_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v3v5'])
         hmp_refseqv3v5_data = sort_obj_by_abundance_order(hmp_refseqv3v5_data, C.hmp_refseq_abundance_order)
         //console.log('eren3v5-sorted',erenv3v5_data)
@@ -1477,7 +1483,7 @@ router.get('/ecology', function ecology(req, res) {
     }
   }
   children_list.sort()
-  //console.log('children_list',children_list)
+  
 
   if (C.hmp_v3v5_to_suppress.indexOf(otid) !== -1) {
     hmp_refseqv3v5_notes = 'No data – the v3v5 region of the 16S rRNA gene does not distinguish this species from its close relatives.'
@@ -1500,31 +1506,31 @@ router.get('/ecology', function ecology(req, res) {
     lineage: lineage_string,
     lin: lineage_list[0],
     rank: rank,
-    max: JSON.stringify({ 'hmp_refseqv1v3': hmp_refseqv1v3_max, 'hmp_refseqv3v5': hmp_refseqv3v5_max, 'hmp_metaphlan': hmp_metaphlan_max, 'dewhirst': dewhirst_max, 'erenv1v3': erenv1v3_max, 'erenv3v5': erenv3v5_max }),
+    //max: JSON.stringify({ 'hmp_refseqv1v3': hmp_refseqv1v3_max, 'hmp_refseqv3v5': hmp_refseqv3v5_max, 'hmp_metaphlan': hmp_metaphlan_max, 'dewhirst': dewhirst_max, 'erenv1v3': erenv1v3_max, 'erenv3v5': erenv3v5_max }),
     otid: otid,  // zero unless species (or subspecies)
     genera: JSON.stringify(genera),
     text_file: text[0],
     page: page,
     text_format: text[1],
     children: JSON.stringify(children_list),
-    notes: JSON.stringify({ 'hmp_refseqv1v3': hmp_refseqv1v3_notes, 'hmp_refseqv3v5': hmp_refseqv3v5_notes, 'hmp_metaphlan': hmp_metaphlan_notes, 'dewhirst': dewhirst_notes, 'erenv1v3': erenv1v3_notes, 'erenv3v5': erenv3v5_notes }),
-
+    notes: JSON.stringify({ 'hmpv1v3': hmp_refseqv1v3_notes, 'hmpv3v5': hmp_refseqv3v5_notes, 'metaphlan': hmp_metaphlan_notes, 'dewhirst': dewhirst_notes, 'erenv1v3': erenv1v3_notes, 'erenv3v5': erenv3v5_notes }),
+    has_data: JSON.stringify(has_data),
+    
     dewhirst_table: dewhirst_table,
     erenv1v3_table: erenv1v3_table,
     erenv3v5_table: erenv3v5_table,
-    hmp_metaphlan_table: hmp_metaphlan_table,
-    hmp_refseqv1v3_table: hmp_refseqv1v3_table,
-    hmp_refseqv3v5_table: hmp_refseqv3v5_table,
-    //segata: JSON.stringify(segata_data),
+    metaphlan_table: hmp_metaphlan_table,
+    hmpv1v3_table: hmp_refseqv1v3_table,
+    hmpv3v5_table: hmp_refseqv3v5_table,
 
     dewhirst: JSON.stringify(dewhirst_data),
     erenv1v3: JSON.stringify(erenv1v3_data),
     erenv3v5: JSON.stringify(erenv3v5_data),
-    hmp_metaphlan: JSON.stringify(hmp_metaphlan_data),
-    hmp_refseqv1v3: JSON.stringify(hmp_refseqv1v3_data),
-    hmp_refseqv3v5: JSON.stringify(hmp_refseqv3v5_data),
+    metaphlan: JSON.stringify(hmp_metaphlan_data),
+    hmpv1v3: JSON.stringify(hmp_refseqv1v3_data),
+    hmpv3v5: JSON.stringify(hmp_refseqv3v5_data),
+    
     ver_info: JSON.stringify(C.version_information),
-
     site_colors: JSON.stringify(C.abundance_site_colors),
   })
 })
@@ -2157,7 +2163,7 @@ function build_abundance_table(cite, data, order) {
   html += '<tr><th>Avg (%)</th>'
   for (let n in data) {
     datapt = (parseFloat(data[n].avg)).toFixed(3)
-    if (datapt === 'NaN') {
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) {
       datapt = ''
     }
     html += "<td class='right-justify'>" + datapt + "</td>"
@@ -2167,14 +2173,14 @@ function build_abundance_table(cite, data, order) {
   html += '<tr><th>10<sup>th</sup>p</th>'
   for (let n in data) {
     datapt = (parseFloat(data[n]['10p'])).toFixed(3)
-    if (datapt === 'NaN') { datapt = ''; }
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = ''; }
     html += "<td class='right-justify'>" + datapt + "</td>"
   }
   html += "</tr>"
   html += "<tr><th>90<sup>th</sup>p</th>"
   for (let n in data) {
     datapt = (parseFloat(data[n]['90p'])).toFixed(3)
-    if (datapt === 'NaN') { datapt = ''; }
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = ''; }
     html += "<td class='right-justify'>" + datapt + "</td>"
   }
   html += "</tr>"
@@ -2184,7 +2190,7 @@ function build_abundance_table(cite, data, order) {
   for (let n in data) {
 
     datapt = (parseFloat(data[n].sd)).toFixed(3)
-    if (datapt === 'NaN') {
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) {
       datapt = ''
     }
     html += "<td class='right-justify'>" + datapt + "</td>"
@@ -2195,7 +2201,7 @@ function build_abundance_table(cite, data, order) {
   html += "<tr><th>Prev(%)</th>"
   for (let n in data) {
     datapt = (parseFloat(data[n].prev)).toFixed(3)
-    if (datapt === 'NaN') {
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) {
       datapt = ''
     }
     html += "<td class='right-justify'>" + datapt + "</td>"

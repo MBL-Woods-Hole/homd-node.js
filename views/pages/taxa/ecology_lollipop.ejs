@@ -59,13 +59,16 @@
 .font-size-xsm{
    font-size:0.7em;
 }
+
 #erenv1v3-div{
-  display: block;
+  display: none;
 }
+/* 
 #erenv1v3-btn{
   background:purple;
   color:white;
 }
+ */
 #erenv3v5-div{
   display: none;
 }
@@ -81,18 +84,22 @@
 #dewhirst-div{
   display: none;
 }
+.nonote{
+    color:lightgrey;
+}
 </style>
 
 <% dewhirst_data = JSON.parse(dewhirst) %>
 <% erenv1v3_data = JSON.parse(erenv1v3) %>
 <% erenv3v5_data = JSON.parse(erenv3v5) %>
-<% hmp_metaphlan_data = JSON.parse(hmp_metaphlan) %>
-<% hmp_refseqv1v3_data = JSON.parse(hmp_refseqv1v3) %>
-<% hmp_refseqv3v5_data = JSON.parse(hmp_refseqv3v5) %>
+<% metaphlan_data = JSON.parse(metaphlan) %>
+<% hmpv1v3_data = JSON.parse(hmpv1v3) %>
+<% hmpv3v5_data = JSON.parse(hmpv3v5) %>
 <% children_lst = JSON.parse(children) %>
 <% genera = JSON.parse(genera) %>
 <% site_colors_html = JSON.parse(site_colors) %>
 <% notes = JSON.parse(notes) %>
+<% hasdata = JSON.parse(has_data) %>
 <%- include('../../partials/header_html'); %>
 
 
@@ -194,14 +201,40 @@
 </div>
 <div  class="grid-container"  >
 <div id='plot-buttons'>
-<center>Datasets:
-&nbsp;<span id='erenv1v3-btn' class='pill pill-lavender-lg' onclick="change_dataset('erenv1v3')">Eren V1-V3</span>
-&nbsp;<span id='erenv3v5-btn' class='pill pill-lavender-lg' onclick="change_dataset('erenv3v5')">Eren V3-V5</span>
-&nbsp;<span id='hmpv1v3-btn' class='pill pill-lavender-lg' onclick="change_dataset('hmpv1v3')">HMP V1-V3</span>
-&nbsp;<span id='hmpv3v5-btn' class='pill pill-lavender-lg' onclick="change_dataset('hmpv3v5')">HMP V3-V5</span>
-&nbsp;<span id='metaphlan-btn' class='pill pill-lavender-lg' onclick="change_dataset('metaphlan')">HMP Metaphlan</span>
-&nbsp;<span id='dewhirst-btn' class='pill pill-lavender-lg' onclick="change_dataset('dewhirst')">Dewhirst 35x9</span>
-</center>
+  <center>
+    Available Datasets:
+
+    <% if(erenv1v3_data.length){ %>
+        &nbsp;<span id='erenv1v3-btn' class='pill pill-lavender-lg' onclick="change_dataset('erenv1v3')">Eren V1-V3</span>
+    <% }else{ %>
+        &nbsp;<span id='erenv1v3-btn' class='pill pill-grey-lg'><small>ND:</small>Erenv1v3</span>
+    <% } %>
+    <% if(erenv3v5_data.length){ %>
+        &nbsp;<span id='erenv3v5-btn' class='pill pill-lavender-lg' onclick="change_dataset('erenv3v5')">Eren V3-V5</span>
+    <% }else{ %>
+        &nbsp;<span id='erenv3v5-btn' class='pill pill-grey-lg'><small>ND:</small>Erenv3v5 </span>
+    <% } %>
+    <% if(hmpv1v3_data.length){ %>
+        &nbsp;<span id='hmpv1v3-btn' class='pill pill-lavender-lg' onclick="change_dataset('hmpv1v3')">HMP V1-V3</span>
+    <% }else{ %>
+        &nbsp;<span id='hmpv1v3-btn' class='pill pill-grey-lg'><small>ND:</small>HMPv1v3</span>
+    <% } %>
+    <% if(hmpv3v5_data.length){ %>
+        &nbsp;<span id='hmpv3v5-btn' class='pill pill-lavender-lg' onclick="change_dataset('hmpv3v5')">HMP V3-V5</span>
+    <% }else{ %>
+        &nbsp;<span id='hmpv3v5-btn' class='pill pill-grey-lg'><small>ND:</small>HMPv3v5</span>
+    <% } %>
+    <% if(metaphlan_data.length){ %>
+        &nbsp;<span id='metaphlan-btn' class='pill pill-lavender-lg' onclick="change_dataset('metaphlan')">HMP Metaphlan</span>
+    <% }else{ %>
+        &nbsp;<span id='metaphlan-btn' class='pill pill-grey-lg'"><small>ND:</small>Metaphlan</span>
+    <% } %>
+    <% if(dewhirst_data.length){ %>
+        &nbsp;<span id='dewhirst-btn' class='pill pill-lavender-lg' onclick="change_dataset('dewhirst')">Dewhirst 35x9</span>
+    <% }else{ %>
+        &nbsp;<span id='dewhirst-btn' class='pill pill-grey-lg'>ND:Dewhirst35x9</span>
+    <% } %>
+  </center>
 </div>
 
 <div id='erenv1v3-div' >
@@ -289,10 +322,10 @@
             </small>
           </div>
           
-          <% if(notes.hmp_refseqv1v3 == ''){ %>
+          <% if(notes.hmpv1v3 == ''){ %>
             <div class='nonote'>No Notes</div>
           <% }else{ %>
-            <% parts = notes.hmp_refseqv1v3.split(';') %>
+            <% parts = notes.hmpv1v3.split(';') %>
             
             <div class='note'>
                 <b>Notes:</b><br>
@@ -303,13 +336,13 @@
           <% } %>
         
           <div class='plot' >
-            <div id="plot_log_hmp_refseqv1v3_here"></div> 
+            <div id="plot_log_hmpv1v3_here"></div> 
           </div>
         
         <br>
-        <% if(Object.keys(hmp_refseqv1v3_data).length !== 0){ %>
+        <% if(Object.keys(hmpv1v3_data).length !== 0){ %>
           <div class='abund-table-div'>
-            <%- hmp_refseqv1v3_table %>
+            <%- hmpv1v3_table %>
           </div>  
         <% } %>  
         </center>
@@ -325,10 +358,10 @@
             </small>
             
           </div>
-          <% if(notes.hmp_refseqv3v5 == ''){ %>
+          <% if(notes.hmpv3v5 == ''){ %>
             <div class='nonote'>No Notes</div>
           <% }else{ %>
-            <% parts = notes.hmp_refseqv3v5.split(';') %>
+            <% parts = notes.hmpv3v5.split(';') %>
             
             <div class='note'>
             <b>Notes:</b><br>
@@ -339,12 +372,12 @@
           <% } %>
         
           <div class='plot' >
-            <div id="plot_log_hmp_refseqv3v5_here"></div> 
+            <div id="plot_log_hmpv3v5_here"></div> 
           </div>
         <br>
-        <% if(Object.keys(hmp_refseqv3v5_data).length !== 0){ %>
+        <% if(Object.keys(hmpv3v5_data).length !== 0){ %>
           <div class='abund-table-div'>
-            <%- hmp_refseqv3v5_table %>
+            <%- hmpv3v5_table %>
           </div>  
         <% } %> 
         </center>
@@ -397,10 +430,10 @@
             </small>
             
           </div>
-          <% if(notes.hmp_metaphlan == ''){ %>
+          <% if(notes.metaphlan == ''){ %>
             <div class='nonote'>No Notes</div>
           <% }else{ %>
-            <% parts = notes.hmp_metaphlan.split(';') %>
+            <% parts = notes.metaphlan.split(';') %>
             
             <div class='note'>
             <b>Notes:</b><br>
@@ -411,13 +444,13 @@
           <% } %>
         
           <div class='plot' >
-            <div id="plot_log_hmp_metaphlan_here"></div> 
+            <div id="plot_log_metaphlan_here"></div> 
           </div>
         
         <br>
-        <% if(Object.keys(hmp_metaphlan_data).length !== 0){ %>
+        <% if(Object.keys(metaphlan_data).length !== 0){ %>
           <div class='abund-table-div'>
-            <%- hmp_metaphlan_table %>
+            <%- metaphlan_table %>
           </div>  
         <% } %>
         </center>
@@ -447,16 +480,19 @@
 <script type="text/javascript" src="/js/taxonomy.js"></script>
 
 <script>
+  
+  
   mainmenu()
-  max       =   JSON.parse('<%- max %>')
+  
   rank      =   '<%- rank %>'
-  dewhirst     = JSON.parse('<%- dewhirst %>')
-  erenv1v3        = JSON.parse('<%- erenv1v3 %>')
-  erenv3v5        = JSON.parse('<%- erenv3v5 %>')
-  hmpmetaphlan    = JSON.parse('<%- hmp_metaphlan %>')
-  hmprefseqv1v3   = JSON.parse('<%- hmp_refseqv1v3 %>')
-  hmprefseqv3v5   = JSON.parse('<%- hmp_refseqv3v5 %>')
-  hmpv1v3table    = "<%- hmp_refseqv1v3_table %>"
+  active = JSON.parse('<%- has_data %>')
+  dewhirst_data     = JSON.parse('<%- dewhirst %>')
+  erenv1v3_data        = JSON.parse('<%- erenv1v3 %>')
+  erenv3v5_data        = JSON.parse('<%- erenv3v5 %>')
+  metaphlan_data    = JSON.parse('<%- metaphlan %>')
+  hmpv1v3_data   = JSON.parse('<%- hmpv1v3 %>')
+  hmpv3v5_data   = JSON.parse('<%- hmpv3v5 %>')
+ 
   lineage         = '<%= lin %>'
   site_colors_js     = JSON.parse('<%- site_colors %>')
   box_width = 445
@@ -539,14 +575,13 @@
     // Create  tooltips
     // ----------------
     var tooltips = {}
-    //tooltips.hmprefseqv1v3 = d3.select("#plot_hmp_refseqv1v3_here").append("div").style("position", "absolute").style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px")
-    
-    tooltips.hmprefseqv1v3_log = d3.select("#plot_log_hmp_refseqv1v3_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
-    tooltips.hmprefseqv3v5_log = d3.select("#plot_log_hmp_refseqv3v5_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
+     
+    tooltips.hmpv1v3_log = d3.select("#plot_log_hmpv1v3_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
+    tooltips.hmpv3v5_log = d3.select("#plot_log_hmpv3v5_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
     tooltips.dewhirst_log = d3.select("#plot_log_dewhirst_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
     tooltips.erenv1v3_log = d3.select("#plot_log_erenv1v3_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
     tooltips.erenv3v5_log = d3.select("#plot_log_erenv3v5_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
-    tooltips.hmpmetaphlan_log = d3.select("#plot_log_hmp_metaphlan_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
+    tooltips.metaphlan_log = d3.select("#plot_log_metaphlan_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
     
 
 
@@ -558,18 +593,38 @@ function show_legend(){
     document.getElementById('legend').style.display = 'block';
     document.getElementById('legend-return').style.display = 'none';
 }
-function change_dataset(dset){
+function change_dataset(selected){
    dsets = ['erenv1v3','erenv3v5','hmpv1v3','hmpv3v5','metaphlan','dewhirst']
+   
    for(n in dsets){
-     document.getElementById(dsets[n]+'-div').style.display = 'none'
-     document.getElementById(dsets[n]+'-btn').style.background = 'lavender'
-     document.getElementById(dsets[n]+'-btn').style.color = 'black'
-     
+     if(active[dsets[n]]){
+       document.getElementById(dsets[n]+'-div').style.display = 'none'
+       document.getElementById(dsets[n]+'-btn').style.background = 'lavender'
+       document.getElementById(dsets[n]+'-btn').style.color = 'black'
+     }
    }
-   document.getElementById(dset+'-div').style.display = 'block'
-   document.getElementById(dset+'-btn').style.background = 'purple'
-   document.getElementById(dset+'-btn').style.color = 'white'
+   document.getElementById(selected+'-div').style.display = 'block'
+   document.getElementById(selected+'-btn').style.background = 'purple'
+   document.getElementById(selected+'-btn').style.color = 'white'
 }
+function initialize(){
+  //console.log('in itit buttons')
+  //console.log('active',active)
+  // should de in order: erenv1v3:0,erenv3v5:0,hmpv1v3:0,hmpv3v5:0,metaphlan:0,dewhirst:0
+  for(ds in active){
+    //console.log(ds,active[ds])
+    if(active[ds]){
+       //show graph, then exit
+        first_active_div = ds+'-div'
+        first_active_btn = ds+'-btn'
+        document.getElementById(first_active_div).style.display = 'block'
+        document.getElementById(first_active_btn).style.background = 'purple'
+        document.getElementById(first_active_btn).style.color = 'white'
+       return
+    }
+  }
+}
+initialize()
 </script>
 <script type="text/javascript" src="/js/ecology_lollipop.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>

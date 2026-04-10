@@ -373,6 +373,15 @@ p {
   color: grey;
   cursor:default;
 }
+.pill-grey-lg {
+  background-color: lightgrey;
+  border: 1px solid grey;
+  color: grey;
+  width:150px;
+  font-size:14px;
+  padding:3px 0px;
+  cursor:default;
+}
  .download_browser_text_excel {
   float: right;
   top: 2px;
