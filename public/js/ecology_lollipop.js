@@ -1,7 +1,7 @@
 
 
 
-plots = ['hmpv1v3', 'hmpv3v5', 'dewhirst', 'metaphlan', 'erenv1v3', 'erenv3v5']
+plots = ['hmpv1v3', 'hmpv3v5', 'dewhirst', 'metaphlan', 'erenv1v3', 'erenv3v5','mapping']
 metadata ={}
 metadata['hmpv1v3'] = {
     "data":hmpv1v3_data,"target":"plot_log_hmpv1v3_here","plot_name":"HMP 16S RefSeq V1-V3","tt":tooltips.hmpv1v3_log
@@ -20,6 +20,9 @@ metadata['erenv1v3'] = {
     }
 metadata['erenv3v5'] = {
     "data":erenv3v5_data,"target":"plot_log_erenv3v5_here","plot_name":"Eren V3-V5","tt":tooltips.erenv3v5_log
+    }
+metadata['mapping'] = {
+    "data":mapping_data,"target":"plot_log_mapping_here","plot_name":"HMP Mapping","tt":tooltips.mapping_log
     }
 for(let i = 0; i < plots.length; i++) {
     //console.log(metadata[plots[i]])

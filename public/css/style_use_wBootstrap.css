@@ -367,6 +367,13 @@ p {
   width:150px;
   font-size:18px;
 }
+.pill-teagreen-lg {
+  background-color: #D0F0C0;
+  border: 1px solid black;
+  color: black;
+  width:150px;
+  font-size:18px;
+}
 .pill-grayed {
   background-color: lightgrey;
   border: 1px solid grey;

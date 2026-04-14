@@ -276,17 +276,16 @@ def run_abundance_db():
     #site_prefixes    = ['SubP','SupP','KG','BM','HP','SV','TH','PT','TD']
     all_site_prefixes = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
     eren_site_prefixes     = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO',                                                'STO']
-    #segata_site_prefixes   = all_site_prefixes
     dewhirst_site_prefixes = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA']
     hmp_metaphlan_prefixes = ['SUBP','SUPP','PERIO','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','RAF','VIN','MVA','PFO','STO']
-    hmp_refseq_prefixes = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
-
+    hmp_refseq_prefixes    = ['SUBP','SUPP','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','LAF','RAF','VIN','MVA','PFO','STO']
+    hmp_mapping_prefixes   = ['SUBP','SUPP','PERIO','AKE','BMU','HPA','SAL','THR','PTO','TDO','ANA','LRC','RRC','RAF','VIN','MVA','PFO','STO']
     #['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','NS']
     #print(segata_site_prefixes)
     missing_count =0
     for row in result:
         
-        max_eren, max_dewhirst, max_hmp_metaphlan, max_hmp_refseq = 0,0,0,0
+        max_hmp_mapping, max_eren, max_dewhirst, max_hmp_metaphlan, max_hmp_refseq = 0,0,0,0,0
         #if row['otid'] in (71,81,106,123,138,178,187,192,243,274,306,332,374,375,377,386,398,411,431,578,638,809,818,820,922,928):
         #if row['otid'] in ('071','081','081','106','123','138','178','187','192','243','274','306','332','374','375','377','386','398','411','431','578','638','809','818','820','922','928'):
         #    print('pre ',row['otid'],row['taxonomy'])
@@ -318,6 +317,8 @@ def run_abundance_db():
             if 'notes' not in TCtaxa[taxon_string]:
                 TCtaxa[taxon_string]['notes'] = {}
             
+            if 'hmp_mapping' not in TCtaxa[taxon_string]:
+                TCtaxa[taxon_string]['hmp_mapping'] = {}
             if 'eren_v1v3' not in TCtaxa[taxon_string]:
                 TCtaxa[taxon_string]['eren_v1v3'] = {}
             if 'eren_v3v5' not in TCtaxa[taxon_string]:
@@ -331,7 +332,12 @@ def run_abundance_db():
             if 'hmp_refseq_v3v5' not in TCtaxa[taxon_string]:
                 TCtaxa[taxon_string]['hmp_refseq_v3v5'] = {}
                 
-            
+            if row['reference'].startswith('HMP_Mapping'):
+                for p in hmp_mapping_prefixes:
+                    max_hmp_mapping = get_max(row, p, max_hmp_mapping)
+                    TCtaxa[taxon_string]['hmp_mapping'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                TCtaxa[taxon_string]['max_hmp_mapping'] = max_hmp_mapping
+                TCtaxa[taxon_string]['notes']['hmp_mapping'] = row['notes']
             if row['reference'].startswith('Eren2014_v1v3'):
                 for p in eren_site_prefixes:
                     max_eren = get_max(row, p, max_eren)

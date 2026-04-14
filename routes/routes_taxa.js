@@ -1342,17 +1342,17 @@ router.get('/ecology', function ecology(req, res) {
   }
   //let segata_text = '',dewhirst_text='',erenv1v3_text='';
   //console.log('rank',rank,'tax',tax_name)
-  let dewhirst_notes = '', erenv1v3_notes = '', erenv3v5_notes = '', hmp_metaphlan_notes = '', hmp_refseqv1v3_notes = '', hmp_refseqv3v5_notes = '';
+  let hmp_mapping_notes='',dewhirst_notes = '', erenv1v3_notes = '', erenv3v5_notes = '', hmp_metaphlan_notes = '', hmp_refseqv1v3_notes = '', hmp_refseqv3v5_notes = '';
   //let max = 0;
   let otid = '0';
   //let max_obj = {};
   //let major_genera=0;
   //let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
-  let dewhirst_data = {}, erenv1v3_data = {}, erenv3v5_data = {}, hmp_metaphlan_data = {}, hmp_refseqv1v3_data = {}, hmp_refseqv3v5_data = {};
+  let hmp_mapping_data={},dewhirst_data = {}, erenv1v3_data = {}, erenv3v5_data = {}, hmp_metaphlan_data = {}, hmp_refseqv1v3_data = {}, hmp_refseqv3v5_data = {};
   //let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
   //let dewhirst_max = 0, erenv1v3_max = 0, erenv3v5_max = 0, hmp_metaphlan_max = 0, hmp_refseqv1v3_max = 0, hmp_refseqv3v5_max = 0;
   //let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
-  let erenv1v3_table = '', erenv3v5_table = '', dewhirst_table = '', hmp_metaphlan_table = '', hmp_refseqv1v3_table, hmp_refseqv3v5_table;
+  let hmp_mapping_table,erenv1v3_table, erenv3v5_table, dewhirst_table, hmp_metaphlan_table, hmp_refseqv1v3_table, hmp_refseqv3v5_table;
   //console.log('rank: '+rank+' name: '+tax_name);
   // TODO::should be in constants???
   let text = get_rank_text(rank, tax_name)
@@ -1392,7 +1392,7 @@ router.get('/ecology', function ecology(req, res) {
   }
   //console.log('node',node)
   let lineage_list = helpers_taxa.make_lineage(node)
-  let has_data = {erenv1v3:0,erenv3v5:0,hmpv1v3:0,hmpv3v5:0,metaphlan:0,dewhirst:0}
+  let has_data = {mapping:0,erenv1v3:0,erenv3v5:0,hmpv1v3:0,hmpv3v5:0,metaphlan:0,dewhirst:0}
   if (!lineage_list[0]) {
     lineage_list[0] = ''
     console.log('ERROR Lineage')
@@ -1427,27 +1427,29 @@ router.get('/ecology', function ecology(req, res) {
       }
       if ('eren_v3v5' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['eren_v3v5']).length !== 0) {
         has_data.erenv3v5 = 1
-        //erenv3v5_max = C.abundance_lookup[lineage_list[0]]['max_erenv3v5']
         erenv3v5_data = Object.values(C.abundance_lookup[lineage_list[0]]['eren_v3v5'])
-
         erenv3v5_data = sort_obj_by_abundance_order(erenv3v5_data, C.eren_abundance_order)
-        //console.log('eren3v5-sorted',erenv3v5_data)
         let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)) // clone to avoid difficult errors
-        //helpers.print(C.abundance_lookup[lineage_list[0]])
         erenv3v5_table = build_abundance_table('eren_v3v5', clone_eren_data, C.eren_abundance_order)
         if ('eren_v3v5' in C.abundance_lookup[lineage_list[0]]['notes']) {
           erenv3v5_notes = C.abundance_lookup[lineage_list[0]]['notes']['eren_v3v5']
         }
       }
+      if ('hmp_mapping' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_mapping']).length !== 0) {
+        has_data.mapping = 1
+        hmp_mapping_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_mapping'])
+        hmp_mapping_data = sort_obj_by_abundance_order(hmp_mapping_data, C.hmp_mapping_abundance_order)
+        let clone_hmp_mapping_data = JSON.parse(JSON.stringify(hmp_mapping_data)) // clone to avoid difficult errors
+        hmp_mapping_table = build_abundance_table('hmp_mapping', clone_hmp_mapping_data, C.hmp_mapping_abundance_order)
+        if ('hmp_mapping' in C.abundance_lookup[lineage_list[0]]['notes']) {
+          hmp_mapping_notes = C.abundance_lookup[lineage_list[0]]['notes']['hmp_mapping']
+        }
+      }
       if ('hmp_metaphlan' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_metaphlan']).length !== 0) {
         has_data.metaphlan = 1
-        //hmp_metaphlan_max = C.abundance_lookup[lineage_list[0]]['max_hmp_metaphlan']
         hmp_metaphlan_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_metaphlan'])
-
         hmp_metaphlan_data = sort_obj_by_abundance_order(hmp_metaphlan_data, C.hmp_metaphlan_abundance_order)
-        //console.log('eren3v5-sorted',erenv3v5_data)
         let clone_hmp_metaphlan_data = JSON.parse(JSON.stringify(hmp_metaphlan_data)) // clone to avoid difficult errors
-        //helpers.print(C.abundance_lookup[lineage_list[0]])
         hmp_metaphlan_table = build_abundance_table('hmp_metaphlan', clone_hmp_metaphlan_data, C.hmp_metaphlan_abundance_order)
         if ('hmp_metaphlan' in C.abundance_lookup[lineage_list[0]]['notes']) {
           hmp_metaphlan_notes = C.abundance_lookup[lineage_list[0]]['notes']['hmp_metaphlan']
@@ -1455,12 +1457,9 @@ router.get('/ecology', function ecology(req, res) {
       }
       if ('hmp_refseq_v1v3' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v1v3']).length !== 0) {
         has_data.hmpv1v3 = 1
-        //hmp_refseqv1v3_max = C.abundance_lookup[lineage_list[0]]['max_hmp_refseq_v1v3']
         hmp_refseqv1v3_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v1v3'])
         hmp_refseqv1v3_data = sort_obj_by_abundance_order(hmp_refseqv1v3_data, C.hmp_refseq_abundance_order)
-        //console.log('eren3v5-sorted',erenv3v5_data)
         let clone_hmp_refseqv1v3_data = JSON.parse(JSON.stringify(hmp_refseqv1v3_data)) // clone to avoid difficult errors
-        //helpers.print(C.abundance_lookup[lineage_list[0]])
         hmp_refseqv1v3_table = build_abundance_table('hmp_refseqv1v3', clone_hmp_refseqv1v3_data, C.hmp_refseq_abundance_order)
         if ('hmp_refseq_v1v3' in C.abundance_lookup[lineage_list[0]]['notes']) {
           hmp_refseqv1v3_notes = C.abundance_lookup[lineage_list[0]]['notes']['hmp_refseq_v1v3']
@@ -1468,12 +1467,9 @@ router.get('/ecology', function ecology(req, res) {
       }
       if ('hmp_refseq_v3v5' in C.abundance_lookup[lineage_list[0]] && Object.keys(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v3v5']).length !== 0) {
         has_data.hmpv3v5 = 1
-        //hmp_refseqv3v5_max = C.abundance_lookup[lineage_list[0]]['max_hmp_refseq_v3v5']
         hmp_refseqv3v5_data = Object.values(C.abundance_lookup[lineage_list[0]]['hmp_refseq_v3v5'])
         hmp_refseqv3v5_data = sort_obj_by_abundance_order(hmp_refseqv3v5_data, C.hmp_refseq_abundance_order)
-        //console.log('eren3v5-sorted',erenv3v5_data)
         let clone_hmp_refseqv3v5_data = JSON.parse(JSON.stringify(hmp_refseqv3v5_data)) // clone to avoid difficult errors
-        //helpers.print(C.abundance_lookup[lineage_list[0]])
         hmp_refseqv3v5_table = build_abundance_table('hmp_refseqv3v5', clone_hmp_refseqv3v5_data, C.hmp_refseq_abundance_order)
         if ('hmp_refseq_v3v5' in C.abundance_lookup[lineage_list[0]]['notes']) {
           hmp_refseqv3v5_notes = C.abundance_lookup[lineage_list[0]]['notes']['hmp_refseq_v3v5']
@@ -1513,7 +1509,7 @@ router.get('/ecology', function ecology(req, res) {
     page: page,
     text_format: text[1],
     children: JSON.stringify(children_list),
-    notes: JSON.stringify({ 'hmpv1v3': hmp_refseqv1v3_notes, 'hmpv3v5': hmp_refseqv3v5_notes, 'metaphlan': hmp_metaphlan_notes, 'dewhirst': dewhirst_notes, 'erenv1v3': erenv1v3_notes, 'erenv3v5': erenv3v5_notes }),
+    notes: JSON.stringify({ 'mapping':hmp_mapping_notes,'hmpv1v3': hmp_refseqv1v3_notes, 'hmpv3v5': hmp_refseqv3v5_notes, 'metaphlan': hmp_metaphlan_notes, 'dewhirst': dewhirst_notes, 'erenv1v3': erenv1v3_notes, 'erenv3v5': erenv3v5_notes }),
     has_data: JSON.stringify(has_data),
     
     dewhirst_table: dewhirst_table,
@@ -1522,13 +1518,15 @@ router.get('/ecology', function ecology(req, res) {
     metaphlan_table: hmp_metaphlan_table,
     hmpv1v3_table: hmp_refseqv1v3_table,
     hmpv3v5_table: hmp_refseqv3v5_table,
-
+    mapping_table: hmp_mapping_table,
+    
     dewhirst: JSON.stringify(dewhirst_data),
     erenv1v3: JSON.stringify(erenv1v3_data),
     erenv3v5: JSON.stringify(erenv3v5_data),
     metaphlan: JSON.stringify(hmp_metaphlan_data),
     hmpv1v3: JSON.stringify(hmp_refseqv1v3_data),
     hmpv3v5: JSON.stringify(hmp_refseqv3v5_data),
+    mapping: JSON.stringify(hmp_mapping_data),
     
     ver_info: JSON.stringify(C.version_information),
     site_colors: JSON.stringify(C.abundance_site_colors),
