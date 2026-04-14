@@ -92,14 +92,20 @@ if __name__ == "__main__":
     if not os.path.exists(args.outdir):
         print("\nThe out put directory doesn't exist:: using the current dir instead\n")
         args.outdir = './'
-    if args.dbhost == 'homd_v3':
-        dbhost = '192.168.1.42'
+    if args.dbhost == 'homd_v42':  
+        args.DATABASE  = 'homd'
+        dbhost = '192.168.1.69'
+    elif args.dbhost == 'homd_v3':
+        args.DATABASE = 'homd'
+        dbhost= '192.168.1.42'
     elif args.dbhost == 'homd_v41':
-        dbhost = '192.168.1.58'
+        args.DATABASE = 'homd'
+        dbhost= '192.168.1.58'
     elif args.dbhost == 'homd_dev':
-        dbhost= '192.168.1.69'
-    elif args.dbhost == 'localhost':  #default
-        #args.DATABASE = 'homd'
+        args.DATABASE = 'homd'
+        dbhost= '192.168.1.71'
+    elif args.dbhost == 'localhost':
+        args.DATABASE = 'homd'
         dbhost = 'localhost'
         
     else:
