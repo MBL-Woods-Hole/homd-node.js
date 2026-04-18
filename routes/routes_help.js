@@ -87,7 +87,7 @@ router.get('/help-page', async function help_page(req, res) {
       })
   }else if(page == 'database_update'){
       // NOT USED!!!!
-      let con,q = queries.get_db_updates_query()
+      let conn,q = queries.get_db_updates_query()
       let rowarray = []
       let byDate = {}
       try {
