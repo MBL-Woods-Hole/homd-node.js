@@ -2272,6 +2272,7 @@ router.get('/peptide_table3', async function protein_peptide(req, res) {
     const q = queries.get_peptide3(gid)
     let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study,peptide_id,jb_link
     let locstart,locstop,size,seqacc,loc,highlight
+    let conn
     console.log(q)
     try {
         conn = await global.TDBConn();
