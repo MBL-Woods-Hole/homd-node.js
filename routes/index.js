@@ -570,7 +570,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
 //
 router.post('/basic_site_search', function basic_site_search(req, res) {
   
-  console.log('in basic index.js POST -Search')
+  console.log('index.js::in basic POST -Search')
   console.log(req.body)
   const searchText = req.body.adv_search_text
   const searchTextLower = req.body.adv_search_text.toLowerCase()
@@ -693,8 +693,9 @@ function search_taxonomy(text_string){
     // lets search the taxonomy names
     // Bacterial Taxonomy Names
     const taxonList = Object.values(C.taxon_lineage_lookup).filter(function (e) {
+    
     if (Object.keys(e).length !== 0) {
-      // console.log(e)
+      //console.log('e',e)
       if (e.domain.toLowerCase().includes(text_string) ||
         e.phylum.toLowerCase().includes(text_string) ||
         e.klass.toLowerCase().includes(text_string) ||
@@ -708,7 +709,7 @@ function search_taxonomy(text_string){
     }
     //
     })
-      
+      //console.log('taxonList',taxonList)
     //  Now get the otids
     let pototid,taxonOtidObj = {}
     // must find: HMT-389, HMT_389, HMT389 as well as 389
