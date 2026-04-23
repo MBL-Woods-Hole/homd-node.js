@@ -25,6 +25,7 @@ router.get('/index', function index(req, res) {
 router.get('/help-page', async function help_page(req, res) {
   //let page = req.params.pagecode
   let page = req.query.pagecode
+  let conn
   console.log('page',page)
   const renderVersionFxn = (req, res, type, data) => {
       //console.log('updates',updates)
@@ -87,7 +88,7 @@ router.get('/help-page', async function help_page(req, res) {
       })
   }else if(page == 'database_update'){
       // NOT USED!!!!
-      let conn,q = queries.get_db_updates_query()
+      let q = queries.get_db_updates_query()
       let rowarray = []
       let byDate = {}
       try {

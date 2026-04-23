@@ -2164,22 +2164,31 @@ function build_abundance_table(cite, data, order) {
     if (datapt === 'NaN' || parseFloat(datapt) === 0) {
       datapt = ''
     }
-    html += "<td class='right-justify'>" + datapt + "</td>"
+    html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += '</tr>'
-
+  if(cite === 'hmp_mapping'){
+      // adding row of n for each site
+      html += '<tr><th>n</th>'
+      for (let n in data) {
+        datapt = (parseInt(data[n]['n']))
+        if (datapt === 'NaN' || parseInt(datapt) === 0) { datapt = ''; }
+        html += "<td class='alignright'>" + datapt + "</td>"
+      }
+    
+  }
   html += '<tr><th>10<sup>th</sup>p</th>'
   for (let n in data) {
     datapt = (parseFloat(data[n]['10p'])).toFixed(3)
     if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = ''; }
-    html += "<td class='right-justify'>" + datapt + "</td>"
+    html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += "</tr>"
   html += "<tr><th>90<sup>th</sup>p</th>"
   for (let n in data) {
     datapt = (parseFloat(data[n]['90p'])).toFixed(3)
     if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = ''; }
-    html += "<td class='right-justify'>" + datapt + "</td>"
+    html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += "</tr>"
 
@@ -2191,7 +2200,7 @@ function build_abundance_table(cite, data, order) {
     if (datapt === 'NaN' || parseFloat(datapt) === 0) {
       datapt = ''
     }
-    html += "<td class='right-justify'>" + datapt + "</td>"
+    html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += "</tr>"
 
@@ -2202,7 +2211,7 @@ function build_abundance_table(cite, data, order) {
     if (datapt === 'NaN' || parseFloat(datapt) === 0) {
       datapt = ''
     }
-    html += "<td class='right-justify'>" + datapt + "</td>"
+    html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += "</tr>"
 

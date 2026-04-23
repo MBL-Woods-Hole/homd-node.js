@@ -141,14 +141,13 @@
     <a class='download_browser_text_excel'  href='/download/download/abundance' >Download Options</a>   
     <div id='taxon-page-div'>
     <center>Full Lineage: <%- lineage %></center>
-        <small>Each rank name is a link to abundance plots at that rank:</small><br>
         
         <% if(children_lst.length == 0){ %>
-           
+             <br>
         <% }else{ %>
            
-           <br><small>Lower rank member(s): 
-           <% if(children_lst.length <= 5){ %>
+           <br><strong>Lower rank member(s): 
+           <% if(children_lst.length <= 6){ %>
                <% for(n in children_lst){ %>
                  <span >[<%- children_lst[n] %>]</span>
                <% } %>
@@ -182,7 +181,7 @@
           </select>
         <% } %>
         
-        </small>
+        </strong>
         
     </div>  <!-- end taxon-page-div -->
 
@@ -191,11 +190,11 @@
      LINKS: <a href='/taxa/ecology_home'>Ecology Home</a>
      <% if(otid != 0){ %>
         <span>
-          |&nbsp;<a href='body_sites?otid=<%= otid %>'><%= taxidfullname %>: Body Sites Data</a>
-          |&nbsp;<a href='tax_description?otid=<%= otid %>'><%= taxidfullname %>: Taxon Description</a>
+          |&nbsp;<%= taxidfullname %>: [<a href='body_sites?otid=<%= otid %>'>Body Sites Data</a>]
+          &nbsp;[<a href='tax_description?otid=<%= otid %>'>Taxon Description</a>]
         </span>
      <% } %>
-     |&nbsp;<a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'>Life Page: <%- tax_name %></a>
+     |&nbsp;Life Page: <a href='/taxa/life?rank=<%= rank %>&name=<%= tax_name %>'><%- tax_name %></a>
 </div>
 </center> 
 
@@ -253,7 +252,7 @@
      <center>
           <div class='plot-title'>
             <small>
-            HMP Mapping  <span class='font-size-xsm'>(not published) (data from healthy subjects)</span>
+            Human Microbiome Project Mapping  <span class='font-size-xsm'>(not published) (data from healthy subjects)</span>
             </small>
             
           </div>

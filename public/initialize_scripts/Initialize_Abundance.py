@@ -63,6 +63,7 @@ headers = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SA
 # subspecies['nucleatum subsp. polymorphum'] = ['nucleatum','subsp._polymorphum'] 
 # subspecies['nucleatum subsp. vincentii'] = ['nucleatum','subsp._vincentii'] 
 """
+OBSOLETE!!
 CREATE TABLE `abundance` (
   `abundance_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `reference` varchar(30) NOT NULL DEFAULT '',
@@ -224,6 +225,7 @@ def run_abundance_db():
     #print('TCtaxa',TCtaxa.keys())
     #sys.exit()
     for n in headers:
+        sites.append(n+'_n')
         sites.append(n+'_mean')
         sites.append(n+'_10p')
         sites.append(n+'_90p')
@@ -319,6 +321,7 @@ def run_abundance_db():
             
             if 'hmp_mapping' not in TCtaxa[taxon_string]:
                 TCtaxa[taxon_string]['hmp_mapping'] = {}
+                
             if 'eren_v1v3' not in TCtaxa[taxon_string]:
                 TCtaxa[taxon_string]['eren_v1v3'] = {}
             if 'eren_v3v5' not in TCtaxa[taxon_string]:
@@ -335,7 +338,7 @@ def run_abundance_db():
             if row['reference'].startswith('HMP_Mapping'):
                 for p in hmp_mapping_prefixes:
                     max_hmp_mapping = get_max(row, p, max_hmp_mapping)
-                    TCtaxa[taxon_string]['hmp_mapping'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                    TCtaxa[taxon_string]['hmp_mapping'][p] = {'site':p,'n':row[p+'_n'],'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
                 TCtaxa[taxon_string]['max_hmp_mapping'] = max_hmp_mapping
                 TCtaxa[taxon_string]['notes']['hmp_mapping'] = row['notes']
             if row['reference'].startswith('Eren2014_v1v3'):
