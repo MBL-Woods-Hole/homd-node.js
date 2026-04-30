@@ -1493,6 +1493,7 @@ router.get('/ecology', function ecology(req, res) {
   }else{ 
     rank_show = rank.charAt(0).toUpperCase() + rank.slice(1)
   }
+  let legend_visibility = 'no_show'  // show or no_show
   res.render('pages/taxa/ecology_lollipop', {
     title: 'HOMD ::' + rank_show + ':' + tax_name,
     pgname: 'taxon/ecology', // for AbountThisPage 
@@ -1502,6 +1503,7 @@ router.get('/ecology', function ecology(req, res) {
     lineage: lineage_string,
     lin: lineage_list[0],
     rank: rank,
+    legendvis: legend_visibility,
     //max: JSON.stringify({ 'hmp_refseqv1v3': hmp_refseqv1v3_max, 'hmp_refseqv3v5': hmp_refseqv3v5_max, 'hmp_metaphlan': hmp_metaphlan_max, 'dewhirst': dewhirst_max, 'erenv1v3': erenv1v3_max, 'erenv3v5': erenv3v5_max }),
     otid: otid,  // zero unless species (or subspecies)
     genera: JSON.stringify(genera),

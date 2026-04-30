@@ -539,13 +539,13 @@
   metaphlan_data    = JSON.parse('<%- metaphlan %>')
   hmpv1v3_data   = JSON.parse('<%- hmpv1v3 %>')
   hmpv3v5_data   = JSON.parse('<%- hmpv3v5 %>')
- 
+  legend_visibility = '<%- legendvis %>'
   lineage         = '<%= lin %>'
   site_colors_js     = JSON.parse('<%- site_colors %>')
   box_width = 445
   gap = 30
   box_height = 580
-  
+  console.log('ILV',legend_visibility)
   var margin = {top: 40, right: 20, bottom: 90, left: 60},
     width = (box_width*2) + gap - margin.left - margin.right,
     height = box_height - margin.top - margin.bottom;
@@ -665,8 +665,8 @@ function change_dataset(selected){
       alert('allblank')
    }
 }
-function initialize(){
-  //console.log('in itit buttons')
+function initialize(lv){
+  console.log('in itit buttons')
   //console.log('active',active)
   // should de in order: erenv1v3:0,erenv3v5:0,hmpv1v3:0,hmpv3v5:0,metaphlan:0,dewhirst:0
   var got_one_active = false
@@ -680,15 +680,22 @@ function initialize(){
         document.getElementById(first_active_div).style.display = 'block'
         document.getElementById(first_active_btn).style.background = 'olivedrab'
         document.getElementById(first_active_btn).style.color = 'white'
-        return
+        
     }
   }
   if(!got_one_active){
       document.getElementById('nodata-div').style.display = 'block'
   }
-  
+  console.log('legend_visibility',lv)
+  if(lv === 'show'){
+    document.getElementById('legend').style.display = 'block';
+    document.getElementById('legend-return').style.display = 'none';
+  }else{
+    document.getElementById('legend').style.display = 'none';
+    document.getElementById('legend-return').style.display = 'block';
+  }
 }
-initialize()
+initialize(legend_visibility)
 </script>
 <script type="text/javascript" src="/js/ecology_lollipop.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
