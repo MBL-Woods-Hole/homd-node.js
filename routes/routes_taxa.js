@@ -1403,7 +1403,9 @@ router.get('/ecology', function ecology(req, res) {
         has_data.dewhirst = 1
         //dewhirst_max = C.abundance_lookup[lineage_list[0]]['max_dewhirst']
         //console.log('in Dewhirst')
+        
         dewhirst_data = Object.values(C.abundance_lookup[lineage_list[0]]['dewhirst'])
+        //console.log('dew data',dewhirst_data)
         dewhirst_data = sort_obj_by_abundance_order(dewhirst_data, C.dewhirst_abundance_order)
         // order by constants.dewhirst_abundance_order
         let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)) // clone to avoid difficult errors
@@ -2169,7 +2171,7 @@ function build_abundance_table(cite, data, order) {
     html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += '</tr>'
-  if(cite === 'hmp_mapping'){
+  //if(cite === 'hmp_mapping'){
       // adding row of n for each site
       html += '<tr><th>n</th>'
       for (let n in data) {
@@ -2178,7 +2180,7 @@ function build_abundance_table(cite, data, order) {
         html += "<td class='alignright'>" + datapt + "</td>"
       }
     
-  }
+  //}
   html += '<tr><th>10<sup>th</sup>p</th>'
   for (let n in data) {
     datapt = (parseFloat(data[n]['10p'])).toFixed(3)

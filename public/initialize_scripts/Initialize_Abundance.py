@@ -344,27 +344,27 @@ def run_abundance_db():
             if row['reference'].startswith('Eren2014_v1v3'):
                 for p in eren_site_prefixes:
                     max_eren = get_max(row, p, max_eren)
-                    TCtaxa[taxon_string]['eren_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                    TCtaxa[taxon_string]['eren_v1v3'][p] = {'site':p,'n':row[p+'_n'],'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
                 TCtaxa[taxon_string]['max_erenv1v3'] = max_eren
                 TCtaxa[taxon_string]['notes']['eren_v1v3'] = row['notes']
             if row['reference'].startswith('Eren2014_v3v5'):
                 for p in eren_site_prefixes:
                     max_eren = get_max(row, p, max_eren)
-                    TCtaxa[taxon_string]['eren_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                    TCtaxa[taxon_string]['eren_v3v5'][p] = {'site':p,'n':row[p+'_n'],'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
                 TCtaxa[taxon_string]['max_erenv3v5'] = max_eren
                 TCtaxa[taxon_string]['notes']['eren_v3v5'] = row['notes']
             if row['reference'].startswith('Dewhirst'):
                 for p in dewhirst_site_prefixes:
                     max_dewhirst = get_max(row, p, max_dewhirst)
                     #print('max_dewhirst',max_dewhirst)
-                    TCtaxa[taxon_string]['dewhirst'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                    TCtaxa[taxon_string]['dewhirst'][p] = {'site':p,'n':row[p+'_n'],'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
                 TCtaxa[taxon_string]['max_dewhirst'] = max_dewhirst
                 TCtaxa[taxon_string]['notes']['dewhirst'] = row['notes']
             if row['reference'].startswith('HMP_MetaPhlan'):
                 for p in hmp_metaphlan_prefixes:
                     max_hmp_metaphlan = get_max(row, p, max_hmp_metaphlan)
                     #print('max_dewhirst',max_dewhirst)
-                    TCtaxa[taxon_string]['hmp_metaphlan'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                    TCtaxa[taxon_string]['hmp_metaphlan'][p] = {'site':p,'n':row[p+'_n'],'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
                 TCtaxa[taxon_string]['max_hmp_metaphlan'] = max_hmp_metaphlan
                 TCtaxa[taxon_string]['notes']['hmp_metaphlan'] = row['notes']
                 
@@ -372,14 +372,14 @@ def run_abundance_db():
                 for p in hmp_refseq_prefixes:
                     max_hmp_refseq = get_max(row, p, max_hmp_refseq)
                     #print('max_dewhirst',max_dewhirst)
-                    TCtaxa[taxon_string]['hmp_refseq_v1v3'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                    TCtaxa[taxon_string]['hmp_refseq_v1v3'][p] = {'site':p,'n':row[p+'_n'],'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
                 TCtaxa[taxon_string]['max_hmp_refseq_v1v3'] = max_hmp_refseq
                 TCtaxa[taxon_string]['notes']['hmp_refseq_v1v3'] = row['notes']
             if row['reference'].startswith('HMP_16S_RefSeq_v3v5'):
                 for p in hmp_refseq_prefixes:
                     max_hmp_refseq = get_max(row, p, max_hmp_refseq)
                     #print('max_dewhirst',max_dewhirst)
-                    TCtaxa[taxon_string]['hmp_refseq_v3v5'][p] = {'site':p,'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
+                    TCtaxa[taxon_string]['hmp_refseq_v3v5'][p] = {'site':p,'n':row[p+'_n'],'avg':row[p+'_mean'],'prev':row[p+'_prev'],'sd':row[p+'_sd'],'10p':row[p+'_10p'],'90p':row[p+'_90p']}
                 TCtaxa[taxon_string]['max_hmp_refseq_v3v5'] = max_hmp_refseq
                 TCtaxa[taxon_string]['notes']['hmp_refseq_v3v5'] = row['notes']
     #print(TCtaxa)

@@ -207,7 +207,16 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
     let temp_list = Object.values(C.abundance_lookup)
     let abundance_order
     let header = 'HOMD (https://homd.org/)::'
-    if(source === 'dewhirst'){
+    
+    if(source === 'mapping'){
+        if(type === 'samples_file'){
+            let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'HOMD_AbundanceData_Mapping.tar.gz')
+            res.download(fullpath)
+            return 
+        }
+        header += 'HOMD Abundance Data from Human Microbiome Project Mapping; '
+        abundance_order = C.hmp_mapping_abundance_order
+    }else if(source === 'dewhirst'){
         header += 'HOMD Data from Dewhirst(unpublished); '
         abundance_order = C.dewhirst_abundance_order
     }else if(source === 'erenv1v3'){
@@ -216,7 +225,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             res.download(fullpath)
             return 
         }
-        header += 'HOMD Data from Eren(2014) V1-V3; '
+        header += 'HOMD Abundance Data from Eren(2014) V1-V3; '
         abundance_order = C.eren_abundance_order
     }else if(source === 'erenv3v5'){
         if(type === 'samples_file'){
@@ -224,7 +233,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             res.download(fullpath)
             return
         }
-        header += 'HOMD Data from Eren(2014) V3-V5; '
+        header += 'HOMD Abundance Data from Eren(2014) V3-V5; '
         abundance_order = C.eren_abundance_order
     }else if(source === 'hmpmeta'){
         header += 'HOMD Data from HMP MetaPhlan (unpublished); '
@@ -235,7 +244,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             res.download(fullpath)
             return 
         }
-        header += 'HOMD Data from HMP 16S RefSeq V1-V3 (unpublished); '
+        header += 'HOMD Abundance Data from HMP 16S RefSeq V1-V3 (unpublished); '
         abundance_order = C.hmp_refseq_abundance_order
     }else if(source === 'hmprefseqv3v5'){
         if(type === 'samples_file'){
@@ -251,11 +260,22 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
     
     for(let n in abundance_order){
          site = abundance_order[n]
-         table_tsv += '\t' +site+'_mean'+'\t'+site+'_stdev'+'\t'+site+'_prev'
+         table_tsv += '\t' +site+'_n'+'\t' +site+'_mean'+'\t'+site+'_stdev'+'\t'+site+'_prev'
     }
     table_tsv += '\n'
     for(let tax_string in C.abundance_lookup){
-      if(source === 'dewhirst' 
+      if(source === 'mapping' 
+                && C.abundance_lookup[tax_string].hasOwnProperty('hmp_mapping') 
+                && Object.keys(C.abundance_lookup[tax_string]['hmp_mapping']).length > 0)
+            {
+            table_tsv += tax_string+'\t'+C.abundance_lookup[tax_string]['otid']
+            row = C.abundance_lookup[tax_string]['hmp_mapping']
+            for(let n in abundance_order){
+                site = abundance_order[n]
+                table_tsv += '\t'+row[site]['n']+'\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+            }
+            table_tsv += '\n'
+      }else if(source === 'dewhirst' 
                 && C.abundance_lookup[tax_string].hasOwnProperty('dewhirst') 
                 && Object.keys(C.abundance_lookup[tax_string]['dewhirst']).length > 0)
             {
@@ -263,7 +283,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             row = C.abundance_lookup[tax_string]['dewhirst']
             for(let n in abundance_order){
                 site = abundance_order[n]
-                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+                table_tsv += '\t'+row[site]['n']+'\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
       }else if(source === 'erenv1v3' 
@@ -274,7 +294,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             row = C.abundance_lookup[tax_string]['eren_v1v3']
             for(let n in abundance_order){
                 site = abundance_order[n]
-                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+                table_tsv += '\t'+row[site]['n']+'\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
       }else if(source === 'erenv3v5' 
@@ -285,7 +305,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             row = C.abundance_lookup[tax_string]['eren_v3v5']
             for(let n in abundance_order){
                 site = abundance_order[n]
-                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+                table_tsv += '\t'+row[site]['n']+'\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
       }else if(source === 'hmpmeta' 
@@ -296,7 +316,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             row = C.abundance_lookup[tax_string]['hmp_metaphlan']
             for(let n in abundance_order){
                 site = abundance_order[n]
-                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+                table_tsv += '\t'+row[site]['n']+'\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
             
@@ -309,7 +329,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             row = C.abundance_lookup[tax_string]['hmp_refseq_v1v3']
             for(let n in abundance_order){
                 site = abundance_order[n]
-                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+                table_tsv += '\t'+row[site]['n']+'\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
       }else if(source === 'hmprefseqv3v5'
@@ -320,7 +340,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             row = C.abundance_lookup[tax_string]['hmp_refseq_v3v5']
             for(let n in abundance_order){
                 site = abundance_order[n]
-                table_tsv += '\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
+                table_tsv += '\t'+row[site]['n']+'\t'+row[site]['avg']+'\t'+row[site]['sd']+'\t'+row[site]['prev']
             }
             table_tsv += '\n'
       }else{

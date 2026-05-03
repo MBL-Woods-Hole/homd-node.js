@@ -642,6 +642,7 @@ function show_legend(){
     document.getElementById('legend-return').style.display = 'none';
 }
 function change_dataset(selected){
+   console.log('selected',selected)
    dsets = ['erenv1v3','erenv3v5','hmpv1v3','hmpv3v5','metaphlan','dewhirst','mapping']
    var got_one_active = false
    for(n in active){
@@ -662,7 +663,7 @@ function change_dataset(selected){
        document.getElementById(selected+'-btn').style.background = 'olivedrab'
        document.getElementById(selected+'-btn').style.color = 'white'
    }else{
-      alert('allblank')
+      //alert('allblank')
    }
 }
 function initialize(lv){
@@ -680,13 +681,23 @@ function initialize(lv){
         document.getElementById(first_active_div).style.display = 'block'
         document.getElementById(first_active_btn).style.background = 'olivedrab'
         document.getElementById(first_active_btn).style.color = 'white'
-        
+        //change_dataset(ds)
+    }else{
+      
     }
+  }
+  
+  //console.log('active',active)
+  for(ds in active){
+      if(active[ds] == 1){
+          change_dataset(ds)
+          break
+      }
   }
   if(!got_one_active){
       document.getElementById('nodata-div').style.display = 'block'
   }
-  console.log('legend_visibility',lv)
+  //console.log('legend_visibility',lv)
   if(lv === 'show'){
     document.getElementById('legend').style.display = 'block';
     document.getElementById('legend-return').style.display = 'none';
