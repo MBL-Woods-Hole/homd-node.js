@@ -2156,42 +2156,38 @@ function build_abundance_table(cite, data, order) {
   //console.log('data',data)
   //C.abundance_names
   let datapt = ''
-  let html = "<table class='abundance-table'><thead><tr><td></td>"
+  let html = "<table class='abundance-table'><thead><tr><th></th>"
   for (let n in order) {
-    html += "<th title='" + C.abundance_names[order[n]] + "' style='background:" + C.abundance_site_colors[order[n]] + "'>" + order[n] + '</th>'
+    html += "<td class='abundance-table-head' title='" + C.abundance_names[order[n]] + "' style='background:" + C.abundance_site_colors[order[n]] + "'>" + order[n] + '</td>'
   }
   html += '</tr></thead><tbody>'
 
   html += '<tr><th>Avg (%)</th>'
   for (let n in data) {
-    datapt = (parseFloat(data[n].avg)).toFixed(3)
-    if (datapt === 'NaN' || parseFloat(datapt) === 0) {
-      datapt = ''
-    }
+    datapt = (parseFloat(data[n].avg)).toFixed(2)
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = '0' }
     html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += '</tr>'
-  //if(cite === 'hmp_mapping'){
-      // adding row of n for each site
       html += '<tr><th>n</th>'
       for (let n in data) {
         datapt = (parseInt(data[n]['n']))
-        if (datapt === 'NaN' || parseInt(datapt) === 0) { datapt = ''; }
+        if (datapt === 'NaN' || parseInt(datapt) === 0) { datapt = '0'; }
         html += "<td class='alignright'>" + datapt + "</td>"
       }
     
   //}
   html += '<tr><th>10<sup>th</sup>p</th>'
   for (let n in data) {
-    datapt = (parseFloat(data[n]['10p'])).toFixed(3)
-    if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = ''; }
+    datapt = (parseFloat(data[n]['10p'])).toFixed(2)
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = '0'; }
     html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += "</tr>"
   html += "<tr><th>90<sup>th</sup>p</th>"
   for (let n in data) {
-    datapt = (parseFloat(data[n]['90p'])).toFixed(3)
-    if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = ''; }
+    datapt = (parseFloat(data[n]['90p'])).toFixed(2)
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = '0'; }
     html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += "</tr>"
@@ -2200,10 +2196,8 @@ function build_abundance_table(cite, data, order) {
   html += "<tr><th>Stdev</th>"
   for (let n in data) {
 
-    datapt = (parseFloat(data[n].sd)).toFixed(3)
-    if (datapt === 'NaN' || parseFloat(datapt) === 0) {
-      datapt = ''
-    }
+    datapt = (parseFloat(data[n].sd)).toFixed(2)
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = '0'; }
     html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += "</tr>"
@@ -2211,10 +2205,8 @@ function build_abundance_table(cite, data, order) {
 
   html += "<tr><th>Prev(%)</th>"
   for (let n in data) {
-    datapt = (parseFloat(data[n].prev)).toFixed(3)
-    if (datapt === 'NaN' || parseFloat(datapt) === 0) {
-      datapt = ''
-    }
+    datapt = (parseFloat(data[n].prev)).toFixed(2)
+    if (datapt === 'NaN' || parseFloat(datapt) === 0) { datapt = '0' }
     html += "<td class='alignright'>" + datapt + "</td>"
   }
   html += "</tr>"
