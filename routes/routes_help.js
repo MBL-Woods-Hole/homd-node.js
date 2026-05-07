@@ -55,6 +55,7 @@ router.get('/help-page', async function help_page(req, res) {
           
       })
   }
+  
   if(page == 'genome/genome_version'){
       // read file path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt)
       fs.readFile(path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt'), 'utf8', (err, data) => {
@@ -86,6 +87,7 @@ router.get('/help-page', async function help_page(req, res) {
         }
         renderVersionFxn(req, res, 'HOMD RefSeq Version History', data.trim())
       })
+    
   }else if(page == 'database_update'){
       // NOT USED!!!!
       let q = queries.get_db_updates_query()
@@ -291,7 +293,9 @@ function getPageTitle(page){
     if(page === 'blast/advanced'){
        return 'Page Help::Blast Advanced Parameters'
     }
-    
+    if(page === 'bestuse'){
+       return 'How to Best Use HOMD to Your Advantage'
+    }
     
     return page+'-FixmyTitle'
 }

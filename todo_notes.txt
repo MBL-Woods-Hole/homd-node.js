@@ -20,18 +20,9 @@ Email from Julian
    Would it be possible for the Download action button to only include the taxon-specific 
    tarball along with its checksum file that you have currently updated?
 
-Email from George:
-   Hi Andy,
-   Could you please add the following release notes to the Genomic RefSeq V11.02? 
-   Please also make the attached Excel file available for download when clicking on the “Excel worksheets”.
-    https://www.homd.org/help/help-page?pagecode=genome/genome_version
 
-        2025-09-19 Genomic Reference Sequences Version 11.02 release notes
 
-        Version 11.02 of genomes dataset contains a total of 8,177 genomes, by dropping 314 from and adding 3 new genomes to the 8,488 genomes in previous Version 11.01. Genomes were dropped, relocated (to a different taxon), merged (with another taxon), or created due to various reasons including identified as chimera, taxon merging, removal, or creation. Detail information can be found in these Excel worksheets.
-
-    Jessica or Floyd, we also need to add some update to cover taxonomy changes from V4.0 to V4.2:
-        https://www.homd.org/help/help-page?pagecode=taxon/taxon_version
+ 
 =============================================================
 Best,  Floyd
 Hi,
