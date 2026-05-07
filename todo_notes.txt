@@ -1,3 +1,39 @@
+2026-05-06
+Email from Floyd:
+1- Create a new page on HowToUse HOMD to advantage
+2- George and Andy,  
+  for genomic BLAST searches I find I’m essentially always changing the Advanced parameters.   
+  I usually change to -evalue 1.0e-45 and -max_target_seqs 400 or 800 or 2000. 
+  It is easy to mistype one of the parameters and kill the blast. 
+  I know this is a canned program from NCBI and difficult to modify, 
+  but is there be better way to choose one’s favorite values for  ‘-evalue and -max_target_seqs?
+
+  Also, when you do a BLAST, with “open results in new tab” the results show up in a new tab as desired.  
+  However, when you close that tab you come back to a frozen HOMD Genomic BLAST Server page.  
+  The only way to recover tis to hit refresh which clears all database selection and your sequence.   
+  This is annoying if you were coming back to change the number of sequences you wanted 
+  or to copy the BLASTed sequence.  You have to start from scratch.  (I realize this may not be easily fixable)
+
+Email from Julian
+   In the interactive pangenome view (when launching any given pangenome with OpenAnvi’o ) 
+   there is a top-bar menu icon labeled ‘Download’.  At the moment , clicking it downloads a bundle of files. 
+   Would it be possible for the Download action button to only include the taxon-specific 
+   tarball along with its checksum file that you have currently updated?
+
+Email from George:
+   Hi Andy,
+   Could you please add the following release notes to the Genomic RefSeq V11.02? 
+   Please also make the attached Excel file available for download when clicking on the “Excel worksheets”.
+    https://www.homd.org/help/help-page?pagecode=genome/genome_version
+
+        2025-09-19 Genomic Reference Sequences Version 11.02 release notes
+
+        Version 11.02 of genomes dataset contains a total of 8,177 genomes, by dropping 314 from and adding 3 new genomes to the 8,488 genomes in previous Version 11.01. Genomes were dropped, relocated (to a different taxon), merged (with another taxon), or created due to various reasons including identified as chimera, taxon merging, removal, or creation. Detail information can be found in these Excel worksheets.
+
+    Jessica or Floyd, we also need to add some update to cover taxonomy changes from V4.0 to V4.2:
+        https://www.homd.org/help/help-page?pagecode=taxon/taxon_version
+=============================================================
+Best,  Floyd
 Hi,
     Julian - Thanks for the help! -- I fixed the issues with the 'Genome Category'
     that I was using and now use "Assembly Level" as the table column. I also
