@@ -876,6 +876,22 @@ router.get('/pg/:type/:pg', function dld_pg (req, res) {
     return 
     
 })
+router.get('/version/:index', function dld_pg (req, res) {
+    // this is for all/any downloads needed version text files
+    //console.log('in dnld version/:index')
+    let idx = req.params.index
+    //console.log('idx',idx)
+    let fullpath
+    if(idx === '01'){
+       fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'HOMD_Full_Taxonomy2025_02_18_JMWv4_ForAddDropNameChange.xlsx')
+    }else{
+        return
+    }
+    //console.log(fullpath)
+    res.download(fullpath)
+    return
+    
+})
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function create_full_crispr_table(lookup_obj,header_txt) {
