@@ -3,12 +3,25 @@ p {
    padding:8px;
    font-size:18px;
 }
+#qlist{
+   padding:10px;
+   background;lightgrey
+   
+}
 </style>
 
 
+<div id='qlist'>
+  <ul>
+  <li><strong><a href='#what-taxa'>What taxa and genomes are included in HOMD and why.</a></strong></li>
+  <li><strong><a href='#why-homd'>Why HOMD has distinct advantages over NCBI for genomic analysis.</a></strong></li>
+  <li><strong><a href='#protein-blast'>Protein BLAST searches easily done on HOMD that are difficult or impossible at NCBI.</a></strong></li>
+  <li><strong><a href='#dna-blast'>DNA BLAST searches easily done on HOMD that are difficult or impossible at NCBI.</a></strong></li>
+  </ul>
+</div>
 
 
-<strong>What taxa and genomes are included in HOMD and why.</strong>
+<strong id='what-taxa'>What taxa and genomes are included in HOMD and why.</strong>
 <p>
 The focus of the Human Oral Microbiome Database is organisms, as the name implies, found in the human oral cavity. Because humans eat, drink, breathe, and touch their noses, lips, tongue and teeth, organisms from the environment and other human body sites are found in oral cavities together with endogenous oral organisms.
 
@@ -19,18 +32,19 @@ water, and soil. Part of the metadata for each taxon is ecological information, 
 the primary body site including abundance and prevalence in 9 oral sites. 
 A Table summarizing ecology, naming and cultivation status for all 836 taxa in HOMD can be found <a href='/statistics'>here</a>.
 </p>
+</a>
 
-<strong>Why HOMD has distinct advantages over NCBI for genomic analysis.</strong>
+<strong id='why-homd'>Why HOMD has distinct advantages over NCBI for genomic analysis.</strong>
 <p>
 The genomes in HOMD were selected and curated for relevance. Therefore, HOMD BLAST analyses are not overwhelmed by returning irrelevant environmental hits from the ocean, soil, cow rumen, insects and plants.
 </p>
 
-<strong>Protein BLAST searches easily done on HOMD that are difficult or impossible at NCBI.</strong>
+<strong id='protein-blast'>Protein BLAST searches easily done on HOMD that are difficult or impossible at NCBI.</strong>
 <p>
 <u>You want to determine a protein’s occurrence in oral taxa by species and by each genome hit</u>. At HOMD, BLASTP returns results that can be downloaded as an Excel file with full blast identity and coverage data for each genome hit by GCA_# and with full taxonomy. At NCBI, BLASTP returns identity and coverage data but clusters identical protein sequences into representative WP_ sequences or cluster of WP_ sequences. From the WP_sequence entry one can manually link to Identical Proteins. This brings up a table that identifies the GCA_ (or GCF_) assembly number identifying genome hit. At NCBI the organism is listed as genus and species assigned by depositors which is often incomplete or wrong. It is not possible at NCBI to download BLASTP results in a file that contains genome assembly ID and full taxonomic data. Many genomes, particularly for MAGs are often deposited in NCBI, but not annotated by NCBI. These genomes contain only a FASTA file with the raw genome sequence, no annotation or protein information. Because there is no annotation, no proteins have been identified and thus are not included in the NCBI Protein or BLAST databases. Regardless of source, HOMD annotates every one of its genomes using PROKKA and so every protein in every genome appears in HOMD annotations, BLASTP searches, and in Genome Viewer even when absent from NCBI.
 </p>
 
-<strong>DNA BLAST searches easily done on HOMD that are difficult or impossible at NCBI.</strong>
+<strong id='dna-blast'>DNA BLAST searches easily done on HOMD that are difficult or impossible at NCBI.</strong>
 <p>
 <u>You want to find non-coding elements such as tRNAs, sRNAs, RNaseP or riboswitches</u>. This requires searching the entire DNA sequences of a genome rather than the DNA sequence for only the coding regions (a very important distinction). At HOMD, BLASTN searches using the fna databases return results for all genomes in HOMD regardless of whether they are closed genomes or a set of Whole Genome Shotgun (WGS) contigs. At NCBI, the Core nucleotide database contains nearly exclusively closed genomes which can be searched using BLASTN and the core_nt database. The problem is the vast majority of sequences at NCBI and 75% of the genomes at HOMD are Whole Genome Shotgun sequences. At NCBI, WGS genomes can only be searched one genome at a time assuming you know either its BioProject or WGS Project number. Finding which oral genomes contain a novel sRNA is simple using a single BLASTN search at HOMD, but at NCBI requires a BLASTN search of the core_nt database plus 6,000 BLASTN searches of the WGS database with their 6,000 WGS or BioProject accession numbers.
 </p>

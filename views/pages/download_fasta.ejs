@@ -1,0 +1,59 @@
+<style>
+form{
+   text-align:center;
+}
+#submit-btn{
+    padding:3px;
+    color:ivory;
+    background:purple;
+}
+</style>
+<%- include('../partials/header_html'); %>
+
+<body>
+    <div id='wrapper'>
+    <%- include('../partials/header_img'); %>
+    <%- include('../partials/navbar'); %>
+    
+    
+    <div class='page-content' >
+              
+       <p class='h3 title'>Download FASTA</p>
+    <form id='' action='download_fasta' method='POST' enctype="multipart/form-data">
+    <br>
+    Annotations:&nbsp;&nbsp;&nbsp;
+    <input type='radio' checked name='anno' value='prokka'> PROKKA&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type='radio' name='anno' value='ncbi'> NCBI
+    <br><br>
+    Sequence Type:&nbsp;&nbsp;&nbsp;
+    <input type='radio' checked name='fa_type' value='protein'> Protein&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type='radio' name='fa_type' value='nucleotide'> Nucleotide
+    <br><br>
+    Required: file of ProteinIDs 
+    One ID per line and no formatting or other information.
+    <br><small>LIMIT 1000 IDs</small>
+    <br><br>
+    <label for="file-upload">Choose a file of proteinIDs:</label>
+    <input type="file" id="file-upload" name="myFile">
+    <br><br><br><br><br><br>
+    <button id='submit-btn' type="submit">Upload / Create FASTA</button>
+    </form>
+  
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../partials/footer'); %>
+    </div>
+       
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  mainmenu()
+</script>
+
+

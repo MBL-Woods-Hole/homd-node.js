@@ -1,13 +1,22 @@
+2026-05-12
+-add pangenome icon to home page -DONE
+-add big link to UseCase Page
+-SS — Floyd and Katheryn will send info
+-Anvio: either delete ‘Download’ button
+   or link to pg page
+-HOMD Function: upload file list of protein IDs
+   retrieve fasta
 2026-05-06
 Email from Floyd:
-1- Create a new page on HowToUse HOMD to advantage
+DONE 1- Create a new page on HowToUse HOMD to advantage
 2- George and Andy,  
   for genomic BLAST searches I find I’m essentially always changing the Advanced parameters.   
   I usually change to -evalue 1.0e-45 and -max_target_seqs 400 or 800 or 2000. 
   It is easy to mistype one of the parameters and kill the blast. 
   I know this is a canned program from NCBI and difficult to modify, 
   but is there be better way to choose one’s favorite values for  ‘-evalue and -max_target_seqs?
-
+    (AAV mabe a dropdown with a set list?)
+    
   Also, when you do a BLAST, with “open results in new tab” the results show up in a new tab as desired.  
   However, when you close that tab you come back to a frozen HOMD Genomic BLAST Server page.  
   The only way to recover tis to hit refresh which clears all database selection and your sequence.   

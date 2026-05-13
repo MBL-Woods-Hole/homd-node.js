@@ -1210,18 +1210,7 @@ router.get('/explorer', async function explorer_get (req, res) {
     return
 })
 
-//
-//
-// router.get('/blast_server', function genome_blast_server(req, res) {
-//     res.render('pages/blast/blast_server', {
-//         title: 'HOMD :: Blast Server',
-//         pgname: '', // for AboutThisPage
-//         config: JSON.stringify(ENV),
-//         ver_info: JSON.stringify(C.version_information),
-//         
-//         blast_type: 'genome'
-//       })
-// })
+
 router.get('/blast_select_genome', function blast_select_genome(req, res) {
    //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
   //helpers.accesslog(req, res)
@@ -1259,44 +1248,7 @@ router.get('/blast_select_genome', function blast_select_genome(req, res) {
   })
 })
 
-// router.get('/blast_sserver', function blast_sserver(req, res){
-//    //console.log(req.query)
-//    //helpers.accesslog(req, res)
-//    let db_type = req.query.type
-//    let page_title = ''
-//    if(db_type === 'refseq'){
-//      page_title = 'BLAST: RefSeq Databases'
-//    }else{
-//      page_title = 'Genomic BLAST: All-Genomes Databases'
-//    }
-//    console.log('BLAST SequenceServer','Type:',db_type,'IP:',req.ip)
-//    // res.render('pages/genome/blast_server_no_iframe', {
-// //     title: 'HOMD :: BLAST', 
-// //     pgname: 'blast/pagehelp', // for AboutThisPage
-// //     config: JSON.stringify(ENV),
-// //     ver_info: JSON.stringify(C.version_information),
-// //     
-// //     gid: '',
-// //     annotation: '',
-// //     organism: '',
-// //     db_type: db_type,
-// //     ptitle: page_title,
-// //   })
-//   
-//    res.render('pages/genome/blast_server_iframe', {
-//     title: 'HOMD :: BLAST', 
-//     pgname: 'blast/pagehelp', // for AboutThisPage
-//     config: JSON.stringify(ENV),
-//     ver_info: JSON.stringify(C.version_information),
-//     
-//     gid: '',
-//     annotation: '',
-//     organism: '',
-//     db_type: db_type,
-//     ptitle: page_title,
-//     no_ncbi_blast: JSON.stringify([])
-//   })
-// })
+
 
 router.post('/blast_ss_single', function blast_ss_single(req, res){
   console.log('IN POST blast_ss_single')
@@ -1314,21 +1266,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
      page_title = '['+req.body.annotation.toUpperCase() +'] '+ page_title
   }
   
-  //console.log('BLAST SequenceServer','Type:SingleGenome',gid,'IP:',req.ip)
-  //console.log('SingleBLASTURL: '+ENV.BLAST_URL_BASE+'/genome_blast_single_'+req.body.annotation+'/?gid='+gid)
- //  res.render('pages/genome/blast_server_iframe', {
-//     title: 'HOMD :: BLAST', 
-//     pgname: 'blast/pagehelp', // for AboutThisPage
-//     config: JSON.stringify(ENV),
-//     ver_info: JSON.stringify(C.version_information),
-//     
-//     gid: req.body.gid,
-//     annotation: req.body.annotation,
-//     organism: organism,
-//     ptitle: page_title,
-//     db_type: '',
-//     no_ncbi_blast: JSON.stringify(C.no_ncbi_blast_dbs)
-//   })
+
   
   let url = ''
   if(req.body.annotation === 'ncbi'){
@@ -1344,161 +1282,9 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
 
 
 
-// router.post('/blast_single', function blast_single(req, res) {
-//     //console.log(req.body)
-//     // 'prokka|fna|SEQF1595.2|/Users/avoorhis/programming/blast-db-alt/fna/SEQF1595.2.fna'
-//     let blast_db_parts = req.body.blastdb.split('|')
-//     let anno    = blast_db_parts[0]
-//     let ext     = blast_db_parts[1]
-//     let gid     = blast_db_parts[2]
-//     let db_path = blast_db_parts[3]
-//     
-//     // localhost:4567  or 0.0.0.
-//     // production:  192.168.1.60:4569  for the SS-single
-//     // How to fire submit on form from another host.server
-//     let connect = require('connect');
-//     //let http = require('http');
-// 
-//     let app2 = connect();
-//     app2.listen(4567, '0.0.0.0', function() {
-//        console.log('Listening to port:  ' + 4567);
-//     });
-// 
-// 
-// })
-// router.get('/blast_server_one', function blast_test(req, res) {
-//   console.log('blast_test')
-//   let gid = req.query.gid
-//   const { spawn } = require("child_process");
-//   let info = {}, filepath
-//   info[gid] = []
-//     let dataPromises = []
-//     let exts = ['faa', 'ffn', 'fna']
-//     let paths = [ENV.BLAST_DB_PATH_GENOME_NCBI, ENV.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
-//     for(let p in paths){
-//        for(let e in exts){
-//            filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
-//            console.log(filepath)
-//            
-//            dataPromises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
-//       }
-//   }
-//   Promise.all(dataPromises).then(result => {
-//     //this code will be called in future after all readCSV Promises call resolve(..)
-//     //console.log('info-results',result)
-//     let data = []
-//     for(let n in result){
-//        if(typeof result[n] !== 'string'){
-//           if(result[n].path.includes('ncbi')){
-//              result[n].anno = 'ncbi'
-//           }else{
-//              result[n].anno = 'prokka'
-//           }
-//           data.push(result[n])
-//        }
-//     }
-//     //console.log('data-results',data)
-//     res.render('pages/genome/blast_one_genome', {
-//     title: 'HOMD :: BLAST', 
-//     pgname: '', // for AboutThisPage
-//     config: JSON.stringify(ENV),
-//     gid: gid,  // default
-//     org: C.genome_lookup[gid].organism,
-//     ver_info: JSON.stringify(C.version_information),
-//     
-//     data: JSON.stringify(data)
-//     }) 
-//   
-//   })
-//   
-//   
+
+
   
-//})
-// router.get('/genome_blast_no_iframe', function genome_blast_no_iframe(req, res) {
-//   console.log('in genome_blast_no_iframe')
-//   console.log(req.query)
-//      //console.log(req.query)
-//    //helpers.accesslog(req, res)
-//    let url = ENV.BLAST_URL_BASE+'/genome_blast/'
-//    let db_type = req.query.type
-//    let page_title = ''
-//    if(db_type === 'refseq'){
-//      page_title = 'BLAST: RefSeq Databases'
-//    }else{
-//      page_title = 'Genomic BLAST: All-Genomes Databases'
-//    }
-//    console.log('BLAST SequenceServer','Type:',db_type,'IP:',req.ip)
-//    
-//    res.render('pages/genome/blast_server_no_iframe', {
-//     title: 'HOMD :: BLAST', 
-//     pgname: 'blast/pagehelp', // for AboutThisPage
-//     config: JSON.stringify(ENV),
-//     ver_info: JSON.stringify(C.version_information),
-//     
-//     gid: '',
-//     annotation: '',
-//     url:url,
-//     organism: '',
-//     db_type: db_type,
-//     ptitle: page_title,
-//   })
-// })
-// router.get('/blast', function blast_get(req, res) {
-//    //console.log('in genome blast-GET')
-//    let chosen_gid = req.query.gid
-//    if(!chosen_gid){chosen_gid='all'}
-//    //console.log('chosen gid=',chosen_gid)
-//    let sg = helpers.makeid(3).toUpperCase()
-//    let organism,dbChoices
-//    const allAnnosObj = Object.keys(C.annotation_lookup).map((gid) => {
-//     return {gid: gid, org: C.annotation_lookup[gid].prokka.organism}
-//    })
-//    
-//    allAnnosObj.sort((a, b) =>{
-//       return helpers.compareStrings_alpha(a.org, b.org)
-//    })
-//    //let dbChoices = C.all_genome_blastn_db_choices.nucleotide   //.nucleotide.map((x) => x); // copy array
-//     if(! chosen_gid || chosen_gid === 0|| chosen_gid ==='all' || !C.annotation_lookup.hasOwnProperty(chosen_gid)){
-//       
-//       organism   = allAnnosObj[0].org
-//       chosen_gid = allAnnosObj[0].gid
-//           dbChoices = [
-//           {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
-//                    filename:'fna/'+chosen_gid+'.fna'},
-//           {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
-//                    filename:'ffn/'+chosen_gid+'.ffn'}
-//           ]
-//     }else{
-//       
-//         organism = C.annotation_lookup[chosen_gid].prokka.organism
-//         dbChoices = [
-//           {name: "This Organism's ("+organism + ") Genomic DNA", value:'org_genomes1', programs:['blastn','tblastn','tblastx'],
-//                    filename:'fna/'+chosen_gid+'.fna'},
-//           {name: "This Organism's ("+organism + ") DNA of Annotated Proteins", value:'org_genomes2', programs:['blastn','tblastn','tblastx'],
-//                    filename:'ffn/'+chosen_gid+'.ffn'}
-//           ]
-//         
-//     }
-//     
-//     res.render('pages/genome/blast', {
-//         title: 'HOMD :: BLAST',
-//         pgname: 'blast/blast', // for AboutThisPage
-//         config: JSON.stringify(ENV),
-//         ver_info: JSON.stringify(C.version_information),
-//         
-//         blastFxn: 'genome',
-//         organism: organism,
-//         gid: chosen_gid,
-//         spamguard: sg,
-//         all_annos: JSON.stringify(allAnnosObj),
-//         blast_prg: JSON.stringify(C.blastPrograms),
-//         db_choices: JSON.stringify(dbChoices),
-//         returnTo: '/genome/blast',
-//         blastmax: JSON.stringify(C.blast_max_file),
-//         blast_version: ENV.BLAST_VERSION,
-//       })
-//    
-// })
 
 // 2021-06-15  opening trees in new tab because thet take too long to open in an iframe
 // which makes the main menu non functional
@@ -1722,31 +1508,62 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //     })
 // }
 //
-router.get('/anvio_pangenomes', async function anvio_pangenomes(req, res){
-    let q = queries.get_all_pangenomes_query()
-    //console.log(C.pangenome_lookup)
+router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
+    //let q = queries.get_all_pangenomes_query()
+    console.log('in GET anvio selection',req.query)
+    console.log('GET')
     let pg_list = Object.keys(C.pangenome_lookup)
-    pg_list.sort()
-    //console.log(C.pangenome_lookup[pg_list[2]])
-    res.render('pages/genome/anvio_selection', {
-        title: 'HOMD :: Pangenomes', 
-        pgname: '', // for AboutThisPage
-        config: JSON.stringify(ENV),
-        ver_info: JSON.stringify(C.version_information),
-        
-        pangenomes: JSON.stringify(C.pangenome_lookup),
-        sorted_pg:  JSON.stringify(pg_list),
-        
+    if(req.query && req.query.search){
+        console.log('render new list:',req.query.search)
+        let search_term = req.query.search
+        if(search_term.length >200){
+            return
+        }
+        let collector = []
+        let new_pg_obj = {}
+        for(let i in pg_list){
+            if(pg_list[i].toLowerCase().includes(search_term)){
+                collector.push(pg_list[i])
+                new_pg_obj[pg_list[i]] = C.pangenome_lookup[pg_list[i]]
+            }
+        }
+        collector.sort()
+        res.render('pages/genome/anvio_selection?search='+req.query.search, {
+            title: 'HOMD :: Pangenomes', 
+            pgname: '', // for AboutThisPage
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+            
+            pangenomes: JSON.stringify(new_pg_obj),
+            sorted_pg:  JSON.stringify(collector),
+            
         })
+    }else{
+        
+        pg_list.sort()
+        //console.log(C.pangenome_lookup[pg_list[2]])
+        res.render('pages/genome/anvio_selection', {
+            title: 'HOMD :: Pangenomes', 
+            pgname: '', // for AboutThisPage
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+            
+            pangenomes: JSON.stringify(C.pangenome_lookup),
+            sorted_pg:  JSON.stringify(pg_list),
+            
+        })
+    }
     return
 
 })
 //
-router.post('/anvio_pangenomes', async function anvio_pangenomes_POST(req, res){
+router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
+    
+    
     console.log('in POST anvio selection')
+    console.log('in POST anvio selection',req.query)
     let search_term = req.body.val.toLowerCase()
-    //let q = queries.get_all_pangenomes_query()
-    //let send_rows = []
+    
     let pg,obj,html = ""
     let html_rows = ""
     let html_head = "<table id='pgtable' class='table sortable' border='1'>"

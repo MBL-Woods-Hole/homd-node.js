@@ -3,6 +3,11 @@ import express from 'express';
 let router   = express.Router();
 
 import fs from 'fs-extra';
+//import fileUpload from 'express-fileupload';
+//const app = express();
+//app.use(fileUpload());
+import multer  from 'multer'
+global.ENV = process.env;
 
 import path from 'path';
 import { pipeline, Transform } from 'stream';
@@ -12,6 +17,9 @@ import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
 import * as helpers_genomes from './helpers/helpers_genomes.js';
 import * as queries from './queries.js';
+
+const upload = multer({ dest: ENV.PATH_TO_TMP  })
+
 //import { getConnection } from '../config/database.js';
 //import pool from '../config/database.js';
 router.get('/download/:q', function download(req, res) {
@@ -926,6 +934,79 @@ router.get('/version/:index', function dld_pg (req, res) {
     res.download(fullpath)
     return
     
+})
+router.get('/download_fasta', function dld_fasta_get (req, res) {
+    res.render('pages/download_fasta', {
+            title: 'HOMD :: Download FASTA', 
+            pgname: '', // for AboutThisPage
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+        })
+})
+
+router.post('/download_fasta', upload.single('myFile'), async function dld_fasta_post (req, res) {
+    console.log('in download fasta')
+    console.log('req.file',req.file)
+    //console.log('str',req.file.buffer.toString())
+    //console.log('body',req.body)
+    let data = []
+    if(req.file){
+        data = req.file.buffer.toString().split('\n')
+        if(data.length > 1000){
+           res.send('Data input is too long (>1000 IDs)')
+           return
+        }
+    }else{
+        res.redirect('download_fasta')
+        return
+    }
+    //console.log('data',data)
+    let conn,table='faa',db='PROKKA',tmp = []
+    if(req.body.anno === 'ncbi'){
+        db = 'NCBI'
+    }
+    if(req.body.fa_type === 'nucleotide'){
+        table = 'ffn'
+        
+    }
+    let q = "SELECT genome_id as gid,protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+db+"."+table+" WHERE protein_id in ("
+    for(let n in data){
+        //console.log('n',data[n])
+        tmp.push( "'"+data[n].trim()+"'")
+    }
+    q += tmp.join(',')
+    q += ")"
+    //console.log(q)
+    let defline,seq,outfile_txt = ''
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+
+        if (rows.length === 0) {
+            console.log('no rows found')
+            res.send('No Data Found')
+            return
+        
+        }else{
+            for(let n in rows){
+                defline = '>'+rows[n].pid+'|'+rows[n].gid
+                seq = rows[n].seq.toString()
+                const arr = helpers.chunkSubstr(seq, 80)
+                //arr.join('<br>')
+                outfile_txt += defline+'\n'+arr.join('\n')+'\n'
+            }
+        }
+        
+        let fname = 'HOMD_FASTA.fna'
+        res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+        res.send(outfile_txt)
+        res.end()
+    } catch (error) {
+        console.error(error);
+        res.send(error)
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
 })
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

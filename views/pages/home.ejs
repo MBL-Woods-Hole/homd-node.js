@@ -16,7 +16,9 @@
        <img src="/images/homd_banner_dbhelix_4.2_devel.png">
        <%- include("../partials/navbar"); %>
     </div>
-    
+    <div class=""  style='width:65%;padding:15px;margin:20px 0;background:#004080;'>
+      <center><a style='color:ivory;text-decoration:underline;' href='help/help-page?pagecode=bestuse'>How to Best Use HOMD to Your Advantage.</a></center>
+    </div>
     <div class="shadow introduction bggray rounded"  style='width:85%;text-align:left;padding:15px;margin:20px 0;'>
 
         <tspan style="font-size:1.5em;font-weight:normal;color:rgb(150, 35, 44);font-style:italic">
@@ -112,12 +114,22 @@
                     <tr><td>
                         <table class="tabeffect bgpink">
                             <tr>
-                              <!-- <td><a href='/genome/blast_sserver?type=genome'>Genomic BLAST</a></td> -->
                               <td><a href="<%= cfg.BLAST_URL_BASE %>/genome_blast/" target="_self" >Genomic BLAST</a></td>
                             </tr>
                             <tr>
                               <!-- <td><a href='/genome/blast_sserver?type=genome'><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td> -->
                               <td><a href="<%= cfg.BLAST_URL_BASE %>/genome_blast/" target="_self" ><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td>
+                            </tr>
+                        </table>
+                    </td></tr>
+                    <tr><td>
+                        <table class="tabeffect bgpink">
+                            <tr>
+                              <td><a href="genome/anvio_pangenomes" target="_self" >Pangenomes</a></td>
+                            </tr>
+                            <tr>
+                              <!-- <td><a href='/genome/blast_sserver?type=genome'><img src="/images/image-BLAST-genome50pct.png" width="320"></a></td> -->
+                              <td><a href="genome/anvio_pangenomes" target="_self" ><img src="/images/image-Pangenomes.png" width="320"></a></td>
                             </tr>
                         </table>
                     </td></tr>

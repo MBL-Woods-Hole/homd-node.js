@@ -140,7 +140,7 @@ thead th { position: sticky; top: 0; }
   <th class="center">Scope</th>
   <th class="center" >Genome<br>Count</th>
   <!-- <th class="sorttable_nosort center">Notes</th> -->
-  <th class="sorttable_nosort"></th>
+  <th class="center sorttable_nosort">Download Files</th>
   
 </tr>
 
@@ -272,7 +272,7 @@ Primary reference: Human Oral Microbiome Database (HOMD): Chen et al., 2010; Dew
     //console.log(input.value)
     var xmlhttp = new XMLHttpRequest();
     
-    xmlhttp.open("POST", 'anvio_pangenomes', false);
+    xmlhttp.open("POST", 'anvio_pangenomes?search='+args.val, true);
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 ) {
@@ -284,6 +284,7 @@ Primary reference: Human Oral Microbiome Database (HOMD): Chen et al., 2010; Dew
         }
     }
     xmlhttp.send(JSON.stringify(args));
+    xmlhttp.send();
     
   });
   function find_anvio(pg,source){

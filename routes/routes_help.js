@@ -294,7 +294,7 @@ function getPageTitle(page){
        return 'Page Help::Blast Advanced Parameters'
     }
     if(page === 'bestuse'){
-       return 'How to Best Use HOMD to Your Advantage'
+       return 'HOMD Use Cases'
     }
     
     return page+'-FixmyTitle'
