@@ -962,12 +962,13 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
         return
     }
     //console.log('data',data)
-    let conn,table='faa',db='PROKKA',tmp = []
+    let conn,table='faa',db='PROKKA',ext='.faa',tmp = []
     if(req.body.anno === 'ncbi'){
         db = 'NCBI'
     }
     if(req.body.fa_type === 'nucleotide'){
         table = 'ffn'
+        ext='.fna'
         
     }
     let q = "SELECT genome_id as gid,protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+db+"."+table+" WHERE protein_id in ("
@@ -1002,7 +1003,7 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
             }
         }
         
-        let fname = 'HOMD_FASTA_'+req.body.anno+'_'+req.body.fa_type+'_'+dt.today + '_' + dt.seconds + '.fna'
+        let fname = 'HOMD_FASTA_'+req.body.anno+'_'+req.body.fa_type+'_'+dt.today + '_' + dt.seconds + ext
         res.set({ 'Content-Disposition': 'attachment; filename='+fname })
         res.send(outfile_txt)
         res.end()
