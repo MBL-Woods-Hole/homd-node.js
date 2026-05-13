@@ -972,6 +972,10 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
     let q = "SELECT genome_id as gid,protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+db+"."+table+" WHERE protein_id in ("
     for(let n in data){
         //console.log('n',data[n])
+        if(data[n].length > 50){
+            res.send('Data node is too long (>50 chars)')
+            return
+        }
         tmp.push( "'"+data[n].trim()+"'")
     }
     q += tmp.join(',')
