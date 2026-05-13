@@ -1479,43 +1479,16 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   
 })
 //
-
-//
-
-// function get_blast_db_info(gid){
-//     console.log('in get_blast_db_info')
-//     let info = {},run,filepath,hit
-//     const { spawn } = require("child_process");
-//     // get & check paths to six genome databases: 
-//     //gid = 'SEQF1595'
-//     info[gid] = []
-//     let promises = []
-//     let exts = ['faa', 'ffn', 'fna']
-//     let paths = [ENV.BLAST_DB_PATH_GENOME_NCBI, ENV.BLAST_DB_PATH_GENOME_PROKKA,'/Users/avoorhis/programming/blast-db-alt']
-//     for(let p in paths){
-//        for(let e in exts){
-//            filepath = path.join(paths[p], exts[e], gid+'.'+exts[e]) 
-//            //console.log(filepath)
-//            let full_data = ''
-//            promises.push(helpers.readFromblastDb(filepath, gid, exts[e]))
-// 
-//        }
-//     }
-//     const responses = Promise.all(promises)
-//       .then(results => {
-//       
-//       return results
-//     })
-// }
 //
 router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
     //let q = queries.get_all_pangenomes_query()
     console.log('in GET anvio selection',req.query)
     console.log('GET')
     let pg_list = Object.keys(C.pangenome_lookup)
-    if(req.query && req.query.search){
-        console.log('render new list:',req.query.search)
-        let search_term = req.query.search
+    let tot_count = pg_list.length
+    if(req.query && req.query.filter){
+        console.log('render new list:',req.query.filter)
+        let search_term = req.query.filter.toLowerCase()
         if(search_term.length >200){
             return
         }
@@ -1528,12 +1501,14 @@ router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
             }
         }
         collector.sort()
-        res.render('pages/genome/anvio_selection?search='+req.query.search, {
+        res.render('pages/genome/anvio_selection', {
             title: 'HOMD :: Pangenomes', 
             pgname: '', // for AboutThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
-            
+            search: search_term,
+            tcount: tot_count,
+            thiscount: collector.length,
             pangenomes: JSON.stringify(new_pg_obj),
             sorted_pg:  JSON.stringify(collector),
             
@@ -1547,7 +1522,9 @@ router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
             pgname: '', // for AboutThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
-            
+            search: '',
+            tcount: tot_count,
+            thiscount: tot_count,
             pangenomes: JSON.stringify(C.pangenome_lookup),
             sorted_pg:  JSON.stringify(pg_list),
             
@@ -1630,7 +1607,8 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
         html_rows += "</td>"
         html_rows += "</tr>"
     }
-    html += "<br><span style='padding:0 5px;'>Filtered Pangenome Count: <b>"+collector.length.toString() +"</b></span>"
+    html += "This Table Length:"+collector.length.toString()
+    
     html += html_head
     html += html_rows
     html += "</tbody></table>"

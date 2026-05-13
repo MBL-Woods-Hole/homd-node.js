@@ -947,6 +947,7 @@ router.get('/download_fasta', function dld_fasta_get (req, res) {
 router.post('/download_fasta', upload.single('myFile'), async function dld_fasta_post (req, res) {
     console.log('in download fasta')
     console.log('req.file',req.file)
+    let dt = helpers.get_today_obj()
     //console.log('str',req.file.buffer.toString())
     //console.log('body',req.body)
     let data = []
@@ -1001,7 +1002,7 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
             }
         }
         
-        let fname = 'HOMD_FASTA.fna'
+        let fname = 'HOMD_FASTA_'+req.body.anno+'_'+req.body.fa_type+'_'+dt.today + '_' + dt.seconds + '.fna'
         res.set({ 'Content-Disposition': 'attachment; filename='+fname })
         res.send(outfile_txt)
         res.end()

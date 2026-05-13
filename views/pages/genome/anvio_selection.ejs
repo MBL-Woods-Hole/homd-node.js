@@ -89,7 +89,10 @@ thead th { position: sticky; top: 0; }
     font-size:16px;
     padding:5px;
 }
-
+#info-div{
+  width:70%;
+  Padding:10px;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% pgs = JSON.parse(pangenomes) %>
@@ -115,25 +118,25 @@ thead th { position: sticky; top: 0; }
     </div>
     </center>
 <!-- iFrame or New_Window? -->
-
-<center>Search Names:
-<input id='pg_search_input' style='border:1px solid gray;padding:5px;' type='text' placeholder="Enter search term..."\>
+<div id='info-div' >
+<span>Available Pangenomes Count: <b><%- tcount %></b></span>
+&nbsp;&nbsp;&nbsp;
+Search Names:
+<input id='pg_search_input' style='border:1px solid gray;padding:5px;' type='text' value='<%= search %>' placeholder="Enter search term..."\>
 <a href='anvio_pangenomes'>Reload Page</a>
-</center>
-
-<span>Available Pangenomes Count: <b><%- sorted.length %></b></span>
-<span class='pull_right'>Created with HOMD Genomic Version `<b><%= version_info.gen_ver %></b>`</span>
-
+&nbsp;&nbsp;&nbsp;
+<span class=''>Created with HOMD Genomic Version `<b><%= version_info.gen_ver %></b>`</span>
+</div>
 
 
 <div id='pgtable-div' style=''>
 
 
-
+This Table Length: <%= thiscount %>
 <table id='pgtable' class='table sortable' border='1'>
 
 <tr>
-  <th nowrap>Pangenome<small><br>&nbsp;&nbsp;&nbsp;Click to Sort</small></th>
+  <th nowrap>Pangenome  <small><br>&nbsp;&nbsp;&nbsp;Click to Sort</small></th>
   
   <th class="sorttable_nosort center">Interactive</th>
   <th class="sorttable_nosort center">Preview</th>
@@ -272,7 +275,7 @@ Primary reference: Human Oral Microbiome Database (HOMD): Chen et al., 2010; Dew
     //console.log(input.value)
     var xmlhttp = new XMLHttpRequest();
     
-    xmlhttp.open("POST", 'anvio_pangenomes?search='+args.val, true);
+    xmlhttp.open("POST", 'anvio_pangenomes', false);
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 ) {
@@ -284,9 +287,10 @@ Primary reference: Human Oral Microbiome Database (HOMD): Chen et al., 2010; Dew
         }
     }
     xmlhttp.send(JSON.stringify(args));
-    xmlhttp.send();
+    
     
   });
+  
   function find_anvio(pg,source){
     // called on click of pg link
     //loader.showLoader();

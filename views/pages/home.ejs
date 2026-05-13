@@ -16,25 +16,16 @@
        <img src="/images/homd_banner_dbhelix_4.2_devel.png">
        <%- include("../partials/navbar"); %>
     </div>
-    <div class=""  style='width:65%;padding:15px;margin:20px 0;background:#004080;'>
-      <center><a style='color:ivory;text-decoration:underline;' href='help/help-page?pagecode=bestuse'>How to Best Use HOMD to Your Advantage.</a></center>
-    </div>
+    
     <div class="shadow introduction bggray rounded"  style='width:85%;text-align:left;padding:15px;margin:20px 0;'>
-
-        <tspan style="font-size:1.5em;font-weight:normal;color:rgb(150, 35, 44);font-style:italic">
+        <center>
+          <tspan style="font-size:1.5em;font-weight:normal;color:rgb(150, 35, 44);font-style:italic">
             e</tspan><tspan style="font-size:2em;font-weight:bold;color:steelblue">H</tspan>OMD has been updated to version 
             <%= version_info.tax_ver %><span class='red-text'>&Phi;</span>.
             
-            With this update, a beta version of prophage predictions for all genomes in the eHOMD, is included,
-            and we include graphical pangenomes for all taxa with at least 2 genomes.
-
-            We are also transforming the database to a taxonomy based on whole-genome sequence information, 
-            while still including 16S rRNA gene-based taxonomy to retain oral taxa known only from their rRNA genes. 
-            In the major update to version 4, we added 44 human oral taxa as well as deleting taxa that whole-genome 
-            sequences reveal to be redundant. We present expanded information to indicate which organisms in 
-            eHOMD are primarily oral or nasal and which can be found in the mouth but primarily reside at a different body 
-            site or in the environment. 
-        <br><br>
+            <a href='/help/help-page?pagecode=description'>Read more about this update Here.</a>
+        </center>
+        <br>
             
             eHOMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract. 
             
@@ -57,6 +48,9 @@
             linked to a stably named reference scheme.
     </div>
    
+   <div class=""  style='width:85%;padding:15px;margin:20px 0;background:#004080;'>
+      <center><a style='color:ivory;text-decoration:underline;' href='help/help-page?pagecode=bestuse'>How to Best Use HOMD to Your Advantage.</a></center>
+    </div>
     
     <div class="container">
         <div class="column">
