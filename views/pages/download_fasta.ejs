@@ -6,6 +6,7 @@ form{
     padding:3px;
     color:ivory;
     background:purple;
+    padding:3px;
 }
 </style>
 <%- include('../partials/header_html'); %>
@@ -29,14 +30,14 @@ form{
     <input type='radio' checked name='fa_type' value='protein'> Protein&nbsp;&nbsp;&nbsp;&nbsp;
     <input type='radio' name='fa_type' value='nucleotide'> Nucleotide
     <br><br>
-    Required: file of ProteinIDs 
-    One ID per line and no formatting or other information.
+    <strong>Required:</strong> File of Protein-IDs 
+    <br>One ID per line and no formatting or other information.
     <br><small>LIMIT 1000 IDs</small>
     <br><br>
-    <label for="file-upload">Choose a file of proteinIDs:</label>
+    <label for="file-upload">Choose a file of protein-IDs:</label>
     <input type="file" id="file-upload" name="myFile">
     <br><br><br><br><br><br>
-    <button id='submit-btn' type="submit">Upload / Create FASTA</button>
+    <button id='submit-btn' type="submit">Create FASTA</button>
     </form>
   
     </div> <!-- end: page-content -->
