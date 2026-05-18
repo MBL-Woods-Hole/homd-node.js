@@ -45,8 +45,12 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     // let q = "SELECT UNCOMPRESS(seq_compressed) as seq from PROKKA.ffn"
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.faa"   //okay
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.ffn"
+    
     // prokka::ffn OKAY GCA_019602835.1_00003,GCA_027625375.1_00003,GCA_030503915.1_02746
-    q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"')"
+    // prokka fna XXXX "GCA_019602835.1|CP080761.1", "GCA_027625375.1|CP115182.1", "GCA_030148125.1|JASBUB010000108.1"
+    // NCBI fna  XXXX "GCA_019602835.1|CP080761.1", "GCA_030148125.1|JASBUB010000108.1", "GCA_027625375.1|CP115182.1"
+    // NCBI ffn  "GCA_019602835.1|lcl|CP080761.1_cds_QYY25611.1_3", "GCA_000015545.1|lcl|CP000539.1_cds_ABM44247.1_3991"
+    q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"') limit 10"
     
     console.log(q)
     try {
@@ -58,19 +62,10 @@ router.get('/get_fasta', async function get_fasta(req, res) {
             html += "No sequence found in database"
         }else{
             predictor = rows[0].predictor
-            gid = rows[0].genome_id
-            if(gid && C.genome_lookup.hasOwnProperty(gid)){
-                otid = C.genome_lookup[gid]['otid']
-                strain = C.genome_lookup[gid]['strain']
-                species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
-              }
-            contig = rows[0].contig
-            length = rows[0].seq_length
-            const seqstr = (rows[0].seq).toString()
-            const arr = helpers.chunkSubstr(seqstr, 100)
-            html += arr.join('<br>')
+            gid = rows[0].gid
+            
         }
-        res.send(JSON.stringify({html:html,length:length,gid:gid,contig:contig,org:species+' ('+strain+')',predictor:predictor}))
+        res.send('OKAY from HOMD Dev')
         return
     } catch (error) {
         console.error(error);
