@@ -26,7 +26,7 @@ router.get('/', function index(req, res) {
   })
 })
 
-router.get('/get_fasta', function get_fasta(req, res) {
+router.get('/get_fasta', async function get_fasta(req, res) {
       // I think you can implement an url from the blast result page, 
       // if possible, and as long as the url has an address such as 
       // https://homd.org/get_fasta?seqid=xxx,xxx,xxx
