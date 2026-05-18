@@ -41,12 +41,12 @@ router.get('/get_fasta', async function get_fasta(req, res) {
       let conn
     let html = '',contig,length,gid,predictor,species='',strain='',otid
     
-    let q = "SELECT UNCOMPRESS(seq_compressed) as seq from "+anno+"."+dbtable+"" //
+    let q = "SELECT genome_id as gid, protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+anno+"."+dbtable+"" //
     // let q = "SELECT UNCOMPRESS(seq_compressed) as seq from PROKKA.ffn"
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.faa"   //okay
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.ffn"
     // prokka::ffn OKAY GCA_019602835.1_00003,GCA_027625375.1_00003,GCA_030503915.1_02746
-    q += " WHERE protein_id  in ('"+seqids.replace(/,/g, "','")+"')"
+    q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"')"
     
     console.log(q)
     try {
