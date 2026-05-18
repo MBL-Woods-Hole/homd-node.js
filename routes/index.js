@@ -45,7 +45,8 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     // let q = "SELECT UNCOMPRESS(seq_compressed) as seq from PROKKA.ffn"
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.faa"   //okay
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.ffn"
-    q += " WHERE protein_id  in ('"+seqids.split("','")+"')"
+    q += " WHERE protein_id  in ('"+seqids.replace(/,/g, "','");+"')"
+    
     console.log(q)
     try {
         conn = await global.TDBConn();
