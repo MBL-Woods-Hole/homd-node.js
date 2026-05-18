@@ -26,7 +26,60 @@ router.get('/', function index(req, res) {
   })
 })
 
+router.get('/get_fasta', function get_fasta(req, res) {
+      // I think you can implement an url from the blast result page, 
+      // if possible, and as long as the url has an address such as 
+      // https://homd.org/get_fasta?seqid=xxx,xxx,xxx
 
+
+      console.log('in get_fasta')
+      console.log('req.query',req.query)
+      let anno = req.query.anno  // PROKKA or NCBI
+      let dbtable = req.query.dbtable  // protein or nucleotide
+      let seqids = req.query.seqid
+      
+      let conn
+    let html = '',contig,length,gid,predictor,species='',strain='',otid
+    
+    let q = "SELECT UNCOMPRESS(seq_compressed) as seq from "+anno+"."+dbtable+"" //
+    // let q = "SELECT UNCOMPRESS(seq_compressed) as seq from PROKKA.ffn"
+//     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.faa"   //okay
+//     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.ffn"
+    q += " WHERE search_id  in '"+seqids.split(',')+"'"
+    console.log(q)
+    try {
+        conn = await global.TDBConn();
+        const [rows] = await conn.execute(q);
+    
+        //console.log('rows',rows)
+        if(rows.length === 0){
+            html += "No sequence found in database"
+        }else{
+            predictor = rows[0].predictor
+            gid = rows[0].genome_id
+            if(gid && C.genome_lookup.hasOwnProperty(gid)){
+                otid = C.genome_lookup[gid]['otid']
+                strain = C.genome_lookup[gid]['strain']
+                species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+              }
+            contig = rows[0].contig
+            length = rows[0].seq_length
+            const seqstr = (rows[0].seq).toString()
+            const arr = helpers.chunkSubstr(seqstr, 100)
+            html += arr.join('<br>')
+        }
+        res.send(JSON.stringify({html:html,length:length,gid:gid,contig:contig,org:species+' ('+strain+')',predictor:predictor}))
+        return
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
+      return
+  
+})
 
 router.get('/statistics', function poster(req, res) {
 

@@ -1,3 +1,16 @@
+Hi Katheryn,
+
+  I've been looking into the SequenceServer code (which is ruby BTW - not my favorite) and I found that there was a default fasta download
+  of all the sequences and another for selected sequences on the left sidebar of the results page. 
+  These defaults have been hidden because our blast databases were compiled without the '-parse_seqids' tag on the makeblastdb script.
+  
+  I know George told my why this was done, but it was done on purpose. So I need to use an sql call to the homd database 
+  after the results are presented to create the fasta file for download (similar to the xlsx and csv files)
+  
+  I think I have successfully edited the xlsx and csv spreadsheet files so I'll work on the fasta files next.
+  Working on the live system with hopefully little downtime.
+  
+  
 2026-05-12
 -add pangenome icon to home page -DONE
 -add big link to UseCase Page
