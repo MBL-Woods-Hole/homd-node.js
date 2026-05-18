@@ -32,14 +32,14 @@ router.get('/get_fasta', async function get_fasta(req, res) {
       // https://homd.org/get_fasta?seqid=xxx,xxx,xxx
 
 
-      console.log('in get_fasta')
-      console.log('req.query',req.query)
-      let anno = req.query.anno  // PROKKA or NCBI
-      let dbtable = req.query.dbtable  // protein or nucleotide
-      let seqids = req.query.seqid
+    console.log('in get_fasta')
+    console.log('req.query',req.query)
+    let anno = req.query.anno  // PROKKA or NCBI
+    let dbtable = req.query.dbtable  // protein or nucleotide
+    let seqids = req.query.seqid
       
-      let conn
-    let html = '',contig,length,gid,predictor,species='',strain='',otid
+    let conn,gid,pid
+    let html = ''
     
     let q = "SELECT genome_id as gid, protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+anno+"."+dbtable+"" //
     // let q = "SELECT UNCOMPRESS(seq_compressed) as seq from PROKKA.ffn"
@@ -51,7 +51,7 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     // NCBI fna  XXXX "GCA_019602835.1|CP080761.1", "GCA_030148125.1|JASBUB010000108.1", "GCA_027625375.1|CP115182.1"
     // NCBI ffn  "GCA_019602835.1|lcl|CP080761.1_cds_QYY25611.1_3", "GCA_000015545.1|lcl|CP000539.1_cds_ABM44247.1_3991"
     q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"') limit 10"
-    
+    console.log('\n',anno,dbtable)
     console.log(q)
     try {
         conn = await global.TDBConn();
@@ -61,9 +61,9 @@ router.get('/get_fasta', async function get_fasta(req, res) {
         if(rows.length === 0){
             html += "No sequence found in database"
         }else{
-            predictor = rows[0].predictor
-            gid = rows[0].gid
             
+            gid = rows[0].gid
+            pid = rows[0].pid
         }
         res.send('OKAY from HOMD Dev')
         return
