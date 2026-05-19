@@ -30,51 +30,68 @@ router.get('/get_fasta', async function get_fasta(req, res) {
       // I think you can implement an url from the blast result page, 
       // if possible, and as long as the url has an address such as 
       // https://homd.org/get_fasta?seqid=xxx,xxx,xxx
-
+    let dt = helpers.get_today_obj()
 
     console.log('in get_fasta')
     console.log('req.query',req.query)
     let anno = req.query.anno  // PROKKA or NCBI
-    let dbtable = req.query.dbtable  // protein or nucleotide
+    let dbtable = req.query.dbtable  // ffa ffn fna
     let seqids = req.query.seqid
-      
-    let conn,gid,pid
+    let dbname = req.query.dbname
+    let conn
     let html = ''
     
     let q = "SELECT genome_id as gid, protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+anno+"."+dbtable+"" //
     // let q = "SELECT UNCOMPRESS(seq_compressed) as seq from PROKKA.ffn"
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.faa"   //okay
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.ffn"
-    
-    // prokka::ffn OKAY GCA_019602835.1_00003,GCA_027625375.1_00003,GCA_030503915.1_02746
-    // prokka fna XXXX "GCA_019602835.1|CP080761.1", "GCA_027625375.1|CP115182.1", "GCA_030148125.1|JASBUB010000108.1"
-    // NCBI fna  XXXX "GCA_019602835.1|CP080761.1", "GCA_030148125.1|JASBUB010000108.1", "GCA_027625375.1|CP115182.1"
-    // NCBI ffn  "GCA_019602835.1|lcl|CP080761.1_cds_QYY25611.1_3", "GCA_000015545.1|lcl|CP000539.1_cds_ABM44247.1_3991"
+    // PROKKA faa
+    // NCBI faa
+    // PROKKA::ffn OKAY GCA_019602835.1_00003,GCA_027625375.1_00003,GCA_030503915.1_02746
+    // PROKKA fna BROKE XXXX "GCA_019602835.1|CP080761.1", "GCA_027625375.1|CP115182.1", "GCA_030148125.1|JASBUB010000108.1"
+    // NCBI fna BROKE XXXX "GCA_019602835.1|CP080761.1", "GCA_030148125.1|JASBUB010000108.1", "GCA_027625375.1|CP115182.1"
+    // NCBI ffn  FIXED in routes.rb "GCA_019602835.1|lcl|CP080761.1_cds_QYY25611.1_3", "GCA_000015545.1|lcl|CP000539.1_cds_ABM44247.1_3991"
+    //
     q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"') limit 10"
     console.log('\n',anno,dbtable)
     console.log(q)
+    let defline,outfile_txt = ''
     try {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
     
         //console.log('rows',rows)
         if(rows.length === 0){
-            html += "No sequence found in database"
+            console.log('no rows found')
+            res.send('No Data Found')
+            return
         }else{
             
-            gid = rows[0].gid
-            pid = rows[0].pid
+           
+            for(let n in rows){
+                
+                defline = '>'+rows[n].pid+'|'+rows[n].gid
+                seq = rows[n].seq.toString()
+                const arr = helpers.chunkSubstr(seq, 80)
+                //arr.join('<br>')
+                outfile_txt += defline+'\n'+arr.join('\n')+'\n'
+            }
+            
         }
-        res.send('OKAY from HOMD Dev')
-        return
+        
+        let fname = 'HOMD_BLAST_FASTA_'+anno+'_'+dbname+'_'+dt.today + '_' + dt.seconds + ext
+        res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+        res.send(outfile_txt)
+        res.end()
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
     } finally {
         if (conn) conn.release(); // Release the connection back to the pool
+        return
     }
     return
-      return
+      
   
 })
 
