@@ -79,7 +79,7 @@ router.get('/get_fasta', async function get_fasta(req, res) {
             
         }
         
-        let fname = 'HOMD_BLAST_FASTA_'+anno+'_'+dbname+'_'+dt.today + '_' + dt.seconds + ext
+        let fname = 'HOMD_BLAST_FASTA_'+anno+'_'+dbname+'_'+dt.today + '_' + dt.seconds + '.fa'
         res.set({ 'Content-Disposition': 'attachment; filename='+fname })
         res.send(outfile_txt)
         res.end()
