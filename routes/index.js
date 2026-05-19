@@ -55,7 +55,7 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"') limit 10"
     console.log('\n',anno,dbtable)
     console.log(q)
-    let defline,outfile_txt = ''
+    let defline,seq,outfile_txt = ''
     try {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
