@@ -36,7 +36,7 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     console.log('req.query',req.query)
     let anno = req.query.anno  // PROKKA or NCBI
     let dbtable = req.query.dbtable  // ffa ffn fna
-    let seqids = req.query.seqid
+    let seqids = req.query.seqids
     let dbname = req.query.dbname
     let conn
     let html = ''
