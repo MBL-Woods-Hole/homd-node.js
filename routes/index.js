@@ -38,20 +38,21 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     let dbtable = req.query.dbtable  // ffa ffn fna
     let seqids = req.query.seqids
     let dbname = req.query.dbname
-    let conn
-    let html = ''
+    let jobid = req.query.jobid
+    let conn,q,html = ''
     
-    let q = "SELECT genome_id as gid, protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+anno+"."+dbtable+"" //
+    
+    q = "SELECT genome_id as gid, protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+anno+"."+dbtable+"" //
     // let q = "SELECT UNCOMPRESS(seq_compressed) as seq from PROKKA.ffn"
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.faa"   //okay
 //     let q = "SELECT UNCOMPRESS(seq_compressed) as seq from NCBI.ffn"
-    // PROKKA faa
-    // NCBI faa
+    // PROKKA faa OKAY GCA_937930255.1_00784", "GCA_013267415.1_00353
+    // NCBI faa  FIXED in routes.rb GCA_026783725.1|MCY7224140.1", "GCA_013267415.1|QKH46404.1
     // PROKKA::ffn OKAY GCA_019602835.1_00003,GCA_027625375.1_00003,GCA_030503915.1_02746
     // PROKKA fna BROKE XXXX "GCA_019602835.1|CP080761.1", "GCA_027625375.1|CP115182.1", "GCA_030148125.1|JASBUB010000108.1"
     // NCBI fna BROKE XXXX "GCA_019602835.1|CP080761.1", "GCA_030148125.1|JASBUB010000108.1", "GCA_027625375.1|CP115182.1"
     // NCBI ffn  FIXED in routes.rb "GCA_019602835.1|lcl|CP080761.1_cds_QYY25611.1_3", "GCA_000015545.1|lcl|CP000539.1_cds_ABM44247.1_3991"
-    //
+    //  
     q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"') limit 10"
     console.log('\n',anno,dbtable)
     console.log(q)
