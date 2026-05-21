@@ -79,6 +79,9 @@ router.get('/get_fasta', async function get_fasta(req, res) {
             }
             
         }
+        let outfilePath = path.join(ENV.PATH_TO_TMP,'test.fa')
+        console.log('writing fasta to ',outfilePath)
+        await fs.writeFile(outfilePath, outfile_txt);
         
         let fname = 'HOMD_BLAST_FASTA_'+anno+'_'+dbname+'_'+dt.today + '_' + dt.seconds + '.fa'
         res.set({ 'Content-Disposition': 'attachment; filename='+fname })
