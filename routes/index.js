@@ -79,7 +79,7 @@ router.get('/get_fasta', async function get_fasta(req, res) {
             }
             
         }
-        let outfilePath = path.join(ENV.PATH_TO_TMP,'test.fa')
+        let outfilePath = path.join(ENV.PATH_TO_TMP,jobid+'.fa')
         console.log('writing fasta to ',outfilePath)
         await fs.writeFile(outfilePath, outfile_txt);
         
