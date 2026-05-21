@@ -53,7 +53,8 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     // NCBI fna BROKE XXXX "GCA_019602835.1|CP080761.1", "GCA_030148125.1|JASBUB010000108.1", "GCA_027625375.1|CP115182.1"
     // NCBI ffn  FIXED in routes.rb "GCA_019602835.1|lcl|CP080761.1_cds_QYY25611.1_3", "GCA_000015545.1|lcl|CP000539.1_cds_ABM44247.1_3991"
     //  
-    q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"') limit 10"
+    q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"')"
+    //q += " limit 10"
     console.log('\n',anno,dbtable)
     console.log(q)
     let defline,seq,outfile_txt = ''
