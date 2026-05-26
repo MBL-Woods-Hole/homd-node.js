@@ -59,9 +59,9 @@ router.get('/phage_table', function phage_explorer(req, res) {
         //genome_lookup[gid] = {organism:organism,strain:strain,otid:otid,contigs:contigs,length:length}
         sort_list.push({gid:gid, org:organism})
     }
-    let full_count = Object.keys(genome_lookup).length
-    //console.log(genome_lookup['GCA_000009645.1'])
-       
+    
+    //console.log('full_count',full_count)
+    console.log('sort_list',sort_list.length)
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);
     })
@@ -72,7 +72,7 @@ router.get('/phage_table', function phage_explorer(req, res) {
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             data: JSON.stringify(genome_lookup),
-            full_count: full_count,
+            row_count: sort_list.length,
             gid_list: JSON.stringify(sort_list),
     })
   

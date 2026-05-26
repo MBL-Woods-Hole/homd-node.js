@@ -3,22 +3,81 @@
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 
+#phage-table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+#phage-table.sortable thead tr::before {
+    content: "";
+    display: table-cell;
+    width:30px;
+    /* padding-left:1px; */
+    vertical-align: middle;
+    color:white;
+    /* background:  var(--table-header-bg); */
+    padding:5px;
+    font-size:13px;
+    text-align: center;
+}
+#phage-table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+    text-align:right;
+    font-size:small;
+}
+ #phage-table
+{
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
+  /* table-layout:auto */
+  width:100%;
+  /* background:lightgrey; */
+}
+#phage-table th
+{
+  color:white;
+  background:  var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+  z-index: .5;
+}
+#phage-table td
+{
+  padding:3px 2px 2px 5px;
+  
+  font-size:small;
+  font-weight:bold;
+  color: #303030;
 
-
+  white-space: nowrap;
+}
+#phage-table .ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#phage-table tr:nth-child(even) { 
+    /* background-color: var(--table-row-even1); */
+ } 
+ 
+ #phage-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
 .w-med{
     width:140px;
     text-align:center;
 }
 .w-vsm{
-    width:60px;
+    width:40px;
     text-align:center;
 }
 .w-sm{
-    width:90px;
+    width:50px;
     text-align:center;
 }
 .w-exp{
-    min-width:150px;
+    width:110px;
     text-align:left;
 }
 #phage-sub-table-div{
@@ -34,9 +93,19 @@ thead th { position: sticky; top: 0; }
   padding:8px;
   margin:0px;
   border:2px solid black;
+  z-index: 1;
   
   /* left:-160px; */
   top:350px;
+}
+.project_decription{
+    border:1px solid black;
+    background:lightgrey;
+    text-align:left;
+    font-size:16px;
+    padding:5px;
+    height:150px;
+    overflow:auto;
 }
 #loader {
     background: url('/images/loading.gif') no-repeat center center;
@@ -64,13 +133,26 @@ thead th { position: sticky; top: 0; }
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
       
-         <p class='h3 title'>Genomes with Phage Predictions <small>(<span class='red-text'>in Beta</span>)</small></p>
+        <p class='h3 title'>Genomes with Phage Predictions <small>(<span class='red-text'>in Beta</span>)</small></p>
+    <br>
+    <center>
+    <div class='project_decription'>
+        <b>Description</b>
+        <br>
+        The HOMD is expanding to incorporate viruses (including phages). We begin by defining prophage regions in bacterial genomes. Future updates will include detailed curation and definition of oral viral taxonomic units, enabling cross-referencing of viral findings across oral datasets, and expansion to incorporate non-phage viruses and metagenomic and isolate data types.
+        Table 1 provides a hyperlinked summary describing prophage regions identified in all 8,177 in HOMD v11.02 bacterial genomes, currently representing 15,589 phage/phage-like regions. Following these hyperlinks offers users the ability to inspect the prophage region in JBrowse in light of prophage predictions from geNomad (vX, add flags), 
+        cenote-taker3 (vX, add flags), and manual curation (for microviruses). A unique feature of this analysis is the integration with pangenome information calculated for each bacterial species using PPanGGoLIN (vX, add flags), allowing users to see whether genes in bacterial genomes are core to the species pangenome (“persistent” and colored orange on the JBrowse pangenome track) or present at lower prevalence (intermediate frequency “shell” and low frequency “cloud”, colored green and blue, respectively). Updates to phage region boundaries in the table below will explicitly consider pangenome information, these are “coming soon!”. Table 2 offers a per-GCA view of prophages identified in bacterial genomes based on raw genomad and cenote-taker3-based prophage calls, along with associated summary statistics.
+        Underlying data is available for download at https://www.homd.org/ftp/phages/V1.2, with information provided on a per genome (GCA) level and including faa, fna, gbk, and gff predictions for cenote and genomad phage calls, as well as tsv summary tables for each bacterial genome including information on ppanggolin pangenome and prophage predictions.
 
+    </div>
+    </center>
 <div class='red-text' align="center" >
     Warning: Phage predictions were made with <a href="https://github.com/mtisza1/Cenote-Taker3" target='_blank'>Cenote-Taker3</a> and 
     <a href="https://github.com/apcamargo/genomad/" target='_blank'>geNomad</a>, and have not been manually curated. Please use caution when interpreting the results.
-</div>
+</div>Row Count: <%= row_count %>
+<span class='pull_right'><a href='/download/download/phage'>Download Options</a></span>
 <div id='phage-box' >
+         
          <table id='phage-table' class='table table-hover table-condensed sortable' >
          <thead>
           <tr>
@@ -103,8 +185,8 @@ thead th { position: sticky; top: 0; }
              
              <td class='w-sm' nowrap><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= datarows[gid].otid %>'><%= taxidfullname %></a></td>
              <td class='w-vsm'><%= datarows[gid].site %></td>
-             <td class='w-exp' title='<%= datarows[gid].organism %>'><i><%= datarows[gid].organism %></i></td>
-             <td class='w-exp' title='<%= datarows[gid].strain %>'><%= datarows[gid].strain %></td>
+             <td class='w-exp ellipsis' title='<%= datarows[gid].organism %>'><i><%= datarows[gid].organism %></i></td>
+             <td class='w-exp ellipsis' title='<%= datarows[gid].strain %>'><%= datarows[gid].strain %></td>
              <td class='w-vsm'><%= datarows[gid].contigs %></td>
              <td class='w-sm'><%= datarows[gid].length %></td>
              <td class='w-sm'><%= datarows[gid].cenote_count %></td>
