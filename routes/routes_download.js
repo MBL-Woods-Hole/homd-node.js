@@ -852,6 +852,7 @@ router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
         
         fileFilterText = 'HOMD.org Phage Data:: All HOMD Data;' + ' Date: ' + dt.today
         tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
+        // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
         
         if (type === 'browser') {
           res.set('Content-Type', 'text/plain') // <= important - allows tabs to display

@@ -2141,8 +2141,7 @@ router.get('/amr_table', function amr(req, res) {
         sort_list.push({gid:gid, org:organism})
     }
     //console.log(genome_lookup)
-    let full_count = Object.keys(genome_lookup).length
-    //console.log(genome_lookup['GCA_000009645.1'])
+    
        
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);
@@ -2154,7 +2153,7 @@ router.get('/amr_table', function amr(req, res) {
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             data: JSON.stringify(genome_lookup),
-            full_count: full_count,
+            row_count: sort_list.length,
             gid_list: JSON.stringify(sort_list),
     })
 })
@@ -2287,13 +2286,12 @@ router.get('/crispr_table', function crispr(req, res) {
         sort_list.push({gid:gid, org:organism})
     }
     
-   
-    let full_count = Object.keys(genome_lookup).length
-    //console.log(genome_lookup['GCA_027474905.1'].crispr)
        
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);
     })
+    
+    console.log('sort_list',sort_list.length)
     res.render('pages/genome/crispr_cas', {
         title: 'HOMD :: CRISPR-Cas', 
         pgname: '', // for AboutThisPage
@@ -2301,7 +2299,7 @@ router.get('/crispr_table', function crispr(req, res) {
         ver_info: JSON.stringify(C.version_information),
         pgtitle: 'CRISPR-Cas',
         crispr_data: JSON.stringify(genome_lookup),
-        full_count: full_count,
+        row_count: sort_list.length,
         show: show,
         gid_list: JSON.stringify(sort_list),
     })

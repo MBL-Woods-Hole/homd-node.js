@@ -1,35 +1,66 @@
 <style>
 thead th { position: sticky; top: 0; }
-.table-condensed{
-  font-size: 13px;
+#crispr-table.sortable tbody {
+    counter-reset: sortabletablescope;
 }
-#crispr-box{
-   height:700px;
-   display:none;
-    overflow:auto;
-    padding:10px 10px 20px 10px;
-    border:1px solid gray;
-    margin-top:5px;
+#crispr-table.sortable thead tr::before {
+    content: "";
+    display: table-cell;
+    width:30px;
+    /* padding-left:1px; */
+    vertical-align: middle;
+    color:white;
+    /* background:  var(--table-header-bg); */
+    padding:5px;
+    font-size:13px;
+    text-align: center;
+}
+#crispr-table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+    text-align:right;
+    font-size:small;
+}
+ #crispr-table
+{
+  padding:5px;
+ /*  width:1200px; */
+  table-layout:fixed;
+  /* table-layout:auto */
+  width:100%;
+  /* background:lightgrey; */
+}
+#crispr-table th
+{
+  color:white;
+  background:  var(--table-header-bg);
+  padding:5px;
+  font-size:13px;
+  text-align: center;
+  z-index: .5;
+}
+#crispr-table td
+{
+  padding:3px 2px 2px 5px;
   
-}
+  font-size:small;
+  font-weight:bold;
+  color: #303030;
 
-#crispr-table{
-
-  border: 1px solid black;
-  /* table-layout: fixed; */
-  
-
+  white-space: nowrap;
 }
-#crispr-table th{
-   border-right:1px solid ivory;
+#crispr-table .ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-#crispr-table tr:nth-child(even) {
-    background-color: var(--table-row-even3);
-}
-#crispr-table tr:hover {
-    background-color: #FBF9EA;
-}
-
+#crispr-table tr:nth-child(even) { 
+    /* background-color: var(--table-row-even1); */
+ } 
+ 
+ #crispr-table tr:hover { 
+    background-color: #dce7f5; 
+ } 
 
 .w-med{
     width:140px;
@@ -61,9 +92,18 @@ thead th { position: sticky; top: 0; }
   padding:8px;
   margin:0px;
   border:2px solid black;
-  
+  z-index: 1;
   /* left:-160px; */
   top:350px;
+}
+.project_decription{
+    border:1px solid black;
+    background:lightgrey;
+    text-align:left;
+    font-size:16px;
+    padding:5px;
+    height:150px;
+    overflow:auto;
 }
 #loader {
     background: url('/images/loading.gif') no-repeat center center;
@@ -90,9 +130,17 @@ thead th { position: sticky; top: 0; }
     
     <div class='page-content' >
               
-       <p class='title h3'>CRISPR-Cas systems detected in <%= full_count %> HOMD genomes</p>
-       
-       
+       <p class='title h3'>CRISPR-Cas systems detected in HOMD genomes</p>
+       <br>
+    <center>
+    <div class='project_decription'>
+        <b>Description</b>
+        <br>
+        Please help write me!
+    </div>
+    </center>
+       Row Count: <%= row_count %>
+       <span class='pull_right'><a href='/download/download/crispr'>Download Options</a></span>
        <div id='crispr-box'>
        <table id='crispr-table' class='table table-hover table-condensed sortable'>
        <thead>

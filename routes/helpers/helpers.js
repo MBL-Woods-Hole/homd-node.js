@@ -720,4 +720,16 @@ export const calculate_homd_stats = () => {
     //console.log(s)
     return s
 }
+//
+export const create_jbrowse_link = (gid, loc, hilite) => {
+    // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
+        
+    let link = ''
+    let jb_base = ENV.JBROWSE_URL
+    let tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
+    
+    return link
+}
+
+
 export default router;
