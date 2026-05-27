@@ -1480,7 +1480,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 })
 //
 //
-router.get('/anvio_pangenomes', function anvio_pangenomes(req, res){
+router.get('/anvio_pangenomes', function anvio_pangenomes_GET(req, res){
     //let q = queries.get_all_pangenomes_query()
     console.log('in GET anvio selection',req.query)
     console.log('GET')
@@ -2124,11 +2124,11 @@ router.get('/peptide_table3', async function protein_peptide(req, res) {
     }
     return
 })
-router.get('/amr_table', function amr(req, res) {
+router.get('/amr_table', function amr_table_GET(req, res) {
     let gid
     let organism,strain,otid,contigs,length,tmp={}
-    let genome_lookup = {}
-    let sort_list=[]
+    let genome_lookup = {},sort_list=[]
+    let tcount = Object.keys(C.amr_lookup).length
     for(let gid in C.amr_lookup){
         organism = C.genome_lookup[gid].organism
         strain = C.genome_lookup[gid].strain
@@ -2154,12 +2154,58 @@ router.get('/amr_table', function amr(req, res) {
             ver_info: JSON.stringify(C.version_information),
             data: JSON.stringify(genome_lookup),
             row_count: sort_list.length,
+            tcount: tcount,
             gid_list: JSON.stringify(sort_list),
+            search:''
+    })
+})
+//
+router.post('/amr_table', function amr_table_POST(req, res) {
+    console.log('1n post amr-table',req.body)
+    let s = req.body.search_input.toLowerCase()
+    let organism,strain,otid,hmt,contigs,length,tmp={}
+    let tcount = Object.keys(C.amr_lookup).length
+    let genome_lookup = {},sort_list=[]
+    
+    for(let gid in C.amr_lookup){
+         // gid search
+        organism = C.genome_lookup[gid].organism //search
+        strain = C.genome_lookup[gid].strain //search
+        otid = C.genome_lookup[gid].otid //search
+        hmt = helpers.make_otid_display_name(otid)
+        contigs = C.genome_lookup[gid].contigs
+        length = C.genome_lookup[gid].combined_size
+        tmp = {organism:organism,strain:strain,otid:otid,contigs:contigs,length:length,hit_count:C.amr_lookup[gid]}
+        //merge objects:
+        genome_lookup[gid] = tmp;
+        
+        if(organism.toLowerCase().includes(s)
+           || strain.toLowerCase().includes(s)
+           || gid.toLowerCase().includes(s)
+           || hmt.toLowerCase().includes(s)
+        ){
+            sort_list.push({gid:gid, org:organism})
+        }
+    }
+    sort_list.sort((a, b) => {
+        return helpers.compareStrings_alpha(a.org, b.org);
+    })
+    res.render('pages/genome/amr_table', {
+            title: 'HOMD :: AMR Table',
+            pgtitle: 'AMR Genomes',
+            pgname: '',  //for AbountThisPage
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+            data: JSON.stringify(genome_lookup),
+            row_count: sort_list.length,
+            tcount: tcount,
+            gid_list: JSON.stringify(sort_list),
+            search: s
     })
 })
 //
 //
-router.post('/amr_ajax', async function phage_ajax(req, res){
+router.post('/amr_ajax', async function amr_ajax(req, res){
     console.log('in POST amr_ajax')
     let gid = req.body.gid
     let q = 'SELECT homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
@@ -2261,17 +2307,18 @@ router.post('/amr_ajax', async function phage_ajax(req, res){
     return
     
 })
-router.get('/crispr_table', function crispr(req, res) {
+router.get('/crispr_table', function crispr_table_GET(req, res) {
     // grab HMT,species,strain,contigs,length for each gid
     //let q = "SELECT genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
     //q += " FROM crispr_cas"
     let genome_lookup = {}
-    let show =''
+    
     if(req.query.show){
         show = req.query.show  // a, na or all
     }
     let gid,organism,strain,otid,contigs,length
     let contig,tmp
+    let tcount = Object.keys(C.crispr_lookup).length
     //operon,operon_pos,crisprs,prediction,prediction_crisprs,distances,prediction_cas,prediction_cripsrs
     let sort_list=[]
     for(let gid in C.crispr_lookup){
@@ -2284,6 +2331,7 @@ router.get('/crispr_table', function crispr(req, res) {
         //merge objects:
         genome_lookup[gid] = tmp;
         sort_list.push({gid:gid, org:organism})
+        
     }
     
        
@@ -2300,13 +2348,64 @@ router.get('/crispr_table', function crispr(req, res) {
         pgtitle: 'CRISPR-Cas',
         crispr_data: JSON.stringify(genome_lookup),
         row_count: sort_list.length,
-        show: show,
+        tcount: tcount,
+        
         gid_list: JSON.stringify(sort_list),
+        search:'',
     })
     
     
 })
-
+//
+router.post('/crispr_table', function crispr_table_POST(req, res) {
+    console.log('in post crispr-table')
+    let s = req.body.search_input.toLowerCase()
+    let genome_lookup = {}
+    let gid,organism,strain,otid,contigs,length
+    let contig,tmp,hmt
+    let tcount = Object.keys(C.crispr_lookup).length
+    //operon,operon_pos,crisprs,prediction,prediction_crisprs,distances,prediction_cas,prediction_cripsrs
+    let sort_list=[]
+    for(let gid in C.crispr_lookup){
+        organism = C.genome_lookup[gid].organism
+        strain = C.genome_lookup[gid].strain
+        otid = C.genome_lookup[gid].otid
+        hmt = helpers.make_otid_display_name(otid)
+        contigs = C.genome_lookup[gid].contigs
+        length = C.genome_lookup[gid].combined_size
+        tmp = {organism:organism,strain:strain,otid:otid,contigs:contigs,length:length,hit_count:C.crispr_lookup[gid]}
+        //merge objects:
+        genome_lookup[gid] = tmp;
+        if(organism.toLowerCase().includes(s)
+           || strain.toLowerCase().includes(s)
+           || gid.toLowerCase().includes(s)
+           || hmt.toLowerCase().includes(s)
+        ){
+            sort_list.push({gid:gid, org:organism})
+        }
+    }
+    
+       
+    sort_list.sort((a, b) => {
+        return helpers.compareStrings_alpha(a.org, b.org);
+    })
+    
+    console.log('sort_list',sort_list.length)
+    res.render('pages/genome/crispr_cas', {
+        title: 'HOMD :: CRISPR-Cas', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
+        pgtitle: 'CRISPR-Cas',
+        crispr_data: JSON.stringify(genome_lookup),
+        row_count: sort_list.length,
+        tcount: tcount,
+        
+        gid_list: JSON.stringify(sort_list),
+        search: s,
+    })
+    
+})
 function list_clean(item){
     //JSON.parse(item.replace('[','').replace(']','') 
     return JSON.parse(item.replace(/'/g, '"'))

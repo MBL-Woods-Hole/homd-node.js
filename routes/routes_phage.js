@@ -40,12 +40,13 @@ router.get('/phage', async function phage(req, res) {
 
 })
 
-router.get('/phage_table', function phage_explorer(req, res) {
+router.get('/phage_table', function phage_table_GET(req, res) {
     
     // need contigs,HMT,species,strain,average
     let organism,strain,otid,contigs,length,tmp
     let genome_lookup = {}
     let sort_list=[]
+    let tcount = Object.keys(C.phage_lookup).length
     for(let gid in C.phage_lookup){
         organism = C.genome_lookup[gid].organism
         strain = C.genome_lookup[gid].strain
@@ -73,9 +74,59 @@ router.get('/phage_table', function phage_explorer(req, res) {
             ver_info: JSON.stringify(C.version_information),
             data: JSON.stringify(genome_lookup),
             row_count: sort_list.length,
+            tcount:tcount,
             gid_list: JSON.stringify(sort_list),
+            search:'',
     })
   
+})
+//
+router.post('/phage_table', function phage_table_POST(req, res) {
+
+    // need contigs,HMT,species,strain,average
+    let s = req.body.search_input.toLowerCase()
+    let organism,strain,otid,contigs,length,tmp,hmt
+    let genome_lookup = {}
+    let sort_list=[]
+    let tcount = Object.keys(C.phage_lookup).length
+    for(let gid in C.phage_lookup){
+        organism = C.genome_lookup[gid].organism
+        strain = C.genome_lookup[gid].strain
+        otid = C.genome_lookup[gid].otid
+        hmt = helpers.make_otid_display_name(otid)
+        contigs = C.genome_lookup[gid].contigs
+        length = C.genome_lookup[gid].combined_size
+        tmp = {organism:organism,strain:strain,otid:otid,contigs:contigs,length:length}
+        //merge objects:
+        genome_lookup[gid] = Object.assign({}, tmp, C.phage_lookup[gid]);
+        
+        //genome_lookup[gid] = {organism:organism,strain:strain,otid:otid,contigs:contigs,length:length}
+        if(organism.toLowerCase().includes(s)
+           || strain.toLowerCase().includes(s)
+           || gid.toLowerCase().includes(s)
+           || hmt.toLowerCase().includes(s)
+        ){
+            sort_list.push({gid:gid, org:organism})
+        }
+    }
+    
+    //console.log('full_count',full_count)
+    console.log('sort_list',sort_list.length)
+    sort_list.sort((a, b) => {
+        return helpers.compareStrings_alpha(a.org, b.org);
+    })
+    res.render('pages/phage/phagetable', {
+            title: 'HOMD :: Phage Table',
+            pgtitle: 'Human Oral/Nasal Phage',
+            pgname: 'taxon/phage_table',  //for AbountThisPage
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+            data: JSON.stringify(genome_lookup),
+            row_count: sort_list.length,
+            tcount: tcount,
+            gid_list: JSON.stringify(sort_list),
+            search:s,
+    })
 })
 //
 router.post('/phage_ajax', async function phage_ajax(req, res){

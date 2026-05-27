@@ -102,7 +102,7 @@ thead th { position: sticky; top: 0; }
     text-align:left;
     font-size:16px;
     padding:5px;
-    height:150px;
+    height:130px;
     overflow:auto;
 }
 #loader {
@@ -114,6 +114,10 @@ thead th { position: sticky; top: 0; }
     height: 100%;
     width: 100%;
     z-index: 9999999;
+}
+.search-box{
+   border:1px solid black;
+   padding:3px 6px;
 }
 </style>
 <% var cfg = JSON.parse(config) %> 
@@ -139,8 +143,33 @@ thead th { position: sticky; top: 0; }
         Please help write me!
     </div>
     </center>
-       Row Count: <%= row_count %>
-       <span class='pull_right'><a href='/download/download/crispr'>Download Options</a></span>
+        
+    <div class='container'>  <!-- Bootstrap container-->
+    <div class="row">
+        <div class="col">
+        <% if(parseInt(row_count) == parseInt(tcount)){ %>
+           Row Count: <b><%- tcount %></b>
+        <% }else{ %>
+            Available Full Count: <b><%- tcount %></b>
+           <br>Showing: <b><%- row_count %></b>
+        <% } %>
+        </div>
+    <div class="col-5 search-box">
+      <form id='crispr-search-form' method='post' action='crispr_table'>
+      Search Names:
+      <input id='search_input' name='search_input' style='border:1px solid gray;padding:5px;' type='text' maxlength='50' value='<%= search %>' placeholder="Enter search term..."\>
+      <button class='button' type='submit' value='Go'>Go</button>
+      &nbsp;&nbsp;&nbsp;&nbsp;<small><a href='crispr_table'>Reload Page</a></small>
+      </form>
+
+    </div>
+    <div class="col text-end"><a href='/download/download/crispr'>Download Options</a></div>
+    </div>
+    </div>
+       
+ 
+       
+       
        <div id='crispr-box'>
        <table id='crispr-table' class='table table-hover table-condensed sortable'>
        <thead>
@@ -164,8 +193,8 @@ thead th { position: sticky; top: 0; }
        <tr>
             <td class='w-med'><a href='genome_description?gid=<%= gid %>'><%= gid %></a></td>
             <td class='w-sm' nowrap><a href='/taxa/tax_description?otid=<%= cdata[gid].otid %>'><%= taxidfullname %></a></td>
-            <td class='w-exp' title='<%= cdata[gid].organism %>'><i><%= cdata[gid].organism %></i></td>
-            <td class='w-exp' title='<%= cdata[gid].strain %>'><%= cdata[gid].strain %></td>
+            <td class='w-exp ellipsis' title='<%= cdata[gid].organism %>'><i><%= cdata[gid].organism %></i></td>
+            <td class='w-exp ellipsis' title='<%= cdata[gid].strain %>'><%= cdata[gid].strain %></td>
             <td class='w-vsm'><%= cdata[gid].contigs %></td>
             <td class='w-sm'><%= cdata[gid].length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); %></td>
             

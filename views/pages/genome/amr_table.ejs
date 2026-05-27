@@ -104,7 +104,7 @@ thead th { position: sticky; top: 0; }
     text-align:left;
     font-size:16px;
     padding:5px;
-    height:150px;
+    height:130px;
     overflow:auto;
 }
 #loader {
@@ -116,6 +116,10 @@ thead th { position: sticky; top: 0; }
     height: 100%;
     width: 100%;
     z-index: 9999999;
+}
+.search-box{
+   border:1px solid black;
+   padding:3px 6px;
 }
 </style>
 <% var datarows = JSON.parse(data) %>
@@ -142,7 +146,30 @@ thead th { position: sticky; top: 0; }
         Please help write me!
     </div>
     </center>
-       Row Count: <%= row_count %>
+    
+    
+    <div class='container'>  <!-- Bootstrap container-->
+    <div class="row">
+    <div class="col">
+        <% if(parseInt(row_count) == parseInt(tcount)){ %>
+           Row Count: <b><%- tcount %></b>
+        <% }else{ %>
+            Available Full Count: <b><%- tcount %></b>
+           <br>Showing: <b><%- row_count %></b>
+        <% } %>
+    </div>
+    <div class="col-5 search-box">
+      <form id='amr-search-form' method='post' action='amr_table'>
+      Search Names:
+      <input id='search_input' name='search_input' style='border:1px solid gray;padding:5px;' type='text' maxlength='50' value='<%= search %>' placeholder="Enter search term..."\>
+      <button class='button' type='submit' value='Go'>Go</button>
+      &nbsp;&nbsp;&nbsp;&nbsp;<small><a href='amr_table'>Reload Page</a></small>
+      </form>
+    </div>
+    
+    </div>
+    </div>
+       
        
 
 <div id='amr-box' >
@@ -171,8 +198,8 @@ thead th { position: sticky; top: 0; }
              
              <td class='w-sm'><a href='/taxa/tax_description?gid=<%= gid %>&otid=<%= datarows[gid].otid %>'><%= taxidfullname %></a></td>
              
-             <td class='w-exp' title='<%= datarows[gid].organism %>'><i><%= datarows[gid].organism %></i></td>
-             <td class='w-exp' title='<%= datarows[gid].strain %>'><%= datarows[gid].strain %></td>
+             <td class='w-exp ellipsis' title='<%= datarows[gid].organism %>'><i><%= datarows[gid].organism %></i></td>
+             <td class='w-exp ellipsis' title='<%= datarows[gid].strain %>'><%= datarows[gid].strain %></td>
              <td class='w-vsm'><%= datarows[gid].contigs %></td>
              <td class='w-sm'><%= datarows[gid].length %></td>
              
@@ -214,6 +241,8 @@ thead th { position: sticky; top: 0; }
 <script>
   mainmenu()
   var jb_path = '<%- cfg.JBROWSE_URL %>'
+  
+  
   
   function get_ajax(gid){
       let args = {}

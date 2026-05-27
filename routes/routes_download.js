@@ -883,7 +883,7 @@ router.get('/dld_crispr_table/:type', function dld_crispr_table (req, res) {
     
     // get all crispr data from C.crispr_lookup
     
-    
+    //console.log(C.crispr_lookup)
         //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
         
     fileFilterText = 'HOMD.org Crispr-Cas Data:: All HOMD Data;' + ' Date: ' + dt.today
@@ -1017,26 +1017,38 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
 })
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function create_full_crispr_table(lookup_obj,header_txt) {
-    let text = header_txt+'\n'
+async function create_full_crispr_table(lookup_obj,header_txt) {
+    let q,conn,text = header_txt+'\n'
     let header_array = ['Genome-ID','Contig','Operon','Operon Pos','Prediction','Crisprs','Distances','Predicion_cas','Prediction_crisprs']
     text += header_array.join('\t')+'\n'
     //console.log(lookup_obj)
     for(let gid in lookup_obj){
+        q = queries.get_crispr_cas_data(gid)
+        //console.log('Crispr',gid,lookup_obj[gid][1])
+        try {
+            conn = await global.TDBConn();
+            var [rows] = await conn.execute(q);
+            //console.log('rows',rows)
        
-       
-       for(let n in lookup_obj[gid]){
-           text += gid+'\t'+lookup_obj[gid][n].contig
-           text += '\t'+lookup_obj[gid][n].operon
-           text += '\t'+lookup_obj[gid][n].operon_pos
-           text += '\t'+lookup_obj[gid][n].prediction
-           text += '\t'+lookup_obj[gid][n].crisprs
-           text += '\t'+lookup_obj[gid][n].distances
-           text += '\t'+lookup_obj[gid][n].prediction_cas
-           text += '\t'+lookup_obj[gid][n].prediction_crisprs
-           
-           text += '\n'
-       }
+            for(let n in rows){
+               text += gid+'\t'+rows[n].contig
+               text += '\t'+rows[n].operon
+               text += '\t'+rows[n].operon_pos
+               text += '\t'+rows[n].prediction
+               text += '\t'+rows[n].crisprs
+               text += '\t'+rows[n].distances
+               text += '\t'+rows[n].prediction_cas
+               text += '\t'+rows[n].prediction_crisprs
+               
+               text += '\n'
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error fetching data');
+        } finally {
+            if (conn) conn.release(); // Release the connection back to the pool
+        }
+            
     }
     return text
 }

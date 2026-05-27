@@ -104,7 +104,7 @@ thead th { position: sticky; top: 0; }
     text-align:left;
     font-size:16px;
     padding:5px;
-    height:150px;
+    height:130px;
     overflow:auto;
 }
 #loader {
@@ -116,6 +116,10 @@ thead th { position: sticky; top: 0; }
     height: 100%;
     width: 100%;
     z-index: 9999999;
+}
+.search-box{
+   border:1px solid black;
+   padding:3px 6px;
 }
 </style>
 <% var datarows = JSON.parse(data) %>
@@ -146,11 +150,40 @@ thead th { position: sticky; top: 0; }
 
     </div>
     </center>
+
+    <div class='container'>  <!-- Bootstrap container-->
+    <div class="row">
+    <div class="col">
+        
+        <% if(parseInt(row_count) == parseInt(tcount)){ %>
+           Row Count: <b><%- tcount %></b>
+        <% }else{ %>
+            Available Full Count: <b><%- tcount %></b>
+           <br>Showing: <b><%- row_count %></b>
+        <% } %>
+    </div>
+    <div class="col-5 search-box">
+      <form id='phage-search-form' method='post' action='phage_table'>
+      Search Names:
+      <input id='search_input' name='search_input' style='border:1px solid gray;padding:5px;' type='text' maxlength='50' value='<%= search %>' placeholder="Enter search term..."\>
+      <button class='button' type='submit' value='Go'>Go</button>
+      &nbsp;&nbsp;&nbsp;&nbsp;<small><a href='phage_table'>Reload Page</a></small>
+      </form>
+    </div>
+    <div class="col text-end"><a href='/download/download/phage'>Download Options</a></div>
+    </div>
+    </div>
+
+
+
 <div class='red-text' align="center" >
     Warning: Phage predictions were made with <a href="https://github.com/mtisza1/Cenote-Taker3" target='_blank'>Cenote-Taker3</a> and 
     <a href="https://github.com/apcamargo/genomad/" target='_blank'>geNomad</a>, and have not been manually curated. Please use caution when interpreting the results.
-</div>Row Count: <%= row_count %>
-<span class='pull_right'><a href='/download/download/phage'>Download Options</a></span>
+</div>
+
+
+
+
 <div id='phage-box' >
          
          <table id='phage-table' class='table table-hover table-condensed sortable' >

@@ -89,9 +89,9 @@ thead th { position: sticky; top: 0; }
     font-size:16px;
     padding:5px;
 }
-#info-div{
-  width:70%;
-  Padding:10px;
+.search-box{
+   border:1px solid black;
+   padding:3px 6px;
 }
 </style>
 <%- include('../../partials/header_html'); %>
@@ -117,16 +117,22 @@ thead th { position: sticky; top: 0; }
         Anvi`o (<a href='https://anvio.org/' target='_blank'>https://anvio.org</a>) is a visualization platform for microbial 'omics and is used here to display the HOMD pangenomes.
     </div>
     </center>
-<!-- iFrame or New_Window? -->
-<div id='info-div' >
-<span>Available Pangenomes Count: <b><%- tcount %></b></span>
-&nbsp;&nbsp;&nbsp;
-Search Names:
-<input id='pg_search_input' style='border:1px solid gray;padding:5px;' type='text' value='<%= search %>' placeholder="Enter search term..."\>
-<a href='anvio_pangenomes'>Reload Page</a>
-&nbsp;&nbsp;&nbsp;
-<span class=''>Created with HOMD Genomic Version `<b><%= version_info.gen_ver %></b>`</span>
-</div>
+    
+
+
+
+    <div class='container'  >
+    <div class="row">
+    <div class="col">Available Pangenomes Count: <b><%- tcount %></b></div>
+    <div class="col search-box">
+      Search Names:
+      <input id='pg_search_input' style='border:1px solid gray;padding:5px;' type='text' maxlength='50' value='<%= search %>' placeholder="Enter search term..."\>
+      <a href='anvio_pangenomes'>Reload Page</a>
+    </div>
+    <span class='col text-end'>Created with HOMD Genomic Version `<b><%= version_info.gen_ver %></b>`</span>
+    </div>
+    </div>
+
 
 
 <div id='pgtable-div' style=''>
