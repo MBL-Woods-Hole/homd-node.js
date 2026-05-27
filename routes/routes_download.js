@@ -874,33 +874,79 @@ router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
     }
     return
 })
-router.get('/dld_crispr_table/:type', function dld_crispr_table (req, res) {
+router.get('/dld_crispr_table/:type', async function dld_crispr_table (req, res) {
+    let dt = helpers.get_today_obj()
+    const type = req.params.type
+    let conn
+    let fileFilterText,tableTsv
+    
+    let q = queries.get_all_crispr_cas_data()
+    try {
+        conn = await global.TDBConn();
+        const [mysqlrows] = await conn.execute(q);
+
+        
+        fileFilterText = 'HOMD.org Crispr-Cas Data:: All HOMD Data;' + ' Date: ' + dt.today
+        tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
+        // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
+        
+        if (type === 'browser') {
+          res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        } else if (type === 'text') {
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.txt"' })
+        } else if (type === 'excel') {
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.xls"' })
+        } else {
+          // error
+          console.log('Download table format ERROR')
+        }
+        res.send(tableTsv)
+        res.end()
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
+    }
+    return
+    
+    
+})
+router.get('/dld_amr_table/:type', async function dld_crispr_table (req, res) {
     let dt = helpers.get_today_obj()
     const type = req.params.type
         
-    let fileFilterText,tableTsv
+    let conn,fileFilterText,tableTsv
+    let q = queries.get_all_amr_data()
     
-    
-    // get all crispr data from C.crispr_lookup
-    
-    //console.log(C.crispr_lookup)
-        //const tableTsv = createTable(listOfGids, 'table', type, fileFilterText)
+    try {
+        conn = await global.TDBConn();
+        const [mysqlrows] = await conn.execute(q);
+
         
-    fileFilterText = 'HOMD.org Crispr-Cas Data:: All HOMD Data;' + ' Date: ' + dt.today
-    tableTsv = create_full_crispr_table(C.crispr_lookup, fileFilterText)
+        fileFilterText = 'HOMD.org AMR Data:: All HOMD Data;' + ' Date: ' + dt.today
+        tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
+        // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
         
-    if (type === 'browser') {
-      res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-    } else if (type === 'text') {
-      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.txt"' })
-    } else if (type === 'excel') {
-      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.xls"' })
-    } else {
-      // error
-      console.log('Download table format ERROR')
+        if (type === 'browser') {
+          res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        } else if (type === 'text') {
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_AMR_table' + dt.today + '_' + dt.seconds + '.txt"' })
+        } else if (type === 'excel') {
+          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_AMR_table' + dt.today + '_' + dt.seconds + '.xls"' })
+        } else {
+          // error
+          console.log('Download table format ERROR')
+        }
+        res.send(tableTsv)
+        res.end()
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    } finally {
+        if (conn) conn.release(); // Release the connection back to the pool
     }
-    res.send(tableTsv)
-    res.end()
+    return
     
 })
 router.get('/pg/:type/:pg', function dld_pg (req, res) {
@@ -1017,41 +1063,77 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
 })
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function create_full_crispr_table(lookup_obj,header_txt) {
-    let q,conn,text = header_txt+'\n'
-    let header_array = ['Genome-ID','Contig','Operon','Operon Pos','Prediction','Crisprs','Distances','Predicion_cas','Prediction_crisprs']
-    text += header_array.join('\t')+'\n'
-    //console.log(lookup_obj)
-    for(let gid in lookup_obj){
-        q = queries.get_crispr_cas_data(gid)
-        //console.log('Crispr',gid,lookup_obj[gid][1])
-        try {
-            conn = await global.TDBConn();
-            var [rows] = await conn.execute(q);
-            //console.log('rows',rows)
-       
-            for(let n in rows){
-               text += gid+'\t'+rows[n].contig
-               text += '\t'+rows[n].operon
-               text += '\t'+rows[n].operon_pos
-               text += '\t'+rows[n].prediction
-               text += '\t'+rows[n].crisprs
-               text += '\t'+rows[n].distances
-               text += '\t'+rows[n].prediction_cas
-               text += '\t'+rows[n].prediction_crisprs
-               
-               text += '\n'
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Error fetching data');
-        } finally {
-            if (conn) conn.release(); // Release the connection back to the pool
-        }
-            
-    }
-    return text
-}
+// function create_full_amr_table(lookup_obj,header_txt) {
+//     let q,conn,text = header_txt+'\n'
+//     let header_array = ['Genome-ID','Contig','Operon','Operon Pos','Prediction','Crisprs','Distances','Predicion_cas','Prediction_crisprs']
+//     text += header_array.join('\t')+'\n'
+//     console.log(lookup_obj)
+//     return
+//     for(let gid in lookup_obj){
+//         q = queries.get_amr_data(gid)
+//         //console.log('AMR',gid,lookup_obj[gid][1])
+//         try {
+//             conn = await global.TDBConn();
+//             var [rows] = await conn.execute(q);
+//             //console.log('rows',rows)
+//        
+//             for(let n in rows){
+//                text += gid+'\t'+rows[n].contig
+//                text += '\t'+rows[n].operon
+//                text += '\t'+rows[n].operon_pos
+//                text += '\t'+rows[n].prediction
+//                text += '\t'+rows[n].crisprs
+//                text += '\t'+rows[n].distances
+//                text += '\t'+rows[n].prediction_cas
+//                text += '\t'+rows[n].prediction_crisprs
+//                
+//                text += '\n'
+//             }
+//         } catch (error) {
+//             console.error(error);
+//             res.status(500).send('Error fetching data');
+//         } finally {
+//             if (conn) conn.release(); // Release the connection back to the pool
+//         }
+//             
+//     }
+//     return text
+// }
+// async function create_full_crispr_table(lookup_obj,header_txt) {
+//     let q,conn,text = header_txt+'\n'
+//     let header_array = ['Genome-ID','Contig','Operon','Operon Pos','Prediction','Crisprs','Distances','Predicion_cas','Prediction_crisprs']
+//     text += header_array.join('\t')+'\n'
+//     //console.log(lookup_obj)
+//     for(let gid in lookup_obj){
+//         q = queries.get_crispr_cas_data(gid)
+//         //console.log('Crispr',gid,lookup_obj[gid][1])
+//         try {
+//             conn = await global.TDBConn();
+//             var [rows] = await conn.execute(q);
+//             //console.log('rows',rows)
+//        
+//             for(let n in rows){
+//                text += gid+'\t'+rows[n].contig
+//                text += '\t'+rows[n].operon
+//                text += '\t'+rows[n].operon_pos
+//                text += '\t'+rows[n].prediction
+//                text += '\t'+rows[n].crisprs
+//                text += '\t'+rows[n].distances
+//                text += '\t'+rows[n].prediction_cas
+//                text += '\t'+rows[n].prediction_crisprs
+//                
+//                text += '\n'
+//             }
+//         } catch (error) {
+//             console.error(error);
+//             res.status(500).send('Error fetching data');
+//         } finally {
+//             if (conn) conn.release(); // Release the connection back to the pool
+//         }
+//             
+//     }
+//     return text
+// }
 function create_phage_search_table(sql_rows,header_array,search_term) {
     let gid,otid,hmt,lineage,strain
     let text ='::Search String: "'+search_term+'"\n'

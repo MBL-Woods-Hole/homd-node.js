@@ -17,11 +17,11 @@ Database rules:
    and the tables are indexed on certain fields depending on which parameters are expected to be searched.
    The indexing allows for faster queries.
 
-One important point related to the database is that certain information
+One important point related to the application is that certain information
 is queried from the database and placed in JSON format flat files
 for the Node.js server to read on startup.
 This means that the data is available in memory and much faster to access
-than sql queries called during normal page loading. Some data is too
+than sql queries called during normal page loading. Of course, some data is too
 large to store in memory or too infrequently used to warrant keeping
 it in memory so that SQL queries are used instead. 
 

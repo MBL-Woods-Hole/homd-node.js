@@ -2208,12 +2208,7 @@ router.post('/amr_table', function amr_table_POST(req, res) {
 router.post('/amr_ajax', async function amr_ajax(req, res){
     console.log('in POST amr_ajax')
     let gid = req.body.gid
-    let q = 'SELECT homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
-    q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc, "
-    q += "closest_ref_name,hmm_acc,hmm_description,accession,start,stop"
-    q += " FROM homd.amr"
-    q += " JOIN PROKKA.orf using(protein_id)"
-    q += " WHERE homd.amr.genome_id='"+gid+"'"
+    let q = queries.get_amr_data(gid)
     console.log(q)
     let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
     let org = C.genome_lookup[gid].organism

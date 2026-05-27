@@ -129,7 +129,7 @@ a{
         <li id='menu-phylo'><a href='#' onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
         <li id='menu-peptide'><a href='#' onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
         <li id='menu-phage'><a href='#' onclick="shift_page_view('phage')">Phage Data</a></li>
-        <li id='menu-crispr'><a href='#' onclick="shift_page_view('crispr')">Crispr-Cas Data</a></li>
+        <li id='menu-crispr'><a href='#' onclick="shift_page_view('crispr')">Crispr-Cas & AMR Data</a></li>
         <li id='menu-refseq'><a href='#' onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
         <li id='menu-schema'><a href='#' onclick="shift_page_view('schema')">Database Schema</a></li>
       </div>
@@ -353,16 +353,25 @@ a{
 
 <div id='crispr' class='dnld-block'>
   <center>
-  <div class='subtitle'>Crispr-Cas Data::Batch Downloads <small>[<a href='/genome/crispr'>Visit Crispr-Cas Table</a>]</small></div>
+  <div class='subtitle'>Crispr-Cas and AMR Data::Batch Downloads <small>[<a href='/genome/crispr'>Visit Crispr-Cas Table</a>]</small></div>
   <table class='download-table'>
+    
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
     <tr>
       <td>Crispr Table</td>
       <td><a href='/download/dld_crispr_table/browser'>Tab Delimited Text<br>(View in browser)</a></td>
       <td><a href='/download/dld_crispr_table/text'>Tab Delimited Text<br>(Save to file)</a></td>
-      <td><a href='/download/dld_crispr_table/excel'>MS Excel Format<br>(Save to file)</a></td></tr>
+      <td><a href='/download/dld_crispr_table/excel'>MS Excel Format<br>(Save to file)</a></td>
+    </tr>
+    <tr>
+      <td>AMR Table</td>
+      <td><a href='/download/dld_amr_table/browser'>Tab Delimited Text<br>(View in browser)</a></td>
+      <td><a href='/download/dld_amr_table/text'>Tab Delimited Text<br>(Save to file)</a></td>
+      <td><a href='/download/dld_amr_table/excel'>MS Excel Format<br>(Save to file)</a></td>
+    </tr>
     
   </table>
+  
   </center>
 </div>
 

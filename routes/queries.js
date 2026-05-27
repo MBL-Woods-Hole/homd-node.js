@@ -149,7 +149,31 @@ export const get_crispr_cas_data = (gid) => {
     
     return qSelectCrisprCas
 };
-
+export const get_all_crispr_cas_data = () => {
+    let qSelectCrisprCas = "SELECT homd.genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
+    qSelectCrisprCas += " FROM crispr_cas"
+    
+    return qSelectCrisprCas
+};
+export const get_amr_data = (gid) => {
+    let q = 'SELECT homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
+    q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc, "
+    q += "closest_ref_name,hmm_acc,hmm_description,accession,start,stop"
+    q += " FROM homd.amr"
+    q += " JOIN PROKKA.orf using(protein_id)"
+    q += " WHERE homd.amr.genome_id='"+gid+"'"
+    
+    return q
+};
+export const get_all_amr_data = () => {
+    let q = 'SELECT amr.genome_id,homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
+    q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc, "
+    q += "closest_ref_name,hmm_acc,hmm_description,accession,start,stop"
+    q += " FROM homd.amr"
+    q += " JOIN PROKKA.orf using(protein_id)"
+    
+    return q
+};
 export const get_AA_NA = (db, gid, pid,type) => {
     let q = ''
     if(type === 'prokka-na' || type === 'ncbi-na'){
