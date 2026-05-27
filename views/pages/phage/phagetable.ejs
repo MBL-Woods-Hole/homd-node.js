@@ -144,9 +144,9 @@ thead th { position: sticky; top: 0; }
         <b>Description</b>
         <br>
         The HOMD is expanding to incorporate viruses (including phages). We begin by defining prophage regions in bacterial genomes. Future updates will include detailed curation and definition of oral viral taxonomic units, enabling cross-referencing of viral findings across oral datasets, and expansion to incorporate non-phage viruses and metagenomic and isolate data types.
-        Table 1 provides a hyperlinked summary describing prophage regions identified in all 8,177 in HOMD v11.02 bacterial genomes, currently representing 15,589 phage/phage-like regions. Following these hyperlinks offers users the ability to inspect the prophage region in JBrowse in light of prophage predictions from geNomad (vX, add flags), 
+        <br><br>Table 1 provides a hyperlinked summary describing prophage regions identified in all 8,177 in HOMD v11.02 bacterial genomes, currently representing 15,589 phage/phage-like regions. Following these hyperlinks offers users the ability to inspect the prophage region in JBrowse in light of prophage predictions from geNomad (vX, add flags), 
         cenote-taker3 (vX, add flags), and manual curation (for microviruses). A unique feature of this analysis is the integration with pangenome information calculated for each bacterial species using PPanGGoLIN (vX, add flags), allowing users to see whether genes in bacterial genomes are core to the species pangenome (“persistent” and colored orange on the JBrowse pangenome track) or present at lower prevalence (intermediate frequency “shell” and low frequency “cloud”, colored green and blue, respectively). Updates to phage region boundaries in the table below will explicitly consider pangenome information, these are “coming soon!”. Table 2 offers a per-GCA view of prophages identified in bacterial genomes based on raw genomad and cenote-taker3-based prophage calls, along with associated summary statistics.
-        Underlying data is available for download at https://www.homd.org/ftp/phages/V1.2, with information provided on a per genome (GCA) level and including faa, fna, gbk, and gff predictions for cenote and genomad phage calls, as well as tsv summary tables for each bacterial genome including information on ppanggolin pangenome and prophage predictions.
+        <br><br>Underlying data is available for download at <a href='https://www.homd.org/ftp/phages/V1.2' target='_blank'>https://www.homd.org/ftp/phages/V1.2</a>, with information provided on a per genome (GCA) level and including faa, fna, gbk, and gff predictions for cenote and genomad phage calls, as well as tsv summary tables for each bacterial genome including information on ppanggolin pangenome and prophage predictions.
 
     </div>
     </center>
@@ -154,7 +154,6 @@ thead th { position: sticky; top: 0; }
     <div class='container'>  <!-- Bootstrap container-->
     <div class="row">
     <div class="col">
-        
         <% if(parseInt(row_count) == parseInt(tcount)){ %>
            Row Count: <b><%- tcount %></b>
         <% }else{ %>
