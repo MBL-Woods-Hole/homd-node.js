@@ -1,5 +1,5 @@
 Dec 2025
-
+https://academic.oup.com/database/article/doi/10.1093/database/baq013/405450
 HOMD Database Architecture
 
 
@@ -30,5 +30,28 @@ The database is divided into four general sections:
 Taxonomy, Genomes, Phage and Annotation tables which are linked to each other
 using HMT-ID or the GENOME-ID
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Overview of Software:
+	The HOMD web application code uses a Linux (Ubuntu version 20+) operating system and Node.js (a server-side 
+JavaScript runtime environment) with Express.js (the framework built on top of Node.js).
+Node.js is a fast, lightweight, modular, cross-platform and open-source development environment which allows JavaScript to be run outside of the
+web browser enabling full-stack application development, server creation, and system automation using a single programming language.
 
+Express.js provides a layer of fundamental web application features such as Routing (HTTP methods such as GET and POST), 
+Middleware (creates request and response objects) and the Request/Response Cycle.
+	
+	To make the app more responsive much of the data from the backend database is pulled into
+JavaScript Object Notation (JSON) structured flat files that are read into memory when the application is started.
+These JSON files are created by python scripts and pre-placed in the directory structure where they are 
+available when the Node.js server is started (or re-started). These JSON objects that are now in memory are much faster to access
+than SQL queries to the database providing a more responsive user experience.  Of course, some data is too
+large to store in memory or too infrequently used to warrant keeping
+it in memory so that occasional SQL queries are used instead. 
+ 
+
+Database Structure:
+	The HOMD backend storage uses a MySQL relational database with standard InnoDB structured tables. The data tables are
+roughly divided into four areas: Taxa, Genomes, Annotations and Viruses (Phage). The tables are linked together using taxon IDs
+and genome IDs to facilitate queries and minimize data duplication.
+	
