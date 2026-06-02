@@ -51,7 +51,8 @@ it in memory so that occasional SQL queries are used instead.
  
 
 Database Structure:
-	The HOMD backend storage uses a MySQL relational database with standard InnoDB structured tables. The data tables are
-roughly divided into four areas: Taxa, Genomes, Annotations and Viruses (Phage). The tables are linked together using taxon IDs
-and genome IDs to facilitate queries and minimize data duplication.
+	The HOMD backend database storage uses a MySQL relational format with standard InnoDB structured tables. The data tables are
+roughly divided into four areas: Taxa, Genomes, Annotations and Viruses (Phage) and are linked together using taxon IDs
+and genome IDs helping to minimize data duplication. The database tables themselves are indexed to facilitate sql queries. 
+The overall database schema (PNG Image) and table structures (MySQL dump file) can be viewed and downloaded from the HOMD web site.
 	
