@@ -63,11 +63,11 @@ export const get_annotation_query = (gid, anno) => {
     
     qSelectAnno += 'PROKKA.orf.product as product,'
     qSelectAnno += 'PROKKA.orf.gene as gene,'
-    qSelectAnno += 'BAKTA.orf.Bakta_product as bakta_product,'
-    qSelectAnno += 'BAKTA.orf.Bakta_gene as bakta_gene,'
-    qSelectAnno += 'BAKTA.orf.bakta_Length'
+    qSelectAnno += 'BAKTA_sub_prokka.orf.Bakta_product as bakta_product,'
+    qSelectAnno += 'BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene,'
+    qSelectAnno += 'BAKTA_sub_prokka.orf.bakta_Length'
     qSelectAnno += ' FROM PROKKA.orf'
-    qSelectAnno += ' LEFT JOIN BAKTA.orf on(protein_id=core_ID)'
+    qSelectAnno += ' LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)'
   }else{
     qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`, gene'
     qSelectAnno += ' FROM '+anno.toUpperCase()+'.orf'

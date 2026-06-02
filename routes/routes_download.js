@@ -502,11 +502,11 @@ router.post('/anno_search_data', async (req, res) => {
     //console.log('unique_lst',unique_pidlst)
     if(anno.toUpperCase() === 'BAKTA'){
         if(format === 'fasta_aa'){
-            q = "SELECT CONCAT('>Bakta | ',BAKTA.orf.core_contig_acc,' | ', BAKTA.orf.genome_id,' | ',"
+            q = "SELECT CONCAT('>Bakta | ',BAKTA_sub_prokka.orf.core_contig_acc,' | ', BAKTA_sub_prokka.orf.genome_id,' | ',"
             q += " core_ID,' | ',core_start,'..',core_end,' | length:',bakta_Length) AS defline,"
             q += " UNCOMPRESS(seq_compressed) as sequence"
-            q += " from BAKTA.orf"
-            q += " JOIN BAKTA.faa using(core_ID)"
+            q += " from BAKTA_sub_prokka.orf"
+            q += " JOIN BAKTA_sub_prokka.faa using(core_ID)"
             q += " WHERE core_ID in ("+unique_pidlst+")"
             //head_text_array = ['core_ID','Genome_ID','Contig','BAKTA','seq_length']
         }else if(format === 'fasta_na'){
@@ -518,7 +518,7 @@ router.post('/anno_search_data', async (req, res) => {
             // bakta table (everthing except seqs)
             q = "SELECT genome_id as gid,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
             q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef"
-            q += " from `BAKTA`.orf WHERE core_ID in ("+unique_pidlst+")"
+            q += " from `BAKTA_sub_prokka`.orf WHERE core_ID in ("+unique_pidlst+")"
             head_text_array = [
                 'Genome_ID',
                 'HMT-ID',
@@ -672,9 +672,9 @@ router.post('/anno_data_by_gid', async (req, res) => {
     
     }else if(anno === 'prokka'){
         q = "SELECT accession as acc,  gc, protein_id as pid, length_na,length_aa, `start`, `stop`,"
-        q+= " PROKKA.orf.product as product,PROKKA.orf.gene as gene,BAKTA.orf.Bakta_product as bakta_product,BAKTA.orf.Bakta_gene as bakta_gene" 
+        q+= " PROKKA.orf.product as product,PROKKA.orf.gene as gene,BAKTA_sub_prokka.orf.Bakta_product as bakta_product,BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene" 
         q += " FROM PROKKA.orf"
-        q += " LEFT JOIN BAKTA.orf on(protein_id=core_ID)"
+        q += " LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)"
         q += " WHERE PROKKA.orf.genome_id = '"+gid+"'" 
         head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
         
