@@ -125,6 +125,7 @@ thead th { position: sticky; top: 0; }
        <th class='col0 sorttable_nosort'></th>
        <th class='col1'>Molecule-ID</th>
        <th class='' title='Protein ID' class='col2'>Protein-ID</th>
+       <th class='' title='Type' class='col2'>Type</th>
        <th class='col2 sorttable_nosort'>Genome<br>Viewer</th>
        <th class='col5 sorttable_nosort'>Range<br><small>(bp)</small></th>
        <th title='Nucleic Acid Length (bp)' class='col3 center sorttable_numeric' nowrap>Show Sequences<br><small>(length) NA / AA</small></th>
@@ -134,10 +135,7 @@ thead th { position: sticky; top: 0; }
        <th class='col6'><small><%= anno_type.toUpperCase() %></small><br>Gene</th>
        <th class='col7'><small><%= anno_type.toUpperCase() %></small><br>GeneProduct</th>
        
-       <% if(anno_type == "prokka"){ %><!-- Only show BAKTA if anno == PROKKA -->
-         <th class='col6'><small>BAKTA</small><br>Gene</th>
-         <th class='col7'><small>BAKTA</small><br>GeneProduct</th>
-       <% } %>
+       
        
       </tr>
      </thead>
@@ -145,6 +143,7 @@ thead th { position: sticky; top: 0; }
      <% if(mole.length === 0){ %>
         <tr><td>No Data</td><td>Try different filter settings</td></tr>
      <% }else{ %>
+     mole Length <%= mole.length %>
      <% for(n in mole){ %>
      <!-- Clean up start/stop and parseInt -->
      <%   if(mole[n].start[0] === "<" ){ %>
@@ -153,10 +152,10 @@ thead th { position: sticky; top: 0; }
      <%     start = parseInt(mole[n].start) %>
      <%   } %>
      
-     <%   if(mole[n].stop[0] === ">" ){ %>
-     <%     stop = parseInt(mole[n].stop.substring(1)) %>
+     <%   if(mole[n].end[0] === ">" ){ %>
+     <%     stop = parseInt(mole[n].end.substring(1)) %>
      <%   }else{ %>
-     <%     stop = parseInt(mole[n].stop)%>
+     <%     stop = parseInt(mole[n].end)%>
      <%   } %>
      
      <%   if(start > stop){ %>
@@ -174,7 +173,7 @@ thead th { position: sticky; top: 0; }
      <%   } %>
      <%   //contig_gc = (parseFloat(mole[n].gc)/100).toFixed(2) %>
      <tr>
-       <% if(mole[n].length_na) { %>
+       
        <td><%= cnt %></td>
        <td><%= mole[n].accession %></td>
        
@@ -193,20 +192,21 @@ thead th { position: sticky; top: 0; }
          <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
        
        </td>
+       <td><%= mole[n].type %></td>
        <td class='center' nowrap>
          <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('<%= gid %>','anno_table','','','<%= anno_type %>','<%= loc %>','<%= highlight %>')">open</a>
        </td>
        
-       <td class='center'><%= mole[n].start %>-<%= mole[n].stop %></td>
-       
+       <td class='center'><%= mole[n].start %>-<%= mole[n].end %></td>
        
        <td class='center' nowrap>
+           <% if(mole[n].type === "CDS"){ %>
            <a title='Nucleic Acid' href='#' onclick="get_AA_NA_seq('na','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')">
            <%= mole[n].length_na %>_na</a>
            &nbsp;&nbsp;&nbsp;
            <a title='Amino Acid'   href='#' onclick="get_AA_NA_seq('aa','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')">
            <%= mole[n].length_aa %>_aa</a>
-           
+           <% } %>
        </td>
        
        
@@ -229,11 +229,8 @@ thead th { position: sticky; top: 0; }
          <td><%- mole[n].product %></td>
       <% } %>
       
-       <% if(anno_type == "prokka"){ %>
-          <td><%- mole[n].bakta_gene %></td>
-          <td><%- mole[n].bakta_product %></td>
-       <% } %>
-       <% } %>
+       
+       
      </tr>
      <% cnt += 1 %>
      <% } %>

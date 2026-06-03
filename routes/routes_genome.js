@@ -901,6 +901,7 @@ function apply_annot_table_filter(rows, filter){
 function get_text_filtered_annot(annot_list, search_txt, search_field){
 
   let send_list = []
+  //console.log('annot_list',annot_list)
   if(search_field === 'pid'){
       send_list = annot_list.filter(item => item.protein_id.toLowerCase().includes(search_txt))
   }else if(search_field === 'product'){
@@ -910,36 +911,49 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
   }else if(search_field === 'molecule'){
       send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
   }else {
-      // search all
+      //console.log('search all',search_txt)
       //send_list = send_tax_obj
-      let temp_obj = {}
-      let tmp_send_list = annot_list.filter(item => item.protein_id.toLowerCase().includes(search_txt))
+      let temp_obj = []
+      let tmp_send_list = annot_list.filter(item => item.type.toLowerCase().includes(search_txt))
       // for uniqueness convert to object
       for(let n in tmp_send_list){
-         temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+         //temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+         temp_obj.push(tmp_send_list[n])
+      }
+      
+      tmp_send_list = annot_list.filter(item => item.protein_id.toLowerCase().includes(search_txt))
+      // for uniqueness convert to object
+      for(let n in tmp_send_list){
+         //temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+         temp_obj.push(tmp_send_list[n])
       }
       
       tmp_send_list = annot_list.filter(item => item.product.toLowerCase().includes(search_txt))
       for(let n in tmp_send_list){
-         temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+         //temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+         temp_obj.push(tmp_send_list[n])
       }
       
       tmp_send_list = annot_list.filter(item => item.gene.toLowerCase().includes(search_txt))
       for(let n in tmp_send_list){
-         temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+         //temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+         temp_obj.push(tmp_send_list[n])
       }
       
       tmp_send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
       for(let n in tmp_send_list){
-         temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+         //temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
+         temp_obj.push(tmp_send_list[n])
       }
       
+      
       // now back to a list
-      send_list = Object.values(temp_obj);
+      send_list = temp_obj  //Object.values(temp_obj);
       
       
   }
   return send_list
+  
 }
 
 router.get('/reset_atable', function annot_table_reset(req, res) {
@@ -993,7 +1007,7 @@ router.post('/explorer', async function explorer_post (req, res) {
             console.log('no rows found')
         }
         let filtered_rows = apply_annot_table_filter(rows, atable_filter)
-        
+        //console.log('filtered_rows[0]',filtered_rows)
         pageData.trecords = filtered_rows.length
         if(filtered_rows.length < C.PAGER_ROWS){
          pidList = filtered_rows
@@ -1017,7 +1031,7 @@ router.post('/explorer', async function explorer_post (req, res) {
             //console.log('start count', pageData.start_count)
           }
         }
-      //console.log('pidlist',pidList)
+      //console.log('POST pidlist',pidList.length)
         const args = {
             gid: gid,
             gc:             gc,
@@ -1150,39 +1164,40 @@ router.get('/explorer', async function explorer_get (req, res) {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
         if (rows.length === 0) {
-        console.log('no rows found')
+            console.log('no rows found')
         }
         let filtered_rows = apply_annot_table_filter(rows, atable_filter)
         pageData.trecords = rows.length
         if (pageData.page) {
-        const trows = rows.length
-        // console.log('trows',trows)
-        pageData.row_per_page = C.PAGER_ROWS
-        pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
-        if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
-        if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-        helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
-        pageData.show_page = pageData.page
-        if (pageData.show_page === 1) {
-          pidList = rows.slice(0, pageData.row_per_page) // first 200
-          pageData.start_count = 1
-        } else {
-          pidList = rows.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
-          pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
-        }
+            const trows = rows.length
+            // console.log('trows',trows)
+            pageData.row_per_page = C.PAGER_ROWS
+            pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
+            if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
+            if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
+            helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+            pageData.show_page = pageData.page
+            if (pageData.show_page === 1) {
+              pidList = rows.slice(0, pageData.row_per_page) // first 200
+              pageData.start_count = 1
+            } else {
+              pidList = rows.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
+              pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
+            }
         //console.log('start count', pageData.start_count)
         }
         if(req.session.atable_filter){
-        //console.log('filetr session')
-        atable_filter = req.session.atable_filter
+            //console.log('filetr session')
+            atable_filter = req.session.atable_filter
         }else{
-        //console.log('filetr from default')
-        atable_filter = helpers_genomes.get_default_annot_filter()
-        req.session.atable_filter = atable_filter
+            //console.log('filetr from default')
+            atable_filter = helpers_genomes.get_default_annot_filter()
+            req.session.atable_filter = atable_filter
         }
         //console.log('atable_filter',atable_filter)
         //console.log('default',helpers_genomes.get_default_annot_filter())
         //console.log('annoInfoObj',annoInfoObj)
+        //console.log('pidlist',pidList.length)
         args = {
             gid: gid,
             

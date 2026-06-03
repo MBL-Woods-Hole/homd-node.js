@@ -59,20 +59,38 @@ export const get_db_updates_query = () => {
 export const get_annotation_query = (gid, anno) => {
   let qSelectAnno 
   if(anno === 'prokka'){
-    qSelectAnno = 'SELECT accession,  gc, protein_id, length_na,length_aa, `start`, `stop`,'
+    qSelectAnno = 'SELECT accession, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
+   qSelectAnno += ' FROM PROKKA.orf_gff a'
+   qSelectAnno += ' LEFT JOIN PROKKA.faa b using(protein_id)'
+   qSelectAnno += ' LEFT JOIN PROKKA.ffn c using(protein_id)'
+   qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
     
-    qSelectAnno += 'PROKKA.orf.product as product,'
-    qSelectAnno += 'PROKKA.orf.gene as gene,'
-    qSelectAnno += 'BAKTA_sub_prokka.orf.Bakta_product as bakta_product,'
-    qSelectAnno += 'BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene,'
-    qSelectAnno += 'BAKTA_sub_prokka.orf.bakta_Length'
-    qSelectAnno += ' FROM PROKKA.orf'
-    qSelectAnno += ' LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)'
-  }else{
-    qSelectAnno = 'SELECT accession,  gc, protein_id, product, length_na,length_aa, `start`, `stop`, gene'
-    qSelectAnno += ' FROM '+anno.toUpperCase()+'.orf'
+    
+    // qSelectAnno = 'SELECT accession, type, gc, protein_id, length_na, length_aa, `start`, `end`,'
+//     qSelectAnno += 'PROKKA.orf_gff.product as product,'
+//     qSelectAnno += 'PROKKA.orf_gff.gene as gene,'
+//     qSelectAnno += 'BAKTA_sub_prokka.orf.Bakta_product as bakta_product,'
+//     qSelectAnno += 'BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene,'
+//     qSelectAnno += 'BAKTA_sub_prokka.orf.bakta_Length'
+//     qSelectAnno += ' FROM PROKKA.orf_gff'
+//     qSelectAnno += ' LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)'
+//     qSelectAnno += " WHERE PROKKA.orf_gff.genome_id = '"+gid+"'"
+  
+  }else if(anno === 'ncbi') {
+    qSelectAnno = 'SELECT accession, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
+    qSelectAnno += ' FROM NCBI.orf_gff a'
+    qSelectAnno += ' LEFT JOIN NCBI.faa b using(protein_id)'
+    qSelectAnno += ' LEFT JOIN NCBI.ffn c using(protein_id)'
+    qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
+  
+  }else{ // BAKTA
+    qSelectAnno = 'SELECT accession, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, attribute_gene as gene'
+    qSelectAnno += ' FROM BAKTA.gff a'
+    qSelectAnno += ' LEFT JOIN BAKTA.faa b using(protein_id)'
+    qSelectAnno += ' LEFT JOIN BAKTA.ffn c using(protein_id)'
+    qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
   }
-  qSelectAnno += " WHERE "+anno.toUpperCase()+".orf.genome_id = '"+gid+"'"
+  
   // const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
 //   let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
 //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
