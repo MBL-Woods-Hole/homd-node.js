@@ -41,7 +41,7 @@ thead th { position: sticky; top: 0; }
 <table id='outer-anno-table'><tr><td>
     
     <div id='annotation-info'>
-    <span id='anno-title2'><%= anno_type.toUpperCase() %> Annotation for <%= gid %></span>
+    <span id='anno-title2'><strong><%= anno_type.toUpperCase() %> Annotations</strong> for <%= gid %></span>
 
     <table id='info-table' >
      <tr><th colspan='6'>Genome Selected: <%= organism %> </th></tr>
@@ -111,9 +111,15 @@ thead th { position: sticky; top: 0; }
     <hr>
     <span><strong>Notes:</strong>
     <small>&nbsp;&nbsp;<strong>1-</strong> Column headers only sort the current page. <strong>2-</strong> Select [NA] or [AA] links to show sequences.
+    <!-- 
+
     <strong>3-</strong> BAKTA columns are <a href='https://github.com/oschwengers/bakta' target='_blank'>
          BAKTA</a> annotations of PROKKA gene calls.
-    </small></span>
+    
+ -->
+    </small>
+    
+    </span>
      
      
      <div id='table-container'>
@@ -123,7 +129,7 @@ thead th { position: sticky; top: 0; }
      <thead>
       <tr>
        <th class='col0 sorttable_nosort'></th>
-       <th class='col1'>Molecule-ID</th>
+       <th class='col1'>Region</th>
        <th class='' title='Protein ID' class='col2'>Protein-ID</th>
        <th class='' title='Type' class='col2'>Type</th>
        <th class='col2 sorttable_nosort'>Genome<br>Viewer</th>
