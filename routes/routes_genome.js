@@ -321,7 +321,7 @@ router.get('/genome_description', async function Description (req, res) {
         helpers.print('In Genome_Descriptin2: '+q_contig)
         const [rows2] = await conn.execute(q_contig);
         for(let r in rows2){
-            contigs.push({contig: rows2[r].accession, gc: rows2[r].GC})
+            contigs.push({contig: rows2[r].region, gc: rows2[r].GC})
         }
         let fpath = path.join(ENV.PATH_TO_DATA,'homdData-Crispr.json')
         //console.log(fpath)
@@ -848,7 +848,7 @@ function apply_annot_table_filter(rows, filter){
               })
         }else if(filter.sort_col === 'molecule'){
               new_rows.sort((b, a) => {
-                return helpers.compareStrings_alpha(a.accession, b.accession);
+                return helpers.compareStrings_alpha(a.region, b.region);
               })
         }else if(filter.sort_col === 'gene'){
               new_rows.sort((b, a) => {
@@ -874,7 +874,7 @@ function apply_annot_table_filter(rows, filter){
               })
         }else if(filter.sort_col === 'molecule'){
               new_rows.sort((a, b) => {
-                return helpers.compareStrings_alpha(a.accession, b.accession);
+                return helpers.compareStrings_alpha(a.region, b.region);
               })
         }else if(filter.sort_col === 'gene'){
               new_rows.sort((a, b) => {
@@ -909,7 +909,7 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
   }else if(search_field === 'gene'){
       send_list = annot_list.filter(item => item.gene.toLowerCase().includes(search_txt))
   }else if(search_field === 'molecule'){
-      send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
+      send_list = annot_list.filter(item => item.region.toLowerCase().includes(search_txt))
   }else {
       //console.log('search all',search_txt)
       //send_list = send_tax_obj
@@ -940,7 +940,7 @@ function get_text_filtered_annot(annot_list, search_txt, search_field){
          temp_obj.push(tmp_send_list[n])
       }
       
-      tmp_send_list = annot_list.filter(item => item.accession.toLowerCase().includes(search_txt))
+      tmp_send_list = annot_list.filter(item => item.region.toLowerCase().includes(search_txt))
       for(let n in tmp_send_list){
          //temp_obj[tmp_send_list[n].protein_id] = tmp_send_list[n]
          temp_obj.push(tmp_send_list[n])
@@ -964,7 +964,7 @@ router.get('/reset_atable', function annot_table_reset(req, res) {
 });
 
 router.post('/explorer', async function explorer_post (req, res) {
-    //console.log('IN explorer_post')
+    console.log('IN explorer_post')
     //console.log(req.body)
     let pidList
     let gid = req.body.gid
@@ -1058,7 +1058,7 @@ router.post('/explorer', async function explorer_post (req, res) {
     
 })
 router.get('/explorer', async function explorer_get (req, res) {
-    //console.log('in explorerGET')
+    console.log('in explorerGET')
     //console.log(C.annotation_lookup)
     // let myurl = url.parse(req.url, true)
     helpers.accesslog(req, res)
@@ -1069,7 +1069,7 @@ router.get('/explorer', async function explorer_get (req, res) {
       req.session.gtable_filter.gid = gid
     }
     let otid = 0,gc = 0
-    let anno = req.query.anno || 'ncbi'
+    let anno = req.query.anno || 'prokka'
     
     
     helpers.print(['gid:', gid,'anno:',anno])
@@ -1084,7 +1084,7 @@ router.get('/explorer', async function explorer_get (req, res) {
     }
     let organism = 'Unknown', pidList
     //let dbChoices = []
-    
+    console.log('A')
     
     let conn,args = {}
     
@@ -1118,7 +1118,7 @@ router.get('/explorer', async function explorer_get (req, res) {
       }
     }
   
-  
+    console.log('B')
     if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
         otid = C.genome_lookup[gid].otid
         //gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
@@ -1146,7 +1146,7 @@ router.get('/explorer', async function explorer_get (req, res) {
     render_explorer(req, res, args)
     return
     }
-
+    console.log('C')
     //OLD DB
     const q = queries.get_annotation_query(gid, anno)
     console.log('get_annotation_query-GET',q)
@@ -2272,7 +2272,7 @@ router.post('/amr_ajax', async function amr_ajax(req, res){
                 if(locstart < 1){ 
                     locstart = 1 
                 }
-                seqacc = rows[i].accession.replace('_','|')
+                seqacc = rows[i].region.replace('_','|')
                 loc = seqacc+":"+locstart.toString()+".."+locstop.toString() 
                 highlight = seqacc+":"+start.toString()+".."+stop.toString() 
                 

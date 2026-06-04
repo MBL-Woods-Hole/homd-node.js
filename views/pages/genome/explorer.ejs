@@ -119,10 +119,10 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
      
     <% if(!gid || gid.toString() === '0'){ %>
              <!-- do nothing here  -->
-    <% }else if(anno_type === "prokka" || anno_type === "ncbi" ) { %>
+    <% }else if(anno_type === "prokka" || anno_type === "ncbi" || anno_type === "bakta") { %>
                  <%- include("../../partials/annotation"); %>
     <% }else{ %>
-                 Page Errror
+                 Page Error
     <% } %>
       
 </div>  <!-- end anno-box -->

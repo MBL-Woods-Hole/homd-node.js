@@ -59,7 +59,7 @@ export const get_db_updates_query = () => {
 export const get_annotation_query = (gid, anno) => {
   let qSelectAnno 
   if(anno === 'prokka'){
-    qSelectAnno = 'SELECT accession, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
+    qSelectAnno = 'SELECT a.region, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
    qSelectAnno += ' FROM PROKKA.orf_gff a'
    qSelectAnno += ' LEFT JOIN PROKKA.faa b using(protein_id)'
    qSelectAnno += ' LEFT JOIN PROKKA.ffn c using(protein_id)'
@@ -77,17 +77,23 @@ export const get_annotation_query = (gid, anno) => {
 //     qSelectAnno += " WHERE PROKKA.orf_gff.genome_id = '"+gid+"'"
   
   }else if(anno === 'ncbi') {
-    qSelectAnno = 'SELECT accession, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
+    qSelectAnno = 'SELECT a.region, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
     qSelectAnno += ' FROM NCBI.orf_gff a'
     qSelectAnno += ' LEFT JOIN NCBI.faa b using(protein_id)'
     qSelectAnno += ' LEFT JOIN NCBI.ffn c using(protein_id)'
     qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
   
   }else{ // BAKTA
-    qSelectAnno = 'SELECT accession, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, attribute_gene as gene'
+//     SELECT a.region, a.type,  a.attribute_locus_tag as locus_tag,  a.attribute_product as product, 'c.length_na', b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene 
+// FROM BAKTA.gff a 
+// LEFT JOIN BAKTA.faa b on b.protein_id=a.attribute_locus_tag
+/* using(protein_id)  */
+/* LEFT JOIN BAKTA.ffn c using(protein_id)  */
+//WHERE a.genome_id = 'GCA_900105505.1'
+    qSelectAnno = 'SELECT a.region, a.type,  a.attribute_locus_tag as protein_id,  a.attribute_product as product, "c.length_na", b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene '
     qSelectAnno += ' FROM BAKTA.gff a'
-    qSelectAnno += ' LEFT JOIN BAKTA.faa b using(protein_id)'
-    qSelectAnno += ' LEFT JOIN BAKTA.ffn c using(protein_id)'
+    qSelectAnno += ' LEFT JOIN BAKTA.faa b on b.protein_id=a.attribute_locus_tag'
+    //qSelectAnno += ' LEFT JOIN BAKTA.ffn c using(protein_id)'
     qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
   }
   
@@ -176,7 +182,7 @@ export const get_all_crispr_cas_data = () => {
 export const get_amr_data = (gid) => {
     let q = 'SELECT homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
     q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc, "
-    q += "closest_ref_name,hmm_acc,hmm_description,accession,start,stop"
+    q += "closest_ref_name,hmm_acc,hmm_description,region,start,stop"
     q += " FROM homd.amr"
     q += " JOIN PROKKA.orf using(protein_id)"
     q += " WHERE homd.amr.genome_id='"+gid+"'"
@@ -186,7 +192,7 @@ export const get_amr_data = (gid) => {
 export const get_all_amr_data = () => {
     let q = 'SELECT amr.genome_id,homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
     q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc, "
-    q += "closest_ref_name,hmm_acc,hmm_description,accession,start,stop"
+    q += "closest_ref_name,hmm_acc,hmm_description,region,start,stop"
     q += " FROM homd.amr"
     q += " JOIN PROKKA.orf using(protein_id)"
     
@@ -257,7 +263,7 @@ export const get_genome = (gid) => {   // always NCBI for genome description
 
 export const get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
-  let qSelectContigs = "SELECT accession, GC from `NCBI`.`molecule` WHERE genome_id = '"+gid+"'"
+  let qSelectContigs = "SELECT region, GC from `NCBI`.`molecule` WHERE genome_id = '"+gid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj
@@ -267,7 +273,7 @@ export const get_contigs = (gid) => {   // always NCBI for taxon description
 
 export const get_contig = (gid, mid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
-  let qSelectContigs = "SELECT UNCOMPRESS(seq_compressed) as seq from `NCBI`.`contig` WHERE genome_id = '"+gid+"' and mol_id='"+mid+"'"
+  let qSelectContigs = "SELECT UNCOMPRESS(seq_compressed) as seq from `NCBI`.`contig` WHERE genome_id = '"+gid+"' and region='"+mid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj

@@ -127,7 +127,7 @@ thead th { position: sticky; top: 0; }
        <th class='' title='Protein ID' class='col2'>Protein-ID</th>
        <th class='' title='Type' class='col2'>Type</th>
        <th class='col2 sorttable_nosort'>Genome<br>Viewer</th>
-       <th class='col5 sorttable_nosort'>Range<br><small>(bp)</small></th>
+       <th class='col5 center sorttable_nosort'>Range<br><small>(bp)</small></th>
        <th title='Nucleic Acid Length (bp)' class='col3 center sorttable_numeric' nowrap>Show Sequences<br><small>(length) NA / AA</small></th>
       
        
@@ -143,7 +143,7 @@ thead th { position: sticky; top: 0; }
      <% if(mole.length === 0){ %>
         <tr><td>No Data</td><td>Try different filter settings</td></tr>
      <% }else{ %>
-     mole Length <%= mole.length %>
+     
      <% for(n in mole){ %>
      <!-- Clean up start/stop and parseInt -->
      <%   if(mole[n].start[0] === "<" ){ %>
@@ -171,11 +171,11 @@ thead th { position: sticky; top: 0; }
      <%   if(locstart < 1){ %>
      <%     locstart = 1 %>
      <%   } %>
-     <%   //contig_gc = (parseFloat(mole[n].gc)/100).toFixed(2) %>
+     
      <tr>
        
        <td><%= cnt %></td>
-       <td><%= mole[n].accession %></td>
+       <td><%= mole[n].region %></td>
        
        <td nowrap>
          <% idx = mole[n].protein_id.toLowerCase().indexOf(src_txt) %>
@@ -186,7 +186,7 @@ thead th { position: sticky; top: 0; }
            <%- mole[n].protein_id %>
          <% } %>
          
-        <% seqacc = mole[n].accession.replace('_','|') %>
+        <% seqacc = mole[n].region.replace('_','|') %>
         
          <% loc = seqacc+":"+locstart.toString()+".."+locstop.toString() %>
          <% highlight = seqacc+":"+start.toString()+".."+stop.toString() %>
@@ -201,10 +201,10 @@ thead th { position: sticky; top: 0; }
        
        <td class='center' nowrap>
            <% if(mole[n].type === "CDS"){ %>
-           <a title='Nucleic Acid' href='#' onclick="get_AA_NA_seq('na','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')">
+           <a title='Nucleic Acid' href='#' onclick="get_AA_NA_seq('na','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].region %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')">
            <%= mole[n].length_na %>_na</a>
            &nbsp;&nbsp;&nbsp;
-           <a title='Amino Acid'   href='#' onclick="get_AA_NA_seq('aa','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].accession %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')">
+           <a title='Amino Acid'   href='#' onclick="get_AA_NA_seq('aa','<%= mole[n].protein_id %>','<%= db %>','<%= mole[n].region %>','<%= organism %>','<%= mole[n].product %>','<%= gid %>')">
            <%= mole[n].length_aa %>_aa</a>
            <% } %>
        </td>

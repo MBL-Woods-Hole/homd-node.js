@@ -84,7 +84,9 @@ def run(args):
     # prokka first
     q_prokka_base = "SELECT organism, gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_prokkaV11.0` WHERE genome_id='%s'"
     q_ncbi_base   = "SELECT organism, gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_ncbiV11.0`   WHERE genome_id='%s'"
-    fields = ['organism','gene','CDS','rRNA','tRNA','tmRNA','mRNA']
+    q_bakta_base   = "SELECT '',gene,CDS,rRNA,tRNA,tmRNA,mRNA FROM `homd`.`genomes_bakta`   WHERE genome_id='%s'"
+    
+    #fields = ['organism','gene','CDS','rRNA','tRNA','tmRNA','mRNA']
     
     for gid in genome_collector:
         #print(gid)
@@ -128,7 +130,23 @@ def run(args):
             master_lookup[gid][anno]['tRNA']     = row[0][4]
             master_lookup[gid][anno]['tmRNA']    = row[0][5]
             master_lookup[gid][anno]['mRNA']     = row[0][6]
-
+        
+        anno = 'bakta'
+        if 'bakta' not in master_lookup[gid]:
+            master_lookup[gid]['bakta']={}
+        q2 = q_bakta_base % (gid)
+        row = myconn.execute_fetch_select(q2)
+            
+        if myconn.cursor.rowcount > 0:
+            
+            master_lookup[gid][anno]['organism'] = row[0][0]
+            
+            master_lookup[gid][anno]['gene']     = row[0][1]
+            master_lookup[gid][anno]['CDS']      = row[0][2]
+            master_lookup[gid][anno]['rRNA']     = row[0][3]
+            master_lookup[gid][anno]['tRNA']     = row[0][4]
+            master_lookup[gid][anno]['tmRNA']    = row[0][5]
+            master_lookup[gid][anno]['mRNA']     = row[0][6]
     file =  os.path.join(args.outdir,args.outfileprefix+'Lookup.json')
     print_dict(file, master_lookup)
 
