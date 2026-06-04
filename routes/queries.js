@@ -59,10 +59,10 @@ export const get_db_updates_query = () => {
 export const get_annotation_query = (gid, anno) => {
   let qSelectAnno 
   if(anno === 'prokka'){
-    qSelectAnno = 'SELECT a.region, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
+    qSelectAnno = 'SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
    qSelectAnno += ' FROM PROKKA.orf_gff a'
-   qSelectAnno += ' LEFT JOIN PROKKA.faa b using(protein_id)'
-   qSelectAnno += ' LEFT JOIN PROKKA.ffn c using(protein_id)'
+   qSelectAnno += ' LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id '
+   qSelectAnno += ' LEFT JOIN PROKKA.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id '
    qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
     
     
@@ -77,10 +77,10 @@ export const get_annotation_query = (gid, anno) => {
 //     qSelectAnno += " WHERE PROKKA.orf_gff.genome_id = '"+gid+"'"
   
   }else if(anno === 'ncbi') {
-    qSelectAnno = 'SELECT a.region, type, gc, protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
+    qSelectAnno = 'SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
     qSelectAnno += ' FROM NCBI.orf_gff a'
-    qSelectAnno += ' LEFT JOIN NCBI.faa b using(protein_id)'
-    qSelectAnno += ' LEFT JOIN NCBI.ffn c using(protein_id)'
+    qSelectAnno += ' LEFT JOIN NCBI.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id '
+    qSelectAnno += ' LEFT JOIN NCBI.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id '
     qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
   
   }else{ // BAKTA
