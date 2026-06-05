@@ -92,7 +92,7 @@ export const get_annotation_query = (gid, anno) => {
 //WHERE a.genome_id = 'GCA_900105505.1'
     qSelectAnno = 'SELECT a.region, a.type,  a.attribute_locus_tag as protein_id,  a.attribute_product as product, "c.length_na", b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene '
     qSelectAnno += ' FROM BAKTA.gff a'
-    qSelectAnno += ' LEFT JOIN BAKTA.faa b on b.protein_id=a.attribute_locus_tag'
+    qSelectAnno += ' LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag'
     //qSelectAnno += ' LEFT JOIN BAKTA.ffn c using(protein_id)'
     qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
   }

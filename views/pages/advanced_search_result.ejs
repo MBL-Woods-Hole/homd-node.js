@@ -288,6 +288,7 @@ table.sortable thead {
                 
                 <td nowrap class='center'>
                   <a class='pill pill-mediumorchid' href='/genome/explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
+                  <a class='pill pill-colorkit10' href='/genome/explorer?gid=<%= gid %>&anno=bakta'>BAKTA</a>
                   <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
                     <a class='pill pill-slateblue' href='/genome/explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
                   <% }else{ %>

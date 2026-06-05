@@ -199,13 +199,25 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
     let anno = req.body.anno.toUpperCase()
     let q,conn
     if(anno =='BAKTA'){
-        q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA_sub_prokka`.orf WHERE core_ID in ("+req.body.id_list+")"
+        //q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA_sub_prokka`.orf WHERE core_ID in ("+req.body.id_list+")"
+        q = "SELECT a.region as acc,"
+        q+= " attribute_locus_tag as pid,"
+        q+= " type,"
+        q+= " start,"
+        q+= " end,"
+        q+= " attribute_product as product,"
+        q+= " attribute_Gene as gene,"
+        q+= " length_aa as laa,"
+        q+= " '0' as lna"
+        q+= " FROM BAKTA.gff a"
+        q+= " LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
+        q+= " WHERE a.genome_id in ("+req.body.id_list+")"
     }else{
         //q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE protein_id in ("+req.body.pid_list+")"
         q = "SELECT accession as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.id_list+")"
     
     }
-    //console.log('QQ',q)
+    console.log('QQ',q)
     try {
         conn = await global.TDBConn();
         const [rows] = await conn.execute(q);
