@@ -77,7 +77,7 @@ var cfg = '<%= config %>'
   
 function show_anno_hits(obj, anno, gid){
     var data = JSON.parse(obj)
-    //console.log('data obj',data)
+    console.log('data obj',data)
     //console.log('data[gid]',data[0])
     org = data[0].species
     

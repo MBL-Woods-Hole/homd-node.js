@@ -211,10 +211,10 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
         q+= " '0' as lna"
         q+= " FROM BAKTA.gff a"
         q+= " LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
-        q+= " WHERE a.genome_id in ("+req.body.id_list+")"
+        q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
     }else{
         //q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE protein_id in ("+req.body.pid_list+")"
-        q = "SELECT accession as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.id_list+")"
+        q = "SELECT region as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.id_list+")"
     
     }
     console.log('QQ',q)
@@ -529,6 +529,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                     //ncbi|gca_045159995.1|cp077160.1|kst12_00050|wyk98014.1|hypothetical protein|942|313|6825|7766
                     //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
                     //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
+                    //bakta|gca_000174175.1|acfu01000001.1||gca000174175_02365|hypothetical protein|178369|178515
                     let pts = row_array[n].split('|')
                     //console.log('grep pts',pts)
                     if(pts.length >= split_length && ['prokka','ncbi','bakta'].indexOf(pts[0]) != -1 ){
@@ -536,8 +537,8 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                       if(pts[0] == 'bakta'){
                          let id_pts = pts[1].split('_')
                          gid = (id_pts[0]+'_'+id_pts[1]).toUpperCase()
-                         pid = pts[1]
-                         prod = pts[4]
+                         pid = pts[4]
+                         prod = pts[5]
                          gene = pts[3]
                          type=''
                       }else{   //prokka and ncbi
