@@ -502,12 +502,12 @@ router.post('/anno_search_data', async (req, res) => {
     //console.log('unique_lst',unique_pidlst)
     if(anno.toUpperCase() === 'BAKTA'){
         if(format === 'fasta_aa'){
-            q = "SELECT CONCAT('>Bakta | ',BAKTA_sub_prokka.orf.core_contig_acc,' | ', BAKTA_sub_prokka.orf.genome_id,' | ',"
-            q += " core_ID,' | ',core_start,'..',core_end,' | length:',bakta_Length) AS defline,"
+            q = "SELECT CONCAT('>Bakta | ',a.region,' | ', a.genome_id,' | ',"
+            q += " a.attribute_locus_tag,' | ',start,'..',end,' | length:',b.length_aa) AS defline,"
             q += " UNCOMPRESS(seq_compressed) as sequence"
-            q += " from BAKTA_sub_prokka.orf"
-            q += " JOIN BAKTA_sub_prokka.faa using(core_ID)"
-            q += " WHERE core_ID in ("+unique_pidlst+")"
+            q += " FROM BAKTA.gff a"
+            q += " JOIN BAKTA.faa b  on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
+            q += " WHERE a.attribute_locus_tag in ("+unique_pidlst+")"
             //head_text_array = ['core_ID','Genome_ID','Contig','BAKTA','seq_length']
         }else if(format === 'fasta_na'){
             // error  there is no bakta na seqs
