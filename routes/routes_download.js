@@ -651,7 +651,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
     let anno_cap = anno.toUpperCase()
 
     q = "SELECT"
-    q += " CONCAT('>',protein_id,' | ',genome_id,' | ',mol_id) AS defline,"
+    q += " CONCAT('>',protein_id,' | ',genome_id,' | ',region) AS defline,"
     q += " UNCOMPRESS(seq_compressed) AS sequence"
     if(format === 'fasta_aa' && anno === 'ncbi'){
         q += " from NCBI.faa WHERE NCBI.faa.genome_id = '"+gid+"'" 
@@ -664,6 +664,9 @@ router.post('/anno_data_by_gid', async (req, res) => {
         
     //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
     //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`faa` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
+    }else if(format === 'fasta_aa' && anno === 'bakta'){
+        q += " from BAKTA.faa WHERE BAKTA.faa.genome_id = '"+gid+"'" 
+    
     }else if(format === 'fasta_na' && anno === 'prokka'){
         q += " from PROKKA.ffn WHERE PROKKA.ffn.genome_id = '"+gid+"'"
         
@@ -1269,7 +1272,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
             if (err) {
                 console.log(err);
             }
-            console.log('streaming to download')
+            console.log('streaming to download1')
             });
             
             return
@@ -1280,7 +1283,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
             if (err) {
                 console.log(err);
             }
-            console.log('streaming to download')
+            console.log('streaming to download2')
             });
         }
     } catch (error) {
