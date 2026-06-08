@@ -111,7 +111,7 @@ function show_anno_hits(obj, anno, gid){
     id_list = []
     for(n in data){
         //console.log('1',data[n])
-        if(anno === 'bakta'){
+        if(anno === 'bakta' || anno === 'prokka'){
           console.log('2',"'"+data[n].pid+"'")
           if(data[n].pid){
            id_list.push("'"+data[n].pid+"'")
