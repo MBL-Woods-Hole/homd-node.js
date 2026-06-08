@@ -69,9 +69,9 @@ html, body { min-height: 100%; }
        <p class='h3 title'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span> (Case Insensitive)</small>]
        </p>
 
-<span style='float:right;'><a href='advanced_site_search'>Search Again</a></span> 
+<span style='float:right;'><a href='full_site_search'>Search Again</a></span> 
     <br>
-    <center><a href='advanced_site_search'>Search Genome Annotations</a></center>
+    <center><a href='full_site_search'>Search Genome Annotations</a></center>
     <br>Matches from <strong>Bacterial Taxon Names</strong>: (<%= Object.keys(lineageids).length %> hits)<span class='float-right small'>Your Search String: "<%= search_text %>"</span>
   <% if( Object.keys(lineageids).length > 0 ){ %>
   <div class='search-box'>
