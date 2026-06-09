@@ -212,12 +212,12 @@ export const get_AA_NA = (db, gid, pid,type) => {
     return q
 };
 
-export const get_bakta_AA = (db, gid, pid, type ) => {
-    let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
-    q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
-    
-    return q
-};
+// export const get_bakta_AA = (db, gid, pid, type ) => {
+//     let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
+//     q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
+//     
+//     return q
+// };
 
 function genome_query() {
     let tbl  = C.genomes_table_name

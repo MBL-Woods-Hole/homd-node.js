@@ -414,20 +414,23 @@ router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
           q = queries.get_AA_NA(db, gid, pid,'ncbi-aa')
        }else if(db_pts[0] === 'bakta'){
           db = "`BAKTA`.`faa`"
-          q = queries.get_bakta_AA(db, gid, pid,'bakta-aa')
+          q = queries.get_AA_NA(db, gid, pid,'bakta-aa')
        }else{
           db = "`PROKKA`.`faa`"
           q = queries.get_AA_NA(db, gid, pid,'prokka-aa')
        }
      
     }else{   //req.body.type === 'na':   // NCBI  na
-      let orfid = pid
+      
       if(db_pts[0] === 'NCBI' || db_pts[0] === 'ncbi'){
           db = "`NCBI`.`ffn`"
-          q = queries.get_AA_NA(db, gid, orfid,'ncbi-na')
+          q = queries.get_AA_NA(db, gid, pid,'ncbi-na')
+      }else if(db_pts[0] === 'bakta'){
+          db = "`BAKTA`.`ffn`"
+          q = queries.get_AA_NA(db, gid, pid,'bakta-na')
        }else{
           db = "`PROKKA`.`ffn`"
-          q = queries.get_AA_NA(db, gid, orfid,'prokka-na')
+          q = queries.get_AA_NA(db, gid, pid,'prokka-na')
        }
     }
     try {
