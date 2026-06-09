@@ -211,7 +211,7 @@ function show_anno_hits(obj, anno, gid){
                   html += "<td></td>"   // AA length
                 }else{
                   html += "<td nowrap class='center'>"+resp_data[n].lna
-                  html += " [<a title='Nucleic Acid' href='#' onclick=\"get_AA_NA_seq('na','"+resp_data[n].orf_id+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>NA</b></a>]"
+                  html += " [<a title='Nucleic Acid' href='#' onclick=\"get_AA_NA_seq('na','"+resp_data[n].pid+"','"+db+"','"+resp_data[n].acc+"','"+org+"','"+resp_data[n].product+"','"+gid+"')\"><b>NA</b></a>]"
                   html += "</td>"   // NA length
                 }
                 if(!resp_data[n].laa || resp_data[n].laa == '0'){
