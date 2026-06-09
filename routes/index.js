@@ -198,9 +198,37 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
     //console.log('pidlist',req.body.pid_list)
     let anno = req.body.anno.toUpperCase()
     let q,conn
-    if(anno =='BAKTA'){
-        //q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA_sub_prokka`.orf WHERE core_ID in ("+req.body.id_list+")"
-        q = "SELECT a.region as acc,"
+    // if(anno =='BAKTA'){
+//         //q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA_sub_prokka`.orf WHERE core_ID in ("+req.body.id_list+")"
+//         q = "SELECT a.region as acc,"
+//         q+= " a.attribute_locus_tag as pid,"
+//         q+= " type,"
+//         q+= " start,"
+//         q+= " end,"
+//         q+= " attribute_product as product,"
+//         q+= " attribute_Gene as gene,"
+//         q+= " length_aa as laa,"
+//         q+= " '0' as lna"
+//         q+= " FROM BAKTA.gff a"
+//         q+= " LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
+//         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
+//     }else{
+//         //q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE protein_id in ("+req.body.pid_list+")"
+//         //q = "SELECT region as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.id_list+")"
+//         q = "SELECT a.region as acc,"
+//         q+= " a.attribute_locus_tag as pid,"
+//         q+= " type,"
+//         q+= " start,"
+//         q+= " end,"
+//         q+= " attribute_product as product,"
+//         q+= " attribute_Gene as gene,"
+//         q+= " length_aa as laa,"
+//         q+= " '0' as lna"
+//         q+= " FROM PROKKA.gff a"
+//         q+= " LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
+//         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
+//     }
+    q = "SELECT a.region as acc,"
         q+= " a.attribute_locus_tag as pid,"
         q+= " type,"
         q+= " start,"
@@ -209,28 +237,10 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
         q+= " attribute_Gene as gene,"
         q+= " length_aa as laa,"
         q+= " '0' as lna"
-        q+= " FROM BAKTA.gff a"
-        q+= " LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
-        q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
-    }else{
-        //q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE protein_id in ("+req.body.pid_list+")"
-        //q = "SELECT region as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.id_list+")"
-        q = "SELECT a.region as acc,"
-        q+= " a.attribute_locus_tag as pid,"
-        q+= " type,"
-        q+= " start,"
-        q+= " end,"
-        q+= " attribute_product as product,"
-        q+= " attribute_Gene as gene,"
-        q+= " length_aa as laa,"
-        q+= " '0' as lna"
-        q+= " FROM PROKKA.gff a"
-        q+= " LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
+        q+= " FROM "+anno+".gff a"
+        q+= " LEFT JOIN "+anno+".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
     
-    
-    
-    }
     console.log('QQ',q)
     try {
         conn = await global.TDBConn();
@@ -548,34 +558,28 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                     //console.log('grep pts',pts)
                     if(pts.length >= split_length && ['prokka','ncbi','bakta'].indexOf(pts[0]) != -1 ){
                       //console.log('pts',pts)
-                      if(pts[0] == 'bakta' || pts[0] == 'prokka'){
+//                      if(pts[0] == 'bakta' || pts[0] == 'prokka'){
                          let id_pts = pts[1].split('_')
                          gid = (id_pts[0]+'_'+id_pts[1]).toUpperCase()
                          pid = pts[4]
                          prod = pts[5]
                          gene = pts[3]
                          type=''
-                      }else{   //ncbi
-                        gid  = pts[1].toUpperCase()
-                        type = pts[3]
-                        gene = pts[4]
-                        orf_id  = pts[5].toUpperCase()
-                        pid = ''
-                        if(type === 'cds'){
-                            if(pts[0] === 'prokka'){
-                                pid = orf_id
-                            }else{  // ncbi
-                                pid = orf_id.split('-')[1]
-                            }
-                        }
-                        
-                        prod = pts[6]
-                        
-                        // gene = pts[3]
-//                         pid = pts[4]
-//                         prod = pts[5]
-                        
-                      }
+//                      }else{   //ncbi
+                        // gid  = pts[1].toUpperCase()
+//                         type = pts[3]
+//                         gene = pts[4]
+//                         orf_id  = pts[5].toUpperCase()
+//                         pid = ''
+//                         if(type === 'cds'){
+//                             if(pts[0] === 'prokka'){
+//                                 pid = orf_id
+//                             }else{  // ncbi
+//                                 pid = orf_id.split('-')[1]
+//                             }
+//                         }
+//                         prod = pts[6]
+ //                     }
                       gid_count[gid] = 1
                       //console.log('LOOKup',C.genome_lookup[gid])
                       
