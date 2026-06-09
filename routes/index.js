@@ -228,7 +228,8 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
 //         q+= " LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
 //         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
 //     }
-    q = "SELECT a.region as acc,"
+      if(anno =='BAKTA'){  // no ffn seqs yet
+        q = "SELECT a.region as acc,"
         q+= " a.attribute_locus_tag as pid,"
         q+= " type,"
         q+= " start,"
@@ -240,7 +241,21 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
         q+= " FROM "+anno+".gff a"
         q+= " LEFT JOIN "+anno+".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
-    
+      }else{  // PROKKA and NCBI
+        q = "SELECT a.region as acc,"
+        q+= " a.attribute_locus_tag as pid,"
+        q+= " type,"
+        q+= " start,"
+        q+= " end,"
+        q+= " attribute_product as product,"
+        q+= " attribute_Gene as gene,"
+        q+= " length_aa as laa,"
+        q+= " length_na as lna"
+        q+= " FROM "+anno+".gff a"
+        q+= " LEFT JOIN "+anno+".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
+        q+= " LEFT JOIN "+anno+".ffn c on a.genome_id=c.genome_id and c.protein_id=a.attribute_locus_tag"
+        q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
+      }
     console.log('QQ',q)
     try {
         conn = await global.TDBConn();
