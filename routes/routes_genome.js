@@ -398,7 +398,7 @@ router.post('/get_contig_seq', async function get_contig_seq (req, res) {
 
 
 router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
-    console.log('in get_AA_NA_seq -post')
+    console.log('in get_AA_NA_seq -post',req.body)
     //console.log(req.body)
     //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
     const pid = req.body.pid
