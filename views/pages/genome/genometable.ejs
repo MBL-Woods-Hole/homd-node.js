@@ -69,11 +69,11 @@ thead th { position: sticky; top: 0; }
   display: none;
   position: absolute;
   background:lightblue;
-  width:165px;  /* This sets the box width to allow cursor contact */
+  width:185px;  /* 165px This sets the box width to allow cursor contact */
   padding:8px;
   margin:0px;
   border:1px solid black;
-  left:-160px;
+  left:-160px;   /* -160px */
   top:-50px;
   z-index: 1;
 }
@@ -190,10 +190,10 @@ thead th { position: sticky; top: 0; }
         <% }else{ %>
             <td class='right'><%= parseInt(n) + 1 %></td>
       <% } %>
-        <% genus = ginfo[n].organism.split(" ")[0] %>
+        
         <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
         <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-        <td class='tax_name ellipsis' title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].species %> <%= ginfo[n].subspecies %></em></a></td>
+        <td class='tax_name ellipsis' title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].species %> <%= ginfo[n].subspecies %></em></a></td>
         
         <td class='tax_name ellipsis' title='<%= ginfo[n].strain %>'><em><%= ginfo[n].strain %></em></td>
         <td class='center'><%= ginfo[n].mag %></td>

@@ -891,7 +891,7 @@ router.get('/life', function life(req, res) {
     html += '</td></tr>'
     image_array = [{ name: 'cellular_organisms.png', text: '' }]
   } else {
-    console.log('tax_name2', tax_name + '_' + rank)
+    //console.log('tax_name2', tax_name + '_' + rank)
     let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name + '_' + rank]
     if (!node) {
       console.log('taxnode error:', tax_name + '_' + rank)
@@ -901,23 +901,23 @@ router.get('/life', function life(req, res) {
     rank_id = C.ranks.indexOf(rank) + 2
     show_ranks = C.ranks.slice(0, rank_id)
     helpers.print(['node', node])
-    console.log('show_ranks', show_ranks)
+    //console.log('show_ranks', show_ranks)
     last_rank = show_ranks[show_ranks.length - 1]
-
+    ///console.log('lineage_list', lineage_list)
     space = '&nbsp;'
     for (let i in show_ranks) {
 
       rank_display = get_rank_display(show_ranks[i], false)
 
       if (show_ranks[i] !== last_rank) {  // Last row of many items
-
+        //console.log('show_ranks[i]]  show_ranks[i]',lineage_list[1][show_ranks[i]], show_ranks[i])
         node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[lineage_list[1][show_ranks[i]] + '_' + show_ranks[i]]
         lin = helpers_taxa.make_lineage(node)
         //console.log('lin',lin)
         cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString()
 
         title = rank_display + ': ' + lineage_list[1][show_ranks[i]]
-        console.log('show_ranks[i]', show_ranks[i])
+        //console.log('show_ranks[i]', show_ranks[i])
         if (rank === show_ranks[i]) {
           html += "<tr><td class='life-taxa-name selected'>" + space + rank_display + "</td><td class='life-taxa'>"
         } else {
@@ -930,7 +930,7 @@ router.get('/life', function life(req, res) {
         }
 
         html += "<span class='vist-taxon-page'>" //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-        console.log('rank',show_ranks[i],'name',lineage_list[1][show_ranks[i]])
+        //console.log('rank',show_ranks[i],'name',lineage_list[1][show_ranks[i]])
         if(C.has_abundance_data[show_ranks[i]][lineage_list[1][show_ranks[i]]]){
           html += "<a href='ecology?rank=" + show_ranks[i] + "&name=" + lineage_list[1][show_ranks[i]] + "'>abundance</a></span>"
         }else{

@@ -107,7 +107,7 @@ router.get('/genome_table', function genome_table(req, res) {
        page_data.start_count = 1
        filter = helpers_genomes.get_default_gtable_filter()
     }
-    //console.log('filter',filter)
+    //console.log('C.genome_lookup',C.genome_lookup)
     //console.log('gfiletr from default')
     // Filter defaults to nul on initial GET
     //filter = helpers.get_default_gtable_filter()

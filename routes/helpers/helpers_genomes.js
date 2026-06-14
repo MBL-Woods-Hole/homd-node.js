@@ -113,7 +113,7 @@ export const init_page_data = () => {
 };
 
 export const apply_species = (lst) => {
-  let otid, sp = '';
+  let otid, sp = '',genus='';
   let subspecies = '';
 
   for (let i in lst) {
@@ -129,6 +129,7 @@ export const apply_species = (lst) => {
       lst[i].subspecies = C.taxon_lineage_lookup[otid].subspecies;
     }
   }
+  //console.log('lst',lst)
   return lst;
 
 };
