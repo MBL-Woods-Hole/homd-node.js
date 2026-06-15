@@ -52,7 +52,7 @@
    width: 35px;
 }
 #gnom-table .col1{
-   width: 120px;
+   width: 130px;
 }
 #gnom-table .col2 {
     width: 65px;
@@ -86,6 +86,7 @@
 #gnom-table .col11 {
     /* width: 120px; */
 }
+
 
 /* ANNOTATION TABLE */
 #annotation-table .col0{
