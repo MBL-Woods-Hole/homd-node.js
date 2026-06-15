@@ -497,6 +497,13 @@ and (min-width : 1824px) {
         <% }else{ %>
         <input type='radio' name='sort_col' value='strain' onclick='adv_update_sb()' > Strain&nbsp;
         <% } %>
+        
+        <% if(fltr.sort_col === 'mag'){ %>
+        <input type='radio' checked name='sort_col' value='mag' onclick='adv_update_sb()' > MAG&nbsp;
+        <% }else{ %>
+        <input type='radio' name='sort_col' value='mag' onclick='adv_update_sb()' > MAG&nbsp;
+        <% } %>
+        
         <% if(fltr.sort_col === 'level'){ %>
         <input type='radio' checked name='sort_col' value='level' onclick='adv_update_sb()' > Level&nbsp;
         <% }else{ %>
@@ -586,7 +593,7 @@ and (min-width : 1824px) {
 <tr>
   <td colspan='2'>
    <center>
-   <button id='adv_form_btn' type='submit' class='btn apply' value='Submit'>Apply</button>
+   <button id='adv_form_btn' type='submit' class='btn apply' value='Submit' style='display:none;background:grey;cursor:default;'>&nbsp;</button>
    <button type="button" class="btn cancel" onclick="closeAdvancedForm()">Close</button>
    </center>
   </td>

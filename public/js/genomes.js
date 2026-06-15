@@ -423,7 +423,7 @@ function update_sb(){ //submit button
     btn.style.background = 'black'
     btn.style.cursor = 'pointer'
     btn.style.fontSize ='14px';
-    btn.innerHTML = '** Update Table **'
+    btn.innerHTML = '** APPLY **'
 }
 function adv_update_sb(){
     btn = document.getElementById("adv_form_btn");
@@ -431,7 +431,8 @@ function adv_update_sb(){
     btn.style.background = 'black'
     btn.style.cursor = 'pointer'
     btn.style.fontSize ='14px';
-    btn.innerHTML = '** Apply Updated Filter to Table. **'
+    btn.style.display = 'inline-block';
+    btn.innerHTML = '** APPLY **'
 }
 function adv_clear_search_txt(){
    txt = document.getElementById("gene_srch_text");

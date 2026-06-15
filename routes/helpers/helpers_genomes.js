@@ -197,6 +197,7 @@ export const apply_pages = (glist, fltr, pd) => {
 export const apply_gtable_filter = (req, filter) => {
   let big_g_list = Object.values(C.genome_lookup);
   //console.log('big_g_list-0',big_g_list[0])
+  
   let vals;
   if (req.session.gtable_filter) {
     vals = req.session.gtable_filter;
@@ -226,6 +227,8 @@ export const apply_gtable_filter = (req, filter) => {
   }
 //console.log("GCA_013333485.2-1",big_g_list.length)
   //sort_col
+  //console.log('big_g_list count INIT',big_g_list.length)
+  //console.log('vals',vals)
   if (vals.sort_rev === 'on') {
     //console.log('REV sorting by ',vals.sort_col,' ',big_g_list.length)
     if (vals.sort_col === 'gid') {
@@ -265,8 +268,6 @@ export const apply_gtable_filter = (req, filter) => {
       big_g_list.sort(function (b, a) {
         return helpers.compareStrings_float(a[vals.sort_col], b[vals.sort_col]);
       });
-
-
     } else {
       // default: sort by organism
       big_g_list.sort(function (b, a) {
@@ -277,11 +278,8 @@ export const apply_gtable_filter = (req, filter) => {
   } else {
     //console.log('FWD sorting by ',vals.sort_col,' ',big_g_list[0])
     if (vals.sort_col === 'gid') {
-
       big_g_list.sort(function (a, b) {
         return helpers.compareStrings_alpha(a.gid, b.gid);
-
-
       });
     } else if (vals.sort_col === 'otid') {
       big_g_list.sort(function (a, b) {
@@ -324,6 +322,7 @@ export const apply_gtable_filter = (req, filter) => {
       });
     }
   }
+  //console.log('big_g_list count 2',big_g_list.length)
   //console.log("GCA_013333485.2-2",big_g_list.length)
   // Assembly Level
   let level_on = Object.keys(vals.level).filter(item => vals.level[item] === 'on');
@@ -375,7 +374,7 @@ export const apply_gtable_filter = (req, filter) => {
   });
 
 
-
+//console.log('big_g_list count 3',big_g_list.length)
   //console.log("GCA_013333485.2-4",big_g_list.length)
   //  big_g_list.filter(function (item) {
 //     if (item.gid === 'GCA_013333485.2') {
@@ -385,11 +384,11 @@ export const apply_gtable_filter = (req, filter) => {
   
   // ADV::Tax Sites ////////////////////////////////////////////////
   let site_on = Object.keys(vals.site).filter(item => vals.site[item] === 'on');
-  let default_length_of_site = 9;
+  
   //console.log('site_on',site_on)
   //console.log('big_g_list[]',big_g_list[0])
   big_g_list = big_g_list.filter(function (item) {
-    if (site_on.length === default_length_of_site) {
+    if (site_on.length === C.default_site_on.length) {
       return item;
     } else {
       //console.log('Sites:',C.site_lookup[item.otid].s1)
@@ -402,6 +401,7 @@ export const apply_gtable_filter = (req, filter) => {
     }
 
   });
+  //console.log('big_g_list count 3b',big_g_list.length)
   // ADV::Tax Abundance ////////////////////////////////////////////////
   //console.log('vals',vals)
   let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] === 'on');
@@ -429,6 +429,7 @@ export const apply_gtable_filter = (req, filter) => {
   //console.log("GCA_013333485.2-5",big_g_list.length)
   // MAGs /////////////////////////////////////////////////
   //console.log('vals',vals)
+  //console.log('big_g_list count 3c',big_g_list.length)
   big_g_list = big_g_list.filter(function filterMAGs(item) {
     //console.log('item',item)
     if (vals.mags === 'no_mags') {
@@ -444,7 +445,7 @@ export const apply_gtable_filter = (req, filter) => {
     }
 
   });
-  
+  //console.log('big_g_list count 4',big_g_list.length)
   //console.log("GCA_013333485.2-6",big_g_list.length)
   /// OTID ///
   big_g_list = big_g_list.filter(function filterOTIDs(item) {

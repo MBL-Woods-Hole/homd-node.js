@@ -365,6 +365,7 @@ constants.tax_sites_all = {
    'unassigned'   :'Unassigned'
 }
 constants.tax_sites_default = ['oral', 'nasal', 'skin','gut', 'vaginal', 'pathogen', 'enviro', 'ref', 'unassigned']
+constants.default_site_on = ['oral', 'nasal', 'skin','gut', 'vaginal', 'pathogen', 'unassigned']
 //constants.naming_status = ['Named','Unnamed']
 //constants.cultivation_status = ['Cultivated','Uncultivated']
 constants.tax_status_all     = ['named_cultivated','named_uncultivated','unnamed_cultivated','phylotype','dropped'];

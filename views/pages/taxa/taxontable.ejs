@@ -116,7 +116,7 @@ thead th { position: sticky; top: 0; }
        <tr id='<%= otid %>'>
        <% taxidfullname = 'HMT-'+("0000" + otid).slice(-4); %>
        <td class="col1" nowrap ><a href='/taxa/tax_description?otid=<%= otid %>'><%= taxidfullname  %></a>
-         &nbsp;&nbsp;<img id='<%= otid %>-image' class='dd-image' src="/images/drop-down-menu-comments-icon2.png" width='23' height='18' alt="dropmenu-icon" 
+         &nbsp;&nbsp;<img title='more...' id='<%= otid %>-image' class='dd-image' src="/images/drop-down-menu-comments-icon2.png" width='23' height='18' alt="dropmenu-icon" 
          onclick="openPopup('<%= otid %>', '<%= list[n].genus %>', '<%= list[n].species %>', '<%= list[n].genomes.length %>', '<%= list[n].ecology %>')" ">
        </td>
        <td class="col2 ellipsis" nowrap title='<%= list[n].genus  %>'><i><b><a href='life?rank=genus&name=<%= list[n].genus %>&otid=<%= otid %>'><%= list[n].genus  %></a></b></i></td>
