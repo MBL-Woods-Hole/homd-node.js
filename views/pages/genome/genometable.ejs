@@ -335,7 +335,7 @@ function closeAdvancedForm() {
         }else{
             pubody.innerHTML += `<li><span class='pill pill-grayed' style='display:flex;text-align:center;margin:10px 0;font-size:15px;' title='Phage Not Available'>Phage (not available)</span></li>`
         }
-        pubody.innerHTML += `<span class='dd-head'>Annotations:</span>`
+        pubody.innerHTML += `<hr><span class='bold'><strong>Annotations</strong></span>`
         pubody.innerHTML += `<a class='pill pill-colorkit8' href='explorer?gid=${gid}&anno=prokka'>PROKKA</a>`
         if(no_ncbi_annotation.indexOf(gid) == -1 ){
             pubody.innerHTML += `<li><a class='pill pill-colorkit9' href='explorer?gid=${gid}&anno=ncbi'>NCBI</a></li>`
