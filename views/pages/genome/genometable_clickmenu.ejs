@@ -37,7 +37,7 @@ thead th { position: sticky; top: 0; }
   
 }
 .ellipsis{
-  max-width:100px;
+  /* max-width: 200px;   */       /* Defines the truncation boundary */
   white-space: nowrap;      /* Keeps the text on a single line */
   overflow: hidden;         /* Hides the text that overflows the cell */
   text-overflow: ellipsis;
@@ -49,58 +49,46 @@ thead th { position: sticky; top: 0; }
  } 
 
 
-/* Tools Menu  */
-.dropbtn {
-  background-color: #04AA6D;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  z-index: -1;
-}
+/* Popup Background Overlay */
+    .popup-overlay {
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background-color: rgba(0, 0, 0, 0.3); 
+      z-index: 1000;
+    }
 
-/* The container <div> - needed to position the dropdown content */
-.dd-menu {
-  position: relative;
-  display: inline-block;
-  width:100%;
-  /* border:1px solid black; */
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background:lightblue;
-  width:185px;  /* 165px This sets the box width to allow cursor contact */
-  padding:8px;
-  margin:0px;
-  border:1px solid black;
-  left:-160px;   /* -160px */
-  top:-50px;
-  z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  font-size:13px;
-  margin:5px 0;
-  display: block;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-    background-color: white;
-    border:1px solid tomato;
-    color:black;
+    /* Popup Content Box */
+    .popup-content {
+      position: absolute;
+      top: 50%;
+      left: 40%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      min-width: 300px;
+      
+      /* text-align:center; */
+    }
+    .popup-content a{
+      display:flex;
+      text-align:center;
+      margin: 10px 0;
+      font-size:15px;
+    }
     
-}
-
-/* Show the dropdown menu on hover */
-.dd-menu:hover .dropdown-content {display: block;}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dd-menu:hover .dropbtn {background-color: #3e8e41;}
+    .dd-image{
+      cursor:pointer;
+    }
+    .dd-head{
+       font-size:18px;
+       font-weight:bold;
+    }
 #loader {
     background: url('/images/loading.gif') no-repeat center center;
     position: absolute;
@@ -162,7 +150,7 @@ thead th { position: sticky; top: 0; }
     <table id='gnom-table' class='table table-hover table-condensed' >
     <thead>
     <tr><th class='col0' >row #</th>
-    <th class='col1' scope='col' style='width:100px;'>Genome-ID</th>
+    <th class='col1' scope='col' >Genome-ID</th>
     <th class='col2' scope='col' nowrap>Taxon-ID</th>
     <th class='col3'  >Species</th>
     <th class='col4'  >Strain</th>
@@ -171,7 +159,6 @@ thead th { position: sticky; top: 0; }
     <th class='col7' scope='col' ><small>Contigs</small></th>
     <th class='col8' scope='col' >Combined<br>Length</th>
     <th class='col9' scope='col' >GC(%)</th>
-    <th class="col10 sorttable_nosort" scope='col' >More Information, Tools<br> and Annotations</th>
     
     </tr>
     </thead>
@@ -194,9 +181,14 @@ thead th { position: sticky; top: 0; }
             <td class='right'><%= parseInt(n) + 1 %></td>
       <% } %>
         
-        <td class='linkout center'><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a></td>
-        <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a></td>
-        <td class='tax_name ellipsis' title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].species %> <%= ginfo[n].subspecies %></em></a></td>
+        <td class='linkout center' nowrap><a href="genome_description?gid=<%= ginfo[n].gid %>"> <%= ginfo[n].gid %></a>
+        &nbsp;&nbsp;<img title='more...' id='<%= ginfo[n].gid %>-image' class='dd-image' src="/images/drop-down-menu-comments-icon2.png" width='23' height='18' alt="dropmenu-icon" 
+         onclick="openPopup('<%= ginfo[n].gid %>', '<%= ginfo[n].otid %>', '<%= ginfo[n].gc %>','<%= ginfo[n].phage %>')" ">
+        </td>
+        <td class='linkout center' nowrap ><a href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'><%= taxidfullname %></a>
+        
+        </td>
+        <td class='tax_name ellipsis' nowrap title='<%= ginfo[n].organism %>'><a href='/taxa/life?rank=genus&name=<%= ginfo[n].genus %>&gid=<%= ginfo[n].gid %>'><em><%= ginfo[n].species %> <%= ginfo[n].subspecies %></em></a></td>
         
         <td class='tax_name ellipsis' title='<%= ginfo[n].strain %>'><em><%= ginfo[n].strain %></em></td>
         <td class='center'><%= ginfo[n].mag %></td>
@@ -205,47 +197,7 @@ thead th { position: sticky; top: 0; }
         <td class='center' title='Size: <%= ginfo[n].combined_size %>bp'><%= ginfo[n].combined_size %></td>
     
         <td class='center'><%= ginfo[n].gc %></td>
-        <% gc2 = (parseFloat(ginfo[n].gc)/100).toFixed(2) %>
-        <td class='center' nowrap>
-            
-            <span class="dd-menu">
-                <!-- <button class="dropbtn pill pill-indigo">Hover Menu</button> -->
-                <img title='more...' src="/images/drop-down-menu-comments-icon2.png" width='23' height='18' alt="dropmenu-icon" >
-                <div class="dropdown-content">
-                <li><%= ginfo[n].gid %></li>
-                <li><a class='pill pill-colorkit1' href='genome_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Genome Description</a></li>
-                <li><a class='pill pill-colorkit2' href='#' onclick="open_jbrowse('<%= ginfo[n].gid %>','genome_table','<%= ginfo[n].gc %>')">Genome Viewer
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
-                      </svg>
-                </a></li>
-                <li><a class='pill pill-colorkit3 icon-link' href='conserved_protein_tree?gid=<%= ginfo[n].gid %>' target='_blank'>Genome Tree
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
-                      </svg>
-                    </a>
-                </li>
-                
-                <li><a class='pill pill-colorkit4' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info: <%= taxidfullname %></a></li>
-                <li><a class='pill pill-colorkit5' href='/taxa/tax_hierarchy?otid=<%= ginfo[n].otid %>'>Taxon Tree: <%= taxidfullname %></a></li>
-                
-                <li><a class='pill pill-colorkit6' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a></li> 
-                <% if(ginfo[n].phage == 'yes' ){ %>
-                    <li><a class='pill pill-colorkit7' href='/phage/phage?gid=<%= ginfo[n].gid %>' target="_self">Phage</a></li>
-                <% }else{ %>
-                    <li><span class='pill pill-grayed' title='Phage Not Available'>Phage (not available)</span></li>
-                <% } %>
-                <hr><li>Annotations:</li>
-                <a class='pill pill-colorkit8' href='explorer?gid=<%= ginfo[n].gid %>&anno=prokka'>PROKKA</a>
-                <% if(no_ncbi_annotation.indexOf(ginfo[n].gid) == -1 ){ %>
-                    <li><a class='pill pill-colorkit9' href='explorer?gid=<%= ginfo[n].gid %>&anno=ncbi'>NCBI</a></li>
-                <% }else{ %>
-                    <li><span class='pill pill-grayed' title='NCBI Annotation Not Available' >NCBI (not available)</span></li>
-                <% } %>
-                <a class='pill pill-colorkit10' href='explorer?gid=<%= ginfo[n].gid %>&anno=bakta'>BAKTA</a>
-                </div>
-            </span>
-        </td>
+        
         
         
       </tr>
@@ -255,6 +207,14 @@ thead th { position: sticky; top: 0; }
     </tbody>
     <% } %>
     </table>
+    
+<!-- Popup Structure -->
+  <div id="popupOverlay" class="popup-overlay" onclick="closePopup(event)">
+    <div class="popup-content" onclick="event.stopPropagation()">
+      <p id="popupBody" style='text-align:center;'></p>
+    </div>
+  </div>
+  
 </div>  <!-- end genome-box -->
     
   
@@ -290,6 +250,8 @@ thead th { position: sticky; top: 0; }
     var gid = '<%- filtergid %>'
     var filter_on = '<%- filter_on %>'
     var jb_path = '<%- cfg.JBROWSE_URL %>'
+    var no_ncbi_annotation = '<%- no_ncbi_annot %>'
+    
     console.log('JBPATH',jb_path)
     if(letter){
       document.getElementById(letter).style.color = 'red'
@@ -343,5 +305,56 @@ function openAdvancedForm() {
 function closeAdvancedForm() {
     document.getElementById("myAdvancedForm").style.display = "none";
 }
+
+///////////////////////////
+    const overlay = document.getElementById('popupOverlay');
+    //const title = document.getElementById('popupTitle');
+    const pubody = document.getElementById('popupBody');
+
+    // Open popup and populate with row data
+    function openPopup(gid, otid, gc, phage) {
+        //console.log('eco',ecology)
+        var taxidfullname = 'HMT-'+("0000" + otid).slice(-4);
+        //gc2 = (parseFloat(gc)/100).toFixed(2)
+        pubody.innerHTML = "<div class='dropdown-content'>"
+        pubody.innerHTML += `<span class='dd-head'>${gid}</span>`
+        pubody.innerHTML += `<li><a class='pill pill-colorkit1' href='genome_description?gid=${gid}&otid=${otid}'>Genome Description</a></li>`
+        pubody.innerHTML += `<li><a class='pill pill-colorkit2' href='#' onclick="open_jbrowse('${gid}','genome_table','${gc}')">Genome Viewer`
+                
+        pubody.innerHTML += `</a></li>`
+        pubody.innerHTML += `<li><a class='pill pill-colorkit3 icon-link' href='conserved_protein_tree?gid=${gid}' target='_blank'>Genome Tree`
+                  
+        pubody.innerHTML += `</a></li>`
+                
+        pubody.innerHTML += `<li><a class='pill pill-colorkit4' href='/taxa/tax_description?gid=${gid}&otid=${otid}'>Taxon Info: ${taxidfullname}</a></li>`
+        pubody.innerHTML += `<li><a class='pill pill-colorkit5' href='/taxa/tax_hierarchy?otid=${otid}'>Taxon Tree: ${taxidfullname}</a></li>`
+                
+        pubody.innerHTML += `<li><a class='pill pill-colorkit6' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=${gid}' target="_self">BLAST</a></li>` 
+        if(phage == 'yes' ){
+            pubody.innerHTML += `<li><a class='pill pill-colorkit7' href='/phage/phage?gid=${gid}' target="_self">Phage</a></li>`
+        }else{
+            pubody.innerHTML += `<li><span class='pill pill-grayed' style='display:flex;text-align:center;margin:10px 0;font-size:15px;' title='Phage Not Available'>Phage (not available)</span></li>`
+        }
+        pubody.innerHTML += `<hr><span class='bold'><strong>Annotations</strong></span>`
+        pubody.innerHTML += `<a class='pill pill-colorkit8' href='explorer?gid=${gid}&anno=prokka'>PROKKA</a>`
+        if(no_ncbi_annotation.indexOf(gid) == -1 ){
+            pubody.innerHTML += `<li><a class='pill pill-colorkit9' href='explorer?gid=${gid}&anno=ncbi'>NCBI</a></li>`
+        }else{
+            pubody.innerHTML += `<li><span class='pill pill-grayed' style='display:flex;text-align:center;margin:10px 0;font-size:15px;' title='NCBI Annotation Not Available' >NCBI (not available)</span></li>`
+        }
+            pubody.innerHTML += `<a class='pill pill-colorkit10' href='explorer?gid=${gid}&anno=bakta'>BAKTA</a>`
+            pubody.innerHTML += `</div>`
+      
+      //title.innerText = `Details for ${genus} ${species}`;
+      //pubody.innerText = `ID: ${otid}\nLength: ${glength}`;
+      overlay.style.display = 'inline-block';
+    }
+
+    // Close popup only when clicking the overlay container background
+    function closePopup(event) {
+      if (event.target === overlay) {
+        overlay.style.display = 'none';
+      }
+    }
 </script>
 
