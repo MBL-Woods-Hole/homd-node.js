@@ -35,6 +35,7 @@ router.get('/help-page', async function help_page(req, res) {
           version_type: type,
           pagetitle: type,
           data: JSON.stringify(data),
+          
           //date_sort: date_sort,
           config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
@@ -52,6 +53,7 @@ router.get('/help-page', async function help_page(req, res) {
           date_sort: date_sort,
           config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
+          fs: fs,
           
       })
   }

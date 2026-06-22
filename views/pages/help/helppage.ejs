@@ -17,8 +17,10 @@
     
     <br>
     <div class='help-div'> 
-        <%- include("../../partials/help/"+pagecode); %>
-    </div>  
+        <% if(fs.existsSync("../../partials/help/"+pagecode)){ %>
+            <%- include("../../partials/help/"+pagecode); %>
+        <% } %>
+    </div>
 </div> <!-- end: page-content -->
     
 <div id='footer'>
