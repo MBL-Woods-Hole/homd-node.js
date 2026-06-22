@@ -52,6 +52,7 @@ router.get('/help-page', async function help_page(req, res) {
           date_sort: date_sort,
           config: JSON.stringify(ENV),
           ver_info: JSON.stringify(C.version_information),
+          fs:fs,
           
       })
   }
