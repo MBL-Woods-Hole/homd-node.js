@@ -15,6 +15,7 @@ constants.version_information = {
     tax_ver: constants.homd_taxonomy_version,
     vir_ver: constants.virome_version
 }
+constants.homd_stats = {}    // SEE helpers.calculate_homd_stats()
 constants.GTDB_version = '226'            // used on taxon description page
 constants.grep_search_max_rows = 500000  //100000 // up from 50000 on 2025-07-28
 constants.genomes_table_name = 'genomesV11.0'

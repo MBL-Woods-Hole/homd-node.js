@@ -684,6 +684,22 @@ export const calculate_homd_stats = () => {
     count = homd_taxa.filter(item => item.sites[0] === 'Unassigned').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_unassigned   = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    //ANNOTATIONS////ANNOTATIONS//ANNOTATIONS//ANNOTATIONS//ANNOTATIONS
+    C.annotation_lookup
+    let homd_annos = Object.values(C.annotation_lookup)
+    count   = homd_annos.filter(item => Object.keys(item.ncbi).length !=0 ).length
+    pct = count / s.genome_count * 100
+    s.genome_ncbi = {count:count,pct_of_genomes:pct.toFixed(1)}
+    count   = homd_annos.filter(item => Object.keys(item.prokka).length !=0 ).length
+    pct = count / s.genome_count * 100
+    s.genome_prokka = {count:count,pct_of_genomes:pct.toFixed(1)}
+    count   = homd_annos.filter(item => Object.keys(item.bakta).length !=0 ).length
+    pct = count / s.genome_count * 100
+    s.genome_bakta = {count:count,pct_of_genomes:pct.toFixed(1)}
+    
+    
+    //console.log('NCBI Genomes',count)
     //pct = count / s.taxon_count * 100
     //console.log('oral',s.genome_site_env)
     //s.taxa_site_oral    = {count:count,pct_of_taxa:pct.toFixed(1)}// Body Site

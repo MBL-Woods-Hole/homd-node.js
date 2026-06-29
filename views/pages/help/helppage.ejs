@@ -17,7 +17,7 @@
     
     <br>
     <div class='help-div'> 
-        <% if(fs.existsSync("../../partials/help/"+pagecode)){ %>
+        <% if(fs.existsSync("views/partials/help/"+pagecode+".ejs")){ %>
             <%- include("../../partials/help/"+pagecode); %>
         <% } %>
     </div>
