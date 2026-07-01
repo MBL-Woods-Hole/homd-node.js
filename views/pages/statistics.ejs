@@ -115,6 +115,10 @@
     <% const mags = new Intl.NumberFormat().format(s.genome_mags.count) %>
     <% const oral = new Intl.NumberFormat().format(s.genome_site_oral.count) %>
     
+    <% const bakta = new Intl.NumberFormat().format(s.genome_bakta.count) %>
+    <% const prokka = new Intl.NumberFormat().format(s.genome_prokka.count) %>
+    <% const ncbi = new Intl.NumberFormat().format(s.genome_ncbi.count) %>
+    
     <% const min_size = new Intl.NumberFormat().format(s.genome_min_length) %>
     <% const max_size = new Intl.NumberFormat().format(s.genome_max_length) %>
     There are <span class='stat'><%= genome_count %></span> genomes in HOMD 
@@ -147,9 +151,9 @@
         <tr><td class='right'>Unassigned</td><td class='left stat'><%= s.genome_site_unassigned.count %> (<%= s.genome_site_unassigned.pct_of_genomes %>%) </td></tr>
         
         <tr><th colspan='2'>Annotations</th></tr>
-        <tr><td class='right'>BAKTA</td><td class='left stat'><%= s.genome_bakta.count %> (<%= s.genome_bakta.pct_of_genomes %>%) </td></tr>
-        <tr><td class='right'>PROKKA</td><td class='left stat'><%= s.genome_prokka.count %> (<%= s.genome_prokka.pct_of_genomes %>%) </td></tr>
-        <tr><td class='right'>NCBI</td><td class='left stat'><%= s.genome_ncbi.count %> (<%= s.genome_ncbi.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>BAKTA</td><td class='left stat'><%= bakta %> (<%= s.genome_bakta.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>PROKKA</td><td class='left stat'><%= prokka %> (<%= s.genome_prokka.pct_of_genomes %>%) </td></tr>
+        <tr><td class='right'>NCBI</td><td class='left stat'><%= ncbi %> (<%= s.genome_ncbi.pct_of_genomes %>%) </td></tr>
         
         
     </table>
