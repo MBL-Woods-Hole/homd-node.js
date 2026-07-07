@@ -521,7 +521,8 @@ router.post('/anno_search_data', async (req, res) => {
             q = "SELECT"
             q += " CONCAT('>NCBI | ',NCBI.orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
             q += " UNCOMPRESS(seq_compressed) AS sequence"
-            q += " FROM NCBI.orf JOIN NCBI.ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            q += " FROM NCBI.orf JOIN NCBI.ffn on NCBI.ffn.orf_id = NCBI.orf.protein_id"
+            q += " WHERE protein_id in ("+unique_pidlst+")"
             }
             
             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
