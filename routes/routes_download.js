@@ -539,21 +539,21 @@ router.post('/anno_search_data', async (req, res) => {
         
         if(format === 'fasta_aa'){
             q = "SELECT"
-            q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
+            q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',"+anno_cap+".orf.region,' | ',protein_id) AS defline,"
             q += " UNCOMPRESS(seq_compressed) AS sequence"
             q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         
         }else if(format === 'fasta_na'){
             q = "SELECT"
-            q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
+            q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',"+anno_cap+".orf.region,' | ',protein_id) AS defline,"
             q += " UNCOMPRESS(seq_compressed) AS sequence"
             q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         
         }else{
             // table  PROKKA and NCBI
-            q = "SELECT genome_id as gid,accession as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
+            q = "SELECT genome_id as gid,region as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
             q += "length_na as lna from "+anno_cap+".orf WHERE protein_id in ("+unique_pidlst+")"
             //head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
             // add HMT,taxonomy(inc.subsp),strain
@@ -674,7 +674,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
     //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`ffn` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
     
     }else if(anno === 'prokka'){
-        q = "SELECT accession as acc,  gc, protein_id as pid, length_na,length_aa, `start`, `stop`,"
+        q = "SELECT region as acc,  gc, protein_id as pid, length_na,length_aa, `start`, `stop`,"
         q+= " PROKKA.orf.product as product,PROKKA.orf.gene as gene,BAKTA_sub_prokka.orf.Bakta_product as bakta_product,BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene" 
         q += " FROM PROKKA.orf"
         q += " LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)"
@@ -682,7 +682,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
         head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
         
     }else if(anno === 'ncbi'){
-        q = "SELECT accession as acc,  gc, protein_id as pid, product, length_na,length_aa, `start`, `stop`, gene" 
+        q = "SELECT region as acc,  gc, protein_id as pid, product, length_na,length_aa, `start`, `stop`, gene" 
         q += " FROM NCBI.orf"
         q += " WHERE NCBI.orf.genome_id = '"+gid+"'" 
         head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
@@ -1172,15 +1172,7 @@ function create_phage_search_table(sql_rows,header_array,search_term) {
            text += '\t'+sql_rows[n].description
            text += '\n'
            
-           
-           
-           
-           
-           // text += sql_rows[n].search_id +'\t'+sql_rows[n].genome_id+'\t'+sql_rows[n].contig
-//            text += '\t'+sql_rows[n].predictor+'\t'+sql_rows[n].seq_length
-//            text += '\t'+sql_rows[n].accession
-//            text += '\t'+sql_rows[n].description
-//            text += '\n'
+
         }
     }
     return text
