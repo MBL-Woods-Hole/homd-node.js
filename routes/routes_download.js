@@ -495,17 +495,35 @@ router.post('/anno_search_data', async (req, res) => {
         // PROKKA and NCBI
         
         if(format === 'fasta_aa'){
+            if(anno_cap === 'PROKKA'){
             q = "SELECT"
-            q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
+            q += " CONCAT('>PROKKA | ',PROKKA.orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
             q += " UNCOMPRESS(seq_compressed) AS sequence"
-            q += " from "+anno_cap+".orf JOIN "+anno_cap+".faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            q += " from PROKKA.orf JOIN PROKKA.faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            }else{
+            q = "SELECT"
+            q += " CONCAT('>NCBI | ',NCBI.orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
+            q += " UNCOMPRESS(seq_compressed) AS sequence"
+            q += " from NCBI.orf JOIN NCBI.faa using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            }
+            
             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         
         }else if(format === 'fasta_na'){
+            if(anno_cap === 'PROKKA'){
             q = "SELECT"
-            q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
+            q += " CONCAT('>PROKKA | ',PROKKA.orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
             q += " UNCOMPRESS(seq_compressed) AS sequence"
-            q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            q += " FROM PROKKA.orf JOIN PROKKA.ffn on PROKKA.ffn.orf_id = PROKKA.orf.protein_id"
+            q += " WHERE protein_id in ("+unique_pidlst+")"
+            }else{
+            
+            q = "SELECT"
+            q += " CONCAT('>NCBI | ',NCBI.orf.genome_id,' | ',accession,' | ',protein_id) AS defline,"
+            q += " UNCOMPRESS(seq_compressed) AS sequence"
+            q += " FROM NCBI.orf JOIN NCBI.ffn using(protein_id) WHERE protein_id in ("+unique_pidlst+")"
+            }
+            
             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         
         }else{
