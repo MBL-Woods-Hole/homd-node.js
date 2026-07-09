@@ -29,14 +29,27 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   waitForConnections: true,
-  connectionLimit: 10, // Adjust based on your needs/server limits
-  queueLimit: 0,
+  connectionLimit: 30, // default (10) Adjust based on your needs/server limits
+  queueLimit: 100,  // '0' means unlimited queue ->bad
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000,
+  acquireTimeout: 30000,
+  connectTimeout: 30000
 });
+
+export default pool;
 
 // Get the Promise-wrapped pool for async/await usage
 //const promisePool = pool.promise();
-export const getConnection = () => {
-  return pool.getConnection();
-};
+
+// export const getConnection = () => {
+//   return pool.getConnection();
+// };
+//export const getConnection = () => {
+// return pool;
+//};
+// export const getPool = () => {
+//   return pool;
+// };
 // Export the pool instance to be used everywhere
 //export default pool;

@@ -8,7 +8,7 @@ import fs from 'fs-extra';
 //app.use(fileUpload());
 import multer  from 'multer'
 global.ENV = process.env;
-
+import pool from '../config/database.js';
 import path from 'path';
 import { pipeline, Transform } from 'stream';
 import csv from 'fast-csv';
@@ -377,7 +377,7 @@ router.get('/dld_genome_table_all/:type/:filter', async function dld_genome_tabl
     const type = req.params.type
     const filter = req.params.filter
     //console.log('in dld_genome_table_all/:type/:filter',type,filter)
-    let conn,fileFilterText,tableTsv
+    let fileFilterText,tableTsv
     const sendList = Object.values(C.genome_lookup)
     const listOfGids = sendList.map(item => item.gid)
     
@@ -576,7 +576,7 @@ router.post('/anno_search_data', async (req, res) => {
     }
     
     helpers.print('query: '+q)
-    let conn
+   
     
     if(format.slice(0,5) === 'fasta'){
         // Set response headers for file download
@@ -587,8 +587,8 @@ router.post('/anno_search_data', async (req, res) => {
     }else{
     
         try {
-            conn = await global.TDBConn();
-            const [rows] = await conn.execute(q);
+            
+            const [rows] = await pool.execute(q);
             for(let n in rows){
                 //console.log(rows[n].genome_id)
             }
@@ -621,9 +621,7 @@ router.post('/anno_search_data', async (req, res) => {
         } catch (error) {
             console.error(error);
             res.status(500).send('Error fetching data');
-        } finally {
-            if (conn) conn.release(); // Release the connection back to the pool
-        }
+        } 
         return
     }
     
@@ -693,7 +691,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
     
     
     helpers.print('query: '+q)
-    let conn
+    
     
     if(format.slice(0,5) === 'fasta'){
         // Set response headers for file download
@@ -704,8 +702,8 @@ router.post('/anno_data_by_gid', async (req, res) => {
     }else{
     
         try {
-            conn = await global.TDBConn();
-            const [rows] = await conn.execute(q);
+            
+            const [rows] = await pool.execute(q);
             for(let n in rows){
                 //console.log(rows[n].genome_id)
             }
@@ -739,8 +737,6 @@ router.post('/anno_data_by_gid', async (req, res) => {
         } catch (error) {
             console.error(error);
             res.status(500).send('Error fetching data');
-        } finally {
-            if (conn) conn.release(); // Release the connection back to the pool
         }
         return
     }
@@ -764,7 +760,7 @@ router.post('/phage_search_data', async (req, res) => {
     let format = req.body.format  // csv or fasta
     let search_text = req.body.search_text
     let id_list = req.body.ids
-    let conn,fname,result_text,ext
+    let fname,result_text,ext
     
     let dt = helpers.get_today_obj()
     let head_text_array = [
@@ -799,8 +795,8 @@ router.post('/phage_search_data', async (req, res) => {
             return
     }else{
         try {
-            conn = await global.TDBConn();
-            const [rows] = await conn.execute(q);
+            
+            const [rows] = await pool.execute(q);
         
             for(let n in rows){
                 //console.log(rows[n].genome_id)
@@ -830,9 +826,7 @@ router.post('/phage_search_data', async (req, res) => {
         } catch (error) {
             console.error(error);
             res.status(500).send('Error fetching data');
-        } finally {
-            if (conn) conn.release(); // Release the connection back to the pool
-        }
+        } 
         return
    }
 });
@@ -842,15 +836,15 @@ router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
     const type = req.params.type
     console.log('in dld phage')
     
-    let conn,fileFilterText,tableTsv
+    let fileFilterText,tableTsv
     //const sendList = Object.values(C.genome_lookup)
     //const listOfGids = sendList.map(item => item.gid)
     
     
     const q = queries.get_all_phage_for_download()
     try {
-        conn = await global.TDBConn();
-        const [mysqlrows] = await conn.execute(q);
+        
+        const [mysqlrows] = await pool.execute(q);
 
         
         fileFilterText = 'HOMD.org Phage Data:: All HOMD Data;' + ' Date: ' + dt.today
@@ -872,21 +866,18 @@ router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    } 
 })
 router.get('/dld_crispr_table/:type', async function dld_crispr_table (req, res) {
     let dt = helpers.get_today_obj()
     const type = req.params.type
-    let conn
+    
     let fileFilterText,tableTsv
     
     let q = queries.get_all_crispr_cas_data()
     try {
-        conn = await global.TDBConn();
-        const [mysqlrows] = await conn.execute(q);
+        
+        const [mysqlrows] = await pool.execute(q);
 
         
         fileFilterText = 'HOMD.org Crispr-Cas Data:: All HOMD Data;' + ' Date: ' + dt.today
@@ -908,23 +899,19 @@ router.get('/dld_crispr_table/:type', async function dld_crispr_table (req, res)
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
     }
-    return
-    
     
 })
 router.get('/dld_amr_table/:type', async function dld_crispr_table (req, res) {
     let dt = helpers.get_today_obj()
     const type = req.params.type
         
-    let conn,fileFilterText,tableTsv
+    let fileFilterText,tableTsv
     let q = queries.get_all_amr_data()
     
     try {
-        conn = await global.TDBConn();
-        const [mysqlrows] = await conn.execute(q);
+        
+        const [mysqlrows] = await pool.execute(q);
 
         
         fileFilterText = 'HOMD.org AMR Data:: All HOMD Data;' + ' Date: ' + dt.today
@@ -946,10 +933,7 @@ router.get('/dld_amr_table/:type', async function dld_crispr_table (req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    } 
     
 })
 router.get('/pg/:type/:pg', function dld_pg (req, res) {
@@ -1012,7 +996,7 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
         return
     }
     //console.log('data',data)
-    let conn,table='faa',db='PROKKA',ext='.faa',tmp = []
+    let table='faa',db='PROKKA',ext='.faa',tmp = []
     if(req.body.anno === 'ncbi'){
         db = 'NCBI'
     }
@@ -1035,8 +1019,8 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
     //console.log(q)
     let defline,seq,outfile_txt = ''
     try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
 
         if (rows.length === 0) {
             console.log('no rows found')
@@ -1060,83 +1044,9 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
     } catch (error) {
         console.error(error);
         res.send(error)
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
+    } 
 })
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// function create_full_amr_table(lookup_obj,header_txt) {
-//     let q,conn,text = header_txt+'\n'
-//     let header_array = ['Genome-ID','Contig','Operon','Operon Pos','Prediction','Crisprs','Distances','Predicion_cas','Prediction_crisprs']
-//     text += header_array.join('\t')+'\n'
-//     console.log(lookup_obj)
-//     return
-//     for(let gid in lookup_obj){
-//         q = queries.get_amr_data(gid)
-//         //console.log('AMR',gid,lookup_obj[gid][1])
-//         try {
-//             conn = await global.TDBConn();
-//             var [rows] = await conn.execute(q);
-//             //console.log('rows',rows)
-//        
-//             for(let n in rows){
-//                text += gid+'\t'+rows[n].contig
-//                text += '\t'+rows[n].operon
-//                text += '\t'+rows[n].operon_pos
-//                text += '\t'+rows[n].prediction
-//                text += '\t'+rows[n].crisprs
-//                text += '\t'+rows[n].distances
-//                text += '\t'+rows[n].prediction_cas
-//                text += '\t'+rows[n].prediction_crisprs
-//                
-//                text += '\n'
-//             }
-//         } catch (error) {
-//             console.error(error);
-//             res.status(500).send('Error fetching data');
-//         } finally {
-//             if (conn) conn.release(); // Release the connection back to the pool
-//         }
-//             
-//     }
-//     return text
-// }
-// async function create_full_crispr_table(lookup_obj,header_txt) {
-//     let q,conn,text = header_txt+'\n'
-//     let header_array = ['Genome-ID','Contig','Operon','Operon Pos','Prediction','Crisprs','Distances','Predicion_cas','Prediction_crisprs']
-//     text += header_array.join('\t')+'\n'
-//     //console.log(lookup_obj)
-//     for(let gid in lookup_obj){
-//         q = queries.get_crispr_cas_data(gid)
-//         //console.log('Crispr',gid,lookup_obj[gid][1])
-//         try {
-//             conn = await global.TDBConn();
-//             var [rows] = await conn.execute(q);
-//             //console.log('rows',rows)
-//        
-//             for(let n in rows){
-//                text += gid+'\t'+rows[n].contig
-//                text += '\t'+rows[n].operon
-//                text += '\t'+rows[n].operon_pos
-//                text += '\t'+rows[n].prediction
-//                text += '\t'+rows[n].crisprs
-//                text += '\t'+rows[n].distances
-//                text += '\t'+rows[n].prediction_cas
-//                text += '\t'+rows[n].prediction_crisprs
-//                
-//                text += '\n'
-//             }
-//         } catch (error) {
-//             console.error(error);
-//             res.status(500).send('Error fetching data');
-//         } finally {
-//             if (conn) conn.release(); // Release the connection back to the pool
-//         }
-//             
-//     }
-//     return text
-// }
+
 function create_phage_search_table(sql_rows,header_array,search_term) {
     let gid,otid,hmt,lineage,strain
     let text ='::Search String: "'+search_term+'"\n'
@@ -1186,7 +1096,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
     if(format === 'fasta' && type === 'excel'){
         type = 'text'
     }
-    let conn,transformerStream
+    let transformerStream
     if (type === 'browser') {
           res.set('Content-Type', 'text/plain') // <= important:plain - allows tabs to display
     } else if (type === 'text') {
@@ -1219,72 +1129,38 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
       }
     });
  
-
-    try {
-        conn = await global.TDBConn();
-        const queryStream = conn.connection.query(q).stream();
+    const connection = await pool.getConnection();
+      
+    const [queryStream] = await connection.query(q) //.stream();
         
         
+    if(format === 'table'){
+        //transformerStream = tableObjectToStringStream
+        const passThroughStream = new Transform.PassThrough();
+        let delimiter = '\t'
+        passThroughStream.write(C.genome_table_headers.join(delimiter) + '\n');
+        const csvStream = csv.format({ headers: false, delimiter: delimiter,writeHeaders: false }); 
         
-        // const Writer = new stream.Writable({
-        //           objectMode: true,
-        //           write(data, enc, cb) {
-        //             console.log(data);
-        //             cb();
-        //           },
-        //         });
-        ///////
-        // Assume getDatabaseStream() is a function that returns a Readable stream from your DB driver
-        // Assume createCsvTransformer() is a Transform stream (e.g., using 'fast-csv' or similar)
-        // const databaseStream = getDatabaseStream();
-//         const csvTransformer = createCsvTransformer();
-//         const writeStream
-        // pipeline(
-//           databaseStream,
-//           csvTransformer,
-//           writeStream,
-//           (err) => {
-//             if (err) {
-//               console.error('Pipeline failed:', err);
-//             } else {
-//               console.log('Pipeline succeeded, file written to output.csv');
-//             }
-//           }
-//         );
-        // Here res IS the output stream:
-        
-        if(format === 'table'){
-            //transformerStream = tableObjectToStringStream
-            const passThroughStream = new Transform.PassThrough();
-            let delimiter = '\t'
-            passThroughStream.write(C.genome_table_headers.join(delimiter) + '\n');
-            const csvStream = csv.format({ headers: false, delimiter: delimiter,writeHeaders: false }); 
-            
-            pipeline(queryStream, csvStream, passThroughStream, res, (err) => {
-            if (err) {
-                console.log(err);
-            }
-            console.log('streaming to download1')
-            });
-            
-            return
-        }else if(format === 'fasta'){
-            
-            transformerStream = fastaObjectToStringStream
-            pipeline(queryStream, transformerStream, res, (err) => {
-            if (err) {
-                console.log(err);
-            }
-            console.log('streaming to download2')
-            });
+        pipeline(queryStream, csvStream, passThroughStream, res, (err) => {
+        if (err) {
+            console.log(err);
         }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
+        console.log('streaming to download1')
+        });
+        
+        return
+    }else if(format === 'fasta'){
+        
+        transformerStream = fastaObjectToStringStream
+        pipeline(queryStream, transformerStream, res, (err) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log('streaming to download2')
+        });
     }
-    return
+    
+   
     
 }
 ////

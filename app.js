@@ -36,9 +36,10 @@ const dirname = import.meta.dirname
 // import pool from './config/database.js';
 // global.TDBConn = pool 
 
-import { getConnection } from './config/database.js';
-global.TDBConn = getConnection;   // database:  homd
-
+import pool from './config/database.js';
+//global.TDBConn = getConnection;   // database:  homd
+//global.pool = getPool;   // database:  homd
+//global.pool = pool;
 ///////////////////////////////////
 
 global.app_root = path.resolve(dirname);

@@ -8,7 +8,7 @@ import path from 'path';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
 import { exec, spawn } from 'child_process';
-
+import pool from '../config/database.js';
 
 router.get('/index', function index(req, res) {
   
@@ -25,7 +25,7 @@ router.get('/index', function index(req, res) {
 router.get('/help-page', async function help_page(req, res) {
   //let page = req.params.pagecode
   let page = req.query.pagecode
-  let conn
+  
   console.log('page',page)
   const renderVersionFxn = (req, res, type, data) => {
       //console.log('updates',updates)
@@ -96,8 +96,8 @@ router.get('/help-page', async function help_page(req, res) {
       let rowarray = []
       let byDate = {}
       try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
       
         
         for(let n in rows){
@@ -122,9 +122,7 @@ router.get('/help-page', async function help_page(req, res) {
       } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-      } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-      }
+      } 
       return
   }else{
     renderHelpFxn(req, res, page, [], [])

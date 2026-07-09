@@ -6,7 +6,7 @@ import fs from 'fs-extra';
 
 // const url = require('url');
 import path from 'path';
-
+import pool from '../config/database.js';
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
@@ -14,12 +14,12 @@ import * as queries from './queries.js';
 router.get('/phage', async function phage(req, res) {
     //console.log('in phage',req.query.gid)
     let gid = req.query.gid
-    let conn
+    
     const q = queries.get_phage(gid)
     //console.log('phage q',q)
     try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
         
         res.render('pages/phage/phage', {
                 title: 'HOMD :: Phage', 
@@ -33,10 +33,7 @@ router.get('/phage', async function phage(req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    } 
 
 })
 
@@ -144,10 +141,10 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
     html_rows += "<th>Prediction<br>Tool</th><th>Genome<br>Viewer</th><th class=''>Phage-ID</th><th>Contig</th><th>Start</th><th>End</th>"
     html_rows += "</tr>"
     console.log(q)
-    let conn,stop,start,tmp,seqacc,loc,locstart,locstop
+    let stop,start,tmp,seqacc,loc,locstart,locstop
     try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
         for(let i in rows){
             //console.log(rows[i])
             
@@ -208,10 +205,7 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    } 
     
 })
 

@@ -7,7 +7,7 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import * as helpers from './helpers/helpers.js';
-
+import pool from '../config/database.js';
 
 import C from '../public/constants.js';
 import { exec, spawn } from 'child_process';
@@ -39,7 +39,7 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     let seqids = req.query.seqids
     let dbname = req.query.dbname
     let jobid = req.query.jobid
-    let conn,q,html = ''
+    let q,html = ''
     
     
     q = "SELECT genome_id as gid, protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+anno+"."+dbtable+"" //
