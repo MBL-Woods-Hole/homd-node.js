@@ -103,7 +103,7 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='adv_search_text' id='adv_search_text' value='' maxlength='80' size='50' /> 
-          <input type='button' class='submit-button' id='submit-button-tax' name='submit-button' value='Submit' onclick="validate_search_form('taxNgenomes')" \>
+          <input type='button' class='submit-button' id='submit-button-tax' name='submit-button-tax' value='Submit' onclick="validate_search_form('taxNgenomes')" \>
         </td>
       </tr>
       
@@ -136,7 +136,7 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='search_text_anno_grep' id='search_text_anno_grep' value='' maxlength='80' size='50' /> 
-          <input type='button' class='submit-button' id='submit-button-anno' name='submit-button' value='Submit' onclick="validate_search_form('anno_grep')" \>
+          <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \>
         </td>
       </tr>
       
@@ -160,7 +160,7 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='search_text_phage_grep' id='search_text_phage_grep' value='' maxlength='80' size='50' /> 
-          <input type='button' class='submit-button' id='submit-button-phage' name='submit-button' value='Submit' onclick="validate_search_form('phage_grep')" \>
+          <input type='button' class='submit-button' id='submit-button-phage' name='submit-button-phage' value='Submit' onclick="validate_search_form('phage_grep')" \>
         </td>
       </tr>
       
@@ -196,7 +196,7 @@
   }
   function validate_search_form(form_type){
      // validate cbs
-     if(form_type == 'taxNgenomes'){
+     if(form_type === 'taxNgenomes'){
          const checkboxes = document.getElementsByClassName('tax_cb');
          var cb_count = checkboxes.length
          var checked_count = 0
@@ -206,7 +206,7 @@
                  checked_count += 1
              }
          }
-         if(checked_count == 0){
+         if(checked_count === 0){
              alert('Must check at least one (Taxonomy or Genomes)!')
              return
          }
@@ -219,7 +219,7 @@
          }
            var f = document.getElementById('adv-search-form');
            
-     }else if(form_type == 'phage_grep'){
+     }else if(form_type === 'phage_grep'){
         var ss = document.getElementById('search_text_phage_grep').value
         console.log('phage search',ss)
          //var ss = document.querySelector('#search_textx').value;
