@@ -89,7 +89,7 @@
        <p class='title h3'>Search HOMD Databases</p>
 
   <div id='adv-search-form-div'>
-  <form id='adv-search-form' class='search-form' method='POST' action='basic_site_search'>
+  <form id='adv-search-form-tax' class='search-form' method='POST' action='basic_site_search'>
       <br><span id='srch-tax' class='mid-title'>Search the Taxonomy and/or Genome Databases</span>
       <table id='tax-table' class='table'>
       <tr><td>
@@ -103,7 +103,8 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='adv_search_text' id='adv_search_text' value='' maxlength='80' size='50' /> 
-          <input type='button' class='submit-button' id='submit-button-tax' name='submit-button-tax' value='Submit' onclick="validate_search_form('taxNgenomes')" \>
+          <!-- <input type='button' class='submit-button' id='submit-button-tax' name='submit-button-tax' value='Submit' onclick="validate_search_form('taxNgenomes')" \> -->
+          <button id="submit-button-tax" type="button" class='submit-button'>Submit</button>
         </td>
       </tr>
       
@@ -115,7 +116,7 @@
   
   
   
-  <form id='adv-search-form-annotations_grep'  class='search-form' method='POST' action='advanced_site_search_anno_grep'>  <!-- advanced_site_search_annotations -->
+  <form id='adv-search-form-anno_grep'  class='search-form' method='POST' action='advanced_site_search_anno_grep'>  <!-- advanced_site_search_annotations -->
       <br><span id='srch-anno' class='mid-title'>Search the Annotations Database</span>
       <table id='anno-table' class='table'>
       <tr><td>
@@ -136,7 +137,8 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='search_text_anno_grep' id='search_text_anno_grep' value='' maxlength='80' size='50' /> 
-          <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \>
+          <!-- <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \> -->
+          <button id="submit-button-anno" type="button" class='submit-button'>Submit</button>
         </td>
       </tr>
       
@@ -160,7 +162,8 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='search_text_phage_grep' id='search_text_phage_grep' value='' maxlength='80' size='50' /> 
-          <input type='button' class='submit-button' id='submit-button-phage' name='submit-button-phage' value='Submit' onclick="validate_search_form('phage_grep')" \>
+          <!-- <input type='button' class='submit-button' id='submit-button-phage' name='submit-button-phage' value='Submit' onclick="validate_search_form('phage_grep')" \> -->
+           <button id="submit-button-phage" type="button" class='submit-button'>Submit</button>
         </td>
       </tr>
       
@@ -169,7 +172,8 @@
       
       <input type="hidden" id="refreshed" value="no">
   </form>
-  
+  <!-- External trigger button -->
+
   </div>
   
   
@@ -194,67 +198,132 @@
                if(e.value=="no")e.value="yes";
                else{e.value="no";location.reload();}
   }
-  function validate_search_form(form_type){
-     // validate cbs
-     if(form_type === 'taxNgenomes'){
-         const checkboxes = document.getElementsByClassName('tax_cb');
-         var cb_count = checkboxes.length
-         var checked_count = 0
-         for(var i in checkboxes){
-             if(checkboxes[i].checked){
-                 //console.log('got one',checkboxes[i])
-                 checked_count += 1
-             }
+  
+  const f_tax = document.getElementById('adv-search-form-tax');
+  const f_anno = document.getElementById('adv-search-form-anno_grep');
+  const f_phage = document.getElementById('adv-search-form-phage_grep');
+  const submit_button_tax = document.getElementById('submit-button-tax');
+  const submit_button_anno = document.getElementById('submit-button-anno');
+  const submit_button_phage = document.getElementById('submit-button-phage');
+  
+  // TAX
+  submit_button_tax.addEventListener('click', function() {
+    // Validates inputs and triggers the submit event safely
+    
+    const checkboxes = document.getElementsByClassName('tax_cb');
+    var cb_count = checkboxes.length
+    var checked_count = 0
+    for(var i in checkboxes){
+         if(checkboxes[i].checked){
+             //console.log('got one',checkboxes[i])
+             checked_count += 1
          }
-         if(checked_count === 0){
-             alert('Must check at least one (Taxonomy or Genomes)!')
-             return
-         }
-         // validate search_string
-         var ss = document.getElementById('adv_search_text').value
+    }
+    if(checked_count === 0){
+         alert('Must check at least one (Taxonomy or Genomes)!')
+         return
+    }
+     // validate search_string
+    var ss = document.getElementById('adv_search_text').value
+     //var ss = document.querySelector('#search_textx').value;
+    if(ss.length <=2){
+         alert('Search string is too short (must be at least 3 characters)!')
+         return
+    }
+    
+    f_tax.requestSubmit();
+    document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
+  });
+  
+  // ANNO
+  submit_button_anno.addEventListener('click', function() {
+    const checkboxes = document.getElementsByClassName('anno_cb_grep');
+    var cb_count = checkboxes.length
+    var ss = document.getElementById('search_text_anno_grep').value
          //var ss = document.querySelector('#search_textx').value;
          if(ss.length <=2){
              alert('Search string is too short (must be at least 3 characters)!')
              return
          }
-           var f = document.getElementById('adv-search-form');
-           
-     }else if(form_type === 'phage_grep'){
-        var ss = document.getElementById('search_text_phage_grep').value
-        console.log('phage search',ss)
-         //var ss = document.querySelector('#search_textx').value;
-         if(ss.length <=2){
+    f_anno.requestSubmit();
+    document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
+  });
+  
+  // PHAGE
+  submit_button_phage.addEventListener('click', function() {
+    var ss = document.getElementById('search_text_phage_grep').value
+    //console.log('phage search',ss)
+    //var ss = document.querySelector('#search_textx').value;
+    if(ss.length <=2){
              alert('Search string is too short (must be at least 3 characters)!')
              return
-         }
-        var f = document.getElementById('adv-search-form-phage_grep');
-     }else{
-         
-         //document.getElementById('adv-search-form-annotations-div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
-         const checkboxes = document.getElementsByClassName('anno_cb_grep');
-         var cb_count = checkboxes.length
-         // var checked_count = 0
+    }
+    f_phage.requestSubmit();
+    document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
+  });
+  
+//   function validate_search_form(form_type){
+//      // validate cbs
+//      var f
+//      if(form_type === 'taxNgenomes'){
+//          const checkboxes = document.getElementsByClassName('tax_cb');
+//          var cb_count = checkboxes.length
+//          var checked_count = 0
 //          for(var i in checkboxes){
 //              if(checkboxes[i].checked){
 //                  //console.log('got one',checkboxes[i])
 //                  checked_count += 1
 //              }
 //          }
-//          if(checked_count == 0){
-//              alert('Must check at least one (PROKKA or NCBI)!')
+//          if(checked_count === 0){
+//              alert('Must check at least one (Taxonomy or Genomes)!')
 //              return
 //          }
-         var ss = document.getElementById('search_text_anno_grep').value
-         //var ss = document.querySelector('#search_textx').value;
-         if(ss.length <=2){
-             alert('Search string is too short (must be at least 3 characters)!')
-             return
-         }
-        var f = document.getElementById('adv-search-form-annotations_grep');
-     }
-     f.submit()
-     document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
-  }
+//          // validate search_string
+//          var ss = document.getElementById('adv_search_text').value
+//          //var ss = document.querySelector('#search_textx').value;
+//          if(ss.length <=2){
+//              alert('Search string is too short (must be at least 3 characters)!')
+//              return
+//          }
+//         f = document.getElementById('adv-search-form');
+//            
+//      }else if(form_type === 'phage_grep'){
+//         var ss = document.getElementById('search_text_phage_grep').value
+//         console.log('phage search',ss)
+//          //var ss = document.querySelector('#search_textx').value;
+//          if(ss.length <=2){
+//              alert('Search string is too short (must be at least 3 characters)!')
+//              return
+//          }
+//         f = document.getElementById('adv-search-form-phage_grep');
+//      }else{
+//          
+//          //document.getElementById('adv-search-form-annotations-div').innerHTML = '<img id="" class="loader-gif" align="center" src="/images/row-of-blocks-loader-animation.gif"> Searching'
+//          const checkboxes = document.getElementsByClassName('anno_cb_grep');
+//          var cb_count = checkboxes.length
+//          // var checked_count = 0
+// //          for(var i in checkboxes){
+// //              if(checkboxes[i].checked){
+// //                  //console.log('got one',checkboxes[i])
+// //                  checked_count += 1
+// //              }
+// //          }
+// //          if(checked_count == 0){
+// //              alert('Must check at least one (PROKKA or NCBI)!')
+// //              return
+// //          }
+//          var ss = document.getElementById('search_text_anno_grep').value
+//          //var ss = document.querySelector('#search_textx').value;
+//          if(ss.length <=2){
+//              alert('Search string is too short (must be at least 3 characters)!')
+//              return
+//          }
+//         f = document.getElementById('adv-search-form-annotations_grep');
+//      }
+//      f.submit()
+//      document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
+//   }
 </script>
 
 
