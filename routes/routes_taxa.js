@@ -7,7 +7,7 @@ import fs from 'fs-extra';
 // const url = require('url');
 import path from 'path';
 
-//import { title } from 'process';
+import pool from '../config/database.js';
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
@@ -606,7 +606,7 @@ router.get('/tax_description', async function tax_description(req, res) {
   if (req.query.gid && req.session.gtable_filter) {
     req.session.gtable_filter.gid = req.query.gid
   }
-  let conn
+ 
   /*
   This busy page needs:
   1  otid     type:string
@@ -654,8 +654,8 @@ router.get('/tax_description', async function tax_description(req, res) {
     console.log('lineage', q)
     console.log('C.taxon_lineage_lookup', C.taxon_lineage_lookup[otid])
     try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
     
 
       //console.log('rows',rows)
@@ -698,9 +698,7 @@ router.get('/tax_description', async function tax_description(req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
+    } 
     return
 
   }
@@ -745,11 +743,11 @@ router.get('/tax_description', async function tax_description(req, res) {
     let q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes)
     
     try {
-        conn = await global.TDBConn();
-        const [refseq] = await conn.execute(q_refseq_metadata);
-        const [info]   = await conn.execute(q_info);
-        const [pangenomes] = await conn.execute(q_pangenome);
-        const [gtdbtax] = await conn.execute(q_gtdb_tax);
+        
+        const [refseq] = await pool.execute(q_refseq_metadata);
+        const [info]   = await pool.execute(q_info);
+        const [pangenomes] = await pool.execute(q_pangenome);
+        const [gtdbtax] = await pool.execute(q_gtdb_tax);
   
     if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
       sites = 'Primary: ' + C.site_lookup[otid]['s1']
@@ -795,25 +793,21 @@ router.get('/tax_description', async function tax_description(req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
- 
+    } 
 })
 
 
 router.post('/get_refseq', async function get_refseq(req, res) {
   helpers.print(req.body)
   let refseq_id = req.body.refseqid;
-  let html,conn
+  let html
 
   //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
   let q = queries.get_refseq_query(refseq_id)
   helpers.print(q)
     try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
 		if (!rows || rows.length === 0) {
 		  html = 'No Seq Found'
 		} else {
@@ -825,10 +819,7 @@ router.post('/get_refseq', async function get_refseq(req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    } 
 })
 
 
@@ -1635,10 +1626,10 @@ router.get('/dropped', async function dropped(req, res) {
 
     let q = queries.get_dropped_taxa()
    //console.log(q)
-    let conn
+    
     try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
   
     res.render('pages/taxa/dropped', {
       title: 'HOMD :: Dropped Taxa',
@@ -1654,10 +1645,7 @@ router.get('/dropped', async function dropped(req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    } 
 })
 router.get('/tree_d3', function tree_d3(req, res) {
 

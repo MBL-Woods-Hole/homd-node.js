@@ -39,8 +39,8 @@ const pool = mysql.createPool({
 
 // Get the Promise-wrapped pool for async/await usage
 //const promisePool = pool.promise();
-export const getConnection = () => {
-  return pool.getConnection();
-};
+// export const getConnection = () => {
+//   return pool.getConnection();
+// };
 // Export the pool instance to be used everywhere
 export default pool;

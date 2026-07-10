@@ -7,7 +7,7 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import * as helpers from './helpers/helpers.js';
-
+import pool from '../config/database.js';
 
 import C from '../public/constants.js';
 import { exec, spawn } from 'child_process';
@@ -125,7 +125,7 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
     console.log('body',req.body)
     //console.log('pidlist',req.body.pid_list)
     let anno = req.body.anno.toUpperCase()
-    let q,conn
+    let q
     if(anno =='BAKTA'){
         q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA`.orf WHERE core_ID in ("+req.body.id_list+")"
     }else{
@@ -135,17 +135,15 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
     }
     //console.log('QQ',q)
     try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
         //console.log('rows',rows)
         res.send(JSON.stringify(rows))
         return
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
+    } 
     return
     
     //res.send('OKAY')
@@ -307,13 +305,13 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
 router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
    console.log('in open_phage_sequence')
    console.log(req.body)
-   let conn
+   
    let html = '',contig,length,gid,predictor,species='',strain='',otid
    let q = "SELECT genome_id,contig,predictor,seq_length,UNCOMPRESS(seq_compressed) as seq from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
     try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
     
         //console.log('rows',rows)
         if(rows.length === 0){
@@ -337,10 +335,7 @@ router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    } 
 })
 //
 router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res) {
@@ -356,10 +351,10 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
    //console.log(hit_ids)
    let q = queries.get_phage_from_ids_noseqs(hit_ids)
    console.log(q)
-   let conn
+   
    try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
    
         //console.log('rows',rows)
         
@@ -377,10 +372,7 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    } 
    
 })
 router.post('/submit_phage_data', async function submit_phage_data(req, res) {
@@ -389,20 +381,17 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
    
    let q = "SELECT * from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
-    let conn
+    
     try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+        
+        const [rows] = await pool.execute(q);
         //console.log('rows',rows)
         res.send(JSON.stringify(rows))
         return
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    } 
 })
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     console.log('in advanced_site_search_grep - index.js')
