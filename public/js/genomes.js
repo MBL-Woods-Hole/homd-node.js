@@ -38,7 +38,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   
   var url
   if(!tracks || tracks === ''){
-    tracks = 'DNA,bakta_full,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
+    tracks = 'DNA,bakta_full,prokka,prokka_ncrna,ncbi,ncbi_ncrna,panggolin'
   }
   //console.log('tracks1',tracks)
   if(page === 'genome_desc_single'){ 
@@ -48,7 +48,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       pts = contigplusgc.split('|')
       contig = pts[0]
       gc = pts[1]
-      tracks_plus = tracks+',GC Skew'
+      tracks_plus = tracks
       url = jb_path+'/'+gid+"&tracks="+tracks_plus+"&loc="+gid+"|"+contig.trim()
      
   }else if(page === 'genome_desc'){ 
@@ -58,19 +58,19 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       pts = contigplusgc.split('|')
       contig = pts[0]
       gc = pts[1]
-      tracks_plus = tracks+',GC Skew'
+      tracks_plus = tracks
       url = jb_path+'/'+gid+"&tracks="+tracks_plus+"&loc="+gid+"|"+contig.trim()
      
   }else if(page === 'genome_table'){
         gid = value
-        tracks_plus = tracks+',GC Skew'
+        tracks_plus = tracks
         url = jb_path+'/'+gid+"&tracks="+tracks_plus
   
   }else if(page === 'main_menu'){
       pts = value.split('|')
       gid = pts[0]
       gc = pts[1]
-      tracks_plus = tracks+',GC Skew'
+      tracks_plus = tracks
       url = jb_path+'/'+gid+"&tracks="+tracks_plus
 
   }else if(page === 'explorer'){
@@ -78,7 +78,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       url = jb_path+'/'+gid+"&tracks="+tracks
   }else if(page === 'amr'){
       gid = value
-      tracks_plus = tracks+',amr,GC Skew'
+      tracks_plus = tracks+',amr'
       
       //url = jb_path+'/'+gid+"&tracks="+tracks
       url = jb_path+'/'+gid+"&tracks="+tracks_plus+"&loc="+gid+'|'+loc+"&highlight="+gid+'|'+hilit
@@ -88,7 +88,7 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
       //console.log('loc',loc)
       //console.log('hilit',hilit)
       gid = value
-      tracks_plus = tracks+',GC Skew'
+      tracks_plus = tracks
        //Good https://www.homd.org//jbrowse/?data=homd_V11.0/GCA_030450175.1&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=GCA_030450175.1|CP073095.1:1..2445683&highlight=GCA_030450175.1|CP073095.1:455..2445183
       //https://www.homd.org//jbrowse/?data=homd_V11.0/GCA_030450175.1&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna&loc=GCA_030450175.1|GCA_030450175.1|CP073095.1:1..2445683&highlight=GCA_030450175.1|GCA_030450175.1|CP073095.1:455..2445183
       url = jb_path+'/'+gid+"&tracks="+tracks_plus+"&loc="+gid+'|'+loc+"&highlight="+gid+'|'+hilit
@@ -96,23 +96,23 @@ function open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hi
   
   }else if(page === 'protein_peptide'){
        gid = value
-       tracks_plus = tracks+',GC Skew'
+       tracks_plus = tracks
        url = jb_path+'/'+gid+"&tracks="+tracks_plus+"&loc="+loc+"&highlight="+gid+'|'+hilit
        
   }else if(page === 'crispr'){
   
-      tracks_plus = tracks+',crispr,GC Skew'
+      tracks_plus = tracks+',crispr'
       gid = value
       url = jb_path+'/'+gid+"&tracks="+tracks_plus+"&loc="+loc+"&highlight="+gid+'|'+hilit
       
   }else if(page === 'oralgen'){
       gid = value
-      tracks_plus = tracks+',GC Skew'
+      tracks_plus = tracks
       url = jb_path+'/'+gid+"&tracks="+tracks_plus
   
   }else if(page === 'phage'){
       gid = value
-      tracks_plus = tracks+',cenote,genomad,GC Skew'
+      tracks_plus = tracks+',cenote,genomad'
       //https://www.homd.org/jbrowse/?data=homd_V11.02_phage_1.1/GCA_000008185.1&loc=GCA_000008185.1|AE017226.1:1165152..1202411&
       //tracks=  From Fxn vars
       //https://jbrowse.homd.org/?data=homd_V11.02_phage_1.2%2FGCA_905372995.1&loc=GCA_905372995.1%7CCAJPRA010000106.1%3A1..4690&tracks=DNA%2Cbakta_full%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2CGC%20Skew&highlight=
