@@ -1144,6 +1144,7 @@ router.get('/explorer', async function explorer_get (req, res) {
     console.log('C')
     //OLD DB
     const q = queries.get_annotation_query(gid, anno)
+    helpers.logPoolStatus(res,pool.pool)
     console.log('get_annotation_query-GET',q)
     //NEW DB
   

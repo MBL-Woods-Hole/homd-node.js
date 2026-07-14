@@ -746,6 +746,20 @@ export const create_jbrowse_link = (gid, loc, hilite) => {
     
     return link
 }
+export const logPoolStatus = (statusRes,poolInternal) => {
+  console.log('\nMySQL pool connections:')
+  const allConn = poolInternal._allConnections.length;
+  const freeConn = poolInternal._freeConnections.length;
+  const queuedCount = poolInternal._connectionQueue.length;
 
+  
+    console.log('limit:', poolInternal.config.connectionLimit)
+    console.log('allocatedTotal:', allConn)
+    console.log('freeIdle:', freeConn)
+    console.log('activeBusy:', allConn - freeConn)
+    console.log('queuedRequests:', queuedCount)
+  
+  console.log('\n')
+}
 
 export default router;
