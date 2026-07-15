@@ -630,7 +630,7 @@
   <tr>
     <td class='taxon-bold tbl-title'>NCBI Taxon ID:</td>
     <td class='taxon-data'>
-    <% if(data_lookup.ncbi_taxid == "0"){ %>
+    <% if(!data_lookup.ncbi_taxid || parseInt(data_lookup.ncbi_taxid) == 0){ %>
         <small>Not Available</small>
     <% }else{ %>
       
