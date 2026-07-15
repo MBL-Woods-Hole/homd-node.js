@@ -630,13 +630,13 @@
   <tr>
     <td class='taxon-bold tbl-title'>NCBI Taxon ID:</td>
     <td class='taxon-data'>
-    <% if(data_lookup.ncbi_taxid === "0"){ %>
+    <% if(data_lookup.ncbi_taxid == "0"){ %>
         <small>Not Available</small>
     <% }else{ %>
       
         <%= data_lookup.ncbi_taxid %> 
         <span class='link'>
-        [<a href='https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=<%= data_lookup.ncbi_taxid %>' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]
+        [<a href='https://www.ncbi.nlm.nih.gov/datasets/taxonomy/<%= data_lookup.ncbi_taxid %>/' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]
         </span>
       
       <% } %>

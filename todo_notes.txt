@@ -1,3 +1,15 @@
+2026-07-14
+SS error on no CR
+>GCA_018141845.1_01294 MDEREKIIRLWFDMWLTQQDLGIDDIFLDDVIYIESWCPKYENRQTVKHWFNEWNTRGKVLAWDIKQFFHKDNQTIVEWHFKNKMNEGKVEEFDGISLIVWTADNKIKALKEFGCNCNNYNPYKE
+TODO: Write more descriptive error into SS code
+
+Get/Update NCBI Taxon-IDs :: see script NCBI_API_taxa.py using 'datasets'
+conda activate ncbi_datasets
+
+Continue monitoring MySQL pool connections
+
+
+--------------------
 Hi Katheryn,
 
   I've been looking into the SequenceServer code (which is ruby BTW - not my favorite) and I found that there was a default fasta download
