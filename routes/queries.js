@@ -11,7 +11,7 @@ export const run_query = async (sql, req, res) => {
   console.log('Request from: '+req.ip)
   logPoolStatus(res, pool)
   try {
-    const [rows] = await pool.execute(sql);
+    const [rows] = await pool.query(sql);
     return rows;
   } catch (error) {
     console.error('Database Query Error:', error);
