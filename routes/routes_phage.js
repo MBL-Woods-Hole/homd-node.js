@@ -17,9 +17,7 @@ router.get('/phage', async function phage(req, res) {
    
     const q = queries.get_phage(gid)
     //console.log('phage q',q)
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
         
         res.render('pages/phage/phage', {
                 title: 'HOMD :: Phage', 
@@ -30,10 +28,7 @@ router.get('/phage', async function phage(req, res) {
                 data: JSON.stringify(rows),
                 gid: gid
         })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 
 })
 
@@ -91,9 +86,7 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
     html_rows += "</tr>"
     console.log(q)
     let stop,start,tmp,seqacc,loc,locstart,locstop
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
         for(let i in rows){
             //console.log(rows[i])
             
@@ -151,10 +144,7 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
         res.send(html_rows)
         //console.log(send_rows,send_rows.length)
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
     
 })
 

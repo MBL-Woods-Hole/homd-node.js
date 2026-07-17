@@ -288,10 +288,8 @@ router.get('/genome_description', async function Description (req, res) {
     const q_genome = queries.get_genome(gid)
     const q_contig = queries.get_contigs(gid)
     helpers.print('In Genome_Descriptin1: '+q_genome)
+    const rows1 = await queries.run_query(q_genome, req, res)
     
-    try {
-        
-        const [rows1] = await pool.execute(q_genome);
         if(rows1.length ==0){
              return
         }
@@ -315,11 +313,12 @@ router.get('/genome_description', async function Description (req, res) {
         data.species =C.taxon_lookup[data.otid].species
         data.combined_size = helpers.format_long_numbers(data.combined_size)
         let contigs = []
-        // try get contigs from file:
-        // ncbi only
+        
+        
         //console.log('q_contig',q_contig)
         helpers.print('In Genome_Descriptin2: '+q_contig)
-        const [rows2] = await pool.execute(q_contig);
+        
+        const rows2 = await queries.run_query(q_contig, req, res)
         for(let r in rows2){
             contigs.push({contig: rows2[r].accession, gc: rows2[r].GC})
         }
@@ -352,10 +351,7 @@ router.get('/genome_description', async function Description (req, res) {
            ver_info: JSON.stringify(C.version_information),
         })
         //res.send('okay')
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 
 })
 router.post('/get_contig_seq', async function get_contig_seq (req, res) {
@@ -367,9 +363,7 @@ router.post('/get_contig_seq', async function get_contig_seq (req, res) {
     // test genome:one contig only::GCA_000019425.1 
     console.log('CONTIG query',q)
     let html='',length = 0
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
         if(rows.length === 0){
            html += "No sequence found in database"
         }else{
@@ -384,10 +378,7 @@ router.post('/get_contig_seq', async function get_contig_seq (req, res) {
         }
         //console.log('html:',html.substring(0,8))
         res.send(JSON.stringify({html:html,length:length}))
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 })
 
 
@@ -424,10 +415,7 @@ router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
           q = queries.get_AA_NA(db, gid, orfid,'prokka-na')
        }
     }
-    try {
-        console.log(q)
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
         //console.log('rows',rows)
         let html = ''
         let length = 0
@@ -446,10 +434,7 @@ router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
         res.send(JSON.stringify({html:html,length:length}))
 
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
   
 })
 function render_explorer(req, res, args){
@@ -976,9 +961,7 @@ router.post('/explorer', async function explorer_post (req, res) {
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
     console.log('get_annotation_query-post',q)
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
 
         if (rows.length === 0) {
             console.log('no rows found')
@@ -1025,11 +1008,7 @@ router.post('/explorer', async function explorer_post (req, res) {
             
         render_explorer(req, res, args)
     
-    } catch (error) {
-        console.error(error);
-        args = {fltr:{},filter_on: 'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
-        render_explorer(req, res, args)
-    } 
+    
     
 })
 router.get('/explorer', async function explorer_get (req, res) {
@@ -1124,9 +1103,8 @@ router.get('/explorer', async function explorer_get (req, res) {
 
     //OLD DB
     const q = queries.get_annotation_query(gid, anno)
-    helpers.logPoolStatus(res,pool.pool)
-    console.log('get_annotation_query-GET',q)
-    //NEW DB
+    
+    
   
     if(req.session.atable_filter){
         atable_filter = req.session.atable_filter
@@ -1136,9 +1114,7 @@ router.get('/explorer', async function explorer_get (req, res) {
     }
     helpers.print('explorer::anno query: '+q)
     // local host:  explorer?gid=SEQF4098.1&anno=ncbi
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
         if (rows.length === 0) {
         console.log('no rows found')
         }
@@ -1190,11 +1166,7 @@ router.get('/explorer', async function explorer_get (req, res) {
             
         render_explorer(req, res, args)
 
-    } catch (error) {
-        console.error(error);
-        args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
-        render_explorer(req, res, args)
-    } 
+    
 })
 
 //
@@ -1799,9 +1771,7 @@ router.get('/peptide_table', async function peptide_table_get(req, res) {
     
     const q = queries.get_peptide()
     let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
     
         let send_list = []
         for(let r in rows){
@@ -1839,10 +1809,7 @@ router.get('/peptide_table', async function peptide_table_get(req, res) {
           row_count:send_list.length,
           search_text:''
         })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 
 })
 router.post('/peptide_table', async function peptide_table_post(req, res) {
@@ -1853,9 +1820,7 @@ router.post('/peptide_table', async function peptide_table_post(req, res) {
     
     let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
     console.log(q)
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
     
         let full_send_list = []
         for(let r in rows){
@@ -1899,10 +1864,7 @@ router.post('/peptide_table', async function peptide_table_post(req, res) {
           row_count:send_list.length,
           search_text:req.body.txt_srch
        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    }
+    
     
 })
 //
@@ -1914,9 +1876,7 @@ router.get('/peptide_table2', async function peptide_table2_get(req, res) {
 
     let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
-    try {
-       
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
 
         let full_send_list = []
         let org_list = []
@@ -1960,10 +1920,7 @@ router.get('/peptide_table2', async function peptide_table2_get(req, res) {
           search_text:''
           
        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 })
 router.post('/peptide_table2', async function peptide_table2_post(req, res) {
     const q = queries.get_peptide2()
@@ -1971,9 +1928,7 @@ router.post('/peptide_table2', async function peptide_table2_post(req, res) {
     let search_text = req.body.txt_srch.toLowerCase()
     let gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
     
        //console.log('1')
        let full_send_list = []
@@ -2033,10 +1988,7 @@ router.post('/peptide_table2', async function peptide_table2_post(req, res) {
           search_text:req.body.txt_srch
           
        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 })
 router.get('/peptide_table3', async function protein_peptide(req, res) {
     console.log(req.query)
@@ -2046,10 +1998,7 @@ router.get('/peptide_table3', async function protein_peptide(req, res) {
     let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study,peptide_id,jb_link
     let locstart,locstop,size,seqacc,loc,highlight
     
-    console.log(q)
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
     
         let send_list = []
        
@@ -2094,10 +2043,7 @@ router.get('/peptide_table3', async function protein_peptide(req, res) {
           otid:otid
           
        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 })
 router.get('/amr_table', function amr(req, res) {
     let gid
@@ -2157,9 +2103,7 @@ router.post('/amr_ajax', async function phage_ajax(req, res){
     html_rows += " <th>Subclass</th><th>Method</th><th>Target Length</th><th>Ref Seq Length</th><th>Ref Coverage %</th><th>Ref Identity %</th>"
     html_rows += " <th>Alignment Length</th><th>Closest Ref Acc</th><th>Closest Ref name</th><th>HMM Acc</th><th>HMM Description</th>"
     html_rows += "</tr>"
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
 
 
         for(let i in rows){
@@ -2228,10 +2172,7 @@ router.post('/amr_ajax', async function phage_ajax(req, res){
         html_rows += "</table></div>"
         res.send(html_rows)
         //console.log(send_rows,send_rows.length)
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    }
+    
     
 })
 router.get('/crispr_table', function crispr(req, res) {
@@ -2293,10 +2234,7 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
     //console.log('crispr_ajax',gid)
     const q = queries.get_crispr_cas_data(gid)
     console.log(q)
-    try {
-        
-        const [rows] = await pool.execute(q);
-
+    const rows = await queries.run_query(q, req, res)
         //console.log('rows',rows)
         let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
         let org = C.genome_lookup[gid].organism
@@ -2356,10 +2294,7 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
         html_rows += "</table></div>"
         res.send(html_rows)
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 })
 ////
 
@@ -2411,32 +2346,5 @@ router.get('/open_ftp_file', function open_ftp_file(req, res) {
     })
     
     
-    
-    
-    
-    // console.log('in genomes GET open_ftp_file',req.params)
-//     //let gid = req.body.gid
-//     let fname = req.params.fname
-//     let file_ext = 'faa'
-//     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,fname)
-//     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/'+file_ext+'/GCA_000174175.1.faa'
-//     //let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/faa/"+gid+".faa"
-//     console.log(fpath)
-//     if(ENV.ENV === 'localhost'){
-//       fpath = fpath_local
-//     }
-//     fs.readFile(fpath, "utf8", (err, data) => {
-//         if (err) {
-//             console.error(err);
-//             return
-//         } else {
-//             // Send the file content as the response
-//             res.writeHead(200, { "Content-Type": "text/plain" });
-//             //data = data.replace('<','\n<')
-//             //console.log(data)
-//             res.end(data);
-//             return;
-//         }
-//     });
 })
 export default router;

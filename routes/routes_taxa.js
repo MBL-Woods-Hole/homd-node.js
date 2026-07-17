@@ -599,7 +599,8 @@ router.get('/tax_description', async function tax_description(req, res) {
   }
   
   //console.log('otid',otid)
-  let lookup_data = {}, data4, refseq = [], links = {}, sites = ''
+  let lookup_data = {}, data4, links = {}, sites = ''
+  let refseq = [],info=[],gtdbtax=[],pangenomes=[]
   if (otid && req.session.ttable_filter) {
     req.session.ttable_filter.otid = otid
   }
@@ -653,9 +654,7 @@ router.get('/tax_description', async function tax_description(req, res) {
     let q = queries.get_lineage_query(otid)  // dont need query 
     console.log('lineage', q)
     console.log('C.taxon_lineage_lookup', C.taxon_lineage_lookup[otid])
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
     
 
       //console.log('rows',rows)
@@ -695,10 +694,7 @@ router.get('/tax_description', async function tax_description(req, res) {
       args.otid_has_abundance = false
       //args.lineage = lineage_string
       renderTaxonDescription(req, res, args)
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
     return
 
   }
@@ -742,12 +738,17 @@ router.get('/tax_description', async function tax_description(req, res) {
     let q_pangenome = queries.get_pangenomes_query(otid)
     let q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes)
     
-    try {
+    
         
-        const [refseq] = await pool.execute(q_refseq_metadata);
-        const [info]   = await pool.execute(q_info);
-        const [pangenomes] = await pool.execute(q_pangenome);
-        const [gtdbtax] = await pool.execute(q_gtdb_tax);
+        refseq = await queries.run_query(q_refseq_metadata, req, res)
+        info = await queries.run_query(q_info, req, res)
+        pangenomes = await queries.run_query(q_pangenome, req, res)
+        gtdbtax = await queries.run_query(q_gtdb_tax, req, res)
+        
+        // const [refseq] = await pool.execute(q_refseq_metadata);
+//         const [info]   = await pool.execute(q_info);
+//         const [pangenomes] = await pool.execute(q_pangenome);
+//         const [gtdbtax] = await pool.execute(q_gtdb_tax);
   
     if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
       sites = 'Primary: ' + C.site_lookup[otid]['s1']
@@ -789,11 +790,6 @@ router.get('/tax_description', async function tax_description(req, res) {
     args.lin = lineage
     renderTaxonDescription(req, res, args)
 
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
 })
 
 
@@ -805,21 +801,16 @@ router.post('/get_refseq', async function get_refseq(req, res) {
   //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
   let q = queries.get_refseq_query(refseq_id)
   helpers.print(q)
-    try {
-        
-        const [rows] = await pool.execute(q);
-		if (!rows || rows.length === 0) {
-		  html = 'No Seq Found'
-		} else {
-		  let seqstr = rows[0].seq.toString()
-		  let arr = helpers.chunkSubstr(seqstr, 80)
-		  html = arr.join('<br>')
-		}
-		res.send(html)
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    const rows = await queries.run_query(q, req, res)
+	if (!rows || rows.length === 0) {
+	  html = 'No Seq Found'
+	} else {
+	  let seqstr = rows[0].seq.toString()
+	  let arr = helpers.chunkSubstr(seqstr, 80)
+	  html = arr.join('<br>')
+	}
+	res.send(html)
+    
 })
 
 
@@ -1627,9 +1618,7 @@ router.get('/dropped', async function dropped(req, res) {
     let q = queries.get_dropped_taxa()
    //console.log(q)
     
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
   
     res.render('pages/taxa/dropped', {
       title: 'HOMD :: Dropped Taxa',
@@ -1642,10 +1631,7 @@ router.get('/dropped', async function dropped(req, res) {
       row_count: rows.length,
 
     })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 })
 router.get('/tree_d3', function tree_d3(req, res) {
 

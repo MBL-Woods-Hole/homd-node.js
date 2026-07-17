@@ -721,13 +721,13 @@ export const calculate_homd_stats = () => {
     return s
 }
 
-export const logPoolStatus = (statusRes,poolInternal) => {
+export const logPoolStatus = (statusRes, pool) => {
     console.log('\nMySQL pool connections:')
-    const allConn = poolInternal._allConnections.length;
-    const freeConn = poolInternal._freeConnections.length;
-    const queuedCount = poolInternal._connectionQueue.length;
+    const allConn = pool.pool._allConnections.length;
+    const freeConn = pool.pool._freeConnections.length;
+    const queuedCount = pool.pool._connectionQueue.length;
 
-    console.log('limit:', poolInternal.config.connectionLimit)
+    console.log('limit:', pool.pool.config.connectionLimit)
     console.log('allocatedTotal:', allConn)
     console.log('freeIdle:', freeConn)
     console.log('activeBusy:', allConn - freeConn)

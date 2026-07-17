@@ -1,8 +1,38 @@
 import express from 'express';
 const router = express.Router()
-
+import pool from '../config/database.js';
 import C from '../public/constants.js';
+import { logPoolStatus } from './helpers/helpers.js';
 
+
+// Generalized query function
+export const run_query = async (sql, req, res) => {
+  console.log('\nExecuting:',sql)
+  console.log('Request from: '+req.ip)
+  logPoolStatus(res, pool)
+  try {
+    const [rows] = await pool.execute(sql);
+    return rows;
+  } catch (error) {
+    console.error('Database Query Error:', error);
+    res.status(500).send('Error fetching MySQL data');
+  }
+};
+//
+export const run_query_stream = async (sql, req, res) => {
+  console.log('\nStreaming:',sql)
+  console.log('Request from: '+req.ip)
+  logPoolStatus(res, pool)
+  try {
+    const connection = await pool.getConnection();
+    const [queryStream] = await connection.query(sql) //.stream();
+    return queryStream;
+  } catch (error) {
+    console.error('Database Query Error:', error);
+    res.status(500).send('Error fetching MySQL stream');
+  }
+};
+//
 export const get_refseq_query = (refid) => {
   let qSelectRefseq = 'SELECT UNCOMPRESS(seq_compressed) as seq from 16S_refseq '
   qSelectRefseq += " WHERE refseq_id='" + refid + "'"

@@ -134,16 +134,10 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
     
     }
     //console.log('QQ',q)
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
         //console.log('rows',rows)
-        res.send(JSON.stringify(rows))
-        return
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    res.send(JSON.stringify(rows))
+   
     return
     
     //res.send('OKAY')
@@ -309,9 +303,7 @@ router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
    let html = '',contig,length,gid,predictor,species='',strain='',otid
    let q = "SELECT genome_id,contig,predictor,seq_length,UNCOMPRESS(seq_compressed) as seq from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
     
         //console.log('rows',rows)
         if(rows.length === 0){
@@ -331,11 +323,8 @@ router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
             html += arr.join('<br>')
         }
         res.send(JSON.stringify({html:html,length:length,gid:gid,contig:contig,org:species+' ('+strain+')',predictor:predictor}))
-        return
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+        
+    
 })
 //
 router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res) {
@@ -352,9 +341,7 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
    let q = queries.get_phage_from_ids_noseqs(hit_ids)
    console.log(q)
    
-   try {
-        
-        const [rows] = await pool.execute(q);
+   const rows = await queries.run_query(q, req, res)
    
         //console.log('rows',rows)
         
@@ -369,10 +356,7 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
             sqldata: JSON.stringify(rows)
             
         })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
    
 })
 router.post('/submit_phage_data', async function submit_phage_data(req, res) {
@@ -382,16 +366,11 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
    let q = "SELECT * from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
     
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, req, res)
         //console.log('rows',rows)
-        res.send(JSON.stringify(rows))
+    res.send(JSON.stringify(rows))
         return
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 })
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     console.log('in advanced_site_search_grep - index.js')

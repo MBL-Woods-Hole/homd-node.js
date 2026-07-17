@@ -92,9 +92,7 @@ router.get('/help-page', async function help_page(req, res) {
       let q = queries.get_db_updates_query()
       let rowarray = []
       let byDate = {}
-      try {
-        
-        const [rows] = await pool.execute(q);
+      const rows = await queries.run_query(q, req, res)
       
         
         for(let n in rows){
@@ -116,11 +114,7 @@ router.get('/help-page', async function help_page(req, res) {
         })
         //console.log('date_array2',date_array)
         renderHelpFxn(req, res, page, byDate, date_array)
-      } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-      } 
-      return
+      
   }else{
     renderHelpFxn(req, res, page, [], [])
   }

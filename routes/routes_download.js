@@ -346,7 +346,7 @@ router.get('/dld_genome_table_all/:type/:filter', async function dld_genome_tabl
     let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds
     
     //let fname = 'HOMD_genome_table' + dt.today + '_' + dt.seconds + ext
-    stream_sqlquery_download(q, fname, res, 'table', type)
+    stream_sqlquery_download(q, fname, req, res, 'table', type)
     return
 
 })
@@ -558,13 +558,11 @@ router.post('/anno_search_data', async (req, res) => {
         // Set response headers for file download
         //res.setHeader('Content-Type', 'text/plain');
         let fname = 'HOMD_'+anno+'_search' + dt.today + '_' + dt.seconds
-        stream_sqlquery_download(q, fname,  res, 'fasta', type)
+        stream_sqlquery_download(q, fname,  req, res, 'fasta', type)
         return
     }else{
     
-        try {
-            
-            const [rows] = await pool.execute(q);
+        const rows = await queries.run_query(q, req, res)
             for(let n in rows){
                 //console.log(rows[n].genome_id)
             }
@@ -594,11 +592,7 @@ router.post('/anno_search_data', async (req, res) => {
             }
             res.send(result_text)
             res.end()
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Error fetching data');
-        } 
-        return
+        
     }
     
 })
@@ -670,13 +664,11 @@ router.post('/anno_data_by_gid', async (req, res) => {
         // Set response headers for file download
         //res.setHeader('Content-Type', 'text/plain');
         let fname = 'HOMD_'+anno+'_search' + dt.today + '_' + dt.seconds
-        stream_sqlquery_download(q, fname,  res, 'fasta', type)
+        stream_sqlquery_download(q, fname,  req, res, 'fasta', type)
         return
     }else{
     
-        try {
-            
-            const [rows] = await pool.execute(q);
+        const rows = await queries.run_query(q, req, res)
             for(let n in rows){
                 //console.log(rows[n].genome_id)
             }
@@ -707,11 +699,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
             }
             res.send(result_text)
             res.end()
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Error fetching data');
-        } 
-        return
+        
     }
     
 })
@@ -721,7 +709,7 @@ router.post('/phage_sequences', async (req, res) => {
     let q = queries.get_phage_fasta(req.body.search_ids)
     let dt = helpers.get_today_obj()
     let fname = 'HOMD_phage_seqs' + dt.today + '_' + dt.seconds
-    stream_sqlquery_download(q, fname, res, 'fasta', 'text')
+    stream_sqlquery_download(q, fname, req, res, 'fasta', 'text')
     return
     
 })
@@ -764,12 +752,10 @@ router.post('/phage_search_data', async (req, res) => {
             
             let q = queries.get_phage_fasta(id_list)
             let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds
-            stream_sqlquery_download(q, fname, res, 'fasta', type)
+            stream_sqlquery_download(q, fname, req, res, 'fasta', type)
             return
     }else{
-        try {
-            
-            const [rows] = await pool.execute(q);
+        const rows = await queries.run_query(q, req, res)
         
             for(let n in rows){
                 //console.log(rows[n].genome_id)
@@ -796,11 +782,7 @@ router.post('/phage_search_data', async (req, res) => {
             }
             res.send(result_text)
             res.end()
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Error fetching data');
-        } 
-        return
+        
    }
 });
 router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
@@ -815,10 +797,7 @@ router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
     
     
     const q = queries.get_all_phage_for_download()
-    try {
-        
-        const [mysqlrows] = await pool.execute(q);
-
+    const mysqlrows = await queries.run_query(q, req, res)
         
         fileFilterText = 'HOMD.org Phage Data:: All HOMD Data;' + ' Date: ' + dt.today
         tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
@@ -835,10 +814,7 @@ router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
         }
         res.send(tableTsv)
         res.end()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 })
 router.get('/dld_crispr_table/:type', function dld_crispr_table (req, res) {
     let dt = helpers.get_today_obj()
@@ -968,7 +944,7 @@ function create_phage_search_table(sql_rows,header_array,search_term) {
 }
 
 ////
-async function stream_sqlquery_download(q, fname, res, format, type) {
+async function stream_sqlquery_download(q, fname, req, res, format, type) {
     console.log('in stream_sqlquery_download',format,type)
     // IMPORTANT: q must have defline and sequence elements
     // format is fasta or table
@@ -1008,10 +984,8 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
       }
     });
  
-
-    const connection = await pool.getConnection();
-        
-    const [queryStream] = await connection.query(q) //.stream();
+    const sqlStream = await queries.run_query_stream(q, req, res)
+    
         
         
         
@@ -1025,7 +999,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
             passThroughStream.write(C.genome_table_headers.join(delimiter) + '\n');
             const csvStream = csv.format({ headers: false, delimiter: delimiter,writeHeaders: false }); 
             
-            pipeline(queryStream, csvStream, passThroughStream, res, (err) => {
+            pipeline(sqlStream, csvStream, passThroughStream, res, (err) => {
             if (err) {
                 console.log(err);
             }
@@ -1036,7 +1010,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
         }else if(format === 'fasta'){
             
             transformerStream = fastaObjectToStringStream
-            pipeline(queryStream, transformerStream, res, (err) => {
+            pipeline(sqlStream, transformerStream, res, (err) => {
             if (err) {
                 console.log(err);
             }
