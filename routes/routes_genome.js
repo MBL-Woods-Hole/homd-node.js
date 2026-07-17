@@ -1057,7 +1057,7 @@ router.get('/explorer', async function explorer_get (req, res) {
     }
     let organism = 'Unknown', pidList
     //let dbChoices = []
-    console.log('A')
+    //console.log('A')
     
     let args = {}
     
@@ -1091,7 +1091,7 @@ router.get('/explorer', async function explorer_get (req, res) {
       }
     }
   
-    console.log('B')
+    //console.log('B')
     if (Object.prototype.hasOwnProperty.call(C.genome_lookup, gid)) {
         otid = C.genome_lookup[gid].otid
         //gc = helpers.get_gc_for_gccontent(C.genome_lookup[gid].gc)
@@ -1119,12 +1119,9 @@ router.get('/explorer', async function explorer_get (req, res) {
     render_explorer(req, res, args)
     return
     }
-    console.log('C')
+    //console.log('C')
     //OLD DB
     const q = queries.get_annotation_query(gid, anno)
-    
-    console.log('get_annotation_query-GET',q)
-    //NEW DB
   
     if(req.session.atable_filter){
         atable_filter = req.session.atable_filter

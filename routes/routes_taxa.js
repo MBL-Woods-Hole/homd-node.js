@@ -66,7 +66,7 @@ router.get('/taxon_table', function tax_table_get(req, res) {
   let args = { filter: filter, send_list: send_list, count_txt: count_text, filter_on: helpers_taxa.get_filter_on(filter) }
 
   renderTaxonTable(req, res, args)
-
+  
 })
 
 router.post('/taxon_table', function tax_table_post(req, res) {
@@ -640,28 +640,31 @@ router.get('/tax_description', async function tax_description(req, res) {
 
   
   */
-  let lineage = C.taxon_lineage_lookup[otid]
-  //console.log('lin',lineage)
+  let lineage
+  
+  
+  
   let text_file = get_rank_text('species', '', otid)
   if (C.dropped_taxids.indexOf(otid) !== -1) {
     //helpers.print(data1)
     // DROPPED
+    
+    
+    
+    
+      
     lookup_data = C.taxon_lookup[otid]
     let hmt = helpers.make_otid_display_name(otid)
     let message = "This TaxonID (" + hmt + ") has been Dropped.<br>Reason: " + lookup_data.notes
     //let dropped_notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
     //data1.notes= "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
     //data3 = get_special_lineage_from_db(otid)
-    let q = queries.get_lineage_query(otid)  // dont need query 
-    console.log('lineage', q)
-    console.log('C.taxon_lineage_lookup', C.taxon_lineage_lookup[otid])
-    
-        
+    let q = queries.get_lineage_query(otid)  //
     
     const rows = await queries.run_query(q, res)
 
-    //console.log('rows',rows)
-    let lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
+    lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
+    
     links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage)
     //console.log(links)
 
@@ -697,9 +700,11 @@ router.get('/tax_description', async function tax_description(req, res) {
     args.otid_has_abundance = false
     //args.lineage = lineage_string
     renderTaxonDescription(req, res, args)
-    
+    return
   }  // END DROPPED
-
+  
+  lineage = C.taxon_lineage_lookup[otid]  // dropped not in lineage lookup use hierarchy
+  console.log('LLLx',lineage)
   if (C.taxon_lookup[otid] === undefined) {
     res.send('That Taxon ID: (' + otid + ') was not found1 - Use the Back Arrow and select another')
     return

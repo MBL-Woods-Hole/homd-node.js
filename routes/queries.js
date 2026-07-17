@@ -32,27 +32,27 @@ export const run_query_stream = async (sql, res) => {
 };
 
 export const get_refseq_query = (refid) => {
-  let qSelectRefseq = 'SELECT UNCOMPRESS(seq_compressed) as seq from 16S_refseq '
-  qSelectRefseq += " WHERE refseq_id='" + refid + "'"
+  let q = 'SELECT UNCOMPRESS(seq_compressed) as seq from 16S_refseq '
+  q += " WHERE refseq_id='" + refid + "'"
 
-  return qSelectRefseq
+  return q
 };
 
 export const get_gtdb_tax = (genomes) => {
   let g = genomes.join("','")
-  let qSelectGTDBTaxonomy = 'SELECT genome_id, GTDB_taxonomy  from `'+C.genomes_table_name+'`'
-  qSelectGTDBTaxonomy += " WHERE genome_id in ('" + g + "')"
+  let q = 'SELECT genome_id, GTDB_taxonomy  from `'+C.genomes_table_name+'`'
+  q += " WHERE genome_id in ('" + g + "')"
   //console.log(qSelectGTDBTaxonomy)
-  return qSelectGTDBTaxonomy
+  return q
 };
 
 export const get_refseq_metadata_query = (otid) => {
   // let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
 //   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
-  let qSelectRefseqInfo = 'SELECT refseq_id,species,seqids from homd.16S_refseq '
-  qSelectRefseqInfo += " WHERE otid='" + otid + "'"
+  let q = 'SELECT refseq_id,species,seqids from homd.16S_refseq '
+  q += " WHERE otid='" + otid + "'"
 
-  return qSelectRefseqInfo
+  return q
 };
 
 export const get_taxon_info_query = (otid) => {
@@ -85,31 +85,23 @@ export const get_db_updates_query = () => {
 
 // GENOMES
 export const get_annotation_query = (gid, anno) => {
-  let qSelectAnno 
+  let q 
   if(anno === 'prokka'){
-    qSelectAnno = 'SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
-   qSelectAnno += ' FROM PROKKA.orf_gff a'
-   qSelectAnno += ' LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id '
-   qSelectAnno += ' LEFT JOIN PROKKA.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id '
-   qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
+    q = 'SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
+   q += ' FROM PROKKA.orf_gff a'
+   q += ' LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id '
+   q += ' LEFT JOIN PROKKA.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id '
+   q += " WHERE a.genome_id = '"+gid+"'"
     
     
-    // qSelectAnno = 'SELECT accession, type, gc, protein_id, length_na, length_aa, `start`, `end`,'
-//     qSelectAnno += 'PROKKA.orf_gff.product as product,'
-//     qSelectAnno += 'PROKKA.orf_gff.gene as gene,'
-//     qSelectAnno += 'BAKTA_sub_prokka.orf.Bakta_product as bakta_product,'
-//     qSelectAnno += 'BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene,'
-//     qSelectAnno += 'BAKTA_sub_prokka.orf.bakta_Length'
-//     qSelectAnno += ' FROM PROKKA.orf_gff'
-//     qSelectAnno += ' LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)'
-//     qSelectAnno += " WHERE PROKKA.orf_gff.genome_id = '"+gid+"'"
+
   
   }else if(anno === 'ncbi') {
-    qSelectAnno = 'SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
-    qSelectAnno += ' FROM NCBI.orf_gff a'
-    qSelectAnno += ' LEFT JOIN NCBI.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id '
-    qSelectAnno += ' LEFT JOIN NCBI.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id '
-    qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
+    q = 'SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene'
+    q += ' FROM NCBI.orf_gff a'
+    q += ' LEFT JOIN NCBI.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id '
+    q += ' LEFT JOIN NCBI.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id '
+    q += " WHERE a.genome_id = '"+gid+"'"
   
   }else{ // BAKTA
 //     SELECT a.region, a.type,  a.attribute_locus_tag as locus_tag,  a.attribute_product as product, 'c.length_na', b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene 
@@ -118,32 +110,32 @@ export const get_annotation_query = (gid, anno) => {
 /* using(protein_id)  */
 /* LEFT JOIN BAKTA.ffn c using(protein_id)  */
 //WHERE a.genome_id = 'GCA_900105505.1'
-    qSelectAnno = 'SELECT a.region, a.type,  a.attribute_locus_tag as protein_id,  a.attribute_product as product, "c.length_na", b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene '
-    qSelectAnno += ' FROM BAKTA.gff a'
-    qSelectAnno += ' LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag'
+    q = 'SELECT a.region, a.type,  a.attribute_locus_tag as protein_id,  a.attribute_product as product, "c.length_na", b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene '
+    q += ' FROM BAKTA.gff a'
+    q += ' LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag'
     //qSelectAnno += ' LEFT JOIN BAKTA.ffn c using(protein_id)'
-    qSelectAnno += " WHERE a.genome_id = '"+gid+"'"
+    q += " WHERE a.genome_id = '"+gid+"'"
   }
   
   // const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
 //   let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
 //   qSelectAnno += ' JOIN ' + db + '.molecules ON ' + db + '.ORF_seq.mol_id=' + db + '.molecules.id'
-  return qSelectAnno
+  return q
 };
 
 export const get_lineage_query = (otid) => {
-   let qSelectTaxnames = 'SELECT domain,phylum,klass,`order`,family,genus,species,subspecies from otid_prime'
-    qSelectTaxnames += ' join taxonomy using(taxonomy_id)'
-    qSelectTaxnames += ' join domain using(domain_id)'
-    qSelectTaxnames += ' join phylum using(phylum_id)'
-    qSelectTaxnames += ' join klass using(klass_id)'
-    qSelectTaxnames += ' join `order` using(order_id)'
-    qSelectTaxnames += ' join family using(family_id)'
-    qSelectTaxnames += ' join genus using(genus_id)'
-    qSelectTaxnames += ' join species using(species_id)'
-    qSelectTaxnames += ' join subspecies using(subspecies_id)'
-    qSelectTaxnames += " WHERE otid='"+otid+"'"
-    return qSelectTaxnames
+   let q = 'SELECT domain,phylum,klass,`order`,family,genus,species,subspecies from otid_prime'
+    q += ' join taxonomy using(taxonomy_id)'
+    q += ' join domain using(domain_id)'
+    q += ' join phylum using(phylum_id)'
+    q += ' join klass using(klass_id)'
+    q += ' join `order` using(order_id)'
+    q += ' join family using(family_id)'
+    q += ' join genus using(genus_id)'
+    q += ' join species using(species_id)'
+    q += ' join subspecies using(subspecies_id)'
+    q += " WHERE otid='"+otid+"'"
+    return q
 };
 
 export const get_all_pangenomes_query = () => {
@@ -164,10 +156,10 @@ export const get_pangenomes_query = (otid) => {
 
 export const get_peptide = () => {
 /// USING Ver 3.1
-    let qSelectPeptide = "SELECT `genomes`.otid, study_id, seq_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
-    qSelectPeptide += " JOIN `genomes` using (seq_id)"
+    let q = "SELECT `genomes`.otid, study_id, seq_id, organism, protein_accession,jb_link,molecule,peptide_id,peptide,product from protein_peptide"
+    q += " JOIN `genomes` using (seq_id)"
     
-    return qSelectPeptide
+    return q
 };
 
 export const get_peptide2 = () => {
@@ -196,16 +188,16 @@ export const get_peptide3 = (gid) => {
 };
 
 export const get_crispr_cas_data = (gid) => {
-    let qSelectCrisprCas = "SELECT contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
-    qSelectCrisprCas += " FROM crispr_cas where genome_id='"+gid+"'"
+    let q = "SELECT contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
+    q += " FROM crispr_cas where genome_id='"+gid+"'"
     
-    return qSelectCrisprCas
+    return q
 };
 export const get_all_crispr_cas_data = () => {
-    let qSelectCrisprCas = "SELECT homd.genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
-    qSelectCrisprCas += " FROM crispr_cas"
+    let q = "SELECT homd.genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
+    q += " FROM crispr_cas"
     
-    return qSelectCrisprCas
+    return q
 };
 export const get_amr_data = (gid) => {
     let q = 'SELECT homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
@@ -251,33 +243,30 @@ function genome_query() {
     let tbl  = C.genomes_table_name
     let ntbl = C.genomes_ncbi_table_name
     let ptbl = C.genomes_prokka_table_name
-    let qSelectGenome = `SELECT \`${tbl}\`.genome_id as GENOME_ID,concat("HMT-",LPAD(\`${tbl}\`.otid,3,"0")) as HMT_ID,`
-        qSelectGenome +=` \`${tbl}\`.strain,naming_status as hmt_naming_status, cultivation_status as hmt_cultivation_status,`
-        qSelectGenome +=` site as hmt_primary_body_site_w_abundance,\`${ptbl}\`.organism,\`${tbl}\`.contigs,\`${tbl}\`.combined_size,`
-        qSelectGenome +=` \`${tbl}\`.MAG,\`${tbl}\`.GC,\`${tbl}\`.url,\`${tbl}\`.GTDB_taxonomy,  bioproject,taxid,biosample,`
-        qSelectGenome +=` assembly_name,assembly_level,assembly_method, submission_date,geo_loc_name,isolation_source,`
-        qSelectGenome +=` seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,`
-        qSelectGenome +=` checkM2_contamination,refseq_assembly,WGS,`
-        qSelectGenome +=` \`${ptbl}\`.CDS as prokka_CDS,\`${ptbl}\`.gene as prokka_gene,\`${ptbl}\`.mRNA as prokka_mRNA,`
-        qSelectGenome +=` \`${ptbl}\`.misc_RNA as prokka_misc_RNA,\`genomes_prokkaV11.0\`.rRNA as prokka_rRNA,`
-        qSelectGenome +=` \`${ptbl}\`.tRNA as prokka_tRNA,\`${ptbl}\`.tmRNA as prokka_tmRNA,`
-        qSelectGenome +=` pangenomes.pangenome_name as pangenome`
-        qSelectGenome +=` FROM \`${tbl}\``
-        qSelectGenome +=` JOIN status using(otid)`
-        qSelectGenome +=` JOIN sites on primary_body_site_id = site_id`
-        qSelectGenome +=` LEFT JOIN \`${ptbl}\` using(genome_id)`
-        qSelectGenome +=` LEFT JOIN \`${ntbl}\` using(genome_id)`
-        qSelectGenome +=` LEFT JOIN pangenome_genome using(genome_id)`
-        qSelectGenome +=` LEFT JOIN pangenomes using(pangenome_id)`
+    let q = `SELECT \`${tbl}\`.genome_id as GENOME_ID,concat("HMT-",LPAD(\`${tbl}\`.otid,3,"0")) as HMT_ID,`
+        q +=` \`${tbl}\`.strain,naming_status as hmt_naming_status, cultivation_status as hmt_cultivation_status,`
+        q +=` site as hmt_primary_body_site_w_abundance,\`${ptbl}\`.organism,\`${tbl}\`.contigs,\`${tbl}\`.combined_size,`
+        q +=` \`${tbl}\`.MAG,\`${tbl}\`.GC,\`${tbl}\`.url,\`${tbl}\`.GTDB_taxonomy,  bioproject,taxid,biosample,`
+        q +=` assembly_name,assembly_level,assembly_method, submission_date,geo_loc_name,isolation_source,`
+        q +=` seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,`
+        q +=` checkM2_contamination,refseq_assembly,WGS,`
+        q +=` \`${ptbl}\`.CDS as prokka_CDS,\`${ptbl}\`.gene as prokka_gene,\`${ptbl}\`.mRNA as prokka_mRNA,`
+        q +=` \`${ptbl}\`.misc_RNA as prokka_misc_RNA,\`genomes_prokkaV11.0\`.rRNA as prokka_rRNA,`
+        q +=` \`${ptbl}\`.tRNA as prokka_tRNA,\`${ptbl}\`.tmRNA as prokka_tmRNA,`
+        q +=` pangenomes.pangenome_name as pangenome`
+        q +=` FROM \`${tbl}\``
+        q +=` JOIN status using(otid)`
+        q +=` JOIN sites on primary_body_site_id = site_id`
+        q +=` LEFT JOIN \`${ptbl}\` using(genome_id)`
+        q +=` LEFT JOIN \`${ntbl}\` using(genome_id)`
+        q +=` LEFT JOIN pangenome_genome using(genome_id)`
+        q +=` LEFT JOIN pangenomes using(pangenome_id)`
     
-    
-    console.log(qSelectGenome)
-    return qSelectGenome
+    return q
 }
 
 export const get_all_genomes = () => {  // for downld all
     let q = genome_query()
-
     return q
 };
 
@@ -291,22 +280,22 @@ export const get_genome = (gid) => {   // always NCBI for genome description
 
 export const get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
-  let qSelectContigs = "SELECT region, GC from `NCBI`.`molecule` WHERE genome_id = '"+gid+"'"
+  let q = "SELECT region, GC from `NCBI`.`molecule` WHERE genome_id = '"+gid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj
   //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
-  return qSelectContigs
+  return q
 };
 
 export const get_contig = (gid, mid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
-  let qSelectContigs = "SELECT UNCOMPRESS(seq_compressed) as seq from `NCBI`.`contig` WHERE genome_id = '"+gid+"' and region='"+mid+"'"
+  let q = "SELECT UNCOMPRESS(seq_compressed) as seq from `NCBI`.`contig` WHERE genome_id = '"+gid+"' and region='"+mid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj
   //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
-  return qSelectContigs
+  return q
 };
 
 export const get_all_phage_for_download = () => {
@@ -316,15 +305,14 @@ export const get_all_phage_for_download = () => {
     q += " FROM phage_stats"
     q += " JOIN phage_data using (genome_id)"
     
-    //console.log(q)
     return q
 
 };
 
 export const get_phage = (gid) => {   // always NCBI for taxon description
 
-  let qSelectPhage = "SELECT phage_id,type,contig,start,end FROM phage_data where genome_id='"+gid+"'"
-  return qSelectPhage
+  let q = "SELECT phage_id,type,contig,start,end FROM phage_data where genome_id='"+gid+"'"
+  return q
 };
 
 export const get_phage_fasta = (search_id_list) => {   // 
@@ -338,11 +326,7 @@ export const get_phage_fasta = (search_id_list) => {   //
 
 export const get_phage_from_ids_noseqs = (search_id_list) => {   // always NCBI for taxon description
   let q = "SELECT search_id,genome_id,contig,predictor,start,end,"
-  // bakta_core_product,"
-//     q += "IFNULL(bakta_core_note,'') as bcnote,"
-//     q += "bakta_EC,"
-//     q += "IFNULL(bakta_GO,'') as bakta_GO,"
-//     q += "bakta_COG,"
+  
     q += "accession,"
     q += "description"
     
