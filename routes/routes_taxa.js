@@ -6,7 +6,7 @@ import fs from 'fs-extra';
 
 // const url = require('url');
 import path from 'path';
-import pool from '../config/database.js';
+
 //import { title } from 'process';
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
@@ -598,7 +598,10 @@ router.get('/tax_description', async function tax_description(req, res) {
       otid = req.query.otid.replace(/^0+/, '')   // remove leading zeros
   }
   //console.log('otid',otid)
-  let lookup_data = {}, data4, refseq = [], links = {}, sites = ''
+  //defaults
+  let lookup_data = {}, data4, links = {}, sites = ''
+  let refseq=[],info=[],pangenomes=[],gtdbtax=[]
+  
   if (otid && req.session.ttable_filter) {
     req.session.ttable_filter.otid = otid
   }
@@ -652,58 +655,52 @@ router.get('/tax_description', async function tax_description(req, res) {
     let q = queries.get_lineage_query(otid)  // dont need query 
     console.log('lineage', q)
     console.log('C.taxon_lineage_lookup', C.taxon_lineage_lookup[otid])
-    try {
-        
-        const [rows] = await pool.execute(q);
     
+        
+    
+    const rows = await queries.run_query(q, res)
 
-      //console.log('rows',rows)
-      let lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
-      links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage)
-      //console.log(links)
+    //console.log('rows',rows)
+    let lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
+    links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage)
+    //console.log(links)
 
-      sites = ''
-      if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
+    sites = ''
+    if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
         sites = 'Primary: ' + C.site_lookup[otid]['s1']
         if (C.site_lookup[otid]['s2']) {
-          sites += '<br>Secondary: ' + C.site_lookup[otid]['s2']
+            sites += '<br>Secondary: ' + C.site_lookup[otid]['s2']
         }
         if (C.site_lookup[otid]['notes']) {
-          sites += '<br><small>Note: ' + C.site_lookup[otid]['notes'] + '</small>'
+            sites += '<br><small>Note: ' + C.site_lookup[otid]['notes'] + '</small>'
         }
-      }
-
-      //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-      //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-      //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-      //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-      //args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
-      let args = { otid: otid }
-      args.image_array = []
-      args.data1 = lookup_data
-      args.data1.pangenomes = []
-      args.msg = message
-      args.text_file = text_file[0]
-      args.tinfo = {}
-      args.gtdbtax = {}
-      args.lin = lineage
-      args.data4 = {}
-      args.refseq_info = {}
-      args.links = links
-      args.sites = sites
-      args.otid_has_abundance = false
-      //args.lineage = lineage_string
-      renderTaxonDescription(req, res, args)
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
     }
-    return
 
-  }
+    //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+    //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+    //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+    //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+    //args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
+    let args = { otid: otid }
+    args.image_array = []
+    args.data1 = lookup_data
+    args.data1.pangenomes = []
+    args.msg = message
+    args.text_file = text_file[0]
+    args.tinfo = {}
+    args.gtdbtax = {}
+    args.lin = lineage
+    args.data4 = {}
+    args.refseq_info = {}
+    args.links = links
+    args.sites = sites
+    args.otid_has_abundance = false
+    //args.lineage = lineage_string
+    renderTaxonDescription(req, res, args)
+    
+  }  // END DROPPED
 
   if (C.taxon_lookup[otid] === undefined) {
-
     res.send('That Taxon ID: (' + otid + ') was not found1 - Use the Back Arrow and select another')
     return
   }
@@ -736,18 +733,18 @@ router.get('/tax_description', async function tax_description(req, res) {
   //refseq = {}
   //info = {'general':'','cultavability':'','prevalence':'','disease_associations':'','phenotypic':''}  // unique per otid
   //counts = 
-    let q_refseq_metadata = queries.get_refseq_metadata_query(otid)    // dont need query 
-    let q_info = queries.get_taxon_info_query(otid)
-    let q_pangenome = queries.get_pangenomes_query(otid)
-    let q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes)
+    const q_refseq_metadata = queries.get_refseq_metadata_query(otid)    // dont need query 
+    const q_info = queries.get_taxon_info_query(otid)
+    const q_pangenome = queries.get_pangenomes_query(otid)
+    const q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes)
     
-    try {
+   
         
-        const [refseq] = await pool.execute(q_refseq_metadata);
-        const [info]   = await pool.execute(q_info);
-        const [pangenomes] = await pool.execute(q_pangenome);
-        const [gtdbtax] = await pool.execute(q_gtdb_tax);
-  
+    refseq = await queries.run_query(q_refseq_metadata,res);
+    info   = await queries.run_query(q_info,res);
+    pangenomes = await queries.run_query(q_pangenome,res);
+    gtdbtax = await queries.run_query(q_gtdb_tax,res);
+          
     if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
       sites = 'Primary: ' + C.site_lookup[otid]['s1']
       // = Object.values(C.site_lookup[otid]).join('<br>')
@@ -788,42 +785,29 @@ router.get('/tax_description', async function tax_description(req, res) {
     args.lin = lineage
     renderTaxonDescription(req, res, args)
 
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
-    return
- 
 })
 
 
 router.post('/get_refseq', async function get_refseq(req, res) {
-  helpers.print(req.body)
-  let refseq_id = req.body.refseqid;
-  let html
+    helpers.print(req.body)
+    let refseq_id = req.body.refseqid;
+    let html
 
-  //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
-  let q = queries.get_refseq_query(refseq_id)
-  helpers.print(q)
-    try {
-        
-        const [rows] = await pool.execute(q);
-		if (!rows || rows.length === 0) {
-		  html = 'No Seq Found'
-		} else {
-		  let seqstr = rows[0].seq.toString()
-		  let arr = helpers.chunkSubstr(seqstr, 80)
-		  html = arr.join('<br>')
-		}
-		res.send(html)
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
-    return
+    //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
+    let q = queries.get_refseq_query(refseq_id)
+    helpers.print(q)
+    
+    const rows = await queries.run_query(q, res)
+    if (!rows || rows.length === 0) {
+      html = 'No Seq Found'
+    } else {
+      let seqstr = rows[0].seq.toString()
+      let arr = helpers.chunkSubstr(seqstr, 80)
+      html = arr.join('<br>')
+    }
+    res.send(html)
+    
 })
-
 
 
 
@@ -1634,29 +1618,21 @@ router.get('/show_all_abundance/:site/:rank', function show_all_abundance(req, r
 //
 router.get('/dropped', async function dropped(req, res) {
 
-    let q = queries.get_dropped_taxa()
-   //console.log(q)
+    const q = queries.get_dropped_taxa()
+    //console.log(q)
+    const rows = await queries.run_query(q, res)
+    res.render('pages/taxa/dropped', {
+          title: 'HOMD :: Dropped Taxa',
+          pgname: '', // for AbountThisPage
+          pgtitle: 'Dropped Taxa Table',
+          config: JSON.stringify(ENV),
+          ver_info: JSON.stringify(C.version_information),
+    
+          data: JSON.stringify(rows),
+          row_count: rows.length,
+    
+    })
    
-    try {
-        
-        const [rows] = await pool.execute(q);
-  
-		res.render('pages/taxa/dropped', {
-		  title: 'HOMD :: Dropped Taxa',
-		  pgname: '', // for AbountThisPage
-		  pgtitle: 'Dropped Taxa Table',
-		  config: JSON.stringify(ENV),
-		  ver_info: JSON.stringify(C.version_information),
-	
-		  data: JSON.stringify(rows),
-		  row_count: rows.length,
-	
-		})
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
-    return
 })
 router.get('/tree_d3', function tree_d3(req, res) {
 

@@ -8,7 +8,7 @@ import path from 'path';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
 import { exec, spawn } from 'child_process';
-import pool from '../config/database.js';
+
 
 router.get('/index', function index(req, res) {
   
@@ -95,12 +95,10 @@ router.get('/help-page', async function help_page(req, res) {
       let q = queries.get_db_updates_query()
       let rowarray = []
       let byDate = {}
-      try {
-        
-        const [rows] = await pool.execute(q);
+      const rows = await queries.run_query(q, res)
       
         
-        for(let n in rows){
+      for(let n in rows){
            if(rows[n].date in byDate){
              byDate[rows[n].date].push({otid:rows[n].otid, description:rows[n].description, reason:rows[n].reason})
            }else{
@@ -108,7 +106,7 @@ router.get('/help-page', async function help_page(req, res) {
               
            }
 
-        }
+      }
         //console.log(byDate)
         let date_array = Object.keys(byDate)
         //console.log('date_array1',date_array)
@@ -119,11 +117,7 @@ router.get('/help-page', async function help_page(req, res) {
         })
         //console.log('date_array2',date_array)
         renderHelpFxn(req, res, page, byDate, date_array)
-      } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-      } 
-      return
+      
   }else{
     renderHelpFxn(req, res, page, [], [])
   }

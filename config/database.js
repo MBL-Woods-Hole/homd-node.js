@@ -30,7 +30,7 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 30, // default (10) Adjust based on your needs/server limits
-  queueLimit: 100,  // '0' means unlimited queue ->bad
+  queueLimit: 100,  // '0' means unlimited queue ->bad (will run out of memory)
   enableKeepAlive: true,
   keepAliveInitialDelay: 10000,
   acquireTimeout: 30000,

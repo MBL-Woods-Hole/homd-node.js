@@ -8,7 +8,7 @@ import fs from 'fs-extra';
 //app.use(fileUpload());
 import multer  from 'multer'
 global.ENV = process.env;
-import pool from '../config/database.js';
+
 import path from 'path';
 import { pipeline, Transform } from 'stream';
 import csv from 'fast-csv';
@@ -20,8 +20,7 @@ import * as queries from './queries.js';
 
 const upload = multer({ dest: ENV.PATH_TO_TMP  })
 
-//import { getConnection } from '../config/database.js';
-//import pool from '../config/database.js';
+
 router.get('/download/:q', function download(req, res) {
   // renders the overall downlads page
   //console.log('q',req.params)
@@ -586,43 +585,37 @@ router.post('/anno_search_data', async (req, res) => {
         return
     }else{
     
-        try {
+        const rows = await queries.run_query(q, res)
+        for(let n in rows){
+            //console.log(rows[n].genome_id)
+        }
+        
+        fname = ''
+        ext = '.txt'
+        result_text = create_anno_search_table(rows, anno, head_text_array, search_text)
+        
+        
+        if (type === 'browser') {
+            res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        } else if (type === 'text') {
             
-            const [rows] = await pool.execute(q);
-            for(let n in rows){
-                //console.log(rows[n].genome_id)
-            }
-            
-            fname = ''
-            ext = '.txt'
-            result_text = create_anno_search_table(rows, anno, head_text_array, search_text)
-            
-            
-            if (type === 'browser') {
-                res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-            } else if (type === 'text') {
-                
-                let fname = 'HOMD_search'+anno_cap+ dt.today + '_' + dt.seconds + ext
-                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
-            
-            
-            } else if (type === 'excel') {
-                let fname = 'HOMD_search'+anno_cap + dt.today + '_' + dt.seconds + '.xls'
-                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
-              
-            
-            } else {
-                // error
-                console.log('Download table format ERROR')
-            
-            }
-            res.send(result_text)
-            res.end()
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Error fetching data');
-        } 
-        return
+            let fname = 'HOMD_search'+anno_cap+ dt.today + '_' + dt.seconds + ext
+            res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+        
+        
+        } else if (type === 'excel') {
+            let fname = 'HOMD_search'+anno_cap + dt.today + '_' + dt.seconds + '.xls'
+            res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+          
+        
+        } else {
+            // error
+            console.log('Download table format ERROR')
+        
+        }
+        res.send(result_text)
+        res.end()
+        
     }
     
 })
@@ -701,44 +694,38 @@ router.post('/anno_data_by_gid', async (req, res) => {
         return
     }else{
     
-        try {
-            
-            const [rows] = await pool.execute(q);
-            for(let n in rows){
-                //console.log(rows[n].genome_id)
-            }
-            
-            fname = ''
-            ext = '.txt'
-            // anno is ONLY prokka or ncbi  NOT bakta
-            result_text = create_anno_table(rows, anno,gid)
-            
-            
-            if (type === 'browser') {
-                res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-            } else if (type === 'text') {
-                
-                let fname = 'HOMD_annotations' + anno_cap+ dt.today + '_' + dt.seconds + ext
-                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
-            
-            
-            } else if (type === 'excel') {
-                let fname = 'HOMD_annotations' + anno_cap+ dt.today + '_' + dt.seconds + '.xls'
-                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
-              
-            
-            } else {
-                // error
-                console.log('Download table format ERROR')
-            
-            }
-            res.send(result_text)
-            res.end()
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Error fetching data');
+        const rows = await queries.run_query(q, res)
+        for(let n in rows){
+            //console.log(rows[n].genome_id)
         }
-        return
+        
+        fname = ''
+        ext = '.txt'
+        // anno is ONLY prokka or ncbi  NOT bakta
+        result_text = create_anno_table(rows, anno,gid)
+        
+        
+        if (type === 'browser') {
+            res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        } else if (type === 'text') {
+            
+            let fname = 'HOMD_annotations' + anno_cap+ dt.today + '_' + dt.seconds + ext
+            res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+        
+        
+        } else if (type === 'excel') {
+            let fname = 'HOMD_annotations' + anno_cap+ dt.today + '_' + dt.seconds + '.xls'
+            res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+          
+        
+        } else {
+            // error
+            console.log('Download table format ERROR')
+        
+        }
+        res.send(result_text)
+        res.end()
+       
     }
     
 })
@@ -785,49 +772,45 @@ router.post('/phage_search_data', async (req, res) => {
     q += " from phage_search where search_id in ("+id_list+')'
     if(format === 'fasta'){
             
-            if(type == 'excel'){
-                type = 'text'  //change type if fasta::excel selected
-            }
-            
-            let q = queries.get_phage_fasta(id_list)
-            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds
-            stream_sqlquery_download(q, fname, res, 'fasta', type)
-            return
-    }else{
-        try {
-            
-            const [rows] = await pool.execute(q);
+        if(type == 'excel'){
+            type = 'text'  //change type if fasta::excel selected
+        }
         
-            for(let n in rows){
-                //console.log(rows[n].genome_id)
-            }
-            
-            fname = ''
-            ext = '.txt'
-            result_text = create_phage_search_table(rows, head_text_array, search_text)
-            
-            
-            if (type === 'browser') {
-                res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-            } else if (type === 'text') {
-                
-                let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
-                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
-            } else if (type === 'excel') {
-                let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
-                res.set({ 'Content-Disposition': 'attachment; filename='+fname })
-              
-            } else {
-                // error
-                console.log('Download table format ERROR')
-            }
-            res.send(result_text)
-            res.end()
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Error fetching data');
-        } 
+        let q = queries.get_phage_fasta(id_list)
+        let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds
+        stream_sqlquery_download(q, fname, res, 'fasta', type)
         return
+    }else{
+        
+            
+        const rows = await queries.run_query(q, res)
+    
+        for(let n in rows){
+            //console.log(rows[n].genome_id)
+        }
+        
+        fname = ''
+        ext = '.txt'
+        result_text = create_phage_search_table(rows, head_text_array, search_text)
+        
+        
+        if (type === 'browser') {
+            res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        } else if (type === 'text') {
+            
+            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + ext
+            res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+        } else if (type === 'excel') {
+            let fname = 'HOMD_phage_search' + dt.today + '_' + dt.seconds + '.xls'
+            res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+          
+        } else {
+            // error
+            console.log('Download table format ERROR')
+        }
+        res.send(result_text)
+        res.end()
+        
    }
 });
 router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
@@ -842,31 +825,26 @@ router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
     
     
     const q = queries.get_all_phage_for_download()
-    try {
+    const mysqlrows = await queries.run_query(q, res)
         
-        const [mysqlrows] = await pool.execute(q);
-
         
-        fileFilterText = 'HOMD.org Phage Data:: All HOMD Data;' + ' Date: ' + dt.today
-        tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
-        // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
-        
-        if (type === 'browser') {
-          res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-        } else if (type === 'text') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_phage_table' + dt.today + '_' + dt.seconds + '.txt"' })
-        } else if (type === 'excel') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_phage_table' + dt.today + '_' + dt.seconds + '.xls"' })
-        } else {
-          // error
-          console.log('Download table format ERROR')
-        }
-        res.send(tableTsv)
-        res.end()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    fileFilterText = 'HOMD.org Phage Data:: All HOMD Data;' + ' Date: ' + dt.today
+    tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
+    // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
+    
+    if (type === 'browser') {
+      res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+    } else if (type === 'text') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_phage_table' + dt.today + '_' + dt.seconds + '.txt"' })
+    } else if (type === 'excel') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_phage_table' + dt.today + '_' + dt.seconds + '.xls"' })
+    } else {
+      // error
+      console.log('Download table format ERROR')
+    }
+    res.send(tableTsv)
+    res.end()
+    
 })
 router.get('/dld_crispr_table/:type', async function dld_crispr_table (req, res) {
     let dt = helpers.get_today_obj()
@@ -875,31 +853,26 @@ router.get('/dld_crispr_table/:type', async function dld_crispr_table (req, res)
     let fileFilterText,tableTsv
     
     let q = queries.get_all_crispr_cas_data()
-    try {
-        
-        const [mysqlrows] = await pool.execute(q);
+    const mysqlrows = await queries.run_query(q, res)
 
         
-        fileFilterText = 'HOMD.org Crispr-Cas Data:: All HOMD Data;' + ' Date: ' + dt.today
-        tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
-        // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
-        
-        if (type === 'browser') {
-          res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-        } else if (type === 'text') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.txt"' })
-        } else if (type === 'excel') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.xls"' })
-        } else {
-          // error
-          console.log('Download table format ERROR')
-        }
-        res.send(tableTsv)
-        res.end()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
+    fileFilterText = 'HOMD.org Crispr-Cas Data:: All HOMD Data;' + ' Date: ' + dt.today
+    tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
+    // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
+    
+    if (type === 'browser') {
+      res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+    } else if (type === 'text') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.txt"' })
+    } else if (type === 'excel') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.xls"' })
+    } else {
+      // error
+      console.log('Download table format ERROR')
     }
+    res.send(tableTsv)
+    res.end()
+    
     
 })
 router.get('/dld_amr_table/:type', async function dld_crispr_table (req, res) {
@@ -909,31 +882,26 @@ router.get('/dld_amr_table/:type', async function dld_crispr_table (req, res) {
     let fileFilterText,tableTsv
     let q = queries.get_all_amr_data()
     
-    try {
-        
-        const [mysqlrows] = await pool.execute(q);
+    const mysqlrows = await queries.run_query(q, res)
 
         
-        fileFilterText = 'HOMD.org AMR Data:: All HOMD Data;' + ' Date: ' + dt.today
-        tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
-        // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
-        
-        if (type === 'browser') {
-          res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
-        } else if (type === 'text') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_AMR_table' + dt.today + '_' + dt.seconds + '.txt"' })
-        } else if (type === 'excel') {
-          res.set({ 'Content-Disposition': 'attachment; filename="HOMD_AMR_table' + dt.today + '_' + dt.seconds + '.xls"' })
-        } else {
-          // error
-          console.log('Download table format ERROR')
-        }
-        res.send(tableTsv)
-        res.end()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    fileFilterText = 'HOMD.org AMR Data:: All HOMD Data;' + ' Date: ' + dt.today
+    tableTsv = create_table_from_sql_query(mysqlrows, fileFilterText)
+    // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
+    
+    if (type === 'browser') {
+      res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+    } else if (type === 'text') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_AMR_table' + dt.today + '_' + dt.seconds + '.txt"' })
+    } else if (type === 'excel') {
+      res.set({ 'Content-Disposition': 'attachment; filename="HOMD_AMR_table' + dt.today + '_' + dt.seconds + '.xls"' })
+    } else {
+      // error
+      console.log('Download table format ERROR')
+    }
+    res.send(tableTsv)
+    res.end()
+    
     
 })
 router.get('/pg/:type/:pg', function dld_pg (req, res) {
@@ -1018,33 +986,28 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
     q += ")"
     //console.log(q)
     let defline,seq,outfile_txt = ''
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, res)
 
-        if (rows.length === 0) {
-            console.log('no rows found')
-            res.send('No Data Found')
-            return
-        
-        }else{
-            for(let n in rows){
-                defline = '>'+rows[n].pid+'|'+rows[n].gid
-                seq = rows[n].seq.toString()
-                const arr = helpers.chunkSubstr(seq, 80)
-                //arr.join('<br>')
-                outfile_txt += defline+'\n'+arr.join('\n')+'\n'
-            }
+    if (rows.length === 0) {
+        console.log('no rows found')
+        res.send('No Data Found')
+        return
+    
+    }else{
+        for(let n in rows){
+            defline = '>'+rows[n].pid+'|'+rows[n].gid
+            seq = rows[n].seq.toString()
+            const arr = helpers.chunkSubstr(seq, 80)
+            //arr.join('<br>')
+            outfile_txt += defline+'\n'+arr.join('\n')+'\n'
         }
-        
-        let fname = 'HOMD_FASTA_'+req.body.anno+'_'+req.body.fa_type+'_'+dt.today + '_' + dt.seconds + ext
-        res.set({ 'Content-Disposition': 'attachment; filename='+fname })
-        res.send(outfile_txt)
-        res.end()
-    } catch (error) {
-        console.error(error);
-        res.send(error)
-    } 
+    }
+    
+    let fname = 'HOMD_FASTA_'+req.body.anno+'_'+req.body.fa_type+'_'+dt.today + '_' + dt.seconds + ext
+    res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+    res.send(outfile_txt)
+    res.end()
+    
 })
 
 function create_phage_search_table(sql_rows,header_array,search_term) {
@@ -1129,10 +1092,8 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
       }
     });
  
-    const connection = await pool.getConnection();
-      
-    const [queryStream] = await connection.query(q) //.stream();
-        
+    
+    const stream = await queries.run_query_stream(q, res)
         
     if(format === 'table'){
         //transformerStream = tableObjectToStringStream
@@ -1141,7 +1102,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
         passThroughStream.write(C.genome_table_headers.join(delimiter) + '\n');
         const csvStream = csv.format({ headers: false, delimiter: delimiter,writeHeaders: false }); 
         
-        pipeline(queryStream, csvStream, passThroughStream, res, (err) => {
+        pipeline(stream, csvStream, passThroughStream, res, (err) => {
         if (err) {
             console.log(err);
         }
@@ -1152,7 +1113,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
     }else if(format === 'fasta'){
         
         transformerStream = fastaObjectToStringStream
-        pipeline(queryStream, transformerStream, res, (err) => {
+        pipeline(stream, transformerStream, res, (err) => {
         if (err) {
             console.log(err);
         }

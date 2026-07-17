@@ -6,7 +6,7 @@ import fs from 'fs-extra';
 
 // const url = require('url');
 import path from 'path';
-import pool from '../config/database.js';
+
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
@@ -17,23 +17,19 @@ router.get('/phage', async function phage(req, res) {
     
     const q = queries.get_phage(gid)
     //console.log('phage q',q)
-    try {
+    const rows = await queries.run_query(q, res)
         
-        const [rows] = await pool.execute(q);
         
-        res.render('pages/phage/phage', {
-                title: 'HOMD :: Phage', 
-                pgname: '', // for AboutThisPage
-                config: JSON.stringify(ENV),
-                ver_info: JSON.stringify(C.version_information),
-                pgtitle: 'Phage',
-                data: JSON.stringify(rows),
-                gid: gid
-        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    res.render('pages/phage/phage', {
+            title: 'HOMD :: Phage', 
+            pgname: '', // for AboutThisPage
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+            pgtitle: 'Phage',
+            data: JSON.stringify(rows),
+            gid: gid
+    })
+    
 
 })
 
@@ -142,70 +138,67 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
     html_rows += "</tr>"
     console.log(q)
     let stop,start,tmp,seqacc,loc,locstart,locstop
-    try {
+    const rows = await queries.run_query(q, res)
         
-        const [rows] = await pool.execute(q);
-        for(let i in rows){
-            //console.log(rows[i])
+       
+    for(let i in rows){
+        //console.log(rows[i])
+        
+            //send_rows.push(rows[i])
+            // create JB Link
+            // https://www.homd.org/jbrowse/?data=homd_V11.02_phage_1.1/GCA_000008065.1&loc=GCA_000008065.1|AE017198.1:1291298..1331686&tracks=DNA,panggolin,cenote
+            start = rows[i].start
+            stop  = rows[i].end
+            if(start[0] === "<" ){
+                start = parseInt(start.substring(1))
+            }else{ 
+                start = parseInt(start) 
+            } 
+            if(stop[0] === ">" ){ 
+                stop = parseInt(stop.substring(1))
+            }else{ 
+                stop = parseInt(stop)
+            } 
+            if(start > stop){ 
+                tmp = stop 
+                stop = start 
+                start = tmp 
+            }
+            locstart = start - 500 
+            locstop = stop + 500 
+            //size = stop - start 
+ 
+            if(locstart < 1){ 
+                locstart = 1 
+            }
+            seqacc = rows[i].contig
+            loc = seqacc+":"+locstart.toString()+".."+locstop.toString() 
+            //highlight = seqacc+":"+start.toString()+".."+stop.toString() 
             
-                //send_rows.push(rows[i])
-                // create JB Link
-                // https://www.homd.org/jbrowse/?data=homd_V11.02_phage_1.1/GCA_000008065.1&loc=GCA_000008065.1|AE017198.1:1291298..1331686&tracks=DNA,panggolin,cenote
-                start = rows[i].start
-                stop  = rows[i].end
-                if(start[0] === "<" ){
-                    start = parseInt(start.substring(1))
-                }else{ 
-                    start = parseInt(start) 
-                } 
-                if(stop[0] === ">" ){ 
-                    stop = parseInt(stop.substring(1))
-                }else{ 
-                    stop = parseInt(stop)
-                } 
-                if(start > stop){ 
-                    tmp = stop 
-                    stop = start 
-                    start = tmp 
-                }
-                locstart = start - 500 
-                locstop = stop + 500 
-                //size = stop - start 
-     
-                if(locstart < 1){ 
-                    locstart = 1 
-                }
-                seqacc = rows[i].contig
-                loc = seqacc+":"+locstart.toString()+".."+locstop.toString() 
-                //highlight = seqacc+":"+start.toString()+".."+stop.toString() 
-                
-                html_rows += "<tr><td nowrap>"+rows[i].type+"</td>"
-                html_rows += "<td><a href='#' onclick=\"open_jbrowse('"+gid+"','phage','','','','"+loc+"')\">open"
-                html_rows += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
-                html_rows += '  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
-                html_rows += "</svg>"
-                html_rows += "</a>"
-                
-                html_rows += "</td>"
-                html_rows += "<td nowrap class=''>"+rows[i].phage_id+"</td>"
-                html_rows += "<td nowrap class=''>"+rows[i].contig+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].start+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].end+"</td>"
-                
-                html_rows += "</tr>"
-                //counter += 1
-        }
+            html_rows += "<tr><td nowrap>"+rows[i].type+"</td>"
+            html_rows += "<td><a href='#' onclick=\"open_jbrowse('"+gid+"','phage','','','','"+loc+"')\">open"
+            html_rows += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
+            html_rows += '  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
+            html_rows += "</svg>"
+            html_rows += "</a>"
             
+            html_rows += "</td>"
+            html_rows += "<td nowrap class=''>"+rows[i].phage_id+"</td>"
+            html_rows += "<td nowrap class=''>"+rows[i].contig+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].start+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].end+"</td>"
+            
+            html_rows += "</tr>"
+            //counter += 1
+    }
         
-        
-        html_rows += "</table>"
-        res.send(html_rows)
-        //console.log(send_rows,send_rows.length)
+    
+    
+    html_rows += "</table>"
+    res.send(html_rows)
+    //console.log(send_rows,send_rows.length)
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
     
 })
 

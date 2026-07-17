@@ -2,15 +2,12 @@
 // import dotenv from 'dotenv';
 // dotenv.config();
 
-//import dotenv from 'dotenv';
-// for newrelic: start in config.js
-//const winston = require('winston');
+
 //import process.env from './config/config.js';
 import 'dotenv/config';
-//import { pool } from './config/database.js';
-//console.log('xx',envs)
+
 //import { * } from './config/config.js';
-//console.log(`Your DB_HOST is ${DB_HOST}`); // 8626
+
 global.ENV = process.env;
 import path from 'path';
 
@@ -33,13 +30,7 @@ console.log('NODE_ENV:',ENV.NODE_ENV)
 const dirname = import.meta.dirname
 
 //// SQL Connection ///////////////
-// import pool from './config/database.js';
-// global.TDBConn = pool 
-
-import pool from './config/database.js';
-//global.TDBConn = getConnection;   // database:  homd
-//global.pool = getPool;   // database:  homd
-//global.pool = pool;
+// See helpers.js
 ///////////////////////////////////
 
 global.app_root = path.resolve(dirname);
@@ -130,10 +121,6 @@ if(process.env.NODE_ENV === 'production'){
     // to see console.logs: "npm run debug"
 }
 
-
-//passportConfig(passport, TDBConn);
-//app.use(passport.initialize());
-//app.use(passport.session()); // persistent login sessions
 
 app.use(flash());
 

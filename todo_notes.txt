@@ -1,6 +1,13 @@
 2026-07-14
 SS error on no CR
 >GCA_018141845.1_01294 MDEREKIIRLWFDMWLTQQDLGIDDIFLDDVIYIESWCPKYENRQTVKHWFNEWNTRGKVLAWDIKQFFHKDNQTIVEWHFKNKMNEGKVEEFDGISLIVWTADNKIKALKEFGCNCNNYNPYKE
+
+>>>>>>>
+Looks like there is a problem with the server. Try visiting the page again after a while. If this message persists, please report the problem on our issue tracker.
+
+BLAST failed abruptly (exit status: 3). Most likely there is a
+problem with the BLAST+ binaries.
+<<<<<<<<<<<<<
 TODO: Write more descriptive error into SS code
 
 Get/Update NCBI Taxon-IDs :: see script NCBI_API_taxa.py using 'datasets'

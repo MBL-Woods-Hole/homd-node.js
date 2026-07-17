@@ -7,7 +7,7 @@ import { parse, stringify } from 'svgson';
 
 import pretty from 'pretty'
 import path from 'path';
-import pool from '../config/database.js';
+
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
@@ -289,9 +289,9 @@ router.get('/genome_description', async function Description (req, res) {
     const q_contig = queries.get_contigs(gid)
     helpers.print('In Genome_Descriptin1: '+q_genome)
     
-    try {
+    
+        const rows1 = await queries.run_query(q_genome, res)
         
-        const [rows1] = await pool.execute(q_genome);
         if(rows1.length ==0){
              return
         }
@@ -319,7 +319,8 @@ router.get('/genome_description', async function Description (req, res) {
         // ncbi only
         //console.log('q_contig',q_contig)
         helpers.print('In Genome_Descriptin2: '+q_contig)
-        const [rows2] = await pool.execute(q_contig);
+        const rows2 = await queries.run_query(q_contig, res)
+        
         for(let r in rows2){
             contigs.push({contig: rows2[r].region, gc: rows2[r].GC})
         }
@@ -352,11 +353,7 @@ router.get('/genome_description', async function Description (req, res) {
            ver_info: JSON.stringify(C.version_information),
         })
         //res.send('okay')
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
-    return
+    
 
 })
 router.post('/get_contig_seq', async function get_contig_seq (req, res) {
@@ -368,28 +365,24 @@ router.post('/get_contig_seq', async function get_contig_seq (req, res) {
     // test genome:one contig only::GCA_000019425.1 
     console.log('CONTIG query',q)
     let html='',length = 0
-    try {
-        
-        const [rows] = await pool.execute(q);
-        if(rows.length === 0){
-           html += "No sequence found in database"
-        }else{
-           length = rows[0].seq.toString().length
-           const seqstr = (rows[0].seq).toString()
-           //console.log('seqstr',seqstr)
-           //console.log(seqstr.length)
-           const arr = helpers.chunkSubstr(seqstr, 100)
-           //console.log('arr[0]',arr[0])
-           html += arr.join('<br>')
-           //html = seqstr
-        }
-        //console.log('html:',html.substring(0,8))
-        res.send(JSON.stringify({html:html,length:length}))
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
-    return
+    
+    const rows = await queries.run_query(q, res)
+    
+    if(rows.length === 0){
+       html += "No sequence found in database"
+    }else{
+       length = rows[0].seq.toString().length
+       const seqstr = (rows[0].seq).toString()
+       //console.log('seqstr',seqstr)
+       //console.log(seqstr.length)
+       const arr = helpers.chunkSubstr(seqstr, 100)
+       //console.log('arr[0]',arr[0])
+       html += arr.join('<br>')
+       //html = seqstr
+    }
+    //console.log('html:',html.substring(0,8))
+    res.send(JSON.stringify({html:html,length:length}))
+   
 })
 
 
@@ -429,34 +422,24 @@ router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
           q = queries.get_AA_NA(db, gid, pid,'prokka-na')
        }
     }
-    try {
-        console.log(q)
-        
-        const [rows] = await pool.execute(q);
-        //console.log('rows',rows)
-        let html = ''
-        let length = 0
-        if(rows.length === 0){
-            html += "No sequence found in database"
-        }else{
-           length = rows[0].seq.length
-           const seqstr = (rows[0].seq).toString()
-           //console.log('seqstr',seqstr)
-           //console.log(seqstr.length)
-           const arr = helpers.chunkSubstr(seqstr, 100)
-           html += arr.join('<br>')
-           //html = seqstr
-        }
-        
-        res.send(JSON.stringify({html:html,length:length}))
+    const rows = await queries.run_query(q, res)
+    
+    let html = ''
+    let length = 0
+    if(rows.length === 0){
+        html += "No sequence found in database"
+    }else{
+       length = rows[0].seq.length
+       const seqstr = (rows[0].seq).toString()
+       //console.log('seqstr',seqstr)
+       //console.log(seqstr.length)
+       const arr = helpers.chunkSubstr(seqstr, 100)
+       html += arr.join('<br>')
+       //html = seqstr
+    }
+    
+    res.send(JSON.stringify({html:html,length:length}))
 
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
-    return
-  
 })
 function render_explorer(req, res, args){
     res.render('pages/genome/explorer', {
@@ -996,60 +979,55 @@ router.post('/explorer', async function explorer_post (req, res) {
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
     console.log('get_annotation_query-post',q)
-    try {
-        
-        const [rows] = await pool.execute(q);
-
-        if (rows.length === 0) {
-            console.log('no rows found')
-        }
-        let filtered_rows = apply_annot_table_filter(rows, atable_filter)
-        //console.log('filtered_rows[0]',filtered_rows)
-        pageData.trecords = filtered_rows.length
-        if(filtered_rows.length < C.PAGER_ROWS){
-         pidList = filtered_rows
-        }else{
-          if (pageData.page) {
-            const trows = filtered_rows.length
-            // console.log('trows',trows)
-            pageData.row_per_page = C.PAGER_ROWS
-            pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
-            if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
-            if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-            helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
-            pageData.show_page = pageData.page
-            if (pageData.show_page === 1) {
-              pidList = filtered_rows.slice(0, pageData.row_per_page) // first 200
-              pageData.start_count = 1
-            } else {
-              pidList = filtered_rows.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
-              pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
-            }
-            //console.log('start count', pageData.start_count)
-          }
-        }
-      //console.log('POST pidlist',pidList.length)
-        const args = {
-            gid: gid,
-            gc:             gc,
-            otid:           otid,
-            organism:       organism,
-            allAnnosObj:    allAnnosObj,
-            annoType:       anno,
-            pageData:       pageData,
-            annoInfoObj:    annoInfoObj,
-            pidList:        pidList,
-            fltr:  atable_filter,
-            filter_on: get_filter_on(atable_filter,'annot')
-        }
-            
-        render_explorer(req, res, args)
     
-    } catch (error) {
-        console.error(error);
-        args = {fltr:{},filter_on: 'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
-        render_explorer(req, res, args)
-    } 
+    const rows = await queries.run_query(q, res)
+    
+    if (rows.length === 0) {
+        console.log('no rows found')
+    }
+    let filtered_rows = apply_annot_table_filter(rows, atable_filter)
+    //console.log('filtered_rows[0]',filtered_rows)
+    pageData.trecords = filtered_rows.length
+    if(filtered_rows.length < C.PAGER_ROWS){
+     pidList = filtered_rows
+    }else{
+      if (pageData.page) {
+        const trows = filtered_rows.length
+        // console.log('trows',trows)
+        pageData.row_per_page = C.PAGER_ROWS
+        pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
+        if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
+        if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
+        helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+        pageData.show_page = pageData.page
+        if (pageData.show_page === 1) {
+          pidList = filtered_rows.slice(0, pageData.row_per_page) // first 200
+          pageData.start_count = 1
+        } else {
+          pidList = filtered_rows.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
+          pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
+        }
+        //console.log('start count', pageData.start_count)
+      }
+    }
+    //console.log('POST pidlist',pidList.length)
+    const args = {
+        gid: gid,
+        gc:             gc,
+        otid:           otid,
+        organism:       organism,
+        allAnnosObj:    allAnnosObj,
+        annoType:       anno,
+        pageData:       pageData,
+        annoInfoObj:    annoInfoObj,
+        pidList:        pidList,
+        fltr:  atable_filter,
+        filter_on: get_filter_on(atable_filter,'annot')
+    }
+        
+    render_explorer(req, res, args)
+    
+    
     
 })
 router.get('/explorer', async function explorer_get (req, res) {
@@ -1144,7 +1122,7 @@ router.get('/explorer', async function explorer_get (req, res) {
     console.log('C')
     //OLD DB
     const q = queries.get_annotation_query(gid, anno)
-    helpers.logPoolStatus(res,pool.pool)
+    
     console.log('get_annotation_query-GET',q)
     //NEW DB
   
@@ -1156,67 +1134,62 @@ router.get('/explorer', async function explorer_get (req, res) {
     }
     helpers.print('explorer::anno query: '+q)
     // local host:  explorer?gid=SEQF4098.1&anno=ncbi
-    try {
+    
+    const rows = await queries.run_query(q, res)
+    
+    if (rows.length === 0) {
+        console.log('no rows found')
+    }
+    let filtered_rows = apply_annot_table_filter(rows, atable_filter)
+    pageData.trecords = rows.length
+    if (pageData.page) {
+        const trows = rows.length
+        // console.log('trows',trows)
+        pageData.row_per_page = C.PAGER_ROWS
+        pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
+        if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
+        if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
+        helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+        pageData.show_page = pageData.page
+        if (pageData.show_page === 1) {
+          pidList = rows.slice(0, pageData.row_per_page) // first 200
+          pageData.start_count = 1
+        } else {
+          pidList = rows.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
+          pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
+        }
+    //console.log('start count', pageData.start_count)
+    }
+    if(req.session.atable_filter){
+        //console.log('filetr session')
+        atable_filter = req.session.atable_filter
+    }else{
+        //console.log('filetr from default')
+        atable_filter = helpers_genomes.get_default_annot_filter()
+        req.session.atable_filter = atable_filter
+    }
+    //console.log('atable_filter',atable_filter)
+    //console.log('default',helpers_genomes.get_default_annot_filter())
+    //console.log('annoInfoObj',annoInfoObj)
+    //console.log('pidlist',pidList.length)
+    args = {
+        gid: gid,
         
-        const [rows] = await pool.execute(q);
-        if (rows.length === 0) {
-            console.log('no rows found')
+        gc:             gc,
+        otid:           otid,
+        organism:       organism,
+        allAnnosObj:    allAnnosObj,
+        annoType:       anno,
+        pageData:       pageData,
+        annoInfoObj:    annoInfoObj,
+        pidList:        pidList,
+        fltr:  atable_filter,
+        filter_on: get_filter_on(atable_filter,'annot')
         }
-        let filtered_rows = apply_annot_table_filter(rows, atable_filter)
-        pageData.trecords = rows.length
-        if (pageData.page) {
-            const trows = rows.length
-            // console.log('trows',trows)
-            pageData.row_per_page = C.PAGER_ROWS
-            pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
-            if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
-            if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-            helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
-            pageData.show_page = pageData.page
-            if (pageData.show_page === 1) {
-              pidList = rows.slice(0, pageData.row_per_page) // first 200
-              pageData.start_count = 1
-            } else {
-              pidList = rows.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
-              pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
-            }
-        //console.log('start count', pageData.start_count)
-        }
-        if(req.session.atable_filter){
-            //console.log('filetr session')
-            atable_filter = req.session.atable_filter
-        }else{
-            //console.log('filetr from default')
-            atable_filter = helpers_genomes.get_default_annot_filter()
-            req.session.atable_filter = atable_filter
-        }
-        //console.log('atable_filter',atable_filter)
-        //console.log('default',helpers_genomes.get_default_annot_filter())
-        //console.log('annoInfoObj',annoInfoObj)
-        //console.log('pidlist',pidList.length)
-        args = {
-            gid: gid,
-            
-            gc:             gc,
-            otid:           otid,
-            organism:       organism,
-            allAnnosObj:    allAnnosObj,
-            annoType:       anno,
-            pageData:       pageData,
-            annoInfoObj:    annoInfoObj,
-            pidList:        pidList,
-            fltr:  atable_filter,
-            filter_on: get_filter_on(atable_filter,'annot')
-            }
-            
-        render_explorer(req, res, args)
+        
+    render_explorer(req, res, args)
 
-    } catch (error) {
-        console.error(error);
-        args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:otid,organism:organism,allAnnosObj:allAnnosObj,annoType:anno,pageData:{},annoInfoObj:annoInfoObj,pidList:[]}
-        render_explorer(req, res, args)
-    } 
-    return
+    
 })
 
 
@@ -1772,52 +1745,47 @@ router.get('/peptide_table', async function peptide_table_get(req, res) {
     
     const q = queries.get_peptide()
     let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
-    try {
-        
-        const [rows] = await pool.execute(q);
+    const rows = await queries.run_query(q, res)
+   
     
-        let send_list = []
-        for(let r in rows){
-           pid = rows[r].protein_accession
-           prod = rows[r].product
-           pep = rows[r].peptide
-           pepid = rows[r].peptide_id
-           gid = pid.split('_')[0]
-           otid = rows[r].otid
-           org = rows[r].organism
-           mol = rows[r].molecule
-           jb_link = rows[r].jb_link
-           study_id = rows[r].study_id
-        
-         
-           //if(C.genome_lookup.hasOwnProperty(gid)){
-             //genome = C.genome_lookup[gid]
-             //console.log('genome',genome)
-             temp = {study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,peptide_id:pepid,peptide:pep,jb_link:jb_link}
-             //temp = {gc:genome.gc,study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide_id:pepid,peptide:pep,jb_link:jb_link}
-             //console.log('temp',temp)
-             //console.log(C.genome_lookup[gid])
-             send_list.push(temp)
-           //}
-        }
-        //console.log(send_list[0])
-        res.render('pages/genome/protein_peptide', {
-          title: 'HOMD :: Human Oral Microbiome Database',
-          pgname: '', // for AbountThisPage
-          pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(ENV),
-          ver_info: JSON.stringify(C.version_information),
-          
-          data: JSON.stringify(send_list),
-          row_count:send_list.length,
-          search_text:''
-        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
-    return
-
+    let send_list = []
+    for(let r in rows){
+       pid = rows[r].protein_accession
+       prod = rows[r].product
+       pep = rows[r].peptide
+       pepid = rows[r].peptide_id
+       gid = pid.split('_')[0]
+       otid = rows[r].otid
+       org = rows[r].organism
+       mol = rows[r].molecule
+       jb_link = rows[r].jb_link
+       study_id = rows[r].study_id
+    
+     
+       //if(C.genome_lookup.hasOwnProperty(gid)){
+         //genome = C.genome_lookup[gid]
+         //console.log('genome',genome)
+         temp = {study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,peptide_id:pepid,peptide:pep,jb_link:jb_link}
+         //temp = {gc:genome.gc,study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide_id:pepid,peptide:pep,jb_link:jb_link}
+         //console.log('temp',temp)
+         //console.log(C.genome_lookup[gid])
+         send_list.push(temp)
+       //}
+    }
+    //console.log(send_list[0])
+    res.render('pages/genome/protein_peptide', {
+      title: 'HOMD :: Human Oral Microbiome Database',
+      pgname: '', // for AbountThisPage
+      pgtitle: 'Protein Peptide Table',
+      config: JSON.stringify(ENV),
+      ver_info: JSON.stringify(C.version_information),
+      
+      data: JSON.stringify(send_list),
+      row_count:send_list.length,
+      search_text:''
+    })
+    
+    
 })
 router.post('/peptide_table', async function peptide_table_post(req, res) {
     console.log('req.body',req.body)
@@ -1827,57 +1795,53 @@ router.post('/peptide_table', async function peptide_table_post(req, res) {
     
     let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
     console.log(q)
-    try {
+    const rows = await queries.run_query(q, res)
         
-        const [rows] = await pool.execute(q);
+        
     
-        let full_send_list = []
-        for(let r in rows){
-           pid = rows[r].protein_accession
-           prod = rows[r].product
-           pep = rows[r].peptide
-           pepid = rows[r].peptide_id
-           gid = pid.split('_')[0]
-           
-           otid = rows[r].otid
-           hmt = helpers.make_otid_display_name(otid)
-           org = rows[r].organism
-           mol = rows[r].molecule
-           jb_link = rows[r].jb_link
-           study_id = rows[r].study_id
-            temp = {study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,peptide_id:pepid,peptide:pep,jb_link:jb_link}
-             
-             full_send_list.push(temp)
-           //}
-        }
-       // will search all === PID,HMT,Organism,Peptide,Product
-       let send_list = full_send_list
-       if(search_text){
-          console.log('searching',search_text)
-          send_list = full_send_list.filter( function(item){
-               return item.organism.toLowerCase().includes(search_text) ||
-                  item.product.toLowerCase().includes(search_text)      ||
-                  item.peptide.toLowerCase().includes(search_text)      ||
-                  item.pid.toLowerCase().includes(search_text)          ||
-                  item.hmt.toLowerCase().includes(search_text)
-           })
-       }
-       res.render('pages/genome/protein_peptide', {
-          title: 'HOMD :: Human Oral Microbiome Database',
-          pgname: '', // for AbountThisPage
-          pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(ENV),
-          ver_info: JSON.stringify(C.version_information),
-          
-          data: JSON.stringify(send_list),
-          row_count:send_list.length,
-          search_text:req.body.txt_srch
+    let full_send_list = []
+    for(let r in rows){
+       pid = rows[r].protein_accession
+       prod = rows[r].product
+       pep = rows[r].peptide
+       pepid = rows[r].peptide_id
+       gid = pid.split('_')[0]
+       
+       otid = rows[r].otid
+       hmt = helpers.make_otid_display_name(otid)
+       org = rows[r].organism
+       mol = rows[r].molecule
+       jb_link = rows[r].jb_link
+       study_id = rows[r].study_id
+        temp = {study_id:study_id,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,peptide_id:pepid,peptide:pep,jb_link:jb_link}
+         
+         full_send_list.push(temp)
+       //}
+    }
+    // will search all === PID,HMT,Organism,Peptide,Product
+    let send_list = full_send_list
+    if(search_text){
+      console.log('searching',search_text)
+      send_list = full_send_list.filter( function(item){
+           return item.organism.toLowerCase().includes(search_text) ||
+              item.product.toLowerCase().includes(search_text)      ||
+              item.peptide.toLowerCase().includes(search_text)      ||
+              item.pid.toLowerCase().includes(search_text)          ||
+              item.hmt.toLowerCase().includes(search_text)
        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
-        
+    }
+    res.render('pages/genome/protein_peptide', {
+      title: 'HOMD :: Human Oral Microbiome Database',
+      pgname: '', // for AbountThisPage
+      pgtitle: 'Protein Peptide Table',
+      config: JSON.stringify(ENV),
+      ver_info: JSON.stringify(C.version_information),
+      
+      data: JSON.stringify(send_list),
+      row_count:send_list.length,
+      search_text:req.body.txt_srch
+    })
+
 })
 //
 //
@@ -1888,56 +1852,53 @@ router.get('/peptide_table2', async function peptide_table2_get(req, res) {
 
     let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
-    try {
+    const rows = await queries.run_query(q, res)
         
-        const [rows] = await pool.execute(q);
+        
 
-        let full_send_list = []
-        let org_list = []
-        study_collector = {}
-        row_collector= {}
-        for(let r in rows){
-           
-           gid = rows[r].seq_id
-           
-           study_id = rows[r].study_id
-           if(!study_collector.hasOwnProperty(gid)){
-                study_collector[gid] = [rows[r].study_id]
-           }else{
-                study_collector[gid].push(rows[r].study_id) 
-           }
-           row_collector[gid] = rows[r]
-        }
-        for(gid in row_collector){
-           
-           ///gid = rows[r].seq_id
-           studies = study_collector[gid].join(',')
-           row = row_collector[gid]
-           //console.log('row',row)
-           //temp = {gid:rows[r].seq_id, otid:rows[r].otid, org:rows[r].organism, prot_count:rows[r].protein_count,pep_count:rows[r].peptide_count,studies:studies}
-           temp = {gid:gid, otid:row.otid, org:row.organism, prot_count:row.protein_count,pep_count:row.peptide_count,studies:studies}
-           
-           full_send_list.push(temp)
-           
-       }
-       let send_list = full_send_list
+    let full_send_list = []
+    let org_list = []
+    study_collector = {}
+    row_collector= {}
+    for(let r in rows){
        
-       res.render('pages/genome/protein_peptide2', {
-          title: 'HOMD :: Human Oral Microbiome Database',
-          pgname: '', // for AbountThisPage
-          pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(ENV),
-          ver_info: JSON.stringify(C.version_information),
-          
-          data: JSON.stringify(send_list),
-          row_count:send_list.length,
-          search_text:''
-          
-       })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+       gid = rows[r].seq_id
+       
+       study_id = rows[r].study_id
+       if(!study_collector.hasOwnProperty(gid)){
+            study_collector[gid] = [rows[r].study_id]
+       }else{
+            study_collector[gid].push(rows[r].study_id) 
+       }
+       row_collector[gid] = rows[r]
+    }
+    for(gid in row_collector){
+       
+       ///gid = rows[r].seq_id
+       studies = study_collector[gid].join(',')
+       row = row_collector[gid]
+       //console.log('row',row)
+       //temp = {gid:rows[r].seq_id, otid:rows[r].otid, org:rows[r].organism, prot_count:rows[r].protein_count,pep_count:rows[r].peptide_count,studies:studies}
+       temp = {gid:gid, otid:row.otid, org:row.organism, prot_count:row.protein_count,pep_count:row.peptide_count,studies:studies}
+       
+       full_send_list.push(temp)
+       
+    }
+    let send_list = full_send_list
+    
+    res.render('pages/genome/protein_peptide2', {
+      title: 'HOMD :: Human Oral Microbiome Database',
+      pgname: '', // for AbountThisPage
+      pgtitle: 'Protein Peptide Table',
+      config: JSON.stringify(ENV),
+      ver_info: JSON.stringify(C.version_information),
+      
+      data: JSON.stringify(send_list),
+      row_count:send_list.length,
+      search_text:''
+      
+    })
+    
 })
 router.post('/peptide_table2', async function peptide_table2_post(req, res) {
     const q = queries.get_peptide2()
@@ -1945,39 +1906,37 @@ router.post('/peptide_table2', async function peptide_table2_post(req, res) {
     let search_text = req.body.txt_srch.toLowerCase()
     let gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
-    try {
+    const rows = await queries.run_query(q, res)
         
-        const [rows] = await pool.execute(q);
-    
-       //console.log('1')
-       let full_send_list = []
-       let org_list = []
-       study_collector = {}
-       row_collector= {}
-       for(let r in rows){
-           
-           gid = rows[r].seq_id
-           study_id = rows[r].study_id
-           if(!study_collector.hasOwnProperty(gid)){
-                study_collector[gid] = [rows[r].study_id]
-           }else{
-                study_collector[gid].push(rows[r].study_id) 
-           }
-           row_collector[gid] = rows[r]
-        }
-        for(gid in row_collector){
-           
-           ///gid = rows[r].seq_id
-           studies = study_collector[gid].join(',')
-           
-           row = row_collector[gid]
-           hmt = helpers.make_otid_display_name(row.otid)
-           //console.log('row',row)
-           //temp = {gid:rows[r].seq_id, otid:rows[r].otid, org:rows[r].organism, prot_count:rows[r].protein_count,pep_count:rows[r].peptide_count,studies:studies}
-           temp = {gid:gid, otid:row.otid, hmt:hmt,org:row.organism, prot_count:row.protein_count,pep_count:row.peptide_count,studies:studies}
-           
-           full_send_list.push(temp)
-           // if(C.genome_lookup.hasOwnProperty(gid)){
+   //console.log('1')
+   let full_send_list = []
+   let org_list = []
+   study_collector = {}
+   row_collector= {}
+   for(let r in rows){
+       
+       gid = rows[r].seq_id
+       study_id = rows[r].study_id
+       if(!study_collector.hasOwnProperty(gid)){
+            study_collector[gid] = [rows[r].study_id]
+       }else{
+            study_collector[gid].push(rows[r].study_id) 
+       }
+       row_collector[gid] = rows[r]
+    }
+    for(gid in row_collector){
+       
+       ///gid = rows[r].seq_id
+       studies = study_collector[gid].join(',')
+       
+       row = row_collector[gid]
+       hmt = helpers.make_otid_display_name(row.otid)
+       //console.log('row',row)
+       //temp = {gid:rows[r].seq_id, otid:rows[r].otid, org:rows[r].organism, prot_count:rows[r].protein_count,pep_count:rows[r].peptide_count,studies:studies}
+       temp = {gid:gid, otid:row.otid, hmt:hmt,org:row.organism, prot_count:row.protein_count,pep_count:row.peptide_count,studies:studies}
+       
+       full_send_list.push(temp)
+       // if(C.genome_lookup.hasOwnProperty(gid)){
 //              genome = C.genome_lookup[gid]
 //              console.log('genome',genome)
 //              temp = {gc:genome.gc,pid:pid,product:prod,gid:gid,mol:mol,organism:org,otid:otid,genus:genome.genus,species:genome.species,strain:genome.strain,peptide:pep,unique:rows[r].unique,length:rows[r].length,start:rows[r].start,stop:rows[r].end}
@@ -1985,32 +1944,29 @@ router.post('/peptide_table2', async function peptide_table2_post(req, res) {
 //              //console.log(C.genome_lookup[gid])
 //              send_list.push(temp)
 //            }
-       }
-       let send_list = full_send_list
-       if(search_text){
-          console.log('searching',search_text)
-          send_list = full_send_list.filter( function(item){
-               return item.org.toLowerCase().includes(search_text) ||
-                  item.gid.toLowerCase().includes(search_text)          ||
-                  item.hmt.toLowerCase().includes(search_text)
-           })
-       }
-       res.render('pages/genome/protein_peptide2', {
-          title: 'HOMD :: Human Oral Microbiome Database',
-          pgname: '', // for AbountThisPage
-          pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(ENV),
-          ver_info: JSON.stringify(C.version_information),
-          
-          data: JSON.stringify(send_list),
-          row_count:send_list.length,
-          search_text:req.body.txt_srch
-          
+    }
+    let send_list = full_send_list
+    if(search_text){
+      console.log('searching',search_text)
+      send_list = full_send_list.filter( function(item){
+           return item.org.toLowerCase().includes(search_text) ||
+              item.gid.toLowerCase().includes(search_text)          ||
+              item.hmt.toLowerCase().includes(search_text)
        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    }
+    res.render('pages/genome/protein_peptide2', {
+      title: 'HOMD :: Human Oral Microbiome Database',
+      pgname: '', // for AbountThisPage
+      pgtitle: 'Protein Peptide Table',
+      config: JSON.stringify(ENV),
+      ver_info: JSON.stringify(C.version_information),
+      
+      data: JSON.stringify(send_list),
+      row_count:send_list.length,
+      search_text:req.body.txt_srch
+      
+    })
+    
 })
 router.get('/peptide_table3', async function protein_peptide(req, res) {
     console.log(req.query)
@@ -2021,57 +1977,52 @@ router.get('/peptide_table3', async function protein_peptide(req, res) {
     let locstart,locstop,size,seqacc,loc,highlight
     
     console.log(q)
-    try {
+    const rows = await queries.run_query(q, res)
         
-        const [rows] = await pool.execute(q);
-    
-        let send_list = []
+    let send_list = []
+   
+    for(let r in rows){
+       temp = {}
+       study = rows[r].study_id
+       study_name = rows[r].study_name
+       pid = rows[r].pid
+       prod = rows[r].product
+       pep = rows[r].peptide
+       //start = rows[r].start
+       //stop = rows[r].end
+       org = rows[r].org
+       otid = rows[r].otid
+       mol = rows[r].mol
+       peptide_id = rows[r].peptide_id
+       jb_link = rows[r].jb_link
        
-        for(let r in rows){
-           temp = {}
-           study = rows[r].study_id
-           study_name = rows[r].study_name
-           pid = rows[r].pid
-           prod = rows[r].product
-           pep = rows[r].peptide
-           //start = rows[r].start
-           //stop = rows[r].end
-           org = rows[r].org
-           otid = rows[r].otid
-           mol = rows[r].mol
-           peptide_id = rows[r].peptide_id
-           jb_link = rows[r].jb_link
-           
-           /////////////////////////////////////////
-           
-         //temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop,loc:loc,hlite:highlight}
-        temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, jb_link:jb_link,peptide_id:peptide_id}
-           
-        send_list.push(temp)
-           
-         
-       }
+       /////////////////////////////////////////
        
+     //temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, start:start, stop:stop,loc:loc,hlite:highlight}
+    temp = {study:study,study_name:study_name,otid:otid, mol:mol, pid:pid, prod:prod, pep:pep, jb_link:jb_link,peptide_id:peptide_id}
        
-       res.render('pages/genome/protein_peptide3', {
-          title: 'HOMD :: Human Oral Microbiome Database',
-          pgname: '', // for AbountThisPage
-          pgtitle: 'Protein Peptide Table',
-          config: JSON.stringify(ENV),
-          ver_info: JSON.stringify(C.version_information),
-          
-          data: JSON.stringify(send_list),
-          row_count:send_list.length,
-          //stud:JSON.stringify(studies_ary),
-          org:org,
-          gid:gid,
-          otid:otid
-          
-       })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    send_list.push(temp)
+       
+     
+    }
+   
+   
+    res.render('pages/genome/protein_peptide3', {
+      title: 'HOMD :: Human Oral Microbiome Database',
+      pgname: '', // for AbountThisPage
+      pgtitle: 'Protein Peptide Table',
+      config: JSON.stringify(ENV),
+      ver_info: JSON.stringify(C.version_information),
+      
+      data: JSON.stringify(send_list),
+      row_count:send_list.length,
+      //stud:JSON.stringify(studies_ary),
+      org:org,
+      gid:gid,
+      otid:otid
+      
+    })
+
 })
 router.get('/amr_table', function amr_table_GET(req, res) {
     let gid
@@ -2171,82 +2122,75 @@ router.post('/amr_ajax', async function amr_ajax(req, res){
     html_rows += " <th>Subclass</th><th>Method</th><th>Target Length</th><th>Ref Seq Length</th><th>Ref Coverage %</th><th>Ref Identity %</th>"
     html_rows += " <th>Alignment Length</th><th>Closest Ref Acc</th><th>Closest Ref name</th><th>HMM Acc</th><th>HMM Description</th>"
     html_rows += "</tr>"
-    try {
+    const rows = await queries.run_query(q, res)
         
-        const [rows] = await pool.execute(q);
-
-
-        for(let i in rows){
-            //console.log(rows[i])
+    for(let i in rows){
+        //console.log(rows[i])
+        
+            //send_rows.push(rows[i])
+            html_rows += "<tr>"
+            html_rows += "<td nowrap>"+rows[i].protein_id+"</td>"
+            start = rows[i].start
+            stop  = rows[i].stop
+            if(start[0] === "<" ){
+                start = parseInt(start.substring(1))
+            }else{ 
+                start = parseInt(start) 
+            } 
+            if(stop[0] === ">" ){ 
+                stop = parseInt(stop.substring(1))
+            }else{ 
+                stop = parseInt(stop)
+            } 
+            if(start > stop){ 
+                tmp = stop 
+                stop = start 
+                start = tmp 
+            }
+            locstart = start - 500 
+            locstop = stop + 500 
+            //size = stop - start 
+ 
+            if(locstart < 1){ 
+                locstart = 1 
+            }
+            seqacc = rows[i].region.replace('_','|')
+            loc = seqacc+":"+locstart.toString()+".."+locstop.toString() 
+            highlight = seqacc+":"+start.toString()+".."+stop.toString() 
             
-                //send_rows.push(rows[i])
-                html_rows += "<tr>"
-                html_rows += "<td nowrap>"+rows[i].protein_id+"</td>"
-                start = rows[i].start
-                stop  = rows[i].stop
-                if(start[0] === "<" ){
-                    start = parseInt(start.substring(1))
-                }else{ 
-                    start = parseInt(start) 
-                } 
-                if(stop[0] === ">" ){ 
-                    stop = parseInt(stop.substring(1))
-                }else{ 
-                    stop = parseInt(stop)
-                } 
-                if(start > stop){ 
-                    tmp = stop 
-                    stop = start 
-                    start = tmp 
-                }
-                locstart = start - 500 
-                locstop = stop + 500 
-                //size = stop - start 
-     
-                if(locstart < 1){ 
-                    locstart = 1 
-                }
-                seqacc = rows[i].region.replace('_','|')
-                loc = seqacc+":"+locstart.toString()+".."+locstop.toString() 
-                highlight = seqacc+":"+start.toString()+".."+stop.toString() 
-                
-                html_rows += "<td><a href='#' onclick=\"open_jbrowse('"+gid+"','amr','','','','"+loc+"','"+highlight+"')\">open"
-                html_rows += ' <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
-                html_rows += '  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
-                html_rows += " </svg>"
-                html_rows += " </a>"
-                html_rows += "</td>"
+            html_rows += "<td><a href='#' onclick=\"open_jbrowse('"+gid+"','amr','','','','"+loc+"','"+highlight+"')\">open"
+            html_rows += ' <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
+            html_rows += '  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
+            html_rows += " </svg>"
+            html_rows += " </a>"
+            html_rows += "</td>"
 
-                html_rows += "<td nowrap class=''>"+rows[i].element_symbol+"</td>"
-                html_rows += "<td nowrap class=''>"+rows[i].element_name+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].scope+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].type+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].subtype+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].class+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].subclass+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].method+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].target_length+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].ref_seq_length+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].pct_cov_of_ref+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].pct_ident_to_ref+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].align_length+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].closest_ref_acc+"</td>"
-                html_rows += "<td nowrap class=''>"+rows[i].closest_ref_name+"</td>"
-                html_rows += "<td nowrap class='center'>"+rows[i].hmm_acc+"</td>"
-                html_rows += "<td nowrap class=''>"+rows[i].hmm_description+"</td>"
-                
-                html_rows += "</tr>"
-                //counter += 1
-        }
-        
-        html_rows += "</table></div>"
-        res.send(html_rows)
-        //console.log(send_rows,send_rows.length)
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
-    return
+            html_rows += "<td nowrap class=''>"+rows[i].element_symbol+"</td>"
+            html_rows += "<td nowrap class=''>"+rows[i].element_name+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].scope+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].type+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].subtype+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].class+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].subclass+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].method+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].target_length+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].ref_seq_length+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].pct_cov_of_ref+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].pct_ident_to_ref+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].align_length+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].closest_ref_acc+"</td>"
+            html_rows += "<td nowrap class=''>"+rows[i].closest_ref_name+"</td>"
+            html_rows += "<td nowrap class='center'>"+rows[i].hmm_acc+"</td>"
+            html_rows += "<td nowrap class=''>"+rows[i].hmm_description+"</td>"
+            
+            html_rows += "</tr>"
+            //counter += 1
+    }
+    
+    html_rows += "</table></div>"
+    res.send(html_rows)
+    //console.log(send_rows,send_rows.length)
+    
     
 })
 router.get('/crispr_table', function crispr_table_GET(req, res) {
@@ -2360,95 +2304,72 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
     //console.log('crispr_ajax',gid)
     const q = queries.get_crispr_cas_data(gid)
     console.log(q)
-    try {
+    const rows = await queries.run_query(q, res)
         
-        const [rows] = await pool.execute(q);
+        
 
-        //console.log('rows',rows)
-        let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
-        let org = C.genome_lookup[gid].organism
-        let strain = C.genome_lookup[gid].strain
-        let html_rows = "<div id='crispr-sub-table-div'>"+gid+'; '+hmt+'; '+org+' ('+strain+')'
-        html_rows += "<a href='#' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</a>"
-        html_rows += "<table id='crispr-sub-table' class='table table-condensed'>"
+    //console.log('rows',rows)
+    let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
+    let org = C.genome_lookup[gid].organism
+    let strain = C.genome_lookup[gid].strain
+    let html_rows = "<div id='crispr-sub-table-div'>"+gid+'; '+hmt+'; '+org+' ('+strain+')'
+    html_rows += "<a href='#' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</a>"
+    html_rows += "<table id='crispr-sub-table' class='table table-condensed'>"
+    html_rows += "<tr>"
+    html_rows += "<th class='col1'>Contig</th>"
+    html_rows += "<th class='col9'>Genome<br>Viewer</th>"
+    html_rows += "<th class='col1'>Operon</th>"
+    html_rows += "<th class=''>Operon<br>Position</th>"
+    html_rows += "<th class='col9'>Prediction</th>"
+    html_rows += "<th class='col1'>CRISPRs</th>"
+    html_rows += "<th class='col9'>Distances</th>"
+    html_rows += "<th class='col6'>Prediction<br>Cas</th>"
+    html_rows += "<th class='col9'>Prediction<br>CRISPRs</th>"
+    
+    html_rows += "</tr>"
+    for(let r in rows){
         html_rows += "<tr>"
-        html_rows += "<th class='col1'>Contig</th>"
-        html_rows += "<th class='col9'>Genome<br>Viewer</th>"
-        html_rows += "<th class='col1'>Operon</th>"
-        html_rows += "<th class=''>Operon<br>Position</th>"
-        html_rows += "<th class='col9'>Prediction</th>"
-        html_rows += "<th class='col1'>CRISPRs</th>"
-        html_rows += "<th class='col9'>Distances</th>"
-        html_rows += "<th class='col6'>Prediction<br>Cas</th>"
-        html_rows += "<th class='col9'>Prediction<br>CRISPRs</th>"
+        html_rows += "<td nowrap>"+rows[r].contig+"</td>"
         
-        html_rows += "</tr>"
-        for(let r in rows){
-            html_rows += "<tr>"
-            html_rows += "<td nowrap>"+rows[r].contig+"</td>"
-            
-            if(rows[r].prediction_cas == "Ambiguous"){
-                html_rows += "<td><small>Ambig</small></td>"
-            }else{
-                opos = list_clean(rows[r].operon_pos)
-                p1 = opos[0] //.substring(1,pos[0].length)
-                p2 = opos[1]  //.substring(0,pos[1].length-1)
-                //console.log('rows[r].operon_pos',opos)
-                //console.log('p1p2',p1,p2)
-                loc = rows[r].contig+":"+(parseInt(p1)-500).toString()+".."+(parseInt(p2)+500).toString()
-                highlight = rows[r].contig+":"+p1+".."+p2
-                //console.log('loc',loc)
-                //console.log('hl',highlight)
-                html_rows += "<td class='center'><a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+gid+"','crispr','','','','"+loc+"','"+highlight+"')\">open"
-                html_rows += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
-                html_rows += '<path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
-                html_rows += "</svg>"
-                html_rows += "</a> </td>"
-            }
-                    
-            html_rows += "<td nowrap>"+rows[r].operon+"</td>"
-           //console.log('operon',obj.operon)
-            html_rows += "<td nowrap>"+ opos +"</td>"
-           //console.log('pos',rows[r].operon_pos)
-           
-           html_rows += "<td nowrap>"+rows[r].prediction+"</td>"
-           html_rows += "<td nowrap>"+list_clean(rows[r].crisprs)+"</td>"
-           html_rows += "<td nowrap>"+list_clean(rows[r].distances)+"</td>"
-           html_rows += "<td nowrap>"+rows[r].prediction_cas+"</td>"
-           html_rows += "<td nowrap>"+list_clean(rows[r].prediction_crisprs)+"</td>"
-           
-           
-           html_rows += "</tr>"
+        if(rows[r].prediction_cas == "Ambiguous"){
+            html_rows += "<td><small>Ambig</small></td>"
+        }else{
+            opos = list_clean(rows[r].operon_pos)
+            p1 = opos[0] //.substring(1,pos[0].length)
+            p2 = opos[1]  //.substring(0,pos[1].length-1)
+            //console.log('rows[r].operon_pos',opos)
+            //console.log('p1p2',p1,p2)
+            loc = rows[r].contig+":"+(parseInt(p1)-500).toString()+".."+(parseInt(p2)+500).toString()
+            highlight = rows[r].contig+":"+p1+".."+p2
+            //console.log('loc',loc)
+            //console.log('hl',highlight)
+            html_rows += "<td class='center'><a title='JBrowse/Genome Viewer' href='#' onclick=\"open_jbrowse('"+gid+"','crispr','','','','"+loc+"','"+highlight+"')\">open"
+            html_rows += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
+            html_rows += '<path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
+            html_rows += "</svg>"
+            html_rows += "</a> </td>"
         }
-        html_rows += "</table></div>"
-        res.send(html_rows)
+                
+        html_rows += "<td nowrap>"+rows[r].operon+"</td>"
+       //console.log('operon',obj.operon)
+        html_rows += "<td nowrap>"+ opos +"</td>"
+       //console.log('pos',rows[r].operon_pos)
+       
+       html_rows += "<td nowrap>"+rows[r].prediction+"</td>"
+       html_rows += "<td nowrap>"+list_clean(rows[r].crisprs)+"</td>"
+       html_rows += "<td nowrap>"+list_clean(rows[r].distances)+"</td>"
+       html_rows += "<td nowrap>"+rows[r].prediction_cas+"</td>"
+       html_rows += "<td nowrap>"+list_clean(rows[r].prediction_crisprs)+"</td>"
+       
+       
+       html_rows += "</tr>"
+    }
+    html_rows += "</table></div>"
+    res.send(html_rows)
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } 
+    
 })
-////
-// router.post('/open_ftp_file', function open_ftp_file(req, res) {
-//     console.log('in genomes open_ftp_file',req.body)
-//     let gid = req.body.gid
-//     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02','gff',gid+'.gff')
-//     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/gff/GCA_000174175.1.gff'
-//     let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/gff/"+gid+".gff"
-//     console.log(fpath)
-//     fs.readFile(fpath_local, "utf8", (err, data) => {
-//         if (err) {
-//             console.error(err);
-//             return
-//         } else {
-//             // Send the file content as the response
-//             res.writeHead(200, { "Content-Type": "text/html" });
-//             //console.log(data)
-//             res.end(data);
-//             return;
-//         }
-//     });
-// })
+
 router.get('/open_ftp_file', function open_ftp_file(req, res) {
     //let findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
     let pid = req.query.prokka_pid

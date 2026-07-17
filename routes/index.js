@@ -7,7 +7,6 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import * as helpers from './helpers/helpers.js';
-import pool from '../config/database.js';
 
 import C from '../public/constants.js';
 import { exec, spawn } from 'child_process';
@@ -58,44 +57,35 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     console.log('\n',anno,dbtable)
     console.log(q)
     let defline,seq,outfile_txt = ''
-    try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+    const rows = await queries.run_query(q, res)
     
-        //console.log('rows',rows)
-        if(rows.length === 0){
-            console.log('no rows found')
-            res.send('No Data Found')
-            return
-        }else{
-            
-           
-            for(let n in rows){
-                
-                defline = '>'+rows[n].pid+'|'+rows[n].gid
-                seq = rows[n].seq.toString()
-                const arr = helpers.chunkSubstr(seq, 80)
-                //arr.join('<br>')
-                outfile_txt += defline+'\n'+arr.join('\n')+'\n'
-            }
-            
-        }
-        let outfilePath = path.join(ENV.PATH_TO_TMP,jobid+'.fa')
-        console.log('writing fasta to ',outfilePath)
-        await fs.writeFile(outfilePath, outfile_txt);
-        
-        let fname = 'HOMD_BLAST_FASTA_'+anno+'_'+dbname+'_'+dt.today + '_' + dt.seconds + '.fa'
-        res.set({ 'Content-Disposition': 'attachment; filename='+fname })
-        res.send(outfile_txt)
-        res.end()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
+    //console.log('rows',rows)
+    if(rows.length === 0){
+        console.log('no rows found')
+        res.send('No Data Found')
         return
+    }else{
+        
+       
+        for(let n in rows){
+            
+            defline = '>'+rows[n].pid+'|'+rows[n].gid
+            seq = rows[n].seq.toString()
+            const arr = helpers.chunkSubstr(seq, 80)
+            //arr.join('<br>')
+            outfile_txt += defline+'\n'+arr.join('\n')+'\n'
+        }
+        
     }
-    return
+    let outfilePath = path.join(ENV.PATH_TO_TMP,jobid+'.fa')
+    console.log('writing fasta to ',outfilePath)
+    await fs.writeFile(outfilePath, outfile_txt);
+    
+    let fname = 'HOMD_BLAST_FASTA_'+anno+'_'+dbname+'_'+dt.today + '_' + dt.seconds + '.fa'
+    res.set({ 'Content-Disposition': 'attachment; filename='+fname })
+    res.send(outfile_txt)
+    res.end()
+    
       
   
 })
@@ -197,7 +187,7 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
     console.log('body',req.body)
     //console.log('pidlist',req.body.pid_list)
     let anno = req.body.anno.toUpperCase()
-    let q,conn
+    let q
     // if(anno =='BAKTA'){
 //         //q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA_sub_prokka`.orf WHERE core_ID in ("+req.body.id_list+")"
 //         q = "SELECT a.region as acc,"
@@ -257,21 +247,10 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
       }
     console.log('QQ',q)
-    try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
-        //console.log('rows',rows)
-        res.send(JSON.stringify(rows))
-        return
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    const rows = await queries.run_query(q, res)
     
-    //res.send('OKAY')
+    res.send(JSON.stringify(rows))
+    
 })
 //
 router.post('/advanced_site_search_phage_grep', async function advanced_site_search_phagePOST(req, res) {
@@ -430,40 +409,31 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
 router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
    console.log('in open_phage_sequence')
    console.log(req.body)
-   let conn
+   
    let html = '',contig,length,gid,predictor,species='',strain='',otid
    let q = "SELECT genome_id,contig,predictor,seq_length,UNCOMPRESS(seq_compressed) as seq from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
-    try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+    const rows = await queries.run_query(q, res)
     
-        //console.log('rows',rows)
-        if(rows.length === 0){
-            html += "No sequence found in database"
-        }else{
-            predictor = rows[0].predictor
-            gid = rows[0].genome_id
-            if(gid && C.genome_lookup.hasOwnProperty(gid)){
-                otid = C.genome_lookup[gid]['otid']
-                strain = C.genome_lookup[gid]['strain']
-                species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
-              }
-            contig = rows[0].contig
-            length = rows[0].seq_length
-            const seqstr = (rows[0].seq).toString()
-            const arr = helpers.chunkSubstr(seqstr, 100)
-            html += arr.join('<br>')
-        }
-        res.send(JSON.stringify({html:html,length:length,gid:gid,contig:contig,org:species+' ('+strain+')',predictor:predictor}))
-        return
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
+    //console.log('rows',rows)
+    if(rows.length === 0){
+        html += "No sequence found in database"
+    }else{
+        predictor = rows[0].predictor
+        gid = rows[0].genome_id
+        if(gid && C.genome_lookup.hasOwnProperty(gid)){
+            otid = C.genome_lookup[gid]['otid']
+            strain = C.genome_lookup[gid]['strain']
+            species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+          }
+        contig = rows[0].contig
+        length = rows[0].seq_length
+        const seqstr = (rows[0].seq).toString()
+        const arr = helpers.chunkSubstr(seqstr, 100)
+        html += arr.join('<br>')
     }
-    return
+    res.send(JSON.stringify({html:html,length:length,gid:gid,contig:contig,org:species+' ('+strain+')',predictor:predictor}))
+        
 })
 //
 router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res) {
@@ -479,31 +449,22 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
    //console.log(hit_ids)
    let q = queries.get_phage_from_ids_noseqs(hit_ids)
    console.log(q)
-   let conn
-   try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
+   const rows = await queries.run_query(q, res)
    
-        //console.log('rows',rows)
+    //console.log('rows',rows)
         
-        res.render('pages/phage/all_hits_result', {
-            title: 'HOMD :: Search Results',
-            pgname: '', // for AboutThisPage 
-            config: JSON.stringify(ENV),
-            ver_info: JSON.stringify(C.version_information),
-            //hits_list: req.body.big_list,
-            searchtxt: req.body.search_text,
-            numhits: req.body.total_hits,
-            sqldata: JSON.stringify(rows)
-            
-        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
-    return
+    res.render('pages/phage/all_hits_result', {
+        title: 'HOMD :: Search Results',
+        pgname: '', // for AboutThisPage 
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
+        //hits_list: req.body.big_list,
+        searchtxt: req.body.search_text,
+        numhits: req.body.total_hits,
+        sqldata: JSON.stringify(rows)
+        
+    })
+   
    
 })
 router.post('/submit_phage_data', async function submit_phage_data(req, res) {
@@ -512,20 +473,11 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
    
    let q = "SELECT * from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
-    let conn
-    try {
-        conn = await global.TDBConn();
-        const [rows] = await conn.execute(q);
-        //console.log('rows',rows)
-        res.send(JSON.stringify(rows))
-        return
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
-    } finally {
-        if (conn) conn.release(); // Release the connection back to the pool
-    }
+    const rows = await queries.run_query(q, res)
+    
+    res.send(JSON.stringify(rows))
     return
+    
 })
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     console.log('in advanced_site_search_grep - index.js')
