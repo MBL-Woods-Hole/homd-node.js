@@ -639,7 +639,7 @@ router.get('/tax_description', async function tax_description(req, res) {
 
   
   */
-  let lineage = C.taxon_lineage_lookup[otid]
+  let lineage
   //console.log('lin',lineage)
   let text_file = get_rank_text('species', '', otid)
   if (C.dropped_taxids.indexOf(otid) !== -1) {
@@ -658,7 +658,7 @@ router.get('/tax_description', async function tax_description(req, res) {
     
 
       //console.log('rows',rows)
-      let lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
+      lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
       links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage)
       //console.log(links)
 
@@ -697,8 +697,9 @@ router.get('/tax_description', async function tax_description(req, res) {
     
     return
 
-  }
-
+  } // END DROPPED
+  
+  lineage = C.taxon_lineage_lookup[otid]  // dropped not in lineage lookup use hierarchy
   if (C.taxon_lookup[otid] === undefined) {
 
     res.send('That Taxon ID: (' + otid + ') was not found1 - Use the Back Arrow and select another')
