@@ -661,7 +661,7 @@ router.get('/tax_description', async function tax_description(req, res) {
     //data3 = get_special_lineage_from_db(otid)
     let q = queries.get_lineage_query(otid)  //
     
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
 
     lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
     
@@ -745,10 +745,10 @@ router.get('/tax_description', async function tax_description(req, res) {
     
    
         
-    refseq = await queries.run_query(q_refseq_metadata,res);
-    info   = await queries.run_query(q_info,res);
-    pangenomes = await queries.run_query(q_pangenome,res);
-    gtdbtax = await queries.run_query(q_gtdb_tax,res);
+    refseq = await queries.run_query(q_refseq_metadata,req, res);
+    info   = await queries.run_query(q_info,req, res);
+    pangenomes = await queries.run_query(q_pangenome,req, res);
+    gtdbtax = await queries.run_query(q_gtdb_tax,req, res);
           
     if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
       sites = 'Primary: ' + C.site_lookup[otid]['s1']
@@ -802,7 +802,7 @@ router.post('/get_refseq', async function get_refseq(req, res) {
     let q = queries.get_refseq_query(refseq_id)
     helpers.print(q)
     
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     if (!rows || rows.length === 0) {
       html = 'No Seq Found'
     } else {
@@ -1625,7 +1625,7 @@ router.get('/dropped', async function dropped(req, res) {
 
     const q = queries.get_dropped_taxa()
     //console.log(q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     res.render('pages/taxa/dropped', {
           title: 'HOMD :: Dropped Taxa',
           pgname: '', // for AbountThisPage

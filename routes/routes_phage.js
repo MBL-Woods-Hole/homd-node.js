@@ -17,7 +17,7 @@ router.get('/phage', async function phage(req, res) {
     
     const q = queries.get_phage(gid)
     //console.log('phage q',q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
         
         
     res.render('pages/phage/phage', {
@@ -138,7 +138,7 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
     html_rows += "</tr>"
     console.log(q)
     let stop,start,tmp,seqacc,loc,locstart,locstop
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
         
        
     for(let i in rows){

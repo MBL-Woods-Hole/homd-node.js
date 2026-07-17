@@ -57,7 +57,7 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     console.log('\n',anno,dbtable)
     console.log(q)
     let defline,seq,outfile_txt = ''
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     
     //console.log('rows',rows)
     if(rows.length === 0){
@@ -247,7 +247,7 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
       }
     console.log('QQ',q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     
     res.send(JSON.stringify(rows))
     
@@ -413,7 +413,7 @@ router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
    let html = '',contig,length,gid,predictor,species='',strain='',otid
    let q = "SELECT genome_id,contig,predictor,seq_length,UNCOMPRESS(seq_compressed) as seq from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     
     //console.log('rows',rows)
     if(rows.length === 0){
@@ -449,7 +449,7 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
    //console.log(hit_ids)
    let q = queries.get_phage_from_ids_noseqs(hit_ids)
    console.log(q)
-   const rows = await queries.run_query(q, res)
+   const rows = await queries.run_query(q, req, res)
    
     //console.log('rows',rows)
         
@@ -473,7 +473,7 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
    
    let q = "SELECT * from phage_search WHERE search_id = '"+req.body.search_id+"'"
     console.log(q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     
     res.send(JSON.stringify(rows))
     return

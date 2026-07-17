@@ -290,7 +290,7 @@ router.get('/genome_description', async function Description (req, res) {
     helpers.print('In Genome_Descriptin1: '+q_genome)
     
     
-        const rows1 = await queries.run_query(q_genome, res)
+        const rows1 = await queries.run_query(q_genome, req, res)
         
         if(rows1.length ==0){
              return
@@ -319,7 +319,7 @@ router.get('/genome_description', async function Description (req, res) {
         // ncbi only
         //console.log('q_contig',q_contig)
         helpers.print('In Genome_Descriptin2: '+q_contig)
-        const rows2 = await queries.run_query(q_contig, res)
+        const rows2 = await queries.run_query(q_contig, req, res)
         
         for(let r in rows2){
             contigs.push({contig: rows2[r].region, gc: rows2[r].GC})
@@ -366,7 +366,7 @@ router.post('/get_contig_seq', async function get_contig_seq (req, res) {
     console.log('CONTIG query',q)
     let html='',length = 0
     
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     
     if(rows.length === 0){
        html += "No sequence found in database"
@@ -422,7 +422,7 @@ router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
           q = queries.get_AA_NA(db, gid, pid,'prokka-na')
        }
     }
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     
     let html = ''
     let length = 0
@@ -980,7 +980,7 @@ router.post('/explorer', async function explorer_post (req, res) {
     const q = queries.get_annotation_query(gid, req.body.anno)
     console.log('get_annotation_query-post',q)
     
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     
     if (rows.length === 0) {
         console.log('no rows found')
@@ -1132,7 +1132,7 @@ router.get('/explorer', async function explorer_get (req, res) {
     helpers.print('explorer::anno query: '+q)
     // local host:  explorer?gid=SEQF4098.1&anno=ncbi
     
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
     
     if (rows.length === 0) {
         console.log('no rows found')
@@ -1742,7 +1742,7 @@ router.get('/peptide_table', async function peptide_table_get(req, res) {
     
     const q = queries.get_peptide()
     let pid,gid,prod,genome,temp,pep,otid,org,mol,stop,start,tmp,pepid,size,jb_link,study_id
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
    
     
     let send_list = []
@@ -1792,7 +1792,7 @@ router.post('/peptide_table', async function peptide_table_post(req, res) {
     
     let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
     console.log(q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
         
         
     
@@ -1849,7 +1849,7 @@ router.get('/peptide_table2', async function peptide_table2_get(req, res) {
 
     let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
         
         
 
@@ -1903,7 +1903,7 @@ router.post('/peptide_table2', async function peptide_table2_post(req, res) {
     let search_text = req.body.txt_srch.toLowerCase()
     let gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
     console.log(q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
         
    //console.log('1')
    let full_send_list = []
@@ -1974,7 +1974,7 @@ router.get('/peptide_table3', async function protein_peptide(req, res) {
     let locstart,locstop,size,seqacc,loc,highlight
     
     console.log(q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
         
     let send_list = []
    
@@ -2119,7 +2119,7 @@ router.post('/amr_ajax', async function amr_ajax(req, res){
     html_rows += " <th>Subclass</th><th>Method</th><th>Target Length</th><th>Ref Seq Length</th><th>Ref Coverage %</th><th>Ref Identity %</th>"
     html_rows += " <th>Alignment Length</th><th>Closest Ref Acc</th><th>Closest Ref name</th><th>HMM Acc</th><th>HMM Description</th>"
     html_rows += "</tr>"
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
         
     for(let i in rows){
         //console.log(rows[i])
@@ -2301,7 +2301,7 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
     //console.log('crispr_ajax',gid)
     const q = queries.get_crispr_cas_data(gid)
     console.log(q)
-    const rows = await queries.run_query(q, res)
+    const rows = await queries.run_query(q, req, res)
         
         
 

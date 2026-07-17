@@ -5,8 +5,9 @@ import C from '../public/constants.js';
 import { logPoolStatus } from './helpers/helpers.js';
 
 // Generalized query function
-export const run_query = async (sql, res) => {
+export const run_query = async (sql, req, res) => {
   console.log('\nExecuting:',sql)
+  console.log('Request from:'+req.ip)
   logPoolStatus(res, pool)
   try {
     const [rows] = await pool.execute(sql);

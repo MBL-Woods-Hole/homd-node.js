@@ -95,7 +95,7 @@ router.get('/help-page', async function help_page(req, res) {
       let q = queries.get_db_updates_query()
       let rowarray = []
       let byDate = {}
-      const rows = await queries.run_query(q, res)
+      const rows = await queries.run_query(q, req, res)
       
         
       for(let n in rows){
