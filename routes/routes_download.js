@@ -618,21 +618,31 @@ router.post('/anno_data_by_gid', async (req, res) => {
     let head_text_array
     let anno_cap = anno.toUpperCase()
 
-    q = "SELECT"
-    q += " CONCAT('>',protein_id,' | ',genome_id,' | ',mol_id) AS defline,"
-    q += " UNCOMPRESS(seq_compressed) AS sequence"
+    
     if(format === 'fasta_aa' && anno === 'ncbi'){
+        q = "SELECT"
+        q += " CONCAT('>',protein_id,' | ',genome_id,' | ',mol_id) AS defline,"
+        q += " UNCOMPRESS(seq_compressed) AS sequence"
         q += " from NCBI.faa WHERE NCBI.faa.genome_id = '"+gid+"'" 
         
     }else if(format === 'fasta_na' && anno === 'ncbi'){
+        q = "SELECT"
+        q += " CONCAT('>',orf_id,' | ',genome_id,' | ',mol_id) AS defline,"
+        q += " UNCOMPRESS(seq_compressed) AS sequence"
         q += " from NCBI.ffn WHERE NCBI.ffn.genome_id = '"+gid+"'"
         
     }else if(format === 'fasta_aa' && anno === 'prokka'){
+        q = "SELECT"
+        q += " CONCAT('>',protein_id,' | ',genome_id,' | ',mol_id) AS defline,"
+        q += " UNCOMPRESS(seq_compressed) AS sequence"
         q += " from PROKKA.faa WHERE PROKKA.faa.genome_id = '"+gid+"'" 
         
     //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
     //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`faa` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
     }else if(format === 'fasta_na' && anno === 'prokka'){
+        q = "SELECT"
+        q += " CONCAT('>',orf_id,' | ',genome_id,' | ',mol_id) AS defline,"
+        q += " UNCOMPRESS(seq_compressed) AS sequence"
         q += " from PROKKA.ffn WHERE PROKKA.ffn.genome_id = '"+gid+"'"
         
     //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
