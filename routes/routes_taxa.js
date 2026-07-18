@@ -643,59 +643,59 @@ router.get('/tax_description', async function tax_description(req, res) {
   //console.log('lin',lineage)
   let text_file = get_rank_text('species', '', otid)
   if (C.dropped_taxids.indexOf(otid) !== -1) {
-    //helpers.print(data1)
-    // DROPPED
-    lookup_data = C.taxon_lookup[otid]
-    let hmt = 'HMT-' + ("000" + otid).slice(-3)
-    let message = "This TaxonID (" + hmt + ") has been Dropped.<br>Reason: " + lookup_data.notes
-    //let dropped_notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
-    //data1.notes= "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
-    //data3 = get_special_lineage_from_db(otid)
-    let q = queries.get_lineage_query(otid)  // dont need query 
-    console.log('lineage', q)
-    console.log('C.taxon_lineage_lookup', C.taxon_lineage_lookup[otid])
-    const rows = await queries.run_query(q, req, res)
-    
-
-      //console.log('rows',rows)
-      lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
-      links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage)
-      //console.log(links)
-
-      sites = ''
-      if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
-        sites = 'Primary: ' + C.site_lookup[otid]['s1']
-        if (C.site_lookup[otid]['s2']) {
-          sites += '<br>Secondary: ' + C.site_lookup[otid]['s2']
-        }
-        if (C.site_lookup[otid]['notes']) {
-          sites += '<br><small>Note: ' + C.site_lookup[otid]['notes'] + '</small>'
-        }
-      }
-
-      //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-      //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-      //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-      //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-      //args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
-      let args = { otid: otid }
-      args.image_array = []
-      args.data1 = lookup_data
-      args.data1.pangenomes = []
-      args.msg = message
-      args.text_file = text_file[0]
-      args.tinfo = {}
-      args.gtdbtax = {}
-      args.lin = lineage
-      args.data4 = {}
-      args.refseq_info = {}
-      args.links = links
-      args.sites = sites
-      args.otid_has_abundance = false
-      //args.lineage = lineage_string
-      renderTaxonDescription(req, res, args)
-    
-    return
+            //helpers.print(data1)
+            // DROPPED
+            lookup_data = C.taxon_lookup[otid]
+            let hmt = 'HMT-' + ("000" + otid).slice(-3)
+            let message = "This TaxonID (" + hmt + ") has been Dropped.<br>Reason: " + lookup_data.notes
+            //let dropped_notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
+            //data1.notes= "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
+            //data3 = get_special_lineage_from_db(otid)
+            let q = queries.get_lineage_query(otid)  // dont need query 
+            
+            console.log('C.taxon_lineage_lookup', C.taxon_lineage_lookup[otid])
+            const rows = await queries.run_query(q, req, res)
+            
+            
+            //console.log('rows',rows)
+            lineage = rows[0]  // NEED because dropped are not in C.taxon_lineage_lookup
+            links['lpsnlink'] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage)
+            //console.log(links)
+            
+            sites = ''
+            if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
+                sites = 'Primary: ' + C.site_lookup[otid]['s1']
+            if (C.site_lookup[otid]['s2']) {
+                sites += '<br>Secondary: ' + C.site_lookup[otid]['s2']
+            }
+            if (C.site_lookup[otid]['notes']) {
+                sites += '<br><small>Note: ' + C.site_lookup[otid]['notes'] + '</small>'
+            }
+            }
+            
+            //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+            //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+            //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+            //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+            //args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
+            let args = { otid: otid }
+            args.image_array = []
+            args.data1 = lookup_data
+            args.data1.pangenomes = []
+            args.msg = message
+            args.text_file = text_file[0]
+            args.tinfo = {}
+            args.gtdbtax = {}
+            args.lin = lineage
+            args.data4 = {}
+            args.refseq_info = {}
+            args.links = links
+            args.sites = sites
+            args.otid_has_abundance = false
+            //args.lineage = lineage_string
+            renderTaxonDescription(req, res, args)
+            
+            return
 
   } // END DROPPED
   
@@ -803,14 +803,14 @@ router.post('/get_refseq', async function get_refseq(req, res) {
   let q = queries.get_refseq_query(refseq_id)
   helpers.print(q)
     const rows = await queries.run_query(q, req, res)
-	if (!rows || rows.length === 0) {
-	  html = 'No Seq Found'
-	} else {
-	  let seqstr = rows[0].seq.toString()
-	  let arr = helpers.chunkSubstr(seqstr, 80)
-	  html = arr.join('<br>')
-	}
-	res.send(html)
+    if (!rows || rows.length === 0) {
+      html = 'No Seq Found'
+    } else {
+      let seqstr = rows[0].seq.toString()
+      let arr = helpers.chunkSubstr(seqstr, 80)
+      html = arr.join('<br>')
+    }
+    res.send(html)
     
 })
 

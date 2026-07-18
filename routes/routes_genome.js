@@ -2090,7 +2090,7 @@ router.post('/amr_ajax', async function phage_ajax(req, res){
     q += " FROM homd.amr"
     q += " JOIN PROKKA.orf using(protein_id)"
     q += " WHERE homd.amr.genome_id='"+gid+"'"
-    console.log(q)
+    
     let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
     let org = C.genome_lookup[gid].organism
     let strain = C.genome_lookup[gid].strain

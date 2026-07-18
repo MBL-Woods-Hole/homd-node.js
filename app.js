@@ -118,15 +118,15 @@ import download from './routes/routes_download.js';
 
 // PRODUCTION: log every restart
 
-if(process.env.NODE_ENV === 'production'){
-    // const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
-//     const restart_logger = new console.Console(output)
-//     restart_logger.log('Restart on '+helpers.timestamp(false))
-    console.log('!!Turning off console logging for production mode!!')
-    console.log('To debug: run `npm run debug`')
-    console.log = function() {};  // turn off console.logging
-    // to see console.logs: "npm run debug"
-}
+// if(process.env.NODE_ENV === 'production'){
+//     // const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
+//     //     const restart_logger = new console.Console(output)
+//     //     restart_logger.log('Restart on '+helpers.timestamp(false))
+//     console.log('!!Turning off console logging for production mode!!')
+//     console.log('To debug: run `npm run debug`')
+//     console.log = function() {};  // turn off console.logging
+//     // to see console.logs: "npm run debug"
+// }
 
 
 //passportConfig(passport, TDBConn);
