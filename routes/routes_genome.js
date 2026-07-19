@@ -961,10 +961,11 @@ router.post('/explorer', async function explorer_post (req, res) {
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
     //console.log('get_annotation_query-post',q)
-    const rows = await queries.run_query(q, req, res)
+    let rows = await queries.run_query(q, req, res)
 
-        if (rows.length === 0) {
+        if (!rows || rows.length === 0) {
             console.log('no rows found')
+            rows=[]
         }
         let filtered_rows = apply_annot_table_filter(rows, atable_filter)
         
@@ -1114,9 +1115,10 @@ router.get('/explorer', async function explorer_get (req, res) {
     }
     helpers.print('explorer::anno query: '+q)
     // local host:  explorer?gid=SEQF4098.1&anno=ncbi
-    const rows = await queries.run_query(q, req, res)
-        if (rows.length === 0) {
-        console.log('no rows found')
+    let rows = await queries.run_query(q, req, res)
+        if (! rows || rows.length === 0) {
+           console.log('no rows found')
+           rows=[]
         }
         let filtered_rows = apply_annot_table_filter(rows, atable_filter)
         pageData.trecords = rows.length
