@@ -146,17 +146,17 @@ thead th { position: sticky; top: 0; }
         <tr><td>No Data</td><td>Try different filter settings</td></tr>
      <% }else{ %>
      <% for(n in mole){ %>
-     <!-- Clean up start/stop and parseInt -->
+     <!-- Clean up start/end and parseInt -->
      <%   if(mole[n].start[0] === "<" ){ %>
      <%     start = parseInt(mole[n].start.substring(1)) %>
      <%   }else{ %>
      <%     start = parseInt(mole[n].start) %>
      <%   } %>
      
-     <%   if(mole[n].stop[0] === ">" ){ %>
-     <%     stop = parseInt(mole[n].stop.substring(1)) %>
+     <%   if(mole[n].end[0] === ">" ){ %>
+     <%     stop = parseInt(mole[n].end.substring(1)) %>
      <%   }else{ %>
-     <%     stop = parseInt(mole[n].stop)%>
+     <%     stop = parseInt(mole[n].end)%>
      <%   } %>
      
      <%   if(start > stop){ %>
@@ -197,7 +197,7 @@ thead th { position: sticky; top: 0; }
          <a title='JBrowse/Genome Viewer' href='#' onclick="open_jbrowse('<%= gid %>','anno_table','','','<%= anno_type %>','<%= loc %>','<%= highlight %>')">open</a>
        </td>
        
-       <td class='center'><%= mole[n].start %>-<%= mole[n].stop %></td>
+       <td class='center'><%= mole[n].start %>-<%= mole[n].end %></td>
        
        
        <td class='center' nowrap>
