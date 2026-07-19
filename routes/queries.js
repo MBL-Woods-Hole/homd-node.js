@@ -88,7 +88,7 @@ export const get_db_updates_query = () => {
 export const get_annotation_query = (gid, anno) => {
   let q 
   if(anno === 'prokka'){
-    q = "SELECT a.region, type, gc, a.protein_id, product, a.length_na, a.length_aa, `start`, `end`, gene"
+    q = "SELECT a.accession, type, gc, a.protein_id, product, a.length_na, a.length_aa, `start`, `end`, gene"
    q += ' FROM PROKKA.orf_gff a'
    q += ' LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id '
    q += ' LEFT JOIN PROKKA.ffn c on a.genome_id=c.orf_id and a.protein_id=c.orf_id '
@@ -98,7 +98,7 @@ export const get_annotation_query = (gid, anno) => {
 
   
   }else if(anno === 'ncbi') {
-    q = "SELECT a.region, type, gc, a.protein_id, product, a.length_na, a.length_aa, `start`, `end`, gene"
+    q = "SELECT a.accession, type, gc, a.protein_id, product, a.length_na, a.length_aa, `start`, `end`, gene"
     q += ' FROM NCBI.orf_gff a'
     q += ' LEFT JOIN NCBI.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id '
     q += ' LEFT JOIN NCBI.ffn c on a.genome_id=c.orf_id and a.protein_id=c.orf_id '
