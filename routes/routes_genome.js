@@ -853,7 +853,7 @@ function apply_annot_table_filter(rows, filter){
 //                 return helpers.compareStrings_alpha(a.accession, b.accession);
 //               })
               new_rows.sort((a, b) => {
-                if(a.hasOwnProperty(region)){
+                if(a.hasOwnProperty('region')){
                    return helpers.compareStrings_alpha(a.region, b.region);
                 }else{
                    return helpers.compareStrings_alpha(a.accession, b.accession);
