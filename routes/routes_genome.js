@@ -960,7 +960,7 @@ router.post('/explorer', async function explorer_post (req, res) {
     let atable_filter = get_annot_table_filter(req.body)
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
-    console.log('get_annotation_query-post',q)
+    //console.log('get_annotation_query-post',q)
     const rows = await queries.run_query(q, req, res)
 
         if (rows.length === 0) {
