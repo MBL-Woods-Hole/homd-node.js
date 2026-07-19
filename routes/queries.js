@@ -281,7 +281,7 @@ export const get_genome = (gid) => {   // always NCBI for genome description
 
 export const get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
-  let q = "SELECT region, GC from `NCBI`.`molecule` WHERE genome_id = '"+gid+"'"
+  let q = "SELECT accession, GC from `NCBI`.`molecule` WHERE genome_id = '"+gid+"'"
   // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
   //                               PROKKA gb_asmbly+.fna.gz
   // asm_name amd gb_asm are both from genomes_obj
