@@ -849,8 +849,16 @@ function apply_annot_table_filter(rows, filter){
                 return helpers.compareStrings_alpha(a.protein_id, b.protein_id);
               })
         }else if(filter.sort_col === 'molecule'){
+              // new_rows.sort((a, b) => {
+//                 return helpers.compareStrings_alpha(a.accession, b.accession);
+//               })
               new_rows.sort((a, b) => {
-                return helpers.compareStrings_alpha(a.accession, b.accession);
+                if(a.hasOwnProperty(region)){
+                   return helpers.compareStrings_alpha(a.region, b.region);
+                }else{
+                   return helpers.compareStrings_alpha(a.accession, b.accession);
+                }
+                
               })
         }else if(filter.sort_col === 'gene'){
               new_rows.sort((a, b) => {
