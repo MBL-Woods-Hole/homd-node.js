@@ -515,7 +515,7 @@ router.post('/anno_search_data', async (req, res) => {
             return
         }else{
             // bakta table (everthing except seqs)
-            q = "SELECT genome_id as gid,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
+            q = "SELECT genome_id as gid,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
             q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef"
             q += " from `BAKTA_sub_prokka`.orf WHERE core_ID in ("+unique_pidlst+")"
             head_text_array = [
@@ -665,7 +665,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
     //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`ffn` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
     
     }else if(anno === 'prokka'){
-        q = "SELECT region as acc,  gc, protein_id as pid, length_na,length_aa, `start`, `stop`,"
+        q = "SELECT region as acc,  gc, protein_id as pid, length_na,length_aa, `start`, `end`,"
         q+= " PROKKA.orf.product as product,PROKKA.orf.gene as gene,BAKTA_sub_prokka.orf.Bakta_product as bakta_product,BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene" 
         q += " FROM PROKKA.orf"
         q += " LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)"
@@ -673,7 +673,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
         head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
         
     }else if(anno === 'ncbi'){
-        q = "SELECT region as acc,  gc, protein_id as pid, product, length_na,length_aa, `start`, `stop`, gene" 
+        q = "SELECT region as acc,  gc, protein_id as pid, product, length_na,length_aa, `start`, `end`, gene" 
         q += " FROM NCBI.orf"
         q += " WHERE NCBI.orf.genome_id = '"+gid+"'" 
         head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
@@ -1138,7 +1138,7 @@ function create_anno_table(sql_rows,anno,gid) {
         text += headers.join("\t")+'\n'
         for(let n in sql_rows){
             text += gid+'\t'+sql_rows[n].acc+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].length_na+'\t'+sql_rows[n].length_aa
-            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
+            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].end+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
             text += '\t'+sql_rows[n].bakta_product+'\t'+sql_rows[n].bakta_gene
             text += '\n'
         }
@@ -1148,7 +1148,7 @@ function create_anno_table(sql_rows,anno,gid) {
         text += headers.join("\t")+'\n'
         for(let n in sql_rows){
             text += gid+'\t'+sql_rows[n].acc+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].length_na+'\t'+sql_rows[n].length_aa
-            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
+            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].end+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
             text += '\n'
         }
              
@@ -1183,7 +1183,7 @@ function create_anno_search_table(sql_rows,anno,headers,search_term) {
             text += '\t'+lineage.subspecies
             text += '\t'+strain
             text += '\t'+sql_rows[n].contig+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].length
-            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
+            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].end+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
             text += '\t'+sql_rows[n].bakta_EC+'\t'+sql_rows[n].bakta_GO+'\t'+sql_rows[n].bakta_COG
             text += '\t'+sql_rows[n].bakta_RefSeq+'\t'+sql_rows[n].bakta_UniParc+'\t'+sql_rows[n].bakta_UniRef
             text += '\n'
@@ -1209,7 +1209,7 @@ function create_anno_search_table(sql_rows,anno,headers,search_term) {
             text += '\t'+sql_rows[n].acc+'\t'+sql_rows[n].pid+'\t'+sql_rows[n].lna
             
             text += '\t'+sql_rows[n].laa
-            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].stop+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
+            text += '\t'+sql_rows[n].start+'\t'+sql_rows[n].end+'\t'+sql_rows[n].product+'\t'+sql_rows[n].gene
             
             text += '\n'
         }
