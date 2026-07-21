@@ -588,7 +588,7 @@ function renderTaxonDescription(req, res, args) {
   })
 }
 ///
-router.get('/tax_description', async function tax_description(req, res) {
+router.get('/tax_description', async function Description(req, res) {
   // let myurl = url.parse(req.url, true);
   //helpers.print(['pre data1',C.taxon_lookup[389]])
   let otid = ''
@@ -738,13 +738,28 @@ router.get('/tax_description', async function tax_description(req, res) {
   //refseq = {}
   //info = {'general':'','cultavability':'','prevalence':'','disease_associations':'','phenotypic':''}  // unique per otid
   //counts = 
+    
+    //const q_refseq_metadata,q_info,q_pangenome,q_gtdb_tax
     const q_refseq_metadata = queries.get_refseq_metadata_query(otid)    // dont need query 
     const q_info = queries.get_taxon_info_query(otid)
     const q_pangenome = queries.get_pangenomes_query(otid)
     const q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes)
+    // let q_list = [
+//         queries.get_refseq_metadata_query(otid),
+//         queries.get_taxon_info_query(otid),
+//         queries.get_pangenomes_query(otid),
+//         queries.get_gtdb_tax(lookup_data.genomes)        
+//     ]
+//     console.log('ql',q_list)
+    // const [refseqP,infoP,pangenomesP,gtdbtaxP] = [
+//       pool.query(queries.get_refseq_metadata_query(otid)),
+//       pool.query(queries.get_taxon_info_query(otid)),
+//       pool.query(queries.get_pangenomes_query(otid)),
+//       pool.query(queries.get_gtdb_tax(lookup_data.genomes))
+//     ];
+    // [[refseq], [info],[pangenomes],[gtdbtax]] = await Promise.all([refseqP,infoP,pangenomesP,gtdbtaxP]);
+    //[refseq, info, pangenomes, gtdbtax] = queries.run_parallel_queries(q_list, req, res)
     
-   
-        
     refseq = await queries.run_query(q_refseq_metadata,req, res);
     info   = await queries.run_query(q_info,req, res);
     pangenomes = await queries.run_query(q_pangenome,req, res);

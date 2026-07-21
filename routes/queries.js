@@ -31,6 +31,25 @@ export const run_query_stream = async (sql, res) => {
     res.status(500).send('Error fetching MySQL stream');
   }
 };
+//
+export const run_parallel_queries = async (sql_list, req, res) => {
+  console.log('Parallel:',sql_list)
+  //logPoolStatus(res, pool)
+  let result_array = []
+  for (let i = 0; i < sql_list.length; i++) {
+     result_array[i] = []
+  }
+  console.log('result array',result_array.length)
+  try {
+    //const [[users], [orders]] = await Promise.all([usersPromise, ordersPromise]);
+    const [[users], [orders]] = await Promise.all(sql_list);
+    
+    return 
+  } catch (error) {
+    console.error('Database Query Error:', error);
+    res.status(500).send('Error fetching MySQL stream');
+  }
+};
 
 export const get_refseq_query = (refid) => {
   let q = 'SELECT UNCOMPRESS(seq_compressed) as seq from 16S_refseq '

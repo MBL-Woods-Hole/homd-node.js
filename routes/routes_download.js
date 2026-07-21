@@ -552,7 +552,7 @@ router.post('/anno_search_data', async (req, res) => {
         
         }else{
             // table  PROKKA and NCBI
-            q = "SELECT genome_id as gid,region as acc,protein_id as pid,start,stop,product,gene,length_aa as laa,"
+            q = "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,"
             q += "length_na as lna from "+anno_cap+".orf WHERE protein_id in ("+unique_pidlst+")"
             //head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
             // add HMT,taxonomy(inc.subsp),strain
