@@ -10,13 +10,15 @@ import path from 'path';
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
+import pino from 'pino';
+const logger = helpers.pino_conf(pino)
 
 router.get('/phage', async function phage(req, res) {
-    //console.log('in phage',req.query.gid)
+    
     let gid = req.query.gid
     
     const q = queries.get_phage(gid)
-    //console.log('phage q',q)
+    
     const rows = await queries.run_query(q, req, res)
         
         
@@ -55,7 +57,7 @@ router.get('/phage_table', function phage_table_GET(req, res) {
     }
     
     //console.log('full_count',full_count)
-    console.log('sort_list',sort_list.length)
+    
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);
     })
@@ -103,8 +105,7 @@ router.post('/phage_table', function phage_table_POST(req, res) {
         }
     }
     
-    //console.log('full_count',full_count)
-    console.log('sort_list',sort_list.length)
+    
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);
     })
@@ -123,7 +124,7 @@ router.post('/phage_table', function phage_table_POST(req, res) {
 })
 //
 router.post('/phage_ajax', async function phage_ajax(req, res){
-    console.log('in POST phage_ajax')
+    logger.info('in POST phage_ajax')
     let gid = req.body.gid
     let q = 'SELECT phage_id,type,contig,start,end FROM phage_data'
     q += " WHERE genome_id='"+gid+"'"
@@ -136,7 +137,7 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
     html_rows += "<tr>"
     html_rows += "<th>Prediction<br>Tool</th><th>Genome<br>Viewer</th><th class=''>Phage-ID</th><th>Contig</th><th>Start</th><th>End</th>"
     html_rows += "</tr>"
-    console.log(q)
+    
     let stop,start,tmp,seqacc,loc,locstart,locstop
     const rows = await queries.run_query(q, req, res)
         
@@ -191,14 +192,10 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
             html_rows += "</tr>"
             //counter += 1
     }
-        
-    
     
     html_rows += "</table>"
     res.send(html_rows)
-    //console.log(send_rows,send_rows.length)
-
-    
+   
     
 })
 

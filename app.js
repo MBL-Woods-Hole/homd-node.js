@@ -11,21 +11,31 @@ import 'dotenv/config';
 global.ENV = process.env;
 import path from 'path';
 
+
 //=============================================================
-console.log('ENV:Base Dir',ENV.BASE_DIR)
 ENV.PROCESS_DIR                 = path.join(ENV.BASE_DIR, ENV.PROCESS_DIR_BASENAME)
 ENV.PATH_TO_STATIC_DOWNLOADS    = path.join(ENV.BASE_DIR, ENV.PATH_TO_STATIC_DOWNLOADS_BASENAME)
 ENV.PATH_TO_DATA                = path.join(ENV.BASE_DIR, ENV.PATH_TO_DATA_BASENAME)
 ENV.PATH_TO_SEARCH              = path.join(ENV.BASE_DIR, ENV.PATH_TO_SEARCH_BASENAME)
 ENV.PATH_TO_SCRIPTS             = path.join(ENV.PROCESS_DIR, ENV.PATH_TO_SCRIPTS_BASENAME)
-ENV.LOG_DIR                     = path.join(ENV.BASE_DIR, ENV.LOG_DIR_BASENAME)
-console.log('ENV.PATH_TO_SCRIPTS',ENV.PATH_TO_SCRIPTS)
+
 ENV.PATH_TO_TMP                 = path.join(ENV.BASE_DIR, ENV.PATH_TO_TMP_BASENAME)
 ENV.PATH_TO_IMAGES              = path.join(ENV.BASE_DIR, ENV.PATH_TO_IMAGES_BASENAME)
-ENV.access_logfile              = path.join(ENV.LOG_DIR,'homd-access.log')
-
+ENV.access_logfile              = path.join(ENV.LOGGING_DIR,'logs','homd-access.log')
+ENV.pino_logfile                = path.join(ENV.LOGGING_DIR,'logs','homd-combined.log')
 //=============================================================
-console.log('NODE_ENV:',ENV.NODE_ENV)
+import pino from 'pino';
+const logger = helpers.pino_conf(pino)
+logger.info('ENV:Base Dir',ENV.BASE_DIR)
+logger.info('ENV.PATH_TO_SCRIPTS',ENV.PATH_TO_SCRIPTS)
+
+logger.info('Pino logger.info Testing! Pino is working with ES Modules.');
+logger.warn('Pino logger.warn Testing! Pino is working with ES Modules.');
+logger.error('Pino logger.error Testing! Pino is working with ES Modules.');
+
+
+logger.info(`NODE_ENV: ${ENV.NODE_ENV}`);
+
 
 const dirname = import.meta.dirname
 
@@ -50,11 +60,11 @@ const router = express.Router();
 // console.log('dirname',dirname)
 // console.log('process.env.LOG_DIR',process.env.LOG_DIR)
 // console.log('process.env.PRODUCTION_LOG',process.env.PRODUCTION_LOG)
-const logFilePath = path.join(process.env.LOG_DIR, process.env.PRODUCTION_LOG)
+//const logFilePath = path.join(process.env.LOG_DIR, process.env.PRODUCTION_LOG)
 //import node_log from 'simple-node-logger').createSimpleFileLogger(logFilePath);
-import pkg from 'simple-node-logger';
-const { createSimpleFileLogger } = pkg;
-var node_log = createSimpleFileLogger(logFilePath)
+//import pkg from 'simple-node-logger';
+//const { createSimpleFileLogger } = pkg;
+//var node_log = createSimpleFileLogger(logFilePath)
 
 import session from 'express-session';
 
@@ -115,9 +125,9 @@ if(process.env.NODE_ENV === 'production'){
     // const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
 //     const restart_logger = new console.Console(output)
 //     restart_logger.log('Restart on '+helpers.timestamp(false))
-    console.log('!!Turning off console logging for production mode!!')
-    console.log('To debug: run `npm run debug`')
-    console.log = function() {};  // turn off console.logging
+    logger.info('!!Turning off console logging for production mode!!')
+    logger.info('To debug: run `npm run debug`')
+    logger.info = function() {};  // turn off console.logging
     // to see console.logs: "npm run debug"
 }
 
@@ -188,11 +198,11 @@ app.get('/*', function(req, res, next){
 
 // error handler middleware:
 app.use((error, req, res, next) => {
-  console.error(error);
+  logger.error(error);
   //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
   //if(process.env.ENV === 'development'){
   //if(process.env.ENV === 'production'){
-  node_log.debug(error.toString())
+  //node_log.debug(error.toString())
   //}
   
   let u = req.user || {}
@@ -337,48 +347,48 @@ Promise.all(promises)
     
     C.has_abundance_data = helpers.get_has_abundance()
     
-    //console.log('C.otids_w_abundance',C.otids_w_abundance)
-    //console.log('')
+    //logger.info('C.otids_w_abundance',C.otids_w_abundance)
+    
     
     //examples
     let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
-    console.log('C.taxon_lookup #ofKeys:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
+    logger.info(`C.taxon_lookup #ofKeys: ${Object.keys(C.taxon_lookup).length} \t\tsize(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.taxon_references_lookup))
-    console.log('C.taxon_references_lookup #ofKeys',Object.keys(C.taxon_references_lookup).length,'\tsize(KB):',size/1024)
-    //console.log(C.phage_lookup)
+    logger.info(`C.taxon_references_lookup #ofKeys ${Object.keys(C.taxon_references_lookup).length} \tsize(KB): ${size/1024}`)
+    //logger.info(C.phage_lookup)
     size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup))
-    console.log('C.taxon_lineage_lookup #ofKeys',Object.keys(C.taxon_lineage_lookup).length,'\tsize(KB):',size/1024)
+    logger.info(`C.taxon_lineage_lookup #ofKeys ${Object.keys(C.taxon_lineage_lookup).length} \tsize(KB): ${size/1024}`)
     
     //size = Buffer.byteLength(JSON.stringify(C.taxon_info_lookup))
-    //console.log('C.taxon_info_lookup #ofKeys',Object.keys(C.taxon_info_lookup).length,'\t\tsize(KB):',size/1024)
+    //logger.info('C.taxon_info_lookup #ofKeys',Object.keys(C.taxon_info_lookup).length} \t\tsize(KB): ${size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.refseq_lookup))
-    console.log('C.refseq_lookup #ofKeys',Object.keys(C.refseq_lookup).length,'\t\tsize(KB):',size/1024)
+    logger.info(`C.refseq_lookup #ofKeys ${Object.keys(C.refseq_lookup).length} \t\tsize(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.genome_lookup))
-    console.log('C.genome_lookup #ofKeys',Object.keys(C.genome_lookup).length,'\t\tsize(KB):',size/1024)
+    logger.info(`C.genome_lookup #ofKeys ${Object.keys(C.genome_lookup).length} \t\tsize(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.annotation_lookup))
-    console.log('C.annotation_lookup #ofKeys',Object.keys(C.annotation_lookup).length,'\t\tsize(KB):',size/1024)
+    logger.info(`C.annotation_lookup #ofKeys ${Object.keys(C.annotation_lookup).length} \t\tsize(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.taxon_counts_lookup))
-    console.log('C.taxon_counts_lookup #ofKeys',Object.keys(C.taxon_counts_lookup).length,'\tsize(KB):',size/1024)
+    logger.info(`C.taxon_counts_lookup #ofKeys ${Object.keys(C.taxon_counts_lookup).length} \tsize(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.contig_lookup))
-    console.log('C.contig_lookup #ofKeys',Object.keys(C.contig_lookup).length,'\t\tsize(KB):',size/1024)
+    logger.info(`C.contig_lookup #ofKeys ${Object.keys(C.contig_lookup).length} \t\tsize(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.homd_taxonomy))
-    console.log('C.homd_taxonomy','\t\t\tsize(KB):',size/1024)
+    logger.info(`C.homd_taxonomy \t\t\t\tsize(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.site_lookup))
-    console.log('C.site_lookup #ofKeys',Object.keys(C.site_lookup).length,'\t\tsize(KB):',size/1024)
+    logger.info(`C.site_lookup #ofKeys ${Object.keys(C.site_lookup).length} \t\t\tsize(KB): ${size/1024}`)
     
-    console.log('C.no_ncbi_genomes #of els',C.no_ncbi_genomes.length)
-    console.log('C.no_ncbi_blast_dbs #of els',C.no_ncbi_blast_dbs.length)
+    logger.info(`C.no_ncbi_genomes #of els ${C.no_ncbi_genomes.length}`)
+    logger.info(`C.no_ncbi_blast_dbs #of els ${C.no_ncbi_blast_dbs.length}`)
     
     for(var n in C.homd_taxonomy){
-       console.log(n)
+       logger.info(`  Components of C.homd_taxonomy: ${n}`)
     }
     ///////// TESTING ////////////////////////////////////////////////////////////////////
    //console.log(C.taxon_lookup)
@@ -386,36 +396,36 @@ Promise.all(promises)
    //helpers.print(['app data1',C.taxon_lookup[389]])
    //Absconditabacteria (SR1) [C-1]
     //console.log('C.no_ncbi_annotation',C.no_ncbi_annotation)
-    //console.log('C.no_ncbi_blast_dbs',C.no_ncbi_blast_dbs)
-    //console.log('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
+    //logger.info('C.no_ncbi_blast_dbs',C.no_ncbi_blast_dbs)
+    //logger.info('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
     //helpers.print(['lineage 673',C.taxon_lookup[673]])
     //helpers.print(['Lookup 673',C.taxon_lookup[673]])
-    //console.log('refseq 12',C.refseq_lookup[12])
+    //logger.info('refseq 12',C.refseq_lookup[12])
     //helpers.print(['SEQF10010',C.genome_lookup['SEQF10010']])
     
-    //console.log('362 Correct',C.taxon_lineage_lookup[886])
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Hornefia minuta_species'])
-    //console.log('Euryarchaeota_phylum',C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Euryarchaeota_phylum'])
-    //console.log(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
-    //console.log('id 944 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[944])
-    //console.log('id 943 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[943])
-    //console.log('id 30 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[30])
-    //console.log('id 29 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[29])
-    //console.log('id 598 class',C.homd_taxonomy.taxa_tree_dict_map_by_id[598])
-    //console.log('id 599 order',C.homd_taxonomy.taxa_tree_dict_map_by_id[599])
-    //console.log('id 603 fam ERR',C.homd_taxonomy.taxa_tree_dict_map_by_id[603])
-    //console.log('636_species',C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank['9_species'])
+    //logger.info('362 Correct',C.taxon_lineage_lookup[886])
+    //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
+    //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Hornefia minuta_species'])
+    //logger.info('Euryarchaeota_phylum',C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Euryarchaeota_phylum'])
+    //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
+    //logger.info('id 944 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[944])
+    //logger.info('id 943 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[943])
+    //logger.info('id 30 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[30])
+    //logger.info('id 29 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[29])
+    //logger.info('id 598 class',C.homd_taxonomy.taxa_tree_dict_map_by_id[598])
+    //logger.info('id 599 order',C.homd_taxonomy.taxa_tree_dict_map_by_id[599])
+    //logger.info('id 603 fam ERR',C.homd_taxonomy.taxa_tree_dict_map_by_id[603])
+    //logger.info('636_species',C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank['9_species'])
     /////////////////////////////////////////////////////////////////////////////////////
     C.taxa_with_subspecies = Object.values(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies']).map(x => x.otid)
     
     C.homd_stats         = helpers.calculate_homd_stats()
     
-    console.log('Dropped Taxa:',C.dropped_taxids,C.dropped_taxids.length)
-    console.log('Reference Taxa:',C.reference_taxids,C.reference_taxids.length)
-    console.log('C.taxa_with_subspecies',C.taxa_with_subspecies,C.taxa_with_subspecies.length)
-    console.log('C.no_refseq_otids',C.no_refseq_otids,C.no_refseq_otids.length)
-     //console.log(JSON.stringify(C.homd_taxonomy, null, '\t'))
+    logger.info(`Dropped Taxa: ${C.dropped_taxids,C.dropped_taxids.length}`)
+    logger.info(`Reference Taxa: ${C.reference_taxids,C.reference_taxids.length}`)
+    logger.info(`C.taxa_with_subspecies ${C.taxa_with_subspecies,C.taxa_with_subspecies.length}`)
+    logger.info(`C.no_refseq_otids ${C.no_refseq_otids,C.no_refseq_otids.length}`)
+     //logger.info(JSON.stringify(C.homd_taxonomy, null, '\t'))
      
      
     //session.site_search_result = {}
@@ -427,11 +437,10 @@ Promise.all(promises)
 //           num_zeros += 1
 //        }
 //     }
-   // console.log("number
-    // do more stuff
+   
 });
 
-console.log('start here in app.js')
+logger.info('start here in app.js')
 
 export default app;
 

@@ -2,51 +2,52 @@ import express from 'express';
 const router = express.Router()
 import pool from '../config/database.js';
 import C from '../public/constants.js';
-import { logPoolStatus } from './helpers/helpers.js';
+import * as helpers from './helpers/helpers.js';
+import pino from 'pino';
+const logger = helpers.pino_conf(pino)
 
 // Generalized query function
 export const run_query = async (sql, req, res) => {
-  console.log('\nExecuting:',sql)
-  console.log('Request from: '+req.ip)
-  logPoolStatus(res, pool)
+  
+  //logger.info(`Request from: ${req.ip}`)
+  helpers.logPoolStatus(pool, sql)
   try {
     const [rows] = await pool.query(sql);
     return rows;
-  } catch (error) {
-    console.error('Database Query Error:', error);
+  } catch (e) {
+    logger.error(`Database Query Error: ${e}`);
     res.status(500).send('Error fetching MySQL data');
   }
 };
 
 export const run_query_stream = async (sql, res) => {
-  console.log('Streaming:',sql)
-  //logPoolStatus(res, pool)
+  
+  helpers.logPoolStatus(pool, sql)
   try {
     const connection = await pool.getConnection();
       
     const [queryStream] = await connection.query(sql) //.stream();
     return queryStream;
-  } catch (error) {
-    console.error('Database Query Error:', error);
+  } catch (e) {
+    logger.error(`Database Query Error: ${e}`);
     res.status(500).send('Error fetching MySQL stream');
   }
 };
 //
 export const run_parallel_queries = async (sql_list, req, res) => {
-  console.log('Parallel:',sql_list)
-  //logPoolStatus(res, pool)
+  logger.info('Parallel:',sql_list)
+  helpers.logPoolStatus(pool, sql_list)
   let result_array = []
   for (let i = 0; i < sql_list.length; i++) {
      result_array[i] = []
   }
-  console.log('result array',result_array.length)
+  logger.info('result array',result_array.length)
   try {
     //const [[users], [orders]] = await Promise.all([usersPromise, ordersPromise]);
     const [[users], [orders]] = await Promise.all(sql_list);
-    
     return 
-  } catch (error) {
-    console.error('Database Query Error:', error);
+  } catch (e) {
+    logger.error(`Database Query Error: ${e}`);
     res.status(500).send('Error fetching MySQL stream');
   }
 };
@@ -54,7 +55,6 @@ export const run_parallel_queries = async (sql_list, req, res) => {
 export const get_refseq_query = (refid) => {
   let q = 'SELECT UNCOMPRESS(seq_compressed) as seq from 16S_refseq '
   q += " WHERE refseq_id='" + refid + "'"
-
   return q
 };
 
@@ -62,16 +62,12 @@ export const get_gtdb_tax = (genomes) => {
   let g = genomes.join("','")
   let q = 'SELECT genome_id, GTDB_taxonomy  from `'+C.genomes_table_name+'`'
   q += " WHERE genome_id in ('" + g + "')"
-  //console.log(qSelectGTDBTaxonomy)
   return q
 };
 
 export const get_refseq_metadata_query = (otid) => {
-  // let qSelectRefseqInfo = 'SELECT refseqid,seqname,strain,genbank from taxon_refseqid '
-//   qSelectRefseqInfo += " WHERE otid='" + otid + "'"
   let q = 'SELECT refseq_id,species,seqids from homd.16S_refseq '
   q += " WHERE otid='" + otid + "'"
-
   return q
 };
 
@@ -83,7 +79,6 @@ export const get_taxon_info_query = (otid) => {
 };
 
 export const get_dropped_taxa = () => {
-  
   let q = "SELECT otid, naming_status, cultivation_status, notes, genus, species from otid_prime"
     q += " JOIN taxonomy using(taxonomy_id)"
     q += " JOIN status using(otid)"
@@ -93,12 +88,7 @@ export const get_dropped_taxa = () => {
   return q
 };
 
-// module.exports.get_16s_rRNA_sequence_query = (gid) => {
-//   let qSelect16Sseq = 'SELECT 16s_rRNA from genomes '
-//   qSelect16Sseq += "WHERE genome_id='" + gid + "'"
-// 
-//   return qSelect16Sseq
-// }
+
 export const get_db_updates_query = () => {
   return "SELECT otid, description, reason, date FROM updates WHERE `show`='1'"
 };
@@ -112,8 +102,7 @@ export const get_annotation_query = (gid, anno) => {
    q += ' LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id '
    q += ' LEFT JOIN PROKKA.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id '
    q += " WHERE a.genome_id = '"+gid+"'"
-    
-    
+
 
   
   }else if(anno === 'ncbi') {
@@ -166,7 +155,6 @@ export const get_all_pangenomes_query = () => {
 };
 
 export const get_pangenomes_query = (otid) => {
-    //let q = "SELECT distinct pangenome_name from pangenome_genome"
     let q = "SELECT DISTINCT pangenomes.pangenome_name as pg" 
     q += " FROM pangenome_genome"
     q += " JOIN pangenomes using(pangenome_id)"
@@ -199,24 +187,19 @@ export const get_peptide3 = (gid) => {
     q += " JOIN `genomes` using (seq_id)"
     q += " JOIN protein_peptide_counts_study using (protein_peptide_counts_id)"
     q += " JOIN protein_peptide_studies on (protein_peptide_counts_study.study_id=protein_peptide_studies.study_id) "
-    
 
-    //q += " JOIN protein_peptide_studies using (seq_id)"
     q += " where seq_id='"+gid+"'"
-    
     return q
 };
 
 export const get_crispr_cas_data = (gid) => {
     let q = "SELECT contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
     q += " FROM crispr_cas where genome_id='"+gid+"'"
-    
     return q
 };
 export const get_all_crispr_cas_data = () => {
     let q = "SELECT homd.genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
     q += " FROM crispr_cas"
-    
     return q
 };
 export const get_amr_data = (gid) => {
@@ -226,7 +209,6 @@ export const get_amr_data = (gid) => {
     q += " FROM homd.amr"
     q += " JOIN PROKKA.orf using(protein_id)"
     q += " WHERE homd.amr.genome_id='"+gid+"'"
-    
     return q
 };
 export const get_all_amr_data = () => {
@@ -235,7 +217,6 @@ export const get_all_amr_data = () => {
     q += "closest_ref_name,hmm_acc,hmm_description,region,start,stop"
     q += " FROM homd.amr"
     q += " JOIN PROKKA.orf using(protein_id)"
-    
     return q
 };
 export const get_AA_NA = (db, gid, pid,type) => {
@@ -248,7 +229,6 @@ export const get_AA_NA = (db, gid, pid,type) => {
         q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
         q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
     }
-    console.log(q)
     return q
 };
 
@@ -294,27 +274,18 @@ export const get_genome = (gid) => {   // always NCBI for genome description
     let q = genome_query()
     q +=" WHERE genome_id = '"+gid+"'"
     q += " AND homd_genome_version = '"+C.genomic_refseq_version+"'" // for correct pangenome
-  
     return q 
 };
 
 export const get_contigs = (gid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
   let q = "SELECT region, GC from `NCBI`.`molecule` WHERE genome_id = '"+gid+"'"
-  // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
-  //                               PROKKA gb_asmbly+.fna.gz
-  // asm_name amd gb_asm are both from genomes_obj
-  //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
   return q
 };
 
 export const get_contig = (gid, mid) => {   // always NCBI for taxon description
   //const db = 'NCBI_' + gid
   let q = "SELECT UNCOMPRESS(seq_compressed) as seq from `NCBI`.`contig` WHERE genome_id = '"+gid+"' and region='"+mid+"'"
-  // molecules is from which file? NCBI: gb_asmbly+asm_name+.genomic.fna.gz
-  //                               PROKKA gb_asmbly+.fna.gz
-  // asm_name amd gb_asm are both from genomes_obj
-  //qSelectContigs = "SELECT accession, GC from "+db+".molecules"
   return q
 };
 
@@ -324,7 +295,6 @@ export const get_all_phage_for_download = () => {
     q += "phage_id,type,contig,start,end"
     q += " FROM phage_stats"
     q += " JOIN phage_data using (genome_id)"
-    
     return q
 
 };

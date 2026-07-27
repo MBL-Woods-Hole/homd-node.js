@@ -8,6 +8,8 @@ import path from 'path';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
 import { exec, spawn } from 'child_process';
+import pino from 'pino';
+const logger = helpers.pino_conf(pino)
 
 
 router.get('/index', function index(req, res) {
@@ -26,7 +28,7 @@ router.get('/help-page', async function help_page(req, res) {
   //let page = req.params.pagecode
   let page = req.query.pagecode
   
-  console.log('page',page)
+  logger.info(`page ${page}`)
   const renderVersionFxn = (req, res, type, data) => {
       //console.log('updates',updates)
       res.render('pages/version_history', {
@@ -62,7 +64,7 @@ router.get('/help-page', async function help_page(req, res) {
       // read file path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt)
       fs.readFile(path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt'), 'utf8', (err, data) => {
         if (err) {
-           console.error(err);
+           logger.error(err);
            return;
         }
         //console.log(data.trim());
@@ -73,7 +75,7 @@ router.get('/help-page', async function help_page(req, res) {
       // read file path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt)
       fs.readFile(path.join(ENV.PATH_TO_DATA,'taxonomy_version_history.txt'), 'utf8', (err, data) => {
         if (err) {
-           console.error(err);
+           logger.error(err);
            return;
         }
         //console.log(data.trim());
@@ -84,7 +86,7 @@ router.get('/help-page', async function help_page(req, res) {
       // read file path.join(ENV.PATH_TO_DATA,'refseq_version_history.txt)
       fs.readFile(path.join(ENV.PATH_TO_DATA,'refseq_version_history.txt'), 'utf8', (err, data) => {
         if (err) {
-           console.error(err);
+           logger.error(err);
            return;
         }
         renderVersionFxn(req, res, 'HOMD RefSeq Version History', data.trim())
@@ -134,8 +136,8 @@ router.get('/search', function search(req, res) {
     })
 })
 router.post('/help_search_result', function help_search_result(req, res) {
-  console.log('in POST -Search Help')
-  console.log(req.body)
+  logger.info('in POST -Search Help')
+  logger.info(req.body)
   let searchText = req.body.input_string
   // help pages uses grep
   let helpLst = []
@@ -144,7 +146,7 @@ router.post('/help_search_result', function help_search_result(req, res) {
   //console.log('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
-        console.error('stderr',stderr);
+        logger.error(stderr);
         return;
       }
       //console.log('stdout',stdout);

@@ -13,6 +13,8 @@ import path from 'path';
 import { exec, spawn } from 'child_process';
 import * as helpers from './helpers.js';
 import * as helpers_genomes from './helpers_genomes.js';
+import pino from 'pino';
+const logger = helpers.pino_conf(pino)
 
 
 export const get_default_annot_filter = () => {

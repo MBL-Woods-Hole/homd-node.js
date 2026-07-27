@@ -17,13 +17,13 @@ import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
 import * as helpers_genomes from './helpers/helpers_genomes.js';
 import * as queries from './queries.js';
-
 const upload = multer({ dest: ENV.PATH_TO_TMP  })
-
+import pino from 'pino';
+const logger = helpers.pino_conf(pino)
 
 router.get('/download/:q', function download(req, res) {
   // renders the overall downlads page
-  //console.log('q',req.params)
+  
   let q = req.params.q
   res.render('pages/download', {
     title: 'HOMD :: Downloads',
@@ -40,7 +40,7 @@ router.get('/download', function download(req, res) {
 router.get('/download_file', function search(req, res) {
   //let page = req.params.pagecode
   let fullpath = req.query.filename
-  helpers.print('file path: '+fullpath)
+  logger.info(`file path: ${fullpath}`)
   res.download(fullpath)
   //res.end()
 })
@@ -55,7 +55,6 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
     
     let list_of_otids = send_list.map(item => item.otid)
     
-    //console.log('ALL::Count of OTIDs:',list_of_otids.length)
     
     let table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
     
@@ -67,7 +66,7 @@ router.get('/dld_taxtable_all/:type/', function dld_taxtable_all(req, res) {
       res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+dt.today+'_'+dt.seconds+".xls\""})
     }else {
       // error
-      console.log('Download table format ERROR')
+      logger.error('Download table format ERROR')
     }
     res.send(table_tsv)
     res.end()
@@ -115,7 +114,7 @@ router.get('/dld_refseqtable_all/:type', function dld_refseqtable(req, res) {
         res.set({ 'Content-Disposition': 'attachment; filename='+fname })
     } else {
         // error
-        console.log('Download table format ERROR')
+        logger.error('Download table format ERROR')
     }
     res.send(tableTsv)
     res.end()
@@ -123,7 +122,7 @@ router.get('/dld_refseqtable_all/:type', function dld_refseqtable(req, res) {
 
 })
 router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
-//router.get('/dld_table/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
+
     let dt = helpers.get_today_obj()
     let letter='all',statusfilter='on',search_txt='',search_field=''
     let send_list = []
@@ -134,7 +133,7 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
     let file_filter_txt = "HOMD.org Taxon Data::Site/Status Filter Applied"+ " Date: "+dt.today 
 
     let list_of_otids = send_list.map(item => item.otid)
-    //console.log('Table::Count of OTIDs:',list_of_otids)
+    
     // type = browser, text or excel
     let table_tsv = create_taxon_table(list_of_otids, 'table', type, file_filter_txt )
     if(type === 'browser'){
@@ -145,7 +144,7 @@ router.get('/dld_taxtable/:type', function dld_taxtable(req, res) {
       res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+dt.today+'_'+dt.seconds+".xls\""})
     }else {
       // error
-      console.log('Download table format ERROR')
+      logger.error('Download table format ERROR')
     }
     res.send(table_tsv)
     res.end()
@@ -155,7 +154,7 @@ router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
 
     let type = req.params.type   // browser, text or excel
     let fxn = req.params.fxn     // hierarchy or level
-    helpers.print(['in download: '+type+'::'+fxn])
+    logger.info(`in download: ${type} ${fxn}`)
     let file_filter_txt, table_tsv;
    
     let temp_list = Object.values(C.taxon_lookup);
@@ -181,7 +180,7 @@ router.get('/dld_tax/:type/:fxn', function dld_tax(req, res) {
       res.set({"Content-Disposition":"attachment; filename=\"HOMD_taxon_table"+dt.today+'_'+dt.seconds+".xls\""})
   }else {
       // error
-      console.log('Download table format ERROR')
+      logger.error('Download table format ERROR')
   }
   res.send(table_tsv)
   res.end()
@@ -198,7 +197,7 @@ router.get('/dld_tax_table/:version/', function dld_tax_table(req, res) {
         let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'HOMD_taxon_tableV42.xls')
         res.download(fullpath)
     }else{
-      console.log('ERROR - no version')
+      logger.error('ERROR - no version')
     }
     return
 
@@ -209,7 +208,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
 
     let type = req.params.type
     let source = req.params.source
-    //helpers.print('type: '+type+' source: '+source)
+    
     let table_tsv='',row,site
     let temp_list = Object.values(C.abundance_lookup)
     let abundance_order
@@ -351,7 +350,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
             }
             table_tsv += '\n'
       }else{
-         // error
+         logger.error('ERROR')
       }
     }
     let filename = 'HOMD_abundance_table_'+source
@@ -363,7 +362,7 @@ router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
       res.set({"Content-Disposition":"attachment; filename=\""+filename+dt.today+'_'+dt.seconds+".xls\""})
     }else {
       // error
-      console.log('Download table format ERROR')
+      logger.error('Download table format ERROR')
     }
     res.send(table_tsv)
     res.end()
@@ -375,7 +374,7 @@ router.get('/dld_genome_table_all/:type/:filter', async function dld_genome_tabl
     let dt = helpers.get_today_obj()
     const type = req.params.type
     const filter = req.params.filter
-    //console.log('in dld_genome_table_all/:type/:filter',type,filter)
+    
     let fileFilterText,tableTsv
     const sendList = Object.values(C.genome_lookup)
     const listOfGids = sendList.map(item => item.gid)
@@ -395,7 +394,7 @@ router.get('/dld_genome_table_all/:type/:filter', async function dld_genome_tabl
 //
 router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   
-  console.log('in download table partial-genome:')
+  logger.error('in download table partial-genome:')
   let dt = helpers.get_today_obj()
   const type = req.params.type
   
@@ -418,8 +417,7 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   const listOfGids = sendList.map(item => item.gid)
   fileFilterText = fileFilterText + ' Date: ' + dt.today
 
-  //helpers.print(['listOfGids', listOfGids])
-  // type = browser, text or excel
+  
   const tableTsv = create_genome_table(listOfGids, 'table', type, fileFilterText)
 
   if (type === 'browser') {
@@ -432,7 +430,7 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
     res.set({ 'Content-Disposition': 'attachment; filename='+fname })
   } else {
     // error
-    console.log('Download table format ERROR')
+    logger.error('Download table format ERROR')
   }
   res.send(tableTsv)
   res.end()
@@ -442,7 +440,7 @@ router.get('/dld_static_file/:fname', function dld_static_file (req, res) {
     const fname = req.params.fname
     
     let fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,fname)
-    console.log('downloading',fullpath)
+    logger.info(`downloading ${fullpath}`)
     res.download(fullpath)
     return 
 })
@@ -573,8 +571,6 @@ router.post('/anno_search_data', async (req, res) => {
         }
         
     }
-    
-    helpers.print('query: '+q)
    
     
     if(format.slice(0,5) === 'fasta'){
@@ -587,7 +583,7 @@ router.post('/anno_search_data', async (req, res) => {
     
         const rows = await queries.run_query(q, res)
         for(let n in rows){
-            //console.log(rows[n].genome_id)
+            //logger.info(rows[n].genome_id)
         }
         
         fname = ''
@@ -610,7 +606,7 @@ router.post('/anno_search_data', async (req, res) => {
         
         } else {
             // error
-            console.log('Download table format ERROR')
+            logger.error('Download table format ERROR')
         
         }
         res.send(result_text)
@@ -622,7 +618,7 @@ router.post('/anno_search_data', async (req, res) => {
 ////
 router.post('/anno_data_by_gid', async (req, res) => {
     // Download all Annotation Hits By gid/ table and fasta
-    console.log('anno_data_by_gid req body',req.body)
+    logger.info(`anno_data_by_gid req body ${req.body}`)
     let type = req.body.type  // browser, text or excel
     let anno = req.body.anno  // ncbi prokka or bakta
     let gid = req.body.gid
@@ -679,11 +675,6 @@ router.post('/anno_data_by_gid', async (req, res) => {
         head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
         
     }
-
-       
-    
-    
-    helpers.print('query: '+q)
     
     
     if(format.slice(0,5) === 'fasta'){
@@ -720,7 +711,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
         
         } else {
             // error
-            console.log('Download table format ERROR')
+            logger.error('Download table format ERROR')
         
         }
         res.send(result_text)
@@ -731,7 +722,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
 })
 ////
 router.post('/phage_sequences', async (req, res) => {
-    console.log(req.body)
+    logger.info(req.body)
     let q = queries.get_phage_fasta(req.body.search_ids)
     let dt = helpers.get_today_obj()
     let fname = 'HOMD_phage_seqs' + dt.today + '_' + dt.seconds
@@ -806,7 +797,7 @@ router.post('/phage_search_data', async (req, res) => {
           
         } else {
             // error
-            console.log('Download table format ERROR')
+            logger.error('Download table format ERROR')
         }
         res.send(result_text)
         res.end()
@@ -817,7 +808,7 @@ router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
     // from PHAGE TABLE (not PHAGE Search)
     let dt = helpers.get_today_obj()
     const type = req.params.type
-    console.log('in dld phage')
+    logger.info('in dld phage')
     
     let fileFilterText,tableTsv
     //const sendList = Object.values(C.genome_lookup)
@@ -839,8 +830,7 @@ router.get('/dld_phage_table/:type', async function dld_phage_table (req, res) {
     } else if (type === 'excel') {
       res.set({ 'Content-Disposition': 'attachment; filename="HOMD_phage_table' + dt.today + '_' + dt.seconds + '.xls"' })
     } else {
-      // error
-      console.log('Download table format ERROR')
+      logger.error('Download table format ERROR')
     }
     res.send(tableTsv)
     res.end()
@@ -867,8 +857,7 @@ router.get('/dld_crispr_table/:type', async function dld_crispr_table (req, res)
     } else if (type === 'excel') {
       res.set({ 'Content-Disposition': 'attachment; filename="HOMD_crispr_cas_table' + dt.today + '_' + dt.seconds + '.xls"' })
     } else {
-      // error
-      console.log('Download table format ERROR')
+      logger.error('Download table format ERROR')
     }
     res.send(tableTsv)
     res.end()
@@ -896,8 +885,7 @@ router.get('/dld_amr_table/:type', async function dld_crispr_table (req, res) {
     } else if (type === 'excel') {
       res.set({ 'Content-Disposition': 'attachment; filename="HOMD_AMR_table' + dt.today + '_' + dt.seconds + '.xls"' })
     } else {
-      // error
-      console.log('Download table format ERROR')
+      logger.error('Download table format ERROR')
     }
     res.send(tableTsv)
     res.end()
@@ -905,8 +893,8 @@ router.get('/dld_amr_table/:type', async function dld_crispr_table (req, res) {
     
 })
 router.get('/pg/:type/:pg', function dld_pg (req, res) {
-    console.log('in dnld pg')
-    //console.log(req.params)
+    logger.info('in dnld pg')
+    
     let pg = req.params.pg
     let dt = helpers.get_today_obj()
     const type = req.params.type   // sha256 OR targz are only choices
@@ -923,16 +911,16 @@ router.get('/pg/:type/:pg', function dld_pg (req, res) {
 })
 router.get('/version/:index', function dld_pg (req, res) {
     // this is for all/any downloads needed version text files
-    //console.log('in dnld version/:index')
+    
     let idx = req.params.index
-    //console.log('idx',idx)
+    
     let fullpath
     if(idx === '01'){
        fullpath = path.join(ENV.PATH_TO_STATIC_DOWNLOADS,'HOMD_Full_Taxonomy2025_02_18_JMWv4_ForAddDropNameChange.xlsx')
     }else{
         return
     }
-    //console.log(fullpath)
+    
     res.download(fullpath)
     return
     
@@ -947,8 +935,8 @@ router.get('/download_fasta', function dld_fasta_get (req, res) {
 })
 
 router.post('/download_fasta', upload.single('myFile'), async function dld_fasta_post (req, res) {
-    console.log('in download fasta')
-    console.log('req.file',req.file)
+    logger.info('in download fasta')
+    logger.info(`req.file ${req.file}`)
     let dt = helpers.get_today_obj()
     //console.log('str',req.file.buffer.toString())
     //console.log('body',req.body)
@@ -963,7 +951,7 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
         res.redirect('download_fasta')
         return
     }
-    //console.log('data',data)
+    
     let table='faa',db='PROKKA',ext='.faa',tmp = []
     if(req.body.anno === 'ncbi'){
         db = 'NCBI'
@@ -974,7 +962,7 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
         
     }
     let q = "SELECT genome_id as gid,protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+db+"."+table+" WHERE protein_id in ("
-    console.log('data',data)
+    logger.info(`data ${data}`)
     
     for(let n in data){
         //console.log('n',data[n])
@@ -990,12 +978,12 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
     }
     q += tmp.join(',')
     q += ")"
-    console.log(q)
+    
     let defline,seq,outfile_txt = ''
     const rows = await queries.run_query(q, res)
 
     if (rows.length === 0) {
-        console.log('no rows found')
+        logger.error('no rows found')
         res.send('No Data Found')
         return
     
@@ -1059,7 +1047,7 @@ function create_phage_search_table(sql_rows,header_array,search_term) {
 
 ////
 async function stream_sqlquery_download(q, fname, res, format, type) {
-    console.log('in stream_sqlquery_download',format,type)
+    logger.error(`in stream_sqlquery_download ${format} ${type}`)
     // IMPORTANT: q must have defline and sequence elements
     // format is fasta or table
     if(format === 'fasta' && type === 'excel'){
@@ -1110,9 +1098,9 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
         
         pipeline(stream, csvStream, passThroughStream, res, (err) => {
         if (err) {
-            console.log(err);
+            logger.error(err);
         }
-        console.log('streaming to download1')
+        logger.info('streaming to download1')
         });
         
         return
@@ -1121,9 +1109,9 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
         transformerStream = fastaObjectToStringStream
         pipeline(stream, transformerStream, res, (err) => {
         if (err) {
-            console.log(err);
+            logger.error(err);
         }
-        console.log('streaming to download2')
+        logger.info('streaming to download2')
         });
     }
     
@@ -1251,25 +1239,14 @@ function create_taxon_table(otids, source, type, head_txt) {
             }else{
             
                 o1 = obj1[otid]
-                 //console.log('otid',otid)
+                 
                  
                 if(otid in obj2){
                    o2 = obj2[otid]
                 }else {
                    o2 = {'domain':'','phylum':'','klass':'','order':'','family':'','genus':'','species':'','subspecies':''}
                 }
-                // if(otid in obj3){
-//                    o3 = obj3[otid]
-//                 }else {
-//                    o3 = {'general':'','culta':'','pheno':'','prev':'','disease':''}
-//                 }
-                // if(otid in obj4){
-//                    o4 = obj4[otid]
-//                 }else {
-//                    o4 = {NCBI_pubmed_search_count: '0',NCBI_nucleotide_search_count: '0',NCBI_protein_search_count: '0'}
-//                 }
-                // list! o1.type_strain, o1,genomes, o1,synonyms, o1.sites, o1.ref_strains, o1,rrna_sequences
-                // clone counts
+                
                 if(o2.domain){  // weeds out dropped
                    //console.log('o2',o2)
                    let tstrains = o1.type_strains.join(' | ')
@@ -1307,8 +1284,7 @@ function create_taxon_table(otids, source, type, head_txt) {
        txt +=  headers.join('\t')+'\n'
        for(let n in otids){
             otid_pretty = helpers.make_otid_display_name(otids[n])
-            //console.log('hmt',otids[n])
-            //console.log(C.taxon_lineage_lookup[otids[n]])
+            
             if(otids[n] in C.taxon_lineage_lookup){
                 txt += otid_pretty+'\t'+C.taxon_lineage_lookup[otids[n]].domain
                 txt += '\t'+C.taxon_lineage_lookup[otids[n]].phylum
@@ -1329,7 +1305,7 @@ function create_taxon_table(otids, source, type, head_txt) {
         
         for(let n in otids){
             otid_pretty = helpers.make_otid_display_name(otids[n])
-            //console.log(C.taxon_lineage_lookup[otids[n]])
+            
             old_lineage = ''
             if(otids[n] in C.taxon_lineage_lookup){
                 for( let m in C.ranks){
@@ -1401,6 +1377,7 @@ function create_taxon_table(otids, source, type, head_txt) {
         
     }else {
        // source ERROR
+       logger.error('ERROR')
        return 'ERROR'
     }
    
@@ -1408,12 +1385,12 @@ function create_taxon_table(otids, source, type, head_txt) {
 }
 //
 function create_table_from_sql_query (sqlrows, startText) {
-    //console.log('in create_table_from_sql_query')
+    
     let txt = startText + '\n'
     let tmp,data,i,n,hmt
     const headersRow = Object.keys(sqlrows[0])
     txt += headersRow.join('\t')+'\n'
-    //console.log('headersRow',headersRow)
+    
     for(n in sqlrows){
         tmp = []
         for(i in headersRow){
@@ -1425,7 +1402,7 @@ function create_table_from_sql_query (sqlrows, startText) {
               data.push(sqlrows[n][headersRow[i]])
           }
           tmp.push(data)
-          //console.log('hd',sqlrows[n][headersRow[i]])
+          
         }
         txt += tmp.join('\t')
         txt += '\n'
@@ -1435,14 +1412,11 @@ function create_table_from_sql_query (sqlrows, startText) {
 function create_full_genome_table_gtdb (sqlrows, startText) {
     let txt = startText + '\n'
     let tmp,data,i,n,hmt
-    //console.log('in create_full_genome_table_gtdb',txt)
+    
     const headersRow = ['Genome-ID','HMT-ID','GTDB Taxonomy']
     txt += headersRow.join('\t')+'\n'
-    //console.log('sqlrows',headersRow)
+    
     for(n in sqlrows){
-
-        //console.log('sqlrows[n]',sqlrows[n])
-        //hmt = helpers.make_otid_display_name(sqlrows[n].HMT_ID)
 
         hmt = sqlrows[n].HMT_ID
         tmp = [sqlrows[n].GENOME_ID, hmt, sqlrows[n].GTDB_taxonomy]
@@ -1458,13 +1432,10 @@ function create_genome_table (gids, source, type, startText) {
   if (source === 'table') {
     const headersRow = ['Genome-ID', 'Oral_Taxon-ID', 'Genus', 'Species', 'SubSpecies', 'Strain','No. Contigs',  'Total Length',  'MAG', 'Assembly Level','GC %']
     txt += headersRow.join('\t')+'\n'
-    //console.log('SEQF5379.1',C.genome_lookup)
     for (let n in gids) {
       const gid = gids[n]
       const obj = C.genome_lookup[gid]
-      //console.log(obj)
-      // per FDewhirst: species needs to be unencumbered of genus for this table
-      //let species = obj.species.replace(obj.genus,'').trim()
+      
       let genus = C.taxon_lookup[obj.otid].genus
       let species = C.taxon_lookup[obj.otid].species
       let subspecies = C.taxon_lookup[obj.otid].subspecies
@@ -1473,7 +1444,7 @@ function create_genome_table (gids, source, type, startText) {
       txt += r.join('\t') +'\n'
     }
   }
-  // console.log(txt)
+  
   return txt
 }
 

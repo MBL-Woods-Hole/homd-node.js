@@ -58,7 +58,7 @@ router.get('/blast_server', function refseq_blast_server(req, res) {
 })
 //
 router.get('/refseq_blastn', function refseq_blastn(req, res) {
-    console.log('MADEIT TO blastn-get')
+    logger.info('MADEIT TO blastn-get')
     //helpers.accesslog(req, res)
   
   res.render('pages/refseq/blastn', {
@@ -80,7 +80,7 @@ router.get('/refseq_blastn', function refseq_blastn(req, res) {
 
 
 router.get('/refseq_tree', function refseq_tree(req, res) {
-  console.log('in refseq_tree')
+  logger.info('in refseq_tree')
    
   // https://www.homd.org/ftp//phylogenetic_trees/refseq/current/eHOMD_16S_rRNA_RefSeq.svg
   // here from taxdescription page  public/trees/
@@ -102,7 +102,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
   }
   fs.readFile(filepath, 'utf8', (err, data) => {
           if (err) {
-            console.error('Error reading file:', err);
+            logger.error('Error reading file:', err);
             return;
           }
           //console.log('File content:', data);
@@ -125,7 +125,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
 })
 //
 router.get('/download', function download(req, res) {
-    console.log('download')
+    logger.info('download')
   //console.log(req.body)
   //helpers.accesslog(req, res)
   res.render('pages/refseq/download', {

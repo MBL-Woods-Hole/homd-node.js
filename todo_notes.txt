@@ -1,78 +1,9 @@
-2026-07-14
-SS error on no CR
->GCA_018141845.1_01294 MDEREKIIRLWFDMWLTQQDLGIDDIFLDDVIYIESWCPKYENRQTVKHWFNEWNTRGKVLAWDIKQFFHKDNQTIVEWHFKNKMNEGKVEEFDGISLIVWTADNKIKALKEFGCNCNNYNPYKE
-
->>>>>>>
-Looks like there is a problem with the server. Try visiting the page again after a while. If this message persists, please report the problem on our issue tracker.
-
-BLAST failed abruptly (exit status: 3). Most likely there is a
-problem with the BLAST+ binaries.
-<<<<<<<<<<<<<
-TODO: Write more descriptive error into SS code
-
-Get/Update NCBI Taxon-IDs :: see script NCBI_API_taxa.py using 'datasets'
-conda activate ncbi_datasets
-
-Continue monitoring MySQL pool connections
+2026-07-21
+BlastServer:
+  1-public site download fasta fails
+  2-floyd says the fasta id is too long initially.
 
 
---------------------
-Hi Katheryn,
-
-  I've been looking into the SequenceServer code (which is ruby BTW - not my favorite) and I found that there was a default fasta download
-  of all the sequences and another for selected sequences on the left sidebar of the results page. 
-  These defaults have been hidden because our blast databases were compiled without the '-parse_seqids' tag on the makeblastdb script.
-  
-  I know George told my why this was done, but it was done on purpose. So I need to use an sql call to the homd database 
-  after the results are presented to create the fasta file for download (similar to the xlsx and csv files)
-  
-  I think I have successfully edited the xlsx and csv spreadsheet files so I'll work on the fasta files next.
-  Working on the live system with hopefully little downtime.
-  
-  
-2026-05-12
--add pangenome icon to home page -DONE
--add big link to UseCase Page
--SS — Floyd and Katheryn will send info
--Anvio: either delete ‘Download’ button
-   or link to pg page
--HOMD Function: upload file list of protein IDs
-   retrieve fasta
-2026-05-06
-Email from Floyd:
-DONE 1- Create a new page on HowToUse HOMD to advantage
-2- George and Andy,  
-  for genomic BLAST searches I find I’m essentially always changing the Advanced parameters.   
-  I usually change to -evalue 1.0e-45 and -max_target_seqs 400 or 800 or 2000. 
-  It is easy to mistype one of the parameters and kill the blast. 
-  I know this is a canned program from NCBI and difficult to modify, 
-  but is there be better way to choose one’s favorite values for  ‘-evalue and -max_target_seqs?
-    (AAV mabe a dropdown with a set list?)
-    
-  Also, when you do a BLAST, with “open results in new tab” the results show up in a new tab as desired.  
-  However, when you close that tab you come back to a frozen HOMD Genomic BLAST Server page.  
-  The only way to recover tis to hit refresh which clears all database selection and your sequence.   
-  This is annoying if you were coming back to change the number of sequences you wanted 
-  or to copy the BLASTed sequence.  You have to start from scratch.  (I realize this may not be easily fixable)
-
-Email from Julian
-   In the interactive pangenome view (when launching any given pangenome with OpenAnvi’o ) 
-   there is a top-bar menu icon labeled ‘Download’.  At the moment , clicking it downloads a bundle of files. 
-   Would it be possible for the Download action button to only include the taxon-specific 
-   tarball along with its checksum file that you have currently updated?
-
-
-
- 
-=============================================================
-Best,  Floyd
-Hi,
-    Julian - Thanks for the help! -- I fixed the issues with the 'Genome Category'
-    that I was using and now use "Assembly Level" as the table column. I also
-    separated out the MAGs into a separate column as you suggested.
-    
-    Floyd - I've add the sorting ability for 'taxon lineage' on the advanced
-    filter for the taxon table page.
     
 Andy
 

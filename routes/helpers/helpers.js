@@ -12,8 +12,9 @@ import async from 'async';
 import util from 'util';
 import path from 'path';
 import { exec, spawn } from 'child_process';
-//import helpers from './helpers.js';
-import  * as helpers_taxa from './helpers_taxa.js'
+
+import * as helpers_taxa from './helpers_taxa.js'
+import pino from 'pino';
 
 
 export const getKeyByValue = (object, value) => {
@@ -97,10 +98,10 @@ export const compareStrings_float = (a, b) => {
 };
 
 export const show_session = (req) =>{
-  console.log('(Availible for when sessions are needed) req.session: ')
+  logger.info('(Availible for when sessions are needed) req.session: ')
     //console.log('req.session',req.session)
     //console.log('req.sessionID',req.sessionID)
-    console.log('req.session.id',req.session.id)
+    logger.info(`req.session.id ${req.session.id}`)
 };
 
 // export const accesslog = (req, res) =>{
@@ -119,7 +120,7 @@ export const show_session = (req) =>{
 // };
 export const accesslog = (req, res) => {
        let testout = 'Request from:'+req.ip+'\n'
-       //console.log(C.access_logfile);
+       logger.info(`ENV.access_logfile ${ENV.access_logfile}`);
         fs.appendFile(ENV.access_logfile, testout, err => {
              if (err) {
                  console.error(err)
@@ -747,21 +748,44 @@ export const create_jbrowse_link = (gid, loc, hilite) => {
     return link
 }
 //
-export const logPoolStatus = (statusRes,pool) => {
-    console.log('MySQL pool connections:')
-    //console.log('poolInternal',pool.pool)
+export const logPoolStatus = (pool,sql) => {
+    
+    
     const allConn = pool.pool._allConnections.length;
     const freeConn = pool.pool._freeConnections.length;
     const queuedCount = pool.pool._connectionQueue.length;
-
-  
-    console.log('limit:', pool.pool.config.connectionLimit)
-    console.log('allocatedTotal:', allConn)
-    console.log('freeIdle:', freeConn)
-    console.log('activeBusy:', allConn - freeConn)
-    console.log('queuedRequests:', queuedCount)
-  
-  console.log('\n')
+    let obj = {connectlimit:    pool.pool.config.connectionLimit,
+               allocatedTotal:  allConn,
+               freeIdle:        freeConn,
+               activeBusy:      allConn - freeConn,
+               queuedRequests:  queuedCount
+                }
+    logger.info({QUERY:sql})
+    logger.info(obj, 'MySQL POOL:')
 }
-
+export const pino_conf = (pino) => {
+    return pino({
+      level: process.env.LOG_LEVEL, // Lowest logging level allowed globally
+      
+      transport: {
+        targets: [
+          {
+            target: 'pino-pretty', // Outputs formatted text to the terminal
+            level: 'debug',
+            options: { colorize: true }
+          },
+          {
+            target: 'pino/file',   // Outputs structured JSON to a file
+            level: 'info',         // Only saves 'info' and higher severities
+            options: { 
+              destination: process.env.pino_logfile,
+              mkdir: true 
+            }
+          }
+        ]
+      }
+    });
+    
+}
+const logger = pino_conf(pino)
 export default router;

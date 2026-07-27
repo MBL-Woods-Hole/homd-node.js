@@ -13,7 +13,8 @@ import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
 import * as helpers_genomes from './helpers/helpers_genomes.js';
 import * as queries from './queries.js';
-
+import pino from 'pino';
+const logger = helpers.pino_conf(pino)
 
 
 import https from 'https';
@@ -89,8 +90,8 @@ router.get('/reset_gtable', function gen_table_reset(req, res) {
 router.get('/genome_table', function genome_table(req, res) {
     
     // https://www.ncbi.nlm.nih.gov/assembly/GCF_000160075.2/?shouldredirect=false
-    helpers.print('In GET Genome Table')
-    console.log(req.query)
+    logger.info('In GET Genome Table')
+    //logger.info(`req.query ${req.query}`)
     let filter={}, send_list, showing,ret_obj,count_before_paging,args,count_txt
     let page_data = helpers_genomes.init_page_data()
     //console.log('page data',page_data)
@@ -180,7 +181,7 @@ router.get('/genome_table', function genome_table(req, res) {
 
 });
 router.post('/genome_table', function genome_table_post(req, res) {
-    console.log('in POST genome_table')
+    logger.info('in POST genome_table')
     //console.log('req.body',req.body)
     let filter, send_list, page_data,count_before_paging,pager_txt,ret_obj,args,count_txt
     //console.log('req.session.gtable_filter1',req.session.gtable_filter)
@@ -264,7 +265,7 @@ router.get('/jbrowse', function jbrowse (req, res) {
 })
 //
 router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
-  console.log('AJAX JBrowse')
+  logger.info('AJAX JBrowse')
   
   // for logging
   //console.log('req.ip',req.ip)
@@ -287,10 +288,8 @@ router.get('/genome_description', async function Description (req, res) {
     //console.log('data',data)
     const q_genome = queries.get_genome(gid)
     const q_contig = queries.get_contigs(gid)
-    helpers.print('In Genome_Descriptin1: '+q_genome)
     
-    
-        const rows1 = await queries.run_query(q_genome, req, res)
+    const rows1 = await queries.run_query(q_genome, req, res)
         
         if(rows1.length ==0){
              return
@@ -307,7 +306,9 @@ router.get('/genome_description', async function Description (req, res) {
         data = rows1[0]
         delete data.pangenome
         data.pangenomes = pangenomes
-        helpers.print(data)
+        
+        logger.info(data, "LOGGED Success")
+        //logger.info("LOGGED Success")
         data.gid = gid
         data.otid = C.genome_lookup[gid].otid
         
@@ -318,14 +319,15 @@ router.get('/genome_description', async function Description (req, res) {
         // try get contigs from file:
         // ncbi only
         //console.log('q_contig',q_contig)
-        helpers.print('In Genome_Descriptin2: '+q_contig)
+        //logger.info(`In Genome_Description2`)
+        
         const rows2 = await queries.run_query(q_contig, req, res)
         
         for(let r in rows2){
             contigs.push({contig: rows2[r].region, gc: rows2[r].GC})
         }
         let fpath = path.join(ENV.PATH_TO_DATA,'homdData-Crispr.json')
-        //console.log(fpath)
+       
         let crispr = 0
         let crispr_data = JSON.parse(fs.readFileSync(fpath))
         if(gid in crispr_data){
@@ -336,7 +338,7 @@ router.get('/genome_description', async function Description (req, res) {
         //console.log('GTDB_taxonomy',data.GTDB_taxonomy)
         let checkm_status_obj = helpers_genomes.get_checkm_status(data)
         
-        //console.log('checkM status',checkm_status_obj)
+        
         res.render('pages/genome/genomedesc', {
            title: 'HOMD :: Genome',
            pgname: 'genome/description', // for AboutThisPage 
@@ -352,24 +354,23 @@ router.get('/genome_description', async function Description (req, res) {
            // data4: JSON.stringify(data4),
            ver_info: JSON.stringify(C.version_information),
         })
-        //res.send('okay')
-    
+       
 
 })
 router.post('/get_contig_seq', async function get_contig_seq (req, res) {
-    helpers.print(req.body)
+    logger.info(req.body,'In get_contig_sequence')
     const gid = req.body.gid.trim()
     const mid = req.body.mid.trim()
     const contig = req.body.contig.trim()
     let q = queries.get_contig(gid,contig)
     // test genome:one contig only::GCA_000019425.1 
-    console.log('CONTIG query',q)
     let html='',length = 0
     
     const rows = await queries.run_query(q, req, res)
     
     if(rows.length === 0){
        html += "No sequence found in database"
+       logger.error('No Seqs Found in DB')
     }else{
        length = rows[0].seq.toString().length
        const seqstr = (rows[0].seq).toString()
@@ -387,7 +388,7 @@ router.post('/get_contig_seq', async function get_contig_seq (req, res) {
 
 
 router.post('/get_AA_NA_seq', async function get_AA_NA_SeqPost (req, res) {
-    console.log('in get_AA_NA_seq -post',req.body)
+    logger.info(`in get_AA_NA_seq -post ${req.body}`)
     //console.log(req.body)
     //const fieldName = 'seq_' + req.body.type  // na or aa => seq_na or seq_aa
     const pid = req.body.pid
@@ -468,7 +469,7 @@ function render_explorer(req, res, args){
 }
 //
 router.post('/make_anno_search_table', function make_anno_search_table (req, res) {
-    console.log('in POST:make_anno_search_table')
+    logger.info('in POST:make_anno_search_table')
     //console.log(req.body)
     let anno_path = path.join(ENV.PATH_TO_TMP,req.body.dirname)
     
@@ -494,18 +495,18 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
     html += '<th>Gene</th><th>Gene Product</th>'
     html += '</tr>'
     
-    fs.access(anno_path, function(error) {
-       if (error) {
-         console.log("Directory does not exist.")
+    fs.access(anno_path, function(e) {
+       if (e) {
+         logger.error(e)
          res.send('Session Expired')
          return
        } else {
-         console.log("Directory exists.")
+         logger.info("Directory exists.")
          let filepath = path.join(anno_path,anno+'_data')
          
          fs.readFile(filepath, 'utf8', function readOrfSearch (err, data) {
              if (err) {
-               console.log(err)
+               logger.error(err)
                res.send('Session Expired')
                return
              }
@@ -619,7 +620,7 @@ router.post('/make_anno_search_table', function make_anno_search_table (req, res
 })
 //
 router.post('/orf_search_sql', function orf_search_full (req, res) {
-    console.log('in POST:orf_search_sql')
+    logger.info('in POST:orf_search_sql')
     //console.log(req.body)
     let site_search_result={},tmpgid,ssp,data_keys,obj
     let anno = req.body.anno
@@ -633,9 +634,9 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
     //let bigdata = req.session.anno_search_full //JSON.parse(decodeURI(req.body.dataobj))
     //console.log('req.session',req.session)
     //console.log('Parsed Data1',bigdata)
-    fs.access(anno_path, function(error) {
-       if (error) {
-         //console.log("Directory does not exist.")
+    fs.access(anno_path, function(e) {
+       if (e) {
+         logger.error(e)
          res.send('Session Expired')
          return
        } else {
@@ -643,7 +644,7 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
          let filepath = path.join(anno_path,anno+'_data')
          fs.readFile(filepath, 'utf8', function readSQLOrfSearch (err, data) {
             if (err) {
-               console.log(err)
+               logger.error(err)
                res.send('Session Expired')
                return
              }
@@ -711,8 +712,8 @@ router.post('/orf_search_sql', function orf_search_full (req, res) {
 })
 router.post('/orf_search', function orf_search (req, res) {
     // From GREP Search
-    console.log('in POST:orf_search')
-    //console.log(req.body)
+    logger.info('in POST:orf_search')
+    
     let anno = req.body.anno
     let search_text = req.body.search_text
     let org_list = {}
@@ -724,9 +725,9 @@ router.post('/orf_search', function orf_search (req, res) {
     let anno_path = path.join(ENV.PATH_TO_TMP,req.session.anno_search_dirname)
     let site_search_result = {}
     let tmpgid,ssp=''
-    fs.access(anno_path, function(error) {
-       if (error) {
-         console.log("Directory does not exist.")
+    fs.access(anno_path, function(e) {
+       if (e) {
+         logger.error(e)
          res.send('Session Expired')
          return
        } else {
@@ -734,7 +735,7 @@ router.post('/orf_search', function orf_search (req, res) {
          let filepath = path.join(anno_path,anno,'data')
          fs.readFile(filepath, 'utf8', function readOrfSearch (err, data) {
              if (err) {
-               console.log(err)
+               logger.error(err)
                res.send('Session Expired')
                return
              }
@@ -944,7 +945,7 @@ router.get('/reset_atable', function annot_table_reset(req, res) {
 });
 
 router.post('/explorer', async function explorer_post (req, res) {
-    console.log('IN explorer_post')
+    logger.info('IN explorer_post')
     //console.log(req.body)
     let pidList
     let gid = req.body.gid
@@ -978,12 +979,11 @@ router.post('/explorer', async function explorer_post (req, res) {
     let atable_filter = get_annot_table_filter(req.body)
     req.session.atable_filter = atable_filter
     const q = queries.get_annotation_query(gid, req.body.anno)
-    console.log('get_annotation_query-post',q)
-    
+        
     const rows = await queries.run_query(q, req, res)
     
     if (rows.length === 0) {
-        console.log('no rows found')
+        logger.warn('no rows found')
     }
     let filtered_rows = apply_annot_table_filter(rows, atable_filter)
     //console.log('filtered_rows[0]',filtered_rows)
@@ -998,7 +998,7 @@ router.post('/explorer', async function explorer_post (req, res) {
         pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
         if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
         if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-        helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+        logger.info(`page_data.number_of_pages ${pageData.number_of_pages}`)
         pageData.show_page = pageData.page
         if (pageData.show_page === 1) {
           pidList = filtered_rows.slice(0, pageData.row_per_page) // first 200
@@ -1007,7 +1007,7 @@ router.post('/explorer', async function explorer_post (req, res) {
           pidList = filtered_rows.slice(pageData.row_per_page * (pageData.show_page - 1), pageData.row_per_page * pageData.show_page) // second 200
           pageData.start_count = pageData.row_per_page * (pageData.show_page - 1) + 1
         }
-        //console.log('start count', pageData.start_count)
+        
       }
     }
     //console.log('POST pidlist',pidList.length)
@@ -1031,7 +1031,7 @@ router.post('/explorer', async function explorer_post (req, res) {
     
 })
 router.get('/explorer', async function explorer_get (req, res) {
-    console.log('in explorerGET')
+    logger.info('in explorerGET')
     //console.log(C.annotation_lookup)
     // let myurl = url.parse(req.url, true)
     helpers.accesslog(req, res)
@@ -1044,8 +1044,6 @@ router.get('/explorer', async function explorer_get (req, res) {
     let otid = 0,gc = 0
     let anno = req.query.anno || 'prokka'
     
-    
-    helpers.print(['gid:', gid,'anno:',anno])
   
     // anno === 
     let atable_filter
@@ -1098,7 +1096,7 @@ router.get('/explorer', async function explorer_get (req, res) {
         gc = C.genome_lookup[gid].gc
     }
     if(gid && !anno) {
-      //console.log('no anno2')
+      
       args = {fltr:{},filter_on:'off',gid:gid,gc:gc,otid:0,organism:organism,allAnnosObj:allAnnosObj,annoType:'',pageData:{},annoInfoObj:{},pidList:[]}
       render_explorer(req, res, args)
       return
@@ -1106,7 +1104,7 @@ router.get('/explorer', async function explorer_get (req, res) {
  
   
     // NOW ANNOTATIONS
-    //console.log('C.annotation_lookup',C.annotation_lookup)
+    
     // localhost http://0.0.0.0:3001/genome/explorer?gid=SEQF4098&anno=ncbi
     if (Object.prototype.hasOwnProperty.call(C.annotation_lookup, gid) && Object.prototype.hasOwnProperty.call(C.annotation_lookup[gid], anno)) {
     annoInfoObj = C.annotation_lookup[gid][anno]
@@ -1119,7 +1117,7 @@ router.get('/explorer', async function explorer_get (req, res) {
     render_explorer(req, res, args)
     return
     }
-    //console.log('C')
+   
     //OLD DB
     const q = queries.get_annotation_query(gid, anno)
   
@@ -1129,13 +1127,13 @@ router.get('/explorer', async function explorer_get (req, res) {
         atable_filter = helpers_genomes.get_default_annot_filter()
         req.session.atable_filter = atable_filter
     }
-    helpers.print('explorer::anno query: '+q)
+    
     // local host:  explorer?gid=SEQF4098.1&anno=ncbi
     
     const rows = await queries.run_query(q, req, res)
     
     if (rows.length === 0) {
-        console.log('no rows found')
+        logger.warn('no rows found')
     }
     let filtered_rows = apply_annot_table_filter(rows, atable_filter)
     pageData.trecords = rows.length
@@ -1146,7 +1144,7 @@ router.get('/explorer', async function explorer_get (req, res) {
         pageData.number_of_pages = Math.ceil(trows / pageData.row_per_page)
         if (pageData.page > pageData.number_of_pages) { pageData.page = 1 }
         if (pageData.page < 1) { pageData.page = pageData.number_of_pages }
-        helpers.print(['page_data.number_of_pages', pageData.number_of_pages])
+        logger.info(`page_data.number_of_pages ${pageData.number_of_pages}`)
         pageData.show_page = pageData.page
         if (pageData.show_page === 1) {
           pidList = rows.slice(0, pageData.row_per_page) // first 200
@@ -1191,10 +1189,7 @@ router.get('/explorer', async function explorer_get (req, res) {
 
 
 router.get('/blast_select_genome', function blast_select_genome(req, res) {
-   //router.get('/taxTable', helpers.isLoggedIn, (req, res) => {
-  //helpers.accesslog(req, res)
-  //console.log('blast_select_genome')
-  //let myurl = url.parse(req.url, true);
+  
     
   const gid = req.query.gid
   let gc = 0
@@ -1230,7 +1225,7 @@ router.get('/blast_select_genome', function blast_select_genome(req, res) {
 
 
 router.post('/blast_ss_single', function blast_ss_single(req, res){
-  console.log('IN POST blast_ss_single')
+  logger.info('IN POST blast_ss_single')
   //console.log(req.body)
   let gid = req.body.gid
   //console.log(ENV.BLAST_URL_BASE)
@@ -1270,7 +1265,7 @@ router.post('/blast_ss_single', function blast_ss_single(req, res){
 // These functions are used to open trees with a search for odid or genomeID
 // The main menu goues through routes_homd::open_tree
 router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
-  console.log('in conserved_protein_tree (Genomic Tree)')
+  logger.info('in conserved_protein_tree (Genomic Tree)')
   // let myurl = url.URL(req.url, true);
   //const http = require('http'); 
   let findme = 'DEFAULTxxxxFINDMExxxxxxxxxx'  // will be either gid OR otid (other is 'undefined')
@@ -1295,11 +1290,11 @@ router.get('/conserved_protein_tree', function conservedProteinTree (req, res) {
   }else{
       filepath = ENV.FILEPATH_TO_FTP + ENV.CP_TREE_PATH
   }
-  console.log(filepath,findme)
+  logger.info(filepath,findme)
   
   fs.readFile(filepath, 'utf8', (err, data) => {
           if (err) {
-            console.error('Error reading file:', err);
+            logger.error(err);
             return;
           }
           //console.log('File content:', data);
@@ -1371,7 +1366,7 @@ router.get('/ribosomal_protein_tree', function ribosomalProteinTree (req, res) {
   }
   fs.readFile(filepath, 'utf8', (err, data) => {
           if (err) {
-            console.error('Error reading file:', err);
+            logger.error(err);
             return;
           }
           //console.log('File content:', data);
@@ -1438,7 +1433,7 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
   
   fs.readFile(filepath, 'utf8', (err, data) => {
           if (err) {
-            console.error('Error reading file:', err);
+            logger.error(err);
             return;
           }
           //console.log('File content:', data);
@@ -1461,12 +1456,12 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //
 router.get('/anvio_pangenomes', function anvio_pangenomes_GET(req, res){
     //let q = queries.get_all_pangenomes_query()
-    console.log('in GET anvio selection',req.query)
-    console.log('GET')
+    logger.info(`in GET anvio selection ${req.query}`)
+    
     let pg_list = Object.keys(C.pangenome_lookup)
     let tot_count = pg_list.length
     if(req.query && req.query.filter){
-        console.log('render new list:',req.query.filter)
+        
         let search_term = req.query.filter.toLowerCase()
         if(search_term.length >200){
             return
@@ -1514,10 +1509,8 @@ router.get('/anvio_pangenomes', function anvio_pangenomes_GET(req, res){
 })
 //
 router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
-    
-    
-    console.log('in POST anvio selection')
-    console.log('in POST anvio selection',req.query)
+
+    logger.info(`in POST anvio selection ${req.query}`)
     let search_term = req.body.val.toLowerCase()
     
     let pg,obj,html = ""
@@ -1600,13 +1593,13 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
 
 
 router.get('/anvio', (req, res) => {
-    console.log('In anvio')
+    logger.info('In anvio')
     
     //helpers.accesslog(req, res)
     
     let pg = req.query.pg
     
-    console.log('Selected Pangenome:',pg)
+    logger.info(`Selected Pangenome: ${pg}`)
     //let port = anvio_ports()
     //let default_open_ports = [8080,8081,8082,8083,8084,8085] 
     //let port = default_open_ports[Math.floor(Math.random() * default_open_ports.length)]
@@ -1646,7 +1639,7 @@ router.get('/pangenome_image', async function pangenome_image(req, res) {
 //    }
 })
 router.get('/pangenome_image2', async function pangenome_image(req, res) {
-    console.log(req.query)
+    logger.info(req.query)
     //const { parse, stringify } = require('svgson')
     
     let otid,pg,ext,filepath
@@ -1785,13 +1778,13 @@ router.get('/peptide_table', async function peptide_table_get(req, res) {
     
 })
 router.post('/peptide_table', async function peptide_table_post(req, res) {
-    console.log('req.body',req.body)
+    logger.info(req.body)
     let search_text = req.body.txt_srch.toLowerCase()
     let big_p_list //= Object.values(C.genome_lookup);
     const q = queries.get_peptide()
     
     let pid,gid,prod,genome,temp,pep,otid,hmt,org,mol,pepid,size,jb_link,study_id
-    console.log(q)
+   
     const rows = await queries.run_query(q, req, res)
         
         
@@ -1818,7 +1811,7 @@ router.post('/peptide_table', async function peptide_table_post(req, res) {
     // will search all === PID,HMT,Organism,Peptide,Product
     let send_list = full_send_list
     if(search_text){
-      console.log('searching',search_text)
+      logger.info(`searching ${search_text}`)
       send_list = full_send_list.filter( function(item){
            return item.organism.toLowerCase().includes(search_text) ||
               item.product.toLowerCase().includes(search_text)      ||
@@ -1848,7 +1841,7 @@ router.get('/peptide_table2', async function peptide_table2_get(req, res) {
     const q = queries.get_peptide2()
 
     let gid,otid,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
-    console.log(q)
+    
     const rows = await queries.run_query(q, req, res)
         
         
@@ -1902,7 +1895,7 @@ router.post('/peptide_table2', async function peptide_table2_post(req, res) {
 
     let search_text = req.body.txt_srch.toLowerCase()
     let gid,otid,hmt,org,prot_count,pep_count,temp,studies,studies_ary,study_id,study_collector,row,row_collector
-    console.log(q)
+    
     const rows = await queries.run_query(q, req, res)
         
    //console.log('1')
@@ -1944,7 +1937,7 @@ router.post('/peptide_table2', async function peptide_table2_post(req, res) {
     }
     let send_list = full_send_list
     if(search_text){
-      console.log('searching',search_text)
+      logger.info(`searching ${search_text}`)
       send_list = full_send_list.filter( function(item){
            return item.org.toLowerCase().includes(search_text) ||
               item.gid.toLowerCase().includes(search_text)          ||
@@ -1966,14 +1959,14 @@ router.post('/peptide_table2', async function peptide_table2_post(req, res) {
     
 })
 router.get('/peptide_table3', async function protein_peptide(req, res) {
-    console.log(req.query)
+    logger.info(req.query)
     let gid = req.query.gid
     
     const q = queries.get_peptide3(gid)
     let temp,pid,otid,org,prod,pep,start,stop,mol,study_name,study,peptide_id,jb_link
     let locstart,locstop,size,seqacc,loc,highlight
     
-    console.log(q)
+    
     const rows = await queries.run_query(q, req, res)
         
     let send_list = []
@@ -2037,7 +2030,7 @@ router.get('/amr_table', function amr_table_GET(req, res) {
         genome_lookup[gid] = tmp;
         sort_list.push({gid:gid, org:organism})
     }
-    //console.log(genome_lookup)
+    
     
        
     sort_list.sort((a, b) => {
@@ -2058,7 +2051,7 @@ router.get('/amr_table', function amr_table_GET(req, res) {
 })
 //
 router.post('/amr_table', function amr_table_POST(req, res) {
-    console.log('1n post amr-table',req.body)
+    
     let s = req.body.search_input.toLowerCase()
     let organism,strain,otid,hmt,contigs,length,tmp={}
     let tcount = Object.keys(C.amr_lookup).length
@@ -2103,10 +2096,10 @@ router.post('/amr_table', function amr_table_POST(req, res) {
 //
 //
 router.post('/amr_ajax', async function amr_ajax(req, res){
-    console.log('in POST amr_ajax')
+    
     let gid = req.body.gid
     let q = queries.get_amr_data(gid)
-    console.log(q)
+    
     let hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
     let org = C.genome_lookup[gid].organism
     let strain = C.genome_lookup[gid].strain
@@ -2222,7 +2215,7 @@ router.get('/crispr_table', function crispr_table_GET(req, res) {
         return helpers.compareStrings_alpha(a.org, b.org);
     })
     
-    console.log('sort_list',sort_list.length)
+    
     res.render('pages/genome/crispr_cas', {
         title: 'HOMD :: CRISPR-Cas', 
         pgname: '', // for AboutThisPage
@@ -2241,7 +2234,7 @@ router.get('/crispr_table', function crispr_table_GET(req, res) {
 })
 //
 router.post('/crispr_table', function crispr_table_POST(req, res) {
-    console.log('in post crispr-table')
+    logger.info('in post crispr-table')
     let s = req.body.search_input.toLowerCase()
     let genome_lookup = {}
     let gid,organism,strain,otid,contigs,length
@@ -2273,7 +2266,7 @@ router.post('/crispr_table', function crispr_table_POST(req, res) {
         return helpers.compareStrings_alpha(a.org, b.org);
     })
     
-    console.log('sort_list',sort_list.length)
+    
     res.render('pages/genome/crispr_cas', {
         title: 'HOMD :: CRISPR-Cas', 
         pgname: '', // for AboutThisPage
@@ -2300,7 +2293,7 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
     let p1,p2,loc,highlight,opos
     //console.log('crispr_ajax',gid)
     const q = queries.get_crispr_cas_data(gid)
-    console.log(q)
+    
     const rows = await queries.run_query(q, req, res)
         
         
@@ -2377,13 +2370,13 @@ router.get('/open_ftp_file', function open_ftp_file(req, res) {
     //console.log('fname',fname)
     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,fname)
     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/'+file_ext+'/GCA_000174175.1.faa'
-    console.log(fpath)
+    logger.info(fpath)
     if(ENV.ENV === 'localhost'){
       fpath = fpath_local
     }
     fs.readFile(fpath, 'utf8', (err, data) => {
         if (err) {
-          console.error('Error reading file:', err);
+          logger.error(err);
         return;
         }
         //console.log('File content:', data);

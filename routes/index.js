@@ -11,7 +11,8 @@ import * as helpers from './helpers/helpers.js';
 import C from '../public/constants.js';
 import { exec, spawn } from 'child_process';
 import * as queries from './queries.js';
-
+import pino from 'pino';
+const logger = helpers.pino_conf(pino)
 
 router.get('/', function index(req, res) {
   
@@ -31,8 +32,8 @@ router.get('/get_fasta', async function get_fasta(req, res) {
       // https://homd.org/get_fasta?seqid=xxx,xxx,xxx
     let dt = helpers.get_today_obj()
 
-    console.log('in get_fasta')
-    console.log('req.query',req.query)
+    logger.info('in get_fasta')
+    logger.info('req.query',req.query)
     let anno = req.query.anno  // PROKKA or NCBI
     let dbtable = req.query.dbtable  // ffa ffn fna
     let seqids = req.query.seqids
@@ -54,14 +55,14 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     //  
     q += " WHERE protein_id in ('"+seqids.replace(/,/g, "','")+"')"
     //q += " limit 10"
-    console.log('\n',anno,dbtable)
-    console.log(q)
+    logger.info('\n',anno,dbtable)
+    
     let defline,seq,outfile_txt = ''
     const rows = await queries.run_query(q, req, res)
     
     //console.log('rows',rows)
     if(rows.length === 0){
-        console.log('no rows found')
+        console.error('no rows found')
         res.send('No Data Found')
         return
     }else{
@@ -78,7 +79,7 @@ router.get('/get_fasta', async function get_fasta(req, res) {
         
     }
     let outfilePath = path.join(ENV.PATH_TO_TMP,jobid+'.fa')
-    console.log('writing fasta to ',outfilePath)
+    logger.info('writing fasta to ',outfilePath)
     await fs.writeFile(outfilePath, outfile_txt);
     
     let fname = 'HOMD_BLAST_FASTA_'+anno+'_'+dbname+'_'+dt.today + '_' + dt.seconds + '.fa'
@@ -163,12 +164,12 @@ function execPromise(cmd, args, max) {
           //}
         });
         process.stderr.on("data", data => {
-            console.log(`stderr: ${data}`);
+            logger.error(`stderr1: ${data}`);
             reject(data)
         });
         process.on('close', function (code) { 
           // *** Process completed
-          console.log('code',code)
+          logger.info(`code: ${code}`)
           let dataBuffer =  Buffer.concat(bufferArray);
           let dataBufferArray = dataBuffer.toString().split('\n')
           //console.log('resolving okay',dataBufferArray[0])
@@ -177,14 +178,15 @@ function execPromise(cmd, args, max) {
         });
         process.on('error', function (err) {
           // *** Process creation failed
+          logger.error(`stderr2: ${data}`);
           reject(err);
         });
     });
 }
 
 router.post('/advanced_anno_orf_search', async function advanced_anno_orf_searchPOST(req, res) {
-    console.log('in advanced_anno_orf_search RESULTS')
-    console.log('body',req.body)
+    logger.info('in advanced_anno_orf_search RESULTS')
+    logger.info(`body: ${req.body}`)
     //console.log('pidlist',req.body.pid_list)
     let anno = req.body.anno.toUpperCase()
     let q
@@ -246,7 +248,7 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
         q+= " LEFT JOIN "+anno+".ffn c on a.genome_id=c.genome_id and c.protein_id=a.attribute_locus_tag"
         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
       }
-    console.log('QQ',q)
+    
     const rows = await queries.run_query(q, req, res)
     
     res.send(JSON.stringify(rows))
@@ -254,8 +256,8 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
 })
 //
 router.post('/advanced_site_search_phage_grep', async function advanced_site_search_phagePOST(req, res) {
-    console.log('in advanced_site_search_phage_grep')
-    console.log(req.body)
+    logging.info('in advanced_site_search_phage_grep')
+    logging.info(req.body)
     const searchText = req.body.search_text_phage_grep.toLowerCase()
     //let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     //let grep_fields = ['predictor','genome_id','accession']  // MUST BE order from file
@@ -273,7 +275,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         let args = ['-h','-m '+(max_rows).toString(),'"'+searchText+'"',datapath]
         //let args = ['-h','"'+searchText+'"',datapath]
         let grep_cmd = ENV.GREP_CMD + ' ' + args.join(' ')
-        console.log(grep_cmd)
+        logging.info(grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
         // [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
         const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
@@ -397,7 +399,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         })
     }
     catch(e){
-          console.log("error",e);
+          logging.error(e);
       }
       
     return
@@ -407,17 +409,18 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
 
 })
 router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
-   console.log('in open_phage_sequence')
-   console.log(req.body)
+   logging.info('in open_phage_sequence')
+   clogging.info(req.body)
    
    let html = '',contig,length,gid,predictor,species='',strain='',otid
    let q = "SELECT genome_id,contig,predictor,seq_length,UNCOMPRESS(seq_compressed) as seq from phage_search WHERE search_id = '"+req.body.search_id+"'"
-    console.log(q)
+    
     const rows = await queries.run_query(q, req, res)
     
     //console.log('rows',rows)
     if(rows.length === 0){
         html += "No sequence found in database"
+        logging.error("error-No sequence found in database");
     }else{
         predictor = rows[0].predictor
         gid = rows[0].genome_id
@@ -437,7 +440,7 @@ router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
 })
 //
 router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res) {
-   console.log('in show_all_phage_hits')
+   logging.info('in show_all_phage_hits')
    let all = JSON.parse(req.body.big_list)
    let hit_ids = [],hl
    for(let n in all){
@@ -448,7 +451,7 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
    }
    //console.log(hit_ids)
    let q = queries.get_phage_from_ids_noseqs(hit_ids)
-   console.log(q)
+   
    const rows = await queries.run_query(q, req, res)
    
     //console.log('rows',rows)
@@ -468,11 +471,11 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
    
 })
 router.post('/submit_phage_data', async function submit_phage_data(req, res) {
-   console.log('in submit_phage_data')
-   console.log(req.body)
+   logging.info('in submit_phage_data')
+   logging.info(req.body)
    
    let q = "SELECT * from phage_search WHERE search_id = '"+req.body.search_id+"'"
-    console.log(q)
+    
     const rows = await queries.run_query(q, req, res)
     
     res.send(JSON.stringify(rows))
@@ -480,9 +483,9 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
     
 })
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
-    console.log('in advanced_site_search_grep - index.js')
+    logging.info('in advanced_site_search_grep - index.js')
     // anno now includes prokka, ncbi and bakta
-    console.log('body',req.body)
+    logging.info('body',req.body)
     const searchText = req.body.search_text_anno_grep.toLowerCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
@@ -621,7 +624,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         })
     }
     catch(e){
-          console.log("error",e);
+          logging.error(e);
       }
       
     return
@@ -640,8 +643,8 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
 //
 router.post('/basic_site_search', function basic_site_search(req, res) {
   
-  console.log('index.js::in basic POST -Search')
-  console.log(req.body)
+  logging.info('index.js::in basic POST -Search')
+  logging.info(req.body)
   const searchText = req.body.adv_search_text
   const searchTextLower = req.body.adv_search_text.toLowerCase()
   let taxonOtidObj = {},otidLst = [],refseqObj={},gidLst=[],ret_obj={}
@@ -708,7 +711,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
 
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
-        console.error('stderr',stderr);
+        logging.error(stderr);
         return;
       }
       //console.log('stdout',stdout);
