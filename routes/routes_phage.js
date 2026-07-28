@@ -1,12 +1,8 @@
 'use strict'
 import express from 'express';
 let router   = express.Router();
-
 import fs from 'fs-extra';
-
-// const url = require('url');
 import path from 'path';
-
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
