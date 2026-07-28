@@ -74,7 +74,7 @@ router.get('/taxon_table', function tax_table_get(req, res) {
 
 router.post('/taxon_table', function tax_table_post(req, res) {
   logger.info('in TT post')
-  //logger.info(req.body)
+  logger.info(req.body)
   let send_list
   helpers_taxa.set_ttable_session(req)
   //logger.info('ttable_session',req.session.ttable_filter)

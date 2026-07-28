@@ -505,7 +505,11 @@ export const calculate_homd_stats = () => {
 //TAXA////TAXA////TAXA////TAXA////TAXA////TAXA////TAXA//
     //logger.info(C.taxon_lookup['10'])
     //s.taxa_count = Object.keys(C.taxon_lookup).length
-    let homd_taxa = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped'))
+    let homd_taxa = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped' && item.status.toLowerCase() !== 'reference'))
+    let homd_dropped_taxa = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped'))
+    let homd_reference_taxa = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference'))
+    s.ref_count = homd_reference_taxa.length
+    s.dropped_count = homd_dropped_taxa.length
     // Status
     s.taxon_count               = homd_taxa.length
     count = homd_taxa.filter(item => item.naming_status.toLowerCase().slice(0,5) === 'named' 
@@ -549,10 +553,6 @@ export const calculate_homd_stats = () => {
     count = homd_taxa.filter(item => item.sites[0] === 'Environmental').length
     pct = count / s.taxon_count * 100
     s.taxa_site_env   = {count:count,pct_of_taxa:pct.toFixed(1)}
-    
-    count = homd_taxa.filter(item => item.sites[0] === 'Reference').length
-    pct = count / s.taxon_count * 100
-    s.taxa_site_ref   = {count:count,pct_of_taxa:pct.toFixed(1)}
     
     count = homd_taxa.filter(item => item.sites[0] === 'Unassigned').length
     pct = count / s.taxon_count * 100

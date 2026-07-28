@@ -94,9 +94,11 @@
           <tr><td class='right'>Vaginal</td><td class='left stat'><%= s.taxa_site_vaginal.count %> (<%= s.taxa_site_vaginal.pct_of_taxa %>%) </td></tr>
           <tr><td class='right'>Pathogen</td><td class='left stat'><%= s.taxa_site_path.count %> (<%= s.taxa_site_path.pct_of_taxa %>%) </td></tr>
           <tr><td class='right'>Environmental</td><td class='left stat'><%= s.taxa_site_env.count %> (<%= s.taxa_site_env.pct_of_taxa %>%) </td></tr>
-          <tr><td class='right'>Reference</td><td class='left stat'><%= s.taxa_site_ref.count %> (<%= s.taxa_site_ref.pct_of_taxa %>%) </td></tr>
           <tr><td class='right'>Unassigned</td><td class='left stat'><%= s.taxa_site_unassigned.count %> (<%= s.taxa_site_unassigned.pct_of_taxa %>%) </td></tr>
-    
+          <tr><th colspan='2'>Other</th></tr>
+          <tr><td class='right'>Reference Taxa</td><td class='left stat'><%= s.ref_count %></td></tr>
+          <tr><td class='right'>Dropped Taxa</td><td class='left stat'><%= s.dropped_count %></td></tr>
+          
           <tr><th colspan='2'>Phyla Represented</th></tr>
           <% for(var n in s.taxa_phyla){ %>
              <tr><td class='right'><%= s.taxa_phyla[n].phyla %></td><td class='left stat'><%= s.taxa_phyla[n].taxcnt %></td></tr>

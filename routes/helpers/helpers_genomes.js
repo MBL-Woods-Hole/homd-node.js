@@ -389,7 +389,8 @@ export const apply_gtable_filter = (req, filter) => {
   //logger.info('site_on',site_on)
   //logger.info('big_g_list[]',big_g_list[0])
   big_g_list = big_g_list.filter(function (item) {
-    if (site_on.length === C.default_site_on.length) {
+    //if (site_on.length === C.default_site_on.length) {
+    if (site_on.length === Object.keys(C.tax_sites_all).length){
       return item;
     } else {
       //logger.info('Sites:',C.site_lookup[item.otid].s1)
