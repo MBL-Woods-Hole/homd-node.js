@@ -20,13 +20,11 @@ export const reset_user_signin = function reset_user_signin(new_count, old_date,
 
 export const update_user_info = function update_user_info(uid, new_info) {
     let updateQuery = "UPDATE user set first_name='"+new_info.first_name+"', last_name='"+new_info.last_name+"', email='"+new_info.email+"', institution='"+new_info.institution+"' WHERE user_id='"+uid+"'"
-    console.log(updateQuery)
     return updateQuery
 };
 
 export const update_user_pw_admin = function update_user_pw_admin(uid, pw) {
     let updateQuery = "UPDATE user set encrypted_password=CONCAT('*', UPPER(SHA1(UNHEX(SHA1('"+pw+"'))))) WHERE user_id='"+uid+"'"
-    console.log(updateQuery)
     return updateQuery
 };
 

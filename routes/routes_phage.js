@@ -52,7 +52,6 @@ router.get('/phage_table', function phage_table_GET(req, res) {
         sort_list.push({gid:gid, org:organism})
     }
     
-    //console.log('full_count',full_count)
     
     sort_list.sort((a, b) => {
         return helpers.compareStrings_alpha(a.org, b.org);
@@ -139,7 +138,7 @@ router.post('/phage_ajax', async function phage_ajax(req, res){
         
        
     for(let i in rows){
-        //console.log(rows[i])
+        
         
             //send_rows.push(rows[i])
             // create JB Link

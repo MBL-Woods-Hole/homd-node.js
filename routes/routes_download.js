@@ -203,7 +203,7 @@ router.get('/dld_tax_table/:version/', function dld_tax_table(req, res) {
 
 })
 router.get('/dld_taxabund/:type/:source/', function dld_taxabund(req, res) {
-    //console.log('in dld abund - taxon')
+    //logger.info('in dld abund - taxon')
     let dt = helpers.get_today_obj()
 
     let type = req.params.type
@@ -406,10 +406,10 @@ router.get('/dld_genome_table/:type', function dld_genome_table (req, res) {
   let filter = helpers_genomes.get_default_gtable_filter()
   if(req.session.hasOwnProperty('gtable_filter')){
     filter = req.session.gtable_filter
-    //console.log('filter',filter)
+    //logger.info('filter',filter)
     
   }
-  //console.log('YYYfilter',filter)
+  //logger.info('YYYfilter',filter)
   let sendList = helpers_genomes.apply_gtable_filter(req, filter)
 
      let fileFilterText = 'HOMD.org Genome Data:: Filtered Genome Data'
@@ -452,7 +452,7 @@ router.get('/dld_peptide_table_all/:study', function dld_peptide_table_all (req,
     return 
 })
 // router.get('/dnld_pangenome',(req, res) => {
-//     console.log('req query',req.query)
+//     logger.info('req query',req.query)
 //     let pg = req.query.pg
 //     let ver = req.query.V
 //     let fn
@@ -473,17 +473,17 @@ router.get('/dld_peptide_table_all/:study', function dld_peptide_table_all (req,
 
 router.post('/anno_search_data', async (req, res) => {
    // Download all Annotation Hits/ table and fasta
-   //console.log('anno_search_data req body',req.body)
+   //logger.info('anno_search_data req body',req.body)
    let type = req.body.type  // browser, text or excel
    let anno = req.body.anno  // ncbi prokka or bakta
    let anno_cap = anno.toUpperCase()
    let search_text = req.body.search_text
     let format = req.body.format  // csv or fasta
     let id_list = JSON.parse(req.body.anno_ids)
-    //console.log('id_list length',id_list.length)
-    //console.log('anno',anno)
-    //console.log('type',type)
-    //console.log('format',format)
+    //logger.info('id_list length',id_list.length)
+    //logger.info('anno',anno)
+    //logger.info('type',type)
+    //logger.info('format',format)
     let fname,result_text,ext,q
     let dt = helpers.get_today_obj()
     //if anno is prokka or ncbi us .map to get all the pids from idlist
@@ -496,7 +496,7 @@ router.post('/anno_search_data', async (req, res) => {
        pid_list = pid_list.concat(lst)
     }
     unique_pidlst = [...new Set(pid_list)];
-    //console.log('unique_lst',unique_pidlst)
+    //logger.info('unique_lst',unique_pidlst)
     if(anno.toUpperCase() === 'BAKTA'){
         if(format === 'fasta_aa'){
             q = "SELECT CONCAT('>Bakta | ',a.region,' | ', a.genome_id,' | ',"
@@ -626,9 +626,9 @@ router.post('/anno_data_by_gid', async (req, res) => {
     let format = req.body.format  // csv or fasta
     //let id_list = JSON.parse(req.body.anno_ids)
     
-    //console.log('anno',anno)
-    //console.log('type',type)
-    //console.log('format',format)
+    //logger.info('anno',anno)
+    //logger.info('type',type)
+    //logger.info('format',format)
     let fname,result_text,ext,q
     let dt = helpers.get_today_obj()
     //if anno is prokka or ncbi us .map to get all the pids from idlist
@@ -687,7 +687,7 @@ router.post('/anno_data_by_gid', async (req, res) => {
     
         const rows = await queries.run_query(q, res)
         for(let n in rows){
-            //console.log(rows[n].genome_id)
+            //logger.info(rows[n].genome_id)
         }
         
         fname = ''
@@ -733,7 +733,7 @@ router.post('/phage_sequences', async (req, res) => {
 ////
 router.post('/phage_search_data', async (req, res) => {
     // Download all Phage Hits
-    //console.log('req body',req.body)
+    //logger.info('req body',req.body)
     let type = req.body.type  // browser, text or excel
     let format = req.body.format  // csv or fasta
     let search_text = req.body.search_text
@@ -777,7 +777,7 @@ router.post('/phage_search_data', async (req, res) => {
         const rows = await queries.run_query(q, res)
     
         for(let n in rows){
-            //console.log(rows[n].genome_id)
+            //logger.info(rows[n].genome_id)
         }
         
         fname = ''
@@ -938,8 +938,8 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
     logger.info('in download fasta')
     logger.info(`req.file ${req.file}`)
     let dt = helpers.get_today_obj()
-    //console.log('str',req.file.buffer.toString())
-    //console.log('body',req.body)
+    //logger.info('str',req.file.buffer.toString())
+    //logger.info('body',req.body)
     let data = [],line
     if(req.file){
         data = req.file.buffer.toString().split('\n')
@@ -965,7 +965,7 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
     logger.info(`data ${data}`)
     
     for(let n in data){
-        //console.log('n',data[n])
+        //logger.info('n',data[n])
         line = data[n].trim()
         if(!line || line[0] === '#'){  // comment
             continue
@@ -983,7 +983,7 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
     const rows = await queries.run_query(q, res)
 
     if (rows.length === 0) {
-        logger.error('no rows found')
+        logger.warn('no rows found')
         res.send('No Data Found')
         return
     
@@ -1009,7 +1009,7 @@ function create_phage_search_table(sql_rows,header_array,search_term) {
     let text ='::Search String: "'+search_term+'"\n'
     text += header_array.join('\t') + '\n'
     for(let n in sql_rows){
-        //console.log('sql_rows[n]',sql_rows[n])
+        //logger.info('sql_rows[n]',sql_rows[n])
         //['Fasta_ID','Genome_ID','Contig','Predictor','seq_length', 'bakta_core_product','bakta_core_note','bakta_EC','bakta_GO','bakta_COG',
         //  'accession','description']
         if(sql_rows[n].seq){
@@ -1076,7 +1076,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
       transform(chunk, encoding, callback) {
         // Convert the object to a string (e.g., JSON string) and push it as a string
         const arr = helpers.chunkSubstr(chunk.sequence.toString(), 100)
-           //console.log('arr[0]',arr[0])
+           //logger.info('arr[0]',arr[0])
           // let str += arr.join('\n')
         //let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
         let record = JSON.stringify(chunk.defline) + '\n'+arr.join('\n')+ '\n'
@@ -1222,8 +1222,8 @@ function create_taxon_table(otids, source, type, head_txt) {
         //let obj3 = C.taxon_info_lookup  // discontinued 2025-02-24
         let obj4 = C.taxon_references_lookup 
         let obj5 = C.site_lookup 
-        //console.log('in create_taxon_table: '+source)
-        //console.log('otids',otids)
+        //logger.info('in create_taxon_table: '+source)
+        //logger.info('otids',otids)
         
         txt +=  C.taxon_table_headers.join('\t')
         let o1,o2 //,o3,o4
@@ -1248,7 +1248,7 @@ function create_taxon_table(otids, source, type, head_txt) {
                 }
                 
                 if(o2.domain){  // weeds out dropped
-                   //console.log('o2',o2)
+                   //logger.info('o2',o2)
                    let tstrains = o1.type_strains.join(' | ')
                    let gn = o1.genomes.join(' | ')
                    let syn = o1.synonyms.join(' | ')
@@ -1312,7 +1312,7 @@ function create_taxon_table(otids, source, type, head_txt) {
                     rank = C.ranks[m]
                 
                     lineage = old_lineage + C.taxon_lineage_lookup[otids[n]][rank]
-                    //console.log(rank,lineage)
+                    //logger.info(rank,lineage)
                     cnts = C.taxon_counts_lookup[lineage].taxcnt
                     if(rank == 'subspecies' ){
                           txt += C.taxon_lineage_lookup[otids[n]]['subspecies']+'\t'+otid_pretty // no counts
@@ -1357,8 +1357,8 @@ function create_taxon_table(otids, source, type, head_txt) {
                     rank = C.ranks[m]
                     lineage = old_lineage + C.taxon_lineage_lookup[otids[n]][rank]
                     cnts = C.taxon_counts_lookup[lineage]
-                    //console.log(lineage)
-                    //console.log(cnts)
+                    //logger.info(lineage)
+                    //logger.info(cnts)
                     txt += cnts.taxcnt +'\t'+cnts.gcnt +'\t'+cnts.refcnt +'\t'
                     if(rank == 'species' ){
                       if(C.taxon_lineage_lookup[otids[n]]['subspecies'] == ''){
@@ -1459,7 +1459,7 @@ function create_genome_table (gids, source, type, startText) {
 //     if (err) {
 //         console.error('Download failed:', err.message);
 //     } else {
-//         console.log(`Download successful! File saved to ${destination}`);
+//         logger.info(`Download successful! File saved to ${destination}`);
 //     }
 // });
 const downloadFile_stream = (url, destinationPath, callback) => {

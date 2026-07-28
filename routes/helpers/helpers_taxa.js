@@ -14,6 +14,8 @@ import path from 'path';
 import { exec, spawn } from 'child_process';
 import * as helpers from './helpers.js';
 import * as helpers_taxa from './helpers_taxa.js';
+import pino from 'pino';
+const logger = helpers.pino_conf(pino)
 
 
 
@@ -33,14 +35,14 @@ export const clean_rank_name_for_show = (rank) =>{
 
 export const get_filter_on = (f) => {
   // for comparison stringify
-  //console.log('get_filter_on')
+  //logger.info('get_filter_on')
   let obj1 = JSON.stringify(helpers_taxa.get_default_tax_filter());
   let obj2 = JSON.stringify(f);
   if (obj1 === obj2) {
-    //console.log('off')
+    //logger.info('off')
     return 'off';
   } else {
-    //console.log('on')
+    //logger.info('on')
     return 'on';
   }
 };
@@ -136,13 +138,13 @@ export const get_null_tax_filter = () => {
 export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_field) => {
 
   let send_list = [];
-  //console.log('txt srch',search_txt,search_field)
+  //logger.info('txt srch',search_txt,search_field)
   if (search_field == 'taxid') {
     if(search_txt.slice(0, 3) === 'hmt'){ 
         let pototid = parseInt(search_txt.slice(3).replace('-','').replace('_',''))
         send_list = big_tax_list.filter(item => {
             if(pototid && item.otid == pototid){
-                //console.log('item',item)
+                //logger.info('item',item)
                 return item
             }
         });
@@ -181,9 +183,9 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
     if(search_txt.slice(0, 3) === 'hmt'){ 
         let pototid = parseInt(search_txt.slice(3).replace('-','').replace('_',''))
         tmp_send_list = big_tax_list.filter(item => {
-            //console.log('pototid',pototid)
+            //logger.info('pototid',pototid)
             if(pototid && item.otid == pototid){
-                //console.log('item',item)
+                //logger.info('item',item)
                 return item
             }
         });
@@ -202,17 +204,17 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
 
 
     //Genus
-    //console.log('srchfield',search_field, search_txt)
-    //console.log('big_tax_list2.length',big_tax_list.length)
+    //logger.info('srchfield',search_field, search_txt)
+    //logger.info('big_tax_list2.length',big_tax_list.length)
     tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt));
-    //console.log('tmp_send_list1',tmp_send_list)
+    //logger.info('tmp_send_list1',tmp_send_list)
     for (let n in tmp_send_list) {
       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n];
     }
 
 
     // Species
-    //console.log('tmp_send_list2',tmp_send_list)
+    //logger.info('tmp_send_list2',tmp_send_list)
     tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt));
     for (let n in tmp_send_list) {
       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n];
@@ -249,7 +251,7 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
       if (e.otid in C.site_lookup) {
         let to_include = Object.values(C.site_lookup[e.otid]);
         let glom = to_include.join(' ').toLowerCase();
-        //console.log('site_on[n]',site_on[n],'glom',glom)
+        //logger.info('site_on[n]',site_on[n],'glom',glom)
         if (glom.includes(search_txt)) {
           //if(site_on.includes(item.sites[n].toLowerCase())){
           return e;
@@ -262,10 +264,10 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
 
     // SEARCH '**' and 'NVP' in naming_status, cultivation_status
     //if(search_txt == '**' || search_txt == 'nvp'){
-    //console.log('TEXT3',big_tax_list.length,Object.keys(temp_obj).length)
+    //logger.info('TEXT3',big_tax_list.length,Object.keys(temp_obj).length)
     tmp_send_list = big_tax_list.filter(function filterBigList5(e) {
       if (e.naming_status.toLowerCase().includes(search_txt) || e.cultivation_status.toLowerCase().includes(search_txt)) {
-        //console.log('TEXT3',e)
+        //logger.info('TEXT3',e)
         return e;
       }
     });
@@ -273,7 +275,7 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n];
     }
     //}
-    //console.log('TEXT4',Object.keys(temp_obj).length)
+    //logger.info('TEXT4',Object.keys(temp_obj).length)
     // now back to a list
     send_list = Object.values(temp_obj);
 
@@ -283,7 +285,7 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
 };
 
 export const make_lineage = (node) => {
-  //console.log('in lineage-node',node)
+  //logger.info('in lineage-node',node)
   if (!node) {
     return ['', {}];
   }
@@ -339,19 +341,19 @@ export const make_lineage = (node) => {
     lineage_obj.family = tax_obj[node.parent_id].taxon;
     lineage_obj.genus = node.taxon;
   } else if (node.rank === 'species') {
-    //console.log('species1',node)
+    //logger.info('species1',node)
     let gn = tax_obj[node.parent_id];
-    //console.log('genus1',gn)
+    //logger.info('genus1',gn)
     let fn = tax_obj[gn.parent_id];
 
     let on = tax_obj[fn.parent_id];
     let kn = tax_obj[on.parent_id];
     let pn = tax_obj[kn.parent_id];
     let dn = tax_obj[pn.parent_id];
-    // console.log('phylum1',pn)
-    //         console.log('class1',kn)
-    //         console.log('order1',on)
-    //         console.log('family1',fn)
+    // logger.info('phylum1',pn)
+    //         logger.info('class1',kn)
+    //         logger.info('order1',on)
+    //         logger.info('family1',fn)
     lineage = dn.taxon + ';' + pn.taxon + ';' + kn.taxon + ';' + on.taxon + ';' + fn.taxon + ';' + gn.taxon + ';' + node.taxon;
     lineage_obj.domain = tax_obj[pn.parent_id].taxon;
     lineage_obj.phylum = tax_obj[kn.parent_id].taxon;
@@ -379,7 +381,7 @@ export const make_lineage = (node) => {
     lineage_obj.species = tax_obj[node.parent_id].taxon;
     lineage_obj.subspecies = node.taxon;
   }
-  //console.log('line',lineage)
+  //logger.info('line',lineage)
   return [lineage, lineage_obj];
 };
 
@@ -394,8 +396,8 @@ export const set_ttable_session = (req) => {
   // 3taxa/ecology
   // 4taxa/tax_description
   // 5genome_genome_table
-  //console.log('set sess body',req.body)
-  //console.log('xsession',req.session)
+  //logger.info('set sess body',req.body)
+  //logger.info('xsession',req.session)
   let letter = '0';
   if (req.session.ttable_filter && req.session.ttable_filter.letter) {
     letter = req.session.ttable_filter.letter;
@@ -447,7 +449,7 @@ export const set_ttable_session = (req) => {
     // sites
     for (let site_code in C.tax_sites_all) {
       if (item == site_code) {
-        //console.log('C.tax_sites_all[n]',item,C.tax_sites_all[site_code])
+        //logger.info('C.tax_sites_all[n]',item,C.tax_sites_all[site_code])
         req.session.ttable_filter.site[site_code] = 'on';
       }
     }
@@ -485,34 +487,34 @@ export const set_ttable_session = (req) => {
 export const apply_ttable_filter = (req, filter) => {
 
   let big_tax_list = Object.values(C.taxon_lookup);
-  //console.log('olength-0',big_tax_list)
+  //logger.info('olength-0',big_tax_list)
   let vals;
   //
-  //console.log('req.session.ttable_filter',req.session.ttable_filter)
+  //logger.info('req.session.ttable_filter',req.session.ttable_filter)
   if (req.session.ttable_filter) {
-    //console.log('vals from session ttfilter')
+    //logger.info('vals from session ttfilter')
     vals = req.session.ttable_filter;
   } else {
-    //console.log('vals from default ttfilter')
+    //logger.info('vals from default ttfilter')
     vals = helpers_taxa.get_default_tax_filter();
   }
-  //console.log('vals',vals)
+  //logger.info('vals',vals)
   //
   // SEARCH txt_srch
-  //console.log('TEXT',vals.text.txt_srch, vals.text.field)
+  //logger.info('TEXT',vals.text.txt_srch, vals.text.field)
   if (vals.text.txt_srch !== '') {
     big_tax_list = helpers_taxa.get_text_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field);
   }
-  //console.log('big_tax_list',big_tax_list[0])
-  //console.log('vals',vals)
+  //logger.info('big_tax_list',big_tax_list[0])
+  //logger.info('vals',vals)
   ///// SEARCH status /////
   let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on');
-  //console.log('status_on',status_on)
+  //logger.info('status_on',status_on)
   let check, combo = '', first_part = '', second_part = '';
   big_tax_list = big_tax_list.filter(function filterStatus(item) {
-    // console.log('item',item)
+    // logger.info('item',item)
     // if (item.otid == 470) {
-//           console.log('1-Found 470',item.otid)
+//           logger.info('1-Found 470',item.otid)
 //     }
     // choices: dropped,phylotype, named_cultivated,named_uncultivated,unnamed_cultivated
     if (item.naming_status.substring(0, 5).toLowerCase() == 'named') {
@@ -539,7 +541,7 @@ export const apply_ttable_filter = (req, filter) => {
         check = 'phylotype';
     }
     // if (item.otid == 470) {
-//         console.log('470 check:',check)
+//         logger.info('470 check:',check)
 //     }
     for (let i in status_on) {
       if (status_on[i] == check) {
@@ -548,23 +550,23 @@ export const apply_ttable_filter = (req, filter) => {
     }
 
   });
-  // console.log('testing::')
+  // logger.info('testing::')
 //   big_tax_list.filter(function testForPresences(item) {
 //       if (item.otid == 470) {
-//           console.log('1testForPresence-Found 470',item.otid)
-//           console.log(item)
+//           logger.info('1testForPresence-Found 470',item.otid)
+//           logger.info(item)
 //       }
 //    })
-  //console.log('status_on',status_on)
-  //console.log('big_tax_list.length-1',big_tax_list.length)
+  //logger.info('status_on',status_on)
+  //logger.info('big_tax_list.length-1',big_tax_list.length)
   //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
   //SEARCH Abundance
   let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on');
-  //console.log('abundOn',abund_on)
+  //logger.info('abundOn',abund_on)
   big_tax_list = big_tax_list.filter(function filterAbundance(item) {
-    //console.log('item',C.site_lookup[item.otid])
+    //logger.info('item',C.site_lookup[item.otid])
     // if (item.otid == 470) {
-//           console.log('abund-Found 470',item.otid)
+//           logger.info('abund-Found 470',item.otid)
 //       }
     if (abund_on.length == C.tax_abund_all.length) {
       return item;
@@ -576,7 +578,7 @@ export const apply_ttable_filter = (req, filter) => {
         for (let n in abund_on) {
           let test = abund_on[n].slice(0, -6).toLowerCase(); // 
 
-          //console.log('test',test)
+          //logger.info('test',test)
           if (site_item_primary.includes(test)) {
             return item;
           }
@@ -584,25 +586,25 @@ export const apply_ttable_filter = (req, filter) => {
       }
     }
   });
-  //console.log('big_tax_list length2',big_tax_list.length)
+  //logger.info('big_tax_list length2',big_tax_list.length)
   //site
   // create array of 'on's
   let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on');
   //let site_on = Object.keys(vals.site).filter(item => vals.site[0][helpers.getKeyByValue(C.tax_sites_all,item.sites[0])] == 'on')
   // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
   // taxon will be excluded here from the taxon table
-  //console.log('olength-1',big_tax_list.length)
-  //console.log('site_on',site_on)
-  //console.log('filter.site',filter.site)
+  //logger.info('olength-1',big_tax_list.length)
+  //logger.info('site_on',site_on)
+  //logger.info('filter.site',filter.site)
   
   if (filter && filter.site.p_or_pst == 'primary_site') {
     big_tax_list = big_tax_list.filter(function (item) {
       // if (item.otid == 470) {
-//           console.log('2-Found 470',item.otid)
+//           logger.info('2-Found 470',item.otid)
 //       }
       for (let n in item.sites) {
-        //console.log('n',n,'site',item.sites[n])
-        //console.log('item.sites',item.sites)
+        //logger.info('n',n,'site',item.sites[n])
+        //logger.info('item.sites',item.sites)
         if (site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.sites[0]))) {
           //if(site_on.includes(item.sites[n].toLowerCase())){
           item.site = item.sites[0];
@@ -620,15 +622,15 @@ export const apply_ttable_filter = (req, filter) => {
     //C.site_lookup[1]
     big_tax_list = big_tax_list.filter(function (item) {
       // if (item.otid == 470) {
-//           console.log('3-Found 470',item.otid)
+//           logger.info('3-Found 470',item.otid)
 //       }
-      //console.log('otid',item)
+      //logger.info('otid',item)
       if (item.otid in C.site_lookup) {
-        //console.log('looking1')
+        //logger.info('looking1')
         let to_include = Object.values(C.site_lookup[item.otid]); // C.site_lookup[559]  [ '', 'Environmental (soil/water)', 'Opportunistic pathogen' ]
         for (let n in site_on) { //'oral', 'nasal', 'skin','gut','vaginal','unassigned','enviro','pathogen'
           let glom = to_include.join(' ').toLowerCase();
-          //console.log('site_on[n]',site_on[n],'glom',glom)
+          //logger.info('site_on[n]',site_on[n],'glom',glom)
           if (glom.includes(site_on[n])) {
             //if(site_on.includes(item.sites[n].toLowerCase())){
             item.site = item.sites[0];
@@ -640,16 +642,16 @@ export const apply_ttable_filter = (req, filter) => {
   }
   big_tax_list.filter(function testForPresences(item) {
       // if (item.otid == 470) {
-//           console.log('2testForPresence-Found 470',item.otid)
+//           logger.info('2testForPresence-Found 470',item.otid)
 //       }
    })
-  //console.log('big_tax_list.length-3',big_tax_list.length)
+  //logger.info('big_tax_list.length-3',big_tax_list.length)
   //phylum
   if (vals.phylum != '0') {
     big_tax_list = helpers.filter_for_phylum(big_tax_list, vals.phylum);
   }
-  //console.log('olength-2',big_tax_list.length)
-  //console.log('vals',vals)
+  //logger.info('olength-2',big_tax_list.length)
+  //logger.info('vals',vals)
   //
   //letter
   if (vals.letter && vals.letter.match(/[A-Z]{1}/)) { // always caps
@@ -671,7 +673,7 @@ export const apply_ttable_filter = (req, filter) => {
     if (el.status.toLowerCase() != 'dropped') {
       el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || '';
       let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus + ' ' + el.species + '_species'];
-      //console.log(el)
+      //logger.info(el)
       let lineage_list = helpers_taxa.make_lineage(node);
 
       if (C.abundance_lookup.hasOwnProperty(lineage_list[0]) && C.abundance_lookup[lineage_list[0]].ecology == '1') {
@@ -682,7 +684,7 @@ export const apply_ttable_filter = (req, filter) => {
 
     }
   });
-  //console.log('big_tax_list.length-4',big_tax_list.length)
+  //logger.info('big_tax_list.length-4',big_tax_list.length)
   //sort column
   if (vals.sort_rev === 'on') {
     if (vals.sort_col === 'otid') {
@@ -690,7 +692,7 @@ export const apply_ttable_filter = (req, filter) => {
         return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
       });
     } else if (vals.sort_col === 'lineage') {
-      //console.log('sorting by lineage')
+      //logger.info('sorting by lineage')
       big_tax_list.sort(function (b, a) {
         let lin_a = C.taxon_lineage_lookup[a.otid].domain;
         let lin_b = C.taxon_lineage_lookup[b.otid].domain;
@@ -717,9 +719,9 @@ export const apply_ttable_filter = (req, filter) => {
         return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
       });
     } else if (vals.sort_col === 'lineage') {
-      //console.log('sorting by lineage')
+      //logger.info('sorting by lineage')
       big_tax_list.sort(function (a, b) {
-        //console.log('a',a)
+        //logger.info('a',a)
         //C.taxon_lineage_lookup
         let lin_a = C.taxon_lineage_lookup[a.otid].domain;
         let lin_b = C.taxon_lineage_lookup[b.otid].domain;
@@ -729,19 +731,19 @@ export const apply_ttable_filter = (req, filter) => {
           lin_a = lin_a + ';' + C.taxon_lineage_lookup[a.otid][ranks_tmp[n]];
           lin_b = lin_b + ';' + C.taxon_lineage_lookup[b.otid][ranks_tmp[n]];
         }
-        //console.log('lina',lin_a)
+        //logger.info('lina',lin_a)
         return helpers.compareStrings_alpha(lin_a, lin_b);
       });
 
     } else {
-      //console.log(big_tax_list[0])
-      //console.log('sorting by ',vals.sort_col)
+      //logger.info(big_tax_list[0])
+      //logger.info('sorting by ',vals.sort_col)
       big_tax_list.sort(function (a, b) {
         return helpers.compareStrings_alpha(a[vals.sort_col], b[vals.sort_col]);
       });
     }
   }
-  //console.log('big_tax_list.length-5',big_tax_list.length)
+  //logger.info('big_tax_list.length-5',big_tax_list.length)
   return big_tax_list;
 
 };
@@ -750,13 +752,13 @@ export const apply_ttable_filter = (req, filter) => {
 
 //
 export const get_lpsn_outlink1 = (obj1, lineage) => {
-  //console.log('obj',obj1,lineage)
+  //logger.info('obj',obj1,lineage)
   if (lineage['genus'].includes('[')) {
     let gpts = lineage['genus'].split(/\s/);
     let g = gpts.shift();
 
     let l = gpts.length;
-    //console.log('l',g,l)
+    //logger.info('l',g,l)
     if (l == 1) {
       return 'family/' + lineage['family'];
     }
@@ -768,7 +770,7 @@ export const get_lpsn_outlink1 = (obj1, lineage) => {
     }
     if (l == 4) {
       let ppts = lineage['phylum'].split(/\s/);
-      //console.log('l2',lineage['phylum'],ppts)
+      //logger.info('l2',lineage['phylum'],ppts)
       if (ppts.length == 2) {
         return 'phylum/' + ppts[1];
       } else {
@@ -783,7 +785,7 @@ export const get_lpsn_outlink1 = (obj1, lineage) => {
 };
 
 export const get_lpsn_outlink2 = (rank, lineage, nexttaxname) => {
-  //console.log('obj',rank,lineage,nexttaxname)
+  //logger.info('obj',rank,lineage,nexttaxname)
   let lpsnrank, linkrank, l, pts, ppts = [];
   if (lineage.hasOwnProperty('phylum')) {
     ppts = lineage['phylum'].split(/\s/);
@@ -878,7 +880,7 @@ export const make_lineage_string_with_links = (lineage_list, link, page) => {
     i += 1;
   }
   tmp += '</span>';
-  //console.log(tmp)
+  //logger.info(tmp)
   return tmp;
 };
 

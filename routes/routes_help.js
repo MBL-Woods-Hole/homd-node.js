@@ -30,7 +30,7 @@ router.get('/help-page', async function help_page(req, res) {
   
   logger.info(`page ${page}`)
   const renderVersionFxn = (req, res, type, data) => {
-      //console.log('updates',updates)
+      //logger.info('updates',updates)
       res.render('pages/version_history', {
         title: 'HOMD :: Version History',
           pgname: '', // for AboutThisPage
@@ -45,7 +45,7 @@ router.get('/help-page', async function help_page(req, res) {
       })
   }
   const renderHelpFxn = (req, res, page, updates, date_sort) => {
-      //console.log('updates',updates)
+      //logger.info('updates',updates)
       res.render('pages/help/helppage', {
         title: 'HOMD :: Help Pages',
           pgname: '', // for AboutThisPage
@@ -67,7 +67,7 @@ router.get('/help-page', async function help_page(req, res) {
            logger.error(err);
            return;
         }
-        //console.log(data.trim());
+        //logger.info(data.trim());
         renderVersionFxn(req, res, 'HOMD Genomic Version History', data.trim())
         return;
       })
@@ -78,7 +78,7 @@ router.get('/help-page', async function help_page(req, res) {
            logger.error(err);
            return;
         }
-        //console.log(data.trim());
+        //logger.info(data.trim());
         renderVersionFxn(req, res, 'HOMD Taxonomy Version History', data.trim())
         return;
       })
@@ -109,15 +109,15 @@ router.get('/help-page', async function help_page(req, res) {
            }
 
       }
-        //console.log(byDate)
+        //logger.info(byDate)
         let date_array = Object.keys(byDate)
-        //console.log('date_array1',date_array)
+        //logger.info('date_array1',date_array)
         date_array.sort(function(a, b){
             const date1 = new Date(a)
             const date2 = new Date(b)
             return date2 - date1;
         })
-        //console.log('date_array2',date_array)
+        //logger.info('date_array2',date_array)
         renderHelpFxn(req, res, page, byDate, date_array)
       
   }else{
@@ -143,20 +143,20 @@ router.post('/help_search_result', function help_search_result(req, res) {
   let helpLst = []
   let help_trunk = path.join(ENV.PROCESS_DIR,'views','partials','help')
   const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
-  //console.log('grep_cmd',grep_cmd)
+  //logger.info('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
         logger.error(stderr);
         return;
       }
-      //console.log('stdout',stdout);
+      //logger.info('stdout',stdout);
       let fileLst = []
       if(stdout){
         fileLst = stdout.trim().split('\n')
       }
       if(fileLst.length > 0){
         for(let n in fileLst){
-          //console.log('file',fileLst[n])
+          //logger.info('file',fileLst[n])
           let cleanfinal = fileLst[n].replace(help_trunk,'').replace(/^\//,'').replace(/\.ejs$/,'')
           helpLst.push(cleanfinal)
         }

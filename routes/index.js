@@ -5,9 +5,7 @@ import fs from 'fs-extra';
 
 // const fs   = require('fs-extra')
 import path from 'path';
-
 import * as helpers from './helpers/helpers.js';
-
 import C from '../public/constants.js';
 import { exec, spawn } from 'child_process';
 import * as queries from './queries.js';
@@ -60,9 +58,9 @@ router.get('/get_fasta', async function get_fasta(req, res) {
     let defline,seq,outfile_txt = ''
     const rows = await queries.run_query(q, req, res)
     
-    //console.log('rows',rows)
+    //logger.info('rows',rows)
     if(rows.length === 0){
-        console.error('no rows found')
+        logger.warn('no rows found')
         res.send('No Data Found')
         return
     }else{
@@ -117,7 +115,7 @@ router.get('/poster', function poster(req, res) {
 })
 ////
 router.get('/full_site_search', function full_site_search_GET(req, res) {
-  //console.log('full_site_searchGET')
+  //logger.info('full_site_searchGET')
   res.render('pages/full_site_search', {
     title: 'HOMD :: Human Oral Microbiome Database',
     pgname: '', // for AbountThisPage
@@ -137,7 +135,7 @@ function execPromise(cmd, args, max) {
 //         });
         let data_array = [],chunk_rows=[],line_count = 0
         let bufferArray= []
-        //console.log('ARGS',cmd+' '+args.join(' '))
+        //logger.info('ARGS',cmd+' '+args.join(' '))
         let full_cmd_str = cmd+' '+args.join(' ')
         //const process = spawn(cmd, args, { shell: true });  
         // shell:true need expand wildcard '*'
@@ -145,10 +143,10 @@ function execPromise(cmd, args, max) {
         const process = spawn(full_cmd_str, { shell: true });  // shell:true need expand wildcard '*'
         process.stdout.on('data', (data) => {
           // Process the data received from stdout
-          //console.log(`stdout: ${data}`);
+          //logger.info(`stdout: ${data}`);
           // STRATEGY:: protein_id is unique
           // grab accessions
-          //console.log(`stdout: ${data}`);
+          //logger.info(`stdout: ${data}`);
           
           
           //if(data){
@@ -172,7 +170,7 @@ function execPromise(cmd, args, max) {
           logger.info(`code: ${code}`)
           let dataBuffer =  Buffer.concat(bufferArray);
           let dataBufferArray = dataBuffer.toString().split('\n')
-          //console.log('resolving okay',dataBufferArray[0])
+          //logger.info('resolving okay',dataBufferArray[0])
           
           resolve(dataBufferArray);
         });
@@ -187,7 +185,7 @@ function execPromise(cmd, args, max) {
 router.post('/advanced_anno_orf_search', async function advanced_anno_orf_searchPOST(req, res) {
     logger.info('in advanced_anno_orf_search RESULTS')
     logger.info(`body: ${req.body}`)
-    //console.log('pidlist',req.body.pid_list)
+    //logger.info('pidlist',req.body.pid_list)
     let anno = req.body.anno.toUpperCase()
     let q
     // if(anno =='BAKTA'){
@@ -279,10 +277,10 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         //const rows = await get_grep_rows(grep_cmd);
         // [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
         const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
-        //console.log('rows_lst length',row_array.length)
+        //logger.info('rows_lst length',row_array.length)
         
         let total_length = row_array.length - 1
-        //console.log('total_length',total_length)
+        //logger.info('total_length',total_length)
         //rows = rows_lst.join('')
         if(total_length == 0){
         
@@ -290,24 +288,24 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         if(row_array[0] == 'too_long'){
             obj2 = {'too_long':'too_long'}
         }else{
-            //console.log('row_array[0]',row_array[0])
+            //logger.info('row_array[0]',row_array[0])
             //row_array = rows.split('\n')
             for(let n in row_array){
                 if(row_array[n] != ''){
                     
                     let pts = row_array[n].split('|')
-                    //console.log('pts',pts)
+                    //logger.info('pts',pts)
                     let pts_clean = []
                     for(let n in pts){
                         //pts_clean.push(decodeURIComponent(pts[n].replace("5'", "5").replace("3'", "3").replace(",", ";").replace("2'", "2").replace("n'", "n")))
-                        //console.log('pts[n]',pts[n])
+                        //logger.info('pts[n]',pts[n])
                         //pts_clean.push(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";").replace("%", "pct")))
                         pts_clean.push(decodeURIComponent(encodeURIComponent(pts[n])))
-                        //console.log(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";")))
+                        //logger.info(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";")))
                     }
-                    //console.log('pts',pts)
+                    //logger.info('pts',pts)
                     if(['genomad','cenote'].indexOf(pts[1]) != -1 ){
-                      //console.log('pts',pts)
+                      //logger.info('pts',pts)
                       search_id = pts[0]
                       all_phage_search_ids_lookup[search_id] = 1  // for downloads
                       predictor = pts[1]
@@ -350,8 +348,8 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
                 }
             }
         }
-        //console.log('lookup',lookup['GCA_000008065.1']['AE017198.1'].bakta)
-        //console.log(gid_collector)
+        //logger.info('lookup',lookup['GCA_000008065.1']['AE017198.1'].bakta)
+        //logger.info(gid_collector)
         let sendlist=[]
         for(gid in lookup){
             for(contig in lookup[gid]){
@@ -364,12 +362,12 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         }
         
 
-        //console.log('sendlist',sendlist)
+        //logger.info('sendlist',sendlist)
         sendlist.sort(function (a, b) {
-           //console.log('a',a)
+           //logger.info('a',a)
            return helpers.compareStrings_alpha(a.species, b.species);
         })
-       //console.log('sort_lst2',Object.keys(all_phage_search_ids_lookup))
+       //logger.info('sort_lst2',Object.keys(all_phage_search_ids_lookup))
         res.render('pages/full_site_search_results', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
@@ -417,7 +415,7 @@ router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
     
     const rows = await queries.run_query(q, req, res)
     
-    //console.log('rows',rows)
+    //logger.info('rows',rows)
     if(rows.length === 0){
         html += "No sequence found in database"
         logging.error("error-No sequence found in database");
@@ -449,12 +447,12 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
           hit_ids.push(hl[m][0])
        }
    }
-   //console.log(hit_ids)
+   //logger.info(hit_ids)
    let q = queries.get_phage_from_ids_noseqs(hit_ids)
    
    const rows = await queries.run_query(q, req, res)
    
-    //console.log('rows',rows)
+    //logger.info('rows',rows)
         
     res.render('pages/phage/all_hits_result', {
         title: 'HOMD :: Search Results',
@@ -505,17 +503,17 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         //let args = ['-h','"'+searchText+'"',datapath]
         // prokka|gca_000174175.1|acfu01000087.1|cds|ynba|gca_000174175.1_00001|inner membrane protein ynba|597|198|14|610
         let grep_cmd = 'LC_ALL=C '+ENV.GREP_CMD + ' ' + args.join(' ')
-        console.log(grep_cmd)
+        logger.info('GREP CMD: '+grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
         const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
-        //console.log('rows_lst length',row_array.length)
+        //logger.info('rows_lst length',row_array.length)
         
         let total_length = row_array.length - 1
         //rows = rows_lst.join('')
         if(row_array[0] == 'too_long'){
             obj2 = {'too_long':'too_long'}
         }else{
-            //console.log('row_array[0]',row_array[0])
+            //logger.info('row_array[0]',row_array[0])
             //row_array = rows.split('\n')
             for(let n in row_array){
                 if(row_array[n] != ''){
@@ -525,9 +523,9 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                     //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                     //bakta|gca_000174175.1|acfu01000001.1||gca000174175_02365|hypothetical protein|178369|178515
                     let pts = row_array[n].split('|')
-                    //console.log('grep pts',pts)
+                    //logger.info('grep pts',pts)
                     if(pts.length >= split_length && ['prokka','ncbi','bakta'].indexOf(pts[0]) != -1 ){
-                      //console.log('pts',pts)
+                      //logger.info('pts',pts)
 //                      if(pts[0] == 'bakta' || pts[0] == 'prokka'){
                          let id_pts = pts[1].split('_')
                          gid = (id_pts[0]+'_'+id_pts[1]).toUpperCase()
@@ -551,7 +549,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
 //                         prod = pts[6]
  //                     }
                       gid_count[gid] = 1
-                      //console.log('LOOKup',C.genome_lookup[gid])
+                      //logger.info('LOOKup',C.genome_lookup[gid])
                       
                     tmp_obj = {
                           gid:gid,
@@ -578,7 +576,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                         tmp_obj.otid = otid
                         tmp_obj.hmt = hmt
                     }
-                        //console.log('tmp_obj',tmp_obj)
+                        //logger.info('tmp_obj',tmp_obj)
                         if(obj2.hasOwnProperty(gid)){
                           obj2[gid].push(tmp_obj)
                         }else{
@@ -589,11 +587,11 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                 }
             }
         }
-        //console.log('sort_lst1',sort_lst)
+        //logger.info('sort_lst1',sort_lst)
         sort_lst.sort(function (a, b) {
            return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
         })
-        //console.log('obj2',obj2)
+        //logger.info('obj2',obj2)
         res.render('pages/full_site_search_results', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
@@ -669,7 +667,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
    
 ///////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
   
-  //console.log('gidObjList',gidObjList)
+  //logger.info('gidObjList',gidObjList)
 
 ///////////// CONTIGS /////////////////////////////////////////////////////////////////////////////
 
@@ -680,15 +678,15 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
 
   //  Now the phage db
   // phageID, phage:family,genus,species, host:genus,species, ncbi ids
-  // console.log(C.phage_lookup['HPT-000001'])
+  // logger.info(C.phage_lookup['HPT-000001'])
   // PHAGE Metadata
 //   const allPhageObjList = Object.values(C.phage_lookup)
 //   // let gid_lst = Object.keys(C.genome_lookup).filter(item => ((item.toLowerCase()+'').includes(searchTextLower)))
-//   // console.log(allPhageObjList[0])
+//   // logger.info(allPhageObjList[0])
 //   const pidKeyList = Object.keys(allPhageObjList[0])
 //   const pidObjList = allPhageObjList.filter(function (el) {
 //     for (let n in pidKeyList) {
-//       // console.log(pidkeylist[n]+'-'+searchTextLower)
+//       // logger.info(pidkeylist[n]+'-'+searchTextLower)
 //       if (Array.isArray(el[pidKeyList[n]])) {
 //         // we're missing any arrays
 //         // return 0
@@ -700,7 +698,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
 //       }
 //     }
 //   })
-//   // console.log(pidObjList)
+//   // logger.info(pidObjList)
 //   
 //   const phageIdLst = pidObjList.map(e => e.pid)
 //////////// HELP PAGES //////////////////////////////////////////////////////////////////////////////  
@@ -714,14 +712,14 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
         logging.error(stderr);
         return;
       }
-      //console.log('stdout',stdout);
+      //logger.info('stdout',stdout);
       let fileLst = []
       if(stdout){
         fileLst = stdout.trim().split('\n')
       }
       if(fileLst.length > 0){
         for(let n in fileLst){
-          //console.log('file',fileLst[n])
+          //logger.info('file',fileLst[n])
           let cleanfinal = fileLst[n].replace(help_trunk,'').replace(/^\//,'').replace(/\.ejs$/,'')
           helpLst.push(cleanfinal)
         }
@@ -734,7 +732,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
       // set req.session.site_search_result = {} here before annotation collection
       //req.session.site_search_result_prokka = {}
       //req.session.site_search_result_ncbi = {}
-      //console.log('st',searchText)
+      //logger.info('st',searchText)
       res.render('pages/basic_search_result', {
         title: 'HOMD :: Site Search',
         pgname: '', // for AbountThisPage
@@ -768,7 +766,7 @@ function search_taxonomy(text_string){
     const taxonList = Object.values(C.taxon_lineage_lookup).filter(function (e) {
     
     if (Object.keys(e).length !== 0) {
-      //console.log('e',e)
+      //logger.info('e',e)
       if (e.domain.toLowerCase().includes(text_string) ||
         e.phylum.toLowerCase().includes(text_string) ||
         e.klass.toLowerCase().includes(text_string) ||
@@ -782,7 +780,7 @@ function search_taxonomy(text_string){
     }
     //
     })
-      //console.log('taxonList',taxonList)
+      //logger.info('taxonList',taxonList)
     //  Now get the otids
     let pototid,taxonOtidObj = {}
     // must find: HMT-389, HMT_389, HMT389 as well as 389
@@ -796,7 +794,7 @@ function search_taxonomy(text_string){
      if(C.dropped_taxids.indexOf(pototid.toString()) != -1){
         taxonOtidObj[pototid] = 'This taxon has been dropped from HOMD.'
      }else{
-        //console.log('got OTID int',text_string)
+        //logger.info('got OTID int',text_string)
         taxonOtidObj[pototid] = C.taxon_lineage_lookup[pototid].domain
         taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].phylum
         taxonOtidObj[pototid] += ';' + C.taxon_lineage_lookup[pototid].klass
@@ -832,11 +830,11 @@ function search_taxonomy(text_string){
     //helpers.print(['allOtidObjList[0]',allOtidObjList[0]]) // site is undefined
     let otidObjList = allOtidObjList.filter(function (el) {
     for (let n in otidKeyList) {
-      //console.log( 'el[otidKeyList[n]]',el[otidKeyList[n]] )
-      //console.log( 'el',el )
+      //logger.info( 'el[otidKeyList[n]]',el[otidKeyList[n]] )
+      //logger.info( 'el',el )
       if (Array.isArray(el[otidKeyList[n]]) && el[otidKeyList[n]].length > 0) {
         // we're catching any arrays: rrna_sequences, synonyms, sites, pangenomes, type_strains, ref_strains
-          //console.log('el',el)
+          //logger.info('el',el)
           if(el[otidKeyList[n]][0] && el[otidKeyList[n]].findIndex(element => element.toString().toLowerCase().includes(text_string)) !== -1){
               return el.otid
           }
@@ -861,7 +859,7 @@ function search_taxonomy(text_string){
       
     const otidMetaLst = otidObjList.map(e => ({otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
     
-    //console.log('otidMetaLst',otidMetaLst[0])
+    //logger.info('otidMetaLst',otidMetaLst[0])
     otidMetaLst.sort(function (a, b) {
        return helpers.compareStrings_alpha(a.species, b.species);
     })
@@ -869,7 +867,7 @@ function search_taxonomy(text_string){
     
     // RefSeq
     // add to OTID Metadata
-    //console.log(C.refseq_lookup)
+    //logger.info(C.refseq_lookup)
     const allRefSeqObjList = Object.values(C.refseq_lookup)
       
     // '998': [
@@ -880,12 +878,12 @@ function search_taxonomy(text_string){
 
     let refseqObj = {}
     allRefSeqObjList.filter((el) => {
-     //console.log('refseq-el',el)
+     //logger.info('refseq-el',el)
      for(let n in el){
          if(el[n].refseq_id.toLowerCase().includes(text_string) ||
             el[n].seqids.toLowerCase().includes(text_string)
          ){
-             //console.log('el',el[n].refseq_id.toLowerCase())
+             //logger.info('el',el[n].refseq_id.toLowerCase())
              let hmt = el[n].refseq_id.split('_')[0]
              let otid = hmt.split('-')[1]
              if(!refseqObj.hasOwnProperty(hmt)){
@@ -903,7 +901,7 @@ function search_taxonomy(text_string){
      }
     })
     
-    //console.log('in refseq search',refseqObj)
+    //logger.info('in refseq search',refseqObj)
     
     return {'taxonOtidObj':taxonOtidObj,'otidLst':otidMetaLst,'refseqObj':refseqObj}
 }
@@ -933,7 +931,7 @@ function search_genomes(text_string){
   let gidLst = gidObjList.map(e => ({gid: e.gid, strain:e.strain, otid:e.otid, species: '<i>'+e.genus+' '+e.species+'</i>'}))
   //helpers.print(gidLst)
   gidLst.sort(function (a, b) {
-       //console.log('a',a)
+       //logger.info('a',a)
        return helpers.compareStrings_alpha(a.species, b.species);
   })
   return gidLst
@@ -942,7 +940,7 @@ function search_genomes(text_string){
 function search_contigs(text_string){
   // search contigs
   let contigObj_list = []
-  //console.log('C.contig_lookup',C.contig_lookup )
+  //logger.info('C.contig_lookup',C.contig_lookup )
   let all_contigs = Object.keys(C.contig_lookup)
   const contig_list = all_contigs.filter(el => {
     if (el.toLowerCase().indexOf(text_string) !== -1) {

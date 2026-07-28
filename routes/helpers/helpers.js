@@ -84,7 +84,7 @@ export const compareStrings_int = (a, b) => {
   
   let numa = parseInt(a.toString().replaceAll(',',''))
   let numb = parseInt(b.toString().replaceAll(',',''))
-  //console.log('numa',numa)
+  //logger.info('numa',numa)
   
   return (numa < numb) ? -1 : (numa > numb) ? 1 : 0;
 };
@@ -99,19 +99,19 @@ export const compareStrings_float = (a, b) => {
 
 export const show_session = (req) =>{
   logger.info('(Availible for when sessions are needed) req.session: ')
-    //console.log('req.session',req.session)
-    //console.log('req.sessionID',req.sessionID)
+    //logger.info('req.session',req.session)
+    //logger.info('req.sessionID',req.sessionID)
     logger.info(`req.session.id ${req.session.id}`)
 };
 
 // export const accesslog = (req, res) =>{
-//     console.log('ip',req.ip)
+//     logger.info('ip: '+req.ip)
 //     accesslogx(req, res, 'RemoteIP:'+req.ip+':'+ C.access_log_format, function(s) {
 //        let testout = 'Request from:'+req.ip+ s+'\n'
-//        console.log(testout);
+//        logger.info(testout);
 //         fs.appendFile(C.access_logfile, s+'\n', err => {
 //              if (err) {
-//                  console.error(err)
+//                  logger.error(err)
 //                  return
 //              }
 //              //file written successfully
@@ -123,7 +123,7 @@ export const accesslog = (req, res) => {
        logger.info(`ENV.access_logfile ${ENV.access_logfile}`);
         fs.appendFile(ENV.access_logfile, testout, err => {
              if (err) {
-                 console.error(err)
+                 logger.error(err)
                  return
              }
              //file written successfully
@@ -188,7 +188,7 @@ export const capitalizeFirst = (value, index, self) =>{
 
 export const print_size = (obj, index, self) =>{
   let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
-    //console.log('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
+    //logger.info('C.taxon_lookup length:',Object.keys(C.taxon_lookup).length,'\t\tsize(KB):',size/1024)
 };
 
 export const make_otid_display_name = (otid) =>{
@@ -209,7 +209,7 @@ export const getAllDirFiles = (dirPath, arrayOfFiles) => {
     files.forEach(function getFilesArray(file) {
       let stats = fs.statSync(dirPath + "/" + file);
       let unixFilePermissions = '0' + (stats.mode & parseInt('777', 8)).toString(8);
-      //console.log(file,unixFilePermissions,stats)
+      //logger.info(file,unixFilePermissions,stats)
       if (stats.mode & (fs.constants.S_IRUSR | fs.constants.S_IRGRP | fs.constants.S_IROTH)) {
 
         if (stats.isDirectory()) {
@@ -224,6 +224,7 @@ export const getAllDirFiles = (dirPath, arrayOfFiles) => {
     });
     return arrayOfFiles;
   } catch (e) {
+    logger.error(e)
     return 0;
   }
 
@@ -231,7 +232,7 @@ export const getAllDirFiles = (dirPath, arrayOfFiles) => {
 
 // module.exports.readAsync = async function readAsync(file, callback) {
 //     if(ENV.ENV === 'development'){
-//         console.log('Reading File:',file)
+//         logger.info('Reading File:',file)
 //     }
 //     module.exports.print(['Reading File:',file])
 //     try {
@@ -239,7 +240,7 @@ export const getAllDirFiles = (dirPath, arrayOfFiles) => {
 //     //file exists
 //       }
 //     } catch(err) {
-//       console.error(err)
+//       logger.error(err)
 //     }
 //     
 //     //await module.exports.sleep(10000)
@@ -264,17 +265,17 @@ export const makeid = (length) => {
 //
 export const checkFileSize = (file_path) => {
   let statsObj = fs.statSync(file_path);
-  //console.log('size',statsObj.size);  // bytes
+  //logger.info('size',statsObj.size);  // bytes
   return statsObj.size;
   
 };
 
 export const print = function print(thing) {
-    // console.log only if development
+    // logger.info only if development
     // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
     let date = new Date().toISOString()
     if(ENV.ENV == 'localhost' ) {
-        console.log('\x1b[31m%s\x1b[0m',date, thing)  
+        logger.info('\x1b[31m%s\x1b[0m_'+date+'-'+thing)  
     }
     
 };
@@ -298,7 +299,7 @@ export const get_gc_for_gccontent = (gc) => (parseFloat(gc) / 100).toFixed(2);
 export const readFromFile = (file, ext) => new Promise((resolve, reject) => {
   fs.readFile(file, (err, data) => {
     if (err) {
-      console.log(err);
+      logger.error(err);
       reject(err);
     }
     else {
@@ -306,7 +307,7 @@ export const readFromFile = (file, ext) => new Promise((resolve, reject) => {
         resolve(JSON.parse(data));
       } else if (ext == 'csv') {
         let gids = [];
-        //console.log(data.toString())
+        //logger.info(data.toString())
         let pts = data.toString().split('\n');
         for (let i in pts) {
           //#re.findall(r'\S+', s)
@@ -315,12 +316,12 @@ export const readFromFile = (file, ext) => new Promise((resolve, reject) => {
 
         // const allFileContents = fs.readFileSync('broadband.sql', 'utf-8');
         // allFileContents.split(/\r?\n/).forEach(line =>  {
-        //   console.log(`Line from file: ${line}`);
+        //   logger.info(`Line from file: ${line}`);
         // });
         resolve(gids);
 
       } else {
-        //console.log(data)
+        //logger.info(data)
         resolve(data);
       }
     }
@@ -346,7 +347,7 @@ export const execShellCommand = (cmd) => {
 };
 
 export const rtrim = (x, characters) => {
-  //console.log('x,characters',x,characters)
+  //logger.info('x,characters',x,characters)
   let start = 0;
   let end = x.length - 1;
   while (characters.indexOf(x[end]) >= 0) {
@@ -365,14 +366,14 @@ export const ltrim = (x, characters) => {
 };
 
 // module.exports.filter_for_phylumXX = function filter_for_phylum(list, phy){
-//     //console.log('list[0]',list[0])
+//     //logger.info('list[0]',list[0])
 //     let lineage_list = Object.values(C.taxon_lineage_lookup)
 //     let obj_lst = lineage_list.filter(item => item.phylum === phy)  //filter for phylum 
-//     //console.log('obj_lst[0]',obj_lst[0])
+//     //logger.info('obj_lst[0]',obj_lst[0])
 //     let otid_list = obj_lst.map( (el) =>{  // get list of otids with this phylum
 //         return el.otid
 //     })
-//     //console.log('otid_list.length',otid_list.length)
+//     //logger.info('otid_list.length',otid_list.length)
 //     let otid_grabber = {}
 //     let gid_obj_list = list.filter(item => {   // filter genome obj list for inclusion in otid list
 //         if(otid_list.indexOf(item.otid.toString()) !== -1){
@@ -381,16 +382,16 @@ export const ltrim = (x, characters) => {
 //         }
 //         //return otid_list.indexOf(item.otid) !== -1
 //     })
-//     //console.log('otid_grabber',otid_grabber)
-//     //console.log('gid_obj_list',gid_obj_list)
+//     //logger.info('otid_grabber',otid_grabber)
+//     //logger.info('gid_obj_list',gid_obj_list)
 //     // now get just the otids from the selected gids
 //     gid_obj_list.map( (el) =>{ return el.otid })
 //     return gid_obj_list
 // }
 
 export const filter_for_phylum = (obj_list, phylum) => {
-  //console.log('tlist[0]',tlist[0])
-  //console.log('C.taxon_lineage_lookup',C.taxon_lineage_lookup['1'])
+  //logger.info('tlist[0]',tlist[0])
+  //logger.info('C.taxon_lineage_lookup',C.taxon_lineage_lookup['1'])
   let new_obj_list = obj_list.filter(item => {
     if (C.taxon_lineage_lookup.hasOwnProperty(item.otid) && C.taxon_lineage_lookup[item.otid].phylum == phylum) {
       return true;
@@ -404,13 +405,13 @@ export const walk = (dir) => {
 
  
     // get the contents of dir
-    console.log('dir',dir)
+    logger.info('dir'+dir)
     
     fs.readdir(dir, (e, items) => {
          
         // for each item in the contents
         if(e){
-          console.log('e',e)
+          logger.error(e)
           return
         }else{
           items.forEach((item) => {
@@ -422,7 +423,7 @@ export const walk = (dir) => {
             fs.stat(itemPath, (e, stats) => {
  
                 // Just log the item path for now
-                console.log('walking',itemPath);
+                logger.info('walking'+itemPath);
  
                 // for now just use stats to find out
                 // if the current item is a dir
@@ -444,7 +445,7 @@ export const walk = (dir) => {
  
 };
 export const get_has_abundance = () => {
-   console.log('getting abund +-')
+   logger.info('getting abund +-')
    /// Relies on the C.abundance_lookup to have acurate data
    /// see Initialize_Abundance.py
    /// used on ecology_home page
@@ -458,7 +459,7 @@ export const get_has_abundance = () => {
     let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']
     let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
     let lineage_list,tc
-    //console.log(phyla_obj)
+    //logger.info(phyla_obj)
     for(let n in domain_obj){
         lineage_list = helpers_taxa.make_lineage(domain_obj[n])
         tc = C.abundance_lookup[lineage_list[0]]
@@ -494,15 +495,15 @@ export const get_has_abundance = () => {
         tc = C.abundance_lookup[lineage_list[0]]
         data.species[species_obj[n].taxon] = tc.ecology
     }
-    //console.log('abund data',data)
+    //logger.info('abund data',data)
     return data
 }
 ////
 export const calculate_homd_stats = () => {
-    console.log('calc stats')
+    logger.info('calc stats')
     let pct,count,s = {}
 //TAXA////TAXA////TAXA////TAXA////TAXA////TAXA////TAXA//
-    //console.log(C.taxon_lookup['10'])
+    //logger.info(C.taxon_lookup['10'])
     //s.taxa_count = Object.keys(C.taxon_lookup).length
     let homd_taxa = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped'))
     // Status
@@ -526,7 +527,7 @@ export const calculate_homd_stats = () => {
     pct = count / s.taxon_count * 100
     s.taxa_status_phylotype    = {count:count,pct_of_taxa:pct.toFixed(1)}
     // Body Sites
-    //console.log(C.site_lookup['10'])
+    //logger.info(C.site_lookup['10'])
     count = homd_taxa.filter(item => item.sites[0] === 'Oral').length
     pct = count / s.taxon_count * 100
     s.taxa_site_oral    = {count:count,pct_of_taxa:pct.toFixed(1)}
@@ -562,12 +563,12 @@ export const calculate_homd_stats = () => {
     s.taxa_with_genomes= {count:count,pct_of_taxa:pct.toFixed(1)}
     
     //Phyla
-    //console.log(C.taxon_counts_lookup)
+    //logger.info(C.taxon_counts_lookup)
    
     // list to sort
     let sortlist = [],cnt,show
     C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'].map(taxitem => {
-      //console.log(taxitem)
+      //logger.info(taxitem)
       if(!C.taxon_counts_lookup.hasOwnProperty('Bacteria;'+taxitem.taxon)){
          show = '(Archaea) '+taxitem.taxon
          cnt = C.taxon_counts_lookup['Archaea;'+taxitem.taxon].taxcnt
@@ -580,17 +581,17 @@ export const calculate_homd_stats = () => {
     sortlist.sort((a, b) =>{
       return compareStrings_int(b.taxcnt, a.taxcnt)
     })
-    //console.log('sort',sortlist)
+    //logger.info('sort',sortlist)
     s.taxa_phyla = sortlist
     
 //RefSeq//RefSeq//RefSeq//RefSeq//RefSeq//RefSeq//RefSeq//RefSeq
-    //console.log(C.refseq_lookup)
+    //logger.info(C.refseq_lookup)
     let refseq_otids = Object.values(C.refseq_lookup)
     s.refseqs = {}
     s.refseqs.count = 0
     
     refseq_otids.map(item => {
-      //console.log('refseq',item)
+      //logger.info('refseq',item)
       s.refseqs.count += item.length
     })
     count = refseq_otids.length
@@ -601,7 +602,7 @@ export const calculate_homd_stats = () => {
     
 //Genomes// Genomes// Genomes// Genomes// Genomes// Genomes
     let homd_genomes = Object.values(C.genome_lookup)
-    //console.log("GCA_013333485.2",C.genome_lookup['GCA_013333485.2'])
+    //logger.info("GCA_013333485.2",C.genome_lookup['GCA_013333485.2'])
     s.genome_count               = homd_genomes.length
     count   = homd_genomes.filter(item => item.mag === 'yes').length
     // in how many taxa (see taxa_with_genomes)
@@ -642,7 +643,7 @@ export const calculate_homd_stats = () => {
     s.genome_max_contigs = max_contigs
     s.genome_min_length = min_length
     s.genome_max_length = max_length
-    //console.log(C.annotation_lookup)
+    //logger.info(C.annotation_lookup)
     // max and min contigs
     // max and min genome size
     // Genome Body Site
@@ -673,7 +674,7 @@ export const calculate_homd_stats = () => {
     
     // ??
     //let ref_genomes = homd_taxa.filter(item => item.sites[0] === 'Reference').map(item => item.genomes).flat()
-    //console.log('ref_genomes',ref_genomes)
+    //logger.info('ref_genomes',ref_genomes)
     count = homd_taxa.filter(item => item.sites[0] === 'Environmental').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_env   = {count:count,pct_of_genomes:pct.toFixed(1)}
@@ -700,13 +701,13 @@ export const calculate_homd_stats = () => {
     s.genome_bakta = {count:count,pct_of_genomes:pct.toFixed(1)}
     
     
-    //console.log('NCBI Genomes',count)
+    //logger.info('NCBI Genomes',count)
     //pct = count / s.taxon_count * 100
-    //console.log('oral',s.genome_site_env)
+    //logger.info('oral',s.genome_site_env)
     //s.taxa_site_oral    = {count:count,pct_of_taxa:pct.toFixed(1)}// Body Site
     
 //PHAGE///PHAGE///PHAGE///PHAGE///PHAGE///PHAGE///PHAGE/
-    //console.log("phage",C.phage_lookup)
+    //logger.info("phage",C.phage_lookup)
    //  'GCA_946997235.1': {
 //     site: 'other',
 //     cenote_count: '1',
@@ -720,7 +721,7 @@ export const calculate_homd_stats = () => {
     s.phage.count = 0
     let homd_phage = Object.values(C.phage_lookup)
     homd_phage.map(item => {
-      //console.log('phage',item)
+      //logger.info('phage',item)
       s.phage.count += parseInt(item.cenote_count) + parseInt(item.genomad_count)
     })
     // how many genomes have phage? (range 1-40 phage/genome) How many taxa?
@@ -734,7 +735,7 @@ export const calculate_homd_stats = () => {
     s.taxa_with_subspecies = C.taxa_with_subspecies.length
     
     
-    //console.log(s)
+    //logger.info(s)
     return s
 }
 //

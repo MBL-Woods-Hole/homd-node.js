@@ -19,7 +19,7 @@ router.get('/refseq_table', function refseq_table(req, res) {
          //hmt = helpers.make_otid_display_name(otid)
          vals = C.refseq_lookup[otid]
          for(let m  in vals){
-            //console.log('val',vals[m])
+            //logger.info('val',vals[m])
             refseq_array.push({
                 otid:        otid,
                 species:     vals[m].species,
@@ -90,9 +90,9 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
   //let myurl = url.parse(req.url, true);
   let otid = req.query.otid.replace(/^0+/, '')
   
-  //console.log('otid',otid)
+  //logger.info('otid',otid)
   let fullname = helpers.make_otid_display_name(otid)
-  //console.log(fullname)
+  //logger.info(fullname)
   let filepath
   if(ENV.ENV === "localhost"){
       filepath = '/Users/avoorhis/programming/homd-node.js/public/trees/eHOMD_16S_rRNA_RefSeq.svg'
@@ -104,7 +104,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
             logger.error('Error reading file:', err);
             return;
           }
-          //console.log('File content:', data);
+          //logger.info('File content:', data);
           if(ENV.ENV === "localhost"){
              data = "<center><H1 style='color:red;'>LOCALHOST</H1></center>"+data
           }
@@ -125,7 +125,7 @@ router.get('/refseq_tree', function refseq_tree(req, res) {
 //
 router.get('/download', function download(req, res) {
     logger.info('download')
-  //console.log(req.body)
+  //logger.info(req.body)
   //helpers.accesslog(req, res)
   res.render('pages/refseq/download', {
     title: 'HOMD :: Phylo Tree', 
