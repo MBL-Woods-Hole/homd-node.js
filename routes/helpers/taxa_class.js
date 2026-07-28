@@ -7,8 +7,7 @@
 
 import C from '../../public/constants.js';
 import * as helpers from './helpers.js';
-import pino from 'pino';
-const logger = helpers.pino_conf(pino)
+
 
 // Private
 let taxon_name_id = 1;

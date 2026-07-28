@@ -12,7 +12,7 @@ import util from 'util';
 import path from 'path';
 import { exec, spawn } from 'child_process';
 import * as helpers from './helpers.js';
-import * as helpers_genomes from './helpers_genomes.js';
+//import * as helpers_genomes from './helpers_genomes.js';
 import pino from 'pino';
 const logger = helpers.pino_conf(pino)
 
@@ -43,8 +43,8 @@ export const set_gtable_session = (req) => {
   if (req.session.gtable_filter && req.session.gtable_filter.letter) {
     letter = req.session.gtable_filter.letter;
   }
-  //req.session.gtable_filter = helpers_genomes.get_default_gtable_filter()
-  req.session.gtable_filter = helpers_genomes.get_null_gtable_filter();
+  //req.session.gtable_filter = get_default_gtable_filter()
+  req.session.gtable_filter = get_null_gtable_filter();
   req.session.gtable_filter.letter = letter;
   
   for (let item in req.body) {
@@ -139,7 +139,7 @@ export const apply_species = (lst) => {
 export const on_paging = (glist, fltr, pd) => {
   let txt = '';
   let cbp = glist.length;
-  let ret_obj = helpers_genomes.apply_pages(glist, fltr, pd);
+  let ret_obj = apply_pages(glist, fltr, pd);
   let sendList = ret_obj.send_list;
   let pageData = ret_obj.page_data;
   let space = '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;';
@@ -204,7 +204,7 @@ export const apply_gtable_filter = (req, filter) => {
   if (req.session.gtable_filter) {
     vals = req.session.gtable_filter;
   } else {
-    vals = helpers_genomes.get_default_gtable_filter();
+    vals = get_default_gtable_filter();
   }
   ///logger.info('ZZZ Vals',vals)
   // big_g_list.filter(function (item) {
@@ -213,7 +213,7 @@ export const apply_gtable_filter = (req, filter) => {
 //     }
 //   })
   if(vals.text.txt_srch){
-    big_g_list = helpers_genomes.get_filtered_genome_list(big_g_list, vals.text.txt_srch, vals.text.field);
+    big_g_list = get_filtered_genome_list(big_g_list, vals.text.txt_srch, vals.text.field);
   }
   //logger.info("GCA_013333485.2-0",big_g_list.length)
   //letter

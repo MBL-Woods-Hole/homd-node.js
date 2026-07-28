@@ -13,9 +13,8 @@ import util from 'util';
 import path from 'path';
 import { exec, spawn } from 'child_process';
 import * as helpers from './helpers.js';
-import * as helpers_taxa from './helpers_taxa.js';
+//import * as helpers_taxa from './helpers_taxa.js';
 import pino from 'pino';
-const logger = helpers.pino_conf(pino)
 
 
 
@@ -36,7 +35,7 @@ export const clean_rank_name_for_show = (rank) =>{
 export const get_filter_on = (f) => {
   // for comparison stringify
   //logger.info('get_filter_on')
-  let obj1 = JSON.stringify(helpers_taxa.get_default_tax_filter());
+  let obj1 = JSON.stringify(get_default_tax_filter());
   let obj2 = JSON.stringify(f);
   if (obj1 === obj2) {
     //logger.info('off')
@@ -144,7 +143,7 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
         let pototid = parseInt(search_txt.slice(3).replace('-','').replace('_',''))
         send_list = big_tax_list.filter(item => {
             if(pototid && item.otid == pototid){
-                //logger.info('item',item)
+                logger.info('item',item)
                 return item
             }
         });
@@ -402,7 +401,7 @@ export const set_ttable_session = (req) => {
   if (req.session.ttable_filter && req.session.ttable_filter.letter) {
     letter = req.session.ttable_filter.letter;
   }
-  req.session.ttable_filter = helpers_taxa.get_null_tax_filter();
+  req.session.ttable_filter = get_null_tax_filter();
   req.session.ttable_filter.letter = letter;
 
   for (let item in req.body) {
@@ -496,14 +495,14 @@ export const apply_ttable_filter = (req, filter) => {
     vals = req.session.ttable_filter;
   } else {
     //logger.info('vals from default ttfilter')
-    vals = helpers_taxa.get_default_tax_filter();
+    vals = get_default_tax_filter();
   }
   //logger.info('vals',vals)
   //
   // SEARCH txt_srch
   //logger.info('TEXT',vals.text.txt_srch, vals.text.field)
   if (vals.text.txt_srch !== '') {
-    big_tax_list = helpers_taxa.get_text_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field);
+    big_tax_list = get_text_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field);
   }
   //logger.info('big_tax_list',big_tax_list[0])
   //logger.info('vals',vals)
@@ -674,7 +673,7 @@ export const apply_ttable_filter = (req, filter) => {
       el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || '';
       let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus + ' ' + el.species + '_species'];
       //logger.info(el)
-      let lineage_list = helpers_taxa.make_lineage(node);
+      let lineage_list = make_lineage(node);
 
       if (C.abundance_lookup.hasOwnProperty(lineage_list[0]) && C.abundance_lookup[lineage_list[0]].ecology == '1') {
         el.ecology = 1;
