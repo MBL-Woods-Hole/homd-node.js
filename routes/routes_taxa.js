@@ -59,7 +59,7 @@ router.get('/taxon_table', function tax_table_get(req, res) {
   //     }
 
   send_list = helpers_taxa.apply_ttable_filter(req, filter)
-  //logger.info('LENGTH',send_list.length)
+  logger.info(`Table LENGTH: ${send_list.length}`)
   //let big_tax_list0 = Object.values(C.taxon_lookup);
   //let specific = send_list.filter(item => (item.otid == '209'))
   //logger.info('sendlist209',specific)

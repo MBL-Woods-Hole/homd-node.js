@@ -143,12 +143,6 @@
                 <input type='checkbox' class='filter_ckbx' id='enviro' name='enviro' onclick='update_sb()' \> Environmental&nbsp;
             <% } %>
             
-            <% if(statusfltr.site.ref === 'on'){ %>
-                <input title='Was NonOralRef' type='checkbox' checked class='filter_ckbx' id='ref' name='ref' onclick='update_sb()' \> Reference&nbsp;
-            <% }else{ %>
-                <input title='Was NonOralRef' type='checkbox' class='filter_ckbx' id='ref' name='ref' onclick='update_sb()' \> Reference&nbsp;
-            <% } %>
-            
             <% if(statusfltr.site.unassigned === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='unassigned' name='unassigned' onclick='update_sb()' \> Unassigned&nbsp;
             <% }else{ %>
@@ -222,12 +216,17 @@
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='phylotype' name='phylotype' onclick='update_sb()' \> Phylotype&nbsp;
             <% } %>
+            
             <% if(statusfltr.status.dropped === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
             <% } %>
-
+            <% if(statusfltr.status.reference === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='reference' name='reference' onclick='update_sb()' \> Reference&nbsp;
+            <% }else{ %>
+                <input type='checkbox' class='filter_ckbx' id='reference' name='reference' onclick='update_sb()' \> Reference&nbsp;
+            <% } %>
             
              
              <small><span  id='toggle_cb_status_span'><a class="pill pill-aqua" href='#' onclick="toggle_cb_status('off')">Toggle CheckBoxes On/Off</a></span></small>

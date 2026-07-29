@@ -336,9 +336,9 @@ Promise.all(promises)
     C.abundance_lookup       = results[16];  // should have same taxa keys as C.taxon_counts_lookup
     C.pangenome_lookup       = results[17]
     /// END of results files
-    C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped')).map(x => x.otid)
-    C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference' && item.status.toLowerCase() !== 'dropped')).map(x => x.otid)
-    C.no_refseq_otids = Object.values(C.taxon_lookup).filter(item => (!C.refseq_lookup.hasOwnProperty(item.otid) && item.status.toLowerCase() !== 'dropped')).map(x => x.otid)
+    C.dropped_taxids    = Object.values(C.taxon_lookup).filter(item => (item.active_status.toLowerCase() === 'dropped')).map(x => x.otid)
+    C.reference_taxids = Object.values(C.taxon_lookup).filter(item => (item.active_status.toLowerCase() === 'reference' && item.active_status.toLowerCase() !== 'dropped')).map(x => x.otid)
+    C.no_refseq_otids = Object.values(C.taxon_lookup).filter(item => (!C.refseq_lookup.hasOwnProperty(item.otid) && item.active_status.toLowerCase() !== 'dropped')).map(x => x.otid)
     C.otids_w_abundance = Object.values(C.abundance_lookup).filter(item => {
         if(item.otid != ''){
             return item.otid

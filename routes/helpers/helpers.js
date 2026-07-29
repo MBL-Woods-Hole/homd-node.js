@@ -505,9 +505,9 @@ export const calculate_homd_stats = () => {
 //TAXA////TAXA////TAXA////TAXA////TAXA////TAXA////TAXA//
     //logger.info(C.taxon_lookup['10'])
     //s.taxa_count = Object.keys(C.taxon_lookup).length
-    let homd_taxa = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped' && item.status.toLowerCase() !== 'reference'))
-    let homd_dropped_taxa = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'dropped'))
-    let homd_reference_taxa = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() === 'reference'))
+    let homd_taxa = Object.values(C.taxon_lookup).filter(item => (item.active_status.toLowerCase() !== 'dropped'))
+    let homd_dropped_taxa = Object.values(C.taxon_lookup).filter(item => (item.active_status.toLowerCase() === 'dropped'))
+    let homd_reference_taxa = Object.values(C.taxon_lookup).filter(item => (item.active_status.toLowerCase() === 'reference'))
     s.ref_count = homd_reference_taxa.length
     s.dropped_count = homd_dropped_taxa.length
     // Status

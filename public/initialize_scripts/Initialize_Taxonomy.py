@@ -28,7 +28,7 @@ reference_otids = []  # must get from DB
 
 query_taxa ="""
 SELECT otid, taxonomy_id, genus, species,
-`status`, naming_status, cultivation_status, notes,
+active_status, naming_status, cultivation_status, notes,
 ncbi_taxon_id as ncbi_taxid
 from otid_prime
 join taxonomy using(taxonomy_id)
@@ -56,7 +56,7 @@ def create_taxon(otid):
 
     taxon = {}
     taxon['otid'] = otid
-    taxon['status'] = ''
+    taxon['active_status'] = ''
     taxon['naming_status'] = ''
     #taxon['status_issue'] = ''
     taxon['cultivation_status'] = ''
@@ -73,7 +73,6 @@ def create_taxon(otid):
     taxon['rrna_sequences'] = []
     taxon['synonyms'] = []
     taxon['sites'] = []
-    #taxon['pangenomes'] = []
     
     return taxon
 
@@ -93,12 +92,12 @@ def run_taxa(args):
         otid = str(obj['otid'])
         taxonObj = create_taxon(otid)
         
-        if obj['status'].lower() == 'dropped':
+        if obj['active_status'].lower() == 'dropped':
             #print('dropped',otid)
             dropped_otids.append(otid)
        
             
-        taxonObj['status']             = obj['status']
+        taxonObj['active_status']             = obj['active_status']
         taxonObj['naming_status']      = obj['naming_status']
         #taxonObj['status_issue']      = obj['status_issue']
         taxonObj['cultivation_status'] = obj['cultivation_status']
@@ -179,7 +178,7 @@ def run_sites(args):
     #q = "SELECT otid, site FROM otid_site JOIN sites USING (site_id) ORDER BY otid,priority"
     #q = "SELECT otid, primary_body_site FROM otid_prime"
     #q = "SELECT otid, site FROM otid_prime JOIN sites on otid_prime.primary_body_site_id=sites.site_id"
-    q = "SELECT otid, site_notes, p1.site as p1, p2.site as p2,body_site_reference as ref FROM otid_prime"
+    q = "SELECT otid, site_notes, p1.site as p1, p2.site as p2, body_site_reference as ref FROM otid_prime"
     q += " JOIN `status` using(otid)"
     q += " JOIN sites p1 on `status`.primary_body_site_id=p1.site_id"
     q += " JOIN sites p2 on `status`.secondary_body_site_id=p2.site_id  ORDER BY otid"
