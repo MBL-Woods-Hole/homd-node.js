@@ -13,6 +13,9 @@
    border: 1px solid black;
    color: white;
 }
+.bold-text{
+   font-weight:bold;
+}
 </style>
 <div id='filter_form_div'>
 
@@ -81,7 +84,7 @@
          
     <span style='float:right;' class="advanced-filter-btn" onclick="openAdvancedForm()">Open Advanced Filter</span>
     <small>
-    <span class='filter-title'>Search This Table</span>:&nbsp;&nbsp;
+    <span class='filter-title bold-text'>Search This Table</span>:&nbsp;&nbsp;
     
     <span class="">
       
@@ -101,7 +104,7 @@
          <small>
             
             
-            <span class='filter-title' id='body_site_title'>Primary Body Site <small>(in Beta)</small>:</span>&nbsp;&nbsp;
+            <span class='filter-title bold-text' id='body_site_title'>Primary Body Site <small>(in Beta)</small>:</span>&nbsp;&nbsp;
             
             
             <% if(statusfltr.site.oral === 'on'){ %>
@@ -158,7 +161,7 @@
 <tr>
 <td>
          <small>
-            <span class='filter-title'>Body Site Abundance <small>(in Beta)</small>:</span>&nbsp;&nbsp;
+            <span class='filter-title bold-text'>Body Site Abundance <small>(in Beta)</small>:</span>&nbsp;&nbsp;
             <% if(statusfltr.abund.high_abund === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='high_abund' name='high_abund' onclick='update_sb()'\> High&nbsp;
             <% }else{ %>
@@ -195,7 +198,7 @@
 <tr>
 <td>
          <small>
-            <span class='filter-title'>Status</span>:&nbsp;&nbsp;
+            <span class='filter-title bold-text'>Status</span>:&nbsp;&nbsp;
             <% if(statusfltr.status.named_cultivated === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='named_cultivated' name='named_cultivated' onclick='update_sb()'\> Named/Cultivated&nbsp;
             <% }else{ %>
