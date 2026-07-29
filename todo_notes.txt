@@ -1,3 +1,25 @@
+2026-07-28
+Floyd email diff between 3.1 and 4.2 (see below)
+  asks for change between 
+  add files to (1-FTP site) and 2-homd-download page
+------------------------------------------------
+Hi All,
+Spent some time over the weekend examining the number of taxa and genome added or deleted between these two HOMD versions.
+I based the comparisons between these versions by going to each and downloading the Taxonomy table files.  Between versions, 3.1 has NonOralRef off and 4.2 has NonOralRef on, so compare apples with apples the Taxa totals are 789 and 836 for NOR on and 774 off.  Actually the WSP-2 taxon should not be a NOR in 3.1 which would take the 3.1 NOR off to 775.  So NOR off goes from 775 to 826.   Between these versions 78 taxa were added and 31 dropped for net addition of 47.   The math works 780 + 47 = 836 with NOR on.  For NOR off, 775 +47 +4(diff in # NORs) =826
+
+DONE In V3.1 Andy need to change Taxon 998 Victivallales_[G-1] bacterium_HMT_998 from NOR to unnamed and our numbers will all be what I say above.
+I think we should also turn off NOR on V4.2 so that the two are consistent and the number of taxa will display as 826.
+
+The first table is an edited version of the Taxon Table download from V4.2.  I added lines for all numbers between 001 and 999.  My going back to older files that listed unused (Free) and dropped taxa I completed the table.  Four Free are reserved for four Eikenella species to add in the next update.  There are four taxa that may have been added very briefly as part of Nasal that were dropped.  Whether they should stay dropped or move to Free need to be discussed.  Anyway, we currently have 99 Free HMT number to hand out and we have retired 64 as Dropped.  We can discussed if we should split Dropped into Dropped (as chimeras or bad taxa) and Moved or Merged as we did for lots of taxa in this update.
+
+The second file compares the Taxon Table download files side by side for  V4.2 and V3.1.  I added partial lines where versions differ so you can see additions to V4.2 or Deletions from 3.1.  I added in NonOralRefs to V3.1 because they are on HOMD but somehow excluded from the download table.
+
+The third file is just cutting out the Additions and Deletions.  This information will inform updating the papers Table S1
+
+I don’t know if we have it elsewhere, but the second file also nicely shows the two taxonomies where a vast number of names have changes.
+Can explain more Tuesday
+Best,Floyd
+------------------------------------------------
 2026-07-21
 BlastServer:
   1-public site download fasta fails
