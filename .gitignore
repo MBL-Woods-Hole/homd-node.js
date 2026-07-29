@@ -80,6 +80,6 @@ visuals_testing/
 .DS_Store
 *.pyc
 .~lock.*.csv#
-
+.env*
 venv
 

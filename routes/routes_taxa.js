@@ -40,7 +40,7 @@ function get_default_filter(){
             phylotype: 'on',
             lost: 'on',
             dropped:'off',
-            nonoralref:'off'
+            nonoralref:'on'
         },
         genomes:'both',
         text:{
