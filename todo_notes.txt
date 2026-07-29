@@ -2,6 +2,7 @@
 Floyd email diff between 3.1 and 4.2 (see below)
   asks for change between 
   add files to (1-FTP site) and 2-homd-download page
+  In our current V4.2, the “References” box in in Primary Body Site, but really should be in Status next to Dropped as in V3.1
 ------------------------------------------------
 Hi All,
 Spent some time over the weekend examining the number of taxa and genome added or deleted between these two HOMD versions.
