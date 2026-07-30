@@ -25,7 +25,8 @@ newrelic.js
 *newrelic.js
 bin/versions.sh
 version.log
-config/
+config/*
+!config/app_config.js
 !public/constants.js
 vamps-launcher.sh
 
