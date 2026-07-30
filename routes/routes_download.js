@@ -618,7 +618,7 @@ router.post('/anno_search_data', async (req, res) => {
 ////
 router.post('/anno_data_by_gid', async (req, res) => {
     // Download all Annotation Hits By gid/ table and fasta
-    logger.info(`anno_data_by_gid req body ${req.body}`)
+    logger.info(req.body,'anno_data_by_gid req body')
     let type = req.body.type  // browser, text or excel
     let anno = req.body.anno  // ncbi prokka or bakta
     let gid = req.body.gid
@@ -962,7 +962,7 @@ router.post('/download_fasta', upload.single('myFile'), async function dld_fasta
         
     }
     let q = "SELECT genome_id as gid,protein_id as pid, UNCOMPRESS(seq_compressed) as seq from "+db+"."+table+" WHERE protein_id in ("
-    logger.info(`data ${data}`)
+    logger.info(data,'data')
     
     for(let n in data){
         //logger.info('n',data[n])
