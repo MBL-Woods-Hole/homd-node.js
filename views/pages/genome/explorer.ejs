@@ -88,6 +88,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     width: 100%;
     z-index: 9999999;
 }
+.anno-announce{
+    text-transform: uppercase;
+    float:left;
+    color: green;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% info_data = JSON.parse(info_data) %>
@@ -111,7 +116,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
           <% if(!gid || gid.toString() === "0"){ %>
              <% title ="Genome Explorer" %>
           <% }else{ %>
-             <% title ="Genome Explorer: "+organism+" ("+gid+")" %>
+             <% title ="<span class='anno-announce'>"+anno_type.toUpperCase()+"</span>Genome Explorer: "+organism+" ("+gid+")" %>
           <% } %>
           <%- include("../../partials/explorer_head"); %>
         </div>
