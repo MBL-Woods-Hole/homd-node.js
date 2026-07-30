@@ -12,8 +12,8 @@ import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
 import * as queries from './queries.js';
-import pino from 'pino';
-const logger = helpers.pino_conf(pino)
+//import pino from 'pino';
+import logger from '../config/app_config.js';
 
 function renderTaxonTable(req, res, args) {
 

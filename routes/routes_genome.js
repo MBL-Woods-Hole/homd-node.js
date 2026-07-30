@@ -13,8 +13,8 @@ import * as helpers from './helpers/helpers.js';
 import * as helpers_taxa from './helpers/helpers_taxa.js';
 import * as helpers_genomes from './helpers/helpers_genomes.js';
 import * as queries from './queries.js';
-import pino from 'pino';
-const logger = helpers.pino_conf(pino)
+//import pino from 'pino';
+import logger from '../config/app_config.js';
 
 
 import https from 'https';
@@ -307,8 +307,7 @@ router.get('/genome_description', async function Description (req, res) {
         delete data.pangenome
         data.pangenomes = pangenomes
         
-        logger.info(data, "LOGGED Success")
-        //logger.info("LOGGED Success")
+        
         data.gid = gid
         data.otid = C.genome_lookup[gid].otid
         
@@ -2407,33 +2406,6 @@ router.get('/open_ftp_file', function open_ftp_file(req, res) {
          })
     })
     
-    
-    
-    
-    
-    // logger.info('in genomes GET open_ftp_file',req.params)
-//     //let gid = req.body.gid
-//     let fname = req.params.fname
-//     let file_ext = 'faa'
-//     let fpath = path.join(ENV.FILEPATH_TO_FTP,'genomes','PROKKA','V11.02',file_ext,fname)
-//     let fpath_local = '/Users/avoorhis/programming/homd-work/genomesV11/PROKKA/V11.0/'+file_ext+'/GCA_000174175.1.faa'
-//     //let href = "https://www.homd.org/ftp/genomes/PROKKA/V11.02/faa/"+gid+".faa"
-//     logger.info(fpath)
-//     if(ENV.ENV === 'localhost'){
-//       fpath = fpath_local
-//     }
-//     fs.readFile(fpath, "utf8", (err, data) => {
-//         if (err) {
-//             logger.error(err);
-//             return
-//         } else {
-//             // Send the file content as the response
-//             res.writeHead(200, { "Content-Type": "text/plain" });
-//             //data = data.replace('<','\n<')
-//             //logger.info(data)
-//             res.end(data);
-//             return;
-//         }
-//     });
+
 })
 export default router;

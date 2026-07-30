@@ -12,10 +12,9 @@ import util from 'util';
 import path from 'path';
 import { exec, spawn } from 'child_process';
 import * as helpers from './helpers.js';
-//import * as helpers_genomes from './helpers_genomes.js';
-import pino from 'pino';
-const logger = helpers.pino_conf(pino)
 
+//import pino from 'pino';
+import logger from '../../config/app_config.js';
 
 export const get_default_annot_filter = () => {
   let defaultfilter = {
@@ -30,7 +29,7 @@ export const get_default_annot_filter = () => {
 };
 
 export const get_taxa_wgenomes = () => {
-  let alltax_list = Object.values(C.taxon_lookup).filter(item => (item.status.toLowerCase() !== 'dropped'));
+  let alltax_list = Object.values(C.taxon_lookup).filter(item => (item.active_status.toLowerCase() !== 'dropped'));
   let taxa_wgenomes = alltax_list.filter(item => item.genomes.length > 0);
   return taxa_wgenomes;
 };

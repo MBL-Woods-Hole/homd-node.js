@@ -3,8 +3,9 @@ const router = express.Router()
 import pool from '../config/database.js';
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
-import pino from 'pino';
-const logger = helpers.pino_conf(pino)
+//import pino from 'pino';
+import logger from '../config/app_config.js';
+
 
 // Generalized query function
 export const run_query = async (sql, req, res) => {
@@ -84,7 +85,7 @@ export const get_dropped_taxa = () => {
     q += " JOIN status using(otid)"
     q += " JOIN genus using (genus_id)"
     q += " JOIN species using (species_id)"
-    q += " WHERE status='Dropped'   Order By genus,species"
+    q += " WHERE active_status='Dropped'   Order By genus,species"
   return q
 };
 

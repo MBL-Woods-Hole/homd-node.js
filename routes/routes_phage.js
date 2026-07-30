@@ -6,8 +6,8 @@ import path from 'path';
 import C from '../public/constants.js';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
-import pino from 'pino';
-const logger = helpers.pino_conf(pino)
+//import pino from 'pino';
+import logger from '../config/app_config.js';
 
 router.get('/phage', async function phage(req, res) {
     

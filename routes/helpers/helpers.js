@@ -14,8 +14,8 @@ import path from 'path';
 import { exec, spawn } from 'child_process';
 
 import * as helpers_taxa from './helpers_taxa.js'
-import pino from 'pino';
-
+//import pino from 'pino';
+import logger from '../../config/app_config.js';
 
 export const getKeyByValue = (object, value) => {
   return Object.keys(object).find(key => object[key] === value);
@@ -764,29 +764,34 @@ export const logPoolStatus = (pool,sql) => {
     logger.info({QUERY:sql})
     logger.info(obj, 'MySQL POOL:')
 }
-export const pino_conf = (pino) => {
-    return pino({
-      level: process.env.LOG_LEVEL, // Lowest logging level allowed globally
-      
-      transport: {
-        targets: [
-          {
-            target: 'pino-pretty', // Outputs formatted text to the terminal
-            level: 'debug',
-            options: { colorize: true }
-          },
-          {
-            target: 'pino/file',   // Outputs structured JSON to a file
-            level: 'info',         // Only saves 'info' and higher severities
-            options: { 
-              destination: process.env.pino_logfile,
-              mkdir: true 
-            }
-          }
-        ]
-      }
-    });
-    
-}
-const logger = pino_conf(pino)
+// export const pino_conf = (pino) => {
+//     return pino({
+//      // https://github.com/pinojs/pino
+//       transport: {
+//         targets: [
+//           {
+//             // Outputs formatted text to the terminal
+//             target: 'pino-pretty', 
+//             level: process.env.NODE_ENV === 'production' ? 'silent' : 'debug',
+//             options: { 
+//                 colorize: true,
+//                 translateTime: 'SYS:standard',
+//                 ignore: 'pid,hostname',
+//             }
+//           },
+//           {
+//             // Outputs structured JSON to a file
+//             target: 'pino/file',   // Outputs structured JSON to a file
+//             level: process.env.NODE_ENV === 'production' ? 'silent' : 'info',     // Only saves 'info' and higher severities
+//             options: { 
+//               destination: process.env.pino_logfile,  // name set in apps.js, PATH is process.env.LOGGING_DIR (in .env)
+//               mkdir: true 
+//             }
+//           }
+//         ]
+//       }
+//     });
+//     
+// }
+// const logger = pino_conf(pino)
 export default router;

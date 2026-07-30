@@ -5,10 +5,11 @@
 
 //import process.env from './config/config.js';
 import 'dotenv/config';
+global.ENV = process.env;
 
 //import { * } from './config/config.js';
 
-global.ENV = process.env;
+
 import path from 'path';
 
 
@@ -22,10 +23,15 @@ ENV.PATH_TO_SCRIPTS             = path.join(ENV.PROCESS_DIR, ENV.PATH_TO_SCRIPTS
 ENV.PATH_TO_TMP                 = path.join(ENV.BASE_DIR, ENV.PATH_TO_TMP_BASENAME)
 ENV.PATH_TO_IMAGES              = path.join(ENV.BASE_DIR, ENV.PATH_TO_IMAGES_BASENAME)
 ENV.access_logfile              = path.join(ENV.LOGGING_DIR,'logs','homd-access.log')
-ENV.pino_logfile                = path.join(ENV.LOGGING_DIR,'logs','homd-combined.log')
+
 //=============================================================
-import pino from 'pino';
-const logger = helpers.pino_conf(pino)
+import logger from './config/app_config.js';
+
+//import pino from 'pino';
+//const logger = helpers.pino_conf(pino)
+//const logger = pino()
+// see helpers.pino_conf()
+// 
 logger.info('ENV:Base Dir',ENV.BASE_DIR)
 logger.info('ENV.PATH_TO_SCRIPTS',ENV.PATH_TO_SCRIPTS)
 
@@ -107,7 +113,6 @@ import async from 'async';
 
 
 import home from './routes/index.js';
-
 import taxa from './routes/routes_taxa.js';
 import refseq from './routes/routes_refseq.js';
 import genome from './routes/routes_genome.js';
@@ -119,15 +124,16 @@ import help from './routes/routes_help.js';
 import download from './routes/routes_download.js';
 
 
-// PRODUCTION: log every restart
+// PRODUCTION: log every restart?
+// To turn off logging for production system
+// 1- Make sure NODE_ENV (in .env file) is set to 'production'  <= for console.log()
+// 2- Make sure LOG_LEVEL (in .env file) is set to 'silent' <= for logger.info()
 
 if(process.env.NODE_ENV === 'production'){
-    // const output = fs.createWriteStream('../homd-stats/restart.log', {flags : 'a'})
-//     const restart_logger = new console.Console(output)
-//     restart_logger.log('Restart on '+helpers.timestamp(false))
-    logger.info('!!Turning off console logging for production mode!!')
-    logger.info('To debug: run `npm run debug`')
-    logger.info = function() {};  // turn off console.logging
+   
+    console.log('!!Turning off console logging for production mode!!')
+    console.log('To debug: run `npm run debug`')
+    console.log = function() {};  // turn off console.logging
     // to see console.logs: "npm run debug"
 }
 

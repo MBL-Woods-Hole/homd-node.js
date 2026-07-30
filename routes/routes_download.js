@@ -18,8 +18,8 @@ import * as helpers_taxa from './helpers/helpers_taxa.js';
 import * as helpers_genomes from './helpers/helpers_genomes.js';
 import * as queries from './queries.js';
 const upload = multer({ dest: ENV.PATH_TO_TMP  })
-import pino from 'pino';
-const logger = helpers.pino_conf(pino)
+//import pino from 'pino';
+import logger from '../config/app_config.js';
 
 router.get('/download/:q', function download(req, res) {
   // renders the overall downlads page

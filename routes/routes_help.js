@@ -8,9 +8,8 @@ import path from 'path';
 import * as helpers from './helpers/helpers.js';
 import * as queries from './queries.js';
 import { exec, spawn } from 'child_process';
-import pino from 'pino';
-const logger = helpers.pino_conf(pino)
-
+//import pino from 'pino';
+import logger from '../config/app_config.js';
 
 router.get('/index', function index(req, res) {
   
