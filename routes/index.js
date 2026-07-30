@@ -255,8 +255,8 @@ router.post('/advanced_anno_orf_search', async function advanced_anno_orf_search
 })
 //
 router.post('/advanced_site_search_phage_grep', async function advanced_site_search_phagePOST(req, res) {
-    logging.info('in advanced_site_search_phage_grep')
-    logging.info(req.body)
+    logger.info('in advanced_site_search_phage_grep')
+    logger.info(req.body)
     const searchText = req.body.search_text_phage_grep.toLowerCase()
     //let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     //let grep_fields = ['predictor','genome_id','accession']  // MUST BE order from file
@@ -274,7 +274,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         let args = ['-h','-m '+(max_rows).toString(),'"'+searchText+'"',datapath]
         //let args = ['-h','"'+searchText+'"',datapath]
         let grep_cmd = ENV.GREP_CMD + ' ' + args.join(' ')
-        logging.info(grep_cmd)
+        logger.info(grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
         // [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
         const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
@@ -398,7 +398,7 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
         })
     }
     catch(e){
-          logging.error(e);
+          logger.error(e);
       }
       
     return
@@ -408,8 +408,8 @@ router.post('/advanced_site_search_phage_grep', async function advanced_site_sea
 
 })
 router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
-   logging.info('in open_phage_sequence')
-   clogging.info(req.body)
+   logger.info('in open_phage_sequence')
+   clogger.info(req.body)
    
    let html = '',contig,length,gid,predictor,species='',strain='',otid
    let q = "SELECT genome_id,contig,predictor,seq_length,UNCOMPRESS(seq_compressed) as seq from phage_search WHERE search_id = '"+req.body.search_id+"'"
@@ -419,7 +419,7 @@ router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
     //logger.info('rows',rows)
     if(rows.length === 0){
         html += "No sequence found in database"
-        logging.error("error-No sequence found in database");
+        logger.error("error-No sequence found in database");
     }else{
         predictor = rows[0].predictor
         gid = rows[0].genome_id
@@ -439,7 +439,7 @@ router.post('/open_phage_sequence', async function submit_phage_data(req, res) {
 })
 //
 router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res) {
-   logging.info('in show_all_phage_hits')
+   logger.info('in show_all_phage_hits')
    let all = JSON.parse(req.body.big_list)
    let hit_ids = [],hl
    for(let n in all){
@@ -470,8 +470,8 @@ router.post('/show_all_phage_hits', async function show_all_phage_hits(req, res)
    
 })
 router.post('/submit_phage_data', async function submit_phage_data(req, res) {
-   logging.info('in submit_phage_data')
-   logging.info(req.body)
+   logger.info('in submit_phage_data')
+   logger.info(req.body)
    
    let q = "SELECT * from phage_search WHERE search_id = '"+req.body.search_id+"'"
     
@@ -482,9 +482,9 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
     
 })
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
-    logging.info('in advanced_site_search_grep - index.js')
+    logger.info('in advanced_site_search_grep - index.js')
     // anno now includes prokka, ncbi and bakta
-    logging.info('body',req.body)
+    logger.info('body',req.body)
     const searchText = req.body.search_text_anno_grep.toLowerCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
@@ -623,7 +623,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         })
     }
     catch(e){
-          logging.error(e);
+          logger.error(e);
       }
       
     return
@@ -642,8 +642,8 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
 //
 router.post('/basic_site_search', function basic_site_search(req, res) {
   
-  logging.info('index.js::in basic POST -Search')
-  logging.info(req.body)
+  logger.info('index.js::in basic POST -Search')
+  logger.info(req.body)
   const searchText = req.body.adv_search_text
   const searchTextLower = req.body.adv_search_text.toLowerCase()
   let taxonOtidObj = {},otidLst = [],refseqObj={},gidLst=[],ret_obj={}
@@ -710,7 +710,7 @@ router.post('/basic_site_search', function basic_site_search(req, res) {
 
   exec(grep_cmd, (err, stdout, stderr) => {
       if (stderr) {
-        logging.error(stderr);
+        logger.error(stderr);
         return;
       }
       //logger.info('stdout',stdout);
