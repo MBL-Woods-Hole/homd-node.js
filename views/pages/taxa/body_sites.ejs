@@ -107,6 +107,7 @@ tr.selected td{
        
         
         <th class="col2" nowrap>Taxon-ID</th>
+        <th class='col2 sorttable_nosort'></th>
         <th nowrap>Genus-Species</th>
         <th nowrap>Naming Status</th>
         <th>Cultivation Status</th>
@@ -124,7 +125,12 @@ tr.selected td{
                 <tr id='<%= otid %>' class=''>
             <% } %>
                  <td nowrap><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
-                 <td class='ellipsis' nowrap  title='<%= data[n]['gsp'] %>'><i><%- data[n]['gsp'] %></i></td> 
+                 <% if(data[n].naming_status == "Dropped"){ %>
+                   <td></td>
+                 <% }else{ %>
+                   <td><a href='/taxa/ecology?rank=species&name=<%- data[n]['gsp'] %>'>Abundance</a></td>
+                 <% } %>
+                 <td class=''ellipsis' nowrap  title='<%= data[n]['gsp'] %>'><i><%- data[n]['gsp'] %></i></td> 
                  <td nowrap><%= data[n].naming_status %></td> 
                  <td nowrap><%= data[n].cultivation_status %></td> 
                  <td class='ellipsis' nowrap title='<%= data[n]['s1'] %>'><%= data[n]['s1'] %></td>
