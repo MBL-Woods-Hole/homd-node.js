@@ -5,18 +5,20 @@ constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVer
 //constants.access_logfile = ENV.LOG_DIR+'/homd-access.log'  // JBROWSE if you want a non-relative url use: config.js
 
 
-constants.rRNA_refseq_version    = '16.03' // Used on title page header
-constants.genomic_refseq_version = '11.02' // Used on title page header
+constants.rRNA_refseq_version   = '16.03' // Used on title page header
+constants.genomic_refseq_version= '11.02' // Used on title page header
 constants.homd_taxonomy_version = '4.2'    // Used on title page header
-constants.virome_version    = '1.2'
+constants.virome_version        = '1.2'
+constants.GTDB_version          = '226'            // used on genome description page
 constants.version_information = {
     rna_ver: constants.rRNA_refseq_version, 
     gen_ver: constants.genomic_refseq_version, 
     tax_ver: constants.homd_taxonomy_version,
-    vir_ver: constants.virome_version
+    vir_ver: constants.virome_version,
+    gtdb_ver: constants.GTDB_version
 }
 constants.homd_stats = {}    // SEE helpers.calculate_homd_stats()
-constants.GTDB_version = '226'            // used on taxon description page
+
 constants.grep_search_max_rows = 500000  //100000 // up from 50000 on 2025-07-28
 constants.genomes_table_name = 'genomesV11.0'
 constants.genomes_prokka_table_name = 'genomes_prokkaV11.0'

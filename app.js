@@ -39,6 +39,9 @@ logger.info('Pino logger.info Testing! Pino is working with ES Modules.');
 logger.warn('Pino logger.warn Testing! Pino is working with ES Modules.');
 logger.error('Pino logger.error Testing! Pino is working with ES Modules.');
 
+// logger.debug('Pino logger.debug Testing! Pino is working with ES Modules.');
+// logger.level = 'trace'  // turns on debug level
+// logger.debug('this is a debug statement')
 
 logger.info(`NODE_ENV: ${ENV.NODE_ENV}`);
 

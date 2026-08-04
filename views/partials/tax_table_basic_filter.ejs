@@ -16,6 +16,7 @@
 .bold-text{
    font-weight:bold;
 }
+
 </style>
 <div id='filter_form_div'>
 
@@ -106,52 +107,62 @@
             
             <span class='filter-title bold-text' id='body_site_title'>Primary Body Site <small>(in Beta)</small>:</span>&nbsp;&nbsp;
             
-            
+            <span class='nowrap'>
             <% if(statusfltr.site.oral === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='oral' name='oral' onclick='update_sb()'\> Oral&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='oral' name='oral' onclick='update_sb()'\> Oral&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.site.nasal === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='nasal' name='nasal' onclick='update_sb()' \> Nasal&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='nasal' name='nasal' onclick='update_sb()' \> Nasal&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.site.skin === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='skin' name='skin' onclick='update_sb()' \> Skin&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='skin' name='skin' onclick='update_sb()' \> Skin&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.site.gut === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='gut' name='gut' onclick='update_sb()' \> Gut&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='gut' name='gut' onclick='update_sb()' \> Gut&nbsp;
             <% } %>
-            
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.site.vaginal === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='vaginal' name='vaginal' onclick='update_sb()' \> Vaginal&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='vaginal' name='vaginal' onclick='update_sb()' \> Vaginal&nbsp;
             <% } %>
-            
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.site.pathogen === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='pathogen' name='pathogen' onclick='update_sb()' \> Pathogen&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='pathogen' name='pathogen' onclick='update_sb()' \> Pathogen&nbsp;
             <% } %>
-            
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.site.enviro === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='enviro' name='enviro' onclick='update_sb()' \> Environmental&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='enviro' name='enviro' onclick='update_sb()' \> Environmental&nbsp;
             <% } %>
-            
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.site.unassigned === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='unassigned' name='unassigned' onclick='update_sb()' \> Unassigned&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='unassigned' name='unassigned' onclick='update_sb()' \> Unassigned&nbsp;
             <% } %> 
-            
+            </span>
             <small><span  id='toggle_cb_sites_span'><a class="pill pill-aqua" href='#' onclick="toggle_cb_sites('off')">Toggle CheckBoxes On/Off</a></span></small>
              
              
@@ -162,35 +173,42 @@
 <td>
          <small>
             <span class='filter-title bold-text'>Body Site Abundance <small>(in Beta)</small>:</span>&nbsp;&nbsp;
+            
+            <span class='nowrap'>
             <% if(statusfltr.abund.high_abund === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='high_abund' name='high_abund' onclick='update_sb()'\> High&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='high_abund' name='high_abund' onclick='update_sb()'\> High&nbsp;
             <% } %>
-            
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.abund.medium_abund === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='medium_abund' name='medium_abund' onclick='update_sb()' \> Medium&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='medium_abund' name='medium_abund' onclick='update_sb()' \> Medium&nbsp;
             <% } %>
-            
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.abund.low_abund === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='low_abund' name='low_abund' onclick='update_sb()' \> Low&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='low_abund' name='low_abund' onclick='update_sb()' \> Low&nbsp;
             <% } %>
-            
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.abund.scarce_abund === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='scarce_abund' name='scarce_abund' onclick='update_sb()' \> Scarce&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='scarce_abund' name='scarce_abund' onclick='update_sb()' \> Scarce&nbsp;
             <% } %>
-            
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.abund.nodata_abund === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='nodata_abund' name='nodata_abund' onclick='update_sb()' \> No Data&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='nodata_abund' name='nodata_abund' onclick='update_sb()' \> No Data&nbsp;
             <% } %>
+            </span>
             <span  id='toggle_cb_abund_span'><a class="pill pill-aqua" href='#' onclick="toggle_cb_abund('off')">Toggle CheckBoxes On/Off</a></span>
          </small>
 </td>
@@ -199,38 +217,49 @@
 <td>
          <small>
             <span class='filter-title bold-text'>Status</span>:&nbsp;&nbsp;
+            
+            <span class='nowrap'>
             <% if(statusfltr.status.named_cultivated === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='named_cultivated' name='named_cultivated' onclick='update_sb()'\> Named/Cultivated&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='named_cultivated' name='named_cultivated' onclick='update_sb()'\> Named/Cultivated&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.status.named_uncultivated === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='named_uncultivated' name='named_uncultivated' onclick='update_sb()' \> Named/Uncultivated&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='named_uncultivated' name='named_uncultivated' onclick='update_sb()' \> Named/Uncultivated&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.status.unnamed_cultivated === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='unnamed_cultivated' name='unnamed_cultivated' onclick='update_sb()' \> Unnamed/Cultivated&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='unnamed_cultivated' name='unnamed_cultivated' onclick='update_sb()' \> Unnamed/Cultivated&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.status.phylotype === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='phylotype' name='phylotype' onclick='update_sb()' \> Phylotype&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='phylotype' name='phylotype' onclick='update_sb()' \> Phylotype&nbsp;
             <% } %>
-            
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.status.dropped === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(statusfltr.status.reference === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='reference' name='reference' onclick='update_sb()' \> Reference&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='reference' name='reference' onclick='update_sb()' \> Reference&nbsp;
             <% } %>
-            
+            </span>
              
              <small><span  id='toggle_cb_status_span'><a class="pill pill-aqua" href='#' onclick="toggle_cb_status('off')">Toggle CheckBoxes On/Off</a></span></small>
          </small>

@@ -1097,10 +1097,10 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
         const csvStream = csv.format({ headers: false, delimiter: delimiter,writeHeaders: false }); 
         
         pipeline(stream, csvStream, passThroughStream, res, (err) => {
-        if (err) {
-            logger.error(err);
-        }
-        logger.info('streaming to download1')
+            if (err) {
+                logger.error(err);
+            }
+            logger.info('table streamed download1')
         });
         
         return
@@ -1108,10 +1108,10 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
         
         transformerStream = fastaObjectToStringStream
         pipeline(stream, transformerStream, res, (err) => {
-        if (err) {
-            logger.error(err);
-        }
-        logger.info('streaming to download2')
+            if (err) {
+                logger.error(err);
+            }
+            logger.info('fasta streamed download2')
         });
     }
     

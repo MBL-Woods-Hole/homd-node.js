@@ -413,3 +413,6 @@ p {
 .pull_right{
     float:right;
 }
+.nowrap{
+    white-space: nowrap;
+}

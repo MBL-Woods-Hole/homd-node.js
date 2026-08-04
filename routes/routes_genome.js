@@ -267,7 +267,6 @@ router.get('/jbrowse', function jbrowse (req, res) {
 router.post('/jbrowse_ajax', function jbrowseAjaxPost (req, res) {
   logger.info('AJAX JBrowse')
   
-  // for logging
   //logger.info('req.ip',req.ip)
   helpers.accesslog(req, res)
   //open(jburl)

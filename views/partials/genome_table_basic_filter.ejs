@@ -69,11 +69,20 @@
         <small>
         <span style=''>Paging: &nbsp;
           <% if(fltr.paging === 'on'){ %>
-            <input type='radio' checked name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
-            <input type='radio'         name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
+            
+            <span class='nowrap'>
+             <input type='radio' checked name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
+            </span>
+            <span class='nowrap'>
+             <input type='radio'         name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
+            </span>
           <% }else{ %>
-            <input type='radio'         name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
-            <input type='radio' checked name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
+            <span class='nowrap'>
+             <input type='radio'         name='paging' value='on' onclick='update_sb()' > On&nbsp;<small>(<%= pgdata.rows_per_page %> rows / page)</small>&nbsp;&nbsp;&nbsp;
+            </span>
+            <span class='nowrap'>
+             <input type='radio' checked name='paging' value='off' onclick='update_sb()' > Off (show all <%= pgdata.count_before_paging %> rows)&nbsp;
+            </span>
           <% } %>
           
         </span>
@@ -86,27 +95,34 @@
             <span class='filter-title' id='body_site_title'>Assembly Level:</span>&nbsp;&nbsp;
 
             
+            <span class='nowrap'>
             <% if(fltr.level.complete_genome === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='complete_genome' name='complete_genome' onclick='update_sb()'\> Complete Genome&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='complete_genome' name='complete_genome' onclick='update_sb()'\> Complete Genome&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(fltr.level.scaffold === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='scaffold' name='scaffold' onclick='update_sb()' \> Scaffold&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='scaffold' name='scaffold' onclick='update_sb()' \> Scaffold&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(fltr.level.contig === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='contig' name='contig' onclick='update_sb()' \> Contig&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='contig' name='contig' onclick='update_sb()' \> Contig&nbsp;
             <% } %>
+            </span>
+            <span class='nowrap'>
             <% if(fltr.level.chromosome === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='chromosome' name='chromosome' onclick='update_sb()' \> Chromosome&nbsp;
             <% }else{ %>
                 <input type='checkbox' class='filter_ckbx' id='chromosome' name='chromosome' onclick='update_sb()' \> Chromosome&nbsp;
             <% } %>
-            
+            </span>
             <small><span  id='toggle_cb_levels_span'><a class="pill pill-aqua" href='#' onclick="toggle_cb_levels('off')">Toggle CheckBoxes On/Off</a></span></small>
              
              
@@ -117,55 +133,72 @@
     <td class='border-on-right'>
        <small>
         <span class='filter-title'>Sort Column</span>:&nbsp;&nbsp;
+        
+        <span class='nowrap'>
         <% if(fltr.sort_col === 'gid'){ %>
         <input type='radio' checked name='sort_col' value='gid' onclick='update_sb()' > Genome-ID&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='gid' onclick='update_sb()' > Genome-ID&nbsp;
         <% } %>
+        </span>
+        <span class='nowrap'>
         <% if(fltr.sort_col === 'otid'){ %>
         <input type='radio' checked name='sort_col' value='otid' onclick='update_sb()' > Taxon-ID&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='otid' onclick='update_sb()' > Taxon-ID&nbsp;
         <% } %>
-        
+        </span>
+        <span class='nowrap'>
         <% if(fltr.sort_col === 'organism'){ %>
         <input type='radio' checked name='sort_col' value='organism' onclick='update_sb()' > Species&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='organism' onclick='update_sb()' > Species&nbsp;
         <% } %>
-        
+        </span>
+        <span class='nowrap'>
         <% if(fltr.sort_col === 'strain'){ %>
         <input type='radio' checked name='sort_col' value='strain' onclick='update_sb()' > Strain&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='strain' onclick='update_sb()' > Strain&nbsp;
         <% } %>
+        </span>
+        <span class='nowrap'>
         <% if(fltr.sort_col === 'mag'){ %>
         <input type='radio' checked name='sort_col' value='mag' onclick='update_sb()' > MAG&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='mag' onclick='update_sb()' > MAG&nbsp;
         <% } %>
+        </span>
+        <span class='nowrap'>
         <% if(fltr.sort_col === 'level'){ %>
         <input type='radio' checked name='sort_col' value='level' onclick='update_sb()' > Level&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='level' onclick='update_sb()' > Level&nbsp;
         <% } %>
+        </span>
+        <span class='nowrap'>
         <% if(fltr.sort_col === 'contigs'){ %>
         <input type='radio' checked name='sort_col' value='contigs' onclick='update_sb()' > Contigs&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='contigs' onclick='update_sb()' > Contigs&nbsp;
         <% } %>
+        </span>
+        <span class='nowrap'>
         <% if(fltr.sort_col === 'combined_size'){ %>
         <input type='radio' checked name='sort_col' value='combined_size' onclick='update_sb()' > Length&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='combined_size' onclick='update_sb()' > Length&nbsp;
         <% } %>
+        </span>
+        <span class='nowrap'>
         <% if(fltr.sort_col === 'gc'){ %>
         <input type='radio' checked name='sort_col' value='gc' onclick='update_sb()' > GC&nbsp;
         <% }else{ %>
         <input type='radio' name='sort_col' value='gc' onclick='update_sb()' > GC&nbsp;
         <% } %>
+        </span>
         
-        <span id='sort_rev' title='Reverse the Sort Order'>  
+        <span class='nowrap' id='sort_rev' title='Reverse the Sort Order'>  
         <% if(fltr.sort_rev === 'on'){ %>
         <input type='checkbox' checked name='sort_rev' onclick='update_sb()' > Reverse
         <% }else{ %>
