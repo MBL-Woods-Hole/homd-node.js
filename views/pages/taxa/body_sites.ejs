@@ -60,6 +60,9 @@ tr.selected td{
 .col2{
    width: 100px;
 }
+.col3{
+   width: 130px;
+}
 #main-table.sortable tbody {
     counter-reset: sortabletablescope;
 }
@@ -109,8 +112,8 @@ tr.selected td{
         <th class="col2" nowrap>Taxon-ID</th>
         <th class='col2 sorttable_nosort'></th>
         <th nowrap>Genus-Species</th>
-        <th nowrap>Naming Status</th>
-        <th>Cultivation Status</th>
+        <th class='col3' nowrap>Naming Status</th>
+        <th class='col3'>Cultivation Status</th>
         <th>Primary Body Site</th>
         <th>Other Body Sites</th>
         <th>Notes</th>
@@ -130,9 +133,9 @@ tr.selected td{
                  <% }else{ %>
                    <td><a href='/taxa/ecology?rank=species&name=<%- data[n]['gsp'] %>'>Abundance</a></td>
                  <% } %>
-                 <td class=''ellipsis' nowrap  title='<%= data[n]['gsp'] %>'><i><%- data[n]['gsp'] %></i></td> 
-                 <td nowrap><%= data[n].naming_status %></td> 
-                 <td nowrap><%= data[n].cultivation_status %></td> 
+                 <td class='ellipsis' nowrap  title='<%= data[n]['gsp'] %>'><i><%- data[n]['gsp'] %></i></td> 
+                 <td class='center' nowrap><%= data[n].naming_status %></td> 
+                 <td class='center' nowrap><%= data[n].cultivation_status %></td> 
                  <td class='ellipsis' nowrap title='<%= data[n]['s1'] %>'><%= data[n]['s1'] %></td>
                  <td class='ellipsis' nowrap title='<%= data[n]['s2'] %>'><%= data[n]['s2'] %></td>
                  <td><%= data[n]['note'] %></td>
