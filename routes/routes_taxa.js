@@ -1231,7 +1231,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
   families.sort()
   genera.sort()
   //'Bacteria;Pseudomonadota;Gammaproteobacteria;Enterobacterales;Yersiniaceae;Yersinia;Yersinia pestis'
-  //logger.info('has_abundance_data',C.has_abundance_data)
+  logger.info(C.has_abundance_data,'has_abundance_data')
   res.render('pages/taxa/ecology_home', {
     title: 'HOMD :: Ecology',
     pgname: 'taxon/ecology', // for AbountThisPage
@@ -1311,7 +1311,7 @@ router.get('/body_sites', function body_sites(req, res) {
     pgname: '', // for AbountThisPage
     config: JSON.stringify(ENV),
     ver_info: JSON.stringify(C.version_information),
-
+    has_data: JSON.stringify(C.has_abundance_data),
     sites: JSON.stringify(send_list),
     selected: selected_otid
 

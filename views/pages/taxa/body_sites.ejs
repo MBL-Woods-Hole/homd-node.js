@@ -87,6 +87,8 @@ tr.selected td{
 </style>
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <% data = JSON.parse(sites) %>
+<% has_abund_data =JSON.parse(has_data) %>
+
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -110,7 +112,7 @@ tr.selected td{
        
         
         <th class="col2" nowrap>Taxon-ID</th>
-        <th class='col2 sorttable_nosort'></th>
+        <th class='col2'>Abundance</th>
         <th nowrap>Genus-Species</th>
         <th class='col3' nowrap>Naming Status</th>
         <th class='col3'>Cultivation Status</th>
@@ -127,11 +129,11 @@ tr.selected td{
             <% }else{ %>
                 <tr id='<%= otid %>' class=''>
             <% } %>
-                 <td nowrap><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
-                 <% if(data[n].naming_status == "Dropped"){ %>
-                   <td></td>
+                 <td class='center' nowrap><a href='tax_description?otid=<%= otid %>'><%= taxidfullname %></a></td> 
+                 <% if(data[n].naming_status == "Dropped" || !has_abund_data.species[data[n]["gsp"]]){ %>
+                   <td class='center'></td>
                  <% }else{ %>
-                   <td><a href='/taxa/ecology?rank=species&name=<%- data[n]['gsp'] %>'>Abundance</a></td>
+                   <td class='center'><a href='/taxa/ecology?rank=species&name=<%- data[n]['gsp'] %>'>link</a></td>
                  <% } %>
                  <td class='ellipsis' nowrap  title='<%= data[n]['gsp'] %>'><i><%- data[n]['gsp'] %></i></td> 
                  <td class='center' nowrap><%= data[n].naming_status %></td> 
