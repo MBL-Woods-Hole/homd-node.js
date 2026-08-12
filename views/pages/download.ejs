@@ -149,6 +149,9 @@ a{
   
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+    <tr>
+      <td colspan='4'>Data from Current Version</td>
+    </tr>
     <tr><td>Current Taxon Table <a href='/taxa/taxon_table'>[page]</a></td>
       <td><a href='/download/dld_taxtable_all/browser'>Tab Delimited Text<br>(View in browser)</a></td>
       <td><a href='/download/dld_taxtable_all/text'>Tab Delimited Text<br>(Save to file)</a></td>
@@ -178,7 +181,7 @@ a{
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='2'>Versions</th></tr>
     <tr>
-      <td colspan='2'>Link out: <a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy' target='_blank'>HOMD FTP Taxonomy Site</a></td>
+      <td colspan='2'>Data from: <a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy' target='_blank'>HOMD FTP Taxonomy Site</a></td>
     </tr>
     <tr>
       <td>Comparison of V4.2 vs V3.1 HOMD Taxonomy </td>
@@ -189,13 +192,23 @@ a{
       <td colspan='2'><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_Compare_V4.1_V3.1_Taxonomy.csv'>V4.1 and V3.1 (csv)</a></td>
     </tr>
     <tr>
-      <td>Tax Table Data File</td>
-      <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_taxon_table_v3.1.csv' >eHOMD Taxonomy Version 3.1 (csv)</a></td>
+      <td>Tax Table Data File V3.1</td>
+      <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_taxon_table_v3.1.csv' >HOMD Taxonomy Version 3.1 (csv)</a></td>
     </tr>
     <tr>
-      <td>Tax Table Data File</td>
-      <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_taxon_table_v4.2.csv' >eHOMD Taxonomy Version 4.2 (csv)</a></td>
+      <td>Tax Table Data File V4.2</td>
+      <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_taxon_table_v4.2.csv' >HOMD Taxonomy Version 4.2 (csv)</a></td>
     </tr>
+    
+    <tr>
+      <td>Body Site Data V0.8</td>
+      <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_body_sites_table_v0.8.csv' >HOMD Body Sites Table Version 0.8 (csv) (taxonomy version 3.1)</a></td>
+    </tr>
+    <tr>
+      <td>Body Site Data V0.9</td>
+      <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_body_sites_table_v0.9.csv' >HOMD Body Sites Table Version 0.9 (csv) (taxonomy version 4.2)</a></td>
+    </tr>
+    
   </table>
   
   </center>
@@ -211,6 +224,9 @@ a{
   </div>
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th><th></th></tr>
+    <tr>
+      <td colspan='5'>Data from Current Version</td>
+    </tr>
     <tr><td>HMP Mapping</td><td><a href='/download/dld_taxabund/browser/mapping'>Tab Delimited Text<br>(View in browser)</a></td>
       <td><a href='/download/dld_taxabund/text/mapping'>Tab Delimited Text<br>(Save to file)</a></td>
       <td><a href='/download/dld_taxabund/excel/mapping'>MS Excel Format<br>(Save to file)</a></td>
@@ -243,6 +259,22 @@ a{
       <td><a href='/download/dld_taxabund/excel/hmprefseqv3v5'>MS Excel Format<br>(Save to file)</a></td>
       <td><a href='/download/dld_taxabund/samples_file/hmprefseqv3v5'>Taxonomy Samples Matrix Files<br>(Tab Delimited Text: *.tar.gz)</a></td>
     </tr>
+  </table>
+  <br>
+  <table class='download-table'>
+    <tr><th class='header'>Type</th><th class='header' colspan='2'>Versions</th></tr>
+    <tr>
+      <td colspan='2'>Data from: <a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy' target='_blank'>HOMD FTP Taxonomy Site</a></td>
+    </tr>
+    <tr>
+      <td>Abundance Data V0.8</td>
+      <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_abundance_table_v0.8.csv' >HOMD Abundance Table Version 0.8 (csv) (taxonomy version 3.1)</a></td>
+    </tr>
+    <tr>
+      <td>Abundance Data V0.9</td>
+      <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_abundance_table_v0.9.csv' >HOMD Abundance Table Version 0.9 (csv) (taxonomy version 4.2)</a></td>
+    </tr>
+    
   </table>
   </center>
 </div>

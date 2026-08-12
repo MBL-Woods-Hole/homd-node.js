@@ -450,7 +450,7 @@ export const get_has_abundance = () => {
    /// see Initialize_Abundance.py
    /// used on ecology_home page
     
-    let data ={domain:{},phylum:{},klass:{},order:{},family:{},genus:{},species:{}}
+    let data ={domain:{},phylum:{},klass:{},order:{},family:{},genus:{},species:{},subspecies:{},otid:''}
     let domain_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain']
     let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum']
     let class_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['klass']
@@ -458,8 +458,9 @@ export const get_has_abundance = () => {
     let family_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['family']
     let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']
     let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
+    let subspecies_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies']
     let lineage_list,tc
-    //logger.info(phyla_obj)
+    //logger.info(subspecies_obj,'subspecies_obj')
     for(let n in domain_obj){
         lineage_list = helpers_taxa.make_lineage(domain_obj[n])
         tc = C.abundance_lookup[lineage_list[0]]
@@ -493,7 +494,18 @@ export const get_has_abundance = () => {
     for(let n in species_obj){
         lineage_list = helpers_taxa.make_lineage(species_obj[n])
         tc = C.abundance_lookup[lineage_list[0]]
+        if(tc.hasOwnProperty('otid')){
+            data.otid = tc.otid
+        }
         data.species[species_obj[n].taxon] = tc.ecology
+    }
+    for(let n in subspecies_obj){
+        lineage_list = helpers_taxa.make_lineage(subspecies_obj[n])
+        tc = C.abundance_lookup[lineage_list[0]]
+        if(tc.hasOwnProperty('otid')){
+            data.otid = tc.otid
+        }
+        data.subspecies[subspecies_obj[n].taxon] = tc.ecology
     }
     //logger.info('abund data',data)
     return data

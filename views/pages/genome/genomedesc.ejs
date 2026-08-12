@@ -157,7 +157,9 @@
               <input type='hidden' name='annotation' value='prokka'>
               <input type='submit' class='gd-button' value='BLAST'>
             </form>
-            <!-- <a class='gd-button' href='/genome_blast_single?gid=<%= ginfo.gid %>' target='_blank'>BLAST</a> -->
+            
+            <a class='gd-button' href='https://devel.blast.homd.org/genome_blast_single_prokka?gid=<%= ginfo.gid %>'>BLAST2</a>
+            <a class='gd-button' href='https://devel.blast.homd.org/genome_blast_single_prokka/?gid=<%= ginfo.gid %>'>BLAST3</a>
 
             <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA
               Annotation</a>

@@ -93,6 +93,16 @@
 .nonote{
     color:lightgrey;
 }
+#body-site-data{
+   float:right;
+   padding:2px 25px 2px 0;
+   margin-right:8px;
+   margin-top:20px;
+   background:dodgerblue;
+   color:ivory;
+   border:1px solid blue;
+   font-size:11px;
+}
 </style>
 <% mapping_data = JSON.parse(mapping) %>
 <% dewhirst_data = JSON.parse(dewhirst) %>
@@ -135,6 +145,7 @@
       </span>
       <% if(otid != 0){ %>
        <small>(<%= taxidfullname %>)</small>
+        <span id='body-site-data'>Primary Body Site: <%- bodysite %></span>
       <% } %>
     </p>
     
@@ -199,13 +210,16 @@
 </center> 
 
 <div id="legend" class="legend">
+  
   <%- include('./ecology_lollipop_legend'); %>
 </div>
 <div id="legend-return" class='pill pill-brown'>
   <a href='#' onclick='show_legend()'>Show Legend</a>
 </div>
-<div  class="grid-container"  >
+<div  class="grid-container">
+
 <div id='plot-buttons'>
+
   <center>
     Available Datasets:<br>
     <% if(mapping_data.length){ %>

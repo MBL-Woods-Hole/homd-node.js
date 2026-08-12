@@ -88,7 +88,7 @@ tr.selected td{
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <% data = JSON.parse(sites) %>
 <% has_abund_data =JSON.parse(has_data) %>
-
+<% subsp = JSON.parse(subs) %>
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -102,6 +102,7 @@ tr.selected td{
        <p class='title h3'>HOMD Taxa Preferred Body Sites <small>(<span class='red-text'>in Beta</span>)</small></p>
        
        <span class='small'>[<a href="javascript:window.history.back();"><-- Back</a>]&nbsp;&nbsp;&nbsp;&nbsp;[<a href='body_sites'>Reload Page</a>]</span>
+       <a class='download_browser_text_excel'  href='/download/download/taxon' >Download Options</a> 
        <div id='main-box'>
        
 
@@ -135,7 +136,11 @@ tr.selected td{
                  <% }else{ %>
                    <td class='center'><a href='/taxa/ecology?rank=species&name=<%- data[n]['gsp'] %>'>link</a></td>
                  <% } %>
-                 <td class='ellipsis' nowrap  title='<%= data[n]['gsp'] %>'><i><%- data[n]['gsp'] %></i></td> 
+                 <td class='ellipsis' nowrap  title='<%= data[n]['gsp'] %>'><i><%- data[n]['gsp'] %></i>
+                 <% if(otid in subsp) { %>
+                     <%= subsp[otid] %>
+                 <% } %>
+                 </td> 
                  <td class='center' nowrap><%= data[n].naming_status %></td> 
                  <td class='center' nowrap><%= data[n].cultivation_status %></td> 
                  <td class='ellipsis' nowrap title='<%= data[n]['s1'] %>'><%= data[n]['s1'] %></td>

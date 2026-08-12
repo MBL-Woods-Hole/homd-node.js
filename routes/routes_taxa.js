@@ -1231,7 +1231,7 @@ router.get('/ecology_home', function ecology_home(req, res) {
   families.sort()
   genera.sort()
   //'Bacteria;Pseudomonadota;Gammaproteobacteria;Enterobacterales;Yersiniaceae;Yersinia;Yersinia pestis'
-  logger.info(C.has_abundance_data,'has_abundance_data')
+  
   res.render('pages/taxa/ecology_home', {
     title: 'HOMD :: Ecology',
     pgname: 'taxon/ecology', // for AbountThisPage
@@ -1266,7 +1266,7 @@ router.get('/body_sites', function body_sites(req, res) {
   }
 
   //for(let otid in C.site_lookup){
-
+  let subs = {}
   for (let otid in C.taxon_lookup) {
     obj = {}
     //logger.info(C.taxon_lookup[otid])
@@ -1289,12 +1289,19 @@ router.get('/body_sites', function body_sites(req, res) {
 
       obj.note = C.site_lookup[otid].notes
       obj.gsp = C.taxon_lookup[otid].genus + ' ' + C.taxon_lookup[otid].species
+      
+      if(C.taxa_with_subspecies.indexOf(otid) != -1){
+         subs[otid] =  C.taxon_lineage_lookup[otid].subspecies
+      }
     } else {
       obj.s1 = 'Unassigned'
       obj.s2 = ''
 
       obj.note = 'Missing From Database (C.site_lookup)'
       obj.gsp = C.taxon_lookup[otid].genus + ' ' + C.taxon_lookup[otid].species
+      if(C.taxa_with_subspecies.indexOf(otid) != -1){
+         subs[otid] =  C.taxon_lineage_lookup[otid].subspecies
+      }
     }
     obj.naming_status = C.taxon_lookup[otid].naming_status
     obj.cultivation_status = C.taxon_lookup[otid].cultivation_status
@@ -1305,7 +1312,6 @@ router.get('/body_sites', function body_sites(req, res) {
   send_list.sort((b, a) => {
     return helpers.compareStrings_alpha(b.gsp, a.gsp);
   })
-
   res.render('pages/taxa/body_sites', {
     title: 'HOMD :: Body Sites',
     pgname: '', // for AbountThisPage
@@ -1313,7 +1319,8 @@ router.get('/body_sites', function body_sites(req, res) {
     ver_info: JSON.stringify(C.version_information),
     has_data: JSON.stringify(C.has_abundance_data),
     sites: JSON.stringify(send_list),
-    selected: selected_otid
+    selected: selected_otid,
+    subs: JSON.stringify(subs)
 
   })
 })
@@ -1480,7 +1487,11 @@ router.get('/ecology', function ecology(req, res) {
     }
   }
   children_list.sort()
+  let bodysite = ''
   
+  if(otid != '0'){
+     bodysite = C.site_lookup[otid].s1
+  }
 
   if (C.hmp_v3v5_to_suppress.indexOf(otid) !== -1) {
     hmp_refseqv3v5_notes = 'No data – the v3v5 region of the 16S rRNA gene does not distinguish this species from its close relatives.'
@@ -1507,6 +1518,7 @@ router.get('/ecology', function ecology(req, res) {
     legendvis: legend_visibility,
     //max: JSON.stringify({ 'hmp_refseqv1v3': hmp_refseqv1v3_max, 'hmp_refseqv3v5': hmp_refseqv3v5_max, 'hmp_metaphlan': hmp_metaphlan_max, 'dewhirst': dewhirst_max, 'erenv1v3': erenv1v3_max, 'erenv3v5': erenv3v5_max }),
     otid: otid,  // zero unless species (or subspecies)
+    bodysite: bodysite,
     genera: JSON.stringify(genera),
     text_file: text[0],
     page: page,
