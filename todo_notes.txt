@@ -2,8 +2,8 @@
 SEARCH NEW: https://github.com/nextapps-de/flexsearch#api-overview
    Plan export text to searchable db
    
-versioning of abundance and body site nos.
-combine abundance and body site nos
+DONE versioning of abundance and body site nos.
+
 2026-08-10
 PROBLEM: when refresh sequenceserver-single page, the params disappear.
 This is probably an nginx config issue.
