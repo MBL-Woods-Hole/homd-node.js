@@ -139,7 +139,8 @@ function execPromise(cmd, args, max) {
         let bufferArray= []
         //logger.info('ARGS',cmd+' '+args.join(' '))
         let full_cmd_str = cmd+' '+args.join(' ')
-        //const process = spawn(cmd, args, { shell: true });  
+        //const process = spawn(cmd, args, { shell: true });
+        logger.info('Promise CMD: '+full_cmd_str)
         // shell:true need expand wildcard '*'
         // shell:true need glob so pass pass cmd in full NOT args
         const process = spawn(full_cmd_str, { shell: true });  // shell:true need expand wildcard '*'
@@ -591,15 +592,27 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         
         let split_length = 6  // longer okay too
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
-        let args = ['-F','-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
+        
         //let args = ['-h','"'+searchText+'"',datapath]
         // prokka|gca_000174175.1|acfu01000087.1|cds|ynba|gca_000174175.1_00001|inner membrane protein ynba|597|198|14|610
-        let grep_cmd = 'LC_ALL=C '+ENV.GREP_CMD + ' ' + args.join(' ')
-        logger.info('GREP CMD: '+grep_cmd)
-        //const rows = await get_grep_rows(grep_cmd);
-        const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
-        //logger.info('rows_lst length',row_array.length)
         
+        //// REGULAR GREP
+        //let args = ['-F','-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
+        //let grep_cmd_base = 'LC_ALL=C '+ENV.GREP_CMD
+        //let grep_cmd = grep_cmd_base + ' ' + args.join(' ')
+        
+        // find ENV.PATH_TO_SEARCH -type f -name "homd_GREP_Search-PROKKA*" | parallel grep "exo"
+        ////// PARALLEL GREP
+        let args = ['-type','f','-name','"homd_GREP_Search-PROKKA*"','|','parallel','/usr/bin/grep','"'+searchText+'"']
+        let grep_cmd_base = 'find '+ENV.PATH_TO_SEARCH
+        let grep_cmd = grep_cmd_base + ' ' + args.join(' ')
+        
+        //logger.info('GREP CMD: '+grep_cmd)
+        //const rows = await get_grep_rows(grep_cmd);
+        //const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
+        const row_array = await execPromise(grep_cmd_base, args, max_rows);
+        logger.info(row_array)
+        logger.info(row_array.length)
         let total_length = row_array.length - 1
         //rows = rows_lst.join('')
         if(row_array[0] == 'too_long'){
