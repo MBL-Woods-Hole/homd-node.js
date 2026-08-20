@@ -45,7 +45,7 @@ async function fetchData() {
     //console.log(prokka_rows)
     // PROKKA
     document = new FlexSearch.Document({
-        tokenize: "forward",
+        
         document: {
             id: "id",
             index: ["id", "content"],
@@ -75,7 +75,7 @@ async function fetchData() {
   
     // BAKTA
     document = new FlexSearch.Document({
-        tokenize: "forward",
+        
         document: {
             id: "id",
             index: ["id", "content"],
@@ -100,7 +100,7 @@ async function fetchData() {
     });
     // NCBI
     document = new FlexSearch.Document({
-        tokenize: "forward",
+        
         document: {
             id: "id",
             index: ["id", "content"],

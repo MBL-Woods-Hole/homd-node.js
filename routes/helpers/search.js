@@ -26,7 +26,7 @@ import logger from '../../config/app_config.js';
 // ```javascript
 //const index = new Index({tokenize: "forward"});
 const index = new FlexSearch.Document({
-        tokenize: "forward",
+        
         document: {
             id: "id",
             index: ["id", "content"],
