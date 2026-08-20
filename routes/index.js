@@ -6,6 +6,7 @@ import fs from 'fs-extra';
 // const fs   = require('fs-extra')
 import path from 'path';
 import * as helpers from './helpers/helpers.js';
+import  * as search from './helpers/search.js'
 import C from '../public/constants.js';
 import { exec, spawn } from 'child_process';
 import * as queries from './queries.js';
@@ -481,6 +482,96 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
     return
     
 })
+router.post('/advanced_site_search_anno_flex', async function advanced_site_search_anno_flexPOST(req, res) {
+   logger.info(req.body,'index.js `flex` body')
+   let anno = req.body.anno
+   let search_string = req.body.search_text
+   let tmp_obj = {},gid_count = {},obj2={},sort_lst=[],total_length=0,otid,hmt,strain,species
+   //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
+   search.search_test(anno, search_string).then((result) => {
+        
+        
+        if(result.length == 0){
+            console.log("Nothing found for string: `"+search_string+"` in "+anno)
+            obj2 = {no_data:'No Data'}
+        }else if(result.length >= 4000){
+            obj2 = {too_long:'too_long'}
+        }else{
+            console.log('myresult',result,result.length)
+            total_length = result.length
+            for(let n in result){
+                let row_pts = result[n].split('\t')
+                let gid = row_pts[1]
+                anno = row_pts[0].toUpperCase()
+                gid_count[gid] = 1
+                //console.log(gid)
+                tmp_obj = {
+                          gid:      gid,
+                          otid:     '',
+                          hmt:      '',
+                          species:  '=>Genome Not Found in db<=',
+                          strain:   '',
+                          acc:      row_pts[3],
+                          gene:     row_pts[5],
+                          pid:      row_pts[4],
+                          orf_id:   '',
+                          prod:     row_pts[6],
+                          type:     row_pts[2]
+                        
+                }
+                if(gid && C.genome_lookup.hasOwnProperty(gid)){
+                      //if(gid){
+                        otid = C.genome_lookup[gid]['otid']
+                        hmt = helpers.make_otid_display_name(otid),
+                        strain = C.genome_lookup[gid]['strain']
+                        species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+                        tmp_obj.species = species
+                        tmp_obj.strain = strain
+                        tmp_obj.otid = otid
+                        tmp_obj.hmt = hmt
+                }
+                if(obj2.hasOwnProperty(gid)){
+                    obj2[gid].push(tmp_obj)
+                }else{
+                    sort_lst.push({gid:gid,species:species,strain:strain})
+                    obj2[gid] = [tmp_obj]
+                }
+            }
+                    
+       }
+        sort_lst.sort(function (a, b) {
+           return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
+        })
+        res.render('pages/full_site_search_results', {
+            title: 'HOMD :: Search Results',
+            pgname: '', // for AboutThisPage 
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+            
+            anno: anno,
+            search_text: search_string,
+            otid_list: JSON.stringify([]),
+            gid_list: JSON.stringify([]),
+            taxon_otid_obj: JSON.stringify({}),
+            //annotationList: JSON.stringify(obj_array),
+            
+            annotationList2: JSON.stringify(obj2),
+            anno_sort_list: JSON.stringify(sort_lst),
+            
+            phageList: JSON.stringify({}),
+            phage_sort_list: JSON.stringify([]),
+            phage_lookup: JSON.stringify({}),
+            phage_id_list: JSON.stringify([]),
+            
+            gid_count: Object.keys(gid_count).length,
+            total_hits: total_length,
+            max: helpers.format_long_numbers(C.grep_search_max_rows),
+            form_type: JSON.stringify(['annotations']),
+            no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
+                    
+        })
+    })
+})
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     logger.info('in advanced_site_search_grep - index.js')
     // anno now includes prokka, ncbi and bakta
@@ -578,13 +669,13 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
                         tmp_obj.hmt = hmt
                     }
                         //logger.info('tmp_obj',tmp_obj)
-                        if(obj2.hasOwnProperty(gid)){
-                          obj2[gid].push(tmp_obj)
-                        }else{
-                          sort_lst.push({gid:gid,species:species,strain:strain})
-                          obj2[gid] = [tmp_obj]
-                        }
+                    if(obj2.hasOwnProperty(gid)){
+                        obj2[gid].push(tmp_obj)
+                    }else{
+                        sort_lst.push({gid:gid,species:species,strain:strain})
+                        obj2[gid] = [tmp_obj]
                     }
+                  }
                 }
             }
         }
@@ -624,7 +715,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     }
     catch(e){
           logger.error(e);
-      }
+    }
       
     return
 

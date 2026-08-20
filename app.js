@@ -56,9 +56,10 @@ global.app_root = path.resolve(dirname);
 
 import C from './public/constants.js';
 import  * as helpers from './routes/helpers/helpers.js'
-
+import  * as search from './routes/helpers/search.js'
 
 import fs from 'fs-extra';
+
 //console.log('helpers',helpers)
 //require('dotenv').config({path: __dirname + '/.env'})
 //const createIframe = require("node-iframe");
@@ -435,18 +436,22 @@ Promise.all(promises)
     logger.info(`C.taxa_with_subspecies ${C.taxa_with_subspecies,C.taxa_with_subspecies.length}`)
     logger.info(`C.no_refseq_otids ${C.no_refseq_otids,C.no_refseq_otids.length}`)
      //logger.info(JSON.stringify(C.homd_taxonomy, null, '\t'))
-     
-     
-    //session.site_search_result = {}
-    // let num_zeros = 0
-//     for(n in C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus']){
-//        var m = C.homd_taxonomy.taxa_tree_dict_map_by_rank['genus'][n]
-//        if(m.parent_id==0){
-//           console.log(m)
-//           num_zeros += 1
-//        }
-//     }
-   
+    let search_string = 'exo'
+    let anno = 'prokka'
+    //search.search_test(anno, search_string).then((result) => {
+        //console.log('in app.js',result)
+        
+       //  if(result.length == 0){
+//                 console.log("Nothing found for string: `"+search_string+"` in "+anno)
+//         }else{
+//                 for(let gid in result){
+//                    console.log(gid)
+//                 }
+//                     //console.log('Search String: `'+search_string+"`in "+anno,'FOUND:',i); //data[i]);
+//                     //console.log('181',results[0].result[0].doc);
+//                 //});
+//         }
+    //})
 });
 
 logger.info('start here in app.js')
