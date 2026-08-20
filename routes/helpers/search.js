@@ -29,7 +29,7 @@ const index = new FlexSearch.Document({
         tokenize: "forward",
         document: {
             id: "id",
-            index: ["gid", "content"],
+            index: ["id", "content"],
             store: true // ◄ CRITICAL: Tells FlexSearch to retain original data
           }
     });

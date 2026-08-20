@@ -4,7 +4,7 @@ import FlexSearch from 'flexsearch';
 import mysql from 'mysql2/promise';
 import path from 'path'
 //console.log('config',config)
-console.log('user',process.env.DB_USER)
+console.log('mysql user',process.env.DB_USER)
 
 const sqlconn = mysql.createPool({
   host: process.env.DB_HOST,
@@ -35,11 +35,11 @@ let document
 
 async function fetchData() {
     let pid,product,row,index
-    let prokka_sql = "SELECT genome_id, concat_ws('\t','prokka',genome_id,type,region,attribute_locus_tag,attribute_gene,attribute_product,start,end) as rowdata FROM PROKKA.gff"
+    let prokka_sql = "SELECT id, concat_ws('\t','prokka',genome_id,type,region,attribute_locus_tag,attribute_gene,attribute_product) as rowdata FROM PROKKA.gff"
     //prokka_sql += ' limit 10'
     
-    let bakta_sql =  "SELECT genome_id, concat_ws('\t','bakta',genome_id,type,region,attribute_locus_tag,attribute_gene,attribute_product,start,end) as rowdata from BAKTA.gff"
-    let ncbi_sql =   "SELECT genome_id, concat_ws('\t','ncbi',genome_id,type,region,attribute_locus_tag,attribute_gene,attribute_product,start,end) as rowdata from NCBI.gff"
+    let bakta_sql =  "SELECT id, concat_ws('\t','bakta',genome_id,type,region,attribute_locus_tag,attribute_gene,attribute_product) as rowdata from BAKTA.gff"
+    let ncbi_sql =   "SELECT id, concat_ws('\t','ncbi',genome_id,type,region,attribute_locus_tag,attribute_gene,attribute_product) as rowdata from NCBI.gff"
     const [prokka_rows] = await sqlconn.execute(prokka_sql);
     
     //console.log(prokka_rows)
@@ -48,7 +48,7 @@ async function fetchData() {
         tokenize: "forward",
         document: {
             id: "id",
-            index: ["gid", "content"],
+            index: ["id", "content"],
             store: true // ◄ CRITICAL: Tells FlexSearch to retain original data
           }
     });
@@ -62,7 +62,7 @@ async function fetchData() {
         
         document.add({
                 id:         n,
-                gid:        row.genome_id,
+                sqlid:      row.id,
                 content:    row.rowdata
         });
         //console.log('PROKKA')
@@ -78,7 +78,7 @@ async function fetchData() {
         tokenize: "forward",
         document: {
             id: "id",
-            index: ["gid", "content"],
+            index: ["id", "content"],
             store: true // ◄ CRITICAL: Tells FlexSearch to retain original data
           }
     });
@@ -90,7 +90,7 @@ async function fetchData() {
         // ID=GCA_000174175.1_00100; inference=ab initio prediction:Prodigal:002006; locus_tag=GCA_000174175.1_00100; product=hypothetical protein
         document.add({
                 id:         n,
-                gid:        row.genome_id,
+                sqlid:      row.id,
                 content:    row.rowdata
         });
     }
@@ -103,7 +103,7 @@ async function fetchData() {
         tokenize: "forward",
         document: {
             id: "id",
-            index: ["gid", "content"],
+            index: ["id", "content"],
             store: true // ◄ CRITICAL: Tells FlexSearch to retain original data
           }
     });
@@ -115,7 +115,7 @@ async function fetchData() {
         // ID=GCA_000174175.1_00100; inference=ab initio prediction:Prodigal:002006; locus_tag=GCA_000174175.1_00100; product=hypothetical protein
         document.add({
                 id:         n,
-                gid:        row.genome_id,
+                sqlid:        row.id,
                 content:    row.rowdata
         });
     }
