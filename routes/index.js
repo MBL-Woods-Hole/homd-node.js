@@ -576,7 +576,7 @@ router.post('/advanced_site_search_anno_flex', async function advanced_site_sear
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     logger.info('in advanced_site_search_grep - index.js')
     // anno now includes prokka, ncbi and bakta
-    logger.info('body',req.body)
+    logger.info(req.body,'body')
     const searchText = req.body.search_text_anno_grep.toLowerCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
@@ -603,16 +603,17 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         
         // find ENV.PATH_TO_SEARCH -type f -name "homd_GREP_Search-PROKKA*" | parallel grep "exo"
         ////// PARALLEL GREP
-        let args = ['-type','f','-name','"homd_GREP_Search-PROKKA*"','|','parallel','/usr/bin/grep','"'+searchText+'"']
-        let grep_cmd_base = 'find '+ENV.PATH_TO_SEARCH
+        let filenames = "homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*"
+        let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
+        let grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH
         let grep_cmd = grep_cmd_base + ' ' + args.join(' ')
         
         //logger.info('GREP CMD: '+grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
         //const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
         const row_array = await execPromise(grep_cmd_base, args, max_rows);
-        logger.info(row_array)
-        logger.info(row_array.length)
+        //logger.info(row_array)
+        //logger.info(row_array.length)
         let total_length = row_array.length - 1
         //rows = rows_lst.join('')
         if(row_array[0] == 'too_long'){
