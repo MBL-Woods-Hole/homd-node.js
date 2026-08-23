@@ -574,7 +574,7 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
 //     })
 // })
 router.post('/advanced_site_search_anno_grepts', async function advanced_site_search_greptsPOST(req, res) {
-    //logger.info(req.body,'body')
+    logger.info(req.body,'body')
     const searchText = req.body.search_text.toLowerCase()
     let anno = req.body.anno
     const targetDir = path.join(ENV.PATH_TO_SEARCH,req.body.anno+'_annotations');  // lowercase dirs

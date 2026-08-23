@@ -44,7 +44,6 @@ app.set('port', ENV.PORT);
 
 console.log('SQL DATABASE: => (Databases set in config/database.js)');
 
-
 console.log('ENV:',ENV.ENV,'(Environment set in ~/.env)');
 
 const server = http.createServer(options, app).listen(app.get('port'), function(){
