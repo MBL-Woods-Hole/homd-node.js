@@ -691,7 +691,9 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     logger.info('in advanced_site_search_grep - index.js')
     // anno now includes prokka, ncbi and bakta
     logger.info(req.body,'body')
-    const searchText = req.body.search_text_anno_grep.toLowerCase()
+    const searchText = req.body.search_text.toLowerCase()
+    const annoLower = req.body.anno
+    const annoUpper = req.body.anno.toUpperCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
     
@@ -699,7 +701,8 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     let tmp_obj = {}
     
     try{
-        let datapath = path.join(ENV.PATH_TO_SEARCH,"homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*")
+        //let datapath = path.join(ENV.PATH_TO_SEARCH,annoLower,"*"+annoUpper+"*")
+        
         //let filename = uuidv4();  //ENV.PATH_TO_TMP
         //let filepath = path.join(ENV.PATH_TO_TMP, filename)
         let max_rows = C.grep_search_max_rows //see constants.js 50000
@@ -717,9 +720,9 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         
         // find ENV.PATH_TO_SEARCH -type f -name "homd_GREP_Search-PROKKA*" | parallel grep "exo"
         ////// PARALLEL GREP
-        let filenames = "homd_GREP_Search-"+req.body.adv_anno_radio_grep.toUpperCase()+"*"
+        let filenames = "*"+annoUpper+"*"
         let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
-        let grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH
+        let grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
         let grep_cmd = grep_cmd_base + ' ' + args.join(' ')
         
         //logger.info('GREP CMD: '+grep_cmd)
@@ -818,8 +821,8 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
             
-            anno: req.body.adv_anno_radio_grep,
-            search_text: req.body.search_text_anno_grep,
+            anno: annoLower,
+            search_text: req.body.search_text,
             otid_list: JSON.stringify([]),
             gid_list: JSON.stringify([]),
             taxon_otid_obj: JSON.stringify({}),

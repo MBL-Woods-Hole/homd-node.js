@@ -147,6 +147,8 @@
   </form>
   
  -->
+ 
+<!-- 
    <form id='adv-search-form-anno_grepts'  class='search-form' method='POST' action='advanced_site_search_anno_grepts'>  <!~~ advanced_site_search_annotations ~~>
       <br><span id='srch-anno-grepts' class='mid-title'>(TESTING) GREPTS Annotations</span>
       <table id='anno-table-grepts' class='table'>
@@ -178,6 +180,7 @@
       
       <input type="hidden" id="refreshed" value="no">
   </form>
+ -->
   
   <form id='adv-search-form-anno_grep'  class='search-form' method='POST' action='advanced_site_search_anno_grep'>  <!-- advanced_site_search_annotations -->
       <br><span id='srch-anno' class='mid-title'>Search the Annotations Database</span>
@@ -187,11 +190,11 @@
         </td>
       </tr>
       <tr><td>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_grep' checked id='prokka_cb_grep' name='adv_anno_radio_grep' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_grep' checked id='prokka_cb_grep' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_grep' id='ncbi_cb_grep' name='adv_anno_radio_grep' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_grep' id='ncbi_cb_grep' name='anno' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;
-        <input type='radio' class='anno_cb_grep' id='bakta_cb_grep' name='adv_anno_radio_grep' value='bakta'  > 
+        <input type='radio' class='anno_cb_grep' id='bakta_cb_grep' name='anno' value='bakta'  > 
         <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
         
         </td>
@@ -199,7 +202,7 @@
       <tr>
         <td>
           Enter Search Text: 
-          <input type="text" class='search_text' placeholder="Search Site.." name='search_text_anno_grep' id='search_text_anno_grep' value='' maxlength='80' size='50' /> 
+          <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_anno_grep' value='' maxlength='80' size='50' /> 
           <!-- <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \> -->
           <button id="submit-button-anno" type="button" class='submit-button'>Submit</button>
         </td>
@@ -330,18 +333,18 @@
     document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
   });
   // FLEXSEARCH
-  submit_button_flex.addEventListener('click', function() {
-    const checkboxes = document.getElementsByClassName('anno_cb_flex');
-    var cb_count = checkboxes.length
-    var ss = document.getElementById('search_text_anno_flex').value
-         //var ss = document.querySelector('#search_textx').value;
-         if(ss.length <=2){
-             alert('Search string is too short (must be at least 3 characters)!')
-             return
-         }
-    f_flex.requestSubmit();
-    document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
-  });
+//   submit_button_flex.addEventListener('click', function() {
+//     const checkboxes = document.getElementsByClassName('anno_cb_flex');
+//     var cb_count = checkboxes.length
+//     var ss = document.getElementById('search_text_anno_flex').value
+//          //var ss = document.querySelector('#search_textx').value;
+//          if(ss.length <=2){
+//              alert('Search string is too short (must be at least 3 characters)!')
+//              return
+//          }
+//     f_flex.requestSubmit();
+//     document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
+//   });
   // PHAGE
   submit_button_phage.addEventListener('click', function() {
     var ss = document.getElementById('search_text_phage_grep').value
