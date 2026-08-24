@@ -721,7 +721,11 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         // find ENV.PATH_TO_SEARCH -type f -name "homd_GREP_Search-PROKKA*" | parallel grep "exo"
         ////// PARALLEL GREP
         let filenames = "*"+annoUpper+"*"
-        let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
+        // GNU parallel:: if only one core (check with nproc) 
+        //    use -j 1 to force the program to use only 1 job/core execution at any given moment. <-- DEV
+        //    if more than 1 core don't include the -j 1 tag <-- PROD
+        let args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 1','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
+        //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
         let grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
         let grep_cmd = grep_cmd_base + ' ' + args.join(' ')
         
