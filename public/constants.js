@@ -7,7 +7,7 @@ constants.access_log_format = ':ip - [:clfDate] ":method :url :protocol/:httpVer
 
 constants.rRNA_refseq_version   = '16.03' // Used on title page header
 constants.genomic_refseq_version= '11.02' // Used on title page header
-constants.homd_taxonomy_version = '4.2'    // Used on title page header
+constants.homd_taxonomy_version = '4.3'    // Used on title page header
 constants.virome_version        = '1.2'
 constants.GTDB_version          = '226'            // used on genome description page
 constants.version_information = {

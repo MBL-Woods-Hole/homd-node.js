@@ -112,6 +112,37 @@
      
       
   </form>
+   <form id='adv-search-form-anno_mysql'  class='search-form' method='POST' action='advanced_site_search_anno_mysql'>  <!~~ advanced_site_search_annotations ~~>
+      <br><span id='srch-anno-mysql' class='mid-title'>(TESTING) MySQLFullTextSearch Annotations</span>
+      <table id='anno-table-mysql' class='table'>
+      <tr><td>
+        Searches: Genome-ID, Accession (Region), Protein-ID, Gene and Gene Product
+        </td>
+      </tr>
+      <tr><td>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_mysql' checked id='prokka_cb_anno_mysql' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_mysql' id='ncbi_cb_mysql' name='anno' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;
+        <input type='radio' class='anno_cb_mysql' id='bakta_cb_mysql' name='anno' value='bakta'  > 
+        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
+        
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Enter Search Text: 
+          <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_anno_mysql' value='' maxlength='80' size='50' /> 
+          <!~~ <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \> ~~>
+          <button id="submit-button-mysql" type="button" class='submit-button'>Submit</button>
+        </td>
+      </tr>
+      
+      </table>
+     
+      
+      <input type="hidden" id="refreshed" value="no">
+  </form>
  <!-- 
  
   <form id='adv-search-form-anno_flex'  class='search-form' method='POST' action='advanced_site_search_anno_flex'>  <!~~ advanced_site_search_annotations ~~>
@@ -268,12 +299,14 @@
   const f_tax = document.getElementById('adv-search-form-tax');
   const f_anno = document.getElementById('adv-search-form-anno_grep');
   const f_flex = document.getElementById('adv-search-form-anno_flex');
+  const f_mysql = document.getElementById('adv-search-form-anno_mysql');
   const f_grepts = document.getElementById('adv-search-form-anno_grepts');
   const f_phage = document.getElementById('adv-search-form-phage_grep');
   
   const submit_button_tax = document.getElementById('submit-button-tax');
   const submit_button_anno = document.getElementById('submit-button-anno');
   const submit_button_flex = document.getElementById('submit-button-flex');
+  const submit_button_mysql = document.getElementById('submit-button-mysql');
   const submit_button_grepts = document.getElementById('submit-button-grepts');
   const submit_button_phage = document.getElementById('submit-button-phage');
   
@@ -317,6 +350,19 @@
              return
          }
     f_anno.requestSubmit();
+    document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
+  });
+  // MYSQL FULLSEARCH
+  submit_button_mysql.addEventListener('click', function() {
+    const checkboxes = document.getElementsByClassName('anno_cb_mysql');
+    var cb_count = checkboxes.length
+    var ss = document.getElementById('search_text_anno_mysql').value
+         //var ss = document.querySelector('#search_textx').value;
+         if(ss.length <=2){
+             alert('Search string is too short (must be at least 3 characters)!')
+             return
+         }
+    f_mysql.requestSubmit();
     document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
   });
   // GREPTS

@@ -483,6 +483,97 @@ router.post('/submit_phage_data', async function submit_phage_data(req, res) {
     return
     
 })
+router.post('/advanced_site_search_anno_mysql', async function advanced_site_search_anno_mysqlPOST(req, res) {
+    console.log(req.body,'index.js `mysql fullsearch` body')
+    let anno = req.body.anno
+    let annoUpper = anno.toUpperCase()
+    let search_string = req.body.search_text
+    let tmp_obj = {},gid_count = {},obj2={},sort_lst=[],total_length=0,otid,hmt,strain,species
+    let gid
+    //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
+    let q = "SELECT genome_id as gid,region as acc,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,`type` FROM "+annoUpper+".gff_fullsearch"
+    q += " WHERE MATCH(attribute_product,attribute_gene) AGAINST('"+search_string+"' IN BOOLEAN MODE);"
+    console.log(q)
+    const rows = await queries.run_query(q, req, res)
+    total_length = rows.length
+    if(total_length == 0){
+        console.log("Nothing found for string: `"+search_string+"` in "+anno)
+        obj2 = {no_data:'No Data'}
+    }else if(total_length >= 50000){
+        obj2 = {too_long:'too_long'}
+    }else{
+        for(let n in rows){
+            //console.log(rows[n])
+            gid = rows[n].gid
+            
+            gid_count[gid] = 1
+            //total_length +=1
+                //console.log(gid)
+            tmp_obj = {
+                          gid:      gid,
+                          otid:     '',
+                          hmt:      '',
+                          species:  '=>Genome Not Found in db<=',
+                          strain:   '',
+                          acc:      rows[n].acc,
+                          gene:     rows[n].gene,
+                          pid:      rows[n].pid,
+                          orf_id:   '',
+                          prod:     rows[n].product,
+                          type:     rows[n].type
+                        
+            }
+            if(gid && C.genome_lookup.hasOwnProperty(gid)){
+              //if(gid){
+                otid = C.genome_lookup[gid]['otid']
+                hmt = helpers.make_otid_display_name(otid),
+                strain = C.genome_lookup[gid]['strain']
+                species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
+                tmp_obj.species = species
+                tmp_obj.strain = strain
+                tmp_obj.otid = otid
+                tmp_obj.hmt = hmt
+            }
+                //logger.info('tmp_obj',tmp_obj)
+            if(obj2.hasOwnProperty(gid)){
+                obj2[gid].push(tmp_obj)
+            }else{
+                sort_lst.push({gid:gid,species:species,strain:strain})
+                obj2[gid] = [tmp_obj]
+            }
+        }
+        
+    }
+    res.render('pages/full_site_search_results', {
+        title: 'HOMD :: Search Results',
+        pgname: '', // for AboutThisPage 
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
+        
+        anno: anno,
+        search_text: search_string,
+        otid_list: JSON.stringify([]),
+        gid_list: JSON.stringify([]),
+        taxon_otid_obj: JSON.stringify({}),
+        //annotationList: JSON.stringify(obj_array),
+        
+        annotationList2: JSON.stringify(obj2),
+        anno_sort_list: JSON.stringify(sort_lst),
+        
+        phageList: JSON.stringify({}),
+        phage_sort_list: JSON.stringify([]),
+        phage_lookup: JSON.stringify({}),
+        phage_id_list: JSON.stringify([]),
+        
+        gid_count: Object.keys(gid_count).length,
+        total_hits: total_length,
+        max: helpers.format_long_numbers(C.grep_search_max_rows),
+        form_type: JSON.stringify(['annotations']),
+        no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
+            
+    })
+})
+
 // router.post('/advanced_site_search_anno_flex', async function advanced_site_search_anno_flexPOST(req, res) {
 //    logger.info(req.body,'index.js `flex` body')
 //    let anno = req.body.anno
