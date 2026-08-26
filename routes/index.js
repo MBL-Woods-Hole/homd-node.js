@@ -491,7 +491,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     let tmp_obj = {},gid_count = {},obj2={},sort_lst=[],total_length=0,otid,hmt,strain,species
     let gid
     //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
-    let q = "SELECT genome_id as gid,region as acc,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,`type` FROM "+annoUpper+".gff_fullsearch"
+    let q = "SELECT genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM "+annoUpper+".gff_fullsearch"
     q += " WHERE MATCH(attribute_product,attribute_gene) AGAINST('"+search_string+"' IN BOOLEAN MODE);"
     console.log(q)
     const rows = await queries.run_query(q, req, res)
@@ -515,12 +515,12 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
                           hmt:      '',
                           species:  '=>Genome Not Found in db<=',
                           strain:   '',
-                          acc:      rows[n].acc,
+                          acc:      '',
                           gene:     rows[n].gene,
                           pid:      rows[n].pid,
                           orf_id:   '',
                           prod:     rows[n].product,
-                          type:     rows[n].type
+                          type:     ''
                         
             }
             if(gid && C.genome_lookup.hasOwnProperty(gid)){
