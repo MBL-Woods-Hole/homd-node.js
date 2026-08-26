@@ -490,7 +490,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     let search_string = req.body.search_text
     let tmp_obj = {},gid_count = {},obj2={},sort_lst=[],total_length=0,otid,hmt,strain,species
     let gid
-    let allowed_max = 100000
+    let allowed_max = 200000
     //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
     let q = "SELECT genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM "+annoUpper+".gff_fullsearch"
     q += " WHERE MATCH(attribute_product,attribute_gene) AGAINST('"+search_string+"' IN BOOLEAN MODE);"
@@ -498,10 +498,10 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     const rows = await queries.run_query(q, req, res)
     total_length = rows.length
     if(total_length == 0){
-        logger.info("Nothing found for string: `"+search_string+"` in "+anno)
+        logger.info("Nothing found for string: `"+search_string+"` in "+annoUpper)
         obj2 = {no_data:'No Data'}
     }else if(total_length >= allowed_max){
-        logger.info("Over MAX` "+search_string+"` in "+anno+' (Rows Found: '+total_length.toString()+'; Max:'+allowed_max.toString()+')')
+        logger.info("Over MAX - `"+search_string+"` in "+annoUpper+' (Rows Found: '+total_length.toString()+'; Max:'+allowed_max.toString()+')')
         obj2 = {too_long:'too_long'}
         
     }else{
