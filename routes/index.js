@@ -499,7 +499,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     if(total_length == 0){
         console.log("Nothing found for string: `"+search_string+"` in "+anno)
         obj2 = {no_data:'No Data'}
-    }else if(total_length >= 50000){
+    }else if(total_length >= 500000){
         obj2 = {too_long:'too_long'}
     }else{
         for(let n in rows){
