@@ -1,0 +1,242 @@
+<style>
+.container {
+  display: grid;
+  grid-template-columns: auto;
+  background-color: white;
+}
+
+.container div {
+  background-color: #f1f1f1;
+  width: 400px;
+  margin: 2px;
+  padding: 20px;
+
+  text-align: left;  
+  font-size: 30px;
+  
+}
+#taxon-row1{
+   background: #deebf6;
+   
+}
+#genomics-row1{
+   background: #fff1cd;
+}
+#pangenomics-row1{
+   background: #e3efda;
+}
+#rrna16s-row1{
+   background: #f9d2ba;
+}
+#ecology-row1{
+   background: #fec6ef;
+}
+#phage-row1{
+   background: #dedbf6;
+}
+.tooltip_templates { display: none; }
+#tooltip_content ul{
+  background:lightgrey;
+  padding:8px;
+  color:black;
+}
+</style>
+
+<%- include('../../partials/header_html'); %>
+
+<% data_lookup = JSON.parse(data1) %>
+<% data_pubs = JSON.parse(data4) %>
+<% data_info = JSON.parse(tinfo) %>
+<% data_lineage = JSON.parse(lin) %>
+<% data_refseq = JSON.parse(refseq_info) %>
+<% links = JSON.parse(links) //refseq  %>
+<% sites = JSON.parse(sites) %>
+<% taxidfullnameplus = "HMT-"+("0000" + otid).slice(-4); %>
+
+
+<% images = JSON.parse(image_array)  %>
+<!-- <link rel="stylesheet" type="text/css" href="tooltipster/dist/css/tooltipster.bundle.min.css" /> -->
+<body>
+    <link rel="stylesheet" type="text/css" href="/css/tooltipster.bundle.min.css" />
+<div id='wrapper'>
+<%- include('../../partials/header_img'); %>
+<%- include('../../partials/navbar'); %>
+<div class='page-content' >
+    <span class='back_btnx' ><a href='/taxa/taxon_table'>Taxon Table</a> | <a href='/genome/genome_table'>Genome Table</a></span>
+  
+  
+  <p class='h3 title'>
+    <i><%= data_lineage.species %> <%= data_lineage.subspecies %></i>
+    (<%= taxidfullnameplus %>)
+  </p>
+  
+
+
+  <center>
+   <span id='lineage'>
+    <%= data_lineage.domain %>;<%= data_lineage.phylum %>;<%= data_lineage.klass %>;<%= data_lineage.order %>;<%= data_lineage.family %>;<%= data_lineage.species %>
+    <%= data_lineage.subspecies %>
+   </span>
+  </center>
+  
+  <div class="container">
+    <div class='' id='taxon-row1'>Taxonomy
+        <table id='tax_lineage'>
+        <tr><td class='taxon-bold'>Domain:</td>
+        <td class='taxon-data'><a href='life?rank=domain&name=<%= data_lineage.domain %>'><%= data_lineage.domain %></a></td></tr>
+        <tr><td class='taxon-bold'>Phylum:</td>
+        <td class='taxon-data'><a href='life?rank=phylum&name=<%= data_lineage.phylum %>'><%= data_lineage.phylum %></a></td></tr>
+        <tr><td class='taxon-bold'>Class:</td>
+        <td class='taxon-data'>
+        <a href='life?rank=klass&name=<%= data_lineage.klass %>'><%= data_lineage.klass %></a>
+        
+        </td></tr>
+        <tr><td class='taxon-bold'>Order:</td>
+        <td class='taxon-data'>
+        <a href='life?rank=order&name=<%= data_lineage.order %>'><%= data_lineage.order %></a>
+        
+        </td></tr>
+        
+        
+        <tr><td class='taxon-bold'>Family:</td>
+        <td class='taxon-data'>
+        <a href='life?rank=family&name=<%= data_lineage.family %>'><%= data_lineage.family %></a>
+        
+        </td></tr>
+        <tr><td class='taxon-bold'>Genus:</td>
+        <td class='taxon-data'>
+        <a href='life?rank=genus&name=<%= data_lineage.genus %>'><%= data_lookup.genus %></a>
+        <% if(data_lineage.genus.includes("[")){ %>
+        <span class="tooltip-tipster" data-tooltip-content="#tooltip_content">
+        <img src="/images/question.png" width='20'>
+        </span>
+        <% } %>
+        </td></tr>
+        <div class="tooltip_templates">
+        <span id="tooltip_content">
+        Bracketed letters indicate 
+        <br>that the taxonomic name at this 
+        <br>level has not been established.
+        <ul>
+        <li><small>Examples:</small>
+        <li><small>C1 – First Unnamed Class</small>
+        <li><small>O1 – First Unnamed Order</small>
+        <li><small>F2 – Second Unnamed Family</small>
+        <li><small>G3 – Third Unnamed Genus</small>
+        </ul>
+        </span>
+        </div>
+        <% if(data_lineage.subspecies){ %>
+        <tr><td class='taxon-bold'>Species:</td><td class='taxon-data'> <a href='life?rank=species&name=<%= data_lineage.species %>'><%= data_lookup.species %></a></td></tr>
+        <tr><td class='taxon-bold'>Subspecies:<br>or Clade:</td><td class='taxon-data'><%= data_lineage.subspecies %></td></tr>
+        <% }else{ %>
+        <tr><td class='taxon-bold'>Species:</td><td class='taxon-data'><%= data_lookup.species %></td></tr>
+        <% } %>
+        </table>
+    
+    
+    </div>
+    
+    
+    <div class='' id='genomics-row1'>Genomics</div>
+    
+    <div class='' id='pangenomics-row1'>Pangenomics</div>
+   
+    <div class='' id='rrna16s-row1'>16S rRNA</div>
+    
+    <div class='' id='ecology-row1'>Ecology</div>
+    
+    
+    <div class='' id='phage-row1'>Phage</div>
+    
+  </div>
+  
+  
+  
+  
+  
+</div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
+    </div>
+  </div> <!-- end wrapper   -->
+</body>
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="/js/tooltipster.bundle.min.js"></script>
+<script type="text/javascript" src="/js/taxonomy.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+  //$(document).ready(function() {
+    $('.tooltip-tipster').tooltipster({
+       contentCloning: true, theme: 'tooltipster-noir'
+    });
+  //}
+  mainmenu()
+  images = JSON.parse(`<%- image_array %>`)
+  //var tooltip = new Tooltip(document.querySelector('.trigger'));
+  //$(document).ready(function() {
+        // https://calebjacob.github.io/tooltipster/
+        
+  //});
+
+  //for(x in images){
+     //alert(images[x].hires)
+  //}
+  // Get the modal
+// url= /images/life-images/hires/images[n].hires
+var modal = document.getElementById("myModal");
+// https://www.w3schools.com/howto/howto_css_modal_images.asp
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var img0 = document.getElementById("myImg0");
+var img1 = document.getElementById("myImg1");
+//var img2 = document.getElementById("myImg2");
+//var img3 = document.getElementById("myImg3");
+var modalImg = document.getElementById("img0");
+
+var captionText = document.getElementById("caption");
+if(img0){
+    img0.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = '/images/life-images/hires/'+images[0].hires;   // this will open the same image- we want another
+      captionText.innerHTML = images[0].hires;
+    }
+}
+if(img1){
+    img1.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = '/images/life-images/hires/'+images[1].hires;   // this will open the same image- we want another
+      captionText.innerHTML = images[1].hires;
+    }
+}
+// if(img2){
+//  img2.onclick = function(){
+//    modal.style.display = "block";
+//    modalImg.src = '/images/life-images/hires/'+images[2].hires;   // this will open the same image- we want another
+//    captionText.innerHTML = images[2].hires;
+//  }
+// }
+// if(img3){
+//  img3.onclick = function(){
+//    modal.style.display = "block";
+//    modalImg3.src = '/images/life-images/hires/'+images[3].hires;   // this will open the same image- we want another
+//    captionText.innerHTML = images[3].hires;
+//  }
+// }
+
+// Get the <span> element that closes the modal
+var closers = document.getElementsByClassName("close");
+
+// When the user clicks on <span> (x), close the modal
+//alert(closers)
+for(n in closers){
+    closers[n].onclick = function() {
+      modal.style.display = "none";
+    }
+}
+
+</script>
