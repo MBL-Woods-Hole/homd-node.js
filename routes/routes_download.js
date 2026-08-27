@@ -1252,9 +1252,9 @@ function create_taxon_table(otids, source, type, head_txt) {
                    let tstrains = o1.type_strains.join(' | ')
                    let gn = o1.genomes.join(' | ')
                    let syn = o1.synonyms.join(' | ')
-                   let sites = obj5[otid].s1
-                   if(obj5[otid].hasOwnProperty('s2')){
-                       sites = sites + ' | ' +obj5[otid].s2
+                   let sites = obj5[otid].major_body_site+' ('+obj5[otid].major_site_abundance+')'
+                   if(obj5[otid].secondary_sites != 'none assigned'){
+                       sites = sites + ' | ' +obj5[otid].secondary_sites+' ('+obj5[otid].secondary_site_abundance+')'
                    }
                    let rstrains = o1.ref_strains.join(' | ')
                    let rnaseq = o1.rrna_sequences.join(' | ')

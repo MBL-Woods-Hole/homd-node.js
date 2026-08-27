@@ -233,20 +233,13 @@ export const get_AA_NA = (db, gid, pid,type) => {
     return q
 };
 
-// export const get_bakta_AA = (db, gid, pid, type ) => {
-//     let q = 'SELECT UNCOMPRESS(seq_compressed) as seq FROM ' + db
-//     q += " WHERE genome_id ='"+gid+"' and protein_id='" + pid + "'"
-//     
-//     return q
-// };
-
 function genome_query() {
     let tbl  = C.genomes_table_name
     let ntbl = C.genomes_ncbi_table_name
     let ptbl = C.genomes_prokka_table_name
     let q = `SELECT \`${tbl}\`.genome_id as GENOME_ID,concat("HMT-",LPAD(\`${tbl}\`.otid,3,"0")) as HMT_ID,`
         q +=` \`${tbl}\`.strain,naming_status as hmt_naming_status, cultivation_status as hmt_cultivation_status,`
-        q +=` site as hmt_primary_body_site_w_abundance,\`${ptbl}\`.organism,\`${tbl}\`.contigs,\`${tbl}\`.combined_size,`
+        q +=` major_body_site as hmt_primary_body_site,major_site_abundance,\`${ptbl}\`.organism,\`${tbl}\`.contigs,\`${tbl}\`.combined_size,`
         q +=` \`${tbl}\`.MAG,\`${tbl}\`.GC,\`${tbl}\`.url,\`${tbl}\`.GTDB_taxonomy,  bioproject,taxid,biosample,`
         q +=` assembly_name,assembly_level,assembly_method, submission_date,geo_loc_name,isolation_source,`
         q +=` seqtech,submitter,coverage,ANI,checkM_completeness,checkM_contamination,checkM2_completeness,`
@@ -257,7 +250,7 @@ function genome_query() {
         q +=` pangenomes.pangenome_name as pangenome`
         q +=` FROM \`${tbl}\``
         q +=` JOIN status using(otid)`
-        q +=` JOIN sites on primary_body_site_id = site_id`
+        q +=` JOIN body_sites using(otid)`
         q +=` LEFT JOIN \`${ptbl}\` using(genome_id)`
         q +=` LEFT JOIN \`${ntbl}\` using(genome_id)`
         q +=` LEFT JOIN pangenome_genome using(genome_id)`

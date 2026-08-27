@@ -501,7 +501,7 @@ export const apply_ttable_filter = (req, filter) => {
     //logger.info('vals from default ttfilter')
     vals = get_default_tax_filter();
   }
-  //logger.info('vals',vals)
+  //console.log('vals',vals)
   //
   // SEARCH txt_srch
   //logger.info('TEXT',vals.text.txt_srch, vals.text.field)
@@ -579,8 +579,8 @@ export const apply_ttable_filter = (req, filter) => {
     if (abund_on.length == C.tax_abund_all.length) {
       return item;
     } else {
-      if (C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1) {
-        let site_item_primary = C.site_lookup[item.otid].s1.toLowerCase().replace(/\s/g, '');
+      if (C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].major_body_site) {
+        let site_item_primary = C.site_lookup[item.otid].major_body_site.toLowerCase().replace(/\s/g, '');
         
         //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund','nodata_abund' ]
         for (let n in abund_on) {
@@ -594,7 +594,7 @@ export const apply_ttable_filter = (req, filter) => {
       }
     }
   });
-  //logger.info('big_tax_list length2',big_tax_list.length)
+  console.log('big_tax_list length2',big_tax_list.length)
   //////////////////////////////////
   // SEARCH SITEs
   //
@@ -603,45 +603,44 @@ export const apply_ttable_filter = (req, filter) => {
   // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
   // taxon will be excluded here from the taxon table
   //logger.info('olength-1',big_tax_list.length)
-  //logger.info('site_on',site_on)
+  //console.log('site_on',site_on)
   //logger.info('status_on',status_on)
   //logger.info('filter.site',filter.site)
     
   if (filter && filter.site.p_or_pst == 'primary_site') {
-    big_tax_list = big_tax_list.filter(function (item) {
+      big_tax_list = big_tax_list.filter(function (item) {
       // if (item.otid == 470) {
-//           logger.info('2-Found 470',item.otid)
-//       }
-// PROBLEM Taxonomic Reference(sites) and ReferenceTaxa(status) are the same 
-// if (un)check 'Reference' in status line it should (un)include here
-      //logger.info('item',item)
-      let s = item.sites[0].toLowerCase()
-      if(item.active_status.toLowerCase() === 'reference'){
-        if(status_on.indexOf(s) != -1){
-            if (item.otid in C.site_lookup) {
-                item.site = C.site_lookup[item.otid].s1;
+        //           logger.info('2-Found 470',item.otid)
+        //       }
+        //console.log('item',item)
+        // PROBLEM Taxonomic Reference(sites) and ReferenceTaxa(status) are the same 
+        // if (un)check 'Reference' in status line it should (un)include here
+        //logger.info(item,'item')
+          let s = item.body_site.toLowerCase()
+          if(item.active_status.toLowerCase() === 'reference'){
+            if(status_on.indexOf(s) != -1){
+                if (item.otid in C.site_lookup) {
+                    item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
+                }
+                return item;
             }
-            return item;
-        }
-      }
-      for (let n in item.sites) {
-        //logger.info('n',n,'site',item.sites[n])
-        //logger.info('item.sites',item.sites)
-        if (site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.sites[0]))) {
-          //if(site_on.includes(item.sites[n].toLowerCase())){
-          item.site = item.sites[0];
-
-          if (item.otid in C.site_lookup) {
-            item.site = C.site_lookup[item.otid].s1;
           }
+      
+         //logger.info('n',n,'site',item.sites[n])
+         //logger.info('item.sites',item.sites)
+        if (site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.body_site))) {
+          //if(site_on.includes(item.sites[n].toLowerCase())){
+          //item.site = item.body_site;
+          item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
           return item;
         }
 
-      }
-    });
+     
+      });
 
   } else {
     //C.site_lookup[1]
+    console.log('else XX')
     big_tax_list = big_tax_list.filter(function (item) {
       // if (item.otid == 470) {
 //           logger.info('3-Found 470',item.otid)
@@ -655,7 +654,8 @@ export const apply_ttable_filter = (req, filter) => {
           //logger.info('site_on[n]',site_on[n],'glom',glom)
           if (glom.includes(site_on[n])) {
             //if(site_on.includes(item.sites[n].toLowerCase())){
-            item.site = item.sites[0];
+            //item.site = item.body_site;
+            item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
             return item;
           }
         }
@@ -667,7 +667,8 @@ export const apply_ttable_filter = (req, filter) => {
 //           logger.info('2testForPresence-Found 470',item.otid)
 //       }
    })
-  //logger.info('big_tax_list.length-3',big_tax_list.length)
+   //console.log('big_tax_list[0] zero',big_tax_list[0])
+  console.log('big_tax_list length3',big_tax_list.length)
   //phylum
   if (vals.phylum != '0') {
     big_tax_list = helpers.filter_for_phylum(big_tax_list, vals.phylum);

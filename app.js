@@ -405,7 +405,7 @@ Promise.all(promises)
    //class
    //helpers.print(['app data1',C.taxon_lookup[389]])
    //Absconditabacteria (SR1) [C-1]
-    //console.log('C.no_ncbi_annotation',C.no_ncbi_annotation)
+    console.log('C.site_lookup',C.site_lookup[282])
     //logger.info('C.no_ncbi_blast_dbs',C.no_ncbi_blast_dbs)
     //logger.info('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
     //helpers.print(['lineage 673',C.taxon_lookup[673]])

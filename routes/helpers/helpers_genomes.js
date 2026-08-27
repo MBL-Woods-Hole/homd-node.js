@@ -394,7 +394,7 @@ export const apply_gtable_filter = (req, filter) => {
     } else {
       //logger.info('Sites:',C.site_lookup[item.otid].s1)
       //logger.info('Sites2:', C.taxon_lookup[item.otid].sites[0].toLowerCase());
-      let site = C.taxon_lookup[item.otid].sites[0].toLowerCase();
+      let site = C.taxon_lookup[item.otid].body_site.toLowerCase();
       //logger.info('site',site)
       if (site_on.includes(site)) {
         return item;
@@ -413,8 +413,8 @@ export const apply_gtable_filter = (req, filter) => {
     if (abund_on.length === default_length_of_abund) {
       return item;
     } else {
-      if (C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].s1) {
-        let site_item_primary = C.site_lookup[item.otid].s1;
+      if (C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].major_body_site) {
+        let site_item_primary = C.site_lookup[item.otid].major_body_site;
         //logger.info('site_item_primary',site_item_primary)
         //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund' ]
         for (let n in abund_on) {

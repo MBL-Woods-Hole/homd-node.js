@@ -41,7 +41,7 @@ router.get('/reset_ttable', function tax_table_reset(req, res) {
   res.redirect('taxon_table');
 })
 //
-router.get('/taxon_table', function tax_table_get(req, res) {
+router.get('/taxon_table', function TaxTable_GET(req, res) {
   logger.info('in TT get')
   let filter, send_list
 
@@ -72,7 +72,7 @@ router.get('/taxon_table', function tax_table_get(req, res) {
   
 })
 
-router.post('/taxon_table', function tax_table_post(req, res) {
+router.post('/taxon_table', function TaxTable_POST(req, res) {
   logger.info('in TT post')
   logger.info(req.body)
   let send_list
@@ -591,7 +591,7 @@ function renderTaxonDescription(req, res, args) {
   })
 }
 ///
-router.get('/tax_description', async function Description(req, res) {
+router.get('/tax_description', async function TaxDescription(req, res) {
   
   let otid = ''
   if(!req.query.otid){
@@ -665,13 +665,13 @@ router.get('/tax_description', async function Description(req, res) {
     //logger.info(links)
 
     sites = ''
-    if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
-        sites = 'Primary: ' + C.site_lookup[otid]['s1']
-        if (C.site_lookup[otid]['s2']) {
-            sites += '<br>Secondary: ' + C.site_lookup[otid]['s2']
+    if (otid in C.site_lookup && 'major_body_site' in C.site_lookup[otid]) {
+        sites = 'Primary: ' + C.site_lookup[otid].major_body_site+' (Abundance: '+C.site_lookup[otid].major_site_abundance+')'
+        if (C.site_lookup[otid].secondary_sites != 'none assigned') {
+            sites += '<br>Secondary: ' + C.site_lookup[otid].secondary_sites+' (Abundance: '+C.site_lookup[otid].secondary_site_abundance+')'
         }
-        if (C.site_lookup[otid]['notes']) {
-            sites += '<br><small>Note: ' + C.site_lookup[otid]['notes'] + '</small>'
+        if (C.site_lookup[otid].subsite_of_primary) {
+            sites += '<br><small>Note: ' + C.site_lookup[otid].subsite_of_primary + '</small>'
         }
     }
 
@@ -761,11 +761,11 @@ router.get('/tax_description', async function Description(req, res) {
     pangenomes = await queries.run_query(q_pangenome,req, res);
     gtdbtax = await queries.run_query(q_gtdb_tax,req, res);
           
-    if (otid in C.site_lookup && 's1' in C.site_lookup[otid]) {
-      sites = 'Primary: ' + C.site_lookup[otid]['s1']
+    if (otid in C.site_lookup && 'major_body_site' in C.site_lookup[otid]) {
+      sites = 'Primary: ' + C.site_lookup[otid].major_body_site+' (Abundance: '+C.site_lookup[otid].major_site_abundance+')'
       // = Object.values(C.site_lookup[otid]).join('<br>')
-      if (C.site_lookup[otid]['s2'] && C.site_lookup[otid]['s2'] !== 'Unassigned') {
-        sites += '<br>Secondary: ' + C.site_lookup[otid]['s2']
+      if (C.site_lookup[otid].secondary_sites && C.site_lookup[otid].secondary_sites !== 'none assigned') {
+        sites += '<br>Secondary: ' + C.site_lookup[otid].secondary_sites+' (Abundance: '+C.site_lookup[otid].secondary_site_abundance+')'
       }
       if (C.site_lookup[otid]['ref_link']) {
         let ref_link_lst = C.site_lookup[otid]['ref_link'].split(';')  //.split(/\s+/)
@@ -775,8 +775,8 @@ router.get('/tax_description', async function Description(req, res) {
         }
         sites += '</small>'
       }
-      if (C.site_lookup[otid]['notes']) {
-        sites += '<br><small>Note: ' + C.site_lookup[otid]['notes'] + '</small>'
+      if (C.site_lookup[otid].subsite_of_primary) {
+        sites += '<br><small>Note: ' + C.site_lookup[otid].subsite_of_primary + '</small>'
       }
     }
     let args = { otid: otid }
@@ -1280,14 +1280,18 @@ router.get('/body_sites', function body_sites(req, res) {
       obj.notes = ''
       obj.gsp = C.taxon_lookup[otid].genus + ' ' + C.taxon_lookup[otid].species + ' (<b>DROPPED</b>)'
     } else if (otid in C.site_lookup) {
-      obj.s1 = C.site_lookup[otid].s1
-      if (C.site_lookup[otid].s2 === 'Unassigned') {
+      obj.s1 = C.site_lookup[otid].major_body_site +' (Abundance: '+C.site_lookup[otid].major_site_abundance+')'
+      if (C.site_lookup[otid].secondary_sites === 'none assigned') {
         obj.s2 = ''
       } else {
-        obj.s2 = C.site_lookup[otid].s2
+        obj.s2 = C.site_lookup[otid].secondary_sites
+        if(C.site_lookup[otid].secondary_site_abundance !== 'NA'){
+          obj.s2 += ' (Abundance: '+C.site_lookup[otid].secondary_site_abundance+')'
+        }
+        
       }
 
-      obj.note = C.site_lookup[otid].notes
+      obj.note = C.site_lookup[otid].subsite_of_primary
       obj.gsp = C.taxon_lookup[otid].genus + ' ' + C.taxon_lookup[otid].species
       
       if(C.taxa_with_subspecies.indexOf(otid) != -1){

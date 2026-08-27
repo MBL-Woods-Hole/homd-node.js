@@ -73,7 +73,6 @@ def create_taxon(otid):
     taxon['rrna_sequences'] = []
     taxon['synonyms'] = []
     taxon['sites'] = []
-    taxon['body_site'] = ''
     
     return taxon
 
@@ -176,55 +175,45 @@ def run_sites(args):
     global master_lookup
 
     primary_short_sites =['Oral','Nasal','Skin','Gut','Vaginal','Pathogen','Environmental','Reference','Unassigned']
-    # from body sites table:
-    primary_short_sites =['Oral','Nasal','Skin','Gastrointestinal Tract','Vaginal','Pathogen','Environmental','Taxonomic Reference','no data']
-    # Environmental
-# Gastrointestinal Tract
-# Nasal
-# no data
-# Pathogen
-# Oral
-# Skin
-# Taxonomic Reference
-# Vaginal
     #q = "SELECT otid, site FROM otid_site JOIN sites USING (site_id) ORDER BY otid,priority"
     #q = "SELECT otid, primary_body_site FROM otid_prime"
     #q = "SELECT otid, site FROM otid_prime JOIN sites on otid_prime.primary_body_site_id=sites.site_id"
-#     q = "SELECT otid, site_notes, p1.site as p1, p2.site as p2, body_site_reference as ref FROM otid_prime"
-#     q += " JOIN `status` using(otid)"
-#     q += " JOIN sites p1 on `status`.primary_body_site_id=p1.site_id"
-#     q += " JOIN sites p2 on `status`.secondary_body_site_id=p2.site_id  ORDER BY otid"
-    
-    q = "SELECT otid,general_habitat,major_body_site,subsite_of_primary,major_site_abundance,secondary_sites,secondary_site_abundance from otid_prime"
-    q += " JOIN body_sites using(otid)"
-    # "76": {"s1": "Skin (Abundance: Scarce)", "s2": "Unassigned", "ref_link": "", "notes": ""},
+    q = "SELECT otid, site_notes, p1.site as p1, p2.site as p2, body_site_reference as ref FROM otid_prime"
+    q += " JOIN `status` using(otid)"
+    q += " JOIN sites p1 on `status`.primary_body_site_id=p1.site_id"
+    q += " JOIN sites p2 on `status`.secondary_body_site_id=p2.site_id  ORDER BY otid"
     lookup = {}
     #print(q)
     result = myconn.execute_fetch_select_dict(q)
     #print(result)
     for obj in result:
         otid = str(obj['otid'])
-        
+        primary_site = obj['p1']
         #print('psite',primary_site)
         lookup[otid] = {}
-        lookup[otid] = obj
-        
-        #for site in primary_short_sites:
-         #   if obj['major_body_site'] == site:
-        if obj['major_body_site'] == 'Gastrointestinal Tract':
-            master_lookup[otid]['body_site'] = 'Gut'
-            lookup[otid]['major_body_site'] = 'Gut'
-        elif obj['major_body_site'] == 'no data':
-            master_lookup[otid]['body_site'] = 'Unassigned'
-            lookup[otid]['major_body_site'] = 'Unassigned'
-        elif obj['major_body_site'] == 'Taxonomic Reference':
-            master_lookup[otid]['body_site'] = 'Reference'
-            lookup[otid]['major_body_site'] = 'Reference'
-        else:
-            master_lookup[otid]['body_site'] = obj['major_body_site']
-            
-                
-        
+        lookup[otid]['s1'] = primary_site
+        if obj['p2']:
+            lookup[otid]['s2'] = obj['p2']
+        if not obj['ref']:
+            obj['ref'] = ''
+        lookup[otid]['ref_link'] = obj['ref']
+        lookup[otid]['notes'] = obj['site_notes']
+        for site in primary_short_sites:
+            if primary_site.startswith(site):
+                master_lookup[otid]['sites'].append(site)
+            elif site == 'Gut' and primary_site.startswith('Gastro'):
+                master_lookup[otid]['sites'].append(site)
+            elif site == 'Pathogen' and 'Pathogen' in primary_site:
+                master_lookup[otid]['sites'].append(site)
+            elif site == 'Reference' and 'Reference' in primary_site:
+                master_lookup[otid]['sites'].append(site)
+            elif site == 'Unassigned' and 'Human-Associated' in primary_site:
+                master_lookup[otid]['sites'].append(site)
+        # for site in short_site_names:
+#             if primary_site in short_site_names[site]:
+#                 master_lookup[otid]['sites'].append(site)
+        if len(master_lookup[otid]['sites']) == 0:
+            master_lookup[otid]['sites'].append('')  # add site to dict above
     
 # 0 Unassigned
 # 1 Oral

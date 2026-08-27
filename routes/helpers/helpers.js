@@ -544,29 +544,29 @@ export const calculate_homd_stats = () => {
     s.taxa_status_phylotype    = {count:count,pct_of_taxa:pct.toFixed(1)}
     // Body Sites
     //logger.info(C.site_lookup['10'])
-    count = homd_taxa.filter(item => item.sites[0] === 'Oral').length
+    count = homd_taxa.filter(item => item.body_site === 'Oral').length
     pct = count / s.taxon_count * 100
     s.taxa_site_oral    = {count:count,pct_of_taxa:pct.toFixed(1)}
-    count = homd_taxa.filter(item => item.sites[0] === 'Nasal').length
+    count = homd_taxa.filter(item => item.body_site === 'Nasal').length
     pct = count / s.taxon_count * 100
     s.taxa_site_nasal   = {count:count,pct_of_taxa:pct.toFixed(1)}
-    count = homd_taxa.filter(item => item.sites[0] === 'Skin').length
+    count = homd_taxa.filter(item => item.body_site === 'Skin').length
     pct = count / s.taxon_count * 100
     s.taxa_site_skin   = {count:count,pct_of_taxa:pct.toFixed(1)}
-    count = homd_taxa.filter(item => item.sites[0] === 'Gut').length
+    count = homd_taxa.filter(item => item.body_site === 'Gut').length
     pct = count / s.taxon_count * 100
     s.taxa_site_gut   = {count:count,pct_of_taxa:pct.toFixed(1)}
-    count = homd_taxa.filter(item => item.sites[0] === 'Vaginal').length
+    count = homd_taxa.filter(item => item.body_site === 'Vaginal').length
     pct = count / s.taxon_count * 100
     s.taxa_site_vaginal   = {count:count,pct_of_taxa:pct.toFixed(1)}
-    count = homd_taxa.filter(item => item.sites[0] === 'Pathogen').length
+    count = homd_taxa.filter(item => item.body_site === 'Pathogen').length
     pct = count / s.taxon_count * 100
     s.taxa_site_path   = {count:count,pct_of_taxa:pct.toFixed(1)}
-    count = homd_taxa.filter(item => item.sites[0] === 'Environmental').length
+    count = homd_taxa.filter(item => item.body_site === 'Environmental').length
     pct = count / s.taxon_count * 100
     s.taxa_site_env   = {count:count,pct_of_taxa:pct.toFixed(1)}
     
-    count = homd_taxa.filter(item => item.sites[0] === 'Unassigned').length
+    count = homd_taxa.filter(item => item.body_site === 'Unassigned').length
     pct = count / s.taxon_count * 100
     s.taxa_site_unassigned   = {count:count,pct_of_taxa:pct.toFixed(1)}
     
@@ -660,42 +660,42 @@ export const calculate_homd_stats = () => {
     // max and min genome size
     // Genome Body Site
     //count = homd_taxa.filter(item => item.sites[0] === 'Oral').length
-    count = homd_taxa.filter(item => item.sites[0] === 'Oral').map(item => item.genomes).flat().length
+    count = homd_taxa.filter(item => item.body_site === 'Oral').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_oral   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
-    count = homd_taxa.filter(item => item.sites[0] === 'Nasal').map(item => item.genomes).flat().length
+    count = homd_taxa.filter(item => item.body_site === 'Nasal').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_nasal   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
-    count = homd_taxa.filter(item => item.sites[0] === 'Skin').map(item => item.genomes).flat().length
+    count = homd_taxa.filter(item => item.body_site === 'Skin').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_skin   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
-    count = homd_taxa.filter(item => item.sites[0] === 'Gut').map(item => item.genomes).flat().length
+    count = homd_taxa.filter(item => item.body_site === 'Gut').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_gut   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
-    count = homd_taxa.filter(item => item.sites[0] === 'Vaginal').map(item => item.genomes).flat().length
+    count = homd_taxa.filter(item => item.body_site === 'Vaginal').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_vaginal   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
-    count = homd_taxa.filter(item => item.sites[0] === 'Pathogen').map(item => item.genomes).flat().length
+    count = homd_taxa.filter(item => item.body_site === 'Pathogen').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_path   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
     // ??
     //let ref_genomes = homd_taxa.filter(item => item.sites[0] === 'Reference').map(item => item.genomes).flat()
     //logger.info('ref_genomes',ref_genomes)
-    count = homd_taxa.filter(item => item.sites[0] === 'Environmental').map(item => item.genomes).flat().length
+    count = homd_taxa.filter(item => item.body_site === 'Environmental').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_env   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
-    count = homd_taxa.filter(item => item.sites[0] === 'Reference').map(item => item.genomes).flat().length
+    count = homd_taxa.filter(item => item.body_site === 'Reference').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_ref   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
-    count = homd_taxa.filter(item => item.sites[0] === 'Unassigned').map(item => item.genomes).flat().length
+    count = homd_taxa.filter(item => item.body_site === 'Unassigned').map(item => item.genomes).flat().length
     pct = count / s.genome_count * 100
     s.genome_site_unassigned   = {count:count,pct_of_genomes:pct.toFixed(1)}
     
