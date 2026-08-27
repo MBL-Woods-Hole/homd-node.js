@@ -171,11 +171,9 @@ width: 1500px;
          
          
             
-            <% if(statusfltr.site.p_or_pst === 'primary_site'){ %>
-              <span class='adv-filter-title' id='adv_body_site_title'>Primary Body Site <small>(in Beta)</small>:</span><br>&nbsp;&nbsp;
-            <% }else{ %>
-              <span class='adv-filter-title' id='adv_body_site_title'>Primary and Secondary Body Sites <small>(in Beta)</small>:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <% } %>
+            
+              <span class='adv-filter-title' id='adv_body_site_title'>Body Sites <small>(in Beta)</small>:</span><br>&nbsp;&nbsp;
+            
             
             <% if(statusfltr.site.oral === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='adv_oral' name='oral' onclick='adv_update_sb()'\> Oral&nbsp;&nbsp;&nbsp;
@@ -231,12 +229,15 @@ width: 1500px;
             
             <span  id='adv_toggle_cb_sites_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_sites('off')">Toggle CheckBoxes On/Off</a></span>
              
-            <br><br>&nbsp;&nbsp;&nbsp;&nbsp;** 
+            
              
-            <span id='pst_filter_span'>Filter/Search from both Primary and Secondary Body Sites Instead:&nbsp;
+            <!-- 
+            <br><br>&nbsp;&nbsp;&nbsp;&nbsp;** 
+<span id='pst_filter_span'>Filter/Search from both Primary and Secondary Body Sites Instead:&nbsp;
                   <a class="pill pill-btn" href='#' onclick="adv_toggle_site_filter('P')">Toggle</a> 
                   <input type='hidden' id='p_or_pst' name='p_or_pst' value='primary_site' \>
             </span>
+ -->
                 
             <span style='float:right;'>See <a href='body_sites'>Preferred Body Sites</a> Page</span>
              

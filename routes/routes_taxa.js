@@ -1281,8 +1281,8 @@ router.get('/body_sites', function body_sites(req, res) {
       obj.subsite = ''
       obj.gsp = C.taxon_lookup[otid].genus + ' ' + C.taxon_lookup[otid].species + ' (<b>DROPPED</b>)'
     } else if (otid in C.site_lookup) {
-      obj.gen_habitat = C.site_lookup[otid].general_habitat +' (Abundance: '+C.site_lookup[otid].major_site_abundance+')'
-      obj.major_body_site = C.site_lookup[otid].major_body_site
+      obj.gen_habitat = C.site_lookup[otid].general_habitat
+      obj.major_body_site = C.site_lookup[otid].major_body_site +' (Abundance: '+C.site_lookup[otid].major_site_abundance+')'
       if (C.site_lookup[otid].secondary_sites === 'none assigned') {
         obj.secondary = ''
       } else {

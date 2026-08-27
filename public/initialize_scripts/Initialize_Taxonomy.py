@@ -74,7 +74,7 @@ def create_taxon(otid):
     taxon['synonyms'] = []
     taxon['sites'] = []
     taxon['body_site'] = ''
-    
+    taxon['body_site2'] = ''
     return taxon
 
 
@@ -223,7 +223,12 @@ def run_sites(args):
         else:
             master_lookup[otid]['body_site'] = obj['major_body_site']
             
-                
+        if obj['secondary_sites'] == 'Gastrointestinal Tract':
+            master_lookup[otid]['body_site2'] = 'Gut'
+        elif obj['secondary_sites'] == 'none assigned':
+            master_lookup[otid]['body_site2'] = ''
+        else:
+            master_lookup[otid]['body_site2'] = obj['secondary_sites']
         
     
 # 0 Unassigned

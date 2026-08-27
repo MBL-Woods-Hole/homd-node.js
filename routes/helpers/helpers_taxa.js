@@ -59,7 +59,7 @@ export const get_default_tax_filter = () => {
       defaultfilter.site[body_sites[n]] = 'on'; // then turn all 'on'
     }
   }
-  defaultfilter.site['p_or_pst'] = 'primary_site';
+  defaultfilter.site['p_or_pst'] = 'both'  //'primary_site';
 
   // abundance
   for (let n=0; n < C.tax_abund_all.length; n++) {
@@ -113,7 +113,7 @@ export const get_null_tax_filter = () => {
       unassigned: 'off',
       enviro: 'off',
       pathogen: 'off',
-      p_or_pst: 'primary_site'
+      p_or_pst: 'both'  //'primary_site'
     },
     abund: {
       high_abund: 'off',
@@ -607,7 +607,8 @@ export const apply_ttable_filter = (req, filter) => {
   //logger.info('status_on',status_on)
   //logger.info('filter.site',filter.site)
     
-  if (filter && filter.site.p_or_pst == 'primary_site') {
+  if (filter && filter.site.p_or_pst == 'both') {  // this is now default
+      console.log('filter primary_site only')
       big_tax_list = big_tax_list.filter(function (item) {
       // if (item.otid == 470) {
         //           logger.info('2-Found 470',item.otid)
@@ -635,12 +636,18 @@ export const apply_ttable_filter = (req, filter) => {
           return item;
         }
 
+        if (site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.body_site2))) {
+          //if(site_on.includes(item.sites[n].toLowerCase())){
+          //item.site = item.body_site;
+          item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
+          return item;
+        }
      
       });
 
   } else {
     //C.site_lookup[1]
-    console.log('else XX')
+    console.log('else XX')  // should search both primary and secondary body_sites (now the default)
     big_tax_list = big_tax_list.filter(function (item) {
       // if (item.otid == 470) {
 //           logger.info('3-Found 470',item.otid)
@@ -655,7 +662,11 @@ export const apply_ttable_filter = (req, filter) => {
           if (glom.includes(site_on[n])) {
             //if(site_on.includes(item.sites[n].toLowerCase())){
             //item.site = item.body_site;
-            item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
+            item.site = C.site_lookup[item.otid].major_body_site
+            if(C.site_lookup[item.otid].secondary_sites != 'none assigned'){
+                item.site += '; '+C.site_lookup[item.otid].secondary_sites
+            }
+            item.site += ' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
             return item;
           }
         }
