@@ -117,9 +117,11 @@ tr.selected td{
         <th nowrap>Genus-Species</th>
         <th class='col3' nowrap>Naming Status</th>
         <th class='col3'>Cultivation Status</th>
-        <th>Primary Body Site</th>
-        <th>Other Body Sites</th>
+        <th>General Habitat</th>
+        <th>Major Body Site</th>
         <th>Subsites of Primary Site</th>
+        <th>Other Body Sites</th>
+        
         </tr>
         </thead>
         <% for(n in data){ %>
@@ -143,9 +145,11 @@ tr.selected td{
                  </td> 
                  <td class='center' nowrap><%= data[n].naming_status %></td> 
                  <td class='center' nowrap><%= data[n].cultivation_status %></td> 
-                 <td class='ellipsis' nowrap title='<%= data[n]['s1'] %>'><%= data[n]['s1'] %></td>
-                 <td class='ellipsis' nowrap title='<%= data[n]['s2'] %>'><%= data[n]['s2'] %></td>
-                 <td><%= data[n]['note'] %></td>
+                 <td class='ellipsis' nowrap title='<%= data[n]['s1'] %>'><%= data[n]['gen_habitat'] %></td>
+                 <td class='ellipsis' nowrap title='<%= data[n]['s1'] %>'><%= data[n]['major_body_site'] %></td>
+                 <td><%= data[n]['subsite'] %></td>
+                 <td class='ellipsis' nowrap title='<%= data[n]['s2'] %>'><%= data[n]['secondary'] %></td>
+                 
                </tr>
            
        <% } %>

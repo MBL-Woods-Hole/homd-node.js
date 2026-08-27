@@ -1274,34 +1274,37 @@ router.get('/body_sites', function body_sites(req, res) {
     obj.otid = otid
 
     if (C.dropped_taxids.indexOf(otid) !== -1) {
-      obj.s1 = 'Unassigned'
-      obj.s2 = ''
+      obj.gen_habitat = 'Unassigned'
+      obj.major_body_site = 'Unassigned'
+      obj.secondary = ''
 
-      obj.notes = ''
+      obj.subsite = ''
       obj.gsp = C.taxon_lookup[otid].genus + ' ' + C.taxon_lookup[otid].species + ' (<b>DROPPED</b>)'
     } else if (otid in C.site_lookup) {
-      obj.s1 = C.site_lookup[otid].major_body_site +' (Abundance: '+C.site_lookup[otid].major_site_abundance+')'
+      obj.gen_habitat = C.site_lookup[otid].general_habitat +' (Abundance: '+C.site_lookup[otid].major_site_abundance+')'
+      obj.major_body_site = C.site_lookup[otid].major_body_site
       if (C.site_lookup[otid].secondary_sites === 'none assigned') {
-        obj.s2 = ''
+        obj.secondary = ''
       } else {
-        obj.s2 = C.site_lookup[otid].secondary_sites
+        obj.secondary = C.site_lookup[otid].secondary_sites
         if(C.site_lookup[otid].secondary_site_abundance !== 'NA'){
-          obj.s2 += ' (Abundance: '+C.site_lookup[otid].secondary_site_abundance+')'
+          obj.secondary += ' (Abundance: '+C.site_lookup[otid].secondary_site_abundance+')'
         }
         
       }
 
-      obj.note = C.site_lookup[otid].subsite_of_primary
+      obj.subsite = C.site_lookup[otid].subsite_of_primary
       obj.gsp = C.taxon_lookup[otid].genus + ' ' + C.taxon_lookup[otid].species
       
       if(C.taxa_with_subspecies.indexOf(otid) != -1){
          subs[otid] =  C.taxon_lineage_lookup[otid].subspecies
       }
     } else {
-      obj.s1 = 'Unassigned'
+      obj.gen_habitat = 'Unassigned'
+      obj.major_body_site = 'Unassigned'
       obj.s2 = ''
 
-      obj.note = 'Missing From Database (C.site_lookup)'
+      obj.subsite = 'Missing From Database (C.site_lookup)'
       obj.gsp = C.taxon_lookup[otid].genus + ' ' + C.taxon_lookup[otid].species
       if(C.taxa_with_subspecies.indexOf(otid) != -1){
          subs[otid] =  C.taxon_lineage_lookup[otid].subspecies
