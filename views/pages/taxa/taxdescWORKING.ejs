@@ -6,18 +6,40 @@
 }
 
 .container div {
-  background-color: #f1f1f1;
-  width: 400px;
+  background-color: white;
+  width: 350px;
   margin: 2px;
   padding: 20px;
 
   text-align: left;  
-  font-size: 30px;
+  font-size: 20px;
   
 }
+table {
+  border-collapse: collapse;
+}
+
+table tr {
+  /* border-bottom: 1pt solid black; */
+}
+.underline{
+    border-bottom: 1px solid lightgrey;
+}
+.spaced-row td{
+    padding:10px;
+    
+    
+}
+.text-right {
+    text-align: right;
+  }
+.taxon-bold{
+   /* font-family: "Lucida Console", "Courier New", monospace; */
+   font-weight:bold;
+}
 #taxon-row1{
-   background: #deebf6;
    
+   background: #deebf6;
 }
 #genomics-row1{
    background: #fff1cd;
@@ -39,6 +61,21 @@
   background:lightgrey;
   padding:8px;
   color:black;
+}
+.head{
+   font-size: 30px;
+   font-weight:bold;
+}
+
+.blue{
+   
+   padding:2px 200px 2px 10px;
+}
+.white{
+    background: white;
+}
+.line{
+    border-bottom: 1px solid black;
 }
 </style>
 
@@ -80,67 +117,168 @@
   </center>
   
   <div class="container">
-    <div class='' id='taxon-row1'>Taxonomy
+    <div class='' id='taxon-row1'>
         <table id='tax_lineage'>
-        <tr><td class='taxon-bold'>Domain:</td>
-        <td class='taxon-data'><a href='life?rank=domain&name=<%= data_lineage.domain %>'><%= data_lineage.domain %></a></td></tr>
-        <tr><td class='taxon-bold'>Phylum:</td>
-        <td class='taxon-data'><a href='life?rank=phylum&name=<%= data_lineage.phylum %>'><%= data_lineage.phylum %></a></td></tr>
-        <tr><td class='taxon-bold'>Class:</td>
-        <td class='taxon-data'>
-        <a href='life?rank=klass&name=<%= data_lineage.klass %>'><%= data_lineage.klass %></a>
-        
-        </td></tr>
-        <tr><td class='taxon-bold'>Order:</td>
-        <td class='taxon-data'>
-        <a href='life?rank=order&name=<%= data_lineage.order %>'><%= data_lineage.order %></a>
-        
-        </td></tr>
-        
-        
-        <tr><td class='taxon-bold'>Family:</td>
-        <td class='taxon-data'>
-        <a href='life?rank=family&name=<%= data_lineage.family %>'><%= data_lineage.family %></a>
-        
-        </td></tr>
-        <tr><td class='taxon-bold'>Genus:</td>
-        <td class='taxon-data'>
-        <a href='life?rank=genus&name=<%= data_lineage.genus %>'><%= data_lookup.genus %></a>
-        <% if(data_lineage.genus.includes("[")){ %>
-        <span class="tooltip-tipster" data-tooltip-content="#tooltip_content">
-        <img src="/images/question.png" width='20'>
-        </span>
-        <% } %>
-        </td></tr>
-        <div class="tooltip_templates">
-        <span id="tooltip_content">
-        Bracketed letters indicate 
-        <br>that the taxonomic name at this 
-        <br>level has not been established.
-        <ul>
-        <li><small>Examples:</small>
-        <li><small>C1 – First Unnamed Class</small>
-        <li><small>O1 – First Unnamed Order</small>
-        <li><small>F2 – Second Unnamed Family</small>
-        <li><small>G3 – Third Unnamed Genus</small>
-        </ul>
-        </span>
-        </div>
+        <tr><td class='taxon-bold blue head'>Taxonomy</td></tr>
+        <tr class='underline'><td class='taxon-bold text-right blue'>Domain:</td>
+            <td class='taxon-data white'><a href='life?rank=domain&name=<%= data_lineage.domain %>'><%= data_lineage.domain %></a></td>
+        </tr>
+        <tr class='underline'><td class='taxon-bold text-right blue '>Phylum:</td>
+            <td class='taxon-data white'><a href='life?rank=phylum&name=<%= data_lineage.phylum %>'><%= data_lineage.phylum %></a></td>
+        </tr>
+        <tr class='underline'><td class='taxon-bold text-right blue'>Class:</td>
+            <td class='taxon-data white'>
+            <a href='life?rank=klass&name=<%= data_lineage.klass %>'><%= data_lineage.klass %></a>
+            </td>
+        </tr>
+        <tr class='underline'><td class='taxon-bold text-right blue'>Order:</td>
+            <td class='taxon-data white'>
+            <a href='life?rank=order&name=<%= data_lineage.order %>'><%= data_lineage.order %></a>
+            </td>
+        </tr>
+        <tr class='underline'><td class='taxon-bold text-right blue'>Family:</td>
+            <td class='taxon-data white'>
+            <a href='life?rank=family&name=<%= data_lineage.family %>'><%= data_lineage.family %></a>
+            </td>
+        </tr>
+        <tr class='underline'><td class='taxon-bold text-right blue'>Genus:</td>
+            <td class='taxon-data white'>
+            <a href='life?rank=genus&name=<%= data_lineage.genus %>'><%= data_lookup.genus %></a>
+            <% if(data_lineage.genus.includes("[")){ %>
+            <span class="tooltip-tipster" data-tooltip-content="#tooltip_content">
+            <img src="/images/question.png" width='20'>
+            </span>
+            <% } %>
+            </td>
+        </tr>
+            <div class="tooltip_templates">
+            <span id="tooltip_content">
+            Bracketed letters indicate 
+            <br>that the taxonomic name at this 
+            <br>level has not been established.
+            <ul>
+            <li><small>Examples:</small>
+            <li><small>C1 – First Unnamed Class</small>
+            <li><small>O1 – First Unnamed Order</small>
+            <li><small>F2 – Second Unnamed Family</small>
+            <li><small>G3 – Third Unnamed Genus</small>
+            </ul>
+            </span>
+            </div>
         <% if(data_lineage.subspecies){ %>
-        <tr><td class='taxon-bold'>Species:</td><td class='taxon-data'> <a href='life?rank=species&name=<%= data_lineage.species %>'><%= data_lookup.species %></a></td></tr>
-        <tr><td class='taxon-bold'>Subspecies:<br>or Clade:</td><td class='taxon-data'><%= data_lineage.subspecies %></td></tr>
+        <tr class='underline'><td class='taxon-bold text-right blue'>Species:</td>
+            <td class='taxon-data'> <a href='life?rank=species&name=<%= data_lineage.species %>'><%= data_lookup.species %></a></td>
+        </tr>
+        <tr class='underline'><td class='taxon-bold text-right blue'>Subspecies:<br>or Clade:</td>
+            <td class='taxon-data white'><%= data_lineage.subspecies %></td>
+        </tr>
         <% }else{ %>
-        <tr><td class='taxon-bold'>Species:</td><td class='taxon-data'><%= data_lookup.species %></td></tr>
+        <tr class='underline'><td class='taxon-bold text-right blue'>Species:</td>
+            <td class='taxon-data white'><%= data_lookup.species %></td>
+        </tr>
         <% } %>
+        
+        <tr class=''><td class='line taxon-bold blue' colspan='2'>&nbsp;</td>
+            
+        </tr> 
+        
+        <tr class='spaced-row'><td class='taxon-bold blue' nowrap>Bacterial Name</td>
+            <td class='taxon-data' nowrap><i><%= data_lineage.species %></i></td>
+        </tr>
+        <tr class=''><td class='line taxon-bold blue' colspan='2'>&nbsp;</td>
+        <tr class='spaced-row'><td class='taxon-bold blue'  nowrap>Taxonomic Rank link</td>
+            <td class='taxon-data' nowrap></td>
+        </tr>
+        <tr class=''><td class='line taxon-bold blue' colspan='2'>&nbsp;</td>
+        <tr class='spaced-row'><td class='taxon-bold blue' nowrap>HOMD/NCBI/GTDB</td>
+            <td class='taxon-data' nowrap></td>
+        </tr>
+        <tr class=''><td class='line taxon-bold blue' colspan='2'>&nbsp;</td>
+        <tr class='spaced-row'><td class='taxon-bold blue' nowrap>NCBI Taxon-ID</td>
+            <td class='taxon-data' nowrap>
+            <% if(!data_lookup.ncbi_taxid || parseInt(data_lookup.ncbi_taxid) == 0){ %>
+                <small>Not Available</small>
+            <% }else{ %>
+                <span class='link'>
+                    <a href='https://www.ncbi.nlm.nih.gov/datasets/taxonomy/<%= data_lookup.ncbi_taxid %>/' target='_blank' rel="noopener noreferrer"><%= data_lookup.ncbi_taxid %> </a>
+                </span>
+            <% } %>
+            </td>
+        </tr>
+        <tr class=''><td class='line taxon-bold blue' colspan='2'>&nbsp;</td>
+        <tr class='spaced-row'><td class='taxon-bold blue' nowrap>LSPN Species Page</td>
+            <td class='taxon-data' nowrap>
+                <% link = "https://lpsn.dsmz.de/"+links["lpsnlink"] %>
+                <% show = data_lineage.species %>
+                <span>
+                    <a class='link' href='<%- link %>' target='_blank' rel="noopener noreferrer"><em><%- link %></em></a>
+                </span>
+            </td>
+        </tr>
+        <tr class=''><td class='line taxon-bold blue' colspan='2'>&nbsp;</td>
+        <tr class='spaced-row'><td class='taxon-bold blue' nowrap>Type Strain(s)</td>
+            <td class='taxon-data' nowrap></td>
+        </tr>
+        <tr class=''><td class='line taxon-bold blue' colspan='2'>&nbsp;</td>
+        <tr class='spaced-row'><td class='taxon-bold blue' nowrap>Former Names/Synonyms</td>
+            <td class='taxon-data' nowrap>
+            <table class='' border='0'>
+                <% for(n=0;n<data_lookup.synonyms.length;n++){ %>
+                <tr><td class='taxon-data' style='border:none;padding:0 1px;' nowrap><i><%- data_lookup.synonyms[n] %></i></td></tr>
+                <% } %>
+            </table>
+            </td>
+        </tr>
+       
+        
+        
+        
+        
         </table>
-    
+       
     
     </div>
-    
+   
     
     <div class='' id='genomics-row1'>Genomics</div>
     
-    <div class='' id='pangenomics-row1'>Pangenomics</div>
+    <div class='' id='pangenomics-row1'>
+        <table>
+        <tr><td class='taxon-bold blue head'>Pangenomics</td></tr>
+        <tr><td class='taxon-bold blue'>Preview:</td>
+            <td class='taxon-data' nowrap>
+            
+<% if(data_lookup.pangenomes.length == 1 && data_lookup.pangenomes[0]){ %>
+    <a class='link' href='/genome/pangenome_image2?pg=<%= data_lookup.pangenomes[0].pg %>&ext=svg' target='_blank'>OpenSVG</a> 
+<% }else if(data_lookup.pangenomes.length > 1 && data_lookup.pangenomes[0]){ %>
+<% for(n in data_lookup.pangenomes){ %>
+    <a class='link' href='/genome/pangenome_image2?pg=<%= data_lookup.pangenomes[n].pg %>&ext=svg' target='_blank'>OpenSVG</a> 
+<%   } %>
+<% }else{ %>
+    <small>No Pangenomes Available.</small>
+<% } %>
+            
+            </td>
+        </tr>
+        <tr><td class='taxon-bold blue'>Open Anvi`o:</td>
+            <td class='taxon-data' nowrap>
+            
+            
+<% if(data_lookup.pangenomes.length == 1 && data_lookup.pangenomes[0]){ %>
+    <a class='link' href='/genome/anvio?pg=<%= data_lookup.pangenomes[0].pg %>' target='_blank'>OpenAnvi`o</a> 
+<% }else if(data_lookup.pangenomes.length > 1 && data_lookup.pangenomes[0]){ %>
+<%   for(n in data_lookup.pangenomes){ %>
+    <a class='link' href='/genome/anvio?pg=<%= data_lookup.pangenomes[n].pg %>' target='_blank'>OpenAnvi`o</a> 
+<%   } %>
+<% }else{ %>
+    <small>No Pangenomes Available.</small>
+<% } %>
+    
+            
+            </td>
+        </tr>
+       </table>
+    </div>
    
     <div class='' id='rrna16s-row1'>16S rRNA</div>
     

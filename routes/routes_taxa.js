@@ -590,8 +590,36 @@ function renderTaxonDescription(req, res, args) {
 
   })
 }
+function renderTaxonDescriptionTEMP(req, res, args) {
+  logger.info('IN TEMP')
+  res.render('pages/taxa/taxdescWORKING', {
+    title: 'HOMD :: Taxon Info',
+    pgname: 'taxon/description', // for AbountThisPage
+    config: JSON.stringify(ENV),
+    ver_info: JSON.stringify(C.version_information),
+
+
+    otid: args.otid,
+    image_array: JSON.stringify(args.image_array),
+    data1: JSON.stringify(args.data1),
+    msg: args.msg,
+    text_file: args.text_file,   // only 666 so far
+    tinfo: JSON.stringify(args.tinfo),  // description 
+    lin: JSON.stringify(args.lin),  // lineage domain=>subspecies
+    data4: JSON.stringify(args.data4),  // publications
+    refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
+    links: JSON.stringify(args.links),
+    sites: JSON.stringify(args.sites),
+    gtdb: JSON.stringify(args.gtdbtax),
+    otid_has_abundance: args.otid_has_abundance,
+    //lineage: args.lineage_string,
+
+  })
+}
 ///
 router.get('/tax_description', async function TaxDescription(req, res) {
+  
+  logger.warn(req.query)
   
   let otid = ''
   if(!req.query.otid){
@@ -799,7 +827,12 @@ router.get('/tax_description', async function TaxDescription(req, res) {
 
     //args.lineage = lineage_string
     args.lin = lineage
-    renderTaxonDescription(req, res, args)
+    
+    if(req.query.TMP =='1'){
+        renderTaxonDescriptionTEMP(req, res, args)
+    }else{
+      renderTaxonDescription(req, res, args)
+    }
 
 })
 

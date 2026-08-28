@@ -143,17 +143,17 @@ function change_level(rank) {
   args.rank = rank.toLowerCase()
   
   var items = document.getElementsByName('countcb')
-  
+  count_type = 'default'
 //   if(items[0].checked){
 //      count_type = 'wdropped'
 //   }else{
 //       count_type = 'default'
 //   }
-  if(items[0].checked){
-     count_type = 'wdropped'
-    }else{
-      count_type = 'default'
-    }
+  // if(items[0].checked){
+//      count_type = 'wdropped'
+//     }else{
+//       count_type = 'default'
+//     }
 
   
   args.count_type = count_type
