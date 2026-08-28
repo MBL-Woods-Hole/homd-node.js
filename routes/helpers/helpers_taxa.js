@@ -617,6 +617,9 @@ export const apply_ttable_filter = (req, filter) => {
         // PROBLEM Taxonomic Reference(sites) and ReferenceTaxa(status) are the same 
         // if (un)check 'Reference' in status line it should (un)include here
         //logger.info(item,'item')
+        // select only nasal: should find secondary nasals
+        // HMT-0567 Staphylococcus caprae
+        // HMT-0601 Staphylococcus epidermidis
           let s = item.body_site.toLowerCase()
           if(item.active_status.toLowerCase() === 'reference'){
             if(status_on.indexOf(s) != -1){
@@ -628,15 +631,16 @@ export const apply_ttable_filter = (req, filter) => {
           }
       
          //logger.info('n',n,'site',item.sites[n])
-         //logger.info('item.sites',item.sites)
+         if(item.otid=='567'){
+          //console.log('item',item)
+         }
+         // 
         if (site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.body_site))) {
           //if(site_on.includes(item.sites[n].toLowerCase())){
           //item.site = item.body_site;
           item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
           return item;
-        }
-
-        if (site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.body_site2))) {
+        }else if (site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.body_site2))) {
           //if(site_on.includes(item.sites[n].toLowerCase())){
           //item.site = item.body_site;
           item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
