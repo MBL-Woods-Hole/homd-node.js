@@ -80,14 +80,14 @@ export const set_gtable_session = (req) => {
       }
     }
     // Tax Status
-    let status_array = ['named_cultivated', 'named_uncultivated', 'unnamed_cultivated', 'phylotype'];
+    let status_array = ['named_cultivated', 'named_uncultivated', 'unnamed_cultivated', 'phylotype', 'reference'];
     for (let item in status_array) {
       if (Object.prototype.hasOwnProperty.call(req.body, status_array[item])) {
         req.session.gtable_filter.status[status_array[item]] = req.body[status_array[item]];
       }
     }
     // Tax Site
-    let site_array = ['oral', 'nasal', 'skin', 'gut', 'vaginal', 'unassigned', 'environmental', 'reference', 'pathogen'];
+    let site_array = ['oral', 'nasal', 'skin', 'gut', 'vaginal', 'unassigned', 'environmental', 'pathogen'];
     
     for (let item in site_array) {
       if (Object.prototype.hasOwnProperty.call(req.body, site_array[item])) {
@@ -228,7 +228,7 @@ export const apply_gtable_filter = (req, filter) => {
   }
 //logger.info("GCA_013333485.2-1",big_g_list.length)
   //sort_col
-  //logger.info('big_g_list count INIT',big_g_list.length)
+  //console.log('big_g_list count INIT',big_g_list.length)
   //logger.info('vals',vals)
   if (vals.sort_rev === 'on') {
     //logger.info('REV sorting by ',vals.sort_col,' ',big_g_list.length)
@@ -323,8 +323,7 @@ export const apply_gtable_filter = (req, filter) => {
       });
     }
   }
-  //logger.info('big_g_list count 2',big_g_list.length)
-  //logger.info("GCA_013333485.2-2",big_g_list.length)
+  //console.log('big_g_list count 2',big_g_list.length)
   // Assembly Level
   let level_on = Object.keys(vals.level).filter(item => vals.level[item] === 'on');
   //logger.info('vals',vals)
@@ -340,9 +339,10 @@ export const apply_gtable_filter = (req, filter) => {
   
   
   
-  let default_length_of_status = 4;  // default should be 4 exclude dropped
+  let default_length_of_status = 5;  // default should be 5; exclude dropped but include reference
   
-  
+  //console.log('vals.status',vals.status)
+  //console.log('status_on',status_on)
   big_g_list = big_g_list.filter(function (item) {
     if (status_on.length === default_length_of_status) {
       return item;
@@ -354,6 +354,8 @@ export const apply_gtable_filter = (req, filter) => {
       //second_part=['cultivated','uncultivated']
       let nstatus = C.taxon_lookup[item.otid].naming_status.toLowerCase()
       let cstatus = C.taxon_lookup[item.otid].cultivation_status.toLowerCase()
+      //console.log('nstat',nstatus)
+      //console.log('cstat',cstatus)
       if(nstatus == 'phylotype'){
         status='phylotype'
       }else if(nstatus.slice(0,5) === 'named'){  // this catches named** and name NVP
@@ -373,7 +375,7 @@ export const apply_gtable_filter = (req, filter) => {
 
   });
 
-
+//console.log('big_g_list count 3',big_g_list.length)
 //logger.info('big_g_list count 3',big_g_list.length)
   //logger.info("GCA_013333485.2-4",big_g_list.length)
   //  big_g_list.filter(function (item) {
@@ -381,10 +383,11 @@ export const apply_gtable_filter = (req, filter) => {
 //       logger.info('GOOOOD',item)
 //     }
 //})
+  //console.log('vals.site',vals.site)
   
   // ADV::Tax Sites ////////////////////////////////////////////////
   let site_on = Object.keys(vals.site).filter(item => vals.site[item] === 'on');
-  
+  //console.log('site_on',site_on)
   //logger.info('site_on',site_on)
   //logger.info('big_g_list[]',big_g_list[0])
   big_g_list = big_g_list.filter(function (item) {
@@ -552,6 +555,7 @@ export const get_default_gtable_filter = () => {
       named_uncultivated: 'on',
       unnamed_cultivated: 'on',
       phylotype: 'on',
+      reference: 'on'
       //dropped: 'on',
       //nonoralref:'off'
     },
@@ -563,7 +567,6 @@ export const get_default_gtable_filter = () => {
       vaginal: 'on',
       unassigned: 'on',
       environmental: 'on',
-      reference: 'on',
       pathogen: 'on'
       //p_or_pst    :'primary_site'
     },
@@ -604,6 +607,7 @@ export const get_null_gtable_filter = () => {
       named_uncultivated: 'off',
       unnamed_cultivated: 'off',
       phylotype: 'off',
+      reference: 'off'
       //dropped: 'off',
       //nonoralref:'off'
     },
@@ -615,7 +619,6 @@ export const get_null_gtable_filter = () => {
       vaginal: 'off',
       unassigned: 'off',
       environmental: 'off',
-      reference: 'off',
       pathogen: 'off'
       //p_or_pst    :'primary_site'
     },

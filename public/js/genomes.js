@@ -310,14 +310,14 @@ function toggle_cb_levels(x){
         document.getElementById("scaffold").checked = false;
         document.getElementById("contig").checked = false;
         document.getElementById("chromosome").checked = false;
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_levels('on')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_levels('on')\">Toggle On/Off</a>"
         document.getElementById('toggle_cb_levels_span').innerHTML = link_html
     }else{
         document.getElementById("complete_genome").checked = true;
         document.getElementById("scaffold").checked = true;
         document.getElementById("contig").checked = true;
         document.getElementById("chromosome").checked = true;
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_levels('off')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"toggle_cb_levels('off')\">Toggle On/Off</a>"
         document.getElementById('toggle_cb_levels_span').innerHTML = link_html
     }
     update_sb()
@@ -330,7 +330,7 @@ function adv_toggle_cb_levels(x){
         document.getElementById("adv_chromosome").checked = false;
         
         
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_levels('on')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_levels('on')\">Toggle On/Off</a>"
         document.getElementById('adv_toggle_cb_levels_span').innerHTML = link_html
     }else{
         document.getElementById("adv_complete_genome").checked = true;
@@ -338,7 +338,7 @@ function adv_toggle_cb_levels(x){
         document.getElementById("adv_contig").checked = true;
         document.getElementById("adv_chromosome").checked = true;
         
-        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_levels('off')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-aqua\" href='#' onclick=\"adv_toggle_cb_levels('off')\">Toggle On/Off</a>"
         document.getElementById('adv_toggle_cb_levels_span').innerHTML = link_html
     }
     adv_update_sb()
@@ -352,9 +352,9 @@ function adv_toggle_cb_sites(x){
         document.getElementById("adv_vaginal").checked = false;
         document.getElementById("adv_pathogen").checked = false;
         document.getElementById("adv_environmental").checked = false;
-        document.getElementById("adv_reference").checked = false;
+        
         document.getElementById("adv_unassigned").checked = false;
-        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('on')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('on')\">Toggle On/Off</a>"
         document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html
     }else{
         document.getElementById("adv_oral").checked = true;
@@ -364,9 +364,9 @@ function adv_toggle_cb_sites(x){
         document.getElementById("adv_vaginal").checked = true;
         document.getElementById("adv_pathogen").checked = true;
         document.getElementById("adv_environmental").checked = true;
-        document.getElementById("adv_reference").checked = true;
+        
         document.getElementById("adv_unassigned").checked = true;
-        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('off')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_sites('off')\">Toggle On/Off</a>"
         document.getElementById('adv_toggle_cb_sites_span').innerHTML = link_html
     }
     adv_update_sb()
@@ -379,7 +379,7 @@ function adv_toggle_cb_abund(x){
         document.getElementById("adv_low_abund").checked = false;
         document.getElementById("adv_scarce_abund").checked = false;
         
-        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('on')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('on')\">Toggle On/Off</a>"
         document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html
     }else{
         document.getElementById("adv_high_abund").checked = true;
@@ -387,7 +387,7 @@ function adv_toggle_cb_abund(x){
         document.getElementById("adv_low_abund").checked = true;
         document.getElementById("adv_scarce_abund").checked = true;
         
-        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('off')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_abund('off')\">Toggle On/Off</a>"
         document.getElementById('adv_toggle_cb_abund_span').innerHTML = link_html
     }
     adv_update_sb()
@@ -400,17 +400,17 @@ function adv_toggle_cb_status(x){
         document.getElementById("adv_named_cultivated").checked = false;
         document.getElementById("adv_named_uncultivated").checked = false;
         document.getElementById("adv_unnamed_cultivated").checked = false;
-        
-        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('on')\">Toggle CheckBoxes On/Off</a>"
+        document.getElementById("adv_reference").checked = false;
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('on')\">Toggle On/Off</a>"
         document.getElementById('adv_toggle_cb_status_span').innerHTML = link_html
     }else{
         document.getElementById("adv_named_cultivated").checked = true;
         document.getElementById("adv_named_uncultivated").checked = true;
         document.getElementById("adv_unnamed_cultivated").checked = true;
         document.getElementById("adv_phylotype").checked = true;
-       
+        document.getElementById("adv_reference").checked = true;
         
-        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('off')\">Toggle CheckBoxes On/Off</a>"
+        var link_html = "<a class=\"pill pill-btn\" href='#' onclick=\"adv_toggle_cb_status('off')\">Toggle On/Off</a>"
         document.getElementById('adv_toggle_cb_status_span').innerHTML = link_html
     }
     adv_update_sb()

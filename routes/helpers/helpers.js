@@ -512,7 +512,7 @@ export const get_has_abundance = () => {
 }
 ////
 export const calculate_homd_stats = () => {
-    logger.info('calc stats')
+    logger.info('Calculating Stats...')
     let pct,count,s = {}
 //TAXA////TAXA////TAXA////TAXA////TAXA////TAXA////TAXA//
     //logger.info(C.taxon_lookup['10'])

@@ -362,43 +362,43 @@ Promise.all(promises)
     
     //examples
     let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup))
-    logger.info(`C.taxon_lookup #ofKeys: ${Object.keys(C.taxon_lookup).length} \t\tsize(KB): ${size/1024}`)
+    logger.info(`C.taxon_lookup............#ofKeys: ${Object.keys(C.taxon_lookup).length} size(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.taxon_references_lookup))
-    logger.info(`C.taxon_references_lookup #ofKeys ${Object.keys(C.taxon_references_lookup).length} \tsize(KB): ${size/1024}`)
+    logger.info(`C.taxon_references_lookup.#ofKeys ${Object.keys(C.taxon_references_lookup).length}   size(KB): ${size/1024}`)
     //logger.info(C.phage_lookup)
     size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup))
-    logger.info(`C.taxon_lineage_lookup #ofKeys ${Object.keys(C.taxon_lineage_lookup).length} \tsize(KB): ${size/1024}`)
+    logger.info(`C.taxon_lineage_lookup....#ofKeys ${Object.keys(C.taxon_lineage_lookup).length}  size(KB): ${size/1024}`)
     
     //size = Buffer.byteLength(JSON.stringify(C.taxon_info_lookup))
     //logger.info('C.taxon_info_lookup #ofKeys',Object.keys(C.taxon_info_lookup).length} \t\tsize(KB): ${size/1024)
     
     size = Buffer.byteLength(JSON.stringify(C.refseq_lookup))
-    logger.info(`C.refseq_lookup #ofKeys ${Object.keys(C.refseq_lookup).length} \t\tsize(KB): ${size/1024}`)
+    logger.info(`C.refseq_lookup...........#ofKeys ${Object.keys(C.refseq_lookup).length}  size(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.genome_lookup))
-    logger.info(`C.genome_lookup #ofKeys ${Object.keys(C.genome_lookup).length} \t\tsize(KB): ${size/1024}`)
+    logger.info(`C.genome_lookup...........#ofKeys ${Object.keys(C.genome_lookup).length} size(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.annotation_lookup))
-    logger.info(`C.annotation_lookup #ofKeys ${Object.keys(C.annotation_lookup).length} \t\tsize(KB): ${size/1024}`)
+    logger.info(`C.annotation_lookup.......#ofKeys ${Object.keys(C.annotation_lookup).length} size(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.taxon_counts_lookup))
-    logger.info(`C.taxon_counts_lookup #ofKeys ${Object.keys(C.taxon_counts_lookup).length} \tsize(KB): ${size/1024}`)
+    logger.info(`C.taxon_counts_lookup.....#ofKeys ${Object.keys(C.taxon_counts_lookup).length} size(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.contig_lookup))
-    logger.info(`C.contig_lookup #ofKeys ${Object.keys(C.contig_lookup).length} \t\tsize(KB): ${size/1024}`)
+    logger.info(`C.contig_lookup...........#ofKeys ${Object.keys(C.contig_lookup).length}  size(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.homd_taxonomy))
-    logger.info(`C.homd_taxonomy \t\t\t\tsize(KB): ${size/1024}`)
+    logger.info(`C.homd_taxonomy...........             size(KB): ${size/1024}`)
     
     size = Buffer.byteLength(JSON.stringify(C.site_lookup))
-    logger.info(`C.site_lookup #ofKeys ${Object.keys(C.site_lookup).length} \t\t\tsize(KB): ${size/1024}`)
+    logger.info(`C.site_lookup.............#ofKeys ${Object.keys(C.site_lookup).length}  size(KB): ${size/1024}`)
     
-    logger.info(`C.no_ncbi_genomes #of els ${C.no_ncbi_genomes.length}`)
-    logger.info(`C.no_ncbi_blast_dbs #of els ${C.no_ncbi_blast_dbs.length}`)
-    
+    logger.info(`C.no_ncbi_genomes.........#of els ${C.no_ncbi_genomes.length}`)
+    logger.info(`C.no_ncbi_blast_dbs.......#of els ${C.no_ncbi_blast_dbs.length}`)
+    logger.info(`Components of C.homd_taxonomy:`)
     for(var n in C.homd_taxonomy){
-       logger.info(`  Components of C.homd_taxonomy: ${n}`)
+       logger.info(`   ${n}`)
     }
     ///////// TESTING ////////////////////////////////////////////////////////////////////
    //console.log(C.taxon_lookup)
@@ -431,10 +431,10 @@ Promise.all(promises)
     
     C.homd_stats         = helpers.calculate_homd_stats()
     
-    logger.info(`Dropped Taxa: ${C.dropped_taxids,C.dropped_taxids.length}`)
-    logger.info(`Reference Taxa: ${C.reference_taxids,C.reference_taxids.length}`)
-    logger.info(`C.taxa_with_subspecies ${C.taxa_with_subspecies,C.taxa_with_subspecies.length}`)
-    logger.info(`C.no_refseq_otids ${C.no_refseq_otids,C.no_refseq_otids.length}`)
+    logger.info(`Dropped Taxa:.............${C.dropped_taxids.length}`)
+    logger.info(`Reference Taxa:...........${C.reference_taxids.length}`)
+    logger.info(`C.taxa_with_subspecies....${C.taxa_with_subspecies.length}`)
+    logger.info(`C.no_refseq_otids.........${C.no_refseq_otids.length}`)
      //logger.info(JSON.stringify(C.homd_taxonomy, null, '\t'))
     let search_string = 'exo'
     let anno = 'prokka'

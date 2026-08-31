@@ -302,7 +302,7 @@ and (min-width : 1824px) {
                 <input type='checkbox' class='filter_ckbx' id='adv_chromosome' name='chromosome' onclick='adv_update_sb()' \> Chromosome&nbsp;
             <% } %>
            
-            <small><span  id='adv_toggle_cb_levels_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_levels('off')">Toggle CheckBoxes On/Off</a></span></small>
+            <small><span  id='adv_toggle_cb_levels_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_levels('off')">Toggle On/Off</a></span></small>
              
              
          
@@ -384,11 +384,7 @@ and (min-width : 1824px) {
                 <input type='checkbox'         class='filter_ckbx' id='adv_environmental' name='environmental' onclick='adv_update_sb()' \> Environmental&nbsp;&nbsp;&nbsp;
             <% } %>
             
-            <% if(fltr.site.reference === 'on'){ %>
-                <input title='Was NonOralRef' type='checkbox' checked class='filter_ckbx' id='adv_reference' name='reference' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
-            <% }else{ %>
-                <input title='Was NonOralRef' type='checkbox'         class='filter_ckbx' id='adv_reference' name='reference' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
-            <% } %>
+            
             
             <% if(fltr.site.unassigned === 'on'){ %>
                 <input type='checkbox' checked class='filter_ckbx' id='adv_unassigned' name='unassigned' onclick='adv_update_sb()' \> Unassigned&nbsp;&nbsp;
@@ -396,7 +392,7 @@ and (min-width : 1824px) {
                 <input type='checkbox'         class='filter_ckbx' id='adv_unassigned' name='unassigned' onclick='adv_update_sb()' \> Unassigned&nbsp;&nbsp;
             <% } %> 
             
-            <span  id='adv_toggle_cb_sites_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_sites('off')">Toggle CheckBoxes On/Off</a></span>
+            <span  id='adv_toggle_cb_sites_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_sites('off')">Toggle On/Off</a></span>
 
              
          
@@ -434,7 +430,7 @@ and (min-width : 1824px) {
             <% }else{ %>
                 <input type='checkbox'         class='filter_ckbx' id='adv_scarce_abund' name='scarce_abund' onclick='adv_update_sb()' \> Scarce&nbsp;&nbsp;
             <% } %>
-           <span  id='adv_toggle_cb_abund_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_abund('off')">Toggle CheckBoxes On/Off</a></span>
+           <span  id='adv_toggle_cb_abund_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_abund('off')">Toggle On/Off</a></span>
 </td><td></td>
 </tr>
 <tr><td class='spacer'></td></tr>
@@ -464,9 +460,13 @@ and (min-width : 1824px) {
                 <input type='checkbox'         class='filter_ckbx' id='adv_phylotype' name='phylotype' onclick='adv_update_sb()' \> Phylotype&nbsp;&nbsp;&nbsp;
             <% } %>
             
-            
+            <% if(fltr.status.reference === 'on'){ %>
+                <input type='checkbox' checked class='filter_ckbx' id='adv_reference' name='reference' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
+            <% }else{ %>
+                <input type='checkbox'  class='filter_ckbx' id='adv_reference' name='reference' onclick='adv_update_sb()' \> Reference&nbsp;&nbsp;&nbsp;
+            <% } %>
              
-             <span  id='adv_toggle_cb_status_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_status('off')">Toggle CheckBoxes On/Off</a></span>
+             <span  id='adv_toggle_cb_status_span'><a class="pill pill-btn" href='#' onclick="adv_toggle_cb_status('off')">Toggle On/Off</a></span>
          
 </td><td></td>
 </tr>
