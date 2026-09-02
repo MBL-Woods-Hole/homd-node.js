@@ -1664,7 +1664,7 @@ router.get('/pangenome_image2', async function pangenome_image(req, res) {
        ext = req.query.ext
        pg = req.query.pg
        //filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
-       filepath = ENV.FILEPATH_TO_FTP+"/pangenomes/V11.02/svg/"+req.query.pg+".svg"
+       filepath = ENV.FILEPATH_TO_FTP+"/pangenomes/V11.02/svg/"+req.query.pg+"-pangenome.svg"
        logger.info('fpath '+filepath)
        const originalSvg = await fs.readFile(filepath, 'utf8');
        //const json = await parse(svgString)
