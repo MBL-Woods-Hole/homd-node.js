@@ -408,6 +408,7 @@ p {
 .dropdown-homd{
    font-size:15px;
    height:25px;
+   width:150px;
    border:1px solid brown;
 }
 .pull_right{

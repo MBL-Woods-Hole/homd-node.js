@@ -584,7 +584,9 @@ function renderTaxonDescription(req, res, args) {
     refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
     links: JSON.stringify(args.links),
     sites: JSON.stringify(args.sites),
+    sites2: JSON.stringify(args.sites2),
     gtdb: JSON.stringify(args.gtdbtax),
+    strains: JSON.stringify(args.gstrains),
     otid_has_abundance: args.otid_has_abundance,
     //lineage: args.lineage_string,
 
@@ -610,7 +612,9 @@ function renderTaxonDescriptionTEMP(req, res, args) {
     refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
     links: JSON.stringify(args.links),
     sites: JSON.stringify(args.sites),
+    sites2: JSON.stringify(args.sites2),
     gtdb: JSON.stringify(args.gtdbtax),
+    strains: JSON.stringify(args.gstrains),
     otid_has_abundance: args.otid_has_abundance,
     //lineage: args.lineage_string,
 
@@ -722,10 +726,12 @@ router.get('/tax_description', async function TaxDescription(req, res) {
     args.links = links
     args.sites = sites
     args.otid_has_abundance = false
+    args.gstrains = {}
     //args.lineage = lineage_string
     renderTaxonDescription(req, res, args)
     return
   }  // END DROPPED
+  
   
   lineage = C.taxon_lineage_lookup[otid]  // dropped not in lineage lookup use hierarchy
   logger.info(`lineage: ${lineage}`)
@@ -807,6 +813,12 @@ router.get('/tax_description', async function TaxDescription(req, res) {
         sites += '<br><small>Note: ' + C.site_lookup[otid].subsite_of_primary + '</small>'
       }
     }
+    let gstrains = {}
+    for(let n in lookup_data.genomes){
+         gstrains[lookup_data.genomes[n]] = C.genome_lookup[lookup_data.genomes[n]].strain
+    }
+    
+    let sites2 = C.site_lookup[otid]
     let args = { otid: otid }
     args.image_array = image_array
     args.data1 = lookup_data
@@ -823,7 +835,9 @@ router.get('/tax_description', async function TaxDescription(req, res) {
     args.refseq_info = refseq
     args.links = links
     args.sites = sites
+    args.sites2 = sites2
     args.otid_has_abundance = otid_has_abundance
+    args.gstrains = gstrains
 
     //args.lineage = lineage_string
     args.lin = lineage

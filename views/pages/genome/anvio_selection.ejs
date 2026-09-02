@@ -42,7 +42,7 @@ thead th { position: sticky; top: 0; }
   position: absolute;
   background:lightblue;
   font-size:16px;
-  width:200px;  /* This sets the box width to allow cursor contact */
+  
   padding:10px;
   margin:0px;
   border:1px solid black;
@@ -51,6 +51,7 @@ thead th { position: sticky; top: 0; }
   z-index: 2;
   max-height: 200px;
   overflow:auto;
+  text-align:left;
   
 }
 .link{
@@ -99,6 +100,7 @@ thead th { position: sticky; top: 0; }
 <% cfg = JSON.parse(config) %>
 <% sorted = JSON.parse(sorted_pg) %>
 <% var version_info=JSON.parse(ver_info) %>
+<% gstrains = JSON.parse(strains) %>
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -174,7 +176,7 @@ This Table Length: <%= thiscount %>
           <% }else{ %>
              <span class="dd-menu">
                <span class='link'><%= pgs[pg].scope %></span>
-               <div class="dropdown-content">
+               <div class="dropdown-content" style='width:200px;'>
                  <% for(n in pgs[pg].otids){ %>
                     <li><%= parseInt(n)+1 %>) <a href='/taxa/tax_description?otid=<%= pgs[pg].otids[n] %>'>HMT-<%= pgs[pg].otids[n].toString().padStart(3, '0'); %></a>
                  <% } %>
@@ -194,9 +196,12 @@ This Table Length: <%= thiscount %>
                  id-list
                 
                
-               <div class="dropdown-content">
+               <div class="dropdown-content" style='width:400px;'>
                  <% for(n in pgs[pg].gids){ %>
-                    <li><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= pgs[pg].gids[n] %>'><%= pgs[pg].gids[n] %></a>
+                    <li><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= pgs[pg].gids[n] %>'>
+                     <%= pgs[pg].gids[n] %>
+                     <small><%= gstrains[pgs[pg].gids[n]] %></small>
+                     </a>
                  <% } %>
                
                </div>
@@ -209,9 +214,12 @@ This Table Length: <%= thiscount %>
              <span class="dd-menu">
                ( <span class='link'>id-list</span> )
                
-               <div class="dropdown-content">
+               <div class="dropdown-content" style='width:400px;'>
                  <% for(n in pgs[pg].gids){ %>
-                    <li><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= pgs[pg].gids[n] %>'><%= pgs[pg].gids[n] %></a>
+                    <li><%= parseInt(n)+1 %>) <a href='/genome/genome_description?gid=<%= pgs[pg].gids[n] %>'>
+                        <%= pgs[pg].gids[n] %>
+                        <small><%= gstrains[pgs[pg].gids[n]] %></small>
+                        </a>
                  <% } %>
                
                </div>
@@ -219,20 +227,12 @@ This Table Length: <%= thiscount %>
            <% } %>
         </td>
         
-        <!-- 
-<td class='center'>
-           <span class="dd-menu">
-             <span class='pill pill-aqua'>hover</span>
-        
-            <div class="dropdown-content">
-              <%- // pgs[pg].description %>
-            </div>
-          </span>
-        </td>
- -->
         
         <td class='center'>
-          download <small>(<a href='/download/pg/targz/<%= pg %>'>tar.gz</a>)&nbsp;&nbsp;(<a href='/download/pg/sha256/<%= pg %>'>sha256</a>)</small>
+          <small>
+         <a href='<%= cfg.HOMD_URL_BASE %>ftp/pangenomes/V11.02/targz/<%= pg %>.tar.gz'>download</a>&nbsp;&nbsp;
+         (<a href='<%= cfg.HOMD_URL_BASE %>ftp/pangenomes/V11.02/targz/<%= pg %>.tar.gz.sha256'>sha256</a>)
+         </small>
         </td>
      
       

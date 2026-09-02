@@ -357,6 +357,55 @@ function clear_filter_form(){
 //     }
 //     xmlhttp.send(JSON.stringify(args));
 // }
+function get_refseqs(val_array) {
+    if(!val_array){
+       return
+    }
+    //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+    let X = JSON.parse(val_array)
+    if(X.length === 0){
+       return
+    }
+    let hmt = X[0]
+    let refseqid = X[1]
+    let species = X[2]
+    let seqids = X[3]
+    var defline = '>'+refseqid+' | '+hmt+' | '+species+' | seqids:'+seqids
+    
+    var args={}
+    args.refseqid = refseqid
+    var xmlhttp = new XMLHttpRequest();
+    //use fake url to avoid error
+    var win = window.open("http://example.com/waiting.html", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+    var doc = win.document;
+    doc.open("text/html");
+    
+    xmlhttp.open("POST", "/taxa/get_refseq", true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var resp = xmlhttp.responseText;
+        //console.log(resp)
+        text = ''
+        //text += '<pre>'+defline+'<br>'
+        text = '<pre>'
+        text += defline+'\n'
+        text += resp
+        text += '</pre>'
+    //var win = window.open("about:blank", null, "menubar=no,status=no,toolbar=no,location=no,width=650,height=500");
+    //var doc = win.document;
+    //doc.writeln("<title>yourtitle</title>");
+        doc.title = 'eHOMD Reference Sequence'
+    //doc.open("text/html");
+    
+        doc.write("<title>eHOMD Reference Sequence</title>"+text);
+        doc.close();
+        
+        
+      }
+    }
+    xmlhttp.send(JSON.stringify(args));
+}
 function get_refseqV16(hmt,refseqid,species,seqids) {
     
     //<!-- >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->

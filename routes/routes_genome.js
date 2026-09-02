@@ -1454,10 +1454,16 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 //
 router.get('/anvio_pangenomes', function anvio_pangenomes_GET(req, res){
     //let q = queries.get_all_pangenomes_query()
-    logger.info(`in GET anvio selection ${req.query}`)
+    logger.info(`in GET anvio selection`)
     
     let pg_list = Object.keys(C.pangenome_lookup)
     let tot_count = pg_list.length
+    let gstrains = {}
+    for(let n in C.pangenome_lookup){
+       for(let i in C.pangenome_lookup[n].gids){
+          gstrains[C.pangenome_lookup[n].gids[i]] = C.genome_lookup[C.pangenome_lookup[n].gids[i]].strain
+       }
+    }
     if(req.query && req.query.filter){
         
         let search_term = req.query.filter.toLowerCase()
@@ -1466,12 +1472,15 @@ router.get('/anvio_pangenomes', function anvio_pangenomes_GET(req, res){
         }
         let collector = []
         let new_pg_obj = {}
+       
         for(let i in pg_list){
             if(pg_list[i].toLowerCase().includes(search_term)){
                 collector.push(pg_list[i])
+                
                 new_pg_obj[pg_list[i]] = C.pangenome_lookup[pg_list[i]]
             }
         }
+        
         collector.sort()
         res.render('pages/genome/anvio_selection', {
             title: 'HOMD :: Pangenomes', 
@@ -1483,9 +1492,11 @@ router.get('/anvio_pangenomes', function anvio_pangenomes_GET(req, res){
             thiscount: collector.length,
             pangenomes: JSON.stringify(new_pg_obj),
             sorted_pg:  JSON.stringify(collector),
+            strains: JSON.stringify(gstrains)
             
         })
     }else{
+        
         
         pg_list.sort()
         //logger.info(C.pangenome_lookup[pg_list[2]])
@@ -1499,7 +1510,7 @@ router.get('/anvio_pangenomes', function anvio_pangenomes_GET(req, res){
             thiscount: tot_count,
             pangenomes: JSON.stringify(C.pangenome_lookup),
             sorted_pg:  JSON.stringify(pg_list),
-            
+            strains: JSON.stringify(gstrains)
         })
     }
     return
@@ -1533,6 +1544,7 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
            collector.push(pnames[i])
         }
     }
+     
     collector.sort()
     for(let n in collector){
         pg = collector[n]
@@ -1551,9 +1563,10 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
         if(obj.scope === "HMT"){
             html_rows += " ( <span class='dd-menu link'>"
             html_rows += "    id-list"
-            html_rows += "   <div class='dropdown-content'>"
+            html_rows += "   <div class='dropdown-content' style='width:400px;'>"
                  for(let m in obj.gids){
-                    html_rows += "<li>"+ (parseInt(m)+1).toString() + ") <a href='/genome/genome_description?gid="+obj.gids[m]+"'>"+obj.gids[m]+"</a>"
+                    html_rows += "<li>"+ (parseInt(m)+1).toString() + ") <a href='/genome/genome_description?gid="+obj.gids[m]+"'>"
+                    html_rows += obj.gids[m]+" "+C.genome_lookup[obj.gids[m]].strain+"</a>"
                  }
             html_rows += " </div>"
             html_rows += " </span> )"
@@ -1563,17 +1576,23 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
         }else{   // scope === 'Species'
             html_rows += "  <span class='dd-menu'>"
             html_rows += "       ( <span class='link'>id-list</span> )"
-            html_rows += "       <div class='dropdown-content'>"
+            html_rows += "       <div class='dropdown-content' style='width:400px;'>"
                 for(let m in obj.gids){
-                    html_rows += "<li>"+ (parseInt(m)+1).toString() + ") <a href='/genome/genome_description?gid="+obj.gids[m]+"'>"+obj.gids[m]+"</a>"
+                    html_rows += "<li>"+ (parseInt(m)+1).toString() + ") <a href='/genome/genome_description?gid="+obj.gids[m]+"'>"
+                    html_rows += obj.gids[m]+" "+C.genome_lookup[obj.gids[m]].strain+"</a>"
                 }
             html_rows += "       </div>"
             html_rows += "     </span>"
         }
         html_rows +=  "</td>"
         
-        html_rows += "<td class='center'>download <small>(<a href='/download/pg/targz/"+pg+"'>tar.gz</a>)"
-        html_rows += "&nbsp;&nbsp;(<a href='/download/pg/sha256/"+pg+"'>sha256</a>)</small>"
+        // <a href='<%= cfg.HOMD_URL_BASE %>ftp/pangenomes/V11.02/targz/<%= pg %>.tar.gz'>download</a>&nbsp;&nbsp;
+        // (<a href='<%= cfg.HOMD_URL_BASE %>ftp/pangenomes/V11.02/targz/<%= pg %>.tar.gz.sha256'>sha256</a>)
+        html_rows += "<td class='center'><small><a href='"+ENV.HOMD_URL_BASE+"/ftp/pangenomes/V11.02/targz/"+pg+".tar.gz'>download</a>"
+        html_rows += "&nbsp;&nbsp;(<a href='"+ENV.HOMD_URL_BASE+"/ftp/pangenomes/V11.02/targz/"+pg+".tar.gz.sha256'>sha256</a>)</small>"
+        
+        //html_rows += "<td class='center'>download <small>(<a href='/download/pg/targz/"+pg+"'>tar.gz</a>)"
+        //html_rows += "&nbsp;&nbsp;(<a href='/download/pg/sha256/"+pg+"'>sha256</a>)</small>"
         html_rows += "</td>"
         html_rows += "</tr>"
     }
@@ -1625,7 +1644,7 @@ router.get('/anvio', (req, res) => {
         })
 });
 router.get('/pangenome_image', async function pangenome_image(req, res) {
-    //logger.info(req.query)
+    logger.info('pangenome_image')
     let otid,pg,ext,filepath
 
        // get directly from files system using ext and pg name
@@ -1637,15 +1656,16 @@ router.get('/pangenome_image', async function pangenome_image(req, res) {
 //    }
 })
 router.get('/pangenome_image2', async function pangenome_image(req, res) {
-    logger.info(req.query)
+    logger.info('pangenome_image2')
     //const { parse, stringify } = require('svgson')
     
     let otid,pg,ext,filepath
     
        ext = req.query.ext
        pg = req.query.pg
-       filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
-       //logger.info('fpath',filepath)
+       //filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
+       filepath = ENV.FILEPATH_TO_FTP+"/pangenomes/V11.02/svg/"+req.query.pg+".svg"
+       logger.info('fpath '+filepath)
        const originalSvg = await fs.readFile(filepath, 'utf8');
        //const json = await parse(svgString)
        
