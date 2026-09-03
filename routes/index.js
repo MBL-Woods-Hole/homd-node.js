@@ -496,6 +496,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     let q = "SELECT genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM "+annoUpper+".gff_fullsearch"
     q += " WHERE MATCH(attribute_product,attribute_gene) AGAINST('"+search_string+"' IN BOOLEAN MODE);"
     console.log(q)
+    try{
     const rows = await queries.run_query(q, req,res)
     
     
@@ -670,6 +671,11 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
             
     })
+    catch(e){
+          logger.error(e);
+      }
+      
+    return
 })
 
 // router.post('/advanced_site_search_anno_flex', async function advanced_site_search_anno_flexPOST(req, res) {
