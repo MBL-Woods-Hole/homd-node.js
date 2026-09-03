@@ -508,7 +508,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     //stream.on('data', (row) => writable.write(JSON.stringify(row) + '\n'));
     stream.on('data', (row) => {
     // Process each row one by one without loading all into memory
-        console.log('Processed row:', row);
+        //console.log('Processed row:', row);
         gid = row.gid
             
         gid_count[gid] = 1
@@ -548,8 +548,6 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         
         
     })
- 
-
 
     stream.on('error', (err) => {
         console.log('Stream error:', err);
@@ -589,7 +587,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         
         
     });
-   console.log('end?')
+   
 
 return
     
