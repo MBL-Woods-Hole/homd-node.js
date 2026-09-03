@@ -103,7 +103,7 @@ a{
 }
 #downloadMenu li{
     padding:5px 2px;
-    text-decoration:underline;
+   /*  text-decoration:underline; */
     
 }
 </style>
@@ -122,14 +122,15 @@ a{
     <div  class="" >
      <div  id="downloadMenu" >
       <div class="list-group">
-        <li id='menu-top'><a href='/download/download/all'>[top]</a></li>
-        <li id='menu-taxon'><a href='#' onclick="shift_page_view('taxon')">Taxonomy Data</a></li>
-        <li id='menu-abundance'><a href='#' onclick="shift_page_view('abundance')">Abundance Data</a></li>
+        <li id='menu-top'><a href='/download/download/all'>[MENU]</a></li>
+        <li id='menu-taxon'><a href='#' onclick="shift_page_view('taxon')">Taxonomy</a></li>
+        <li id='menu-abundance'><a href='#' onclick="shift_page_view('abundance')">Abundances</a></li>
         <li id='menu-genome'><a href='#' onclick="shift_page_view('genome')">Genomic Data</a></li>
         <li id='menu-phylo'><a href='#' onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
+        <li id='menu-pangenome'><a href='#' onclick="shift_page_view('pangenome')">Pangenomes</a></li>
         <li id='menu-peptide'><a href='#' onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
         <li id='menu-phage'><a href='#' onclick="shift_page_view('phage')">Phage Data</a></li>
-        <li id='menu-crispr'><a href='#' onclick="shift_page_view('crispr')">Crispr-Cas & AMR Data</a></li>
+        <li id='menu-crispr'><a href='#' onclick="shift_page_view('crispr')">Crispr-Cas & AMR</a></li>
         <li id='menu-refseq'><a href='#' onclick="shift_page_view('refseq')">16S rRNA Sequences</a></li>
         <li id='menu-schema'><a href='#' onclick="shift_page_view('schema')">Database Schema</a></li>
       </div>
@@ -328,7 +329,7 @@ a{
   </div>
   <table class='download-table' >
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
-    <tr><td>Go To Current &nbsp;&nbsp;&nbsp;[<a href="<%= cfg.HOMD_URL_BASE %>ftp/phylogenetic_trees/refseq/current">RefSeq</a>] 
+    <tr><td>Current &nbsp;&nbsp;&nbsp;[<a href="<%= cfg.HOMD_URL_BASE %>ftp/phylogenetic_trees/refseq/current">RefSeq</a>] 
       &nbsp;&nbsp;&nbsp;[<a href="<%= cfg.HOMD_URL_BASE %>ftp/phylogenetic_trees/genome/current">Genome</a>]&nbsp;&nbsp;&nbsp;FTP Directory</td>
         <td></td>
         <td></td>
@@ -357,6 +358,28 @@ a{
   </table>
   </center>
 </div>
+
+<hr>
+<a name='pangenome'></a>
+
+<div id='pangenome' class='dnld-block'>
+  <center>
+  <div class='subtitle'>
+    Pangenomes <small>[<a href='/genome/anvio_pangenomes'>Visit Pangenomes Table</a>]</small>
+  </div>
+  <table class='download-table' >
+    <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
+    <tr><td colspan='2'>Current <a href="<%= cfg.HOMD_URL_BASE %>ftp/pangenomes/V11.02">Pangenomes FTP Directory</a></td>
+        <td>*.tar.gz data files and .svg image files</td>
+        
+        
+    </tr>
+    
+  </table>
+  </center>
+</div>
+
+
 
 <hr>
 <a name='peptide'></a>
@@ -637,7 +660,7 @@ a{
   }
   function shift_page_view(item){
     //all_groups = ['top','taxon','abundance','genome','phylo','phage','refseq','schema']
-    all_groups = ['topx','taxon','abundance','genome','phylo','peptide','phage','crispr','refseq','schema']
+    all_groups = ['topx','taxon','abundance','genome','phylo','pangenome','peptide','phage','crispr','refseq','schema']
     for(g in all_groups){
       if(all_groups[g] != 'topx'){
         group = document.getElementById(all_groups[g]).getElementsByClassName("subtitle")[0]

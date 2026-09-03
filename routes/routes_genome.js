@@ -1534,7 +1534,12 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
     html_head += "<th class='center'>Scope</th>"
     html_head += "<th class='center'>Genome<br>Count</th>"
     //html_head += "<th class='sorttable_nosort center'>Notes</th>"
-    html_head += "<th class='sorttable_nosort'></th>"
+    
+    
+    html_head += "<th class='center sorttable_nosort'>Download Files"
+    html_head += "<br><small>[<a style='color:orange;' href='"+ENV.HOMD_URL_BASE+"ftp/pangenomes/V11.02'>FTP Site</a>]</small></th>"
+  
+  
     html_head += "</tr>"
     html_head += "</thead><tbody>"
     let collector = []
@@ -1661,28 +1666,28 @@ router.get('/pangenome_image2', async function pangenome_image(req, res) {
     
     let otid,pg,ext,filepath
     
-       ext = req.query.ext
-       pg = req.query.pg
-       //filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
-       filepath = ENV.FILEPATH_TO_FTP+"/pangenomes/V11.02/svg/"+req.query.pg+"-pangenome.svg"
-       logger.info('fpath '+filepath)
-       const originalSvg = await fs.readFile(filepath, 'utf8');
-       //const json = await parse(svgString)
-       
-       let updatedSvg = await deleteElementById(originalSvg, 'legend_group')
-       updatedSvg =     await deleteElementById(updatedSvg,  'layer_legend')
-       updatedSvg =    await deleteElementById(updatedSvg,  'bin_legend')
-       updatedSvg =    await changeSvgFontById(updatedSvg,  'title_group')
-        
+    ext = req.query.ext
+    pg = req.query.pg
+    if(ENV.ENV === "localhost"){
+        filepath = ENV.PATH_TO_STATIC_DOWNLOADS + "/pangenomes/V11.02/"+ext+'/'+req.query.pg+'-pangenome.'+ext
+    }else{
+        filepath = ENV.FILEPATH_TO_FTP+"/pangenomes/V11.02/svg/"+req.query.pg+"-pangenome.svg"
+    }
+    logger.info('fpath '+filepath)
+    const originalSvg = await fs.readFile(filepath, 'utf8');
+    //const json = await parse(svgString)
+    
+    let updatedSvg = await deleteElementById(originalSvg, 'legend_group')
+    updatedSvg =     await deleteElementById(updatedSvg,  'layer_legend')
+    updatedSvg =    await deleteElementById(updatedSvg,  'bin_legend')
+    updatedSvg =    await changeSvgFontById(updatedSvg,  'title_group')
 
-
-
-       //logger.info(pretty(updatedSvg))
-        res.writeHead(200, {
-            "Content-Type": "image/svg+xml",
-            "Content-Length": Buffer.byteLength(updatedSvg)
-        });
-        res.end(updatedSvg);
+    //logger.info(pretty(updatedSvg))
+    res.writeHead(200, {
+        "Content-Type": "image/svg+xml",
+        "Content-Length": Buffer.byteLength(updatedSvg)
+    });
+    res.end(updatedSvg);
        
 })
 async function changeSvgFontById(svgString, targetId) {
