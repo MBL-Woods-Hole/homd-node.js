@@ -500,9 +500,9 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     if(total_length == 0){
         logger.info("Nothing found for string: `"+search_string+"` in "+annoUpper)
         obj2 = {no_data:'No Data'}
-    }else if(total_length >= allowed_max){
-        logger.info("Over MAX - `"+search_string+"` in "+annoUpper+' (Rows Found: '+total_length.toString()+'; Max:'+allowed_max.toString()+')')
-        obj2 = {too_long:'too_long'}
+   //  }else if(total_length >= allowed_max){
+//         logger.info("Over MAX - `"+search_string+"` in "+annoUpper+' (Rows Found: '+total_length.toString()+'; Max:'+allowed_max.toString()+')')
+//         obj2 = {too_long:'too_long'}
         
     }else{
         for(let n in rows){
