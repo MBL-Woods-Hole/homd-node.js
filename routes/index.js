@@ -671,6 +671,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
             
     })
+    }
     catch(e){
           logger.error(e);
       }
