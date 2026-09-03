@@ -643,6 +643,10 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         }
         
     }
+    }
+    catch(e){
+          logger.error(e);
+    }
     res.render('pages/full_site_search_results', {
         title: 'HOMD :: Search Results',
         pgname: '', // for AboutThisPage 
@@ -671,10 +675,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
             
     })
-    }
-    catch(e){
-          logger.error(e);
-      }
+    
       
     return
 })
