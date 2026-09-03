@@ -25,9 +25,9 @@ export const run_query_stream = async (sql, res) => {
   
   helpers.logPoolStatus(pool, sql)
   try {
-    const connection = await pool.getConnection();
+    const conn = await pool.getConnection();
       
-    const [queryStream] = await connection.query(sql) //.stream();
+    const queryStream = await conn.connection.query(sql).stream();
     return queryStream;
   } catch (e) {
     logger.error(`Database Query Error: ${e}`);
