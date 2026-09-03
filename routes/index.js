@@ -545,8 +545,6 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
             sort_lst.push({gid:gid,species:species,strain:strain})
             obj2[gid] = [tmp_obj]
         }
-        
-        
     })
 
     stream.on('error', (err) => {
@@ -554,7 +552,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     })
 
     stream.on('end', () => {
-        //console.log('Streaming finished.');
+        console.log('Streaming finished.');
         //console.log('obj2',obj2)
         res.render('pages/full_site_search_results', {
             title: 'HOMD :: Search Results',
