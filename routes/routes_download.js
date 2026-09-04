@@ -499,6 +499,7 @@ router.post('/anno_search_data', async (req, res) => {
     //logger.info('unique_lst',unique_pidlst)
     if(anno.toUpperCase() === 'BAKTA'){
         if(format === 'fasta_aa'){
+            type = 'text'
             q = "SELECT CONCAT('>Bakta | ',a.region,' | ', a.genome_id,' | ',"
             q += " a.attribute_locus_tag,' | ',start,'..',end,' | length:',b.length_aa) AS defline,"
             q += " UNCOMPRESS(seq_compressed) as sequence"
@@ -535,6 +536,8 @@ router.post('/anno_search_data', async (req, res) => {
         // PROKKA and NCBI
         
         if(format === 'fasta_aa'){
+            
+            type = 'text'
             q = "SELECT"
             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',"+anno_cap+".orf.region,' | ',protein_id) AS defline,"
             q += " UNCOMPRESS(seq_compressed) AS sequence"
@@ -542,6 +545,7 @@ router.post('/anno_search_data', async (req, res) => {
             //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
         
         }else if(format === 'fasta_na'){
+            type = 'text'
             q = "SELECT"
             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',"+anno_cap+".orf.region,' | ',protein_id) AS defline,"
             q += " UNCOMPRESS(seq_compressed) AS sequence"
@@ -567,7 +571,6 @@ router.post('/anno_search_data', async (req, res) => {
                 'Subspecies',
                 'Strain',
                 'Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
-             
         }
         
     }
@@ -593,6 +596,7 @@ router.post('/anno_search_data', async (req, res) => {
         
         if (type === 'browser') {
             res.set('Content-Type', 'text/plain') // <= important - allows tabs to display
+        
         } else if (type === 'text') {
             
             let fname = 'HOMD_search'+anno_cap+ dt.today + '_' + dt.seconds + ext
