@@ -111,14 +111,30 @@
       </table>
      
       
+      
+      
+      
   </form>
    <form id='adv-search-form-anno_mysql'  class='search-form' method='POST' action='advanced_site_search_anno_mysql'>  <!~~ advanced_site_search_annotations ~~>
-      <br><span id='srch-anno-mysql' class='mid-title'>(TESTING) SQL FullText Search Annotations</span>
+      <br><span id='srch-anno' class='mid-title'>Search Annotations</span>
       <table id='anno-table-mysql' class='table'>
       <tr><td>
-        Searches Gene and Gene Product (whole words only)
+        <input type='radio' name='anno_search_type' value='mysql_fullsearch' />
+        Searches: Whole Words Only
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;Scope: Gene and Gene Product
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;[Faster]
+        
         </td>
       </tr>
+      <tr><td>
+        <input type='radio' checked name='anno_search_type' value='grep_search'/>
+        Searches: Whole and Partial Words<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;Scope: Genome-ID, Accession (Region), Protein-ID, Gene and Gene Product
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;[Slower]
+        
+        </td>
+      </tr>
+      
       <tr><td>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <input type='radio' class='anno_cb_mysql' checked id='prokka_cb_anno_mysql' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;
@@ -133,7 +149,7 @@
         <td>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_anno_mysql' value='' maxlength='80' size='50' /> 
-          <!~~ <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \> ~~>
+          <!~~ <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \>
           <button id="submit-button-mysql" type="button" class='submit-button'>Submit</button>
         </td>
       </tr>
@@ -143,107 +159,18 @@
       
       <input type="hidden" id="refreshed" value="no">
   </form>
- <!-- 
- 
-  <form id='adv-search-form-anno_flex'  class='search-form' method='POST' action='advanced_site_search_anno_flex'>  <!~~ advanced_site_search_annotations ~~>
-      <br><span id='srch-anno-flex' class='mid-title'>(TESTING) FlexSearch Annotations</span>
-      <table id='anno-table-flex' class='table'>
-      <tr><td>
-        Searches: Genome-ID, Accession (Region), Protein-ID, Gene and Gene Product
-        </td>
-      </tr>
-      <tr><td>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_flex' checked id='prokka_cb_anno_flex' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_flex' id='ncbi_cb_flex' name='anno' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;
-        <input type='radio' class='anno_cb_flex' id='bakta_cb_flex' name='anno' value='bakta'  > 
-        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
-        
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Enter Search Text: 
-          <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_anno_flex' value='' maxlength='80' size='50' /> 
-          <!~~ <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \> ~~>
-          <button id="submit-button-flex" type="button" class='submit-button'>Submit</button>
-        </td>
-      </tr>
-      
-      </table>
-     
-      
-      <input type="hidden" id="refreshed" value="no">
-  </form>
+
   
- -->
  
-<!-- 
-   <form id='adv-search-form-anno_grepts'  class='search-form' method='POST' action='advanced_site_search_anno_grepts'>  <!~~ advanced_site_search_annotations ~~>
-      <br><span id='srch-anno-grepts' class='mid-title'>(TESTING) GREPTS Annotations</span>
-      <table id='anno-table-grepts' class='table'>
-      <tr><td>
-        Searches: Genome-ID, Accession (Region), Protein-ID, Gene and Gene Product
-        </td>
-      </tr>
-      <tr><td>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_grepts' checked id='prokka_cb_anno_grepts' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_grepts' id='ncbi_cb_grepts' name='anno' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;
-        <input type='radio' class='anno_cb_grepts' id='bakta_cb_grepts' name='anno' value='bakta'  > 
-        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
-        
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Enter Search Text: 
-          <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_anno_grepts' value='' maxlength='80' size='50' /> 
-          <!~~ <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \> ~~>
-          <button id="submit-button-grepts" type="button" class='submit-button'>Submit</button>
-        </td>
-      </tr>
-      
-      </table>
-     
-      
-      <input type="hidden" id="refreshed" value="no">
-  </form>
- -->
   
-  <form id='adv-search-form-anno_grep'  class='search-form' method='POST' action='advanced_site_search_anno_grep'>  <!-- advanced_site_search_annotations -->
-      <br><span id='srch-anno' class='mid-title'>Search the Annotations Database</span>
-      <table id='anno-table' class='table'>
-      <tr><td>
-        Searches: Genome-ID, Accession (Region), Protein-ID, Gene and Gene Product
-        </td>
-      </tr>
-      <tr><td>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_grep' checked id='prokka_cb_grep' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_grep' id='ncbi_cb_grep' name='anno' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;
-        <input type='radio' class='anno_cb_grep' id='bakta_cb_grep' name='anno' value='bakta'  > 
-        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
-        
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Enter Search Text: 
-          <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_anno_grep' value='' maxlength='80' size='50' /> 
-          <!-- <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \> -->
-          <button id="submit-button-anno" type="button" class='submit-button'>Submit</button>
-        </td>
-      </tr>
-      
-      </table>
-     
-      
-      <input type="hidden" id="refreshed" value="no">
-  </form>
+  
+  
+  
+  
+  
+  
+  
+  
   
   <form id='adv-search-form-phage_grep'  class='search-form' method='POST' action='advanced_site_search_phage_grep'>  <!-- advanced_site_search_annotations -->
       <br><span id='srch-phage' class='mid-title'>Search the Phage Database</span>
@@ -297,17 +224,17 @@
   }
   
   const f_tax = document.getElementById('adv-search-form-tax');
-  const f_anno = document.getElementById('adv-search-form-anno_grep');
-  const f_flex = document.getElementById('adv-search-form-anno_flex');
+ // const f_anno = document.getElementById('adv-search-form-anno_grep');
+ // const f_flex = document.getElementById('adv-search-form-anno_flex');
   const f_mysql = document.getElementById('adv-search-form-anno_mysql');
-  const f_grepts = document.getElementById('adv-search-form-anno_grepts');
+  //const f_grepts = document.getElementById('adv-search-form-anno_grepts');
   const f_phage = document.getElementById('adv-search-form-phage_grep');
   
   const submit_button_tax = document.getElementById('submit-button-tax');
-  const submit_button_anno = document.getElementById('submit-button-anno');
-  const submit_button_flex = document.getElementById('submit-button-flex');
+ // const submit_button_anno = document.getElementById('submit-button-anno');
+  //const submit_button_flex = document.getElementById('submit-button-flex');
   const submit_button_mysql = document.getElementById('submit-button-mysql');
-  const submit_button_grepts = document.getElementById('submit-button-grepts');
+  //const submit_button_grepts = document.getElementById('submit-button-grepts');
   const submit_button_phage = document.getElementById('submit-button-phage');
   
   // TAX
@@ -339,45 +266,44 @@
     document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
   });
   
-  // ANNO
-  submit_button_anno.addEventListener('click', function() {
-    const checkboxes = document.getElementsByClassName('anno_cb_grep');
-    var cb_count = checkboxes.length
-    var ss = document.getElementById('search_text_anno_grep').value
-         //var ss = document.querySelector('#search_textx').value;
-         if(ss.length <=2){
-             alert('Search string is too short (must be at least 3 characters)!')
-             return
-         }
-    f_anno.requestSubmit();
-    document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
-  });
+
+  
   // MYSQL FULLSEARCH
   submit_button_mysql.addEventListener('click', function() {
     const checkboxes = document.getElementsByClassName('anno_cb_mysql');
     var cb_count = checkboxes.length
+    const search_type = document.querySelector('input[name="anno_search_type"]:checked');
+    let form = document.getElementById('adv-search-form-anno_mysql')
+    //console.log('action',form.action)
+    //console.log('search_type',search_type.value)
     var ss = document.getElementById('search_text_anno_mysql').value
          //var ss = document.querySelector('#search_textx').value;
-         if(ss.length <=2){
+    if(ss.length <=2){
              alert('Search string is too short (must be at least 3 characters)!')
              return
-         }
-    f_mysql.requestSubmit();
+    }
+    if(search_type.value === 'mysql_fullsearch'){
+        form.action = "advanced_site_search_anno_mysql";
+    }else{
+        form.action = "advanced_site_search_anno_grep";
+    }
+    form.submit()
+    //f_mysql.requestSubmit();
     document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
   });
   // GREPTS
-  submit_button_grepts.addEventListener('click', function() {
-    const checkboxes = document.getElementsByClassName('anno_cb_grepts');
-    var cb_count = checkboxes.length
-    var ss = document.getElementById('search_text_anno_grepts').value
-         //var ss = document.querySelector('#search_textx').value;
-         if(ss.length <=2){
-             alert('Search string is too short (must be at least 3 characters)!')
-             return
-         }
-    f_grepts.requestSubmit();
-    document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
-  });
+ //  submit_button_grepts.addEventListener('click', function() {
+//     const checkboxes = document.getElementsByClassName('anno_cb_grepts');
+//     var cb_count = checkboxes.length
+//     var ss = document.getElementById('search_text_anno_grepts').value
+//          //var ss = document.querySelector('#search_textx').value;
+//          if(ss.length <=2){
+//              alert('Search string is too short (must be at least 3 characters)!')
+//              return
+//          }
+//     f_grepts.requestSubmit();
+//     document.getElementById('adv-search-form-div').innerHTML = '<div class="loader-gif"><img id="" class="" align="center" src="/images/load_indicator_monobook.gif"> Searching ...</div>'
+//   });
   // FLEXSEARCH
 //   submit_button_flex.addEventListener('click', function() {
 //     const checkboxes = document.getElementsByClassName('anno_cb_flex');
