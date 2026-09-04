@@ -35,7 +35,7 @@
   },
   "scripts": {
     "test": "nodemon bin/start",
-    "debug": "NODE_ENV=development nodemon --max-old-space-size=4096 bin/homd-node-start",
+    "debug": "NODE_ENV=development nodemon --max-old-space-size=8192 bin/homd-node-start",
     "start": "NODE_ENV=production nodemon --max-old-space-size=4096 bin/homd-node-start",
     "search": "node bin/search.js"
   },
