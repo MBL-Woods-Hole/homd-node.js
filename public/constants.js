@@ -19,7 +19,7 @@ constants.version_information = {
 }
 constants.homd_stats = {}    // SEE helpers.calculate_homd_stats()
 
-constants.grep_search_max_rows = 500000  //100000 // up from 50000 on 2025-07-28
+constants.grep_search_max_rows = 70000  //500000  //100000 // up from 50000 on 2025-07-28
 constants.genomes_table_name = 'genomesV11.0'
 constants.genomes_prokka_table_name = 'genomes_prokkaV11.0'
 constants.genomes_ncbi_table_name = 'genomes_ncbiV11.0'

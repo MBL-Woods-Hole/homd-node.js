@@ -492,7 +492,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     let search_string = req.body.search_text
     let tmp_obj = {},gid_count = {},obj2={},sort_lst=[],total_length=0,otid,hmt,strain,species
     let gid
-    let allowed_max = 70000  // died at 73,000
+    let allowed_max = C.grep_search_max_rows  // died at 73,000
     //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
     let q = "SELECT genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM "+annoUpper+".gff_fullsearch"
     q += " WHERE MATCH(attribute_product,attribute_gene) AGAINST('"+search_string+"' IN BOOLEAN MODE);"
@@ -513,7 +513,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         //console.log('Processed row:', row);
         gid = row.gid
         cnt += 1
-        logger.info('count '+cnt.toString())
+        //logger.info('count '+cnt.toString())
         if(cnt >= allowed_max){
            stream.destroy();
         }
@@ -607,7 +607,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     logger.info(req.body,'body')
     const searchText = req.body.search_text.toLowerCase()
     const annoLower = req.body.anno
-    let allowed_max = 70000  // died at 73,000
+    let allowed_max = C.grep_search_max_rows  // died at 73,000
     const annoUpper = req.body.anno.toUpperCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
