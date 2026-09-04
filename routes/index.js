@@ -607,6 +607,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     logger.info(req.body,'body')
     const searchText = req.body.search_text.toLowerCase()
     const annoLower = req.body.anno
+    let allowed_max = 70000  // died at 73,000
     const annoUpper = req.body.anno.toUpperCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
@@ -646,7 +647,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         //logger.info('GREP CMD: '+grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
         //const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
-        const row_array = await execPromise(grep_cmd_base, args, max_rows);
+        const row_array = await execPromise(grep_cmd_base, args, allowed_max);
         //logger.info(row_array)
         //logger.info(row_array.length)
         let total_length = row_array.length - 1
