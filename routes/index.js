@@ -620,7 +620,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         
         //let filename = uuidv4();  //ENV.PATH_TO_TMP
         //let filepath = path.join(ENV.PATH_TO_TMP, filename)
-        let max_rows = C.grep_search_max_rows //see constants.js 50000
+        //let max_rows = C.grep_search_max_rows //see constants.js 50000
         
         let split_length = 6  // longer okay too
         //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
@@ -757,7 +757,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
             
             gid_count: Object.keys(gid_count).length,
             total_hits: total_length,
-            max: helpers.format_long_numbers(max_rows),
+            max: helpers.format_long_numbers(allowed_max),
             form_type: JSON.stringify(['annotations']),
             no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
                     
