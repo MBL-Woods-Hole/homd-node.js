@@ -497,7 +497,8 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     let q = "SELECT genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM "+annoUpper+".gff_fullsearch"
     q += " WHERE MATCH(attribute_product,attribute_gene) AGAINST('"+search_string+"' IN BOOLEAN MODE);"
     console.log(q)
-    try{
+    //try{
+    let cnt = 0
     const rows = await queries.run_query(q, req,res)
     
     
@@ -511,7 +512,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     // Process each row one by one without loading all into memory
         //console.log('Processed row:', row);
         gid = row.gid
-            
+        cnt += 1
         gid_count[gid] = 1
         total_length +=1
         tmp_obj = {
@@ -555,6 +556,8 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     stream.on('end', () => {
         console.log('Streaming finished.');
         //console.log('obj2',obj2)
+        console.log('Row Count',cnt)
+        
         res.render('pages/full_site_search_results', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
@@ -575,7 +578,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
             phage_sort_list: JSON.stringify([]),
             phage_lookup: JSON.stringify({}),
             phage_id_list: JSON.stringify([]),
-            
+            search_params: '(Searches only whole words in `Gene` and `Gene Product`):',
             gid_count: Object.keys(gid_count).length,
             total_hits: total_length,
             max: helpers.format_long_numbers(allowed_max),
@@ -588,300 +591,10 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     });
    
 
-return
-    
-    total_length = rows.length
-    if(total_length == 0){
-        logger.info("Nothing found for string: `"+search_string+"` in "+annoUpper)
-        obj2 = {no_data:'No Data'}
-    }else if(total_length >= allowed_max){
-        logger.info("Over MAX - `"+search_string+"` in "+annoUpper+' (Rows Found: '+total_length.toString()+'; Max:'+allowed_max.toString()+')')
-        obj2 = {too_long:'too_long'}
-        
-    }else{
-        for(let n in rows){
-            //console.log(rows[n])
-            gid = rows[n].gid
-            
-            gid_count[gid] = 1
-            //total_length +=1
-                //console.log(gid)
-            tmp_obj = {
-                          gid:      gid,
-                          otid:     '',
-                          hmt:      '',
-                          species:  '=>Genome Not Found in db<=',
-                          strain:   '',
-                          acc:      '',
-                          gene:     rows[n].gene,
-                          pid:      rows[n].pid,
-                          orf_id:   '',
-                          prod:     rows[n].product,
-                          type:     ''
-                        
-            }
-            if(gid && C.genome_lookup.hasOwnProperty(gid)){
-              //if(gid){
-                otid = C.genome_lookup[gid]['otid']
-                hmt = helpers.make_otid_display_name(otid),
-                strain = C.genome_lookup[gid]['strain']
-                species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
-                tmp_obj.species = species
-                tmp_obj.strain = strain
-                tmp_obj.otid = otid
-                tmp_obj.hmt = hmt
-            }
-                //logger.info('tmp_obj',tmp_obj)
-            if(obj2.hasOwnProperty(gid)){
-                obj2[gid].push(tmp_obj)
-            }else{
-                sort_lst.push({gid:gid,species:species,strain:strain})
-                obj2[gid] = [tmp_obj]
-            }
-        }
-        
-    }
-    }
-    catch(e){
-          logger.error(e);
-    }
-    res.render('pages/full_site_search_results', {
-        title: 'HOMD :: Search Results',
-        pgname: '', // for AboutThisPage 
-        config: JSON.stringify(ENV),
-        ver_info: JSON.stringify(C.version_information),
-        
-        anno: anno,
-        search_text: search_string,
-        otid_list: JSON.stringify([]),
-        gid_list: JSON.stringify([]),
-        taxon_otid_obj: JSON.stringify({}),
-        //annotationList: JSON.stringify(obj_array),
-        
-        annotationList2: JSON.stringify(obj2),
-        anno_sort_list: JSON.stringify(sort_lst),
-        
-        phageList: JSON.stringify({}),
-        phage_sort_list: JSON.stringify([]),
-        phage_lookup: JSON.stringify({}),
-        phage_id_list: JSON.stringify([]),
-        
-        gid_count: Object.keys(gid_count).length,
-        total_hits: total_length,
-        max: helpers.format_long_numbers(allowed_max),
-        form_type: JSON.stringify(['annotations']),
-        no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
-            
-    })
-    
-      
-    return
+
 })
 
-// router.post('/advanced_site_search_anno_flex', async function advanced_site_search_anno_flexPOST(req, res) {
-//    logger.info(req.body,'index.js `flex` body')
-//    let anno = req.body.anno
-//    let search_string = req.body.search_text
-//    let tmp_obj = {},gid_count = {},obj2={},sort_lst=[],total_length=0,otid,hmt,strain,species
-//    //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
-//    search.search_test(anno, search_string).then((result) => {
-//         
-//         
-//         if(result.length == 0){
-//             console.log("Nothing found for string: `"+search_string+"` in "+anno)
-//             obj2 = {no_data:'No Data'}
-//         }else if(result.length >= 4000){
-//             obj2 = {too_long:'too_long'}
-//         }else{
-//             console.log('myresult',result,result.length)
-//             total_length = result.length
-//             for(let n in result){
-//                 let row_pts = result[n].split('\t')
-//                 let gid = row_pts[1]
-//                 anno = row_pts[0].toUpperCase()
-//                 gid_count[gid] = 1
-//                 //console.log(gid)
-//                 tmp_obj = {
-//                           gid:      gid,
-//                           otid:     '',
-//                           hmt:      '',
-//                           species:  '=>Genome Not Found in db<=',
-//                           strain:   '',
-//                           acc:      row_pts[3],
-//                           gene:     row_pts[5],
-//                           pid:      row_pts[4],
-//                           orf_id:   '',
-//                           prod:     row_pts[6],
-//                           type:     row_pts[2]
-//                         
-//                 }
-//                 if(gid && C.genome_lookup.hasOwnProperty(gid)){
-//                       //if(gid){
-//                         otid = C.genome_lookup[gid]['otid']
-//                         hmt = helpers.make_otid_display_name(otid),
-//                         strain = C.genome_lookup[gid]['strain']
-//                         species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
-//                         tmp_obj.species = species
-//                         tmp_obj.strain = strain
-//                         tmp_obj.otid = otid
-//                         tmp_obj.hmt = hmt
-//                 }
-//                 if(obj2.hasOwnProperty(gid)){
-//                     obj2[gid].push(tmp_obj)
-//                 }else{
-//                     sort_lst.push({gid:gid,species:species,strain:strain})
-//                     obj2[gid] = [tmp_obj]
-//                 }
-//             }
-//                     
-//        }
-//         sort_lst.sort(function (a, b) {
-//            return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
-//         })
-//         res.render('pages/full_site_search_results', {
-//             title: 'HOMD :: Search Results',
-//             pgname: '', // for AboutThisPage 
-//             config: JSON.stringify(ENV),
-//             ver_info: JSON.stringify(C.version_information),
-//             
-//             anno: anno,
-//             search_text: search_string,
-//             otid_list: JSON.stringify([]),
-//             gid_list: JSON.stringify([]),
-//             taxon_otid_obj: JSON.stringify({}),
-//             //annotationList: JSON.stringify(obj_array),
-//             
-//             annotationList2: JSON.stringify(obj2),
-//             anno_sort_list: JSON.stringify(sort_lst),
-//             
-//             phageList: JSON.stringify({}),
-//             phage_sort_list: JSON.stringify([]),
-//             phage_lookup: JSON.stringify({}),
-//             phage_id_list: JSON.stringify([]),
-//             
-//             gid_count: Object.keys(gid_count).length,
-//             total_hits: total_length,
-//             max: helpers.format_long_numbers(C.grep_search_max_rows),
-//             form_type: JSON.stringify(['annotations']),
-//             no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
-//                     
-//         })
-//     })
-// })
-// router.post('/advanced_site_search_anno_grepts', async function advanced_site_search_greptsPOST(req, res) {
-//     logger.info(req.body,'body')
-//     const searchText = req.body.search_text.toLowerCase()
-//     let anno = req.body.anno
-//     const targetDir = path.join(ENV.PATH_TO_SEARCH,req.body.anno+'_annotations');  // lowercase dirs
-//     // Resolves to an absolute path from the root system root
-//     const absolutePaths = fs.readdirSync(targetDir).map(file => path.resolve(targetDir, file));
-//     const options = searchOptionsSchema.parse({
-//         pattern: searchText,
-//         paths: absolutePaths,
-//         fixedStrings: true,
-//         ignoreCase: true,  // we always use lowercase 
-//     });
-//     //console.log('files',absolutePaths)
-//     //console.log('searchText->'+searchText+'<--')
-//     const results = await searchAsync(options);
-//     //console.log('results->',JSON.stringify(results, null, 2),'<--results');
-//     //console.log('results->',results,'<--results');
-//     let row_pts,id_pts,gid,pid,prod,gene,type,gid_count={},tmp_obj={},obj2={}
-//     let otid,hmt,species,strain,genus,sort_lst=[]
-//     let split_length = 6
-//     // bakta|gca_947096185.1|camuqn010000001.1|||adocbl (cobalamin/b12) riboswitch aptamer|25735|25873
-//     // prokka|gca_003939335.2|cp078018.1|cobo|gca_003939335.2_00679|cobalamin adenosyltransferase|711027|711614
-//     let total_length = 0
-//     for(let i in results){
-//           total_length += results[i].matchCount
-//     }
-//     if(total_length == 0){
-//             console.log("Nothing found for string: `"+search_string+"` in "+anno)
-//             obj2 = {no_data:'No Data'}
-//     }else if(total_length >= 50000){
-//             obj2 = {too_long:'too_long'}
-//     }else{
-//         for(let i in results){
-//           for(let n in results[i].matches){
-//             //console.log('m',results[i].matches[n].line)
-//             // Next iteration include type
-//             row_pts = results[i].matches[n].line.split('|')
-//             gid = row_pts[1].toUpperCase()
-//             anno = row_pts[0].toUpperCase()
-//             gid_count[gid] = 1
-//             //total_length +=1
-//                 //console.log(gid)
-//             tmp_obj = {
-//                           gid:      gid,
-//                           otid:     '',
-//                           hmt:      '',
-//                           species:  '=>Genome Not Found in db<=',
-//                           strain:   '',
-//                           acc:      row_pts[2],
-//                           gene:     row_pts[3],
-//                           pid:      row_pts[4],
-//                           orf_id:   '',
-//                           prod:     row_pts[5],
-//                           type:     ''
-//                         
-//             }
-//             if(gid && C.genome_lookup.hasOwnProperty(gid)){
-//               //if(gid){
-//                 otid = C.genome_lookup[gid]['otid']
-//                 hmt = helpers.make_otid_display_name(otid),
-//                 strain = C.genome_lookup[gid]['strain']
-//                 species = C.taxon_lookup[otid]['genus'] +' '+C.taxon_lookup[otid]['species']
-//                 tmp_obj.species = species
-//                 tmp_obj.strain = strain
-//                 tmp_obj.otid = otid
-//                 tmp_obj.hmt = hmt
-//             }
-//                 //logger.info('tmp_obj',tmp_obj)
-//             if(obj2.hasOwnProperty(gid)){
-//                 obj2[gid].push(tmp_obj)
-//             }else{
-//                 sort_lst.push({gid:gid,species:species,strain:strain})
-//                 obj2[gid] = [tmp_obj]
-//             }
-//           }
-//         }
-//     
-//     }
-//     //console.log(sort_lst)
-//     sort_lst.sort(function (a, b) {
-//        return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
-//     })
-//         //logger.info('obj2',obj2)
-//     res.render('pages/full_site_search_results', {
-//         title: 'HOMD :: Search Results',
-//         pgname: '', // for AboutThisPage 
-//         config: JSON.stringify(ENV),
-//         ver_info: JSON.stringify(C.version_information),
-//         
-//         anno: req.body.anno,
-//         search_text: req.body.search_text,
-//         otid_list: JSON.stringify([]),
-//         gid_list: JSON.stringify([]),
-//         taxon_otid_obj: JSON.stringify({}),
-//         //annotationList: JSON.stringify(obj_array),
-//         
-//         annotationList2: JSON.stringify(obj2),
-//         anno_sort_list: JSON.stringify(sort_lst),
-//         
-//         phageList: JSON.stringify({}),
-//         phage_sort_list: JSON.stringify([]),
-//         phage_lookup: JSON.stringify({}),
-//         phage_id_list: JSON.stringify([]),
-//         
-//         gid_count: Object.keys(gid_count).length,
-//         total_hits: total_length,
-//         max: helpers.format_long_numbers(C.grep_search_max_rows),
-//         form_type: JSON.stringify(['annotations']),
-//         no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
-//                 
-//     })
-//     
-// })
+
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     logger.info('in advanced_site_search_grep - index.js')
     // anno now includes prokka, ncbi and bakta
@@ -1026,7 +739,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
             gid_list: JSON.stringify([]),
             taxon_otid_obj: JSON.stringify({}),
             //annotationList: JSON.stringify(obj_array),
-            
+            search_params: '(Searches `Genome-ID`s, `Accession`(Region), `Protein-ID`s, `Gene` and `Gene Product`):',
             annotationList2: JSON.stringify(obj2),
             anno_sort_list: JSON.stringify(sort_lst),
             
@@ -1046,11 +759,6 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     catch(e){
           logger.error(e);
     }
-      
-    return
-
-
-
 
 })
 

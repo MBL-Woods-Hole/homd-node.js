@@ -226,7 +226,7 @@ table.sortable thead {
     <div class='search-box-loading'>
     <%= anno.toUpperCase() %> Annotations 
     
-    <small>(Searches only Genome-IDs, Accessions(Region), Protein-IDs, Gene and Gene Product):</small>
+    <small><%= search_params %></small>
     
      <% if(anno_list2.hasOwnProperty("too_long")){  %>
         <br>Hits: ><%= max %>
