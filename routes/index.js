@@ -501,7 +501,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
     let cnt = 0
     const rows = await queries.run_query(q, req,res)
     
-    
+    try{
     const conn = await pool.getConnection();
     const stream = conn.connection.query(q).stream();
     //const queryStream = connection.query(query, [searchTerm]).stream({ highWaterMark: 16 });
@@ -589,7 +589,9 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         
         
     });
-   
+    }catch(e){
+          logger.error(e);
+    }
 
 
 })
@@ -755,8 +757,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
             no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes)
                     
         })
-    }
-    catch(e){
+    }catch(e){
           logger.error(e);
     }
 
