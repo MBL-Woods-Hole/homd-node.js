@@ -513,6 +513,7 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         //console.log('Processed row:', row);
         gid = row.gid
         cnt += 1
+        logger.info('count '+cnt.toString())
         if(cnt >= allowed_max){
            stream.destroy();
         }
