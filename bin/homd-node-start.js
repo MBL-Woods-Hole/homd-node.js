@@ -15,7 +15,7 @@ console.log('ENV.HOSTNAME: ',ENV.HOSTNAME)
 
 console.log("Setting Environment to: ",ENV.NODE_ENV);
 console.log("Node Options: ",ENV.NODE_OPTIONS);
-console.log('For Production: Use "node --max-old-space-size=8096 bin/homd-node-start" (in systemd command)')
+console.log('For Production: Use "node --max-old-space-size=8192 bin/homd-node-start" (in systemd command)')
 
 const options = {}
 let http,https;
