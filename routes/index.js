@@ -610,7 +610,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     logger.info(req.body,'body')
     const searchText = req.body.search_text.toLowerCase()
     const annoLower = req.body.anno
-    let allowed_max = 1000000  //C.grep_search_max_rows  // died at 73,000
+    let allowed_max = 500000  //C.grep_search_max_rows  // died at 73,000
     const annoUpper = req.body.anno.toUpperCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
