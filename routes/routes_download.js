@@ -500,7 +500,7 @@ router.post('/anno_search_data', async (req, res) => {
     if(anno.toUpperCase() === 'BAKTA'){
         if(format === 'fasta_aa'){
             type = 'text'
-            q = "SELECT CONCAT('>Bakta | ',a.region,' | ', a.genome_id,' | ',"
+            q = "SELECT CONCAT('>BAKTA | ',a.region,' | ', a.genome_id,' | ',"
             q += " a.attribute_locus_tag,' | ',start,'..',end,' | length:',b.length_aa) AS defline,"
             q += " UNCOMPRESS(seq_compressed) as sequence"
             q += " FROM BAKTA.gff a"
@@ -536,7 +536,6 @@ router.post('/anno_search_data', async (req, res) => {
         // PROKKA and NCBI
         
         if(format === 'fasta_aa'){
-            
             type = 'text'
             q = "SELECT"
             q += " CONCAT('>"+anno_cap+" | ',"+anno_cap+".orf.genome_id,' | ',"+anno_cap+".orf.region,' | ',protein_id) AS defline,"

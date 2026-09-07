@@ -451,7 +451,7 @@ table.sortable thead {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = xmlhttp.responseText;
             resp = JSON.parse(response)
-            console.log('resp',resp[0])
+            //console.log('resp',resp[0])
             //https://www.homd.org/jbrowse/?data=homd_V11.02_phage_1.1/GCA_000008925.1&loc=GCA_000008925.1|CP000233.1:289940..329542&tracks=DNA,panggolin,cenote
             //https://www.homd.org/jbrowse/?data=homd_V11.02_phage_1.1/GCA_000008805.1&loc=GCA_000008805.1|AE002098.2:1099110..1136674&tracks=DNA,panggolin,genomad
             gid = resp[0].genome_id.toUpperCase()
@@ -460,7 +460,7 @@ table.sortable thead {
             start = resp[0].start
             end = resp[0].end
             var jb = jb_path+'/'+gid+'&loc='+gid+'|'+contig+':'+start+'..'+end+'&tracks=DNA,panggolin,cenote,genomad'
-            console.log(jb)
+            //console.log(jb)
             window.open(jb, '_blank')
         }
     }
@@ -480,7 +480,7 @@ table.sortable thead {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var response = xmlhttp.responseText;
             resp = JSON.parse(response)
-            console.log('resp',resp)
+            //console.log('resp',resp)
             text = '<pre>'
             text += '>' + resp.gid +' | Contig: ' + resp.contig +' | ' + resp.predictor + ' | ' + resp.org + ' | Seq Length:'+resp.length + 'bp\n'
             text += resp.html

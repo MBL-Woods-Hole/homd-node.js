@@ -155,6 +155,7 @@ function execPromise(cmd, args, max) {
           
           //if(data){
             chunk_rows = data.toString().split('\n')
+            //logger.info(`chunk_rows[0]: ${chunk_rows[0]}`);
             line_count += chunk_rows.length
             //data_array.push(data.toString())
             if(line_count > max){
@@ -174,7 +175,7 @@ function execPromise(cmd, args, max) {
           logger.info(`code: ${code}`)
           let dataBuffer =  Buffer.concat(bufferArray);
           let dataBufferArray = dataBuffer.toString().split('\n')
-          //logger.info('resolving okay',dataBufferArray[0])
+          logger.info('resolving okay',dataBufferArray[0])
           
           resolve(dataBufferArray);
         });
@@ -561,7 +562,9 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
         console.log('Streaming finished.');
         //console.log('obj2',obj2)
         logger.info('Row Count '+cnt.toString())
-        
+        sort_lst.sort(function (a, b) {
+           return helpers.compareStrings_alpha(a.species+a.strain, b.species+b.strain);
+        })
         res.render('pages/full_site_search_results', {
             title: 'HOMD :: Search Results',
             pgname: '', // for AboutThisPage 
@@ -607,7 +610,7 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     logger.info(req.body,'body')
     const searchText = req.body.search_text.toLowerCase()
     const annoLower = req.body.anno
-    let allowed_max = C.grep_search_max_rows  // died at 73,000
+    let allowed_max = 1000000  //C.grep_search_max_rows  // died at 73,000
     const annoUpper = req.body.anno.toUpperCase()
     let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
     let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
@@ -639,9 +642,12 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
         // GNU parallel:: if only one core (check with nproc) 
         //    use -j 1 to force the program to use only 1 job/core execution at any given moment. <-- DEV
         //    if more than 1 core don't include the -j 1 tag <-- PROD
-        let args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 1','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
+        let args,grep_cmd_base
+        //args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 8','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
         //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
-        let grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
+        args = ['-iIN','"'+searchText+'"',ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations/*'+annoUpper+"*"]
+        //grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
+        grep_cmd_base = ENV.RIPGREP_CMD
         let grep_cmd = grep_cmd_base + ' ' + args.join(' ')
         
         //logger.info('GREP CMD: '+grep_cmd)
