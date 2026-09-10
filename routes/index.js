@@ -733,7 +733,7 @@ router.get('/get_grep_stream', async function get_grep_stream(req, res) {
                         //res.write(`data: ${line}\n\n`);
                         gid = line_pts[1].toUpperCase()
                         hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
-                        region = line_pts[2]
+                        region = line_pts[2].toUpperCase()
                         start = line_pts[6]
                         end = line_pts[7]
                         url = helpers.create_jbrowse_url(gid, region, start, end)

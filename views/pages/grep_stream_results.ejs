@@ -7,20 +7,32 @@
     overflow:auto;
 }
 table { width: 100%; border-collapse: collapse; font-family: sans-serif; border:2px solid grey;}
-th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left;  }
 th { background-color: #f4f4f4; }
 tr:nth-child(even) { background-color: #f9f9f9; }
 tr:nth-child(odd) { background-color: lightblue; }
-
+.nowrap td{
+    white-space: nowrap;
+}
 #end-notice{
    color:red;
+}
+#loader {
+    background: url('/images/loading.gif') no-repeat center center;
+    position: absolute;
+    background-size: 100px 100px;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
 }
 </style>
 <%- include('../partials/header_html'); %>
 
 
 <body>
-    
+    <div id="loader" class="center-loader" style='z-index:1'></div>
     <div id='wrapper'>
     <%- include('../partials/header_img'); %>
     <%- include('../partials/navbar'); %>
@@ -32,8 +44,8 @@ tr:nth-child(odd) { background-color: lightblue; }
         <thead>
             <tr>
                 <th>Genome-ID</th>
-                <th>HMT-ID</th>
-                <th>Organism</th>
+                <th class='nowrap'>HMT-ID</th>
+                <th class='nowrap'>Organism</th>
                 <th>Protein-ID</th>
                 <th>Gene</th>
                 <th>Product</th>
@@ -62,6 +74,8 @@ tr:nth-child(odd) { background-color: lightblue; }
                 const notification = document.getElementById('end-notice');
                 notification.innerHTML = "DONE (row count: "+eventData.count.toString()+")"
                 console.log('Stream ended by server.');
+                //document.querySelector('#table-div').style.display = "none";
+                document.querySelector("#loader").style.visibility = "hidden";
                 return;
             }
             // Append the new line
@@ -132,3 +146,22 @@ tr:nth-child(odd) { background-color: lightblue; }
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>
+<script>
+document.onreadystatechange = function() {
+        // just three els to loader: this(js);css;html
+       //  if (document.readyState !== "complete") {
+//             document.querySelector(
+//                 '#table-div').style.display = "none";
+//             document.querySelector(
+//                 "#loader").style.visibility = "visible";
+//             
+//         } else {
+//             document.querySelector(
+//                 '#table-div').style.display = "block";
+//             document.querySelector(
+//                 "#loader").style.visibility = "hidden";
+//             
+//                 
+//         }
+  };
+</script>

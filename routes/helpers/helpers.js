@@ -789,8 +789,8 @@ export const create_jbrowse_url = (gid, region, start, stop) => {
     hilite = region+":"+start.toString()+".."+stop.toString()
     
     let tracks = 'DNA,bakta_full,prokka,prokka_ncrna,ncbi,ncbi_ncrna,panggolin'
-    link = ENV.JBROWSE_URL+'/'+gid+'&tracks='+tracks+'&loc='+gid+'|'+loc+'&highlight='+gid+'|'+hilite
-    
+    //link = ENV.JBROWSE_URL+'/'+gid+'&tracks='+tracks+'&loc='+gid+'|'+loc+'&highlight='+gid+'|'+hilite
+    link = ENV.JBROWSE_URL+'/'+gid+'&loc='+gid+'|'+loc+'&highlight='+gid+'|'+hilite+'&tracks='+tracks
     return link
 }
 //
