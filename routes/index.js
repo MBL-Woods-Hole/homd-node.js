@@ -682,7 +682,7 @@ router.get('/get_grep_stream', async function get_grep_stream(req, res) {
     console.log(req.query)
     const annoLower = req.query.anno
     const search_text = req.query.search_text.toLowerCase().replace(/\|/g, "\\|");
-    let args,grep_cmd_base,full_cmd_str,fpaths = [],gid,pid,gene,prod,payload,start,end,region,url
+    let args,grep_cmd_base,full_cmd_str,fpaths = [],gid,pid,gene,prod,payload,start,end,region,url,hmt
         //args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 8','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
         //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
     const files = fs.readdirSync(ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations/');
@@ -732,14 +732,16 @@ router.get('/get_grep_stream', async function get_grep_stream(req, res) {
                         //console.log('line',line)
                         //res.write(`data: ${line}\n\n`);
                         gid = line_pts[1].toUpperCase()
+                        hmt = helpers.make_otid_display_name(C.genome_lookup[gid].otid)
                         region = line_pts[2]
                         start = line_pts[6]
                         end = line_pts[7]
                         url = helpers.create_jbrowse_url(gid, region, start, end)
-                        //console.log('url',url)
+                        //console.log('gid',C.genome_lookup[gid])
                         payload = {
                             gid: gid,
-                            org: C.genome_lookup[line_pts[1].toUpperCase()].organism,
+                            hmt: hmt,
+                            org: C.genome_lookup[gid].organism,
                             pid: line_pts[4].toUpperCase(),
                             prod: line_pts[5],
                             gene: line_pts[3],

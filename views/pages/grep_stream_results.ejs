@@ -32,6 +32,7 @@ tr:nth-child(odd) { background-color: lightblue; }
         <thead>
             <tr>
                 <th>Genome-ID</th>
+                <th>HMT-ID</th>
                 <th>Organism</th>
                 <th>Protein-ID</th>
                 <th>Gene</th>
@@ -81,7 +82,8 @@ tr:nth-child(odd) { background-color: lightblue; }
                 const gidCell = document.createElement('td');
                 gidCell.textContent = eventData.gid || "";
 
-                
+                const hmtCell = document.createElement('td');
+                hmtCell.textContent = eventData.hmt || "";
                 
                 const orgCell = document.createElement('td');
                 orgCell.textContent = eventData.org || "";
@@ -100,6 +102,7 @@ tr:nth-child(odd) { background-color: lightblue; }
                 
                 // 5. Append cells to the row
                 row.appendChild(gidCell);
+                row.appendChild(hmtCell);
                 row.appendChild(orgCell);
                 row.appendChild(pidCell);
                 row.appendChild(geneCell);
