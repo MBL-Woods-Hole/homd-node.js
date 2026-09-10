@@ -77,6 +77,12 @@
     background:green;
     color:ivory;
 }
+#result{
+   background: lightblue;
+   padding:20px;
+   height: 50px;
+   overflow:auto;
+}
 </style>
 <%- include('../partials/header_html'); %>
 
@@ -116,10 +122,10 @@
       
   </form>
    <form id='adv-search-form-anno_mysql'  class='search-form' method='POST' action='advanced_site_search_anno_mysql'>  <!~~ advanced_site_search_annotations ~~>
-      <br><span id='srch-anno' class='mid-title'>Search Annotations</span>
+      <br><span id='srch-anno' class='mid-title'>Search Genome Annotations</span>
       <table id='anno-table-mysql' class='table'>
       <tr><td>
-        <input type='radio' name='anno_search_type' value='mysql_fullsearch' />
+        <input type='radio' checked name='anno_search_type' value='mysql_fullsearch' />
         Searches: Whole Words Only
         <br>&nbsp;&nbsp;&nbsp;&nbsp;Scope: Gene and Gene Product
         <br>&nbsp;&nbsp;&nbsp;&nbsp;[Faster]
@@ -127,11 +133,17 @@
         </td>
       </tr>
       <tr><td>
-        <input type='radio' checked name='anno_search_type' value='grep_search'/>
+        <input type='radio'  name='anno_search_type' value='grep_search'/>
         Searches: Whole and Partial Words<br>
         &nbsp;&nbsp;&nbsp;&nbsp;Scope: Genome-ID, Accession (Region), Protein-ID, Gene and Gene Product
         <br>&nbsp;&nbsp;&nbsp;&nbsp;[Slower]
         
+        </td>
+      </tr>
+      
+      <tr><td>
+        <input type='radio'  name='anno_search_type' value='stream_grep_search'/>
+        <b>EventSource Streaming</b> (Experimental) 
         </td>
       </tr>
       
@@ -158,9 +170,31 @@
      
       
       <input type="hidden" id="refreshed" value="no">
+      
+     
+      
   </form>
-
   
+  
+  
+ <!-- 
+<div id='' class=''>
+ <b>EventSource Streaming</b> (Experimental) 
+ <br>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_stream' checked id='prokka_cb_stream' name='anno_cb_stream' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_stream' id='ncbi_cb_stream' name='anno_cb_stream' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;
+        <input type='radio' class='anno_cb_stream' id='bakta_cb_stream' name='anno_cb_stream' value='bakta'  > 
+        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
+<br>
+ Stream Enter Search Text: 
+          <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_stream' value='' maxlength='80' size='50' /> 
+          <!~~ <input type='button' class='submit-button' id='submit-button-stream' name='submit-button-stream' value='Submit' onclick="validate_search_form('anno_grep')" \>
+          <button id="submit-button-stream" type="button" class='submit-button'>Submit</button>
+    
+ </div>
+ -->
  
   
   
@@ -234,6 +268,7 @@
  // const submit_button_anno = document.getElementById('submit-button-anno');
   //const submit_button_flex = document.getElementById('submit-button-flex');
   const submit_button_mysql = document.getElementById('submit-button-mysql');
+  const submit_button_stream = document.getElementById('submit-button-stream');
   //const submit_button_grepts = document.getElementById('submit-button-grepts');
   const submit_button_phage = document.getElementById('submit-button-phage');
   
@@ -267,6 +302,16 @@
   });
   
 
+  // submit_button_stream.addEventListener('click', function() {
+//     //const checkboxes = document.getElementsByClassName('anno_cb_stream');
+//     //var cb_count = checkboxes.length
+//     const anno = document.querySelector('input[name="anno_cb_stream"]:checked').value;
+//     var ss = document.getElementById('search_text_stream').value
+//     //var anno = 'prokka'
+//     //console.log('anno',anno)
+//     window.open('grep_stream_results?anno='+anno+'&search_text='+ss, '_self');
+//   })
+  
   
   // MYSQL FULLSEARCH
   submit_button_mysql.addEventListener('click', function() {
@@ -277,12 +322,17 @@
     //console.log('action',form.action)
     //console.log('search_type',search_type.value)
     var ss = document.getElementById('search_text_anno_mysql').value
+    const anno = document.querySelector('input[name="anno"]:checked').value;
          //var ss = document.querySelector('#search_textx').value;
     if(ss.length <=2){
              alert('Search string is too short (must be at least 3 characters)!')
              return
     }
-    if(search_type.value === 'mysql_fullsearch'){
+    console.log('search_type.value',search_type.value)
+    if(search_type.value === 'stream_grep_search'){
+        window.open('grep_stream_results?anno='+anno+'&search_text='+ss, '_self');
+        return
+    }else if(search_type.value === 'mysql_fullsearch'){
         form.action = "advanced_site_search_anno_mysql";
     }else{
         form.action = "advanced_site_search_anno_grep";

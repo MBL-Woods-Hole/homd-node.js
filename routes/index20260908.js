@@ -602,171 +602,8 @@ router.post('/advanced_site_search_anno_mysql', async function advanced_site_sea
 
 
 })
-router.post('/advanced_site_search_grep_stream', async function advanced_site_search_streamPOST(req, res) {
-    console.log('in advanced_site_search_grep_stream')
-    console.log(req.body)
-    let search_type = req.body.anno_search_type
-    let anno = req.body.anno
-    let annoUpper = anno.toUpperCase()
-    let annoLower = anno.toLowerCase()
-    let search_string = req.body.search_text
-    res.render('pages/grep_stream', {
-            title: 'HOMD :: Search Results',
-            pgname: '', // for AboutThisPage 
-            config: JSON.stringify(ENV),
-            ver_info: JSON.stringify(C.version_information),
-            
-            anno: annoLower,
-            search_text: req.body.search_text,
-                    
-        })
-})
-router.get('/grep_stream_results', function get_grep_stream(req, res) {
-    console.log('IN grep_stream_result')
-    console.log(req.query)
-    const annoLower = req.query.anno
-    const annoUpper = annoLower.toUpperCase()
-    const search_text = req.query.search_text.toLowerCase()
-    res.render('pages/grep_stream_results', {
-        title: 'HOMD :: Search Results',
-        pgname: '', // for AboutThisPage 
-        config: JSON.stringify(ENV),
-        ver_info: JSON.stringify(C.version_information),
-        anno: annoLower,
-        search_text: search_text,
-    })
-})
-router.get('/stream-grep', (req, res) => {
-    // Set headers for Server-Sent Events (SSE)
-    console.log('IN stream-grep (from grep_stream_results.ejs)')
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
 
-    // Example: grep "error" inside "logfile.log"
-    // Replace these arguments with your target search term and file path
-    const searchTerm = 'cobalamin';
-    const filePath = ENV.PATH_TO_SEARCH+'/prokka_annotations/homd_GREP_Search-PROKKA1.csv';
-    
-    const grep = spawn('grep', [searchTerm, filePath]);
 
-    // Handle line-by-line data output
-    grep.stdout.on('data', (data) => {
-        const lines = data.toString().split('\n');
-        lines.forEach(line => {
-            if (line.trim() !== '') {
-                // SSE format requires "data: " prefix and two newlines at the end
-                res.write(`data: ${line}\n\n`);
-            }
-        });
-    });
-
-    // Handle standard error output
-    grep.stderr.on('data', (data) => {
-        res.write(`data: ERROR: ${data.toString()}\n\n`);
-    });
-
-    // Clean up when the grep process finishes
-    grep.on('close', (code) => {
-        res.write(`data: [PROCESS COMPLETED WITH CODE ${code}]\n\n`);
-        res.end();
-    });
-
-    // Clean up if the user closes the browser tab before grep finishes
-    req.on('close', () => {
-        grep.kill();
-    });
-});
-router.get('/get_grep_stream', async function get_grep_stream(req, res) {
-    console.log('IN get_grep_stream')
-    console.log(req.query)
-    const annoLower = req.query.anno
-    const search_text = req.query.search_text.toLowerCase().replace(/\|/g, "\\|");
-    let args,grep_cmd_base,full_cmd_str,fpaths = [],gid,pid,gene,prod,payload
-        //args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 8','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
-        //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
-    const files = fs.readdirSync(ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations/');
-    files.forEach(file => {
-            //console.log(file);
-            fpaths.push(ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations/'+file)
-    });
-    
-    
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
-    
-    args = ['--line-buffered','-iIN','"'+search_text+'"'].concat(fpaths); 
-        //grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
-    grep_cmd_base = ENV.RIPGREP_CMD
-        //let grep_cmd = grep_cmd_base + ' ' + args
-    full_cmd_str = grep_cmd_base+' '+args.join(' ')
-    logger.info('GREP CMD: '+full_cmd_str)
-        //const rows = await get_grep_rows(grep_cmd);
-        //const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
-        const process = await spawn(full_cmd_str, { shell: true });  // shell:true need expand wildcard '*'
-        let count = 0
-        let page = 1;
-        //res.write(`<a href='javascript:history.back()'>back</a><br>`);
-        //res.write(`data: <table class='table'>\n\n`);
-        //res.write(`data: <tr><th>GID</th><th>PID</th><th>Gene</th><th>Product</th></tr>\n\n`);
-        process.stdout.on('data', (data) => {
-            if(count >=100000){
-                console.log('Destroying stream')
-                process.stdout.destroy();
-                
-                return
-            }
-            //console.log('DATA',data.toString(),'END DATA')
-            const lines = data.toString().split('\n');
-            //console.log('line count',lines.length)
-            
-            lines.forEach(line => {
-                count +=1
-                
-                if (line.trim() !== '') {
-                    // SSE format requires "data: " prefix and two newlines at the end
-                    let line_pts = line.split('|')
-                    if(line_pts.length === 8){
-                        //console.log('line',line)
-                        //res.write(`data: ${line}\n\n`);
-                        payload = {
-                            gid: line_pts[1].toUpperCase(),
-                            pid: line_pts[4].toUpperCase(),
-                            prod: line_pts[5],
-                            gene: line_pts[3]
-                        }
-                        res.write(`data: ${JSON.stringify(payload)}\n\n`);
-                    }
-                }
-            });
-            //res.write(`data: </table>\n\n`);
-        })
-        // Handle standard error output
-        process.stderr.on('data', (data) => {
-            res.write(`data: ERROR: ${data.toString()}\n\n`);
-        });
-    
-        // Clean up when the grep process finishes
-        process.on('close', (code) => {
-            //res.write(`data: [PROCESS COMPLETED WITH CODE ${code}]\n\n`);
-            //res.write(`data: Count: ${count.toString()}\n\n`);
-            const endpayload = {
-                            notice: 'END-OF-STREAM',
-                            count: count,
-                        }
-            res.write(`data: ${JSON.stringify(endpayload)}\n\n`); 
-            console.log('DONE')
-            res.end();
-        });
-    
-        // Clean up if the user closes the browser tab before grep finishes
-        req.on('close', () => {
-            process.kill();
-        });
-    
-})
 router.post('/advanced_site_search_anno_grep', async function advanced_site_search_annoPOST(req, res) {
     logger.info('in advanced_site_search_grep - index.js')
     // anno now includes prokka, ncbi and bakta
@@ -782,7 +619,6 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
     let tmp_obj = {}
     
     try{
-        
         //let datapath = path.join(ENV.PATH_TO_SEARCH,annoLower,"*"+annoUpper+"*")
         
         //let filename = uuidv4();  //ENV.PATH_TO_TMP
@@ -815,44 +651,14 @@ router.post('/advanced_site_search_anno_grep', async function advanced_site_sear
             fpaths.push(ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations/'+file)
         });
         //args = ['-iIN', searchText].concat(fpaths);  //, fpaths.join(' ')]
-        args = ['-iIN',"'"+searchText+"'"].concat(fpaths); 
+        args = ['--line-buffered','-iIN',"'"+searchText+"'"].concat(fpaths); 
         //grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
         grep_cmd_base = ENV.RIPGREP_CMD
         //let grep_cmd = grep_cmd_base + ' ' + args
-        let full_cmd_str = grep_cmd_base+' '+args.join(' ')
+        
         //logger.info('GREP CMD: '+grep_cmd)
         //const rows = await get_grep_rows(grep_cmd);
         //const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
-        // const process = spawn(full_cmd_str, { shell: true });  // shell:true need expand wildcard '*'
-//         let count = 0
-//         res.write(`<a href='javascript:history.back()'>back</a><br>`);
-//         process.stdout.on('data', (data) => {
-//         
-//             
-//             const lines = data.toString().split('\n');
-//             lines.forEach(line => {
-//                 count +=1
-//                 if (line.trim() !== '') {
-//                     // SSE format requires "data: " prefix and two newlines at the end
-//                     res.write(`data: ${line}\n`);
-//                 }
-//             });
-//         })
-//         process.stderr.on('data', (data) => {
-//             res.write(`data: ERROR: ${data.toString()}\n\n`);
-//         });
-//     
-//         // Clean up when the grep process finishes
-//         process.on('close', (code) => {
-//             console.log('count',count)
-//             console.log(`data: [PROCESS COMPLETED WITH CODE ${code}]\n\n`);
-//             res.write(`data: [PROCESS COMPLETED WITH CODE ${code}]\n\n`);
-//             res.end();
-//         });
-//         
-//         return;
-        
-        
         const row_array = await execPromise(grep_cmd_base, args, allowed_max);
         //logger.info(row_array)
         //logger.info(row_array.length)
