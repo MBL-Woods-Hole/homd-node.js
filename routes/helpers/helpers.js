@@ -753,10 +753,43 @@ export const calculate_homd_stats = () => {
 //
 export const create_jbrowse_link = (gid, loc, hilite) => {
     // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
-        
+    // url = jb_path+'/'+gid+"&tracks="+tracks_plus+"&loc="+gid+'|'+loc+"&highlight="+gid+'|'+hilit
     let link = ''
     let jb_base = ENV.JBROWSE_URL
-    let tracks = 'DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna'
+    
+    let tracks = 'DNA,bakta_full,prokka,prokka_ncrna,ncbi,ncbi_ncrna,panggolin'
+    return link
+}
+export const create_jbrowse_url = (gid, region, start, stop) => {
+    // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
+        
+    let link,loc='',hilite='',tmp
+    if(start[0] === "<" ){
+      start = parseInt(start.substring(1))
+    }else{
+      start = parseInt(start)
+    }
+    if(stop[0] === ">" ){ 
+      stop = parseInt(stop.substring(1))
+    }else{ 
+      stop = parseInt(stop)
+    }
+    if(start > stop){ 
+        tmp = stop 
+        stop = start 
+        start = tmp 
+    } 
+    let locstart = start - 500 
+    let locstop = stop + 500 
+ 
+    if(locstart < 1){ 
+        locstart = 1 
+    }
+    loc = region+":"+locstart.toString()+".."+locstop.toString()
+    hilite = region+":"+start.toString()+".."+stop.toString()
+    
+    let tracks = 'DNA,bakta_full,prokka,prokka_ncrna,ncbi,ncbi_ncrna,panggolin'
+    link = ENV.JBROWSE_URL+'/'+gid+'&tracks='+tracks+'&loc='+gid+'|'+loc+'&highlight='+gid+'|'+hilite
     
     return link
 }

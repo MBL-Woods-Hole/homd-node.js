@@ -28,13 +28,15 @@ tr:nth-child(odd) { background-color: lightblue; }
     <h1><%= anno.toUpperCase() %> Grep Search Results for: <small>'<%= search_text %>'</small></h1>
     <center><span id='end-notice'>Streaming Search Results...</span></center>
     <div id='table-div'>
-    <table>
+    <table class='sortable'>
         <thead>
             <tr>
-                <th>GID</th>
-                <th>PID</th>
-                <th>GENE</th>
+                <th>Genome-ID</th>
+                <th>Organism</th>
+                <th>Protein-ID</th>
+                <th>Gene</th>
                 <th>Product</th>
+                <th class="sorttable_nosort">GenomeViewer</th>
             </tr>
         </thead>
         <tbody id="table-body">
@@ -79,6 +81,11 @@ tr:nth-child(odd) { background-color: lightblue; }
                 const gidCell = document.createElement('td');
                 gidCell.textContent = eventData.gid || "";
 
+                
+                
+                const orgCell = document.createElement('td');
+                orgCell.textContent = eventData.org || "";
+                
                 const pidCell = document.createElement('td');
                 pidCell.textContent = eventData.pid || "";
 
@@ -87,11 +94,18 @@ tr:nth-child(odd) { background-color: lightblue; }
                 
                 const prodCell = document.createElement('td');
                 prodCell.textContent = eventData.prod || "";
+                
+                const urlCell = document.createElement('td');
+                urlCell.innerHTML = "<a href='"+eventData.jburl+"' target='_blank'>link</a>";
+                
                 // 5. Append cells to the row
                 row.appendChild(gidCell);
+                row.appendChild(orgCell);
                 row.appendChild(pidCell);
                 row.appendChild(geneCell);
                 row.appendChild(prodCell);
+                row.appendChild(urlCell);
+                
                 // 6. Insert row into the table body
                 // prepend() puts new events at the top. Use append() to put them at the bottom.
                 tableBody.prepend(row); 
@@ -113,4 +127,5 @@ tr:nth-child(odd) { background-color: lightblue; }
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
 <script type="text/javascript" src="/js/menu.js"></script>

@@ -682,7 +682,7 @@ router.get('/get_grep_stream', async function get_grep_stream(req, res) {
     console.log(req.query)
     const annoLower = req.query.anno
     const search_text = req.query.search_text.toLowerCase().replace(/\|/g, "\\|");
-    let args,grep_cmd_base,full_cmd_str,fpaths = [],gid,pid,gene,prod,payload
+    let args,grep_cmd_base,full_cmd_str,fpaths = [],gid,pid,gene,prod,payload,start,end,region,url
         //args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 8','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
         //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
     const files = fs.readdirSync(ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations/');
@@ -731,12 +731,21 @@ router.get('/get_grep_stream', async function get_grep_stream(req, res) {
                     if(line_pts.length === 8){
                         //console.log('line',line)
                         //res.write(`data: ${line}\n\n`);
+                        gid = line_pts[1].toUpperCase()
+                        region = line_pts[2]
+                        start = line_pts[6]
+                        end = line_pts[7]
+                        url = helpers.create_jbrowse_url(gid, region, start, end)
+                        //console.log('url',url)
                         payload = {
-                            gid: line_pts[1].toUpperCase(),
+                            gid: gid,
+                            org: C.genome_lookup[line_pts[1].toUpperCase()].organism,
                             pid: line_pts[4].toUpperCase(),
                             prod: line_pts[5],
-                            gene: line_pts[3]
+                            gene: line_pts[3],
+                            jburl: url
                         }
+                        
                         res.write(`data: ${JSON.stringify(payload)}\n\n`);
                     }
                 }
