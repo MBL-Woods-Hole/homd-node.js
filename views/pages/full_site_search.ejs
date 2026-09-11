@@ -143,10 +143,14 @@
       
       <tr><td>
         <input type='radio'  name='anno_search_type' value='stream_grep_search'/>
-        <b>EventSource Streaming</b> (Experimental Grep Search)
+        <b>(Grep) EventSource Streaming</b> (Experimental Search - substrings okay)
         </td>
       </tr>
-      
+      <tr><td>
+        <input type='radio'  name='anno_search_type' value='stream_sql_search'/>
+        <b>(SQL) EventSource Streaming</b> (Experimental Search - full word only)
+        </td>
+      </tr>
       <tr><td>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <input type='radio' class='anno_cb_mysql' checked id='prokka_cb_anno_mysql' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;
@@ -329,8 +333,11 @@
              return
     }
     console.log('search_type.value',search_type.value)
-    if(search_type.value === 'stream_grep_search'){
-        window.open('grep_stream_results?anno='+anno+'&search_text='+ss, '_self');
+    if(search_type.value === 'stream_sql_search'){
+        window.open('stream_results_sql?anno='+anno+'&search_text='+ss, '_self');
+        return
+    }else if(search_type.value === 'stream_grep_search'){
+        window.open('stream_results_grep?anno='+anno+'&search_text='+ss, '_self');
         return
     }else if(search_type.value === 'mysql_fullsearch'){
         form.action = "advanced_site_search_anno_mysql";

@@ -56,7 +56,7 @@ global.app_root = path.resolve(dirname);
 
 import C from './public/constants.js';
 import  * as helpers from './routes/helpers/helpers.js'
-import  * as search from './routes/helpers/search.js'
+import  * as helpersearch from './routes/helpers/search.js'
 
 import fs from 'fs-extra';
 
@@ -124,9 +124,8 @@ import phage from './routes/routes_phage.js';
 
 //const blast    = require('./routes/routes_blast');
 import help from './routes/routes_help.js';
-
 import download from './routes/routes_download.js';
-
+import search from './routes/routes_search.js';
 
 // PRODUCTION: log every restart?
 // To turn off logging for production system
@@ -184,6 +183,7 @@ app.use('/genome', genome);
 app.use('/phage', phage);
 app.use('/help', help);
 app.use('/download', download);
+app.use('/search', search);
 
 // for non-routing pages such as heatmap, counts and bar_charts
 app.get('/*', function(req, res, next){

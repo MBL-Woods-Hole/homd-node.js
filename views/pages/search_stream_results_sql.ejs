@@ -11,9 +11,7 @@ th, td { border: 1px solid #ddd; padding: 8px; text-align: left;  }
 th { background-color: #f4f4f4; }
 tr:nth-child(even) { background-color: #f9f9f9; }
 tr:nth-child(odd) { background-color: lightblue; }
-.nowrap td{
-    white-space: nowrap;
-}
+
 #end-notice{
    color:red;
 }
@@ -37,7 +35,7 @@ tr:nth-child(odd) { background-color: lightblue; }
     <%- include('../partials/header_img'); %>
     <%- include('../partials/navbar'); %>
     <div class='page-content' > 
-    <h1><%= anno.toUpperCase() %> Grep Search Results for: <small>'<%= search_text %>'</small></h1>
+    <h3><%= anno.toUpperCase() %> Annotations SQL Streaming Search Results for: <small>'<%= search_text %>'</small></h3>
     <center><span id='end-notice'>Streaming Search Results...</span></center>
     <div id='table-div'>
     <table class='sortable'>
@@ -63,7 +61,7 @@ tr:nth-child(odd) { background-color: lightblue; }
         //outputDiv.textContent = ''; 
          //outputDiv.innerHTML = "";
         // Connect to the SSE endpoint
-        const eventSource = new EventSource('/get_grep_stream?anno=<%= anno %>&search_text=<%= search_text %>');
+        const eventSource = new EventSource('/search/get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>');
 
         eventSource.onmessage = function(event) {
             const eventData = JSON.parse(event.data);
@@ -94,12 +92,14 @@ tr:nth-child(odd) { background-color: lightblue; }
 
                 // 4. Create and populate cells
                 const gidCell = document.createElement('td');
-                gidCell.textContent = eventData.gid || "";
+                gidCell.innerHTML = "<a href='/genome/genome_description?gid="+eventData.gid+"'>"+eventData.gid+"</a>";
 
                 const hmtCell = document.createElement('td');
-                hmtCell.textContent = eventData.hmt || "";
+                hmtCell.setAttribute('style', 'white-space: nowrap;');
+                hmtCell.innerHTML = "<a href='/taxa/tax_description?otid="+eventData.otid+"'>"+eventData.hmt+"</a>";
                 
                 const orgCell = document.createElement('td');
+                orgCell.setAttribute('style', 'white-space: nowrap;');
                 orgCell.textContent = eventData.org || "";
                 
                 const pidCell = document.createElement('td');
