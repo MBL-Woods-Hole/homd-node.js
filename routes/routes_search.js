@@ -606,7 +606,7 @@ router.get('/get_sql_stream', async function get_sql_stream(req, res) {
             //logger.info('tmp_obj',tmp_obj)
         })
         stream.on('error', (err) => {
-            res.write(`data: ERROR: ${data.toString()}\n\n`);
+            res.write(`data: ERROR: ${err.toString()}\n\n`);
         })
 
         stream.on('end', () => {
