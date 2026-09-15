@@ -2119,7 +2119,7 @@ router.post('/amr_table', function amr_table_POST(req, res) {
 //
 //
 router.post('/amr_ajax', async function amr_ajax(req, res){
-    console.log('in amr ajax')
+    //console.log('in amr ajax')
     let gid = req.body.gid
     let q = queries.get_amr_data(gid)
     

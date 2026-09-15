@@ -199,7 +199,7 @@ export const get_crispr_cas_data = (gid) => {
     return q
 };
 export const get_all_crispr_cas_data = () => {
-    let q = "SELECT homd.genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
+    let q = "SELECT genome_id,contig,operon,operon_pos,prediction,crisprs,distances,prediction_cas,prediction_crisprs"
     q += " FROM crispr_cas"
     return q
 };
