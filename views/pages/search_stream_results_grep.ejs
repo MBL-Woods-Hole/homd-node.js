@@ -102,7 +102,7 @@ tr:nth-child(odd) { background-color: lightblue; }
                 
                 const orgCell = document.createElement('td');
                 orgCell.setAttribute('style', 'white-space: nowrap;');
-                orgCell.textContent = eventData.org || "";
+                orgCell.innerHTML =  "<i>"+eventData.org+"</i>"
                 
                 const pidCell = document.createElement('td');
                 pidCell.textContent = eventData.pid || "";

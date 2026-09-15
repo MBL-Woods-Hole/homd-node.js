@@ -102,8 +102,10 @@ thead th { position: sticky; top: 0; }
     border:1px solid black;
     background:lightgrey;
     text-align:left;
+    text-indent: 2em;
+    line-height: 1.6;
     font-size:16px;
-    padding:5px;
+    padding:8px;
     height:130px;
     overflow:auto;
 }
@@ -141,8 +143,7 @@ thead th { position: sticky; top: 0; }
     <br>
     <center>
     <div class='project_decription'>
-        <b>Description</b>
-        <br>
+        
         The HOMD is expanding to incorporate viruses (including phages). We begin by defining prophage regions in bacterial genomes. Future updates will include detailed curation and definition of oral viral taxonomic units, enabling cross-referencing of viral findings across oral datasets, and expansion to incorporate non-phage viruses and metagenomic and isolate data types.
         <br><br>Table 1 provides a hyperlinked summary describing prophage regions identified in all 8,177 in HOMD v11.02 bacterial genomes, currently representing 15,589 phage/phage-like regions. Following these hyperlinks offers users the ability to inspect the prophage region in JBrowse in light of prophage predictions from geNomad (vX, add flags), 
         cenote-taker3 (vX, add flags), and manual curation (for microviruses). A unique feature of this analysis is the integration with pangenome information calculated for each bacterial species using PPanGGoLIN (vX, add flags), allowing users to see whether genes in bacterial genomes are core to the species pangenome (“persistent” and colored orange on the JBrowse pangenome track) or present at lower prevalence (intermediate frequency “shell” and low frequency “cloud”, colored green and blue, respectively). Updates to phage region boundaries in the table below will explicitly consider pangenome information, these are “coming soon!”. Table 2 offers a per-GCA view of prophages identified in bacterial genomes based on raw genomad and cenote-taker3-based prophage calls, along with associated summary statistics.

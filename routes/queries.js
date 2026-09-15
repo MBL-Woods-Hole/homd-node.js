@@ -206,7 +206,7 @@ export const get_all_crispr_cas_data = () => {
 export const get_amr_data = (gid) => {
     let q = 'SELECT homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
     q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc, "
-    q += "closest_ref_name,hmm_acc,hmm_description,region,start,stop"
+    q += "closest_ref_name,hmm_acc,hmm_description,region,start,end"
     q += " FROM homd.amr"
     q += " JOIN PROKKA.orf using(protein_id)"
     q += " WHERE homd.amr.genome_id='"+gid+"'"
@@ -215,7 +215,7 @@ export const get_amr_data = (gid) => {
 export const get_all_amr_data = () => {
     let q = 'SELECT amr.genome_id,homd.amr.protein_id,element_symbol,element_name,scope,type,subtype,class,'
     q += "subclass,method,target_length,ref_seq_length,pct_cov_of_ref,pct_ident_to_ref,align_length,closest_ref_acc, "
-    q += "closest_ref_name,hmm_acc,hmm_description,region,start,stop"
+    q += "closest_ref_name,hmm_acc,hmm_description,region,start,end"
     q += " FROM homd.amr"
     q += " JOIN PROKKA.orf using(protein_id)"
     return q

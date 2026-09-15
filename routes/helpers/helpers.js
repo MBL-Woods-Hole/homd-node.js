@@ -785,7 +785,7 @@ export const create_jbrowse_url = (gid, region, start, stop) => {
     if(locstart < 1){ 
         locstart = 1 
     }
-    loc = region+":"+locstart.toString()+".."+locstop.toString()
+    loc    = region+":"+locstart.toString()+".."+locstop.toString()
     hilite = region+":"+start.toString()+".."+stop.toString()
     
     let tracks = 'DNA,bakta_full,prokka,prokka_ncrna,ncbi,ncbi_ncrna,panggolin'
