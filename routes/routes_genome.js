@@ -2119,7 +2119,7 @@ router.post('/amr_table', function amr_table_POST(req, res) {
 //
 //
 router.post('/amr_ajax', async function amr_ajax(req, res){
-    
+    console.log('in amr ajax')
     let gid = req.body.gid
     let q = queries.get_amr_data(gid)
     
@@ -2144,7 +2144,7 @@ router.post('/amr_ajax', async function amr_ajax(req, res){
             html_rows += "<tr>"
             html_rows += "<td nowrap>"+rows[i].protein_id+"</td>"
             start = rows[i].start
-            stop  = rows[i].stop
+            stop  = rows[i].end
             if(start[0] === "<" ){
                 start = parseInt(start.substring(1))
             }else{ 
