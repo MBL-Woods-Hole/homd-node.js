@@ -87,8 +87,12 @@ thead th { position: sticky; top: 0; }
     border:1px solid black;
     background:lightgrey;
     text-align:left;
+    text-indent:2em;
+    line-height: 1.6;
     font-size:16px;
-    padding:5px;
+    padding:10px 18px;
+    height:150px;
+    overflow:auto;
 }
 .search-box{
    border:1px solid black;
@@ -109,11 +113,12 @@ thead th { position: sticky; top: 0; }
     <div class='page-content' >
 
     <p class='title h3'>HOMD Pangenomes</p>
-    <br>
+    <span class='pull_right'>Pangenome data can be downloaded from the<a href='https://www.homd.org/ftp/pangenomes/V11.02/'> FTP site here.</a>
+    
+    </span><br>
     <center>
     <div class='project_decription'>
-        <b>Description</b>
-        <br>
+        
         Pangenomes summarize gene content diversity across oral microbial taxa. By default, they are defined at the Human Microbial Taxon (HMT) level with genomes as rows and gene clusters as columns; black marks indicate gene cluster presence. Interactive views and downloadable files support comparative genomics, functional exploration, and reuse.
         Pangenomes are built from HOMD V4.1 genomes (Genomes V11.02) using anvio v8. Functional annotations include KEGG KOfams, NCBI COGs, and Pfam.  Built: 2025-12-08.
         Anvi`o (<a href='https://anvio.org/' target='_blank'>https://anvio.org</a>) is a visualization platform for microbial 'omics and is used here to display the HOMD pangenomes.
@@ -129,9 +134,9 @@ thead th { position: sticky; top: 0; }
     <div class="col search-box">
       Filter Names:
       <input id='pg_search_input' style='border:1px solid gray;padding:5px;' type='text' maxlength='50' value='<%= search %>' placeholder="Enter search term..."\>
-      <a href='anvio_pangenomes'>Reload Page</a>
+      <a href='pangenomes'>Reload Page</a>
     </div>
-    <span class='col text-end'>Created with HOMD Genomic Version `<b><%= version_info.gen_ver %></b>`</span>
+    <span class='col text-end'>Created with HOMD Genomic Version `<b>11.02</b>`</span>
     </div>
     </div>
 
@@ -151,9 +156,7 @@ This Table Length: <%= thiscount %>
   <th class="center">Scope</th>
   <th class="center" >Genome<br>Count</th>
   <!-- <th class="sorttable_nosort center">Notes</th> -->
-  <th class="center sorttable_nosort">Download Files
-    <br><small>[<a style='color:orange;' href='<%= cfg.HOMD_URL_BASE %>ftp/pangenomes/V11.02'>FTP Site</a>]</small>
-  </th>
+  <th class="center sorttable_nosort">Download Files</th>
   
 </tr>
 
@@ -283,7 +286,7 @@ Primary reference: Human Oral Microbiome Database (HOMD): Chen et al., 2010; Dew
     //console.log(input.value)
     var xmlhttp = new XMLHttpRequest();
     
-    xmlhttp.open("POST", 'anvio_pangenomes', false);
+    xmlhttp.open("POST", 'pangenomes', false);
     xmlhttp.setRequestHeader("Content-type","application/json");
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 ) {

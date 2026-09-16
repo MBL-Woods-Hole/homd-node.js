@@ -129,6 +129,7 @@ p {
   background: grey;
   font-size: 10px;
   color: white;
+  border-radius: 5px;
 }
 .red-text{
    color:red;

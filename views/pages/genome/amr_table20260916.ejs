@@ -81,23 +81,18 @@ thead th { position: sticky; top: 0; }
     min-width:150px;
     text-align:left;
 }
-#amr-sub-table-div{
-    height:500px;
-    overflow:auto;
-}
-
 #sub-table-div{
    display: none;
-  position: fixed;
-  background:lightyellow;
-  width:1200px;
-  padding:8px;
-  margin:0px;
-  border:2px solid black;
-  z-index: 1;
-  /* left:-160px; */
-  top:350px;
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+  z-index: 1000;
 }
+
+
+
 .project_decription{
     border:1px solid black;
     background:lightgrey;
@@ -123,7 +118,6 @@ thead th { position: sticky; top: 0; }
    border:1px solid black;
    padding:3px 6px;
 }
-
 </style>
 <% var datarows = JSON.parse(data) %>
 <% var genomelist = JSON.parse(gid_list) %>
@@ -142,7 +136,7 @@ thead th { position: sticky; top: 0; }
       
     <p class='title h3'>Anti-Microbial Resistance (AMR) detected in HOMD genomes</p>
     
-    <span class='pull_right'>AMR Data can be downloaded from the<a href='https://www.homd.org/ftp/amr/amr_V1.0/'> FTP site here.</a>
+    <span class='pull_right'>AMR data can be downloaded from the<a href='https://www.homd.org/ftp/amr/amr_V1.0/'> FTP site here.</a>
     Other download options <a href='/download/download/crispr'>here</a>.
     </span><br>
     <center>
@@ -160,8 +154,8 @@ thead th { position: sticky; top: 0; }
         (<a href='https://pubmed.ncbi.nlm.nih.gov/34135355/' target='_blank'>Feldgarden, M. et al., 2021</a>) with default setting. A total of 4,504 genomes are detected carrying ARGs. 
         The results were tabulated as a table listing the ARGs carrying genomes. 
         Links to the Genome Viewer and original AMRFinderPlus output are provided below.
-        The survey is summarized in  <a href='https://docs.google.com/presentation/d/1F7vnj2o-ih0KRQTGSwq560npIcxwuiv5/edit?pli=1&slide=id.p20#slide=id.p20'>
-        these slides</a>.
+        The survey is summarized in these slides <a href='https://docs.google.com/presentation/d/1F7vnj2o-ih0KRQTGSwq560npIcxwuiv5/edit?pli=1&slide=id.p20#slide=id.p20'>
+        here</a>.
     </div>
     </center>
     
@@ -221,11 +215,17 @@ thead th { position: sticky; top: 0; }
              <td class='w-sm'><%= datarows[gid].length %></td>
              
              
-             <td class='w-sm' sorttable_customkey="<%= datarows[gid].hit_count %>">
-               <button class='button' onclick="get_ajax('<%= gid %>')"><%= datarows[gid].hit_count %> rows</button>
-             </td>
+            
+             <td class="ajax-trigger" data-id="<%= gid %>">Click me for data</td>
+             
+             
+             
              <td class='center'>
-             <a href="<%= cfg.HOMD_URL_BASE %><%= cfg.AMR_PATH %><%= gid %>.amrfinder" target='_blank'>get ftp data</a>
+             <a href="<%= cfg.HOMD_URL_BASE %><%= cfg.AMR_PATH %><%= gid %>.amrfinder" target='_blank'>ftp
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+              </svg>
+             </a>
              </td>
             
              </tr>
@@ -234,7 +234,7 @@ thead th { position: sticky; top: 0; }
          </table>
          
 </div>  <!-- end: amr-box -->
-      <div id='sub-table-div'>XXXX</div>
+      <div id='sub-table-div' class='hidden'>XXXX</div>
     </div> <!-- end: page-content -->
     <div id='footer'>
          <%- include('../../partials/footer'); %>
@@ -246,6 +246,7 @@ thead th { position: sticky; top: 0; }
 
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 <script type="text/javascript" src="/js/genomes.js"></script>
 <script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
@@ -256,30 +257,57 @@ thead th { position: sticky; top: 0; }
   var jb_path = '<%- cfg.JBROWSE_URL %>'
   
   
-  
-  function get_ajax(gid){
-      let args = {}
-      args.gid = gid
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.open("POST", "/genome/amr_ajax", true);
-      xmlhttp.setRequestHeader("Content-type","application/json");
-      xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var resp = xmlhttp.responseText;
-            //console.log(resp)
-            //window.open(url)
-            
-            disp = document.getElementById('sub-table-div')
-            disp.innerHTML = resp
-            disp.style.display = 'block'
-            
-          }
-      }
-      xmlhttp.send(JSON.stringify(args));
-  }
+$(document).on('click', 'td.ajax-trigger', function(e) {
+  console.log('client td.ajax-trigger')
+  var $div = $('#sub-table-div');
+  var recordId = $(this).data('id');
+  console.log('recordId',recordId)
+  // Position div near the cursor
+  $div.css({
+    top: e.pageY + 10 + 'px',
+    left: '10px'  //e.pageX + 10 + 'px'
+  });
+
+  // Fetch data via AJAX
+  $.ajax({
+    url: '/genome/amr_ajax',
+    type: 'POST',
+    //dataType: 'json', 
+    data: { gid: recordId },
+    success: function(response) {
+      //console.log('success',response)
+      $div.html(response).show();
+    },
+    error: function(xhr, status, error) {
+        // Code to execute if the request fails
+        console.log("Error occurred:", error);
+    }
+  });
+});
+//   function get_ajax(gid){
+//       let args = {}
+//       args.gid = gid
+//       var xmlhttp = new XMLHttpRequest();
+//       xmlhttp.open("POST", "/genome/amr_ajax", true);
+//       xmlhttp.setRequestHeader("Content-type","application/json");
+//       xmlhttp.onreadystatechange = function() {
+//           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//             var resp = xmlhttp.responseText;
+//             //console.log(resp)
+//             //window.open(url)
+//             disp = document.getElementById('sub-table-div')
+//             disp.innerHTML = resp
+//             disp.style.display = 'block'
+//             
+//           }
+//       }
+//       xmlhttp.send(JSON.stringify(args));
+//   }
   function close_sub_table(){
-        disp = document.getElementById('sub-table-div')
-        disp.style.display = 'none'
+        //disp = document.getElementById('sub-table-div')
+        //disp.style.display = 'none'
+        var $div = $('#sub-table-div');
+        $div.html().hide
   }
   document.onreadystatechange = function() {
         // just three els to loader: this(js);css;html
@@ -299,3 +327,6 @@ thead th { position: sticky; top: 0; }
         }
   };
 </script>
+
+
+

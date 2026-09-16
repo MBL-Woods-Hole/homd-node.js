@@ -1452,9 +1452,9 @@ router.get('/rRNA_gene_tree', function rRNAGeneTree (req, res) {
 })
 //
 //
-router.get('/anvio_pangenomes', function anvio_pangenomes_GET(req, res){
+router.get('/pangenomes', function pangenomes_GET(req, res){
     //let q = queries.get_all_pangenomes_query()
-    logger.info(`in GET anvio selection`)
+    logger.info(`in GET pangenomes`)
     
     let pg_list = Object.keys(C.pangenome_lookup)
     let tot_count = pg_list.length
@@ -1464,62 +1464,28 @@ router.get('/anvio_pangenomes', function anvio_pangenomes_GET(req, res){
           gstrains[C.pangenome_lookup[n].gids[i]] = C.genome_lookup[C.pangenome_lookup[n].gids[i]].strain
        }
     }
-    if(req.query && req.query.filter){
-        
-        let search_term = req.query.filter.toLowerCase()
-        if(search_term.length >200){
-            return
-        }
-        let collector = []
-        let new_pg_obj = {}
-       
-        for(let i in pg_list){
-            if(pg_list[i].toLowerCase().includes(search_term)){
-                collector.push(pg_list[i])
-                
-                new_pg_obj[pg_list[i]] = C.pangenome_lookup[pg_list[i]]
-            }
-        }
-        
-        collector.sort()
-        res.render('pages/genome/anvio_selection', {
-            title: 'HOMD :: Pangenomes', 
-            pgname: '', // for AboutThisPage
-            config: JSON.stringify(ENV),
-            ver_info: JSON.stringify(C.version_information),
-            search: search_term,
-            tcount: tot_count,
-            thiscount: collector.length,
-            pangenomes: JSON.stringify(new_pg_obj),
-            sorted_pg:  JSON.stringify(collector),
-            strains: JSON.stringify(gstrains)
-            
-        })
-    }else{
-        
-        
-        pg_list.sort()
-        //logger.info(C.pangenome_lookup[pg_list[2]])
-        res.render('pages/genome/anvio_selection', {
-            title: 'HOMD :: Pangenomes', 
-            pgname: '', // for AboutThisPage
-            config: JSON.stringify(ENV),
-            ver_info: JSON.stringify(C.version_information),
-            search: '',
-            tcount: tot_count,
-            thiscount: tot_count,
-            pangenomes: JSON.stringify(C.pangenome_lookup),
-            sorted_pg:  JSON.stringify(pg_list),
-            strains: JSON.stringify(gstrains)
-        })
-    }
-    return
+    
+    pg_list.sort()
+    //logger.info(C.pangenome_lookup[pg_list[2]])
+    res.render('pages/genome/pangenomes', {
+        title: 'HOMD :: Pangenomes', 
+        pgname: '', // for AboutThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
+        search: '',
+        tcount: tot_count,
+        thiscount: tot_count,
+        pangenomes: JSON.stringify(C.pangenome_lookup),
+        sorted_pg:  JSON.stringify(pg_list),
+        strains: JSON.stringify(gstrains)
+    })
+    
 
 })
 //
-router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
+router.post('/pangenomes', function pangenomes_POST(req, res){
 
-    logger.info(`in POST anvio selection ${req.query}`)
+    logger.info(`in POST pangenomes ${req.query}`)
     let search_term = req.body.val.toLowerCase()
     
     let pg,obj,html = ""
@@ -1615,7 +1581,7 @@ router.post('/anvio_pangenomes', function anvio_pangenomes_POST(req, res){
 
 
 router.get('/anvio', (req, res) => {
-    logger.info('In anvio')
+    logger.info('In anvio opening HOMD Anvi`o')
     
     //helpers.accesslog(req, res)
     
@@ -1638,7 +1604,7 @@ router.get('/anvio', (req, res) => {
 //     }
     //logger.info('env',ENV)
     res.render('pages/genome/anvi_server', {
-    //res.render('pages/genome/anvi_server_iframe', {
+    
         title: 'HOMD :: Pangenomes', 
         pgname: '', // for AboutThisPage
         config: JSON.stringify(ENV),
@@ -2119,7 +2085,7 @@ router.post('/amr_table', function amr_table_POST(req, res) {
 //
 //
 router.post('/amr_ajax', async function amr_ajax(req, res){
-    //console.log('in amr ajax')
+    console.log('in amr ajax')
     let gid = req.body.gid
     let q = queries.get_amr_data(gid)
     
@@ -2127,9 +2093,9 @@ router.post('/amr_ajax', async function amr_ajax(req, res){
     let org = C.genome_lookup[gid].organism
     let strain = C.genome_lookup[gid].strain
     let start,stop,tmp,locstart,locstop,seqacc,loc,highlight
-    let html_rows = "<div id='amr-sub-table-div'>"+gid+'; '+hmt+'; '+org+' ('+strain+')'
-    html_rows += "<a href='#' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</a>"
-    html_rows += "<table id='amr-sub-table' class='table table-condensed'>"
+    let html_rows = "<div id='amr-sub-table-div' >"+gid+'; '+hmt+'; '+org+' ('+strain+')'
+    html_rows += "<button class='button' href='#' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</button>"
+    html_rows += "<table id='amr-sub-table' class='table table-condensed hidden-table'>"
     html_rows += "<tr>"
     html_rows += " <th>Protein-ID</th><th>Genome Viewer</th><th>Element Symbol</th><th>Element Name</th><th>Scope</th><th>Type</th><th>Subtype</th><th>Class</th>"
     html_rows += " <th>Subclass</th><th>Method</th><th>Target Length</th><th>Ref Seq Length</th><th>Ref Coverage %</th><th>Ref Identity %</th>"
@@ -2171,11 +2137,7 @@ router.post('/amr_ajax', async function amr_ajax(req, res){
             loc = seqacc+":"+locstart.toString()+".."+locstop.toString() 
             highlight = seqacc+":"+start.toString()+".."+stop.toString() 
             
-            html_rows += "<td><a href='#' onclick=\"open_jbrowse('"+gid+"','amr','','','','"+loc+"','"+highlight+"')\">open"
-            html_rows += ' <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">'
-            html_rows += '  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>'
-            html_rows += " </svg>"
-            html_rows += " </a>"
+            html_rows += "<td><a href='#' onclick=\"open_jbrowse('"+gid+"','amr','','','','"+loc+"','"+highlight+"')\">open</a>"
             html_rows += "</td>"
 
             html_rows += "<td nowrap class=''>"+rows[i].element_symbol+"</td>"
@@ -2326,7 +2288,7 @@ router.post('/crispr_ajax', async function crispr_ajax(req, res) {
     let org = C.genome_lookup[gid].organism
     let strain = C.genome_lookup[gid].strain
     let html_rows = "<div id='crispr-sub-table-div'>"+gid+'; '+hmt+'; '+org+' ('+strain+')'
-    html_rows += "<a href='#' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</a>"
+    html_rows += "<button class='button' onclick=close_sub_table() style='float:right;margin-right:100px;'>Close</button>"
     html_rows += "<table id='crispr-sub-table' class='table table-condensed'>"
     html_rows += "<tr>"
     html_rows += "<th class='col1'>Contig</th>"
