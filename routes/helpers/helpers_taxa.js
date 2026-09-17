@@ -1,35 +1,33 @@
-'use strict'
+"use strict";
 //import express from 'express';
 let router = express.Router();
-import C from '../../public/constants.js';
+import C from "../../public/constants.js";
 //const queries = require(app_root + '/routes/queries');
 
-import express from 'express';
-import fs from 'fs-extra';
-import readline from 'readline';
-import accesslog from 'access-log';
-import async from 'async';
-import util from 'util';
-import path from 'path';
-import { exec, spawn } from 'child_process';
-import * as helpers from './helpers.js';
+import express from "express";
+//import fs from "fs-extra";
+
+//import async from "async";
+
+//import { exec, spawn } from "child_process";
+import * as helpers from "./helpers.js";
 //import * as helpers_taxa from './helpers_taxa.js';
-import logger from '../../config/app_config.js';
-
-
+import logger from "../../config/app_config.js";
 
 export const get_all_phyla = () => {
-  let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['phylum'];
-  let phyla = phyla_obj.map(function mapPhylaObj2(el) { return el.taxon; });
+  let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["phylum"];
+  let phyla = phyla_obj.map(function mapPhylaObj2(el) {
+    return el.taxon;
+  });
   return phyla;
 };
 
-export const clean_rank_name_for_show = (rank) =>{
-    // capitalise and fix klass => Class
-    if(rank == 'klass' || rank == 'Klass'){
-       rank = 'Class'
-    }
-    return rank.charAt(0).toUpperCase() + rank.slice(1)
+export const clean_rank_name_for_show = (rank) => {
+  // capitalise and fix klass => Class
+  if (rank == "klass" || rank == "Klass") {
+    rank = "Class";
+  }
+  return rank.charAt(0).toUpperCase() + rank.slice(1);
 };
 
 export const get_filter_on = (f) => {
@@ -39,124 +37,134 @@ export const get_filter_on = (f) => {
   let obj2 = JSON.stringify(f);
   if (obj1 === obj2) {
     //logger.info('off')
-    return 'off';
+    return "off";
   } else {
     //logger.info('on')
-    return 'on';
+    return "on";
   }
 };
 
 export const get_default_tax_filter = () => {
-
-  let defaultfilter = { otid: '', status: {}, site: {}, abund: {} };
+  let defaultfilter = { otid: "", status: {}, site: {}, abund: {} };
 
   // body sites
   let body_sites = Object.keys(C.tax_sites_all);
   for (let n in body_sites) {
     if (C.tax_sites_default.indexOf(body_sites[n]) == -1) {
-      defaultfilter.site[body_sites[n]] = 'off'; // then turn all 'on'
+      defaultfilter.site[body_sites[n]] = "off"; // then turn all 'on'
     } else {
-      defaultfilter.site[body_sites[n]] = 'on'; // then turn all 'on'
+      defaultfilter.site[body_sites[n]] = "on"; // then turn all 'on'
     }
   }
-  defaultfilter.site['p_or_pst'] = 'both'  //'primary_site';
+  defaultfilter.site["p_or_pst"] = "both"; //'primary_site';
 
   // abundance
-  for (let n=0; n < C.tax_abund_all.length; n++) {
+  for (let n = 0; n < C.tax_abund_all.length; n++) {
     if (C.tax_abund_default.indexOf(C.tax_abund_all[n]) == -1) {
-      defaultfilter.abund[C.tax_abund_all[n]] = 'off'; // then turn all 'on'
+      defaultfilter.abund[C.tax_abund_all[n]] = "off"; // then turn all 'on'
     } else {
-      defaultfilter.abund[C.tax_abund_all[n]] = 'on'; // then turn all 'on'
+      defaultfilter.abund[C.tax_abund_all[n]] = "on"; // then turn all 'on'
     }
   }
 
   // status
-  for (let n=0; n < C.tax_status_all.length; n++) { //'named_cultivated','named_uncultivated','unnamed_cultivated','phylotype','reference','dropped'
+  for (let n = 0; n < C.tax_status_all.length; n++) {
+    //'named_cultivated','named_uncultivated','unnamed_cultivated','phylotype','reference','dropped'
     // default will have 'dropped' off
     if (C.tax_status_default.indexOf(C.tax_status_all[n]) == -1) {
-      defaultfilter.status[C.tax_status_all[n]] = 'off'; // then turn all 'on'
+      defaultfilter.status[C.tax_status_all[n]] = "off"; // then turn all 'on'
     } else {
-      defaultfilter.status[C.tax_status_all[n]] = 'on'; // then turn all 'on'
+      defaultfilter.status[C.tax_status_all[n]] = "on"; // then turn all 'on'
     }
   }
 
-  defaultfilter.genomes = 'both';
+  defaultfilter.genomes = "both";
   defaultfilter.text = {
-    txt_srch: '',
-    field: 'all',
+    txt_srch: "",
+    field: "all",
   };
-  defaultfilter.letter = '0';
-  defaultfilter.phylum = '0';
-  defaultfilter.sort_col = 'genus';
-  defaultfilter.sort_rev = 'off';
+  defaultfilter.letter = "0";
+  defaultfilter.phylum = "0";
+  defaultfilter.sort_col = "genus";
+  defaultfilter.sort_rev = "off";
 
   return defaultfilter;
 };
 
 export const get_null_tax_filter = () => {
   let nullfilter = {
-    otid: '',
+    otid: "",
     status: {
-      named_cultivated: 'off',
-      named_uncultivated: 'off',
-      unnamed_cultivated: 'off',
-      phylotype: 'off',
-      dropped: 'off',
-      reference: 'off'
+      named_cultivated: "off",
+      named_uncultivated: "off",
+      unnamed_cultivated: "off",
+      phylotype: "off",
+      dropped: "off",
+      reference: "off",
     },
     site: {
-      oral: 'off',
-      nasal: 'off',
-      skin: 'off',
-      gut: 'off',
-      vaginal: 'off',
-      unassigned: 'off',
-      enviro: 'off',
-      pathogen: 'off',
-      p_or_pst: 'both'  //'primary_site'
+      oral: "off",
+      nasal: "off",
+      skin: "off",
+      gut: "off",
+      vaginal: "off",
+      unassigned: "off",
+      enviro: "off",
+      pathogen: "off",
+      p_or_pst: "both", //'primary_site'
     },
     abund: {
-      high_abund: 'off',
-      medium_abund: 'off',
-      low_abund: 'off',
-      scarce_abund: 'off',
-      nodata_abund: 'off'
+      high_abund: "off",
+      medium_abund: "off",
+      low_abund: "off",
+      scarce_abund: "off",
+      nodata_abund: "off",
     },
-    genomes: 'both',
+    genomes: "both",
     text: {
-      txt_srch: '',
-      field: 'all',
+      txt_srch: "",
+      field: "all",
     },
-    letter: '0',
-    phylum: '0',
-    sort_col: 'genus',
-    sort_rev: 'off'
+    letter: "0",
+    phylum: "0",
+    sort_col: "genus",
+    sort_rev: "off",
   };
   return nullfilter;
 };
 
-export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_field) => {
-
-  let send_list = [];
+export const get_text_filtered_taxon_list = (
+  big_tax_list,
+  search_txt,
+  search_field,
+) => {
+  let send_list;
   //logger.info('txt srch',search_txt,search_field)
-  if (search_field == 'taxid') {
-    if(search_txt.slice(0, 3) === 'hmt'){ 
-        let pototid = parseInt(search_txt.slice(3).replace('-','').replace('_',''))
-        send_list = big_tax_list.filter(item => {
-            if(pototid && item.otid == pototid){
-                logger.info('item',item)
-                return item
-            }
-        });
-        
-    }else{
-        send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt));
+  if (search_field == "taxid") {
+    if (search_txt.slice(0, 3) === "hmt") {
+      let pototid = parseInt(
+        search_txt.slice(3).replace("-", "").replace("_", ""),
+      );
+      send_list = big_tax_list.filter((item) => {
+        if (pototid && item.otid == pototid) {
+          logger.info("item", item);
+          return item;
+        }
+      });
+    } else {
+      send_list = big_tax_list.filter((item) =>
+        item.otid.toLowerCase().includes(search_txt),
+      );
     }
-  } else if (search_field == 'genus') {
-    send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt));
-  } else if (search_field == 'species') {
-    send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt));
-  } else if (search_field == 'synonym') {
+  } else if (search_field == "genus") {
+    send_list = big_tax_list.filter((item) =>
+      item.genus.toLowerCase().includes(search_txt),
+    );
+  } else if (search_field == "species") {
+    send_list = big_tax_list.filter((item) =>
+      item.species.toLowerCase().includes(search_txt),
+    );
+  } else if (search_field == "synonym") {
     send_list = big_tax_list.filter(function (e) {
       for (let n in e.synonyms) {
         if (e.synonyms[n].toLowerCase().includes(search_txt)) {
@@ -164,8 +172,7 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
         }
       }
     });
-
-  } else if (search_field == 'type_strain') {
+  } else if (search_field == "type_strain") {
     send_list = big_tax_list.filter(function filterBigList1(e) {
       for (let n in e.type_strains) {
         if (e.type_strains[n].toLowerCase().includes(search_txt)) {
@@ -179,47 +186,50 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
     let temp_obj = {};
 
     //OTID
-    let tmp_send_list
-    if(search_txt.slice(0, 3) === 'hmt'){ 
-        let pototid = parseInt(search_txt.slice(3).replace('-','').replace('_',''))
-        tmp_send_list = big_tax_list.filter(item => {
-            //logger.info('pototid',pototid)
-            if(pototid && item.otid == pototid){
-                //logger.info('item',item)
-                return item
-            }
-        });
-        
-    }else{
-        tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt));
+    let tmp_send_list;
+    if (search_txt.slice(0, 3) === "hmt") {
+      let pototid = parseInt(
+        search_txt.slice(3).replace("-", "").replace("_", ""),
+      );
+      tmp_send_list = big_tax_list.filter((item) => {
+        //logger.info('pototid',pototid)
+        if (pototid && item.otid == pototid) {
+          //logger.info('item',item)
+          return item;
+        }
+      });
+    } else {
+      tmp_send_list = big_tax_list.filter((item) =>
+        item.otid.toLowerCase().includes(search_txt),
+      );
     }
     //let tmp_send_list = big_tax_list.filter(item => item.otid.toLowerCase().includes(search_txt));
-    
-    
+
     //let tmp_send_list = big_tax_list.filter(screen_tax_list)
     // for uniqueness convert to object
     for (let n in tmp_send_list) {
       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n];
     }
 
-
     //Genus
     //logger.info('srchfield',search_field, search_txt)
     //logger.info('big_tax_list2.length',big_tax_list.length)
-    tmp_send_list = big_tax_list.filter(item => item.genus.toLowerCase().includes(search_txt));
+    tmp_send_list = big_tax_list.filter((item) =>
+      item.genus.toLowerCase().includes(search_txt),
+    );
     //logger.info('tmp_send_list1',tmp_send_list)
     for (let n in tmp_send_list) {
       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n];
     }
 
-
     // Species
     //logger.info('tmp_send_list2',tmp_send_list)
-    tmp_send_list = big_tax_list.filter(item => item.species.toLowerCase().includes(search_txt));
+    tmp_send_list = big_tax_list.filter((item) =>
+      item.species.toLowerCase().includes(search_txt),
+    );
     for (let n in tmp_send_list) {
       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n];
     }
-
 
     //Synonyms
     tmp_send_list = big_tax_list.filter(function filterBigList2(e) {
@@ -232,7 +242,6 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
     for (let n in tmp_send_list) {
       temp_obj[tmp_send_list[n].otid] = tmp_send_list[n];
     }
-
 
     //type_strains
     tmp_send_list = big_tax_list.filter(function filterBigList3(e) {
@@ -250,7 +259,7 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
     tmp_send_list = big_tax_list.filter(function filterBigList4(e) {
       if (e.otid in C.site_lookup) {
         let to_include = Object.values(C.site_lookup[e.otid]);
-        let glom = to_include.join(' ').toLowerCase();
+        let glom = to_include.join(" ").toLowerCase();
         //logger.info('site_on[n]',site_on[n],'glom',glom)
         if (glom.includes(search_txt)) {
           //if(site_on.includes(item.sites[n].toLowerCase())){
@@ -266,7 +275,10 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
     //if(search_txt == '**' || search_txt == 'nvp'){
     //logger.info('TEXT3',big_tax_list.length,Object.keys(temp_obj).length)
     tmp_send_list = big_tax_list.filter(function filterBigList5(e) {
-      if (e.naming_status.toLowerCase().includes(search_txt) || e.cultivation_status.toLowerCase().includes(search_txt)) {
+      if (
+        e.naming_status.toLowerCase().includes(search_txt) ||
+        e.cultivation_status.toLowerCase().includes(search_txt)
+      ) {
         //logger.info('TEXT3',e)
         return e;
       }
@@ -278,8 +290,6 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
     //logger.info('TEXT4',Object.keys(temp_obj).length)
     // now back to a list
     send_list = Object.values(temp_obj);
-
-
   }
   return send_list;
 };
@@ -287,60 +297,80 @@ export const get_text_filtered_taxon_list = (big_tax_list, search_txt, search_fi
 export const make_lineage = (node) => {
   //logger.info('in lineage-node',node)
   if (!node) {
-    return ['', {}];
+    return ["", {}];
   }
-  let lineage = '';
+  let lineage = "";
   let lineage_obj = {};
   let tax_obj = C.homd_taxonomy.taxa_tree_dict_map_by_id;
   if (node.parent_id == 0) {
     lineage = node.taxon;
     lineage_obj.domain = node.taxon;
-  } else if (node.rank === 'phylum') {
+  } else if (node.rank === "phylum") {
     let dn = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id];
-    lineage = dn.taxon + ';' + node.taxon;
+    lineage = dn.taxon + ";" + node.taxon;
     lineage_obj.domain = dn.taxon;
     lineage_obj.phylum = node.taxon;
-  } else if (node.rank === 'klass' || node.rank === 'class') {
+  } else if (node.rank === "klass" || node.rank === "class") {
     let pn = tax_obj[node.parent_id];
     let dn = tax_obj[pn.parent_id];
-    lineage = dn.taxon + ';' + pn.taxon + ';' + node.taxon;
+    lineage = dn.taxon + ";" + pn.taxon + ";" + node.taxon;
     lineage_obj.domain = tax_obj[pn.parent_id].taxon;
     lineage_obj.phylum = tax_obj[node.parent_id].taxon;
     lineage_obj.klass = node.taxon;
-  } else if (node.rank === 'order') {
+  } else if (node.rank === "order") {
     let kn = tax_obj[node.parent_id];
     let pn = tax_obj[kn.parent_id];
     let dn = tax_obj[pn.parent_id];
-    lineage = dn.taxon + ';' + pn.taxon + ';' + kn.taxon + ';' + node.taxon;
+    lineage = dn.taxon + ";" + pn.taxon + ";" + kn.taxon + ";" + node.taxon;
     lineage_obj.domain = tax_obj[pn.parent_id].taxon;
     lineage_obj.phylum = tax_obj[kn.parent_id].taxon;
     lineage_obj.klass = tax_obj[node.parent_id].taxon;
     lineage_obj.order = node.taxon;
-  } else if (node.rank === 'family') {
+  } else if (node.rank === "family") {
     let on = tax_obj[node.parent_id];
     let kn = tax_obj[on.parent_id];
     let pn = tax_obj[kn.parent_id];
     let dn = tax_obj[pn.parent_id];
-    lineage = dn.taxon + ';' + pn.taxon + ';' + kn.taxon + ';' + on.taxon + ';' + node.taxon;
+    lineage =
+      dn.taxon +
+      ";" +
+      pn.taxon +
+      ";" +
+      kn.taxon +
+      ";" +
+      on.taxon +
+      ";" +
+      node.taxon;
     lineage_obj.domain = tax_obj[pn.parent_id].taxon;
     lineage_obj.phylum = tax_obj[kn.parent_id].taxon;
     lineage_obj.klass = tax_obj[on.parent_id].taxon;
     lineage_obj.order = tax_obj[node.parent_id].taxon;
     lineage_obj.family = node.taxon;
-  } else if (node.rank === 'genus') {
+  } else if (node.rank === "genus") {
     let fn = tax_obj[node.parent_id];
     let on = tax_obj[fn.parent_id];
     let kn = tax_obj[on.parent_id];
     let pn = tax_obj[kn.parent_id];
     let dn = tax_obj[pn.parent_id];
-    lineage = dn.taxon + ';' + pn.taxon + ';' + kn.taxon + ';' + on.taxon + ';' + fn.taxon + ';' + node.taxon;
+    lineage =
+      dn.taxon +
+      ";" +
+      pn.taxon +
+      ";" +
+      kn.taxon +
+      ";" +
+      on.taxon +
+      ";" +
+      fn.taxon +
+      ";" +
+      node.taxon;
     lineage_obj.domain = tax_obj[pn.parent_id].taxon;
     lineage_obj.phylum = tax_obj[kn.parent_id].taxon;
     lineage_obj.klass = tax_obj[on.parent_id].taxon;
     lineage_obj.order = tax_obj[fn.parent_id].taxon;
     lineage_obj.family = tax_obj[node.parent_id].taxon;
     lineage_obj.genus = node.taxon;
-  } else if (node.rank === 'species') {
+  } else if (node.rank === "species") {
     //logger.info('species1',node)
     let gn = tax_obj[node.parent_id];
     //logger.info('genus1',gn)
@@ -354,7 +384,20 @@ export const make_lineage = (node) => {
     //         logger.info('class1',kn)
     //         logger.info('order1',on)
     //         logger.info('family1',fn)
-    lineage = dn.taxon + ';' + pn.taxon + ';' + kn.taxon + ';' + on.taxon + ';' + fn.taxon + ';' + gn.taxon + ';' + node.taxon;
+    lineage =
+      dn.taxon +
+      ";" +
+      pn.taxon +
+      ";" +
+      kn.taxon +
+      ";" +
+      on.taxon +
+      ";" +
+      fn.taxon +
+      ";" +
+      gn.taxon +
+      ";" +
+      node.taxon;
     lineage_obj.domain = tax_obj[pn.parent_id].taxon;
     lineage_obj.phylum = tax_obj[kn.parent_id].taxon;
     lineage_obj.klass = tax_obj[on.parent_id].taxon;
@@ -362,7 +405,7 @@ export const make_lineage = (node) => {
     lineage_obj.family = tax_obj[gn.parent_id].taxon;
     lineage_obj.genus = tax_obj[node.parent_id].taxon;
     lineage_obj.species = node.taxon;
-  } else if (node.rank === 'subspecies') {
+  } else if (node.rank === "subspecies") {
     let sn = tax_obj[node.parent_id];
     let gn = tax_obj[sn.parent_id];
     let fn = tax_obj[gn.parent_id];
@@ -370,7 +413,22 @@ export const make_lineage = (node) => {
     let kn = tax_obj[on.parent_id];
     let pn = tax_obj[kn.parent_id];
     let dn = tax_obj[pn.parent_id];
-    lineage = dn.taxon + ';' + pn.taxon + ';' + kn.taxon + ';' + on.taxon + ';' + fn.taxon + ';' + gn.taxon + ';' + sn.taxon + ';' + node.taxon;
+    lineage =
+      dn.taxon +
+      ";" +
+      pn.taxon +
+      ";" +
+      kn.taxon +
+      ";" +
+      on.taxon +
+      ";" +
+      fn.taxon +
+      ";" +
+      gn.taxon +
+      ";" +
+      sn.taxon +
+      ";" +
+      node.taxon;
     lineage_obj.domain = tax_obj[pn.parent_id].taxon;
     lineage_obj.phylum = tax_obj[kn.parent_id].taxon;
     lineage_obj.klass = tax_obj[on.parent_id].taxon;
@@ -398,7 +456,7 @@ export const set_ttable_session = (req) => {
   // 5genome_genome_table
   //logger.info('set sess body',req.body)
   //logger.info('xsession',req.session)
-  let letter = '0';
+  let letter = "0";
   if (req.session.ttable_filter && req.session.ttable_filter.letter) {
     letter = req.session.ttable_filter.letter;
   }
@@ -406,20 +464,20 @@ export const set_ttable_session = (req) => {
   req.session.ttable_filter.letter = letter;
 
   for (let item in req.body) {
-    if (item == 'letter') {
+    if (item == "letter") {
       req.session.ttable_filter.letter = req.body.letter;
     }
-    if (item == 'phylum') {
+    if (item == "phylum") {
       req.session.ttable_filter.phylum = req.body.phylum;
     }
-    if (item == 'genomes') {
+    if (item == "genomes") {
       req.session.ttable_filter.genomes = req.body.genomes;
     }
-    if (item == 'sort_col') {
+    if (item == "sort_col") {
       req.session.ttable_filter.sort_col = req.body.sort_col;
     }
-    if (item == 'sort_rev') {
-      req.session.ttable_filter.sort_rev = 'on';
+    if (item == "sort_rev") {
+      req.session.ttable_filter.sort_rev = "on";
     }
 
     // Named Cultivated
@@ -427,68 +485,63 @@ export const set_ttable_session = (req) => {
     // Named Uncultivated
     // Dropped Dropped
     // Phylotype
-    if (item == 'named_cultivated') {
-      req.session.ttable_filter.status.named_cultivated = 'on';
+    if (item == "named_cultivated") {
+      req.session.ttable_filter.status.named_cultivated = "on";
     }
 
-    if (item == 'named_uncultivated') {
-      req.session.ttable_filter.status.named_uncultivated = 'on';
+    if (item == "named_uncultivated") {
+      req.session.ttable_filter.status.named_uncultivated = "on";
     }
-    if (item == 'unnamed_cultivated') {
-      req.session.ttable_filter.status.unnamed_cultivated = 'on';
+    if (item == "unnamed_cultivated") {
+      req.session.ttable_filter.status.unnamed_cultivated = "on";
     }
-    if (item == 'phylotype') {
-      req.session.ttable_filter.status.phylotype = 'on';
+    if (item == "phylotype") {
+      req.session.ttable_filter.status.phylotype = "on";
     }
-    if (item == 'dropped') {
-      req.session.ttable_filter.status.dropped = 'on';
+    if (item == "dropped") {
+      req.session.ttable_filter.status.dropped = "on";
     }
-    if (item == 'reference') {
-      req.session.ttable_filter.status.reference = 'on';
+    if (item == "reference") {
+      req.session.ttable_filter.status.reference = "on";
     }
-
-
 
     // sites
     for (let site_code in C.tax_sites_all) {
       if (item == site_code) {
         //logger.info('C.tax_sites_all[n]',item,C.tax_sites_all[site_code])
-        req.session.ttable_filter.site[site_code] = 'on';
+        req.session.ttable_filter.site[site_code] = "on";
       }
     }
 
-    if (item == 'p_or_pst') {
+    if (item == "p_or_pst") {
       req.session.ttable_filter.site.p_or_pst = req.body.p_or_pst;
     }
-    if (item == 'high_abund') {
-      req.session.ttable_filter.abund.high_abund = 'on';
+    if (item == "high_abund") {
+      req.session.ttable_filter.abund.high_abund = "on";
     }
-    if (item == 'medium_abund') {
-      req.session.ttable_filter.abund.medium_abund = 'on';
+    if (item == "medium_abund") {
+      req.session.ttable_filter.abund.medium_abund = "on";
     }
-    if (item == 'low_abund') {
-      req.session.ttable_filter.abund.low_abund = 'on';
+    if (item == "low_abund") {
+      req.session.ttable_filter.abund.low_abund = "on";
     }
-    if (item == 'scarce_abund') {
-      req.session.ttable_filter.abund.scarce_abund = 'on';
+    if (item == "scarce_abund") {
+      req.session.ttable_filter.abund.scarce_abund = "on";
     }
-    if (item == 'nodata_abund') {
-      req.session.ttable_filter.abund.nodata_abund = 'on';
+    if (item == "nodata_abund") {
+      req.session.ttable_filter.abund.nodata_abund = "on";
     }
     //////
-    if (item == 'txt_srch') {
+    if (item == "txt_srch") {
       req.session.ttable_filter.text.txt_srch = req.body.txt_srch.toLowerCase();
     }
-    if (item == 'field') {
+    if (item == "field") {
       req.session.ttable_filter.text.field = req.body.field;
     }
-
   }
-
 };
 
 export const apply_ttable_filter = (req, filter) => {
-
   let big_tax_list = Object.values(C.taxon_lookup);
   //logger.info('olength-0',big_tax_list)
   let vals;
@@ -505,86 +558,107 @@ export const apply_ttable_filter = (req, filter) => {
   //
   // SEARCH txt_srch
   //logger.info('TEXT',vals.text.txt_srch, vals.text.field)
-  if (vals.text.txt_srch !== '') {
-    big_tax_list = get_text_filtered_taxon_list(big_tax_list, vals.text.txt_srch, vals.text.field);
+  if (vals.text.txt_srch !== "") {
+    big_tax_list = get_text_filtered_taxon_list(
+      big_tax_list,
+      vals.text.txt_srch,
+      vals.text.field,
+    );
   }
   //logger.info('big_tax_list',big_tax_list[0])
   //logger.info('vals', vals)
   /////////////////////////
   ///// SEARCH STATUS /////
-  let status_on = Object.keys(vals.status).filter(item => vals.status[item] == 'on');
+  let status_on = Object.keys(vals.status).filter(
+    (item) => vals.status[item] == "on",
+  );
   //logger.info('status_on',status_on)
-  let check, combo = '', first_part = '', second_part = '';
+  let check,
+    first_part = "",
+    second_part = "";
   big_tax_list = big_tax_list.filter(function filterStatus(item) {
     //logger.info('item',item)
     // if (item.otid == 470) {
-//           logger.info('1-Found 470',item.otid)
-//     }
+    //           logger.info('1-Found 470',item.otid)
+    //     }
     // choices: dropped,phylotype, named_cultivated,named_uncultivated,unnamed_cultivated
-    if (item.naming_status.substring(0, 5).toLowerCase() === 'named') {
-      first_part = 'named';
-    } else if (item.naming_status.substring(0, 7).toLowerCase() === 'unnamed') {
-      first_part = 'unnamed';
+    if (item.naming_status.substring(0, 5).toLowerCase() === "named") {
+      first_part = "named";
+    } else if (item.naming_status.substring(0, 7).toLowerCase() === "unnamed") {
+      first_part = "unnamed";
     }
 
-    if (item.cultivation_status.substring(0, 10).toLowerCase() === 'cultivated') {
-      second_part = 'cultivated';
-    } else if (item.cultivation_status.substring(0, 12).toLowerCase() === 'uncultivated') {
-      second_part = 'uncultivated';
+    if (
+      item.cultivation_status.substring(0, 10).toLowerCase() === "cultivated"
+    ) {
+      second_part = "cultivated";
+    } else if (
+      item.cultivation_status.substring(0, 12).toLowerCase() === "uncultivated"
+    ) {
+      second_part = "uncultivated";
     }
-    
+
     /////
-    if (item.active_status.toLowerCase() === 'dropped') {
-      check = 'dropped';
-    } else if (item.active_status.toLowerCase() === 'reference') {
-      check = 'reference';
-    } else if (item.naming_status.toLowerCase() === 'phylotype') {
-      check = 'phylotype';
+    if (item.active_status.toLowerCase() === "dropped") {
+      check = "dropped";
+    } else if (item.active_status.toLowerCase() === "reference") {
+      check = "reference";
+    } else if (item.naming_status.toLowerCase() === "phylotype") {
+      check = "phylotype";
     } else {
-      check = first_part + '_' + second_part;
+      check = first_part + "_" + second_part;
     }
     // if by mistake: Unnamed and Uncultivated
-    if(item.naming_status.toLowerCase() == 'unnamed' && item.cultivation_status.substring(0, 12).toLowerCase() == 'uncultivated'){
-        check = 'phylotype';
+    if (
+      item.naming_status.toLowerCase() == "unnamed" &&
+      item.cultivation_status.substring(0, 12).toLowerCase() == "uncultivated"
+    ) {
+      check = "phylotype";
     }
     // if (item.otid == 470) {
-//         logger.info('470 check:',check)
-//     }
+    //         logger.info('470 check:',check)
+    //     }
     for (let i in status_on) {
       if (status_on[i] == check) {
         return item;
       }
     }
-
   });
   // logger.info('testing::')
-//   big_tax_list.filter(function testForPresences(item) {
-//       if (item.otid == 470) {
-//           logger.info('1testForPresence-Found 470',item.otid)
-//           logger.info(item)
-//       }
-//    })
+  //   big_tax_list.filter(function testForPresences(item) {
+  //       if (item.otid == 470) {
+  //           logger.info('1testForPresence-Found 470',item.otid)
+  //           logger.info(item)
+  //       }
+  //    })
   //logger.info('status_on',status_on)
   //logger.info('big_tax_list.length-1',big_tax_list.length)
   //OLD WAY:item => status_on.indexOf(item.status.toLowerCase()) !== -1 )
   /////////////////////////////
   // SEARCH ABUNDANCE
-  let abund_on = Object.keys(vals.abund).filter(item => vals.abund[item] == 'on');
+  let abund_on = Object.keys(vals.abund).filter(
+    (item) => vals.abund[item] == "on",
+  );
   //logger.info('abundOn',abund_on)
   big_tax_list = big_tax_list.filter(function filterAbundance(item) {
     //logger.info('item',C.site_lookup[item.otid])
     // if (item.otid == 470) {
-//           logger.info('abund-Found 470',item.otid)
-//       }
+    //           logger.info('abund-Found 470',item.otid)
+    //       }
     if (abund_on.length == C.tax_abund_all.length) {
       return item;
     } else {
-      if (C.site_lookup.hasOwnProperty(item.otid) && C.site_lookup[item.otid].major_body_site) {
-        let site_item_primary = C.site_lookup[item.otid].major_body_site.toLowerCase().replace(/\s/g, '');
-        
+      if (
+        Object.hasOwn(C.site_lookup, item.otid) &&
+        C.site_lookup[item.otid].major_body_site
+      ) {
+        let site_item_primary = C.site_lookup[item.otid].major_body_site
+          .toLowerCase()
+          .replace(/\s/g, "");
+
         //abundOn [ 'medium_abund', 'low_abund', 'scarce_abund','nodata_abund' ]
         for (let n in abund_on) {
-          let test = abund_on[n].slice(0, -6).toLowerCase(); // 
+          let test = abund_on[n].slice(0, -6).toLowerCase(); //
 
           //logger.info('test',test)
           if (site_item_primary.includes(test)) {
@@ -594,11 +668,13 @@ export const apply_ttable_filter = (req, filter) => {
       }
     }
   });
-  console.log('big_tax_list length2',big_tax_list.length)
+  console.log("big_tax_list length2", big_tax_list.length);
   //////////////////////////////////
   // SEARCH SITEs
   //
-  let site_on = Object.keys(vals.site).filter(item => vals.site[item] == 'on');
+  let site_on = Object.keys(vals.site).filter(
+    (item) => vals.site[item] == "on",
+  );
   //let site_on = Object.keys(vals.site).filter(item => vals.site[0][helpers.getKeyByValue(C.tax_sites_all,item.sites[0])] == 'on')
   // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
   // taxon will be excluded here from the taxon table
@@ -606,130 +682,154 @@ export const apply_ttable_filter = (req, filter) => {
   //console.log('site_on',site_on)
   //logger.info('status_on',status_on)
   //logger.info('filter.site',filter.site)
-    
-  if (filter && filter.site.p_or_pst == 'both') {  // this is now default
-      console.log('filter primary_site only')
-      big_tax_list = big_tax_list.filter(function (item) {
-      // if (item.otid == 470) {
-        //           logger.info('2-Found 470',item.otid)
-        //       }
-        //console.log('item',item)
-        // PROBLEM Taxonomic Reference(sites) and ReferenceTaxa(status) are the same 
-        // if (un)check 'Reference' in status line it should (un)include here
-        //logger.info(item,'item')
-        // select only nasal: should find secondary nasals
-        // HMT-0567 Staphylococcus caprae
-        // HMT-0601 Staphylococcus epidermidis
-          let s = item.body_site.toLowerCase()
-          if(item.active_status.toLowerCase() === 'reference'){
-            if(status_on.indexOf(s) != -1){
-                if (item.otid in C.site_lookup) {
-                    item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
-                }
-                return item;
-            }
-          }
-      
-         //logger.info('n',n,'site',item.sites[n])
-         if(item.otid=='567'){
-          //console.log('item',item)
-         }
-         // 
-        if (site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.body_site))) {
-          //if(site_on.includes(item.sites[n].toLowerCase())){
-          //item.site = item.body_site;
-          item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
-          return item;
-        }else if (site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.body_site2))) {
-          //if(site_on.includes(item.sites[n].toLowerCase())){
-          //item.site = item.body_site;
-          item.site = C.site_lookup[item.otid].major_body_site+' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
-          return item;
-        }
-     
-      });
 
-  } else {
-    //C.site_lookup[1]
-    console.log('else XX')  // should search both primary and secondary body_sites (now the default)
+  if (filter && filter.site.p_or_pst == "both") {
+    // this is now default
+    console.log("filter primary_site only");
     big_tax_list = big_tax_list.filter(function (item) {
       // if (item.otid == 470) {
-//           logger.info('3-Found 470',item.otid)
-//       }
+      //           logger.info('2-Found 470',item.otid)
+      //       }
+      //console.log('item',item)
+      // PROBLEM Taxonomic Reference(sites) and ReferenceTaxa(status) are the same
+      // if (un)check 'Reference' in status line it should (un)include here
+      //logger.info(item,'item')
+      // select only nasal: should find secondary nasals
+      // HMT-0567 Staphylococcus caprae
+      // HMT-0601 Staphylococcus epidermidis
+      let s = item.body_site.toLowerCase();
+      if (item.active_status.toLowerCase() === "reference") {
+        if (status_on.indexOf(s) != -1) {
+          if (item.otid in C.site_lookup) {
+            item.site =
+              C.site_lookup[item.otid].major_body_site +
+              " (Abundance: " +
+              C.site_lookup[item.otid].major_site_abundance +
+              ")";
+          }
+          return item;
+        }
+      }
+
+      //logger.info('n',n,'site',item.sites[n])
+      if (item.otid == "567") {
+        //console.log('item',item)
+      }
+      //
+      if (
+        site_on.includes(helpers.getKeyByValue(C.tax_sites_all, item.body_site))
+      ) {
+        //if(site_on.includes(item.sites[n].toLowerCase())){
+        //item.site = item.body_site;
+        item.site =
+          C.site_lookup[item.otid].major_body_site +
+          " (Abundance: " +
+          C.site_lookup[item.otid].major_site_abundance +
+          ")";
+        return item;
+      } else if (
+        site_on.includes(
+          helpers.getKeyByValue(C.tax_sites_all, item.body_site2),
+        )
+      ) {
+        //if(site_on.includes(item.sites[n].toLowerCase())){
+        //item.site = item.body_site;
+        item.site =
+          C.site_lookup[item.otid].major_body_site +
+          " (Abundance: " +
+          C.site_lookup[item.otid].major_site_abundance +
+          ")";
+        return item;
+      }
+    });
+  } else {
+    //C.site_lookup[1]
+    console.log("else XX"); // should search both primary and secondary body_sites (now the default)
+    big_tax_list = big_tax_list.filter(function (item) {
+      // if (item.otid == 470) {
+      //           logger.info('3-Found 470',item.otid)
+      //       }
       //logger.info('otid',item)
       if (item.otid in C.site_lookup) {
         //logger.info('looking1')
         let to_include = Object.values(C.site_lookup[item.otid]); // C.site_lookup[559]  [ '', 'Environmental (soil/water)', 'Opportunistic pathogen' ]
-        for (let n in site_on) { //'oral', 'nasal', 'skin','gut','vaginal','unassigned','enviro','pathogen'
-          let glom = to_include.join(' ').toLowerCase();
+        for (let n in site_on) {
+          //'oral', 'nasal', 'skin','gut','vaginal','unassigned','enviro','pathogen'
+          let glom = to_include.join(" ").toLowerCase();
           //logger.info('site_on[n]',site_on[n],'glom',glom)
           if (glom.includes(site_on[n])) {
             //if(site_on.includes(item.sites[n].toLowerCase())){
             //item.site = item.body_site;
-            item.site = C.site_lookup[item.otid].major_body_site
-            if(C.site_lookup[item.otid].secondary_sites != 'none assigned'){
-                item.site += '; '+C.site_lookup[item.otid].secondary_sites
+            item.site = C.site_lookup[item.otid].major_body_site;
+            if (C.site_lookup[item.otid].secondary_sites != "none assigned") {
+              item.site += "; " + C.site_lookup[item.otid].secondary_sites;
             }
-            item.site += ' (Abundance: '+C.site_lookup[item.otid].major_site_abundance+')'
+            item.site +=
+              " (Abundance: " +
+              C.site_lookup[item.otid].major_site_abundance +
+              ")";
             return item;
           }
         }
       }
     });
   }
-  big_tax_list.filter(function testForPresences(item) {
-      // if (item.otid == 470) {
-//           logger.info('2testForPresence-Found 470',item.otid)
-//       }
-   })
-   //console.log('big_tax_list[0] zero',big_tax_list[0])
-  console.log('big_tax_list length3',big_tax_list.length)
+
+  //console.log('big_tax_list[0] zero',big_tax_list[0])
+  console.log("big_tax_list length3", big_tax_list.length);
   //phylum
-  if (vals.phylum != '0') {
+  if (vals.phylum != "0") {
     big_tax_list = helpers.filter_for_phylum(big_tax_list, vals.phylum);
   }
   //logger.info('olength-2',big_tax_list.length)
   //logger.info('vals',vals)
   //
   //letter
-  if (vals.letter && vals.letter.match(/[A-Z]{1}/)) { // always caps
-    helpers.print(['FILTER::GOT a TaxLetter: ', vals.letter]);
+  if (vals.letter && vals.letter.match(/[A-Z]{1}/)) {
+    // always caps
     // COOL.... filter the whole list
-    big_tax_list = big_tax_list.filter(item => item.genus.toUpperCase().charAt(0) === vals.letter);
+    big_tax_list = big_tax_list.filter(
+      (item) => item.genus.toUpperCase().charAt(0) === vals.letter,
+    );
   }
   //
   // genomes
-  if (vals.genomes == 'wgenomes') {
-    big_tax_list = big_tax_list.filter(item => item.genomes.length > 0);
-  } else if (vals.genomes == 'wogenomes') {
-    big_tax_list = big_tax_list.filter(item => item.genomes.length === 0);
+  if (vals.genomes == "wgenomes") {
+    big_tax_list = big_tax_list.filter((item) => item.genomes.length > 0);
+  } else if (vals.genomes == "wogenomes") {
+    big_tax_list = big_tax_list.filter((item) => item.genomes.length === 0);
   }
 
   big_tax_list.map(function (el) {
-    // do we have ecology/abundance data?  
+    // do we have ecology/abundance data?
     // Is abundance the only thing on the ecology page?
-    if (el.active_status.toLowerCase() != 'dropped') {
-      el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || '';
-      let node = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[el.genus + ' ' + el.species + '_species'];
+    if (el.active_status.toLowerCase() != "dropped") {
+      el.subsp = C.taxon_lineage_lookup[el.otid].subspecies || "";
+      let node =
+        C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+          el.genus + " " + el.species + "_species"
+        ];
       //logger.info(el)
       let lineage_list = make_lineage(node);
 
-      if (C.abundance_lookup.hasOwnProperty(lineage_list[0]) && C.abundance_lookup[lineage_list[0]].ecology == '1') {
+      if (
+        Object.hasOwn(C.abundance_lookup, lineage_list[0]) &&
+        C.abundance_lookup[lineage_list[0]].ecology == "1"
+      ) {
         el.ecology = 1;
       } else {
         el.ecology = 0;
       }
-
     }
   });
   //logger.info('big_tax_list.length-4',big_tax_list.length)
   //sort column
-  if (vals.sort_rev === 'on') {
-    if (vals.sort_col === 'otid') {
+  if (vals.sort_rev === "on") {
+    if (vals.sort_col === "otid") {
       big_tax_list.sort(function (b, a) {
         return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
       });
-    } else if (vals.sort_col === 'lineage') {
+    } else if (vals.sort_col === "lineage") {
       //logger.info('sorting by lineage')
       big_tax_list.sort(function (b, a) {
         let lin_a = C.taxon_lineage_lookup[a.otid].domain;
@@ -737,8 +837,8 @@ export const apply_ttable_filter = (req, filter) => {
         //,lin_barray = []
         let ranks_tmp = C.ranks.slice(1);
         for (let n in ranks_tmp) {
-          lin_a = lin_a + ';' + C.taxon_lineage_lookup[a.otid][ranks_tmp[n]];
-          lin_b = lin_b + ';' + C.taxon_lineage_lookup[b.otid][ranks_tmp[n]];
+          lin_a = lin_a + ";" + C.taxon_lineage_lookup[a.otid][ranks_tmp[n]];
+          lin_b = lin_b + ";" + C.taxon_lineage_lookup[b.otid][ranks_tmp[n]];
         }
         return helpers.compareStrings_alpha(lin_a, lin_b);
       });
@@ -748,15 +848,15 @@ export const apply_ttable_filter = (req, filter) => {
       });
     }
   } else {
-    if (vals.sort_col === 'genus') {
+    if (vals.sort_col === "genus") {
       big_tax_list.sort(function (a, b) {
-        return helpers.compareByTwoStrings_alpha(a, b, 'genus', 'species');
+        return helpers.compareByTwoStrings_alpha(a, b, "genus", "species");
       });
-    } else if (vals.sort_col === 'otid') {
+    } else if (vals.sort_col === "otid") {
       big_tax_list.sort(function (a, b) {
         return helpers.compareStrings_int(a[vals.sort_col], b[vals.sort_col]);
       });
-    } else if (vals.sort_col === 'lineage') {
+    } else if (vals.sort_col === "lineage") {
       //logger.info('sorting by lineage')
       big_tax_list.sort(function (a, b) {
         //logger.info('a',a)
@@ -766,13 +866,12 @@ export const apply_ttable_filter = (req, filter) => {
         //,lin_barray = []
         let ranks_tmp = C.ranks.slice(1); // remove domain
         for (let n in ranks_tmp) {
-          lin_a = lin_a + ';' + C.taxon_lineage_lookup[a.otid][ranks_tmp[n]];
-          lin_b = lin_b + ';' + C.taxon_lineage_lookup[b.otid][ranks_tmp[n]];
+          lin_a = lin_a + ";" + C.taxon_lineage_lookup[a.otid][ranks_tmp[n]];
+          lin_b = lin_b + ";" + C.taxon_lineage_lookup[b.otid][ranks_tmp[n]];
         }
         //logger.info('lina',lin_a)
         return helpers.compareStrings_alpha(lin_a, lin_b);
       });
-
     } else {
       //logger.info(big_tax_list[0])
       //logger.info('sorting by ',vals.sort_col)
@@ -783,7 +882,6 @@ export const apply_ttable_filter = (req, filter) => {
   }
   //logger.info('big_tax_list.length[0]',big_tax_list[0])
   return big_tax_list;
-
 };
 
 //
@@ -791,44 +889,48 @@ export const apply_ttable_filter = (req, filter) => {
 //
 export const get_lpsn_outlink1 = (obj1, lineage) => {
   //logger.info('obj',obj1,lineage)
-  if (lineage['genus'].includes('[')) {
-    let gpts = lineage['genus'].split(/\s/);
-    let g = gpts.shift();
+  if (lineage["genus"].includes("[")) {
+    let gpts = lineage["genus"].split(/\s/);
 
     let l = gpts.length;
     //logger.info('l',g,l)
     if (l == 1) {
-      return 'family/' + lineage['family'];
+      return "family/" + lineage["family"];
     }
     if (l == 2) {
-      return 'order/' + lineage['order'];
+      return "order/" + lineage["order"];
     }
     if (l == 3) {
-      return 'class/' + lineage['klass'];
+      return "class/" + lineage["klass"];
     }
     if (l == 4) {
-      let ppts = lineage['phylum'].split(/\s/);
+      let ppts = lineage["phylum"].split(/\s/);
       //logger.info('l2',lineage['phylum'],ppts)
       if (ppts.length == 2) {
-        return 'phylum/' + ppts[1];
+        return "phylum/" + ppts[1];
       } else {
-        return 'phylum/' + lineage['phylum'];
+        return "phylum/" + lineage["phylum"];
       }
     }
-  } else if (obj1['species'].includes('HMT')) { //Anaerococcus sp. HMT-290
-    return 'genus/' + obj1['genus'];
+  } else if (obj1["species"].includes("HMT")) {
+    //Anaerococcus sp. HMT-290
+    return "genus/" + obj1["genus"];
   } else {
-    return 'species/' + obj1['genus'] + '-' + obj1['species'];
+    return "species/" + obj1["genus"] + "-" + obj1["species"];
   }
 };
 
 export const get_lpsn_outlink2 = (rank, lineage, nexttaxname) => {
   //logger.info('obj',rank,lineage,nexttaxname)
-  let lpsnrank, linkrank, l, pts, ppts = [];
-  if (lineage.hasOwnProperty('phylum')) {
-    ppts = lineage['phylum'].split(/\s/);
+  let lpsnrank,
+    linkrank,
+    l,
+    pts,
+    ppts = [];
+  if (Object.hasOwn(lineage, "phylum")) {
+    ppts = lineage["phylum"].split(/\s/);
   }
-  if (lineage.hasOwnProperty(rank) && lineage[rank].includes('[')) {
+  if (Object.hasOwn(lineage, rank) && lineage[rank].includes("[")) {
     pts = lineage[rank].split(/\s/);
     pts.shift(); // shift name off front  'Clostridiales [F3]'
     l = pts.length;
@@ -836,39 +938,51 @@ export const get_lpsn_outlink2 = (rank, lineage, nexttaxname) => {
     if (l == 1) {
       linkrank = C.ranks[C.ranks.indexOf(rank) - 1];
       lpsnrank = linkrank;
-      if (linkrank == 'klass') { lpsnrank = 'class'; }
-      if (ppts.length == 2) { return 'phylum/' + ppts[1]; }
-      return lpsnrank + '/' + lineage[linkrank];
+      if (linkrank == "klass") {
+        lpsnrank = "class";
+      }
+      if (ppts.length == 2) {
+        return "phylum/" + ppts[1];
+      }
+      return lpsnrank + "/" + lineage[linkrank];
     }
     if (l == 2) {
       linkrank = C.ranks[C.ranks.indexOf(rank) - 2];
       lpsnrank = linkrank;
       //if(linkrank == 'klass'){lpsnrank = 'class'}
-      if (ppts.length == 2) { return 'phylum/' + ppts[1]; }
-      return lpsnrank + '/' + lineage[linkrank];
+      if (ppts.length == 2) {
+        return "phylum/" + ppts[1];
+      }
+      return lpsnrank + "/" + lineage[linkrank];
     }
     if (l == 3) {
       linkrank = C.ranks[C.ranks.indexOf(rank) - 3];
       lpsnrank = linkrank;
       //if(linkrank == 'klass'){lpsnrank = 'class'}
-      if (ppts.length == 2) { return 'phylum/' + ppts[1]; }
-      return lpsnrank + '/' + lineage[linkrank];
+      if (ppts.length == 2) {
+        return "phylum/" + ppts[1];
+      }
+      return lpsnrank + "/" + lineage[linkrank];
     }
     if (l == 4) {
       linkrank = C.ranks[C.ranks.indexOf(rank) - 4];
       lpsnrank = linkrank;
       //if(linkrank == 'klass'){lpsnrank = 'class'}
-      if (ppts.length == 2) { return 'phylum/' + ppts[1]; }
-      return lpsnrank + '/' + lineage[linkrank];
+      if (ppts.length == 2) {
+        return "phylum/" + ppts[1];
+      }
+      return lpsnrank + "/" + lineage[linkrank];
     }
   } else {
     lpsnrank = rank;
-    if (rank == 'klass') { lpsnrank = 'class'; }
+    if (rank == "klass") {
+      lpsnrank = "class";
+    }
     if (ppts.length == 2) {
-      return 'phylum/' + ppts[1];
+      return "phylum/" + ppts[1];
     }
     if (!lineage[rank]) {
-      if (nexttaxname.includes('[')) {
+      if (nexttaxname.includes("[")) {
         pts = nexttaxname.split(/\s/);
         pts.shift(); // shift name off front  'Clostridiales [F3]'
         l = pts.length;
@@ -877,27 +991,26 @@ export const get_lpsn_outlink2 = (rank, lineage, nexttaxname) => {
           //                lpsnrank = linkrank
           //                if(linkrank == 'klass'){lpsnrank = 'class'}
           //                if(ppts.length == 2){return 'phylum/'+ppts[1] }
-          return linkrank + '/' + lineage[linkrank];
+          return linkrank + "/" + lineage[linkrank];
         }
         if (l == 2) {
           linkrank = C.ranks[C.ranks.indexOf(rank) - 2];
           //                lpsnrank = linkrank
           //                if(linkrank == 'klass'){lpsnrank = 'class'}
           //                if(ppts.length == 2){return 'phylum/'+ppts[1] }
-          return linkrank + '/' + lineage[linkrank];
+          return linkrank + "/" + lineage[linkrank];
         }
       }
-      if (rank == 'species') {
-        return lpsnrank + '/' + nexttaxname.replace(' ', '-');
+      if (rank == "species") {
+        return lpsnrank + "/" + nexttaxname.replace(" ", "-");
       }
-      return lpsnrank + '/' + nexttaxname;
+      return lpsnrank + "/" + nexttaxname;
     }
-    if (lpsnrank == 'species') {
-      return lpsnrank + '/' + lineage[rank].replace(' ', '-');
+    if (lpsnrank == "species") {
+      return lpsnrank + "/" + lineage[rank].replace(" ", "-");
     }
-    return lpsnrank + '/' + lineage[rank];
+    return lpsnrank + "/" + lineage[rank];
   }
-
 };
 
 //
@@ -906,42 +1019,86 @@ export const make_lineage_string_with_links = (lineage_list, link, page) => {
   let tmp = "<span class='lineage'>";
   let i = 0;
   for (let n in lineage_list[1]) {
-    if (link == 'life') {
-      tmp += "<a href='/taxa/" + link + "?rank=" + C.ranks[i] + "&name=\"" + lineage_list[1][n] + "&page=\"" + page + "\"'>" + lineage_list[1][n] + '</a>; ';
+    if (link == "life") {
+      tmp +=
+        "<a href='/taxa/" +
+        link +
+        "?rank=" +
+        C.ranks[i] +
+        '&name="' +
+        lineage_list[1][n] +
+        '&page="' +
+        page +
+        "\"'>" +
+        lineage_list[1][n] +
+        "</a>; ";
     } else {
-      if (i === (Object.keys(lineage_list[1])).length - 1) {
+      if (i === Object.keys(lineage_list[1]).length - 1) {
         tmp += lineage_list[1][n];
       } else {
-        tmp += "<a href='/taxa/" + link + "?rank=" + C.ranks[i] + "&name=" + lineage_list[1][n] + "&page=" + page + "'>" + lineage_list[1][n] + '</a>; ';
+        tmp +=
+          "<a href='/taxa/" +
+          link +
+          "?rank=" +
+          C.ranks[i] +
+          "&name=" +
+          lineage_list[1][n] +
+          "&page=" +
+          page +
+          "'>" +
+          lineage_list[1][n] +
+          "</a>; ";
       }
     }
     i += 1;
   }
-  tmp += '</span>';
+  tmp += "</span>";
   //logger.info(tmp)
   return tmp;
 };
 
 export const get_counts = (lineage, ctype) => {
-  let txt,lst;
+  let txt, lst;
   let cts = C.taxon_counts_lookup[lineage];
   // if(ctype === 'wdropped'){
-  //         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>' 
+  //         txt = "[<span class='red-text'>"+   (cts.taxcnt + cts.taxcnt_wdropped).toString()+'</span>'
   //             + ", <span class='green-text'>"+(cts.gcnt   + cts.gcnt_wdropped).toString()+'</span>'
   //             +", <span class='blue-text'>"+  (cts.refcnt + cts.refcnt_wdropped).toString()+'</span>]';
-  if (ctype === 'wdropped') {
-    txt = "[<span class='red-text'>" + (cts.taxcnt + cts.taxcnt_wdropped).toString() + '</span>'
-      + ", <span class='green-text'>" + (cts.gcnt + cts.gcnt_wdropped).toString() + '</span>'
-      + ", <span class='blue-text'>" + (cts.refcnt + cts.refcnt_wdropped).toString() + '</span>]';
-    lst = {tax_counts:cts.taxcnt+cts.taxcnt_wdropped, genome_cts:cts.gcnt + cts.gcnt_wdropped, refseq_counts:cts.refcnt + cts.refcnt_wdropped}
+  if (ctype === "wdropped") {
+    txt =
+      "[<span class='red-text'>" +
+      (cts.taxcnt + cts.taxcnt_wdropped).toString() +
+      "</span>" +
+      ", <span class='green-text'>" +
+      (cts.gcnt + cts.gcnt_wdropped).toString() +
+      "</span>" +
+      ", <span class='blue-text'>" +
+      (cts.refcnt + cts.refcnt_wdropped).toString() +
+      "</span>]";
+    lst = {
+      tax_counts: cts.taxcnt + cts.taxcnt_wdropped,
+      genome_cts: cts.gcnt + cts.gcnt_wdropped,
+      refseq_counts: cts.refcnt + cts.refcnt_wdropped,
+    };
   } else {
-    txt = "[<span class='red-text'>" + (cts.taxcnt).toString() + '</span>'
-      + ", <span class='green-text'>" + (cts.gcnt).toString() + '</span>'
-      + ", <span class='blue-text'>" + (cts.refcnt).toString() + '</span>]';
-    lst = {tax_counts:cts.taxcnt, genome_counts:cts.gcnt, refseq_counts:cts.refcnt}
+    txt =
+      "[<span class='red-text'>" +
+      cts.taxcnt.toString() +
+      "</span>" +
+      ", <span class='green-text'>" +
+      cts.gcnt.toString() +
+      "</span>" +
+      ", <span class='blue-text'>" +
+      cts.refcnt.toString() +
+      "</span>]";
+    lst = {
+      tax_counts: cts.taxcnt,
+      genome_counts: cts.gcnt,
+      refseq_counts: cts.refcnt,
+    };
   }
 
-  return {txt:txt,lst:lst}
+  return { txt: txt, lst: lst };
 };
 
 export default router;
