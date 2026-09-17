@@ -295,7 +295,7 @@ export const get_text_filtered_taxon_list = (
 };
 
 export const make_lineage = (node) => {
-  //logger.info('in lineage-node',node)
+  //logger.info(node,'in lineage-node')
   if (!node) {
     return ["", {}];
   }

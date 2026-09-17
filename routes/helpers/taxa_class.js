@@ -80,7 +80,7 @@ function add_children_to_parent(dictMap_by_id, current_dict) {
   if (current_dict.rank == "subspecies") {
     delete parent_node.otid;
   }
-  return parent_node;
+  //return parent_node;
 }
 
 // todo: refactor! Too long and nested
@@ -118,7 +118,6 @@ function make_taxa_tree_dict(taxonomy_obj) {
         let otid = in_obj[otid_field_name];
         //console.log("in_obj = " + JSON.stringify(in_obj));
 
-        let parent_node = {};
         let current_dict;
         let taxa_rank = field_name;
 
@@ -167,7 +166,7 @@ function make_taxa_tree_dict(taxonomy_obj) {
 
               taxon_name_id += 1;
 
-              parent_node = add_children_to_parent(dictMap_by_id, current_dict);
+              add_children_to_parent(dictMap_by_id, current_dict);
             }
           }
         }

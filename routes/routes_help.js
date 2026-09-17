@@ -1,303 +1,318 @@
-'use strict'
-import express from 'express';
-var router   = express.Router();
-import fs from 'fs-extra';
+"use strict";
+import express from "express";
+var router = express.Router();
+import fs from "fs-extra";
 
-import C from '../public/constants.js';
-import path from 'path';
-import * as helpers from './helpers/helpers.js';
-import * as queries from './queries.js';
-import { exec, spawn } from 'child_process';
+import C from "../public/constants.js";
+import path from "path";
+import * as helpers from "./helpers/helpers.js";
+import * as queries from "./queries.js";
+import { exec } from "child_process";
 //import pino from 'pino';
-import logger from '../config/app_config.js';
+import logger from "../config/app_config.js";
 
-router.get('/index', function index(req, res) {
-  
-    res.render('pages/help/index', {
-        title: 'HOMD :: Help Pages',
-        pgname: '', // for AboutThisPage
-        config: JSON.stringify(ENV),
-        ver_info: JSON.stringify(C.version_information),
-        
-
-    })
-  
-})
-router.get('/help-page', async function help_page(req, res) {
+router.get("/index", function index(req, res) {
+  res.render("pages/help/index", {
+    title: "HOMD :: Help Pages",
+    pgname: "", // for AboutThisPage
+    config: JSON.stringify(ENV),
+    ver_info: JSON.stringify(C.version_information),
+  });
+});
+router.get("/help-page", async function help_page(req, res) {
   //let page = req.params.pagecode
-  let page = req.query.pagecode
-  
-  logger.info(`page ${page}`)
+  let page = req.query.pagecode;
+
+  logger.info(`page ${page}`);
   const renderVersionFxn = (req, res, type, data) => {
-      //logger.info('updates',updates)
-      res.render('pages/version_history', {
-        title: 'HOMD :: Version History',
-          pgname: '', // for AboutThisPage
-          version_type: type,
-          pagetitle: type,
-          data: JSON.stringify(data),
-          
-          //date_sort: date_sort,
-          config: JSON.stringify(ENV),
-          ver_info: JSON.stringify(C.version_information),
-          
-      })
-  }
+    //logger.info('updates',updates)
+    res.render("pages/version_history", {
+      title: "HOMD :: Version History",
+      pgname: "", // for AboutThisPage
+      version_type: type,
+      pagetitle: type,
+      data: JSON.stringify(data),
+
+      //date_sort: date_sort,
+      config: JSON.stringify(ENV),
+      ver_info: JSON.stringify(C.version_information),
+    });
+  };
   const renderHelpFxn = (req, res, page, updates, date_sort) => {
-      //logger.info('updates',updates)
-      res.render('pages/help/helppage', {
-        title: 'HOMD :: Help Pages',
-          pgname: '', // for AboutThisPage
-          pagecode: page,
-          pagetitle: getPageTitle(page),
-          db_updates: JSON.stringify(updates),
-          date_sort: date_sort,
-          config: JSON.stringify(ENV),
-          ver_info: JSON.stringify(C.version_information),
-          fs: fs,
-          
-      })
-  }
-  
-  if(page == 'genome/genome_version'){
-      // read file path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt)
-      fs.readFile(path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt'), 'utf8', (err, data) => {
-        if (err) {
-           logger.error(err);
-           return;
-        }
-        //logger.info(data.trim());
-        renderVersionFxn(req, res, 'HOMD Genomic Version History', data.trim())
-        return;
-      })
-  }else if(page == 'taxon/taxon_version'){
-      // read file path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt)
-      fs.readFile(path.join(ENV.PATH_TO_DATA,'taxonomy_version_history.txt'), 'utf8', (err, data) => {
-        if (err) {
-           logger.error(err);
-           return;
-        }
-        //logger.info(data.trim());
-        renderVersionFxn(req, res, 'HOMD Taxonomy Version History', data.trim())
-        return;
-      })
-  }else if(page == 'refseq/refseq_version'){
-      // read file path.join(ENV.PATH_TO_DATA,'refseq_version_history.txt)
-      fs.readFile(path.join(ENV.PATH_TO_DATA,'refseq_version_history.txt'), 'utf8', (err, data) => {
-        if (err) {
-           logger.error(err);
-           return;
-        }
-        renderVersionFxn(req, res, 'HOMD RefSeq Version History', data.trim())
-      })
-    
-  }else if(page == 'database_update'){
-      // NOT USED!!!!
-      let q = queries.get_db_updates_query()
-      let rowarray = []
-      let byDate = {}
-      const rows = await queries.run_query(q, req, res)
-      
-        
-      for(let n in rows){
-           if(rows[n].date in byDate){
-             byDate[rows[n].date].push({otid:rows[n].otid, description:rows[n].description, reason:rows[n].reason})
-           }else{
-             byDate[rows[n].date] = [{otid:rows[n].otid, description:rows[n].description, reason:rows[n].reason}]
-              
-           }
+    //logger.info('updates',updates)
+    res.render("pages/help/helppage", {
+      title: "HOMD :: Help Pages",
+      pgname: "", // for AboutThisPage
+      pagecode: page,
+      pagetitle: getPageTitle(page),
+      db_updates: JSON.stringify(updates),
+      date_sort: date_sort,
+      config: JSON.stringify(ENV),
+      ver_info: JSON.stringify(C.version_information),
+      fs: fs,
+    });
+  };
 
+  if (page == "genome/genome_version") {
+    // read file path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt)
+    fs.readFile(
+      path.join(ENV.PATH_TO_DATA, "genomic_version_history.txt"),
+      "utf8",
+      (err, data) => {
+        if (err) {
+          logger.error(err);
+          return;
+        }
+        //logger.info(data.trim());
+        renderVersionFxn(req, res, "HOMD Genomic Version History", data.trim());
+        return;
+      },
+    );
+  } else if (page == "taxon/taxon_version") {
+    // read file path.join(ENV.PATH_TO_DATA,'genomic_version_history.txt)
+    fs.readFile(
+      path.join(ENV.PATH_TO_DATA, "taxonomy_version_history.txt"),
+      "utf8",
+      (err, data) => {
+        if (err) {
+          logger.error(err);
+          return;
+        }
+        //logger.info(data.trim());
+        renderVersionFxn(
+          req,
+          res,
+          "HOMD Taxonomy Version History",
+          data.trim(),
+        );
+        return;
+      },
+    );
+  } else if (page == "refseq/refseq_version") {
+    // read file path.join(ENV.PATH_TO_DATA,'refseq_version_history.txt)
+    fs.readFile(
+      path.join(ENV.PATH_TO_DATA, "refseq_version_history.txt"),
+      "utf8",
+      (err, data) => {
+        if (err) {
+          logger.error(err);
+          return;
+        }
+        renderVersionFxn(req, res, "HOMD RefSeq Version History", data.trim());
+      },
+    );
+  } else if (page == "database_update") {
+    // NOT USED!!!!
+    let q = queries.get_db_updates_query();
+
+    let byDate = {};
+    const rows = await queries.run_query(q, req, res);
+
+    for (let n in rows) {
+      if (rows[n].date in byDate) {
+        byDate[rows[n].date].push({
+          otid: rows[n].otid,
+          description: rows[n].description,
+          reason: rows[n].reason,
+        });
+      } else {
+        byDate[rows[n].date] = [
+          {
+            otid: rows[n].otid,
+            description: rows[n].description,
+            reason: rows[n].reason,
+          },
+        ];
       }
-        //logger.info(byDate)
-        let date_array = Object.keys(byDate)
-        //logger.info('date_array1',date_array)
-        date_array.sort(function(a, b){
-            const date1 = new Date(a)
-            const date2 = new Date(b)
-            return date2 - date1;
-        })
-        //logger.info('date_array2',date_array)
-        renderHelpFxn(req, res, page, byDate, date_array)
-      
-  }else{
-    renderHelpFxn(req, res, page, [], [])
+    }
+    //logger.info(byDate)
+    let date_array = Object.keys(byDate);
+    //logger.info('date_array1',date_array)
+    date_array.sort(function (a, b) {
+      const date1 = new Date(a);
+      const date2 = new Date(b);
+      return date2 - date1;
+    });
+    //logger.info('date_array2',date_array)
+    renderHelpFxn(req, res, page, byDate, date_array);
+  } else {
+    renderHelpFxn(req, res, page, [], []);
   }
-})
+});
 
-router.get('/search', function search(req, res) {
+router.get("/search", function search(req, res) {
   //let page = req.params.pagecode
-  res.render('pages/help/search', {
-        title: 'HOMD :: Help Search',
-        pgname: '', // for AboutThisPage
-        config: JSON.stringify(ENV),
-        ver_info: JSON.stringify(C.version_information),
-        
-    })
-})
-router.post('/help_search_result', function help_search_result(req, res) {
-  logger.info('in POST -Search Help')
-  logger.info(req.body)
-  let searchText = req.body.input_string
+  res.render("pages/help/search", {
+    title: "HOMD :: Help Search",
+    pgname: "", // for AboutThisPage
+    config: JSON.stringify(ENV),
+    ver_info: JSON.stringify(C.version_information),
+  });
+});
+router.post("/help_search_result", function help_search_result(req, res) {
+  logger.info("in POST -Search Help");
+  logger.info(req.body);
+  let searchText = req.body.input_string;
   // help pages uses grep
-  let helpLst = []
-  let help_trunk = path.join(ENV.PROCESS_DIR,'views','partials','help')
-  const grep_cmd = "/usr/bin/grep -liR "+help_trunk + " -e '" + helpers.addslashes(searchText) + "'" 
+  let helpLst = [];
+  let help_trunk = path.join(ENV.PROCESS_DIR, "views", "partials", "help");
+  const grep_cmd =
+    "/usr/bin/grep -liR " +
+    help_trunk +
+    " -e '" +
+    helpers.addslashes(searchText) +
+    "'";
   //logger.info('grep_cmd',grep_cmd)
   exec(grep_cmd, (err, stdout, stderr) => {
-      if (stderr) {
-        logger.error(stderr);
-        return;
+    if (stderr) {
+      logger.error(stderr);
+      return;
+    }
+    //logger.info('stdout',stdout);
+    let fileLst = [];
+    if (stdout) {
+      fileLst = stdout.trim().split("\n");
+    }
+    if (fileLst.length > 0) {
+      for (let n in fileLst) {
+        //logger.info('file',fileLst[n])
+        let cleanfinal = fileLst[n]
+          .replace(help_trunk, "")
+          .replace(/^\//, "")
+          .replace(/\.ejs$/, "");
+        helpLst.push(cleanfinal);
       }
-      //logger.info('stdout',stdout);
-      let fileLst = []
-      if(stdout){
-        fileLst = stdout.trim().split('\n')
-      }
-      if(fileLst.length > 0){
-        for(let n in fileLst){
-          //logger.info('file',fileLst[n])
-          let cleanfinal = fileLst[n].replace(help_trunk,'').replace(/^\//,'').replace(/\.ejs$/,'')
-          helpLst.push(cleanfinal)
-        }
-      }
+    }
 
-      res.render('pages/help/search_result', {
-        title: 'HOMD :: Help Search',
-        pgname: '', // for AbountThisPage
-        config: JSON.stringify(ENV),
-        ver_info: JSON.stringify(C.version_information),
-        
-        search_text: searchText,
-        help_pages: JSON.stringify(helpLst),
-      })
-   });
-  
-})
+    res.render("pages/help/search_result", {
+      title: "HOMD :: Help Search",
+      pgname: "", // for AbountThisPage
+      config: JSON.stringify(ENV),
+      ver_info: JSON.stringify(C.version_information),
 
+      search_text: searchText,
+      help_pages: JSON.stringify(helpLst),
+    });
+  });
+});
 
 //=====================================================================================
-function getPageTitle(page){
-    
-    if(page === 'cite'){
-       return 'How to Cite the Human Oral Microbiome Database'
-    }
-    if(page === 'description'){
-       return 'The HOMD Project Description'
-    }
-    if(page === 'strains'){
-       return 'Strains and DNA Availability'
-    }
-    if(page === 'team'){
-       return 'Team'
-    }
-    if(page === 'contact'){
-       return 'Contact Us'
-    }
-    if(page === 'mailing'){
-       return 'Mailing Lists'
-    }
-    if(page === 'download'){
-       return 'Downloading HOMD Data'
-    }
-    if(page === 'publications'){
-       return 'Publications'
-    }
-    if(page === 'announcement'){
-       return 'Announcements'
-    }
-     if(page === 'database_update'){
-       return 'HOMD Database Updates'
-    }
-    // GENOME
-    if(page === 'genome/genome_table'){
-       return 'Page Help::Genome Table'
-    }
-    if(page === 'genome/genome_version'){
-       return 'HOMD Reference Genomes Version History'
-    }
-    if(page === 'genome/description'){
-       return 'Page Help::Genome Description'
-    }
-    if(page === 'genome/explorer'){
-       return 'Page Help::Genome Explorer and Annotations'
-    }
-    if(page === 'genome/jbrowse'){
-       return 'Page Help::JBrowse'
-    }
-    // REFSEQ
-    if(page === 'refseq/refseq_version'){
-       return 'HOMD 16S rRNA Gene Reference Sequence Version History'
-    }
-    if(page === 'refseq/blastn'){
-       return 'Page Help:: Refseq BLASTN'
-    }
-    if(page === 'refseq/trees'){
-       return 'Page Help:: Refseq Phylogenetic Trees'
-    }
-    // TAXON
-    if(page === 'taxon/taxon_table'){
-       return 'Page Help::Taxon Table'
-    }
-    if(page === 'taxon/description'){
-       return 'Page Help::Taxon Description'
-    }
-    if(page === 'taxon/ecology'){
-       return 'Page Help::Ecology and Abundance'
-    }
-    if(page === 'taxon/hierarchy'){
-       return 'Page Help::Taxon Dynamic Tree Hierarchy'
-    }
-    if(page === 'taxon/level'){
-       return 'Page Help::Taxon by Rank Level Selection'
-    }
-    if(page === 'taxon/life'){
-       return "Page Help::Taxon 'life' Pages"
-    }
-    if(page === 'taxon/taxon_version'){
-       return 'HOMD Taxonomy Version History'
-    }
-    // PHAGE
-    if(page === 'phage/phage_table'){
-       return 'Page Help::Phage Table'
-    }
-    if(page === 'phage/description'){
-       return 'Page Help::Phage Description'
-    }
-    // BLAST
-    if(page === 'blast/blast'){
-       return 'Page Help::Blast Menu'
-    }
-    if(page === 'blast/pagehelp'){
-       return 'Page Help::SequenceServer BLAST'
-    }
-    if(page === 'blast/formats'){
-       return 'Page Help::Blast Formats'
-    }
-    if(page === 'blast/formats'){
-       return 'Page Help::Blast Formats'
-    }
-    if(page === 'blast/databases'){
-       return 'Page Help::Blast Databases'
-    }
-    if(page === 'blast/parameters'){
-       return 'Page Help::Blast Parameters'
-    }
-    if(page === 'blast/programs'){
-       return 'Page Help::Blast Programs'
-    }
-    if(page === 'blast/advanced'){
-       return 'Page Help::Blast Advanced Parameters'
-    }
-    if(page === 'bestuse'){
-       return 'HOMD Use Cases'
-    }
-    
-    return page+'-FixmyTitle'
+function getPageTitle(page) {
+  if (page === "cite") {
+    return "How to Cite the Human Oral Microbiome Database";
+  }
+  if (page === "description") {
+    return "The HOMD Project Description";
+  }
+  if (page === "strains") {
+    return "Strains and DNA Availability";
+  }
+  if (page === "team") {
+    return "Team";
+  }
+  if (page === "contact") {
+    return "Contact Us";
+  }
+  if (page === "mailing") {
+    return "Mailing Lists";
+  }
+  if (page === "download") {
+    return "Downloading HOMD Data";
+  }
+  if (page === "publications") {
+    return "Publications";
+  }
+  if (page === "announcement") {
+    return "Announcements";
+  }
+  if (page === "database_update") {
+    return "HOMD Database Updates";
+  }
+  // GENOME
+  if (page === "genome/genome_table") {
+    return "Page Help::Genome Table";
+  }
+  if (page === "genome/genome_version") {
+    return "HOMD Reference Genomes Version History";
+  }
+  if (page === "genome/description") {
+    return "Page Help::Genome Description";
+  }
+  if (page === "genome/explorer") {
+    return "Page Help::Genome Explorer and Annotations";
+  }
+  if (page === "genome/jbrowse") {
+    return "Page Help::JBrowse";
+  }
+  // REFSEQ
+  if (page === "refseq/refseq_version") {
+    return "HOMD 16S rRNA Gene Reference Sequence Version History";
+  }
+  if (page === "refseq/blastn") {
+    return "Page Help:: Refseq BLASTN";
+  }
+  if (page === "refseq/trees") {
+    return "Page Help:: Refseq Phylogenetic Trees";
+  }
+  // TAXON
+  if (page === "taxon/taxon_table") {
+    return "Page Help::Taxon Table";
+  }
+  if (page === "taxon/description") {
+    return "Page Help::Taxon Description";
+  }
+  if (page === "taxon/ecology") {
+    return "Page Help::Ecology and Abundance";
+  }
+  if (page === "taxon/hierarchy") {
+    return "Page Help::Taxon Dynamic Tree Hierarchy";
+  }
+  if (page === "taxon/level") {
+    return "Page Help::Taxon by Rank Level Selection";
+  }
+  if (page === "taxon/life") {
+    return "Page Help::Taxon 'life' Pages";
+  }
+  if (page === "taxon/taxon_version") {
+    return "HOMD Taxonomy Version History";
+  }
+  // PHAGE
+  if (page === "phage/phage_table") {
+    return "Page Help::Phage Table";
+  }
+  if (page === "phage/description") {
+    return "Page Help::Phage Description";
+  }
+  // BLAST
+  if (page === "blast/blast") {
+    return "Page Help::Blast Menu";
+  }
+  if (page === "blast/pagehelp") {
+    return "Page Help::SequenceServer BLAST";
+  }
+  if (page === "blast/formats") {
+    return "Page Help::Blast Formats";
+  }
+  if (page === "blast/formats") {
+    return "Page Help::Blast Formats";
+  }
+  if (page === "blast/databases") {
+    return "Page Help::Blast Databases";
+  }
+  if (page === "blast/parameters") {
+    return "Page Help::Blast Parameters";
+  }
+  if (page === "blast/programs") {
+    return "Page Help::Blast Programs";
+  }
+  if (page === "blast/advanced") {
+    return "Page Help::Blast Advanced Parameters";
+  }
+  if (page === "bestuse") {
+    return "HOMD Use Cases";
+  }
+
+  return page + "-FixmyTitle";
 }
-
-
-
-
-
 
 export default router;
