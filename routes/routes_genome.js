@@ -1440,10 +1440,11 @@ router.get("/conserved_protein_tree", function conservedProteinTree(req, res) {
     //const http = require('http');
     let findme = "DEFAULTxxxxFINDMExxxxxxxxxx"; // will be either gid OR otid (other is 'undefined')
     let otid;
+
     if (req.query.otid) {
         otid = req.query.otid.replace(/^0+/, "");
         //findme = helpers.make_otid_display_name(otid);
-        findme = helpers.make_otid_display_nameOLDSTYLEHMTS(otid);
+        findme = helpers.make_otid_display_nameOLDSTYLEHMTS(otid); // ie: HMT-123
     } else if (req.query.gid) {
         findme = req.query.gid;
     }

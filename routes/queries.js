@@ -293,7 +293,7 @@ export const get_genome = (gid) => {
     // always NCBI for genome description
     let q = genome_query();
     q += " WHERE genome_id = '" + gid + "'";
-    q += " AND homd_genome_version = '" + C.genomic_refseq_version + "'"; // for correct pangenome
+    //q += " AND homd_genome_version = '" + C.genomic_refseq_version + "'"; // for correct pangenome
     return q;
 };
 
